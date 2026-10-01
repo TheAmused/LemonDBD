@@ -445,14 +445,14 @@
       "id": 800,
       "name": "Grisly Chains",
       "killer_id": 9,
-      "description": "A chain with unusually hefty cutter teeth that leaves victims crippled even after being healed.\n• Chainsaw hits inflict **Mangled** for **70 seconds**.\n**Mangled** **increases** time required to heal by **25%** and lasts for a set duration or until fully healed.",
+      "description": "A chain with unusually hefty cutter teeth that leaves victims crippled even after being healed.\n• Chainsaw hits inflict **Mangled** for **70 seconds**.\n**Mangled increases** time required to heal by **25%** and lasts for a set duration or until fully healed.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_grislyChains.png?dd7007",
       "icon_local_path": "icons/addons/grisly_chains.webp",
       "rarity": "Rare",
       "translations": {
         "de": {
           "name": "Grässliche Kette",
-          "description": "Eine Kette mit ungewöhnlich kräftigen Schneidezähnen, die Opfer verkrüppelt zurücklässt, selbst nachdem sie geheilt wurden.\n• Überlebende, die von der Kettensäge getroffen werden, erleiden den Statuseffekt **Zerfleischt** für **70 Sekunden**.\n**Zerfleischt** **erhöht** die Heilungsdauer um **25 %** und hält eine festgelegte Zeit oder bis zur vollständigen Heilung an."
+          "description": "Eine Kette mit ungewöhnlich kräftigen Schneidezähnen, die Opfer verkrüppelt zurücklässt, selbst nachdem sie geheilt wurden.\n• Überlebende, die von der Kettensäge getroffen werden, erleiden den Statuseffekt **Zerfleischt** für **70 Sekunden**.\n**Zerfleischt erhöht** die Heilungsdauer um **25 %** und hält eine festgelegte Zeit oder bis zur vollständigen Heilung an."
         },
         "en": {
           "name": "Grisly Chain"

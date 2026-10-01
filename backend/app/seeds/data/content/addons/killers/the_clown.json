@@ -305,7 +305,7 @@
       "id": 214,
       "name": "Flask of Bleach",
       "killer_id": 12,
-      "description": "A potent chemical which **causes** irritation, burn and lungs damage.\n• **Increases** the **Hindered** penalty from Intoxication by an additional **2%**.\n**Hindered** **reduces** Survivor movement speed.",
+      "description": "A potent chemical which **causes** irritation, burn and lungs damage.\n• **Increases** the **Hindered** penalty from Intoxication by an additional **2%**.\n**Hindered reduces** Survivor movement speed.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_flaskOfBleach.png?c93123",
       "icon_local_path": "icons/addons/flask_of_bleach.webp",
       "rarity": "Rare",
@@ -316,7 +316,7 @@
         },
         "es": {
           "name": "Frasco de lejía",
-          "description": "Un potente químico que causa irritación, quemaduras y daño pulmonar.\n• **Aumenta** la penalización **Entorpecimiento** con Intoxicación un **2 %** adicional.\n**Entorpecimiento** **reduce** la velocidad de movimiento del superviviente."
+          "description": "Un potente químico que causa irritación, quemaduras y daño pulmonar.\n• **Aumenta** la penalización **Entorpecimiento** con Intoxicación un **2 %** adicional.\n**Entorpecimiento reduce** la velocidad de movimiento del superviviente."
         },
         "ja": {
           "name": "ブリーチのフラスコ",
@@ -467,14 +467,14 @@
       "id": 788,
       "name": "Sulphuric Acid Vial",
       "killer_id": 12,
-      "description": "An odorless syrupy liquid which is highly corrosive.\n• Intoxication inflicts **Mangled** on injured Survivors for **70 seconds**.\n**Mangled** **increases** time required to heal by **25%** and lasts for a set duration or until fully healed.",
+      "description": "An odorless syrupy liquid which is highly corrosive.\n• Intoxication inflicts **Mangled** on injured Survivors for **70 seconds**.\n**Mangled increases** time required to heal by **25%** and lasts for a set duration or until fully healed.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_sulphuricAcidVial.png?5a8745",
       "icon_local_path": "icons/addons/sulphuric_acid_vial.webp",
       "rarity": "Rare",
       "translations": {
         "de": {
           "name": "Fläschchen mit Schwefelsäure",
-          "description": "Eine geruchlose, sirupartige Flüssigkeit, die äußerst ätzend ist.\n• Die Benebelung löst für **70 Sekunden** **Zerfleischt** bei **verletzten** Überlebenden aus.\n**Zerfleischt** **erhöht** die Heilungsdauer um **25 %** und hält eine festgelegte Zeit oder bis zur vollständigen Heilung an."
+          "description": "Eine geruchlose, sirupartige Flüssigkeit, die äußerst ätzend ist.\n• Die Benebelung löst für **70 Sekunden Zerfleischt** bei **verletzten** Überlebenden aus.\n**Zerfleischt erhöht** die Heilungsdauer um **25 %** und hält eine festgelegte Zeit oder bis zur vollständigen Heilung an."
         },
         "en": {
           "name": "Sulfuric Acid Vial"

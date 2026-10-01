@@ -143,14 +143,14 @@
       "id": 61,
       "name": "Fragile Wheeze",
       "killer_id": 4,
-      "description": "The whistling and rattling breath stolen from Father Campbell. Silently curves and bends at The Nurse's touch.\n• Blink Attacks inflict the **Mangled** **status effect** for **70 seconds**.\n**Mangled** **increases** time required to heal by **25%** and lasts for a set duration or until fully healed.",
+      "description": "The whistling and rattling breath stolen from Father Campbell. Silently curves and bends at The Nurse's touch.\n• Blink Attacks inflict the **Mangled status effect** for **70 seconds**.\n**Mangled increases** time required to heal by **25%** and lasts for a set duration or until fully healed.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_fragileWheeze.png?4ccc14",
       "icon_local_path": "icons/addons/fragile_wheeze.webp",
       "rarity": "Rare",
       "translations": {
         "de": {
           "name": "Schwaches Röcheln",
-          "description": "Der pfeifende und rasselnde Atem, gestohlen von Pater Campbell. Krümmt und biegt sich lautlos, wenn die Krankenschwester ihn berührt.\n• Teleportationsangriffe verursachen den Statuseffekt **Zerfleischt** für **70 Sekunden**.\n**Zerfleischt** **erhöht** die Heilungsdauer um **25 %** und hält eine festgelegte Zeit oder bis zur vollständigen Heilung an."
+          "description": "Der pfeifende und rasselnde Atem, gestohlen von Pater Campbell. Krümmt und biegt sich lautlos, wenn die Krankenschwester ihn berührt.\n• Teleportationsangriffe verursachen den Statuseffekt **Zerfleischt** für **70 Sekunden**.\n**Zerfleischt erhöht** die Heilungsdauer um **25 %** und hält eine festgelegte Zeit oder bis zur vollständigen Heilung an."
         },
         "es": {
           "name": "Respiración frágil",
@@ -231,7 +231,7 @@
       "translations": {
         "de": {
           "name": "Andenken an den „Bösen Mann“",
-          "description": "Ein verfaulter Backenzahn, der dem toten „Bösen Mann“ entrissen wurde.\n• Triffst du einen Überlebenden mit einem Teleportationsangriff, wird dessen **Aura** **enthüllt**, sofern dieser sich in einem Umkreis von **28 Metern** heilt oder geheilt wird, und zwar für **60 Sekunden**."
+          "description": "Ein verfaulter Backenzahn, der dem toten „Bösen Mann“ entrissen wurde.\n• Triffst du einen Überlebenden mit einem Teleportationsangriff, wird dessen **Aura enthüllt**, sofern dieser sich in einem Umkreis von **28 Metern** heilt oder geheilt wird, und zwar für **60 Sekunden**."
         },
         "es": {
           "name": "Recuerdo del \"Hombre Malo\"",
@@ -440,7 +440,7 @@
       "id": 72,
       "name": "Kavanagh's Last Breath",
       "killer_id": 4,
-      "description": "A powerful last breath snatched from Crotus Prenn asylum orderly Harvey Kavanagh. In the hands of The Nurse, it wobbles with intensity.\n• When succumbing to fatigue, any Survivors within **8 meters** of The Nurse are afflicted with the **Blindness** **status effect** for **60 seconds**.\n**Blindness** prevents Survivors from seeing **auras**.",
+      "description": "A powerful last breath snatched from Crotus Prenn asylum orderly Harvey Kavanagh. In the hands of The Nurse, it wobbles with intensity.\n• When succumbing to fatigue, any Survivors within **8 meters** of The Nurse are afflicted with the **Blindness status effect** for **60 seconds**.\n**Blindness** prevents Survivors from seeing **auras**.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_kavanaghsLastBreath.png?c87984",
       "icon_local_path": "icons/addons/kavanaghs_last_breath.webp",
       "rarity": "Very Rare",

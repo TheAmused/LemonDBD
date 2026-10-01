@@ -8,14 +8,14 @@
       "id": 131,
       "name": "Rusty Head",
       "killer_id": 8,
-      "description": "These Hatchets' heads are covered with crusty and volatile rust spots that makes injuries particularly difficult to heal.\n• Hatchets inflict **Mangled** for **70 seconds**.\n**Mangled** **increases** time required to heal by **25%** and lasts for a set duration or until fully healed.",
+      "description": "These Hatchets' heads are covered with crusty and volatile rust spots that makes injuries particularly difficult to heal.\n• Hatchets inflict **Mangled** for **70 seconds**.\n**Mangled increases** time required to heal by **25%** and lasts for a set duration or until fully healed.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_rustyHead.png?db0437",
       "icon_local_path": "icons/addons/rusty_head.webp",
       "rarity": "Rare",
       "translations": {
         "de": {
           "name": "Rostige Klinge",
-          "description": "Die Klingen dieser Beile sind übersät mit verkrusteten und ätzenden Rostflecken, die es besonders schwierig machen, Verletzungen zu heilen.\n• Beile verursachen den Statuseffekt **Zerfleischt** für **70 Sekunden**.\n**Zerfleischt** **erhöht** die Heilungsdauer um **25 %** und hält eine festgelegte Zeit oder bis zur vollständigen Heilung an."
+          "description": "Die Klingen dieser Beile sind übersät mit verkrusteten und ätzenden Rostflecken, die es besonders schwierig machen, Verletzungen zu heilen.\n• Beile verursachen den Statuseffekt **Zerfleischt** für **70 Sekunden**.\n**Zerfleischt erhöht** die Heilungsdauer um **25 %** und hält eine festgelegte Zeit oder bis zur vollständigen Heilung an."
         },
         "es": {
           "name": "Cabezal oxidado",
@@ -35,14 +35,14 @@
       "id": 132,
       "name": "Begrimed Head",
       "killer_id": 8,
-      "description": "These Hatchets' heads are stained with a foul substance that afflict anyone it touches with debilities.\n• Hit target suffers from the **Mangled** and **Hemorrhage** **status effects** for **80 seconds**.\n**Hemorrhage** regresses healing progress when not healing, and **increases** blood trails left by injured survivors. This lasts for a set duration or until healed.\n**Mangled** **increases** time required to heal by **25%** and lasts for a set duration or until fully healed.",
+      "description": "These Hatchets' heads are stained with a foul substance that afflict anyone it touches with debilities.\n• Hit target suffers from the **Mangled** and **Hemorrhage status effects** for **80 seconds**.\n**Hemorrhage** regresses healing progress when not healing, and **increases** blood trails left by injured survivors. This lasts for a set duration or until healed.\n**Mangled increases** time required to heal by **25%** and lasts for a set duration or until fully healed.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_begrimedHead.png?656ac6",
       "icon_local_path": "icons/addons/begrimed_head.webp",
       "rarity": "Very Rare",
       "translations": {
         "de": {
           "name": "Beschmutzte Klinge",
-          "description": "Die Klingen dieser Beile sind mit einer üblen Substanz verunreinigt, die jeden schwächt, der sie berührt.\n• Ein getroffenes Ziel leidet unter den Statuseffekten **Zerfleischt** und Blutung für **80 Sekunden**.\nBlutung setzt den Heilungsfortschritt zurück, wenn nicht gerade geheilt wird, und verstärkt Blutspuren, die **verletzte** Überlebende hinterlassen. Dieser Effekt hält eine festgelegte Zeit oder bis zur Heilung an.\n**Zerfleischt** **erhöht** die Heilungsdauer um **25 %** und hält eine festgelegte Zeit oder bis zur vollständigen Heilung an."
+          "description": "Die Klingen dieser Beile sind mit einer üblen Substanz verunreinigt, die jeden schwächt, der sie berührt.\n• Ein getroffenes Ziel leidet unter den Statuseffekten **Zerfleischt** und Blutung für **80 Sekunden**.\nBlutung setzt den Heilungsfortschritt zurück, wenn nicht gerade geheilt wird, und verstärkt Blutspuren, die **verletzte** Überlebende hinterlassen. Dieser Effekt hält eine festgelegte Zeit oder bis zur Heilung an.\n**Zerfleischt erhöht** die Heilungsdauer um **25 %** und hält eine festgelegte Zeit oder bis zur vollständigen Heilung an."
         },
         "es": {
           "name": "Cabezal mugroso",
@@ -62,7 +62,7 @@
       "id": 133,
       "name": "Wooden Fox",
       "killer_id": 8,
-      "description": "Roughly carved, this fox statuette is no more than a few inches. A reminder that stealth and cunning is as effective as raw power.\n• **Grants** **Undetectable** for **30 seconds** after reloading.\n**Undetectable** hides the Killer's **aura**, **Terror Radius**, and Red Stain.",
+      "description": "Roughly carved, this fox statuette is no more than a few inches. A reminder that stealth and cunning is as effective as raw power.\n• **Grants Undetectable** for **30 seconds** after reloading.\n**Undetectable** hides the Killer's **aura**, **Terror Radius**, and Red Stain.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_woodenFox.png?783451",
       "icon_local_path": "icons/addons/wooden_fox.webp",
       "rarity": "Very Rare",
@@ -73,7 +73,7 @@
         },
         "es": {
           "name": "Zorro de madera",
-          "description": "Una tosca y diminuta estatuilla de un zorro, recordatorio de que el sigilo y la astucia son tan letales como la fuerza bruta.\n• **Aplica** **Indetectable** durante **30 segundos** tras recargar.\n**Indetectable** oculta el **aura**, **radio de terror** y marca roja del asesino."
+          "description": "Una tosca y diminuta estatuilla de un zorro, recordatorio de que el sigilo y la astucia son tan letales como la fuerza bruta.\n• **Aplica Indetectable** durante **30 segundos** tras recargar.\n**Indetectable** oculta el **aura**, **radio de terror** y marca roja del asesino."
         },
         "ja": {
           "name": "木製の狐",
@@ -170,18 +170,18 @@
       "id": 137,
       "name": "Leather Loop",
       "killer_id": 8,
-      "description": "The right tool in the right hands is key to a successful hunt.\n• Hatchet hits **grant** **2%** **Haste** for **5 seconds**.\n**Haste** **increases** Killer movement speed.",
+      "description": "The right tool in the right hands is key to a successful hunt.\n• Hatchet hits **grant 2% Haste** for **5 seconds**.\n**Haste increases** Killer movement speed.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_leatherLoop.png?b5452b",
       "icon_local_path": "icons/addons/leather_loop.webp",
       "rarity": "Uncommon",
       "translations": {
         "de": {
           "name": "Lederschlaufe",
-          "description": "Das richtige Werkzeug in den richtigen Händen ist der Schlüssel für eine erfolgreiche Jagd.\n• Treffer mit dem Beil gewähren **2 %** **Eile** für **5 Sek**..\n**Eile** **erhöht** die Bewegungsgeschwindigkeit des Killers."
+          "description": "Das richtige Werkzeug in den richtigen Händen ist der Schlüssel für eine erfolgreiche Jagd.\n• Treffer mit dem Beil gewähren **2 % Eile** für **5 Sek**..\n**Eile erhöht** die Bewegungsgeschwindigkeit des Killers."
         },
         "es": {
           "name": "Presilla de cuero",
-          "description": "La herramienta adecuada en las manos adecuadas es fundamental para que la caza tenga éxito.\n• Los golpes de destral otorgan un **2 %** de **Celeridad** durante **5 segundos**.\n**Celeridad** **aumenta** la velocidad de movimiento del asesino."
+          "description": "La herramienta adecuada en las manos adecuadas es fundamental para que la caza tenga éxito.\n• Los golpes de destral otorgan un **2 %** de **Celeridad** durante **5 segundos**.\n**Celeridad aumenta** la velocidad de movimiento del asesino."
         },
         "ja": {
           "name": "革の輪",
@@ -189,7 +189,7 @@
         },
         "pl": {
           "name": "Skórzany Węzeł",
-          "description": "Właściwe narzędzie we właściwych rękach jest kluczem do udanego polowania.\n• Uderzenia toporka dodają **2%** **Pośpiechu** na **5 s**.\n**Pośpiech** **zwiększa** prędkość ruchu zabójcy."
+          "description": "Właściwe narzędzie we właściwych rękach jest kluczem do udanego polowania.\n• Uderzenia toporka dodają **2% Pośpiechu** na **5 s**.\n**Pośpiech zwiększa** prędkość ruchu zabójcy."
         }
       }
     },
@@ -197,18 +197,18 @@
       "id": 138,
       "name": "Infantry Belt",
       "killer_id": 8,
-      "description": "A sturdy utility belt pillaged from a soldier. He was quick in combat, but she was quicker.\n• Hatchet hits **grant** **3%** **Haste** for **5 seconds**.\n**Haste** **increases** Killer movement speed.",
+      "description": "A sturdy utility belt pillaged from a soldier. He was quick in combat, but she was quicker.\n• Hatchet hits **grant 3% Haste** for **5 seconds**.\n**Haste increases** Killer movement speed.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_infantryBelt.png?cae6e6",
       "icon_local_path": "icons/addons/infantry_belt.webp",
       "rarity": "Very Rare",
       "translations": {
         "de": {
           "name": "Infanteristengürtel",
-          "description": "Ein robuster Mehrzweckgürtel, der einem Soldaten abgenommen wurde. Er war schnell im Kampf, doch sie war schneller.\n• Treffer mit dem Beil gewähren **3 %** **Eile** für **5 Sekunden**.\n**Eile** **erhöht** die Bewegungsgeschwindigkeit des Killers."
+          "description": "Ein robuster Mehrzweckgürtel, der einem Soldaten abgenommen wurde. Er war schnell im Kampf, doch sie war schneller.\n• Treffer mit dem Beil gewähren **3 % Eile** für **5 Sekunden**.\n**Eile erhöht** die Bewegungsgeschwindigkeit des Killers."
         },
         "es": {
           "name": "Cinturón de infantería",
-          "description": "Un resistente cinturón de herramientas que perteneció a un soldado caído. Era rápido en combate, pero ella lo era más.\n• Los golpes de destral otorgan un **3 %** de **Celeridad** durante **5 segundos**.\n**Celeridad** **aumenta** la velocidad de movimiento del asesino."
+          "description": "Un resistente cinturón de herramientas que perteneció a un soldado caído. Era rápido en combate, pero ella lo era más.\n• Los golpes de destral otorgan un **3 %** de **Celeridad** durante **5 segundos**.\n**Celeridad aumenta** la velocidad de movimiento del asesino."
         },
         "ja": {
           "name": "歩兵のベルト",
@@ -216,7 +216,7 @@
         },
         "pl": {
           "name": "Pasek Piechoty",
-          "description": "Solidny pas zabrany żołnierzowi. Był szybki w walce, ale ona była szybsza.\n• Uderzenia toporka dodają **3%** **pośpiechu** na **5 s**.\nPośpiechPośpiech **zwiększa** prędkość ruchu zabójcy."
+          "description": "Solidny pas zabrany żołnierzowi. Był szybki w walce, ale ona była szybsza.\n• Uderzenia toporka dodają **3% pośpiechu** na **5 s**.\nPośpiechPośpiech **zwiększa** prędkość ruchu zabójcy."
         }
       }
     },

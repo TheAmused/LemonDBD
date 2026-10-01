@@ -162,7 +162,7 @@
         },
         "pl": {
           "name": "Naszyjnik z Moonstone",
-          "description": "Za dnia zwykły naszyjnik, którego moc budzi się w ciemności.\n• **Zmniejsza** **zasięg terroru** w postaci wampira i wilka o **8 m**."
+          "description": "Za dnia zwykły naszyjnik, którego moc budzi się w ciemności.\n• **Zmniejsza zasięg terroru** w postaci wampira i wilka o **8 m**."
         }
       }
     },
@@ -224,7 +224,7 @@
       "id": 657,
       "name": "White Wolf Medallion",
       "killer_id": 37,
-      "description": "A trinket once used to call a great spirit guide.\n• **Increases** **Killer Instinct** duration by **1 second** while in Wolf Form after Survivors complete rushed actions.",
+      "description": "A trinket once used to call a great spirit guide.\n• **Increases Killer Instinct** duration by **1 second** while in Wolf Form after Survivors complete rushed actions.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_WhiteWolfMedallion.png?c8f792",
       "icon_local_path": "icons/addons/white_wolf_medallion.webp",
       "rarity": "Uncommon",
@@ -235,7 +235,7 @@
         },
         "es": {
           "name": "Medallón del lobo blanco",
-          "description": "Un abalorio que se empleaba para llamar a un gran guía espiritual.\n• **Aumenta** la duración de **Instinto asesino** **1 segundo** con la forma licantrópica después de que los supervivientes completen acciones rápidas."
+          "description": "Un abalorio que se empleaba para llamar a un gran guía espiritual.\n• **Aumenta** la duración de **Instinto asesino 1 segundo** con la forma licantrópica después de que los supervivientes completen acciones rápidas."
         },
         "ja": {
           "name": "白オオカミのメダル",
@@ -359,7 +359,7 @@
       "id": 662,
       "name": "Lapis Lazuli",
       "killer_id": 37,
-      "description": "A stone said to bring luck to its holders, or take it from their enemies.\n• After Teleporting to a **window** vault, the **Entity** **blocks** that **window** for Survivors for **8 seconds**.",
+      "description": "A stone said to bring luck to its holders, or take it from their enemies.\n• After Teleporting to a **window** vault, the **Entity blocks** that **window** for Survivors for **8 seconds**.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_LapisLazuli.png?5ab0b2",
       "icon_local_path": "icons/addons/lapis_lazuli.webp",
       "rarity": "Very Rare",
@@ -473,7 +473,7 @@
       "id": 874,
       "name": "Medusa's Hair",
       "killer_id": 37,
-      "description": "A snakelike memento from one of Dracula's most ancient and fearsome minions.\n• All Survivors within **8 meters** of your teleport destination suffer from an **8%** **Hindered** **status effect** for **4 seconds**.\n**Hindered** **reduces** Survivor movement speed.",
+      "description": "A snakelike memento from one of Dracula's most ancient and fearsome minions.\n• All Survivors within **8 meters** of your teleport destination suffer from an **8% Hindered status effect** for **4 seconds**.\n**Hindered reduces** Survivor movement speed.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_MedusasHair.png?4afcd7",
       "icon_local_path": "icons/addons/medusas_hair.webp",
       "rarity": "Very Rare",
@@ -487,7 +487,7 @@
         },
         "es": {
           "name": "Cabello de Medusa",
-          "description": "Una reliquia con forma de serpiente de uno de los esbirros más antiguos y temibles de Drácula.\n• Todos los supervivientes en un radio de **8 metros** de tu destino de teletransporte sufren un **8 %** del efecto de estado **Entorpecimiento** durante **4 segundos**.\n**Entorpecimiento** **reduce** la velocidad de movimiento del superviviente."
+          "description": "Una reliquia con forma de serpiente de uno de los esbirros más antiguos y temibles de Drácula.\n• Todos los supervivientes en un radio de **8 metros** de tu destino de teletransporte sufren un **8 %** del efecto de estado **Entorpecimiento** durante **4 segundos**.\n**Entorpecimiento reduce** la velocidad de movimiento del superviviente."
         },
         "ja": {
           "name": "メデューサの髪",

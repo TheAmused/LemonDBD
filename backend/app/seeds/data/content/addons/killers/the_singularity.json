@@ -42,7 +42,7 @@
       "translations": {
         "de": {
           "name": "Schwerwasser",
-          "description": "Ein Nebenprodukt der Mikrospaltungsreaktoren, die die Kryo- und Lebenserhaltungssysteme betreiben. Selbst ein kleiner Riss wäre eine Katastrophe für die Sensoren an Bord.\n• Die **Aura** von Vorratskoffern wird um **8 Meter** **verringert**."
+          "description": "Ein Nebenprodukt der Mikrospaltungsreaktoren, die die Kryo- und Lebenserhaltungssysteme betreiben. Selbst ein kleiner Riss wäre eine Katastrophe für die Sensoren an Bord.\n• Die **Aura** von Vorratskoffern wird um **8 Meter verringert**."
         },
         "es": {
           "name": "Agua pesada",
@@ -54,7 +54,7 @@
         },
         "pl": {
           "name": "Ciężka woda",
-          "description": "Produkt uboczny reaktorów mikropodziału zasilających krio i systemy podtrzymywania życia. Nawet niewielki wyciek okazałby się katastrofalny dla czujników pokładowych.\n• Odległość dostrzegania **aury** **skrzyń** z zapasami zostaje zmniejszona o **8 m**."
+          "description": "Produkt uboczny reaktorów mikropodziału zasilających krio i systemy podtrzymywania życia. Nawet niewielki wyciek okazałby się katastrofalny dla czujników pokładowych.\n• Odległość dostrzegania **aury skrzyń** z zapasami zostaje zmniejszona o **8 m**."
         }
       }
     },
@@ -108,7 +108,7 @@
         },
         "pl": {
           "name": "Narzędzie diagnostyczne (budowa)",
-          "description": "Urządzenie, które przekazuje bardzo dokładne informacje o układzie terenu.\n• **Ujawnia** **aury ocalałych**, którzy podnoszą napęd elektromagnetyczny, na **8 sekund**."
+          "description": "Urządzenie, które przekazuje bardzo dokładne informacje o układzie terenu.\n• **Ujawnia aury ocalałych**, którzy podnoszą napęd elektromagnetyczny, na **8 sekund**."
         }
       }
     },
@@ -197,7 +197,7 @@
       "id": 569,
       "name": "Cryo Gel",
       "killer_id": 32,
-      "description": "A no-friction gel applied to crew members before entering deep cryo sleep.\n• Slipstreamed Survivors suffer from the **Hemorrhage** **status effect** for **60 seconds** when hit with a basic attack.\n**Hemorrhage** regresses healing progress when not healing, and **increases** blood trails left by injured Survivors.",
+      "description": "A no-friction gel applied to crew members before entering deep cryo sleep.\n• Slipstreamed Survivors suffer from the **Hemorrhage status effect** for **60 seconds** when hit with a basic attack.\n**Hemorrhage** regresses healing progress when not healing, and **increases** blood trails left by injured Survivors.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_cryoGel.png?287f8f",
       "icon_local_path": "icons/addons/cryo_gel.webp",
       "rarity": "Uncommon",
@@ -285,7 +285,7 @@
       "translations": {
         "de": {
           "name": "Ultraschallsensor",
-          "description": "Eine Einschränkung von organischen Hörorganen ist ihr beschränktes Hörspektrum. Wenn dieses erweitert wird, hat man das Gefühl, einen völlig neuen Sinn zu nutzen.\n• Verlässt du eine Biokapsel innerhalb von **2 Sekunden**, nachdem du einen Überlebenden mit Sog belegt hast, wird dein **Terrorradius** für **12 Sekunden** um **12 Meter** **verringert**."
+          "description": "Eine Einschränkung von organischen Hörorganen ist ihr beschränktes Hörspektrum. Wenn dieses erweitert wird, hat man das Gefühl, einen völlig neuen Sinn zu nutzen.\n• Verlässt du eine Biokapsel innerhalb von **2 Sekunden**, nachdem du einen Überlebenden mit Sog belegt hast, wird dein **Terrorradius** für **12 Sekunden** um **12 Meter verringert**."
         },
         "es": {
           "name": "Sensor ultrasónico",
@@ -386,7 +386,7 @@
       "id": 576,
       "name": "Hologram Generator",
       "killer_id": 32,
-      "description": "Originally used for communication and entertainment, this has been repurposed for obfuscation.\n• After a successful Slipstream teleport from a Biopod, the target Survivor suffers from the **Oblivious** **status effect** for **60 seconds**.\n**Oblivious** prevents Survivors from hearing or being **affected** by the Killer's **Terror Radius**.",
+      "description": "Originally used for communication and entertainment, this has been repurposed for obfuscation.\n• After a successful Slipstream teleport from a Biopod, the target Survivor suffers from the **Oblivious status effect** for **60 seconds**.\n**Oblivious** prevents Survivors from hearing or being **affected** by the Killer's **Terror Radius**.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_hologramGenerator.png?a6e782",
       "icon_local_path": "icons/addons/hologram_generator.webp",
       "rarity": "Rare",
@@ -413,18 +413,18 @@
       "id": 577,
       "name": "Soma Family Photo",
       "killer_id": 32,
-      "description": "A sentimental object that grounds someone to an imagined past.\n• Slipstreaming a Survivor using a Biopod inflicts a **3%** **Hindered** **status effect** for **6 seconds**.\n**Hindered** **reduces** Survivor movement speed.\n> “YOUR ATTACHMENT TO ILLUSIONS IS WEAKNESS.” - Hux",
+      "description": "A sentimental object that grounds someone to an imagined past.\n• Slipstreaming a Survivor using a Biopod inflicts a **3% Hindered status effect** for **6 seconds**.\n**Hindered reduces** Survivor movement speed.\n> “YOUR ATTACHMENT TO ILLUSIONS IS WEAKNESS.” - Hux",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_somaFamilyPhoto.png?d9180f",
       "icon_local_path": "icons/addons/soma_family_photo.webp",
       "rarity": "Very Rare",
       "translations": {
         "de": {
           "name": "Soma-Familienfoto",
-          "description": "Ein Gegenstand von sentimentalem Wert, der jemanden mit einer erdachten Vergangenheit verbindet.\n• Wenn ein Überlebender mithilfe einer Biokapsel mit Sog belegt wird, wird der Statuseffekt Eingeschränkt mit **3 %** für **6 Sekunden** **aktiviert**.\nEingeschränkt **verringert** die Bewegungsgeschwindigkeit von Überlebenden.\n> „DEIN FESTHALTEN AN ILLUSIONEN IST EINE SCHWÄCHE.“ – Hux"
+          "description": "Ein Gegenstand von sentimentalem Wert, der jemanden mit einer erdachten Vergangenheit verbindet.\n• Wenn ein Überlebender mithilfe einer Biokapsel mit Sog belegt wird, wird der Statuseffekt Eingeschränkt mit **3 %** für **6 Sekunden aktiviert**.\nEingeschränkt **verringert** die Bewegungsgeschwindigkeit von Überlebenden.\n> „DEIN FESTHALTEN AN ILLUSIONEN IST EINE SCHWÄCHE.“ – Hux"
         },
         "es": {
           "name": "Fotografía familiar de Soma",
-          "description": "Un objeto con un valor sentimental que ata a una persona a un pasado imaginario.\n• Provocar una estela a un superviviente con una biocápsula causa un **3 %** de **Entorpecimiento** durante **6 segundos**.\n**Entorpecimiento** **reduce** la velocidad de movimiento del superviviente.\n> \"TU APEGO A LOS ESPEJISMOS ES UNA DEBILIDAD\". (Hux)"
+          "description": "Un objeto con un valor sentimental que ata a una persona a un pasado imaginario.\n• Provocar una estela a un superviviente con una biocápsula causa un **3 %** de **Entorpecimiento** durante **6 segundos**.\n**Entorpecimiento reduce** la velocidad de movimiento del superviviente.\n> \"TU APEGO A LOS ESPEJISMOS ES UNA DEBILIDAD\". (Hux)"
         },
         "ja": {
           "name": "ソーマ家の写真",
@@ -459,7 +459,7 @@
         },
         "pl": {
           "name": "Manifest załogi",
-          "description": "Kompletna lista danych biograficznych całej załogi statku wysłanego do Dvarki.\n• **Ujawnia** **aurę** ocalałego z cieniem na **8 s**, gdy ten przeniesie cień na innego ocalałego.\n• **Zwiększa** zasięg przenoszenia cienia między ocalałymi o **2 m**."
+          "description": "Kompletna lista danych biograficznych całej załogi statku wysłanego do Dvarki.\n• **Ujawnia aurę** ocalałego z cieniem na **8 s**, gdy ten przeniesie cień na innego ocalałego.\n• **Zwiększa** zasięg przenoszenia cienia między ocalałymi o **2 m**."
         }
       }
     },
@@ -501,7 +501,7 @@
       "translations": {
         "de": {
           "name": "Kinder-Fanghandschuh",
-          "description": "Ein Kinder-Baseballhandschuh eines der Kolonisten. Seine Erinnerungen an ein Baseball spielendes Kind wurden ihm eingepflanzt.\n• Die Dauer des Übertaktungsmodus ist um **8 %** **erhöht**."
+          "description": "Ein Kinder-Baseballhandschuh eines der Kolonisten. Seine Erinnerungen an ein Baseball spielendes Kind wurden ihm eingepflanzt.\n• Die Dauer des Übertaktungsmodus ist um **8 % erhöht**."
         },
         "en": {
           "name": "Kid’s Ball Glove"
@@ -524,7 +524,7 @@
       "id": 848,
       "name": "Foreign Plant Fibres",
       "killer_id": 32,
-      "description": "Xenobotanists would have a field day with these strange samples of alien plant life.\n• **Decreases** the duration of the **Hindered** **status effect** after being stunned by a **pallet** while in Overclock mode by **20%**.\n**Hindered** **reduces** Killer movement speed.",
+      "description": "Xenobotanists would have a field day with these strange samples of alien plant life.\n• **Decreases** the duration of the **Hindered status effect** after being stunned by a **pallet** while in Overclock mode by **20%**.\n**Hindered reduces** Killer movement speed.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_foreignPlantFibres.png?b8fea2",
       "icon_local_path": "icons/addons/foreign_plant_fibres.webp",
       "rarity": "Very Rare",
@@ -538,7 +538,7 @@
         },
         "es": {
           "name": "Fibras de plantas foráneas",
-          "description": "Los xenobotánicos se lo pasaron de maravilla recogiendo estas inusuales muestras de vida vegetal alienígena.\n• **Reduce** la duración del efecto de estado **Entorpecimiento** cuando se le aturde con un palé en el modo acelerado un **20 %**.\n**Entorpecimiento** **reduce** la velocidad de movimiento del asesino."
+          "description": "Los xenobotánicos se lo pasaron de maravilla recogiendo estas inusuales muestras de vida vegetal alienígena.\n• **Reduce** la duración del efecto de estado **Entorpecimiento** cuando se le aturde con un palé en el modo acelerado un **20 %**.\n**Entorpecimiento reduce** la velocidad de movimiento del asesino."
         },
         "ja": {
           "name": "異星種植物繊維",

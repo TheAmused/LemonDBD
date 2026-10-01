@@ -62,7 +62,7 @@
       "id": 17,
       "name": "Braided Bauble",
       "item_category_id": 5,
-      "description": "Four thin but sturdy cords, all masterfully wrapped around one another.\n**Increases** the duration of **auras** **revealed** by keys by **2 seconds**.",
+      "description": "Four thin but sturdy cords, all masterfully wrapped around one another.\n**Increases** the duration of **auras revealed** by keys by **2 seconds**.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_braidedBauble.png?332519",
       "icon_local_path": "icons/addons/braided_bauble.webp",
       "rarity": "Rare",
@@ -73,7 +73,7 @@
         },
         "es": {
           "name": "Aro trenzado",
-          "description": "Cuatro cuerdas finas, pero resistentes, entrelazadas con destreza.\n**Aumenta** la duración de las **auras** **reveladas** con llaves en **2 segundos**."
+          "description": "Cuatro cuerdas finas, pero resistentes, entrelazadas con destreza.\n**Aumenta** la duración de las **auras reveladas** con llaves en **2 segundos**."
         },
         "ja": {
           "name": "編み込まれた飾り",
@@ -116,7 +116,7 @@
       "id": 19,
       "name": "Blood Amber",
       "item_category_id": 5,
-      "description": "A blood-red amber striped with black veins. The amber is warm to the touch.\n• Using this key **reveals** the Killer to you, and you to the Killer.\n• **Reduces** **aura** **reveal** time by **6 seconds**.\n• **Reduces** number of charges by 2.",
+      "description": "A blood-red amber striped with black veins. The amber is warm to the touch.\n• Using this key **reveals** the Killer to you, and you to the Killer.\n• **Reduces aura reveal** time by **6 seconds**.\n• **Reduces** number of charges by 2.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_bloodAmber.png?a1d50c",
       "icon_local_path": "icons/addons/blood_amber.webp",
       "rarity": "Very Rare",
@@ -135,7 +135,7 @@
         },
         "pl": {
           "name": "Krwawy bursztyn",
-          "description": "Klucz w czerwono-czarne pasy, z czarnymi żyłkami. Bursztyn jest ciepły w dotyku.\n• Użycie tego klucza **ujawnia** zabójcę tobie i ciebie zabójcy.\n• Skraca czas **ujawniania** **aury** o **6 s**.\n• **Zmniejsza** liczbę ładunków o 2."
+          "description": "Klucz w czerwono-czarne pasy, z czarnymi żyłkami. Bursztyn jest ciepły w dotyku.\n• Użycie tego klucza **ujawnia** zabójcę tobie i ciebie zabójcy.\n• Skraca czas **ujawniania aury** o **6 s**.\n• **Zmniejsza** liczbę ładunków o 2."
         }
       }
     }

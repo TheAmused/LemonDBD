@@ -150,7 +150,7 @@
       "translations": {
         "de": {
           "name": "Schlamm mit toten Fliegen",
-          "description": "Ein kleiner Schlammbrocken, dessen schwarze Farbe von Überresten toter Fliegen stammt. **Erhöht** **Ausdauer** nach Fressen.\n• **Erhöht** die Teleportationsreichweite um **10 %**."
+          "description": "Ein kleiner Schlammbrocken, dessen schwarze Farbe von Überresten toter Fliegen stammt. **Erhöht Ausdauer** nach Fressen.\n• **Erhöht** die Teleportationsreichweite um **10 %**."
         },
         "es": {
           "name": "Fango con moscas muertas",
@@ -204,7 +204,7 @@
       "translations": {
         "de": {
           "name": "Libellenflügel",
-          "description": "Eine Handvoll gelblicher Flügel, getrocknet und knusprig. **Erhöht** **Ausdauer** nach Fressen.\n• **Erhöht** die Teleportationsreichweite um **12,5 %**."
+          "description": "Eine Handvoll gelblicher Flügel, getrocknet und knusprig. **Erhöht Ausdauer** nach Fressen.\n• **Erhöht** die Teleportationsreichweite um **12,5 %**."
         },
         "es": {
           "name": "Alas de libélula",
@@ -231,7 +231,7 @@
       "translations": {
         "de": {
           "name": "Getrocknete Zikade",
-          "description": "Eine riesige Schlammzikade, mit einer feinen Ascheschicht überzogen. Knusprig. **Erhöht** **Ausdauer** nach Fressen.\n• **Erhöht** die Teleportationsreichweite um **15 %**."
+          "description": "Eine riesige Schlammzikade, mit einer feinen Ascheschicht überzogen. Knusprig. **Erhöht Ausdauer** nach Fressen.\n• **Erhöht** die Teleportationsreichweite um **15 %**."
         },
         "es": {
           "name": "Cigarra seca",
@@ -251,7 +251,7 @@
       "id": 84,
       "name": "Grandma's Heart",
       "killer_id": 6,
-      "description": "The cold heart of the cannibal village elder. The trapped life essence within **unlocks** tremendous potential in The Hag's power.\n• **Decreases** **Terror Radius** to **0 meters** when a Survivor triggers a Phantasm Trap.\n• **Increases** Mud Phantasms' **Terror Radius** by **16 meters**.\n> \"Bring me another slice of the girl.\" -Grandma",
+      "description": "The cold heart of the cannibal village elder. The trapped life essence within **unlocks** tremendous potential in The Hag's power.\n• **Decreases Terror Radius** to **0 meters** when a Survivor triggers a Phantasm Trap.\n• **Increases** Mud Phantasms' **Terror Radius** by **16 meters**.\n> \"Bring me another slice of the girl.\" -Grandma",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_granmasHeart.png?e66792",
       "icon_local_path": "icons/addons/grandmas_heart.webp",
       "rarity": "Very Rare",
@@ -270,7 +270,7 @@
         },
         "pl": {
           "name": "Serce babci",
-          "description": "Zimne serce starszej z wioski kanibali. Uwięziona wewnątrz serca esencja życia **odblokowuje** potężny potencjał mocy Wiedźmy.\n• **Zmniejsza** **zasięg terroru** do **0 metr**ów, gdy ocalały **aktywuje** Widmową Pułapkę.\n• **Zwiększa** **zasięg terroru** błotnych fantomów o **16 metr**ów.\n> „Przynieś mi kolejny kawałek dziewczyny”. – Babcia"
+          "description": "Zimne serce starszej z wioski kanibali. Uwięziona wewnątrz serca esencja życia **odblokowuje** potężny potencjał mocy Wiedźmy.\n• **Zmniejsza zasięg terroru** do **0 metr**ów, gdy ocalały **aktywuje** Widmową Pułapkę.\n• **Zwiększa zasięg terroru** błotnych fantomów o **16 metr**ów.\n> „Przynieś mi kolejny kawałek dziewczyny”. – Babcia"
         }
       }
     },
@@ -378,7 +378,7 @@
         },
         "pl": {
           "name": "Bazie kotki",
-          "description": "Mała wiązanka dziewiczych kwiatków pokrytych dobrej jakości szarawym futrem.\n• Ukazuje na **3 sekundy** **aury ocalałych**, którzy aktywowali Widmowe Pułapki."
+          "description": "Mała wiązanka dziewiczych kwiatków pokrytych dobrej jakości szarawym futrem.\n• Ukazuje na **3 sekundy aury ocalałych**, którzy aktywowali Widmowe Pułapki."
         }
       }
     },
@@ -440,7 +440,7 @@
       "id": 91,
       "name": "Scarred Hand",
       "killer_id": 6,
-      "description": "The cut up, severed hand of the cannibal village butcher. The trapped life essence within **unlocks** tremendous potential in The Hag's power.\n• Mud Phantasms become solid and will **block** Survivors.\n• Removes the ability to teleport to traps.\n• **Grants** **300%** bonus Deviousness Bloodpoints.\n> \"…\" -The Butcher",
+      "description": "The cut up, severed hand of the cannibal village butcher. The trapped life essence within **unlocks** tremendous potential in The Hag's power.\n• Mud Phantasms become solid and will **block** Survivors.\n• Removes the ability to teleport to traps.\n• **Grants 300%** bonus Deviousness Bloodpoints.\n> \"…\" -The Butcher",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_scarredHand.png?64c123",
       "icon_local_path": "icons/addons/scarred_hand.webp",
       "rarity": "Very Rare",
@@ -494,7 +494,7 @@
       "id": 93,
       "name": "Waterlogged Shoe",
       "killer_id": 6,
-      "description": "A child's shoe, long lost in the bog's waters. The trapped life essence within **unlocks** tremendous potential in The Hag's power.\n• Survivors in the trigger zone of a triggered Phantasm Trap are **Hindered** by **9%**.\n• **Increases** movement speed by **7.5%**.\n• Removes the ability to teleport to traps.\n**Hindered** **reduces** Survivor movement speed.",
+      "description": "A child's shoe, long lost in the bog's waters. The trapped life essence within **unlocks** tremendous potential in The Hag's power.\n• Survivors in the trigger zone of a triggered Phantasm Trap are **Hindered** by **9%**.\n• **Increases** movement speed by **7.5%**.\n• Removes the ability to teleport to traps.\n**Hindered reduces** Survivor movement speed.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_waterloggedShoe.png?bf148a",
       "icon_local_path": "icons/addons/waterlogged_shoe.webp",
       "rarity": "Ultra Rare",
@@ -505,7 +505,7 @@
         },
         "es": {
           "name": "Zapato empapado",
-          "description": "Un zapato de niño, perdido hace mucho tiempo en las aguas del pantano. La esencia de vida atrapada en su interior despierta un enorme potencial en el poder de la Bruja.\n• Los supervivientes en la zona donde hay una trampa fantasma **activada** sufrirán un **9 %** de **Entorpecimiento**.\n• **Aumenta** la velocidad de movimiento un **7,5 %**.\n• Impide que pueda teletransportarse hasta las trampas.\n**Entorpecimiento** **reduce** la velocidad de movimiento del superviviente."
+          "description": "Un zapato de niño, perdido hace mucho tiempo en las aguas del pantano. La esencia de vida atrapada en su interior despierta un enorme potencial en el poder de la Bruja.\n• Los supervivientes en la zona donde hay una trampa fantasma **activada** sufrirán un **9 %** de **Entorpecimiento**.\n• **Aumenta** la velocidad de movimiento un **7,5 %**.\n• Impide que pueda teletransportarse hasta las trampas.\n**Entorpecimiento reduce** la velocidad de movimiento del superviviente."
         },
         "ja": {
           "name": "ずぶ濡れの靴",
@@ -540,7 +540,7 @@
         },
         "pl": {
           "name": "Wierzbowy wieniec",
-          "description": "Trzy gładkie gałązki wierzby połączone w trójkątny wieniec.\n• Ukazują na **5 sekund** **aury ocalałych**, którzy aktywowali Widmowe Pułapki."
+          "description": "Trzy gładkie gałązki wierzby połączone w trójkątny wieniec.\n• Ukazują na **5 sekund aury ocalałych**, którzy aktywowali Widmowe Pułapki."
         }
       }
     }

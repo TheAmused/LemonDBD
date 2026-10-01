@@ -8,7 +8,7 @@
       "id": 332,
       "name": "Rickety Chain",
       "killer_id": 19,
-      "description": "Weak steel links first used on Caleb's prototype Speargun. Despite the chain's failings, it holds sentimental value.\n• **Grants** **50%** bonus Bloodpoints for Speared score events.\n• Survivors break free **33%** faster.",
+      "description": "Weak steel links first used on Caleb's prototype Speargun. Despite the chain's failings, it holds sentimental value.\n• **Grants 50%** bonus Bloodpoints for Speared score events.\n• Survivors break free **33%** faster.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_ricketyChain.png?660b70",
       "icon_local_path": "icons/addons/rickety_chain.webp",
       "rarity": "Common",
@@ -116,14 +116,14 @@
       "id": 336,
       "name": "Rusted Spike",
       "killer_id": 19,
-      "description": "A railroad spike that Caleb fastened to the front of the Speargun during a moment of morbid curiosity. The dull tip prevents it from cleanly piercing its target.\n• Hitting a Survivor with The Redeemer while they are being reeled in inflicts **Mangled** for **60 seconds**.\n**Mangled** **increases** time required to heal by **25%** for a set duration or until fully healed.",
+      "description": "A railroad spike that Caleb fastened to the front of the Speargun during a moment of morbid curiosity. The dull tip prevents it from cleanly piercing its target.\n• Hitting a Survivor with The Redeemer while they are being reeled in inflicts **Mangled** for **60 seconds**.\n**Mangled increases** time required to heal by **25%** for a set duration or until fully healed.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_rustedSpike.png?b824ec",
       "icon_local_path": "icons/addons/rusted_spike.webp",
       "rarity": "Uncommon",
       "translations": {
         "de": {
           "name": "Rostiger Nagel",
-          "description": "Ein Schwellennagel, den Caleb in einem Moment krankhafter Neugier vorne an der Harpune befestigte. Die stumpfe Spitze verhindert, dass das Ziel sauber durchbohrt wird.\n• Wenn du einen Überlebenden mit dem Erlöser triffst, während dieser herangezogen wird, erleidet er den Statuseffekt **Zerfleischt** für **60 Sekunden**.\n**Zerfleischt** **erhöht** die Heilungsdauer um **25 %** und hält eine festgelegte Zeit oder bis zur vollständigen Heilung an."
+          "description": "Ein Schwellennagel, den Caleb in einem Moment krankhafter Neugier vorne an der Harpune befestigte. Die stumpfe Spitze verhindert, dass das Ziel sauber durchbohrt wird.\n• Wenn du einen Überlebenden mit dem Erlöser triffst, während dieser herangezogen wird, erleidet er den Statuseffekt **Zerfleischt** für **60 Sekunden**.\n**Zerfleischt erhöht** die Heilungsdauer um **25 %** und hält eine festgelegte Zeit oder bis zur vollständigen Heilung an."
         },
         "es": {
           "name": "Clavo oxidado",
@@ -224,7 +224,7 @@
       "id": 340,
       "name": "Marshal's Badge",
       "killer_id": 19,
-      "description": "A silver badge taken from the corpse of a lawman in Arizona Territory who interfered with the Hellshire Gang’s bounties.\n• **Decreases** **Terror Radius** by **4 meters** while aiming down The Redeemer's sights.\n> “Get your prayers in, you’ll be swinging by noon.” -Caleb Quinn",
+      "description": "A silver badge taken from the corpse of a lawman in Arizona Territory who interfered with the Hellshire Gang’s bounties.\n• **Decreases Terror Radius** by **4 meters** while aiming down The Redeemer's sights.\n> “Get your prayers in, you’ll be swinging by noon.” -Caleb Quinn",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_marshalsBadge.png?117548",
       "icon_local_path": "icons/addons/marshals_badge.webp",
       "rarity": "Uncommon",
@@ -243,7 +243,7 @@
         },
         "pl": {
           "name": "Odznaka policjanta",
-          "description": "Srebrna odznaka zdjęta w Terytorium Arizony z ciała stróża prawa, który przeszkodził w łowach gangu z Hellshire.\n• **Zmniejsza** **zasięg terroru** o **4 metry** podczas patrzenia przez celownik Wybawcy.\n> „Lepiej się pomódl. Zawiśniesz do południa”. – Caleb Quinn"
+          "description": "Srebrna odznaka zdjęta w Terytorium Arizony z ciała stróża prawa, który przeszkodził w łowach gangu z Hellshire.\n• **Zmniejsza zasięg terroru** o **4 metry** podczas patrzenia przez celownik Wybawcy.\n> „Lepiej się pomódl. Zawiśniesz do południa”. – Caleb Quinn"
         }
       }
     },
@@ -332,7 +332,7 @@
       "id": 344,
       "name": "Gold Creek Whiskey",
       "killer_id": 19,
-      "description": "Warm comfort in a bottle that quelled Caleb’s anger and slowed his step.\n• **Decreases** **Terror Radius** by **8 meters** while aiming down The Redeemer's sights.\n> “A smooth taste for the rugged frontier” -Gold Creek Advertisement, 1876",
+      "description": "Warm comfort in a bottle that quelled Caleb’s anger and slowed his step.\n• **Decreases Terror Radius** by **8 meters** while aiming down The Redeemer's sights.\n> “A smooth taste for the rugged frontier” -Gold Creek Advertisement, 1876",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_goldCreekWhiskey.png?edfb35",
       "icon_local_path": "icons/addons/gold_creek_whiskey.webp",
       "rarity": "Very Rare",
@@ -350,7 +350,7 @@
           "description": "温かい安らぎを与える瓶入りの飲み物。カレブの怒りは鎮まり、足取りはゆっくりとなった。\n• 贖い主の照準をのぞき込む時の**脅威範囲**が**8メートル**縮小する\n> \"「厳しい辺境にも、やさしい口当たり」- ゴールドクリークの広告（1876年）\""
         },
         "pl": {
-          "description": "Ciepła zawartość butelki, która uspokoiła gniew Caleba i spowolniła jego kroki.\n• **Zmniejsza** **zasięg terroru** o **8 metr**ów podczas patrzenia przez celownik Wybawcy.\n> „Spokojny smak na Dziki Zachód” – ogłoszenie z Gold Creek, 1876 r."
+          "description": "Ciepła zawartość butelki, która uspokoiła gniew Caleba i spowolniła jego kroki.\n• **Zmniejsza zasięg terroru** o **8 metr**ów podczas patrzenia przez celownik Wybawcy.\n> „Spokojny smak na Dziki Zachód” – ogłoszenie z Gold Creek, 1876 r."
         }
       }
     },
@@ -392,7 +392,7 @@
       "translations": {
         "de": {
           "name": "Hellshire-Brandeisen",
-          "description": "Das Brandeisen der Hellshire-Bande. Entgegen der Geschichten wurden damit niemals Neulinge in der Bande gebrandmarkt, sondern ausschließlich besonders streitsüchtige Opfer.\n• Wenn ein Überlebender mit einem Pfeil erwischt wird, wird der Effekt **Unentdeckbar** **aktiviert**. Der Effekt hält für **10 Sekunden** an, nachdem der Überlebende nicht mehr aufgespießt ist.\n**Unentdeckbar** verbirgt **Aura**, **Terrorradius** und roten Fleck des Killers.\n> „Hellshire-Bande: Kämpfer für Gerechtigkeit oder Gesetzlose?“ – Schlagzeile der Glenvale Gazette"
+          "description": "Das Brandeisen der Hellshire-Bande. Entgegen der Geschichten wurden damit niemals Neulinge in der Bande gebrandmarkt, sondern ausschließlich besonders streitsüchtige Opfer.\n• Wenn ein Überlebender mit einem Pfeil erwischt wird, wird der Effekt **Unentdeckbar aktiviert**. Der Effekt hält für **10 Sekunden** an, nachdem der Überlebende nicht mehr aufgespießt ist.\n**Unentdeckbar** verbirgt **Aura**, **Terrorradius** und roten Fleck des Killers.\n> „Hellshire-Bande: Kämpfer für Gerechtigkeit oder Gesetzlose?“ – Schlagzeile der Glenvale Gazette"
         },
         "es": {
           "name": "Hierro de Hellshire",
@@ -469,14 +469,14 @@
       "id": 850,
       "name": "Honey Locust Thorn",
       "killer_id": 19,
-      "description": "Angered with a bounty who fled twice before, Caleb twisted thorn branches onto a spear and let it loose.\n• Breaking free from the spear inflicts **Mangled** for **70 seconds**.\n**Mangled** **increases** time required to heal by **25%** and lasts for a set duration or until fully healed.",
+      "description": "Angered with a bounty who fled twice before, Caleb twisted thorn branches onto a spear and let it loose.\n• Breaking free from the spear inflicts **Mangled** for **70 seconds**.\n**Mangled increases** time required to heal by **25%** and lasts for a set duration or until fully healed.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_honeyLocustThorn.png?1731a4",
       "icon_local_path": "icons/addons/honey_locust_thorn.webp",
       "rarity": "Rare",
       "translations": {
         "de": {
           "name": "Dornenpfeil",
-          "description": "Voller Wut über ein Opfer, das zuvor schon zweimal geflohen war, drehte Caleb Dornenzweige zu einem Pfeil zusammen, um ihn ins Ziel zu jagen.\n• Das Losreißen von einem Pfeil verursacht **Zerfleischt** für **70 Sekunden**.\n**Zerfleischt** **erhöht** die Heilungsdauer um **25 %** und hält eine festgelegte Zeit oder bis zur vollständigen Heilung an."
+          "description": "Voller Wut über ein Opfer, das zuvor schon zweimal geflohen war, drehte Caleb Dornenzweige zu einem Pfeil zusammen, um ihn ins Ziel zu jagen.\n• Das Losreißen von einem Pfeil verursacht **Zerfleischt** für **70 Sekunden**.\n**Zerfleischt erhöht** die Heilungsdauer um **25 %** und hält eine festgelegte Zeit oder bis zur vollständigen Heilung an."
         },
         "en": {
           "name": "Honey Locust Thorns"

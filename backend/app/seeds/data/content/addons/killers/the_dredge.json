@@ -251,7 +251,7 @@
       "id": 501,
       "name": "War Helmet",
       "killer_id": 28,
-      "description": "While investigating an Overlap in the Alps, she found an abandoned war bunker. She took a helmet from it after the Overlap nearly took her.\n• **Increases** **Killer Instinct** duration by **1.5 seconds**.",
+      "description": "While investigating an Overlap in the Alps, she found an abandoned war bunker. She took a helmet from it after the Overlap nearly took her.\n• **Increases Killer Instinct** duration by **1.5 seconds**.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_warHelmet.png?40c5d3",
       "icon_local_path": "icons/addons/war_helmet.webp",
       "rarity": "Rare",
@@ -305,14 +305,14 @@
       "id": 503,
       "name": "Tilling Blade",
       "killer_id": 28,
-      "description": "The island was self-sufficient, and followers tilled the tough soil to grow crops during the warm season.\n• When a Survivor is injured from full health during Nightfall, they are afflicted with the **Blindness**, **Hemorrhage**, and **Mangled** **status effects** for **80 seconds**.\n**Blindness** prevents Survivors from seeing **auras**.\n**Hemorrhage** regresses healing progress when not healing, and **increases** blood trails left by injured survivors. This lasts for a set duration or until healed.\n**Mangled** **increases** time required to heal by **25%** and lasts for a set duration or until fully healed.\n> \"Like a predatory beast, it can smell and track blood.\"",
+      "description": "The island was self-sufficient, and followers tilled the tough soil to grow crops during the warm season.\n• When a Survivor is injured from full health during Nightfall, they are afflicted with the **Blindness**, **Hemorrhage**, and **Mangled status effects** for **80 seconds**.\n**Blindness** prevents Survivors from seeing **auras**.\n**Hemorrhage** regresses healing progress when not healing, and **increases** blood trails left by injured survivors. This lasts for a set duration or until healed.\n**Mangled increases** time required to heal by **25%** and lasts for a set duration or until fully healed.\n> \"Like a predatory beast, it can smell and track blood.\"",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_tillingBlade.png?63607b",
       "icon_local_path": "icons/addons/tilling_blade.webp",
       "rarity": "Very Rare",
       "translations": {
         "de": {
           "name": "Ackerwerkzeug",
-          "description": "Die Insel war autark und die Anhänger bearbeiteten den rauen Boden, um in der warmen Jahreszeit Pflanzen anzubauen.\n• Wenn ein Überlebender während Nachteinbruch bei voller Gesundheit **verletzt** wird, erleidet er für **80 Sekunden** die Statuseffekte Erblindung, Blutung und **Zerfleischt**.\nBei Erblindung können Überlebende keine **Auren** sehen.\nBlutung setzt den Heilungsfortschritt zurück, wenn nicht gerade geheilt wird, und verstärkt Blutspuren, die **verletzte** Überlebende hinterlassen. Dieser Effekt hält eine festgelegte Zeit oder bis zur Heilung an.\n**Zerfleischt** **erhöht** die Heilungsdauer um **25 %** und hält eine festgelegte Zeit oder bis zur vollständigen Heilung an.\n> „Wie eine Raubbestie kann sie Blut riechen und aufspüren.“"
+          "description": "Die Insel war autark und die Anhänger bearbeiteten den rauen Boden, um in der warmen Jahreszeit Pflanzen anzubauen.\n• Wenn ein Überlebender während Nachteinbruch bei voller Gesundheit **verletzt** wird, erleidet er für **80 Sekunden** die Statuseffekte Erblindung, Blutung und **Zerfleischt**.\nBei Erblindung können Überlebende keine **Auren** sehen.\nBlutung setzt den Heilungsfortschritt zurück, wenn nicht gerade geheilt wird, und verstärkt Blutspuren, die **verletzte** Überlebende hinterlassen. Dieser Effekt hält eine festgelegte Zeit oder bis zur Heilung an.\n**Zerfleischt erhöht** die Heilungsdauer um **25 %** und hält eine festgelegte Zeit oder bis zur vollständigen Heilung an.\n> „Wie eine Raubbestie kann sie Blut riechen und aufspüren.“"
         },
         "es": {
           "name": "Hoja para arar",
@@ -359,7 +359,7 @@
       "id": 505,
       "name": "Field Recorder",
       "killer_id": 28,
-      "description": "Haddie documented all of her forays near Overlaps, to prove not only to the world but herself what she saw and felt.\n• Nightfall is active at the start of the **trial**.\n• Nightfall is automatically triggered when the last **generator** is repaired.\n• Any Survivor that comes into contact with a Remnant is afflicted with the **Exhausted** **status effect** for **15 seconds**.\n**Exhausted** prevents Survivors from **activating** certain perks.",
+      "description": "Haddie documented all of her forays near Overlaps, to prove not only to the world but herself what she saw and felt.\n• Nightfall is active at the start of the **trial**.\n• Nightfall is automatically triggered when the last **generator** is repaired.\n• Any Survivor that comes into contact with a Remnant is afflicted with the **Exhausted status effect** for **15 seconds**.\n**Exhausted** prevents Survivors from **activating** certain perks.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_fieldRecorder.png?d02f0d",
       "icon_local_path": "icons/addons/field_recorder.webp",
       "rarity": "Very Rare",
@@ -420,7 +420,7 @@
       "translations": {
         "de": {
           "name": "Opfermesser",
-          "description": "Als eine Journalistin die Ottomarianer vor seinem wahren Ziel warnen wollte, schlitzte er als Warnung für alle Andersdenkenden ihre Kehle auf.\n• Das Verlassen eines Schließschranks während Nachteinbruch **blockiert** **5 Sek**. lang alle Sprungmöglichkeiten im Umkreis von **16 Metern**.\n> „Es gibt Schwindler unter euch! Sie wollen unser perfektes Zuhause mit dunklen Gedanken zerstören. Findet sie und bringt sie zu mir!“ – Otto Stamper"
+          "description": "Als eine Journalistin die Ottomarianer vor seinem wahren Ziel warnen wollte, schlitzte er als Warnung für alle Andersdenkenden ihre Kehle auf.\n• Das Verlassen eines Schließschranks während Nachteinbruch **blockiert 5 Sek**. lang alle Sprungmöglichkeiten im Umkreis von **16 Metern**.\n> „Es gibt Schwindler unter euch! Sie wollen unser perfektes Zuhause mit dunklen Gedanken zerstören. Findet sie und bringt sie zu mir!“ – Otto Stamper"
         },
         "es": {
           "name": "Cuchillo de sacrificio",
@@ -440,7 +440,7 @@
       "id": 508,
       "name": "Iridescent Wooden Plank",
       "killer_id": 28,
-      "description": "Once the journalist’s blood stained the wooden boards of the stage, everything was set into motion for The Dredge’s arrival.\n• Survivors are afflicted with the **Exposed** **status effect** for the last **12 seconds** of Nightfall.\n**Exposed** Survivors are downed by basic attacks, even if uninjured.\n> \"She came here to poison your minds with fear! Do not let the fear in!\" –Otto Stamper",
+      "description": "Once the journalist’s blood stained the wooden boards of the stage, everything was set into motion for The Dredge’s arrival.\n• Survivors are afflicted with the **Exposed status effect** for the last **12 seconds** of Nightfall.\n**Exposed** Survivors are downed by basic attacks, even if uninjured.\n> \"She came here to poison your minds with fear! Do not let the fear in!\" –Otto Stamper",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_iridescentWoodenPlank.png?45e50b",
       "icon_local_path": "icons/addons/iridescent_wooden_plank.webp",
       "rarity": "Ultra Rare",
@@ -467,7 +467,7 @@
       "id": 853,
       "name": "Follower's Cowl",
       "killer_id": 28,
-      "description": "They believed the cowls proved their enlightenment, but they merely kept them in darkness.\n• Teleporting to the Remnant will **activate** **Killer Instinct** even when not in Nightfall.",
+      "description": "They believed the cowls proved their enlightenment, but they merely kept them in darkness.\n• Teleporting to the Remnant will **activate Killer Instinct** even when not in Nightfall.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_followersCowl.png?47195a",
       "icon_local_path": "icons/addons/followers_cowl.webp",
       "rarity": "Common",
@@ -481,7 +481,7 @@
         },
         "es": {
           "name": "Hábito de discípulo",
-          "description": "Pensaban que aquellas vestiduras demostraban su condición de seres superiores, pero solo servían para mantenerlos en la oscuridad.\n• El teletransporte al remanente **activará** **Instinto asesino** aunque Nocturnidad no esté activo."
+          "description": "Pensaban que aquellas vestiduras demostraban su condición de seres superiores, pero solo servían para mantenerlos en la oscuridad.\n• El teletransporte al remanente **activará Instinto asesino** aunque Nocturnidad no esté activo."
         },
         "ja": {
           "name": "信奉者の頭巾",
@@ -489,7 +489,7 @@
         },
         "pl": {
           "name": "Kaptur zwolennika",
-          "description": "Wierzyli, że kaptury są dowodem ich oświecenia, a one jedynie utrzymały ich w ciemności.\n• Teleportacja do iluzorycznej postaci **aktywuje** **instynkt zabójcy** nawet poza Zmrokiem."
+          "description": "Wierzyli, że kaptury są dowodem ich oświecenia, a one jedynie utrzymały ich w ciemności.\n• Teleportacja do iluzorycznej postaci **aktywuje instynkt zabójcy** nawet poza Zmrokiem."
         }
       }
     },

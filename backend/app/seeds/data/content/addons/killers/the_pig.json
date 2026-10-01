@@ -189,7 +189,7 @@
         },
         "pl": {
           "name": "Ostrza użytkowe",
-          "description": "Modyfikacja do odwróconej **pułapki na niedźwiedzie**: ostrza znajdujące się w pułapce kaleczą ofiarę z każdym jej ruchem.\n• Odwrócone **pułapki na niedźwiedzie** **nakładają** efekt **Krwotoku** za każdym razem, kiedy ocalały zostanie ranny w jakikolwiek sposób.\n**Krwotok** cofa postęp leczenia, gdy akcja ta nie jest wykonywana, i **zwiększa** krwawy ślad zostawiany przez rannych ocalałych."
+          "description": "Modyfikacja do odwróconej **pułapki na niedźwiedzie**: ostrza znajdujące się w pułapce kaleczą ofiarę z każdym jej ruchem.\n• Odwrócone **pułapki na niedźwiedzie nakładają** efekt **Krwotoku** za każdym razem, kiedy ocalały zostanie ranny w jakikolwiek sposób.\n**Krwotok** cofa postęp leczenia, gdy akcja ta nie jest wykonywana, i **zwiększa** krwawy ślad zostawiany przez rannych ocalałych."
         }
       }
     },
@@ -224,14 +224,14 @@
       "id": 192,
       "name": "Rusty Attachments",
       "killer_id": 11,
-      "description": "A modification to the Reverse **Bear Trap**: Mouth spikes, covered with crusty and volatile rust spots that make injuries particularly difficult to heal.\n• Reverse **Bear Traps** inflict **Mangled** for **70 seconds**.\n**Mangled** **increases** time required to heal by **25%** and lasts for a set duration or until fully healed.",
+      "description": "A modification to the Reverse **Bear Trap**: Mouth spikes, covered with crusty and volatile rust spots that make injuries particularly difficult to heal.\n• Reverse **Bear Traps** inflict **Mangled** for **70 seconds**.\n**Mangled increases** time required to heal by **25%** and lasts for a set duration or until fully healed.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_rustyAttachments.png?fa6757",
       "icon_local_path": "icons/addons/rusty_attachments.webp",
       "rarity": "Rare",
       "translations": {
         "de": {
           "name": "Rostige Befestigung",
-          "description": "Eine Abwandlung der umgekehrten Bärenfalle: Mundfixierung, übersät mit verkrusteten und ätzenden Rostflecken, die es besonders schwierig machen, Verletzungen zu heilen.\n• Umgekehrte Bärenfallen verursachen den Statuseffekt **Zerfleischt** für **70 Sekunden**.\n**Zerfleischt** **erhöht** die Heilungsdauer um **25 %** und hält eine festgelegte Zeit oder bis zur vollständigen Heilung an."
+          "description": "Eine Abwandlung der umgekehrten Bärenfalle: Mundfixierung, übersät mit verkrusteten und ätzenden Rostflecken, die es besonders schwierig machen, Verletzungen zu heilen.\n• Umgekehrte Bärenfallen verursachen den Statuseffekt **Zerfleischt** für **70 Sekunden**.\n**Zerfleischt erhöht** die Heilungsdauer um **25 %** und hält eine festgelegte Zeit oder bis zur vollständigen Heilung an."
         },
         "es": {
           "name": "Accesorios oxidados",
@@ -243,7 +243,7 @@
         },
         "pl": {
           "name": "Zardzewiałe Kolce",
-          "description": "Modyfikacja do odwróconej **pułapki na niedźwiedzie**: zęby są pokryte kruchą i lotną rdzą. Sprawiają, że rany ofiar, które wpadły w pułapkę, stają się bardzo trudne do wyleczenia.\n• Odwrócone **pułapki na niedźwiedzie** **nakładają** efekt Zmasakrowany na **70 s**.\nZmasakrowanie wydłuża czas potrzebny na wyleczenie o **25%** i trwa przez określony czas lub do pełnego wyleczenia."
+          "description": "Modyfikacja do odwróconej **pułapki na niedźwiedzie**: zęby są pokryte kruchą i lotną rdzą. Sprawiają, że rany ofiar, które wpadły w pułapkę, stają się bardzo trudne do wyleczenia.\n• Odwrócone **pułapki na niedźwiedzie nakładają** efekt Zmasakrowany na **70 s**.\nZmasakrowanie wydłuża czas potrzebny na wyleczenie o **25%** i trwa przez określony czas lub do pełnego wyleczenia."
         }
       }
     },
@@ -270,7 +270,7 @@
         },
         "pl": {
           "name": "Powolnie uwalniana toksyna",
-          "description": "Modyfikacja do odwróconej **pułapki na niedźwiedzie**: trucizna, która nie jest śmiertelna, lecz osłabia ciało i sprawia, że całkowite wyzdrowienie staje się niemal niemożliwe.\n• Odwrócone **pułapki na niedźwiedzie** **nakładają** efekt **Wyczerpany** do chwili zdjęcia.\n**Wyczerpanie** uniemożliwia ocalałym aktywację wyczerpujących umiejętności."
+          "description": "Modyfikacja do odwróconej **pułapki na niedźwiedzie**: trucizna, która nie jest śmiertelna, lecz osłabia ciało i sprawia, że całkowite wyzdrowienie staje się niemal niemożliwe.\n• Odwrócone **pułapki na niedźwiedzie nakładają** efekt **Wyczerpany** do chwili zdjęcia.\n**Wyczerpanie** uniemożliwia ocalałym aktywację wyczerpujących umiejętności."
         }
       }
     },
@@ -386,7 +386,7 @@
       "id": 198,
       "name": "Amanda's Letter",
       "killer_id": 11,
-      "description": "A blackmailing letter for the attention of Amanda. Fills the reader with rage and focus.\n• While crouched, **reveals** **auras** of Survivors within **16 meters**.\n• **Decreases** available Reverse **Bear Traps** by 2.\n> \"Amanda, you were with Cecil the night Jill lost Gideon. You killed their child. You know it and I know it.\" -Amanda's Letter",
+      "description": "A blackmailing letter for the attention of Amanda. Fills the reader with rage and focus.\n• While crouched, **reveals auras** of Survivors within **16 meters**.\n• **Decreases** available Reverse **Bear Traps** by 2.\n> \"Amanda, you were with Cecil the night Jill lost Gideon. You killed their child. You know it and I know it.\" -Amanda's Letter",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_amandasLetter.png?31e0e7",
       "icon_local_path": "icons/addons/amandas_letter.webp",
       "rarity": "Ultra Rare",

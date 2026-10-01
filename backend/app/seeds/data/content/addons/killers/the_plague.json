@@ -62,7 +62,7 @@
       "id": 262,
       "name": "Olibanum Incense",
       "killer_id": 15,
-      "description": "Precious resin extracted from Boswellia trees, used during ceremonies for their sweet citrusy fragrance.\n• Survivors who cleanse at fountains have their **auras** **revealed** for **4 seconds**.",
+      "description": "Precious resin extracted from Boswellia trees, used during ceremonies for their sweet citrusy fragrance.\n• Survivors who cleanse at fountains have their **auras revealed** for **4 seconds**.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_olibanumIncense.png?91e43f",
       "icon_local_path": "icons/addons/olibanum_incense.webp",
       "rarity": "Common",
@@ -501,7 +501,7 @@
       "translations": {
         "de": {
           "name": "Schillerndes Siegel",
-          "description": "Ein durchscheinendes, zylinderförmiges Siegel, das aus dem Nebel selbst gegossen wurde. Es trägt das Abbild der Seuche. Seine Oberfläche fühlt sich warm an und pulsiert mit der Macht des Entitus.\n• Reinigung des Verderbens wird bei jedem Abschluss eines **Generators** **aktiviert**.\n• **Verringert** die Dauer von Reinigung des Verderbens um **20 Sekunden**."
+          "description": "Ein durchscheinendes, zylinderförmiges Siegel, das aus dem Nebel selbst gegossen wurde. Es trägt das Abbild der Seuche. Seine Oberfläche fühlt sich warm an und pulsiert mit der Macht des Entitus.\n• Reinigung des Verderbens wird bei jedem Abschluss eines **Generators aktiviert**.\n• **Verringert** die Dauer von Reinigung des Verderbens um **20 Sekunden**."
         },
         "es": {
           "name": "Sello iridiscente",

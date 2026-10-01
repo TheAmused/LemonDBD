@@ -189,7 +189,7 @@
         },
         "pl": {
           "name": "Zęby mleczne",
-          "description": "Dwa zęby, które wypadły Victorowi dawno temu. Są niezwykle ostre.\n• Zgniecenie Victora po połączeniu **nakłada** **Oślepienie** na **30 sekund**.\n**Oślepienie** uniemożliwia ocalałym widzenie aur."
+          "description": "Dwa zęby, które wypadły Victorowi dawno temu. Są niezwykle ostre.\n• Zgniecenie Victora po połączeniu **nakłada Oślepienie** na **30 sekund**.\n**Oślepienie** uniemożliwia ocalałym widzenie aur."
         }
       }
     },
@@ -552,7 +552,7 @@
         },
         "pl": {
           "name": "Żołnierzyk Victora",
-          "description": "Zabawkowy żołnierzyk, którego Victor używał, kiedy się bał. Było w nim coś, co wywoływało zazdrość u Charlotte.\n• Zgniecenie uśpionego Victora **ujawnia** **aurę** ocalałego na **6 sekund**.\n> „Kch-kch… U… Umrzyć złych ludzi…” – Victor Deshayes"
+          "description": "Zabawkowy żołnierzyk, którego Victor używał, kiedy się bał. Było w nim coś, co wywoływało zazdrość u Charlotte.\n• Zgniecenie uśpionego Victora **ujawnia aurę** ocalałego na **6 sekund**.\n> „Kch-kch… U… Umrzyć złych ludzi…” – Victor Deshayes"
         }
       }
     }

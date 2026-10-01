@@ -143,7 +143,7 @@
       "id": 477,
       "name": "Sea-Soaked Cloth",
       "killer_id": 27,
-      "description": "The hood worn by the mysterious figure in the tape. Makes those near it unable to trust what they see.\n• While Survivors are within **8 meters** of a powered TV, they are afflicted with the **Blindness** **status effect**. This effect lingers for **7 seconds** after the TV is turned off.\n**Blindness** prevents Survivors from seeing **auras**.",
+      "description": "The hood worn by the mysterious figure in the tape. Makes those near it unable to trust what they see.\n• While Survivors are within **8 meters** of a powered TV, they are afflicted with the **Blindness status effect**. This effect lingers for **7 seconds** after the TV is turned off.\n**Blindness** prevents Survivors from seeing **auras**.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_seaSoakedCloth.png?dfbcd7",
       "icon_local_path": "icons/addons/sea_soaked_cloth.webp",
       "rarity": "Uncommon",
@@ -251,7 +251,7 @@
       "id": 481,
       "name": "Rickety Pinwheel",
       "killer_id": 27,
-      "description": "A pinwheel found in the caves of Izu Oshima. It spins even when there is no wind, disorienting those who see or hear it.\n• While Survivors are within **8 meters** of a powered TV, they are afflicted with the **Oblivious** **status effect**. This effect lingers for **7 seconds** after the TV is turned off.\n**Oblivious** prevents Survivors from hearing or being **affected** by the Killer's **Terror Radius**.",
+      "description": "A pinwheel found in the caves of Izu Oshima. It spins even when there is no wind, disorienting those who see or hear it.\n• While Survivors are within **8 meters** of a powered TV, they are afflicted with the **Oblivious status effect**. This effect lingers for **7 seconds** after the TV is turned off.\n**Oblivious** prevents Survivors from hearing or being **affected** by the Killer's **Terror Radius**.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_ricketyPinwheel.png?9177f2",
       "icon_local_path": "icons/addons/rickety_pinwheel.webp",
       "rarity": "Rare",
@@ -278,7 +278,7 @@
       "id": 482,
       "name": "Well Water",
       "killer_id": 27,
-      "description": "Water from the well where Sadako was left to die. Murky and black, it obscures everything around it.\n• **Increases** the duration of the **Undetectable** **status effect** by **2 seconds** when Manifesting by any means.\n**Undetectable** hides the Killer's **aura**, **Terror Radius**, and Red Stain.",
+      "description": "Water from the well where Sadako was left to die. Murky and black, it obscures everything around it.\n• **Increases** the duration of the **Undetectable status effect** by **2 seconds** when Manifesting by any means.\n**Undetectable** hides the Killer's **aura**, **Terror Radius**, and Red Stain.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_wellWater.png?267917",
       "icon_local_path": "icons/addons/well_water.webp",
       "rarity": "Rare",
@@ -378,7 +378,7 @@
         },
         "pl": {
           "name": "Grzebień matki",
-          "description": "Grzebień, którego matka Sadako używała w nagraniu. Zdolności parapsychiczne Sadako są wzmocnione, gdy się na nim skupi.\n• Wyłączenie telewizora **aktywuje** głośne powiadomienie dźwiękowe.\n• **Ujawnia** **aurę** każdego telewizora, który został w dowolny sposób wyłączony."
+          "description": "Grzebień, którego matka Sadako używała w nagraniu. Zdolności parapsychiczne Sadako są wzmocnione, gdy się na nim skupi.\n• Wyłączenie telewizora **aktywuje** głośne powiadomienie dźwiękowe.\n• **Ujawnia aurę** każdego telewizora, który został w dowolny sposób wyłączony."
         }
       }
     },
@@ -419,7 +419,7 @@
       "translations": {
         "de": {
           "name": "Verzerrtes Foto",
-          "description": "Wer den Film gesehen hat, sieht alle seine Fotos verzerrt – eine Erinnerung an das Todesurteil.\n• Überlebende, die in einem Umkreis von **16 Metern** Zeugen einer Manifestierung werden, schreien auf. Danach ist ihre **Aura** **4 Sekunden** lang sichtbar.\n> „Warum wurdest nur du gerettet?“ – Sadako Yamamura"
+          "description": "Wer den Film gesehen hat, sieht alle seine Fotos verzerrt – eine Erinnerung an das Todesurteil.\n• Überlebende, die in einem Umkreis von **16 Metern** Zeugen einer Manifestierung werden, schreien auf. Danach ist ihre **Aura 4 Sekunden** lang sichtbar.\n> „Warum wurdest nur du gerettet?“ – Sadako Yamamura"
         },
         "es": {
           "name": "Fotografía deformada",
@@ -439,7 +439,7 @@
       "id": 488,
       "name": "Telephone",
       "killer_id": 27,
-      "description": "After watching the video, victims receive a phone call. They are frozen in fear as they realize they have seven days to live.\n• Manifestation afflicts Survivors within **7 meters** with a **3%** **Hindered** **status effect** for **3 seconds**.\n**Hindered** **reduces** survivor movement speed.\n> \"I saw a weird video the other day... after it ended, someone called us. Some kind of prank call.\" —Tomoko Oishi",
+      "description": "After watching the video, victims receive a phone call. They are frozen in fear as they realize they have seven days to live.\n• Manifestation afflicts Survivors within **7 meters** with a **3% Hindered status effect** for **3 seconds**.\n**Hindered reduces** survivor movement speed.\n> \"I saw a weird video the other day... after it ended, someone called us. Some kind of prank call.\" —Tomoko Oishi",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_telephone.png?a5bed2",
       "icon_local_path": "icons/addons/telephone.webp",
       "rarity": "Very Rare",
@@ -450,7 +450,7 @@
         },
         "es": {
           "name": "Teléfono",
-          "description": "Tras ver el vídeo, alguien llama por *teléfono* a las víctimas, aterrorizadas al percatarse de que solo les quedan siete días de vida.\n• Manifestarse en un radio de **7 metros** de un superviviente le provoca un **3 %** del efecto de estado **Entorpecimiento** durante **3 segundos**.\n**Entorpecimiento** **reduce** la velocidad de movimiento del superviviente.\n> \"El otro día vi un vídeo rarísimo... Cuando terminó, alguien llamó al teléfono. Era una broma, o algo así\". (Tomoko Oishi)"
+          "description": "Tras ver el vídeo, alguien llama por *teléfono* a las víctimas, aterrorizadas al percatarse de que solo les quedan siete días de vida.\n• Manifestarse en un radio de **7 metros** de un superviviente le provoca un **3 %** del efecto de estado **Entorpecimiento** durante **3 segundos**.\n**Entorpecimiento reduce** la velocidad de movimiento del superviviente.\n> \"El otro día vi un vídeo rarísimo... Cuando terminó, alguien llamó al teléfono. Era una broma, o algo así\". (Tomoko Oishi)"
         },
         "ja": {
           "name": "電話",

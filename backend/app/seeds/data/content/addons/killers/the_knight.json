@@ -89,7 +89,7 @@
       "id": 532,
       "name": "Pillaged Mead",
       "killer_id": 30,
-      "description": "Drinks taken from their victims tasted sweet, but such frivolities were often short-lived.\n• Guards special-break **Pallets** and Breakable walls, and damage **Generators** **10%** faster.",
+      "description": "Drinks taken from their victims tasted sweet, but such frivolities were often short-lived.\n• Guards special-break **Pallets** and Breakable walls, and damage **Generators 10%** faster.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_pillagedMead.png?428f43",
       "icon_local_path": "icons/addons/pillaged_mead.webp",
       "rarity": "Common",
@@ -108,7 +108,7 @@
         },
         "pl": {
           "name": "Zrabowany miód",
-          "description": "Napoje zabrane ofiarom smakowały słodko, ale takie frywolności były często krótkotrwałe.\n• Strażnik niszczy **palety** i rozbijalne ściany w specjalny sposób oraz uszkadza **generatory** **10%** szybciej."
+          "description": "Napoje zabrane ofiarom smakowały słodko, ale takie frywolności były często krótkotrwałe.\n• Strażnik niszczy **palety** i rozbijalne ściany w specjalny sposób oraz uszkadza **generatory 10%** szybciej."
         }
       }
     },
@@ -204,7 +204,7 @@
       "translations": {
         "de": {
           "name": "Ruf zu den Waffen",
-          "description": "In mehreren Städten suchten Fürsten verzweifelt nach fähigen Söldnern, um ihre Reichtümer zu beschützen. Keiner von ihnen überlebte.\n• Verlängert eine Patrouillenstrecke um **4 Meter**. Beim Erstellen der Strecke ist die Bewegungsgeschwindigkeit um **7 %** **erhöht**."
+          "description": "In mehreren Städten suchten Fürsten verzweifelt nach fähigen Söldnern, um ihre Reichtümer zu beschützen. Keiner von ihnen überlebte.\n• Verlängert eine Patrouillenstrecke um **4 Meter**. Beim Erstellen der Strecke ist die Bewegungsgeschwindigkeit um **7 % erhöht**."
         },
         "es": {
           "name": "Grito de guerra",
@@ -278,14 +278,14 @@
       "id": 539,
       "name": "Broken Hilt",
       "killer_id": 30,
-      "description": "A fresh weapon is clean, even surgical; an attack with a **broken** one is malicious and desperate.\n• Guards inflict the **Hemorrhage** and **Mangled** **status effects** for **70 seconds** when damaging a Survivor.\n**Hemorrhage** regresses healing progress when not healing, and **increases** blood trails left by injured Survivors. This lasts for a set duration or until fully healed.\n**Mangled** **increases** time required to heal by **25%** for a set duration or until fully healed.",
+      "description": "A fresh weapon is clean, even surgical; an attack with a **broken** one is malicious and desperate.\n• Guards inflict the **Hemorrhage** and **Mangled status effects** for **70 seconds** when damaging a Survivor.\n**Hemorrhage** regresses healing progress when not healing, and **increases** blood trails left by injured Survivors. This lasts for a set duration or until fully healed.\n**Mangled increases** time required to heal by **25%** for a set duration or until fully healed.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_brokenHilt.png?861e80",
       "icon_local_path": "icons/addons/broken_hilt.webp",
       "rarity": "Rare",
       "translations": {
         "de": {
           "name": "Zerstörter Griff",
-          "description": "Eine frische Waffe ist sauber, sogar hygienisch. Ein Angriff mit einer kaputten ist boshaft und verzweifelt.\n• Wachen verursachen die Statuseffekte Blutung und **Zerfleischt** für **70 Sekunden**, wenn sie einem Überlebenden Schaden zufügen.\nBlutung setzt den Heilungsfortschritt zurück, wenn nicht gerade geheilt wird, und verstärkt Blutspuren, die **verletzte** Überlebende hinterlassen. Dieser Effekt hält eine festgelegte Zeit oder bis zur vollständigen Heilung an.\n**Zerfleischt** **erhöht** die Heilungsdauer um **25 %** und hält eine festgelegte Zeit oder bis zur vollständigen Heilung an."
+          "description": "Eine frische Waffe ist sauber, sogar hygienisch. Ein Angriff mit einer kaputten ist boshaft und verzweifelt.\n• Wachen verursachen die Statuseffekte Blutung und **Zerfleischt** für **70 Sekunden**, wenn sie einem Überlebenden Schaden zufügen.\nBlutung setzt den Heilungsfortschritt zurück, wenn nicht gerade geheilt wird, und verstärkt Blutspuren, die **verletzte** Überlebende hinterlassen. Dieser Effekt hält eine festgelegte Zeit oder bis zur vollständigen Heilung an.\n**Zerfleischt erhöht** die Heilungsdauer um **25 %** und hält eine festgelegte Zeit oder bis zur vollständigen Heilung an."
         },
         "es": {
           "name": "Empuñadura rota",
@@ -312,7 +312,7 @@
       "translations": {
         "de": {
           "name": "Feuerstein und Stahl",
-          "description": "Nächtliche Angriffe waren nichts Ungewöhnliches. Furcht war oft ihre wichtigste Verbündete.\n• Nachdem der Scharfrichter gerufen wurde, kann der Ritter die **Auren** von Überlebenden in einem Umkreis von **24 Metern** um gefallene **Paletten** **8 Sekunden** lang sehen."
+          "description": "Nächtliche Angriffe waren nichts Ungewöhnliches. Furcht war oft ihre wichtigste Verbündete.\n• Nachdem der Scharfrichter gerufen wurde, kann der Ritter die **Auren** von Überlebenden in einem Umkreis von **24 Metern** um gefallene **Paletten 8 Sekunden** lang sehen."
         },
         "es": {
           "name": "Pedernal y acero",
@@ -332,14 +332,14 @@
       "id": 541,
       "name": "Healing Poultice",
       "killer_id": 30,
-      "description": "Their reputation was so large, so horrible, that the mere knowledge that they were coming was enough to bring people to their knees.\n• After summoning The Assassin, all Survivors within **8 meters** from the Guard's initial position have their **aura** **revealed** for **8 seconds**.",
+      "description": "Their reputation was so large, so horrible, that the mere knowledge that they were coming was enough to bring people to their knees.\n• After summoning The Assassin, all Survivors within **8 meters** from the Guard's initial position have their **aura revealed** for **8 seconds**.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_healingPoultice.png?1caa95",
       "icon_local_path": "icons/addons/healing_poultice.webp",
       "rarity": "Very Rare",
       "translations": {
         "de": {
           "name": "Heilender Umschlag",
-          "description": "Ihr Ruf war so weit verbreitet und so schrecklich, dass allein das Wissen, dass sie kommen würden, die Menschen in die Knie zwang.\n• Nachdem der Meuchler gerufen wurde, werden die **Auren** aller Überlebenden innerhalb von **8 Metern** um die anfängliche Position der Wache für **8 Sekunden** **enthüllt**."
+          "description": "Ihr Ruf war so weit verbreitet und so schrecklich, dass allein das Wissen, dass sie kommen würden, die Menschen in die Knie zwang.\n• Nachdem der Meuchler gerufen wurde, werden die **Auren** aller Überlebenden innerhalb von **8 Metern** um die anfängliche Position der Wache für **8 Sekunden enthüllt**."
         },
         "es": {
           "name": "Cataplasma curativa",
@@ -359,7 +359,7 @@
       "id": 542,
       "name": "Jailer's Chimes",
       "killer_id": 30,
-      "description": "Many captives met the same grisly end for attempting to escape his clutches.\n• After summoning The Jailer, Survivors that cross his Patrol Path have their **aura** **revealed** for **8 seconds**.",
+      "description": "Many captives met the same grisly end for attempting to escape his clutches.\n• After summoning The Jailer, Survivors that cross his Patrol Path have their **aura revealed** for **8 seconds**.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_jailersChimes.png?7508da",
       "icon_local_path": "icons/addons/jailers_chimes.webp",
       "rarity": "Very Rare",
@@ -393,7 +393,7 @@
       "translations": {
         "de": {
           "name": "Schillerndes Kompaniebanner",
-          "description": "Wo dieses Banner gehisst wurde, flüchteten die, die sich „zivilisiert“ nannten, und versteckten sich, denn trotz all ihrer Regeln und Gesetze hatten sie nichts, was wahrer Stärke gleichkam.\n• Solange ein Überlebender von einer Wache gejagt wird, **blockieren** Stacheln den Ausgang für den gejagten Überlebenden. Wenn er springt, wird der Sprungort für alle Überlebenden für die Dauer der Jagd **blockiert**.\n• Beim Erstellen einer Patrouillenstrecke, die durch Sprungorte hindurchführt, werden diese Orte für **25 Sekunden** **blockiert**, nachdem eine Wache gerufen wurde.\n> „Wie Parasiten drängen sie sich in ihren Dörfern zusammen! Sie haben ihr Streben nach Macht verloren.“ – Tarhos Kovács"
+          "description": "Wo dieses Banner gehisst wurde, flüchteten die, die sich „zivilisiert“ nannten, und versteckten sich, denn trotz all ihrer Regeln und Gesetze hatten sie nichts, was wahrer Stärke gleichkam.\n• Solange ein Überlebender von einer Wache gejagt wird, **blockieren** Stacheln den Ausgang für den gejagten Überlebenden. Wenn er springt, wird der Sprungort für alle Überlebenden für die Dauer der Jagd **blockiert**.\n• Beim Erstellen einer Patrouillenstrecke, die durch Sprungorte hindurchführt, werden diese Orte für **25 Sekunden blockiert**, nachdem eine Wache gerufen wurde.\n> „Wie Parasiten drängen sie sich in ihren Dörfern zusammen! Sie haben ihr Streben nach Macht verloren.“ – Tarhos Kovács"
         },
         "es": {
           "name": "Estandarte iridiscente de la compañía",
@@ -443,7 +443,7 @@
       "id": 820,
       "name": "Ironworker's Tongs",
       "killer_id": 30,
-      "description": "Vital for repairs between battles and a horrifying, gauging, tearing improvisational weapon.\n• When a Survivor escapes a Guard Hunt successfully, they suffer from the **Oblivious** **status effect** for **60 seconds**.\n**Oblivious** prevents survivors from hearing or being **affected** by the Killer's **Terror Radius**.",
+      "description": "Vital for repairs between battles and a horrifying, gauging, tearing improvisational weapon.\n• When a Survivor escapes a Guard Hunt successfully, they suffer from the **Oblivious status effect** for **60 seconds**.\n**Oblivious** prevents survivors from hearing or being **affected** by the Killer's **Terror Radius**.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_ironworkersTongs.png?fa7531",
       "icon_local_path": "icons/addons/ironworkers_tongs.webp",
       "rarity": "Rare",
@@ -473,7 +473,7 @@
       "id": 821,
       "name": "Town Watch's Torch",
       "killer_id": 30,
-      "description": "Upon breaching a village, the first thing they would extinguish was the torches, and with them, hope.\n• While a Guard is actively Hunting a Survivor, gain the **Undetectable** **status effect**.\n**Undetectable** hides the Killer's **aura**, **Terror Radius**, and Red Stain.",
+      "description": "Upon breaching a village, the first thing they would extinguish was the torches, and with them, hope.\n• While a Guard is actively Hunting a Survivor, gain the **Undetectable status effect**.\n**Undetectable** hides the Killer's **aura**, **Terror Radius**, and Red Stain.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_townWatchsTorch.png?3cd085",
       "icon_local_path": "icons/addons/town_watchs_torch.webp",
       "rarity": "Rare",
@@ -503,7 +503,7 @@
       "id": 822,
       "name": "Blacksmith's Hammer",
       "killer_id": 30,
-      "description": "In their hands, everything was a weapon.\n• Guards inflict the **Broken** **status effect** for **60 seconds** when damaging a Survivor.\n**Broken** prevents Survivors from being healed.",
+      "description": "In their hands, everything was a weapon.\n• Guards inflict the **Broken status effect** for **60 seconds** when damaging a Survivor.\n**Broken** prevents Survivors from being healed.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_blacksmithsHammer.png?3b29c6",
       "icon_local_path": "icons/addons/blacksmiths_hammer.webp",
       "rarity": "Very Rare",

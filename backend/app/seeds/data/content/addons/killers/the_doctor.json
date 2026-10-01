@@ -8,7 +8,7 @@
       "id": 112,
       "name": "\"Order\" - Class I",
       "killer_id": 7,
-      "description": "A conventional ECT procedure, part of a patient's daily routine at the Léry's Memorial Institute. Can **cause** a state of mild confusion in the patient.\n• **Decreases** Static Blast cooldown by **2 seconds**.\nSurvivors with Madness suffer from the Affliction of Order:\n• **Broken** **pallets** may appear to be replaced with illusionary **pallets** that persist until approached.\n• A new illusionary **pallet** is generated at the location of a random **broken** **pallet** every **20 seconds**.\n• The Doctor sees the **auras** of illusionary **pallets**.",
+      "description": "A conventional ECT procedure, part of a patient's daily routine at the Léry's Memorial Institute. Can **cause** a state of mild confusion in the patient.\n• **Decreases** Static Blast cooldown by **2 seconds**.\nSurvivors with Madness suffer from the Affliction of Order:\n• **Broken pallets** may appear to be replaced with illusionary **pallets** that persist until approached.\n• A new illusionary **pallet** is generated at the location of a random **broken pallet** every **20 seconds**.\n• The Doctor sees the **auras** of illusionary **pallets**.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_orderClassI.png?e95bce",
       "icon_local_path": "icons/addons/order_class_i.webp",
       "rarity": "Common",
@@ -35,7 +35,7 @@
       "id": 113,
       "name": "\"Calm\" - Class I",
       "killer_id": 7,
-      "description": "An ECT procedure using a deep wavelength that soothes various mental illness. With Carter's Spark as its source, this procedure can **cause** mild anxiety in the patient.\n• **Increases** **Terror Radius** by **4 meters** while Static Blast is ready.\n• **Decreases** **Terror Radius** by **4 meters** while Static Blast is on cooldown.\nSurvivors with Madness suffer from the Affliction of Calm:\n• Madness II: Intermittently **causes** Survivors to hear a distant illusionary **Terror Radius**.\n• Madness III: Constantly **causes** Survivors to hear a distant illusionary **Terror Radius**.",
+      "description": "An ECT procedure using a deep wavelength that soothes various mental illness. With Carter's Spark as its source, this procedure can **cause** mild anxiety in the patient.\n• **Increases Terror Radius** by **4 meters** while Static Blast is ready.\n• **Decreases Terror Radius** by **4 meters** while Static Blast is on cooldown.\nSurvivors with Madness suffer from the Affliction of Calm:\n• Madness II: Intermittently **causes** Survivors to hear a distant illusionary **Terror Radius**.\n• Madness III: Constantly **causes** Survivors to hear a distant illusionary **Terror Radius**.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_calmClassI.png?7b5bb3",
       "icon_local_path": "icons/addons/calm_class_i.webp",
       "rarity": "Common",
@@ -54,7 +54,7 @@
         },
         "pl": {
           "name": "\"Spokój\" – Klasa I",
-          "description": "Procedura elektrowstrząsowa wykorzystująca basową falę dźwiękową w celu łagodzenia skutków pewnych chorób psychicznych. Fala dźwiękowa nasycona Iskrą Cartera wypacza procedurę i wywołuje łagodny niepokój u pacjenta.\n• **Zwiększa** **zasięg terroru** o **4 metry**, gdy Wybuch Statyczny jest gotowy.\n• **Zmniejsza** **zasięg terroru** o **4 metry** podczas ładowania Wybuchu Statycznego.\nOcalali z efektem Szaleństwa cierpią na skutek schorzenia Spokój:\n• Szaleństwo 2: ocalali co jakiś czas słyszą odległy iluzoryczny **zasięg terroru**.\n• Szaleństwo 3: ocalali ciągle słyszą odległy iluzoryczny **zasięg terroru**."
+          "description": "Procedura elektrowstrząsowa wykorzystująca basową falę dźwiękową w celu łagodzenia skutków pewnych chorób psychicznych. Fala dźwiękowa nasycona Iskrą Cartera wypacza procedurę i wywołuje łagodny niepokój u pacjenta.\n• **Zwiększa zasięg terroru** o **4 metry**, gdy Wybuch Statyczny jest gotowy.\n• **Zmniejsza zasięg terroru** o **4 metry** podczas ładowania Wybuchu Statycznego.\nOcalali z efektem Szaleństwa cierpią na skutek schorzenia Spokój:\n• Szaleństwo 2: ocalali co jakiś czas słyszą odległy iluzoryczny **zasięg terroru**.\n• Szaleństwo 3: ocalali ciągle słyszą odległy iluzoryczny **zasięg terroru**."
         }
       }
     },
@@ -89,7 +89,7 @@
       "id": 115,
       "name": "\"Order\" - Class II",
       "killer_id": 7,
-      "description": "A high stimulus ECT procedure, part of a patient daily routine at the Léry's Memorial Institute. Can **cause** a state of moderate confusion in the patient.\n• **Decreases** Static Blast cooldown by **2.5 seconds**.\nSurvivors with Madness suffer from the Affliction of Order:\n• **Broken** **pallets** may appear to be replaced with illusionary **pallets** that persist until approached.\n• A new illusionary **pallet** is generated at the location of a random **broken** **pallet** every **20 seconds**.\n• The Doctor sees the **auras** of illusionary **pallets**.",
+      "description": "A high stimulus ECT procedure, part of a patient daily routine at the Léry's Memorial Institute. Can **cause** a state of moderate confusion in the patient.\n• **Decreases** Static Blast cooldown by **2.5 seconds**.\nSurvivors with Madness suffer from the Affliction of Order:\n• **Broken pallets** may appear to be replaced with illusionary **pallets** that persist until approached.\n• A new illusionary **pallet** is generated at the location of a random **broken pallet** every **20 seconds**.\n• The Doctor sees the **auras** of illusionary **pallets**.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_orderClassII.png?ccf92d",
       "icon_local_path": "icons/addons/order_class_ii.webp",
       "rarity": "Uncommon",
@@ -143,7 +143,7 @@
       "id": 117,
       "name": "\"Calm\" - Class II",
       "killer_id": 7,
-      "description": "A risky ECT procedure using a deep wavelength that soothes various mental illness. With Carter's Spark as its source, this procedure can **cause** moderate anxiety in the patient.\n• **Increases** **Terror Radius** by **6 meters** while Static Blast is ready.\n• **Decreases** **Terror Radius** by **6 meters** while Static Blast is on cooldown.\nSurvivors with Madness suffer from the Affliction of Calm:\n• Madness II: Intermittently **causes** Survivors to hear a distant illusionary **Terror Radius**.\n• Madness III: Constantly **causes** Survivors to hear a distant illusionary **Terror Radius**.\n> \"Electroconvulsive therapy is one of the safest medical procedures.\" -Léry's Memorial Institute",
+      "description": "A risky ECT procedure using a deep wavelength that soothes various mental illness. With Carter's Spark as its source, this procedure can **cause** moderate anxiety in the patient.\n• **Increases Terror Radius** by **6 meters** while Static Blast is ready.\n• **Decreases Terror Radius** by **6 meters** while Static Blast is on cooldown.\nSurvivors with Madness suffer from the Affliction of Calm:\n• Madness II: Intermittently **causes** Survivors to hear a distant illusionary **Terror Radius**.\n• Madness III: Constantly **causes** Survivors to hear a distant illusionary **Terror Radius**.\n> \"Electroconvulsive therapy is one of the safest medical procedures.\" -Léry's Memorial Institute",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_calmClassII.png?6b7f25",
       "icon_local_path": "icons/addons/calm_class_ii.webp",
       "rarity": "Uncommon",
@@ -162,7 +162,7 @@
         },
         "pl": {
           "name": "\"Spokój\" – Klasa II",
-          "description": "Ryzykowna procedura elektrowstrząsowa, która wykorzystuje basową falę dźwiękową w celu łagodzenia skutków pewnych chorób psychicznych. Fala dźwiękowa nasycona Iskrą Cartera wypacza procedurę i wywołuje umiarkowany niepokój u pacjenta.\n• **Zwiększa** **zasięg terroru** o **6 metr**ów, gdy Wybuch Statyczny jest gotowy.\n• **Zmniejsza** **zasięg terroru** o **6 metr**ów podczas ładowania Wybuchu Statycznego.\nOcalali z efektem Szaleństwa cierpią na skutek schorzenia Spokój:\n• 2. poziom szaleństwa: ocalali co jakiś czas słyszą odległy iluzoryczny **zasięg terroru**.\n• 3. poziom szaleństwa: ocalali ciągle słyszą odległy iluzoryczny **zasięg terroru**.\n> „Terapia elektrokonwulsywna jest jedną z najbezpieczniejszych procedur medycznych”. – Instytut Pamięci Léry'ego"
+          "description": "Ryzykowna procedura elektrowstrząsowa, która wykorzystuje basową falę dźwiękową w celu łagodzenia skutków pewnych chorób psychicznych. Fala dźwiękowa nasycona Iskrą Cartera wypacza procedurę i wywołuje umiarkowany niepokój u pacjenta.\n• **Zwiększa zasięg terroru** o **6 metr**ów, gdy Wybuch Statyczny jest gotowy.\n• **Zmniejsza zasięg terroru** o **6 metr**ów podczas ładowania Wybuchu Statycznego.\nOcalali z efektem Szaleństwa cierpią na skutek schorzenia Spokój:\n• 2. poziom szaleństwa: ocalali co jakiś czas słyszą odległy iluzoryczny **zasięg terroru**.\n• 3. poziom szaleństwa: ocalali ciągle słyszą odległy iluzoryczny **zasięg terroru**.\n> „Terapia elektrokonwulsywna jest jedną z najbezpieczniejszych procedur medycznych”. – Instytut Pamięci Léry'ego"
         }
       }
     },
@@ -359,7 +359,7 @@
       "id": 125,
       "name": "\"Order\" - Carter's Notes",
       "killer_id": 7,
-      "description": "An experimental version of the ECT procedure, annotated by Doctor Herman Carter himself. The long, constant stimulus leaves the patient in a state of severe confusion.\n• **Decreases** Static Blast cooldown by **3 seconds**.\nSurvivors with Madness suffer from the Affliction of Order:\n• **Broken** **pallets** may appear to be replaced with illusionary **pallets** that persist until approached.\n• A new illusionary **pallet** is generated at the location of a random **broken** **pallet** every **20 seconds**.\n• The Doctor sees the **auras** of illusionary **pallets**.",
+      "description": "An experimental version of the ECT procedure, annotated by Doctor Herman Carter himself. The long, constant stimulus leaves the patient in a state of severe confusion.\n• **Decreases** Static Blast cooldown by **3 seconds**.\nSurvivors with Madness suffer from the Affliction of Order:\n• **Broken pallets** may appear to be replaced with illusionary **pallets** that persist until approached.\n• A new illusionary **pallet** is generated at the location of a random **broken pallet** every **20 seconds**.\n• The Doctor sees the **auras** of illusionary **pallets**.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_orderCartersNotes.png?ef764c",
       "icon_local_path": "icons/addons/order_carters_notes.webp",
       "rarity": "Very Rare",
@@ -413,7 +413,7 @@
       "id": 127,
       "name": "\"Calm\" - Carter's Notes",
       "killer_id": 7,
-      "description": "An experimental version of the ECT procedure annotated by Doctor Herman Carter himself. Uses a deep wavelength that soothes various mental illness. With Carter's Spark as its source, this procedure **causes** uncontrollable fear and anxiety in the patient.\n• **Increases** **Terror Radius** by **8 meters** while Static Blast is ready.\n• **Decreases** **Terror Radius** by **8 meters** while Static Blast is on cooldown.\nSurvivors with Madness suffer from the Affliction of Calm:\n• Madness II: Intermittently **causes** Survivors to hear a distant illusionary **Terror Radius**.\n• Madness III: Constantly **causes** Survivors to hear a distant illusionary **Terror Radius**.\n> \"Higher quality seizures trigger catatonia. At least it gives me peace for the time it lasts.\" -H. Carter",
+      "description": "An experimental version of the ECT procedure annotated by Doctor Herman Carter himself. Uses a deep wavelength that soothes various mental illness. With Carter's Spark as its source, this procedure **causes** uncontrollable fear and anxiety in the patient.\n• **Increases Terror Radius** by **8 meters** while Static Blast is ready.\n• **Decreases Terror Radius** by **8 meters** while Static Blast is on cooldown.\nSurvivors with Madness suffer from the Affliction of Calm:\n• Madness II: Intermittently **causes** Survivors to hear a distant illusionary **Terror Radius**.\n• Madness III: Constantly **causes** Survivors to hear a distant illusionary **Terror Radius**.\n> \"Higher quality seizures trigger catatonia. At least it gives me peace for the time it lasts.\" -H. Carter",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_calmCartersNotes.png?10a4f5",
       "icon_local_path": "icons/addons/calm_carters_notes.webp",
       "rarity": "Very Rare",
@@ -432,7 +432,7 @@
         },
         "pl": {
           "name": "\"Spokój\" – Notatki Cartera",
-          "description": "Eksperymentalna wersja procedury elektrowstrząsowej opisana przez samego doktora Hermana Cartera. Wykorzystuje basową falę dźwiękową w celu łagodzenia skutków pewnych chorób psychicznych. Fala dźwiękowa nasycona Iskrą Cartera wywołuje niekontrolowany strach i niepokój u pacjenta.\n• **Zwiększa** **zasięg terroru** o **8 metr**ów, gdy Wybuch Statyczny jest gotowy.\n• **Zmniejsza** **zasięg terroru** o **8 metr**ów podczas ładowania Wybuchu Statycznego.\nOcalali z efektem Szaleństwa cierpią na skutek schorzenia Spokój:\n• Szaleństwo 2: ocalali co jakiś czas słyszą odległy iluzoryczny **zasięg terroru**.\n• Szaleństwo 3: ocalali ciągle słyszą odległy iluzoryczny **zasięg terroru**.\n> „Potężniejsze drgawki padaczkowe wywołują katatonię. Przynajmniej jestem spokojny na czas ich trwania”. – H. Carter"
+          "description": "Eksperymentalna wersja procedury elektrowstrząsowej opisana przez samego doktora Hermana Cartera. Wykorzystuje basową falę dźwiękową w celu łagodzenia skutków pewnych chorób psychicznych. Fala dźwiękowa nasycona Iskrą Cartera wywołuje niekontrolowany strach i niepokój u pacjenta.\n• **Zwiększa zasięg terroru** o **8 metr**ów, gdy Wybuch Statyczny jest gotowy.\n• **Zmniejsza zasięg terroru** o **8 metr**ów podczas ładowania Wybuchu Statycznego.\nOcalali z efektem Szaleństwa cierpią na skutek schorzenia Spokój:\n• Szaleństwo 2: ocalali co jakiś czas słyszą odległy iluzoryczny **zasięg terroru**.\n• Szaleństwo 3: ocalali ciągle słyszą odległy iluzoryczny **zasięg terroru**.\n> „Potężniejsze drgawki padaczkowe wywołują katatonię. Przynajmniej jestem spokojny na czas ich trwania”. – H. Carter"
         }
       }
     },
@@ -494,7 +494,7 @@
       "id": 130,
       "name": "Iridescent King",
       "killer_id": 7,
-      "description": "A glass-like king chess piece molded from The Fog Itself. The **Entity**'s trace reverberating within can break the most powerful minds.\nSurvivors with Madness **status effect** suffer from the following Afflictions: Calm, Discipline, Order, and Restraint.\n• **Causes** Survivors to hear a distant illusionary **Terror Radius**. The effect is intermittent in Madness II and constant in Madness III.\n• While in a chase, Survivors perceive an illusionary Red Stain and **Terror Radius** as though The Doctor were directly behind them. This effect persists for **6 seconds** after the chase ends in Madness II and is constantly active in Madness III.\n• **Broken** **pallets** may appear to be replaced with illusionary **pallets** that persist until approached. A new illusionary **pallets** is generated at the location of a random **broken** **pallet** every **20 seconds**.\n• **Increases** the duration of illusionary Doctor hallucinations by **6 seconds**.\n• The Doctor sees illusionary Red Stains as well as the **auras** of illusionary Doctors and illusionary **pallets**.\n> \"Gazing in the iridescent glass is plunging oneself into madness\" -Unsigned Notes",
+      "description": "A glass-like king chess piece molded from The Fog Itself. The **Entity**'s trace reverberating within can break the most powerful minds.\nSurvivors with Madness **status effect** suffer from the following Afflictions: Calm, Discipline, Order, and Restraint.\n• **Causes** Survivors to hear a distant illusionary **Terror Radius**. The effect is intermittent in Madness II and constant in Madness III.\n• While in a chase, Survivors perceive an illusionary Red Stain and **Terror Radius** as though The Doctor were directly behind them. This effect persists for **6 seconds** after the chase ends in Madness II and is constantly active in Madness III.\n• **Broken pallets** may appear to be replaced with illusionary **pallets** that persist until approached. A new illusionary **pallets** is generated at the location of a random **broken pallet** every **20 seconds**.\n• **Increases** the duration of illusionary Doctor hallucinations by **6 seconds**.\n• The Doctor sees illusionary Red Stains as well as the **auras** of illusionary Doctors and illusionary **pallets**.\n> \"Gazing in the iridescent glass is plunging oneself into madness\" -Unsigned Notes",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_iridescentKing.png?6bd71a",
       "icon_local_path": "icons/addons/iridescent_king.webp",
       "rarity": "Ultra Rare",

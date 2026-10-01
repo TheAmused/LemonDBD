@@ -71,13 +71,13 @@
       "survivor_id": 2,
       "is_generic_counterpart": false,
       "is_teachable": true,
-      "description": "When all **Generators** are completed, if you are downed or injured, heal instantly. Then, ignoring **Exhausted**:\n• You gain **50%** **Haste** for **5s**.\n• You gain **Exhausted** for **60/50/40s**.",
+      "description": "When all **Generators** are completed, if you are downed or injured, heal instantly. Then, ignoring **Exhausted**:\n• You gain **50% Haste** for **5s**.\n• You gain **Exhausted** for **60/50/40s**.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconPerks_adrenaline.png",
       "icon_local_path": "icons/survivors/Meg Thomas/adrenaline.webp",
       "translations": {
         "de": {
           "name": "Adrenalin",
-          "description": "Wenn alle **Generatoren** fertiggestellt sind, wirst du sofort geheilt, wenn du niedergestreckt wurdest oder **verletzt** bist. Dann ignorierst du **Erschöpfung** und es gilt:\n• Du erhältst **50%** **Eile** für **5 Sek**.\n• Du leidest **60/50/40 Sek**. lang unter **Erschöpfung**."
+          "description": "Wenn alle **Generatoren** fertiggestellt sind, wirst du sofort geheilt, wenn du niedergestreckt wurdest oder **verletzt** bist. Dann ignorierst du **Erschöpfung** und es gilt:\n• Du erhältst **50% Eile** für **5 Sek**.\n• Du leidest **60/50/40 Sek**. lang unter **Erschöpfung**."
         },
         "es": {
           "name": "Adrenalina",
@@ -167,7 +167,7 @@
       "translations": {
         "de": {
           "name": "Mit allen Mitteln",
-          "description": "Drücke neben einer umgestoßenen **Palette** **4 Sek**. lang `Fähigkeits-Taste 1`, um sie wieder aufzustellen.\nDu siehst die **Auren** von umgestoßenen **Paletten**.\n> „Ich werde dich mit allem angreifen, was mir zur Verfügung steht. Und danach noch einmal.“ – Yui Kimura"
+          "description": "Drücke neben einer umgestoßenen **Palette 4 Sek**. lang `Fähigkeits-Taste 1`, um sie wieder aufzustellen.\nDu siehst die **Auren** von umgestoßenen **Paletten**.\n> „Ich werde dich mit allem angreifen, was mir zur Verfügung steht. Und danach noch einmal.“ – Yui Kimura"
         },
         "es": {
           "name": "Cueste lo que cueste",
@@ -191,13 +191,13 @@
       "survivor_id": 47,
       "is_generic_counterpart": false,
       "is_teachable": true,
-      "description": "After you rummage or **unlock** 2 **Chest**, while next to a **Broken** **Pallet**, use `Active Ability Button 1` for **4s** to create a Fragile **Pallet**.\nWithin **24/28/32m**, you see the **Auras** of **Broken** **Pallets**.\n> “Without the fences, this place is worthless.” -Rick Grimes",
+      "description": "After you rummage or **unlock** 2 **Chest**, while next to a **Broken Pallet**, use `Active Ability Button 1` for **4s** to create a Fragile **Pallet**.\nWithin **24/28/32m**, you see the **Auras** of **Broken Pallets**.\n> “Without the fences, this place is worthless.” -Rick Grimes",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconPerks_apocalypticIngenuity.png",
       "icon_local_path": "icons/survivors/Rick Grimes/apocalyptic_ingenuity.webp",
       "translations": {
         "de": {
           "name": "Apokalyptischer Scharfsinn",
-          "description": "Nachdem du 2 **Truhen** durchwühlt oder aufgeschlossen hast, kannst du neben einer kaputten **Palette** **4 Sek**. lang `Fähigkeits-Taste 1` drücken, um eine zerbrechliche **Palette** zu erschaffen.\nDu siehst die **Auren** von kaputten **Paletten** in einem Umkreis von **24/28/32 Metern**.\n> „Ohne die Zäune ist dieser Ort nutzlos.“ – Rick Grimes"
+          "description": "Nachdem du 2 **Truhen** durchwühlt oder aufgeschlossen hast, kannst du neben einer kaputten **Palette 4 Sek**. lang `Fähigkeits-Taste 1` drücken, um eine zerbrechliche **Palette** zu erschaffen.\nDu siehst die **Auren** von kaputten **Paletten** in einem Umkreis von **24/28/32 Metern**.\n> „Ohne die Zäune ist dieser Ort nutzlos.“ – Rick Grimes"
         },
         "es": {
           "name": "Ingenio apocalíptico",
@@ -221,13 +221,13 @@
       "survivor_id": 24,
       "is_generic_counterpart": false,
       "is_teachable": true,
-      "description": "When the **trial** starts, you earn **3 Tokens**.\nSpend **1 Token** to rummage an empty **Chest**, up to 1 times per **Chest**.\nYou rummage **Chests** **40/60/80%** faster.",
+      "description": "When the **trial** starts, you earn **3 Tokens**.\nSpend **1 Token** to rummage an empty **Chest**, up to 1 times per **Chest**.\nYou rummage **Chests 40/60/80%** faster.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconPerks_appraisal.png",
       "icon_local_path": "icons/survivors/Élodie Rakoto/appraisal.webp",
       "translations": {
         "de": {
           "name": "Einschätzung",
-          "description": "Wenn die **Prüfung** beginnt, erhältst du 3 Zähler.\nFür 1 Zähler kannst du leere **Truhen** durchwühlen, bis zu 1-mal pro **Truhe**.\nDu durchstöberst **Truhen** **40/60/80%** schneller."
+          "description": "Wenn die **Prüfung** beginnt, erhältst du 3 Zähler.\nFür 1 Zähler kannst du leere **Truhen** durchwühlen, bis zu 1-mal pro **Truhe**.\nDu durchstöberst **Truhen 40/60/80%** schneller."
         },
         "es": {
           "name": "Evaluación",
@@ -239,7 +239,7 @@
         },
         "pl": {
           "name": "Ocena sytuacji",
-          "description": "Na początku próby, otrzymujesz określoną liczbę żetonów (3).\nWydaj żeton (1) aby przeszukać puste **skrzynie**, maksymalnie 1 razy na **skrzynię**.\nPrzeszukujesz **skrzynie** **40/60/80%** szybciej."
+          "description": "Na początku próby, otrzymujesz określoną liczbę żetonów (3).\nWydaj żeton (1) aby przeszukać puste **skrzynie**, maksymalnie 1 razy na **skrzynię**.\nPrzeszukujesz **skrzynie 40/60/80%** szybciej."
         }
       },
       "perk_type": "entity"
@@ -281,12 +281,12 @@
       "survivor_id": 19,
       "is_generic_counterpart": false,
       "is_teachable": true,
-      "description": "Whenever you unhook a Survivor:\n• They gain **7%** **Haste** for **6/8/10s**.\n• They leave no Pools of Blood for **6/8/10s**.\n• They leave no Scratch Marks for **6/8/10s**.\n• You see the Killer's **Aura** for **6/8/10s**.\n> “I promised to keep you shitheads safe, and that’s exactly what I plan on doing.” -Steve Harrington",
+      "description": "Whenever you unhook a Survivor:\n• They gain **7% Haste** for **6/8/10s**.\n• They leave no Pools of Blood for **6/8/10s**.\n• They leave no Scratch Marks for **6/8/10s**.\n• You see the Killer's **Aura** for **6/8/10s**.\n> “I promised to keep you shitheads safe, and that’s exactly what I plan on doing.” -Steve Harrington",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconPerks_babysitter.png",
       "icon_local_path": "icons/survivors/Steve Harrington/babysitter.webp",
       "translations": {
         "de": {
-          "description": "Immer wenn du einen Überlebenden vom **Haken** gerettet hast, gilt:\n• Er erhält **7%** **Eile** für **6/8/10 Sek**.\n• Er hinterlässt **6/8/10 Sek**. lang keine Blutpfützen.\n• Er hinterlässt **6/8/10 Sek**. lang keine Kratzspuren.\n• Du siehst **6/8/10 Sek**. lang die **Aura** des Killers.\n> „Ich habe versprochen, euch Knallköpfe zu retten, und genau das habe ich gerade vor.“ – Steve Harrington"
+          "description": "Immer wenn du einen Überlebenden vom **Haken** gerettet hast, gilt:\n• Er erhält **7% Eile** für **6/8/10 Sek**.\n• Er hinterlässt **6/8/10 Sek**. lang keine Blutpfützen.\n• Er hinterlässt **6/8/10 Sek**. lang keine Kratzspuren.\n• Du siehst **6/8/10 Sek**. lang die **Aura** des Killers.\n> „Ich habe versprochen, euch Knallköpfe zu retten, und genau das habe ich gerade vor.“ – Steve Harrington"
         },
         "es": {
           "name": "Canguro",
@@ -310,13 +310,13 @@
       "survivor_id": 36,
       "is_generic_counterpart": false,
       "is_teachable": true,
-      "description": "Whenever the Killer picks-up another Survivor, for the next **10s**, when you start running:\n• Gain **50%** **Haste** for **5s**.\n• Gain **Exhausted** for **30/25/20s**.\n> “You forget about me?” -Renato Lyra",
+      "description": "Whenever the Killer picks-up another Survivor, for the next **10s**, when you start running:\n• Gain **50% Haste** for **5s**.\n• Gain **Exhausted** for **30/25/20s**.\n> “You forget about me?” -Renato Lyra",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconPerks_backgroundPlayer.png",
       "icon_local_path": "icons/survivors/Renato Lyra/background_player.webp",
       "translations": {
         "de": {
           "name": "Hintergrundspieler",
-          "description": "Immer wenn der Killer einen anderen Überlebenden aufhebt, gilt für die nächsten **10 Sek**., wenn du zu laufen beginnst:\n• Du erhältst **50%** **Eile** für **5 Sek**.\n• Du erhältst **Erschöpfung** für **30/25/20 Sek**.\n> „Hast du mich vergessen?“ – Renato Lyra"
+          "description": "Immer wenn der Killer einen anderen Überlebenden aufhebt, gilt für die nächsten **10 Sek**., wenn du zu laufen beginnst:\n• Du erhältst **50% Eile** für **5 Sek**.\n• Du erhältst **Erschöpfung** für **30/25/20 Sek**.\n> „Hast du mich vergessen?“ – Renato Lyra"
         },
         "es": {
           "name": "Jugador secundario",
@@ -340,7 +340,7 @@
       "survivor_id": 50,
       "is_generic_counterpart": false,
       "is_teachable": true,
-      "description": "After repairing **50%** of **Generators**, while next to a **Window**, use `Active Ability Button 2` to trap it for **40/50/60s**. All Survivors see that **Window**'s **Aura** for that time.\nWhen the Killer vaults that **Window**, the trap explodes and they gain **50%** **Hindered** for **4s**.\n> \"Never tell me the odds.\" -Dustin Henderson",
+      "description": "After repairing **50%** of **Generators**, while next to a **Window**, use `Active Ability Button 2` to trap it for **40/50/60s**. All Survivors see that **Window**'s **Aura** for that time.\nWhen the Killer vaults that **Window**, the trap explodes and they gain **50% Hindered** for **4s**.\n> \"Never tell me the odds.\" -Dustin Henderson",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconsPerks_BadaBadaBoom.png",
       "icon_local_path": "icons/survivors/Dustin Henderson/bada_bada_boom.webp",
       "translations": {
@@ -358,7 +358,7 @@
         },
         "pl": {
           "name": "Bada Bada Bum",
-          "description": "Po naprawieniu **50%** **generatorów**, stojąc obok okna, użyj `przycisk zdolności aktywnej 2` aby założyć pułapkę, która trwa **40/50/60 s**. Wszyscy ocalali widzę **aurę** tego okna przez ten czas.\nGdy zabójca przeskoczy przez to okno, pułapka wybucha i cel otrzymuje **50%** efektu Skrępowany na **4 s**.\n> „Nigdy nie mów mi, jakie są szanse.” – Dustin Henderson"
+          "description": "Po naprawieniu **50% generatorów**, stojąc obok okna, użyj `przycisk zdolności aktywnej 2` aby założyć pułapkę, która trwa **40/50/60 s**. Wszyscy ocalali widzę **aurę** tego okna przez ten czas.\nGdy zabójca przeskoczy przez to okno, pułapka wybucha i cel otrzymuje **50%** efektu Skrępowany na **4 s**.\n> „Nigdy nie mów mi, jakie są szanse.” – Dustin Henderson"
         }
       },
       "perk_type": "generator"
@@ -370,13 +370,13 @@
       "survivor_id": 5,
       "is_generic_counterpart": false,
       "is_teachable": true,
-      "description": "Whenever you fall from at least **1m**:\n• You gain **50%** **Haste** for **3s**.\n• You gain **Exhausted** for **60/50/40s**.\n• Your stagger is **75%** shorter.\n• Your Grunts from falling are **100%** quieter.\n> \"I've jumped from higher places.\" -Nea",
+      "description": "Whenever you fall from at least **1m**:\n• You gain **50% Haste** for **3s**.\n• You gain **Exhausted** for **60/50/40s**.\n• Your stagger is **75%** shorter.\n• Your Grunts from falling are **100%** quieter.\n> \"I've jumped from higher places.\" -Nea",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconPerks_balancedLanding.png",
       "icon_local_path": "icons/survivors/Nea Karlsson/balanced_landing.webp",
       "translations": {
         "de": {
           "name": "Ausgewogene Landung",
-          "description": "Immer wenn du aus mindestens **1 Meter**(n) Höhe fällst, gilt:\n• Du erhältst **50%** **Eile** für **3 Sek**.\n• Du erhältst **Erschöpfung** für **60/50/40 Sek**.\n• Du taumelst **75%** kürzer.\n• Deine Schmerzenslaute nach Stürzen sind **100%** leiser.\n> „Ich bin schon von höheren Orten gesprungen.“ – Nea"
+          "description": "Immer wenn du aus mindestens **1 Meter**(n) Höhe fällst, gilt:\n• Du erhältst **50% Eile** für **3 Sek**.\n• Du erhältst **Erschöpfung** für **60/50/40 Sek**.\n• Du taumelst **75%** kürzer.\n• Deine Schmerzenslaute nach Stürzen sind **100%** leiser.\n> „Ich bin schon von höheren Orten gesprungen.“ – Nea"
         },
         "es": {
           "name": "Caída equilibrada",
@@ -460,20 +460,20 @@
       "survivor_id": 33,
       "is_generic_counterpart": false,
       "is_teachable": true,
-      "description": "Whenever you finish healing another Survivor, until they take damage:\n• They bless and cleanse **6/7/8%** faster.\n• They heal **6/7/8%** faster.\n• They **unlock** **Chests** **6/7/8%** faster.",
+      "description": "Whenever you finish healing another Survivor, until they take damage:\n• They bless and cleanse **6/7/8%** faster.\n• They heal **6/7/8%** faster.\n• They **unlock Chests 6/7/8%** faster.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconPerks_betterThanNew.png",
       "icon_local_path": "icons/survivors/Rebecca Chambers/better_than_new.webp",
       "translations": {
         "de": {
           "name": "Besser als neu",
-          "description": "Immer wenn du einen anderen Überlebenden vollständig heilst, gilt Folgendes für ihn, bis er Schaden erleidet:\n• Er segnet und zerstört **6/7/8%** schneller.\n• Er heilt **6/7/8%** schneller.\n• Er schließt **Truhen** **6/7/8%** schneller auf."
+          "description": "Immer wenn du einen anderen Überlebenden vollständig heilst, gilt Folgendes für ihn, bis er Schaden erleidet:\n• Er segnet und zerstört **6/7/8%** schneller.\n• Er heilt **6/7/8%** schneller.\n• Er schließt **Truhen 6/7/8%** schneller auf."
         },
         "en": {
           "name": "Better Than New"
         },
         "es": {
           "name": "Mejor que nuevo",
-          "description": "Cada vez que termines de curar a otro superviviente, hasta que sufra daño:\n• Bendecirá y purificará un **6/7/8%** más rápido.\n• Curará un **6/7/8%** más rápido.\n• **Desbloqueará** **cofres** un **6/7/8%** más rápido."
+          "description": "Cada vez que termines de curar a otro superviviente, hasta que sufra daño:\n• Bendecirá y purificará un **6/7/8%** más rápido.\n• Curará un **6/7/8%** más rápido.\n• **Desbloqueará cofres** un **6/7/8%** más rápido."
         },
         "ja": {
           "name": "みなぎる活力",
@@ -481,7 +481,7 @@
         },
         "pl": {
           "name": "Lepsze niż nowe",
-          "description": "Za każdym razem, gdy kończysz leczenie innego ocalałego, dopóki ten ocalały nie otrzyma obrażeń:\n• Błogosławi i oczyszcza **6/7/8%** szybciej.\n• Leczy **6/7/8%** szybciej.\n• **Odblokowuje** **skrzynie** **6/7/8%** szybciej."
+          "description": "Za każdym razem, gdy kończysz leczenie innego ocalałego, dopóki ten ocalały nie otrzyma obrażeń:\n• Błogosławi i oczyszcza **6/7/8%** szybciej.\n• Leczy **6/7/8%** szybciej.\n• **Odblokowuje skrzynie 6/7/8%** szybciej."
         }
       },
       "perk_type": "healing"
@@ -541,7 +541,7 @@
         },
         "pl": {
           "name": "Mina",
-          "description": "Po naprawieniu **40/50%** **generatorów**, będąc obok **generatora**, użyj `przycisk zdolności aktywnej 2` aby założyć pułapkę, która trwa przez **100/110/120 s**. Wszyscy ocalali widzą **aurę** tego **generatora** przez ten czas.\nGdy zabójca uszkodzi ten **generator**, pułapka eksploduje, następnie:\n• Zabójca zostaje ogłuszony przez **4 s**.\n• Wszyscy w pobliżu patrzący na detonację zostają oślepieni.\n> „Chcesz S.T.A.R.S.? Proszę bardzo!” – Jill Valentine"
+          "description": "Po naprawieniu **40/50% generatorów**, będąc obok **generatora**, użyj `przycisk zdolności aktywnej 2` aby założyć pułapkę, która trwa przez **100/110/120 s**. Wszyscy ocalali widzą **aurę** tego **generatora** przez ten czas.\nGdy zabójca uszkodzi ten **generator**, pułapka eksploduje, następnie:\n• Zabójca zostaje ogłuszony przez **4 s**.\n• Wszyscy w pobliżu patrzący na detonację zostają oślepieni.\n> „Chcesz S.T.A.R.S.? Proszę bardzo!” – Jill Valentine"
         }
       },
       "perk_type": "generator"
@@ -553,13 +553,13 @@
       "survivor_id": 22,
       "is_generic_counterpart": false,
       "is_teachable": true,
-      "description": "While you are not the **Obsession**:\n• While you or the **Obsession** are injured, you see each other's **Auras**.\n• Whenever you finish healing the **Obsession**, or they finish healing you, while within **16m** of each other, you both gain **7%** **Haste**.\nWhen the **trial** starts, you are less likely to be the **Obsession**.",
+      "description": "While you are not the **Obsession**:\n• While you or the **Obsession** are injured, you see each other's **Auras**.\n• Whenever you finish healing the **Obsession**, or they finish healing you, while within **16m** of each other, you both gain **7% Haste**.\nWhen the **trial** starts, you are less likely to be the **Obsession**.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconPerks_bloodPact.png",
       "icon_local_path": "icons/survivors/Cheryl Mason/blood_pact.webp",
       "translations": {
         "de": {
           "name": "Blutpakt",
-          "description": "Solange du nicht das Ziel der **Besessenheit** bist, gilt:\n• Während du oder das Ziel der **Besessenheit** **verletzt** seid, seht ihr gegenseitig eure **Auren**.\n• Wenn du das Ziel der **Besessenheit** vollständig heilst oder es dich vollständig heilt, erhaltet ihr beide **7%** **Eile**, solange ihr euch nicht weiter als **16 Meter** voneinander entfernt.\nZu Beginn der **Prüfung** bist du mit geringerer Wahrscheinlichkeit das Ziel der **Besessenheit**."
+          "description": "Solange du nicht das Ziel der **Besessenheit** bist, gilt:\n• Während du oder das Ziel der **Besessenheit verletzt** seid, seht ihr gegenseitig eure **Auren**.\n• Wenn du das Ziel der **Besessenheit** vollständig heilst oder es dich vollständig heilt, erhaltet ihr beide **7% Eile**, solange ihr euch nicht weiter als **16 Meter** voneinander entfernt.\nZu Beginn der **Prüfung** bist du mit geringerer Wahrscheinlichkeit das Ziel der **Besessenheit**."
         },
         "es": {
           "name": "Pacto de sangre",
@@ -613,7 +613,7 @@
       "survivor_id": 13,
       "is_generic_counterpart": false,
       "is_teachable": true,
-      "description": "While carried by the Killer:\n• Whenever the Killer falls from at least **1m**, you gain **33%** of your current wiggle progress.\n• Your wiggle is **15/20/25%** stronger.\n• Within **48/56/64m**, the Killer cannot see **Hook** **Auras**.\n> “Buck and Wild/ Swing to be free/Your hands just can’t keep ahold of me.” -Kate Denson’s Boil Over",
+      "description": "While carried by the Killer:\n• Whenever the Killer falls from at least **1m**, you gain **33%** of your current wiggle progress.\n• Your wiggle is **15/20/25%** stronger.\n• Within **48/56/64m**, the Killer cannot see **Hook Auras**.\n> “Buck and Wild/ Swing to be free/Your hands just can’t keep ahold of me.” -Kate Denson’s Boil Over",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconPerks_boilOver.png",
       "icon_local_path": "icons/survivors/Kate Denson/boil_over.webp",
       "translations": {
@@ -673,7 +673,7 @@
       "survivor_id": 28,
       "is_generic_counterpart": false,
       "is_teachable": true,
-      "description": "While next to a **totem**, use `Active Ability Button 1` to bless it, creating a unique **Boon** **Totem** that combines all your **Boons**.\nSurvivors within the **Boon**'s range:\n• While healing without a **Med-Kit**, they heal others **100%** faster.\n• While injured, other Survivors see their **Aura**.\n> \"Try this, it’s better than anything you’ll find in a pharmacy.\" -Mikaela Reid",
+      "description": "While next to a **totem**, use `Active Ability Button 1` to bless it, creating a unique **Boon Totem** that combines all your **Boons**.\nSurvivors within the **Boon**'s range:\n• While healing without a **Med-Kit**, they heal others **100%** faster.\n• While injured, other Survivors see their **Aura**.\n> \"Try this, it’s better than anything you’ll find in a pharmacy.\" -Mikaela Reid",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconPerks_boonCircleOfHealing.png",
       "icon_local_path": "icons/survivors/Mikaela Reid/boon_circle_of_healing.webp",
       "translations": {
@@ -703,13 +703,13 @@
       "survivor_id": 30,
       "is_generic_counterpart": false,
       "is_teachable": true,
-      "description": "While next to a **totem**, use `Active Ability Button 1` to bless it, creating a unique **Boon** **Totem** that combines all your **Boons**.\nSurvivors within the **Boon**'s range gain **2%** **Haste**. When leaving the range, this ends after **2/3/4s**.",
+      "description": "While next to a **totem**, use `Active Ability Button 1` to bless it, creating a unique **Boon Totem** that combines all your **Boons**.\nSurvivors within the **Boon**'s range gain **2% Haste**. When leaving the range, this ends after **2/3/4s**.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconPerks_boonDarkTheory.png",
       "icon_local_path": "icons/survivors/Yoichi Asakawa/boon_dark_theory.webp",
       "translations": {
         "de": {
           "name": "Segen: Dunkle Theorie",
-          "description": "Neben einem **Totem** kannst du `Fähigkeits-Taste 1` drücken, um es zu segnen und ein einzigartiges Segenstotem zu erschaffen, das alle deine **Segen** kombiniert.\nÜberlebende in seiner Reichweite erhalten **2%** **Eile**. Dieser Effekt endet **2/3/4 Sek**. nach Verlassen des Radius."
+          "description": "Neben einem **Totem** kannst du `Fähigkeits-Taste 1` drücken, um es zu segnen und ein einzigartiges Segenstotem zu erschaffen, das alle deine **Segen** kombiniert.\nÜberlebende in seiner Reichweite erhalten **2% Eile**. Dieser Effekt endet **2/3/4 Sek**. nach Verlassen des Radius."
         },
         "es": {
           "name": "Bendición: Teoría oscura",
@@ -733,7 +733,7 @@
       "survivor_id": 29,
       "is_generic_counterpart": false,
       "is_teachable": true,
-      "description": "While next to a **totem**, use `Active Ability Button 1` to bless it, creating a unique **Boon** **totem** that combines all your **Boons**.\nDowned Survivors within the **Boon**'s range:\n• Recover **90/95/100%** faster.\n• Can fully recover.\n> \"It's not our time to die... probably.\" -Jonah Vasquez",
+      "description": "While next to a **totem**, use `Active Ability Button 1` to bless it, creating a unique **Boon totem** that combines all your **Boons**.\nDowned Survivors within the **Boon**'s range:\n• Recover **90/95/100%** faster.\n• Can fully recover.\n> \"It's not our time to die... probably.\" -Jonah Vasquez",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconPerks_boonExponential.png",
       "icon_local_path": "icons/survivors/Jonah Vasquez/boon_exponential.webp",
       "translations": {
@@ -763,7 +763,7 @@
       "survivor_id": 40,
       "is_generic_counterpart": false,
       "is_teachable": true,
-      "description": "While next to a **totem**, use `Active Ability Button 1` to bless it, creating a unique **Boon** **totem** that combines all your **Boons**.\nSurvivors within the **Boon**'s range:\n• See the **Auras** of **Chests**.\n• See the **Auras** of **Generators**.\nWhile you have a **Boon** **Totem**, you bless and cleanse **6/8/10%** faster.\n> \"A shift in reality. Heavy with hidden meanings.\" -Return",
+      "description": "While next to a **totem**, use `Active Ability Button 1` to bless it, creating a unique **Boon totem** that combines all your **Boons**.\nSurvivors within the **Boon**'s range:\n• See the **Auras** of **Chests**.\n• See the **Auras** of **Generators**.\nWhile you have a **Boon Totem**, you bless and cleanse **6/8/10%** faster.\n> \"A shift in reality. Heavy with hidden meanings.\" -Return",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconPerks_boonIllumination.png",
       "icon_local_path": "icons/survivors/Alan Wake/boon_illumination.webp",
       "translations": {
@@ -781,7 +781,7 @@
         },
         "pl": {
           "name": "Dar: Iluminacja",
-          "description": "Stojąc obok **totemu**, użyj `przycisk zdolności aktywnej 1`, aby go błogosławić, tworząc wyjątkowy dobry **totem**, który łączy wszystkie twoje uroki.\nOcalali w zasięgu uroków:\n• Widzą **aury** **skrzyń**.\n• Widzą **aury** **generatorów**.\nGdy masz zapalony dobry **totem**, błogosławisz i oczyszczasz **6/8/10%** szybciej.\n> „Zmiana rzeczywistości. Ukryte znaczenie dodaje wagi”. – Powrót"
+          "description": "Stojąc obok **totemu**, użyj `przycisk zdolności aktywnej 1`, aby go błogosławić, tworząc wyjątkowy dobry **totem**, który łączy wszystkie twoje uroki.\nOcalali w zasięgu uroków:\n• Widzą **aury skrzyń**.\n• Widzą **aury generatorów**.\nGdy masz zapalony dobry **totem**, błogosławisz i oczyszczasz **6/8/10%** szybciej.\n> „Zmiana rzeczywistości. Ukryte znaczenie dodaje wagi”. – Powrót"
         }
       },
       "perk_type": "boon"
@@ -793,7 +793,7 @@
       "survivor_id": 28,
       "is_generic_counterpart": false,
       "is_teachable": true,
-      "description": "While next to a **Totem**, use `Active Ability Button 1` to bless it, creating a unique **Boon** **Totem** that combines all your **Boons**. Survivors within the **Boon**'s range:\n• Leave no Scratch Marks.\n• Their **Auras** cannot be seen by the Killer.\nWhen leaving the range, this ends after **2/3/4s**.\n> \"Stick to the shadows and cover your tracks.\" -Mikaela Reid",
+      "description": "While next to a **Totem**, use `Active Ability Button 1` to bless it, creating a unique **Boon Totem** that combines all your **Boons**. Survivors within the **Boon**'s range:\n• Leave no Scratch Marks.\n• Their **Auras** cannot be seen by the Killer.\nWhen leaving the range, this ends after **2/3/4s**.\n> \"Stick to the shadows and cover your tracks.\" -Mikaela Reid",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconPerks_boonShadowStep.png",
       "icon_local_path": "icons/survivors/Mikaela Reid/boon_shadow_step.webp",
       "translations": {
@@ -823,7 +823,7 @@
       "survivor_id": 54,
       "is_generic_counterpart": false,
       "is_teachable": true,
-      "description": "While next to a **Totem**, use `Active Ability Button 1` to bless it, creating a unique **Boon** **Totem** that combines all your **Boons**.\n**Generators** within the **Boon**'s range:\n• Regress **50%** slower.\n• Survivors repair them **8/9/10%** faster.\nSurvivors within the **Boon**'s range see the **Auras** of **affected** **Generators**.\n“That which thine hands deliver shall prosper, for thine hands are guided by faith.” (Enlightenments, 2:10)",
+      "description": "While next to a **Totem**, use `Active Ability Button 1` to bless it, creating a unique **Boon Totem** that combines all your **Boons**.\n**Generators** within the **Boon**'s range:\n• Regress **50%** slower.\n• Survivors repair them **8/9/10%** faster.\nSurvivors within the **Boon**'s range see the **Auras** of **affected Generators**.\n“That which thine hands deliver shall prosper, for thine hands are guided by faith.” (Enlightenments, 2:10)",
       "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconsPerks_BoonSteadfast.png",
       "icon_local_path": "icons/survivors/Aurora Stardotter/boon_steadfast.webp",
       "translations": {
@@ -841,7 +841,7 @@
         },
         "pl": {
           "name": "Urok: Niezłomność",
-          "description": "Stojąc obok **totemu**, użyj `przycisk zdolności aktywnej 1` aby go błogosławić, tworząc wyjątkowy dobry **totem**, który łączy wszystkie twoje uroki.\n**Generatory** w zasięgu uroków:\n• Tracą postęp naprawy **50%** wolniej.\n• Ocalali naprawiają **generatory** **8/9/10%** szybciej.\nOcalali w zasięgu **totemu** widzą **aury** **generatorów** dotkniętych efektem.\n> „To, co twe ręce uczynią, rozkwitnie, gdyż twe rece prowadzi wiara” – Oświecenia, 2,10"
+          "description": "Stojąc obok **totemu**, użyj `przycisk zdolności aktywnej 1` aby go błogosławić, tworząc wyjątkowy dobry **totem**, który łączy wszystkie twoje uroki.\n**Generatory** w zasięgu uroków:\n• Tracą postęp naprawy **50%** wolniej.\n• Ocalali naprawiają **generatory 8/9/10%** szybciej.\nOcalali w zasięgu **totemu** widzą **aury generatorów** dotkniętych efektem.\n> „To, co twe ręce uczynią, rozkwitnie, gdyż twe rece prowadzi wiara” – Oświecenia, 2,10"
         }
       },
       "perk_type": "boon"
@@ -943,13 +943,13 @@
       "survivor_id": 20,
       "is_generic_counterpart": false,
       "is_teachable": true,
-      "description": "Within **5m** of a carried Survivor:\n• You gain **5/6/7%** **Haste**.\n• The carried Survivor wiggles **25%** faster.\n> “Come, we’re going to rip our way out of this.” -Yui Kimura",
+      "description": "Within **5m** of a carried Survivor:\n• You gain **5/6/7% Haste**.\n• The carried Survivor wiggles **25%** faster.\n> “Come, we’re going to rip our way out of this.” -Yui Kimura",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconPerks_breakout.png",
       "icon_local_path": "icons/survivors/Yui Kimura/breakout.webp",
       "translations": {
         "de": {
           "name": "Ausbruch",
-          "description": "In einem Umkreis von **5 Metern** rund um einen getragenen Überlebenden gilt:\n• Du erhältst **5/6/7%** **Eile**.\n• Der getragene Überlebende windet sich **25%** schneller heraus.\n> „Komm, wir werden schon einen Weg hier heraus finden.“ – Yui Kimura"
+          "description": "In einem Umkreis von **5 Metern** rund um einen getragenen Überlebenden gilt:\n• Du erhältst **5/6/7% Eile**.\n• Der getragene Überlebende windet sich **25%** schneller heraus.\n> „Komm, wir werden schon einen Weg hier heraus finden.“ – Yui Kimura"
         },
         "es": {
           "name": "Fuga",
@@ -973,13 +973,13 @@
       "survivor_id": 17,
       "is_generic_counterpart": false,
       "is_teachable": true,
-      "description": "While healing a downed Survivor, you both see the Killer's **Aura**.\nWhenever you finish healing a downed Survivor or fully recover:\n• The Survivor gains **7%** **Haste** for **6/8/10s**.\n• The Survivor leaves no Scratch Marks for **6/8/10s**.\n> “Ghost beaters never leave a man behind.\" -Ash Williams",
+      "description": "While healing a downed Survivor, you both see the Killer's **Aura**.\nWhenever you finish healing a downed Survivor or fully recover:\n• The Survivor gains **7% Haste** for **6/8/10s**.\n• The Survivor leaves no Scratch Marks for **6/8/10s**.\n> “Ghost beaters never leave a man behind.\" -Ash Williams",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconPerks_buckleUp.png",
       "icon_local_path": "icons/survivors/Ash Williams/buckle_up.webp",
       "translations": {
         "de": {
           "name": "Anschnallen",
-          "description": "Wenn du einen niedergestreckten Überlebenden heilst, seht ihr beide die **Aura** des Killers.\nImmer wenn du einen niedergestreckten Überlebenden geheilt hast oder du vollständig genest, gilt:\n• Der Überlebende erhält **7%** **Eile** für **6/8/10 Sek**.\n• Der Überlebende hinterlässt **6/8/10 Sek**. lang keine Kratzspuren.\n> „Geisterschläger lassen niemals einen Menschen zurück.“ – Ash Williams"
+          "description": "Wenn du einen niedergestreckten Überlebenden heilst, seht ihr beide die **Aura** des Killers.\nImmer wenn du einen niedergestreckten Überlebenden geheilt hast oder du vollständig genest, gilt:\n• Der Überlebende erhält **7% Eile** für **6/8/10 Sek**.\n• Der Überlebende hinterlässt **6/8/10 Sek**. lang keine Kratzspuren.\n> „Geisterschläger lassen niemals einen Menschen zurück.“ – Ash Williams"
         },
         "es": {
           "name": "Sujétate",
@@ -1033,7 +1033,7 @@
       "survivor_id": 4,
       "is_generic_counterpart": false,
       "is_teachable": true,
-      "description": "You do not scare Crows or scream.\nYou bless and cleanse **Totems**, and **unlock** **Chests** silently, but **20/25/30%** slower.",
+      "description": "You do not scare Crows or scream.\nYou bless and cleanse **Totems**, and **unlock Chests** silently, but **20/25/30%** slower.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconPerks_calmSpirit.png",
       "icon_local_path": "icons/survivors/Jake Park/calm_spirit.webp",
       "translations": {
@@ -1043,7 +1043,7 @@
         },
         "es": {
           "name": "Espíritu calmado",
-          "description": "No asustas a los cuervos ni gritas.\n**Desbloqueas** **cofres** y bendices y purificas **tótems** sin hacer ruido un **20/25/30%** más despacio."
+          "description": "No asustas a los cuervos ni gritas.\n**Desbloqueas cofres** y bendices y purificas **tótems** sin hacer ruido un **20/25/30%** más despacio."
         },
         "ja": {
           "name": "魂の平穏",
@@ -1051,7 +1051,7 @@
         },
         "pl": {
           "name": "Spokojny Duch",
-          "description": "Nie płoszysz wron i nie krzyczysz.\nBłogosławisz i oczyszczasz **skrzynie** oraz **odblokowujesz** **skrzynie** po cichu, ale **20/25/30%** wolniej."
+          "description": "Nie płoszysz wron i nie krzyczysz.\nBłogosławisz i oczyszczasz **skrzynie** oraz **odblokowujesz skrzynie** po cichu, ale **20/25/30%** wolniej."
         }
       },
       "perk_type": "stealth"
@@ -1096,13 +1096,13 @@
       "survivor_id": 40,
       "is_generic_counterpart": false,
       "is_teachable": true,
-      "description": "While you are using a **Flashlight**, you gain **5%** **Haste**.\nWhenever you blind the Killer, they gain **20%** **Hindered** for **1s**. Cooldown: **60/50/40s**.\n> “I squeezed the flashlight like my life depended on it, willing it to stop coming any closer.” -Departure",
+      "description": "While you are using a **Flashlight**, you gain **5% Haste**.\nWhenever you blind the Killer, they gain **20% Hindered** for **1s**. Cooldown: **60/50/40s**.\n> “I squeezed the flashlight like my life depended on it, willing it to stop coming any closer.” -Departure",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconPerks_championOfLight.png",
       "icon_local_path": "icons/survivors/Alan Wake/champion_of_light.webp",
       "translations": {
         "de": {
           "name": "Meister des Lichts",
-          "description": "Solange du eine Taschenlampe verwendest, erhältst du **5%** **Eile**.\nImmer wenn du den Killer blendest, erhält er **20%** Eingeschränkt für **1 Sek**. Abklingzeit: **60/50/40 Sek**.\n> „Ich hielt die Taschenlampe fest, als würde mein Leben davon abhängen, und flehte die Bedrohung in Gedanken an, nicht näher zu kommen.“ – Aufbruch"
+          "description": "Solange du eine Taschenlampe verwendest, erhältst du **5% Eile**.\nImmer wenn du den Killer blendest, erhält er **20%** Eingeschränkt für **1 Sek**. Abklingzeit: **60/50/40 Sek**.\n> „Ich hielt die Taschenlampe fest, als würde mein Leben davon abhängen, und flehte die Bedrohung in Gedanken an, nicht näher zu kommen.“ – Aufbruch"
         },
         "es": {
           "name": "Campeón de la luz",
@@ -1156,7 +1156,7 @@
       "survivor_id": 39,
       "is_generic_counterpart": false,
       "is_teachable": true,
-      "description": "After repairing **40/50%** of **Generators**, while next to a Dropped **Pallet**, use `Active Ability Button 2` to trap it for **100/110/120s**. All Survivors see that **Pallet**'s **Aura** for that time.\nWhen the Killer breaks that **Pallet**, the trap explodes and they gain **50%** **Hindered** for **4s**.\n> “How do we kill it, Ash?” -Ellen Ripley",
+      "description": "After repairing **40/50%** of **Generators**, while next to a Dropped **Pallet**, use `Active Ability Button 2` to trap it for **100/110/120s**. All Survivors see that **Pallet**'s **Aura** for that time.\nWhen the Killer breaks that **Pallet**, the trap explodes and they gain **50% Hindered** for **4s**.\n> “How do we kill it, Ash?” -Ellen Ripley",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconPerks_chemicalTrap.png",
       "icon_local_path": "icons/survivors/Ellen Ripley/chemical_trap.webp",
       "translations": {
@@ -1174,7 +1174,7 @@
         },
         "pl": {
           "name": "Pułapka Chemiczna",
-          "description": "Po naprawieniu **40/50%** **generatorów**, stojąc obok przewróconej **palety**, użyj `przycisk zdolności aktywnej 2`, aby założyć pułapkę, która trwa **100/110/120 s**. Wszyscy ocalali widzą **aurę** tej **palety** przez ten czas.\nGdy zabójca zniszczy tę **paletę**, pułapka wybucha i cel otrzymuje **50%** efektu Skrępowany na **4 s**.\n> „Jak to zabić, Ash?” – Ellen Ripley"
+          "description": "Po naprawieniu **40/50% generatorów**, stojąc obok przewróconej **palety**, użyj `przycisk zdolności aktywnej 2`, aby założyć pułapkę, która trwa **100/110/120 s**. Wszyscy ocalali widzą **aurę** tej **palety** przez ten czas.\nGdy zabójca zniszczy tę **paletę**, pułapka wybucha i cel otrzymuje **50%** efektu Skrępowany na **4 s**.\n> „Jak to zabić, Ash?” – Ellen Ripley"
         }
       },
       "perk_type": "generator"
@@ -1204,7 +1204,7 @@
         },
         "pl": {
           "name": "Jasnowidzenie",
-          "description": "Za każdym razem, gdy błogosławisz lub oczyścisz **totem**, jeśli nie niesiesz przedmiotu, użyj `przycisk użycia przedmiotu`, aby przez maksymalnie **8/9/10 s** i w promieniu **8 m**:\n• Zobaczyć **aury** **skrzyń**.\n• Zobaczyć **aury** przełączników bramy wyjściowej.\n• Zobaczyć **aury** **generatorów**.\n• Zobaczyć **aurę** włazu.\n• Zobaczyć **aury** **haków**.\n> „Czy ktoś jeszcze to widzi? Czy tylko ja?” – Mikaela Reid"
+          "description": "Za każdym razem, gdy błogosławisz lub oczyścisz **totem**, jeśli nie niesiesz przedmiotu, użyj `przycisk użycia przedmiotu`, aby przez maksymalnie **8/9/10 s** i w promieniu **8 m**:\n• Zobaczyć **aury skrzyń**.\n• Zobaczyć **aury** przełączników bramy wyjściowej.\n• Zobaczyć **aury generatorów**.\n• Zobaczyć **aurę** włazu.\n• Zobaczyć **aury haków**.\n> „Czy ktoś jeszcze to widzi? Czy tylko ja?” – Mikaela Reid"
         }
       },
       "perk_type": "aura"
@@ -1336,13 +1336,13 @@
       "survivor_id": 26,
       "is_generic_counterpart": false,
       "is_teachable": true,
-      "description": "When the **trial** starts, you earn **1 Token**.\nWhenever you cleanse a **Totem**, earn **1 Token**, then, you see the **Aura** of the farthest **Totem** for **4s**.\nFor each Token, you cleanse **Totems** **8/9/10%** faster.\n> \"I don't mind a little detective work.\" -Jill Valentine",
+      "description": "When the **trial** starts, you earn **1 Token**.\nWhenever you cleanse a **Totem**, earn **1 Token**, then, you see the **Aura** of the farthest **Totem** for **4s**.\nFor each Token, you cleanse **Totems 8/9/10%** faster.\n> \"I don't mind a little detective work.\" -Jill Valentine",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconPerks_counterforce.png",
       "icon_local_path": "icons/survivors/Jill Valentine/counterforce.webp",
       "translations": {
         "de": {
           "name": "Gegengewalt",
-          "description": "Wenn die **Prüfung** beginnt, erhältst du 1 Zähler.\nImmer wenn du ein **Totem** zerstörst, erhältst du 1 Zähler. Dann siehst du **4 Sek**. lang die **Aura** des am weitesten entfernten **Totems**.\nFür jeden Zähler zerstörst du **Totems** **8/9/10%** schneller.\n> „Ich habe nichts gegen ein wenig Detektivarbeit.“ – Jill Valentine"
+          "description": "Wenn die **Prüfung** beginnt, erhältst du 1 Zähler.\nImmer wenn du ein **Totem** zerstörst, erhältst du 1 Zähler. Dann siehst du **4 Sek**. lang die **Aura** des am weitesten entfernten **Totems**.\nFür jeden Zähler zerstörst du **Totems 8/9/10%** schneller.\n> „Ich habe nichts gegen ein wenig Detektivarbeit.“ – Jill Valentine"
         },
         "es": {
           "name": "Contrafuerza",
@@ -1354,7 +1354,7 @@
         },
         "pl": {
           "name": "Przeciwdziałanie",
-          "description": "Na początku próby, otrzymujesz określoną liczbę żetonów (1).\nZa każdym razem, gdy oczyścisz **totem**, otrzymujesz określoną liczbę żetonów (1), następnie widzisz **aurę** najdalszego **totemu** przez **4 s**.\nZa każdy żeton, oczyszczasz **totemy** **8/9/10%** szybciej.\n> „Nie przeszkadza mi odrobina zabawy w detektywa”. – Jill Valentine"
+          "description": "Na początku próby, otrzymujesz określoną liczbę żetonów (1).\nZa każdym razem, gdy oczyścisz **totem**, otrzymujesz określoną liczbę żetonów (1), następnie widzisz **aurę** najdalszego **totemu** przez **4 s**.\nZa każdy żeton, oczyszczasz **totemy 8/9/10%** szybciej.\n> „Nie przeszkadza mi odrobina zabawy w detektywa”. – Jill Valentine"
         }
       },
       "perk_type": "aura"
@@ -1685,7 +1685,7 @@
         },
         "pl": {
           "name": "Desperacki krok",
-          "description": "Za każdego rannego, powalonego lub powieszonego na **haku** ocalałego:\n• Leczysz **10/12/14%** szybciej.\n• Zdejmujesz z **haka** **10/12/14%** szybciej.\n> „Jeśli ktoś zburzy twoje ściany, następne wybuduj mocniejsze”. – Feliks Richter"
+          "description": "Za każdego rannego, powalonego lub powieszonego na **haku** ocalałego:\n• Leczysz **10/12/14%** szybciej.\n• Zdejmujesz z **haka 10/12/14%** szybciej.\n> „Jeśli ktoś zburzy twoje ściany, następne wybuduj mocniejsze”. – Feliks Richter"
         }
       },
       "perk_type": "healing"
@@ -1715,7 +1715,7 @@
         },
         "pl": {
           "name": "Przeczucie Detektywa",
-          "description": "Za każdym razem, gdy **generator** jest naprawiony, przez **10 s**, w odległości **36/48/64 m** od ciebie:\n• Widzisz **aury** **skrzyń**.\n• Widzisz **aury** **generatorów**.\n• Widzisz **aury** **totemów**.\n> „Czy możesz nam powiedzieć gdzie byłeś zeszłej nocy?” – Detektyw David Tapp"
+          "description": "Za każdym razem, gdy **generator** jest naprawiony, przez **10 s**, w odległości **36/48/64 m** od ciebie:\n• Widzisz **aury skrzyń**.\n• Widzisz **aury generatorów**.\n• Widzisz **aury totemów**.\n> „Czy możesz nam powiedzieć gdzie byłeś zeszłej nocy?” – Detektyw David Tapp"
         }
       },
       "perk_type": "aura"
@@ -1817,13 +1817,13 @@
       "survivor_id": 38,
       "is_generic_counterpart": false,
       "is_teachable": true,
-      "description": "While healthy and running, use `Active Ability Button 1`:\n• You gain **50%** **Haste** for **2s**.\n• You gain **Exhausted** for **60/50/40s**.\nThen, one happens at random:\n• You gain **50%** **Haste** for **2s**.\n• You gain **Exposed** for **12s**.\n• You gain a random rare item with random add-ons.\n• You scream, but nothing happens.\nThe same effect cannot happen twice in a row.\n> “Take the part. It’s a good movie, he says. What’s the worst that can happen?” -Nicolas Cage",
+      "description": "While healthy and running, use `Active Ability Button 1`:\n• You gain **50% Haste** for **2s**.\n• You gain **Exhausted** for **60/50/40s**.\nThen, one happens at random:\n• You gain **50% Haste** for **2s**.\n• You gain **Exposed** for **12s**.\n• You gain a random rare item with random add-ons.\n• You scream, but nothing happens.\nThe same effect cannot happen twice in a row.\n> “Take the part. It’s a good movie, he says. What’s the worst that can happen?” -Nicolas Cage",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconPerks_dramaturgy.png",
       "icon_local_path": "icons/survivors/Nicolas Cage/dramaturgy.webp",
       "translations": {
         "de": {
           "name": "Dramaturgie",
-          "description": "Wenn du gesund bist und läufst, kannst du `Fähigkeits-Taste 1` drücken, um:\n• **50%** **Eile** für **2 Sek**. zu erhalten.\n• **Erschöpfung** für **60/50/40 Sek**. zu erhalten.\nDann tritt eines dieser Ereignisse nach dem Zufallsprinzip ein:\n• Du erhältst **50%** **Eile** für **2 Sek**.\n• Du leidest **12 Sek**. lang unter **Gefährdet**.\n• Du erhältst einen zufälligen seltenen Gegenstand mit zufälligen Zusätzen.\n• Du schreist, aber nichts passiert.\nDerselbe Effekt kann nicht zweimal hintereinander eintreten.\n> „Nimm die Rolle an. Es ist ein guter Film, hieß es. Was ist das Schlimmste, was passieren kann?“ – Nicolas Cage"
+          "description": "Wenn du gesund bist und läufst, kannst du `Fähigkeits-Taste 1` drücken, um:\n• **50% Eile** für **2 Sek**. zu erhalten.\n• **Erschöpfung** für **60/50/40 Sek**. zu erhalten.\nDann tritt eines dieser Ereignisse nach dem Zufallsprinzip ein:\n• Du erhältst **50% Eile** für **2 Sek**.\n• Du leidest **12 Sek**. lang unter **Gefährdet**.\n• Du erhältst einen zufälligen seltenen Gegenstand mit zufälligen Zusätzen.\n• Du schreist, aber nichts passiert.\nDerselbe Effekt kann nicht zweimal hintereinander eintreten.\n> „Nimm die Rolle an. Es ist ein guter Film, hieß es. Was ist das Schlimmste, was passieren kann?“ – Nicolas Cage"
         },
         "es": {
           "name": "Dramaturgia",
@@ -1847,13 +1847,13 @@
       "survivor_id": 46,
       "is_generic_counterpart": false,
       "is_teachable": true,
-      "description": "While healthy, whenever you take a protection hit, other Survivors within **16m** gain **10%** **Haste** for **4s**.\n> \"Don't worry about me. I've got a knack for bouncing back.\" -Orela Rose",
+      "description": "While healthy, whenever you take a protection hit, other Survivors within **16m** gain **10% Haste** for **4s**.\n> \"Don't worry about me. I've got a knack for bouncing back.\" -Orela Rose",
       "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconsPerks_DutyOfCare.png",
       "icon_local_path": "icons/survivors/Orela Rose/duty_of_care.webp",
       "translations": {
         "de": {
           "name": "Fürsorgepflicht",
-          "description": "Wenn du gesund bist und einen Schutztreffer einsteckst, erhalten andere Überlebende in einem Umkreis von **16 Metern** **10%** **Eile** für **4 Sek**.\n> „Mach dir um mich keine Sorgen. Ich bin gut darin, mich wieder aufzurappeln.“– Orela Rose"
+          "description": "Wenn du gesund bist und einen Schutztreffer einsteckst, erhalten andere Überlebende in einem Umkreis von **16 Metern 10% Eile** für **4 Sek**.\n> „Mach dir um mich keine Sorgen. Ich bin gut darin, mich wieder aufzurappeln.“– Orela Rose"
         },
         "es": {
           "name": "Deber de socorro",
@@ -2033,7 +2033,7 @@
       "translations": {
         "de": {
           "name": "Überholspur",
-          "description": "Immer wenn du einen anderen Überlebenden vom **Haken** rettest, erhältst du **1/2/3** Zähler, bis zu 3.\nImmer wenn du beim Reparieren einen großartigen einfachen Fähigkeitscheck schaffst, verbrauchst du alle Zähler. Für jeden verbrauchten Zähler erhält der **Generator** **4/5/6%** dauerhaften Fortschritt.\n> „Die Schwachen werden zuerst geopfert. So ist die Natur, so ist das Geschäft... Es ist die Wahrheit, die viele nicht sehen wollen.“ – Yun-jin"
+          "description": "Immer wenn du einen anderen Überlebenden vom **Haken** rettest, erhältst du **1/2/3** Zähler, bis zu 3.\nImmer wenn du beim Reparieren einen großartigen einfachen Fähigkeitscheck schaffst, verbrauchst du alle Zähler. Für jeden verbrauchten Zähler erhält der **Generator 4/5/6%** dauerhaften Fortschritt.\n> „Die Schwachen werden zuerst geopfert. So ist die Natur, so ist das Geschäft... Es ist die Wahrheit, die viele nicht sehen wollen.“ – Yun-jin"
         },
         "es": {
           "name": "Primera línea",
@@ -2105,7 +2105,7 @@
         },
         "pl": {
           "name": "Pięć ruchów naprzód",
-          "description": "Będąc w **zasięgu terroru** zabójcy lub uciekając przed zabójcą:\n• Widzisz **aury** **1/2/3** najbliższych **palet** i okien.\n• Gdy przewrócisz **paletę**, zaczynasz się poruszać **20/25/30%** wcześniej.\n• Za każdym razem, gdy przewrócisz **paletę**, czas odnawiania: **60/50/40 s**.\n> „Każdy problem ma rozwiązanie. To tylko kwestia poziomu skomplikowania”. – Kwon Tae-young"
+          "description": "Będąc w **zasięgu terroru** zabójcy lub uciekając przed zabójcą:\n• Widzisz **aury 1/2/3** najbliższych **palet** i okien.\n• Gdy przewrócisz **paletę**, zaczynasz się poruszać **20/25/30%** wcześniej.\n• Za każdym razem, gdy przewrócisz **paletę**, czas odnawiania: **60/50/40 s**.\n> „Każdy problem ma rozwiązanie. To tylko kwestia poziomu skomplikowania”. – Kwon Tae-young"
         }
       },
       "perk_type": "aura"
@@ -2117,13 +2117,13 @@
       "survivor_id": 18,
       "is_generic_counterpart": false,
       "is_teachable": true,
-      "description": "While walking, you gain **7%** **Haste**.\nYou see your own Scratch Marks.\n> \"I wanna finish what we started. I want to kill it.\" -Nancy Wheeler",
+      "description": "While walking, you gain **7% Haste**.\nYou see your own Scratch Marks.\n> \"I wanna finish what we started. I want to kill it.\" -Nancy Wheeler",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconPerks_fixated.png",
       "icon_local_path": "icons/survivors/Nancy Wheeler/fixated.webp",
       "translations": {
         "de": {
           "name": "Fixiert",
-          "description": "Beim Gehen erhältst du **7%** **Eile**.\nDu siehst deine eigenen Kratzspuren.\n> „Ich will zu Ende bringen, was wir begonnen haben. Ich will es töten.“ – Nancy Wheeler"
+          "description": "Beim Gehen erhältst du **7% Eile**.\nDu siehst deine eigenen Kratzspuren.\n> „Ich will zu Ende bringen, was wir begonnen haben. Ich will es töten.“ – Nancy Wheeler"
         },
         "es": {
           "name": "Fijación",
@@ -2165,7 +2165,7 @@
         },
         "pl": {
           "name": "Granat Błyskowy",
-          "description": "Po naprawieniu **50/45/40%** **generatorów**, ukrywając się w szafce, użyj `przycisk zdolności aktywnej 1`, aby stworzyć *granat błyskowy*.\nPo użyciu granatu błyskowego:\n• Wszyscy w pobliżu patrzących na detonację są oślepieni.\n• Zabójca dostaje powiadomienie.\n> „Zejdź z mojej twarzy!” – Leon S. Kennedy"
+          "description": "Po naprawieniu **50/45/40% generatorów**, ukrywając się w szafce, użyj `przycisk zdolności aktywnej 1`, aby stworzyć *granat błyskowy*.\nPo użyciu granatu błyskowego:\n• Wszyscy w pobliżu patrzących na detonację są oślepieni.\n• Zabójca dostaje powiadomienie.\n> „Zejdź z mojej twarzy!” – Leon S. Kennedy"
         }
       },
       "perk_type": "generator"
@@ -2212,7 +2212,7 @@
       "translations": {
         "de": {
           "name": "Im Flow",
-          "description": "Immer wenn ein **Generator** fertig repariert wurde, erhältst du 1 Zähler, bis zu max. 3.\nFür jeden Zähler gilt:\n• Du segnest und zerstörst **Totems** **6/8/10%** schneller.\n• Du heilst **6/8/10%** schneller.\n• Du rettest Überlebende **6/8/10%** schneller vom **Haken**.\n> „Tut mir leid... Ich habe gar nicht bemerkt, wie spät es geworden ist.“ – Kwon Tae-young"
+          "description": "Immer wenn ein **Generator** fertig repariert wurde, erhältst du 1 Zähler, bis zu max. 3.\nFür jeden Zähler gilt:\n• Du segnest und zerstörst **Totems 6/8/10%** schneller.\n• Du heilst **6/8/10%** schneller.\n• Du rettest Überlebende **6/8/10%** schneller vom **Haken**.\n> „Tut mir leid... Ich habe gar nicht bemerkt, wie spät es geworden ist.“ – Kwon Tae-young"
         },
         "es": {
           "name": "Estado fluido",
@@ -2224,7 +2224,7 @@
         },
         "pl": {
           "name": "Stan przepływu",
-          "description": "Za każdym razem, gdy **generator** jest ukończony, otrzymujesz żeton (3), maksymalnie 1.\nZa każdy żeton:\n• Błogosławisz i oczyszczasz **6/8/10%** szybciej.\n• Leczysz **6/8/10%** szybciej.\n• Zdejmujesz ocalałych z **haka** **6/8/10%** szybciej.\n> „Przepraszam... Nie zdawałem sobie sprawy, że pracuję do tak późna”. – Kwon Tae-young"
+          "description": "Za każdym razem, gdy **generator** jest ukończony, otrzymujesz żeton (3), maksymalnie 1.\nZa każdy żeton:\n• Błogosławisz i oczyszczasz **6/8/10%** szybciej.\n• Leczysz **6/8/10%** szybciej.\n• Zdejmujesz ocalałych z **haka 6/8/10%** szybciej.\n> „Przepraszam... Nie zdawałem sobie sprawy, że pracuję do tak późna”. – Kwon Tae-young"
         }
       },
       "perk_type": "healing"
@@ -2326,13 +2326,13 @@
       "survivor_id": 54,
       "is_generic_counterpart": false,
       "is_teachable": true,
-      "description": "Whenever a **Generator** is completed, you earn **1 Token**.\nWhenever you finish repairing a **Generator**, for each Token:\n• You gain **5%** **Haste** for **2s**.\n• You gain **10/15/20%** healing progress.\n“And as the final brick was laid upon the walls of Stellanatis, the people rejoiced.” (Kelglen’s Declaration, 9:9)",
+      "description": "Whenever a **Generator** is completed, you earn **1 Token**.\nWhenever you finish repairing a **Generator**, for each Token:\n• You gain **5% Haste** for **2s**.\n• You gain **10/15/20%** healing progress.\n“And as the final brick was laid upon the walls of Stellanatis, the people rejoiced.” (Kelglen’s Declaration, 9:9)",
       "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconsPerks_FruitsOfYourLabor.png",
       "icon_local_path": "icons/survivors/Aurora Stardotter/fruits_of_your_labor.webp",
       "translations": {
         "de": {
           "name": "Früchte deiner Arbeit",
-          "description": "Immer wenn ein **Generator** fertiggestellt wird, verdienst du 1 Zähler.\nImmer wenn du einen **Generator** fertig reparierst, gilt für jeden Zähler:\n• Du erhältst **5%** **Eile** für **2 Sek**.\n• Du erhältst **10/15/20%** Heilungsfortschritt.\n„Und als der letzte Ziegel die Mauer von Stellanatis vollendete, jubelten die Menschen.“ (Kelglens Deklaration, 9:9)"
+          "description": "Immer wenn ein **Generator** fertiggestellt wird, verdienst du 1 Zähler.\nImmer wenn du einen **Generator** fertig reparierst, gilt für jeden Zähler:\n• Du erhältst **5% Eile** für **2 Sek**.\n• Du erhältst **10/15/20%** Heilungsfortschritt.\n„Und als der letzte Ziegel die Mauer von Stellanatis vollendete, jubelten die Menschen.“ (Kelglens Deklaration, 9:9)"
         },
         "es": {
           "name": "Frutos de tu esfuerzo",
@@ -2356,13 +2356,13 @@
       "survivor_id": 49,
       "is_generic_counterpart": false,
       "is_teachable": true,
-      "description": "While you have **Exhausted**, your Scratch Marks disappear **50%** faster.\nYou lose **Exhausted** **10/12.5/15%** faster.\n> “Let’s take it to the bridge!” -Vee Boonyasak",
+      "description": "While you have **Exhausted**, your Scratch Marks disappear **50%** faster.\nYou lose **Exhausted 10/12.5/15%** faster.\n> “Let’s take it to the bridge!” -Vee Boonyasak",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconPerks_GhostNotes.png",
       "icon_local_path": "icons/survivors/Vee Boonyasak/ghost_notes.webp",
       "translations": {
         "de": {
           "name": "Geisternoten",
-          "description": "Während du unter **Erschöpfung** leidest, verschwinden deine Kratzspuren **50%** schneller.\nDu verlierst den Statuseffekt **Erschöpfung** **10/12.5/15%** schneller.\n> „Jetzt zur Bridge!“ – Vee Boonyasak"
+          "description": "Während du unter **Erschöpfung** leidest, verschwinden deine Kratzspuren **50%** schneller.\nDu verlierst den Statuseffekt **Erschöpfung 10/12.5/15%** schneller.\n> „Jetzt zur Bridge!“ – Vee Boonyasak"
         },
         "es": {
           "name": "Notas fantasmales",
@@ -2374,7 +2374,7 @@
         },
         "pl": {
           "name": "Notatki ducha",
-          "description": "Gdy masz efekt **Wyczerpany**, twoje czerwone zarysowania znikają **50%** szybciej.\nTracisz efekt **Wyczerpany** **10/12.5/15%** szybciej.\n> „Czas na przejście!” — Vee Boonyasak"
+          "description": "Gdy masz efekt **Wyczerpany**, twoje czerwone zarysowania znikają **50%** szybciej.\nTracisz efekt **Wyczerpany 10/12.5/15%** szybciej.\n> „Czas na przejście!” — Vee Boonyasak"
         }
       },
       "perk_type": "stealth"
@@ -2445,13 +2445,13 @@
       "role": "Survivor",
       "is_generic_counterpart": false,
       "is_teachable": false,
-      "description": "When all **Generators** are completed, you gain **5/6/7%** **Haste**.\n> \"Buckle up, fuckos! Let's roll!\" -Lost Tapes: Nikki",
+      "description": "When all **Generators** are completed, you gain **5/6/7% Haste**.\n> \"Buckle up, fuckos! Let's roll!\" -Lost Tapes: Nikki",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconPerks_hope.png",
       "icon_local_path": "icons/survivors/General/hope.webp",
       "translations": {
         "de": {
           "name": "Hoffnung",
-          "description": "Wenn alle **Generatoren** fertiggestellt sind, erhältst du **5/6/7%** **Eile**.\n> „Anschnallen, Leute! Los geht’s!“ – Verlorene Tonbänder: Nikki"
+          "description": "Wenn alle **Generatoren** fertiggestellt sind, erhältst du **5/6/7% Eile**.\n> „Anschnallen, Leute! Los geht’s!“ – Verlorene Tonbänder: Nikki"
         },
         "es": {
           "name": "Esperanza",
@@ -2714,17 +2714,17 @@
       "survivor_id": 1,
       "is_generic_counterpart": false,
       "is_teachable": true,
-      "description": "Within **4m** of you, other Survivors:\n• Cleanse **Totems** **15/20/25%** faster.\n• Heal **15/20/25%** faster.\n• Open Exit Gates **15/20/25%** faster.\n• Sabotage **Hooks** **15/20/25%** faster.\n• Unhook Survivors **15/20/25%** faster.\n• **Unlock** **Chests** **15/20/25%** faster.\nAfter they leave your range, this ends after **0s**.",
+      "description": "Within **4m** of you, other Survivors:\n• Cleanse **Totems 15/20/25%** faster.\n• Heal **15/20/25%** faster.\n• Open Exit Gates **15/20/25%** faster.\n• Sabotage **Hooks 15/20/25%** faster.\n• Unhook Survivors **15/20/25%** faster.\n• **Unlock Chests 15/20/25%** faster.\nAfter they leave your range, this ends after **0s**.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconPerks_leader.png",
       "icon_local_path": "icons/survivors/Dwight Fairfield/leader.webp",
       "translations": {
         "de": {
           "name": "Anführer",
-          "description": "In einem Umkreis von **4 Metern** rund um dich gilt für andere Überlebende:\n• Sie zerstören **Totems** **15/20/25%** schneller.\n• Sie heilen **15/20/25%** schneller.\n• Sie öffnen Ausgangstore **15/20/25%** schneller.\n• Sie sabotieren **Haken** **15/20/25%** schneller.\n• Sie retten Überlebende **15/20/25%** schneller vom **Haken**.\n• Sie schließen **Truhen** **15/20/25%** schneller auf.\nNachdem sie den Radius verlassen haben, endet dieser Effekt nach **0 Sek**."
+          "description": "In einem Umkreis von **4 Metern** rund um dich gilt für andere Überlebende:\n• Sie zerstören **Totems 15/20/25%** schneller.\n• Sie heilen **15/20/25%** schneller.\n• Sie öffnen Ausgangstore **15/20/25%** schneller.\n• Sie sabotieren **Haken 15/20/25%** schneller.\n• Sie retten Überlebende **15/20/25%** schneller vom **Haken**.\n• Sie schließen **Truhen 15/20/25%** schneller auf.\nNachdem sie den Radius verlassen haben, endet dieser Effekt nach **0 Sek**."
         },
         "es": {
           "name": "Líder",
-          "description": "Otros supervivientes que estén en un radio de **4 metros** de ti:\n• Purificarán **tótems** un **15/20/25%** más rápido.\n• Curarán un **15/20/25%** más rápido.\n• Abrirán puertas de salida un **15/20/25%** más rápido.\n• Sabotearán **ganchos** un **15/20/25%** más rápido.\n• Desengancharán supervivientes un **15/20/25%** más rápido.\n• **Desbloquearán** **cofres** un **15/20/25%** más rápido.\nEsto termina **0 segundos** después de que salgan de tu alcance."
+          "description": "Otros supervivientes que estén en un radio de **4 metros** de ti:\n• Purificarán **tótems** un **15/20/25%** más rápido.\n• Curarán un **15/20/25%** más rápido.\n• Abrirán puertas de salida un **15/20/25%** más rápido.\n• Sabotearán **ganchos** un **15/20/25%** más rápido.\n• Desengancharán supervivientes un **15/20/25%** más rápido.\n• **Desbloquearán cofres** un **15/20/25%** más rápido.\nEsto termina **0 segundos** después de que salgan de tu alcance."
         },
         "ja": {
           "name": "リーダー",
@@ -2732,7 +2732,7 @@
         },
         "pl": {
           "name": "Lider",
-          "description": "Inni ocalali w odległości **4 m** od ciebie:\n• Oczyszczają **totemy** **15/20/25%** szybciej.\n• Leczą **15/20/25%** szybciej.\n• Otwierają bramy wyjściowe **15/20/25%** szybciej.\n• Sabotują **haki** **15/20/25%** szybciej.\n• Zdejmują ocalałych z **haka** **15/20/25%** szybciej.\n• Odblokowują **skrzynie** **15/20/25%** szybciej.\nTen efekt kończy się **0 s** po tym, jak oddalą się poza twój zasięg."
+          "description": "Inni ocalali w odległości **4 m** od ciebie:\n• Oczyszczają **totemy 15/20/25%** szybciej.\n• Leczą **15/20/25%** szybciej.\n• Otwierają bramy wyjściowe **15/20/25%** szybciej.\n• Sabotują **haki 15/20/25%** szybciej.\n• Zdejmują ocalałych z **haka 15/20/25%** szybciej.\n• Odblokowują **skrzynie 15/20/25%** szybciej.\nTen efekt kończy się **0 s** po tym, jak oddalą się poza twój zasięg."
         }
       },
       "perk_type": "entity"
@@ -2866,13 +2866,13 @@
       "survivor_id": 9,
       "is_generic_counterpart": false,
       "is_teachable": true,
-      "description": "Whenever you medium or fast-vault:\n• You gain **50%** **Haste** for **3s**.\n• You gain **Exhausted** for **60/50/40s**.\n> “U mad?” -Feng Min",
+      "description": "Whenever you medium or fast-vault:\n• You gain **50% Haste** for **3s**.\n• You gain **Exhausted** for **60/50/40s**.\n> “U mad?” -Feng Min",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconPerks_lithe.png",
       "icon_local_path": "icons/survivors/Feng Min/lithe.webp",
       "translations": {
         "de": {
           "name": "Flink",
-          "description": "Immer wenn du einen Sprung mit mittlerer oder hoher Geschwindigkeit ausführst, gilt:\n• Du erhältst **50%** **Eile** für **3 Sek**.\n• Du leidest **60/50/40 Sek**. lang unter **Erschöpfung**.\n> „Warum so wütend?“ – Feng Min"
+          "description": "Immer wenn du einen Sprung mit mittlerer oder hoher Geschwindigkeit ausführst, gilt:\n• Du erhältst **50% Eile** für **3 Sek**.\n• Du leidest **60/50/40 Sek**. lang unter **Erschöpfung**.\n> „Warum so wütend?“ – Feng Min"
         },
         "es": {
           "name": "Agilidad",
@@ -2986,13 +2986,13 @@
       "survivor_id": 37,
       "is_generic_counterpart": false,
       "is_teachable": true,
-      "description": "While injured, whenever you finish healing another Survivor, you gain **Endurance** for **6/8/10s**.\nWhile you have **Deep Wound**, you gain **3%** **Haste**.\n> “I didn’t come here to be robot food.” -Gabriel Soma",
+      "description": "While injured, whenever you finish healing another Survivor, you gain **Endurance** for **6/8/10s**.\nWhile you have **Deep Wound**, you gain **3% Haste**.\n> “I didn’t come here to be robot food.” -Gabriel Soma",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconPerks_madeForThis.png",
       "icon_local_path": "icons/survivors/Gabriel Soma/made_for_this.webp",
       "translations": {
         "de": {
           "name": "Dafür geschaffen",
-          "description": "Wenn du einen anderen Überlebenden vollständig geheilt hast, während du **verletzt** bist, erhältst du **6/8/10 Sek**. lang Kondition.\nWenn du eine **Tiefe Wunde** hast, erhältst du **3%** **Eile**.\n> „Ich bin nicht hierhergekommen, um als Roboterfutter zu enden.“ – Gabriel Soma"
+          "description": "Wenn du einen anderen Überlebenden vollständig geheilt hast, während du **verletzt** bist, erhältst du **6/8/10 Sek**. lang Kondition.\nWenn du eine **Tiefe Wunde** hast, erhältst du **3% Eile**.\n> „Ich bin nicht hierhergekommen, um als Roboterfutter zu enden.“ – Gabriel Soma"
         },
         "es": {
           "name": "Hecho para esto",
@@ -3064,7 +3064,7 @@
         },
         "pl": {
           "name": "Lustrzana Iluzja",
-          "description": "Po naprawieniu **40/50%** **generatorów**, stojąc obok **skrzyni**, przełącznika bramy wyjściowej, **generatora** lub **totemu**, użyj `przycisk zdolności aktywnej 2`, aby stworzyć statyczną iluzję na **100/110/120 s**.\n> „Zostań… tutaj… Idealnie!” – Baermar"
+          "description": "Po naprawieniu **40/50% generatorów**, stojąc obok **skrzyni**, przełącznika bramy wyjściowej, **generatora** lub **totemu**, użyj `przycisk zdolności aktywnej 2`, aby stworzyć statyczną iluzję na **100/110/120 s**.\n> „Zostań… tutaj… Idealnie!” – Baermar"
         }
       },
       "perk_type": "generator"
@@ -3166,13 +3166,13 @@
       "alternate_name": "Bound by Obsession",
       "is_generic_counterpart": true,
       "is_teachable": true,
-      "description": "While you are the **Obsession**, every **30s**, the Killer sees your **Aura** for **4s**.\nWhile the Killer sees your **Aura**:\n• You see their **Aura**.\n• You cleanse **totems** **25/30/35%** faster.\n• You heal **25/30/35%** faster.\n• You repair **25/30/35%** faster.\nWhen the **trial** starts, you are more likely to be the **Obsession**.\n> “He was watching me!” -Laurie Strode",
+      "description": "While you are the **Obsession**, every **30s**, the Killer sees your **Aura** for **4s**.\nWhile the Killer sees your **Aura**:\n• You see their **Aura**.\n• You cleanse **totems 25/30/35%** faster.\n• You heal **25/30/35%** faster.\n• You repair **25/30/35%** faster.\nWhen the **trial** starts, you are more likely to be the **Obsession**.\n> “He was watching me!” -Laurie Strode",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconPerks_objectOfObsession.png",
       "icon_local_path": "icons/survivors/Laurie Strode/object_of_obsession.webp",
       "translations": {
         "de": {
           "name": "Objekt der Besessenheit",
-          "description": "Solange du das Ziel seiner **Besessenheit** bist, sieht der Killer **4 Sek**. lang alle **30 Sek**. deine **Aura**.\nSolange der Killer deine **Aura** sieht, gilt:\n• Du siehst seine **Aura**.\n• Du zerstörst **Totems** **25/30/35%** schneller.\n• Du heilst **25/30/35%** schneller.\n• Du reparierst **25/30/35%** schneller.\nZu Beginn der **Prüfung** bist du mit größerer Wahrscheinlichkeit das Ziel der **Besessenheit**.\n> „Er hat mich beobachtet!“ – Laurie Strode"
+          "description": "Solange du das Ziel seiner **Besessenheit** bist, sieht der Killer **4 Sek**. lang alle **30 Sek**. deine **Aura**.\nSolange der Killer deine **Aura** sieht, gilt:\n• Du siehst seine **Aura**.\n• Du zerstörst **Totems 25/30/35%** schneller.\n• Du heilst **25/30/35%** schneller.\n• Du reparierst **25/30/35%** schneller.\nZu Beginn der **Prüfung** bist du mit größerer Wahrscheinlichkeit das Ziel der **Besessenheit**.\n> „Er hat mich beobachtet!“ – Laurie Strode"
         },
         "es": {
           "name": "Objeto de obsesión",
@@ -3184,7 +3184,7 @@
         },
         "pl": {
           "name": "Obiekt obsesji",
-          "description": "Gdy jesteś **obsesją**, co **30 s** zabójca widzi twoją **aurę** przez **4 s**.\nGdy zabójca widzi twoją **aurę**:\n• Widzisz **aurę zabójcy**.\n• Oczyszczasz **totemy** **25/30/35%** szybciej.\n• Leczysz **25/30/35%** szybciej.\n• Naprawiasz **25/30/35%** szybciej.\nNa początku próby masz większą szansę stać się **obsesją**.\n> „On mnie obserwował!” – Laurie Strode"
+          "description": "Gdy jesteś **obsesją**, co **30 s** zabójca widzi twoją **aurę** przez **4 s**.\nGdy zabójca widzi twoją **aurę**:\n• Widzisz **aurę zabójcy**.\n• Oczyszczasz **totemy 25/30/35%** szybciej.\n• Leczysz **25/30/35%** szybciej.\n• Naprawiasz **25/30/35%** szybciej.\nNa początku próby masz większą szansę stać się **obsesją**.\n> „On mnie obserwował!” – Laurie Strode"
         }
       },
       "perk_type": "aura"
@@ -3265,7 +3265,7 @@
       "translations": {
         "de": {
           "name": "Offenes Blatt",
-          "description": "Alle Überlebenden sehen **Auren** mit festgelegter Reichweite aus einer um **8/12/16 Meter** **erhöhten** Entfernung.\n> „Aufpassen ist es, was mich die ganzen Jahre am Leben gehalten hat. Das und mein gutes Aussehen natürlich.“ – Ace"
+          "description": "Alle Überlebenden sehen **Auren** mit festgelegter Reichweite aus einer um **8/12/16 Meter erhöhten** Entfernung.\n> „Aufpassen ist es, was mich die ganzen Jahre am Leben gehalten hat. Das und mein gutes Aussehen natürlich.“ – Ace"
         },
         "es": {
           "name": "A mano descubierta",
@@ -3319,7 +3319,7 @@
       "survivor_id": 31,
       "is_generic_counterpart": false,
       "is_teachable": true,
-      "description": "Whenever you bless or cleanse a **Totem**, until you take damage, you repair **6/8/10%** faster. If that **Totem** was a **Hex** **Totem**, the effect is doubled.\n> \"The Ravage senses us. We need to work fast.\" -Haddie Kaur, Ravages of the Abyss Episode 9",
+      "description": "Whenever you bless or cleanse a **Totem**, until you take damage, you repair **6/8/10%** faster. If that **Totem** was a **Hex Totem**, the effect is doubled.\n> \"The Ravage senses us. We need to work fast.\" -Haddie Kaur, Ravages of the Abyss Episode 9",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconPerks_overzealous.png",
       "icon_local_path": "icons/survivors/Haddie Kaur/overzealous.webp",
       "translations": {
@@ -3379,17 +3379,17 @@
       "survivor_id": 11,
       "is_generic_counterpart": false,
       "is_teachable": true,
-      "description": "Whenever you **unlock** a **Chest**, it will contain a rare **Med-Kit**.\nYou **unlock** **Chests** **40/60/80%** faster.\nThe range at which the Killer hears you **unlocking** **Chests** is **8m** shorter.",
+      "description": "Whenever you **unlock** a **Chest**, it will contain a rare **Med-Kit**.\nYou **unlock Chests 40/60/80%** faster.\nThe range at which the Killer hears you **unlocking Chests** is **8m** shorter.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconPerks_pharmacy.png",
       "icon_local_path": "icons/survivors/Quentin Smith/pharmacy.webp",
       "translations": {
         "de": {
           "name": "Apotheke",
-          "description": "Immer wenn du eine **Truhe** aufschließt, findest du darin einen seltenen Sani-Kasten.\nDu schließt **Truhen** **40/60/80%** schneller auf.\nDie Entfernung, aus der der Killer das Aufschließen von **Truhen** hören kann, ist um **8 Meter** **verringert**."
+          "description": "Immer wenn du eine **Truhe** aufschließt, findest du darin einen seltenen Sani-Kasten.\nDu schließt **Truhen 40/60/80%** schneller auf.\nDie Entfernung, aus der der Killer das Aufschließen von **Truhen** hören kann, ist um **8 Meter verringert**."
         },
         "es": {
           "name": "Farmacia",
-          "description": "Cuando desbloquees un **cofre**, contendrá un botiquín raro.\n**Desbloqueas** **cofres** un **40/60/80%** más rápido.\nLa distancia a la que el asesino te oye **desbloqueando** **cofres** se **reduce** **8 metros**."
+          "description": "Cuando desbloquees un **cofre**, contendrá un botiquín raro.\n**Desbloqueas cofres** un **40/60/80%** más rápido.\nLa distancia a la que el asesino te oye **desbloqueando cofres** se **reduce 8 metros**."
         },
         "ja": {
           "name": "調剤学",
@@ -3397,7 +3397,7 @@
         },
         "pl": {
           "name": "Farmacja",
-          "description": "Za każdym razem, gdy **odblokowujesz** **skrzynię**, zawiera ona rzadką apteczkę.\n**Odblokowujesz** **skrzynie** **40/60/80%** szybciej.\nOdległość, z jakiej zabójca słyszy odgłosy odblokowywania przez ciebie **skrzyni**, jest mniejsza o **8 m**."
+          "description": "Za każdym razem, gdy **odblokowujesz skrzynię**, zawiera ona rzadką apteczkę.\n**Odblokowujesz skrzynie 40/60/80%** szybciej.\nOdległość, z jakiej zabójca słyszy odgłosy odblokowywania przez ciebie **skrzyni**, jest mniejsza o **8 m**."
         }
       },
       "perk_type": "healing"
@@ -3409,13 +3409,13 @@
       "survivor_id": 38,
       "is_generic_counterpart": false,
       "is_teachable": true,
-      "description": "While injured, crouched and idle, use `Active Ability Button 2` to be downed silently.\nWhile downed this way, once per **trial**:\n• You make no Grunts of Pain.\n• You leave no Pools of Blood.\n• You recover **100%** faster.\n• You can fully recover.\nWhenever you recover this way:\n• You gain **50%** **Haste** for **4/5/6s**.\n• You are healed instantly.\nWhen all **Generators** are completed, you can use this ability once again.\n> “I think you’ll find this shooting location… captivating.” -Pauline Stamper",
+      "description": "While injured, crouched and idle, use `Active Ability Button 2` to be downed silently.\nWhile downed this way, once per **trial**:\n• You make no Grunts of Pain.\n• You leave no Pools of Blood.\n• You recover **100%** faster.\n• You can fully recover.\nWhenever you recover this way:\n• You gain **50% Haste** for **4/5/6s**.\n• You are healed instantly.\nWhen all **Generators** are completed, you can use this ability once again.\n> “I think you’ll find this shooting location… captivating.” -Pauline Stamper",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconPerks_plotTwist.png",
       "icon_local_path": "icons/survivors/Nicolas Cage/plot_twist.webp",
       "translations": {
         "de": {
           "name": "Überraschende Wendung",
-          "description": "Wenn du **verletzt**, geduckt und untätig bist, kannst du `Fähigkeits-Taste 2` drücken, um leise niedergestreckt zu werden.\nWenn du auf diese Weise niedergestreckt wurdest, gilt einmal pro **Prüfung**:\n• Du gibst keine Schmerzenslaute von dir.\n• Du hinterlässt keine Blutpfützen.\n• Du erholst dich **100%** schneller.\n• Du kannst dich vollständig erholen.\nImmer wenn du dich auf diese Weise erholt hast, gilt:\n• Du erhältst **50%** **Eile** für **4/5/6 Sek**.\n• Du wirst sofort geheilt.\nSobald alle **Generatoren** fertig repariert wurden, kannst du diese Fähigkeit ein weiteres Mal nutzen.\n> „Ich denke, du wirst diesen Drehort... fesselnd finden.“ – Pauline Stamper"
+          "description": "Wenn du **verletzt**, geduckt und untätig bist, kannst du `Fähigkeits-Taste 2` drücken, um leise niedergestreckt zu werden.\nWenn du auf diese Weise niedergestreckt wurdest, gilt einmal pro **Prüfung**:\n• Du gibst keine Schmerzenslaute von dir.\n• Du hinterlässt keine Blutpfützen.\n• Du erholst dich **100%** schneller.\n• Du kannst dich vollständig erholen.\nImmer wenn du dich auf diese Weise erholt hast, gilt:\n• Du erhältst **50% Eile** für **4/5/6 Sek**.\n• Du wirst sofort geheilt.\nSobald alle **Generatoren** fertig repariert wurden, kannst du diese Fähigkeit ein weiteres Mal nutzen.\n> „Ich denke, du wirst diesen Drehort... fesselnd finden.“ – Pauline Stamper"
         },
         "es": {
           "name": "Giro argumental",
@@ -3456,7 +3456,7 @@
         },
         "pl": {
           "name": "Instynkt Grabieżcy",
-          "description": "W odległości **16/24/32 m** od zablokowanych **skrzyń** i upuszczonych przedmiotów, widzisz ich **aury**.\nZa każdym razem, gdy **odblokowujesz** **skrzynię**, masz **Slightly**/**Moderately**/**Considerably**% większą szansę na znalezienie przedmiotu o wyższej klasie.\n> „Pionierzy zbierali łupy godzinami”. – Zaginione taśmy: Aizeyu"
+          "description": "W odległości **16/24/32 m** od zablokowanych **skrzyń** i upuszczonych przedmiotów, widzisz ich **aury**.\nZa każdym razem, gdy **odblokowujesz skrzynię**, masz **Slightly**/**Moderately**/**Considerably**% większą szansę na znalezienie przedmiotu o wyższej klasie.\n> „Pionierzy zbierali łupy godzinami”. – Zaginione taśmy: Aizeyu"
         }
       },
       "perk_type": "aura"
@@ -3859,17 +3859,17 @@
       "role": "Survivor",
       "is_generic_counterpart": false,
       "is_teachable": false,
-      "description": "While injured:\n• You bless and cleanse **Totems** **3/6/9%** faster.\n• You heal **3/6/9%** faster.\n• You open Exit Gates **3/6/9%** faster.\n• You repair **3/6/9%** faster.\n• You sabotage **Hooks** **3/6/9%** faster.\n• You unhook Survivors **3/6/9%** faster.\n• You **unlock** **chests** **3/6/9%** faster.\n• You vault **3/6/9%** faster.\n> \"Focus, even in these desperate times.\"",
+      "description": "While injured:\n• You bless and cleanse **Totems 3/6/9%** faster.\n• You heal **3/6/9%** faster.\n• You open Exit Gates **3/6/9%** faster.\n• You repair **3/6/9%** faster.\n• You sabotage **Hooks 3/6/9%** faster.\n• You unhook Survivors **3/6/9%** faster.\n• You **unlock chests 3/6/9%** faster.\n• You vault **3/6/9%** faster.\n> \"Focus, even in these desperate times.\"",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconPerks_resilience.png",
       "icon_local_path": "icons/survivors/General/resilience.webp",
       "translations": {
         "de": {
           "name": "Widerstandsfähigkeit",
-          "description": "Wenn du **verletzt** bist, gilt:\n• Du segnest und zerstörst **Totems** **3/6/9%** schneller.\n• Du heilst **3/6/9%** schneller.\n• Du öffnest Ausgangstore **3/6/9%** schneller.\n• Du reparierst **3/6/9%** schneller.\n• Du sabotierst **Haken** **3/6/9%** schneller.\n• Du rettest Überlebende **3/6/9%** schneller vom **Haken**.\n• Du öffnest **Truhen** **3/6/9%** schneller.\n• Du springst **3/6/9%** schneller.\n> „Konzentriere dich, auch in diesen hoffnungslosen Zeiten.“"
+          "description": "Wenn du **verletzt** bist, gilt:\n• Du segnest und zerstörst **Totems 3/6/9%** schneller.\n• Du heilst **3/6/9%** schneller.\n• Du öffnest Ausgangstore **3/6/9%** schneller.\n• Du reparierst **3/6/9%** schneller.\n• Du sabotierst **Haken 3/6/9%** schneller.\n• Du rettest Überlebende **3/6/9%** schneller vom **Haken**.\n• Du öffnest **Truhen 3/6/9%** schneller.\n• Du springst **3/6/9%** schneller.\n> „Konzentriere dich, auch in diesen hoffnungslosen Zeiten.“"
         },
         "es": {
           "name": "Resiliencia",
-          "description": "Estando herido:\n• Bendecirás y purificarás **tótems** un **3/6/9%** más rápido.\n• Curarás un **3/6/9%** más rápido.\n• Abrirás las puertas de salida un **3/6/9%** más rápido.\n• Repararás un **3/6/9%** más rápido.\n• Sabotearás **ganchos** un **3/6/9%** más rápido.\n• Desengancharás supervivientes un **3/6/9%** más rápido.\n• **Desbloquearás** **cofres** un **3/6/9%** más rápido.\n• Saltarás un **3/6/9%** más rápido.\n> \"Concéntrate, incluso en los momentos más desesperados\"."
+          "description": "Estando herido:\n• Bendecirás y purificarás **tótems** un **3/6/9%** más rápido.\n• Curarás un **3/6/9%** más rápido.\n• Abrirás las puertas de salida un **3/6/9%** más rápido.\n• Repararás un **3/6/9%** más rápido.\n• Sabotearás **ganchos** un **3/6/9%** más rápido.\n• Desengancharás supervivientes un **3/6/9%** más rápido.\n• **Desbloquearás cofres** un **3/6/9%** más rápido.\n• Saltarás un **3/6/9%** más rápido.\n> \"Concéntrate, incluso en los momentos más desesperados\"."
         },
         "ja": {
           "name": "逆境魂",
@@ -3877,7 +3877,7 @@
         },
         "pl": {
           "name": "Zaradność",
-          "description": "Gdy jesteś ranny:\n• Błogosławisz i oczyszczasz **totemy** **3/6/9%** szybciej.\n• Leczysz **3/6/9%** szybciej.\n• Otwierasz bramy wyjściowe **3/6/9%** szybciej.\n• Naprawiasz **3/6/9%** szybciej.\n• Sabotujesz **haki** **3/6/9%** szybciej.\n• Zdejmujesz ocalałych z **haka** **3/6/9%** szybciej.\n• **Odblokowujesz** **skrzynie** **3/6/9%** szybciej.\n• Wykonujesz przeskoki **3/6/9%** szybciej.\n> „Skup się, nawet w tych desperackich czasach”."
+          "description": "Gdy jesteś ranny:\n• Błogosławisz i oczyszczasz **totemy 3/6/9%** szybciej.\n• Leczysz **3/6/9%** szybciej.\n• Otwierasz bramy wyjściowe **3/6/9%** szybciej.\n• Naprawiasz **3/6/9%** szybciej.\n• Sabotujesz **haki 3/6/9%** szybciej.\n• Zdejmujesz ocalałych z **haka 3/6/9%** szybciej.\n• **Odblokowujesz skrzynie 3/6/9%** szybciej.\n• Wykonujesz przeskoki **3/6/9%** szybciej.\n> „Skup się, nawet w tych desperackich czasach”."
         }
       },
       "perk_type": "entity"
@@ -3959,7 +3959,7 @@
         },
         "es": {
           "name": "Espíritu de novato",
-          "description": "Tras lograr **5/4/3** **pruebas de habilidad** de reparación básicas, mientras un **generador** se esté revirtiendo, verás su **aura**.\n\"Pondré fin a esto, teniente. Se lo prometo\". (Leon S. Kennedy)"
+          "description": "Tras lograr **5/4/3 pruebas de habilidad** de reparación básicas, mientras un **generador** se esté revirtiendo, verás su **aura**.\n\"Pondré fin a esto, teniente. Se lo prometo\". (Leon S. Kennedy)"
         },
         "ja": {
           "name": "新人魂",
@@ -3996,7 +3996,7 @@
         },
         "pl": {
           "name": "Sabotażysta",
-          "description": "W odległości **56 m** od miejsca, gdy inny ocalały został podniesiony przez zabójcę i jest niesiony, widzisz **aury** **haka** i **haków plagi**.\nMożesz sabotować **haki**. Czas odnawiania: **30/25/20 s**."
+          "description": "W odległości **56 m** od miejsca, gdy inny ocalały został podniesiony przez zabójcę i jest niesiony, widzisz **aury haka** i **haków plagi**.\nMożesz sabotować **haki**. Czas odnawiania: **30/25/20 s**."
         }
       },
       "perk_type": "aura"
@@ -4014,7 +4014,7 @@
       "translations": {
         "de": {
           "name": "Ruf der Erlösung",
-          "description": "Immer wenn der Killer mit der Jagd auf dich beginnt, gilt:\n• Du siehst **5 Sek**. lang die **Auren** anderer Überlebender.\n• Überlebende, die nicht gejagt werden, sehen deine **Aura** **1/2/3 Sek**. lang.\n• Überlebende, die nicht gejagt werden, sehen **1/2/3 Sek**. lang die **Aura** des Killers.\n> „Mögest du sehen wie die Sterne.“ – Segen der Auroriten"
+          "description": "Immer wenn der Killer mit der Jagd auf dich beginnt, gilt:\n• Du siehst **5 Sek**. lang die **Auren** anderer Überlebender.\n• Überlebende, die nicht gejagt werden, sehen deine **Aura 1/2/3 Sek**. lang.\n• Überlebende, die nicht gejagt werden, sehen **1/2/3 Sek**. lang die **Aura** des Killers.\n> „Mögest du sehen wie die Sterne.“ – Segen der Auroriten"
         },
         "es": {
           "name": "Grito de salvación",
@@ -4276,13 +4276,13 @@
       "survivor_id": 25,
       "is_generic_counterpart": false,
       "is_teachable": true,
-      "description": "Whenever you **Pallet**-stun the Killer:\n• You gain **50%** **Haste** for **4s**.\n• You gain **Exhausted** for **30/25/20s**.\n> \"I've dealt with psychopaths in suits. You're just uglier and worse dressed.\" -Yun-jin",
+      "description": "Whenever you **Pallet**-stun the Killer:\n• You gain **50% Haste** for **4s**.\n• You gain **Exhausted** for **30/25/20s**.\n> \"I've dealt with psychopaths in suits. You're just uglier and worse dressed.\" -Yun-jin",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconPerks_smashHit.png",
       "icon_local_path": "icons/survivors/Lee Yun-jin/smash_hit.webp",
       "translations": {
         "de": {
           "name": "Superhit",
-          "description": "Immer wenn du den Killer durch eine **Palette** betäubst, gilt:\n• Du erhältst **50%** **Eile** für **4 Sek**.\n• Du leidest **30/25/20 Sek**. lang unter **Erschöpfung**.\n> „Ich hatte mit Psychopathen in Anzügen zu tun. Du bist einfach nur hässlicher und schäbiger gekleidet.“ – Yun-jin"
+          "description": "Immer wenn du den Killer durch eine **Palette** betäubst, gilt:\n• Du erhältst **50% Eile** für **4 Sek**.\n• Du leidest **30/25/20 Sek**. lang unter **Erschöpfung**.\n> „Ich hatte mit Psychopathen in Anzügen zu tun. Du bist einfach nur hässlicher und schäbiger gekleidet.“ – Yun-jin"
         },
         "es": {
           "name": "Éxito aplastante",
@@ -4403,7 +4403,7 @@
       "translations": {
         "de": {
           "name": "Spezialistin",
-          "description": "Immer wenn du eine **Truhe** durchwühlst oder aufschließt, erhältst du 1 Zähler, bis zu max. 3.\nImmer wenn du beim Reparieren eines **Generators** einen großartigen einfachen Fähigkeitscheck schaffst, verbrauchst du alle Zähler. Für jeden verbrauchten Zähler erhält der **Generator** **60/50/40%** dauerhaften Fortschritt.\n> „Also dann. Das kommt mir irgendwie bekannt vor.“ – Lara Croft"
+          "description": "Immer wenn du eine **Truhe** durchwühlst oder aufschließt, erhältst du 1 Zähler, bis zu max. 3.\nImmer wenn du beim Reparieren eines **Generators** einen großartigen einfachen Fähigkeitscheck schaffst, verbrauchst du alle Zähler. Für jeden verbrauchten Zähler erhält der **Generator 60/50/40%** dauerhaften Fortschritt.\n> „Also dann. Das kommt mir irgendwie bekannt vor.“ – Lara Croft"
         },
         "es": {
           "name": "Especialista",
@@ -4415,7 +4415,7 @@
         },
         "pl": {
           "name": "Specjalistka",
-          "description": "Za każdym razem, gdy przeszukujesz lub **odblokowujesz** **skrzynię**, otrzymujesz określoną liczbę żetonów (1), maksymalnie 3.\nPodczas naprawiania **generatora**, za każdym razem, gdy trafisz świetny podstawowy **test umiejętności**, wydaj wszystkie żetony. Za każdy wydany żeton **generator** otrzymuje **60/50/40%** więcej stałego postępu.\n> „No proszę, to wydaje się znajome”. – Lara Croft"
+          "description": "Za każdym razem, gdy przeszukujesz lub **odblokowujesz skrzynię**, otrzymujesz określoną liczbę żetonów (1), maksymalnie 3.\nPodczas naprawiania **generatora**, za każdym razem, gdy trafisz świetny podstawowy **test umiejętności**, wydaj wszystkie żetony. Za każdy wydany żeton **generator** otrzymuje **60/50/40%** więcej stałego postępu.\n> „No proszę, to wydaje się znajome”. – Lara Croft"
         }
       },
       "perk_type": "generator"
@@ -4426,17 +4426,17 @@
       "role": "Survivor",
       "is_generic_counterpart": false,
       "is_teachable": false,
-      "description": "Within **36m**, whenever the Killer looks at you, you hear a sound cue.\nWithin **36m**, while the Killer is looking at you:\n• You bless and cleanse **Totems** **2/4/6%** faster.\n• You heal **2/4/6%** faster.\n• You open Exit Gates **2/4/6%** faster.\n• You repair **Generators** **2/4/6%** faster.\n• You sabotage **Hooks** **2/4/6%** faster.\n• You unhook Survivors **2/4/6%** faster.\n• You **unlock** **Chests** **2/4/6%** faster.",
+      "description": "Within **36m**, whenever the Killer looks at you, you hear a sound cue.\nWithin **36m**, while the Killer is looking at you:\n• You bless and cleanse **Totems 2/4/6%** faster.\n• You heal **2/4/6%** faster.\n• You open Exit Gates **2/4/6%** faster.\n• You repair **Generators 2/4/6%** faster.\n• You sabotage **Hooks 2/4/6%** faster.\n• You unhook Survivors **2/4/6%** faster.\n• You **unlock Chests 2/4/6%** faster.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconPerks_spineChill.png",
       "icon_local_path": "icons/survivors/General/spine_chill.webp",
       "translations": {
         "de": {
           "name": "Kalter Rückenschauer",
-          "description": "In einem Umkreis von **36 Metern** bekommst du immer dann einen Geräuschhinweis, wenn der Killer dich ansieht.\nWenn der Killer dich in einem Umkreis von **36 Metern** ansieht, gilt:\n• Du segnest und zerstörst **Totems** **2/4/6%** schneller.\n• Du heilst **2/4/6%** schneller.\n• Du öffnest Ausgangstore **2/4/6%** schneller.\n• Du reparierst **Generatoren** **2/4/6%** schneller.\n• Du sabotierst **Haken** **2/4/6%** schneller.\n• Du rettest Überlebende **2/4/6%** schneller vom **Haken**.\n• Du schließt **Truhen** **2/4/6%** schneller auf."
+          "description": "In einem Umkreis von **36 Metern** bekommst du immer dann einen Geräuschhinweis, wenn der Killer dich ansieht.\nWenn der Killer dich in einem Umkreis von **36 Metern** ansieht, gilt:\n• Du segnest und zerstörst **Totems 2/4/6%** schneller.\n• Du heilst **2/4/6%** schneller.\n• Du öffnest Ausgangstore **2/4/6%** schneller.\n• Du reparierst **Generatoren 2/4/6%** schneller.\n• Du sabotierst **Haken 2/4/6%** schneller.\n• Du rettest Überlebende **2/4/6%** schneller vom **Haken**.\n• Du schließt **Truhen 2/4/6%** schneller auf."
         },
         "es": {
           "name": "Escalofríos",
-          "description": "En un radio de **36 metros**, cada vez que el asesino te mire, oirás un sonido.\nEn un radio de **36 metros**, cada vez que el asesino te mire:\n• Bendecirás y purificarás **tótems** un **2/4/6%** más rápido.\n• Curarás un **2/4/6%** más rápido.\n• Abrirás las puertas de salida un **2/4/6%** más rápido.\n• Repararás **generadores** un **2/4/6%** más rápido.\n• Sabotearás **ganchos** un **2/4/6%** más rápido.\n• Desengancharás supervivientes un **2/4/6%** más rápido.\n• **Desbloquearás** **cofres** un **2/4/6%** más rápido."
+          "description": "En un radio de **36 metros**, cada vez que el asesino te mire, oirás un sonido.\nEn un radio de **36 metros**, cada vez que el asesino te mire:\n• Bendecirás y purificarás **tótems** un **2/4/6%** más rápido.\n• Curarás un **2/4/6%** más rápido.\n• Abrirás las puertas de salida un **2/4/6%** más rápido.\n• Repararás **generadores** un **2/4/6%** más rápido.\n• Sabotearás **ganchos** un **2/4/6%** más rápido.\n• Desengancharás supervivientes un **2/4/6%** más rápido.\n• **Desbloquearás cofres** un **2/4/6%** más rápido."
         },
         "ja": {
           "name": "凍りつく背筋",
@@ -4444,7 +4444,7 @@
         },
         "pl": {
           "name": "Dreszcz",
-          "description": "W odległości **36 m**, za każdym razem, gdy zabójca spojrzy na ciebie, słyszysz sygnał dźwiękowy.\nW odległości **36 m**, gdy zabójca patrzy na ciebie:\n• Błogosławisz i oczyszczasz **2/4/6%** szybciej.\n• Leczysz **2/4/6%** szybciej.\n• Otwierasz bramy wyjściowe **2/4/6%** szybciej.\n• Naprawiasz **generatory** **2/4/6%** szybciej.\n• Sabotujesz **haki** **2/4/6%** szybciej.\n• Zdejmujesz ocalałych z **haka** **2/4/6%** szybciej.\n• **Odblokowujesz** **skrzynie** **2/4/6%** szybciej."
+          "description": "W odległości **36 m**, za każdym razem, gdy zabójca spojrzy na ciebie, słyszysz sygnał dźwiękowy.\nW odległości **36 m**, gdy zabójca patrzy na ciebie:\n• Błogosławisz i oczyszczasz **2/4/6%** szybciej.\n• Leczysz **2/4/6%** szybciej.\n• Otwierasz bramy wyjściowe **2/4/6%** szybciej.\n• Naprawiasz **generatory 2/4/6%** szybciej.\n• Sabotujesz **haki 2/4/6%** szybciej.\n• Zdejmujesz ocalałych z **haka 2/4/6%** szybciej.\n• **Odblokowujesz skrzynie 2/4/6%** szybciej."
         }
       },
       "perk_type": "chase"
@@ -4456,13 +4456,13 @@
       "survivor_id": 2,
       "is_generic_counterpart": false,
       "is_teachable": true,
-      "description": "Whenever you start running:\n• You gain **50%** **Haste** for **3s**.\n• You gain **Exhausted** for **60/50/40s**.",
+      "description": "Whenever you start running:\n• You gain **50% Haste** for **3s**.\n• You gain **Exhausted** for **60/50/40s**.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconPerks_sprintBurst.png",
       "icon_local_path": "icons/survivors/Meg Thomas/sprint_burst.webp",
       "translations": {
         "de": {
           "name": "Sprintboost",
-          "description": "Immer wenn du zu laufen beginnst, gilt:\n• Du erhältst **50%** **Eile** für **3 Sek**.\n• Du leidest **60/50/40 Sek**. lang unter **Erschöpfung**."
+          "description": "Immer wenn du zu laufen beginnst, gilt:\n• Du erhältst **50% Eile** für **3 Sek**.\n• Du leidest **60/50/40 Sek**. lang unter **Erschöpfung**."
         },
         "es": {
           "name": "Esprint",
@@ -4534,7 +4534,7 @@
         },
         "pl": {
           "name": "Nieruchomy Wzrok",
-          "description": "Po byciu w bezczynności przez **6/5/4 s**, w odległości **24 m**, do czasu rozpoczęcia ruchu:\n• Widzisz **aurę zabójcy**.\n• Widzisz **aury** **skrzyń**.\n• Widzisz **aury** **generatorów**.\n> „Wdech. Wydech. A teraz otwórz oczy”. – Baermar"
+          "description": "Po byciu w bezczynności przez **6/5/4 s**, w odległości **24 m**, do czasu rozpoczęcia ruchu:\n• Widzisz **aurę zabójcy**.\n• Widzisz **aury skrzyń**.\n• Widzisz **aury generatorów**.\n> „Wdech. Wydech. A teraz otwórz oczy”. – Baermar"
         }
       },
       "perk_type": "aura"
@@ -4666,13 +4666,13 @@
       "survivor_id": 35,
       "is_generic_counterpart": false,
       "is_teachable": true,
-      "description": "Whenever you finish healing another Survivor, while you stay within **12m** of each other, you both gain **5%** **Haste**. When either of you leaves the range, this ends after **20/25/30s**.\n> “You good? Then keep up.” -Thalita Lyra",
+      "description": "Whenever you finish healing another Survivor, while you stay within **12m** of each other, you both gain **5% Haste**. When either of you leaves the range, this ends after **20/25/30s**.\n> “You good? Then keep up.” -Thalita Lyra",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconPerks_teamworkPowerOfTwo.png",
       "icon_local_path": "icons/survivors/Thalita Lyra/teamwork_power_of_two.webp",
       "translations": {
         "de": {
           "name": "Teamwork: Starkes Duo",
-          "description": "Immer wenn du einen anderen Überlebenden vollständig geheilt hast, erhaltet ihr beide **5%** **Eile**, solange ihr euch nicht weiter als **12 Meter** voneinander entfernt. Wenn einer von euch den Radius verlässt, endet dieser Effekt nach **20/25/30 Sek**.\n> „Alles klar? Dann halt dich ran.“ – Thalita Lyra"
+          "description": "Immer wenn du einen anderen Überlebenden vollständig geheilt hast, erhaltet ihr beide **5% Eile**, solange ihr euch nicht weiter als **12 Meter** voneinander entfernt. Wenn einer von euch den Radius verlässt, endet dieser Effekt nach **20/25/30 Sek**.\n> „Alles klar? Dann halt dich ran.“ – Thalita Lyra"
         },
         "es": {
           "name": "Trabajo en equipo: Poder dual",
@@ -4702,7 +4702,7 @@
       "translations": {
         "de": {
           "name": "Teamwork: Sanfte Töne",
-          "description": "Pro Überlebenden, der gemeinsam mit dir einen **Generator** repariert, wird die Reichweite der Reparaturgeräusche des **Generators** um **15/20/25%** **verringert**.\nWenn du mit mindestens einem anderen Überlebenden reparierst, reparierst du **5%** schneller.\n> „Ich mache meine eigenen Regeln.“ – Elf"
+          "description": "Pro Überlebenden, der gemeinsam mit dir einen **Generator** repariert, wird die Reichweite der Reparaturgeräusche des **Generators** um **15/20/25% verringert**.\nWenn du mit mindestens einem anderen Überlebenden reparierst, reparierst du **5%** schneller.\n> „Ich mache meine eigenen Regeln.“ – Elf"
         },
         "es": {
           "name": "Trabajo en equipo: Tono suave",
@@ -4732,7 +4732,7 @@
       "translations": {
         "de": {
           "name": "Teamwork: Hinwerfen",
-          "description": "Immer wenn du den Killer blendest oder mit einer **Palette** betäubst, gilt für andere **verletzte** Überlebende in einem Umkreis von **24 Metern** **6/8/10 Sek**. lang:\n• Sie erhalten Kondition.\n• Sie sehen die **Aura** des Killers.\n> „Im Kampf gegen das Böse vereinen sich die guten Menschen.“ – Michonne Grimes"
+          "description": "Immer wenn du den Killer blendest oder mit einer **Palette** betäubst, gilt für andere **verletzte** Überlebende in einem Umkreis von **24 Metern 6/8/10 Sek**. lang:\n• Sie erhalten Kondition.\n• Sie sehen die **Aura** des Killers.\n> „Im Kampf gegen das Böse vereinen sich die guten Menschen.“ – Michonne Grimes"
         },
         "es": {
           "name": "Trabajo en equipo: Al derribo",
@@ -4792,7 +4792,7 @@
       "translations": {
         "de": {
           "name": "Technikerin",
-          "description": "Während du einen **Generator** reparierst, gilt:\n• Die Reichweite der Reparaturgeräusche des **Generators** ist um **8 Meter** **verringert**.\n• Immer wenn du einen einfachen Fähigkeitscheck nicht schaffst, explodiert der **Generator** nicht, aber er verliert **10%** mehr Fortschritt.\n> „Hier schleich ich mich besser vorbei.“ – Feng Min"
+          "description": "Während du einen **Generator** reparierst, gilt:\n• Die Reichweite der Reparaturgeräusche des **Generators** ist um **8 Meter verringert**.\n• Immer wenn du einen einfachen Fähigkeitscheck nicht schaffst, explodiert der **Generator** nicht, aber er verliert **10%** mehr Fortschritt.\n> „Hier schleich ich mich besser vorbei.“ – Feng Min"
         },
         "es": {
           "name": "Pericia técnica",
@@ -4816,13 +4816,13 @@
       "survivor_id": 12,
       "is_generic_counterpart": false,
       "is_teachable": true,
-      "description": "While downed:\n• You gain **7%** **Haste**.\n• You can crawl and recover at the same time.\n• Your Grunts of Pain are **100%** quieter.\n• The Killer cannot see your **Aura**.\n> \"What the hell is this? I'm taking this bastard down!\" -Detective David Tapp",
+      "description": "While downed:\n• You gain **7% Haste**.\n• You can crawl and recover at the same time.\n• Your Grunts of Pain are **100%** quieter.\n• The Killer cannot see your **Aura**.\n> \"What the hell is this? I'm taking this bastard down!\" -Detective David Tapp",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconPerks_tenacity.png",
       "icon_local_path": "icons/survivors/David Tapp/tenacity.webp",
       "translations": {
         "de": {
           "name": "Beharrlichkeit",
-          "description": "Solange du niedergestreckt bist, gilt:\n• Du erhältst **7%** **Eile**.\n• Du kannst gleichzeitig kriechen und dich erholen.\n• Deine Schmerzenslaute sind **100%** leiser.\n> „Was zur Hölle ist das? Den Mistkerl schnapp ich mir!“ – Detective David Tapp"
+          "description": "Solange du niedergestreckt bist, gilt:\n• Du erhältst **7% Eile**.\n• Du kannst gleichzeitig kriechen und dich erholen.\n• Deine Schmerzenslaute sind **100%** leiser.\n> „Was zur Hölle ist das? Den Mistkerl schnapp ich mir!“ – Detective David Tapp"
         },
         "es": {
           "name": "Tenacidad",
@@ -4893,7 +4893,7 @@
         },
         "pl": {
           "name": "Rozwiązywanie Problemów",
-          "description": "Gdy ściga cię zabójca:\n• Widzisz **aurę** **generatora** z największym postępem.\n• Za każdym razem, gdy przewrócisz **paletę**, widzisz **aurę zabójcy** przez **4/5/6 s**.\nEfekt ten kończy się **6/8/10 s** po tym, jak zabójca przestanie cię ścigać.\n> „Jeśli ja czegoś nie zrobię, nikt tego nie zrobi”. – Gabriel Soma"
+          "description": "Gdy ściga cię zabójca:\n• Widzisz **aurę generatora** z największym postępem.\n• Za każdym razem, gdy przewrócisz **paletę**, widzisz **aurę zabójcy** przez **4/5/6 s**.\nEfekt ten kończy się **6/8/10 s** po tym, jak zabójca przestanie cię ścigać.\n> „Jeśli ja czegoś nie zrobię, nikt tego nie zrobi”. – Gabriel Soma"
         }
       },
       "perk_type": "aura"
@@ -4965,13 +4965,13 @@
       "survivor_id": 5,
       "is_generic_counterpart": false,
       "is_teachable": true,
-      "description": "While crouched, you gain **90/95/100%** **Haste**.\n> \"The paint is still fresh but I'm long gone.\" -Nea",
+      "description": "While crouched, you gain **90/95/100% Haste**.\n> \"The paint is still fresh but I'm long gone.\" -Nea",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconPerks_urbanEvasion.png",
       "icon_local_path": "icons/survivors/Nea Karlsson/urban_evasion.webp",
       "translations": {
         "de": {
           "name": "Städtische Umgehung",
-          "description": "In geduckter Haltung erhältst du **90/95/100%** **Eile**.\n> „Die Farbe ist noch immer frisch, aber ich bin schon lange weg.“ – Nea"
+          "description": "In geduckter Haltung erhältst du **90/95/100% Eile**.\n> „Die Farbe ist noch immer frisch, aber ich bin schon lange weg.“ – Nea"
         },
         "es": {
           "name": "Evasión urbana",
@@ -4995,13 +4995,13 @@
       "survivor_id": 11,
       "is_generic_counterpart": false,
       "is_teachable": true,
-      "description": "All Survivors within **8m** of you:\n• Lose **Blindness** **20/25/30%** faster.\n• Lose **Broken** **20/25/30%** faster.\n• Lose **Exhausted** **20/25/30%** faster.\n• Lose **Exposed** **20/25/30%** faster.\n• Lose **Hemorrhage** **20/25/30%** faster.\n• Lose **Hindered** **20/25/30%** faster.\n• Lose **Mangled** **20/25/30%** faster.\n• Lose **Oblivious** **20/25/30%** faster.\nAfter they leave your range, this ends after **15s**.\n> \"I'm gonna be here when you wake up. You're gonna make it.\" -Quentin Smith",
+      "description": "All Survivors within **8m** of you:\n• Lose **Blindness 20/25/30%** faster.\n• Lose **Broken 20/25/30%** faster.\n• Lose **Exhausted 20/25/30%** faster.\n• Lose **Exposed 20/25/30%** faster.\n• Lose **Hemorrhage 20/25/30%** faster.\n• Lose **Hindered 20/25/30%** faster.\n• Lose **Mangled 20/25/30%** faster.\n• Lose **Oblivious 20/25/30%** faster.\nAfter they leave your range, this ends after **15s**.\n> \"I'm gonna be here when you wake up. You're gonna make it.\" -Quentin Smith",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconPerks_vigil.png",
       "icon_local_path": "icons/survivors/Quentin Smith/vigil.webp",
       "translations": {
         "de": {
           "name": "Nachtwache",
-          "description": "Für alle Überlebenden in einem Umkreis von **8 Metern** rund um dich gilt:\n• Sie verlieren Erblindung **20/25/30%** schneller.\n• Sie verlieren **Gebrochen** **20/25/30%** schneller.\n• Sie verlieren **Erschöpfung** **20/25/30%** schneller.\n• Sie verlieren **Gefährdet** **20/25/30%** schneller.\n• Sie verlieren Blutung **20/25/30%** schneller.\n• Sie verlieren Eingeschränkt **20/25/30%** schneller.\n• Sie verlieren **Zerfleischt** **20/25/30%** schneller.\n• Sie verlieren **Ahnungslos** **20/25/30%** schneller.\nNachdem sie den Radius verlassen haben, endet dieser Effekt nach **15 Sek**.\n> „Ich werde hier sein, wenn du aufwachst. Du wirst es schaffen.“ – Quentin Smith"
+          "description": "Für alle Überlebenden in einem Umkreis von **8 Metern** rund um dich gilt:\n• Sie verlieren Erblindung **20/25/30%** schneller.\n• Sie verlieren **Gebrochen 20/25/30%** schneller.\n• Sie verlieren **Erschöpfung 20/25/30%** schneller.\n• Sie verlieren **Gefährdet 20/25/30%** schneller.\n• Sie verlieren Blutung **20/25/30%** schneller.\n• Sie verlieren Eingeschränkt **20/25/30%** schneller.\n• Sie verlieren **Zerfleischt 20/25/30%** schneller.\n• Sie verlieren **Ahnungslos 20/25/30%** schneller.\nNachdem sie den Radius verlassen haben, endet dieser Effekt nach **15 Sek**.\n> „Ich werde hier sein, wenn du aufwachst. Du wirst es schaffen.“ – Quentin Smith"
         },
         "es": {
           "name": "Vigilia",
@@ -5013,7 +5013,7 @@
         },
         "pl": {
           "name": "Czuwanie",
-          "description": "Wszyscy ocalali w odległości **8 m** od ciebie:\n• Tracą efekt **Oślepienie** **20/25/30%** szybciej.\n• Tracą efekt **Okaleczony** **20/25/30%** szybciej.\n• Tracą efekt **Wyczerpany** **20/25/30%** szybciej.\n• Tracą efekt Narażony **20/25/30%** szybciej.\n• Tracą efekt **Krwotok** **20/25/30%** szybciej.\n• Tracą efekt Skrępowany **20/25/30%** szybciej.\n• Tracą efekt Zmasakrowany **20/25/30%** szybciej.\n• Tracą efekt **Nieświadomy** **20/25/30%** szybciej.\nTen efekt kończy się **15 s** po tym, jak oddalą się poza twój zasięg.\n> „Będę tu, gdy się obudzisz. Dasz radę”. – Quentin Smith"
+          "description": "Wszyscy ocalali w odległości **8 m** od ciebie:\n• Tracą efekt **Oślepienie 20/25/30%** szybciej.\n• Tracą efekt **Okaleczony 20/25/30%** szybciej.\n• Tracą efekt **Wyczerpany 20/25/30%** szybciej.\n• Tracą efekt Narażony **20/25/30%** szybciej.\n• Tracą efekt **Krwotok 20/25/30%** szybciej.\n• Tracą efekt Skrępowany **20/25/30%** szybciej.\n• Tracą efekt Zmasakrowany **20/25/30%** szybciej.\n• Tracą efekt **Nieświadomy 20/25/30%** szybciej.\nTen efekt kończy się **15 s** po tym, jak oddalą się poza twój zasięg.\n> „Będę tu, gdy się obudzisz. Dasz radę”. – Quentin Smith"
         }
       },
       "perk_type": "chase"
@@ -5043,7 +5043,7 @@
         },
         "pl": {
           "name": "Wizjoner",
-          "description": "W odległości **32 m** od ciebie, widzisz **aury** **generatorów**.\nZa każdym razem, gdy **generator** jest ukończony, czas odnawiania: **20/18/16 s**."
+          "description": "W odległości **32 m** od ciebie, widzisz **aury generatorów**.\nZa każdym razem, gdy **generator** jest ukończony, czas odnawiania: **20/18/16 s**."
         }
       },
       "perk_type": "aura"
@@ -5207,13 +5207,13 @@
       "survivor_id": 53,
       "is_generic_counterpart": false,
       "is_teachable": true,
-      "description": "Whenever you fast-vault a **Pallet**:\n• You gain **10/12.5/15%** **Haste** for **3s**.\n• The **Pallet** is reset, **blocked** for **60s**, and all Survivors see its **Aura** for that time.\nCooldown: **60s**.\n> \"Nothing but the open road. Just the way I like it.\" -Shane Wiigwaas",
+      "description": "Whenever you fast-vault a **Pallet**:\n• You gain **10/12.5/15% Haste** for **3s**.\n• The **Pallet** is reset, **blocked** for **60s**, and all Survivors see its **Aura** for that time.\nCooldown: **60s**.\n> \"Nothing but the open road. Just the way I like it.\" -Shane Wiigwaas",
       "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconsPerks_WideOpenThrottle.png",
       "icon_local_path": "icons/survivors/Shane Wiigwaas/wide_open_throttle.webp",
       "translations": {
         "de": {
           "name": "Vollgas",
-          "description": "Immer wenn du einen schnellen Sprung über eine **Palette** machst, gilt:\n• Du erhältst **3 Sek**. lang **10/12.5/15%** **Eile**.\n• Die **Palette** wird zurückgesetzt und **60 Sek**. lang **blockiert**. Während dieser Zeit sehen alle Überlebenden ihre **Aura**.\nAbklingzeit: **60 Sek**.\n> „Nur die leere Straße vor mir. So gefällt mir das.“ – Shane Wiigwaas"
+          "description": "Immer wenn du einen schnellen Sprung über eine **Palette** machst, gilt:\n• Du erhältst **3 Sek**. lang **10/12.5/15% Eile**.\n• Die **Palette** wird zurückgesetzt und **60 Sek**. lang **blockiert**. Während dieser Zeit sehen alle Überlebenden ihre **Aura**.\nAbklingzeit: **60 Sek**.\n> „Nur die leere Straße vor mir. So gefällt mir das.“ – Shane Wiigwaas"
         },
         "es": {
           "name": "Acelerador a fondo",
@@ -5254,7 +5254,7 @@
         },
         "pl": {
           "name": "Ostatnia Szansa",
-          "description": "W odległości **32 m** od ciebie:\n• Widzisz **aury** **palet**.\n• Widzisz **aury** ścian do zniszczenia.\n• Widzisz **aury** okien.\n> „Wykuj w skale swoje imię / Ceń wiarę i rodzinę, nie uskarżaj się / Odnajdź w życiu swą ostatnią szansę”. – Kate Denson, „Ostatnia szansa”"
+          "description": "W odległości **32 m** od ciebie:\n• Widzisz **aury palet**.\n• Widzisz **aury** ścian do zniszczenia.\n• Widzisz **aury** okien.\n> „Wykuj w skale swoje imię / Ceń wiarę i rodzinę, nie uskarżaj się / Odnajdź w życiu swą ostatnią szansę”. – Kate Denson, „Ostatnia szansa”"
         }
       },
       "perk_type": "aura"
@@ -5284,7 +5284,7 @@
         },
         "pl": {
           "name": "Podsłuch",
-          "description": "Po naprawieniu **40/50%** **generatorów**, stojąc obok **generatora**, użyj `przycisk zdolności aktywnej 2`, aby założyć pułapkę, która trwa przez **100/110/120 s** lub do czasu, aż zabójca uszkodzi ten **generator**. Wszyscy ocalali widzą **aurę** tego **generatora** przez ten czas.\nGdy zabójca znajduje się w odległości **14 m** od tego **generatora**, wszyscy ocalali widzą **aurę zabójcy**."
+          "description": "Po naprawieniu **40/50% generatorów**, stojąc obok **generatora**, użyj `przycisk zdolności aktywnej 2`, aby założyć pułapkę, która trwa przez **100/110/120 s** lub do czasu, aż zabójca uszkodzi ten **generator**. Wszyscy ocalali widzą **aurę** tego **generatora** przez ten czas.\nGdy zabójca znajduje się w odległości **14 m** od tego **generatora**, wszyscy ocalali widzą **aurę zabójcy**."
         }
       },
       "perk_type": "generator"
@@ -5326,13 +5326,13 @@
       "killer_id": 1,
       "is_generic_counterpart": false,
       "is_teachable": true,
-      "description": "While carrying a Survivor:\n• You gain **6/12/18%** **Haste**.\n• Your **Terror Radius** is **6/8/12m** larger.\n> \"At some point, the excitement of hooking one of us becomes more important than the desire to kill us.\"",
+      "description": "While carrying a Survivor:\n• You gain **6/12/18% Haste**.\n• Your **Terror Radius** is **6/8/12m** larger.\n> \"At some point, the excitement of hooking one of us becomes more important than the desire to kill us.\"",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconPerks_agitation.png",
       "icon_local_path": "icons/killers/The Trapper/agitation.webp",
       "translations": {
         "de": {
           "name": "Erregung",
-          "description": "Während du einen Überlebenden trägst, gilt:\n• Du erhältst **6/12/18%** **Eile**.\n• Dein **Terrorradius** ist **6/8/12 Meter** größer.\n> „Manchmal ist die Begeisterung, einen von uns festzuhaken, bedeutsamer, als der Wunsch, uns zu töten.“"
+          "description": "Während du einen Überlebenden trägst, gilt:\n• Du erhältst **6/12/18% Eile**.\n• Dein **Terrorradius** ist **6/8/12 Meter** größer.\n> „Manchmal ist die Begeisterung, einen von uns festzuhaken, bedeutsamer, als der Wunsch, uns zu töten.“"
         },
         "es": {
           "name": "Agitación",
@@ -5446,13 +5446,13 @@
       "killer_id": 12,
       "is_generic_counterpart": false,
       "is_teachable": true,
-      "description": "Whenever you vault a **Window**, it is **blocked** for Survivors for **5/10/15s**.\nYou basic-vault **Windows** **8/12/16%** faster.\nOnly 1 **Window** can be **blocked** at a time.",
+      "description": "Whenever you vault a **Window**, it is **blocked** for Survivors for **5/10/15s**.\nYou basic-vault **Windows 8/12/16%** faster.\nOnly 1 **Window** can be **blocked** at a time.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconPerks_bamboozle.png",
       "icon_local_path": "icons/killers/The Clown/bamboozle.webp",
       "translations": {
         "de": {
           "name": "Verblüffen",
-          "description": "Immer wenn du durch ein **Fenster** springst, wird es für Überlebende **5/10/15 Sek**. lang **blockiert**.\nDeine Grundfähigkeit-Sprünge durch **Fenster** sind **8/12/16%** schneller.\nEs kann immer nur ein **Fenster** **blockiert** werden."
+          "description": "Immer wenn du durch ein **Fenster** springst, wird es für Überlebende **5/10/15 Sek**. lang **blockiert**.\nDeine Grundfähigkeit-Sprünge durch **Fenster** sind **8/12/16%** schneller.\nEs kann immer nur ein **Fenster blockiert** werden."
         },
         "es": {
           "name": "Desconcierto",
@@ -5509,13 +5509,13 @@
       "killer_id": 34,
       "is_generic_counterpart": false,
       "is_teachable": true,
-      "description": "Within **16m** of a completed **Generator**, you gain **5%** **Haste**. When you leave the range, this ends after **1/3/5s**.\n> “Surprise! Did you miss me, Andy?” -Chucky",
+      "description": "Within **16m** of a completed **Generator**, you gain **5% Haste**. When you leave the range, this ends after **1/3/5s**.\n> “Surprise! Did you miss me, Andy?” -Chucky",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconPerks_batteriesIncluded.png",
       "icon_local_path": "icons/killers/The Good Guy/batteries_included.webp",
       "translations": {
         "de": {
           "name": "Batterien enthalten",
-          "description": "In einem Umkreis von **16 Metern** rund um einen fertig reparierten **Generator** erhältst du **5%** **Eile**. Dieser Effekt endet **1/3/5 Sek**. nach Verlassen des Radius.\n> „Überraschung! Hast du mich vermisst, Andy?“ – Chucky"
+          "description": "In einem Umkreis von **16 Metern** rund um einen fertig reparierten **Generator** erhältst du **5% Eile**. Dieser Effekt endet **1/3/5 Sek**. nach Verlassen des Radius.\n> „Überraschung! Hast du mich vermisst, Andy?“ – Chucky"
         },
         "es": {
           "name": "Pilas incluidas",
@@ -5688,13 +5688,13 @@
       "killer_id": 1,
       "is_generic_counterpart": false,
       "is_teachable": true,
-      "description": "You basic-break **Pallets** and Breakable Walls, and damage **Generators** **10/15/20%** faster.\n> \"It's more than muscles. A dark power motivates the beast.\"",
+      "description": "You basic-break **Pallets** and Breakable Walls, and damage **Generators 10/15/20%** faster.\n> \"It's more than muscles. A dark power motivates the beast.\"",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconPerks_brutalStrength.png",
       "icon_local_path": "icons/killers/The Trapper/brutal_strength.webp",
       "translations": {
         "de": {
           "name": "Brutale Stärke",
-          "description": "Du zerstörst **Paletten** und zerstörbare Mauern mit deiner Grundfähigkeit bzw. beschädigst **Generatoren** **10/15/20%** schneller.\n> „Es ist mehr als bloße Muskelkraft. Eine dunkle Energie treibt die Bestie an.“"
+          "description": "Du zerstörst **Paletten** und zerstörbare Mauern mit deiner Grundfähigkeit bzw. beschädigst **Generatoren 10/15/20%** schneller.\n> „Es ist mehr als bloße Muskelkraft. Eine dunkle Energie treibt die Bestie an.“"
         },
         "es": {
           "name": "Fuerza brutal",
@@ -5706,7 +5706,7 @@
         },
         "pl": {
           "name": "Brutalna Siła",
-          "description": "Niszczysz **palety** i dające się zniszczyć ściany oraz uszkadzasz **generatory** **10/15/20%** szybciej.\n> „To nie tylko mięśnie. Mroczna siła motywuje bestię”."
+          "description": "Niszczysz **palety** i dające się zniszczyć ściany oraz uszkadzasz **generatory 10/15/20%** szybciej.\n> „To nie tylko mięśnie. Mroczna siła motywuje bestię”."
         }
       },
       "perk_type": "chase"
@@ -5784,7 +5784,7 @@
       "translations": {
         "de": {
           "name": "Korrupte Intervention",
-          "description": "Wenn die **Prüfung** beginnt, werden die 3 am weitesten von dir entfernten **Generatoren** **80/100/120 Sek**. lang **blockiert**, oder bis du einen Überlebenden niederstreckst.\n„Es soll im ganzen Land bekannt werden, dass die Götter die Ungläubigen verfluchen.“ (Adiris’ Tafel, 3,7)"
+          "description": "Wenn die **Prüfung** beginnt, werden die 3 am weitesten von dir entfernten **Generatoren 80/100/120 Sek**. lang **blockiert**, oder bis du einen Überlebenden niederstreckst.\n„Es soll im ganzen Land bekannt werden, dass die Götter die Ungläubigen verfluchen.“ (Adiris’ Tafel, 3,7)"
         },
         "es": {
           "name": "Intervención corrupta",
@@ -5898,7 +5898,7 @@
       "killer_id": 36,
       "is_generic_counterpart": false,
       "is_teachable": true,
-      "description": "You basic-vault **Windows** **15%** faster.\nWhenever you are **blinded** or **Pallet**-stunned, the duration is **15/20/25%** longer.\n> “Run all you want. I will not be denied.” -Vecna",
+      "description": "You basic-vault **Windows 15%** faster.\nWhenever you are **blinded** or **Pallet**-stunned, the duration is **15/20/25%** longer.\n> “Run all you want. I will not be denied.” -Vecna",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconPerks_darkArrogance.png",
       "icon_local_path": "icons/killers/The Lich/dark_arrogance.webp",
       "translations": {
@@ -6180,7 +6180,7 @@
         },
         "es": {
           "name": "Desasosiego",
-          "description": "Tu **radio de terror** **aumenta** un **22/24/26%**.\n> \"Saborea su miedo\"."
+          "description": "Tu **radio de terror aumenta** un **22/24/26%**.\n> \"Saborea su miedo\"."
         },
         "ja": {
           "name": "苦悶の根源",
@@ -6206,7 +6206,7 @@
       "translations": {
         "de": {
           "name": "Dominanz",
-          "description": "Wenn eine **Truhe** zum ersten Mal von einem Überlebenden aufgeschlossen oder ein **Totem** zum ersten Mal von einem Überlebenden gesegnet oder zerstört wird, wird die **Truhe**/das **Totem** **8/12/16 Sek**. lang **blockiert**.\n> „Tragisch, nicht wahr? Wie machtlos du dich fühlen musst.“ – Dracula"
+          "description": "Wenn eine **Truhe** zum ersten Mal von einem Überlebenden aufgeschlossen oder ein **Totem** zum ersten Mal von einem Überlebenden gesegnet oder zerstört wird, wird die **Truhe**/das **Totem 8/12/16 Sek**. lang **blockiert**.\n> „Tragisch, nicht wahr? Wie machtlos du dich fühlen musst.“ – Dracula"
         },
         "es": {
           "name": "Dominación",
@@ -6264,13 +6264,13 @@
       "alternate_name": "Cull the Weak",
       "is_generic_counterpart": true,
       "is_teachable": true,
-      "description": "Whenever you **hook** a Survivor that is not the **Obsession**, earn **33 token**.\nWhile the **Obsession** is alive, for each Token:\n• Other Survivors heal **2/2.5/3%** slower.\n• Other Survivors repair **2/2.5/3%** slower.\n• Other Survivors sabotage **Hooks** **2/2.5/3%** slower.\nThe **Obsession**:\n• Heals other Survivors **33/40/47%** faster.\n• Unhooks other Survivors **33/40/47%** faster.\n> \"This isn't a man...\" -Dr. Sam Loomis",
+      "description": "Whenever you **hook** a Survivor that is not the **Obsession**, earn **33 token**.\nWhile the **Obsession** is alive, for each Token:\n• Other Survivors heal **2/2.5/3%** slower.\n• Other Survivors repair **2/2.5/3%** slower.\n• Other Survivors sabotage **Hooks 2/2.5/3%** slower.\nThe **Obsession**:\n• Heals other Survivors **33/40/47%** faster.\n• Unhooks other Survivors **33/40/47%** faster.\n> \"This isn't a man...\" -Dr. Sam Loomis",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconPerks_dyingLight.png",
       "icon_local_path": "icons/killers/The Shape/dying_light.webp",
       "translations": {
         "de": {
           "name": "Erlöschendes Licht",
-          "description": "Immer wenn du einen Überlebenden festhakst, der nicht das Ziel deiner **Besessenheit** ist, erhältst du 33 Zähler.\nSolange das Ziel deiner **Besessenheit** lebt, gilt pro Zähler:\n• Andere Überlebende heilen **2/2.5/3%** langsamer.\n• Andere Überlebende reparieren **2/2.5/3%** langsamer.\n• Andere Überlebende sabotieren **Haken** **2/2.5/3%** langsamer.\nDas Ziel der **Besessenheit**:\n• heilt andere Überlebende **33/40/47%** schneller.\n• rettet andere Überlebende **33/40/47%** schneller vom **Haken**.\n> „Das ist kein Mensch...“ – Dr. Sam Loomis"
+          "description": "Immer wenn du einen Überlebenden festhakst, der nicht das Ziel deiner **Besessenheit** ist, erhältst du 33 Zähler.\nSolange das Ziel deiner **Besessenheit** lebt, gilt pro Zähler:\n• Andere Überlebende heilen **2/2.5/3%** langsamer.\n• Andere Überlebende reparieren **2/2.5/3%** langsamer.\n• Andere Überlebende sabotieren **Haken 2/2.5/3%** langsamer.\nDas Ziel der **Besessenheit**:\n• heilt andere Überlebende **33/40/47%** schneller.\n• rettet andere Überlebende **33/40/47%** schneller vom **Haken**.\n> „Das ist kein Mensch...“ – Dr. Sam Loomis"
         },
         "es": {
           "name": "Luz que agoniza",
@@ -6282,7 +6282,7 @@
         },
         "pl": {
           "name": "Umierające Światło",
-          "description": "Za każdym razem, gdy powiesisz na **haku** ocalałego nie będącego **obsesją**, otrzymujesz żeton (33).\nGdy **obsesja** żyje, za każdy żeton:\n• Inni ocalali leczą **2/2.5/3%** wolniej.\n• Inni ocalali naprawiają **2/2.5/3%** wolniej.\n• Inni ocalali sabotują **haki** **2/2.5/3%** wolniej.\n**Obsesja**:\n• Leczy innych ocalałych **33/40/47%** szybciej.\n• Zdejmuje innych ocalałych z **haka** **33/40/47%** szybciej.\n> „To nie jest człowiek...” – Dr Sam Loomis"
+          "description": "Za każdym razem, gdy powiesisz na **haku** ocalałego nie będącego **obsesją**, otrzymujesz żeton (33).\nGdy **obsesja** żyje, za każdy żeton:\n• Inni ocalali leczą **2/2.5/3%** wolniej.\n• Inni ocalali naprawiają **2/2.5/3%** wolniej.\n• Inni ocalali sabotują **haki 2/2.5/3%** wolniej.\n**Obsesja**:\n• Leczy innych ocalałych **33/40/47%** szybciej.\n• Zdejmuje innych ocalałych z **haka 33/40/47%** szybciej.\n> „To nie jest człowiek...” – Dr Sam Loomis"
         }
       },
       "perk_type": "generator"
@@ -6300,7 +6300,7 @@
       "translations": {
         "de": {
           "name": "Beständig",
-          "description": "Wenn du keinen Überlebenden trägst, sind Betäubungen durch **Paletten** **40/45/50%** kürzer.\n> „Er macht vor nichts Halt.“"
+          "description": "Wenn du keinen Überlebenden trägst, sind Betäubungen durch **Paletten 40/45/50%** kürzer.\n> „Er macht vor nichts Halt.“"
         },
         "es": {
           "name": "Resistente",
@@ -6354,13 +6354,13 @@
       "killer_id": 10,
       "is_generic_counterpart": false,
       "is_teachable": true,
-      "description": "Whenever a **Generator** is completed, earn **4/5/6 Token**, up to **4/5/6**.\nFor each Token:\n• You basic-break **Pallets** and Breakable Walls **4/5/6%** faster.\n• You damage **Generators** **4/5/6%** faster.\n• You pick-up and drop Survivors **4/5/6%** faster.\n• You basic-vault **Windows** **4/5/6%** faster.\n> “Now why don't you just fucking die?” -Freddy Krueger",
+      "description": "Whenever a **Generator** is completed, earn **4/5/6 Token**, up to **4/5/6**.\nFor each Token:\n• You basic-break **Pallets** and Breakable Walls **4/5/6%** faster.\n• You damage **Generators 4/5/6%** faster.\n• You pick-up and drop Survivors **4/5/6%** faster.\n• You basic-vault **Windows 4/5/6%** faster.\n> “Now why don't you just fucking die?” -Freddy Krueger",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconPerks_fireUp.png",
       "icon_local_path": "icons/killers/The Nightmare/fire_up.webp",
       "translations": {
         "de": {
           "name": "Einheizen",
-          "description": "Immer wenn ein **Generator** fertig repariert wurde, erhältst du **4/5/6** Zähler, bis zu max. **4/5/6**.\nFür jeden Zähler gilt:\n• Du zerstörst **Paletten** und zerstörbare Mauern **4/5/6%** schneller mit deiner Grundfähigkeit.\n• Du beschädigst **Generatoren** **4/5/6%** schneller.\n• Du hebst Überlebende **4/5/6%** schneller auf und lässt sie ebenso schnell fallen.\n• Dein Grundfähigkeit-Sprung durch **Fenster** ist **4/5/6%** schneller.\n> „Und warum stirbst du jetzt nicht einfach?“ – Freddy Krueger"
+          "description": "Immer wenn ein **Generator** fertig repariert wurde, erhältst du **4/5/6** Zähler, bis zu max. **4/5/6**.\nFür jeden Zähler gilt:\n• Du zerstörst **Paletten** und zerstörbare Mauern **4/5/6%** schneller mit deiner Grundfähigkeit.\n• Du beschädigst **Generatoren 4/5/6%** schneller.\n• Du hebst Überlebende **4/5/6%** schneller auf und lässt sie ebenso schnell fallen.\n• Dein Grundfähigkeit-Sprung durch **Fenster** ist **4/5/6%** schneller.\n> „Und warum stirbst du jetzt nicht einfach?“ – Freddy Krueger"
         },
         "es": {
           "name": "Enfurecimiento",
@@ -6372,7 +6372,7 @@
         },
         "pl": {
           "name": "Paląca Potrzeba",
-          "description": "Za każdym razem, gdy **generator** jest ukończony, otrzymujesz żeton (**4/5/6**), maksymalnie **4/5/6**.\nZa każdy żeton:\n• Niszczysz w podstawowy sposób **palety** i dające się zniszczyć ściany **4/5/6%** szybciej.\n• Uszkadzasz **generatory** **4/5/6%** szybciej.\n• Podnosisz i upuszczasz ocalałych **4/5/6%** szybciej.\n• Przeskakujesz przez okna **4/5/6%** szybciej.\n> „Dlaczego po prostu nie zdechniesz?” – Freddy Krueger"
+          "description": "Za każdym razem, gdy **generator** jest ukończony, otrzymujesz żeton (**4/5/6**), maksymalnie **4/5/6**.\nZa każdy żeton:\n• Niszczysz w podstawowy sposób **palety** i dające się zniszczyć ściany **4/5/6%** szybciej.\n• Uszkadzasz **generatory 4/5/6%** szybciej.\n• Podnosisz i upuszczasz ocalałych **4/5/6%** szybciej.\n• Przeskakujesz przez okna **4/5/6%** szybciej.\n> „Dlaczego po prostu nie zdechniesz?” – Freddy Krueger"
         }
       },
       "perk_type": "entity"
@@ -6384,7 +6384,7 @@
       "killer_id": 32,
       "is_generic_counterpart": false,
       "is_teachable": true,
-      "description": "Whenever you down a Survivor, other Survivors within **16m** of the downed Survivor gain **10%** **Hindered** for **20s**. Cooldown: **40/35/30s**.\n> “THE ORGANIC MIND’S CAPACITY FOR EMPATHY GOES BEYOND HINDRANCE.” -HUX-A7-13",
+      "description": "Whenever you down a Survivor, other Survivors within **16m** of the downed Survivor gain **10% Hindered** for **20s**. Cooldown: **40/35/30s**.\n> “THE ORGANIC MIND’S CAPACITY FOR EMPATHY GOES BEYOND HINDRANCE.” -HUX-A7-13",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconPerks_forcedHesitation.png",
       "icon_local_path": "icons/killers/The Singularity/forced_hesitation.webp",
       "translations": {
@@ -6462,7 +6462,7 @@
         },
         "pl": {
           "name": "Połączeni na zawsze",
-          "description": "Za każdym razem, gdy ocalałemu zostaną zadane obrażenia, otrzymujesz żeton (**6/7/8**), maksymalnie 4.\nZa każdy żeton:\n• Wieszasz ocalałych na **haku** **2/3/4%** szybciej.\n• Podnosisz i upuszczasz ocalałych **2/3/4%** szybciej.\n> „Próbowałeś mnie pożreć, więc nie masz prawa narzekać, jeśli to ja zjem ciebie, prawda?” – Ken Kaneki"
+          "description": "Za każdym razem, gdy ocalałemu zostaną zadane obrażenia, otrzymujesz żeton (**6/7/8**), maksymalnie 4.\nZa każdy żeton:\n• Wieszasz ocalałych na **haku 2/3/4%** szybciej.\n• Podnosisz i upuszczasz ocalałych **2/3/4%** szybciej.\n> „Próbowałeś mnie pożreć, więc nie masz prawa narzekać, jeśli to ja zjem ciebie, prawda?” – Ken Kaneki"
         }
       },
       "perk_type": "entity"
@@ -6525,7 +6525,7 @@
         },
         "pl": {
           "name": "Przyjaciele do Końca",
-          "description": "Za każdym razem, gdy powiesisz na **haku** ocalałego nie będącego **obsesją**:\n• **Obsesja** otrzymuje efekt Narażony na **20 s**.\n• Widzisz **aurę** **obsesji** przez **6/8/10 s**.\nZa każdym razem, gdy powiesisz na **haku** **obsesję**, inny ocalały:\n• Krzyczy, następnie otrzymujesz powiadomienie.\n• Staje się **obsesją**.\n> „Mam świeże mięso w kolejce i nie pozwolę ci go zepsuć. Nie tym razem!” – Chucky"
+          "description": "Za każdym razem, gdy powiesisz na **haku** ocalałego nie będącego **obsesją**:\n• **Obsesja** otrzymuje efekt Narażony na **20 s**.\n• Widzisz **aurę obsesji** przez **6/8/10 s**.\nZa każdym razem, gdy powiesisz na **haku obsesję**, inny ocalały:\n• Krzyczy, następnie otrzymujesz powiadomienie.\n• Staje się **obsesją**.\n> „Mam świeże mięso w kolejce i nie pozwolę ci go zepsuć. Nie tym razem!” – Chucky"
         }
       },
       "perk_type": "aura"
@@ -6537,13 +6537,13 @@
       "killer_id": 16,
       "is_generic_counterpart": false,
       "is_teachable": true,
-      "description": "Whenever you **hook** the **Obsession**:\n• You gain **10%** **Haste** for **14/16/18s**.\n• You gain **Undetectable** for **14/16/18s**.\nWhenever the **Obsession** is unhooked, the Survivor who unhooked them becomes the **Obsession**.\n> \"You have no idea what I have planned for you. It’ll be in the news for weeks: I’ll make sure of it.\" -The Ghost Face",
+      "description": "Whenever you **hook** the **Obsession**:\n• You gain **10% Haste** for **14/16/18s**.\n• You gain **Undetectable** for **14/16/18s**.\nWhenever the **Obsession** is unhooked, the Survivor who unhooked them becomes the **Obsession**.\n> \"You have no idea what I have planned for you. It’ll be in the news for weeks: I’ll make sure of it.\" -The Ghost Face",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconPerks_furtiveChase.png",
       "icon_local_path": "icons/killers/The Ghost Face/furtive_chase.webp",
       "translations": {
         "de": {
           "name": "Heimliche Verfolgungsjagd",
-          "description": "Immer wenn du das Ziel deiner **Besessenheit** festhakst, gilt:\n• Du erhältst **10%** **Eile** für **14/16/18 Sek**.\n• Du erhältst **Unentdeckbar** für **14/16/18 Sek**.\nImmer wenn das Ziel deiner **Besessenheit** vom **Haken** gerettet wird, wird der Überlebende, der es gerettet hat, zum neuen Ziel deiner **Besessenheit**.\n> „Du hast keine Ahnung, was ich mit dir vorhabe. Darüber werden sie wochenlang in den Nachrichten berichten. Dafür werde ich sorgen.“ – Ghost Face"
+          "description": "Immer wenn du das Ziel deiner **Besessenheit** festhakst, gilt:\n• Du erhältst **10% Eile** für **14/16/18 Sek**.\n• Du erhältst **Unentdeckbar** für **14/16/18 Sek**.\nImmer wenn das Ziel deiner **Besessenheit** vom **Haken** gerettet wird, wird der Überlebende, der es gerettet hat, zum neuen Ziel deiner **Besessenheit**.\n> „Du hast keine Ahnung, was ich mit dir vorhabe. Darüber werden sie wochenlang in den Nachrichten berichten. Dafür werde ich sorgen.“ – Ghost Face"
         },
         "es": {
           "name": "Persecución furtiva",
@@ -6555,7 +6555,7 @@
         },
         "pl": {
           "name": "Tajemny Pościg",
-          "description": "Za każdym razem, gdy wieszasz na **haku** **obsesję**:\n• Otrzymujesz **10%** efektu **Pośpiech** na **14/16/18 s**.\n• Otrzymujesz efektNiewykrywalny na **14/16/18 s**.\nZa każdym razem, gdy **obsesja** jest zdjęta z **haka**, ocalały zdejmujący z **haka** sam staje się **obsesją**.\n> „Nawet nie wiesz, co dla ciebie zaplanowałem. Tygodniami będą o tym pisać w gazetach – zadbam o to”. – Ghost Face"
+          "description": "Za każdym razem, gdy wieszasz na **haku obsesję**:\n• Otrzymujesz **10%** efektu **Pośpiech** na **14/16/18 s**.\n• Otrzymujesz efektNiewykrywalny na **14/16/18 s**.\nZa każdym razem, gdy **obsesja** jest zdjęta z **haka**, ocalały zdejmujący z **haka** sam staje się **obsesją**.\n> „Nawet nie wiesz, co dla ciebie zaplanowałem. Tygodniami będą o tym pisać w gazetach – zadbam o to”. – Ghost Face"
         }
       },
       "perk_type": "chase"
@@ -6567,13 +6567,13 @@
       "killer_id": 31,
       "is_generic_counterpart": false,
       "is_teachable": true,
-      "description": "While chasing the **Obsession**, whenever you basic-break **Pallets** or Breakable Walls, or damage **Generators**, you gain **7%** **Haste** for **8/9/10s**.\nWhenever you damage the Survivor with the most chase time with a basic-attack, they become the **Obsession**.\n> “This one might actually be a challenge... ” -Adriana Imai",
+      "description": "While chasing the **Obsession**, whenever you basic-break **Pallets** or Breakable Walls, or damage **Generators**, you gain **7% Haste** for **8/9/10s**.\nWhenever you damage the Survivor with the most chase time with a basic-attack, they become the **Obsession**.\n> “This one might actually be a challenge... ” -Adriana Imai",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconPerks_gameAfoot.png",
       "icon_local_path": "icons/killers/The Skull Merchant/game_afoot.webp",
       "translations": {
         "de": {
           "name": "Spielbeginn",
-          "description": "Während der Jagd auf das Ziel deiner **Besessenheit** erhältst du **7%** **Eile** für **8/9/10 Sek**., wenn du mit deiner Grundfähigkeit **Paletten** oder zerstörbare Mauern zerstörst oder wenn du **Generatoren** beschädigst.\nImmer wenn du den Überlebenden mit der längsten Jagddauer mit einem Grundangriff **verletzt**, wird dieser zum Ziel deiner **Besessenheit**.\n> „Dieses Opfer könnte tatsächlich eine Herausforderung sein...“ – Adriana Imai"
+          "description": "Während der Jagd auf das Ziel deiner **Besessenheit** erhältst du **7% Eile** für **8/9/10 Sek**., wenn du mit deiner Grundfähigkeit **Paletten** oder zerstörbare Mauern zerstörst oder wenn du **Generatoren** beschädigst.\nImmer wenn du den Überlebenden mit der längsten Jagddauer mit einem Grundangriff **verletzt**, wird dieser zum Ziel deiner **Besessenheit**.\n> „Dieses Opfer könnte tatsächlich eine Herausforderung sein...“ – Adriana Imai"
         },
         "es": {
           "name": "Veda abierta",
@@ -6663,7 +6663,7 @@
       "translations": {
         "de": {
           "name": "Düstere Umarmung",
-          "description": "Immer wenn du einen Überlebenden zum ersten Mal festhakst, erhältst du **6/8/10** Zähler.\nWenn du dich **4 Meter** vom festgehakten Überlebenden entfernst, werden alle **Generatoren** **40 Sek**. lang **blockiert**.\nWenn du 10 Zähler hast und dich **4 Meter** vom festgehakten Überlebenden entfernst, gilt:\n• Alle **Generatoren** werden **20/25/30 Sek** lang. **blockiert**.\n• Du siehst **6 Sek**. lang die **Aura** des Ziels der **Besessenheit**.\n> „Sind wir nur Gefangene unseres Kummers?“ – Carmina Mora"
+          "description": "Immer wenn du einen Überlebenden zum ersten Mal festhakst, erhältst du **6/8/10** Zähler.\nWenn du dich **4 Meter** vom festgehakten Überlebenden entfernst, werden alle **Generatoren 40 Sek**. lang **blockiert**.\nWenn du 10 Zähler hast und dich **4 Meter** vom festgehakten Überlebenden entfernst, gilt:\n• Alle **Generatoren** werden **20/25/30 Sek** lang. **blockiert**.\n• Du siehst **6 Sek**. lang die **Aura** des Ziels der **Besessenheit**.\n> „Sind wir nur Gefangene unseres Kummers?“ – Carmina Mora"
         },
         "es": {
           "name": "Acogida nefasta",
@@ -6675,7 +6675,7 @@
         },
         "pl": {
           "name": "Ponure Objęcia",
-          "description": "Za każdym razem, gdy po raz pierwszy powiesisz ocalałego na **haku**, otrzymujesz żeton (**6/8/10**).\nGdy oddalisz się o **4 m** od powieszonego ocalałego, wszystkie **generatory** zostają zablokowane na **40 s**.\nGdy masz dość żetonów (10), jeśli oddalisz się o**4 m** od powieszonego ocalałego:\n• Wszystkie **generatory** zostają zablokowane na **20/25/30 s**.\n• Widzisz **aurę** **obsesji** przez **6 s**.\n> „Czy jesteśmy wyłącznie więźniami naszego smutku?” – Carmina Mora"
+          "description": "Za każdym razem, gdy po raz pierwszy powiesisz ocalałego na **haku**, otrzymujesz żeton (**6/8/10**).\nGdy oddalisz się o **4 m** od powieszonego ocalałego, wszystkie **generatory** zostają zablokowane na **40 s**.\nGdy masz dość żetonów (10), jeśli oddalisz się o**4 m** od powieszonego ocalałego:\n• Wszystkie **generatory** zostają zablokowane na **20/25/30 s**.\n• Widzisz **aurę obsesji** przez **6 s**.\n> „Czy jesteśmy wyłącznie więźniami naszego smutku?” – Carmina Mora"
         }
       },
       "perk_type": "generator"
@@ -6780,17 +6780,17 @@
       "killer_id": 23,
       "is_generic_counterpart": false,
       "is_teachable": true,
-      "description": "The first time a Survivor medium or fast-vaults a **Window**, a Dull **Totem** ignites.\nThe last **3/4/5** **Windows** Survivors medium or fast-vault are **blocked**.\nYou basic-vault **blocked** **Windows** **3/4/5%** faster.\nYou see the **Auras** of **blocked** **Windows** within **3/4/5m**.\n> \"You have no control. People like you never did.\" -Hak Ji-woon",
+      "description": "The first time a Survivor medium or fast-vaults a **Window**, a Dull **Totem** ignites.\nThe last **3/4/5 Windows** Survivors medium or fast-vault are **blocked**.\nYou basic-vault **blocked Windows 3/4/5%** faster.\nYou see the **Auras** of **blocked Windows** within **3/4/5m**.\n> \"You have no control. People like you never did.\" -Hak Ji-woon",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconPerks_hexCrowdControl.png",
       "icon_local_path": "icons/killers/The Trickster/hex_crowd_control.webp",
       "translations": {
         "de": {
           "name": "Fluch: Publikumskontrolle",
-          "description": "Wenn ein Überlebender zum ersten Mal einen Fenstersprung mit mittlerer oder hoher Geschwindigkeit ausführt, wird ein glanzloses **Totem** entfacht.\nDie letzten **3/4/5** **Fenster**, durch die Überlebende mit mittlerer oder hoher Geschwindigkeit gesprungen sind, werden **blockiert**.\nDeine Grundfähigkeit-Sprünge durch **blockierte** **Fenster** sind **3/4/5%** schneller.\nDu siehst die **Auren** von **blockierten** **Fenstern** in einem Umkreis von **3/4/5 Metern**.\n> „Du hast keine Kontrolle. Leute wie du können nur davon träumen.“ – Hak Ji-woon"
+          "description": "Wenn ein Überlebender zum ersten Mal einen Fenstersprung mit mittlerer oder hoher Geschwindigkeit ausführt, wird ein glanzloses **Totem** entfacht.\nDie letzten **3/4/5 Fenster**, durch die Überlebende mit mittlerer oder hoher Geschwindigkeit gesprungen sind, werden **blockiert**.\nDeine Grundfähigkeit-Sprünge durch **blockierte Fenster** sind **3/4/5%** schneller.\nDu siehst die **Auren** von **blockierten Fenstern** in einem Umkreis von **3/4/5 Metern**.\n> „Du hast keine Kontrolle. Leute wie du können nur davon träumen.“ – Hak Ji-woon"
         },
         "es": {
           "name": "Maleficio: Control de masas",
-          "description": "La primera vez que un superviviente realiza un salto mediano o rápido por una **ventana**, se enciende un **tótem** apagado.\nLas últimas **3/4/5** **ventanas** por las que los supervivientes realicen saltos medianos o rápidos quedan bloqueadas.\nRealizas saltos básicos por **ventanas** un **3/4/5%** más rápido.\nVes las **auras** de las **ventanas** bloqueadas en un radio de **3/4/5 metros**.\n\"Eres igual que los demás; no sabes controlarte\". (Hak Ji-Woon)"
+          "description": "La primera vez que un superviviente realiza un salto mediano o rápido por una **ventana**, se enciende un **tótem** apagado.\nLas últimas **3/4/5 ventanas** por las que los supervivientes realicen saltos medianos o rápidos quedan bloqueadas.\nRealizas saltos básicos por **ventanas** un **3/4/5%** más rápido.\nVes las **auras** de las **ventanas** bloqueadas en un radio de **3/4/5 metros**.\n\"Eres igual que los demás; no sabes controlarte\". (Hak Ji-Woon)"
         },
         "ja": {
           "name": "呪術：クラウドコントロール",
@@ -6810,13 +6810,13 @@
       "killer_id": 6,
       "is_generic_counterpart": false,
       "is_teachable": true,
-      "description": "When the **trial** starts, a Dull **Totem** ignites.\nWhenever a Survivor is unhooked while you are at least **3/4/5m** away, earn **3/4/5 Token**, up to **3/4/5**:\n• **2 Tokens** | **3/4/5s** after **hooking** a Survivor, gain **3/4/5%** **Haste** for **3/4/5s**.\n• **3 Tokens** | Survivors gain **Exposed**.\n• **5 Tokens** | You can Kill downed Survivors.\n> “If you do nothing, you have their blood on your hands. If you save them, her hunger grows.“",
+      "description": "When the **trial** starts, a Dull **Totem** ignites.\nWhenever a Survivor is unhooked while you are at least **3/4/5m** away, earn **3/4/5 Token**, up to **3/4/5**:\n• **2 Tokens** | **3/4/5s** after **hooking** a Survivor, gain **3/4/5% Haste** for **3/4/5s**.\n• **3 Tokens** | Survivors gain **Exposed**.\n• **5 Tokens** | You can Kill downed Survivors.\n> “If you do nothing, you have their blood on your hands. If you save them, her hunger grows.“",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconPerks_hexDevourHope.png",
       "icon_local_path": "icons/killers/The Hag/hex_devour_hope.webp",
       "translations": {
         "de": {
           "name": "Fluch: Aufgezehrte Hoffnung",
-          "description": "Wenn die **Prüfung** beginnt, wird ein glanzloses **Totem** entfacht.\nImmer wenn ein Überlebender vom **Haken** gerettet wird, während du mindestens **3/4/5 Meter** entfernt bist, erhältst du **3/4/5** Zähler, bis zu max. **3/4/5**.\n• 2 Zähler: **3/4/5 Sek**., nachdem du einen Überlebenden festgehakt hast, erhältst du **3/4/5%** **Eile** für **3/4/5 Sek**.\n• 3 Zähler: Überlebende leiden unter **Gefährdet**.\n• 5 Zähler: Du kannst niedergestreckte Überlebende töten.\n> „Wenn du nichts unternimmst, klebt ihr Blut an deinen Händen. Wenn du sie rettest, wird ihr Hunger wachsen.“"
+          "description": "Wenn die **Prüfung** beginnt, wird ein glanzloses **Totem** entfacht.\nImmer wenn ein Überlebender vom **Haken** gerettet wird, während du mindestens **3/4/5 Meter** entfernt bist, erhältst du **3/4/5** Zähler, bis zu max. **3/4/5**.\n• 2 Zähler: **3/4/5 Sek**., nachdem du einen Überlebenden festgehakt hast, erhältst du **3/4/5% Eile** für **3/4/5 Sek**.\n• 3 Zähler: Überlebende leiden unter **Gefährdet**.\n• 5 Zähler: Du kannst niedergestreckte Überlebende töten.\n> „Wenn du nichts unternimmst, klebt ihr Blut an deinen Händen. Wenn du sie rettest, wird ihr Hunger wachsen.“"
         },
         "es": {
           "name": "Maleficio: Devoradora de esperanza",
@@ -6840,7 +6840,7 @@
       "killer_id": 30,
       "is_generic_counterpart": false,
       "is_teachable": true,
-      "description": "Whenever you damage a Survivor, they are **hexed** and a Dull **Totem** ignites.\nEvery **35/30/25s**, other Survivors not within your **Terror Radius** scream, then you see their **Auras** for **2s**.\nWhen the **hexed** Survivor is downed or becomes healthy, the **Hex** **Totem** is extinguished.\n> \"I shall make an example of one. These mewling worms will never know peace.\"-Tarhos Kovács",
+      "description": "Whenever you damage a Survivor, they are **hexed** and a Dull **Totem** ignites.\nEvery **35/30/25s**, other Survivors not within your **Terror Radius** scream, then you see their **Auras** for **2s**.\nWhen the **hexed** Survivor is downed or becomes healthy, the **Hex Totem** is extinguished.\n> \"I shall make an example of one. These mewling worms will never know peace.\"-Tarhos Kovács",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconPerks_hexFaceTheDarkness.png",
       "icon_local_path": "icons/killers/The Knight/hex_face_the_darkness.webp",
       "translations": {
@@ -6870,7 +6870,7 @@
       "killer_id": 13,
       "is_generic_counterpart": false,
       "is_teachable": true,
-      "description": "When the **trial** starts, 2 Dull **Totems** ignite.\nWhen either of those **Hex** **Totems** is blessed or cleansed:\n• All Survivors gain **Exposed** for **40/50/60s**.\n• The other **Totem** is extinguished.\n> “Her home became profane.”",
+      "description": "When the **trial** starts, 2 Dull **Totems** ignite.\nWhen either of those **Hex Totems** is blessed or cleansed:\n• All Survivors gain **Exposed** for **40/50/60s**.\n• The other **Totem** is extinguished.\n> “Her home became profane.”",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconPerks_hexHauntedGround.png",
       "icon_local_path": "icons/killers/The Spirit/hex_haunted_ground.webp",
       "translations": {
@@ -6900,7 +6900,7 @@
       "killer_id": 42,
       "is_generic_counterpart": false,
       "is_teachable": true,
-      "description": "The first time you **hook** a Survivor, a Dull **Totem** ignites.\nThe **Auras** of **Generators** show their progress.\nWhen 1 **Generator** remains:\n• All **Generators** explode, lose **6/8/10%** progress and start regressing.\n• The **Hex** **Totem** is extinguished.\n> “You... let us in. And now, you are going to have to let us stay.” -Henry Creel",
+      "description": "The first time you **hook** a Survivor, a Dull **Totem** ignites.\nThe **Auras** of **Generators** show their progress.\nWhen 1 **Generator** remains:\n• All **Generators** explode, lose **6/8/10%** progress and start regressing.\n• The **Hex Totem** is extinguished.\n> “You... let us in. And now, you are going to have to let us stay.” -Henry Creel",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconsPerks_HexHiveMind.png",
       "icon_local_path": "icons/killers/The First/hex_hive_mind.webp",
       "translations": {
@@ -6918,7 +6918,7 @@
         },
         "pl": {
           "name": "Klątwa: Umysł roju",
-          "description": "Gdy powiesisz ocalałego na **haku** po raz pierwszy, zwykły **totem** zapala się.\n**Aury** **generatorów** pokazują swój postęp.\nGdy określona liczba **generatorów** (1) pozostaje w grze:\n• Wszystkie **generatory** wybuchają, tracą **6/8/10%** postępu i ich postęp naprawy zaczyna się cofać.\n• Przeklęty **totem** się wyczerpuje.\n> „Ty... pozwoliłeś nam wejść. A teraz, będziesz musiał pozwolić nam zostać.” – Henry Creel"
+          "description": "Gdy powiesisz ocalałego na **haku** po raz pierwszy, zwykły **totem** zapala się.\n**Aury generatorów** pokazują swój postęp.\nGdy określona liczba **generatorów** (1) pozostaje w grze:\n• Wszystkie **generatory** wybuchają, tracą **6/8/10%** postępu i ich postęp naprawy zaczyna się cofać.\n• Przeklęty **totem** się wyczerpuje.\n> „Ty... pozwoliłeś nam wejść. A teraz, będziesz musiał pozwolić nam zostać.” – Henry Creel"
         }
       },
       "perk_type": "hex"
@@ -6959,13 +6959,13 @@
       "role": "Killer",
       "is_generic_counterpart": false,
       "is_teachable": false,
-      "description": "When all **Generators** are completed, a Dull **Totem** ignites:\n• Survivors gain **Exposed**.\n• You gain **2/3/4%** **Haste**.\nWithin **4m**, Survivors see the **Hex** **Totem**'s **Aura**, expanding to **24m** over **30s**.\n> \"And the beast became faster and more powerful as if The Entity's shadowy whips were lashing at its back.\"",
+      "description": "When all **Generators** are completed, a Dull **Totem** ignites:\n• Survivors gain **Exposed**.\n• You gain **2/3/4% Haste**.\nWithin **4m**, Survivors see the **Hex Totem**'s **Aura**, expanding to **24m** over **30s**.\n> \"And the beast became faster and more powerful as if The Entity's shadowy whips were lashing at its back.\"",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconPerks_hexNoOneEscapesDeath.png",
       "icon_local_path": "icons/killers/General/hex_no_one_escapes_death.webp",
       "translations": {
         "de": {
           "name": "Fluch: Niemand entrinnt dem Tod",
-          "description": "Wenn alle **Generatoren** fertig repariert sind, wird ein glanzloses **Totem** entfacht:\n• Überlebende leiden unter **Gefährdet**.\n• Du erhältst **2/3/4%** **Eile**.\nIn einem Umkreis von **4 Metern** sehen Überlebende die **Aura** des Fluchtotems. Dieser Radius **erhöht** sich im Verlauf von **30 Sek**. auf **24 Meter**.\n> „Und die Bestie wurde schneller und stärker, als würde die schattenhafte Peitsche des Entitus auf seinen Rücken knallen.“"
+          "description": "Wenn alle **Generatoren** fertig repariert sind, wird ein glanzloses **Totem** entfacht:\n• Überlebende leiden unter **Gefährdet**.\n• Du erhältst **2/3/4% Eile**.\nIn einem Umkreis von **4 Metern** sehen Überlebende die **Aura** des Fluchtotems. Dieser Radius **erhöht** sich im Verlauf von **30 Sek**. auf **24 Meter**.\n> „Und die Bestie wurde schneller und stärker, als würde die schattenhafte Peitsche des Entitus auf seinen Rücken knallen.“"
         },
         "es": {
           "name": "Maleficio: Nadie escapa de la muerte",
@@ -6989,7 +6989,7 @@
       "killer_id": 39,
       "is_generic_counterpart": false,
       "is_teachable": true,
-      "description": "After you damage Survivors with a basic-attack 8 times, a Dull **Totem** ignites.\nWhenever you damage a Survivor with a basic-attack, they gain **5%** **Hindered** for **10/12.5/15s**.\n> \"All of the liabilities of this world are due to the inadequacies of the person involved.\" -Ken Kaneki",
+      "description": "After you damage Survivors with a basic-attack 8 times, a Dull **Totem** ignites.\nWhenever you damage a Survivor with a basic-attack, they gain **5% Hindered** for **10/12.5/15s**.\n> \"All of the liabilities of this world are due to the inadequacies of the person involved.\" -Ken Kaneki",
       "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconPerks_NothingButMisery.png",
       "icon_local_path": "icons/killers/The Ghoul/hex_nothing_but_misery.webp",
       "translations": {
@@ -7022,13 +7022,13 @@
       "killer_id": 41,
       "is_generic_counterpart": false,
       "is_teachable": true,
-      "description": "When the **trial** starts, a Dull **Totem** ignites and **hexes** the farthest **Generator** from it.\nAfter a Survivor repairs the **hexed** **Generator** for **5 seconds**:\n• You gain **Undetectable** for **20/25/30s**.\n• For that time, your **Terror Radius** is set to that **Generator**.\nWhen the **hexed** **Generator** is repaired, the next farthest **Generator** is **hexed**.\n> “From salvation’s ruin, be warned/death comes from all around.” -Giovanni Serrata’s Fog Hill",
+      "description": "When the **trial** starts, a Dull **Totem** ignites and **hexes** the farthest **Generator** from it.\nAfter a Survivor repairs the **hexed Generator** for **5 seconds**:\n• You gain **Undetectable** for **20/25/30s**.\n• For that time, your **Terror Radius** is set to that **Generator**.\nWhen the **hexed Generator** is repaired, the next farthest **Generator** is **hexed**.\n> “From salvation’s ruin, be warned/death comes from all around.” -Giovanni Serrata’s Fog Hill",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconPerks_HexOvertureOfDoom.png",
       "icon_local_path": "icons/killers/The Krasue/hex_overture_of_doom.webp",
       "translations": {
         "de": {
           "name": "Fluch: Verhängnisvolle Ouvertüre",
-          "description": "Wenn die **Prüfung** beginnt, wird ein glanzloses **Totem** entfacht und der am weitesten davon entfernte **Generator** wird verflucht.\nNachdem ein Überlebender den verfluchten **Generator** **5 Sek**. lang repariert hat, gilt:\n• Du erhältst **Unentdeckbar** für **20/25/30 Sek**.\n• Während dieses Zeitraums wird dein **Terrorradius** auf den **Generator** übertragen.\nSobald der verfluchte **Generator** repariert ist, wird der nächste am weitesten entfernte **Generator** verflucht.\n> „Vor der zerstörten Erlösung seid gewarnt/der Tod kommt von überall.“ – Giovanni Serratas „Nebelhügel“"
+          "description": "Wenn die **Prüfung** beginnt, wird ein glanzloses **Totem** entfacht und der am weitesten davon entfernte **Generator** wird verflucht.\nNachdem ein Überlebender den verfluchten **Generator 5 Sek**. lang repariert hat, gilt:\n• Du erhältst **Unentdeckbar** für **20/25/30 Sek**.\n• Während dieses Zeitraums wird dein **Terrorradius** auf den **Generator** übertragen.\nSobald der verfluchte **Generator** repariert ist, wird der nächste am weitesten entfernte **Generator** verflucht.\n> „Vor der zerstörten Erlösung seid gewarnt/der Tod kommt von überall.“ – Giovanni Serratas „Nebelhügel“"
         },
         "es": {
           "name": "Maleficio: Obertura del mal",
@@ -7083,7 +7083,7 @@
       "alternate_name": "Hex: Fortune's Fool",
       "is_generic_counterpart": true,
       "is_teachable": true,
-      "description": "The first time you **hook** each Survivor, they are **hexed** and a Dull **Totem** ignites.\nFor **90s**, the **Hex** **Totem** is **blocked** to other Survivors.\nThe **hexed** Survivors:\n• Gain **Oblivious**.\n• Within **16m** of the **Hex** **totem**, they see its **Aura**.\n> \"We came. Now you must come with us. Taste our pleasures.\" -Pinhead",
+      "description": "The first time you **hook** each Survivor, they are **hexed** and a Dull **Totem** ignites.\nFor **90s**, the **Hex Totem** is **blocked** to other Survivors.\nThe **hexed** Survivors:\n• Gain **Oblivious**.\n• Within **16m** of the **Hex totem**, they see its **Aura**.\n> \"We came. Now you must come with us. Taste our pleasures.\" -Pinhead",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconPerks_hexPlaything.png",
       "icon_local_path": "icons/killers/The Cenobite/hex_plaything.webp",
       "translations": {
@@ -7113,7 +7113,7 @@
       "killer_id": 19,
       "is_generic_counterpart": false,
       "is_teachable": true,
-      "description": "When the **trial** starts, a Dull **Totem** ignites.\nWhenever a Survivor starts blessing or cleansing a **Totem**, they gain **Oblivious** for **40/50/60s**.\nWhenever a **Hex** **Totem** is blessed or cleansed, you see the **Auras** of all Survivors for **20s**.\n> \"Bloody fool, you pulled the trigger on yourself.\" -Caleb Quinn",
+      "description": "When the **trial** starts, a Dull **Totem** ignites.\nWhenever a Survivor starts blessing or cleansing a **Totem**, they gain **Oblivious** for **40/50/60s**.\nWhenever a **Hex Totem** is blessed or cleansed, you see the **Auras** of all Survivors for **20s**.\n> \"Bloody fool, you pulled the trigger on yourself.\" -Caleb Quinn",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconPerks_hexRetribution.png",
       "icon_local_path": "icons/killers/The Deathslinger/hex_retribution.webp",
       "translations": {
@@ -7173,7 +7173,7 @@
       "killer_id": 43,
       "is_generic_counterpart": false,
       "is_teachable": true,
-      "description": "After you **hook** 4 different Survivors, a Dull **Totem** ignites.\nWhile chasing a Survivor, whenever you basic-break a **Pallet**, Survivors within **16m**:\n• Scream.\n• Gain **3/4/5%** **Hindered** for **3s**.\n> \"There was a scream from the forest. Like someone was attacking her.\" -Mount Ormond Missing Person Report",
+      "description": "After you **hook** 4 different Survivors, a Dull **Totem** ignites.\nWhile chasing a Survivor, whenever you basic-break a **Pallet**, Survivors within **16m**:\n• Scream.\n• Gain **3/4/5% Hindered** for **3s**.\n> \"There was a scream from the forest. Like someone was attacking her.\" -Mount Ormond Missing Person Report",
       "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconsPerks_ScaredToDeath.png",
       "icon_local_path": "icons/killers/The Slasher/hex_scared_to_death.webp",
       "translations": {
@@ -7232,13 +7232,13 @@
       "role": "Killer",
       "is_generic_counterpart": false,
       "is_teachable": false,
-      "description": "When the **trial** starts, a Dull **Totem** ignites.\nFor each Dull and **Hex** **Totem** remaining, you have **1 Token**.\nFor each Token, Survivors bless and cleanse **totems** **8/9/10%** slower.",
+      "description": "When the **trial** starts, a Dull **Totem** ignites.\nFor each Dull and **Hex Totem** remaining, you have **1 Token**.\nFor each Token, Survivors bless and cleanse **totems 8/9/10%** slower.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconPerks_hexThrillOfTheHunt.png",
       "icon_local_path": "icons/killers/General/hex_thrill_of_the_hunt.webp",
       "translations": {
         "de": {
           "name": "Fluch: Nervenkitzel der Jagd",
-          "description": "Wenn die **Prüfung** beginnt, wird ein glanzloses **Totem** entfacht.\nFür jedes verbleibende glanzlose **Totem** und Fluchtotem erhältst du 1 Zähler.\nFür jeden Zähler segnen und zerstören die Überlebenden **Totems** **8/9/10%** langsamer."
+          "description": "Wenn die **Prüfung** beginnt, wird ein glanzloses **Totem** entfacht.\nFür jedes verbleibende glanzlose **Totem** und Fluchtotem erhältst du 1 Zähler.\nFür jeden Zähler segnen und zerstören die Überlebenden **Totems 8/9/10%** langsamer."
         },
         "es": {
           "name": "Maleficio: La emoción de la caza",
@@ -7250,7 +7250,7 @@
         },
         "pl": {
           "name": "Klątwa: Dreszcz Polowania",
-          "description": "Na początku próby, zwykły **totem** zapala się.\nZa każdy pozostały zwykły i przeklęty **totem**, otrzymujesz żeton (1).\nZa każdy żeton, ocalali błogosławią i oczyszczają **totemy** **8/9/10%** wolniej."
+          "description": "Na początku próby, zwykły **totem** zapala się.\nZa każdy pozostały zwykły i przeklęty **totem**, otrzymujesz żeton (1).\nZa każdy żeton, ocalali błogosławią i oczyszczają **totemy 8/9/10%** wolniej."
         }
       },
       "perk_type": "hex"
@@ -7292,13 +7292,13 @@
       "killer_id": 44,
       "is_generic_counterpart": false,
       "is_teachable": true,
-      "description": "The first time a Survivor gains a **Hook** State, a Dull **Totem** ignites.\nWhenever a running Survivor gains **Haste** within **32m** of you, you are alerted.\nRunning Survivors cannot gain more than **25/20/15%** **Haste** at a time.\n“They will run, but Judgment will make the very ground they tread turn to ash and smoke.” (Visions of Gerhardt, ch. 1)",
+      "description": "The first time a Survivor gains a **Hook** State, a Dull **Totem** ignites.\nWhenever a running Survivor gains **Haste** within **32m** of you, you are alerted.\nRunning Survivors cannot gain more than **25/20/15% Haste** at a time.\n“They will run, but Judgment will make the very ground they tread turn to ash and smoke.” (Visions of Gerhardt, ch. 1)",
       "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconsPerks_HexUnderYourThumb.png",
       "icon_local_path": "icons/killers/The Judgment/hex_under_your_thumb.webp",
       "translations": {
         "de": {
           "name": "Fluch: Unter deiner Knute",
-          "description": "Wenn ein Überlebender zum ersten Mal einen Hakenstatus erhält, wird ein glanzloses **Totem** entfacht.\nImmer wenn ein laufender Überlebender in einem Umkreis von **32 m** um dich **Eile** erhält, wirst du benachrichtigt.\nLaufende Überlebende können nicht mehr als **25/20/15%** **Eile** auf einmal erhalten.\n> „Sie werden davonlaufen, doch das Urteil wird den Boden unter ihren Füßen zu Staub und Asche verbrennen.“ – Visionen von Gerhardt, Kapitel 1"
+          "description": "Wenn ein Überlebender zum ersten Mal einen Hakenstatus erhält, wird ein glanzloses **Totem** entfacht.\nImmer wenn ein laufender Überlebender in einem Umkreis von **32 m** um dich **Eile** erhält, wirst du benachrichtigt.\nLaufende Überlebende können nicht mehr als **25/20/15% Eile** auf einmal erhalten.\n> „Sie werden davonlaufen, doch das Urteil wird den Boden unter ihren Füßen zu Staub und Asche verbrennen.“ – Visionen von Gerhardt, Kapitel 1"
         },
         "es": {
           "name": "Maleficio: A tu merced",
@@ -7322,7 +7322,7 @@
       "killer_id": 21,
       "is_generic_counterpart": false,
       "is_teachable": true,
-      "description": "When the **trial** starts, a Dull **Totem** ignites.\nWhen another **Hex** **Totem** is blessed or cleansed, it replaces this one and keeps any Tokens it had.\nYou see the **Auras** of Survivors within **2/3/4m** of Dull **Totems**.",
+      "description": "When the **trial** starts, a Dull **Totem** ignites.\nWhen another **Hex Totem** is blessed or cleansed, it replaces this one and keeps any Tokens it had.\nYou see the **Auras** of Survivors within **2/3/4m** of Dull **Totems**.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconPerks_hexUndying.png",
       "icon_local_path": "icons/killers/The Blight/hex_undying.webp",
       "translations": {
@@ -7352,7 +7352,7 @@
       "killer_id": 37,
       "is_generic_counterpart": false,
       "is_teachable": true,
-      "description": "The first time a **Generator** is completed, a Dull **Totem** ignites.\nThe **Obsession**:\n• Repairs **27/30/33%** slower.\n• Sees the **Hex** **Totem**'s **Aura** within **12m**.\n> \"So toil, mortal, toil! Your effort will be for naught!\" -Dracula",
+      "description": "The first time a **Generator** is completed, a Dull **Totem** ignites.\nThe **Obsession**:\n• Repairs **27/30/33%** slower.\n• Sees the **Hex Totem**'s **Aura** within **12m**.\n> \"So toil, mortal, toil! Your effort will be for naught!\" -Dracula",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconPerks_HexWretchedFate.png",
       "icon_local_path": "icons/killers/The Dark Lord/hex_wretched_fate.webp",
       "translations": {
@@ -7392,7 +7392,7 @@
         },
         "es": {
           "name": "Acaparadora",
-          "description": "Cuando comienza la partida, aparecen **32/48/64** **cofres** más.\nCuando un superviviente recoja un objeto o empiece a **desbloquear** un **cofre** en un radio de **2 metros** de ti, recibirás una alerta."
+          "description": "Cuando comienza la partida, aparecen **32/48/64 cofres** más.\nCuando un superviviente recoja un objeto o empiece a **desbloquear** un **cofre** en un radio de **2 metros** de ti, recibirás una alerta."
         },
         "ja": {
           "name": "溜め込み屋",
@@ -7442,7 +7442,7 @@
       "killer_id": 37,
       "is_generic_counterpart": false,
       "is_teachable": true,
-      "description": "Whenever a Survivor gets within **3/4/5m** of a locked **Chest**, you see their **Aura** for **8s**.\nYou can lock **unlocked** **Chests**. Cooldown: **10s**.\nYou see the **Auras** of locked **Chests**.\n> \"Come running, one and all, and see what fortune awaits you.\" -Dracula",
+      "description": "Whenever a Survivor gets within **3/4/5m** of a locked **Chest**, you see their **Aura** for **8s**.\nYou can lock **unlocked Chests**. Cooldown: **10s**.\nYou see the **Auras** of locked **Chests**.\n> \"Come running, one and all, and see what fortune awaits you.\" -Dracula",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconPerks_HumanGreed.png",
       "icon_local_path": "icons/killers/The Dark Lord/human_greed.webp",
       "translations": {
@@ -7452,7 +7452,7 @@
         },
         "es": {
           "name": "Codicia humana",
-          "description": "Cuando un superviviente entre en el radio de **3/4/5 metros** de un **cofre** cerrado, verás su **aura** durante **8 segundos**.\nPuedes cerrar **cofres** **desbloqueados**. Tiempo de recarga: **10 segundos**.\nVes las **auras** de los **cofres** cerrados.\n\"Venid todos a mí y descubrid qué os depara el destino\". (Drácula)"
+          "description": "Cuando un superviviente entre en el radio de **3/4/5 metros** de un **cofre** cerrado, verás su **aura** durante **8 segundos**.\nPuedes cerrar **cofres desbloqueados**. Tiempo de recarga: **10 segundos**.\nVes las **auras** de los **cofres** cerrados.\n\"Venid todos a mí y descubrid qué os depara el destino\". (Drácula)"
         },
         "ja": {
           "name": "人間の欲",
@@ -7649,7 +7649,7 @@
       "killer_id": 9,
       "is_generic_counterpart": false,
       "is_teachable": true,
-      "description": "Whenever a Survivor drops a **Pallet**, for the next **90/60/30s**, if they move **16m** away from it, they gain **5/10/15%** **Hindered** for **30s**.\n> \"Oh, that gun's no good. The old way… with a sledge! You see, that way's better. They die better that way.\" -Nubbins Sawyer",
+      "description": "Whenever a Survivor drops a **Pallet**, for the next **90/60/30s**, if they move **16m** away from it, they gain **5/10/15% Hindered** for **30s**.\n> \"Oh, that gun's no good. The old way… with a sledge! You see, that way's better. They die better that way.\" -Nubbins Sawyer",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconPerks_knockOut.png",
       "icon_local_path": "icons/killers/The Cannibal/knock_out.webp",
       "translations": {
@@ -7829,13 +7829,13 @@
       "killer_id": 32,
       "is_generic_counterpart": false,
       "is_teachable": true,
-      "description": "Whenever you damage a **Generator**, it becomes Compromised.\nWhen that **Generator** is completed by Survivors:\n• You gain **8%** **Haste** for **40/50/60s**.\n• You gain **Undetectable** for **40/50/60s**.\nOnly one **Generator** can be compromised at a time.\n> “YOU WILL HOLD NO DOMINION OVER ME.” -HUX-A7-13",
+      "description": "Whenever you damage a **Generator**, it becomes Compromised.\nWhen that **Generator** is completed by Survivors:\n• You gain **8% Haste** for **40/50/60s**.\n• You gain **Undetectable** for **40/50/60s**.\nOnly one **Generator** can be compromised at a time.\n> “YOU WILL HOLD NO DOMINION OVER ME.” -HUX-A7-13",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconPerks_machineLearning.png",
       "icon_local_path": "icons/killers/The Singularity/machine_learning.webp",
       "translations": {
         "de": {
           "name": "Maschinelles Lernen",
-          "description": "Immer wenn du einen **Generator** beschädigst, wird er beeinträchtigt.\nWenn dieser **Generator** von Überlebenden fertiggestellt wurde, gilt:\n• Du erhältst **8%** **Eile** für **40/50/60 Sek**.\n• Du erhältst **Unentdeckbar** für **40/50/60 Sek**.\nEs kann immer nur ein **Generator** beeinträchtigt sein.\n> „IHR HABT KEINE MACHT ÜBER MICH.“ – HUX-A7-13"
+          "description": "Immer wenn du einen **Generator** beschädigst, wird er beeinträchtigt.\nWenn dieser **Generator** von Überlebenden fertiggestellt wurde, gilt:\n• Du erhältst **8% Eile** für **40/50/60 Sek**.\n• Du erhältst **Unentdeckbar** für **40/50/60 Sek**.\nEs kann immer nur ein **Generator** beeinträchtigt sein.\n> „IHR HABT KEINE MACHT ÜBER MICH.“ – HUX-A7-13"
         },
         "es": {
           "name": "Aprendizaje de máquina",
@@ -7928,7 +7928,7 @@
       "translations": {
         "de": {
           "name": "Erbarmungsloser Sturm",
-          "description": "Wenn ein **Generator** zum ersten Mal **90%** Fortschritt erreicht, gilt: Überlebende, die ihn reparieren, erhalten besondere Fähigkeitschecks. Wenn sie einen davon nicht schaffen oder die Reparatur unterbrechen, wird dieser **Generator** **16/18/20 Sek**. lang **blockiert**."
+          "description": "Wenn ein **Generator** zum ersten Mal **90%** Fortschritt erreicht, gilt: Überlebende, die ihn reparieren, erhalten besondere Fähigkeitschecks. Wenn sie einen davon nicht schaffen oder die Reparatur unterbrechen, wird dieser **Generator 16/18/20 Sek**. lang **blockiert**."
         },
         "es": {
           "name": "Tormenta vil",
@@ -7988,7 +7988,7 @@
       "translations": {
         "de": {
           "name": "Beobachten und zuschlagen",
-          "description": "Während du einen Überlebenden jagst, ist dein **Terrorradius** **5/10/15%** größer.\nWenn du keinen Überlebenden jagst, ist dein **Terrorradius** **15/20/25%** kleiner.\n> „Es ist Zeit für Ihre Behandlung!“ – Der Doktor"
+          "description": "Während du einen Überlebenden jagst, ist dein **Terrorradius 5/10/15%** größer.\nWenn du keinen Überlebenden jagst, ist dein **Terrorradius 15/20/25%** kleiner.\n> „Es ist Zeit für Ihre Behandlung!“ – Der Doktor"
         },
         "es": {
           "name": "Monitorización y abuso",
@@ -8071,7 +8071,7 @@
       "killer_id": 23,
       "is_generic_counterpart": false,
       "is_teachable": true,
-      "description": "The first time you **Hook** each Survivor, you earn **12 Token**.\nWhen all **Generators** are completed, when a Survivor starts opening an Exit Gate:\n• It is **blocked** **6/9/12s**, plus **6/8/10s** for each Token.\n• You are alerted.\n> \"That sound when you bleed...let me hear it again.\" -Hak Ji-woon",
+      "description": "The first time you **Hook** each Survivor, you earn **12 Token**.\nWhen all **Generators** are completed, when a Survivor starts opening an Exit Gate:\n• It is **blocked 6/9/12s**, plus **6/8/10s** for each Token.\n• You are alerted.\n> \"That sound when you bleed...let me hear it again.\" -Hak Ji-woon",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconPerks_noWayOut.png",
       "icon_local_path": "icons/killers/The Trickster/no_way_out.webp",
       "translations": {
@@ -8197,7 +8197,7 @@
       "translations": {
         "de": {
           "name": "Überladen",
-          "description": "Immer wenn du einen **Generator** beschädigst, gilt:\n• Die Geschwindigkeit, mit der er Fortschritt verliert, verändert sich im Verlauf von **2/3/4 Sek**. von **2/3/4%** auf **2/3/4%**.\n• Der nächste Überlebende, der einen auf diese Weise beschädigten **Generator** repariert, erhält einen besonderen Fähigkeitscheck. Wenn er ihn nicht schafft, verliert der **Generator** **2/3/4%** mehr Fortschritt.\n> „Es ist eine Falle. Aber eine Falle, die jemand auslösen muss...“ – Der Doktor"
+          "description": "Immer wenn du einen **Generator** beschädigst, gilt:\n• Die Geschwindigkeit, mit der er Fortschritt verliert, verändert sich im Verlauf von **2/3/4 Sek**. von **2/3/4%** auf **2/3/4%**.\n• Der nächste Überlebende, der einen auf diese Weise beschädigten **Generator** repariert, erhält einen besonderen Fähigkeitscheck. Wenn er ihn nicht schafft, verliert der **Generator 2/3/4%** mehr Fortschritt.\n> „Es ist eine Falle. Aber eine Falle, die jemand auslösen muss...“ – Der Doktor"
         },
         "es": {
           "name": "Sobrecarga",
@@ -8282,13 +8282,13 @@
       "alternate_name": "See How They Run",
       "is_generic_counterpart": true,
       "is_teachable": true,
-      "description": "Whenever you stop chasing the **Obsession**, you earn **3 Token**, up to **3/4/5**. Cooldown: **120s**.\nFor each Token, gain **5%** **Haste**.\nWhenever you attack, lose **1 Token**.\n> “You've fooled them, haven't you Michael? But not me.” -Dr. Sam Loomis",
+      "description": "Whenever you stop chasing the **Obsession**, you earn **3 Token**, up to **3/4/5**. Cooldown: **120s**.\nFor each Token, gain **5% Haste**.\nWhenever you attack, lose **1 Token**.\n> “You've fooled them, haven't you Michael? But not me.” -Dr. Sam Loomis",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconPerks_playWithYourFood.png",
       "icon_local_path": "icons/killers/The Shape/play_with_your_food.webp",
       "translations": {
         "de": {
           "name": "Spiele mit deinem Essen",
-          "description": "Immer wenn du aufhörst, das Ziel deiner **Besessenheit** zu jagen, erhältst du 3 Zähler, bis zu max. **3/4/5**. Abklingzeit: **120 Sek**.\nFür jeden Zähler erhältst du **5%** **Eile**.\nBei jedem Angriff verlierst du 1 Zähler.\n> „Du hast sie zum Narren gehalten, nicht wahr, Michael? Aber nicht mich.“ – Dr. Sam Loomis"
+          "description": "Immer wenn du aufhörst, das Ziel deiner **Besessenheit** zu jagen, erhältst du 3 Zähler, bis zu max. **3/4/5**. Abklingzeit: **120 Sek**.\nFür jeden Zähler erhältst du **5% Eile**.\nBei jedem Angriff verlierst du 1 Zähler.\n> „Du hast sie zum Narren gehalten, nicht wahr, Michael? Aber nicht mich.“ – Dr. Sam Loomis"
         },
         "en": {
           "name": "Play With Your Food"
@@ -8374,13 +8374,13 @@
       "killer_id": 43,
       "is_generic_counterpart": false,
       "is_teachable": true,
-      "description": "Whenever you basic-break a **Pallet** or Breakable Wall, you earn **1 Token**, up to 3.\nWhenever you are **blinded** or **Pallet**-stunned, for the next **13/13/13s** you gain **6/8/10%** **Haste** for each Token. Cooldown: **60/50/40**.\n> “Signs of a pursuit led deep into the woods where the victim’s body was found.” -Port Henly Herald",
+      "description": "Whenever you basic-break a **Pallet** or Breakable Wall, you earn **1 Token**, up to 3.\nWhenever you are **blinded** or **Pallet**-stunned, for the next **13/13/13s** you gain **6/8/10% Haste** for each Token. Cooldown: **60/50/40**.\n> “Signs of a pursuit led deep into the woods where the victim’s body was found.” -Port Henly Herald",
       "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconsPerks_Rampage.png",
       "icon_local_path": "icons/killers/The Slasher/rampage.webp",
       "translations": {
         "de": {
           "name": "Randale",
-          "description": "Immer wenn du eine **Palette** oder zerstörbare Mauer mit einem Grundangriff zerstörst, verdienst du 1 Zähler, bis zu max. 3.\nImmer wenn du geblendet oder durch eine **Palette** betäubt wirst, erhältst du für die nächsten **13/13/13 Sek**. **6/8/10%** **Eile** pro Zähler. Abklingzeit: **60/50/40**.\n> „Die Spuren der Verfolgung führten tief in den Wald, wo die Leiche des Opfers gefunden wurde.“ – Port Henly Herald"
+          "description": "Immer wenn du eine **Palette** oder zerstörbare Mauer mit einem Grundangriff zerstörst, verdienst du 1 Zähler, bis zu max. 3.\nImmer wenn du geblendet oder durch eine **Palette** betäubt wirst, erhältst du für die nächsten **13/13/13 Sek**. **6/8/10% Eile** pro Zähler. Abklingzeit: **60/50/40**.\n> „Die Spuren der Verfolgung führten tief in den Wald, wo die Leiche des Opfers gefunden wurde.“ – Port Henly Herald"
         },
         "es": {
           "name": "Desbocamiento",
@@ -8392,7 +8392,7 @@
         },
         "pl": {
           "name": "Szał",
-          "description": "Za każdym razem, gdy w podstawowy sposób niszczysz **paletę** lub rozbijalną ścianę, zyskujesz określoną liczbę żetonów (1, maksymalnie 3).\nZa każdym razem, gdy jesteś **oślepiony** lub ogłuszony przez **paletę**, zyskujesz na kolejne **13/13/13 s** **6/8/10%** efektu **Pośpiech** za każdy żeton. Czas odnawiania: **60/50/40**.\n> „Ślady pościgu prowadziły głęboko do lasu, gdzie znaleziono ciało ofiary”. – Port Henly Herald"
+          "description": "Za każdym razem, gdy w podstawowy sposób niszczysz **paletę** lub rozbijalną ścianę, zyskujesz określoną liczbę żetonów (1, maksymalnie 3).\nZa każdym razem, gdy jesteś **oślepiony** lub ogłuszony przez **paletę**, zyskujesz na kolejne **13/13/13 s 6/8/10%** efektu **Pośpiech** za każdy żeton. Czas odnawiania: **60/50/40**.\n> „Ślady pościgu prowadziły głęboko do lasu, gdzie znaleziono ciało ofiary”. – Port Henly Herald"
         }
       },
       "perk_type": "chase"
@@ -8434,13 +8434,13 @@
       "killer_id": 33,
       "is_generic_counterpart": false,
       "is_teachable": true,
-      "description": "Whenever you damage a Survivor with a basic-attack, you gain **5%** **Haste** for **8/9/10s**.\nWhile chasing a Survivor, you cannot gain **Bloodlust**.\n> “Catch it, put it in the airlock, get rid of it.” -Dallas",
+      "description": "Whenever you damage a Survivor with a basic-attack, you gain **5% Haste** for **8/9/10s**.\nWhile chasing a Survivor, you cannot gain **Bloodlust**.\n> “Catch it, put it in the airlock, get rid of it.” -Dallas",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconPerks_rapidBrutality.png",
       "icon_local_path": "icons/killers/The Xenomorph/rapid_brutality.webp",
       "translations": {
         "de": {
           "name": "Stürmische Brutalität",
-          "description": "Immer wenn du einen Überlebenden mit einem Grundangriff **verletzt**, erhältst du **5%** **Eile** für **8/9/10 Sek**.\nDu kannst bei der Jagd auf einen Überlebenden keinen **Blutrausch** erhalten.\n> „Fangen, in die Luftschleuse stecken und loswerden.“ – Dallas"
+          "description": "Immer wenn du einen Überlebenden mit einem Grundangriff **verletzt**, erhältst du **5% Eile** für **8/9/10 Sek**.\nDu kannst bei der Jagd auf einen Überlebenden keinen **Blutrausch** erhalten.\n> „Fangen, in die Luftschleuse stecken und loswerden.“ – Dallas"
         },
         "es": {
           "name": "Brutalidad veloz",
@@ -8667,7 +8667,7 @@
         },
         "pl": {
           "name": "Hak Plagi: Uszkodzony Kompas",
-          "description": "Na początku próby maksymalnie 4 losowe **haki** zmieniają się w **haki plagi**.\nKiedy ocalały zostanie zdjęty z **haka**, **hak** ten staje się **hakiem** plagi.\nKiedy zawiesisz ocalałego na **haku plagi**, przez **6/8/10 s** widzisz **aurę** **generatora** z największym postępem.\n> „Rzucić kotwicę! Wyznaczę nowy kurs”. – Portia Maye"
+          "description": "Na początku próby maksymalnie 4 losowe **haki** zmieniają się w **haki plagi**.\nKiedy ocalały zostanie zdjęty z **haka**, **hak** ten staje się **hakiem** plagi.\nKiedy zawiesisz ocalałego na **haku plagi**, przez **6/8/10 s** widzisz **aurę generatora** z największym postępem.\n> „Rzucić kotwicę! Wyznaczę nowy kurs”. – Portia Maye"
         }
       },
       "perk_type": "hooks"
@@ -8744,11 +8744,11 @@
       "translations": {
         "de": {
           "name": "Geheimprojekt",
-          "description": "Immer wenn ein **Totem** gesegnet oder zerstört wird, wird ein zufälliger nicht **blockierter** **Generator** **20/25/30 Sek**. lang **blockiert**.\nImmer wenn mindestens 1 **Generator** **blockiert** wird, erhältst du **Unentdeckbar** für **30 Sek**.\n> „Du bist hier gefangen, genau wie ich.“ – Henry Creel"
+          "description": "Immer wenn ein **Totem** gesegnet oder zerstört wird, wird ein zufälliger nicht **blockierter Generator 20/25/30 Sek**. lang **blockiert**.\nImmer wenn mindestens 1 **Generator blockiert** wird, erhältst du **Unentdeckbar** für **30 Sek**.\n> „Du bist hier gefangen, genau wie ich.“ – Henry Creel"
         },
         "es": {
           "name": "Proyecto secreto",
-          "description": "Cuando se bendice o purifica un **tótem**, un **generador** **desbloqueado** aleatorio queda bloqueado durante **20/25/30 segundos**.\nCuando hay 1 o más **generadores** bloqueados, obtienes **Indetectable** durante **30 segundos**.\n\"Eres presa de este lugar, igual que yo\". (Henry Creel)"
+          "description": "Cuando se bendice o purifica un **tótem**, un **generador desbloqueado** aleatorio queda bloqueado durante **20/25/30 segundos**.\nCuando hay 1 o más **generadores** bloqueados, obtienes **Indetectable** durante **30 segundos**.\n\"Eres presa de este lugar, igual que yo\". (Henry Creel)"
         },
         "ja": {
           "name": "極秘プロジェクト",
@@ -8798,13 +8798,13 @@
       "killer_id": 2,
       "is_generic_counterpart": false,
       "is_teachable": true,
-      "description": "Whenever you are **blinded**, gain **6/8/10%** **Haste** for **10s**.\n> \"Shining in the darkest dark, his eyes pierce the night and sting your soul.\"",
+      "description": "Whenever you are **blinded**, gain **6/8/10% Haste** for **10s**.\n> \"Shining in the darkest dark, his eyes pierce the night and sting your soul.\"",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconPerks_shadowborn.png",
       "icon_local_path": "icons/killers/The Wraith/shadowborn.webp",
       "translations": {
         "de": {
           "name": "Schattengeborener",
-          "description": "Immer wenn du geblendet wirst, erhältst du **6/8/10 Sek**. lang **10%** **Eile**.\n> „Strahlend in der finstersten Dunkelheit, durchbohren seine Augen die Nacht und brennen sich in deine Seele.“"
+          "description": "Immer wenn du geblendet wirst, erhältst du **6/8/10 Sek**. lang **10% Eile**.\n> „Strahlend in der finstersten Dunkelheit, durchbohren seine Augen die Nacht und brennen sich in deine Seele.“"
         },
         "es": {
           "name": "Hijo de las sombras",
@@ -8827,7 +8827,7 @@
       "role": "Killer",
       "is_generic_counterpart": false,
       "is_teachable": false,
-      "description": "You not only snuff out **totems**, but destroy them entirely.\nWhenever you snuff a **Boon** **Totem**, that **Totem** is destroyed instead.\nAfter destroying a **Boon** **Totem**, the **Auras** of all Survivors within its effect range are **revealed** to you for **6/7/8 seconds**.",
+      "description": "You not only snuff out **totems**, but destroy them entirely.\nWhenever you snuff a **Boon Totem**, that **Totem** is destroyed instead.\nAfter destroying a **Boon Totem**, the **Auras** of all Survivors within its effect range are **revealed** to you for **6/7/8 seconds**.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconPerks_shatteredHope.png",
       "icon_local_path": "icons/killers/General/shattered_hope.webp",
       "translations": {
@@ -8941,13 +8941,13 @@
       "killer_id": 13,
       "is_generic_counterpart": false,
       "is_teachable": true,
-      "description": "After you break **4/3/2** **Pallets**, when you are **Pallet**-stunned, the **Pallet** is destroyed.\n> “Fury is her blood.”",
+      "description": "After you break **4/3/2 Pallets**, when you are **Pallet**-stunned, the **Pallet** is destroyed.\n> “Fury is her blood.”",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconPerks_spiritFury.png",
       "icon_local_path": "icons/killers/The Spirit/spirit_fury.webp",
       "translations": {
         "de": {
           "name": "Zorn des Gespensts",
-          "description": "Nachdem du **4/3/2** **Paletten** zerstört hast, wird die nächste **Palette**, mit der du betäubt wirst, zerstört.\n> „Zorn ist ihr Blut.“"
+          "description": "Nachdem du **4/3/2 Paletten** zerstört hast, wird die nächste **Palette**, mit der du betäubt wirst, zerstört.\n> „Zorn ist ihr Blut.“"
         },
         "es": {
           "name": "Furia espiritual",
@@ -8959,7 +8959,7 @@
         },
         "pl": {
           "name": "Duchowa Furia",
-          "description": "Po uszkodzeniu **4/3/2** **palet**, gdy jesteś ogłuszony przez **paletę**, **paleta** ta ulega zniszczeniu.\n> „Gniew płynie w jej żyłach.”"
+          "description": "Po uszkodzeniu **4/3/2 palet**, gdy jesteś ogłuszony przez **paletę**, **paleta** ta ulega zniszczeniu.\n> „Gniew płynie w jej żyłach.”"
         }
       },
       "perk_type": "chase"
@@ -8977,7 +8977,7 @@
       "translations": {
         "de": {
           "name": "Groupie",
-          "description": "Wenn du einen Überlebenden trägst, erhalten Überlebende in deinem **Terrorradius** **Gefährdet**. Dieser Effekt endet **26/28/30 Sek**., nachdem:\n• sie deinen **Terrorradius** verlassen.\n• du den getragenen Überlebenden fallen lässt oder festhakst.\nAbklingzeit: **60 Sek**.\n> „Genieße diesen Augenblick, nur wenige kommen mir so nah.“ – Hak Ji-woon"
+          "description": "Wenn du einen Überlebenden trägst, erhalten Überlebende in deinem **Terrorradius Gefährdet**. Dieser Effekt endet **26/28/30 Sek**., nachdem:\n• sie deinen **Terrorradius** verlassen.\n• du den getragenen Überlebenden fallen lässt oder festhakst.\nAbklingzeit: **60 Sek**.\n> „Genieße diesen Augenblick, nur wenige kommen mir so nah.“ – Hak Ji-woon"
         },
         "es": {
           "name": "Deslumbrado",
@@ -9036,7 +9036,7 @@
       "translations": {
         "de": {
           "name": "Überlegene Anatomie",
-          "description": "Immer wenn ein Überlebender in einem Umkreis von **30/35/40 Metern** rund um dich einen schnellen Sprung ausführt, ist dein nächster Grundfähigkeit-Sprung durch ein **Fenster** **12%** schneller. Abklingzeit: **25 Sek**."
+          "description": "Immer wenn ein Überlebender in einem Umkreis von **30/35/40 Metern** rund um dich einen schnellen Sprung ausführt, ist dein nächster Grundfähigkeit-Sprung durch ein **Fenster 12%** schneller. Abklingzeit: **25 Sek**."
         },
         "es": {
           "name": "Anatomía superior",
@@ -9210,13 +9210,13 @@
       "killer_id": 4,
       "is_generic_counterpart": false,
       "is_teachable": true,
-      "description": "For each injured, downed, or **hooked** Survivor, all Survivors:\n• Cleanse **totems** **1/1.5/2%** slower.\n• Repair **1/1.5/2%** slower.\n• Sabotage **Hooks** **1/1.5/2%** slower.\nWhile 4 Survivors are either injured, downed or **hooked**, all above actions are additionally **4/6/8%** slower.\n> \"She plays with us and revels in our pain.\"",
+      "description": "For each injured, downed, or **hooked** Survivor, all Survivors:\n• Cleanse **totems 1/1.5/2%** slower.\n• Repair **1/1.5/2%** slower.\n• Sabotage **Hooks 1/1.5/2%** slower.\nWhile 4 Survivors are either injured, downed or **hooked**, all above actions are additionally **4/6/8%** slower.\n> \"She plays with us and revels in our pain.\"",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconPerks_thanatophobia.png",
       "icon_local_path": "icons/killers/The Nurse/thanatophobia.webp",
       "translations": {
         "de": {
           "name": "Thanatophobie",
-          "description": "Für jeden **verletzten**, niedergestreckten oder festgehakten Überlebenden gilt für alle Überlebende:\n• Sie zerstören **Totems** **1/1.5/2%** langsamer.\n• Sie reparieren **1/1.5/2%** langsamer.\n• Sie sabotieren **Haken** **1/1.5/2%** langsamer.\nSind vier Überlebende **verletzt**, niedergestreckt oder festgehakt, sind alle oben genannten Aktionen zusätzlich **4/6/8%** langsamer.\n> „Sie spielt mit uns und weidet sich an unserem Schmerz.“"
+          "description": "Für jeden **verletzten**, niedergestreckten oder festgehakten Überlebenden gilt für alle Überlebende:\n• Sie zerstören **Totems 1/1.5/2%** langsamer.\n• Sie reparieren **1/1.5/2%** langsamer.\n• Sie sabotieren **Haken 1/1.5/2%** langsamer.\nSind vier Überlebende **verletzt**, niedergestreckt oder festgehakt, sind alle oben genannten Aktionen zusätzlich **4/6/8%** langsamer.\n> „Sie spielt mit uns und weidet sich an unserem Schmerz.“"
         },
         "es": {
           "name": "Tanatofobia",
@@ -9228,7 +9228,7 @@
         },
         "pl": {
           "name": "Tanatofobia",
-          "description": "Za każdego rannego, powalonego lub powieszonego na **haku** ocalałego, wszyscy ocalali:\n• Oczyszczają **totemy** **1/1.5/2%** wolniej.\n• Naprawiają **1/1.5/2%** wolniej.\n• Sabotują **haki** **1/1.5/2%** wolniej.\nGdy 4 ocalałych jest rannych, powalonych lub powieszonych na **haku**, wszystkie wymienione akcje są **4/6/8%** wolniejsze.\n> „Droczy się z nami i bawi się naszym bólem”."
+          "description": "Za każdego rannego, powalonego lub powieszonego na **haku** ocalałego, wszyscy ocalali:\n• Oczyszczają **totemy 1/1.5/2%** wolniej.\n• Naprawiają **1/1.5/2%** wolniej.\n• Sabotują **haki 1/1.5/2%** wolniej.\nGdy 4 ocalałych jest rannych, powalonych lub powieszonych na **haku**, wszystkie wymienione akcje są **4/6/8%** wolniejsze.\n> „Droczy się z nami i bawi się naszym bólem”."
         }
       },
       "perk_type": "generator"
@@ -9393,13 +9393,13 @@
       "killer_id": 35,
       "is_generic_counterpart": false,
       "is_teachable": true,
-      "description": "Whenever a healthy Survivor becomes injured, for the next **24/27/30s**, whenever you basic-vault a **window**, gain **7%** **Haste** for **10s**.\n> \"I heard it. Running. It was getting closer!” -Anonymous Testimony, 09/09/1979",
+      "description": "Whenever a healthy Survivor becomes injured, for the next **24/27/30s**, whenever you basic-vault a **window**, gain **7% Haste** for **10s**.\n> \"I heard it. Running. It was getting closer!” -Anonymous Testimony, 09/09/1979",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconPerks_unbound.png",
       "icon_local_path": "icons/killers/The Unknown/unbound.webp",
       "translations": {
         "de": {
           "name": "Unbändig",
-          "description": "Immer wenn ein gesunder Überlebender **verletzt** wird, erhältst du während der nächsten **24/27/30 Sek**. **7%** **Eile** für **10 Sek**., wenn du einen Grundfähigkeit-Sprung durch ein **Fenster** machst.\n> „Ich habe es gehört. Es lief. Es kam näher!“ – Anonymer Zeugenbericht, 09.09.1979"
+          "description": "Immer wenn ein gesunder Überlebender **verletzt** wird, erhältst du während der nächsten **24/27/30 Sek**. **7% Eile** für **10 Sek**., wenn du einen Grundfähigkeit-Sprung durch ein **Fenster** machst.\n> „Ich habe es gehört. Es lief. Es kam näher!“ – Anonymer Zeugenbericht, 09.09.1979"
         },
         "es": {
           "name": "Separación",
@@ -9649,7 +9649,7 @@
         },
         "pl": {
           "name": "Taktyka Zanshin",
-          "description": "W odległości **32 m**, widzisz **aury** **palet** i okien.\nZa każdym razem, gdy ocalały przewróci **paletę**, widzisz jego **aurę** przez **3/4/5 s**.\n> „W sile twojego wroga tkwi słabość”. – Doktryna Renjira 12:5"
+          "description": "W odległości **32 m**, widzisz **aury palet** i okien.\nZa każdym razem, gdy ocalały przewróci **paletę**, widzisz jego **aurę** przez **3/4/5 s**.\n> „W sile twojego wroga tkwi słabość”. – Doktryna Renjira 12:5"
         }
       },
       "perk_type": "aura"

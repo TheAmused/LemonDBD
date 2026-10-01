@@ -116,7 +116,7 @@
       "id": 5,
       "name": "Sport Flashlight",
       "category_id": 3,
-      "description": "A very portable **Flashlight** with a good grip. Its efficient technology produces a powerful light while consuming less power.\n• **8 Seconds** of use.\n• **Decreases** **Flashlight** battery consumption by **11%**.\n• **Increases** the accuracy of the **Flashlight** beam by **20%**.",
+      "description": "A very portable **Flashlight** with a good grip. Its efficient technology produces a powerful light while consuming less power.\n• **8 Seconds** of use.\n• **Decreases Flashlight** battery consumption by **11%**.\n• **Increases** the accuracy of the **Flashlight** beam by **20%**.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconItems_sportFlashlight.png?574655",
       "icon_local_path": "icons/items/sport_flashlight.webp",
       "rarity": "Rare",
@@ -143,7 +143,7 @@
       "id": 6,
       "name": "Utility Flashlight",
       "category_id": 3,
-      "description": "A sturdy but heavy **Flashlight** that packs a lot of power.\n• **12 Seconds** of use.\n• **Increases** the brightness of the **Flashlight** beam by **30%**.\n• **Increases** **Blindness** duration by **15%**.\n• **Decreases** the accuracy of the **Flashlight** beam by **20%**.",
+      "description": "A sturdy but heavy **Flashlight** that packs a lot of power.\n• **12 Seconds** of use.\n• **Increases** the brightness of the **Flashlight** beam by **30%**.\n• **Increases Blindness** duration by **15%**.\n• **Decreases** the accuracy of the **Flashlight** beam by **20%**.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconItems_utilityFlashlight.png?14da21",
       "icon_local_path": "icons/items/utility_flashlight.webp",
       "rarity": "Very Rare",
@@ -251,7 +251,7 @@
       "id": 10,
       "name": "Will O' Wisp",
       "category_id": 1,
-      "description": "A **Flashlight** equipped with a special lens cover that adds an orange tint and a little ghost to the beam.\n• **8 Seconds** of use.\n• **Considerably** **increases** Friendly Ghosts in your life.\n> \"Happy Trick or Treating!\"",
+      "description": "A **Flashlight** equipped with a special lens cover that adds an orange tint and a little ghost to the beam.\n• **8 Seconds** of use.\n• **Considerably increases** Friendly Ghosts in your life.\n> \"Happy Trick or Treating!\"",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconItems_willOWisp.png?2ee5ef",
       "icon_local_path": "icons/items/will_o_wisp.webp",
       "rarity": "Event",
@@ -359,7 +359,7 @@
       "id": 14,
       "name": "Broken Key",
       "category_id": 5,
-      "description": "The bow and shank of a key, vibrating with power.\nConsume a charge to:\n• **Reveal** **auras** of Survivors within **48 meters** for **8 seconds** by holding the `Use Item Button`.\nBegins with **6 charges**.",
+      "description": "The bow and shank of a key, vibrating with power.\nConsume a charge to:\n• **Reveal auras** of Survivors within **48 meters** for **8 seconds** by holding the `Use Item Button`.\nBegins with **6 charges**.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconItems_brokenKey.png?32b943",
       "icon_local_path": "icons/items/broken_key.webp",
       "rarity": "Common",
@@ -386,7 +386,7 @@
       "id": 15,
       "name": "Dull Key",
       "category_id": 5,
-      "description": "A bent and *dull Key* that once held great power.\nConsume a charge to:\n• **Reveal** **auras** of Survivors within **56 meters** for **9 seconds** by holding the `Use Item Button`.\n• **Unlock** **Chests** quickly. **Chests** **unlocked** with this Key have a **revealed** **aura** within **42 meters**, enabling another Survivor to rummage once, and will contain items of at least Rare quality.\n• **Unlock** the Hatch.\nBegins with **5 charges**.",
+      "description": "A bent and *dull Key* that once held great power.\nConsume a charge to:\n• **Reveal auras** of Survivors within **56 meters** for **9 seconds** by holding the `Use Item Button`.\n• **Unlock Chests** quickly. **Chests unlocked** with this Key have a **revealed aura** within **42 meters**, enabling another Survivor to rummage once, and will contain items of at least Rare quality.\n• **Unlock** the Hatch.\nBegins with **5 charges**.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconItems_dullKey.png?a30f9d",
       "icon_local_path": "icons/items/dull_key.webp",
       "rarity": "Uncommon",
@@ -397,7 +397,7 @@
         },
         "es": {
           "name": "Llave deslustrada",
-          "description": "Una *llave deslustrada* y torcida que tiempo atrás fue muy poderosa.\nConsume una carga para:\n• **Revelar** las **auras** de los supervivientes en un radio de **56 metros** durante **9 segundos** al mantener pulsado el botón Usar objeto.\n• **Desbloquear** **cofres** rápidamente. Los **cofres** abiertos con esta llave tienen un **aura** **revelada** en un radio de **42 metros**, lo que le permite a otro superviviente rebuscar una vez, y contendrá objetos de calidad rara como mínimo.\n• **Desbloquear** la trampilla.\nComienza con **5 cargas**."
+          "description": "Una *llave deslustrada* y torcida que tiempo atrás fue muy poderosa.\nConsume una carga para:\n• **Revelar** las **auras** de los supervivientes en un radio de **56 metros** durante **9 segundos** al mantener pulsado el botón Usar objeto.\n• **Desbloquear cofres** rápidamente. Los **cofres** abiertos con esta llave tienen un **aura revelada** en un radio de **42 metros**, lo que le permite a otro superviviente rebuscar una vez, y contendrá objetos de calidad rara como mínimo.\n• **Desbloquear** la trampilla.\nComienza con **5 cargas**."
         },
         "ja": {
           "name": "すり減ったカギ",
@@ -413,7 +413,7 @@
       "id": 16,
       "name": "Skeleton Key",
       "category_id": 5,
-      "description": "A tarnished and crooked key, vibrating with ominous power.\nConsume a charge to:\n• **Reveal** **auras** of Survivors within **64 meters** for **10 seconds** by holding the `Use Item Button`.\n• **Unlock** **Chests** quickly. **Chests** **unlocked** with this Key have a **revealed** **aura** within **42 meters**, enabling another Survivor to rummage once, and will contain items of at least Rare quality.\n• **Unlock** the Hatch.\nBegins with **6 charges**.",
+      "description": "A tarnished and crooked key, vibrating with ominous power.\nConsume a charge to:\n• **Reveal auras** of Survivors within **64 meters** for **10 seconds** by holding the `Use Item Button`.\n• **Unlock Chests** quickly. **Chests unlocked** with this Key have a **revealed aura** within **42 meters**, enabling another Survivor to rummage once, and will contain items of at least Rare quality.\n• **Unlock** the Hatch.\nBegins with **6 charges**.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconItems_skeletonKey.png?1b6308",
       "icon_local_path": "icons/items/skeleton_key.webp",
       "rarity": "Rare",
@@ -424,7 +424,7 @@
         },
         "es": {
           "name": "Llave esqueleto",
-          "description": "Una llave deslustrada y torcida, imbuida de un poder amenazador que la hace vibrar.\nConsume una carga para:\n• **Revelar** las **auras** de los supervivientes en un radio de **64 metros** durante **10 segundos** al mantener pulsado el botón Usar objeto.\n• **Desbloquear** **cofres** rápidamente. Los **cofres** abiertos con esta llave tienen un **aura** **revelada** en un radio de **42 metros**, lo que le permite a otro superviviente rebuscar una vez, y contendrá objetos de calidad rara como mínimo.\n• **Desbloquear** la trampilla.\nComienza con **6 cargas**."
+          "description": "Una llave deslustrada y torcida, imbuida de un poder amenazador que la hace vibrar.\nConsume una carga para:\n• **Revelar** las **auras** de los supervivientes en un radio de **64 metros** durante **10 segundos** al mantener pulsado el botón Usar objeto.\n• **Desbloquear cofres** rápidamente. Los **cofres** abiertos con esta llave tienen un **aura revelada** en un radio de **42 metros**, lo que le permite a otro superviviente rebuscar una vez, y contendrá objetos de calidad rara como mínimo.\n• **Desbloquear** la trampilla.\nComienza con **6 cargas**."
         },
         "ja": {
           "name": "スケルトンキー",
@@ -440,7 +440,7 @@
       "id": 17,
       "name": "Cryptic Map",
       "category_id": 6,
-      "description": "Looking at it, the directions make no sense. But merely holding it **grants** you an uncanny intuition.\n• Press the `Use Item Button` to **reveal** **auras** of all **pallets** and vaults within **24 meters** for **10 seconds**.\n• Using the secondary interaction creates a beam of light at the Survivor's location. **Generators** within **32 meters** of the beam of light have their **auras** **revealed**.\n• **4 charges**.",
+      "description": "Looking at it, the directions make no sense. But merely holding it **grants** you an uncanny intuition.\n• Press the `Use Item Button` to **reveal auras** of all **pallets** and vaults within **24 meters** for **10 seconds**.\n• Using the secondary interaction creates a beam of light at the Survivor's location. **Generators** within **32 meters** of the beam of light have their **auras revealed**.\n• **4 charges**.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconItems_CrypticMap.png?624911",
       "icon_local_path": "icons/items/cryptic_map.webp",
       "rarity": "Common",
@@ -467,7 +467,7 @@
       "id": 18,
       "name": "Scribbled Map",
       "category_id": 6,
-      "description": "Peering at the parchment, a path appears in your mind. Moments later, you feel lost again.\n• Press the `Use Item Button` to **reveal** **auras** of all **pallets** and vaults within **32 meters** for **12 seconds**.\n• Using the secondary interaction creates a beam of light at the Survivor's location. **Generators** within **32 meters** of the beam of light have their **auras** **revealed**.\n• **5 charges**.",
+      "description": "Peering at the parchment, a path appears in your mind. Moments later, you feel lost again.\n• Press the `Use Item Button` to **reveal auras** of all **pallets** and vaults within **32 meters** for **12 seconds**.\n• Using the secondary interaction creates a beam of light at the Survivor's location. **Generators** within **32 meters** of the beam of light have their **auras revealed**.\n• **5 charges**.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconItems_map.png?a9589c",
       "icon_local_path": "icons/items/scribbled_map.webp",
       "rarity": "Uncommon",
@@ -494,7 +494,7 @@
       "id": 19,
       "name": "Annotated Map",
       "category_id": 6,
-      "description": "The sketch is clear and detailed. Strange knowledge flows into you, followed by dread uncertainty.\n• Press the `Use Item Button` to **reveal** **auras** of all **pallets** and vaults within **40 meters** for **14 seconds**.\n• Using the secondary interaction creates a beam of light at the Survivor's location. **Generators** within **32 meters** of the beam of light have their **auras** **revealed**.\n• **6 charges**.",
+      "description": "The sketch is clear and detailed. Strange knowledge flows into you, followed by dread uncertainty.\n• Press the `Use Item Button` to **reveal auras** of all **pallets** and vaults within **40 meters** for **14 seconds**.\n• Using the secondary interaction creates a beam of light at the Survivor's location. **Generators** within **32 meters** of the beam of light have their **auras revealed**.\n• **6 charges**.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconItems_rainbowMap.png?25dde4",
       "icon_local_path": "icons/items/annotated_map.webp",
       "rarity": "Rare",
@@ -521,7 +521,7 @@
       "id": 20,
       "name": "Bloodsense Map",
       "category_id": 6,
-      "description": "A bloodstained piece of parchment, hastily rolled and burning with a strange power.\n• Press the `Use Item Button` to **reveal** **auras** of all **pallets**, vaults and injured Survivors within **48 meters** for **14 seconds**.\n• Using the secondary interaction creates a beam of light at the Survivor's location. **Generators** within **32 meters** of the beam of light have their **auras** **revealed**.\n• **Causes** pools of blood to spawn beneath you while being used.\n• **8 charges**.",
+      "description": "A bloodstained piece of parchment, hastily rolled and burning with a strange power.\n• Press the `Use Item Button` to **reveal auras** of all **pallets**, vaults and injured Survivors within **48 meters** for **14 seconds**.\n• Using the secondary interaction creates a beam of light at the Survivor's location. **Generators** within **32 meters** of the beam of light have their **auras revealed**.\n• **Causes** pools of blood to spawn beneath you while being used.\n• **8 charges**.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconItems_bloodsenseMap.png?d98285",
       "icon_local_path": "icons/items/bloodsense_map.webp",
       "rarity": "Event",
@@ -764,7 +764,7 @@
       "id": 29,
       "name": "Worn-out Tools",
       "category_id": 8,
-      "description": "Metal box containing out of condition tools that could break at any moment. Even without training, can be used to repair or break various mechanical components.\n• **16 charges**.\n• **Increases** repair speed by **50%**.\n• **Decreases** **Skill Check** success zone size by **10%**.\n• **Unlocks** the sabotage action.\nRepairing a **generator** requires **90 charges**.\nSabotaging a **hook** requires **6 charges**.\n> \"You call these tools?… Really?\"",
+      "description": "Metal box containing out of condition tools that could break at any moment. Even without training, can be used to repair or break various mechanical components.\n• **16 charges**.\n• **Increases** repair speed by **50%**.\n• **Decreases Skill Check** success zone size by **10%**.\n• **Unlocks** the sabotage action.\nRepairing a **generator** requires **90 charges**.\nSabotaging a **hook** requires **6 charges**.\n> \"You call these tools?… Really?\"",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconItems_wornOutTools.png?755d30",
       "icon_local_path": "icons/items/worn_out_tools.webp",
       "rarity": "Common",
@@ -1088,7 +1088,7 @@
       "id": 41,
       "name": "Candelabra",
       "category_id": 9,
-      "description": "Limited Item from the *Lights Out - Castlevania* Modifier Event.\nIn the darkest of castles, any light is a precious commodity. All Survivors start the **Trial** with a ***Candelabra*** in hand.\n• **90 Charges**.\n• Pushes back the Fog as a passive effect when held.\n• Press and hold the *`Use Item button`* to **reveal** the **Aura** of the nearest incomplete **Generator**.\n• Place the ***Candelabra*** on top of a **Generator** to **reveal** its **Aura** to all Survivors within **32 meters**.\n• Completing that **Generator** suppresses the Killer's ability to read **Generator** **Auras** for **15 seconds**.\n> Limited Item — consumed by The Entity upon exiting the Trial.",
+      "description": "Limited Item from the *Lights Out - Castlevania* Modifier Event.\nIn the darkest of castles, any light is a precious commodity. All Survivors start the **Trial** with a ***Candelabra*** in hand.\n• **90 Charges**.\n• Pushes back the Fog as a passive effect when held.\n• Press and hold the *`Use Item button`* to **reveal** the **Aura** of the nearest incomplete **Generator**.\n• Place the ***Candelabra*** on top of a **Generator** to **reveal** its **Aura** to all Survivors within **32 meters**.\n• Completing that **Generator** suppresses the Killer's ability to read **Generator Auras** for **15 seconds**.\n> Limited Item — consumed by The Entity upon exiting the Trial.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconItems_fireflyLantern.png?6818a2",
       "icon_local_path": "icons/items/candelabra.webp",
       "rarity": "Special",
@@ -1233,7 +1233,7 @@
       "translations": {
         "de": {
           "name": "Nebelkristall",
-          "description": "Begrenzter Gegenstand aus dem *Haunted by Daylight*-Event.\nDer Kristall fühlt sich eiskalt an und vibriert vor dunkler Energie.\nDrücke die Taste *Gegenstand benutzen*, um den Kristall zu werfen:\n• Explodiert in eine dichte Nebelwolke, die den Killer verlangsamt und **Auren** **blockiert**.\n> Begrenzter Gegenstand – wird am Ende der Prüfung vom Entitus aufgenommen."
+          "description": "Begrenzter Gegenstand aus dem *Haunted by Daylight*-Event.\nDer Kristall fühlt sich eiskalt an und vibriert vor dunkler Energie.\nDrücke die Taste *Gegenstand benutzen*, um den Kristall zu werfen:\n• Explodiert in eine dichte Nebelwolke, die den Killer verlangsamt und **Auren blockiert**.\n> Begrenzter Gegenstand – wird am Ende der Prüfung vom Entitus aufgenommen."
         },
         "es": {
           "name": "Cristal de niebla",
@@ -1280,7 +1280,7 @@
       "id": 48,
       "name": "Glowing Fungus",
       "category_id": 9,
-      "description": "A strange *glowing fungus* that grows on Survivors infected with a parasite.\n• Consuming the ***Glowing Fungus*** removes the parasite and cures the infection.\n• Eating the fungus may temporarily inflict the **Oblivious** or **Exhausted** **Status Effect**.\n• Holding a fungus **reveals** your location to the Killer within a certain range.\n> Limited Item — consumed by The Entity upon exiting the Trial.",
+      "description": "A strange *glowing fungus* that grows on Survivors infected with a parasite.\n• Consuming the ***Glowing Fungus*** removes the parasite and cures the infection.\n• Eating the fungus may temporarily inflict the **Oblivious** or **Exhausted Status Effect**.\n• Holding a fungus **reveals** your location to the Killer within a certain range.\n> Limited Item — consumed by The Entity upon exiting the Trial.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconItems_glowingFungus.png?717ccf",
       "icon_local_path": "icons/items/glowing_fungus.webp",
       "rarity": "Special",
@@ -1407,7 +1407,7 @@
         },
         "pl": {
           "name": "Kandelabr",
-          "description": "W najciemniejszych zamkach każde światło jest cenne.\n• **90 ładunk**ów.\n• Gdy jest trzymany, odpycha mgłę.\n• Gdy jest używany, **ujawnia** **aurę** najbliższego nieukończonego **generatora** i pokazuje aktualne działania drużynowe ocalałych na interfejsie.\n• Po umieszczeniu go na **generatorze** wszyscy ocalali w promieniu **32 m** od tego **generatora** widzą jego **aurę**.\n• Po ukończeniu **generatora** z kandelabrem **aury** **generatorów** zostają ukryte dla zabójcy na **15 s**.\n• Zabójcy mogą niszczyć kandelabry na **generatorach**."
+          "description": "W najciemniejszych zamkach każde światło jest cenne.\n• **90 ładunk**ów.\n• Gdy jest trzymany, odpycha mgłę.\n• Gdy jest używany, **ujawnia aurę** najbliższego nieukończonego **generatora** i pokazuje aktualne działania drużynowe ocalałych na interfejsie.\n• Po umieszczeniu go na **generatorze** wszyscy ocalali w promieniu **32 m** od tego **generatora** widzą jego **aurę**.\n• Po ukończeniu **generatora** z kandelabrem **aury generatorów** zostają ukryte dla zabójcy na **15 s**.\n• Zabójcy mogą niszczyć kandelabry na **generatorach**."
         }
       }
     },
@@ -1476,7 +1476,7 @@
       "translations": {
         "de": {
           "name": "Anhänger des Suchers",
-          "description": "Ein Artefakt von einem fremden Ort, an dem der Nachthimmel Antworten gab.\nDer *Anhänger des Suchers* funktioniert wie eine Taschenlampe. Jedes Mal, wenn ein Überlebender ins Exil kommt, erhält er den *Anhänger des Suchers* in einem temporären dritten Gegenstandsplatz. Halte [M2?] gedrückt, um verbannte Seelen anzuvisieren. Nach **0,5 Sek**. wird die Seele absorbiert. Nach dem Absorbieren erhältst du eine 1-sekündige Immunität gegen Saat der Strafe. Maximale Reichweite: **10 m**. Für jede gesammelte Seele (bevor alle **Generatoren** fertiggestellt wurden) erhält der Überlebende Blutpunkte und zusätzlich **0,5 Sek**. für die folgenden Effekte, wenn er aus dem Exil gerettet wurde: Kondition, **10 %** **Eile**, Schlüpfrig. Seelen, die gesammelt werden, nachdem alle **Generatoren** fertiggestellt wurden, gewähren keinen zusätzlichen Schutz nach einer Rettung."
+          "description": "Ein Artefakt von einem fremden Ort, an dem der Nachthimmel Antworten gab.\nDer *Anhänger des Suchers* funktioniert wie eine Taschenlampe. Jedes Mal, wenn ein Überlebender ins Exil kommt, erhält er den *Anhänger des Suchers* in einem temporären dritten Gegenstandsplatz. Halte [M2?] gedrückt, um verbannte Seelen anzuvisieren. Nach **0,5 Sek**. wird die Seele absorbiert. Nach dem Absorbieren erhältst du eine 1-sekündige Immunität gegen Saat der Strafe. Maximale Reichweite: **10 m**. Für jede gesammelte Seele (bevor alle **Generatoren** fertiggestellt wurden) erhält der Überlebende Blutpunkte und zusätzlich **0,5 Sek**. für die folgenden Effekte, wenn er aus dem Exil gerettet wurde: Kondition, **10 % Eile**, Schlüpfrig. Seelen, die gesammelt werden, nachdem alle **Generatoren** fertiggestellt wurden, gewähren keinen zusätzlichen Schutz nach einer Rettung."
         },
         "es": {
           "name": "Colgante de Buscador",
@@ -1496,7 +1496,7 @@
       "id": 56,
       "name": "VHS Tape",
       "category_id": 9,
-      "description": "A **cursed** videotape retrieved from an active TV to turn it off temporarily.\n• Carrying a ***VHS Tape*** **causes** **Condemned** to steadily build up during The Onryō's Projections.\n• Insert the ***VHS Tape*** into the highlighted TV to **reduce Condemned by -3 Stacks**.\n• Survivors who reach maximum Condemned (**7 Stacks**) can be killed immediately when downed.\n> Limited Item — consumed by The Entity upon exiting the Trial.",
+      "description": "A **cursed** videotape retrieved from an active TV to turn it off temporarily.\n• Carrying a ***VHS Tape*** **causes Condemned** to steadily build up during The Onryō's Projections.\n• Insert the ***VHS Tape*** into the highlighted TV to **reduce Condemned by -3 Stacks**.\n• Survivors who reach maximum Condemned (**7 Stacks**) can be killed immediately when downed.\n> Limited Item — consumed by The Entity upon exiting the Trial.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconItems_vhsTape.png?d4c36e",
       "icon_local_path": "icons/items/vhs_tape.webp",
       "rarity": "Special",

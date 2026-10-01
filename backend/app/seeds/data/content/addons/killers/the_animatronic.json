@@ -89,14 +89,14 @@
       "id": 700,
       "name": "Ripped Curtain",
       "killer_id": 40,
-      "description": "Taken from Pirates Cove, caught on the animatronic that lived there.\nWhen an Axe hits a Survivor, they gain the **Hemorrhage** and **Mangled** **status effects** for **60 seconds**.\n**Hemorrhage** regresses healing progress when not healing, and **increases** blood trails left by injured Survivors. This lasts for a set duration or until fully healed.\n**Mangled** **increases** time required to heal by **25%** and lasts for a set duration or until fully healed.",
+      "description": "Taken from Pirates Cove, caught on the animatronic that lived there.\nWhen an Axe hits a Survivor, they gain the **Hemorrhage** and **Mangled status effects** for **60 seconds**.\n**Hemorrhage** regresses healing progress when not healing, and **increases** blood trails left by injured Survivors. This lasts for a set duration or until fully healed.\n**Mangled increases** time required to heal by **25%** and lasts for a set duration or until fully healed.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_RippedCurtain.png?753757",
       "icon_local_path": "icons/addons/ripped_curtain.webp",
       "rarity": "Uncommon",
       "translations": {
         "de": {
           "name": "Zerrissener Vorhang",
-          "description": "Der Animatronic aus der Pirate Cove hat sich darin verheddert.\nWenn eine Axt einen Überlebenden trifft, leidet dieser **60 Sek**. lang unter den Statuseffekten Blutung und **Zerfleischt**.\nBlutung setzt den Heilungsfortschritt zurück, wenn nicht gerade geheilt wird, und verstärkt Blutspuren, die **verletzte** Überlebende hinterlassen. Dieser Effekt hält eine festgelegte Zeit oder bis zur vollständigen Heilung an.\n**Zerfleischt** **erhöht** die Heilungsdauer um **25 %** und hält eine festgelegte Zeit oder bis zur vollständigen Heilung an."
+          "description": "Der Animatronic aus der Pirate Cove hat sich darin verheddert.\nWenn eine Axt einen Überlebenden trifft, leidet dieser **60 Sek**. lang unter den Statuseffekten Blutung und **Zerfleischt**.\nBlutung setzt den Heilungsfortschritt zurück, wenn nicht gerade geheilt wird, und verstärkt Blutspuren, die **verletzte** Überlebende hinterlassen. Dieser Effekt hält eine festgelegte Zeit oder bis zur vollständigen Heilung an.\n**Zerfleischt erhöht** die Heilungsdauer um **25 %** und hält eine festgelegte Zeit oder bis zur vollständigen Heilung an."
         },
         "es": {
           "name": "Cortina rasgada",
@@ -197,7 +197,7 @@
       "id": 704,
       "name": "Office Phone",
       "killer_id": 40,
-      "description": "He tried to leave messages as a warning. He didn't last long, either.\nSurvivors within **24 meters** of a Survivor with an embedded Axe gain the **Oblivious** and - if injured - **Broken** **status effects**. **Reveals** the **aura** of the Axe to Survivors within this range.\n**Decreases** the time required to remove the Axe from another Survivor by **50%**.\n**Oblivious** prevents Survivors from hearing or being **affected** by the Killer's **Terror Radius**.\n**Broken** prevents Survivors from being healed.",
+      "description": "He tried to leave messages as a warning. He didn't last long, either.\nSurvivors within **24 meters** of a Survivor with an embedded Axe gain the **Oblivious** and - if injured - **Broken status effects**. **Reveals** the **aura** of the Axe to Survivors within this range.\n**Decreases** the time required to remove the Axe from another Survivor by **50%**.\n**Oblivious** prevents Survivors from hearing or being **affected** by the Killer's **Terror Radius**.\n**Broken** prevents Survivors from being healed.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_OfficePhone.png?246a77",
       "icon_local_path": "icons/addons/office_phone.webp",
       "rarity": "Uncommon",
@@ -216,7 +216,7 @@
         },
         "pl": {
           "name": "Telefon biurowy",
-          "description": "Probówał zostawiać wiadomości z ostrzeżeniami. On także długo nie przetrwał.\nOcalali w promieniu **24 metr**ów od ocalałego, w którego wbity jest topór, otrzymują efekt **Nieświadomy**, a jeśli zostaną zranieni, również efekt **Okaleczony**. **Ujawnia** **aurę** topora ocalałym w tym zasięgu.\nSkraca czas potrzebny na usunięcie topora z innego ocalałego o **50%**.\n**Nieświadomość** uniemożliwia ocalałym usłyszenie **zasięgu terroru** i niweluje jego wpływ.\n**Okaleczenie** uniemożliwia leczenie ocalałych."
+          "description": "Probówał zostawiać wiadomości z ostrzeżeniami. On także długo nie przetrwał.\nOcalali w promieniu **24 metr**ów od ocalałego, w którego wbity jest topór, otrzymują efekt **Nieświadomy**, a jeśli zostaną zranieni, również efekt **Okaleczony**. **Ujawnia aurę** topora ocalałym w tym zasięgu.\nSkraca czas potrzebny na usunięcie topora z innego ocalałego o **50%**.\n**Nieświadomość** uniemożliwia ocalałym usłyszenie **zasięgu terroru** i niweluje jego wpływ.\n**Okaleczenie** uniemożliwia leczenie ocalałych."
         }
       }
     },
@@ -258,7 +258,7 @@
       "translations": {
         "de": {
           "name": "Geschenketüte",
-          "description": "Öffne die Tüte und sieh nach, welche Geschenke darin warten.\nWährend eine Axt in einem Überlebenden steckt, gilt:\n• Ausgangstore werden für ihn und Überlebende in einem Umkreis von **12 Metern** **blockiert**."
+          "description": "Öffne die Tüte und sieh nach, welche Geschenke darin warten.\nWährend eine Axt in einem Überlebenden steckt, gilt:\n• Ausgangstore werden für ihn und Überlebende in einem Umkreis von **12 Metern blockiert**."
         },
         "es": {
           "name": "Bolsa de botín",
@@ -297,7 +297,7 @@
         },
         "pl": {
           "name": "Panel dostępu",
-          "description": "Zdobywanie kontroli nad drzwiami bezpieczeństwa jest kluczem do wykonania pracy.\nTwój topór zyskuje zdolność do przemieszczenia się przez drzwi bezpieczeństwa i wyjdzie od razu przez połączone drzwi bezpieczeństwa.\nGdy celujesz swoim toporem:\n• Zyskaj efekt **instynktu zabójcy** na ocalałych w zasięgu **6 metr**ów od każdych drzwi bezpieczeństwa.\n• **Ujawnia** **aury** wszystkich numerów drzwi bezpieczeństwa."
+          "description": "Zdobywanie kontroli nad drzwiami bezpieczeństwa jest kluczem do wykonania pracy.\nTwój topór zyskuje zdolność do przemieszczenia się przez drzwi bezpieczeństwa i wyjdzie od razu przez połączone drzwi bezpieczeństwa.\nGdy celujesz swoim toporem:\n• Zyskaj efekt **instynktu zabójcy** na ocalałych w zasięgu **6 metr**ów od każdych drzwi bezpieczeństwa.\n• **Ujawnia aury** wszystkich numerów drzwi bezpieczeństwa."
         }
       }
     },
@@ -305,18 +305,18 @@
       "id": 708,
       "name": "Celebrate! Poster",
       "killer_id": 40,
-      "description": "The celebration lasts all night long, or until no one is left.\nWhile the Axe is embedded in a Survivor, all players within **32 meters** gain **12%** **Haste** and vault **20%** faster.\n**Haste** **increases** Killer movement speed.",
+      "description": "The celebration lasts all night long, or until no one is left.\nWhile the Axe is embedded in a Survivor, all players within **32 meters** gain **12% Haste** and vault **20%** faster.\n**Haste increases** Killer movement speed.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_CelebratePoster.png?c3bcbd",
       "icon_local_path": "icons/addons/celebrate_poster.webp",
       "rarity": "Very Rare",
       "translations": {
         "de": {
           "name": "Partyplakat",
-          "description": "Die Feier dauert die ganze Nacht lang oder bis niemand mehr übrig ist.\nWenn die Axt in einem Überlebenden steckt, erhalten alle Spieler in einem Umkreis von **32 Metern** **12 %** **Eile** und sie springen **20 %** schneller.\n**Eile** **erhöht** die Bewegungsgeschwindigkeit des Killers."
+          "description": "Die Feier dauert die ganze Nacht lang oder bis niemand mehr übrig ist.\nWenn die Axt in einem Überlebenden steckt, erhalten alle Spieler in einem Umkreis von **32 Metern 12 % Eile** und sie springen **20 %** schneller.\n**Eile erhöht** die Bewegungsgeschwindigkeit des Killers."
         },
         "es": {
           "name": "Cartel de \"¡A celebrar!\"",
-          "description": "La celebración dura toda la noche..., o hasta que no quede nadie con vida.\nMientras el hacha esté incrustada en un superviviente, todos los jugadores en un radio de **32 metros** obtienen un **12 %** de **Celeridad** y saltan un **20 %** más rápido.\n**Celeridad** **aumenta** la velocidad de movimiento del asesino."
+          "description": "La celebración dura toda la noche..., o hasta que no quede nadie con vida.\nMientras el hacha esté incrustada en un superviviente, todos los jugadores en un radio de **32 metros** obtienen un **12 %** de **Celeridad** y saltan un **20 %** más rápido.\n**Celeridad aumenta** la velocidad de movimiento del asesino."
         },
         "ja": {
           "name": "セレブレート！ポスター",
@@ -324,7 +324,7 @@
         },
         "pl": {
           "name": "Plakat „Świętowanie!”",
-          "description": "Świętowanie trwa całą noc lub dopóki wszyscy się nie rozejdą.\nGdy topór jest wbity w ocalałego, wszyscy gracze w zasięgu **32 metr**ów zyskują **12%** **Pośpiechu** i przeskakują o **20%** szybciej.\n**Pośpiech** **zwiększa** prędkość ruchu zabójcy."
+          "description": "Świętowanie trwa całą noc lub dopóki wszyscy się nie rozejdą.\nGdy topór jest wbity w ocalałego, wszyscy gracze w zasięgu **32 metr**ów zyskują **12% Pośpiechu** i przeskakują o **20%** szybciej.\n**Pośpiech zwiększa** prędkość ruchu zabójcy."
         }
       }
     },
@@ -332,7 +332,7 @@
       "id": 709,
       "name": "Faz-Coin",
       "killer_id": 40,
-      "description": "Collecting these tokens comes with a price.\nUpon throwing the Axe, it gains a **Terror Radius** of **24 meters** until it is reclaimed. You gain the **Undetectable** **status effect** for **10 seconds**.\n**Undetectable** hides the Killer's **aura**, **Terror Radius**, and Red Stain.",
+      "description": "Collecting these tokens comes with a price.\nUpon throwing the Axe, it gains a **Terror Radius** of **24 meters** until it is reclaimed. You gain the **Undetectable status effect** for **10 seconds**.\n**Undetectable** hides the Killer's **aura**, **Terror Radius**, and Red Stain.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_FazCoin.png?d91916",
       "icon_local_path": "icons/addons/faz_coin.webp",
       "rarity": "Ultra Rare",
@@ -351,7 +351,7 @@
         },
         "pl": {
           "name": "Faz-coin",
-          "description": "Zbieranie tych żetonów ma swoją cenę.\nGdy rzucasz toporem, twój **zasięg terroru** **zwiększa** się o **24 metry**, do czasu jego odzyskania. Otrzymujesz status **Niewykrywalny** na **10 s**.\n**Niewykrywalność** ukrywa **aurę**, **zasięg terroru** i czerwoną poświatę zabójcy."
+          "description": "Zbieranie tych żetonów ma swoją cenę.\nGdy rzucasz toporem, twój **zasięg terroru zwiększa** się o **24 metry**, do czasu jego odzyskania. Otrzymujesz status **Niewykrywalny** na **10 s**.\n**Niewykrywalność** ukrywa **aurę**, **zasięg terroru** i czerwoną poświatę zabójcy."
         }
       }
     },
@@ -359,14 +359,14 @@
       "id": 710,
       "name": "Endo CPU",
       "killer_id": 40,
-      "description": "Greater computing power, for greater efficacy.\nWithin the Axe's area of effect, you basic-break **Pallets** or Breakable Walls, and damage **Generators** **40%** faster. This effect lingers for **5 seconds** after leaving the area of effect.",
+      "description": "Greater computing power, for greater efficacy.\nWithin the Axe's area of effect, you basic-break **Pallets** or Breakable Walls, and damage **Generators 40%** faster. This effect lingers for **5 seconds** after leaving the area of effect.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_EndoCPU.png?ab000d",
       "icon_local_path": "icons/addons/endo_cpu.webp",
       "rarity": "Very Rare",
       "translations": {
         "de": {
           "name": "Endo-CPU",
-          "description": "Höhere Rechenleistung für größere Effizienz.\nInnerhalb des Wirkungsbereichs der Axt zerstörst du **Paletten** oder zerstörbare Mauern mit deiner Grundfähigkeit bzw. beschädigst du **Generatoren** **40 %** schneller. Dieser Effekt hält **5 Sek**. lang an, nachdem du den Wirkungsbereich verlassen hast."
+          "description": "Höhere Rechenleistung für größere Effizienz.\nInnerhalb des Wirkungsbereichs der Axt zerstörst du **Paletten** oder zerstörbare Mauern mit deiner Grundfähigkeit bzw. beschädigst du **Generatoren 40 %** schneller. Dieser Effekt hält **5 Sek**. lang an, nachdem du den Wirkungsbereich verlassen hast."
         },
         "es": {
           "name": "Procesador de Endo",
@@ -378,7 +378,7 @@
         },
         "pl": {
           "name": "Procesor Endo",
-          "description": "Większa moc obliczeniowa dla większej wydajności.\nW zasięgu działania topora, niszczysz w podstawowy sposób **palety** lub rozbijalne ściany oraz uszkadzasz **generatory** **40%** szybciej. Ten efekt utrzymuje się przez **5 sekund** po opuszczeniu zasięgu działania."
+          "description": "Większa moc obliczeniowa dla większej wydajności.\nW zasięgu działania topora, niszczysz w podstawowy sposób **palety** lub rozbijalne ściany oraz uszkadzasz **generatory 40%** szybciej. Ten efekt utrzymuje się przez **5 sekund** po opuszczeniu zasięgu działania."
         }
       }
     },
@@ -413,14 +413,14 @@
       "id": 814,
       "name": "Security Guard's Badge",
       "killer_id": 40,
-      "description": "The badge comes with certain privileges for whoever carries it.\nWhen exiting a Security Door after a teleport, gain the **Undetectable** **status effect** for **25%** longer.\n**Undetectable** hides the Killer's **aura**, **Terror Radius**, and Red Stain.",
+      "description": "The badge comes with certain privileges for whoever carries it.\nWhen exiting a Security Door after a teleport, gain the **Undetectable status effect** for **25%** longer.\n**Undetectable** hides the Killer's **aura**, **Terror Radius**, and Red Stain.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_SecurityGuardsBadge.png?798a3e",
       "icon_local_path": "icons/addons/security_guards_badge.webp",
       "rarity": "Uncommon",
       "translations": {
         "de": {
           "name": "Sicherheitsdienst-Ausweis",
-          "description": "Der Ausweis verschafft dem Träger bestimmte Privilegien.\nWenn du nach einem Teleport aus der Sicherheitstür kommst, erhältst du den Statuseffekt **Unentdeckbar** **25 %** länger.\n**Unentdeckbar** verbirgt **Aura**, **Terrorradius** und roten Fleck des Killers."
+          "description": "Der Ausweis verschafft dem Träger bestimmte Privilegien.\nWenn du nach einem Teleport aus der Sicherheitstür kommst, erhältst du den Statuseffekt **Unentdeckbar 25 %** länger.\n**Unentdeckbar** verbirgt **Aura**, **Terrorradius** und roten Fleck des Killers."
         },
         "en": {
           "name": "Security Guard’s Badge"
@@ -443,7 +443,7 @@
       "id": 815,
       "name": "Bonnie's Guitar Strings",
       "killer_id": 40,
-      "description": "Worn strings that are off-tune and liable to snap.\n**Unlocks** potential in one’s **aura reading** ability.\nWhile moving between Security Doors, the repair progress of **generators** can be determined by the intensity of their **auras**.\n**Decreases** the duration of the **Undetectable** **status effect** upon exiting the Security Door by **100%**.\n**Undetectable** hides the Killer's **aura**, **Terror Radius**, and Red Stain.",
+      "description": "Worn strings that are off-tune and liable to snap.\n**Unlocks** potential in one’s **aura reading** ability.\nWhile moving between Security Doors, the repair progress of **generators** can be determined by the intensity of their **auras**.\n**Decreases** the duration of the **Undetectable status effect** upon exiting the Security Door by **100%**.\n**Undetectable** hides the Killer's **aura**, **Terror Radius**, and Red Stain.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_BonniesGuitarStrings.png?92b234",
       "icon_local_path": "icons/addons/bonnies_guitar_strings.webp",
       "rarity": "Rare",
@@ -473,7 +473,7 @@
       "id": 816,
       "name": "Chica's Bib",
       "killer_id": 40,
-      "description": "A good way to keep Mr. Cupcake from making a mess.\nSurvivors within the Axe's area of effect gain the **Exhausted** **status effect** for **5 seconds**.\n**Exhausted** prevents Survivors from **activating** exhausting perks.",
+      "description": "A good way to keep Mr. Cupcake from making a mess.\nSurvivors within the Axe's area of effect gain the **Exhausted status effect** for **5 seconds**.\n**Exhausted** prevents Survivors from **activating** exhausting perks.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_ChicasBib.png?7c3866",
       "icon_local_path": "icons/addons/chicas_bib.webp",
       "rarity": "Rare",
@@ -503,21 +503,21 @@
       "id": 817,
       "name": "Foxy's Hook",
       "killer_id": 40,
-      "description": "A pirate’s **hook** that seems more menacing than playful.\nPlayers within range of the Axe's area of effect gain **7%** **Haste** for **6 seconds**.\n**Haste** **increases** Killer movement speed.",
+      "description": "A pirate’s **hook** that seems more menacing than playful.\nPlayers within range of the Axe's area of effect gain **7% Haste** for **6 seconds**.\n**Haste increases** Killer movement speed.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_FoxyHook.png?484011",
       "icon_local_path": "icons/addons/foxys_hook.webp",
       "rarity": "Rare",
       "translations": {
         "de": {
           "name": "Foxys Haken",
-          "description": "Der **Haken** eines Piraten, der eher bedrohlich als verspielt wirkt.\nSpieler innerhalb des Wirkungsbereichs der Axt erhalten **7 %** **Eile** für **6 Sek**.\n**Eile** **erhöht** die Bewegungsgeschwindigkeit des Killers."
+          "description": "Der **Haken** eines Piraten, der eher bedrohlich als verspielt wirkt.\nSpieler innerhalb des Wirkungsbereichs der Axt erhalten **7 % Eile** für **6 Sek**.\n**Eile erhöht** die Bewegungsgeschwindigkeit des Killers."
         },
         "en": {
           "name": "Foxy’s Hook"
         },
         "es": {
           "name": "Garfio de Foxy",
-          "description": "Un garfio pirata que parece más amenazante que divertido.\nLos jugadores dentro del alcance del área de efecto del hacha obtienen un **7 %** de **Celeridad** durante **6 segundos**.\n**Celeridad** **aumenta** la velocidad de movimiento del asesino."
+          "description": "Un garfio pirata que parece más amenazante que divertido.\nLos jugadores dentro del alcance del área de efecto del hacha obtienen un **7 %** de **Celeridad** durante **6 segundos**.\n**Celeridad aumenta** la velocidad de movimiento del asesino."
         },
         "ja": {
           "name": "フォクシーのフック",
@@ -525,7 +525,7 @@
         },
         "pl": {
           "name": "Hak Foxy",
-          "description": "Piracki **hak**, który wydaje się bardziej groźny, niż zabawny.\nGracze w zasięgu działania topora otrzymują efekt **7%** **Pośpiechu** na **6 sekund**.\n**Pośpiech** **zwiększa** prędkość ruchu zabójcy."
+          "description": "Piracki **hak**, który wydaje się bardziej groźny, niż zabawny.\nGracze w zasięgu działania topora otrzymują efekt **7% Pośpiechu** na **6 sekund**.\n**Pośpiech zwiększa** prędkość ruchu zabójcy."
         }
       }
     },

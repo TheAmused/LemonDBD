@@ -332,7 +332,7 @@
       "id": 360,
       "name": "Tablet of the Oppressor",
       "killer_id": 20,
-      "description": "A metal tablet engraved with Aztec figures.\n• While using Rites of Judgment, gain the **Undetectable** **Status Effect**.",
+      "description": "A metal tablet engraved with Aztec figures.\n• While using Rites of Judgment, gain the **Undetectable Status Effect**.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_tabletOfTheOppressor.png?5acaf1",
       "icon_local_path": "icons/addons/tablet_of_the_oppressor.webp",
       "rarity": "Rare",
@@ -386,7 +386,7 @@
       "id": 362,
       "name": "Lost Memories Book",
       "killer_id": 20,
-      "description": "A book about the history and legends of Silent Hill and the surrounding area.\n• Survivors injured by Punishment of the Damned suffer from the **Oblivious** **Status Effect** for **80 seconds**.\n**Oblivious** prevents Survivors from hearing or being **affected** by the Killer's **Terror Radius**.\n> “They called this place ‘The Place of the Silent Spirits.’”",
+      "description": "A book about the history and legends of Silent Hill and the surrounding area.\n• Survivors injured by Punishment of the Damned suffer from the **Oblivious Status Effect** for **80 seconds**.\n**Oblivious** prevents Survivors from hearing or being **affected** by the Killer's **Terror Radius**.\n> “They called this place ‘The Place of the Silent Spirits.’”",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_lostMemoriesBook.png?af3e4b",
       "icon_local_path": "icons/addons/lost_memories_book.webp",
       "rarity": "Very Rare",
@@ -413,14 +413,14 @@
       "id": 363,
       "name": "Crimson Ceremony Book",
       "killer_id": 20,
-      "description": "A book about an ancient god. Author unknown.\n• Survivors damaged by Punishment of the Damned suffer from the **Hemorrhage** and **Mangled** **status effects** for **80 seconds**.\n**Hemorrhage** regresses healing progress when not healing, and **increases** blood trails left by injured survivors. This lasts for a set duration or until healed.\n**Mangled** **increases** time required to heal by **25%** and lasts for a set duration or until fully healed.\n> “Speak. I am the Crimson One. The lies and the mist are not they, but I.”",
+      "description": "A book about an ancient god. Author unknown.\n• Survivors damaged by Punishment of the Damned suffer from the **Hemorrhage** and **Mangled status effects** for **80 seconds**.\n**Hemorrhage** regresses healing progress when not healing, and **increases** blood trails left by injured survivors. This lasts for a set duration or until healed.\n**Mangled increases** time required to heal by **25%** and lasts for a set duration or until fully healed.\n> “Speak. I am the Crimson One. The lies and the mist are not they, but I.”",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_crimsonCeremonyBook.png?87cf9d",
       "icon_local_path": "icons/addons/crimson_ceremony_book.webp",
       "rarity": "Very Rare",
       "translations": {
         "de": {
           "name": "Buch „Blutrote Zeremonie“",
-          "description": "Ein Buch über einen uralten Gott. Autor unbekannt.\n• Überlebende, die von Bestrafung der Verdammten **verletzt** werden, erleiden die Statuseffekte Blutung und **Zerfleischt** für **80 Sekunden**.\nBlutung setzt den Heilungsfortschritt zurück, wenn nicht gerade geheilt wird, und verstärkt Blutspuren, die **verletzte** Überlebende hinterlassen. Dieser Effekt hält eine festgelegte Zeit oder bis zur Heilung an.\n**Zerfleischt** **erhöht** die Heilungsdauer um **25 %** und hält eine festgelegte Zeit oder bis zur vollständigen Heilung an.\n> „Sprich. Ich bin der Blutrote. Die Lügen und der Nebel sind nicht sie, sondern ich.“"
+          "description": "Ein Buch über einen uralten Gott. Autor unbekannt.\n• Überlebende, die von Bestrafung der Verdammten **verletzt** werden, erleiden die Statuseffekte Blutung und **Zerfleischt** für **80 Sekunden**.\nBlutung setzt den Heilungsfortschritt zurück, wenn nicht gerade geheilt wird, und verstärkt Blutspuren, die **verletzte** Überlebende hinterlassen. Dieser Effekt hält eine festgelegte Zeit oder bis zur Heilung an.\n**Zerfleischt erhöht** die Heilungsdauer um **25 %** und hält eine festgelegte Zeit oder bis zur vollständigen Heilung an.\n> „Sprich. Ich bin der Blutrote. Die Lügen und der Nebel sind nicht sie, sondern ich.“"
         },
         "es": {
           "name": "Libro \"Ceremonia Crimson\"",

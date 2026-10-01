@@ -8,7 +8,7 @@
       "id": 611,
       "name": "Rabbit's Foot",
       "killer_id": 35,
-      "description": "The unlucky creature’s remains were found by a tree, its intestines wedged between its teeth.\n• Pools of blood are brighter when charging UVX.\nSurvivors injured by UVX suffer from the **Hemorrhage** **status effect** for **45 seconds**.\n**Hemorrhage** regresses healing progress when not healing, and **increases** blood trails left by injured Survivors.",
+      "description": "The unlucky creature’s remains were found by a tree, its intestines wedged between its teeth.\n• Pools of blood are brighter when charging UVX.\nSurvivors injured by UVX suffer from the **Hemorrhage status effect** for **45 seconds**.\n**Hemorrhage** regresses healing progress when not healing, and **increases** blood trails left by injured Survivors.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_rabbitsFoot.png?942f75",
       "icon_local_path": "icons/addons/rabbits_foot.webp",
       "rarity": "Common",
@@ -116,7 +116,7 @@
       "id": 615,
       "name": "Punctured Eyeball",
       "killer_id": 35,
-      "description": "The station was a scene of madness. The officers had seemingly turned on each other.\n• Survivors who are both Weakened and injured suffer from the **Deep Wound** **status effect** when they Dispel a Hallucination.\n**Deep Wound** will put a Survivor in the **dying state** unless it is mended before the timer runs out.\nWeakened Survivors lose health states when hit by UVX’s Blast Area.",
+      "description": "The station was a scene of madness. The officers had seemingly turned on each other.\n• Survivors who are both Weakened and injured suffer from the **Deep Wound status effect** when they Dispel a Hallucination.\n**Deep Wound** will put a Survivor in the **dying state** unless it is mended before the timer runs out.\nWeakened Survivors lose health states when hit by UVX’s Blast Area.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_puncturedEyeball.png?158de5",
       "icon_local_path": "icons/addons/punctured_eyeball.webp",
       "rarity": "Common",
@@ -143,7 +143,7 @@
       "id": 616,
       "name": "Notebook of Theories",
       "killer_id": 35,
-      "description": "His studio apartment was empty and reeked of black mold. The book was the only thing left.\n• Survivors hit by UVX while it is airborne suffer from the **Hindered** **status effect** for an additional **2 seconds**.\n**Hindered** **reduces** Survivor movement speed.",
+      "description": "His studio apartment was empty and reeked of black mold. The book was the only thing left.\n• Survivors hit by UVX while it is airborne suffer from the **Hindered status effect** for an additional **2 seconds**.\n**Hindered reduces** Survivor movement speed.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_notebookOfTheories.png?7b814f",
       "icon_local_path": "icons/addons/notebook_of_theories.webp",
       "rarity": "Uncommon",
@@ -154,7 +154,7 @@
         },
         "es": {
           "name": "Cuaderno de teorías",
-          "description": "Su estudio estaba vacío y apestaba a moho negro. Lo único que quedaba era el libro.\n• Los supervivientes que el VXD alcance mientras esté en el aire sufren el efecto de estado **Entorpecimiento** durante **2 segundos** adicionales.\n**Entorpecimiento** **reduce** la velocidad de movimiento del superviviente."
+          "description": "Su estudio estaba vacío y apestaba a moho negro. Lo único que quedaba era el libro.\n• Los supervivientes que el VXD alcance mientras esté en el aire sufren el efecto de estado **Entorpecimiento** durante **2 segundos** adicionales.\n**Entorpecimiento reduce** la velocidad de movimiento del superviviente."
         },
         "ja": {
           "name": "理論が書かれたノート",
@@ -197,7 +197,7 @@
       "id": 618,
       "name": "Sketch Attempt",
       "killer_id": 35,
-      "description": "The victim’s child was given paper and crayons at the station, while he waited for his father to pick him up.\n• Survivors hit by UVX's Blast Area suffer from the **Oblivious** **status effect** for **20 seconds**.\n**Oblivious** prevents Survivors from hearing or being **affected** by the Killer's **Terror Radius**.",
+      "description": "The victim’s child was given paper and crayons at the station, while he waited for his father to pick him up.\n• Survivors hit by UVX's Blast Area suffer from the **Oblivious status effect** for **20 seconds**.\n**Oblivious** prevents Survivors from hearing or being **affected** by the Killer's **Terror Radius**.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_sketchAttempt.png?ae906b",
       "icon_local_path": "icons/addons/sketch_attempt.webp",
       "rarity": "Common",
@@ -258,7 +258,7 @@
       "translations": {
         "de": {
           "name": "Artikel auf der Titelseite",
-          "description": "Der Angreifer hatte riesige Löcher in die Wände der Hütte gerissen und die Familie in den Wald gejagt.\n• Wenn du eine **Palette** oder zerstörbare Mauer zerstörst, wird die Zeit bis zur nächsten Halluzination um **50 %** **verringert**."
+          "description": "Der Angreifer hatte riesige Löcher in die Wände der Hütte gerissen und die Familie in den Wald gejagt.\n• Wenn du eine **Palette** oder zerstörbare Mauer zerstörst, wird die Zeit bis zur nächsten Halluzination um **50 % verringert**."
         },
         "es": {
           "name": "Artículo de primera plana",
@@ -278,7 +278,7 @@
       "id": 621,
       "name": "B-Movie Poster",
       "killer_id": 35,
-      "description": "The movie was rumored to be state-funded propaganda, made specifically for something called Project Apple-Pie.\n• Survivors damaged by UVX's Blast Area suffer from the **Broken** **status effect** for **30 seconds**.\n**Broken** prevents Survivors from being healed.",
+      "description": "The movie was rumored to be state-funded propaganda, made specifically for something called Project Apple-Pie.\n• Survivors damaged by UVX's Blast Area suffer from the **Broken status effect** for **30 seconds**.\n**Broken** prevents Survivors from being healed.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_b-moviePoster.png?5a8150",
       "icon_local_path": "icons/addons/b_movie_poster.webp",
       "rarity": "Rare",
@@ -305,7 +305,7 @@
       "id": 622,
       "name": "Device of Undisclosed Origin",
       "killer_id": 35,
-      "description": "Was the thing made on Earth? Or somewhere else entirely?\n• Survivors entering the **Aura** Range of a Hallucination suffer from the **Oblivious** **status effect**.\n**Oblivious** prevents Survivors from hearing or being **affected** by the Killer's **Terror Radius**.",
+      "description": "Was the thing made on Earth? Or somewhere else entirely?\n• Survivors entering the **Aura** Range of a Hallucination suffer from the **Oblivious status effect**.\n**Oblivious** prevents Survivors from hearing or being **affected** by the Killer's **Terror Radius**.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_deviceOfUndisclosedOrigin.png?7ec168",
       "icon_local_path": "icons/addons/device_of_undisclosed_origin.webp",
       "rarity": "Uncommon",
@@ -332,7 +332,7 @@
       "id": 623,
       "name": "Homemade Mask",
       "killer_id": 35,
-      "description": "The killer had made the mask in the shed in his backyard, where he would bring the others when the sun went down.\n• Survivors who Dispel Hallucinations suffer from the **Blindness** **status effect** for **60 seconds**.\n**Blindness** prevents Survivors from seeing **auras**.",
+      "description": "The killer had made the mask in the shed in his backyard, where he would bring the others when the sun went down.\n• Survivors who Dispel Hallucinations suffer from the **Blindness status effect** for **60 seconds**.\n**Blindness** prevents Survivors from seeing **auras**.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_homemadeMask.png?c1ad51",
       "icon_local_path": "icons/addons/homemade_mask.webp",
       "rarity": "Very Rare",
@@ -413,7 +413,7 @@
       "id": 626,
       "name": "Serum Vial",
       "killer_id": 35,
-      "description": "The molecular structure of the substance was synthesized in the lab, but its effects could never be replicated.\n• Survivors within a Hallucination’s **Aura** Range suffer from the **Exhausted** **status effect** for **15 seconds**.\n**Exhausted** prevents Survivors from **activating** certain perks.",
+      "description": "The molecular structure of the substance was synthesized in the lab, but its effects could never be replicated.\n• Survivors within a Hallucination’s **Aura** Range suffer from the **Exhausted status effect** for **15 seconds**.\n**Exhausted** prevents Survivors from **activating** certain perks.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_serumVial.png?7f92c7",
       "icon_local_path": "icons/addons/serum_vial.webp",
       "rarity": "Very Rare",
@@ -524,7 +524,7 @@
       "id": 871,
       "name": "Hypnotist's Watch",
       "killer_id": 35,
-      "description": "Hypnotherapy was recommended to recover repressed memories. What emerged from his mind would be his undoing.\n• Survivors hit by UVX while it is airborne suffer from the **Exhausted** **status effect** for **15 seconds**.\n**Exhausted** prevents Survivors from **activating** certain perks.",
+      "description": "Hypnotherapy was recommended to recover repressed memories. What emerged from his mind would be his undoing.\n• Survivors hit by UVX while it is airborne suffer from the **Exhausted status effect** for **15 seconds**.\n**Exhausted** prevents Survivors from **activating** certain perks.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_hypnotistsWatch.png?11f25e",
       "icon_local_path": "icons/addons/hypnotists_watch.webp",
       "rarity": "Rare",

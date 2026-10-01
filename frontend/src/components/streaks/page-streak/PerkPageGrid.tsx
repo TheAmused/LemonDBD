@@ -25,7 +25,7 @@ export const PerkPageGrid: React.FC<PerkPageGridProps> = ({
 
   return (
     <div
-      className={`grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-5 ${animation} ${
+      className={`grid grid-cols-2 gap-x-4 gap-y-3 sm:grid-cols-3 lg:grid-cols-5 ${animation} ${
         dimmed ? 'pointer-events-none opacity-40 grayscale' : ''
       }`}
     >

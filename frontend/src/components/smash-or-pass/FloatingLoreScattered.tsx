@@ -15,7 +15,8 @@ import {
 import { SmashSounds } from './SmashSoundEffects';
 import { EntityItem, RosterCustomLabels } from '@/types/smashOrPass';
 import { localizedProfile } from '@/utils/entityProfile';
-import { resolveWatermarks, getWatermarkFontSize } from '@/utils/smashWatermarks';
+import { resolveWatermarks } from '@/utils/smashWatermarks';
+import { FitText } from '@/components/common/FitText';
 import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
 import { isKiller as isKillerRole, isSurvivor as isSurvivorRole } from '@/utils/characterUtils';
 
@@ -142,29 +143,37 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({
         {/* Left Side: Watermark Left */}
         <div
           key={`watermark-left-${character.slug}`}
-          className="pointer-events-auto anim-watermark-dissolve absolute top-[44%] -translate-y-1/2 right-[50%] mr-32 sm:mr-40 md:mr-52 lg:mr-64 text-right opacity-[0.07] dark:opacity-[0.04] hover:opacity-25 transition-all duration-500 cursor-default group"
+          className="pointer-events-auto anim-watermark-dissolve absolute top-[44%] -translate-y-1/2 right-[50%] mr-32 sm:mr-40 md:mr-52 lg:mr-64 w-[max(5rem,calc(50%-8rem-1rem))] sm:w-[max(5rem,calc(50%-10rem-1rem))] md:w-[max(5rem,calc(50%-13rem-1rem))] lg:w-[max(14rem,calc(50%-16rem-1rem))] text-right opacity-[0.07] dark:opacity-[0.04] hover:opacity-25 transition-all duration-500 cursor-default group"
           onMouseEnter={handleCardHover}
         >
-          <span className={`${getWatermarkFontSize(leftWatermark)} font-black uppercase tracking-wider text-text-primary font-mono group-hover:text-accent-red group-hover:drop-shadow-[0_0_60px_var(--accent-red)] transition-all duration-500 inline-block group-hover:scale-105 transform whitespace-nowrap`}>
+          <FitText
+            minScale={0.5}
+            maxLines={4}
+            className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl leading-[0.95] font-black uppercase tracking-wider text-text-primary font-mono group-hover:text-accent-red group-hover:drop-shadow-[0_0_60px_var(--accent-red)] transition-all duration-500 group-hover:scale-105 transform"
+          >
             {leftWatermark}
-          </span>
+          </FitText>
         </div>
 
         {/* Right Side: Watermark Right */}
         <div
           key={`watermark-right-${character.slug}`}
-          className="pointer-events-auto anim-watermark-dissolve absolute top-[44%] -translate-y-1/2 left-[50%] ml-32 sm:ml-40 md:ml-52 lg:ml-64 text-left opacity-[0.07] dark:opacity-[0.04] hover:opacity-25 transition-all duration-500 cursor-default group"
+          className="pointer-events-auto anim-watermark-dissolve absolute top-[44%] -translate-y-1/2 left-[50%] ml-32 sm:ml-40 md:ml-52 lg:ml-64 w-[max(5rem,calc(50%-8rem-1rem))] sm:w-[max(5rem,calc(50%-10rem-1rem))] md:w-[max(5rem,calc(50%-13rem-1rem))] lg:w-[max(14rem,calc(50%-16rem-1rem))] text-left opacity-[0.07] dark:opacity-[0.04] hover:opacity-25 transition-all duration-500 cursor-default group"
           style={{ animationDelay: '100ms' }}
           onMouseEnter={handleCardHover}
         >
-          <span className={`${getWatermarkFontSize(rightWatermark)} font-black uppercase tracking-wider text-text-primary font-mono group-hover:text-accent-red group-hover:drop-shadow-[0_0_60px_var(--accent-red)] transition-all duration-500 inline-block group-hover:scale-105 transform whitespace-nowrap`}>
+          <FitText
+            minScale={0.5}
+            maxLines={4}
+            className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl leading-[0.95] font-black uppercase tracking-wider text-text-primary font-mono group-hover:text-accent-red group-hover:drop-shadow-[0_0_60px_var(--accent-red)] transition-all duration-500 group-hover:scale-105 transform"
+          >
             {rightWatermark}
-          </span>
+          </FitText>
         </div>
       </div>
 
       {/* 2. LEFT FLANKING DOSSIER WING */}
-      <div className="absolute left-4 xl:left-8 2xl:left-14 top-16 bottom-16 hidden lg:flex flex-col justify-center max-w-[270px] xl:max-w-[310px] pointer-events-none space-y-3">
+      <div className="absolute left-4 xl:left-8 2xl:left-14 top-16 bottom-6 hidden lg:flex flex-col justify-end max-w-[270px] xl:max-w-[310px] pointer-events-none space-y-3">
         {/* Left Item 1: Trial Classification - Hidden for now */}
 
         {/* Left Item 2: Dating Archetype (Tilt Right +2deg & Crimson Flare) */}
@@ -214,7 +223,7 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({
       </div>
 
       {/* 3. RIGHT FLANKING DOSSIER WING */}
-      <div className="absolute right-4 xl:right-8 2xl:right-14 top-16 bottom-16 hidden lg:flex flex-col justify-center max-w-[270px] xl:max-w-[310px] pointer-events-none space-y-3">
+      <div className="absolute right-4 xl:right-8 2xl:right-14 top-16 bottom-6 hidden lg:flex flex-col justify-end max-w-[270px] xl:max-w-[310px] pointer-events-none space-y-3">
         {/* Right Item 1: Identity Profile - Hidden for now */}
 
         {/* Right Item 2: Signature Quote (Tilt Left -1deg & Gold Halo) */}

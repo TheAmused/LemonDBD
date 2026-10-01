@@ -9,16 +9,6 @@ export function cleanWatermark(str: string): string {
 }
 
 /**
- * Returns responsive Tailwind font-size classes for flanking watermarks.
- * Clamps to a smaller font scale for strings longer than 10 characters to prevent clipping or line wraps.
- */
-export function getWatermarkFontSize(str: string): string {
-  return str.length > 10
-    ? 'text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl'
-    : 'text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl';
-}
-
-/**
  * Samples 2 to 3 flags from a flag pool.
  * If the pool length <= 3, retains all items.
  * If the pool length > 3, randomly selects 2 or 3 items.

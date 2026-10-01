@@ -11,6 +11,7 @@ import { FlagIcon } from './FlagIcon';
 import { FogReportIcon, CampfireMugIcon } from '@/components/icons/DbdIcons';
 
 import { tip } from '@/components/common/Tooltip';
+import { FitText } from '@/components/common/FitText';
 // Keep in sync with the backend's own locale list -- SUPPORTED_LOCALES in
 // backend/app/utils/lang.py. No shared
 // source of truth across the Python/TypeScript boundary; a locale added to
@@ -210,7 +211,7 @@ export const SidebarBottomControls: React.FC<SidebarBottomControlsProps> = ({
             <span className="shrink-0">
               {isMounted ? currentThemeOption.icon : THEME_OPTIONS[THEME_OPTIONS.length - 1].icon}
             </span>
-            <span className="min-w-0 truncate">{isMounted ? currentThemeOption.label : ''}</span>
+            <FitText minScale={0.6} className="min-w-0 text-center">{isMounted ? currentThemeOption.label : ''}</FitText>
           </button>
 
           {isThemeMenuOpen && (
@@ -255,7 +256,7 @@ export const SidebarBottomControls: React.FC<SidebarBottomControlsProps> = ({
           className={`flex min-h-8 items-center justify-center gap-1.5 rounded-xl border border-border-color bg-bg-elevated/50 px-2 py-1.5 text-[11px] font-semibold text-text-secondary hover:bg-bg-elevated transition-colors cursor-pointer ${FOCUS_RING}`}
         >
           <FogReportIcon className="h-3.5 w-3.5 shrink-0 text-accent-red" />
-          <span className="text-center">{dict?.sidebar?.reportBug || 'Report Bug'}</span>
+          <FitText minScale={0.6} maxLines={2} className="min-w-0 text-center">{dict?.sidebar?.reportBug || 'Report Bug'}</FitText>
         </button>
 
         <button
@@ -265,7 +266,7 @@ export const SidebarBottomControls: React.FC<SidebarBottomControlsProps> = ({
           className={`flex min-h-8 items-center justify-center gap-1.5 rounded-xl border border-border-color bg-bg-elevated/50 px-2 py-1.5 text-[11px] font-semibold text-text-secondary hover:bg-bg-elevated transition-colors cursor-pointer ${FOCUS_RING}`}
         >
           <CampfireMugIcon className="h-3.5 w-3.5 shrink-0 text-accent-amber" />
-          <span className="text-center">{dict?.sidebar?.buyCoffee || 'Buy Coffee'}</span>
+          <FitText minScale={0.6} maxLines={2} className="min-w-0 text-center">{dict?.sidebar?.buyCoffee || 'Buy Coffee'}</FitText>
         </button>
       </div>
     </div>

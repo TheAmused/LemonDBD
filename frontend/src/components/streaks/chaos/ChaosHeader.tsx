@@ -6,8 +6,9 @@ import React from 'react';
 import { Difficulty } from '@/types/chaosStreak';
 import { Flame } from 'lucide-react';
 import { FreezeBadge } from '../FreezeBadge';
-import { ChallengeHeaderLayout, HeaderButton, ModeSelectButton, StandardHeaderActions, StatTile } from '../ChallengePanel';
+import { ChallengeHeaderLayout, HeaderButton, ModeSelectButton, StandardHeaderActions } from '../ChallengePanel';
 import { AdeptBadgeIcon } from '@/components/icons/DbdIcons';
+import { StreakStatTiles } from '../StreakStatTiles';
 
 const DIFFICULTY_TONE = { easy: 'green', medium: 'amber', hell: 'red' } as const;
 
@@ -48,8 +49,14 @@ export const ChaosHeader: React.FC<ChaosHeaderProps> = ({
     <ChallengeHeaderLayout
       stats={
         <>
-          <StatTile icon={<Flame className="h-5 w-5" />} label={dict?.streaks?.current || 'Current'} value={currentStreak} />
-          <StatTile icon={<AdeptBadgeIcon className="h-5 w-5" />} label={dict?.streaks?.best || 'Best'} value={bestStreak} />
+          <StreakStatTiles
+            current={currentStreak}
+            best={bestStreak}
+            currentLabel={dict?.streaks?.current || 'Current'}
+            bestLabel={dict?.streaks?.best || 'Best'}
+            currentIcon={<Flame className="h-5 w-5" />}
+            bestIcon={<AdeptBadgeIcon className="h-5 w-5" />}
+          />
           <FreezeBadge frozen={poolFrozen} dict={dict} />
         </>
       }

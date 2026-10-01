@@ -18,17 +18,19 @@ export const MODEL_QUALITY_STORAGE_KEY = 'lemondbd:voice:modelQuality';
 
 export interface ModelDescriptor {
   name: string;
+  /** Pinned Hugging Face commit, so an upstream change can never break voice input. */
+  revision: string;
   approxSizeMb: number;
 }
 
 const MODEL_MATRIX: Record<ModelQuality, { english: ModelDescriptor; multilingual: ModelDescriptor }> = {
   fast: {
-    english: { name: 'Xenova/whisper-tiny.en', approxSizeMb: 39 },
-    multilingual: { name: 'Xenova/whisper-tiny', approxSizeMb: 42 },
+    english: { name: 'Xenova/whisper-tiny.en', revision: '79fb389fc764e7c395bd330e9531d9d32ada7049', approxSizeMb: 39 },
+    multilingual: { name: 'Xenova/whisper-tiny', revision: '5332fcc35e32a33b86612b9a57a89be7906102b1', approxSizeMb: 42 },
   },
   accurate: {
-    english: { name: 'Xenova/whisper-base.en', approxSizeMb: 78 },
-    multilingual: { name: 'Xenova/whisper-base', approxSizeMb: 82 },
+    english: { name: 'Xenova/whisper-base.en', revision: '95bf40a508535962c6483ead40270b2e32267508', approxSizeMb: 78 },
+    multilingual: { name: 'Xenova/whisper-base', revision: '64da57285918e20ea79ea5c88eed7197933abaa8', approxSizeMb: 82 },
   },
 };
 
@@ -419,7 +421,6 @@ let currentProgressInfo: ModelProgressInfo = {
   progress: 0,
 };
 const progressListeners = new Set<ProgressCallback>();
-let isLocalBundleActive = false;
 let modelQuality: ModelQuality = 'fast';
 
 if (typeof window !== 'undefined') {
@@ -473,36 +474,26 @@ export function getModelProgress(): ModelProgressInfo {
   return currentProgressInfo;
 }
 
+// Runtime and models are NOT bundled with the app: the browser fetches the
+// pinned Transformers.js build (and its ONNX wasm) from jsDelivr and the Whisper
+// weights from the Hugging Face Hub, then keeps them in the browser cache.
+const TRANSFORMERS_VERSION = '2.17.2';
+const TRANSFORMERS_CDN = `https://cdn.jsdelivr.net/npm/@xenova/transformers@${TRANSFORMERS_VERSION}/dist/`;
+
 /**
- * Loads the standalone browser Transformers.js ES module via dynamic import.
+ * Loads the standalone browser Transformers.js ES module from the CDN.
  */
 async function loadTransformersStandalone(): Promise<any> {
   if (typeof window === 'undefined') return null;
 
-  // 1. Try local ESM distribution from /transformers/transformers.min.js
   try {
     const importDynamic = new Function('url', 'return import(url)');
-    const mod = await importDynamic('/transformers/transformers.min.js');
+    const mod = await importDynamic(`${TRANSFORMERS_CDN}transformers.min.js`);
     if (mod && (mod.AutoModelForSpeechSeq2Seq || mod.default?.AutoModelForSpeechSeq2Seq || mod.pipeline || mod.default?.pipeline)) {
-      console.log('[ClientSpeechModel] Loaded local ESM Transformers.js successfully!');
-      isLocalBundleActive = true;
       return mod.AutoModelForSpeechSeq2Seq || mod.pipeline ? mod : mod.default;
     }
   } catch (err) {
-    console.warn('[ClientSpeechModel] Local ESM import error, trying CDN fallback...', err);
-  }
-
-  // 2. Fallback to CDN ESM distribution
-  try {
-    const importDynamic = new Function('url', 'return import(url)');
-    const cdnMod = await importDynamic('https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.2/dist/transformers.min.js');
-    if (cdnMod && (cdnMod.AutoModelForSpeechSeq2Seq || cdnMod.default?.AutoModelForSpeechSeq2Seq || cdnMod.pipeline || cdnMod.default?.pipeline)) {
-      console.log('[ClientSpeechModel] Loaded CDN ESM Transformers.js successfully!');
-      isLocalBundleActive = false;
-      return cdnMod.AutoModelForSpeechSeq2Seq || cdnMod.pipeline ? cdnMod : cdnMod.default;
-    }
-  } catch (cdnErr) {
-    console.warn('[ClientSpeechModel] CDN ESM import error:', cdnErr);
+    console.warn('[ClientSpeechModel] Transformers.js CDN import error:', err);
   }
 
   return null;
@@ -545,8 +536,7 @@ export async function initClientSpeechModel(locale: string = 'en'): Promise<any>
     } = transformers;
 
     if (env) {
-      env.allowLocalModels = true;
-      env.localModelPath = '/models/';
+      env.allowLocalModels = false;
       env.useBrowserCache = true;
       env.allowRemoteModels = true;
       if (env.backends?.onnx) {
@@ -556,16 +546,14 @@ export async function initClientSpeechModel(locale: string = 'en'): Promise<any>
           env.backends.onnx.wasm.numThreads = 1;
           env.backends.onnx.wasm.proxy = false;
           env.backends.onnx.wasm.simd = true;
-          // In ONNX Runtime Web, wasmPaths must be the directory prefix string (e.g. '/transformers/')
-          // or an object keyed by the exact filenames ('ort-wasm.wasm', 'ort-wasm-simd.wasm', etc.).
-          env.backends.onnx.wasm.wasmPaths = isLocalBundleActive
-            ? '/transformers/'
-            : 'https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.2/dist/';
+          // ONNX Runtime Web wasmPaths is the directory prefix the runtime picks its wasm from.
+          env.backends.onnx.wasm.wasmPaths = TRANSFORMERS_CDN;
         }
       }
     }
 
     const modelName = descriptor.name;
+    const revision = descriptor.revision;
 
     console.log(
       `[ClientSpeechModel] Initializing Whisper model (${modelName}, quality=${modelQuality})...`
@@ -591,15 +579,17 @@ export async function initClientSpeechModel(locale: string = 'en'): Promise<any>
     if (typeof pipeline === 'function') {
       cachedPipeline = await pipeline('automatic-speech-recognition', modelName, {
         quantized: true,
+        revision,
         progress_callback,
         session_options,
       });
     } else {
       const [tokenizer, processor, model] = await Promise.all([
-        AutoTokenizer.from_pretrained(modelName, { progress_callback }),
-        AutoProcessor.from_pretrained(modelName, { progress_callback }),
+        AutoTokenizer.from_pretrained(modelName, { revision, progress_callback }),
+        AutoProcessor.from_pretrained(modelName, { revision, progress_callback }),
         AutoModelForSpeechSeq2Seq.from_pretrained(modelName, {
           quantized: true,
+          revision,
           progress_callback,
           session_options,
         }),

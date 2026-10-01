@@ -77,7 +77,7 @@ export function TierPool({
       {/* Header: search on the left (always reachable, even collapsed), title centred on the panel, collapse toggle on the right. */}
       <div
         onClick={() => setCollapsed((c) => !c)}
-        className="relative grid w-full cursor-pointer select-none grid-cols-[minmax(0,1fr)_auto] items-center gap-x-3 gap-y-2 overflow-hidden px-3 py-2.5 sm:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] sm:px-4 sm:min-h-[64px]">
+        className="relative grid w-full cursor-pointer select-none grid-cols-[2.5rem_minmax(0,1fr)_2.5rem] items-center gap-x-3 gap-y-2 overflow-hidden px-3 py-2.5 sm:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] sm:px-4 sm:min-h-[64px]">
         {/* Atmospheric DBD Banner Backdrop */}
         <div
           className="absolute inset-0 bg-cover bg-center opacity-15 dark:opacity-25 mix-blend-luminosity filter pointer-events-none"
@@ -88,7 +88,7 @@ export function TierPool({
 
         <div
           onClick={(e) => e.stopPropagation()}
-          className="relative z-10 order-3 col-span-2 cursor-auto sm:order-1 sm:col-span-1 sm:max-w-xs"
+          className="relative z-10 col-span-3 row-start-2 cursor-auto sm:col-span-1 sm:col-start-1 sm:row-start-1 sm:max-w-xs"
         >
           <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-text-muted" aria-hidden="true" />
           <Input
@@ -115,7 +115,7 @@ export function TierPool({
           )}
         </div>
 
-        <div className="relative z-10 order-1 sm:order-2 flex items-center justify-start sm:justify-center gap-2">
+        <div className="relative z-10 col-start-2 row-start-1 flex items-center justify-center gap-2">
           <h2 className="text-xs sm:text-sm font-black uppercase tracking-widest text-text-primary font-mono">
             {t.unranked}
           </h2>
@@ -129,7 +129,7 @@ export function TierPool({
           type="button"
           aria-expanded={!collapsed}
           aria-label={collapsed ? t.showPool : t.hidePool}
-          className="relative z-10 order-2 sm:order-3 justify-self-end flex min-h-[40px] items-center gap-2.5 cursor-pointer select-none text-text-secondary hover:text-accent-red transition-colors"
+          className="relative z-10 col-start-3 row-start-1 justify-self-end flex min-h-[40px] items-center gap-2.5 cursor-pointer select-none text-text-secondary hover:text-accent-red transition-colors"
         >
           <span className="text-xs font-mono hidden sm:inline">{collapsed ? t.showPool : t.hidePool}</span>
           <ChevronDown
@@ -165,11 +165,13 @@ export function TierPool({
             onClick={canReceiveSelection ? () => onMoveSelectedHere(POOL_CONTAINER_ID) : undefined}
             className={cn(
               'min-h-[100px] max-h-[calc(var(--pool-h)-var(--pool-head))] flex-1 overflow-y-auto overscroll-contain p-3 sm:p-4 transition-colors',
+              // Touch screens: one sideways-scrolling strip (see touchSensors.ts)
+              '[@media(pointer:coarse)]:overflow-x-auto [@media(pointer:coarse)]:overflow-y-hidden',
               isOver && 'bg-accent-red/10',
               canReceiveSelection && 'cursor-pointer hover:bg-accent-amber/5'
             )}
           >
-          <div className="flex flex-wrap content-start justify-center gap-1.5 sm:gap-2">
+          <div data-pool-grid="" className="flex flex-wrap content-start justify-start gap-1.5 sm:gap-2 [@media(pointer:coarse)]:grid [@media(pointer:coarse)]:w-max [@media(pointer:coarse)]:grid-flow-col [@media(pointer:coarse)]:grid-rows-2 [@media(pointer:coarse)]:justify-start">
             <SortableContext items={visibleKeys.map(itemDndId)} strategy={rectSortingStrategy}>
               {visibleKeys.map((key) => {
                 const item = itemsByKey.get(key);

@@ -63,6 +63,7 @@ export const TierItemTile = React.forwardRef<HTMLDivElement, TierItemTileProps>(
   return (
     <div
       ref={ref}
+      data-tier-tile=""
       {...tip(item.name, undefined, 'item')}
       aria-label={item.name}
       className={cn(

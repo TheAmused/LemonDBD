@@ -247,7 +247,8 @@ const LEVER_ROD_PX = 12;
 const LEVER_ROD_FRACTION = 0.38;
 const LEVER_PERSPECTIVE_PX = 130;
 const LEVER_SWING_MS = 600;
-const LEVER_ROD_GRADIENT = 'linear-gradient(90deg, #5a5f73, #f4f6fb 45%, #6b7087)';
+const LEVER_ROD_FILL = 'linear-gradient(90deg, #d5d9e4 55%, #9096aa 55%)';
+const LEVER_BALL_FILL = 'radial-gradient(circle at 32% 30%, #fecaca 0 13%, transparent 14%), #ef4444';
 
 const easeOutBack = (t: number): number => {
   const c1 = 1.3;
@@ -338,27 +339,21 @@ const SlotLever: React.FC<{ down: boolean; disabled: boolean; onPull: () => void
       <div
         ref={panelRef}
         className="relative h-24 sm:h-28 md:h-32 w-16 sm:w-[72px] rounded-2xl border border-border-color"
-        style={{
-          background: 'linear-gradient(180deg, #0a0b0e, #1b1c22)',
-          boxShadow: 'inset 0 8px 16px rgba(0,0,0,0.7), inset 0 -2px 4px rgba(255,255,255,0.04)',
-        }}
+        style={{ background: '#13141a' }}
       >
         <div
           className="absolute left-1/2 top-1/2 h-[40%] w-[22px] -translate-x-1/2 -translate-y-1/2 rounded-full"
-          style={{ background: '#050608', boxShadow: 'inset 0 3px 8px #000, 0 1px 0 rgba(255,255,255,0.06)' }}
+          style={{ background: '#050608' }}
         />
-        <div ref={rodRef} className="absolute left-1/2" style={{ background: LEVER_ROD_GRADIENT }} />
+        <div ref={rodRef} className="absolute left-1/2" style={{ background: LEVER_ROD_FILL }} />
         <div
           className="absolute left-1/2 top-1/2 h-[26px] w-[26px] -translate-x-1/2 -translate-y-1/2 rounded-full"
-          style={{
-            background: 'radial-gradient(circle at 35% 30%, #8d93a8, #3a3d4b 60%, #1c1d24)',
-            boxShadow: '0 3px 6px rgba(0,0,0,0.6)',
-          }}
+          style={{ background: '#3a3d4b', border: '2px solid #5a5f73' }}
         />
         <div
           ref={ballRef}
           className="absolute rounded-full"
-          style={{ background: 'radial-gradient(circle at 35% 30%, #fecaca, #ef4444 45%, #6b1414)' }}
+          style={{ background: LEVER_BALL_FILL }}
         />
       </div>
     </button>

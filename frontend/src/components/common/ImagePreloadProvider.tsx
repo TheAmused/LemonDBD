@@ -24,6 +24,7 @@ const CORE_ASSETS_TO_PREFETCH = [
   '/images/addon-rarity/rare.webp',
   '/images/addon-rarity/very-rare.webp',
   '/images/addon-rarity/ultra-rare.webp',
+  '/images/addon-rarity/event.webp',
 ];
 
 export const ImagePreloadProvider: React.FC<{ children?: React.ReactNode }> = ({

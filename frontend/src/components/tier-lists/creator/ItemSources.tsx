@@ -18,6 +18,7 @@ import { LABEL, TOUCH_BTN, TOUCH_FIELD } from '../styles';
 import { Spinner } from '@/components/common/Spinner';
 import { Button } from '@/components/common/Button';
 import { Input } from '@/components/common/Field';
+import { CustomDropdown } from '@/components/common/CustomDropdown';
 
 export interface IncomingItem {
   name: string;
@@ -305,26 +306,18 @@ function CatalogSource({
 
   return (
     <div className="flex flex-col gap-3">
-      <div className="flex flex-wrap justify-center gap-2" role="group" aria-label={c.catalogSource}>
-        {CATALOG_KINDS.map((k) => (
-          <button
-            key={k}
-            type="button"
-            onClick={() => {
-              setKind(k);
-              setSelected(new Set());
-            }}
-            aria-pressed={kind === k}
-            className={cn(
-              'min-h-[38px] rounded-lg border px-3 text-xs sm:text-sm font-bold transition-colors cursor-pointer',
-              kind === k
-                ? 'border-accent-red bg-accent-red/10 text-accent-red'
-                : 'border-border-color bg-bg-surface text-text-secondary hover:bg-bg-elevated hover:text-text-primary'
-            )}
-          >
-            {t.kinds[k]}
-          </button>
-        ))}
+      <div className="flex justify-center">
+        <CustomDropdown
+          value={kind}
+          onChange={(k) => {
+            setKind(k as CatalogKind);
+            setSelected(new Set());
+          }}
+          options={CATALOG_KINDS.map((k) => ({ value: k, label: t.kinds[k] }))}
+          ariaLabel={c.catalogSource}
+          buttonClassName="min-h-[40px] min-w-[200px] justify-between"
+          minWidthClass="min-w-[220px]"
+        />
       </div>
 
       <div className="flex flex-col gap-2 sm:flex-row">

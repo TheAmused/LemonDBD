@@ -45,7 +45,7 @@ const LockedTile: React.FC<{ perk: Perk; displayName: string }> = ({ perk, displ
   const [failed, setFailed] = useState(false);
   const src = perkIconFor(perk);
   return (
-    <div className="relative flex flex-col items-center gap-1.5 p-2 rounded-lg bg-bg-elevated border border-dashed border-2 border-border-color overflow-hidden">
+    <div className="relative flex flex-col items-center gap-1.5 p-2 rounded-lg bg-bg-elevated border border-dashed border-2 border-accent-red/30 overflow-hidden">
       <div className="w-full aspect-square rounded-md overflow-hidden bg-bg-elevated flex items-center justify-center grayscale opacity-40">
         {src && !failed ? (
           <img
@@ -62,8 +62,8 @@ const LockedTile: React.FC<{ perk: Perk; displayName: string }> = ({ perk, displ
         {displayName}
       </span>
       <div className="absolute inset-0 flex items-center justify-center bg-bg-primary/50">
-        <div className="flex h-7 w-7 items-center justify-center rounded-full bg-accent-amber/20 border border-accent-amber/40 shadow-md">
-          <Lock className="w-3.5 h-3.5 text-accent-amber" />
+        <div className="flex h-7 w-7 items-center justify-center rounded-full bg-accent-red/20 border border-accent-red/40 shadow-md">
+          <Lock className="w-3.5 h-3.5 text-accent-red" />
         </div>
       </div>
     </div>
@@ -165,7 +165,7 @@ export const HistoryPerkPoolPanel: React.FC<HistoryPerkPoolPanelProps> = ({
         </div>
       )}
 
-      <div className="mb-2 flex items-center gap-1.5 text-xs font-bold text-accent-amber">
+      <div className="mb-2 flex items-center gap-1.5 text-xs font-bold text-accent-red">
         <Lock className="w-3.5 h-3.5" />
         {dict?.streaks?.lockedLabel || 'Locked'}
       </div>

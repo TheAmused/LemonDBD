@@ -62,6 +62,8 @@ export function TierListHub({ locale, dict }: TierListHubProps) {
     [state.custom]
   );
 
+  const customCount = hydrated ? customLists.length : 0;
+
   const rankedCount = useCallback(
     (slug: string) =>
       Object.values(state.rankings[slug]?.placements ?? {}).reduce((n, keys) => n + keys.length, 0),
@@ -131,9 +133,11 @@ export function TierListHub({ locale, dict }: TierListHubProps) {
               </h2>
             </div>
             <p className="text-[11px] sm:text-xs 2xl:text-sm text-text-secondary mt-0.5 truncate">
-              {lists.length === 1
+              {(lists.length === 1
                 ? t.curatedTemplatesSingular
-                : (t.curatedTemplatesCount || '{count} curated templates').replace('{count}', String(lists.length))}
+                : (t.curatedTemplatesCount || '{count} curated templates').replace('{count}', String(lists.length)))}
+              {' · '}
+              {t.officialSavedNote}
             </p>
           </div>
           <div className="relative z-10 w-8 flex justify-end">
@@ -254,7 +258,11 @@ export function TierListHub({ locale, dict }: TierListHubProps) {
                 </h2>
               </div>
               <p className="text-[11px] sm:text-xs 2xl:text-sm text-text-secondary mt-0.5 truncate">
-                {(t.customListsCount || 'Custom lists: {count}').replace('{count}', String(hydrated ? customLists.length : 0))}
+                {(customCount === 1
+                  ? t.customListsSingular
+                  : (t.customListsCount || '{count} custom lists').replace('{count}', String(customCount)))}
+                {' · '}
+                {t.customSavedNote}
               </p>
             </div>
 

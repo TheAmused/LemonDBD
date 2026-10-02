@@ -11,7 +11,7 @@ import { getLocalizedMutator } from './generator/lib/chaosMutatorLocalization';
 
 import { tip } from '@/components/common/Tooltip';
 import { Modal } from '@/components/common/Modal';
-import { canvasFont } from '@/utils/canvasFont';
+import { canvasEmojiFont, canvasFont } from '@/utils/canvasFont';
 export { CHAOS_MUTATORS };
 export type { ChaosMutator };
 
@@ -145,7 +145,7 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({
 
       ctx.save();
       // Draw icon - Always faces the user upright (no rotation)
-      ctx.font = `${iconFontSize}px "Apple Color Emoji", "Segoe UI Emoji", sans-serif`;
+      ctx.font = canvasEmojiFont(iconFontSize);
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       ctx.fillText(m.icon, cx, cy - 18 * scale);

@@ -15,3 +15,8 @@ export function siteFontStack(): string {
 export function canvasFont(weight: string | number, sizePx: number): string {
   return `${weight} ${sizePx}px ${siteFontStack()}`;
 }
+
+/** Emoji glyphs first (so they render in colour), then the site stack for everything else. */
+export function canvasEmojiFont(sizePx: number): string {
+  return `${sizePx}px "Apple Color Emoji", "Segoe UI Emoji", ${siteFontStack()}`;
+}

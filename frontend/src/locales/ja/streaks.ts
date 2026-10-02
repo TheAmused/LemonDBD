@@ -206,7 +206,7 @@ export default {
   niceGuyStreakTitle: "ナイスガイ・ストリーク",
   bloodMoneyStreakTitle: "血の金・ストリーク",
   copycatStreakTitle: "コピーキャット・ストリーク",
-  confirmBuild: '構成を確定',
+  confirmBuild: '確定',
   noPerksDrawnYet: 'このサイクルではまだパークが引かれていません。',
   perkPoolEmptyFreshCycle: 'プールは空です。次のドローで新しいサイクルが始まります。',
   perkPoolTabs: 'パークプールナビゲーション',

@@ -162,7 +162,7 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
                     disabled={busy || selected.length !== buildSize}
                     onClick={() => setConfirmed(true)}
                   >
-                    {dict?.streaks?.confirmBuild || 'Confirm build'}
+                    {dict?.streaks?.confirmBuild || 'Confirm'}
                   </StreakActionButton>
                 )}
               </StreakActionBar>

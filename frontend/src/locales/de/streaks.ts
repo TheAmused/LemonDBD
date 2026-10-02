@@ -206,7 +206,7 @@ export default {
   niceGuyStreakTitle: "Nice-Guy-Streak",
   bloodMoneyStreakTitle: "Blutgeld-Streak",
   copycatStreakTitle: "Nachahmer-Streak",
-  confirmBuild: 'Build bestätigen',
+  confirmBuild: 'Bestätigen',
   noPerksDrawnYet: 'In diesem Zyklus wurden noch keine Perks gezogen.',
   perkPoolEmptyFreshCycle: 'Der Pool ist leer; die nächste Ziehung startet einen neuen Zyklus.',
   perkPoolTabs: 'Perk-Pool Navigation',

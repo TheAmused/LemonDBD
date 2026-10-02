@@ -206,7 +206,7 @@ export default {
   niceGuyStreakTitle: "Racha de Chico Bueno",
   bloodMoneyStreakTitle: "Racha de Dinero Sangriento",
   copycatStreakTitle: "Racha del Imitador",
-  confirmBuild: 'Confirmar build',
+  confirmBuild: 'Confirmar',
   noPerksDrawnYet: 'Aún no se han seleccionado ventajas en este ciclo.',
   perkPoolEmptyFreshCycle: 'El grupo está vacío; la siguiente selección iniciará un nuevo ciclo.',
   perkPoolTabs: 'Navegación del grupo de ventajas',

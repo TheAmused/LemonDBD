@@ -175,7 +175,7 @@ export const CampfireHeader: React.FC<CampfireHeaderProps> = ({
 
         {/* Far right: account actions, stacked and vertically centred */}
         {actions ? (
-          <div className="xl:col-span-3 flex flex-row xl:flex-col flex-wrap items-center justify-center gap-2 w-full pt-6 xl:pt-0 border-t xl:border-t-0 border-border-color [&>*]:w-full sm:[&>*]:w-auto xl:[&>*]:w-full">
+          <div className="xl:col-span-3 flex flex-row xl:flex-col flex-wrap xl:flex-nowrap items-center xl:items-stretch justify-center xl:self-center xl:justify-self-end xl:w-max gap-2 w-full pt-6 xl:pt-0 border-t xl:border-t-0 border-border-color [&>*]:whitespace-nowrap">
             {actions}
           </div>
         ) : null}

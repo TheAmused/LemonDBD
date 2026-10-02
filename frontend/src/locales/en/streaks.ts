@@ -232,7 +232,7 @@ export default {
   niceGuyStreakTitle: "Nice Guy streak",
   bloodMoneyStreakTitle: "Blood Money streak",
   copycatStreakTitle: "Copycat streak",
-  confirmBuild: 'Confirm build',
+  confirmBuild: 'Confirm',
   noPerksDrawnYet: 'No perks drawn yet this cycle.',
   perkPoolEmptyFreshCycle: 'The pool is empty; the next draw starts a fresh cycle.',
   perkPoolTabs: 'Perk Pool Navigation',

@@ -126,11 +126,11 @@ export function TierListHub({ locale, dict }: TierListHubProps) {
           <div className="relative z-10 w-8 hidden sm:block pointer-events-none" aria-hidden="true" />
           <div className="relative z-10 flex-1 text-center min-w-0 px-2">
             <div className="inline-flex items-center gap-2">
-              <h2 id="tier-lists-official" className="text-xs sm:text-sm 2xl:text-base font-black uppercase tracking-widest text-text-primary font-mono group-hover:text-accent-red transition-colors">
+              <h2 id="tier-lists-official" className="text-xs sm:text-sm 2xl:text-base font-black uppercase tracking-widest text-text-primary group-hover:text-accent-red transition-colors">
                 {t.officialSection}
               </h2>
             </div>
-            <p className="text-[11px] sm:text-xs 2xl:text-sm text-text-secondary mt-0.5 font-mono truncate">
+            <p className="text-[11px] sm:text-xs 2xl:text-sm text-text-secondary mt-0.5 truncate">
               {lists.length === 1
                 ? t.curatedTemplatesSingular
                 : (t.curatedTemplatesCount || '{count} curated templates').replace('{count}', String(lists.length))}
@@ -249,11 +249,11 @@ export function TierListHub({ locale, dict }: TierListHubProps) {
             <div className="hidden lg:flex w-56 shrink-0 pointer-events-none" aria-hidden="true" />
             <div className="flex-1 text-center min-w-0 px-2">
               <div className="inline-flex items-center justify-center gap-2">
-                <h2 id="tier-lists-custom" className="text-xs sm:text-sm 2xl:text-base font-black uppercase tracking-widest text-text-primary font-mono">
+                <h2 id="tier-lists-custom" className="text-xs sm:text-sm 2xl:text-base font-black uppercase tracking-widest text-text-primary">
                   {t.mySection}
                 </h2>
               </div>
-              <p className="text-[11px] sm:text-xs 2xl:text-sm text-text-secondary mt-0.5 font-mono truncate">
+              <p className="text-[11px] sm:text-xs 2xl:text-sm text-text-secondary mt-0.5 truncate">
                 {(t.customListsCount || 'Custom lists: {count}').replace('{count}', String(hydrated ? customLists.length : 0))}
               </p>
             </div>

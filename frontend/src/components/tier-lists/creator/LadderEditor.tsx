@@ -78,7 +78,7 @@ export function LadderEditor({ tiers, onChange, onPreset, activePreset, dict }: 
     <div className="flex flex-col gap-4">
       {/* Phones: the label and a dropdown share one row. Wide screens: the label above every preset. */}
       <div className="flex items-center justify-center gap-2.5 sm:flex-col sm:gap-0">
-        <p className="text-xs font-bold uppercase tracking-wider text-text-secondary font-mono text-center sm:mb-2">{c.presetsLabel}</p>
+        <p className="text-xs font-bold uppercase tracking-wider text-text-secondary text-center sm:mb-2">{c.presetsLabel}</p>
         <div className="sm:hidden">
           <CustomDropdown
             value={activePreset ?? ''}

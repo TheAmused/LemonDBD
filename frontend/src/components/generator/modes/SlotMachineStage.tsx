@@ -558,7 +558,7 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
                             )}
                             {coordLabel && (
                               <span
-                                className="pointer-events-none absolute left-1 top-1 z-10 whitespace-nowrap font-mono font-black text-accent-amber drop-shadow-xs"
+                                className="pointer-events-none absolute left-1 top-1 z-10 whitespace-nowrap font-black text-accent-amber drop-shadow-xs"
                                 style={{ fontSize: Math.max(8, Math.min(11, cellPx * 0.12)) }}
                               >
                                 {coordLabel}
@@ -742,7 +742,7 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
                             )}
                             {coordLabel && (
                               <span
-                                className="pointer-events-none absolute left-0.5 top-0.5 z-10 whitespace-nowrap font-mono font-black text-accent-amber drop-shadow-xs"
+                                className="pointer-events-none absolute left-0.5 top-0.5 z-10 whitespace-nowrap font-black text-accent-amber drop-shadow-xs"
                                 style={{ fontSize: Math.max(7, Math.min(11, cellPx * 0.09)) }}
                               >
                                 {coordLabel}

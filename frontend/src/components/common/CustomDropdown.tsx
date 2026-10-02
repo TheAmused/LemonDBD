@@ -89,7 +89,7 @@ export function CustomDropdown<T extends string = string>({
         onClick={handleToggle}
         {...popoverTriggerProps(isOpen, children ? 'true' : 'listbox')}
         aria-label={ariaLabel || (typeof triggerLabel === 'string' ? triggerLabel : undefined)}
-        className={`flex items-center gap-2 px-3 py-2 rounded-xl bg-bg-surface border border-border-color hover:border-accent-amber/50 hover:bg-bg-elevated text-xs font-mono font-bold text-text-primary transition-all cursor-pointer shadow-xs select-none ${
+        className={`flex items-center gap-2 px-3 py-2 rounded-xl bg-bg-surface border border-border-color hover:border-accent-amber/50 hover:bg-bg-elevated text-xs font-bold text-text-primary transition-all cursor-pointer shadow-xs select-none ${
           isOpen ? 'border-accent-amber bg-accent-amber/10 text-accent-amber shadow-xs' : ''
         } ${buttonClassName}`}
       >
@@ -126,7 +126,7 @@ export function CustomDropdown<T extends string = string>({
                       role="option"
                       aria-selected={isSelected}
                       onClick={() => handleSelect(opt.value)}
-                      className={`flex items-center justify-between w-full px-3 py-2 rounded-xl text-xs font-mono font-bold transition-all text-left cursor-pointer ${
+                      className={`flex items-center justify-between w-full px-3 py-2 rounded-xl text-xs font-bold transition-all text-left cursor-pointer ${
                         isSelected
                           ? 'bg-accent-amber text-text-inverted font-black shadow-xs'
                           : 'text-text-secondary hover:text-text-primary hover:bg-bg-elevated'

@@ -177,7 +177,7 @@ export const FullscreenMapEngineView: React.FC<FullscreenMapEngineProps> = ({
           {activeMap && (
             <div className="min-w-0 flex-1 flex flex-wrap items-center justify-center sm:justify-start gap-1.5 text-xs">
               {activeMap.size_sq_tiles != null ? (
-                <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-bg-elevated border border-accent-red/40 text-text-secondary font-mono shadow-sm shrink-0">
+                <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-bg-elevated border border-accent-red/40 text-text-secondary shadow-sm shrink-0">
                   <Maximize2 className="w-3.5 h-3.5 text-accent-red shrink-0" />
                   <span className="text-text-muted">{dict?.maps?.surfaceArea || 'Surface Area'}</span>
                   <span className="font-bold text-text-primary text-xs">{activeMap.size_sq_tiles}</span>
@@ -288,7 +288,7 @@ export const FullscreenMapEngineView: React.FC<FullscreenMapEngineProps> = ({
             <ZoomOut className="w-4 h-4" />
           </Button>
 
-          <span className="text-xs font-mono font-bold text-text-primary px-2 min-w-[50px] text-center">
+          <span className="text-xs font-bold text-text-primary px-2 min-w-[50px] text-center">
             {Math.round(zoom * 100)}{dict?.maps?.percentSign || '%'}
           </span>
 

@@ -65,10 +65,10 @@ export const UserBugReportsDrawer: React.FC<UserBugReportsDrawerProps> = ({
 
         <div aria-hidden="true" />
         <div className="relative z-10 text-center pointer-events-none">
-          <h2 className="text-xs sm:text-sm 2xl:text-base font-black uppercase tracking-widest text-text-primary font-mono group-hover:text-accent-red transition-colors">
+          <h2 className="text-xs sm:text-sm 2xl:text-base font-black uppercase tracking-widest text-text-primary group-hover:text-accent-red transition-colors">
             {dict?.user?.tabBugReports || 'My Bug Reports'}
           </h2>
-          <p className="text-[11px] sm:text-xs 2xl:text-sm text-text-secondary mt-0.5 font-mono">
+          <p className="text-[11px] sm:text-xs 2xl:text-sm text-text-secondary mt-0.5">
             {getSubtitle()}
           </p>
         </div>

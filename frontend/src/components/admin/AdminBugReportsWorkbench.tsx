@@ -123,7 +123,7 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
           <span className="text-xs font-bold uppercase flex items-center gap-1.5">
             <HelpCircle className="h-4 w-4" /> {dict?.admin?.statusPending || dict?.admin?.pending || ''}
           </span>
-          <p className="text-xl sm:text-2xl font-black font-mono mt-1">
+          <p className="text-xl sm:text-2xl font-black mt-1">
             {bugStats?.pending ?? 0}
           </p>
         </button>
@@ -141,7 +141,7 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
           <span className="text-xs font-bold uppercase flex items-center gap-1.5">
             <Clock className="h-4 w-4" /> {dict?.admin?.statusInProgress || dict?.admin?.inProgress || ''}
           </span>
-          <p className="text-xl sm:text-2xl font-black font-mono mt-1">
+          <p className="text-xl sm:text-2xl font-black mt-1">
             {bugStats?.in_progress ?? 0}
           </p>
         </button>
@@ -159,7 +159,7 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
           <span className="text-xs font-bold uppercase flex items-center gap-1.5">
             <CheckCircle className="h-4 w-4" /> {dict?.admin?.statusResolved || dict?.admin?.resolved || ''}
           </span>
-          <p className="text-xl sm:text-2xl font-black font-mono mt-1">
+          <p className="text-xl sm:text-2xl font-black mt-1">
             {bugStats?.resolved ?? 0}
           </p>
         </button>
@@ -177,7 +177,7 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
           <span className="text-xs font-bold uppercase flex items-center gap-1.5">
             <FogReportIcon className="h-4 w-4" /> {dict?.admin?.totalTickets || ''}
           </span>
-          <p className="text-xl sm:text-2xl font-black text-text-primary font-mono mt-1">
+          <p className="text-xl sm:text-2xl font-black text-text-primary mt-1">
             {bugStats?.total ?? 0}
           </p>
         </button>
@@ -219,11 +219,11 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
 
           <div className="space-y-2 max-h-[600px] overflow-y-auto pr-1">
             {loading ? (
-              <div className="py-12 text-center text-xs text-text-muted font-mono">
+              <div className="py-12 text-center text-xs text-text-muted">
                 {dict?.admin?.loadingTickets || ''}
               </div>
             ) : bugReports.length === 0 ? (
-              <div className="py-12 text-center text-xs text-text-muted font-mono">
+              <div className="py-12 text-center text-xs text-text-muted">
                 {dict?.admin?.noBugReports || ''}
               </div>
             ) : (
@@ -254,7 +254,7 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
                     <div className="flex items-start justify-between gap-2">
                       <div className="flex items-center gap-1.5">
                         <span className={`h-2 w-2 rounded-full ${cfg.dot}`} />
-                        <span className="font-mono text-xs font-black text-text-primary">
+                        <span className="text-xs font-black text-text-primary">
                           #{report.id}
                         </span>
                       </div>
@@ -330,7 +330,7 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-border-color">
                 <div>
                   <div className="flex items-center gap-2 mb-1">
-                    <span className="font-mono text-xs font-bold text-accent-red">
+                    <span className="text-xs font-bold text-accent-red">
                       #{selectedBug.id}
                     </span>
                     <span className="rounded-md bg-bg-elevated text-text-secondary border border-border-color px-2 py-0.5 text-[10px] font-bold">

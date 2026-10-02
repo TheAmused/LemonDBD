@@ -20,7 +20,7 @@ export const AdminStatsGrid: React.FC<AdminStatsGridProps> = ({ stats, dict }) =
           <Users className="h-4 w-4 text-text-secondary" />
           <span>{dict?.admin?.totalUsers || 'Total Users'}</span>
         </div>
-        <p className="text-xl sm:text-2xl font-black text-text-primary font-mono">
+        <p className="text-xl sm:text-2xl font-black text-text-primary">
           {stats?.total_users ?? '-'}
         </p>
       </div>
@@ -30,7 +30,7 @@ export const AdminStatsGrid: React.FC<AdminStatsGridProps> = ({ stats, dict }) =
           <OverseerEyeIcon className="h-4 w-4 text-text-secondary" />
           <span>{dict?.admin?.admins || 'Admins'}</span>
         </div>
-        <p className="text-xl sm:text-2xl font-black text-text-primary font-mono">
+        <p className="text-xl sm:text-2xl font-black text-text-primary">
           {stats?.admin_count ?? '-'}
         </p>
       </div>
@@ -40,7 +40,7 @@ export const AdminStatsGrid: React.FC<AdminStatsGridProps> = ({ stats, dict }) =
           <Layers className="h-4 w-4 text-text-secondary" />
           <span>{dict?.admin?.characters || 'Characters'}</span>
         </div>
-        <p className="text-xl sm:text-2xl font-black text-text-primary font-mono">
+        <p className="text-xl sm:text-2xl font-black text-text-primary">
           {stats?.total_characters ?? '0'}
         </p>
       </div>
@@ -50,7 +50,7 @@ export const AdminStatsGrid: React.FC<AdminStatsGridProps> = ({ stats, dict }) =
           <Sparkles className="h-4 w-4 text-accent-amber" />
           <span>{dict?.admin?.perks || 'Perks'}</span>
         </div>
-        <p className="text-xl sm:text-2xl font-black text-text-primary font-mono">
+        <p className="text-xl sm:text-2xl font-black text-text-primary">
           {stats?.total_perks ?? '0'}
         </p>
       </div>
@@ -60,7 +60,7 @@ export const AdminStatsGrid: React.FC<AdminStatsGridProps> = ({ stats, dict }) =
           <Database className="h-4 w-4 text-text-secondary" />
           <span>{dict?.admin?.database || 'Database'}</span>
         </div>
-        <p className="text-xl sm:text-2xl font-black text-text-primary font-mono">
+        <p className="text-xl sm:text-2xl font-black text-text-primary">
           {dict?.admin?.online || 'ONLINE'}
         </p>
       </div>

@@ -329,13 +329,13 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
             </div>
 
             <div className="space-y-1.5 max-w-sm">
-              <h3 className="text-xl sm:text-2xl font-black font-mono text-text-primary">
+              <h3 className="text-xl sm:text-2xl font-black text-text-primary">
                 {persona.title}
               </h3>
-              <p className="text-xs text-accent-red/80 font-mono">
+              <p className="text-xs text-accent-red/80">
                 {persona.subtitle}
               </p>
-              <p className="text-xs sm:text-sm text-text-muted font-sans leading-relaxed pt-1">
+              <p className="text-xs sm:text-sm text-text-muted leading-relaxed pt-1">
                 {persona.description}
               </p>
             </div>
@@ -363,26 +363,26 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
             >
               <div className="flex items-center justify-between gap-3">
                 <div className="min-w-0">
-                  <span className="text-[10px] font-mono uppercase tracking-widest text-text-inverted/75 block">
+                  <span className="text-[10px] uppercase tracking-widest text-text-inverted/75 block">
                     {rawSmash?.modals?.personaTitle || 'Trial Romance Archetype'}
                   </span>
-                  <h4 className="text-xl sm:text-2xl font-black font-mono tracking-tight truncate text-text-inverted">
+                  <h4 className="text-xl sm:text-2xl font-black tracking-tight truncate text-text-inverted">
                     {persona.title}
                   </h4>
                   {persona.subtitle && (
-                    <p className="text-xs text-text-inverted/85 line-clamp-1 mt-0.5 font-sans font-medium">
+                    <p className="text-xs text-text-inverted/85 line-clamp-1 mt-0.5 font-medium">
                       {persona.subtitle}
                     </p>
                   )}
                 </div>
                 <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-bg-primary/40 border border-border-color backdrop-blur-md shrink-0">
                   <Heart className="h-3.5 w-3.5 fill-accent-red text-accent-red" />
-                  <span className="text-xs font-black font-mono text-text-inverted">
+                  <span className="text-xs font-black text-text-inverted">
                     {persona.smashRate}%
                   </span>
                 </div>
               </div>
-              <div className="mt-3 flex items-center gap-4 text-[11px] font-mono text-text-inverted/85">
+              <div className="mt-3 flex items-center gap-4 text-[11px] text-text-inverted/85">
                 <span className="flex items-center gap-1.5">
                   <SurvivorIcon className="h-3.5 w-3.5 text-accent-green" />
                   <span>{survivorsLabel} {persona.survivorAffinity}%</span>
@@ -396,11 +396,11 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
 
             {/* Social Media Direct Share Grid */}
             <div className="space-y-2 pt-1">
-              <span className="text-[10px] font-mono uppercase tracking-wider text-text-muted font-bold flex items-center gap-1.5">
+              <span className="text-[10px] uppercase tracking-wider text-text-muted font-bold flex items-center gap-1.5">
                 <Share2 className="h-3 w-3 text-accent-red" />
                 {rawSmash?.sharing?.shareDirectly || 'Share Directly'}
               </span>
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 font-mono text-xs">
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs">
                 {socialLinks.map((item) => (
                   <a
                     key={item.name}
@@ -418,7 +418,7 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
 
               {/* Status / Feedback Banner (for Telegram, Discord, etc.) */}
               {feedbackNotice && (
-                <div className="flex items-center gap-2 p-2.5 rounded-xl bg-accent-red/10 border border-accent-red/30 text-accent-red text-xs font-mono animate-fadeIn">
+                <div className="flex items-center gap-2 p-2.5 rounded-xl bg-accent-red/10 border border-accent-red/30 text-accent-red text-xs animate-fadeIn">
                   <Check className="h-4 w-4 shrink-0 stroke-[3]" />
                   <span className="leading-snug">{feedbackNotice}</span>
                 </div>
@@ -427,7 +427,7 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
 
             {/* Direct Link Copy (Single Canonical Copy Button) */}
             <div className="space-y-2 pt-1">
-              <span className="text-[10px] font-mono uppercase tracking-wider text-text-muted font-bold">
+              <span className="text-[10px] uppercase tracking-wider text-text-muted font-bold">
                 {rawSmash?.sharing?.directLink || 'Direct Link to Archetype'}
               </span>
               <div className="flex items-center gap-2">
@@ -437,7 +437,7 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
                   readOnly
                   value={shareUrl}
                   onFocus={(e) => e.target.select()}
-                  className="min-w-0 flex-1 font-mono sm:text-xs select-all"
+                  className="min-w-0 flex-1 sm:text-xs select-all"
                 />
                 <Button
                   variant="primary" size="md"
@@ -475,7 +475,7 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
             >
               {isSharedView && (
                 <div className="mb-2">
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-bg-primary/50 border border-border-color text-[11px] font-mono font-bold tracking-wider text-text-inverted backdrop-blur-md shadow-sm">
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-bg-primary/50 border border-border-color text-[11px] font-bold tracking-wider text-text-inverted backdrop-blur-md shadow-sm">
                     <Sparkles className="h-3 w-3 text-text-inverted" />
                     {sharedResultBadge}
                   </span>
@@ -484,11 +484,11 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
 
               <div className="relative z-10 flex items-start justify-between gap-4">
                 <div className="space-y-1 flex-1 min-w-0">
-                  <h3 className="text-2xl sm:text-3xl font-black font-mono tracking-tight text-text-inverted drop-shadow-md">
+                  <h3 className="text-2xl sm:text-3xl font-black tracking-tight text-text-inverted drop-shadow-md">
                     {persona.title}
                   </h3>
                   {persona.subtitle && (
-                    <p className="text-xs sm:text-sm text-text-inverted/90 leading-relaxed font-sans font-medium">
+                    <p className="text-xs sm:text-sm text-text-inverted/90 leading-relaxed font-medium">
                       {persona.subtitle}
                     </p>
                   )}
@@ -502,17 +502,17 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
 
             {/* Dating Psychology Card */}
             <Surface tone="elevated" radius="2xl" padding="none" className="p-4 sm:p-5 space-y-2 shadow-inner">
-              <span className="font-bold text-accent-red uppercase tracking-wider text-[11px] font-mono flex items-center gap-1.5">
+              <span className="font-bold text-accent-red uppercase tracking-wider text-[11px] flex items-center gap-1.5">
                 <Sparkles className="h-3.5 w-3.5" />
                 {datingPsychologyLabel}
               </span>
-              <p className="text-text-secondary leading-relaxed text-xs sm:text-sm font-sans">
+              <p className="text-text-secondary leading-relaxed text-xs sm:text-sm">
                 {persona.description}
               </p>
             </Surface>
 
             {/* Telemetry Matrix */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs font-mono">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs">
               <div className="p-3.5 rounded-2xl bg-bg-surface border border-border-color flex flex-col justify-between gap-1 shadow-inner">
                 <span className="text-text-muted text-[11px]">{totalEvaluatedLabel}</span>
                 <span className="text-lg font-black text-text-primary">
@@ -537,7 +537,7 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
                   )}
                   <div className="min-w-0">
                     <span className="text-text-muted text-[10px] block truncate">{firstSmashLabel}</span>
-                    <span className="text-xs font-bold text-text-primary font-mono truncate block">
+                    <span className="text-xs font-bold text-text-primary truncate block">
                       {persona.favoriteChar.name}
                     </span>
                   </div>
@@ -548,12 +548,12 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
             {/* Role Affinity Scale (Survivor vs Killer) */}
             <Surface tone="elevated" radius="2xl" padding="none" className="p-4 sm:p-5 space-y-3">
               <div className="flex items-center justify-between pb-0.5 border-b border-border-color/40">
-                <span className="font-bold text-text-secondary uppercase tracking-wider text-[11px] font-mono flex items-center gap-1.5">
+                <span className="font-bold text-text-secondary uppercase tracking-wider text-[11px] flex items-center gap-1.5">
                   <Compass className="h-3.5 w-3.5 text-accent-red" />
                   {roleAffinityLabel}
                 </span>
                 {persona.totalSmashes !== undefined && (
-                  <span className="text-[10px] font-mono text-text-muted">
+                  <span className="text-[10px] text-text-muted">
                     {persona.totalSmashes > 0
                       ? `${persona.totalSmashes} ${rawSmash?.statsDetail?.smashCount || 'smashes'}`
                       : noSmashesRecordedLabel}
@@ -561,7 +561,7 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
                 )}
               </div>
 
-              <div className="flex justify-between items-center text-xs font-bold font-mono">
+              <div className="flex justify-between items-center text-xs font-bold">
                 <span className="flex items-center gap-1.5 text-accent-green">
                   <SurvivorIcon className="h-4 w-4" aria-hidden="true" />
                   <span>

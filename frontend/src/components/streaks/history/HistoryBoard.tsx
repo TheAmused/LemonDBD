@@ -185,7 +185,7 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
                 {dict?.streaks?.pickYourKiller || 'Pick your killer'}
               </h3>
               {run && (
-                <p className="text-xs text-text-muted font-mono">
+                <p className="text-xs text-text-muted">
                   {dict?.streaks?.rowLabel || 'Row'} {run.current_row_index + 1}{' '}
                   {dict?.streaks?.ofLabel || 'of'} {run.total_rows}
                 </p>

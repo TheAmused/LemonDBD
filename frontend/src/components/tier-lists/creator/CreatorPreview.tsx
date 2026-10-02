@@ -84,7 +84,7 @@ export function CreatorPreview({ title, description, tiers, items, backgroundIma
       <div className="flex flex-col items-center gap-2 w-full">
         <div className="flex items-center justify-center gap-2 px-1">
           <span className="text-xs font-black uppercase tracking-wider text-text-muted">{t.unranked}</span>
-          <span className="rounded-full bg-accent-red/10 px-2 py-0.5 text-[11px] font-bold text-accent-red border border-accent-red/25 font-mono">
+          <span className="rounded-full bg-accent-red/10 px-2 py-0.5 text-[11px] font-bold text-accent-red border border-accent-red/25">
             {tiles.length}
           </span>
         </div>

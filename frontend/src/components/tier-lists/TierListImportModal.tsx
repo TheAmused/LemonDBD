@@ -108,7 +108,7 @@ export function TierListImportModal({ open, target, sharePayload, onClose, onImp
         if (result?.ok && canImport) onImport(result.doc);
       }}
       labelClassName={LABEL}
-      fieldClassName={`${TOUCH_FIELD} py-2 font-mono text-xs leading-relaxed`}
+      fieldClassName={`${TOUCH_FIELD} py-2 text-xs leading-relaxed`}
       buttonClassName={TOUCH_BTN}
       cancelClassName={`${TOUCH_BTN} min-h-[42px] px-5`}
       importClassName={`${TOUCH_BTN} min-h-[42px] px-6`}

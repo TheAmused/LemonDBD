@@ -514,7 +514,7 @@ export const SmashAnimations: React.FC<SmashAnimationsProps> = ({
                 <Heart className="h-16 w-16 sm:h-20 sm:w-20 text-accent-red fill-accent-red drop-shadow-[0_0_30px_var(--accent-red)] animate-pulse" />
                 <Skull className="absolute h-8 w-8 sm:h-10 sm:w-10 text-bg-primary/80 drop-shadow" />
               </div>
-              <span className="text-xl sm:text-2xl font-black uppercase tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-accent-red-hover via-accent-red to-accent-red-hover drop-shadow-[0_0_20px_var(--accent-red)] font-mono">
+              <span className="text-xl sm:text-2xl font-black uppercase tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-accent-red-hover via-accent-red to-accent-red-hover drop-shadow-[0_0_20px_var(--accent-red)]">
                 {smashLabel}
               </span>
             </div>
@@ -531,7 +531,7 @@ export const SmashAnimations: React.FC<SmashAnimationsProps> = ({
                 <Flame className="h-20 w-20 sm:h-24 sm:w-24 text-accent-amber fill-accent-amber drop-shadow-[0_0_35px_var(--accent-amber)] animate-bounce" />
                 <Zap className="absolute h-10 w-10 sm:h-12 sm:w-12 text-accent-red fill-accent-red drop-shadow-[0_0_20px_var(--accent-red)] animate-pulse" />
               </div>
-              <span className="text-2xl sm:text-3xl font-black uppercase tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-accent-amber via-accent-amber-hover to-accent-red drop-shadow-[0_0_25px_var(--accent-amber)] font-mono">
+              <span className="text-2xl sm:text-3xl font-black uppercase tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-accent-amber via-accent-amber-hover to-accent-red drop-shadow-[0_0_25px_var(--accent-amber)]">
                 {superSmashLabel}
               </span>
             </div>
@@ -545,7 +545,7 @@ export const SmashAnimations: React.FC<SmashAnimationsProps> = ({
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="flex flex-col items-center gap-2 animate-in zoom-in-75 fade-in duration-150 opacity-90">
               <Skull className="h-16 w-16 sm:h-20 sm:w-20 text-text-muted drop-shadow-[0_0_25px_var(--text-muted)]" />
-              <span className="text-lg sm:text-xl font-black uppercase tracking-widest text-text-muted drop-shadow font-mono">
+              <span className="text-lg sm:text-xl font-black uppercase tracking-widest text-text-muted drop-shadow">
                 {passLabel}
               </span>
             </div>

@@ -70,7 +70,7 @@ export const AdminReasonModal: React.FC<AdminReasonModalProps> = ({
         placeholder={dict?.admin?.reasonPlaceholder || ''}
         className="resize-none"
       />
-      <p className="text-right text-[10px] text-text-muted font-mono">{reason.length}/255</p>
+      <p className="text-right text-[10px] text-text-muted">{reason.length}/255</p>
     </Modal>
   );
 };

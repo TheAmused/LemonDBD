@@ -406,7 +406,7 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
       </section>
 
       {loading && (
-        <div className="py-16 text-center text-xs text-text-muted font-mono">
+        <div className="py-16 text-center text-xs text-text-muted">
           {dict?.maps?.loadingTacticalMaps || 'Loading Tactical Maps...'}
         </div>
       )}
@@ -454,7 +454,7 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
                   <h2 className="absolute top-2 left-2 right-2 text-center text-sm sm:text-base font-black text-text-inverted tracking-tight line-clamp-2">
                     {realm}
                   </h2>
-                  <span className="absolute bottom-2 right-2 rounded-full bg-bg-primary/70 px-2 py-0.5 text-xs font-mono text-text-inverted">
+                  <span className="absolute bottom-2 right-2 rounded-full bg-bg-primary/70 px-2 py-0.5 text-xs text-text-inverted">
                     {realmMaps.length}
                   </span>
                 </button>

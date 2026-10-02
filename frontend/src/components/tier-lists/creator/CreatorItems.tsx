@@ -29,7 +29,7 @@ export function CreatorItems({ items, onRename, onUpdateItem, onRemove, onClear,
     <div className="flex flex-col gap-3">
       <div className="flex items-center justify-between gap-2 w-full">
         <div className="w-20 hidden sm:block pointer-events-none" aria-hidden="true" />
-        <h3 className="flex-1 text-center text-xs sm:text-sm font-black uppercase tracking-wider text-text-secondary font-mono">
+        <h3 className="flex-1 text-center text-xs sm:text-sm font-black uppercase tracking-wider text-text-secondary">
           {c.itemsHeading.replace('{count}', String(items.length)).replace('{max}', String(TIER_LIST_LIMITS.maxItems))}
         </h3>
         <div className="w-20 flex justify-end">
@@ -62,7 +62,7 @@ export function CreatorItems({ items, onRename, onUpdateItem, onRemove, onClear,
                     className="h-full w-full object-cover transition-transform duration-200 group-hover/item:scale-105"
                   />
                 ) : (
-                  <span className="text-base sm:text-lg font-black font-mono text-text-muted select-none">
+                  <span className="text-base sm:text-lg font-black text-text-muted select-none">
                     {item.name.slice(0, 2).toUpperCase() || '?'}
                   </span>
                 )}

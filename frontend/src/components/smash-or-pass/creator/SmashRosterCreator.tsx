@@ -780,7 +780,7 @@ export function SmashRosterCreator({ locale, dict, editId }: SmashRosterCreatorP
                       referrerPolicy="no-referrer"
                       className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                     />
-                    <div className="absolute inset-0 bg-bg-primary/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-1.5 text-text-inverted font-mono text-xs font-bold">
+                    <div className="absolute inset-0 bg-bg-primary/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-1.5 text-text-inverted text-xs font-bold">
                       <Crop className="h-5 w-5 text-accent-red" />
                       <span>{c.cropClickPrompt}</span>
                     </div>
@@ -814,7 +814,7 @@ export function SmashRosterCreator({ locale, dict, editId }: SmashRosterCreatorP
                       onChange={(checked) => patch({ roster_mode: checked ? 'simple' : 'full' })}
                       ariaLabel={c.simpleVersion || 'Simple Version'}
                     />
-                    <span className="text-xs sm:text-sm font-mono font-bold text-text-primary group-hover:text-accent-red transition-colors">
+                    <span className="text-xs sm:text-sm font-bold text-text-primary group-hover:text-accent-red transition-colors">
                       {c.simpleVersion || 'Simple Version'}
                     </span>
                   </div>
@@ -834,7 +834,7 @@ export function SmashRosterCreator({ locale, dict, editId }: SmashRosterCreatorP
                       onChange={(checked) => patch({ is_nsfw: checked })}
                       ariaLabel={c.nsfwLabel || 'Contains NSFW content'}
                     />
-                    <span className="text-xs sm:text-sm font-mono font-bold text-text-primary group-hover:text-accent-red transition-colors">
+                    <span className="text-xs sm:text-sm font-bold text-text-primary group-hover:text-accent-red transition-colors">
                       {c.nsfwLabel || 'Contains NSFW content'}
                     </span>
                   </div>
@@ -855,7 +855,7 @@ export function SmashRosterCreator({ locale, dict, editId }: SmashRosterCreatorP
                         onChange={(checked) => setOfficial(checked)}
                         ariaLabel={c.officialPublicHub || 'Official Roster (Public on Hub)'}
                       />
-                      <span className="text-xs sm:text-sm font-mono font-bold text-accent-red group-hover:underline transition-colors">
+                      <span className="text-xs sm:text-sm font-bold text-accent-red group-hover:underline transition-colors">
                         {c.officialPublicHub || 'Official (Public on Hub)'}
                       </span>
                     </div>
@@ -963,7 +963,7 @@ export function SmashRosterCreator({ locale, dict, editId }: SmashRosterCreatorP
           <div className="flex flex-col gap-6">
             {draft.entities.length === 0 ? (
               <div className="flex flex-col items-center justify-center p-8 text-center rounded-xl border border-dashed border-border-color bg-bg-elevated/20">
-                <p className="text-sm text-text-muted mb-3 font-mono">
+                <p className="text-sm text-text-muted mb-3">
                   {c.noEntitiesYet || 'No candidates yet. Add your first one above.'}
                 </p>
                 <Button
@@ -1084,11 +1084,11 @@ function Section({ title, badge, defaultOpen = true, headerAction, toggleAria, c
           aria-expanded={isOpen}
           className="flex-1 flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 min-w-0 px-1 sm:px-2 cursor-pointer select-none text-center"
         >
-          <h2 className="text-xs sm:text-sm 2xl:text-base font-black uppercase tracking-widest text-text-primary hover:text-accent-red transition-colors font-mono">
+          <h2 className="text-xs sm:text-sm 2xl:text-base font-black uppercase tracking-widest text-text-primary hover:text-accent-red transition-colors">
             {title}
           </h2>
           {badge !== undefined && (
-            <Badge size="sm" plain className="font-mono">
+            <Badge size="sm" plain className="">
               {badge}
             </Badge>
           )}

@@ -137,7 +137,7 @@ export default function UserProfilePage() {
           <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-accent-amber/15 border border-accent-amber/30">
             <LemonIcon className="h-10 w-10 text-accent-amber" />
           </div>
-          <h1 className="text-xl sm:text-2xl font-black tracking-wider font-mono text-text-primary">
+          <h1 className="text-xl sm:text-2xl font-black tracking-wider text-text-primary">
             {dict?.user?.authRequiredTitle || 'Authentication Required'}
           </h1>
           <p className="text-xs text-text-secondary leading-relaxed">
@@ -154,7 +154,7 @@ export default function UserProfilePage() {
             </Button>
             <Link
               href={`/${currentLocale}`}
-              className="text-xs text-text-muted hover:text-accent-amber transition-colors py-1 font-mono"
+              className="text-xs text-text-muted hover:text-accent-amber transition-colors py-1"
             >
               {dict?.user?.returnToHome || 'Return to Home'}
             </Link>

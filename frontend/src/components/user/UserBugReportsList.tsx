@@ -118,21 +118,21 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
     switch (status) {
       case 'in_progress':
         return (
-          <span className="inline-flex items-center gap-1.5 rounded-lg border border-accent-amber/30 bg-accent-amber/10 px-2.5 py-1 text-[10px] font-black uppercase tracking-wider text-accent-amber font-mono">
+          <span className="inline-flex items-center gap-1.5 rounded-lg border border-accent-amber/30 bg-accent-amber/10 px-2.5 py-1 text-[10px] font-black uppercase tracking-wider text-accent-amber">
             <Clock className="h-3 w-3 animate-spin" />
             <span>{t.statusInProgress || 'In Progress'}</span>
           </span>
         );
       case 'resolved':
         return (
-          <span className="inline-flex items-center gap-1.5 rounded-lg border border-accent-green/30 bg-accent-green/10 px-2.5 py-1 text-[10px] font-black uppercase tracking-wider text-accent-green font-mono">
+          <span className="inline-flex items-center gap-1.5 rounded-lg border border-accent-green/30 bg-accent-green/10 px-2.5 py-1 text-[10px] font-black uppercase tracking-wider text-accent-green">
             <CheckCircle className="h-3 w-3" />
             <span>{t.statusResolved || 'Resolved'}</span>
           </span>
         );
       case 'rejected':
         return (
-          <span className="inline-flex items-center gap-1.5 rounded-lg border border-border-color bg-bg-elevated px-2.5 py-1 text-[10px] font-black uppercase tracking-wider text-text-muted font-mono">
+          <span className="inline-flex items-center gap-1.5 rounded-lg border border-border-color bg-bg-elevated px-2.5 py-1 text-[10px] font-black uppercase tracking-wider text-text-muted">
             <XCircle className="h-3 w-3" />
             <span>{t.statusClosed || 'Closed'}</span>
           </span>
@@ -140,7 +140,7 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
       case 'pending':
       default:
         return (
-          <span className="inline-flex items-center gap-1.5 rounded-lg border border-accent-red/30 bg-accent-red/10 px-2.5 py-1 text-[10px] font-black uppercase tracking-wider text-accent-red font-mono">
+          <span className="inline-flex items-center gap-1.5 rounded-lg border border-accent-red/30 bg-accent-red/10 px-2.5 py-1 text-[10px] font-black uppercase tracking-wider text-accent-red">
             <HelpCircle className="h-3 w-3" />
             <span>{t.statusPending || 'Pending'}</span>
           </span>
@@ -152,7 +152,7 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
     <div className="space-y-3.5 w-full flex flex-col">
       {!hideHeading ? (
         <div className="flex items-center justify-between gap-3 pb-2.5 border-b border-border-color shrink-0">
-          <h2 className="text-sm sm:text-base font-black tracking-wider text-text-primary font-mono flex items-center gap-2">
+          <h2 className="text-sm sm:text-base font-black tracking-wider text-text-primary flex items-center gap-2">
             <FogReportIcon className="h-4 w-4 text-accent-red" />
             <span>{t.bugReportsTitle || 'Your Submitted Bug Reports'}</span>
           </h2>
@@ -209,12 +209,12 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
                 >
                   <div className="space-y-1 min-w-0 flex-1">
                     <div className="flex items-center gap-2.5 flex-wrap">
-                      <span className="font-mono text-xs text-text-muted font-bold">#{report.id}</span>
-                      <h3 className="text-sm sm:text-base font-black text-text-primary font-mono truncate">
+                      <span className="text-xs text-text-muted font-bold">#{report.id}</span>
+                      <h3 className="text-sm sm:text-base font-black text-text-primary truncate">
                         {report.title}
                       </h3>
                     </div>
-                    <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-[11px] text-text-secondary font-mono">
+                    <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-[11px] text-text-secondary">
                       <span className="rounded-lg bg-bg-elevated text-text-primary px-2 py-0.5 font-bold border border-border-color">
                         {report.category}
                       </span>
@@ -252,7 +252,7 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
                       {/* Attachments with click to open popup modal */}
                       {report.images && report.images.length > 0 && (
                         <div className="space-y-1.5 pt-1">
-                          <span className="text-[10px] font-extrabold uppercase tracking-wider text-text-muted flex items-center gap-1 font-mono">
+                          <span className="text-[10px] font-extrabold uppercase tracking-wider text-text-muted flex items-center gap-1">
                             <ImageIcon className="h-3 w-3 text-accent-red" />
                             {t.attachments || 'Attachments'} ({report.images.length})
                           </span>
@@ -290,7 +290,7 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
                       {/* Developer Admin Response */}
                       {report.admin_notes && (
                         <div className="mt-2 rounded-xl border border-accent-amber/30 bg-accent-amber/10 p-3 space-y-1">
-                          <div className="flex items-center gap-2 text-accent-amber text-xs font-bold font-mono">
+                          <div className="flex items-center gap-2 text-accent-amber text-xs font-bold">
                             <OverseerEyeIcon className="h-3.5 w-3.5" />
                             <span>{t.devResponse || 'Developer Response'}</span>
                           </div>

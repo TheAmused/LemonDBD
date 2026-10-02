@@ -45,7 +45,7 @@ export const StartRunPanel: React.FC<StartRunPanelProps> = ({ killer, busy, onSt
       <h3 className="text-base font-extrabold text-text-primary">
         {dict?.streaks?.readyForPrefix || 'Ready for'} {pageCount ?? '…'} {dict?.streaks?.pagesOnSuffix || 'pages on'} {killer}?
       </h3>
-      <div className="flex flex-wrap justify-center gap-5 font-mono text-[11px] text-text-muted">
+      <div className="flex flex-wrap justify-center gap-5 text-[11px] text-text-muted">
         <span>{dict?.streaks?.perksCount || 'perks'} <b className="text-text-primary tabular-nums">{poolSize ?? '—'}</b></span>
         <span>{dict?.streaks?.pagesCount || 'pages'} <b className="text-text-primary tabular-nums">{pageCount ?? '—'}</b></span>
         <span>{dict?.streaks?.lastPage || 'last page'} <b className="text-text-primary tabular-nums">{lastPageSize ?? '—'}</b> {dict?.streaks?.perksCount || 'perks'}</span>

@@ -121,7 +121,7 @@ export function ExportModal<D>({
       title={labels.title}
       subtitle={labels.subtitle}
       icon={<Share2 className="h-5 w-5" aria-hidden="true" />}
-      bodyClassName="p-4 sm:p-6 font-sans"
+      bodyClassName="p-4 sm:p-6"
     >
       <div className="flex flex-col gap-6">
         <section className="flex flex-col gap-2">
@@ -134,7 +134,7 @@ export function ExportModal<D>({
               readOnly
               value={shareUrl || labels.preparingLink}
               onFocus={(e) => e.currentTarget.select()}
-              className={cn(fieldClassName, 'font-mono')}
+              className={cn(fieldClassName, '')}
             />
             <Button
               variant="primary"
@@ -165,7 +165,7 @@ export function ExportModal<D>({
             value={json}
             rows={10}
             onFocus={(e) => e.currentTarget.select()}
-            className={cn(jsonFieldClassName ?? fieldClassName, 'font-mono leading-relaxed')}
+            className={cn(jsonFieldClassName ?? fieldClassName, ' leading-relaxed')}
           />
           <div className={cn('flex flex-wrap gap-2', actionsClassName)}>
             <Button variant="secondary" onClick={() => downloadTextFile(json, fileName(doc))} className={buttonClassName}>

@@ -79,14 +79,14 @@ const CharacterGridItem: React.FC<{
             unoptimized
           />
         ) : (
-          <div className="w-full h-full flex flex-col items-center justify-center text-text-primary text-sm font-bold font-mono">
+          <div className="w-full h-full flex flex-col items-center justify-center text-text-primary text-sm font-bold">
             <span>{char.name.slice(0, 2).toUpperCase()}</span>
           </div>
         )}
       </div>
 
       {/* Name */}
-      <span className="text-xs font-bold font-mono text-text-primary group-hover:text-accent-amber line-clamp-1">
+      <span className="text-xs font-bold text-text-primary group-hover:text-accent-amber line-clamp-1">
         {char.name}
       </span>
 
@@ -166,7 +166,7 @@ export const ShowcaseCharacterModal: React.FC<ShowcaseCharacterModalProps> = ({
       {/* Search Bar */}
       <div className="p-4 bg-bg-elevated/40 shrink-0">
         <SearchInput
-          className="font-mono"
+          className=""
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder={dict?.user?.searchCharacters || 'Search characters...'}
@@ -179,7 +179,7 @@ export const ShowcaseCharacterModal: React.FC<ShowcaseCharacterModalProps> = ({
         {loading ? (
           <div className="flex flex-col items-center justify-center py-16 space-y-3">
             <Spinner size="lg" tone="amber" />
-            <p className="text-xs text-text-muted font-mono">
+            <p className="text-xs text-text-muted">
               {dict?.user?.loadingCharacters || 'Consulting the Fog...'}
             </p>
           </div>

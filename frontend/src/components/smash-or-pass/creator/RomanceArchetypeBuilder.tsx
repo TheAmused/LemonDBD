@@ -123,12 +123,12 @@ export function RomanceArchetypeBuilder({
           {!embedded && (
             <div className="flex items-center gap-2">
               <Sparkles className="h-5 w-5 text-accent-red" />
-              <h3 className="text-sm sm:text-base font-black uppercase tracking-wider font-mono text-text-primary">
+              <h3 className="text-sm sm:text-base font-black uppercase tracking-wider text-text-primary">
                 {ab.sectionTitle}
               </h3>
             </div>
           )}
-          <p className="text-xs text-text-muted mt-0.5 leading-relaxed font-mono">
+          <p className="text-xs text-text-muted mt-0.5 leading-relaxed">
             {ab.sectionDesc}
           </p>
         </div>
@@ -143,7 +143,7 @@ export function RomanceArchetypeBuilder({
       </div>
 
       {archetypes.length === 0 ? (
-        <div className="p-4 rounded-2xl border border-dashed border-border-color text-center text-xs text-text-muted font-mono">
+        <div className="p-4 rounded-2xl border border-dashed border-border-color text-center text-xs text-text-muted">
           {ab.noArchetypes}
         </div>
       ) : (
@@ -172,7 +172,7 @@ export function RomanceArchetypeBuilder({
                     </div>
                     <div className="min-w-0">
                       <div className="flex items-center gap-2">
-                        <span className="text-xs sm:text-sm font-black text-text-primary font-mono truncate">
+                        <span className="text-xs sm:text-sm font-black text-text-primary truncate">
                           {arch.title || `${ab.titleLabel} #${idx + 1}`}
                         </span>
                         {arch.is_fallback && (
@@ -301,7 +301,7 @@ export function RomanceArchetypeBuilder({
                               type="button"
                               onClick={() => updateArchetype(arch.id, { badge_color: color.value })}
                               className={cn(
-                                'text-[11px] px-2.5 py-1 rounded-xl border transition-all cursor-pointer font-mono font-bold',
+                                'text-[11px] px-2.5 py-1 rounded-xl border transition-all cursor-pointer font-bold',
                                 arch.badge_color === color.value
                                   ? 'border-accent-red bg-accent-red/20 text-text-primary'
                                   : 'border-border-color bg-bg-surface text-text-muted hover:text-text-primary'

@@ -73,7 +73,7 @@ export const ChallengeCompletionHistoryDrawer: React.FC<ChallengeCompletionHisto
                 )}
               </div>
               {entry.completed_at && (
-                <div className="text-[11px] text-text-secondary font-mono">
+                <div className="text-[11px] text-text-secondary">
                   {new Date(entry.completed_at).toLocaleDateString()}
                 </div>
               )}

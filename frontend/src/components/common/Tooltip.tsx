@@ -38,7 +38,7 @@ export const TOOLTIP_CONFIG = {
     },
     item: {
       content: 'border-accent-amber/50',
-      title: 'font-mono text-xs sm:text-sm normal-case tracking-normal text-accent-amber',
+      title: ' text-xs sm:text-sm normal-case tracking-normal text-accent-amber',
       arrowBorder: 'color-mix(in srgb, var(--accent-amber) 50%, transparent)',
     },
     /** Buttons, toggles and other controls: a short verb-like label. */

@@ -310,7 +310,7 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
         </div>
 
         {characters.length === 0 && perks.length === 0 && loading ? (
-          <p className="text-xs text-text-muted py-6 text-center font-mono">{dict?.admin?.loading || 'Loading...'}</p>
+          <p className="text-xs text-text-muted py-6 text-center">{dict?.admin?.loading || 'Loading...'}</p>
         ) : (
           <div className={`transition-opacity duration-150 ${loading ? 'opacity-50' : ''}`}>
             {subTab === 'killers' ? (

@@ -39,7 +39,7 @@ function AboutSection({ id, heading, className = '', children }: AboutSectionPro
         className="relative w-full flex items-center justify-center py-4 px-12 sm:px-14 cursor-pointer group select-none text-center shrink-0"
         aria-expanded={isExpanded}
       >
-        <h2 className="text-xs sm:text-sm font-bold uppercase tracking-widest text-accent-red font-mono text-center">
+        <h2 className="text-xs sm:text-sm font-bold uppercase tracking-widest text-accent-red text-center">
           {heading}
         </h2>
         <ChevronDown
@@ -93,7 +93,7 @@ function SyncedAboutCard({
           className="relative w-full flex items-center justify-center py-4 px-12 sm:px-14 cursor-pointer group select-none text-center shrink-0"
           aria-expanded={isExpanded}
         >
-          <h2 className="text-xs sm:text-sm font-bold uppercase tracking-widest text-accent-red font-mono text-center">
+          <h2 className="text-xs sm:text-sm font-bold uppercase tracking-widest text-accent-red text-center">
             {section.heading}
           </h2>
           <ChevronDown
@@ -121,7 +121,7 @@ function SyncedAboutCard({
         className="col-start-1 row-start-1 invisible pointer-events-none select-none hidden lg:flex flex-col rounded-3xl border border-transparent"
       >
         <div className="py-4 px-12 sm:px-14 shrink-0">
-          <h2 className="text-xs sm:text-sm font-bold uppercase tracking-widest font-mono text-center opacity-0">
+          <h2 className="text-xs sm:text-sm font-bold uppercase tracking-widest text-center opacity-0">
             {section.heading}
           </h2>
         </div>
@@ -194,7 +194,7 @@ export default function AboutPage() {
       <div className="relative z-10 mx-auto my-auto flex w-full max-w-5xl xl:max-w-6xl flex-col gap-6 sm:gap-8 py-6 sm:py-10">
         {/* Header */}
         <header className="flex flex-col items-center text-center gap-2.5 sm:gap-3 pt-2 sm:pt-4">
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-black font-mono tracking-tight text-text-primary">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-black tracking-tight text-text-primary">
             {pageHeading}
           </h1>
           {about?.features?.paragraphs?.[0] ? (
@@ -266,7 +266,7 @@ export default function AboutPage() {
           <div className="lg:col-span-2 flex justify-center">
             <Link
               href={`/${locale}/privacy-policy`}
-              className="inline-flex items-center gap-2 rounded-full border border-border-color bg-bg-surface px-5 py-2.5 text-xs sm:text-sm font-bold uppercase tracking-widest font-mono text-accent-red shadow-md backdrop-blur-xl transition-colors hover:border-accent-red/50 hover:bg-bg-elevated"
+              className="inline-flex items-center gap-2 rounded-full border border-border-color bg-bg-surface px-5 py-2.5 text-xs sm:text-sm font-bold uppercase tracking-widest text-accent-red shadow-md backdrop-blur-xl transition-colors hover:border-accent-red/50 hover:bg-bg-elevated"
             >
               <ShieldCheck className="h-4 w-4" aria-hidden="true" />
               {dict?.privacy?.heading}

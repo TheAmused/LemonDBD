@@ -827,7 +827,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
                 {t?.skipButton || 'Skip'}
               </button>
             </div>
-            <h1 className="text-lg sm:text-xl md:text-2xl font-black font-mono tracking-tight text-text-primary px-2">
+            <h1 className="text-lg sm:text-xl md:text-2xl font-black tracking-tight text-text-primary px-2">
               {t?.heading || 'Which characters do you already own?'}
             </h1>
             <p className="text-xs sm:text-sm text-text-secondary max-w-xl mx-auto px-2">
@@ -849,7 +849,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
 
           {/* Legend Section ("Jak to działa") */}
           <section className="flex flex-col items-center text-center space-y-1.5 sm:space-y-2">
-            <h2 className="text-sm sm:text-base md:text-lg font-black uppercase tracking-wider text-text-primary font-mono">
+            <h2 className="text-sm sm:text-base md:text-lg font-black uppercase tracking-wider text-text-primary">
               {t?.legendTitle || 'How this works'}
             </h2>
             <div className="grid grid-cols-3 items-start justify-items-center gap-2 sm:gap-6 w-full max-w-xl mx-auto">
@@ -930,7 +930,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
           <section className="space-y-3">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
               <div className="flex items-center gap-2.5">
-                <span className="text-xs font-black uppercase tracking-wider text-text-secondary font-mono">
+                <span className="text-xs font-black uppercase tracking-wider text-text-secondary">
                   {t?.chaptersTitle || 'Chapters'}
                 </span>
                 <span className="rounded-full border border-border-color bg-bg-elevated px-2 py-0.5 text-[11px] font-bold text-text-secondary">
@@ -982,7 +982,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
                     >
                       {isAllOwned && <Check className="h-3 w-3 sm:h-3.5 sm:w-3.5 stroke-[3]" />}
                     </span>
-                    <span className="text-xs font-bold font-mono tracking-tight">
+                    <span className="text-xs font-bold tracking-tight">
                       {t?.selectAllButton || 'I own everything'}
                     </span>
                   </button>

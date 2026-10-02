@@ -88,7 +88,7 @@ export function SmashRosterImportModal({ isOpen, onClose, sharePayload, onImport
       canImport={canImport}
       onImport={doImport}
       labelClassName={LABEL}
-      fieldClassName="font-mono sm:text-xs leading-relaxed"
+      fieldClassName="sm:text-xs leading-relaxed"
       buttonClassName="min-h-[44px]"
     >
       {fileError && <Notice tone="error" text={t.readFileError || 'Could not read that file.'} />}

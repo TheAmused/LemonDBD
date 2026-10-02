@@ -209,12 +209,12 @@ export const TactileKeycaps: React.FC<TactileKeycapsProps> = ({
               } ${disabled ? 'opacity-40 cursor-not-allowed pointer-events-none' : 'active:translate-y-1'}`}
             >
               {/* Primary Key / Icon */}
-              <div className={`flex items-center justify-center font-mono font-black text-sm sm:text-base ${cap.colorTheme.text}`}>
+              <div className={`flex items-center justify-center font-black text-sm sm:text-base ${cap.colorTheme.text}`}>
                 {cap.primaryKey}
               </div>
 
               {/* Sub-Legend Letter */}
-              <span className={`text-[10px] font-bold font-mono tracking-wider transition-colors ${
+              <span className={`text-[10px] font-bold tracking-wider transition-colors ${
                 isActive
                   ? 'text-text-primary'
                   : 'text-text-muted group-hover:text-text-primary'

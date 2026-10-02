@@ -829,7 +829,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
         <div className="flex flex-col lg:flex-row items-center justify-between gap-3 sm:gap-4 w-full">
           {/* LEFT: Live Session Telemetry Capsule */}
           <div className="flex items-center justify-center lg:justify-start w-full lg:w-auto order-2 lg:order-1 shrink-0">
-            <div className="flex items-center gap-2 sm:gap-2.5 px-3.5 py-2 rounded-2xl bg-bg-elevated border border-border-color text-xs sm:text-sm font-mono shadow-inner">
+            <div className="flex items-center gap-2 sm:gap-2.5 px-3.5 py-2 rounded-2xl bg-bg-elevated border border-border-color text-xs sm:text-sm shadow-inner">
               <span className="flex items-center gap-1.5 text-text-secondary font-bold">
                 <Layers className="h-4 w-4 text-text-secondary" />
                 <span className="text-text-primary font-black text-sm sm:text-base">{remainingInDeck}</span>
@@ -861,7 +861,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
             <button
               type="button"
               onClick={() => setIsRosterModalOpen(true)}
-              className="flex items-center gap-2.5 sm:gap-3 px-3.5 sm:px-4 py-2 sm:py-2.5 min-h-[44px] rounded-2xl bg-bg-surface border border-accent-red/50 hover:border-accent-red text-xs sm:text-sm font-mono font-bold text-accent-red transition-all cursor-pointer group shrink-0 touch-manipulation"
+              className="flex items-center gap-2.5 sm:gap-3 px-3.5 sm:px-4 py-2 sm:py-2.5 min-h-[44px] rounded-2xl bg-bg-surface border border-accent-red/50 hover:border-accent-red text-xs sm:text-sm font-bold text-accent-red transition-all cursor-pointer group shrink-0 touch-manipulation"
             >
               <span className="relative flex h-5 w-5 sm:h-6 sm:w-6 items-center justify-center rounded-lg overflow-hidden border border-accent-red/60 shrink-0">
                 <img
@@ -1017,7 +1017,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
             >
               <div className="flex flex-col md:flex-row items-center justify-between gap-3">
                 {/* Role Segmented Switch */}
-                <div className="flex items-center gap-1 p-1 bg-bg-elevated border border-border-color rounded-2xl w-full md:w-auto shadow-inner text-xs font-mono font-bold overflow-x-auto">
+                <div className="flex items-center gap-1 p-1 bg-bg-elevated border border-border-color rounded-2xl w-full md:w-auto shadow-inner text-xs font-bold overflow-x-auto">
                   <button
                     type="button"
                     onClick={() => handleFilterChange('role', 'all')}
@@ -1051,7 +1051,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
                 </div>
 
                 {/* Gender Segmented Switch */}
-                <div className="flex items-center gap-1 p-1 bg-bg-elevated border border-border-color rounded-2xl w-full md:w-auto shadow-inner text-xs font-mono font-bold overflow-x-auto">
+                <div className="flex items-center gap-1 p-1 bg-bg-elevated border border-border-color rounded-2xl w-full md:w-auto shadow-inner text-xs font-bold overflow-x-auto">
                   <button
                     type="button"
                     onClick={() => handleFilterChange('gender', 'all')}
@@ -1113,7 +1113,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
               <div className="flex h-14 w-14 sm:h-16 sm:w-16 items-center justify-center rounded-2xl bg-accent-red/15 border border-accent-red/40 text-accent-red">
                 <AlertTriangle className="h-7 w-7 sm:h-8 sm:w-8" aria-hidden="true" />
               </div>
-              <h3 className="text-base sm:text-lg font-black font-mono text-text-primary">
+              <h3 className="text-base sm:text-lg font-black text-text-primary">
                 {dict?.smashOrPass?.nsfw?.title || 'Contains NSFW Content'}
               </h3>
               <p className="text-xs sm:text-sm text-text-muted">
@@ -1134,7 +1134,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
           <div className="relative flex flex-col items-center justify-center min-h-[460px] sm:min-h-[520px] pointer-events-auto select-none animate-pulse">
             <div className="w-[88vw] max-w-[340px] sm:max-w-[380px] md:max-w-[420px] aspect-[9/14] sm:aspect-[9/15] rounded-[32px] sm:rounded-[36px] bg-bg-primary border-2 border-accent-red/30 flex flex-col items-center justify-center p-6 space-y-4">
               <Heart className="h-12 w-12 text-accent-red fill-accent-red/30 animate-pulse" />
-              <span className="text-xs font-mono text-text-secondary text-center font-semibold">
+              <span className="text-xs text-text-secondary text-center font-semibold">
                 {dict?.smashOrPass?.loadingRosterPrefix || 'Loading'} {activeRoster.name || selectedRosterSlug} {dict?.smashOrPass?.loadingRosterSuffix || 'from Database...'}
               </span>
               <div className="h-1.5 w-32 rounded-full bg-bg-elevated overflow-hidden">
@@ -1249,14 +1249,14 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
             </div>
 
             <div className="space-y-1">
-              <h3 className="text-xl font-black font-mono text-text-primary">{dict?.smashOrPass?.empty?.title || 'All Candidates Evaluated!'}</h3>
+              <h3 className="text-xl font-black text-text-primary">{dict?.smashOrPass?.empty?.title || 'All Candidates Evaluated!'}</h3>
               <p className="text-xs text-text-muted">
                 {dict?.smashOrPass?.empty?.subtitle || `You have completed all available candidates in ${activeRoster.name || selectedRosterSlug}.`}
               </p>
             </div>
 
             {/* Session Stats Summary */}
-            <div className="grid grid-cols-2 gap-3 py-2 font-mono">
+            <div className="grid grid-cols-2 gap-3 py-2">
               <Surface tone="elevated" radius="2xl" padding="none" className="p-4">
                 <span className="text-xs text-accent-red font-bold uppercase">{dict?.smashOrPass?.smash || 'Smash'}</span>
                 <p className="text-2xl font-black text-text-primary">{sessionSmashes}</p>
@@ -1301,12 +1301,12 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
         closeButtonAriaLabel={dict?.modal?.close || ''}
         bodyClassName="p-5 sm:p-6"
       >
-      <div className="space-y-3.5 text-xs text-text-secondary font-sans">
+      <div className="space-y-3.5 text-xs text-text-secondary">
         {/* 1. Drag / Swipe */}
         <Surface tone="elevated" radius="2xl" padding="sm" className="flex items-start gap-3">
           <span className="text-xl shrink-0">{dict?.smashOrPass?.howToPlayModal?.swipeIcon || '👆'}</span>
           <div>
-            <span className="font-bold text-accent-red block text-xs font-mono">
+            <span className="font-bold text-accent-red block text-xs">
               {dict?.smashOrPass?.howToPlayModal?.swipeTitle || 'Swipe or Drag Cards'}
             </span>
             <p className="text-text-muted leading-relaxed pt-0.5">
@@ -1319,7 +1319,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
         <Surface tone="elevated" radius="2xl" padding="sm" className="flex items-start gap-3">
           <span className="text-xl shrink-0">{dict?.smashOrPass?.howToPlayModal?.iconsIcon || '🎯'}</span>
           <div>
-            <span className="font-bold text-accent-red block text-xs font-mono">
+            <span className="font-bold text-accent-red block text-xs">
               {dict?.smashOrPass?.howToPlayModal?.iconsTitle || 'On-Card Action Icons'}
             </span>
             <p className="text-text-muted leading-relaxed pt-0.5">
@@ -1332,7 +1332,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
         <Surface tone="elevated" radius="2xl" padding="sm" className="space-y-2">
           <div className="flex items-center gap-2">
             <span className="text-xl shrink-0">{dict?.smashOrPass?.howToPlayModal?.keycapsIcon || '⌨️'}</span>
-            <span className="font-bold text-accent-red block text-xs font-mono">
+            <span className="font-bold text-accent-red block text-xs">
               {dict?.smashOrPass?.howToPlayModal?.keycapsTitle || 'Tactile Keyboard Keycaps'}
             </span>
           </div>
@@ -1362,7 +1362,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
         <Surface tone="elevated" radius="2xl" padding="sm" className="flex items-start gap-3">
           <span className="text-xl shrink-0">{dict?.smashOrPass?.howToPlayModal?.atmosphereIcon || '🌌'}</span>
           <div>
-            <span className="font-bold text-accent-red block text-xs font-mono">
+            <span className="font-bold text-accent-red block text-xs">
               {dict?.smashOrPass?.howToPlayModal?.atmosphereTitle || 'Atmospheric Background & Music'}
             </span>
             <p className="text-text-muted leading-relaxed pt-0.5">
@@ -1456,7 +1456,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
             </div>
           }
         >
-          <p className="text-xs text-text-muted leading-relaxed font-sans">
+          <p className="text-xs text-text-muted leading-relaxed">
             {(dict?.smashOrPass?.picker?.deleteConfirmDesc || 'This permanently removes "{name}" from this browser. This cannot be undone.').replace(
               '{name}',
               rosterPendingDelete.name
@@ -1498,7 +1498,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
           <div className="absolute inset-0 bg-accent-red/15 backdrop-blur-sm animate-pulse" />
           <div className="relative flex flex-col items-center gap-2 p-6 rounded-3xl bg-bg-primary/90 border-2 border-accent-red text-center animate-in zoom-in-75 duration-300">
             <Heart className="h-14 w-14 text-accent-red fill-accent-red animate-bounce" />
-            <span className="text-xl font-mono font-black tracking-widest text-text-primary uppercase">
+            <span className="text-xl font-black tracking-widest text-text-primary uppercase">
               {getRosterDisplayName({ slug: rosterSwitchEffect })}
             </span>
           </div>

@@ -337,7 +337,7 @@ export const DbdSpinner: React.FC<DbdSpinnerProps> = ({
         <div className="mt-5 flex flex-col items-center text-center space-y-1.5 max-w-sm sm:max-w-md px-2">
           {resolvedLabel && (
             <p
-              className={`dbd-spinner-label text-base sm:text-lg font-black font-mono tracking-wider uppercase ${colorMap.text} drop-shadow-xs`}
+              className={`dbd-spinner-label text-base sm:text-lg font-black tracking-wider uppercase ${colorMap.text} drop-shadow-xs`}
             >
               {resolvedLabel}
             </p>

@@ -26,7 +26,7 @@ const VariantRow: React.FC<{
 }> = ({ label, breakdown, dict }) => (
   <div className="flex items-center justify-between text-xs px-3 py-2.5 rounded-lg bg-bg-primary border border-border-subtle">
     <span className="font-bold text-text-primary">{label}</span>
-    <span className="font-mono text-text-secondary">
+    <span className="text-text-secondary">
       <span className="text-text-primary font-black">{breakdown.completed_runs}</span>{' '}
       {dict?.admin?.completionsLabel || 'completions'} {dict?.admin?.middotSeparator || '·'}{' '}
       {breakdown.unique_users} {dict?.admin?.usersLabel || 'users'}
@@ -70,7 +70,7 @@ export const AdminChallengeStats: React.FC<AdminChallengeStatsProps> = ({ stats,
                 <span>{label}</span>
               </h3>
               <div className="text-right">
-                <div className="text-2xl font-black text-text-primary font-mono">
+                <div className="text-2xl font-black text-text-primary">
                   {breakdown?.total.completed_runs ?? '-'}
                 </div>
               </div>

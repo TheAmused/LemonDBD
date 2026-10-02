@@ -81,7 +81,7 @@ export const SurvivorDetailView: React.FC<CharacterViewBaseProps> = ({
         <div className="lg:col-span-8 space-y-5">
           <header className="flex flex-col items-center text-center gap-4 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:text-left">
             <div>
-              <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black text-text-primary font-mono tracking-tight">
+              <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black text-text-primary tracking-tight">
                 {character.name}
               </h1>
               {character.real_name && character.real_name !== character.name && (

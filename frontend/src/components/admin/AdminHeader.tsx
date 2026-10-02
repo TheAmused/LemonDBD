@@ -46,7 +46,7 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
           <OverseerEyeIcon className="h-6 w-6" />
         </div>
         <div>
-          <h1 className="text-xl sm:text-2xl lg:text-3xl font-black tracking-wider text-text-primary font-mono">
+          <h1 className="text-xl sm:text-2xl lg:text-3xl font-black tracking-wider text-text-primary">
             {dict?.sidebar?.adminControlCenter || dict?.admin?.title || 'Admin Control Center'}
           </h1>
         </div>

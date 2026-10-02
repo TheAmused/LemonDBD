@@ -107,7 +107,7 @@ export const AdminSettingsPanel: React.FC<AdminSettingsPanelProps> = ({ onAction
       </div>
 
       {loading ? (
-        <div className="py-10 text-center text-xs font-mono uppercase tracking-widest text-text-muted">…</div>
+        <div className="py-10 text-center text-xs uppercase tracking-widest text-text-muted">…</div>
       ) : (
         <>
           {GROUP_ORDER.map((group) => {
@@ -118,7 +118,7 @@ export const AdminSettingsPanel: React.FC<AdminSettingsPanelProps> = ({ onAction
                 key={group}
                 className="rounded-2xl border border-border-color bg-bg-surface p-5 shadow-sm backdrop-blur-sm"
               >
-                <h4 className="pb-3 text-xs font-black uppercase tracking-widest text-accent-red font-mono">
+                <h4 className="pb-3 text-xs font-black uppercase tracking-widest text-accent-red">
                   {groupLabel(group)}
                 </h4>
                 <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
@@ -143,7 +143,7 @@ export const AdminSettingsPanel: React.FC<AdminSettingsPanelProps> = ({ onAction
                       />
                       <p className="text-[11px] leading-snug text-text-muted">{descFor(row.key)}</p>
                       <div className="flex items-center gap-3 text-[11px] text-text-muted">
-                        <span className="font-mono">
+                        <span className="">
                           {(t.configDefaultValue || 'Default: {value}').replace(
                             '{value}',
                             String(row.default) || '—'

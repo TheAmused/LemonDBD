@@ -73,7 +73,7 @@ export function TierEditModal({
       size="md"
       title={t.editTier}
       icon={<Palette className="h-5 w-5" aria-hidden="true" />}
-      bodyClassName="p-4 sm:p-6 font-sans"
+      bodyClassName="p-4 sm:p-6"
       footer={
         <div className="flex w-full flex-wrap items-center justify-center gap-3">
           <Button variant="secondary" onClick={onClose} className={cn(TOUCH_BTN, 'min-h-[42px] px-5')}>

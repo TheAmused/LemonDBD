@@ -131,7 +131,7 @@ describe('User Profile Theme Support', () => {
       })
     );
     assert.ok(
-      killerHtml.includes('text-text-primary') || killerHtml.includes('text-slate-900 dark:text-slate-100 font-mono'),
+      killerHtml.includes('text-text-primary') || killerHtml.includes('text-slate-900 dark:text-slate-100'),
       'Killer title must have theme classes'
     );
     assert.ok(
@@ -155,7 +155,7 @@ describe('User Profile Theme Support', () => {
       })
     );
     assert.ok(
-      survivorHtml.includes('text-text-primary') || survivorHtml.includes('text-slate-900 dark:text-slate-100 font-mono'),
+      survivorHtml.includes('text-text-primary') || survivorHtml.includes('text-slate-900 dark:text-slate-100'),
       'Survivor title must have theme classes'
     );
     assert.ok(

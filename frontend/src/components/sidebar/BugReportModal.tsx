@@ -254,7 +254,7 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({
         <CheckCircle2 className="h-9 w-9 animate-bounce" />
       </div>
       <div className="space-y-1.5">
-        <h3 className="text-xl font-black tracking-wide font-mono text-text-primary">
+        <h3 className="text-xl font-black tracking-wide text-text-primary">
           {t.bugSuccessMessage || ''}
         </h3>
       </div>
@@ -358,7 +358,7 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({
             <ImageIcon className="h-3.5 w-3.5 text-text-muted" aria-hidden="true" />
             {t.bugScreenshotsLabel || ''}
           </label>
-          <span className="text-[10px] text-text-muted font-mono">
+          <span className="text-[10px] text-text-muted">
             {images.length}/3
           </span>
         </div>

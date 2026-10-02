@@ -67,7 +67,7 @@ export const CharacterHeroAvatar: React.FC<CharacterHeroAvatarProps> = ({
         ) : (
           <div className="flex flex-col items-center justify-center p-6 text-center text-text-muted">
             <User className="h-16 w-16 mb-2 opacity-50" />
-            <span className="text-xs font-mono font-bold text-text-secondary">{character.name}</span>
+            <span className="text-xs font-bold text-text-secondary">{character.name}</span>
           </div>
         )}
 
@@ -75,7 +75,7 @@ export const CharacterHeroAvatar: React.FC<CharacterHeroAvatarProps> = ({
           <div className="h-12 w-12 rounded-2xl bg-accent-red/20 border border-accent-red/40 flex items-center justify-center text-accent-red mb-2 shadow-lg group-hover:scale-110 transition-transform">
             <ZoomIn className="h-6 w-6" />
           </div>
-          <span className="text-xs font-black text-text-inverted uppercase tracking-wider font-mono">
+          <span className="text-xs font-black text-text-inverted uppercase tracking-wider">
             {t.view3DModel || 'Click to Expand'}
           </span>
         </div>

@@ -102,7 +102,7 @@ export const TierItemTile = React.forwardRef<HTMLDivElement, TierItemTileProps>(
             )}
           />
         ) : (
-          <span className="px-1 text-center font-mono text-sm font-black text-text-secondary" aria-hidden="true">
+          <span className="px-1 text-center text-sm font-black text-text-secondary" aria-hidden="true">
             {initials(item.name)}
           </span>
         )}

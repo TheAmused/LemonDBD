@@ -64,7 +64,13 @@
   --animate-chaos-pop: chaosBadgePop 380ms cubic-bezier(0.22, 1.4, 0.36, 1) both;
   --animate-lock-shake: historyLockShake 380ms ease-in-out;
 
-  /* Crisp cross-browser monospace font stack (avoids typewriter Courier New fallback in Firefox Windows) */
+  /* ONE font system for the whole site. No component picks a font family:
+   *   --font-sans    everything (the Challenges page look); system stack, nothing to download
+   *   --font-display Smash or Pass headings only, via the .theme-smash scope below
+   *   --font-mono    real code only (<code>, <pre>, <kbd>, <samp>)
+   */
+  --font-sans: ui-sans-serif, system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  --font-display: var(--font-playfair), Georgia, "Times New Roman", serif;
   --font-mono: Consolas, "Cascadia Code", "Segoe UI Mono", Menlo, Monaco, "Liberation Mono", ui-monospace, monospace;
 
   /* Named ultra-wide breakpoints (registered in the theme scale, not as
@@ -81,6 +87,16 @@
  * Base Layers & Color Themes (Calibrated for WCAG 2.1 AA / AAA Compliance)
  * --------------------------------------------------------------------------- */
 @layer base {
+
+  code, kbd, pre, samp {
+    font-family: var(--font-mono);
+  }
+
+  /* Smash or Pass: same body font as the rest of the site, a more elegant display face on headings and key controls. */
+  .theme-smash :is(h1, h2, h3, h4, [role="tab"], .font-display) {
+    font-family: var(--font-display);
+    letter-spacing: 0.01em;
+  }
 
   :root,
   .light {
@@ -266,7 +282,7 @@
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    font-family: inherit;
+    font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     transition: background-color 200ms ease, color 200ms ease;

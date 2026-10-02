@@ -291,7 +291,7 @@ export const CoverImageCropModal: React.FC<CoverImageCropModalProps> = ({
       subtitle={cm.subtitle}
       icon={<Crop className="h-5 w-5 text-accent-red" />}
     >
-      <div className="space-y-4 p-4 sm:p-6 font-mono select-none">
+      <div className="space-y-4 p-4 sm:p-6 select-none">
         {/* Interactive Crop Viewport (16:9 Aspect Ratio) */}
         <div className="relative rounded-3xl border-2 border-accent-red/40 bg-bg-primary overflow-hidden shadow-2xl">
           <div

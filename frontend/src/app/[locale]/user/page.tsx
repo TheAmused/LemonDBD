@@ -184,12 +184,6 @@ export default function UserProfilePage() {
             className="hidden"
           />
 
-          {/* Account actions: export and delete (explanations live in the tooltips) */}
-          <div className="flex flex-wrap items-center justify-end gap-2">
-            <DownloadDataSection dict={dict} />
-            <DeleteAccountSection dict={dict} />
-          </div>
-
           {/* Campfire Header Card (Avatar + Info + Vault Mastery) */}
           <CampfireHeader
             user={user}
@@ -206,6 +200,12 @@ export default function UserProfilePage() {
             isUploadingAvatar={isUploadingAvatar}
             onAvatarClick={() => fileInputRef.current?.click()}
             avatarFeedback={avatarFeedback}
+            actions={
+              <>
+                <DownloadDataSection dict={dict} />
+                <DeleteAccountSection dict={dict} />
+              </>
+            }
           />
 
           {/* 1. TOP BLOCK: Account Management */}

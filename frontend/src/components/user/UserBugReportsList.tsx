@@ -150,31 +150,22 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
 
   return (
     <div className="space-y-3.5 w-full flex flex-col">
-      <div className="flex items-center justify-between gap-3 pb-2.5 border-b border-border-color shrink-0">
-        {!hideHeading ? (
-          <div>
-            <h2 className="text-sm sm:text-base font-black tracking-wider text-text-primary font-mono flex items-center gap-2">
-              <FogReportIcon className="h-4 w-4 text-accent-red" />
-              <span>{t.bugReportsTitle || 'Your Submitted Bug Reports'}</span>
-            </h2>
-          </div>
-        ) : (
-          <div className="text-xs font-mono font-bold text-text-secondary">
-            {dict?.user?.myBugReportsCount
-              ? dict.user.myBugReportsCount.replace('{count}', String(totalCount))
-              : `${totalCount}`}
-          </div>
-        )}
-
-        <Button
-          variant="primary"
-          size="sm"
-          onClick={onOpenReportModal}
-          leftIcon={<Plus className="h-3.5 w-3.5" />}
-        >
-          <span>{t.reportNewBug || 'Report New Bug'}</span>
-        </Button>
-      </div>
+      {!hideHeading ? (
+        <div className="flex items-center justify-between gap-3 pb-2.5 border-b border-border-color shrink-0">
+          <h2 className="text-sm sm:text-base font-black tracking-wider text-text-primary font-mono flex items-center gap-2">
+            <FogReportIcon className="h-4 w-4 text-accent-red" />
+            <span>{t.bugReportsTitle || 'Your Submitted Bug Reports'}</span>
+          </h2>
+          <Button
+            variant="primary"
+            size="sm"
+            onClick={onOpenReportModal}
+            leftIcon={<Plus className="h-3.5 w-3.5" />}
+          >
+            <span>{t.reportNewBug || 'Report New Bug'}</span>
+          </Button>
+        </div>
+      ) : null}
 
       {loading ? (
         <UserBugReportsSkeleton dict={dict} count={3} />
@@ -320,7 +311,7 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
       )}
 
       {!loading && reports.length > 0 && totalPages > 1 && onPageChange && (
-        <div className="shrink-0 pt-2 border-t border-border-color">
+        <div className="shrink-0 pt-2">
           <Pagination
             page={page}
             totalPages={totalPages}

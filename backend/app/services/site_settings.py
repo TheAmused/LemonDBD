@@ -15,7 +15,7 @@ from sqlalchemy import select
 
 from app.core.extensions import db
 from app.models.admin import SiteSetting
-from app.utils.site_settings_spec import PAGE_IDS, SETTING_SPECS, SPEC_BY_KEY, parse_pages, validate_setting
+from app.utils.site_settings_spec import SETTING_SPECS, SPEC_BY_KEY, is_page_id, parse_pages, validate_setting
 
 logger = logging.getLogger(__name__)
 
@@ -113,14 +113,14 @@ def disabled_pages() -> list[str]:
 def set_page_disabled(page: str, disabled: bool) -> list[str]:
     """Switch one page off/on; returns the new list. Raises ValueError for an unknown page."""
     global _pages_cache
-    if page not in PAGE_IDS:
-        raise ValueError(f"Unknown page '{page}'.")
+    if not is_page_id(page):
+        raise ValueError(f"Invalid page id '{page}'.")
     current = set(parse_pages(get_setting("disabled_pages")))
     if disabled:
         current.add(page)
     else:
         current.discard(page)
-    new_value = ",".join(p for p in PAGE_IDS if p in current)
+    new_value = ",".join(sorted(current))
     update_settings({"disabled_pages": new_value or None})
     return parse_pages(new_value)
 

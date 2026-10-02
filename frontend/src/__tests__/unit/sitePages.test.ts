@@ -1,7 +1,7 @@
 // frontend/src/__tests__/unit/sitePages.test.ts
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
-import { isSitePageId, parseSitePagesStatus, sitePageFromPathname, SITE_PAGE_IDS } from '@/utils/sitePages';
+import { isSitePageId, isSwitchableSegment, parseSitePagesStatus, sitePageFromPathname, SITE_PAGE_IDS } from '@/utils/sitePages';
 
 const LOCALES = ['en', 'pl', 'de', 'es', 'ja'] as const;
 
@@ -28,15 +28,21 @@ describe('sitePageFromPathname', () => {
     assert.equal(sitePageFromPathname('/en/%E0%A4%A', LOCALES), null);
   });
 
-  it('covers every switchable page', () => {
+  it('treats an unregistered page folder as switchable (block by default)', () => {
+    assert.deepEqual(sitePageFromPathname('/en/brand-new-page/x', LOCALES), { locale: 'en', page: 'brand-new-page' });
+    assert.equal(isSwitchableSegment('Bad Segment'), false);
+    assert.equal(isSwitchableSegment('admin'), false);
+  });
+
+  it('covers every discovered page', () => {
     for (const id of SITE_PAGE_IDS) assert.equal(sitePageFromPathname(`/en/${id}`, LOCALES)?.page, id);
   });
 });
 
 describe('parseSitePagesStatus', () => {
   it('keeps known ids only and reads the admin flag strictly', () => {
-    assert.deepEqual(parseSitePagesStatus({ disabled: ['maps', 'nope', 3], viewer_is_admin: true }), {
-      disabled: ['maps'],
+    assert.deepEqual(parseSitePagesStatus({ disabled: ['maps', 'Not A Slug', 3, 'new-page'], viewer_is_admin: true }), {
+      disabled: ['maps', 'new-page'],
       viewer_is_admin: true,
     });
     assert.equal(parseSitePagesStatus({ disabled: [], viewer_is_admin: 'true' })?.viewer_is_admin, false);

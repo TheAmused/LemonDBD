@@ -3,7 +3,7 @@
 
 import { useEffect, useState } from 'react';
 import { apiUrl } from '@/utils/api';
-import { parseSitePagesStatus, type SitePageId, type SitePagesStatus } from '@/utils/sitePages';
+import { parseSitePagesStatus, type PageSlug, type SitePagesStatus } from '@/utils/sitePages';
 
 const CACHE_MS = 15_000;
 let cached: { at: number; status: SitePagesStatus } | null = null;
@@ -39,7 +39,7 @@ export function refreshSitePages(): void {
  * Which pages are switched off, and whether the viewer is an admin (who still sees them).
  * The sidebar uses this to hide links; the real protection is the proxy + API guard.
  */
-export function useSitePages(): { disabled: readonly SitePageId[]; isAdminViewer: boolean; isOff: (page: SitePageId) => boolean } {
+export function useSitePages(): { disabled: readonly PageSlug[]; isAdminViewer: boolean; isOff: (page: PageSlug) => boolean } {
   const [status, setStatus] = useState<SitePagesStatus | null>(cached?.status ?? null);
 
   useEffect(() => {

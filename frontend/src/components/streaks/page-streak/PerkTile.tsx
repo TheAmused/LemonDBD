@@ -49,7 +49,7 @@ export const PerkTile: React.FC<PerkTileProps> = ({
           )}
         </span>
       </span>
-      <span className={`text-center text-[10.5px] font-semibold leading-tight ${selected ? 'text-text-primary' : 'text-text-secondary'}`}>
+      <span className={`text-center text-tiny font-semibold leading-tight ${selected ? 'text-text-primary' : 'text-text-secondary'}`}>
         {label}
       </span>
     </>

@@ -54,7 +54,7 @@ export const SidebarUserSection: React.FC<SidebarUserSectionProps> = ({
             >
               <UserAvatar user={user} size="sm" />
               <div className="truncate">
-                <p className="flex items-center gap-1 text-xs font-bold text-text-primary truncate">
+                <p className="flex items-center gap-1 type-strong text-text-primary truncate">
                   <span className="truncate">{user.username}</span>
                   {user.is_verified === false && (
                     <MailWarning
@@ -64,7 +64,7 @@ export const SidebarUserSection: React.FC<SidebarUserSectionProps> = ({
                   )}
                 </p>
                 <span
-                  className={`inline-block rounded px-1 text-[9px] font-black uppercase tracking-wider ${
+                  className={`inline-block rounded px-1 text-micro font-black uppercase tracking-wider ${
                     user.role === 'admin'
                       ? 'bg-accent-red/20 text-accent-red border border-accent-red/30'
                       : 'bg-bg-surface text-text-muted border border-border-color'
@@ -103,7 +103,7 @@ export const SidebarUserSection: React.FC<SidebarUserSectionProps> = ({
             <button
               type="button"
               onClick={onOpenVerifyModal}
-              className="w-full text-left text-[10px] text-accent-amber hover:underline cursor-pointer"
+              className="w-full text-left type-micro text-accent-amber hover:underline cursor-pointer"
             >
               {dict?.sidebar?.emailNotVerified || 'Email not verified. Verify now'}
             </button>

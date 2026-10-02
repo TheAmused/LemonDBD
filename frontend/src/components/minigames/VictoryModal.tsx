@@ -126,7 +126,7 @@ export const VictoryModal: React.FC<VictoryModalProps> = ({
 
             <Link
               href={`/${locale}/minigames`}
-              className="flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-bg-elevated hover:bg-bg-surface border border-border-color text-text-primary font-semibold text-sm transition-all"
+              className="flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-bg-elevated hover:bg-bg-surface border border-border-color text-text-primary type-card-title transition-all"
             >
               <Home className="w-4 h-4" />
               <span>{t.backToMinigames}</span>
@@ -142,7 +142,7 @@ export const VictoryModal: React.FC<VictoryModalProps> = ({
           return (
             <div
               key={`modal-r-${idx}`}
-              className="flex items-center justify-between text-xs sm:text-sm font-semibold text-text-secondary px-2"
+              className="flex items-center justify-between type-strong-fluid text-text-secondary px-2"
             >
               <div className="flex items-center gap-2">
                 <span className="text-text-muted">#{idx + 1}</span>

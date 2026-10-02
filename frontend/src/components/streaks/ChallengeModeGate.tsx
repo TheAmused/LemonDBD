@@ -56,7 +56,7 @@ export const ChallengeModeGate: React.FC<ChallengeModeGateProps> = ({ mode, loca
         )}
         <Link
           href={`/${locale}/streaks/${role}`}
-          className="mt-2 rounded-xl border border-border-color bg-bg-surface px-4 py-2 text-xs font-bold text-text-secondary hover:border-accent-amber/50 hover:text-accent-amber transition-colors"
+          className="mt-2 rounded-xl border border-border-color bg-bg-surface px-4 py-2 type-strong text-text-secondary hover:border-accent-amber/50 hover:text-accent-amber transition-colors"
         >
           {dict?.streaks?.backToKillerStreaks || 'Back to challenges'}
         </Link>

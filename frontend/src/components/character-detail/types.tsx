@@ -259,50 +259,50 @@ export function getRarityTileStyle(rarity?: string): RarityTileStyle {
   if (r.includes('ultra') || r.includes('iridescent')) {
     return {
       ...rarityImageTile('Ultra Rare'),
-      badge: 'bg-pink-500/20 text-pink-300 border-pink-500/40',
-      text: 'text-pink-400',
+      badge: 'bg-accent-pink/20 text-accent-pink border-accent-pink/40',
+      text: 'text-accent-pink',
     };
   }
   if (r.includes('very rare') || r.includes('purple')) {
     return {
       ...rarityImageTile('Very Rare'),
-      badge: 'bg-purple-500/20 text-purple-300 border-purple-500/40',
-      text: 'text-purple-400',
+      badge: 'bg-accent-purple/20 text-accent-purple border-accent-purple/40',
+      text: 'text-accent-purple',
     };
   }
   if (r.includes('rare') || r.includes('blue')) {
     return {
       ...rarityImageTile('Rare'),
-      badge: 'bg-sky-500/20 text-sky-300 border-sky-500/40',
-      text: 'text-sky-400',
+      badge: 'bg-accent-blue/20 text-accent-blue border-accent-blue/40',
+      text: 'text-accent-blue',
     };
   }
   if (r.includes('uncommon') || r.includes('green')) {
     return {
       ...rarityImageTile('Uncommon'),
-      badge: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40',
-      text: 'text-emerald-400',
+      badge: 'bg-accent-green/20 text-accent-green border-accent-green/40',
+      text: 'text-accent-green',
     };
   }
   if (r.includes('common') || r.includes('brown')) {
     return {
       ...rarityImageTile('Common'),
-      badge: 'bg-amber-800/30 text-amber-200 border-amber-700/40',
-      text: 'text-amber-300',
+      badge: 'bg-accent-amber-deep/30 text-accent-amber border-accent-amber/40',
+      text: 'text-accent-amber',
     };
   }
   if (r.includes('event')) {
     return {
       ...rarityImageTile('Event'),
-      badge: 'bg-orange-500/20 text-orange-300 border-orange-500/40',
-      text: 'text-orange-400',
+      badge: 'bg-accent-orange/20 text-accent-orange border-accent-orange/40',
+      text: 'text-accent-orange',
     };
   }
   // Unknown / unrated rarities (e.g. "Special") look like Common.
   return {
     ...rarityImageTile('Common'),
-    badge: 'bg-amber-800/30 text-amber-200 border-amber-700/40',
-    text: 'text-amber-300',
+    badge: 'bg-accent-amber-deep/30 text-accent-amber border-accent-amber/40',
+    text: 'text-accent-amber',
   };
 }
 

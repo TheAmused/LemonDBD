@@ -65,7 +65,7 @@ export const AdminChallengeStats: React.FC<AdminChallengeStatsProps> = ({ stats,
             className={`rounded-2xl border ${border} bg-bg-surface p-5 shadow-sm backdrop-blur-sm transition-colors duration-200`}
           >
             <div className="flex items-center justify-between mb-4">
-              <h3 className="flex items-center gap-2 text-sm font-black uppercase tracking-wider text-text-primary">
+              <h3 className="flex items-center gap-2 type-label text-text-primary">
                 <Icon className={`h-4 w-4 ${color}`} />
                 <span>{label}</span>
               </h3>
@@ -88,7 +88,7 @@ export const AdminChallengeStats: React.FC<AdminChallengeStatsProps> = ({ stats,
                 ))}
               </div>
             ) : (
-              <p className="text-[11px] text-text-muted">
+              <p className="type-caption text-text-muted">
                 {dict?.admin?.pageStreakCompletionsNotice || 'Completions tracked as total runs.'}
               </p>
             )}

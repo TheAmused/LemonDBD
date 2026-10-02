@@ -76,13 +76,13 @@ export const PerkCard: React.FC<PerkCardProps> = ({
         className={`relative flex flex-col items-center justify-center gap-2 p-2 ${GRID_SIZE_CLASSES[size]}`}
       >
         {coordinateLabel && (
-          <span className="absolute top-1 left-1 z-10 text-[10px] font-black text-accent-amber">
+          <span className="absolute top-1 left-1 z-10 type-strong-2xs text-accent-amber">
             {coordinateLabel}
           </span>
         )}
         <HelpCircle className="h-10 w-10 text-text-muted" />
         {dict?.generator?.hiddenPerkLabel && (
-          <span className="text-[11px] font-bold text-text-muted text-center px-2">
+          <span className="type-strong-xs text-text-muted text-center px-2">
             {dict.generator.hiddenPerkLabel}
           </span>
         )}
@@ -113,8 +113,8 @@ export const PerkCard: React.FC<PerkCardProps> = ({
           <span
             className={`absolute z-10 font-black pointer-events-none ${
               size === 'tarot' || size === 'compact'
-                ? 'top-0 left-0 text-[8px] sm:text-[9px] md:text-[10px] xl:text-xs 2xl:text-sm text-accent-amber bg-bg-primary/80 px-1 py-0.5 rounded shadow-xs'
-                : 'top-1 left-1 text-[10px] text-accent-amber'
+                ? 'top-0 left-0 text-micro sm:text-micro md:text-tiny xl:text-xs 2xl:text-sm text-accent-amber bg-bg-primary/80 px-1 py-0.5 rounded shadow-xs'
+                : 'top-1 left-1 text-tiny text-accent-amber'
             }`}
           >
             {coordinateLabel}

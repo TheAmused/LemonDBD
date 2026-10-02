@@ -184,7 +184,7 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
 
       <Link
         href={`/${locale}/streaks/killer`}
-        className="inline-flex items-center gap-1.5 rounded text-xs font-bold text-text-secondary hover:text-accent-red transition-colors focus:outline-none focus:ring-2 focus:ring-accent-red"
+        className="inline-flex items-center gap-1.5 rounded type-strong text-text-secondary hover:text-accent-red transition-colors focus:outline-none focus:ring-2 focus:ring-accent-red"
       >
         <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" />
         <span>{dict?.streaks?.backToKillerStreaks || ''}</span>
@@ -217,7 +217,7 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
             <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl border-2 border-accent-green bg-accent-green/15 text-accent-green" aria-hidden="true">
               <AdeptBadgeIcon className="h-8 w-8" />
             </div>
-            <p className="mb-1 text-xs font-bold uppercase tracking-widest text-accent-green">
+            <p className="mb-1 type-label-sm text-accent-green">
               {dict?.streaks?.victoryCongrats || 'Congratulations'}
             </p>
             <h2 className="text-2xl font-black tracking-tight text-text-primary">
@@ -248,7 +248,7 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
               />
             </div>
             <div className="mb-6 rounded-2xl border border-border-color bg-bg-surface/90 backdrop-blur-sm p-5 pb-24 shadow-sm">
-              <h3 className="text-sm font-bold text-text-secondary uppercase tracking-wider mb-3">
+              <h3 className="type-label text-text-secondary mb-3">
                 {dict?.streaks?.pickYourKiller || ''}
               </h3>
 
@@ -298,7 +298,7 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
               onClick={handleDevSkipToWin}
               disabled={busy || !killers.length}
               {...tip(dict?.streaks?.devSkipWinTitle || '', undefined, 'action')} aria-label={dict?.streaks?.devSkipWinTitle || ''}
-              className="inline-flex items-center gap-2 text-xs font-bold text-accent-amber border border-accent-amber/30 bg-accent-amber/10 hover:bg-accent-amber/20 disabled:opacity-50 transition-colors cursor-pointer rounded-lg px-2.5 py-1"
+              className="inline-flex items-center gap-2 type-strong text-accent-amber border border-accent-amber/30 bg-accent-amber/10 hover:bg-accent-amber/20 disabled:opacity-50 transition-colors cursor-pointer rounded-lg px-2.5 py-1"
             >
               <AdeptBadgeIcon className="h-3.5 w-3.5" aria-hidden="true" />
               <span>{dict?.streaks?.devSkipWinLabel || ''}</span>

@@ -248,12 +248,12 @@ export const ChangelogEditorModal: React.FC<ChangelogEditorModalProps> = ({
     </div>
 
     {error && (
-      <p role="alert" className="rounded-xl border border-accent-red/40 bg-accent-red/10 px-3 py-2 text-xs font-bold text-accent-red">
+      <p role="alert" className="rounded-xl border border-accent-red/40 bg-accent-red/10 px-3 py-2 type-strong text-accent-red">
         {error}
       </p>
     )}
 
-    <Checkbox checked={isPublished} onChange={setIsPublished} className="text-xs font-bold text-text-muted">
+    <Checkbox checked={isPublished} onChange={setIsPublished} className="type-strong text-text-muted">
       {t?.publishedLabel || 'Published (visible in the "What\'s New?" feed)'}
     </Checkbox>
     </Modal>
@@ -294,7 +294,7 @@ const SwatchPopover: React.FC<{
         {...tip(clearLabel || 'No highlight', undefined, 'action')} aria-label={clearLabel || 'No highlight'}
         onMouseDown={(e) => e.preventDefault()}
         onClick={onClear}
-        className="flex h-6 w-6 items-center justify-center rounded-full border border-dashed border-border-color text-[9px] text-text-muted cursor-pointer hover:border-accent-red"
+        className="flex h-6 w-6 items-center justify-center rounded-full border border-dashed border-border-color text-micro text-text-muted cursor-pointer hover:border-accent-red"
       >
         ×
       </button>

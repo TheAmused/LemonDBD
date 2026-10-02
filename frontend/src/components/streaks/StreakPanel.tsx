@@ -81,12 +81,12 @@ export const StreakPanel: React.FC<StreakPanelProps> = ({
       )}
 
       {disabled ? (
-        <span className="absolute right-3 top-3 z-10 flex items-center gap-1 rounded-full border border-accent-amber/40 bg-accent-amber/15 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-accent-amber">
+        <span className="absolute right-3 top-3 z-10 flex items-center gap-1 rounded-full border border-accent-amber/40 bg-accent-amber/15 px-2.5 py-1 type-label-2xs text-accent-amber">
           <AlertTriangle className="h-3 w-3" />
           {dict?.streaks?.disabled || 'Disabled'}
         </span>
       ) : comingSoon ? (
-        <span className="absolute right-3 top-3 z-10 rounded-full border border-border-color bg-bg-elevated px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-text-muted">
+        <span className="absolute right-3 top-3 z-10 rounded-full border border-border-color bg-bg-elevated px-2.5 py-1 type-label-2xs text-text-muted">
           {dict?.streaks?.comingSoon || 'Coming soon.'}
         </span>
       ) : completed && completedFull ? (

@@ -45,7 +45,7 @@ export const EquipmentDetailModal: React.FC<EquipmentDetailModalProps> = ({
       bodyClassName="space-y-4 text-sm leading-relaxed text-text-secondary"
     >
       {item.associated_target && (
-        <div className="text-xs font-bold text-text-secondary">
+        <div className="type-strong text-text-secondary">
           {t.compatibleTarget || 'Compatible Target:'} <span className="text-text-primary">{item.associated_target}</span>
         </div>
       )}

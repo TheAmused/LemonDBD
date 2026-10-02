@@ -133,7 +133,7 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
         <span className="inline-flex items-center gap-1.5">
           {dict?.filters?.survivor && <span>{dict.filters.survivor}</span>}
           {typeof survivorCount === 'number' && (
-            <span className="rounded-full bg-text-inverted/20 px-1 py-0.5 text-[9px] sm:px-1.5 sm:text-[10px] wide:px-2 wide:text-xs font-black leading-none">
+            <span className="rounded-full bg-text-inverted/20 px-1 py-0.5 text-micro sm:px-1.5 sm:text-tiny wide:px-2 wide:text-xs font-black leading-none">
               {survivorCount}
             </span>
           )}
@@ -148,7 +148,7 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
         <span className="inline-flex items-center gap-1.5">
           {dict?.filters?.killer && <span>{dict.filters.killer}</span>}
           {typeof killerCount === 'number' && (
-            <span className="rounded-full bg-text-inverted/20 px-1 py-0.5 text-[9px] sm:px-1.5 sm:text-[10px] wide:px-2 wide:text-xs font-black leading-none">
+            <span className="rounded-full bg-text-inverted/20 px-1 py-0.5 text-micro sm:px-1.5 sm:text-tiny wide:px-2 wide:text-xs font-black leading-none">
               {killerCount}
             </span>
           )}
@@ -165,7 +165,7 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
         <span className="inline-flex items-center gap-1.5">
           {dict?.filters?.allPerks && <span>{dict.filters.allPerks}</span>}
           {typeof allCount === 'number' && (
-            <span className="rounded-full bg-text-inverted/20 px-1 py-0.5 text-[9px] sm:px-1.5 sm:text-[10px] wide:px-2 wide:text-xs font-black leading-none">
+            <span className="rounded-full bg-text-inverted/20 px-1 py-0.5 text-micro sm:px-1.5 sm:text-tiny wide:px-2 wide:text-xs font-black leading-none">
               {allCount}
             </span>
           )}
@@ -179,7 +179,7 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
         <span className="inline-flex items-center gap-1.5">
           {dict?.filters?.ownedOnly && <span>{dict.filters.ownedOnly}</span>}
           {typeof ownedCount === 'number' && (
-            <span className="rounded-full bg-text-inverted/20 px-1 py-0.5 text-[9px] sm:px-1.5 sm:text-[10px] wide:px-2 wide:text-xs font-black leading-none">
+            <span className="rounded-full bg-text-inverted/20 px-1 py-0.5 text-micro sm:px-1.5 sm:text-tiny wide:px-2 wide:text-xs font-black leading-none">
               {ownedCount}
             </span>
           )}
@@ -192,12 +192,12 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
     {
       value: 'name',
       label: dict?.filters?.sortByName,
-      activeClassName: 'bg-accent-red text-white',
+      activeClassName: 'bg-accent-red text-text-inverted',
     },
     {
       value: 'character',
       label: dict?.filters?.sortByCharacter,
-      activeClassName: 'bg-accent-red text-white',
+      activeClassName: 'bg-accent-red text-text-inverted',
     },
   ];
 
@@ -206,13 +206,13 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
       value: 'asc',
       icon: <ArrowUpAZ className="h-3 w-3 sm:h-3.5 sm:w-3.5 wide:h-4 wide:w-4 wide-2k:h-5 wide-2k:w-5" />,
       label: dict?.filters?.orderAsc,
-      activeClassName: 'bg-accent-red text-white',
+      activeClassName: 'bg-accent-red text-text-inverted',
     },
     {
       value: 'desc',
       icon: <ArrowDownZA className="h-3 w-3 sm:h-3.5 sm:w-3.5 wide:h-4 wide:w-4 wide-2k:h-5 wide-2k:w-5" />,
       label: dict?.filters?.orderDesc,
-      activeClassName: 'bg-accent-red text-white',
+      activeClassName: 'bg-accent-red text-text-inverted',
     },
   ];
 
@@ -225,7 +225,7 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
       checked={scope === 'general'}
       onChange={(checked) => setScope(checked ? 'general' : 'all')}
       ariaLabel={dict?.filters?.generalOnly}
-      className="w-full shrink-0 gap-1.5 whitespace-nowrap rounded-full border border-border-color bg-bg-elevated/60 px-3 py-2 text-[11px] font-extrabold text-text-secondary shadow-inner sm:w-auto sm:gap-2 sm:px-3.5 sm:text-xs lg:py-2.5 wide:gap-2.5 wide:px-5 wide:py-3 wide:text-sm"
+      className="w-full shrink-0 gap-1.5 whitespace-nowrap rounded-full border border-border-color bg-bg-elevated/60 px-3 py-2 text-mini font-extrabold text-text-secondary shadow-inner sm:w-auto sm:gap-2 sm:px-3.5 sm:text-xs lg:py-2.5 wide:gap-2.5 wide:px-5 wide:py-3 wide:text-sm"
       boxClassName="h-3.5 w-3.5 wide:h-4 wide:w-4"
     >
       {dict?.filters?.generalOnly && <span>{dict.filters.generalOnly}</span>}
@@ -337,7 +337,7 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
           }}
           placeholder={dict?.filters?.searchPlaceholder}
           aria-label={dict?.filters?.searchPlaceholder}
-          className="w-full rounded-full border border-border-color bg-bg-elevated/60 py-2 pl-9 pr-8 text-[11px] sm:py-2.5 sm:pl-10 sm:pr-9 sm:text-xs lg:py-3 lg:text-sm wide:py-3.5 font-medium text-text-primary placeholder:text-text-muted focus:border-accent-red focus:bg-bg-surface focus:outline-none focus:ring-2 focus:ring-accent-red/20 transition-all"
+          className="w-full rounded-full border border-border-color bg-bg-elevated/60 py-2 pl-9 pr-8 text-mini sm:py-2.5 sm:pl-10 sm:pr-9 sm:text-xs lg:py-3 lg:text-sm wide:py-3.5 font-medium text-text-primary placeholder:text-text-muted focus:border-accent-red focus:bg-bg-surface focus:outline-none focus:ring-2 focus:ring-accent-red/20 transition-all"
         />
         {search && (
           <Button
@@ -374,18 +374,18 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
               >
                 <div className="flex items-center gap-2.5 min-w-0">
                   <div className="flex flex-col min-w-0">
-                    <span className="text-xs font-black text-text-primary truncate">
+                    <span className="type-strong text-text-primary truncate">
                       {item.name}
                     </span>
                     {item.alternate_name && (
-                      <span className="text-[10px] text-accent-amber font-semibold truncate">
+                      <span className="type-strong-2xs text-accent-amber truncate">
                         {dict?.filters?.aliasLabel && `${dict.filters.aliasLabel} `}
                         {item.alternate_name}
                       </span>
                     )}
                   </div>
                 </div>
-                <span className="text-[10px] font-bold text-text-muted shrink-0">
+                <span className="type-strong-2xs text-text-muted shrink-0">
                   {item.character || dict?.modal?.generalPerk}
                 </span>
               </button>

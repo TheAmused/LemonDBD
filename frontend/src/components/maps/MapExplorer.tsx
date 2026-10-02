@@ -470,7 +470,7 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
                         {(panelGroups ?? []).map((group) => (
                           <div key={group.realm} className="space-y-2">
                             {(panelGroups?.length ?? 0) > 1 && (
-                              <h3 className="text-xs font-bold text-text-muted uppercase tracking-wide">
+                              <h3 className="type-label-sm text-text-muted">
                                 {group.realm}
                               </h3>
                             )}

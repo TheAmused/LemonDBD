@@ -184,7 +184,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
       {error && (
         <div
           role="alert"
-          className="mb-4 flex items-center gap-2.5 rounded-xl border border-accent-red/30 bg-accent-red/10 p-3 text-xs text-accent-red animate-in fade-in duration-150 shadow-xs font-semibold"
+          className="mb-4 flex items-center gap-2.5 rounded-xl border border-accent-red/30 bg-accent-red/10 p-3 type-strong text-accent-red animate-in fade-in duration-150 shadow-xs"
         >
           <AlertCircle className="h-4 w-4 shrink-0 text-accent-red" />
           <span>{error}</span>
@@ -225,7 +225,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             <button
               type="button"
               onClick={onClose}
-              className="block w-full rounded-lg bg-accent-amber/20 py-1.5 text-[11px] font-black uppercase tracking-wider text-accent-amber hover:bg-accent-amber/30 transition-colors cursor-pointer"
+              className="block w-full rounded-lg bg-accent-amber/20 py-1.5 type-label-xs text-accent-amber hover:bg-accent-amber/30 transition-colors cursor-pointer"
             >
               {dict.modal.close}
             </button>
@@ -238,7 +238,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           {mode !== 'forgot' && (
             <div>
               {dict?.user?.usernameOrEmailLabel && (
-                <label className="block text-[11px] font-bold uppercase tracking-wider text-text-secondary mb-1">
+                <label className="block type-label-xs text-text-secondary mb-1">
                   {dict.user.usernameOrEmailLabel}
                 </label>
               )}
@@ -259,7 +259,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           {(mode === 'register' || mode === 'forgot') && (
             <div>
               {(dict?.user?.emailLabel || dict?.admin?.thEmail) && (
-                <label className="block text-[11px] font-bold uppercase tracking-wider text-text-secondary mb-1">
+                <label className="block type-label-xs text-text-secondary mb-1">
                   {dict?.user?.emailLabel || dict?.admin?.thEmail}
                 </label>
               )}
@@ -280,7 +280,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           {mode !== 'forgot' && (
             <div>
               {(dict?.user?.passwordLabel || dict?.admin?.thPassword) && (
-                <label className="block text-[11px] font-bold uppercase tracking-wider text-text-secondary mb-1">
+                <label className="block type-label-xs text-text-secondary mb-1">
                   {dict?.user?.passwordLabel || dict?.admin?.thPassword}
                 </label>
               )}
@@ -303,7 +303,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               <button
                 type="button"
                 onClick={() => switchMode('forgot')}
-                className="text-[11px] text-text-muted hover:text-accent-amber transition-colors cursor-pointer"
+                className="type-caption text-text-muted hover:text-accent-amber transition-colors cursor-pointer"
               >
                 {dict.user.forgotPasswordLink}
               </button>
@@ -342,7 +342,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
       {!notice && mode !== 'forgot' && (
         <div className="mt-4 pt-4 border-t border-border-color">
           {dict?.user?.quickDemoAccounts && (
-            <p className="text-[10px] uppercase font-bold text-text-muted mb-2 text-center tracking-wider">
+            <p className="type-label-2xs text-text-muted mb-2 text-center">
               {dict.user.quickDemoAccounts}
             </p>
           )}
@@ -353,7 +353,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             <button
               type="button"
               onClick={() => handleFillDemo('player')}
-              className="flex items-center justify-center gap-1.5 rounded-lg border border-accent-amber/30 bg-accent-amber/10 px-2.5 py-1.5 text-[11px] font-semibold text-accent-amber hover:bg-accent-amber/20 transition-colors shadow-xs cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red"
+              className="flex items-center justify-center gap-1.5 rounded-lg border border-accent-amber/30 bg-accent-amber/10 px-2.5 py-1.5 type-strong-xs text-accent-amber hover:bg-accent-amber/20 transition-colors shadow-xs cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red"
             >
               <Sparkles className="h-3 w-3 text-accent-amber" />
               <span>{dict?.user?.userDemo}</span>

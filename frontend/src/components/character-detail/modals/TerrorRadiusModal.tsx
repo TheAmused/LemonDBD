@@ -41,7 +41,7 @@ export const TerrorRadiusModal: React.FC<TerrorRadiusModalProps> = ({
     <div className="relative flex flex-col items-center justify-center p-6 rounded-3xl bg-bg-primary border border-border-color overflow-hidden">
       <div className="relative w-64 h-64 sm:w-72 sm:h-72 flex items-center justify-center">
         <div className="absolute inset-0 rounded-full border border-dashed border-border-subtle flex items-start justify-center pt-1">
-          <span className="text-[9px] text-text-muted">{t.distance45m || '45m'} ({t.lullaby || 'Lullaby'})</span>
+          <span className="text-micro text-text-muted">{t.distance45m || '45m'} ({t.lullaby || 'Lullaby'})</span>
         </div>
 
         <div
@@ -51,7 +51,7 @@ export const TerrorRadiusModal: React.FC<TerrorRadiusModalProps> = ({
               : 'border-border-color'
           } flex items-start justify-center pt-1`}
         >
-          <span className="text-[9px] font-bold text-accent-red">{t.distance32m || '32m'} ({t.audible || 'Audible'})</span>
+          <span className="text-micro font-bold text-accent-red">{t.distance32m || '32m'} ({t.audible || 'Audible'})</span>
         </div>
 
         <div
@@ -61,22 +61,22 @@ export const TerrorRadiusModal: React.FC<TerrorRadiusModalProps> = ({
               : 'border-border-subtle'
           } flex items-start justify-center pt-1`}
          >
-           <span className="text-[9px] font-bold text-accent-amber">{t.distance24m}</span>
+           <span className="text-micro font-bold text-accent-amber">{t.distance24m}</span>
          </div>
 
          <div className="absolute inset-20 rounded-full border border-accent-red/60 bg-accent-red/10 flex items-start justify-center pt-1">
-           <span className="text-[9px] font-bold text-accent-red">{t.distance16m}</span>
+           <span className="text-micro font-bold text-accent-red">{t.distance16m}</span>
          </div>
 
 
         <div className="absolute inset-28 rounded-full border-2 border-accent-red bg-accent-red/20 flex items-center justify-center">
-          <span className="text-[9px] font-black text-accent-red">{t.distance8m || '8m'} ({t.chase || 'Chase'})</span>
+          <span className="text-micro font-black text-accent-red">{t.distance8m || '8m'} ({t.chase || 'Chase'})</span>
         </div>
 
         <div className="h-4 w-4 rounded-full bg-accent-red shadow-lg shadow-accent-red/50 z-10" />
       </div>
 
-      <div className="mt-4 flex items-center gap-2 text-xs font-bold text-text-secondary">
+      <div className="mt-4 flex items-center gap-2 type-strong text-text-secondary">
         <span className="inline-block h-2 w-2 rounded-full bg-accent-red" />
         <span>
           {t.currentBaseTerrorRadius || 'Current Base Terror Radius'}:{' '}
@@ -86,7 +86,7 @@ export const TerrorRadiusModal: React.FC<TerrorRadiusModalProps> = ({
     </div>
 
     <div className="space-y-3">
-      <h3 className="text-xs font-black uppercase text-text-secondary tracking-wider">
+      <h3 className="type-label-sm text-text-secondary">
         {t.heartbeatStages || 'Heartbeat Intensity Progression'}
       </h3>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
@@ -94,7 +94,7 @@ export const TerrorRadiusModal: React.FC<TerrorRadiusModalProps> = ({
           <strong className="text-accent-red block mb-1">
             {t.immediateThreat || '0 - 8 Metres (Immediate Chase)'}
           </strong>
-          <p className="text-text-secondary text-[11px]">
+          <p className="text-text-secondary type-caption">
             {t.immediateChaseDesc || 'Max heartbeat tempo, aggressive percussion, and direct visual red stain engagement.'}
           </p>
         </div>
@@ -102,7 +102,7 @@ export const TerrorRadiusModal: React.FC<TerrorRadiusModalProps> = ({
           <strong className="text-accent-red block mb-1">
             {t.dangerZone || '8 - 16 Metres (Danger Zone)'}
           </strong>
-          <p className="text-text-secondary text-[11px]">
+          <p className="text-text-secondary type-caption">
             {t.dangerZoneDesc || 'Rapid heavy thumping heartbeat; killer is actively maneuvering around loops.'}
           </p>
         </div>
@@ -110,7 +110,7 @@ export const TerrorRadiusModal: React.FC<TerrorRadiusModalProps> = ({
           <strong className="text-accent-amber block mb-1">
             {t.approaching || '16 - 24 Metres (Approaching)'}
           </strong>
-          <p className="text-text-secondary text-[11px]">
+          <p className="text-text-secondary type-caption">
             {t.approachingDesc || 'Rhythmic steady pulse indicating proximity to survivor objectives.'}
           </p>
         </div>
@@ -118,7 +118,7 @@ export const TerrorRadiusModal: React.FC<TerrorRadiusModalProps> = ({
           <strong className="text-text-primary block mb-1">
             {t.audibleRange || '24 - 32 Metres (Audible Range)'}
           </strong>
-          <p className="text-text-secondary text-[11px]">
+          <p className="text-text-secondary type-caption">
             {t.audibleRangeDesc || 'Initial faint audio cues signaling presence within the trial quadrant.'}
           </p>
         </div>
@@ -126,7 +126,7 @@ export const TerrorRadiusModal: React.FC<TerrorRadiusModalProps> = ({
     </div>
 
     <div className="space-y-2">
-      <span className="text-xs font-bold text-text-secondary uppercase">
+      <span className="type-label-sm text-text-secondary">
         {t.survivorComparison || 'Survivor Speed Comparison'}
       </span>
       <p className="text-xs text-text-secondary">

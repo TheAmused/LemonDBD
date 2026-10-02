@@ -140,7 +140,7 @@ export default function UserProfilePage() {
           <h1 className="text-xl sm:text-2xl font-black tracking-wider text-text-primary">
             {dict?.user?.authRequiredTitle || 'Authentication Required'}
           </h1>
-          <p className="text-xs text-text-secondary leading-relaxed">
+          <p className="type-body text-text-secondary">
             {dict?.user?.authRequiredDesc || 'Please sign in or create an account to view your LemonDBD profile, manage your teachables, and track game challenges.'}
           </p>
           <div className="flex flex-col gap-3 pt-2">

@@ -248,7 +248,7 @@ const CandidateRow = React.memo<CandidateRowProps>(({
               <span
                 {...tip(`${unratedLabel} - ${noVotesDesc}`, undefined, 'status')}
                 aria-label={`${unratedLabel} - ${noVotesDesc}`}
-                className="flex h-6 w-6 items-center justify-center rounded-lg border border-border-color bg-bg-elevated text-text-muted font-black text-xs shadow-inner shrink-0 transition-transform hover:scale-110"
+                className="flex h-6 w-6 items-center justify-center rounded-lg border border-border-color bg-bg-elevated text-text-muted type-strong shadow-inner shrink-0 transition-transform hover:scale-110"
               >
                 ?
               </span>
@@ -265,7 +265,7 @@ const CandidateRow = React.memo<CandidateRowProps>(({
       <div className="flex items-center justify-between sm:justify-end gap-3.5 shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-border-color">
         {/* Progress Bar */}
         <div className="flex flex-col gap-1 w-28 sm:w-32 shrink-0">
-          <div className="flex items-center justify-between text-[11px]">
+          <div className="flex items-center justify-between type-caption">
             <span className={`font-bold flex items-center gap-1 ${hasVotes ? 'text-accent-red' : 'text-text-muted'}`}>
               <Heart className={`h-3 w-3 ${hasVotes ? 'fill-accent-red text-accent-red' : 'text-text-muted'}`} />
               {hasVotes ? `${smashRate}${percentSign}` : '—'}
@@ -292,7 +292,7 @@ const CandidateRow = React.memo<CandidateRowProps>(({
             )}
           </div>
 
-          <span className="text-[10px] text-text-muted text-right">
+          <span className="type-micro text-text-muted text-right">
             {formatNumber(totalVotes)} {votesWord}
           </span>
         </div>
@@ -303,7 +303,7 @@ const CandidateRow = React.memo<CandidateRowProps>(({
             <Heart className="h-3.5 w-3.5 fill-accent-red" />
             <span>{smashCount}</span>
           </div>
-          <div className="flex items-center gap-1.5 justify-end text-text-muted text-[11px] font-semibold mt-0.5">
+          <div className="flex items-center gap-1.5 justify-end text-text-muted type-strong-xs mt-0.5">
             <ThumbsDown className="h-3 w-3 text-text-muted" />
             <span>{passCount}</span>
           </div>
@@ -546,12 +546,12 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
     {
       value: 'female',
       label: femaleOnlyLabel,
-      icon: <span className="flex h-3.5 w-3.5 items-center justify-center font-bold text-accent-red text-xs">♀</span>,
+      icon: <span className="flex h-3.5 w-3.5 items-center justify-center type-strong text-accent-red">♀</span>,
     },
     {
       value: 'male',
       label: maleOnlyLabel,
-      icon: <span className="flex h-3.5 w-3.5 items-center justify-center font-bold text-text-secondary text-xs">♂</span>,
+      icon: <span className="flex h-3.5 w-3.5 items-center justify-center type-strong text-text-secondary">♂</span>,
     },
     { value: 'monster_other', label: monstersLabel, icon: <Skull className="h-3.5 w-3.5 text-text-muted" /> },
   ];
@@ -591,7 +591,7 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
   ];
 
   const headerBadge = editionName ? (
-    <span className="px-2.5 py-0.5 rounded-full bg-accent-red/20 text-accent-red border border-accent-red/40 text-xs font-bold truncate max-w-[200px]">
+    <span className="px-2.5 py-0.5 rounded-full bg-accent-red/20 text-accent-red border border-accent-red/40 type-strong truncate max-w-[200px]">
       {editionName}
     </span>
   ) : null;
@@ -737,9 +737,9 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
                   <div className="flex items-center gap-2">
                     {meta.icon}
                     <span className="font-black text-xs sm:text-sm uppercase tracking-wider">{meta.name}</span>
-                    <span className="text-[11px] opacity-85">({meta.range})</span>
+                    <span className="type-caption opacity-85">({meta.range})</span>
                   </div>
-                  <span className="text-xs font-black">
+                  <span className="type-strong">
                     {tierList.length} {candidatesWord}
                   </span>
                 </div>

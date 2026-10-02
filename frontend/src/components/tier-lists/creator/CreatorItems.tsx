@@ -97,7 +97,7 @@ export function CreatorItems({ items, onRename, onUpdateItem, onRemove, onClear,
                 maxLength={TIER_LIST_LIMITS.maxItemName}
                 onChange={(e) => onRename(item.id, e.target.value)}
                 aria-label={c.renameItemAria.replace('{name}', item.name)}
-                className="mt-1 h-6 w-full rounded-sm border border-transparent bg-transparent px-1 text-center text-xs font-semibold text-text-secondary transition-colors hover:text-text-primary hover:bg-bg-elevated/40 focus:border-accent-red focus:bg-bg-surface focus:text-text-primary focus:outline-hidden truncate"
+                className="mt-1 h-6 w-full rounded-sm border border-transparent bg-transparent px-1 text-center type-strong text-text-secondary transition-colors hover:text-text-primary hover:bg-bg-elevated/40 focus:border-accent-red focus:bg-bg-surface focus:text-text-primary focus:outline-hidden truncate"
               />
             </li>
           ))}

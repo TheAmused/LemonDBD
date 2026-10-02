@@ -58,7 +58,7 @@ export const HistoryHeader: React.FC<HistoryHeaderProps> = ({
             className="hidden sm:block h-11 w-11 object-contain"
           />
           <div className="flex flex-col items-center sm:items-start">
-            <span className="flex items-center gap-1.5 text-sm font-bold uppercase tracking-wider text-text-muted capitalize">
+            <span className="flex items-center gap-1.5 type-label text-text-muted capitalize">
               <ModeIcon className="w-4 h-4" />
               {modeLabel}
             </span>
@@ -73,7 +73,7 @@ export const HistoryHeader: React.FC<HistoryHeaderProps> = ({
           <div className="flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-bg-elevated border border-border-color text-text-secondary shadow-sm">
             <Flame className="w-5 h-5 text-text-muted" />
             <div className="flex flex-col">
-              <span className="text-[10px] uppercase tracking-wider text-text-muted font-bold leading-none">
+              <span className="text-tiny uppercase tracking-wider text-text-muted font-bold leading-none">
                 {dict?.streaks?.killersBeaten || 'Killers beaten'}
               </span>
               <span className="text-lg font-black text-text-primary leading-none mt-0.5">
@@ -85,7 +85,7 @@ export const HistoryHeader: React.FC<HistoryHeaderProps> = ({
           <div className="flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-accent-amber/10 border border-accent-amber/30 text-accent-amber shadow-sm">
             <AdeptBadgeIcon className="w-5 h-5 text-accent-amber" />
             <div className="flex flex-col">
-              <span className="text-[10px] uppercase tracking-wider text-text-muted font-bold leading-none">
+              <span className="text-tiny uppercase tracking-wider text-text-muted font-bold leading-none">
                 {dict?.streaks?.best || 'Best'}
               </span>
               <span className="text-lg font-black text-text-primary leading-none mt-0.5">
@@ -97,7 +97,7 @@ export const HistoryHeader: React.FC<HistoryHeaderProps> = ({
           <div className="flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-bg-elevated border border-border-color text-text-secondary shadow-sm">
             <Flag className="w-5 h-5 text-text-muted" />
             <div className="flex flex-col">
-              <span className="text-[10px] uppercase tracking-wider text-text-muted font-bold leading-none">
+              <span className="text-tiny uppercase tracking-wider text-text-muted font-bold leading-none">
                 {dict?.streaks?.checkpointRow || 'Checkpoint row'}
               </span>
               <span className="text-lg font-black text-text-primary leading-none mt-0.5">

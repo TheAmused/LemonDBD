@@ -118,21 +118,21 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
     switch (status) {
       case 'in_progress':
         return (
-          <span className="inline-flex items-center gap-1.5 rounded-lg border border-accent-amber/30 bg-accent-amber/10 px-2.5 py-1 text-[10px] font-black uppercase tracking-wider text-accent-amber">
+          <span className="inline-flex items-center gap-1.5 rounded-lg border border-accent-amber/30 bg-accent-amber/10 px-2.5 py-1 type-label-2xs text-accent-amber">
             <Clock className="h-3 w-3 animate-spin" />
             <span>{t.statusInProgress || 'In Progress'}</span>
           </span>
         );
       case 'resolved':
         return (
-          <span className="inline-flex items-center gap-1.5 rounded-lg border border-accent-green/30 bg-accent-green/10 px-2.5 py-1 text-[10px] font-black uppercase tracking-wider text-accent-green">
+          <span className="inline-flex items-center gap-1.5 rounded-lg border border-accent-green/30 bg-accent-green/10 px-2.5 py-1 type-label-2xs text-accent-green">
             <CheckCircle className="h-3 w-3" />
             <span>{t.statusResolved || 'Resolved'}</span>
           </span>
         );
       case 'rejected':
         return (
-          <span className="inline-flex items-center gap-1.5 rounded-lg border border-border-color bg-bg-elevated px-2.5 py-1 text-[10px] font-black uppercase tracking-wider text-text-muted">
+          <span className="inline-flex items-center gap-1.5 rounded-lg border border-border-color bg-bg-elevated px-2.5 py-1 type-label-2xs text-text-muted">
             <XCircle className="h-3 w-3" />
             <span>{t.statusClosed || 'Closed'}</span>
           </span>
@@ -140,7 +140,7 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
       case 'pending':
       default:
         return (
-          <span className="inline-flex items-center gap-1.5 rounded-lg border border-accent-red/30 bg-accent-red/10 px-2.5 py-1 text-[10px] font-black uppercase tracking-wider text-accent-red">
+          <span className="inline-flex items-center gap-1.5 rounded-lg border border-accent-red/30 bg-accent-red/10 px-2.5 py-1 type-label-2xs text-accent-red">
             <HelpCircle className="h-3 w-3" />
             <span>{t.statusPending || 'Pending'}</span>
           </span>
@@ -209,12 +209,12 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
                 >
                   <div className="space-y-1 min-w-0 flex-1">
                     <div className="flex items-center gap-2.5 flex-wrap">
-                      <span className="text-xs text-text-muted font-bold">#{report.id}</span>
+                      <span className="type-strong text-text-muted">#{report.id}</span>
                       <h3 className="text-sm sm:text-base font-black text-text-primary truncate">
                         {report.title}
                       </h3>
                     </div>
-                    <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-[11px] text-text-secondary">
+                    <div className="flex flex-wrap items-center gap-2 sm:gap-3 type-caption text-text-secondary">
                       <span className="rounded-lg bg-bg-elevated text-text-primary px-2 py-0.5 font-bold border border-border-color">
                         {report.category}
                       </span>
@@ -245,14 +245,14 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
                 >
                   <div className="overflow-hidden">
                     <div className="p-3.5 sm:p-4 pt-0 border-t border-border-color/60 space-y-3">
-                      <p className="text-xs text-text-secondary leading-relaxed whitespace-pre-wrap pt-2">
+                      <p className="type-body text-text-secondary whitespace-pre-wrap pt-2">
                         {report.message}
                       </p>
 
                       {/* Attachments with click to open popup modal */}
                       {report.images && report.images.length > 0 && (
                         <div className="space-y-1.5 pt-1">
-                          <span className="text-[10px] font-extrabold uppercase tracking-wider text-text-muted flex items-center gap-1">
+                          <span className="type-label-2xs text-text-muted flex items-center gap-1">
                             <ImageIcon className="h-3 w-3 text-accent-red" />
                             {t.attachments || 'Attachments'} ({report.images.length})
                           </span>
@@ -290,7 +290,7 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
                       {/* Developer Admin Response */}
                       {report.admin_notes && (
                         <div className="mt-2 rounded-xl border border-accent-amber/30 bg-accent-amber/10 p-3 space-y-1">
-                          <div className="flex items-center gap-2 text-accent-amber text-xs font-bold">
+                          <div className="flex items-center gap-2 text-accent-amber type-strong">
                             <OverseerEyeIcon className="h-3.5 w-3.5" />
                             <span>{t.devResponse || 'Developer Response'}</span>
                           </div>

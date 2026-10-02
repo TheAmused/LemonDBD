@@ -404,20 +404,20 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ className = 
                   <div className="min-w-0 flex-1">
                     <div className="flex flex-wrap items-center gap-2">
                       <span
-                        className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[10px] font-black uppercase tracking-wide ${theme.badgeClass}`}
+                        className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-tiny font-black uppercase tracking-wide ${theme.badgeClass}`}
                       >
                         {theme.label}
                       </span>
                       {!post.is_published && (
-                        <span className="text-[10px] font-bold uppercase tracking-wide text-text-muted">
+                        <span className="type-label-2xs text-text-muted">
                           {t?.draftBadge || 'Draft'}
                         </span>
                       )}
-                      <span className="text-[10px] font-bold uppercase tracking-wide text-text-muted">
+                      <span className="type-label-2xs text-text-muted">
                         {formatPostDate(post.created_at)}
                       </span>
                     </div>
-                    <h3 className="mt-1.5 truncate text-sm font-black text-text-primary">{post.title}</h3>
+                    <h3 className="mt-1.5 truncate type-card-title text-text-primary">{post.title}</h3>
                   </div>
                   <span className="mt-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-text-muted">
                     {isExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
@@ -437,7 +437,7 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ className = 
                       className="dbd-changelog-body text-xs leading-relaxed text-text-muted [&_h3]:text-sm [&_h3]:font-black [&_h3]:text-accent-red [&_ul]:list-disc [&_ul]:pl-4 [&_ol]:list-decimal [&_ol]:pl-4 [&_a]:text-accent-red [&_a]:underline"
                     />
                     <div className="mt-2.5 flex items-center justify-between gap-2">
-                      <span className="text-[10px] font-bold uppercase tracking-wide text-text-muted">
+                      <span className="type-label-2xs text-text-muted">
                         {t?.byAuthor || 'by'} {post.author_name}
                       </span>
                       {isAdmin && (
@@ -526,7 +526,7 @@ const FilterChip: React.FC<{ active: boolean; onClick: () => void; label: string
   <button
     type="button"
     onClick={onClick}
-    className={`flex items-center gap-1.5 rounded-full border px-3 py-1 text-[11px] font-bold transition-all cursor-pointer ${
+    className={`flex items-center gap-1.5 rounded-full border px-3 py-1 text-mini font-bold transition-all cursor-pointer ${
       active
         ? 'border-accent-red/50 bg-accent-red/10 text-accent-red'
         : 'border-border-color text-text-muted hover:text-text-secondary'

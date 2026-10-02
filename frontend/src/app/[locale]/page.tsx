@@ -45,7 +45,7 @@ function LandingContent() {
 
           {/* Badge */}
           {dict?.landing?.welcomeBadge && (
-            <div className="inline-flex items-center rounded-full border border-accent-red/30 bg-accent-red/10 px-4 py-1.5 text-xs font-black uppercase tracking-wider text-accent-red mb-5">
+            <div className="inline-flex items-center rounded-full border border-accent-red/30 bg-accent-red/10 px-4 py-1.5 type-label-sm text-accent-red mb-5">
               <span>{dict.landing.welcomeBadge}</span>
             </div>
           )}
@@ -68,7 +68,7 @@ function LandingContent() {
             <div className="mt-8">
               <Link
                 href={`/${locale}/perks`}
-                className="inline-flex items-center gap-2.5 rounded-2xl bg-accent-red hover:bg-accent-red-hover px-7 py-3.5 text-sm font-black text-text-inverted shadow-md hover:scale-105 active:scale-95 transition-all cursor-pointer"
+                className="inline-flex items-center gap-2.5 rounded-2xl bg-accent-red hover:bg-accent-red-hover px-7 py-3.5 type-card-title text-text-inverted shadow-md hover:scale-105 active:scale-95 transition-all cursor-pointer"
               >
                 <Sparkles className="h-4 w-4" />
                 <span>{dict.landing.enterButton}</span>

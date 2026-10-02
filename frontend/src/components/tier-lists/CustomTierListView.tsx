@@ -108,7 +108,7 @@ export function CustomTierListView({ id, locale, dict }: CustomTierListViewProps
       <div className="relative z-10 flex flex-col gap-2">
         <Link
           href={`/${locale}/tier-lists`}
-          className="inline-flex min-h-[44px] w-fit items-center gap-1 text-xs font-bold uppercase tracking-wider text-text-secondary hover:text-accent-red"
+          className="inline-flex min-h-[44px] w-fit items-center gap-1 type-label-sm text-text-secondary hover:text-accent-red"
         >
           <ChevronLeft className="h-4 w-4" aria-hidden="true" />
           {t.backToHub}

@@ -54,7 +54,7 @@ export function SegmentedControl<T extends string>({
             onClick={() => onChange(opt.value)}
             aria-pressed={isActive}
             className={cn(
-              'relative flex items-center justify-center gap-1 sm:gap-1.5 2xl:gap-2.5 text-[10px] xs:text-[11px] sm:text-xs 2xl:text-sm min-[1800px]:text-base font-black tracking-wide sm:tracking-wider uppercase transition-all duration-200 cursor-pointer touch-manipulation min-h-[36px] sm:min-h-[42px] 2xl:min-h-[48px] select-none text-center',
+              'relative flex items-center justify-center gap-1 sm:gap-1.5 2xl:gap-2.5 text-tiny xs:text-mini sm:text-xs 2xl:text-sm min-[1800px]:text-base font-black tracking-wide sm:tracking-wider uppercase transition-all duration-200 cursor-pointer touch-manipulation min-h-[36px] sm:min-h-[42px] 2xl:min-h-[48px] select-none text-center',
               bare
                 ? cn('pb-1.5 pt-1 px-0.5 sm:px-2 2xl:px-3.5 2xl:py-2 min-[1800px]:px-4.5 rounded-xl transition-colors', isActive ? 'text-accent-red font-extrabold' : 'text-text-secondary hover:text-text-primary hover:bg-bg-elevated/60')
                 : cn(

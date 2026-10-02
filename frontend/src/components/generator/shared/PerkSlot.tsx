@@ -80,7 +80,7 @@ export const PerkSlot: React.FC<PerkSlotProps> = ({
           )}
         >
           <EyeOff className="h-10 w-10 animate-pulse" />
-          <span className="text-[11px] font-black uppercase tracking-wide text-center px-2">
+          <span className="type-label-xs text-center px-2">
             {dict?.generator?.clickToReveal || '??? (Click to Reveal)'}
           </span>
         </button>
@@ -98,7 +98,7 @@ export const PerkSlot: React.FC<PerkSlotProps> = ({
           )}
         >
           <ImageOff className="h-8 w-8 text-text-muted" />
-          <span className="text-[11px] font-bold text-text-muted text-center px-2">
+          <span className="type-strong-xs text-text-muted text-center px-2">
             {dict?.generator?.emptySlot || 'Empty Slot'}
           </span>
         </div>

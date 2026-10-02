@@ -81,7 +81,7 @@ export const PerksTogglePopup: React.FC<PerksTogglePopupProps> = ({
       centerTitle={false}
     >
       {dict?.characterDetail?.togglePerkOwnershipHelp && (
-        <p className="px-5 pt-4 text-[11px] text-text-muted">
+        <p className="px-5 pt-4 type-caption text-text-muted">
           {dict.characterDetail.togglePerkOwnershipHelp}
         </p>
       )}
@@ -127,7 +127,7 @@ export const PerksTogglePopup: React.FC<PerksTogglePopupProps> = ({
                   {isUnlocked ? <Check className="h-3.5 w-3.5" /> : <Lock className="h-3.5 w-3.5" />}
                 </div>
               </div>
-              <span className="line-clamp-2 text-[11px] font-semibold leading-tight text-text-primary">
+              <span className="line-clamp-2 text-mini font-semibold leading-tight text-text-primary">
                 {perk.name}
               </span>
             </button>

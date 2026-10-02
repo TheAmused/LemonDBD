@@ -327,10 +327,10 @@ export const CoverImageCropModal: React.FC<CoverImageCropModalProps> = ({
               <div className="flex flex-col items-center justify-center gap-2.5 p-6 text-center text-text-muted">
                 <ImageIcon className="h-10 w-10 text-accent-red/60 animate-bounce" />
                 <div className="space-y-1">
-                  <p className="text-xs font-bold text-text-primary">
+                  <p className="type-strong text-text-primary">
                     {imageError ? cm.unableToDisplay : cm.noImageUrl}
                   </p>
-                  <p className="text-[11px] text-text-muted max-w-sm">
+                  <p className="type-caption text-text-muted max-w-sm">
                     {cm.uploadPrompt}
                   </p>
                 </div>
@@ -358,7 +358,7 @@ export const CoverImageCropModal: React.FC<CoverImageCropModalProps> = ({
             </div>
 
             {/* Hint overlay */}
-            <div className="absolute bottom-3 left-3 px-2.5 py-1 rounded-lg bg-bg-primary/80 backdrop-blur-md border border-border-subtle text-[10px] text-text-secondary pointer-events-none">
+            <div className="absolute bottom-3 left-3 px-2.5 py-1 rounded-lg bg-bg-primary/80 backdrop-blur-md border border-border-subtle type-micro text-text-secondary pointer-events-none">
               {cm.dragHint ? cm.dragHint.replace('{zoom}', String(Math.round(zoom * 100))) : ''}
             </div>
           </div>
@@ -375,7 +375,7 @@ export const CoverImageCropModal: React.FC<CoverImageCropModalProps> = ({
               <ZoomOut className="h-4 w-4" />
             </Button>
 
-            <span className="text-xs font-bold text-text-muted flex items-center gap-1 shrink-0 w-24">
+            <span className="type-strong text-text-muted flex items-center gap-1 shrink-0 w-24">
               <ZoomIn className="h-3.5 w-3.5 text-accent-red" />
               {Math.round(zoom * 100)}%
             </span>
@@ -437,7 +437,7 @@ export const CoverImageCropModal: React.FC<CoverImageCropModalProps> = ({
             <AlertCircle className="h-5 w-5 shrink-0 mt-0.5 text-accent-amber" />
             <div className="space-y-1.5">
               <p className="font-bold">{cm.corsTitle}</p>
-              <p className="text-[11px] text-text-muted leading-relaxed">
+              <p className="text-mini text-text-muted leading-relaxed">
                 {isAdmin ? cm.corsAdminDesc : cm.corsUserDesc}
               </p>
               <div className="flex items-center gap-2 pt-1">
@@ -445,7 +445,7 @@ export const CoverImageCropModal: React.FC<CoverImageCropModalProps> = ({
                   <button
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
-                    className="px-3 py-1 rounded-lg bg-accent-amber text-text-inverted text-xs font-bold uppercase tracking-wider hover:opacity-90 transition-opacity cursor-pointer"
+                    className="px-3 py-1 rounded-lg bg-accent-amber text-text-inverted type-label-sm hover:opacity-90 transition-opacity cursor-pointer"
                   >
                     {cm.uploadFile}
                   </button>

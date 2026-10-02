@@ -53,11 +53,11 @@ export const KillerPowerGuesser: React.FC<KillerPowerGuesserProps> = ({
         </div>
 
         <div className="text-center">
-          <div className="text-xs uppercase tracking-wider text-text-muted font-semibold mb-2">
+          <div className="type-label-sm text-text-muted mb-2">
             {t.modes.killer_power}
           </div>
           {/* Show description, NOT power_name */}
-          <p className="text-sm text-text-secondary leading-relaxed max-w-sm">
+          <p className="type-body-lg text-text-secondary max-w-sm">
             {powerDescription}
           </p>
         </div>
@@ -84,7 +84,7 @@ export const KillerPowerGuesser: React.FC<KillerPowerGuesserProps> = ({
         )}
 
         {isSolved && targetKiller && (
-          <div className="mt-2 px-4 py-1.5 rounded-lg bg-accent-green text-text-inverted font-bold text-sm flex items-center gap-2 shadow-md">
+          <div className="mt-2 px-4 py-1.5 rounded-lg bg-accent-green text-text-inverted type-card-title flex items-center gap-2 shadow-md">
             <Check className="w-4 h-4" />
             <span>{targetKiller.name} — {targetKiller.power_name}</span>
           </div>

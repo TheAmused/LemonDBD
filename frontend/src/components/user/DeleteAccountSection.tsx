@@ -81,7 +81,7 @@ export const DeleteAccountSection: React.FC<{ dict?: Dictionary }> = ({ dict }) 
         }
       >
         <div className="flex flex-col gap-3 text-left">
-          <p className="text-sm leading-relaxed text-text-muted">{t.deleteAccountConfirmDesc}</p>
+          <p className="type-body-lg text-text-muted">{t.deleteAccountConfirmDesc}</p>
           <Input
             type="password"
             autoComplete="current-password"
@@ -96,7 +96,7 @@ export const DeleteAccountSection: React.FC<{ dict?: Dictionary }> = ({ dict }) 
             autoFocus
           />
           {error ? (
-            <p role="alert" className="text-xs font-semibold text-accent-red">
+            <p role="alert" className="type-strong text-accent-red">
               {error}
             </p>
           ) : null}

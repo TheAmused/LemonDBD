@@ -120,10 +120,10 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
               : 'border-accent-red/20 bg-accent-red/10 text-accent-red hover:border-accent-red/40'
           }`}
         >
-          <span className="text-xs font-bold uppercase flex items-center gap-1.5">
+          <span className="type-label-sm flex items-center gap-1.5">
             <HelpCircle className="h-4 w-4" /> {dict?.admin?.statusPending || dict?.admin?.pending || ''}
           </span>
-          <p className="text-xl sm:text-2xl font-black mt-1">
+          <p className="type-page-title mt-1">
             {bugStats?.pending ?? 0}
           </p>
         </button>
@@ -138,10 +138,10 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
               : 'border-accent-amber/20 bg-accent-amber/10 text-accent-amber hover:border-accent-amber/40'
           }`}
         >
-          <span className="text-xs font-bold uppercase flex items-center gap-1.5">
+          <span className="type-label-sm flex items-center gap-1.5">
             <Clock className="h-4 w-4" /> {dict?.admin?.statusInProgress || dict?.admin?.inProgress || ''}
           </span>
-          <p className="text-xl sm:text-2xl font-black mt-1">
+          <p className="type-page-title mt-1">
             {bugStats?.in_progress ?? 0}
           </p>
         </button>
@@ -156,10 +156,10 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
               : 'border-accent-green/20 bg-accent-green/10 text-accent-green hover:border-accent-green/40'
           }`}
         >
-          <span className="text-xs font-bold uppercase flex items-center gap-1.5">
+          <span className="type-label-sm flex items-center gap-1.5">
             <CheckCircle className="h-4 w-4" /> {dict?.admin?.statusResolved || dict?.admin?.resolved || ''}
           </span>
-          <p className="text-xl sm:text-2xl font-black mt-1">
+          <p className="type-page-title mt-1">
             {bugStats?.resolved ?? 0}
           </p>
         </button>
@@ -174,10 +174,10 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
               : 'border-border-color bg-bg-surface text-text-secondary hover:border-border-subtle'
           }`}
         >
-          <span className="text-xs font-bold uppercase flex items-center gap-1.5">
+          <span className="type-label-sm flex items-center gap-1.5">
             <FogReportIcon className="h-4 w-4" /> {dict?.admin?.totalTickets || ''}
           </span>
-          <p className="text-xl sm:text-2xl font-black text-text-primary mt-1">
+          <p className="type-page-title text-text-primary mt-1">
             {bugStats?.total ?? 0}
           </p>
         </button>
@@ -197,7 +197,7 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
             />
 
             <div className="flex items-center justify-between gap-2">
-              <label htmlFor="bug-status-filter-select" className="flex items-center gap-1 text-[11px] font-bold text-text-secondary">
+              <label htmlFor="bug-status-filter-select" className="flex items-center gap-1 type-strong-xs text-text-secondary">
                 <Filter className="h-3 w-3" />
                 <span>{dict?.admin?.filterLabel || ''}</span>
               </label>
@@ -254,26 +254,26 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
                     <div className="flex items-start justify-between gap-2">
                       <div className="flex items-center gap-1.5">
                         <span className={`h-2 w-2 rounded-full ${cfg.dot}`} />
-                        <span className="text-xs font-black text-text-primary">
+                        <span className="type-strong text-text-primary">
                           #{report.id}
                         </span>
                       </div>
                       <span
-                        className={`text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-md border ${cfg.badge}`}
+                        className={`text-tiny font-black uppercase tracking-wider px-2 py-0.5 rounded-md border ${cfg.badge}`}
                       >
                         {statusLabel}
                       </span>
                     </div>
 
-                    <h4 className="text-xs font-black text-text-primary truncate">
+                    <h4 className="type-strong text-text-primary truncate">
                       {report.title}
                     </h4>
 
-                    <p className="text-[11px] text-text-secondary line-clamp-2 leading-relaxed">
+                    <p className="text-mini text-text-secondary line-clamp-2 leading-relaxed">
                       {report.message}
                     </p>
 
-                    <div className="flex items-center justify-between text-[10px] text-text-muted pt-1">
+                    <div className="flex items-center justify-between type-micro text-text-muted pt-1">
                       <span className="font-semibold text-text-secondary truncate max-w-[140px]">
                         {report.reporter_name}
                       </span>
@@ -295,7 +295,7 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
 
           {totalBugReports > 20 && (
             <div className="flex items-center justify-between pt-3 border-t border-border-color text-xs">
-              <span className="text-text-secondary text-[11px]">
+              <span className="text-text-secondary type-caption">
                 {dict?.admin?.pageLabel || ''} {bugPage} {dict?.admin?.ofLabel || ''}{' '}
                 {Math.ceil(totalBugReports / 20)}
               </span>
@@ -330,13 +330,13 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-border-color">
                 <div>
                   <div className="flex items-center gap-2 mb-1">
-                    <span className="text-xs font-bold text-accent-red">
+                    <span className="type-strong text-accent-red">
                       #{selectedBug.id}
                     </span>
-                    <span className="rounded-md bg-bg-elevated text-text-secondary border border-border-color px-2 py-0.5 text-[10px] font-bold">
+                    <span className="rounded-md bg-bg-elevated text-text-secondary border border-border-color px-2 py-0.5 type-strong-2xs">
                       {selectedBug.category}
                     </span>
-                    <span className="text-[11px] text-text-muted">
+                    <span className="type-caption text-text-muted">
                       {formatDateTime(selectedBug.created_at)}
                     </span>
                   </div>
@@ -378,17 +378,17 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
               </div>
 
               <div className="space-y-2">
-                <h4 className="text-[11px] font-bold uppercase tracking-wider text-text-secondary">
+                <h4 className="type-label-xs text-text-secondary">
                   {dict?.admin?.description || ''}
                 </h4>
-                <div className="rounded-2xl border border-border-color bg-bg-primary p-4 text-xs text-text-primary leading-relaxed whitespace-pre-wrap min-h-[100px]">
+                <div className="rounded-2xl border border-border-color bg-bg-primary p-4 type-body text-text-primary whitespace-pre-wrap min-h-[100px]">
                   {selectedBug.message}
                 </div>
               </div>
 
               {selectedBug.images && selectedBug.images.length > 0 && (
                 <div className="space-y-2">
-                  <h4 className="text-[11px] font-bold uppercase tracking-wider text-text-secondary flex items-center gap-1.5">
+                  <h4 className="type-label-xs text-text-secondary flex items-center gap-1.5">
                     <ImageIcon className="h-3.5 w-3.5" />
                     {dict?.admin?.attachmentsLabel || ''} ({selectedBug.images.length})
                   </h4>
@@ -417,7 +417,7 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
               )}
 
               <div className="space-y-2 pt-2 border-t border-border-color">
-                <label htmlFor={`dev-feedback-${selectedBug.id}`} className="text-[11px] font-bold uppercase tracking-wider text-text-secondary flex items-center gap-1.5">
+                <label htmlFor={`dev-feedback-${selectedBug.id}`} className="type-label-xs text-text-secondary flex items-center gap-1.5">
                   <MessageSquare className="h-3.5 w-3.5 text-accent-amber" />
                   {dict?.admin?.devFeedbackLabel || ''}
                 </label>

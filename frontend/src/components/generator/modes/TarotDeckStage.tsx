@@ -215,7 +215,7 @@ export const TarotDeckStage: React.FC<TarotDeckStageProps> = ({
                     {card.flipped && (
                       <>
                         <div className="relative z-10 pt-1 text-center">
-                          <span className="text-[9px] sm:text-[10px] md:text-[11px] xl:text-xs 2xl:text-sm wide:text-base font-black uppercase tracking-[0.2em] text-tarot-ink drop-shadow-xs">
+                          <span className="text-micro sm:text-tiny md:text-mini xl:text-xs 2xl:text-sm wide:text-base font-black uppercase tracking-spaced text-tarot-ink drop-shadow-xs">
                             {typeNames[card.type] || DEFAULT_TYPE_NAMES[card.type]}
                           </span>
                         </div>

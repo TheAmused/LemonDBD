@@ -107,12 +107,12 @@ export const MainCard: React.FC<MainCardProps> = ({
                 <span className="text-2xl sm:text-3xl tracking-wider text-text-primary">
                   {loadout.characterName.slice(0, 2).toUpperCase()}
                 </span>
-                <span className="text-[10px] text-text-muted">
+                <span className="type-micro text-text-muted">
                   {role.toUpperCase()}
                 </span>
               </div>
             )}
-            <div className="absolute inset-0 bg-bg-primary/70 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-xs font-bold text-text-inverted uppercase tracking-wider backdrop-blur-xs">
+            <div className="absolute inset-0 bg-bg-primary/70 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center type-label-sm text-text-inverted backdrop-blur-xs">
               {dict?.user?.changeMain || 'Change'}
             </div>
           </div>

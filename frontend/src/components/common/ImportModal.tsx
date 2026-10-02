@@ -111,7 +111,7 @@ export function Notice({ tone, text }: { tone: NoticeTone; text: string }) {
 /** The bold summary line shown above warnings once a payload parsed. */
 export function ImportPreview({ text }: { text: string }) {
   return (
-    <p className="rounded-xl border border-border-color bg-bg-elevated/60 p-3 text-sm font-bold text-text-primary">
+    <p className="rounded-xl border border-border-color bg-bg-elevated/60 p-3 type-card-title text-text-primary">
       {text}
     </p>
   );
@@ -197,7 +197,7 @@ export function ImportModal({
     >
       <div className="flex flex-col gap-4">
         {sharedLink && (
-          <p className="flex items-start gap-2 rounded-xl border border-accent-amber/40 bg-accent-amber/10 p-3 text-sm font-semibold text-accent-amber">
+          <p className="flex items-start gap-2 rounded-xl border border-accent-amber/40 bg-accent-amber/10 p-3 type-card-title text-accent-amber">
             <Info className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
             {labels.sharedLinkDetected}
           </p>

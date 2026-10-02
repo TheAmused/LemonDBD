@@ -38,8 +38,8 @@ const COLOR_PRESETS = [
   { label: 'Crimson Ember', value: 'from-accent-red to-bg-primary' },
   { label: 'Golden Radiance', value: 'from-accent-amber to-bg-primary' },
   { label: 'Emerald Spirit', value: 'from-accent-green to-bg-primary' },
-  { label: 'Amethyst Void', value: 'from-purple-600 to-bg-primary' },
-  { label: 'Deep Cyan', value: 'from-cyan-600 to-bg-primary' },
+  { label: 'Amethyst Void', value: 'from-accent-purple to-bg-primary' },
+  { label: 'Deep Cyan', value: 'from-accent-cyan to-bg-primary' },
   { label: 'Obsidian Fog', value: 'from-bg-surface to-bg-primary' },
 ];
 
@@ -128,7 +128,7 @@ export function RomanceArchetypeBuilder({
               </h3>
             </div>
           )}
-          <p className="text-xs text-text-muted mt-0.5 leading-relaxed">
+          <p className="type-body text-text-muted mt-0.5">
             {ab.sectionDesc}
           </p>
         </div>
@@ -172,16 +172,16 @@ export function RomanceArchetypeBuilder({
                     </div>
                     <div className="min-w-0">
                       <div className="flex items-center gap-2">
-                        <span className="text-xs sm:text-sm font-black text-text-primary truncate">
+                        <span className="type-strong-fluid text-text-primary truncate">
                           {arch.title || `${ab.titleLabel} #${idx + 1}`}
                         </span>
                         {arch.is_fallback && (
-                          <span className="text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.2 rounded bg-accent-amber/20 text-accent-amber border border-accent-amber/30">
+                          <span className="type-label-2xs px-1.5 py-0.2 rounded bg-accent-amber/20 text-accent-amber border border-accent-amber/30">
                             {ab.fallbackBadge}
                           </span>
                         )}
                       </div>
-                      <p className="text-[11px] text-text-muted truncate">{arch.subtitle}</p>
+                      <p className="type-caption text-text-muted truncate">{arch.subtitle}</p>
                     </div>
                   </div>
 
@@ -245,7 +245,7 @@ export function RomanceArchetypeBuilder({
                       <div className="grid gap-3 sm:grid-cols-2">
                         {/* Preset Icon Choice */}
                         <div>
-                          <label className="text-[11px] font-bold text-text-secondary block mb-1">
+                          <label className="type-strong-xs text-text-secondary block mb-1">
                             {ab.chooseIconPreset}
                           </label>
                           <div className="flex flex-wrap gap-1.5">
@@ -273,7 +273,7 @@ export function RomanceArchetypeBuilder({
 
                         {/* Custom Icon Image URL */}
                         <div>
-                          <label className="text-[11px] font-bold text-text-secondary block mb-1">
+                          <label className="type-strong-xs text-text-secondary block mb-1">
                             {ab.customIconUrl}
                           </label>
                           <div className="relative">
@@ -291,7 +291,7 @@ export function RomanceArchetypeBuilder({
 
                       {/* Badge Color Presets */}
                       <div className="pt-2">
-                        <label className="text-[11px] font-bold text-text-secondary block mb-1">
+                        <label className="type-strong-xs text-text-secondary block mb-1">
                           {ab.badgeGradientColor}
                         </label>
                         <div className="flex flex-wrap gap-2">
@@ -301,7 +301,7 @@ export function RomanceArchetypeBuilder({
                               type="button"
                               onClick={() => updateArchetype(arch.id, { badge_color: color.value })}
                               className={cn(
-                                'text-[11px] px-2.5 py-1 rounded-xl border transition-all cursor-pointer font-bold',
+                                'text-mini px-2.5 py-1 rounded-xl border transition-all cursor-pointer font-bold',
                                 arch.badge_color === color.value
                                   ? 'border-accent-red bg-accent-red/20 text-text-primary'
                                   : 'border-border-color bg-bg-surface text-text-muted hover:text-text-primary'
@@ -316,7 +316,7 @@ export function RomanceArchetypeBuilder({
                       <Checkbox
                         checked={arch.is_fallback || false}
                         onChange={(checked) => updateArchetype(arch.id, { is_fallback: checked })}
-                        className="pt-1 text-xs font-bold text-text-secondary"
+                        className="pt-1 type-strong text-text-secondary"
                       >
                         {ab.markAsFallback}
                       </Checkbox>
@@ -329,7 +329,7 @@ export function RomanceArchetypeBuilder({
                         <button
                           type="button"
                           onClick={() => addRule(arch.id)}
-                          className="text-xs font-bold text-accent-red hover:underline flex items-center gap-1 cursor-pointer"
+                          className="type-strong text-accent-red hover:underline flex items-center gap-1 cursor-pointer"
                         >
                           <Plus className="h-3 w-3" />
                           <span>{ab.addCondition}</span>

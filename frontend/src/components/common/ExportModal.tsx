@@ -148,7 +148,7 @@ export function ExportModal<D>({
             </Button>
           </div>
           {shareUrl.length > shareLinkWarnChars && (
-            <p className="flex items-start gap-2 rounded-xl border border-accent-amber/40 bg-accent-amber/10 p-3 text-xs font-semibold text-accent-amber">
+            <p className="flex items-start gap-2 rounded-xl border border-accent-amber/40 bg-accent-amber/10 p-3 type-strong text-accent-amber">
               <TriangleAlert className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
               {labels.linkTooLong.replace('{count}', shareUrl.length.toLocaleString(locale))}
             </p>

@@ -61,22 +61,22 @@ export const KillerPowerModal: React.FC<KillerPowerModalProps> = ({
     >
       <div className="px-6 py-3 bg-bg-elevated border-b border-border-color grid grid-cols-3 gap-2">
         <div className="p-2 rounded-xl bg-bg-surface border border-border-color text-center">
-          <span className="block text-[9px] font-bold uppercase text-text-secondary">{t.movementSpeed || 'Speed'}</span>
-          <span className="block text-xs font-black text-text-primary truncate">{killerSpeed}</span>
+          <span className="block text-micro font-bold uppercase text-text-secondary">{t.movementSpeed || 'Speed'}</span>
+          <span className="block type-strong text-text-primary truncate">{killerSpeed}</span>
         </div>
         <div className="p-2 rounded-xl bg-bg-surface border border-border-color text-center">
-          <span className="block text-[9px] font-bold uppercase text-text-secondary">{t.terrorRadius || 'Terror Radius'}</span>
-          <span className="block text-xs font-black text-accent-red truncate">{killerTerrorRadius}</span>
+          <span className="block text-micro font-bold uppercase text-text-secondary">{t.terrorRadius || 'Terror Radius'}</span>
+          <span className="block type-strong text-accent-red truncate">{killerTerrorRadius}</span>
         </div>
         <div className="p-2 rounded-xl bg-bg-surface border border-border-color text-center">
-          <span className="block text-[9px] font-bold uppercase text-text-secondary">{t.height || 'Height'}</span>
-          <span className="block text-xs font-black text-text-primary truncate">{killerHeight}</span>
+          <span className="block text-micro font-bold uppercase text-text-secondary">{t.height || 'Height'}</span>
+          <span className="block type-strong text-text-primary truncate">{killerHeight}</span>
         </div>
       </div>
 
-      <div className="p-4 sm:p-6 space-y-4 text-sm text-text-secondary leading-relaxed">
+      <div className="p-4 sm:p-6 space-y-4 type-body-lg text-text-secondary">
         <div className="space-y-2">
-          <span className="flex items-center gap-2 text-xs font-bold text-text-secondary uppercase mb-2">
+          <span className="flex items-center gap-2 type-label-sm text-text-secondary mb-2">
             <BookOpen className="h-3.5 w-3.5 text-accent-red" />
             {t.killerPowerDesc || 'Special ability and combat mechanics'}
           </span>

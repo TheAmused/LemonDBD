@@ -62,7 +62,7 @@ export const RunHeader: React.FC<RunHeaderProps> = ({
           <div className="flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-bg-elevated border border-accent-red/30 text-accent-red shadow-sm">
             <Flame className="w-5 h-5 text-accent-red fill-accent-red/20" aria-hidden="true" />
             <div className="flex flex-col">
-              <span className="text-[10px] uppercase tracking-wider text-text-muted font-bold leading-none">
+              <span className="text-tiny uppercase tracking-wider text-text-muted font-bold leading-none">
                 {dict?.stats?.current || 'Current'}
               </span>
               <span className="text-lg font-black text-text-primary leading-none mt-0.5">
@@ -74,7 +74,7 @@ export const RunHeader: React.FC<RunHeaderProps> = ({
           <div className="flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-bg-elevated border border-accent-amber/30 text-accent-amber shadow-sm">
             <AdeptBadgeIcon className="w-5 h-5 text-accent-amber" aria-hidden="true" />
             <div className="flex flex-col">
-              <span className="text-[10px] uppercase tracking-wider text-text-muted font-bold leading-none">
+              <span className="text-tiny uppercase tracking-wider text-text-muted font-bold leading-none">
                 {dict?.stats?.best || 'Best'}
               </span>
               <span className="text-lg font-black text-text-primary leading-none mt-0.5">
@@ -130,7 +130,7 @@ export const RunHeader: React.FC<RunHeaderProps> = ({
       </div>
 
       <div className="mt-4">
-        <div className="flex items-baseline justify-between text-[11px] uppercase tracking-wider text-text-muted">
+        <div className="flex items-baseline justify-between text-mini uppercase tracking-wider text-text-muted">
           <span>
             {run.status === 'completed'
               ? (dict?.streaks?.allPagesCleared || 'All pages cleared')

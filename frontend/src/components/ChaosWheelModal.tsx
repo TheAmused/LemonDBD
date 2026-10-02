@@ -280,7 +280,7 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({
       padded
     >
     {dict?.generator?.chaosWheelDesc && (
-      <p id="chaos-modal-desc" className="max-w-lg mx-auto text-center text-xs sm:text-sm font-bold text-text-secondary">
+      <p id="chaos-modal-desc" className="max-w-lg mx-auto text-center type-strong-fluid text-text-secondary">
         {dict.generator.chaosWheelDesc}
       </p>
     )}
@@ -339,7 +339,7 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({
             type="button"
             onClick={handleClearCurse}
             {...tip(dict?.generator?.clearMutatorTooltip || 'Remove active curse', undefined, 'action')} aria-label={dict?.generator?.clearMutatorTooltip || 'Remove active curse'}
-            className="flex items-center gap-1 text-xs sm:text-sm text-accent-red hover:text-accent-red-hover font-bold px-2 py-1.5 rounded-lg hover:bg-accent-red/10 transition-colors cursor-pointer shrink-0"
+            className="flex items-center gap-1 type-strong-fluid text-accent-red hover:text-accent-red-hover px-2 py-1.5 rounded-lg hover:bg-accent-red/10 transition-colors cursor-pointer shrink-0"
           >
             <Trash2 className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
             <span className="hidden xs:inline">{dict?.generator?.clearMutator || 'Clear'}</span>
@@ -366,12 +366,12 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({
               type="button"
               onClick={handleClearCurse}
               {...tip(dict?.generator?.clearMutatorTooltip || 'Remove active curse', undefined, 'action')} aria-label={dict?.generator?.clearMutatorTooltip || 'Remove active curse'}
-              className="flex items-center gap-1 text-xs sm:text-sm text-accent-red hover:text-accent-red-hover font-bold px-2 py-1 rounded-lg hover:bg-accent-red/10 transition-colors cursor-pointer"
+              className="flex items-center gap-1 type-strong-fluid text-accent-red hover:text-accent-red-hover px-2 py-1 rounded-lg hover:bg-accent-red/10 transition-colors cursor-pointer"
             >
               <Trash2 className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
               <span className="hidden xs:inline">{dict?.generator?.clearMutator || 'Clear'}</span>
             </button>
-            <div className="flex items-center gap-1 text-accent-green font-bold text-xs sm:text-sm bg-accent-green/10 px-2.5 py-1 rounded-lg border border-accent-green/30">
+            <div className="flex items-center gap-1 text-accent-green type-strong-fluid bg-accent-green/10 px-2.5 py-1 rounded-lg border border-accent-green/30">
               <Check className="h-3.5 w-3.5 sm:h-4 sm:w-4" aria-hidden="true" />
               <span>{dict?.smashOrPass?.active || 'Active'}</span>
             </div>

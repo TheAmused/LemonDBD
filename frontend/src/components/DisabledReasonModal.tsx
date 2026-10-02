@@ -40,7 +40,7 @@ export const DisabledReasonModal: React.FC<DisabledReasonModalProps> = ({
       closeButtonAriaLabel={t?.close}
       padded
     >
-      <p className="text-sm text-text-secondary leading-relaxed">
+      <p className="type-body-lg text-text-secondary">
         {wasDisabledText}
         {reason && (
           <>

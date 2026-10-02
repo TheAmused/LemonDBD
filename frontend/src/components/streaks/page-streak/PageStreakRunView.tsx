@@ -25,7 +25,7 @@ interface PageStreakRunViewProps {
 }
 
 const SectionLabel: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <div className="mb-2.5 mt-6 flex items-center gap-2 text-[10.5px] uppercase tracking-widest text-text-muted">
+  <div className="mb-2.5 mt-6 flex items-center gap-2 text-tiny uppercase tracking-widest text-text-muted">
     <span>{children}</span>
     <span className="h-px flex-1 bg-border-color" />
   </div>
@@ -88,7 +88,7 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
       <Confetti active={celebrating} />
       <Link
         href={`/${locale}/streaks/killer/page-streak`}
-        className="inline-flex items-center gap-1.5 rounded text-xs font-bold text-text-secondary transition-colors hover:text-accent-red focus:outline-none focus:ring-2 focus:ring-accent-red"
+        className="inline-flex items-center gap-1.5 rounded type-strong text-text-secondary transition-colors hover:text-accent-red focus:outline-none focus:ring-2 focus:ring-accent-red"
       >
         <ArrowLeft className="h-3.5 w-3.5" />
         <span>{dict?.streaks?.backToKillers || 'Back to killers'}</span>
@@ -129,13 +129,13 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
               <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl border-2 border-accent-green bg-accent-green/15 text-accent-green">
                 <AdeptBadgeIcon className="h-8 w-8" />
               </div>
-              <p className="mb-1 text-xs font-bold uppercase tracking-widest text-accent-green">
+              <p className="mb-1 type-label-sm text-accent-green">
                 {dict?.streaks?.victoryCongrats || 'Congratulations'}
               </p>
               <h2 className="text-2xl font-black tracking-tight text-text-primary">
                 {dict?.streaks?.pageStreakVictoryTitle || 'You won the Page Streak'}
               </h2>
-              <p className="mt-1 text-sm font-semibold text-text-secondary">
+              <p className="mt-1 type-card-title text-text-secondary">
                 {dict?.streaks?.pageStreakVictoryPrefix || 'on'} {killerDisplayName}
               </p>
               <Button
@@ -208,7 +208,7 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
                     type="button"
                     onClick={() => setShowNextPage((open) => !open)}
                     aria-expanded={showNextPage}
-                    className="mb-2.5 mt-6 flex w-full items-center gap-2 rounded text-[10.5px] uppercase tracking-widest text-text-muted transition-colors hover:text-accent-red focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red motion-reduce:transition-none"
+                    className="mb-2.5 mt-6 flex w-full items-center gap-2 rounded text-tiny uppercase tracking-widest text-text-muted transition-colors hover:text-accent-red focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red motion-reduce:transition-none"
                   >
                     <ChevronRight
                       className={`h-3.5 w-3.5 transition-transform duration-300 motion-reduce:transition-none ${

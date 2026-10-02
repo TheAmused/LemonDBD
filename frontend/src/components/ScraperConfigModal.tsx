@@ -533,27 +533,27 @@ export function ScraperConfigModal({
     {activeTab === 'export' && (
       <div className="space-y-4">
         {exportError && (
-          <div role="alert" className="rounded-xl border border-accent-red/30 bg-accent-red/10 p-3 text-xs text-accent-red flex items-center gap-2 font-semibold">
+          <div role="alert" className="rounded-xl border border-accent-red/30 bg-accent-red/10 p-3 type-strong text-accent-red flex items-center gap-2">
             <AlertTriangle className="h-4 w-4 shrink-0" />
             <span>{exportError}</span>
           </div>
         )}
 
         {exportSuccess && (
-          <div role="status" className="rounded-xl border border-accent-green/30 bg-accent-green/10 p-3 text-xs text-accent-green flex items-center gap-2 font-semibold">
+          <div role="status" className="rounded-xl border border-accent-green/30 bg-accent-green/10 p-3 type-strong text-accent-green flex items-center gap-2">
             <CheckCircle2 className="h-4 w-4 shrink-0" />
             <span>{exportSuccess}</span>
           </div>
         )}
 
         <div className="flex items-center justify-between pb-1 border-b border-border-color">
-          <span className="text-[11px] font-bold uppercase tracking-wider text-text-secondary">
+          <span className="type-label-xs text-text-secondary">
             {dict?.admin?.selectBackupEntities}
           </span>
           <button
             type="button"
             onClick={toggleAllExport}
-            className="text-xs font-bold text-accent-amber hover:underline cursor-pointer"
+            className="type-strong text-accent-amber hover:underline cursor-pointer"
           >
             {exportTargets.length === ALL_TARGETS.length
               ? dict?.admin?.deselectAll
@@ -574,17 +574,17 @@ export function ScraperConfigModal({
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <GroupIcon className="h-3.5 w-3.5 text-accent-red" />
-                    <span className="text-[11px] font-black uppercase tracking-wider text-text-primary">
+                    <span className="type-label-xs text-text-primary">
                       {groupLabel}
                     </span>
-                    <span className="rounded-md bg-bg-surface px-1.5 py-0.5 text-[10px] font-bold text-text-secondary border border-border-color">
+                    <span className="rounded-md bg-bg-surface px-1.5 py-0.5 type-strong-2xs text-text-secondary border border-border-color">
                       {selectedInGroup.length}/{groupTargets.length}
                     </span>
                   </div>
                   <button
                     type="button"
                     onClick={() => toggleGroupExport(group.key)}
-                    className="text-[11px] font-bold text-accent-amber hover:underline cursor-pointer"
+                    className="type-strong-xs text-accent-amber hover:underline cursor-pointer"
                   >
                     {allGroupSelected ? dict?.admin?.deselectAll : dict?.admin?.selectAll}
                   </button>
@@ -611,8 +611,8 @@ export function ScraperConfigModal({
                           )}
                         </div>
                         <div>
-                          <p className="text-xs font-bold">{target.label}</p>
-                          <p className="text-[10px] text-text-muted line-clamp-1">{target.desc}</p>
+                          <p className="type-strong">{target.label}</p>
+                          <p className="type-micro text-text-muted line-clamp-1">{target.desc}</p>
                         </div>
                       </div>
                     );
@@ -644,14 +644,14 @@ export function ScraperConfigModal({
     {activeTab === 'import' && (
       <div className="space-y-4">
         {importError && (
-          <div role="alert" className="rounded-xl border border-accent-red/30 bg-accent-red/10 p-3 text-xs text-accent-red flex items-center gap-2 font-semibold">
+          <div role="alert" className="rounded-xl border border-accent-red/30 bg-accent-red/10 p-3 type-strong text-accent-red flex items-center gap-2">
             <AlertTriangle className="h-4 w-4 shrink-0" />
             <span>{importError}</span>
           </div>
         )}
 
         {importSuccess && (
-          <div role="status" className="rounded-xl border border-accent-green/30 bg-accent-green/10 p-3 text-xs text-accent-green flex items-center gap-2 font-semibold">
+          <div role="status" className="rounded-xl border border-accent-green/30 bg-accent-green/10 p-3 type-strong text-accent-green flex items-center gap-2">
             <CheckCircle2 className="h-4 w-4 shrink-0" />
             <span>{importSuccess}</span>
           </div>
@@ -698,14 +698,14 @@ export function ScraperConfigModal({
 
           {isDragging ? (
             <div>
-              <p className="text-sm font-black text-accent-green animate-bounce">
+              <p className="type-card-title text-accent-green animate-bounce">
                 {dict?.admin?.dropFilePrompt || 'Drop the .json backup file here...'}
               </p>
             </div>
           ) : importFile ? (
             <div className="space-y-1">
               <div className="flex items-center justify-center gap-2">
-                <p className="text-xs font-bold text-text-primary max-w-[280px] sm:max-w-md truncate" {...tip(importFile.name, undefined, 'default')}>
+                <p className="type-strong text-text-primary max-w-[280px] sm:max-w-md truncate" {...tip(importFile.name, undefined, 'default')}>
                   {importFile.name}
                 </p>
                 <Button
@@ -720,16 +720,16 @@ export function ScraperConfigModal({
                   <X className="h-3.5 w-3.5" />
                 </Button>
               </div>
-              <p className="text-[11px] text-accent-green font-semibold">
+              <p className="type-strong-xs text-accent-green">
                 {(importFile.size / 1024).toFixed(1)} {dict?.admin?.kbReadySuffix || 'KB, ready to restore'}
               </p>
-              <p className="text-[10px] text-text-muted hover:text-text-secondary transition-colors">
+              <p className="type-micro text-text-muted hover:text-text-secondary transition-colors">
                 {dict?.admin?.changeFile || 'Click or drag another file to replace'}
               </p>
             </div>
           ) : (
             <div>
-              <p className="text-xs font-bold text-text-secondary">
+              <p className="type-strong text-text-secondary">
                 {dict?.admin?.clickOrDragBackupPrefix || 'Click or drag & drop a'}{' '}
                 <span className="text-accent-green font-black">.json</span>{' '}
                 {dict?.admin?.clickOrDragBackupSuffix || 'backup file'}
@@ -739,7 +739,7 @@ export function ScraperConfigModal({
         </div>
 
         <div className="space-y-2">
-          <span className="text-[11px] font-bold uppercase tracking-wider text-text-secondary">
+          <span className="type-label-xs text-text-secondary">
             {dict?.admin?.chooseImportStrategy}
           </span>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -753,8 +753,8 @@ export function ScraperConfigModal({
             >
               <ShieldCheck className="h-4 w-4 text-accent-green mt-0.5 shrink-0" />
               <div>
-                <p className="text-xs font-bold">{dict?.admin?.mergeUpdate}</p>
-                <p className="text-[10px] text-text-muted">{dict?.admin?.mergeUpdateDesc}</p>
+                <p className="type-strong">{dict?.admin?.mergeUpdate}</p>
+                <p className="type-micro text-text-muted">{dict?.admin?.mergeUpdateDesc}</p>
               </div>
             </div>
 
@@ -768,8 +768,8 @@ export function ScraperConfigModal({
             >
               <RotateCcw className="h-4 w-4 text-accent-amber mt-0.5 shrink-0" />
               <div>
-                <p className="text-xs font-bold">{dict?.admin?.wipeReplace}</p>
-                <p className="text-[10px] text-text-muted">{dict?.admin?.wipeReplaceDesc}</p>
+                <p className="type-strong">{dict?.admin?.wipeReplace}</p>
+                <p className="type-micro text-text-muted">{dict?.admin?.wipeReplaceDesc}</p>
               </div>
             </div>
           </div>
@@ -777,14 +777,14 @@ export function ScraperConfigModal({
 
         {importSummary && (
           <div className="rounded-xl border border-border-color bg-bg-primary p-3 max-h-36 overflow-y-auto space-y-1.5">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-text-muted">
+            <span className="type-label-xs text-text-muted">
               {dict?.admin?.importResultsBreakdown}
             </span>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5 text-xs">
               {Object.entries(importSummary).map(([key, counts]) => (
                 <div key={key} className="rounded-lg bg-bg-surface p-1.5 border border-border-color">
-                  <p className="text-[10px] font-bold text-text-muted capitalize">{key}</p>
-                  <p className="text-xs font-bold text-accent-green">
+                  <p className="type-strong-2xs text-text-muted capitalize">{key}</p>
+                  <p className="type-strong text-accent-green">
                     {dict?.admin?.createdCountPrefix || '+'}
                     {counts.created}{' '}
                     <span className="text-text-muted font-normal">
@@ -818,27 +818,27 @@ export function ScraperConfigModal({
     {activeTab === 'purge' && (
       <div className="space-y-4">
         {purgeError && (
-          <div role="alert" className="rounded-xl border border-accent-red/30 bg-accent-red/10 p-3 text-xs text-accent-red flex items-center gap-2 font-semibold">
+          <div role="alert" className="rounded-xl border border-accent-red/30 bg-accent-red/10 p-3 type-strong text-accent-red flex items-center gap-2">
             <AlertTriangle className="h-4 w-4 shrink-0" />
             <span>{purgeError}</span>
           </div>
         )}
 
         {purgeSuccess && (
-          <div role="status" className="rounded-xl border border-accent-green/30 bg-accent-green/10 p-3 text-xs text-accent-green flex items-center gap-2 font-semibold">
+          <div role="status" className="rounded-xl border border-accent-green/30 bg-accent-green/10 p-3 type-strong text-accent-green flex items-center gap-2">
             <CheckCircle2 className="h-4 w-4 shrink-0" />
             <span>{purgeSuccess}</span>
           </div>
         )}
 
         <div className="flex items-center justify-between pb-1 border-b border-border-color">
-          <span className="text-[11px] font-bold uppercase tracking-wider text-text-secondary">
+          <span className="type-label-xs text-text-secondary">
             {dict?.admin?.selectTablesToWipe}
           </span>
           <button
             type="button"
             onClick={toggleAllPurge}
-            className="text-xs font-bold text-accent-amber hover:underline cursor-pointer"
+            className="type-strong text-accent-amber hover:underline cursor-pointer"
           >
             {purgeTargets.length === ALL_TARGETS.length
               ? dict?.admin?.deselectAll
@@ -859,17 +859,17 @@ export function ScraperConfigModal({
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <GroupIcon className="h-3.5 w-3.5 text-accent-red" />
-                    <span className="text-[11px] font-black uppercase tracking-wider text-text-primary">
+                    <span className="type-label-xs text-text-primary">
                       {groupLabel}
                     </span>
-                    <span className="rounded-md bg-bg-surface px-1.5 py-0.5 text-[10px] font-bold text-text-secondary border border-border-color">
+                    <span className="rounded-md bg-bg-surface px-1.5 py-0.5 type-strong-2xs text-text-secondary border border-border-color">
                       {selectedInGroup.length}/{groupTargets.length}
                     </span>
                   </div>
                   <button
                     type="button"
                     onClick={() => toggleGroupPurge(group.key)}
-                    className="text-[11px] font-bold text-accent-amber hover:underline cursor-pointer"
+                    className="type-strong-xs text-accent-amber hover:underline cursor-pointer"
                   >
                     {allGroupSelected ? dict?.admin?.deselectAll : dict?.admin?.selectAll}
                   </button>
@@ -896,8 +896,8 @@ export function ScraperConfigModal({
                           )}
                         </div>
                         <div>
-                          <p className="text-xs font-bold">{target.label}</p>
-                          <p className="text-[10px] text-text-muted line-clamp-1">{target.desc}</p>
+                          <p className="type-strong">{target.label}</p>
+                          <p className="type-micro text-text-muted line-clamp-1">{target.desc}</p>
                         </div>
                       </div>
                     );

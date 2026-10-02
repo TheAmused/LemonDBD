@@ -167,7 +167,7 @@ export const AudioGuesser: React.FC<AudioGuesserProps> = ({
       {/* Audio Player Clue Card */}
       <div className="w-full max-w-lg p-6 rounded-2xl bg-bg-surface border border-border-color shadow-2xl flex flex-col items-center gap-4 relative overflow-hidden">
         {/* Header Badge */}
-        <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-accent-red/10 border border-accent-red/30 text-accent-red text-xs font-bold uppercase tracking-wider">
+        <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-accent-red/10 border border-accent-red/30 text-accent-red type-label-sm">
           <Disc3 className={`w-3.5 h-3.5 ${isPlaying ? 'animate-spin' : ''}`} />
           <span>{dict.minigames.audio.themeBadge}</span>
         </div>
@@ -260,7 +260,7 @@ export const AudioGuesser: React.FC<AudioGuesserProps> = ({
 
         {/* Solved Victory Reveal */}
         {isSolved && targetChar && (
-          <div className="mt-2 px-4 py-2 rounded-xl bg-accent-green text-text-inverted font-bold text-sm flex items-center gap-3 shadow-lg">
+          <div className="mt-2 px-4 py-2 rounded-xl bg-accent-green text-text-inverted type-card-title flex items-center gap-3 shadow-lg">
             {avatarUrl && (
               <div className="relative w-8 h-8 rounded-full overflow-hidden border border-border-color">
                 <Image src={avatarUrl} alt={targetChar.name} fill className="object-cover" />

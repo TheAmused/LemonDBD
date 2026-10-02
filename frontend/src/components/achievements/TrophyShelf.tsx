@@ -32,7 +32,7 @@ export const TrophyShelf: React.FC<TrophyShelfProps> = ({ shelf, dict }) => {
           const allHover = tier.hoverText?.all ?? `${hoverBase} ${allSuffix}`;
           return (
             <div key={tier.id} className="flex flex-col items-center gap-2">
-              <span className="text-xs font-bold uppercase tracking-wider text-text-muted">
+              <span className="type-label-sm text-text-muted">
                 {tier.label}
               </span>
               <div className="flex gap-3">

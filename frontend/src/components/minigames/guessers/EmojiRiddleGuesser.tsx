@@ -33,7 +33,7 @@ export const EmojiRiddleGuesser: React.FC<EmojiRiddleGuesserProps> = ({
     <div className="w-full flex flex-col items-center my-6">
       {/* Emoji Riddle Display Card */}
       <div className="w-full max-w-md p-8 rounded-2xl bg-bg-surface border border-border-color shadow-2xl flex flex-col items-center text-center relative overflow-hidden">
-        <div className="text-xs uppercase tracking-widest text-text-muted font-semibold mb-3">
+        <div className="type-label-sm text-text-muted mb-3">
           {t.modes.emoji_riddle}
         </div>
         <div className="text-5xl sm:text-6xl tracking-widest py-3 select-none">
@@ -41,13 +41,13 @@ export const EmojiRiddleGuesser: React.FC<EmojiRiddleGuesserProps> = ({
         </div>
 
         {attempts >= 2 && (
-          <div className="mt-4 px-3 py-1 rounded-full bg-bg-elevated border border-border-subtle text-xs font-semibold text-text-secondary">
+          <div className="mt-4 px-3 py-1 rounded-full bg-bg-elevated border border-border-subtle type-strong text-text-secondary">
             {roundConfig.target_type === 'perk' ? t.attributes.perk : t.attributes.character}
           </div>
         )}
 
         {isSolved && (
-          <div className="mt-6 px-4 py-1.5 rounded-lg bg-accent-green text-text-inverted font-bold text-sm flex items-center gap-2 shadow-md">
+          <div className="mt-6 px-4 py-1.5 rounded-lg bg-accent-green text-text-inverted type-card-title flex items-center gap-2 shadow-md">
             <Check className="w-4 h-4" />
             <span>{t.attributeValues.correct}</span>
           </div>

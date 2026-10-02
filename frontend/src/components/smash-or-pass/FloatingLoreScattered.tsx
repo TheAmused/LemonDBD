@@ -150,7 +150,7 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({
             minScale={0.5}
             maxLines={4}
             wrapFirst
-            className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl leading-[0.95] font-black uppercase tracking-wider text-text-primary group-hover:text-accent-red group-hover:drop-shadow-[0_0_60px_var(--accent-red)] transition-all duration-500 group-hover:scale-105 transform"
+            className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl leading-flat font-black uppercase tracking-wider text-text-primary group-hover:text-accent-red group-hover:drop-shadow-[0_0_60px_var(--accent-red)] transition-all duration-500 group-hover:scale-105 transform"
           >
             {leftWatermark}
           </FitText>
@@ -167,7 +167,7 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({
             minScale={0.5}
             maxLines={4}
             wrapFirst
-            className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl leading-[0.95] font-black uppercase tracking-wider text-text-primary group-hover:text-accent-red group-hover:drop-shadow-[0_0_60px_var(--accent-red)] transition-all duration-500 group-hover:scale-105 transform"
+            className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl leading-flat font-black uppercase tracking-wider text-text-primary group-hover:text-accent-red group-hover:drop-shadow-[0_0_60px_var(--accent-red)] transition-all duration-500 group-hover:scale-105 transform"
           >
             {rightWatermark}
           </FitText>
@@ -188,7 +188,7 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({
           <div className="relative overflow-hidden p-3.5 xl:p-4 rounded-3xl bg-bg-surface/95 border-2 border-accent-red/40 backdrop-blur-2xl shadow-2xl space-y-1 transition-all duration-300 group-hover:border-accent-red group-hover:shadow-[0_0_50px_var(--accent-red)]">
             <div className="flex items-center gap-1.5 text-accent-red">
               <Sparkles className="h-3.5 w-3.5 animate-spin group-hover:scale-125 transition-transform" style={{ animationDuration: '4s' }} />
-              <span className="text-[10px] font-bold uppercase tracking-widest">
+              <span className="type-label-2xs">
                 {datingArchetypeLabel}
               </span>
             </div>
@@ -212,7 +212,7 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({
             <div className="relative overflow-hidden p-3.5 xl:p-4 rounded-3xl bg-bg-surface/95 border-2 border-accent-green/40 backdrop-blur-2xl shadow-2xl space-y-1 transition-all duration-300 group-hover:border-accent-green group-hover:shadow-[0_0_50px_var(--accent-green)]">
               <div className="flex items-center gap-1.5 text-accent-green">
                 <Flame className="h-3.5 w-3.5 group-hover:scale-125 transition-transform" />
-                <span className="text-[10px] font-bold uppercase tracking-widest">
+                <span className="type-label-2xs">
                   {turnOnLabel}
                 </span>
               </div>
@@ -238,11 +238,11 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({
           <div className="relative overflow-hidden p-4 rounded-3xl bg-bg-surface/95 border-2 border-accent-amber/40 backdrop-blur-2xl shadow-2xl space-y-1.5 transition-all duration-300 group-hover:border-accent-amber group-hover:shadow-[0_0_50px_var(--accent-amber)]">
             <div className="flex items-center gap-1.5 text-accent-amber">
               <Quote className="h-3.5 w-3.5 group-hover:scale-125 group-hover:rotate-12 transition-transform" />
-              <span className="text-[10px] font-bold uppercase tracking-widest">
+              <span className="type-label-2xs">
                 {signatureQuoteLabel}
               </span>
             </div>
-            <p className="text-xs text-text-secondary italic leading-relaxed group-hover:text-text-primary transition-colors">
+            <p className="type-body text-text-secondary italic group-hover:text-text-primary transition-colors">
               {charQuote}
             </p>
           </div>
@@ -259,7 +259,7 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({
             <div className="relative overflow-hidden p-3.5 xl:p-4 rounded-3xl bg-bg-surface/95 border-2 border-accent-red/40 backdrop-blur-2xl shadow-2xl space-y-1 transition-all duration-300 group-hover:border-accent-red group-hover:shadow-[0_0_50px_var(--accent-red)]">
               <div className="flex items-center gap-1.5 text-accent-red">
                 <AlertTriangle className="h-3.5 w-3.5 group-hover:scale-125 transition-transform" />
-                <span className="text-[10px] font-bold uppercase tracking-widest">
+                <span className="type-label-2xs">
                   {dealbreakerLabel}
                 </span>
               </div>

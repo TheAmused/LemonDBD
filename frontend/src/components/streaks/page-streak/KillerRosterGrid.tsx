@@ -91,7 +91,7 @@ export const KillerRosterGrid: React.FC<KillerRosterGridProps> = ({
               src={staticUrl(entry.avatar_local_path)}
               done={done}
             />
-            <div className="text-center text-xs font-bold text-text-secondary truncate">
+            <div className="text-center type-strong text-text-secondary truncate">
               {displayName}
             </div>
             {!done && (
@@ -110,7 +110,7 @@ export const KillerRosterGrid: React.FC<KillerRosterGridProps> = ({
               </div>
             )}
             <div
-              className={`text-center text-[10px] font-semibold ${done
+              className={`text-center text-tiny font-semibold ${done
                   ? 'text-accent-green'
                   : active
                     ? 'text-accent-amber'

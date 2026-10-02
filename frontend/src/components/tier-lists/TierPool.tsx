@@ -119,7 +119,7 @@ export function TierPool({
           <h2 className="text-xs sm:text-sm font-black uppercase tracking-widest text-text-primary">
             {t.unranked}
           </h2>
-          <Badge tone="red" plain className="text-[11px] font-bold">
+          <Badge tone="red" plain className="type-strong-xs">
             {t.unrankedCount.replace('{count}', String(keys.length))}
           </Badge>
         </div>
@@ -152,7 +152,7 @@ export function TierPool({
               <button
                 type="button"
                 onClick={() => onMoveSelectedHere(POOL_CONTAINER_ID)}
-                className="inline-flex h-8.5 shrink-0 items-center gap-1.5 rounded-xl border border-dashed border-accent-amber/60 bg-accent-amber/10 px-3 text-xs font-bold text-accent-amber hover:bg-accent-amber/20 cursor-pointer transition-colors"
+                className="inline-flex h-8.5 shrink-0 items-center gap-1.5 rounded-xl border border-dashed border-accent-amber/60 bg-accent-amber/10 px-3 type-strong text-accent-amber hover:bg-accent-amber/20 cursor-pointer transition-colors"
               >
                 <ArrowDownToLine className="h-3.5 w-3.5" aria-hidden="true" />
                 {t.moveHere}
@@ -188,7 +188,7 @@ export function TierPool({
             </SortableContext>
           </div>
           {visibleKeys.length === 0 && (
-            <p className="py-6 text-center text-xs font-semibold text-text-muted">
+            <p className="py-6 text-center type-strong text-text-muted">
               {keys.length === 0 ? emptyLabel : t.poolNoMatches}
             </p>
           )}

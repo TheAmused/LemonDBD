@@ -58,22 +58,22 @@ export const VoiceEngineInfoBody: React.FC<Omit<VoiceEngineInfoModalProps, 'isOp
     {/* Current Browser Status Card */}
     <div className="rounded-2xl border border-border-color bg-bg-elevated p-4 space-y-2">
       <div className="flex items-center justify-between">
-        <span className="text-[11px] font-extrabold uppercase tracking-wider text-text-muted flex items-center gap-1.5">
+        <span className="type-label-xs text-text-muted flex items-center gap-1.5">
           <Laptop className="h-3.5 w-3.5 text-text-muted" aria-hidden="true" />
           {dict?.maps?.detectedBrowser || ''}
         </span>
-        <span className="rounded-full bg-bg-surface px-2.5 py-0.5 text-xs font-bold text-text-primary">
+        <span className="rounded-full bg-bg-surface px-2.5 py-0.5 type-strong text-text-primary">
           {browserName}
         </span>
       </div>
 
       <div className="flex items-center justify-between pt-1">
-        <span className="text-[11px] font-extrabold uppercase tracking-wider text-text-muted flex items-center gap-1.5">
+        <span className="type-label-xs text-text-muted flex items-center gap-1.5">
           <Sparkles className="h-3.5 w-3.5 text-text-muted" aria-hidden="true" />
           {dict?.maps?.activeRecognitionEngine || ''}
         </span>
         <span
-          className="rounded-full px-2.5 py-0.5 text-xs font-black border bg-accent-red/10 text-accent-red border-accent-red/30"
+          className="rounded-full px-2.5 py-0.5 type-strong border bg-accent-red/10 text-accent-red border-accent-red/30"
         >
           {currentEngine === 'web-speech'
             ? t.engineNativeBadge || ''
@@ -98,7 +98,7 @@ export const VoiceEngineInfoBody: React.FC<Omit<VoiceEngineInfoModalProps, 'isOp
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Globe className="h-4 w-4 text-text-secondary" aria-hidden="true" />
-            <h4 className="text-xs font-black text-text-primary uppercase tracking-wider">
+            <h4 className="type-label-sm text-text-primary">
               {t.engineNative || ''}
             </h4>
           </div>
@@ -107,11 +107,11 @@ export const VoiceEngineInfoBody: React.FC<Omit<VoiceEngineInfoModalProps, 'isOp
           )}
         </div>
 
-        <p className="text-xs text-text-muted leading-relaxed">
+        <p className="type-body text-text-muted">
           {t.howItWorksNative || ''}
         </p>
 
-        <div className="pt-1 flex items-center gap-1.5 text-[10px] font-bold text-text-muted">
+        <div className="pt-1 flex items-center gap-1.5 type-strong-2xs text-text-muted">
           <span className="h-1.5 w-1.5 rounded-full bg-text-muted" aria-hidden="true" />
           <span>{dict?.maps?.chromeEdgeSafari || ''}</span>
         </div>
@@ -128,7 +128,7 @@ export const VoiceEngineInfoBody: React.FC<Omit<VoiceEngineInfoModalProps, 'isOp
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Cpu className="h-4 w-4 text-text-secondary" aria-hidden="true" />
-            <h4 className="text-xs font-black text-text-primary uppercase tracking-wider">
+            <h4 className="type-label-sm text-text-primary">
               {t.engineClient || ''}
             </h4>
           </div>
@@ -137,11 +137,11 @@ export const VoiceEngineInfoBody: React.FC<Omit<VoiceEngineInfoModalProps, 'isOp
           )}
         </div>
 
-        <p className="text-xs text-text-muted leading-relaxed">
+        <p className="type-body text-text-muted">
           {t.howItWorksClient || ''}
         </p>
 
-        <div className="pt-1 flex items-center gap-1.5 text-[10px] font-bold text-text-secondary">
+        <div className="pt-1 flex items-center gap-1.5 type-strong-2xs text-text-secondary">
           <ShieldCheck className="h-3.5 w-3.5" aria-hidden="true" />
           <span>{dict?.maps?.universalPrivateInBrowser || ''}</span>
         </div>
@@ -150,7 +150,7 @@ export const VoiceEngineInfoBody: React.FC<Omit<VoiceEngineInfoModalProps, 'isOp
 
     {/* Local model accuracy: whisper-tiny ('fast') vs whisper-base ('accurate') */}
     <div className="rounded-2xl border border-border-color bg-bg-elevated p-4 space-y-3">
-      <div className="flex items-center gap-1.5 text-[11px] font-extrabold uppercase tracking-wider text-text-muted">
+      <div className="flex items-center gap-1.5 type-label-xs text-text-muted">
         <Gauge className="h-3.5 w-3.5 text-text-muted" aria-hidden="true" />
         <span>{t.accuracyTitle || ''}</span>
       </div>
@@ -183,18 +183,18 @@ export const VoiceEngineInfoBody: React.FC<Omit<VoiceEngineInfoModalProps, 'isOp
               }`}
             >
               <div className="flex items-center justify-between gap-2">
-                <span className="text-xs font-black text-text-primary uppercase tracking-wider">
+                <span className="type-label-sm text-text-primary">
                   {label || ''}
                 </span>
                 {isSelected && (
                   <CheckCircle2 className="h-4 w-4 shrink-0 text-accent-green" aria-hidden="true" />
                 )}
               </div>
-              <p className="text-[11px] text-text-muted leading-relaxed">
+              <p className="text-mini text-text-muted leading-relaxed">
                 {description || ''}
               </p>
               {sizeMb !== null && (
-                <p className="text-[10px] font-bold text-text-muted">
+                <p className="type-strong-2xs text-text-muted">
                   {(t.modelSize || '').replace('{size}', String(sizeMb))}
                 </p>
               )}
@@ -206,11 +206,11 @@ export const VoiceEngineInfoBody: React.FC<Omit<VoiceEngineInfoModalProps, 'isOp
 
     {/* Why Fallback Is Needed Box */}
     <div className="rounded-2xl border border-accent-amber/30 bg-accent-amber/10 p-4 space-y-2">
-      <div className="flex items-center gap-2 text-accent-amber font-extrabold text-xs">
+      <div className="flex items-center gap-2 text-accent-amber type-strong">
         <Info className="h-4 w-4 shrink-0" aria-hidden="true" />
         <span>{t.whyNeededTitle || ''}</span>
       </div>
-      <p className="text-xs text-text-secondary leading-relaxed">
+      <p className="type-body text-text-secondary">
         {t.whyNeededText || ''}
       </p>
     </div>
@@ -220,7 +220,7 @@ export const VoiceEngineInfoBody: React.FC<Omit<VoiceEngineInfoModalProps, 'isOp
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <DownloadCloud className="h-4 w-4 text-accent-red" aria-hidden="true" />
-          <span className="text-xs font-bold text-text-primary">
+          <span className="type-strong text-text-primary">
             {modelProgress.status === 'downloading'
               ? (t.downloadProgress || '').replace('{progress}', String(modelProgress.progress))
               : modelProgress.status === 'ready'
@@ -228,7 +228,7 @@ export const VoiceEngineInfoBody: React.FC<Omit<VoiceEngineInfoModalProps, 'isOp
                 : t.modelCacheInfo || t.modelCached || ''}
           </span>
         </div>
-        <span className="text-[10px] font-bold text-text-muted">
+        <span className="type-strong-2xs text-text-muted">
           {modelProgress.progress}{dict?.maps?.percentSign || '%'}
         </span>
       </div>

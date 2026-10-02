@@ -303,7 +303,7 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
                     key={`mob-tray-empty-${slotIdx}`}
                     className="flex flex-col items-center justify-center w-[74px] h-[74px] xs:w-[84px] xs:h-[84px] rounded-2xl border-2 border-dashed border-border-color bg-bg-surface/90 text-text-muted"
                   >
-                    <span className="text-xs font-bold opacity-40">#{slotIdx + 1}</span>
+                    <span className="type-strong opacity-40">#{slotIdx + 1}</span>
                   </div>
                 );
               })}

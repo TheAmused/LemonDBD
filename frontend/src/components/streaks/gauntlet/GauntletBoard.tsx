@@ -187,7 +187,7 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({
             <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl border-2 border-accent-green bg-accent-green/15 text-accent-green">
               <AdeptBadgeIcon className="h-8 w-8" />
             </div>
-            <p className="mb-1 text-xs font-bold uppercase tracking-widest text-accent-green">
+            <p className="mb-1 type-label-sm text-accent-green">
               {dict?.streaks?.victoryCongrats || 'Congratulations'}
             </p>
             <h2 className="text-2xl font-black tracking-tight text-text-primary">

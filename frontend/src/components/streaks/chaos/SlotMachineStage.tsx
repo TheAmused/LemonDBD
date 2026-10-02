@@ -124,7 +124,7 @@ const ReelStrip: React.FC<{
 const RarityBadge: React.FC<{ rarity: AddonRarity; visible: boolean }> = ({ rarity, visible }) => {
   if (!visible) return <div className="h-10" />;
   return (
-    <span className="chaos-badge-pop inline-flex items-center gap-2 rounded-lg border border-accent-red/30 bg-bg-surface/80 pl-1 pr-3 py-1 text-sm font-bold text-text-primary">
+    <span className="chaos-badge-pop inline-flex items-center gap-2 rounded-lg border border-accent-red/30 bg-bg-surface/80 pl-1 pr-3 py-1 type-card-title text-text-primary">
       <img
         src={ADDON_RARITY_ICONS[rarity]}
         alt=""

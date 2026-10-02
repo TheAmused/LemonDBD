@@ -214,7 +214,7 @@ export const TactileKeycaps: React.FC<TactileKeycapsProps> = ({
               </div>
 
               {/* Sub-Legend Letter */}
-              <span className={`text-[10px] font-bold tracking-wider transition-colors ${
+              <span className={`text-tiny font-bold tracking-wider transition-colors ${
                 isActive
                   ? 'text-text-primary'
                   : 'text-text-muted group-hover:text-text-primary'
@@ -227,7 +227,7 @@ export const TactileKeycaps: React.FC<TactileKeycapsProps> = ({
       </div>
 
       {/* Instruction Subtitle */}
-      <div className="flex items-center gap-1.5 text-[11px] font-medium text-text-muted pt-0.5">
+      <div className="flex items-center gap-1.5 text-mini font-medium text-text-muted pt-0.5">
         <span className="inline-block w-1.5 h-1.5 rounded-full bg-accent-red animate-pulse" />
         <span>
           {dict?.smashOrPass?.controls?.hint || 'Użyj strzałek lub przeciągnij, aby zagłosować'}

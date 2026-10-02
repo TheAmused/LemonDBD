@@ -35,7 +35,7 @@ export const AddonGuesser: React.FC<AddonGuesserProps> = ({
           <Package className="w-7 h-7" />
         </div>
 
-        <div className="text-xs uppercase tracking-widest text-text-muted font-semibold mb-2">
+        <div className="type-label-sm text-text-muted mb-2">
           {t.addonModifier}
         </div>
 
@@ -44,13 +44,13 @@ export const AddonGuesser: React.FC<AddonGuesserProps> = ({
         </p>
 
         {attempts >= 2 && (
-          <div className="mt-4 px-3 py-1 rounded-full bg-bg-elevated border border-border-subtle text-xs font-semibold text-text-secondary">
+          <div className="mt-4 px-3 py-1 rounded-full bg-bg-elevated border border-border-subtle type-strong text-text-secondary">
             {t.highRarityHint}
           </div>
         )}
 
         {isSolved && (
-          <div className="mt-6 px-4 py-1.5 rounded-lg bg-accent-green text-text-inverted font-bold text-sm flex items-center gap-2 shadow-md">
+          <div className="mt-6 px-4 py-1.5 rounded-lg bg-accent-green text-text-inverted type-card-title flex items-center gap-2 shadow-md">
             <Check className="w-4 h-4" />
             <span>{t.solved}</span>
           </div>

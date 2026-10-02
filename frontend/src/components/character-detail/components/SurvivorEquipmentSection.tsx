@@ -211,7 +211,7 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
               value: cat.key as SurvivorCategoryKey,
               icon: <Icon className="h-5 w-5 sm:h-6 sm:w-6" aria-hidden="true" />,
               label: (
-                <span className="mt-0.5 block max-w-[56px] truncate text-[9px] font-bold">{cat.label.split(' ')[0]}</span>
+                <span className="mt-0.5 block max-w-[56px] truncate text-micro font-bold">{cat.label.split(' ')[0]}</span>
               ),
               buttonProps: { ...tip(`${cat.label} - ${cat.desc}`, undefined, 'default'), 'aria-label': cat.label },
             };
@@ -231,7 +231,7 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
               />
             </div>
             <div className="hidden sm:flex items-center justify-center border-b border-border-color pb-2.5 mb-3">
-              <h3 className="text-xs font-bold uppercase tracking-wider text-accent-green flex items-center gap-1.5">
+              <h3 className="type-label-sm text-accent-green flex items-center gap-1.5">
                 <Package className="h-4 w-4" aria-hidden="true" />
                 {t.items || 'Items'} ({categorizedData.displayedItems.length})
               </h3>
@@ -279,14 +279,14 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
 
           <div className="flex flex-col p-4">
             <div className="flex items-center justify-between border-b border-border-color pb-2.5 mb-3">
-              <h3 className="text-xs font-bold uppercase tracking-wider text-text-secondary flex items-center gap-1.5">
+              <h3 className="type-label-sm text-text-secondary flex items-center gap-1.5">
                 <Sparkles className="h-4 w-4" aria-hidden="true" />
                 {selectedCategory === 'trial_exclusive'
                   ? t.artifactMechanics || 'Artifact Mechanics'
                   : `${t.compatibleAddons || 'Compatible Add-ons'} (${categorizedData.displayedAddons.length})`}
               </h3>
               {selectedCategory === 'trial_exclusive' && (
-                <span className="text-[10px] text-accent-amber">
+                <span className="type-micro text-accent-amber">
                   {t.specialTrialRules || 'Special Trial Rules'}
                 </span>
               )}
@@ -294,7 +294,7 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
 
             {selectedCategory === 'trial_exclusive' ? (
               <div className="flex-1 flex flex-col justify-center p-4 rounded-2xl bg-accent-amber/10 border border-accent-amber/30 text-xs space-y-3">
-                <div className="flex items-center gap-2 text-accent-amber font-black text-sm">
+                <div className="flex items-center gap-2 text-accent-amber type-card-title">
                   <ShieldAlert className="h-5 w-5 shrink-0" aria-hidden="true" />
                   <span>{t.inTrialArtifactsHeading || 'In-Trial Killer Counters & Artifacts'}</span>
                 </div>
@@ -329,7 +329,7 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
                         }
                       }}
                       {...tip(displayItem.name, undefined, 'item')}
-                      className={`relative group rounded-2xl border-2 p-1.5 flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-110 active:scale-95 focus:outline-none focus:ring-2 focus:ring-amber-500 h-20 w-20 sm:h-24 sm:w-24 ${rarityStyle.bg}`}
+                      className={`relative group rounded-2xl border-2 p-1.5 flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-110 active:scale-95 focus:outline-none focus:ring-2 focus:ring-accent-amber h-20 w-20 sm:h-24 sm:w-24 ${rarityStyle.bg}`}
                       style={rarityStyle.style}
                       aria-label={`${t.inspectAddonPrefix || 'Inspect addon:'} ${displayItem.name}`}
                     >

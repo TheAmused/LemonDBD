@@ -55,7 +55,7 @@ const KillerTile: React.FC<{
           <KillerIcon className="w-6 h-6 text-text-muted" />
         )}
       </div>
-      <span className="text-[11px] font-medium text-center text-text-secondary truncate w-full">
+      <span className="text-mini font-medium text-center text-text-secondary truncate w-full">
         {displayName}
       </span>
     </button>

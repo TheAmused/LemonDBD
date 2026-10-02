@@ -473,7 +473,7 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
               >
                 <div className="absolute top-1.5 right-1.5 sm:top-2 sm:right-2 z-20">
                   <span
-                    className={`inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 sm:px-2 text-[9px] sm:text-[10px] font-bold border backdrop-blur-md ${
+                    className={`inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 sm:px-2 text-micro sm:text-tiny font-bold border backdrop-blur-md ${
                       isSurvivor
                         ? 'bg-accent-green/10 text-accent-green border-accent-green/30'
                         : 'bg-accent-red/10 text-accent-red border-accent-red/30'
@@ -540,13 +540,13 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
                         e.stopPropagation();
                         setPerksPopupCharacter(char);
                       }}
-                      className="mb-1 sm:mb-1.5 inline-flex items-center justify-center gap-1 rounded-full border border-accent-amber/50 bg-bg-surface/90 px-2.5 py-0.5 text-[9px] sm:text-[10px] font-bold text-accent-amber hover:bg-accent-amber/20 hover:border-accent-amber transition-colors shadow-xs cursor-pointer pointer-events-auto select-none"
+                      className="mb-1 sm:mb-1.5 inline-flex items-center justify-center gap-1 rounded-full border border-accent-amber/50 bg-bg-surface/90 px-2.5 py-0.5 text-micro sm:text-tiny font-bold text-accent-amber hover:bg-accent-amber/20 hover:border-accent-amber transition-colors shadow-xs cursor-pointer pointer-events-auto select-none"
                     >
                       <span>{dict?.filters?.perks}</span>
                       {perkStats.total > 0 && ` (${perkStats.unlocked}/${perkStats.total})`}
                     </button>
                   )}
-                  <h3 className="w-full text-center font-extrabold text-[11px] sm:text-xs md:text-sm text-text-primary group-hover:text-accent-red transition-colors truncate px-1 pointer-events-auto leading-tight">
+                  <h3 className="w-full text-center font-extrabold text-mini sm:text-xs md:text-sm text-text-primary group-hover:text-accent-red transition-colors truncate px-1 pointer-events-auto leading-tight">
                     {char.name}
                   </h3>
                 </div>
@@ -574,7 +574,7 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
           {ownershipSaveError && (
             <p
               role="alert"
-              className="px-5 sm:px-7 lg:px-9 pt-2 text-center text-[11px] font-semibold text-accent-red"
+              className="px-5 sm:px-7 lg:px-9 pt-2 text-center type-strong-xs text-accent-red"
             >
               {ownershipSaveError}
             </p>
@@ -618,7 +618,7 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
         <div className="fixed top-6 left-[var(--sidebar-width,0rem)] right-0 z-50 flex justify-center pointer-events-none transition-[left] duration-300 px-4">
           <div
             role="status"
-            className="pointer-events-auto flex items-center gap-3 rounded-2xl bg-accent-amber px-5 py-3 text-xs font-bold text-text-inverted shadow-2xl ring-2 ring-accent-amber/50 animate-in fade-in slide-in-from-top-4 duration-300"
+            className="pointer-events-auto flex items-center gap-3 rounded-2xl bg-accent-amber px-5 py-3 type-strong text-text-inverted shadow-2xl ring-2 ring-accent-amber/50 animate-in fade-in slide-in-from-top-4 duration-300"
           >
             <MailWarning className="h-4 w-4 shrink-0" />
             <span>{dict?.user?.verifyEmailRequired}</span>
@@ -629,14 +629,14 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
                 setAuthModalIntent('verify');
                 setIsAuthModalOpen(true);
               }}
-              className="rounded-lg bg-text-inverted/20 px-3 py-1 text-[11px] font-black uppercase tracking-wider hover:bg-text-inverted/30 transition-colors cursor-pointer"
+              className="rounded-lg bg-text-inverted/20 px-3 py-1 type-label-xs hover:bg-text-inverted/30 transition-colors cursor-pointer"
             >
               {dict?.streaks?.verifyEmail}
             </button>
             <button
               type="button"
               onClick={() => setVerificationNoticeOpen(false)}
-              className="text-[11px] font-black underline cursor-pointer"
+              className="type-strong-xs underline cursor-pointer"
             >
               {dict?.characterDetail?.dismiss || dict?.modal?.close}
             </button>

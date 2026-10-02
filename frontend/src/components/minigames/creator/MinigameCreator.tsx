@@ -221,14 +221,14 @@ export const MinigameCreator: React.FC<MinigameCreatorProps> = ({
 
       {/* Validation / Success Notices */}
       {errorMsg && (
-        <div className="w-full max-w-2xl mb-6 p-4 rounded-xl bg-accent-red/20 border border-accent-red/40 text-accent-red text-xs font-semibold flex items-center gap-2 shadow-lg">
+        <div className="w-full max-w-2xl mb-6 p-4 rounded-xl bg-accent-red/20 border border-accent-red/40 text-accent-red type-strong flex items-center gap-2 shadow-lg">
           <AlertCircle className="w-4 h-4 flex-shrink-0" />
           <span>{errorMsg}</span>
         </div>
       )}
 
       {successMsg && (
-        <div className="w-full max-w-2xl mb-6 p-4 rounded-xl bg-accent-green/20 border border-accent-green/40 text-accent-green text-xs font-semibold flex items-center gap-2 shadow-lg">
+        <div className="w-full max-w-2xl mb-6 p-4 rounded-xl bg-accent-green/20 border border-accent-green/40 text-accent-green type-strong flex items-center gap-2 shadow-lg">
           <Check className="w-4 h-4 flex-shrink-0" />
           <span>{successMsg}</span>
         </div>
@@ -237,7 +237,7 @@ export const MinigameCreator: React.FC<MinigameCreatorProps> = ({
       {/* Challenge Title & Description Form */}
       <div className="w-full max-w-2xl p-6 rounded-3xl bg-bg-surface border border-border-color shadow-xl mb-6 space-y-4">
         <div>
-          <label className="block text-xs font-semibold text-text-secondary mb-1.5">
+          <label className="block type-strong text-text-secondary mb-1.5">
             {c.challengeTitleLabel} *
           </label>
           <Input
@@ -250,7 +250,7 @@ export const MinigameCreator: React.FC<MinigameCreatorProps> = ({
         </div>
 
         <div>
-          <label className="block text-xs font-semibold text-text-secondary mb-1.5">
+          <label className="block type-strong text-text-secondary mb-1.5">
             {c.descriptionLabel}
           </label>
           <Textarea
@@ -290,7 +290,7 @@ export const MinigameCreator: React.FC<MinigameCreatorProps> = ({
         <button
           type="button"
           onClick={handleAddRound}
-          className="w-full py-3.5 rounded-2xl border-2 border-dashed border-border-color hover:border-accent-red/60 text-text-secondary hover:text-text-primary font-bold text-sm flex items-center justify-center gap-2 transition-all group"
+          className="w-full py-3.5 rounded-2xl border-2 border-dashed border-border-color hover:border-accent-red/60 text-text-secondary hover:text-text-primary type-card-title flex items-center justify-center gap-2 transition-all group"
         >
           <Plus className="w-4 h-4 group-hover:scale-125 transition-transform text-accent-red" />
           <span>{c.addRound}</span>
@@ -349,7 +349,7 @@ export const MinigameCreator: React.FC<MinigameCreatorProps> = ({
       {/* Admin Official Publishing Section */}
       {isAdmin && (
         <div className="w-full max-w-2xl p-6 rounded-3xl bg-bg-surface border border-accent-amber/40 shadow-2xl relative">
-          <div className="flex items-center gap-2 text-accent-amber font-bold text-sm mb-2">
+          <div className="flex items-center gap-2 text-accent-amber type-card-title mb-2">
             <ShieldCheck className="w-5 h-5" />
             <span>{c.publishOfficialModalTitle}</span>
           </div>
@@ -359,7 +359,7 @@ export const MinigameCreator: React.FC<MinigameCreatorProps> = ({
 
           <div className="flex flex-col sm:flex-row gap-3 items-end">
             <div className="flex-1 w-full">
-              <label className="block text-xs font-semibold text-text-muted mb-1">
+              <label className="block type-strong text-text-muted mb-1">
                 {c.publishDateLabel}
               </label>
               <Input
@@ -375,7 +375,7 @@ export const MinigameCreator: React.FC<MinigameCreatorProps> = ({
               type="button"
               onClick={handlePublishOfficial}
               disabled={isPublishingOfficial}
-              className="w-full sm:w-auto flex items-center justify-center gap-2 py-2.5 px-5 rounded-xl bg-accent-amber hover:bg-accent-amber-hover text-text-inverted font-bold text-xs uppercase tracking-wider shadow-lg shadow-accent-amber/20 transition-all disabled:opacity-50"
+              className="w-full sm:w-auto flex items-center justify-center gap-2 py-2.5 px-5 rounded-xl bg-accent-amber hover:bg-accent-amber-hover text-text-inverted type-label-sm shadow-lg shadow-accent-amber/20 transition-all disabled:opacity-50"
             >
               <Sparkles className="w-4 h-4" />
               <span>{isPublishingOfficial ? c.publishing : c.confirmPublish}</span>

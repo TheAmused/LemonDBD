@@ -39,7 +39,7 @@ export const IconToggleButton: React.FC<IconToggleButtonProps> = ({
       )}
     >
       {icon}
-      {badge !== undefined && <span className="text-xs font-black">{badge}</span>}
+      {badge !== undefined && <span className="type-strong">{badge}</span>}
     </button>
   );
 };

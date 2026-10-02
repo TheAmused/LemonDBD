@@ -136,7 +136,7 @@ export function CustomDropdown<T extends string = string>({
                         {opt.icon && <span className="shrink-0">{opt.icon}</span>}
                         <span className="truncate">{opt.label}</span>
                         {opt.sublabel && (
-                          <span className="text-[10px] text-text-muted font-normal truncate">
+                          <span className="text-tiny text-text-muted font-normal truncate">
                             {opt.sublabel}
                           </span>
                         )}

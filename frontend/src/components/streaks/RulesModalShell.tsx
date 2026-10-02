@@ -84,7 +84,7 @@ export const RulesModalListSection: React.FC<{
       <span>{title}</span>
     </h3>
     {intro && <p className="text-xs text-text-secondary">{intro}</p>}
-    <ul className="space-y-2 text-xs sm:text-sm text-text-secondary leading-relaxed">
+    <ul className="space-y-2 type-body-fluid text-text-secondary">
       {items.map((item, i) => (
         <li key={i}>
           <strong>{item.label}: </strong>

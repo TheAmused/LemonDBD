@@ -73,7 +73,7 @@ export function OfficialTierListView({ slug, locale, dict }: OfficialTierListVie
   const backLink = (
     <Link
       href={`/${locale}/tier-lists`}
-      className="inline-flex min-h-[44px] w-fit items-center gap-1 text-xs font-bold uppercase tracking-wider text-text-secondary hover:text-accent-red"
+      className="inline-flex min-h-[44px] w-fit items-center gap-1 type-label-sm text-text-secondary hover:text-accent-red"
     >
       <ChevronLeft className="h-4 w-4" aria-hidden="true" />
       {t.backToHub}
@@ -146,7 +146,7 @@ export function OfficialTierListView({ slug, locale, dict }: OfficialTierListVie
       kindLabel={t.kinds[template.kind]}
       badges={
         template.has_default_placements ? (
-          <span className="inline-flex items-center gap-1 rounded-lg bg-accent-amber/15 px-2 py-0.5 text-[11px] font-black uppercase tracking-wider text-accent-amber">
+          <span className="inline-flex items-center gap-1 rounded-lg bg-accent-amber/15 px-2 py-0.5 type-label-xs text-accent-amber">
             <Crown className="h-3.5 w-3.5" aria-hidden="true" />
             {t.officialRanking}
           </span>

@@ -85,7 +85,7 @@ export const SurvivorDetailView: React.FC<CharacterViewBaseProps> = ({
                 {character.name}
               </h1>
               {character.real_name && character.real_name !== character.name && (
-                <p className="text-xs sm:text-sm font-semibold text-text-secondary mt-0.5">
+                <p className="type-strong-fluid text-text-secondary mt-0.5">
                   {t.realName || ''}:{' '}
                   <span className="text-text-primary">{character.real_name}</span>
                 </p>
@@ -103,18 +103,18 @@ export const SurvivorDetailView: React.FC<CharacterViewBaseProps> = ({
               </Button>
 
               {chapterName && (
-                <span className="flex items-center gap-1.5 px-3 py-2 rounded-2xl bg-bg-elevated border border-border-color text-xs font-bold text-text-secondary select-none">
+                <span className="flex items-center gap-1.5 px-3 py-2 rounded-2xl bg-bg-elevated border border-border-color type-strong text-text-secondary select-none">
                   <Bookmark className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
                   {chapterName}
                 </span>
               )}
 
-              <span className="flex items-center gap-1.5 px-3 py-2 rounded-2xl bg-bg-elevated border border-border-color text-xs font-bold text-text-secondary select-none">
+              <span className="flex items-center gap-1.5 px-3 py-2 rounded-2xl bg-bg-elevated border border-border-color type-strong text-text-secondary select-none">
                 <Calendar className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
                 {releaseDate}
               </span>
 
-              <span className="flex items-center gap-1.5 px-3 py-2 rounded-2xl bg-bg-elevated border border-border-color text-xs font-bold text-text-secondary select-none">
+              <span className="flex items-center gap-1.5 px-3 py-2 rounded-2xl bg-bg-elevated border border-border-color type-strong text-text-secondary select-none">
                 <ShieldCheck className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
                 {character.is_licensed
                   ? t.licensedFranchise || t.dlcLicensed || ''

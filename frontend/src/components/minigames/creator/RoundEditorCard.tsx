@@ -155,10 +155,10 @@ export const RoundEditorCard: React.FC<RoundEditorCardProps> = ({
       {/* Top Header Row */}
       <div className="flex items-center justify-between gap-3 border-b border-border-color pb-3">
         <div className="flex items-center gap-2">
-          <div className="w-7 h-7 rounded-lg bg-accent-red/20 text-accent-red font-bold text-xs flex items-center justify-center border border-accent-red/30">
+          <div className="w-7 h-7 rounded-lg bg-accent-red/20 text-accent-red type-strong flex items-center justify-center border border-accent-red/30">
             #{index + 1}
           </div>
-          <span className="font-bold text-text-primary text-sm">
+          <span className="type-card-title text-text-primary">
             {c.roundNumber.replace('{number}', String(index + 1))}
           </span>
         </div>
@@ -203,7 +203,7 @@ export const RoundEditorCard: React.FC<RoundEditorCardProps> = ({
       {/* Mode & Max Attempts Row */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         <div className="sm:col-span-2">
-          <label className="block text-xs font-semibold text-text-muted mb-1.5">
+          <label className="block type-strong text-text-muted mb-1.5">
             {c.selectMode}
           </label>
           <Select
@@ -221,7 +221,7 @@ export const RoundEditorCard: React.FC<RoundEditorCardProps> = ({
         </div>
 
         <div>
-          <label className="block text-xs font-semibold text-text-muted mb-1.5">
+          <label className="block type-strong text-text-muted mb-1.5">
             {c.maxAttemptsLabel}
           </label>
           <Input
@@ -243,7 +243,7 @@ export const RoundEditorCard: React.FC<RoundEditorCardProps> = ({
 
       {/* Target Answer Selection */}
       <div>
-        <label className="block text-xs font-semibold text-text-muted mb-1.5">
+        <label className="block type-strong text-text-muted mb-1.5">
           {c.targetItem}
         </label>
 
@@ -265,7 +265,7 @@ export const RoundEditorCard: React.FC<RoundEditorCardProps> = ({
                 )}
               </div>
               <div>
-                <div className="text-sm font-bold text-text-primary">{selectedTargetItem.name}</div>
+                <div className="type-card-title text-text-primary">{selectedTargetItem.name}</div>
                 <div className="text-xs text-text-muted capitalize">{targetType}</div>
               </div>
             </div>
@@ -273,7 +273,7 @@ export const RoundEditorCard: React.FC<RoundEditorCardProps> = ({
             <button
               type="button"
               onClick={() => onUpdate({ ...round, target_id: undefined })}
-              className="text-xs text-text-muted hover:text-text-primary underline font-semibold px-2 py-1"
+              className="type-strong text-text-muted hover:text-text-primary underline px-2 py-1"
             >
               {c.change}
             </button>
@@ -292,7 +292,7 @@ export const RoundEditorCard: React.FC<RoundEditorCardProps> = ({
       {round.mode === 'quote_lore' && (
         <div className="space-y-3 pt-2 border-t border-border-color">
           <div>
-            <label className="block text-xs font-semibold text-text-muted mb-1">
+            <label className="block type-strong text-text-muted mb-1">
               {c.customQuoteLabel}
             </label>
             <Textarea
@@ -304,7 +304,7 @@ export const RoundEditorCard: React.FC<RoundEditorCardProps> = ({
             />
           </div>
           <div>
-            <label className="block text-xs font-semibold text-text-muted mb-1">
+            <label className="block type-strong text-text-muted mb-1">
               {c.customSpeakerLabel}
             </label>
             <Input
@@ -320,7 +320,7 @@ export const RoundEditorCard: React.FC<RoundEditorCardProps> = ({
 
       {round.mode === 'emoji_riddle' && (
         <div className="pt-2 border-t border-border-color">
-          <label className="block text-xs font-semibold text-text-muted mb-1">
+          <label className="block type-strong text-text-muted mb-1">
             {c.customEmojisLabel}
           </label>
           <Input
@@ -336,7 +336,7 @@ export const RoundEditorCard: React.FC<RoundEditorCardProps> = ({
 
       {round.mode === 'killer_power' && (
         <div className="pt-2 border-t border-border-color">
-          <label className="block text-xs font-semibold text-text-muted mb-1">
+          <label className="block type-strong text-text-muted mb-1">
             {c.customPowerName}
           </label>
           <Input

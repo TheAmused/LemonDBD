@@ -102,13 +102,13 @@ export const TierItemTile = React.forwardRef<HTMLDivElement, TierItemTileProps>(
             )}
           />
         ) : (
-          <span className="px-1 text-center text-sm font-black text-text-secondary" aria-hidden="true">
+          <span className="px-1 text-center type-card-title text-text-secondary" aria-hidden="true">
             {initials(item.name)}
           </span>
         )}
       </div>
       {showName && (
-        <span aria-hidden="true" className="w-full text-center text-[10px] sm:text-[11px] font-bold leading-tight text-text-secondary line-clamp-2 break-words">
+        <span aria-hidden="true" className="w-full text-center text-tiny sm:text-mini font-bold leading-tight text-text-secondary line-clamp-2 break-words">
           {item.name}
         </span>
       )}

@@ -80,7 +80,7 @@ export const AdminCreateUserModal: React.FC<AdminCreateUserModalProps> = ({
     >
     <form id="admin-create-user-form" onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <label className="block text-[11px] font-bold uppercase tracking-wider text-text-secondary mb-1">
+        <label className="block type-label-xs text-text-secondary mb-1">
           {dict?.admin?.thUsername || 'Username'}
         </label>
         <Input
@@ -94,7 +94,7 @@ export const AdminCreateUserModal: React.FC<AdminCreateUserModalProps> = ({
       </div>
 
       <div>
-        <label className="block text-[11px] font-bold uppercase tracking-wider text-text-secondary mb-1">
+        <label className="block type-label-xs text-text-secondary mb-1">
           {dict?.admin?.thEmail || 'Email Address'}
         </label>
         <Input
@@ -107,7 +107,7 @@ export const AdminCreateUserModal: React.FC<AdminCreateUserModalProps> = ({
       </div>
 
       <div>
-        <label className="block text-[11px] font-bold uppercase tracking-wider text-text-secondary mb-1">
+        <label className="block type-label-xs text-text-secondary mb-1">
           {dict?.admin?.thPassword || 'Password'}
         </label>
         <Input
@@ -120,7 +120,7 @@ export const AdminCreateUserModal: React.FC<AdminCreateUserModalProps> = ({
       </div>
 
       <div>
-        <label className="block text-[11px] font-bold uppercase tracking-wider text-text-secondary mb-1">
+        <label className="block type-label-xs text-text-secondary mb-1">
           {dict?.admin?.rolePrivilege || 'Role Privilege'}
         </label>
         <Select

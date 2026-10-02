@@ -51,7 +51,7 @@ const PerkTile: React.FC<{ perk: Perk; index: number; phase: LockPhase }> = ({ p
           <Sparkles className="w-5 h-5 text-accent-green" />
         )}
       </div>
-      <span className="text-[10px] font-bold text-text-secondary truncate w-full text-center">
+      <span className="type-strong-2xs text-text-secondary truncate w-full text-center">
         {displayName}
       </span>
 

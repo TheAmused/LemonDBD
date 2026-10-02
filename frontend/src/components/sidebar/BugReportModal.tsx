@@ -279,19 +279,19 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({
               <p className="font-bold text-text-primary">
                 {t.bugLoggedInAs ? `${t.bugLoggedInAs} ${user.username}` : user.username}
               </p>
-              <p className="text-[10px] text-text-muted">
+              <p className="type-micro text-text-muted">
                 {user.email}
               </p>
             </div>
           </div>
-          <span className="rounded-md bg-accent-green/10 px-2 py-0.5 text-[10px] font-bold text-accent-green border border-accent-green/20 flex items-center gap-1">
+          <span className="rounded-md bg-accent-green/10 px-2 py-0.5 type-strong-2xs text-accent-green border border-accent-green/20 flex items-center gap-1">
             <UserCheck className="h-3 w-3" aria-hidden="true" />
             {t.verified || ''}
           </span>
         </div>
       ) : (
         <div>
-          <label className="block text-[11px] font-bold uppercase tracking-wider text-text-muted mb-1 flex items-center gap-1.5">
+          <label className="block type-label-xs text-text-muted mb-1 flex items-center gap-1.5">
             <Mail className="h-3.5 w-3.5 text-text-muted" aria-hidden="true" />
             {t.bugGuestEmailLabel || ''} <span className="text-accent-red">*</span>
           </label>
@@ -307,7 +307,7 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         <div className="sm:col-span-2">
-          <label className="block text-[11px] font-bold uppercase tracking-wider text-text-muted mb-1">
+          <label className="block type-label-xs text-text-muted mb-1">
             {t.bugTitleLabel || ''} <span className="text-accent-red">*</span>
           </label>
           <Input
@@ -320,7 +320,7 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({
         </div>
 
         <div>
-          <label className="block text-[11px] font-bold uppercase tracking-wider text-text-muted mb-1">
+          <label className="block type-label-xs text-text-muted mb-1">
             {t.bugCategoryLabel || ''}
           </label>
           <Select
@@ -339,7 +339,7 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({
       </div>
 
       <div>
-        <label className="block text-[11px] font-bold uppercase tracking-wider text-text-muted mb-1">
+        <label className="block type-label-xs text-text-muted mb-1">
           {t.bugDescriptionLabel || ''}{' '}
           <span className="text-accent-red">*</span>
         </label>
@@ -354,11 +354,11 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({
 
       <div>
         <div className="flex items-center justify-between mb-1.5">
-          <label className="text-[11px] font-bold uppercase tracking-wider text-text-muted flex items-center gap-1.5">
+          <label className="type-label-xs text-text-muted flex items-center gap-1.5">
             <ImageIcon className="h-3.5 w-3.5 text-text-muted" aria-hidden="true" />
             {t.bugScreenshotsLabel || ''}
           </label>
-          <span className="text-[10px] text-text-muted">
+          <span className="type-micro text-text-muted">
             {images.length}/3
           </span>
         </div>
@@ -389,7 +389,7 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({
             <button
               type="button"
               onClick={() => fileInputRef.current?.click()}
-              className="flex h-16 w-28 flex-col items-center justify-center rounded-xl border border-dashed border-border-color bg-bg-elevated/50 hover:bg-accent-red/10 hover:border-accent-red/50 text-text-muted hover:text-accent-red transition-all cursor-pointer text-[10px]"
+              className="flex h-16 w-28 flex-col items-center justify-center rounded-xl border border-dashed border-border-color bg-bg-elevated/50 hover:bg-accent-red/10 hover:border-accent-red/50 text-text-muted hover:text-accent-red transition-all cursor-pointer type-micro"
             >
               <Upload className="h-4 w-4 mb-0.5" aria-hidden="true" />
               <span>{t.bugUploadImage || ''}</span>

@@ -54,7 +54,7 @@ function AboutSection({ id, heading, className = '', children }: AboutSectionPro
         }`}
       >
         <div className="overflow-hidden h-full">
-          <div className="flex flex-col gap-2 border-t border-border-color p-4 sm:p-6 text-sm leading-relaxed h-full">
+          <div className="flex flex-col gap-2 border-t border-border-color p-4 sm:p-6 type-body-lg h-full">
             {children}
           </div>
         </div>
@@ -108,7 +108,7 @@ function SyncedAboutCard({
           }`}
         >
           <div className="overflow-hidden h-full">
-            <div className="flex flex-col gap-2 border-t border-border-color p-4 sm:p-6 text-sm leading-relaxed h-full">
+            <div className="flex flex-col gap-2 border-t border-border-color p-4 sm:p-6 type-body-lg h-full">
               {section.children}
             </div>
           </div>
@@ -131,7 +131,7 @@ function SyncedAboutCard({
           }`}
         >
           <div className="overflow-hidden h-full">
-            <div className="flex flex-col gap-2 border-t border-transparent p-4 sm:p-6 text-sm leading-relaxed h-full">
+            <div className="flex flex-col gap-2 border-t border-transparent p-4 sm:p-6 type-body-lg h-full">
               {section.children}
             </div>
           </div>
@@ -198,7 +198,7 @@ export default function AboutPage() {
             {pageHeading}
           </h1>
           {about?.features?.paragraphs?.[0] ? (
-            <p className="max-w-2xl text-xs sm:text-sm text-text-muted leading-relaxed text-center px-4">
+            <p className="max-w-2xl type-body-fluid text-text-muted text-center px-4">
               <RichText text={about.features.paragraphs[0]} />
             </p>
           ) : null}

@@ -51,7 +51,7 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
             type="button"
             onClick={onCancel}
             disabled={busy}
-            className="w-full sm:flex-1 rounded-xl border border-border-color bg-bg-surface py-3 text-sm font-bold text-text-secondary transition-colors hover:bg-bg-elevated hover:text-text-primary disabled:opacity-50 cursor-pointer shadow-xs"
+            className="w-full sm:flex-1 rounded-xl border border-border-color bg-bg-surface py-3 type-card-title text-text-secondary transition-colors hover:bg-bg-elevated hover:text-text-primary disabled:opacity-50 cursor-pointer shadow-xs"
           >
             {cancelLabel}
           </button>
@@ -61,7 +61,7 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
           data-autofocus
           onClick={onConfirm}
           disabled={busy}
-          className="w-full sm:flex-1 inline-flex items-center justify-center gap-2 rounded-xl bg-accent-red py-3 text-sm font-extrabold text-text-inverted shadow-md shadow-accent-red/20 transition-all hover:bg-red-600 disabled:opacity-50 cursor-pointer"
+          className="w-full sm:flex-1 inline-flex items-center justify-center gap-2 rounded-xl bg-accent-red py-3 type-card-title text-text-inverted shadow-md shadow-accent-red/20 transition-all hover:bg-accent-red-hover disabled:opacity-50 cursor-pointer"
         >
           {!busy && confirmIcon}
           <span>{busy ? busyLabel : confirmLabel}</span>
@@ -69,6 +69,6 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
       </>
     }
   >
-    {message && <div className="text-sm text-text-secondary leading-relaxed">{message}</div>}
+    {message && <div className="type-body-lg text-text-secondary">{message}</div>}
   </Modal>
 );

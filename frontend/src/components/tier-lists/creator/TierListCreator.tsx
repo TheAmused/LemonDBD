@@ -208,7 +208,7 @@ export function TierListCreator({ locale, dict, editId }: TierListCreatorProps) 
       <div className="relative z-10 flex flex-col gap-2">
         <Link
           href={`/${locale}/tier-lists`}
-          className="inline-flex min-h-[44px] w-fit items-center gap-1 text-xs font-bold uppercase tracking-wider text-text-secondary hover:text-accent-red"
+          className="inline-flex min-h-[44px] w-fit items-center gap-1 type-label-sm text-text-secondary hover:text-accent-red"
         >
           <ChevronLeft className="h-4 w-4" aria-hidden="true" />
           {t.backToHub}
@@ -359,7 +359,7 @@ export function TierListCreator({ locale, dict, editId }: TierListCreatorProps) 
         <div className="flex lg:hidden items-center justify-between gap-2 w-full">
           <Link
             href={`/${locale}/tier-lists`}
-            className="inline-flex min-h-[44px] items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-text-secondary hover:text-accent-red transition-colors"
+            className="inline-flex min-h-[44px] items-center gap-1.5 type-label-sm text-text-secondary hover:text-accent-red transition-colors"
           >
             <ChevronLeft className="h-4 w-4" aria-hidden="true" />
             {t.backToHub}
@@ -547,7 +547,7 @@ function Section({ title, defaultOpen = true, children }: { title: string; defau
       >
         <div className="w-8 shrink-0 pointer-events-none" aria-hidden="true" />
         <div className="flex-1 text-center min-w-0 px-2">
-          <h2 className="text-xs sm:text-sm 2xl:text-base font-black uppercase tracking-widest text-text-primary group-hover:text-accent-red transition-colors">
+          <h2 className="type-section-title text-text-primary group-hover:text-accent-red transition-colors">
             {title}
           </h2>
         </div>
@@ -595,7 +595,7 @@ function Feedback({
   ];
   if (messages.length === 0) return null;
   return (
-    <div role="alert" className="flex flex-col items-center justify-center gap-1.5 rounded-lg border border-accent-red/40 bg-accent-red/10 p-3 text-sm font-semibold text-accent-red text-center">
+    <div role="alert" className="flex flex-col items-center justify-center gap-1.5 rounded-lg border border-accent-red/40 bg-accent-red/10 p-3 type-card-title text-accent-red text-center">
       {messages.map((m) => (
         <p key={m} className="flex items-center justify-center gap-2">
           <TriangleAlert className="h-4 w-4 shrink-0" aria-hidden="true" />

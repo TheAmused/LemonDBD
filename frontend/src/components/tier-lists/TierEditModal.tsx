@@ -14,6 +14,7 @@ import { TierBadge } from './TierBadge';
 import { tierColorProps } from './tierColor';
 import { Button } from '@/components/common/Button';
 import { Input } from '@/components/common/Field';
+import { themeColor } from '@/utils/themeColor';
 
 interface TierEditModalProps {
   tier: TierDefinition | null;
@@ -57,7 +58,7 @@ export function TierEditModal({
   if (!tier) return null;
 
   const trimmed = label.trim();
-  const customHex = HEX_COLOR_PATTERN.test(color) ? color : '#888888';
+  const customHex = HEX_COLOR_PATTERN.test(color) ? color : themeColor('--text-muted');
   const trimmedBg = backgroundImage.trim();
   const safeBg = trimmedBg ? sanitizeImageUrl(trimmedBg) : null;
   const bgInvalid = Boolean(trimmedBg) && !safeBg;

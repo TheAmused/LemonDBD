@@ -51,7 +51,7 @@ export const RulesConceptCard: React.FC<{ title: React.ReactNode; text: React.Re
       <AdeptBadgeIcon className="w-4 h-4" aria-hidden="true" />
       <span>{title}</span>
     </h3>
-    <p className="leading-relaxed text-xs sm:text-sm text-text-secondary">{text}</p>
+    <p className="type-body-fluid text-text-secondary">{text}</p>
   </div>
 );
 
@@ -63,7 +63,7 @@ export const RulesHowItWorks: React.FC<{
   hint?: React.ReactNode;
 }> = ({ title, items, tone, hint }) => (
   <div>
-    <h3 className="text-sm font-bold text-text-primary uppercase tracking-wider mb-3">{title}</h3>
+    <h3 className="type-label text-text-primary mb-3">{title}</h3>
     <ul
       className={`space-y-2 text-xs sm:text-sm text-text-secondary leading-relaxed list-disc pl-4 ${RULES_TONES[tone].marker}`}
     >
@@ -71,14 +71,14 @@ export const RulesHowItWorks: React.FC<{
         <li key={i}>{item}</li>
       ))}
     </ul>
-    {hint && <p className="mt-3 leading-relaxed text-xs sm:text-sm text-text-muted italic">{hint}</p>}
+    {hint && <p className="mt-3 type-body-fluid text-text-muted italic">{hint}</p>}
   </div>
 );
 
 /** Flame-headed section (difficulty / tier restrictions) wrapping its rows. */
 export const RulesFlameSection: React.FC<{ title: string; children: React.ReactNode }> = ({ title, children }) => (
   <div>
-    <h3 className="text-sm font-bold text-text-primary uppercase tracking-wider mb-3 flex items-center gap-2">
+    <h3 className="type-label text-text-primary mb-3 flex items-center gap-2">
       <Flame className="w-4 h-4 text-accent-red" aria-hidden="true" />
       <span>{title}</span>
     </h3>

@@ -180,10 +180,10 @@ export const FullscreenMapEngineView: React.FC<FullscreenMapEngineProps> = ({
                 <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-bg-elevated border border-accent-red/40 text-text-secondary shadow-sm shrink-0">
                   <Maximize2 className="w-3.5 h-3.5 text-accent-red shrink-0" />
                   <span className="text-text-muted">{dict?.maps?.surfaceArea || 'Surface Area'}</span>
-                  <span className="font-bold text-text-primary text-xs">{activeMap.size_sq_tiles}</span>
+                  <span className="type-strong text-text-primary">{activeMap.size_sq_tiles}</span>
                   <span className="text-accent-red font-bold">{dict?.maps?.sqTilesUnit || 'sqT'}</span>
                   {activeMap.size_sq_meters != null && (
-                    <span className="text-text-muted text-[10px] pl-0.5">
+                    <span className="text-text-muted type-micro pl-0.5">
                       {(dict?.maps?.sqMetersSuffix || '({value} m²)').replace(
                         '{value}',
                         formatNumber(activeMap.size_sq_meters)
@@ -264,7 +264,7 @@ export const FullscreenMapEngineView: React.FC<FullscreenMapEngineProps> = ({
         ) : (
           <div className="flex flex-col items-center gap-3 text-text-muted">
             <ImageOff className="w-12 h-12" />
-            <span className="text-xs font-bold uppercase tracking-wider">
+            <span className="type-label-sm">
               {dict?.maps?.noMapsFound || 'No Tactical Callout Image Available'}
             </span>
           </div>
@@ -288,7 +288,7 @@ export const FullscreenMapEngineView: React.FC<FullscreenMapEngineProps> = ({
             <ZoomOut className="w-4 h-4" />
           </Button>
 
-          <span className="text-xs font-bold text-text-primary px-2 min-w-[50px] text-center">
+          <span className="type-strong text-text-primary px-2 min-w-[50px] text-center">
             {Math.round(zoom * 100)}{dict?.maps?.percentSign || '%'}
           </span>
 

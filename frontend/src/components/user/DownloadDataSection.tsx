@@ -41,7 +41,7 @@ export const DownloadDataSection: React.FC<{ dict?: Dictionary }> = ({ dict }) =
       >
         <span>{t.downloadDataButton || 'Download my data'}</span>
       </Button>
-      {error ? <span role="alert" className="text-xs font-semibold text-accent-red">{t.downloadDataFailed}</span> : null}
+      {error ? <span role="alert" className="type-strong text-accent-red">{t.downloadDataFailed}</span> : null}
     </>
   );
 };

@@ -414,7 +414,7 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
         </div>
 
         <div className="text-center pt-1 sm:pt-2 space-y-2.5">
-          <h2 className="text-xl sm:text-3xl md:text-4xl font-black tracking-[0.25em] sm:tracking-[0.35em] text-text-primary uppercase">
+          <h2 className="text-xl sm:text-3xl md:text-4xl font-black tracking-spaced-md sm:tracking-spaced-lg text-text-primary uppercase">
             {selectRosterTitle}
           </h2>
 
@@ -424,7 +424,7 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
                 <button
                   type="button"
                   onClick={onCreateRoster}
-                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 min-h-[36px] rounded-xl bg-accent-red/10 border border-accent-red/40 text-accent-red text-xs font-bold uppercase tracking-wide hover:bg-accent-red/20 transition-colors cursor-pointer"
+                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 min-h-[36px] rounded-xl bg-accent-red/10 border border-accent-red/40 text-accent-red type-label-sm hover:bg-accent-red/20 transition-colors cursor-pointer"
                 >
                   <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
                   {dict?.smashOrPass?.picker?.createRoster || 'Create a roster'}
@@ -434,7 +434,7 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
                 <button
                   type="button"
                   onClick={onImportRoster}
-                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 min-h-[36px] rounded-xl bg-bg-elevated border border-border-color text-text-secondary text-xs font-bold uppercase tracking-wide hover:text-text-primary hover:border-border-subtle transition-colors cursor-pointer"
+                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 min-h-[36px] rounded-xl bg-bg-elevated border border-border-color text-text-secondary type-label-sm hover:text-text-primary hover:border-border-subtle transition-colors cursor-pointer"
                 >
                   <Upload className="h-3.5 w-3.5" aria-hidden="true" />
                   {dict?.smashOrPass?.picker?.importRoster || 'Import'}
@@ -612,7 +612,7 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
 
                   {isRosterEnabled && (
                     <div
-                      className="absolute top-4 left-4 sm:top-5 sm:left-5 flex items-center gap-1.5 px-3 py-1.5 rounded-2xl bg-bg-primary/80 backdrop-blur-md border border-border-color text-text-inverted text-xs sm:text-sm font-bold shadow-md pointer-events-none"
+                      className="absolute top-4 left-4 sm:top-5 sm:left-5 flex items-center gap-1.5 px-3 py-1.5 rounded-2xl bg-bg-primary/80 backdrop-blur-md border border-border-color text-text-inverted type-strong-fluid shadow-md pointer-events-none"
                     >
                       <Flame className="h-4 w-4 text-accent-red fill-accent-red" aria-hidden="true" />
                       <span>{count}</span>
@@ -622,7 +622,7 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
                   {r.is_nsfw && (
                     <div
                       data-testid="roster-nsfw-badge"
-                      className="absolute top-4 left-1/2 -translate-x-1/2 sm:top-5 flex items-center gap-1 px-2.5 py-1 rounded-2xl bg-accent-red text-text-inverted text-[10px] sm:text-xs font-black uppercase tracking-wide shadow-md pointer-events-none"
+                      className="absolute top-4 left-1/2 -translate-x-1/2 sm:top-5 flex items-center gap-1 px-2.5 py-1 rounded-2xl bg-accent-red text-text-inverted text-tiny sm:text-xs font-black uppercase tracking-wide shadow-md pointer-events-none"
                     >
                       <AlertTriangle className="h-3 w-3" aria-hidden="true" />
                       <span>{dict?.smashOrPass?.nsfw?.badge || 'NSFW'}</span>
@@ -632,7 +632,7 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
                   {r.is_local && (
                     <div
                       data-testid="roster-local-badge"
-                      className="absolute bottom-[5.5rem] left-1/2 -translate-x-1/2 sm:bottom-24 flex items-center gap-1 px-2.5 py-1 rounded-2xl bg-bg-primary/85 backdrop-blur-md border border-accent-amber/40 text-accent-amber text-[10px] sm:text-xs font-black uppercase tracking-wide shadow-md pointer-events-none"
+                      className="absolute bottom-[5.5rem] left-1/2 -translate-x-1/2 sm:bottom-24 flex items-center gap-1 px-2.5 py-1 rounded-2xl bg-bg-primary/85 backdrop-blur-md border border-accent-amber/40 text-accent-amber text-tiny sm:text-xs font-black uppercase tracking-wide shadow-md pointer-events-none"
                     >
                       <Sparkles className="h-3 w-3" aria-hidden="true" />
                       <span>{dict?.smashOrPass?.picker?.yours || 'Yours'}</span>
@@ -641,7 +641,7 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
 
                   {isCurrentlyActive && (
                     <div
-                      className="absolute top-4 right-4 sm:top-5 sm:right-5 flex items-center gap-1 px-3 py-1.5 rounded-2xl bg-accent-red text-text-inverted text-xs font-black pointer-events-none"
+                      className="absolute top-4 right-4 sm:top-5 sm:right-5 flex items-center gap-1 px-3 py-1.5 rounded-2xl bg-accent-red text-text-inverted type-strong pointer-events-none"
                     >
                       <Check className="h-3.5 w-3.5 stroke-[3]" aria-hidden="true" />
                       <span>{rawSmash?.active || ''}</span>
@@ -649,7 +649,7 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
                   )}
 
                   {!isRosterEnabled && !isCurrentlyActive && (
-                    <div className="absolute top-4 right-4 sm:top-5 sm:right-5 flex items-center gap-1.5 px-3 py-1.5 rounded-2xl bg-bg-elevated border border-border-color text-text-secondary text-xs font-bold shadow-lg pointer-events-none">
+                    <div className="absolute top-4 right-4 sm:top-5 sm:right-5 flex items-center gap-1.5 px-3 py-1.5 rounded-2xl bg-bg-elevated border border-border-color text-text-secondary type-strong shadow-lg pointer-events-none">
                       <Lock className="h-3.5 w-3.5 text-text-muted" aria-hidden="true" />
                       <span>{dict?.smashOrPass?.comingSoon || 'Coming Soon'}</span>
                     </div>

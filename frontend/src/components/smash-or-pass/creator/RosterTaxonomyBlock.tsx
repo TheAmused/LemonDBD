@@ -87,12 +87,12 @@ export const RosterTaxonomyBlock: React.FC<RosterTaxonomyBlockProps> = ({
               {tx.rolesTitle}
             </h3>
           </div>
-          <span className="text-[10px] font-bold text-text-muted">
+          <span className="type-strong-2xs text-text-muted">
             {roles.length > 0 ? `${roles.length} ${tx.customCount}` : tx.defaultRoles}
           </span>
         </div>
 
-        <p className="text-xs text-text-secondary leading-relaxed text-center">
+        <p className="type-body text-text-secondary text-center">
           {tx.rolesDesc}
         </p>
 
@@ -123,7 +123,7 @@ export const RosterTaxonomyBlock: React.FC<RosterTaxonomyBlockProps> = ({
 
         {/* Quick Suggestion Chips */}
         <div className="flex flex-wrap items-center justify-center gap-1.5 pt-1">
-          <span className="text-[10px] text-text-muted uppercase">{tx.quickPresets}</span>
+          <span className="text-tiny text-text-muted uppercase">{tx.quickPresets}</span>
           {['Survivor', 'Killer', 'Hero', 'Villain', 'Neutral'].map((preset) => {
             const isAdded = roles.some((r) => r.toLowerCase() === preset.toLowerCase());
             if (isAdded) return null;
@@ -132,7 +132,7 @@ export const RosterTaxonomyBlock: React.FC<RosterTaxonomyBlockProps> = ({
                 key={preset}
                 type="button"
                 onClick={() => handleAddRole(preset)}
-                className="text-[10px] px-2 py-0.5 rounded-lg bg-bg-surface hover:bg-bg-elevated border border-border-color text-text-muted hover:text-text-primary transition-colors cursor-pointer"
+                className="type-micro px-2 py-0.5 rounded-lg bg-bg-surface hover:bg-bg-elevated border border-border-color text-text-muted hover:text-text-primary transition-colors cursor-pointer"
               >
                 + {preset}
               </button>
@@ -176,12 +176,12 @@ export const RosterTaxonomyBlock: React.FC<RosterTaxonomyBlockProps> = ({
               {tx.gendersTitle}
             </h3>
           </div>
-          <span className="text-[10px] font-bold text-text-muted">
+          <span className="type-strong-2xs text-text-muted">
             {genders.length > 0 ? `${genders.length} ${tx.customCount}` : tx.defaultGenders}
           </span>
         </div>
 
-        <p className="text-xs text-text-secondary leading-relaxed text-center">
+        <p className="type-body text-text-secondary text-center">
           {tx.gendersDesc}
         </p>
 
@@ -212,7 +212,7 @@ export const RosterTaxonomyBlock: React.FC<RosterTaxonomyBlockProps> = ({
 
         {/* Quick Suggestion Chips */}
         <div className="flex flex-wrap items-center justify-center gap-1.5 pt-1">
-          <span className="text-[10px] text-text-muted uppercase">{tx.quickPresets}</span>
+          <span className="text-tiny text-text-muted uppercase">{tx.quickPresets}</span>
           {['Female', 'Male', 'Non-Binary', 'Monster / Other', 'ABC'].map((preset) => {
             const isAdded = genders.some((g) => g.toLowerCase() === preset.toLowerCase());
             if (isAdded) return null;
@@ -221,7 +221,7 @@ export const RosterTaxonomyBlock: React.FC<RosterTaxonomyBlockProps> = ({
                 key={preset}
                 type="button"
                 onClick={() => handleAddGender(preset)}
-                className="text-[10px] px-2 py-0.5 rounded-lg bg-bg-surface hover:bg-bg-elevated border border-border-color text-text-muted hover:text-text-primary transition-colors cursor-pointer"
+                className="type-micro px-2 py-0.5 rounded-lg bg-bg-surface hover:bg-bg-elevated border border-border-color text-text-muted hover:text-text-primary transition-colors cursor-pointer"
               >
                 + {preset}
               </button>

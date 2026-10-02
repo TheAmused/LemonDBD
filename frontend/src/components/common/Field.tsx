@@ -96,7 +96,7 @@ export const FieldLabel: React.FC<{
   children: React.ReactNode;
 }> = ({ label, htmlFor, hint, error, className, children }) => (
   <div className={cn('space-y-1.5', className)}>
-    <label htmlFor={htmlFor} className="block text-xs font-bold text-text-secondary">
+    <label htmlFor={htmlFor} className="block type-strong text-text-secondary">
       {label}
     </label>
     {children}

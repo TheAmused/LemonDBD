@@ -102,7 +102,7 @@ export const EmailVerificationForm: React.FC<EmailVerificationFormProps> = ({
   return (
     <form onSubmit={handleSubmit} className="flex flex-col items-center gap-3">
       {error && (
-        <p role="alert" className="text-[11px] font-semibold text-accent-red">
+        <p role="alert" className="type-strong-xs text-accent-red">
           {error}
         </p>
       )}
@@ -139,7 +139,7 @@ export const EmailVerificationForm: React.FC<EmailVerificationFormProps> = ({
           type="button"
           onClick={handleResend}
           disabled={cooldown > 0}
-          className="text-[11px] font-bold underline text-accent-amber hover:opacity-80 disabled:opacity-60 cursor-pointer"
+          className="type-strong-xs underline text-accent-amber hover:opacity-80 disabled:opacity-60 cursor-pointer"
         >
           {cooldown > 0
             ? t?.resendCodeIn?.replace('{seconds}', String(cooldown))

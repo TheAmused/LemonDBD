@@ -116,7 +116,7 @@ export function CandidateFormInputs({
       <div className="relative flex items-center justify-between pb-3 border-b border-border-color/60">
         <div className="w-24 hidden sm:block pointer-events-none" aria-hidden="true" />
         <div className="flex-1 flex flex-wrap items-center justify-center gap-2 min-w-0 text-center">
-          <span className="text-xs font-bold px-2 py-0.5 rounded bg-accent-red/10 border border-accent-red/30 text-accent-red">
+          <span className="type-strong px-2 py-0.5 rounded bg-accent-red/10 border border-accent-red/30 text-accent-red">
             #{displayIndex}
           </span>
           <h3 className="font-bold text-sm sm:text-base text-text-primary truncate">
@@ -156,11 +156,11 @@ export function CandidateFormInputs({
               ) : (
                 <div className="flex flex-col items-center gap-2 p-3 text-center text-text-muted select-none">
                   <ImageIcon className="h-10 w-10 opacity-30 text-accent-red" />
-                  <span className="text-xs font-bold uppercase tracking-wider">{c.preview || 'Preview'}</span>
-                  <span className="text-[10px] text-text-muted/60">#{displayIndex}</span>
+                  <span className="type-label-sm">{c.preview || 'Preview'}</span>
+                  <span className="type-micro text-text-muted/60">#{displayIndex}</span>
                 </div>
               )}
-              <span className="absolute top-2 left-2 text-[10px] font-black px-2 py-0.5 rounded-md bg-bg-surface/90 text-accent-red border border-border-color/60 backdrop-blur-xs select-none">
+              <span className="absolute top-2 left-2 type-strong-2xs px-2 py-0.5 rounded-md bg-bg-surface/90 text-accent-red border border-border-color/60 backdrop-blur-xs select-none">
                 #{displayIndex}
               </span>
             </div>
@@ -169,7 +169,7 @@ export function CandidateFormInputs({
           {/* Inputs column: compact inputs taking focused space */}
           <div className="flex-1 max-w-md sm:max-w-lg 2xl:max-wide-2k:max-w-xl wide-2k:max-w-3xl w-full flex flex-col gap-2.5">
             <label className="block">
-              <span className="mb-1 block text-[11px] font-black uppercase tracking-wider text-text-secondary">
+              <span className="mb-1 block type-label-xs text-text-secondary">
                 {c.entityNameLabel || 'Candidate Name'}
               </span>
               <Input
@@ -183,7 +183,7 @@ export function CandidateFormInputs({
             </label>
 
             <label className="block">
-              <span className="mb-1 block text-[11px] font-black uppercase tracking-wider text-text-secondary">
+              <span className="mb-1 block type-label-xs text-text-secondary">
                 {c.entityMediaLabel || 'Portrait Image URL'}
               </span>
               <Input
@@ -199,7 +199,7 @@ export function CandidateFormInputs({
               {/* Dynamic Role Input + Quick Chips */}
               <div className="space-y-1">
                 <label className="block">
-                  <span className="mb-1 block text-[11px] font-black uppercase tracking-wider text-text-secondary">
+                  <span className="mb-1 block type-label-xs text-text-secondary">
                     {c.entityRoleLabel || 'Role'}
                   </span>
                   <Input
@@ -222,14 +222,14 @@ export function CandidateFormInputs({
                 {/* Quick-Pick Role Chips */}
                 {availableRoles.length > 0 && (
                   <div className="flex flex-wrap items-center gap-1 pt-0.5">
-                    <span className="text-[9px] text-text-muted mr-0.5">{c.quick || 'Quick:'}</span>
+                    <span className="text-micro text-text-muted mr-0.5">{c.quick || 'Quick:'}</span>
                     {availableRoles.slice(0, 4).map((r) => (
                       <button
                         key={r}
                         type="button"
                         onClick={() => onChange({ role: r })}
                         className={cn(
-                          'px-1.5 py-0.5 rounded text-[9px] transition-colors cursor-pointer',
+                          'px-1.5 py-0.5 rounded text-micro transition-colors cursor-pointer',
                           entity.role.toLowerCase() === r.toLowerCase()
                             ? 'bg-accent-red text-text-inverted font-bold'
                             : 'bg-bg-elevated hover:bg-bg-primary text-text-secondary hover:text-text-primary border border-border-color'
@@ -245,7 +245,7 @@ export function CandidateFormInputs({
               {/* Dynamic Gender Input + Quick Chips */}
               <div className="space-y-1">
                 <label className="block">
-                  <span className="mb-1 block text-[11px] font-black uppercase tracking-wider text-text-secondary">
+                  <span className="mb-1 block type-label-xs text-text-secondary">
                     {c.entityGenderLabel || 'Gender'}
                   </span>
                   <Input
@@ -268,14 +268,14 @@ export function CandidateFormInputs({
                 {/* Quick-Pick Gender Chips */}
                 {availableGenders.length > 0 && (
                   <div className="flex flex-wrap items-center gap-1 pt-0.5">
-                    <span className="text-[9px] text-text-muted mr-0.5">{c.quick || 'Quick:'}</span>
+                    <span className="text-micro text-text-muted mr-0.5">{c.quick || 'Quick:'}</span>
                     {availableGenders.slice(0, 4).map((g) => (
                       <button
                         key={g}
                         type="button"
                         onClick={() => onChange({ gender: g })}
                         className={cn(
-                          'px-1.5 py-0.5 rounded text-[9px] transition-colors cursor-pointer',
+                          'px-1.5 py-0.5 rounded text-micro transition-colors cursor-pointer',
                           entity.gender.toLowerCase() === g.toLowerCase()
                             ? 'bg-accent-amber text-text-inverted font-bold'
                             : 'bg-bg-elevated hover:bg-bg-primary text-text-secondary hover:text-text-primary border border-border-color'
@@ -478,7 +478,7 @@ export function CandidateTiles({
                 )}
               >
                 {/* Number badge on top-left of tile */}
-                <span className="absolute top-1 left-1 z-10 text-[9px] font-black px-1.5 py-0.5 rounded bg-bg-surface/90 text-text-secondary border border-border-color/60 backdrop-blur-xs">
+                <span className="absolute top-1 left-1 z-10 text-micro font-black px-1.5 py-0.5 rounded bg-bg-surface/90 text-text-secondary border border-border-color/60 backdrop-blur-xs">
                   #{displayIndex}
                 </span>
 
@@ -528,7 +528,7 @@ export function CandidateTiles({
                 onFocus={() => onSelect(entity.key)}
                 placeholder={c.unnamedCandidate || 'Unnamed'}
                 aria-label={(c.renameCandidateAria || 'Rename {name}').replace('{name}', entity.name || displayIndex)}
-                className="mt-1 h-6 w-full rounded-sm border border-transparent bg-transparent px-1 text-center text-xs font-semibold text-text-secondary transition-colors hover:text-text-primary hover:bg-bg-elevated/40 focus:border-accent-red focus:bg-bg-surface focus:text-text-primary focus:outline-hidden truncate"
+                className="mt-1 h-6 w-full rounded-sm border border-transparent bg-transparent px-1 text-center type-strong text-text-secondary transition-colors hover:text-text-primary hover:bg-bg-elevated/40 focus:border-accent-red focus:bg-bg-surface focus:text-text-primary focus:outline-hidden truncate"
               />
             </li>
           );
@@ -545,10 +545,10 @@ export function CandidateTiles({
             >
               <div className="flex flex-col items-center gap-1">
                 <Plus className="h-5 w-5 transition-transform group-hover:scale-110" />
-                <span className="text-[10px] font-bold uppercase">{c.add || 'Add'}</span>
+                <span className="type-label-2xs">{c.add || 'Add'}</span>
               </div>
             </button>
-            <span className="mt-1 h-6 text-[10px] text-text-muted flex items-center select-none">
+            <span className="mt-1 h-6 type-micro text-text-muted flex items-center select-none">
               {c.addCandidateTile || '+ Add'}
             </span>
           </li>
@@ -592,7 +592,7 @@ function TextField({
 }) {
   return (
     <label className={full ? 'sm:col-span-2 block' : 'block'}>
-      <span className="mb-1 block text-[11px] font-black uppercase tracking-wider text-text-secondary">{label}</span>
+      <span className="mb-1 block type-label-xs text-text-secondary">{label}</span>
       <Input
         fieldSize="md"
         value={value}
@@ -621,7 +621,7 @@ function TextAreaField({
 }) {
   return (
     <label className={full ? 'sm:col-span-2 block' : 'block'}>
-      <span className="mb-1 block text-[11px] font-black uppercase tracking-wider text-text-secondary">{label}</span>
+      <span className="mb-1 block type-label-xs text-text-secondary">{label}</span>
       <Textarea
         fieldSize="md"
         value={value}

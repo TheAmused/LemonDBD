@@ -255,7 +255,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </div>
 
         <nav aria-label={dict?.sidebar?.navAria || 'Navigation'} className="mt-5 space-y-1">
-          <p className="px-3 text-[10px] font-extrabold uppercase tracking-wider text-text-muted mb-2">
+          <p className="px-3 type-label-2xs text-text-muted mb-2">
             {dict?.sidebar?.navigation || 'Navigation'}
           </p>
 

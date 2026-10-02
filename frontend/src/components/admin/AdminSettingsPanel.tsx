@@ -97,7 +97,7 @@ export const AdminSettingsPanel: React.FC<AdminSettingsPanelProps> = ({ onAction
   return (
     <div className="space-y-6">
       <div className="rounded-2xl border border-border-color bg-bg-surface p-5 shadow-sm backdrop-blur-sm">
-        <h3 className="flex items-center gap-2 text-sm font-black uppercase tracking-wider text-text-primary">
+        <h3 className="flex items-center gap-2 type-label text-text-primary">
           <Settings2 className="h-4 w-4 text-accent-red" />
           <span>{t.configTitle || 'Site configuration'}</span>
         </h3>
@@ -118,7 +118,7 @@ export const AdminSettingsPanel: React.FC<AdminSettingsPanelProps> = ({ onAction
                 key={group}
                 className="rounded-2xl border border-border-color bg-bg-surface p-5 shadow-sm backdrop-blur-sm"
               >
-                <h4 className="pb-3 text-xs font-black uppercase tracking-widest text-accent-red">
+                <h4 className="pb-3 type-label-sm text-accent-red">
                   {groupLabel(group)}
                 </h4>
                 <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
@@ -126,7 +126,7 @@ export const AdminSettingsPanel: React.FC<AdminSettingsPanelProps> = ({ onAction
                     <div key={row.key} className="flex flex-col gap-1.5">
                       <label
                         htmlFor={`cfg-${row.key}`}
-                        className="text-xs font-bold text-text-primary"
+                        className="type-strong text-text-primary"
                       >
                         {labelFor(row.key)}
                       </label>
@@ -141,8 +141,8 @@ export const AdminSettingsPanel: React.FC<AdminSettingsPanelProps> = ({ onAction
                         onChange={(e) => setDrafts((prev) => ({ ...prev, [row.key]: e.target.value }))}
                         disabled={saving}
                       />
-                      <p className="text-[11px] leading-snug text-text-muted">{descFor(row.key)}</p>
-                      <div className="flex items-center gap-3 text-[11px] text-text-muted">
+                      <p className="text-mini leading-snug text-text-muted">{descFor(row.key)}</p>
+                      <div className="flex items-center gap-3 type-caption text-text-muted">
                         <span className="">
                           {(t.configDefaultValue || 'Default: {value}').replace(
                             '{value}',

@@ -24,7 +24,7 @@ export const ClassicPerkGuesser: React.FC<ClassicPerkGuesserProps> = ({
     <div className="w-full overflow-x-auto pb-4 my-6">
       <table className="w-full min-w-[600px] border-separate border-spacing-2 text-center select-none">
         <thead>
-          <tr className="text-xs uppercase tracking-wider text-text-muted font-semibold">
+          <tr className="type-label-sm text-text-muted">
             <th className="p-2 w-32 text-left">{dict.filters.perks}</th>
             <th className="p-2 w-24">{t.attributes.role}</th>
             <th className="p-2 w-36">{dict.sidebar.characters}</th>

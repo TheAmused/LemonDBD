@@ -90,7 +90,7 @@ export const DbdSpinner: React.FC<DbdSpinnerProps> = ({
       needle: '#f43f5e',
       glow: 'rgba(239, 68, 68, 0.75)',
       ring: 'rgba(244, 63, 94, 0.35)',
-      text: 'text-rose-600 dark:text-rose-400',
+      text: 'text-accent-rose',
       baseTrack: '#1e293b',
     },
     amber: {
@@ -106,7 +106,7 @@ export const DbdSpinner: React.FC<DbdSpinnerProps> = ({
       needle: '#34d399',
       glow: 'rgba(16, 185, 129, 0.75)',
       ring: 'rgba(52, 211, 153, 0.35)',
-      text: 'text-emerald-700 dark:text-emerald-400',
+      text: 'text-accent-green',
       baseTrack: '#1e293b',
     },
     cyan: {
@@ -114,7 +114,7 @@ export const DbdSpinner: React.FC<DbdSpinnerProps> = ({
       needle: '#38bdf8',
       glow: 'rgba(6, 182, 212, 0.75)',
       ring: 'rgba(56, 189, 248, 0.35)',
-      text: 'text-cyan-700 dark:text-cyan-400',
+      text: 'text-accent-cyan',
       baseTrack: '#1e293b',
     },
     violet: {
@@ -122,7 +122,7 @@ export const DbdSpinner: React.FC<DbdSpinnerProps> = ({
       needle: '#a78bfa',
       glow: 'rgba(139, 92, 246, 0.75)',
       ring: 'rgba(167, 139, 250, 0.35)',
-      text: 'text-purple-700 dark:text-purple-400',
+      text: 'text-accent-purple',
       baseTrack: '#1e293b',
     },
     blood: {
@@ -130,7 +130,7 @@ export const DbdSpinner: React.FC<DbdSpinnerProps> = ({
       needle: '#991b1b',
       glow: 'rgba(220, 38, 38, 0.90)',
       ring: 'rgba(153, 27, 27, 0.40)',
-      text: 'text-red-700 dark:text-red-500',
+      text: 'text-accent-red',
       baseTrack: '#170202',
     },
     gold: {
@@ -146,7 +146,7 @@ export const DbdSpinner: React.FC<DbdSpinnerProps> = ({
       needle: '#ff007f',
       glow: 'rgba(0, 255, 204, 0.85)',
       ring: 'rgba(255, 0, 127, 0.40)',
-      text: 'text-cyan-700 dark:text-cyan-300',
+      text: 'text-accent-cyan',
       baseTrack: '#051b2c',
     },
   };
@@ -264,7 +264,7 @@ export const DbdSpinner: React.FC<DbdSpinnerProps> = ({
             stroke={colorMap.baseTrack}
             strokeWidth="7.5"
             strokeLinecap="round"
-            className="stroke-border-color dark:stroke-slate-800"
+            className="stroke-border-color"
           />
 
           <circle

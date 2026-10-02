@@ -104,7 +104,7 @@ export const ChallengeIntroModalShell: React.FC<ChallengeIntroModalShellProps> =
       {intro && (
         <div className="pb-5">
           <div className="bg-bg-elevated border border-border-color rounded-xl p-4 shadow-sm text-center">
-            <p className="leading-relaxed text-xs sm:text-sm text-text-secondary">
+            <p className="type-body-fluid text-text-secondary">
               {intro}
             </p>
             {onOpenRules && (
@@ -132,7 +132,7 @@ export const ChallengeIntroModalShell: React.FC<ChallengeIntroModalShellProps> =
           const descriptionClassName = tile.disabled
             ? 'text-xs text-text-muted text-balance'
             : 'text-xs text-text-secondary text-balance';
-          const badgeClassName = 'text-[10px] font-bold uppercase tracking-wider text-text-muted';
+          const badgeClassName = 'text-tiny font-bold uppercase tracking-wider text-text-muted';
 
           const content = (
             <>
@@ -175,14 +175,14 @@ export const ChallengeIntroModalShell: React.FC<ChallengeIntroModalShellProps> =
                 <span className="absolute right-2 top-2 flex items-center gap-1 rounded-full border border-accent-red/50 bg-accent-red/15 px-1.5 py-0.5 text-accent-red shadow-sm">
                   <AdeptBadgeIcon className="h-3 w-3" />
                   {tile.completedFullCount != null && (
-                    <span className="text-[10px] font-black leading-none">{tile.completedFullCount}</span>
+                    <span className="text-tiny font-black leading-none">{tile.completedFullCount}</span>
                   )}
                 </span>
               ) : tile.completed ? (
                 <span className="absolute right-2 top-2 flex items-center gap-1 rounded-full border border-accent-amber/40 bg-accent-amber/15 px-1.5 py-0.5 text-accent-amber shadow-sm">
                   <AdeptBadgeIcon className="h-3 w-3" />
                   {tile.completedCount != null && (
-                    <span className="text-[10px] font-black leading-none">{tile.completedCount}</span>
+                    <span className="text-tiny font-black leading-none">{tile.completedCount}</span>
                   )}
                 </span>
               ) : null}

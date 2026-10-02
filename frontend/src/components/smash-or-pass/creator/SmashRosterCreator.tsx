@@ -483,7 +483,7 @@ export function SmashRosterCreator({ locale, dict, editId }: SmashRosterCreatorP
       <div className="relative z-10 flex flex-col gap-2">
         <Link
           href={`/${locale}/smash-or-pass`}
-          className="inline-flex min-h-[44px] w-fit items-center gap-1 text-xs font-bold uppercase tracking-wider text-text-secondary hover:text-accent-red"
+          className="inline-flex min-h-[44px] w-fit items-center gap-1 type-label-sm text-text-secondary hover:text-accent-red"
         >
           <ChevronLeft className="h-4 w-4" aria-hidden="true" />
           {c.title || 'Create a Roster'}
@@ -684,7 +684,7 @@ export function SmashRosterCreator({ locale, dict, editId }: SmashRosterCreatorP
         <div className="flex lg:hidden items-center justify-between gap-2 w-full">
           <Link
             href={`/${locale}/smash-or-pass`}
-            className="inline-flex min-h-[44px] items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-text-secondary hover:text-accent-red transition-colors"
+            className="inline-flex min-h-[44px] items-center gap-1.5 type-label-sm text-text-secondary hover:text-accent-red transition-colors"
           >
             <ChevronLeft className="h-4 w-4" aria-hidden="true" />
             {c.backToHub || 'Smash or Pass'}
@@ -780,7 +780,7 @@ export function SmashRosterCreator({ locale, dict, editId }: SmashRosterCreatorP
                       referrerPolicy="no-referrer"
                       className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                     />
-                    <div className="absolute inset-0 bg-bg-primary/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-1.5 text-text-inverted text-xs font-bold">
+                    <div className="absolute inset-0 bg-bg-primary/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-1.5 text-text-inverted type-strong">
                       <Crop className="h-5 w-5 text-accent-red" />
                       <span>{c.cropClickPrompt}</span>
                     </div>
@@ -814,7 +814,7 @@ export function SmashRosterCreator({ locale, dict, editId }: SmashRosterCreatorP
                       onChange={(checked) => patch({ roster_mode: checked ? 'simple' : 'full' })}
                       ariaLabel={c.simpleVersion || 'Simple Version'}
                     />
-                    <span className="text-xs sm:text-sm font-bold text-text-primary group-hover:text-accent-red transition-colors">
+                    <span className="type-strong-fluid text-text-primary group-hover:text-accent-red transition-colors">
                       {c.simpleVersion || 'Simple Version'}
                     </span>
                   </div>
@@ -834,7 +834,7 @@ export function SmashRosterCreator({ locale, dict, editId }: SmashRosterCreatorP
                       onChange={(checked) => patch({ is_nsfw: checked })}
                       ariaLabel={c.nsfwLabel || 'Contains NSFW content'}
                     />
-                    <span className="text-xs sm:text-sm font-bold text-text-primary group-hover:text-accent-red transition-colors">
+                    <span className="type-strong-fluid text-text-primary group-hover:text-accent-red transition-colors">
                       {c.nsfwLabel || 'Contains NSFW content'}
                     </span>
                   </div>
@@ -855,7 +855,7 @@ export function SmashRosterCreator({ locale, dict, editId }: SmashRosterCreatorP
                         onChange={(checked) => setOfficial(checked)}
                         ariaLabel={c.officialPublicHub || 'Official Roster (Public on Hub)'}
                       />
-                      <span className="text-xs sm:text-sm font-bold text-accent-red group-hover:underline transition-colors">
+                      <span className="type-strong-fluid text-accent-red group-hover:underline transition-colors">
                         {c.officialPublicHub || 'Official (Public on Hub)'}
                       </span>
                     </div>
@@ -1084,7 +1084,7 @@ function Section({ title, badge, defaultOpen = true, headerAction, toggleAria, c
           aria-expanded={isOpen}
           className="flex-1 flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 min-w-0 px-1 sm:px-2 cursor-pointer select-none text-center"
         >
-          <h2 className="text-xs sm:text-sm 2xl:text-base font-black uppercase tracking-widest text-text-primary hover:text-accent-red transition-colors">
+          <h2 className="type-section-title text-text-primary hover:text-accent-red transition-colors">
             {title}
           </h2>
           {badge !== undefined && (
@@ -1146,7 +1146,7 @@ function Feedback({
   const messages = [...errors, ...(saveErrorText ? [saveErrorText] : []), ...(submitError ? [submitError] : []), ...(publishError ? [publishError] : [])];
   if (messages.length === 0) return null;
   return (
-    <div role="alert" className="flex flex-col items-center justify-center gap-1.5 rounded-lg border border-accent-red/40 bg-accent-red/10 p-3 text-sm font-semibold text-accent-red text-center">
+    <div role="alert" className="flex flex-col items-center justify-center gap-1.5 rounded-lg border border-accent-red/40 bg-accent-red/10 p-3 type-card-title text-accent-red text-center">
       {messages.map((m) => (
         <p key={m} className="flex items-center justify-center gap-2">
           <TriangleAlert className="h-4 w-4 shrink-0" aria-hidden="true" />

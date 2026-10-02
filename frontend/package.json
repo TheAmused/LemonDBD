@@ -16,7 +16,8 @@
     "check:i18n": "tsx scripts/check-hardcoded-strings.ts",
     "check:i18n:strict": "tsx scripts/check-hardcoded-strings.ts --strict",
     "check:styles": "tsx scripts/check-global-styles.ts",
-    "check:styles:strict": "tsx scripts/check-global-styles.ts --strict"
+    "check:styles:strict": "tsx scripts/check-global-styles.ts --strict",
+    "check:typography": "tsx scripts/check-typography.ts"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",

@@ -246,7 +246,7 @@ export function calculateRomancePersona(
       title: chosenArch.title,
       subtitle: chosenArch.subtitle,
       description: chosenArch.description,
-      badgeColor: chosenArch.badge_color || 'from-purple-600 to-indigo-950',
+      badgeColor: chosenArch.badge_color || 'from-accent-purple to-accent-indigo-deep',
       borderColor: 'border-accent-red/60',
       glowColor: 'rgba(220, 38, 38, 0.35)',
       iconName: (chosenArch.icon_name as any) || 'sparkles',

@@ -78,7 +78,7 @@ function BlockCard({ id, title, accent, children }: BlockCardProps) {
           }`}
         >
           <div className="h-full overflow-hidden">
-            <div className="flex h-full flex-col gap-2 border-t border-border-color p-4 text-sm leading-relaxed sm:p-6">
+            <div className="flex h-full flex-col gap-2 border-t border-border-color p-4 type-body-lg sm:p-6">
               {children}
             </div>
           </div>
@@ -173,7 +173,7 @@ export default function PrivacyPolicyPage() {
         <header className="grid grid-cols-2 items-center gap-x-4 gap-y-3 sm:grid-cols-[1fr_auto_1fr]">
           <Link
             href={`/${locale}/about`}
-            className="inline-flex w-fit items-center gap-1.5 text-xs font-semibold text-text-muted transition-colors hover:text-accent-red sm:text-sm"
+            className="inline-flex w-fit items-center gap-1.5 type-strong-fluid text-text-muted transition-colors hover:text-accent-red"
           >
             <ArrowLeft className="h-4 w-4" />
             {privacy?.backToAbout}
@@ -181,7 +181,7 @@ export default function PrivacyPolicyPage() {
           <h1 className="col-span-2 row-start-2 text-center text-2xl font-black tracking-tight text-text-primary sm:col-span-1 sm:col-start-2 sm:row-start-1 sm:text-3xl md:text-4xl">
             {privacy?.heading}
           </h1>
-          <p className="justify-self-end text-right text-[11px] uppercase tracking-widest text-text-muted sm:col-start-3 sm:row-start-1 sm:text-xs">
+          <p className="justify-self-end text-right text-mini uppercase tracking-widest text-text-muted sm:col-start-3 sm:row-start-1 sm:text-xs">
             {privacy?.lastUpdatedLabel}: {privacy?.lastUpdated}
           </p>
         </header>

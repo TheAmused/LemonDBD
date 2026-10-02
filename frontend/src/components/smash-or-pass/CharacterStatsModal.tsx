@@ -140,7 +140,7 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({
 
   const roleBadge = (
     <span
-      className={`text-[10px] font-black uppercase px-2 py-0.5 rounded-lg border ${
+      className={`text-tiny font-black uppercase px-2 py-0.5 rounded-lg border ${
         isSurvivor
           ? 'bg-accent-green/15 text-accent-green border-accent-green/40'
           : 'bg-accent-red/15 text-accent-red border-accent-red/40'
@@ -184,7 +184,7 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({
               {tierInfo.icon}
             </div>
             <div>
-              <span className="text-[10px] font-bold uppercase tracking-widest text-text-muted block">
+              <span className="type-label-2xs text-text-muted block">
                 {communityConsensusLabel}
               </span>
               <span className={`text-sm font-black ${tierInfo.color}`}>
@@ -194,7 +194,7 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({
           </div>
 
           <div className="text-right">
-            <span className="text-[10px] text-text-muted block">{smashRateLabel}</span>
+            <span className="type-micro text-text-muted block">{smashRateLabel}</span>
             <span className="text-xl font-black text-accent-red flex items-center gap-1 justify-end">
               <Heart className="h-4 w-4 fill-accent-red" /> {smashRate}{percentSign}
             </span>
@@ -203,7 +203,7 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({
 
         {/* 2. Vote Breakdown Progress Bar */}
         <Surface tone="elevated" radius="2xl" padding="none" className="space-y-1.5 p-3.5">
-          <div className="flex justify-between text-xs font-bold">
+          <div className="flex justify-between type-strong">
             <span className="flex items-center gap-1 text-accent-red">
               <Heart className="h-3.5 w-3.5 fill-accent-red" /> {formatNumber(smashCount)} {smashesLabel} ({smashPct}{percentSign})
             </span>
@@ -221,7 +221,7 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({
               className="h-full bg-border-color transition-all duration-500"
             />
           </div>
-          <div className="flex justify-between text-[10px] text-text-muted pt-1">
+          <div className="flex justify-between type-micro text-text-muted pt-1">
             <span>{totalVotesLabel}: {formatNumber(totalVotes)}</span>
             {stats?.rank && <span>{globalRankLabel}: #{stats.rank}</span>}
           </div>
@@ -230,11 +230,11 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({
         {/* 3. Lore Quote */}
         {quote && (
           <Surface tone="elevated" radius="2xl" padding="none" className="p-3.5 space-y-1">
-            <div className="flex items-center gap-1 text-accent-amber text-[10px] uppercase font-bold">
+            <div className="flex items-center gap-1 text-accent-amber type-label-2xs">
               <Quote className="h-3.5 w-3.5" />
               <span>{loreQuoteLabel}</span>
             </div>
-            <p className="text-xs text-text-secondary italic leading-relaxed">
+            <p className="type-body text-text-secondary italic">
               {quote}
             </p>
           </Surface>
@@ -243,10 +243,10 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({
         {/* 4. Bio Profile */}
         {bio && (
           <div className="space-y-1">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-text-muted">
+            <span className="type-label-2xs text-text-muted">
               {loreProfileLabel}
             </span>
-            <p className="text-xs text-text-secondary leading-relaxed bg-bg-elevated p-3 rounded-2xl border border-border-color">
+            <p className="type-body text-text-secondary bg-bg-elevated p-3 rounded-2xl border border-border-color">
               {bio}
             </p>
           </div>
@@ -259,14 +259,14 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
             {profile.turn_on && (
               <div className="bg-bg-elevated border border-border-color p-2.5 rounded-2xl space-y-0.5">
-                <span className="font-bold text-accent-red uppercase text-[10px] block">{turnOnLabel}</span>
-                <p className="text-text-secondary text-[11px] leading-tight">{profile.turn_on}</p>
+                <span className="type-label-2xs text-accent-red block">{turnOnLabel}</span>
+                <p className="text-text-secondary text-mini leading-tight">{profile.turn_on}</p>
               </div>
             )}
             {dealbreaker && (
               <div className="bg-bg-elevated border border-border-color p-2.5 rounded-2xl space-y-0.5">
-                <span className="font-bold text-accent-amber uppercase text-[10px] block">{dealbreakerLabel}</span>
-                <p className="text-text-secondary text-[11px] leading-tight">{dealbreaker}</p>
+                <span className="type-label-2xs text-accent-amber block">{dealbreakerLabel}</span>
+                <p className="text-text-secondary text-mini leading-tight">{dealbreaker}</p>
               </div>
             )}
           </div>

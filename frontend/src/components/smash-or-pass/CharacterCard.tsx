@@ -521,7 +521,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
               </div>
 
               <span
-                className={`text-[9px] font-black uppercase px-2 py-0.5 rounded-lg border shrink-0 ${
+                className={`text-micro font-black uppercase px-2 py-0.5 rounded-lg border shrink-0 ${
                   isSurvivor
                     ? 'bg-accent-green/15 text-accent-green border-accent-green/30'
                     : 'bg-accent-red/15 text-accent-red border-accent-red/30'
@@ -547,63 +547,63 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
             >
               {/* Archetype / Dating Vibe */}
               <div className="p-2.5 rounded-2xl bg-bg-elevated border border-accent-red/30 space-y-0.5">
-                <span className="text-[10px] font-bold uppercase text-accent-red flex items-center gap-1">
+                <span className="type-label-2xs text-accent-red flex items-center gap-1">
                   <Flame className="h-3 w-3 text-accent-red" aria-hidden="true" />
                   {customLabels?.dating_vibe || 'Dating Vibe'}: {charTitle}
                 </span>
-                {charTagline && <p className="text-[11px] text-text-secondary italic leading-snug">{charTagline}</p>}
+                {charTagline && <p className="text-mini text-text-secondary italic leading-snug">{charTagline}</p>}
               </div>
 
               {/* Turn On (Visible & Optional) */}
               {profile.turn_on && (
                 <div className="p-2.5 rounded-2xl bg-accent-green/10 border border-accent-green/40 space-y-0.5">
-                  <span className="text-[10px] font-bold uppercase text-accent-green flex items-center gap-1">
+                  <span className="type-label-2xs text-accent-green flex items-center gap-1">
                     <Flame className="h-3 w-3 text-accent-green" aria-hidden="true" />
                     {customLabels?.turn_on || ''}
                   </span>
-                  <p className="text-[11px] text-text-primary leading-snug">{profile.turn_on}</p>
+                  <p className="text-mini text-text-primary leading-snug">{profile.turn_on}</p>
                 </div>
               )}
 
               {/* Dealbreaker (Visible & Optional) */}
               {profile.dealbreaker && (
                 <div className="p-2.5 rounded-2xl bg-accent-red/10 border border-accent-red/40 space-y-0.5">
-                  <span className="text-[10px] font-bold uppercase text-accent-red flex items-center gap-1">
+                  <span className="type-label-2xs text-accent-red flex items-center gap-1">
                     <AlertTriangle className="h-3 w-3 text-accent-red" aria-hidden="true" />
                     {customLabels?.dealbreaker || ''}
                   </span>
-                  <p className="text-[11px] text-text-primary leading-snug">{profile.dealbreaker}</p>
+                  <p className="text-mini text-text-primary leading-snug">{profile.dealbreaker}</p>
                 </div>
               )}
 
               {/* Signature Quote */}
               {charQuote && (
                 <div className="p-2.5 rounded-2xl bg-bg-elevated border border-accent-amber/30 space-y-0.5">
-                  <span className="text-[10px] font-bold uppercase text-accent-amber flex items-center gap-1">
+                  <span className="type-label-2xs text-accent-amber flex items-center gap-1">
                     <Quote className="h-3 w-3 text-accent-amber" aria-hidden="true" />
                     {customLabels?.quote || 'Quote'}
                   </span>
-                  <p className="text-[11px] text-text-secondary italic leading-relaxed">{charQuote}</p>
+                  <p className="text-mini text-text-secondary italic leading-relaxed">{charQuote}</p>
                 </div>
               )}
 
               {/* Full Mode Extras */}
               {rosterMode !== 'simple' && charBio && (
                 <Surface tone="elevated" radius="2xl" padding="none" className="p-2.5 space-y-1">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-text-muted">
+                  <span className="type-label-2xs text-text-muted">
                     {rawSmashDict?.loreAndPersonality || 'Lore'}
                   </span>
-                  <p className="text-xs text-text-secondary leading-relaxed">{charBio}</p>
+                  <p className="type-body text-text-secondary">{charBio}</p>
                 </Surface>
               )}
 
               {rosterMode !== 'simple' && charMeme && (
                 <Surface tone="elevated" radius="2xl" padding="none" className="p-2.5 space-y-0.5">
-                  <span className="flex items-center gap-1.5 text-[10px] font-black uppercase text-text-secondary">
+                  <span className="flex items-center gap-1.5 type-label-2xs text-text-secondary">
                     <Sparkles className="h-3 w-3 text-text-muted" aria-hidden="true" />
                     {customLabels?.meme || rawSmashDict?.trialRumor || 'Meme'}
                   </span>
-                  <p className="text-[11px] text-text-secondary italic leading-snug">{charMeme}</p>
+                  <p className="text-mini text-text-secondary italic leading-snug">{charMeme}</p>
                 </Surface>
               )}
             </div>

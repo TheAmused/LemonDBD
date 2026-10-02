@@ -62,7 +62,7 @@ export const PerkIconGuesser: React.FC<PerkIconGuesserProps> = ({
           <ShieldAlert className="w-12 h-12 text-text-muted" />
         )}
 
-        <div className="absolute top-2.5 left-2.5 px-2.5 py-0.5 rounded-full bg-bg-surface/80 backdrop-blur-md border border-border-subtle text-[11px] font-semibold text-text-secondary flex items-center gap-1 shadow-md">
+        <div className="absolute top-2.5 left-2.5 px-2.5 py-0.5 rounded-full bg-bg-surface/80 backdrop-blur-md border border-border-subtle type-strong-xs text-text-secondary flex items-center gap-1 shadow-md">
           <Eye className="w-3 h-3 text-accent-red" />
           <span>{Math.round(zoom * 100)}%</span>
         </div>

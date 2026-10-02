@@ -84,7 +84,7 @@ export const CampfireHeader: React.FC<CampfireHeaderProps> = ({
                 />
                 <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-bg-primary/80 text-text-inverted opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl sm:rounded-3xl">
                   <Camera className="h-5 w-5 sm:h-6 sm:w-6 mb-1 text-accent-red" />
-                  <span className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider">
+                  <span className="text-micro sm:text-tiny font-bold uppercase tracking-wider">
                     {dict?.user?.changeAvatar || 'Change'}
                   </span>
                 </div>
@@ -98,7 +98,7 @@ export const CampfireHeader: React.FC<CampfireHeaderProps> = ({
 
             {avatarFeedback && (
               <p
-                className={`text-[11px] font-semibold text-center max-w-[140px] leading-tight ${
+                className={`text-mini font-semibold text-center max-w-[140px] leading-tight ${
                   avatarFeedback.type === 'success' ? 'text-accent-green' : 'text-accent-red'
                 }`}
               >
@@ -114,7 +114,7 @@ export const CampfireHeader: React.FC<CampfireHeaderProps> = ({
                 {user.username}
               </h1>
               {user.role === 'admin' && (
-                <span className="rounded-xl px-2.5 py-0.5 text-xs font-black uppercase tracking-wider border border-accent-red/40 bg-accent-red/15 text-accent-red shadow-xs">
+                <span className="rounded-xl px-2.5 py-0.5 type-label-sm border border-accent-red/40 bg-accent-red/15 text-accent-red shadow-xs">
                   {dict?.user?.roleAdmin || 'Administrator'}
                 </span>
               )}
@@ -152,7 +152,7 @@ export const CampfireHeader: React.FC<CampfireHeaderProps> = ({
               {user.role === 'admin' && (
                 <Link
                   href={`/${currentLocale}/admin`}
-                  className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-lg border border-accent-red/30 bg-accent-red/10 text-[11px] font-bold text-accent-red hover:bg-accent-red/20 transition-colors"
+                  className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-lg border border-accent-red/30 bg-accent-red/10 type-strong-xs text-accent-red hover:bg-accent-red/20 transition-colors"
                 >
                   <OverseerEyeIcon className="h-3 w-3" />
                   <span>{dict?.sidebar?.adminPanel || 'Admin Panel'}</span>

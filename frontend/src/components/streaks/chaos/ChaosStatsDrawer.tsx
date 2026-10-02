@@ -30,7 +30,7 @@ export const ChaosStatsDrawer: React.FC<ChaosStatsDrawerProps> = ({ isOpen, onCl
     dict={dict}
     renderLabel={(log) => (
       <>
-        <div className="text-sm font-bold text-text-primary">{characterDisplayName(log.killer_id)}</div>
+        <div className="type-card-title text-text-primary">{characterDisplayName(log.killer_id)}</div>
         <div className="flex items-center gap-1 mt-1">
           {log.addon_rarities.map((rarity, i) => (
             <img

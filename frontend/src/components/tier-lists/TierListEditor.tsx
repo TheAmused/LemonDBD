@@ -187,12 +187,12 @@ export function TierListEditor(props: TierListEditorProps) {
       <div className="flex shrink-0 items-center gap-2 sm:hidden">
         <Link
           href={`/${locale}/tier-lists`}
-          className="inline-flex min-h-[44px] shrink-0 items-center gap-0.5 rounded-xl pr-1 text-xs font-bold uppercase tracking-wider text-text-secondary hover:text-accent-red transition-colors"
+          className="inline-flex min-h-[44px] shrink-0 items-center gap-0.5 rounded-xl pr-1 type-label-sm text-text-secondary hover:text-accent-red transition-colors"
         >
           <ChevronLeft className="h-4 w-4" aria-hidden="true" />
           {t.backShort}
         </Link>
-        <h1 className="min-w-0 flex-1 truncate text-center text-sm font-black uppercase tracking-wider text-text-primary">
+        <h1 className="min-w-0 flex-1 truncate text-center type-label text-text-primary">
           {pageTitle}
         </h1>
         <button
@@ -250,7 +250,7 @@ export function TierListEditor(props: TierListEditorProps) {
           <div className="flex items-center justify-center xl:justify-start gap-3 shrink-0 xl:justify-self-start">
             <Link
               href={`/${locale}/tier-lists`}
-              className="inline-flex min-h-[44px] w-fit items-center gap-1 rounded-xl pr-3 text-xs font-bold uppercase tracking-wider text-text-secondary hover:text-accent-red transition-colors"
+              className="inline-flex min-h-[44px] w-fit items-center gap-1 rounded-xl pr-3 type-label-sm text-text-secondary hover:text-accent-red transition-colors"
             >
               <ChevronLeft className="h-4 w-4" aria-hidden="true" />
               {t.backToHub}
@@ -261,7 +261,7 @@ export function TierListEditor(props: TierListEditorProps) {
           <div className="min-w-0 text-center px-2">
             <div className="inline-flex flex-wrap items-center justify-center gap-2">
               {showKindBadge && (
-                <span className="rounded-lg border border-accent-red/30 bg-accent-red/10 px-2 py-0.5 text-[11px] font-black uppercase tracking-wider text-accent-red">
+                <span className="rounded-lg border border-accent-red/30 bg-accent-red/10 px-2 py-0.5 type-label-xs text-accent-red">
                   {kindLabel}
                 </span>
               )}
@@ -316,7 +316,7 @@ export function TierListEditor(props: TierListEditorProps) {
       </header>
 
       {saveError && (
-        <div role="alert" className="flex items-start gap-3 rounded-2xl border border-accent-red/40 bg-accent-red/10 p-3 text-sm font-semibold text-accent-red">
+        <div role="alert" className="flex items-start gap-3 rounded-2xl border border-accent-red/40 bg-accent-red/10 p-3 type-card-title text-accent-red">
           <TriangleAlert className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
           <span className="flex-1">{saveError === 'quota' ? t.saveFailedQuota : t.saveFailedUnavailable}</span>
           <button
@@ -341,7 +341,7 @@ export function TierListEditor(props: TierListEditorProps) {
           aria-live="polite"
           className="pointer-events-none fixed inset-x-0 bottom-4 z-40 flex justify-center px-4 lemon-modal-overlay-sidebar-aware"
         >
-          <div className="pointer-events-auto flex max-w-xl flex-wrap items-center justify-center gap-2 rounded-2xl border border-accent-amber/40 bg-bg-surface shadow-lg px-3 py-1.5 text-sm font-semibold text-accent-amber text-center">
+          <div className="pointer-events-auto flex max-w-xl flex-wrap items-center justify-center gap-2 rounded-2xl border border-accent-amber/40 bg-bg-surface shadow-lg px-3 py-1.5 type-card-title text-accent-amber text-center">
             <MousePointerClick className="h-4 w-4 shrink-0" aria-hidden="true" />
             <span className="min-w-0">{t.selectedHint.replace('{name}', selectedItem.name)}</span>
             {mode === 'custom' && onRemoveItem && (

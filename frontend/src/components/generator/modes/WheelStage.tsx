@@ -684,7 +684,7 @@ export const WheelStage: React.FC<WheelStageProps> = ({
 
   return (
     <div className="flex h-full w-full flex-1 flex-col items-center justify-center gap-2 sm:gap-3 pt-3 pb-1 sm:pt-4">
-      <p className="max-w-md text-center text-xs sm:text-sm font-bold text-text-secondary px-3 line-clamp-2 sm:line-clamp-none">
+      <p className="max-w-md text-center type-strong-fluid text-text-secondary px-3 line-clamp-2 sm:line-clamp-none">
         {dict?.generator?.spinOrRollPrompt ||
           'Spin the Page Wheel to land on a random page, then the Perk Wheel to land on a random perk from it, one slot at a time until all four are filled.'}
       </p>

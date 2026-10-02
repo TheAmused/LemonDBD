@@ -100,7 +100,7 @@ export function TierListHub({ locale, dict }: TierListHubProps) {
     <div className="relative z-10 flex flex-col gap-8">
       <h1 className="sr-only">{t.pageTitle}</h1>
       {saveError && !saveError.ok && (
-        <p role="alert" className="flex items-start gap-2 rounded-2xl border border-accent-red/40 bg-accent-red/10 p-3 text-sm font-semibold text-accent-red">
+        <p role="alert" className="flex items-start gap-2 rounded-2xl border border-accent-red/40 bg-accent-red/10 p-3 type-card-title text-accent-red">
           <TriangleAlert className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
           {saveError.reason === 'quota' ? t.saveFailedQuota : t.saveFailedUnavailable}
         </p>
@@ -128,11 +128,11 @@ export function TierListHub({ locale, dict }: TierListHubProps) {
           <div className="relative z-10 w-8 hidden sm:block pointer-events-none" aria-hidden="true" />
           <div className="relative z-10 flex-1 text-center min-w-0 px-2">
             <div className="inline-flex items-center gap-2">
-              <h2 id="tier-lists-official" className="text-xs sm:text-sm 2xl:text-base font-black uppercase tracking-widest text-text-primary group-hover:text-accent-red transition-colors">
+              <h2 id="tier-lists-official" className="type-section-title text-text-primary group-hover:text-accent-red transition-colors">
                 {t.officialSection}
               </h2>
             </div>
-            <p className="text-[11px] sm:text-xs 2xl:text-sm text-text-secondary mt-0.5 truncate">
+            <p className="type-section-subtitle text-text-secondary mt-0.5 truncate">
               {(lists.length === 1
                 ? t.curatedTemplatesSingular
                 : (t.curatedTemplatesCount || '{count} curated templates').replace('{count}', String(lists.length)))}
@@ -253,11 +253,11 @@ export function TierListHub({ locale, dict }: TierListHubProps) {
             <div className="hidden lg:flex w-56 shrink-0 pointer-events-none" aria-hidden="true" />
             <div className="flex-1 text-center min-w-0 px-2">
               <div className="inline-flex items-center justify-center gap-2">
-                <h2 id="tier-lists-custom" className="text-xs sm:text-sm 2xl:text-base font-black uppercase tracking-widest text-text-primary">
+                <h2 id="tier-lists-custom" className="type-section-title text-text-primary">
                   {t.mySection}
                 </h2>
               </div>
-              <p className="text-[11px] sm:text-xs 2xl:text-sm text-text-secondary mt-0.5 truncate">
+              <p className="type-section-subtitle text-text-secondary mt-0.5 truncate">
                 {(customCount === 1
                   ? t.customListsSingular
                   : (t.customListsCount || '{count} custom lists').replace('{count}', String(customCount)))}

@@ -86,7 +86,7 @@ function ResetPasswordContent() {
             </p>
             <Link
               href={`/${locale}`}
-              className="inline-flex items-center justify-center gap-2 rounded-xl bg-accent-red px-5 py-2.5 text-xs font-black uppercase tracking-wider text-text-inverted shadow-xs hover:bg-accent-red-hover transition-all"
+              className="inline-flex items-center justify-center gap-2 rounded-xl bg-accent-red px-5 py-2.5 type-label-sm text-text-inverted shadow-xs hover:bg-accent-red-hover transition-all"
             >
               {dict?.user?.goToHome || 'Go to LemonDBD'}
             </Link>
@@ -104,7 +104,7 @@ function ResetPasswordContent() {
             )}
 
             <div>
-              <label className="block text-[11px] font-bold uppercase tracking-wider text-text-secondary mb-1">
+              <label className="block type-label-xs text-text-secondary mb-1">
                 {dict?.user?.newPassword || 'New Password'}
               </label>
               <div className="relative">
@@ -121,7 +121,7 @@ function ResetPasswordContent() {
             </div>
 
             <div>
-              <label className="block text-[11px] font-bold uppercase tracking-wider text-text-secondary mb-1">
+              <label className="block type-label-xs text-text-secondary mb-1">
                 {dict?.user?.confirmPassword || 'Confirm Password'}
               </label>
               <div className="relative">

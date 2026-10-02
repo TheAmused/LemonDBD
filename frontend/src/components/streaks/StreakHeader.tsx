@@ -96,7 +96,7 @@ export const StreakHeader: React.FC<StreakHeaderProps> = ({
           <img src={imageSrc} alt="" className={`hidden sm:block object-contain ${v.image}`} />
           <h1 className={`font-extrabold text-text-primary tracking-tight ${v.h1}`}>{title}</h1>
           {titleBadge && (
-            <span className="rounded-full border border-accent-amber/30 bg-accent-amber/10 px-2.5 py-0.5 text-[10px] font-extrabold uppercase tracking-wider text-accent-amber">
+            <span className="rounded-full border border-accent-amber/30 bg-accent-amber/10 px-2.5 py-0.5 type-label-2xs text-accent-amber">
               {titleBadge}
             </span>
           )}
@@ -108,7 +108,7 @@ export const StreakHeader: React.FC<StreakHeaderProps> = ({
               <div key={stat.key} className={`flex items-center gap-2.5 px-3.5 py-2 ${STAT_BOX}`}>
                 {stat.icon}
                 <div className="flex flex-col">
-                  <span className="text-[10px] uppercase tracking-wider text-text-muted font-bold leading-none">
+                  <span className="text-tiny uppercase tracking-wider text-text-muted font-bold leading-none">
                     {stat.label}
                   </span>
                   <span className="text-lg font-black text-text-primary leading-none mt-0.5">
@@ -118,8 +118,8 @@ export const StreakHeader: React.FC<StreakHeaderProps> = ({
               </div>
             ) : (
               <div key={stat.key} className={`flex items-center gap-1.5 px-3 py-2 ${STAT_BOX}`}>
-                <span className="text-[10px] uppercase tracking-wider text-text-muted font-bold">{stat.label}</span>
-                <span className="text-sm font-black text-text-primary">{stat.value}</span>
+                <span className="type-label-2xs text-text-muted">{stat.label}</span>
+                <span className="type-card-title text-text-primary">{stat.value}</span>
               </div>
             )
           )}

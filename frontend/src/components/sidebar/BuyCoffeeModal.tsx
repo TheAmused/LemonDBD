@@ -66,7 +66,7 @@ export const BuyCoffeeModal: React.FC<BuyCoffeeModalProps> = ({
       tagline: t.coffeeBuyMeCoffeeTagline || 'Quick 1-click coffee & support',
       accentColor:
         'border-border-color bg-bg-elevated text-text-secondary hover:border-accent-red/40 hover:bg-accent-red/10',
-      buttonBg: 'bg-accent-red hover:bg-accent-red-hover text-white',
+      buttonBg: 'bg-accent-red hover:bg-accent-red-hover text-text-inverted',
       icon: CampfireMugIcon,
     },
     {
@@ -75,7 +75,7 @@ export const BuyCoffeeModal: React.FC<BuyCoffeeModalProps> = ({
       tagline: t.coffeeKofiTagline || '0% fee donations & one-time tips',
       accentColor:
         'border-border-color bg-bg-elevated text-text-secondary hover:border-accent-red/40 hover:bg-accent-red/10',
-      buttonBg: 'bg-accent-red hover:bg-accent-red-hover text-white',
+      buttonBg: 'bg-accent-red hover:bg-accent-red-hover text-text-inverted',
       icon: Heart,
     },
     {
@@ -84,7 +84,7 @@ export const BuyCoffeeModal: React.FC<BuyCoffeeModalProps> = ({
       tagline: t.coffeePatreonTagline || 'Monthly supporter perks & early features',
       accentColor:
         'border-border-color bg-bg-elevated text-text-secondary hover:border-accent-red/40 hover:bg-accent-red/10',
-      buttonBg: 'bg-accent-red hover:bg-accent-red-hover text-white',
+      buttonBg: 'bg-accent-red hover:bg-accent-red-hover text-text-inverted',
       icon: AuricCellIcon,
     },
   ];
@@ -101,7 +101,7 @@ export const BuyCoffeeModal: React.FC<BuyCoffeeModalProps> = ({
       padded
       bodyClassName="space-y-6"
     >
-    <div className="rounded-2xl border border-border-color bg-bg-elevated p-4 text-xs text-text-secondary leading-relaxed space-y-1">
+    <div className="rounded-2xl border border-border-color bg-bg-elevated p-4 type-body text-text-secondary space-y-1">
       <div className="flex items-center gap-1.5 font-bold text-accent-red mb-1">
         <Sparkles className="h-4 w-4" />
         <span>{t.coffeeFuelNotice || 'Entity Fuel Notice'}</span>
@@ -128,7 +128,7 @@ export const BuyCoffeeModal: React.FC<BuyCoffeeModalProps> = ({
                 <h3 className="text-xs font-black tracking-wide text-text-primary">
                   {gateway.name}
                 </h3>
-                <p className="text-[11px] text-text-muted">
+                <p className="type-caption text-text-muted">
                   {gateway.tagline}
                 </p>
               </div>
@@ -136,7 +136,7 @@ export const BuyCoffeeModal: React.FC<BuyCoffeeModalProps> = ({
 
             <div className="flex items-center gap-2">
               <span
-                className={`hidden sm:inline-flex items-center gap-1 px-3 py-1.5 rounded-xl text-[11px] font-black uppercase tracking-wider shadow-md group-hover:scale-105 transition-all ${gateway.buttonBg}`}
+                className={`hidden sm:inline-flex items-center gap-1 px-3 py-1.5 rounded-xl text-mini font-black uppercase tracking-wider shadow-md group-hover:scale-105 transition-all ${gateway.buttonBg}`}
               >
                 <span>{t.coffeeVisit || 'Visit'}</span>
                 <ExternalLink className="h-3 w-3" />

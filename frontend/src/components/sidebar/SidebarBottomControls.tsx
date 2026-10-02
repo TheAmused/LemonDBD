@@ -254,7 +254,7 @@ export const SidebarBottomControls: React.FC<SidebarBottomControlsProps> = ({
           type="button"
           onClick={onOpenBugModal}
           aria-label={dict?.sidebar?.reportBug || 'Report Bug'}
-          className={`flex min-h-8 items-center justify-center gap-1.5 rounded-xl border border-border-color bg-bg-elevated/50 px-2 py-1.5 text-[11px] font-semibold text-text-secondary hover:bg-bg-elevated transition-colors cursor-pointer ${FOCUS_RING}`}
+          className={`flex min-h-8 items-center justify-center gap-1.5 rounded-xl border border-border-color bg-bg-elevated/50 px-2 py-1.5 text-mini font-semibold text-text-secondary hover:bg-bg-elevated transition-colors cursor-pointer ${FOCUS_RING}`}
         >
           <FogReportIcon className="h-3.5 w-3.5 shrink-0 text-accent-red" />
           <FitText minScale={0.6} maxLines={2} className="min-w-0 text-center">{dict?.sidebar?.reportBug || 'Report Bug'}</FitText>
@@ -264,7 +264,7 @@ export const SidebarBottomControls: React.FC<SidebarBottomControlsProps> = ({
           type="button"
           onClick={onOpenCoffeeModal}
           aria-label={dict?.sidebar?.buyCoffee || 'Buy Coffee'}
-          className={`flex min-h-8 items-center justify-center gap-1.5 rounded-xl border border-border-color bg-bg-elevated/50 px-2 py-1.5 text-[11px] font-semibold text-text-secondary hover:bg-bg-elevated transition-colors cursor-pointer ${FOCUS_RING}`}
+          className={`flex min-h-8 items-center justify-center gap-1.5 rounded-xl border border-border-color bg-bg-elevated/50 px-2 py-1.5 text-mini font-semibold text-text-secondary hover:bg-bg-elevated transition-colors cursor-pointer ${FOCUS_RING}`}
         >
           <CampfireMugIcon className="h-3.5 w-3.5 shrink-0 text-accent-amber" />
           <FitText minScale={0.6} maxLines={2} className="min-w-0 text-center">{dict?.sidebar?.buyCoffee || 'Buy Coffee'}</FitText>

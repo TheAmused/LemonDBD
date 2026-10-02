@@ -288,7 +288,7 @@ export const CharacterAutocomplete: React.FC<CharacterAutocompleteProps> = ({
                 </div>
 
                 <div className="flex-1 min-w-0">
-                  <div className="text-sm font-semibold truncate text-text-primary">{item.name}</div>
+                  <div className="type-card-title truncate text-text-primary">{item.name}</div>
                   {item.subtitle && (
                     <div className="text-xs text-text-muted truncate">{item.subtitle}</div>
                   )}
@@ -296,7 +296,7 @@ export const CharacterAutocomplete: React.FC<CharacterAutocompleteProps> = ({
 
                 {item.role && (
                   <span
-                    className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded ${
+                    className={`text-tiny font-bold uppercase tracking-wider px-2 py-0.5 rounded ${
                       isKiller(item.role)
                         ? 'bg-accent-red/20 text-accent-red border border-accent-red/40'
                         : isSurvivor(item.role)

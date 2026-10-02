@@ -107,7 +107,7 @@ function PlayTrialContent() {
       {loading ? (
         <div className="flex flex-col items-center justify-center p-12 gap-4">
           <DbdSpinner size="lg" />
-          <p className="text-sm font-semibold text-text-muted">{dict.app.loading}</p>
+          <p className="type-card-title text-text-muted">{dict.app.loading}</p>
         </div>
       ) : error ? (
         <div className="p-8 rounded-2xl bg-accent-red/10 border border-accent-red/30 text-center max-w-md mx-auto my-12">

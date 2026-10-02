@@ -108,7 +108,7 @@ export const TierRow = React.memo(function TierRow({
               e.stopPropagation();
               onMoveSelectedHere(tier.id);
             }}
-            className="inline-flex min-h-[44px] items-center gap-1.5 self-center rounded-xl border border-dashed border-accent-amber/60 bg-accent-amber/10 px-3 text-xs font-bold text-accent-amber cursor-pointer"
+            className="inline-flex min-h-[44px] items-center gap-1.5 self-center rounded-xl border border-dashed border-accent-amber/60 bg-accent-amber/10 px-3 type-strong text-accent-amber cursor-pointer"
           >
             <ArrowDownToLine className="h-3.5 w-3.5" aria-hidden="true" />
             {t.moveHere}

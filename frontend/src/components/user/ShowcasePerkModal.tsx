@@ -67,7 +67,7 @@ const PerkGridItem: React.FC<{
       </div>
 
       {/* Name */}
-      <span className="text-xs font-bold text-text-primary group-hover:text-accent-red line-clamp-1">
+      <span className="type-strong text-text-primary group-hover:text-accent-red line-clamp-1">
         {perk.name}
       </span>
 

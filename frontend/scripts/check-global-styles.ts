@@ -214,25 +214,6 @@ function reportError(filePath: string, line: number, message: string) {
   hasErrors = true;
 }
 
-/**
- * Checks whether the current line or previous line contains an ignore directive.
- */
-function hasIgnoreComment(node: Node): boolean {
-  const sourceFile = node.getSourceFile();
-  const line = node.getStartLineNumber();
-  const lines = sourceFile.getFullText().split("\n");
-
-  const currentLineText = lines[line - 1] || "";
-  const prevLineText = lines[line - 2] || "";
-
-  return (
-    currentLineText.includes("// styles-ignore") ||
-    currentLineText.includes("/* styles-ignore */") ||
-    prevLineText.includes("// styles-ignore") ||
-    prevLineText.includes("/* styles-ignore */")
-  );
-}
-
 function propName(node: Node): string | null {
   if (Node.isPropertyAssignment(node) || Node.isShorthandPropertyAssignment(node)) {
     const nameNode = node.getNameNode();
@@ -271,7 +252,6 @@ for (const sourceFile of project.getSourceFiles()) {
       ? el.getOpeningElement().getTagNameNode()
       : el.getTagNameNode();
     if (tagNameNode.getText().toLowerCase() !== "style") continue;
-    if (hasIgnoreComment(el)) continue;
 
     reportError(
       filePath,
@@ -286,7 +266,6 @@ for (const sourceFile of project.getSourceFiles()) {
   // depth (e.g. `app/[locale]/layout.tsx` for a locale route group), so
   // there is no single fixed path to special-case.
   for (const imp of sourceFile.getImportDeclarations()) {
-    if (hasIgnoreComment(imp)) continue;
     const spec = imp.getModuleSpecifierValue();
     if (!spec.endsWith(".css")) continue;
     if (/(^|[\\/])globals\.css$/.test(spec)) continue;
@@ -304,14 +283,12 @@ for (const sourceFile of project.getSourceFiles()) {
     .filter((attr) => attr.getNameNode().getText() === "style");
 
   for (const attr of styleAttrs) {
-    if (hasIgnoreComment(attr)) continue;
     const initializer = attr.getInitializer();
     if (!initializer || !Node.isJsxExpression(initializer)) continue;
     const expr = initializer.getExpression();
     if (!expr || !Node.isObjectLiteralExpression(expr)) continue;
 
     for (const prop of expr.getProperties()) {
-      if (hasIgnoreComment(prop)) continue;
       const name = propName(prop);
       if (!name || !PRESENTATIONAL_STYLE_PROPS.has(name)) continue;
       if (NON_PRESENTATIONAL_STYLE_PROPS.has(name)) continue;
@@ -343,7 +320,6 @@ for (const sourceFile of project.getSourceFiles()) {
     .filter((attr) => ["className", "class"].includes(attr.getNameNode().getText()));
 
   for (const attr of classAttrs) {
-    if (hasIgnoreComment(attr)) continue;
     const initializer = attr.getInitializer();
     if (!initializer) continue;
 

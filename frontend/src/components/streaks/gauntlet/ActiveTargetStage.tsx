@@ -117,9 +117,9 @@ const slotIconBase = (size: SlotSize) =>
   `${SLOT_ICON_BASE[size]} shrink-0 rounded-md rotate-45 flex items-center justify-center border relative`;
 
 const BADGE_TEXT_SIZE: Record<SlotSize, string> = {
-  large: 'text-[9.5px]',
-  small: 'text-[9.5px]',
-  compact: 'text-[7px]',
+  large: 'text-micro',
+  small: 'text-micro',
+  compact: 'text-micro',
 };
 
 const BADGE_BG: Record<'amber' | 'red', string> = {
@@ -205,7 +205,7 @@ const PerkSlotsRow: React.FC<PerkSlotsRowProps> = ({ tierInfo, charPerks, random
   return (
     <div>
       {charactersPerksOnly && perkLimit === 0 && (
-        <p className="mb-1.5 text-[11px] text-text-secondary">
+        <p className="mb-1.5 type-caption text-text-secondary">
           {dict?.streaks?.noPerksThisTrial || 'No perks this trial.'} {displayName}{' '}
           {dict?.streaks?.goesInBare || 'goes in bare.'}
         </p>
@@ -362,7 +362,7 @@ const CompactPlayerBuild: React.FC<CompactPlayerBuildProps> = ({
         {Array.from({ length: playersPerCharacter }, (_, n) => (
           <div key={n} className="flex items-center gap-4">
             {shared && (
-              <span className="w-14 shrink-0 text-[9px] uppercase font-black text-accent-red tracking-wider">
+              <span className="w-14 shrink-0 text-micro uppercase font-black text-accent-red tracking-wider">
                 {playerLabel} {index * playersPerCharacter + n + 1}
               </span>
             )}

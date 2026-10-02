@@ -64,7 +64,7 @@ export const AltchaWidget: React.FC<AltchaWidgetProps> = ({
                   type="button"
                   onClick={onRetry}
                   aria-label={retryLabel}
-                  className="ml-auto underline text-accent-amber hover:opacity-80 text-xs cursor-pointer focus:outline-none font-bold"
+                  className="ml-auto underline text-accent-amber hover:opacity-80 type-strong cursor-pointer focus:outline-none"
                 >
                   {retryLabel}
                 </button>

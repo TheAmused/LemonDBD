@@ -4,6 +4,7 @@ import type { Dictionary } from '@/locales/types';
 
 import React, { useEffect, useRef, useState } from 'react';
 import { Heart, Flame, Skull, Zap } from 'lucide-react';
+import { themeColor } from '@/utils/themeColor';
 
 interface Particle {
   x: number;
@@ -140,9 +141,9 @@ export const SmashAnimations: React.FC<SmashAnimationsProps> = ({
 
     // Theme Palettes
     // Neon Crimson: #dc2626, Deep Velvet Purple: #27272a, Cyber Mint: #71717a, Eldritch Gold: #fbbf24
-    const crimsonPalette = ['#dc2626', '#ff2a7a', '#e11d48', '#fb7185', '#27272a', '#ffffff'];
-    const goldPalette = ['#fbbf24', '#f59e0b', '#fbbf24', '#dc2626', '#71717a', '#ffffff'];
-    const passPalette = ['#71717a', '#52525b', '#3f3f46', '#27272a', '#a1a1aa', '#09090b'];
+    const crimsonPalette = [themeColor('--accent-red'), '#ff2a7a', '#e11d48', '#fb7185', themeColor('--bg-elevated'), themeColor('--text-inverted')];
+    const goldPalette = [themeColor('--accent-amber'), '#f59e0b', themeColor('--accent-amber'), themeColor('--accent-red'), themeColor('--text-muted'), themeColor('--text-inverted')];
+    const passPalette = [themeColor('--text-muted'), '#52525b', '#3f3f46', themeColor('--bg-elevated'), '#a1a1aa', '#09090b'];
 
     // 1. Initialize Shockwaves
     if (triggerType === 'super_smash') {
@@ -153,7 +154,7 @@ export const SmashAnimations: React.FC<SmashAnimationsProps> = ({
           radius: 10,
           maxRadius: Math.max(width, height) * 0.75,
           speed: 18,
-          color: '#fbbf24',
+          color: themeColor('--accent-amber'),
           lineWidth: 8,
           alpha: 1.0,
           decay: 0.02,
@@ -164,7 +165,7 @@ export const SmashAnimations: React.FC<SmashAnimationsProps> = ({
           radius: 5,
           maxRadius: Math.max(width, height) * 0.55,
           speed: 12,
-          color: '#dc2626',
+          color: themeColor('--accent-red'),
           lineWidth: 5,
           alpha: 0.9,
           decay: 0.025,
@@ -175,7 +176,7 @@ export const SmashAnimations: React.FC<SmashAnimationsProps> = ({
           radius: 0,
           maxRadius: Math.max(width, height) * 0.4,
           speed: 8,
-          color: '#ffffff',
+          color: themeColor('--text-inverted'),
           lineWidth: 12,
           alpha: 1.0,
           decay: 0.04,
@@ -192,7 +193,7 @@ export const SmashAnimations: React.FC<SmashAnimationsProps> = ({
 
         lightnings.push({
           segments: createLightningPath(spawnX, spawnY, endX, endY, 60, 0.45),
-          color: b % 2 === 0 ? '#fbbf24' : '#ffffff',
+          color: b % 2 === 0 ? themeColor('--accent-amber') : themeColor('--text-inverted'),
           width: Math.random() * 2.5 + 1.5,
           alpha: 1.0,
           decay: 0.035,
@@ -206,7 +207,7 @@ export const SmashAnimations: React.FC<SmashAnimationsProps> = ({
           radius: 10,
           maxRadius: Math.max(width, height) * 0.6,
           speed: 14,
-          color: '#dc2626',
+          color: themeColor('--accent-red'),
           lineWidth: 7,
           alpha: 1.0,
           decay: 0.024,
@@ -217,7 +218,7 @@ export const SmashAnimations: React.FC<SmashAnimationsProps> = ({
           radius: 0,
           maxRadius: Math.max(width, height) * 0.45,
           speed: 9,
-          color: '#27272a',
+          color: themeColor('--bg-elevated'),
           lineWidth: 4,
           alpha: 0.8,
           decay: 0.03,
@@ -231,7 +232,7 @@ export const SmashAnimations: React.FC<SmashAnimationsProps> = ({
         radius: 5,
         maxRadius: Math.max(width, height) * 0.4,
         speed: 10,
-        color: '#71717a',
+        color: themeColor('--text-muted'),
         lineWidth: 3,
         alpha: 0.7,
         decay: 0.03,

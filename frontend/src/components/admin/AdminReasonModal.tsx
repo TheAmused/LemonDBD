@@ -58,7 +58,7 @@ export const AdminReasonModal: React.FC<AdminReasonModalProps> = ({
         </>
       }
     >
-      <label className="block text-[11px] font-bold uppercase tracking-wider text-text-secondary">
+      <label className="block type-label-xs text-text-secondary">
         {dict?.admin?.reasonShownToPlayers || 'Reason'}
       </label>
       <Textarea
@@ -70,7 +70,7 @@ export const AdminReasonModal: React.FC<AdminReasonModalProps> = ({
         placeholder={dict?.admin?.reasonPlaceholder || ''}
         className="resize-none"
       />
-      <p className="text-right text-[10px] text-text-muted">{reason.length}/255</p>
+      <p className="text-right type-micro text-text-muted">{reason.length}/255</p>
     </Modal>
   );
 };

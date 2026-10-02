@@ -77,7 +77,7 @@ export const Pagination: React.FC<PaginationProps> = ({
           in the accessibility tree either way -- nothing is lost for
           screen reader users, only sighted users on very small screens). */}
       <div
-        className="sr-only min-[400px]:not-sr-only min-[400px]:text-[11px] min-[400px]:font-medium min-[400px]:text-text-muted sm:text-xs lg:text-sm wide:text-base"
+        className="sr-only min-[400px]:not-sr-only min-[400px]:text-mini min-[400px]:font-medium min-[400px]:text-text-muted sm:text-xs lg:text-sm wide:text-base"
         aria-live="polite"
         aria-label={showingAriaLabel || undefined}
       >
@@ -94,7 +94,7 @@ export const Pagination: React.FC<PaginationProps> = ({
           aria-label={dict?.pagination?.perPage || 'Per page'}
           value={limit}
           onChange={(e) => onLimitChange(Number(e.target.value))}
-          className="rounded-lg border border-border-color bg-bg-surface px-1.5 py-1 text-[11px] font-semibold text-text-primary focus:outline-none focus:ring-1 focus:ring-accent-red cursor-pointer [&>option]:bg-bg-surface [&>option]:text-text-primary sm:px-2 sm:text-xs lg:px-3 lg:py-1.5 lg:text-sm wide:text-base"
+          className="rounded-lg border border-border-color bg-bg-surface px-1.5 py-1 text-mini font-semibold text-text-primary focus:outline-none focus:ring-1 focus:ring-accent-red cursor-pointer [&>option]:bg-bg-surface [&>option]:text-text-primary sm:px-2 sm:text-xs lg:px-3 lg:py-1.5 lg:text-sm wide:text-base"
         >
           <option value={15}>15</option>
           <option value={30}>30</option>
@@ -122,7 +122,7 @@ export const Pagination: React.FC<PaginationProps> = ({
             <ChevronLeft className="h-3.5 w-3.5 sm:h-4 sm:w-4 lg:h-5 lg:w-5 xl:h-6 xl:w-6" />
           </button>
 
-          <span className="flex items-center gap-0.5 px-0.5 text-[11px] font-bold text-text-primary sm:gap-1 sm:text-xs lg:gap-1.5 lg:text-sm wide:text-base">
+          <span className="flex items-center gap-0.5 px-0.5 text-mini font-bold text-text-primary sm:gap-1 sm:text-xs lg:gap-1.5 lg:text-sm wide:text-base">
             <input
               id="current-page-input"
               type="number"
@@ -135,7 +135,7 @@ export const Pagination: React.FC<PaginationProps> = ({
               onBlur={commitPageInput}
               onKeyDown={handlePageInputKeyDown}
               aria-label={dict?.pagination?.goTo || 'Go to page'}
-              className="w-7 [appearance:textfield] rounded-md border border-border-color bg-bg-surface px-1 py-0.5 text-center text-[11px] font-bold text-text-primary focus:outline-none focus:ring-1 focus:ring-accent-red [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none sm:w-9 sm:text-xs lg:w-11 lg:py-1 lg:text-sm wide:w-12"
+              className="w-7 [appearance:textfield] rounded-md border border-border-color bg-bg-surface px-1 py-0.5 text-center text-mini font-bold text-text-primary focus:outline-none focus:ring-1 focus:ring-accent-red [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none sm:w-9 sm:text-xs lg:w-11 lg:py-1 lg:text-sm wide:w-12"
             />
             <span aria-hidden="true" className="text-text-muted">/</span>
             <span aria-hidden="true">{safeTotalPages}</span>

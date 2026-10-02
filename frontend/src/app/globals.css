@@ -24,6 +24,23 @@
   --color-accent-amber-hover: var(--accent-amber-hover);
   --color-accent-green: var(--accent-green);
   --color-accent-green-hover: var(--accent-green-hover);
+  --color-accent-blue: var(--accent-blue);
+  --color-accent-purple: var(--accent-purple);
+  --color-accent-cyan: var(--accent-cyan);
+  --color-accent-rose: var(--accent-rose);
+  --color-accent-pink: var(--accent-pink);
+  --color-accent-orange: var(--accent-orange);
+  --color-accent-indigo: var(--accent-indigo);
+  --color-accent-red-deep: #450a0a;
+  --color-accent-rose-deep: #4c0519;
+  --color-accent-purple-deep: #3b0764;
+  --color-accent-amber-deep: #451a03;
+  --color-accent-indigo-deep: #1e1b4b;
+  --color-scrim: #000000;
+  --color-brand-reddit: #ff4500;
+  --color-brand-whatsapp: #25d366;
+  --color-brand-telegram: #229ed9;
+  --color-brand-discord: #5865f2;
 
   /* Dusty tan lettering of the tarot card art (same in every theme: the cards are always dark). */
   --color-tarot-ink: #b39e82;
@@ -71,6 +88,20 @@
    */
   --font-sans: ui-sans-serif, system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
   --font-display: var(--font-playfair), Georgia, "Times New Roman", serif;
+
+  /* Type scale below Tailwind's text-xs, plus em-relative sizes for inline code. */
+  --text-micro: 0.5625rem;
+  --text-tiny: 0.625rem;
+  --text-mini: 0.6875rem;
+  --text-compact: 0.8125rem;
+  --text-relative: 0.9em;
+  --text-relative-sm: 0.85em;
+  /* Wide letter-spacing steps for spaced-out headings. */
+  --tracking-spaced-sm: 0.18em;
+  --tracking-spaced: 0.2em;
+  --tracking-spaced-md: 0.25em;
+  --tracking-spaced-lg: 0.35em;
+  --leading-flat: 0.95;
   --font-mono: Consolas, "Cascadia Code", "Segoe UI Mono", Menlo, Monaco, "Liberation Mono", ui-monospace, monospace;
 
   /* Named ultra-wide breakpoints (registered in the theme scale, not as
@@ -86,6 +117,31 @@
 /* ---------------------------------------------------------------------------
  * Base Layers & Color Themes (Calibrated for WCAG 2.1 AA / AAA Compliance)
  * --------------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------------
+ * Type roles -- THE single source of truth for how text looks.
+ * A component names a role (`type-label`); it never assembles size + weight + tracking itself.
+ * Change a role here and every page that uses it follows. Colour stays a separate token class
+ * (text-text-primary, text-accent-red, ...), so one role works on every theme and surface.
+ * scripts/check-typography.ts fails when a class list spells out exactly what a role already is.
+ * --------------------------------------------------------------------------- */
+@utility type-page-title { @apply text-xl sm:text-2xl font-black; }
+@utility type-section-title { @apply text-xs sm:text-sm 2xl:text-base font-black uppercase tracking-widest; }
+@utility type-section-subtitle { @apply text-mini sm:text-xs 2xl:text-sm; }
+@utility type-card-title { @apply text-sm font-bold; }
+@utility type-label { @apply text-sm font-bold uppercase tracking-wider; }
+@utility type-label-sm { @apply text-xs font-bold uppercase tracking-wider; }
+@utility type-label-xs { @apply text-mini font-bold uppercase tracking-wider; }
+@utility type-label-2xs { @apply text-tiny font-bold uppercase tracking-wider; }
+@utility type-strong { @apply text-xs font-bold; }
+@utility type-strong-fluid { @apply text-xs sm:text-sm font-bold; }
+@utility type-strong-xs { @apply text-mini font-bold; }
+@utility type-strong-2xs { @apply text-tiny font-bold; }
+@utility type-body { @apply text-xs leading-relaxed; }
+@utility type-body-fluid { @apply text-xs sm:text-sm leading-relaxed; }
+@utility type-body-lg { @apply text-sm leading-relaxed; }
+@utility type-caption { @apply text-mini; }
+@utility type-micro { @apply text-tiny; }
+
 @layer base {
 
   code, kbd, pre, samp {
@@ -117,6 +173,13 @@
     --accent-green: #15803d;
     /* 4.6:1 on white (AA Body) */
     --accent-green-hover: #166534;
+    --accent-blue: #0369a1;
+    --accent-purple: #7e22ce;
+    --accent-cyan: #0e7490;
+    --accent-rose: #be123c;
+    --accent-pink: #be185d;
+    --accent-orange: #c2410c;
+    --accent-indigo: #4338ca;
 
     /* Text hierarchy */
     --text-primary: #111827;
@@ -175,6 +238,13 @@
       --accent-amber-hover: #fbbf24;
       --accent-green: #22c55e;
       --accent-green-hover: #4ade80;
+      --accent-blue: #38bdf8;
+      --accent-purple: #c084fc;
+      --accent-cyan: #22d3ee;
+      --accent-rose: #fb7185;
+      --accent-pink: #f472b6;
+      --accent-orange: #fb923c;
+      --accent-indigo: #818cf8;
 
       --text-primary: #f4f4f6;
       --text-secondary: #a3a3af;
@@ -211,6 +281,13 @@
     --accent-green: #166534;
     /* 5.8:1 on #fbf6ea */
     --accent-green-hover: #14532d;
+    --accent-blue: #0369a1;
+    --accent-purple: #7e22ce;
+    --accent-cyan: #0e7490;
+    --accent-rose: #be123c;
+    --accent-pink: #be185d;
+    --accent-orange: #c2410c;
+    --accent-indigo: #4338ca;
 
     --text-primary: #1e1704;
     /* 15.2:1 on #fbf6ea (AAA) */
@@ -250,6 +327,13 @@
     --accent-green: #22c55e;
     /* 6.3:1 on #0a0a0c (AA Compliant) */
     --accent-green-hover: #4ade80;
+    --accent-blue: #38bdf8;
+    --accent-purple: #c084fc;
+    --accent-cyan: #22d3ee;
+    --accent-rose: #fb7185;
+    --accent-pink: #f472b6;
+    --accent-orange: #fb923c;
+    --accent-indigo: #818cf8;
 
     --text-primary: #f4f4f6;
     /* 18.5:1 on #0a0a0c (AAA) */

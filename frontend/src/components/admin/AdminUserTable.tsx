@@ -112,16 +112,16 @@ export const AdminUserTable: React.FC<AdminUserTableProps> = ({
                     <div className="flex items-center gap-1.5">
                       <span className="font-bold text-text-primary truncate">{u.username}</span>
                       {u.id === currentUserId && (
-                        <span className="shrink-0 rounded-md bg-accent-amber/15 border border-accent-amber/30 px-1.5 py-0.5 text-[9px] font-black uppercase tracking-wider text-accent-amber">
+                        <span className="shrink-0 rounded-md bg-accent-amber/15 border border-accent-amber/30 px-1.5 py-0.5 text-micro font-black uppercase tracking-wider text-accent-amber">
                           {dict?.admin?.you || 'You'}
                         </span>
                       )}
                     </div>
-                    <span className="block text-[11px] text-text-muted truncate">{u.email}</span>
+                    <span className="block type-caption text-text-muted truncate">{u.email}</span>
                   </div>
                 </div>
                 <span
-                  className={`shrink-0 inline-flex items-center gap-1 rounded-lg px-2 py-0.5 text-[10px] font-black uppercase tracking-wider border ${
+                  className={`shrink-0 inline-flex items-center gap-1 rounded-lg px-2 py-0.5 text-tiny font-black uppercase tracking-wider border ${
                     u.role === 'admin'
                       ? 'bg-accent-red/15 text-accent-red border-accent-red/30'
                       : 'bg-bg-elevated text-text-secondary border-border-color'
@@ -132,7 +132,7 @@ export const AdminUserTable: React.FC<AdminUserTableProps> = ({
                 </span>
               </div>
 
-              <div className="flex items-center justify-between text-[11px] text-text-secondary">
+              <div className="flex items-center justify-between type-caption text-text-secondary">
                 <span>#{u.id}</span>
                 <span>{dict?.admin?.thOwnedChars || 'Owned Chars'}: {u.owned_characters_count ?? 0}</span>
                 <span>{dict?.admin?.thUnlockedPerks || 'Unlocked Perks'}: {u.unlocked_perks_count ?? 0}</span>
@@ -140,12 +140,12 @@ export const AdminUserTable: React.FC<AdminUserTableProps> = ({
 
               <div className="flex items-center justify-between pt-1 border-t border-border-color">
                 {u.is_active ? (
-                  <span className="inline-flex items-center gap-1 text-[11px] text-accent-green font-semibold">
+                  <span className="inline-flex items-center gap-1 type-strong-xs text-accent-green">
                     <CheckCircle className="h-3.5 w-3.5" />
                     <span>{dict?.stats?.active || 'Active'}</span>
                   </span>
                 ) : (
-                  <span className="inline-flex items-center gap-1 text-[11px] text-accent-red font-semibold">
+                  <span className="inline-flex items-center gap-1 type-strong-xs text-accent-red">
                     <XCircle className="h-3.5 w-3.5" />
                     <span>{dict?.sidebar?.disabled || 'Disabled'}</span>
                   </span>
@@ -191,7 +191,7 @@ export const AdminUserTable: React.FC<AdminUserTableProps> = ({
       {/* Desktop view */}
       <div className="hidden sm:block overflow-x-auto w-full">
         <table className="w-full text-left text-xs text-text-primary">
-          <thead className="border-b border-border-color bg-bg-elevated text-[10px] uppercase font-black tracking-wider text-text-secondary">
+          <thead className="border-b border-border-color bg-bg-elevated type-label-2xs text-text-secondary">
             <tr>
               <th className="px-4 py-3">{dict?.admin?.thId || 'ID'}</th>
               <th className="px-4 py-3">{dict?.admin?.thUser || 'User'}</th>
@@ -218,7 +218,7 @@ export const AdminUserTable: React.FC<AdminUserTableProps> = ({
                     <UserAvatar user={u} size="xs" />
                     <span className="truncate max-w-[120px]">{u.username}</span>
                     {u.id === currentUserId && (
-                      <span className="rounded-md bg-accent-amber/15 border border-accent-amber/30 px-1.5 py-0.5 text-[9px] font-black uppercase tracking-wider text-accent-amber">
+                      <span className="rounded-md bg-accent-amber/15 border border-accent-amber/30 px-1.5 py-0.5 text-micro font-black uppercase tracking-wider text-accent-amber">
                         {dict?.admin?.you || 'You'}
                       </span>
                     )}
@@ -226,7 +226,7 @@ export const AdminUserTable: React.FC<AdminUserTableProps> = ({
                   <td className="px-4 py-3 text-text-secondary">{u.email}</td>
                   <td className="px-4 py-3">
                     <span
-                      className={`inline-flex items-center gap-1 rounded-lg px-2 py-0.5 text-[10px] font-black uppercase tracking-wider border ${
+                      className={`inline-flex items-center gap-1 rounded-lg px-2 py-0.5 text-tiny font-black uppercase tracking-wider border ${
                         u.role === 'admin'
                           ? 'bg-accent-red/15 text-accent-red border-accent-red/30'
                           : 'bg-bg-elevated text-text-secondary border-border-color'
@@ -244,12 +244,12 @@ export const AdminUserTable: React.FC<AdminUserTableProps> = ({
                   </td>
                   <td className="px-4 py-3">
                     {u.is_active ? (
-                      <span className="inline-flex items-center gap-1 text-[11px] text-accent-green font-semibold">
+                      <span className="inline-flex items-center gap-1 type-strong-xs text-accent-green">
                         <CheckCircle className="h-3.5 w-3.5" />
                         <span>{dict?.stats?.active || 'Active'}</span>
                       </span>
                     ) : (
-                      <span className="inline-flex items-center gap-1 text-[11px] text-accent-red font-semibold">
+                      <span className="inline-flex items-center gap-1 type-strong-xs text-accent-red">
                         <XCircle className="h-3.5 w-3.5" />
                         <span>{dict?.sidebar?.disabled || 'Disabled'}</span>
                       </span>

@@ -490,7 +490,7 @@ export const ChallengeRunner: React.FC<ChallengeRunnerProps> = ({
 
       {/* Active Round Card Banner */}
       <div className="w-full max-w-xl text-center mb-4">
-        <div className="text-xs uppercase tracking-widest text-text-secondary font-semibold mb-1">
+        <div className="type-label-sm text-text-secondary mb-1">
           {t.roundIndicator
             .replace('{current}', String(currentRoundIndex + 1))
             .replace('{total}', String(rounds.length))}
@@ -504,7 +504,7 @@ export const ChallengeRunner: React.FC<ChallengeRunnerProps> = ({
       </div>
 
       {/* Attempts Remaining Counter */}
-      <div className="mb-4 text-xs font-semibold text-text-secondary flex items-center gap-1.5">
+      <div className="mb-4 type-strong text-text-secondary flex items-center gap-1.5">
         <Flame className="w-4 h-4 text-accent-red" />
         <span>
           {attemptsRemaining > 0
@@ -539,7 +539,7 @@ export const ChallengeRunner: React.FC<ChallengeRunnerProps> = ({
               >
                 <div>{isRoundSolved ? t.victoryTitle : t.defeatTitle}</div>
                 {!isRoundSolved && (
-                  <div className="text-xs text-accent-red font-semibold mt-1">
+                  <div className="type-strong text-accent-red mt-1">
                     {t.revealAnswerNotice.replace(
                       '{answer}',
                       revealedAnswers[currentRoundIndex] || getTargetAnswerName(currentRound)

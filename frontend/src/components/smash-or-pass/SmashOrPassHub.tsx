@@ -833,17 +833,17 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
               <span className="flex items-center gap-1.5 text-text-secondary font-bold">
                 <Layers className="h-4 w-4 text-text-secondary" />
                 <span className="text-text-primary font-black text-sm sm:text-base">{remainingInDeck}</span>
-                <span className="text-[11px] sm:text-xs text-text-muted font-medium">
+                <span className="text-mini sm:text-xs text-text-muted font-medium">
                   {hudLabels.left || (locale === 'pl' ? 'pozostało' : 'left')}
                 </span>
               </span>
               <span className="text-border-color">{dict?.smashOrPass?.pipeSeparator || '|'}</span>
-              <span className="flex items-center gap-1.5 text-accent-red font-black text-xs sm:text-sm">
+              <span className="flex items-center gap-1.5 text-accent-red type-strong-fluid">
                 <Heart className="h-3.5 w-3.5 sm:h-4 sm:w-4 fill-accent-red" />
                 <span>{sessionSmashes}</span>
               </span>
               <span className="text-border-color">{dict?.smashOrPass?.pipeSeparator || '|'}</span>
-              <span className="flex items-center gap-1.5 text-text-muted font-black text-xs sm:text-sm">
+              <span className="flex items-center gap-1.5 text-text-muted type-strong-fluid">
                 <ThumbsDown className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-text-muted" />
                 <span>{sessionPasses}</span>
               </span>
@@ -861,7 +861,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
             <button
               type="button"
               onClick={() => setIsRosterModalOpen(true)}
-              className="flex items-center gap-2.5 sm:gap-3 px-3.5 sm:px-4 py-2 sm:py-2.5 min-h-[44px] rounded-2xl bg-bg-surface border border-accent-red/50 hover:border-accent-red text-xs sm:text-sm font-bold text-accent-red transition-all cursor-pointer group shrink-0 touch-manipulation"
+              className="flex items-center gap-2.5 sm:gap-3 px-3.5 sm:px-4 py-2 sm:py-2.5 min-h-[44px] rounded-2xl bg-bg-surface border border-accent-red/50 hover:border-accent-red type-strong-fluid text-accent-red transition-all cursor-pointer group shrink-0 touch-manipulation"
             >
               <span className="relative flex h-5 w-5 sm:h-6 sm:w-6 items-center justify-center rounded-lg overflow-hidden border border-accent-red/60 shrink-0">
                 <img
@@ -876,7 +876,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
               <span className="truncate max-w-[150px] sm:max-w-[220px] text-text-primary group-hover:text-accent-red font-black tracking-wide">
                 {getRosterDisplayName(activeRoster)}
               </span>
-              <span className="px-2 py-0.5 rounded-lg bg-accent-red/20 text-accent-red text-[10px] sm:text-xs font-black">
+              <span className="px-2 py-0.5 rounded-lg bg-accent-red/20 text-accent-red text-tiny sm:text-xs font-black">
                 {activeRoster.entity_count ?? activeRoster.character_count ?? totalRemaining ?? deck.length}
               </span>
               <ChevronDown className="h-4 w-4 text-accent-red group-hover:translate-y-0.5 transition-transform" />
@@ -1017,7 +1017,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
             >
               <div className="flex flex-col md:flex-row items-center justify-between gap-3">
                 {/* Role Segmented Switch */}
-                <div className="flex items-center gap-1 p-1 bg-bg-elevated border border-border-color rounded-2xl w-full md:w-auto shadow-inner text-xs font-bold overflow-x-auto">
+                <div className="flex items-center gap-1 p-1 bg-bg-elevated border border-border-color rounded-2xl w-full md:w-auto shadow-inner type-strong overflow-x-auto">
                   <button
                     type="button"
                     onClick={() => handleFilterChange('role', 'all')}
@@ -1051,7 +1051,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
                 </div>
 
                 {/* Gender Segmented Switch */}
-                <div className="flex items-center gap-1 p-1 bg-bg-elevated border border-border-color rounded-2xl w-full md:w-auto shadow-inner text-xs font-bold overflow-x-auto">
+                <div className="flex items-center gap-1 p-1 bg-bg-elevated border border-border-color rounded-2xl w-full md:w-auto shadow-inner type-strong overflow-x-auto">
                   <button
                     type="button"
                     onClick={() => handleFilterChange('gender', 'all')}
@@ -1134,7 +1134,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
           <div className="relative flex flex-col items-center justify-center min-h-[460px] sm:min-h-[520px] pointer-events-auto select-none animate-pulse">
             <div className="w-[88vw] max-w-[340px] sm:max-w-[380px] md:max-w-[420px] aspect-[9/14] sm:aspect-[9/15] rounded-[32px] sm:rounded-[36px] bg-bg-primary border-2 border-accent-red/30 flex flex-col items-center justify-center p-6 space-y-4">
               <Heart className="h-12 w-12 text-accent-red fill-accent-red/30 animate-pulse" />
-              <span className="text-xs text-text-secondary text-center font-semibold">
+              <span className="type-strong text-text-secondary text-center">
                 {dict?.smashOrPass?.loadingRosterPrefix || 'Loading'} {activeRoster.name || selectedRosterSlug} {dict?.smashOrPass?.loadingRosterSuffix || 'from Database...'}
               </span>
               <div className="h-1.5 w-32 rounded-full bg-bg-elevated overflow-hidden">
@@ -1258,11 +1258,11 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
             {/* Session Stats Summary */}
             <div className="grid grid-cols-2 gap-3 py-2">
               <Surface tone="elevated" radius="2xl" padding="none" className="p-4">
-                <span className="text-xs text-accent-red font-bold uppercase">{dict?.smashOrPass?.smash || 'Smash'}</span>
+                <span className="type-label-sm text-accent-red">{dict?.smashOrPass?.smash || 'Smash'}</span>
                 <p className="text-2xl font-black text-text-primary">{sessionSmashes}</p>
               </Surface>
               <Surface tone="elevated" radius="2xl" padding="none" className="p-4">
-                <span className="text-xs text-text-muted font-bold uppercase">{dict?.smashOrPass?.pass || 'Pass'}</span>
+                <span className="type-label-sm text-text-muted">{dict?.smashOrPass?.pass || 'Pass'}</span>
                 <p className="text-2xl font-black text-text-primary">{sessionPasses}</p>
               </Surface>
             </div>
@@ -1306,7 +1306,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
         <Surface tone="elevated" radius="2xl" padding="sm" className="flex items-start gap-3">
           <span className="text-xl shrink-0">{dict?.smashOrPass?.howToPlayModal?.swipeIcon || '👆'}</span>
           <div>
-            <span className="font-bold text-accent-red block text-xs">
+            <span className="type-strong text-accent-red block">
               {dict?.smashOrPass?.howToPlayModal?.swipeTitle || 'Swipe or Drag Cards'}
             </span>
             <p className="text-text-muted leading-relaxed pt-0.5">
@@ -1319,7 +1319,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
         <Surface tone="elevated" radius="2xl" padding="sm" className="flex items-start gap-3">
           <span className="text-xl shrink-0">{dict?.smashOrPass?.howToPlayModal?.iconsIcon || '🎯'}</span>
           <div>
-            <span className="font-bold text-accent-red block text-xs">
+            <span className="type-strong text-accent-red block">
               {dict?.smashOrPass?.howToPlayModal?.iconsTitle || 'On-Card Action Icons'}
             </span>
             <p className="text-text-muted leading-relaxed pt-0.5">
@@ -1332,7 +1332,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
         <Surface tone="elevated" radius="2xl" padding="sm" className="space-y-2">
           <div className="flex items-center gap-2">
             <span className="text-xl shrink-0">{dict?.smashOrPass?.howToPlayModal?.keycapsIcon || '⌨️'}</span>
-            <span className="font-bold text-accent-red block text-xs">
+            <span className="type-strong text-accent-red block">
               {dict?.smashOrPass?.howToPlayModal?.keycapsTitle || 'Tactile Keyboard Keycaps'}
             </span>
           </div>
@@ -1362,7 +1362,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
         <Surface tone="elevated" radius="2xl" padding="sm" className="flex items-start gap-3">
           <span className="text-xl shrink-0">{dict?.smashOrPass?.howToPlayModal?.atmosphereIcon || '🌌'}</span>
           <div>
-            <span className="font-bold text-accent-red block text-xs">
+            <span className="type-strong text-accent-red block">
               {dict?.smashOrPass?.howToPlayModal?.atmosphereTitle || 'Atmospheric Background & Music'}
             </span>
             <p className="text-text-muted leading-relaxed pt-0.5">
@@ -1456,7 +1456,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
             </div>
           }
         >
-          <p className="text-xs text-text-muted leading-relaxed">
+          <p className="type-body text-text-muted">
             {(dict?.smashOrPass?.picker?.deleteConfirmDesc || 'This permanently removes "{name}" from this browser. This cannot be undone.').replace(
               '{name}',
               rosterPendingDelete.name
@@ -1571,7 +1571,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
           </>
         }
       >
-        <p className="px-6 py-5 text-center text-xs text-text-muted leading-relaxed">
+        <p className="px-6 py-5 text-center type-body text-text-muted">
           {dict?.smashOrPass?.modals?.resetConfirmDesc || `This will clear your voting history for ${activeRoster?.name || selectedRosterSlug} and restore all candidates to your deck.`}
         </p>
       </Modal>

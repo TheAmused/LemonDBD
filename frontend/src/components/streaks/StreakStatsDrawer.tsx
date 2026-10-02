@@ -89,7 +89,7 @@ export function StreakStatsDrawer<TLog extends StreakMatchLogBase>({
       <div className="grid grid-cols-2 gap-4">
         <div className="col-span-2 bg-bg-elevated border border-border-color rounded-xl p-5 flex items-center justify-between shadow-inner">
           <div>
-            <span className="text-xs uppercase font-bold text-text-secondary tracking-wider">
+            <span className="type-label-sm text-text-secondary">
               {dict?.streaks?.winRate || 'Win Rate'}
             </span>
             <div className="text-4xl font-extrabold text-text-primary mt-1">
@@ -102,7 +102,7 @@ export function StreakStatsDrawer<TLog extends StreakMatchLogBase>({
         </div>
 
         <div className="bg-bg-elevated border border-border-color rounded-xl p-4 shadow-sm">
-          <div className="flex items-center gap-2 text-xs uppercase font-bold text-text-secondary">
+          <div className="flex items-center gap-2 type-label-sm text-text-secondary">
             <Activity className="w-4 h-4 text-text-secondary" />
             {dict?.streaks?.matches || 'Matches'}
           </div>
@@ -111,7 +111,7 @@ export function StreakStatsDrawer<TLog extends StreakMatchLogBase>({
 
         {attempts !== undefined && (
           <div className="bg-bg-elevated border border-border-color rounded-xl p-4 shadow-sm">
-            <div className="flex items-center gap-2 text-xs uppercase font-bold text-text-secondary">
+            <div className="flex items-center gap-2 type-label-sm text-text-secondary">
               <RotateCcw className="w-4 h-4 text-text-secondary" />
               {dict?.streaks?.attempts || 'Attempts'}
             </div>
@@ -121,13 +121,13 @@ export function StreakStatsDrawer<TLog extends StreakMatchLogBase>({
 
         <div className="col-span-2 bg-bg-elevated border border-border-color rounded-xl p-4 flex justify-between items-center shadow-sm">
           <div>
-            <div className="text-xs uppercase font-bold text-accent-green flex items-center gap-1">
+            <div className="type-label-sm text-accent-green flex items-center gap-1">
               <CheckCircle2 className="w-3.5 h-3.5" /> {dict?.streaks?.wins || 'Wins'}
             </div>
             <div className="text-xl font-black text-accent-green mt-1">{wins}</div>
           </div>
           <div className="text-right">
-            <div className="text-xs uppercase font-bold text-accent-red flex items-center gap-1 justify-end">
+            <div className="type-label-sm text-accent-red flex items-center gap-1 justify-end">
               <XCircle className="w-3.5 h-3.5" /> {dict?.streaks?.losses || 'Losses'}
             </div>
             <div className="text-xl font-black text-accent-red mt-1">{losses}</div>
@@ -136,7 +136,7 @@ export function StreakStatsDrawer<TLog extends StreakMatchLogBase>({
       </div>
 
       <div>
-        <h3 className="text-sm font-bold text-text-secondary uppercase tracking-wider mb-4 flex items-center gap-2">
+        <h3 className="type-label text-text-secondary mb-4 flex items-center gap-2">
           <AdeptBadgeIcon className={`w-4 h-4 ${accentClasses.trophy}`} />
           {dict?.streaks?.recentMatchHistory || 'Recent Match History'}
         </h3>
@@ -166,14 +166,14 @@ export function StreakStatsDrawer<TLog extends StreakMatchLogBase>({
                     </div>
                     <div>
                       {log.triggered_by === 'inactivity' ? (
-                        <div className="flex items-center gap-1 text-sm font-bold text-text-secondary">
+                        <div className="flex items-center gap-1 type-card-title text-text-secondary">
                           <Clock className="w-3.5 h-3.5" />
                           {dict?.streaks?.autoLossInactive || 'Auto-loss, run was inactive'}
                         </div>
                       ) : (
                         renderLabel(log)
                       )}
-                      <div className="text-[11px] text-text-secondary mt-1">
+                      <div className="type-caption text-text-secondary mt-1">
                         {renderMeta(log)}
                       </div>
                     </div>
@@ -190,7 +190,7 @@ export function StreakStatsDrawer<TLog extends StreakMatchLogBase>({
                       {log.result}
                     </div>
                     {log.timestamp && (
-                      <div className="text-[11px] text-text-secondary mt-1">
+                      <div className="type-caption text-text-secondary mt-1">
                         {new Date(log.timestamp).toLocaleDateString()}
                       </div>
                     )}

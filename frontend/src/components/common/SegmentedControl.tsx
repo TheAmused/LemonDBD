@@ -68,8 +68,8 @@ export function SegmentedControl<T extends string>({
       : 'py-1.5 sm:py-2 lg:py-2.5 xl:py-3 wide:py-3.5';
   const textSize =
     size === 'sm'
-      ? 'text-[10px] sm:text-[11px] wide:text-xs wide-2k:text-sm'
-      : 'text-[11px] sm:text-xs wide:text-sm wide-2k:text-base';
+      ? 'text-tiny sm:text-mini wide:text-xs wide-2k:text-sm'
+      : 'text-mini sm:text-xs wide:text-sm wide-2k:text-base';
 
   // A fixed 50%-width thumb only lines up when both options render to the
   // same width -- as soon as one side is visibly longer, it undershoots and

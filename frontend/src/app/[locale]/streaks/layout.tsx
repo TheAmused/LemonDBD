@@ -105,7 +105,7 @@ export default function StreaksLayout({ children }: { children: React.ReactNode 
             <h2 className="mt-4 text-sm font-extrabold tracking-wide text-text-primary">
               {dict?.streaks?.loginToTrack || 'Log in to track your challenges'}
             </h2>
-            <p className="mt-1.5 max-w-sm text-xs leading-relaxed text-text-muted">
+            <p className="mt-1.5 max-w-sm type-body text-text-muted">
               {dict?.streaks?.loginToTrackDesc || 'Challenges use the killers and perks you own, so we need to know who you are first.'}
             </p>
             <Button

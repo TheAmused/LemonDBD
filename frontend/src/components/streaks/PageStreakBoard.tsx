@@ -60,7 +60,7 @@ export const PageStreakBoard: React.FC<PageStreakBoardProps> = ({ locale }) => {
     <div>
       <Link
         href={`/${locale}/streaks/killer`}
-        className="inline-flex items-center gap-1.5 rounded text-xs font-bold text-text-secondary hover:text-accent-red transition-colors focus:outline-none focus:ring-2 focus:ring-accent-red"
+        className="inline-flex items-center gap-1.5 rounded type-strong text-text-secondary hover:text-accent-red transition-colors focus:outline-none focus:ring-2 focus:ring-accent-red"
       >
         <ArrowLeft className="h-3.5 w-3.5" />
         <span>{dict?.streaks?.backToKillerStreaks || 'Back to killer streaks'}</span>

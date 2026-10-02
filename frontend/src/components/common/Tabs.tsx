@@ -85,7 +85,7 @@ export const tabId = (idBase: string, value: string) => `${idBase}-tab-${value}`
 export const panelId = (idBase: string, value: string) => `${idBase}-panel-${value}`;
 
 const SIZES: Record<TabsSize, string> = {
-  sm: 'gap-1 px-2.5 py-1 text-[11px]',
+  sm: 'gap-1 px-2.5 py-1 text-mini',
   md: 'gap-1.5 px-3 py-1.5 text-xs',
   lg: 'min-h-[48px] gap-2 px-4 py-2.5 text-xs',
 };

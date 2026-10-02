@@ -209,7 +209,7 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
     <div className="space-y-6">
       {/* Challenge mode kill switches */}
       <div className="rounded-2xl border border-border-color bg-bg-surface p-5 shadow-sm backdrop-blur-sm transition-colors duration-200">
-        <h3 className="flex items-center gap-2 text-sm font-black uppercase tracking-wider text-text-primary mb-4">
+        <h3 className="flex items-center gap-2 type-label text-text-primary mb-4">
           <Power className="h-4 w-4 text-accent-red" />
           <span>{dict?.admin?.challengeModeKillSwitches || 'Challenge Mode Switches'}</span>
         </h3>
@@ -224,11 +224,11 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
               }`}
             >
               <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-text-primary">{MODE_LABELS[setting.mode]}</span>
+                <span className="type-strong text-text-primary">{MODE_LABELS[setting.mode]}</span>
                 <button
                   type="button"
                   onClick={() => requestModeToggle(setting.mode, !setting.is_enabled)}
-                  className={`text-[10px] font-black uppercase px-2.5 py-1 rounded-lg border cursor-pointer transition-colors ${
+                  className={`text-tiny font-black uppercase px-2.5 py-1 rounded-lg border cursor-pointer transition-colors ${
                     setting.is_enabled
                       ? 'border-accent-green/40 bg-accent-green/10 text-accent-green hover:bg-accent-green/20'
                       : 'border-accent-red/40 bg-accent-red/10 text-accent-red hover:bg-accent-red/20'
@@ -238,7 +238,7 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
                 </button>
               </div>
               {setting.disabled_reason && (
-                <p className="text-[10px] text-accent-red font-medium leading-snug">{setting.disabled_reason}</p>
+                <p className="text-tiny text-accent-red font-medium leading-snug">{setting.disabled_reason}</p>
               )}
             </div>
           ))}

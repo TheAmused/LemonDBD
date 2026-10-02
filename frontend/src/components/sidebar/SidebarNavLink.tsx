@@ -43,7 +43,7 @@ const SidebarNavLinkBase: React.FC<SidebarNavLinkProps> = ({
       </div>
       {badge && (
         <span
-          className={`shrink-0 rounded px-1 py-0.5 text-[9px] font-extrabold uppercase border ${badgeColor}`}
+          className={`shrink-0 rounded px-1 py-0.5 text-micro font-extrabold uppercase border ${badgeColor}`}
         >
           {badge}
         </span>

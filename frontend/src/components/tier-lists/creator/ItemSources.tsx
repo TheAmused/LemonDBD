@@ -162,12 +162,12 @@ function UploadSource({ onAdd, dict }: { onAdd: (items: IncomingItem[]) => void;
         />
       </div>
       {processing && (
-        <p role="status" className="text-xs font-semibold text-text-muted text-center">
+        <p role="status" className="type-strong text-text-muted text-center">
           {c.processing}
         </p>
       )}
       {!processing && skipped > 0 && (
-        <p role="alert" className="text-xs font-semibold text-accent-red text-center">
+        <p role="alert" className="type-strong text-accent-red text-center">
           {c.uploadSkipped.replace('{count}', String(skipped))}
         </p>
       )}
@@ -243,7 +243,7 @@ function LinksSource({ onAdd, dict }: { onAdd: (items: IncomingItem[]) => void; 
       </div>
       <p className="text-xs text-text-muted text-center">{t.itemImageHint}</p>
       {error && (
-        <p role="alert" className="text-xs font-semibold text-accent-red text-center">
+        <p role="alert" className="type-strong text-accent-red text-center">
           {error}
         </p>
       )}
@@ -375,7 +375,7 @@ function CatalogSource({
 
       <div className="max-h-[360px] overflow-y-auto overscroll-contain rounded-lg border border-border-color bg-bg-primary/40 p-2">
         {loading ? (
-          <p className="flex items-center justify-center gap-2 py-10 text-sm font-semibold text-text-muted">
+          <p className="flex items-center justify-center gap-2 py-10 type-card-title text-text-muted">
             <Spinner size="sm" tone="current" />
             {c.catalogLoading}
           </p>

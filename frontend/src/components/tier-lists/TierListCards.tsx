@@ -46,10 +46,10 @@ export function OfficialTierListCard({ list, rankedCount, locale, dict }: Offici
           {(showKindBadge || list.is_featured) && (
             <div className="flex flex-wrap items-center justify-center sm:justify-start gap-1.5">
               {showKindBadge && (
-                <span className="text-[11px] font-black uppercase tracking-wider text-text-muted">{kindName}</span>
+                <span className="type-label-xs text-text-muted">{kindName}</span>
               )}
               {list.is_featured && (
-                <span className="rounded-md bg-accent-amber/15 px-1.5 py-0.5 text-[10px] font-black uppercase tracking-wider text-accent-amber">
+                <span className="rounded-md bg-accent-amber/15 px-1.5 py-0.5 type-label-2xs text-accent-amber">
                   {t.featured}
                 </span>
               )}
@@ -61,7 +61,7 @@ export function OfficialTierListCard({ list, rankedCount, locale, dict }: Offici
         </div>
       </div>
       {list.description && <p className="line-clamp-2 text-sm text-text-secondary text-center sm:text-left">{list.description}</p>}
-      <div className="mt-auto flex flex-wrap items-center justify-center sm:justify-start gap-2 pt-1 text-xs font-bold">
+      <div className="mt-auto flex flex-wrap items-center justify-center sm:justify-start gap-2 pt-1 type-strong">
         {list.item_count !== null && (
           <span className="text-text-muted">{t.itemsCount.replace('{count}', String(list.item_count))}</span>
         )}
@@ -132,7 +132,7 @@ export function CustomTierListCard({ list, locale, dict, onDelete, disabled }: C
         <div className="flex items-center sm:items-start justify-center sm:justify-start gap-3">
           <div className="min-w-0 flex-1 text-center sm:text-left">
             {!isDuplicateCustomKind && (
-              <span className="text-[11px] font-black uppercase tracking-wider text-text-muted">{t.kinds.custom}</span>
+              <span className="type-label-xs text-text-muted">{t.kinds.custom}</span>
             )}
             <h3 className="mt-0.5 text-lg font-black leading-tight text-text-primary group-hover:text-accent-red break-words">
               {customTitle}
@@ -154,7 +154,7 @@ export function CustomTierListCard({ list, locale, dict, onDelete, disabled }: C
             ))}
           </div>
         )}
-        <div className="mt-auto flex flex-wrap items-center justify-center sm:justify-start gap-2 pt-1 text-xs font-bold">
+        <div className="mt-auto flex flex-wrap items-center justify-center sm:justify-start gap-2 pt-1 type-strong">
           <span className="text-text-muted">{t.itemsCount.replace('{count}', String(list.items.length))}</span>
           {ranked > 0 && (
             <span className="rounded-md bg-accent-green/15 px-1.5 py-0.5 text-accent-green">

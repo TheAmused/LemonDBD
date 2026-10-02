@@ -74,7 +74,7 @@ export const CharacterRosterGrid: React.FC<CharacterRosterGridProps> = ({
             <span>{roleLabel}</span> {dict?.streaks?.rosterProgress || 'Roster Progress'}
           </h3>
         </div>
-        <div className="px-4 py-1.5 rounded-xl bg-bg-elevated border border-border-color text-xs font-bold text-text-secondary shadow-sm">
+        <div className="px-4 py-1.5 rounded-xl bg-bg-elevated border border-border-color type-strong text-text-secondary shadow-sm">
           {completedText}: <span className="text-accent-green font-extrabold">{completedCount}</span> / {characters.length}
         </div>
       </div>
@@ -160,7 +160,7 @@ export const CharacterRosterGrid: React.FC<CharacterRosterGridProps> = ({
                   )}
                 </div>
 
-                <span className="text-[11px] leading-tight font-semibold text-center text-text-secondary line-clamp-2 min-h-[2.4em] w-full group-hover:text-accent-red transition-colors">
+                <span className="text-mini leading-tight font-semibold text-center text-text-secondary line-clamp-2 min-h-[2.4em] w-full group-hover:text-accent-red transition-colors">
                   {displayName(char.name)}
                 </span>
               </div>

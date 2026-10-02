@@ -79,14 +79,14 @@ const CharacterGridItem: React.FC<{
             unoptimized
           />
         ) : (
-          <div className="w-full h-full flex flex-col items-center justify-center text-text-primary text-sm font-bold">
+          <div className="w-full h-full flex flex-col items-center justify-center text-text-primary type-card-title">
             <span>{char.name.slice(0, 2).toUpperCase()}</span>
           </div>
         )}
       </div>
 
       {/* Name */}
-      <span className="text-xs font-bold text-text-primary group-hover:text-accent-amber line-clamp-1">
+      <span className="type-strong text-text-primary group-hover:text-accent-amber line-clamp-1">
         {char.name}
       </span>
 

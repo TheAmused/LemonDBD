@@ -206,7 +206,7 @@ function renderHoldKeyHint(template: string | undefined, key: string): React.Rea
     <span className="inline">
       <span className="whitespace-nowrap">
         {trimmedBefore && <span>{`${trimmedBefore}\u00A0`}</span>}
-        <kbd className="inline-flex items-center justify-center rounded border border-border-color bg-bg-elevated px-1.5 py-0.5 text-[11px] text-accent-amber shadow-xs align-middle">
+        <kbd className="inline-flex items-center justify-center rounded border border-border-color bg-bg-elevated px-1.5 py-0.5 type-caption text-accent-amber shadow-xs align-middle">
           {key}
         </kbd>
         {trailingPunct && <span>{trailingPunct}</span>}
@@ -815,31 +815,31 @@ export function VoiceCommandBanner({
       badge: rawVoiceDict.listeningSpeakNow || '',
       dotClass: 'bg-accent-red animate-ping',
       icon: Volume2,
-      buttonColor: 'bg-accent-red text-white ring-accent-red/60 hover:bg-accent-red-hover',
+      buttonColor: 'bg-accent-red text-text-inverted ring-accent-red/60 hover:bg-accent-red-hover',
     },
     processing: {
       badge: rawVoiceDict.processingAudio || '',
       dotClass: 'bg-accent-amber animate-pulse',
       icon: RefreshCw,
-      buttonColor: 'bg-accent-amber text-white ring-accent-amber/40',
+      buttonColor: 'bg-accent-amber text-text-inverted ring-accent-amber/40',
     },
     matched: {
       badge: rawVoiceDict.matchedExecuting || '',
       dotClass: 'bg-accent-green',
       icon: CheckCircle2,
-      buttonColor: 'bg-accent-green text-white ring-accent-green/50',
+      buttonColor: 'bg-accent-green text-text-inverted ring-accent-green/50',
     },
     nomatch: {
       badge: rawVoiceDict.noMatchTryAgain || '',
       dotClass: 'bg-accent-amber',
       icon: MicOff,
-      buttonColor: 'bg-accent-amber text-white ring-accent-amber/30',
+      buttonColor: 'bg-accent-amber text-text-inverted ring-accent-amber/30',
     },
     error: {
       badge: rawVoiceDict.micErrorCheckPermission || '',
       dotClass: 'bg-accent-red',
       icon: AlertCircle,
-      buttonColor: 'bg-accent-red text-white ring-accent-red/40',
+      buttonColor: 'bg-accent-red text-text-inverted ring-accent-red/40',
     },
   };
 
@@ -883,7 +883,7 @@ export function VoiceCommandBanner({
                 ? dict?.voice?.webSpeechTooltip || ''
                 : dict?.voice?.clientModelTooltip || '', undefined, 'action')}
             aria-label={dict?.voice?.viewEngineInfo || ''}
-            className="inline-flex items-center gap-2 rounded-full border border-accent-red/30 bg-accent-red/10 px-3.5 py-1.5 text-[13px] font-bold text-accent-red transition-all cursor-pointer shadow-sm hover:scale-105 hover:bg-accent-red/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red"
+            className="inline-flex items-center gap-2 rounded-full border border-accent-red/30 bg-accent-red/10 px-3.5 py-1.5 text-compact font-bold text-accent-red transition-all cursor-pointer shadow-sm hover:scale-105 hover:bg-accent-red/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red"
           >
             {activeEngine === 'web-speech' ? (
               <Globe className="h-4 w-4 text-accent-red" aria-hidden="true" />
@@ -929,7 +929,7 @@ export function VoiceCommandBanner({
                 ? dict?.voice?.webSpeechTooltip || ''
                 : dict?.voice?.clientModelTooltip || '', undefined, 'action')}
             aria-label={dict?.voice?.viewEngineInfo || ''}
-            className="inline-flex items-center gap-1.5 rounded-full border border-accent-red/30 bg-accent-red/10 px-2.5 py-1 text-xs font-bold text-accent-red transition-all cursor-pointer hover:bg-accent-red/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red shadow-xs"
+            className="inline-flex items-center gap-1.5 rounded-full border border-accent-red/30 bg-accent-red/10 px-2.5 py-1 type-strong text-accent-red transition-all cursor-pointer hover:bg-accent-red/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red shadow-xs"
           >
             {activeEngine === 'web-speech' ? (
               <Globe className="h-3.5 w-3.5 text-accent-red" aria-hidden="true" />
@@ -961,7 +961,7 @@ export function VoiceCommandBanner({
           <div
             className="inline-flex items-center gap-1.5 rounded-full border border-border-color bg-bg-elevated px-2.5 py-1 text-xs text-text-secondary shadow-xs"
           >
-            <span className="text-[10px] text-text-muted font-bold uppercase">
+            <span className="type-label-2xs text-text-muted">
               {dict?.maps?.sourceLabel || 'Źródło:'}
             </span>
             <span className="font-extrabold text-accent-red">
@@ -977,14 +977,14 @@ export function VoiceCommandBanner({
             aria-label={dict?.maps?.providerAria || ''}
             className="flex items-center gap-1.5 rounded-full border border-border-color bg-bg-elevated p-1"
           >
-            <span className="px-1.5 text-[11px] font-bold uppercase tracking-wider text-text-muted">
+            <span className="px-1.5 type-label-xs text-text-muted">
               {dict?.maps?.sourceLabel || ''}
             </span>
             <button
               type="button"
               onClick={() => onSourceChange('hens333')}
               aria-pressed={currentSource === 'hens333'}
-              className={`rounded-full px-3 py-1 text-[13px] font-extrabold transition-all cursor-pointer ${currentSource === 'hens333'
+              className={`rounded-full px-3 py-1 text-compact font-extrabold transition-all cursor-pointer ${currentSource === 'hens333'
                   ? 'bg-accent-red text-text-inverted shadow-sm font-black'
                   : 'text-text-secondary hover:bg-bg-surface hover:text-text-primary'
                 }`}
@@ -997,7 +997,7 @@ export function VoiceCommandBanner({
               disabled
               {...tip(dict?.maps?.lemonDbdSourceLocked || '', undefined, 'action')} aria-label={dict?.maps?.lemonDbdSourceLocked || ''}
               aria-disabled="true"
-              className="flex items-center gap-1.5 rounded-full px-3 py-1 text-[13px] font-extrabold text-text-muted cursor-not-allowed"
+              className="flex items-center gap-1.5 rounded-full px-3 py-1 text-compact font-extrabold text-text-muted cursor-not-allowed"
             >
               <Lock className="h-3 w-3" aria-hidden="true" />
               {dict?.maps?.sourceLemonDbd || ''}
@@ -1151,7 +1151,7 @@ export function VoiceCommandBanner({
               <div className="flex flex-col text-center items-center w-full max-w-full px-2">
                 <div className="flex items-center justify-center gap-2 max-w-full">
                   <span className="h-2 w-2 rounded-full bg-accent-red animate-ping shrink-0" aria-hidden="true" />
-                  <span className="text-xs sm:text-sm font-black text-text-primary truncate max-w-[280px] sm:max-w-xl">
+                  <span className="type-strong-fluid text-text-primary truncate max-w-[280px] sm:max-w-xl">
                     {liveTranscript
                       ? `“${liveTranscript}”`
                       : audioLevel > 8
@@ -1159,7 +1159,7 @@ export function VoiceCommandBanner({
                         : rawVoiceDict.speakMapPrompt || ''}
                   </span>
                 </div>
-                <span className="text-[10px] text-text-muted truncate max-w-[280px] sm:max-w-xl">
+                <span className="type-micro text-text-muted truncate max-w-[280px] sm:max-w-xl">
                   {activeEngine === 'client-model'
                     ? rawVoiceDict.localModelListeningDesc || ''
                     : rawVoiceDict.webSpeechListeningDesc || ''}
@@ -1171,13 +1171,13 @@ export function VoiceCommandBanner({
               <div className="flex flex-col text-center items-center w-full max-w-full px-2">
                 <div className="flex items-center justify-center gap-2 max-w-full">
                   <Spinner size="xs" tone="amber" />
-                  <span className="text-xs sm:text-sm font-bold text-accent-amber truncate max-w-[280px] sm:max-w-xl">
+                  <span className="type-strong-fluid text-accent-amber truncate max-w-[280px] sm:max-w-xl">
                     {liveTranscript
                       ? `${rawVoiceDict.transcribingPrefix || ''} “${liveTranscript}”`
                       : rawVoiceDict.transcribingVoice || ''}
                   </span>
                 </div>
-                <span className="text-[10px] text-accent-amber/80 truncate max-w-[280px] sm:max-w-xl">
+                <span className="type-micro text-accent-amber/80 truncate max-w-[280px] sm:max-w-xl">
                   {rawVoiceDict.localWasmInference || ''}
                 </span>
               </div>
@@ -1187,7 +1187,7 @@ export function VoiceCommandBanner({
               <div className="flex flex-col text-center items-center w-full max-w-full px-2">
                 <div className="flex items-center justify-center gap-1.5 max-w-full">
                   <CheckCircle2 className="h-3.5 w-3.5 text-accent-green shrink-0" aria-hidden="true" />
-                  <span className="text-xs sm:text-sm font-black text-accent-green truncate max-w-[280px] sm:max-w-xl">
+                  <span className="type-strong-fluid text-accent-green truncate max-w-[280px] sm:max-w-xl">
                     {matchedResult.matchedMapName
                       ? `${rawVoiceDict.matchedPrefix || ''} ${matchedResult.matchedMapName}`
                       : matchedResult.action === 'switch_source'
@@ -1196,7 +1196,7 @@ export function VoiceCommandBanner({
                   </span>
                 </div>
                 {liveTranscript && (
-                  <span className="text-[10px] text-accent-green/90 truncate max-w-[280px] sm:max-w-xl">
+                  <span className="type-micro text-accent-green/90 truncate max-w-[280px] sm:max-w-xl">
                     {dict?.maps?.heardLabel || ''} {dict?.maps?.openQuote || '“'}{liveTranscript}{dict?.maps?.closeQuote || '”'} {matchPercentText}
                   </span>
                 )}
@@ -1205,7 +1205,7 @@ export function VoiceCommandBanner({
 
             {voiceStatus === 'nomatch' && (
               <div className="flex flex-col text-center items-center w-full max-w-full px-2">
-                <div className="flex items-center justify-center gap-1.5 text-xs font-bold text-accent-amber max-w-full">
+                <div className="flex items-center justify-center gap-1.5 type-strong text-accent-amber max-w-full">
                   <AlertCircle className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
                   <span className="truncate max-w-[280px] sm:max-w-xl">
                     {liveTranscript
@@ -1213,7 +1213,7 @@ export function VoiceCommandBanner({
                       : rawVoiceDict.noSpeechDetected || ''}
                   </span>
                 </div>
-                <span className="text-[10px] text-text-muted truncate max-w-[280px] sm:max-w-xl">
+                <span className="type-micro text-text-muted truncate max-w-[280px] sm:max-w-xl">
                   {rawVoiceDict.trySayingPrompt || ''}
                 </span>
               </div>
@@ -1221,11 +1221,11 @@ export function VoiceCommandBanner({
 
             {voiceStatus === 'error' && (
               <div className="flex flex-col text-center items-center w-full max-w-full px-2">
-                <div className="flex items-center justify-center gap-1.5 text-xs font-bold text-accent-red max-w-full">
+                <div className="flex items-center justify-center gap-1.5 type-strong text-accent-red max-w-full">
                   <AlertCircle className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
                   <span className="truncate max-w-[280px] sm:max-w-xl">{errorMessage || rawVoiceDict.micBlocked || ''}</span>
                 </div>
-                <span className="text-[10px] text-accent-red/80 truncate max-w-[280px] sm:max-w-xl">
+                <span className="type-micro text-accent-red/80 truncate max-w-[280px] sm:max-w-xl">
                   {rawVoiceDict.checkPermissionsHint || ''}
                 </span>
               </div>
@@ -1233,7 +1233,7 @@ export function VoiceCommandBanner({
 
             {voiceStatus === 'idle' && (
               <div className="w-full text-center px-2 max-w-full">
-                <p className="text-xs sm:text-[13px] text-text-muted leading-relaxed text-center break-words max-w-full">
+                <p className="text-xs sm:text-compact text-text-muted leading-relaxed text-center break-words max-w-full">
                   <span className="md:hidden">
                     {rawVoiceDict.tapToTalkMobileHint || dict?.voice?.tapToTalkMobileHint || TAP_HINT_FALLBACK}
                   </span>
@@ -1248,7 +1248,7 @@ export function VoiceCommandBanner({
 
       {disambiguationVariants.length > 0 && (
         <div className="relative z-10 mt-2.5 rounded-2xl border border-border-color bg-bg-elevated p-2.5 backdrop-blur-sm flex flex-wrap items-center gap-2">
-          <div className="flex items-center gap-1.5 text-xs font-black text-text-secondary">
+          <div className="flex items-center gap-1.5 type-strong text-text-secondary">
             <span>{dict?.maps?.variants || ''}</span>
           </div>
 
@@ -1258,7 +1258,7 @@ export function VoiceCommandBanner({
                 key={variant}
                 type="button"
                 onClick={() => handleExecuteCommand(variant)}
-                className="flex items-center gap-1 rounded-xl border border-border-color bg-bg-surface px-2.5 py-0.5 text-xs font-bold text-text-primary transition hover:border-accent-red hover:bg-accent-red/10 active:scale-95 cursor-pointer shadow-xs focus:outline-none focus-visible:ring-1 focus-visible:ring-accent-red"
+                className="flex items-center gap-1 rounded-xl border border-border-color bg-bg-surface px-2.5 py-0.5 type-strong text-text-primary transition hover:border-accent-red hover:bg-accent-red/10 active:scale-95 cursor-pointer shadow-xs focus:outline-none focus-visible:ring-1 focus-visible:ring-accent-red"
               >
                 <span>{variant}</span>
                 <ArrowRight className="h-3 w-3 text-accent-red" aria-hidden="true" />

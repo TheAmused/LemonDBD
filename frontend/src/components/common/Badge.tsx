@@ -13,13 +13,13 @@ export const BADGE_TONES: Record<BadgeTone, string> = {
   red: 'bg-accent-red/10 text-accent-red border-accent-red/30',
   amber: 'bg-accent-amber/10 text-accent-amber border-accent-amber/30',
   green: 'bg-accent-green/10 text-accent-green border-accent-green/30',
-  blue: 'bg-sky-500/10 text-sky-500 border-sky-500/30',
-  purple: 'bg-purple-500/10 text-purple-500 border-purple-500/30',
+  blue: 'bg-accent-blue/10 text-accent-blue border-accent-blue/30',
+  purple: 'bg-accent-purple/10 text-accent-purple border-accent-purple/30',
 };
 
 export const BADGE_SIZES: Record<BadgeSize, string> = {
-  xs: 'px-1.5 py-0.5 text-[9px]',
-  sm: 'px-2 py-0.5 text-[10px]',
+  xs: 'px-1.5 py-0.5 text-micro',
+  sm: 'px-2 py-0.5 text-tiny',
   md: 'px-2.5 py-1 text-xs',
 };
 

@@ -41,7 +41,7 @@ export const FreezeBadge: React.FC<FreezeBadgeProps> = ({ frozen, compact = fals
         closeOnOutsideClick={false}
         closeOnEscape={false}
         returnFocus={false}
-        className="w-56 rounded-xl border border-accent-amber/30 bg-bg-surface px-3 py-2.5 text-[11px] leading-snug text-text-secondary shadow-2xl backdrop-blur-md"
+        className="w-56 rounded-xl border border-accent-amber/30 bg-bg-surface px-3 py-2.5 text-mini leading-snug text-text-secondary shadow-2xl backdrop-blur-md"
       >
         <span className="font-bold text-accent-amber">
           {dict?.streaks?.challengeStarted || 'Challenge started.'}

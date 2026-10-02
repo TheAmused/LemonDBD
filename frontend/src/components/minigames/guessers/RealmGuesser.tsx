@@ -59,7 +59,7 @@ export const RealmGuesser: React.FC<RealmGuesserProps> = ({
         </div>
 
         {/* Clue overlay tag */}
-        <div className="absolute top-3 left-3 px-3 py-1 rounded-full bg-bg-elevated/80 backdrop-blur-md border border-border-color text-xs font-semibold text-text-secondary flex items-center gap-1.5 shadow-md">
+        <div className="absolute top-3 left-3 px-3 py-1 rounded-full bg-bg-elevated/80 backdrop-blur-md border border-border-color type-strong text-text-secondary flex items-center gap-1.5 shadow-md">
           <Eye className="w-3.5 h-3.5 text-accent-red" />
           <span>{zoomLevel}%</span>
         </div>

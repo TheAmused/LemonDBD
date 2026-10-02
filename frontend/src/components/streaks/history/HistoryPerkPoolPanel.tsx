@@ -33,7 +33,7 @@ const UnlockedTile: React.FC<{ perk: Perk; displayName: string; justUnlocked: bo
           <Sparkles className="w-6 h-6 text-text-muted" />
         )}
       </div>
-      <span className="text-[11px] font-medium text-center text-text-secondary leading-tight line-clamp-2">
+      <span className="text-mini font-medium text-center text-text-secondary leading-tight line-clamp-2">
         {displayName}
       </span>
     </div>
@@ -57,7 +57,7 @@ const LockedTile: React.FC<{ perk: Perk; displayName: string }> = ({ perk, displ
           <Sparkles className="w-6 h-6 text-text-muted" />
         )}
       </div>
-      <span className="text-[11px] font-medium text-center text-text-muted leading-tight line-clamp-2 opacity-60">
+      <span className="text-mini font-medium text-center text-text-muted leading-tight line-clamp-2 opacity-60">
         {displayName}
       </span>
       <div className="absolute inset-0 flex items-center justify-center bg-bg-primary/50">
@@ -110,13 +110,13 @@ export const HistoryPerkPoolPanel: React.FC<HistoryPerkPoolPanelProps> = ({
           <Layers className="w-4 h-4" />
         </div>
         <div>
-          <h3 className="text-sm font-bold text-text-secondary uppercase tracking-wider">
+          <h3 className="type-label text-text-secondary">
             {dict?.streaks?.perkPool || 'Perk pool'}
           </h3>
         </div>
       </div>
 
-      <div className="mb-2 flex items-center gap-1.5 text-xs font-bold text-accent-green">
+      <div className="mb-2 flex items-center gap-1.5 type-strong text-accent-green">
         <CheckCircle2 className="w-3.5 h-3.5" />
         {dict?.streaks?.availableLabel || 'Available'}
       </div>
@@ -137,7 +137,7 @@ export const HistoryPerkPoolPanel: React.FC<HistoryPerkPoolPanelProps> = ({
         </div>
       )}
 
-      <div className="mb-2 flex items-center gap-1.5 text-xs font-bold text-accent-amber">
+      <div className="mb-2 flex items-center gap-1.5 type-strong text-accent-amber">
         <Lock className="w-3.5 h-3.5" />
         {dict?.streaks?.lockedLabel || 'Locked'}
       </div>

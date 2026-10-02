@@ -604,7 +604,7 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
                     <div className="flex flex-col items-center justify-center w-14 sm:w-16 shrink-0">
                       <span
                         className={cn(
-                          'text-[11px] sm:text-xs font-black uppercase tracking-wider text-center',
+                          'text-mini sm:text-xs font-black uppercase tracking-wider text-center',
                           reel.locked
                             ? 'text-accent-amber'
                             : landedBroken
@@ -786,7 +786,7 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
                     </div>
                     <span
                       className={cn(
-                        'text-[10px] font-black uppercase tracking-wide',
+                        'text-tiny font-black uppercase tracking-wide',
                         reel.locked ? 'text-accent-amber' : landedBroken ? 'text-accent-red' : 'text-text-muted'
                       )}
                     >

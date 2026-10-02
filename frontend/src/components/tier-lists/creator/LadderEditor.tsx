@@ -14,6 +14,7 @@ import { tierColorProps } from '../tierColor';
 import { Button } from '@/components/common/Button';
 import { Input } from '@/components/common/Field';
 import { CustomDropdown } from '@/components/common/CustomDropdown';
+import { themeColor } from '@/utils/themeColor';
 
 function PresetSwatch({ colors }: { colors: readonly string[] }) {
   return (
@@ -78,7 +79,7 @@ export function LadderEditor({ tiers, onChange, onPreset, activePreset, dict }: 
     <div className="flex flex-col gap-4">
       {/* Phones: the label and a dropdown share one row. Wide screens: the label above every preset. */}
       <div className="flex items-center justify-center gap-2.5 sm:flex-col sm:gap-0">
-        <p className="text-xs font-bold uppercase tracking-wider text-text-secondary text-center sm:mb-2">{c.presetsLabel}</p>
+        <p className="type-label-sm text-text-secondary text-center sm:mb-2">{c.presetsLabel}</p>
         <div className="sm:hidden">
           <CustomDropdown
             value={activePreset ?? ''}
@@ -143,7 +144,7 @@ export function LadderEditor({ tiers, onChange, onPreset, activePreset, dict }: 
                   maxLength={TIER_LIST_LIMITS.maxTierLabel}
                   onChange={(e) => update(tier.id, { label: e.target.value })}
                   aria-label={c.tierLabelAria.replace('{index}', String(index + 1))}
-                  className="min-w-0 flex-1 bg-transparent px-3 text-sm font-bold text-text-primary focus:outline-hidden focus:bg-bg-elevated/40 transition-colors"
+                  className="min-w-0 flex-1 bg-transparent px-3 type-card-title text-text-primary focus:outline-hidden focus:bg-bg-elevated/40 transition-colors"
                 />
 
                 {/* Integrated Reorder & Delete Toolbar */}
@@ -209,14 +210,14 @@ export function LadderEditor({ tiers, onChange, onPreset, activePreset, dict }: 
                   >
                     <input
                       type="color"
-                      value={HEX_COLOR_PATTERN.test(tier.color) ? tier.color : '#888888'}
+                      value={HEX_COLOR_PATTERN.test(tier.color) ? tier.color : themeColor('--text-muted')}
                       onChange={(e) => update(tier.id, { color: e.target.value })}
                       className="h-4 w-4 cursor-pointer rounded border-0 bg-transparent p-0"
                     />
                     {t.customColor}
                   </label>
                   <label className="flex min-w-0 basis-full flex-col gap-1 mt-1">
-                    <span className="text-xs font-bold text-text-secondary">{t.tierBackgroundImage}</span>
+                    <span className="type-strong text-text-secondary">{t.tierBackgroundImage}</span>
                     <Input
                       value={bgDraft}
                       onChange={(e) => setBackgroundImage(tier, e.target.value)}

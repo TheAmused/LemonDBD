@@ -721,7 +721,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
           <h1 className="text-xl font-black tracking-wider text-text-primary">
             {dict?.user?.authRequiredTitle || 'Authentication Required'}
           </h1>
-          <p className="text-xs leading-relaxed text-text-secondary">
+          <p className="type-body text-text-secondary">
             {dict?.user?.authRequiredDesc ||
               'Please sign in or create an account to view your LemonDBD profile, manage your teachables, and track game challenges.'}
           </p>
@@ -838,7 +838,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
               <button
                 type="button"
                 onClick={() => setIsSkipModalOpen(true)}
-                className="shrink-0 rounded-xl border border-accent-amber/50 bg-accent-amber/10 px-3 py-1 text-xs font-bold text-accent-amber hover:bg-accent-amber/20 transition-colors cursor-pointer"
+                className="shrink-0 rounded-xl border border-accent-amber/50 bg-accent-amber/10 px-3 py-1 type-strong text-accent-amber hover:bg-accent-amber/20 transition-colors cursor-pointer"
               >
                 {t?.skipButton || 'Skip'}
               </button>
@@ -871,7 +871,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
                     badgeSize="sm"
                   />
                 </span>
-                <span className="text-[10px] sm:text-xs font-semibold text-text-primary leading-tight">
+                <span className="text-tiny sm:text-xs font-semibold text-text-primary leading-tight">
                   {t?.legendLocked || 'Locked - not available yet'}
                 </span>
               </div>
@@ -894,7 +894,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
                     badgeSize="sm"
                   />
                 </span>
-                <span className="text-[10px] sm:text-xs font-semibold text-text-primary leading-tight">
+                <span className="text-tiny sm:text-xs font-semibold text-text-primary leading-tight">
                   {t?.legendPartial || 'Partially unlocked - some perks unlocked by hand'}
                 </span>
               </div>
@@ -917,7 +917,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
                     badgeSize="sm"
                   />
                 </span>
-                <span className="text-[10px] sm:text-xs font-semibold text-text-primary leading-tight">
+                <span className="text-tiny sm:text-xs font-semibold text-text-primary leading-tight">
                   {t?.legendOwned || 'Owned - fully available'}
                 </span>
               </div>
@@ -930,10 +930,10 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
           <section className="space-y-3">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
               <div className="flex items-center gap-2.5">
-                <span className="text-xs font-black uppercase tracking-wider text-text-secondary">
+                <span className="type-label-sm text-text-secondary">
                   {t?.chaptersTitle || 'Chapters'}
                 </span>
-                <span className="rounded-full border border-border-color bg-bg-elevated px-2 py-0.5 text-[11px] font-bold text-text-secondary">
+                <span className="rounded-full border border-border-color bg-bg-elevated px-2 py-0.5 type-strong-xs text-text-secondary">
                   {ownedChaptersCount} / {chapterGroups.length}
                 </span>
               </div>
@@ -994,7 +994,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
               </div>
             </div>
 
-            <p className="flex items-start gap-1.5 text-[10px] sm:text-[11px] text-text-secondary">
+            <p className="flex items-start gap-1.5 text-tiny sm:text-mini text-text-secondary">
               <Info className="h-3 w-3 sm:h-3.5 sm:w-3.5 shrink-0 mt-0.5" />
               <span>
                 {t?.legendCustomizeHint ||
@@ -1046,7 +1046,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
                         className="h-full w-full object-cover"
                       />
                     ) : (
-                      <span className="px-1 sm:px-2 text-center text-[10px] sm:text-sm font-extrabold text-text-secondary line-clamp-2">{chapterDisplayName}</span>
+                      <span className="px-1 sm:px-2 text-center text-tiny sm:text-sm font-extrabold text-text-secondary line-clamp-2">{chapterDisplayName}</span>
                     )}
                     <OwnershipClipOverlay
                       isOwned={chapterOwned}
@@ -1068,7 +1068,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
                     aria-label={chapterSwitchLabel}
                     className="flex w-full items-center justify-between gap-1 sm:gap-2 border-t border-border-color px-1.5 py-1 sm:px-2.5 sm:py-2 text-left cursor-pointer hover:bg-bg-elevated transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent-red"
                   >
-                    <h3 className="flex-1 text-[9px] sm:text-xs font-bold sm:font-extrabold leading-tight line-clamp-2 min-h-[22px] sm:min-h-[32px] flex items-center text-text-primary break-words">
+                    <h3 className="flex-1 text-micro sm:text-xs font-bold sm:font-extrabold leading-tight line-clamp-2 min-h-[22px] sm:min-h-[32px] flex items-center text-text-primary break-words">
                       {chapterDisplayName}
                     </h3>
                     <SwitchTrack checked={chapterOwned} size="sm" />
@@ -1132,7 +1132,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
                                 lockedTitle={dict?.modal?.unownedPerk}
                                 ownedTitle={dict?.filters?.ownedOnly}
                               />
-                              <span className="absolute bottom-1 left-1 right-1 truncate rounded bg-bg-primary/80 px-1.5 py-0.5 text-[10px] font-bold text-text-inverted text-center">
+                              <span className="absolute bottom-1 left-1 right-1 truncate rounded bg-bg-primary/80 px-1.5 py-0.5 type-strong-2xs text-text-inverted text-center">
                                 {c.name}
                               </span>
                             </button>
@@ -1140,7 +1140,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
                               <button
                                 type="button"
                                 onClick={() => setPerksPopupCharacter(c)}
-                                className="w-full border-t border-border-color bg-accent-amber/10 px-1.5 py-1 text-[10px] font-bold text-accent-amber hover:bg-accent-amber/20 transition-colors cursor-pointer"
+                                className="w-full border-t border-border-color bg-accent-amber/10 px-1.5 py-1 type-strong-2xs text-accent-amber hover:bg-accent-amber/20 transition-colors cursor-pointer"
                               >
                                 {t?.perksButton || 'Perks'} ({perkStats.unlocked}/{perkStats.total})
                               </button>

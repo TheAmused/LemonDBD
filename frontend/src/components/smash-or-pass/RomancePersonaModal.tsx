@@ -140,7 +140,7 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
       },
       {
         name: 'Reddit',
-        color: 'hover:border-[#ff4500] hover:bg-[#ff4500]/10 text-[#ff4500]',
+        color: 'hover:border-brand-reddit hover:bg-brand-reddit/10 text-brand-reddit',
         url: `https://www.reddit.com/submit?title=${encodedTitle}&url=${encodedUrl}`,
         icon: (
           <svg className="h-4 w-4 fill-current" viewBox="0 0 24 24" aria-hidden="true">
@@ -150,7 +150,7 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
       },
       {
         name: 'WhatsApp',
-        color: 'hover:border-[#25D366] hover:bg-[#25D366]/10 text-[#25D366]',
+        color: 'hover:border-brand-whatsapp hover:bg-brand-whatsapp/10 text-brand-whatsapp',
         url: `https://api.whatsapp.com/send?text=${encodeURIComponent(`${shareText} ${shareUrl}`)}`,
         icon: (
           <svg className="h-4 w-4 fill-current" viewBox="0 0 24 24" aria-hidden="true">
@@ -160,7 +160,7 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
       },
       {
         name: 'Telegram',
-        color: 'hover:border-[#229ED9] hover:bg-[#229ED9]/10 text-[#229ED9]',
+        color: 'hover:border-brand-telegram hover:bg-brand-telegram/10 text-brand-telegram',
         url: buildTelegramShareUrl(shareUrl, shareText, isMobile),
         onClick: async () => {
           await copyTextWithFallback(`${shareText} - ${shareUrl}`);
@@ -179,7 +179,7 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
       },
       {
         name: 'Discord',
-        color: 'hover:border-[#5865F2] hover:bg-[#5865F2]/10 text-[#5865F2]',
+        color: 'hover:border-brand-discord hover:bg-brand-discord/10 text-brand-discord',
         url: '#',
         onClick: async (e: React.MouseEvent) => {
           e.preventDefault();
@@ -329,13 +329,13 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
             </div>
 
             <div className="space-y-1.5 max-w-sm">
-              <h3 className="text-xl sm:text-2xl font-black text-text-primary">
+              <h3 className="type-page-title text-text-primary">
                 {persona.title}
               </h3>
               <p className="text-xs text-accent-red/80">
                 {persona.subtitle}
               </p>
-              <p className="text-xs sm:text-sm text-text-muted leading-relaxed pt-1">
+              <p className="type-body-fluid text-text-muted pt-1">
                 {persona.description}
               </p>
             </div>
@@ -363,7 +363,7 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
             >
               <div className="flex items-center justify-between gap-3">
                 <div className="min-w-0">
-                  <span className="text-[10px] uppercase tracking-widest text-text-inverted/75 block">
+                  <span className="text-tiny uppercase tracking-widest text-text-inverted/75 block">
                     {rawSmash?.modals?.personaTitle || 'Trial Romance Archetype'}
                   </span>
                   <h4 className="text-xl sm:text-2xl font-black tracking-tight truncate text-text-inverted">
@@ -377,12 +377,12 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
                 </div>
                 <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-bg-primary/40 border border-border-color backdrop-blur-md shrink-0">
                   <Heart className="h-3.5 w-3.5 fill-accent-red text-accent-red" />
-                  <span className="text-xs font-black text-text-inverted">
+                  <span className="type-strong text-text-inverted">
                     {persona.smashRate}%
                   </span>
                 </div>
               </div>
-              <div className="mt-3 flex items-center gap-4 text-[11px] text-text-inverted/85">
+              <div className="mt-3 flex items-center gap-4 type-caption text-text-inverted/85">
                 <span className="flex items-center gap-1.5">
                   <SurvivorIcon className="h-3.5 w-3.5 text-accent-green" />
                   <span>{survivorsLabel} {persona.survivorAffinity}%</span>
@@ -396,7 +396,7 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
 
             {/* Social Media Direct Share Grid */}
             <div className="space-y-2 pt-1">
-              <span className="text-[10px] uppercase tracking-wider text-text-muted font-bold flex items-center gap-1.5">
+              <span className="type-label-2xs text-text-muted flex items-center gap-1.5">
                 <Share2 className="h-3 w-3 text-accent-red" />
                 {rawSmash?.sharing?.shareDirectly || 'Share Directly'}
               </span>
@@ -427,7 +427,7 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
 
             {/* Direct Link Copy (Single Canonical Copy Button) */}
             <div className="space-y-2 pt-1">
-              <span className="text-[10px] uppercase tracking-wider text-text-muted font-bold">
+              <span className="type-label-2xs text-text-muted">
                 {rawSmash?.sharing?.directLink || 'Direct Link to Archetype'}
               </span>
               <div className="flex items-center gap-2">
@@ -475,7 +475,7 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
             >
               {isSharedView && (
                 <div className="mb-2">
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-bg-primary/50 border border-border-color text-[11px] font-bold tracking-wider text-text-inverted backdrop-blur-md shadow-sm">
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-bg-primary/50 border border-border-color text-mini font-bold tracking-wider text-text-inverted backdrop-blur-md shadow-sm">
                     <Sparkles className="h-3 w-3 text-text-inverted" />
                     {sharedResultBadge}
                   </span>
@@ -502,11 +502,11 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
 
             {/* Dating Psychology Card */}
             <Surface tone="elevated" radius="2xl" padding="none" className="p-4 sm:p-5 space-y-2 shadow-inner">
-              <span className="font-bold text-accent-red uppercase tracking-wider text-[11px] flex items-center gap-1.5">
+              <span className="type-label-xs text-accent-red flex items-center gap-1.5">
                 <Sparkles className="h-3.5 w-3.5" />
                 {datingPsychologyLabel}
               </span>
-              <p className="text-text-secondary leading-relaxed text-xs sm:text-sm">
+              <p className="text-text-secondary type-body-fluid">
                 {persona.description}
               </p>
             </Surface>
@@ -514,14 +514,14 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
             {/* Telemetry Matrix */}
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs">
               <div className="p-3.5 rounded-2xl bg-bg-surface border border-border-color flex flex-col justify-between gap-1 shadow-inner">
-                <span className="text-text-muted text-[11px]">{totalEvaluatedLabel}</span>
+                <span className="text-text-muted type-caption">{totalEvaluatedLabel}</span>
                 <span className="text-lg font-black text-text-primary">
                   {persona.totalVotes} <span className="text-xs font-normal text-text-muted">{candidatesLabel}</span>
                 </span>
               </div>
 
               <div className="p-3.5 rounded-2xl bg-bg-surface border border-border-color flex flex-col justify-between gap-1 shadow-inner">
-                <span className="text-text-muted text-[11px]">{smashRateLabel}</span>
+                <span className="text-text-muted type-caption">{smashRateLabel}</span>
                 <span className="text-lg font-black text-accent-red flex items-center gap-1">
                   <Heart className="h-4 w-4 fill-accent-red" />
                   {persona.smashRate}{percentSign}
@@ -536,8 +536,8 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
                     </div>
                   )}
                   <div className="min-w-0">
-                    <span className="text-text-muted text-[10px] block truncate">{firstSmashLabel}</span>
-                    <span className="text-xs font-bold text-text-primary truncate block">
+                    <span className="text-text-muted type-micro block truncate">{firstSmashLabel}</span>
+                    <span className="type-strong text-text-primary truncate block">
                       {persona.favoriteChar.name}
                     </span>
                   </div>
@@ -548,12 +548,12 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
             {/* Role Affinity Scale (Survivor vs Killer) */}
             <Surface tone="elevated" radius="2xl" padding="none" className="p-4 sm:p-5 space-y-3">
               <div className="flex items-center justify-between pb-0.5 border-b border-border-color/40">
-                <span className="font-bold text-text-secondary uppercase tracking-wider text-[11px] flex items-center gap-1.5">
+                <span className="type-label-xs text-text-secondary flex items-center gap-1.5">
                   <Compass className="h-3.5 w-3.5 text-accent-red" />
                   {roleAffinityLabel}
                 </span>
                 {persona.totalSmashes !== undefined && (
-                  <span className="text-[10px] text-text-muted">
+                  <span className="type-micro text-text-muted">
                     {persona.totalSmashes > 0
                       ? `${persona.totalSmashes} ${rawSmash?.statsDetail?.smashCount || 'smashes'}`
                       : noSmashesRecordedLabel}
@@ -561,7 +561,7 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
                 )}
               </div>
 
-              <div className="flex justify-between items-center text-xs font-bold">
+              <div className="flex justify-between items-center type-strong">
                 <span className="flex items-center gap-1.5 text-accent-green">
                   <SurvivorIcon className="h-4 w-4" aria-hidden="true" />
                   <span>

@@ -27,7 +27,7 @@ export const ClassicCharacterGuesser: React.FC<ClassicCharacterGuesserProps> = (
     <div className="w-full overflow-x-auto pb-4 my-6">
       <table className="w-full min-w-[700px] border-separate border-spacing-2 text-center select-none">
         <thead>
-          <tr className="text-xs uppercase tracking-wider text-text-muted font-semibold">
+          <tr className="type-label-sm text-text-muted">
             <th className="p-2 w-28 text-left">{(t.attributes as any).character || 'Character'}</th>
             <th className="p-2 w-20">{t.attributes.role}</th>
             <th className="p-2 w-20">{t.attributes.gender}</th>

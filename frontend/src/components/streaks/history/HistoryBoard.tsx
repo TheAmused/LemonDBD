@@ -129,7 +129,7 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
 
       <Link
         href={`/${locale}/streaks/killer`}
-        className="inline-flex items-center gap-1.5 rounded text-xs font-bold text-text-muted hover:text-text-primary transition-colors focus:outline-none focus:ring-2 focus:ring-accent-red"
+        className="inline-flex items-center gap-1.5 rounded type-strong text-text-muted hover:text-text-primary transition-colors focus:outline-none focus:ring-2 focus:ring-accent-red"
       >
         <ArrowLeft className="h-3.5 w-3.5" />
         <span>{dict?.streaks?.backToKillerStreaks || 'Back to killer streaks'}</span>
@@ -161,7 +161,7 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
             <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl border-2 border-accent-green bg-accent-green/15 text-accent-green">
               <AdeptBadgeIcon className="h-8 w-8" />
             </div>
-            <p className="mb-1 text-xs font-bold uppercase tracking-widest text-accent-green">
+            <p className="mb-1 type-label-sm text-accent-green">
               {dict?.streaks?.victoryCongrats || 'Congratulations'}
             </p>
             <h2 className="text-2xl font-black tracking-tight text-text-primary">
@@ -181,7 +181,7 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
         ) : (
           <div className="mb-6 rounded-2xl border border-border-color bg-bg-surface backdrop-blur-sm p-5 shadow-sm">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 mb-3 text-center sm:text-left">
-              <h3 className="text-sm font-bold text-text-secondary uppercase tracking-wider">
+              <h3 className="type-label text-text-secondary">
                 {dict?.streaks?.pickYourKiller || 'Pick your killer'}
               </h3>
               {run && (

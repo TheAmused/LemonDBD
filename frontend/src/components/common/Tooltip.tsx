@@ -61,8 +61,8 @@ export const TOOLTIP_CONFIG = {
     },
     /** Add-on / item rarity labels. */
     rarity: {
-      content: 'border-purple-500/50',
-      title: 'tracking-widest text-purple-300',
+      content: 'border-accent-purple/50',
+      title: 'tracking-widest text-accent-purple',
       arrowBorder: 'color-mix(in srgb, rgb(168 85 247) 50%, transparent)',
     },
   },
@@ -222,7 +222,7 @@ export const TooltipBubble: React.FC<TooltipBubbleProps> = ({
             {title && (
               <span
                 className={cn(
-                  'relative block whitespace-normal text-[11px] font-black uppercase tracking-wider text-text-primary',
+                  'relative block whitespace-normal text-mini font-black uppercase tracking-wider text-text-primary',
                   look.title
                 )}
               >
@@ -232,7 +232,7 @@ export const TooltipBubble: React.FC<TooltipBubbleProps> = ({
             {description && (
               <span
                 className={cn(
-                  'relative block whitespace-normal text-[11px] font-medium italic leading-snug text-text-secondary',
+                  'relative block whitespace-normal text-mini font-medium italic leading-snug text-text-secondary',
                   title && 'mt-1'
                 )}
               >

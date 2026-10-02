@@ -68,7 +68,7 @@ export const PerkModal: React.FC<PerkModalProps> = ({
           {perk.name}
         </h2>
         {perk.alternate_name && (
-          <p className="mt-1.5 text-xs font-bold text-accent-amber">
+          <p className="mt-1.5 type-strong text-accent-amber">
             {dict?.modal?.alias && `${dict.modal.alias}: `}
             {perk.alternate_name}
           </p>

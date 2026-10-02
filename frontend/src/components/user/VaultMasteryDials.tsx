@@ -112,7 +112,7 @@ const RadialDial: React.FC<DialProps> = ({
           </div>
           <div
             className={`${
-              compact ? 'text-[9px] sm:text-[10px]' : 'text-[9px] xs:text-[10px] sm:text-xs 2xl:text-sm'
+              compact ? 'text-micro sm:text-tiny' : 'text-micro xs:text-tiny sm:text-xs 2xl:text-sm'
             } font-bold text-text-secondary`}
           >
             {count}/{total}
@@ -127,7 +127,7 @@ const RadialDial: React.FC<DialProps> = ({
         </div>
         <span
           className={`${
-            compact ? 'text-[9px] sm:text-[10px]' : 'text-[9px] xs:text-[10px] sm:text-xs 2xl:text-sm'
+            compact ? 'text-micro sm:text-tiny' : 'text-micro xs:text-tiny sm:text-xs 2xl:text-sm'
           } font-black uppercase tracking-wider text-text-primary truncate`}
         >
           {title}

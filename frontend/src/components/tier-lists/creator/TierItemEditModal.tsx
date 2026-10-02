@@ -116,7 +116,7 @@ export function TierItemEditModal({ item, isOpen, onClose, onSave, dict }: TierI
           <h3 className="mt-3 max-w-xs truncate text-base sm:text-lg font-black text-text-primary">
             {trimmedName || item.name || '?'}
           </h3>
-          <span className="text-[10px] font-bold uppercase tracking-widest text-text-muted">
+          <span className="type-label-2xs text-text-muted">
             {c.previewHeading}
           </span>
 
@@ -178,7 +178,7 @@ export function TierItemEditModal({ item, isOpen, onClose, onSave, dict }: TierI
           </label>
 
           {error && (
-            <p role="alert" className="text-xs font-semibold text-accent-red">
+            <p role="alert" className="type-strong text-accent-red">
               {error}
             </p>
           )}

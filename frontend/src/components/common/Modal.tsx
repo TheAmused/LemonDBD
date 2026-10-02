@@ -102,7 +102,7 @@ export const MODAL_CONFIG = {
   },
   backdrops: {
     blur: 'bg-bg-primary/70 backdrop-blur-md',
-    dim: 'bg-black/70',
+    dim: 'bg-scrim/70',
     none: 'bg-transparent',
   },
   sizes: MODAL_SIZES,
@@ -111,7 +111,7 @@ export const MODAL_CONFIG = {
     danger: 'bg-accent-red/15 text-accent-red border-accent-red/30',
     success: 'bg-accent-green/15 text-accent-green border-accent-green/30',
     warning: 'bg-accent-amber/15 text-accent-amber border-accent-amber/30',
-    info: 'bg-cyan-500/15 text-cyan-600 border-cyan-500/30 dark:text-cyan-400',
+    info: 'bg-accent-cyan/15 text-accent-cyan border-accent-cyan/30',
   },
   /** Drag distance (px) / velocity that counts as "swipe to close". */
   swipeDistance: 110,

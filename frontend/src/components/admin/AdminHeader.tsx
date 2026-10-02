@@ -76,7 +76,7 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
           target="_blank"
           rel="noopener noreferrer"
           {...tip(dict?.admin?.pgAdminTitle || 'pgAdmin Database Manager', undefined, 'action')} aria-label={dict?.admin?.pgAdminTitle || 'pgAdmin Database Manager'}
-          className="flex items-center justify-center gap-2 rounded-xl border border-border-color bg-bg-surface hover:bg-bg-elevated text-text-primary px-3.5 py-2 text-xs font-bold transition-all cursor-pointer shadow-xs flex-1 sm:flex-initial"
+          className="flex items-center justify-center gap-2 rounded-xl border border-border-color bg-bg-surface hover:bg-bg-elevated text-text-primary px-3.5 py-2 type-strong transition-all cursor-pointer shadow-xs flex-1 sm:flex-initial"
         >
           <Database className="h-3.5 w-3.5 text-text-secondary" />
           <span>{dict?.admin?.pgAdmin || 'pgAdmin (DB)'}</span>
@@ -97,7 +97,7 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
             target="_blank"
             rel="noopener noreferrer"
             {...tip(dict?.admin?.analyticsTitle || 'Analytics', undefined, 'action')} aria-label={dict?.admin?.analyticsTitle || 'Analytics'}
-            className="flex items-center justify-center gap-1.5 rounded-xl border border-border-color bg-bg-surface hover:bg-bg-elevated text-text-primary px-3 py-2 text-xs font-bold transition-colors cursor-pointer shadow-xs"
+            className="flex items-center justify-center gap-1.5 rounded-xl border border-border-color bg-bg-surface hover:bg-bg-elevated text-text-primary px-3 py-2 type-strong transition-colors cursor-pointer shadow-xs"
           >
             <LineChart className="h-3.5 w-3.5 text-text-secondary" />
             <span className="hidden md:inline">{dict?.admin?.analytics || 'Analytics'}</span>

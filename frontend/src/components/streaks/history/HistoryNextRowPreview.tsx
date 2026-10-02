@@ -30,7 +30,7 @@ const PreviewTile: React.FC<{ name: string }> = ({ name }) => {
           <KillerIcon className="w-6 h-6 text-text-muted" />
         )}
       </div>
-      <span className="text-[11px] font-medium text-center text-text-muted truncate w-full">
+      <span className="text-mini font-medium text-center text-text-muted truncate w-full">
         {name}
       </span>
     </div>
@@ -55,7 +55,7 @@ export const HistoryNextRowPreview: React.FC<HistoryNextRowPreviewProps> = ({
         onClick={() => setExpanded((v) => !v)}
         className="flex w-full items-center justify-center gap-1.5 text-left cursor-pointer"
       >
-        <span className="text-xs font-bold text-text-muted uppercase tracking-wider">
+        <span className="type-label-sm text-text-muted">
           {dict?.streaks?.nextRowPreviewLabel || 'Next row preview'}{' '}
           {dict?.streaks?.middotSeparator || '·'} {dict?.streaks?.rowLabel || 'Row'} {currentRowIndex + 2}
         </span>

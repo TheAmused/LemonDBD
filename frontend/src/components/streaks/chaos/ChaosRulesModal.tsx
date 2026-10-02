@@ -31,13 +31,13 @@ export const ChaosRulesModal: React.FC<ChaosRulesModalProps> = ({ isOpen, onClos
       isOpen={isOpen}
       onClose={onClose}
       icon={BookOpen}
-      title={s.chaosRulesTitle || 'Chaos Streak Rules'}
+      title={s.rules || 'Rules'}
       footerButtonLabel={s.gotItLetsPlay || "Got It, Let's Play!"}
       dict={dict}
     >
       <RulesConceptCard
         tone="red"
-        title={s.chaosConcept || 'Chaos Concept'}
+        title={s.chaosConcept || 'Concept'}
         text={
           s.chaosConceptShort ||
           'Pull the lever for 4 random perks plus 2 add-on rarities. Pick a killer to run the build, then play the trial.'

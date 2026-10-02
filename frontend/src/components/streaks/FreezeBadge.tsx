@@ -8,12 +8,10 @@ import { Popover } from '@/components/common/Popover';
 
 export interface FreezeBadgeProps {
   frozen: boolean;
-  /** Matches the slim single-line stat chips instead of the default square icon button. */
-  compact?: boolean;
   dict?: Dictionary;
 }
 
-export const FreezeBadge: React.FC<FreezeBadgeProps> = ({ frozen, compact = false, dict }) => {
+export const FreezeBadge: React.FC<FreezeBadgeProps> = ({ frozen, dict }) => {
   const [hovered, setHovered] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -24,11 +22,9 @@ export const FreezeBadge: React.FC<FreezeBadgeProps> = ({ frozen, compact = fals
       ref={ref}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      className={`freeze-badge-in flex items-center justify-center rounded-xl bg-bg-elevated border border-accent-amber/30 text-accent-amber shadow-sm ${
-        compact ? 'px-3 py-2' : 'px-3.5 py-3'
-      }`}
+      className="freeze-badge-in flex items-center justify-center rounded-xl bg-bg-elevated border border-border-color text-text-secondary shadow-sm px-3.5 py-3"
     >
-      <Snowflake className={compact ? 'w-5 h-5 text-accent-amber' : 'w-6 h-6 text-accent-amber'} />
+      <Snowflake className="w-6 h-6" />
 
       <Popover
         open={hovered}
@@ -41,9 +37,9 @@ export const FreezeBadge: React.FC<FreezeBadgeProps> = ({ frozen, compact = fals
         closeOnOutsideClick={false}
         closeOnEscape={false}
         returnFocus={false}
-        className="w-56 rounded-xl border border-accent-amber/30 bg-bg-surface px-3 py-2.5 text-mini leading-snug text-text-secondary shadow-2xl backdrop-blur-md"
+        className="w-56 rounded-xl border border-border-color bg-bg-surface px-3 py-2.5 text-mini leading-snug text-text-secondary shadow-2xl backdrop-blur-md"
       >
-        <span className="font-bold text-accent-amber">
+        <span className="font-bold text-text-primary">
           {dict?.streaks?.challengeStarted || 'Challenge started.'}
         </span>{' '}
         {dict?.streaks?.freezeNotice ||

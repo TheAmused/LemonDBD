@@ -20,12 +20,10 @@ export const PageStreakStatsDrawer: React.FC<PageStreakStatsDrawerProps> = ({ is
   <StreakStatsDrawer<PageStreakMatchLog>
     isOpen={isOpen}
     onClose={onClose}
-    title={dict?.streaks?.pageStreak || 'Page Streak'}
-    accent="amber"
     stats={stats}
     dict={dict}
     renderLabel={(log) => (
-      <div className="type-card-title text-text-primary">{characterDisplayName(log.killer)}</div>
+      <div className="text-base font-bold text-text-primary">{characterDisplayName(log.killer)}</div>
     )}
     renderMeta={(log) => (
       <span>

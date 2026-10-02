@@ -4,7 +4,7 @@ import type { Dictionary } from '@/locales/types';
 
 import React from 'react';
 import { ChaosStats, ChaosMatchLog } from '@/types/chaosStreak';
-import { StreakStatsDrawer } from '../StreakStatsDrawer';
+import { StreakStatsDrawer, streakAtResult } from '../StreakStatsDrawer';
 import { ADDON_RARITY_ICONS } from '@/constants/addonRarityIcons';
 import { useCharacterDisplayName } from '@/context/DisplayNamesContext';
 
@@ -23,31 +23,25 @@ export const ChaosStatsDrawer: React.FC<ChaosStatsDrawerProps> = ({ isOpen, onCl
   <StreakStatsDrawer<ChaosMatchLog>
     isOpen={isOpen}
     onClose={onClose}
-    title={dict?.streaks?.chaosStreak || 'Chaos Streak'}
-    accent="amber"
     stats={stats}
     attempts={attempts}
     dict={dict}
     renderLabel={(log) => (
-      <>
-        <div className="type-card-title text-text-primary">{characterDisplayName(log.killer_id)}</div>
-        <div className="flex items-center gap-1 mt-1">
-          {log.addon_rarities.map((rarity, i) => (
-            <img
-              key={i}
-              src={ADDON_RARITY_ICONS[rarity]}
-              alt={rarity}
-              {...tip(rarity, undefined, 'rarity')}
-              className="h-3.5 w-3.5 rounded object-cover border border-border-color"
-            />
-          ))}
-        </div>
-      </>
+      <div className="text-base font-bold text-text-primary">{characterDisplayName(log.killer_id)}</div>
     )}
     renderMeta={(log) => (
-      <span>
-        {dict?.streaks?.streakLabel || 'Streak:'} {log.streak_before} {dict?.streaks?.streakArrow || '→'}{' '}
-        {log.streak_after}
+      <span className="inline-flex items-center gap-1.5">
+        {dict?.streaks?.streakLabel || 'Streak:'} {streakAtResult(log)}
+        <span>{dict?.streaks?.middotSeparator || '·'}</span>
+        {log.addon_rarities.map((rarity, i) => (
+          <img
+            key={i}
+            src={ADDON_RARITY_ICONS[rarity]}
+            alt={rarity}
+            title={rarity}
+            className="h-3.5 w-3.5 rounded object-cover border border-border-color"
+          />
+        ))}
       </span>
     )}
   />

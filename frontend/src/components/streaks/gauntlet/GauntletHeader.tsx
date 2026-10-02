@@ -3,17 +3,17 @@
 import type { Dictionary } from '@/locales/types';
 
 import React from 'react';
-import { Role } from '@/types/gauntletStreak';
-import { BookOpen, Gauge } from 'lucide-react';
-import { StreakHeader, type StreakHeaderAction } from '../StreakHeader';
+import { Flame } from 'lucide-react';
+import { FreezeBadge } from '../FreezeBadge';
+import { ChallengeHeaderLayout, ModeSelectButton, StandardHeaderActions } from '../ChallengePanel';
+import { AdeptBadgeIcon } from '@/components/icons/DbdIcons';
+import { StreakStatTiles } from '../StreakStatTiles';
 
 export interface GauntletHeaderProps {
-  role: Role;
   currentStreak: number;
   bestStreak: number;
-  lastCheckpointStreak: number;
   poolFrozen?: boolean;
-  /** The lemon variant's label (e.g. "Duo"), shown next to the title. Omit for Original. */
+  /** The lemon variant's label (e.g. "Duo"), shown as a badge. Omit for Original. */
   modeLabel?: string;
   onOpenStats: () => void;
   onOpenHistory: () => void;
@@ -25,10 +25,8 @@ export interface GauntletHeaderProps {
 }
 
 export const GauntletHeader: React.FC<GauntletHeaderProps> = ({
-  role,
   currentStreak,
   bestStreak,
-  lastCheckpointStreak,
   poolFrozen = false,
   modeLabel,
   onOpenStats,
@@ -37,36 +35,39 @@ export const GauntletHeader: React.FC<GauntletHeaderProps> = ({
   onOpenReset,
   onChangeMode,
   dict,
-}) => {
-  const s = dict?.streaks;
-  const actions: StreakHeaderAction[] = [
-    { key: 'rules', label: s?.rules || 'Rules', icon: <BookOpen className="w-4 h-4" />, onClick: onOpenRules },
-  ];
-  if (onChangeMode) {
-    actions.push({ key: 'mode', label: s?.changeMode || 'Change Mode', icon: <Gauge className="w-4 h-4" />, onClick: onChangeMode });
-  }
-
-  return (
-    <StreakHeader
-      variant="compact"
-      imageSrc="/images/streaks/gauntlet-streak.webp"
-      title={
-        <>
-          <span className="capitalize">{s?.[role] || role}</span> {s?.gauntlet || 'Gauntlet'}
-        </>
-      }
-      titleBadge={modeLabel}
-      poolFrozen={poolFrozen}
-      stats={[
-        { key: 'current', label: s?.current || 'Current', value: currentStreak },
-        { key: 'best', label: s?.best || 'Best', value: bestStreak },
-        { key: 'checkpoint', label: s?.checkpointHeader || 'Checkpoint', value: lastCheckpointStreak },
-      ]}
-      actions={actions}
-      onOpenStats={onOpenStats}
-      onOpenHistory={onOpenHistory}
-      onOpenReset={onOpenReset}
-      dict={dict}
-    />
-  );
-};
+}) => (
+  <ChallengeHeaderLayout
+    stats={
+      <>
+        <StreakStatTiles
+          current={currentStreak}
+          best={bestStreak}
+          currentLabel={dict?.streaks?.current || 'Current'}
+          bestLabel={dict?.streaks?.best || 'Best'}
+          currentIcon={<Flame className="h-5 w-5" />}
+          bestIcon={<AdeptBadgeIcon className="h-5 w-5" />}
+        />
+        <FreezeBadge frozen={poolFrozen} dict={dict} />
+      </>
+    }
+    actions={
+      <StandardHeaderActions
+        onOpenRules={onOpenRules}
+        onOpenStats={onOpenStats}
+        onOpenHistory={onOpenHistory}
+        onOpenReset={onOpenReset}
+        dict={dict}
+        extra={
+          modeLabel && (
+            <ModeSelectButton
+              label={modeLabel}
+              tone="amber"
+              onClick={onChangeMode}
+              title={dict?.streaks?.changeMode || 'Change Mode'}
+            />
+          )
+        }
+      />
+    }
+  />
+);

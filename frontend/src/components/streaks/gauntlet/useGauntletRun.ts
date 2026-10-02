@@ -1,7 +1,7 @@
 // frontend/src/components/streaks/gauntlet/useGauntletRun.ts
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback } from 'react';
 import {
   DEFAULT_GAUNTLET_GAME_MODE,
   GauntletGameMode,
@@ -9,113 +9,43 @@ import {
   GauntletStats,
   Role,
 } from '@/types/gauntletStreak';
-import { ChallengeCompletion } from '@/types/challengeCompletion';
 import * as api from '@/services/gauntletStreakApi';
-import { useAuth } from '@/context/AuthContext';
+import { useBankedCheckpoint, useChallengeRun } from '../useChallengeRun';
 
 export function useGauntletRun(role: Role, gameMode: GauntletGameMode = DEFAULT_GAUNTLET_GAME_MODE) {
-  const { token } = useAuth();
-  const [run, setRun] = useState<GauntletRun | null>(null);
-  const [stats, setStats] = useState<GauntletStats | null>(null);
-  const [completions, setCompletions] = useState<ChallengeCompletion[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [busy, setBusy] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
+  const { token, run, stats, completions, loading, busy, error, load, loadStats, loadCompletions, mutate } =
+    useChallengeRun<GauntletRun, GauntletStats>({
+      scope: `${role}:${gameMode}`,
+      label: 'gauntlet',
+      fetchRun: async (t) => (await api.fetchRun(t, role, gameMode)).run,
+      fetchStats: async (t) => (await api.fetchStats(t, role, gameMode)).stats,
+      fetchCompletions: async (t) => (await api.fetchCompletions(t, role, gameMode)).completions,
+    });
   // The checkpoint streak just banked by a win, so the board can show a
   // one-off celebration. Null once dismissed or once nothing new was banked.
-  const [justBankedCheckpoint, setJustBankedCheckpoint] = useState<number | null>(null);
-
-  const loadStats = useCallback(async () => {
-    if (!token) return;
-    try {
-      const resp = await api.fetchStats(token, role, gameMode);
-      setStats(resp.stats);
-    } catch (err) {
-      console.error('Failed to load gauntlet stats:', err);
-    }
-  }, [token, role, gameMode]);
-
-  const loadCompletions = useCallback(async () => {
-    if (!token) return;
-    try {
-      const resp = await api.fetchCompletions(token, role, gameMode);
-      setCompletions(resp.completions);
-    } catch (err) {
-      console.error('Failed to load gauntlet completion history:', err);
-    }
-  }, [token, role, gameMode]);
-
-  const load = useCallback(async () => {
-    if (!token) return;
-    setLoading(true);
-    setError(null);
-    try {
-      const resp = await api.fetchRun(token, role, gameMode);
-      setRun(resp.run);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Could not load this gauntlet');
-    } finally {
-      setLoading(false);
-    }
-  }, [token, role, gameMode]);
-
-  useEffect(() => {
-    load();
-    loadStats();
-    loadCompletions();
-  }, [load, loadStats, loadCompletions]);
-
-  const mutate = useCallback(
-    async (action: () => Promise<GauntletRun>) => {
-      if (!token) return;
-      setBusy(true);
-      setError(null);
-      try {
-        setRun(await action());
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'That did not go through. Try again.');
-      } finally {
-        setBusy(false);
-      }
-    },
-    [token]
-  );
+  const { justBankedCheckpoint, setJustBankedCheckpoint, dismissCheckpointCelebration } = useBankedCheckpoint();
 
   const submitResult = useCallback(
     async (result: 'win' | 'loss') => {
       if (!token || !run) return;
       const checkpointBefore = run.last_checkpoint_streak;
-      setBusy(true);
-      setError(null);
-      try {
-        const resp = await api.submitMatchResult(token, role, run.id, result);
-        setRun(resp.run);
-        loadStats();
-        // A win that banks a fresh checkpoint gets its own celebration. If that
-        // same win also finished the gauntlet, the win screen covers that instead.
-        const justFinished = resp.previous_run.status === 'completed';
-        if (justFinished) {
-          loadCompletions();
-        }
-        if (
-          result === 'win' &&
-          !justFinished &&
-          resp.previous_run.last_checkpoint_streak > checkpointBefore
-        ) {
-          setJustBankedCheckpoint(resp.previous_run.last_checkpoint_streak);
-        }
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to record the result');
-      } finally {
-        setBusy(false);
+      let outcome: Awaited<ReturnType<typeof api.submitMatchResult>> | undefined;
+      const updated = await mutate(async () => {
+        outcome = await api.submitMatchResult(token, role, run.id, result);
+        return outcome.run;
+      }, 'Failed to record the result');
+      if (!updated || !outcome) return;
+      loadStats();
+      // A win that banks a fresh checkpoint gets its own celebration. If that
+      // same win also finished the gauntlet, the win screen covers that instead.
+      const justFinished = outcome.previous_run.status === 'completed';
+      if (justFinished) loadCompletions();
+      if (result === 'win' && !justFinished && outcome.previous_run.last_checkpoint_streak > checkpointBefore) {
+        setJustBankedCheckpoint(outcome.previous_run.last_checkpoint_streak);
       }
     },
-    [token, role, run, loadStats, loadCompletions]
+    [token, role, run, mutate, loadStats, loadCompletions, setJustBankedCheckpoint]
   );
-
-  const dismissCheckpointCelebration = useCallback(() => {
-    setJustBankedCheckpoint(null);
-  }, []);
 
   const reveal = useCallback(() => {
     if (!token || !run) return;
@@ -134,7 +64,7 @@ export function useGauntletRun(role: Role, gameMode: GauntletGameMode = DEFAULT_
     if (!token) return;
     setJustBankedCheckpoint(null);
     return mutate(() => api.resetRun(token, role, gameMode));
-  }, [token, role, gameMode, mutate]);
+  }, [token, role, gameMode, mutate, setJustBankedCheckpoint]);
 
   return {
     run,

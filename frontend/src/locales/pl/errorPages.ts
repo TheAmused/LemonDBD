@@ -1,7 +1,6 @@
 // frontend/src/locales/pl/errorPages.ts
 export default {
   backHome: 'Wróć na stronę główną',
-  goBack: 'Wstecz',
   notFound: {
     code: '404',
     title: 'Nie znaleziono strony',

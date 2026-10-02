@@ -7,12 +7,10 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { ArrowLeft, Home } from 'lucide-react';
+import { Home } from 'lucide-react';
 import { PageShell } from '@/components/layout/PageShell';
 import { LemonIcon } from '@/components/LemonIcon';
 import { FogHeartbeatBackground } from '@/components/landing/FogHeartbeatBackground';
-import { buttonClassName } from '@/components/common/Button';
 import { buildMainNavItems } from '@/components/sidebar/mainNavItems';
 import { useDictionary, useLocale } from '@/context/DictionaryContext';
 import { useAuth } from '@/context/AuthContext';
@@ -30,7 +28,6 @@ interface ErrorPageProps {
 export const ErrorPage: React.FC<ErrorPageProps> = ({ variant, pageId = null }) => {
   const dict = useDictionary();
   const locale = useLocale();
-  const router = useRouter();
   const { isAuthenticated } = useAuth();
   const copy = dict.errorPages;
 
@@ -80,7 +77,7 @@ export const ErrorPage: React.FC<ErrorPageProps> = ({ variant, pageId = null }) 
           <p className="mt-3 max-w-md type-body text-text-muted">{copy.blocked.hint}</p>
         ) : null}
 
-        <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row">
+        <div className="mt-8">
           <Link
             href={`/${locale}`}
             className="inline-flex cursor-pointer items-center gap-2.5 rounded-2xl bg-accent-red px-7 py-3.5 type-card-title text-text-inverted shadow-md transition-all hover:scale-105 hover:bg-accent-red-hover active:scale-95"
@@ -88,10 +85,6 @@ export const ErrorPage: React.FC<ErrorPageProps> = ({ variant, pageId = null }) 
             <Home className="h-4 w-4" aria-hidden="true" />
             <span>{copy.backHome}</span>
           </Link>
-          <button type="button" onClick={() => router.back()} className={buttonClassName('ghost', 'lg', 'rounded-2xl')}>
-            <ArrowLeft className="h-4 w-4" aria-hidden="true" />
-            <span>{copy.goBack}</span>
-          </button>
         </div>
       </div>
     </PageShell>

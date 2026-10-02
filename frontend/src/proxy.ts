@@ -2,7 +2,6 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { i18n, type Locale } from '@/i18n/config';
-import { getBackendBaseUrl } from '@/utils/api';
 import { parseSitePagesStatus, sitePageFromPathname, type SitePagesStatus } from '@/utils/sitePages';
 
 /**
@@ -10,15 +9,22 @@ import { parseSitePagesStatus, sitePageFromPathname, type SitePagesStatus } from
  * session cookie is forwarded). Returns null when the backend can't answer: the page then
  * loads normally, while the API guard keeps protecting the page's own endpoints.
  */
+/** Where the Next server reaches the backend. NEXT_PUBLIC_API_URL is the browser-facing address
+ * (https://localhost inside a container points back at the frontend itself), so it is not used. */
+const BACKEND_URL = (process.env.INTERNAL_API_URL || 'http://backend:5000').replace(/\/+$/, '');
+
 async function fetchSitePagesStatus(cookie: string): Promise<SitePagesStatus | null> {
     try {
-        const res = await fetch(`${getBackendBaseUrl()}/api/v1/site/pages`, {
+        const res = await fetch(`${BACKEND_URL}/api/v1/site/pages`, {
             headers: { cookie },
             cache: 'no-store',
             signal: AbortSignal.timeout(1500),
         });
-        return res.ok ? parseSitePagesStatus(await res.json()) : null;
-    } catch {
+        if (res.ok) return parseSitePagesStatus(await res.json());
+        console.warn(`[page-switches] backend answered ${res.status}; pages are not being checked`);
+        return null;
+    } catch (err) {
+        console.warn('[page-switches] backend unreachable; pages are not being checked', err);
         return null;
     }
 }
@@ -57,11 +63,17 @@ function getPreferredLocale(request: NextRequest): Locale {
 const PAGES_TTL_MS = 5000;
 let pagesCache: { at: number; disabled: readonly string[] } | null = null;
 let pagesRefresh: Promise<void> | null = null;
+let pagesFailedAt = 0;
 
 function refreshPagesCache(): Promise<void> {
     pagesRefresh ??= fetchSitePagesStatus('')
         .then((status) => {
-            if (status) pagesCache = { at: Date.now(), disabled: status.disabled };
+            if (status) {
+                pagesCache = { at: Date.now(), disabled: status.disabled };
+                pagesFailedAt = 0;
+            } else {
+                pagesFailedAt = Date.now();
+            }
         })
         .finally(() => {
             pagesRefresh = null;
@@ -70,8 +82,10 @@ function refreshPagesCache(): Promise<void> {
 }
 
 async function cachedDisabledPages(): Promise<readonly string[]> {
-    if (!pagesCache) await refreshPagesCache();
-    else if (Date.now() - pagesCache.at > PAGES_TTL_MS) void refreshPagesCache();
+    if (!pagesCache) {
+        // Cold start: wait once. If the backend is down, don't make every request wait for it.
+        if (Date.now() - pagesFailedAt > PAGES_TTL_MS) await refreshPagesCache();
+    } else if (Date.now() - pagesCache.at > PAGES_TTL_MS) void refreshPagesCache();
     return pagesCache?.disabled ?? [];
 }
 

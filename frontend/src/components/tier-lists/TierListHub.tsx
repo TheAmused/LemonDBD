@@ -216,7 +216,7 @@ export function TierListHub({ locale, dict }: TierListHubProps) {
             `overflow-hidden` used to do automatically for whichever part
             happened to be the visual bottom. */}
         <div
-          className={`sticky top-16 z-20 lg:top-0 w-full min-h-[64px] sm:min-h-[72px] overflow-hidden ${
+          className={`group sticky top-16 z-20 lg:top-0 w-full min-h-[64px] sm:min-h-[72px] overflow-hidden ${
             isCustomOpen ? 'rounded-t-3xl' : 'rounded-3xl'
           }`}
         >
@@ -253,7 +253,7 @@ export function TierListHub({ locale, dict }: TierListHubProps) {
             <div className="hidden lg:flex w-56 shrink-0 pointer-events-none" aria-hidden="true" />
             <div className="flex-1 text-center min-w-0 px-2">
               <div className="inline-flex items-center justify-center gap-2">
-                <h2 id="tier-lists-custom" className="type-section-title text-text-primary">
+                <h2 id="tier-lists-custom" className="type-section-title text-text-primary group-hover:text-accent-red transition-colors">
                   {t.mySection}
                 </h2>
               </div>

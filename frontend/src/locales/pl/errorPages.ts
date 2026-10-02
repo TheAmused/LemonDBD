@@ -2,28 +2,19 @@
 export default {
   backHome: 'Wróć na stronę główną',
   goBack: 'Wstecz',
-  statusLabel: 'Status',
-  addressLabel: 'Adres',
-  pageLabel: 'Strona',
-  accountLabel: 'Konto',
-  guest: 'Gość (niezalogowany)',
-  nextTitle: 'Dokąd dalej',
   notFound: {
     code: '404',
-    status: '404 · Nie znaleziono',
     title: 'Nie znaleziono strony',
     text: 'Ta strona nie istnieje, została przeniesiona albo w adresie jest literówka.',
   },
   forbidden: {
     code: '403',
-    status: '403 · Brak dostępu',
     title: 'Brak dostępu',
     textSignedIn: 'Twoje konto nie ma uprawnień do otwarcia tej strony.',
     textGuest: 'Aby otworzyć tę stronę, zaloguj się na konto administratora.',
   },
   blocked: {
     code: 'Zablokowana',
-    status: 'Zablokowana przez administratora',
     title: 'Strona zablokowana',
     text: 'Administrator tymczasowo wyłączył stronę: {page}.',
     textGeneric: 'Ta strona została tymczasowo wyłączona przez administratora.',

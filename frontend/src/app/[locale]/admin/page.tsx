@@ -519,20 +519,20 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
               />
             </div>
           ) : activeTab === 'challenges' ? (
-            <div className="space-y-6">
-              <AdminPageSwitches onActionMessage={setActionMessage} dict={dict} />
-              <Suspense fallback={<AdminTabContentSkeleton dict={dict} />}>
-                <AdminChallengeControl onActionMessage={setActionMessage} dict={dict} />
-              </Suspense>
-            </div>
+            <Suspense fallback={<AdminTabContentSkeleton dict={dict} />}>
+              <AdminChallengeControl onActionMessage={setActionMessage} dict={dict} />
+            </Suspense>
           ) : activeTab === 'challenge_stats' ? (
             <Suspense fallback={<AdminTabContentSkeleton dict={dict} />}>
               <AdminChallengeStats stats={stats} dict={dict} />
             </Suspense>
           ) : activeTab === 'settings' ? (
-            <Suspense fallback={<AdminTabContentSkeleton dict={dict} />}>
-              <AdminSettingsPanel onActionMessage={setActionMessage} dict={dict} />
-            </Suspense>
+            <div className="space-y-6">
+              <AdminPageSwitches onActionMessage={setActionMessage} dict={dict} />
+              <Suspense fallback={<AdminTabContentSkeleton dict={dict} />}>
+                <AdminSettingsPanel onActionMessage={setActionMessage} dict={dict} />
+              </Suspense>
+            </div>
           ) : activeTab === 'audit' ? (
             <Suspense fallback={<AdminTabContentSkeleton dict={dict} />}>
               <AdminAuditLogView dict={dict} />

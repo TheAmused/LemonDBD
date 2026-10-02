@@ -16,7 +16,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 COPY requirements.txt .
 RUN pip install --no-cache-dir --user -r requirements.txt
 COPY requirements-ocr.txt .
-RUN pip install --no-cache-dir --user --no-deps -r requirements-ocr.txt
+# rapidocr-onnxruntime declares Requires-Python <3.13 but is pure Python and runs on 3.14
+# (checked); its dependencies are installed above, hence --no-deps. The import is a build-time smoke test.
+RUN pip install --no-cache-dir --user --no-deps --ignore-requires-python -r requirements-ocr.txt \
+    && python -c "import rapidocr_onnxruntime"
 
 # Stage 2: Final Runtime Container
 FROM python:3.14-slim AS runner

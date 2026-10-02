@@ -27,6 +27,12 @@ _engine_lock = threading.Lock()  # guards creating the engine
 _infer_lock = threading.Lock()   # one ONNX session: one inference at a time
 
 
+ACCEPTED_INPUT_NOTE = (
+    "Only full-screen screenshots of the game or Steam screenshots are accepted "
+    "(uncropped, 16:9, at least 1280x720)."
+)
+
+
 class ScoreboardError(Exception):
     def __init__(self, code: str, message: str):
         super().__init__(message)
@@ -62,9 +68,9 @@ def load_image(data: bytes) -> np.ndarray:
         if width * height > MAX_PIXELS:
             raise ScoreboardError("too_large", "The screenshot resolution is too large.")
         if width < 1280 or height < 720:
-            raise ScoreboardError("too_small", "The screenshot is too small to read (minimum 1280x720).")
+            raise ScoreboardError("too_small", "The screenshot is too small to read. " + ACCEPTED_INPUT_NOTE)
         if abs(width / height - 16 / 9) > 0.05:
-            raise ScoreboardError("unsupported_aspect_ratio", "Take the screenshot in 16:9 (full screen game).")
+            raise ScoreboardError("unsupported_aspect_ratio", "This is not a full-screen 16:9 screenshot. " + ACCEPTED_INPUT_NOTE)
         image = image.convert("RGB").resize((REF_W, REF_H), Image.LANCZOS)
     except ScoreboardError:
         raise

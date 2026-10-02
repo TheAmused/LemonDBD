@@ -32,6 +32,7 @@ export default {
         "<b>Zgłoszenia błędów i wiadomości:</b> treść, zrzuty ekranu, imię i adres e-mail, które nam wysyłasz. Goście muszą podać e-mail, abyśmy mogli odpowiedzieć.",
         "<b>Dane techniczne:</b> adres IP, typ przeglądarki i szczegóły żądań, używane do ograniczania liczby zapytań, zapobiegania nadużyciom i naprawiania błędów.",
         "<b>Komendy głosowe (mapy):</b> po ich włączeniu dźwięk z mikrofonu służy do rozpoznawania nazw map. Jak to działa, opisujemy w sekcji o pamięci przeglądarki i podmiotach trzecich poniżej.",
+        "<b>Weryfikacja zrzutu ekranu:</b> jeśli prześlesz tabelę wyników meczu, aby potwierdzić wyzwanie, obraz jest analizowany w pamięci serwera i usuwany, gdy tylko wynik jest gotowy. Nie jest zapisywany ani logowany; do Ciebie wraca tylko wynik (np. wygrana lub nie).",
       ],
     },
     howWeUse: {

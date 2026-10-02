@@ -172,6 +172,7 @@ def create_app(config_class: Type[Config] | None = None) -> Flask:
     from app.routes.tier_lists import tier_lists_bp
     from app.routes.users import users_bp
     from app.routes.minigames import minigames_bp
+    from app.routes.scoreboard import scoreboard_bp
 
     flask_app.register_blueprint(auth_bp)
     flask_app.register_blueprint(users_bp)
@@ -192,6 +193,7 @@ def create_app(config_class: Type[Config] | None = None) -> Flask:
     flask_app.register_blueprint(admin_control_bp)
     flask_app.register_blueprint(tier_lists_bp)
     flask_app.register_blueprint(minigames_bp)
+    flask_app.register_blueprint(scoreboard_bp)
 
 
     with flask_app.app_context():

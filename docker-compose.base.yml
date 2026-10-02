@@ -165,6 +165,8 @@ services:
       - "3000"
     environment:
       - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-https://localhost}
+      # Server-side (proxy/SSR) calls go straight to the backend container, not through the public URL
+      - INTERNAL_API_URL=http://backend:5000
       - NEXT_PUBLIC_UMAMI_URL=${NEXT_PUBLIC_UMAMI_URL:-}
       - UMAMI_PUBLIC_URL=${NEXT_PUBLIC_UMAMI_URL:-}
       - NEXT_PUBLIC_PGADMIN_URL=${NEXT_PUBLIC_PGADMIN_URL:-https://localhost:5050}

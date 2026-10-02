@@ -1,7 +1,6 @@
 // frontend/src/locales/ja/errorPages.ts
 export default {
   backHome: 'ホームに戻る',
-  goBack: '前のページへ',
   notFound: {
     code: '404',
     title: 'ページが見つかりません',

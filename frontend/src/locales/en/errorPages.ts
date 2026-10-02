@@ -1,7 +1,6 @@
 // frontend/src/locales/en/errorPages.ts
 export default {
   backHome: 'Back to home',
-  goBack: 'Go back',
   notFound: {
     code: '404',
     title: 'Page not found',

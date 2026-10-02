@@ -7,6 +7,7 @@ import React, { useState } from 'react';
 import { Download } from 'lucide-react';
 import type { Dictionary } from '@/locales/types';
 import { Button } from '@/components/common/Button';
+import { tip } from '@/components/common/Tooltip';
 import { downloadMyData } from '@/services/userProfileApi';
 
 export const DownloadDataSection: React.FC<{ dict?: Dictionary }> = ({ dict }) => {
@@ -28,26 +29,19 @@ export const DownloadDataSection: React.FC<{ dict?: Dictionary }> = ({ dict }) =
   };
 
   return (
-    <section className="rounded-2xl border border-border-color bg-bg-surface p-4 sm:p-5 shadow-sm backdrop-blur-sm">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div className="min-w-0">
-          <h3 className="text-sm font-black uppercase tracking-wider text-text-primary">
-            {t.downloadDataTitle || 'Download my data'}
-          </h3>
-          <p className="mt-1 text-xs leading-relaxed text-text-muted">{t.downloadDataDesc}</p>
-          {error ? <p className="mt-1 text-xs font-semibold text-accent-red">{t.downloadDataFailed}</p> : null}
-        </div>
-        <Button
-          variant="secondary"
-          size="sm"
-          onClick={handleDownload}
-          disabled={busy}
-          leftIcon={<Download className="h-3.5 w-3.5" />}
-          className="w-full sm:w-auto shrink-0"
-        >
-          <span>{t.downloadDataButton || 'Download my data'}</span>
-        </Button>
-      </div>
-    </section>
+    <>
+      <Button
+        variant="secondary"
+        size="sm"
+        onClick={handleDownload}
+        disabled={busy}
+        leftIcon={<Download className="h-3.5 w-3.5" />}
+        aria-label={t.downloadDataTitle || 'Download my data'}
+        {...tip(t.downloadDataTitle || 'Download my data', t.downloadDataDesc, 'action')}
+      >
+        <span>{t.downloadDataButton || 'Download my data'}</span>
+      </Button>
+      {error ? <span role="alert" className="text-xs font-semibold text-accent-red">{t.downloadDataFailed}</span> : null}
+    </>
   );
 };

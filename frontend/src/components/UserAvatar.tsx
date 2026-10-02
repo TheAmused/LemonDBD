@@ -142,7 +142,7 @@ export const UserAvatar: React.FC<UserAvatarProps> = ({
 
       {showAdminBadge && user?.role === 'admin' && (
         <span
-          className={`absolute flex items-center justify-center rounded-full bg-accent-red text-text-inverted shadow-xs border border-accent-red/40 ${sizeConfig.badge}`}
+          className={`absolute z-30 flex items-center justify-center rounded-full bg-accent-red text-text-inverted shadow-xs border border-accent-red/40 ${sizeConfig.badge}`}
           {...tip(adminTitle, undefined, 'status')}
           aria-label={adminAriaLabel}
         >

@@ -238,7 +238,6 @@ export const GauntletRulesModal: React.FC<GauntletRulesModalProps> = ({
       onClose={onClose}
       icon={BookOpen}
       title={modalTitle}
-      footerButtonLabel={rawStreaks.gotItLetsPlay || "Got It, Let's Play!"}
       dict={dict}
     >
       <RulesConceptCard

@@ -29,7 +29,6 @@ export const PageStreakRulesModal: React.FC<PageStreakRulesModalProps> = ({ isOp
       onClose={onClose}
       icon={BookOpen}
       title={s.rules || 'Rules'}
-      footerButtonLabel={s.gotItLetsPlay || "Got It, Let's Play!"}
       dict={dict}
     >
       <RulesConceptCard

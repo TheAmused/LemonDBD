@@ -3,7 +3,6 @@ export default {
   backToKillerStreaks: "Back to killer streaks",
   backToKillers: "Back to killers",
   rules: "Rules",
-  gotItLetsPlay: "Got It, Let's Play!",
   readFullRules: "Read full rules",
   cancel: "Cancel",
   stats: "Statistics",

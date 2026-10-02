@@ -32,7 +32,6 @@ export const ChaosRulesModal: React.FC<ChaosRulesModalProps> = ({ isOpen, onClos
       onClose={onClose}
       icon={BookOpen}
       title={s.rules || 'Rules'}
-      footerButtonLabel={s.gotItLetsPlay || "Got It, Let's Play!"}
       dict={dict}
     >
       <RulesConceptCard

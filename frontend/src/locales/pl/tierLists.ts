@@ -11,7 +11,6 @@ export default {
   customListsSingular: "1 własna lista",
   officialSavedNote: "Twoje rankingi są zapisywane tylko w tej przeglądarce",
   customSavedNote: "Zapisane tylko w tej przeglądarce",
-  featured: "Polecana",
   officialRanking: "Oficjalny ranking",
   itemsCount: "Elementy: {count}",
   rankedCount: "Ocenione: {count}",

@@ -11,7 +11,6 @@ export default {
   customListsSingular: "カスタムリスト 1 件",
   officialSavedNote: "ランキングはこのブラウザにのみ保存されます",
   customSavedNote: "このブラウザにのみ保存されます",
-  featured: "おすすめ",
   officialRanking: "公式ランキング",
   itemsCount: "{count}件",
   rankedCount: "{count}件ランク済み",

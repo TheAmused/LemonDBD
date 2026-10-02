@@ -68,8 +68,8 @@ export function SegmentedControl<T extends string>({
       : 'py-1.5 sm:py-2 lg:py-2.5 xl:py-3 wide:py-3.5';
   const textSize =
     size === 'sm'
-      ? 'text-tiny sm:text-mini wide:text-xs wide-2k:text-sm'
-      : 'text-mini sm:text-xs wide:text-sm wide-2k:text-base';
+      ? 'type-strong-wide-sm'
+      : 'type-strong-wide';
 
   // A fixed 50%-width thumb only lines up when both options render to the
   // same width -- as soon as one side is visibly longer, it undershoots and
@@ -114,7 +114,7 @@ export function SegmentedControl<T extends string>({
         const isActive = value === opt.value;
         const activeTextClass = opt.activeTextColor || 'text-text-inverted';
         const optionClassName = cn(
-          'relative z-10 flex flex-1 cursor-pointer items-center justify-center gap-1 sm:gap-1.5 wide:gap-2 whitespace-nowrap rounded-full px-2 sm:px-3 wide:px-4 wide-2k:px-5 font-black transition-colors duration-200',
+          'relative z-10 flex flex-1 cursor-pointer items-center justify-center gap-1 sm:gap-1.5 wide:gap-2 whitespace-nowrap rounded-full px-2 sm:px-3 wide:px-4 wide-2k:px-5 transition-colors duration-200',
           padY,
           textSize,
           isActive ? activeTextClass : 'text-text-secondary hover:text-text-primary'

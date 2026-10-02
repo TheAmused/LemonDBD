@@ -76,7 +76,7 @@ export function ItemSources({ onAdd, existingIds, locale, dict }: ItemSourcesPro
           onChange={setTab}
           panels={false}
           variant="boxed"
-          tabClassName="min-h-[38px] gap-2 rounded-md px-3.5 text-xs sm:text-sm"
+          tabClassName="min-h-[38px] gap-2 rounded-md px-3.5"
           tabs={options}
         />
       </div>

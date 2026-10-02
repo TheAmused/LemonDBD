@@ -468,7 +468,7 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
             size="lg"
             wrap
             className="border-b border-border-color pb-2"
-            tabClassName="flex-1 sm:flex-initial font-black uppercase tracking-wider"
+            tabClassName="flex-1 sm:flex-initial"
             tabs={[
               {
                 value: 'users',

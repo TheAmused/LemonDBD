@@ -30,7 +30,7 @@ const SidebarNavLinkBase: React.FC<SidebarNavLinkProps> = ({
   badgeColor = 'bg-accent-amber/10 text-accent-amber border-accent-amber/20',
   onClick,
 }) => {
-  const commonClasses = `w-full flex items-center justify-between px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-accent-red ${isActive
+  const commonClasses = `w-full flex items-center justify-between px-3.5 py-2 rounded-xl type-strong transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-accent-red ${isActive
       ? activeBg
       : 'text-text-secondary hover:bg-bg-elevated hover:text-text-primary'
     }`;

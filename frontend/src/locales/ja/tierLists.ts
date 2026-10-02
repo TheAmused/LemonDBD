@@ -7,6 +7,7 @@ export default {
   curatedTemplatesSingular: "1 個の厳選テンプレート",
   mySection: "マイカスタムリスト",
   localOnlyNote: "ランキングとカスタムリストはこのブラウザにのみ保存されます。",
+  customListsCount: "カスタムリスト: {count}",
   featured: "おすすめ",
   officialRanking: "公式ランキング",
   itemsCount: "{count}件",

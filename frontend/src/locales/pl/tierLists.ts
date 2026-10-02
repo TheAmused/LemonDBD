@@ -7,6 +7,7 @@ export default {
   curatedTemplatesSingular: "1 przygotowany szablon",
   mySection: "Moje własne listy",
   localOnlyNote: "Twoje rankingi i własne listy są zapisywane tylko w tej przeglądarce.",
+  customListsCount: "Własne listy: {count}",
   featured: "Polecana",
   officialRanking: "Oficjalny ranking",
   itemsCount: "Elementy: {count}",

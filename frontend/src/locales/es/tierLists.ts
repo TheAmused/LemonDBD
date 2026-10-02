@@ -7,6 +7,7 @@ export default {
   curatedTemplatesSingular: "1 plantilla seleccionada",
   mySection: "Mis listas personalizadas",
   localOnlyNote: "Tus clasificaciones y listas personalizadas se guardan solo en este navegador.",
+  customListsCount: "Listas personalizadas: {count}",
   featured: "Destacada",
   officialRanking: "Clasificación oficial",
   itemsCount: "Elementos: {count}",

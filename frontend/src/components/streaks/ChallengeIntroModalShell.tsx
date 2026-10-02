@@ -100,6 +100,17 @@ export const ChallengeIntroModalShell: React.FC<ChallengeIntroModalShellProps> =
           </Button>
         ) : undefined
       }
+      headerRight={
+        onOpenRules ? (
+          <button
+            type="button"
+            onClick={onOpenRules}
+            className={`${HEADER_BUTTON_CLASSES} gap-1.5 px-3 py-2.5 text-xs font-bold`}
+          >
+            {rulesLabel}
+          </button>
+        ) : undefined
+      }
       bodyClassName="p-5 sm:p-6"
     >
       {intro && (
@@ -108,15 +119,6 @@ export const ChallengeIntroModalShell: React.FC<ChallengeIntroModalShellProps> =
             <p className="type-body-fluid text-text-secondary">
               {intro}
             </p>
-            {onOpenRules && (
-              <button
-                type="button"
-                onClick={onOpenRules}
-                className={`${HEADER_BUTTON_CLASSES} mx-auto mt-3 gap-1.5 px-3 py-2.5 text-xs font-bold`}
-              >
-                {rulesLabel}
-              </button>
-            )}
           </div>
         </div>
       )}

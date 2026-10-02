@@ -16,4 +16,4 @@ export const CelebrationBadge: React.FC = () => (
 );
 
 /** Small amber caps line under the badge, e.g. "Congratulations". */
-export const CELEBRATION_LABEL_CLASSES = 'text-xs font-black uppercase tracking-[0.25em] text-accent-amber';
+export const CELEBRATION_LABEL_CLASSES = 'text-xs font-black uppercase tracking-spaced-md text-accent-amber';

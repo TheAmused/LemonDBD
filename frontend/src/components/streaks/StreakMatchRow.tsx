@@ -25,14 +25,14 @@ export function StreakMatchRow<TLog extends StreakMatchLogBase>({
     <div className="flex items-center justify-between px-4 py-3.5 rounded-xl bg-bg-elevated border border-border-color hover:border-border-subtle transition-colors shadow-sm">
       <div className="pl-1">
         {log.triggered_by === 'inactivity' ? (
-          <div className="flex items-center gap-1 text-sm font-bold text-text-secondary">
+          <div className="flex items-center gap-1 type-card-title text-text-secondary">
             <Clock className="w-3.5 h-3.5" />
             {dict?.streaks?.autoLossInactive || 'Auto-loss, run was inactive'}
           </div>
         ) : (
           renderLabel(log)
         )}
-        <div className="text-xs text-text-secondary mt-1.5 font-mono">{renderMeta(log)}</div>
+        <div className="text-xs text-text-secondary mt-1.5">{renderMeta(log)}</div>
       </div>
 
       <div className="text-right">
@@ -46,7 +46,7 @@ export function StreakMatchRow<TLog extends StreakMatchLogBase>({
           {log.result}
         </div>
         {log.timestamp && (
-          <div className="text-[11px] text-text-secondary mt-1 font-mono">
+          <div className="type-caption text-text-secondary mt-1">
             {new Date(log.timestamp).toLocaleDateString()}
           </div>
         )}

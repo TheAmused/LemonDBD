@@ -4,6 +4,7 @@ import type { Dictionary } from '@/locales/types';
 
 import React, { useEffect, useState } from 'react';
 import { Sparkles, Lock } from 'lucide-react';
+import { Modal } from '@/components/common/Modal';
 import { Perk } from '@/types/gauntletStreak';
 import { perkIconUrl as perkIconFor } from '@/utils/staticUrl';
 import { usePerkDisplayName } from '@/context/DisplayNamesContext';
@@ -56,7 +57,7 @@ const PerkTile: React.FC<{ perk: Perk; index: number; phase: LockPhase }> = ({ p
           <Sparkles className="w-5 h-5 text-text-muted" />
         )}
       </div>
-      <span className="text-[10px] font-bold text-text-secondary truncate w-full text-center">
+      <span className="type-strong-2xs text-text-secondary truncate w-full text-center">
         {displayName}
       </span>
 
@@ -108,17 +109,16 @@ export const HistoryPerkModal: React.FC<HistoryPerkModalProps> = ({ killerName, 
     };
   }, [killerName]);
 
-  if (!killerName) return null;
-
   return (
-    <div
-      onClick={onClose}
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-bg-primary/80 backdrop-blur-md cursor-pointer"
+    <Modal
+      isOpen={killerName != null}
+      onClose={onClose}
+      variant="lightbox"
+      size="sm"
+      closeButton="none"
+      ariaLabel={dict?.streaks?.victoryCongrats || 'Congratulations'}
     >
-      <div
-        onClick={(e) => e.stopPropagation()}
-        className={`relative w-full max-w-sm ${CELEBRATION_CARD_CLASSES} px-8 py-10 cursor-default`}
-      >
+      <div className={`relative w-full ${CELEBRATION_CARD_CLASSES} px-8 py-10`}>
         <CelebrationBadge />
 
         <p className={`mt-6 ${CELEBRATION_LABEL_CLASSES}`}>{dict?.streaks?.victoryCongrats || 'Congratulations'}</p>
@@ -136,11 +136,11 @@ export const HistoryPerkModal: React.FC<HistoryPerkModalProps> = ({ killerName, 
 
         <button
           onClick={onClose}
-          className="mt-6 w-full rounded-xl bg-accent-amber py-3 text-sm font-extrabold text-text-inverted transition-colors hover:bg-accent-amber-hover cursor-pointer"
+          className="mt-6 w-full rounded-xl bg-accent-amber py-3 type-card-title text-text-inverted transition-colors hover:bg-accent-amber-hover cursor-pointer"
         >
           {dict?.streaks?.continueButton || 'Continue'}
         </button>
       </div>
-    </div>
+    </Modal>
   );
 };

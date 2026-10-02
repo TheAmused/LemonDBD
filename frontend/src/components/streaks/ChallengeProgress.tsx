@@ -40,12 +40,12 @@ export const ChallengeProgress: React.FC<ChallengeProgressProps> = ({ current, t
   return (
     <div>
       <div className="mb-4 flex items-center justify-between gap-3">
-        <h3 className="text-xs font-black uppercase tracking-wider text-text-primary">
+        <h3 className="type-label-sm text-text-primary">
           {s?.progressTitle || 'Progress'}
         </h3>
-        <span className="text-xs font-bold text-text-secondary">
+        <span className="type-strong text-text-secondary">
           {dict?.stats?.completed || s?.completed || 'Completed'}:{' '}
-          <span className="font-mono font-extrabold text-accent-green">{cleared}</span> / {total}
+          <span className="font-extrabold text-accent-green">{cleared}</span> / {total}
         </span>
       </div>
 
@@ -86,7 +86,7 @@ export const ChallengeProgress: React.FC<ChallengeProgressProps> = ({ current, t
                   <Trophy className="h-3.5 w-3.5" aria-hidden="true" />
                 </div>
                 <span
-                  className={`absolute left-1/2 top-full mt-1 -translate-x-1/2 font-mono text-[11px] font-bold ${
+                  className={`absolute left-1/2 top-full mt-1 -translate-x-1/2 text-mini font-bold ${
                     reached ? 'text-accent-amber' : 'text-text-muted'
                   }`}
                 >

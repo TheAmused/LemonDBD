@@ -190,7 +190,7 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
                     type="button"
                     onClick={() => setShowNextPage((open) => !open)}
                     aria-expanded={showNextPage}
-                    className={`mt-4 flex w-full items-center gap-2 rounded font-mono text-[10.5px] uppercase tracking-widest text-text-muted transition-colors hover:text-accent-red focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red motion-reduce:transition-none ${showNextPage ? 'mb-2.5' : ''}`}
+                    className={`mt-4 flex w-full items-center gap-2 rounded text-tiny uppercase tracking-widest text-text-muted transition-colors hover:text-accent-red focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red motion-reduce:transition-none ${showNextPage ? 'mb-2.5' : ''}`}
                   >
                     <ChevronRight
                       className={`h-3.5 w-3.5 transition-transform duration-300 motion-reduce:transition-none ${

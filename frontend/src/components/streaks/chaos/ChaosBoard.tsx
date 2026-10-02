@@ -204,7 +204,7 @@ export const ChaosBoard: React.FC = () => {
         {!isCompleted && (
           <>
             <div className="rounded-2xl border border-border-color bg-bg-surface/90 backdrop-blur-sm p-5 shadow-sm">
-              <h3 className="text-sm font-bold text-text-secondary uppercase tracking-wider mb-3">
+              <h3 className="type-label text-text-secondary mb-3">
                 {dict?.streaks?.pickYourKiller || ''}
               </h3>
 

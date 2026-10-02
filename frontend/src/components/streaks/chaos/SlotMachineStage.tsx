@@ -248,10 +248,6 @@ const LEVER_ROD_PX = 12;
 const LEVER_ROD_FRACTION = 0.38;
 const LEVER_PERSPECTIVE_PX = 130;
 const LEVER_SWING_MS = 600;
-const LEVER_ROD_FILL =
-  'linear-gradient(90deg, var(--text-muted) 55%, color-mix(in srgb, var(--text-muted) 65%, var(--bg-primary)) 55%)';
-const LEVER_BALL_FILL =
-  'radial-gradient(circle at 32% 30%, var(--accent-red-hover) 0 13%, transparent 14%), color-mix(in srgb, var(--accent-red) 72%, black)';
 
 const easeOutBack = (t: number): number => {
   const c1 = 1.3;
@@ -342,22 +338,16 @@ const SlotLever: React.FC<{ down: boolean; disabled: boolean; onPull: () => void
       <div
         ref={panelRef}
         className="relative h-24 sm:h-28 md:h-32 w-16 sm:w-[72px] rounded-2xl border border-border-color"
-        style={{ background: 'var(--bg-surface)' }}
+       
       >
         <div
-          className="absolute left-1/2 top-1/2 h-[40%] w-[22px] -translate-x-1/2 -translate-y-1/2 rounded-full"
-          style={{ background: 'var(--bg-primary)' }}
+          className="absolute left-1/2 top-1/2 h-[40%] w-[22px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-bg-primary"
         />
-        <div ref={rodRef} className="absolute left-1/2" style={{ background: LEVER_ROD_FILL }} />
+        <div ref={rodRef} className="lever-rod absolute left-1/2" />
         <div
-          className="absolute left-1/2 top-1/2 h-[26px] w-[26px] -translate-x-1/2 -translate-y-1/2 rounded-full"
-          style={{ background: 'var(--bg-elevated)', border: '2px solid var(--border-color)' }}
+          className="absolute left-1/2 top-1/2 h-[26px] w-[26px] -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-border-color bg-bg-elevated"
         />
-        <div
-          ref={ballRef}
-          className="absolute rounded-full"
-          style={{ background: LEVER_BALL_FILL }}
-        />
+        <div ref={ballRef} className="lever-ball absolute rounded-full" />
       </div>
     </button>
   );

@@ -10,49 +10,39 @@ import type { Dictionary } from '@/locales/types';
 import type { ActionMessage } from '@/types/admin';
 import { Surface } from '@/components/common/Surface';
 import { Switch } from '@/components/common/Switch';
-import { buildMainNavItems } from '@/components/sidebar/mainNavItems';
+import { buildSwitchablePages } from '@/components/sidebar/mainNavItems';
 import { useLocale } from '@/context/DictionaryContext';
 import { refreshSitePages } from '@/hooks/useSitePages';
 import { backendBase } from '@/utils/staticUrl';
 import { authHeaders, getErrorMessage } from '@/utils/api';
-import { isSitePageId, type SitePageId } from '@/utils/sitePages';
+import type { PageSlug } from '@/utils/sitePages';
 
 interface AdminPageSwitchesProps {
   onActionMessage: (msg: ActionMessage) => void;
   dict?: Dictionary;
 }
 
-interface PageRow {
-  id: SitePageId;
-  disabled: boolean;
-}
-
 export const AdminPageSwitches: React.FC<AdminPageSwitchesProps> = ({ onActionMessage, dict }) => {
   const locale = useLocale();
   const t = (dict?.admin || {}) as Record<string, string>;
-  const [rows, setRows] = useState<PageRow[]>([]);
+  const [disabledIds, setDisabledIds] = useState<PageSlug[]>([]);
   const [loading, setLoading] = useState(true);
   const [systemOn, setSystemOn] = useState(true);
-  const [busyId, setBusyId] = useState<SitePageId | null>(null);
+  const [busyId, setBusyId] = useState<PageSlug | null>(null);
 
-  const items = buildMainNavItems(dict, locale);
+  // Every page folder, plus any switched-off id whose folder is gone (so it can still be switched back on).
+  const items = buildSwitchablePages(dict, locale, disabledIds);
 
-  const applyRows = (raw: unknown, enabled?: unknown) => {
-    if (typeof enabled === 'boolean') setSystemOn(enabled);
-    const list = Array.isArray(raw) ? raw : [];
-    setRows(
-      list.flatMap((row: { id?: string; disabled?: boolean }) =>
-        isSitePageId(row.id) ? [{ id: row.id, disabled: row.disabled === true }] : []
-      )
-    );
+  const applyStatus = (body: { disabled?: unknown; enabled?: unknown }) => {
+    if (typeof body.enabled === 'boolean') setSystemOn(body.enabled);
+    setDisabledIds(Array.isArray(body.disabled) ? body.disabled.filter((id): id is string => typeof id === 'string') : []);
   };
 
   const load = useCallback(async () => {
     try {
       const res = await fetch(`${backendBase}/api/v1/admin/pages`, { credentials: 'include', headers: authHeaders() });
       if (!res.ok) throw new Error('load failed');
-      const body = await res.json();
-      applyRows(body.pages, body.enabled);
+      applyStatus(await res.json());
     } catch (err) {
       onActionMessage({ type: 'error', text: getErrorMessage(err, t.pageSwitchesLoadFailed || 'Failed to load the page switches.') });
     } finally {
@@ -64,7 +54,7 @@ export const AdminPageSwitches: React.FC<AdminPageSwitchesProps> = ({ onActionMe
     load();
   }, [load]);
 
-  const setLive = async (id: SitePageId, live: boolean, label: string) => {
+  const setLive = async (id: PageSlug, live: boolean, label: string) => {
     setBusyId(id);
     try {
       const res = await fetch(`${backendBase}/api/v1/admin/pages/${id}`, {
@@ -78,7 +68,7 @@ export const AdminPageSwitches: React.FC<AdminPageSwitchesProps> = ({ onActionMe
         onActionMessage({ type: 'error', text: data.error || t.pageSwitchFailed || 'Failed to update the page switch.' });
         return;
       }
-      applyRows(data.pages, data.enabled);
+      applyStatus(data);
       refreshSitePages();
       const template = live ? t.pageSwitchedOnMsg || '{page} is live again.' : t.pageSwitchedOffMsg || '{page} is now switched off for visitors.';
       onActionMessage({ type: 'success', text: template.replace('{page}', label) });
@@ -89,7 +79,7 @@ export const AdminPageSwitches: React.FC<AdminPageSwitchesProps> = ({ onActionMe
     }
   };
 
-  const offCount = rows.filter((row) => row.disabled).length;
+  const offCount = disabledIds.length;
 
   return (
     <Surface as="section" className="shadow-sm backdrop-blur-sm" aria-busy={loading}>
@@ -119,8 +109,7 @@ export const AdminPageSwitches: React.FC<AdminPageSwitchesProps> = ({ onActionMe
 
       <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
         {items.map((item) => {
-          const row = rows.find((r) => r.id === item.pageId);
-          const live = row ? !row.disabled : true;
+          const live = !disabledIds.includes(item.pageId);
           const Icon = item.icon;
           return (
             <li

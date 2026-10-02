@@ -17,32 +17,30 @@ class SettingSpec:
     max_length: int = 150
 
 
-# Pages an admin can switch off for everyone but admins (id == first URL segment after the locale,
-# except "generator", which lives at /randomizer). Keep in sync with frontend/src/utils/sitePages.ts.
-PAGE_IDS: tuple[str, ...] = (
-    "perks",
-    "randomizer",
-    "streaks",
-    "minigames",
-    "maps",
-    "characters",
-    "tier-lists",
-    "smash-or-pass",
-    "achievements",
-    "about",
-)
+# A page id is the first URL segment after the locale (the route folder name). The backend does not
+# keep a list of pages: the frontend discovers them from its route folders, and any slug can be
+# switched off, so a new page never needs a backend change. Which routes can never be switched off
+# (admin, user, ...) is decided by the frontend proxy and panel.
+_PAGE_ID_RE = re.compile(r"^[a-z0-9][a-z0-9-]{0,40}$")
+MAX_DISABLED_PAGES = 40
+
+
+def is_page_id(value: Any) -> bool:
+    return isinstance(value, str) and bool(_PAGE_ID_RE.match(value))
 
 
 def parse_pages(raw: Any) -> list[str]:
-    """Normalise a comma string / list of page ids: known ids only, de-duplicated, canonical order."""
+    """Normalise a comma string / list of page ids: valid slugs only, de-duplicated, sorted."""
     if raw is None:
         return []
     items = raw if isinstance(raw, (list, tuple, set)) else str(raw).split(",")
     wanted = {str(item).strip() for item in items if str(item).strip()}
-    unknown = wanted - set(PAGE_IDS)
-    if unknown:
-        raise ValueError(f"Unknown page '{sorted(unknown)[0]}'.")
-    return [page for page in PAGE_IDS if page in wanted]
+    for page in wanted:
+        if not is_page_id(page):
+            raise ValueError(f"Invalid page id '{page}'.")
+    if len(wanted) > MAX_DISABLED_PAGES:
+        raise ValueError("Too many pages.")
+    return sorted(wanted)
 
 
 SETTING_SPECS: tuple[SettingSpec, ...] = (

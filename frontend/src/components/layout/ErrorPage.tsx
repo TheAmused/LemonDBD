@@ -15,14 +15,14 @@ import { buildMainNavItems } from '@/components/sidebar/mainNavItems';
 import { useDictionary, useLocale } from '@/context/DictionaryContext';
 import { useAuth } from '@/context/AuthContext';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
-import type { SitePageId } from '@/utils/sitePages';
+import type { PageSlug } from '@/utils/sitePages';
 
 export type ErrorPageVariant = 'not-found' | 'forbidden' | 'blocked';
 
 interface ErrorPageProps {
   variant: ErrorPageVariant;
   /** For `blocked`: the switched-off page that was requested. */
-  pageId?: SitePageId | null;
+  pageId?: PageSlug | null;
 }
 
 export const ErrorPage: React.FC<ErrorPageProps> = ({ variant, pageId = null }) => {

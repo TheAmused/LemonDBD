@@ -3,10 +3,10 @@
 import pytest
 
 from app.core.extensions import db
-from app.core.page_guard import PAGE_API_PREFIXES, page_for_path
+from app.core.page_guard import page_for_blueprint, register_page_blueprint
 from app.core.security import generate_token
 from app.models.user import User
-from app.utils.site_settings_spec import PAGE_IDS, parse_pages, validate_setting
+from app.utils.site_settings_spec import is_page_id, parse_pages, validate_setting
 
 pytestmark = pytest.mark.unit
 
@@ -26,24 +26,40 @@ def _auth(token: str) -> dict[str, str]:
 
 class TestSpec:
     def test_parse_pages_normalises(self) -> None:
-        assert parse_pages("maps, perks,maps") == ["perks", "maps"]
+        assert parse_pages("maps, perks,maps") == ["maps", "perks"]
         assert parse_pages(None) == [] and parse_pages("") == []
 
-    def test_unknown_page_rejected(self) -> None:
+    def test_any_slug_is_a_page_but_garbage_is_not(self) -> None:
+        assert is_page_id("brand-new-page") and is_page_id("a1")
+        for bad in ("", "-x", "Perks", "a b", "../x", "x" * 60, 3, None):
+            assert not is_page_id(bad)
         with pytest.raises(ValueError):
-            parse_pages("perks,nope")
+            parse_pages("perks,Not A Slug")
         with pytest.raises(ValueError):
-            validate_setting("disabled_pages", "nope")
+            validate_setting("disabled_pages", "no spaces")
 
-    def test_every_guarded_prefix_maps_to_a_known_page(self) -> None:
-        assert {page for _, page in PAGE_API_PREFIXES} <= set(PAGE_IDS)
+    def test_every_page_blueprint_is_attached(self, app) -> None:
+        attached = {
+            "tier_lists": "tier-lists",
+            "minigames": "minigames",
+            "smash_or_pass": "smash-or-pass",
+            "smash_alias": "smash-or-pass",
+            "page_streak": "streaks",
+            "gauntlet_streak": "streaks",
+            "chaos_streak": "streaks",
+            "history_streak": "streaks",
+            "challenge_completions": "streaks",
+        }
+        for name, page in attached.items():
+            assert page_for_blueprint(app, name) == page, name
+        assert page_for_blueprint(app, "perks") is None
+        assert page_for_blueprint(app, None) is None
 
-    def test_prefix_match_is_exact_on_segments(self) -> None:
-        assert page_for_path("/api/v1/tier-lists/3") == "tier-lists"
-        assert page_for_path("/api/v1/smash") == "smash-or-pass"
-        assert page_for_path("/api/v1/smash-or-pass/roster") == "smash-or-pass"
-        assert page_for_path("/api/v1/tier-listsx") is None
-        assert page_for_path("/api/v1/perks") is None
+    def test_register_rejects_a_bad_page(self, app) -> None:
+        from flask import Blueprint
+
+        with pytest.raises(ValueError):
+            register_page_blueprint(app, Blueprint("x", __name__), page="Bad Page")
 
 
 class TestEndpoints:
@@ -61,12 +77,15 @@ class TestEndpoints:
 
     def test_switch_roundtrip_and_validation(self, client, tokens) -> None:
         admin = _auth(tokens["admin"])
-        assert client.put("/api/v1/admin/pages/nope", json={"disabled": True}, headers=admin).status_code == 400
+        assert client.put("/api/v1/admin/pages/Not%20Valid", json={"disabled": True}, headers=admin).status_code == 400
         assert client.put("/api/v1/admin/pages/maps", json={"disabled": "yes"}, headers=admin).status_code == 400
 
         res = client.put("/api/v1/admin/pages/maps", json={"disabled": True}, headers=admin)
         assert res.status_code == 200
-        assert {p["id"]: p["disabled"] for p in res.get_json()["pages"]}["maps"] is True
+        assert res.get_json()["disabled"] == ["maps"]
+        assert client.put("/api/v1/admin/pages/a-future-page", json={"disabled": True}, headers=admin).status_code == 200
+        assert client.get("/api/v1/site/pages").get_json()["disabled"] == ["a-future-page", "maps"]
+        client.put("/api/v1/admin/pages/a-future-page", json={"disabled": False}, headers=admin)
         assert client.get("/api/v1/site/pages").get_json()["disabled"] == ["maps"]
 
         client.put("/api/v1/admin/pages/maps", json={"disabled": False}, headers=admin)
@@ -90,7 +109,7 @@ class TestMasterSwitch:
             assert client.get("/api/v1/tier-lists/official").status_code != 403
             stored = client.get("/api/v1/admin/pages", headers=admin).get_json()
             assert stored["enabled"] is False
-            assert {p["id"]: p["disabled"] for p in stored["pages"]}["tier-lists"] is True
+            assert stored["disabled"] == ["tier-lists"]
         finally:
             app.config["PAGE_KILL_SWITCHES_ENABLED"] = True
 

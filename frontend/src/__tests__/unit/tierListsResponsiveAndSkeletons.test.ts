@@ -128,9 +128,8 @@ describe('Tier lists: pages and navigation', () => {
   }
 
   it('the sidebar links to the hub', () => {
-    const nav = read('components/sidebar/mainNavItems.ts');
-    assert.ok(nav.includes("['tier-lists', 'tier-lists'"));
-    assert.ok(nav.includes('href: `/${locale}/${pageId}`'));
+    assert.ok(read('app/[locale]/tier-lists/nav.ts').includes('export const nav'));
+    assert.ok(read('generated/pageNav.generated.ts').includes("'tier-lists': nav_tier_lists"));
     assert.ok(read('components/Sidebar.tsx').includes('buildMainNavItems'));
   });
 

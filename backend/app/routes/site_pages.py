@@ -4,7 +4,6 @@ from flask import Blueprint, jsonify
 
 from app.core.security import get_current_user
 from app.services import site_settings
-from app.utils.site_settings_spec import PAGE_IDS
 
 site_pages_bp = Blueprint("site_pages", __name__, url_prefix="/api/v1/site")
 
@@ -15,7 +14,6 @@ def page_status():
     user = get_current_user()
     response = jsonify({
         "enabled": site_settings.kill_switches_enabled(),
-        "pages": list(PAGE_IDS),
         "disabled": site_settings.disabled_pages(),
         "viewer_is_admin": bool(user is not None and user.role == "admin"),
     })

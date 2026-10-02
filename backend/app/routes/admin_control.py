@@ -10,7 +10,7 @@ from app.utils.pagination import paginate_args
 from app.models import Killer, Perk, Survivor
 from app.models.admin import CHALLENGE_MODES
 from app.services import site_settings
-from app.utils.site_settings_spec import PAGE_IDS
+from app.utils.site_settings_spec import is_page_id
 from app.services.admin_control_service import (
     get_audit_logs,
     get_challenge_mode_settings,
@@ -255,10 +255,9 @@ def update_challenge_mode(mode: str):
 @admin_control_bp.route("/pages", methods=["GET"])
 @admin_required
 def list_page_switches():
-    disabled = set(site_settings.configured_disabled_pages())
     return jsonify({
         "enabled": site_settings.kill_switches_enabled(),
-        "pages": [{"id": p, "disabled": p in disabled} for p in PAGE_IDS],
+        "disabled": site_settings.configured_disabled_pages(),
     }), 200
 
 
@@ -266,8 +265,8 @@ def list_page_switches():
 @admin_required
 def update_page_switch(page: str):
     """Body: ``{"disabled": bool}``. A disabled page is hidden from everyone but admins."""
-    if page not in PAGE_IDS:
-        return jsonify({"error": f"Unknown page '{page}'."}), 400
+    if not is_page_id(page):
+        return jsonify({"error": f"Invalid page id '{page}'."}), 400
     data = request.get_json(silent=True) or {}
     disabled = data.get("disabled")
     if not isinstance(disabled, bool):
@@ -280,10 +279,9 @@ def update_page_switch(page: str):
         target_type="page",
         target_id=page,
     )
-    disabled_now = set(site_settings.configured_disabled_pages())
     return jsonify({
         "enabled": site_settings.kill_switches_enabled(),
-        "pages": [{"id": p, "disabled": p in disabled_now} for p in PAGE_IDS],
+        "disabled": site_settings.configured_disabled_pages(),
     }), 200
 
 

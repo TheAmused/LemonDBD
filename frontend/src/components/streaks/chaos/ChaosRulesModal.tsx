@@ -3,13 +3,12 @@
 import type { Dictionary } from '@/locales/types';
 
 import React from 'react';
-import { BookOpen } from 'lucide-react';
 import { RulesModalShell } from '../RulesModalShell';
 import {
   DIFFICULTY_BADGE,
   RulesConceptCard,
   RulesDifficultyRows,
-  RulesFlameSection,
+  RulesSection,
   RulesHowItWorks,
   RulesModalFooterSections,
   STANDARD_CLARIFICATIONS,
@@ -30,7 +29,6 @@ export const ChaosRulesModal: React.FC<ChaosRulesModalProps> = ({ isOpen, onClos
     <RulesModalShell
       isOpen={isOpen}
       onClose={onClose}
-      icon={BookOpen}
       title={s.rules || 'Rules'}
       dict={dict}
     >
@@ -56,7 +54,7 @@ export const ChaosRulesModal: React.FC<ChaosRulesModalProps> = ({ isOpen, onClos
         ]}
       />
 
-      <RulesFlameSection title={s.difficultyAndCheckpoints || 'Difficulty'}>
+      <RulesSection title={s.difficultyAndCheckpoints || 'Difficulty'}>
         <RulesDifficultyRows
           rows={[
             {
@@ -76,7 +74,7 @@ export const ChaosRulesModal: React.FC<ChaosRulesModalProps> = ({ isOpen, onClos
             },
           ]}
         />
-      </RulesFlameSection>
+      </RulesSection>
 
       <RulesModalFooterSections
         copy={s}

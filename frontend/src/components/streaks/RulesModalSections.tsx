@@ -2,8 +2,7 @@
 import type { Dictionary } from '@/locales/types';
 
 import React from 'react';
-import { AlertTriangle, Clock, Flame, Snowflake } from 'lucide-react';
-import { AdeptBadgeIcon } from '@/components/icons/DbdIcons';
+import { Clock, Snowflake } from 'lucide-react';
 import { RulesModalListSection, RulesModalNotices, type RuleListEntry } from './RulesModalShell';
 
 /** The `dict.streaks` copy bag, loosened so keys can be looked up dynamically. */
@@ -45,12 +44,7 @@ export const RulesConceptCard: React.FC<{ title: React.ReactNode; text: React.Re
   tone,
 }) => (
   <div className="bg-bg-elevated border border-border-color rounded-xl p-4 shadow-sm">
-    <h3
-      className={`text-sm font-bold uppercase tracking-wider mb-2 flex items-center gap-2 ${RULES_TONES[tone].conceptTitle}`}
-    >
-      <AdeptBadgeIcon className="w-4 h-4" aria-hidden="true" />
-      <span>{title}</span>
-    </h3>
+    <h3 className={`type-label mb-2 ${RULES_TONES[tone].conceptTitle}`}>{title}</h3>
     <p className="type-body-fluid text-text-secondary">{text}</p>
   </div>
 );
@@ -75,13 +69,10 @@ export const RulesHowItWorks: React.FC<{
   </div>
 );
 
-/** Flame-headed section (difficulty / tier restrictions) wrapping its rows. */
-export const RulesFlameSection: React.FC<{ title: string; children: React.ReactNode }> = ({ title, children }) => (
+/** Titled section (difficulty / tier restrictions) wrapping its rows. */
+export const RulesSection: React.FC<{ title: string; children: React.ReactNode }> = ({ title, children }) => (
   <div>
-    <h3 className="type-label text-text-primary mb-3 flex items-center gap-2">
-      <Flame className="w-4 h-4 text-accent-red" aria-hidden="true" />
-      <span>{title}</span>
-    </h3>
+    <h3 className="type-label text-text-primary mb-3">{title}</h3>
     {children}
   </div>
 );
@@ -196,7 +187,6 @@ export const RulesModalFooterSections: React.FC<{
   return (
     <>
       <RulesModalListSection
-        icon={AlertTriangle}
         title={copy.exceptions || 'Exceptions'}
         intro={voidIntro || copy.voidMatchNotice || 'These void the match. Replay it.'}
         headerColorClassName={t.sectionHeader}
@@ -204,7 +194,6 @@ export const RulesModalFooterSections: React.FC<{
         items={exceptions}
       />
       <RulesModalListSection
-        icon={AlertTriangle}
         title={copy.clarifications || 'Clarifications'}
         headerColorClassName={t.sectionHeader}
         boxClassName="border-border-color"

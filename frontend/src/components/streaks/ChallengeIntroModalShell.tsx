@@ -5,10 +5,11 @@ import { Button } from '@/components/common/Button';
 import type { Dictionary } from '@/locales/types';
 
 import React from 'react';
-import { BookOpen, ChevronLeft } from 'lucide-react';
+import { ChevronLeft } from 'lucide-react';
 import { Modal } from '@/components/common/Modal';
 import { toneFromIconClass } from '@/components/streaks/RulesModalShell';
 import { AdeptBadgeIcon } from '@/components/icons/DbdIcons';
+import { HEADER_BUTTON_CLASSES } from './ChallengePanel';
 
 export const NEUTRAL_TILE_ACCENT = 'border-border-color bg-bg-elevated hover:bg-bg-elevated/80 text-text-secondary';
 
@@ -108,15 +109,13 @@ export const ChallengeIntroModalShell: React.FC<ChallengeIntroModalShellProps> =
               {intro}
             </p>
             {onOpenRules && (
-              <Button
-                variant="secondary"
-                size="sm"
+              <button
+                type="button"
                 onClick={onOpenRules}
-                className="mt-3"
+                className={`${HEADER_BUTTON_CLASSES} mx-auto mt-3 gap-1.5 px-3 py-2.5 text-xs font-bold`}
               >
-                <BookOpen className="w-3.5 h-3.5" />
                 {rulesLabel}
-              </Button>
+              </button>
             )}
           </div>
         </div>

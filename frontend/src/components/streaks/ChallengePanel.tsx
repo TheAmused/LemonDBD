@@ -119,6 +119,10 @@ interface HeaderButtonProps {
   danger?: boolean;
 }
 
+/** Look shared by the challenge header buttons (and any other button that should match them). */
+export const HEADER_BUTTON_CLASSES =
+  'flex items-center rounded-xl border border-border-color bg-bg-elevated text-text-secondary shadow-sm transition-colors cursor-pointer hover:bg-bg-elevated/70 hover:text-text-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red';
+
 /** Header action button shared by every challenge. */
 export const HeaderButton: React.FC<HeaderButtonProps> = ({ onClick, title, icon, label, danger = false }) => (
   <button
@@ -126,9 +130,9 @@ export const HeaderButton: React.FC<HeaderButtonProps> = ({ onClick, title, icon
     onClick={onClick}
     title={title}
     aria-label={title}
-    className={`flex items-center rounded-xl border border-border-color bg-bg-elevated text-text-secondary shadow-sm transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red ${
-      danger ? 'hover:bg-accent-red/10 hover:text-accent-red' : 'hover:bg-bg-elevated/70 hover:text-text-primary'
-    } ${label ? 'gap-1.5 px-3 py-2.5 text-xs font-bold' : 'justify-center p-2.5'}`}
+    className={`${HEADER_BUTTON_CLASSES} ${danger ? 'hover:bg-accent-red/10 hover:text-accent-red' : ''} ${
+      label ? 'gap-1.5 px-3 py-2.5 text-xs font-bold' : 'justify-center p-2.5'
+    }`}
   >
     {icon}
     {label && <span className="hidden sm:inline">{label}</span>}

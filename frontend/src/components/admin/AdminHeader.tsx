@@ -4,7 +4,7 @@
 import React from 'react';
 import { Button } from '@/components/common/Button';
 import type { Dictionary } from '@/locales/types';
-import { Database, RefreshCw, Download, Upload, LineChart } from 'lucide-react';
+import { Database, RefreshCw, Download, Upload, LineChart, ScanText } from 'lucide-react';
 import { OverseerEyeIcon } from '@/components/icons/DbdIcons';
 
 import { tip } from '@/components/common/Tooltip';
@@ -12,6 +12,7 @@ interface AdminHeaderProps {
   isLoading: boolean;
   onOpenDbMaintenance: (tab?: 'export' | 'import' | 'purge') => void;
   onRefreshData: () => void;
+  onOpenOcrCheck: () => void;
   dict?: Dictionary;
   // Legacy scraper props preserved for backward compatibility
   isSyncing?: boolean;
@@ -23,6 +24,7 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
   isLoading,
   onOpenDbMaintenance,
   onRefreshData,
+  onOpenOcrCheck,
   dict,
 }) => {
   const pgAdminUrl =
@@ -69,6 +71,15 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
           leftIcon={<Upload className="h-3.5 w-3.5 text-text-secondary" />}
         >
           <span className="hidden md:inline">{dict?.admin?.import || 'Import'}</span>
+        </Button>
+
+        <Button
+          size="sm"
+          onClick={onOpenOcrCheck}
+          {...tip(dict?.admin?.ocrCheck || 'OCR check', undefined, 'action')} aria-label={dict?.admin?.ocrCheck || 'OCR check'}
+          leftIcon={<ScanText className="h-3.5 w-3.5 text-text-secondary" />}
+        >
+          <span className="hidden md:inline">{dict?.admin?.ocrCheck || 'OCR check'}</span>
         </Button>
 
         <a

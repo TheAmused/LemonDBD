@@ -31,6 +31,7 @@ export default {
   import: "Importuj",
   pgAdminTitle: "Otwórz panel zarządzania pgAdmin (Baza PostgreSQL)",
   pgAdmin: "pgAdmin (Baza)",
+  ocrCheck: "Test OCR",
   runScraperTitle: "Uruchom scraper danych i zasilanie bazy",
   refreshTitle: "Odśwież metryki",
   refresh: "Odśwież",

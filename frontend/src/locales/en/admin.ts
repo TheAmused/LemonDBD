@@ -31,6 +31,7 @@ export default {
   import: "Import",
   pgAdminTitle: "Open pgAdmin Web Management (PostgreSQL DB Manager)",
   pgAdmin: "pgAdmin (DB)",
+  ocrCheck: "OCR check",
   runScraperTitle: "Execute Data Scraper and Database Seed",
   refreshTitle: "Refresh metrics",
   refresh: "Refresh",

@@ -109,8 +109,8 @@ export const ChallengeIntroModalShell: React.FC<ChallengeIntroModalShellProps> =
             </p>
             {onOpenRules && (
               <Button
-                variant="ghost"
-                size="xs"
+                variant="secondary"
+                size="sm"
                 onClick={onOpenRules}
                 className="mt-3"
               >

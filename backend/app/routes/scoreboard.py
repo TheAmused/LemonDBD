@@ -39,7 +39,7 @@ def _character_names() -> list[str]:
 @scoreboard_bp.route("/status", methods=["GET"])
 def status():
     """Public: whether the OCR engine is installed on this server."""
-    return _no_store({"available": scoreboard_ocr.engine_available(), "max_bytes": MAX_UPLOAD_BYTES}, 200)
+    return _no_store({"available": scoreboard_ocr.engine_available(), "max_bytes": MAX_UPLOAD_BYTES, "note": scoreboard_ocr.ACCEPTED_INPUT_NOTE}, 200)
 
 
 @scoreboard_bp.route("/analyze", methods=["POST"])

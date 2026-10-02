@@ -1,1 +1,2 @@
+# Installed separately: see the Dockerfile (--no-deps --ignore-requires-python).
 rapidocr-onnxruntime==1.4.4

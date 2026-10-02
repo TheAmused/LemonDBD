@@ -47,7 +47,7 @@ export const UserBugReportsDrawer: React.FC<UserBugReportsDrawerProps> = ({
   return (
     <div className="rounded-3xl border border-border-color bg-bg-surface backdrop-blur-xl shadow-md overflow-hidden transition-colors flex flex-col">
       {/* Connected Header with Collapsible Drawer Toggle */}
-      <div className="relative w-full grid grid-cols-[1fr_auto_1fr] items-center gap-2 py-2.5 px-5 sm:px-7 2xl:px-9 group select-none overflow-hidden transition-colors text-left">
+      <div className="relative w-full grid grid-cols-[1fr_auto_1fr] items-center gap-2 py-4 px-5 sm:py-4.5 sm:px-7 2xl:py-5.5 2xl:px-9 group select-none overflow-hidden transition-colors text-left">
         {/* Atmospheric DBD Banner Backdrop */}
         <div
           className="absolute inset-0 bg-cover bg-center opacity-20 dark:opacity-30 mix-blend-luminosity filter pointer-events-none group-hover:scale-105 transition-transform duration-700 ease-out"

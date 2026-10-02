@@ -21,6 +21,7 @@ describe('Admin Theme Support', () => {
         onOpenDbMaintenance: () => {},
         onTriggerSync: () => {},
         onRefreshData: () => {},
+        onOpenOcrCheck: () => {},
       })
     );
     assert.ok(

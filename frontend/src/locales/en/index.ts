@@ -23,6 +23,7 @@ import tierLists from './tierLists';
 import minigames from './minigames';
 import privacy from './privacy';
 import errorPages from './errorPages';
+import scoreboardCheck from './scoreboardCheck';
 
 const en = {
   app,
@@ -49,6 +50,7 @@ const en = {
   minigames,
   privacy,
   errorPages,
+  scoreboardCheck,
 };
 
 export default en;

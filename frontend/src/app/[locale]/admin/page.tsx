@@ -52,6 +52,10 @@ const AdminCreateUserModal = dynamic(
   () => import('@/components/admin/AdminCreateUserModal').then((m) => m.AdminCreateUserModal),
   { ssr: false }
 );
+const ScoreboardCheckModal = dynamic(
+  () => import('@/components/common/ScoreboardCheckModal').then((m) => m.ScoreboardCheckModal),
+  { ssr: false }
+);
 const ScraperConfigModal = dynamic(
   () => import('@/components/ScraperConfigModal').then((m) => m.ScraperConfigModal),
   { ssr: false }
@@ -102,6 +106,7 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
 
   // Modals & Maintenance State
   const [isConfigOpen, setIsConfigOpen] = useState<boolean>(false);
+  const [isOcrCheckOpen, setIsOcrCheckOpen] = useState<boolean>(false);
   const [modalTab, setModalTab] = useState<'export' | 'import' | 'purge'>('export');
   const [isCreateUserOpen, setIsCreateUserOpen] = useState<boolean>(false);
   const [userPendingDeletion, setUserPendingDeletion] = useState<UserRow | null>(null);
@@ -432,6 +437,7 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
               if (tab) setModalTab(tab);
               setIsConfigOpen(true);
             }}
+            onOpenOcrCheck={() => setIsOcrCheckOpen(true)}
             onRefreshData={() => (activeTab === 'users' ? fetchAdminData() : fetchBugReports())}
             dict={dict}
           />
@@ -572,6 +578,8 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
         onSubmit={handleCreateUser}
         dict={dict}
       />
+
+      <ScoreboardCheckModal isOpen={isOcrCheckOpen} onClose={() => setIsOcrCheckOpen(false)} />
 
       <ScraperConfigModal
         key={modalTab}

@@ -31,6 +31,7 @@ export default {
   import: "インポート",
   pgAdminTitle: "pgAdmin Web管理画面を開く（PostgreSQL DBマネージャー）",
   pgAdmin: "pgAdmin (DB)",
+  ocrCheck: "OCRチェック",
   runScraperTitle: "データスクレイパーとDBシードの実行",
   refreshTitle: "メトリクスを更新",
   refresh: "更新",

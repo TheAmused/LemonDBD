@@ -10,10 +10,7 @@ import { Modal, type ModalTone } from '@/components/common/Modal';
 export interface RulesModalShellProps {
   isOpen: boolean;
   onClose: () => void;
-  icon: LucideIcon;
   title: string;
-  /** Tailwind classes for the header icon chip, e.g. "bg-accent-red/10 border-accent-red/20 text-accent-red". */
-  iconClassName?: string;
   children: React.ReactNode;
   dict?: Dictionary;
 }
@@ -69,18 +66,14 @@ export interface RuleListEntry {
  * every streak mode's Rules modal, so the same list markup isn't re-declared
  * per file. */
 export const RulesModalListSection: React.FC<{
-  icon: LucideIcon;
   title: string;
   intro?: string;
   items: RuleListEntry[];
   headerColorClassName: string;
   boxClassName: string;
-}> = ({ icon: Icon, title, intro, items, headerColorClassName, boxClassName }) => (
+}> = ({ title, intro, items, headerColorClassName, boxClassName }) => (
   <div className={`bg-bg-elevated border rounded-xl p-4 space-y-3 shadow-sm ${boxClassName}`}>
-    <h3 className={`text-sm font-bold uppercase tracking-wider flex items-center gap-2 ${headerColorClassName}`}>
-      <Icon className="w-4 h-4" aria-hidden="true" />
-      <span>{title}</span>
-    </h3>
+    <h3 className={`type-label ${headerColorClassName}`}>{title}</h3>
     {intro && <p className="text-xs text-text-secondary">{intro}</p>}
     <ul className="space-y-2 type-body-fluid text-text-secondary">
       {items.map((item, i) => (
@@ -96,9 +89,7 @@ export const RulesModalListSection: React.FC<{
 export const RulesModalShell: React.FC<RulesModalShellProps> = ({
   isOpen,
   onClose,
-  icon: Icon,
   title,
-  iconClassName,
   children,
   dict,
 }) => {
@@ -109,8 +100,6 @@ export const RulesModalShell: React.FC<RulesModalShellProps> = ({
       variant="dialog"
       size="3xl"
       layer="top"
-      tone={toneFromIconClass(iconClassName)}
-      icon={<Icon className="h-5 w-5" aria-hidden="true" />}
       title={<span className="capitalize">{title}</span>}
       closeButtonAriaLabel={dict?.modal?.close || 'Close'}
       bodyClassName="space-y-6 p-5 text-sm text-text-secondary sm:p-6"

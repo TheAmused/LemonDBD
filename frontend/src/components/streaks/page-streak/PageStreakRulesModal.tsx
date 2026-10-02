@@ -3,7 +3,6 @@
 import type { Dictionary } from '@/locales/types';
 
 import React from 'react';
-import { BookOpen } from 'lucide-react';
 import { RulesModalShell } from '../RulesModalShell';
 import {
   RulesConceptCard,
@@ -27,7 +26,6 @@ export const PageStreakRulesModal: React.FC<PageStreakRulesModalProps> = ({ isOp
     <RulesModalShell
       isOpen={isOpen}
       onClose={onClose}
-      icon={BookOpen}
       title={s.rules || 'Rules'}
       dict={dict}
     >

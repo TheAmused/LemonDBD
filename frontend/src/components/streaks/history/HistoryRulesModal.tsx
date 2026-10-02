@@ -3,13 +3,12 @@
 import type { Dictionary } from '@/locales/types';
 
 import React from 'react';
-import { BookOpen } from 'lucide-react';
 import { RulesModalShell } from '../RulesModalShell';
 import {
   DIFFICULTY_BADGE,
   RulesConceptCard,
   RulesDifficultyRows,
-  RulesFlameSection,
+  RulesSection,
   RulesHowItWorks,
   RulesModalFooterSections,
   STANDARD_CLARIFICATIONS_WITH_ADDONS,
@@ -30,7 +29,6 @@ export const HistoryRulesModal: React.FC<HistoryRulesModalProps> = ({ isOpen, on
     <RulesModalShell
       isOpen={isOpen}
       onClose={onClose}
-      icon={BookOpen}
       title={s.rules || 'Rules'}
       dict={dict}
     >
@@ -56,7 +54,7 @@ export const HistoryRulesModal: React.FC<HistoryRulesModalProps> = ({ isOpen, on
         hint={s.historyConceptHint || 'For the full experience try to play killers in order from the oldest to newest. 🙂'}
       />
 
-      <RulesFlameSection title={s.difficultyAndCheckpoints || 'Difficulty'}>
+      <RulesSection title={s.difficultyAndCheckpoints || 'Difficulty'}>
         <RulesDifficultyRows
           alignTextRight
           rows={[
@@ -72,7 +70,7 @@ export const HistoryRulesModal: React.FC<HistoryRulesModalProps> = ({ isOpen, on
             },
           ]}
         />
-      </RulesFlameSection>
+      </RulesSection>
 
       <RulesModalFooterSections
         copy={s}

@@ -2,7 +2,7 @@
 // frontend/src/components/streaks/gauntlet/GauntletRulesModal.tsx
 
 import React from 'react';
-import { BookOpen, Lock } from 'lucide-react';
+import { Lock } from 'lucide-react';
 import type { Dictionary } from '@/locales/types';
 import type { GauntletGameMode, Role } from '@/types/gauntletStreak';
 import { RulesModalShell } from '../RulesModalShell';
@@ -12,7 +12,7 @@ import {
   RULE_GAME_CANCELLED,
   RULE_HACKERS,
   RulesConceptCard,
-  RulesFlameSection,
+  RulesSection,
   RulesHowItWorks,
   RulesModalFooterSections,
   STANDARD_CLARIFICATIONS_WITH_ADDONS,
@@ -236,7 +236,6 @@ export const GauntletRulesModal: React.FC<GauntletRulesModalProps> = ({
     <RulesModalShell
       isOpen={isOpen}
       onClose={onClose}
-      icon={BookOpen}
       title={modalTitle}
       dict={dict}
     >
@@ -252,7 +251,7 @@ export const GauntletRulesModal: React.FC<GauntletRulesModalProps> = ({
 
       <RulesHowItWorks tone="red" title={rawStreaks.howItWorks || 'How it works'} items={howItWorks} />
 
-      <RulesFlameSection title={rawStreaks.progressiveTierRestrictions || 'Progressive Tier Restrictions'}>
+      <RulesSection title={rawStreaks.progressiveTierRestrictions || 'Progressive Tier Restrictions'}>
         <div className="grid grid-cols-1 gap-2.5" role="list">
           {tiers.map((tier) => {
             const tierName = rawStreaks[tier.nameKey] || tier.defaultName;
@@ -294,7 +293,7 @@ export const GauntletRulesModal: React.FC<GauntletRulesModalProps> = ({
             );
           })}
         </div>
-      </RulesFlameSection>
+      </RulesSection>
 
       <RulesModalFooterSections
         copy={rawStreaks}

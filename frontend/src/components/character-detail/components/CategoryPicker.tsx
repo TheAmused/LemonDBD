@@ -80,7 +80,7 @@ export const CategoryPicker: React.FC<CategoryPickerProps> = ({
         <span className="flex items-center gap-2 min-w-0">
           <SelectedIcon className={`h-4 w-4 shrink-0 ${accentClasses.text}`} aria-hidden="true" />
           <span className="truncate">{selected.label}</span>
-          {countLabel && <span className="text-text-muted font-mono shrink-0">{countLabel}</span>}
+          {countLabel && <span className="text-text-muted shrink-0">{countLabel}</span>}
         </span>
         <ChevronDown className={`h-4 w-4 shrink-0 transition-transform duration-200 ${open ? 'rotate-180' : ''}`} aria-hidden="true" />
       </button>

@@ -577,7 +577,7 @@ export function ScraperConfigModal({
                     <span className="text-[11px] font-black uppercase tracking-wider text-text-primary">
                       {groupLabel}
                     </span>
-                    <span className="rounded-md bg-bg-surface px-1.5 py-0.5 text-[10px] font-mono font-bold text-text-secondary border border-border-color">
+                    <span className="rounded-md bg-bg-surface px-1.5 py-0.5 text-[10px] font-bold text-text-secondary border border-border-color">
                       {selectedInGroup.length}/{groupTargets.length}
                     </span>
                   </div>
@@ -731,7 +731,7 @@ export function ScraperConfigModal({
             <div>
               <p className="text-xs font-bold text-text-secondary">
                 {dict?.admin?.clickOrDragBackupPrefix || 'Click or drag & drop a'}{' '}
-                <span className="text-accent-green font-mono font-black">.json</span>{' '}
+                <span className="text-accent-green font-black">.json</span>{' '}
                 {dict?.admin?.clickOrDragBackupSuffix || 'backup file'}
               </p>
             </div>
@@ -862,7 +862,7 @@ export function ScraperConfigModal({
                     <span className="text-[11px] font-black uppercase tracking-wider text-text-primary">
                       {groupLabel}
                     </span>
-                    <span className="rounded-md bg-bg-surface px-1.5 py-0.5 text-[10px] font-mono font-bold text-text-secondary border border-border-color">
+                    <span className="rounded-md bg-bg-surface px-1.5 py-0.5 text-[10px] font-bold text-text-secondary border border-border-color">
                       {selectedInGroup.length}/{groupTargets.length}
                     </span>
                   </div>

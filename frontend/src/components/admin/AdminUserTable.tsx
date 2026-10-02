@@ -60,7 +60,7 @@ export const AdminUserTable: React.FC<AdminUserTableProps> = ({
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-border-color">
         <div className="flex items-center gap-3">
           <Users className="h-5 w-5 text-accent-amber" />
-          <h2 className="text-base font-black uppercase tracking-wider text-text-primary font-mono">
+          <h2 className="text-base font-black uppercase tracking-wider text-text-primary">
             {dict?.admin?.title || 'User Accounts'} ({totalUsers})
           </h2>
         </div>
@@ -99,7 +99,7 @@ export const AdminUserTable: React.FC<AdminUserTableProps> = ({
       {/* Mobile view */}
       <div className="sm:hidden space-y-3 w-full">
         {users.length === 0 ? (
-          <div className="rounded-2xl border border-border-color bg-bg-primary py-8 text-center text-xs text-text-muted font-mono">
+          <div className="rounded-2xl border border-border-color bg-bg-primary py-8 text-center text-xs text-text-muted">
             {loading ? dict?.admin?.loading || 'Loading...' : dict?.admin?.noUsers || 'No users found.'}
           </div>
         ) : (
@@ -117,7 +117,7 @@ export const AdminUserTable: React.FC<AdminUserTableProps> = ({
                         </span>
                       )}
                     </div>
-                    <span className="block text-[11px] text-text-muted font-mono truncate">{u.email}</span>
+                    <span className="block text-[11px] text-text-muted truncate">{u.email}</span>
                   </div>
                 </div>
                 <span
@@ -132,7 +132,7 @@ export const AdminUserTable: React.FC<AdminUserTableProps> = ({
                 </span>
               </div>
 
-              <div className="flex items-center justify-between text-[11px] text-text-secondary font-mono">
+              <div className="flex items-center justify-between text-[11px] text-text-secondary">
                 <span>#{u.id}</span>
                 <span>{dict?.admin?.thOwnedChars || 'Owned Chars'}: {u.owned_characters_count ?? 0}</span>
                 <span>{dict?.admin?.thUnlockedPerks || 'Unlocked Perks'}: {u.unlocked_perks_count ?? 0}</span>
@@ -206,14 +206,14 @@ export const AdminUserTable: React.FC<AdminUserTableProps> = ({
           <tbody className="divide-y divide-border-subtle">
             {users.length === 0 ? (
               <tr>
-                <td colSpan={8} className="py-8 text-center text-text-muted font-mono">
+                <td colSpan={8} className="py-8 text-center text-text-muted">
                   {loading ? dict?.admin?.loading || 'Loading...' : dict?.admin?.noUsers || 'No users found.'}
                 </td>
               </tr>
             ) : (
               users.map((u) => (
                 <tr key={u.id} className="hover:bg-bg-elevated/60 text-text-primary transition-colors">
-                  <td className="px-4 py-3 font-mono text-text-muted">#{u.id}</td>
+                  <td className="px-4 py-3 text-text-muted">#{u.id}</td>
                   <td className="px-4 py-3 font-bold text-text-primary flex items-center gap-2">
                     <UserAvatar user={u} size="xs" />
                     <span className="truncate max-w-[120px]">{u.username}</span>
@@ -223,7 +223,7 @@ export const AdminUserTable: React.FC<AdminUserTableProps> = ({
                       </span>
                     )}
                   </td>
-                  <td className="px-4 py-3 text-text-secondary font-mono">{u.email}</td>
+                  <td className="px-4 py-3 text-text-secondary">{u.email}</td>
                   <td className="px-4 py-3">
                     <span
                       className={`inline-flex items-center gap-1 rounded-lg px-2 py-0.5 text-[10px] font-black uppercase tracking-wider border ${
@@ -236,10 +236,10 @@ export const AdminUserTable: React.FC<AdminUserTableProps> = ({
                       {u.role}
                     </span>
                   </td>
-                  <td className="px-4 py-3 font-mono text-text-primary">
+                  <td className="px-4 py-3 text-text-primary">
                     {u.owned_characters_count ?? 0}
                   </td>
-                  <td className="px-4 py-3 font-mono text-text-primary">
+                  <td className="px-4 py-3 text-text-primary">
                     {u.unlocked_perks_count ?? 0}
                   </td>
                   <td className="px-4 py-3">

@@ -25,7 +25,7 @@ export default function SmashOrPassPage() {
       locale={locale}
       dict={dict || ({} as Dictionary)}
       activeCategory="smash-or-pass"
-      mainClassName="overflow-y-auto"
+      mainClassName="overflow-y-auto theme-smash"
     >
       <React.Suspense fallback={<SmashHubSkeleton />}>
         {dict ? (

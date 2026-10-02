@@ -53,7 +53,7 @@ export const STYLE_TOKENS: Readonly<Record<string, string>> = {
   muted: 'text-text-muted',
   name: 'italic font-bold text-text-primary',
   // Legacy wiki spans that may still appear in scraped text.
-  FlavorText: 'italic font-serif text-text-secondary',
+  FlavorText: 'italic text-text-secondary',
   ReminderText: 'text-text-muted',
   Highlight: 'font-bold text-accent-amber',
 };
@@ -81,8 +81,8 @@ export const RICH_VARIANTS: Readonly<Record<'ui' | 'game', RichVariant>> = {
   ui: {
     strong: 'font-bold text-text-primary',
     em: 'italic',
-    kbd: 'px-1 rounded border border-border-color bg-bg-elevated font-mono text-[0.85em]',
-    code: 'px-1 rounded bg-bg-elevated font-mono text-[0.9em]',
+    kbd: 'px-1 rounded border border-border-color bg-bg-elevated text-[0.85em]',
+    code: 'px-1 rounded bg-bg-elevated text-[0.9em]',
     mark: 'bg-accent-amber/25 rounded px-0.5',
     link: 'text-accent-red underline underline-offset-2 hover:opacity-80',
     p: () => NONE,
@@ -91,13 +91,13 @@ export const RICH_VARIANTS: Readonly<Record<'ui' | 'game', RichVariant>> = {
     quote: () => 'border-l-2 border-border-color pl-3 italic text-text-secondary',
     notice: 'rounded-xl border border-accent-amber/30 bg-accent-amber/10 p-3 text-accent-amber',
     heading: 'mt-3 first:mt-0 font-bold text-text-primary',
-    noticeLabel: 'mr-2 rounded-lg bg-accent-amber/25 px-2 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wider',
+    noticeLabel: 'mr-2 rounded-lg bg-accent-amber/25 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider',
   },
   game: {
     strong: 'font-bold text-accent-amber drop-shadow-xs',
     em: 'italic text-text-secondary',
-    kbd: 'inline-flex items-center px-1.5 py-0.5 mx-0.5 rounded-md text-[10px] sm:text-[11px] font-mono font-bold bg-bg-elevated border border-accent-amber/50 text-accent-amber shadow-xs align-baseline whitespace-nowrap',
-    code: 'inline-flex items-center px-1.5 py-0.5 mx-0.5 rounded-md text-[10px] sm:text-[11px] font-mono font-bold bg-bg-elevated border border-accent-amber/50 text-accent-amber shadow-xs align-baseline whitespace-nowrap',
+    kbd: 'inline-flex items-center px-1.5 py-0.5 mx-0.5 rounded-md text-[10px] sm:text-[11px] font-bold bg-bg-elevated border border-accent-amber/50 text-accent-amber shadow-xs align-baseline whitespace-nowrap',
+    code: 'inline-flex items-center px-1.5 py-0.5 mx-0.5 rounded-md text-[10px] sm:text-[11px] font-bold bg-bg-elevated border border-accent-amber/50 text-accent-amber shadow-xs align-baseline whitespace-nowrap',
     mark: 'bg-accent-amber/25 rounded px-0.5',
     link: 'text-accent-amber underline underline-offset-2 hover:opacity-80',
     p: (c) => cn('leading-relaxed text-text-secondary', c ? 'mb-1 text-xs' : 'mb-2.5 text-xs sm:text-sm'),
@@ -105,12 +105,12 @@ export const RICH_VARIANTS: Readonly<Record<'ui' | 'game', RichVariant>> = {
     li: (c) => cn('leading-relaxed text-text-secondary marker:text-accent-amber', c ? 'text-xs' : 'text-xs sm:text-sm'),
     quote: (c) =>
       cn(
-        'rounded-2xl border-l-3 border-accent-amber/90 bg-gradient-to-r from-accent-amber/10 via-bg-primary/80 to-transparent px-3.5 py-2.5 italic text-left text-text-secondary font-serif shadow-inner',
+        'rounded-2xl border-l-3 border-accent-amber/90 bg-gradient-to-r from-accent-amber/10 via-bg-primary/80 to-transparent px-3.5 py-2.5 italic text-left text-text-secondary shadow-inner',
         c ? 'my-1.5 text-[11px]' : 'my-3 text-xs sm:text-sm'
       ),
     notice: 'p-3 my-2 text-left text-left rounded-2xl bg-accent-amber/10 border border-accent-amber/30 text-xs font-semibold text-accent-amber flex items-start gap-2.5 shadow-sm',
-    heading: 'mt-4 first:mt-0 mb-1 text-left font-mono text-[11px] font-black uppercase tracking-[0.18em] text-accent-amber',
-    noticeLabel: 'shrink-0 font-mono font-bold uppercase tracking-wider text-[10px] bg-accent-amber/25 px-2 py-0.5 rounded-lg text-accent-amber',
+    heading: 'mt-4 first:mt-0 mb-1 text-left text-[11px] font-black uppercase tracking-[0.18em] text-accent-amber',
+    noticeLabel: 'shrink-0 font-bold uppercase tracking-wider text-[10px] bg-accent-amber/25 px-2 py-0.5 rounded-lg text-accent-amber',
   },
 };
 

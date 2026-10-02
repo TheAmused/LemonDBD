@@ -45,12 +45,12 @@ export const KillerEquipmentSection: React.FC<KillerEquipmentSectionProps> = ({
             <Flame className="h-5 w-5" />
           </div>
           <div>
-            <h3 className="text-lg font-black tracking-tight text-text-primary font-mono flex items-center gap-2">
+            <h3 className="text-lg font-black tracking-tight text-text-primary flex items-center gap-2">
               {t.equipmentTitleKiller || 'Killer Power Add-ons & Equipment'}
             </h3>
           </div>
         </div>
-        <div className="py-8 text-center text-xs text-text-muted font-mono">
+        <div className="py-8 text-center text-xs text-text-muted">
           {t.noEquipment || 'No unique add-ons found for this character in database.'}
         </div>
       </section>
@@ -69,7 +69,7 @@ export const KillerEquipmentSection: React.FC<KillerEquipmentSectionProps> = ({
               <Flame className="h-5 w-5" />
             </div>
             <div>
-              <h3 className="text-lg font-black tracking-tight text-text-primary font-mono flex items-center gap-2">
+              <h3 className="text-lg font-black tracking-tight text-text-primary flex items-center gap-2">
                 {t.equipmentTitleKiller || 'Killer Power Add-ons & Equipment'}
                 <span className="text-xs px-2 py-0.5 rounded-full bg-accent-red/10 text-accent-red border border-accent-red/30">
                   {addons.length}

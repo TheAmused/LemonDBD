@@ -63,7 +63,7 @@ function BlockCard({ id, title, accent, children }: BlockCardProps) {
           aria-expanded={isExpanded}
           className="relative flex w-full shrink-0 cursor-pointer select-none items-center justify-center px-12 py-4 text-center sm:px-14"
         >
-          <h2 className="text-center font-mono text-xs font-bold uppercase tracking-widest text-accent-red sm:text-sm">
+          <h2 className="text-center text-xs font-bold uppercase tracking-widest text-accent-red sm:text-sm">
             {title}
           </h2>
           <ChevronDown
@@ -178,10 +178,10 @@ export default function PrivacyPolicyPage() {
             <ArrowLeft className="h-4 w-4" />
             {privacy?.backToAbout}
           </Link>
-          <h1 className="col-span-2 row-start-2 text-center font-mono text-2xl font-black tracking-tight text-text-primary sm:col-span-1 sm:col-start-2 sm:row-start-1 sm:text-3xl md:text-4xl">
+          <h1 className="col-span-2 row-start-2 text-center text-2xl font-black tracking-tight text-text-primary sm:col-span-1 sm:col-start-2 sm:row-start-1 sm:text-3xl md:text-4xl">
             {privacy?.heading}
           </h1>
-          <p className="justify-self-end text-right font-mono text-[11px] uppercase tracking-widest text-text-muted sm:col-start-3 sm:row-start-1 sm:text-xs">
+          <p className="justify-self-end text-right text-[11px] uppercase tracking-widest text-text-muted sm:col-start-3 sm:row-start-1 sm:text-xs">
             {privacy?.lastUpdatedLabel}: {privacy?.lastUpdated}
           </p>
         </header>

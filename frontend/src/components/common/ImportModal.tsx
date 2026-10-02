@@ -182,7 +182,7 @@ export function ImportModal({
       title={labels.title}
       subtitle={labels.subtitle}
       icon={<FileJson className="h-5 w-5" aria-hidden="true" />}
-      bodyClassName="p-4 sm:p-6 font-sans"
+      bodyClassName="p-4 sm:p-6"
       footer={
         <div className={footerClassName ?? 'flex w-full flex-wrap items-center justify-end gap-2'}>
           <Button variant="secondary" onClick={onClose} className={cancelClassName ?? buttonClassName}>

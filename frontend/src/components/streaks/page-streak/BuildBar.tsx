@@ -40,7 +40,7 @@ export const BuildBar: React.FC<BuildBarProps> = ({
           className={`flex h-16 min-w-[145px] flex-1 items-center gap-2.5 rounded-lg px-3 text-xs transition-colors ${
             name
               ? 'border border-accent-red/50 bg-accent-red/10 font-semibold text-text-primary'
-              : 'border border-dashed border-border-color font-mono text-text-muted'
+              : 'border border-dashed border-border-color text-text-muted'
           }`}
         >
           {name && (

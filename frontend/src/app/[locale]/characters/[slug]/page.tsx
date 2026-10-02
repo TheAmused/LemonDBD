@@ -100,7 +100,7 @@ export default function CharacterDetailPage() {
               <UserX className="h-8 w-8" />
             </div>
             <div className="space-y-1 max-w-md">
-              <h2 className="text-xl sm:text-2xl font-black text-text-primary font-mono">
+              <h2 className="text-xl sm:text-2xl font-black text-text-primary">
                 {t.notFoundTitle || 'Character Not Found'}
               </h2>
               <p className="text-xs sm:text-sm text-text-muted leading-relaxed">

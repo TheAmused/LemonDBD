@@ -70,7 +70,7 @@ export function TierItemEditModal({ item, isOpen, onClose, onSave, dict }: TierI
       size="md"
       title={c.editItem}
       icon={<Pencil className="h-5 w-5" aria-hidden="true" />}
-      bodyClassName="p-4 sm:p-6 font-sans"
+      bodyClassName="p-4 sm:p-6"
       footer={
         <div className="flex w-full items-center justify-center gap-3 pt-1">
           <Button variant="secondary" onClick={onClose} className={cn(TOUCH_BTN, 'min-h-[42px] px-5')}>
@@ -107,16 +107,16 @@ export function TierItemEditModal({ item, isOpen, onClose, onSave, dict }: TierI
                 className="h-full w-full object-cover"
               />
             ) : (
-              <span className="text-2xl sm:text-3xl font-black font-mono text-text-muted select-none">
+              <span className="text-2xl sm:text-3xl font-black text-text-muted select-none">
                 {(trimmedName || item.name || '?').slice(0, 2).toUpperCase()}
               </span>
             )}
           </div>
 
-          <h3 className="mt-3 max-w-xs truncate text-base sm:text-lg font-black font-mono text-text-primary">
+          <h3 className="mt-3 max-w-xs truncate text-base sm:text-lg font-black text-text-primary">
             {trimmedName || item.name || '?'}
           </h3>
-          <span className="text-[10px] font-bold uppercase tracking-widest text-text-muted font-mono">
+          <span className="text-[10px] font-bold uppercase tracking-widest text-text-muted">
             {c.previewHeading}
           </span>
 

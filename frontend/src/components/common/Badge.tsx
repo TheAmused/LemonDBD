@@ -46,7 +46,7 @@ export const Badge: React.FC<BadgeProps> = ({
   <span
     className={cn(
       'inline-flex max-w-full shrink-0 items-center gap-1 border font-black tracking-wider whitespace-nowrap',
-      !plain && 'font-mono uppercase',
+      !plain && ' uppercase',
       square ? 'rounded-md' : 'rounded-full',
       BADGE_TONES[tone],
       BADGE_SIZES[size],

@@ -142,7 +142,7 @@ export const KillerDetailView: React.FC<CharacterViewBaseProps> = ({
               )}
 
               <div>
-                <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black text-text-primary font-mono tracking-tight">
+                <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black text-text-primary tracking-tight">
                   {character.name}
                 </h1>
                 {character.real_name && character.real_name !== character.name && (

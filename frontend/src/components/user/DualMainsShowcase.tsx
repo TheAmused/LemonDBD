@@ -66,10 +66,10 @@ export const DualMainsShowcase: React.FC<DualMainsShowcaseProps> = ({
 
         <div className="relative z-10 w-8 hidden sm:block" aria-hidden="true" />
         <div className="relative z-10 flex-1 text-center">
-          <h2 className="text-xs sm:text-sm 2xl:text-base font-black uppercase tracking-widest text-text-primary font-mono group-hover:text-accent-red transition-colors">
+          <h2 className="text-xs sm:text-sm 2xl:text-base font-black uppercase tracking-widest text-text-primary group-hover:text-accent-red transition-colors">
             {dict?.user?.dualMainsTitle || 'Signature Loadouts'}
           </h2>
-          <p className="text-[11px] sm:text-xs 2xl:text-sm text-text-secondary mt-0.5 font-mono">
+          <p className="text-[11px] sm:text-xs 2xl:text-sm text-text-secondary mt-0.5">
             {showcase.survivorMain.characterName} • {showcase.killerMain.characterName}
           </p>
         </div>

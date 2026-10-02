@@ -87,8 +87,8 @@ describe('About Page: Layout, Typography & LocalStorage', () => {
       'Card headings must be bold'
     );
     assert.ok(
-      source.includes('font-mono'),
-      'Card headings must use font-mono consistent with application headers'
+      source.includes(''),
+      'Card headings must use consistent with application headers'
     );
   });
 

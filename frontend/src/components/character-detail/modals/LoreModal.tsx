@@ -32,7 +32,7 @@ export const LoreModal: React.FC<LoreModalProps> = ({
       subtitle={`${t.entityArchives || "The Entity's Archives"} ${t.bulletSeparator || '•'} ${t.codex || 'Codex'} #${character.id || 1}`}
       closeButtonAriaLabel={t.close || 'Close'}
       padded
-      bodyClassName="space-y-4 text-sm leading-relaxed font-sans text-text-secondary"
+      bodyClassName="space-y-4 text-sm leading-relaxed text-text-secondary"
     >
       <p className="italic text-text-secondary border-l-2 border-border-color pl-4 py-1">
         {t.quoteOpen || '"'}{character.name} {t.emDashSeparator || '—'} {t.enteredTheFog || 'Entered The Fog.'}{t.quoteClose || '"'}

@@ -547,7 +547,7 @@ function Section({ title, defaultOpen = true, children }: { title: string; defau
       >
         <div className="w-8 shrink-0 pointer-events-none" aria-hidden="true" />
         <div className="flex-1 text-center min-w-0 px-2">
-          <h2 className="text-xs sm:text-sm 2xl:text-base font-black uppercase tracking-widest text-text-primary group-hover:text-accent-red transition-colors font-mono">
+          <h2 className="text-xs sm:text-sm 2xl:text-base font-black uppercase tracking-widest text-text-primary group-hover:text-accent-red transition-colors">
             {title}
           </h2>
         </div>

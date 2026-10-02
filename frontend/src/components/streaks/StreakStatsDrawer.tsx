@@ -173,7 +173,7 @@ export function StreakStatsDrawer<TLog extends StreakMatchLogBase>({
                       ) : (
                         renderLabel(log)
                       )}
-                      <div className="text-[11px] text-text-secondary mt-1 font-mono">
+                      <div className="text-[11px] text-text-secondary mt-1">
                         {renderMeta(log)}
                       </div>
                     </div>
@@ -190,7 +190,7 @@ export function StreakStatsDrawer<TLog extends StreakMatchLogBase>({
                       {log.result}
                     </div>
                     {log.timestamp && (
-                      <div className="text-[11px] text-text-secondary mt-1 font-mono">
+                      <div className="text-[11px] text-text-secondary mt-1">
                         {new Date(log.timestamp).toLocaleDateString()}
                       </div>
                     )}

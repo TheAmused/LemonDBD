@@ -76,7 +76,7 @@ export const HistoryHeader: React.FC<HistoryHeaderProps> = ({
               <span className="text-[10px] uppercase tracking-wider text-text-muted font-bold leading-none">
                 {dict?.streaks?.killersBeaten || 'Killers beaten'}
               </span>
-              <span className="text-lg font-black text-text-primary leading-none mt-0.5 font-mono">
+              <span className="text-lg font-black text-text-primary leading-none mt-0.5">
                 {totalKillersBeaten}
               </span>
             </div>
@@ -88,7 +88,7 @@ export const HistoryHeader: React.FC<HistoryHeaderProps> = ({
               <span className="text-[10px] uppercase tracking-wider text-text-muted font-bold leading-none">
                 {dict?.streaks?.best || 'Best'}
               </span>
-              <span className="text-lg font-black text-text-primary leading-none mt-0.5 font-mono">
+              <span className="text-lg font-black text-text-primary leading-none mt-0.5">
                 {bestKillersBeaten}
               </span>
             </div>
@@ -100,7 +100,7 @@ export const HistoryHeader: React.FC<HistoryHeaderProps> = ({
               <span className="text-[10px] uppercase tracking-wider text-text-muted font-bold leading-none">
                 {dict?.streaks?.checkpointRow || 'Checkpoint row'}
               </span>
-              <span className="text-lg font-black text-text-primary leading-none mt-0.5 font-mono">
+              <span className="text-lg font-black text-text-primary leading-none mt-0.5">
                 {checkpointRowIndex + 1}
               </span>
             </div>

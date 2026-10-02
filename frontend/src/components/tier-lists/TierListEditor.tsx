@@ -192,7 +192,7 @@ export function TierListEditor(props: TierListEditorProps) {
           <ChevronLeft className="h-4 w-4" aria-hidden="true" />
           {t.backShort}
         </Link>
-        <h1 className="min-w-0 flex-1 truncate text-center text-sm font-black uppercase tracking-wider font-mono text-text-primary">
+        <h1 className="min-w-0 flex-1 truncate text-center text-sm font-black uppercase tracking-wider text-text-primary">
           {pageTitle}
         </h1>
         <button
@@ -265,7 +265,7 @@ export function TierListEditor(props: TierListEditorProps) {
                   {kindLabel}
                 </span>
               )}
-              <h1 className="text-base sm:text-lg lg:text-xl font-black uppercase tracking-wider font-mono text-text-primary truncate">
+              <h1 className="text-base sm:text-lg lg:text-xl font-black uppercase tracking-wider text-text-primary truncate">
                 {pageTitle}
               </h1>
             </div>

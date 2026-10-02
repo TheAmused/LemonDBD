@@ -311,7 +311,7 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
               <Gift className="h-5 w-5" />
             </div>
             <div>
-              <h2 className="text-lg font-black tracking-tight text-text-primary font-mono flex items-center gap-2">
+              <h2 className="text-lg font-black tracking-tight text-text-primary flex items-center gap-2">
                 {t.offeringsTitle || 'Offerings & Sacrificial Rites'}
                 <span
                   className={`text-xs px-2 py-0.5 rounded-full border ${

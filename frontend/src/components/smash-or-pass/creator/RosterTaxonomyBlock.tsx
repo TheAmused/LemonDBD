@@ -77,7 +77,7 @@ export const RosterTaxonomyBlock: React.FC<RosterTaxonomyBlockProps> = ({
   };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-border-color font-mono">
+    <div className="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-border-color">
       {/* 1. ROLES SECTION */}
       <div className="flex flex-col gap-3 pb-6 md:pb-0 md:pr-6">
         <div className="flex flex-col items-center justify-center text-center gap-1">
@@ -92,7 +92,7 @@ export const RosterTaxonomyBlock: React.FC<RosterTaxonomyBlockProps> = ({
           </span>
         </div>
 
-        <p className="text-xs text-text-secondary font-sans leading-relaxed text-center">
+        <p className="text-xs text-text-secondary leading-relaxed text-center">
           {tx.rolesDesc}
         </p>
 
@@ -143,7 +143,7 @@ export const RosterTaxonomyBlock: React.FC<RosterTaxonomyBlockProps> = ({
         {/* Active Roles Badge List */}
         <div className="flex flex-wrap items-center justify-center gap-1.5 pt-2 border-t border-border-color/60 min-h-[36px]">
           {roles.length === 0 ? (
-            <span className="text-xs text-text-muted italic font-sans text-center w-full">
+            <span className="text-xs text-text-muted italic text-center w-full">
               {tx.noCustomRoles}
             </span>
           ) : (
@@ -181,7 +181,7 @@ export const RosterTaxonomyBlock: React.FC<RosterTaxonomyBlockProps> = ({
           </span>
         </div>
 
-        <p className="text-xs text-text-secondary font-sans leading-relaxed text-center">
+        <p className="text-xs text-text-secondary leading-relaxed text-center">
           {tx.gendersDesc}
         </p>
 
@@ -232,7 +232,7 @@ export const RosterTaxonomyBlock: React.FC<RosterTaxonomyBlockProps> = ({
         {/* Active Genders Badge List */}
         <div className="flex flex-wrap items-center justify-center gap-1.5 pt-2 border-t border-border-color/60 min-h-[36px]">
           {genders.length === 0 ? (
-            <span className="text-xs text-text-muted italic font-sans text-center w-full">
+            <span className="text-xs text-text-muted italic text-center w-full">
               {tx.noCustomGenders}
             </span>
           ) : (

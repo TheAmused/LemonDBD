@@ -9,7 +9,11 @@ import { AuthProvider } from '@/context/AuthContext';
 import { DictionaryProvider } from '@/context/DictionaryContext';
 import { ImagePreloadProvider } from '@/components/common/ImagePreloadProvider';
 import { TooltipProvider } from '@/components/common/Tooltip';
+import { Playfair_Display } from 'next/font/google';
 import '@/app/globals.css';
+
+// Self-hosted at build time by next/font (no request to Google from visitors' browsers).
+const playfair = Playfair_Display({ subsets: ['latin', 'latin-ext'], variable: '--font-playfair', display: 'swap' });
 
 export const metadata: Metadata = {
   title: {
@@ -57,7 +61,7 @@ export default async function RootLayout({
   const dict = await getDictionary(locale);
 
   return (
-    <html lang={locale} suppressHydrationWarning>
+    <html lang={locale} className={playfair.variable} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: SIDEBAR_INIT_SCRIPT }} />
       </head>

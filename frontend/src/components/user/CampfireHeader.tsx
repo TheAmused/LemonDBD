@@ -84,7 +84,7 @@ export const CampfireHeader: React.FC<CampfireHeaderProps> = ({
                 />
                 <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-bg-primary/80 text-text-inverted opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl sm:rounded-3xl">
                   <Camera className="h-5 w-5 sm:h-6 sm:w-6 mb-1 text-accent-red" />
-                  <span className="text-[9px] sm:text-[10px] font-mono font-bold uppercase tracking-wider">
+                  <span className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider">
                     {dict?.user?.changeAvatar || 'Change'}
                   </span>
                 </div>
@@ -98,7 +98,7 @@ export const CampfireHeader: React.FC<CampfireHeaderProps> = ({
 
             {avatarFeedback && (
               <p
-                className={`text-[11px] font-mono font-semibold text-center max-w-[140px] leading-tight ${
+                className={`text-[11px] font-semibold text-center max-w-[140px] leading-tight ${
                   avatarFeedback.type === 'success' ? 'text-accent-green' : 'text-accent-red'
                 }`}
               >
@@ -110,11 +110,11 @@ export const CampfireHeader: React.FC<CampfireHeaderProps> = ({
           {/* Name, Role, Title & Account Metadata */}
           <div className="space-y-2.5 min-w-0">
             <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2.5">
-              <h1 className="text-2xl sm:text-3xl font-black tracking-wide text-text-primary font-mono truncate">
+              <h1 className="text-2xl sm:text-3xl font-black tracking-wide text-text-primary truncate">
                 {user.username}
               </h1>
               {user.role === 'admin' && (
-                <span className="rounded-xl px-2.5 py-0.5 text-xs font-black uppercase tracking-wider border font-mono border-accent-red/40 bg-accent-red/15 text-accent-red shadow-xs">
+                <span className="rounded-xl px-2.5 py-0.5 text-xs font-black uppercase tracking-wider border border-accent-red/40 bg-accent-red/15 text-accent-red shadow-xs">
                   {dict?.user?.roleAdmin || 'Administrator'}
                 </span>
               )}
@@ -130,14 +130,14 @@ export const CampfireHeader: React.FC<CampfireHeaderProps> = ({
                   label: `« ${title} »`,
                 }))}
                 icon={<Sparkles className="h-3.5 w-3.5 text-accent-amber" />}
-                buttonClassName="border-accent-amber/35 bg-accent-amber/10 text-accent-amber hover:bg-accent-amber/20 hover:border-accent-amber text-xs font-mono font-bold tracking-wide"
+                buttonClassName="border-accent-amber/35 bg-accent-amber/10 text-accent-amber hover:bg-accent-amber/20 hover:border-accent-amber text-xs font-bold tracking-wide"
                 menuClassName="bg-bg-surface border-border-color shadow-xl"
                 ariaLabel={dict?.user?.playerTitle || 'Player Title'}
               />
             </div>
 
             {/* Account Metadata: Member Since, Admin Panel Link */}
-            <div className="flex flex-wrap items-center justify-center sm:justify-start gap-x-4 gap-y-1.5 pt-0.5 text-xs text-text-secondary font-mono">
+            <div className="flex flex-wrap items-center justify-center sm:justify-start gap-x-4 gap-y-1.5 pt-0.5 text-xs text-text-secondary">
               {user.created_at && (
                 <span className="flex items-center gap-1.5">
                   <Calendar className="h-3.5 w-3.5 text-text-muted shrink-0" />
@@ -152,7 +152,7 @@ export const CampfireHeader: React.FC<CampfireHeaderProps> = ({
               {user.role === 'admin' && (
                 <Link
                   href={`/${currentLocale}/admin`}
-                  className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-lg border border-accent-red/30 bg-accent-red/10 text-[11px] font-bold text-accent-red hover:bg-accent-red/20 transition-colors font-mono"
+                  className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-lg border border-accent-red/30 bg-accent-red/10 text-[11px] font-bold text-accent-red hover:bg-accent-red/20 transition-colors"
                 >
                   <OverseerEyeIcon className="h-3 w-3" />
                   <span>{dict?.sidebar?.adminPanel || 'Admin Panel'}</span>

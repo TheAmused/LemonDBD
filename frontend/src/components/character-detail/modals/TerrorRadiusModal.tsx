@@ -41,7 +41,7 @@ export const TerrorRadiusModal: React.FC<TerrorRadiusModalProps> = ({
     <div className="relative flex flex-col items-center justify-center p-6 rounded-3xl bg-bg-primary border border-border-color overflow-hidden">
       <div className="relative w-64 h-64 sm:w-72 sm:h-72 flex items-center justify-center">
         <div className="absolute inset-0 rounded-full border border-dashed border-border-subtle flex items-start justify-center pt-1">
-          <span className="text-[9px] font-mono text-text-muted">{t.distance45m || '45m'} ({t.lullaby || 'Lullaby'})</span>
+          <span className="text-[9px] text-text-muted">{t.distance45m || '45m'} ({t.lullaby || 'Lullaby'})</span>
         </div>
 
         <div
@@ -51,7 +51,7 @@ export const TerrorRadiusModal: React.FC<TerrorRadiusModalProps> = ({
               : 'border-border-color'
           } flex items-start justify-center pt-1`}
         >
-          <span className="text-[9px] font-mono font-bold text-accent-red">{t.distance32m || '32m'} ({t.audible || 'Audible'})</span>
+          <span className="text-[9px] font-bold text-accent-red">{t.distance32m || '32m'} ({t.audible || 'Audible'})</span>
         </div>
 
         <div
@@ -61,22 +61,22 @@ export const TerrorRadiusModal: React.FC<TerrorRadiusModalProps> = ({
               : 'border-border-subtle'
           } flex items-start justify-center pt-1`}
          >
-           <span className="text-[9px] font-mono font-bold text-accent-amber">{t.distance24m}</span>
+           <span className="text-[9px] font-bold text-accent-amber">{t.distance24m}</span>
          </div>
 
          <div className="absolute inset-20 rounded-full border border-accent-red/60 bg-accent-red/10 flex items-start justify-center pt-1">
-           <span className="text-[9px] font-mono font-bold text-accent-red">{t.distance16m}</span>
+           <span className="text-[9px] font-bold text-accent-red">{t.distance16m}</span>
          </div>
 
 
         <div className="absolute inset-28 rounded-full border-2 border-accent-red bg-accent-red/20 flex items-center justify-center">
-          <span className="text-[9px] font-mono font-black text-accent-red">{t.distance8m || '8m'} ({t.chase || 'Chase'})</span>
+          <span className="text-[9px] font-black text-accent-red">{t.distance8m || '8m'} ({t.chase || 'Chase'})</span>
         </div>
 
         <div className="h-4 w-4 rounded-full bg-accent-red shadow-lg shadow-accent-red/50 z-10" />
       </div>
 
-      <div className="mt-4 flex items-center gap-2 text-xs font-mono font-bold text-text-secondary">
+      <div className="mt-4 flex items-center gap-2 text-xs font-bold text-text-secondary">
         <span className="inline-block h-2 w-2 rounded-full bg-accent-red" />
         <span>
           {t.currentBaseTerrorRadius || 'Current Base Terror Radius'}:{' '}
@@ -86,7 +86,7 @@ export const TerrorRadiusModal: React.FC<TerrorRadiusModalProps> = ({
     </div>
 
     <div className="space-y-3">
-      <h3 className="text-xs font-mono font-black uppercase text-text-secondary tracking-wider">
+      <h3 className="text-xs font-black uppercase text-text-secondary tracking-wider">
         {t.heartbeatStages || 'Heartbeat Intensity Progression'}
       </h3>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
@@ -126,13 +126,13 @@ export const TerrorRadiusModal: React.FC<TerrorRadiusModalProps> = ({
     </div>
 
     <div className="space-y-2">
-      <span className="text-xs font-mono font-bold text-text-secondary uppercase">
+      <span className="text-xs font-bold text-text-secondary uppercase">
         {t.survivorComparison || 'Survivor Speed Comparison'}
       </span>
       <p className="text-xs text-text-secondary">
         {t.survivorComparisonDesc || 'Survivor standard sprint speed is 4.0 m/s (100%).'}
       </p>
-      <div className="flex flex-wrap items-center gap-4 text-xs font-mono pt-1 text-text-secondary">
+      <div className="flex flex-wrap items-center gap-4 text-xs pt-1 text-text-secondary">
         <span>
           {t.killerBase || 'Killer Base'}: <strong className="text-accent-red">{killerSpeed}</strong>
         </span>

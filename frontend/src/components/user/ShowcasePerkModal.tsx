@@ -67,7 +67,7 @@ const PerkGridItem: React.FC<{
       </div>
 
       {/* Name */}
-      <span className="text-xs font-bold font-mono text-text-primary group-hover:text-accent-red line-clamp-1">
+      <span className="text-xs font-bold text-text-primary group-hover:text-accent-red line-clamp-1">
         {perk.name}
       </span>
 
@@ -171,7 +171,7 @@ export const ShowcasePerkModal: React.FC<ShowcasePerkModalProps> = ({
         {loading ? (
           <div className="flex flex-col items-center justify-center py-16 space-y-3">
             <Spinner size="lg" tone="accent" />
-            <p className="text-xs text-text-muted font-mono">
+            <p className="text-xs text-text-muted">
               {dict?.user?.loadingPerks || 'Channeling teachable knowledge...'}
             </p>
           </div>
@@ -180,7 +180,7 @@ export const ShowcasePerkModal: React.FC<ShowcasePerkModalProps> = ({
             <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-accent-red/10 border border-accent-red/25">
               <Search className={`h-6 w-6 text-accent-red ${cleanQuery.length > 0 ? 'animate-pulse' : ''}`} />
             </div>
-            <p className="text-xs sm:text-sm font-mono text-text-secondary">
+            <p className="text-xs sm:text-sm text-text-secondary">
               {cleanQuery.length === 0
                 ? dict?.user?.searchPerksPrompt || 'Type at least 3 characters to search perks...'
                 : (dict?.user?.searchPerksMinChars || 'Type {count} more character(s) to search...').replace(

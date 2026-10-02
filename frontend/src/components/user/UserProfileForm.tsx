@@ -113,10 +113,10 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
 
         <div className="relative z-10 w-8 hidden sm:block" aria-hidden="true" />
         <div className="relative z-10 flex-1 text-center">
-          <h2 className="text-xs sm:text-sm 2xl:text-base font-black uppercase tracking-widest text-text-primary font-mono group-hover:text-accent-red transition-colors">
+          <h2 className="text-xs sm:text-sm 2xl:text-base font-black uppercase tracking-widest text-text-primary group-hover:text-accent-red transition-colors">
             {dict?.user?.tabSanctum || 'Account Management'}
           </h2>
-          <p className="text-[11px] sm:text-xs 2xl:text-sm text-text-secondary mt-0.5 font-mono">
+          <p className="text-[11px] sm:text-xs 2xl:text-sm text-text-secondary mt-0.5">
             {dict?.user?.accountSettingsSubtitle || 'Manage your email address and password'}
           </p>
         </div>
@@ -140,7 +140,7 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
             {/* Status Feedback Banner */}
             {statusMessage && (
               <div
-                className={`max-w-2xl mx-auto flex items-center gap-2.5 rounded-2xl border p-3 text-xs shadow-sm font-mono ${
+                className={`max-w-2xl mx-auto flex items-center gap-2.5 rounded-2xl border p-3 text-xs shadow-sm ${
                   statusMessage.type === 'success'
                     ? 'border-accent-green/30 bg-accent-green/10 text-accent-green'
                     : 'border-accent-red/30 bg-accent-red/10 text-accent-red'
@@ -159,7 +159,7 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
               <div className="space-y-4 sm:space-y-5">
                 {/* Email Address */}
                 <div className="space-y-1.5">
-                  <label className="block text-[11px] font-bold uppercase tracking-wider text-text-secondary font-mono">
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-text-secondary">
                     {dict?.user?.emailLabel || 'Email Address'}
                   </label>
                   <div className="relative">
@@ -172,7 +172,7 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
                       fieldSize="sm"
                       value={newEmail}
                       onChange={(e) => setNewEmail(e.target.value)}
-                      className="pl-10 font-mono"
+                      className="pl-10"
                     />
                   </div>
                 </div>
@@ -180,11 +180,11 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
                 {/* Password Management */}
                 <div className="space-y-3 pt-3 border-t border-border-color">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-black uppercase tracking-wider text-text-primary flex items-center gap-2 font-mono">
+                    <span className="text-xs font-black uppercase tracking-wider text-text-primary flex items-center gap-2">
                       <Lock className="h-3.5 w-3.5 text-accent-amber" />
                       <span>{dict?.user?.passwordLabel || 'Password'}</span>
                     </span>
-                    <span className="text-[11px] text-text-muted font-mono">
+                    <span className="text-[11px] text-text-muted">
                       {t.passwordPlaceholder || 'Leave blank to keep current'}
                     </span>
                   </div>
@@ -192,7 +192,7 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                     {/* New Password Input */}
                     <div className="space-y-1">
-                      <label className="block text-[10px] font-bold uppercase tracking-wider text-text-secondary font-mono">
+                      <label className="block text-[10px] font-bold uppercase tracking-wider text-text-secondary">
                         {t.newPassword || 'New Password'}
                       </label>
                       <div className="relative">
@@ -201,7 +201,7 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
                           value={newPassword}
                           onChange={(e) => setNewPassword(e.target.value)}
                           fieldSize="sm"
-                          className="pr-9 font-mono"
+                          className="pr-9"
                         />
                         <button
                           type="button"
@@ -216,7 +216,7 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
 
                     {/* Confirm Password Input */}
                     <div className="space-y-1">
-                      <label className="block text-[10px] font-bold uppercase tracking-wider text-text-secondary font-mono">
+                      <label className="block text-[10px] font-bold uppercase tracking-wider text-text-secondary">
                         {t.confirmPassword || 'Confirm New Password'}
                       </label>
                       <div className="relative">
@@ -226,7 +226,7 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
                           onChange={(e) => setConfirmPassword(e.target.value)}
                           fieldSize="sm"
                           invalid={!!confirmPassword && !passwordsMatch}
-                          className={`pr-9 font-mono ${
+                          className={`pr-9 ${
                             confirmPassword && passwordsMatch
                               ? 'border-accent-green/50 focus:border-accent-green focus:ring-accent-green'
                               : ''

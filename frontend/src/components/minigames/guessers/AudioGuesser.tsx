@@ -193,7 +193,7 @@ export const AudioGuesser: React.FC<AudioGuesserProps> = ({
         {/* Playback Controls & Timeline */}
         <div className="w-full max-w-sm flex flex-col gap-2">
           {duration > 0 && !useFallback && (
-            <div className="flex items-center justify-between text-2xs font-mono text-text-muted px-1">
+            <div className="flex items-center justify-between text-2xs text-text-muted px-1">
               <span>{formatSeconds(currentTime)}</span>
               <div className="flex-1 mx-3 h-1 bg-bg-elevated rounded-full overflow-hidden">
                 <div

@@ -25,7 +25,7 @@ interface PageStreakRunViewProps {
 }
 
 const SectionLabel: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <div className="mb-2.5 mt-6 flex items-center gap-2 font-mono text-[10.5px] uppercase tracking-widest text-text-muted">
+  <div className="mb-2.5 mt-6 flex items-center gap-2 text-[10.5px] uppercase tracking-widest text-text-muted">
     <span>{children}</span>
     <span className="h-px flex-1 bg-border-color" />
   </div>
@@ -208,7 +208,7 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
                     type="button"
                     onClick={() => setShowNextPage((open) => !open)}
                     aria-expanded={showNextPage}
-                    className="mb-2.5 mt-6 flex w-full items-center gap-2 rounded font-mono text-[10.5px] uppercase tracking-widest text-text-muted transition-colors hover:text-accent-red focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red motion-reduce:transition-none"
+                    className="mb-2.5 mt-6 flex w-full items-center gap-2 rounded text-[10.5px] uppercase tracking-widest text-text-muted transition-colors hover:text-accent-red focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red motion-reduce:transition-none"
                   >
                     <ChevronRight
                       className={`h-3.5 w-3.5 transition-transform duration-300 motion-reduce:transition-none ${

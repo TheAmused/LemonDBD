@@ -583,7 +583,7 @@ export const Modal: React.FC<ModalProps> = ({
             onDragEnd={dragAxis ? handleDragEnd : undefined}
             onClick={(e) => e.stopPropagation()}
             className={cn(
-              'relative z-10 flex min-h-0 flex-col overflow-hidden bg-bg-surface text-text-primary font-mono shadow-2xl outline-none',
+              'relative z-10 flex min-h-0 flex-col overflow-hidden bg-bg-surface text-text-primary shadow-2xl outline-none',
               !borderless && 'border border-border-color',
               sizeClass,
               spec.panel,

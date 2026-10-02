@@ -243,7 +243,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               <LemonIcon className="h-7 w-7" />
             </div>
             <div>
-              <span className="font-black text-base tracking-wider text-text-primary font-mono">
+              <span className="font-black text-base tracking-wider text-text-primary">
                 {dict?.app?.title || 'LemonDBD'}
               </span>
             </div>
@@ -349,7 +349,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent-red/15 border border-accent-red/30 text-text-primary p-1">
             <LemonIcon className="h-6 w-6" />
           </div>
-          <span className="font-extrabold text-sm tracking-wider font-mono text-text-primary">
+          <span className="font-extrabold text-sm tracking-wider text-text-primary">
             {dict?.app?.title || 'LemonDBD'}
           </span>
         </Link>

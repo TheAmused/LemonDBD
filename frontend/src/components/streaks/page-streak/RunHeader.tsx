@@ -65,7 +65,7 @@ export const RunHeader: React.FC<RunHeaderProps> = ({
               <span className="text-[10px] uppercase tracking-wider text-text-muted font-bold leading-none">
                 {dict?.stats?.current || 'Current'}
               </span>
-              <span className="text-lg font-black text-text-primary leading-none mt-0.5 font-mono">
+              <span className="text-lg font-black text-text-primary leading-none mt-0.5">
                 {cleared}
               </span>
             </div>
@@ -77,7 +77,7 @@ export const RunHeader: React.FC<RunHeaderProps> = ({
               <span className="text-[10px] uppercase tracking-wider text-text-muted font-bold leading-none">
                 {dict?.stats?.best || 'Best'}
               </span>
-              <span className="text-lg font-black text-text-primary leading-none mt-0.5 font-mono">
+              <span className="text-lg font-black text-text-primary leading-none mt-0.5">
                 {run.best_page}
               </span>
             </div>
@@ -130,7 +130,7 @@ export const RunHeader: React.FC<RunHeaderProps> = ({
       </div>
 
       <div className="mt-4">
-        <div className="flex items-baseline justify-between font-mono text-[11px] uppercase tracking-wider text-text-muted">
+        <div className="flex items-baseline justify-between text-[11px] uppercase tracking-wider text-text-muted">
           <span>
             {run.status === 'completed'
               ? (dict?.streaks?.allPagesCleared || 'All pages cleared')

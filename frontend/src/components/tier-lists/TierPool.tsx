@@ -116,10 +116,10 @@ export function TierPool({
         </div>
 
         <div className="relative z-10 col-start-2 row-start-1 flex items-center justify-center gap-2">
-          <h2 className="text-xs sm:text-sm font-black uppercase tracking-widest text-text-primary font-mono">
+          <h2 className="text-xs sm:text-sm font-black uppercase tracking-widest text-text-primary">
             {t.unranked}
           </h2>
-          <Badge tone="red" plain className="font-mono text-[11px] font-bold">
+          <Badge tone="red" plain className="text-[11px] font-bold">
             {t.unrankedCount.replace('{count}', String(keys.length))}
           </Badge>
         </div>
@@ -131,7 +131,7 @@ export function TierPool({
           aria-label={collapsed ? t.showPool : t.hidePool}
           className="relative z-10 col-start-3 row-start-1 justify-self-end flex min-h-[40px] items-center gap-2.5 cursor-pointer select-none text-text-secondary hover:text-accent-red transition-colors"
         >
-          <span className="text-xs font-mono hidden sm:inline">{collapsed ? t.showPool : t.hidePool}</span>
+          <span className="text-xs hidden sm:inline">{collapsed ? t.showPool : t.hidePool}</span>
           <ChevronDown
             className={`h-4 w-4 sm:h-5 sm:w-5 text-accent-red transition-transform duration-300 ease-in-out ${
               collapsed ? 'rotate-0' : 'rotate-180'

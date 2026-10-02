@@ -77,7 +77,7 @@ export const AdminAuditLogView: React.FC<{ dict?: Dictionary }> = ({ dict }) => 
       </div>
 
       {loading ? (
-        <p className="text-xs text-text-muted py-8 text-center font-mono">
+        <p className="text-xs text-text-muted py-8 text-center">
           {dict?.admin?.loadingAuditLog || 'Loading activity...'}
         </p>
       ) : logs.length === 0 ? (
@@ -88,7 +88,7 @@ export const AdminAuditLogView: React.FC<{ dict?: Dictionary }> = ({ dict }) => 
         <div className="overflow-x-auto">
           <table className="w-full text-xs">
             <thead>
-              <tr className="text-left font-mono uppercase tracking-wider text-text-secondary border-b border-border-color">
+              <tr className="text-left uppercase tracking-wider text-text-secondary border-b border-border-color">
                 <th className="py-2.5 pr-3 font-bold">{dict?.admin?.thAdmin || 'User'}</th>
                 <th className="py-2.5 pr-3 font-bold">{dict?.admin?.thAction || 'Action'}</th>
                 <th className="py-2.5 pr-3 font-bold">{dict?.admin?.thTarget || 'Target'}</th>
@@ -105,7 +105,7 @@ export const AdminAuditLogView: React.FC<{ dict?: Dictionary }> = ({ dict }) => 
                   <td className="py-3 pr-3 font-bold whitespace-nowrap">
                     {log.admin_username || `#${log.admin_user_id ?? '?'}`}
                   </td>
-                  <td className={`py-3 pr-3 font-mono whitespace-nowrap font-semibold ${ACTION_COLORS[log.action] || 'text-text-secondary'}`}>
+                  <td className={`py-3 pr-3 whitespace-nowrap font-semibold ${ACTION_COLORS[log.action] || 'text-text-secondary'}`}>
                     {log.action}
                   </td>
                   <td className="py-3 pr-3 text-text-secondary whitespace-nowrap">
@@ -114,7 +114,7 @@ export const AdminAuditLogView: React.FC<{ dict?: Dictionary }> = ({ dict }) => 
                   <td className="py-3 pr-3 text-text-secondary italic truncate max-w-[240px]">
                     {describeDetails(log) || '-'}
                   </td>
-                  <td className="py-3 text-right text-text-muted font-mono whitespace-nowrap">
+                  <td className="py-3 text-right text-text-muted whitespace-nowrap">
                     {formatDateTime(log.created_at)}
                   </td>
                 </tr>
@@ -135,7 +135,7 @@ export const AdminAuditLogView: React.FC<{ dict?: Dictionary }> = ({ dict }) => 
           >
             <ChevronLeft className="h-4 w-4" />
           </Button>
-          <span className="text-xs text-text-secondary font-mono font-medium">
+          <span className="text-xs text-text-secondary font-medium">
             {dict?.admin?.pageLabel || 'Page'} {page} {dict?.admin?.ofLabel || 'of'} {totalPages}
           </span>
           <Button

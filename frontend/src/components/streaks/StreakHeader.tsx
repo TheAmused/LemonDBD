@@ -111,7 +111,7 @@ export const StreakHeader: React.FC<StreakHeaderProps> = ({
                   <span className="text-[10px] uppercase tracking-wider text-text-muted font-bold leading-none">
                     {stat.label}
                   </span>
-                  <span className="text-lg font-black text-text-primary leading-none mt-0.5 font-mono">
+                  <span className="text-lg font-black text-text-primary leading-none mt-0.5">
                     {stat.value}
                   </span>
                 </div>
@@ -119,7 +119,7 @@ export const StreakHeader: React.FC<StreakHeaderProps> = ({
             ) : (
               <div key={stat.key} className={`flex items-center gap-1.5 px-3 py-2 ${STAT_BOX}`}>
                 <span className="text-[10px] uppercase tracking-wider text-text-muted font-bold">{stat.label}</span>
-                <span className="text-sm font-black text-text-primary font-mono">{stat.value}</span>
+                <span className="text-sm font-black text-text-primary">{stat.value}</span>
               </div>
             )
           )}

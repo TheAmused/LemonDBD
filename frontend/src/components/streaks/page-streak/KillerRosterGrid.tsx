@@ -110,7 +110,7 @@ export const KillerRosterGrid: React.FC<KillerRosterGridProps> = ({
               </div>
             )}
             <div
-              className={`text-center font-mono text-[10px] font-semibold ${done
+              className={`text-center text-[10px] font-semibold ${done
                   ? 'text-accent-green'
                   : active
                     ? 'text-accent-amber'

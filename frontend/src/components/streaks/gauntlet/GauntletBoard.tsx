@@ -296,7 +296,7 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({
         <StreakCheckpointModal
           checkpoint={justBankedCheckpoint}
           className="gn-land-frame"
-          valueClassName="font-mono"
+          valueClassName=""
           onClose={dismissCheckpointCelebration}
           dict={dict}
         />

@@ -493,7 +493,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
               SmashSounds.playFlipSound();
               startFlip();
             }}
-            className="absolute inset-0 h-full w-full rounded-[32px] sm:rounded-[36px] overflow-hidden border-2 border-accent-red/50 bg-bg-primary/95 backdrop-blur-2xl p-4 sm:p-5 flex flex-col justify-between font-mono text-text-primary cursor-pointer select-none"
+            className="absolute inset-0 h-full w-full rounded-[32px] sm:rounded-[36px] overflow-hidden border-2 border-accent-red/50 bg-bg-primary/95 backdrop-blur-2xl p-4 sm:p-5 flex flex-col justify-between text-text-primary cursor-pointer select-none"
           >
             {/* Top Bar with accessible Flip Back button and Title */}
             <div className="relative z-30 flex items-center justify-between pb-2 border-b border-border-color shrink-0 pointer-events-auto">
@@ -610,7 +610,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
             {BACK_FACE_COMING_SOON && (
               <div className="absolute inset-0 z-20 flex items-center justify-center pointer-events-none">
                 <div className="px-6 py-3 rounded-2xl bg-bg-primary/80 border border-border-color/60 backdrop-blur-md shadow-2xl">
-                  <span className="text-2xl sm:text-3xl font-black font-mono tracking-widest text-text-primary uppercase drop-shadow-md">
+                  <span className="text-2xl sm:text-3xl font-black tracking-widest text-text-primary uppercase drop-shadow-md">
                     {rawSmashDict?.soon || 'Soon...'}
                   </span>
                 </div>
@@ -684,9 +684,9 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
               }
             }}
           />
-          <div className="absolute bottom-0 inset-x-0 p-4 bg-gradient-to-t from-bg-primary via-bg-primary/80 to-transparent text-center font-mono">
+          <div className="absolute bottom-0 inset-x-0 p-4 bg-gradient-to-t from-bg-primary via-bg-primary/80 to-transparent text-center">
             <h3 className="text-lg font-black text-text-primary">{character.name}</h3>
-            {charTagline && <p className="text-xs text-accent-red font-sans italic">{charTagline}</p>}
+            {charTagline && <p className="text-xs text-accent-red italic">{charTagline}</p>}
           </div>
         </div>
       </Modal>

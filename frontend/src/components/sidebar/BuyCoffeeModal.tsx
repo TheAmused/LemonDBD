@@ -125,7 +125,7 @@ export const BuyCoffeeModal: React.FC<BuyCoffeeModalProps> = ({
                 <Icon className="h-5 w-5" />
               </div>
               <div>
-                <h3 className="text-xs font-black tracking-wide text-text-primary font-mono">
+                <h3 className="text-xs font-black tracking-wide text-text-primary">
                   {gateway.name}
                 </h3>
                 <p className="text-[11px] text-text-muted">

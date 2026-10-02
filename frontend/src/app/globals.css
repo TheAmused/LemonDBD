@@ -138,6 +138,7 @@
 @utility type-strong-2xs { @apply text-tiny font-bold; }
 @utility type-strong-wide { @apply text-mini sm:text-xs wide:text-sm wide-2k:text-base font-bold; }
 @utility type-strong-wide-sm { @apply text-tiny sm:text-mini wide:text-xs wide-2k:text-sm font-bold; }
+@utility type-strong-wide-caps { @apply text-mini sm:text-xs wide:text-sm wide-2k:text-base font-bold uppercase tracking-wider; }
 @utility type-body { @apply text-xs leading-relaxed; }
 @utility type-body-fluid { @apply text-xs sm:text-sm leading-relaxed; }
 @utility type-body-lg { @apply text-sm leading-relaxed; }

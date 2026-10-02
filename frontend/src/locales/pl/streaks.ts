@@ -3,7 +3,7 @@ export default {
   backToKillerStreaks: "Powrót do serii zabójców",
   backToKillers: "Powrót do zabójców",
   rules: "Zasady",
-  readFullRules: "Przeczytaj pełne zasady",
+  readFullRules: "Pełne zasady",
   cancel: "Anuluj",
   stats: "Statystyki",
   perkPool: "Pula Umiejętności",

@@ -3,7 +3,7 @@ export default {
   backToKillerStreaks: "Back to killer streaks",
   backToKillers: "Back to killers",
   rules: "Rules",
-  readFullRules: "Read full rules",
+  readFullRules: "Full rules",
   cancel: "Cancel",
   stats: "Statistics",
   perkPool: "Perk Pool",

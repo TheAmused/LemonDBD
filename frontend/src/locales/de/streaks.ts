@@ -3,7 +3,7 @@ export default {
   backToKillerStreaks: "Zurück zu den Killer-Streaks",
   backToKillers: "Zurück zu den Killern",
   rules: "Regeln",
-  readFullRules: "Alle Regeln lesen",
+  readFullRules: "Vollständige Regeln",
   cancel: "Abbrechen",
   stats: "Statistiken",
   perkPool: "Perk-Pool",

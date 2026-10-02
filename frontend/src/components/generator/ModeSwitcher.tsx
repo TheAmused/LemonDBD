@@ -62,7 +62,7 @@ export const ModeSwitcher: React.FC<ModeSwitcherProps> = ({ mode, onChange, dict
           }))}
           ariaLabel={dict?.generator?.modeSwitcherAriaLabel || 'Select Draw Mode'}
           className="w-full sm:w-auto"
-          buttonClassName="w-full sm:w-auto justify-between min-h-[44px] px-4 py-2 text-sm font-extrabold rounded-xl border border-border-color bg-bg-surface hover:bg-bg-elevated text-text-primary"
+          buttonClassName="w-full sm:w-auto justify-between min-h-[44px] px-4 py-2 type-card-title rounded-xl border border-border-color bg-bg-surface hover:bg-bg-elevated text-text-primary"
           menuClassName="w-full sm:w-auto min-w-[220px]"
         />
       </div>

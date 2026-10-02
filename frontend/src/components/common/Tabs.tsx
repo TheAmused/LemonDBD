@@ -85,9 +85,9 @@ export const tabId = (idBase: string, value: string) => `${idBase}-tab-${value}`
 export const panelId = (idBase: string, value: string) => `${idBase}-panel-${value}`;
 
 const SIZES: Record<TabsSize, string> = {
-  sm: 'gap-1 px-2.5 py-1 text-mini',
-  md: 'gap-1.5 px-3 py-1.5 text-xs',
-  lg: 'min-h-[48px] gap-2 px-4 py-2.5 text-xs',
+  sm: 'gap-1 px-2.5 py-1 type-strong-xs',
+  md: 'gap-1.5 px-3 py-1.5 type-strong',
+  lg: 'min-h-[48px] gap-2 px-4 py-2.5 type-strong',
 };
 
 const ACTIVE_TINT: Record<TabAccent, string> = {
@@ -201,7 +201,7 @@ export function Tabs<T extends string>({
             onKeyDown={(e) => onKeyDown(e, i)}
             {...restButtonProps}
             className={cn(
-              'inline-flex shrink-0 cursor-pointer items-center justify-center whitespace-nowrap font-bold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red disabled:cursor-not-allowed disabled:opacity-50',
+              'inline-flex shrink-0 cursor-pointer items-center justify-center whitespace-nowrap transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red disabled:cursor-not-allowed disabled:opacity-50',
               SIZES[size],
               fullWidth && 'flex-1',
               variantClass,

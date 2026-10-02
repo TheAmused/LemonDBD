@@ -878,7 +878,6 @@ export function SmashRosterCreator({ locale, dict, editId }: SmashRosterCreatorP
                   variant="boxed"
                   size="sm"
                   wrap
-                  tabClassName="uppercase tracking-wider"
                   tabs={TRANSLATABLE_LOCALES.map((loc) => ({ value: loc, label: loc }))}
                 />
                 <div className="grid gap-2 sm:grid-cols-2">

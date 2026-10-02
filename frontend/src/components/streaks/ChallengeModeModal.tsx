@@ -89,7 +89,7 @@ export const ChallengeModeModal: React.FC<ChallengeModeModalProps> = ({
         onClose={onClose}
         title={title ?? (dict?.streaks?.chooseMode || 'Choose a mode')}
         intro={intro}
-        rulesLabel={dict?.streaks?.readFullRules || 'Read full rules'}
+        rulesLabel={dict?.streaks?.readFullRules || 'Full rules'}
         onOpenRules={showRules ? () => setIsRulesOpen(true) : undefined}
         tiles={tiles}
         onSelectTile={onSelectTile}

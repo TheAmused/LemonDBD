@@ -3,7 +3,7 @@ export default {
   backToKillerStreaks: "Volver a rachas de asesino",
   backToKillers: "Volver a asesinos",
   rules: "Reglas",
-  readFullRules: "Leer las reglas completas",
+  readFullRules: "Reglas completas",
   cancel: "Cancelar",
   stats: "Estadísticas",
   perkPool: "Grupo de Habilidades",

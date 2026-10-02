@@ -54,6 +54,7 @@ export const UserBugReportsDrawer: React.FC<UserBugReportsDrawerProps> = ({
           style={{ backgroundImage: "url('/images/banners/banner_bugs.webp')" }}
         />
         <div className="absolute inset-0 bg-gradient-to-r from-bg-surface via-bg-surface/75 to-bg-surface pointer-events-none" />
+        <div className="absolute inset-x-0 bottom-0 h-px bg-border-color/60 pointer-events-none" />
         <button
           type="button"
           onClick={toggleExpanded}
@@ -96,7 +97,7 @@ export const UserBugReportsDrawer: React.FC<UserBugReportsDrawerProps> = ({
         }`}
       >
         <div className="overflow-hidden">
-          <div className="p-4 sm:p-6 2xl:p-8">
+          <div className="p-3 sm:p-4 border-t border-border-color">
             <UserBugReportsList
               reports={reports}
               loading={loading}

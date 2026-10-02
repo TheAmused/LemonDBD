@@ -49,7 +49,7 @@ export const KillerRosterGrid: React.FC<KillerRosterGridProps> = ({
 }) => {
   const characterDisplayName = useCharacterDisplayName();
   return (
-    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6" role="list">
+    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-10" role="list">
       {roster.map((entry) => {
         // ever_completed comes from the persistent completion history, so it
         // survives a per-killer reset (which flips status back to in_progress).

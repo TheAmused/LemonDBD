@@ -17,7 +17,7 @@ export function getKillerStreakPanels(dict?: Dictionary): StreakPanelDef[] {
   return [
     {
       id: 'gauntlet-streak',
-      title: t?.gauntletStreakTitle || 'Gauntlet streak',
+      title: t?.gauntletStreakTitle || 'The Gauntlet',
       image: '/images/streaks/gauntlet-streak.webp',
     },
     {
@@ -58,7 +58,7 @@ export function getSurvivorStreakPanels(dict?: Dictionary): StreakPanelDef[] {
   return [
     {
       id: 'gauntlet-streak',
-      title: t?.gauntletStreakTitle || 'Gauntlet streak',
+      title: t?.gauntletStreakTitle || 'The Gauntlet',
       image: '/images/streaks/gauntlet-streak.webp',
     },
     {

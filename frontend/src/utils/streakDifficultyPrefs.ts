@@ -46,3 +46,16 @@ export function hasSeenPageStreakIntro(): boolean {
 export function markPageStreakIntroSeen() {
   safeSetItem(PAGE_STREAK_SEEN_KEY, '1');
 }
+
+export type StreakRole = 'survivor' | 'killer' | 'challenge';
+
+const LAST_ROLE_KEY = 'lemon_dbd_streaks_last_role_v1';
+
+export function getSavedStreakRole(): StreakRole | null {
+  const value = safeGetItem(LAST_ROLE_KEY);
+  return value === 'survivor' || value === 'killer' || value === 'challenge' ? value : null;
+}
+
+export function saveStreakRole(role: StreakRole) {
+  safeSetItem(LAST_ROLE_KEY, role);
+}

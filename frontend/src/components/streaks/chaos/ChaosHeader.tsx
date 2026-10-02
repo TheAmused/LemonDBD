@@ -4,21 +4,18 @@ import type { Dictionary } from '@/locales/types';
 
 import React from 'react';
 import { Difficulty } from '@/types/chaosStreak';
-import { Flame, BookOpen, Layers, Gauge, Flag } from 'lucide-react';
-import { StreakHeader } from '../StreakHeader';
-import { TierEasyIcon, TierMediumIcon, TierHellIcon, AdeptBadgeIcon } from '@/components/icons/DbdIcons';
+import { Flame } from 'lucide-react';
+import { FreezeBadge } from '../FreezeBadge';
+import { ChallengeHeaderLayout, HeaderButton, ModeSelectButton, StandardHeaderActions } from '../ChallengePanel';
+import { AdeptBadgeIcon } from '@/components/icons/DbdIcons';
+import { StreakStatTiles } from '../StreakStatTiles';
 
-const DIFFICULTY_ICON: Record<Difficulty, React.ElementType> = {
-  easy: TierEasyIcon,
-  medium: TierMediumIcon,
-  hell: TierHellIcon,
-};
+const DIFFICULTY_TONE = { easy: 'green', medium: 'amber', hell: 'red' } as const;
 
 export interface ChaosHeaderProps {
   difficulty: Difficulty;
   currentStreak: number;
   bestStreak: number;
-  lastCheckpointStreak: number;
   poolFrozen?: boolean;
   onOpenStats: () => void;
   onOpenHistory: () => void;
@@ -33,7 +30,6 @@ export const ChaosHeader: React.FC<ChaosHeaderProps> = ({
   difficulty,
   currentStreak,
   bestStreak,
-  lastCheckpointStreak,
   poolFrozen = false,
   onOpenStats,
   onOpenHistory,
@@ -43,39 +39,51 @@ export const ChaosHeader: React.FC<ChaosHeaderProps> = ({
   onChangeDifficulty,
   dict,
 }) => {
-  const s = dict?.streaks;
-  const DifficultyIcon = DIFFICULTY_ICON[difficulty] ?? TierHellIcon;
   const difficultyLabel = {
-    easy: s?.chaosEasyLabel || 'Easy',
-    medium: s?.chaosMediumLabel || 'Medium',
-    hell: s?.chaosHellLabel || 'Hell',
+    easy: dict?.streaks?.chaosEasyLabel || 'Easy',
+    medium: dict?.streaks?.chaosMediumLabel || 'Medium',
+    hell: dict?.streaks?.chaosHellLabel || 'Hell',
   }[difficulty];
 
   return (
-    <StreakHeader
-      variant="roomy"
-      imageSrc="/images/streaks/chaos-streak.webp"
-      title={
+    <ChallengeHeaderLayout
+      stats={
         <>
-          <DifficultyIcon className="w-6 h-6 text-accent-red" />
-          <span className="capitalize">{difficultyLabel}</span> {s?.chaosStreak || 'Chaos Streak'}
+          <StreakStatTiles
+            current={currentStreak}
+            best={bestStreak}
+            currentLabel={dict?.streaks?.current || 'Current'}
+            bestLabel={dict?.streaks?.best || 'Best'}
+            currentIcon={<Flame className="h-5 w-5" />}
+            bestIcon={<AdeptBadgeIcon className="h-5 w-5" />}
+          />
+          <FreezeBadge frozen={poolFrozen} dict={dict} />
         </>
       }
-      poolFrozen={poolFrozen}
-      stats={[
-        { key: 'current', label: s?.current || 'Current', value: currentStreak, icon: <Flame className="w-5 h-5 animate-pulse" /> },
-        { key: 'best', label: s?.best || 'Best', value: bestStreak, icon: <AdeptBadgeIcon className="w-5 h-5" /> },
-        { key: 'checkpoint', label: s?.checkpointHeader || 'Checkpoint', value: lastCheckpointStreak, icon: <Flag className="w-5 h-5" /> },
-      ]}
-      actions={[
-        { key: 'rules', label: s?.rules || 'Rules', icon: <BookOpen className="w-4 h-4" />, onClick: onOpenRules },
-        { key: 'perkPool', label: s?.perkPool || 'Perk Pool', icon: <Layers className="w-4 h-4" />, onClick: onOpenPerkPool },
-        { key: 'difficulty', label: s?.changeDifficulty || 'Change Difficulty', icon: <Gauge className="w-4 h-4" />, onClick: onChangeDifficulty },
-      ]}
-      onOpenStats={onOpenStats}
-      onOpenHistory={onOpenHistory}
-      onOpenReset={onOpenReset}
-      dict={dict}
+      actions={
+        <StandardHeaderActions
+          onOpenRules={onOpenRules}
+          onOpenStats={onOpenStats}
+          onOpenHistory={onOpenHistory}
+          onOpenReset={onOpenReset}
+          dict={dict}
+          extra={
+            <>
+              <HeaderButton
+                onClick={onOpenPerkPool}
+                title={dict?.streaks?.perkPool || 'Perk Pool'}
+                label={dict?.streaks?.perkPool || 'Perk Pool'}
+              />
+              <ModeSelectButton
+                label={difficultyLabel}
+                tone={DIFFICULTY_TONE[difficulty]}
+                onClick={onChangeDifficulty}
+                title={dict?.streaks?.changeDifficulty || 'Change Difficulty'}
+              />
+            </>
+          }
+        />
+      }
     />
   );
 };

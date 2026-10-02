@@ -17,7 +17,6 @@ import {
   resolveRuleEntries,
   streakCopy,
 } from '@/components/streaks/RulesModalSections';
-import { StreakHeader } from '@/components/streaks/StreakHeader';
 import { CHAOS_DIFFICULTY_ORDER } from '@/utils/challengeTierCompletion';
 import enDict from '@/locales/en';
 
@@ -117,33 +116,5 @@ describe('rules sections static render', () => {
     assert.ok(html.includes('sm:text-right'));
     assert.ok(html.includes('badge-x'));
     assert.equal((html.match(/<li>/g) || []).length, 2 + 3 + 3);
-  });
-});
-
-describe('StreakHeader static render', () => {
-  const base = {
-    imageSrc: '/x.webp',
-    title: 'Title',
-    stats: [{ key: 'current', label: 'Current', value: 4, icon: el('i', { className: 'stat-icon' }) }],
-    actions: [{ key: 'rules', label: 'Rules', icon: el('b', null), onClick: () => {} }],
-    onOpenStats: () => {},
-    onOpenHistory: () => {},
-    onOpenReset: () => {},
-    dict: enDict,
-  };
-
-  it('compact variant: inline stats, no stat icon, mode badge, three icon buttons plus actions', () => {
-    const html = renderToStaticMarkup(el(StreakHeader, { ...base, variant: 'compact', titleBadge: 'Duo' }));
-    assert.ok(html.includes('Duo'));
-    assert.ok(html.includes('text-sm font-black'));
-    assert.ok(!html.includes('stat-icon'));
-    assert.equal((html.match(/<button/g) || []).length, 4);
-  });
-
-  it('roomy variant: stacked stats with icon and no badge', () => {
-    const html = renderToStaticMarkup(el(StreakHeader, { ...base, variant: 'roomy' }));
-    assert.ok(html.includes('stat-icon'));
-    assert.ok(html.includes('text-lg font-black'));
-    assert.ok(html.includes('sm:text-3xl'));
   });
 });

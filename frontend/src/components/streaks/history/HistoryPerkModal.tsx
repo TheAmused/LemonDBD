@@ -1,14 +1,23 @@
 'use client';
 // frontend/src/components/streaks/history/HistoryPerkModal.tsx
-import { Button } from '@/components/common/Button';
 import type { Dictionary } from '@/locales/types';
 
-import React, { useEffect, useRef, useState } from 'react';
-import { PartyPopper, Sparkles, Lock } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { Sparkles, Lock } from 'lucide-react';
 import { Perk } from '@/types/gauntletStreak';
 import { perkIconUrl as perkIconFor } from '@/utils/staticUrl';
-import { Modal } from '@/components/common/Modal';
-import { useCharacterDisplayName, usePerkDisplayName } from '@/context/DisplayNamesContext';
+import { usePerkDisplayName } from '@/context/DisplayNamesContext';
+import { CELEBRATION_CARD_CLASSES, CELEBRATION_LABEL_CLASSES, CelebrationBadge } from '../CelebrationBadge';
+
+const PLURAL_SUFFIX = { one: 'One', few: 'Few', many: 'Many' } as const;
+
+/** "You unlocked 3 new perks", worded and declined for the locale. */
+function unlockedPerksMessage(dict: Dictionary | undefined, locale: string, count: number): string {
+  const category = new Intl.PluralRules(locale).select(count);
+  const suffix = PLURAL_SUFFIX[category as keyof typeof PLURAL_SUFFIX] ?? 'Other';
+  const template = dict?.streaks?.[`unlockedPerks${suffix}` as 'unlockedPerksOther'] || 'You unlocked {count} new perks';
+  return template.replace('{count}', String(count));
+}
 
 type LockPhase = 'locked' | 'shaking' | 'breaking' | 'unlocked';
 
@@ -27,11 +36,7 @@ const PerkTile: React.FC<{ perk: Perk; index: number; phase: LockPhase }> = ({ p
 
   return (
     <div
-      className={`relative flex flex-col items-center gap-1.5 p-2 rounded-lg border transition-colors duration-500 overflow-hidden ${
-        isRevealed
-          ? 'bg-accent-green/10 border-accent-green/40'
-          : 'bg-bg-elevated border-border-color'
-      }`}
+      className="relative flex flex-col items-center gap-1.5 p-2 rounded-lg border border-border-color bg-bg-elevated overflow-hidden"
       style={delay}
     >
       <div
@@ -48,10 +53,10 @@ const PerkTile: React.FC<{ perk: Perk; index: number; phase: LockPhase }> = ({ p
             onError={() => setFailed(true)}
           />
         ) : (
-          <Sparkles className="w-5 h-5 text-accent-green" />
+          <Sparkles className="w-5 h-5 text-text-muted" />
         )}
       </div>
-      <span className="type-strong-2xs text-text-secondary truncate w-full text-center">
+      <span className="text-[10px] font-bold text-text-secondary truncate w-full text-center">
         {displayName}
       </span>
 
@@ -78,12 +83,14 @@ const PerkTile: React.FC<{ perk: Perk; index: number; phase: LockPhase }> = ({ p
 export interface HistoryPerkModalProps {
   killerName: string | null;
   perks: Perk[];
+  locale: string;
   onClose: () => void;
   dict?: Dictionary;
 }
 
-export const HistoryPerkModal: React.FC<HistoryPerkModalProps> = ({ killerName, perks, onClose, dict }) => {
+export const HistoryPerkModal: React.FC<HistoryPerkModalProps> = ({ killerName, perks, locale, onClose, dict }) => {
   const [phase, setPhase] = useState<LockPhase>('locked');
+  const unlockedMessage = unlockedPerksMessage(dict, locale, perks.length);
 
   useEffect(() => {
     if (!killerName) {
@@ -101,50 +108,39 @@ export const HistoryPerkModal: React.FC<HistoryPerkModalProps> = ({ killerName, 
     };
   }, [killerName]);
 
-  // Keep the last name so the exit animation does not flash an empty title.
-  const lastNameRef = useRef<string>('');
-  if (killerName) lastNameRef.current = killerName;
-  const shownName = useCharacterDisplayName()(killerName || lastNameRef.current);
+  if (!killerName) return null;
 
   return (
-    <Modal
-      isOpen={!!killerName}
-      onClose={onClose}
-      variant="confirm"
-      tone="success"
-      icon={<PartyPopper className="h-5 w-5" aria-hidden="true" />}
-      title={`${shownName} ${dict?.stats?.win || 'beaten'}!`}
-      subtitle={
-        <span className="font-bold uppercase tracking-wider text-text-muted">
-          {dict?.streaks?.perksUnlocked || 'Perks unlocked'}
-        </span>
-      }
-      closeButtonAriaLabel={dict?.modal?.close}
-      bodyClassName="p-5 sm:p-6"
-      footerClassName="!justify-stretch p-4"
-      footer={
-        <Button
-          variant="success"
-          size="lg"
-          data-autofocus
+    <div
+      onClick={onClose}
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-bg-primary/80 backdrop-blur-md cursor-pointer"
+    >
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className={`relative w-full max-w-sm ${CELEBRATION_CARD_CLASSES} px-8 py-10 cursor-default`}
+      >
+        <CelebrationBadge />
+
+        <p className={`mt-6 ${CELEBRATION_LABEL_CLASSES}`}>{dict?.streaks?.victoryCongrats || 'Congratulations'}</p>
+        <h2 className="mt-2 text-2xl font-black tracking-tight text-text-primary">
+          {perks.length > 0 ? unlockedMessage : dict?.streaks?.noNewPerks || 'No new perks this time.'}
+        </h2>
+
+        {perks.length > 0 && (
+          <div className="mt-4 grid grid-cols-3 gap-2.5">
+            {perks.map((perk, i) => (
+              <PerkTile key={perk.name} perk={perk} index={i} phase={phase} />
+            ))}
+          </div>
+        )}
+
+        <button
           onClick={onClose}
-          className="w-full"
+          className="mt-6 w-full rounded-xl bg-accent-amber py-3 text-sm font-extrabold text-text-inverted transition-colors hover:bg-accent-amber-hover cursor-pointer"
         >
           {dict?.streaks?.continueButton || 'Continue'}
-        </Button>
-      }
-    >
-      {perks.length === 0 ? (
-        <p className="text-center text-sm text-text-secondary">
-          {dict?.streaks?.noNewPerks || 'No new perks this time.'}
-        </p>
-      ) : (
-        <div className="grid grid-cols-3 gap-2.5">
-          {perks.map((perk, i) => (
-            <PerkTile key={perk.name} perk={perk} index={i} phase={phase} />
-          ))}
-        </div>
-      )}
-    </Modal>
+        </button>
+      </div>
+    </div>
   );
 };

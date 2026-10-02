@@ -31,13 +31,13 @@ export const HistoryRulesModal: React.FC<HistoryRulesModalProps> = ({ isOpen, on
       isOpen={isOpen}
       onClose={onClose}
       icon={BookOpen}
-      title={s.historyRulesTitle || 'History Streak Rules'}
+      title={s.rules || 'Rules'}
       footerButtonLabel={s.gotItLetsPlay || "Got It, Let's Play!"}
       dict={dict}
     >
       <RulesConceptCard
         tone="neutral"
-        title={s.historyConceptLabel || 'History Concept'}
+        title={s.historyConceptLabel || 'Concept'}
         text={
           s.historyConceptShort ||
           'Killers are grouped into rows of 5, sorted by release order. Clear a row to unlock the next.'

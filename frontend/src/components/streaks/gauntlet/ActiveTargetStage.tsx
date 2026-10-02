@@ -108,7 +108,7 @@ const PerkArt: React.FC<{ perk: Perk; size: string }> = ({ perk, size }) => {
 type SlotSize = 'large' | 'small' | 'compact';
 
 const SLOT_ICON_BASE: Record<SlotSize, string> = {
-  large: 'w-20 h-20',
+  large: 'w-[4.5rem] h-[4.5rem]',
   small: 'w-16 h-16',
   compact: 'w-12 h-12',
 };
@@ -151,7 +151,7 @@ const SlotChip: React.FC<{
 );
 
 const SLOT_ICON_SIZE: Record<SlotSize, string> = {
-  large: 'w-8 h-8',
+  large: 'w-7 h-7',
   small: 'w-6 h-6',
   compact: 'w-4 h-4',
 };
@@ -200,7 +200,7 @@ const PerkSlotsRow: React.FC<PerkSlotsRowProps> = ({ tierInfo, charPerks, random
   const perkDisplayName = usePerkDisplayName();
   const large = size === 'large';
   const iconSize = SLOT_ICON_SIZE[size];
-  const perkArtSize = large ? 'w-32 h-32' : size === 'compact' ? 'w-14 h-14' : 'w-20 h-20';
+  const perkArtSize = large ? 'w-28 h-28' : size === 'compact' ? 'w-14 h-14' : 'w-20 h-20';
 
   return (
     <div>
@@ -210,7 +210,7 @@ const PerkSlotsRow: React.FC<PerkSlotsRowProps> = ({ tierInfo, charPerks, random
           {dict?.streaks?.goesInBare || 'goes in bare.'}
         </p>
       )}
-      <div className={large ? 'flex items-center gap-16' : size === 'compact' ? 'flex items-center gap-6' : 'flex items-center gap-10'} role="list">
+      <div className={large ? 'flex items-center gap-12' : size === 'compact' ? 'flex items-center gap-6' : 'flex items-center gap-10'} role="list">
         {slots.map((idx) => {
           if (idx === 0 && perkLimit === 0 && randomPerks.length > 0) {
             const perk = randomPerks[0];
@@ -335,7 +335,7 @@ const CompactPlayerBuild: React.FC<CompactPlayerBuildProps> = ({
     return (
       <div className="flex w-full items-center gap-8">
         <div className="w-1/3 shrink-0 flex flex-col items-center gap-3 border-r border-border-color pr-8">
-          {avatarBox('w-28 h-28 sm:w-36 sm:h-36', 'w-14 h-14')}
+          {avatarBox('w-24 h-24 sm:w-28 sm:h-28', 'w-12 h-12')}
           <span className="text-base font-bold text-text-primary text-center leading-tight">{displayName}</span>
         </div>
         <div className="flex-1 min-w-0 flex items-center justify-center">
@@ -478,7 +478,7 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
 
   if (!run || !run.current_loadout) {
     return (
-      <div className="w-full bg-bg-surface border border-border-color rounded-2xl p-6 text-center backdrop-blur-md mb-4">
+      <div className="w-full rounded-xl p-6 text-center">
         <Spinner size="md" tone="accent" className="mx-auto mb-2" />
         <p className="text-text-muted text-sm">
           {dict?.streaks?.loadingStreak || 'Loading active gauntlet stage...'}
@@ -490,13 +490,13 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
   if (pickCharacter && !run.target_revealed) {
     return (
       <>
-        <div className="w-full flex items-center justify-center bg-bg-surface border border-border-color rounded-xl px-4 py-[92px] shadow-sm backdrop-blur-md mb-4">
+        <div className="w-full flex items-center justify-center rounded-xl px-4 py-[92px]">
           <h2 className="text-sm sm:text-base font-black text-text-primary">
             {dict?.streaks?.soloPickTitle || 'Choose your survivor'}
           </h2>
         </div>
         <StreakActionBar>
-          <StreakActionButton variant="red" compact onClick={() => onAcceptPick?.()} disabled={loading || !pendingPick}>
+          <StreakActionButton variant="red" onClick={() => onAcceptPick?.()} disabled={loading || !pendingPick}>
             {dict?.streaks?.acceptPick || 'ACCEPT PICK'}
           </StreakActionButton>
         </StreakActionBar>
@@ -535,22 +535,22 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
       </Button>
     );
 
-    if (!isTeam && !drawing) {
+    if (!drawing) {
       return (
-        <div className="w-full flex items-center justify-center bg-bg-surface border border-border-color rounded-xl px-4 sm:px-6 py-6 shadow-sm backdrop-blur-md mb-4">
+        <div className="w-full flex items-center justify-center rounded-xl p-2 min-h-[148px] sm:min-h-[164px]">
           {startButton}
         </div>
       );
     }
 
-    if (!isTeam && drawing) {
+    if (!isTeam) {
       const reel = reels[0];
       const displayPhase = reel.phase === 'idle' ? 'landed' : reel.phase;
       return (
-        <div className="w-full flex items-center justify-center gap-3 bg-bg-surface border border-border-color rounded-xl px-4 sm:px-6 py-4 shadow-sm backdrop-blur-md mb-4">
+        <div className="w-full flex items-center justify-center gap-3 rounded-xl p-2 min-h-[148px] sm:min-h-[164px]">
           <div className="flex flex-col items-center gap-3">
             <div
-              className={`w-28 h-28 sm:w-36 sm:h-36 rounded-xl p-1 bg-bg-elevated border-2 border-border-color flex items-center justify-center overflow-hidden ${
+              className={`w-24 h-24 sm:w-28 sm:h-28 rounded-xl p-1 bg-bg-elevated border-2 border-border-color flex items-center justify-center overflow-hidden ${
                 displayPhase === 'landed' ? 'gn-land-glow' : ''
               }`}
             >
@@ -571,40 +571,32 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
     }
 
     return (
-      <div className="w-full flex flex-wrap items-center gap-4 bg-bg-surface border border-border-color rounded-xl px-4 sm:px-6 py-6 shadow-sm backdrop-blur-md mb-4 min-h-[210px]">
+      <div className="w-full flex flex-wrap items-center gap-4 rounded-xl p-2 min-h-[194px]">
         <div className="flex-1 flex items-center justify-center gap-4 flex-wrap">
-        <div className="flex items-center gap-24">
-          {reels.map((reel, idx) => {
-            // A reel that finished before its partner reverts to 'idle' on its own;
-            // while the pair is still drawing overall, treat that as still landed.
-            const displayPhase = drawing && reel.phase === 'idle' ? 'landed' : reel.phase;
-            return (
-              <div
-                key={idx}
-                className={`w-28 h-28 sm:w-32 sm:h-32 rounded-xl p-1 bg-bg-elevated border-2 border-border-color flex items-center justify-center overflow-hidden ${
-                  displayPhase === 'landed' ? 'gn-land-glow' : ''
-                }`}
-              >
-                <RevealPortrait
-                  key={drawing ? reel.name ?? 'idle' : 'idle'}
-                  name={drawing ? reel.name ?? undefined : undefined}
-                  role={role}
-                  phase={drawing ? displayPhase : 'idle'}
-                  characters={characters}
-                />
-              </div>
-            );
-          })}
-        </div>
-
-        {!drawing && (
-          <div className="text-sm sm:text-base font-black text-text-primary">
-            {dict?.streaks?.readyForGauntlet || 'Ready for the Gauntlet?'}
+          <div className="flex items-center gap-24">
+            {reels.map((reel, idx) => {
+              // A reel that finished before its partner reverts to 'idle' on its own;
+              // while the pair is still drawing overall, treat that as still landed.
+              const displayPhase = reel.phase === 'idle' ? 'landed' : reel.phase;
+              return (
+                <div
+                  key={idx}
+                  className={`w-28 h-28 sm:w-32 sm:h-32 rounded-xl p-1 bg-bg-elevated border-2 border-border-color flex items-center justify-center overflow-hidden ${
+                    displayPhase === 'landed' ? 'gn-land-glow' : ''
+                  }`}
+                >
+                  <RevealPortrait
+                    key={reel.name ?? 'idle'}
+                    name={reel.name ?? undefined}
+                    role={role}
+                    phase={displayPhase}
+                    characters={characters}
+                  />
+                </div>
+              );
+            })}
           </div>
-        )}
         </div>
-
-        {!drawing && startButton}
       </div>
     );
   }
@@ -619,11 +611,11 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
     { name: 'The Warm Up', tier_level: 0, perk_limit: 4, character_perks_only: false, description: '' };
   const actionButtons = (
     <StreakActionBar>
-      <StreakActionButton variant="green" compact onClick={onWin} disabled={loading}>
-        {dict?.streaks?.winMatch || 'WON'}
-      </StreakActionButton>
-      <StreakActionButton variant="red" compact onClick={onLoss} disabled={loading}>
+      <StreakActionButton variant="red" onClick={onLoss} disabled={loading}>
         {dict?.streaks?.loseMatch || 'LOST'}
+      </StreakActionButton>
+      <StreakActionButton variant="green" onClick={onWin} disabled={loading}>
+        {dict?.streaks?.winMatch || 'WON'}
       </StreakActionButton>
     </StreakActionBar>
   );
@@ -634,7 +626,7 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
 
   return (
     <>
-      <div className="w-full bg-bg-surface border border-border-color rounded-2xl p-4 shadow-sm dark:shadow-2xl backdrop-blur-md mb-4">
+      <div className="w-full rounded-xl p-2 min-h-[148px] sm:min-h-[164px]">
         <div className={isTeam ? 'grid grid-cols-1 sm:grid-cols-2 gap-3 divide-y sm:divide-y-0 sm:divide-x divide-border-color' : ''}>
           {players.map((player, index) => (
             <CompactPlayerBuild

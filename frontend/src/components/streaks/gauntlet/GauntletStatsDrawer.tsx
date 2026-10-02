@@ -4,8 +4,7 @@ import type { Dictionary } from '@/locales/types';
 
 import React from 'react';
 import { GauntletStats, MatchLog } from '@/types/gauntletStreak';
-import { Flame } from 'lucide-react';
-import { StreakStatsDrawer } from '../StreakStatsDrawer';
+import { StreakStatsDrawer, streakAtResult } from '../StreakStatsDrawer';
 import { useCharacterDisplayName } from '@/context/DisplayNamesContext';
 
 export interface GauntletStatsDrawerProps {
@@ -22,19 +21,15 @@ export const GauntletStatsDrawer: React.FC<GauntletStatsDrawerProps> = ({ isOpen
   <StreakStatsDrawer<MatchLog>
     isOpen={isOpen}
     onClose={onClose}
-    title={dict?.streaks?.gauntlet || 'Gauntlet'}
-    accent="amber"
     stats={stats}
     attempts={attempts}
     dict={dict}
     renderLabel={(log: MatchLog) => (
-      <div className="type-card-title text-text-primary">{characterDisplayName(log.character_id)}</div>
+      <div className="text-base font-bold text-text-primary">{characterDisplayName(log.character_id)}</div>
     )}
     renderMeta={(log: MatchLog) => (
-      <span className="inline-flex items-center gap-1">
-        <Flame className="w-3 h-3 text-accent-red" />
-        {dict?.streaks?.streakLabel || 'Streak:'} {log.streak_before} {dict?.streaks?.streakArrow || '→'}{' '}
-        {log.streak_after}
+      <span>
+        {dict?.streaks?.streakLabel || 'Streak:'} {streakAtResult(log)}
       </span>
     )}
   />

@@ -28,13 +28,13 @@ export const PageStreakRulesModal: React.FC<PageStreakRulesModalProps> = ({ isOp
       isOpen={isOpen}
       onClose={onClose}
       icon={BookOpen}
-      title={s.pageStreakRulesTitle || 'Page Streak Rules'}
+      title={s.rules || 'Rules'}
       footerButtonLabel={s.gotItLetsPlay || "Got It, Let's Play!"}
       dict={dict}
     >
       <RulesConceptCard
         tone="red"
-        title={s.pageStreakConceptLabel || 'Page Streak Concept'}
+        title={s.pageStreakConceptLabel || 'Concept'}
         text={s.pageStreakConceptShort || 'Pick a killer, then build a loadout from your perks, split across pages.'}
       />
 

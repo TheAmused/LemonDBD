@@ -1,9 +1,7 @@
 'use client';
 // frontend/src/components/streaks/PageStreakBoard.tsx
-import { Button } from '@/components/common/Button';
 import React, { useCallback, useEffect, useState } from 'react';
-import Link from 'next/link';
-import { ArrowLeft, RotateCcw } from 'lucide-react';
+import { RotateCcw } from 'lucide-react';
 import { ConfirmModal } from '@/components/common/ConfirmModal';
 import { PageStreakRoster } from './page-streak/PageStreakRoster';
 import { fetchRoster, resetAllRuns } from '@/services/pageStreakApi';
@@ -58,34 +56,15 @@ export const PageStreakBoard: React.FC<PageStreakBoardProps> = ({ locale }) => {
 
   return (
     <div>
-      <Link
-        href={`/${locale}/streaks/killer`}
-        className="inline-flex items-center gap-1.5 rounded type-strong text-text-secondary hover:text-accent-red transition-colors focus:outline-none focus:ring-2 focus:ring-accent-red"
-      >
-        <ArrowLeft className="h-3.5 w-3.5" />
-        <span>{dict?.streaks?.backToKillerStreaks || 'Back to killer streaks'}</span>
-      </Link>
-
-      <div className="mt-4 mb-6 flex flex-wrap items-center justify-between gap-3">
-        <div className="flex items-center gap-3">
-          <img
-            src="/images/streaks/page-streak.webp"
-            alt=""
-            className="h-11 w-11 object-contain"
-          />
-          <h2 className="text-lg font-extrabold tracking-wide text-text-primary">
-            {dict?.streaks?.pageStreak || 'Page streak'}
-          </h2>
-        </div>
-
-        <Button
-          variant="secondary"
-          size="sm"
+      <div className="mb-6 flex justify-end">
+        <button
+          type="button"
           onClick={() => setConfirmingResetAll(true)}
+          className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-bg-elevated hover:bg-accent-red/10 text-text-secondary hover:text-accent-red border border-border-color font-bold text-xs transition-colors shadow-sm cursor-pointer"
         >
           <RotateCcw className="w-3.5 h-3.5" />
           {dict?.streaks?.resetAllRuns || 'Reset all killers'}
-        </Button>
+        </button>
       </div>
 
       <ConfirmModal
@@ -95,7 +74,7 @@ export const PageStreakBoard: React.FC<PageStreakBoardProps> = ({ locale }) => {
           dict?.streaks?.resetAllRunsPrompt ||
           'This resets progress on every killer and clears every Page Streak win. This cannot be undone.'
         }
-        confirmLabel={dict?.generator?.resetAllLabel || 'Reset All'}
+        confirmLabel={dict?.streaks?.resetConfirm || 'Reset'}
         cancelLabel={dict?.streaks?.cancel || 'Cancel'}
         busy={resettingAll}
         onConfirm={handleResetAll}

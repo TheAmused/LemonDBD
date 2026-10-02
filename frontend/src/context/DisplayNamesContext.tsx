@@ -5,6 +5,7 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import { backendBase } from '@/utils/staticUrl';
 
 interface NamedRecord {
+  description?: string;
   id: number;
   name: string;
 }
@@ -14,12 +15,29 @@ interface DisplayNamesValue {
   characterName: (name: string) => string;
   /** Canonical (English) perk name -> localized name. */
   perkName: (name: string) => string;
+  /** A perk record -> its localized name and description, matched by id first, then by name. */
+  perkLabel: (perk: { id?: number; name: string }) => LocalizedLabel | undefined;
 }
 
 const DisplayNamesContext = createContext<DisplayNamesValue>({
   characterName: (name) => name,
   perkName: (name) => name,
+  perkLabel: () => undefined,
 });
+
+interface LocalizedLabel {
+  name: string;
+  description?: string;
+}
+
+interface DisplayMaps {
+  /** Keyed by the canonical (lang=en) name. */
+  byName: Map<string, LocalizedLabel>;
+  /** Keyed by record id, which is stable where canonical names are not (a perk's lang=en name can differ from its stored one). */
+  byId: Map<number, LocalizedLabel>;
+}
+
+const EMPTY_MAPS: DisplayMaps = { byName: new Map(), byId: new Map() };
 
 /**
  * `canonicalUrl` must pass `lang=en` explicitly, not omit `lang` -- the
@@ -32,24 +50,28 @@ const DisplayNamesContext = createContext<DisplayNamesValue>({
 async function buildDisplayMap(
   canonicalUrl: string,
   translatedUrl: string
-): Promise<Map<string, string>> {
+): Promise<DisplayMaps> {
   const [canonicalRes, translatedRes] = await Promise.all([
     fetch(canonicalUrl).catch(() => null),
     fetch(translatedUrl).catch(() => null),
   ]);
-  if (!canonicalRes?.ok || !translatedRes?.ok) return new Map();
+  if (!canonicalRes?.ok || !translatedRes?.ok) return EMPTY_MAPS;
 
   const [canonicalData, translatedData] = await Promise.all([canonicalRes.json(), translatedRes.json()]);
   const canonicalById = new Map<number, string>();
   for (const item of (canonicalData.data || []) as NamedRecord[]) {
     canonicalById.set(item.id, item.name);
   }
-  const map = new Map<string, string>();
+  const byName = new Map<string, LocalizedLabel>();
+  const byId = new Map<number, LocalizedLabel>();
   for (const item of (translatedData.data || []) as NamedRecord[]) {
+    if (!item.name) continue;
+    const label = { name: item.name, description: item.description };
+    byId.set(item.id, label);
     const canonicalName = canonicalById.get(item.id);
-    if (canonicalName && item.name) map.set(canonicalName, item.name);
+    if (canonicalName) byName.set(canonicalName, label);
   }
-  return map;
+  return { byName, byId };
 }
 
 /**
@@ -64,13 +86,13 @@ export const DisplayNamesProvider: React.FC<{ locale: string; children: React.Re
   locale,
   children,
 }) => {
-  const [characterMap, setCharacterMap] = useState<Map<string, string>>(new Map());
-  const [perkMap, setPerkMap] = useState<Map<string, string>>(new Map());
+  const [characterMap, setCharacterMap] = useState<DisplayMaps>(EMPTY_MAPS);
+  const [perkMap, setPerkMap] = useState<DisplayMaps>(EMPTY_MAPS);
 
   useEffect(() => {
     if (!locale || locale === 'en') {
-      setCharacterMap(new Map());
-      setPerkMap(new Map());
+      setCharacterMap(EMPTY_MAPS);
+      setPerkMap(EMPTY_MAPS);
       return;
     }
 
@@ -96,8 +118,9 @@ export const DisplayNamesProvider: React.FC<{ locale: string; children: React.Re
   }, [locale]);
 
   const value: DisplayNamesValue = {
-    characterName: (name) => characterMap.get(name) || name,
-    perkName: (name) => perkMap.get(name) || name,
+    characterName: (name) => characterMap.byName.get(name)?.name || name,
+    perkName: (name) => perkMap.byName.get(name)?.name || name,
+    perkLabel: (perk) => (perk.id !== undefined ? perkMap.byId.get(perk.id) : undefined) ?? perkMap.byName.get(perk.name),
   };
 
   return <DisplayNamesContext.Provider value={value}>{children}</DisplayNamesContext.Provider>;
@@ -116,4 +139,9 @@ export function useCharacterDisplayName(): (name: string) => string {
 /** Returns a resolver function mapping a canonical perk name to its localized label. */
 export function usePerkDisplayName(): (name: string) => string {
   return useContext(DisplayNamesContext).perkName;
+}
+
+/** Returns a resolver mapping a perk record to its localized name and description, or undefined when none. */
+export function usePerkLabel(): (perk: { id?: number; name: string }) => LocalizedLabel | undefined {
+  return useContext(DisplayNamesContext).perkLabel;
 }

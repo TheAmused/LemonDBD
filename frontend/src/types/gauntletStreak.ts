@@ -20,6 +20,10 @@ export interface Perk {
   category?: string;
   icon_url?: string;
   icon_local_path?: string;
+  description?: string;
+  alternate_name?: string;
+  role?: string;
+  is_generic_counterpart?: boolean;
 }
 
 export interface GauntletPlayerLoadout {

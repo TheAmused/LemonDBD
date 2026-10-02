@@ -2,8 +2,8 @@
 // frontend/src/components/streaks/chaos/SlotMachineStage.tsx
 import type { Dictionary } from '@/locales/types';
 
-import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Sparkles } from 'lucide-react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { RefreshCw } from 'lucide-react';
 import { Perk } from '@/types/gauntletStreak';
 import { AddonRarity } from '@/types/chaosStreak';
 import { ADDON_RARITY_ICONS } from '@/constants/addonRarityIcons';
@@ -20,7 +20,7 @@ const PerkImg: React.FC<{ perk: Perk | null; className: string }> = ({ perk, cla
   const displayName = usePerkDisplayName()(perk?.name || '');
   const src = perk ? perkIconFor(perk) : undefined;
   if (!perk || !src || failed) {
-    return <Sparkles className="w-5 h-5 text-text-muted" />;
+    return <span className="text-2xl font-black text-text-muted" aria-hidden="true">?</span>;
   }
   return (
     <img src={src} alt={displayName} className={className} draggable={false} onError={() => setFailed(true)} />
@@ -158,6 +158,18 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
   const [leverPulled, setLeverPulled] = useState(false);
   const [hasSpunThisBuild, setHasSpunThisBuild] = useState(revealed);
   const pendingSpinRef = useRef(false);
+  const leverTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    if (revealed) {
+      if (leverTimerRef.current) clearTimeout(leverTimerRef.current);
+      setLeverPulled(false);
+    }
+  }, [revealed]);
+
+  useEffect(() => () => {
+    if (leverTimerRef.current) clearTimeout(leverTimerRef.current);
+  }, []);
 
   useEffect(() => {
     if (!revealed) {
@@ -178,12 +190,12 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
     if (revealed || loading || locked) return;
     pendingSpinRef.current = true;
     setLeverPulled(true);
-    setTimeout(() => setLeverPulled(false), 550);
+    leverTimerRef.current = setTimeout(() => setLeverPulled(false), LEVER_PENDING_MS);
     onPullLever();
   };
 
   return (
-    <div className="relative w-full overflow-hidden rounded-2xl border-2 border-border-color bg-bg-elevated p-6 sm:p-8 shadow-sm">
+    <div className="relative w-full overflow-hidden rounded-xl p-6 sm:p-8">
       <div className="relative z-10">
         <div className="flex items-center justify-center gap-4 sm:gap-6">
           <div className="flex items-end gap-2">
@@ -200,7 +212,7 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
             ))}
           </div>
 
-          <SlotLever pulled={leverPulled} disabled={revealed || loading || locked} onPull={handlePull} />
+          <SlotLever down={revealed || leverPulled} disabled={revealed || loading || locked} onPull={handlePull} />
 
           <div className="w-40 sm:w-48 shrink-0 pl-2 sm:pl-3">
             {revealed ? (
@@ -229,43 +241,124 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
   );
 };
 
-const SlotLever: React.FC<{ pulled: boolean; disabled: boolean; onPull: () => void; label?: string }> = ({
-  pulled,
+/** Keeps the lever down while the reveal request is in flight; releases it if the request never lands. */
+const LEVER_PENDING_MS = 4000;
+const LEVER_BALL_PX = 26;
+const LEVER_ROD_PX = 12;
+const LEVER_ROD_FRACTION = 0.38;
+const LEVER_PERSPECTIVE_PX = 130;
+const LEVER_SWING_MS = 600;
+const LEVER_ROD_FILL =
+  'linear-gradient(90deg, var(--text-muted) 55%, color-mix(in srgb, var(--text-muted) 65%, var(--bg-primary)) 55%)';
+const LEVER_BALL_FILL =
+  'radial-gradient(circle at 32% 30%, var(--accent-red-hover) 0 13%, transparent 14%), color-mix(in srgb, var(--accent-red) 72%, black)';
+
+const easeOutBack = (t: number): number => {
+  const c1 = 1.3;
+  const c3 = c1 + 1;
+  return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2);
+};
+
+const SlotLever: React.FC<{ down: boolean; disabled: boolean; onPull: () => void; label?: string }> = ({
+  down,
   disabled,
   onPull,
   label = 'Pull the lever',
-}) => (
-  <button
-    type="button"
-    onClick={onPull}
-    disabled={disabled}
-    aria-label={label}
-    className="group relative flex flex-col items-center pb-1 disabled:opacity-50 cursor-pointer"
-  >
-    <div
-      className={`relative ${pulled ? 'chaos-lever-pull' : ''}`}
-      style={{ transformOrigin: '50% 100%' }}
+}) => {
+  const panelRef = useRef<HTMLDivElement | null>(null);
+  const rodRef = useRef<HTMLDivElement | null>(null);
+  const ballRef = useRef<HTMLDivElement | null>(null);
+  const angleRef = useRef(down ? Math.PI : 0);
+
+  // Projects the rod tip, swinging about the horizontal pivot axis toward the viewer, with a
+  // manual perspective divide. Plain 2D transforms only, so no 3D layer is ever re-rasterised.
+  const render = useCallback((angle: number) => {
+    const panel = panelRef.current;
+    const rod = rodRef.current;
+    const ball = ballRef.current;
+    if (!panel || !rod || !ball) return;
+    const pivotY = panel.clientHeight / 2;
+    const length = panel.clientHeight * LEVER_ROD_FRACTION;
+    const scale = LEVER_PERSPECTIVE_PX / (LEVER_PERSPECTIVE_PX - length * Math.sin(angle));
+    const tipY = pivotY - length * Math.cos(angle) * scale;
+    const rodHeight = Math.abs(tipY - pivotY);
+    const rodWidth = LEVER_ROD_PX * Math.max(1, scale);
+    const tipHalf = (LEVER_ROD_PX / 2) * scale;
+    const pivotHalf = LEVER_ROD_PX / 2;
+    const mid = rodWidth / 2;
+    const tipUp = tipY < pivotY;
+    const top = tipUp ? tipY : pivotY;
+    const [topHalf, bottomHalf] = tipUp ? [tipHalf, pivotHalf] : [pivotHalf, tipHalf];
+    rod.style.top = `${top}px`;
+    rod.style.height = `${rodHeight}px`;
+    rod.style.width = `${rodWidth}px`;
+    rod.style.marginLeft = `${-rodWidth / 2}px`;
+    rod.style.opacity = rodHeight < 1 ? '0' : '1';
+    rod.style.clipPath = `polygon(${mid - topHalf}px 0, ${mid + topHalf}px 0, ${mid + bottomHalf}px 100%, ${mid - bottomHalf}px 100%)`;
+    const ballSize = LEVER_BALL_PX * scale;
+    ball.style.width = `${ballSize}px`;
+    ball.style.height = `${ballSize}px`;
+    ball.style.left = `calc(50% - ${ballSize / 2}px)`;
+    ball.style.top = `${tipY - ballSize / 2}px`;
+  }, []);
+
+  useEffect(() => {
+    const target = down ? Math.PI : 0;
+    const from = angleRef.current;
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduced || from === target) {
+      angleRef.current = target;
+      render(target);
+      return;
+    }
+    const start = performance.now();
+    let raf = 0;
+    const tick = (now: number) => {
+      const t = Math.min(1, (now - start) / LEVER_SWING_MS);
+      angleRef.current = from + (target - from) * easeOutBack(t);
+      render(angleRef.current);
+      if (t < 1) raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [down, render]);
+
+  useEffect(() => {
+    const panel = panelRef.current;
+    if (!panel) return;
+    const ro = new ResizeObserver(() => render(angleRef.current));
+    ro.observe(panel);
+    return () => ro.disconnect();
+  }, [render]);
+
+  return (
+    <button
+      type="button"
+      onClick={onPull}
+      disabled={disabled}
+      aria-label={label}
+      className="relative shrink-0 cursor-pointer disabled:cursor-default"
     >
-      <svg width="28" height="72" viewBox="0 0 28 72" className="drop-shadow-md">
-        <defs>
-          <linearGradient id="chaosLeverRail" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%" stopColor="#94a3b8" />
-            <stop offset="45%" stopColor="#f1f5f9" />
-            <stop offset="100%" stopColor="#475569" />
-          </linearGradient>
-          <radialGradient id="chaosLeverBall" cx="35%" cy="30%" r="70%">
-            <stop offset="0%" stopColor="#fca5a5" />
-            <stop offset="45%" stopColor="#ef4444" />
-            <stop offset="100%" stopColor="#7f1d1d" />
-          </radialGradient>
-        </defs>
-        <rect x="11" y="19" width="6" height="48" rx="3" fill="url(#chaosLeverRail)" />
-        <circle cx="14" cy="15" r="14" fill="url(#chaosLeverBall)" stroke="#fecaca" strokeWidth="1" />
-        <ellipse cx="9" cy="10" rx="4.2" ry="2.8" fill="#fff" opacity="0.55" />
-      </svg>
-    </div>
-    <svg width="42" height="14" viewBox="0 0 42 14" className="-mt-0.5">
-      <ellipse cx="21" cy="6" rx="19.5" ry="4.9" fill="#1e293b" stroke="#475569" strokeWidth="1.4" />
-    </svg>
-  </button>
-);
+      <div
+        ref={panelRef}
+        className="relative h-24 sm:h-28 md:h-32 w-16 sm:w-[72px] rounded-2xl border border-border-color"
+        style={{ background: 'var(--bg-surface)' }}
+      >
+        <div
+          className="absolute left-1/2 top-1/2 h-[40%] w-[22px] -translate-x-1/2 -translate-y-1/2 rounded-full"
+          style={{ background: 'var(--bg-primary)' }}
+        />
+        <div ref={rodRef} className="absolute left-1/2" style={{ background: LEVER_ROD_FILL }} />
+        <div
+          className="absolute left-1/2 top-1/2 h-[26px] w-[26px] -translate-x-1/2 -translate-y-1/2 rounded-full"
+          style={{ background: 'var(--bg-elevated)', border: '2px solid var(--border-color)' }}
+        />
+        <div
+          ref={ballRef}
+          className="absolute rounded-full"
+          style={{ background: LEVER_BALL_FILL }}
+        />
+      </div>
+    </button>
+  );
+};

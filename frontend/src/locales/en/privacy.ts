@@ -32,6 +32,7 @@ export default {
         "<b>Bug reports and messages:</b> the text, screenshots, name and email address you send us. Guests must give an email address so we can answer.",
         "<b>Technical data:</b> your IP address, browser type and request details, used for rate limiting, abuse prevention and fixing errors.",
         "<b>Voice commands (maps):</b> if you turn them on, your microphone audio is used to recognize map names. See the section on storage and third parties below for how this works.",
+        "<b>Screenshot check:</b> if you upload a match scoreboard to verify a challenge, the image is analysed in the server's memory and discarded as soon as the result is ready. It is never saved or logged; only the result (for example won or not) is returned to you.",
       ],
     },
     howWeUse: {

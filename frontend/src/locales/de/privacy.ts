@@ -32,6 +32,7 @@ export default {
         "<b>Fehlermeldungen und Nachrichten:</b> Text, Screenshots, Name und E-Mail-Adresse, die du uns schickst. Gäste müssen eine E-Mail-Adresse angeben, damit wir antworten können.",
         "<b>Technische Daten:</b> deine IP-Adresse, Browsertyp und Anfragedetails, genutzt für Ratenbegrenzung, Missbrauchsschutz und Fehlerbehebung.",
         "<b>Sprachbefehle (Karten):</b> Wenn du sie einschaltest, wird dein Mikrofonton zur Erkennung von Kartennamen verwendet. Wie das funktioniert, steht unten im Abschnitt zu Speicher und Dritten.",
+        "<b>Screenshot-Prüfung:</b> Wenn du eine Match-Ergebnistafel hochlädst, um eine Challenge zu bestätigen, wird das Bild im Arbeitsspeicher des Servers analysiert und verworfen, sobald das Ergebnis vorliegt. Es wird weder gespeichert noch protokolliert; nur das Ergebnis (z. B. gewonnen oder nicht) wird an dich zurückgegeben.",
       ],
     },
     howWeUse: {

@@ -32,6 +32,7 @@ export default {
         "<b>Informes de errores y mensajes:</b> el texto, las capturas, el nombre y el correo que nos envías. Los invitados deben indicar un correo para que podamos responder.",
         "<b>Datos técnicos:</b> tu dirección IP, tipo de navegador y detalles de las solicitudes, usados para limitar el uso, prevenir abusos y corregir errores.",
         "<b>Comandos de voz (mapas):</b> si los activas, el audio del micrófono se usa para reconocer nombres de mapas. Cómo funciona se explica abajo, en la sección sobre almacenamiento y terceros.",
+        "<b>Verificación por captura:</b> si subes el marcador de una partida para verificar un reto, la imagen se analiza en la memoria del servidor y se descarta en cuanto el resultado está listo. No se guarda ni se registra; solo se te devuelve el resultado (por ejemplo, ganada o no).",
       ],
     },
     howWeUse: {

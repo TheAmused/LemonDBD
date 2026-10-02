@@ -15,6 +15,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 COPY requirements.txt .
 RUN pip install --no-cache-dir --user -r requirements.txt
+COPY requirements-ocr.txt .
+RUN pip install --no-cache-dir --user --no-deps -r requirements-ocr.txt
 
 # Stage 2: Final Runtime Container
 FROM python:3.14-slim AS runner

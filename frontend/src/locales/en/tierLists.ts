@@ -7,6 +7,7 @@ export default {
   curatedTemplatesSingular: "1 curated list",
   mySection: "My custom lists",
   localOnlyNote: "Your rankings and custom lists are saved in this browser only.",
+  customListsCount: "Custom lists: {count}",
   featured: "Featured",
   officialRanking: "Official ranking",
   itemsCount: "Items: {count}",

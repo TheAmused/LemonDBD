@@ -18,7 +18,6 @@ import { TierListImportModal } from './TierListImportModal';
 import { TierListSkeleton } from './TierListSkeleton';
 import { TOUCH_BTN } from './styles';
 import { Button } from '@/components/common/Button';
-import { Badge } from '@/components/common/Badge';
 
 interface TierListHubProps {
   locale: string;
@@ -130,9 +129,6 @@ export function TierListHub({ locale, dict }: TierListHubProps) {
               <h2 id="tier-lists-official" className="text-xs sm:text-sm 2xl:text-base font-black uppercase tracking-widest text-text-primary font-mono group-hover:text-accent-red transition-colors">
                 {t.officialSection}
               </h2>
-              <Badge tone="red" plain className="font-mono text-[11px] font-bold">
-                {lists.length}
-              </Badge>
             </div>
             <p className="text-[11px] sm:text-xs 2xl:text-sm text-text-secondary mt-0.5 font-mono truncate">
               {lists.length === 1
@@ -256,12 +252,9 @@ export function TierListHub({ locale, dict }: TierListHubProps) {
                 <h2 id="tier-lists-custom" className="text-xs sm:text-sm 2xl:text-base font-black uppercase tracking-widest text-text-primary font-mono">
                   {t.mySection}
                 </h2>
-                <span className="inline-flex items-center rounded-full bg-accent-amber/10 px-2 py-0.5 text-[11px] font-bold text-accent-amber border border-accent-amber/25 font-mono">
-                  {hydrated ? customLists.length : 0}
-                </span>
               </div>
               <p className="text-[11px] sm:text-xs 2xl:text-sm text-text-secondary mt-0.5 font-mono truncate">
-                {t.localOnlyNote}
+                {(t.customListsCount || 'Custom lists: {count}').replace('{count}', String(hydrated ? customLists.length : 0))}
               </p>
             </div>
 

@@ -7,6 +7,7 @@ export default {
   curatedTemplatesSingular: "1 kuratierte Vorlage",
   mySection: "Meine eigenen Listen",
   localOnlyNote: "Deine Rankings und eigenen Listen werden nur in diesem Browser gespeichert.",
+  customListsCount: "Eigene Listen: {count}",
   featured: "Empfohlen",
   officialRanking: "Offizielles Ranking",
   itemsCount: "Einträge: {count}",

@@ -11,7 +11,6 @@ export default {
   customListsSingular: "1 eigene Liste",
   officialSavedNote: "Deine Rankings werden nur in diesem Browser gespeichert",
   customSavedNote: "Nur in diesem Browser gespeichert",
-  featured: "Empfohlen",
   officialRanking: "Offizielles Ranking",
   itemsCount: "Einträge: {count}",
   rankedCount: "Eingestuft: {count}",

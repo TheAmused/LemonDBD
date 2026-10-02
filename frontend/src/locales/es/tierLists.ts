@@ -11,7 +11,6 @@ export default {
   customListsSingular: "1 lista personalizada",
   officialSavedNote: "Tus clasificaciones se guardan solo en este navegador",
   customSavedNote: "Guardado solo en este navegador",
-  featured: "Destacada",
   officialRanking: "Clasificación oficial",
   itemsCount: "Elementos: {count}",
   rankedCount: "Clasificados: {count}",

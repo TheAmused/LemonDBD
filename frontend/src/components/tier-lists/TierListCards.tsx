@@ -43,17 +43,8 @@ export function OfficialTierListCard({ list, rankedCount, locale, dict }: Offici
       )}
       <div className="flex items-center sm:items-start justify-center sm:justify-start gap-3">
         <div className="min-w-0 flex-1 text-center sm:text-left">
-          {(showKindBadge || list.is_featured) && (
-            <div className="flex flex-wrap items-center justify-center sm:justify-start gap-1.5">
-              {showKindBadge && (
-                <span className="type-label-xs text-text-muted">{kindName}</span>
-              )}
-              {list.is_featured && (
-                <span className="rounded-md bg-accent-amber/15 px-1.5 py-0.5 type-label-2xs text-accent-amber">
-                  {t.featured}
-                </span>
-              )}
-            </div>
+          {showKindBadge && (
+            <span className="type-label-xs text-text-muted">{kindName}</span>
           )}
           <h3 className="mt-0.5 text-lg font-black leading-tight text-text-primary group-hover:text-accent-red">
             {list.title}
@@ -104,9 +95,6 @@ export function CustomTierListCard({ list, locale, dict, onDelete, disabled }: C
   const preview = list.items.filter((i) => i.image).slice(0, 5);
   const date = formatDate(list.updatedAt, locale) || null;
   const customTitle = list.title || t.untitled;
-  const isDuplicateCustomKind = Boolean(
-    t.kinds.custom && customTitle && t.kinds.custom.trim().toLowerCase() === customTitle.trim().toLowerCase()
-  );
   const background = list.backgroundImage ? coverSrc(list.backgroundImage) : null;
 
   const inner = (
@@ -131,10 +119,7 @@ export function CustomTierListCard({ list, locale, dict, onDelete, disabled }: C
       <div className="relative z-10 flex flex-1 flex-col gap-3">
         <div className="flex items-center sm:items-start justify-center sm:justify-start gap-3">
           <div className="min-w-0 flex-1 text-center sm:text-left">
-            {!isDuplicateCustomKind && (
-              <span className="type-label-xs text-text-muted">{t.kinds.custom}</span>
-            )}
-            <h3 className="mt-0.5 text-lg font-black leading-tight text-text-primary group-hover:text-accent-red break-words">
+            <h3 className="text-lg font-black leading-tight text-text-primary group-hover:text-accent-red break-words">
               {customTitle}
             </h3>
           </div>

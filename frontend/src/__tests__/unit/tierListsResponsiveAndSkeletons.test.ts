@@ -128,9 +128,10 @@ describe('Tier lists: pages and navigation', () => {
   }
 
   it('the sidebar links to the hub', () => {
-    const sidebar = read('components/Sidebar.tsx');
-    assert.ok(sidebar.includes("id: 'tier-lists'"));
-    assert.ok(sidebar.includes('href: `/${currentLocale}/tier-lists`'));
+    const nav = read('components/sidebar/mainNavItems.ts');
+    assert.ok(nav.includes("['tier-lists', 'tier-lists'"));
+    assert.ok(nav.includes('href: `/${locale}/${pageId}`'));
+    assert.ok(read('components/Sidebar.tsx').includes('buildMainNavItems'));
   });
 
   it('the page is viewport-locked and the pool keeps a reserved height so toggling it never moves its header', () => {

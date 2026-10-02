@@ -2,6 +2,26 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { i18n, type Locale } from '@/i18n/config';
+import { getBackendBaseUrl } from '@/utils/api';
+import { parseSitePagesStatus, sitePageFromPathname, type SitePagesStatus } from '@/utils/sitePages';
+
+/**
+ * Asks the backend which pages are switched off and whether this visitor is an admin (their
+ * session cookie is forwarded). Returns null when the backend can't answer: the page then
+ * loads normally, while the API guard keeps protecting the page's own endpoints.
+ */
+async function fetchSitePagesStatus(cookie: string): Promise<SitePagesStatus | null> {
+    try {
+        const res = await fetch(`${getBackendBaseUrl()}/api/v1/site/pages`, {
+            headers: { cookie },
+            cache: 'no-store',
+            signal: AbortSignal.timeout(1500),
+        });
+        return res.ok ? parseSitePagesStatus(await res.json()) : null;
+    } catch {
+        return null;
+    }
+}
 
 function getPreferredLocale(request: NextRequest): Locale {
     const acceptLanguage = request.headers.get('accept-language');
@@ -28,7 +48,34 @@ function getPreferredLocale(request: NextRequest): Locale {
     return i18n.defaultLocale;
 }
 
-export function proxy(request: NextRequest) {
+/**
+ * The switched-off list lives in memory so the normal case (page is on) costs no backend call.
+ * It is refreshed in the background at most every PAGES_TTL_MS and never makes a request wait,
+ * except the very first one after a cold start. The visitor-specific admin check only happens
+ * for the rare request to a page that is switched off.
+ */
+const PAGES_TTL_MS = 5000;
+let pagesCache: { at: number; disabled: readonly string[] } | null = null;
+let pagesRefresh: Promise<void> | null = null;
+
+function refreshPagesCache(): Promise<void> {
+    pagesRefresh ??= fetchSitePagesStatus('')
+        .then((status) => {
+            if (status) pagesCache = { at: Date.now(), disabled: status.disabled };
+        })
+        .finally(() => {
+            pagesRefresh = null;
+        });
+    return pagesRefresh;
+}
+
+async function cachedDisabledPages(): Promise<readonly string[]> {
+    if (!pagesCache) await refreshPagesCache();
+    else if (Date.now() - pagesCache.at > PAGES_TTL_MS) void refreshPagesCache();
+    return pagesCache?.disabled ?? [];
+}
+
+export async function proxy(request: NextRequest) {
     const pathname = request.nextUrl.pathname;
 
     // Skip static files, API calls, and Next.js internal routes
@@ -49,6 +96,23 @@ export function proxy(request: NextRequest) {
         return NextResponse.redirect(
             new URL(`/${preferredLocale}${pathname}`, request.url)
         );
+    }
+
+    // Page kill switch: a page an admin switched off is served as the "Blocked" page to everyone
+    // else, whatever way they reached it (link, typed URL, bookmark, client-side navigation).
+    const target = sitePageFromPathname(pathname, i18n.locales);
+    if (target) {
+        if (!(await cachedDisabledPages()).includes(target.page)) return;
+        // Switched off: now (and only now) ask who is looking, with a fresh answer.
+        const status = await fetchSitePagesStatus(request.headers.get('cookie') ?? '');
+        if (status && !status.viewer_is_admin && status.disabled.includes(target.page)) {
+            const response = NextResponse.rewrite(
+                new URL(`/${target.locale}/blocked?page=${target.page}`, request.url)
+            );
+            response.headers.set('X-Robots-Tag', 'noindex, nofollow');
+            response.headers.set('Cache-Control', 'no-store');
+            return response;
+        }
     }
 }
 

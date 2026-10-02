@@ -6,16 +6,7 @@ import type { Dictionary } from '@/locales/types';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useParams } from 'next/navigation';
-import {
-  Menu,
-  X,
-  ChevronLeft,
-  ChevronRight,
-  Heart,
-  Info,
-  LayoutList,
-  Gamepad2,
-} from 'lucide-react';
+import { Menu, X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useSidebarState } from '@/hooks/useSidebarState';
 import { LemonIcon } from './LemonIcon';
 import { useAuth } from '@/context/AuthContext';
@@ -25,7 +16,8 @@ import { SidebarUserSection } from './sidebar/SidebarUserSection';
 import { SidebarBottomControls } from './sidebar/SidebarBottomControls';
 import { i18n, type Locale } from '@/i18n/config';
 import { WhatsNewLauncher } from '@/components/changelog/WhatsNewLauncher';
-import { PerkHexIcon, BloodwebIcon, RiftPortalIcon, RealmMapIcon, MaskIcon, AdeptBadgeIcon } from '@/components/icons/DbdIcons';
+import { buildMainNavItems } from './sidebar/mainNavItems';
+import { refreshSitePages, useSitePages } from '@/hooks/useSitePages';
 
 import { tip } from '@/components/common/Tooltip';
 import { Button } from '@/components/common/Button';
@@ -143,89 +135,16 @@ export const Sidebar: React.FC<SidebarProps> = ({
     return false;
   }, [pathname, currentLocale, activeCategory]);
 
-  const mainNavItems = useMemo(() => [
-    {
-      id: 'perks',
-      label: dict?.filters?.perks || dict?.sidebar?.perks || 'Perks',
-      icon: PerkHexIcon,
-      color: 'text-accent-red',
-      activeBg: 'bg-accent-red/10 text-accent-red border border-accent-red/20',
-      href: `/${currentLocale}/perks`,
-    },
-    {
-      id: 'generator',
-      label: dict?.filters?.generatorTab || dict?.generator?.title || 'Randomizer',
-      icon: BloodwebIcon,
-      color: 'text-accent-red',
-      activeBg: 'bg-accent-red/10 text-accent-red border border-accent-red/20',
-      href: `/${currentLocale}/randomizer`,
-    },
-    {
-      id: 'streaks',
-      label: dict?.sidebar?.challenges || 'Challenges',
-      icon: RiftPortalIcon,
-      color: 'text-accent-red',
-      activeBg: 'bg-accent-red/10 text-accent-red border border-accent-red/20',
-      href: `/${currentLocale}/streaks`,
-    },
-    {
-      id: 'minigames',
-      label: dict?.sidebar?.minigames || 'Minigames',
-      icon: Gamepad2,
-      color: 'text-accent-red',
-      activeBg: 'bg-accent-red/10 text-accent-red border border-accent-red/20',
-      href: `/${currentLocale}/minigames`,
-    },
-    {
-      id: 'maps',
-      label: dict?.sidebar?.mapExplorer || 'Maps',
-      icon: RealmMapIcon,
-      color: 'text-accent-red',
-      activeBg: 'bg-accent-red/10 text-accent-red border border-accent-red/20',
-      href: `/${currentLocale}/maps`,
-    },
-    {
-      id: 'characters',
-      label: dict?.sidebar?.characters || 'Characters',
-      icon: MaskIcon,
-      color: 'text-accent-red',
-      activeBg: 'bg-accent-red/10 text-accent-red border border-accent-red/20',
-      href: `/${currentLocale}/characters`,
-    },
-    {
-      id: 'tier-lists',
-      label: dict?.sidebar?.tierLists || 'Tier Lists',
-      icon: LayoutList,
-      color: 'text-accent-red',
-      activeBg: 'bg-accent-red/10 text-accent-red border border-accent-red/20',
-      href: `/${currentLocale}/tier-lists`,
-    },
-    {
-      id: 'smash-or-pass',
-      label: dict?.sidebar?.smashOrPass || 'Smash or Pass',
-      icon: Heart,
-      color: 'text-accent-red',
-      activeBg: 'bg-accent-red/10 text-accent-red border border-accent-red/20',
-      href: `/${currentLocale}/smash-or-pass`,
-    },
-    {
-      id: 'trophies',
-      label: dict?.sidebar?.trophies || 'Trophies',
-      icon: AdeptBadgeIcon,
-      color: 'text-accent-red',
-      activeBg: 'bg-accent-red/10 text-accent-red border border-accent-red/20',
-      href: `/${currentLocale}/achievements`,
-    },
-    // TEMPORARY: remove once About us is linked permanently.
-    {
-      id: 'about',
-      label: 'About us',
-      icon: Info,
-      color: 'text-accent-red',
-      activeBg: 'bg-accent-red/10 text-accent-red border border-accent-red/20',
-      href: `/${currentLocale}/about`,
-    },
-  ], [dict, currentLocale]);
+  const { isOff, isAdminViewer } = useSitePages();
+  useEffect(() => {
+    refreshSitePages();
+  }, [isAuthenticated, isAdmin]);
+  const mainNavItems = useMemo(
+    () => buildMainNavItems(dict, currentLocale),
+    [dict, currentLocale]
+  );
+  // Switched-off pages disappear for everyone but admins, who keep them (marked) to switch them back on.
+  const visibleNavItems = mainNavItems.filter((item) => isAdminViewer || isAdmin || !isOff(item.pageId));
 
 
 
@@ -259,7 +178,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             {dict?.sidebar?.navigation || 'Navigation'}
           </p>
 
-          {mainNavItems.map((item) => (
+          {visibleNavItems.map((item) => (
             <SidebarNavLink
               key={item.id}
               id={item.id}
@@ -269,6 +188,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
               activeBg={item.activeBg}
               href={item.href}
               isActive={checkIsActive(item.id, item.href)}
+              badge={isOff(item.pageId) ? dict?.admin?.pageOffBadge || 'Off' : undefined}
+              badgeColor="bg-accent-red/10 text-accent-red border-accent-red/20"
               onClick={closeMobile}
             />
           ))}

@@ -80,6 +80,11 @@ class Config:
     MAIL_PASSWORD: str = os.getenv("MAIL_PASSWORD", "")
     MAIL_DEFAULT_SENDER: str = os.getenv("MAIL_DEFAULT_SENDER") or MAIL_USERNAME
     # Public address shown on the Privacy Policy page; falls back to the mail account.
+    # Master switch for the per-page kill switches (admin "Page switches"): when false, every
+    # page stays reachable and the admin toggles have no effect.
+    PAGE_KILL_SWITCHES_ENABLED: bool = os.getenv("PAGE_KILL_SWITCHES_ENABLED", "true").strip().lower() not in {
+        "0", "false", "no", "off",
+    }
     PRIVACY_CONTACT_EMAIL: str = os.getenv("PRIVACY_CONTACT_EMAIL") or MAIL_USERNAME
     REQUIRE_EMAIL_VERIFICATION: bool = os.getenv(
         "REQUIRE_EMAIL_VERIFICATION", "true"

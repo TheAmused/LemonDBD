@@ -48,6 +48,10 @@ def create_app(config_class: Type[Config] | None = None) -> Flask:
 
     flask_app.before_request(enforce_cookie_csrf_protection)
 
+    from app.core.page_guard import enforce_page_kill_switch
+
+    flask_app.before_request(enforce_page_kill_switch)
+
     db_uri = str(flask_app.config.get("SQLALCHEMY_DATABASE_URI", ""))
     if "sqlite" in db_uri.lower():
         engine_opts = dict(flask_app.config.get("SQLALCHEMY_ENGINE_OPTIONS", {}))
@@ -173,6 +177,7 @@ def create_app(config_class: Type[Config] | None = None) -> Flask:
     from app.routes.users import users_bp
     from app.routes.minigames import minigames_bp
     from app.routes.scoreboard import scoreboard_bp
+    from app.routes.site_pages import site_pages_bp
 
     flask_app.register_blueprint(auth_bp)
     flask_app.register_blueprint(users_bp)
@@ -194,6 +199,7 @@ def create_app(config_class: Type[Config] | None = None) -> Flask:
     flask_app.register_blueprint(tier_lists_bp)
     flask_app.register_blueprint(minigames_bp)
     flask_app.register_blueprint(scoreboard_bp)
+    flask_app.register_blueprint(site_pages_bp)
 
 
     with flask_app.app_context():

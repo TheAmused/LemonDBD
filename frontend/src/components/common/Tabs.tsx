@@ -174,15 +174,15 @@ export function Tabs<T extends string>({
         const { className: extraClass, ...restButtonProps } = (tab.buttonProps ?? {}) as { className?: string };
         const variantClass =
           variant === 'underline'
-            ? cn('rounded-t-md border-b-2 -mb-px', isActive ? ACTIVE_UNDERLINE[tabAccent] : 'border-transparent text-text-secondary hover:text-text-primary')
+            ? cn('rounded-t-md border-b-2 -mb-px', isActive ? ACTIVE_UNDERLINE[tabAccent] : 'border-transparent text-text-primary hover:text-accent-red')
             : variant === 'boxed'
-              ? cn('rounded-md', isActive ? ACTIVE_SOLID[tabAccent] : 'text-text-secondary hover:bg-bg-surface/80 hover:text-text-primary')
+              ? cn('rounded-md', isActive ? ACTIVE_SOLID[tabAccent] : 'text-text-primary hover:bg-bg-surface/80 hover:text-accent-red')
               : cn(
                   size === 'sm' ? 'rounded-lg' : 'rounded-xl',
                   'border',
                   isActive
                     ? cn(ACTIVE_TINT[tabAccent], 'shadow-xs')
-                    : 'border-transparent bg-bg-elevated text-text-secondary hover:bg-bg-surface hover:text-text-primary'
+                    : 'border-transparent bg-bg-elevated text-text-primary hover:bg-bg-surface hover:text-accent-red'
                 );
         return (
           <button

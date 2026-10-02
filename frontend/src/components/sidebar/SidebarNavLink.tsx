@@ -32,7 +32,7 @@ const SidebarNavLinkBase: React.FC<SidebarNavLinkProps> = ({
 }) => {
   const commonClasses = `w-full flex items-center justify-between px-3.5 py-2 rounded-xl type-strong transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-accent-red ${isActive
       ? activeBg
-      : 'text-text-secondary hover:bg-bg-elevated hover:text-text-primary'
+      : 'text-text-primary hover:bg-bg-elevated hover:text-accent-red'
     }`;
 
   const innerContent = (

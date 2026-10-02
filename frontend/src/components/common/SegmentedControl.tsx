@@ -117,7 +117,7 @@ export function SegmentedControl<T extends string>({
           'relative z-10 flex flex-1 cursor-pointer items-center justify-center gap-1 sm:gap-1.5 wide:gap-2 whitespace-nowrap rounded-full px-2 sm:px-3 wide:px-4 wide-2k:px-5 transition-colors duration-200',
           padY,
           textSize,
-          isActive ? activeTextClass : 'text-text-secondary hover:text-text-primary'
+          isActive ? activeTextClass : 'text-text-primary hover:text-accent-red'
         );
 
         if (opt.href) {

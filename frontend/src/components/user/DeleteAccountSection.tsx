@@ -9,6 +9,7 @@ import type { Dictionary } from '@/locales/types';
 import { Button } from '@/components/common/Button';
 import { Input } from '@/components/common/Field';
 import { Modal } from '@/components/common/Modal';
+import { tip } from '@/components/common/Tooltip';
 import { useAuth } from '@/context/AuthContext';
 import { ApiError, deleteAccount } from '@/services/userProfileApi';
 
@@ -48,24 +49,17 @@ export const DeleteAccountSection: React.FC<{ dict?: Dictionary }> = ({ dict }) 
   };
 
   return (
-    <section className="rounded-2xl border border-accent-red/30 bg-bg-surface p-4 sm:p-5 shadow-sm backdrop-blur-sm">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div className="min-w-0">
-          <h3 className="text-sm font-black uppercase tracking-wider text-accent-red">
-            {t.deleteAccountTitle || 'Delete account'}
-          </h3>
-          <p className="mt-1 text-xs leading-relaxed text-text-muted">{t.deleteAccountDesc}</p>
-        </div>
-        <Button
-          variant="danger"
-          size="sm"
-          onClick={() => setOpen(true)}
-          leftIcon={<Trash2 className="h-3.5 w-3.5" />}
-          className="w-full sm:w-auto shrink-0"
-        >
-          <span>{t.deleteAccountButton || 'Delete my account'}</span>
-        </Button>
-      </div>
+    <>
+      <Button
+        variant="danger"
+        size="sm"
+        onClick={() => setOpen(true)}
+        leftIcon={<Trash2 className="h-3.5 w-3.5" />}
+        aria-label={t.deleteAccountTitle || 'Delete account'}
+        {...tip(t.deleteAccountTitle || 'Delete account', t.deleteAccountDesc, 'action')}
+      >
+        <span>{t.deleteAccountButton || 'Delete my account'}</span>
+      </Button>
 
       <Modal
         isOpen={open}
@@ -108,6 +102,6 @@ export const DeleteAccountSection: React.FC<{ dict?: Dictionary }> = ({ dict }) 
           ) : null}
         </div>
       </Modal>
-    </section>
+    </>
   );
 };

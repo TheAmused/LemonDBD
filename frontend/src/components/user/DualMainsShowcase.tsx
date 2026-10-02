@@ -90,7 +90,7 @@ export const DualMainsShowcase: React.FC<DualMainsShowcaseProps> = ({
       >
         <div className="overflow-hidden">
           <div className="p-4 sm:p-5 border-t border-border-color">
-            <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 sm:gap-5">
+            <div className="grid grid-cols-1 xl:grid-cols-2 divide-y xl:divide-y-0 xl:divide-x divide-border-color">
           {/* Survivor Main Column */}
           <MainCard
             role="Survivor"

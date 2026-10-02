@@ -12,6 +12,7 @@ import { getSlotInteraction } from '../lib/blindnessCurse';
 import { PerkSlot } from '../shared/PerkSlot';
 import { useJackpotCelebration } from '../shared/useJackpotCelebration';
 import { isSurvivor } from '@/utils/characterUtils';
+import { canvasFont } from '@/utils/canvasFont';
 
 export interface WheelStageProps {
   totalPages: number;
@@ -187,7 +188,7 @@ export const WheelStage: React.FC<WheelStageProps> = ({
         ctx.strokeStyle = '#f59e0b';
         ctx.stroke();
 
-        ctx.font = '900 18px system-ui, sans-serif';
+        ctx.font = canvasFont('900', 18);
         ctx.fillStyle = '#f59e0b';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
@@ -204,7 +205,7 @@ export const WheelStage: React.FC<WheelStageProps> = ({
       ctx.stroke();
 
       ctx.fillStyle = '#f59e0b';
-      ctx.font = '900 16px system-ui, sans-serif';
+      ctx.font = canvasFont('900', 16);
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       ctx.fillText('PAGE WHEEL', centerX, centerY);
@@ -279,7 +280,7 @@ export const WheelStage: React.FC<WheelStageProps> = ({
           ctx.strokeRect(-24, -24, 48, 48);
           ctx.restore();
 
-          ctx.font = '900 16px system-ui, sans-serif';
+          ctx.font = canvasFont('900', 16);
           ctx.fillStyle = '#ffffff';
           ctx.textAlign = 'center';
           ctx.textBaseline = 'middle';
@@ -287,7 +288,7 @@ export const WheelStage: React.FC<WheelStageProps> = ({
         }
 
         if (isBlocked) {
-          ctx.font = 'bold 24px sans-serif';
+          ctx.font = canvasFont('bold', 24);
           ctx.fillStyle = '#b91c1c';
           ctx.textAlign = 'center';
           ctx.textBaseline = 'middle';
@@ -306,7 +307,7 @@ export const WheelStage: React.FC<WheelStageProps> = ({
       ctx.stroke();
 
       ctx.fillStyle = isSurvivor(role) ? '#22c55e' : '#dc2626';
-      ctx.font = '900 16px system-ui, sans-serif';
+      ctx.font = canvasFont('900', 16);
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       ctx.fillText(`PAGE ${pageNumber}`, centerX, centerY);

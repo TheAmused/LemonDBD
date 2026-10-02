@@ -11,6 +11,7 @@ import { getLocalizedMutator } from './generator/lib/chaosMutatorLocalization';
 
 import { tip } from '@/components/common/Tooltip';
 import { Modal } from '@/components/common/Modal';
+import { canvasFont } from '@/utils/canvasFont';
 export { CHAOS_MUTATORS };
 export type { ChaosMutator };
 
@@ -150,7 +151,7 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({
       ctx.fillText(m.icon, cx, cy - 18 * scale);
 
       // Draw label lines - Always faces the user upright (no rotation)
-      ctx.font = `bold ${textFontSize}px system-ui, -apple-system, sans-serif`;
+      ctx.font = canvasFont('bold', textFontSize);
       ctx.fillStyle = '#f8fafc';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
@@ -178,12 +179,12 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({
     ctx.stroke();
 
     ctx.fillStyle = '#f59e0b';
-    ctx.font = `900 ${Math.round(13 * scale)}px system-ui, -apple-system, sans-serif`;
+    ctx.font = canvasFont('900', Math.round(13 * scale));
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillText('CHAOS', center, center - 7 * scale);
     ctx.fillStyle = '#a1a1aa';
-    ctx.font = `800 ${Math.round(10 * scale)}px system-ui, -apple-system, sans-serif`;
+    ctx.font = canvasFont('800', Math.round(10 * scale));
     ctx.fillText('WHEEL', center, center + 9 * scale);
 
     // Top pointer

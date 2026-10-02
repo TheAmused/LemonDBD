@@ -3,9 +3,11 @@
 
 import { Tabs } from '@/components/common/Tabs';
 import React, { useState, useEffect, useCallback, use, Suspense } from 'react';
+import { usePersistentString } from '@/hooks/usePersistentString';
+import { ErrorPage } from '@/components/layout/ErrorPage';
+import { AdminPageSwitches } from '@/components/admin/AdminPageSwitches';
 import { Button } from '@/components/common/Button';
 import dynamic from 'next/dynamic';
-import { useRouter } from 'next/navigation';
 import { getBackendBaseUrl, authHeaders, getAuthToken, getErrorMessage } from '@/utils/api';
 import { useAuth } from '@/context/AuthContext';
 import { PageShell } from '@/components/layout/PageShell';
@@ -65,14 +67,18 @@ interface AdminPageProps {
 
 type AdminTab = 'users' | 'bugs' | 'challenges' | 'challenge_stats' | 'audit' | 'settings';
 
+const ADMIN_TABS: readonly AdminTab[] = ['users', 'bugs', 'challenges', 'challenge_stats', 'audit', 'settings'];
+const isAdminTab = (value: string): value is AdminTab => (ADMIN_TABS as readonly string[]).includes(value);
+/** localStorage key remembering the open tab across refreshes. */
+const ADMIN_TAB_STORAGE_KEY = 'lemondbd_admin_tab';
+
 export default function AdminPanelPage({ params }: AdminPageProps) {
   const resolvedParams = use(params);
-  const router = useRouter();
   const currentLocale = (resolvedParams?.locale as Locale) || 'en';
   const { user, isAdmin, isAuthenticated, isLoading } = useAuth();
 
   const dict = useDictionary();
-  const [activeTab, setActiveTab] = useState<AdminTab>('users');
+  const [activeTab, setActiveTab] = usePersistentString<AdminTab>(ADMIN_TAB_STORAGE_KEY, 'users', isAdminTab);
   const [stats, setStats] = useState<AdminStats | null>(null);
   const [actionMessage, setActionMessage] = useState<ActionMessage | null>(null);
 
@@ -107,12 +113,6 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
   const API_BASE = getBackendBaseUrl();
 
   useDocumentTitle(dict?.app?.adminPageTitle || 'LemonDBD - Admin Control Center');
-
-  useEffect(() => {
-    if (!isLoading && (!isAuthenticated || !isAdmin)) {
-      router.replace(`/${currentLocale}`);
-    }
-  }, [isLoading, isAuthenticated, isAdmin, currentLocale, router]);
 
   const fetchAdminData = useCallback(async () => {
     const token = getAuthToken();
@@ -411,8 +411,11 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
     }
   };
 
-  if (!dict || isLoading || !isAuthenticated || !isAdmin) {
+  if (!dict || isLoading) {
     return <AdminPanelSkeleton dict={dict} />;
+  }
+  if (!isAuthenticated || !isAdmin) {
+    return <ErrorPage variant="forbidden" />;
   }
 
   return (
@@ -516,9 +519,12 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
               />
             </div>
           ) : activeTab === 'challenges' ? (
-            <Suspense fallback={<AdminTabContentSkeleton dict={dict} />}>
-              <AdminChallengeControl onActionMessage={setActionMessage} dict={dict} />
-            </Suspense>
+            <div className="space-y-6">
+              <AdminPageSwitches onActionMessage={setActionMessage} dict={dict} />
+              <Suspense fallback={<AdminTabContentSkeleton dict={dict} />}>
+                <AdminChallengeControl onActionMessage={setActionMessage} dict={dict} />
+              </Suspense>
+            </div>
           ) : activeTab === 'challenge_stats' ? (
             <Suspense fallback={<AdminTabContentSkeleton dict={dict} />}>
               <AdminChallengeStats stats={stats} dict={dict} />

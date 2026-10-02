@@ -22,6 +22,7 @@ import about from './about';
 import tierLists from './tierLists';
 import minigames from './minigames';
 import privacy from './privacy';
+import errorPages from './errorPages';
 
 const en = {
   app,
@@ -47,6 +48,7 @@ const en = {
   tierLists,
   minigames,
   privacy,
+  errorPages,
 };
 
 export default en;

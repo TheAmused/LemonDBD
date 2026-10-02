@@ -22,6 +22,7 @@ import about from './about';
 import tierLists from './tierLists';
 import minigames from './minigames';
 import privacy from './privacy';
+import errorPages from './errorPages';
 
 const pl = {
   app,
@@ -47,6 +48,7 @@ const pl = {
   tierLists,
   minigames,
   privacy,
+  errorPages,
 };
 
 export default pl;

@@ -40,7 +40,7 @@ export const RunHeader: React.FC<RunHeaderProps> = ({
     <ChallengeHeaderLayout
       stats={
         <>
-          <div className="flex items-center gap-2.5 rounded-xl border border-border-color bg-bg-elevated py-1.5 pl-1.5 pr-3.5 shadow-sm">
+          <div className="flex items-center gap-2.5 pr-1.5">
             <div className="flex h-9 w-9 flex-none items-center justify-center overflow-hidden rounded-lg bg-bg-surface">
               {avatarSrc && !imgError ? (
                 <img

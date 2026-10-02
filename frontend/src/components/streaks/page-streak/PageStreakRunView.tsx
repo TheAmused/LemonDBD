@@ -232,7 +232,13 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
           />
 
           <PageStreakRulesModal isOpen={isRulesOpen} onClose={() => setIsRulesOpen(false)} dict={dict} />
-          <PageStreakStatsDrawer isOpen={isStatsOpen} onClose={() => setIsStatsOpen(false)} stats={stats} dict={dict} />
+          <PageStreakStatsDrawer
+            isOpen={isStatsOpen}
+            onClose={() => setIsStatsOpen(false)}
+            stats={stats}
+            attempts={run.attempt}
+            dict={dict}
+          />
           <ChallengeCompletionHistoryDrawer
             isOpen={isHistoryOpen}
             onClose={() => setIsHistoryOpen(false)}

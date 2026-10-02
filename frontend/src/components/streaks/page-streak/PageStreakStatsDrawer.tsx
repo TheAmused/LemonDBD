@@ -11,16 +11,19 @@ export interface PageStreakStatsDrawerProps {
   isOpen: boolean;
   onClose: () => void;
   stats: PageStreakStats | null;
+  /** The open killer's current attempt number. */
+  attempts?: number;
   dict?: Dictionary;
 }
 
-export const PageStreakStatsDrawer: React.FC<PageStreakStatsDrawerProps> = ({ isOpen, onClose, stats, dict }) => {
+export const PageStreakStatsDrawer: React.FC<PageStreakStatsDrawerProps> = ({ isOpen, onClose, stats, attempts, dict }) => {
   const characterDisplayName = useCharacterDisplayName();
   return (
   <StreakStatsDrawer<PageStreakMatchLog>
     isOpen={isOpen}
     onClose={onClose}
     stats={stats}
+    attempts={attempts}
     dict={dict}
     renderLabel={(log) => (
       <div className="text-base font-bold text-text-primary">{characterDisplayName(log.killer)}</div>

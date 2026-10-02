@@ -15,8 +15,7 @@ export default {
   blocked: {
     code: 'Bloqueada',
     title: 'Página bloqueada',
-    text: 'Un administrador ha desactivado {page} por ahora.',
-    textGeneric: 'Un administrador ha desactivado esta página por ahora.',
-    hint: 'Suele ser temporal, por mantenimiento o para corregir un error. El resto del sitio sigue funcionando.',
+    text: 'Esta página no está abierta a los visitantes por ahora.',
+    hint: 'De momento solo está disponible para administradores. El resto del sitio sigue funcionando.',
   },
 } as const;

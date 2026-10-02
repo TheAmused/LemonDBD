@@ -15,8 +15,7 @@ export default {
   blocked: {
     code: 'Gesperrt',
     title: 'Seite gesperrt',
-    text: '{page} wurde von einem Administrator vorübergehend abgeschaltet.',
-    textGeneric: 'Diese Seite wurde von einem Administrator vorübergehend abgeschaltet.',
-    hint: 'Das ist meist nur vorübergehend, wegen Wartung oder einer Fehlerbehebung. Der Rest der Seite funktioniert weiterhin.',
+    text: 'Diese Seite ist für Besucher derzeit nicht geöffnet.',
+    hint: 'Sie ist vorerst nur für Administratoren verfügbar. Der Rest der Seite funktioniert weiterhin.',
   },
 } as const;

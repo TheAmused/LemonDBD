@@ -48,10 +48,6 @@ def create_app(config_class: Type[Config] | None = None) -> Flask:
 
     flask_app.before_request(enforce_cookie_csrf_protection)
 
-    from app.core.page_guard import enforce_page_kill_switch, register_page_blueprint
-
-    flask_app.before_request(enforce_page_kill_switch)
-
     db_uri = str(flask_app.config.get("SQLALCHEMY_DATABASE_URI", ""))
     if "sqlite" in db_uri.lower():
         engine_opts = dict(flask_app.config.get("SQLALCHEMY_ENGINE_OPTIONS", {}))
@@ -177,7 +173,6 @@ def create_app(config_class: Type[Config] | None = None) -> Flask:
     from app.routes.users import users_bp
     from app.routes.minigames import minigames_bp
     from app.routes.scoreboard import scoreboard_bp
-    from app.routes.site_pages import site_pages_bp
 
     flask_app.register_blueprint(auth_bp)
     flask_app.register_blueprint(users_bp)
@@ -186,20 +181,19 @@ def create_app(config_class: Type[Config] | None = None) -> Flask:
     flask_app.register_blueprint(maps_bp)
     flask_app.register_blueprint(avatars_bp)
     flask_app.register_blueprint(privacy_bp)
-    register_page_blueprint(flask_app, page_streak_bp, page="streaks")
-    register_page_blueprint(flask_app, challenge_completions_bp, page="streaks")
-    register_page_blueprint(flask_app, gauntlet_streak_bp, page="streaks")
-    register_page_blueprint(flask_app, chaos_streak_bp, page="streaks")
+    flask_app.register_blueprint(page_streak_bp)
+    flask_app.register_blueprint(challenge_completions_bp)
+    flask_app.register_blueprint(gauntlet_streak_bp)
+    flask_app.register_blueprint(chaos_streak_bp)
     flask_app.register_blueprint(changelog_bp)
-    register_page_blueprint(flask_app, history_streak_bp, page="streaks")
-    register_page_blueprint(flask_app, smash_or_pass_bp, page="smash-or-pass")
-    register_page_blueprint(flask_app, smash_or_pass_bp, page="smash-or-pass", url_prefix="/api/v1/smash", name="smash_alias")
+    flask_app.register_blueprint(history_streak_bp)
+    flask_app.register_blueprint(smash_or_pass_bp)
+    flask_app.register_blueprint(smash_or_pass_bp, url_prefix="/api/v1/smash", name="smash_alias")
     flask_app.register_blueprint(bug_reports_bp)
     flask_app.register_blueprint(admin_control_bp)
-    register_page_blueprint(flask_app, tier_lists_bp, page="tier-lists")
-    register_page_blueprint(flask_app, minigames_bp, page="minigames")
+    flask_app.register_blueprint(tier_lists_bp)
+    flask_app.register_blueprint(minigames_bp)
     flask_app.register_blueprint(scoreboard_bp)
-    flask_app.register_blueprint(site_pages_bp)
 
 
     with flask_app.app_context():

@@ -15,8 +15,7 @@ export default {
   blocked: {
     code: 'Zablokowana',
     title: 'Strona zablokowana',
-    text: 'Administrator tymczasowo wyłączył stronę: {page}.',
-    textGeneric: 'Ta strona została tymczasowo wyłączona przez administratora.',
-    hint: 'Zwykle jest to tymczasowe, na czas prac lub poprawki błędu. Reszta serwisu działa normalnie.',
+    text: 'Ta strona nie jest teraz dostępna dla odwiedzających.',
+    hint: 'Na razie jest dostępna tylko dla administratorów. Reszta serwisu działa normalnie.',
   },
 } as const;

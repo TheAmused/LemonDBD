@@ -56,7 +56,7 @@ export const ModeSelectButton: React.FC<ModeSelectButtonProps> = ({ label, tone,
   const content = (
     <>
       <span className={`h-2.5 w-2.5 rounded-full ${MODE_DOT_TONES[tone]}`} aria-hidden="true" />
-      <span className="text-xs font-black uppercase tracking-wider text-text-primary">{label}</span>
+      <span className="type-label-sm text-text-primary">{label}</span>
       {onClick && <ChevronDown className="h-4 w-4 text-text-muted" aria-hidden="true" />}
     </>
   );
@@ -102,8 +102,8 @@ export const StatTile: React.FC<StatTileProps> = ({
   >
     <span className={`flex transition-colors duration-500 ${iconClassName}`}>{icon}</span>
     <div className="flex flex-col">
-      <span className="text-[10px] font-bold uppercase leading-none tracking-wider text-text-muted">{label}</span>
-      <span className={`mt-0.5 font-mono text-lg font-black leading-none text-text-primary transition-colors duration-500 ${valueClassName}`}>
+      <span className="text-tiny font-bold uppercase leading-none tracking-wider text-text-muted">{label}</span>
+      <span className={`mt-0.5 text-lg font-black leading-none text-text-primary transition-colors duration-500 ${valueClassName}`}>
         {value}
       </span>
     </div>
@@ -205,12 +205,12 @@ export const ChallengeVictoryCard: React.FC<ChallengeVictoryCardProps> = ({ titl
     <CelebrationBadge />
     <p className={`mt-6 ${CELEBRATION_LABEL_CLASSES}`}>{dict?.streaks?.victoryCongrats || 'Congratulations'}</p>
     <h2 className="mt-2 text-2xl font-black tracking-tight text-text-primary">{title}</h2>
-    {subtitle && <p className="mt-1 text-sm font-semibold text-text-secondary">{subtitle}</p>}
+    {subtitle && <p className="mt-1 type-card-title text-text-secondary">{subtitle}</p>}
     <button
       type="button"
       onClick={onRestart}
       disabled={busy}
-      className="mt-6 inline-flex items-center justify-center gap-2 rounded-xl bg-accent-amber px-6 py-3 text-sm font-extrabold text-text-inverted shadow-xs transition-colors hover:bg-accent-amber-hover disabled:opacity-50 cursor-pointer"
+      className="mt-6 inline-flex items-center justify-center gap-2 rounded-xl bg-accent-amber px-6 py-3 type-card-title text-text-inverted shadow-xs transition-colors hover:bg-accent-amber-hover disabled:opacity-50 cursor-pointer"
     >
       {dict?.streaks?.startNewRun || 'Start a new run'}
     </button>

@@ -3,6 +3,7 @@ export default {
   backToKillerStreaks: "Powrót do serii zabójców",
   backToKillers: "Powrót do zabójców",
   rules: "Zasady",
+  gotItLetsPlay: "Rozumiem, gramy!",
   readFullRules: "Przeczytaj pełne zasady",
   cancel: "Anuluj",
   stats: "Statystyki",

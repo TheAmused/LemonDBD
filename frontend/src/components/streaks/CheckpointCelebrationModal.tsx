@@ -4,7 +4,7 @@ import type { Dictionary } from '@/locales/types';
 
 import React, { useEffect, useState } from 'react';
 import { Trophy } from 'lucide-react';
-import { useEscapeKey } from '@/hooks/useEscapeKey';
+import { Modal } from '@/components/common/Modal';
 
 export interface CheckpointCelebrationModalProps {
   checkpoint: number | null;
@@ -65,21 +65,17 @@ export const CheckpointCelebrationModal: React.FC<CheckpointCelebrationModalProp
 }) => {
   const counted = useCountUp(checkpoint);
 
-  useEscapeKey(checkpoint != null, onClose);
-
-  if (checkpoint == null) return null;
-
   return (
-    <div
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="checkpoint-modal-title"
-      onClick={onClose}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-bg-primary/80 p-4 backdrop-blur-md cursor-pointer select-none"
+    <Modal
+      isOpen={checkpoint != null}
+      onClose={onClose}
+      variant="lightbox"
+      size="sm"
+      closeButton="none"
+      ariaLabel={dict?.streaks?.checkpointSecured || 'Checkpoint secured'}
     >
       <div
-        onClick={(e) => e.stopPropagation()}
-        className="ck-card-in relative w-full max-w-sm overflow-hidden rounded-3xl border border-accent-amber/60 bg-gradient-to-b from-accent-amber/20 via-bg-surface to-bg-primary flex min-h-[26rem] flex-col items-center justify-center px-8 py-14 text-center cursor-default"
+        className="ck-card-in relative w-full overflow-hidden rounded-3xl border border-accent-amber/60 bg-gradient-to-b from-accent-amber/20 via-bg-surface to-bg-primary flex min-h-[26rem] flex-col items-center justify-center px-8 py-14 text-center cursor-default"
       >
         <div className="relative mx-auto h-24 w-24" aria-hidden="true">
           <div
@@ -111,17 +107,16 @@ export const CheckpointCelebrationModal: React.FC<CheckpointCelebrationModalProp
           </div>
         </div>
 
-        <p className="ck-shine-text relative mt-6 bg-gradient-to-r from-accent-amber via-text-primary to-accent-amber bg-clip-text text-xs font-black uppercase tracking-[0.25em] text-transparent">
+        <p className="ck-shine-text relative mt-6 bg-gradient-to-r from-accent-amber via-text-primary to-accent-amber bg-clip-text type-label-sm tracking-spaced-md text-transparent">
           {dict?.streaks?.checkpointSecured || 'Checkpoint secured'}
         </p>
         <h2
-          id="checkpoint-modal-title"
-          className="relative mt-2 font-mono text-5xl font-black tracking-tight text-text-primary"
+          className="relative mt-2 text-5xl font-black tracking-tight text-text-primary"
         >
           {counted}
           <span className="ml-2 text-lg font-bold text-text-secondary">{dict?.streaks?.winsSuffix || 'wins'}</span>
         </h2>
       </div>
-    </div>
+    </Modal>
   );
 };

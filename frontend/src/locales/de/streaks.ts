@@ -3,6 +3,7 @@ export default {
   backToKillerStreaks: "Zurück zu den Killer-Streaks",
   backToKillers: "Zurück zu den Killern",
   rules: "Regeln",
+  gotItLetsPlay: "Verstanden, los geht's!",
   readFullRules: "Alle Regeln lesen",
   cancel: "Abbrechen",
   stats: "Statistiken",

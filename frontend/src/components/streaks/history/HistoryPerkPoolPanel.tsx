@@ -118,7 +118,7 @@ export const HistoryPerkPoolPanel: React.FC<HistoryPerkPoolPanelProps> = ({
   return (
     <div className="mt-10 rounded-2xl border border-border-color bg-bg-surface backdrop-blur-sm p-5 shadow-sm">
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-        <h3 className="text-sm font-bold text-text-secondary uppercase tracking-wider">
+        <h3 className="type-label text-text-secondary">
           {dict?.streaks?.perkPool || 'Perk pool'}
         </h3>
         <div className="relative w-full sm:w-64">
@@ -165,7 +165,7 @@ export const HistoryPerkPoolPanel: React.FC<HistoryPerkPoolPanelProps> = ({
         </div>
       )}
 
-      <div className="mb-2 flex items-center gap-1.5 text-xs font-bold text-text-muted">
+      <div className="mb-2 flex items-center gap-1.5 type-strong text-text-muted">
         <Lock className="w-3.5 h-3.5" />
         {dict?.streaks?.lockedLabel || 'Locked'}
       </div>

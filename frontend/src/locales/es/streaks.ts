@@ -3,7 +3,6 @@ export default {
   backToKillerStreaks: "Volver a rachas de asesino",
   backToKillers: "Volver a asesinos",
   rules: "Reglas",
-  gotItLetsPlay: "¡Entendido, a jugar!",
   readFullRules: "Leer las reglas completas",
   cancel: "Cancelar",
   stats: "Estadísticas",

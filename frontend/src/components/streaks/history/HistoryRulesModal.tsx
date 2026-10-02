@@ -32,7 +32,6 @@ export const HistoryRulesModal: React.FC<HistoryRulesModalProps> = ({ isOpen, on
       onClose={onClose}
       icon={BookOpen}
       title={s.rules || 'Rules'}
-      footerButtonLabel={s.gotItLetsPlay || "Got It, Let's Play!"}
       dict={dict}
     >
       <RulesConceptCard

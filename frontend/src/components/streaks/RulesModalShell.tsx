@@ -1,7 +1,6 @@
 // frontend/src/components/streaks/RulesModalShell.tsx
 'use client';
 
-import { Button } from '@/components/common/Button';
 import type { Dictionary } from '@/locales/types';
 
 import React from 'react';
@@ -15,15 +14,14 @@ export interface RulesModalShellProps {
   title: string;
   /** Tailwind classes for the header icon chip, e.g. "bg-accent-red/10 border-accent-red/20 text-accent-red". */
   iconClassName?: string;
-  footerButtonLabel?: string;
   children: React.ReactNode;
   dict?: Dictionary;
 }
 
 /**
  * Shared chrome for every streak mode's Rules modal (Gauntlet/Chaos/History/
- * Page Streak): the shared <Modal> with icon + title, scrolling body, and a
- * footer confirm button. Each mode only supplies its own body
+ * Page Streak): the shared <Modal> with icon + title and a scrolling body.
+ * Each mode only supplies its own body
  * content as children plus a couple of color classes, instead of
  * re-declaring this same header/footer/backdrop markup four times.
  */
@@ -101,7 +99,6 @@ export const RulesModalShell: React.FC<RulesModalShellProps> = ({
   icon: Icon,
   title,
   iconClassName,
-  footerButtonLabel = "Got It, Let's Play!",
   children,
   dict,
 }) => {
@@ -117,12 +114,6 @@ export const RulesModalShell: React.FC<RulesModalShellProps> = ({
       title={<span className="capitalize">{title}</span>}
       closeButtonAriaLabel={dict?.modal?.close || 'Close'}
       bodyClassName="space-y-6 p-5 text-sm text-text-secondary sm:p-6"
-      footerClassName="justify-end"
-      footer={
-        <Button variant="primary" onClick={onClose} className="w-full sm:w-auto">
-          {footerButtonLabel}
-        </Button>
-      }
     >
       {children}
     </Modal>

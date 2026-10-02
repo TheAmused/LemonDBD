@@ -3,7 +3,6 @@ export default {
   backToKillerStreaks: "キラーストリークに戻る",
   backToKillers: "キラー一覧に戻る",
   rules: "ルール",
-  gotItLetsPlay: "了解、プレイ開始！",
   readFullRules: "ルールを全文で読む",
   cancel: "キャンセル",
   stats: "統計",

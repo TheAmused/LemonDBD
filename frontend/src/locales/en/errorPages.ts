@@ -15,8 +15,7 @@ export default {
   blocked: {
     code: 'Blocked',
     title: 'Page blocked',
-    text: '{page} has been switched off by an administrator for now.',
-    textGeneric: 'This page has been switched off by an administrator for now.',
-    hint: 'This is usually temporary, for maintenance or a bug fix. The rest of the site keeps working.',
+    text: 'This page isn\'t open to visitors right now.',
+    hint: 'It is only available to administrators for the moment. The rest of the site keeps working.',
   },
 } as const;

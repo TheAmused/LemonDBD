@@ -11,28 +11,21 @@ import { Home } from 'lucide-react';
 import { PageShell } from '@/components/layout/PageShell';
 import { LemonIcon } from '@/components/LemonIcon';
 import { FogHeartbeatBackground } from '@/components/landing/FogHeartbeatBackground';
-import { buildMainNavItems } from '@/components/sidebar/mainNavItems';
 import { useDictionary, useLocale } from '@/context/DictionaryContext';
 import { useAuth } from '@/context/AuthContext';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
-import type { PageSlug } from '@/utils/sitePages';
 
 export type ErrorPageVariant = 'not-found' | 'forbidden' | 'blocked';
 
 interface ErrorPageProps {
   variant: ErrorPageVariant;
-  /** For `blocked`: the switched-off page that was requested. */
-  pageId?: PageSlug | null;
 }
 
-export const ErrorPage: React.FC<ErrorPageProps> = ({ variant, pageId = null }) => {
+export const ErrorPage: React.FC<ErrorPageProps> = ({ variant }) => {
   const dict = useDictionary();
   const locale = useLocale();
   const { isAuthenticated } = useAuth();
   const copy = dict.errorPages;
-
-  const pageLabel =
-    (pageId ? buildMainNavItems(dict, locale).find((item) => item.pageId === pageId)?.label : undefined) ?? '';
 
   const { code, title, text } =
     variant === 'not-found'
@@ -46,7 +39,7 @@ export const ErrorPage: React.FC<ErrorPageProps> = ({ variant, pageId = null }) 
         : {
             code: copy.blocked.code,
             title: copy.blocked.title,
-            text: pageLabel ? copy.blocked.text.replace('{page}', pageLabel) : copy.blocked.textGeneric,
+            text: copy.blocked.text,
           };
 
   useDocumentTitle(`${dict.app.title} - ${title}`);

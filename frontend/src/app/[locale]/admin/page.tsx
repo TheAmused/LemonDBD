@@ -5,7 +5,6 @@ import { Tabs } from '@/components/common/Tabs';
 import React, { useState, useEffect, useCallback, use, Suspense } from 'react';
 import { usePersistentString } from '@/hooks/usePersistentString';
 import { ErrorPage } from '@/components/layout/ErrorPage';
-import { AdminPageSwitches } from '@/components/admin/AdminPageSwitches';
 import { Button } from '@/components/common/Button';
 import dynamic from 'next/dynamic';
 import { getBackendBaseUrl, authHeaders, getAuthToken, getErrorMessage } from '@/utils/api';
@@ -527,12 +526,9 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
               <AdminChallengeStats stats={stats} dict={dict} />
             </Suspense>
           ) : activeTab === 'settings' ? (
-            <div className="space-y-6">
-              <AdminPageSwitches onActionMessage={setActionMessage} dict={dict} />
-              <Suspense fallback={<AdminTabContentSkeleton dict={dict} />}>
-                <AdminSettingsPanel onActionMessage={setActionMessage} dict={dict} />
-              </Suspense>
-            </div>
+            <Suspense fallback={<AdminTabContentSkeleton dict={dict} />}>
+              <AdminSettingsPanel onActionMessage={setActionMessage} dict={dict} />
+            </Suspense>
           ) : activeTab === 'audit' ? (
             <Suspense fallback={<AdminTabContentSkeleton dict={dict} />}>
               <AdminAuditLogView dict={dict} />

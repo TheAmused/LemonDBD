@@ -128,9 +128,9 @@ describe('Tier lists: pages and navigation', () => {
   }
 
   it('the sidebar links to the hub', () => {
-    assert.ok(read('app/[locale]/tier-lists/nav.ts').includes('export const nav'));
-    assert.ok(read('generated/pageNav.generated.ts').includes("'tier-lists': nav_tier_lists"));
-    assert.ok(read('components/Sidebar.tsx').includes('buildMainNavItems'));
+    const sidebar = read('components/Sidebar.tsx');
+    assert.ok(sidebar.includes("id: 'tier-lists'"));
+    assert.ok(sidebar.includes('href: `/${currentLocale}/tier-lists`'));
   });
 
   it('the page is viewport-locked and the pool keeps a reserved height so toggling it never moves its header', () => {

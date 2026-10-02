@@ -6,7 +6,6 @@ value. Security-relevant lifetimes are therefore read through here at the moment
 are used, so an admin change takes effect without a restart.
 """
 import logging
-import time
 from datetime import timedelta
 from typing import Any
 
@@ -15,7 +14,7 @@ from sqlalchemy import select
 
 from app.core.extensions import db
 from app.models.admin import SiteSetting
-from app.utils.site_settings_spec import SETTING_SPECS, SPEC_BY_KEY, is_page_id, parse_pages, validate_setting
+from app.utils.site_settings_spec import SETTING_SPECS, SPEC_BY_KEY, validate_setting
 
 logger = logging.getLogger(__name__)
 
@@ -25,7 +24,6 @@ _FALLBACK_DEFAULTS: dict[str, str | int] = {
     "reset_token_minutes": 60,
     "session_hours": 24,
     "streak_prune_days": 90,
-    "disabled_pages": "",
 }
 
 
@@ -81,65 +79,11 @@ def contact_email() -> str:
     return str(get_setting("contact_email"))
 
 
-_PAGES_TTL_SECONDS = 2.0
-_pages_cache: tuple[float, list[str]] | None = None
-
-
-def kill_switches_enabled() -> bool:
-    """False when PAGE_KILL_SWITCHES_ENABLED turns the whole page kill-switch system off."""
-    return bool(current_app.config.get("PAGE_KILL_SWITCHES_ENABLED", True)) if has_app_context() else True
-
-
-def disabled_pages() -> list[str]:
-    """Pages currently switched off (admins still see them); empty when the system is off.
-    Cached for a couple of seconds because the API guard asks on every request; a local change
-    clears the cache at once."""
-    global _pages_cache
-    if not kill_switches_enabled():
-        return []
-    now = time.monotonic()
-    testing = has_app_context() and bool(current_app.config.get("TESTING"))
-    if not testing and _pages_cache is not None and now - _pages_cache[0] < _PAGES_TTL_SECONDS:
-        return list(_pages_cache[1])
-    value = str(get_setting("disabled_pages"))
-    try:
-        pages = parse_pages(value)
-    except ValueError:
-        pages = []
-    _pages_cache = (now, pages)
-    return list(pages)
-
-
-def set_page_disabled(page: str, disabled: bool) -> list[str]:
-    """Switch one page off/on; returns the new list. Raises ValueError for an unknown page."""
-    global _pages_cache
-    if not is_page_id(page):
-        raise ValueError(f"Invalid page id '{page}'.")
-    current = set(parse_pages(get_setting("disabled_pages")))
-    if disabled:
-        current.add(page)
-    else:
-        current.discard(page)
-    new_value = ",".join(sorted(current))
-    update_settings({"disabled_pages": new_value or None})
-    return parse_pages(new_value)
-
-
-def configured_disabled_pages() -> list[str]:
-    """What the admin has switched off, whether or not the system is currently enabled."""
-    try:
-        return parse_pages(get_setting("disabled_pages"))
-    except ValueError:
-        return []
-
-
 def list_settings() -> list[dict[str, Any]]:
     """Every setting with its effective value, default, bounds and whether it is overridden."""
     overrides = _overrides()
     rows: list[dict[str, Any]] = []
     for spec in SETTING_SPECS:
-        if spec.kind == "pages":  # managed from the page switches, not the configuration form
-            continue
         default = default_value(spec.key)
         value = default
         if spec.key in overrides:
@@ -182,6 +126,4 @@ def update_settings(changes: dict[str, Any]) -> dict[str, Any]:
         else:
             db.session.add(SiteSetting(key=key, value=str(value)))
     db.session.commit()
-    global _pages_cache
-    _pages_cache = None
     return {key: (default_value(key) if value is None else value) for key, value in cleaned.items()}

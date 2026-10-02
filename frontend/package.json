@@ -3,10 +3,7 @@
   "version": "2.0.0",
   "private": true,
   "scripts": {
-    "generate:pages": "node scripts/generate-site-pages.mjs",
-    "predev": "node scripts/generate-site-pages.mjs",
     "dev": "next dev",
-    "prebuild": "node scripts/generate-site-pages.mjs",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",

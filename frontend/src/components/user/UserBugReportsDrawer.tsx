@@ -47,7 +47,7 @@ export const UserBugReportsDrawer: React.FC<UserBugReportsDrawerProps> = ({
   return (
     <div className="rounded-3xl border border-border-color bg-bg-surface backdrop-blur-xl shadow-md overflow-hidden transition-colors flex flex-col">
       {/* Connected Header with Collapsible Drawer Toggle */}
-      <div className="relative w-full flex items-center justify-between py-4 px-5 sm:py-4.5 sm:px-7 2xl:py-5.5 2xl:px-9 group select-none overflow-hidden transition-colors text-left">
+      <div className="relative w-full grid grid-cols-[1fr_auto_1fr] items-center gap-2 py-4 px-5 sm:py-4.5 sm:px-7 2xl:py-5.5 2xl:px-9 group select-none overflow-hidden transition-colors text-left">
         {/* Atmospheric DBD Banner Backdrop */}
         <div
           className="absolute inset-0 bg-cover bg-center opacity-20 dark:opacity-30 mix-blend-luminosity filter pointer-events-none group-hover:scale-105 transition-transform duration-700 ease-out"
@@ -62,8 +62,8 @@ export const UserBugReportsDrawer: React.FC<UserBugReportsDrawerProps> = ({
           className="absolute inset-0 z-[1] cursor-pointer"
         />
 
-        <div className="relative z-10 w-8 hidden sm:block pointer-events-none" aria-hidden="true" />
-        <div className="relative z-10 flex-1 text-center pointer-events-none">
+        <div aria-hidden="true" />
+        <div className="relative z-10 text-center pointer-events-none">
           <h2 className="text-xs sm:text-sm 2xl:text-base font-black uppercase tracking-widest text-text-primary font-mono group-hover:text-accent-red transition-colors">
             {dict?.user?.tabBugReports || 'My Bug Reports'}
           </h2>

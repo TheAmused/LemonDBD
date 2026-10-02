@@ -11,6 +11,7 @@ from app.core.security import (
     get_current_user,
     login_required,
     set_session_cookie,
+    widen_legacy_session_cookie,
 )
 from app.schemas.user import UserCreate, UserResponse
 from app.services.altcha_service import AltchaService
@@ -184,7 +185,7 @@ def get_current_user_profile():
         "ownership": summary,
     }))
     resp.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
-    return resp, 200
+    return widen_legacy_session_cookie(resp), 200
 
 
 @auth_bp.route("/profile", methods=["PUT"])

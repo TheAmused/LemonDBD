@@ -30,6 +30,28 @@ def _cookie_secure() -> bool:
     return request.is_secure or request.headers.get("X-Forwarded-Proto", "").lower() == "https"
 
 
+# The session cookie is valid for the whole site, not just /api: the Next.js proxy has to see it on
+# page requests to tell admins from everyone else (admin-only pages). It is HttpOnly + SameSite=Lax,
+# so scripts still can't read it and other sites can't send it. Until this was widened the cookie
+# was scoped to /api; that legacy cookie is removed whenever a new one is written.
+SESSION_COOKIE_PATH = "/"
+_LEGACY_SESSION_COOKIE_PATH = "/api"
+
+
+def _write_session_cookie(response, token: str, max_age: int):
+    response.delete_cookie(SESSION_COOKIE_NAME, path=_LEGACY_SESSION_COOKIE_PATH, samesite="Lax")
+    response.set_cookie(
+        SESSION_COOKIE_NAME,
+        token,
+        max_age=max_age,
+        httponly=True,
+        secure=_cookie_secure(),
+        samesite="Lax",
+        path=SESSION_COOKIE_PATH,
+    )
+    return response
+
+
 def set_session_cookie(response, token: str):
     """Attach the login cookie (HttpOnly, SameSite=Lax, Secure over HTTPS) to `response`."""
     max_age = int(DEFAULT_EXPIRATION.total_seconds())
@@ -39,20 +61,31 @@ def set_session_cookie(response, token: str):
         max_age = int(session_lifetime().total_seconds())
     except Exception:
         pass
-    response.set_cookie(
-        SESSION_COOKIE_NAME,
-        token,
-        max_age=max_age,
-        httponly=True,
-        secure=_cookie_secure(),
-        samesite="Lax",
-        path="/api",
-    )
-    return response
+    return _write_session_cookie(response, token, max_age)
+
+
+def widen_legacy_session_cookie(response):
+    """Re-issue an existing session cookie with the site-wide path, keeping its remaining lifetime.
+
+    Sessions started before the cookie was widened only exist at /api; calling this on /auth/me
+    (which every page load hits) upgrades them without signing anyone out or extending the session.
+    """
+    if request.headers.get("Authorization"):
+        return response
+    token = request.cookies.get(SESSION_COOKIE_NAME, "").strip()
+    payload = decode_token(token) if token else None
+    exp = payload.get("exp") if payload else None
+    if not isinstance(exp, (int, float)):
+        return response
+    remaining = int(exp - datetime.now(timezone.utc).timestamp())
+    if remaining <= 0:
+        return response
+    return _write_session_cookie(response, token, remaining)
 
 
 def clear_session_cookie(response):
-    response.delete_cookie(SESSION_COOKIE_NAME, path="/api", samesite="Lax")
+    for path in (SESSION_COOKIE_PATH, _LEGACY_SESSION_COOKIE_PATH):
+        response.delete_cookie(SESSION_COOKIE_NAME, path=path, samesite="Lax")
     return response
 
 

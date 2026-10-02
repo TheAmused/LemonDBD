@@ -38,17 +38,34 @@ def _make_admin(name: str = "boss") -> tuple[User, str]:
 class TestCookieSession:
     def test_register_and_login_set_an_httponly_cookie(self, client: FlaskClient) -> None:
         res = _register(client, "cookieuser")
-        header = next(h for h in res.headers.getlist("Set-Cookie") if h.startswith(SESSION_COOKIE_NAME))
+        header = next(
+            h for h in res.headers.getlist("Set-Cookie") if h.startswith(f"{SESSION_COOKIE_NAME}=") and "Max-Age=0" not in h
+        )
         assert "HttpOnly" in header
         assert "SameSite=Lax" in header
-        assert "Path=/api" in header
+        assert "Path=/;" in header or header.rstrip().endswith("Path=/")
+        # the old /api-scoped cookie is removed in the same response
+        assert any("Path=/api" in h and "Expires=Thu, 01 Jan 1970" in h for h in res.headers.getlist("Set-Cookie"))
 
-        client.delete_cookie(SESSION_COOKIE_NAME, path="/api")
+        client.delete_cookie(SESSION_COOKIE_NAME, path="/")
         login = client.post(
             "/api/v1/auth/login", json={"username_or_email": "cookieuser", "password": PASSWORD}
         )
         assert login.status_code == 200
         assert any(h.startswith(SESSION_COOKIE_NAME) for h in login.headers.getlist("Set-Cookie"))
+
+    def test_me_upgrades_a_legacy_api_scoped_cookie_without_extending_it(self, client: FlaskClient) -> None:
+        from app.core.security import generate_token
+
+        user, token = _make_admin()
+        client.set_cookie(SESSION_COOKIE_NAME, token, path="/api")
+        res = client.get("/api/v1/auth/me")
+        assert res.get_json()["authenticated"] is True
+        cookies = res.headers.getlist("Set-Cookie")
+        fresh = next(h for h in cookies if h.startswith(f"{SESSION_COOKIE_NAME}={token}"))
+        assert "Path=/" in fresh and "HttpOnly" in fresh
+        max_age = int(next(p.split("=")[1] for p in fresh.split("; ") if p.startswith("Max-Age")))
+        assert 0 < max_age <= 24 * 3600
 
     def test_cookie_authenticates_without_authorization_header(self, client: FlaskClient) -> None:
         _register(client, "cookieme")

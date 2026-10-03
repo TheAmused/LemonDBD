@@ -12,16 +12,14 @@ import { useDictionary } from "@/context/DictionaryContext";
 interface EmailVerificationFormProps {
   email: string;
   onVerified?: (user?: UserProfile) => void;
-  submitLabel?: string;
 }
 
 const CODE_LENGTH = 6;
 const RESEND_COOLDOWN_SECONDS = 60;
 
-export const EmailVerificationForm: React.FC<EmailVerificationFormProps> = ({ email, onVerified, submitLabel }) => {
+export const EmailVerificationForm: React.FC<EmailVerificationFormProps> = ({ email, onVerified }) => {
   const dict = useDictionary();
   const t = dict.user;
-  const resolvedSubmitLabel = submitLabel || t.verifyEmailAction;
   const { verifyEmail, resendVerification, refreshUser } = useAuth();
   const [digits, setDigits] = useState<string[]>(Array(CODE_LENGTH).fill(''));
   const [error, setError] = useState<string | null>(null);
@@ -97,13 +95,16 @@ export const EmailVerificationForm: React.FC<EmailVerificationFormProps> = ({ em
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col items-center gap-3">
+    <form onSubmit={handleSubmit} className="flex w-full flex-col items-center gap-5">
+      <p className="w-full text-center type-body-lg text-text-secondary">
+        {formatMessage(t.authVerifySubtitle, { email })}
+      </p>
       {error && (
         <p role="alert" className="type-strong-xs text-accent-red">
           {error}
         </p>
       )}
-      <div className="flex items-center justify-center gap-1.5" onPaste={handlePaste}>
+      <div className="flex w-full items-center justify-center gap-1.5" onPaste={handlePaste}>
         {digits.map((digit, index) => (
           <input
             key={index}
@@ -112,6 +113,8 @@ export const EmailVerificationForm: React.FC<EmailVerificationFormProps> = ({ em
             }}
             type="text"
             inputMode="numeric"
+            autoComplete="one-time-code"
+            autoFocus={index === 0}
             maxLength={1}
             value={digit}
             onChange={(e) => handleChange(index, e.target.value)}
@@ -121,22 +124,20 @@ export const EmailVerificationForm: React.FC<EmailVerificationFormProps> = ({ em
           />
         ))}
       </div>
-      {resolvedSubmitLabel && (
-        <Button
-          type="submit"
-          variant="primary"
-          disabled={verifying || code.length !== CODE_LENGTH}
-          className="w-full max-w-xs"
-        >
-          {verifying ? t.verifying : resolvedSubmitLabel}
-        </Button>
-      )}
+      <Button
+        type="submit"
+        variant="primary"
+        disabled={verifying || code.length !== CODE_LENGTH}
+        className="w-full"
+      >
+        {verifying ? t.verifying : t.verifyEmailAction}
+      </Button>
       {(t.resendCodeIn) && (
         <button
           type="button"
           onClick={handleResend}
           disabled={cooldown > 0}
-          className="type-strong-xs underline text-accent-amber hover:opacity-80 disabled:opacity-60 cursor-pointer"
+          className="type-strong text-accent-amber hover:opacity-80 disabled:opacity-60 cursor-pointer"
         >
           {cooldown > 0
             ? formatMessage(t.resendCodeIn, { seconds: cooldown })

@@ -12,6 +12,7 @@ import { getSlotInteraction } from '../lib/blindnessCurse';
 import { PerkSlot } from '../shared/PerkSlot';
 import { useJackpotCelebration } from '../shared/useJackpotCelebration';
 import { playCardFlip } from '@/utils/perkAudio';
+import { useDictionary } from "@/context/DictionaryContext";
 
 export interface TarotDeckStageProps {
   role: RoleCategory;
@@ -22,7 +23,6 @@ export interface TarotDeckStageProps {
   onRevealSlot: (idx: number) => void;
   onSelectPerk: (perk: Perk) => void;
   isBlind?: boolean;
-  dict?: Dictionary;
   backendBase?: string;
 }
 
@@ -69,44 +69,62 @@ const TAROT_IMAGE_SLUG: Record<TarotType, string> = {
   hooks: 'hanged-man',
 };
 
+/** Static card art lives under /images/ so the service worker caches it
+ * cache-first and next.config.ts serves it with long-lived headers. Faces are
+ * produced by scripts/generate_tarot_card_faces.py from the art above. */
+const TAROT_IMAGE_BASE = '/images/tarot';
+const TAROT_FACE_DIR = 'faces';
+
+type TarotSide = 'back' | 'face';
+
+const tarotImageUrl = (type: TarotType, side: TarotSide): string =>
+  `${TAROT_IMAGE_BASE}/${side === 'face' ? `${TAROT_FACE_DIR}/` : ''}the-${TAROT_IMAGE_SLUG[type]}.webp`;
+
+/** Warm the browser/SW cache so a card flips onto an already-loaded face. */
+const preloadTarotFace = (type: TarotType): void => {
+  if (typeof Image === 'undefined') return;
+  new Image().src = tarotImageUrl(type, 'face');
+};
+
 /**
- * Card-back image for a given type, with a graceful text-only fallback if
- * the file is ever missing (never renders a broken <img>).
+ * Card art for a given type and side, with a graceful fallback if the file is
+ * ever missing (never renders a broken <img>; the face keeps its solid colour).
  */
-const CardBackImage: React.FC<{ type: TarotType }> = ({ type }) => {
+const CardImage: React.FC<{ type: TarotType; side: TarotSide }> = ({ type, side }) => {
   const [errored, setErrored] = useState(false);
 
   if (errored) return null;
 
   return (
     <img
-      src={`/images/tarot/the-${TAROT_IMAGE_SLUG[type]}.webp`}
+      src={tarotImageUrl(type, side)}
       alt=""
       aria-hidden="true"
+      draggable={false}
       onError={() => setErrored(true)}
-      className="absolute inset-0 h-full w-full rounded-2xl object-cover"
+      className="pointer-events-none absolute inset-0 h-full w-full rounded-2xl object-cover"
     />
   );
 };
 
 export const TarotDeckStage: React.FC<TarotDeckStageProps> = ({
-  role,
-  activePlayablePerks,
-  activeMutator,
-  onRollComplete,
-  revealedSlots,
-  onRevealSlot,
-  onSelectPerk,
-  isBlind = false,
-  dict,
-  backendBase,
-}) => {
+      role,
+      activePlayablePerks,
+      activeMutator,
+      onRollComplete,
+      revealedSlots,
+      onRevealSlot,
+      onSelectPerk,
+      isBlind = false,
+      backendBase,
+    }) => {
+  const dict = useDictionary();
   const [cards, setCards] = useState<TarotCard[] | null>(null);
   const resultsRef = useRef<HTMLDivElement | null>(null);
   const { celebrate } = useJackpotCelebration();
   const reduceMotion = useReducedMotion();
 
-  const typeNames = dict?.generator?.tarotCardNames || DEFAULT_TYPE_NAMES;
+  const typeNames = dict.generator.tarotCardNames || DEFAULT_TYPE_NAMES;
 
   const handleShuffle = () => {
     if (activePlayablePerks.length === 0) return;
@@ -114,13 +132,13 @@ export const TarotDeckStage: React.FC<TarotDeckStageProps> = ({
     const picked = pickRandomLoadout(activePlayablePerks, activeMutator, 4);
     const slots = buildDrawnSlots(picked, activePlayablePerks);
 
-    setCards(
-      slots.map((slot) => ({
-        type: slot.perk ? getPerkTarotType(slot.perk) : 'entity',
-        slot,
-        flipped: false,
-      }))
-    );
+    const next: TarotCard[] = slots.map((slot) => ({
+      type: slot.perk ? getPerkTarotType(slot.perk) : 'entity',
+      slot,
+      flipped: false,
+    }));
+    next.forEach((card) => preloadTarotFace(card.type));
+    setCards(next);
     onRollComplete(slots);
   };
 
@@ -140,8 +158,7 @@ export const TarotDeckStage: React.FC<TarotDeckStageProps> = ({
   return (
     <div className="flex flex-col items-center justify-center gap-3 sm:gap-6 xl:gap-8 2xl:gap-10 py-2 sm:py-6 wide:py-8">
       <p className="max-w-lg xl:max-w-2xl 2xl:max-w-3xl wide:max-w-4xl text-center text-xs sm:text-base xl:text-lg wide:text-xl font-semibold text-text-secondary">
-        {dict?.generator?.tarotTapToFlip ||
-          'Tap any card to flip it and reveal the perk hidden beneath. Flip all four to lock in your loadout.'}
+        {dict.generator.tarotTapToFlip}
       </p>
 
       {cards ? (
@@ -179,27 +196,25 @@ export const TarotDeckStage: React.FC<TarotDeckStageProps> = ({
                     className="group absolute inset-0 overflow-hidden rounded-2xl bg-gradient-to-br from-bg-elevated to-bg-primary cursor-pointer disabled:cursor-default border-2 border-transparent transition-all duration-300 hover:scale-[1.04] hover:border-accent-amber/70 hover:shadow-lg hover:shadow-accent-amber/40 active:scale-[0.97]"
                     style={{ backfaceVisibility: 'hidden', pointerEvents: card.flipped ? 'none' : 'auto' }}
                   >
-                    <CardBackImage type={card.type} />
+                    <CardImage type={card.type} side="back" />
                   </button>
 
-                  {/* Front face: still dressed as the same tarot card,
-                      dark card stock, amber frame, corner pips, just
-                      revealing the perk in its center window instead of
-                      turning into a bare icon. */}
+                  {/* Front face: the same card stock as the back art (generated
+                      from it, see CardImage side="face"), revealing the perk
+                      in its diamond window instead of turning into a bare icon. */}
                   <div
-                    className="absolute inset-0 flex flex-col items-center justify-between overflow-hidden rounded-2xl border-2 border-accent-amber/30 bg-bg-surface p-2 sm:p-2.5 xl:p-3 2xl:p-4 wide:p-5"
+                    className="absolute inset-0 flex flex-col items-center justify-between overflow-hidden rounded-2xl bg-bg-surface p-2 sm:p-2.5 xl:p-3 2xl:p-4 wide:p-5"
                     style={{
                       backfaceVisibility: 'hidden',
                       transform: 'rotateY(180deg)',
                       pointerEvents: card.flipped ? 'auto' : 'none',
                     }}
                   >
-                    {/* Inner card-stock border only */}
-                    <span className="pointer-events-none absolute inset-1 sm:inset-1.5 xl:inset-2 2xl:inset-2.5 rounded-xl border border-accent-amber/20" />
+                    <CardImage type={card.type} side="face" />
                     {card.flipped && (
                       <>
                         <div className="relative z-10 pt-1 text-center">
-                          <span className="text-[9px] sm:text-[10px] md:text-[11px] xl:text-xs 2xl:text-sm wide:text-base font-black uppercase tracking-[0.2em] text-accent-amber drop-shadow-xs">
+                          <span className="text-micro sm:text-tiny md:text-mini xl:text-xs 2xl:text-sm wide:text-base font-black uppercase tracking-spaced text-tarot-ink drop-shadow-xs">
                             {typeNames[card.type] || DEFAULT_TYPE_NAMES[card.type]}
                           </span>
                         </div>
@@ -213,7 +228,6 @@ export const TarotDeckStage: React.FC<TarotDeckStageProps> = ({
                             isObscured={isObscured}
                             isBlind={isBlind}
                             onClick={onClick}
-                            dict={dict}
                           />
                         </div>
                       </>
@@ -246,7 +260,7 @@ export const TarotDeckStage: React.FC<TarotDeckStageProps> = ({
         onClick={handleShuffle}
         disabled={activePlayablePerks.length === 0}
       >
-        {dict?.generator?.tarotShuffleButton || 'Shuffle & Draw'}
+        {dict.generator.tarotShuffleButton}
       </DbdButton>
     </div>
   );

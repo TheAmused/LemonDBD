@@ -16,11 +16,11 @@ export function useKillerPerkPool() {
     setLoading(true);
     try {
       const res = await fetch(`${backendBase}/api/v1/users/${user.id}/perks?category=Killer`, {
-        headers: { Authorization: `Bearer ${token}` },
+        credentials: 'include',
       });
       if (res.ok) {
         const data = await res.json();
-        const unlocked = (data.data || []).filter((p: any) => p.is_unlocked);
+        const unlocked = (data.data || []).filter((p: { is_unlocked?: boolean }) => p.is_unlocked);
         setPool(unlocked);
       }
     } catch (err) {

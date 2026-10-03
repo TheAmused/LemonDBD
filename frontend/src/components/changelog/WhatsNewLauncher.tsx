@@ -2,14 +2,11 @@
 // frontend/src/components/changelog/WhatsNewLauncher.tsx
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { createPortal } from 'react-dom';
 import {
   Megaphone,
   Plus,
   Pencil,
   Trash2,
-  X,
-  Loader2,
   Sparkles,
   Skull,
   ChevronDown,
@@ -30,31 +27,31 @@ import {
 import { CHANGELOG_TAG_THEME } from './changelogTheme';
 import dynamic from 'next/dynamic';
 
+import { tip } from '@/components/common/Tooltip';
+import { Modal } from '@/components/common/Modal';
+import { RichText } from '@/components/common/RichText';
+import { Spinner } from '@/components/common/Spinner';
+import { formatDate } from '@/utils/format';
+import { useDictionary } from "@/context/DictionaryContext";
+
 const ChangelogEditorModal = dynamic(
   () => import('./ChangelogEditorModal').then((m) => m.ChangelogEditorModal),
   { ssr: false }
 );
 const ConfirmModal = dynamic(
-  () => import('@/components/ConfirmModal').then((m) => m.ConfirmModal),
+  () => import('@/components/common/ConfirmModal').then((m) => m.ConfirmModal),
   { ssr: false }
 );
 
 const LAST_SEEN_KEY = 'lemondbd_changelog_last_seen';
 const TOUCH_HOLD_MS = 220;
 
-function formatDate(iso: string | null): string {
-  if (!iso) return '';
-  try {
-    return new Date(iso).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
-  } catch {
-    return '';
-  }
-}
+const formatPostDate = (iso: string | null) =>
+  formatDate(iso, undefined, { month: 'short', day: 'numeric', year: 'numeric' });
 
 export interface WhatsNewLauncherProps {
   /** Extra classes for the icon-only trigger button (sizing/positioning). */
   className?: string;
-  dict?: Dictionary;
 }
 
 /**
@@ -64,8 +61,9 @@ export interface WhatsNewLauncherProps {
  * grabbing a handle (mouse-drag on desktop, press-and-hold-then-drag via the
  * Pointer Events API on touch) or with keyboard/tap-friendly up/down buttons.
  */
-export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ className = '', dict }) => {
-  const t = dict?.changelog;
+export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ className = '' }) => {
+  const dict = useDictionary();
+  const t = dict.changelog;
   const { token, isAdmin } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const [posts, setPosts] = useState<ChangelogPost[]>([]);
@@ -76,6 +74,7 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ className = 
   const [editingPost, setEditingPost] = useState<ChangelogPost | null>(null);
   const [editorOpen, setEditorOpen] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [editorError, setEditorError] = useState<string | null>(null);
   const [pendingDeleteId, setPendingDeleteId] = useState<number | null>(null);
   const [draggingId, setDraggingId] = useState<number | null>(null);
   const [mounted, setMounted] = useState(false);
@@ -113,15 +112,6 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ className = 
     loadPosts();
   }, [loadPosts]);
 
-  useEffect(() => {
-    if (!isOpen) return;
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setIsOpen(false);
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen]);
-
   const handleOpen = () => {
     setIsOpen(true);
     if (posts[0]?.created_at && typeof window !== 'undefined') {
@@ -137,6 +127,7 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ className = 
   const handleSave = async (draft: ChangelogPostDraft) => {
     if (!token) return;
     setSaving(true);
+    setEditorError(null);
     try {
       if (editingPost) {
         await updateChangelogPost(token, editingPost.id, draft);
@@ -147,7 +138,7 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ className = 
       setEditingPost(null);
       await loadPosts();
     } catch (err) {
-      window.alert(err instanceof Error ? err.message : t?.saveError || 'Failed to save changelog entry.');
+      setEditorError(err instanceof Error ? err.message : t.saveError);
     } finally {
       setSaving(false);
     }
@@ -162,7 +153,8 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ className = 
       setEditingPost(null);
       await loadPosts();
     } catch (err) {
-      window.alert(err instanceof Error ? err.message : t?.deleteError || 'Failed to delete changelog entry.');
+      setPendingDeleteId(null);
+      setEditorError(err instanceof Error ? err.message : t.deleteError);
     }
   };
 
@@ -186,7 +178,6 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ className = 
     if (isOpen && visiblePosts.length > 0 && expandedIds.size === 0) {
       setExpandedIds(new Set([visiblePosts[0].id]));
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen, visiblePosts]);
 
   const availableTags = useMemo(() => {
@@ -292,9 +283,9 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ className = 
       <button
         type="button"
         onClick={handleOpen}
-        title={t?.triggerTitle || "What's New?"}
-        aria-label={t?.triggerTitle || "What's New?"}
-        className={`group relative flex h-9 w-9 items-center justify-center rounded-xl border border-border-color text-text-muted transition-all hover:border-accent-red/50 hover:text-accent-red hover:bg-accent-red/10 cursor-pointer ${className}`}
+        {...tip(t.triggerTitle, undefined, 'action')}
+        aria-label={t.triggerTitle}
+        className={`pointer-coarse:min-h-11 pointer-coarse:min-w-11 group relative flex h-9 w-9 items-center justify-center rounded-xl border border-border-color text-text-muted transition-all hover:border-accent-red/50 hover:text-accent-red hover:bg-accent-red/10 cursor-pointer ${className}`}
       >
         <Megaphone className="h-4 w-4" />
         {hasUnread && (
@@ -305,254 +296,223 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ className = 
         )}
       </button>
 
-      {mounted &&
-        isOpen &&
-        createPortal(
-          <div
-            onClick={() => setIsOpen(false)}
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="whats-new-title"
-            className="fixed inset-0 z-[75] flex items-center justify-center p-4 sm:p-8 bg-bg-primary/80 backdrop-blur-md animate-in fade-in duration-200 cursor-pointer"
-          >
-            <div
-              onClick={(e) => e.stopPropagation()}
-              className="relative flex w-full max-w-2xl max-h-[85vh] flex-col overflow-hidden rounded-3xl border border-accent-red/40 bg-bg-surface/98 shadow-2xl cursor-default animate-in zoom-in-95 duration-200"
+      <Modal
+        isOpen={mounted && isOpen}
+        onClose={() => setIsOpen(false)}
+        variant="dialog"
+        size="2xl"
+        icon={<Sparkles className="h-4 w-4" />}
+        title={t.modalTitle}
+        closeButtonAriaLabel={t.close}
+        headerRight={
+          isAdmin ? (
+            <button
+              type="button"
+              onClick={() => {
+                setEditingPost(null);
+                setEditorOpen(true);
+              }}
+              {...tip(t.newEntry, undefined, 'action')} aria-label={t.newEntry}
+              className="pointer-coarse:min-h-11 pointer-coarse:min-w-11 flex h-9 w-9 items-center justify-center rounded-xl border border-border-subtle text-text-secondary hover:border-accent-red/50 hover:text-accent-red cursor-pointer"
             >
-              <div className="relative flex items-center justify-between border-b border-border-color px-6 py-5">
-                <div className="flex items-center gap-3">
-                  <span className="flex h-10 w-10 items-center justify-center rounded-2xl border border-accent-red/30 bg-accent-red/10 text-accent-red shadow-inner">
-                    <Sparkles className="h-4 w-4" />
-                  </span>
-                  <h2 id="whats-new-title" className="text-base font-black tracking-tight text-text-primary">
-                    {t?.modalTitle || "What's New"}
-                  </h2>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  {isAdmin && (
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setEditingPost(null);
-                        setEditorOpen(true);
-                      }}
-                      title={t?.newEntry || 'New entry'}
-                      className="flex h-8 w-8 items-center justify-center rounded-lg border border-border-subtle text-text-secondary hover:border-accent-red/50 hover:text-accent-red cursor-pointer"
-                    >
-                      <Plus className="h-4 w-4" />
-                    </button>
-                  )}
+              <Plus className="h-4 w-4" />
+            </button>
+          ) : undefined
+        }
+      >
+      {availableTags.length > 1 && (
+        <div className="sticky top-0 z-10 flex flex-wrap gap-1.5 border-b border-border-color bg-bg-surface px-6 py-3">
+          <FilterChip
+            active={activeFilter === 'all'}
+            onClick={() => setActiveFilter('all')}
+            label={t.filterAll}
+          />
+          {availableTags.map((tag) => {
+            const theme = CHANGELOG_TAG_THEME[tag];
+            return (
+              <FilterChip
+                key={tag}
+                active={activeFilter === tag}
+                onClick={() => setActiveFilter(tag)}
+                label={theme.label}
+                dotClass={theme.dotClass}
+              />
+            );
+          })}
+        </div>
+      )}
+        <div className="relative px-6 py-5 space-y-3">
+        {loading && (
+          <div className="flex items-center justify-center py-16 text-text-muted">
+            <Spinner size="md" />
+          </div>
+        )}
+
+        {!loading && visiblePosts.length === 0 && (
+          <div className="flex flex-col items-center gap-2 py-16 text-center">
+            <Skull className="h-6 w-6 text-text-muted" />
+            <p className="text-xs font-medium text-text-muted">
+              {t.emptyState}
+            </p>
+          </div>
+        )}
+
+        {visiblePosts.map((post, idx) => {
+          const theme = CHANGELOG_TAG_THEME[post.tag] || CHANGELOG_TAG_THEME.feature;
+          const isExpanded = expandedIds.has(post.id);
+          const isDragging = draggingId === post.id;
+
+          return (
+            <div
+              key={post.id}
+              ref={(el) => {
+                if (el) rowRefs.current.set(post.id, el);
+                else rowRefs.current.delete(post.id);
+              }}
+              onPointerMove={handlePointerMove}
+              onPointerUp={endDrag}
+              onPointerCancel={endDrag}
+              className={`rounded-2xl border transition-all ${
+                isDragging
+                  ? 'border-accent-amber/60 bg-bg-elevated/80 shadow-lg scale-[1.01] z-10 relative'
+                  : post.is_published
+                    ? 'border-border-color bg-bg-elevated/50'
+                    : 'border-dashed border-border-subtle bg-bg-elevated/20'
+              }`}
+            >
+              <div className="flex items-start gap-2 p-4">
+                {canReorder && (
                   <button
                     type="button"
-                    onClick={() => setIsOpen(false)}
-                    aria-label={t?.close || 'Close'}
-                    className="flex h-8 w-8 items-center justify-center rounded-lg text-text-muted hover:bg-bg-elevated hover:text-text-primary cursor-pointer"
+                    {...tip(t.dragToReorder, undefined, 'action')}
+                    aria-label={t.dragToReorder}
+                    onPointerDown={(e) => beginDrag(e, post.id)}
+                    style={{ touchAction: 'none' }}
+                    className={`pointer-coarse:min-h-11 pointer-coarse:min-w-11 mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-text-muted hover:bg-bg-elevated hover:text-text-secondary cursor-grab active:cursor-grabbing ${
+                      isDragging ? 'text-accent-amber' : ''
+                    }`}
                   >
-                    <X className="h-4 w-4" />
+                    <GripVertical className="h-4 w-4" />
                   </button>
-                </div>
+                )}
+
+                <button
+                  type="button"
+                  onClick={() => toggleExpanded(post.id)}
+                  aria-expanded={isExpanded}
+                  className="flex flex-1 items-start justify-between gap-3 text-left cursor-pointer"
+                >
+                  <div className="min-w-0 flex-1">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span
+                        className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-tiny font-black uppercase tracking-wide ${theme.badgeClass}`}
+                      >
+                        {theme.label}
+                      </span>
+                      {!post.is_published && (
+                        <span className="type-label-2xs text-text-muted">
+                          {t.draftBadge}
+                        </span>
+                      )}
+                      <span className="type-label-2xs text-text-muted">
+                        {formatPostDate(post.created_at)}
+                      </span>
+                    </div>
+                    <h3 className="mt-1.5 truncate type-card-title text-text-primary">{post.title}</h3>
+                  </div>
+                  <span className="mt-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-text-muted">
+                    {isExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                  </span>
+                </button>
               </div>
 
-              {availableTags.length > 1 && (
-                <div className="relative flex flex-wrap gap-1.5 border-b border-border-color px-6 py-3">
-                  <FilterChip
-                    active={activeFilter === 'all'}
-                    onClick={() => setActiveFilter('all')}
-                    label={t?.filterAll || 'All'}
-                  />
-                  {availableTags.map((tag) => {
-                    const theme = CHANGELOG_TAG_THEME[tag];
-                    return (
-                      <FilterChip
-                        key={tag}
-                        active={activeFilter === tag}
-                        onClick={() => setActiveFilter(tag)}
-                        label={theme.label}
-                        dotClass={theme.dotClass}
-                      />
-                    );
-                  })}
-                </div>
-              )}
-
-              <div className="relative flex-1 overflow-y-auto px-6 py-5 space-y-3">
-                {loading && (
-                  <div className="flex items-center justify-center py-16 text-text-muted">
-                    <Loader2 className="h-5 w-5 animate-spin" />
-                  </div>
-                )}
-
-                {!loading && visiblePosts.length === 0 && (
-                  <div className="flex flex-col items-center gap-2 py-16 text-center">
-                    <Skull className="h-6 w-6 text-text-muted" />
-                    <p className="text-xs font-medium text-text-muted">
-                      {t?.emptyState || 'Nothing new yet. Check back after the next Trial.'}
-                    </p>
-                  </div>
-                )}
-
-                {visiblePosts.map((post, idx) => {
-                  const theme = CHANGELOG_TAG_THEME[post.tag] || CHANGELOG_TAG_THEME.feature;
-                  const isExpanded = expandedIds.has(post.id);
-                  const isDragging = draggingId === post.id;
-
-                  return (
-                    <div
-                      key={post.id}
-                      ref={(el) => {
-                        if (el) rowRefs.current.set(post.id, el);
-                        else rowRefs.current.delete(post.id);
-                      }}
-                      onPointerMove={handlePointerMove}
-                      onPointerUp={endDrag}
-                      onPointerCancel={endDrag}
-                      className={`rounded-2xl border transition-all ${
-                        isDragging
-                          ? 'border-accent-amber/60 bg-bg-elevated/80 shadow-lg scale-[1.01] z-10 relative'
-                          : post.is_published
-                            ? 'border-border-color bg-bg-elevated/50'
-                            : 'border-dashed border-border-subtle bg-bg-elevated/20'
-                      }`}
-                    >
-                      <div className="flex items-start gap-2 p-4">
-                        {canReorder && (
-                          <button
-                            type="button"
-                            title={t?.dragToReorder || 'Drag to reorder'}
-                            aria-label={t?.dragToReorder || 'Drag to reorder'}
-                            onPointerDown={(e) => beginDrag(e, post.id)}
-                            style={{ touchAction: 'none' }}
-                            className={`mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-text-muted hover:bg-bg-elevated hover:text-text-secondary cursor-grab active:cursor-grabbing ${
-                              isDragging ? 'text-accent-amber' : ''
-                            }`}
-                          >
-                            <GripVertical className="h-4 w-4" />
-                          </button>
-                        )}
-
-                        <button
-                          type="button"
-                          onClick={() => toggleExpanded(post.id)}
-                          aria-expanded={isExpanded}
-                          className="flex flex-1 items-start justify-between gap-3 text-left cursor-pointer"
-                        >
-                          <div className="min-w-0 flex-1">
-                            <div className="flex flex-wrap items-center gap-2">
-                              <span
-                                className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[10px] font-black uppercase tracking-wide ${theme.badgeClass}`}
-                              >
-                                {theme.label}
-                              </span>
-                              {!post.is_published && (
-                                <span className="text-[10px] font-bold uppercase tracking-wide text-text-muted">
-                                  {t?.draftBadge || 'Draft'}
-                                </span>
-                              )}
-                              <span className="text-[10px] font-bold uppercase tracking-wide text-text-muted">
-                                {formatDate(post.created_at)}
-                              </span>
-                            </div>
-                            <h3 className="mt-1.5 truncate text-sm font-black text-text-primary">{post.title}</h3>
-                          </div>
-                          <span className="mt-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-text-muted">
-                            {isExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-                          </span>
-                        </button>
-                      </div>
-
-                      <div
-                        className="grid transition-[grid-template-rows] duration-300 ease-out"
-                        style={{ gridTemplateRows: isExpanded ? '1fr' : '0fr' }}
-                      >
-                        <div className="overflow-hidden">
-                          <div className="px-4 pb-4 pl-[2.75rem]">
-                            <div
-                              className="dbd-changelog-body text-xs leading-relaxed text-text-muted [&_h3]:text-sm [&_h3]:font-black [&_h3]:text-accent-red [&_ul]:list-disc [&_ul]:pl-4 [&_ol]:list-decimal [&_ol]:pl-4 [&_a]:text-accent-red [&_a]:underline"
-                              dangerouslySetInnerHTML={{ __html: post.content_html }}
-                            />
-                            <div className="mt-2.5 flex items-center justify-between gap-2">
-                              <span className="text-[10px] font-bold uppercase tracking-wide text-text-muted">
-                                {t?.byAuthor || 'by'} {post.author_name}
-                              </span>
-                              {isAdmin && (
-                                <div className="flex items-center gap-1">
-                                  {canReorder && (
-                                    <>
-                                      <IconButton
-                                        icon={ChevronUp}
-                                        label={t?.moveUp || 'Move up'}
-                                        disabled={idx === 0}
-                                        onClick={() => movePost(post.id, -1)}
-                                      />
-                                      <IconButton
-                                        icon={ChevronDown}
-                                        label={t?.moveDown || 'Move down'}
-                                        disabled={idx === visiblePosts.length - 1}
-                                        onClick={() => movePost(post.id, 1)}
-                                      />
-                                    </>
-                                  )}
-                                  <IconButton
-                                    icon={Pencil}
-                                    label={t?.edit || 'Edit'}
-                                    hoverClass="hover:text-accent-red"
-                                    onClick={() => {
-                                      setEditingPost(post);
-                                      setEditorOpen(true);
-                                    }}
-                                  />
-                                  <IconButton
-                                    icon={Trash2}
-                                    label={t?.delete || 'Delete'}
-                                    hoverClass="hover:text-accent-red"
-                                    onClick={() => setPendingDeleteId(post.id)}
-                                  />
-                                </div>
-                              )}
-                            </div>
-                          </div>
+              <div
+                className="grid transition-[grid-template-rows] duration-300 ease-out"
+                style={{ gridTemplateRows: isExpanded ? '1fr' : '0fr' }}
+              >
+                <div className="overflow-hidden">
+                  <div className="px-4 pb-4 pl-[2.75rem]">
+                    <RichText
+                      text={post.content_html}
+                      block
+                      className="dbd-changelog-body text-xs leading-relaxed text-text-muted [&_h3]:text-sm [&_h3]:font-black [&_h3]:text-accent-red [&_ul]:list-disc [&_ul]:pl-4 [&_ol]:list-decimal [&_ol]:pl-4 [&_a]:text-accent-red [&_a]:underline"
+                    />
+                    <div className="mt-2.5 flex items-center justify-between gap-2">
+                      <span className="type-label-2xs text-text-muted">
+                        {t.byAuthor} {post.author_name}
+                      </span>
+                      {isAdmin && (
+                        <div className="flex items-center gap-1">
+                          {canReorder && (
+                            <>
+                              <IconButton
+                                icon={ChevronUp}
+                                label={t.moveUp}
+                                disabled={idx === 0}
+                                onClick={() => movePost(post.id, -1)}
+                              />
+                              <IconButton
+                                icon={ChevronDown}
+                                label={t.moveDown}
+                                disabled={idx === visiblePosts.length - 1}
+                                onClick={() => movePost(post.id, 1)}
+                              />
+                            </>
+                          )}
+                          <IconButton
+                            icon={Pencil}
+                            label={t.edit}
+                            hoverClass="hover:text-accent-red"
+                            onClick={() => {
+                              setEditingPost(post);
+                              setEditorOpen(true);
+                            }}
+                          />
+                          <IconButton
+                            icon={Trash2}
+                            label={t.delete}
+                            hoverClass="hover:text-accent-red"
+                            onClick={() => setPendingDeleteId(post.id)}
+                          />
                         </div>
-                      </div>
+                      )}
                     </div>
-                  );
-                })}
+                  </div>
+                </div>
               </div>
             </div>
-          </div>,
-          document.body
-        )}
+          );
+        })}
+      </div>
+      </Modal>
 
-      {mounted &&
-        createPortal(
-          <>
-            {editorOpen && (
-            <ChangelogEditorModal
-              open={editorOpen}
-              post={editingPost}
-              saving={saving}
-              dict={dict}
-              onClose={() => {
-                setEditorOpen(false);
-                setEditingPost(null);
-              }}
-              onSave={handleSave}
-              onDelete={editingPost ? () => setPendingDeleteId(editingPost.id) : undefined}
-            />
-            )}
+      {editorOpen && (
+      <ChangelogEditorModal
+        open={editorOpen}
+        post={editingPost}
+        saving={saving}
+        error={editorError}
+        onClose={() => {
+          setEditorError(null);
+          setEditorOpen(false);
+          setEditingPost(null);
+        }}
+        onSave={handleSave}
+        onDelete={editingPost ? () => setPendingDeleteId(editingPost.id) : undefined}
+      />
+      )}
 
-            {pendingDeleteId != null && (
-            <ConfirmModal
-              open={pendingDeleteId != null}
-              title={t?.deleteConfirmTitle || 'Delete this entry?'}
-              message={t?.deleteConfirmMessage || 'This changelog post will be permanently removed.'}
-              confirmLabel={t?.delete || 'Delete'}
-              onConfirm={handleDelete}
-              onCancel={() => setPendingDeleteId(null)}
-            />
-            )}
-          </>,
-          document.body
-        )}
+      {pendingDeleteId != null && (
+      <ConfirmModal
+        open={pendingDeleteId != null}
+        title={t.deleteConfirmTitle}
+        message={t.deleteConfirmMessage}
+        confirmLabel={t.delete}
+        onConfirm={handleDelete}
+        onCancel={() => setPendingDeleteId(null)}
+      />
+      )}
+
     </>
   );
 };
@@ -566,7 +526,7 @@ const FilterChip: React.FC<{ active: boolean; onClick: () => void; label: string
   <button
     type="button"
     onClick={onClick}
-    className={`flex items-center gap-1.5 rounded-full border px-3 py-1 text-[11px] font-bold transition-all cursor-pointer ${
+    className={`flex items-center gap-1.5 rounded-full border px-3 py-1 text-mini font-bold transition-all cursor-pointer ${
       active
         ? 'border-accent-red/50 bg-accent-red/10 text-accent-red'
         : 'border-border-color text-text-muted hover:text-text-secondary'
@@ -586,11 +546,11 @@ const IconButton: React.FC<{
 }> = ({ icon: Icon, label, onClick, disabled, hoverClass = 'hover:text-text-secondary' }) => (
   <button
     type="button"
-    title={label}
+    {...tip(label, undefined, 'action')}
     aria-label={label}
     disabled={disabled}
     onClick={onClick}
-    className={`flex h-7 w-7 items-center justify-center rounded-md text-text-muted transition-colors cursor-pointer hover:bg-bg-elevated disabled:opacity-30 disabled:cursor-not-allowed ${hoverClass}`}
+    className={`pointer-coarse:min-h-11 pointer-coarse:min-w-11 flex h-7 w-7 items-center justify-center rounded-md text-text-muted transition-colors cursor-pointer hover:bg-bg-elevated disabled:opacity-30 disabled:cursor-not-allowed ${hoverClass}`}
   >
     <Icon className="h-3.5 w-3.5" />
   </button>

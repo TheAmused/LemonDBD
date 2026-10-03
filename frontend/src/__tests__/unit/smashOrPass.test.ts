@@ -7,7 +7,6 @@ import { localizedProfile } from '../../utils/entityProfile';
 import type { EntityMetadata, EntityItem, RosterItem } from '../../types/smashOrPass';
 import {
   cleanWatermark,
-  getWatermarkFontSize,
   sampleFlags,
   resolveWatermarks,
 } from '../../utils/smashWatermarks';
@@ -904,11 +903,13 @@ test('SmashOrPass: Dual-Identity Watermarks & Clamping Helper', async (t) => {
     assert.strictEqual(cleanWatermark('Sadako (Yamamura)'), 'Sadako Yamamura');
   });
 
-  await t.test('clamps font size for long watermarks (> 10 characters)', () => {
-    assert.strictEqual(getWatermarkFontSize('SHORT'), 'text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl');
-    assert.strictEqual(getWatermarkFontSize('1234567890'), 'text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl');
-    assert.strictEqual(getWatermarkFontSize('THE EXECUTIONER'), 'text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl');
-    assert.strictEqual(getWatermarkFontSize('SADAKO YAMAMURA'), 'text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl');
+  await t.test('fits long watermarks with FitText instead of fixed size tiers', async () => {
+    const { readFileSync } = await import('node:fs');
+    const src = readFileSync(new URL('../../components/smash-or-pass/FloatingLoreScattered.tsx', import.meta.url), 'utf8');
+    assert.match(src, /<FitText[\s\S]*?maxLines=\{[2-4]\}/);
+    assert.match(src, /wrapFirst/);
+    assert.match(src, /text-center/);
+    assert.doesNotMatch(src, /whitespace-nowrap/);
   });
 
   await t.test('uses explicit watermark_left and watermark_right when provided', () => {

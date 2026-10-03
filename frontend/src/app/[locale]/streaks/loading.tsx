@@ -1,10 +1,10 @@
 // frontend/src/app/[locale]/streaks/loading.tsx
 import React from 'react';
-import { DbdSpinner } from '@/components/DbdSpinner';
+import { DbdSpinner } from '@/components/common/DbdSpinner';
 
 export default function StreaksLoading() {
   return (
-    <div className="min-h-screen bg-bg-primary text-text-primary flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300">
+    <div className="min-h-screen text-text-primary flex flex-col lg:flex-row transition-colors duration-300">
       <div
         aria-hidden="true"
         className="lemon-shell-aside hidden lg:fixed lg:inset-y-0 lg:left-0 lg:z-40 lg:block lg:w-64 border-r border-border-color bg-bg-surface"
@@ -18,8 +18,8 @@ export default function StreaksLoading() {
           layout="inline"
           accent="blood"
           needleSpeed={1.1}
-          label="Synchronizing Trial Streaks..."
-          sublabel="Validating gauntlet records and victory metrics"
+          labelKey="streaks.loadingTrialStreaks"
+          sublabelKey="streaks.loadingTrialStreaksSub"
         />
       </main>
     </div>

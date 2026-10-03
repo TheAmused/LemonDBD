@@ -112,4 +112,48 @@ describe('creator: page wiring', () => {
     const hub = fs.readFileSync(path.join(SRC, 'components/tier-lists/TierListHub.tsx'), 'utf-8');
     assert.ok(hub.includes('/tier-lists/new'));
   });
+
+  it('every creator button and label key exists in all 5 locales with shortened create label', async () => {
+    const expectedCreate: Record<string, string> = {
+      en: 'Create',
+      pl: 'Stwórz',
+      de: 'Erstellen',
+      es: 'Crear',
+      ja: '作成',
+    };
+
+    for (const code of ['en', 'de', 'es', 'ja', 'pl']) {
+      const dict = (await import(`@/locales/${code}`)).default;
+      const c = dict.tierLists.creator;
+      assert.equal(c.create, expectedCreate[code], `${code} create label must be shortened to "${expectedCreate[code]}"`);
+      assert.ok(c.editItem, `${code} missing editItem key`);
+      assert.ok(c.editItemAria, `${code} missing editItemAria key`);
+      assert.ok(c.removeImage, `${code} missing removeImage key`);
+      assert.ok(c.closeToast, `${code} missing closeToast key`);
+    }
+  });
+
+  it('TierListCreator header has no border-b, includes Preview and Create in top header, and no duplicate preview at bottom', () => {
+    const creator = fs.readFileSync(path.join(SRC, 'components/tier-lists/creator/TierListCreator.tsx'), 'utf-8');
+    // No horizontal line under header navigation
+    assert.ok(!creator.includes('border-b border-border-color pb-4'), 'must not have horizontal border under header navigation');
+    // Floating toast for draft restored
+    assert.ok(creator.includes('fixed top-5 right-5 z-50'), 'restored draft must render as fixed top-right toast');
+    // Top header includes preview and submitButton
+    assert.ok(creator.includes('c.previewHeading'), 'header must include preview button');
+    // Header is in-line with the basics block in the middle
+    assert.ok(creator.includes('flex flex-col lg:flex-row items-stretch lg:items-start justify-between'), 'header must be in-line');
+    assert.ok(creator.includes('c.stepBasics'), 'the basics block must be in the header row');
+    // CreatorItems wires onUpdateItem
+    assert.ok(creator.includes('onUpdateItem='), 'CreatorItems must receive onUpdateItem handler');
+  });
+
+  it('TierItemEditModal exists and allows editing both name and image URL', () => {
+    const modal = fs.readFileSync(path.join(SRC, 'components/tier-lists/creator/TierItemEditModal.tsx'), 'utf-8');
+    assert.ok(modal.includes('c.editItem'));
+    assert.ok(modal.includes('t.itemName'));
+    assert.ok(modal.includes('t.itemImage'));
+    assert.ok(modal.includes('c.removeImage'));
+  });
 });
+

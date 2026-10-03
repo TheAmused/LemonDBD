@@ -14,7 +14,7 @@ import { Difficulty } from '@/types/chaosStreak';
 import { HistoryMode } from '@/types/historyStreak';
 import type { GauntletGameMode } from '@/types/gauntletStreak';
 import { fetchChallengeModeStatus, type ChallengeModeStatusMap } from '@/services/challengeModesApi';
-import { useStreaksDict } from '@/context/StreaksDictContext';
+import { useDictionary } from '@/context/DictionaryContext';
 import { useChallengeCompletionStatus } from './useChallengeCompletionStatus';
 import { isHardestTierCompleted, CHAOS_DIFFICULTY_ORDER, HISTORY_MODE_ORDER } from '@/utils/challengeTierCompletion';
 
@@ -60,7 +60,7 @@ interface StreakPanelGridProps {
 
 export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }) => {
   const router = useRouter();
-  const dict = useStreaksDict();
+  const dict = useDictionary();
 
   const panels = useMemo(() => {
     if (role === 'killer') return getKillerStreakPanels(dict);
@@ -121,7 +121,6 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
               title={panel.title}
               image={panel.image}
               comingSoon
-              dict={dict}
             />
           );
         }
@@ -139,7 +138,6 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
               href={`/${locale}/streaks/${role}/${panel.id}`}
               disabled
               disabledReason={mode?.disabled_reason}
-              dict={dict}
             />
           );
         }
@@ -150,7 +148,6 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
               key={panel.id}
               title={panel.title}
               image={panel.image}
-              dict={dict}
               completed={gauntletCardCompleted}
               completedCount={gauntletCardCount}
               completedFull={gauntletCardFullCount != null}
@@ -178,7 +175,6 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
               key={panel.id}
               title={panel.title}
               image={panel.image}
-              dict={dict}
               completed={chaosCardCompleted}
               completedCount={chaosCardCount}
               completedFull={chaosCardFullCount != null}
@@ -203,7 +199,6 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
               key={panel.id}
               title={panel.title}
               image={panel.image}
-              dict={dict}
               completed={historyCardCompleted}
               completedCount={historyCardCount}
               completedFull={historyCardFullCount != null}
@@ -228,7 +223,6 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
               key={panel.id}
               title={panel.title}
               image={panel.image}
-              dict={dict}
               completed={pageStreakCardCompleted}
               completedCount={pageStreakCardCount}
               completedFull={pageStreakCardFullCount != null}
@@ -251,7 +245,6 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
             title={panel.title}
             image={panel.image}
             href={`/${locale}/streaks/${role}/${panel.id}`}
-            dict={dict}
           />
         );
       })}
@@ -269,7 +262,6 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
         originalCompletedCount={gauntletCardCount}
         originalCompletedFull={gauntletCardFullCount != null}
         originalCompletedFullCount={gauntletCardFullCount}
-        dict={dict}
       />
 
       <ChaosModeModal
@@ -281,7 +273,6 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
         }}
         completedCounts={chaosCounts}
         completedFullCounts={chaosFullRoster}
-        dict={dict}
       />
 
       <HistoryModeModal
@@ -293,7 +284,6 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
         }}
         completedCounts={historyCounts}
         completedFullCounts={historyFullRoster}
-        dict={dict}
       />
 
       <PageStreakModeModal
@@ -303,8 +293,7 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
           markPageStreakIntroSeen();
           router.push(`/${locale}/streaks/${role}/page-streak`);
         }}
-        dict={dict}
       />
     </div>
   );
-};
+};

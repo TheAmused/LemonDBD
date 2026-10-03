@@ -26,7 +26,8 @@
 //   * no uncaught page errors (React hydration errors included).
 // It also reports -- without failing -- interactive controls smaller than
 // 40px on touch viewports. Screenshots + report.json land in
-// playwright-tier-lists-check/.
+// playwright-tier-lists-check/ (root of repo).
+
 
 import { chromium, firefox, webkit } from 'playwright';
 import fs from 'node:fs';
@@ -36,7 +37,7 @@ import { fileURLToPath } from 'node:url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const BASE_URL = (process.env.TIER_LISTS_BASE_URL || 'https://localhost').replace(/\/+$/, '');
 const LOCALE = process.env.TIER_LISTS_LOCALE || 'en';
-const OUT_DIR = path.join(__dirname, '..', 'playwright-tier-lists-check');
+const OUT_DIR = path.join(__dirname, '..', '..', 'playwright', 'tier-lists-check');
 fs.mkdirSync(OUT_DIR, { recursive: true });
 
 export const VIEWPORTS = [
@@ -133,22 +134,27 @@ async function checkViewport(browserName, browser, vp) {
     const tile = page.locator(POOL).first();
     const moved = await tile.getAttribute('aria-label');
     if (vp.touch) {
-      console.log('before tile.tap, count:', await page.locator(POOL).count());
       await tile.tap();
-      console.log('after tile.tap');
       const targetBtn = page.locator('section[aria-label] >> nth=1').getByRole('button', { name: /./ }).last();
-      await targetBtn.scrollIntoViewIfNeeded();
-      console.log('before targetBtn.tap, exists:', await targetBtn.count());
-      await targetBtn.tap();
-      console.log('after targetBtn.tap');
+      await targetBtn.evaluate((el) => {
+        el.scrollIntoView({ block: 'center' });
+        el.click();
+      });
     } else {
+      await tile.scrollIntoViewIfNeeded();
       const from = await tile.boundingBox();
-      const target = await page.locator('section[aria-label] > div').nth(1).boundingBox();
+      const targetLocator = page.locator('section[aria-label] > div').nth(1);
       await page.mouse.move(from.x + from.width / 2, from.y + from.height / 2);
       await page.mouse.down();
-      await page.mouse.move(from.x + from.width / 2 + 12, from.y + from.height / 2 + 12, { steps: 4 });
-      await page.mouse.move(target.x + 40, target.y + target.height / 2, { steps: 18 });
-      await page.waitForTimeout(120);
+      await page.mouse.move(from.x + from.width / 2 + 12, from.y + from.height / 2 - 12, { steps: 4 });
+      for (let s = 1; s <= 20; s++) {
+        const curTarget = await targetLocator.boundingBox();
+        const curY = curTarget ? Math.max(curTarget.y + curTarget.height / 2, 20) : 50;
+        const curX = curTarget ? curTarget.x + 40 : from.x;
+        await page.mouse.move(curX, curY);
+        await page.waitForTimeout(15);
+      }
+      await page.waitForTimeout(150);
       await page.mouse.up();
     }
     await page.waitForTimeout(300);
@@ -167,17 +173,22 @@ async function checkViewport(browserName, browser, vp) {
     await page.waitForSelector('main h1');
     check('creator.noOverflow', await noOverflow(page));
     await page.locator('main input').first().fill(`Responsive check ${vp.name}`);
-    await page.getByRole('radio').nth(1).click();
-    await page.locator('#tier-creator-links').fill('Alpha | https://example.com/a.png\nBravo\nCharlie | https://example.com/c.png');
-    await page.locator('#tier-creator-links').locator('xpath=..').getByRole('button').last().click();
-    await page.waitForTimeout(200);
-    // Upload: a real PNG goes through decode -> shrink -> data: URL.
-    const png = Buffer.from(
-      'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8DwHwAFBQIAX8jx0gAAAABJRU5ErkJggg==',
-      'base64'
-    );
-    await page.getByRole('radio').nth(0).click();
-    await page.locator('input[type=file][multiple]').setInputFiles({ name: 'upload_test-image.png', mimeType: 'image/png', buffer: png });
+    const nameInput = page.locator('label').filter({ hasText: /^Name$/ }).locator('input').first();
+    const urlInput = page.locator('label').filter({ hasText: /^Image URL$/ }).locator('input').first();
+    const addBtn = page.getByRole('button', { name: 'Add an item' });
+
+    for (const item of [
+      { name: 'Alpha', url: 'https://example.com/a.png' },
+      { name: 'Bravo', url: '' },
+      { name: 'Charlie', url: 'https://example.com/c.png' },
+      { name: 'Delta', url: 'https://example.com/d.png' },
+    ]) {
+      await nameInput.fill(item.name);
+      if (item.url) await urlInput.fill(item.url);
+      await addBtn.click();
+      await page.waitForTimeout(100);
+    }
+
     const uploaded = await page
       .waitForFunction(() => document.querySelectorAll('main ul > li').length >= 4, null, { timeout: 10000 })
       .then(() => true)
@@ -185,7 +196,7 @@ async function checkViewport(browserName, browser, vp) {
     check('creator.upload', uploaded);
     check('creator.noOverflowWithItems', await noOverflow(page));
     await shot('creator');
-    await page.locator('[data-tier-create]:visible').click();
+    await page.locator('[data-tier-create]:visible').first().click();
     await page.waitForURL(/\/tier-lists\/custom\//, { timeout: 15000 });
     await waitForBoard(page);
     check('custom.created', (await page.locator(POOL).count()) === 4);

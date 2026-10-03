@@ -1,5 +1,7 @@
 // frontend/src/components/character-detail/types.tsx
 import React from 'react';
+import { RARITY_TILE_IMAGES } from '@/constants/addonRarityIcons';
+import { localeMetaFor } from '@/i18n/config';
 
 export interface CharacterItem {
   id?: number;
@@ -105,13 +107,15 @@ export type CharacterDetailDictionary = Record<string, string>;
 
 export interface CharacterViewBaseProps {
   currentLocale: string;
-  dict?: Record<string, unknown>;
   detailData: CharacterDetailPayload;
   allCharacters?: CharacterItem[];
 }
 
 export interface RarityTileStyle {
+  /** Tile classes. Image-backed rarities only carry a transparent border here. */
   bg: string;
+  /** Inline background (the rarity artwork) for rarities that have an image. */
+  style?: React.CSSProperties;
   badge: string;
   text: string;
 }
@@ -133,14 +137,7 @@ export function formatLocalizedReleaseDate(rawDate?: string, locale: string = 'e
   const parsed = new Date(trimmed);
   if (!isNaN(parsed.getTime())) {
     try {
-      const locMap: Record<string, string> = {
-        en: 'en-US',
-        pl: 'pl-PL',
-        de: 'de-DE',
-        es: 'es-ES',
-        ja: 'ja-JP',
-      };
-      return parsed.toLocaleDateString(locMap[locale] || locale, {
+      return parsed.toLocaleDateString(localeMetaFor(locale).bcp47, {
         year: 'numeric',
         month: 'long',
         day: 'numeric',
@@ -226,54 +223,79 @@ export function getAvatarUrl(
   return char.avatar_url || char.portrait_url || '';
 }
 
+/**
+ * Small WebP copy of a character avatar for grids/lists (served by
+ * `/api/v1/avatars/thumb/...`). Detail pages keep using `getAvatarUrl` (full image).
+ * Falls back to the full avatar when the character has no local file.
+ */
+export function getAvatarThumbUrl(
+  backendBase: string,
+  char: CharacterItem,
+  isSurvivor: boolean
+): string {
+  const full = getAvatarUrl(backendBase, char, isSurvivor);
+  if (!full.startsWith(`${backendBase}/static/avatars/`)) return full;
+  const rel = full.slice(`${backendBase}/static/avatars/`.length);
+  if (!/\.(webp|png|jpe?g)$/i.test(rel)) return full;
+  return `${backendBase}/api/v1/avatars/thumb/${rel}`;
+}
+
+function rarityImageTile(rarity: keyof typeof RARITY_TILE_IMAGES): Pick<RarityTileStyle, 'bg' | 'style'> {
+  return {
+    bg: 'border-transparent bg-no-repeat bg-center bg-[length:100%_100%]',
+    style: { backgroundImage: `url(${RARITY_TILE_IMAGES[rarity]})` },
+  };
+}
+
 export function getRarityTileStyle(rarity?: string): RarityTileStyle {
   const r = (rarity || '').toLowerCase();
   if (r.includes('ultra') || r.includes('iridescent')) {
     return {
-      bg: 'bg-gradient-to-br from-[#c9245e] via-[#85123d] to-[#45051e] border-[#f24483] shadow-[0_0_16px_rgba(242,68,131,0.5)]',
-      badge: 'bg-pink-500/20 text-pink-300 border-pink-500/40',
-      text: 'text-pink-400',
+      ...rarityImageTile('Ultra Rare'),
+      badge: 'bg-accent-pink/20 text-accent-pink border-accent-pink/40',
+      text: 'text-accent-pink',
     };
   }
   if (r.includes('very rare') || r.includes('purple')) {
     return {
-      bg: 'bg-gradient-to-br from-[#7e2ba3] via-[#52176e] to-[#2b083b] border-[#ad43e3] shadow-[0_0_14px_rgba(173,67,227,0.45)]',
-      badge: 'bg-purple-500/20 text-purple-300 border-purple-500/40',
-      text: 'text-purple-400',
+      ...rarityImageTile('Very Rare'),
+      badge: 'bg-accent-purple/20 text-accent-purple border-accent-purple/40',
+      text: 'text-accent-purple',
     };
   }
   if (r.includes('rare') || r.includes('blue')) {
     return {
-      bg: 'bg-gradient-to-br from-[#1f6fb2] via-[#154d7a] to-[#0a2740] border-[#3b9fe0] shadow-[0_0_12px_rgba(59,159,224,0.4)]',
-      badge: 'bg-sky-500/20 text-sky-300 border-sky-500/40',
-      text: 'text-sky-400',
+      ...rarityImageTile('Rare'),
+      badge: 'bg-accent-blue/20 text-accent-blue border-accent-blue/40',
+      text: 'text-accent-blue',
     };
   }
   if (r.includes('uncommon') || r.includes('green')) {
     return {
-      bg: 'bg-gradient-to-br from-[#277a3c] via-[#1a5328] to-[#0c2a13] border-[#38b259] shadow-[0_0_12px_rgba(56,178,89,0.4)]',
-      badge: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40',
-      text: 'text-emerald-400',
+      ...rarityImageTile('Uncommon'),
+      badge: 'bg-accent-green/20 text-accent-green border-accent-green/40',
+      text: 'text-accent-green',
     };
   }
   if (r.includes('common') || r.includes('brown')) {
     return {
-      bg: 'bg-gradient-to-br from-[#5c4033] via-[#432d24] to-[#251710] border-[#8b5a3e] shadow-[0_0_12px_rgba(139,90,62,0.35)]',
-      badge: 'bg-amber-800/30 text-amber-200 border-amber-700/40',
-      text: 'text-amber-300',
+      ...rarityImageTile('Common'),
+      badge: 'bg-accent-amber-deep/30 text-accent-amber border-accent-amber/40',
+      text: 'text-accent-amber',
     };
   }
   if (r.includes('event')) {
     return {
-      bg: 'bg-gradient-to-br from-[#d97706] via-[#92400e] to-[#451a03] border-[#f59e0b] shadow-[0_0_14px_rgba(245,158,11,0.45)]',
-      badge: 'bg-orange-500/20 text-orange-300 border-orange-500/40',
-      text: 'text-orange-400',
+      ...rarityImageTile('Event'),
+      badge: 'bg-accent-orange/20 text-accent-orange border-accent-orange/40',
+      text: 'text-accent-orange',
     };
   }
+  // Unknown / unrated rarities (e.g. "Special") look like Common.
   return {
-    bg: 'bg-slate-900 border-slate-700 shadow-md',
-    badge: 'bg-slate-500/20 text-slate-400 border-slate-500/40',
-    text: 'text-slate-400',
+    ...rarityImageTile('Common'),
+    badge: 'bg-accent-amber-deep/30 text-accent-amber border-accent-amber/40',
+    text: 'text-accent-amber',
   };
 }
 
@@ -308,13 +330,5 @@ export function getLocalizedItemCategory(category?: string, t?: Record<string, s
   return (key && t?.[key]) || category;
 }
 
-export {
-  DBD_KEYWORDS,
-  ACTION_KEYWORDS,
-  TOKEN_REGEX,
-  createDbdTokenRegex,
-  parseLineTokens,
-  renderFormattedDbdText,
-} from '@/utils/textFormatter';
 
 

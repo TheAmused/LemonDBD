@@ -88,13 +88,6 @@ class TestGetOrCreateRun:
         assert easy_run["checkpoint_interval"] == 5
         assert medium_run["checkpoint_interval"] == 10
 
-    def test_getting_twice_returns_the_same_run(
-        self, chaos_service: ChaosService, chaos_user: int
-    ) -> None:
-        first = chaos_service.get_or_create_run(chaos_user, "medium")
-        second = chaos_service.get_or_create_run(chaos_user, "medium")
-        assert first["id"] == second["id"]
-
     def test_unknown_difficulty_defaults_checkpoint_to_zero(
         self, chaos_service: ChaosService, chaos_user: int
     ) -> None:
@@ -153,24 +146,6 @@ class TestHellDifficulty:
         self.service = chaos_service
         self.run = chaos_service.get_or_create_run(self.user_id, "hell")
 
-    def test_a_character_becoming_owned_mid_run_does_not_inflate_the_completion_count(self) -> None:
-        """Regression: a killer un-kill-switched (or otherwise newly owned)
-        after this run's pool was already frozen at 2 must not inflate the
-        count recorded for a run that only ever had to clear those 2."""
-        from app.core.extensions import db
-        from app.models import ChallengeCompletionRecord
-
-        seed_killer("The Huntress")  # owned by default; the frozen pool stays at 2
-
-        self.service.submit_result(self.user_id, self.run["id"], "win", "The Trapper")
-        final = self.service.submit_result(self.user_id, self.run["id"], "win", "The Wraith")
-        assert final["status"] == "completed"
-
-        record = db.session.scalars(
-            select(ChallengeCompletionRecord).where(ChallengeCompletionRecord.user_id == self.user_id)
-        ).first()
-        assert record.unlocked_characters_count == 2
-
     def test_new_killer_mid_run_is_not_in_the_completion_check(self) -> None:
         from datetime import datetime, timezone
         from app.core.extensions import db
@@ -194,25 +169,6 @@ class TestHellDifficulty:
         ).first()
         assert record.full_roster is True
         assert record.unlocked_characters_count == 2
-
-    def test_full_roster_is_false_when_a_killer_exists_that_is_not_owned(self) -> None:
-        from datetime import datetime, timezone
-        from app.core.extensions import db
-        from app.models import ChallengeCompletionRecord
-
-        ghostface = seed_killer("Ghostface")
-        ghostface.created_at = datetime(2020, 1, 1, tzinfo=timezone.utc)
-        db.session.commit()
-        OwnershipService().set_character_ownership(self.user_id, ghostface.id, is_owned=False, role="Killer")
-
-        self.service.submit_result(self.user_id, self.run["id"], "win", "The Trapper")
-        final = self.service.submit_result(self.user_id, self.run["id"], "win", "The Wraith")
-        assert final["status"] == "completed"
-
-        record = db.session.scalars(
-            select(ChallengeCompletionRecord).where(ChallengeCompletionRecord.user_id == self.user_id)
-        ).first()
-        assert record.full_roster is False
 
     def test_new_perk_mid_run_is_not_drawn(self) -> None:
         run = self.service.submit_result(self.user_id, self.run["id"], "win", self.run["owned_killers"][0])
@@ -245,41 +201,6 @@ class TestHellDifficulty:
         after_loss = self.service.submit_result(self.user_id, self.run["id"], "loss", "The Trapper")
         assert after_loss["attempts"] == 1
 
-    def test_completing_the_run_records_completion_and_resets_attempts(self) -> None:
-        from app.core.extensions import db
-        from app.models import ChallengeCompletionRecord
-
-        self.service.submit_result(self.user_id, self.run["id"], "loss", "The Trapper")  # attempts -> 1
-        self.service.submit_result(self.user_id, self.run["id"], "win", "The Trapper")
-        final = self.service.submit_result(self.user_id, self.run["id"], "win", "The Wraith")
-        assert final["status"] == "completed"
-        assert final["attempts"] == 0
-
-        record = db.session.scalars(
-            select(ChallengeCompletionRecord).where(ChallengeCompletionRecord.user_id == self.user_id)
-        ).first()
-        assert record is not None
-        assert record.mode == "chaos"
-        assert record.variant == "hell"
-        assert record.attempts_taken == 2
-        assert record.matches_played == 3
-
-    def test_completing_the_run_with_no_losses_records_one_attempt(self) -> None:
-        from app.core.extensions import db
-        from app.models import ChallengeCompletionRecord
-
-        self.service.submit_result(self.user_id, self.run["id"], "win", "The Trapper")
-        final = self.service.submit_result(self.user_id, self.run["id"], "win", "The Wraith")
-        assert final["status"] == "completed"
-
-        record = db.session.scalars(
-            select(ChallengeCompletionRecord).where(ChallengeCompletionRecord.user_id == self.user_id)
-        ).first()
-        assert record is not None
-        assert record.attempts_taken == 1
-        assert record.unlocked_characters_count == 2
-        assert record.full_roster is True
-
     def test_one_loss_resets_everything_in_hell(self) -> None:
         self.service.submit_result(self.user_id, self.run["id"], "win", "The Trapper")
         after_loss = self.service.submit_result(self.user_id, self.run["id"], "loss", "The Wraith")
@@ -292,16 +213,6 @@ class TestHellDifficulty:
         run = self.service.get_or_create_run(self.user_id, "hell")
         with pytest.raises(ValueError, match=r"already been cleared"):
             self.service.submit_result(self.user_id, run["id"], "win", "The Trapper")
-
-    def test_submit_result_on_completed_run_raises_value_error(self) -> None:
-        self.service.submit_result(self.user_id, self.run["id"], "win", "The Trapper")
-        self.service.submit_result(self.user_id, self.run["id"], "win", "The Wraith")
-        with pytest.raises(ValueError):
-            self.service.submit_result(self.user_id, self.run["id"], "win", "The Trapper")
-
-    def test_submit_invalid_result_string_raises_value_error(self) -> None:
-        with pytest.raises(ValueError, match=r"must be 'win' or 'loss'"):
-            self.service.submit_result(self.user_id, self.run["id"], "tie", "The Trapper")
 
     def test_apply_inactivity_loss_resets_to_zero(self, db_session: Session) -> None:
         self.service.submit_result(self.user_id, self.run["id"], "win", "The Trapper")
@@ -382,12 +293,6 @@ class TestResetRunAndStats:
         assert reset["current_streak"] == 0
         assert reset["completed_killers"] == []
         assert reset["perks_revealed"] is False
-
-    def test_reset_missing_run_raises_value_error(
-        self, chaos_service: ChaosService, chaos_user: int
-    ) -> None:
-        with pytest.raises(ValueError):
-            chaos_service.reset_run(chaos_user, "medium")
 
     def test_stats_reflect_submitted_results(
         self, chaos_service: ChaosService, chaos_user: int

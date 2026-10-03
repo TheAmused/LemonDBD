@@ -2,12 +2,15 @@
 // frontend/src/components/smash-or-pass/RosterSelectModal.tsx
 
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
-import { ChevronLeft, ChevronRight, Check, Flame, X, Lock, AlertTriangle, Sparkles, Upload, Pencil, Trash2, Share2 } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Check, Flame, Lock, AlertTriangle, Sparkles, Upload, Pencil, Trash2, Share2 } from 'lucide-react';
 import type { Dictionary } from '@/locales/types';
 import type { RosterItem } from '@/types/smashOrPass';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 import { cn } from '@/utils/cn';
 import { SmashSounds } from './SmashSoundEffects';
+import { Modal } from '@/components/common/Modal';
+import { Button } from '@/components/common/Button';
+import { useDictionary } from "@/context/DictionaryContext";
 
 const STORAGE_KEY = 'dbd_smash_selected_roster';
 
@@ -32,23 +35,22 @@ interface RosterSelectModalProps {
   /** Opens the share-link/JSON export flow for a local roster. */
   onExportRoster?: (id: string) => void;
   locale?: string;
-  dict?: Dictionary | any;
 }
 
 export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
-  isOpen,
-  onClose,
-  rosters,
-  selectedRosterSlug,
-  onSelectRoster,
-  onCreateRoster,
-  onImportRoster,
-  onEditRoster,
-  onDeleteRoster,
-  onExportRoster,
-  locale = 'en',
-  dict,
-}) => {
+      isOpen,
+      onClose,
+      rosters,
+      selectedRosterSlug,
+      onSelectRoster,
+      onCreateRoster,
+      onImportRoster,
+      onEditRoster,
+      onDeleteRoster,
+      onExportRoster,
+      locale = 'en',
+    }) => {
+  const dict = useDictionary();
   const isCurrentlyCustom = Boolean(selectedRosterSlug?.startsWith('local:'));
   const [filter, setFilter] = useState<'official' | 'custom'>(isCurrentlyCustom ? 'custom' : 'official');
   const [visualIndex, setVisualIndex] = useState<number>(0);
@@ -191,15 +193,24 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
     [N, normalizeIndex, displayedRosters, onSelectRoster, onClose]
   );
 
-  // Closing the modal (X button, backdrop click, Escape) must always be able
-  // to dismiss it, regardless of which roster happens to be centered. Unlike
-  // commitSelection, this never validates `is_active`, so browsing to a
-  // locked/inactive roster and then closing can't get stuck -- it just
-  // discards the in-progress browse and falls back to whatever roster was
-  // selected before the modal was opened.
+  // Closing (X, backdrop, Escape) confirms the roster centered in the carousel.
+  // If that roster is locked/inactive (or nothing is centered), nothing changes
+  // and the roster that was active when the modal opened stays selected.
   const handleClose = useCallback(() => {
+    if (N > 0) {
+      const centered = displayedRosters[normalizeIndex(targetIndexRef.current)];
+      if (centered && centered.is_active !== false) {
+        if (centered.slug !== activeSelectedSlug) {
+          if (typeof window !== 'undefined') {
+            localStorage.setItem(STORAGE_KEY, centered.slug);
+          }
+          setActiveSelectedSlug(centered.slug);
+          onSelectRoster(centered.slug);
+        }
+      }
+    }
     onClose();
-  }, [onClose]);
+  }, [N, displayedRosters, normalizeIndex, activeSelectedSlug, onSelectRoster, onClose]);
 
   const stepPrev = useCallback(
     (e?: React.MouseEvent | React.PointerEvent) => {
@@ -240,15 +251,12 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
       } else if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
         commitSelection();
-      } else if (e.key === 'Escape') {
-        e.preventDefault();
-        handleClose();
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, commitSelection, handleClose, stepPrev, stepNext]);
+  }, [isOpen, commitSelection, stepPrev, stepNext]);
 
   const getRosterDisplayName = useCallback(
     (r: RosterItem) => {
@@ -354,27 +362,25 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
 
   const activeRosterInCenter = N > 0 ? displayedRosters[normalizeIndex(targetIndexRef.current)] : null;
 
-  if (!isOpen) return null;
-
-  const rawSmash = dict?.smashOrPass;
-  const selectRosterTitle = rawSmash?.selectRoster || '';
-  const candidatesWord = rawSmash?.candidates || rawSmash?.candidatesWord || '';
-  const selectPrefixText = rawSmash?.selectPrefix || rawSmash?.select || '';
+  const rawSmash = dict.smashOrPass;
+  const selectRosterTitle = rawSmash.selectRoster;
+  const candidatesWord = rawSmash.candidates;
+  const selectPrefixText = rawSmash.selectPrefix;
 
   return (
-    <div
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="roster-select-title"
-      onClick={() => handleClose()}
-      className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 md:p-6 bg-bg-primary/80 backdrop-blur-2xl animate-in fade-in duration-250 select-none overflow-y-auto"
+    <Modal
+      isOpen={isOpen}
+      onClose={handleClose}
+      variant="dialog"
+      size="full"
+      closeButton="floating"
+      ariaLabel={selectRosterTitle}
+      closeButtonAriaLabel={dict.modal.close}
+      backdrop="blur"
+      className="h-[94dvh] max-h-[1100px] min-h-[580px] max-w-[1600px] border-2 border-accent-red/35 rounded-[32px] sm:rounded-[44px]"
+      bodyClassName="flex flex-col overflow-hidden"
     >
-      <div className="absolute inset-0 bg-bg-primary/10 pointer-events-none" aria-hidden="true" />
-
-      <div
-        onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-[1300px] h-[92vh] max-h-[860px] min-h-[580px] rounded-[32px] sm:rounded-[44px] bg-bg-surface border-2 border-accent-red/35 p-4 sm:p-6 md:p-8 flex flex-col items-center justify-between overflow-hidden animate-in zoom-in-95 duration-200"
-      >
+      <div className="relative flex min-h-0 w-full flex-1 flex-col items-center justify-between overflow-hidden p-4 sm:p-6 md:p-8">
         {/* Top Left: Filter Toggle (Official vs Custom) */}
         <div className="absolute top-4 left-4 sm:top-6 sm:left-6 z-50">
           <div className="inline-flex items-center gap-1 p-1 bg-bg-elevated/90 backdrop-blur-md rounded-2xl border border-border-color shadow-sm">
@@ -382,43 +388,33 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
               type="button"
               onClick={() => handleFilterChange('official')}
               className={cn(
-                'flex items-center gap-1.5 px-3 sm:px-3.5 py-1.5 rounded-xl text-xs font-mono font-bold uppercase tracking-wider transition-all cursor-pointer touch-manipulation',
+                'flex items-center gap-1.5 px-3 sm:px-3.5 py-1.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer touch-manipulation',
                 filter === 'official'
                   ? 'bg-accent-red text-text-inverted shadow-xs'
                   : 'text-text-secondary hover:text-text-primary'
               )}
             >
               <Flame className="h-3 w-3" />
-              <span>Official ({officialRosters.length})</span>
+              <span>{dict.smashOrPass.picker.officialTab} ({officialRosters.length})</span>
             </button>
             <button
               type="button"
               onClick={() => handleFilterChange('custom')}
               className={cn(
-                'flex items-center gap-1.5 px-3 sm:px-3.5 py-1.5 rounded-xl text-xs font-mono font-bold uppercase tracking-wider transition-all cursor-pointer touch-manipulation',
+                'flex items-center gap-1.5 px-3 sm:px-3.5 py-1.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer touch-manipulation',
                 filter === 'custom'
                   ? 'bg-accent-red text-text-inverted shadow-xs'
                   : 'text-text-secondary hover:text-text-primary'
               )}
             >
               <Sparkles className="h-3 w-3" />
-              <span>Custom ({customRosters.length})</span>
+              <span>{dict.smashOrPass.picker.customTab} ({customRosters.length})</span>
             </button>
           </div>
         </div>
 
-        {/* Top Right: Close button */}
-        <button
-          type="button"
-          onClick={() => handleClose()}
-          className="absolute top-4 right-4 sm:top-6 sm:right-6 flex h-11 w-11 sm:h-12 sm:w-12 items-center justify-center rounded-full bg-bg-elevated border border-border-color text-text-muted hover:text-text-primary hover:border-accent-red hover:bg-accent-red/10 transition-all cursor-pointer z-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red"
-          aria-label={dict?.modal?.close || ''}
-        >
-          <X className="h-5 w-5 sm:h-6 sm:w-6" aria-hidden="true" />
-        </button>
-
         <div className="text-center pt-1 sm:pt-2 space-y-2.5">
-          <h2 id="roster-select-title" className="text-xl sm:text-3xl md:text-4xl font-black font-mono tracking-[0.25em] sm:tracking-[0.35em] text-text-primary uppercase">
+          <h2 className="text-xl sm:text-3xl md:text-4xl font-black tracking-spaced-md sm:tracking-spaced-lg text-text-primary uppercase">
             {selectRosterTitle}
           </h2>
 
@@ -428,20 +424,20 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
                 <button
                   type="button"
                   onClick={onCreateRoster}
-                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 min-h-[36px] rounded-xl bg-accent-red/10 border border-accent-red/40 text-accent-red text-xs font-mono font-bold uppercase tracking-wide hover:bg-accent-red/20 transition-colors cursor-pointer"
+                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 min-h-[36px] rounded-xl bg-accent-red/10 border border-accent-red/40 text-accent-red type-label-sm hover:bg-accent-red/20 transition-colors cursor-pointer"
                 >
                   <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
-                  {dict?.smashOrPass?.picker?.createRoster || 'Create a roster'}
+                  {dict.smashOrPass.picker.createRoster}
                 </button>
               )}
               {onImportRoster && (
                 <button
                   type="button"
                   onClick={onImportRoster}
-                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 min-h-[36px] rounded-xl bg-bg-elevated border border-border-color text-text-secondary text-xs font-mono font-bold uppercase tracking-wide hover:text-text-primary hover:border-border-subtle transition-colors cursor-pointer"
+                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 min-h-[36px] rounded-xl bg-bg-elevated border border-border-color text-text-secondary type-label-sm hover:text-text-primary hover:border-border-subtle transition-colors cursor-pointer"
                 >
                   <Upload className="h-3.5 w-3.5" aria-hidden="true" />
-                  {dict?.smashOrPass?.picker?.importRoster || 'Import'}
+                  {dict.smashOrPass.picker.importRoster}
                 </button>
               )}
             </div>
@@ -454,8 +450,12 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
           onPointerMove={handlePointerMove}
           onPointerUp={handlePointerUp}
           onPointerCancel={handlePointerUp}
-          className="relative w-full flex-1 max-h-[580px] flex items-center justify-center overflow-visible touch-none cursor-grab active:cursor-grabbing my-2"
-          style={{ perspective: 1200 }}
+          className="relative w-full flex-1 min-h-0 flex items-center justify-center overflow-visible touch-none cursor-grab active:cursor-grabbing my-2"
+          style={{
+            perspective: 1200,
+            ['--card-h' as string]: 'clamp(340px, calc(94dvh - 330px), 760px)',
+            ['--card-w' as string]: 'calc(var(--card-h) * 0.685)',
+          }}
           role="region"
           aria-label={selectRosterTitle}
         >
@@ -463,7 +463,7 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
             <>
               <button
                 type="button"
-                aria-label={dict?.pagination?.previous || ''}
+                aria-label={dict.pagination.previous}
                 onPointerDown={(e) => e.stopPropagation()}
                 onPointerUp={(e) => e.stopPropagation()}
                 onMouseDown={(e) => e.stopPropagation()}
@@ -476,7 +476,7 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
 
               <button
                 type="button"
-                aria-label={dict?.pagination?.next || ''}
+                aria-label={dict.pagination.next}
                 onPointerDown={(e) => e.stopPropagation()}
                 onPointerUp={(e) => e.stopPropagation()}
                 onMouseDown={(e) => e.stopPropagation()}
@@ -492,26 +492,27 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
           {N === 0 ? (
             <div className="relative z-10 flex flex-col items-center justify-center gap-3 p-8 rounded-3xl border border-dashed border-border-color bg-bg-elevated/40 text-center max-w-md mx-auto">
               <Sparkles className="h-10 w-10 text-accent-red animate-pulse" />
-              <h3 className="text-base font-bold font-mono text-text-primary uppercase tracking-wide">
-                {filter === 'custom' ? 'No Custom Rosters Found' : 'No Rosters Found'}
-              </h3>
-              <p className="text-xs text-text-muted font-mono">
+              <h3 className="text-base font-bold text-text-primary uppercase tracking-wide">
                 {filter === 'custom'
-                  ? "You haven't created any custom rosters yet in this browser."
-                  : 'No rosters match this filter.'}
+                  ? dict.smashOrPass.picker.noCustomRostersFound
+                  : dict.smashOrPass.picker.noRostersFound}
+              </h3>
+              <p className="text-xs text-text-muted">
+                {filter === 'custom'
+                  ? dict.smashOrPass.picker.noCustomRostersDesc
+                  : dict.smashOrPass.picker.noRostersMatchDesc}
               </p>
               {onCreateRoster && filter === 'custom' && (
-                <button
-                  type="button"
+                <Button
+                  variant="primary" size="sm"
                   onClick={() => {
-                    handleClose();
+                    onClose();
                     onCreateRoster();
                   }}
-                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-accent-red text-text-inverted text-xs font-mono font-bold uppercase tracking-wider shadow-md hover:bg-accent-red-hover transition-colors cursor-pointer"
                 >
                   <Sparkles className="h-3.5 w-3.5" />
-                  <span>Create Your First Roster</span>
-                </button>
+                  <span>{dict.smashOrPass.picker.createFirstRoster}</span>
+                </Button>
               )}
             </div>
           ) : (
@@ -532,7 +533,11 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
                   ? 145
                   : typeof window !== 'undefined' && window.innerWidth < 1024
                     ? 205
-                    : 260;
+                    : window.innerWidth >= 1536
+                      ? 360
+                      : window.innerWidth >= 1280
+                        ? 310
+                        : 260;
 
               const translateX = visualOffset * spreadUnit;
               const rotateY = Math.max(-55, Math.min(55, -visualOffset * 30));
@@ -567,7 +572,7 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
                       if (isRosterEnabled) commitSelection();
                     }
                   }}
-                  className={`absolute w-[240px] sm:w-[300px] md:w-[350px] lg:w-[370px] h-[360px] sm:h-[450px] md:h-[500px] lg:h-[540px] rounded-[28px] sm:rounded-[36px] overflow-hidden cursor-pointer ${isCenter
+                  className={`absolute w-[var(--card-w)] h-[var(--card-h)] rounded-[28px] sm:rounded-[36px] overflow-hidden cursor-pointer ${isCenter
                     ? isRosterEnabled
                       ? 'border-2 sm:border-[3px] border-accent-red'
                       : 'border-2 border-border-color'
@@ -607,7 +612,7 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
 
                   {isRosterEnabled && (
                     <div
-                      className="absolute top-4 left-4 sm:top-5 sm:left-5 flex items-center gap-1.5 px-3 py-1.5 rounded-2xl bg-bg-primary/80 backdrop-blur-md border border-border-color text-text-inverted text-xs sm:text-sm font-mono font-bold shadow-md pointer-events-none"
+                      className="absolute top-4 left-4 sm:top-5 sm:left-5 flex items-center gap-1.5 px-3 py-1.5 rounded-2xl bg-bg-primary/80 backdrop-blur-md border border-border-color text-text-inverted type-strong-fluid shadow-md pointer-events-none"
                     >
                       <Flame className="h-4 w-4 text-accent-red fill-accent-red" aria-hidden="true" />
                       <span>{count}</span>
@@ -617,36 +622,36 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
                   {r.is_nsfw && (
                     <div
                       data-testid="roster-nsfw-badge"
-                      className="absolute top-4 left-1/2 -translate-x-1/2 sm:top-5 flex items-center gap-1 px-2.5 py-1 rounded-2xl bg-accent-red text-text-inverted text-[10px] sm:text-xs font-mono font-black uppercase tracking-wide shadow-md pointer-events-none"
+                      className="absolute top-4 left-1/2 -translate-x-1/2 sm:top-5 flex items-center gap-1 px-2.5 py-1 rounded-2xl bg-accent-red text-text-inverted text-tiny sm:text-xs font-black uppercase tracking-wide shadow-md pointer-events-none"
                     >
                       <AlertTriangle className="h-3 w-3" aria-hidden="true" />
-                      <span>{dict?.smashOrPass?.nsfw?.badge || 'NSFW'}</span>
+                      <span>{dict.smashOrPass.nsfw.badge}</span>
                     </div>
                   )}
 
                   {r.is_local && (
                     <div
                       data-testid="roster-local-badge"
-                      className="absolute bottom-[5.5rem] left-1/2 -translate-x-1/2 sm:bottom-24 flex items-center gap-1 px-2.5 py-1 rounded-2xl bg-bg-primary/85 backdrop-blur-md border border-accent-amber/40 text-accent-amber text-[10px] sm:text-xs font-mono font-black uppercase tracking-wide shadow-md pointer-events-none"
+                      className="absolute bottom-[5.5rem] left-1/2 -translate-x-1/2 sm:bottom-24 flex items-center gap-1 px-2.5 py-1 rounded-2xl bg-bg-primary/85 backdrop-blur-md border border-accent-amber/40 text-accent-amber text-tiny sm:text-xs font-black uppercase tracking-wide shadow-md pointer-events-none"
                     >
                       <Sparkles className="h-3 w-3" aria-hidden="true" />
-                      <span>{dict?.smashOrPass?.picker?.yours || 'Yours'}</span>
+                      <span>{dict.smashOrPass.picker.yours}</span>
                     </div>
                   )}
 
                   {isCurrentlyActive && (
                     <div
-                      className="absolute top-4 right-4 sm:top-5 sm:right-5 flex items-center gap-1 px-3 py-1.5 rounded-2xl bg-accent-red text-text-inverted text-xs font-mono font-black pointer-events-none"
+                      className="absolute top-4 right-4 sm:top-5 sm:right-5 flex items-center gap-1 px-3 py-1.5 rounded-2xl bg-accent-red text-text-inverted type-strong pointer-events-none"
                     >
                       <Check className="h-3.5 w-3.5 stroke-[3]" aria-hidden="true" />
-                      <span>{rawSmash?.active || ''}</span>
+                      <span>{rawSmash.active}</span>
                     </div>
                   )}
 
                   {!isRosterEnabled && !isCurrentlyActive && (
-                    <div className="absolute top-4 right-4 sm:top-5 sm:right-5 flex items-center gap-1.5 px-3 py-1.5 rounded-2xl bg-bg-elevated border border-border-color text-text-secondary text-xs font-mono font-bold shadow-lg pointer-events-none">
+                    <div className="absolute top-4 right-4 sm:top-5 sm:right-5 flex items-center gap-1.5 px-3 py-1.5 rounded-2xl bg-bg-elevated border border-border-color text-text-secondary type-strong shadow-lg pointer-events-none">
                       <Lock className="h-3.5 w-3.5 text-text-muted" aria-hidden="true" />
-                      <span>{dict?.smashOrPass?.comingSoon || 'Coming Soon'}</span>
+                      <span>{dict.smashOrPass.comingSoon}</span>
                     </div>
                   )}
 
@@ -665,12 +670,12 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
                   )}
 
                   <div className="absolute inset-x-0 bottom-0 p-4 sm:p-6 text-center flex flex-col items-center justify-end z-10 pointer-events-none">
-                    <h3 className="text-base sm:text-lg md:text-xl font-black font-mono tracking-wide text-text-inverted drop-shadow-md mb-1">
+                    <h3 className="text-base sm:text-lg md:text-xl font-black tracking-wide text-text-inverted drop-shadow-md mb-1">
                       {getRosterDisplayName(r)}
                     </h3>
 
                     {r.description && (
-                      <p className="text-xs sm:text-sm md:text-base font-mono font-bold text-accent-red/90 tracking-wider drop-shadow-md">
+                      <p className="text-xs sm:text-sm md:text-base font-bold text-accent-red/90 tracking-wider drop-shadow-md">
                         {r.description}
                       </p>
                     )}
@@ -691,8 +696,8 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
       </div>
 
         <div className="text-center pt-2 pb-1 space-y-2 sm:space-y-3">
-          {rawSmash?.dwellHint && (
-            <p className="text-xs sm:text-sm md:text-base font-mono text-text-muted tracking-wide">
+          {rawSmash.dwellHint && (
+            <p className="text-xs sm:text-sm md:text-base text-text-muted tracking-wide">
               {rawSmash.dwellHint}
             </p>
           )}
@@ -706,61 +711,61 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
             // Select/Edit/Export/Delete even though they render visually above it.
             <div className="relative z-50 flex flex-wrap items-center justify-center gap-2.5">
               {activeRosterInCenter.is_active !== false ? (
-                <button
-                  type="button"
+                <Button
+                  variant="primary" size="lg"
                   onClick={() => commitSelection()}
-                  className="inline-flex items-center gap-2.5 px-8 sm:px-10 py-3 sm:py-3.5 rounded-2xl bg-accent-red text-text-inverted font-mono font-black text-xs sm:text-sm md:text-base tracking-widest uppercase border border-accent-red/60 hover:scale-105 active:scale-95 transition-all cursor-pointer"
+                  className="rounded-2xl px-8 sm:px-10 uppercase tracking-widest"
                 >
                   <Check className="h-4 w-4 sm:h-5 sm:w-5 stroke-[3]" aria-hidden="true" />
                   <span>
                     {selectPrefixText ? `${selectPrefixText} ` : ''}
                     {getRosterDisplayName(activeRosterInCenter)}
                   </span>
-                </button>
+                </Button>
               ) : (
-                <button
-                  type="button"
+                <Button
+                  variant="secondary" size="lg"
                   disabled
-                  className="inline-flex items-center gap-2.5 px-8 sm:px-10 py-3 sm:py-3.5 rounded-2xl bg-bg-elevated border border-border-color text-text-muted font-mono font-black text-xs sm:text-sm md:text-base tracking-widest uppercase cursor-not-allowed opacity-75"
+                  className="rounded-2xl px-8 sm:px-10 uppercase tracking-widest"
                 >
                   <Lock className="h-4 w-4 sm:h-5 sm:w-5 text-text-muted" aria-hidden="true" />
                   <span>
-                    {getRosterDisplayName(activeRosterInCenter)} ({dict?.smashOrPass?.comingSoon || 'Coming Soon'})
+                    {getRosterDisplayName(activeRosterInCenter)} ({dict.smashOrPass.comingSoon})
                   </span>
-                </button>
+                </Button>
               )}
 
               {activeRosterInCenter.is_local && (onEditRoster || onExportRoster || onDeleteRoster) && (
                 <>
                   {onEditRoster && (
-                    <button
-                      type="button"
+                    <Button
+                      variant="secondary" size="lg" icon
                       onClick={() => onEditRoster((activeRosterInCenter as RosterItem).id)}
-                      aria-label={dict?.smashOrPass?.picker?.editRoster || 'Edit this roster'}
-                      className="flex h-11 w-11 sm:h-[52px] sm:w-[52px] items-center justify-center rounded-2xl bg-bg-elevated border border-border-color text-text-secondary hover:text-text-primary hover:border-border-subtle transition-all cursor-pointer"
+                      aria-label={dict.smashOrPass.picker.editRoster}
+                      className="h-11 w-11 sm:h-[52px] sm:w-[52px] rounded-2xl"
                     >
                       <Pencil className="h-4 w-4 sm:h-5 sm:w-5" aria-hidden="true" />
-                    </button>
+                    </Button>
                   )}
                   {onExportRoster && (
-                    <button
-                      type="button"
+                    <Button
+                      variant="secondary" size="lg" icon
                       onClick={() => onExportRoster((activeRosterInCenter as RosterItem).id)}
-                      aria-label={dict?.smashOrPass?.picker?.exportRoster || 'Export this roster'}
-                      className="flex h-11 w-11 sm:h-[52px] sm:w-[52px] items-center justify-center rounded-2xl bg-bg-elevated border border-border-color text-text-secondary hover:text-text-primary hover:border-border-subtle transition-all cursor-pointer"
+                      aria-label={dict.smashOrPass.picker.exportRoster}
+                      className="h-11 w-11 sm:h-[52px] sm:w-[52px] rounded-2xl"
                     >
                       <Share2 className="h-4 w-4 sm:h-5 sm:w-5" aria-hidden="true" />
-                    </button>
+                    </Button>
                   )}
                   {onDeleteRoster && (
-                    <button
-                      type="button"
+                    <Button
+                      variant="secondary" size="lg" icon
                       onClick={() => onDeleteRoster((activeRosterInCenter as RosterItem).id)}
-                      aria-label={dict?.smashOrPass?.picker?.deleteRoster || 'Delete this roster'}
-                      className="flex h-11 w-11 sm:h-[52px] sm:w-[52px] items-center justify-center rounded-2xl bg-bg-elevated border border-border-color text-text-secondary hover:text-accent-red hover:border-accent-red/40 transition-all cursor-pointer"
+                      aria-label={dict.smashOrPass.picker.deleteRoster}
+                      className="h-11 w-11 sm:h-[52px] sm:w-[52px] rounded-2xl"
                     >
                       <Trash2 className="h-4 w-4 sm:h-5 sm:w-5" aria-hidden="true" />
-                    </button>
+                    </Button>
                   )}
                 </>
               )}
@@ -768,6 +773,6 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
           )}
         </div>
       </div>
-    </div>
+    </Modal>
   );
 };

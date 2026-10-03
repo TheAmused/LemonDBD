@@ -4,13 +4,12 @@ import type { Dictionary } from '@/locales/types';
 
 import React from 'react';
 import { useParams } from 'next/navigation';
-import { ChevronDown } from 'lucide-react';
+import Link from 'next/link';
+import { ChevronDown, ShieldCheck } from 'lucide-react';
 import { PageShell } from '@/components/layout/PageShell';
-import { CampfireParticles } from '@/components/common/CampfireParticles';
 import { RichText } from '@/components/common/RichText';
 import { Locale } from '@/i18n/config';
 import { useDictionary } from '@/context/DictionaryContext';
-import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { usePersistentDrawer } from '@/hooks/usePersistentDrawer';
 
 // Placeholder names, to be replaced with real contributors before publishing.
@@ -38,7 +37,7 @@ function AboutSection({ id, heading, className = '', children }: AboutSectionPro
         className="relative w-full flex items-center justify-center py-4 px-12 sm:px-14 cursor-pointer group select-none text-center shrink-0"
         aria-expanded={isExpanded}
       >
-        <h2 className="text-xs sm:text-sm font-bold uppercase tracking-widest text-accent-red font-mono text-center">
+        <h2 className="text-xs sm:text-sm font-bold uppercase tracking-widest text-accent-red text-center">
           {heading}
         </h2>
         <ChevronDown
@@ -53,7 +52,7 @@ function AboutSection({ id, heading, className = '', children }: AboutSectionPro
         }`}
       >
         <div className="overflow-hidden h-full">
-          <div className="flex flex-col gap-2 border-t border-border-color p-4 sm:p-6 text-sm leading-relaxed h-full">
+          <div className="flex flex-col gap-2 border-t border-border-color p-4 sm:p-6 type-body-lg h-full">
             {children}
           </div>
         </div>
@@ -92,7 +91,7 @@ function SyncedAboutCard({
           className="relative w-full flex items-center justify-center py-4 px-12 sm:px-14 cursor-pointer group select-none text-center shrink-0"
           aria-expanded={isExpanded}
         >
-          <h2 className="text-xs sm:text-sm font-bold uppercase tracking-widest text-accent-red font-mono text-center">
+          <h2 className="text-xs sm:text-sm font-bold uppercase tracking-widest text-accent-red text-center">
             {section.heading}
           </h2>
           <ChevronDown
@@ -107,7 +106,7 @@ function SyncedAboutCard({
           }`}
         >
           <div className="overflow-hidden h-full">
-            <div className="flex flex-col gap-2 border-t border-border-color p-4 sm:p-6 text-sm leading-relaxed h-full">
+            <div className="flex flex-col gap-2 border-t border-border-color p-4 sm:p-6 type-body-lg h-full">
               {section.children}
             </div>
           </div>
@@ -120,7 +119,7 @@ function SyncedAboutCard({
         className="col-start-1 row-start-1 invisible pointer-events-none select-none hidden lg:flex flex-col rounded-3xl border border-transparent"
       >
         <div className="py-4 px-12 sm:px-14 shrink-0">
-          <h2 className="text-xs sm:text-sm font-bold uppercase tracking-widest font-mono text-center opacity-0">
+          <h2 className="text-xs sm:text-sm font-bold uppercase tracking-widest text-center opacity-0">
             {section.heading}
           </h2>
         </div>
@@ -130,7 +129,7 @@ function SyncedAboutCard({
           }`}
         >
           <div className="overflow-hidden h-full">
-            <div className="flex flex-col gap-2 border-t border-transparent p-4 sm:p-6 text-sm leading-relaxed h-full">
+            <div className="flex flex-col gap-2 border-t border-transparent p-4 sm:p-6 type-body-lg h-full">
               {section.children}
             </div>
           </div>
@@ -174,30 +173,27 @@ export default function AboutPage() {
   const params = useParams();
   const locale = (params?.locale as Locale) || 'en';
   const dict = useDictionary();
-  const about = dict?.about;
+  const about = dict.about;
 
-  useDocumentTitle(about?.pageTitle || 'LemonDBD - About us');
 
-  const pageHeading = about?.pageTitle
+  const pageHeading = about.pageTitle
     ? about.pageTitle.replace(/^LemonDBD\s*[-–—]\s*/i, '').trim()
     : 'About us';
 
   return (
     <PageShell
       locale={locale}
-      dict={dict || ({} as Dictionary)}
       padding="spacious"
       mainClassName="flex flex-col items-center justify-center min-h-[calc(100vh-4rem)] lg:min-h-screen overflow-y-auto relative"
     >
-      <CampfireParticles />
       <div className="relative z-10 mx-auto my-auto flex w-full max-w-5xl xl:max-w-6xl flex-col gap-6 sm:gap-8 py-6 sm:py-10">
         {/* Header */}
         <header className="flex flex-col items-center text-center gap-2.5 sm:gap-3 pt-2 sm:pt-4">
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-black font-mono tracking-tight text-text-primary">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-black tracking-tight text-text-primary">
             {pageHeading}
           </h1>
-          {about?.features?.paragraphs?.[0] ? (
-            <p className="max-w-2xl text-xs sm:text-sm text-text-muted leading-relaxed text-center px-4">
+          {about.features.paragraphs?.[0] ? (
+            <p className="max-w-2xl type-body-fluid text-text-muted text-center px-4">
               <RichText text={about.features.paragraphs[0]} />
             </p>
           ) : null}
@@ -209,8 +205,8 @@ export default function AboutPage() {
           <SyncedAboutPair
             sectionA={{
               id: 'who',
-              heading: about?.who.heading,
-              children: about?.who.paragraphs.map((text, i) => (
+              heading: about.who.heading,
+              children: about.who.paragraphs.map((text, i) => (
                 <p key={i} className="text-text-muted text-justify [text-justify:inter-word] hyphens-auto">
                   <RichText text={text} />
                 </p>
@@ -218,8 +214,8 @@ export default function AboutPage() {
             }}
             sectionB={{
               id: 'why',
-              heading: about?.why.heading,
-              children: about?.why.paragraphs.map((text, i) => (
+              heading: about.why.heading,
+              children: about.why.paragraphs.map((text, i) => (
                 <p key={i} className="text-text-muted text-justify [text-justify:inter-word] hyphens-auto">
                   <RichText text={text} />
                 </p>
@@ -231,8 +227,8 @@ export default function AboutPage() {
           <SyncedAboutPair
             sectionA={{
               id: 'community',
-              heading: about?.community.heading,
-              children: about?.community.paragraphs.map((text, i) => (
+              heading: about.community.heading,
+              children: about.community.paragraphs.map((text, i) => (
                 <p key={i} className="text-text-muted text-justify [text-justify:inter-word] hyphens-auto">
                   <RichText text={text} />
                 </p>
@@ -240,8 +236,8 @@ export default function AboutPage() {
             }}
             sectionB={{
               id: 'features',
-              heading: about?.features.heading,
-              children: about?.features.paragraphs.map((text, i) => (
+              heading: about.features.heading,
+              children: about.features.paragraphs.map((text, i) => (
                 <p key={i} className="text-text-muted text-justify [text-justify:inter-word] hyphens-auto">
                   <RichText text={text} />
                 </p>
@@ -250,9 +246,9 @@ export default function AboutPage() {
           />
 
           {/* Row 3: Credits (full width spanning both columns, centered content) */}
-          <AboutSection id="credits" heading={about?.credits.heading} className="lg:col-span-2">
+          <AboutSection id="credits" heading={about.credits.heading} className="lg:col-span-2">
             <p className="text-text-muted text-center leading-relaxed">
-              <RichText text={about?.credits.text} />
+              <RichText text={about.credits.text} />
             </p>
             <ul className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-text-primary pt-1">
               {CREDITS.map((name) => (
@@ -260,6 +256,17 @@ export default function AboutPage() {
               ))}
             </ul>
           </AboutSection>
+
+          {/* Privacy Policy pill (links to its own page) */}
+          <div className="lg:col-span-2 flex justify-center">
+            <Link
+              href={`/${locale}/privacy-policy`}
+              className="inline-flex items-center gap-2 rounded-full border border-border-color bg-bg-surface px-5 py-2.5 text-xs sm:text-sm font-bold uppercase tracking-widest text-accent-red shadow-md backdrop-blur-xl transition-colors hover:border-accent-red/50 hover:bg-bg-elevated"
+            >
+              <ShieldCheck className="h-4 w-4" aria-hidden="true" />
+              {dict.privacy.heading}
+            </Link>
+          </div>
         </div>
       </div>
     </PageShell>

@@ -2,13 +2,18 @@
 'use client';
 
 import React, { useState, useMemo, useEffect } from 'react';
+import { SearchInput } from '@/components/common/Field';
 import Image from 'next/image';
-import { Search, UserCheck, Sparkles } from 'lucide-react';
+import { UserCheck, Sparkles } from 'lucide-react';
 import type { RoleCategory, CharacterItem } from '@/types/perks';
 import type { Dictionary } from '@/locales/types';
 import { getBackendBaseUrl, getCharacterAvatarUrl, normalizeSearchText } from '@/utils/perkUtils';
-import { CATALOG_TTL_MS, catalogKey, fetchCached, fetchJson } from '@/services/dataCache';
+import { CATALOG_TTL_MS, catalogKey, fetchCached, fetchJson, unwrapList, type ListPayload } from '@/services/dataCache';
 import { Modal } from '@/components/common/Modal';
+import { Spinner } from '@/components/common/Spinner';
+import { EmptyState } from '@/components/common/EmptyState';
+import { isSurvivor } from '@/utils/characterUtils';
+import { useDictionary } from "@/context/DictionaryContext";
 
 interface ShowcaseCharacterModalProps {
   isOpen: boolean;
@@ -16,7 +21,6 @@ interface ShowcaseCharacterModalProps {
   currentCharacter: string;
   onSelect: (characterName: string) => void;
   onClose: () => void;
-  dict?: Dictionary | null;
   locale?: string;
 }
 
@@ -75,14 +79,14 @@ const CharacterGridItem: React.FC<{
             unoptimized
           />
         ) : (
-          <div className="w-full h-full flex flex-col items-center justify-center text-text-primary text-sm font-bold font-mono">
+          <div className="w-full h-full flex flex-col items-center justify-center text-text-primary type-card-title">
             <span>{char.name.slice(0, 2).toUpperCase()}</span>
           </div>
         )}
       </div>
 
       {/* Name */}
-      <span className="text-xs font-bold font-mono text-text-primary group-hover:text-accent-amber line-clamp-1">
+      <span className="type-strong text-text-primary group-hover:text-accent-amber line-clamp-1">
         {char.name}
       </span>
 
@@ -96,15 +100,8 @@ const CharacterGridItem: React.FC<{
   );
 };
 
-export const ShowcaseCharacterModal: React.FC<ShowcaseCharacterModalProps> = ({
-  isOpen,
-  role,
-  currentCharacter,
-  onSelect,
-  onClose,
-  dict,
-  locale = 'en',
-}) => {
+export const ShowcaseCharacterModal: React.FC<ShowcaseCharacterModalProps> = ({ isOpen, role, currentCharacter, onSelect, onClose, locale = 'en' }) => {
+  const dict = useDictionary();
   const [search, setSearch] = useState('');
   const [characters, setCharacters] = useState<CharacterItem[]>([]);
   const [loading, setLoading] = useState(false);
@@ -118,9 +115,9 @@ export const ShowcaseCharacterModal: React.FC<ShowcaseCharacterModalProps> = ({
     const url = catalogKey('characters', { category: 'all', lang: locale });
 
     setLoading(true);
-    fetchCached<any>(url, () => fetchJson(url), { ttlMs: CATALOG_TTL_MS })
+    fetchCached<ListPayload<CharacterItem>>(url, () => fetchJson<ListPayload<CharacterItem>>(url), { ttlMs: CATALOG_TTL_MS })
       .then((data) => {
-        const list = Array.isArray(data) ? data : data?.data || [];
+        const list = unwrapList(data);
         setCharacters(list);
       })
       .catch((err) => {
@@ -153,40 +150,34 @@ export const ShowcaseCharacterModal: React.FC<ShowcaseCharacterModalProps> = ({
       isOpen={isOpen}
       onClose={onClose}
       size="2xl"
-      title={`${dict?.user?.selectCharacter || 'Select Character'} (${role})`}
-      icon={<Sparkles className={`h-5 w-5 ${role === 'Survivor' ? 'text-accent-green' : 'text-accent-red'}`} />}
+      title={`${dict.user.selectCharacter} (${role})`}
+      icon={<Sparkles className={`h-5 w-5 ${isSurvivor(role) ? 'text-accent-green' : 'text-accent-red'}`} />}
       className="max-h-[85vh] flex flex-col"
       bodyClassName="flex flex-col min-h-0 overflow-hidden"
       borderless
     >
       {/* Search Bar */}
       <div className="p-4 bg-bg-elevated/40 shrink-0">
-        <div className="relative">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-text-muted" />
-          <input
-            type="text"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder={dict?.user?.searchCharacters || 'Search characters...'}
-            className="w-full pl-10 pr-4 py-2.5 bg-bg-surface rounded-xl text-xs sm:text-sm text-text-primary placeholder-text-muted focus:outline-none transition-colors font-mono"
-            autoFocus
-          />
-        </div>
+        <SearchInput
+          className=""
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder={dict.user.searchCharacters}
+          autoFocus
+        />
       </div>
 
       {/* Characters Grid */}
       <div className="flex-1 overflow-y-auto p-4 sm:p-6 min-h-0">
         {loading ? (
           <div className="flex flex-col items-center justify-center py-16 space-y-3">
-            <span className="h-8 w-8 animate-spin rounded-full border-2 border-accent-amber border-t-transparent" />
-            <p className="text-xs text-text-muted font-mono">
-              {dict?.user?.loadingCharacters || 'Consulting the Fog...'}
+            <Spinner size="lg" tone="amber" />
+            <p className="text-xs text-text-muted">
+              {dict.user.loadingCharacters}
             </p>
           </div>
         ) : filteredCharacters.length === 0 ? (
-          <div className="text-center py-16 text-text-muted text-xs sm:text-sm font-mono">
-            {dict?.user?.noCharactersFound || 'No matching characters found.'}
-          </div>
+          <EmptyState variant="inline" title={dict.user.noCharactersFound} />
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
             {filteredCharacters.map((char) => (

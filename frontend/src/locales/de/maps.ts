@@ -9,10 +9,7 @@ export default {
   zoomOutAria: "Verkleinern",
   resetPanZoom: "Position & Zoom Zurücksetzen",
   resetPanAndZoomAria: "Position und Zoom Zurücksetzen",
-  fullscreenMode: "Interaktiver Vollbildmodus",
   noMapsFound: "Keine Karten Gefunden",
-  mapVariantsAria: "Karten-Reichsvarianten",
-  mapVariants: "Karten-Varianten:",
   variants: "Varianten:",
   engineControlsAria: "Engine-Zoom- und Reset-Steuerung",
   fullscreenEngineAria: "2D-Vollbild-Karten-Engine",
@@ -68,4 +65,5 @@ export default {
   layoutOutdoor: 'Außen',
   layoutIndoor: 'Innen',
   layoutHybrid: 'Hybrid',
+  loadingTacticalMapsSub: 'Kachelvarianten, Loops und Spawn-Koordinaten werden kartiert',
 } as const;

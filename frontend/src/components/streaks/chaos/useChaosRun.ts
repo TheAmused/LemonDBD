@@ -1,114 +1,41 @@
 // frontend/src/components/streaks/chaos/useChaosRun.ts
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback } from 'react';
 import { ChaosRun, ChaosStats, Difficulty } from '@/types/chaosStreak';
-import { ChallengeCompletion } from '@/types/challengeCompletion';
 import * as api from '@/services/chaosStreakApi';
-import { useAuth } from '@/context/AuthContext';
+import { useBankedCheckpoint, useChallengeRun } from '../useChallengeRun';
 
 export function useChaosRun(difficulty: Difficulty) {
-  const { token } = useAuth();
-  const [run, setRun] = useState<ChaosRun | null>(null);
-  const [stats, setStats] = useState<ChaosStats | null>(null);
-  const [completions, setCompletions] = useState<ChallengeCompletion[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [busy, setBusy] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
-  const [justBankedCheckpoint, setJustBankedCheckpoint] = useState<number | null>(null);
-
-  const loadStats = useCallback(async () => {
-    if (!token) return;
-    try {
-      const s = await api.fetchChaosStats(token, difficulty);
-      setStats(s);
-    } catch (err) {
-      console.error('Failed to load chaos stats:', err);
-    }
-  }, [token, difficulty]);
-
-  const loadCompletions = useCallback(async () => {
-    if (!token) return;
-    try {
-      const resp = await api.fetchChaosCompletions(token, difficulty);
-      setCompletions(resp.completions);
-    } catch (err) {
-      console.error('Failed to load chaos completion history:', err);
-    }
-  }, [token, difficulty]);
-
-  const load = useCallback(async () => {
-    if (!token) return;
-    setLoading(true);
-    setError(null);
-    try {
-      const r = await api.fetchChaosRun(token, difficulty);
-      setRun(r);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Could not load this run');
-    } finally {
-      setLoading(false);
-    }
-  }, [token, difficulty]);
-
-  useEffect(() => {
-    load();
-    loadStats();
-    loadCompletions();
-  }, [load, loadStats, loadCompletions]);
-
-  const mutate = useCallback(
-    async (action: () => Promise<ChaosRun>) => {
-      if (!token) return;
-      setBusy(true);
-      setError(null);
-      try {
-        setRun(await action());
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'That did not go through. Try again.');
-      } finally {
-        setBusy(false);
-      }
-    },
-    [token]
-  );
+  const { token, run, stats, completions, loading, busy, error, load, loadStats, loadCompletions, mutate } =
+    useChallengeRun<ChaosRun, ChaosStats>({
+      scope: difficulty,
+      label: 'chaos',
+      fetchRun: (t) => api.fetchChaosRun(t, difficulty),
+      fetchStats: (t) => api.fetchChaosStats(t, difficulty),
+      fetchCompletions: async (t) => (await api.fetchChaosCompletions(t, difficulty)).completions,
+    });
+  const { justBankedCheckpoint, setJustBankedCheckpoint, dismissCheckpointCelebration } = useBankedCheckpoint();
 
   const submitResult = useCallback(
     async (result: 'win' | 'loss', killerId: string, options?: { silent?: boolean }) => {
-      if (!token || !run) return;
+      if (!token || !run) return undefined;
       const checkpointBefore = run.last_checkpoint_streak;
-      setBusy(true);
-      setError(null);
-      try {
-        const updated = await api.submitChaosResult(token, run.id, result, killerId);
-        const justFinished = updated.status === 'completed';
-        setRun(updated);
-        loadStats();
-        if (justFinished) {
-          loadCompletions();
-        }
-        if (
-          !options?.silent &&
-          result === 'win' &&
-          !justFinished &&
-          updated.last_checkpoint_streak > checkpointBefore
-        ) {
-          setJustBankedCheckpoint(updated.last_checkpoint_streak);
-        }
-        return updated;
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to record the result');
-        return undefined;
-      } finally {
-        setBusy(false);
+      const updated = await mutate(
+        () => api.submitChaosResult(token, run.id, result, killerId),
+        'Failed to record the result'
+      );
+      if (!updated) return undefined;
+      const justFinished = updated.status === 'completed';
+      loadStats();
+      if (justFinished) loadCompletions();
+      if (!options?.silent && result === 'win' && !justFinished && updated.last_checkpoint_streak > checkpointBefore) {
+        setJustBankedCheckpoint(updated.last_checkpoint_streak);
       }
+      return updated;
     },
-    [token, run, loadStats, loadCompletions]
+    [token, run, mutate, loadStats, loadCompletions, setJustBankedCheckpoint]
   );
-
-  const dismissCheckpointCelebration = useCallback(() => {
-    setJustBankedCheckpoint(null);
-  }, []);
 
   const reveal = useCallback(() => {
     if (!token || !run) return;
@@ -119,7 +46,7 @@ export function useChaosRun(difficulty: Difficulty) {
     if (!token) return;
     setJustBankedCheckpoint(null);
     return mutate(() => api.resetChaosRun(token, difficulty));
-  }, [token, difficulty, mutate]);
+  }, [token, difficulty, mutate, setJustBankedCheckpoint]);
 
   return {
     run,

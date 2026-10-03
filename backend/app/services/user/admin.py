@@ -4,7 +4,9 @@ from typing import Any
 from sqlalchemy import func, or_, select
 
 from app.core.extensions import db
+from app.core.security import verify_password
 from app.models import (
+    BugReport,
     Killer,
     Survivor,
     Perk,
@@ -117,6 +119,36 @@ def admin_remove_user(user_id: int) -> bool:
     db.session.delete(user)
     db.session.commit()
     return True
+
+
+def delete_own_account(user_id: int, password: str) -> tuple[bool, str | None]:
+    """Self-service account deletion, confirmed with the current password.
+
+    Everything keyed to the user cascades away with the row. Bug reports are kept
+    for the team's records but stripped of the reporter's identity first. The only
+    remaining admin cannot delete itself (that would lock the site out).
+    """
+    user = db.session.get(User, user_id)
+    if not user:
+        return False, "Account not found."
+    if not password or not verify_password(password, user.password_hash):
+        return False, "Incorrect password."
+    if user.role == "admin":
+        other_admins = db.session.scalar(
+            select(func.count(User.id)).where(User.role == "admin", User.id != user.id)
+        )
+        if not other_admins:
+            return False, "The last administrator account cannot be deleted."
+
+    for report in db.session.scalars(select(BugReport).where(BugReport.user_id == user.id)):
+        report.reporter_name = "Deleted user"
+        report.reporter_email = None
+
+    avatar_dir = get_avatar_storage_directory()
+    remove_stale_avatar_file(user.avatar_url, avatar_dir)
+    db.session.delete(user)
+    db.session.commit()
+    return True, None
 
 
 def fetch_admin_metrics() -> dict[str, Any]:

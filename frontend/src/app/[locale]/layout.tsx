@@ -4,25 +4,37 @@ import type { Metadata } from 'next';
 import { UmamiScript } from '@/components/UmamiScript';
 import { i18n, type Locale } from '@/i18n/config';
 import { getDictionary } from '@/i18n/get-dictionary';
+import { resolveLocale, siteUrl } from '@/i18n/metadata';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import { AuthProvider } from '@/context/AuthContext';
-import { DictionaryProvider } from '@/context/DictionaryContext';
-import { VaultStatsProvider } from '@/context/VaultStatsContext';
-import { ImagePreloadProvider } from '@/components/ImagePreloadProvider';
+import { LocaleDictionaryProvider } from '@/context/LocaleDictionaryProvider';
+import { ImagePreloadProvider } from '@/components/common/ImagePreloadProvider';
+import { TooltipProvider } from '@/components/common/Tooltip';
+import { AppBackground } from '@/components/layout/AppBackground';
+import { Playfair_Display } from 'next/font/google';
 import '@/app/globals.css';
 
-export const metadata: Metadata = {
-  title: {
-    template: 'LemonDBD - %s',
-    default: 'LemonDBD - Dead by Daylight Hub & Tools',
-  },
-  description: 'LemonDBD: Ultimate Dead by Daylight database, perk randomizer, map explorer, and player companion.',
-  icons: {
-    icon: '/icon.png',
-    shortcut: '/icon.png',
-    apple: '/icon.png',
-  },
-};
+// Self-hosted at build time by next/font (no request to Google from visitors' browsers).
+const playfair = Playfair_Display({ subsets: ['latin', 'latin-ext'], variable: '--font-playfair', display: 'swap' });
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const locale = resolveLocale((await params).locale);
+  const dict = await getDictionary(locale);
+  const base = siteUrl();
+  return {
+    ...(base ? { metadataBase: base } : {}),
+    title: {
+      template: 'LemonDBD - %s',
+      default: dict.app.homePageTitle,
+    },
+    description: dict.app.siteDescription,
+    icons: {
+      icon: '/icon.png',
+      shortcut: '/icon.png',
+      apple: '/icon.png',
+    },
+  };
+}
 
 export async function generateStaticParams() {
   return i18n.locales.map((locale) => ({ locale }));
@@ -51,13 +63,8 @@ export default async function RootLayout({
     i18n.locales.includes(rawLocale as Locale) ? rawLocale : i18n.defaultLocale
   ) as Locale;
 
-  // Resolved on the server and handed to the client tree as a prop, so pages
-  // render their real content on the first frame instead of spinning while a
-  // client-side dynamic import of the locale bundle resolves.
-  const dict = await getDictionary(locale);
-
   return (
-    <html lang={locale} suppressHydrationWarning>
+    <html lang={locale} className={playfair.variable} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: SIDEBAR_INIT_SCRIPT }} />
       </head>
@@ -71,11 +78,13 @@ export default async function RootLayout({
           disableTransitionOnChange
         >
           <AuthProvider>
-            <DictionaryProvider dict={dict} locale={locale}>
-              <VaultStatsProvider>
-                <ImagePreloadProvider>{children}</ImagePreloadProvider>
-              </VaultStatsProvider>
-            </DictionaryProvider>
+            <LocaleDictionaryProvider locale={locale}>
+              <ImagePreloadProvider>
+                <AppBackground />
+                {children}
+              </ImagePreloadProvider>
+              <TooltipProvider />
+            </LocaleDictionaryProvider>
           </AuthProvider>
         </ThemeProvider>
       </body>

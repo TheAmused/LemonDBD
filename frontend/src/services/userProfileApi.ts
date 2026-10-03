@@ -12,32 +12,17 @@
 
 import type { UserBugReport } from '@/types/userProfile';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
+import { ApiError, authHeaders, getAuthToken, type ApiErrorBody } from '@/utils/api';
 
-const TOKEN_KEY = 'lemondbd_token';
-
-export class ApiError extends Error {
-  status: number;
-  code?: string;
-
-  constructor(message: string, status: number, code?: string) {
-    super(message);
-    this.name = 'ApiError';
-    this.status = status;
-    this.code = code;
-  }
-}
-
-function getToken(): string | null {
-  return typeof window !== 'undefined' ? localStorage.getItem(TOKEN_KEY) : null;
-}
+export { ApiError };
 
 function apiBase(): string {
   return getBackendBaseUrl();
 }
 
-async function parseJsonSafely(res: Response): Promise<any> {
+async function parseJsonSafely<T extends object = object>(res: Response): Promise<ApiErrorBody & Partial<T>> {
   try {
-    return await res.json();
+    return (await res.json()) as ApiErrorBody & Partial<T>;
   } catch {
     return {};
   }
@@ -56,7 +41,7 @@ export async function fetchMyBugReports(
   perPage = 10,
   signal?: AbortSignal
 ): Promise<MyBugReportsPage> {
-  const token = getToken();
+  const token = getAuthToken();
   if (!token) {
     throw new ApiError('Authentication token missing.', 401, 'authTokenMissing');
   }
@@ -65,14 +50,20 @@ export async function fetchMyBugReports(
     `${apiBase()}/api/v1/bug-reports/my?page=${page}&per_page=${perPage}&_t=${Date.now()}`,
     {
       headers: {
-        Authorization: `Bearer ${token}`,
+        ...authHeaders(token),
         'Cache-Control': 'no-cache, no-store, must-revalidate',
       },
       signal,
     }
   );
 
-  const data = await parseJsonSafely(res);
+  const data = await parseJsonSafely<{
+    reports: UserBugReport[];
+    total: number;
+    page: number;
+    per_page: number;
+    total_pages: number;
+  }>(res);
   if (!res.ok) {
     throw new ApiError(data.error || 'Failed to fetch bug reports.', res.status, data.error_code);
   }
@@ -91,8 +82,8 @@ export interface UpdateProfilePayload {
   new_password?: string;
 }
 
-export async function updateUserProfile(payload: UpdateProfilePayload): Promise<any> {
-  const token = getToken();
+export async function updateUserProfile(payload: UpdateProfilePayload): Promise<void> {
+  const token = getAuthToken();
   if (!token) {
     throw new ApiError('Authentication token missing.', 401, 'authTokenMissing');
   }
@@ -101,7 +92,7 @@ export async function updateUserProfile(payload: UpdateProfilePayload): Promise<
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
+      ...authHeaders(token),
     },
     body: JSON.stringify(payload),
   });
@@ -110,11 +101,10 @@ export async function updateUserProfile(payload: UpdateProfilePayload): Promise<
   if (!res.ok) {
     throw new ApiError(data.error || 'Failed to update profile.', res.status, data.error_code);
   }
-  return data;
 }
 
-export async function uploadAvatar(file: File): Promise<any> {
-  const token = getToken();
+export async function uploadAvatar(file: File): Promise<void> {
+  const token = getAuthToken();
   if (!token) {
     throw new ApiError('Authentication token missing.', 401, 'authTokenMissing');
   }
@@ -124,7 +114,7 @@ export async function uploadAvatar(file: File): Promise<any> {
 
   const res = await fetch(`${apiBase()}/api/v1/auth/avatar`, {
     method: 'POST',
-    headers: { Authorization: `Bearer ${token}` },
+    headers: authHeaders(token),
     body: formData,
   });
 
@@ -132,6 +122,38 @@ export async function uploadAvatar(file: File): Promise<any> {
   if (!res.ok) {
     throw new ApiError(data.error || 'Failed to upload avatar.', res.status, data.error_code);
   }
-  return data;
 }
 
+/** Downloads everything the server holds about the signed-in account as a JSON file. */
+export async function downloadMyData(): Promise<void> {
+  const res = await fetch(`${apiBase()}/api/v1/auth/account/export`, {
+    credentials: 'include',
+    headers: { Accept: 'application/json', ...authHeaders() },
+  });
+  if (!res.ok) {
+    const data = await parseJsonSafely(res);
+    throw new ApiError(data.error || 'Failed to export data.', res.status, data.error_code);
+  }
+  const url = URL.createObjectURL(await res.blob());
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'lemondbd-my-data.json';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+/** Permanently deletes the signed-in account; the server re-checks the password. */
+export async function deleteAccount(password: string): Promise<void> {
+  const res = await fetch(`${apiBase()}/api/v1/auth/account`, {
+    method: 'DELETE',
+    credentials: 'include',
+    headers: { 'Content-Type': 'application/json', ...authHeaders() },
+    body: JSON.stringify({ password }),
+  });
+  const data = await parseJsonSafely(res);
+  if (!res.ok) {
+    throw new ApiError(data.error || 'Failed to delete account.', res.status, data.error_code);
+  }
+}

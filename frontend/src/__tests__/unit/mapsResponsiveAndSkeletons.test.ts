@@ -2,19 +2,18 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import React from 'react';
-import { renderToStaticMarkup } from 'react-dom/server';
 import { MapsPageSkeleton } from '@/components/maps/MapsSkeleton';
 import enDict from '@/locales/en';
 import deDict from '@/locales/de';
 import esDict from '@/locales/es';
 import jaDict from '@/locales/ja';
 import plDict from '@/locales/pl';
+import { renderWithDictionary } from '../helpers/renderWithDictionary';
 
 describe('Maps: Skeletons & DBD Framer Motion Spinner Integrity', () => {
   it('MapsPageSkeleton renders with role="status", aria-busy="true", and DBD Skill Check Spinner', () => {
-    const html = renderToStaticMarkup(
+    const html = renderWithDictionary(
       React.createElement(MapsPageSkeleton, {
-        dict: enDict,
       })
     );
 
@@ -59,7 +58,6 @@ describe('Maps: i18n Localization Parity Across All 5 Locales', () => {
     'searchPlaceholder',
     'initializingTacticalMap',
     'noMapsFound',
-    'fullscreenMode',
   ];
 
   for (const { code, dict } of locales) {

@@ -9,7 +9,11 @@ import type { MainLoadout } from '@/types/userShowcase';
 import type { RoleCategory, Perk } from '@/types/perks';
 import type { Dictionary } from '@/locales/types';
 import { getCharacterAvatarUrl } from '@/utils/perkUtils';
-import { CATALOG_TTL_MS, catalogKey, fetchCached, fetchJson } from '@/services/dataCache';
+import { CATALOG_TTL_MS, catalogKey, fetchCached, fetchJson, unwrapList, type ListPayload } from '@/services/dataCache';
+
+import { tip } from '@/components/common/Tooltip';
+import { isSurvivor as isSurvivorRole } from '@/utils/characterUtils';
+import { useDictionary } from "@/context/DictionaryContext";
 
 interface MainCardProps {
   role: RoleCategory;
@@ -19,22 +23,21 @@ interface MainCardProps {
   onPerkChange: (slotIndex: number, perkId: number | null) => void;
   onOpenCharacterModal: () => void;
   onOpenPerkModal: (slotIndex: number) => void;
-  dict?: Dictionary | null;
   locale?: string;
 }
 
 export const MainCard: React.FC<MainCardProps> = ({
-  role,
-  loadout,
-  onCharacterChange,
-  onPrestigeChange,
-  onPerkChange,
-  onOpenCharacterModal,
-  onOpenPerkModal,
-  dict,
-  locale = 'en',
-}) => {
-  const isSurvivor = role === 'Survivor';
+      role,
+      loadout,
+      onCharacterChange,
+      onPrestigeChange,
+      onPerkChange,
+      onOpenCharacterModal,
+      onOpenPerkModal,
+      locale = 'en',
+    }) => {
+  const dict = useDictionary();
+  const isSurvivor = isSurvivorRole(role);
   const [allPerks, setAllPerks] = useState<Perk[]>([]);
   const [imgError, setImgError] = useState(false);
 
@@ -47,9 +50,9 @@ export const MainCard: React.FC<MainCardProps> = ({
   // is reachable from several places and none of them should pay for it twice.
   useEffect(() => {
     const url = catalogKey('perks', { limit: 1000, lang: locale });
-    fetchCached<any>(url, () => fetchJson(url), { ttlMs: CATALOG_TTL_MS })
+    fetchCached<ListPayload<Perk>>(url, () => fetchJson<ListPayload<Perk>>(url), { ttlMs: CATALOG_TTL_MS })
       .then((data) => {
-        const list: Perk[] = Array.isArray(data) ? data : data?.data || [];
+        const list = unwrapList(data);
         setAllPerks(list);
       })
       .catch(() => {});
@@ -66,12 +69,8 @@ export const MainCard: React.FC<MainCardProps> = ({
 
   return (
     <div
-      aria-label={isSurvivor ? (dict?.user?.survivorMain || 'Survivor Main') : (dict?.user?.killerMain || 'Killer Main')}
-      className={`relative overflow-hidden rounded-2xl border p-4 sm:p-5 backdrop-blur-xl shadow-md transition-all ${
-        isSurvivor
-          ? 'border-accent-green/35 bg-bg-surface hover:border-accent-green/50'
-          : 'border-accent-red/35 bg-bg-surface hover:border-accent-red/50'
-      }`}
+      aria-label={isSurvivor ? (dict.user.survivorMain) : (dict.user.killerMain)}
+      className="relative overflow-hidden p-4 sm:p-5"
     >
       {/* Side-by-side: Survivor (Left = Avatar, Right = Perks) vs Killer (Left = Perks, Right = Avatar) */}
       <div
@@ -90,8 +89,8 @@ export const MainCard: React.FC<MainCardProps> = ({
                 onOpenCharacterModal();
               }
             }}
-            title={dict?.user?.changeMain || 'Change Main'}
-            aria-label={dict?.user?.changeMain || 'Change Main'}
+            {...tip(dict.user.changeMain, undefined, 'action')}
+            aria-label={dict.user.changeMain}
             className="relative group w-28 h-28 sm:w-36 sm:h-36 rounded-2xl overflow-hidden border-2 border-border-color hover:border-accent-red cursor-pointer shadow-lg bg-bg-elevated shrink-0 transition-all hover:scale-102 focus:outline-none focus:ring-2 focus:ring-accent-red"
           >
             {avatarSrc && !imgError ? (
@@ -105,28 +104,28 @@ export const MainCard: React.FC<MainCardProps> = ({
                 unoptimized
               />
             ) : (
-              <div className="w-full h-full flex flex-col items-center justify-center bg-bg-elevated text-text-muted font-bold font-mono">
+              <div className="w-full h-full flex flex-col items-center justify-center bg-bg-elevated text-text-muted font-bold">
                 <span className="text-2xl sm:text-3xl tracking-wider text-text-primary">
                   {loadout.characterName.slice(0, 2).toUpperCase()}
                 </span>
-                <span className="text-[10px] font-mono text-text-muted">
+                <span className="type-micro text-text-muted">
                   {role.toUpperCase()}
                 </span>
               </div>
             )}
-            <div className="absolute inset-0 bg-bg-primary/70 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-xs font-bold text-text-inverted uppercase tracking-wider backdrop-blur-xs font-mono">
-              {dict?.user?.changeMain || 'Change'}
+            <div className="absolute inset-0 bg-bg-primary/70 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center type-label-sm text-text-inverted backdrop-blur-xs">
+              {dict.user.changeMain}
             </div>
           </div>
 
-          <h3 className="text-base sm:text-lg font-black text-text-primary font-mono tracking-wide truncate max-w-[180px]">
+          <h3 className="text-base sm:text-lg font-black text-text-primary tracking-wide truncate max-w-[180px]">
             {loadout.characterName}
           </h3>
         </div>
 
         {/* Right: 4-Perk Signature Diamond Loadout */}
         <div
-          aria-label={dict?.user?.signatureLoadout || '4-Perk Signature Loadout'}
+          aria-label={dict.user.signatureLoadout}
           className="relative flex flex-col items-center justify-center p-2 shrink-0"
         >
           {/* Subtle diamond connector crosshairs */}
@@ -142,8 +141,8 @@ export const MainCard: React.FC<MainCardProps> = ({
               perkId={loadout.perkIds[0]}
               onClick={() => onOpenPerkModal(0)}
               onClear={() => onPerkChange(0, null)}
-              emptyLabel={dict?.user?.emptySlot || 'Empty Slot'}
-              clearLabel={dict?.user?.clearPerk || 'Clear'}
+              emptyLabel={dict.user.emptySlot}
+              clearLabel={dict.user.clearPerk}
             />
           </div>
 
@@ -155,8 +154,8 @@ export const MainCard: React.FC<MainCardProps> = ({
               perkId={loadout.perkIds[3]}
               onClick={() => onOpenPerkModal(3)}
               onClear={() => onPerkChange(3, null)}
-              emptyLabel={dict?.user?.emptySlot || 'Empty Slot'}
-              clearLabel={dict?.user?.clearPerk || 'Clear'}
+              emptyLabel={dict.user.emptySlot}
+              clearLabel={dict.user.clearPerk}
             />
             <PerkDiamondSlot
               slotIndex={1}
@@ -164,8 +163,8 @@ export const MainCard: React.FC<MainCardProps> = ({
               perkId={loadout.perkIds[1]}
               onClick={() => onOpenPerkModal(1)}
               onClear={() => onPerkChange(1, null)}
-              emptyLabel={dict?.user?.emptySlot || 'Empty Slot'}
-              clearLabel={dict?.user?.clearPerk || 'Clear'}
+              emptyLabel={dict.user.emptySlot}
+              clearLabel={dict.user.clearPerk}
             />
           </div>
 
@@ -177,8 +176,8 @@ export const MainCard: React.FC<MainCardProps> = ({
               perkId={loadout.perkIds[2]}
               onClick={() => onOpenPerkModal(2)}
               onClear={() => onPerkChange(2, null)}
-              emptyLabel={dict?.user?.emptySlot || 'Empty Slot'}
-              clearLabel={dict?.user?.clearPerk || 'Clear'}
+              emptyLabel={dict.user.emptySlot}
+              clearLabel={dict.user.clearPerk}
             />
           </div>
         </div>

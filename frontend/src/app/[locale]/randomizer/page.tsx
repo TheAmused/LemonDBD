@@ -18,10 +18,6 @@ import { useCachedData } from '@/hooks/useCachedData';
 import { fetchJson } from '@/services/dataCache';
 
 const PerkModal = dynamic(() => import('@/components/PerkModal').then((m) => m.PerkModal), { ssr: false });
-const CampfireParticles = dynamic(
-  () => import('@/components/common/CampfireParticles').then((m) => m.CampfireParticles),
-  { ssr: false }
-);
 
 function RandomizerContent() {
   const params = useParams();
@@ -42,7 +38,7 @@ function RandomizerContent() {
   const [characterCount, setCharacterCount] = useState<number>(0);
 
   useEffect(() => {
-    document.title = dict?.app?.perkRandomizerPageTitle || 'LemonDBD - Perk Randomizer';
+    document.title = dict.app.perkRandomizerPageTitle;
   }, [dict]);
 
   // Both reads share their cache keys with /perks, so arriving here from the
@@ -76,28 +72,25 @@ function RandomizerContent() {
   return (
     <PageShell
       locale={locale}
-      dict={dict}
       activeCategory="generator"
       totalPerksCount={allPerks.length}
       survivorCount={survivorCount}
       killerCount={killerCount}
       characterCount={characterCount}
       padding="flush"
-      decoration={<span className="hidden" />}
       mainClassName="min-h-screen overflow-y-auto flex flex-col relative"
     >
-      <CampfireParticles />
       <div className="relative z-10 flex flex-col flex-1 min-h-0">
         {perksLoading ? (
-          <RandomizerPageSkeleton dict={dict} />
+          <RandomizerPageSkeleton />
         ) : (
-          <Suspense fallback={<RandomizerPageSkeleton dict={dict} />}>
-            <GeneratorPage allPerks={allPerks} onSelectPerk={setSelectedPerk} dict={dict} />
+          <Suspense fallback={<RandomizerPageSkeleton />}>
+            <GeneratorPage allPerks={allPerks} onSelectPerk={setSelectedPerk} />
           </Suspense>
         )}
 
         {selectedPerk && (
-          <PerkModal perk={selectedPerk} onClose={() => setSelectedPerk(null)} dict={dict} />
+          <PerkModal perk={selectedPerk} onClose={() => setSelectedPerk(null)} />
         )}
       </div>
     </PageShell>

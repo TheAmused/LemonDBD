@@ -1,4 +1,5 @@
 // frontend/src/__tests__/unit/i18nTranslations.test.ts
+import { placeholderNames } from '@/utils/i18nFormat';
 import test from 'node:test';
 import assert from 'node:assert';
 import { getDictionary } from '@/utils/../i18n/get-dictionary';
@@ -7,26 +8,8 @@ import { en, es, pl, de, ja } from '@/utils/../locales';
 import type { Dictionary } from '@/utils/../locales/types';
 
 const allLocales: Locale[] = ['en', 'es', 'pl', 'de', 'ja'];
-const expectedNamespaces = [
-  'app',
-  'landing',
-  'generator',
-  'stats',
-  'filters',
-  'pagination',
-  'card',
-  'modal',
-  'empty',
-  'guesser',
-  'voice',
-  'characterDetail',
-  'sidebar',
-  'smashOrPass',
-  'user',
-  'swf',
-  'draft',
-  'streaks',
-] as const;
+// Every namespace English defines -- new ones are covered automatically.
+const expectedNamespaces = Object.keys(en) as Array<keyof Dictionary>;
 
 test('i18n Config: supported locales list', () => {
   assert.deepStrictEqual(i18n.locales, ['en', 'es', 'pl', 'de', 'ja']);
@@ -77,25 +60,10 @@ test('Locales export parity: all 5 locales conform to English dictionary shape',
   }
 });
 
-test('Interpolation placeholders: {page}, {slot}, {drawn}, {total} preserved across all locales', () => {
-  const localeDicts: Record<Locale, Dictionary> = { en, es, pl, de, ja };
-
-  for (const loc of allLocales) {
-    const dict = localeDicts[loc];
-
-    assert.ok(dict.generator.spinWheels.includes('{slot}'), `generator.spinWheels in ${loc} must include {slot}`);
-    assert.ok(dict.generator.selectedPage.includes('{page}'), `generator.selectedPage in ${loc} must include {page}`);
-    assert.ok(dict.generator.slotBadge.includes('{page}'), `generator.slotBadge in ${loc} must include {page}`);
-    assert.ok(dict.generator.slotBadge.includes('{slot}'), `generator.slotBadge in ${loc} must include {slot}`);
-    assert.ok(dict.generator.drawnBadge.includes('{drawn}'), `generator.drawnBadge in ${loc} must include {drawn}`);
-    assert.ok(dict.generator.drawnBadge.includes('{total}'), `generator.drawnBadge in ${loc} must include {total}`);
-  }
-});
-
 test('Smash or Pass locale coverage: all roster categories and tiers present in all locales', () => {
   const localeDicts: Record<Locale, Dictionary> = { en, es, pl, de, ja };
   const expectedTiers = ['godTier', 'fatalAttraction', 'friendzone', 'eldritchVoid'] as const;
-  const expectedControls = ['pass', 'smash', 'superSmash', 'stats', 'reset', 'keybindings'] as const;
+  const expectedControls = ['pass', 'smash', 'superSmash', 'stats', 'reset'] as const;
   const expectedRosters = ['canon', 'hoy', 'legendary', 'cyberpunk', 'anime', 'gothic'] as const;
 
   for (const loc of allLocales) {
@@ -115,9 +83,6 @@ test('Smash or Pass locale coverage: all roster categories and tiers present in 
       assert.ok((sop.rosters as any)[roster].name, `Roster "${roster}.name" must exist in ${loc}`);
     }
 
-    assert.ok(sop.chaosRating, `chaosRating must exist in ${loc}`);
-    assert.ok(sop.dangerLevel, `dangerLevel must exist in ${loc}`);
-    assert.ok(sop.compatibilityScore, `compatibilityScore must exist in ${loc}`);
   }
 });
 
@@ -127,8 +92,6 @@ test('Modal and Hover i18n coverage: all inspection and role keys present in all
     'close',
     'character',
     'role',
-    'copySlug',
-    'slugCopied',
     'perkDescription',
     'generalPerk',
     'alias',
@@ -138,7 +101,6 @@ test('Modal and Hover i18n coverage: all inspection and role keys present in all
     'survivorPerk',
     'unownedPerk',
     'equipment',
-    'clickOutsideToClose',
   ] as const;
 
   for (const loc of allLocales) {
@@ -156,7 +118,6 @@ test('Sidebar Bug Report and Buy Coffee i18n coverage across all locales', () =>
   const localeDicts: Record<Locale, Dictionary> = { en, es, pl, de, ja };
   const expectedSidebarKeys = [
     'bugReportModalTitle',
-    'bugReportModalSubtitle',
     'bugCategoryPerks',
     'bugCategoryCharacters',
     'bugCategoryMaps',
@@ -174,16 +135,12 @@ test('Sidebar Bug Report and Buy Coffee i18n coverage across all locales', () =>
     'bugLoggedInAs',
     'bugScreenshotsLabel',
     'bugUploadImage',
-    'bugSecurityVerification',
     'bugSubmitButton',
     'bugSubmitting',
     'bugSuccessMessage',
     'bugErrorMessage',
     'bugCloseButton',
-    'bugAltchaVerifying',
-    'bugAltchaVerified',
     'coffeeTitle',
-    'coffeeSubtitle',
     'coffeeFuelNotice',
     'coffeeDonationMessage',
     'coffeeBuyMeCoffeeTagline',
@@ -208,8 +165,6 @@ test('Character Detail combat, terror radius, codex and sort options i18n covera
   const localeDicts: Record<Locale, Dictionary> = { en, es, pl, de, ja };
   const expectedDetailKeys = [
     'combatAttributes',
-    'clickTerrorRadiusVisualizer',
-    'clickOutsideToClose',
     'acousticRange',
     'entityArchives',
     'codex',
@@ -222,9 +177,6 @@ test('Character Detail combat, terror radius, codex and sort options i18n covera
     'survivorSprint',
     'straightGapClose',
     'straightLine',
-    'clickOfferingForDetails',
-    'clickAddonForDetails',
-    'clickItemForDetails',
     'clickToInspectPerk',
     'killerPerk',
     'survivorPerk',
@@ -246,4 +198,27 @@ test('Character Detail combat, terror radius, codex and sort options i18n covera
       assert.ok((detailDict as any)[key].length > 0);
     }
   }
+});
+test('Every string in every locale uses the same placeholders as English (plural variables included)', () => {
+  const localeDicts: Record<Locale, Dictionary> = { en, es, pl, de, ja };
+  const problems: string[] = [];
+
+  const walk = (baseline: unknown, target: unknown, path: string, loc: string) => {
+    if (typeof baseline === 'string') {
+      if (typeof target !== 'string') return;
+      const a = placeholderNames(baseline).join(',');
+      const b = placeholderNames(target).join(',');
+      if (a !== b) problems.push(`${loc}.${path}: expected {${a}} got {${b}}`);
+      if (/\{[^{}]*,\s*plural\s*,/.test(target) && !/\bother\s*\{/.test(target)) {
+        problems.push(`${loc}.${path}: plural without an "other" branch`);
+      }
+      return;
+    }
+    if (baseline && typeof baseline === 'object' && target && typeof target === 'object') {
+      for (const [k, v] of Object.entries(baseline)) walk(v, (target as Record<string, unknown>)[k], path ? `${path}.${k}` : k, loc);
+    }
+  };
+
+  for (const loc of allLocales) walk(en, localeDicts[loc], '', loc);
+  assert.deepStrictEqual(problems, []);
 });

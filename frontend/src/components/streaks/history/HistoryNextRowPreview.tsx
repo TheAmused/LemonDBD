@@ -7,11 +7,13 @@ import { ChevronDown } from 'lucide-react';
 import { avatarUrlFor } from '../chaos/KillerPickerGrid';
 import { KillerIcon } from '@/components/icons/DbdIcons';
 
+import { tip } from '@/components/common/Tooltip';
+import { useDictionary } from "@/context/DictionaryContext";
+
 export interface HistoryNextRowPreviewProps {
   killers: string[];
   rowSize: number;
   currentRowIndex: number;
-  dict?: Dictionary;
 }
 
 const PreviewTile: React.FC<{ name: string }> = ({ name }) => {
@@ -19,7 +21,7 @@ const PreviewTile: React.FC<{ name: string }> = ({ name }) => {
   const src = avatarUrlFor(name);
   return (
     <div
-      title={name}
+      {...tip(name, undefined, 'character')}
       className="flex flex-col items-center gap-1.5 rounded-lg border border-border-color bg-bg-surface p-1.5 grayscale opacity-50"
     >
       <div className="relative w-full aspect-square rounded-md overflow-hidden bg-bg-elevated flex items-center justify-center">
@@ -29,19 +31,15 @@ const PreviewTile: React.FC<{ name: string }> = ({ name }) => {
           <KillerIcon className="w-6 h-6 text-text-muted" />
         )}
       </div>
-      <span className="text-[11px] font-medium text-center text-text-muted truncate w-full">
+      <span className="text-mini font-medium text-center text-text-muted truncate w-full">
         {name}
       </span>
     </div>
   );
 };
 
-export const HistoryNextRowPreview: React.FC<HistoryNextRowPreviewProps> = ({
-  killers,
-  rowSize,
-  currentRowIndex,
-  dict,
-}) => {
+export const HistoryNextRowPreview: React.FC<HistoryNextRowPreviewProps> = ({ killers, rowSize, currentRowIndex }) => {
+  const dict = useDictionary();
   const [expanded, setExpanded] = useState(false);
   const nextRowStart = (currentRowIndex + 1) * rowSize;
   const nextRow = killers.slice(nextRowStart, nextRowStart + rowSize);
@@ -54,9 +52,9 @@ export const HistoryNextRowPreview: React.FC<HistoryNextRowPreviewProps> = ({
         onClick={() => setExpanded((v) => !v)}
         className="flex w-full items-center justify-center gap-1.5 text-left cursor-pointer"
       >
-        <span className="text-xs font-bold text-text-muted uppercase tracking-wider">
-          {dict?.streaks?.nextRowPreviewLabel || 'Next row preview'}{' '}
-          {dict?.streaks?.middotSeparator || '·'} {dict?.streaks?.rowLabel || 'Row'} {currentRowIndex + 2}
+        <span className="type-label-sm text-text-muted">
+          {dict.streaks.nextRowPreviewLabel}{' '}
+          {dict.streaks.middotSeparator} {dict.streaks.rowLabel} {currentRowIndex + 2}
         </span>
         <ChevronDown
           className={`h-4 w-4 text-text-muted transition-transform ${expanded ? 'rotate-180' : ''}`}

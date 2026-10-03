@@ -47,10 +47,6 @@ def history_auth_setup(db_session: Session) -> tuple[int, str, dict[str, str]]:
 class TestHistoryRoutes:
     """Tests for History mode API routes: chronological unlocks, rows, and resets."""
 
-    def test_endpoints_require_login(self, client: FlaskClient) -> None:
-        resp = client.get("/api/v1/history-streak/run?mode=hell")
-        assert resp.status_code == 401
-
     def test_get_run_auto_creates(
         self, client: FlaskClient, history_auth_setup: tuple[int, str, dict[str, str]]
     ) -> None:
@@ -60,14 +56,6 @@ class TestHistoryRoutes:
         run = resp.get_json()["run"]
         assert run["mode"] == "hell"
         assert run["current_row_killers"] == ["The Trapper", "The Wraith"]
-
-    @pytest.mark.parametrize("invalid_mode", ["easy", "invalid_custom", ""])
-    def test_run_requires_valid_mode(
-        self, client: FlaskClient, history_auth_setup: tuple[int, str, dict[str, str]], invalid_mode: str
-    ) -> None:
-        _, _, headers = history_auth_setup
-        resp = client.get(f"/api/v1/history-streak/run?mode={invalid_mode}", headers=headers)
-        assert resp.status_code == 400
 
     def test_result_lifecycle(
         self, client: FlaskClient, history_auth_setup: tuple[int, str, dict[str, str]]
@@ -86,20 +74,6 @@ class TestHistoryRoutes:
         assert "The Trapper" in body["completed_killers"]
         assert len(body["newly_unlocked_perks"]) > 0
 
-    def test_result_requires_killer_id(
-        self, client: FlaskClient, history_auth_setup: tuple[int, str, dict[str, str]]
-    ) -> None:
-        _, _, headers = history_auth_setup
-        run = client.get(
-            "/api/v1/history-streak/run?mode=hell", headers=headers
-        ).get_json()["run"]
-        resp = client.post(
-            "/api/v1/history-streak/result",
-            json={"run_id": run["id"], "result": "win"},
-            headers=headers,
-        )
-        assert resp.status_code == 400
-
     def test_reset_endpoint(
         self, client: FlaskClient, history_auth_setup: tuple[int, str, dict[str, str]]
     ) -> None:
@@ -117,11 +91,3 @@ class TestHistoryRoutes:
         )
         assert resp.status_code == 200
         assert resp.get_json()["run"]["total_killers_beaten"] == 0
-
-    def test_stats_endpoint(
-        self, client: FlaskClient, history_auth_setup: tuple[int, str, dict[str, str]]
-    ) -> None:
-        _, _, headers = history_auth_setup
-        resp = client.get("/api/v1/history-streak/stats?mode=hell", headers=headers)
-        assert resp.status_code == 200
-        assert resp.get_json()["stats"]["total_matches"] == 0

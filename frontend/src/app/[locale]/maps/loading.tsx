@@ -1,6 +1,6 @@
 // frontend/src/app/[locale]/maps/loading.tsx
 import React from 'react';
-import { DbdSpinner } from '@/components/DbdSpinner';
+import { DbdSpinner } from '@/components/common/DbdSpinner';
 import { PageShellFallback } from '@/components/layout/PageShellFallback';
 
 export default function MapsLoading() {
@@ -14,8 +14,8 @@ export default function MapsLoading() {
           layout="inline"
           accent="blood"
           needleSpeed={1.6}
-          label="Surveying Realms & Seeds..."
-          sublabel="Mapping tile variants, loops, and spawn coordinates"
+          labelKey="maps.loadingTacticalMaps"
+          sublabelKey="maps.loadingTacticalMapsSub"
         />
       }
     />

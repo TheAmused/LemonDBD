@@ -5,6 +5,7 @@ import React from 'react';
 import { Sparkles } from 'lucide-react';
 import type { Dictionary } from '@/locales/types';
 import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
+import { useDictionary } from "@/context/DictionaryContext";
 
 interface MetricItem {
   owned: number;
@@ -24,7 +25,6 @@ interface OwnershipData {
 
 interface VaultMasteryDialsProps {
   ownership?: OwnershipData | null;
-  dict?: Dictionary | null;
   compact?: boolean;
   hideTitle?: boolean;
   className?: string;
@@ -106,14 +106,14 @@ const RadialDial: React.FC<DialProps> = ({
               compact
                 ? 'text-xs sm:text-base'
                 : 'text-xs xs:text-sm sm:text-lg md:text-xl xl:text-lg 2xl:text-2xl'
-            } font-black font-mono tracking-tight text-text-primary`}
+            } font-black tracking-tight text-text-primary`}
           >
             {percentage}%
           </div>
           <div
             className={`${
-              compact ? 'text-[9px] sm:text-[10px]' : 'text-[9px] xs:text-[10px] sm:text-xs 2xl:text-sm'
-            } font-mono font-bold text-text-secondary`}
+              compact ? 'text-micro sm:text-tiny' : 'text-micro xs:text-tiny sm:text-xs 2xl:text-sm'
+            } font-bold text-text-secondary`}
           >
             {count}/{total}
           </div>
@@ -127,8 +127,8 @@ const RadialDial: React.FC<DialProps> = ({
         </div>
         <span
           className={`${
-            compact ? 'text-[9px] sm:text-[10px]' : 'text-[9px] xs:text-[10px] sm:text-xs 2xl:text-sm'
-          } font-black font-mono uppercase tracking-wider text-text-primary truncate`}
+            compact ? 'text-micro sm:text-tiny' : 'text-micro xs:text-tiny sm:text-xs 2xl:text-sm'
+          } font-black uppercase tracking-wider text-text-primary truncate`}
         >
           {title}
         </span>
@@ -137,13 +137,8 @@ const RadialDial: React.FC<DialProps> = ({
   );
 };
 
-export const VaultMasteryDials: React.FC<VaultMasteryDialsProps> = ({
-  ownership,
-  dict,
-  compact = false,
-  hideTitle = false,
-  className = '',
-}) => {
+export const VaultMasteryDials: React.FC<VaultMasteryDialsProps> = ({ ownership, compact = false, hideTitle = false, className = '' }) => {
+  const dict = useDictionary();
   const survOwned = ownership?.survivors?.owned ?? 0;
   const survTotal = ownership?.survivors?.total ?? 54;
   const survPercent =
@@ -166,9 +161,9 @@ export const VaultMasteryDials: React.FC<VaultMasteryDialsProps> = ({
     <div className={`space-y-3 ${className}`}>
       {!hideTitle && (
         <div className="flex items-center justify-center text-center">
-          <h2 className="text-xs sm:text-sm font-black font-mono uppercase tracking-widest text-text-primary flex items-center justify-center gap-2">
+          <h2 className="text-xs sm:text-sm font-black uppercase tracking-widest text-text-primary flex items-center justify-center gap-2">
             <Sparkles className="h-4 w-4 text-accent-amber" />
-            <span>{dict?.user?.vaultMastery || 'Vault Mastery'}</span>
+            <span>{dict.user.vaultMastery}</span>
           </h2>
         </div>
       )}
@@ -176,7 +171,7 @@ export const VaultMasteryDials: React.FC<VaultMasteryDialsProps> = ({
       <div className="grid grid-cols-3 gap-2 sm:gap-4">
         {/* Survivors Dial */}
         <RadialDial
-          title={dict?.stats?.survivors || 'Survivors'}
+          title={dict.stats.survivors}
           count={survOwned}
           total={survTotal}
           percentage={survPercent}
@@ -188,7 +183,7 @@ export const VaultMasteryDials: React.FC<VaultMasteryDialsProps> = ({
 
         {/* Killers Dial */}
         <RadialDial
-          title={dict?.stats?.killers || 'Killers'}
+          title={dict.stats.killers}
           count={killerOwned}
           total={killerTotal}
           percentage={killerPercent}
@@ -200,7 +195,7 @@ export const VaultMasteryDials: React.FC<VaultMasteryDialsProps> = ({
 
         {/* Perks Dial */}
         <RadialDial
-          title={dict?.sidebar?.perks || 'Perks'}
+          title={dict.sidebar.perks}
           count={perkUnlocked}
           total={perkTotal}
           percentage={perkPercent}

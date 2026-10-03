@@ -1,10 +1,12 @@
 // frontend/src/components/user/PerkDiamondSlot.tsx
+import { useDictionary } from '@/context/DictionaryContext';
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { Plus, X, Sparkles } from 'lucide-react';
 import type { Perk } from '@/types/perks';
 import { getPerkIconUrl } from '@/utils/perkUtils';
 
+import { tip } from '@/components/common/Tooltip';
 interface PerkDiamondSlotProps {
   slotIndex: number;
   perk?: Perk | null;
@@ -20,9 +22,12 @@ export const PerkDiamondSlot: React.FC<PerkDiamondSlotProps> = ({
   perk,
   onClick,
   onClear,
-  emptyLabel = 'Empty Slot',
-  clearLabel = 'Clear Perk',
+  emptyLabel: emptyLabelProp,
+  clearLabel: clearLabelProp,
 }) => {
+  const dict = useDictionary();
+  const emptyLabel = emptyLabelProp ?? dict.user.emptySlot;
+  const clearLabel = clearLabelProp ?? dict.user.clearPerk;
   const [imgError, setImgError] = useState(false);
 
   useEffect(() => {
@@ -42,7 +47,7 @@ export const PerkDiamondSlot: React.FC<PerkDiamondSlotProps> = ({
             ? 'border-accent-red/80 bg-bg-elevated hover:scale-105 hover:border-accent-red'
             : 'border-dashed border-border-color bg-bg-elevated/40 hover:border-accent-amber/60 hover:bg-accent-amber/5 hover:scale-105'
         }`}
-        title={perk?.name || emptyLabel}
+        {...tip(perk?.name || emptyLabel, undefined, perk ? 'item' : 'action')}
         aria-label={perk?.name || emptyLabel}
       >
         {/* Un-rotated inside content */}
@@ -73,8 +78,8 @@ export const PerkDiamondSlot: React.FC<PerkDiamondSlotProps> = ({
             e.stopPropagation();
             onClear(e);
           }}
-          title={clearLabel}
-          className="absolute -top-1 -right-1 z-20 flex h-5 w-5 items-center justify-center rounded-full bg-accent-red text-text-inverted shadow-md opacity-0 group-hover:opacity-100 hover:opacity-90 transition-all cursor-pointer"
+          {...tip(clearLabel, undefined, 'action')} aria-label={clearLabel}
+          className="hit-area absolute -top-1 -right-1 z-20 flex h-5 w-5 items-center justify-center rounded-full bg-accent-red text-text-inverted shadow-md opacity-0 group-hover:opacity-100 hover:opacity-90 transition-all cursor-pointer"
         >
           <X className="h-3 w-3" />
         </button>
@@ -82,7 +87,7 @@ export const PerkDiamondSlot: React.FC<PerkDiamondSlotProps> = ({
 
       {/* Label under diamond */}
       {perk ? (
-        <span className="mt-2 text-[10px] font-mono font-bold text-center max-w-[84px] truncate text-text-muted group-hover:text-accent-amber transition-colors">
+        <span className="mt-2 type-strong-2xs text-center max-w-[84px] truncate text-text-muted group-hover:text-accent-amber transition-colors">
           {perk.name}
         </span>
       ) : (

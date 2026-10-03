@@ -1,8 +1,8 @@
 // frontend/src/components/layout/PageShell.tsx
 import type { ReactNode } from 'react';
-import { AmbientEmbers } from '@/components/layout/AmbientEmbers';
 import { Sidebar } from '@/components/Sidebar';
 import type { Dictionary } from '@/locales/types';
+import { useDictionary } from "@/context/DictionaryContext";
 
 /**
  * The 4 padding scales actually in use across pages: tight (dense grids like
@@ -20,7 +20,6 @@ export const PAGE_SHELL_PADDING_CLASSES: Record<PageShellPadding, string> = {
 
 interface PageShellProps {
   locale: string;
-  dict: Dictionary;
   activeCategory?: string;
   onSelectCategory?: (category: string) => void;
   totalPerksCount?: number;
@@ -37,15 +36,11 @@ interface PageShellProps {
   mainId?: string;
   /** Override the outer wrapper's classes entirely. Only use for a page with a genuinely different shell shape (e.g. the home page's ambient background). */
   outerClassName?: string;
-  /** Rendered as the outer wrapper's first child, before the sidebar -- for a
-   * full-bleed absolute-positioned background decoration that must sit behind
-   * both the sidebar and <main> (requires `outerClassName` to include `relative`). */
-  decoration?: ReactNode;
   children: ReactNode;
 }
 
 export const DEFAULT_OUTER_CLASSNAME =
-  'min-h-screen bg-bg-primary text-text-primary flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300';
+  'min-h-screen text-text-primary flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300';
 
 /**
  * Single source of truth for the sidebar + <main> shell every page renders.
@@ -54,22 +49,21 @@ export const DEFAULT_OUTER_CLASSNAME =
  * caused the sitewide padding regression this shell class was named after.
  */
 export function PageShell({
-  locale,
-  dict,
-  activeCategory,
-  onSelectCategory,
-  totalPerksCount,
-  survivorCount,
-  killerCount,
-  characterCount,
-  padding = 'comfortable',
-  customPadding,
-  mainClassName = '',
-  mainId,
-  outerClassName,
-  decoration,
-  children,
-}: PageShellProps) {
+      locale,
+      activeCategory,
+      onSelectCategory,
+      totalPerksCount,
+      survivorCount,
+      killerCount,
+      characterCount,
+      padding = 'comfortable',
+      customPadding,
+      mainClassName = '',
+      mainId,
+      outerClassName,
+      children,
+    }: PageShellProps) {
+  const dict = useDictionary();
   // The flush margin variant (`lemon-shell-main--flush`) is keyed off
   // `padding`, not `customPadding` -- `customPadding` overrides only the
   // spacing classes (see mainClasses below), so a page can still combine
@@ -87,10 +81,8 @@ export function PageShell({
 
   return (
     <div className={outerClassName ?? DEFAULT_OUTER_CLASSNAME}>
-      {decoration ?? <AmbientEmbers />}
       <Sidebar
         currentLocale={locale}
-        dict={dict}
         activeCategory={activeCategory}
         onSelectCategory={onSelectCategory}
         totalPerksCount={totalPerksCount}

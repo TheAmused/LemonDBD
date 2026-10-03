@@ -2,34 +2,24 @@
 import test from 'node:test';
 import assert from 'node:assert';
 import React from 'react';
+import enDict from '@/locales/en';
+import { renderWithDictionary } from '../helpers/renderWithDictionary';
 import { SmashHubSkeleton, SmashLeaderboardSkeleton } from '../../components/smash-or-pass/SmashOrPassSkeleton';
 
 test('SmashOrPass: Skeletons & DBD Framer Motion Spinner Suite', async (t) => {
   await t.test('SmashHubSkeleton renders with correct accessibility and DBD Skill Check Spinner', () => {
-    const el = React.createElement(SmashHubSkeleton, {
-      dict: { smashOrPass: { loadingArena: 'Loading Smash or Pass arena...' } },
-    });
-    assert.ok(el, 'SmashHubSkeleton element should be instantiated');
-    assert.strictEqual(typeof el.type, 'function');
-
-    const rendered = (el.type as any)({
-      dict: { smashOrPass: { loadingArena: 'Loading Smash or Pass arena...' } },
-    });
-    assert.ok(rendered, 'Should render JSX element tree');
-    assert.strictEqual(rendered.props.role, 'status');
-    assert.strictEqual(rendered.props['aria-busy'], 'true');
-    assert.strictEqual(rendered.props['aria-label'], 'Loading Smash or Pass arena...');
-    assert.ok(rendered.props.className.includes('min-h-[calc(100vh-5rem)]'));
+    const html = renderWithDictionary(React.createElement(SmashHubSkeleton));
+    assert.ok(html.includes('role="status"'));
+    assert.ok(html.includes('aria-busy="true"'));
+    assert.ok(html.includes(`aria-label="${enDict.smashOrPass.loadingArena}"`));
+    assert.ok(html.includes('min-h-[calc(100vh-5rem)]'));
   });
 
   await t.test('SmashLeaderboardSkeleton renders with status role and accessibility label', () => {
-    const mockDict = { smashOrPass: { loadingRankings: 'Loading Hall of Fame rankings...' } };
-    const el5 = React.createElement(SmashLeaderboardSkeleton, { count: 5, dict: mockDict });
-    const rendered5 = (el5.type as any)({ count: 5, dict: mockDict });
-    assert.ok(rendered5);
-    assert.strictEqual(rendered5.props.role, 'status');
-    assert.strictEqual(rendered5.props['aria-label'], 'Loading Hall of Fame rankings...');
-    assert.strictEqual(rendered5.props['aria-busy'], 'true');
+    const html = renderWithDictionary(React.createElement(SmashLeaderboardSkeleton, { count: 5 }));
+    assert.ok(html.includes('role="status"'));
+    assert.ok(html.includes(`aria-label="${enDict.smashOrPass.loadingRankings}"`));
+    assert.ok(html.includes('aria-busy="true"'));
   });
 });
 

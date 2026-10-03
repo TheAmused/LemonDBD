@@ -7,6 +7,9 @@ import { useRouter } from 'next/navigation';
 import { AlertTriangle } from 'lucide-react';
 import { AdeptBadgeIcon } from '@/components/icons/DbdIcons';
 
+import { tip } from '@/components/common/Tooltip';
+import { useDictionary } from "@/context/DictionaryContext";
+
 const PANEL_HOVER_CLASSES = 'hover:border-accent-red/50 focus:ring-accent-red';
 
 const DisabledReasonModal = dynamic(
@@ -27,7 +30,6 @@ interface StreakPanelBaseProps {
   completedFull?: boolean;
   /** Killer count frozen at that full-roster completion, shown next to the badge. */
   completedFullCount?: number | null;
-  dict?: Dictionary;
   /**
    * Routes this panel may navigate to. Panels that pick their destination at
    * click time (from a saved difficulty/mode) render as a <button>, so Next
@@ -44,20 +46,20 @@ type StreakPanelProps = StreakPanelBaseProps &
    { comingSoon?: false; href?: never; onClick: () => void });
 
 export const StreakPanel: React.FC<StreakPanelProps> = ({
-  title,
-  image,
-  href,
-  onClick,
-  comingSoon,
-  disabled,
-  disabledReason,
-  completed,
-  completedCount,
-  completedFull,
-  completedFullCount,
-  dict,
-  prefetchHrefs,
-}) => {
+      title,
+      image,
+      href,
+      onClick,
+      comingSoon,
+      disabled,
+      disabledReason,
+      completed,
+      completedCount,
+      completedFull,
+      completedFullCount,
+      prefetchHrefs,
+    }) => {
+  const dict = useDictionary();
   const router = useRouter();
   const [showDisabledModal, setShowDisabledModal] = useState(false);
   const body = (
@@ -80,19 +82,19 @@ export const StreakPanel: React.FC<StreakPanelProps> = ({
       )}
 
       {disabled ? (
-        <span className="absolute right-3 top-3 z-10 flex items-center gap-1 rounded-full border border-accent-amber/40 bg-accent-amber/15 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-accent-amber">
+        <span className="absolute right-3 top-3 z-10 flex items-center gap-1 rounded-full border border-accent-amber/40 bg-accent-amber/15 px-2.5 py-1 type-label-2xs text-accent-amber">
           <AlertTriangle className="h-3 w-3" />
-          {dict?.streaks?.disabled || 'Disabled'}
+          {dict.streaks.disabled}
         </span>
       ) : comingSoon ? (
-        <span className="absolute right-3 top-3 z-10 rounded-full border border-border-color bg-bg-elevated px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-text-muted">
-          {dict?.streaks?.comingSoon || 'Coming soon.'}
+        <span className="absolute right-3 top-3 z-10 rounded-full border border-border-color bg-bg-elevated px-2.5 py-1 type-label-2xs text-text-muted">
+          {dict.streaks.comingSoon}
         </span>
       ) : completed && completedFull ? (
         <span
           className="absolute right-3 top-3 z-10 flex items-center gap-1 rounded-full border border-accent-red/50 bg-accent-red/15 px-2 py-1 text-accent-red shadow-sm"
-          aria-label={dict?.streaks?.completedFullRoster || 'Completed with the entire roster'}
-          title={dict?.streaks?.completedFullRoster || 'Completed with the entire roster'}
+          aria-label={dict.streaks.completedFullRoster}
+          {...tip(dict.streaks.completedFullRoster, undefined, 'status')}
         >
           <AdeptBadgeIcon className="h-3.5 w-3.5" />
           {completedFullCount != null && (
@@ -102,8 +104,8 @@ export const StreakPanel: React.FC<StreakPanelProps> = ({
       ) : completed ? (
         <span
           className="absolute right-3 top-3 z-10 flex items-center gap-1 rounded-full border border-accent-amber/40 bg-accent-amber/15 px-2 py-1 text-accent-amber shadow-sm"
-          aria-label={dict?.streaks?.completed || 'Completed'}
-          title={dict?.streaks?.completed || 'Completed'}
+          aria-label={dict.streaks.completed}
+          {...tip(dict.streaks.completed, undefined, 'status')}
         >
           <AdeptBadgeIcon className="h-3.5 w-3.5" />
           {completedCount != null && (

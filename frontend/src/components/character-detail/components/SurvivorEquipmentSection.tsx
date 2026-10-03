@@ -1,5 +1,6 @@
 // frontend/src/components/character-detail/components/SurvivorEquipmentSection.tsx
-import React, { useState, useMemo } from 'react';
+import { Tabs } from '@/components/common/Tabs';
+import React, { useMemo } from 'react';
 import {
   Package,
   ShieldAlert,
@@ -19,13 +20,14 @@ import {
   getRarityTileStyle,
   getRarityRank,
 } from '../types';
-import { UnifiedHoverModal, ActiveHoverState } from './UnifiedHoverModal';
 import { CategoryPicker } from './CategoryPicker';
 import { CollapsibleDrawer } from './CollapsibleDrawer';
 import { toTitleCase } from '@/utils/textCase';
 import { usePersistentString } from '@/hooks/usePersistentString';
 import { usePersistentDrawer } from '@/hooks/usePersistentDrawer';
 
+import { tip } from '@/components/common/Tooltip';
+import { EmptyState } from '@/components/common/EmptyState';
 interface SurvivorEquipmentSectionProps {
   items?: EquipmentItem[];
   addons?: (AddonItem | EquipmentItem)[];
@@ -124,7 +126,6 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
     'medkit',
     isSurvivorCategoryKey
   );
-  const [activeHover, setActiveHover] = useState<ActiveHoverState | null>(null);
   const [isDrawerOpen, , setDrawerOpen] = usePersistentDrawer('lemondbd_drawer_survivor_items', true);
 
   const categories = useMemo(
@@ -183,7 +184,7 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
               <Package className="h-5 w-5" />
             </div>
             <div>
-              <h2 id="survivor-equipment-heading" className="text-lg font-black tracking-tight text-text-primary font-mono flex items-center gap-2">
+              <h2 id="survivor-equipment-heading" className="text-lg font-black tracking-tight text-text-primary flex items-center gap-2">
                 {t.equipmentTitleSurvivor || 'Survival Items & Equipment'}
                 <span className="text-xs px-2 py-0.5 rounded-full bg-accent-green/10 text-accent-green border border-accent-green/30">
                   {items.length + addons.length}
@@ -195,40 +196,27 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
       >
       <div className="space-y-4">
       <div className="flex flex-col md:flex-row gap-4 items-stretch">
-        <div
-          role="tablist"
-          aria-label={t.equipmentCategories || 'Survivor item categories'}
-          className="hidden sm:flex md:flex-col items-center justify-start gap-2 p-2 rounded-2xl bg-bg-elevated border border-border-color shrink-0 md:overflow-x-visible"
-        >
-          {categories.map((cat) => {
+        <Tabs
+          ariaLabel={t.equipmentCategories || 'Survivor item categories'}
+          value={selectedCategory}
+          onChange={setSelectedCategory}
+          panels={false}
+          variant="pill"
+          accent="green"
+          className="hidden sm:flex md:flex-col md:items-stretch md:overflow-x-visible justify-start gap-2 p-2 rounded-2xl bg-bg-elevated border border-border-color shrink-0"
+          tabClassName="relative h-12 w-14 sm:h-14 sm:w-16 flex-col gap-0 rounded-2xl p-1.5"
+          tabs={categories.map((cat) => {
             const Icon = cat.icon;
-            const isSelected = selectedCategory === cat.key;
-            return (
-              <button
-                type="button"
-                key={cat.key}
-                role="tab"
-                aria-selected={isSelected}
-                onClick={() => setSelectedCategory(cat.key as SurvivorCategoryKey)}
-                className={`relative h-12 w-14 sm:h-14 sm:w-16 rounded-2xl flex flex-col items-center justify-center p-1.5 transition-all duration-200 cursor-pointer ${
-                  isSelected
-                    ? 'bg-accent-green/20 border-2 border-accent-green text-accent-green shadow-lg scale-105'
-                    : 'bg-bg-surface border border-border-color hover:border-border-subtle text-text-secondary hover:text-text-primary hover:bg-bg-elevated'
-                }`}
-                title={`${cat.label} - ${cat.desc}`}
-                aria-label={cat.label}
-              >
-                <Icon className="h-5 w-5 sm:h-6 sm:w-6" aria-hidden="true" />
-                <span className="text-[9px] font-mono font-bold truncate max-w-[56px] mt-0.5">
-                  {cat.label.split(' ')[0]}
-                </span>
-                {isSelected && (
-                  <span className="absolute -top-1 -right-1 h-2.5 w-2.5 rounded-full bg-accent-green ring-2 ring-bg-surface" aria-hidden="true" />
-                )}
-              </button>
-            );
+            return {
+              value: cat.key as SurvivorCategoryKey,
+              icon: <Icon className="h-5 w-5 sm:h-6 sm:w-6" aria-hidden="true" />,
+              label: (
+                <span className="mt-0.5 block max-w-[56px] truncate text-micro font-bold">{cat.label.split(' ')[0]}</span>
+              ),
+              buttonProps: { ...tip(`${cat.label} - ${cat.desc}`, undefined, 'default'), 'aria-label': cat.label },
+            };
           })}
-        </div>
+        />
 
         <div className="flex-1 rounded-3xl bg-bg-surface border border-border-color shadow-sm dark:shadow-lg overflow-hidden grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-border-color">
           <div className="flex flex-col p-4">
@@ -243,16 +231,14 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
               />
             </div>
             <div className="hidden sm:flex items-center justify-center border-b border-border-color pb-2.5 mb-3">
-              <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-accent-green flex items-center gap-1.5">
+              <h3 className="type-label-sm text-accent-green flex items-center gap-1.5">
                 <Package className="h-4 w-4" aria-hidden="true" />
                 {t.items || 'Items'} ({categorizedData.displayedItems.length})
               </h3>
             </div>
 
             {categorizedData.displayedItems.length === 0 ? (
-              <div className="flex-1 flex items-center justify-center p-8 text-center text-text-muted text-xs italic">
-                {t.noItemsFound || 'No items found in this category matching your filter.'}
-              </div>
+              <EmptyState variant="inline" className="flex-1 py-8 text-center" title={t.noItemsFound || 'No items found in this category matching your filter.'} />
             ) : (
               <div className="flex flex-wrap items-center justify-center gap-3 p-1" role="list">
                 {categorizedData.displayedItems.map((item, idx) => {
@@ -271,12 +257,9 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
                           onSelectEquipment(item);
                         }
                       }}
-                      onMouseEnter={(e) => {
-                        const rect = e.currentTarget.getBoundingClientRect();
-                        setActiveHover({ item, rect, accentColor: 'text-accent-green' });
-                      }}
-                      onMouseLeave={() => setActiveHover(null)}
+                      {...tip(item.name, undefined, 'item')}
                       className={`relative group rounded-2xl border-2 p-1.5 flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-110 active:scale-95 focus:outline-none focus:ring-2 focus:ring-accent-green h-20 w-20 sm:h-24 sm:w-24 ${rarityStyle.bg}`}
+                      style={rarityStyle.style}
                       aria-label={`${t.inspectItemPrefix || 'Inspect item:'} ${item.name}`}
                     >
                       <img
@@ -296,14 +279,14 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
 
           <div className="flex flex-col p-4">
             <div className="flex items-center justify-between border-b border-border-color pb-2.5 mb-3">
-              <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-text-secondary flex items-center gap-1.5">
+              <h3 className="type-label-sm text-text-secondary flex items-center gap-1.5">
                 <Sparkles className="h-4 w-4" aria-hidden="true" />
                 {selectedCategory === 'trial_exclusive'
                   ? t.artifactMechanics || 'Artifact Mechanics'
                   : `${t.compatibleAddons || 'Compatible Add-ons'} (${categorizedData.displayedAddons.length})`}
               </h3>
               {selectedCategory === 'trial_exclusive' && (
-                <span className="text-[10px] font-mono text-accent-amber">
+                <span className="type-micro text-accent-amber">
                   {t.specialTrialRules || 'Special Trial Rules'}
                 </span>
               )}
@@ -311,7 +294,7 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
 
             {selectedCategory === 'trial_exclusive' ? (
               <div className="flex-1 flex flex-col justify-center p-4 rounded-2xl bg-accent-amber/10 border border-accent-amber/30 text-xs space-y-3">
-                <div className="flex items-center gap-2 text-accent-amber font-mono font-black text-sm">
+                <div className="flex items-center gap-2 text-accent-amber type-card-title">
                   <ShieldAlert className="h-5 w-5 shrink-0" aria-hidden="true" />
                   <span>{t.inTrialArtifactsHeading || 'In-Trial Killer Counters & Artifacts'}</span>
                 </div>
@@ -345,12 +328,9 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
                           onSelectEquipment(displayItem);
                         }
                       }}
-                      onMouseEnter={(e) => {
-                        const rect = e.currentTarget.getBoundingClientRect();
-                        setActiveHover({ item: displayItem, rect, accentColor: 'text-amber-400' });
-                      }}
-                      onMouseLeave={() => setActiveHover(null)}
-                      className={`relative group rounded-2xl border-2 p-1.5 flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-110 active:scale-95 focus:outline-none focus:ring-2 focus:ring-amber-500 h-20 w-20 sm:h-24 sm:w-24 ${rarityStyle.bg}`}
+                      {...tip(displayItem.name, undefined, 'item')}
+                      className={`relative group rounded-2xl border-2 p-1.5 flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-110 active:scale-95 focus:outline-none focus:ring-2 focus:ring-accent-amber h-20 w-20 sm:h-24 sm:w-24 ${rarityStyle.bg}`}
+                      style={rarityStyle.style}
                       aria-label={`${t.inspectAddonPrefix || 'Inspect addon:'} ${displayItem.name}`}
                     >
                       <img
@@ -371,14 +351,6 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
       </div>
       </div>
       </CollapsibleDrawer>
-
-      {/* Unified Hover Modal */}
-      <UnifiedHoverModal
-        activeHover={activeHover}
-        placement="above"
-        t={t}
-        actionPrompt={t.clickItemForDetails || t.clickToInspect || 'Click item for details'}
-      />
     </section>
   );
 };

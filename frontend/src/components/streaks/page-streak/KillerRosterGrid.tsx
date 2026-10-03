@@ -9,11 +9,11 @@ import type { Dictionary } from '@/locales/types';
 import { staticUrl } from '@/utils/staticUrl';
 import { useCharacterDisplayName } from '@/context/DisplayNamesContext';
 import { KillerIcon } from '@/components/icons/DbdIcons';
+import { useDictionary } from "@/context/DictionaryContext";
 
 interface KillerRosterGridProps {
   locale: string;
   roster: RosterEntry[];
-  dict?: Dictionary;
 }
 
 const KillerPortrait: React.FC<{ name: string; src?: string; done: boolean }> = ({
@@ -42,14 +42,11 @@ const KillerPortrait: React.FC<{ name: string; src?: string; done: boolean }> = 
   );
 };
 
-export const KillerRosterGrid: React.FC<KillerRosterGridProps> = ({
-  locale,
-  roster,
-  dict,
-}) => {
+export const KillerRosterGrid: React.FC<KillerRosterGridProps> = ({ locale, roster }) => {
+  const dict = useDictionary();
   const characterDisplayName = useCharacterDisplayName();
   return (
-    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6" role="list">
+    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-10" role="list">
       {roster.map((entry) => {
         // ever_completed comes from the persistent completion history, so it
         // survives a per-killer reset (which flips status back to in_progress).
@@ -60,12 +57,12 @@ export const KillerRosterGrid: React.FC<KillerRosterGridProps> = ({
         const cleared = entry.status === 'not_started' ? 0 : Math.max(0, entry.current_page - 1);
         const pct = entry.page_count > 0 ? Math.round((cleared / entry.page_count) * 100) : 0;
 
-        const progressAriaLabel = dict?.streaks?.progress
+        const progressAriaLabel = dict.streaks.progress
           ? `${displayName} - ${dict.streaks.progress} ${pct}%`
           : `${displayName} ${pct}%`;
 
         const progressText =
-          `${cleared} ${dict?.streaks?.ofLabel || 'of'} ${entry.page_count} ${dict?.streaks?.pagesCount || 'pages'}`.trim();
+          `${cleared} ${dict.streaks.ofLabel} ${entry.page_count} ${dict.streaks.pagesCount}`.trim();
 
         return (
           <Link
@@ -81,7 +78,7 @@ export const KillerRosterGrid: React.FC<KillerRosterGridProps> = ({
             {done && (
               <span
                 className="absolute right-2 top-2 flex h-5 w-5 items-center justify-center rounded-full bg-accent-green text-text-inverted shadow-sm"
-                aria-label={dict?.streaks?.completed || ''}
+                aria-label={dict.streaks.completed}
               >
                 <Check className="h-3 w-3" strokeWidth={3} aria-hidden="true" />
               </span>
@@ -91,7 +88,7 @@ export const KillerRosterGrid: React.FC<KillerRosterGridProps> = ({
               src={staticUrl(entry.avatar_local_path)}
               done={done}
             />
-            <div className="text-center text-xs font-bold text-text-secondary truncate">
+            <div className="text-center type-strong text-text-secondary truncate">
               {displayName}
             </div>
             {!done && (
@@ -110,7 +107,7 @@ export const KillerRosterGrid: React.FC<KillerRosterGridProps> = ({
               </div>
             )}
             <div
-              className={`text-center font-mono text-[10px] font-semibold ${done
+              className={`text-center text-tiny font-semibold ${done
                   ? 'text-accent-green'
                   : active
                     ? 'text-accent-amber'
@@ -118,7 +115,7 @@ export const KillerRosterGrid: React.FC<KillerRosterGridProps> = ({
                 }`}
             >
               {done
-                ? (dict?.streaks?.completed || '')
+                ? (dict.streaks.completed)
                 : progressText}
             </div>
           </Link>
@@ -126,4 +123,4 @@ export const KillerRosterGrid: React.FC<KillerRosterGridProps> = ({
       })}
     </div>
   );
-};
+};

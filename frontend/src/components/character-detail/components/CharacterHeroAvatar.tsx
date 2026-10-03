@@ -7,6 +7,7 @@ import type { CharacterItem } from '../types';
 import { getAvatarUrl } from '../types';
 import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
 
+import { tip } from '@/components/common/Tooltip';
 export interface CharacterHeroAvatarTranslations {
   view3DModel?: string;
   interactiveViewer?: string;
@@ -50,7 +51,7 @@ export const CharacterHeroAvatar: React.FC<CharacterHeroAvatarProps> = ({
           }
         }}
         className="group relative w-full max-w-[280px] sm:max-w-[320px] aspect-[3/4] rounded-3xl overflow-hidden border-2 border-border-color bg-bg-elevated shadow-lg dark:shadow-2xl cursor-pointer hover:border-accent-red/60 focus:outline-none focus:ring-2 focus:ring-accent-red transition-all duration-300 flex items-center justify-center"
-        title={t.view3DModel || ''}
+        {...tip(t.view3DModel || '', undefined, 'action')}
         aria-label={heroAriaLabel}
       >
         {!imgFailed ? (
@@ -66,7 +67,7 @@ export const CharacterHeroAvatar: React.FC<CharacterHeroAvatarProps> = ({
         ) : (
           <div className="flex flex-col items-center justify-center p-6 text-center text-text-muted">
             <User className="h-16 w-16 mb-2 opacity-50" />
-            <span className="text-xs font-mono font-bold text-text-secondary">{character.name}</span>
+            <span className="type-strong text-text-secondary">{character.name}</span>
           </div>
         )}
 
@@ -74,7 +75,7 @@ export const CharacterHeroAvatar: React.FC<CharacterHeroAvatarProps> = ({
           <div className="h-12 w-12 rounded-2xl bg-accent-red/20 border border-accent-red/40 flex items-center justify-center text-accent-red mb-2 shadow-lg group-hover:scale-110 transition-transform">
             <ZoomIn className="h-6 w-6" />
           </div>
-          <span className="text-xs font-black text-text-inverted uppercase tracking-wider font-mono">
+          <span className="type-label-sm text-text-inverted">
             {t.view3DModel || 'Click to Expand'}
           </span>
         </div>
@@ -92,7 +93,7 @@ export const CharacterHeroAvatar: React.FC<CharacterHeroAvatarProps> = ({
             {roleLabel}
           </span>
 
-          <span className="rounded-full bg-bg-elevated/80 border border-border-color px-2.5 py-0.5 text-[10px] font-bold text-text-secondary backdrop-blur-md">
+          <span className="rounded-full bg-bg-elevated/80 border border-border-color px-2.5 py-0.5 type-strong-2xs text-text-secondary backdrop-blur-md">
             {character.is_licensed ? (t.dlcLicensed || '') : (t.dlcOriginal || '')}
           </span>
         </div>

@@ -50,8 +50,8 @@ export function useSmashTaxonomies() {
           // quota or private mode
         }
       }
-    } catch (err) {
-      console.debug('Failed to fetch taxonomies from backend:', err);
+    } catch {
+      // Best-effort: failure here is non-fatal.
     }
   }, []);
 

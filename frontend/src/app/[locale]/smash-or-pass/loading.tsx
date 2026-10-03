@@ -1,10 +1,10 @@
 // frontend/src/app/[locale]/smash-or-pass/loading.tsx
 import React from 'react';
-import { DbdSpinner } from '@/components/DbdSpinner';
+import { DbdSpinner } from '@/components/common/DbdSpinner';
 
 export default function SmashOrPassLoading() {
   return (
-    <div className="min-h-screen bg-bg-primary text-text-primary flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300">
+    <div className="min-h-screen text-text-primary flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300">
       <div
         aria-hidden="true"
         className="lemon-shell-aside hidden lg:fixed lg:inset-y-0 lg:left-0 lg:z-40 lg:block lg:w-64 border-r border-border-color bg-bg-surface"
@@ -18,8 +18,8 @@ export default function SmashOrPassLoading() {
           layout="inline"
           accent="blood"
           needleSpeed={1.0}
-          label="Entering Smash or Pass Arena..."
-          sublabel="Summoning community rating candidates"
+          labelKey="smashOrPass.loadingArena"
+          sublabelKey="smashOrPass.loadingArenaSub"
         />
       </main>
     </div>

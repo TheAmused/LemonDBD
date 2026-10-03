@@ -95,25 +95,6 @@ function shouldIgnoreText(rawText: string): boolean {
 }
 
 /**
- * Checks whether the current line or previous line contains an ignore directive.
- */
-function hasIgnoreComment(node: Node): boolean {
-  const sourceFile = node.getSourceFile();
-  const line = node.getStartLineNumber();
-  const lines = sourceFile.getFullText().split("\n");
-
-  const currentLineText = lines[line - 1] || "";
-  const prevLineText = lines[line - 2] || "";
-
-  return (
-    currentLineText.includes("// i18n-ignore") ||
-    currentLineText.includes("/* i18n-ignore */") ||
-    prevLineText.includes("// i18n-ignore") ||
-    prevLineText.includes("/* i18n-ignore */")
-  );
-}
-
-/**
  * Checks if a node is or is nested inside an ignored tag like <style>, <script>, <code>, or <pre>.
  */
 function isIgnoredTag(node: Node): boolean {
@@ -143,7 +124,6 @@ interface StringCandidate {
  * (ternary branches, logical OR fallbacks, template strings, parenthesized expressions).
  */
 function extractRenderedStrings(expr: Node, isRightOfFallback = false): StringCandidate[] {
-  if (hasIgnoreComment(expr)) return [];
 
   // String Literals
   if (Node.isStringLiteral(expr) || Node.isNoSubstitutionTemplateLiteral(expr)) {
@@ -219,7 +199,7 @@ for (const sourceFile of project.getSourceFiles()) {
   // 1. Raw JSX Text Nodes: <h1>Raw text</h1>
   const jsxTexts = sourceFile.getDescendantsOfKind(SyntaxKind.JsxText);
   for (const node of jsxTexts) {
-    if (isIgnoredTag(node) || hasIgnoreComment(node)) continue;
+    if (isIgnoredTag(node)) continue;
 
     const rawText = node.getText();
     if (!shouldIgnoreText(rawText)) {
@@ -234,7 +214,7 @@ for (const sourceFile of project.getSourceFiles()) {
   ];
 
   for (const el of jsxElements) {
-    if (isIgnoredTag(el) || hasIgnoreComment(el)) continue;
+    if (isIgnoredTag(el)) continue;
 
     for (const child of el.getJsxChildren()) {
       if (Node.isJsxExpression(child)) {
@@ -255,7 +235,6 @@ for (const sourceFile of project.getSourceFiles()) {
   // 3. User-Facing JSX Attributes: placeholder="...", title="...", aria-label="..."
   const jsxAttributes = sourceFile.getDescendantsOfKind(SyntaxKind.JsxAttribute);
   for (const attr of jsxAttributes) {
-    if (hasIgnoreComment(attr)) continue;
 
     const attrName = attr.getNameNode().getText();
     if (!USER_FACING_ATTRIBUTES.has(attrName)) continue;

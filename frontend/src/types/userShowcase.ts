@@ -19,8 +19,6 @@ export const PLAYER_TITLES = [
   'Killer',
 ] as const;
 
-export type PlayerTitle = (typeof PLAYER_TITLES)[number];
-
 export const GRADE_EMBLEMS = [
   'Iridescent I',
   'Iridescent II',
@@ -30,8 +28,6 @@ export const GRADE_EMBLEMS = [
   'Ash I',
   'Ash IV',
 ] as const;
-
-export type GradeEmblem = (typeof GRADE_EMBLEMS)[number];
 
 export const DEFAULT_SHOWCASE_STATE: UserShowcaseState = {
   playerTitle: 'Survivor',

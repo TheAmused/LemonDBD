@@ -7,13 +7,10 @@ import { VoiceCommandBanner } from '@/utils/../components/maps/VoiceCommandBanne
 import { MapExplorer } from '@/utils/../components/maps/MapExplorer';
 import { FullscreenMapEngine } from '@/utils/../components/maps/FullscreenMapEngine';
 
-import { VariantSwitcherBar } from '@/utils/../components/maps/VariantSwitcherBar';
-
-test('VoiceCommandBanner, MapExplorer, FullscreenMapEngine, and VariantSwitcherBar are properly exported', () => {
+test('VoiceCommandBanner, MapExplorer, FullscreenMapEngine are properly exported', () => {
   assert.strictEqual(typeof VoiceCommandBanner, 'function');
   assert.strictEqual(typeof MapExplorer, 'function');
   assert.strictEqual(typeof FullscreenMapEngine, 'function');
-  assert.strictEqual(typeof VariantSwitcherBar, 'function');
 });
 
 test('VoiceCommandBanner props interface and match handling integration', () => {

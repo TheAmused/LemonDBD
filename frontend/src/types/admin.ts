@@ -106,3 +106,14 @@ export interface AdminAuditLogEntry {
   created_at: string;
 }
 
+
+export interface AdminSiteSetting {
+  key: string;
+  kind: 'int' | 'email';
+  group: 'privacy' | 'tokens' | 'retention';
+  value: string | number;
+  default: string | number;
+  overridden: boolean;
+  min: number | null;
+  max: number | null;
+}

@@ -2,12 +2,12 @@
 // frontend/src/components/character-detail/CharactersSkeleton.tsx
 
 import React from 'react';
-import { DbdSpinner } from '@/components/DbdSpinner';
+import { DbdSpinner } from '@/components/common/DbdSpinner';
 import type { Dictionary } from '@/locales/types';
+import { useDictionary } from "@/context/DictionaryContext";
 
 interface CharactersSkeletonProps {
   className?: string;
-  dict?: Dictionary | any;
   ariaLabel?: string;
   count?: number;
   sublabel?: string;
@@ -16,13 +16,9 @@ interface CharactersSkeletonProps {
 /**
  * DBD Skill Check Framer Motion Loading Spinner for the Character Roster Grid (/characters).
  */
-export const CharactersGridSkeleton: React.FC<CharactersSkeletonProps> = ({
-  className = '',
-  dict,
-  ariaLabel,
-  sublabel,
-}) => {
-  const loadingLabel = ariaLabel || dict?.characterDetail?.loading || dict?.app?.loading || 'Loading characters...';
+export const CharactersGridSkeleton: React.FC<CharactersSkeletonProps> = ({ className = '', ariaLabel, sublabel }) => {
+  const dict = useDictionary();
+  const loadingLabel = ariaLabel || dict.characterDetail.loading;
 
   return (
     <div
@@ -38,7 +34,6 @@ export const CharactersGridSkeleton: React.FC<CharactersSkeletonProps> = ({
         needleSpeed={1.4}
         label={loadingLabel}
         sublabel={sublabel ?? 'Loading survivor & killer dossiers'}
-        dict={dict}
       />
     </div>
   );
@@ -47,13 +42,9 @@ export const CharactersGridSkeleton: React.FC<CharactersSkeletonProps> = ({
 /**
  * DBD Skill Check Framer Motion Loading Spinner for Character Detail Page (/characters/[slug]).
  */
-export const CharacterDetailSkeleton: React.FC<CharactersSkeletonProps> = ({
-  className = '',
-  dict,
-  ariaLabel,
-  sublabel,
-}) => {
-  const loadingLabel = ariaLabel || dict?.characterDetail?.loading || dict?.app?.loading || 'Loading character details...';
+export const CharacterDetailSkeleton: React.FC<CharactersSkeletonProps> = ({ className = '', ariaLabel, sublabel }) => {
+  const dict = useDictionary();
+  const loadingLabel = ariaLabel || dict.characterDetail.loading;
 
   return (
     <div
@@ -69,10 +60,7 @@ export const CharacterDetailSkeleton: React.FC<CharactersSkeletonProps> = ({
         needleSpeed={1.3}
         label={loadingLabel}
         sublabel={sublabel ?? 'Loading unique perks, power stats, and bio'}
-        dict={dict}
       />
     </div>
   );
 };
-
-export default CharactersGridSkeleton;

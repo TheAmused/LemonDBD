@@ -2,7 +2,7 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import React from 'react';
-import { renderToStaticMarkup } from 'react-dom/server';
+import { renderWithDictionary } from '../helpers/renderWithDictionary';
 import { AdminHeader } from '@/components/admin/AdminHeader';
 import { AdminStatsGrid } from '@/components/admin/AdminStatsGrid';
 import { AdminUserTable } from '@/components/admin/AdminUserTable';
@@ -13,7 +13,7 @@ import { AdminChallengeStats } from '@/components/admin/AdminChallengeStats';
 
 describe('Admin Theme Support', () => {
   it('AdminHeader title supports light mode and dark mode text', () => {
-    const html = renderToStaticMarkup(
+    const html = renderWithDictionary(
       React.createElement(AdminHeader, {
         isSyncing: false,
         syncStatus: 'idle',
@@ -21,6 +21,7 @@ describe('Admin Theme Support', () => {
         onOpenDbMaintenance: () => {},
         onTriggerSync: () => {},
         onRefreshData: () => {},
+        onOpenOcrCheck: () => {},
       })
     );
     assert.ok(
@@ -34,7 +35,7 @@ describe('Admin Theme Support', () => {
   });
 
   it('AdminStatsGrid cards use light-compatible border and background', () => {
-    const html = renderToStaticMarkup(
+    const html = renderWithDictionary(
       React.createElement(AdminStatsGrid, {
         stats: {
           total_users: 10,
@@ -68,7 +69,7 @@ describe('Admin Theme Support', () => {
   });
 
   it('AdminUserTable outer card and search input support light and dark theme contrast', () => {
-    const html = renderToStaticMarkup(
+    const html = renderWithDictionary(
       React.createElement(AdminUserTable, {
         users: [
           {
@@ -123,7 +124,7 @@ describe('Admin Theme Support', () => {
   });
 
   it('AdminAuditLogView container card and headers support light and dark mode', () => {
-    const html = renderToStaticMarkup(
+    const html = renderWithDictionary(
       React.createElement(AdminAuditLogView, {})
     );
     assert.ok(
@@ -145,7 +146,7 @@ describe('Admin Theme Support', () => {
   });
 
   it('AdminBugReportsWorkbench supports light and dark theme classes', () => {
-    const html = renderToStaticMarkup(
+    const html = renderWithDictionary(
       React.createElement(AdminBugReportsWorkbench, {
         bugReports: [
           {
@@ -192,7 +193,7 @@ describe('Admin Theme Support', () => {
   });
 
   it('AdminChallengeControl container supports light and dark modes', () => {
-    const html = renderToStaticMarkup(
+    const html = renderWithDictionary(
       React.createElement(AdminChallengeControl, {
         onActionMessage: () => {},
       })
@@ -212,7 +213,7 @@ describe('Admin Theme Support', () => {
   });
 
   it('AdminChallengeStats cards support light and dark theme contrast', () => {
-    const html = renderToStaticMarkup(
+    const html = renderWithDictionary(
       React.createElement(AdminChallengeStats, {
         stats: {
           total_users: 10,

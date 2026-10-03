@@ -1,14 +1,15 @@
 'use client';
 // frontend/src/components/tier-lists/creator/CreatorPreview.tsx
 
-import React, { useEffect, useMemo } from 'react';
-import { X } from 'lucide-react';
+import React, { useMemo } from 'react';
+import { Modal } from '@/components/common/Modal';
 import type { StoredCustomList, TierDefinition, TierListDocumentItem } from '@/types/tierList';
 import type { Dictionary } from '@/locales/types';
 import { documentItemsToItems } from '@/utils/tierLists/items';
 import { TierBadge } from '../TierBadge';
 import { CustomTierListCard } from '../TierListCards';
 import { TierItemTile } from '../TierItemTile';
+import { useDictionary } from "@/context/DictionaryContext";
 
 interface CreatorPreviewProps {
   title: string;
@@ -18,10 +19,10 @@ interface CreatorPreviewProps {
   /** Sanitized, or null when unset/invalid -- already validated by the caller. */
   backgroundImage?: string | null;
   locale: string;
-  dict: Dictionary;
 }
 
-export function CreatorPreview({ title, description, tiers, items, backgroundImage, locale, dict }: CreatorPreviewProps) {
+export function CreatorPreview({ title, description, tiers, items, backgroundImage, locale }: CreatorPreviewProps) {
+  const dict = useDictionary();
   const t = dict.tierLists;
   const c = t.creator;
   const tiles = useMemo(() => documentItemsToItems(items), [items]);
@@ -47,10 +48,10 @@ export function CreatorPreview({ title, description, tiers, items, backgroundIma
 
   return (
     <div className="flex flex-col gap-6 w-full">
-      <div className="flex flex-col gap-2">
-        <span className="text-xs font-black uppercase tracking-wider text-text-muted px-1">{c.cardPreviewHeading}</span>
-        <div className="max-w-sm">
-          <CustomTierListCard list={cardPreviewList} locale={locale} dict={dict} disabled />
+      <div className="flex flex-col items-center gap-2 w-full">
+        <span className="type-label-sm text-text-muted px-1 text-center">{c.cardPreviewHeading}</span>
+        <div className="w-full max-w-sm">
+          <CustomTierListCard list={cardPreviewList} locale={locale} disabled />
         </div>
       </div>
 
@@ -81,14 +82,14 @@ export function CreatorPreview({ title, description, tiers, items, backgroundIma
         ))}
       </div>
 
-      <div className="flex flex-col gap-2">
-        <div className="flex items-center gap-2 px-1">
-          <span className="text-xs font-black uppercase tracking-wider text-text-muted">{t.unranked}</span>
-          <span className="rounded-full bg-accent-red/10 px-2 py-0.5 text-[11px] font-bold text-accent-red border border-accent-red/25 font-mono">
+      <div className="flex flex-col items-center gap-2 w-full">
+        <div className="flex items-center justify-center gap-2 px-1">
+          <span className="type-label-sm text-text-muted">{t.unranked}</span>
+          <span className="rounded-full bg-accent-red/10 px-2 py-0.5 type-strong-xs text-accent-red border border-accent-red/25">
             {tiles.length}
           </span>
         </div>
-        <div className="rounded-2xl border border-border-color bg-bg-primary/20 p-3 sm:p-4 min-h-[96px] flex flex-wrap gap-2 items-center">
+        <div className="w-full rounded-2xl border border-border-color bg-bg-primary/20 p-3 sm:p-4 min-h-[96px] flex flex-wrap gap-2 items-center justify-center">
           {tiles.length === 0 ? (
             <p className="text-xs text-text-muted italic px-2">{c.noItems}</p>
           ) : (
@@ -111,68 +112,28 @@ interface CreatorPreviewModalProps {
   items: TierListDocumentItem[];
   backgroundImage?: string | null;
   locale: string;
-  dict: Dictionary;
 }
 
-export function CreatorPreviewModal({
-  isOpen,
-  onClose,
-  title,
-  description,
-  tiers,
-  items,
-  backgroundImage,
-  locale,
-  dict,
-}: CreatorPreviewModalProps) {
-  useEffect(() => {
-    if (!isOpen) return;
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, onClose]);
-
-  if (!isOpen) return null;
-
+export function CreatorPreviewModal({ isOpen, onClose, title, description, tiers, items, backgroundImage, locale }: CreatorPreviewModalProps) {
+  const dict = useDictionary();
   return (
-    <div
-      role="dialog"
-      aria-modal="true"
-      onClick={onClose}
-      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-bg-primary/50 backdrop-blur-xs animate-in fade-in duration-200 cursor-pointer"
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      variant="dialog"
+      size="5xl"
+      title={dict.tierLists.creator.previewHeading}
+      closeButtonAriaLabel={dict.characterDetail.close}
+      bodyClassName="p-4 sm:p-6"
     >
-      <div
-        onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-5xl max-h-[90vh] flex flex-col rounded-3xl border-2 border-accent-red/60 bg-bg-surface/95 shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200 cursor-default"
-      >
-        <div className="flex items-center justify-between border-b border-border-color px-5 py-4 sm:px-6">
-          <span className="text-xs font-black uppercase tracking-widest text-text-muted font-mono">
-            {dict.tierLists.creator.previewHeading}
-          </span>
-          <button
-            type="button"
-            onClick={onClose}
-            aria-label={dict.characterDetail.close || 'Close'}
-            className="p-1.5 rounded-xl border border-border-color bg-bg-elevated text-text-secondary hover:text-text-primary hover:bg-bg-elevated/80 transition-colors"
-          >
-            <X className="h-5 w-5" aria-hidden="true" />
-          </button>
-        </div>
-
-        <div className="flex-1 overflow-y-auto p-4 sm:p-6">
-          <CreatorPreview
-            title={title}
-            description={description}
-            tiers={tiers}
-            items={items}
-            backgroundImage={backgroundImage}
-            locale={locale}
-            dict={dict}
-          />
-        </div>
-      </div>
-    </div>
+      <CreatorPreview
+        title={title}
+        description={description}
+        tiers={tiers}
+        items={items}
+        backgroundImage={backgroundImage}
+        locale={locale}
+      />
+    </Modal>
   );
 }

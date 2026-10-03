@@ -4,7 +4,7 @@
 import React, { useCallback, useMemo } from 'react';
 import Link from 'next/link';
 import { ChevronLeft, Crown, RotateCcw, SearchX, TriangleAlert } from 'lucide-react';
-import { EmptyState } from '@/components/EmptyState';
+import { EmptyState } from '@/components/common/EmptyState';
 import type { Dictionary } from '@/locales/types';
 import {
   TIER_LIST_FORMAT,
@@ -22,17 +22,18 @@ import { resolveTiers } from '@/utils/tierLists/board';
 import { clearRanking, saveRanking } from '@/utils/tierLists/storage';
 import { TierListEditor } from './TierListEditor';
 import { TierListSkeleton } from './TierListSkeleton';
+import { useDictionary } from "@/context/DictionaryContext";
 
 interface OfficialTierListViewProps {
   slug: string;
   locale: string;
-  dict: Dictionary;
 }
 
 const EMPTY: TierPlacements = {};
 
 /** An official (database) tier list, ranked by this browser's user. */
-export function OfficialTierListView({ slug, locale, dict }: OfficialTierListViewProps) {
+export function OfficialTierListView({ slug, locale }: OfficialTierListViewProps) {
+  const dict = useDictionary();
   const t = dict.tierLists;
   const { template, loading: templateLoading, error: templateError, refresh } = useTierListTemplate(slug, locale);
   const { items, loading: itemsLoading, error: itemsError, refresh: refreshItems } = useTierListItems(template, locale);
@@ -73,7 +74,7 @@ export function OfficialTierListView({ slug, locale, dict }: OfficialTierListVie
   const backLink = (
     <Link
       href={`/${locale}/tier-lists`}
-      className="inline-flex min-h-[44px] w-fit items-center gap-1 text-xs font-bold uppercase tracking-wider text-text-secondary hover:text-accent-red"
+      className="inline-flex min-h-[44px] w-fit items-center gap-1 type-label-sm text-text-secondary hover:text-accent-red"
     >
       <ChevronLeft className="h-4 w-4" aria-hidden="true" />
       {t.backToHub}
@@ -83,7 +84,7 @@ export function OfficialTierListView({ slug, locale, dict }: OfficialTierListVie
   if (!template) {
     // `loading` stays true after a failed first fetch (there is still nothing
     // to show), so an error has to win over it here.
-    if (templateLoading && !templateError) return <TierListSkeleton dict={dict} />;
+    if (templateLoading && !templateError) return <TierListSkeleton />;
     const notFound = isNotFoundError(templateError);
     return (
       <div className="relative z-10 flex flex-col gap-2">
@@ -135,7 +136,7 @@ export function OfficialTierListView({ slug, locale, dict }: OfficialTierListVie
   // Wait for localStorage as well as the catalog: painting the empty board and
   // then snapping every item into its saved tier a frame later is worse than
   // a spinner.
-  if (itemsLoading || !hydrated) return <TierListSkeleton dict={dict} label={t.loadingItems} />;
+  if (itemsLoading || !hydrated) return <TierListSkeleton label={t.loadingItems} />;
 
   return (
     <TierListEditor
@@ -146,7 +147,7 @@ export function OfficialTierListView({ slug, locale, dict }: OfficialTierListVie
       kindLabel={t.kinds[template.kind]}
       badges={
         template.has_default_placements ? (
-          <span className="inline-flex items-center gap-1 rounded-lg bg-accent-amber/15 px-2 py-0.5 text-[11px] font-black uppercase tracking-wider text-accent-amber">
+          <span className="inline-flex items-center gap-1 rounded-lg bg-accent-amber/15 px-2 py-0.5 type-label-xs text-accent-amber">
             <Crown className="h-3.5 w-3.5" aria-hidden="true" />
             {t.officialRanking}
           </span>
@@ -165,7 +166,6 @@ export function OfficialTierListView({ slug, locale, dict }: OfficialTierListVie
       importTarget={{ kind: 'template', slug, title: template.title }}
       onImport={onImport}
       locale={locale}
-      dict={dict}
     />
   );
 }

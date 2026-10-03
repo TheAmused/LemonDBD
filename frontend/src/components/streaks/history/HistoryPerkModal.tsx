@@ -3,10 +3,19 @@
 import type { Dictionary } from '@/locales/types';
 
 import React, { useEffect, useState } from 'react';
-import { PartyPopper, Sparkles, Lock } from 'lucide-react';
+import { Sparkles, Lock } from 'lucide-react';
+import { Modal } from '@/components/common/Modal';
 import { Perk } from '@/types/gauntletStreak';
 import { perkIconUrl as perkIconFor } from '@/utils/staticUrl';
-import { useCharacterDisplayName, usePerkDisplayName } from '@/context/DisplayNamesContext';
+import { usePerkDisplayName } from '@/context/DisplayNamesContext';
+import { CELEBRATION_CARD_CLASSES, CELEBRATION_LABEL_CLASSES, CelebrationBadge } from '../CelebrationBadge';
+import { formatMessage } from '@/utils/i18nFormat';
+import { useDictionary } from "@/context/DictionaryContext";
+
+/** "You unlocked 3 new perks", worded and declined for the locale. */
+function unlockedPerksMessage(dict: Dictionary, locale: string, count: number): string {
+  return formatMessage(dict.streaks.unlockedPerks, { count }, locale);
+}
 
 type LockPhase = 'locked' | 'shaking' | 'breaking' | 'unlocked';
 
@@ -25,11 +34,7 @@ const PerkTile: React.FC<{ perk: Perk; index: number; phase: LockPhase }> = ({ p
 
   return (
     <div
-      className={`relative flex flex-col items-center gap-1.5 p-2 rounded-lg border transition-colors duration-500 overflow-hidden ${
-        isRevealed
-          ? 'bg-accent-green/10 border-accent-green/40'
-          : 'bg-bg-elevated border-border-color'
-      }`}
+      className="relative flex flex-col items-center gap-1.5 p-2 rounded-lg border border-border-color bg-bg-elevated overflow-hidden"
       style={delay}
     >
       <div
@@ -46,10 +51,10 @@ const PerkTile: React.FC<{ perk: Perk; index: number; phase: LockPhase }> = ({ p
             onError={() => setFailed(true)}
           />
         ) : (
-          <Sparkles className="w-5 h-5 text-accent-green" />
+          <Sparkles className="w-5 h-5 text-text-muted" />
         )}
       </div>
-      <span className="text-[10px] font-bold text-text-secondary truncate w-full text-center">
+      <span className="type-strong-2xs text-text-secondary truncate w-full text-center">
         {displayName}
       </span>
 
@@ -76,13 +81,14 @@ const PerkTile: React.FC<{ perk: Perk; index: number; phase: LockPhase }> = ({ p
 export interface HistoryPerkModalProps {
   killerName: string | null;
   perks: Perk[];
+  locale: string;
   onClose: () => void;
-  dict?: Dictionary;
 }
 
-export const HistoryPerkModal: React.FC<HistoryPerkModalProps> = ({ killerName, perks, onClose, dict }) => {
+export const HistoryPerkModal: React.FC<HistoryPerkModalProps> = ({ killerName, perks, locale, onClose }) => {
+  const dict = useDictionary();
   const [phase, setPhase] = useState<LockPhase>('locked');
-  const killerDisplayName = useCharacterDisplayName()(killerName || '');
+  const unlockedMessage = unlockedPerksMessage(dict, locale, perks.length);
 
   useEffect(() => {
     if (!killerName) {
@@ -100,31 +106,24 @@ export const HistoryPerkModal: React.FC<HistoryPerkModalProps> = ({ killerName, 
     };
   }, [killerName]);
 
-  if (!killerName) return null;
-
   return (
-    <div
-      onClick={onClose}
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-bg-primary/80 backdrop-blur-md cursor-pointer"
+    <Modal
+      isOpen={killerName != null}
+      onClose={onClose}
+      variant="lightbox"
+      size="sm"
+      closeButton="none"
+      ariaLabel={dict.streaks.victoryCongrats}
     >
-      <div
-        onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-sm rounded-2xl border-2 border-accent-green bg-bg-surface p-8 text-center shadow-2xl cursor-default"
-      >
-        <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-2xl border-2 border-accent-green bg-accent-green/15 text-accent-green">
-          <PartyPopper className="h-8 w-8" />
-        </div>
+      <div className={`relative w-full ${CELEBRATION_CARD_CLASSES} px-8 py-10`}>
+        <CelebrationBadge />
 
-        <h2 className="text-xl font-black tracking-tight text-text-primary">{killerDisplayName} {dict?.stats?.win || 'beaten'}!</h2>
-        <p className="mt-1 text-xs text-text-muted uppercase tracking-wider font-bold">
-          {dict?.streaks?.perksUnlocked || 'Perks unlocked'}
-        </p>
+        <p className={`mt-6 ${CELEBRATION_LABEL_CLASSES}`}>{dict.streaks.victoryCongrats}</p>
+        <h2 className="mt-2 text-2xl font-black tracking-tight text-text-primary">
+          {perks.length > 0 ? unlockedMessage : dict.streaks.noNewPerks}
+        </h2>
 
-        {perks.length === 0 ? (
-          <p className="mt-4 text-sm text-text-secondary">
-            {dict?.streaks?.noNewPerks || 'No new perks this time.'}
-          </p>
-        ) : (
+        {perks.length > 0 && (
           <div className="mt-4 grid grid-cols-3 gap-2.5">
             {perks.map((perk, i) => (
               <PerkTile key={perk.name} perk={perk} index={i} phase={phase} />
@@ -134,11 +133,11 @@ export const HistoryPerkModal: React.FC<HistoryPerkModalProps> = ({ killerName, 
 
         <button
           onClick={onClose}
-          className="mt-6 w-full rounded-xl bg-accent-green py-3 text-sm font-extrabold text-text-inverted shadow-lg transition-all hover:bg-accent-green-hover cursor-pointer"
+          className="mt-6 w-full rounded-xl bg-accent-amber py-3 type-card-title text-text-inverted transition-colors hover:bg-accent-amber-hover cursor-pointer"
         >
-          {dict?.streaks?.continueButton || 'Continue'}
+          {dict.streaks.continueButton}
         </button>
       </div>
-    </div>
+    </Modal>
   );
 };

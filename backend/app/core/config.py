@@ -1,6 +1,5 @@
 # backend/app/core/config.py
 import os
-import tempfile
 from datetime import timedelta
 from pathlib import Path
 from typing import Any
@@ -42,6 +41,8 @@ class Config:
 
     JWT_SECRET_KEY: str = os.getenv("JWT_SECRET_KEY", SECRET_KEY)
     JWT_ALGORITHM: str = os.getenv("JWT_ALGORITHM", "HS256")
+    # "auto" marks the session cookie Secure whenever the request arrived over HTTPS.
+    SESSION_COOKIE_SECURE_MODE: str = os.getenv("SESSION_COOKIE_SECURE", "auto")
     JWT_ACCESS_TOKEN_EXPIRES: timedelta = timedelta(hours=int(os.getenv("JWT_EXPIRATION_HOURS", "24")))
 
     # Rate Limiting Configuration
@@ -69,12 +70,6 @@ class Config:
         "pool_timeout": int(os.getenv("DB_POOL_TIMEOUT", "30")),
     }
 
-    INITIAL_SCRAPE_ENABLED: bool = os.getenv("INITIAL_SCRAPE_ENABLED", "false").lower() in ("true", "1", "yes")
-    SCRAPE_LOCK_FILE: str = os.getenv(
-        "SCRAPE_LOCK_FILE",
-        str(Path(tempfile.gettempdir()) / "dbd_initial_scrape.lock"),
-    )
-
     SCHEDULER_ENABLED: bool = os.getenv("SCHEDULER_ENABLED", "true").lower() in ("true", "1", "yes")
     STREAK_INACTIVITY_PRUNE_DAYS: int = int(os.getenv("STREAK_INACTIVITY_PRUNE_DAYS", "90"))
 
@@ -84,6 +79,8 @@ class Config:
     MAIL_USERNAME: str = os.getenv("MAIL_USERNAME", "")
     MAIL_PASSWORD: str = os.getenv("MAIL_PASSWORD", "")
     MAIL_DEFAULT_SENDER: str = os.getenv("MAIL_DEFAULT_SENDER") or MAIL_USERNAME
+    # Public address shown on the Privacy Policy page; falls back to the mail account.
+    PRIVACY_CONTACT_EMAIL: str = os.getenv("PRIVACY_CONTACT_EMAIL") or MAIL_USERNAME
     REQUIRE_EMAIL_VERIFICATION: bool = os.getenv(
         "REQUIRE_EMAIL_VERIFICATION", "true"
     ).lower() in ("true", "1", "yes")
@@ -96,6 +93,5 @@ class TestingConfig(Config):
     DEBUG: bool = False
     SQLALCHEMY_DATABASE_URI: str = "sqlite:///:memory:"
     SQLALCHEMY_ENGINE_OPTIONS: dict[str, Any] = {}
-    INITIAL_SCRAPE_ENABLED: bool = False
     RATELIMIT_ENABLED: bool = False
     SCHEDULER_ENABLED: bool = False

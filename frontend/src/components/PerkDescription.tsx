@@ -2,17 +2,16 @@
 // frontend/src/components/PerkDescription.tsx
 
 import React from 'react';
-import { renderFormattedDbdText } from '@/utils/textFormatter';
+import { RichText } from '@/components/common/RichText';
 
 interface PerkDescriptionProps {
   description: string;
-  perkName?: string;
   variant?: 'modal' | 'tooltip';
 }
 
+/** Layout wrapper for seed descriptions; all markup rendering is RichText's. */
 export const PerkDescription: React.FC<PerkDescriptionProps> = ({
   description,
-  perkName = '',
   variant = 'modal',
 }) => {
   if (!description) return null;
@@ -24,14 +23,10 @@ export const PerkDescription: React.FC<PerkDescriptionProps> = ({
       className={
         isTooltip
           ? 'space-y-1 text-xs text-text-primary'
-          : 'space-y-2.5 text-xs sm:text-sm leading-relaxed font-normal text-text-secondary [&_p]:text-text-secondary [&_li]:text-text-secondary [&_strong]:text-accent-amber [&_strong]:font-bold [&_b]:text-accent-amber [&_b]:font-bold'
+          : 'space-y-2.5 text-xs sm:text-sm leading-relaxed text-justify hyphens-auto [overflow-wrap:break-word] font-normal text-text-secondary [&_p]:text-text-secondary [&_li]:text-text-secondary [&_strong]:text-accent-amber [&_strong]:font-bold [&_b]:text-accent-amber [&_b]:font-bold'
       }
     >
-      {renderFormattedDbdText(description, {
-        isCompact: isTooltip,
-        highlightName: perkName,
-      })}
+      <RichText text={description} block variant="game" compact={isTooltip} />
     </div>
   );
 };
-

@@ -2,22 +2,19 @@
 // frontend/src/components/PerksSkeleton.tsx
 
 import React from 'react';
-import { DbdSpinner } from '@/components/DbdSpinner';
+import { DbdSpinner } from '@/components/common/DbdSpinner';
 import type { Dictionary } from '@/locales/types';
+import { useDictionary } from "@/context/DictionaryContext";
 
 interface PerksSkeletonProps {
   className?: string;
-  dict?: Dictionary | any;
   ariaLabel?: string;
   count?: number;
 }
 
-export const PerksGridSkeleton: React.FC<PerksSkeletonProps> = ({
-  className = '',
-  dict,
-  ariaLabel,
-}) => {
-  const loadingLabel = ariaLabel || dict?.filters?.loadingPerks || dict?.app?.loading;
+export const PerksGridSkeleton: React.FC<PerksSkeletonProps> = ({ className = '', ariaLabel }) => {
+  const dict = useDictionary();
+  const loadingLabel = ariaLabel || dict.app.loadingPerks;
 
   return (
     <div
@@ -32,11 +29,7 @@ export const PerksGridSkeleton: React.FC<PerksSkeletonProps> = ({
         accent="blood"
         needleSpeed={1.2}
         label={loadingLabel}
-        dict={dict}
       />
     </div>
   );
 };
-
-export default PerksGridSkeleton;
-

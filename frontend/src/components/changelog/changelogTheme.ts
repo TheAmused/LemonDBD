@@ -10,28 +10,28 @@ export interface ChangelogTagTheme {
 export const CHANGELOG_TAG_THEME: Record<ChangelogTag, ChangelogTagTheme> = {
   feature: {
     label: 'New',
-    badgeClass: 'bg-amber-500/15 text-amber-400 border-amber-500/30',
-    dotClass: 'bg-amber-400',
+    badgeClass: 'bg-accent-amber/15 text-accent-amber border-accent-amber/30',
+    dotClass: 'bg-accent-amber',
   },
   bugfix: {
     label: 'Fixed',
-    badgeClass: 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30',
-    dotClass: 'bg-emerald-400',
+    badgeClass: 'bg-accent-green/15 text-accent-green border-accent-green/30',
+    dotClass: 'bg-accent-green',
   },
   balance: {
     label: 'Balance',
-    badgeClass: 'bg-rose-500/15 text-rose-400 border-rose-500/30',
-    dotClass: 'bg-rose-400',
+    badgeClass: 'bg-accent-rose/15 text-accent-rose border-accent-rose/30',
+    dotClass: 'bg-accent-rose',
   },
   event: {
     label: 'Event',
-    badgeClass: 'bg-violet-500/15 text-violet-400 border-violet-500/30',
-    dotClass: 'bg-violet-400',
+    badgeClass: 'bg-accent-purple/15 text-accent-purple border-accent-purple/30',
+    dotClass: 'bg-accent-purple',
   },
   announcement: {
     label: 'Announcement',
-    badgeClass: 'bg-sky-500/15 text-sky-400 border-sky-500/30',
-    dotClass: 'bg-sky-400',
+    badgeClass: 'bg-accent-blue/15 text-accent-blue border-accent-blue/30',
+    dotClass: 'bg-accent-blue',
   },
 };
 

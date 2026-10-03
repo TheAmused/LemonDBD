@@ -2,33 +2,38 @@
 // frontend/src/components/streaks/RoleTabs.tsx
 import type { Dictionary } from '@/locales/types';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import { Puzzle } from 'lucide-react';
-import { ToggleSwitch, ToggleSwitchOption } from '@/components/common/ToggleSwitch';
+import { SegmentedControl, SegmentedControlOption } from '@/components/common/SegmentedControl';
 import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
+import { saveStreakRole, type StreakRole } from '@/utils/streakDifficultyPrefs';
+import { useDictionary } from "@/context/DictionaryContext";
 
 interface RoleTabsProps {
   locale: string;
-  dict?: Dictionary;
 }
-
-type StreakRole = 'survivor' | 'killer' | 'challenge';
 
 const ROLE_IDS: readonly StreakRole[] = ['survivor', 'killer', 'challenge'];
 
 const noop = () => {};
 
-export const RoleTabs: React.FC<RoleTabsProps> = ({ locale, dict }) => {
+export const RoleTabs: React.FC<RoleTabsProps> = ({ locale }) => {
+  const dict = useDictionary();
   const pathname = usePathname();
 
-  const activeRole: StreakRole =
-    ROLE_IDS.find((id) => pathname?.startsWith(`/${locale}/streaks/${id}`)) ?? 'survivor';
+  const matchedRole = ROLE_IDS.find((id) => pathname?.startsWith(`/${locale}/streaks/${id}`));
+  const activeRole: StreakRole = matchedRole ?? 'survivor';
 
-  const survivorLabel = dict?.characterDetail?.roleSurvivor || 'Survivor';
-  const killerLabel = dict?.characterDetail?.roleKiller || 'Killer';
+  // Remembered so the bare /streaks entry reopens the tab last used.
+  useEffect(() => {
+    if (matchedRole) saveStreakRole(matchedRole);
+  }, [matchedRole]);
 
-  const options: readonly ToggleSwitchOption<StreakRole>[] = [
+  const survivorLabel = dict.characterDetail.roleSurvivor;
+  const killerLabel = dict.characterDetail.roleKiller;
+
+  const options: readonly SegmentedControlOption<StreakRole>[] = [
     {
       value: 'survivor',
       href: `/${locale}/streaks/survivor`,
@@ -48,13 +53,13 @@ export const RoleTabs: React.FC<RoleTabsProps> = ({ locale, dict }) => {
       href: `/${locale}/streaks/challenge`,
       icon: <Puzzle className="h-3.5 w-3.5" />,
       label: `${survivorLabel}/${killerLabel}`,
-      activeClassName: 'bg-bg-elevated border border-border-color text-text-primary',
+      activeClassName: 'bg-accent-amber text-text-inverted',
     },
   ];
 
   return (
-    <ToggleSwitch
-      ariaLabel={dict?.streaks?.streakRoleTabs || 'Streak Role Tabs'}
+    <SegmentedControl
+      ariaLabel={dict.streaks.streakRoleTabs}
       value={activeRole}
       onChange={noop}
       options={options}

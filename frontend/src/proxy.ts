@@ -2,6 +2,7 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { i18n, type Locale } from '@/i18n/config';
+import { adminOnlyPageFromPathname } from '@/utils/adminOnlyPages';
 
 function getPreferredLocale(request: NextRequest): Locale {
     const acceptLanguage = request.headers.get('accept-language');
@@ -28,7 +29,31 @@ function getPreferredLocale(request: NextRequest): Locale {
     return i18n.defaultLocale;
 }
 
-export function proxy(request: NextRequest) {
+/** Where the Next server reaches the backend. NEXT_PUBLIC_API_URL is the browser-facing address
+ * (https://localhost inside a container points back at the frontend itself), so it is not used. */
+const BACKEND_URL = (process.env.INTERNAL_API_URL || 'http://backend:5000').replace(/\/+$/, '');
+
+/**
+ * Is the visitor a signed-in admin? A visitor without a session cookie is answered without
+ * asking the backend. If the backend can't answer, the answer is "no": an admin-only page stays closed.
+ */
+async function viewerIsAdmin(cookie: string): Promise<boolean> {
+    if (!cookie) return false;
+    try {
+        const res = await fetch(`${BACKEND_URL}/api/v1/auth/me`, {
+            headers: { cookie },
+            cache: 'no-store',
+            signal: AbortSignal.timeout(1500),
+        });
+        if (!res.ok) return false;
+        const body = (await res.json()) as { user?: { role?: string } | null };
+        return body.user?.role === 'admin';
+    } catch {
+        return false;
+    }
+}
+
+export async function proxy(request: NextRequest) {
     const pathname = request.nextUrl.pathname;
 
     // Skip static files, API calls, and Next.js internal routes
@@ -49,6 +74,15 @@ export function proxy(request: NextRequest) {
         return NextResponse.redirect(
             new URL(`/${preferredLocale}${pathname}`, request.url)
         );
+    }
+
+    // Admin-only pages: everyone else gets the Blocked page (the address bar keeps the requested URL).
+    const adminOnly = adminOnlyPageFromPathname(pathname, i18n.locales);
+    if (adminOnly && !(await viewerIsAdmin(request.headers.get('cookie') ?? ''))) {
+        const response = NextResponse.rewrite(new URL(`/${adminOnly.locale}/blocked`, request.url));
+        response.headers.set('X-Robots-Tag', 'noindex, nofollow');
+        response.headers.set('Cache-Control', 'no-store');
+        return response;
     }
 }
 

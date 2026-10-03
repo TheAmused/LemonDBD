@@ -100,6 +100,9 @@ backend/app/static/icons/
 backend/app/static/maps/
 backend/app/static/realms/
 backend/app/static/uploads/
+backend/app/static/audio/cache/
+backend/app/static/audio/*.mp3
+backend/app/static/audio/*.ogg
 translations/*
 !translations/create_translations.py
 
@@ -109,5 +112,10 @@ response.md
 frontend/AGENTS.md
 frontend/CLAUDE.md
 
-# Output of frontend/scripts/verify-tier-lists.mjs
-frontend/playwright-tier-lists-check/
+# Playwright test screenshots & reports
+playwright/
+
+legacy
+backend/app/static/avatars/_thumbs/
+
+additions

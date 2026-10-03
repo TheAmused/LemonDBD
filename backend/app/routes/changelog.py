@@ -7,6 +7,7 @@ from app.core.security import admin_required
 from app.schemas.changelog import ChangelogPostCreate, ChangelogPostUpdate
 from app.services import changelog_service
 from app.services.admin_control_service import log_admin_action
+from app.utils.pagination import paginate_args
 
 logger = logging.getLogger(__name__)
 
@@ -16,11 +17,7 @@ changelog_bp = Blueprint("changelog", __name__, url_prefix="/api/v1/changelog")
 @changelog_bp.route("", methods=["GET"])
 def get_changelog_posts():
     """Public feed for the 'What's New?' drawer -- published posts only."""
-    try:
-        page = int(request.args.get("page", 1))
-        per_page = int(request.args.get("per_page", 20))
-    except (TypeError, ValueError):
-        page, per_page = 1, 20
+    page, per_page = paginate_args(default_per_page=20, max_per_page=50)
 
     result = changelog_service.list_posts(page=page, per_page=per_page, include_unpublished=False)
     return jsonify({"status": "success", **result}), 200
@@ -30,11 +27,7 @@ def get_changelog_posts():
 @admin_required
 def get_changelog_posts_admin():
     """Admin feed -- includes drafts/unpublished posts for management."""
-    try:
-        page = int(request.args.get("page", 1))
-        per_page = int(request.args.get("per_page", 50))
-    except (TypeError, ValueError):
-        page, per_page = 1, 50
+    page, per_page = paginate_args(default_per_page=50, max_per_page=50)
 
     result = changelog_service.list_posts(page=page, per_page=per_page, include_unpublished=True)
     return jsonify({"status": "success", **result}), 200

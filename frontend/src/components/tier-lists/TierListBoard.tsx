@@ -8,12 +8,12 @@ import {
   KeyboardSensor,
   MeasuringStrategy,
   MouseSensor,
-  TouchSensor,
   closestCorners,
   pointerWithin,
   useSensor,
   useSensors,
   type Announcements,
+  type UniqueIdentifier,
   type CollisionDetection,
   type DragEndEvent,
   type DragOverEvent,
@@ -27,8 +27,11 @@ import { POOL_CONTAINER_ID } from '@/utils/tierLists/constants';
 import { TierItemPreviewModal } from './TierItemPreviewModal';
 import { TierItemTile, type TierTileShape } from './TierItemTile';
 import { TierPool } from './TierPool';
+import { SidewaysPointerSensor } from './touchSensors';
 import { TierRow } from './TierRow';
 import { parseContainerDndId, parseItemDndId } from './dndIds';
+import { formatMessage } from '@/utils/i18nFormat';
+import { useDictionary } from "@/context/DictionaryContext";
 
 interface TierListBoardProps {
   items: TierItem[];
@@ -42,23 +45,30 @@ interface TierListBoardProps {
   shape: TierTileShape;
   showNames: boolean;
   poolEmptyLabel: string;
-  dict: Dictionary;
 }
 
 /**
  * Pointer-first collision detection: whatever is under the finger wins, items
  * before the container they sit in (so a drop lands *next to* an item rather
- * than at the end of its row). Keyboard drags have no pointer and fall back
- * to the nearest corners.
+ * than at the end of its row). With the finger over no droppable at all (the
+ * header, a gap), the last target stays: re-guessing from the dragged tile's
+ * corners there made the tile hop between rows and the pool on every layout
+ * change -- an endless render loop. Keyboard drags have no pointer and use the
+ * nearest corners.
  */
-const collisionDetection: CollisionDetection = (args) => {
-  const hits = pointerWithin(args);
-  if (hits.length) {
-    const itemHits = hits.filter((hit) => parseItemDndId(hit.id) !== null);
-    return itemHits.length ? itemHits : hits;
-  }
-  return closestCorners(args);
-};
+function createCollisionDetection(lastOver: { current: UniqueIdentifier | null }): CollisionDetection {
+  return (args) => {
+    const hits = args.pointerCoordinates ? pointerWithin(args) : [];
+    if (hits.length) {
+      const itemHits = hits.filter((hit) => parseItemDndId(hit.id) !== null);
+      const result = itemHits.length ? itemHits : hits;
+      lastOver.current = result[0].id;
+      return result;
+    }
+    if (args.pointerCoordinates) return lastOver.current === null ? [] : [{ id: lastOver.current }];
+    return closestCorners(args);
+  };
+}
 
 function sameBoard(a: BoardContainers, b: BoardContainers): boolean {
   const keys = Object.keys(a);
@@ -71,18 +81,18 @@ function sameBoard(a: BoardContainers, b: BoardContainers): boolean {
 }
 
 export function TierListBoard({
-  items,
-  tiers,
-  board,
-  onBoardChange,
-  onEditTier,
-  selectedKey,
-  onSelectedKeyChange,
-  shape,
-  showNames,
-  poolEmptyLabel,
-  dict,
-}: TierListBoardProps) {
+      items,
+      tiers,
+      board,
+      onBoardChange,
+      onEditTier,
+      selectedKey,
+      onSelectedKeyChange,
+      shape,
+      showNames,
+      poolEmptyLabel,
+    }: TierListBoardProps) {
+  const dict = useDictionary();
   const t = dict.tierLists;
   const itemsByKey = useMemo(() => new Map(items.map((i) => [i.key, i])), [items]);
   const catalogOrder = useMemo(() => items.map((i) => i.key), [items]);
@@ -93,6 +103,9 @@ export function TierListBoard({
   const [activeKey, setActiveKey] = useState<string | null>(null);
   const [previewKey, setPreviewKey] = useState<string | null>(null);
   const startBoard = useRef<BoardContainers | null>(null);
+  const lastOver = useRef<UniqueIdentifier | null>(null);
+  const lastHop = useRef<{ from: string; to: string; at: number } | null>(null);
+  const collisionDetection = useMemo(() => createCollisionDetection(lastOver), []);
   // Mirrors `dragBoard` synchronously: dnd-kit can fire dragEnd right after a
   // dragOver, before React has re-rendered with the board that dragOver set.
   const dragBoardRef = useRef<BoardContainers | null>(null);
@@ -105,8 +118,10 @@ export function TierListBoard({
   const sensors = useSensors(
     // A few pixels of travel before a mouse drag starts, so a click selects.
     useSensor(MouseSensor, { activationConstraint: { distance: 6 } }),
-    // A short hold before a touch drag starts, so a swipe still scrolls the page.
-    useSensor(TouchSensor, { activationConstraint: { delay: 180, tolerance: 8 } }),
+    // Touch, in the tier rows and the pool alike: a sideways drag picks a tile up at once (tiles only claim
+    // vertical panning, so an up/down swipe still scrolls). One touch sensor only: two of them (pointer + touch
+    // events) would both start a drag from the same finger.
+    useSensor(SidewaysPointerSensor, { activationConstraint: { distance: { x: 10 } } }),
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
   );
 
@@ -133,16 +148,16 @@ export function TierListBoard({
 
   const announcements: Announcements = useMemo(
     () => ({
-      onDragStart: ({ active }) => t.dnd.pickedUp.replace('{name}', nameOf(active.id)),
+      onDragStart: ({ active }) => formatMessage(t.dnd.pickedUp, { name: nameOf(active.id) }),
       onDragOver: ({ active, over }) =>
         over
-          ? t.dnd.movedOver.replace('{name}', nameOf(active.id)).replace('{target}', targetOf(over.id, shown))
+          ? formatMessage(t.dnd.movedOver, { name: nameOf(active.id), target: targetOf(over.id, shown) })
           : undefined,
       onDragEnd: ({ active, over }) =>
         over
-          ? t.dnd.dropped.replace('{name}', nameOf(active.id)).replace('{target}', targetOf(over.id, shown))
-          : t.dnd.cancelled.replace('{name}', nameOf(active.id)),
-      onDragCancel: ({ active }) => t.dnd.cancelled.replace('{name}', nameOf(active.id)),
+          ? formatMessage(t.dnd.dropped, { name: nameOf(active.id), target: targetOf(over.id, shown) })
+          : formatMessage(t.dnd.cancelled, { name: nameOf(active.id) }),
+      onDragCancel: ({ active }) => formatMessage(t.dnd.cancelled, { name: nameOf(active.id) }),
     }),
     [t.dnd, nameOf, targetOf, shown]
   );
@@ -152,6 +167,8 @@ export function TierListBoard({
       const key = parseItemDndId(event.active.id);
       if (!key) return;
       startBoard.current = board;
+      lastOver.current = null;
+      lastHop.current = null;
       setDragBoard(board);
       setActiveKey(key);
       onSelectedKeyChange(null);
@@ -159,15 +176,15 @@ export function TierListBoard({
     [board, onSelectedKeyChange, setDragBoard]
   );
 
-  const handleDragOver = useCallback(
-    ({ active, over }: DragOverEvent) => {
+  /** The board with the dragged tile moved into the container under the pointer, or null if it is already there. */
+  const hopTo = useCallback(
+    (active: DragOverEvent['active'], over: NonNullable<DragOverEvent['over']>, current: BoardContainers) => {
       const key = parseItemDndId(active.id);
-      const current = dragBoardRef.current;
-      if (!key || !over || !current) return;
+      if (!key) return null;
       const from = findContainer(current, key);
       const overKey = parseItemDndId(over.id);
       const to = overKey ? findContainer(current, overKey) : parseContainerDndId(over.id);
-      if (!from || !to || from === to) return;
+      if (!from || !to || from === to) return null;
 
       // Entering another row: land before or after the hovered item,
       // whichever side of it the dragged tile's centre is on.
@@ -176,15 +193,33 @@ export function TierListBoard({
       if (overKey && dragged && dragged.left + dragged.width / 2 > over.rect.left + over.rect.width / 2) {
         index += 1;
       }
-      setDragBoard(moveItem(current, key, to, index, catalogOrder));
+      return { board: moveItem(current, key, to, index, catalogOrder), from, to };
     },
-    [catalogOrder, setDragBoard]
+    [catalogOrder]
+  );
+
+  const handleDragOver = useCallback(
+    ({ active, over }: DragOverEvent) => {
+      const current = dragBoardRef.current;
+      if (!over || !current) return;
+      const hop = hopTo(active, over, current);
+      if (!hop) return;
+      // A hop reflows the layout, which can put the pointer over the container it just left, and that hops back,
+      // and so on without end. Going straight back within a moment is ignored; the drop reconciles (see handleDragEnd).
+      const now = Date.now();
+      const last = lastHop.current;
+      if (last && last.from === hop.to && last.to === hop.from && now - last.at < 150) return;
+      lastHop.current = { from: hop.from, to: hop.to, at: now };
+      setDragBoard(hop.board);
+    },
+    [hopTo, setDragBoard]
   );
 
   const finishDrag = useCallback(() => {
     setDragBoard(null);
     setActiveKey(null);
     startBoard.current = null;
+    lastOver.current = null;
   }, [setDragBoard]);
 
   const handleDragEnd = useCallback(
@@ -195,17 +230,21 @@ export function TierListBoard({
       finishDrag();
       if (!key || !current || !start || !over) return;
 
-      let next = current;
-      const container = findContainer(current, key);
+      // The last dragOver may have been skipped (see handleDragOver): put the tile where it was dropped.
+      const hop = hopTo(active, over, current);
+      const landed = hop ? hop.board : current;
+
+      let next = landed;
+      const container = findContainer(landed, key);
       const overKey = parseItemDndId(over.id);
       // Reordering inside one tier. The pool has no order of its own.
-      if (container && container !== POOL_CONTAINER_ID && overKey && overKey !== key && current[container].includes(overKey)) {
-        const list = current[container];
-        next = { ...current, [container]: arrayMove(list, list.indexOf(key), list.indexOf(overKey)) };
+      if (container && container !== POOL_CONTAINER_ID && overKey && overKey !== key && landed[container].includes(overKey)) {
+        const list = landed[container];
+        next = { ...landed, [container]: arrayMove(list, list.indexOf(key), list.indexOf(overKey)) };
       }
       if (!sameBoard(next, start)) onBoardChange(next);
     },
-    [finishDrag, onBoardChange]
+    [finishDrag, hopTo, onBoardChange]
   );
 
   const handleSelect = useCallback(
@@ -239,8 +278,9 @@ export function TierListBoard({
       onDragCancel={finishDrag}
       accessibility={{ announcements, screenReaderInstructions: { draggable: t.dnd.instructions } }}
     >
-      <div className="flex flex-col gap-5 sm:gap-6 w-full">
-        <div className="flex flex-col gap-2 w-full">
+      {/* The page never scrolls (short landscape screens excepted). The rows take the height they need and scroll in their own area once they would overflow; the pool header sits right under them. The rows' cap always leaves room for the OPEN pool, so collapsing or expanding the pool never moves anything above or at its header. */}
+      <div className="flex flex-col w-full flex-1 min-h-0 gap-3 sm:gap-4 [--pool-h:min(50dvh,30rem)] sm:[--pool-h:min(40dvh,26rem)] [--pool-head:6.5rem] sm:[--pool-head:4rem]">
+        <div className="flex flex-col gap-2 w-full min-h-0 flex-initial overflow-y-auto overscroll-contain pr-1 [&>*]:shrink-0 max-h-[calc(100%-var(--pool-h)-1rem)] [@media(max-height:559px)]:max-h-none [@media(max-height:559px)]:overflow-visible">
           {tiers.map((tier) => (
             <TierRow
               key={tier.id}
@@ -254,7 +294,6 @@ export function TierListBoard({
               onPreview={handlePreview}
               onMoveSelectedHere={handleMoveSelectedHere}
               onEdit={onEditTier}
-              dict={dict}
             />
           ))}
         </div>
@@ -269,7 +308,6 @@ export function TierListBoard({
           onPreview={handlePreview}
           onMoveSelectedHere={handleMoveSelectedHere}
           emptyLabel={poolEmptyLabel}
-          dict={dict}
         />
       </div>
 

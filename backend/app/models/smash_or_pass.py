@@ -45,15 +45,15 @@ from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.core.extensions import Base
 from app.models.base import utcnow
+from app.utils.lang import TRANSLATABLE_LOCALES  # noqa: F401  (re-exported)
 
 
 def _json_column(**kw: Any):
     return mapped_column(JSONB().with_variant(JSON(), "sqlite"), **kw)
 
 
-#: The locales `translations` may carry. English is never among them: it lives
-#: in the columns, and an "en" entry could only ever restate one.
-TRANSLATABLE_LOCALES = ("de", "es", "ja", "pl")
+# `TRANSLATABLE_LOCALES` (supported minus English) is defined once in
+# `app.utils.lang` and re-exported here for the model and schema layers.
 
 #: Entity fields a translation entry may override. Anything else in a blob is
 #: dropped on import.

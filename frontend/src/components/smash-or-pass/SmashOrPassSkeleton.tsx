@@ -2,21 +2,22 @@
 // frontend/src/components/smash-or-pass/SmashOrPassSkeleton.tsx
 
 import React from 'react';
-import { DbdSpinner } from '@/components/DbdSpinner';
+import { DbdSpinner } from '@/components/common/DbdSpinner';
 import type { Dictionary } from '@/locales/types';
+import { useDictionary } from "@/context/DictionaryContext";
 
 interface SmashOrPassSkeletonProps {
   className?: string;
   mode?: 'full' | 'arena' | 'dock' | 'leaderboard';
-  dict?: Dictionary | any;
   ariaLabel?: string;
 }
 
 /**
  * Universal DBD Skill Check Framer Motion Loading Spinner for Smash or Pass Arena.
  */
-export const SmashHubSkeleton: React.FC<SmashOrPassSkeletonProps> = ({ className = '', dict, ariaLabel }) => {
-  const loadingLabel = ariaLabel || dict?.smashOrPass?.loadingArena || dict?.app?.loading || 'Summoning trial candidates...';
+export const SmashHubSkeleton: React.FC<SmashOrPassSkeletonProps> = ({ className = '', ariaLabel }) => {
+  const dict = useDictionary();
+  const loadingLabel = ariaLabel || dict.smashOrPass.loadingArena;
 
   return (
     <div
@@ -31,7 +32,6 @@ export const SmashHubSkeleton: React.FC<SmashOrPassSkeletonProps> = ({ className
         accent="blood"
         needleSpeed={1.0}
         label={loadingLabel}
-        dict={dict}
       />
     </div>
   );
@@ -40,8 +40,10 @@ export const SmashHubSkeleton: React.FC<SmashOrPassSkeletonProps> = ({ className
 /**
  * DBD Skill Check Framer Motion Loading Spinner for Leaderboard Modal.
  */
-export const SmashLeaderboardSkeleton: React.FC<{ count?: number; dict?: Dictionary | any; ariaLabel?: string }> = ({ dict, ariaLabel }) => {
-  const loadingLabel = ariaLabel || dict?.smashOrPass?.loadingRankings || dict?.app?.loading || 'Loading rankings...';
+export const SmashLeaderboardSkeleton: React.FC<{ count?: number;
+ ariaLabel?: string }> = ({ ariaLabel }) => {
+  const dict = useDictionary();
+  const loadingLabel = ariaLabel || dict.smashOrPass.loadingRankings;
 
   return (
     <div
@@ -56,10 +58,7 @@ export const SmashLeaderboardSkeleton: React.FC<{ count?: number; dict?: Diction
         accent="blood"
         needleSpeed={1.0}
         label={loadingLabel}
-        dict={dict}
       />
     </div>
   );
 };
-
-export default SmashHubSkeleton;

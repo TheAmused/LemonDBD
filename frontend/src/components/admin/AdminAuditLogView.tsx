@@ -2,14 +2,14 @@
 // frontend/src/components/admin/AdminAuditLogView.tsx
 
 import React, { useCallback, useEffect, useState } from 'react';
+import { Button } from '@/components/common/Button';
 import type { Dictionary } from '@/locales/types';
 import { ScrollText, ChevronLeft, ChevronRight } from 'lucide-react';
 import { AdminAuditLogEntry } from '@/types/admin';
 import { backendBase } from '@/utils/staticUrl';
-
-function authHeaders(token: string): HeadersInit {
-  return { Authorization: `Bearer ${token}` };
-}
+import { authHeaders, getAuthToken } from '@/utils/api';
+import { formatDateTime } from '@/utils/format';
+import { useDictionary } from "@/context/DictionaryContext";
 
 const ACTION_COLORS: Record<string, string> = {
   character_disabled: 'text-accent-red',
@@ -21,7 +21,8 @@ const ACTION_COLORS: Record<string, string> = {
   user_deleted: 'text-accent-red',
 };
 
-export const AdminAuditLogView: React.FC<{ dict?: Dictionary }> = ({ dict }) => {
+export const AdminAuditLogView: React.FC<{ }> = () => {
+  const dict = useDictionary();
   const [logs, setLogs] = useState<AdminAuditLogEntry[]>([]);
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
@@ -29,7 +30,7 @@ export const AdminAuditLogView: React.FC<{ dict?: Dictionary }> = ({ dict }) => 
   const perPage = 25;
 
   const load = useCallback(async () => {
-    const token = typeof window !== 'undefined' ? localStorage.getItem('lemondbd_token') : null;
+    const token = getAuthToken();
     if (!token) return;
     setLoading(true);
     try {
@@ -68,33 +69,33 @@ export const AdminAuditLogView: React.FC<{ dict?: Dictionary }> = ({ dict }) => 
   return (
     <div className="rounded-2xl border border-border-color bg-bg-surface p-4 sm:p-6 shadow-sm backdrop-blur-sm transition-colors duration-200">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="flex items-center gap-2 text-sm font-black uppercase tracking-wider text-text-primary">
+        <h3 className="flex items-center gap-2 type-label text-text-primary">
           <ScrollText className="h-4 w-4 text-text-secondary" />
-          <span>{dict?.admin?.auditLog || 'Activity Log'}</span>
+          <span>{dict.admin.auditLog}</span>
         </h3>
         <span className="text-xs text-text-secondary font-medium">
-          {total} {dict?.admin?.totalActionsLabel || 'total actions'}
+          {total} {dict.admin.totalActionsLabel}
         </span>
       </div>
 
       {loading ? (
-        <p className="text-xs text-text-muted py-8 text-center font-mono">
-          {dict?.admin?.loadingAuditLog || 'Loading activity...'}
+        <p className="text-xs text-text-muted py-8 text-center">
+          {dict.admin.loadingAuditLog}
         </p>
       ) : logs.length === 0 ? (
         <p className="text-xs text-text-muted py-8 text-center">
-          {dict?.admin?.noAuditLogs || 'No records found.'}
+          {dict.admin.noAuditLogs}
         </p>
       ) : (
         <div className="overflow-x-auto">
           <table className="w-full text-xs">
             <thead>
-              <tr className="text-left font-mono uppercase tracking-wider text-text-secondary border-b border-border-color">
-                <th className="py-2.5 pr-3 font-bold">{dict?.admin?.thAdmin || 'User'}</th>
-                <th className="py-2.5 pr-3 font-bold">{dict?.admin?.thAction || 'Action'}</th>
-                <th className="py-2.5 pr-3 font-bold">{dict?.admin?.thTarget || 'Target'}</th>
-                <th className="py-2.5 pr-3 font-bold">{dict?.admin?.thReason || 'Reason'}</th>
-                <th className="py-2.5 font-bold text-right">{dict?.admin?.thWhen || 'Time'}</th>
+              <tr className="text-left uppercase tracking-wider text-text-secondary border-b border-border-color">
+                <th className="py-2.5 pr-3 font-bold">{dict.admin.thAdmin}</th>
+                <th className="py-2.5 pr-3 font-bold">{dict.admin.thAction}</th>
+                <th className="py-2.5 pr-3 font-bold">{dict.admin.thTarget}</th>
+                <th className="py-2.5 pr-3 font-bold">{dict.admin.thReason}</th>
+                <th className="py-2.5 font-bold text-right">{dict.admin.thWhen}</th>
               </tr>
             </thead>
             <tbody>
@@ -106,7 +107,7 @@ export const AdminAuditLogView: React.FC<{ dict?: Dictionary }> = ({ dict }) => 
                   <td className="py-3 pr-3 font-bold whitespace-nowrap">
                     {log.admin_username || `#${log.admin_user_id ?? '?'}`}
                   </td>
-                  <td className={`py-3 pr-3 font-mono whitespace-nowrap font-semibold ${ACTION_COLORS[log.action] || 'text-text-secondary'}`}>
+                  <td className={`py-3 pr-3 whitespace-nowrap font-semibold ${ACTION_COLORS[log.action] || 'text-text-secondary'}`}>
                     {log.action}
                   </td>
                   <td className="py-3 pr-3 text-text-secondary whitespace-nowrap">
@@ -115,8 +116,8 @@ export const AdminAuditLogView: React.FC<{ dict?: Dictionary }> = ({ dict }) => 
                   <td className="py-3 pr-3 text-text-secondary italic truncate max-w-[240px]">
                     {describeDetails(log) || '-'}
                   </td>
-                  <td className="py-3 text-right text-text-muted font-mono whitespace-nowrap">
-                    {new Date(log.created_at).toLocaleString()}
+                  <td className="py-3 text-right text-text-muted whitespace-nowrap">
+                    {formatDateTime(log.created_at)}
                   </td>
                 </tr>
               ))}
@@ -127,25 +128,27 @@ export const AdminAuditLogView: React.FC<{ dict?: Dictionary }> = ({ dict }) => 
 
       {totalPages > 1 && (
         <div className="flex items-center justify-center gap-3 mt-5 pt-3 border-t border-border-color">
-          <button
-            type="button"
+          <Button
+            icon
+            size="sm"
             disabled={page <= 1}
             onClick={() => setPage((p) => Math.max(1, p - 1))}
-            className="p-2 rounded-lg border border-border-color bg-bg-surface hover:bg-bg-elevated text-text-primary disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer shadow-xs"
+            aria-label={dict.admin.prevPage}
           >
             <ChevronLeft className="h-4 w-4" />
-          </button>
-          <span className="text-xs text-text-secondary font-mono font-medium">
-            {dict?.admin?.pageLabel || 'Page'} {page} {dict?.admin?.ofLabel || 'of'} {totalPages}
+          </Button>
+          <span className="text-xs text-text-secondary font-medium">
+            {dict.admin.pageLabel} {page} {dict.admin.ofLabel} {totalPages}
           </span>
-          <button
-            type="button"
+          <Button
+            icon
+            size="sm"
             disabled={page >= totalPages}
             onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-            className="p-2 rounded-lg border border-border-color bg-bg-surface hover:bg-bg-elevated text-text-primary disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer shadow-xs"
+            aria-label={dict.admin.nextPage}
           >
             <ChevronRight className="h-4 w-4" />
-          </button>
+          </Button>
         </div>
       )}
     </div>

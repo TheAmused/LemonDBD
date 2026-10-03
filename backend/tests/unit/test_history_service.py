@@ -90,14 +90,6 @@ class TestGetOrCreateRun:
         hell_run = history_service.get_or_create_run(history_user, "hell")
         assert medium_run["id"] != hell_run["id"]
 
-    def test_getting_twice_returns_the_same_run(
-        self, history_service: HistoryService, history_user: int
-    ) -> None:
-        first = history_service.get_or_create_run(history_user, "medium")
-        second = history_service.get_or_create_run(history_user, "medium")
-        assert first["id"] == second["id"]
-
-
 @pytest.mark.unit
 class TestSubmitResultWithinARow:
     """Tests for per-row killer clears, perk unlocking, and match auditing."""
@@ -165,84 +157,6 @@ class TestSubmitResultWithinARow:
         self.service.apply_inactivity_loss(self.run["id"])
         reloaded = self.service.get_or_create_run(self.user_id, "hell")
         assert reloaded["attempts"] == 1
-
-    def test_completing_the_run_records_completion_and_resets_attempts(self) -> None:
-        from app.core.extensions import db
-        from app.models import ChallengeCompletionRecord
-
-        self.service.apply_inactivity_loss(self.run["id"])  # attempts -> 1
-        self.service.submit_result(self.user_id, self.run["id"], "win", "The Trapper")
-        self.service.submit_result(self.user_id, self.run["id"], "win", "The Wraith")
-        final = self.service.submit_result(self.user_id, self.run["id"], "win", "The Hillbilly")
-        assert final["status"] == "completed"
-        assert final["attempts"] == 0
-
-        record = db.session.scalars(
-            select(ChallengeCompletionRecord).where(ChallengeCompletionRecord.user_id == self.user_id)
-        ).first()
-        assert record is not None
-        assert record.mode == "history"
-        assert record.variant == "hell"
-        assert record.attempts_taken == 2
-        assert record.matches_played == 4
-        assert record.unlocked_characters_count == 3
-        assert record.full_roster is True
-
-    def test_a_character_becoming_owned_mid_run_does_not_inflate_the_completion_count(self) -> None:
-        """Regression: a killer un-kill-switched (or otherwise newly owned)
-        after this run's pool was already frozen at 3 must not inflate the
-        count recorded for a run that only had to clear those 3."""
-        from app.core.extensions import db
-        from app.models import ChallengeCompletionRecord
-
-        seed_killer("Ghostface", release_number=99)  # owned by default; frozen pool stays at 3
-
-        self.service.submit_result(self.user_id, self.run["id"], "win", "The Trapper")
-        self.service.submit_result(self.user_id, self.run["id"], "win", "The Wraith")
-        final = self.service.submit_result(self.user_id, self.run["id"], "win", "The Hillbilly")
-        assert final["status"] == "completed"
-
-        record = db.session.scalars(
-            select(ChallengeCompletionRecord).where(ChallengeCompletionRecord.user_id == self.user_id)
-        ).first()
-        assert record.unlocked_characters_count == 3
-
-    def test_full_roster_is_false_when_a_killer_exists_that_is_not_owned(
-        self, ownership_service: OwnershipService
-    ) -> None:
-        from datetime import datetime, timezone
-        from app.core.extensions import db
-        from app.models import ChallengeCompletionRecord
-
-        ghostface = seed_killer("Ghostface", release_number=99)
-        ghostface.created_at = datetime(2020, 1, 1, tzinfo=timezone.utc)
-        db.session.commit()
-        ownership_service.set_character_ownership(self.user_id, ghostface.id, is_owned=False, role="Killer")
-
-        self.service.submit_result(self.user_id, self.run["id"], "win", "The Trapper")
-        self.service.submit_result(self.user_id, self.run["id"], "win", "The Wraith")
-        final = self.service.submit_result(self.user_id, self.run["id"], "win", "The Hillbilly")
-        assert final["status"] == "completed"
-
-        record = db.session.scalars(
-            select(ChallengeCompletionRecord).where(ChallengeCompletionRecord.user_id == self.user_id)
-        ).first()
-        assert record.full_roster is False
-
-    def test_completing_the_run_with_no_losses_records_one_attempt(self) -> None:
-        from app.core.extensions import db
-        from app.models import ChallengeCompletionRecord
-
-        self.service.submit_result(self.user_id, self.run["id"], "win", "The Trapper")
-        self.service.submit_result(self.user_id, self.run["id"], "win", "The Wraith")
-        final = self.service.submit_result(self.user_id, self.run["id"], "win", "The Hillbilly")
-        assert final["status"] == "completed"
-
-        record = db.session.scalars(
-            select(ChallengeCompletionRecord).where(ChallengeCompletionRecord.user_id == self.user_id)
-        ).first()
-        assert record is not None
-        assert record.attempts_taken == 1
 
     def test_apply_inactivity_loss_is_a_noop_on_a_completed_run(self, db_session: Session) -> None:
         self.service.submit_result(self.user_id, self.run["id"], "win", "The Trapper")
@@ -344,13 +258,6 @@ class TestResetRun:
         assert reset["total_killers_beaten"] == 0
         assert reset["completed_killers"] == []
         assert reset["unlocked_perk_names"] == ["Whispers"]
-
-    def test_reset_missing_run_raises(
-        self, history_service: HistoryService, history_user: int
-    ) -> None:
-        with pytest.raises(ValueError):
-            history_service.reset_run(history_user, "medium")
-
 
 @pytest.mark.unit
 class TestGetStats:

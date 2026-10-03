@@ -1,14 +1,11 @@
 # backend/app/services/chaos_service.py
 import logging
 
-from sqlalchemy import select
-
 from app.core.extensions import db
 from app.models import ChaosMatchLog, ChaosRun
 from app.schemas.chaos import ChaosMatchLogDict, ChaosRunState
 from app.schemas.streak import ChallengeCompletionDict, StreakStats
 from app.services.admin_control_service import assert_challenge_mode_enabled
-from app.services.challenge_completions import fetch_challenge_completions, record_challenge_completion
 from app.services.chaos import (
     checkpoint_interval,
     draw_addon_rarities,
@@ -21,12 +18,16 @@ from app.services.chaos import (
     resolve_perks_by_ids,
 )
 from app.services.ownership_service import OwnershipService
-from app.services.roster_milestone import get_full_roster_milestone
+from app.services.streak_run import StreakRunService
 
 logger = logging.getLogger(__name__)
 
 
-class ChaosService:
+class ChaosService(StreakRunService):
+    mode = "chaos"
+    run_model = ChaosRun
+    variant_fields = ("difficulty",)
+
     def __init__(self, ownership_service: OwnershipService | None = None):
         self.ownership_service = ownership_service or OwnershipService()
 
@@ -35,10 +36,12 @@ class ChaosService:
         r.unlocked_perk_ids = get_unlocked_killer_perk_ids(r.user_id, self.ownership_service)
 
     def _freeze_pools_if_needed(self, r: ChaosRun) -> None:
-        if not r.owned_killer_ids:
-            r.owned_killer_ids = get_owned_killer_ids(r.user_id, self.ownership_service)
-        if not r.unlocked_perk_ids:
-            r.unlocked_perk_ids = get_unlocked_killer_perk_ids(r.user_id, self.ownership_service)
+        self._freeze_if_empty(
+            r, "owned_killer_ids", lambda: get_owned_killer_ids(r.user_id, self.ownership_service)
+        )
+        self._freeze_if_empty(
+            r, "unlocked_perk_ids", lambda: get_unlocked_killer_perk_ids(r.user_id, self.ownership_service)
+        )
 
     def _state(self, r: ChaosRun) -> ChaosRunState:
         data = r.to_dict()
@@ -93,14 +96,12 @@ class ChaosService:
         return streak_after, completed, used_perks, last_checkpoint, checkpoint_killers, checkpoint_used_perks
 
     def get_or_create_run(self, user_id: int, difficulty: str) -> ChaosRunState:
-        run = db.session.scalars(
-            select(ChaosRun).where(ChaosRun.user_id == user_id, ChaosRun.difficulty == difficulty)
-        ).first()
-        if run:
-            return self._state(run)
+        return self._get_or_create_run(user_id, difficulty)
 
-        assert_challenge_mode_enabled("chaos")
+    def _present(self, run: ChaosRun) -> ChaosRunState:
+        return self._state(run)
 
+    def _build_run(self, user_id: int, difficulty: str) -> ChaosRun:
         live_owned_ids = get_owned_killer_ids(user_id, self.ownership_service)
         live_unlocked_ids = get_unlocked_killer_perk_ids(user_id, self.ownership_service)
 
@@ -123,15 +124,10 @@ class ChaosService:
         new_run.used_perks = used_perks
         new_run.current_perks = perks
         new_run.current_addon_rarities = addon_rarities
-        db.session.add(new_run)
-        db.session.commit()
-
-        return self._state(new_run)
+        return new_run
 
     def reveal(self, user_id: int, run_id: int) -> ChaosRunState:
-        r = db.session.scalars(
-            select(ChaosRun).where(ChaosRun.id == run_id, ChaosRun.user_id == user_id)
-        ).first()
+        r = self._find_run_by_id(user_id, run_id)
         if not r:
             raise ValueError("Run not found")
         self._freeze_pools_if_needed(r)
@@ -140,30 +136,12 @@ class ChaosService:
         return self._state(r)
 
     def reset_run(self, user_id: int, difficulty: str) -> ChaosRunState:
-        assert_challenge_mode_enabled("chaos")
-        r = db.session.scalars(
-            select(ChaosRun).where(ChaosRun.user_id == user_id, ChaosRun.difficulty == difficulty)
-        ).first()
-        if not r:
-            raise ValueError("Run not found")
-        db.session.delete(r)
-        db.session.commit()
-        return self.get_or_create_run(user_id, difficulty)
+        return self._reset_run(user_id, difficulty)
 
     def submit_result(self, user_id: int, run_id: int, result: str, killer_id: str) -> ChaosRunState:
         assert_challenge_mode_enabled("chaos")
-        if result not in ("win", "loss"):
-            raise ValueError("Result must be 'win' or 'loss'")
-        if not killer_id:
-            raise ValueError("killer_id is required")
-
-        r = db.session.scalars(
-            select(ChaosRun).where(ChaosRun.id == run_id, ChaosRun.user_id == user_id)
-        ).first()
-        if not r:
-            raise ValueError("Run not found")
-        if r.status == "completed":
-            raise ValueError("This run is already completed. Reset it to play again.")
+        self._validate_killer_submission(result, killer_id)
+        r = self._load_run_for_result(user_id, run_id)
 
         self._freeze_pools_if_needed(r)
 
@@ -222,20 +200,8 @@ class ChaosService:
         if result == "win" and owned_names and all(name in completed for name in owned_names):
             r.status = "completed"
             r.used_perks = used_perks
-            # owned_ids was captured before this refreeze -- doing it after
-            # would silently pull in a newly-owned character, inflating the count.
-            is_full, _ = get_full_roster_milestone(owned_ids, role="Killer")
-            record_challenge_completion(
-                user_id=user_id,
-                mode="chaos",
-                variant=r.difficulty,
-                attempts_taken=r.attempts + 1,
-                matches_played=len(r.match_logs),
-                unlocked_characters_count=len(owned_ids),
-                full_roster=is_full,
-            )
+            self._complete_run(r, user_id, r.difficulty, owned_ids, role="Killer")
             self._freeze_pools(r)
-            r.attempts = 0
         else:
             self._redraw_and_maybe_refreeze(r, used_perks, streak_after)
         db.session.commit()
@@ -243,8 +209,8 @@ class ChaosService:
         return self._state(r)
 
     def apply_inactivity_loss(self, run_id: int) -> None:
-        r = db.session.scalars(select(ChaosRun).where(ChaosRun.id == run_id)).first()
-        if not r or r.status == "completed":
+        r = self._load_run_for_inactivity(run_id)
+        if not r:
             return
 
         self._freeze_pools_if_needed(r)
@@ -284,4 +250,4 @@ class ChaosService:
         return fetch_chaos_user_stats(user_id, difficulty)
 
     def get_completions(self, user_id: int, difficulty: str) -> list[ChallengeCompletionDict]:
-        return fetch_challenge_completions(user_id, "chaos", difficulty)
+        return self._completions(user_id, difficulty)

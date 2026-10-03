@@ -9,10 +9,7 @@ export default {
   zoomOutAria: "Zoom Out",
   resetPanZoom: "Reset Pan & Zoom",
   resetPanAndZoomAria: "Reset Pan and Zoom",
-  fullscreenMode: "Fullscreen Interactive Mode",
   noMapsFound: "No Maps Found",
-  mapVariantsAria: "Map Realm Variants",
-  mapVariants: "Map Variants:",
   variants: "Variants:",
   engineControlsAria: "Engine Zoom and Reset Controls",
   fullscreenEngineAria: "2D Fullscreen Map Engine",
@@ -68,4 +65,5 @@ export default {
   layoutOutdoor: 'Outdoor',
   layoutIndoor: 'Indoor',
   layoutHybrid: 'Hybrid',
+  loadingTacticalMapsSub: 'Mapping tile variants, loops, and spawn coordinates',
 } as const;

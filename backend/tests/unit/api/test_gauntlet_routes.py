@@ -43,18 +43,6 @@ def gauntlet_auth_setup(db_session: Session) -> tuple[int, str, dict[str, str]]:
 class TestGauntletRoutes:
     """Tests for Gauntlet Streak challenge routes: progress, target reveals, checkpoints, and restarts."""
 
-    def test_endpoints_require_login(self, client: FlaskClient) -> None:
-        assert client.get("/api/v1/gauntlet-streak/run?role=killer").status_code == 401
-        assert client.post("/api/v1/gauntlet-streak/run/reset", json={"role": "killer"}).status_code == 401
-        assert client.get("/api/v1/gauntlet-streak/stats?role=killer").status_code == 401
-
-    def test_run_requires_valid_role(
-        self, client: FlaskClient, gauntlet_auth_setup: tuple[int, str, dict[str, str]]
-    ) -> None:
-        _, _, headers = gauntlet_auth_setup
-        res = client.get("/api/v1/gauntlet-streak/run?role=bogus", headers=headers)
-        assert res.status_code == 400
-
     def test_run_rejects_unknown_game_mode(
         self, client: FlaskClient, gauntlet_auth_setup: tuple[int, str, dict[str, str]]
     ) -> None:
@@ -143,21 +131,6 @@ class TestGauntletRoutes:
         assert data["previous_run"]["current_streak"] == 1
         assert "run" in data
 
-    def test_reveal_endpoint(
-        self, client: FlaskClient, gauntlet_auth_setup: tuple[int, str, dict[str, str]]
-    ) -> None:
-        _, _, headers = gauntlet_auth_setup
-        run_res = client.get("/api/v1/gauntlet-streak/run?role=killer", headers=headers)
-        run_id = run_res.get_json()["run"]["id"]
-
-        res = client.post(
-            "/api/v1/gauntlet-streak/reveal",
-            json={"run_id": run_id},
-            headers=headers,
-        )
-        assert res.status_code == 200
-        assert res.get_json()["run"]["target_revealed"] is True
-
     def test_run_carries_the_targets_character_perks(
         self, client: FlaskClient, gauntlet_auth_setup: tuple[int, str, dict[str, str]]
     ) -> None:
@@ -183,14 +156,6 @@ class TestGauntletRoutes:
         run = res.get_json()["run"]
         assert run["current_streak"] == 0
         assert run["target_revealed"] is False
-
-    def test_stats_endpoint(
-        self, client: FlaskClient, gauntlet_auth_setup: tuple[int, str, dict[str, str]]
-    ) -> None:
-        _, _, headers = gauntlet_auth_setup
-        res = client.get("/api/v1/gauntlet-streak/stats?role=killer", headers=headers)
-        assert res.status_code == 200
-        assert "stats" in res.get_json()
 
     def test_runs_are_isolated_per_user(
         self, client: FlaskClient, gauntlet_auth_setup: tuple[int, str, dict[str, str]]

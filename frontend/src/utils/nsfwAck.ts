@@ -9,29 +9,12 @@
 // runner (tsx --test) has no component-rendering harness, so anything that
 // needs to be tested as *behavior* rather than source-text regex has to be a
 // plain function like this one.
+import { getLocalStorage } from '@/utils/safeStorage';
 const STORAGE_PREFIX = 'dbd_smash_nsfw_ack_';
-
-function safeLocalStorage(): Storage | null {
-  try {
-    if (typeof window !== 'undefined' && window.localStorage) {
-      return window.localStorage;
-    }
-    // Falls back to a bare `localStorage` global (e.g. a test harness that
-    // stubs `globalThis.localStorage` without a `window` object at all --
-    // this repo's frontend tests run under plain Node via tsx --test, not a
-    // browser/jsdom environment, so `window` is undefined there).
-    if (typeof localStorage !== 'undefined') {
-      return localStorage;
-    }
-    return null;
-  } catch {
-    return null;
-  }
-}
 
 /** Has the viewer already clicked through the NSFW confirmation for this roster? */
 export function hasAcknowledgedNsfwRoster(rosterSlug: string): boolean {
-  const storage = safeLocalStorage();
+  const storage = getLocalStorage();
   if (!storage || !rosterSlug) return false;
   try {
     return storage.getItem(`${STORAGE_PREFIX}${rosterSlug}`) === 'true';
@@ -42,7 +25,7 @@ export function hasAcknowledgedNsfwRoster(rosterSlug: string): boolean {
 
 /** Record that the viewer has confirmed they want to see this roster's content. */
 export function acknowledgeNsfwRoster(rosterSlug: string): void {
-  const storage = safeLocalStorage();
+  const storage = getLocalStorage();
   if (!storage || !rosterSlug) return;
   try {
     storage.setItem(`${STORAGE_PREFIX}${rosterSlug}`, 'true');

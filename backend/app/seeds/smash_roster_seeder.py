@@ -117,7 +117,7 @@ def load_rosters_from_json_files() -> Tuple[List[Dict[str, Any]], Dict[str, List
 def seed_smash_rosters():
     """
     Comprehensive idempotent seeder that dynamically reads all rosters from
-    backend/app/seeds/rosters/*.json and upserts rosters, characters, stats, and translations.
+    backend/app/seeds/data/smash_or_pass/rosters/*.json and upserts rosters, characters, stats, and translations.
     """
     from flask import has_app_context
     if not has_app_context():

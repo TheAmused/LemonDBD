@@ -12,6 +12,7 @@ import { getSlotInteraction } from '../lib/blindnessCurse';
 import { PerkSlot } from '../shared/PerkSlot';
 import { useJackpotCelebration } from '../shared/useJackpotCelebration';
 import { playReelThud } from '@/utils/perkAudio';
+import { useDictionary } from "@/context/DictionaryContext";
 
 export interface InstantStageProps {
   role: RoleCategory;
@@ -29,23 +30,22 @@ export interface InstantStageProps {
   onRevealSlot: (idx: number) => void;
   onSelectPerk: (perk: Perk) => void;
   isBlind?: boolean;
-  dict?: Dictionary;
   backendBase?: string;
 }
 
 export const InstantStage: React.FC<InstantStageProps> = ({
-  role,
-  activePlayablePerks,
-  activeMutator,
-  onRollComplete,
-  onRollStart,
-  revealedSlots,
-  onRevealSlot,
-  onSelectPerk,
-  isBlind = false,
-  dict,
-  backendBase,
-}) => {
+      role,
+      activePlayablePerks,
+      activeMutator,
+      onRollComplete,
+      onRollStart,
+      revealedSlots,
+      onRevealSlot,
+      onSelectPerk,
+      isBlind = false,
+      backendBase,
+    }) => {
+  const dict = useDictionary();
   const [revealSlots, setRevealSlots] = useState<(DrawnSlot | null)[]>([null, null, null, null]);
   const stopTimeoutsRef = useRef<(NodeJS.Timeout | number)[]>([]);
   const resultsRef = useRef<HTMLDivElement | null>(null);
@@ -84,8 +84,7 @@ export const InstantStage: React.FC<InstantStageProps> = ({
   return (
     <div className="flex flex-col items-center justify-center gap-3 sm:gap-6 xl:gap-8 2xl:gap-10 py-2 sm:py-6 wide:py-8">
       <p className="max-w-lg xl:max-w-2xl 2xl:max-w-3xl wide:max-w-4xl text-center text-xs sm:text-base xl:text-lg wide:text-xl font-semibold text-text-secondary">
-        {dict?.generator?.instantRollPrompt ||
-          'Rolls all four perks at once, instantly. Page and slot are decided the moment you click.'}
+        {dict.generator.instantRollPrompt}
       </p>
 
       <DbdButton
@@ -94,7 +93,7 @@ export const InstantStage: React.FC<InstantStageProps> = ({
         onClick={handleRoll}
         disabled={activePlayablePerks.length === 0}
       >
-        {dict?.generator?.rollCompleteLoadout || `Roll Complete ${role} Loadout`}
+        {dict.generator.rollCompleteLoadout}
       </DbdButton>
 
       {/* Always mounted at its final size, even before the first roll --
@@ -127,7 +126,6 @@ export const InstantStage: React.FC<InstantStageProps> = ({
                 isObscured={isObscured}
                 isBlind={isBlind}
                 onClick={onClick}
-                dict={dict}
               />
             </motion.div>
           );

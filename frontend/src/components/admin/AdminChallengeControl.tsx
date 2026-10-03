@@ -2,8 +2,9 @@
 // frontend/src/components/admin/AdminChallengeControl.tsx
 
 import React, { useCallback, useEffect, useState } from 'react';
+import { Input, Select, SearchInput } from '@/components/common/Field';
 import type { Dictionary } from '@/locales/types';
-import { CheckCircle2, Power, Search, Sparkles, XCircle } from 'lucide-react';
+import { CheckCircle2, Power, Sparkles, XCircle } from 'lucide-react';
 import {
   AdminCharacterRow,
   AdminPerkRow,
@@ -15,13 +16,13 @@ import { backendBase, staticUrl } from '@/utils/staticUrl';
 import { AdminReasonModal } from './AdminReasonModal';
 import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
 
+import { tip } from '@/components/common/Tooltip';
+import { authHeaders, getAuthToken, getErrorMessage } from '@/utils/api';
+import { formatMessage } from '@/utils/i18nFormat';
+import { useDictionary } from "@/context/DictionaryContext";
+
 interface AdminChallengeControlProps {
   onActionMessage: (msg: ActionMessage) => void;
-  dict?: Dictionary;
-}
-
-function authHeaders(token: string): HeadersInit {
-  return { Authorization: `Bearer ${token}` };
 }
 
 type PendingAction =
@@ -29,7 +30,8 @@ type PendingAction =
   | { kind: 'character'; character: AdminCharacterRow }
   | { kind: 'perk'; perk: AdminPerkRow };
 
-export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ onActionMessage, dict }) => {
+export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ onActionMessage }) => {
+  const dict = useDictionary();
   const [modes, setModes] = useState<ChallengeModeSetting[]>([]);
   const [subTab, setSubTab] = useState<'killers' | 'perks'>('killers');
   const [roleFilter, setRoleFilter] = useState<'Survivor' | 'Killer'>('Survivor');
@@ -40,16 +42,14 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
   const [pendingAction, setPendingAction] = useState<PendingAction | null>(null);
 
   const MODE_LABELS: Record<ChallengeMode, string> = {
-    gauntlet: dict?.streaks?.gauntlet || 'Gauntlet',
-    chaos: dict?.streaks?.chaosStreak || 'Chaos Streak',
-    history: dict?.streaks?.historyStreak || 'History Streak',
-    page_streak: dict?.streaks?.pageStreak || 'Page Streak',
+    gauntlet: dict.streaks.gauntlet,
+    chaos: dict.streaks.chaosStreak,
+    history: dict.streaks.historyStreak,
+    page_streak: dict.streaks.pageStreak,
   };
 
-  const getToken = () => (typeof window !== 'undefined' ? localStorage.getItem('lemondbd_token') : null);
-
   const loadModes = useCallback(async () => {
-    const token = getToken();
+    const token = getAuthToken();
     if (!token) return;
     try {
       const res = await fetch(`${backendBase}/api/v1/admin/challenge-modes`, { headers: authHeaders(token) });
@@ -60,7 +60,7 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
   }, []);
 
   const loadRoster = useCallback(async (searchTerm: string, role: 'Survivor' | 'Killer') => {
-    const token = getToken();
+    const token = getAuthToken();
     if (!token) return;
     setLoading(true);
     try {
@@ -93,7 +93,7 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
   }, [search, roleFilter, loadRoster]);
 
   const applyModeToggle = async (mode: ChallengeMode, isEnabled: boolean, reason: string | null) => {
-    const token = getToken();
+    const token = getAuthToken();
     if (!token) return;
     try {
       const res = await fetch(`${backendBase}/api/v1/admin/challenge-modes/${mode}`, {
@@ -112,12 +112,12 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
         onActionMessage({ type: 'error', text: err.error || 'Failed to update challenge mode.' });
       }
     } catch (err) {
-      onActionMessage({ type: 'error', text: err instanceof Error ? err.message : 'Network error.' });
+      onActionMessage({ type: 'error', text: getErrorMessage(err, 'Network error.') });
     }
   };
 
   const applyCharacterToggle = async (character: AdminCharacterRow, nextDisabled: boolean, reason: string | null) => {
-    const token = getToken();
+    const token = getAuthToken();
     if (!token) return;
     try {
       const res = await fetch(`${backendBase}/api/v1/admin/characters/${character.id}/disable`, {
@@ -136,12 +136,12 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
         onActionMessage({ type: 'error', text: err.error || 'Failed to update character.' });
       }
     } catch (err) {
-      onActionMessage({ type: 'error', text: err instanceof Error ? err.message : 'Network error.' });
+      onActionMessage({ type: 'error', text: getErrorMessage(err, 'Network error.') });
     }
   };
 
   const applyPerkToggle = async (perk: AdminPerkRow, nextDisabled: boolean, reason: string | null) => {
-    const token = getToken();
+    const token = getAuthToken();
     if (!token) return;
     try {
       const res = await fetch(`${backendBase}/api/v1/admin/perks/${perk.id}/disable`, {
@@ -160,7 +160,7 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
         onActionMessage({ type: 'error', text: err.error || 'Failed to update perk.' });
       }
     } catch (err) {
-      onActionMessage({ type: 'error', text: err instanceof Error ? err.message : 'Network error.' });
+      onActionMessage({ type: 'error', text: getErrorMessage(err, 'Network error.') });
     }
   };
 
@@ -186,25 +186,25 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
     setPendingAction(null);
   };
 
-  const disableTitle = (name: string) => (dict?.admin?.disableConfirmTitle || 'Disable {name}?').replace('{name}', name);
+  const disableTitle = (name: string) => formatMessage((dict.admin.disableConfirmTitle), { name });
 
   const modalCopy = (() => {
     if (!pendingAction) return null;
     if (pendingAction.kind === 'mode') {
       return {
         title: disableTitle(MODE_LABELS[pendingAction.mode]),
-        subtitle: dict?.admin?.disableModeSubtitle || 'Blocks new runs and match submissions for everyone.',
+        subtitle: dict.admin.disableModeSubtitle,
       };
     }
     if (pendingAction.kind === 'character') {
       return {
         title: disableTitle(pendingAction.character.name),
-        subtitle: dict?.admin?.disableCharacterSubtitle || "Won't be rollable into new challenge pools.",
+        subtitle: dict.admin.disableCharacterSubtitle,
       };
     }
     return {
       title: disableTitle(pendingAction.perk.name),
-      subtitle: dict?.admin?.disablePerkSubtitle || "Won't be offered in new challenge pools/pages.",
+      subtitle: dict.admin.disablePerkSubtitle,
     };
   })();
 
@@ -212,9 +212,9 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
     <div className="space-y-6">
       {/* Challenge mode kill switches */}
       <div className="rounded-2xl border border-border-color bg-bg-surface p-5 shadow-sm backdrop-blur-sm transition-colors duration-200">
-        <h3 className="flex items-center gap-2 text-sm font-black uppercase tracking-wider text-text-primary mb-4">
+        <h3 className="flex items-center gap-2 type-label text-text-primary mb-4">
           <Power className="h-4 w-4 text-accent-red" />
-          <span>{dict?.admin?.challengeModeKillSwitches || 'Challenge Mode Switches'}</span>
+          <span>{dict.admin.challengeModeKillSwitches}</span>
         </h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
           {modes.map((setting) => (
@@ -227,21 +227,21 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
               }`}
             >
               <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-text-primary">{MODE_LABELS[setting.mode]}</span>
+                <span className="type-strong text-text-primary">{MODE_LABELS[setting.mode]}</span>
                 <button
                   type="button"
                   onClick={() => requestModeToggle(setting.mode, !setting.is_enabled)}
-                  className={`text-[10px] font-black uppercase px-2.5 py-1 rounded-lg border cursor-pointer transition-colors ${
+                  className={`text-tiny font-black uppercase px-2.5 py-1 rounded-lg border cursor-pointer transition-colors ${
                     setting.is_enabled
                       ? 'border-accent-green/40 bg-accent-green/10 text-accent-green hover:bg-accent-green/20'
                       : 'border-accent-red/40 bg-accent-red/10 text-accent-red hover:bg-accent-red/20'
                   }`}
                 >
-                  {setting.is_enabled ? dict?.admin?.enabledLabel || 'Enabled' : dict?.admin?.disabledLabel || 'Disabled'}
+                  {setting.is_enabled ? dict.admin.enabledLabel : dict.admin.disabledLabel}
                 </button>
               </div>
               {setting.disabled_reason && (
-                <p className="text-[10px] text-accent-red font-medium leading-snug">{setting.disabled_reason}</p>
+                <p className="text-tiny text-accent-red font-medium leading-snug">{setting.disabled_reason}</p>
               )}
             </div>
           ))}
@@ -262,7 +262,7 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
               }`}
             >
               <KillerIcon className="h-3.5 w-3.5" />
-              <span>{dict?.admin?.characters || 'Characters'}</span>
+              <span>{dict.admin.characters}</span>
             </button>
             <button
               type="button"
@@ -274,7 +274,7 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
               }`}
             >
               <Sparkles className="h-3.5 w-3.5" />
-              <span>{dict?.admin?.perks || 'Perks'}</span>
+              <span>{dict.admin.perks}</span>
             </button>
           </div>
           <div className="flex items-center gap-2 rounded-xl border border-border-color bg-bg-elevated p-1">
@@ -288,7 +288,7 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
               }`}
             >
               <SurvivorIcon className="h-3.5 w-3.5" />
-              <span>{dict?.admin?.roleSurvivor || 'Survivor'}</span>
+              <span>{dict.admin.roleSurvivor}</span>
             </button>
             <button
               type="button"
@@ -300,22 +300,20 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
               }`}
             >
               <KillerIcon className="h-3.5 w-3.5" />
-              <span>{dict?.admin?.roleKiller || 'Killer'}</span>
+              <span>{dict.admin.roleKiller}</span>
             </button>
           </div>
-          <div className="relative">
-            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-text-muted" />
-            <input
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder={dict?.admin?.searchGenericPlaceholder || 'Search...'}
-              className="pl-7 pr-3 py-1.5 rounded-lg bg-bg-primary border border-border-color text-xs text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-1 focus:ring-accent-red"
-            />
-          </div>
+          <SearchInput
+            fieldSize="sm"
+            wrapperClassName="w-full sm:w-56"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder={dict.admin.searchGenericPlaceholder}
+          />
         </div>
 
         {characters.length === 0 && perks.length === 0 && loading ? (
-          <p className="text-xs text-text-muted py-6 text-center font-mono">{dict?.admin?.loading || 'Loading...'}</p>
+          <p className="text-xs text-text-muted py-6 text-center">{dict.admin.loading}</p>
         ) : (
           <div className={`transition-opacity duration-150 ${loading ? 'opacity-50' : ''}`}>
             {subTab === 'killers' ? (
@@ -325,7 +323,7 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
                     key={c.id}
                     type="button"
                     onClick={() => requestCharacterToggle(c)}
-                    title={c.disabled_reason ? `${c.name} — ${c.disabled_reason}` : c.name}
+                    {...tip(c.disabled_reason ? `${c.name} — ${c.disabled_reason}` : c.name, undefined, 'status')} aria-label={c.disabled_reason ? `${c.name} — ${c.disabled_reason}` : c.name}
                     className={`relative aspect-square rounded-xl border cursor-pointer transition-all overflow-hidden ${
                       c.is_disabled
                         ? 'border-accent-red bg-accent-red/10 hover:bg-accent-red/20'
@@ -360,7 +358,7 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
                     key={p.id}
                     type="button"
                     onClick={() => requestPerkToggle(p)}
-                    title={p.disabled_reason ? `${p.name} — ${p.disabled_reason}` : p.name}
+                    {...tip(p.disabled_reason ? `${p.name} — ${p.disabled_reason}` : p.name, undefined, 'status')} aria-label={p.disabled_reason ? `${p.name} — ${p.disabled_reason}` : p.name}
                     className={`relative aspect-square rounded-xl border cursor-pointer transition-all overflow-hidden ${
                       p.is_disabled
                         ? 'border-accent-red bg-accent-red/10 hover:bg-accent-red/20'
@@ -395,12 +393,11 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
 
       <AdminReasonModal
         isOpen={pendingAction !== null}
-        title={modalCopy?.title || dict?.admin?.disable || 'Disable?'}
+        title={modalCopy?.title || dict.admin.disable}
         subtitle={modalCopy?.subtitle}
-        confirmLabel={dict?.admin?.disable || 'Disable'}
+        confirmLabel={dict.admin.disable}
         onCancel={() => setPendingAction(null)}
         onConfirm={confirmPendingAction}
-        dict={dict}
       />
     </div>
   );

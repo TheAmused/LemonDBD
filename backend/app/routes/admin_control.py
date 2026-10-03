@@ -6,8 +6,10 @@ from sqlalchemy import and_, case, select
 from app.core.extensions import db
 from app.core.redis_cache import bump_catalog_version
 from app.core.security import admin_required
+from app.utils.pagination import paginate_args
 from app.models import Killer, Perk, Survivor
 from app.models.admin import CHALLENGE_MODES
+from app.services import site_settings
 from app.services.admin_control_service import (
     get_audit_logs,
     get_challenge_mode_settings,
@@ -81,12 +83,11 @@ def set_character_disabled(character_id: int):
     data = request.get_json(silent=True) or {}
     role = (request.args.get("role") or data.get("role") or "").strip().rstrip("s").lower()
     model = {"survivor": Survivor, "killer": Killer}.get(role)
-    if model is None:
-        return jsonify({
-            "error": "Query or body field 'role' must be 'survivor' or 'killer'.",
-        }), 400
+    if model is not None:
+        character = db.session.get(model, character_id)
+    else:
+        character = db.session.get(Killer, character_id) or db.session.get(Survivor, character_id)
 
-    character = db.session.get(model, character_id)
     if not character:
         return jsonify({"error": "Character not found."}), 404
 
@@ -253,6 +254,33 @@ def update_challenge_mode(mode: str):
 @admin_control_bp.route("/audit-logs", methods=["GET"])
 @admin_required
 def list_audit_logs():
-    page = request.args.get("page", 1, type=int)
-    per_page = request.args.get("per_page", 25, type=int)
+    page, per_page = paginate_args(default_per_page=25)
     return jsonify(get_audit_logs(page=page, per_page=per_page)), 200
+
+
+@admin_control_bp.route("/settings", methods=["GET"])
+@admin_required
+def list_site_settings():
+    return jsonify({"settings": site_settings.list_settings()}), 200
+
+
+@admin_control_bp.route("/settings", methods=["PUT"])
+@admin_required
+def update_site_settings():
+    """Body: ``{"settings": {key: value | null}}``; ``null`` restores the config default."""
+    data = request.get_json(silent=True) or {}
+    changes = data.get("settings")
+    if not isinstance(changes, dict) or not changes:
+        return jsonify({"error": "Field 'settings' (object) is required."}), 400
+    try:
+        applied = site_settings.update_settings(changes)
+    except ValueError as err:
+        return jsonify({"error": str(err)}), 400
+
+    log_admin_action(
+        g.current_user.id,
+        action="site_settings_updated",
+        target_type="site_settings",
+        details={"changes": {k: ("<default>" if changes[k] is None else applied[k]) for k in applied}},
+    )
+    return jsonify({"message": "Settings saved.", "settings": site_settings.list_settings()}), 200

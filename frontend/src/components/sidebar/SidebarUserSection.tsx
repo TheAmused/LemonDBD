@@ -1,17 +1,21 @@
 'use client';
 // frontend/src/components/sidebar/SidebarUserSection.tsx
+import type { UserProfile } from '@/context/AuthContext';
 import type { Dictionary } from '@/locales/types';
 
 import React from 'react';
+import { Button } from '@/components/common/Button';
 import Link from 'next/link';
 import { LogIn, LogOut, MailWarning } from 'lucide-react';
 import { UserAvatar } from '@/components/UserAvatar';
 import { OverseerEyeIcon } from '@/components/icons/DbdIcons';
 
+import { tip } from '@/components/common/Tooltip';
+import { useDictionary } from "@/context/DictionaryContext";
+
 export interface SidebarUserSectionProps {
   currentLocale: string;
-  dict?: Dictionary;
-  user: any;
+  user: UserProfile | null;
   isAuthenticated: boolean;
   isAdmin: boolean;
   onOpenAuthModal: () => void;
@@ -21,27 +25,27 @@ export interface SidebarUserSectionProps {
 }
 
 export const SidebarUserSection: React.FC<SidebarUserSectionProps> = ({
-  currentLocale,
-  dict,
-  user,
-  isAuthenticated,
-  isAdmin,
-  onOpenAuthModal,
-  onOpenVerifyModal,
-  onLogout,
-  onNavigateMobile,
-}) => {
+      currentLocale,
+      user,
+      isAuthenticated,
+      isAdmin,
+      onOpenAuthModal,
+      onOpenVerifyModal,
+      onLogout,
+      onNavigateMobile,
+    }) => {
+  const dict = useDictionary();
   return (
     <div className="mt-4 pt-3 border-t border-border-color">
       {!isAuthenticated || !user ? (
-        <button
-          type="button"
+        <Button
+          variant="soft"
           onClick={onOpenAuthModal}
-          className="w-full flex items-center justify-center gap-2 rounded-xl bg-accent-red/10 border border-accent-red/30 hover:border-accent-red/60 p-2.5 text-xs font-bold text-accent-red hover:bg-accent-red/20 transition-all cursor-pointer shadow-sm group"
+          leftIcon={<LogIn className="h-4 w-4" />}
+          className="w-full"
         >
-          <LogIn className="h-4 w-4 group-hover:translate-x-0.5 transition-transform" />
-          <span>{dict?.sidebar?.signIn || 'Sign In / Register'}</span>
-        </button>
+          <span>{dict.sidebar.signIn}</span>
+        </Button>
       ) : (
         <div className="rounded-xl border border-border-color bg-bg-elevated p-2.5 space-y-2">
           <div className="flex items-center justify-between">
@@ -52,17 +56,17 @@ export const SidebarUserSection: React.FC<SidebarUserSectionProps> = ({
             >
               <UserAvatar user={user} size="sm" />
               <div className="truncate">
-                <p className="flex items-center gap-1 text-xs font-bold text-text-primary truncate">
+                <p className="flex items-center gap-1 type-strong text-text-primary truncate">
                   <span className="truncate">{user.username}</span>
                   {user.is_verified === false && (
                     <MailWarning
                       className="h-3 w-3 shrink-0 text-accent-amber"
-                      aria-label={dict?.sidebar?.emailNotVerified || 'Email not verified'}
+                      aria-label={dict.sidebar.emailNotVerified}
                     />
                   )}
                 </p>
                 <span
-                  className={`inline-block rounded px-1 text-[9px] font-black uppercase tracking-wider ${
+                  className={`inline-block rounded px-1 text-micro font-black uppercase tracking-wider ${
                     user.role === 'admin'
                       ? 'bg-accent-red/20 text-accent-red border border-accent-red/30'
                       : 'bg-bg-surface text-text-muted border border-border-color'
@@ -77,8 +81,8 @@ export const SidebarUserSection: React.FC<SidebarUserSectionProps> = ({
               {isAdmin && (
                 <Link
                   href={`/${currentLocale}/admin`}
-                  title={dict?.sidebar?.adminControlCenter || 'Admin Control Center'}
-                  aria-label={dict?.sidebar?.adminControlCenter || 'Admin Control Center'}
+                  title={dict.sidebar.adminControlCenter}
+                  aria-label={dict.sidebar.adminControlCenter}
                   onClick={onNavigateMobile}
                   className="p-1 rounded-lg text-accent-red hover:bg-accent-red/10 transition-colors"
                 >
@@ -88,8 +92,8 @@ export const SidebarUserSection: React.FC<SidebarUserSectionProps> = ({
               <button
                 type="button"
                 onClick={onLogout}
-                title={dict?.sidebar?.signOut || 'Sign Out'}
-                aria-label={dict?.sidebar?.signOut || 'Sign Out'}
+                {...tip(dict.sidebar.signOut, undefined, 'action')}
+                aria-label={dict.sidebar.signOut}
                 className="p-1 rounded-lg text-text-muted hover:text-accent-red hover:bg-accent-red/10 transition-colors cursor-pointer"
               >
                 <LogOut className="h-3.5 w-3.5" />
@@ -101,9 +105,9 @@ export const SidebarUserSection: React.FC<SidebarUserSectionProps> = ({
             <button
               type="button"
               onClick={onOpenVerifyModal}
-              className="w-full text-left text-[10px] text-accent-amber hover:underline cursor-pointer"
+              className="w-full text-left type-micro text-accent-amber hover:underline cursor-pointer"
             >
-              {dict?.sidebar?.emailNotVerified || 'Email not verified. Verify now'}
+              {dict.sidebar.emailNotVerified}
             </button>
           )}
         </div>

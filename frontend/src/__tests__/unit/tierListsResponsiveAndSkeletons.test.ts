@@ -1,10 +1,10 @@
 // frontend/src/__tests__/unit/tierListsResponsiveAndSkeletons.test.ts
+import { placeholderNames } from '@/utils/i18nFormat';
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 import React from 'react';
-import { renderToStaticMarkup } from 'react-dom/server';
 import { TierListSkeleton } from '@/components/tier-lists/TierListSkeleton';
 import { TierItemTile } from '@/components/tier-lists/TierItemTile';
 import { tierColorProps } from '@/components/tier-lists/tierColor';
@@ -14,13 +14,14 @@ import deDict from '@/locales/de';
 import esDict from '@/locales/es';
 import jaDict from '@/locales/ja';
 import plDict from '@/locales/pl';
+import { renderWithDictionary } from '../helpers/renderWithDictionary';
 
 const SRC = path.resolve(__dirname, '../..');
 const read = (rel: string) => fs.readFileSync(path.join(SRC, rel), 'utf-8');
 
 describe('Tier lists: skeleton', () => {
   it('renders role="status", aria-busy and the DBD skill-check spinner', () => {
-    const html = renderToStaticMarkup(React.createElement(TierListSkeleton, { dict: enDict }));
+    const html = renderWithDictionary(React.createElement(TierListSkeleton, {}));
     assert.ok(html.includes('role="status"'));
     assert.ok(html.includes('aria-busy="true"'));
     assert.ok(html.includes('viewBox="0 0 160 160"'), 'must render the DBD Skill Check SVG');
@@ -30,7 +31,7 @@ describe('Tier lists: skeleton', () => {
 
 describe('Tier lists: tiles and colors', () => {
   it('falls back to initials when an item has no image, and never renders an empty src', () => {
-    const html = renderToStaticMarkup(
+    const html = renderWithDictionary(
       React.createElement(TierItemTile, { item: { key: 'x', name: 'Dwight Fairfield', image: null } })
     );
     assert.ok(html.includes('>DF<'));
@@ -38,10 +39,10 @@ describe('Tier lists: tiles and colors', () => {
     assert.ok(html.includes('aria-label="Dwight Fairfield"'));
   });
 
-  it('tiles are at least 56px on phones (w-14/h-14), above the 44px touch minimum', () => {
+  it('tiles are 48px on the smallest phones (w-12/h-12) and 56px from 480px up, above the 44px touch minimum', () => {
     const source = read('components/tier-lists/TierItemTile.tsx');
-    assert.match(source, /square: 'w-14 /);
-    assert.match(source, /square: 'h-14 /);
+    assert.match(source, /square: 'w-12 min-\[480px\]:w-14 /);
+    assert.match(source, /square: 'h-12 min-\[480px\]:h-14 /);
   });
 
   it('size breakpoints never let an sm..xl rule shadow a wide*/wide-2k rule on the same property', () => {
@@ -133,12 +134,14 @@ describe('Tier lists: pages and navigation', () => {
     assert.ok(sidebar.includes('href: `/${currentLocale}/tier-lists`'));
   });
 
-  it('the pool is responsive at the bottom of the board across phone and desktop', () => {
+  it('the page is viewport-locked and the pool keeps a reserved height so toggling it never moves its header', () => {
     const pool = read('components/tier-lists/TierPool.tsx');
-    assert.ok(pool.includes('sticky bottom-0'));
-    assert.ok(pool.includes('sm:static'));
+    assert.ok(pool.includes('var(--pool-h)'));
     const board = read('components/tier-lists/TierListBoard.tsx');
-    assert.ok(board.includes('TouchSensor') && board.includes('KeyboardSensor'), 'touch and keyboard dragging');
+    assert.ok(board.includes('--pool-h:'));
+    assert.ok(board.includes('max-h-[calc(100%-var(--pool-h)'));
+    assert.ok(read('app/[locale]/tier-lists/[slug]/page.tsx').includes('h-dvh overflow-hidden'));
+    assert.ok(board.includes('SidewaysPointerSensor') && board.includes('KeyboardSensor'), 'touch and keyboard dragging');
   });
 });
 
@@ -149,7 +152,7 @@ describe('Tier lists: i18n parity across all 5 locales', () => {
       else acc[`${prefix}${k}`] = String(v);
       return acc;
     }, {});
-  const placeholders = (s: string) => (s.match(/\{\w+\}/g) ?? []).sort().join(',');
+  const placeholders = (s: string) => placeholderNames(s).join(',');
 
   const en = flatten(enDict.tierLists as unknown as Record<string, unknown>);
   const others = { de: deDict, es: esDict, ja: jaDict, pl: plDict };

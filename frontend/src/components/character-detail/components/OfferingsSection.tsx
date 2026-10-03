@@ -1,5 +1,6 @@
 // frontend/src/components/character-detail/components/OfferingsSection.tsx
-import React, { useState, useMemo } from 'react';
+import { Tabs } from '@/components/common/Tabs';
+import React, { useMemo } from 'react';
 import {
   Gift,
   Coins,
@@ -15,13 +16,15 @@ import {
   getRarityTileStyle,
   getRarityRank,
 } from '../types';
-import { UnifiedHoverModal, ActiveHoverState } from './UnifiedHoverModal';
 import { CategoryPicker } from './CategoryPicker';
 import { CollapsibleDrawer } from './CollapsibleDrawer';
 import { MoriCharmIcon, WardCharmIcon } from '@/components/icons/DbdIcons';
 import { usePersistentString } from '@/hooks/usePersistentString';
 import { usePersistentDrawer } from '@/hooks/usePersistentDrawer';
 
+import { tip } from '@/components/common/Tooltip';
+import { EmptyState } from '@/components/common/EmptyState';
+import { isKiller as isKillerRole } from '@/utils/characterUtils';
 const KILLER_OFFERING_KEYS = ['special', 'mori', 'bloodpoint', 'map', 'shroud', 'ward'] as const;
 const SURVIVOR_OFFERING_KEYS = ['special', 'bloodpoint', 'luck', 'map', 'shroud', 'blueprint', 'chest', 'ward'] as const;
 
@@ -48,7 +51,7 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
   onSelectOffering,
   t,
 }) => {
-  const isKiller = role === 'Killer';
+  const isKiller = isKillerRole(role);
 
   const categories = useMemo<OfferingCategoryConfig[]>(() => {
     if (isKiller) {
@@ -151,7 +154,6 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
         value
       )
   );
-  const [activeHover, setActiveHover] = useState<ActiveHoverState | null>(null);
   const [isDrawerOpen, , setDrawerOpen] = usePersistentDrawer('lemondbd_drawer_offerings', true);
 
   const activeCategoryConfig =
@@ -309,7 +311,7 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
               <Gift className="h-5 w-5" />
             </div>
             <div>
-              <h2 className="text-lg font-black tracking-tight text-text-primary font-mono flex items-center gap-2">
+              <h2 className="text-lg font-black tracking-tight text-text-primary flex items-center gap-2">
                 {t.offeringsTitle || 'Offerings & Sacrificial Rites'}
                 <span
                   className={`text-xs px-2 py-0.5 rounded-full border ${
@@ -338,44 +340,32 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
           />
         </div>
 
-        <div
-          role="tablist"
-          aria-label={t.offeringCategories || 'Offering categories'}
-          className="hidden sm:flex flex-wrap items-center justify-center gap-1.5 mb-6"
-        >
-          {categories.map((cat) => {
+        <Tabs
+          ariaLabel={t.offeringCategories || 'Offering categories'}
+          value={selectedCategory}
+          onChange={setSelectedCategory}
+          panels={false}
+          variant="pill"
+          accent={isKiller ? 'red' : 'green'}
+          wrap
+          centered
+          className="hidden sm:flex mb-6"
+          tabs={categories.map((cat) => {
             const Icon = cat.icon;
-            const isSelected = selectedCategory === cat.key;
-            return (
-              <button
-                type="button"
-                key={cat.key}
-                role="tab"
-                aria-selected={isSelected}
-                onClick={() => setSelectedCategory(cat.key)}
-                className={`relative flex items-center gap-1.5 px-3 py-1.5 rounded-xl transition-all duration-200 cursor-pointer text-xs font-bold ${
-                  isSelected
-                    ? isKiller
-                      ? 'bg-accent-red/20 border border-accent-red/60 text-accent-red shadow-md scale-105'
-                      : 'bg-accent-green/20 border border-accent-green/60 text-accent-green shadow-md scale-105'
-                    : 'bg-bg-elevated border border-border-color text-text-muted hover:text-text-primary hover:bg-bg-surface'
-                }`}
-                title={`${cat.label} - ${cat.desc}`}
-              >
-                <Icon className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
-                {/* The count only shows on the selected tab, same idea as
-                    the mobile dropdown's countLabel — one place per tab
-                    for that information, not a separate heading below. */}
-                <span>{cat.label}{isSelected ? ` (${sortedAndFilteredOfferings.length})` : ''}</span>
-              </button>
-            );
+            return {
+              value: cat.key,
+              label: cat.label,
+              icon: <Icon className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />,
+              // The count only shows on the selected tab, same idea as the
+              // mobile dropdown's countLabel.
+              count: selectedCategory === cat.key ? sortedAndFilteredOfferings.length : undefined,
+              buttonProps: { ...tip(`${cat.label} - ${cat.desc}`, undefined, 'default'), 'aria-label': `${cat.label} - ${cat.desc}` },
+            };
           })}
-        </div>
+        />
 
         {sortedAndFilteredOfferings.length === 0 ? (
-          <div className="flex items-center justify-center p-12 text-center text-text-muted text-xs italic">
-            {t.noOfferingsFound || 'No offerings found in this category matching your active filter.'}
-          </div>
+          <EmptyState variant="inline" title={t.noOfferingsFound || 'No offerings found in this category matching your active filter.'} />
         ) : (
           <div className="flex flex-wrap items-center justify-center gap-3.5" role="list">
             {sortedAndFilteredOfferings.map((offering, idx) => {
@@ -394,12 +384,9 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
                       onSelectOffering?.(offering);
                     }
                   }}
-                  onMouseEnter={(e) => {
-                    const rect = e.currentTarget.getBoundingClientRect();
-                    setActiveHover({ item: offering, rect, category: activeCategoryConfig.label });
-                  }}
-                  onMouseLeave={() => setActiveHover(null)}
+                  {...tip(offering.name, undefined, 'item')}
                   className={`relative group rounded-2xl border-2 p-2 flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-110 active:scale-95 focus:outline-none focus:ring-2 focus:ring-accent-red h-20 w-20 sm:h-24 sm:w-24 ${rarityStyle.bg}`}
+                  style={rarityStyle.style}
                   aria-label={`${t.inspectOfferingPrefix || 'Inspect offering:'} ${offering.name}`}
                 >
                   <img
@@ -416,14 +403,6 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
           </div>
         )}
       </CollapsibleDrawer>
-
-      {/* Unified Hover Modal */}
-      <UnifiedHoverModal
-        activeHover={activeHover}
-        placement="above"
-        t={t}
-        actionPrompt={t.clickOfferingForDetails || t.clickToInspect || 'Click offering for details'}
-      />
     </section>
   );
 };

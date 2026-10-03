@@ -5,25 +5,23 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import type { UserProfile } from '@/context/AuthContext';
 import type { Dictionary } from '@/locales/types';
+import { Button } from '@/components/common/Button';
+import { formatMessage } from '@/utils/i18nFormat';
+import { useDictionary } from "@/context/DictionaryContext";
 
 interface EmailVerificationFormProps {
   email: string;
   onVerified?: (user?: UserProfile) => void;
   submitLabel?: string;
-  dict?: Dictionary;
 }
 
 const CODE_LENGTH = 6;
 const RESEND_COOLDOWN_SECONDS = 60;
 
-export const EmailVerificationForm: React.FC<EmailVerificationFormProps> = ({
-  email,
-  onVerified,
-  submitLabel,
-  dict,
-}) => {
-  const t = dict?.user;
-  const resolvedSubmitLabel = submitLabel || t?.verifyEmailAction;
+export const EmailVerificationForm: React.FC<EmailVerificationFormProps> = ({ email, onVerified, submitLabel }) => {
+  const dict = useDictionary();
+  const t = dict.user;
+  const resolvedSubmitLabel = submitLabel || t.verifyEmailAction;
   const { verifyEmail, resendVerification, refreshUser } = useAuth();
   const [digits, setDigits] = useState<string[]>(Array(CODE_LENGTH).fill(''));
   const [error, setError] = useState<string | null>(null);
@@ -84,7 +82,7 @@ export const EmailVerificationForm: React.FC<EmailVerificationFormProps> = ({
       await refreshUser();
       onVerified?.(res.user);
     } else {
-      setError(res.error || t?.invalidVerificationCode || null);
+      setError(res.error || t.invalidVerificationCode);
     }
   };
 
@@ -93,7 +91,7 @@ export const EmailVerificationForm: React.FC<EmailVerificationFormProps> = ({
     setError(null);
     const res = await resendVerification(email);
     if (!res.success) {
-      setError(res.error || t?.failedToResendCode || null);
+      setError(res.error || t.failedToResendCode);
     }
     setCooldown(RESEND_COOLDOWN_SECONDS);
   };
@@ -101,7 +99,7 @@ export const EmailVerificationForm: React.FC<EmailVerificationFormProps> = ({
   return (
     <form onSubmit={handleSubmit} className="flex flex-col items-center gap-3">
       {error && (
-        <p role="alert" className="text-[11px] font-semibold text-accent-red">
+        <p role="alert" className="type-strong-xs text-accent-red">
           {error}
         </p>
       )}
@@ -118,30 +116,31 @@ export const EmailVerificationForm: React.FC<EmailVerificationFormProps> = ({
             value={digit}
             onChange={(e) => handleChange(index, e.target.value)}
             onKeyDown={(e) => handleKeyDown(index, e)}
-            aria-label={t?.digitAriaLabel?.replace('{n}', String(index + 1))}
-            className="h-11 w-9 rounded-lg border border-border-color bg-bg-primary text-center font-mono text-base text-text-primary focus:border-accent-red focus:outline-none focus:ring-1 focus:ring-accent-red shadow-inner transition-colors"
+            aria-label={formatMessage(t.digitAriaLabel, { n: index + 1 })}
+            className="h-11 w-9 rounded-lg border border-border-color bg-bg-primary text-center text-base text-text-primary focus:border-accent-red focus:outline-none focus:ring-1 focus:ring-accent-red shadow-inner transition-colors"
           />
         ))}
       </div>
       {resolvedSubmitLabel && (
-        <button
+        <Button
           type="submit"
+          variant="primary"
           disabled={verifying || code.length !== CODE_LENGTH}
-          className="w-full max-w-xs rounded-xl bg-accent-red hover:bg-accent-red-hover py-2.5 text-xs font-black uppercase tracking-wider text-text-inverted disabled:opacity-50 transition-all cursor-pointer shadow-xs"
+          className="w-full max-w-xs"
         >
-          {verifying ? t?.verifying : resolvedSubmitLabel}
-        </button>
+          {verifying ? t.verifying : resolvedSubmitLabel}
+        </Button>
       )}
-      {(t?.resendCodeIn || t?.resendCode) && (
+      {(t.resendCodeIn) && (
         <button
           type="button"
           onClick={handleResend}
           disabled={cooldown > 0}
-          className="text-[11px] font-bold underline text-accent-amber hover:opacity-80 disabled:opacity-60 cursor-pointer"
+          className="type-strong-xs underline text-accent-amber hover:opacity-80 disabled:opacity-60 cursor-pointer"
         >
           {cooldown > 0
-            ? t?.resendCodeIn?.replace('{seconds}', String(cooldown))
-            : t?.resendCode}
+            ? formatMessage(t.resendCodeIn, { seconds: cooldown })
+            : t.resendCode}
         </button>
       )}
     </form>

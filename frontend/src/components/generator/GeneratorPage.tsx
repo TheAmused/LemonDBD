@@ -31,9 +31,11 @@ import { RoleToggle } from './shared/RoleToggle';
 import { motion } from 'framer-motion';
 import { StageFrame } from './shared/StageFrame';
 import type { ChaosMutator } from '../ChaosWheelModal';
+import { formatMessage } from '@/utils/i18nFormat';
+import { useLocale, useDictionary } from '@/context/DictionaryContext';
 
 const ChaosWheelModal = dynamic(() => import('../ChaosWheelModal').then((m) => m.ChaosWheelModal), { ssr: false });
-const ConfirmModal = dynamic(() => import('../ConfirmModal').then((m) => m.ConfirmModal), { ssr: false });
+const ConfirmModal = dynamic(() => import('../common/ConfirmModal').then((m) => m.ConfirmModal), { ssr: false });
 const WheelStage = dynamic(() => import('./modes/WheelStage').then((m) => m.WheelStage), { ssr: false });
 const InstantStage = dynamic(() => import('./modes/InstantStage').then((m) => m.InstantStage), { ssr: false });
 const SlotMachineStage = dynamic(() => import('./modes/SlotMachineStage').then((m) => m.SlotMachineStage), { ssr: false });
@@ -43,14 +45,15 @@ const LootCrateStage = dynamic(() => import('./modes/LootCrateStage').then((m) =
 interface GeneratorPageProps {
   allPerks: Perk[];
   onSelectPerk: (perk: Perk) => void;
-  dict?: Dictionary;
 }
 
 const PERKS_PER_PAGE = 15;
 const KNOWN_MODES: GeneratorMode[] = ['wheel', 'instant', 'slot', 'tarot', 'crate'];
 const FULL_LOADOUT_SIZE = 4;
 
-export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelectPerk, dict }) => {
+export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelectPerk }) => {
+  const dict = useDictionary();
+  const locale = useLocale();
   const { user } = useAuth();
   const backendBase = getBackendBaseUrl();
 
@@ -251,11 +254,11 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
     });
   }, []);
 
-  const topLeft = <ModeSwitcher mode={genMode} onChange={handleGenModeChange} dict={dict} />;
+  const topLeft = <ModeSwitcher mode={genMode} onChange={handleGenModeChange} />;
 
   const topRight = (
     <>
-      <RoleToggle role={role} onChange={handleRoleChange} className="mr-1" dict={dict} />
+      <RoleToggle role={role} onChange={handleRoleChange} className="mr-1" />
       <Toolbar
         noRepeatPerks={noRepeatPerks}
         onToggleNoRepeat={handleToggleNoRepeat}
@@ -268,7 +271,6 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
         onOpenChaosModal={() => setIsChaosModalOpen(true)}
         activeMutator={activeMutator}
         onResetAll={handleResetAllLoadoutAndWheels}
-        dict={dict}
       />
     </>
   );
@@ -279,11 +281,10 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
         <section aria-live="polite" className="flex flex-col items-center justify-center gap-3 p-12 text-center">
           <AlertTriangle className="h-12 w-12 text-accent-amber animate-bounce" />
           <h2 className="text-lg font-black text-accent-amber">
-            {dict?.generator?.noPerksTitle || `No Perks Available for ${role}`}
+            {dict.generator.noPerksTitle}
           </h2>
           <p className="text-xs text-text-secondary max-w-md">
-            {dict?.generator?.noPerksDesc ||
-              'You don\'t own any unlocked perks for this role yet.'}
+            {dict.generator.noPerksDesc}
           </p>
         </section>
       ) : (
@@ -324,7 +325,6 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
                 onRevealSlot={handleRevealSlot}
                 onSelectPerk={onSelectPerk}
                 isBlind={blindMode}
-                dict={dict}
                 backendBase={backendBase}
               />
             )}
@@ -339,7 +339,6 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
                 onRevealSlot={handleRevealSlot}
                 onSelectPerk={onSelectPerk}
                 isBlind={blindMode}
-                dict={dict}
                 backendBase={backendBase}
               />
             )}
@@ -353,7 +352,6 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
                 onRevealSlot={handleRevealSlot}
                 onSelectPerk={onSelectPerk}
                 isBlind={blindMode}
-                dict={dict}
                 backendBase={backendBase}
               />
             )}
@@ -367,7 +365,6 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
                 onRevealSlot={handleRevealSlot}
                 onSelectPerk={onSelectPerk}
                 isBlind={blindMode}
-                dict={dict}
                 backendBase={backendBase}
               />
             )}
@@ -381,7 +378,6 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
                 onRevealSlot={handleRevealSlot}
                 onSelectPerk={onSelectPerk}
                 isBlind={blindMode}
-                dict={dict}
                 backendBase={backendBase}
               />
             )}
@@ -399,29 +395,25 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
         }}
         onClearMutator={() => handleSelectMutator(null)}
         activeMutator={activeMutator}
-        dict={dict}
       />
 
       <ConfirmModal
         open={showLowPoolWarning}
         title={
           totalPlayableCount === 0
-            ? dict?.generator?.lowPoolEmptyTitle || "You're out of perks"
-            : dict?.generator?.lowPoolTitle || 'Running low on perks'
+            ? dict.generator.lowPoolEmptyTitle
+            : dict.generator.lowPoolTitle
         }
         message={
           totalPlayableCount === 0
-            ? dict?.generator?.lowPoolEmptyDesc ||
-              "No-Repeat Mode has drawn every playable perk. There's nothing left to pull, so reset your drawn-perk memory to open the pool back up."
+            ? dict.generator.lowPoolEmptyDesc
             : totalPlayableCount === 1
-              ? (dict?.generator?.lowPoolDescOne || 'Only 1 perk left in the pool with No-Repeat Mode on, not enough for a full loadout of {size}. Reset your drawn-perk memory to open the pool back up.').replace('{size}', String(FULL_LOADOUT_SIZE))
-              : (dict?.generator?.lowPoolDescMany || 'Only {count} perks left in the pool with No-Repeat Mode on, not enough for a full loadout of {size}. Reset your drawn-perk memory to open the pool back up.')
-                  .replace('{count}', String(totalPlayableCount))
-                  .replace('{size}', String(FULL_LOADOUT_SIZE))
+              ? formatMessage((dict.generator.lowPoolDescOne), { size: FULL_LOADOUT_SIZE })
+              : formatMessage((dict.generator.lowPoolDescMany), { count: totalPlayableCount, size: FULL_LOADOUT_SIZE }, locale)
         }
-        confirmLabel={dict?.generator?.lowPoolResetButton || 'Reset Drawn Perks'}
+        confirmLabel={dict.generator.lowPoolResetButton}
         confirmIcon={<RotateCcw className="h-4 w-4" />}
-        cancelLabel={dict?.generator?.lowPoolCloseButton || 'Close'}
+        cancelLabel={dict.generator.lowPoolCloseButton}
         onConfirm={handleResetDrawnPerksOnly}
         onCancel={() => setShowLowPoolWarning(false)}
       />

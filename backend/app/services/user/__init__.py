@@ -2,6 +2,7 @@
 from app.services.user.admin import (
     admin_modify_user,
     admin_remove_user,
+    delete_own_account,
     fetch_admin_metrics,
     list_all_users_paginated,
     seed_default_admin_if_empty,
@@ -15,6 +16,7 @@ from app.services.user.auth import (
     retrieve_user_from_jwt,
     verify_email_code,
 )
+from app.services.user.data_export import export_user_data
 from app.services.user.avatar import (
     ALLOWED_EXTENSIONS,
     clear_user_avatar,
@@ -57,6 +59,7 @@ __all__ = [
     "list_all_users_paginated",
     "admin_modify_user",
     "admin_remove_user",
+    "delete_own_account",
     "fetch_admin_metrics",
     "seed_default_admin_if_empty",
 ]

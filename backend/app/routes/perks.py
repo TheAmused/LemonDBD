@@ -1,6 +1,5 @@
 # backend/app/routes/perks.py
 import logging
-import threading
 from dataclasses import asdict
 from pathlib import Path
 
@@ -9,11 +8,10 @@ from flask import Blueprint, current_app, jsonify, request, send_from_directory
 from app.core import redis_cache
 from app.core.extensions import db
 from app.core.http_cache import cache_catalog
-from app.core.security import admin_required, get_current_user
-from app.seeds.static_db_seeder import seed_from_static_json
+from app.core.security import get_current_user
 from app.services.perk_service import PerkService
-from app.services.translations import TranslationService
 from app.utils.lang import extract_lang as _extract_lang
+from app.utils.pagination import paginate_args
 from sqlalchemy import select
 
 logger = logging.getLogger(__name__)
@@ -62,8 +60,7 @@ def list_perks():
     search = request.args.get("search")
     sort_by = request.args.get("sort_by", default="name", type=str)
     order = request.args.get("order", default="asc", type=str)
-    page = request.args.get("page", default=1, type=int)
-    limit = request.args.get("limit", default=50, type=int)
+    page, limit = paginate_args(default_per_page=50, max_per_page=10000, per_page_arg="limit")
     lang = _extract_lang()
 
     owned_only_param = request.args.get("owned_only", "false").lower()
@@ -242,79 +239,6 @@ def list_addons():
     lang = _extract_lang()
     addons = perk_service.get_addons(category=category, target=target, search=search, lang=lang)
     return jsonify({"count": len(addons), "data": addons}), 200
-
-
-def _run_background_scrape(app, override_source=None, override_fallback=None):
-    with app.app_context():
-        seed_from_static_json(force=True)
-        perk_service.reload_data()
-
-
-@perks_bp.route("/api/scrape-and-seed", methods=["POST"])
-@perks_bp.route("/api/v1/scrape-and-seed", methods=["POST"])
-@admin_required
-def scrape_and_seed():
-    """Trigger synchronous database seed/update from offline static JSON (Admin only)."""
-    try:
-        res = seed_from_static_json(force=True)
-        perk_service.reload_data()
-        summary = res.get("initial_seed") or {}
-        return jsonify({
-            "status": "success",
-            "characters_synced": summary.get("characters", {}).get("created", 0) + summary.get("characters", {}).get("updated", 0),
-            "perks_synced": summary.get("perks", {}).get("created", 0) + summary.get("perks", {}).get("updated", 0),
-            "items_synced": summary.get("items", {}).get("created", 0) + summary.get("items", {}).get("updated", 0),
-            "addons_synced": summary.get("addons", {}).get("created", 0) + summary.get("addons", {}).get("updated", 0),
-            "metrics": summary,
-        }), 200
-    except Exception as e:
-        logger.error(f"Seeder execution error: {e}")
-        return jsonify({"status": "error", "message": str(e)}), 500
-
-
-@perks_bp.route("/api/v1/scrape", methods=["POST"])
-@admin_required
-def trigger_scrape():
-    """Trigger asynchronous background seeding task from static JSON (Admin only)."""
-    thread = threading.Thread(
-        target=_run_background_scrape,
-        args=(current_app._get_current_object(),),
-        daemon=True,
-    )
-    thread.start()
-    return jsonify({"message": "Seed task initiated in background"}), 202
-
-
-@perks_bp.route("/api/v1/scrape/status", methods=["GET"])
-def get_scrape_status():
-    return jsonify({
-        "is_running": False,
-        "current_step": "idle",
-        "progress": 100,
-        "total": 100,
-        "status": "completed",
-        "last_used_source": "offline_static_json",
-    }), 200
-
-
-
-@perks_bp.route("/api/v1/scrape/translations/game-dumps", methods=["POST"])
-@admin_required
-def sync_game_dump_translations_route():
-    """Synchronize official translations (EN, PL, DE, ES, JA) to the database (Admin only)."""
-    try:
-        data = request.get_json(silent=True) or {}
-        locales = data.get("locales") or ["en", "pl", "de", "es", "ja"]
-        trans_service = TranslationService()
-        result = trans_service.sync_all_locales_to_db(locales=locales)
-        return jsonify({
-            "status": "success",
-            "message": "Game dump translations successfully synchronized to database",
-            "result": result,
-        }), 200
-    except Exception as e:
-        logger.error(f"Error syncing game dump translations: {e}")
-        return jsonify({"status": "error", "message": str(e)}), 500
 
 
 @perks_bp.route("/static/<path:filename>", methods=["GET"])

@@ -2,7 +2,6 @@
 import os
 from importlib import reload
 import pytest
-from flask.testing import FlaskClient
 from sqlalchemy import delete, select
 from sqlalchemy.dialects.sqlite import insert as sqlite_insert
 from sqlalchemy.orm import Session
@@ -135,11 +134,3 @@ class TestSQLAlchemyModelsAndSeeder:
             else:
                 os.environ.pop("DATABASE_URL", None)
 
-    def test_api_scrape_and_seed_route(self, client: FlaskClient) -> None:
-        response = client.post("/api/scrape-and-seed", json={"source": "test"})
-        assert response.status_code in [200, 401, 500]
-        if response.status_code == 200:
-            data = response.get_json()
-            assert data.get("status") == "success"
-            assert "characters_synced" in data
-            assert "perks_synced" in data

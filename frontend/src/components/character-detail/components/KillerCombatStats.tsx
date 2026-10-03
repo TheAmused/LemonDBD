@@ -19,7 +19,7 @@ export const KillerCombatStats: React.FC<KillerCombatStatsProps> = ({
 }) => {
   return (
     <div className="p-4 rounded-2xl bg-bg-surface border border-border-color shadow-sm space-y-2 w-full backdrop-blur-sm">
-      <div className="flex flex-col gap-0.5 sm:flex-row sm:items-center sm:justify-between text-[11px] font-mono font-bold uppercase tracking-wider text-text-secondary">
+      <div className="flex flex-col gap-0.5 sm:flex-row sm:items-center sm:justify-between type-label-xs text-text-secondary">
         <span className="flex items-center gap-1.5 text-accent-red">
           <Activity className="h-3.5 w-3.5" />
           {t.combatAttributes || 'Combat Attributes & Threat Scale'}
@@ -33,10 +33,10 @@ export const KillerCombatStats: React.FC<KillerCombatStatsProps> = ({
             <Gauge className="h-4 w-4" />
           </div>
           <div>
-            <span className="block text-[10px] font-mono text-text-secondary uppercase">
+            <span className="block text-tiny text-text-secondary uppercase">
               {t.movementSpeed || 'Movement Speed'}
             </span>
-            <span className="block text-xs sm:text-sm font-black text-text-primary">
+            <span className="block type-strong-fluid text-text-primary">
               {killerSpeed}
             </span>
           </div>
@@ -48,10 +48,10 @@ export const KillerCombatStats: React.FC<KillerCombatStatsProps> = ({
             <Radio className="h-4 w-4" />
           </div>
           <div>
-            <span className="block text-[10px] font-mono text-text-secondary uppercase">
+            <span className="block text-tiny text-text-secondary uppercase">
               {t.terrorRadius || 'Terror Radius'}
             </span>
-            <span className="block text-xs sm:text-sm font-black text-text-primary">
+            <span className="block type-strong-fluid text-text-primary">
               {killerTerrorRadius}
             </span>
           </div>
@@ -63,10 +63,10 @@ export const KillerCombatStats: React.FC<KillerCombatStatsProps> = ({
             <ArrowUpDown className="h-4 w-4" />
           </div>
           <div>
-            <span className="block text-[10px] font-mono text-text-secondary uppercase">
+            <span className="block text-tiny text-text-secondary uppercase">
               {t.height || 'Height'}
             </span>
-            <span className="block text-xs sm:text-sm font-black text-text-primary">
+            <span className="block type-strong-fluid text-text-primary">
               {killerHeight}
             </span>
           </div>

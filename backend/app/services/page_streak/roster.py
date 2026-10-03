@@ -6,6 +6,7 @@ from sqlalchemy import func, select
 from app.core.extensions import db
 from app.models import Killer, PageStreakRun
 from app.services.challenge_completions import fetch_completed_variants
+from app.services.ownership.characters import get_owned_killers
 from app.services.ownership_service import OwnershipService
 from app.services.perk_service import PerkService
 
@@ -67,8 +68,7 @@ def get_owned_killer_ids(user_id: int, ownership_service: OwnershipService) -> d
     other three modes -- Page Streak's own live badge just doesn't need it,
     since it only counts owned killers here.
     """
-    owned = ownership_service.get_user_characters(user_id, role="Killer")
-    return {c["name"]: c["id"] for c in owned if c["is_owned"] and not c.get("is_disabled")}
+    return get_owned_killers(user_id, ownership_service, shape="name_to_id")
 
 
 def get_live_roster_badge(

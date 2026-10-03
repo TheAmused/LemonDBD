@@ -3,7 +3,8 @@ import type { Dictionary } from '@/locales/types';
 // frontend/src/components/user/UserBugReportsList.tsx
 
 import React, { useState, useRef, useEffect } from 'react';
-import { createPortal } from 'react-dom';
+import { Button } from '@/components/common/Button';
+import { Modal, useModal } from '@/components/common/Modal';
 import {
   Plus,
   Clock,
@@ -17,16 +18,18 @@ import {
 } from 'lucide-react';
 import { UserBugReport } from '@/types/userProfile';
 import { UserBugReportsSkeleton } from './UserBugReportsSkeleton';
-import { Pagination } from '@/components/Pagination';
+import { Pagination } from '@/components/common/Pagination';
 import { staticUrl } from '@/utils/api';
 import { FogReportIcon } from '@/components/icons/DbdIcons';
 import { OverseerEyeIcon } from '@/components/icons/DbdIcons';
+import { EmptyState } from '@/components/common/EmptyState';
+import { formatDate } from '@/utils/format';
+import { useDictionary } from "@/context/DictionaryContext";
 
 interface UserBugReportsListProps {
   reports: UserBugReport[];
   loading: boolean;
   onOpenReportModal: () => void;
-  dict?: Dictionary;
   t?: Record<string, string>;
   total?: number;
   page?: number;
@@ -37,19 +40,19 @@ interface UserBugReportsListProps {
 }
 
 export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
-  reports,
-  loading,
-  onOpenReportModal,
-  dict,
-  t: propT,
-  total,
-  page = 1,
-  perPage = 10,
-  totalPages = 1,
-  onPageChange,
-  hideHeading = false,
-}) => {
-  const t: Record<string, string> = propT || dict?.user || {};
+      reports,
+      loading,
+      onOpenReportModal,
+      t: propT,
+      total,
+      page = 1,
+      perPage = 10,
+      totalPages = 1,
+      onPageChange,
+      hideHeading = false,
+    }) => {
+  const dict = useDictionary();
+  const t: Record<string, string> = propT || dict.user || {};
   const totalCount = total ?? reports.length;
 
   // Individual droppable drawer states for each bug report
@@ -57,11 +60,6 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
 
   // Image popup lightbox state
   const [previewImage, setPreviewImage] = useState<string | null>(null);
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   // Drag-to-scroll and touch-scroll state for PC & Mobile
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -70,22 +68,6 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
   const scrollTopRef = useRef(0);
   const [isGrabbing, setIsGrabbing] = useState(false);
   const hasDraggedRef = useRef(false);
-
-  // Close image modal on Escape key and prevent background scroll
-  useEffect(() => {
-    if (!previewImage) return;
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setPreviewImage(null);
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    const prevOverflow = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-      document.body.style.overflow = prevOverflow;
-    };
-  }, [previewImage]);
 
   const toggleReport = (id: number) => {
     if (hasDraggedRef.current) return;
@@ -136,21 +118,21 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
     switch (status) {
       case 'in_progress':
         return (
-          <span className="inline-flex items-center gap-1.5 rounded-lg border border-accent-amber/30 bg-accent-amber/10 px-2.5 py-1 text-[10px] font-black uppercase tracking-wider text-accent-amber font-mono">
+          <span className="inline-flex items-center gap-1.5 rounded-lg border border-accent-amber/30 bg-accent-amber/10 px-2.5 py-1 type-label-2xs text-accent-amber">
             <Clock className="h-3 w-3 animate-spin" />
             <span>{t.statusInProgress || 'In Progress'}</span>
           </span>
         );
       case 'resolved':
         return (
-          <span className="inline-flex items-center gap-1.5 rounded-lg border border-accent-green/30 bg-accent-green/10 px-2.5 py-1 text-[10px] font-black uppercase tracking-wider text-accent-green font-mono">
+          <span className="inline-flex items-center gap-1.5 rounded-lg border border-accent-green/30 bg-accent-green/10 px-2.5 py-1 type-label-2xs text-accent-green">
             <CheckCircle className="h-3 w-3" />
             <span>{t.statusResolved || 'Resolved'}</span>
           </span>
         );
       case 'rejected':
         return (
-          <span className="inline-flex items-center gap-1.5 rounded-lg border border-border-color bg-bg-elevated px-2.5 py-1 text-[10px] font-black uppercase tracking-wider text-text-muted font-mono">
+          <span className="inline-flex items-center gap-1.5 rounded-lg border border-border-color bg-bg-elevated px-2.5 py-1 type-label-2xs text-text-muted">
             <XCircle className="h-3 w-3" />
             <span>{t.statusClosed || 'Closed'}</span>
           </span>
@@ -158,7 +140,7 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
       case 'pending':
       default:
         return (
-          <span className="inline-flex items-center gap-1.5 rounded-lg border border-accent-red/30 bg-accent-red/10 px-2.5 py-1 text-[10px] font-black uppercase tracking-wider text-accent-red font-mono">
+          <span className="inline-flex items-center gap-1.5 rounded-lg border border-accent-red/30 bg-accent-red/10 px-2.5 py-1 type-label-2xs text-accent-red">
             <HelpCircle className="h-3 w-3" />
             <span>{t.statusPending || 'Pending'}</span>
           </span>
@@ -168,47 +150,36 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
 
   return (
     <div className="space-y-3.5 w-full flex flex-col">
-      <div className="flex items-center justify-between gap-3 pb-2.5 border-b border-border-color shrink-0">
-        {!hideHeading ? (
-          <div>
-            <h2 className="text-sm sm:text-base font-black tracking-wider text-text-primary font-mono flex items-center gap-2">
-              <FogReportIcon className="h-4 w-4 text-accent-red" />
-              <span>{t.bugReportsTitle || 'Your Submitted Bug Reports'}</span>
-            </h2>
-          </div>
-        ) : (
-          <div className="text-xs font-mono font-bold text-text-secondary">
-            {dict?.user?.myBugReportsCount
-              ? dict.user.myBugReportsCount.replace('{count}', String(totalCount))
-              : `${totalCount}`}
-          </div>
-        )}
-
-        <button
-          type="button"
-          onClick={onOpenReportModal}
-          className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-accent-red hover:bg-accent-red-hover px-3.5 py-1.5 text-xs font-bold text-text-inverted shadow-xs transition-all cursor-pointer font-mono"
-        >
-          <Plus className="h-3.5 w-3.5" />
-          <span>{t.reportNewBug || 'Report New Bug'}</span>
-        </button>
-      </div>
+      {!hideHeading ? (
+        <div className="flex items-center justify-between gap-3 pb-2.5 border-b border-border-color shrink-0">
+          <h2 className="text-sm sm:text-base font-black tracking-wider text-text-primary flex items-center gap-2">
+            <FogReportIcon className="h-4 w-4 text-accent-red" />
+            <span>{t.bugReportsTitle || 'Your Submitted Bug Reports'}</span>
+          </h2>
+          <Button
+            variant="primary"
+            size="sm"
+            onClick={onOpenReportModal}
+            leftIcon={<Plus className="h-3.5 w-3.5" />}
+          >
+            <span>{t.reportNewBug || 'Report New Bug'}</span>
+          </Button>
+        </div>
+      ) : null}
 
       {loading ? (
-        <UserBugReportsSkeleton dict={dict} count={3} />
+        <UserBugReportsSkeleton count={3} />
       ) : reports.length === 0 ? (
-        <div className="rounded-2xl border-2 border-dashed border-border-color bg-bg-surface p-6 sm:p-8 text-center space-y-2.5 shadow-sm">
-          <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-xl bg-accent-red/10 text-accent-red">
-            <FogReportIcon className="h-5 w-5" />
-          </div>
-          <h3 className="text-sm sm:text-base font-black text-text-primary font-mono">
-            {t.noReportsTitle || 'No Bug Reports Submitted'}
-          </h3>
-          <p className="text-xs text-text-secondary max-w-sm mx-auto">
-            {t.noReportsSubtitle ||
-              'You have not reported any glitches yet. If you spot incorrect perk numbers or map callout issues, report them!'}
-          </p>
-        </div>
+        <EmptyState
+          variant="compact"
+          icon={FogReportIcon}
+          iconClassName="mx-auto mb-2 h-8 w-8 text-accent-red"
+          title={t.noReportsTitle || 'No Bug Reports Submitted'}
+          subtitle={
+            t.noReportsSubtitle ||
+            'You have not reported any glitches yet. If you spot incorrect perk numbers or map callout issues, report them!'
+          }
+        />
       ) : (
         /* Scrollable and Drag-to-Scroll container on PC & Mobile */
         <div
@@ -238,18 +209,18 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
                 >
                   <div className="space-y-1 min-w-0 flex-1">
                     <div className="flex items-center gap-2.5 flex-wrap">
-                      <span className="font-mono text-xs text-text-muted font-bold">#{report.id}</span>
-                      <h3 className="text-sm sm:text-base font-black text-text-primary font-mono truncate">
+                      <span className="type-strong text-text-muted">#{report.id}</span>
+                      <h3 className="text-sm sm:text-base font-black text-text-primary truncate">
                         {report.title}
                       </h3>
                     </div>
-                    <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-[11px] text-text-secondary font-mono">
+                    <div className="flex flex-wrap items-center gap-2 sm:gap-3 type-caption text-text-secondary">
                       <span className="rounded-lg bg-bg-elevated text-text-primary px-2 py-0.5 font-bold border border-border-color">
                         {report.category}
                       </span>
                       <span>
                         {t.reportedOn || 'Reported on'}{' '}
-                        {new Date(report.created_at).toLocaleDateString()}
+                        {formatDate(report.created_at)}
                       </span>
                     </div>
                   </div>
@@ -274,14 +245,14 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
                 >
                   <div className="overflow-hidden">
                     <div className="p-3.5 sm:p-4 pt-0 border-t border-border-color/60 space-y-3">
-                      <p className="text-xs text-text-secondary leading-relaxed whitespace-pre-wrap pt-2">
+                      <p className="type-body text-text-secondary whitespace-pre-wrap pt-2">
                         {report.message}
                       </p>
 
                       {/* Attachments with click to open popup modal */}
                       {report.images && report.images.length > 0 && (
                         <div className="space-y-1.5 pt-1">
-                          <span className="text-[10px] font-extrabold uppercase tracking-wider text-text-muted flex items-center gap-1 font-mono">
+                          <span className="type-label-2xs text-text-muted flex items-center gap-1">
                             <ImageIcon className="h-3 w-3 text-accent-red" />
                             {t.attachments || 'Attachments'} ({report.images.length})
                           </span>
@@ -319,7 +290,7 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
                       {/* Developer Admin Response */}
                       {report.admin_notes && (
                         <div className="mt-2 rounded-xl border border-accent-amber/30 bg-accent-amber/10 p-3 space-y-1">
-                          <div className="flex items-center gap-2 text-accent-amber text-xs font-bold font-mono">
+                          <div className="flex items-center gap-2 text-accent-amber type-strong">
                             <OverseerEyeIcon className="h-3.5 w-3.5" />
                             <span>{t.devResponse || 'Developer Response'}</span>
                           </div>
@@ -340,7 +311,7 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
       )}
 
       {!loading && reports.length > 0 && totalPages > 1 && onPageChange && (
-        <div className="shrink-0 pt-2 border-t border-border-color">
+        <div className="shrink-0 pt-2">
           <Pagination
             page={page}
             totalPages={totalPages}
@@ -348,47 +319,46 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
             limit={perPage}
             onPageChange={onPageChange}
             onLimitChange={() => {}}
-            dict={dict as any}
           />
         </div>
       )}
 
       {/* Image Popup Lightbox Modal */}
-      {previewImage && mounted && typeof document !== 'undefined' &&
-        createPortal(
-          <div
-            className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 bg-bg-primary/85 backdrop-blur-md transition-opacity animate-in fade-in duration-200"
-            onClick={() => setPreviewImage(null)}
-            role="dialog"
-            aria-modal="true"
-            aria-label={t.imagePreview || 'Image Preview'}
-          >
-            <div
-              className="relative max-w-4xl max-h-[90vh] w-full flex flex-col items-center justify-center"
-              onClick={(e) => e.stopPropagation()}
-            >
-              {/* Close Button */}
-              <button
-                type="button"
-                onClick={() => setPreviewImage(null)}
-                className="absolute -top-12 right-0 sm:-right-2 p-2 rounded-full bg-bg-surface/90 hover:bg-bg-surface text-text-primary hover:text-accent-red border border-border-color shadow-lg transition-all cursor-pointer z-10"
-                aria-label={dict?.modal?.close || t.close || 'Close image preview'}
-              >
-                <X className="h-5 w-5" />
-              </button>
-
-              {/* High-res Image Preview */}
-              <div className="relative max-h-[82vh] w-auto max-w-full overflow-hidden rounded-2xl border border-border-color/80 shadow-2xl bg-bg-primary/60 flex items-center justify-center">
-                <img
-                  src={previewImage}
-                  alt={t.attachmentPreview || 'Bug Report Attachment Full Preview'}
-                  className="max-h-[82vh] max-w-full w-auto h-auto object-contain rounded-2xl"
-                />
-              </div>
-            </div>
-          </div>,
-          document.body
-        )}
+      <Modal
+        isOpen={!!previewImage}
+        onClose={() => setPreviewImage(null)}
+        variant="lightbox"
+        layer="system"
+        ariaLabel={t.imagePreview || 'Image Preview'}
+        className="overflow-visible"
+      >
+        <div className="relative flex items-center justify-center">
+          <PreviewCloseButton label={dict.modal.close} />
+          <div className="relative max-h-[82dvh] w-auto max-w-full overflow-hidden rounded-2xl border border-border-color/80 shadow-2xl bg-bg-primary/60 flex items-center justify-center">
+            {previewImage && (
+              <img
+                src={previewImage}
+                alt={t.attachmentPreview || 'Bug Report Attachment Full Preview'}
+                className="max-h-[82dvh] max-w-full w-auto h-auto object-contain rounded-2xl"
+              />
+            )}
+          </div>
+        </div>
+      </Modal>
     </div>
+  );
+};
+
+const PreviewCloseButton: React.FC<{ label: string }> = ({ label }) => {
+  const { close } = useModal();
+  return (
+    <Button
+      icon
+      onClick={close}
+      className="absolute right-2 top-2 z-10 rounded-full shadow-lg"
+      aria-label={label}
+    >
+      <X className="h-5 w-5" />
+    </Button>
   );
 };

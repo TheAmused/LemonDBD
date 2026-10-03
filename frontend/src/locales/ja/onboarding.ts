@@ -15,7 +15,6 @@ export default {
   legendPartial: "キャラクター一部解放（パークのみ解放）",
   legendCustomizeHint: "ヒント：所持していないチャプターを展開し、キャラクターのパークボタンを使うと、キャラクター全体を所持していなくても個別のパークを解放できます。",
   ownChapterButton: "このチャプターを所持している",
-  lockChapterButton: "このチャプターを所持していない",
   selectAllButton: "すべて所持している",
   deselectAllButton: "すべて解除",
   searchPlaceholder: "チャプターやキャラクターを検索...",

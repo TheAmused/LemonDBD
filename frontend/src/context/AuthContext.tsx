@@ -41,13 +41,13 @@ interface AuthContextType {
   isAdmin: boolean;
   isLoading: boolean;
   ownership: OwnershipSummary | null;
-  login: (usernameOrEmail: string, password: string, extra?: Record<string, any>) => Promise<{ success: boolean; error?: string; user?: UserProfile }>;
-  register: (username: string, email: string, password: string, extra?: Record<string, any>) => Promise<{ success: boolean; error?: string; user?: UserProfile }>;
+  login: (usernameOrEmail: string, password: string, extra?: Record<string, unknown>) => Promise<{ success: boolean; error?: string; user?: UserProfile }>;
+  register: (username: string, email: string, password: string, extra?: Record<string, unknown>) => Promise<{ success: boolean; error?: string; user?: UserProfile }>;
   logout: () => void;
   resendVerification: (email: string) => Promise<{ success: boolean; error?: string }>;
   verifyEmail: (email: string, code: string) => Promise<{ success: boolean; error?: string; user?: UserProfile }>;
-  forgotPassword: (email: string, extra?: Record<string, any>) => Promise<{ success: boolean; error?: string }>;
-  resetPassword: (token: string, newPassword: string, extra?: Record<string, any>) => Promise<{ success: boolean; error?: string }>;
+  forgotPassword: (email: string, extra?: Record<string, unknown>) => Promise<{ success: boolean; error?: string }>;
+  resetPassword: (token: string, newPassword: string, extra?: Record<string, unknown>) => Promise<{ success: boolean; error?: string }>;
   refreshUser: () => Promise<void>;
   updateCharacterOwnership: (characterId: number, isOwned: boolean) => Promise<boolean>;
   bulkUpdateCharacterOwnership: (updates: CharacterOwnershipUpdate[]) => Promise<boolean>;
@@ -59,6 +59,7 @@ interface AuthContextType {
 
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 import type { CharacterOwnershipUpdate } from '@/utils/characterUtils';
+import { SESSION_MARKER, authHeaders, setSessionFlag, getErrorMessage, isAbortError } from '@/utils/api';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -70,16 +71,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [ownership, setOwnership] = useState<OwnershipSummary | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  const fetchCurrentUser = useCallback(async (authToken: string) => {
+  const fetchCurrentUser = useCallback(async () => {
     try {
-      const res = await fetch(`${API_BASE}/api/v1/auth/me`, {
-        headers: {
-          Authorization: `Bearer ${authToken}`,
-        },
-      });
+      const res = await fetch(`${API_BASE}/api/v1/auth/me`, { credentials: 'include' });
       if (res.ok) {
         const data = await res.json();
         if (data.authenticated && data.user) {
+          setToken(SESSION_MARKER);
+          setSessionFlag(true);
           setUser(data.user);
           if (data.ownership) {
             setOwnership(data.ownership);
@@ -87,10 +86,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           return;
         }
       }
-      // If token expired or invalid
+      // No (or an expired) session cookie
       setUser(null);
       setToken(null);
-      localStorage.removeItem('lemondbd_token');
+      setSessionFlag(false);
     } catch (err) {
       console.error('Failed to fetch auth state:', err);
     } finally {
@@ -99,19 +98,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   useEffect(() => {
-    const savedToken = typeof window !== 'undefined' ? localStorage.getItem('lemondbd_token') : null;
-    if (savedToken) {
-      setToken(savedToken);
-      fetchCurrentUser(savedToken);
-    } else {
-      setIsLoading(false);
-    }
+    // The session cookie is HttpOnly, so ask the server who we are.
+    fetchCurrentUser();
   }, [fetchCurrentUser]);
 
-  const login = async (usernameOrEmail: string, password: string, extra?: Record<string, any>) => {
+  const login = async (usernameOrEmail: string, password: string, extra?: Record<string, unknown>) => {
     try {
       const res = await fetch(`${API_BASE}/api/v1/auth/login`, {
         method: 'POST',
+        credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username_or_email: usernameOrEmail, password, ...extra }),
       });
@@ -119,20 +114,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (!res.ok) {
         return { success: false, error: data.error || 'Login failed' };
       }
-      setToken(data.token);
+      setToken(SESSION_MARKER);
+      setSessionFlag(true);
       setUser(data.user);
       if (data.ownership) setOwnership(data.ownership);
-      localStorage.setItem('lemondbd_token', data.token);
       return { success: true, user: data.user as UserProfile };
-    } catch (err: any) {
-      return { success: false, error: err?.message || 'Network error occurred.' };
+    } catch (err) {
+      return { success: false, error: getErrorMessage(err, 'Network error occurred.') };
     }
   };
 
-  const register = async (username: string, email: string, password: string, extra?: Record<string, any>) => {
+  const register = async (username: string, email: string, password: string, extra?: Record<string, unknown>) => {
     try {
       const res = await fetch(`${API_BASE}/api/v1/auth/register`, {
         method: 'POST',
+        credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, email, password, ...extra }),
       });
@@ -140,13 +136,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (!res.ok) {
         return { success: false, error: data.error || 'Registration failed' };
       }
-      setToken(data.token);
+      setToken(SESSION_MARKER);
+      setSessionFlag(true);
       setUser(data.user);
       if (data.ownership) setOwnership(data.ownership);
-      localStorage.setItem('lemondbd_token', data.token);
       return { success: true, user: data.user as UserProfile };
-    } catch (err: any) {
-      return { success: false, error: err?.message || 'Network error occurred.' };
+    } catch (err) {
+      return { success: false, error: getErrorMessage(err, 'Network error occurred.') };
     }
   };
 
@@ -162,8 +158,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return { success: false, error: data.error || 'Failed to resend verification email.' };
       }
       return { success: true };
-    } catch (err: any) {
-      return { success: false, error: err?.message || 'Network error occurred.' };
+    } catch (err) {
+      return { success: false, error: getErrorMessage(err, 'Network error occurred.') };
     }
   };
 
@@ -179,12 +175,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return { success: false, error: data.message || 'Invalid verification code.' };
       }
       return { success: true, user: data.user as UserProfile };
-    } catch (err: any) {
-      return { success: false, error: err?.message || 'Network error occurred.' };
+    } catch (err) {
+      return { success: false, error: getErrorMessage(err, 'Network error occurred.') };
     }
   };
 
-  const forgotPassword = async (email: string, extra?: Record<string, any>) => {
+  const forgotPassword = async (email: string, extra?: Record<string, unknown>) => {
     try {
       const res = await fetch(`${API_BASE}/api/v1/auth/forgot-password`, {
         method: 'POST',
@@ -196,12 +192,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return { success: false, error: data.error || 'Failed to request password reset.' };
       }
       return { success: true };
-    } catch (err: any) {
-      return { success: false, error: err?.message || 'Network error occurred.' };
+    } catch (err) {
+      return { success: false, error: getErrorMessage(err, 'Network error occurred.') };
     }
   };
 
-  const resetPassword = async (token: string, newPassword: string, extra?: Record<string, any>) => {
+  const resetPassword = async (token: string, newPassword: string, extra?: Record<string, unknown>) => {
     try {
       const res = await fetch(`${API_BASE}/api/v1/auth/reset-password`, {
         method: 'POST',
@@ -213,32 +209,33 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return { success: false, error: data.error || 'Failed to reset password.' };
       }
       return { success: true };
-    } catch (err: any) {
-      return { success: false, error: err?.message || 'Network error occurred.' };
+    } catch (err) {
+      return { success: false, error: getErrorMessage(err, 'Network error occurred.') };
     }
   };
 
   const logout = () => {
+    // Clears the HttpOnly cookie server-side (JavaScript cannot delete it).
+    const cleared = fetch(`${API_BASE}/api/v1/auth/logout`, { method: 'POST', credentials: 'include' }).catch(() => {});
     setUser(null);
     setToken(null);
     setOwnership(null);
     if (typeof window !== 'undefined') {
-      localStorage.removeItem('lemondbd_token');
+      setSessionFlag(false);
       const path = window.location.pathname;
       const localeMatch = path.match(/^\/([a-z]{2})/);
       const locale = localeMatch ? localeMatch[1] : 'en';
       if (path.includes('/admin') || path.includes('/user')) {
-        window.location.href = `/${locale}`;
+        cleared.finally(() => {
+          window.location.href = `/${locale}`;
+        });
         return;
       }
     }
-    fetch(`${API_BASE}/api/v1/auth/logout`, { method: 'POST' }).catch(() => {});
   };
 
   const refreshUser = async () => {
-    if (token) {
-      await fetchCurrentUser(token);
-    }
+    await fetchCurrentUser();
   };
 
   const updateCharacterOwnership = async (characterId: number, isOwned: boolean): Promise<boolean> => {
@@ -248,7 +245,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
+          ...authHeaders(token),
         },
         body: JSON.stringify({ character_id: characterId, is_owned: isOwned }),
       });
@@ -272,7 +269,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
+          ...authHeaders(token),
         },
         body: JSON.stringify({ updates }),
       });
@@ -294,7 +291,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
+          ...authHeaders(token),
         },
         body: JSON.stringify({ perk_id: perkId, is_unlocked: isUnlocked }),
       });
@@ -318,7 +315,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
+          ...authHeaders(token),
         },
         body: JSON.stringify({ updates }),
       });
@@ -338,7 +335,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       const res = await fetch(`${API_BASE}/api/v1/users/${user.id}/onboarding/complete`, {
         method: 'POST',
-        headers: { Authorization: `Bearer ${token}` },
+        headers: authHeaders(token),
       });
       if (res.ok) {
         await refreshUser();
@@ -356,7 +353,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       const res = await fetch(`${API_BASE}/api/v1/users/${user.id}/language`, {
         method: 'POST',
-        headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+        headers: authHeaders(token, { json: true }),
         body: JSON.stringify({ language }),
       });
       if (res.ok) {
@@ -412,16 +409,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const actions = useMemo(
     () => ({
-      login: (usernameOrEmail: string, password: string, extra?: Record<string, any>) =>
+      login: (usernameOrEmail: string, password: string, extra?: Record<string, unknown>) =>
         handlersRef.current.login(usernameOrEmail, password, extra),
-      register: (username: string, email: string, password: string, extra?: Record<string, any>) =>
+      register: (username: string, email: string, password: string, extra?: Record<string, unknown>) =>
         handlersRef.current.register(username, email, password, extra),
       logout: () => handlersRef.current.logout(),
       resendVerification: (email: string) => handlersRef.current.resendVerification(email),
       verifyEmail: (email: string, code: string) => handlersRef.current.verifyEmail(email, code),
-      forgotPassword: (email: string, extra?: Record<string, any>) =>
+      forgotPassword: (email: string, extra?: Record<string, unknown>) =>
         handlersRef.current.forgotPassword(email, extra),
-      resetPassword: (token: string, newPassword: string, extra?: Record<string, any>) =>
+      resetPassword: (token: string, newPassword: string, extra?: Record<string, unknown>) =>
         handlersRef.current.resetPassword(token, newPassword, extra),
       refreshUser: () => handlersRef.current.refreshUser(),
       updateCharacterOwnership: (characterId: number, isOwned: boolean) =>

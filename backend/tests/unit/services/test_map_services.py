@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 
 from app.models.map import MapRealm, MapSource, Realm
 from app.services.map_service import MapService
+from app.seeds.static_db_seeder import seed_from_static_json
 from app.services.maps.queries import fetch_maps, fetch_realms
 
 
@@ -190,3 +191,12 @@ def test_fetch_maps_raw_sqlite_fallback() -> None:
     assert row["is_main_building"] is True
     assert row["size_sq_tiles"] == 120.0
     assert row["size_sq_meters"] == 7680
+
+
+@pytest.mark.unit
+def test_get_maps_returns_seeded_catalog() -> None:
+    """MapService.get_maps() over the real static seed (not a hand-built fixture)."""
+    seed_from_static_json(force=True)
+    maps = MapService().get_maps()
+    assert len(maps) >= 6
+    assert "Coal Tower" in [m["name"] for m in maps]

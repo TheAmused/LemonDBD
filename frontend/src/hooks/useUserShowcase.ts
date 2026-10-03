@@ -12,19 +12,11 @@ import {
   fetchUserShowcase,
   updateUserShowcaseApi,
 } from '@/services/userShowcaseApi';
+import { getLocalStorage } from '@/utils/safeStorage';
+import { getAuthToken } from '@/utils/api';
 
 export function getShowcaseStorageKey(userId?: number | string | null): string {
   return `lemondbd_showcase_${userId ?? 'guest'}`;
-}
-
-export function getLocalStorage(): Storage | null {
-  if (typeof window !== 'undefined' && window.localStorage) {
-    return window.localStorage;
-  }
-  if (typeof globalThis !== 'undefined' && (globalThis as any).localStorage) {
-    return (globalThis as any).localStorage;
-  }
-  return null;
 }
 
 export function mergeShowcaseState(partial?: unknown): UserShowcaseState {
@@ -166,8 +158,7 @@ export function useUserShowcase(
   const syncToDatabase = useCallback(
     (targetUserId: number | string, nextState: UserShowcaseState) => {
       if (typeof window === 'undefined') return;
-      const storage = getLocalStorage();
-      const token = storage?.getItem('lemondbd_token');
+      const token = getAuthToken();
       if (!token) return; // Unauthenticated or mock; saved to storage
 
       setIsSaving(true);

@@ -138,6 +138,6 @@ class TestChaosStats:
 
         stats = fetch_chaos_user_stats(sample_user.id, "hell")
         assert stats["total_matches"] == 12
-        assert len(stats["recent_logs"]) <= 10
+        assert len(stats["recent_logs"]) == 12
         first_recent = stats["recent_logs"][0]
         assert first_recent["killer_id"] == "Killer 11"

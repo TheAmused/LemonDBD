@@ -4,6 +4,7 @@
 import json
 import pytest
 from app.seeds.smash_roster_seeder import ROSTERS_DIR
+from app.utils.lang import TRANSLATABLE_LOCALES
 
 REQUIRED_TRANSLATION_FIELDS = (
     "name",
@@ -28,7 +29,6 @@ EXPECTED_HOOKED_ON_YOU_WATERMARKS = {
     "the_narrator": ("THE", "NARRATOR"),
 }
 
-SUPPORTED_LOCALES = ("pl", "de", "es", "ja")
 
 
 @pytest.mark.unit
@@ -52,7 +52,7 @@ class TestHookedOnYouRosterIntegrity:
 
     def test_roster_metadata_translations(self, hoy_roster: dict) -> None:
         translations = hoy_roster.get("translations") or {}
-        for locale in SUPPORTED_LOCALES:
+        for locale in TRANSLATABLE_LOCALES:
             assert locale in translations, f"hooked_on_you missing roster translation for '{locale}'"
             assert translations[locale].get("name"), f"hooked_on_you missing translated name for '{locale}'"
             assert translations[locale].get("description"), f"hooked_on_you missing translated description for '{locale}'"
@@ -103,7 +103,7 @@ class TestHookedOnYouRosterIntegrity:
             en_g_count = len(char.get("green_flags") or [])
             en_r_count = len(char.get("red_flags") or [])
 
-            for locale in SUPPORTED_LOCALES:
+            for locale in TRANSLATABLE_LOCALES:
                 assert locale in translations, f"{slug}: missing translation for locale '{locale}'"
                 t_data = translations[locale]
 
@@ -201,7 +201,7 @@ class TestLegendaryRosterIntegrity:
 
     def test_roster_metadata_translations(self, legendary_roster: dict) -> None:
         translations = legendary_roster.get("translations") or {}
-        for locale in SUPPORTED_LOCALES:
+        for locale in TRANSLATABLE_LOCALES:
             assert locale in translations, f"legendary roster missing translation for '{locale}'"
             assert translations[locale].get("name"), f"legendary roster missing translated name for '{locale}'"
             assert translations[locale].get("description"), f"legendary roster missing translated description for '{locale}'"
@@ -252,7 +252,7 @@ class TestLegendaryRosterIntegrity:
             en_g_count = len(char.get("green_flags") or [])
             en_r_count = len(char.get("red_flags") or [])
 
-            for locale in SUPPORTED_LOCALES:
+            for locale in TRANSLATABLE_LOCALES:
                 assert locale in translations, f"{slug}: missing translation for locale '{locale}'"
                 t_data = translations[locale]
 

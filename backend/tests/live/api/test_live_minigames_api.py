@@ -42,11 +42,13 @@ class TestLiveMinigamesAPI:
         res_quests = live_client.get("/api/v1/others/quests")
         assert res_quests.status_code in (200, 404) or "quests" in res_quests.get_json()
 
-    def test_live_guesser_and_builds_endpoints(self, live_client: FlaskClient) -> None:
-        res_guesser = live_client.get("/api/v1/guesser/stats")
-        assert res_guesser.status_code == 200
-        assert "data" in res_guesser.get_json()
+    def test_live_minigames_catalog_and_daily_endpoints(self, live_client: FlaskClient) -> None:
+        res_catalog = live_client.get("/api/v1/minigames/catalog")
+        assert res_catalog.status_code == 200
+        catalog = res_catalog.get_json()
+        assert "characters" in catalog or "killers" in catalog
 
-        res_builds = live_client.get("/api/v1/builds/")
-        assert res_builds.status_code == 200
-        assert "builds" in res_builds.get_json()
+        res_daily = live_client.get("/api/v1/minigames/daily")
+        assert res_daily.status_code == 200
+        daily = res_daily.get_json()
+        assert "rounds" in daily

@@ -12,13 +12,15 @@ import {
 } from 'lucide-react';
 import { SmashSounds } from './SmashSoundEffects';
 
+import { tip } from '@/components/common/Tooltip';
+import { useDictionary } from "@/context/DictionaryContext";
+
 export interface TactileKeycapsProps {
   onPass: () => void;
   onSmash: () => void;
   onStats: () => void;
   onReset: () => void;
   disabled?: boolean;
-  dict?: Dictionary;
   className?: string;
 }
 
@@ -41,22 +43,15 @@ interface KeycapConfig {
   keys: string[];
 }
 
-export const TactileKeycaps: React.FC<TactileKeycapsProps> = ({
-  onPass,
-  onSmash,
-  onStats,
-  onReset,
-  disabled = false,
-  dict,
-  className,
-}) => {
+export const TactileKeycaps: React.FC<TactileKeycapsProps> = ({ onPass, onSmash, onStats, onReset, disabled = false, className }) => {
+  const dict = useDictionary();
   const [activeKey, setActiveKey] = useState<string | null>(null);
 
   // Localized Labels
-  const passLabel = dict?.smashOrPass?.controls?.pass || dict?.smashOrPass?.pass || 'Pass';
-  const smashLabel = dict?.smashOrPass?.controls?.smash || dict?.smashOrPass?.smash || 'Smash';
-  const statsLabel = dict?.smashOrPass?.controls?.stats || dict?.smashOrPass?.stats || 'Info';
-  const resetLabel = dict?.smashOrPass?.controls?.reset || dict?.smashOrPass?.reset || 'Reset';
+  const passLabel = dict.smashOrPass.controls.pass;
+  const smashLabel = dict.smashOrPass.controls.smash;
+  const statsLabel = dict.smashOrPass.controls.stats;
+  const resetLabel = dict.smashOrPass.controls.reset;
 
   // 4 Keycaps: Left (Pass), Up (Stats), Right (Smash), R (Reset)
   const keycaps: KeycapConfig[] = useMemo(() => [
@@ -198,7 +193,7 @@ export const TactileKeycaps: React.FC<TactileKeycapsProps> = ({
               type="button"
               disabled={disabled}
               onClick={() => triggerAction(cap.id, cap.action)}
-              title={`${cap.label} (${cap.primaryKey} / ${cap.subKey})`}
+              {...tip(`${cap.label} (${cap.primaryKey} / ${cap.subKey})`, undefined, 'action')} aria-label={`${cap.label} (${cap.primaryKey} / ${cap.subKey})`}
               className={`group relative flex flex-col items-center justify-center rounded-xl transition-all duration-150 cursor-pointer ${
                 isReset ? 'w-14 sm:w-16 h-14 sm:h-16' : 'w-12 sm:w-14 h-14 sm:h-16'
               } ${
@@ -208,12 +203,12 @@ export const TactileKeycaps: React.FC<TactileKeycapsProps> = ({
               } ${disabled ? 'opacity-40 cursor-not-allowed pointer-events-none' : 'active:translate-y-1'}`}
             >
               {/* Primary Key / Icon */}
-              <div className={`flex items-center justify-center font-mono font-black text-sm sm:text-base ${cap.colorTheme.text}`}>
+              <div className={`flex items-center justify-center font-black text-sm sm:text-base ${cap.colorTheme.text}`}>
                 {cap.primaryKey}
               </div>
 
               {/* Sub-Legend Letter */}
-              <span className={`text-[10px] font-bold font-mono tracking-wider transition-colors ${
+              <span className={`text-tiny font-bold tracking-wider transition-colors ${
                 isActive
                   ? 'text-text-primary'
                   : 'text-text-muted group-hover:text-text-primary'
@@ -226,10 +221,10 @@ export const TactileKeycaps: React.FC<TactileKeycapsProps> = ({
       </div>
 
       {/* Instruction Subtitle */}
-      <div className="flex items-center gap-1.5 text-[11px] font-medium text-text-muted pt-0.5">
+      <div className="flex items-center gap-1.5 text-mini font-medium text-text-muted pt-0.5">
         <span className="inline-block w-1.5 h-1.5 rounded-full bg-accent-red animate-pulse" />
         <span>
-          {dict?.smashOrPass?.controls?.hint || 'Użyj strzałek lub przeciągnij, aby zagłosować'}
+          {dict.smashOrPass.controls.hint}
         </span>
       </div>
     </div>

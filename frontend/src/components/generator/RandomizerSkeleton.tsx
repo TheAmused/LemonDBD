@@ -2,24 +2,21 @@
 // frontend/src/components/generator/RandomizerSkeleton.tsx
 
 import React from 'react';
-import { DbdSpinner } from '@/components/DbdSpinner';
+import { DbdSpinner } from '@/components/common/DbdSpinner';
 import type { Dictionary } from '@/locales/types';
+import { useDictionary } from "@/context/DictionaryContext";
 
 interface RandomizerSkeletonProps {
   className?: string;
-  dict?: Dictionary | any;
   ariaLabel?: string;
 }
 
 /**
  * Universal DBD Skill Check Framer Motion Loading Spinner for Perk Randomizer (/randomizer).
  */
-export const RandomizerPageSkeleton: React.FC<RandomizerSkeletonProps> = ({
-  className = '',
-  dict,
-  ariaLabel,
-}) => {
-  const loadingLabel = ariaLabel || dict?.generator?.loading || dict?.app?.loading || 'Initializing trial generator...';
+export const RandomizerPageSkeleton: React.FC<RandomizerSkeletonProps> = ({ className = '', ariaLabel }) => {
+  const dict = useDictionary();
+  const loadingLabel = ariaLabel || dict.app.loading;
 
   return (
     <div
@@ -34,10 +31,7 @@ export const RandomizerPageSkeleton: React.FC<RandomizerSkeletonProps> = ({
         accent="blood"
         needleSpeed={0.9}
         label={loadingLabel}
-        dict={dict}
       />
     </div>
   );
 };
-
-export default RandomizerPageSkeleton;

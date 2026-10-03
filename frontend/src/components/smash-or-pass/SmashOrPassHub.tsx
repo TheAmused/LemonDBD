@@ -19,7 +19,6 @@ import {
   Trash2,
   AlertTriangle,
   ThumbsDown,
-  X,
   RotateCw,
   Maximize2,
   Gamepad2,
@@ -27,6 +26,7 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Tooltip } from '@/components/common/Tooltip';
+import { Modal } from '@/components/common/Modal';
 import { CharacterCard } from './CharacterCard';
 import { shuffleArray } from '@/utils/shuffleArray';
 import { hasAcknowledgedNsfwRoster, acknowledgeNsfwRoster } from '@/utils/nsfwAck';
@@ -61,6 +61,11 @@ import {
 import { deleteCustomRoster } from '@/utils/smashOrPass/storage';
 import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
 import { IridescentShardIcon } from '@/components/icons/DbdIcons';
+import { Button } from '@/components/common/Button';
+import { Surface } from '@/components/common/Surface';
+import { isKiller as isKillerRole, isSurvivor as isSurvivorRole } from '@/utils/characterUtils';
+import { formatMessage } from '@/utils/i18nFormat';
+import { useDictionary } from "@/context/DictionaryContext";
 
 // Dynamic client-side imports for heavy visual layers and interactive modals
 const SmashAnimations = dynamic(
@@ -114,11 +119,27 @@ const SmashRosterExportModal = dynamic(
 );
 
 interface SmashOrPassHubProps {
-  dict?: Dictionary;
   locale?: string;
 }
 
-export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = 'en' }) => {
+/** Roster slugs from the API -> the key their names live under in dict.smashOrPass.rosters. */
+const ROSTER_DICT_KEY: Record<string, string> = {
+  hooked_on_you: 'hoy',
+  legendary_characters: 'legendary',
+  cyberpunk_2077: 'cyberpunk',
+  anime_manga: 'anime',
+  gothic_eldritch: 'gothic',
+};
+
+/** One persisted vote; older saves put the slug on the vote itself instead of on `character`. */
+type StoredVote = { character: EntityItem; vote: 'smash' | 'pass'; timestamp: number; slug?: string; character_slug?: string };
+
+function voteSlug(v: StoredVote): string | undefined {
+  return v.character?.slug || v.slug || v.character_slug;
+}
+
+export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ locale = 'en' }) => {
+  const dict = useDictionary();
   const backendBase = getBackendBaseUrl();
   const router = useRouter();
   const { user, token, isAuthenticated } = useAuth();
@@ -182,9 +203,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
   });
 
   // Voting History & Session State (Persisted in localStorage & synced with backend)
-  const [voteHistory, setVoteHistory] = useState<
-    Array<{ character: EntityItem; vote: 'smash' | 'pass'; timestamp: number }>
-  >(() => {
+  const [voteHistory, setVoteHistory] = useState<StoredVote[]>(() => {
     if (typeof window !== 'undefined') {
       try {
         const storedRoster = localStorage.getItem('dbd_smash_selected_roster') || 'canon';
@@ -236,8 +255,8 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
           setIsPersonaOpen(true);
         }
       }
-    } catch (e) {
-      console.debug('Failed to decode shared_archetype query parameter:', e);
+    } catch {
+      // Best-effort: failure here is non-fatal.
     }
   }, []);
   const [isHowToPlayOpen, setIsHowToPlayOpen] = useState<boolean>(false);
@@ -317,8 +336,8 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
       if (rosterList && rosterList.length > 0) {
         setRosters(rosterList);
       }
-    } catch (err) {
-      console.debug('Failed to fetch rosters:', err);
+    } catch {
+      // Best-effort: failure here is non-fatal.
     }
   }, []);
 
@@ -336,8 +355,8 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
       if (items) {
         setLeaderboardItems(items);
       }
-    } catch (err) {
-      console.debug('Failed to fetch leaderboard:', err);
+    } catch {
+      // Best-effort: failure here is non-fatal.
     }
   }, [selectedRosterSlug]);
 
@@ -375,8 +394,8 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
         setCurrentIndex(0);
         setTotalRemaining(feed.total_remaining ?? feed.entities.length);
       }
-    } catch (err) {
-      console.debug('Failed to load feed from database:', err);
+    } catch {
+      // Best-effort: failure here is non-fatal.
     } finally {
       setLoading(false);
       setIsExiting(false);
@@ -387,7 +406,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
 
   // Synchronize vote history from LocalStorage & Backend
   const syncVotes = useCallback(async (rosterSlug: string) => {
-    let currentVotes: Array<{ character: EntityItem; vote: 'smash' | 'pass'; timestamp: number }> = [];
+    let currentVotes: StoredVote[] = [];
     if (typeof window !== 'undefined') {
       try {
         const raw = localStorage.getItem(`dbd_smash_votes_${rosterSlug}`);
@@ -406,15 +425,15 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
       if (isAuthenticated || token || user?.id) {
         try {
           await apiSyncSessionVotes(rosterSlug);
-        } catch (err) {
-          console.debug('Error syncing guest session votes:', err);
+        } catch {
+          // Best-effort: failure here is non-fatal.
         }
       }
 
       try {
         const backendVotes = await fetchUserVotes(rosterSlug);
         if (backendVotes && backendVotes.length > 0) {
-          const existingSlugs = new Set(currentVotes.map((v) => v.character?.slug || (v as any).slug));
+          const existingSlugs = new Set(currentVotes.map((v) => voteSlug(v)));
           const merged = [...currentVotes];
 
           backendVotes.forEach((bv) => {
@@ -424,9 +443,9 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
                 character: (bv.entity || {
                   id: bv.character_slug,
                   slug: bv.character_slug,
-                  name: (bv as any).character_name || bv.character_slug,
-                  role: (bv as any).role || 'Survivor',
-                  gender: (bv as any).gender || 'female',
+                  name: bv.character_name || bv.character_slug,
+                  role: bv.role || 'Survivor',
+                  gender: bv.gender || 'female',
                   order_index: 0,
                   is_active: true,
                   roster_id: rosterSlug,
@@ -440,8 +459,8 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
 
           currentVotes = merged;
         }
-      } catch (err) {
-        console.debug('Error syncing backend user votes:', err);
+      } catch {
+        // Best-effort: failure here is non-fatal.
       }
     }
 
@@ -490,7 +509,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
     };
   }, []);
 
-  const handleFilterChange = (type: 'role' | 'gender', value: any) => {
+  const handleFilterChange = (type: 'role' | 'gender', value: string) => {
     if (type === 'role') setRoleFilter(value);
     if (type === 'gender') setGenderFilter(value);
   };
@@ -534,14 +553,9 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
   const getRosterDisplayName = useCallback(
     (r: { slug: string; name?: string }) => {
       if (r.name) return r.name;
-      const locName = (dict?.smashOrPass?.rosters as any)?.[r.slug]?.name;
+      const key = ROSTER_DICT_KEY[r.slug] ?? r.slug;
+      const locName = (dict.smashOrPass.rosters as Record<string, { name?: string } | undefined>)?.[key]?.name;
       if (locName) return locName;
-      if (r.slug === 'canon') return locale === 'pl' ? 'Dead by Daylight: Kanon Mgły' : 'Dead by Daylight: Fog Canon';
-      if (r.slug === 'hooked_on_you') return locale === 'pl' ? 'Hooked on You: Romans na Wyspie' : 'Hooked on You: Island Romance';
-      if (r.slug === 'legendary_characters') return locale === 'pl' ? 'Legendarne Skórki i Kolaboracje' : 'Legendary Skins & Collabs';
-      if (r.slug === 'cyberpunk_2077') return locale === 'pl' ? 'Cyberpunk Mgła 2077' : 'Cyberpunk Fog 2077';
-      if (r.slug === 'anime_manga') return locale === 'pl' ? 'Estetyka Anime / Mangi' : 'Fog Anime / Manga Aesthetic';
-      if (r.slug === 'gothic_eldritch') return locale === 'pl' ? 'Wiktoriańskie i Gotyckie Legendy' : 'Victorian & Gothic Eldritch';
       return r.name || r.slug;
     },
     [dict, locale]
@@ -592,7 +606,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
       const newEntry = { character: currentCharacter, vote, timestamp: Date.now() };
       setVoteHistory((prev) => {
         const filtered = prev.filter(
-          (v) => (v.character?.slug || (v as any).slug) !== currentCharacter.slug
+          (v) => voteSlug(v) !== currentCharacter.slug
         );
         const updated = [...filtered, newEntry];
         if (typeof window !== 'undefined') {
@@ -614,7 +628,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
       // Call database API to cast vote
       try {
         const voteResponse = await apiCastVote(currentCharacter.id, vote, currentCharacter.slug);
-        const entityData = voteResponse?.data || (voteResponse as any);
+        const entityData = voteResponse?.data;
         if (entityData) {
           setLeaderboardItems((prev) => {
             return prev.map((item) => {
@@ -650,8 +664,8 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
           });
         }
         await loadLeaderboard();
-      } catch (err) {
-        console.debug('Failed to cast vote to database:', err);
+      } catch {
+          // Best-effort: failure here is non-fatal.
       }
     },
     [currentCharacter, isExiting, dragPhysics, handleExitComplete, selectedRosterSlug, loadLeaderboard]
@@ -755,7 +769,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
     return voteHistory
       .filter((v) => v.vote === 'smash')
       .map((v) => ({
-        slug: v.character?.slug || (v as any).slug || (v as any).character_slug || '',
+        slug: voteSlug(v) || '',
         vote: v.vote,
         timestamp: v.timestamp,
       }));
@@ -769,22 +783,21 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
   const remainingInDeck = Math.max(0, deck.length - currentIndex);
 
   // Localized Strings
-  const title = dict?.smashOrPass?.title || 'Smash or Pass';
+  const title = dict.smashOrPass.title;
   const subtitle =
-    dict?.smashOrPass?.subtitle ||
-    'Evaluate Dead by Daylight candidates, discover your Trial Romance Archetype, and contribute to the community rankings.';
-  const allRolesLabel = dict?.smashOrPass?.filters?.allRoles || dict?.smashOrPass?.allRoles || 'All Roles';
-  const survivorsLabel = dict?.smashOrPass?.filters?.survivors || dict?.smashOrPass?.survivors || 'Survivors';
-  const killersLabel = dict?.smashOrPass?.filters?.killers || dict?.smashOrPass?.killers || 'Killers';
-  const allGendersLabel = dict?.smashOrPass?.filters?.allGenders || dict?.smashOrPass?.allGenders || 'All Genders';
-  const femaleOnlyLabel = dict?.smashOrPass?.filters?.femaleOnly || dict?.smashOrPass?.femaleOnly || 'Female';
-  const maleOnlyLabel = dict?.smashOrPass?.filters?.maleOnly || dict?.smashOrPass?.maleOnly || 'Male';
-  const monstersLabel = dict?.smashOrPass?.filters?.monsters || dict?.smashOrPass?.monsters || 'Monsters & Eldritch';
-  const leaderboardLabel = dict?.smashOrPass?.modals?.leaderboardTitle || dict?.smashOrPass?.leaderboard || 'Hall of Fame';
-  const hudLabels: any = dict?.smashOrPass?.hud || {};
+    dict.smashOrPass.subtitle;
+  const allRolesLabel = dict.smashOrPass.filters.allRoles;
+  const survivorsLabel = dict.smashOrPass.filters.survivors;
+  const killersLabel = dict.smashOrPass.filters.killers;
+  const allGendersLabel = dict.smashOrPass.filters.allGenders;
+  const femaleOnlyLabel = dict.smashOrPass.filters.femaleOnly;
+  const maleOnlyLabel = dict.smashOrPass.filters.maleOnly;
+  const monstersLabel = dict.smashOrPass.filters.monsters;
+  const leaderboardLabel = dict.smashOrPass.modals.leaderboardTitle;
+  const hudLabels = dict.smashOrPass.hud;
 
   return (
-    <div className="relative min-h-[calc(100vh-5rem)] flex flex-col justify-start space-y-3 pb-12 overflow-hidden">
+    <div className="relative min-h-[calc(100vh-5rem)] flex flex-col justify-start space-y-3 pb-12 overflow-x-clip">
       {/* Interactive Reactive Background */}
       <Suspense fallback={null}>
         <InteractiveDragBackground
@@ -802,7 +815,6 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
         <FloatingLoreScattered
           character={currentCharacter}
           locale={locale}
-          dict={dict}
           customLabels={activeRoster?.custom_labels}
         />
       </Suspense>
@@ -814,7 +826,6 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
           triggerKey={animTrigger.key}
           originX={animTrigger.originX}
           originY={animTrigger.originY}
-          dict={dict}
         />
       </Suspense>
 
@@ -826,27 +837,27 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
         <div className="flex flex-col lg:flex-row items-center justify-between gap-3 sm:gap-4 w-full">
           {/* LEFT: Live Session Telemetry Capsule */}
           <div className="flex items-center justify-center lg:justify-start w-full lg:w-auto order-2 lg:order-1 shrink-0">
-            <div className="flex items-center gap-2 sm:gap-2.5 px-3.5 py-2 rounded-2xl bg-bg-elevated border border-border-color text-xs sm:text-sm font-mono shadow-inner">
+            <div className="flex items-center gap-2 sm:gap-2.5 px-3.5 py-2 rounded-2xl bg-bg-elevated border border-border-color text-xs sm:text-sm shadow-inner">
               <span className="flex items-center gap-1.5 text-text-secondary font-bold">
                 <Layers className="h-4 w-4 text-text-secondary" />
                 <span className="text-text-primary font-black text-sm sm:text-base">{remainingInDeck}</span>
-                <span className="text-[11px] sm:text-xs text-text-muted font-medium">
-                  {hudLabels.left || (locale === 'pl' ? 'pozostało' : 'left')}
+                <span className="text-mini sm:text-xs text-text-muted font-medium">
+                  {hudLabels.left}
                 </span>
               </span>
-              <span className="text-border-color">{dict?.smashOrPass?.pipeSeparator || '|'}</span>
-              <span className="flex items-center gap-1.5 text-accent-red font-black text-xs sm:text-sm">
+              <span className="text-border-color">{dict.smashOrPass.pipeSeparator}</span>
+              <span className="flex items-center gap-1.5 text-accent-red type-strong-fluid">
                 <Heart className="h-3.5 w-3.5 sm:h-4 sm:w-4 fill-accent-red" />
                 <span>{sessionSmashes}</span>
               </span>
-              <span className="text-border-color">{dict?.smashOrPass?.pipeSeparator || '|'}</span>
-              <span className="flex items-center gap-1.5 text-text-muted font-black text-xs sm:text-sm">
+              <span className="text-border-color">{dict.smashOrPass.pipeSeparator}</span>
+              <span className="flex items-center gap-1.5 text-text-muted type-strong-fluid">
                 <ThumbsDown className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-text-muted" />
                 <span>{sessionPasses}</span>
               </span>
-              <span className="text-border-color">{dict?.smashOrPass?.pipeSeparator || '|'}</span>
+              <span className="text-border-color">{dict.smashOrPass.pipeSeparator}</span>
               <span className="text-accent-amber font-black text-xs sm:text-sm tracking-wide">
-                {sessionSmashRate}{dict?.smashOrPass?.percentSign || '%'}
+                {sessionSmashRate}{dict.smashOrPass.percentSign}
               </span>
             </div>
           </div>
@@ -858,7 +869,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
             <button
               type="button"
               onClick={() => setIsRosterModalOpen(true)}
-              className="flex items-center gap-2.5 sm:gap-3 px-3.5 sm:px-4 py-2 sm:py-2.5 min-h-[44px] rounded-2xl bg-bg-surface border border-accent-red/50 hover:border-accent-red text-xs sm:text-sm font-mono font-bold text-accent-red transition-all cursor-pointer group shrink-0 touch-manipulation"
+              className="flex items-center gap-2.5 sm:gap-3 px-3.5 sm:px-4 py-2 sm:py-2.5 min-h-[44px] rounded-2xl bg-bg-surface border border-accent-red/50 hover:border-accent-red type-strong-fluid text-accent-red transition-all cursor-pointer group shrink-0 touch-manipulation"
             >
               <span className="relative flex h-5 w-5 sm:h-6 sm:w-6 items-center justify-center rounded-lg overflow-hidden border border-accent-red/60 shrink-0">
                 <img
@@ -873,7 +884,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
               <span className="truncate max-w-[150px] sm:max-w-[220px] text-text-primary group-hover:text-accent-red font-black tracking-wide">
                 {getRosterDisplayName(activeRoster)}
               </span>
-              <span className="px-2 py-0.5 rounded-lg bg-accent-red/20 text-accent-red text-[10px] sm:text-xs font-black">
+              <span className="px-2 py-0.5 rounded-lg bg-accent-red/20 text-accent-red text-tiny sm:text-xs font-black">
                 {activeRoster.entity_count ?? activeRoster.character_count ?? totalRemaining ?? deck.length}
               </span>
               <ChevronDown className="h-4 w-4 text-accent-red group-hover:translate-y-0.5 transition-transform" />
@@ -885,72 +896,66 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
           {/* RIGHT: Action Cluster (Icons with Tooltips and >=44px Touch Targets) */}
           <div className="flex items-center justify-center lg:justify-end gap-1.5 sm:gap-2 w-full lg:w-auto order-3 shrink-0 flex-wrap">
             {/* Filter Settings Drawer Toggle */}
-            <Tooltip
-              title={dict?.smashOrPass?.tooltips?.filter || 'Filter Candidates'}
-              description={dict?.smashOrPass?.tooltips?.filterDesc || 'Filter by survivor/killer role and character gender.'}
+            <Tooltip variant="action"
+              title={dict.smashOrPass.tooltips.filter}
+              description={dict.smashOrPass.tooltips.filterDesc}
               placement="bottom"
             >
-              <button
-                type="button"
+              <Button
+                variant={isFilterDrawerOpen || roleFilter !== 'all' || genderFilter !== 'all' ? 'soft' : 'secondary'} size="md" icon
                 onClick={() => setIsFilterDrawerOpen((prev) => !prev)}
-                aria-label={dict?.smashOrPass?.tooltips?.filter || 'Filter Candidates'}
-                className={`relative flex min-h-[44px] min-w-[44px] sm:min-h-[38px] sm:min-w-[38px] h-11 w-11 sm:h-9 sm:w-9 items-center justify-center rounded-xl border transition-all cursor-pointer hover:scale-105 active:scale-95 touch-manipulation ${isFilterDrawerOpen || roleFilter !== 'all' || genderFilter !== 'all'
-                    ? 'bg-accent-red/20 border-accent-red/60 text-accent-red'
-                    : 'bg-bg-surface border-border-color text-text-muted hover:text-text-primary hover:border-border-subtle'
-                  }`}
+                aria-label={dict.smashOrPass.tooltips.filter}
+                className="relative h-11 w-11 sm:h-9 sm:w-9 min-h-[44px] min-w-[44px] sm:min-h-[38px] sm:min-w-[38px]"
               >
                 <SlidersHorizontal className="h-4 w-4 sm:h-4 sm:w-4" />
                 {(roleFilter !== 'all' || genderFilter !== 'all') && (
                   <span className="absolute 1.5 sm:-top-0.5 1.5 sm:-right-0.5 h-2.5 w-2.5 rounded-full bg-accent-red ring-2 ring-bg-surface" />
                 )}
-              </button>
+              </Button>
             </Tooltip>
 
             {/* Dynamic Sound Toggle */}
-            <Tooltip
-              title={isSoundActive ? (dict?.smashOrPass?.tooltips?.muteAudio || 'Mute Audio (M / B)') : (dict?.smashOrPass?.tooltips?.unmuteAudio || 'Enable Audio (M / B)')}
-              description={isSoundActive ? (dict?.smashOrPass?.tooltips?.muteAudioDesc || 'Mute all background music and sound effects.') : (dict?.smashOrPass?.tooltips?.unmuteAudioDesc || 'Enable dark synth ambience and sound effects.')}
+            <Tooltip variant="action"
+              title={isSoundActive ? (dict.smashOrPass.tooltips.muteAudio) : (dict.smashOrPass.tooltips.unmuteAudio)}
+              description={isSoundActive ? (dict.smashOrPass.tooltips.muteAudioDesc) : (dict.smashOrPass.tooltips.unmuteAudioDesc)}
               placement="bottom"
             >
-              <button
-                type="button"
+              <Button
+                variant={isSoundActive ? 'soft' : 'secondary'} size="md" icon
                 onClick={handleToggleMasterSound}
-                aria-label={isSoundActive ? (dict?.smashOrPass?.tooltips?.muteAudio || '') : (dict?.smashOrPass?.tooltips?.unmuteAudio || '')}
-                className={`flex min-h-[44px] min-w-[44px] sm:min-h-[38px] sm:min-w-[38px] h-11 w-11 sm:h-9 sm:w-9 items-center justify-center rounded-xl border transition-all cursor-pointer hover:scale-105 active:scale-95 touch-manipulation ${isSoundActive
-                    ? 'bg-accent-red/10 border-accent-red text-accent-red'
-                    : 'bg-bg-surface border-border-color text-text-muted hover:text-text-secondary hover:border-border-subtle'
-                  }`}
+                aria-label={isSoundActive ? (dict.smashOrPass.tooltips.muteAudio) : (dict.smashOrPass.tooltips.unmuteAudio)}
+                className="h-11 w-11 sm:h-9 sm:w-9 min-h-[44px] min-w-[44px] sm:min-h-[38px] sm:min-w-[38px]"
               >
                 {isSoundActive ? <Volume2 className="h-4 w-4 sm:h-4 sm:w-4 text-accent-red animate-pulse" /> : <VolumeX className="h-4 w-4 sm:h-4 sm:w-4" />}
-              </button>
+              </Button>
             </Tooltip>
 
             {/* Archetype Modal */}
-            <Tooltip
-              title={dict?.smashOrPass?.modals?.personaTitle || 'Trial Romance Archetype'}
-              description={dict?.smashOrPass?.tooltips?.archetypeDesc || 'Discover your personal dating archetype based on your voting tendencies.'}
+            <Tooltip variant="action"
+              title={dict.smashOrPass.modals.personaTitle}
+              description={dict.smashOrPass.tooltips.archetypeDesc}
               placement="bottom"
             >
-              <button
-                type="button"
+              <Button
+                variant="soft" size="md" icon
                 onClick={() => setIsPersonaOpen(true)}
-                aria-label={dict?.smashOrPass?.tooltips?.archetype || dict?.smashOrPass?.modals?.personaTitle || ''}
-                className="flex min-h-[44px] min-w-[44px] sm:min-h-[38px] sm:min-w-[38px] h-11 w-11 sm:h-9 sm:w-9 items-center justify-center rounded-xl bg-accent-red/15 border border-accent-red/30 hover:border-accent-red/60 text-accent-red transition-all shadow-md cursor-pointer hover:scale-105 active:scale-95 touch-manipulation"
+                aria-label={dict.smashOrPass.tooltips.archetype}
+                className="h-11 w-11 sm:h-9 sm:w-9 min-h-[44px] min-w-[44px] sm:min-h-[38px] sm:min-w-[38px]"
               >
                 <Sparkles className="h-4 w-4 sm:h-4 sm:w-4 text-accent-red" />
-              </button>
+              </Button>
             </Tooltip>
 
             {/* Hall of Fame Leaderboard Modal */}
-            <Tooltip
-              title={dict?.smashOrPass?.modals?.leaderboardTitle || 'Hall of Fame'}
-              description={dict?.smashOrPass?.tooltips?.leaderboardDesc || 'View community rankings and smash statistics across the realm.'}
+            <Tooltip variant="action"
+              title={dict.smashOrPass.modals.leaderboardTitle}
+              description={dict.smashOrPass.tooltips.leaderboardDesc}
               placement="bottom"
             >
               <button
                 type="button"
                 onClick={() => setIsLeaderboardOpen(true)}
-                aria-label={dict?.smashOrPass?.tooltips?.leaderboard || dict?.smashOrPass?.modals?.leaderboardTitle || ''}
+                aria-label={dict.smashOrPass.tooltips.leaderboard}
                 className="flex min-h-[44px] min-w-[44px] sm:min-h-[38px] sm:min-w-[38px] h-11 w-11 sm:h-9 sm:w-9 items-center justify-center rounded-xl bg-accent-amber/10 border border-accent-amber/30 hover:border-accent-amber/60 text-accent-amber transition-all shadow-md cursor-pointer hover:scale-105 active:scale-95 touch-manipulation"
               >
                 <IridescentShardIcon className="h-4 w-4 sm:h-4 sm:w-4 text-accent-amber" />
@@ -958,51 +963,51 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
             </Tooltip>
 
             {/* Shuffle */}
-            <Tooltip
-              title={dict?.smashOrPass?.tooltips?.shuffle || 'Shuffle Remaining'}
-              description={dict?.smashOrPass?.tooltips?.shuffleDesc || 'Randomize the remaining candidates in your deck.'}
+            <Tooltip variant="action"
+              title={dict.smashOrPass.tooltips.shuffle}
+              description={dict.smashOrPass.tooltips.shuffleDesc}
               placement="bottom"
             >
-              <button
-                type="button"
+              <Button
+                variant="secondary" size="md" icon
                 onClick={shuffleDeck}
-                aria-label={dict?.smashOrPass?.tooltips?.shuffle || ''}
-                className="flex min-h-[44px] min-w-[44px] sm:min-h-[38px] sm:min-w-[38px] h-11 w-11 sm:h-9 sm:w-9 items-center justify-center rounded-xl bg-bg-surface border border-border-color text-text-muted hover:text-text-primary hover:border-border-subtle transition-all cursor-pointer hover:scale-105 active:scale-95 touch-manipulation"
+                aria-label={dict.smashOrPass.tooltips.shuffle}
+                className="h-11 w-11 sm:h-9 sm:w-9 min-h-[44px] min-w-[44px] sm:min-h-[38px] sm:min-w-[38px]"
               >
                 <Shuffle className="h-4 w-4 sm:h-4 sm:w-4" />
-              </button>
+              </Button>
             </Tooltip>
 
             {/* Reset */}
-            <Tooltip
-              title={dict?.smashOrPass?.tooltips?.resetAllVotes || 'Reset Voting Data'}
-              description={dict?.smashOrPass?.tooltips?.resetDesc || 'Clear your votes and restore all candidate cards.'}
+            <Tooltip variant="action"
+              title={dict.smashOrPass.tooltips.resetAllVotes}
+              description={dict.smashOrPass.tooltips.resetDesc}
               placement="bottom"
             >
-              <button
-                type="button"
+              <Button
+                variant="secondary" size="md" icon
                 onClick={() => setIsResetConfirmOpen(true)}
-                aria-label={dict?.smashOrPass?.tooltips?.resetAllVotes || ''}
-                className="flex min-h-[44px] min-w-[44px] sm:min-h-[38px] sm:min-w-[38px] h-11 w-11 sm:h-9 sm:w-9 items-center justify-center rounded-xl bg-bg-surface border border-border-color text-text-muted hover:text-accent-red hover:border-accent-red/40 transition-all cursor-pointer hover:scale-105 active:scale-95 touch-manipulation"
+                aria-label={dict.smashOrPass.tooltips.resetAllVotes}
+                className="h-11 w-11 sm:h-9 sm:w-9 min-h-[44px] min-w-[44px] sm:min-h-[38px] sm:min-w-[38px]"
               >
                 <Trash2 className="h-4 w-4 sm:h-4 sm:w-4" />
-              </button>
+              </Button>
             </Tooltip>
 
             {/* How to Play */}
-            <Tooltip
-              title={dict?.smashOrPass?.tooltips?.howToPlay || 'How to Play'}
-              description={dict?.smashOrPass?.tooltips?.howToPlayDesc || 'View keyboard shortcuts, voting controls, and trial mechanics.'}
+            <Tooltip variant="action"
+              title={dict.smashOrPass.tooltips.howToPlay}
+              description={dict.smashOrPass.tooltips.howToPlayDesc}
               placement="bottom"
             >
-              <button
-                type="button"
+              <Button
+                variant="secondary" size="md" icon
                 onClick={() => setIsHowToPlayOpen(true)}
-                aria-label={dict?.smashOrPass?.tooltips?.howToPlay || ''}
-                className="flex min-h-[44px] min-w-[44px] sm:min-h-[38px] sm:min-w-[38px] h-11 w-11 sm:h-9 sm:w-9 items-center justify-center rounded-xl bg-bg-surface border border-border-color text-text-muted hover:text-text-primary hover:border-border-subtle transition-all cursor-pointer hover:scale-105 active:scale-95 touch-manipulation"
+                aria-label={dict.smashOrPass.tooltips.howToPlay}
+                className="h-11 w-11 sm:h-9 sm:w-9 min-h-[44px] min-w-[44px] sm:min-h-[38px] sm:min-w-[38px]"
               >
                 <HelpCircle className="h-4 w-4 sm:h-4 sm:w-4" />
-              </button>
+              </Button>
             </Tooltip>
           </div>
         </div>
@@ -1020,7 +1025,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
             >
               <div className="flex flex-col md:flex-row items-center justify-between gap-3">
                 {/* Role Segmented Switch */}
-                <div className="flex items-center gap-1 p-1 bg-bg-elevated border border-border-color rounded-2xl w-full md:w-auto shadow-inner text-xs font-mono font-bold overflow-x-auto">
+                <div className="flex items-center gap-1 p-1 bg-bg-elevated border border-border-color rounded-2xl w-full md:w-auto shadow-inner type-strong overflow-x-auto">
                   <button
                     type="button"
                     onClick={() => handleFilterChange('role', 'all')}
@@ -1032,8 +1037,8 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
                     {allRolesLabel}
                   </button>
                   {availableRoles.map((role) => {
-                    const isSurvivor = role === 'Survivor';
-                    const isKiller = role === 'Killer';
+                    const isSurvivor = isSurvivorRole(role);
+                    const isKiller = isKillerRole(role);
                     const label = isSurvivor ? survivorsLabel : isKiller ? killersLabel : role;
                     return (
                       <button
@@ -1054,7 +1059,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
                 </div>
 
                 {/* Gender Segmented Switch */}
-                <div className="flex items-center gap-1 p-1 bg-bg-elevated border border-border-color rounded-2xl w-full md:w-auto shadow-inner text-xs font-mono font-bold overflow-x-auto">
+                <div className="flex items-center gap-1 p-1 bg-bg-elevated border border-border-color rounded-2xl w-full md:w-auto shadow-inner type-strong overflow-x-auto">
                   <button
                     type="button"
                     onClick={() => handleFilterChange('gender', 'all')}
@@ -1116,29 +1121,28 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
               <div className="flex h-14 w-14 sm:h-16 sm:w-16 items-center justify-center rounded-2xl bg-accent-red/15 border border-accent-red/40 text-accent-red">
                 <AlertTriangle className="h-7 w-7 sm:h-8 sm:w-8" aria-hidden="true" />
               </div>
-              <h3 className="text-base sm:text-lg font-black font-mono text-text-primary">
-                {dict?.smashOrPass?.nsfw?.title || 'Contains NSFW Content'}
+              <h3 className="text-base sm:text-lg font-black text-text-primary">
+                {dict.smashOrPass.nsfw.title}
               </h3>
               <p className="text-xs sm:text-sm text-text-muted">
-                {dict?.smashOrPass?.nsfw?.description ||
-                  `${activeRoster.name || selectedRosterSlug} is flagged as containing mature/NSFW content. Confirm you want to view it.`}
+                {dict.smashOrPass.nsfw.description}
               </p>
-              <button
-                type="button"
+              <Button
+                variant="primary" size="md"
                 onClick={handleAcknowledgeNsfw}
                 data-testid="nsfw-content-gate-confirm"
-                className="mt-2 px-5 py-2.5 rounded-2xl bg-accent-red text-text-inverted text-sm font-mono font-bold shadow-lg hover:brightness-110 active:scale-95 transition-all"
+                className="mt-2 rounded-2xl"
               >
-                {dict?.smashOrPass?.nsfw?.confirm || 'Click to View'}
-              </button>
+                {dict.smashOrPass.nsfw.confirm}
+              </Button>
             </div>
           </div>
         ) : loading ? (
           <div className="relative flex flex-col items-center justify-center min-h-[460px] sm:min-h-[520px] pointer-events-auto select-none animate-pulse">
             <div className="w-[88vw] max-w-[340px] sm:max-w-[380px] md:max-w-[420px] aspect-[9/14] sm:aspect-[9/15] rounded-[32px] sm:rounded-[36px] bg-bg-primary border-2 border-accent-red/30 flex flex-col items-center justify-center p-6 space-y-4">
               <Heart className="h-12 w-12 text-accent-red fill-accent-red/30 animate-pulse" />
-              <span className="text-xs font-mono text-text-secondary text-center font-semibold">
-                {dict?.smashOrPass?.loadingRosterPrefix || 'Loading'} {activeRoster.name || selectedRosterSlug} {dict?.smashOrPass?.loadingRosterSuffix || 'from Database...'}
+              <span className="type-strong text-text-secondary text-center">
+                {dict.smashOrPass.loadingRosterPrefix} {activeRoster.name || selectedRosterSlug} {dict.smashOrPass.loadingRosterSuffix}
               </span>
               <div className="h-1.5 w-32 rounded-full bg-bg-elevated overflow-hidden">
                 <div className="h-full bg-accent-red animate-[shimmer_1.5s_infinite]" />
@@ -1179,7 +1183,6 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
                   onVote={() => { }}
                   isTopCard={false}
                   locale={locale}
-                  dict={dict}
                   customLabels={activeRoster?.custom_labels}
                   rosterMode={activeRoster?.roster_mode}
                 />
@@ -1218,7 +1221,6 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
                   onVote={() => { }}
                   isTopCard={false}
                   locale={locale}
-                  dict={dict}
                   customLabels={activeRoster?.custom_labels}
                   rosterMode={activeRoster?.roster_mode}
                 />
@@ -1238,7 +1240,6 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
                 initialExitOffset={exitOffset}
                 onExitComplete={handleExitComplete}
                 locale={locale}
-                dict={dict}
                 customLabels={activeRoster?.custom_labels}
                 rosterMode={activeRoster?.roster_mode}
               />
@@ -1252,151 +1253,128 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
             </div>
 
             <div className="space-y-1">
-              <h3 className="text-xl font-black font-mono text-text-primary">{dict?.smashOrPass?.empty?.title || 'All Candidates Evaluated!'}</h3>
+              <h3 className="text-xl font-black text-text-primary">{dict.smashOrPass.empty.title}</h3>
               <p className="text-xs text-text-muted">
-                {dict?.smashOrPass?.empty?.subtitle || `You have completed all available candidates in ${activeRoster.name || selectedRosterSlug}.`}
+                {dict.smashOrPass.empty.subtitle}
               </p>
             </div>
 
             {/* Session Stats Summary */}
-            <div className="grid grid-cols-2 gap-3 py-2 font-mono">
-              <div className="bg-bg-elevated p-4 rounded-2xl border border-border-color">
-                <span className="text-xs text-accent-red font-bold uppercase">{dict?.smashOrPass?.smash || 'Smash'}</span>
+            <div className="grid grid-cols-2 gap-3 py-2">
+              <Surface tone="elevated" radius="2xl" padding="none" className="p-4">
+                <span className="type-label-sm text-accent-red">{dict.smashOrPass.smash}</span>
                 <p className="text-2xl font-black text-text-primary">{sessionSmashes}</p>
-              </div>
-              <div className="bg-bg-elevated p-4 rounded-2xl border border-border-color">
-                <span className="text-xs text-text-muted font-bold uppercase">{dict?.smashOrPass?.pass || 'Pass'}</span>
+              </Surface>
+              <Surface tone="elevated" radius="2xl" padding="none" className="p-4">
+                <span className="type-label-sm text-text-muted">{dict.smashOrPass.pass}</span>
                 <p className="text-2xl font-black text-text-primary">{sessionPasses}</p>
-              </div>
+              </Surface>
             </div>
 
             <div className="flex flex-col sm:flex-row gap-3 pt-2">
-              <button
-                type="button"
+              <Button
+                variant="primary" size="md"
                 onClick={() => setIsPersonaOpen(true)}
-                className="flex-1 flex items-center justify-center gap-2 py-3 rounded-2xl bg-accent-red hover:bg-accent-red-hover text-text-inverted font-black text-xs transition-all shadow-lg cursor-pointer font-mono"
+                className="flex-1 rounded-2xl"
               >
                 <Sparkles className="h-4 w-4" />
-                <span>{hudLabels.archetype || 'View Romance Archetype'}</span>
-              </button>
+                <span>{hudLabels.archetype}</span>
+              </Button>
 
-              <button
-                type="button"
+              <Button
+                variant="secondary" size="md"
                 onClick={() => setIsResetConfirmOpen(true)}
-                className="flex-1 flex items-center justify-center gap-2 py-3 rounded-2xl bg-bg-elevated hover:bg-bg-surface text-text-primary font-black text-xs transition-all border border-border-color cursor-pointer font-mono"
+                className="flex-1 rounded-2xl"
               >
                 <RotateCcw className="h-4 w-4 text-text-muted" />
-                <span>{dict?.smashOrPass?.empty?.resetAction || 'Reset & Play Again'}</span>
-              </button>
+                <span>{dict.smashOrPass.empty.resetAction}</span>
+              </Button>
             </div>
           </div>
         )}
       </main>
 
       {/* HOW TO PLAY MODAL (CONTAINING THE KEYBOARD KEYCAPS & CONTROLS EXPLANATION) */}
-      {isHowToPlayOpen && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="how-to-play-title"
-          onClick={() => setIsHowToPlayOpen(false)}
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-bg-primary/70 backdrop-blur-xl animate-in fade-in duration-200"
-        >
-          <div
-            onClick={(e) => e.stopPropagation()}
-            className="w-full max-w-lg rounded-3xl border border-accent-red/40 bg-bg-surface p-6 space-y-5 shadow-2xl text-left text-text-primary font-mono"
-          >
-            <div className="flex items-center justify-between border-b border-border-color pb-3">
-              <div className="flex items-center gap-2.5">
-                <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-accent-red/20 text-accent-red border border-accent-red/30">
-                  <Gamepad2 className="h-5 w-5" />
-                </span>
-                <h3 id="how-to-play-title" className="text-base font-black text-text-primary">
-                  {dict?.smashOrPass?.howToPlayModal?.title || hudLabels.howToPlay || 'How to Play Smash or Pass'}
-                </h3>
-              </div>
-              <button
-                type="button"
-                onClick={() => setIsHowToPlayOpen(false)}
-                className="flex h-8 w-8 items-center justify-center rounded-xl text-text-muted hover:text-text-primary hover:bg-bg-elevated transition-colors cursor-pointer"
-              >
-                <X className="h-4 w-4" />
-              </button>
-            </div>
-
-            <div className="space-y-3.5 text-xs text-text-secondary font-sans">
-              {/* 1. Drag / Swipe */}
-              <div className="flex items-start gap-3 p-3 rounded-2xl bg-bg-elevated border border-border-color">
-                <span className="text-xl shrink-0">{dict?.smashOrPass?.howToPlayModal?.swipeIcon || '👆'}</span>
-                <div>
-                  <span className="font-bold text-accent-red block text-xs font-mono">
-                    {dict?.smashOrPass?.howToPlayModal?.swipeTitle || 'Swipe or Drag Cards'}
-                  </span>
-                  <p className="text-text-muted leading-relaxed pt-0.5">
-                    {dict?.smashOrPass?.howToPlayModal?.swipeDesc || 'Drag card Right to Smash or drag Left to Pass.'}
-                  </p>
-                </div>
-              </div>
-
-              {/* 2. On-card Tactile Buttons */}
-              <div className="flex items-start gap-3 p-3 rounded-2xl bg-bg-elevated border border-border-color">
-                <span className="text-xl shrink-0">{dict?.smashOrPass?.howToPlayModal?.iconsIcon || '🎯'}</span>
-                <div>
-                  <span className="font-bold text-accent-red block text-xs font-mono">
-                    {dict?.smashOrPass?.howToPlayModal?.iconsTitle || 'On-Card Action Icons'}
-                  </span>
-                  <p className="text-text-muted leading-relaxed pt-0.5">
-                    {dict?.smashOrPass?.howToPlayModal?.iconsDesc || 'Click Flip to read bio and memes. Click Zoom for high-res portrait art.'}
-                  </p>
-                </div>
-              </div>
-
-              {/* 3. Keyboard Keycaps Component INSIDE the Modal */}
-              <div className="space-y-2 p-3 rounded-2xl bg-bg-elevated border border-border-color">
-                <div className="flex items-center gap-2">
-                  <span className="text-xl shrink-0">{dict?.smashOrPass?.howToPlayModal?.keycapsIcon || '⌨️'}</span>
-                  <span className="font-bold text-accent-red block text-xs font-mono">
-                    {dict?.smashOrPass?.howToPlayModal?.keycapsTitle || 'Tactile Keyboard Keycaps'}
-                  </span>
-                </div>
-                <TactileKeycaps
-                  onPass={() => {
-                    handleVote('pass');
-                    setIsHowToPlayOpen(false);
-                  }}
-                  onSmash={() => {
-                    handleVote('smash');
-                    setIsHowToPlayOpen(false);
-                  }}
-                  onStats={() => {
-                    setIsHowToPlayOpen(false);
-                    if (currentCharacter) setSelectedStatCharacter(currentCharacter);
-                  }}
-                  onReset={() => {
-                    setIsHowToPlayOpen(false);
-                    setIsResetConfirmOpen(true);
-                  }}
-                  dict={dict}
-                  className="my-1"
-                />
-              </div>
-
-              {/* 4. Background Lore & Atmosphere */}
-              <div className="flex items-start gap-3 p-3 rounded-2xl bg-bg-elevated border border-border-color">
-                <span className="text-xl shrink-0">{dict?.smashOrPass?.howToPlayModal?.atmosphereIcon || '🌌'}</span>
-                <div>
-                  <span className="font-bold text-accent-red block text-xs font-mono">
-                    {dict?.smashOrPass?.howToPlayModal?.atmosphereTitle || 'Atmospheric Background & Music'}
-                  </span>
-                  <p className="text-text-muted leading-relaxed pt-0.5">
-                    {dict?.smashOrPass?.howToPlayModal?.atmosphereDesc || 'Hover over background text elements to inspect quotes and lore with glowing effects.'}
-                  </p>
-                </div>
-              </div>
-            </div>
+      <Modal
+        isOpen={isHowToPlayOpen}
+        onClose={() => setIsHowToPlayOpen(false)}
+        variant="dialog"
+        size="lg"
+        icon={<Gamepad2 className="h-5 w-5" aria-hidden="true" />}
+        title={dict.smashOrPass.howToPlayModal.title}
+        closeButtonAriaLabel={dict.modal.close}
+        bodyClassName="p-5 sm:p-6"
+      >
+      <div className="space-y-3.5 text-xs text-text-secondary">
+        {/* 1. Drag / Swipe */}
+        <Surface tone="elevated" radius="2xl" padding="sm" className="flex items-start gap-3">
+          <span className="text-xl shrink-0">{dict.smashOrPass.howToPlayModal.swipeIcon}</span>
+          <div>
+            <span className="type-strong text-accent-red block">
+              {dict.smashOrPass.howToPlayModal.swipeTitle}
+            </span>
+            <p className="text-text-muted leading-relaxed pt-0.5">
+              {dict.smashOrPass.howToPlayModal.swipeDesc}
+            </p>
           </div>
-        </div>
-      )}
+        </Surface>
+
+        {/* 2. On-card Tactile Buttons */}
+        <Surface tone="elevated" radius="2xl" padding="sm" className="flex items-start gap-3">
+          <span className="text-xl shrink-0">{dict.smashOrPass.howToPlayModal.iconsIcon}</span>
+          <div>
+            <span className="type-strong text-accent-red block">
+              {dict.smashOrPass.howToPlayModal.iconsTitle}
+            </span>
+            <p className="text-text-muted leading-relaxed pt-0.5">
+              {dict.smashOrPass.howToPlayModal.iconsDesc}
+            </p>
+          </div>
+        </Surface>
+
+        {/* 3. Keyboard Keycaps Component INSIDE the Modal */}
+        <Surface tone="elevated" radius="2xl" padding="sm" className="space-y-2">
+          <div className="flex items-center gap-2">
+            <span className="text-xl shrink-0">{dict.smashOrPass.howToPlayModal.keycapsIcon}</span>
+            <span className="type-strong text-accent-red block">
+              {dict.smashOrPass.howToPlayModal.keycapsTitle}
+            </span>
+          </div>
+          <TactileKeycaps
+            onPass={() => {
+              handleVote('pass');
+              setIsHowToPlayOpen(false);
+            }}
+            onSmash={() => {
+              handleVote('smash');
+              setIsHowToPlayOpen(false);
+            }}
+            onStats={() => {
+              setIsHowToPlayOpen(false);
+              if (currentCharacter) setSelectedStatCharacter(currentCharacter);
+            }}
+            onReset={() => {
+              setIsHowToPlayOpen(false);
+              setIsResetConfirmOpen(true);
+            }}
+            className="my-1"
+          />
+        </Surface>
+
+        {/* 4. Background Lore & Atmosphere */}
+        <Surface tone="elevated" radius="2xl" padding="sm" className="flex items-start gap-3">
+          <span className="text-xl shrink-0">{dict.smashOrPass.howToPlayModal.atmosphereIcon}</span>
+          <div>
+            <span className="type-strong text-accent-red block">
+              {dict.smashOrPass.howToPlayModal.atmosphereTitle}
+            </span>
+            <p className="text-text-muted leading-relaxed pt-0.5">
+              {dict.smashOrPass.howToPlayModal.atmosphereDesc}
+            </p>
+          </div>
+        </Surface>
+      </div>
+      </Modal>
 
       {/* MODALS */}
       <RosterSelectModal
@@ -1435,45 +1413,32 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
           setExportingRosterId(id);
         }}
         locale={locale}
-        dict={dict}
       />
 
       {/* DELETE CUSTOM ROSTER CONFIRMATION */}
       {rosterPendingDelete && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          onClick={() => setRosterPendingDelete(null)}
-          className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-bg-primary/70 backdrop-blur-xl animate-in fade-in duration-200"
-        >
-          <div
-            onClick={(e) => e.stopPropagation()}
-            className="w-full max-w-sm rounded-3xl border border-accent-red/40 bg-bg-surface p-6 space-y-4 shadow-2xl text-center font-mono"
-          >
-            <div className="flex h-12 w-12 mx-auto items-center justify-center rounded-2xl bg-accent-red/15 border border-accent-red/30 text-accent-red">
-              <Trash2 className="h-6 w-6" />
-            </div>
-            <div className="space-y-1 font-sans">
-              <h3 className="text-base font-black font-mono text-text-primary">
-                {dict?.smashOrPass?.picker?.deleteConfirmTitle || 'Delete this roster?'}
-              </h3>
-              <p className="text-xs text-text-muted leading-relaxed">
-                {(dict?.smashOrPass?.picker?.deleteConfirmDesc || 'This permanently removes "{name}" from this browser. This cannot be undone.').replace(
-                  '{name}',
-                  rosterPendingDelete.name
-                )}
-              </p>
-            </div>
-            <div className="flex gap-2.5 pt-2 font-mono">
-              <button
-                type="button"
+        <Modal
+          isOpen
+          onClose={() => setRosterPendingDelete(null)}
+          variant="confirm"
+          tone="danger"
+          layer="top"
+          icon={<Trash2 className="h-5 w-5" aria-hidden="true" />}
+          title={dict.smashOrPass.picker.deleteConfirmTitle}
+          closeButtonAriaLabel={dict.modal.close}
+          bodyClassName="p-5 text-center"
+          footerClassName="p-4"
+          footer={
+            <div className="flex w-full flex-col-reverse gap-2.5 sm:flex-row">
+              <Button
+                variant="secondary" size="md"
                 onClick={() => setRosterPendingDelete(null)}
-                className="flex-1 py-2.5 rounded-xl bg-bg-elevated hover:bg-bg-surface text-xs font-bold text-text-secondary transition-colors cursor-pointer"
+                className="flex-1 rounded-xl"
               >
-                {dict?.smashOrPass?.modals?.cancel || 'Cancel'}
-              </button>
-              <button
-                type="button"
+                {dict.smashOrPass.modals.cancel}
+              </Button>
+              <Button
+                variant="primary" size="md"
                 onClick={() => {
                   const id = rosterPendingDelete.id;
                   const slug = `local:${id}`;
@@ -1486,13 +1451,17 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
                   }
                   setRosterPendingDelete(null);
                 }}
-                className="flex-1 py-2.5 rounded-xl bg-accent-red hover:bg-accent-red-hover text-xs font-black text-text-inverted transition-colors shadow-lg cursor-pointer"
+                className="flex-1 rounded-xl"
               >
-                {dict?.smashOrPass?.picker?.deleteConfirmAction || 'Yes, Delete'}
-              </button>
+                {dict.smashOrPass.picker.deleteConfirmAction}
+              </Button>
             </div>
-          </div>
-        </div>
+          }
+        >
+          <p className="type-body text-text-muted">
+            {formatMessage((dict.smashOrPass.picker.deleteConfirmDesc), { name: rosterPendingDelete.name })}
+          </p>
+        </Modal>
       )}
 
       <SmashRosterImportModal
@@ -1505,7 +1474,6 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
             localStorage.setItem('dbd_smash_selected_roster', slug);
           }
         }}
-        dict={dict}
       />
 
       {exportingRosterId && (
@@ -1518,7 +1486,6 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
           })()}
           onClose={() => setExportingRosterId(null)}
           locale={locale}
-          dict={dict}
         />
       )}
 
@@ -1528,7 +1495,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
           <div className="absolute inset-0 bg-accent-red/15 backdrop-blur-sm animate-pulse" />
           <div className="relative flex flex-col items-center gap-2 p-6 rounded-3xl bg-bg-primary/90 border-2 border-accent-red text-center animate-in zoom-in-75 duration-300">
             <Heart className="h-14 w-14 text-accent-red fill-accent-red animate-bounce" />
-            <span className="text-xl font-mono font-black tracking-widest text-text-primary uppercase">
+            <span className="text-xl font-black tracking-widest text-text-primary uppercase">
               {getRosterDisplayName({ slug: rosterSwitchEffect })}
             </span>
           </div>
@@ -1544,7 +1511,6 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
         isAuthenticated={isAuthenticated}
         onSelectCharacter={(char) => setSelectedStatCharacter(char as unknown as EntityItem)}
         locale={locale}
-        dict={dict}
       />
 
       <CharacterStatsModal
@@ -1553,7 +1519,6 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
         character={selectedStatCharacter}
         stats={selectedStatCharacter?.stat ?? undefined}
         locale={locale}
-        dict={dict}
       />
 
       <RomancePersonaModal
@@ -1562,58 +1527,48 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
           setIsPersonaOpen(false);
           setSharedPayload(null);
         }}
-        votes={voteHistory as any}
+        votes={voteHistory}
         sharedPayload={sharedPayload}
         onResetAll={() => setIsResetConfirmOpen(true)}
         locale={locale}
-        dict={dict}
         customArchetypes={activeRoster?.romance_archetypes}
       />
 
       {/* RESET CONFIRMATION MODAL */}
-      {isResetConfirmOpen && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          onClick={() => setIsResetConfirmOpen(false)}
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-bg-primary/70 backdrop-blur-xl animate-in fade-in duration-200"
-        >
-          <div
-            onClick={(e) => e.stopPropagation()}
-            className="w-full max-w-sm rounded-3xl border border-accent-red/40 bg-bg-surface p-6 space-y-4 shadow-2xl text-center font-mono"
-          >
-            <div className="flex h-12 w-12 mx-auto items-center justify-center rounded-2xl bg-accent-red/15 border border-accent-red/30 text-accent-red">
-              <AlertTriangle className="h-6 w-6" />
-            </div>
-
-            <div className="space-y-1 font-sans">
-              <h3 className="text-base font-black font-mono text-text-primary">
-                {dict?.smashOrPass?.modals?.resetConfirmTitle || 'Reset All Votes?'}
-              </h3>
-              <p className="text-xs text-text-muted leading-relaxed">
-                {dict?.smashOrPass?.modals?.resetConfirmDesc || `This will clear your voting history for ${activeRoster.name || selectedRosterSlug} and restore all candidates to your deck.`}
-              </p>
-            </div>
-
-            <div className="flex gap-2.5 pt-2 font-mono">
-              <button
-                type="button"
-                onClick={() => setIsResetConfirmOpen(false)}
-                className="flex-1 py-2.5 rounded-xl bg-bg-elevated hover:bg-bg-surface text-xs font-bold text-text-secondary transition-colors cursor-pointer"
-              >
-                {dict?.smashOrPass?.modals?.cancel || 'Cancel'}
-              </button>
-              <button
-                type="button"
-                onClick={handleResetAllVotes}
-                className="flex-1 py-2.5 rounded-xl bg-accent-red hover:bg-accent-red-hover text-xs font-black text-text-inverted transition-colors shadow-lg cursor-pointer"
-              >
-                {dict?.smashOrPass?.modals?.confirm || 'Yes, Reset All'}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <Modal
+        isOpen={isResetConfirmOpen}
+        onClose={() => setIsResetConfirmOpen(false)}
+        variant="confirm"
+        layer="top"
+        tone="danger"
+        icon={<AlertTriangle className="h-5 w-5" />}
+        title={dict.smashOrPass.modals.resetConfirmTitle}
+        closeButton="none"
+        footerClassName="flex-col-reverse sm:flex-row sm:justify-center gap-2.5"
+        footer={
+          <>
+            <Button
+              variant="secondary" size="md"
+              data-autofocus
+              onClick={() => setIsResetConfirmOpen(false)}
+              className="w-full sm:flex-1 rounded-xl"
+            >
+              {dict.smashOrPass.modals.cancel}
+            </Button>
+            <Button
+              variant="primary" size="md"
+              onClick={handleResetAllVotes}
+              className="w-full sm:flex-1 rounded-xl"
+            >
+              {dict.smashOrPass.modals.confirm}
+            </Button>
+          </>
+        }
+      >
+        <p className="px-6 py-5 text-center type-body text-text-muted">
+          {dict.smashOrPass.modals.resetConfirmDesc}
+        </p>
+      </Modal>
     </div>
   );
 };

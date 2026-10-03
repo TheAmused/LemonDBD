@@ -54,6 +54,8 @@ function gameModeLabel(mode: GauntletGameMode, dict: Dictionary['streaks']): str
       return dict.lemonDuo;
     case 'lemon_squad':
       return dict.lemonSquad;
+    case 'lemon_hooks':
+      return dict.lemonHooks;
     default:
       return dict.original;
   }
@@ -154,7 +156,7 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({
           onOpenHistory={() => setIsHistoryOpen(true)}
           onOpenRules={() => setIsRulesOpen(true)}
           onOpenReset={() => setConfirmingReset(true)}
-          onChangeMode={role === 'survivor' ? () => setIsChangeModeOpen(true) : undefined}
+          onChangeMode={() => setIsChangeModeOpen(true)}
         />
           }
         >

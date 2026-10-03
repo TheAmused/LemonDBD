@@ -3,7 +3,7 @@
 import type { Dictionary } from '@/locales/types';
 
 import React, { useEffect, useState } from 'react';
-import { Swords, Lock, Sparkles, User, Users, UsersRound } from 'lucide-react';
+import { Swords, Sparkles, User, Users, UsersRound } from 'lucide-react';
 import { ChallengeIntroTile, NEUTRAL_TILE_ACCENT } from '../ChallengeIntroModalShell';
 import { ChallengeModeModal } from '../ChallengeModeModal';
 import { GauntletRulesModal } from './GauntletRulesModal';
@@ -31,22 +31,10 @@ export interface GauntletModeModalProps {
 type Stage = 'root' | 'lemon';
 
 function lemonRootTile(role: 'killer' | 'survivor', dict: Dictionary): ChallengeIntroTile {
-  const label = dict.streaks.lemonVersion;
-  if (role !== 'survivor') {
-    return {
-      value: 'lemon',
-      label,
-      description: dict.streaks.gauntletLemonDesc,
-      icon: Lock,
-      accentClassName: 'border-border-color bg-bg-elevated/50',
-      disabled: true,
-      disabledBadge: dict.streaks.comingSoon,
-    };
-  }
   return {
     value: 'lemon',
-    label,
-    description: dict.streaks.gauntletLemonPlayersDesc,
+    label: dict.streaks.lemonVersion,
+    description: role === 'killer' ? dict.streaks.gauntletLemonDesc : dict.streaks.gauntletLemonPlayersDesc,
     icon: Sparkles,
     image: '/images/streaks/modes/gauntlet-lemon.webp',
     accentClassName: NEUTRAL_TILE_ACCENT,
@@ -142,7 +130,9 @@ export const GauntletModeModal: React.FC<GauntletModeModalProps> = ({
       tiles={isLemonStage ? lemonPlayerTiles(dict) : rootTiles}
       onSelectTile={(value) => {
         if (value === 'lemon') {
-          setStage('lemon');
+          // Killers have a single lemon mode, so there is no player count to pick.
+          if (role === 'killer') onSelectMode('lemon_hooks');
+          else setStage('lemon');
           return;
         }
         const mode = GAUNTLET_GAME_MODES.find((candidate) => candidate === value);

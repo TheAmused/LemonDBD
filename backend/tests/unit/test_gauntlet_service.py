@@ -771,3 +771,34 @@ class TestSquadMode:
         assert len(remaining) == 1
         names = {player["character"] for player in run["current_loadout"]["players"]}
         assert names == remaining
+
+
+@pytest.mark.unit
+class TestHooksMode:
+    """The killer hooks variant: checkpoints every 5 wins, perk tiers still step every 10."""
+
+    MODE = "lemon_hooks"
+
+    @pytest.fixture(autouse=True)
+    def setup_run(self, gauntlet_service: GauntletService, gauntlet_user: int) -> None:
+        for index in range(8):
+            seed_killer(f"Killer {index}", perk_count=3)
+        self.user_id = gauntlet_user
+        self.service = gauntlet_service
+        self.run = gauntlet_service.get_or_create_run(self.user_id, "killer", self.MODE)
+
+    def test_checkpoint_banks_every_5_wins_but_tiers_still_step_every_10(self) -> None:
+        for _ in range(4):
+            assert self.service.submit_result(self.user_id, self.run["id"], "win")["last_checkpoint_streak"] == 0
+        fifth = self.service.submit_result(self.user_id, self.run["id"], "win")
+        assert fifth["last_checkpoint_streak"] == 5
+        assert fifth["tier_info"]["tier_level"] == 0
+        assert self.service.submit_result(self.user_id, self.run["id"], "loss")["current_streak"] == 5
+
+    def test_killer_tiers_keep_their_original_thresholds(self) -> None:
+        levels = {streak: self.service.get_tier_info(streak, "killer", self.MODE)["tier_level"] for streak in (9, 10, 19, 20, 29, 30)}
+        assert levels == {9: 0, 10: 1, 19: 1, 20: 2, 29: 2, 30: 3}
+
+    def test_the_character_is_still_rolled_by_the_server(self) -> None:
+        self.service.reveal_target(self.user_id, self.run["id"])
+        assert self.service.prepare_next_match(self.user_id, "killer", self.MODE)["target_revealed"] is True

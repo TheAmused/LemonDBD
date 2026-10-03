@@ -8,6 +8,7 @@ import { Perk } from '@/types/gauntletStreak';
 import { perkIconUrl as perkIconFor } from '@/utils/staticUrl';
 import { usePerkDisplayName, usePerkLabel } from '@/context/DisplayNamesContext';
 import { normalizeSearchText } from '@/utils/perkUtils';
+import { PerkDetailButton } from '../PerkDetailButton';
 import { useDictionary } from "@/context/DictionaryContext";
 
 const UnlockedTile: React.FC<{ perk: Perk; displayName: string; justUnlocked: boolean }> = ({
@@ -18,8 +19,9 @@ const UnlockedTile: React.FC<{ perk: Perk; displayName: string; justUnlocked: bo
   const [failed, setFailed] = useState(false);
   const src = perkIconFor(perk);
   return (
-    <div
-      className={`flex flex-col items-center gap-1.5 p-2 rounded-lg bg-bg-elevated border border-border-color ${
+    <PerkDetailButton
+      perk={perk}
+      className={`w-full flex flex-col items-center gap-1.5 p-2 rounded-lg bg-bg-elevated border border-border-color ${
         justUnlocked ? 'chaos-badge-pop' : ''
       }`}
     >
@@ -38,7 +40,7 @@ const UnlockedTile: React.FC<{ perk: Perk; displayName: string; justUnlocked: bo
       <span className="text-mini font-medium text-center text-text-secondary leading-tight line-clamp-2">
         {displayName}
       </span>
-    </div>
+    </PerkDetailButton>
   );
 };
 
@@ -46,7 +48,7 @@ const LockedTile: React.FC<{ perk: Perk; displayName: string }> = ({ perk, displ
   const [failed, setFailed] = useState(false);
   const src = perkIconFor(perk);
   return (
-    <div className="relative flex flex-col items-center gap-1.5 p-2 rounded-lg bg-bg-elevated border border-dashed border-2 border-border-color overflow-hidden">
+    <PerkDetailButton perk={perk} className="relative w-full flex flex-col items-center gap-1.5 p-2 rounded-lg bg-bg-elevated border border-dashed border-2 border-border-color overflow-hidden">
       <div className="w-full aspect-square rounded-md overflow-hidden bg-bg-elevated flex items-center justify-center grayscale opacity-40">
         {src && !failed ? (
           <img
@@ -67,7 +69,7 @@ const LockedTile: React.FC<{ perk: Perk; displayName: string }> = ({ perk, displ
           <Lock className="w-3.5 h-3.5 text-text-muted" />
         </div>
       </div>
-    </div>
+    </PerkDetailButton>
   );
 };
 

@@ -12,7 +12,7 @@ export default {
   others: "Sonstiges",
   admin: "ADMIN",
   adminControlCenter: "Admin-Kontrollzentrum",
-  signIn: "Anmelden / Registrieren",
+  signIn: "Anmelden",
   signOut: "Abmelden",
   emailNotVerified: "E-Mail nicht verifiziert. Jetzt verifizieren",
   reportBug: "Fehler melden",

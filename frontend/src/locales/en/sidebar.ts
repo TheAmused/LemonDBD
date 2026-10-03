@@ -12,7 +12,7 @@ export default {
   others: "Others",
   admin: "ADMIN",
   adminControlCenter: "Admin Control Center",
-  signIn: "Sign In / Register",
+  signIn: "Sign In",
   signOut: "Sign Out",
   emailNotVerified: "Email not verified. Verify now",
   reportBug: "Report Bug",

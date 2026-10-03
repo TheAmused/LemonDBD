@@ -12,7 +12,7 @@ export default {
   others: "その他",
   admin: "管理者",
   adminControlCenter: "管理コントロールセンター",
-  signIn: "ログイン / 新規登録",
+  signIn: "ログイン",
   signOut: "ログアウト",
   emailNotVerified: "メールアドレスが未認証です。今すぐ認証",
   reportBug: "バグ報告",

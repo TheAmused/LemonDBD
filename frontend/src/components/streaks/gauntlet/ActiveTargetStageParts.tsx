@@ -83,7 +83,6 @@ const SLOT_ICON_BASE: Record<SlotSize, string> = {
   compact: 'w-12 h-12',
 };
 
-// The diamond is rotated, so its corners overhang the layout box; the caption clears them.
 const CAPTION_CLASS: Record<SlotSize, string> = {
   large: 'mt-5 w-28',
   small: 'mt-4 w-24',
@@ -106,7 +105,6 @@ const BADGE_BG: Record<'amber' | 'red', string> = {
 
 const SlotChip: React.FC<{
   iconClassName: string;
-  /** Shown under the diamond; only slots holding a real perk carry one. */
   caption?: string;
   size: SlotSize;
   badge?: string;

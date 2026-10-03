@@ -35,7 +35,7 @@ interface TierDefinition {
   level: number;
   nameKey: string;
   defaultName: string;
-  winRange: readonly [number, number];
+  streakRange: string;
   perkLimit: number;
   badgeColor: string;
 }
@@ -45,7 +45,7 @@ const SURVIVOR_TIERS: TierDefinition[] = [
     level: 0,
     nameKey: 'tierWarmUp',
     defaultName: 'The Warm Up',
-    winRange: [1, 10],
+    streakRange: '1 - 10',
     perkLimit: 4,
     badgeColor: 'bg-accent-green/20 text-accent-green border-accent-green/30',
   },
@@ -53,7 +53,7 @@ const SURVIVOR_TIERS: TierDefinition[] = [
     level: 1,
     nameKey: 'tierThinning',
     defaultName: 'The Thinning',
-    winRange: [11, 20],
+    streakRange: '11 - 20',
     perkLimit: 3,
     badgeColor: 'bg-accent-amber/20 text-accent-amber border-accent-amber/30',
   },
@@ -61,7 +61,7 @@ const SURVIVOR_TIERS: TierDefinition[] = [
     level: 2,
     nameKey: 'tierStruggle',
     defaultName: 'The Struggle',
-    winRange: [21, 30],
+    streakRange: '21 - 30',
     perkLimit: 2,
     badgeColor: 'bg-accent-amber/20 text-accent-amber border-accent-amber/30',
   },
@@ -69,7 +69,7 @@ const SURVIVOR_TIERS: TierDefinition[] = [
     level: 3,
     nameKey: 'tierHardcore',
     defaultName: 'The Hardcore',
-    winRange: [31, 40],
+    streakRange: '31 - 40',
     perkLimit: 1,
     badgeColor: 'bg-accent-amber/20 text-accent-amber border-accent-amber/30',
   },
@@ -77,21 +77,21 @@ const SURVIVOR_TIERS: TierDefinition[] = [
     level: 4,
     nameKey: 'tierLegend',
     defaultName: 'The Legend',
-    winRange: [41, 52],
+    streakRange: '41 - 52',
     perkLimit: 0,
     badgeColor: 'bg-accent-red/20 text-accent-red border-accent-red/30',
   },
 ];
 
 // Duo and squad step a tier every 6 wins.
-const TEAM_WIN_RANGES: readonly (readonly [number, number])[] = [[1, 6], [7, 12], [13, 18], [19, 26]];
+const TEAM_STREAK_RANGES = ['1 - 6', '7 - 12', '13 - 18', '19 - 26'];
 
 const KILLER_TIERS: TierDefinition[] = [
   {
     level: 0,
     nameKey: 'tierBloodbath',
     defaultName: 'The Bloodbath',
-    winRange: [1, 10],
+    streakRange: '1 - 10',
     perkLimit: 3,
     badgeColor: 'bg-accent-green/20 text-accent-green border-accent-green/30',
   },
@@ -99,7 +99,7 @@ const KILLER_TIERS: TierDefinition[] = [
     level: 1,
     nameKey: 'tierObsession',
     defaultName: 'The Obsession',
-    winRange: [11, 20],
+    streakRange: '11 - 20',
     perkLimit: 2,
     badgeColor: 'bg-accent-amber/20 text-accent-amber border-accent-amber/30',
   },
@@ -107,7 +107,7 @@ const KILLER_TIERS: TierDefinition[] = [
     level: 2,
     nameKey: 'tierExecutioner',
     defaultName: 'The Executioner',
-    winRange: [21, 30],
+    streakRange: '21 - 30',
     perkLimit: 1,
     badgeColor: 'bg-accent-amber/20 text-accent-amber border-accent-amber/30',
   },
@@ -115,7 +115,7 @@ const KILLER_TIERS: TierDefinition[] = [
     level: 3,
     nameKey: 'tierEntity',
     defaultName: 'The Entity',
-    winRange: [31, 43],
+    streakRange: '31 - 43',
     perkLimit: 0,
     badgeColor: 'bg-accent-red/20 text-accent-red border-accent-red/30',
   },
@@ -166,7 +166,7 @@ export const GauntletRulesModal: React.FC<GauntletRulesModalProps> = ({ isOpen, 
   const isTeam = isDuo || isSquad;
   // Duo and squad have four stages, so they stop before the perkless tier.
   const tiers =
-    role === 'killer' ? KILLER_TIERS : isTeam ? SURVIVOR_TIERS.slice(0, TEAM_WIN_RANGES.length) : SURVIVOR_TIERS;
+    role === 'killer' ? KILLER_TIERS : isTeam ? SURVIVOR_TIERS.slice(0, TEAM_STREAK_RANGES.length) : SURVIVOR_TIERS;
   const roleLabel = role === 'killer'
     ? (dict.filters.killer)
     : (dict.filters.survivor);
@@ -240,8 +240,10 @@ export const GauntletRulesModal: React.FC<GauntletRulesModalProps> = ({ isOpen, 
         <div className="grid grid-cols-1 gap-2.5" role="list">
           {tiers.map((tier) => {
             const tierName = rawStreaks[tier.nameKey] || tier.defaultName;
-            const [from, to] = isTeam && role === 'survivor' ? TEAM_WIN_RANGES[tier.level] : tier.winRange;
-            const winRangeFormatted = formatMessage(rawStreaks.winRange || '{from} to {to}', { from, to });
+            const streakRange = isTeam && role === 'survivor' ? TEAM_STREAK_RANGES[tier.level] : tier.streakRange;
+            const streakRangeFormatted = rawStreaks.streakRangeLabel
+              ? formatMessage(rawStreaks.streakRangeLabel, { range: streakRange })
+              : streakRange;
 
             const perkLimitText =
               tier.perkLimit === 0
@@ -262,7 +264,7 @@ export const GauntletRulesModal: React.FC<GauntletRulesModalProps> = ({ isOpen, 
                     {rawStreaks.tierLabel || ''} {tier.level}{tierName ? `: ${tierName}` : ''}
                   </span>
                   <span className="text-xs font-medium text-text-muted">
-                    ({winRangeFormatted})
+                    ({streakRangeFormatted})
                   </span>
                 </div>
 

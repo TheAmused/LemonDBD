@@ -97,7 +97,7 @@ export default {
   squadUniquePerkRule: "Los dos jugadores que comparten una plaza de personaje no pueden usar la misma ventaja única de ese personaje.",
   squadCheckpointRule: "Cada 6 victorias se guarda un punto de control y pasáis al siguiente nivel.",
   squadKillerDcText: "Si el asesino se va antes de terminar el primer generador, o se va por un bug o un problema del servidor, la partida no cuenta. Si se va después del primer generador por cualquier otro motivo, cuenta como victoria.",
-  lemonHooks: "Ganchos",
+  lemonMode: "Lemon",
   hooksDevNote: "Esta es nuestra propia versión del desafío. Es más fácil, para que más gente pueda intentarlo, y ganas colgando supervivientes en vez de matarlos.",
   hooksWinCondition: "Victoria = 9 ganchos o más. Menos que eso rompe la racha.",
   hooksCountRule: "Cada etapa de gancho cuenta, así que un superviviente aporta hasta 3 ganchos y una partida hasta 12. Un mori cuenta como los ganchos que se salta. Si un superviviente se desconecta, no cambia nada, el bot sigue jugando.",

@@ -48,7 +48,7 @@ function gameModeLabel(mode: GauntletGameMode, dict: Dictionary['streaks']): str
     case 'lemon_squad':
       return dict.lemonSquad;
     case 'lemon_hooks':
-      return dict.lemonHooks;
+      return dict.lemonMode;
     default:
       return dict.original;
   }
@@ -143,7 +143,7 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({
           currentStreak={run?.current_streak || 0}
           bestStreak={run?.best_streak || 0}
           poolFrozen={Boolean(run?.pool_frozen) && Boolean(run?.target_revealed)}
-          modeLabel={gameMode !== 'original' || role === 'survivor' ? gameModeLabel(gameMode, dict.streaks) : undefined}
+          modeLabel={gameModeLabel(gameMode, dict.streaks)}
           onOpenStats={() => setIsStatsOpen(true)}
           onOpenHistory={() => setIsHistoryOpen(true)}
           onOpenRules={() => setIsRulesOpen(true)}

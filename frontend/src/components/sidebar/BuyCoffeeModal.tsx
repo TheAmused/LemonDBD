@@ -2,10 +2,7 @@
 import type { Dictionary } from '@/locales/types';
 // frontend/src/components/sidebar/BuyCoffeeModal.tsx
 
-import React, { useEffect, useState } from 'react';
-import { useParams, usePathname } from 'next/navigation';
-import { getDictionary } from '@/i18n/get-dictionary';
-import { i18n, type Locale } from '@/i18n/config';
+import React from 'react';
 import {
   Heart,
   ExternalLink,
@@ -19,29 +16,12 @@ import { useDictionary } from "@/context/DictionaryContext";
 export interface BuyCoffeeModalProps {
   isOpen: boolean;
   onClose: () => void;
-  t?: Record<string, string>;
 }
 
-export const BuyCoffeeModal: React.FC<BuyCoffeeModalProps> = ({ isOpen, onClose, t: propT }) => {
-  const propDict = useDictionary();
-  const params = useParams();
-  const pathname = usePathname() || '';
+export const BuyCoffeeModal: React.FC<BuyCoffeeModalProps> = ({ isOpen, onClose }) => {
+  const dict = useDictionary();
 
-  const routeLocale = (params?.locale as string) || pathname.split('/')[1];
-  const currentLocale = (
-    i18n.locales.includes(routeLocale as Locale) ? routeLocale : i18n.defaultLocale
-  ) as Locale;
-
-  const [loadedDict, setLoadedDict] = useState<any>(null);
-
-  useEffect(() => {
-    if (!propDict && !propT) {
-      getDictionary(currentLocale).then(setLoadedDict);
-    }
-  }, [currentLocale, propDict, propT]);
-
-  const t: Record<string, string> =
-    propT || propDict.sidebar || loadedDict?.sidebar || {};
+  const t: Record<string, string> = dict.sidebar;
 
   const buyMeCoffeeUrl =
     process.env.NEXT_PUBLIC_BUY_ME_A_COFFEE_URL ||

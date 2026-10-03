@@ -42,6 +42,7 @@ import { ConfirmModal } from '@/components/common/ConfirmModal';
 import { EmptyState } from '@/components/common/EmptyState';
 import { copyTextWithFallback } from '@/utils/clipboard';
 import { useDictionary } from "@/context/DictionaryContext";
+import { formatMessage } from '@/utils/i18nFormat';
 
 interface MinigamesHubProps {
   locale: string;
@@ -429,7 +430,7 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
                     <div className="flex items-start justify-between gap-2">
                       <h3 className="font-bold text-text-primary text-base truncate">{trial.title}</h3>
                       <span className="type-strong-2xs px-2 py-0.5 rounded bg-bg-elevated text-text-muted border border-border-subtle flex-shrink-0">
-                        {trial.rounds.length} {trial.rounds.length === 1 ? t.roundSingular : t.roundPlural}
+                        {formatMessage(t.roundsCount, { count: trial.rounds.length }, locale)}
                       </span>
                     </div>
                     {trial.description && (

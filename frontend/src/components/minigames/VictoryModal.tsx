@@ -11,6 +11,7 @@ import type { Dictionary } from '@/locales/types';
 import { Modal } from '@/components/common/Modal';
 import { copyTextWithFallback } from '@/utils/clipboard';
 import { useDictionary } from "@/context/DictionaryContext";
+import { formatMessage } from '@/utils/i18nFormat';
 
 interface VictoryModalProps {
   challenge: ChallengeDefinition;
@@ -156,7 +157,7 @@ export const VictoryModal: React.FC<VictoryModalProps> = ({ challenge, roundGues
                   ))}
                 </div>
                 <span className="text-text-muted text-xs ml-1">
-                  {guesses.length} {guesses.length === 1 ? t.trySingular : t.tryPlural}
+                  {formatMessage(t.triesCount, { count: guesses.length }, locale)}
                 </span>
               </div>
             </div>

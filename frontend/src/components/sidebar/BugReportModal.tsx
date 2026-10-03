@@ -3,14 +3,10 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { getBackendBaseUrl, authHeaders, getAuthToken } from '@/utils/api';
-import { useParams, usePathname } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { LemonIcon } from '@/components/LemonIcon';
 import { useAltcha } from '@/hooks/useAltcha';
 import { AltchaWidget } from '@/components/common/AltchaWidget';
-import { getDictionary } from '@/i18n/get-dictionary';
-import { i18n, type Locale } from '@/i18n/config';
-import type { Dictionary } from '@/locales/types';
 import {
   Upload,
   Image as ImageIcon,
@@ -29,7 +25,6 @@ import { useDictionary } from "@/context/DictionaryContext";
 export interface BugReportModalProps {
   isOpen: boolean;
   onClose: () => void;
-  t?: Record<string, string>;
 }
 
 interface BugReportResponse {
@@ -50,27 +45,11 @@ const DEFAULT_BUG_CATEGORIES = [
 
 type BugCategoryKey = typeof DEFAULT_BUG_CATEGORIES[number];
 
-export const BugReportModal: React.FC<BugReportModalProps> = ({ isOpen, onClose, t: propT }) => {
-  const propDict = useDictionary();
+export const BugReportModal: React.FC<BugReportModalProps> = ({ isOpen, onClose }) => {
+  const dict = useDictionary();
   const { user, isAuthenticated } = useAuth();
-  const params = useParams();
-  const pathname = usePathname() || '';
 
-  const routeLocale = (params?.locale as string) || pathname.split('/')[1];
-  const currentLocale = (
-    i18n.locales.includes(routeLocale as Locale) ? routeLocale : i18n.defaultLocale
-  ) as Locale;
-
-  const [loadedDict, setLoadedDict] = useState<Dictionary | null>(null);
-
-  useEffect(() => {
-    if (!propDict && !propT) {
-      getDictionary(currentLocale).then(setLoadedDict);
-    }
-  }, [currentLocale, propDict, propT]);
-
-  const rawSidebarDict = (propDict.sidebar || loadedDict?.sidebar || {}) as Record<string, string>;
-  const t: Record<string, string> = propT || rawSidebarDict;
+  const t: Record<string, string> = dict.sidebar;
 
   const bugCategories: Array<{ key: BugCategoryKey; label: string }> = [
     { key: 'Perks & Teachable Data', label: t.bugCategoryPerks || '' },

@@ -266,7 +266,7 @@ export const MinigameCreator: React.FC<MinigameCreatorProps> = ({ catalog, local
         <div className="flex items-center justify-between">
           <h2 className="text-xl font-bold text-text-primary">{c.roundsHeading}</h2>
           <span className="text-xs text-text-secondary">
-            {rounds.length} {rounds.length === 1 ? dict.minigames.roundSingular : dict.minigames.roundPlural}
+            {formatMessage(t.roundsCount, { count: rounds.length }, locale)}
           </span>
         </div>
 

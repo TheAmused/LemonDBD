@@ -106,7 +106,8 @@ const BADGE_BG: Record<'amber' | 'red', string> = {
 
 const SlotChip: React.FC<{
   iconClassName: string;
-  caption: string;
+  /** Shown under the diamond; only slots holding a real perk carry one. */
+  caption?: string;
   size: SlotSize;
   badge?: string;
   badgeColor?: 'amber' | 'red';
@@ -123,7 +124,7 @@ const SlotChip: React.FC<{
     <div className={`${slotIconBase(size)} ${iconClassName}`}>
       <div className="-rotate-45 flex items-center justify-center">{children}</div>
     </div>
-    <span className={`${CAPTION_CLASS[size]} text-center text-xs font-bold leading-tight text-text-primary line-clamp-2`}>{caption}</span>
+    {caption && <span className={`${CAPTION_CLASS[size]} text-center text-xs font-bold leading-tight text-text-primary line-clamp-2`}>{caption}</span>}
   </div>
 );
 
@@ -146,7 +147,6 @@ const TeachableSlot: React.FC<{ size: SlotSize; accent?: 'amber' | 'red'; }> = (
   <SlotChip
     size={size}
     iconClassName={TEACHABLE_ACCENT[accent]}
-    caption={(dict.streaks.ownPerkOf).replace(/:$/, '')}
     badge={dict.streaks.teachableBadge}
     badgeColor={accent}
   >
@@ -183,7 +183,7 @@ const PerkSlotsRow: React.FC<PerkSlotsRowProps> = ({ tierInfo, charPerks, random
           {dict.streaks.goesInBare}
         </p>
       )}
-      <div className={large ? 'flex items-center gap-12' : size === 'compact' ? 'flex items-center gap-6' : 'flex items-center gap-10'} role="list">
+      <div className={large ? 'flex items-start gap-12' : size === 'compact' ? 'flex items-start gap-6' : 'flex items-start gap-10'} role="list">
         {slots.map((idx) => {
           if (idx === 0 && perkLimit === 0 && randomPerks.length > 0) {
             const perk = randomPerks[0];
@@ -205,7 +205,6 @@ const PerkSlotsRow: React.FC<PerkSlotsRowProps> = ({ tierInfo, charPerks, random
                 key={`locked-${idx}`}
                 size={size}
                 iconClassName="bg-bg-elevated/60 border-dashed border-border-color opacity-60 text-text-muted"
-                caption={dict.streaks.lockedSuffix ? dict.streaks.lockedSuffix[0].toUpperCase() + dict.streaks.lockedSuffix.slice(1) : 'Locked'}
               >
                 <Lock className={iconSize} />
               </SlotChip>
@@ -220,7 +219,7 @@ const PerkSlotsRow: React.FC<PerkSlotsRowProps> = ({ tierInfo, charPerks, random
                 key={`char-slot-${idx}`}
                 size={size}
                 iconClassName={ownPerk ? 'border-transparent' : 'bg-accent-red/10 border-accent-red/40 text-accent-red'}
-                caption={ownPerk ? perkDisplayName(ownPerk.name) : (dict.streaks.ownPerkOf).replace(/:$/, '')}
+                caption={ownPerk ? perkDisplayName(ownPerk.name) : undefined}
               >
                 {ownPerk ? <PerkArt perk={ownPerk} size={perkArtSize} /> : <HelpCircle className={iconSize} />}
               </SlotChip>
@@ -238,7 +237,6 @@ const PerkSlotsRow: React.FC<PerkSlotsRowProps> = ({ tierInfo, charPerks, random
               key={`free-${idx}`}
               size={size}
               iconClassName="bg-bg-elevated border-border-color text-text-muted"
-              caption={dict.streaks.freePickCaption}
             >
               <HelpCircle className={iconSize} />
             </SlotChip>

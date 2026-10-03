@@ -9,7 +9,6 @@ import { avatarUrlForCharacter, perkIconUrl, staticUrl } from '@/utils/staticUrl
 import { useCharacterDisplayName, usePerkDisplayName } from '@/context/DisplayNamesContext';
 import { KillerIcon } from '@/components/icons/DbdIcons';
 import { tip } from '@/components/common/Tooltip';
-import { PerkDetailButton } from '../PerkDetailButton';
 import { useDictionary } from '@/context/DictionaryContext';
 
 const avatarUrlFor = (name: string, role: Role, characters: OwnedCharacterItem[] = []) => {
@@ -106,11 +105,9 @@ const SlotChip: React.FC<{
   size: SlotSize;
   badge?: string;
   badgeColor?: 'amber' | 'red';
-  /** A real perk: the chip then carries the perks-page tooltip and detail modal instead of a status tip. */
-  perk?: Perk;
   children: React.ReactNode;
-}> = ({ iconClassName, caption, title, size, badge, badgeColor = 'amber', perk, children }) => (
-  <div className="relative inline-flex shrink-0" {...(perk ? {} : tip(title || caption, undefined, 'status'))}>
+}> = ({ iconClassName, caption, title, size, badge, badgeColor = 'amber', children }) => (
+  <div className="relative inline-flex shrink-0" {...tip(title || caption, undefined, 'status')}>
     {badge && (
       <div
         className={`absolute -top-2.5 left-1/2 -translate-x-1/2 z-10 ${BADGE_BG[badgeColor]} text-text-primary ${BADGE_TEXT_SIZE[size]} font-black uppercase tracking-wide px-1.5 py-0.5 rounded shadow-sm whitespace-nowrap`}
@@ -119,13 +116,7 @@ const SlotChip: React.FC<{
       </div>
     )}
     <div className={`${slotIconBase(size)} ${iconClassName}`}>
-      {perk ? (
-        <PerkDetailButton perk={perk} className="-rotate-45 flex items-center justify-center">
-          {children}
-        </PerkDetailButton>
-      ) : (
-        <div className="-rotate-45 flex items-center justify-center">{children}</div>
-      )}
+      <div className="-rotate-45 flex items-center justify-center">{children}</div>
     </div>
   </div>
 );
@@ -199,7 +190,6 @@ const PerkSlotsRow: React.FC<PerkSlotsRowProps> = ({ tierInfo, charPerks, random
                 iconClassName="border-transparent"
                 caption={perkDisplayName(perk.name)}
                 title={perkDisplayName(perk.name)}
-                perk={perk}
               >
                 <PerkArt perk={perk} size={perkArtSize} />
               </SlotChip>
@@ -229,7 +219,6 @@ const PerkSlotsRow: React.FC<PerkSlotsRowProps> = ({ tierInfo, charPerks, random
                 size={size}
                 iconClassName={ownPerk ? 'border-transparent' : 'bg-accent-red/10 border-accent-red/40 text-accent-red'}
                 caption={ownPerk ? perkDisplayName(ownPerk.name) : (dict.streaks.ownPerkOf).replace(/:$/, '')}
-                perk={ownPerk}
               >
                 {ownPerk ? <PerkArt perk={ownPerk} size={perkArtSize} /> : <HelpCircle className={iconSize} />}
               </SlotChip>

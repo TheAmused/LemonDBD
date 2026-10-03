@@ -8,7 +8,6 @@ import type { Dictionary } from '@/locales/types';
 import type { Perk } from '@/types/gauntletStreak';
 import { perkIconUrl as perkIconFor } from '@/utils/staticUrl';
 import { Modal } from '@/components/common/Modal';
-import { PerkDetailButton } from '../PerkDetailButton';
 import { usePerkDisplayName } from '@/context/DisplayNamesContext';
 import { useDictionary } from "@/context/DictionaryContext";
 
@@ -16,7 +15,7 @@ const PerkTile: React.FC<{ perk: Perk; displayName: string }> = ({ perk, display
   const [failed, setFailed] = useState<boolean>(false);
   const src = perkIconFor(perk);
   return (
-    <PerkDetailButton perk={perk} className="w-full flex flex-col items-center gap-1.5 p-2 rounded-lg bg-bg-elevated border border-border-color">
+    <div className="flex flex-col items-center gap-1.5 p-2 rounded-lg bg-bg-elevated border border-border-color">
       <div className="w-full aspect-square rounded-md overflow-hidden bg-bg-primary flex items-center justify-center">
         {src && !failed ? (
           <img
@@ -32,7 +31,7 @@ const PerkTile: React.FC<{ perk: Perk; displayName: string }> = ({ perk, display
       <span className="text-mini font-medium text-center text-text-secondary leading-tight line-clamp-2">
         {displayName}
       </span>
-    </PerkDetailButton>
+    </div>
   );
 };
 

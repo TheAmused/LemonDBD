@@ -8,11 +8,11 @@ BUILD_SIZE: int = 4
 GENERAL_CHARACTER: str = "General"
 
 # The first entry is the default. Every mode keeps its own run per (user, role).
-GAME_MODES: tuple[str, ...] = ("original", "lemon_solo", "lemon_duo", "lemon_squad")
+GAME_MODES: tuple[str, ...] = ("original", "lemon_solo", "lemon_duo", "lemon_squad", "lemon_hooks")
 DEFAULT_GAME_MODE: str = GAME_MODES[0]
 
-# Modes not listed here bank a checkpoint every CHECKPOINT_INTERVAL wins and step tiers on the same spacing.
-CHECKPOINT_INTERVALS: dict[str, int] = {"lemon_solo": 5}
+# Modes not listed here bank a checkpoint every CHECKPOINT_INTERVAL wins; perk tiers keep their own spacing.
+CHECKPOINT_INTERVALS: dict[str, int] = {"lemon_solo": 5, "lemon_hooks": 5}
 # Survivor modes whose checkpoints, and with them the perk tiers, land on fixed win counts.
 # Each start opens the next tier, and the stage after the last one runs to the end of the run.
 CHECKPOINT_STAGE_STARTS: dict[str, tuple[int, ...]] = {"lemon_duo": (6, 12, 18), "lemon_squad": (6, 12, 18)}

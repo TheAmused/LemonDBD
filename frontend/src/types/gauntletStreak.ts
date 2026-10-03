@@ -2,7 +2,7 @@
 export type Role = 'survivor' | 'killer';
 
 /** Mirrors the backend's GAME_MODES; each one keeps its own run per role. */
-export const GAUNTLET_GAME_MODES = ['original', 'lemon_solo', 'lemon_duo', 'lemon_squad'] as const;
+export const GAUNTLET_GAME_MODES = ['original', 'lemon_solo', 'lemon_duo', 'lemon_squad', 'lemon_hooks'] as const;
 export type GauntletGameMode = (typeof GAUNTLET_GAME_MODES)[number];
 
 /** Modes where the player picks the character instead of the server rolling one. */

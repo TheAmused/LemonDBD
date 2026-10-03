@@ -11,7 +11,7 @@ export function everyNthCheckpoint(interval: number, total: number): number[] {
 
 // Mirrors backend/app/services/gauntlet/constants.py, which decides where a run actually banks one.
 const GAUNTLET_DEFAULT_INTERVAL = 10;
-const GAUNTLET_SOLO_INTERVAL = 5;
+const GAUNTLET_SHORT_INTERVAL = 5;
 const GAUNTLET_TEAM_STAGE_STARTS = [6, 12, 18];
 /** Characters the server deals into one match; a team match clears several at once. */
 const GAUNTLET_TEAM_CHARACTERS_PER_MATCH = 2;
@@ -25,5 +25,6 @@ export function gauntletRunLength(mode: GauntletGameMode, rosterSize: number): n
 
 export function gauntletCheckpoints(mode: GauntletGameMode, total: number): number[] {
   if (isTeamMode(mode)) return GAUNTLET_TEAM_STAGE_STARTS.filter((n) => n < total);
-  return everyNthCheckpoint(mode === 'lemon_solo' ? GAUNTLET_SOLO_INTERVAL : GAUNTLET_DEFAULT_INTERVAL, total);
+  const short = mode === 'lemon_solo' || mode === 'lemon_hooks';
+  return everyNthCheckpoint(short ? GAUNTLET_SHORT_INTERVAL : GAUNTLET_DEFAULT_INTERVAL, total);
 }

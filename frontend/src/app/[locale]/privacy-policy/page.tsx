@@ -17,6 +17,7 @@ import { fillPrivacyPlaceholders, type PrivacyInfo } from '@/utils/privacyPlaceh
 /** Render order of the policy sections (keys of `dict.privacy.sections`). */
 export const PRIVACY_SECTION_ORDER = [
   'whoWeAre',
+  'aiContent',
   'dataWeCollect',
   'howWeUse',
   'analytics',

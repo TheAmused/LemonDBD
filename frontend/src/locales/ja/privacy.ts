@@ -4,7 +4,7 @@ export default {
   heading: "プライバシーポリシー",
   backToAbout: "私たちについてへ戻る",
   lastUpdatedLabel: "最終更新日",
-  lastUpdated: "2026年10月1日",
+  lastUpdated: "2026年10月3日",
   intro:
     "このページでは、<brand>LemonDBD</brand>がどのような個人データを、なぜ収集し、誰が閲覧できるのか、そしてあなたに何ができるのかを説明します。あえて短く、分かりやすくまとめています。",
   summaryHeading: "かんたんな要約",
@@ -20,6 +20,14 @@ export default {
       paragraphs: [
         "<brand>LemonDBD</brand>は、<i>Dead by Daylight</i>のファンが作った無料のコンパニオンサイトで、<brand>LemonTeam</brand>が運営しています。このページに記載する個人データの管理者は私たちです。",
         "<brand>LemonDBD</brand>は非公式であり、Behaviour Interactive Inc.とは提携しておらず、同社の承認も受けていません。<i>Dead by Daylight</i>およびその名称、画像、その他のゲームコンテンツは、それぞれの権利者に帰属します。",
+      ],
+      items: [],
+    },
+    aiContent: {
+      heading: "AI生成コンテンツ",
+      paragraphs: [
+        "<brand>LemonDBD</brand>上の一部のコンテンツ(画像など)は、AIツールで生成・編集・アップスケールされている場合があります。",
+        "AIを利用したコンテンツには、誤りや不自然な部分が含まれることがあります。気になる点がある場合や、コンテンツの確認・削除をご希望の場合は、ご連絡ください。",
       ],
       items: [],
     },

@@ -4,7 +4,7 @@ export default {
   heading: "Datenschutzerklärung",
   backToAbout: "Zurück zu Über uns",
   lastUpdatedLabel: "Zuletzt aktualisiert",
-  lastUpdated: "1. Oktober 2026",
+  lastUpdated: "3. Oktober 2026",
   intro:
     "Diese Seite erklärt, welche personenbezogenen Daten <brand>LemonDBD</brand> erhebt, warum, wer sie sieht und was du damit tun kannst. Wir haben sie bewusst kurz und verständlich gehalten.",
   summaryHeading: "Kurzfassung",
@@ -20,6 +20,14 @@ export default {
       paragraphs: [
         "<brand>LemonDBD</brand> ist eine kostenlose Fanseite für <i>Dead by Daylight</i>, betrieben vom <brand>LemonTeam</brand>. Wir sind Verantwortliche für die auf dieser Seite beschriebenen personenbezogenen Daten.",
         "<brand>LemonDBD</brand> ist inoffiziell und steht in keiner Verbindung zu Behaviour Interactive Inc. und wird auch nicht von ihr unterstützt. <i>Dead by Daylight</i> sowie Namen, Bilder und weitere Spielinhalte gehören den jeweiligen Rechteinhabern.",
+      ],
+      items: [],
+    },
+    aiContent: {
+      heading: "KI-generierte Inhalte",
+      paragraphs: [
+        "Einige Inhalte auf <brand>LemonDBD</brand>, zum Beispiel Bilder, können mit KI-Werkzeugen erstellt, bearbeitet oder hochskaliert worden sein.",
+        "KI-gestützte Inhalte können Fehler oder seltsame Details enthalten. Wenn dir etwas auffällt oder du einen Inhalt prüfen oder entfernen lassen möchtest, kontaktiere uns.",
       ],
       items: [],
     },

@@ -193,4 +193,5 @@ export default {
     best: "Best Streak",
     days: "Days",
   },
+  toggleSuggestions: 'Show or hide suggestions',
 };

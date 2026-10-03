@@ -127,7 +127,7 @@ if (typeof window !== 'undefined' && (navigator as any).brave) {
       braveObj.isBrave().then((isBrave: boolean) => {
         if (isBrave) {
           isBraveDetected = true;
-          console.log('[ClientSpeechModel] Brave Browser detected! Recommending local client speech model.');
+          console.debug('[ClientSpeechModel] Brave Browser detected! Recommending local client speech model.');
         }
       }).catch(() => {});
     } else {
@@ -261,7 +261,7 @@ export class AudioCaptureSession {
     this.audioChunks = [];
 
     try {
-      console.log('[ClientSpeechModel] Requesting microphone access...');
+      console.debug('[ClientSpeechModel] Requesting microphone access...');
       if (typeof navigator === 'undefined' || !navigator.mediaDevices?.getUserMedia) {
         throw new Error('Microphone mediaDevices API is not available');
       }
@@ -307,7 +307,7 @@ export class AudioCaptureSession {
       }
 
       this.actualSampleRate = this.audioContext.sampleRate || 44100;
-      console.log('[ClientSpeechModel] AudioContext active at sampleRate:', this.actualSampleRate);
+      console.debug('[ClientSpeechModel] AudioContext active at sampleRate:', this.actualSampleRate);
 
       this.mediaSource = this.audioContext.createMediaStreamSource(stream);
       this.scriptProcessor = this.audioContext.createScriptProcessor(4096, 1, 1);
@@ -338,7 +338,7 @@ export class AudioCaptureSession {
       this.muteGain.connect(this.audioContext.destination);
 
       this.isRecording = true;
-      console.log('[ClientSpeechModel] Audio capture session started successfully.');
+      console.debug('[ClientSpeechModel] Audio capture session started successfully.');
     } catch (e) {
       this.cleanup();
       throw e;
@@ -405,7 +405,7 @@ export class AudioCaptureSession {
     const resampled = resampleTo16k(rawMerged, this.actualSampleRate, 16000);
     const normalized = normalizeAudioVolume(resampled);
 
-    console.log(
+    console.debug(
       `[ClientSpeechModel] Audio captured: raw=${rawMerged.length} samples (${this.actualSampleRate}Hz) -> resampled=${normalized.length} samples (16000Hz)`
     );
 
@@ -556,7 +556,7 @@ export async function initClientSpeechModel(locale: string = 'en'): Promise<any>
     const modelName = descriptor.name;
     const revision = descriptor.revision;
 
-    console.log(
+    console.debug(
       `[ClientSpeechModel] Initializing Whisper model (${modelName}, quality=${modelQuality})...`
     );
 
@@ -607,7 +607,7 @@ export async function initClientSpeechModel(locale: string = 'en'): Promise<any>
 
     cachedModelName = modelName;
     broadcastProgress({ status: 'ready', progress: 100 });
-    console.log(`[ClientSpeechModel] Whisper model ${modelName} initialized successfully in browser memory!`);
+    console.debug(`[ClientSpeechModel] Whisper model ${modelName} initialized successfully in browser memory!`);
     return cachedPipeline;
   } catch (err: any) {
     console.warn('[ClientSpeechModel] Whisper pipeline initialization error:', err);
@@ -629,7 +629,7 @@ export async function transcribeClientAudio(
   locale: string = 'en'
 ): Promise<string> {
   if (!audioData || audioData.length < 1600) {
-    console.log('[ClientSpeechModel] Audio too short (<100ms), skipping.');
+    console.debug('[ClientSpeechModel] Audio too short (<100ms), skipping.');
     return '';
   }
 
@@ -640,7 +640,7 @@ export async function transcribeClientAudio(
 
   if (cachedPipeline) {
     try {
-      console.log(
+      console.debug(
         '[ClientSpeechModel] Running Whisper model inference on 16kHz audio buffer of length:',
         audioData.length
       );
@@ -673,7 +673,7 @@ export async function transcribeClientAudio(
       }
 
       text = text.trim();
-      console.log('[ClientSpeechModel] Whisper transcription result:', text);
+      console.debug('[ClientSpeechModel] Whisper transcription result:', text);
       return text;
     } catch (e) {
       console.error('[ClientSpeechModel] Whisper inference failed:', e);

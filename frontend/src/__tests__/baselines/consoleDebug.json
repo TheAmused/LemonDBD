@@ -1,0 +1,6 @@
+{
+  "components/smash-or-pass/SmashOrPassHub.tsx": 7,
+  "hooks/useSmashTaxonomies.ts": 1,
+  "services/clientSpeechModel.ts": 10,
+  "services/smashApi.ts": 2
+}

@@ -250,6 +250,8 @@ export function RomanceArchetypeBuilder({ archetypes, onChange, availableRoles, 
                                 <button
                                   key={p.name}
                                   type="button"
+                                  aria-label={p.name}
+                                  aria-pressed={isSelected}
                                   onClick={() => updateArchetype(arch.id, { icon_name: p.name, icon_url: undefined })}
                                   className={cn(
                                     'flex h-8 w-8 items-center justify-center rounded-xl border transition-all cursor-pointer',

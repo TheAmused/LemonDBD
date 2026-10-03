@@ -2,6 +2,7 @@
 'use client';
 
 import { Input } from '@/components/common/Field';
+import { useDictionary } from '@/context/DictionaryContext';
 import React, { useState, useMemo, useRef, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import { Search, ChevronDown, Sparkles } from 'lucide-react';
@@ -32,6 +33,7 @@ export const CharacterAutocomplete: React.FC<CharacterAutocompleteProps> = ({
   excludeKeys = [],
   autoFocus = false,
 }) => {
+  const dict = useDictionary();
   const [query, setQuery] = useState('');
   const [isOpen, setIsOpen] = useState(false);
   const [highlightedIndex, setHighlightedIndex] = useState(0);
@@ -239,6 +241,7 @@ export const CharacterAutocomplete: React.FC<CharacterAutocompleteProps> = ({
           className="absolute right-3 text-text-muted hover:text-text-primary"
           aria-expanded={isOpen}
           aria-haspopup="listbox"
+          aria-label={dict.minigames.toggleSuggestions}
         >
           <ChevronDown
             className={`w-4 h-4 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}

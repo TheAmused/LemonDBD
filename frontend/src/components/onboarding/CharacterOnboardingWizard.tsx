@@ -751,7 +751,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
 
   if (view === 'intro') {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-bg-primary p-4">
+      <div className="min-h-screen flex items-center justify-center p-4">
         <div className="w-full max-w-md rounded-2xl border border-border-color bg-bg-surface p-8 text-center space-y-4 shadow-2xl">
           <h1 className="text-xl font-black">{t.introTitle}</h1>
           <p className="text-sm text-text-secondary">
@@ -767,7 +767,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
 
   if (view === 'language') {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-bg-primary p-4">
+      <div className="min-h-screen flex items-center justify-center p-4">
         <div className="w-full max-w-md rounded-2xl border border-border-color bg-bg-surface p-8 text-center space-y-4 shadow-2xl">
           <h1 className="text-xl font-black">{t.languageStepTitle}</h1>
           <p className="text-sm text-text-secondary">
@@ -942,6 +942,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
                     <button
                       type="button"
                       onClick={() => setSearchQuery('')}
+                      aria-label={dict.filters.clearSearch}
                       className="absolute right-2 top-1/2 -translate-y-1/2 text-text-muted hover:text-text-primary cursor-pointer"
                     >
                       <X className="h-3 w-3" />

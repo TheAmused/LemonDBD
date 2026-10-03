@@ -197,4 +197,5 @@ export default {
     best: "Najlepsza Seria",
     days: "Dni",
   },
+  toggleSuggestions: 'Pokaż lub ukryj podpowiedzi',
 };

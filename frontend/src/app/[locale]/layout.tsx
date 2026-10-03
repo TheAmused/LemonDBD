@@ -9,7 +9,7 @@ import { AuthProvider } from '@/context/AuthContext';
 import { DictionaryProvider } from '@/context/DictionaryContext';
 import { ImagePreloadProvider } from '@/components/common/ImagePreloadProvider';
 import { TooltipProvider } from '@/components/common/Tooltip';
-import { AppBackgroundProvider } from '@/components/layout/AppBackground';
+import { AppBackground } from '@/components/layout/AppBackground';
 import { Playfair_Display } from 'next/font/google';
 import '@/app/globals.css';
 
@@ -78,7 +78,8 @@ export default async function RootLayout({
           <AuthProvider>
             <DictionaryProvider dict={dict} locale={locale}>
               <ImagePreloadProvider>
-                <AppBackgroundProvider>{children}</AppBackgroundProvider>
+                <AppBackground />
+                {children}
               </ImagePreloadProvider>
               <TooltipProvider />
             </DictionaryProvider>

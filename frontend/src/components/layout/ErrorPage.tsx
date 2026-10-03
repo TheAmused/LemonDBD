@@ -9,7 +9,6 @@ import React from 'react';
 import Link from 'next/link';
 import { Home } from 'lucide-react';
 import { PageShell } from '@/components/layout/PageShell';
-import { useBackgroundEffect } from '@/components/layout/AppBackground';
 import { LemonIcon } from '@/components/LemonIcon';
 import { useDictionary, useLocale } from '@/context/DictionaryContext';
 import { useAuth } from '@/context/AuthContext';
@@ -43,7 +42,6 @@ export const ErrorPage: React.FC<ErrorPageProps> = ({ variant }) => {
           };
 
   useDocumentTitle(`${dict.app.title} - ${title}`);
-  useBackgroundEffect('fog');
 
   return (
     <PageShell

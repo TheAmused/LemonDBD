@@ -20,7 +20,6 @@ import { LANGUAGES } from '@/components/sidebar/SidebarBottomControls';
 import { FlagIcon } from '@/components/sidebar/FlagIcon';
 import { useResponsiveGridColumns } from '@/hooks/useResponsiveGridColumns';
 import { LemonIcon } from '@/components/LemonIcon';
-import { AmbientEmbers } from '@/components/layout/AmbientEmbers';
 import {
   clearOnboardingDraft,
   loadOnboardingDraft,
@@ -713,7 +712,6 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
   if (!authLoading && !isAuthenticated) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center p-6 text-center">
-        <AmbientEmbers />
         <div className="w-full max-w-md space-y-4 rounded-3xl border border-border-color bg-bg-surface p-8 shadow-xl">
           <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl border border-accent-red/30 bg-accent-red/15">
             <LemonIcon className="h-10 w-10 text-accent-red" />
@@ -758,7 +756,6 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
   if (view === 'intro') {
     return (
       <div className="min-h-screen flex items-center justify-center bg-bg-primary p-4">
-        <AmbientEmbers />
         <div className="w-full max-w-md rounded-2xl border border-border-color bg-bg-surface p-8 text-center space-y-4 shadow-2xl">
           <h1 className="text-xl font-black">{t?.introTitle || 'Welcome to LemonDBD'}</h1>
           <p className="text-sm text-text-secondary">
@@ -776,7 +773,6 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
   if (view === 'language') {
     return (
       <div className="min-h-screen flex items-center justify-center bg-bg-primary p-4">
-        <AmbientEmbers />
         <div className="w-full max-w-md rounded-2xl border border-border-color bg-bg-surface p-8 text-center space-y-4 shadow-2xl">
           <h1 className="text-xl font-black">{t?.languageStepTitle || 'Choose your language'}</h1>
           <p className="text-sm text-text-secondary">
@@ -811,8 +807,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
   }
 
   return (
-    <div className="min-h-screen bg-bg-primary p-2.5 sm:p-5 lg:p-6 pb-32 sm:pb-36 lg:pb-36">
-      <AmbientEmbers />
+    <div className="min-h-screen p-2.5 sm:p-5 lg:p-6 pb-32 sm:pb-36 lg:pb-36">
       <div className="mx-auto w-full max-w-[96rem] 2xl:max-w-[110rem] 3xl:max-w-[124rem]">
         {/* Unified Card Container */}
         <div className="rounded-2xl border border-border-color bg-bg-surface p-3 sm:p-5 lg:p-6 shadow-2xl space-y-3.5 sm:space-y-4">

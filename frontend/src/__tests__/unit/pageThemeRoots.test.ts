@@ -114,18 +114,21 @@ describe('Page background: one source of truth', () => {
   it('PageShell no longer paints a background colour or mounts effects (AppBackground in the layout does)', () => {
     const content = fs.readFileSync(path.resolve(__dirname, '../../components/layout/PageShell.tsx'), 'utf-8');
     assert.ok(!/DEFAULT_OUTER_CLASSNAME\s*=\s*\n?\s*['"`][^'"`]*\bbg-bg-primary\b/.test(content));
-    assert.ok(!content.includes('AmbientEmbers') && !content.includes('decoration'));
+    assert.ok(!content.includes('decoration'));
   });
 
-  it('no page mounts a background effect itself', () => {
-    const root = path.resolve(__dirname, '../../app');
+  it('only AppBackground mounts a background effect, and the locale layout mounts it', () => {
+    const src = path.resolve(__dirname, '../..');
     const walk = (dir: string): string[] =>
       fs.readdirSync(dir, { withFileTypes: true }).flatMap((e) =>
         e.isDirectory() ? walk(path.join(dir, e.name)) : /\.tsx$/.test(e.name) ? [path.join(dir, e.name)] : []
       );
-    for (const file of walk(root)) {
+    for (const file of walk(src)) {
+      if (file.endsWith('AppBackground.tsx')) continue;
       const content = fs.readFileSync(file, 'utf-8');
-      assert.ok(!/<(CampfireParticles|FogHeartbeatBackground|AmbientEmbers)\b/.test(content), `${file} mounts its own background effect`);
+      assert.ok(!/<CampfireParticles\b/.test(content), `${file} mounts its own background effect`);
     }
+    const layout = fs.readFileSync(path.resolve(src, 'app/[locale]/layout.tsx'), 'utf-8');
+    assert.ok(layout.includes('<AppBackground />'));
   });
 });

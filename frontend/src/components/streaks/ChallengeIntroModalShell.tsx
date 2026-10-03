@@ -5,7 +5,7 @@ import { Button } from '@/components/common/Button';
 import type { Dictionary } from '@/locales/types';
 
 import React from 'react';
-import { ChevronLeft } from 'lucide-react';
+import { BookOpen, ChevronLeft } from 'lucide-react';
 import { Modal } from '@/components/common/Modal';
 import { toneFromIconClass } from '@/components/streaks/RulesModalShell';
 import { AdeptBadgeIcon } from '@/components/icons/DbdIcons';
@@ -100,25 +100,22 @@ export const ChallengeIntroModalShell: React.FC<ChallengeIntroModalShellProps> =
           </Button>
         ) : undefined
       }
-      headerRight={
-        onOpenRules ? (
-          <button
-            type="button"
-            onClick={onOpenRules}
-            className={`${HEADER_BUTTON_CLASSES} gap-1.5 px-3 py-2.5 text-xs font-bold`}
-          >
-            {rulesLabel}
-          </button>
-        ) : undefined
-      }
       bodyClassName="p-5 sm:p-6"
     >
-      {intro && (
+      {(intro || onOpenRules) && (
         <div className="pb-5">
-          <div className="bg-bg-elevated border border-border-color rounded-xl p-4 shadow-sm text-center">
-            <p className="type-body-fluid text-text-secondary">
-              {intro}
-            </p>
+          <div className="flex flex-col items-center gap-3 bg-bg-elevated border border-border-color rounded-xl p-4 shadow-sm text-center">
+            {intro && <p className="type-body-fluid text-text-secondary">{intro}</p>}
+            {onOpenRules && (
+              <button
+                type="button"
+                onClick={onOpenRules}
+                className={`${HEADER_BUTTON_CLASSES} gap-1.5 px-3 py-2 text-xs font-bold`}
+              >
+                <BookOpen className="h-4 w-4" aria-hidden="true" />
+                {rulesLabel}
+              </button>
+            )}
           </div>
         </div>
       )}

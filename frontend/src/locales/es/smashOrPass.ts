@@ -544,4 +544,6 @@ export default {
     telegramNotice: '¡Telegram abierto! Texto del mensaje copiado al portapapeles.',
   },
   communityConsensus: 'Consenso de la comunidad',
+  loadingArenaSub: 'Invocando a los candidatos para la valoración de la comunidad',
+  loadingCreator: 'Cargando el creador de listas...',
 } as const;

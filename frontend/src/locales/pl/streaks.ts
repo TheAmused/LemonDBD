@@ -274,4 +274,6 @@ export default {
   historyCheckpointRule: "Punkt kontrolny zapisuje twój postęp, więc porażka cofa cię do niego, a nie do zera.",
   pageStreakKillWinCondition: "Wygrana = 3 zabójstwa lub więcej.",
   runFreezeNotice: "Twoje podejście zamraża się. Nowe odblokowania dołączą po kolejnym resecie, porażce cofającej do zera lub ukończeniu.",
+  loadingTrialStreaks: 'Synchronizowanie serii prób...',
+  loadingTrialStreaksSub: 'Weryfikowanie rekordów gauntletu i statystyk zwycięstw',
 } as const;

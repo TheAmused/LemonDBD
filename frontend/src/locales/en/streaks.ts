@@ -272,4 +272,6 @@ export default {
   tierObsession: 'The Obsession',
   tierExecutioner: 'The Executioner',
   tierEntity: 'The Entity',
+  loadingTrialStreaks: 'Synchronizing Trial Streaks...',
+  loadingTrialStreaksSub: 'Validating gauntlet records and victory metrics',
 } as const;

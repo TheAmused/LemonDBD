@@ -156,4 +156,5 @@ export default {
   deleteAccountWrongPassword: "Contraseña incorrecta.",
   deleteAccountFailed: "No se pudo eliminar la cuenta. Inténtalo de nuevo.",
   deleteAccountLastAdmin: "La única cuenta de administrador no se puede eliminar.",
+  loadingProfileSub: "Recuperando el inventario del jugador y la maestría de ventajas",
 } as const;

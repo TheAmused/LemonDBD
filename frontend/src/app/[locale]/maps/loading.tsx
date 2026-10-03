@@ -14,8 +14,8 @@ export default function MapsLoading() {
           layout="inline"
           accent="blood"
           needleSpeed={1.6}
-          label="Surveying Realms & Seeds..."
-          sublabel="Mapping tile variants, loops, and spawn coordinates"
+          labelKey="maps.loadingTacticalMaps"
+          sublabelKey="maps.loadingTacticalMapsSub"
         />
       }
     />

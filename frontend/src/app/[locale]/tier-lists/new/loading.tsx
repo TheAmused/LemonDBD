@@ -13,7 +13,7 @@ export default function TierListsLoading() {
           layout="inline"
           accent="blood"
           needleSpeed={1.6}
-          label="Loading tier lists..."
+          labelKey="tierLists.loading"
         />
       }
     />

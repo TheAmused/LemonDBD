@@ -32,4 +32,5 @@ export default {
   loadingSWFPlanner: "SWFプランナーを読み込み中...",
   loadingQuests: "クエストを読み込み中...",
   notice: "お知らせ",
+  loadingPerksSub: 'サバイバーとキラーのパークを同期中',
 } as const;

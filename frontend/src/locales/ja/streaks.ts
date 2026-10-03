@@ -274,4 +274,6 @@ export default {
   historyCheckpointRule: "チェックポイントは進捗を保存するので、敗北してもゼロではなく直前のチェックポイントまでしか戻りません。",
   pageStreakKillWinCondition: "勝利条件 = 3キル以上。",
   runFreezeNotice: "この挑戦は固定されます。新しい解放要素は、次のリセット、ゼロへの敗北、またはクリアの後に反映されます。",
+  loadingTrialStreaks: '試練ストリークを同期中...',
+  loadingTrialStreaksSub: 'ガントレット記録と勝利データを検証中',
 } as const;

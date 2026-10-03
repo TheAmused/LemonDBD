@@ -68,4 +68,5 @@ export default {
   layoutOutdoor: 'Außen',
   layoutIndoor: 'Innen',
   layoutHybrid: 'Hybrid',
+  loadingTacticalMapsSub: 'Kachelvarianten, Loops und Spawn-Koordinaten werden kartiert',
 } as const;

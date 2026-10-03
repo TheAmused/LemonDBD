@@ -544,4 +544,6 @@ export default {
     telegramNotice: 'Telegram geöffnet! Nachrichtentext in die Zwischenablage kopiert.',
   },
   communityConsensus: 'Community-Konsens',
+  loadingArenaSub: 'Kandidaten für die Community-Bewertung werden herbeigerufen',
+  loadingCreator: 'Listen-Editor wird geladen...',
 } as const;

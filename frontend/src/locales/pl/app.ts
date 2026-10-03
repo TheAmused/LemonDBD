@@ -32,4 +32,5 @@ export default {
   loadingSWFPlanner: "Wczytywanie Planera SWF...",
   loadingQuests: "Wczytywanie Zadań...",
   notice: "Powiadomienie",
+  loadingPerksSub: 'Synchronizowanie perków ocalałych i zabójców',
 } as const;

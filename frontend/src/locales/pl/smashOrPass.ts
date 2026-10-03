@@ -560,4 +560,6 @@ export default {
     telegramNotice: 'Otwarto Telegram! Treść wiadomości skopiowano do schowka.',
   },
   communityConsensus: 'Konsensus społeczności',
+  loadingArenaSub: 'Przywoływanie kandydatów do oceny społeczności',
+  loadingCreator: 'Ładowanie kreatora listy...',
 } as const;

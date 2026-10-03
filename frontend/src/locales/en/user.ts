@@ -156,4 +156,5 @@ export default {
   deleteAccountWrongPassword: "Incorrect password.",
   deleteAccountFailed: "Could not delete the account. Try again.",
   deleteAccountLastAdmin: "The only administrator account cannot be deleted.",
+  loadingProfileSub: "Retrieving player inventory and perk mastery",
 } as const;

@@ -15,8 +15,8 @@ export default function PerksLoading() {
           layout="inline"
           accent="blood"
           needleSpeed={1.2}
-          label="Calibrating Perks Vault..."
-          sublabel="Synchronizing survivor & killer trial perks"
+          labelKey="app.loadingPerks"
+          sublabelKey="app.loadingPerksSub"
         />
       }
     />

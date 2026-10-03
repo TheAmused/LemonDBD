@@ -198,4 +198,5 @@ export default {
     days: "Tage",
   },
   toggleSuggestions: 'Vorschläge ein- oder ausblenden',
+  searchItemPlaceholder: 'Element suchen...',
 };

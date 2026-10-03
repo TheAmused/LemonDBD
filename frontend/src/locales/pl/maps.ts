@@ -68,4 +68,5 @@ export default {
   layoutOutdoor: 'Otwarty',
   layoutIndoor: 'Zamknięty',
   layoutHybrid: 'Hybrydowy',
+  loadingTacticalMapsSub: 'Mapowanie wariantów kafelków, pętli i współrzędnych spawnu',
 } as const;

@@ -32,4 +32,5 @@ export default {
   loadingSWFPlanner: "Lade SWF-Planer...",
   loadingQuests: "Lade Quests...",
   notice: "Hinweis",
+  loadingPerksSub: 'Überlebenden- und Killer-Perks werden synchronisiert',
 } as const;

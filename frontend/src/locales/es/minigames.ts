@@ -198,4 +198,5 @@ export default {
     days: "Días",
   },
   toggleSuggestions: 'Mostrar u ocultar sugerencias',
+  searchItemPlaceholder: 'Buscar elemento...',
 };

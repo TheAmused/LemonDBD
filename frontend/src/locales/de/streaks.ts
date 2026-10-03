@@ -274,4 +274,6 @@ export default {
   historyCheckpointRule: "Ein Checkpoint sichert deinen Fortschritt, eine Niederlage fällt also auf den letzten Checkpoint zurück statt auf null.",
   pageStreakKillWinCondition: "Sieg = 3 oder mehr Tode.",
   runFreezeNotice: "Dein Lauf friert ein. Neue Freischaltungen kommen erst nach deinem nächsten Reset, einer Niederlage auf null oder Abschluss hinzu.",
+  loadingTrialStreaks: 'Prüfungsserien werden synchronisiert...',
+  loadingTrialStreaksSub: 'Gauntlet-Rekorde und Siegesstatistiken werden geprüft',
 } as const;

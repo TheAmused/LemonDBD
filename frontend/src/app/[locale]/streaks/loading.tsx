@@ -18,8 +18,8 @@ export default function StreaksLoading() {
           layout="inline"
           accent="blood"
           needleSpeed={1.1}
-          label="Synchronizing Trial Streaks..."
-          sublabel="Validating gauntlet records and victory metrics"
+          labelKey="streaks.loadingTrialStreaks"
+          sublabelKey="streaks.loadingTrialStreaksSub"
         />
       </main>
     </div>

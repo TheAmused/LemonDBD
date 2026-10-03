@@ -32,4 +32,5 @@ export default {
   loadingSWFPlanner: "Loading SWF Planner...",
   loadingQuests: "Loading Quests...",
   notice: "Notice",
+  loadingPerksSub: 'Synchronizing survivor & killer trial perks',
 } as const;

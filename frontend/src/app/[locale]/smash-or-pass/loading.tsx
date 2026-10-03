@@ -18,8 +18,8 @@ export default function SmashOrPassLoading() {
           layout="inline"
           accent="blood"
           needleSpeed={1.0}
-          label="Entering Smash or Pass Arena..."
-          sublabel="Summoning community rating candidates"
+          labelKey="smashOrPass.loadingArena"
+          sublabelKey="smashOrPass.loadingArenaSub"
         />
       </main>
     </div>

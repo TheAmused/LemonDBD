@@ -84,6 +84,13 @@ const SLOT_ICON_BASE: Record<SlotSize, string> = {
   compact: 'w-12 h-12',
 };
 
+// The diamond is rotated, so its corners overhang the layout box; the caption clears them.
+const CAPTION_CLASS: Record<SlotSize, string> = {
+  large: 'mt-5 w-28',
+  small: 'mt-4 w-24',
+  compact: 'mt-3 w-20',
+};
+
 const slotIconBase = (size: SlotSize) =>
   `${SLOT_ICON_BASE[size]} shrink-0 rounded-md rotate-45 flex items-center justify-center border relative`;
 
@@ -107,7 +114,7 @@ const SlotChip: React.FC<{
   badgeColor?: 'amber' | 'red';
   children: React.ReactNode;
 }> = ({ iconClassName, caption, title, size, badge, badgeColor = 'amber', children }) => (
-  <div className="relative inline-flex shrink-0" {...tip(title || caption, undefined, 'status')}>
+  <div className="relative inline-flex shrink-0 flex-col items-center" {...(title ? tip(title, undefined, 'status') : {})}>
     {badge && (
       <div
         className={`absolute -top-2.5 left-1/2 -translate-x-1/2 z-10 ${BADGE_BG[badgeColor]} text-text-primary ${BADGE_TEXT_SIZE[size]} font-black uppercase tracking-wide px-1.5 py-0.5 rounded shadow-sm whitespace-nowrap`}
@@ -118,6 +125,7 @@ const SlotChip: React.FC<{
     <div className={`${slotIconBase(size)} ${iconClassName}`}>
       <div className="-rotate-45 flex items-center justify-center">{children}</div>
     </div>
+    <span className={`${CAPTION_CLASS[size]} text-center type-strong-2xs leading-tight text-text-secondary line-clamp-2`}>{caption}</span>
   </div>
 );
 
@@ -189,7 +197,6 @@ const PerkSlotsRow: React.FC<PerkSlotsRowProps> = ({ tierInfo, charPerks, random
                 size={size}
                 iconClassName="border-transparent"
                 caption={perkDisplayName(perk.name)}
-                title={perkDisplayName(perk.name)}
               >
                 <PerkArt perk={perk} size={perkArtSize} />
               </SlotChip>

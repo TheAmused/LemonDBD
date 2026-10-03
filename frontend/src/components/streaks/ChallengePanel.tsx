@@ -4,7 +4,6 @@ import type { Dictionary } from '@/locales/types';
 import React from 'react';
 import { BarChart2, ChevronDown, History, RotateCcw } from 'lucide-react';
 import { CELEBRATION_CARD_CLASSES, CELEBRATION_LABEL_CLASSES, CelebrationBadge } from './CelebrationBadge';
-import { tip } from '@/components/common/Tooltip';
 import { useDictionary } from "@/context/DictionaryContext";
 
 interface ChallengePanelProps {
@@ -68,14 +67,12 @@ export const ModeSelectButton: React.FC<ModeSelectButtonProps> = ({ label, tone,
     <button
       type="button"
       onClick={onClick}
-      {...tip(title, undefined, 'status')}
       aria-label={`${title}: ${label}`}
       className={`${shell} cursor-pointer transition-colors hover:bg-bg-elevated/70 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red`}
     >
       {content}
     </button>
   ) : (
-    <div className={shell} {...tip(title, undefined, 'status')}>
       {content}
     </div>
   );
@@ -130,7 +127,6 @@ export const HeaderButton: React.FC<HeaderButtonProps> = ({ onClick, title, icon
   <button
     type="button"
     onClick={onClick}
-    {...(label ? {} : tip(title, undefined, 'status'))}
     aria-label={title}
     className={`${HEADER_BUTTON_CLASSES} ${danger ? 'hover:bg-accent-red/10 hover:text-accent-red' : ''} ${
       label ? 'gap-1.5 px-3 py-2.5 text-xs font-bold' : 'justify-center p-2.5'

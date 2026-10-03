@@ -8,7 +8,6 @@ import { User, Sparkles, Star, Lock, HelpCircle } from 'lucide-react';
 import { avatarUrlForCharacter, perkIconUrl, staticUrl } from '@/utils/staticUrl';
 import { useCharacterDisplayName, usePerkDisplayName } from '@/context/DisplayNamesContext';
 import { KillerIcon } from '@/components/icons/DbdIcons';
-import { tip } from '@/components/common/Tooltip';
 import { useDictionary } from '@/context/DictionaryContext';
 
 const avatarUrlFor = (name: string, role: Role, characters: OwnedCharacterItem[] = []) => {
@@ -108,13 +107,12 @@ const BADGE_BG: Record<'amber' | 'red', string> = {
 const SlotChip: React.FC<{
   iconClassName: string;
   caption: string;
-  title?: string;
   size: SlotSize;
   badge?: string;
   badgeColor?: 'amber' | 'red';
   children: React.ReactNode;
-}> = ({ iconClassName, caption, title, size, badge, badgeColor = 'amber', children }) => (
-  <div className="relative inline-flex shrink-0 flex-col items-center" {...(title ? tip(title, undefined, 'status') : {})}>
+}> = ({ iconClassName, caption, size, badge, badgeColor = 'amber', children }) => (
+  <div className="relative inline-flex shrink-0 flex-col items-center">
     {badge && (
       <div
         className={`absolute -top-2.5 left-1/2 -translate-x-1/2 z-10 ${BADGE_BG[badgeColor]} text-text-primary ${BADGE_TEXT_SIZE[size]} font-black uppercase tracking-wide px-1.5 py-0.5 rounded shadow-sm whitespace-nowrap`}
@@ -125,7 +123,7 @@ const SlotChip: React.FC<{
     <div className={`${slotIconBase(size)} ${iconClassName}`}>
       <div className="-rotate-45 flex items-center justify-center">{children}</div>
     </div>
-    <span className={`${CAPTION_CLASS[size]} text-center type-strong-2xs leading-tight text-text-secondary line-clamp-2`}>{caption}</span>
+    <span className={`${CAPTION_CLASS[size]} text-center text-xs font-bold leading-tight text-text-primary line-clamp-2`}>{caption}</span>
   </div>
 );
 
@@ -142,14 +140,13 @@ const TEACHABLE_ACCENT = {
 
 /** The "own unique perk goes here" slot, always paired with its badge.
  * `accent` lets squad color each player's slot differently. */
-const TeachableSlot: React.FC<{ size: SlotSize; title: string; accent?: 'amber' | 'red'; }> = ({ size, title, accent = 'amber' }) => {
+const TeachableSlot: React.FC<{ size: SlotSize; accent?: 'amber' | 'red'; }> = ({ size, accent = 'amber' }) => {
   const dict = useDictionary();
   return (
   <SlotChip
     size={size}
     iconClassName={TEACHABLE_ACCENT[accent]}
     caption={(dict.streaks.ownPerkOf).replace(/:$/, '')}
-    title={title}
     badge={dict.streaks.teachableBadge}
     badgeColor={accent}
   >
@@ -173,7 +170,6 @@ const PerkSlotsRow: React.FC<PerkSlotsRowProps> = ({ tierInfo, charPerks, random
   const perkLimit = tierInfo.perk_limit;
   const charactersPerksOnly = tierInfo.character_perks_only;
   const slots = [0, 1, 2, 3];
-  const slotLabel = dict.streaks.slotLabel;
   const perkDisplayName = usePerkDisplayName();
   const large = size === 'large';
   const iconSize = SLOT_ICON_SIZE[size];
@@ -210,7 +206,6 @@ const PerkSlotsRow: React.FC<PerkSlotsRowProps> = ({ tierInfo, charPerks, random
                 size={size}
                 iconClassName="bg-bg-elevated/60 border-dashed border-border-color opacity-60 text-text-muted"
                 caption={dict.streaks.lockedSuffix ? dict.streaks.lockedSuffix[0].toUpperCase() + dict.streaks.lockedSuffix.slice(1) : 'Locked'}
-                title={`${slotLabel} ${idx + 1} ${dict.streaks.lockedSuffix} — ${dict.streaks.tierLabel} ${tierInfo.tier_level} ${dict.streaks.ruleSuffix}`}
               >
                 <Lock className={iconSize} />
               </SlotChip>
@@ -235,13 +230,7 @@ const PerkSlotsRow: React.FC<PerkSlotsRowProps> = ({ tierInfo, charPerks, random
           if (idx === 0) {
             // One of several choices, not a specific assigned perk -- a symbol
             // for "your character's own unique perk goes here", not a preview.
-            const title =
-              charPerks.length > 0
-                ? `${dict.streaks.slotOneOfThese}: ${charPerks
-                    .map((p) => perkDisplayName(p.name))
-                    .join(', ')}`
-                : dict.streaks.noTeachablePerks;
-            return <TeachableSlot key="character-slot" size={size} title={title} accent={teachableAccent} />;
+            return <TeachableSlot key="character-slot" size={size} accent={teachableAccent} />;
           }
 
           return (

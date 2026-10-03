@@ -73,6 +73,7 @@ export const ModeSelectButton: React.FC<ModeSelectButtonProps> = ({ label, tone,
       {content}
     </button>
   ) : (
+    <div className={shell}>
       {content}
     </div>
   );

@@ -11,7 +11,6 @@ import { RoleTabs } from '@/components/streaks/RoleTabs';
 import { StreaksHubSkeleton } from '@/components/streaks/StreaksSkeleton';
 import { Locale } from '@/i18n/config';
 import { useAuth } from '@/context/AuthContext';
-import { StreaksDictProvider } from '@/context/StreaksDictContext';
 import { DisplayNamesProvider } from '@/context/DisplayNamesContext';
 import { useDictionary } from '@/context/DictionaryContext';
 import { getBackendBaseUrl } from '@/utils/api';
@@ -51,7 +50,6 @@ export function StreaksLayoutShell({ children }: { children: React.ReactNode }) 
     <div className="min-h-screen text-text-primary flex flex-col lg:flex-row transition-colors duration-300">
       <Sidebar
         currentLocale={locale}
-        dict={dict}
         activeCategory="streaks"
         onSelectCategory={handleSelectCategory}
       />
@@ -61,25 +59,23 @@ export function StreaksLayoutShell({ children }: { children: React.ReactNode }) 
       >
         {isPickerPage && (
           <div className="mb-6">
-            <RoleTabs locale={locale} dict={dict} />
+            <RoleTabs locale={locale} />
           </div>
         )}
 
         {authLoading ? (
           <p className="py-10 text-center text-xs text-text-muted">
-            {dict?.streaks?.loadingStreak || 'Loading…'}
+            {dict.streaks.loadingStreak}
           </p>
         ) : isAuthenticated && user?.is_verified ? (
-          <StreaksDictProvider dict={dict}>
-            <DisplayNamesProvider locale={locale}>{children}</DisplayNamesProvider>
-          </StreaksDictProvider>
+          <DisplayNamesProvider locale={locale}>{children}</DisplayNamesProvider>
         ) : isAuthenticated ? (
           <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-border-color bg-bg-surface/60 px-6 py-20 text-center">
             <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-accent-amber/20 bg-accent-amber/10">
               <MailWarning className="h-5 w-5 text-accent-amber" />
             </div>
             <h2 className="mt-4 text-sm font-extrabold tracking-wide text-text-primary">
-              {dict?.streaks?.verifyEmailToTrack || 'Verify your email to track challenges'}
+              {dict.streaks.verifyEmailToTrack}
             </h2>
             <button
               onClick={() => {
@@ -89,7 +85,7 @@ export function StreaksLayoutShell({ children }: { children: React.ReactNode }) 
               }}
               className="mt-4 rounded-xl bg-accent-red px-5 py-2.5 type-strong text-text-inverted shadow-xs hover:bg-accent-red-hover transition-colors cursor-pointer"
             >
-              {dict?.streaks?.verifyEmail || 'Verify email'}
+              {dict.streaks.verifyEmail}
             </button>
           </div>
         ) : (
@@ -99,10 +95,10 @@ export function StreaksLayoutShell({ children }: { children: React.ReactNode }) 
               <Lock className="h-5 w-5 text-accent-red" />
             </div>
             <h2 className="mt-4 text-sm font-extrabold tracking-wide text-text-primary">
-              {dict?.streaks?.loginToTrack || 'Log in to track your challenges'}
+              {dict.streaks.loginToTrack}
             </h2>
             <p className="mt-1.5 max-w-sm type-body text-text-muted">
-              {dict?.streaks?.loginToTrackDesc || 'Challenges use the killers and perks you own, so we need to know who you are first.'}
+              {dict.streaks.loginToTrackDesc}
             </p>
             <button
               onClick={() => {
@@ -112,7 +108,7 @@ export function StreaksLayoutShell({ children }: { children: React.ReactNode }) 
               }}
               className="mt-5 rounded-xl bg-accent-red px-5 py-2.5 type-strong text-text-inverted shadow-xs hover:bg-accent-red-hover transition-colors"
             >
-              {dict?.streaks?.logIn || 'Log in'}
+              {dict.streaks.logIn}
             </button>
           </div>
         )}

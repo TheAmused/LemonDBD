@@ -25,13 +25,12 @@ export default function CharactersPage() {
   return (
     <PageShell
       locale={locale}
-      dict={dict}
       activeCategory="characters"
       mainClassName="relative overflow-y-auto"
     >
       <div className="relative z-10">
-        <Suspense fallback={<CharactersGridSkeleton dict={dict} />}>
-          <CharactersHub dict={dict} />
+        <Suspense fallback={<CharactersGridSkeleton />}>
+          <CharactersHub />
         </Suspense>
       </div>
     </PageShell>

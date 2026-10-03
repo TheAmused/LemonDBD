@@ -8,17 +8,18 @@ import type { Dictionary } from '@/locales/types';
 import { buildShareUrl, encodeSharePayload, exportFileName, serializeSmashRosterDocument } from '@/utils/smashOrPass/codec';
 import { SMASH_ROSTER_LIMITS } from '@/utils/smashOrPass/constants';
 import { LABEL } from './creator/styles';
+import { useDictionary } from "@/context/DictionaryContext";
 
 interface SmashRosterExportModalProps {
   doc: SmashRosterDocument | null;
   onClose: () => void;
   locale: string;
-  dict?: Dictionary | any;
 }
 
 /** JSON download / copy, and a self-contained share link (the roster rides in the URL fragment). */
-export function SmashRosterExportModal({ doc, onClose, locale, dict }: SmashRosterExportModalProps) {
-  const t = dict?.smashOrPass?.exportModal || {};
+export function SmashRosterExportModal({ doc, onClose, locale }: SmashRosterExportModalProps) {
+  const dict = useDictionary();
+  const t = dict.smashOrPass.exportModal || {};
   return (
     <ExportModal
       doc={doc}
@@ -35,17 +36,17 @@ export function SmashRosterExportModal({ doc, onClose, locale, dict }: SmashRost
       jsonFieldClassName="sm:text-xs"
       buttonClassName="min-h-[44px]"
       labels={{
-        title: t.title || 'Export Roster',
-        subtitle: t.subtitle || 'Copy a shareable link, or download the roster as a JSON file.',
-        shareLinkLabel: t.shareLinkLabel || 'Shareable link',
-        preparingLink: t.preparingLink || 'Preparing link...',
-        copyLink: t.copyLink || 'Copy Link',
-        linkTooLong: t.linkTooLong || 'This link is {count} characters long.',
-        jsonLabel: t.jsonLabel || 'Roster JSON',
-        downloadFile: t.downloadFile || 'Download File',
-        copyJson: t.copyJson || 'Copy JSON',
-        copied: t.copied || 'Copied!',
-        copyFailed: t.copyFailed || "Couldn't copy",
+        title: t.title,
+        subtitle: t.subtitle,
+        shareLinkLabel: t.shareLinkLabel,
+        preparingLink: t.preparingLink,
+        copyLink: t.copyLink,
+        linkTooLong: t.linkTooLong,
+        jsonLabel: t.jsonLabel,
+        downloadFile: t.downloadFile,
+        copyJson: t.copyJson,
+        copied: t.copied,
+        copyFailed: t.copyFailed,
       }}
     />
   );

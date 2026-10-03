@@ -29,6 +29,7 @@ import { Modal, useModal } from '@/components/common/Modal';
 import { Button } from '@/components/common/Button';
 import { Surface } from '@/components/common/Surface';
 import { isSurvivor as isSurvivorRole } from '@/utils/characterUtils';
+import { useDictionary } from "@/context/DictionaryContext";
 
 const ZoomCloseButton: React.FC<{ label: string }> = ({ label }) => {
   const { close } = useModal();
@@ -61,25 +62,24 @@ interface CharacterCardProps {
   initialExitOffset?: { x: number; y: number } | null;
   onExitComplete?: () => void;
   locale?: string;
-  dict?: Dictionary | any;
   customLabels?: RosterCustomLabels;
   rosterMode?: 'simple' | 'full';
 }
 
 export const CharacterCard: React.FC<CharacterCardProps> = ({
-  character,
-  onVote,
-  isTopCard = true,
-  onDragUpdate,
-  isExiting = false,
-  exitType = null,
-  initialExitOffset = null,
-  onExitComplete,
-  locale = 'en',
-  dict,
-  customLabels,
-  rosterMode = 'full',
-}) => {
+      character,
+      onVote,
+      isTopCard = true,
+      onDragUpdate,
+      isExiting = false,
+      exitType = null,
+      initialExitOffset = null,
+      onExitComplete,
+      locale = 'en',
+      customLabels,
+      rosterMode = 'full',
+    }) => {
+  const dict = useDictionary();
   const [isFlipped, setIsFlipped] = useState<boolean>(false);
   const [turn, setTurn] = useState<'settled' | 'out' | 'far'>('settled');
   const [isZoomed, setIsZoomed] = useState<boolean>(false);
@@ -291,9 +291,9 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
       ? 1.02
       : 1;
 
-  const rawSmashDict = dict?.smashOrPass;
+  const rawSmashDict = dict.smashOrPass;
 
-  const zoomAriaLabel = rawSmashDict?.zoomFullPortrait
+  const zoomAriaLabel = rawSmashDict.zoomFullPortrait
     ? `${character.name} - ${rawSmashDict.zoomFullPortrait}`
     : character.name;
 
@@ -424,8 +424,8 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
                   SmashSounds.playFlipSound();
                   startFlip();
                 }}
-                {...tip(rawSmashDict?.flipToDatingProfile || '', undefined, 'action')}
-                aria-label={rawSmashDict?.flipToDatingProfile || ''}
+                {...tip(rawSmashDict.flipToDatingProfile, undefined, 'action')}
+                aria-label={rawSmashDict.flipToDatingProfile}
                 className="flex min-h-[48px] min-w-[48px] h-12 w-12 sm:h-12 sm:w-12 items-center justify-center rounded-2xl bg-bg-primary/85 border border-accent-red/40 text-accent-red hover:text-text-inverted hover:border-accent-red hover:scale-110 active:scale-95 transition-all shadow-2xl backdrop-blur-md cursor-pointer touch-manipulation"
               >
                 <RotateCw className="h-5 w-5" aria-hidden="true" />
@@ -440,8 +440,8 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
                   SmashSounds.playHoverTick();
                   setIsZoomed(true);
                 }}
-                {...tip(rawSmashDict?.zoomFullPortrait || '', undefined, 'action')}
-                aria-label={rawSmashDict?.zoomFullPortrait || ''}
+                {...tip(rawSmashDict.zoomFullPortrait, undefined, 'action')}
+                aria-label={rawSmashDict.zoomFullPortrait}
                 className="flex min-h-[48px] min-w-[48px] h-12 w-12 sm:h-12 sm:w-12 items-center justify-center rounded-2xl bg-bg-primary/85 border border-border-color text-text-secondary hover:text-text-inverted hover:border-accent-red hover:scale-110 active:scale-95 transition-all shadow-2xl backdrop-blur-md cursor-pointer touch-manipulation"
               >
                 <Maximize2 className="h-5 w-5" aria-hidden="true" />
@@ -458,8 +458,8 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
                   const rect = e.currentTarget.getBoundingClientRect();
                   onVote('pass', { x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 });
                 }}
-                {...tip(rawSmashDict?.pass || '', undefined, 'action')}
-                aria-label={rawSmashDict?.pass || ''}
+                {...tip(rawSmashDict.pass, undefined, 'action')}
+                aria-label={rawSmashDict.pass}
                 className="flex min-h-[48px] min-w-[48px] h-13 w-13 sm:h-14 sm:w-14 items-center justify-center rounded-2xl bg-bg-primary/90 border-2 border-border-color text-text-muted hover:text-text-primary hover:border-border-subtle hover:scale-110 active:scale-95 transition-all shadow-2xl backdrop-blur-md cursor-pointer touch-manipulation"
               >
                 <ThumbsDown className="h-6 w-6 sm:h-7 sm:w-7" aria-hidden="true" />
@@ -474,8 +474,8 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
                   const rect = e.currentTarget.getBoundingClientRect();
                   onVote('smash', { x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 });
                 }}
-                {...tip(rawSmashDict?.smash || '', undefined, 'action')}
-                aria-label={rawSmashDict?.smash || ''}
+                {...tip(rawSmashDict.smash, undefined, 'action')}
+                aria-label={rawSmashDict.smash}
                 className="flex min-h-[48px] min-w-[48px] h-13 w-13 sm:h-14 sm:w-14 items-center justify-center rounded-2xl bg-accent-red hover:bg-accent-red-hover text-text-inverted hover:scale-110 active:scale-95 transition-all cursor-pointer touch-manipulation"
               >
                 <Heart className="h-6 w-6 sm:h-7 sm:w-7 fill-text-inverted" aria-hidden="true" />
@@ -506,8 +506,8 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
                   SmashSounds.playFlipSound();
                   startFlip();
                 }}
-                {...tip(rawSmashDict?.flipBack || '', undefined, 'action')}
-                aria-label={rawSmashDict?.flipBack || ''}
+                {...tip(rawSmashDict.flipBack, undefined, 'action')}
+                aria-label={rawSmashDict.flipBack}
                 className="flex min-h-[40px] min-w-[40px] h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-2xl bg-bg-elevated border border-accent-red/40 text-accent-red hover:text-text-inverted hover:border-accent-red hover:scale-110 active:scale-95 transition-all shadow-lg cursor-pointer touch-manipulation"
               >
                 <RotateCw className="h-5 w-5" aria-hidden="true" />
@@ -528,8 +528,8 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
                 }`}
               >
                 {isSurvivor
-                  ? rawSmashDict?.filters?.survivors || character.role
-                  : rawSmashDict?.filters?.killers || character.role}
+                  ? rawSmashDict.filters.survivors
+                  : rawSmashDict.filters.killers}
               </span>
             </div>
 
@@ -591,7 +591,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
               {rosterMode !== 'simple' && charBio && (
                 <Surface tone="elevated" radius="2xl" padding="none" className="p-2.5 space-y-1">
                   <span className="type-label-2xs text-text-muted">
-                    {rawSmashDict?.loreAndPersonality || 'Lore'}
+                    {rawSmashDict.loreAndPersonality}
                   </span>
                   <p className="type-body text-text-secondary">{charBio}</p>
                 </Surface>
@@ -601,7 +601,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
                 <Surface tone="elevated" radius="2xl" padding="none" className="p-2.5 space-y-0.5">
                   <span className="flex items-center gap-1.5 type-label-2xs text-text-secondary">
                     <Sparkles className="h-3 w-3 text-text-muted" aria-hidden="true" />
-                    {customLabels?.meme || rawSmashDict?.trialRumor || 'Meme'}
+                    {customLabels?.meme || rawSmashDict.trialRumor}
                   </span>
                   <p className="text-mini text-text-secondary italic leading-snug">{charMeme}</p>
                 </Surface>
@@ -611,7 +611,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
               <div className="absolute inset-0 z-20 flex items-center justify-center pointer-events-none">
                 <div className="px-6 py-3 rounded-2xl bg-bg-primary/80 border border-border-color/60 backdrop-blur-md shadow-2xl">
                   <span className="text-2xl sm:text-3xl font-black tracking-widest text-text-primary uppercase drop-shadow-md">
-                    {rawSmashDict?.soon || 'Soon...'}
+                    {rawSmashDict.soon}
                   </span>
                 </div>
               </div>
@@ -632,7 +632,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
                 className="flex-1"
               >
                 <ThumbsDown className="h-4 w-4" aria-hidden="true" />
-                <span>{rawSmashDict?.pass || 'Pass'}</span>
+                <span>{rawSmashDict.pass}</span>
               </Button>
               <Button
                 variant="primary" size="sm"
@@ -646,7 +646,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
                 className="flex-1"
               >
                 <Heart className="h-4 w-4 fill-text-inverted" aria-hidden="true" />
-                <span>{rawSmashDict?.smash || 'Smash'}</span>
+                <span>{rawSmashDict.smash}</span>
               </Button>
             </div>
           </div>
@@ -664,7 +664,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
         className="overflow-visible"
         bodyClassName="flex justify-center overflow-visible"
       >
-        <ZoomCloseButton label={dict?.modal?.close || ''} />
+        <ZoomCloseButton label={dict.modal.close} />
         <div className="relative overflow-hidden rounded-3xl border-2 border-accent-red/40 bg-bg-primary">
           <img
             src={avatarSrc}
@@ -692,4 +692,4 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
       </Modal>
     </>
   );
-};
+};

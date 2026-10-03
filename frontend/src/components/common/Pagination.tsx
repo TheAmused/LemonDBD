@@ -4,6 +4,7 @@
 import React, { useEffect, useState } from 'react';
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react';
 import { PerkDictionary } from '@/types/perks';
+import { useDictionary } from "@/context/DictionaryContext";
 
 interface PaginationProps {
   page: number;
@@ -12,18 +13,10 @@ interface PaginationProps {
   limit: number;
   onPageChange: (newPage: number) => void;
   onLimitChange: (newLimit: number) => void;
-  dict?: PerkDictionary;
 }
 
-export const Pagination: React.FC<PaginationProps> = ({
-  page,
-  totalPages,
-  totalResults,
-  limit,
-  onPageChange,
-  onLimitChange,
-  dict,
-}) => {
+export const Pagination: React.FC<PaginationProps> = ({ page, totalPages, totalResults, limit, onPageChange, onLimitChange }) => {
+  const dict = useDictionary();
   const startIdx = totalResults === 0 ? 0 : (page - 1) * limit + 1;
   const endIdx = Math.min(page * limit, totalResults);
   const safeTotalPages = Math.max(1, totalPages || 1);
@@ -57,18 +50,18 @@ export const Pagination: React.FC<PaginationProps> = ({
   };
 
   const showingAriaLabel = [
-    dict?.pagination?.showing,
+    dict.pagination.showing,
     `${startIdx}-${endIdx}`,
-    dict?.pagination?.of,
+    dict.pagination.of,
     `${totalResults}`,
-    dict?.pagination?.results,
+    dict.pagination.results,
   ]
     .filter(Boolean)
     .join(' ');
 
   return (
     <nav
-      aria-label={dict?.pagination?.navAriaLabel}
+      aria-label={dict.pagination.navAriaLabel}
       className="mt-4 flex flex-wrap items-center justify-center gap-x-3 gap-y-2 pt-2 w-full sm:mt-8 sm:justify-between sm:gap-x-4 sm:pt-4 lg:gap-x-5 lg:pt-5 wide:pt-6"
     >
       {/* Numbers only -- no "Showing"/"of"/"results" spelled out. Below
@@ -91,7 +84,7 @@ export const Pagination: React.FC<PaginationProps> = ({
       <div className="flex flex-wrap items-center gap-2 lg:gap-3">
         <select
           id="limit-select"
-          aria-label={dict?.pagination?.perPage || 'Per page'}
+          aria-label={dict.pagination.perPage}
           value={limit}
           onChange={(e) => onLimitChange(Number(e.target.value))}
           className="rounded-lg border border-border-color bg-bg-surface px-1.5 py-1 text-mini font-semibold text-text-primary focus:outline-none focus:ring-1 focus:ring-accent-red cursor-pointer [&>option]:bg-bg-surface [&>option]:text-text-primary sm:px-2 sm:text-xs lg:px-3 lg:py-1.5 lg:text-sm wide:text-base"
@@ -107,7 +100,7 @@ export const Pagination: React.FC<PaginationProps> = ({
             type="button"
             onClick={() => onPageChange(1)}
             disabled={page <= 1}
-            aria-label={dict?.pagination?.firstPage}
+            aria-label={dict.pagination.firstPage}
             className="flex h-7 w-7 items-center justify-center rounded-lg border border-border-color bg-bg-surface text-text-secondary hover:bg-bg-elevated disabled:opacity-40 transition-colors cursor-pointer disabled:cursor-not-allowed sm:h-8 sm:w-8 lg:h-9 lg:w-9 xl:h-10 xl:w-10 wide:h-11 wide:w-11"
           >
             <ChevronsLeft className="h-3.5 w-3.5 sm:h-4 sm:w-4 lg:h-5 lg:w-5 xl:h-6 xl:w-6" />
@@ -116,7 +109,7 @@ export const Pagination: React.FC<PaginationProps> = ({
             type="button"
             onClick={() => onPageChange(page - 1)}
             disabled={page <= 1}
-            aria-label={dict?.pagination?.previous}
+            aria-label={dict.pagination.previous}
             className="flex h-7 w-7 items-center justify-center rounded-lg border border-border-color bg-bg-surface text-text-secondary hover:bg-bg-elevated disabled:opacity-40 transition-colors cursor-pointer disabled:cursor-not-allowed sm:h-8 sm:w-8 lg:h-9 lg:w-9 xl:h-10 xl:w-10 wide:h-11 wide:w-11"
           >
             <ChevronLeft className="h-3.5 w-3.5 sm:h-4 sm:w-4 lg:h-5 lg:w-5 xl:h-6 xl:w-6" />
@@ -134,7 +127,7 @@ export const Pagination: React.FC<PaginationProps> = ({
               onFocus={(e) => e.target.select()}
               onBlur={commitPageInput}
               onKeyDown={handlePageInputKeyDown}
-              aria-label={dict?.pagination?.goTo || 'Go to page'}
+              aria-label={dict.pagination.goTo}
               className="w-7 [appearance:textfield] rounded-md border border-border-color bg-bg-surface px-1 py-0.5 text-center text-mini font-bold text-text-primary focus:outline-none focus:ring-1 focus:ring-accent-red [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none sm:w-9 sm:text-xs lg:w-11 lg:py-1 lg:text-sm wide:w-12"
             />
             <span aria-hidden="true" className="text-text-muted">/</span>
@@ -145,7 +138,7 @@ export const Pagination: React.FC<PaginationProps> = ({
             type="button"
             onClick={() => onPageChange(page + 1)}
             disabled={page >= safeTotalPages}
-            aria-label={dict?.pagination?.next}
+            aria-label={dict.pagination.next}
             className="flex h-7 w-7 items-center justify-center rounded-lg border border-border-color bg-bg-surface text-text-secondary hover:bg-bg-elevated disabled:opacity-40 transition-colors cursor-pointer disabled:cursor-not-allowed sm:h-8 sm:w-8 lg:h-9 lg:w-9 xl:h-10 xl:w-10 wide:h-11 wide:w-11"
           >
             <ChevronRight className="h-3.5 w-3.5 sm:h-4 sm:w-4 lg:h-5 lg:w-5 xl:h-6 xl:w-6" />
@@ -154,7 +147,7 @@ export const Pagination: React.FC<PaginationProps> = ({
             type="button"
             onClick={() => onPageChange(safeTotalPages)}
             disabled={page >= safeTotalPages}
-            aria-label={dict?.pagination?.lastPage}
+            aria-label={dict.pagination.lastPage}
             className="flex h-7 w-7 items-center justify-center rounded-lg border border-border-color bg-bg-surface text-text-secondary hover:bg-bg-elevated disabled:opacity-40 transition-colors cursor-pointer disabled:cursor-not-allowed sm:h-8 sm:w-8 lg:h-9 lg:w-9 xl:h-10 xl:w-10 wide:h-11 wide:w-11"
           >
             <ChevronsRight className="h-3.5 w-3.5 sm:h-4 sm:w-4 lg:h-5 lg:w-5 xl:h-6 xl:w-6" />

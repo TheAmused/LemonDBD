@@ -4,11 +4,11 @@ import assert from 'node:assert';
 import fs from 'node:fs';
 import path from 'node:path';
 import React from 'react';
-import { renderToStaticMarkup } from 'react-dom/server';
+import { renderWithDictionary } from '../helpers/renderWithDictionary';
 import { RichText, STYLE_TOKENS } from '@/components/common/RichText';
 
 const html = (text: string, props: Record<string, unknown> = {}) =>
-  renderToStaticMarkup(React.createElement(RichText, { text, ...props }));
+  renderWithDictionary(React.createElement(RichText, { text, ...props }));
 
 test('RichText: markdown inline, bullets, quotes and notices in block mode', () => {
   const out = html('Gain **10/12/14s** of *Haste*.\n• one\n• two\n> “Quote” -Someone\n!! THIS ITEM IS NO LONGER AVAILABLE', {

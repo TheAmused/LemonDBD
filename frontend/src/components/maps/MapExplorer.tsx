@@ -24,6 +24,7 @@ import {
 import { CustomDropdown, type DropdownOption } from '@/components/common/CustomDropdown';
 import { MapCard } from './MapCard';
 import { EmptyState } from '@/components/common/EmptyState';
+import { useDictionary } from "@/context/DictionaryContext";
 
 // Sentinel dropdown value for "no filter"; real attribute values never collide with it.
 // Also what "no filter" persists as in localStorage, since the filter fields
@@ -58,7 +59,6 @@ export interface MapExplorerProps {
   selectedMap?: { mapName: string; timestamp: number } | string;
   onAvailableMapsLoaded?: (maps: MapRealm[]) => void;
   backendBase: string;
-  dict?: Dictionary;
   locale?: string;
   hideSearch?: boolean;
   /** Rendered in the same slot as the search header (e.g. a voice command
@@ -72,16 +72,16 @@ export interface MapExplorerProps {
 }
 
 export const MapExplorer: React.FC<MapExplorerProps> = ({
-  initialMapName = '',
-  selectedMap,
-  onAvailableMapsLoaded,
-  backendBase,
-  dict,
-  locale,
-  hideSearch = false,
-  voiceSlot,
-  modeSwitcherSlot,
-}) => {
+      initialMapName = '',
+      selectedMap,
+      onAvailableMapsLoaded,
+      backendBase,
+      locale,
+      hideSearch = false,
+      voiceSlot,
+      modeSwitcherSlot,
+    }) => {
+  const dict = useDictionary();
   const {
     maps,
     loading,
@@ -143,23 +143,23 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
   // doing so causes synchronous localStorage writes, realm re-filtering,
   // and animation timer cascades that freeze the UI on rapid switching.
 
-  const mapsDict = dict?.maps;
+  const mapsDict = dict.maps;
   const layoutOptions: DropdownOption[] = useMemo(
     () => [
-      { value: ANY, label: mapsDict?.filterAnyLayout || 'Any layout' },
+      { value: ANY, label: mapsDict.filterAnyLayout },
       ...getLayoutTypeOptions(maps).map((v) => ({ value: v, label: getLayoutTypeLabel(v, mapsDict) })),
     ],
     [maps, mapsDict]
   );
   const sizeOptions: DropdownOption<MapSizeBucket | typeof ANY>[] = [
-    { value: ANY, label: mapsDict?.filterAnySize || 'Any size' },
-    { value: 'small', label: mapsDict?.sizeSmall || 'Small', sublabel: mapsDict?.sizeSmallHint || 'under 9000 m²' },
-    { value: 'medium', label: mapsDict?.sizeMedium || 'Medium', sublabel: mapsDict?.sizeMediumHint || '9000 to 9999 m²' },
-    { value: 'large', label: mapsDict?.sizeLarge || 'Large', sublabel: mapsDict?.sizeLargeHint || '10000 m² and up' },
+    { value: ANY, label: mapsDict.filterAnySize },
+    { value: 'small', label: mapsDict.sizeSmall, sublabel: mapsDict.sizeSmallHint },
+    { value: 'medium', label: mapsDict.sizeMedium, sublabel: mapsDict.sizeMediumHint },
+    { value: 'large', label: mapsDict.sizeLarge, sublabel: mapsDict.sizeLargeHint },
   ];
   const sortOptions: DropdownOption<MapSortOrder>[] = [
-    { value: 'az', label: mapsDict?.sortAz || 'Name A to Z' },
-    { value: 'za', label: mapsDict?.sortZa || 'Name Z to A' },
+    { value: 'az', label: mapsDict.sortAz },
+    { value: 'za', label: mapsDict.sortZa },
   ];
 
   const isSearching = activeSearch.trim().length > 0;
@@ -291,7 +291,7 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
   return (
     <div className="w-full space-y-6" data-testid="map-explorer-root">
       <section
-        aria-label={dict?.maps?.pageTitle || 'Tactical Map Command'}
+        aria-label={dict.maps.pageTitle}
         className="relative flex w-full flex-col overflow-hidden rounded-3xl border border-border-color bg-bg-surface px-4 pt-3.5 pb-4 sm:px-6 sm:pt-4 sm:pb-5 md:min-h-[14rem] backdrop-blur-xl shadow-xl dark:shadow-2xl transition-all duration-300"
       >
         <div className="pointer-events-none absolute -left-16 -top-16 h-48 w-48 rounded-full bg-accent-red/5 blur-3xl" />
@@ -318,8 +318,8 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
                   wrapperClassName="w-full sm:max-w-lg sm:mx-auto"
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  placeholder={dict?.maps?.searchPlaceholder || 'Search...'}
-                  aria-label={dict?.maps?.searchAria || 'Search map or realm'}
+                  placeholder={dict.maps.searchPlaceholder}
+                  aria-label={dict.maps.searchAria}
                   tabIndex={hideSearch ? -1 : undefined}
                   className="rounded-2xl bg-bg-surface"
                 />
@@ -335,12 +335,12 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
                 onChange={setLayoutTypeRaw}
                 options={layoutOptions}
                 icon={<Compass className="h-3.5 w-3.5" />}
-                ariaLabel={mapsDict?.layoutLabel || 'Layout'}
+                ariaLabel={mapsDict.layoutLabel}
                 label={
                   filters.layoutType == null ? (
                     <>
-                      <span className="hidden sm:inline">{mapsDict?.filterAnyLayout || 'Any layout'}</span>
-                      <span className="sm:hidden">{mapsDict?.layoutLabel || 'Layout'}</span>
+                      <span className="hidden sm:inline">{mapsDict.filterAnyLayout}</span>
+                      <span className="sm:hidden">{mapsDict.layoutLabel}</span>
                     </>
                   ) : undefined
                 }
@@ -350,13 +350,13 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
                 onChange={setSizeRaw}
                 options={sizeOptions}
                 icon={<Maximize2 className="h-3.5 w-3.5" />}
-                ariaLabel={mapsDict?.surfaceArea || 'Surface Area'}
+                ariaLabel={mapsDict.surfaceArea}
                 minWidthClass="min-w-[220px]"
                 label={
                   filters.size == null ? (
                     <>
-                      <span className="hidden sm:inline">{mapsDict?.filterAnySize || 'Any size'}</span>
-                      <span className="sm:hidden">{mapsDict?.sizeLabel || 'Size'}</span>
+                      <span className="hidden sm:inline">{mapsDict.filterAnySize}</span>
+                      <span className="sm:hidden">{mapsDict.sizeLabel}</span>
                     </>
                   ) : undefined
                 }
@@ -366,15 +366,15 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
                 onChange={setSortOrder}
                 options={sortOptions}
                 icon={<ArrowDownAZ className="h-3.5 w-3.5" />}
-                ariaLabel={mapsDict?.sortAria || 'Sort maps'}
+                ariaLabel={mapsDict.sortAria}
                 align="right"
                 label={
                   <>
                     <span className="hidden sm:inline">
-                      {sortOrder === 'az' ? mapsDict?.sortAz || 'Name A to Z' : mapsDict?.sortZa || 'Name Z to A'}
+                      {sortOrder === 'az' ? mapsDict.sortAz : mapsDict.sortZa}
                     </span>
                     <span className="sm:hidden">
-                      {sortOrder === 'az' ? mapsDict?.sortAzShort || 'A-Z' : mapsDict?.sortZaShort || 'Z-A'}
+                      {sortOrder === 'az' ? mapsDict.sortAzShort : mapsDict.sortZaShort}
                     </span>
                   </>
                 }
@@ -386,7 +386,7 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
                   onClick={clearFilters}
                 >
                   <X className="h-3.5 w-3.5" aria-hidden="true" />
-                  {mapsDict?.clearFilters || 'Clear filters'}
+                  {mapsDict.clearFilters}
                 </Button>
               )}
             </div>
@@ -407,12 +407,12 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
 
       {loading && (
         <div className="py-16 text-center text-xs text-text-muted">
-          {dict?.maps?.loadingTacticalMaps || 'Loading Tactical Maps...'}
+          {dict.maps.loadingTacticalMaps}
         </div>
       )}
 
       {!loading && displayedGroups.length === 0 && (
-        <EmptyState variant="inline" title={dict?.maps?.noMapsFound || 'No Maps Found'} />
+        <EmptyState variant="inline" title={dict.maps.noMapsFound} />
       )}
 
       {!loading && displayedGroups.length > 0 && (
@@ -434,7 +434,7 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
                   onClick={() => toggleRealm(realm)}
                   aria-expanded={expanded}
                   aria-controls={`realm-panel-${realm}`}
-                  aria-label={`${expanded ? dict?.maps?.collapseRealmAria || 'Collapse realm' : dict?.maps?.expandRealmAria || 'Expand realm'}: ${realm}`}
+                  aria-label={`${expanded ? dict.maps.collapseRealmAria : dict.maps.expandRealmAria}: ${realm}`}
                   className={`group relative aspect-square w-full min-h-[48px] touch-manipulation overflow-hidden rounded-2xl border-2 text-left cursor-pointer transition-transform duration-200 hover:scale-[1.03] active:scale-95 focus:outline-none focus:ring-2 focus:ring-accent-red ${expanded ? 'border-accent-red' : 'border-border-color hover:border-accent-red/60'}`}
                 >
                   {bannerSrc ? (
@@ -499,7 +499,6 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
           availableMaps={maps}
           onClose={() => setOpenMapId(null)}
           backendBase={backendBase}
-          dict={dict}
         />
       )}
     </div>

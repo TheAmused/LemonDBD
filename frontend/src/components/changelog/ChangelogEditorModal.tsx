@@ -32,6 +32,8 @@ import { Modal } from '@/components/common/Modal';
 import { Checkbox } from '@/components/common/Checkbox';
 import { Button } from '@/components/common/Button';
 import { Input } from '@/components/common/Field';
+import { useDictionary } from "@/context/DictionaryContext";
+
 export interface ChangelogEditorModalProps {
   open: boolean;
   post: ChangelogPost | null;
@@ -41,7 +43,6 @@ export interface ChangelogEditorModalProps {
   onClose: () => void;
   onSave: (draft: ChangelogPostDraft) => void;
   onDelete?: () => void;
-  dict?: Dictionary;
 }
 
 const EMPTY_DRAFT: ChangelogPostDraft = {
@@ -58,17 +59,9 @@ const EMPTY_DRAFT: ChangelogPostDraft = {
  * color/highlight/alignment/lists), and avoids pulling in a full rich-text
  * library for a handful of formatting actions used by admins only.
  */
-export const ChangelogEditorModal: React.FC<ChangelogEditorModalProps> = ({
-  open,
-  post,
-  saving = false,
-  error = null,
-  onClose,
-  onSave,
-  onDelete,
-  dict,
-}) => {
-  const t = dict?.changelog;
+export const ChangelogEditorModal: React.FC<ChangelogEditorModalProps> = ({ open, post, saving = false, error = null, onClose, onSave, onDelete }) => {
+  const dict = useDictionary();
+  const t = dict.changelog;
   const editorRef = useRef<HTMLDivElement | null>(null);
   // Modal mounts its content one render after `open` flips, so the draft is applied once the editor exists.
   const [editorEl, setEditorEl] = useState<HTMLDivElement | null>(null);
@@ -111,7 +104,7 @@ export const ChangelogEditorModal: React.FC<ChangelogEditorModalProps> = ({
   };
 
   const handleLink = () => {
-    const url = window.prompt(t?.linkPrompt || 'Link URL (https://...)');
+    const url = window.prompt(t.linkPrompt);
     if (url) exec('createLink', url);
   };
 
@@ -125,17 +118,17 @@ export const ChangelogEditorModal: React.FC<ChangelogEditorModalProps> = ({
     <>
     {post && onDelete ? (
       <Button variant="danger" size="sm" onClick={onDelete} leftIcon={<Trash2 className="h-3.5 w-3.5" />}>
-        {t?.delete || 'Delete'}
+        {t.delete}
       </Button>
     ) : (
       <span />
     )}
     <div className="flex items-center gap-2">
       <Button variant="secondary" size="sm" onClick={onClose}>
-        {t?.cancel || 'Cancel'}
+        {t.cancel}
       </Button>
       <Button variant="primary" size="sm" onClick={handleSave} loading={saving} disabled={!title.trim()}>
-        {post ? (t?.saveChanges || 'Save Changes') : (t?.publishEntry || 'Publish Entry')}
+        {post ? (t.saveChanges) : (t.publishEntry)}
       </Button>
     </div>
     </>
@@ -149,8 +142,8 @@ export const ChangelogEditorModal: React.FC<ChangelogEditorModalProps> = ({
       size="2xl"
       layer="top"
       busy={saving}
-      title={post ? (t?.editTitle || 'Edit Changelog Entry') : (t?.newTitle || 'New Changelog Entry')}
-      closeButtonAriaLabel={dict?.modal?.close}
+      title={post ? (t.editTitle) : (t.newTitle)}
+      closeButtonAriaLabel={dict.modal.close}
       footer={footer}
       footerClassName="gap-3 sm:py-4 text-sm"
       padded
@@ -160,7 +153,7 @@ export const ChangelogEditorModal: React.FC<ChangelogEditorModalProps> = ({
       data-autofocus
       value={title}
       onChange={(e) => setTitle(e.target.value)}
-      placeholder={t?.titlePlaceholder || "Patch title, e.g. 'The Entity Stirs — Balance Update'"}
+      placeholder={t.titlePlaceholder}
       className="px-4 font-bold"
     />
 
@@ -229,7 +222,7 @@ export const ChangelogEditorModal: React.FC<ChangelogEditorModalProps> = ({
               swatches={CHANGELOG_HIGHLIGHT_COLORS}
               onPick={handleHighlight}
               onClear={() => handleHighlight(null)}
-              clearLabel={t?.noHighlight || 'No highlight'}
+              clearLabel={t.noHighlight}
             />
           )}
         </div>
@@ -241,8 +234,7 @@ export const ChangelogEditorModal: React.FC<ChangelogEditorModalProps> = ({
         suppressContentEditableWarning
         className="dbd-changelog-body min-h-[180px] max-h-[40vh] overflow-y-auto px-4 py-3 text-sm text-text-secondary leading-relaxed outline-none [&_h3]:text-base [&_h3]:font-black [&_h3]:text-accent-red [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_a]:text-accent-red [&_a]:underline"
         data-placeholder={
-          t?.bodyPlaceholder ||
-          'Describe what changed... use the toolbar to bold key terms, align a callout, or highlight balance notes.'
+          t.bodyPlaceholder
         }
       />
     </div>
@@ -254,7 +246,7 @@ export const ChangelogEditorModal: React.FC<ChangelogEditorModalProps> = ({
     )}
 
     <Checkbox checked={isPublished} onChange={setIsPublished} className="type-strong text-text-muted">
-      {t?.publishedLabel || 'Published (visible in the "What\'s New?" feed)'}
+      {t.publishedLabel}
     </Checkbox>
     </Modal>
   );

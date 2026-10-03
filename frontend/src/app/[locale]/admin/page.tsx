@@ -236,14 +236,14 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
       if (res.ok) {
         setActionMessage({
           type: 'success',
-          text: dict?.admin?.roleUpdated
+          text: dict.admin.roleUpdated
             ? formatMessage(dict.admin.roleUpdated, { username: targetUser.username, role: newRole.toUpperCase() })
             : `${targetUser.username} role updated to ${newRole.toUpperCase()}.`,
         });
         await fetchAdminData();
       }
     } catch (err: unknown) {
-      const msg = getErrorMessage(err, dict?.admin?.networkError || 'Network error.');
+      const msg = getErrorMessage(err, dict.admin.networkError);
       setActionMessage({ type: 'error', text: msg });
     }
   };
@@ -266,13 +266,13 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
         setActionMessage({
           type: 'success',
           text: newActive
-            ? formatMessage(dict?.admin?.statusUpdatedActive, { username: targetUser.username }) || `${targetUser.username} is active.`
-            : formatMessage(dict?.admin?.statusUpdatedSuspended, { username: targetUser.username }) || `${targetUser.username} is suspended.`,
+            ? formatMessage(dict.admin.statusUpdatedActive, { username: targetUser.username }) || `${targetUser.username} is active.`
+            : formatMessage(dict.admin.statusUpdatedSuspended, { username: targetUser.username }) || `${targetUser.username} is suspended.`,
         });
         await fetchAdminData();
       }
     } catch (err: unknown) {
-      const msg = getErrorMessage(err, dict?.admin?.networkError || 'Network error.');
+      const msg = getErrorMessage(err, dict.admin.networkError);
       setActionMessage({ type: 'error', text: msg });
     }
   };
@@ -296,12 +296,12 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
       if (res.ok) {
         setActionMessage({
           type: 'success',
-          text: formatMessage(dict?.admin?.userDeletedSuccess, { username: targetUser.username }) || `${targetUser.username} deleted.`,
+          text: formatMessage(dict.admin.userDeletedSuccess, { username: targetUser.username }) || `${targetUser.username} deleted.`,
         });
         await fetchAdminData();
       }
     } catch (err: unknown) {
-      const msg = getErrorMessage(err, dict?.admin?.networkError || 'Network error.');
+      const msg = getErrorMessage(err, dict.admin.networkError);
       setActionMessage({ type: 'error', text: msg });
     } finally {
       setIsDeletingUser(false);
@@ -331,7 +331,7 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
       if (res.ok) {
         setActionMessage({
           type: 'success',
-          text: formatMessage(dict?.admin?.userCreatedSuccess, { username: userData.username }) || `${userData.username} created successfully.`,
+          text: formatMessage(dict.admin.userCreatedSuccess, { username: userData.username }) || `${userData.username} created successfully.`,
         });
         setIsCreateUserOpen(false);
         await fetchAdminData();
@@ -339,11 +339,11 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
         const errorData: { error?: string } = await res.json().catch(() => ({}));
         setActionMessage({
           type: 'error',
-          text: errorData.error || dict?.admin?.userCreateFailed || 'Failed to create user.',
+          text: errorData.error || dict.admin.userCreateFailed,
         });
       }
     } catch (err: unknown) {
-      const msg = getErrorMessage(err, dict?.admin?.networkError || 'Network error.');
+      const msg = getErrorMessage(err, dict.admin.networkError);
       setActionMessage({ type: 'error', text: msg });
     }
   };
@@ -371,12 +371,12 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
       if (res.ok) {
         setActionMessage({
           type: 'success',
-          text: formatMessage(dict?.admin?.ticketUpdatedSuccess, { id: reportId.toString() }) || `Report #${reportId} updated.`,
+          text: formatMessage(dict.admin.ticketUpdatedSuccess, { id: reportId.toString() }) || `Report #${reportId} updated.`,
         });
         await fetchBugReports();
       }
     } catch (err: unknown) {
-      const msg = getErrorMessage(err, dict?.admin?.networkError || 'Failed to update report.');
+      const msg = getErrorMessage(err, dict.admin.networkError);
       setActionMessage({ type: 'error', text: msg });
     }
   };
@@ -401,12 +401,12 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
       if (res.ok) {
         setActionMessage({
           type: 'success',
-          text: formatMessage(dict?.admin?.ticketDeleteSuccess, { id: reportId.toString() }) || `Report #${reportId} deleted.`,
+          text: formatMessage(dict.admin.ticketDeleteSuccess, { id: reportId.toString() }) || `Report #${reportId} deleted.`,
         });
         await fetchBugReports();
       }
     } catch (err: unknown) {
-      const msg = getErrorMessage(err, dict?.admin?.ticketDeleteFailed || 'Failed to delete report.');
+      const msg = getErrorMessage(err, dict.admin.ticketDeleteFailed);
       setActionMessage({ type: 'error', text: msg });
     } finally {
       setIsDeletingBugReport(false);
@@ -415,7 +415,7 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
   };
 
   if (!dict || isLoading) {
-    return <AdminPanelSkeleton dict={dict} />;
+    return <AdminPanelSkeleton />;
   }
   if (!isAuthenticated || !isAdmin) {
     return <ErrorPage variant="forbidden" />;
@@ -424,7 +424,6 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
   return (
     <PageShell
       locale={currentLocale}
-      dict={dict}
       activeCategory="admin"
       mainId="main-admin-content"
       mainClassName="overflow-y-auto"
@@ -438,7 +437,6 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
             }}
             onOpenOcrCheck={() => setIsOcrCheckOpen(true)}
             onRefreshData={() => (activeTab === 'users' ? fetchAdminData() : fetchBugReports())}
-            dict={dict}
           />
 
           {actionMessage && (
@@ -458,16 +456,16 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
                 icon
                 onClick={() => setActionMessage(null)}
                 className="ml-3"
-                aria-label={dict?.admin?.closeSymbol || 'Close'}
+                aria-label={dict.admin.closeSymbol}
               >
-                {dict?.admin?.closeSymbol || '×'}
+                {dict.admin.closeSymbol}
               </Button>
             </div>
           )}
 
           {/* Subtab Switcher */}
           <Tabs
-            ariaLabel={dict?.admin?.adminSections || 'Admin Sections'}
+            ariaLabel={dict.admin.adminSections}
             value={activeTab}
             onChange={setActiveTab}
             panels={false}
@@ -480,24 +478,24 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
               {
                 value: 'users',
                 icon: <Users className="h-4 w-4" />,
-                label: dict?.admin?.userDirectoryLabel || 'Users',
+                label: dict.admin.userDirectoryLabel,
                 count: totalUsers,
               },
               {
                 value: 'bugs',
                 icon: <FogReportIcon className="h-4 w-4" />,
-                label: `${dict?.admin?.bugReportsLabel || 'Bug Reports'} (${bugStats?.pending ?? 0} ${dict?.admin?.pending || 'Pending'})`,
+                label: `${dict.admin.bugReportsLabel} (${bugStats?.pending ?? 0} ${dict.admin.pending})`,
               },
-              { value: 'challenges', icon: <ShieldAlert className="h-4 w-4" />, label: dict?.admin?.killSwitches || 'Kill Switches' },
-              { value: 'challenge_stats', icon: <BarChart3 className="h-4 w-4" />, label: dict?.admin?.challengeStats || 'Challenge Stats' },
-              { value: 'audit', icon: <ScrollText className="h-4 w-4" />, label: dict?.admin?.auditLog || 'Audit Log' },
-              { value: 'settings', icon: <Settings2 className="h-4 w-4" />, label: dict?.admin?.configTab || 'Configuration' },
+              { value: 'challenges', icon: <ShieldAlert className="h-4 w-4" />, label: dict.admin.killSwitches },
+              { value: 'challenge_stats', icon: <BarChart3 className="h-4 w-4" />, label: dict.admin.challengeStats },
+              { value: 'audit', icon: <ScrollText className="h-4 w-4" />, label: dict.admin.auditLog },
+              { value: 'settings', icon: <Settings2 className="h-4 w-4" />, label: dict.admin.configTab },
             ]}
           />
 
           {activeTab === 'users' ? (
             <div className="space-y-6">
-              <AdminStatsGrid stats={stats} dict={dict} />
+              <AdminStatsGrid stats={stats} />
               <AdminUserTable
                 users={users}
                 totalUsers={totalUsers}
@@ -506,7 +504,6 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
                 roleFilter={roleFilter}
                 loading={loadingData}
                 currentUserId={user?.id}
-                dict={dict}
                 onSearchChange={(val) => {
                   setSearch(val);
                   setPage(1);
@@ -523,23 +520,23 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
               />
             </div>
           ) : activeTab === 'challenges' ? (
-            <Suspense fallback={<AdminTabContentSkeleton dict={dict} />}>
-              <AdminChallengeControl onActionMessage={setActionMessage} dict={dict} />
+            <Suspense fallback={<AdminTabContentSkeleton />}>
+              <AdminChallengeControl onActionMessage={setActionMessage} />
             </Suspense>
           ) : activeTab === 'challenge_stats' ? (
-            <Suspense fallback={<AdminTabContentSkeleton dict={dict} />}>
-              <AdminChallengeStats stats={stats} dict={dict} />
+            <Suspense fallback={<AdminTabContentSkeleton />}>
+              <AdminChallengeStats stats={stats} />
             </Suspense>
           ) : activeTab === 'settings' ? (
-            <Suspense fallback={<AdminTabContentSkeleton dict={dict} />}>
-              <AdminSettingsPanel onActionMessage={setActionMessage} dict={dict} />
+            <Suspense fallback={<AdminTabContentSkeleton />}>
+              <AdminSettingsPanel onActionMessage={setActionMessage} />
             </Suspense>
           ) : activeTab === 'audit' ? (
-            <Suspense fallback={<AdminTabContentSkeleton dict={dict} />}>
-              <AdminAuditLogView dict={dict} />
+            <Suspense fallback={<AdminTabContentSkeleton />}>
+              <AdminAuditLogView />
             </Suspense>
           ) : (
-            <Suspense fallback={<AdminTabContentSkeleton dict={dict} />}>
+            <Suspense fallback={<AdminTabContentSkeleton />}>
               <AdminBugReportsWorkbench
                 bugReports={bugReports}
                 bugStats={bugStats}
@@ -550,7 +547,6 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
                 selectedBugId={selectedBugId}
                 editingNotes={editingNotes}
                 loading={loadingBugs}
-                dict={dict}
                 onSearchChange={(val) => {
                   setBugSearch(val);
                   setBugPage(1);
@@ -575,7 +571,6 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
         isOpen={isCreateUserOpen}
         onClose={() => setIsCreateUserOpen(false)}
         onSubmit={handleCreateUser}
-        dict={dict}
       />
 
       <ScoreboardCheckModal isOpen={isOcrCheckOpen} onClose={() => setIsOcrCheckOpen(false)} />
@@ -585,7 +580,6 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
         isOpen={isConfigOpen}
         initialTab={modalTab}
         onClose={() => setIsConfigOpen(false)}
-        dict={dict}
         onPurgeSuccess={() => {
           fetchAdminData();
           fetchBugReports();
@@ -594,16 +588,16 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
 
       <ConfirmModal
         open={userPendingDeletion !== null}
-        title={dict?.admin?.deleteUserTitle || 'Delete user?'}
+        title={dict.admin.deleteUserTitle}
         message={
           <>
-            {dict?.admin?.confirmDeleteUserPrefix || 'Delete'}{' '}
+            {dict.admin.confirmDeleteUserPrefix}{' '}
             <strong className="font-bold text-accent-red">{userPendingDeletion?.username}</strong>?
             <br />
-            {dict?.admin?.cannotBeUndone || 'This action cannot be undone.'}
+            {dict.admin.cannotBeUndone}
           </>
         }
-        confirmLabel={dict?.admin?.delete || 'Delete'}
+        confirmLabel={dict.admin.delete}
         busy={isDeletingUser}
         onConfirm={confirmDeleteUser}
         onCancel={() => setUserPendingDeletion(null)}
@@ -611,13 +605,13 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
 
       <ConfirmModal
         open={bugReportPendingDeletion !== null}
-        title={dict?.admin?.deleteBugReportTitle || 'Delete report?'}
+        title={dict.admin.deleteBugReportTitle}
         message={
-          dict?.admin?.confirmDeleteBugReport
+          dict.admin.confirmDeleteBugReport
             ? formatMessage(dict.admin.confirmDeleteBugReport, { id: (bugReportPendingDeletion ?? 0).toString() })
             : `Delete report #${bugReportPendingDeletion}?`
         }
-        confirmLabel={dict?.admin?.delete || 'Delete'}
+        confirmLabel={dict.admin.delete}
         busy={isDeletingBugReport}
         onConfirm={confirmDeleteBugReport}
         onCancel={() => setBugReportPendingDeletion(null)}

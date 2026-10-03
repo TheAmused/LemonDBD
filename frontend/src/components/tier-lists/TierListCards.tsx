@@ -12,6 +12,7 @@ import { staticUrl } from '@/utils/api';
 import { tip } from '@/components/common/Tooltip';
 import { formatDate } from '@/utils/format';
 import { formatMessage } from '@/utils/i18nFormat';
+import { useDictionary } from "@/context/DictionaryContext";
 
 const CARD =
   'group relative flex h-full flex-col gap-3 overflow-hidden rounded-3xl border border-border-color bg-bg-surface p-5 shadow-sm transition-all hover:-translate-y-0.5 hover:border-accent-red/50 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-amber';
@@ -25,10 +26,10 @@ interface OfficialCardProps {
   list: TierListSummary;
   rankedCount: number;
   locale: string;
-  dict: Dictionary;
 }
 
-export function OfficialTierListCard({ list, rankedCount, locale, dict }: OfficialCardProps) {
+export function OfficialTierListCard({ list, rankedCount, locale }: OfficialCardProps) {
+  const dict = useDictionary();
   const t = dict.tierLists;
   const cover = coverSrc(list.cover_image_url);
   const kindName = t.kinds[list.kind];
@@ -81,7 +82,6 @@ export function OfficialTierListCard({ list, rankedCount, locale, dict }: Offici
 interface CustomCardProps {
   list: StoredCustomList;
   locale: string;
-  dict: Dictionary;
   onDelete?: (id: string, title: string) => void;
   /**
    * Renders the same card but as an inert `<div>` instead of a `Link` --
@@ -91,7 +91,8 @@ interface CustomCardProps {
   disabled?: boolean;
 }
 
-export function CustomTierListCard({ list, locale, dict, onDelete, disabled }: CustomCardProps) {
+export function CustomTierListCard({ list, locale, onDelete, disabled }: CustomCardProps) {
+  const dict = useDictionary();
   const t = dict.tierLists;
   const ranked = Object.values(list.placements).reduce((n, keys) => n + keys.length, 0);
   const preview = list.items.filter((i) => i.image).slice(0, 5);

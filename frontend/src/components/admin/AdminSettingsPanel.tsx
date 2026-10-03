@@ -15,10 +15,10 @@ import { Surface } from '@/components/common/Surface';
 import { backendBase } from '@/utils/staticUrl';
 import { authHeaders, getErrorMessage } from '@/utils/api';
 import { formatMessage } from '@/utils/i18nFormat';
+import { useDictionary } from "@/context/DictionaryContext";
 
 interface AdminSettingsPanelProps {
   onActionMessage: (msg: ActionMessage) => void;
-  dict?: Dictionary;
 }
 
 const GROUP_ORDER: AdminSiteSetting['group'][] = ['privacy', 'tokens', 'retention'];
@@ -34,8 +34,9 @@ function unitOf(key: string): 'hours' | 'minutes' | 'days' | null {
   return suffix === 'hours' || suffix === 'minutes' || suffix === 'days' ? suffix : null;
 }
 
-export const AdminSettingsPanel: React.FC<AdminSettingsPanelProps> = ({ onActionMessage, dict }) => {
-  const t = (dict?.admin || {}) as Record<string, string>;
+export const AdminSettingsPanel: React.FC<AdminSettingsPanelProps> = ({ onActionMessage }) => {
+  const dict = useDictionary();
+  const t = (dict.admin || {}) as Record<string, string>;
   const [settings, setSettings] = useState<AdminSiteSetting[]>([]);
   const [drafts, setDrafts] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);

@@ -8,44 +8,45 @@ import { SegmentedControl } from './shared/SegmentedControl';
 import { CustomDropdown } from '@/components/common/CustomDropdown';
 
 import { cn } from '@/utils/cn';
+import { useDictionary } from "@/context/DictionaryContext";
 
 interface ModeSwitcherProps {
   mode: GeneratorMode;
   onChange: (mode: GeneratorMode) => void;
-  dict?: Dictionary;
 }
 
-export const ModeSwitcher: React.FC<ModeSwitcherProps> = ({ mode, onChange, dict }) => {
+export const ModeSwitcher: React.FC<ModeSwitcherProps> = ({ mode, onChange }) => {
+  const dict = useDictionary();
   const options = [
     {
       value: 'instant' as GeneratorMode,
-      label: dict?.generator?.modeInstant || 'Instant Roll',
+      label: dict.generator.modeInstant,
       shortLabel: 'Instant',
-      tooltip: { description: dict?.generator?.modeInstantTooltip || 'Draw all four perks at once, no ceremony, just the result.' },
+      tooltip: { description: dict.generator.modeInstantTooltip },
     },
     {
       value: 'wheel' as GeneratorMode,
-      label: dict?.generator?.modeWheel || 'Wheel of Fortune',
+      label: dict.generator.modeWheel,
       shortLabel: 'Wheel',
-      tooltip: { description: dict?.generator?.modeWheelTooltip || 'Spin the page wheel, then the perk wheel, once per slot until your loadout is full.' },
+      tooltip: { description: dict.generator.modeWheelTooltip },
     },
     {
       value: 'slot' as GeneratorMode,
-      label: dict?.generator?.modeSlot || 'Slot Machine',
+      label: dict.generator.modeSlot,
       shortLabel: 'Slot',
-      tooltip: { description: dict?.generator?.modeSlotTooltip || 'Pull the lever and lock in reels over up to 3 cycles. A reel or two may jam broken, reroll the whole machine to clear it.' },
+      tooltip: { description: dict.generator.modeSlotTooltip },
     },
     {
       value: 'tarot' as GeneratorMode,
-      label: dict?.generator?.modeTarot || 'Tarot Deck',
+      label: dict.generator.modeTarot,
       shortLabel: 'Tarot',
-      tooltip: { description: dict?.generator?.modeTarotTooltip || 'Shuffle the deck and flip cards to reveal your loadout, one omen at a time.' },
+      tooltip: { description: dict.generator.modeTarotTooltip },
     },
     {
       value: 'crate' as GeneratorMode,
-      label: dict?.generator?.modeCrate || 'Loot Crate',
+      label: dict.generator.modeCrate,
       shortLabel: 'Crate',
-      tooltip: { description: dict?.generator?.modeCrateTooltip || 'Crack open a Trial Offering for a random loadout in one go.' },
+      tooltip: { description: dict.generator.modeCrateTooltip },
     },
   ];
 
@@ -60,7 +61,7 @@ export const ModeSwitcher: React.FC<ModeSwitcherProps> = ({ mode, onChange, dict
             value: opt.value,
             label: opt.label,
           }))}
-          ariaLabel={dict?.generator?.modeSwitcherAriaLabel || 'Select Draw Mode'}
+          ariaLabel={dict.generator.modeSwitcherAriaLabel}
           className="w-full sm:w-auto"
           buttonClassName="w-full sm:w-auto justify-between min-h-[44px] px-4 py-2 type-card-title rounded-xl border border-border-color bg-bg-surface hover:bg-bg-elevated text-text-primary"
           menuClassName="w-full sm:w-auto min-w-[220px]"
@@ -72,7 +73,7 @@ export const ModeSwitcher: React.FC<ModeSwitcherProps> = ({ mode, onChange, dict
         <SegmentedControl<GeneratorMode>
           value={mode}
           onChange={onChange}
-          ariaLabel={dict?.generator?.modeSwitcherAriaLabel || 'Select Draw Mode'}
+          ariaLabel={dict.generator.modeSwitcherAriaLabel}
           bare
           options={options}
         />

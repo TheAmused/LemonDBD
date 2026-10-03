@@ -8,6 +8,7 @@ import { Dictionary } from '@/locales/types';
 import { IconToggleButton } from './shared/IconToggleButton';
 import { Tooltip } from '@/components/common/Tooltip';
 import { getLocalizedMutator } from './lib/chaosMutatorLocalization';
+import { useDictionary } from "@/context/DictionaryContext";
 
 export interface ToolbarProps {
   noRepeatPerks: boolean;
@@ -24,26 +25,25 @@ export interface ToolbarProps {
   onOpenChaosModal: () => void;
   activeMutator: ChaosMutator | null;
   onResetAll: () => void;
-  dict?: Dictionary;
 }
 
 /** Bare row of icon toggle buttons -- no wrapping banner/border/background.
  * Floats directly in the stage's top-right corner (see StageFrame's
  * `topRight` slot), each button supplying its own shape/accent. */
 export const Toolbar: React.FC<ToolbarProps> = ({
-  noRepeatPerks,
-  onToggleNoRepeat,
-  playableCount,
-  ownedCount,
-  blindMode,
-  onToggleBlindMode,
-  audioEnabled,
-  onToggleAudio,
-  onOpenChaosModal,
-  activeMutator,
-  onResetAll,
-  dict,
-}) => {
+      noRepeatPerks,
+      onToggleNoRepeat,
+      playableCount,
+      ownedCount,
+      blindMode,
+      onToggleBlindMode,
+      audioEnabled,
+      onToggleAudio,
+      onOpenChaosModal,
+      activeMutator,
+      onResetAll,
+    }) => {
+  const dict = useDictionary();
   return (
     <div className="flex items-center gap-1 sm:gap-1.5 shrink-0">
         {/* Explains the [P/S] tag every drawn perk carries, across every mode
@@ -51,30 +51,29 @@ export const Toolbar: React.FC<ToolbarProps> = ({
          * is mounted regardless of which one is active. Purely informational --
          * onClick is a no-op, the tooltip (hover/focus/touch) is the point. */}
         <Tooltip variant="action"
-          title={dict?.generator?.coordinateLegendTooltipTitle || 'Page / Slot'}
+          title={dict.generator.coordinateLegendTooltipTitle}
           description={
-            dict?.generator?.coordinateLegendTooltipDesc ||
-            "Each perk is tagged with where to find it in your in-game inventory. The first number is the Page, the second is the Slot on that page: [P3/S7] means Page 3, Slot 7."
+            dict.generator.coordinateLegendTooltipDesc
           }
         >
           <IconToggleButton
             icon={<Info className="h-5 w-5" />}
-            label={dict?.generator?.coordinateLegendTooltip || 'What P/S Means'}
+            label={dict.generator.coordinateLegendTooltip}
             onClick={() => {}}
           />
         </Tooltip>
 
         <Tooltip variant="action"
-          title={dict?.generator?.noRepeatTooltipTitle || 'No-Repeat Perks'}
+          title={dict.generator.noRepeatTooltipTitle}
           description={
             noRepeatPerks
-              ? dict?.generator?.noRepeatTooltipDescOn || 'On: perks you already drew stay out of the pool until you reset them.'
-              : dict?.generator?.noRepeatTooltipDescOff || 'Off: every draw pulls from the full pool, repeats and all.'
+              ? dict.generator.noRepeatTooltipDescOn
+              : dict.generator.noRepeatTooltipDescOff
           }
         >
           <IconToggleButton
             icon={<Repeat className="h-5 w-5" />}
-            label={dict?.generator?.noRepeatTooltip || 'Toggle No-Repeat Perks'}
+            label={dict.generator.noRepeatTooltip}
             isActive={noRepeatPerks}
             badge={noRepeatPerks ? `${playableCount}/${ownedCount}` : undefined}
             onClick={onToggleNoRepeat}
@@ -82,12 +81,12 @@ export const Toolbar: React.FC<ToolbarProps> = ({
         </Tooltip>
 
         <Tooltip variant="action"
-          title={dict?.generator?.blindModeTooltipTitle || 'Blind Mode'}
-          description={dict?.generator?.blindModeTooltipDesc || "Hides every perk icon behind a '?' until you tap a slot to reveal it in-run."}
+          title={dict.generator.blindModeTooltipTitle}
+          description={dict.generator.blindModeTooltipDesc}
         >
           <IconToggleButton
             icon={<EyeOff className="h-5 w-5" />}
-            label={dict?.generator?.blindModeTooltip || 'Hide Perk Icons (Blind Mode)'}
+            label={dict.generator.blindModeTooltip}
             isActive={blindMode}
             onClick={onToggleBlindMode}
           />
@@ -96,37 +95,37 @@ export const Toolbar: React.FC<ToolbarProps> = ({
         <Tooltip variant="action"
           title={activeMutator
             ? getLocalizedMutator(activeMutator, dict).name
-            : (dict?.generator?.chaosMutatorTooltip || 'Chaos Mutator')}
+            : (dict.generator.chaosMutatorTooltip)}
           description={
             activeMutator
               ? getLocalizedMutator(activeMutator, dict).description
-              : dict?.generator?.chaosMutatorTooltipDesc || 'Spin for a random Trial curse or buff to twist this loadout.'
+              : dict.generator.chaosMutatorTooltipDesc
           }
         >
           <IconToggleButton
             icon={<span className="text-lg leading-none">{activeMutator ? activeMutator.icon : '🔮'}</span>}
             label={activeMutator
               ? getLocalizedMutator(activeMutator, dict).name
-              : (dict?.generator?.chaosMutatorTooltip || 'Chaos Mutator')}
+              : (dict.generator.chaosMutatorTooltip)}
             isActive={Boolean(activeMutator)}
             onClick={onOpenChaosModal}
           />
         </Tooltip>
 
         <Tooltip variant="action"
-          title={dict?.generator?.soundTooltipTitle || 'Sound Effects'}
+          title={dict.generator.soundTooltipTitle}
           description={
             audioEnabled
-              ? dict?.generator?.soundTooltipDescOn || 'On: reel ticks, thuds, and fanfare will play.'
-              : dict?.generator?.soundTooltipDescOff || 'Muted: every effect is silenced.'
+              ? dict.generator.soundTooltipDescOn
+              : dict.generator.soundTooltipDescOff
           }
         >
           <IconToggleButton
             icon={audioEnabled ? <Volume2 className="h-5 w-5" /> : <VolumeX className="h-5 w-5" />}
             label={
               audioEnabled
-                ? dict?.generator?.audioOnLabel || 'Sound On'
-                : dict?.generator?.audioOffLabel || 'Sound Muted'
+                ? dict.generator.audioOnLabel
+                : dict.generator.audioOffLabel
             }
             isActive={audioEnabled}
             onClick={onToggleAudio}
@@ -134,13 +133,13 @@ export const Toolbar: React.FC<ToolbarProps> = ({
         </Tooltip>
 
         <Tooltip variant="action"
-          title={dict?.generator?.resetAllTooltipTitle || 'Reset Everything'}
+          title={dict.generator.resetAllTooltipTitle}
           align="end"
-          description={dict?.generator?.resetAllTooltipDesc || 'Clears your wheels, loadout slots, and drawn-perk memory. Cannot be undone.'}
+          description={dict.generator.resetAllTooltipDesc}
         >
           <IconToggleButton
             icon={<RotateCcw className="h-5 w-5" />}
-            label={dict?.generator?.resetAllTooltip || 'Reset wheels, loadout slots, and memory'}
+            label={dict.generator.resetAllTooltip}
             onClick={onResetAll}
           />
         </Tooltip>

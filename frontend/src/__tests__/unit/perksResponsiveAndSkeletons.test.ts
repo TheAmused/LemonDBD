@@ -2,7 +2,6 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import React from 'react';
-import { renderToStaticMarkup } from 'react-dom/server';
 import { PerksGridSkeleton } from '@/components/PerksSkeleton';
 import { computeHasActiveFilters } from '@/components/PerkFilters';
 import enDict from '@/locales/en';
@@ -10,12 +9,12 @@ import deDict from '@/locales/de';
 import esDict from '@/locales/es';
 import jaDict from '@/locales/ja';
 import plDict from '@/locales/pl';
+import { renderWithDictionary } from '../helpers/renderWithDictionary';
 
 describe('Perks: Skeletons & DBD Framer Motion Spinner Integrity', () => {
   it('PerksGridSkeleton renders with role="status", aria-busy="true", and DBD Skill Check Spinner', () => {
-    const html = renderToStaticMarkup(
+    const html = renderWithDictionary(
       React.createElement(PerksGridSkeleton, {
-        dict: enDict,
       })
     );
 

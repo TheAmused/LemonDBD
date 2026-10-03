@@ -7,6 +7,7 @@ import type { Dictionary } from '@/locales/types';
 import { LABEL } from './styles';
 import { Button } from '@/components/common/Button';
 import { Input } from '@/components/common/Field';
+import { useDictionary } from "@/context/DictionaryContext";
 
 interface RosterTaxonomyBlockProps {
   roles: string[];
@@ -14,21 +15,14 @@ interface RosterTaxonomyBlockProps {
   onChangeRoles: (roles: string[]) => void;
   onChangeGenders: (genders: string[]) => void;
   onRegisterTerm?: (type: 'role' | 'gender', name: string) => void;
-  dict?: Dictionary;
 }
 
-export const RosterTaxonomyBlock: React.FC<RosterTaxonomyBlockProps> = ({
-  roles,
-  genders,
-  onChangeRoles,
-  onChangeGenders,
-  onRegisterTerm,
-  dict,
-}) => {
+export const RosterTaxonomyBlock: React.FC<RosterTaxonomyBlockProps> = ({ roles, genders, onChangeRoles, onChangeGenders, onRegisterTerm }) => {
+  const dict = useDictionary();
   const [newRoleInput, setNewRoleInput] = useState<string>('');
   const [newGenderInput, setNewGenderInput] = useState<string>('');
 
-  const tx = dict?.smashOrPass?.taxonomies || {
+  const tx = dict.smashOrPass.taxonomies || {
     rolesTitle: 'Roster Roles',
     rolesDesc: 'Define the roles available for characters in this roster. If left blank, standard Dead by Daylight roles (Survivor, Killer) will be used.',
     customCount: 'Custom',

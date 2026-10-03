@@ -173,17 +173,16 @@ export default function AboutPage() {
   const params = useParams();
   const locale = (params?.locale as Locale) || 'en';
   const dict = useDictionary();
-  const about = dict?.about;
+  const about = dict.about;
 
 
-  const pageHeading = about?.pageTitle
+  const pageHeading = about.pageTitle
     ? about.pageTitle.replace(/^LemonDBD\s*[-–—]\s*/i, '').trim()
     : 'About us';
 
   return (
     <PageShell
       locale={locale}
-      dict={dict || ({} as Dictionary)}
       padding="spacious"
       mainClassName="flex flex-col items-center justify-center min-h-[calc(100vh-4rem)] lg:min-h-screen overflow-y-auto relative"
     >
@@ -193,7 +192,7 @@ export default function AboutPage() {
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-black tracking-tight text-text-primary">
             {pageHeading}
           </h1>
-          {about?.features?.paragraphs?.[0] ? (
+          {about.features.paragraphs?.[0] ? (
             <p className="max-w-2xl type-body-fluid text-text-muted text-center px-4">
               <RichText text={about.features.paragraphs[0]} />
             </p>
@@ -206,8 +205,8 @@ export default function AboutPage() {
           <SyncedAboutPair
             sectionA={{
               id: 'who',
-              heading: about?.who.heading,
-              children: about?.who.paragraphs.map((text, i) => (
+              heading: about.who.heading,
+              children: about.who.paragraphs.map((text, i) => (
                 <p key={i} className="text-text-muted text-justify [text-justify:inter-word] hyphens-auto">
                   <RichText text={text} />
                 </p>
@@ -215,8 +214,8 @@ export default function AboutPage() {
             }}
             sectionB={{
               id: 'why',
-              heading: about?.why.heading,
-              children: about?.why.paragraphs.map((text, i) => (
+              heading: about.why.heading,
+              children: about.why.paragraphs.map((text, i) => (
                 <p key={i} className="text-text-muted text-justify [text-justify:inter-word] hyphens-auto">
                   <RichText text={text} />
                 </p>
@@ -228,8 +227,8 @@ export default function AboutPage() {
           <SyncedAboutPair
             sectionA={{
               id: 'community',
-              heading: about?.community.heading,
-              children: about?.community.paragraphs.map((text, i) => (
+              heading: about.community.heading,
+              children: about.community.paragraphs.map((text, i) => (
                 <p key={i} className="text-text-muted text-justify [text-justify:inter-word] hyphens-auto">
                   <RichText text={text} />
                 </p>
@@ -237,8 +236,8 @@ export default function AboutPage() {
             }}
             sectionB={{
               id: 'features',
-              heading: about?.features.heading,
-              children: about?.features.paragraphs.map((text, i) => (
+              heading: about.features.heading,
+              children: about.features.paragraphs.map((text, i) => (
                 <p key={i} className="text-text-muted text-justify [text-justify:inter-word] hyphens-auto">
                   <RichText text={text} />
                 </p>
@@ -247,9 +246,9 @@ export default function AboutPage() {
           />
 
           {/* Row 3: Credits (full width spanning both columns, centered content) */}
-          <AboutSection id="credits" heading={about?.credits.heading} className="lg:col-span-2">
+          <AboutSection id="credits" heading={about.credits.heading} className="lg:col-span-2">
             <p className="text-text-muted text-center leading-relaxed">
-              <RichText text={about?.credits.text} />
+              <RichText text={about.credits.text} />
             </p>
             <ul className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-text-primary pt-1">
               {CREDITS.map((name) => (
@@ -265,7 +264,7 @@ export default function AboutPage() {
               className="inline-flex items-center gap-2 rounded-full border border-border-color bg-bg-surface px-5 py-2.5 text-xs sm:text-sm font-bold uppercase tracking-widest text-accent-red shadow-md backdrop-blur-xl transition-colors hover:border-accent-red/50 hover:bg-bg-elevated"
             >
               <ShieldCheck className="h-4 w-4" aria-hidden="true" />
-              {dict?.privacy?.heading}
+              {dict.privacy.heading}
             </Link>
           </div>
         </div>

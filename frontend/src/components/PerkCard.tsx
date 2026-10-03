@@ -9,6 +9,8 @@ import { getPerkIconUrl, getCharacterAvatarUrl } from '@/utils/perkUtils';
 import { DisabledBadge } from '@/components/DisabledBadge';
 
 import { tip } from '@/components/common/Tooltip';
+import { useDictionary } from "@/context/DictionaryContext";
+
 const DisabledReasonModal = dynamic(
   () => import('@/components/DisabledReasonModal').then((m) => m.DisabledReasonModal),
   { ssr: false }
@@ -28,20 +30,13 @@ const GRID_SIZE_CLASSES: Record<'default' | 'large' | 'fill' | 'tarot' | 'compac
 interface PerkCardProps {
   perk: Perk;
   onSelect: (perk: Perk) => void;
-  dict?: PerkDictionary;
   coordinate?: { page: number; slot: number };
   size?: 'default' | 'large' | 'fill' | 'tarot' | 'compact' | 'wheelFlank';
   isBlind?: boolean;
 }
 
-export const PerkCard: React.FC<PerkCardProps> = ({
-  perk,
-  onSelect,
-  dict,
-  coordinate,
-  size = 'default',
-  isBlind = false,
-}) => {
+export const PerkCard: React.FC<PerkCardProps> = ({ perk, onSelect, coordinate, size = 'default', isBlind = false }) => {
+  const dict = useDictionary();
   const [imgError, setImgError] = useState(false);
   const [avatarError, setAvatarError] = useState(false);
   const [showDisabledModal, setShowDisabledModal] = useState(false);
@@ -58,16 +53,16 @@ export const PerkCard: React.FC<PerkCardProps> = ({
     Boolean(perk.is_generic_counterpart);
   const isOwned = perk.is_owned !== false;
 
-  const generalLabel = dict?.modal?.generalPerk;
+  const generalLabel = dict.modal.generalPerk;
   const roleLabel =
     perk.category === 'Killer'
-      ? dict?.modal?.killerPerk
-      : dict?.modal?.survivorPerk;
+      ? dict.modal.killerPerk
+      : dict.modal.survivorPerk;
 
   const ariaLabel = `${perk.name}${isGeneral ? (generalLabel ? ` - ${generalLabel}` : '') : (perk.character ? ` - ${perk.character}` : '')}`;
 
   const coordinateLabel = coordinate
-    ? `${dict?.generator?.coordOpenPage || '['}${coordinate.page}${dict?.generator?.coordSlot || '/'}${coordinate.slot}${dict?.generator?.coordClose || ']'}`
+    ? `${dict.generator.coordOpenPage}${coordinate.page}${dict.generator.coordSlot}${coordinate.slot}${dict.generator.coordClose}`
     : null;
 
   if (isBlind) {
@@ -81,7 +76,7 @@ export const PerkCard: React.FC<PerkCardProps> = ({
           </span>
         )}
         <HelpCircle className="h-10 w-10 text-text-muted" />
-        {dict?.generator?.hiddenPerkLabel && (
+        {dict.generator.hiddenPerkLabel && (
           <span className="type-strong-xs text-text-muted text-center px-2">
             {dict.generator.hiddenPerkLabel}
           </span>
@@ -184,7 +179,7 @@ export const PerkCard: React.FC<PerkCardProps> = ({
           !isOwned && (
             <div
               className="absolute top-1 right-1 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-bg-primary/90 shadow-xs border border-border-color"
-              {...tip(dict?.modal?.unownedPerk, undefined, 'status')}
+              {...tip(dict.modal.unownedPerk, undefined, 'status')}
             >
               <Lock className="h-3.5 w-3.5 text-text-muted" />
             </div>

@@ -30,6 +30,8 @@ import { PerkHexIcon, BloodwebIcon, RiftPortalIcon, RealmMapIcon, MaskIcon, Adep
 
 import { tip } from '@/components/common/Tooltip';
 import { Button } from '@/components/common/Button';
+import { useDictionary } from "@/context/DictionaryContext";
+
 const AuthModal = dynamic(() => import('./AuthModal').then((m) => m.AuthModal), { ssr: false });
 const BugReportModal = dynamic(
   () => import('./sidebar/BugReportModal').then((m) => m.BugReportModal),
@@ -42,7 +44,6 @@ const BuyCoffeeModal = dynamic(
 
 interface SidebarProps {
   currentLocale?: string;
-  dict: Dictionary;
   activeCategory?: string;
   onSelectCategory?: (category: string) => void;
   totalPerksCount?: number;
@@ -52,14 +53,14 @@ interface SidebarProps {
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({
-  currentLocale: propLocale,
-  dict,
-  activeCategory,
-  totalPerksCount,
-  survivorCount,
-  killerCount,
-  characterCount,
-}) => {
+      currentLocale: propLocale,
+      activeCategory,
+      totalPerksCount,
+      survivorCount,
+      killerCount,
+      characterCount,
+    }) => {
+  const dict = useDictionary();
   const pathname = usePathname() || '';
   const params = useParams();
 
@@ -147,7 +148,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const mainNavItems = useMemo(() => [
     {
       id: 'perks',
-      label: dict?.filters?.perks || dict?.sidebar?.perks || 'Perks',
+      label: dict.filters.perks,
       icon: PerkHexIcon,
       color: 'text-accent-red',
       activeBg: 'bg-accent-red/10 text-accent-red border border-accent-red/20',
@@ -155,7 +156,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     },
     {
       id: 'generator',
-      label: dict?.filters?.generatorTab || dict?.generator?.title || 'Randomizer',
+      label: dict.filters.generatorTab,
       icon: BloodwebIcon,
       color: 'text-accent-red',
       activeBg: 'bg-accent-red/10 text-accent-red border border-accent-red/20',
@@ -163,7 +164,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     },
     {
       id: 'streaks',
-      label: dict?.sidebar?.challenges || 'Challenges',
+      label: dict.sidebar.challenges,
       icon: RiftPortalIcon,
       color: 'text-accent-red',
       activeBg: 'bg-accent-red/10 text-accent-red border border-accent-red/20',
@@ -171,7 +172,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     },
     {
       id: 'minigames',
-      label: dict?.sidebar?.minigames || 'Minigames',
+      label: dict.sidebar.minigames,
       icon: Gamepad2,
       color: 'text-accent-red',
       activeBg: 'bg-accent-red/10 text-accent-red border border-accent-red/20',
@@ -179,7 +180,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     },
     {
       id: 'maps',
-      label: dict?.sidebar?.mapExplorer || 'Maps',
+      label: dict.sidebar.mapExplorer,
       icon: RealmMapIcon,
       color: 'text-accent-red',
       activeBg: 'bg-accent-red/10 text-accent-red border border-accent-red/20',
@@ -187,7 +188,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     },
     {
       id: 'characters',
-      label: dict?.sidebar?.characters || 'Characters',
+      label: dict.sidebar.characters,
       icon: MaskIcon,
       color: 'text-accent-red',
       activeBg: 'bg-accent-red/10 text-accent-red border border-accent-red/20',
@@ -195,7 +196,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     },
     {
       id: 'tier-lists',
-      label: dict?.sidebar?.tierLists || 'Tier Lists',
+      label: dict.sidebar.tierLists,
       icon: LayoutList,
       color: 'text-accent-red',
       activeBg: 'bg-accent-red/10 text-accent-red border border-accent-red/20',
@@ -203,7 +204,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     },
     {
       id: 'smash-or-pass',
-      label: dict?.sidebar?.smashOrPass || 'Smash or Pass',
+      label: dict.sidebar.smashOrPass,
       icon: Heart,
       color: 'text-accent-red',
       activeBg: 'bg-accent-red/10 text-accent-red border border-accent-red/20',
@@ -211,7 +212,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     },
     {
       id: 'trophies',
-      label: dict?.sidebar?.trophies || 'Trophies',
+      label: dict.sidebar.trophies,
       icon: AdeptBadgeIcon,
       color: 'text-accent-red',
       activeBg: 'bg-accent-red/10 text-accent-red border border-accent-red/20',
@@ -238,26 +239,26 @@ export const Sidebar: React.FC<SidebarProps> = ({
             href={`/${currentLocale}`}
             onClick={() => setMobileOpen(false)}
             className="flex items-center gap-3 group focus:outline-none focus:ring-2 focus:ring-accent-red rounded-xl"
-            aria-label={dict?.sidebar?.homeAria || 'Home'}
+            aria-label={dict.sidebar.homeAria}
           >
             <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-accent-red/15 border border-accent-red/30 text-text-primary shadow-xs group-hover:scale-105 transition-transform p-1.5">
               <LemonIcon className="h-7 w-7" />
             </div>
             <div>
               <span className="font-black text-base tracking-wider text-text-primary">
-                {dict?.app?.title || 'LemonDBD'}
+                {dict.app.title}
               </span>
             </div>
           </Link>
 
           <div className="hidden lg:block">
-            <WhatsNewLauncher dict={dict} />
+            <WhatsNewLauncher />
           </div>
         </div>
 
-        <nav aria-label={dict?.sidebar?.navAria || 'Navigation'} className="mt-5 space-y-1">
+        <nav aria-label={dict.sidebar.navAria} className="mt-5 space-y-1">
           <p className="px-3 type-label-2xs text-text-muted mb-2">
-            {dict?.sidebar?.navigation || 'Navigation'}
+            {dict.sidebar.navigation}
           </p>
 
           {mainNavItems
@@ -279,7 +280,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
         <SidebarUserSection
           currentLocale={currentLocale}
-          dict={dict}
           user={user}
           isAuthenticated={isAuthenticated}
           isAdmin={isAdmin}
@@ -298,7 +298,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
       <SidebarBottomControls
         currentLocale={currentLocale}
-        dict={dict}
         onOpenBugModal={() => {
           setBugModalOpen(true);
           setMobileOpen(false);
@@ -314,7 +313,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   return (
     <>
       <aside
-        aria-label={dict?.sidebar?.navAria || 'Sidebar'}
+        aria-label={dict.sidebar.navAria}
         className="lemon-shell-aside hidden lg:flex lg:flex-col lg:sticky lg:top-0 lg:h-screen lg:shrink-0 border-r border-border-color bg-bg-surface backdrop-blur-xl z-50"
       >
         <div className="w-full h-full overflow-hidden flex flex-col">
@@ -327,8 +326,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
           type="button"
           onClick={toggleSidebar}
           data-testid="sidebar-toggle-button"
-          {...tip(dict?.sidebar?.toggleSidebar || 'Toggle Sidebar', undefined, 'action')}
-          aria-label={dict?.sidebar?.toggleSidebar || 'Toggle Sidebar'}
+          {...tip(dict.sidebar.toggleSidebar, undefined, 'action')}
+          aria-label={dict.sidebar.toggleSidebar}
           aria-expanded={!isCollapsed}
           className="hidden lg:flex absolute top-1/2 -right-6 -translate-y-1/2 h-16 w-6 items-center justify-center rounded-r-2xl border border-l-0 border-border-color bg-bg-surface text-text-primary shadow-md hover:bg-bg-elevated hover:w-7 hover:text-accent-red active:scale-95 transition-all duration-200 cursor-pointer z-50 group"
         >
@@ -347,25 +346,25 @@ export const Sidebar: React.FC<SidebarProps> = ({
         <Link
           href={`/${currentLocale}`}
           className="flex items-center gap-2.5"
-          aria-label={dict?.sidebar?.homeAria || 'Home'}
+          aria-label={dict.sidebar.homeAria}
         >
           <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent-red/15 border border-accent-red/30 text-text-primary p-1">
             <LemonIcon className="h-6 w-6" />
           </div>
           <span className="font-extrabold text-sm tracking-wider text-text-primary">
-            {dict?.app?.title || 'LemonDBD'}
+            {dict.app.title}
           </span>
         </Link>
 
         <div className="flex items-center gap-2">
-          <WhatsNewLauncher dict={dict} />
+          <WhatsNewLauncher />
           <Button
             icon
             variant="secondary"
             onClick={() => setMobileOpen(true)}
             data-testid="mobile-drawer-toggle"
             aria-expanded={mobileOpen}
-            aria-label={dict?.sidebar?.openDrawer || 'Open Drawer'}
+            aria-label={dict.sidebar.openDrawer}
           >
             <Menu className="h-5 w-5" />
           </Button>
@@ -380,7 +379,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         layer="nested"
         closeButton="none"
         containerClassName="lg:hidden"
-        ariaLabel={dict?.sidebar?.openDrawer || 'Open Drawer'}
+        ariaLabel={dict.sidebar.openDrawer}
         bodyClassName="p-0"
       >
         <Button
@@ -389,7 +388,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           variant="ghost"
           onClick={() => setMobileOpen(false)}
           data-testid="mobile-drawer-close"
-          aria-label={dict?.sidebar?.closeDrawer || 'Close Drawer'}
+          aria-label={dict.sidebar.closeDrawer}
           className="absolute right-3 top-3 z-20 rounded-full"
         >
           <X className="h-5 w-5" />
@@ -402,21 +401,18 @@ export const Sidebar: React.FC<SidebarProps> = ({
           isOpen={authModalOpen}
           onClose={() => setAuthModalOpen(false)}
           verifyEmailFor={authModalIntent === 'verify' ? user?.email : undefined}
-          dict={dict}
         />
       )}
       {bugModalOpen && (
         <BugReportModal
           isOpen={bugModalOpen}
           onClose={() => setBugModalOpen(false)}
-          dict={dict}
         />
       )}
       {coffeeModalOpen && (
         <BuyCoffeeModal
           isOpen={coffeeModalOpen}
           onClose={() => setCoffeeModalOpen(false)}
-          dict={dict}
         />
       )}
     </>

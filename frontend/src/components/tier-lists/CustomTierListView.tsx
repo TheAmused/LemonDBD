@@ -21,15 +21,16 @@ import { documentItemsToItems } from '@/utils/tierLists/items';
 import { deleteCustomList, saveCustomList, type SaveResult } from '@/utils/tierLists/storage';
 import { TierListEditor } from './TierListEditor';
 import { TierListSkeleton } from './TierListSkeleton';
+import { useDictionary } from "@/context/DictionaryContext";
 
 interface CustomTierListViewProps {
   id: string;
   locale: string;
-  dict: Dictionary;
 }
 
 /** A user's own tier list, living entirely in this browser. */
-export function CustomTierListView({ id, locale, dict }: CustomTierListViewProps) {
+export function CustomTierListView({ id, locale }: CustomTierListViewProps) {
+  const dict = useDictionary();
   const t = dict.tierLists;
   const router = useRouter();
   const { state, hydrated } = useTierListStore();
@@ -101,7 +102,7 @@ export function CustomTierListView({ id, locale, dict }: CustomTierListViewProps
     router.push(`/${locale}/tier-lists`);
   }, [id, locale, router]);
 
-  if (!hydrated) return <TierListSkeleton dict={dict} />;
+  if (!hydrated) return <TierListSkeleton />;
 
   if (!list) {
     return (
@@ -141,7 +142,6 @@ export function CustomTierListView({ id, locale, dict }: CustomTierListViewProps
       editHref={`/${locale}/tier-lists/new?edit=${id}`}
       onDelete={onDelete}
       locale={locale}
-      dict={dict}
     />
   );
 }

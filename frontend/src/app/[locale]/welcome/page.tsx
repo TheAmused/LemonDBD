@@ -24,7 +24,6 @@ function WelcomeContent() {
   return (
     <CharacterOnboardingWizard
       locale={locale}
-      dict={dict}
       onFinished={() => router.push(`/${locale}`)}
     />
   );

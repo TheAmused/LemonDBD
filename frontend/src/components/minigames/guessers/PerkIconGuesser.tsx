@@ -7,24 +7,18 @@ import { Eye, Check, X, ShieldAlert } from 'lucide-react';
 import type { GuessRecord, RoundConfig, CatalogPerk } from '@/types/minigame';
 import type { Dictionary } from '@/locales/types';
 import { staticUrl } from '@/utils/api';
+import { useDictionary } from "@/context/DictionaryContext";
 
 interface PerkIconGuesserProps {
   roundConfig: RoundConfig;
   perks: CatalogPerk[];
   guesses: GuessRecord[];
   isSolved: boolean;
-  dict: Dictionary;
   children?: React.ReactNode;
 }
 
-export const PerkIconGuesser: React.FC<PerkIconGuesserProps> = ({
-  roundConfig,
-  perks,
-  guesses,
-  isSolved,
-  dict,
-  children,
-}) => {
+export const PerkIconGuesser: React.FC<PerkIconGuesserProps> = ({ roundConfig, perks, guesses, isSolved, children }) => {
+  const dict = useDictionary();
   const targetPerk = useMemo(() => {
     return perks.find((p) => p.id === roundConfig.target_id);
   }, [perks, roundConfig.target_id]);

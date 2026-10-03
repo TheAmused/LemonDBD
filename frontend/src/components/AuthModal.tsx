@@ -23,13 +23,13 @@ import { EmailVerificationForm } from '@/components/EmailVerificationForm';
 import { Modal } from '@/components/common/Modal';
 import { Button } from '@/components/common/Button';
 import { Input } from '@/components/common/Field';
+import { useDictionary } from "@/context/DictionaryContext";
 
 interface AuthModalProps {
   isOpen: boolean;
   onClose: () => void;
   initialMode?: 'login' | 'register';
   verifyEmailFor?: string;
-  dict?: Dictionary;
 }
 
 type AuthMode = 'login' | 'register' | 'forgot';
@@ -38,13 +38,8 @@ type Notice =
   | { type: 'register-success'; email: string }
   | { type: 'forgot-sent' };
 
-export const AuthModal: React.FC<AuthModalProps> = ({
-  isOpen,
-  onClose,
-  initialMode = 'login',
-  verifyEmailFor,
-  dict,
-}) => {
+export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode = 'login', verifyEmailFor }) => {
+  const dict = useDictionary();
   const { login, register, forgotPassword } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
@@ -94,7 +89,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         if (res.success) {
           setNotice({ type: 'forgot-sent' });
         } else {
-          setError(res.error || dict?.user?.failedToRequestPasswordReset || null);
+          setError(res.error || dict.user.failedToRequestPasswordReset);
         }
       } else if (mode === 'login') {
         const res = await login(username, password, {
@@ -108,7 +103,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             onClose();
           }
         } else {
-          setError(res.error || dict?.user?.invalidCredentials || null);
+          setError(res.error || dict.user.invalidCredentials);
         }
       } else {
         const res = await register(username, email, password, {
@@ -126,11 +121,11 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             }
           }
         } else {
-          setError(res.error || dict?.user?.registrationFailed || null);
+          setError(res.error || dict.user.registrationFailed);
         }
       }
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : dict?.user?.unexpectedError || null;
+      const message = err instanceof Error ? err.message : dict.user.unexpectedError;
       setError(message);
     } finally {
       setLoading(false);
@@ -158,14 +153,14 @@ export const AuthModal: React.FC<AuthModalProps> = ({
       icon={<LemonIcon className="h-6 w-6 animate-pulse" />}
       title={
         notice?.type === 'verify-reminder' || notice?.type === 'register-success'
-          ? dict?.user?.authVerifyEmailTitle
+          ? dict.user.authVerifyEmailTitle
           : notice?.type === 'forgot-sent'
-            ? dict?.user?.resetPassword
+            ? dict.user.resetPassword
             : mode === 'login'
-              ? dict?.user?.authSignInTitle
+              ? dict.user.authSignInTitle
               : mode === 'register'
-                ? dict?.user?.authRegisterTitle
-                : dict?.user?.resetPassword
+                ? dict.user.authRegisterTitle
+                : dict.user.resetPassword
       }
       subtitle={
         notice?.type === 'verify-reminder' ||
@@ -173,12 +168,12 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         notice?.type === 'forgot-sent' ||
         mode === 'forgot'
           ? notice?.type === 'verify-reminder' || notice?.type === 'register-success'
-            ? dict?.user?.authVerifySubtitle
-            : dict?.user?.authResetSubtitle
+            ? dict.user.authVerifySubtitle
+            : dict.user.authResetSubtitle
           : undefined
       }
       ariaLabel="Authentication"
-      closeButtonAriaLabel={dict?.modal?.close}
+      closeButtonAriaLabel={dict.modal.close}
       padded
     >
       {error && (
@@ -204,10 +199,9 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             }}
             submitLabel={
               notice.type === 'register-success'
-                ? dict?.user?.verifyAndContinue
-                : dict?.user?.verifyEmailAction
+                ? dict.user.verifyAndContinue
+                : dict.user.verifyEmailAction
             }
-            dict={dict}
           />
         </div>
       )}
@@ -219,9 +213,9 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         >
           <div className="flex items-start gap-2.5">
             <MailWarning className="h-4 w-4 shrink-0 mt-0.5" />
-            <span>{dict?.user?.forgotSentNotice}</span>
+            <span>{dict.user.forgotSentNotice}</span>
           </div>
-          {dict?.modal?.close && (
+          {dict.modal.close && (
             <button
               type="button"
               onClick={onClose}
@@ -237,7 +231,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         <form onSubmit={handleSubmit} className="space-y-3.5">
           {mode !== 'forgot' && (
             <div>
-              {dict?.user?.usernameOrEmailLabel && (
+              {dict.user.usernameOrEmailLabel && (
                 <label className="block type-label-xs text-text-secondary mb-1">
                   {dict.user.usernameOrEmailLabel}
                 </label>
@@ -249,7 +243,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                   required
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  placeholder={dict?.user?.usernameOrEmailPlaceholder}
+                  placeholder={dict.user.usernameOrEmailPlaceholder}
                   className="bg-bg-primary pl-10 pr-3.5 shadow-inner"
                 />
               </div>
@@ -258,9 +252,9 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 
           {(mode === 'register' || mode === 'forgot') && (
             <div>
-              {(dict?.user?.emailLabel || dict?.admin?.thEmail) && (
+              {(dict.user.emailLabel) && (
                 <label className="block type-label-xs text-text-secondary mb-1">
-                  {dict?.user?.emailLabel || dict?.admin?.thEmail}
+                  {dict.user.emailLabel}
                 </label>
               )}
               <div className="relative">
@@ -270,7 +264,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder={dict?.user?.emailPlaceholder}
+                  placeholder={dict.user.emailPlaceholder}
                   className="bg-bg-primary pl-10 pr-3.5 shadow-inner"
                 />
               </div>
@@ -279,9 +273,9 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 
           {mode !== 'forgot' && (
             <div>
-              {(dict?.user?.passwordLabel || dict?.admin?.thPassword) && (
+              {(dict.user.passwordLabel) && (
                 <label className="block type-label-xs text-text-secondary mb-1">
-                  {dict?.user?.passwordLabel || dict?.admin?.thPassword}
+                  {dict.user.passwordLabel}
                 </label>
               )}
               <div className="relative">
@@ -298,7 +292,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             </div>
           )}
 
-          {mode === 'login' && dict?.user?.forgotPasswordLink && (
+          {mode === 'login' && dict.user.forgotPasswordLink && (
             <div className="text-right -mt-1.5">
               <button
                 type="button"
@@ -322,17 +316,17 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             {mode === 'login' ? (
               <>
                 <LogIn className="h-4 w-4" />
-                <span>{dict?.user?.signIn}</span>
+                <span>{dict.user.signIn}</span>
               </>
             ) : mode === 'register' ? (
               <>
                 <UserPlus className="h-4 w-4" />
-                <span>{dict?.user?.createAccount}</span>
+                <span>{dict.user.createAccount}</span>
               </>
             ) : (
               <>
                 <Mail className="h-4 w-4" />
-                <span>{dict?.user?.sendResetLink}</span>
+                <span>{dict.user.sendResetLink}</span>
               </>
             )}
           </Button>
@@ -341,14 +335,14 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 
       {!notice && mode !== 'forgot' && (
         <div className="mt-4 pt-4 border-t border-border-color">
-          {dict?.user?.quickDemoAccounts && (
+          {dict.user.quickDemoAccounts && (
             <p className="type-label-2xs text-text-muted mb-2 text-center">
               {dict.user.quickDemoAccounts}
             </p>
           )}
           <div className="grid grid-cols-2 gap-2">
             <Button variant="soft" size="xs" onClick={() => handleFillDemo('admin')} leftIcon={<ShieldAlert className="h-3 w-3" />}>
-              <span>{dict?.user?.adminDemo}</span>
+              <span>{dict.user.adminDemo}</span>
             </Button>
             <button
               type="button"
@@ -356,7 +350,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               className="flex items-center justify-center gap-1.5 rounded-lg border border-accent-amber/30 bg-accent-amber/10 px-2.5 py-1.5 type-strong-xs text-accent-amber hover:bg-accent-amber/20 transition-colors shadow-xs cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red"
             >
               <Sparkles className="h-3 w-3 text-accent-amber" />
-              <span>{dict?.user?.userDemo}</span>
+              <span>{dict.user.userDemo}</span>
             </button>
           </div>
         </div>
@@ -371,20 +365,20 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           >
             {mode === 'forgot' ? (
               <span className="font-bold text-accent-amber underline">
-                {dict?.user?.backToSignIn}
+                {dict.user.backToSignIn}
               </span>
             ) : mode === 'register' ? (
               <>
-                {dict?.user?.alreadyHaveAccount}{' '}
+                {dict.user.alreadyHaveAccount}{' '}
                 <span className="font-bold text-accent-amber underline">
-                  {dict?.user?.signIn}
+                  {dict.user.signIn}
                 </span>
               </>
             ) : (
               <>
-                {dict?.user?.dontHaveAccount}{' '}
+                {dict.user.dontHaveAccount}{' '}
                 <span className="font-bold text-accent-amber underline">
-                  {dict?.user?.register}
+                  {dict.user.register}
                 </span>
               </>
             )}

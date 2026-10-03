@@ -38,4 +38,9 @@ export default {
   mostUpvoted: "Najwyżej oceniane",
   resetAllFilters: "Zresetuj filtry",
   viewMode: "Siatka umiejętności",
+  clearSearch: "Wyczyść wyszukiwanie",
+  filtersTitle: "Filtry",
+  ownershipFilter: "Filtruj według posiadania",
+  sortFields: "Pole sortowania",
+  sortOrderLabel: "Kolejność sortowania",
 } as const;

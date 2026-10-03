@@ -44,20 +44,16 @@ import { EmojiRiddleGuesser } from './guessers/EmojiRiddleGuesser';
 import { AddonGuesser } from './guessers/AddonGuesser';
 import { VictoryModal } from './VictoryModal';
 import { formatMessage } from '@/utils/i18nFormat';
+import { useDictionary } from "@/context/DictionaryContext";
 
 interface ChallengeRunnerProps {
   challenge: ChallengeDefinition;
   catalog: MinigameCatalog;
-  dict: Dictionary;
   locale: string;
 }
 
-export const ChallengeRunner: React.FC<ChallengeRunnerProps> = ({
-  challenge,
-  catalog,
-  dict,
-  locale,
-}) => {
+export const ChallengeRunner: React.FC<ChallengeRunnerProps> = ({ challenge, catalog, locale }) => {
+  const dict = useDictionary();
   const t = dict.minigames;
   const challengeId = challenge.id || 'default_trial';
 
@@ -313,7 +309,6 @@ export const ChallengeRunner: React.FC<ChallengeRunnerProps> = ({
             realms={catalog.realms || []}
             guesses={currentGuesses}
             isSolved={isRoundSolved}
-            dict={dict}
           >
             {inputSlot}
           </RealmGuesser>
@@ -326,7 +321,6 @@ export const ChallengeRunner: React.FC<ChallengeRunnerProps> = ({
             characters={catalog.killers.concat(catalog.survivors)}
             guesses={currentGuesses}
             isSolved={isRoundSolved}
-            dict={dict}
           >
             {inputSlot}
           </PixelAvatarGuesser>
@@ -340,7 +334,6 @@ export const ChallengeRunner: React.FC<ChallengeRunnerProps> = ({
             perks={catalog.perks || []}
             guesses={currentGuesses}
             isSolved={isRoundSolved}
-            dict={dict}
           >
             {inputSlot}
           </PerkIconGuesser>
@@ -353,7 +346,6 @@ export const ChallengeRunner: React.FC<ChallengeRunnerProps> = ({
             killers={catalog.killers || []}
             guesses={currentGuesses}
             isSolved={isRoundSolved}
-            dict={dict}
           >
             {inputSlot}
           </KillerPowerGuesser>
@@ -368,7 +360,6 @@ export const ChallengeRunner: React.FC<ChallengeRunnerProps> = ({
             characters={catalog.killers.concat(catalog.survivors)}
             guesses={currentGuesses}
             isSolved={isRoundSolved}
-            dict={dict}
           >
             {inputSlot}
           </AudioGuesser>
@@ -382,7 +373,6 @@ export const ChallengeRunner: React.FC<ChallengeRunnerProps> = ({
             perks={catalog.perks || []}
             guesses={currentGuesses}
             isSolved={isRoundSolved}
-            dict={dict}
           >
             {inputSlot}
           </QuoteLoreGuesser>
@@ -395,7 +385,6 @@ export const ChallengeRunner: React.FC<ChallengeRunnerProps> = ({
             perks={catalog.perks || []}
             guesses={currentGuesses}
             isSolved={isRoundSolved}
-            dict={dict}
           >
             {inputSlot}
           </EmojiRiddleGuesser>
@@ -407,7 +396,6 @@ export const ChallengeRunner: React.FC<ChallengeRunnerProps> = ({
             killers={catalog.killers || []}
             guesses={currentGuesses}
             isSolved={isRoundSolved}
-            dict={dict}
           >
             {inputSlot}
           </AddonGuesser>
@@ -416,7 +404,7 @@ export const ChallengeRunner: React.FC<ChallengeRunnerProps> = ({
         return (
           <div className="w-full flex flex-col items-center">
             <div className="w-full max-w-xl my-3">{inputSlot}</div>
-            <ClassicPerkGuesser guesses={currentGuesses} dict={dict} />
+            <ClassicPerkGuesser guesses={currentGuesses} />
           </div>
         );
       case 'classic_killer':
@@ -426,7 +414,7 @@ export const ChallengeRunner: React.FC<ChallengeRunnerProps> = ({
         return (
           <div className="w-full flex flex-col items-center">
             <div className="w-full max-w-xl my-3">{inputSlot}</div>
-            <ClassicCharacterGuesser guesses={currentGuesses} dict={dict} />
+            <ClassicCharacterGuesser guesses={currentGuesses} />
           </div>
         );
     }
@@ -586,7 +574,6 @@ export const ChallengeRunner: React.FC<ChallengeRunnerProps> = ({
           roundGuesses={roundGuesses}
           roundStatus={roundStatus}
           locale={locale}
-          dict={dict}
         />
       )}
     </div>

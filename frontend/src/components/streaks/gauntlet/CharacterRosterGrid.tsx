@@ -12,6 +12,8 @@ import { KillerIcon } from '@/components/icons/DbdIcons';
 
 import { tip } from '@/components/common/Tooltip';
 import { SkeletonBlock } from '@/components/common/Skeleton';
+import { useDictionary } from "@/context/DictionaryContext";
+
 export interface CharacterRosterGridProps {
   role: Role;
   characters: OwnedCharacterItem[];
@@ -24,20 +26,19 @@ export interface CharacterRosterGridProps {
   /** The pick waiting to be accepted. */
   selectedCharacterId?: string | null;
   loading?: boolean;
-  dict?: Dictionary;
 }
 
 export const CharacterRosterGrid: React.FC<CharacterRosterGridProps> = ({
-  role,
-  characters = [],
-  completedCharacters = [],
-  checkpointCharacters = [],
-  activeCharacterIds = [],
-  onSelectCharacter,
-  selectedCharacterId = null,
-  loading = false,
-  dict,
-}) => {
+      role,
+      characters = [],
+      completedCharacters = [],
+      checkpointCharacters = [],
+      activeCharacterIds = [],
+      onSelectCharacter,
+      selectedCharacterId = null,
+      loading = false,
+    }) => {
+  const dict = useDictionary();
   const [imageErrors, setImageErrors] = useState<Record<string, boolean>>({});
   const displayName = useCharacterDisplayName();
 
@@ -58,8 +59,8 @@ export const CharacterRosterGrid: React.FC<CharacterRosterGridProps> = ({
     staticUrl(char.avatar_local_path) ||
     avatarUrlForCharacter(char.name, role === 'survivor' ? 'survivors' : 'killers');
 
-  const completedText = dict?.stats?.completed || dict?.streaks?.completed || 'Completed';
-  const activeTargetText = dict?.streaks?.activeGauntletTarget || dict?.streaks?.target || 'Active Target';
+  const completedText = dict.stats.completed;
+  const activeTargetText = dict.streaks.activeGauntletTarget;
 
   return (
     <div className="w-full bg-bg-surface border border-border-color rounded-2xl p-6 shadow-sm dark:shadow-xl backdrop-blur-md">
@@ -71,7 +72,7 @@ export const CharacterRosterGrid: React.FC<CharacterRosterGridProps> = ({
         </div>
       ) : characters.length === 0 ? (
         <div className="py-12 text-center text-text-muted text-sm">
-          {dict?.streaks?.noOwnedCharacters || `You don't own any ${role} characters yet. Head to the Characters tab to mark what you own.`}
+          {dict.streaks.noOwnedCharacters}
         </div>
       ) : (
         <div className="grid grid-cols-5 sm:grid-cols-6 md:grid-cols-[repeat(13,minmax(0,1fr))] gap-3 sm:gap-4">
@@ -154,4 +155,4 @@ export const CharacterRosterGrid: React.FC<CharacterRosterGridProps> = ({
       )}
     </div>
   );
-};
+};

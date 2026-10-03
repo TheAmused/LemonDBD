@@ -49,6 +49,7 @@ import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
 import { Button } from '@/components/common/Button';
 import { Input } from '@/components/common/Field';
 import { authHeaders } from '@/utils/api';
+import { useDictionary } from "@/context/DictionaryContext";
 
 interface OwnedCharacter {
   id: number;
@@ -80,10 +81,10 @@ export interface CharacterDetailData {
 }
 
 interface CharactersHubProps {
-  dict?: PerkDictionary;
 }
 
-export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
+export const CharactersHub: React.FC<CharactersHubProps> = () => {
+  const dict = useDictionary();
   const router = useRouter();
   const params = useParams();
   const searchParams = useSearchParams();
@@ -272,7 +273,7 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
       const perksOk = perkUpdates.length === 0 || (await bulkUpdatePerkOwnership(perkUpdates));
 
       if (!charactersOk || !perksOk) {
-        setOwnershipSaveError(dict?.characterDetail?.saveOwnershipError || null);
+        setOwnershipSaveError(dict.characterDetail.saveOwnershipError);
         return;
       }
 
@@ -286,7 +287,7 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
       });
     } catch (err: unknown) {
       console.error('Failed to save ownership changes:', err);
-      setOwnershipSaveError(dict?.characterDetail?.saveOwnershipError || null);
+      setOwnershipSaveError(dict.characterDetail.saveOwnershipError);
     } finally {
       setOwnershipSaving(false);
     }
@@ -318,12 +319,12 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
   return (
     <div className={`space-y-6 ${ownershipMode ? 'pb-20' : ''}`}>
       <section
-        aria-label={dict?.characterDetail?.characterOverview}
+        aria-label={dict.characterDetail.characterOverview}
         className="flex flex-col sm:flex-row gap-4 justify-between items-center"
       >
         <div
           role="group"
-          aria-label={dict?.filters?.category}
+          aria-label={dict.filters.category}
           className="order-2 sm:order-1 relative flex items-center w-full sm:w-72 h-11 p-1 bg-bg-primary border border-border-color rounded-2xl shadow-inner select-none transition-colors"
         >
           <span
@@ -345,7 +346,7 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
             }`}
           >
             <SurvivorIcon className="h-3.5 w-3.5" />
-            <span>{dict?.filters?.survivor}</span> ({survivorCount})
+            <span>{dict.filters.survivor}</span> ({survivorCount})
           </button>
           <button
             type="button"
@@ -358,7 +359,7 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
             }`}
           >
             <KillerIcon className="h-3.5 w-3.5" />
-            <span>{dict?.filters?.killer}</span> ({killerCount})
+            <span>{dict.filters.killer}</span> ({killerCount})
           </button>
         </div>
 
@@ -376,10 +377,10 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
             {ownershipMode ? <X className="h-3.5 w-3.5" /> : <Lock className="h-3.5 w-3.5" />}
             <span>
               {ownershipLoading
-                ? dict?.app?.loading
+                ? dict.app.loading
                 : ownershipMode
-                  ? dict?.characterDetail?.exitSelection
-                  : dict?.characterDetail?.myCharacters}
+                  ? dict.characterDetail.exitSelection
+                  : dict.characterDetail.myCharacters}
             </span>
           </button>
         </div>
@@ -388,8 +389,8 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
           <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-text-muted" />
           <Input
             type="text"
-            placeholder={dict?.filters?.filterByCharacter}
-            aria-label={dict?.filters?.filterByCharacter}
+            placeholder={dict.filters.filterByCharacter}
+            aria-label={dict.filters.filterByCharacter}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="pl-10 pr-10 min-h-[44px] rounded-2xl bg-bg-primary font-semibold shadow-inner"
@@ -398,7 +399,7 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
             <button
               type="button"
               onClick={() => setSearchQuery('')}
-              aria-label={dict?.filters?.clearSearch}
+              aria-label={dict.filters.clearSearch}
               className="absolute right-1 top-1/2 -translate-y-1/2 flex min-h-[40px] min-w-[40px] items-center justify-center text-text-muted hover:text-text-primary cursor-pointer touch-manipulation"
             >
               <X className="h-4 w-4" />
@@ -409,7 +410,7 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
 
       {loading ? (
         <div className="w-full py-12 flex items-center justify-center">
-          <CharactersGridSkeleton dict={dict} />
+          <CharactersGridSkeleton />
         </div>
       ) : filteredCharacters.length === 0 ? (
         <EmptyState
@@ -419,16 +420,14 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
           iconClassName="mx-auto h-12 w-12 text-text-muted mb-3"
           headingClassName="text-lg font-bold text-text-primary"
           subtitleClassName="mt-1 text-xs text-text-secondary max-w-sm mx-auto"
-          title={dict?.characterDetail?.noCharactersFound || dict?.empty?.charactersTitle || 'No Characters Found'}
+          title={dict.characterDetail.noCharactersFound}
           subtitle={
-            dict?.characterDetail?.hubNoMatchingCharacters ||
-            dict?.empty?.charactersSubtitle ||
-            'No characters match your current filter or search query.'
+            dict.characterDetail.hubNoMatchingCharacters
           }
           action={
             searchQuery
               ? {
-                  label: dict?.app?.resetFilters || dict?.filters?.resetAllFilters || 'Reset Filters',
+                  label: dict.app.resetFilters,
                   onClick: () => setSearchQuery(''),
                 }
               : undefined
@@ -436,7 +435,7 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
         />
       ) : (
         <section
-          aria-label={dict?.characterDetail?.characterOverview}
+          aria-label={dict.characterDetail.characterOverview}
           className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-3 sm:gap-4 md:gap-6"
         >
           {filteredCharacters.map((char, idx) => {
@@ -482,8 +481,8 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
                     {isSurvivor ? <SurvivorIcon className="h-3 w-3" /> : <KillerIcon className="h-3 w-3" />}
                     <span>
                       {isSurvivor
-                        ? dict?.characterDetail?.roleSurvivor
-                        : dict?.characterDetail?.roleKiller}
+                        ? dict.characterDetail.roleSurvivor
+                        : dict.characterDetail.roleKiller}
                     </span>
                   </span>
                 </div>
@@ -525,8 +524,8 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
                       isOwned={isOwned}
                       hasPartialPerks={hasPartialPerks}
                       avatarSrc={avatarSrc}
-                      lockedTitle={dict?.modal?.unownedPerk}
-                      ownedTitle={dict?.filters?.ownedOnly}
+                      lockedTitle={dict.modal.unownedPerk}
+                      ownedTitle={dict.filters.ownedOnly}
                     />
                   )}
                 </div>
@@ -542,7 +541,7 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
                       }}
                       className="mb-1 sm:mb-1.5 inline-flex items-center justify-center gap-1 rounded-full border border-accent-amber/50 bg-bg-surface/90 px-2.5 py-0.5 text-micro sm:text-tiny font-bold text-accent-amber hover:bg-accent-amber/20 hover:border-accent-amber transition-colors shadow-xs cursor-pointer pointer-events-auto select-none"
                     >
-                      <span>{dict?.filters?.perks}</span>
+                      <span>{dict.filters.perks}</span>
                       {perkStats.total > 0 && ` (${perkStats.unlocked}/${perkStats.total})`}
                     </button>
                   )}
@@ -563,8 +562,7 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
         onTogglePerk={handleTogglePerkUnlocked}
         onClose={() => setPerksPopupCharacter(null)}
         backendBase={backendBase}
-        perksLabel={dict?.filters?.perks}
-        dict={dict}
+        perksLabel={dict.filters.perks}
       />
 
       {ownershipMode && (
@@ -581,10 +579,10 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
           )}
           <div className="flex items-center justify-center gap-3 px-5 sm:px-7 lg:px-9 py-2.5">
             <Button variant="secondary" size="sm" onClick={handleCancelOwnershipMode} disabled={ownershipSaving} className="px-5">
-              {dict?.admin?.cancel || dict?.modal?.close}
+              {dict.admin.cancel}
             </Button>
             <Button variant="success" size="sm" onClick={handleSaveOwnership} disabled={ownershipSaving} className="px-6">
-              {ownershipSaving ? dict?.characterDetail?.saving : dict?.characterDetail?.accept}
+              {ownershipSaving ? dict.characterDetail.saving : dict.characterDetail.accept}
             </Button>
           </div>
         </div>
@@ -596,9 +594,9 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
         variant="confirm"
         size="sm"
         layer="top"
-        ariaLabel={dict?.characterDetail?.changesSaved}
+        ariaLabel={dict.characterDetail.changesSaved}
         closeButton="floating"
-        closeButtonAriaLabel={dict?.characterDetail?.dismiss || dict?.modal?.close}
+        closeButtonAriaLabel={dict.characterDetail.dismiss}
         padded
         bodyClassName="flex flex-col items-center justify-center text-center sm:p-8"
       >
@@ -610,7 +608,7 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
         </div>
 
         <h2 className="text-lg sm:text-xl font-extrabold tracking-tight text-text-primary">
-          {dict?.characterDetail?.changesSaved}
+          {dict.characterDetail.changesSaved}
         </h2>
       </Modal>
 
@@ -621,7 +619,7 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
             className="pointer-events-auto flex items-center gap-3 rounded-2xl bg-accent-amber px-5 py-3 type-strong text-text-inverted shadow-2xl ring-2 ring-accent-amber/50 animate-in fade-in slide-in-from-top-4 duration-300"
           >
             <MailWarning className="h-4 w-4 shrink-0" />
-            <span>{dict?.user?.verifyEmailRequired}</span>
+            <span>{dict.user.verifyEmailRequired}</span>
             <button
               type="button"
               onClick={() => {
@@ -631,14 +629,14 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
               }}
               className="rounded-lg bg-text-inverted/20 px-3 py-1 type-label-xs hover:bg-text-inverted/30 transition-colors cursor-pointer"
             >
-              {dict?.streaks?.verifyEmail}
+              {dict.streaks.verifyEmail}
             </button>
             <button
               type="button"
               onClick={() => setVerificationNoticeOpen(false)}
               className="type-strong-xs underline cursor-pointer"
             >
-              {dict?.characterDetail?.dismiss || dict?.modal?.close}
+              {dict.characterDetail.dismiss}
             </button>
           </div>
         </div>
@@ -655,7 +653,6 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
         isOpen={isAuthModalOpen}
         onClose={() => setIsAuthModalOpen(false)}
         verifyEmailFor={authModalIntent === 'verify' ? user?.email : undefined}
-        dict={dict as unknown as Dictionary}
       />
     </div>
   );

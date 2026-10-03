@@ -16,6 +16,7 @@ import { Input } from '@/components/common/Field';
 import { CustomDropdown } from '@/components/common/CustomDropdown';
 import { themeColor } from '@/utils/themeColor';
 import { formatMessage } from '@/utils/i18nFormat';
+import { useDictionary } from "@/context/DictionaryContext";
 
 function PresetSwatch({ colors }: { colors: readonly string[] }) {
   return (
@@ -32,11 +33,11 @@ interface LadderEditorProps {
   onChange: (tiers: TierDefinition[]) => void;
   onPreset: (id: LadderPresetId) => void;
   activePreset: LadderPresetId | null;
-  dict: Dictionary;
 }
 
 /** Inline tier ladder editing for the creator: presets, then label / color / order per row. */
-export function LadderEditor({ tiers, onChange, onPreset, activePreset, dict }: LadderEditorProps) {
+export function LadderEditor({ tiers, onChange, onPreset, activePreset }: LadderEditorProps) {
+  const dict = useDictionary();
   const t = dict.tierLists;
   const c = t.creator;
   const [paletteFor, setPaletteFor] = useState<string | null>(null);

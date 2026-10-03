@@ -12,6 +12,8 @@ import { getLocalizedMutator } from './generator/lib/chaosMutatorLocalization';
 import { tip } from '@/components/common/Tooltip';
 import { Modal } from '@/components/common/Modal';
 import { canvasEmojiFont, canvasFont } from '@/utils/canvasFont';
+import { useDictionary } from "@/context/DictionaryContext";
+
 export { CHAOS_MUTATORS };
 export type { ChaosMutator };
 
@@ -22,7 +24,6 @@ interface ChaosWheelModalProps {
   onSelectMutator: (mutator: ChaosMutator) => void;
   onClearMutator?: () => void;
   activeMutator: ChaosMutator | null;
-  dict?: Dictionary;
 }
 
 export function getMutatorDisplayLines(
@@ -62,15 +63,8 @@ export function getMutatorDisplayLines(
 }
 
 
-export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({
-  isOpen,
-  role,
-  onClose,
-  onSelectMutator,
-  onClearMutator,
-  activeMutator,
-  dict,
-}) => {
+export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({ isOpen, role, onClose, onSelectMutator, onClearMutator, activeMutator }) => {
+  const dict = useDictionary();
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   // Modal mounts its content one render after `isOpen` flips, so the first draw must wait for the canvas.
   const [canvasEl, setCanvasEl] = useState<HTMLCanvasElement | null>(null);
@@ -273,13 +267,13 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({
       variant="dialog"
       size="xl"
       icon={<Skull className="h-5 w-5 animate-pulse" />}
-      title={dict?.generator?.chaosWheelTitle}
-      closeButtonAriaLabel={dict?.modal?.close}
-      ariaLabel={dict?.generator?.chaosWheelTitle}
+      title={dict.generator.chaosWheelTitle}
+      closeButtonAriaLabel={dict.modal.close}
+      ariaLabel={dict.generator.chaosWheelTitle}
       ariaDescribedBy="chaos-modal-desc"
       padded
     >
-    {dict?.generator?.chaosWheelDesc && (
+    {dict.generator.chaosWheelDesc && (
       <p id="chaos-modal-desc" className="max-w-lg mx-auto text-center type-strong-fluid text-text-secondary">
         {dict.generator.chaosWheelDesc}
       </p>
@@ -290,7 +284,7 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({
         ref={setCanvas}
         width={800}
         height={800}
-        aria-label={dict?.generator?.chaosWheelTitle}
+        aria-label={dict.generator.chaosWheelTitle}
         className="w-[260px] h-[260px] xs:w-[290px] xs:h-[290px] sm:w-[330px] sm:h-[330px] md:w-[370px] md:h-[370px] lg:w-[370px] lg:h-[370px] xl:w-[480px] xl:h-[480px] 2xl:w-[540px] 2xl:h-[540px] max-w-full aspect-square transition-all duration-300"
       />
 
@@ -303,8 +297,8 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({
         icon={<Sparkles className={`h-4 w-4 xl:h-5 xl:w-5 ${isSpinning ? 'animate-spin' : ''}`} />}
       >
         {isSpinning
-          ? dict?.generator?.spinningCurses
-          : dict?.generator?.spinChaosWheel}
+          ? dict.generator.spinningCurses
+          : dict.generator.spinChaosWheel}
       </DbdButton>
     </div>
 
@@ -338,11 +332,11 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({
           <button
             type="button"
             onClick={handleClearCurse}
-            {...tip(dict?.generator?.clearMutatorTooltip || 'Remove active curse', undefined, 'action')} aria-label={dict?.generator?.clearMutatorTooltip || 'Remove active curse'}
+            {...tip(dict.generator.clearMutatorTooltip, undefined, 'action')} aria-label={dict.generator.clearMutatorTooltip}
             className="flex items-center gap-1 type-strong-fluid text-accent-red hover:text-accent-red-hover px-2 py-1.5 rounded-lg hover:bg-accent-red/10 transition-colors cursor-pointer shrink-0"
           >
             <Trash2 className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-            <span className="hidden xs:inline">{dict?.generator?.clearMutator || 'Clear'}</span>
+            <span className="hidden xs:inline">{dict.generator.clearMutator}</span>
           </button>
         </div>
       </div>
@@ -365,15 +359,15 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({
             <button
               type="button"
               onClick={handleClearCurse}
-              {...tip(dict?.generator?.clearMutatorTooltip || 'Remove active curse', undefined, 'action')} aria-label={dict?.generator?.clearMutatorTooltip || 'Remove active curse'}
+              {...tip(dict.generator.clearMutatorTooltip, undefined, 'action')} aria-label={dict.generator.clearMutatorTooltip}
               className="flex items-center gap-1 type-strong-fluid text-accent-red hover:text-accent-red-hover px-2 py-1 rounded-lg hover:bg-accent-red/10 transition-colors cursor-pointer"
             >
               <Trash2 className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-              <span className="hidden xs:inline">{dict?.generator?.clearMutator || 'Clear'}</span>
+              <span className="hidden xs:inline">{dict.generator.clearMutator}</span>
             </button>
             <div className="flex items-center gap-1 text-accent-green type-strong-fluid bg-accent-green/10 px-2.5 py-1 rounded-lg border border-accent-green/30">
               <Check className="h-3.5 w-3.5 sm:h-4 sm:w-4" aria-hidden="true" />
-              <span>{dict?.smashOrPass?.active || 'Active'}</span>
+              <span>{dict.smashOrPass.active}</span>
             </div>
           </div>
         </div>

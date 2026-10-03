@@ -13,6 +13,8 @@ import { useCharacterDisplayName } from '@/context/DisplayNamesContext';
 import { AdeptBadgeIcon, KillerIcon } from '@/components/icons/DbdIcons';
 
 import { tip } from '@/components/common/Tooltip';
+import { useDictionary } from "@/context/DictionaryContext";
+
 interface RunHeaderProps {
   run: PageStreakRun;
   avatarSrc?: string;
@@ -20,18 +22,10 @@ interface RunHeaderProps {
   onOpenRules: () => void;
   onOpenStats: () => void;
   onOpenHistory: () => void;
-  dict?: Dictionary;
 }
 
-export const RunHeader: React.FC<RunHeaderProps> = ({
-  run,
-  avatarSrc,
-  onOpenReset,
-  onOpenRules,
-  onOpenStats,
-  onOpenHistory,
-  dict,
-}) => {
+export const RunHeader: React.FC<RunHeaderProps> = ({ run, avatarSrc, onOpenReset, onOpenRules, onOpenStats, onOpenHistory }) => {
+  const dict = useDictionary();
   const killerDisplayName = useCharacterDisplayName()(run.killer);
   const [imgError, setImgError] = useState<boolean>(false);
   const cleared = run.status === 'completed' ? run.page_count : run.current_page - 1;
@@ -58,12 +52,12 @@ export const RunHeader: React.FC<RunHeaderProps> = ({
           <StreakStatTiles
             current={cleared}
             best={run.best_page}
-            currentLabel={dict?.stats?.current || 'Current'}
-            bestLabel={dict?.stats?.best || 'Best'}
+            currentLabel={dict.stats.current}
+            bestLabel={dict.stats.best}
             currentIcon={<Flame className="h-5 w-5" aria-hidden="true" />}
             bestIcon={<AdeptBadgeIcon className="h-5 w-5" aria-hidden="true" />}
           />
-          <FreezeBadge frozen={run.pool_frozen} dict={dict} />
+          <FreezeBadge frozen={run.pool_frozen} />
         </>
       }
       actions={
@@ -72,7 +66,6 @@ export const RunHeader: React.FC<RunHeaderProps> = ({
           onOpenStats={onOpenStats}
           onOpenHistory={onOpenHistory}
           onOpenReset={onOpenReset}
-          dict={dict}
         />
       }
     />

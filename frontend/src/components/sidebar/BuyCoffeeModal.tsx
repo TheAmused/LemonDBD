@@ -14,20 +14,16 @@ import {
 import { CampfireMugIcon } from '@/components/icons/DbdIcons';
 import { AuricCellIcon } from '@/components/icons/DbdIcons';
 import { Modal } from '@/components/common/Modal';
+import { useDictionary } from "@/context/DictionaryContext";
 
 export interface BuyCoffeeModalProps {
   isOpen: boolean;
   onClose: () => void;
-  dict?: Dictionary;
   t?: Record<string, string>;
 }
 
-export const BuyCoffeeModal: React.FC<BuyCoffeeModalProps> = ({
-  isOpen,
-  onClose,
-  dict: propDict,
-  t: propT,
-}) => {
+export const BuyCoffeeModal: React.FC<BuyCoffeeModalProps> = ({ isOpen, onClose, t: propT }) => {
+  const propDict = useDictionary();
   const params = useParams();
   const pathname = usePathname() || '';
 
@@ -45,7 +41,7 @@ export const BuyCoffeeModal: React.FC<BuyCoffeeModalProps> = ({
   }, [currentLocale, propDict, propT]);
 
   const t: Record<string, string> =
-    propT || propDict?.sidebar || loadedDict?.sidebar || {};
+    propT || propDict.sidebar || loadedDict?.sidebar || {};
 
   const buyMeCoffeeUrl =
     process.env.NEXT_PUBLIC_BUY_ME_A_COFFEE_URL ||

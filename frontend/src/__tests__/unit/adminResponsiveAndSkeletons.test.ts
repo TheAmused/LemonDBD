@@ -2,24 +2,24 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import React from 'react';
-import { renderToStaticMarkup } from 'react-dom/server';
 import { AdminPanelSkeleton } from '@/components/admin/AdminPanelSkeleton';
 import { AdminTabContentSkeleton } from '@/components/admin/AdminTabContentSkeleton';
 import { AdminStatsGrid } from '@/components/admin/AdminStatsGrid';
 import { AdminUserTable } from '@/components/admin/AdminUserTable';
 import type { UserRow } from '@/types/admin';
 import enDict from '@/locales/en';
+import { renderWithDictionary } from '../helpers/renderWithDictionary';
 
 describe('Admin Page: Skeletons & DBD Framer Motion Spinner Integrity', () => {
   it('AdminPanelSkeleton renders with role="status", aria-busy="true", and DBD Skill Check Spinner', () => {
-    const html = renderToStaticMarkup(React.createElement(AdminPanelSkeleton, { dict: enDict }));
+    const html = renderWithDictionary(React.createElement(AdminPanelSkeleton, {}));
     assert.ok(html.includes('role="status"'));
     assert.ok(html.includes('aria-busy="true"'));
     assert.ok(html.includes('viewBox="0 0 160 160"'), 'Admin panel skeleton must render DBD Skill Check SVG');
   });
 
   it('AdminTabContentSkeleton renders with role="status", aria-busy="true", and DBD Skill Check Spinner', () => {
-    const html = renderToStaticMarkup(React.createElement(AdminTabContentSkeleton, { dict: enDict, rows: 3 }));
+    const html = renderWithDictionary(React.createElement(AdminTabContentSkeleton, { rows: 3 }));
     assert.ok(html.includes('role="status"'));
     assert.ok(html.includes('aria-busy="true"'));
     assert.ok(html.includes('viewBox="0 0 160 160"'), 'Admin tab content skeleton must render DBD Skill Check SVG');
@@ -28,15 +28,14 @@ describe('Admin Page: Skeletons & DBD Framer Motion Spinner Integrity', () => {
 
 describe('Admin Page: AdminStatsGrid null-safety', () => {
   it('renders placeholder dashes instead of crashing when stats is null (pre-fetch state)', () => {
-    const html = renderToStaticMarkup(React.createElement(AdminStatsGrid, { dict: enDict, stats: null }));
+    const html = renderWithDictionary(React.createElement(AdminStatsGrid, { stats: null }));
     assert.ok(html.includes('Total Users'));
     assert.ok(html.includes('>-<'), 'Missing metrics should render a safe "-" placeholder, not throw');
   });
 
   it('renders real numbers once stats resolve', () => {
-    const html = renderToStaticMarkup(
+    const html = renderWithDictionary(
       React.createElement(AdminStatsGrid, {
-        dict: enDict,
         stats: {
           total_users: 42,
           active_users: 40,
@@ -70,9 +69,8 @@ describe('Admin Page: AdminUserTable responsive card/table split', () => {
   const noop = () => {};
 
   function render(users: UserRow[] = sampleUsers) {
-    return renderToStaticMarkup(
+    return renderWithDictionary(
       React.createElement(AdminUserTable, {
-        dict: enDict,
         users,
         totalUsers: users.length,
         page: 1,

@@ -187,4 +187,5 @@ export default {
   perk: "Umiejętność",
   lullabyRadius: "Promień Kołysanki",
   clickOutsideToClose: 'Kliknij poza oknem, aby zamknąć',
+  saveOwnershipError: 'Nie udało się zapisać zmian w posiadaniu. Spróbuj ponownie.',
 } as const;

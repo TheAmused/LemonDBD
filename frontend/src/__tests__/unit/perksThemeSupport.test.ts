@@ -4,7 +4,7 @@ import assert from 'node:assert/strict';
 import React from 'react';
 import fs from 'node:fs';
 import path from 'node:path';
-import { renderToStaticMarkup } from 'react-dom/server';
+import { renderWithDictionary } from '../helpers/renderWithDictionary';
 import { Pagination } from '@/components/common/Pagination';
 import { PerkDescription } from '@/components/PerkDescription';
 import { PerkCard } from '@/components/PerkCard';
@@ -12,7 +12,7 @@ import { Perk } from '@/types/perks';
 
 describe('Perks Vault Theme Support', () => {
   it('Pagination numbers do not use hardcoded text-slate-100 without dark variant', () => {
-    const html = renderToStaticMarkup(
+    const html = renderWithDictionary(
       React.createElement(Pagination, {
         page: 1,
         totalPages: 5,
@@ -37,7 +37,7 @@ describe('Perks Vault Theme Support', () => {
   });
 
   it('Pagination renders the current-page input and limit select with theme classes', () => {
-    const html = renderToStaticMarkup(
+    const html = renderWithDictionary(
       React.createElement(Pagination, {
         page: 1,
         totalPages: 10,
@@ -93,7 +93,7 @@ describe('Perks Vault Theme Support', () => {
       icon_local_path: '/icons/sprint-burst.png',
       is_owned: true,
     };
-    const html = renderToStaticMarkup(
+    const html = renderWithDictionary(
       React.createElement(PerkCard, {
         perk: samplePerk,
         coordinate: { page: 1, slot: 1 },
@@ -128,7 +128,7 @@ describe('Perks Vault Theme Support', () => {
   });
 
   it('PerkDescription supports dark text in light mode and silver in dark mode, including child elements', () => {
-    const html = renderToStaticMarkup(
+    const html = renderWithDictionary(
       React.createElement(PerkDescription, {
         description: 'Grants a 3% Haste effect.',
       })

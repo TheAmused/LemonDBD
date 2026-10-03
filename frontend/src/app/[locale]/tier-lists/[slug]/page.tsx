@@ -15,14 +15,13 @@ export default function OfficialTierListPage({ params }: { params: Promise<{ slu
   return (
     <PageShell
       locale={locale}
-      dict={dict}
       activeCategory="tier-lists"
       padding="tight"
       outerClassName="h-dvh overflow-hidden [@media(max-height:559px)]:h-auto [@media(max-height:559px)]:min-h-dvh [@media(max-height:559px)]:overflow-visible text-text-primary flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300"
       mainClassName="relative flex min-h-0 flex-col overflow-hidden [@media(max-height:559px)]:overflow-visible"
     >
       {/* Keyed by slug: moving between lists must not carry one list's selection or dialogs into the next. */}
-      <OfficialTierListView key={slug} slug={decodeURIComponent(slug)} locale={locale} dict={dict} />
+      <OfficialTierListView key={slug} slug={decodeURIComponent(slug)} locale={locale} />
     </PageShell>
   );
 }

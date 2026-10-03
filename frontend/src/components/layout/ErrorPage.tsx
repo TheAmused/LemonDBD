@@ -46,7 +46,6 @@ export const ErrorPage: React.FC<ErrorPageProps> = ({ variant }) => {
   return (
     <PageShell
       locale={locale}
-      dict={dict}
       activeCategory=""
       mainId="main-error-content"
       customPadding="p-4 sm:p-8 lg:p-12"

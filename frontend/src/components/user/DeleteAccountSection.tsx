@@ -12,9 +12,11 @@ import { Modal } from '@/components/common/Modal';
 import { tip } from '@/components/common/Tooltip';
 import { useAuth } from '@/context/AuthContext';
 import { ApiError, deleteAccount } from '@/services/userProfileApi';
+import { useDictionary } from "@/context/DictionaryContext";
 
-export const DeleteAccountSection: React.FC<{ dict?: Dictionary }> = ({ dict }) => {
-  const t = (dict?.user || {}) as Record<string, string>;
+export const DeleteAccountSection: React.FC<{ }> = () => {
+  const dict = useDictionary();
+  const t = (dict.user || {}) as Record<string, string>;
   const { logout } = useAuth();
   const [open, setOpen] = useState(false);
   const [password, setPassword] = useState('');

@@ -7,24 +7,18 @@ import { Sparkles, Check, X, ShieldAlert } from 'lucide-react';
 import type { GuessRecord, RoundConfig, CatalogCharacter } from '@/types/minigame';
 import type { Dictionary } from '@/locales/types';
 import { staticUrl } from '@/utils/api';
+import { useDictionary } from "@/context/DictionaryContext";
 
 interface PixelAvatarGuesserProps {
   roundConfig: RoundConfig;
   characters: CatalogCharacter[];
   guesses: GuessRecord[];
   isSolved: boolean;
-  dict: Dictionary;
   children?: React.ReactNode;
 }
 
-export const PixelAvatarGuesser: React.FC<PixelAvatarGuesserProps> = ({
-  roundConfig,
-  characters,
-  guesses,
-  isSolved,
-  dict,
-  children,
-}) => {
+export const PixelAvatarGuesser: React.FC<PixelAvatarGuesserProps> = ({ roundConfig, characters, guesses, isSolved, children }) => {
+  const dict = useDictionary();
   const targetChar = useMemo(() => {
     if (roundConfig.target_type) {
       const match = characters.find(

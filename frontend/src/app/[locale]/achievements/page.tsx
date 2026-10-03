@@ -16,8 +16,8 @@ export default function AchievementsPage() {
 
 
   return (
-    <PageShell locale={locale} dict={dict || ({} as Dictionary)} padding="spacious">
-      {dict && <AchievementsHub dict={dict} />}
+    <PageShell locale={locale} padding="spacious">
+      {dict && <AchievementsHub />}
     </PageShell>
   );
 }

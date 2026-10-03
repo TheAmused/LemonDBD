@@ -16,6 +16,7 @@ import { Button } from '@/components/common/Button';
 import { Input } from '@/components/common/Field';
 import { themeColor } from '@/utils/themeColor';
 import { formatMessage } from '@/utils/i18nFormat';
+import { useDictionary } from "@/context/DictionaryContext";
 
 interface TierEditModalProps {
   tier: TierDefinition | null;
@@ -27,22 +28,11 @@ interface TierEditModalProps {
   onClear: (id: string) => void;
   onDelete: (id: string) => void;
   onAddBelow: (index: number) => void;
-  dict: Dictionary;
 }
 
 /** Edit one tier: label and color, plus the row operations (move, clear, delete, insert). */
-export function TierEditModal({
-  tier,
-  index,
-  tierCount,
-  onClose,
-  onSave,
-  onMove,
-  onClear,
-  onDelete,
-  onAddBelow,
-  dict,
-}: TierEditModalProps) {
+export function TierEditModal({ tier, index, tierCount, onClose, onSave, onMove, onClear, onDelete, onAddBelow }: TierEditModalProps) {
+  const dict = useDictionary();
   const t = dict.tierLists;
   const [label, setLabel] = useState<string>('');
   const [color, setColor] = useState<string>('s');

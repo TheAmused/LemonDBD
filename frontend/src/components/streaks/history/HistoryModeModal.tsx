@@ -8,6 +8,7 @@ import { ChallengeModeModal, buildCompletionTiles } from '../ChallengeModeModal'
 import { HistoryRulesModal } from './HistoryRulesModal';
 import { HISTORY_MODE_ORDER } from '@/utils/challengeTierCompletion';
 import { TierMediumIcon, TierHellIcon } from '@/components/icons/DbdIcons';
+import { useDictionary } from "@/context/DictionaryContext";
 
 export interface HistoryModeModalProps {
   isOpen: boolean;
@@ -24,34 +25,33 @@ export interface HistoryModeModalProps {
   /** Modes ever completed with the entire game roster -- same shape and
    *  cascade, upgrades the badge to red. */
   completedFullCounts?: Record<string, number>;
-  dict?: Dictionary;
 }
 
 export const HistoryModeModal: React.FC<HistoryModeModalProps> = ({
-  isOpen,
-  onClose,
-  onSelectMode,
-  currentMode,
-  showIntro = true,
-  completedCounts = {},
-  completedFullCounts = {},
-  dict,
-}) => {
-  const s = dict?.streaks;
+      isOpen,
+      onClose,
+      onSelectMode,
+      currentMode,
+      showIntro = true,
+      completedCounts = {},
+      completedFullCounts = {},
+    }) => {
+  const dict = useDictionary();
+  const s = dict.streaks;
   const tiles = buildCompletionTiles(
     HISTORY_MODE_ORDER,
     [
       {
         value: 'medium',
-        label: s?.historyMediumLabel || 'Medium',
-        description: s?.historyMediumDesc || 'A checkpoint for every row you clear.',
+        label: s.historyMediumLabel,
+        description: s.historyMediumDesc,
         icon: TierMediumIcon,
         image: '/images/streaks/modes/history-default.webp',
       },
       {
         value: 'hell',
-        label: s?.historyHellLabel || 'Hell',
-        description: s?.historyHellDesc || 'No checkpoints. One loss resets everything.',
+        label: s.historyHellLabel,
+        description: s.historyHellDesc,
         icon: TierHellIcon,
         image: '/images/streaks/modes/history-hell.webp',
       },
@@ -66,16 +66,14 @@ export const HistoryModeModal: React.FC<HistoryModeModalProps> = ({
       onClose={onClose}
       intro={
         showIntro
-          ? s?.historyIntro ||
-            'Your owned killers are grouped into rows of 5, sorted by release order. Clear a row to unlock the next one and add its teachable perks to your pool.'
+          ? s.historyIntro
           : undefined
       }
       tiles={tiles}
       onSelectTile={(value) => onSelectMode(value as HistoryMode)}
       tileGridClassName="sm:grid-cols-2"
       selectedValue={currentMode}
-      renderRules={(rules) => <HistoryRulesModal {...rules} dict={dict} />}
-      dict={dict}
+      renderRules={(rules) => <HistoryRulesModal {...rules} />}
     />
   );
 };

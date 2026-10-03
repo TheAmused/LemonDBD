@@ -11,7 +11,7 @@ export interface LocalizedMutatorInfo {
 
 export function getLocalizedMutator(
   mutator: ChaosMutator | string | null | undefined,
-  dict?: Dictionary
+  dict: Dictionary
 ): LocalizedMutatorInfo {
   if (!mutator) {
     return { name: '', description: '', effect: '', lines: ['', ''] };
@@ -21,7 +21,7 @@ export function getLocalizedMutator(
   const fallbackDesc = typeof mutator === 'string' ? '' : mutator.description;
   const fallbackEffect = typeof mutator === 'string' ? '' : mutator.effect || '';
 
-  const loc = (dict?.generator as any)?.chaosMutators?.[id];
+  const loc = (dict.generator as any)?.chaosMutators?.[id];
   if (loc) {
     return {
       name: loc.name || fallbackName,

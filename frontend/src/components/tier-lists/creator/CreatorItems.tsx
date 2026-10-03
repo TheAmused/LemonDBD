@@ -11,6 +11,7 @@ import { TierItemEditModal } from './TierItemEditModal';
 import { EmptyState } from '@/components/common/EmptyState';
 import { Button } from '@/components/common/Button';
 import { formatMessage } from '@/utils/i18nFormat';
+import { useDictionary } from "@/context/DictionaryContext";
 
 interface CreatorItemsProps {
   items: TierListDocumentItem[];
@@ -18,11 +19,11 @@ interface CreatorItemsProps {
   onUpdateItem?: (id: string, patch: { name: string; image?: string }) => void;
   onRemove: (id: string) => void;
   onClear: () => void;
-  dict: Dictionary;
 }
 
 /** Crisp gaming tile grid with edge-to-edge images, seamless name caption, and click-to-edit modal. */
-export function CreatorItems({ items, onRename, onUpdateItem, onRemove, onClear, dict }: CreatorItemsProps) {
+export function CreatorItems({ items, onRename, onUpdateItem, onRemove, onClear }: CreatorItemsProps) {
+  const dict = useDictionary();
   const c = dict.tierLists.creator;
   const [editingItem, setEditingItem] = useState<TierListDocumentItem | null>(null);
 
@@ -118,7 +119,6 @@ export function CreatorItems({ items, onRename, onUpdateItem, onRemove, onClear,
               onRename(id, patch.name);
             }
           }}
-          dict={dict}
         />
       )}
     </div>

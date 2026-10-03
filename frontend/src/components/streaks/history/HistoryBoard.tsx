@@ -21,7 +21,7 @@ import { HistoryNextRowPreview } from './HistoryNextRowPreview';
 import { HistoryRowClearedBanner } from './HistoryRowClearedBanner';
 import { Perk } from '@/types/gauntletStreak';
 import { saveHistoryMode } from '@/utils/streakDifficultyPrefs';
-import { useStreaksDict } from '@/context/StreaksDictContext';
+import { useDictionary } from '@/context/DictionaryContext';
 import { useChallengeCompletionStatus } from '../useChallengeCompletionStatus';
 import { StreakActionBar, StreakActionButton } from '../StreakActionBar';
 
@@ -47,7 +47,7 @@ interface HistoryBoardProps {
 }
 
 export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
-  const dict = useStreaksDict();
+  const dict = useDictionary();
   const completionStatus = useChallengeCompletionStatus();
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -125,7 +125,6 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
               current={run?.total_killers_beaten ?? 0}
               total={run?.total_owned_killers ?? 0}
               checkpoints={everyNthCheckpoint(mode === 'medium' ? (run?.row_size ?? 0) : 0, run?.total_owned_killers ?? 0)}
-              dict={dict}
             />
           }
           header={
@@ -139,28 +138,26 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
           onOpenHistory={() => setIsHistoryOpen(true)}
           onOpenReset={() => setConfirmingReset(true)}
           onChangeMode={() => setIsChangeModeOpen(true)}
-          dict={dict}
         />
           }
         >
 
         {isCompleted ? (
           <ChallengeVictoryCard
-            title={dict?.streaks?.historyStreakComplete || 'You won the History Streak'}
+            title={dict.streaks.historyStreakComplete}
             onRestart={reset}
             busy={busy}
-            dict={dict}
           />
         ) : (
           <div>
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 mb-3 text-center sm:text-left">
               <h3 className="type-label text-text-secondary">
-                {dict?.streaks?.pickYourKiller || 'Pick your killer'}
+                {dict.streaks.pickYourKiller}
               </h3>
               {run && (
                 <p className="text-xs text-text-muted">
-                  {dict?.streaks?.rowLabel || 'Row'} {run.current_row_index + 1}{' '}
-                  {dict?.streaks?.ofLabel || 'of'} {run.total_rows}
+                  {dict.streaks.rowLabel} {run.current_row_index + 1}{' '}
+                  {dict.streaks.ofLabel} {run.total_rows}
                 </p>
               )}
             </div>
@@ -173,7 +170,6 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
               disabled={busy || Boolean(acceptedKillerId)}
               loading={loading}
               center
-              dict={dict}
             />
 
             {run && (
@@ -181,7 +177,6 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
                 killers={run.owned_killers}
                 rowSize={run.row_size}
                 currentRowIndex={run.current_row_index}
-                dict={dict}
               />
             )}
 
@@ -192,15 +187,15 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
                   onClick={() => selectedKillerId && setAcceptedKillerId(selectedKillerId)}
                   disabled={busy || !selectedKillerId}
                 >
-                  {dict?.streaks?.accept || 'ACCEPT'}
+                  {dict.streaks.accept}
                 </StreakActionButton>
               ) : (
                 <>
                   <StreakActionButton variant="red" onClick={() => handleResult('loss')} disabled={busy}>
-                    {dict?.streaks?.loseMatch || 'LOSE MATCH'}
+                    {dict.streaks.loseMatch}
                   </StreakActionButton>
                   <StreakActionButton variant="green" onClick={() => handleResult('win')} disabled={busy}>
-                    {dict?.streaks?.winMatch || 'WIN MATCH'}
+                    {dict.streaks.winMatch}
                   </StreakActionButton>
                 </>
               )}
@@ -210,16 +205,15 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
         </ChallengePanel>
 
         {!isCompleted && run && (
-          <HistoryPerkPoolPanel pool={perkPool} unlockedPerkNames={run.unlocked_perk_names || []} dict={dict} />
+          <HistoryPerkPoolPanel pool={perkPool} unlockedPerkNames={run.unlocked_perk_names || []} />
         )}
 
         <ResetConfirmModal
           open={confirmingReset}
           busy={busy}
-          message={dict?.streaks?.historyResetConfirmPrompt || 'Row progress and every unlocked perk go back to the start. This cannot be undone.'}
+          message={dict.streaks.historyResetConfirmPrompt}
           onCancel={() => setConfirmingReset(false)}
           onConfirm={handleReset}
-          dict={dict}
         />
 
         <HistoryStatsDrawer
@@ -227,24 +221,21 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
           onClose={() => setIsStatsOpen(false)}
           stats={stats}
           attempts={run?.attempts}
-          dict={dict}
         />
         <ChallengeCompletionHistoryDrawer
           isOpen={isHistoryOpen}
           onClose={() => setIsHistoryOpen(false)}
           completions={completions}
-          subjectLabel={dict?.streaks?.killersLabel || 'killers'}
-          dict={dict}
+          subjectLabel={dict.streaks.killersLabel}
         />
-        <HistoryRulesModal isOpen={isRulesOpen} onClose={() => setIsRulesOpen(false)} dict={dict} />
+        <HistoryRulesModal isOpen={isRulesOpen} onClose={() => setIsRulesOpen(false)} />
         <HistoryPerkModal
           killerName={perkModal?.killerName ?? null}
           perks={perkModal?.perks ?? []}
           locale={locale}
           onClose={() => setPerkModal(null)}
-          dict={dict}
         />
-        <HistoryRowClearedBanner rowNumber={rowClearedNumber} onClose={() => setRowClearedNumber(null)} dict={dict} />
+        <HistoryRowClearedBanner rowNumber={rowClearedNumber} onClose={() => setRowClearedNumber(null)} />
         <HistoryModeModal
           isOpen={isChangeModeOpen}
           onClose={() => setIsChangeModeOpen(false)}
@@ -257,7 +248,6 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
             setIsChangeModeOpen(false);
             router.push(`${pathname}?mode=${newMode}`);
           }}
-          dict={dict}
         />
       </div>
     </div>

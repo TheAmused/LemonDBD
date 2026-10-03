@@ -194,6 +194,8 @@ export default {
     signatureQuote: '代表的なセリフ',
     greenFlag: '魅力的な特徴 (Green Flags)',
     redFlag: '警戒すべき特徴 (Red Flags)',
+    turn_on: 'ツボ:',
+    dealbreaker: '絶対NG:',
   },
   hud: {
     swipeLeftHint: '左スワイプで Pass',
@@ -294,6 +296,8 @@ export default {
     playBgm: 'BGMを再生 (B)',
     unmute: '効果音をオン (M)',
     mute: '効果音をミュート (M)',
+    groupByTierDesc: 'Smash率でキャラクターをティアにまとめます。',
+    rankedListDesc: 'Smash率順の一覧で表示します。',
   },
   picker: {
     yours: 'マイリスト',
@@ -454,6 +458,7 @@ export default {
     draftRestored: '作成途中の下書きを復元しました。',
     startOver: '最初からやり直す',
     closeToast: '閉じる',
+    unnamedCandidate: '名前のない候補',
   },
   cropModal: {
     title: 'カバー画像のトリミングと調整',
@@ -538,4 +543,5 @@ export default {
     facebookNotice: 'Facebookを開きました！投稿テキストがクリップボードにコピーされました（Ctrl+Vで貼り付け）。',
     telegramNotice: 'Telegramを開きました！メッセージテキストがクリップボードにコピーされました。',
   },
+  communityConsensus: 'コミュニティの総意',
 } as const;

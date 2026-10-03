@@ -33,6 +33,7 @@ import { Input } from '@/components/common/Field';
 import { formatNumber } from '@/utils/format';
 import { isSurvivor as isSurvivorRole } from '@/utils/characterUtils';
 import { formatMessage } from '@/utils/i18nFormat';
+import { useDictionary } from "@/context/DictionaryContext";
 
 export interface SmashLeaderboardModalProps {
   isOpen: boolean;
@@ -43,7 +44,6 @@ export interface SmashLeaderboardModalProps {
   editionName?: string;
   isAuthenticated?: boolean;
   locale?: string;
-  dict?: Dictionary | any;
 }
 
 type TierKey = 'godTier' | 'fatalAttraction' | 'friendzone' | 'eldritchVoid';
@@ -314,16 +314,16 @@ const CandidateRow = React.memo<CandidateRowProps>(({
 CandidateRow.displayName = 'CandidateRow';
 
 export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
-  isOpen,
-  onClose,
-  items,
-  userSmashes = [],
-  onSelectCharacter,
-  editionName = '',
-  isAuthenticated = false,
-  locale = 'en',
-  dict,
-}) => {
+      isOpen,
+      onClose,
+      items,
+      userSmashes = [],
+      onSelectCharacter,
+      editionName = '',
+      isAuthenticated = false,
+      locale = 'en',
+    }) => {
+  const dict = useDictionary();
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [roleFilter, setRoleFilter] = useState<'all' | 'Survivor' | 'Killer'>('all');
   const [genderFilter, setGenderFilter] = useState<'all' | 'female' | 'male' | 'monster_other'>('all');
@@ -393,7 +393,7 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
   const checkMouseDown = useCallback(() => isMouseDownRef.current, []);
 
   const backendBase = getBackendBaseUrl();
-  const rawSmashDict = dict?.smashOrPass;
+  const rawSmashDict = dict.smashOrPass;
 
   const userVotedSet = useMemo(() => {
     return new Set(userSmashes.map((s) => s.slug));
@@ -410,25 +410,25 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
   const tierMetadata: Record<TierKey, TierConfig> = useMemo(
     () => ({
       godTier: {
-        name: rawSmashDict?.tiers?.godTier || rawSmashDict?.godTier || 'God Tier',
+        name: rawSmashDict.tiers.godTier,
         style: 'border-accent-amber/50 bg-accent-amber/15 text-accent-amber',
         icon: <Sparkles className="h-3.5 w-3.5 text-accent-amber" aria-hidden="true" />,
         range: '>= 85%',
       },
       fatalAttraction: {
-        name: rawSmashDict?.tiers?.fatalAttraction || rawSmashDict?.fatalAttraction || 'Fatal Attraction',
+        name: rawSmashDict.tiers.fatalAttraction,
         style: 'border-accent-red/50 bg-accent-red/15 text-accent-red',
         icon: <Flame className="h-3.5 w-3.5 text-accent-red" aria-hidden="true" />,
         range: '65% - 84%',
       },
       friendzone: {
-        name: rawSmashDict?.tiers?.friendzone || rawSmashDict?.friendzone || 'Friendzone',
+        name: rawSmashDict.tiers.friendzone,
         style: 'border-border-color bg-bg-elevated text-text-secondary',
         icon: <FriendzoneIcon className="h-3.5 w-3.5 text-text-secondary" aria-hidden="true" />,
         range: '40% - 64%',
       },
       eldritchVoid: {
-        name: rawSmashDict?.tiers?.eldritchVoid || rawSmashDict?.eldritchVoid || 'Eldritch Void',
+        name: rawSmashDict.tiers.eldritchVoid,
         style: 'border-border-color bg-bg-elevated text-text-muted',
         icon: <EldritchVoidIcon className="h-3.5 w-3.5 text-text-muted" aria-hidden="true" />,
         range: '< 40%',
@@ -508,29 +508,29 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
     return groups;
   }, [filteredItems]);
 
-  const title = rawSmashDict?.modals?.leaderboardTitle || rawSmashDict?.leaderboard || 'Hall of Fame Leaderboard';
-  const searchPlaceholder = rawSmashDict?.search || 'Search candidates...';
-  const allRolesLabel = rawSmashDict?.filters?.allRoles || 'All Roles';
-  const survivorsLabel = rawSmashDict?.filters?.survivors || 'Survivors';
-  const killersLabel = rawSmashDict?.filters?.killers || 'Killers';
-  const allGendersLabel = rawSmashDict?.filters?.allGenders || 'All Genders';
-  const femaleOnlyLabel = rawSmashDict?.filters?.femaleOnly || 'Female';
-  const maleOnlyLabel = rawSmashDict?.filters?.maleOnly || 'Male';
-  const monstersLabel = rawSmashDict?.filters?.monsters || 'Monsters & Eldritch';
-  const allTiersLabel = rawSmashDict?.allTiers || rawSmashDict?.all || 'All Tiers';
-  const unratedLabel = rawSmashDict?.tiers?.unrated || 'Unrated';
+  const title = rawSmashDict.modals.leaderboardTitle;
+  const searchPlaceholder = rawSmashDict.search;
+  const allRolesLabel = rawSmashDict.filters.allRoles;
+  const survivorsLabel = rawSmashDict.filters.survivors;
+  const killersLabel = rawSmashDict.filters.killers;
+  const allGendersLabel = rawSmashDict.filters.allGenders;
+  const femaleOnlyLabel = rawSmashDict.filters.femaleOnly;
+  const maleOnlyLabel = rawSmashDict.filters.maleOnly;
+  const monstersLabel = rawSmashDict.filters.monsters;
+  const allTiersLabel = rawSmashDict.allTiers;
+  const unratedLabel = rawSmashDict.tiers.unrated;
 
-  const groupByTierLabel = rawSmashDict?.groupByTier || 'Group by Tier';
-  const rankedListLabel = rawSmashDict?.rankedList || 'Ranked List';
-  const sortSmashRateLabel = rawSmashDict?.sortSmashRate || 'Smash Rate (%)';
-  const sortTotalVotesLabel = rawSmashDict?.sortTotalVotes || 'Total Votes';
-  const sortMostSmashesLabel = rawSmashDict?.sortMostSmashes || 'Most Smashes';
-  const noVotesTitle = rawSmashDict?.noCommunityVotesTitle || 'No Community Votes Yet';
-  const noVotesDesc = rawSmashDict?.noCommunityVotesDesc || 'Cast votes to populate the Hall of Fame rankings.';
-  const noMatchesText = rawSmashDict?.noCandidatesFound || 'No candidates found matching your filter criteria.';
-  const votesWord = rawSmashDict?.votesWord || rawSmashDict?.votes || 'votes';
-  const candidatesWord = rawSmashDict?.candidatesWord || rawSmashDict?.candidates || 'candidates';
-  const percentSign = rawSmashDict?.percentSign || '%';
+  const groupByTierLabel = rawSmashDict.groupByTier;
+  const rankedListLabel = rawSmashDict.rankedList;
+  const sortSmashRateLabel = rawSmashDict.sortSmashRate;
+  const sortTotalVotesLabel = rawSmashDict.sortTotalVotes;
+  const sortMostSmashesLabel = rawSmashDict.sortMostSmashes;
+  const noVotesTitle = rawSmashDict.noCommunityVotesTitle;
+  const noVotesDesc = rawSmashDict.noCommunityVotesDesc;
+  const noMatchesText = rawSmashDict.noCandidatesFound;
+  const votesWord = rawSmashDict.votesWord;
+  const candidatesWord = rawSmashDict.candidatesWord;
+  const percentSign = rawSmashDict.percentSign;
 
   // Dropdown Options with Full Icon Coverage
   const roleOptions: DropdownOption<'all' | 'Survivor' | 'Killer'>[] = [
@@ -678,8 +678,8 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
             title={viewMode === 'flat' ? groupByTierLabel : rankedListLabel}
             description={
               viewMode === 'flat'
-                ? (rawSmashDict?.tooltips?.groupByTierDesc || '')
-                : (rawSmashDict?.tooltips?.rankedListDesc || '')
+                ? (rawSmashDict.tooltips.groupByTierDesc)
+                : (rawSmashDict.tooltips.rankedListDesc)
             }
             placement="bottom"
           >
@@ -817,4 +817,4 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
   );
 };
 
-export default SmashLeaderboardModal;
+export default SmashLeaderboardModal;

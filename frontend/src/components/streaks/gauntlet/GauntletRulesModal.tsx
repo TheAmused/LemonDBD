@@ -22,13 +22,13 @@ import {
   type RuleEntryDef,
 } from '../RulesModalSections';
 import { formatMessage } from '@/utils/i18nFormat';
+import { useDictionary } from "@/context/DictionaryContext";
 
 export interface GauntletRulesModalProps {
   isOpen: boolean;
   onClose: () => void;
   role: Role;
   gameMode?: GauntletGameMode;
-  dict?: Dictionary;
 }
 
 interface TierDefinition {
@@ -158,13 +158,8 @@ const SURVIVOR_CLARIFICATIONS: RuleEntryDef[] = [
   },
 ];
 
-export const GauntletRulesModal: React.FC<GauntletRulesModalProps> = ({
-  isOpen,
-  onClose,
-  role,
-  gameMode,
-  dict,
-}) => {
+export const GauntletRulesModal: React.FC<GauntletRulesModalProps> = ({ isOpen, onClose, role, gameMode }) => {
+  const dict = useDictionary();
   const isSolo = gameMode === 'lemon_solo';
   const isDuo = gameMode === 'lemon_duo';
   const isSquad = gameMode === 'lemon_squad';
@@ -173,8 +168,8 @@ export const GauntletRulesModal: React.FC<GauntletRulesModalProps> = ({
   const tiers =
     role === 'killer' ? KILLER_TIERS : isTeam ? SURVIVOR_TIERS.slice(0, TEAM_STREAK_RANGES.length) : SURVIVOR_TIERS;
   const roleLabel = role === 'killer'
-    ? (dict?.filters?.killer || '')
-    : (dict?.filters?.survivor || '');
+    ? (dict.filters.killer)
+    : (dict.filters.survivor);
 
   const rawStreaks = streakCopy(dict);
 
@@ -238,7 +233,6 @@ export const GauntletRulesModal: React.FC<GauntletRulesModalProps> = ({
       isOpen={isOpen}
       onClose={onClose}
       title={modalTitle}
-      dict={dict}
     >
       <RulesConceptCard
         tone="red"

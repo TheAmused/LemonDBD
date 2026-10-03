@@ -9,6 +9,7 @@ import { FreezeBadge } from '../FreezeBadge';
 import { ChallengeHeaderLayout, HeaderButton, ModeSelectButton, StandardHeaderActions } from '../ChallengePanel';
 import { AdeptBadgeIcon } from '@/components/icons/DbdIcons';
 import { StreakStatTiles } from '../StreakStatTiles';
+import { useDictionary } from "@/context/DictionaryContext";
 
 const DIFFICULTY_TONE = { easy: 'green', medium: 'amber', hell: 'red' } as const;
 
@@ -23,26 +24,25 @@ export interface ChaosHeaderProps {
   onOpenPerkPool: () => void;
   onOpenReset: () => void;
   onChangeDifficulty: () => void;
-  dict?: Dictionary;
 }
 
 export const ChaosHeader: React.FC<ChaosHeaderProps> = ({
-  difficulty,
-  currentStreak,
-  bestStreak,
-  poolFrozen = false,
-  onOpenStats,
-  onOpenHistory,
-  onOpenRules,
-  onOpenPerkPool,
-  onOpenReset,
-  onChangeDifficulty,
-  dict,
-}) => {
+      difficulty,
+      currentStreak,
+      bestStreak,
+      poolFrozen = false,
+      onOpenStats,
+      onOpenHistory,
+      onOpenRules,
+      onOpenPerkPool,
+      onOpenReset,
+      onChangeDifficulty,
+    }) => {
+  const dict = useDictionary();
   const difficultyLabel = {
-    easy: dict?.streaks?.chaosEasyLabel || 'Easy',
-    medium: dict?.streaks?.chaosMediumLabel || 'Medium',
-    hell: dict?.streaks?.chaosHellLabel || 'Hell',
+    easy: dict.streaks.chaosEasyLabel,
+    medium: dict.streaks.chaosMediumLabel,
+    hell: dict.streaks.chaosHellLabel,
   }[difficulty];
 
   return (
@@ -52,12 +52,12 @@ export const ChaosHeader: React.FC<ChaosHeaderProps> = ({
           <StreakStatTiles
             current={currentStreak}
             best={bestStreak}
-            currentLabel={dict?.streaks?.current || 'Current'}
-            bestLabel={dict?.streaks?.best || 'Best'}
+            currentLabel={dict.streaks.current}
+            bestLabel={dict.streaks.best}
             currentIcon={<Flame className="h-5 w-5" />}
             bestIcon={<AdeptBadgeIcon className="h-5 w-5" />}
           />
-          <FreezeBadge frozen={poolFrozen} dict={dict} />
+          <FreezeBadge frozen={poolFrozen} />
         </>
       }
       actions={
@@ -66,19 +66,18 @@ export const ChaosHeader: React.FC<ChaosHeaderProps> = ({
           onOpenStats={onOpenStats}
           onOpenHistory={onOpenHistory}
           onOpenReset={onOpenReset}
-          dict={dict}
           extra={
             <>
               <HeaderButton
                 onClick={onOpenPerkPool}
-                title={dict?.streaks?.perkPool || 'Perk Pool'}
-                label={dict?.streaks?.perkPool || 'Perk Pool'}
+                title={dict.streaks.perkPool}
+                label={dict.streaks.perkPool}
               />
               <ModeSelectButton
                 label={difficultyLabel}
                 tone={DIFFICULTY_TONE[difficulty]}
                 onClick={onChangeDifficulty}
-                title={dict?.streaks?.changeDifficulty || 'Change Difficulty'}
+                title={dict.streaks.changeDifficulty}
               />
             </>
           }

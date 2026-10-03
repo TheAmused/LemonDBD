@@ -10,6 +10,7 @@ import { cn } from '@/utils/cn';
 import { SmashSounds } from './SmashSoundEffects';
 import { Modal } from '@/components/common/Modal';
 import { Button } from '@/components/common/Button';
+import { useDictionary } from "@/context/DictionaryContext";
 
 const STORAGE_KEY = 'dbd_smash_selected_roster';
 
@@ -34,23 +35,22 @@ interface RosterSelectModalProps {
   /** Opens the share-link/JSON export flow for a local roster. */
   onExportRoster?: (id: string) => void;
   locale?: string;
-  dict?: Dictionary | any;
 }
 
 export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
-  isOpen,
-  onClose,
-  rosters,
-  selectedRosterSlug,
-  onSelectRoster,
-  onCreateRoster,
-  onImportRoster,
-  onEditRoster,
-  onDeleteRoster,
-  onExportRoster,
-  locale = 'en',
-  dict,
-}) => {
+      isOpen,
+      onClose,
+      rosters,
+      selectedRosterSlug,
+      onSelectRoster,
+      onCreateRoster,
+      onImportRoster,
+      onEditRoster,
+      onDeleteRoster,
+      onExportRoster,
+      locale = 'en',
+    }) => {
+  const dict = useDictionary();
   const isCurrentlyCustom = Boolean(selectedRosterSlug?.startsWith('local:'));
   const [filter, setFilter] = useState<'official' | 'custom'>(isCurrentlyCustom ? 'custom' : 'official');
   const [visualIndex, setVisualIndex] = useState<number>(0);
@@ -362,10 +362,10 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
 
   const activeRosterInCenter = N > 0 ? displayedRosters[normalizeIndex(targetIndexRef.current)] : null;
 
-  const rawSmash = dict?.smashOrPass;
-  const selectRosterTitle = rawSmash?.selectRoster || '';
-  const candidatesWord = rawSmash?.candidates || rawSmash?.candidatesWord || '';
-  const selectPrefixText = rawSmash?.selectPrefix || rawSmash?.select || '';
+  const rawSmash = dict.smashOrPass;
+  const selectRosterTitle = rawSmash.selectRoster;
+  const candidatesWord = rawSmash.candidates;
+  const selectPrefixText = rawSmash.selectPrefix;
 
   return (
     <Modal
@@ -375,7 +375,7 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
       size="full"
       closeButton="floating"
       ariaLabel={selectRosterTitle}
-      closeButtonAriaLabel={dict?.modal?.close || ''}
+      closeButtonAriaLabel={dict.modal.close}
       backdrop="blur"
       className="h-[94dvh] max-h-[1100px] min-h-[580px] max-w-[1600px] border-2 border-accent-red/35 rounded-[32px] sm:rounded-[44px]"
       bodyClassName="flex flex-col overflow-hidden"
@@ -395,7 +395,7 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
               )}
             >
               <Flame className="h-3 w-3" />
-              <span>{dict?.smashOrPass?.picker?.officialTab} ({officialRosters.length})</span>
+              <span>{dict.smashOrPass.picker.officialTab} ({officialRosters.length})</span>
             </button>
             <button
               type="button"
@@ -408,7 +408,7 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
               )}
             >
               <Sparkles className="h-3 w-3" />
-              <span>{dict?.smashOrPass?.picker?.customTab} ({customRosters.length})</span>
+              <span>{dict.smashOrPass.picker.customTab} ({customRosters.length})</span>
             </button>
           </div>
         </div>
@@ -427,7 +427,7 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
                   className="inline-flex items-center gap-1.5 px-3.5 py-1.5 min-h-[36px] rounded-xl bg-accent-red/10 border border-accent-red/40 text-accent-red type-label-sm hover:bg-accent-red/20 transition-colors cursor-pointer"
                 >
                   <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
-                  {dict?.smashOrPass?.picker?.createRoster || 'Create a roster'}
+                  {dict.smashOrPass.picker.createRoster}
                 </button>
               )}
               {onImportRoster && (
@@ -437,7 +437,7 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
                   className="inline-flex items-center gap-1.5 px-3.5 py-1.5 min-h-[36px] rounded-xl bg-bg-elevated border border-border-color text-text-secondary type-label-sm hover:text-text-primary hover:border-border-subtle transition-colors cursor-pointer"
                 >
                   <Upload className="h-3.5 w-3.5" aria-hidden="true" />
-                  {dict?.smashOrPass?.picker?.importRoster || 'Import'}
+                  {dict.smashOrPass.picker.importRoster}
                 </button>
               )}
             </div>
@@ -463,7 +463,7 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
             <>
               <button
                 type="button"
-                aria-label={dict?.pagination?.previous || ''}
+                aria-label={dict.pagination.previous}
                 onPointerDown={(e) => e.stopPropagation()}
                 onPointerUp={(e) => e.stopPropagation()}
                 onMouseDown={(e) => e.stopPropagation()}
@@ -476,7 +476,7 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
 
               <button
                 type="button"
-                aria-label={dict?.pagination?.next || ''}
+                aria-label={dict.pagination.next}
                 onPointerDown={(e) => e.stopPropagation()}
                 onPointerUp={(e) => e.stopPropagation()}
                 onMouseDown={(e) => e.stopPropagation()}
@@ -494,13 +494,13 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
               <Sparkles className="h-10 w-10 text-accent-red animate-pulse" />
               <h3 className="text-base font-bold text-text-primary uppercase tracking-wide">
                 {filter === 'custom'
-                  ? dict?.smashOrPass?.picker?.noCustomRostersFound
-                  : dict?.smashOrPass?.picker?.noRostersFound}
+                  ? dict.smashOrPass.picker.noCustomRostersFound
+                  : dict.smashOrPass.picker.noRostersFound}
               </h3>
               <p className="text-xs text-text-muted">
                 {filter === 'custom'
-                  ? dict?.smashOrPass?.picker?.noCustomRostersDesc
-                  : dict?.smashOrPass?.picker?.noRostersMatchDesc}
+                  ? dict.smashOrPass.picker.noCustomRostersDesc
+                  : dict.smashOrPass.picker.noRostersMatchDesc}
               </p>
               {onCreateRoster && filter === 'custom' && (
                 <Button
@@ -511,7 +511,7 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
                   }}
                 >
                   <Sparkles className="h-3.5 w-3.5" />
-                  <span>{dict?.smashOrPass?.picker?.createFirstRoster}</span>
+                  <span>{dict.smashOrPass.picker.createFirstRoster}</span>
                 </Button>
               )}
             </div>
@@ -625,7 +625,7 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
                       className="absolute top-4 left-1/2 -translate-x-1/2 sm:top-5 flex items-center gap-1 px-2.5 py-1 rounded-2xl bg-accent-red text-text-inverted text-tiny sm:text-xs font-black uppercase tracking-wide shadow-md pointer-events-none"
                     >
                       <AlertTriangle className="h-3 w-3" aria-hidden="true" />
-                      <span>{dict?.smashOrPass?.nsfw?.badge || 'NSFW'}</span>
+                      <span>{dict.smashOrPass.nsfw.badge}</span>
                     </div>
                   )}
 
@@ -635,7 +635,7 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
                       className="absolute bottom-[5.5rem] left-1/2 -translate-x-1/2 sm:bottom-24 flex items-center gap-1 px-2.5 py-1 rounded-2xl bg-bg-primary/85 backdrop-blur-md border border-accent-amber/40 text-accent-amber text-tiny sm:text-xs font-black uppercase tracking-wide shadow-md pointer-events-none"
                     >
                       <Sparkles className="h-3 w-3" aria-hidden="true" />
-                      <span>{dict?.smashOrPass?.picker?.yours || 'Yours'}</span>
+                      <span>{dict.smashOrPass.picker.yours}</span>
                     </div>
                   )}
 
@@ -644,14 +644,14 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
                       className="absolute top-4 right-4 sm:top-5 sm:right-5 flex items-center gap-1 px-3 py-1.5 rounded-2xl bg-accent-red text-text-inverted type-strong pointer-events-none"
                     >
                       <Check className="h-3.5 w-3.5 stroke-[3]" aria-hidden="true" />
-                      <span>{rawSmash?.active || ''}</span>
+                      <span>{rawSmash.active}</span>
                     </div>
                   )}
 
                   {!isRosterEnabled && !isCurrentlyActive && (
                     <div className="absolute top-4 right-4 sm:top-5 sm:right-5 flex items-center gap-1.5 px-3 py-1.5 rounded-2xl bg-bg-elevated border border-border-color text-text-secondary type-strong shadow-lg pointer-events-none">
                       <Lock className="h-3.5 w-3.5 text-text-muted" aria-hidden="true" />
-                      <span>{dict?.smashOrPass?.comingSoon || 'Coming Soon'}</span>
+                      <span>{dict.smashOrPass.comingSoon}</span>
                     </div>
                   )}
 
@@ -696,7 +696,7 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
       </div>
 
         <div className="text-center pt-2 pb-1 space-y-2 sm:space-y-3">
-          {rawSmash?.dwellHint && (
+          {rawSmash.dwellHint && (
             <p className="text-xs sm:text-sm md:text-base text-text-muted tracking-wide">
               {rawSmash.dwellHint}
             </p>
@@ -730,7 +730,7 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
                 >
                   <Lock className="h-4 w-4 sm:h-5 sm:w-5 text-text-muted" aria-hidden="true" />
                   <span>
-                    {getRosterDisplayName(activeRosterInCenter)} ({dict?.smashOrPass?.comingSoon || 'Coming Soon'})
+                    {getRosterDisplayName(activeRosterInCenter)} ({dict.smashOrPass.comingSoon})
                   </span>
                 </Button>
               )}
@@ -741,7 +741,7 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
                     <Button
                       variant="secondary" size="lg" icon
                       onClick={() => onEditRoster((activeRosterInCenter as RosterItem).id)}
-                      aria-label={dict?.smashOrPass?.picker?.editRoster || 'Edit this roster'}
+                      aria-label={dict.smashOrPass.picker.editRoster}
                       className="h-11 w-11 sm:h-[52px] sm:w-[52px] rounded-2xl"
                     >
                       <Pencil className="h-4 w-4 sm:h-5 sm:w-5" aria-hidden="true" />
@@ -751,7 +751,7 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
                     <Button
                       variant="secondary" size="lg" icon
                       onClick={() => onExportRoster((activeRosterInCenter as RosterItem).id)}
-                      aria-label={dict?.smashOrPass?.picker?.exportRoster || 'Export this roster'}
+                      aria-label={dict.smashOrPass.picker.exportRoster}
                       className="h-11 w-11 sm:h-[52px] sm:w-[52px] rounded-2xl"
                     >
                       <Share2 className="h-4 w-4 sm:h-5 sm:w-5" aria-hidden="true" />
@@ -761,7 +761,7 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
                     <Button
                       variant="secondary" size="lg" icon
                       onClick={() => onDeleteRoster((activeRosterInCenter as RosterItem).id)}
-                      aria-label={dict?.smashOrPass?.picker?.deleteRoster || 'Delete this roster'}
+                      aria-label={dict.smashOrPass.picker.deleteRoster}
                       className="h-11 w-11 sm:h-[52px] sm:w-[52px] rounded-2xl"
                     >
                       <Trash2 className="h-4 w-4 sm:h-5 sm:w-5" aria-hidden="true" />

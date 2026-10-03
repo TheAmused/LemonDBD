@@ -194,6 +194,8 @@ export default {
     signatureQuote: 'Charakteristisches Zitat',
     greenFlag: 'Grüne Flaggen',
     redFlag: 'Rote Flaggen',
+    turn_on: 'Turn-on:',
+    dealbreaker: 'No-Go:',
   },
   hud: {
     swipeLeftHint: 'Nach links wischen für Pass',
@@ -294,6 +296,8 @@ export default {
     playBgm: 'Hintergrundmusik abspielen (B)',
     unmute: 'Soundeffekte einschalten (M)',
     mute: 'Soundeffekte stummstellen (M)',
+    groupByTierDesc: 'Charaktere nach Smash-Rate in Tiers gruppieren.',
+    rankedListDesc: 'Eine einzelne Liste nach Smash-Rate sortiert anzeigen.',
   },
   picker: {
     yours: 'Deine',
@@ -454,6 +458,7 @@ export default {
     draftRestored: 'Dein unfertiger Entwurf wurde wiederhergestellt.',
     startOver: 'Neu beginnen',
     closeToast: 'Schließen',
+    unnamedCandidate: 'Unbenannter Kandidat',
   },
   cropModal: {
     title: 'Titelbild zuschneiden & anpassen',
@@ -538,4 +543,5 @@ export default {
     facebookNotice: 'Facebook geöffnet! Beitragstext in die Zwischenablage kopiert (mit Strg+V einfügen).',
     telegramNotice: 'Telegram geöffnet! Nachrichtentext in die Zwischenablage kopiert.',
   },
+  communityConsensus: 'Community-Konsens',
 } as const;

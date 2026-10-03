@@ -13,6 +13,7 @@ import { Modal } from '@/components/common/Modal';
 import { Spinner } from '@/components/common/Spinner';
 import { EmptyState } from '@/components/common/EmptyState';
 import { isSurvivor } from '@/utils/characterUtils';
+import { useDictionary } from "@/context/DictionaryContext";
 
 interface ShowcaseCharacterModalProps {
   isOpen: boolean;
@@ -20,7 +21,6 @@ interface ShowcaseCharacterModalProps {
   currentCharacter: string;
   onSelect: (characterName: string) => void;
   onClose: () => void;
-  dict?: Dictionary | null;
   locale?: string;
 }
 
@@ -100,15 +100,8 @@ const CharacterGridItem: React.FC<{
   );
 };
 
-export const ShowcaseCharacterModal: React.FC<ShowcaseCharacterModalProps> = ({
-  isOpen,
-  role,
-  currentCharacter,
-  onSelect,
-  onClose,
-  dict,
-  locale = 'en',
-}) => {
+export const ShowcaseCharacterModal: React.FC<ShowcaseCharacterModalProps> = ({ isOpen, role, currentCharacter, onSelect, onClose, locale = 'en' }) => {
+  const dict = useDictionary();
   const [search, setSearch] = useState('');
   const [characters, setCharacters] = useState<CharacterItem[]>([]);
   const [loading, setLoading] = useState(false);
@@ -157,7 +150,7 @@ export const ShowcaseCharacterModal: React.FC<ShowcaseCharacterModalProps> = ({
       isOpen={isOpen}
       onClose={onClose}
       size="2xl"
-      title={`${dict?.user?.selectCharacter || 'Select Character'} (${role})`}
+      title={`${dict.user.selectCharacter} (${role})`}
       icon={<Sparkles className={`h-5 w-5 ${isSurvivor(role) ? 'text-accent-green' : 'text-accent-red'}`} />}
       className="max-h-[85vh] flex flex-col"
       bodyClassName="flex flex-col min-h-0 overflow-hidden"
@@ -169,7 +162,7 @@ export const ShowcaseCharacterModal: React.FC<ShowcaseCharacterModalProps> = ({
           className=""
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          placeholder={dict?.user?.searchCharacters || 'Search characters...'}
+          placeholder={dict.user.searchCharacters}
           autoFocus
         />
       </div>
@@ -180,11 +173,11 @@ export const ShowcaseCharacterModal: React.FC<ShowcaseCharacterModalProps> = ({
           <div className="flex flex-col items-center justify-center py-16 space-y-3">
             <Spinner size="lg" tone="amber" />
             <p className="text-xs text-text-muted">
-              {dict?.user?.loadingCharacters || 'Consulting the Fog...'}
+              {dict.user.loadingCharacters}
             </p>
           </div>
         ) : filteredCharacters.length === 0 ? (
-          <EmptyState variant="inline" title={dict?.user?.noCharactersFound || 'No matching characters found.'} />
+          <EmptyState variant="inline" title={dict.user.noCharactersFound} />
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
             {filteredCharacters.map((char) => (

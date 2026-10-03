@@ -14,6 +14,7 @@ import { useJackpotCelebration } from '../shared/useJackpotCelebration';
 import { isSurvivor } from '@/utils/characterUtils';
 import { canvasFont } from '@/utils/canvasFont';
 import { formatMessage } from '@/utils/i18nFormat';
+import { useDictionary } from "@/context/DictionaryContext";
 
 export interface WheelStageProps {
   totalPages: number;
@@ -30,7 +31,6 @@ export interface WheelStageProps {
   onRevealSlot: (idx: number) => void;
   onSelectPerk: (perk: Perk) => void;
   isBlind?: boolean;
-  dict?: Dictionary;
   backendBase?: string;
 }
 
@@ -45,23 +45,23 @@ interface Particle {
 }
 
 export const WheelStage: React.FC<WheelStageProps> = ({
-  totalPages,
-  perksPerPage,
-  lastPagePerks,
-  spinDurationSec,
-  role,
-  sortedPerks,
-  loadout,
-  activeSlotIdx,
-  onWinSlot,
-  revealedSlots,
-  onRevealSlot,
-  onSelectPerk,
-  isBlind = false,
-  dict,
-  backendBase,
-  activeMutator,
-}) => {
+      totalPages,
+      perksPerPage,
+      lastPagePerks,
+      spinDurationSec,
+      role,
+      sortedPerks,
+      loadout,
+      activeSlotIdx,
+      onWinSlot,
+      revealedSlots,
+      onRevealSlot,
+      onSelectPerk,
+      isBlind = false,
+      backendBase,
+      activeMutator,
+    }) => {
+  const dict = useDictionary();
   const [wheelPhase, setWheelPhase] = useState<'page' | 'perk'>('page');
   const [selectedPageUI, setSelectedPageUI] = useState<number>(1);
   const [isSpinning, setIsSpinning] = useState<boolean>(false);
@@ -566,7 +566,7 @@ export const WheelStage: React.FC<WheelStageProps> = ({
         wheelPhaseRef.current = 'page';
         setWheelPhase('page');
         setStatusText(
-          dict?.generator?.spinningPageWheel
+          dict.generator.spinningPageWheel
             ? formatMessage(dict.generator.spinningPageWheel, { slot: activeSlotIdx + 1 })
             : `Spinning Page Wheel for Slot #${activeSlotIdx + 1}...`
         );
@@ -583,7 +583,7 @@ export const WheelStage: React.FC<WheelStageProps> = ({
         activePageRef.current = targetPage;
         setSelectedPageUI(targetPage);
         setStatusText(
-          dict?.generator?.landedPage
+          dict.generator.landedPage
             ? formatMessage(dict.generator.landedPage, { page: targetPage })
             : `Landed on Page ${targetPage}! Swapping to Perk Wheel...`
         );
@@ -613,7 +613,7 @@ export const WheelStage: React.FC<WheelStageProps> = ({
       }
 
       setStatusText(
-        dict?.generator?.spinningPerkWheel
+        dict.generator.spinningPerkWheel
           ? formatMessage(dict.generator.spinningPerkWheel, { page: targetPage })
           : `Spinning Perk Wheel (Page ${targetPage})...`
       );
@@ -674,20 +674,18 @@ export const WheelStage: React.FC<WheelStageProps> = ({
         isBlind={isBlind}
         size="wheelFlank"
         onClick={onClick}
-        dict={dict}
       />
     );
   };
 
   const spinButtonText = isSpinning
-    ? dict?.generator?.spinningWheel || 'Spinning Wheel...'
-    : `${dict?.generator?.spinWheelButton || 'Spin for Perk Slot'} #${activeSlotIdx + 1}`;
+    ? dict.generator.spinningWheel
+    : `${dict.generator.spinWheelButton} #${activeSlotIdx + 1}`;
 
   return (
     <div className="flex h-full w-full flex-1 flex-col items-center justify-center gap-2 sm:gap-3 pt-3 pb-1 sm:pt-4">
       <p className="max-w-md text-center type-strong-fluid text-text-secondary px-3 line-clamp-2 sm:line-clamp-none">
-        {dict?.generator?.spinOrRollPrompt ||
-          'Spin the Page Wheel to land on a random page, then the Perk Wheel to land on a random perk from it, one slot at a time until all four are filled.'}
+        {dict.generator.spinOrRollPrompt}
       </p>
 
       <div className="flex w-full flex-col items-center justify-center gap-2 sm:gap-3 xl:flex-row xl:items-center xl:justify-center xl:gap-6 2xl:gap-14 wide:gap-20 wide-2k:gap-28 wide-4k:gap-36">
@@ -708,7 +706,7 @@ export const WheelStage: React.FC<WheelStageProps> = ({
             <div
               role={!isSpinning && sortedPerks.length > 0 ? 'button' : undefined}
               tabIndex={!isSpinning && sortedPerks.length > 0 ? 0 : undefined}
-              aria-label={dict?.generator?.spinWheelButton || 'Spin Wheel'}
+              aria-label={dict.generator.spinWheelButton}
               onClick={!isSpinning && sortedPerks.length > 0 ? handleStartSpin : undefined}
               onKeyDown={
                 !isSpinning && sortedPerks.length > 0

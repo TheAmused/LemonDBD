@@ -2,7 +2,6 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import React from 'react';
-import { renderToStaticMarkup } from 'react-dom/server';
 import { UserProfileSkeleton } from '@/components/user/UserProfileSkeleton';
 import { UserBugReportsSkeleton } from '@/components/user/UserBugReportsSkeleton';
 import { UserBugReportsList } from '@/components/user/UserBugReportsList';
@@ -12,10 +11,11 @@ import deDict from '@/locales/de';
 import esDict from '@/locales/es';
 import jaDict from '@/locales/ja';
 import plDict from '@/locales/pl';
+import { renderWithDictionary } from '../helpers/renderWithDictionary';
 
 describe('User Page: Skeletons & DBD Framer Motion Spinner Integrity', () => {
   it('UserProfileSkeleton renders with role="status", aria-busy="true", and DBD Skill Check Spinner', () => {
-    const html = renderToStaticMarkup(React.createElement(UserProfileSkeleton, { dict: enDict }));
+    const html = renderWithDictionary(React.createElement(UserProfileSkeleton));
 
     assert.ok(html.includes('role="status"'), 'Skeleton should declare role="status"');
     assert.ok(html.includes('aria-busy="true"'), 'Skeleton should declare aria-busy="true"');
@@ -23,8 +23,8 @@ describe('User Page: Skeletons & DBD Framer Motion Spinner Integrity', () => {
   });
 
   it('UserBugReportsSkeleton renders with role="status", aria-busy="true", and DBD Skill Check Spinner', () => {
-    const html = renderToStaticMarkup(
-      React.createElement(UserBugReportsSkeleton, { dict: enDict })
+    const html = renderWithDictionary(
+      React.createElement(UserBugReportsSkeleton, {})
     );
     assert.ok(html.includes('role="status"'));
     assert.ok(html.includes('aria-busy="true"'));
@@ -54,9 +54,8 @@ describe('User Page: UserBugReportsList status badges & pagination', () => {
     };
 
     for (const status of statuses) {
-      const html = renderToStaticMarkup(
+      const html = renderWithDictionary(
         React.createElement(UserBugReportsList, {
-          dict: enDict,
           loading: false,
           onOpenReportModal: () => {},
           reports: [{ ...baseReport, status }],
@@ -67,9 +66,8 @@ describe('User Page: UserBugReportsList status badges & pagination', () => {
   });
 
   it('renders the loading skeleton (not the reports grid) while loading is true', () => {
-    const html = renderToStaticMarkup(
+    const html = renderWithDictionary(
       React.createElement(UserBugReportsList, {
-        dict: enDict,
         loading: true,
         onOpenReportModal: () => {},
         reports: [],
@@ -80,9 +78,8 @@ describe('User Page: UserBugReportsList status badges & pagination', () => {
   });
 
   it('renders empty state copy when there are zero reports and loading has finished', () => {
-    const html = renderToStaticMarkup(
+    const html = renderWithDictionary(
       React.createElement(UserBugReportsList, {
-        dict: enDict,
         loading: false,
         onOpenReportModal: () => {},
         reports: [],
@@ -92,9 +89,8 @@ describe('User Page: UserBugReportsList status badges & pagination', () => {
   });
 
   it('renders Pagination navigation only when totalPages > 1 and onPageChange is provided', () => {
-    const withoutPagination = renderToStaticMarkup(
+    const withoutPagination = renderWithDictionary(
       React.createElement(UserBugReportsList, {
-        dict: enDict,
         loading: false,
         onOpenReportModal: () => {},
         reports: [baseReport],
@@ -104,9 +100,8 @@ describe('User Page: UserBugReportsList status badges & pagination', () => {
     );
     assert.ok(!withoutPagination.includes('Pagination Navigation'));
 
-    const withPagination = renderToStaticMarkup(
+    const withPagination = renderWithDictionary(
       React.createElement(UserBugReportsList, {
-        dict: enDict,
         loading: false,
         onOpenReportModal: () => {},
         reports: [baseReport],

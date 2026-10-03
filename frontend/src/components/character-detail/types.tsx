@@ -107,7 +107,6 @@ export type CharacterDetailDictionary = Record<string, string>;
 
 export interface CharacterViewBaseProps {
   currentLocale: string;
-  dict?: Record<string, unknown>;
   detailData: CharacterDetailPayload;
   allCharacters?: CharacterItem[];
 }

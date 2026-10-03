@@ -5,24 +5,18 @@ import React, { useMemo } from 'react';
 import { Flame, Check, X } from 'lucide-react';
 import type { GuessRecord, RoundConfig, CatalogCharacter } from '@/types/minigame';
 import type { Dictionary } from '@/locales/types';
+import { useDictionary } from "@/context/DictionaryContext";
 
 interface KillerPowerGuesserProps {
   roundConfig: RoundConfig;
   killers: CatalogCharacter[];
   guesses: GuessRecord[];
   isSolved: boolean;
-  dict: Dictionary;
   children?: React.ReactNode;
 }
 
-export const KillerPowerGuesser: React.FC<KillerPowerGuesserProps> = ({
-  roundConfig,
-  killers,
-  guesses,
-  isSolved,
-  dict,
-  children,
-}) => {
+export const KillerPowerGuesser: React.FC<KillerPowerGuesserProps> = ({ roundConfig, killers, guesses, isSolved, children }) => {
+  const dict = useDictionary();
   const targetKiller = useMemo(
     () => killers.find((k) => k.id === roundConfig.target_id),
     [killers, roundConfig.target_id]

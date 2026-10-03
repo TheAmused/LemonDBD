@@ -8,6 +8,7 @@ import { Perk } from '@/types/gauntletStreak';
 import { perkIconUrl as perkIconFor } from '@/utils/staticUrl';
 import { usePerkDisplayName, usePerkLabel } from '@/context/DisplayNamesContext';
 import { normalizeSearchText } from '@/utils/perkUtils';
+import { useDictionary } from "@/context/DictionaryContext";
 
 const UnlockedTile: React.FC<{ perk: Perk; displayName: string; justUnlocked: boolean }> = ({
   perk,
@@ -73,14 +74,10 @@ const LockedTile: React.FC<{ perk: Perk; displayName: string }> = ({ perk, displ
 export interface HistoryPerkPoolPanelProps {
   pool: Perk[];
   unlockedPerkNames: string[];
-  dict?: Dictionary;
 }
 
-export const HistoryPerkPoolPanel: React.FC<HistoryPerkPoolPanelProps> = ({
-  pool,
-  unlockedPerkNames,
-  dict,
-}) => {
+export const HistoryPerkPoolPanel: React.FC<HistoryPerkPoolPanelProps> = ({ pool, unlockedPerkNames }) => {
+  const dict = useDictionary();
   const fallbackName = usePerkDisplayName();
   const perkLabel = usePerkLabel();
   // Matched by id where possible, since a perk's canonical name can differ between catalogs.
@@ -95,7 +92,7 @@ export const HistoryPerkPoolPanel: React.FC<HistoryPerkPoolPanelProps> = ({
   const unlockedSet = useMemo(() => new Set(unlockedPerkNames), [unlockedPerkNames]);
   const unlocked = pool.filter((p) => unlockedSet.has(p.name) && matchesQuery(p));
   const locked = pool.filter((p) => !unlockedSet.has(p.name) && matchesQuery(p));
-  const noMatchText = dict?.streaks?.noPerksMatchSearch || 'No perks match your search.';
+  const noMatchText = dict.streaks.noPerksMatchSearch;
 
   const seenUnlockedRef = useRef<Set<string>>(new Set());
   const [justUnlockedNames, setJustUnlockedNames] = useState<Set<string>>(new Set());
@@ -119,7 +116,7 @@ export const HistoryPerkPoolPanel: React.FC<HistoryPerkPoolPanelProps> = ({
     <div className="mt-10 rounded-2xl border border-border-color bg-bg-surface backdrop-blur-sm p-5 shadow-sm">
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
         <h3 className="type-label text-text-secondary">
-          {dict?.streaks?.perkPool || 'Perk pool'}
+          {dict.streaks.perkPool}
         </h3>
         <div className="relative w-full sm:w-64">
           <Search className="absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-text-muted" aria-hidden="true" />
@@ -127,15 +124,15 @@ export const HistoryPerkPoolPanel: React.FC<HistoryPerkPoolPanelProps> = ({
             type="search"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder={dict?.streaks?.searchPerksPlaceholder || 'Search...'}
-            aria-label={dict?.streaks?.searchPerksPlaceholder || 'Search...'}
+            placeholder={dict.streaks.searchPerksPlaceholder}
+            aria-label={dict.streaks.searchPerksPlaceholder}
             className="w-full rounded-xl border border-border-color bg-bg-elevated py-2 pl-9 pr-8 text-xs text-text-primary shadow-inner placeholder:text-text-muted focus:border-accent-red focus:outline-none [&::-webkit-search-cancel-button]:hidden"
           />
           {query && (
             <button
               type="button"
               onClick={() => setQuery('')}
-              aria-label={dict?.streaks?.clearSearch || 'Clear search'}
+              aria-label={dict.streaks.clearSearch}
               className="absolute right-2 top-1/2 -translate-y-1/2 rounded p-0.5 text-text-muted transition-colors hover:text-text-primary cursor-pointer"
             >
               <X className="h-3.5 w-3.5" aria-hidden="true" />
@@ -146,11 +143,11 @@ export const HistoryPerkPoolPanel: React.FC<HistoryPerkPoolPanelProps> = ({
 
       <div className="mb-2 flex items-center gap-1.5 type-strong text-accent-green">
         <CheckCircle2 className="w-3.5 h-3.5" />
-        {dict?.streaks?.availableLabel || 'Available'}
+        {dict.streaks.availableLabel}
       </div>
       {unlocked.length === 0 ? (
         <p className="text-xs text-text-muted mb-5">
-          {normalizedQuery ? noMatchText : dict?.streaks?.noPerksUnlockedYet || 'No perks unlocked yet.'}
+          {normalizedQuery ? noMatchText : dict.streaks.noPerksUnlockedYet}
         </p>
       ) : (
         <div className="mb-5 grid grid-cols-3 sm:grid-cols-6 md:grid-cols-10 lg:grid-cols-[repeat(15,minmax(0,1fr))] gap-2">
@@ -167,11 +164,11 @@ export const HistoryPerkPoolPanel: React.FC<HistoryPerkPoolPanelProps> = ({
 
       <div className="mb-2 flex items-center gap-1.5 type-strong text-text-muted">
         <Lock className="w-3.5 h-3.5" />
-        {dict?.streaks?.lockedLabel || 'Locked'}
+        {dict.streaks.lockedLabel}
       </div>
       {locked.length === 0 ? (
         <p className="text-xs text-text-muted">
-          {normalizedQuery ? noMatchText : dict?.streaks?.everyPerkUnlocked || 'Every perk is unlocked.'}
+          {normalizedQuery ? noMatchText : dict.streaks.everyPerkUnlocked}
         </p>
       ) : (
         <div className="grid grid-cols-3 sm:grid-cols-6 md:grid-cols-10 lg:grid-cols-[repeat(15,minmax(0,1fr))] gap-2">

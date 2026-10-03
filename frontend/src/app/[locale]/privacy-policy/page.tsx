@@ -90,7 +90,7 @@ export default function PrivacyPolicyPage() {
   const params = useParams();
   const locale = (params?.locale as Locale) || 'en';
   const dict = useDictionary();
-  const privacy = dict?.privacy;
+  const privacy = dict.privacy;
 
 
   // Contact address, lifetimes and mail provider come from the backend (admin-editable),
@@ -112,8 +112,8 @@ export default function PrivacyPolicyPage() {
 
   const blockTitle = (id: string): string =>
     id === SUMMARY_BLOCK
-      ? privacy?.summaryHeading ?? ''
-      : privacy?.sections[id as (typeof PRIVACY_SECTION_ORDER)[number]]?.heading ?? '';
+      ? privacy.summaryHeading
+      : privacy.sections[id as (typeof PRIVACY_SECTION_ORDER)[number]]?.heading ?? '';
 
   const renderBlockBody = (id: string) => {
     if (!privacy) return null;
@@ -161,7 +161,6 @@ export default function PrivacyPolicyPage() {
   return (
     <PageShell
       locale={locale}
-      dict={dict || ({} as Dictionary)}
       padding="spacious"
       mainClassName="flex flex-col items-center min-h-[calc(100vh-4rem)] lg:min-h-screen overflow-y-auto relative"
     >
@@ -172,13 +171,13 @@ export default function PrivacyPolicyPage() {
             className="inline-flex w-fit items-center gap-1.5 type-strong-fluid text-text-muted transition-colors hover:text-accent-red"
           >
             <ArrowLeft className="h-4 w-4" />
-            {privacy?.backToAbout}
+            {privacy.backToAbout}
           </Link>
           <h1 className="col-span-2 row-start-2 text-center text-2xl font-black tracking-tight text-text-primary sm:col-span-1 sm:col-start-2 sm:row-start-1 sm:text-3xl md:text-4xl">
-            {privacy?.heading}
+            {privacy.heading}
           </h1>
           <p className="justify-self-end text-right text-mini uppercase tracking-widest text-text-muted sm:col-start-3 sm:row-start-1 sm:text-xs">
-            {privacy?.lastUpdatedLabel}: {privacy?.lastUpdated}
+            {privacy.lastUpdatedLabel}: {privacy.lastUpdated}
           </p>
         </header>
 

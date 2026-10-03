@@ -25,6 +25,8 @@ import { FogReportIcon } from '@/components/icons/DbdIcons';
 import { tip } from '@/components/common/Tooltip';
 import { EmptyState } from '@/components/common/EmptyState';
 import { formatDate, formatDateTime } from '@/utils/format';
+import { useDictionary } from "@/context/DictionaryContext";
+
 interface StatusConfigItem {
   label: string;
   badge: string;
@@ -78,28 +80,27 @@ interface AdminBugReportsWorkbenchProps {
   onNoteChange: (id: number, text: string) => void;
   onUpdateBug: (id: number, newStatus?: string) => void;
   onDeleteBug: (id: number) => void;
-  dict?: Dictionary;
 }
 
 export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> = ({
-  bugReports,
-  bugStats,
-  totalBugReports,
-  bugPage,
-  bugSearch,
-  bugStatusFilter,
-  selectedBugId,
-  editingNotes,
-  loading,
-  onSearchChange,
-  onStatusFilterChange,
-  onPageChange,
-  onSelectBug,
-  onNoteChange,
-  onUpdateBug,
-  onDeleteBug,
-  dict,
-}) => {
+      bugReports,
+      bugStats,
+      totalBugReports,
+      bugPage,
+      bugSearch,
+      bugStatusFilter,
+      selectedBugId,
+      editingNotes,
+      loading,
+      onSearchChange,
+      onStatusFilterChange,
+      onPageChange,
+      onSelectBug,
+      onNoteChange,
+      onUpdateBug,
+      onDeleteBug,
+    }) => {
+  const dict = useDictionary();
   const selectedBug = bugReports.find((r) => r.id === selectedBugId) || null;
 
   return (
@@ -108,7 +109,7 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
       <div
         className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4"
         role="group"
-        aria-label={dict?.admin?.filterLabel || ''}
+        aria-label={dict.admin.filterLabel}
       >
         <button
           type="button"
@@ -121,7 +122,7 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
           }`}
         >
           <span className="type-label-sm flex items-center gap-1.5">
-            <HelpCircle className="h-4 w-4" /> {dict?.admin?.statusPending || dict?.admin?.pending || ''}
+            <HelpCircle className="h-4 w-4" /> {dict.admin.statusPending}
           </span>
           <p className="type-page-title mt-1">
             {bugStats?.pending ?? 0}
@@ -139,7 +140,7 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
           }`}
         >
           <span className="type-label-sm flex items-center gap-1.5">
-            <Clock className="h-4 w-4" /> {dict?.admin?.statusInProgress || dict?.admin?.inProgress || ''}
+            <Clock className="h-4 w-4" /> {dict.admin.statusInProgress}
           </span>
           <p className="type-page-title mt-1">
             {bugStats?.in_progress ?? 0}
@@ -157,7 +158,7 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
           }`}
         >
           <span className="type-label-sm flex items-center gap-1.5">
-            <CheckCircle className="h-4 w-4" /> {dict?.admin?.statusResolved || dict?.admin?.resolved || ''}
+            <CheckCircle className="h-4 w-4" /> {dict.admin.statusResolved}
           </span>
           <p className="type-page-title mt-1">
             {bugStats?.resolved ?? 0}
@@ -175,7 +176,7 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
           }`}
         >
           <span className="type-label-sm flex items-center gap-1.5">
-            <FogReportIcon className="h-4 w-4" /> {dict?.admin?.totalTickets || ''}
+            <FogReportIcon className="h-4 w-4" /> {dict.admin.totalTickets}
           </span>
           <p className="type-page-title text-text-primary mt-1">
             {bugStats?.total ?? 0}
@@ -190,16 +191,16 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
           <div className="flex flex-col gap-2.5 pb-3 border-b border-border-color">
             <SearchInput
               fieldSize="sm"
-              aria-label={dict?.admin?.searchTicketsPlaceholder || ''}
+              aria-label={dict.admin.searchTicketsPlaceholder}
               value={bugSearch}
               onChange={(e) => onSearchChange(e.target.value)}
-              placeholder={dict?.admin?.searchTicketsPlaceholder || ''}
+              placeholder={dict.admin.searchTicketsPlaceholder}
             />
 
             <div className="flex items-center justify-between gap-2">
               <label htmlFor="bug-status-filter-select" className="flex items-center gap-1 type-strong-xs text-text-secondary">
                 <Filter className="h-3 w-3" />
-                <span>{dict?.admin?.filterLabel || ''}</span>
+                <span>{dict.admin.filterLabel}</span>
               </label>
               <Select
                 id="bug-status-filter-select"
@@ -208,11 +209,11 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
                 onChange={(e) => onStatusFilterChange(e.target.value)}
                 className="w-auto"
               >
-                <option value="all">{dict?.admin?.statusAll || ''}</option>
-                <option value="pending">{dict?.admin?.statusPending || ''}</option>
-                <option value="in_progress">{dict?.admin?.statusInProgress || ''}</option>
-                <option value="resolved">{dict?.admin?.statusResolved || ''}</option>
-                <option value="rejected">{dict?.admin?.statusRejected || ''}</option>
+                <option value="all">{dict.admin.statusAll}</option>
+                <option value="pending">{dict.admin.statusPending}</option>
+                <option value="in_progress">{dict.admin.statusInProgress}</option>
+                <option value="resolved">{dict.admin.statusResolved}</option>
+                <option value="rejected">{dict.admin.statusRejected}</option>
               </Select>
             </div>
           </div>
@@ -220,18 +221,18 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
           <div className="space-y-2 max-h-[600px] overflow-y-auto pr-1">
             {loading ? (
               <div className="py-12 text-center text-xs text-text-muted">
-                {dict?.admin?.loadingTickets || ''}
+                {dict.admin.loadingTickets}
               </div>
             ) : bugReports.length === 0 ? (
               <div className="py-12 text-center text-xs text-text-muted">
-                {dict?.admin?.noBugReports || ''}
+                {dict.admin.noBugReports}
               </div>
             ) : (
               bugReports.map((report) => {
                 const isSelected = selectedBugId === report.id;
                 const cfg = STATUS_CONFIG[report.status] || STATUS_CONFIG.pending;
                 const statusDictKey = STATUS_LABEL_KEYS[report.status];
-                const statusLabel = (statusDictKey && dict?.admin?.[statusDictKey]) || cfg.label;
+                const statusLabel = (statusDictKey && dict.admin?.[statusDictKey]) || cfg.label;
 
                 return (
                   <div
@@ -296,7 +297,7 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
           {totalBugReports > 20 && (
             <div className="flex items-center justify-between pt-3 border-t border-border-color text-xs">
               <span className="text-text-secondary type-caption">
-                {dict?.admin?.pageLabel || ''} {bugPage} {dict?.admin?.ofLabel || ''}{' '}
+                {dict.admin.pageLabel} {bugPage} {dict.admin.ofLabel}{' '}
                 {Math.ceil(totalBugReports / 20)}
               </span>
               <div className="flex items-center gap-1.5">
@@ -305,7 +306,7 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
                   size="xs"
                   onClick={() => onPageChange(Math.max(1, bugPage - 1))}
                   disabled={bugPage === 1}
-                  aria-label={dict?.admin?.prevPage || ''}
+                  aria-label={dict.admin.prevPage}
                 >
                   <ChevronLeft className="h-3.5 w-3.5" />
                 </Button>
@@ -314,7 +315,7 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
                   size="xs"
                   onClick={() => onPageChange(bugPage + 1)}
                   disabled={bugPage * 20 >= totalBugReports}
-                  aria-label={dict?.admin?.nextPage || ''}
+                  aria-label={dict.admin.nextPage}
                 >
                   <ChevronRight className="h-3.5 w-3.5" />
                 </Button>
@@ -344,9 +345,9 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
                     {selectedBug.title}
                   </h3>
                   <p className="text-xs text-text-secondary mt-0.5">
-                    {dict?.admin?.reportedBy || ''}{' '}
+                    {dict.admin.reportedBy}{' '}
                     <strong className="text-text-primary">{selectedBug.reporter_name}</strong>{' '}
-                    ({selectedBug.reporter_email || dict?.admin?.noEmailProvided || ''})
+                    ({selectedBug.reporter_email || dict.admin.noEmailProvided})
                   </p>
                 </div>
 
@@ -354,14 +355,14 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
                   <Select
                     value={selectedBug.status}
                     fieldSize="sm"
-                    aria-label={dict?.admin?.updateStatus || ''}
+                    aria-label={dict.admin.updateStatus}
                     onChange={(e) => onUpdateBug(selectedBug.id, e.target.value)}
                     className="w-auto rounded-xl font-black uppercase tracking-wider"
                   >
-                    <option value="pending">{dict?.admin?.statusPending || ''}</option>
-                    <option value="in_progress">{dict?.admin?.statusInProgress || ''}</option>
-                    <option value="resolved">{dict?.admin?.statusResolved || ''}</option>
-                    <option value="rejected">{dict?.admin?.statusRejected || ''}</option>
+                    <option value="pending">{dict.admin.statusPending}</option>
+                    <option value="in_progress">{dict.admin.statusInProgress}</option>
+                    <option value="resolved">{dict.admin.statusResolved}</option>
+                    <option value="rejected">{dict.admin.statusRejected}</option>
                   </Select>
 
                   <Button
@@ -369,8 +370,8 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
                     icon
                     size="sm"
                     onClick={() => onDeleteBug(selectedBug.id)}
-                    {...tip(dict?.admin?.deleteBugReportTitle || '', undefined, 'action')}
-                    aria-label={dict?.admin?.deleteBugReportTitle || ''}
+                    {...tip(dict.admin.deleteBugReportTitle, undefined, 'action')}
+                    aria-label={dict.admin.deleteBugReportTitle}
                   >
                     <Trash2 className="h-4 w-4" />
                   </Button>
@@ -379,7 +380,7 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
 
               <div className="space-y-2">
                 <h4 className="type-label-xs text-text-secondary">
-                  {dict?.admin?.description || ''}
+                  {dict.admin.description}
                 </h4>
                 <div className="rounded-2xl border border-border-color bg-bg-primary p-4 type-body text-text-primary whitespace-pre-wrap min-h-[100px]">
                   {selectedBug.message}
@@ -390,7 +391,7 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
                 <div className="space-y-2">
                   <h4 className="type-label-xs text-text-secondary flex items-center gap-1.5">
                     <ImageIcon className="h-3.5 w-3.5" />
-                    {dict?.admin?.attachmentsLabel || ''} ({selectedBug.images.length})
+                    {dict.admin.attachmentsLabel} ({selectedBug.images.length})
                   </h4>
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                     {selectedBug.images.map((imgUrl, i) => (
@@ -399,12 +400,12 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
                         href={imgUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        aria-label={dict?.admin?.attachmentsLabel ? `${dict.admin.attachmentsLabel} ${i + 1}` : ''}
+                        aria-label={dict.admin.attachmentsLabel ? `${dict.admin.attachmentsLabel} ${i + 1}` : ''}
                         className="group relative h-28 rounded-2xl border border-border-color overflow-hidden bg-bg-elevated shadow-xs transition-all hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-accent-red"
                       >
                         <img
                           src={imgUrl}
-                          alt={dict?.admin?.attachmentsLabel ? `${dict.admin.attachmentsLabel} ${i + 1}` : ''}
+                          alt={dict.admin.attachmentsLabel ? `${dict.admin.attachmentsLabel} ${i + 1}` : ''}
                           className="h-full w-full object-cover group-hover:opacity-85 transition-opacity"
                         />
                         <div className="absolute inset-0 bg-bg-primary/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity text-text-inverted">
@@ -419,7 +420,7 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
               <div className="space-y-2 pt-2 border-t border-border-color">
                 <label htmlFor={`dev-feedback-${selectedBug.id}`} className="type-label-xs text-text-secondary flex items-center gap-1.5">
                   <MessageSquare className="h-3.5 w-3.5 text-accent-amber" />
-                  {dict?.admin?.devFeedbackLabel || ''}
+                  {dict.admin.devFeedbackLabel}
                 </label>
                 <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
                   <Input
@@ -428,7 +429,7 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
                     fieldSize="sm"
                     value={editingNotes[selectedBug.id] ?? ''}
                     onChange={(e) => onNoteChange(selectedBug.id, e.target.value)}
-                    placeholder={dict?.admin?.reasonPlaceholder || ''}
+                    placeholder={dict.admin.reasonPlaceholder}
                     className="flex-1 sm:w-auto"
                   />
                   <Button
@@ -437,13 +438,13 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
                     onClick={() => onUpdateBug(selectedBug.id)}
                     leftIcon={<Save className="h-3.5 w-3.5" />}
                   >
-                    <span>{dict?.admin?.saveNote || dict?.user?.saveChanges || ''}</span>
+                    <span>{dict.admin.saveNote}</span>
                   </Button>
                 </div>
               </div>
             </div>
           ) : (
-            <EmptyState variant="compact" icon={Eye} title={dict?.user?.noReportsSubtitle || ''} />
+            <EmptyState variant="compact" icon={Eye} title={dict.user.noReportsSubtitle} />
           )}
         </div>
       </div>

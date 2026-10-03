@@ -40,5 +40,5 @@ test('privacy policy: locales share the same list sizes as English', () => {
 test('about page links a Privacy Policy pill to the localized /privacy-policy slug', () => {
   const about = fs.readFileSync(path.resolve(__dirname, '../../app/[locale]/about/page.tsx'), 'utf-8');
   assert.ok(about.includes('/privacy-policy`'), 'about links to the privacy-policy slug');
-  assert.ok(about.includes('dict?.privacy?.heading'), 'pill label comes from the dictionary');
+  assert.ok(about.includes('dict.privacy.heading'), 'pill label comes from the dictionary');
 });

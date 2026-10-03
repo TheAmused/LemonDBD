@@ -187,4 +187,5 @@ export default {
   perk: "Perk",
   lullabyRadius: "Lullaby Radius",
   clickOutsideToClose: 'Click outside to close overlay',
+  saveOwnershipError: 'Couldn\'t save your ownership changes. Please try again.',
 } as const;

@@ -24,7 +24,7 @@ import { SlotMachineStage } from './SlotMachineStage';
 import { KillerPickerGrid } from './KillerPickerGrid';
 import { useAuth } from '@/context/AuthContext';
 import { saveChaosDifficulty } from '@/utils/streakDifficultyPrefs';
-import { useStreaksDict } from '@/context/StreaksDictContext';
+import { useDictionary } from '@/context/DictionaryContext';
 import { useChallengeCompletionStatus } from '../useChallengeCompletionStatus';
 import { AdeptBadgeIcon } from '@/components/icons/DbdIcons';
 import { StreakActionBar, StreakActionButton } from '../StreakActionBar';
@@ -48,7 +48,7 @@ const ChaosModeModal = dynamic(
 );
 
 export const ChaosBoard: React.FC = () => {
-  const dict = useStreaksDict();
+  const dict = useDictionary();
   const completionStatus = useChallengeCompletionStatus();
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -151,7 +151,7 @@ export const ChaosBoard: React.FC = () => {
     }
   };
 
-  const completionTitle = dict?.streaks?.chaosVictoryTitle || 'You won the Chaos Streak';
+  const completionTitle = dict.streaks.chaosVictoryTitle;
 
   return (
     <div className="pb-16">
@@ -166,7 +166,6 @@ export const ChaosBoard: React.FC = () => {
               current={run?.current_streak ?? 0}
               total={run?.owned_killers.length ?? rosterKillers.length}
               checkpoints={everyNthCheckpoint(run?.checkpoint_interval ?? 0, run?.owned_killers.length ?? rosterKillers.length)}
-              dict={dict}
             />
           }
           header={
@@ -181,13 +180,12 @@ export const ChaosBoard: React.FC = () => {
           onOpenPerkPool={() => setIsPerkPoolOpen(true)}
           onOpenReset={() => setConfirmingReset(true)}
           onChangeDifficulty={() => setIsChangeDifficultyOpen(true)}
-          dict={dict}
         />
           }
         >
 
         {isCompleted ? (
-          <ChallengeVictoryCard title={completionTitle} onRestart={reset} busy={busy} dict={dict} />
+          <ChallengeVictoryCard title={completionTitle} onRestart={reset} busy={busy} />
         ) : (
           <SlotMachineStage
             perks={run?.current_perks || []}
@@ -196,7 +194,6 @@ export const ChaosBoard: React.FC = () => {
             onPullLever={reveal}
             loading={loading || busy}
             locked={Boolean(acceptedKillerId)}
-            dict={dict}
           />
         )}
         </ChallengePanel>
@@ -205,7 +202,7 @@ export const ChaosBoard: React.FC = () => {
           <>
             <div className="rounded-2xl border border-border-color bg-bg-surface/90 backdrop-blur-sm p-5 shadow-sm">
               <h3 className="type-label text-text-secondary mb-3">
-                {dict?.streaks?.pickYourKiller || ''}
+                {dict.streaks.pickYourKiller}
               </h3>
 
               <div
@@ -219,7 +216,6 @@ export const ChaosBoard: React.FC = () => {
                   onSelect={setSelectedKillerId}
                   disabled={busy || Boolean(acceptedKillerId) || !run?.perks_revealed}
                   loading={loadingKillers}
-                  dict={dict}
                 />
               </div>
             </div>
@@ -231,15 +227,15 @@ export const ChaosBoard: React.FC = () => {
                   onClick={() => selectedKillerId && setAcceptedKillerId(selectedKillerId)}
                   disabled={busy || !run?.perks_revealed || !selectedKillerId}
                 >
-                  {dict?.streaks?.accept || 'ACCEPT'}
+                  {dict.streaks.accept}
                 </StreakActionButton>
               ) : (
                 <>
                   <StreakActionButton variant="red" onClick={() => handleResult('loss')} disabled={busy}>
-                    {dict?.streaks?.loseMatch || ''}
+                    {dict.streaks.loseMatch}
                   </StreakActionButton>
                   <StreakActionButton variant="green" onClick={() => handleResult('win')} disabled={busy}>
-                    {dict?.streaks?.winMatch || ''}
+                    {dict.streaks.winMatch}
                   </StreakActionButton>
                 </>
               )}
@@ -253,11 +249,11 @@ export const ChaosBoard: React.FC = () => {
               type="button"
               onClick={handleDevSkipToWin}
               disabled={busy || !killers.length}
-              {...tip(dict?.streaks?.devSkipWinTitle || '', undefined, 'action')} aria-label={dict?.streaks?.devSkipWinTitle || ''}
+              {...tip(dict.streaks.devSkipWinTitle, undefined, 'action')} aria-label={dict.streaks.devSkipWinTitle}
               className="inline-flex items-center gap-2 type-strong text-accent-amber border border-accent-amber/30 bg-accent-amber/10 hover:bg-accent-amber/20 disabled:opacity-50 transition-colors cursor-pointer rounded-lg px-2.5 py-1"
             >
               <AdeptBadgeIcon className="h-3.5 w-3.5" aria-hidden="true" />
-              <span>{dict?.streaks?.devSkipWinLabel || ''}</span>
+              <span>{dict.streaks.devSkipWinLabel}</span>
             </button>
           </div>
         )}
@@ -265,10 +261,9 @@ export const ChaosBoard: React.FC = () => {
         <ResetConfirmModal
           open={confirmingReset}
           busy={busy}
-          message={dict?.streaks?.resetConfirmPrompt || 'Streak, checkpoints and your unlocked pool go back to zero. This cannot be undone.'}
+          message={dict.streaks.resetConfirmPrompt}
           onCancel={() => setConfirmingReset(false)}
           onConfirm={handleReset}
-          dict={dict}
         />
 
         <ChaosStatsDrawer
@@ -276,24 +271,21 @@ export const ChaosBoard: React.FC = () => {
           onClose={() => setIsStatsOpen(false)}
           stats={stats}
           attempts={run?.attempts}
-          dict={dict}
         />
         <ChallengeCompletionHistoryDrawer
           isOpen={isHistoryOpen}
           onClose={() => setIsHistoryOpen(false)}
           completions={completions}
-          subjectLabel={dict?.streaks?.killersLabel || 'killers'}
-          dict={dict}
+          subjectLabel={dict.streaks.killersLabel}
         />
-        <ChaosRulesModal isOpen={isRulesOpen} onClose={() => setIsRulesOpen(false)} dict={dict} />
+        <ChaosRulesModal isOpen={isRulesOpen} onClose={() => setIsRulesOpen(false)} />
         <ChaosPerkPoolModal
           isOpen={isPerkPoolOpen}
           onClose={() => setIsPerkPoolOpen(false)}
           pool={rosterPerkPool}
           usedPerkNames={run?.used_perks || []}
-          dict={dict}
         />
-        <CheckpointCelebrationModal checkpoint={justBankedCheckpoint} onClose={dismissCheckpointCelebration} dict={dict} />
+        <CheckpointCelebrationModal checkpoint={justBankedCheckpoint} onClose={dismissCheckpointCelebration} />
         <ChaosModeModal
           isOpen={isChangeDifficultyOpen}
           onClose={() => setIsChangeDifficultyOpen(false)}
@@ -306,9 +298,8 @@ export const ChaosBoard: React.FC = () => {
             setIsChangeDifficultyOpen(false);
             router.push(`${pathname}?difficulty=${newDifficulty}`);
           }}
-          dict={dict}
         />
       </div>
     </div>
   );
-};
+};

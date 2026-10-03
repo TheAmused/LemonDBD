@@ -5,11 +5,11 @@ import type { Dictionary } from '@/locales/types';
 import React, { useEffect, useState } from 'react';
 import { Trophy } from 'lucide-react';
 import { Modal } from '@/components/common/Modal';
+import { useDictionary } from "@/context/DictionaryContext";
 
 export interface CheckpointCelebrationModalProps {
   checkpoint: number | null;
   onClose: () => void;
-  dict?: Dictionary;
 }
 
 const SPARK_COUNT = 10;
@@ -58,11 +58,8 @@ function useCountUp(target: number | null, durationMs = 900, delayMs = 450) {
 }
 
 /** Shown when a win banks a checkpoint. Shared by every challenge that has them. */
-export const CheckpointCelebrationModal: React.FC<CheckpointCelebrationModalProps> = ({
-  checkpoint,
-  onClose,
-  dict,
-}) => {
+export const CheckpointCelebrationModal: React.FC<CheckpointCelebrationModalProps> = ({ checkpoint, onClose }) => {
+  const dict = useDictionary();
   const counted = useCountUp(checkpoint);
 
   return (
@@ -72,7 +69,7 @@ export const CheckpointCelebrationModal: React.FC<CheckpointCelebrationModalProp
       variant="lightbox"
       size="sm"
       closeButton="none"
-      ariaLabel={dict?.streaks?.checkpointSecured || 'Checkpoint secured'}
+      ariaLabel={dict.streaks.checkpointSecured}
     >
       <div
         className="ck-card-in relative w-full overflow-hidden rounded-3xl border border-accent-amber/60 bg-gradient-to-b from-accent-amber/20 via-bg-surface to-bg-primary flex min-h-[26rem] flex-col items-center justify-center px-8 py-14 text-center cursor-default"
@@ -108,13 +105,13 @@ export const CheckpointCelebrationModal: React.FC<CheckpointCelebrationModalProp
         </div>
 
         <p className="ck-shine-text relative mt-6 bg-gradient-to-r from-accent-amber via-text-primary to-accent-amber bg-clip-text type-label-sm tracking-spaced-md text-transparent">
-          {dict?.streaks?.checkpointSecured || 'Checkpoint secured'}
+          {dict.streaks.checkpointSecured}
         </p>
         <h2
           className="relative mt-2 text-5xl font-black tracking-tight text-text-primary"
         >
           {counted}
-          <span className="ml-2 text-lg font-bold text-text-secondary">{dict?.streaks?.winsSuffix || 'wins'}</span>
+          <span className="ml-2 text-lg font-bold text-text-secondary">{dict.streaks.winsSuffix}</span>
         </h2>
       </div>
     </Modal>

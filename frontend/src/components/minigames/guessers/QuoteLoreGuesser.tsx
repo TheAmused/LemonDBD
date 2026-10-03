@@ -7,6 +7,7 @@ import { Quote, BookOpen, Check, X, Sparkles } from 'lucide-react';
 import type { GuessRecord, RoundConfig, CatalogCharacter, CatalogPerk } from '@/types/minigame';
 import type { Dictionary } from '@/locales/types';
 import { staticUrl } from '@/utils/api';
+import { useDictionary } from "@/context/DictionaryContext";
 
 interface QuoteLoreGuesserProps {
   roundConfig: RoundConfig;
@@ -14,19 +15,11 @@ interface QuoteLoreGuesserProps {
   perks: CatalogPerk[];
   guesses: GuessRecord[];
   isSolved: boolean;
-  dict: Dictionary;
   children?: React.ReactNode;
 }
 
-export const QuoteLoreGuesser: React.FC<QuoteLoreGuesserProps> = ({
-  roundConfig,
-  characters,
-  perks,
-  guesses,
-  isSolved,
-  dict,
-  children,
-}) => {
+export const QuoteLoreGuesser: React.FC<QuoteLoreGuesserProps> = ({ roundConfig, characters, perks, guesses, isSolved, children }) => {
+  const dict = useDictionary();
   const customData = roundConfig.custom_data || {};
   const quoteText =
     (customData.quote as string) ||

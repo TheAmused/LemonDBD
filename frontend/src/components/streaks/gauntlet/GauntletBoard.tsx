@@ -22,7 +22,7 @@ import { useCelebrateOnRise, useCelebration } from '../useCelebration';
 import { GauntletHeader } from './GauntletHeader';
 import { ActiveTargetStage } from './ActiveTargetStage';
 import { CharacterRosterGrid } from './CharacterRosterGrid';
-import { useStreaksDict } from '@/context/StreaksDictContext';
+import { useDictionary } from '@/context/DictionaryContext';
 import { useChallengeCompletionStatus } from '../useChallengeCompletionStatus';
 import { saveGauntletMode } from '@/utils/streakDifficultyPrefs';
 
@@ -46,16 +46,16 @@ const GauntletFireBackground = dynamic(
   { ssr: false }
 );
 
-function gameModeLabel(mode: GauntletGameMode, dict?: Dictionary['streaks']): string {
+function gameModeLabel(mode: GauntletGameMode, dict: Dictionary['streaks']): string {
   switch (mode) {
     case 'lemon_solo':
-      return dict?.lemonSolo || 'Solo';
+      return dict.lemonSolo;
     case 'lemon_duo':
-      return dict?.lemonDuo || 'Duo';
+      return dict.lemonDuo;
     case 'lemon_squad':
-      return dict?.lemonSquad || 'Squad';
+      return dict.lemonSquad;
     default:
-      return dict?.original || 'Original';
+      return dict.original;
   }
 }
 
@@ -70,7 +70,7 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({
   role,
   gameMode = DEFAULT_GAUNTLET_GAME_MODE,
 }) => {
-  const dict = useStreaksDict();
+  const dict = useDictionary();
   const router = useRouter();
   const pathname = usePathname();
   const completionStatus = useChallengeCompletionStatus();
@@ -142,7 +142,6 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({
               current={run?.current_streak ?? 0}
               total={runLength}
               checkpoints={gauntletCheckpoints(gameMode, runLength)}
-              dict={dict}
             />
           }
           header={
@@ -150,22 +149,20 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({
           currentStreak={run?.current_streak || 0}
           bestStreak={run?.best_streak || 0}
           poolFrozen={Boolean(run?.pool_frozen) && Boolean(run?.target_revealed)}
-          modeLabel={gameMode !== 'original' || role === 'survivor' ? gameModeLabel(gameMode, dict?.streaks) : undefined}
+          modeLabel={gameMode !== 'original' || role === 'survivor' ? gameModeLabel(gameMode, dict.streaks) : undefined}
           onOpenStats={() => setIsStatsOpen(true)}
           onOpenHistory={() => setIsHistoryOpen(true)}
           onOpenRules={() => setIsRulesOpen(true)}
           onOpenReset={() => setConfirmingReset(true)}
           onChangeMode={role === 'survivor' ? () => setIsChangeModeOpen(true) : undefined}
-          dict={dict}
         />
           }
         >
         {isCompleted ? (
           <ChallengeVictoryCard
-            title={dict?.streaks?.gauntletComplete || 'You won The Gauntlet'}
+            title={dict.streaks.gauntletComplete}
             onRestart={reset}
             busy={busy}
-            dict={dict}
           />
         ) : (
           <ActiveTargetStage
@@ -184,7 +181,6 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({
             holdReel={justBankedCheckpoint != null}
             shownTarget={shownTarget}
             onShownTargetChange={setShownTarget}
-            dict={dict}
           />
         )}
         </ChallengePanel>
@@ -198,19 +194,17 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({
           onSelectCharacter={awaitingPick && !busy ? setPendingPick : undefined}
           selectedCharacterId={pendingPick}
           loading={loadingRoster}
-          dict={dict}
         />
 
         <ResetConfirmModal
           open={confirmingReset}
           busy={busy}
-          message={`${dict?.streaks?.resetConfirmPrefix || 'Streak, checkpoints and every cleared'} ${dict?.streaks?.[role] || role} ${dict?.streaks?.resetConfirmSuffix || 'go back to zero. This cannot be undone.'}`}
+          message={`${dict.streaks.resetConfirmPrefix} ${dict.streaks?.[role] || role} ${dict.streaks.resetConfirmSuffix}`}
           onCancel={() => setConfirmingReset(false)}
           onConfirm={() => {
             setConfirmingReset(false);
             reset();
           }}
-          dict={dict}
         />
 
         <GauntletStatsDrawer
@@ -218,7 +212,6 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({
           onClose={() => setIsStatsOpen(false)}
           stats={stats}
           attempts={run?.attempts}
-          dict={dict}
         />
         <ChallengeCompletionHistoryDrawer
           isOpen={isHistoryOpen}
@@ -226,10 +219,9 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({
           completions={completions}
           subjectLabel={
             role === 'killer'
-              ? dict?.streaks?.killersLabel || 'killers'
-              : dict?.streaks?.survivorsLabel || 'survivors'
+              ? dict.streaks.killersLabel
+              : dict.streaks.survivorsLabel
           }
-          dict={dict}
         />
         <GauntletModeModal
           isOpen={isChangeModeOpen}
@@ -246,16 +238,14 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({
             setIsChangeModeOpen(false);
             router.push(mode === 'original' ? pathname : `${pathname}?mode=${mode}`);
           }}
-          dict={dict}
         />
         <GauntletRulesModal
           isOpen={isRulesOpen}
           onClose={() => setIsRulesOpen(false)}
           role={role}
           gameMode={gameMode}
-          dict={dict}
         />
-        <CheckpointCelebrationModal checkpoint={justBankedCheckpoint} onClose={dismissCheckpointCelebration} dict={dict} />
+        <CheckpointCelebrationModal checkpoint={justBankedCheckpoint} onClose={dismissCheckpointCelebration} />
       </div>
     </div>
   );

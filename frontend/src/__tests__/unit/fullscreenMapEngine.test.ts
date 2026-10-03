@@ -2,7 +2,7 @@
 import test from 'node:test';
 import assert from 'node:assert';
 import React from 'react';
-import { renderToStaticMarkup } from 'react-dom/server';
+import { renderWithDictionary } from '../helpers/renderWithDictionary';
 import { FullscreenMapEngineView as FullscreenMapEngine } from '@/components/maps/FullscreenMapEngine';
 import type { MapRealm } from '@/types/map';
 
@@ -64,7 +64,7 @@ const sampleMidwichMap: MapRealm = {
 };
 
 test('FullscreenMapEngine renders outdoor map tactical intel badges and telemetry', () => {
-  const html = renderToStaticMarkup(
+  const html = renderWithDictionary(
     React.createElement(FullscreenMapEngine, {
       mapId: 1,
       availableMaps: [sampleOutdoorMap],
@@ -86,7 +86,7 @@ test('FullscreenMapEngine renders outdoor map tactical intel badges and telemetr
 });
 
 test('FullscreenMapEngine renders indoor map tactical intel without shack and 0 maze tiles', () => {
-  const html = renderToStaticMarkup(
+  const html = renderWithDictionary(
     React.createElement(FullscreenMapEngine, {
       mapId: 43,
       availableMaps: [sampleIndoorMap],
@@ -104,7 +104,7 @@ test('FullscreenMapEngine renders indoor map tactical intel without shack and 0 
 });
 
 test('FullscreenMapEngine renders float tile size accurately', () => {
-  const html = renderToStaticMarkup(
+  const html = renderWithDictionary(
     React.createElement(FullscreenMapEngine, {
       mapId: 45,
       availableMaps: [sampleMidwichMap],

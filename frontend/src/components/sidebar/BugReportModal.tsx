@@ -24,11 +24,11 @@ import { FogReportIcon } from '@/components/icons/DbdIcons';
 import { Modal } from '@/components/common/Modal';
 import { Button } from '@/components/common/Button';
 import { Input, Select, Textarea } from '@/components/common/Field';
+import { useDictionary } from "@/context/DictionaryContext";
 
 export interface BugReportModalProps {
   isOpen: boolean;
   onClose: () => void;
-  dict?: Dictionary | any;
   t?: Record<string, string>;
 }
 
@@ -50,12 +50,8 @@ const DEFAULT_BUG_CATEGORIES = [
 
 type BugCategoryKey = typeof DEFAULT_BUG_CATEGORIES[number];
 
-export const BugReportModal: React.FC<BugReportModalProps> = ({
-  isOpen,
-  onClose,
-  dict: propDict,
-  t: propT,
-}) => {
+export const BugReportModal: React.FC<BugReportModalProps> = ({ isOpen, onClose, t: propT }) => {
+  const propDict = useDictionary();
   const { user, isAuthenticated } = useAuth();
   const params = useParams();
   const pathname = usePathname() || '';
@@ -73,7 +69,7 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({
     }
   }, [currentLocale, propDict, propT]);
 
-  const rawSidebarDict = (propDict?.sidebar || loadedDict?.sidebar || {}) as Record<string, string>;
+  const rawSidebarDict = (propDict.sidebar || loadedDict?.sidebar || {}) as Record<string, string>;
   const t: Record<string, string> = propT || rawSidebarDict;
 
   const bugCategories: Array<{ key: BugCategoryKey; label: string }> = [

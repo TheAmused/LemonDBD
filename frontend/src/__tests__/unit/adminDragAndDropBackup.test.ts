@@ -48,7 +48,7 @@ describe('Admin Database Backup: Drag and Drop Import Modal', () => {
     assert.ok(modalSource.includes('tabIndex={0}'), 'Dropzone must have tabIndex=0 for keyboard accessibility');
     assert.ok(modalSource.includes('onKeyDown'), 'Dropzone must handle keyboard activation');
     assert.ok(
-      modalSource.includes('dict?.admin?.dropFilePrompt'),
+      modalSource.includes('dict.admin.dropFilePrompt'),
       'Dropzone must render the localized drop prompt'
     );
     assert.ok(

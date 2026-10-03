@@ -5,24 +5,18 @@ import React from 'react';
 import { Package, Check, X } from 'lucide-react';
 import type { GuessRecord, RoundConfig, CatalogCharacter } from '@/types/minigame';
 import type { Dictionary } from '@/locales/types';
+import { useDictionary } from "@/context/DictionaryContext";
 
 interface AddonGuesserProps {
   roundConfig: RoundConfig;
   killers: CatalogCharacter[];
   guesses: GuessRecord[];
   isSolved: boolean;
-  dict: Dictionary;
   children?: React.ReactNode;
 }
 
-export const AddonGuesser: React.FC<AddonGuesserProps> = ({
-  roundConfig,
-  killers,
-  guesses,
-  isSolved,
-  dict,
-  children,
-}) => {
+export const AddonGuesser: React.FC<AddonGuesserProps> = ({ roundConfig, killers, guesses, isSolved, children }) => {
+  const dict = useDictionary();
   const attempts = guesses.length;
   const description = (roundConfig.custom_data?.description as string) || '';
   const t = dict.minigames;

@@ -25,12 +25,11 @@ export default function SmashRosterCreatePage() {
   return (
     <PageShell
       locale={locale}
-      dict={dict}
       activeCategory="smash-or-pass"
       padding="tight"
       mainClassName="relative flex flex-col"
     >
-      <SmashRosterCreator locale={locale} dict={dict} editId={editId} />
+      <SmashRosterCreator locale={locale} editId={editId} />
     </PageShell>
   );
 }

@@ -81,13 +81,12 @@ export default function CharacterDetailPage() {
   return (
     <PageShell
       locale={locale}
-      dict={dict}
       activeCategory="characters"
       mainClassName="relative overflow-y-auto"
     >
       <div className="relative z-10">
         {loading ? (
-          <CharacterDetailSkeleton dict={dict} />
+          <CharacterDetailSkeleton />
         ) : notFound || !detailData ? (
           <div className="min-h-[60vh] flex flex-col items-center justify-center space-y-5 text-center p-6">
             <div className="flex h-16 w-16 items-center justify-center rounded-3xl bg-bg-elevated border border-border-color text-text-muted">
@@ -95,11 +94,10 @@ export default function CharacterDetailPage() {
             </div>
             <div className="space-y-1 max-w-md">
               <h2 className="type-page-title text-text-primary">
-                {t.notFoundTitle || 'Character Not Found'}
+                {t.notFoundTitle}
               </h2>
               <p className="type-body-fluid text-text-muted">
-                {t.notFoundDesc ||
-                  'The character you are looking for does not exist or could not be found in the archives.'}
+                {t.notFoundDesc}
               </p>
             </div>
             <Link
@@ -107,14 +105,13 @@ export default function CharacterDetailPage() {
               className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-accent-red hover:bg-accent-red-hover text-text-inverted type-strong transition-all shadow-xs active:scale-95 cursor-pointer"
             >
               <ChevronLeft className="h-4 w-4" />
-              <span>{t.backToCharacters || 'Back to Characters'}</span>
+              <span>{t.backToCharacters}</span>
             </Link>
           </div>
         ) : (
-          <Suspense fallback={<CharacterDetailSkeleton dict={dict} />}>
+          <Suspense fallback={<CharacterDetailSkeleton />}>
             <CharacterSubpageView
               currentLocale={locale}
-              dict={dict}
               detailData={detailData}
               allCharacters={allCharacters}
             />

@@ -10,10 +10,11 @@ import { perkIconUrl as perkIconFor } from '@/utils/staticUrl';
 import { usePerkDisplayName } from '@/context/DisplayNamesContext';
 import { CELEBRATION_CARD_CLASSES, CELEBRATION_LABEL_CLASSES, CelebrationBadge } from '../CelebrationBadge';
 import { formatMessage } from '@/utils/i18nFormat';
+import { useDictionary } from "@/context/DictionaryContext";
 
 /** "You unlocked 3 new perks", worded and declined for the locale. */
-function unlockedPerksMessage(dict: Dictionary | undefined, locale: string, count: number): string {
-  return formatMessage(dict?.streaks?.unlockedPerks || 'You unlocked {count, plural, one {# new perk} other {# new perks}}', { count }, locale);
+function unlockedPerksMessage(dict: Dictionary, locale: string, count: number): string {
+  return formatMessage(dict.streaks.unlockedPerks, { count }, locale);
 }
 
 type LockPhase = 'locked' | 'shaking' | 'breaking' | 'unlocked';
@@ -82,10 +83,10 @@ export interface HistoryPerkModalProps {
   perks: Perk[];
   locale: string;
   onClose: () => void;
-  dict?: Dictionary;
 }
 
-export const HistoryPerkModal: React.FC<HistoryPerkModalProps> = ({ killerName, perks, locale, onClose, dict }) => {
+export const HistoryPerkModal: React.FC<HistoryPerkModalProps> = ({ killerName, perks, locale, onClose }) => {
+  const dict = useDictionary();
   const [phase, setPhase] = useState<LockPhase>('locked');
   const unlockedMessage = unlockedPerksMessage(dict, locale, perks.length);
 
@@ -112,14 +113,14 @@ export const HistoryPerkModal: React.FC<HistoryPerkModalProps> = ({ killerName, 
       variant="lightbox"
       size="sm"
       closeButton="none"
-      ariaLabel={dict?.streaks?.victoryCongrats || 'Congratulations'}
+      ariaLabel={dict.streaks.victoryCongrats}
     >
       <div className={`relative w-full ${CELEBRATION_CARD_CLASSES} px-8 py-10`}>
         <CelebrationBadge />
 
-        <p className={`mt-6 ${CELEBRATION_LABEL_CLASSES}`}>{dict?.streaks?.victoryCongrats || 'Congratulations'}</p>
+        <p className={`mt-6 ${CELEBRATION_LABEL_CLASSES}`}>{dict.streaks.victoryCongrats}</p>
         <h2 className="mt-2 text-2xl font-black tracking-tight text-text-primary">
-          {perks.length > 0 ? unlockedMessage : dict?.streaks?.noNewPerks || 'No new perks this time.'}
+          {perks.length > 0 ? unlockedMessage : dict.streaks.noNewPerks}
         </h2>
 
         {perks.length > 0 && (
@@ -134,7 +135,7 @@ export const HistoryPerkModal: React.FC<HistoryPerkModalProps> = ({ killerName, 
           onClick={onClose}
           className="mt-6 w-full rounded-xl bg-accent-amber py-3 type-card-title text-text-inverted transition-colors hover:bg-accent-amber-hover cursor-pointer"
         >
-          {dict?.streaks?.continueButton || 'Continue'}
+          {dict.streaks.continueButton}
         </button>
       </div>
     </Modal>

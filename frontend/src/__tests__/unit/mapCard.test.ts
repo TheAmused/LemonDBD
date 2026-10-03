@@ -2,7 +2,7 @@
 import test from 'node:test';
 import assert from 'node:assert';
 import React from 'react';
-import { renderToStaticMarkup } from 'react-dom/server';
+import { renderWithDictionary } from '../helpers/renderWithDictionary';
 import { MapCard } from '@/components/maps/MapCard';
 import type { MapRealm } from '@/types/map';
 
@@ -27,7 +27,7 @@ const sampleMap: MapRealm = {
 };
 
 test('MapCard renders the map name as a visible label', () => {
-  const html = renderToStaticMarkup(
+  const html = renderWithDictionary(
     React.createElement(MapCard, {
       map: sampleMap,
       backendBase: 'http://localhost:5000',
@@ -38,7 +38,7 @@ test('MapCard renders the map name as a visible label', () => {
 });
 
 test('MapCard resolves the local static image path', () => {
-  const html = renderToStaticMarkup(
+  const html = renderWithDictionary(
     React.createElement(MapCard, {
       map: sampleMap,
       backendBase: 'http://localhost:5000',
@@ -50,7 +50,7 @@ test('MapCard resolves the local static image path', () => {
 
 test('MapCard falls back to the remote callout URL when no local path is set', () => {
   const remoteOnlyMap: MapRealm = { ...sampleMap, callout_image_local_path: undefined };
-  const html = renderToStaticMarkup(
+  const html = renderWithDictionary(
     React.createElement(MapCard, {
       map: remoteOnlyMap,
       backendBase: 'http://localhost:5000',

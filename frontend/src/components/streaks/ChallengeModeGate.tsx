@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { AlertTriangle } from 'lucide-react';
 import { fetchChallengeModeStatus } from '@/services/challengeModesApi';
-import { useStreaksDict } from '@/context/StreaksDictContext';
+import { useDictionary } from '@/context/DictionaryContext';
 
 interface ChallengeModeGateProps {
   /** Backend `ChallengeModeSetting.mode` key (gauntlet/chaos/history/page_streak). */
@@ -19,7 +19,7 @@ interface ChallengeModeGateProps {
  * actual game board never mounts -- this renders a block screen instead,
  * regardless of how the URL was reached. */
 export const ChallengeModeGate: React.FC<ChallengeModeGateProps> = ({ mode, locale, role, children }) => {
-  const dict = useStreaksDict();
+  const dict = useDictionary();
   const [status, setStatus] = useState<'loading' | 'enabled' | 'disabled'>('loading');
   const [reason, setReason] = useState<string | null>(null);
 
@@ -47,18 +47,18 @@ export const ChallengeModeGate: React.FC<ChallengeModeGateProps> = ({ mode, loca
       <div className="flex flex-col items-center justify-center gap-4 rounded-3xl border border-accent-amber/30 bg-accent-amber/10 p-12 text-center">
         <AlertTriangle className="h-12 w-12 text-accent-amber" />
         <h1 className="text-lg font-extrabold text-text-primary">
-          {dict?.streaks?.temporarilyDisabled || 'This challenge was disabled temporarily.'}
+          {dict.streaks.temporarilyDisabled}
         </h1>
         {reason && (
           <p className="max-w-md text-sm text-text-secondary">
-            {dict?.modal?.reasonLabel || 'Reason'}: {reason}
+            {dict.modal.reasonLabel}: {reason}
           </p>
         )}
         <Link
           href={`/${locale}/streaks/${role}`}
           className="mt-2 rounded-xl border border-border-color bg-bg-surface px-4 py-2 type-strong text-text-secondary hover:border-accent-amber/50 hover:text-accent-amber transition-colors"
         >
-          {dict?.streaks?.backToKillerStreaks || 'Back to challenges'}
+          {dict.streaks.backToKillerStreaks}
         </Link>
       </div>
     );

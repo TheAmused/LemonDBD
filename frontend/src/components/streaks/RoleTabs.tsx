@@ -8,17 +8,18 @@ import { Puzzle } from 'lucide-react';
 import { SegmentedControl, SegmentedControlOption } from '@/components/common/SegmentedControl';
 import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
 import { saveStreakRole, type StreakRole } from '@/utils/streakDifficultyPrefs';
+import { useDictionary } from "@/context/DictionaryContext";
 
 interface RoleTabsProps {
   locale: string;
-  dict?: Dictionary;
 }
 
 const ROLE_IDS: readonly StreakRole[] = ['survivor', 'killer', 'challenge'];
 
 const noop = () => {};
 
-export const RoleTabs: React.FC<RoleTabsProps> = ({ locale, dict }) => {
+export const RoleTabs: React.FC<RoleTabsProps> = ({ locale }) => {
+  const dict = useDictionary();
   const pathname = usePathname();
 
   const matchedRole = ROLE_IDS.find((id) => pathname?.startsWith(`/${locale}/streaks/${id}`));
@@ -29,8 +30,8 @@ export const RoleTabs: React.FC<RoleTabsProps> = ({ locale, dict }) => {
     if (matchedRole) saveStreakRole(matchedRole);
   }, [matchedRole]);
 
-  const survivorLabel = dict?.characterDetail?.roleSurvivor || 'Survivor';
-  const killerLabel = dict?.characterDetail?.roleKiller || 'Killer';
+  const survivorLabel = dict.characterDetail.roleSurvivor;
+  const killerLabel = dict.characterDetail.roleKiller;
 
   const options: readonly SegmentedControlOption<StreakRole>[] = [
     {
@@ -58,7 +59,7 @@ export const RoleTabs: React.FC<RoleTabsProps> = ({ locale, dict }) => {
 
   return (
     <SegmentedControl
-      ariaLabel={dict?.streaks?.streakRoleTabs || 'Streak Role Tabs'}
+      ariaLabel={dict.streaks.streakRoleTabs}
       value={activeRole}
       onChange={noop}
       options={options}

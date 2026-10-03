@@ -21,6 +21,7 @@ import { FriendzoneIcon, EldritchVoidIcon } from '@/components/icons/DbdIcons';
 import { Surface } from '@/components/common/Surface';
 import { formatNumber } from '@/utils/format';
 import { isSurvivor as isSurvivorRole } from '@/utils/characterUtils';
+import { useDictionary } from "@/context/DictionaryContext";
 
 interface CharacterStatsModalProps {
   isOpen: boolean;
@@ -28,19 +29,12 @@ interface CharacterStatsModalProps {
   character: any;
   stats?: EntityStatItem;
   locale?: string;
-  dict?: Dictionary | any;
 }
 
-export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({
-  isOpen,
-  onClose,
-  character: rawCharacter,
-  stats,
-  locale = 'en',
-  dict,
-}) => {
+export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({ isOpen, onClose, character: rawCharacter, stats, locale = 'en' }) => {
+  const dict = useDictionary();
   const backendBase = getBackendBaseUrl();
-  const rawSmashDict = dict?.smashOrPass;
+  const rawSmashDict = dict.smashOrPass;
 
   const slug = rawCharacter?.slug || rawCharacter?.character_slug || rawCharacter?.id || '';
 
@@ -86,7 +80,7 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({
   const tierInfo = useMemo(() => {
     if (smashRate >= 85) {
       return {
-        tier: rawSmashDict?.tiers?.godTier || 'God Tier',
+        tier: rawSmashDict.tiers.godTier,
         color: 'text-accent-amber',
         bg: 'bg-accent-amber/15 border-accent-amber/40',
         glow: '',
@@ -95,7 +89,7 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({
     }
     if (smashRate >= 65) {
       return {
-        tier: rawSmashDict?.tiers?.fatalAttraction || 'Fatal Attraction',
+        tier: rawSmashDict.tiers.fatalAttraction,
         color: 'text-accent-red',
         bg: 'bg-accent-red/15 border-accent-red/40',
         glow: '',
@@ -104,7 +98,7 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({
     }
     if (smashRate >= 40) {
       return {
-        tier: rawSmashDict?.tiers?.friendzone || 'Friendzone',
+        tier: rawSmashDict.tiers.friendzone,
         color: 'text-text-secondary',
         bg: 'bg-bg-elevated border-border-color',
         glow: '',
@@ -112,7 +106,7 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({
       };
     }
     return {
-      tier: rawSmashDict?.tiers?.eldritchVoid || 'Eldritch Void',
+      tier: rawSmashDict.tiers.eldritchVoid,
       color: 'text-text-muted',
       bg: 'bg-bg-elevated border-border-color',
       glow: '',
@@ -121,22 +115,22 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({
   }, [smashRate, rawSmashDict]);
 
   const roleLabel = isSurvivor
-    ? rawSmashDict?.filters?.survivors || 'Survivor'
-    : rawSmashDict?.filters?.killers || 'Killer';
+    ? rawSmashDict.filters.survivors
+    : rawSmashDict.filters.killers;
 
-  const communityConsensusLabel = rawSmashDict?.communityConsensus || 'Community Consensus';
-  const smashRateLabel = rawSmashDict?.statsDetail?.communitySmashRate || rawSmashDict?.statsDetail?.smashRate || 'Smash Rate';
-  const smashesLabel = rawSmashDict?.statsDetail?.smashCount || 'Smashes';
-  const passesLabel = rawSmashDict?.statsDetail?.passCount || 'Passes';
-  const totalVotesLabel = rawSmashDict?.statsDetail?.totalVotes || 'Total Votes';
-  const globalRankLabel = rawSmashDict?.statsDetail?.rank || 'Global Rank';
-  const loreQuoteLabel = rawSmashDict?.loreLabels?.signatureQuote || 'Signature Quote';
-  const loreProfileLabel = rawSmashDict?.loreLabels?.bio || 'Bio';
-  const greenFlagsLabel = rawSmashDict?.loreLabels?.greenFlag || 'Green Flags';
-  const redFlagsLabel = rawSmashDict?.loreLabels?.redFlag || 'Red Flags';
-  const turnOnLabel = rawSmashDict?.loreLabels?.turn_on || 'Turn On:';
-  const dealbreakerLabel = rawSmashDict?.loreLabels?.dealbreaker || 'Dealbreaker:';
-  const percentSign = rawSmashDict?.percentSign || '%';
+  const communityConsensusLabel = rawSmashDict.communityConsensus;
+  const smashRateLabel = rawSmashDict.statsDetail.communitySmashRate;
+  const smashesLabel = rawSmashDict.statsDetail.smashCount;
+  const passesLabel = rawSmashDict.statsDetail.passCount;
+  const totalVotesLabel = rawSmashDict.statsDetail.totalVotes;
+  const globalRankLabel = rawSmashDict.statsDetail.rank;
+  const loreQuoteLabel = rawSmashDict.loreLabels.signatureQuote;
+  const loreProfileLabel = rawSmashDict.loreLabels.bio;
+  const greenFlagsLabel = rawSmashDict.loreLabels.greenFlag;
+  const redFlagsLabel = rawSmashDict.loreLabels.redFlag;
+  const turnOnLabel = rawSmashDict.loreLabels.turn_on;
+  const dealbreakerLabel = rawSmashDict.loreLabels.dealbreaker;
+  const percentSign = rawSmashDict.percentSign;
 
   const roleBadge = (
     <span

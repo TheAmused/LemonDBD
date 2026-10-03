@@ -11,6 +11,7 @@ import { tip } from '@/components/common/Tooltip';
 import { Button } from '@/components/common/Button';
 import { Surface } from '@/components/common/Surface';
 import { formatMessage } from '@/utils/i18nFormat';
+import { useDictionary } from "@/context/DictionaryContext";
 
 interface CoverImageCropModalProps {
   isOpen: boolean;
@@ -19,19 +20,11 @@ interface CoverImageCropModalProps {
   onApplyCrop: (croppedDataUrl: string) => void;
   themeColor?: string;
   isAdmin?: boolean;
-  dict?: Dictionary;
 }
 
-export const CoverImageCropModal: React.FC<CoverImageCropModalProps> = ({
-  isOpen,
-  onClose,
-  imageUrl,
-  onApplyCrop,
-  themeColor = '#ff0055',
-  isAdmin = false,
-  dict,
-}) => {
-  const cm = dict?.smashOrPass?.cropModal || {
+export const CoverImageCropModal: React.FC<CoverImageCropModalProps> = ({ isOpen, onClose, imageUrl, onApplyCrop, themeColor = '#ff0055', isAdmin = false }) => {
+  const dict = useDictionary();
+  const cm = dict.smashOrPass.cropModal || {
     title: 'Crop & Frame Cover Image',
     subtitle: 'Drag to reposition, use mouse wheel or zoom slider to scale up any specific part (up to 500%).',
     previewAlt: 'Cover Preview',

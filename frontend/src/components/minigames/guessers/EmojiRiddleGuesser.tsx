@@ -5,6 +5,7 @@ import React from 'react';
 import { HelpCircle, Check, X } from 'lucide-react';
 import type { GuessRecord, RoundConfig, CatalogCharacter, CatalogPerk } from '@/types/minigame';
 import type { Dictionary } from '@/locales/types';
+import { useDictionary } from "@/context/DictionaryContext";
 
 interface EmojiRiddleGuesserProps {
   roundConfig: RoundConfig;
@@ -12,19 +13,11 @@ interface EmojiRiddleGuesserProps {
   perks: CatalogPerk[];
   guesses: GuessRecord[];
   isSolved: boolean;
-  dict: Dictionary;
   children?: React.ReactNode;
 }
 
-export const EmojiRiddleGuesser: React.FC<EmojiRiddleGuesserProps> = ({
-  roundConfig,
-  characters,
-  perks,
-  guesses,
-  isSolved,
-  dict,
-  children,
-}) => {
+export const EmojiRiddleGuesser: React.FC<EmojiRiddleGuesserProps> = ({ roundConfig, characters, perks, guesses, isSolved, children }) => {
+  const dict = useDictionary();
   const emojis = roundConfig.custom_data?.emojis || '';
   const attempts = guesses.length;
   const t = dict.minigames;

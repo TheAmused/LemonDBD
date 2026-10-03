@@ -38,4 +38,9 @@ export default {
   mostUpvoted: "高評価順",
   resetAllFilters: "すべてのフィルターをリセット",
   viewMode: "パークグリッド表示",
+  clearSearch: "検索をクリア",
+  filtersTitle: "フィルター",
+  ownershipFilter: "所持状況で絞り込む",
+  sortFields: "並べ替え項目",
+  sortOrderLabel: "並べ替え順",
 } as const;

@@ -15,11 +15,10 @@ export default function TierListsPage() {
   return (
     <PageShell
       locale={locale}
-      dict={dict}
       activeCategory="tier-lists"
       mainClassName="relative flex flex-col"
     >
-      <TierListHub locale={locale} dict={dict} />
+      <TierListHub locale={locale} />
     </PageShell>
   );
 }

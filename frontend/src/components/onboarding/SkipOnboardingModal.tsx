@@ -5,21 +5,17 @@ import { AlertTriangle } from 'lucide-react';
 import type { Dictionary } from '@/locales/types';
 import { Modal } from '@/components/common/Modal';
 import { Button } from '@/components/common/Button';
+import { useDictionary } from "@/context/DictionaryContext";
 
 export interface SkipOnboardingModalProps {
   isOpen: boolean;
   onCancel: () => void;
   onConfirm: () => void;
-  dict?: Dictionary;
 }
 
-export const SkipOnboardingModal: React.FC<SkipOnboardingModalProps> = ({
-  isOpen,
-  onCancel,
-  onConfirm,
-  dict,
-}) => {
-  const t = dict?.onboarding;
+export const SkipOnboardingModal: React.FC<SkipOnboardingModalProps> = ({ isOpen, onCancel, onConfirm }) => {
+  const dict = useDictionary();
+  const t = dict.onboarding;
 
   return (
     <Modal
@@ -29,7 +25,7 @@ export const SkipOnboardingModal: React.FC<SkipOnboardingModalProps> = ({
       size="md"
       tone="warning"
       icon={<AlertTriangle className="h-5 w-5 sm:h-6 sm:w-6" aria-hidden="true" />}
-      title={t?.skipModalTitle || 'Skip character setup?'}
+      title={t.skipModalTitle}
       closeButton="none"
       padded
       bodyClassName="text-center"
@@ -37,21 +33,20 @@ export const SkipOnboardingModal: React.FC<SkipOnboardingModalProps> = ({
       footer={
         <>
           <Button variant="secondary" onClick={onCancel} data-autofocus className="w-full sm:flex-1">
-            {t?.skipModalCancel || 'Go back'}
+            {t.skipModalCancel}
           </Button>
           <button
             type="button"
             onClick={onConfirm}
             className="w-full sm:flex-1 rounded-xl bg-accent-amber hover:bg-accent-amber-hover py-2.5 type-label-sm text-text-inverted transition-colors cursor-pointer"
           >
-            {t?.skipModalConfirm || 'Yes, skip for now'}
+            {t.skipModalConfirm}
           </button>
         </>
       }
     >
       <p className="text-xs text-text-secondary">
-        {t?.skipModalBody ||
-          'If you skip, only the free base-game characters will be unlocked for you. Everything else stays locked until you unlock it yourself from your Characters page later.'}
+        {t.skipModalBody}
       </p>
     </Modal>
   );

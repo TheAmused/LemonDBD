@@ -7,16 +7,14 @@ import { ArrowUp, ArrowDown, Check, X } from 'lucide-react';
 import type { GuessRecord, NumericAttributeResult } from '@/types/minigame';
 import type { Dictionary } from '@/locales/types';
 import { staticUrl } from '@/utils/api';
+import { useDictionary } from "@/context/DictionaryContext";
 
 interface ClassicCharacterGuesserProps {
   guesses: GuessRecord[];
-  dict: Dictionary;
 }
 
-export const ClassicCharacterGuesser: React.FC<ClassicCharacterGuesserProps> = ({
-  guesses,
-  dict,
-}) => {
+export const ClassicCharacterGuesser: React.FC<ClassicCharacterGuesserProps> = ({ guesses }) => {
+  const dict = useDictionary();
   if (guesses.length === 0) {
     return null;
   }

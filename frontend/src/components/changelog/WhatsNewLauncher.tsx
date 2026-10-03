@@ -32,6 +32,8 @@ import { Modal } from '@/components/common/Modal';
 import { RichText } from '@/components/common/RichText';
 import { Spinner } from '@/components/common/Spinner';
 import { formatDate } from '@/utils/format';
+import { useDictionary } from "@/context/DictionaryContext";
+
 const ChangelogEditorModal = dynamic(
   () => import('./ChangelogEditorModal').then((m) => m.ChangelogEditorModal),
   { ssr: false }
@@ -50,7 +52,6 @@ const formatPostDate = (iso: string | null) =>
 export interface WhatsNewLauncherProps {
   /** Extra classes for the icon-only trigger button (sizing/positioning). */
   className?: string;
-  dict?: Dictionary;
 }
 
 /**
@@ -60,8 +61,9 @@ export interface WhatsNewLauncherProps {
  * grabbing a handle (mouse-drag on desktop, press-and-hold-then-drag via the
  * Pointer Events API on touch) or with keyboard/tap-friendly up/down buttons.
  */
-export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ className = '', dict }) => {
-  const t = dict?.changelog;
+export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ className = '' }) => {
+  const dict = useDictionary();
+  const t = dict.changelog;
   const { token, isAdmin } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const [posts, setPosts] = useState<ChangelogPost[]>([]);
@@ -136,7 +138,7 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ className = 
       setEditingPost(null);
       await loadPosts();
     } catch (err) {
-      setEditorError(err instanceof Error ? err.message : t?.saveError || 'Failed to save changelog entry.');
+      setEditorError(err instanceof Error ? err.message : t.saveError);
     } finally {
       setSaving(false);
     }
@@ -152,7 +154,7 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ className = 
       await loadPosts();
     } catch (err) {
       setPendingDeleteId(null);
-      setEditorError(err instanceof Error ? err.message : t?.deleteError || 'Failed to delete changelog entry.');
+      setEditorError(err instanceof Error ? err.message : t.deleteError);
     }
   };
 
@@ -282,8 +284,8 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ className = 
       <button
         type="button"
         onClick={handleOpen}
-        {...tip(t?.triggerTitle || "What's New?", undefined, 'action')}
-        aria-label={t?.triggerTitle || "What's New?"}
+        {...tip(t.triggerTitle, undefined, 'action')}
+        aria-label={t.triggerTitle}
         className={`group relative flex h-9 w-9 items-center justify-center rounded-xl border border-border-color text-text-muted transition-all hover:border-accent-red/50 hover:text-accent-red hover:bg-accent-red/10 cursor-pointer ${className}`}
       >
         <Megaphone className="h-4 w-4" />
@@ -301,8 +303,8 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ className = 
         variant="dialog"
         size="2xl"
         icon={<Sparkles className="h-4 w-4" />}
-        title={t?.modalTitle || "What's New"}
-        closeButtonAriaLabel={t?.close || 'Close'}
+        title={t.modalTitle}
+        closeButtonAriaLabel={t.close}
         headerRight={
           isAdmin ? (
             <button
@@ -311,7 +313,7 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ className = 
                 setEditingPost(null);
                 setEditorOpen(true);
               }}
-              {...tip(t?.newEntry || 'New entry', undefined, 'action')} aria-label={t?.newEntry || 'New entry'}
+              {...tip(t.newEntry, undefined, 'action')} aria-label={t.newEntry}
               className="flex h-9 w-9 items-center justify-center rounded-xl border border-border-subtle text-text-secondary hover:border-accent-red/50 hover:text-accent-red cursor-pointer"
             >
               <Plus className="h-4 w-4" />
@@ -324,7 +326,7 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ className = 
           <FilterChip
             active={activeFilter === 'all'}
             onClick={() => setActiveFilter('all')}
-            label={t?.filterAll || 'All'}
+            label={t.filterAll}
           />
           {availableTags.map((tag) => {
             const theme = CHANGELOG_TAG_THEME[tag];
@@ -351,7 +353,7 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ className = 
           <div className="flex flex-col items-center gap-2 py-16 text-center">
             <Skull className="h-6 w-6 text-text-muted" />
             <p className="text-xs font-medium text-text-muted">
-              {t?.emptyState || 'Nothing new yet. Check back after the next Trial.'}
+              {t.emptyState}
             </p>
           </div>
         )}
@@ -383,8 +385,8 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ className = 
                 {canReorder && (
                   <button
                     type="button"
-                    {...tip(t?.dragToReorder || 'Drag to reorder', undefined, 'action')}
-                    aria-label={t?.dragToReorder || 'Drag to reorder'}
+                    {...tip(t.dragToReorder, undefined, 'action')}
+                    aria-label={t.dragToReorder}
                     onPointerDown={(e) => beginDrag(e, post.id)}
                     style={{ touchAction: 'none' }}
                     className={`mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-text-muted hover:bg-bg-elevated hover:text-text-secondary cursor-grab active:cursor-grabbing ${
@@ -410,7 +412,7 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ className = 
                       </span>
                       {!post.is_published && (
                         <span className="type-label-2xs text-text-muted">
-                          {t?.draftBadge || 'Draft'}
+                          {t.draftBadge}
                         </span>
                       )}
                       <span className="type-label-2xs text-text-muted">
@@ -438,7 +440,7 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ className = 
                     />
                     <div className="mt-2.5 flex items-center justify-between gap-2">
                       <span className="type-label-2xs text-text-muted">
-                        {t?.byAuthor || 'by'} {post.author_name}
+                        {t.byAuthor} {post.author_name}
                       </span>
                       {isAdmin && (
                         <div className="flex items-center gap-1">
@@ -446,13 +448,13 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ className = 
                             <>
                               <IconButton
                                 icon={ChevronUp}
-                                label={t?.moveUp || 'Move up'}
+                                label={t.moveUp}
                                 disabled={idx === 0}
                                 onClick={() => movePost(post.id, -1)}
                               />
                               <IconButton
                                 icon={ChevronDown}
-                                label={t?.moveDown || 'Move down'}
+                                label={t.moveDown}
                                 disabled={idx === visiblePosts.length - 1}
                                 onClick={() => movePost(post.id, 1)}
                               />
@@ -460,7 +462,7 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ className = 
                           )}
                           <IconButton
                             icon={Pencil}
-                            label={t?.edit || 'Edit'}
+                            label={t.edit}
                             hoverClass="hover:text-accent-red"
                             onClick={() => {
                               setEditingPost(post);
@@ -469,7 +471,7 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ className = 
                           />
                           <IconButton
                             icon={Trash2}
-                            label={t?.delete || 'Delete'}
+                            label={t.delete}
                             hoverClass="hover:text-accent-red"
                             onClick={() => setPendingDeleteId(post.id)}
                           />
@@ -491,7 +493,6 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ className = 
         post={editingPost}
         saving={saving}
         error={editorError}
-        dict={dict}
         onClose={() => {
           setEditorError(null);
           setEditorOpen(false);
@@ -505,9 +506,9 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ className = 
       {pendingDeleteId != null && (
       <ConfirmModal
         open={pendingDeleteId != null}
-        title={t?.deleteConfirmTitle || 'Delete this entry?'}
-        message={t?.deleteConfirmMessage || 'This changelog post will be permanently removed.'}
-        confirmLabel={t?.delete || 'Delete'}
+        title={t.deleteConfirmTitle}
+        message={t.deleteConfirmMessage}
+        confirmLabel={t.delete}
         onConfirm={handleDelete}
         onCancel={() => setPendingDeleteId(null)}
       />

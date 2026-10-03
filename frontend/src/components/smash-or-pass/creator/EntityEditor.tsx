@@ -19,6 +19,7 @@ import { tip } from '@/components/common/Tooltip';
 import { Button } from '@/components/common/Button';
 import { Input, Textarea } from '@/components/common/Field';
 import { formatMessage } from '@/utils/i18nFormat';
+import { useDictionary } from "@/context/DictionaryContext";
 
 export interface DraftEntity {
   /** Stable client-only key -- never sent anywhere, just for React lists and
@@ -79,7 +80,6 @@ export interface CandidateFormInputsProps {
   translations: Record<string, EntityTranslationDraft>;
   onTranslationChange: (locale: string, field: string, value: string) => void;
   locale: string;
-  dict?: Dictionary | any;
   isSimpleMode?: boolean;
   customLabels?: RosterCustomLabels;
   availableRoles?: string[];
@@ -88,21 +88,21 @@ export interface CandidateFormInputsProps {
 }
 
 export function CandidateFormInputs({
-  entity,
-  index,
-  onChange,
-  onRemove,
-  showTranslations,
-  translations,
-  onTranslationChange,
-  dict,
-  isSimpleMode = false,
-  customLabels = {},
-  availableRoles = [...ROLE_QUICK_PICKS],
-  availableGenders = [...GENDER_QUICK_PICKS],
-  onRegisterTaxonomy,
-}: CandidateFormInputsProps) {
-  const c = dict?.smashOrPass?.creator || {};
+      entity,
+      index,
+      onChange,
+      onRemove,
+      showTranslations,
+      translations,
+      onTranslationChange,
+      isSimpleMode = false,
+      customLabels = {},
+      availableRoles = [...ROLE_QUICK_PICKS],
+      availableGenders = [...GENDER_QUICK_PICKS],
+      onRegisterTaxonomy,
+    }: CandidateFormInputsProps) {
+  const dict = useDictionary();
+  const c = dict.smashOrPass.creator || {};
   const [profileOpen, setProfileOpen] = useState(false);
   const [activeLocale, setActiveLocale] = useState<string>(TRANSLATABLE_LOCALES[0]);
 
@@ -122,20 +122,20 @@ export function CandidateFormInputs({
             #{displayIndex}
           </span>
           <h3 className="font-bold text-sm sm:text-base text-text-primary truncate">
-            {c.editingCandidate || 'Editing Candidate'}:{' '}
-            <span className="text-accent-red">{entity.name.trim() || c.unnamedCandidate || 'Unnamed Candidate'}</span>
+            {c.editingCandidate}:{' '}
+            <span className="text-accent-red">{entity.name.trim() || c.unnamedCandidate}</span>
           </h3>
         </div>
         <div className="w-24 flex justify-end">
           <Button
             variant="ghost" size="xs"
             onClick={onRemove}
-            aria-label={formatMessage((c.removeCandidateAria || 'Remove {name}'), { name: entity.name || displayIndex })}
+            aria-label={formatMessage((c.removeCandidateAria), { name: entity.name || displayIndex })}
             className=""
-            {...tip(c.removeCandidate || 'Remove candidate', undefined, 'action')}
+            {...tip(c.removeCandidate, undefined, 'action')}
           >
             <Trash2 className="h-3.5 w-3.5" aria-hidden="true" />
-            <span className="hidden sm:inline">{c.removeCandidate || 'Remove'}</span>
+            <span className="hidden sm:inline">{c.removeCandidate}</span>
           </Button>
         </div>
       </div>
@@ -158,7 +158,7 @@ export function CandidateFormInputs({
               ) : (
                 <div className="flex flex-col items-center gap-2 p-3 text-center text-text-muted select-none">
                   <ImageIcon className="h-10 w-10 opacity-30 text-accent-red" />
-                  <span className="type-label-sm">{c.preview || 'Preview'}</span>
+                  <span className="type-label-sm">{c.preview}</span>
                   <span className="type-micro text-text-muted/60">#{displayIndex}</span>
                 </div>
               )}
@@ -172,21 +172,21 @@ export function CandidateFormInputs({
           <div className="flex-1 max-w-md sm:max-w-lg 2xl:max-wide-2k:max-w-xl wide-2k:max-w-3xl w-full flex flex-col gap-2.5">
             <label className="block">
               <span className="mb-1 block type-label-xs text-text-secondary">
-                {c.entityNameLabel || 'Candidate Name'}
+                {c.entityNameLabel}
               </span>
               <Input
                 fieldSize="md"
                 value={entity.name}
                 maxLength={SMASH_ROSTER_LIMITS.maxEntityName}
                 onChange={(e) => onChange({ name: e.target.value })}
-                placeholder={c.entityNamePlaceholder || 'e.g. Leon S. Kennedy'}
+                placeholder={c.entityNamePlaceholder}
                 className="font-semibold"
               />
             </label>
 
             <label className="block">
               <span className="mb-1 block type-label-xs text-text-secondary">
-                {c.entityMediaLabel || 'Portrait Image URL'}
+                {c.entityMediaLabel}
               </span>
               <Input
                 fieldSize="md" invalid={mediaInvalid}
@@ -202,7 +202,7 @@ export function CandidateFormInputs({
               <div className="space-y-1">
                 <label className="block">
                   <span className="mb-1 block type-label-xs text-text-secondary">
-                    {c.entityRoleLabel || 'Role'}
+                    {c.entityRoleLabel}
                   </span>
                   <Input
                     fieldSize="md"
@@ -212,7 +212,7 @@ export function CandidateFormInputs({
                       onChange({ role: val });
                       if (val.trim()) onRegisterTaxonomy?.('role', val);
                     }}
-                    placeholder={c.rolePlaceholder || 'e.g. Survivor, Hero, Killer'}
+                    placeholder={c.rolePlaceholder}
                     list={`role-picks-${entity.key}`}
                   />
                   <datalist id={`role-picks-${entity.key}`}>
@@ -224,7 +224,7 @@ export function CandidateFormInputs({
                 {/* Quick-Pick Role Chips */}
                 {availableRoles.length > 0 && (
                   <div className="flex flex-wrap items-center gap-1 pt-0.5">
-                    <span className="text-micro text-text-muted mr-0.5">{c.quick || 'Quick:'}</span>
+                    <span className="text-micro text-text-muted mr-0.5">{c.quick}</span>
                     {availableRoles.slice(0, 4).map((r) => (
                       <button
                         key={r}
@@ -248,7 +248,7 @@ export function CandidateFormInputs({
               <div className="space-y-1">
                 <label className="block">
                   <span className="mb-1 block type-label-xs text-text-secondary">
-                    {c.entityGenderLabel || 'Gender'}
+                    {c.entityGenderLabel}
                   </span>
                   <Input
                     fieldSize="md"
@@ -258,7 +258,7 @@ export function CandidateFormInputs({
                       onChange({ gender: val });
                       if (val.trim()) onRegisterTaxonomy?.('gender', val);
                     }}
-                    placeholder={c.genderPlaceholder || 'e.g. female, male, other'}
+                    placeholder={c.genderPlaceholder}
                     list={`gender-picks-${entity.key}`}
                   />
                   <datalist id={`gender-picks-${entity.key}`}>
@@ -270,7 +270,7 @@ export function CandidateFormInputs({
                 {/* Quick-Pick Gender Chips */}
                 {availableGenders.length > 0 && (
                   <div className="flex flex-wrap items-center gap-1 pt-0.5">
-                    <span className="text-micro text-text-muted mr-0.5">{c.quick || 'Quick:'}</span>
+                    <span className="text-micro text-text-muted mr-0.5">{c.quick}</span>
                     {availableGenders.slice(0, 4).map((g) => (
                       <button
                         key={g}
@@ -297,46 +297,46 @@ export function CandidateFormInputs({
         {isSimpleMode && (
           <div className="grid gap-3 sm:grid-cols-2 pt-3 border-t border-border-color/60 max-w-3xl 2xl:max-wide-2k:max-w-4xl wide-2k:max-w-6xl mx-auto w-full">
             <TextField
-              label={c.entityWatermarkLeftLabel || 'Character left text (watermark)'}
+              label={c.entityWatermarkLeftLabel}
               value={entity.watermark_left}
               max={SMASH_ROSTER_LIMITS.maxWatermark}
               onChange={(v) => onChange({ watermark_left: v })}
-              placeholder={c.watermarkLeftPlaceholder || 'e.g. Raccoon City Police'}
+              placeholder={c.watermarkLeftPlaceholder}
             />
             <TextField
-              label={c.entityWatermarkRightLabel || 'Character right text (watermark)'}
+              label={c.entityWatermarkRightLabel}
               value={entity.watermark_right}
               max={SMASH_ROSTER_LIMITS.maxWatermark}
               onChange={(v) => onChange({ watermark_right: v })}
-              placeholder={c.watermarkRightPlaceholder || 'e.g. R.P.D. Special Ops'}
+              placeholder={c.watermarkRightPlaceholder}
             />
             <TextField
-              label={customLabels.archetype || c.entityArchetypeLabel || 'Dating Archetype'}
+              label={customLabels.archetype || c.entityArchetypeLabel}
               value={entity.archetype}
               max={SMASH_ROSTER_LIMITS.maxArchetype}
               onChange={(v) => onChange({ archetype: v })}
-              placeholder={c.archetypePlaceholder || 'e.g. Stoic Protector'}
+              placeholder={c.archetypePlaceholder}
             />
             <TextField
-              label={customLabels.quote || c.entityQuoteLabel || 'Signature Quote'}
+              label={customLabels.quote || c.entityQuoteLabel}
               value={entity.quote}
               max={SMASH_ROSTER_LIMITS.maxQuote}
               onChange={(v) => onChange({ quote: v })}
-              placeholder={c.quotePlaceholder || 'e.g. "Where is everyone going? Bingo?"'}
+              placeholder={c.quotePlaceholder}
             />
             <TextField
-              label={`${customLabels.turn_on || c.entityTurnOnLabel || 'Turn On'} (Optional)`}
+              label={`${customLabels.turn_on || c.entityTurnOnLabel} (Optional)`}
               value={entity.turn_on}
               max={SMASH_ROSTER_LIMITS.maxTurnOn}
               onChange={(v) => onChange({ turn_on: v })}
-              placeholder={c.turnOnPlaceholder || 'What makes them irresistible?'}
+              placeholder={c.turnOnPlaceholder}
             />
             <TextField
-              label={`${customLabels.dealbreaker || c.entityDealbreakerLabel || 'Dealbreaker'} (Optional)`}
+              label={`${customLabels.dealbreaker || c.entityDealbreakerLabel} (Optional)`}
               value={entity.dealbreaker}
               max={SMASH_ROSTER_LIMITS.maxDealbreaker}
               onChange={(v) => onChange({ dealbreaker: v })}
-              placeholder={c.dealbreakerPlaceholder || 'What ruins the spark immediately?'}
+              placeholder={c.dealbreakerPlaceholder}
             />
           </div>
         )}
@@ -351,42 +351,42 @@ export function CandidateFormInputs({
               className="uppercase tracking-wider"
             >
               <ChevronDown className={cn('h-3.5 w-3.5 text-accent-red transition-transform', profileOpen && 'rotate-180')} aria-hidden="true" />
-              <span>{c.entityProfileToggle || 'Profile & Lore Details'}</span>
+              <span>{c.entityProfileToggle}</span>
             </Button>
           </div>
         )}
 
         {!isSimpleMode && profileOpen && (
           <div className="grid gap-3 sm:grid-cols-2 pt-2 border-t border-border-color/40 max-w-3xl 2xl:max-wide-2k:max-w-4xl wide-2k:max-w-6xl mx-auto w-full">
-            <TextField label={c.entityRealNameLabel || 'Real Name'} value={entity.real_name} max={SMASH_ROSTER_LIMITS.maxRealName} onChange={(v) => onChange({ real_name: v })} />
-            <TextField label={customLabels.archetype || c.entityArchetypeLabel || 'Archetype'} value={entity.archetype} max={SMASH_ROSTER_LIMITS.maxArchetype} onChange={(v) => onChange({ archetype: v })} />
-            <TextField label={c.entityTaglineLabel || 'Tagline'} value={entity.tagline} max={SMASH_ROSTER_LIMITS.maxTagline} onChange={(v) => onChange({ tagline: v })} />
-            <TextField label={customLabels.quote || c.entityQuoteLabel || 'Signature Quote'} value={entity.quote} max={SMASH_ROSTER_LIMITS.maxQuote} onChange={(v) => onChange({ quote: v })} />
-            <TextAreaField label={c.entityBioLabel || 'Bio'} value={entity.bio} max={SMASH_ROSTER_LIMITS.maxBio} onChange={(v) => onChange({ bio: v })} full />
-            <TextAreaField label={customLabels.meme || c.entityMemeLabel || 'Trial Rumor / Meme'} value={entity.meme} max={SMASH_ROSTER_LIMITS.maxMeme} onChange={(v) => onChange({ meme: v })} full />
-            <TextField label={customLabels.turn_on || c.entityTurnOnLabel || 'Turn On'} value={entity.turn_on} max={SMASH_ROSTER_LIMITS.maxTurnOn} onChange={(v) => onChange({ turn_on: v })} />
-            <TextField label={customLabels.dealbreaker || c.entityDealbreakerLabel || 'Dealbreaker'} value={entity.dealbreaker} max={SMASH_ROSTER_LIMITS.maxDealbreaker} onChange={(v) => onChange({ dealbreaker: v })} />
-            <TextField label={customLabels.dating_vibe || c.entityDatingVibeLabel || 'Dating Vibe'} value={entity.dating_vibe} max={SMASH_ROSTER_LIMITS.maxDatingVibe} onChange={(v) => onChange({ dating_vibe: v })} full />
+            <TextField label={c.entityRealNameLabel} value={entity.real_name} max={SMASH_ROSTER_LIMITS.maxRealName} onChange={(v) => onChange({ real_name: v })} />
+            <TextField label={customLabels.archetype || c.entityArchetypeLabel} value={entity.archetype} max={SMASH_ROSTER_LIMITS.maxArchetype} onChange={(v) => onChange({ archetype: v })} />
+            <TextField label={c.entityTaglineLabel} value={entity.tagline} max={SMASH_ROSTER_LIMITS.maxTagline} onChange={(v) => onChange({ tagline: v })} />
+            <TextField label={customLabels.quote || c.entityQuoteLabel} value={entity.quote} max={SMASH_ROSTER_LIMITS.maxQuote} onChange={(v) => onChange({ quote: v })} />
+            <TextAreaField label={c.entityBioLabel} value={entity.bio} max={SMASH_ROSTER_LIMITS.maxBio} onChange={(v) => onChange({ bio: v })} full />
+            <TextAreaField label={customLabels.meme || c.entityMemeLabel} value={entity.meme} max={SMASH_ROSTER_LIMITS.maxMeme} onChange={(v) => onChange({ meme: v })} full />
+            <TextField label={customLabels.turn_on || c.entityTurnOnLabel} value={entity.turn_on} max={SMASH_ROSTER_LIMITS.maxTurnOn} onChange={(v) => onChange({ turn_on: v })} />
+            <TextField label={customLabels.dealbreaker || c.entityDealbreakerLabel} value={entity.dealbreaker} max={SMASH_ROSTER_LIMITS.maxDealbreaker} onChange={(v) => onChange({ dealbreaker: v })} />
+            <TextField label={customLabels.dating_vibe || c.entityDatingVibeLabel} value={entity.dating_vibe} max={SMASH_ROSTER_LIMITS.maxDatingVibe} onChange={(v) => onChange({ dating_vibe: v })} full />
             <TextAreaField
-              label={c.entityRedFlagsLabel || 'Red flags (one per line)'}
+              label={c.entityRedFlagsLabel}
               value={entity.red_flags}
               max={SMASH_ROSTER_LIMITS.maxFlagText * SMASH_ROSTER_LIMITS.maxFlags}
               onChange={(v) => onChange({ red_flags: v })}
             />
             <TextAreaField
-              label={c.entityGreenFlagsLabel || 'Green flags (one per line)'}
+              label={c.entityGreenFlagsLabel}
               value={entity.green_flags}
               max={SMASH_ROSTER_LIMITS.maxFlagText * SMASH_ROSTER_LIMITS.maxFlags}
               onChange={(v) => onChange({ green_flags: v })}
             />
-            <TextField label={c.entityWatermarkLeftLabel || 'Watermark (left)'} value={entity.watermark_left} max={SMASH_ROSTER_LIMITS.maxWatermark} onChange={(v) => onChange({ watermark_left: v })} />
-            <TextField label={c.entityWatermarkRightLabel || 'Watermark (right)'} value={entity.watermark_right} max={SMASH_ROSTER_LIMITS.maxWatermark} onChange={(v) => onChange({ watermark_right: v })} />
+            <TextField label={c.entityWatermarkLeftLabel} value={entity.watermark_left} max={SMASH_ROSTER_LIMITS.maxWatermark} onChange={(v) => onChange({ watermark_left: v })} />
+            <TextField label={c.entityWatermarkRightLabel} value={entity.watermark_right} max={SMASH_ROSTER_LIMITS.maxWatermark} onChange={(v) => onChange({ watermark_right: v })} />
 
             {showTranslations && (
               <div className="sm:col-span-2 flex flex-col gap-2 rounded-xl border border-accent-amber/30 bg-accent-amber/5 p-3">
-                <span className={LABEL}>{c.translationsHeading || 'Translations'}</span>
+                <span className={LABEL}>{c.translationsHeading}</span>
                 <Tabs
-                  ariaLabel={c.translationsHeading || 'Translations'}
+                  ariaLabel={c.translationsHeading}
                   value={activeLocale}
                   onChange={setActiveLocale}
                   panels={false}
@@ -406,13 +406,13 @@ export function CandidateFormInputs({
                     />
                   ))}
                   <TextAreaField
-                    label={`${c.entityRedFlagsLabel || 'Red flags'} (${activeLocale})`}
+                    label={`${c.entityRedFlagsLabel} (${activeLocale})`}
                     value={translations[activeLocale]?.red_flags || ''}
                     max={4000}
                     onChange={(v) => onTranslationChange(activeLocale, 'red_flags', v)}
                   />
                   <TextAreaField
-                    label={`${c.entityGreenFlagsLabel || 'Green flags'} (${activeLocale})`}
+                    label={`${c.entityGreenFlagsLabel} (${activeLocale})`}
                     value={translations[activeLocale]?.green_flags || ''}
                     max={4000}
                     onChange={(v) => onTranslationChange(activeLocale, 'green_flags', v)}
@@ -435,27 +435,18 @@ export interface CandidateTilesProps {
   onRemove: (key: string) => void;
   onAdd: () => void;
   canAdd: boolean;
-  dict?: Dictionary | any;
 }
 
-export function CandidateTiles({
-  entities,
-  selectedKey,
-  onSelect,
-  onRename,
-  onRemove,
-  onAdd,
-  canAdd,
-  dict,
-}: CandidateTilesProps) {
-  const c = dict?.smashOrPass?.creator || {};
+export function CandidateTiles({ entities, selectedKey, onSelect, onRename, onRemove, onAdd, canAdd }: CandidateTilesProps) {
+  const dict = useDictionary();
+  const c = dict.smashOrPass.creator || {};
 
   return (
     <div className="flex flex-col gap-3">
       <div className="flex items-center justify-between gap-2 w-full">
         <div className="w-20 hidden sm:block pointer-events-none" aria-hidden="true" />
         <h4 className="flex-1 text-center text-xs sm:text-sm font-black uppercase tracking-wider text-text-secondary">
-          {c.allCandidatesHeading || 'Roster Candidates'} ({entities.length}/{SMASH_ROSTER_LIMITS.maxEntities})
+          {c.allCandidatesHeading} ({entities.length}/{SMASH_ROSTER_LIMITS.maxEntities})
         </h4>
         <div className="w-20 hidden sm:block pointer-events-none" aria-hidden="true" />
       </div>
@@ -514,7 +505,7 @@ export function CandidateTiles({
                     e.stopPropagation();
                     onRemove(entity.key);
                   }}
-                  aria-label={formatMessage((c.removeCandidateAria || 'Remove {name}'), { name: entity.name || displayIndex })}
+                  aria-label={formatMessage((c.removeCandidateAria), { name: entity.name || displayIndex })}
                   className="absolute top-1 right-1 z-10 flex h-5 w-5 items-center justify-center rounded-md bg-bg-surface/90 text-text-muted opacity-80 sm:opacity-0 group-hover/item:opacity-100 hover:!opacity-100 hover:bg-accent-red hover:text-text-inverted transition-all shadow-xs cursor-pointer border border-border-color/40"
                 >
                   <X className="h-3 w-3" aria-hidden="true" />
@@ -527,8 +518,8 @@ export function CandidateTiles({
                 maxLength={SMASH_ROSTER_LIMITS.maxEntityName}
                 onChange={(e) => onRename(entity.key, e.target.value)}
                 onFocus={() => onSelect(entity.key)}
-                placeholder={c.unnamedCandidate || 'Unnamed'}
-                aria-label={formatMessage((c.renameCandidateAria || 'Rename {name}'), { name: entity.name || displayIndex })}
+                placeholder={c.unnamedCandidate}
+                aria-label={formatMessage((c.renameCandidateAria), { name: entity.name || displayIndex })}
                 className="mt-1 h-6 w-full rounded-sm border border-transparent bg-transparent px-1 text-center type-strong text-text-secondary transition-colors hover:text-text-primary hover:bg-bg-elevated/40 focus:border-accent-red focus:bg-bg-surface focus:text-text-primary focus:outline-hidden truncate"
               />
             </li>
@@ -546,11 +537,11 @@ export function CandidateTiles({
             >
               <div className="flex flex-col items-center gap-1">
                 <Plus className="h-5 w-5 transition-transform group-hover:scale-110" />
-                <span className="type-label-2xs">{c.add || 'Add'}</span>
+                <span className="type-label-2xs">{c.add}</span>
               </div>
             </button>
             <span className="mt-1 h-6 type-micro text-text-muted flex items-center select-none">
-              {c.addCandidateTile || '+ Add'}
+              {c.addCandidateTile}
             </span>
           </li>
         )}

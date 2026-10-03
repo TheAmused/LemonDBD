@@ -4,7 +4,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 import React from 'react';
-import { renderToStaticMarkup } from 'react-dom/server';
+import { renderWithDictionary } from '../helpers/renderWithDictionary';
 import { UserProfileForm } from '@/components/user/UserProfileForm';
 import { UserBugReportsList } from '@/components/user/UserBugReportsList';
 import { KillerDetailView } from '@/components/character-detail/KillerDetailView';
@@ -12,7 +12,7 @@ import { SurvivorDetailView } from '@/components/character-detail/SurvivorDetail
 
 describe('User Profile Theme Support', () => {
   it('UserProfileForm container supports light theme card and text', () => {
-    const html = renderToStaticMarkup(
+    const html = renderWithDictionary(
       React.createElement(UserProfileForm, {
         initialEmail: 'test@example.com',
         onRefreshUser: async () => {},
@@ -30,7 +30,7 @@ describe('User Profile Theme Support', () => {
 
   it('UserBugReportsList renders empty state and reports with light/dark theme classes', () => {
     // Empty state
-    const emptyHtml = renderToStaticMarkup(
+    const emptyHtml = renderWithDictionary(
       React.createElement(UserBugReportsList, {
         reports: [],
         loading: false,
@@ -42,7 +42,7 @@ describe('User Profile Theme Support', () => {
     assert.ok(emptyHtml.includes('bg-bg-surface') || emptyHtml.includes('bg-white'), 'Empty state card must have themed bg');
 
     // With reports
-    const reportHtml = renderToStaticMarkup(
+    const reportHtml = renderWithDictionary(
       React.createElement(UserBugReportsList, {
         reports: [
           {
@@ -73,7 +73,7 @@ describe('User Profile Theme Support', () => {
 
   it('UserBugReportsList status badges provide WCAG AA contrast in light and dark mode', () => {
     for (const status of ['pending', 'in_progress', 'resolved', 'rejected'] as const) {
-      const html = renderToStaticMarkup(
+      const html = renderWithDictionary(
         React.createElement(UserBugReportsList, {
           reports: [
             {
@@ -115,7 +115,7 @@ describe('User Profile Theme Support', () => {
   });
 
   it('KillerDetailView and SurvivorDetailView support light and dark theme hero title and real name', () => {
-    const killerHtml = renderToStaticMarkup(
+    const killerHtml = renderWithDictionary(
       React.createElement(KillerDetailView, {
         currentLocale: 'en',
         detailData: {
@@ -139,7 +139,7 @@ describe('User Profile Theme Support', () => {
       'Killer real name must have theme classes'
     );
 
-    const survivorHtml = renderToStaticMarkup(
+    const survivorHtml = renderWithDictionary(
       React.createElement(SurvivorDetailView, {
         currentLocale: 'en',
         detailData: {

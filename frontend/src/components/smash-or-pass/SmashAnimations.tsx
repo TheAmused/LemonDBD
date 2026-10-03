@@ -5,6 +5,7 @@ import type { Dictionary } from '@/locales/types';
 import React, { useEffect, useRef, useState } from 'react';
 import { Heart, Flame, Skull, Zap } from 'lucide-react';
 import { themeColor } from '@/utils/themeColor';
+import { useDictionary } from "@/context/DictionaryContext";
 
 interface Particle {
   x: number;
@@ -49,7 +50,6 @@ export interface SmashAnimationsProps {
   triggerKey: number; // Incrementing key to re-trigger
   originX?: number;
   originY?: number;
-  dict?: Dictionary;
 }
 
 // Generate jagged lightning path
@@ -88,21 +88,16 @@ function createLightningPath(
   return segments;
 }
 
-export const SmashAnimations: React.FC<SmashAnimationsProps> = ({
-  triggerType,
-  triggerKey,
-  originX,
-  originY,
-  dict,
-}) => {
+export const SmashAnimations: React.FC<SmashAnimationsProps> = ({ triggerType, triggerKey, originX, originY }) => {
+  const dict = useDictionary();
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [activeOverlay, setActiveOverlay] = useState<'smash' | 'super_smash' | 'pass' | null>(null);
   const [chromaticShift, setChromaticShift] = useState(false);
 
-  const smashLabel = dict?.smashOrPass?.controls?.smash || dict?.smashOrPass?.smash || 'SMASH!';
+  const smashLabel = dict.smashOrPass.controls.smash;
   const superSmashLabel =
-    dict?.smashOrPass?.controls?.superSmash || dict?.smashOrPass?.superSmash || 'SUPER SMASH!';
-  const passLabel = dict?.smashOrPass?.controls?.pass || dict?.smashOrPass?.pass || 'PASSED';
+    dict.smashOrPass.controls.superSmash;
+  const passLabel = dict.smashOrPass.controls.pass;
 
   useEffect(() => {
     if (!triggerType) return;

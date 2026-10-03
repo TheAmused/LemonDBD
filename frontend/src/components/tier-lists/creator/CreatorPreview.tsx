@@ -9,6 +9,7 @@ import { documentItemsToItems } from '@/utils/tierLists/items';
 import { TierBadge } from '../TierBadge';
 import { CustomTierListCard } from '../TierListCards';
 import { TierItemTile } from '../TierItemTile';
+import { useDictionary } from "@/context/DictionaryContext";
 
 interface CreatorPreviewProps {
   title: string;
@@ -18,10 +19,10 @@ interface CreatorPreviewProps {
   /** Sanitized, or null when unset/invalid -- already validated by the caller. */
   backgroundImage?: string | null;
   locale: string;
-  dict: Dictionary;
 }
 
-export function CreatorPreview({ title, description, tiers, items, backgroundImage, locale, dict }: CreatorPreviewProps) {
+export function CreatorPreview({ title, description, tiers, items, backgroundImage, locale }: CreatorPreviewProps) {
+  const dict = useDictionary();
   const t = dict.tierLists;
   const c = t.creator;
   const tiles = useMemo(() => documentItemsToItems(items), [items]);
@@ -50,7 +51,7 @@ export function CreatorPreview({ title, description, tiers, items, backgroundIma
       <div className="flex flex-col items-center gap-2 w-full">
         <span className="type-label-sm text-text-muted px-1 text-center">{c.cardPreviewHeading}</span>
         <div className="w-full max-w-sm">
-          <CustomTierListCard list={cardPreviewList} locale={locale} dict={dict} disabled />
+          <CustomTierListCard list={cardPreviewList} locale={locale} disabled />
         </div>
       </div>
 
@@ -111,20 +112,10 @@ interface CreatorPreviewModalProps {
   items: TierListDocumentItem[];
   backgroundImage?: string | null;
   locale: string;
-  dict: Dictionary;
 }
 
-export function CreatorPreviewModal({
-  isOpen,
-  onClose,
-  title,
-  description,
-  tiers,
-  items,
-  backgroundImage,
-  locale,
-  dict,
-}: CreatorPreviewModalProps) {
+export function CreatorPreviewModal({ isOpen, onClose, title, description, tiers, items, backgroundImage, locale }: CreatorPreviewModalProps) {
+  const dict = useDictionary();
   return (
     <Modal
       isOpen={isOpen}
@@ -132,7 +123,7 @@ export function CreatorPreviewModal({
       variant="dialog"
       size="5xl"
       title={dict.tierLists.creator.previewHeading}
-      closeButtonAriaLabel={dict.characterDetail.close || 'Close'}
+      closeButtonAriaLabel={dict.characterDetail.close}
       bodyClassName="p-4 sm:p-6"
     >
       <CreatorPreview
@@ -142,7 +133,6 @@ export function CreatorPreviewModal({
         items={items}
         backgroundImage={backgroundImage}
         locale={locale}
-        dict={dict}
       />
     </Modal>
   );

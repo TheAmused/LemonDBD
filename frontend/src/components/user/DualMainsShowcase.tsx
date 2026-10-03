@@ -11,6 +11,7 @@ import type { UserShowcaseState } from '@/types/userShowcase';
 import type { RoleCategory } from '@/types/perks';
 import type { Dictionary } from '@/locales/types';
 import { isSurvivor } from '@/utils/characterUtils';
+import { useDictionary } from "@/context/DictionaryContext";
 
 interface DualMainsShowcaseProps {
   showcase: UserShowcaseState;
@@ -20,21 +21,20 @@ interface DualMainsShowcaseProps {
   onKillerCharacterChange: (name: string) => void;
   onKillerPrestigeChange: (prestige: number) => void;
   onKillerPerkChange: (slotIndex: number, perkId: number | null) => void;
-  dict?: Dictionary | null;
   locale?: string;
 }
 
 export const DualMainsShowcase: React.FC<DualMainsShowcaseProps> = ({
-  showcase,
-  onSurvivorCharacterChange,
-  onSurvivorPrestigeChange,
-  onSurvivorPerkChange,
-  onKillerCharacterChange,
-  onKillerPrestigeChange,
-  onKillerPerkChange,
-  dict,
-  locale = 'en',
-}) => {
+      showcase,
+      onSurvivorCharacterChange,
+      onSurvivorPrestigeChange,
+      onSurvivorPerkChange,
+      onKillerCharacterChange,
+      onKillerPrestigeChange,
+      onKillerPerkChange,
+      locale = 'en',
+    }) => {
+  const dict = useDictionary();
   const [isExpanded, toggleExpanded] = usePersistentDrawer('lemondbd_drawer_loadouts', true);
 
   // Modal state for characters
@@ -67,7 +67,7 @@ export const DualMainsShowcase: React.FC<DualMainsShowcaseProps> = ({
         <div className="relative z-10 w-8 hidden sm:block" aria-hidden="true" />
         <div className="relative z-10 flex-1 text-center">
           <h2 className="type-section-title text-text-primary group-hover:text-accent-red transition-colors">
-            {dict?.user?.dualMainsTitle || 'Signature Loadouts'}
+            {dict.user.dualMainsTitle}
           </h2>
           <p className="type-section-subtitle text-text-secondary mt-0.5">
             {showcase.survivorMain.characterName} • {showcase.killerMain.characterName}
@@ -106,7 +106,6 @@ export const DualMainsShowcase: React.FC<DualMainsShowcaseProps> = ({
                 currentPerkId: showcase.survivorMain.perkIds[slotIndex],
               })
             }
-            dict={dict}
             locale={locale}
           />
 
@@ -125,7 +124,6 @@ export const DualMainsShowcase: React.FC<DualMainsShowcaseProps> = ({
                 currentPerkId: showcase.killerMain.perkIds[slotIndex],
               })
             }
-            dict={dict}
             locale={locale}
           />
             </div>
@@ -151,7 +149,6 @@ export const DualMainsShowcase: React.FC<DualMainsShowcaseProps> = ({
             }
           }}
           onClose={() => setCharacterModalRole(null)}
-          dict={dict}
           locale={locale}
         />
       )}
@@ -178,7 +175,6 @@ export const DualMainsShowcase: React.FC<DualMainsShowcaseProps> = ({
             }
           }}
           onClose={() => setPerkModalConfig(null)}
-          dict={dict}
           locale={locale}
         />
       )}

@@ -4,6 +4,7 @@ import { Check, Lock } from 'lucide-react';
 import { Modal } from '@/components/common/Modal';
 import { getAssetUrl } from '@/components/character-detail/types';
 import { ownsPerk } from '@/utils/characterUtils';
+import { useDictionary } from "@/context/DictionaryContext";
 
 export interface PerksTogglePopupPerk {
   perk_id: number;
@@ -42,7 +43,6 @@ export interface PerksTogglePopupProps {
   /** The word for "Perks", supplied by the caller so it always matches
    * whichever locale key the caller's own trigger button uses. */
   perksLabel?: string;
-  dict?: PerksTogglePopupDict;
 }
 
 /** The icon-based perk toggle popup -- teachable perks shown as their real
@@ -50,16 +50,16 @@ export interface PerksTogglePopupProps {
  * CharactersHub's ownership grid and the onboarding wizard so both look and
  * behave identically instead of maintaining two versions of the same modal. */
 export const PerksTogglePopup: React.FC<PerksTogglePopupProps> = ({
-  character,
-  perks,
-  isPerkUnlocked,
-  isPerkLockedAlways,
-  onTogglePerk,
-  onClose,
-  backendBase,
-  perksLabel,
-  dict,
-}) => {
+      character,
+      perks,
+      isPerkUnlocked,
+      isPerkLockedAlways,
+      onTogglePerk,
+      onClose,
+      backendBase,
+      perksLabel,
+    }) => {
+  const dict = useDictionary();
   if (!character) return null;
 
   // Matched on the key for this character's own side. A bare id comparison
@@ -77,10 +77,10 @@ export const PerksTogglePopup: React.FC<PerksTogglePopupProps> = ({
       size="lg"
       layer="top"
       title={`${character.name} ${perksLabel ?? ''}`.trimEnd()}
-      closeButtonAriaLabel={dict?.modal?.close}
+      closeButtonAriaLabel={dict.modal.close}
       centerTitle={false}
     >
-      {dict?.characterDetail?.togglePerkOwnershipHelp && (
+      {dict.characterDetail.togglePerkOwnershipHelp && (
         <p className="px-5 pt-4 type-caption text-text-muted">
           {dict.characterDetail.togglePerkOwnershipHelp}
         </p>
@@ -136,7 +136,7 @@ export const PerksTogglePopup: React.FC<PerksTogglePopupProps> = ({
       </div>
       {characterPerks.length === 0 && (
         <p className="text-xs text-text-muted italic">
-          {dict?.characterDetail?.noTeachablePerksForCharacter || dict?.characterDetail?.noPerks}
+          {dict.characterDetail.noTeachablePerksForCharacter}
         </p>
       )}
     </div>

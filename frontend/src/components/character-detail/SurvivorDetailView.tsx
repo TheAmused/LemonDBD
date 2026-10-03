@@ -19,21 +19,17 @@ import { OfferingsSection } from './components/OfferingsSection';
 import { Perk, PerkDictionary } from '@/types/perks';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 import { Button } from '@/components/common/Button';
+import { useDictionary } from "@/context/DictionaryContext";
 
 const LoreModal = dynamic(() => import('./modals/LoreModal').then((m) => m.LoreModal), { ssr: false });
 const Model3DModal = dynamic(() => import('./modals/Model3DModal').then((m) => m.Model3DModal), { ssr: false });
 const EquipmentDetailModal = dynamic(() => import('./modals/EquipmentDetailModal').then((m) => m.EquipmentDetailModal), { ssr: false });
 const PerkModal = dynamic(() => import('@/components/PerkModal').then((m) => m.PerkModal), { ssr: false });
 
-export const SurvivorDetailView: React.FC<CharacterViewBaseProps> = ({
-  currentLocale,
-  dict,
-  detailData,
-  allCharacters = [],
-}) => {
+export const SurvivorDetailView: React.FC<CharacterViewBaseProps> = ({ currentLocale, detailData, allCharacters = [] }) => {
+  const dict = useDictionary();
   const backendBase = getBackendBaseUrl();
-  const rawDict = (dict || {}) as Record<string, Record<string, string>>;
-  const t: Record<string, string> = rawDict.characterDetail || rawDict.characters || {};
+  const t: Record<string, string> = dict.characterDetail;
 
   const character = detailData?.character || { name: '', category: 'Survivor' };
   const perks = Array.isArray(detailData?.perks) ? detailData.perks : [];
@@ -177,9 +173,8 @@ export const SurvivorDetailView: React.FC<CharacterViewBaseProps> = ({
         <PerkModal
           perk={selectedPerk}
           onClose={() => setSelectedPerk(null)}
-          dict={dict as PerkDictionary}
         />
       )}
     </article>
   );
-};
+};

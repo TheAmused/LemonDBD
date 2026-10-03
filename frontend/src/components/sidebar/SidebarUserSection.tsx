@@ -1,5 +1,6 @@
 'use client';
 // frontend/src/components/sidebar/SidebarUserSection.tsx
+import type { UserProfile } from '@/context/AuthContext';
 import type { Dictionary } from '@/locales/types';
 
 import React from 'react';
@@ -14,7 +15,7 @@ import { useDictionary } from "@/context/DictionaryContext";
 
 export interface SidebarUserSectionProps {
   currentLocale: string;
-  user: any;
+  user: UserProfile | null;
   isAuthenticated: boolean;
   isAdmin: boolean;
   onOpenAuthModal: () => void;

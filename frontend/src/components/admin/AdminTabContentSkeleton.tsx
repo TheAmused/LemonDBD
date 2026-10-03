@@ -31,6 +31,3 @@ export const AdminTabContentSkeleton: React.FC<AdminTabContentSkeletonProps> = (
     </div>
   );
 };
-
-export default AdminTabContentSkeleton;
-

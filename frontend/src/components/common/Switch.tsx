@@ -67,5 +67,3 @@ export const Switch: React.FC<SwitchProps> = ({ checked, onChange, ariaLabel, cl
     </button>
   );
 };
-
-export default Switch;

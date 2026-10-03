@@ -9,7 +9,7 @@ import { Search, Trash2, Sparkles, Check } from 'lucide-react';
 import type { RoleCategory, Perk } from '@/types/perks';
 import type { Dictionary } from '@/locales/types';
 import { getBackendBaseUrl, getPerkIconUrl, matchesPerkSearch } from '@/utils/perkUtils';
-import { fetchCached, fetchJson } from '@/services/dataCache';
+import { fetchCached, fetchJson, unwrapList, type ListPayload } from '@/services/dataCache';
 import { Modal } from '@/components/common/Modal';
 import { Spinner } from '@/components/common/Spinner';
 import { EmptyState } from '@/components/common/EmptyState';
@@ -101,9 +101,9 @@ export const ShowcasePerkModal: React.FC<ShowcasePerkModalProps> = ({ isOpen, ro
     const url = `${backendBase}/api/v1/perks?limit=1000&lang=${locale}`;
 
     setLoading(true);
-    fetchCached<any>(url, () => fetchJson(url))
+    fetchCached<ListPayload<Perk>>(url, () => fetchJson<ListPayload<Perk>>(url))
       .then((data) => {
-        const list = Array.isArray(data) ? data : data?.data || [];
+        const list = unwrapList(data);
         setPerks(list);
       })
       .catch((err) => {

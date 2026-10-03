@@ -178,7 +178,6 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ className = 
     if (isOpen && visiblePosts.length > 0 && expandedIds.size === 0) {
       setExpandedIds(new Set([visiblePosts[0].id]));
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen, visiblePosts]);
 
   const availableTags = useMemo(() => {
@@ -286,7 +285,7 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ className = 
         onClick={handleOpen}
         {...tip(t.triggerTitle, undefined, 'action')}
         aria-label={t.triggerTitle}
-        className={`group relative flex h-9 w-9 items-center justify-center rounded-xl border border-border-color text-text-muted transition-all hover:border-accent-red/50 hover:text-accent-red hover:bg-accent-red/10 cursor-pointer ${className}`}
+        className={`pointer-coarse:min-h-11 pointer-coarse:min-w-11 group relative flex h-9 w-9 items-center justify-center rounded-xl border border-border-color text-text-muted transition-all hover:border-accent-red/50 hover:text-accent-red hover:bg-accent-red/10 cursor-pointer ${className}`}
       >
         <Megaphone className="h-4 w-4" />
         {hasUnread && (
@@ -314,7 +313,7 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ className = 
                 setEditorOpen(true);
               }}
               {...tip(t.newEntry, undefined, 'action')} aria-label={t.newEntry}
-              className="flex h-9 w-9 items-center justify-center rounded-xl border border-border-subtle text-text-secondary hover:border-accent-red/50 hover:text-accent-red cursor-pointer"
+              className="pointer-coarse:min-h-11 pointer-coarse:min-w-11 flex h-9 w-9 items-center justify-center rounded-xl border border-border-subtle text-text-secondary hover:border-accent-red/50 hover:text-accent-red cursor-pointer"
             >
               <Plus className="h-4 w-4" />
             </button>
@@ -389,7 +388,7 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ className = 
                     aria-label={t.dragToReorder}
                     onPointerDown={(e) => beginDrag(e, post.id)}
                     style={{ touchAction: 'none' }}
-                    className={`mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-text-muted hover:bg-bg-elevated hover:text-text-secondary cursor-grab active:cursor-grabbing ${
+                    className={`pointer-coarse:min-h-11 pointer-coarse:min-w-11 mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-text-muted hover:bg-bg-elevated hover:text-text-secondary cursor-grab active:cursor-grabbing ${
                       isDragging ? 'text-accent-amber' : ''
                     }`}
                   >
@@ -551,7 +550,7 @@ const IconButton: React.FC<{
     aria-label={label}
     disabled={disabled}
     onClick={onClick}
-    className={`flex h-7 w-7 items-center justify-center rounded-md text-text-muted transition-colors cursor-pointer hover:bg-bg-elevated disabled:opacity-30 disabled:cursor-not-allowed ${hoverClass}`}
+    className={`pointer-coarse:min-h-11 pointer-coarse:min-w-11 flex h-7 w-7 items-center justify-center rounded-md text-text-muted transition-colors cursor-pointer hover:bg-bg-elevated disabled:opacity-30 disabled:cursor-not-allowed ${hoverClass}`}
   >
     <Icon className="h-3.5 w-3.5" />
   </button>

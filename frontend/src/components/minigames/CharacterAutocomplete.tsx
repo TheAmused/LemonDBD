@@ -69,11 +69,11 @@ export const CharacterAutocomplete: React.FC<CharacterAutocompleteProps> = ({
 
     const rawKillers = (catalog.killers && catalog.killers.length > 0)
       ? catalog.killers
-      : ((catalog as any).characters || []).filter((c: any) => isKiller(c.role) || c.type === 'killer');
+      : (catalog.characters || []).filter((c) => isKiller(c.role) || c.type === 'killer');
 
     const rawSurvivors = (catalog.survivors && catalog.survivors.length > 0)
       ? catalog.survivors
-      : ((catalog as any).characters || []).filter((c: any) => isSurvivor(c.role) || c.type === 'survivor');
+      : (catalog.characters || []).filter((c) => isSurvivor(c.role) || c.type === 'survivor');
 
     if (targetType === 'realm') {
       return (catalog.realms || [])
@@ -101,8 +101,8 @@ export const CharacterAutocomplete: React.FC<CharacterAutocompleteProps> = ({
 
     if (targetType === 'killer') {
       return rawKillers
-        .filter((k: any) => !isExcluded('killer', k.id, k.name))
-        .map((k: any) => ({
+        .filter((k) => !isExcluded('killer', k.id, k.name))
+        .map((k) => ({
           id: k.id,
           name: k.name,
           role: 'Killer',
@@ -113,8 +113,8 @@ export const CharacterAutocomplete: React.FC<CharacterAutocompleteProps> = ({
 
     if (targetType === 'survivor') {
       return rawSurvivors
-        .filter((s: any) => !isExcluded('survivor', s.id, s.name))
-        .map((s: any) => ({
+        .filter((s) => !isExcluded('survivor', s.id, s.name))
+        .map((s) => ({
           id: s.id,
           name: s.name,
           role: 'Survivor',
@@ -125,7 +125,7 @@ export const CharacterAutocomplete: React.FC<CharacterAutocompleteProps> = ({
 
     // Default & 'character': both Killers & Survivors
     const combined: AutocompleteItem[] = [];
-    rawKillers.forEach((k: any) => {
+    rawKillers.forEach((k) => {
       if (!isExcluded('killer', k.id, k.name)) {
         combined.push({
           id: k.id,
@@ -136,7 +136,7 @@ export const CharacterAutocomplete: React.FC<CharacterAutocompleteProps> = ({
         });
       }
     });
-    rawSurvivors.forEach((s: any) => {
+    rawSurvivors.forEach((s) => {
       if (!isExcluded('survivor', s.id, s.name)) {
         combined.push({
           id: s.id,

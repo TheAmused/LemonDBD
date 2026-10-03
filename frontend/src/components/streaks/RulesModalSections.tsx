@@ -20,7 +20,7 @@ interface ToneClasses {
   notices: string;
 }
 
-export const RULES_TONES: Record<RulesTone, ToneClasses> = {
+const RULES_TONES: Record<RulesTone, ToneClasses> = {
   red: {
     conceptTitle: 'text-accent-red',
     marker: 'marker:text-accent-red',
@@ -139,13 +139,13 @@ export const RULE_CRASH: RuleEntryDef = {
   textKey: 'excCrashText',
   defaultText: 'The game or server crashes mid-match.',
 };
-export const RULE_SURVIVOR_DC: RuleEntryDef = {
+const RULE_SURVIVOR_DC: RuleEntryDef = {
   labelKey: 'excSurvDcLabel',
   defaultLabel: 'Survivor disconnects',
   textKey: 'excSurvDcText',
   defaultText: 'Keep playing. The bot match still counts.',
 };
-export const RULE_NO_DODGING: RuleEntryDef = {
+const RULE_NO_DODGING: RuleEntryDef = {
   labelKey: 'excNoDodgingLabel',
   defaultLabel: 'No dodging',
   textKey: 'excNoDodgingText',

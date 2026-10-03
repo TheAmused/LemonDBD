@@ -39,8 +39,8 @@ describe('ui: shared primitives', () => {
     assert.deepEqual(bad, [], `Hand-rolled dialog:\n${bad.join('\n')}`);
   });
 
-  it('no hand-rolled fixed full-screen overlays outside the shared Modal and spinner', () => {
-    const bad = scanLines(/fixed inset-0[^"'`]*\bz-\d+/, (m) => /^components\/(common\/(Modal|DbdSpinner|ImagePreloadProvider)|layout\/)/.test(m.file));
+  it('no hand-rolled fixed full-screen overlays outside the shared Modal and spinner (pointer-events-none decoration layers are not overlays)', () => {
+    const bad = scanLines(/^(?!.*pointer-events-none).*fixed inset-0[^"'`]*\bz-\d+/, (m) => /^components\/(common\/(Modal|DbdSpinner|ImagePreloadProvider)|layout\/)/.test(m.file));
     ratchet('handRolledOverlays', countBy(bad.map((b) => b.split(':')[0])), 'hand-rolled overlays');
   });
 

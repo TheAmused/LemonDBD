@@ -131,6 +131,13 @@ const ROSTER_DICT_KEY: Record<string, string> = {
   gothic_eldritch: 'gothic',
 };
 
+/** One persisted vote; older saves put the slug on the vote itself instead of on `character`. */
+type StoredVote = { character: EntityItem; vote: 'smash' | 'pass'; timestamp: number; slug?: string; character_slug?: string };
+
+function voteSlug(v: StoredVote): string | undefined {
+  return v.character?.slug || v.slug || v.character_slug;
+}
+
 export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ locale = 'en' }) => {
   const dict = useDictionary();
   const backendBase = getBackendBaseUrl();
@@ -196,9 +203,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ locale = 'en' })
   });
 
   // Voting History & Session State (Persisted in localStorage & synced with backend)
-  const [voteHistory, setVoteHistory] = useState<
-    Array<{ character: EntityItem; vote: 'smash' | 'pass'; timestamp: number }>
-  >(() => {
+  const [voteHistory, setVoteHistory] = useState<StoredVote[]>(() => {
     if (typeof window !== 'undefined') {
       try {
         const storedRoster = localStorage.getItem('dbd_smash_selected_roster') || 'canon';
@@ -250,8 +255,8 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ locale = 'en' })
           setIsPersonaOpen(true);
         }
       }
-    } catch (e) {
-      console.debug('Failed to decode shared_archetype query parameter:', e);
+    } catch {
+      // Best-effort: failure here is non-fatal.
     }
   }, []);
   const [isHowToPlayOpen, setIsHowToPlayOpen] = useState<boolean>(false);
@@ -331,8 +336,8 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ locale = 'en' })
       if (rosterList && rosterList.length > 0) {
         setRosters(rosterList);
       }
-    } catch (err) {
-      console.debug('Failed to fetch rosters:', err);
+    } catch {
+      // Best-effort: failure here is non-fatal.
     }
   }, []);
 
@@ -350,8 +355,8 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ locale = 'en' })
       if (items) {
         setLeaderboardItems(items);
       }
-    } catch (err) {
-      console.debug('Failed to fetch leaderboard:', err);
+    } catch {
+      // Best-effort: failure here is non-fatal.
     }
   }, [selectedRosterSlug]);
 
@@ -389,8 +394,8 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ locale = 'en' })
         setCurrentIndex(0);
         setTotalRemaining(feed.total_remaining ?? feed.entities.length);
       }
-    } catch (err) {
-      console.debug('Failed to load feed from database:', err);
+    } catch {
+      // Best-effort: failure here is non-fatal.
     } finally {
       setLoading(false);
       setIsExiting(false);
@@ -401,7 +406,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ locale = 'en' })
 
   // Synchronize vote history from LocalStorage & Backend
   const syncVotes = useCallback(async (rosterSlug: string) => {
-    let currentVotes: Array<{ character: EntityItem; vote: 'smash' | 'pass'; timestamp: number }> = [];
+    let currentVotes: StoredVote[] = [];
     if (typeof window !== 'undefined') {
       try {
         const raw = localStorage.getItem(`dbd_smash_votes_${rosterSlug}`);
@@ -420,15 +425,15 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ locale = 'en' })
       if (isAuthenticated || token || user?.id) {
         try {
           await apiSyncSessionVotes(rosterSlug);
-        } catch (err) {
-          console.debug('Error syncing guest session votes:', err);
+        } catch {
+          // Best-effort: failure here is non-fatal.
         }
       }
 
       try {
         const backendVotes = await fetchUserVotes(rosterSlug);
         if (backendVotes && backendVotes.length > 0) {
-          const existingSlugs = new Set(currentVotes.map((v) => v.character?.slug || (v as any).slug));
+          const existingSlugs = new Set(currentVotes.map((v) => voteSlug(v)));
           const merged = [...currentVotes];
 
           backendVotes.forEach((bv) => {
@@ -438,9 +443,9 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ locale = 'en' })
                 character: (bv.entity || {
                   id: bv.character_slug,
                   slug: bv.character_slug,
-                  name: (bv as any).character_name || bv.character_slug,
-                  role: (bv as any).role || 'Survivor',
-                  gender: (bv as any).gender || 'female',
+                  name: bv.character_name || bv.character_slug,
+                  role: bv.role || 'Survivor',
+                  gender: bv.gender || 'female',
                   order_index: 0,
                   is_active: true,
                   roster_id: rosterSlug,
@@ -454,8 +459,8 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ locale = 'en' })
 
           currentVotes = merged;
         }
-      } catch (err) {
-        console.debug('Error syncing backend user votes:', err);
+      } catch {
+        // Best-effort: failure here is non-fatal.
       }
     }
 
@@ -504,7 +509,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ locale = 'en' })
     };
   }, []);
 
-  const handleFilterChange = (type: 'role' | 'gender', value: any) => {
+  const handleFilterChange = (type: 'role' | 'gender', value: string) => {
     if (type === 'role') setRoleFilter(value);
     if (type === 'gender') setGenderFilter(value);
   };
@@ -601,7 +606,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ locale = 'en' })
       const newEntry = { character: currentCharacter, vote, timestamp: Date.now() };
       setVoteHistory((prev) => {
         const filtered = prev.filter(
-          (v) => (v.character?.slug || (v as any).slug) !== currentCharacter.slug
+          (v) => voteSlug(v) !== currentCharacter.slug
         );
         const updated = [...filtered, newEntry];
         if (typeof window !== 'undefined') {
@@ -623,7 +628,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ locale = 'en' })
       // Call database API to cast vote
       try {
         const voteResponse = await apiCastVote(currentCharacter.id, vote, currentCharacter.slug);
-        const entityData = voteResponse?.data || (voteResponse as any);
+        const entityData = voteResponse?.data;
         if (entityData) {
           setLeaderboardItems((prev) => {
             return prev.map((item) => {
@@ -659,8 +664,8 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ locale = 'en' })
           });
         }
         await loadLeaderboard();
-      } catch (err) {
-        console.debug('Failed to cast vote to database:', err);
+      } catch {
+          // Best-effort: failure here is non-fatal.
       }
     },
     [currentCharacter, isExiting, dragPhysics, handleExitComplete, selectedRosterSlug, loadLeaderboard]
@@ -764,7 +769,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ locale = 'en' })
     return voteHistory
       .filter((v) => v.vote === 'smash')
       .map((v) => ({
-        slug: v.character?.slug || (v as any).slug || (v as any).character_slug || '',
+        slug: voteSlug(v) || '',
         vote: v.vote,
         timestamp: v.timestamp,
       }));
@@ -789,7 +794,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ locale = 'en' })
   const maleOnlyLabel = dict.smashOrPass.filters.maleOnly;
   const monstersLabel = dict.smashOrPass.filters.monsters;
   const leaderboardLabel = dict.smashOrPass.modals.leaderboardTitle;
-  const hudLabels: any = dict.smashOrPass.hud || {};
+  const hudLabels = dict.smashOrPass.hud;
 
   return (
     <div className="relative min-h-[calc(100vh-5rem)] flex flex-col justify-start space-y-3 pb-12 overflow-x-clip">
@@ -1273,7 +1278,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ locale = 'en' })
                 className="flex-1 rounded-2xl"
               >
                 <Sparkles className="h-4 w-4" />
-                <span>{hudLabels.archetype || 'View Romance Archetype'}</span>
+                <span>{hudLabels.archetype}</span>
               </Button>
 
               <Button
@@ -1522,7 +1527,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ locale = 'en' })
           setIsPersonaOpen(false);
           setSharedPayload(null);
         }}
-        votes={voteHistory as any}
+        votes={voteHistory}
         sharedPayload={sharedPayload}
         onResetAll={() => setIsResetConfirmOpen(true)}
         locale={locale}

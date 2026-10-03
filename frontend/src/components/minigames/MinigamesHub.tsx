@@ -1,5 +1,8 @@
-// frontend/src/components/minigames/MinigamesHub.tsx
 'use client';
+
+import { getErrorMessage } from "@/utils/api";
+
+// frontend/src/components/minigames/MinigamesHub.tsx
 
 import { Button } from '@/components/common/Button';
 import React, { useState, useEffect, useMemo, useRef } from 'react';
@@ -113,9 +116,9 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
         const imported = importChallengeFromJson(content);
         const saved = saveCustomChallenge(imported);
         setCustomTrials(getCustomChallenges());
-      } catch (err: any) {
-        alert(err.message || 'Failed to import trial.');
-      }
+      } catch (err) {
+            alert(getErrorMessage(err, 'Failed to import trial.'));
+          }
     };
     reader.readAsText(file);
     if (fileInputRef.current) {

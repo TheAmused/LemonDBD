@@ -170,7 +170,6 @@ export const ScoreboardCheckModal: React.FC<ScoreboardCheckModalProps> = ({ isOp
             />
             {previewUrl ? (
               <div className="relative overflow-hidden rounded-xl border border-border-color bg-bg-elevated">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={previewUrl} alt={t.previewAlt} className="mx-auto max-h-72 w-auto object-contain" />
                 <Button
                   size="sm"

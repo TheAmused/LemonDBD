@@ -1,7 +1,7 @@
 // frontend/src/constants/chaosMutators.ts
 import { ChaosMutator } from '@/types/chaos';
 
-export const SURVIVOR_CHAOS_MUTATORS: readonly ChaosMutator[] = [
+const SURVIVOR_CHAOS_MUTATORS: readonly ChaosMutator[] = [
   {
     id: 'no_exhaustion',
     name: 'Curse of Exhaustion',
@@ -77,7 +77,7 @@ export const SURVIVOR_CHAOS_MUTATORS: readonly ChaosMutator[] = [
   },
 ];
 
-export const KILLER_CHAOS_MUTATORS: readonly ChaosMutator[] = [
+const KILLER_CHAOS_MUTATORS: readonly ChaosMutator[] = [
   {
     id: 'no_slowdown',
     name: 'No Gen Slowdown',

@@ -1,6 +1,7 @@
 'use client';
 // frontend/src/components/smash-or-pass/RomancePersonaModal.tsx
 
+import { isAbortError } from '@/utils/api';
 import React, { useMemo, useState } from 'react';
 import {
   Sparkles,
@@ -198,9 +199,9 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({ isOpen
           url: shareUrl,
         });
         return;
-      } catch (err: any) {
+      } catch (err) {
         // Dismissed by user (Cancel clicked in native share) -> do nothing
-        if (err?.name === 'AbortError') {
+        if (isAbortError(err)) {
           return;
         }
       }
@@ -265,7 +266,7 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({ isOpen
           backendBase,
           {
             name: persona.favoriteChar.name,
-            category: (persona.favoriteChar.role || 'Survivor') as any,
+            category: isSurvivor(persona.favoriteChar.role) ? 'Survivor' : 'Killer',
             avatar_local_path: `avatars/${isSurvivor(persona.favoriteChar.role) ? 'survivors' : 'killers'}/${persona.favoriteChar.slug || 'unknown'}.png`,
           },
           isSurvivor(persona.favoriteChar.role)

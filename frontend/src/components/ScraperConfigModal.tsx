@@ -276,8 +276,8 @@ export function ScraperConfigModal({ isOpen, onClose, onPurgeSuccess, initialTab
           throw new Error('Invalid JSON structure: expected an object.');
         }
         setImportJsonText(text);
-      } catch (jsonErr: any) {
-        setImportError(jsonErr?.message || dict.admin.invalidJsonFile);
+      } catch (jsonErr) {
+        setImportError(getErrorMessage(jsonErr, dict.admin.invalidJsonFile));
         setImportFile(null);
         setImportJsonText('');
       }
@@ -377,7 +377,7 @@ export function ScraperConfigModal({ isOpen, onClose, onPurgeSuccess, initialTab
     setImportSummary(null);
 
     try {
-      let parsedPayload: any;
+      let parsedPayload: { data?: unknown };
       try {
         parsedPayload = JSON.parse(importJsonText);
       } catch {

@@ -1,5 +1,8 @@
-// frontend/src/app/[locale]/minigames/play/page.tsx
 'use client';
+
+import { getErrorMessage } from "@/utils/api";
+
+// frontend/src/app/[locale]/minigames/play/page.tsx
 
 import React, { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
@@ -70,11 +73,11 @@ function PlayTrialContent() {
         if (isMounted) {
           setChallenge(loadedChallenge);
         }
-      } catch (err: any) {
-        if (isMounted) {
-          setError(err.message || 'Failed to load challenge.');
-        }
-      } finally {
+      } catch (err) {
+            if (isMounted) {
+              setError(getErrorMessage(err, 'Failed to load challenge.'));
+            }
+          } finally {
         if (isMounted) {
           setLoading(false);
         }

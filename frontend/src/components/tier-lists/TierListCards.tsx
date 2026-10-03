@@ -41,7 +41,6 @@ export function OfficialTierListCard({ list, rankedCount, locale }: OfficialCard
   return (
     <Link href={`/${locale}/tier-lists/${list.slug}`} className={CARD}>
       {cover && (
-        // eslint-disable-next-line @next/next/no-img-element -- images are unoptimized app-wide
         <img src={cover} alt="" loading="lazy" className="-mx-5 -mt-5 mb-1 h-32 w-[calc(100%+2.5rem)] max-w-none object-cover" />
       )}
       <div className="flex items-center sm:items-start justify-center sm:justify-start gap-3">
@@ -130,7 +129,6 @@ export function CustomTierListCard({ list, locale, onDelete, disabled }: CustomC
         {preview.length > 0 && (
           <div className="flex justify-center sm:justify-start -space-x-2" aria-hidden="true">
             {preview.map((item) => (
-              // eslint-disable-next-line @next/next/no-img-element -- user-supplied images
               <img
                 key={item.id}
                 src={item.image?.startsWith('/static/') ? staticUrl(item.image) : item.image}

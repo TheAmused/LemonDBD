@@ -79,5 +79,3 @@ export const ErrorPage: React.FC<ErrorPageProps> = ({ variant }) => {
     </PageShell>
   );
 };
-
-export default ErrorPage;

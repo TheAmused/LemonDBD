@@ -15,7 +15,6 @@ import {
   ArrowRight,
   Lock,
 } from 'lucide-react';
-import type { Dictionary } from '@/locales/types';
 import {
   matchVoiceQuery,
   getVariantsForMap,
@@ -37,17 +36,12 @@ import {
   BrowserCompatibilityInfo,
 } from '@/services/clientSpeechModel';
 import dynamic from 'next/dynamic';
-
-import { tip } from '@/components/common/Tooltip';
 import { Spinner } from '@/components/common/Spinner';
 import { formatMessage } from '@/utils/i18nFormat';
+import { type SpeechRecognitionInstance, playMatchSuccessSound, playMicStartSound, type WindowWithSpeech, type SpeechRecognitionEvent, type SpeechRecognitionErrorEvent, renderHoldKeyHint, VoiceEngineInfoModal } from "./VoiceCommandBannerParts";
 import { localeMetaFor } from '@/i18n/config';
 import { useDictionary } from "@/context/DictionaryContext";
-
-const VoiceEngineInfoModal = dynamic(
-  () => import('./VoiceEngineInfoModal').then((m) => m.VoiceEngineInfoModal),
-  { ssr: false }
-);
+import { tip } from '@/components/common/Tooltip';
 
 export interface VoiceCommandBannerProps {
   locale?: string;
@@ -75,149 +69,6 @@ export type VoiceStatusState =
   | 'matched'
   | 'nomatch'
   | 'error';
-
-interface SpeechRecognitionInstance extends EventTarget {
-  continuous: boolean;
-  interimResults: boolean;
-  lang: string;
-  maxAlternatives: number;
-  start: () => void;
-  stop: () => void;
-  abort: () => void;
-  onstart: (() => void) | null;
-  onresult: ((event: SpeechRecognitionEvent) => void) | null;
-  onerror: ((event: SpeechRecognitionErrorEvent) => void) | null;
-  onend: (() => void) | null;
-}
-
-interface SpeechRecognitionEvent {
-  results: SpeechRecognitionResultList;
-}
-
-interface SpeechRecognitionErrorEvent {
-  error: string;
-}
-
-type WindowWithSpeech = Window &
-  typeof globalThis & {
-    SpeechRecognition?: new () => SpeechRecognitionInstance;
-    webkitSpeechRecognition?: new () => SpeechRecognitionInstance;
-    webkitAudioContext?: typeof AudioContext;
-  };
-
-let sharedAudioContext: AudioContext | null = null;
-
-function getAudioContext(): AudioContext | null {
-  try {
-    if (typeof window === 'undefined') return null;
-    const win = window as WindowWithSpeech;
-    const AudioCtx = win.AudioContext || win.webkitAudioContext;
-    if (!AudioCtx) return null;
-    if (!sharedAudioContext || sharedAudioContext.state === 'closed') {
-      sharedAudioContext = new AudioCtx();
-    }
-    if (sharedAudioContext.state === 'suspended') {
-      sharedAudioContext.resume().catch(() => { });
-    }
-    return sharedAudioContext;
-  } catch {
-    return null;
-  }
-}
-
-function playMicStartSound() {
-  try {
-    const ctx = getAudioContext();
-    if (!ctx) return;
-    const now = ctx.currentTime;
-
-    const osc1 = ctx.createOscillator();
-    const gain1 = ctx.createGain();
-    osc1.type = 'sine';
-    osc1.frequency.setValueAtTime(540, now);
-    osc1.frequency.exponentialRampToValueAtTime(760, now + 0.1);
-    gain1.gain.setValueAtTime(0.12, now);
-    gain1.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
-    osc1.connect(gain1);
-    gain1.connect(ctx.destination);
-    osc1.start(now);
-    osc1.stop(now + 0.12);
-
-    const osc2 = ctx.createOscillator();
-    const gain2 = ctx.createGain();
-    osc2.type = 'triangle';
-    osc2.frequency.setValueAtTime(880, now + 0.05);
-    gain2.gain.setValueAtTime(0.1, now + 0.05);
-    gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.16);
-    osc2.connect(gain2);
-    gain2.connect(ctx.destination);
-    osc2.start(now + 0.05);
-    osc2.stop(now + 0.16);
-  } catch {
-    // Audio feedback is non-critical
-  }
-}
-
-function playMatchSuccessSound() {
-  try {
-    const ctx = getAudioContext();
-    if (!ctx) return;
-    const now = ctx.currentTime;
-
-    const freqs = [523.25, 659.25, 783.99, 1046.5];
-    freqs.forEach((freq, idx) => {
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      const startTime = now + idx * 0.055;
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(freq, startTime);
-      gain.gain.setValueAtTime(0.12, startTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.22);
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      osc.start(startTime);
-      osc.stop(startTime + 0.22);
-    });
-  } catch {
-    // Audio feedback is non-critical
-  }
-}
-
-const HOLD_KEY_HINT_FALLBACK = 'Hold {key} to talk, or tap the mic and say a map name';
-const TAP_HINT_FALLBACK = 'Tap the mic and say a map name';
-
-/** Splits a "...{key}..." hint string around the `{key}` placeholder and
- * renders the key as a styled <kbd> chip inline, so it reads as part of
- * the sentence rather than a separate control. */
-function renderHoldKeyHint(template: string | undefined, key: string): React.ReactNode {
-  const text = template || HOLD_KEY_HINT_FALLBACK;
-  const [before, after] = text.split('{key}');
-  if (after === undefined) {
-    return <span>{text}</span>;
-  }
-
-  const trimmedBefore = before.trimEnd();
-  // Check if `after` starts with punctuation (e.g. ", aby mówić...")
-  // so the punctuation stays attached to the <kbd> chip and never wraps onto a new line by itself.
-  const punctMatch = after.match(/^([,\.\?!;:、。])\s*(.*)$/);
-  const trailingPunct = punctMatch ? punctMatch[1] : '';
-  const remainingAfter = punctMatch ? punctMatch[2] : after.trimStart();
-  const needsSpace = !punctMatch && after.startsWith(' ');
-  const leadingSpace = (trailingPunct || needsSpace) && remainingAfter ? ' ' : '';
-
-  return (
-    <span className="inline">
-      <span className="whitespace-nowrap">
-        {trimmedBefore && <span>{`${trimmedBefore}\u00A0`}</span>}
-        <kbd className="inline-flex items-center justify-center rounded border border-border-color bg-bg-elevated px-1.5 py-0.5 type-caption text-accent-amber shadow-xs align-middle">
-          {key}
-        </kbd>
-        {trailingPunct && <span>{trailingPunct}</span>}
-      </span>
-      {remainingAfter ? `${leadingSpace}${remainingAfter}` : ''}
-    </span>
-  );
-}
 
 export function VoiceCommandBanner({
       locale = 'en',
@@ -895,7 +746,7 @@ export function VoiceCommandBanner({
             onClick={() => setSoundEnabled((prev) => !prev)}
             {...tip(soundEnabled ? dict.voice.muteSound : dict.voice.enableSound, undefined, 'action')}
             aria-label={soundEnabled ? dict.voice.muteSound : dict.voice.enableSound}
-            className="flex h-9 w-9 items-center justify-center rounded-xl border border-border-color bg-bg-elevated text-text-secondary transition hover:border-border-subtle hover:text-text-primary cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-accent-red"
+            className="pointer-coarse:min-h-11 pointer-coarse:min-w-11 flex h-9 w-9 items-center justify-center rounded-xl border border-border-color bg-bg-elevated text-text-secondary transition hover:border-border-subtle hover:text-text-primary cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-accent-red"
           >
             {soundEnabled ? (
               <Volume2 className="h-4 w-4" aria-hidden="true" />
@@ -941,7 +792,7 @@ export function VoiceCommandBanner({
             onClick={() => setSoundEnabled((prev) => !prev)}
             {...tip(soundEnabled ? dict.voice.muteSound : dict.voice.enableSound, undefined, 'action')}
             aria-label={soundEnabled ? dict.voice.muteSound : dict.voice.enableSound}
-            className="flex h-7 w-7 items-center justify-center rounded-full border border-border-color bg-bg-elevated text-text-secondary transition hover:border-border-subtle hover:text-text-primary cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-accent-red shadow-xs"
+            className="pointer-coarse:min-h-11 pointer-coarse:min-w-11 flex h-7 w-7 items-center justify-center rounded-full border border-border-color bg-bg-elevated text-text-secondary transition hover:border-border-subtle hover:text-text-primary cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-accent-red shadow-xs"
           >
             {soundEnabled ? (
               <Volume2 className="h-3.5 w-3.5" aria-hidden="true" />

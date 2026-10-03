@@ -64,5 +64,3 @@ export const CharacterDetailSkeleton: React.FC<CharactersSkeletonProps> = ({ cla
     </div>
   );
 };
-
-export default CharactersGridSkeleton;

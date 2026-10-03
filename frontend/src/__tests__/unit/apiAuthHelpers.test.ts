@@ -12,7 +12,6 @@ import {
   getAuthToken,
   getErrorMessage,
 } from '@/utils/api';
-import { ShowcaseApiError } from '@/services/userShowcaseApi';
 import { ApiError as ProfileApiError } from '@/services/userProfileApi';
 
 const g = globalThis as { localStorage?: Storage; fetch: typeof fetch };
@@ -91,7 +90,6 @@ describe('auth helpers', () => {
 
   it('ApiError is shared by the profile and showcase clients', () => {
     assert.strictEqual(ProfileApiError, ApiError);
-    assert.strictEqual(ShowcaseApiError, ApiError);
     const e = new ApiError('m', 401, 'code');
     assert.ok(e instanceof Error);
     assert.deepStrictEqual([e.status, e.code, e.name], [401, 'code', 'ApiError']);

@@ -1,6 +1,7 @@
 // frontend/src/components/minigames/VictoryModal.tsx
 'use client';
 
+import { lookup } from '@/utils/lookup';
 import { Button } from '@/components/common/Button';
 import React, { useEffect, useState } from 'react';
 import confetti from 'canvas-confetti';
@@ -142,7 +143,7 @@ export const VictoryModal: React.FC<VictoryModalProps> = ({ challenge, roundGues
               <div className="flex items-center gap-2">
                 <span className="text-text-muted">#{idx + 1}</span>
                 <span className="truncate max-w-[160px]">
-                  {(t.modes as any)[round.mode] || round.mode}
+                  {lookup<string>(t.modes, round.mode) || round.mode}
                 </span>
               </div>
               <div className="flex items-center gap-1.5">

@@ -1,5 +1,8 @@
-// frontend/src/app/[locale]/minigames/idle/page.tsx
 'use client';
+
+import { getErrorMessage } from "@/utils/api";
+
+// frontend/src/app/[locale]/minigames/idle/page.tsx
 
 import React, { useState, useEffect } from 'react';
 import { PageShell } from '@/components/layout/PageShell';
@@ -34,11 +37,11 @@ export default function DbdIdlePage() {
           setCatalog(cat);
           setChallenge(chal);
         }
-      } catch (err: any) {
-        if (isMounted) {
-          setError(err.message || 'Failed to load classic idle challenge.');
-        }
-      } finally {
+      } catch (err) {
+            if (isMounted) {
+              setError(getErrorMessage(err, 'Failed to load classic idle challenge.'));
+            }
+          } finally {
         if (isMounted) {
           setLoading(false);
         }

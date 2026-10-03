@@ -38,6 +38,3 @@ export const AdminPanelSkeleton: React.FC<AdminPanelSkeletonProps> = ({ classNam
     </div>
   );
 };
-
-export default AdminPanelSkeleton;
-

@@ -31,7 +31,7 @@ export const BUTTON_SIZES: Record<ButtonSize, string> = {
   lg: 'gap-2 rounded-xl px-6 py-3 text-base',
 };
 
-export const ICON_BUTTON_SIZES: Record<ButtonSize, string> = {
+const ICON_BUTTON_SIZES: Record<ButtonSize, string> = {
   xs: 'h-6 w-6 rounded-lg',
   sm: 'h-8 w-8 rounded-lg',
   md: 'h-10 w-10 rounded-xl',
@@ -99,5 +99,3 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
     </button>
   );
 });
-
-export default Button;

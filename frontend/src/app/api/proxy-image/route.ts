@@ -5,6 +5,7 @@
  * HTML5 canvas by fetching image bytes server-side and streaming them with
  * Access-Control-Allow-Origin: * headers.
  */
+import { getErrorMessage } from '@/utils/api';
 import { NextRequest, NextResponse } from 'next/server';
 
 export const dynamic = 'force-dynamic';
@@ -80,9 +81,9 @@ export async function GET(request: NextRequest) {
         'Cache-Control': 'public, max-age=86400, s-maxage=86400',
       },
     });
-  } catch (err: any) {
+  } catch (err) {
     return NextResponse.json(
-      { error: err?.message || 'Failed to fetch image from upstream' },
+      { error: getErrorMessage(err, 'Failed to fetch image from upstream') },
       { status: 502 }
     );
   }

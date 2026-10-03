@@ -87,7 +87,6 @@ export const TierItemTile = React.forwardRef<HTMLDivElement, TierItemTileProps>(
         )}
       >
         {hasImage ? (
-          // eslint-disable-next-line @next/next/no-img-element -- images are unoptimized app-wide and may be user-supplied URLs
           <img
             src={item.image as string}
             alt=""

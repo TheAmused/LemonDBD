@@ -30,5 +30,3 @@ export const UserBugReportsSkeleton: React.FC<UserBugReportsSkeletonProps> = () 
     </div>
   );
 };
-
-export default UserBugReportsSkeleton;

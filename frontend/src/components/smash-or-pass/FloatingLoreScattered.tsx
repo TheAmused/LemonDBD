@@ -68,21 +68,21 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({ ch
     : ['Unpredictable in the fog'];
 
   // Localized Labels
-  const loreLabels: any = dict.smashOrPass.loreLabels || {};
-  const trialClassificationLabel = loreLabels.trialClassification || (currentLoc === 'pl' ? 'Klasyfikacja Próby' : 'Trial Classification');
-  const datingArchetypeLabel = customLabels?.dating_vibe || loreLabels.datingArchetype || (currentLoc === 'pl' ? 'Archetyp Randkowy' : 'Dating Archetype');
-  const greenFlagLabel = loreLabels.greenFlag || (currentLoc === 'pl' ? 'Zielona Flaga' : 'Trial Green Flag');
-  const redFlagLabel = loreLabels.redFlag || (currentLoc === 'pl' ? 'Ostrzeżenie Próby' : 'Trial Warning');
-  const identityProfileLabel = loreLabels.identityProfile || (currentLoc === 'pl' ? 'Profil Tożsamości' : 'Identity Profile');
-  const signatureQuoteLabel = customLabels?.quote || loreLabels.signatureQuote || (currentLoc === 'pl' ? 'Charakterystyczny Cytat' : 'Signature Quote');
-  const turnOnLabel = customLabels?.turn_on || (currentLoc === 'pl' ? 'Co Kręci' : 'Turn On');
-  const dealbreakerLabel = customLabels?.dealbreaker || (currentLoc === 'pl' ? 'Dyskwalifikacja' : 'Dealbreaker');
+  const loreLabels = dict.smashOrPass.loreLabels;
+  const trialClassificationLabel = loreLabels.trialClassification;
+  const datingArchetypeLabel = customLabels?.dating_vibe || loreLabels.datingArchetype;
+  const greenFlagLabel = loreLabels.greenFlag;
+  const redFlagLabel = loreLabels.redFlag;
+  const identityProfileLabel = loreLabels.identityProfile;
+  const signatureQuoteLabel = customLabels?.quote || loreLabels.signatureQuote;
+  const turnOnLabel = customLabels?.turn_on || loreLabels.turn_on;
+  const dealbreakerLabel = customLabels?.dealbreaker || loreLabels.dealbreaker;
 
   const genderLabel = isMonster
-    ? loreLabels.monster || (currentLoc === 'pl' ? 'Potwór / Przedwieczny' : 'Eldritch / Monster')
+    ? loreLabels.monster
     : isFemale
-    ? loreLabels.female || (currentLoc === 'pl' ? 'Kobieta' : 'Female')
-    : loreLabels.male || (currentLoc === 'pl' ? 'Mężczyzna' : 'Male');
+    ? loreLabels.female
+    : loreLabels.male;
 
   const roleLabel = isSurvivor
     ? dict.smashOrPass.filters.survivors

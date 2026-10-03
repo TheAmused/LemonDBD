@@ -3,19 +3,35 @@
 
 import { PLAYER_TITLES, type UserShowcaseState } from '@/types/userShowcase';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
-import { ApiError, authHeaders, getAuthToken } from '@/utils/api';
-
-/** Kept for existing importers; showcase errors are the shared ApiError. */
-export { ApiError, ApiError as ShowcaseApiError };
+import { ApiError, authHeaders, getAuthToken, type ApiErrorBody } from '@/utils/api';
 
 function apiBase(): string {
   return getBackendBaseUrl();
 }
 
-export function mapBackendToShowcaseState(data: any): UserShowcaseState {
-  if (!data || typeof data !== 'object') {
+interface BackendMain {
+  character_name?: string;
+  prestige?: unknown;
+  perk_ids?: unknown;
+}
+
+interface BackendShowcase {
+  player_title?: unknown;
+  devotion_level?: unknown;
+  grade_rank?: unknown;
+  survivor_main?: BackendMain;
+  killer_main?: BackendMain;
+}
+
+interface ShowcaseResponse extends ApiErrorBody {
+  data?: BackendShowcase;
+}
+
+export function mapBackendToShowcaseState(raw: unknown): UserShowcaseState {
+  if (!raw || typeof raw !== 'object') {
     throw new Error('Invalid showcase data payload');
   }
+  const data = raw as BackendShowcase;
 
   const sPerks = Array.isArray(data.survivor_main?.perk_ids) ? data.survivor_main.perk_ids : [];
   const kPerks = Array.isArray(data.killer_main?.perk_ids) ? data.killer_main.perk_ids : [];
@@ -40,7 +56,7 @@ export function mapBackendToShowcaseState(data: any): UserShowcaseState {
   };
 }
 
-export function mapShowcaseStateToBackend(state: UserShowcaseState): Record<string, any> {
+export function mapShowcaseStateToBackend(state: UserShowcaseState): Record<string, unknown> {
   return {
     player_title: state.playerTitle,
     devotion_level: state.devotionLevel,
@@ -73,9 +89,9 @@ export async function fetchUserShowcase(
     signal,
   });
 
-  let data: any = {};
+  let data: ShowcaseResponse = {};
   try {
-    data = await res.json();
+    data = (await res.json()) as ShowcaseResponse;
   } catch {
     // Empty or non-JSON body
   }
@@ -109,9 +125,9 @@ export async function updateUserShowcaseApi(
     signal,
   });
 
-  let data: any = {};
+  let data: ShowcaseResponse = {};
   try {
-    data = await res.json();
+    data = (await res.json()) as ShowcaseResponse;
   } catch {
     // Empty or non-JSON body
   }

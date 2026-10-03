@@ -155,7 +155,7 @@ export const SidebarBottomControls: React.FC<SidebarBottomControlsProps> = ({
             aria-haspopup="listbox"
             aria-expanded={isLangMenuOpen}
             aria-disabled={isSwitchingLang}
-            className={`flex h-8 w-full items-center justify-center gap-1.5 rounded-xl border border-border-color bg-bg-elevated/50 text-xs font-semibold text-text-secondary hover:bg-bg-elevated transition-colors cursor-pointer ${FOCUS_RING} ${isSwitchingLang ? 'pointer-events-none opacity-60' : ''}`}
+            className={`pointer-coarse:min-h-11 pointer-coarse:min-w-11 flex h-8 w-full items-center justify-center gap-1.5 rounded-xl border border-border-color bg-bg-elevated/50 text-xs font-semibold text-text-secondary hover:bg-bg-elevated transition-colors cursor-pointer ${FOCUS_RING} ${isSwitchingLang ? 'pointer-events-none opacity-60' : ''}`}
           >
             <FlagIcon code={currentLanguage.code} />
             <span className="uppercase">{currentLanguage.code}</span>
@@ -204,7 +204,7 @@ export const SidebarBottomControls: React.FC<SidebarBottomControlsProps> = ({
             aria-label={dict.sidebar.toggleTheme}
             aria-haspopup="listbox"
             aria-expanded={isThemeMenuOpen}
-            className={`flex h-8 w-full min-w-0 items-center justify-center gap-1.5 rounded-xl border border-border-color bg-bg-elevated/50 px-2 text-xs font-semibold text-text-secondary hover:bg-bg-elevated transition-colors cursor-pointer ${FOCUS_RING}`}
+            className={`pointer-coarse:min-h-11 pointer-coarse:min-w-11 flex h-8 w-full min-w-0 items-center justify-center gap-1.5 rounded-xl border border-border-color bg-bg-elevated/50 px-2 text-xs font-semibold text-text-secondary hover:bg-bg-elevated transition-colors cursor-pointer ${FOCUS_RING}`}
           >
             {/* The stored theme is only known after mount; the server always
                 renders the "system" icon, so the client must too until then

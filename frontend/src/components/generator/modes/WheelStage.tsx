@@ -387,7 +387,6 @@ export const WheelStage: React.FC<WheelStageProps> = ({
       setWheelPhase('perk');
       setSelectedPageUI(1);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [role]);
 
   useEffect(() => {

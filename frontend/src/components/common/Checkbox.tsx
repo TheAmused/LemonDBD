@@ -46,5 +46,3 @@ export const Checkbox: React.FC<CheckboxProps> = ({
     {children}
   </label>
 );
-
-export default Checkbox;

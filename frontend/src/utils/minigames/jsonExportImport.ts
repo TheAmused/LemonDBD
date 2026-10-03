@@ -1,4 +1,5 @@
 // frontend/src/utils/minigames/jsonExportImport.ts
+import { getErrorMessage } from '@/utils/api';
 import type { ChallengeDefinition, RoundConfig, MinigameMode } from '@/types/minigame';
 
 const VALID_MODES: Set<MinigameMode> = new Set([
@@ -57,15 +58,30 @@ export function exportChallengeToJson(challenge: ChallengeDefinition): void {
   URL.revokeObjectURL(url);
 }
 
+interface RawRound {
+  mode?: unknown;
+  target_id?: unknown;
+  target_type?: unknown;
+  custom_data?: unknown;
+  max_attempts?: unknown;
+}
+
+interface RawChallenge {
+  title?: unknown;
+  description?: unknown;
+  game_mode?: unknown;
+  rounds?: unknown;
+}
+
 export function importChallengeFromJson(jsonString: string): ChallengeDefinition {
-  let parsed: any;
+  let parsed: (RawChallenge & { challenge?: RawChallenge }) | null;
   try {
     parsed = JSON.parse(jsonString);
-  } catch (err: any) {
-    throw new Error(`Invalid JSON format: ${err.message}`);
+  } catch (err) {
+    throw new Error(`Invalid JSON format: ${getErrorMessage(err, '')}`);
   }
 
-  const rawChallenge = parsed.challenge || parsed;
+  const rawChallenge = parsed?.challenge || parsed;
 
   if (!rawChallenge || typeof rawChallenge !== 'object') {
     throw new Error('Invalid challenge file structure.');
@@ -90,7 +106,7 @@ export function importChallengeFromJson(jsonString: string): ChallengeDefinition
   const validatedRounds: RoundConfig[] = [];
 
   for (let i = 0; i < rawChallenge.rounds.length; i++) {
-    const r = rawChallenge.rounds[i];
+    const r = rawChallenge.rounds[i] as RawRound | null;
     if (!r || typeof r !== 'object') {
       throw new Error(`Round #${i + 1} is invalid.`);
     }
@@ -106,8 +122,8 @@ export function importChallengeFromJson(jsonString: string): ChallengeDefinition
       round_number: i + 1,
       mode,
       target_id: typeof r.target_id === 'number' ? r.target_id : undefined,
-      target_type: typeof r.target_type === 'string' ? r.target_type : undefined,
-      custom_data: r.custom_data && typeof r.custom_data === 'object' ? r.custom_data : {},
+      target_type: typeof r.target_type === 'string' ? (r.target_type as RoundConfig['target_type']) : undefined,
+      custom_data: r.custom_data && typeof r.custom_data === 'object' ? (r.custom_data as RoundConfig['custom_data']) : {},
       max_attempts: typeof r.max_attempts === 'number' && r.max_attempts > 0 ? r.max_attempts : 6,
     });
   }

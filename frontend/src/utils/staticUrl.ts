@@ -1,7 +1,7 @@
 // frontend/src/utils/staticUrl.ts
 import { getBackendBaseUrl, apiUrl, staticUrl, backendBase } from './api';
 
-export { getBackendBaseUrl, apiUrl, staticUrl, backendBase };
+export { staticUrl, backendBase };
 
 /** name -> filesystem-safe slug, matching the backend's avatar filename convention. */
 export function sanitizeName(name: string): string {

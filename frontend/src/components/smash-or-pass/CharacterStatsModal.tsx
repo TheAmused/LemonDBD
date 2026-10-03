@@ -13,7 +13,7 @@ import {
 } from 'lucide-react';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 import { getAvatarUrl as resolveAvatarUrl } from '@/components/character-detail/types';
-import { EntityStatItem } from '@/types/smashOrPass';
+import { EntityItem, EntityStatItem } from '@/types/smashOrPass';
 import { localizedProfile } from '@/utils/entityProfile';
 import { Modal } from '@/components/common/Modal';
 import type { Dictionary } from '@/locales/types';
@@ -23,10 +23,20 @@ import { formatNumber } from '@/utils/format';
 import { isSurvivor as isSurvivorRole } from '@/utils/characterUtils';
 import { useDictionary } from "@/context/DictionaryContext";
 
+/** An entity, optionally carrying legacy vote-response fields. */
+type StatsCharacter = EntityItem & {
+  character_slug?: string;
+  character_name?: string;
+  total_votes?: number;
+  smash_count?: number;
+  pass_count?: number;
+  smash_rate?: number;
+};
+
 interface CharacterStatsModalProps {
   isOpen: boolean;
   onClose: () => void;
-  character: any;
+  character: StatsCharacter | null;
   stats?: EntityStatItem;
   locale?: string;
 }

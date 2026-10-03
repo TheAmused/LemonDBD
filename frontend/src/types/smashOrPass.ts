@@ -160,7 +160,7 @@ export interface VoteResponse {
     total_votes?: number;
     smash_rate?: number;
     chaos_rating?: number;
-    [key: string]: any;
+    [key: string]: unknown;
   };
 }
 

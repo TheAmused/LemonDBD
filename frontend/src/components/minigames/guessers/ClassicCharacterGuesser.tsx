@@ -4,7 +4,7 @@
 import React from 'react';
 import Image from 'next/image';
 import { ArrowUp, ArrowDown, Check, X } from 'lucide-react';
-import type { GuessRecord, NumericAttributeResult } from '@/types/minigame';
+import type { AttributeEvaluation, GuessRecord, NumericAttributeResult } from '@/types/minigame';
 import type { Dictionary } from '@/locales/types';
 import { staticUrl } from '@/utils/api';
 import { useDictionary } from "@/context/DictionaryContext";
@@ -26,7 +26,7 @@ export const ClassicCharacterGuesser: React.FC<ClassicCharacterGuesserProps> = (
       <table className="w-full min-w-[700px] border-separate border-spacing-2 text-center select-none">
         <thead>
           <tr className="type-label-sm text-text-muted">
-            <th className="p-2 w-28 text-left">{(t.attributes as any).character || 'Character'}</th>
+            <th className="p-2 w-28 text-left">{t.attributes.character}</th>
             <th className="p-2 w-20">{t.attributes.role}</th>
             <th className="p-2 w-20">{t.attributes.gender}</th>
             <th className="p-2 w-36">{t.attributes.chapter}</th>
@@ -118,7 +118,7 @@ export const ClassicCharacterGuesser: React.FC<ClassicCharacterGuesserProps> = (
 };
 
 interface AttributeCellProps {
-  evaluation: any;
+  evaluation?: AttributeEvaluation;
   value?: string | number | null;
 }
 

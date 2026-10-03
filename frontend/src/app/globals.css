@@ -133,6 +133,20 @@
 @utility type-label-2xs { @apply text-tiny font-bold uppercase tracking-wider; }
 @utility type-strong { @apply text-xs font-bold; }
 @utility type-strong-fluid { @apply text-xs sm:text-sm font-bold; }
+/* Grows the tappable area of a small, absolutely-positioned control to the 44px minimum without changing how it looks.
+   In-flow controls use `pointer-coarse:min-h-11 pointer-coarse:min-w-11` instead. */
+@utility hit-area {
+  &:not(.absolute, .fixed, .sticky, .relative) { position: relative; }
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: max(100%, 2.75rem);
+    height: max(100%, 2.75rem);
+    transform: translate(-50%, -50%);
+  }
+}
 @utility type-strong-xs { @apply text-mini font-bold; }
 @utility type-strong-2xs { @apply text-tiny font-bold; }
 @utility type-strong-wide { @apply text-mini sm:text-xs wide:text-sm wide-2k:text-base font-bold; }

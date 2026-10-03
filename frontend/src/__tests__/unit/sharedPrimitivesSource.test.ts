@@ -77,6 +77,4 @@ test('Spinner, Skeleton and Checkbox primitives are exported', () => {
   const skeleton = fs.readFileSync(path.join(SRC, 'components/common/Skeleton.tsx'), 'utf-8');
   assert.match(spinner, /export const Spinner/);
   assert.match(skeleton, /export const SkeletonBlock/);
-  assert.match(skeleton, /export const SkeletonLine/);
-  assert.match(skeleton, /export const SkeletonAvatar/);
 });

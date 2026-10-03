@@ -64,7 +64,7 @@ export interface RomancePersonaResult {
   evaluatedKillers?: number;
 }
 
-export const ARCHETYPE_VISUALS: Record<string, ArchetypeVisualConfig> = {
+const ARCHETYPE_VISUALS: Record<string, ArchetypeVisualConfig> = {
   untappedSoul: {
     archKey: 'untappedSoul',
     badgeColor: 'from-bg-elevated via-bg-surface to-bg-primary',
@@ -141,7 +141,7 @@ export function calculateRomancePersona(
         badgeColor: fallbackArch.badge_color || 'from-bg-elevated via-bg-surface to-bg-primary',
         borderColor: 'border-border-color',
         glowColor: 'rgba(0, 0, 0, 0)',
-        iconName: (fallbackArch.icon_name as any) || 'compass',
+        iconName: fallbackArch.icon_name || 'compass',
         iconUrl: fallbackArch.icon_url,
         badgeImageUrl: fallbackArch.badge_image_url,
         killerAffinity: 0,
@@ -249,7 +249,7 @@ export function calculateRomancePersona(
       badgeColor: chosenArch.badge_color || 'from-accent-purple to-accent-indigo-deep',
       borderColor: 'border-accent-red/60',
       glowColor: 'rgba(220, 38, 38, 0.35)',
-      iconName: (chosenArch.icon_name as any) || 'sparkles',
+      iconName: chosenArch.icon_name || 'sparkles',
       iconUrl: chosenArch.icon_url,
       badgeImageUrl: chosenArch.badge_image_url,
       killerAffinity: getRoleAffinity('Killer'),

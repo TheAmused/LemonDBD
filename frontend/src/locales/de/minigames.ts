@@ -29,9 +29,6 @@ export default {
   dailySubtitle: "Alle 24 Stunden eine neue synchrone Herausforderung. Halte deine Serie am Leben!",
   playDaily: "Tägliche Prüfung spielen",
   alreadyCompletedToday: "Heute bereits abgeschlossen!",
-  repeatableTrial: "Endloses Training",
-  repeatableSubtitle: "Frisch generierte Zufallsprüfungen, wann immer du deine Fähigkeiten trainieren willst.",
-  playRepeatable: "Zufällige Prüfung starten",
   creatorTitle: "Prüfungs-Baukasten",
   creatorSubtitle: "Erstelle eigene Mehrrunden-Herausforderungen, exportiere als JSON oder teile Kurzlinks mit Freunden.",
   createChallenge: "Baukasten öffnen",
@@ -45,8 +42,6 @@ export default {
   confirmDelete: "Möchtest du diese eigene Prüfung wirklich löschen?",
   cancel: "Abbrechen",
   playTrial: "Spielen",
-  editTrial: "Bearbeiten",
-  adminPublish: "Als offiziell veröffentlichen",
   adminPublishSuccess: "Herausforderung erfolgreich als offiziell veröffentlicht!",
 
   // Runner
@@ -95,11 +90,7 @@ export default {
 
   // Audio & Interactive Controls
   audio: {
-    playSample: "Ton abspielen",
     playing: "Wird abgespielt...",
-    audioNotSupported: "Audio-Vorschau wird in diesem Browser nicht unterstützt.",
-    distanceHint: "Aktuelle Entfernung: {distance}m",
-    nextClueUnlocked: "Neuer Audio-Hinweis freigeschaltet!",
     themeBadge: "Dead by Daylight Killer-Jagd & Terrormusik",
     pauseMusic: "Musik pausieren",
     listenTheme: "Killer-Thema anhören",
@@ -171,7 +162,6 @@ export default {
     customSpeakerPlaceholder: "z.B. Das Unbekannte, Claudette...",
     customEmojisLabel: "Rätsel-Emojis",
     customEmojisPlaceholder: "z.B. 🔔👻🌲",
-    blurLevelLabel: "Anfängliche Unschärfe",
     saveToMyTrials: "In eigenen Prüfungen speichern",
     saveAndPlay: "Speichern & Spielen",
     publishOfficialModalTitle: "Als offizielle Prüfung veröffentlichen",

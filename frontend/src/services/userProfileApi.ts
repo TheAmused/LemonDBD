@@ -12,7 +12,7 @@
 
 import type { UserBugReport } from '@/types/userProfile';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
-import { ApiError, authHeaders, getAuthToken } from '@/utils/api';
+import { ApiError, authHeaders, getAuthToken, type ApiErrorBody } from '@/utils/api';
 
 export { ApiError };
 
@@ -20,9 +20,9 @@ function apiBase(): string {
   return getBackendBaseUrl();
 }
 
-async function parseJsonSafely(res: Response): Promise<any> {
+async function parseJsonSafely<T extends object = object>(res: Response): Promise<ApiErrorBody & Partial<T>> {
   try {
-    return await res.json();
+    return (await res.json()) as ApiErrorBody & Partial<T>;
   } catch {
     return {};
   }
@@ -57,7 +57,13 @@ export async function fetchMyBugReports(
     }
   );
 
-  const data = await parseJsonSafely(res);
+  const data = await parseJsonSafely<{
+    reports: UserBugReport[];
+    total: number;
+    page: number;
+    per_page: number;
+    total_pages: number;
+  }>(res);
   if (!res.ok) {
     throw new ApiError(data.error || 'Failed to fetch bug reports.', res.status, data.error_code);
   }
@@ -76,7 +82,7 @@ export interface UpdateProfilePayload {
   new_password?: string;
 }
 
-export async function updateUserProfile(payload: UpdateProfilePayload): Promise<any> {
+export async function updateUserProfile(payload: UpdateProfilePayload): Promise<void> {
   const token = getAuthToken();
   if (!token) {
     throw new ApiError('Authentication token missing.', 401, 'authTokenMissing');
@@ -95,10 +101,9 @@ export async function updateUserProfile(payload: UpdateProfilePayload): Promise<
   if (!res.ok) {
     throw new ApiError(data.error || 'Failed to update profile.', res.status, data.error_code);
   }
-  return data;
 }
 
-export async function uploadAvatar(file: File): Promise<any> {
+export async function uploadAvatar(file: File): Promise<void> {
   const token = getAuthToken();
   if (!token) {
     throw new ApiError('Authentication token missing.', 401, 'authTokenMissing');
@@ -117,7 +122,6 @@ export async function uploadAvatar(file: File): Promise<any> {
   if (!res.ok) {
     throw new ApiError(data.error || 'Failed to upload avatar.', res.status, data.error_code);
   }
-  return data;
 }
 
 /** Downloads everything the server holds about the signed-in account as a JSON file. */

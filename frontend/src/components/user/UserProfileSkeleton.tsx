@@ -35,5 +35,3 @@ export const UserProfileSkeleton: React.FC<UserProfileSkeletonProps> = ({ classN
     </div>
   );
 };
-
-export default UserProfileSkeleton;

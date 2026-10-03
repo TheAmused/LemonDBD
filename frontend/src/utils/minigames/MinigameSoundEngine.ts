@@ -1,4 +1,5 @@
 // frontend/src/utils/minigames/MinigameSoundEngine.ts
+import { getAudioContextCtor } from '@/utils/browserApis';
 
 class MinigameSoundEngine {
   private ctx: AudioContext | null = null;
@@ -8,7 +9,7 @@ class MinigameSoundEngine {
   private getContext(): AudioContext | null {
     if (typeof window === 'undefined') return null;
     if (!this.ctx) {
-      const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
+      const AudioCtx = getAudioContextCtor();
       if (AudioCtx) {
         this.ctx = new AudioCtx();
       }
@@ -24,8 +25,8 @@ class MinigameSoundEngine {
       try {
         if ('stop' in node && typeof node.stop === 'function') {
           node.stop();
-        } else if ('disconnect' in node && typeof (node as any).disconnect === 'function') {
-          (node as any).disconnect();
+        } else if ('disconnect' in node && typeof node.disconnect === 'function') {
+          node.disconnect();
         }
       } catch {}
     }

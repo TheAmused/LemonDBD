@@ -32,11 +32,11 @@ import { isTierColor, normalizePlacements, sanitizeImageUrl } from './codec';
 import { ITEM_ID_PATTERN, TIER_LIST_LIMITS } from './constants';
 
 export const TIER_LIST_STORAGE_KEY = 'lemondbd_tier_lists';
-export const TIER_LIST_STORE_VERSION = 1 as const;
+const TIER_LIST_STORE_VERSION = 1 as const;
 
 export type { SaveResult };
 
-export const EMPTY_TIER_LIST_STATE: TierListStoreState = Object.freeze({
+const EMPTY_TIER_LIST_STATE: TierListStoreState = Object.freeze({
   version: TIER_LIST_STORE_VERSION,
   rankings: Object.freeze({}) as Record<string, StoredRanking>,
   custom: Object.freeze({}) as Record<string, StoredCustomList>,
@@ -145,7 +145,7 @@ export const subscribeTierListStore = store.subscribe;
 export const getTierListSnapshot = store.getSnapshot;
 export const getTierListServerSnapshot = store.getServerSnapshot;
 /** Applies `mutate` to the current state, persists it, and notifies subscribers. */
-export const updateTierListState = store.update;
+const updateTierListState = store.update;
 /** Test hook: forget the cached snapshot so the next read hits storage. */
 export const resetTierListStoreCache = store.resetCache;
 

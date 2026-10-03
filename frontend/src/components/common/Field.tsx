@@ -7,11 +7,11 @@ import { cn } from '@/utils/cn';
 
 export type FieldSize = 'sm' | 'md' | 'lg';
 
-export const FIELD_BASE =
+const FIELD_BASE =
   'w-full border border-border-color bg-bg-elevated text-text-primary placeholder:text-text-muted transition-colors focus:outline-none focus:border-accent-red focus:ring-1 focus:ring-accent-red/50 disabled:cursor-not-allowed disabled:opacity-50';
-export const FIELD_ERROR = 'border-accent-red focus:ring-accent-red';
+const FIELD_ERROR = 'border-accent-red focus:ring-accent-red';
 // 16px on small screens stops iOS Safari from zooming into focused inputs.
-export const FIELD_SIZES: Record<FieldSize, string> = {
+const FIELD_SIZES: Record<FieldSize, string> = {
   sm: 'rounded-lg px-2.5 py-1.5 text-base sm:text-xs',
   md: 'rounded-xl px-3 py-2.5 text-base sm:text-sm',
   lg: 'rounded-xl px-4 py-3 text-base',
@@ -87,7 +87,7 @@ export const SearchInput = React.forwardRef<HTMLInputElement, SearchInputProps>(
 });
 
 /** Label + control + hint/error row. */
-export const FieldLabel: React.FC<{
+const FieldLabel: React.FC<{
   label: React.ReactNode;
   htmlFor?: string;
   hint?: React.ReactNode;

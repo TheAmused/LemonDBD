@@ -8,7 +8,7 @@ import { UserCheck, Sparkles } from 'lucide-react';
 import type { RoleCategory, CharacterItem } from '@/types/perks';
 import type { Dictionary } from '@/locales/types';
 import { getBackendBaseUrl, getCharacterAvatarUrl, normalizeSearchText } from '@/utils/perkUtils';
-import { CATALOG_TTL_MS, catalogKey, fetchCached, fetchJson } from '@/services/dataCache';
+import { CATALOG_TTL_MS, catalogKey, fetchCached, fetchJson, unwrapList, type ListPayload } from '@/services/dataCache';
 import { Modal } from '@/components/common/Modal';
 import { Spinner } from '@/components/common/Spinner';
 import { EmptyState } from '@/components/common/EmptyState';
@@ -115,9 +115,9 @@ export const ShowcaseCharacterModal: React.FC<ShowcaseCharacterModalProps> = ({ 
     const url = catalogKey('characters', { category: 'all', lang: locale });
 
     setLoading(true);
-    fetchCached<any>(url, () => fetchJson(url), { ttlMs: CATALOG_TTL_MS })
+    fetchCached<ListPayload<CharacterItem>>(url, () => fetchJson<ListPayload<CharacterItem>>(url), { ttlMs: CATALOG_TTL_MS })
       .then((data) => {
-        const list = Array.isArray(data) ? data : data?.data || [];
+        const list = unwrapList(data);
         setCharacters(list);
       })
       .catch((err) => {

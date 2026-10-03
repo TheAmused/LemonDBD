@@ -70,8 +70,8 @@ export function getChapterBannerSrc(
 export type MapSizeBucket = 'small' | 'medium' | 'large';
 
 /** Upper bounds (exclusive, in m²) for the small and medium size buckets. */
-export const MAP_SIZE_SMALL_MAX = 9000;
-export const MAP_SIZE_MEDIUM_MAX = 10000;
+const MAP_SIZE_SMALL_MAX = 9000;
+const MAP_SIZE_MEDIUM_MAX = 10000;
 
 export function getMapSizeBucket(sizeSqMeters: number | null | undefined): MapSizeBucket | null {
   if (sizeSqMeters == null) return null;

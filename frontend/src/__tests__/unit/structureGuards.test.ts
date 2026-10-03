@@ -84,3 +84,16 @@ describe('structure: heavy libraries stay out of the main bundle', () => {
     void HEAVY;
   });
 });
+
+describe('structure: directives', () => {
+  it('"use client" is the first statement of its file (an import above it silently disables it and breaks the build)', () => {
+    const bad = codeModules()
+      .filter((m) => /^\s*['"]use client['"]/m.test(m.text))
+      .filter((m) => {
+        const code = m.text.replace(/^(\s*(\/\/[^\n]*\n|\/\*[\s\S]*?\*\/))*\s*/, '');
+        return !/^['"]use client['"]/.test(code);
+      })
+      .map((m) => m.file);
+    assert.deepEqual(bad, [], `"use client" must come before every import:\n${bad.join('\n')}`);
+  });
+});

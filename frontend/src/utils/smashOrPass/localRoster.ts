@@ -13,7 +13,7 @@
  */
 import type { EntityItem, EntityMetadata, RosterItem, SmashRosterDocumentEntity, StoredCustomRoster } from '@/types/smashOrPass';
 
-export const LOCAL_ROSTER_PREFIX = 'local:';
+const LOCAL_ROSTER_PREFIX = 'local:';
 
 export function isLocalRosterSlug(slug: string | undefined | null): boolean {
   return typeof slug === 'string' && slug.startsWith(LOCAL_ROSTER_PREFIX);

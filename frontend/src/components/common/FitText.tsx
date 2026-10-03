@@ -256,5 +256,3 @@ export const FitText: React.FC<FitTextProps> = ({
     </span>
   );
 };
-
-export default FitText;

@@ -1,6 +1,7 @@
 // frontend/src/components/user/CampfireHeader.tsx
 'use client';
 
+import type { OwnershipSummary } from '@/context/AuthContext';
 import React from 'react';
 import Link from 'next/link';
 import {
@@ -32,7 +33,7 @@ interface CampfireHeaderProps {
     avatar_url?: string;
   };
   showcase: UserShowcaseState;
-  ownership?: any;
+  ownership?: OwnershipSummary | null;
   isSaving?: boolean;
   saveError?: string | null;
   onTitleChange: (title: string) => void;

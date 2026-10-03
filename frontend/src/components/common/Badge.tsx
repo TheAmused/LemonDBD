@@ -8,7 +8,7 @@ import { FitText } from '@/components/common/FitText';
 export type BadgeTone = 'neutral' | 'red' | 'amber' | 'green' | 'blue' | 'purple';
 export type BadgeSize = 'xs' | 'sm' | 'md';
 
-export const BADGE_TONES: Record<BadgeTone, string> = {
+const BADGE_TONES: Record<BadgeTone, string> = {
   neutral: 'bg-bg-elevated text-text-secondary border-border-color',
   red: 'bg-accent-red/10 text-accent-red border-accent-red/30',
   amber: 'bg-accent-amber/10 text-accent-amber border-accent-amber/30',
@@ -17,7 +17,7 @@ export const BADGE_TONES: Record<BadgeTone, string> = {
   purple: 'bg-accent-purple/10 text-accent-purple border-accent-purple/30',
 };
 
-export const BADGE_SIZES: Record<BadgeSize, string> = {
+const BADGE_SIZES: Record<BadgeSize, string> = {
   xs: 'px-1.5 py-0.5 text-micro',
   sm: 'px-2 py-0.5 text-tiny',
   md: 'px-2.5 py-1 text-xs',
@@ -62,5 +62,3 @@ export const Badge: React.FC<BadgeProps> = ({
     )}
   </span>
 );
-
-export default Badge;

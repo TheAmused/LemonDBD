@@ -20,7 +20,7 @@ export function useKillerPerkPool() {
       });
       if (res.ok) {
         const data = await res.json();
-        const unlocked = (data.data || []).filter((p: any) => p.is_unlocked);
+        const unlocked = (data.data || []).filter((p: { is_unlocked?: boolean }) => p.is_unlocked);
         setPool(unlocked);
       }
     } catch (err) {

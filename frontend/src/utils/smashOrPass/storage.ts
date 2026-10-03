@@ -38,12 +38,9 @@ import { createRandomId, createVersionedStore, isRecord, readNumber, type SaveRe
 import { sanitizeImageUrl } from './codec';
 import { ENTITY_ID_PATTERN, SMASH_ROSTER_LIMITS } from './constants';
 
-export const SMASH_ROSTER_STORAGE_KEY = 'lemondbd_smash_rosters';
-export const SMASH_ROSTER_STORE_VERSION = 1 as const;
-
-export type { SaveResult };
-
-export const EMPTY_SMASH_ROSTER_STATE: SmashRosterStoreState = Object.freeze({
+const SMASH_ROSTER_STORAGE_KEY = 'lemondbd_smash_rosters';
+const SMASH_ROSTER_STORE_VERSION = 1 as const;
+const EMPTY_SMASH_ROSTER_STATE: SmashRosterStoreState = Object.freeze({
   version: SMASH_ROSTER_STORE_VERSION,
   custom: Object.freeze({}) as Record<string, StoredCustomRoster>,
 }) as SmashRosterStoreState;
@@ -122,8 +119,8 @@ export function migrateSmashRosterState(raw: unknown): SmashRosterStoreState {
         ...(value.roster_mode === 'simple' ? { roster_mode: 'simple' as const } : { roster_mode: 'full' as const }),
         ...(Array.isArray(value.custom_roles) ? { custom_roles: value.custom_roles as string[] } : {}),
         ...(Array.isArray(value.custom_genders) ? { custom_genders: value.custom_genders as string[] } : {}),
-        ...(isRecord(value.custom_labels) ? { custom_labels: value.custom_labels as any } : {}),
-        ...(Array.isArray(value.romance_archetypes) ? { romance_archetypes: value.romance_archetypes as any } : {}),
+        ...(isRecord(value.custom_labels) ? { custom_labels: value.custom_labels as StoredCustomRoster['custom_labels'] } : {}),
+        ...(Array.isArray(value.romance_archetypes) ? { romance_archetypes: value.romance_archetypes as StoredCustomRoster['romance_archetypes'] } : {}),
       };
     }
   }
@@ -137,14 +134,14 @@ const store = createVersionedStore<SmashRosterStoreState>({
   migrate: migrateSmashRosterState,
 });
 
-export const loadSmashRosterState = store.load;
-export const saveSmashRosterState = store.save;
+const loadSmashRosterState = store.load;
+const saveSmashRosterState = store.save;
 export const subscribeSmashRosterStore = store.subscribe;
 /** Cached: `useSyncExternalStore` requires the same object until something changes. */
 export const getSmashRosterSnapshot = store.getSnapshot;
 export const getSmashRosterServerSnapshot = store.getServerSnapshot;
 /** Applies `mutate` to the current state, persists it, and notifies subscribers. */
-export const updateSmashRosterState = store.update;
+const updateSmashRosterState = store.update;
 
 // ---------------------------------------------------------------------------
 // Mutations

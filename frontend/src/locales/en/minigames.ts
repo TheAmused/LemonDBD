@@ -29,9 +29,6 @@ export default {
   dailySubtitle: "New synchronized challenge every 24 hours. Keep your daily streak alive!",
   playDaily: "Play Daily Trial",
   alreadyCompletedToday: "Completed Today!",
-  repeatableTrial: "Endless Practice",
-  repeatableSubtitle: "Freshly generated randomized trials whenever you want to sharpen your skills.",
-  playRepeatable: "Start Random Trial",
   creatorTitle: "Trial Creator",
   creatorSubtitle: "Assemble custom multi-round challenges, export to JSON or generate short links for friends.",
   createChallenge: "Open Creator",
@@ -45,8 +42,6 @@ export default {
   confirmDelete: "Are you sure you want to delete this custom trial?",
   cancel: "Cancel",
   playTrial: "Play",
-  editTrial: "Edit",
-  adminPublish: "Publish as Official",
   adminPublishSuccess: "Challenge successfully published as official!",
 
   // Runner
@@ -95,11 +90,7 @@ export default {
 
   // Audio & Interactive Controls
   audio: {
-    playSample: "Play Sound",
     playing: "Playing...",
-    audioNotSupported: "Audio preview not supported in this browser.",
-    distanceHint: "Current Distance: {distance}m",
-    nextClueUnlocked: "New audio clue unlocked!",
     themeBadge: "Dead by Daylight Killer Chase & Terror Theme",
     pauseMusic: "Pause Music",
     listenTheme: "Listen to Killer Theme",
@@ -167,7 +158,6 @@ export default {
     customSpeakerPlaceholder: "e.g., The Unknown, Claudette...",
     customEmojisLabel: "Riddle Emojis",
     customEmojisPlaceholder: "e.g., 🔔👻🌲",
-    blurLevelLabel: "Initial Pixelation / Blur",
     saveToMyTrials: "Save to My Trials",
     saveAndPlay: "Save & Play",
     publishOfficialModalTitle: "Publish as Official Daily Trial",

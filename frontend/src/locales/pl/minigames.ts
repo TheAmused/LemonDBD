@@ -29,9 +29,6 @@ export default {
   dailySubtitle: "Nowe zsynchronizowane wyzwanie co 24 godziny. Utrzymuj swoją serię!",
   playDaily: "Zagraj w Codzienną Próbę",
   alreadyCompletedToday: "Ukończono dzisiaj!",
-  repeatableTrial: "Niekończący się Trening",
-  repeatableSubtitle: "Świeżo generowane losowe próby, kiedy tylko chcesz sprawdzić swoje umiejętności.",
-  playRepeatable: "Rozpocznij Losową Próbę",
   creatorTitle: "Kreator Prób",
   creatorSubtitle: "Projektuj własne wielorundowe wyzwania, eksportuj do JSON lub twórz linki dla znajomych.",
   createChallenge: "Otwórz Kreator",
@@ -45,8 +42,6 @@ export default {
   confirmDelete: "Czy na pewno chcesz usunąć to własne wyzwanie?",
   cancel: "Anuluj",
   playTrial: "Graj",
-  editTrial: "Edytuj",
-  adminPublish: "Opublikuj jako Oficjalne",
   adminPublishSuccess: "Wyzwanie zostało pomyślnie opublikowane jako oficjalne!",
 
   // Runner
@@ -95,11 +90,7 @@ export default {
 
   // Audio & Interactive Controls
   audio: {
-    playSample: "Odtwórz Dźwięk",
     playing: "Odtwarzanie...",
-    audioNotSupported: "Odtwarzanie dźwięku nie jest wspierane w tej przeglądarce.",
-    distanceHint: "Aktualna odległość: {distance}m",
-    nextClueUnlocked: "Odblokowano nową wskazówkę dźwiękową!",
     themeBadge: "Motyw Pościgu i Terroru Zabójcy z Dead by Daylight",
     pauseMusic: "Zatrzymaj Muzykę",
     listenTheme: "Posłuchaj Motywu Zabójcy",
@@ -171,7 +162,6 @@ export default {
     customSpeakerPlaceholder: "np. Nieznany, Claudette...",
     customEmojisLabel: "Emoji Zagadki",
     customEmojisPlaceholder: "np. 🔔👻🌲",
-    blurLevelLabel: "Początkowe Rozmycie / Pikseloza",
     saveToMyTrials: "Zapisz w Moich Próbach",
     saveAndPlay: "Zapisz i Graj",
     publishOfficialModalTitle: "Opublikuj jako Oficjalną Próbę",

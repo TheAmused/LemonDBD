@@ -96,5 +96,3 @@ export const CharacterOwnershipOverlay: React.FC<CharacterOwnershipOverlayProps>
     </>
   );
 };
-
-export default CharacterOwnershipOverlay;

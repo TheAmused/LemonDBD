@@ -2,7 +2,6 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import dynamic from 'next/dynamic';
 import { PageShell } from '@/components/layout/PageShell';
 import { MinigameCreator } from '@/components/minigames/creator/MinigameCreator';
 import { useDictionary, useLocale } from '@/context/DictionaryContext';
@@ -11,10 +10,6 @@ import type { MinigameCatalog } from '@/types/minigame';
 import { fetchMinigameCatalog } from '@/services/minigameApi';
 import { DbdSpinner } from '@/components/common/DbdSpinner';
 
-const CampfireParticles = dynamic(
-  () => import('@/components/common/CampfireParticles').then((m) => m.CampfireParticles),
-  { ssr: false }
-);
 
 export default function MinigameCreatorPage() {
   const dict = useDictionary();
@@ -59,7 +54,6 @@ export default function MinigameCreatorPage() {
       locale={locale}
       dict={dict}
       activeCategory="minigames"
-      decoration={<CampfireParticles />}
       mainClassName="relative flex flex-col items-center justify-center min-h-[70vh]"
     >
       {loading ? (

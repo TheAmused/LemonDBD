@@ -3,7 +3,6 @@ import type { Dictionary } from '@/locales/types';
 // frontend/src/app/[locale]/characters/[slug]/page.tsx
 
 import React, { useEffect, useState, Suspense } from 'react';
-import dynamic from 'next/dynamic';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { ChevronLeft, UserX } from 'lucide-react';
@@ -22,10 +21,6 @@ import { useCachedData } from '@/hooks/useCachedData';
 import { fetchJson } from '@/services/dataCache';
 import { getBackendBaseUrl } from '@/utils/api';
 
-const CampfireParticles = dynamic(
-  () => import('@/components/common/CampfireParticles').then((m) => m.CampfireParticles),
-  { ssr: false }
-);
 
 export default function CharacterDetailPage() {
   const params = useParams();
@@ -90,7 +85,6 @@ export default function CharacterDetailPage() {
       activeCategory="characters"
       mainClassName="relative overflow-y-auto"
     >
-      <CampfireParticles />
       <div className="relative z-10">
         {loading ? (
           <CharacterDetailSkeleton dict={dict} />

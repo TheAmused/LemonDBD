@@ -7,7 +7,6 @@ import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { ArrowLeft, ChevronDown } from 'lucide-react';
 import { PageShell } from '@/components/layout/PageShell';
-import { CampfireParticles } from '@/components/common/CampfireParticles';
 import { RichText } from '@/components/common/RichText';
 import { Locale } from '@/i18n/config';
 import { useDictionary } from '@/context/DictionaryContext';
@@ -168,7 +167,6 @@ export default function PrivacyPolicyPage() {
       padding="spacious"
       mainClassName="flex flex-col items-center min-h-[calc(100vh-4rem)] lg:min-h-screen overflow-y-auto relative"
     >
-      <CampfireParticles />
       <div className="relative z-10 mx-auto flex w-full max-w-[110rem] flex-col gap-6 py-6 sm:gap-8 sm:py-10">
         <header className="grid grid-cols-2 items-center gap-x-4 gap-y-3 sm:grid-cols-[1fr_auto_1fr]">
           <Link

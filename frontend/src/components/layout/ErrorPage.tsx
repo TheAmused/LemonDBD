@@ -9,8 +9,8 @@ import React from 'react';
 import Link from 'next/link';
 import { Home } from 'lucide-react';
 import { PageShell } from '@/components/layout/PageShell';
+import { useBackgroundEffect } from '@/components/layout/AppBackground';
 import { LemonIcon } from '@/components/LemonIcon';
-import { FogHeartbeatBackground } from '@/components/landing/FogHeartbeatBackground';
 import { useDictionary, useLocale } from '@/context/DictionaryContext';
 import { useAuth } from '@/context/AuthContext';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
@@ -43,6 +43,7 @@ export const ErrorPage: React.FC<ErrorPageProps> = ({ variant }) => {
           };
 
   useDocumentTitle(`${dict.app.title} - ${title}`);
+  useBackgroundEffect('fog');
 
   return (
     <PageShell
@@ -50,8 +51,6 @@ export const ErrorPage: React.FC<ErrorPageProps> = ({ variant }) => {
       dict={dict}
       activeCategory=""
       mainId="main-error-content"
-      outerClassName="relative min-h-screen overflow-hidden bg-bg-primary text-text-primary flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300"
-      decoration={<FogHeartbeatBackground />}
       customPadding="p-4 sm:p-8 lg:p-12"
       mainClassName="flex items-center justify-center min-h-[calc(100vh-4rem)] lg:min-h-screen"
     >

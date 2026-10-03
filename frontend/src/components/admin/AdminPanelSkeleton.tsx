@@ -18,7 +18,7 @@ export const AdminPanelSkeleton: React.FC<AdminPanelSkeletonProps> = ({ dict, cl
       role="status"
       aria-busy="true"
       aria-label={loadingLabel}
-      className={`min-h-screen bg-bg-primary text-text-primary flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-200 ${className}`}
+      className={`min-h-screen text-text-primary flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-200 ${className}`}
     >
       <div
         aria-hidden="true"

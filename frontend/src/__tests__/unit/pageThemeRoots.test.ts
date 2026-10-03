@@ -38,8 +38,8 @@ describe('Page Root Theme Wrapper Consistency', () => {
       const outerOverrideMatch = content.match(/outerClassName=["'`]([^"'`]+)["'`]/);
       if (outerOverrideMatch) {
         assert.ok(
-          outerOverrideMatch[1].includes('bg-bg-primary') && outerOverrideMatch[1].includes('text-text-primary'),
-          `${relPath}'s outerClassName override must use bg-bg-primary/text-text-primary, not hardcoded slate colors`
+          outerOverrideMatch[1].includes('text-text-primary'),
+          `${relPath}'s outerClassName override must use the text-text-primary token, not hardcoded slate colors`
         );
       }
     });
@@ -55,8 +55,8 @@ describe('Page Root Theme Wrapper Consistency', () => {
     assert.ok(defaultMatch, 'Could not find DEFAULT_OUTER_CLASSNAME in PageShell.tsx');
     const defaultClassName = defaultMatch![1];
     assert.ok(
-      defaultClassName.includes('bg-bg-primary') && defaultClassName.includes('text-text-primary'),
-      `PageShell's DEFAULT_OUTER_CLASSNAME must use bg-bg-primary/text-text-primary, not hardcoded slate colors: "${defaultClassName}"`
+      defaultClassName.includes('text-text-primary'),
+      `PageShell's DEFAULT_OUTER_CLASSNAME must use the text-text-primary token, not hardcoded slate colors: "${defaultClassName}"`
     );
     assert.ok(
       !defaultClassName.includes('slate'),
@@ -81,7 +81,7 @@ describe('Page Root Theme Wrapper Consistency', () => {
       assert.ok(!content.includes('bg-[#070b12]'), `${relPath} still contains raw hardcoded bg-[#070b12]`);
       assert.ok(
         (content.includes('dark:bg-slate-950') && content.includes('dark:text-slate-100')) ||
-        (content.includes('bg-bg-primary') && content.includes('text-text-primary')),
+        content.includes('text-text-primary'),
         `${relPath} must include theme classes or semantic tokens`
       );
     });
@@ -108,4 +108,24 @@ describe('Page Root Theme Wrapper Consistency', () => {
       );
     });
   }
+});
+
+describe('Page background: one source of truth', () => {
+  it('PageShell no longer paints a background colour or mounts effects (AppBackground in the layout does)', () => {
+    const content = fs.readFileSync(path.resolve(__dirname, '../../components/layout/PageShell.tsx'), 'utf-8');
+    assert.ok(!/DEFAULT_OUTER_CLASSNAME\s*=\s*\n?\s*['"`][^'"`]*\bbg-bg-primary\b/.test(content));
+    assert.ok(!content.includes('AmbientEmbers') && !content.includes('decoration'));
+  });
+
+  it('no page mounts a background effect itself', () => {
+    const root = path.resolve(__dirname, '../../app');
+    const walk = (dir: string): string[] =>
+      fs.readdirSync(dir, { withFileTypes: true }).flatMap((e) =>
+        e.isDirectory() ? walk(path.join(dir, e.name)) : /\.tsx$/.test(e.name) ? [path.join(dir, e.name)] : []
+      );
+    for (const file of walk(root)) {
+      const content = fs.readFileSync(file, 'utf-8');
+      assert.ok(!/<(CampfireParticles|FogHeartbeatBackground|AmbientEmbers)\b/.test(content), `${file} mounts its own background effect`);
+    }
+  });
 });

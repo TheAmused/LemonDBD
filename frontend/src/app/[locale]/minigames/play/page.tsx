@@ -3,7 +3,6 @@
 
 import React, { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
-import dynamic from 'next/dynamic';
 import { PageShell } from '@/components/layout/PageShell';
 import { ChallengeRunner } from '@/components/minigames/ChallengeRunner';
 import { useDictionary, useLocale } from '@/context/DictionaryContext';
@@ -18,10 +17,6 @@ import { getCustomChallenges } from '@/utils/minigames/storage';
 import { decodeChallengeShare, readChallengeFragment } from '@/utils/minigames/shareLink';
 import { DbdSpinner } from '@/components/common/DbdSpinner';
 
-const CampfireParticles = dynamic(
-  () => import('@/components/common/CampfireParticles').then((m) => m.CampfireParticles),
-  { ssr: false }
-);
 
 function PlayTrialContent() {
   const dict = useDictionary();
@@ -101,7 +96,6 @@ function PlayTrialContent() {
       locale={locale}
       dict={dict}
       activeCategory="minigames"
-      decoration={<CampfireParticles />}
       mainClassName="relative flex flex-col items-center justify-center min-h-[70vh]"
     >
       {loading ? (

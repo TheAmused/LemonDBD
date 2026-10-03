@@ -32,10 +32,6 @@ import { useCachedData } from '@/hooks/useCachedData';
 import { fetchCached, fetchJson } from '@/services/dataCache';
 
 const PerkModal = dynamic(() => import('@/components/PerkModal').then((m) => m.PerkModal), { ssr: false });
-const CampfireParticles = dynamic(
-  () => import('@/components/common/CampfireParticles').then((m) => m.CampfireParticles),
-  { ssr: false }
-);
 
 interface PerksResponse {
   data?: Perk[];
@@ -303,10 +299,9 @@ function PerksContent() {
       killerCount={killerCount}
       characterCount={characterCount}
       padding="tight"
-      outerClassName="h-dvh overflow-hidden bg-bg-primary text-text-primary flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300"
+      outerClassName="h-dvh overflow-hidden text-text-primary flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300"
       mainClassName="relative flex h-full min-h-0 flex-col overflow-hidden gap-3 sm:gap-4"
     >
-        <CampfireParticles />
         <div className="relative z-10 flex h-full min-h-0 flex-col overflow-hidden gap-3 sm:gap-4">
         <div className="shrink-0">
           <PerkFilters
@@ -414,7 +409,7 @@ export default function PerksPage() {
     <Suspense
       fallback={
         <PageShellFallback
-          outerClassName="h-dvh overflow-hidden bg-bg-primary text-text-primary flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300"
+          outerClassName="h-dvh overflow-hidden text-text-primary flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300"
           padding="tight"
           mainClassName="flex h-full min-h-0 flex-col overflow-hidden gap-3 sm:gap-4"
           skeleton={<PerksGridSkeleton />}

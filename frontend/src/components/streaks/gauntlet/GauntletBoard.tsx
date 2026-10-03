@@ -39,13 +39,6 @@ const GauntletModeModal = dynamic(
   { ssr: false }
 );
 
-// Particle/Lottie code is heavy and only ever needed on this page, so it gets
-// its own chunk rather than riding along in every route that imports GauntletBoard.
-const GauntletFireBackground = dynamic(
-  () => import('./GauntletFireBackground').then((mod) => mod.GauntletFireBackground),
-  { ssr: false }
-);
-
 function gameModeLabel(mode: GauntletGameMode, dict: Dictionary['streaks']): string {
   switch (mode) {
     case 'lemon_solo':
@@ -132,7 +125,6 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({
 
   return (
     <div className="pb-16">
-      <GauntletFireBackground tierLevel={isCompleted ? 0 : run?.tier_info?.tier_level ?? 0} />
       <Confetti active={celebrating} />
 
       <div>

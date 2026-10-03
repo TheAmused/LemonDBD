@@ -20,6 +20,7 @@
 
   --color-accent-red: var(--accent-red);
   --color-accent-red-hover: var(--accent-red-hover);
+  --color-accent-red-text: var(--accent-red-text);
   --color-accent-amber: var(--accent-amber);
   --color-accent-amber-hover: var(--accent-amber-hover);
   --color-accent-green: var(--accent-green);
@@ -183,6 +184,7 @@
     --accent-red: #b91c1c;
     /* 6.5:1 on white (AAA Large / AA Body) */
     --accent-red-hover: #991b1b;
+    --accent-red-text: var(--accent-red);
     --accent-amber: #92400e;
     /* 5.8:1 on white (AA Body) */
     --accent-amber-hover: #78350f;
@@ -248,8 +250,9 @@
       --border-color: #2e2e38;
       --border-subtle: #1e1e26;
 
-      --accent-red: #ef4444;
-      --accent-red-hover: #f87171;
+      --accent-red: #dc2626;
+      --accent-red-hover: #b91c1c;
+      --accent-red-text: #f87171;
       --accent-amber: #f59e0b;
       --accent-amber-hover: #fbbf24;
       --accent-green: #22c55e;
@@ -291,6 +294,7 @@
     --accent-red: #b91c1c;
     /* 5.8:1 on #fbf6ea */
     --accent-red-hover: #991b1b;
+    --accent-red-text: var(--accent-red);
     --accent-amber: #874900;
     /* 5.3:1 on #fbf6ea */
     --accent-amber-hover: #6c3a00;
@@ -334,9 +338,10 @@
     --border-subtle: #1e1e26;
 
     /* High-contrast, radiant accents on dark backgrounds */
-    --accent-red: #ef4444;
-    /* 5.4:1 on #0a0a0c (AA Compliant - fixed from 2.2:1) */
-    --accent-red-hover: #f87171;
+    --accent-red: #dc2626;
+    /* Fill colour: 4.8:1 against white label text. Red used AS text uses --accent-red-text. */
+    --accent-red-hover: #b91c1c;
+    --accent-red-text: #f87171;
     --accent-amber: #f59e0b;
     /* 9.2:1 on #0a0a0c (AAA) */
     --accent-amber-hover: #fbbf24;
@@ -1013,4 +1018,11 @@
     animation: none !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+/* Red as TEXT needs a lighter shade than red as a FILL on dark themes (no single red passes 4.5:1 both ways). */
+:root .text-accent-red,
+:root .hover\:text-accent-red:hover,
+:root .group-hover\:text-accent-red:is(:where(.group):hover *) {
+  color: var(--accent-red-text);
 }

@@ -13,6 +13,7 @@ import { fetchCached, fetchJson } from '@/services/dataCache';
 import { Modal } from '@/components/common/Modal';
 import { Spinner } from '@/components/common/Spinner';
 import { EmptyState } from '@/components/common/EmptyState';
+import { formatMessage } from '@/utils/i18nFormat';
 
 interface ShowcasePerkModalProps {
   isOpen: boolean;
@@ -183,10 +184,7 @@ export const ShowcasePerkModal: React.FC<ShowcasePerkModalProps> = ({
             <p className="text-xs sm:text-sm text-text-secondary">
               {cleanQuery.length === 0
                 ? dict?.user?.searchPerksPrompt || 'Type at least 3 characters to search perks...'
-                : (dict?.user?.searchPerksMinChars || 'Type {count} more character(s) to search...').replace(
-                    '{count}',
-                    String(3 - cleanQuery.length)
-                  )}
+                : formatMessage((dict?.user?.searchPerksMinChars || 'Type {count} more character(s) to search...'), { count: 3 - cleanQuery.length }, locale)}
             </p>
           </div>
         ) : filteredPerks.length === 0 ? (

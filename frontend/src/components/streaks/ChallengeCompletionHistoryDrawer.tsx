@@ -6,6 +6,8 @@ import React from 'react';
 import { RotateCcw, Users, Swords } from 'lucide-react';
 import { Modal } from '@/components/common/Modal';
 import type { ChallengeCompletion } from '@/types/challengeCompletion';
+import { formatDate } from '@/utils/format';
+import { useLocale } from '@/context/DictionaryContext';
 
 export interface ChallengeCompletionHistoryDrawerProps {
   isOpen: boolean;
@@ -31,6 +33,7 @@ export const ChallengeCompletionHistoryDrawer: React.FC<ChallengeCompletionHisto
   subjectLabel,
   dict,
 }) => {
+  const locale = useLocale();
   return (
     <Modal
       isOpen={isOpen}
@@ -69,7 +72,7 @@ export const ChallengeCompletionHistoryDrawer: React.FC<ChallengeCompletionHisto
               </div>
               {entry.completed_at && (
                 <div className="type-caption text-text-secondary">
-                  {new Date(entry.completed_at).toLocaleDateString()}
+                  {formatDate(entry.completed_at, locale)}
                 </div>
               )}
             </div>

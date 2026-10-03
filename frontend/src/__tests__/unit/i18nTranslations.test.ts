@@ -1,4 +1,5 @@
 // frontend/src/__tests__/unit/i18nTranslations.test.ts
+import { placeholderNames } from '@/utils/i18nFormat';
 import test from 'node:test';
 import assert from 'node:assert';
 import { getDictionary } from '@/utils/../i18n/get-dictionary';
@@ -7,22 +8,8 @@ import { en, es, pl, de, ja } from '@/utils/../locales';
 import type { Dictionary } from '@/utils/../locales/types';
 
 const allLocales: Locale[] = ['en', 'es', 'pl', 'de', 'ja'];
-const expectedNamespaces = [
-  'app',
-  'landing',
-  'generator',
-  'stats',
-  'filters',
-  'pagination',
-  'modal',
-  'empty',
-  'voice',
-  'characterDetail',
-  'sidebar',
-  'smashOrPass',
-  'user',
-  'streaks',
-] as const;
+// Every namespace English defines -- new ones are covered automatically.
+const expectedNamespaces = Object.keys(en) as Array<keyof Dictionary>;
 
 test('i18n Config: supported locales list', () => {
   assert.deepStrictEqual(i18n.locales, ['en', 'es', 'pl', 'de', 'ja']);
@@ -242,4 +229,27 @@ test('Character Detail combat, terror radius, codex and sort options i18n covera
       assert.ok((detailDict as any)[key].length > 0);
     }
   }
+});
+test('Every string in every locale uses the same placeholders as English (plural variables included)', () => {
+  const localeDicts: Record<Locale, Dictionary> = { en, es, pl, de, ja };
+  const problems: string[] = [];
+
+  const walk = (baseline: unknown, target: unknown, path: string, loc: string) => {
+    if (typeof baseline === 'string') {
+      if (typeof target !== 'string') return;
+      const a = placeholderNames(baseline).join(',');
+      const b = placeholderNames(target).join(',');
+      if (a !== b) problems.push(`${loc}.${path}: expected {${a}} got {${b}}`);
+      if (/\{[^{}]*,\s*plural\s*,/.test(target) && !/\bother\s*\{/.test(target)) {
+        problems.push(`${loc}.${path}: plural without an "other" branch`);
+      }
+      return;
+    }
+    if (baseline && typeof baseline === 'object' && target && typeof target === 'object') {
+      for (const [k, v] of Object.entries(baseline)) walk(v, (target as Record<string, unknown>)[k], path ? `${path}.${k}` : k, loc);
+    }
+  };
+
+  for (const loc of allLocales) walk(en, localeDicts[loc], '', loc);
+  assert.deepStrictEqual(problems, []);
 });

@@ -15,6 +15,8 @@ import { SMASH_ROSTER_LIMITS } from '@/utils/smashOrPass/constants';
 import { localRosterSlug } from '@/utils/smashOrPass/localRoster';
 import { createCustomRosterId, saveCustomRoster } from '@/utils/smashOrPass/storage';
 import { LABEL } from './creator/styles';
+import { formatMessage } from '@/utils/i18nFormat';
+import { useLocale } from '@/context/DictionaryContext';
 
 interface SmashRosterImportModalProps {
   isOpen: boolean;
@@ -30,6 +32,7 @@ const TOO_LARGE: SmashRosterParseResult = { ok: false, error: 'tooLarge' };
 const toText = (r: SmashRosterParseResult) => (r.ok ? serializeSmashRosterDocument(r.doc) : null);
 
 export function SmashRosterImportModal({ isOpen, onClose, sharePayload, onImported, dict }: SmashRosterImportModalProps) {
+  const locale = useLocale();
   const t = dict?.smashOrPass?.importModal || {};
   const [saveError, setSaveError] = useState<'quota' | 'unavailable' | null>(null);
   const { text, result, fileError, changeText, readFile } = useImportDraft<SmashRosterParseResult>({
@@ -50,9 +53,7 @@ export function SmashRosterImportModal({ isOpen, onClose, sharePayload, onImport
   const errorText = (code: SmashRosterErrorCode) => t.errors?.[code] || code;
 
   const preview = result?.ok
-    ? (t.preview || 'Importing "{name}" with {count} entities')
-        .replace('{name}', result.doc.name)
-        .replace('{count}', String(result.doc.entities.length))
+    ? formatMessage((t.preview || 'Importing "{name}" with {count} entities'), { name: result.doc.name, count: result.doc.entities.length }, locale)
     : '';
 
   const doImport = () => {
@@ -103,7 +104,7 @@ export function SmashRosterImportModal({ isOpen, onClose, sharePayload, onImport
         <>
           <ImportPreview text={preview} />
           {result.warnings.map((w) => (
-            <Notice key={w.code} tone="warning" text={(t.warnings?.[w.code] || w.code).replace('{count}', String(w.count))} />
+            <Notice key={w.code} tone="warning" text={formatMessage((t.warnings?.[w.code] || w.code), { count: w.count })} />
           ))}
         </>
       )}

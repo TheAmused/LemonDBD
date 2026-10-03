@@ -21,7 +21,6 @@ export default {
   smashWord: 'smash',
   passWord: 'pass',
   showingCandidates: 'Mostrando candidatos:',
-  showingCount: 'Mostrando {count} de {total} candidatos',
   leaderboard: 'Salón de la Fama',
   search: 'Buscar candidatos o en la tabla...',
   all: 'Todos',
@@ -171,6 +170,7 @@ export default {
   },
   modals: {
     personaTitle: 'Arquetipo Romántico de la Prueba',
+    sharedPersonaTitle: 'Arquetipo romántico compartido',
     leaderboardTitle: 'Clasificación del Salón de la Fama',
     howToPlay: 'Cómo jugar',
     resetConfirmTitle: '¿Restablecer todos los votos?',
@@ -199,6 +199,7 @@ export default {
     swipeLeftHint: 'Desliza a la izquierda para Pass',
     swipeRightHint: 'Desliza a la derecha para Smash',
     shuffle: 'Mezclar restantes',
+    left: 'restantes',
     howToPlay: 'Cómo jugar y atajos de teclado',
   },
   howToPlayModal: {
@@ -218,6 +219,15 @@ export default {
     letsPlay: '¡Entendido, a jugar!',
   },
   startVoting: 'Comenzar a Calificar Candidatos',
+  playToDiscover: '¡Juega y descubre el tuyo!',
+  sharedBadge: 'Resultado compartido de un amigo',
+  loreTitleSurvivor: 'Superviviente en la Niebla',
+  loreTitleKiller: 'Asesino en la Niebla',
+  loreTaglineSurvivor: 'Busca una vía de escape en la niebla',
+  loreTaglineKiller: 'Acecha a sus presas en el reino de la Entidad',
+  loreQuoteSurvivor: '«Ante la prueba, lo que cuenta es la determinación y la confianza.» – {name}',
+  loreQuoteKiller: '«Nadie escapa al veredicto de la Entidad en esta niebla.» – {name}',
+  knownQuotes: {} as Record<string, string>,
   personaArchetypes: {
     untappedSoul: {
       title: 'El Alma Oculta',
@@ -315,7 +325,7 @@ export default {
     readFileError: 'No se pudo leer ese archivo.',
     saveFailedQuota: 'No se guardó: el almacenamiento del navegador está lleno. Elimina algunas imágenes o listas.',
     saveFailedUnavailable: 'No se guardó: este navegador bloquea el almacenamiento local, así que los cambios solo duran hasta que salgas de la página.',
-    preview: 'Importando "{name}" con {count} personajes',
+    preview: 'Importando "{name}" con {count, plural, one {# personaje} other {# personajes}}',
     errors: {
       invalidJson: 'Eso no es un JSON válido.',
       notAnObject: 'El contenido debe ser un objeto JSON.',

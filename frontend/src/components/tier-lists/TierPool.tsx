@@ -15,6 +15,7 @@ import type { TierTileShape } from './TierItemTile';
 import { containerDndId, itemDndId } from './dndIds';
 import { Input } from '@/components/common/Field';
 import { Badge } from '@/components/common/Badge';
+import { formatMessage } from '@/utils/i18nFormat';
 
 interface TierPoolProps {
   keys: string[];
@@ -120,7 +121,7 @@ export function TierPool({
             {t.unranked}
           </h2>
           <Badge tone="red" plain className="type-strong-xs">
-            {t.unrankedCount.replace('{count}', String(keys.length))}
+            {formatMessage(t.unrankedCount, { count: keys.length })}
           </Badge>
         </div>
 

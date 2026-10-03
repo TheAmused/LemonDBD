@@ -43,6 +43,7 @@ import { QuoteLoreGuesser } from './guessers/QuoteLoreGuesser';
 import { EmojiRiddleGuesser } from './guessers/EmojiRiddleGuesser';
 import { AddonGuesser } from './guessers/AddonGuesser';
 import { VictoryModal } from './VictoryModal';
+import { formatMessage } from '@/utils/i18nFormat';
 
 interface ChallengeRunnerProps {
   challenge: ChallengeDefinition;
@@ -491,9 +492,7 @@ export const ChallengeRunner: React.FC<ChallengeRunnerProps> = ({
       {/* Active Round Card Banner */}
       <div className="w-full max-w-xl text-center mb-4">
         <div className="type-label-sm text-text-secondary mb-1">
-          {t.roundIndicator
-            .replace('{current}', String(currentRoundIndex + 1))
-            .replace('{total}', String(rounds.length))}
+          {formatMessage(t.roundIndicator, { current: currentRoundIndex + 1, total: rounds.length })}
         </div>
         <h2 className="text-xl font-bold text-text-primary">
           {(t.modes as any)[currentRound.mode] || currentRound.mode}
@@ -508,7 +507,7 @@ export const ChallengeRunner: React.FC<ChallengeRunnerProps> = ({
         <Flame className="w-4 h-4 text-accent-red" />
         <span>
           {attemptsRemaining > 0
-            ? t.attemptsRemaining.replace('{count}', String(attemptsRemaining))
+            ? formatMessage(t.attemptsRemaining, { count: attemptsRemaining }, locale)
             : t.unlimitedAttempts}
         </span>
       </div>
@@ -540,10 +539,7 @@ export const ChallengeRunner: React.FC<ChallengeRunnerProps> = ({
                 <div>{isRoundSolved ? t.victoryTitle : t.defeatTitle}</div>
                 {!isRoundSolved && (
                   <div className="type-strong text-accent-red mt-1">
-                    {t.revealAnswerNotice.replace(
-                      '{answer}',
-                      revealedAnswers[currentRoundIndex] || getTargetAnswerName(currentRound)
-                    )}
+                    {formatMessage(t.revealAnswerNotice, { answer: revealedAnswers[currentRoundIndex] || getTargetAnswerName(currentRound) })}
                   </div>
                 )}
               </div>

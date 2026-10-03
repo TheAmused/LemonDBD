@@ -20,6 +20,7 @@ import { getLayoutTypeLabel, getMapImageSrc } from '@/utils/mapUtils';
 import { tip } from '@/components/common/Tooltip';
 import { Modal } from '@/components/common/Modal';
 import { formatNumber } from '@/utils/format';
+import { formatMessage } from '@/utils/i18nFormat';
 
 interface FullscreenMapEngineProps {
   mapId: number;
@@ -184,10 +185,7 @@ export const FullscreenMapEngineView: React.FC<FullscreenMapEngineProps> = ({
                   <span className="text-accent-red font-bold">{dict?.maps?.sqTilesUnit || 'sqT'}</span>
                   {activeMap.size_sq_meters != null && (
                     <span className="text-text-muted type-micro pl-0.5">
-                      {(dict?.maps?.sqMetersSuffix || '({value} m²)').replace(
-                        '{value}',
-                        formatNumber(activeMap.size_sq_meters)
-                      )}
+                      {formatMessage((dict?.maps?.sqMetersSuffix || '({value} m²)'), { value: formatNumber(activeMap.size_sq_meters) })}
                     </span>
                   )}
                 </div>

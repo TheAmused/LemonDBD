@@ -1,6 +1,7 @@
 // frontend/src/components/character-detail/types.tsx
 import React from 'react';
 import { RARITY_TILE_IMAGES } from '@/constants/addonRarityIcons';
+import { localeMetaFor } from '@/i18n/config';
 
 export interface CharacterItem {
   id?: number;
@@ -137,14 +138,7 @@ export function formatLocalizedReleaseDate(rawDate?: string, locale: string = 'e
   const parsed = new Date(trimmed);
   if (!isNaN(parsed.getTime())) {
     try {
-      const locMap: Record<string, string> = {
-        en: 'en-US',
-        pl: 'pl-PL',
-        de: 'de-DE',
-        es: 'es-ES',
-        ja: 'ja-JP',
-      };
-      return parsed.toLocaleDateString(locMap[locale] || locale, {
+      return parsed.toLocaleDateString(localeMetaFor(locale).bcp47, {
         year: 'numeric',
         month: 'long',
         day: 'numeric',

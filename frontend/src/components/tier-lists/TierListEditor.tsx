@@ -43,6 +43,7 @@ import { TOUCH_BTN } from './styles';
 import { Button, BUTTON_BASE, BUTTON_SIZES, BUTTON_VARIANTS } from '@/components/common/Button';
 import { cn } from '@/utils/cn';
 import { Popover, popoverTriggerProps } from '@/components/common/Popover';
+import { formatMessage } from '@/utils/i18nFormat';
 
 export interface TierListEditorProps {
   mode: 'official' | 'custom';
@@ -343,7 +344,7 @@ export function TierListEditor(props: TierListEditorProps) {
         >
           <div className="pointer-events-auto flex max-w-xl flex-wrap items-center justify-center gap-2 rounded-2xl border border-accent-amber/40 bg-bg-surface shadow-lg px-3 py-1.5 type-card-title text-accent-amber text-center">
             <MousePointerClick className="h-4 w-4 shrink-0" aria-hidden="true" />
-            <span className="min-w-0">{t.selectedHint.replace('{name}', selectedItem.name)}</span>
+            <span className="min-w-0">{formatMessage(t.selectedHint, { name: selectedItem.name })}</span>
             {mode === 'custom' && onRemoveItem && (
               <Button
                 variant="soft"

@@ -27,6 +27,7 @@ import { Users, ShieldAlert, BarChart3, ScrollText, Settings2 } from 'lucide-rea
 import { useDictionary } from '@/context/DictionaryContext';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { FogReportIcon } from '@/components/icons/DbdIcons';
+import { formatMessage } from '@/utils/i18nFormat';
 
 const AdminBugReportsWorkbench = dynamic(
   () => import('@/components/admin/AdminBugReportsWorkbench').then((m) => m.AdminBugReportsWorkbench),
@@ -238,7 +239,7 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
         setActionMessage({
           type: 'success',
           text: dict?.admin?.roleUpdated
-            ? dict.admin.roleUpdated.replace('{username}', targetUser.username).replace('{role}', newRole.toUpperCase())
+            ? formatMessage(dict.admin.roleUpdated, { username: targetUser.username, role: newRole.toUpperCase() })
             : `${targetUser.username} role updated to ${newRole.toUpperCase()}.`,
         });
         await fetchAdminData();
@@ -267,8 +268,8 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
         setActionMessage({
           type: 'success',
           text: newActive
-            ? dict?.admin?.statusUpdatedActive?.replace('{username}', targetUser.username) || `${targetUser.username} is active.`
-            : dict?.admin?.statusUpdatedSuspended?.replace('{username}', targetUser.username) || `${targetUser.username} is suspended.`,
+            ? formatMessage(dict?.admin?.statusUpdatedActive, { username: targetUser.username }) || `${targetUser.username} is active.`
+            : formatMessage(dict?.admin?.statusUpdatedSuspended, { username: targetUser.username }) || `${targetUser.username} is suspended.`,
         });
         await fetchAdminData();
       }
@@ -297,7 +298,7 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
       if (res.ok) {
         setActionMessage({
           type: 'success',
-          text: dict?.admin?.userDeletedSuccess?.replace('{username}', targetUser.username) || `${targetUser.username} deleted.`,
+          text: formatMessage(dict?.admin?.userDeletedSuccess, { username: targetUser.username }) || `${targetUser.username} deleted.`,
         });
         await fetchAdminData();
       }
@@ -332,7 +333,7 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
       if (res.ok) {
         setActionMessage({
           type: 'success',
-          text: dict?.admin?.userCreatedSuccess?.replace('{username}', userData.username) || `${userData.username} created successfully.`,
+          text: formatMessage(dict?.admin?.userCreatedSuccess, { username: userData.username }) || `${userData.username} created successfully.`,
         });
         setIsCreateUserOpen(false);
         await fetchAdminData();
@@ -372,7 +373,7 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
       if (res.ok) {
         setActionMessage({
           type: 'success',
-          text: dict?.admin?.ticketUpdatedSuccess?.replace('{id}', reportId.toString()) || `Report #${reportId} updated.`,
+          text: formatMessage(dict?.admin?.ticketUpdatedSuccess, { id: reportId.toString() }) || `Report #${reportId} updated.`,
         });
         await fetchBugReports();
       }
@@ -402,7 +403,7 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
       if (res.ok) {
         setActionMessage({
           type: 'success',
-          text: dict?.admin?.ticketDeleteSuccess?.replace('{id}', reportId.toString()) || `Report #${reportId} deleted.`,
+          text: formatMessage(dict?.admin?.ticketDeleteSuccess, { id: reportId.toString() }) || `Report #${reportId} deleted.`,
         });
         await fetchBugReports();
       }
@@ -615,7 +616,7 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
         title={dict?.admin?.deleteBugReportTitle || 'Delete report?'}
         message={
           dict?.admin?.confirmDeleteBugReport
-            ? dict.admin.confirmDeleteBugReport.replace('{id}', (bugReportPendingDeletion ?? 0).toString())
+            ? formatMessage(dict.admin.confirmDeleteBugReport, { id: (bugReportPendingDeletion ?? 0).toString() })
             : `Delete report #${bugReportPendingDeletion}?`
         }
         confirmLabel={dict?.admin?.delete || 'Delete'}

@@ -12,6 +12,7 @@ import { SortableTierItem } from './SortableTierItem';
 import { TierBadge } from './TierBadge';
 import type { TierTileShape } from './TierItemTile';
 import { containerDndId, itemDndId } from './dndIds';
+import { formatMessage } from '@/utils/i18nFormat';
 
 interface TierRowProps {
   tier: TierDefinition;
@@ -46,13 +47,13 @@ export const TierRow = React.memo(function TierRow({
 
   return (
     <section
-      aria-label={t.tierAria.replace('{label}', tier.label)}
+      aria-label={formatMessage(t.tierAria, { label: tier.label })}
       className="grid grid-cols-[3.5rem_minmax(0,1fr)] min-[480px]:grid-cols-[4.75rem_minmax(0,1fr)] sm:max-wide-2k:grid-cols-[6.5rem_minmax(0,1fr)] wide-2k:grid-cols-[9rem_minmax(0,1fr)] overflow-hidden rounded-2xl border border-border-color bg-bg-surface shadow-xs"
     >
       <button
         type="button"
         onClick={() => onEdit(tier.id)}
-        aria-label={t.editTierAria.replace('{label}', tier.label)}
+        aria-label={formatMessage(t.editTierAria, { label: tier.label })}
         className="group relative min-h-[56px] min-[480px]:min-h-[72px] sm:max-wide-2k:min-h-[84px] wide-2k:min-h-[112px] overflow-hidden text-center cursor-pointer transition-[filter] hover:brightness-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent-amber"
       >
         <TierBadge

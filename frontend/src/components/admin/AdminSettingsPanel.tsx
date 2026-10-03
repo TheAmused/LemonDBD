@@ -14,6 +14,7 @@ import { Input } from '@/components/common/Field';
 import { Surface } from '@/components/common/Surface';
 import { backendBase } from '@/utils/staticUrl';
 import { authHeaders, getErrorMessage } from '@/utils/api';
+import { formatMessage } from '@/utils/i18nFormat';
 
 interface AdminSettingsPanelProps {
   onActionMessage: (msg: ActionMessage) => void;
@@ -196,7 +197,7 @@ export const AdminSettingsPanel: React.FC<AdminSettingsPanelProps> = ({ onAction
                             </div>
                             <div className="flex flex-wrap items-center gap-x-3 type-caption text-text-muted">
                               <span>
-                                {(t.configDefaultValue || 'Default: {value}').replace('{value}', String(row.default) || '—')}
+                                {formatMessage((t.configDefaultValue || 'Default: {value}'), { value: String(row.default) || '—' })}
                               </span>
                               {row.overridden ? (
                                 <button

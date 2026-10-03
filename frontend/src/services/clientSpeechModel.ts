@@ -1,4 +1,5 @@
 // frontend/src/services/clientSpeechModel.ts
+import { localeMetaFor } from '@/i18n/config';
 /**
  * LemonDBD - Client-Side Speech Recognition Model Service
  * 
@@ -36,7 +37,7 @@ const MODEL_MATRIX: Record<ModelQuality, { english: ModelDescriptor; multilingua
 
 export function resolveModelDescriptor(locale: string = 'en', quality: ModelQuality = 'fast'): ModelDescriptor {
   const tier = MODEL_MATRIX[quality] || MODEL_MATRIX.fast;
-  return locale === 'pl' ? tier.multilingual : tier.english;
+  return localeMetaFor(locale).whisperLanguage === 'english' ? tier.english : tier.multilingual;
 }
 
 export type ModelLoadingStatus = 'unloaded' | 'downloading' | 'ready' | 'error';
@@ -644,7 +645,8 @@ export async function transcribeClientAudio(
         audioData.length
       );
 
-      const isEnglish = !locale || locale === 'en';
+      const whisperLanguage = localeMetaFor(locale).whisperLanguage;
+      const isEnglish = whisperLanguage === 'english';
       const options: Record<string, any> = {
         chunk_length_s: 30,
         stride_length_s: 5,
@@ -652,16 +654,7 @@ export async function transcribeClientAudio(
 
       // Whisper English-only models (whisper-tiny.en) do NOT accept language tokens in vocabulary
       if (!isEnglish) {
-        options.language =
-          locale === 'pl'
-            ? 'polish'
-            : locale === 'es'
-            ? 'spanish'
-            : locale === 'de'
-            ? 'german'
-            : locale === 'fr'
-            ? 'french'
-            : 'english';
+        options.language = whisperLanguage;
         options.task = 'transcribe';
       }
 

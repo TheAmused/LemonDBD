@@ -11,6 +11,8 @@ import { staticUrl } from '@/utils/api';
 
 import { tip } from '@/components/common/Tooltip';
 import { formatDate } from '@/utils/format';
+import { formatMessage } from '@/utils/i18nFormat';
+
 const CARD =
   'group relative flex h-full flex-col gap-3 overflow-hidden rounded-3xl border border-border-color bg-bg-surface p-5 shadow-sm transition-all hover:-translate-y-0.5 hover:border-accent-red/50 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-amber';
 
@@ -54,7 +56,7 @@ export function OfficialTierListCard({ list, rankedCount, locale, dict }: Offici
       {list.description && <p className="line-clamp-2 text-sm text-text-secondary text-center sm:text-left">{list.description}</p>}
       <div className="mt-auto flex flex-wrap items-center justify-center sm:justify-start gap-2 pt-1 type-strong">
         {list.item_count !== null && (
-          <span className="text-text-muted">{t.itemsCount.replace('{count}', String(list.item_count))}</span>
+          <span className="text-text-muted">{formatMessage(t.itemsCount, { count: list.item_count })}</span>
         )}
         {list.has_default_placements && (
           <span className="inline-flex items-center gap-1 text-accent-amber">
@@ -64,7 +66,7 @@ export function OfficialTierListCard({ list, rankedCount, locale, dict }: Offici
         )}
         {rankedCount > 0 && (
           <span className="rounded-md bg-accent-green/15 px-1.5 py-0.5 text-accent-green">
-            {t.rankedCount.replace('{count}', String(rankedCount))}
+            {formatMessage(t.rankedCount, { count: rankedCount })}
           </span>
         )}
         <span className="sm:ml-auto inline-flex items-center gap-0.5 text-accent-red">
@@ -140,13 +142,13 @@ export function CustomTierListCard({ list, locale, dict, onDelete, disabled }: C
           </div>
         )}
         <div className="mt-auto flex flex-wrap items-center justify-center sm:justify-start gap-2 pt-1 type-strong">
-          <span className="text-text-muted">{t.itemsCount.replace('{count}', String(list.items.length))}</span>
+          <span className="text-text-muted">{formatMessage(t.itemsCount, { count: list.items.length })}</span>
           {ranked > 0 && (
             <span className="rounded-md bg-accent-green/15 px-1.5 py-0.5 text-accent-green">
-              {t.rankedCount.replace('{count}', String(ranked))}
+              {formatMessage(t.rankedCount, { count: ranked })}
             </span>
           )}
-          {date && <span className="text-text-muted">{t.updatedOn.replace('{date}', date)}</span>}
+          {date && <span className="text-text-muted">{formatMessage(t.updatedOn, { date })}</span>}
           <div className="sm:ml-auto flex items-center gap-2">
             {onDelete && (
               <button

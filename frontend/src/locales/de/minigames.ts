@@ -51,7 +51,7 @@ export default {
 
   // Runner
   roundIndicator: "Runde {current} von {total}",
-  attemptsRemaining: "{count} Versuche übrig",
+  attemptsRemaining: "{count, plural, one {# Versuch übrig} other {# Versuche übrig}}",
   unlimitedAttempts: "Unbegrenzte Versuche",
   guessPlaceholder: "Charakter, Talent oder Reich suchen...",
   submitGuess: "Raten",

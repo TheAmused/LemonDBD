@@ -21,7 +21,6 @@ export default {
   smashWord: 'Smash',
   passWord: 'Pass',
   showingCandidates: 'Angezeigte Kandidaten:',
-  showingCount: '{count} von {total} Kandidaten angezeigt',
   leaderboard: 'Ruhmeshalle',
   search: 'Kandidaten oder Bestenliste durchsuchen...',
   all: 'Alle',
@@ -171,6 +170,7 @@ export default {
   },
   modals: {
     personaTitle: 'Prüfungs-Romantik-Archetyp',
+    sharedPersonaTitle: 'Geteilter Romantik-Archetyp',
     leaderboardTitle: 'Ruhmeshallen-Rangliste',
     howToPlay: 'Spielanleitung',
     resetConfirmTitle: 'Alle Stimmen zurücksetzen?',
@@ -199,6 +199,7 @@ export default {
     swipeLeftHint: 'Nach links wischen für Pass',
     swipeRightHint: 'Nach rechts wischen für Smash',
     shuffle: 'Verbleibende mischen',
+    left: 'übrig',
     howToPlay: 'Spielanleitung & Tastenbelegung',
   },
   howToPlayModal: {
@@ -218,6 +219,15 @@ export default {
     letsPlay: 'Verstanden, los geht\'s!',
   },
   startVoting: 'Kandidaten Bewerten Starten',
+  playToDiscover: 'Spiele und entdecke deinen!',
+  sharedBadge: 'Geteiltes Ergebnis eines Freundes',
+  loreTitleSurvivor: 'Überlebender im Nebel',
+  loreTitleKiller: 'Killer im Nebel',
+  loreTaglineSurvivor: 'Sucht einen Ausweg im Nebel',
+  loreTaglineKiller: 'Jagt seine Beute im Reich der Entität',
+  loreQuoteSurvivor: '„Wenn wir zusammenhalten, überstehen wir die Prüfung.“ – {name}',
+  loreQuoteKiller: '„Niemand entkommt dem Urteil der Entität in diesem Nebel.“ – {name}',
+  knownQuotes: {} as Record<string, string>,
   personaArchetypes: {
     untappedSoul: {
       title: 'Die unentdeckte Seele',
@@ -315,7 +325,7 @@ export default {
     readFileError: 'Diese Datei konnte nicht gelesen werden.',
     saveFailedQuota: 'Nicht gespeichert: Der Browser-Speicher ist voll. Entferne einige Bilder oder Listen.',
     saveFailedUnavailable: 'Nicht gespeichert: Dieser Browser blockiert lokalen Speicher, Änderungen gelten nur bis du die Seite verlässt.',
-    preview: 'Importiere "{name}" mit {count} Charakteren',
+    preview: 'Importiere "{name}" mit {count, plural, one {# Charakter} other {# Charakteren}}',
     errors: {
       invalidJson: 'Das ist kein gültiges JSON.',
       notAnObject: 'Die Daten müssen ein JSON-Objekt sein.',

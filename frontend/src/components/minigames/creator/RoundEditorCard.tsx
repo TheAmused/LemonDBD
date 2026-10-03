@@ -25,6 +25,8 @@ import { CharacterAutocomplete, type AutocompleteItem } from '../CharacterAutoco
 import { staticUrl } from '@/utils/api';
 
 import { tip } from '@/components/common/Tooltip';
+import { formatMessage } from '@/utils/i18nFormat';
+
 const ALL_MODES: MinigameMode[] = [
   'classic_character',
   'classic_killer',
@@ -159,7 +161,7 @@ export const RoundEditorCard: React.FC<RoundEditorCardProps> = ({
             #{index + 1}
           </div>
           <span className="type-card-title text-text-primary">
-            {c.roundNumber.replace('{number}', String(index + 1))}
+            {formatMessage(c.roundNumber, { number: index + 1 })}
           </span>
         </div>
 

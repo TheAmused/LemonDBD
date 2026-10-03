@@ -24,6 +24,7 @@ import minigames from './minigames';
 import privacy from './privacy';
 import errorPages from './errorPages';
 import scoreboardCheck from './scoreboardCheck';
+import type { Dictionary } from '../types';
 
 const es = {
   app,
@@ -51,6 +52,6 @@ const es = {
   privacy,
   errorPages,
   scoreboardCheck,
-};
+} satisfies Dictionary;
 
 export default es;

@@ -28,6 +28,8 @@ import { ConfirmModal } from '@/components/common/ConfirmModal';
 import { tip } from '@/components/common/Tooltip';
 import { Button } from '@/components/common/Button';
 import { authHeaders, getAuthToken, getErrorMessage } from '@/utils/api';
+import { formatMessage } from '@/utils/i18nFormat';
+
 interface ScraperConfigModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -924,7 +926,7 @@ export function ScraperConfigModal({
             <span>
               {isPurging
                 ? dict?.admin?.purgingStatus || 'Purging...'
-                : (dict?.admin?.purgeSelected || 'Purge Selected ({count})').replace('{count}', String(purgeTargets.length))}
+                : formatMessage((dict?.admin?.purgeSelected || 'Purge Selected ({count})'), { count: purgeTargets.length })}
             </span>
           </Button>
         </div>

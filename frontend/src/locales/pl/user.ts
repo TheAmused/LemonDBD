@@ -140,7 +140,7 @@ export default {
   accountSettingsSubtitle: "Zarządzaj adresem e-mail i hasłem",
   encryptedNotice: "Szyfrowane i Bezpieczne Dane",
   searchPerksPrompt: "Wpisz co najmniej 3 znaki, aby wyszukać umiejętności...",
-  searchPerksMinChars: "Wpisz jeszcze {count} znak(i), aby wyszukać...",
+  searchPerksMinChars: "Wpisz jeszcze {count, plural, one {# znak} few {# znaki} many {# znaków} other {# znaku}}, aby wyszukać...",
   downloadDataTitle: "Pobierz moje dane",
   downloadDataDesc: "Pobierz kopię wszystkiego, co przechowujemy o Twoim koncie (profil, posiadane postacie i perki, gablota, serie, statystyki, głosy i zgłoszenia błędów) jako plik JSON.",
   downloadDataButton: "Pobierz moje dane",

@@ -3,10 +3,9 @@ import React from 'react';
 import type { Metadata } from 'next';
 import { UmamiScript } from '@/components/UmamiScript';
 import { i18n, type Locale } from '@/i18n/config';
-import { getDictionary } from '@/i18n/get-dictionary';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import { AuthProvider } from '@/context/AuthContext';
-import { DictionaryProvider } from '@/context/DictionaryContext';
+import { LocaleDictionaryProvider } from '@/context/LocaleDictionaryProvider';
 import { ImagePreloadProvider } from '@/components/common/ImagePreloadProvider';
 import { TooltipProvider } from '@/components/common/Tooltip';
 import { AppBackground } from '@/components/layout/AppBackground';
@@ -56,11 +55,6 @@ export default async function RootLayout({
     i18n.locales.includes(rawLocale as Locale) ? rawLocale : i18n.defaultLocale
   ) as Locale;
 
-  // Resolved on the server and handed to the client tree as a prop, so pages
-  // render their real content on the first frame instead of spinning while a
-  // client-side dynamic import of the locale bundle resolves.
-  const dict = await getDictionary(locale);
-
   return (
     <html lang={locale} className={playfair.variable} suppressHydrationWarning>
       <head>
@@ -76,13 +70,13 @@ export default async function RootLayout({
           disableTransitionOnChange
         >
           <AuthProvider>
-            <DictionaryProvider dict={dict} locale={locale}>
+            <LocaleDictionaryProvider locale={locale}>
               <ImagePreloadProvider>
                 <AppBackground />
                 {children}
               </ImagePreloadProvider>
               <TooltipProvider />
-            </DictionaryProvider>
+            </LocaleDictionaryProvider>
           </AuthProvider>
         </ThemeProvider>
       </body>

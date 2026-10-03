@@ -13,6 +13,7 @@ import { PerkSlot } from '../shared/PerkSlot';
 import { useJackpotCelebration } from '../shared/useJackpotCelebration';
 import { isSurvivor } from '@/utils/characterUtils';
 import { canvasFont } from '@/utils/canvasFont';
+import { formatMessage } from '@/utils/i18nFormat';
 
 export interface WheelStageProps {
   totalPages: number;
@@ -566,7 +567,7 @@ export const WheelStage: React.FC<WheelStageProps> = ({
         setWheelPhase('page');
         setStatusText(
           dict?.generator?.spinningPageWheel
-            ? dict.generator.spinningPageWheel.replace('{slot}', String(activeSlotIdx + 1))
+            ? formatMessage(dict.generator.spinningPageWheel, { slot: activeSlotIdx + 1 })
             : `Spinning Page Wheel for Slot #${activeSlotIdx + 1}...`
         );
 
@@ -583,7 +584,7 @@ export const WheelStage: React.FC<WheelStageProps> = ({
         setSelectedPageUI(targetPage);
         setStatusText(
           dict?.generator?.landedPage
-            ? dict.generator.landedPage.replace('{page}', String(targetPage))
+            ? formatMessage(dict.generator.landedPage, { page: targetPage })
             : `Landed on Page ${targetPage}! Swapping to Perk Wheel...`
         );
 
@@ -613,7 +614,7 @@ export const WheelStage: React.FC<WheelStageProps> = ({
 
       setStatusText(
         dict?.generator?.spinningPerkWheel
-          ? dict.generator.spinningPerkWheel.replace('{page}', String(targetPage))
+          ? formatMessage(dict.generator.spinningPerkWheel, { page: targetPage })
           : `Spinning Perk Wheel (Page ${targetPage})...`
       );
 

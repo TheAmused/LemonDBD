@@ -51,7 +51,7 @@ export default {
 
   // Runner
   roundIndicator: "Round {current} of {total}",
-  attemptsRemaining: "{count} attempts left",
+  attemptsRemaining: "{count, plural, one {# attempt left} other {# attempts left}}",
   unlimitedAttempts: "Unlimited attempts",
   guessPlaceholder: "Search character, perk, or realm...",
   submitGuess: "Guess",

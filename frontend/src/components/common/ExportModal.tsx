@@ -8,6 +8,7 @@ import { Button } from '@/components/common/Button';
 import { Input, Textarea } from '@/components/common/Field';
 import { copyTextWithFallback } from '@/utils/clipboard';
 import { cn } from '@/utils/cn';
+import { formatMessage } from '@/utils/i18nFormat';
 
 export type CopyState = 'idle' | 'copied' | 'failed';
 
@@ -150,7 +151,7 @@ export function ExportModal<D>({
           {shareUrl.length > shareLinkWarnChars && (
             <p className="flex items-start gap-2 rounded-xl border border-accent-amber/40 bg-accent-amber/10 p-3 type-strong text-accent-amber">
               <TriangleAlert className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
-              {labels.linkTooLong.replace('{count}', shareUrl.length.toLocaleString(locale))}
+              {formatMessage(labels.linkTooLong, { count: shareUrl.length.toLocaleString(locale) })}
             </p>
           )}
         </section>

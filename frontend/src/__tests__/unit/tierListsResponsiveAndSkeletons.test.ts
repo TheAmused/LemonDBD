@@ -1,4 +1,5 @@
 // frontend/src/__tests__/unit/tierListsResponsiveAndSkeletons.test.ts
+import { placeholderNames } from '@/utils/i18nFormat';
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
@@ -151,7 +152,7 @@ describe('Tier lists: i18n parity across all 5 locales', () => {
       else acc[`${prefix}${k}`] = String(v);
       return acc;
     }, {});
-  const placeholders = (s: string) => (s.match(/\{\w+\}/g) ?? []).sort().join(',');
+  const placeholders = (s: string) => placeholderNames(s).join(',');
 
   const en = flatten(enDict.tierLists as unknown as Record<string, unknown>);
   const others = { de: deDict, es: esDict, ja: jaDict, pl: plDict };

@@ -5,6 +5,7 @@ import React from 'react';
 import type { Dictionary } from '@/locales/types';
 import { AlertTriangle } from 'lucide-react';
 import { Modal } from '@/components/common/Modal';
+import { formatMessage } from '@/utils/i18nFormat';
 
 interface DisabledReasonModalProps {
   isOpen: boolean;
@@ -25,7 +26,7 @@ export const DisabledReasonModal: React.FC<DisabledReasonModalProps> = ({
 }) => {
   const t: Record<string, string> | undefined = propT || dict?.modal;
   const wasDisabledText = t?.wasDisabledTemporarily
-    ? t.wasDisabledTemporarily.replace('{item}', label)
+    ? formatMessage(t.wasDisabledTemporarily, { item: label })
     : label;
 
   return (

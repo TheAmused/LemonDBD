@@ -13,6 +13,7 @@ import { getSlotInteraction } from '../lib/blindnessCurse';
 import { PerkSlot } from '../shared/PerkSlot';
 import { useJackpotCelebration } from '../shared/useJackpotCelebration';
 import { playReelThud, playCardFlip } from '@/utils/perkAudio';
+import { formatMessage } from '@/utils/i18nFormat';
 
 export interface LootCrateStageProps {
   role: RoleCategory;
@@ -220,10 +221,10 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
     beginOpen();
   };
 
-  const scatterPrompt = (
-    dict?.generator?.scatterPrompt ||
-    'Pick one. Choosing it costs the Entity 1-2 of the others. {count}/4 locked in.'
-  ).replace('{count}', String(selected.length));
+  const scatterPrompt = formatMessage((
+      dict?.generator?.scatterPrompt ||
+      'Pick one. Choosing it costs the Entity 1-2 of the others. {count}/4 locked in.'
+    ), { count: selected.length });
 
   return (
     <div className="flex h-full w-full flex-col items-center justify-center gap-3 sm:gap-6 xl:gap-8 2xl:gap-10 py-2 sm:py-6 wide:py-8">

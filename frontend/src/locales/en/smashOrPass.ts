@@ -21,7 +21,6 @@ export default {
   smashWord: 'smash',
   passWord: 'pass',
   showingCandidates: 'Showing candidates:',
-  showingCount: 'Showing {count} of {total} candidates',
   leaderboard: 'Hall of Fame',
   search: 'Search candidates or leaderboard...',
   all: 'All',
@@ -171,6 +170,7 @@ export default {
   },
   modals: {
     personaTitle: 'Trial Romance Archetype',
+    sharedPersonaTitle: 'Shared Romance Archetype',
     leaderboardTitle: 'Hall of Fame Leaderboard',
     howToPlay: 'How to Play',
     resetConfirmTitle: 'Reset All Votes?',
@@ -199,6 +199,7 @@ export default {
     swipeLeftHint: 'Swipe left to Pass',
     swipeRightHint: 'Swipe right to Smash',
     shuffle: 'Shuffle Remaining',
+    left: 'left',
     howToPlay: 'How to Play',
   },
   howToPlayModal: {
@@ -218,6 +219,15 @@ export default {
     letsPlay: 'Got It, Let\'s Play!',
   },
   startVoting: 'Start Rating Candidates',
+  playToDiscover: 'Play & Discover Yours!',
+  sharedBadge: 'Friend\'s Shared Result',
+  loreTitleSurvivor: 'Survivor',
+  loreTitleKiller: 'Killer',
+  loreTaglineSurvivor: 'Searching for an escape in the fog',
+  loreTaglineKiller: 'Stalking prey in the entity’s realm',
+  loreQuoteSurvivor: '"{name}"',
+  loreQuoteKiller: '"{name}"',
+  knownQuotes: {} as Record<string, string>,
   personaArchetypes: {
     untappedSoul: {
       title: 'The Untapped Soul',
@@ -315,7 +325,7 @@ export default {
     readFileError: 'Could not read that file.',
     saveFailedQuota: 'Not saved: browser storage is full. Remove some images or rosters.',
     saveFailedUnavailable: 'Not saved: this browser blocks local storage, so changes only last until you leave the page.',
-    preview: 'Importing "{name}" with {count} entities',
+    preview: 'Importing "{name}" with {count, plural, one {# entity} other {# entities}}',
     errors: {
       invalidJson: "That isn't valid JSON.",
       notAnObject: 'The payload must be a JSON object.',

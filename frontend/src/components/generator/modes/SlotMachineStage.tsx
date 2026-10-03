@@ -17,6 +17,7 @@ import { getPerkIconUrl } from '@/utils/perkUtils';
 import { cn } from '@/utils/cn';
 import { Tooltip } from '@/components/common/Tooltip';
 import { DbdButton } from '../shared/DbdButton';
+import { formatMessage } from '@/utils/i18nFormat';
 
 export interface SlotMachineStageProps {
   role: RoleCategory;
@@ -425,12 +426,10 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
   const canConfirm = staged.size >= range.min && staged.size <= range.max;
   const confirmHint =
     range.min === range.max
-      ? (dict?.generator?.slotSelectExact || 'Select exactly {count} to continue').replace('{count}', String(range.min))
+      ? formatMessage((dict?.generator?.slotSelectExact || 'Select exactly {count} to continue'), { count: range.min })
       : range.min === 0
-        ? (dict?.generator?.slotSelectUpTo || 'Select up to {max} (optional)').replace('{max}', String(range.max))
-        : (dict?.generator?.slotSelectRange || 'Select {min}-{max} to continue')
-            .replace('{min}', String(range.min))
-            .replace('{max}', String(range.max));
+        ? formatMessage((dict?.generator?.slotSelectUpTo || 'Select up to {max} (optional)'), { max: range.max })
+        : formatMessage((dict?.generator?.slotSelectRange || 'Select {min}-{max} to continue'), { min: range.min, max: range.max });
 
   return (
     <div className="flex h-full w-full flex-col items-center justify-center gap-2 sm:gap-4 py-1 sm:py-4">
@@ -477,9 +476,9 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
       {(phase === 'spinning' || phase === 'awaiting') && (
         <>
           <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 text-xs sm:text-sm font-black uppercase tracking-wide text-accent-amber">
-            <span>{(dict?.generator?.slotCycleLabel || 'Cycle {cycle}/3').replace('{cycle}', String(cycleIndex + 1))}</span>
+            <span>{formatMessage((dict?.generator?.slotCycleLabel || 'Cycle {cycle}/3'), { cycle: cycleIndex + 1 })}</span>
             <span className="text-text-muted">{'•'}</span>
-            <span>{(dict?.generator?.slotLockedCount || '{count}/4 Locked').replace('{count}', String(selected.length))}</span>
+            <span>{formatMessage((dict?.generator?.slotLockedCount || '{count}/4 Locked'), { count: selected.length })}</span>
           </div>
 
           {isMobile ? (

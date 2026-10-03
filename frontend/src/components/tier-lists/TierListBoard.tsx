@@ -30,6 +30,7 @@ import { TierPool } from './TierPool';
 import { SidewaysPointerSensor } from './touchSensors';
 import { TierRow } from './TierRow';
 import { parseContainerDndId, parseItemDndId } from './dndIds';
+import { formatMessage } from '@/utils/i18nFormat';
 
 interface TierListBoardProps {
   items: TierItem[];
@@ -147,16 +148,16 @@ export function TierListBoard({
 
   const announcements: Announcements = useMemo(
     () => ({
-      onDragStart: ({ active }) => t.dnd.pickedUp.replace('{name}', nameOf(active.id)),
+      onDragStart: ({ active }) => formatMessage(t.dnd.pickedUp, { name: nameOf(active.id) }),
       onDragOver: ({ active, over }) =>
         over
-          ? t.dnd.movedOver.replace('{name}', nameOf(active.id)).replace('{target}', targetOf(over.id, shown))
+          ? formatMessage(t.dnd.movedOver, { name: nameOf(active.id), target: targetOf(over.id, shown) })
           : undefined,
       onDragEnd: ({ active, over }) =>
         over
-          ? t.dnd.dropped.replace('{name}', nameOf(active.id)).replace('{target}', targetOf(over.id, shown))
-          : t.dnd.cancelled.replace('{name}', nameOf(active.id)),
-      onDragCancel: ({ active }) => t.dnd.cancelled.replace('{name}', nameOf(active.id)),
+          ? formatMessage(t.dnd.dropped, { name: nameOf(active.id), target: targetOf(over.id, shown) })
+          : formatMessage(t.dnd.cancelled, { name: nameOf(active.id) }),
+      onDragCancel: ({ active }) => formatMessage(t.dnd.cancelled, { name: nameOf(active.id) }),
     }),
     [t.dnd, nameOf, targetOf, shown]
   );

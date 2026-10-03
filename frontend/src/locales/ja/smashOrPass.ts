@@ -21,7 +21,6 @@ export default {
   smashWord: 'Smash',
   passWord: 'Pass',
   showingCandidates: '表示中の候補者:',
-  showingCount: '{count} / {total} 人の候補者を表示中',
   leaderboard: '殿堂入り',
   search: '候補者やランキングを検索...',
   all: 'すべて',
@@ -171,6 +170,7 @@ export default {
   },
   modals: {
     personaTitle: '試練の恋愛アーキタイプ',
+    sharedPersonaTitle: '共有された恋愛アーキタイプ',
     leaderboardTitle: '殿堂入りランキング',
     howToPlay: '遊び方',
     resetConfirmTitle: 'すべての投票をリセットしますか？',
@@ -199,6 +199,7 @@ export default {
     swipeLeftHint: '左スワイプで Pass',
     swipeRightHint: '右スワイプで Smash',
     shuffle: '残りをシャッフル',
+    left: '残り',
     howToPlay: '遊び方＆キーバインド',
   },
   howToPlayModal: {
@@ -218,6 +219,15 @@ export default {
     letsPlay: '了解、プレイ開始！',
   },
   startVoting: '候補者の評価を開始する',
+  playToDiscover: 'プレイして自分のタイプを見つけよう！',
+  sharedBadge: '友達の共有結果',
+  loreTitleSurvivor: '霧の中のサバイバー',
+  loreTitleKiller: '霧の中のキラー',
+  loreTaglineSurvivor: '霧の中で脱出の道を探している',
+  loreTaglineKiller: 'エンティティの領域で獲物を狙っている',
+  loreQuoteSurvivor: '「試練に立ち向かうとき、大切なのは決意と信頼だ。」– {name}',
+  loreQuoteKiller: '「この霧の中、エンティティの裁きから逃れられる者はいない。」– {name}',
+  knownQuotes: {} as Record<string, string>,
   personaArchetypes: {
     untappedSoul: {
       title: '秘められし魂',

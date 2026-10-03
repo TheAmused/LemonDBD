@@ -40,6 +40,9 @@ import dynamic from 'next/dynamic';
 
 import { tip } from '@/components/common/Tooltip';
 import { Spinner } from '@/components/common/Spinner';
+import { formatMessage } from '@/utils/i18nFormat';
+import { localeMetaFor } from '@/i18n/config';
+
 const VoiceEngineInfoModal = dynamic(
   () => import('./VoiceEngineInfoModal').then((m) => m.VoiceEngineInfoModal),
   { ssr: false }
@@ -587,18 +590,7 @@ export function VoiceCommandBanner({
         const recognition = new SpeechRec();
         recognitionRef.current = recognition;
 
-        recognition.lang =
-          locale === 'pl'
-            ? 'pl-PL'
-            : locale === 'es'
-              ? 'es-ES'
-              : locale === 'tr'
-                ? 'tr-TR'
-                : locale === 'de'
-                  ? 'de-DE'
-                  : locale === 'fr'
-                    ? 'fr-FR'
-                    : 'en-US';
+        recognition.lang = localeMetaFor(locale).bcp47;
         recognition.interimResults = true;
         recognition.maxAlternatives = 5;
         recognition.continuous = true;
@@ -848,7 +840,7 @@ export function VoiceCommandBanner({
 
   const matchPercentText = matchedResult?.confidence
     ? rawVoiceDict.matchPercent
-      ? rawVoiceDict.matchPercent.replace('{percent}', String(Math.round(matchedResult.confidence * 100)))
+      ? formatMessage(rawVoiceDict.matchPercent, { percent: Math.round(matchedResult.confidence * 100) })
       : `(${Math.round(matchedResult.confidence * 100)}%)`
     : '';
 

@@ -66,20 +66,20 @@ export const ChaosHeader: React.FC<ChaosHeaderProps> = ({
           onOpenStats={onOpenStats}
           onOpenHistory={onOpenHistory}
           onOpenReset={onOpenReset}
+          modeSelect={
+            <ModeSelectButton
+              label={difficultyLabel}
+              tone={DIFFICULTY_TONE[difficulty]}
+              onClick={onChangeDifficulty}
+              title={dict.streaks.changeDifficulty}
+            />
+          }
           extra={
-            <>
-              <ModeSelectButton
-                label={difficultyLabel}
-                tone={DIFFICULTY_TONE[difficulty]}
-                onClick={onChangeDifficulty}
-                title={dict.streaks.changeDifficulty}
-              />
-              <HeaderButton
-                onClick={onOpenPerkPool}
-                title={dict.streaks.perkPool}
-                label={dict.streaks.perkPool}
-              />
-            </>
+            <HeaderButton
+              onClick={onOpenPerkPool}
+              title={dict.streaks.perkPool}
+              label={dict.streaks.perkPool}
+            />
           }
         />
       }

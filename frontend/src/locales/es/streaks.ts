@@ -177,7 +177,7 @@ export default {
   percentSign: "%",
   pageLabel: "Página",
   attemptLabel: "Intento",
-  freezeNotice: "Desbloquear o bloquear habilidades/personajes no afectará a este intento hasta una victoria, una derrota que vuelva a 0, o un reinicio.",
+  freezeNotice: "Desbloquear o bloquear habilidades o personajes no afectará a este intento hasta una victoria, una derrota que vuelva a 0, o un reinicio.",
   survivor: "Superviviente",
   killer: "Asesino",
   completed: "Completado",

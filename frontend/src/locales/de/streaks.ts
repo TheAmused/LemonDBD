@@ -177,7 +177,7 @@ export default {
   percentSign: "%",
   pageLabel: "Seite",
   attemptLabel: "Versuch",
-  freezeNotice: "Das Freischalten oder Sperren von Perks/Charakteren wirkt sich erst nach einem Sieg, einer Niederlage zurück auf 0 oder einem Reset auf diesen Lauf aus.",
+  freezeNotice: "Das Freischalten oder Sperren von Perks und Charakteren wirkt sich erst nach einem Sieg, einer Niederlage zurück auf 0 oder einem Reset auf diesen Lauf aus.",
   survivor: "Überlebender",
   killer: "Killer",
   completed: "Abgeschlossen",

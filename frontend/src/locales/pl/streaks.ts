@@ -177,7 +177,7 @@ export default {
   percentSign: "%",
   pageLabel: "Strona",
   attemptLabel: "Próba",
-  freezeNotice: "Odblokowywanie lub blokowanie perków/postaci nie wpłynie na ten przebieg aż do wygranej, porażki cofającej do 0, lub resetu.",
+  freezeNotice: "Odblokowywanie lub blokowanie perków lub postaci nie wpłynie na ten przebieg aż do wygranej, porażki cofającej do 0, lub resetu.",
   survivor: "Ocalały",
   killer: "Zabójca",
   completed: "Ukończono",

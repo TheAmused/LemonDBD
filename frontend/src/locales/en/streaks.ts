@@ -203,7 +203,7 @@ export default {
   percentSign: "%",
   pageLabel: "Page",
   attemptLabel: "Attempt",
-  freezeNotice: "Unlocking or locking perks/characters won't affect this run until a win, a loss back to 0, or a reset.",
+  freezeNotice: "Unlocking or locking perks or characters won't affect this run until a win, a loss back to 0, or a reset.",
   survivor: "Survivor",
   killer: "Killer",
   completed: "Completed",

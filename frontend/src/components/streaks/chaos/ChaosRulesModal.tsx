@@ -6,7 +6,6 @@ import React from 'react';
 import { RulesModalShell } from '../RulesModalShell';
 import {
   DIFFICULTY_BADGE,
-  RulesConceptCard,
   RulesDifficultyRows,
   RulesSection,
   RulesHowItWorks,
@@ -32,15 +31,6 @@ export const ChaosRulesModal: React.FC<ChaosRulesModalProps> = ({ isOpen, onClos
       onClose={onClose}
       title={s.rules || 'Rules'}
     >
-      <RulesConceptCard
-        tone="red"
-        title={s.chaosConcept || 'Concept'}
-        text={
-          s.chaosConceptShort ||
-          'Pull the lever for 4 random perks plus 2 add-on rarities. Pick a killer to run the build, then play the trial.'
-        }
-      />
-
       <RulesHowItWorks
         tone="red"
         title={s.howItWorks || 'How it works'}

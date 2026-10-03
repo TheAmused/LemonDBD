@@ -3,6 +3,7 @@ export default {
   backToKillerStreaks: "キラーストリークに戻る",
   backToKillers: "キラー一覧に戻る",
   rules: "ルール",
+  winRange: "{from}から{to}",
   cancel: "キャンセル",
   stats: "統計",
   perkPool: "パークプール",

@@ -10,7 +10,6 @@ import { PageShell } from '@/components/layout/PageShell';
 import { RichText } from '@/components/common/RichText';
 import { Locale } from '@/i18n/config';
 import { useDictionary } from '@/context/DictionaryContext';
-import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { usePersistentDrawer } from '@/hooks/usePersistentDrawer';
 
 // Placeholder names, to be replaced with real contributors before publishing.
@@ -176,7 +175,6 @@ export default function AboutPage() {
   const dict = useDictionary();
   const about = dict?.about;
 
-  useDocumentTitle(about?.pageTitle || 'LemonDBD - About us');
 
   const pageHeading = about?.pageTitle
     ? about.pageTitle.replace(/^LemonDBD\s*[-–—]\s*/i, '').trim()

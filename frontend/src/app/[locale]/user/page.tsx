@@ -24,7 +24,6 @@ import { fetchMyBugReports, uploadAvatar, ApiError } from '@/services/userProfil
 import { useUserShowcase } from '@/hooks/useUserShowcase';
 import { User } from 'lucide-react';
 import { useDictionary } from '@/context/DictionaryContext';
-import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 
 // Modals are only needed once the user interacts (sign-in prompt, bug report
 // form) -- code-split them out of the initial /user bundle. `ssr: false`
@@ -61,7 +60,6 @@ export default function UserProfilePage() {
   const [reportsTotalPages, setReportsTotalPages] = useState(1);
   const REPORTS_PER_PAGE = 10;
 
-  useDocumentTitle(dict?.app?.userPageTitle || 'LemonDBD - User Profile');
 
   const fetchMyReports = useCallback(async (page: number = 1, signal?: AbortSignal) => {
     if (!isAuthenticated) return;

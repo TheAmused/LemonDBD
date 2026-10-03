@@ -5,7 +5,6 @@ import React, { useState, useEffect } from 'react';
 import { PageShell } from '@/components/layout/PageShell';
 import { ChallengeRunner } from '@/components/minigames/ChallengeRunner';
 import { useDictionary, useLocale } from '@/context/DictionaryContext';
-import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import type { ChallengeDefinition, MinigameCatalog } from '@/types/minigame';
 import { fetchMinigameCatalog, fetchDailyChallenge } from '@/services/minigameApi';
 import { DbdSpinner } from '@/components/common/DbdSpinner';
@@ -20,7 +19,6 @@ export default function DbdIdlePage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useDocumentTitle('DBD Idle - Classic Fog Guesser');
 
   useEffect(() => {
     let isMounted = true;

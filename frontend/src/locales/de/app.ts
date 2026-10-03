@@ -24,6 +24,7 @@ export default {
   swfPageTitle: "LemonDBD - SWF-Teamplaner",
   userPageTitle: "LemonDBD - Benutzerprofil",
   homePageTitle: "LemonDBD - Dead by Daylight Begleiter",
+  siteDescription: 'LemonDBD: die ultimative Dead-by-Daylight-Datenbank mit Perk-Zufallsgenerator, Kartenexplorer und Spielerbegleiter.',
   loading: "Laden...",
   loadingLemonDBD: "Lade LemonDBD...",
   loadingCharactersHub: "Lade Charakter-Zentrale...",

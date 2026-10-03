@@ -1,6 +1,8 @@
 // frontend/src/locales/en/minigames.ts
 export default {
   pageTitle: "LemonDBD - Minigames & DBD Idle",
+  creatorPageTitle: 'LemonDBD - Trial Challenge Creator',
+  idlePageTitle: 'LemonDBD - DBD Idle: Classic Fog Guesser',
   metaDescription: "Play daily Dead by Daylight idle guessing challenges, map and audio guessers, or create and share your own custom gauntlets.",
   hubTitle: "Dead by Daylight Minigames",
   hubSubtitle: "Test your Fog knowledge with daily trials, endless practice, or custom player-made gauntlets.",

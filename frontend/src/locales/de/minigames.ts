@@ -1,6 +1,8 @@
 // frontend/src/locales/de/minigames.ts
 export default {
   pageTitle: "LemonDBD - Minispiele & DBD Idle",
+  creatorPageTitle: 'LemonDBD - Prüfungs-Challenge-Ersteller',
+  idlePageTitle: 'LemonDBD - DBD Idle: Klassischer Nebel-Rater',
   metaDescription: "Spiele tägliche Dead by Daylight Rate-Herausforderungen, Karten- und Audio-Rätsel oder erstelle eigene Herausforderungen.",
   hubTitle: "Dead by Daylight Minispiele",
   hubSubtitle: "Teste dein Nebel-Wissen in täglichen Prüfungen, endlosem Training oder benutzerdefinierten Herausforderungen.",

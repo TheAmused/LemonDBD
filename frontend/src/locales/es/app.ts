@@ -24,6 +24,7 @@ export default {
   swfPageTitle: "LemonDBD - Planificador de Escuadrón SWF",
   userPageTitle: "LemonDBD - Perfil de Usuario",
   homePageTitle: "LemonDBD - Compañero de Dead by Daylight",
+  siteDescription: 'LemonDBD: la base de datos definitiva de Dead by Daylight, con aleatorizador de habilidades, explorador de mapas y compañero para jugadores.',
   loading: "Cargando...",
   loadingLemonDBD: "Cargando LemonDBD...",
   loadingCharactersHub: "Cargando Centro de Personajes...",

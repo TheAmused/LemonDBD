@@ -1,6 +1,8 @@
 // frontend/src/locales/ja/minigames.ts
 export default {
   pageTitle: "LemonDBD - ミニゲーム＆DBD Idle",
+  creatorPageTitle: 'LemonDBD - トライアルチャレンジ作成',
+  idlePageTitle: 'LemonDBD - DBD Idle：クラシック霧当てゲーム',
   metaDescription: "日替わりのDead by Daylight当てゲームやマップ・音声クイズに挑戦。オリジナルのカスタム試練も作成・共有可能。",
   hubTitle: "Dead by Daylight ミニゲーム",
   hubSubtitle: "デイリー試練、エンドレス練習、またはカスタム試練で霧の知識を試そう。",

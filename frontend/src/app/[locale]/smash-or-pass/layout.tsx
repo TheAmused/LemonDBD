@@ -1,40 +1,8 @@
 // frontend/src/app/[locale]/smash-or-pass/layout.tsx
-import type { Metadata } from 'next';
-import { Locale } from '@/i18n/config';
-import { getDictionary } from '@/i18n/get-dictionary';
+import { pageMetadata } from '@/i18n/metadata';
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ locale: Locale }>;
-}): Promise<Metadata> {
-  const { locale } = await params;
-  const dict = await getDictionary(locale);
-  const rawSmash = dict?.smashOrPass;
+export const generateMetadata = pageMetadata('/smash-or-pass', (d) => ({ title: d.app.smashOrPassPageTitle, description: d.smashOrPass.subtitle }));
 
-  const title = dict?.app?.smashOrPassPageTitle || 'LemonDBD - Smash or Pass | Dead by Daylight Romance';
-  const description = rawSmash?.subtitle || 'Rate Dead by Daylight survivors and killers!';
-
-  return {
-    title,
-    description,
-    openGraph: {
-      title,
-      description,
-      type: 'website',
-    },
-    twitter: {
-      card: 'summary',
-      title,
-      description,
-    },
-  };
-}
-
-export default function SmashOrPassLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function SmashOrPassLayout({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }

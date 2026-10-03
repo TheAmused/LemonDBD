@@ -24,6 +24,7 @@ export default {
   swfPageTitle: "LemonDBD - フルパ（SWF）チームプランナー",
   userPageTitle: "LemonDBD - ユーザープロフィール",
   homePageTitle: "LemonDBD - Dead by Daylight コンパニオン",
+  siteDescription: 'LemonDBD：Dead by Daylightの総合データベース。パークのランダマイザー、マップエクスプローラー、プレイヤーの相棒。',
   loading: "読み込み中...",
   loadingLemonDBD: "LemonDBDを読み込み中...",
   loadingCharactersHub: "キャラクターハブを読み込み中...",

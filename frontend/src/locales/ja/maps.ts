@@ -9,10 +9,7 @@ export default {
   zoomOutAria: "縮小",
   resetPanZoom: "位置＆ズームリセット",
   resetPanAndZoomAria: "位置とズームをリセット",
-  fullscreenMode: "全画面インタラクティブモード",
   noMapsFound: "マップが見つかりません",
-  mapVariantsAria: "レルムバリエーション",
-  mapVariants: "マップバリエーション:",
   variants: "バリエーション:",
   engineControlsAria: "エンジンズーム＆リセット操作",
   fullscreenEngineAria: "2D全画面マップエンジン",
@@ -68,4 +65,5 @@ export default {
   layoutOutdoor: '屋外',
   layoutIndoor: '屋内',
   layoutHybrid: 'ハイブリッド',
+  loadingTacticalMapsSub: 'タイルのバリエーション、ループ、スポーン座標をマッピング中',
 } as const;

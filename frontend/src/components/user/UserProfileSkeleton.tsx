@@ -2,22 +2,23 @@
 'use client';
 import type { Dictionary } from '@/locales/types';
 import React from 'react';
-import { DbdSpinner } from '@/components/DbdSpinner';
+import { DbdSpinner } from '@/components/common/DbdSpinner';
+import { useDictionary } from "@/context/DictionaryContext";
 
 interface UserProfileSkeletonProps {
-  dict?: Dictionary | null;
   className?: string;
 }
 
-export const UserProfileSkeleton: React.FC<UserProfileSkeletonProps> = ({ dict, className = '' }) => {
-  const loadingLabel = dict?.characterDetail?.loading || dict?.app?.loading || 'Loading profile...';
+export const UserProfileSkeleton: React.FC<UserProfileSkeletonProps> = ({ className = '' }) => {
+  const dict = useDictionary();
+  const loadingLabel = dict.characterDetail.loading;
 
   return (
     <div
       role="status"
       aria-busy="true"
       aria-label={loadingLabel}
-      className={`min-h-screen bg-bg-primary text-text-primary flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300 ${className}`}
+      className={`min-h-screen text-text-primary flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300 ${className}`}
     >
       <div aria-hidden="true" className="lemon-shell-aside hidden lg:fixed lg:inset-y-0 lg:left-0 lg:z-40 lg:block lg:w-64 border-r border-border-color bg-bg-surface" />
 
@@ -28,12 +29,9 @@ export const UserProfileSkeleton: React.FC<UserProfileSkeletonProps> = ({ dict, 
           accent="blood"
           needleSpeed={1.3}
           label={loadingLabel}
-          sublabel="Retrieving player inventory and perk mastery"
-          dict={dict}
+          sublabel={dict.user.loadingProfileSub}
         />
       </main>
     </div>
   );
 };
-
-export default UserProfileSkeleton;

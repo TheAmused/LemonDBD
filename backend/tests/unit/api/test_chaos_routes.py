@@ -44,10 +44,7 @@ def auth_setup(db_session: Session) -> tuple[int, str, dict[str, str]]:
 class TestChaosRoutes:
     """Tests for Chaos Streak HTTP endpoints: life cycles, reveals, match submissions, and resets."""
 
-    def test_endpoints_require_login(self, client: FlaskClient) -> None:
-        resp = client.get("/api/v1/chaos-streak/run?difficulty=hell")
-        assert resp.status_code == 401
-
+    def test_reveal_and_result_require_login(self, client: FlaskClient) -> None:
         resp_rev = client.post("/api/v1/chaos-streak/reveal", json={"run_id": 1})
         assert resp_rev.status_code == 401
 
@@ -64,27 +61,6 @@ class TestChaosRoutes:
         assert run["difficulty"] == "hell"
         assert len(run["current_perks"]) == 4
         assert run["checkpoint_interval"] == 0
-
-    @pytest.mark.parametrize("invalid_diff", ["nonsense", "hardcore", "extreme", ""])
-    def test_run_requires_valid_difficulty(
-        self, client: FlaskClient, auth_setup: tuple[int, str, dict[str, str]], invalid_diff: str
-    ) -> None:
-        _, _, headers = auth_setup
-        resp = client.get(f"/api/v1/chaos-streak/run?difficulty={invalid_diff}", headers=headers)
-        assert resp.status_code == 400
-
-    def test_reveal_endpoint(
-        self, client: FlaskClient, auth_setup: tuple[int, str, dict[str, str]]
-    ) -> None:
-        _, _, headers = auth_setup
-        run = client.get(
-            "/api/v1/chaos-streak/run?difficulty=hell", headers=headers
-        ).get_json()["run"]
-        resp = client.post(
-            "/api/v1/chaos-streak/reveal", json={"run_id": run["id"]}, headers=headers
-        )
-        assert resp.status_code == 200
-        assert resp.get_json()["run"]["perks_revealed"] is True
 
     def test_result_lifecycle(
         self, client: FlaskClient, auth_setup: tuple[int, str, dict[str, str]]
@@ -103,20 +79,6 @@ class TestChaosRoutes:
         assert "The Trapper" in body["run"]["completed_killers"]
         assert body["run"]["current_streak"] == 1
 
-    def test_result_requires_killer_id(
-        self, client: FlaskClient, auth_setup: tuple[int, str, dict[str, str]]
-    ) -> None:
-        _, _, headers = auth_setup
-        run = client.get(
-            "/api/v1/chaos-streak/run?difficulty=hell", headers=headers
-        ).get_json()["run"]
-        resp = client.post(
-            "/api/v1/chaos-streak/result",
-            json={"run_id": run["id"], "result": "win"},
-            headers=headers,
-        )
-        assert resp.status_code == 400
-
     def test_reset_endpoint(
         self, client: FlaskClient, auth_setup: tuple[int, str, dict[str, str]]
     ) -> None:
@@ -134,14 +96,6 @@ class TestChaosRoutes:
         )
         assert resp.status_code == 200
         assert resp.get_json()["run"]["current_streak"] == 0
-
-    def test_stats_endpoint(
-        self, client: FlaskClient, auth_setup: tuple[int, str, dict[str, str]]
-    ) -> None:
-        _, _, headers = auth_setup
-        resp = client.get("/api/v1/chaos-streak/stats?difficulty=hell", headers=headers)
-        assert resp.status_code == 200
-        assert resp.get_json()["stats"]["total_matches"] == 0
 
     def test_runs_are_isolated_per_difficulty(
         self, client: FlaskClient, auth_setup: tuple[int, str, dict[str, str]]

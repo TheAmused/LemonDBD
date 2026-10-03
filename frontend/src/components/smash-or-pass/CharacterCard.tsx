@@ -18,16 +18,39 @@ import type { Dictionary } from '@/locales/types';
 import { CardDisintegrationOverlay } from './CardDisintegrationOverlay';
 import { SmashSounds } from './SmashSoundEffects';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
+import { cn } from '@/utils/cn';
 import { getAvatarUrl as resolveAvatarUrl } from '@/components/character-detail/types';
 import type { EntityItem, RosterCustomLabels } from '@/types/smashOrPass';
 import { localizedProfile } from '@/utils/entityProfile';
 import { sampleFlags } from '@/utils/smashWatermarks';
 
+import { tip } from '@/components/common/Tooltip';
+import { Modal, useModal } from '@/components/common/Modal';
+import { Button } from '@/components/common/Button';
+import { Surface } from '@/components/common/Surface';
+import { isSurvivor as isSurvivorRole } from '@/utils/characterUtils';
+import { useDictionary } from "@/context/DictionaryContext";
+
+const ZoomCloseButton: React.FC<{ label: string }> = ({ label }) => {
+  const { close } = useModal();
+  return (
+    <Button
+      variant="secondary" size="md" icon
+      onClick={close}
+      aria-label={label}
+      className="absolute right-2 top-2 z-10 rounded-full shadow-lg"
+    >
+      <X className="h-5 w-5" aria-hidden="true" />
+    </Button>
+  );
+};
 // The local CharacterMetadataLocale / CharacterMetadataContainer shapes are gone: they
 // only existed to describe the duplicated payload (camelCase twins, `i18n` next to
 // `translations`, `title` next to `archetype`). EntityMetadata is now that description.
 
 const FLIP_HALF_MS = 190;
+/** The dating-profile back face is not ready yet: its content sits blurred behind a "Soon..." badge. */
+const BACK_FACE_COMING_SOON = true;
 
 interface CharacterCardProps {
   character: EntityItem;
@@ -39,25 +62,24 @@ interface CharacterCardProps {
   initialExitOffset?: { x: number; y: number } | null;
   onExitComplete?: () => void;
   locale?: string;
-  dict?: Dictionary | any;
   customLabels?: RosterCustomLabels;
   rosterMode?: 'simple' | 'full';
 }
 
 export const CharacterCard: React.FC<CharacterCardProps> = ({
-  character,
-  onVote,
-  isTopCard = true,
-  onDragUpdate,
-  isExiting = false,
-  exitType = null,
-  initialExitOffset = null,
-  onExitComplete,
-  locale = 'en',
-  dict,
-  customLabels,
-  rosterMode = 'full',
-}) => {
+      character,
+      onVote,
+      isTopCard = true,
+      onDragUpdate,
+      isExiting = false,
+      exitType = null,
+      initialExitOffset = null,
+      onExitComplete,
+      locale = 'en',
+      customLabels,
+      rosterMode = 'full',
+    }) => {
+  const dict = useDictionary();
   const [isFlipped, setIsFlipped] = useState<boolean>(false);
   const [turn, setTurn] = useState<'settled' | 'out' | 'far'>('settled');
   const [isZoomed, setIsZoomed] = useState<boolean>(false);
@@ -76,7 +98,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
   const cardRef = useRef<HTMLDivElement | null>(null);
   const backendBase = getBackendBaseUrl();
 
-  const isSurvivor = character.role === 'Survivor';
+  const isSurvivor = isSurvivorRole(character.role);
 
   const currentLoc = locale || 'en';
   const profile = localizedProfile(character.metadata, currentLoc);
@@ -269,9 +291,9 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
       ? 1.02
       : 1;
 
-  const rawSmashDict = dict?.smashOrPass;
+  const rawSmashDict = dict.smashOrPass;
 
-  const zoomAriaLabel = rawSmashDict?.zoomFullPortrait
+  const zoomAriaLabel = rawSmashDict.zoomFullPortrait
     ? `${character.name} - ${rawSmashDict.zoomFullPortrait}`
     : character.name;
 
@@ -402,8 +424,8 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
                   SmashSounds.playFlipSound();
                   startFlip();
                 }}
-                title={rawSmashDict?.flipToDatingProfile || ''}
-                aria-label={rawSmashDict?.flipToDatingProfile || ''}
+                {...tip(rawSmashDict.flipToDatingProfile, undefined, 'action')}
+                aria-label={rawSmashDict.flipToDatingProfile}
                 className="flex min-h-[48px] min-w-[48px] h-12 w-12 sm:h-12 sm:w-12 items-center justify-center rounded-2xl bg-bg-primary/85 border border-accent-red/40 text-accent-red hover:text-text-inverted hover:border-accent-red hover:scale-110 active:scale-95 transition-all shadow-2xl backdrop-blur-md cursor-pointer touch-manipulation"
               >
                 <RotateCw className="h-5 w-5" aria-hidden="true" />
@@ -418,8 +440,8 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
                   SmashSounds.playHoverTick();
                   setIsZoomed(true);
                 }}
-                title={rawSmashDict?.zoomFullPortrait || ''}
-                aria-label={rawSmashDict?.zoomFullPortrait || ''}
+                {...tip(rawSmashDict.zoomFullPortrait, undefined, 'action')}
+                aria-label={rawSmashDict.zoomFullPortrait}
                 className="flex min-h-[48px] min-w-[48px] h-12 w-12 sm:h-12 sm:w-12 items-center justify-center rounded-2xl bg-bg-primary/85 border border-border-color text-text-secondary hover:text-text-inverted hover:border-accent-red hover:scale-110 active:scale-95 transition-all shadow-2xl backdrop-blur-md cursor-pointer touch-manipulation"
               >
                 <Maximize2 className="h-5 w-5" aria-hidden="true" />
@@ -436,8 +458,8 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
                   const rect = e.currentTarget.getBoundingClientRect();
                   onVote('pass', { x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 });
                 }}
-                title={rawSmashDict?.pass || ''}
-                aria-label={rawSmashDict?.pass || ''}
+                {...tip(rawSmashDict.pass, undefined, 'action')}
+                aria-label={rawSmashDict.pass}
                 className="flex min-h-[48px] min-w-[48px] h-13 w-13 sm:h-14 sm:w-14 items-center justify-center rounded-2xl bg-bg-primary/90 border-2 border-border-color text-text-muted hover:text-text-primary hover:border-border-subtle hover:scale-110 active:scale-95 transition-all shadow-2xl backdrop-blur-md cursor-pointer touch-manipulation"
               >
                 <ThumbsDown className="h-6 w-6 sm:h-7 sm:w-7" aria-hidden="true" />
@@ -452,8 +474,8 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
                   const rect = e.currentTarget.getBoundingClientRect();
                   onVote('smash', { x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 });
                 }}
-                title={rawSmashDict?.smash || ''}
-                aria-label={rawSmashDict?.smash || ''}
+                {...tip(rawSmashDict.smash, undefined, 'action')}
+                aria-label={rawSmashDict.smash}
                 className="flex min-h-[48px] min-w-[48px] h-13 w-13 sm:h-14 sm:w-14 items-center justify-center rounded-2xl bg-accent-red hover:bg-accent-red-hover text-text-inverted hover:scale-110 active:scale-95 transition-all cursor-pointer touch-manipulation"
               >
                 <Heart className="h-6 w-6 sm:h-7 sm:w-7 fill-text-inverted" aria-hidden="true" />
@@ -471,7 +493,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
               SmashSounds.playFlipSound();
               startFlip();
             }}
-            className="absolute inset-0 h-full w-full rounded-[32px] sm:rounded-[36px] overflow-hidden border-2 border-accent-red/50 bg-bg-primary/95 backdrop-blur-2xl p-4 sm:p-5 flex flex-col justify-between font-mono text-text-primary cursor-pointer select-none"
+            className="absolute inset-0 h-full w-full rounded-[32px] sm:rounded-[36px] overflow-hidden border-2 border-accent-red/50 bg-bg-primary/95 backdrop-blur-2xl p-4 sm:p-5 flex flex-col justify-between text-text-primary cursor-pointer select-none"
           >
             {/* Top Bar with accessible Flip Back button and Title */}
             <div className="relative z-30 flex items-center justify-between pb-2 border-b border-border-color shrink-0 pointer-events-auto">
@@ -484,9 +506,9 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
                   SmashSounds.playFlipSound();
                   startFlip();
                 }}
-                title={rawSmashDict?.flipBack || ''}
-                aria-label={rawSmashDict?.flipBack || ''}
-                className="flex min-h-[40px] min-w-[40px] h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-2xl bg-bg-elevated border border-accent-red/40 text-accent-red hover:text-text-inverted hover:border-accent-red hover:scale-110 active:scale-95 transition-all shadow-lg cursor-pointer touch-manipulation"
+                {...tip(rawSmashDict.flipBack, undefined, 'action')}
+                aria-label={rawSmashDict.flipBack}
+                className="pointer-coarse:min-h-11 pointer-coarse:min-w-11 flex min-h-[40px] min-w-[40px] h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-2xl bg-bg-elevated border border-accent-red/40 text-accent-red hover:text-text-inverted hover:border-accent-red hover:scale-110 active:scale-95 transition-all shadow-lg cursor-pointer touch-manipulation"
               >
                 <RotateCw className="h-5 w-5" aria-hidden="true" />
               </button>
@@ -499,90 +521,107 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
               </div>
 
               <span
-                className={`text-[9px] font-black uppercase px-2 py-0.5 rounded-lg border shrink-0 ${
+                className={`text-micro font-black uppercase px-2 py-0.5 rounded-lg border shrink-0 ${
                   isSurvivor
                     ? 'bg-accent-green/15 text-accent-green border-accent-green/30'
                     : 'bg-accent-red/15 text-accent-red border-accent-red/30'
                 }`}
               >
                 {isSurvivor
-                  ? rawSmashDict?.filters?.survivors || character.role
-                  : rawSmashDict?.filters?.killers || character.role}
+                  ? rawSmashDict.filters.survivors
+                  : rawSmashDict.filters.killers}
               </span>
             </div>
 
             {/* Scrollable Back Content */}
+            <div className="relative my-2 flex-1 min-h-0">
             <div
-              className="space-y-2.5 my-2 flex-1 overflow-y-auto pr-1 select-text scrollbar-thin scrollbar-thumb-border-color pointer-events-auto"
+              className={cn(
+                'space-y-2.5 h-full pr-1 scrollbar-thin scrollbar-thumb-border-color',
+                BACK_FACE_COMING_SOON
+                  ? 'overflow-hidden blur-sm opacity-40 select-none pointer-events-none'
+                  : 'overflow-y-auto select-text pointer-events-auto'
+              )}
+              aria-hidden={BACK_FACE_COMING_SOON || undefined}
               onClick={(e) => e.stopPropagation()}
             >
               {/* Archetype / Dating Vibe */}
               <div className="p-2.5 rounded-2xl bg-bg-elevated border border-accent-red/30 space-y-0.5">
-                <span className="text-[10px] font-bold uppercase text-accent-red flex items-center gap-1">
+                <span className="type-label-2xs text-accent-red flex items-center gap-1">
                   <Flame className="h-3 w-3 text-accent-red" aria-hidden="true" />
                   {customLabels?.dating_vibe || 'Dating Vibe'}: {charTitle}
                 </span>
-                {charTagline && <p className="text-[11px] text-text-secondary italic leading-snug">{charTagline}</p>}
+                {charTagline && <p className="text-mini text-text-secondary italic leading-snug">{charTagline}</p>}
               </div>
 
               {/* Turn On (Visible & Optional) */}
               {profile.turn_on && (
-                <div className="p-2.5 rounded-2xl bg-emerald-950/20 border border-emerald-500/40 space-y-0.5">
-                  <span className="text-[10px] font-bold uppercase text-emerald-400 flex items-center gap-1">
-                    <Flame className="h-3 w-3 text-emerald-400" aria-hidden="true" />
-                    {customLabels?.turn_on || 'Turn On'}
+                <div className="p-2.5 rounded-2xl bg-accent-green/10 border border-accent-green/40 space-y-0.5">
+                  <span className="type-label-2xs text-accent-green flex items-center gap-1">
+                    <Flame className="h-3 w-3 text-accent-green" aria-hidden="true" />
+                    {customLabels?.turn_on || ''}
                   </span>
-                  <p className="text-[11px] text-emerald-200 leading-snug">{profile.turn_on}</p>
+                  <p className="text-mini text-text-primary leading-snug">{profile.turn_on}</p>
                 </div>
               )}
 
               {/* Dealbreaker (Visible & Optional) */}
               {profile.dealbreaker && (
-                <div className="p-2.5 rounded-2xl bg-rose-950/20 border border-rose-500/40 space-y-0.5">
-                  <span className="text-[10px] font-bold uppercase text-rose-400 flex items-center gap-1">
-                    <AlertTriangle className="h-3 w-3 text-rose-400" aria-hidden="true" />
-                    {customLabels?.dealbreaker || 'Dealbreaker'}
+                <div className="p-2.5 rounded-2xl bg-accent-red/10 border border-accent-red/40 space-y-0.5">
+                  <span className="type-label-2xs text-accent-red flex items-center gap-1">
+                    <AlertTriangle className="h-3 w-3 text-accent-red" aria-hidden="true" />
+                    {customLabels?.dealbreaker || ''}
                   </span>
-                  <p className="text-[11px] text-rose-200 leading-snug">{profile.dealbreaker}</p>
+                  <p className="text-mini text-text-primary leading-snug">{profile.dealbreaker}</p>
                 </div>
               )}
 
               {/* Signature Quote */}
               {charQuote && (
                 <div className="p-2.5 rounded-2xl bg-bg-elevated border border-accent-amber/30 space-y-0.5">
-                  <span className="text-[10px] font-bold uppercase text-accent-amber flex items-center gap-1">
+                  <span className="type-label-2xs text-accent-amber flex items-center gap-1">
                     <Quote className="h-3 w-3 text-accent-amber" aria-hidden="true" />
                     {customLabels?.quote || 'Quote'}
                   </span>
-                  <p className="text-[11px] text-text-secondary italic leading-relaxed">{charQuote}</p>
+                  <p className="text-mini text-text-secondary italic leading-relaxed">{charQuote}</p>
                 </div>
               )}
 
               {/* Full Mode Extras */}
               {rosterMode !== 'simple' && charBio && (
-                <div className="p-2.5 rounded-2xl bg-bg-elevated border border-border-color space-y-1">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-text-muted">
-                    {rawSmashDict?.loreAndPersonality || 'Lore'}
+                <Surface tone="elevated" radius="2xl" padding="none" className="p-2.5 space-y-1">
+                  <span className="type-label-2xs text-text-muted">
+                    {rawSmashDict.loreAndPersonality}
                   </span>
-                  <p className="text-xs text-text-secondary leading-relaxed">{charBio}</p>
-                </div>
+                  <p className="type-body text-text-secondary">{charBio}</p>
+                </Surface>
               )}
 
               {rosterMode !== 'simple' && charMeme && (
-                <div className="p-2.5 rounded-2xl bg-bg-elevated border border-border-color space-y-0.5">
-                  <span className="flex items-center gap-1.5 text-[10px] font-black uppercase text-text-secondary">
+                <Surface tone="elevated" radius="2xl" padding="none" className="p-2.5 space-y-0.5">
+                  <span className="flex items-center gap-1.5 type-label-2xs text-text-secondary">
                     <Sparkles className="h-3 w-3 text-text-muted" aria-hidden="true" />
-                    {customLabels?.meme || rawSmashDict?.trialRumor || 'Meme'}
+                    {customLabels?.meme || rawSmashDict.trialRumor}
                   </span>
-                  <p className="text-[11px] text-text-secondary italic leading-snug">{charMeme}</p>
-                </div>
+                  <p className="text-mini text-text-secondary italic leading-snug">{charMeme}</p>
+                </Surface>
               )}
+            </div>
+            {BACK_FACE_COMING_SOON && (
+              <div className="absolute inset-0 z-20 flex items-center justify-center pointer-events-none">
+                <div className="px-6 py-3 rounded-2xl bg-bg-primary/80 border border-border-color/60 backdrop-blur-md shadow-2xl">
+                  <span className="text-2xl sm:text-3xl font-black tracking-widest text-text-primary uppercase drop-shadow-md">
+                    {rawSmashDict.soon}
+                  </span>
+                </div>
+              </div>
+            )}
             </div>
 
             {/* Bottom Actions Bar */}
             <div className="pt-2 flex items-center justify-between border-t border-border-color shrink-0 gap-2 pointer-events-auto">
-              <button
-                type="button"
+              <Button
+                variant="secondary" size="sm"
                 onMouseDown={(e) => e.stopPropagation()}
                 onTouchStart={(e) => e.stopPropagation()}
                 onClick={(e) => {
@@ -590,13 +629,13 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
                   const rect = e.currentTarget.getBoundingClientRect();
                   onVote('pass', { x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 });
                 }}
-                className="flex-1 py-2 px-3 rounded-xl bg-bg-elevated border border-border-color text-text-muted hover:text-text-primary text-xs font-mono font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer hover:border-border-subtle active:scale-95"
+                className="flex-1"
               >
                 <ThumbsDown className="h-4 w-4" aria-hidden="true" />
-                <span>{rawSmashDict?.pass || 'Pass'}</span>
-              </button>
-              <button
-                type="button"
+                <span>{rawSmashDict.pass}</span>
+              </Button>
+              <Button
+                variant="primary" size="sm"
                 onMouseDown={(e) => e.stopPropagation()}
                 onTouchStart={(e) => e.stopPropagation()}
                 onClick={(e) => {
@@ -604,64 +643,53 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
                   const rect = e.currentTarget.getBoundingClientRect();
                   onVote('smash', { x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 });
                 }}
-                className="flex-1 py-2 px-3 rounded-xl bg-accent-red text-text-inverted text-xs font-mono font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer hover:bg-accent-red-hover active:scale-95"
+                className="flex-1"
               >
                 <Heart className="h-4 w-4 fill-text-inverted" aria-hidden="true" />
-                <span>{rawSmashDict?.smash || 'Smash'}</span>
-              </button>
+                <span>{rawSmashDict.smash}</span>
+              </Button>
             </div>
           </div>
         </div>
       </div>
 
-      {isZoomed && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          aria-label={zoomAriaLabel}
-          onClick={() => setIsZoomed(false)}
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-bg-primary/90 backdrop-blur-2xl animate-in fade-in duration-200"
-        >
-          <div
-            onClick={(e) => e.stopPropagation()}
-            className="relative max-w-2xl w-full max-h-[90vh] flex flex-col items-center justify-center"
-          >
-            <button
-              type="button"
-              onClick={() => setIsZoomed(false)}
-              aria-label={dict?.modal?.close || ''}
-              className="absolute -top-12 right-0 sm:right-2 flex h-10 w-10 items-center justify-center rounded-full bg-bg-elevated border border-border-color text-text-secondary hover:text-text-primary transition-colors cursor-pointer shadow-lg z-10"
-            >
-              <X className="h-5 w-5" aria-hidden="true" />
-            </button>
-
-            <div className="relative overflow-hidden rounded-3xl border-2 border-accent-red/40 bg-bg-primary">
-              <img
-                src={avatarSrc}
-                alt={character.name}
-                className="max-h-[80vh] w-auto object-contain rounded-3xl"
-                onError={(e) => {
-                  const target = e.target as HTMLImageElement;
-                  if (!target.dataset.fallback) {
-                    target.dataset.fallback = '1';
-                    // Backend writes avatars as WebP; retry that explicitly in case the
-                    // initial src (e.g. a stale DB path) pointed somewhere unexpected.
-                    target.src = `${backendBase}/static/avatars/${isSurvivor ? 'survivors' : 'killers'}/${character.slug}.webp`;
-                  } else if (target.dataset.fallback === '1') {
-                    target.dataset.fallback = '2';
-                    // Legacy fallback: some pre-normalization assets may still only exist as .png.
-                    target.src = `${backendBase}/static/avatars/${isSurvivor ? 'survivors' : 'killers'}/${character.slug}.png`;
-                  }
-                }}
-              />
-              <div className="absolute bottom-0 inset-x-0 p-4 bg-gradient-to-t from-bg-primary via-bg-primary/80 to-transparent text-center font-mono">
-                <h3 className="text-lg font-black text-text-primary">{character.name}</h3>
-                {charTagline && <p className="text-xs text-accent-red font-sans italic">{charTagline}</p>}
-              </div>
-            </div>
+      <Modal
+        isOpen={isZoomed}
+        onClose={() => setIsZoomed(false)}
+        variant="lightbox"
+        size="2xl"
+        layer="top"
+        ariaLabel={zoomAriaLabel}
+        containerClassName="backdrop-blur-2xl"
+        className="overflow-visible"
+        bodyClassName="flex justify-center overflow-visible"
+      >
+        <ZoomCloseButton label={dict.modal.close} />
+        <div className="relative overflow-hidden rounded-3xl border-2 border-accent-red/40 bg-bg-primary">
+          <img
+            src={avatarSrc}
+            alt={character.name}
+            className="max-h-[80vh] w-auto object-contain rounded-3xl"
+            onError={(e) => {
+              const target = e.target as HTMLImageElement;
+              if (!target.dataset.fallback) {
+                target.dataset.fallback = '1';
+                // Backend writes avatars as WebP; retry that explicitly in case the
+                // initial src (e.g. a stale DB path) pointed somewhere unexpected.
+                target.src = `${backendBase}/static/avatars/${isSurvivor ? 'survivors' : 'killers'}/${character.slug}.webp`;
+              } else if (target.dataset.fallback === '1') {
+                target.dataset.fallback = '2';
+                // Legacy fallback: some pre-normalization assets may still only exist as .png.
+                target.src = `${backendBase}/static/avatars/${isSurvivor ? 'survivors' : 'killers'}/${character.slug}.png`;
+              }
+            }}
+          />
+          <div className="absolute bottom-0 inset-x-0 p-4 bg-gradient-to-t from-bg-primary via-bg-primary/80 to-transparent text-center">
+            <h3 className="text-lg font-black text-text-primary">{character.name}</h3>
+            {charTagline && <p className="text-xs text-accent-red italic">{charTagline}</p>}
           </div>
         </div>
-      )}
+      </Modal>
     </>
   );
-};
+};

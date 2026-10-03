@@ -12,8 +12,6 @@ interface PerkTileProps {
   onToggle?: (name: string) => void;
 }
 
-const DIAMOND = 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)';
-
 export const PerkTile: React.FC<PerkTileProps> = ({
   name,
   selected = false,
@@ -27,36 +25,24 @@ export const PerkTile: React.FC<PerkTileProps> = ({
 
   const content = (
     <>
-      <span
-        className={`grid aspect-square w-full max-w-[88px] place-items-center transition-colors ${
-          selected ? 'bg-accent-red/70' : 'bg-bg-elevated'
-        }`}
-        style={{ clipPath: DIAMOND }}
-      >
-        <span
-          className={`grid h-[82%] w-[82%] place-items-center transition-colors ${
-            selected ? 'bg-bg-primary' : 'bg-bg-elevated'
-          }`}
-          style={{ clipPath: DIAMOND }}
-        >
-          {showImage && (
-            <img
-              src={iconSrc}
-              alt={label}
-              onError={() => setImgError(true)}
-              className="h-[96%] w-[96%] object-contain drop-shadow"
-            />
-          )}
-        </span>
+      <span className="grid aspect-square w-full max-w-[96px] place-items-center">
+        {showImage && (
+          <img
+            src={iconSrc}
+            alt={label}
+            onError={() => setImgError(true)}
+            className="h-[86%] w-[86%] object-contain drop-shadow"
+          />
+        )}
       </span>
-      <span className={`text-center text-[10.5px] font-semibold leading-tight ${selected ? 'text-text-primary' : 'text-text-secondary'}`}>
+      <span className={`text-center text-tiny font-semibold leading-tight ${selected ? 'text-text-primary' : 'text-text-secondary'}`}>
         {label}
       </span>
     </>
   );
 
-  const shell = `flex flex-col items-center gap-2 rounded-xl border p-3 transition-all duration-150 motion-reduce:transition-none motion-reduce:scale-100 shadow-sm ${
-    selected ? 'border-accent-red bg-accent-red/10 scale-[1.03]' : 'border-border-color bg-bg-surface hover:bg-bg-elevated'
+  const shell = `flex flex-col items-center gap-1 rounded-xl border p-1.5 transition-all duration-150 motion-reduce:transition-none ${
+    selected ? 'border-accent-red bg-bg-surface' : 'border-transparent bg-bg-surface hover:bg-bg-elevated'
   }`;
 
   if (disabled || !onToggle) {
@@ -68,7 +54,7 @@ export const PerkTile: React.FC<PerkTileProps> = ({
       type="button"
       onClick={() => onToggle(name)}
       aria-pressed={selected}
-      className={`${shell} hover:border-accent-red/50 focus:outline-none focus:ring-2 focus:ring-accent-red`}
+      className={`${shell} focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red`}
     >
       {content}
     </button>

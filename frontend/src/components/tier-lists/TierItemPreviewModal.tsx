@@ -40,7 +40,7 @@ export function TierItemPreviewModal({ item, onClose }: TierItemPreviewModalProp
       centerTitle
     >
       <div className="flex flex-col items-center gap-4 p-5 sm:p-6">
-        {item.image ? (
+        {(item.fullImage ?? item.image) ? (
           // Sized by the image's own intrinsic ratio, not forced into a
           // fixed square -- a tall character portrait and a wide map photo
           // should each keep their real shape. `max-h`/`max-w` (not fixed
@@ -48,9 +48,8 @@ export function TierItemPreviewModal({ item, onClose }: TierItemPreviewModalProp
           // modal or viewport, while `w-auto h-auto` let it shrink no
           // further than the image and its container actually need.
           <div className="flex w-full items-center justify-center">
-            {/* eslint-disable-next-line @next/next/no-img-element -- images are unoptimized app-wide and may be user-supplied URLs of unknown, varied aspect ratio */}
             <img
-              src={item.image}
+              src={(item.fullImage ?? item.image) as string}
               alt={item.name}
               className="h-auto max-h-[65vh] w-auto max-w-full rounded-2xl border border-border-color bg-bg-elevated object-contain"
             />
@@ -63,7 +62,7 @@ export function TierItemPreviewModal({ item, onClose }: TierItemPreviewModalProp
           </div>
         )}
         {item.description && (
-          <PerkDescription description={item.description} perkName={item.name} />
+          <PerkDescription description={item.description} />
         )}
       </div>
     </Modal>

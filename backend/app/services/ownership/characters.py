@@ -59,10 +59,6 @@ def normalize_role(role: str | None) -> str:
     return key
 
 
-def is_free(role: str, character_id: int) -> bool:
-    return character_id in _FREE_BY_ROLE[normalize_role(role)]
-
-
 def _ownership_filter(role: str, character_id: int):
     """The column that holds this character's key, and the value to match."""
     column = (
@@ -277,3 +273,47 @@ def seed_default_character_ownership(user_id: int) -> int:
 
     bulk_mutate_character_ownership(user_id, updates, lambda _uid: {})
     return len(updates)
+
+
+def _release_key(character: dict[str, Any]):
+    release_number = character.get("release_number")
+    return release_number if release_number is not None else float("inf")
+
+
+def get_owned_killers(
+    user_id: int,
+    ownership_service: Any,
+    *,
+    shape: str = "ids",
+    by_release: bool = False,
+) -> Any:
+    """The user's owned, non-disabled killers, shared by every killer streak mode.
+
+    `shape`: "ids" -> list of Killer.id, "names" -> list of names,
+    "name_to_id" -> {name: id}. `by_release` sorts by release number (killers
+    without one last); otherwise the roster's own order is kept.
+    """
+    owned = [
+        c for c in ownership_service.get_user_characters(user_id, role="Killer")
+        if c["is_owned"] and not c.get("is_disabled")
+    ]
+    if by_release:
+        owned.sort(key=_release_key)
+    if shape == "ids":
+        return [c["id"] for c in owned]
+    if shape == "names":
+        return [c["name"] for c in owned]
+    if shape == "name_to_id":
+        return {c["name"]: c["id"] for c in owned}
+    raise ValueError(f"Unknown shape: {shape}")
+
+
+def resolve_killer_names_by_ids(ids: list[int]) -> list[str]:
+    """Turns a frozen killer id list back into current names, in the order given."""
+    if not ids:
+        return []
+    # These ids are `killers.id`. They used to be `characters.id`, which also
+    # covered the 54 survivors a killer mode never meant.
+    rows = db.session.scalars(select(Killer).where(Killer.id.in_(ids))).all()
+    by_id = {c.id: c.name for c in rows}
+    return [by_id[i] for i in ids if i in by_id]

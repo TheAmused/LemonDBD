@@ -204,6 +204,13 @@ export function fetchCached<T>(
 }
 
 /** Convenience wrapper: GET + json, throwing on a non-2xx so callers can catch. */
+/** List endpoints answer with either a bare array or `{ data: [...] }`. */
+export type ListPayload<T> = T[] | { data?: T[] };
+
+export function unwrapList<T>(payload: ListPayload<T> | null | undefined): T[] {
+  return Array.isArray(payload) ? payload : payload?.data || [];
+}
+
 export async function fetchJson<T>(url: string, init?: RequestInit): Promise<T> {
   const res = await fetch(url, init);
   if (!res.ok) {

@@ -19,6 +19,7 @@ from app.core.security import admin_required, get_current_user
 from app.models import BugReport
 from app.utils.api_i18n import error_response
 from app.utils.lang import extract_lang
+from app.utils.pagination import paginate_args
 from app.schemas.community import BugReportResponse
 from app.services.admin_control_service import log_admin_action
 
@@ -224,11 +225,10 @@ def get_my_bug_reports():
     if not user:
         return error_response("auth_required", 401, lang=lang)
 
-    page = request.args.get("page", default=1, type=int)
-    per_page = request.args.get("per_page", default=10, type=int)
-    if page is None or per_page is None or page < 1 or per_page < 1:
+    try:
+        page, per_page = paginate_args(default_per_page=10, max_per_page=50, strict=True)
+    except ValueError:
         return error_response("invalid_pagination", 400, lang=lang)
-    per_page = min(per_page, 50)
 
     try:
         conditions = [BugReport.user_id == user.id]
@@ -265,8 +265,7 @@ def get_my_bug_reports():
 @admin_required
 def admin_get_bug_reports():
     """Retrieves all bug reports with pagination and filtering for administrators."""
-    page = request.args.get("page", 1, type=int)
-    per_page = request.args.get("per_page", 15, type=int)
+    page, per_page = paginate_args(default_per_page=15)
     status = request.args.get("status", "all").strip().lower()
     category = request.args.get("category", "all").strip()
     search = request.args.get("search", "").strip()

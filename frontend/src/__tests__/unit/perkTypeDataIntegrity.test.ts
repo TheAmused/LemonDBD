@@ -13,19 +13,16 @@ import path from 'node:path';
 const PERKS_JSON_PATH = path.resolve(__dirname, '../../../../backend/app/seeds/data/content/perks.json');
 
 const ALLOWED_PERK_TYPES = new Set([
-  'exhaustion', 'gen_slowdown', 'hex', 'boon', 'chase',
-  'aura_reading', 'altruism_healing', 'handicap', 'meme', 'general',
+  'hex', 'boon', 'sacrifice', 'exhaustion', 'obsession',
+  'aura', 'generator', 'healing', 'chase', 'stealth', 'entity', 'hooks',
 ]);
 
-// Same ground truth as chaosMutators.ts's SURVIVOR_CHAOS_MUTATORS /
-// KILLER_CHAOS_MUTATORS: a perk_type consumed by only one role's curse(s)
-// must never appear on a perk of the other role.
+// Same ground truth as backend test_perk_type_data_integrity.py:
+// a perk_type scoped to only one role must never appear on a perk of the other role.
 const ROLE_ONLY_PERK_TYPES: Record<string, 'Survivor' | 'Killer'> = {
   exhaustion: 'Survivor',
-  altruism_healing: 'Survivor',
   boon: 'Survivor',
-  gen_slowdown: 'Killer',
-  chase: 'Killer',
+  hooks: 'Killer',
 };
 
 interface RawPerk {
@@ -67,7 +64,7 @@ test('SANITY: the role-mismatch sweep would have failed against the real pre-fix
   assert.strictEqual(sloppyButcher!.role, 'Killer');
 
   // Re-run the exact sweep logic against a deliberately corrupted copy.
-  const corrupted = perks.map((p) => (p.name === 'Sloppy Butcher' ? { ...p, perk_type: 'altruism_healing' } : p));
+  const corrupted = perks.map((p) => (p.name === 'Sloppy Butcher' ? { ...p, perk_type: 'exhaustion' } : p));
   const violations = corrupted.filter(
     (p) => p.perk_type && ROLE_ONLY_PERK_TYPES[p.perk_type] && p.role !== ROLE_ONLY_PERK_TYPES[p.perk_type]
   );

@@ -1,20 +1,11 @@
 // frontend/src/utils/smashWatermarks.ts
+import { isKiller as isKillerRole, isSurvivor as isSurvivorRole } from '@/utils/characterUtils';
 
 /**
  * Strips unwanted characters such as parentheses, brackets, and quotes from watermark text.
  */
 export function cleanWatermark(str: string): string {
   return str.replace(/[()[\]"']/g, '').trim();
-}
-
-/**
- * Returns responsive Tailwind font-size classes for flanking watermarks.
- * Clamps to a smaller font scale for strings longer than 10 characters to prevent clipping or line wraps.
- */
-export function getWatermarkFontSize(str: string): string {
-  return str.length > 10
-    ? 'text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl'
-    : 'text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl';
 }
 
 /**
@@ -44,8 +35,8 @@ export function resolveWatermarks(character: {
   real_name?: string;
   role?: string;
 }): { leftWatermark: string; rightWatermark: string } {
-  const isSurvivor = character.role === 'Survivor';
-  const isKiller = character.role === 'Killer';
+  const isSurvivor = isSurvivorRole(character.role);
+  const isKiller = isKillerRole(character.role);
 
   let leftWatermark = cleanWatermark(
     character.watermark_left || (isSurvivor ? (character.name || '').split(' ')[0] : character.name || '')

@@ -20,10 +20,31 @@
 
   --color-accent-red: var(--accent-red);
   --color-accent-red-hover: var(--accent-red-hover);
+  --color-accent-red-text: var(--accent-red-text);
   --color-accent-amber: var(--accent-amber);
   --color-accent-amber-hover: var(--accent-amber-hover);
   --color-accent-green: var(--accent-green);
   --color-accent-green-hover: var(--accent-green-hover);
+  --color-accent-blue: var(--accent-blue);
+  --color-accent-purple: var(--accent-purple);
+  --color-accent-cyan: var(--accent-cyan);
+  --color-accent-rose: var(--accent-rose);
+  --color-accent-pink: var(--accent-pink);
+  --color-accent-orange: var(--accent-orange);
+  --color-accent-indigo: var(--accent-indigo);
+  --color-accent-red-deep: #450a0a;
+  --color-accent-rose-deep: #4c0519;
+  --color-accent-purple-deep: #3b0764;
+  --color-accent-amber-deep: #451a03;
+  --color-accent-indigo-deep: #1e1b4b;
+  --color-scrim: #000000;
+  --color-brand-reddit: #ff4500;
+  --color-brand-whatsapp: #25d366;
+  --color-brand-telegram: #229ed9;
+  --color-brand-discord: #5865f2;
+
+  /* Dusty tan lettering of the tarot card art (same in every theme: the cards are always dark). */
+  --color-tarot-ink: #b39e82;
 
   --color-text-primary: var(--text-primary);
   --color-text-secondary: var(--text-secondary);
@@ -57,12 +78,30 @@
   --animate-ps-pulse: psCompletePulse 800ms ease-in-out 1;
   --animate-gn-frame: gnLandFrame 520ms cubic-bezier(0.22, 1.4, 0.36, 1) both;
   --animate-gn-glow: gnLandGlow 900ms ease-out both;
-  --animate-chaos-lever: chaosLeverPull 550ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
   --animate-chaos-pop: chaosBadgePop 380ms cubic-bezier(0.22, 1.4, 0.36, 1) both;
   --animate-lock-shake: historyLockShake 380ms ease-in-out;
-  --animate-lock-break: historyLockBreak 380ms cubic-bezier(0.36, 0, 0.66, -0.56) forwards;
 
-  /* Crisp cross-browser monospace font stack (avoids typewriter Courier New fallback in Firefox Windows) */
+  /* ONE font system for the whole site. No component picks a font family:
+   *   --font-sans    everything (the Challenges page look); system stack, nothing to download
+   *   --font-display Smash or Pass headings only, via the .theme-smash scope below
+   *   --font-mono    real code only (<code>, <pre>, <kbd>, <samp>)
+   */
+  --font-sans: ui-sans-serif, system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  --font-display: var(--font-playfair), Georgia, "Times New Roman", serif;
+
+  /* Type scale below Tailwind's text-xs, plus em-relative sizes for inline code. */
+  --text-micro: 0.5625rem;
+  --text-tiny: 0.625rem;
+  --text-mini: 0.6875rem;
+  --text-compact: 0.8125rem;
+  --text-relative: 0.9em;
+  --text-relative-sm: 0.85em;
+  /* Wide letter-spacing steps for spaced-out headings. */
+  --tracking-spaced-sm: 0.18em;
+  --tracking-spaced: 0.2em;
+  --tracking-spaced-md: 0.25em;
+  --tracking-spaced-lg: 0.35em;
+  --leading-flat: 0.95;
   --font-mono: Consolas, "Cascadia Code", "Segoe UI Mono", Menlo, Monaco, "Liberation Mono", ui-monospace, monospace;
 
   /* Named ultra-wide breakpoints (registered in the theme scale, not as
@@ -78,7 +117,59 @@
 /* ---------------------------------------------------------------------------
  * Base Layers & Color Themes (Calibrated for WCAG 2.1 AA / AAA Compliance)
  * --------------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------------
+ * Type roles -- THE single source of truth for how text looks.
+ * A component names a role (`type-label`); it never assembles size + weight + tracking itself.
+ * Change a role here and every page that uses it follows. Colour stays a separate token class
+ * (text-text-primary, text-accent-red, ...), so one role works on every theme and surface.
+ * scripts/check-typography.ts fails when a class list spells out exactly what a role already is.
+ * --------------------------------------------------------------------------- */
+@utility type-page-title { @apply text-xl sm:text-2xl font-black; }
+@utility type-section-title { @apply text-xs sm:text-sm 2xl:text-base font-black uppercase tracking-widest; }
+@utility type-section-subtitle { @apply text-mini sm:text-xs 2xl:text-sm; }
+@utility type-card-title { @apply text-sm font-bold; }
+@utility type-label { @apply text-sm font-bold uppercase tracking-wider; }
+@utility type-label-sm { @apply text-xs font-bold uppercase tracking-wider; }
+@utility type-label-xs { @apply text-mini font-bold uppercase tracking-wider; }
+@utility type-label-2xs { @apply text-tiny font-bold uppercase tracking-wider; }
+@utility type-strong { @apply text-xs font-bold; }
+@utility type-strong-fluid { @apply text-xs sm:text-sm font-bold; }
+/* Grows the tappable area of a small, absolutely-positioned control to the 44px minimum without changing how it looks.
+   In-flow controls use `pointer-coarse:min-h-11 pointer-coarse:min-w-11` instead. */
+@utility hit-area {
+  &:not(.absolute, .fixed, .sticky, .relative) { position: relative; }
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: max(100%, 2.75rem);
+    height: max(100%, 2.75rem);
+    transform: translate(-50%, -50%);
+  }
+}
+@utility type-strong-xs { @apply text-mini font-bold; }
+@utility type-strong-2xs { @apply text-tiny font-bold; }
+@utility type-strong-wide { @apply text-mini sm:text-xs wide:text-sm wide-2k:text-base font-bold; }
+@utility type-strong-wide-sm { @apply text-tiny sm:text-mini wide:text-xs wide-2k:text-sm font-bold; }
+@utility type-strong-wide-caps { @apply text-mini sm:text-xs wide:text-sm wide-2k:text-base font-bold uppercase tracking-wider; }
+@utility type-body { @apply text-xs leading-relaxed; }
+@utility type-body-fluid { @apply text-xs sm:text-sm leading-relaxed; }
+@utility type-body-lg { @apply text-sm leading-relaxed; }
+@utility type-caption { @apply text-mini; }
+@utility type-micro { @apply text-tiny; }
+
 @layer base {
+
+  code, kbd, pre, samp {
+    font-family: var(--font-mono);
+  }
+
+  /* Smash or Pass: same body font as the rest of the site, a more elegant display face on headings and key controls. */
+  .theme-smash :is(h1, h2, h3, h4, [role="tab"], .font-display) {
+    font-family: var(--font-display);
+    letter-spacing: 0.01em;
+  }
 
   :root,
   .light {
@@ -93,12 +184,20 @@
     --accent-red: #b91c1c;
     /* 6.5:1 on white (AAA Large / AA Body) */
     --accent-red-hover: #991b1b;
+    --accent-red-text: var(--accent-red);
     --accent-amber: #92400e;
     /* 5.8:1 on white (AA Body) */
     --accent-amber-hover: #78350f;
     --accent-green: #15803d;
     /* 4.6:1 on white (AA Body) */
     --accent-green-hover: #166534;
+    --accent-blue: #0369a1;
+    --accent-purple: #7e22ce;
+    --accent-cyan: #0e7490;
+    --accent-rose: #be123c;
+    --accent-pink: #be185d;
+    --accent-orange: #c2410c;
+    --accent-indigo: #4338ca;
 
     /* Text hierarchy */
     --text-primary: #111827;
@@ -151,12 +250,20 @@
       --border-color: #2e2e38;
       --border-subtle: #1e1e26;
 
-      --accent-red: #ef4444;
-      --accent-red-hover: #f87171;
+      --accent-red: #dc2626;
+      --accent-red-hover: #b91c1c;
+      --accent-red-text: #f87171;
       --accent-amber: #f59e0b;
       --accent-amber-hover: #fbbf24;
       --accent-green: #22c55e;
       --accent-green-hover: #4ade80;
+      --accent-blue: #38bdf8;
+      --accent-purple: #c084fc;
+      --accent-cyan: #22d3ee;
+      --accent-rose: #fb7185;
+      --accent-pink: #f472b6;
+      --accent-orange: #fb923c;
+      --accent-indigo: #818cf8;
 
       --text-primary: #f4f4f6;
       --text-secondary: #a3a3af;
@@ -187,12 +294,20 @@
     --accent-red: #b91c1c;
     /* 5.8:1 on #fbf6ea */
     --accent-red-hover: #991b1b;
+    --accent-red-text: var(--accent-red);
     --accent-amber: #874900;
     /* 5.3:1 on #fbf6ea */
     --accent-amber-hover: #6c3a00;
     --accent-green: #166534;
     /* 5.8:1 on #fbf6ea */
     --accent-green-hover: #14532d;
+    --accent-blue: #0369a1;
+    --accent-purple: #7e22ce;
+    --accent-cyan: #0e7490;
+    --accent-rose: #be123c;
+    --accent-pink: #be185d;
+    --accent-orange: #c2410c;
+    --accent-indigo: #4338ca;
 
     --text-primary: #1e1704;
     /* 15.2:1 on #fbf6ea (AAA) */
@@ -223,15 +338,23 @@
     --border-subtle: #1e1e26;
 
     /* High-contrast, radiant accents on dark backgrounds */
-    --accent-red: #ef4444;
-    /* 5.4:1 on #0a0a0c (AA Compliant - fixed from 2.2:1) */
-    --accent-red-hover: #f87171;
+    --accent-red: #dc2626;
+    /* Fill colour: 4.8:1 against white label text. Red used AS text uses --accent-red-text. */
+    --accent-red-hover: #b91c1c;
+    --accent-red-text: #f87171;
     --accent-amber: #f59e0b;
     /* 9.2:1 on #0a0a0c (AAA) */
     --accent-amber-hover: #fbbf24;
     --accent-green: #22c55e;
     /* 6.3:1 on #0a0a0c (AA Compliant) */
     --accent-green-hover: #4ade80;
+    --accent-blue: #38bdf8;
+    --accent-purple: #c084fc;
+    --accent-cyan: #22d3ee;
+    --accent-rose: #fb7185;
+    --accent-pink: #f472b6;
+    --accent-orange: #fb923c;
+    --accent-indigo: #818cf8;
 
     --text-primary: #f4f4f6;
     /* 18.5:1 on #0a0a0c (AAA) */
@@ -264,7 +387,7 @@
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    font-family: inherit;
+    font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     transition: background-color 200ms ease, color 200ms ease;
@@ -510,18 +633,6 @@
   }
 }
 
-@keyframes gnNameIn {
-  from {
-    opacity: 0;
-    transform: translateY(6px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
 @keyframes freezeBadgeIn {
   from {
     opacity: 0;
@@ -531,38 +642,6 @@
   to {
     opacity: 1;
     transform: scale(1);
-  }
-}
-
-@keyframes entityCoffeeSpawn {
-  0% {
-    opacity: 0;
-    transform: scale(0.92) translateY(20px);
-    filter: blur(6px);
-  }
-
-  100% {
-    opacity: 1;
-    transform: scale(1) translateY(0);
-    filter: blur(0);
-  }
-}
-
-@keyframes chaosLeverPull {
-  0% {
-    transform: rotate(0deg);
-  }
-
-  35% {
-    transform: rotate(32deg);
-  }
-
-  62% {
-    transform: rotate(-6deg);
-  }
-
-  100% {
-    transform: rotate(0deg);
   }
 }
 
@@ -604,23 +683,6 @@
 
   80% {
     transform: translateX(2px) rotate(6deg);
-  }
-}
-
-@keyframes historyLockBreak {
-  0% {
-    transform: scale(1) rotate(0deg);
-    opacity: 1;
-  }
-
-  40% {
-    transform: scale(1.3) rotate(12deg);
-    opacity: 1;
-  }
-
-  100% {
-    transform: scale(0.2) rotate(35deg);
-    opacity: 0;
   }
 }
 
@@ -675,20 +737,8 @@
   animation: gnLandGlow 900ms ease-out both;
 }
 
-.gn-name-in {
-  animation: gnNameIn 260ms ease-out both;
-}
-
 .freeze-badge-in {
   animation: freezeBadgeIn 480ms cubic-bezier(0.22, 1.4, 0.36, 1) both;
-}
-
-.entity-coffee-spawn {
-  animation: entityCoffeeSpawn 400ms ease-out both;
-}
-
-.chaos-lever-pull {
-  animation: chaosLeverPull 550ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
 }
 
 .chaos-badge-pop {
@@ -697,10 +747,6 @@
 
 .history-lock-shake {
   animation: historyLockShake 380ms ease-in-out;
-}
-
-.history-lock-break {
-  animation: historyLockBreak 380ms cubic-bezier(0.36, 0, 0.66, -0.56) forwards;
 }
 
 /* ---------------------------------------------------------------------------
@@ -786,6 +832,164 @@
 /* ---------------------------------------------------------------------------
  * Universal Accessibility & Motion Safety
  * --------------------------------------------------------------------------- */
+/* Checkpoint celebration modal */
+@keyframes ckCardIn {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.92);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes ckTrophyPop {
+  0% {
+    opacity: 0;
+    transform: scale(0.2) rotate(-18deg);
+  }
+
+  55% {
+    opacity: 1;
+    transform: scale(1.18) rotate(6deg);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+@keyframes ckRays {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes ckRing {
+  0% {
+    opacity: 0.7;
+    transform: scale(0.55);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(1.9);
+  }
+}
+
+@keyframes ckSpark {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) scale(0.3);
+  }
+
+  25% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(var(--ck-dx), var(--ck-dy)) scale(1);
+  }
+}
+
+@keyframes ckShine {
+  from {
+    background-position: 200% 0;
+  }
+
+  to {
+    background-position: -200% 0;
+  }
+}
+
+.ck-card-in {
+  animation: ckCardIn 420ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.ck-trophy-pop {
+  animation: ckTrophyPop 700ms cubic-bezier(0.22, 1.3, 0.36, 1) 120ms both;
+}
+
+.ck-rays {
+  background: repeating-conic-gradient(from 0deg, color-mix(in srgb, var(--accent-amber) 55%, transparent) 0deg 10deg, transparent 10deg 30deg);
+  mask-image: radial-gradient(circle, black 8%, transparent 68%);
+  animation: ckRays 14s linear infinite;
+}
+
+.ck-ring {
+  animation: ckRing 1800ms ease-out infinite;
+}
+
+.ck-spark {
+  animation: ckSpark 1400ms ease-out infinite;
+}
+
+.ck-shine-text {
+  background-size: 200% auto;
+  animation: ckShine 3s linear infinite;
+}
+
+@keyframes statBump {
+  0% {
+    transform: scale(1);
+  }
+
+  40% {
+    transform: scale(1.22);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes statRecordBurst {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent-amber) 55%, transparent);
+  }
+
+  100% {
+    box-shadow: 0 0 0 14px transparent;
+  }
+}
+
+@keyframes statRecordShimmer {
+  from {
+    background-position: 150% 0;
+  }
+
+  to {
+    background-position: -50% 0;
+  }
+}
+
+.lever-rod {
+  background-image: linear-gradient(90deg, var(--text-muted) 55%, color-mix(in srgb, var(--text-muted) 65%, var(--bg-primary)) 55%);
+}
+
+.lever-ball {
+  background-color: color-mix(in srgb, var(--accent-red) 72%, black);
+  background-image: radial-gradient(circle at 32% 30%, var(--accent-red-hover) 0 13%, transparent 14%);
+}
+
+.stat-bump {
+  animation: statBump 380ms cubic-bezier(0.22, 1.3, 0.36, 1) both;
+}
+
+.stat-record-burst {
+  animation: statRecordBurst 1100ms ease-out 1;
+}
+
+.stat-record-shimmer {
+  background-image: linear-gradient(110deg, transparent 30%, color-mix(in srgb, var(--accent-amber) 22%, transparent) 50%, transparent 70%);
+  background-size: 250% 100%;
+  animation: statRecordShimmer 4s linear infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
 
   .dbd-spinner-runes,
@@ -795,18 +999,30 @@
   .gn-spin-frame,
   .gn-land-frame,
   .gn-land-glow,
-  .gn-name-in,
   .freeze-badge-in,
-  .entity-coffee-spawn,
-  .chaos-lever-pull,
   .chaos-badge-pop,
   .history-lock-shake,
-  .history-lock-break,
   .ps-page-enter,
   .ps-page-reset,
   .ps-rise,
-  .ps-complete-pulse {
+  .ps-complete-pulse,
+  .ck-card-in,
+  .ck-trophy-pop,
+  .ck-rays,
+  .ck-ring,
+  .ck-spark,
+  .ck-shine-text,
+  .stat-bump,
+  .stat-record-burst,
+  .stat-record-shimmer {
     animation: none !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+/* Red as TEXT needs a lighter shade than red as a FILL on dark themes (no single red passes 4.5:1 both ways). */
+:root .text-accent-red,
+:root .hover\:text-accent-red:hover,
+:root .group-hover\:text-accent-red:is(:where(.group):hover *) {
+  color: var(--accent-red-text);
 }

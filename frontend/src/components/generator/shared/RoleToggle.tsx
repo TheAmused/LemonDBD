@@ -11,21 +11,23 @@ import { RoleCategory } from '@/types/perks';
 import { Dictionary } from '@/locales/types';
 import { cn } from '@/utils/cn';
 import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
+import { isKiller as isKillerRole } from '@/utils/characterUtils';
+import { useDictionary } from "@/context/DictionaryContext";
 
 export interface RoleToggleProps {
   role: RoleCategory;
   onChange: (role: RoleCategory) => void;
   className?: string;
-  dict?: Dictionary;
 }
 
-export const RoleToggle: React.FC<RoleToggleProps> = ({ role, onChange, className, dict }) => {
-  const isKiller = role === 'Killer';
+export const RoleToggle: React.FC<RoleToggleProps> = ({ role, onChange, className }) => {
+  const dict = useDictionary();
+  const isKiller = isKillerRole(role);
 
   return (
     <div
       role="group"
-      aria-label={dict?.generator?.selectRole || 'Select Role'}
+      aria-label={dict.generator.selectRole}
       className={cn(
         'inline-flex items-center rounded-xl border border-border-color bg-bg-elevated p-1 shadow-inner shrink-0',
         className
@@ -43,7 +45,7 @@ export const RoleToggle: React.FC<RoleToggleProps> = ({ role, onChange, classNam
         )}
       >
         <SurvivorIcon className="h-4 w-4 sm:h-5 w-5 shrink-0" />
-        <span>{dict?.generator?.survivor || 'Survivor'}</span>
+        <span>{dict.generator.survivor}</span>
       </button>
       <button
         type="button"
@@ -57,7 +59,7 @@ export const RoleToggle: React.FC<RoleToggleProps> = ({ role, onChange, classNam
         )}
       >
         <KillerIcon className="h-4 w-4 sm:h-5 w-5 shrink-0" />
-        <span>{dict?.generator?.killer || 'Killer'}</span>
+        <span>{dict.generator.killer}</span>
       </button>
     </div>
   );

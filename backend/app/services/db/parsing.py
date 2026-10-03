@@ -20,7 +20,6 @@ _MOVEMENT_SPEED = re.compile(
     re.IGNORECASE,
 )
 
-_TERROR_RADIUS_METRES = re.compile(r"(?P<m>\d+(?:\.\d+)?)\s*(?:m\b|metres|meters)", re.IGNORECASE)
 
 _RELEASE_DATE_FORMATS = ("%Y-%m-%d", "%d %B %Y", "%d %b %Y", "%B %d, %Y")
 
@@ -77,30 +76,6 @@ def parse_movement_speed(value: str | None) -> tuple[Decimal | None, Decimal | N
     except InvalidOperation:
         return None, None
     return speed, percent
-
-
-def format_movement_speed(speed: Decimal | None, percent: Decimal | None) -> str:
-    """Inverse of `parse_movement_speed`, without trailing zeros."""
-    if speed is None:
-        return ""
-    text = f"{format(Decimal(str(speed)).normalize(), 'f')} m/s"
-    if percent is None:
-        return text
-    return f"{text} ({format(Decimal(str(percent)).normalize(), 'f')}%)"
-
-
-def parse_terror_radius_metres(value: str | None) -> int | None:
-    """First radius mentioned, for sorting. The display string is kept as-is:
-    five killers have mode-dependent radii that no single number expresses."""
-    if not value:
-        return None
-    match = _TERROR_RADIUS_METRES.search(str(value))
-    if not match:
-        return None
-    try:
-        return int(float(match.group("m")))
-    except (TypeError, ValueError):
-        return None
 
 
 def parse_release_date(value: str | date | None) -> date | None:

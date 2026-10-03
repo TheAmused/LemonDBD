@@ -7,21 +7,19 @@ import { Lock, Mail, Eye, EyeOff, CheckCircle2, AlertCircle, ChevronDown } from 
 import { StatusFeedback } from '@/types/userProfile';
 import { updateUserProfile, ApiError } from '@/services/userProfileApi';
 import { usePersistentDrawer } from '@/hooks/usePersistentDrawer';
+import { Button } from '@/components/common/Button';
+import { Input } from '@/components/common/Field';
+import { useDictionary } from "@/context/DictionaryContext";
 
 interface UserProfileFormProps {
   initialEmail: string;
   onRefreshUser: () => Promise<void>;
-  dict?: Dictionary;
   t?: Record<string, string>;
 }
 
-export const UserProfileForm: React.FC<UserProfileFormProps> = ({
-  initialEmail,
-  onRefreshUser,
-  dict,
-  t: propT,
-}) => {
-  const t: Record<string, string> = propT || dict?.user || {};
+export const UserProfileForm: React.FC<UserProfileFormProps> = ({ initialEmail, onRefreshUser, t: propT }) => {
+  const dict = useDictionary();
+  const t: Record<string, string> = propT || dict.user || {};
   const [isExpanded, toggleExpanded] = usePersistentDrawer('lemondbd_drawer_account', false);
 
   const [newEmail, setNewEmail] = useState(initialEmail);
@@ -111,11 +109,11 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
 
         <div className="relative z-10 w-8 hidden sm:block" aria-hidden="true" />
         <div className="relative z-10 flex-1 text-center">
-          <h2 className="text-xs sm:text-sm 2xl:text-base font-black uppercase tracking-widest text-text-primary font-mono group-hover:text-accent-red transition-colors">
-            {dict?.user?.tabSanctum || 'Account Management'}
+          <h2 className="type-section-title text-text-primary group-hover:text-accent-red transition-colors">
+            {dict.user.tabSanctum}
           </h2>
-          <p className="text-[11px] sm:text-xs 2xl:text-sm text-text-secondary mt-0.5 font-mono">
-            {dict?.user?.accountSettingsSubtitle || 'Manage your email address and password'}
+          <p className="type-section-subtitle text-text-secondary mt-0.5">
+            {dict.user.accountSettingsSubtitle}
           </p>
         </div>
         <div className="relative z-10 w-8 flex justify-end">
@@ -138,7 +136,7 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
             {/* Status Feedback Banner */}
             {statusMessage && (
               <div
-                className={`max-w-2xl mx-auto flex items-center gap-2.5 rounded-2xl border p-3 text-xs shadow-sm font-mono ${
+                className={`max-w-2xl mx-auto flex items-center gap-2.5 rounded-2xl border p-3 text-xs shadow-sm ${
                   statusMessage.type === 'success'
                     ? 'border-accent-green/30 bg-accent-green/10 text-accent-green'
                     : 'border-accent-red/30 bg-accent-red/10 text-accent-red'
@@ -157,19 +155,20 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
               <div className="space-y-4 sm:space-y-5">
                 {/* Email Address */}
                 <div className="space-y-1.5">
-                  <label className="block text-[11px] font-bold uppercase tracking-wider text-text-secondary font-mono">
-                    {dict?.user?.emailLabel || 'Email Address'}
+                  <label className="block type-label-xs text-text-secondary">
+                    {dict.user.emailLabel}
                   </label>
                   <div className="relative">
                     <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-text-muted">
                       <Mail className="h-4 w-4" />
                     </div>
-                    <input
+                    <Input
                       type="email"
                       required
+                      fieldSize="sm"
                       value={newEmail}
                       onChange={(e) => setNewEmail(e.target.value)}
-                      className="w-full rounded-xl border border-border-color bg-bg-elevated pl-10 pr-4 py-2 text-xs text-text-primary placeholder-text-muted focus:border-accent-red focus:outline-none focus:ring-1 focus:ring-accent-red transition-all shadow-inner font-mono"
+                      className="pl-10"
                     />
                   </div>
                 </div>
@@ -177,11 +176,11 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
                 {/* Password Management */}
                 <div className="space-y-3 pt-3 border-t border-border-color">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-black uppercase tracking-wider text-text-primary flex items-center gap-2 font-mono">
+                    <span className="type-label-sm text-text-primary flex items-center gap-2">
                       <Lock className="h-3.5 w-3.5 text-accent-amber" />
-                      <span>{dict?.user?.passwordLabel || 'Password'}</span>
+                      <span>{dict.user.passwordLabel}</span>
                     </span>
-                    <span className="text-[11px] text-text-muted font-mono">
+                    <span className="type-caption text-text-muted">
                       {t.passwordPlaceholder || 'Leave blank to keep current'}
                     </span>
                   </div>
@@ -189,15 +188,16 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                     {/* New Password Input */}
                     <div className="space-y-1">
-                      <label className="block text-[10px] font-bold uppercase tracking-wider text-text-secondary font-mono">
+                      <label className="block type-label-2xs text-text-secondary">
                         {t.newPassword || 'New Password'}
                       </label>
                       <div className="relative">
-                        <input
+                        <Input
                           type={showNewPassword ? 'text' : 'password'}
                           value={newPassword}
                           onChange={(e) => setNewPassword(e.target.value)}
-                          className="w-full rounded-xl border border-border-color bg-bg-elevated px-3 pr-9 py-2 text-xs text-text-primary placeholder-text-muted focus:border-accent-red focus:outline-none focus:ring-1 focus:ring-accent-red transition-all shadow-inner font-mono"
+                          fieldSize="sm"
+                          className="pr-9"
                         />
                         <button
                           type="button"
@@ -212,20 +212,20 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
 
                     {/* Confirm Password Input */}
                     <div className="space-y-1">
-                      <label className="block text-[10px] font-bold uppercase tracking-wider text-text-secondary font-mono">
+                      <label className="block type-label-2xs text-text-secondary">
                         {t.confirmPassword || 'Confirm New Password'}
                       </label>
                       <div className="relative">
-                        <input
+                        <Input
                           type={showConfirmPassword ? 'text' : 'password'}
                           value={confirmPassword}
                           onChange={(e) => setConfirmPassword(e.target.value)}
-                          className={`w-full rounded-xl border bg-bg-elevated px-3 pr-9 py-2 text-xs text-text-primary placeholder-text-muted focus:outline-none transition-all shadow-inner font-mono ${
-                            !confirmPassword
-                              ? 'border-border-color focus:border-accent-red focus:ring-1 focus:ring-accent-red'
-                              : passwordsMatch
-                                ? 'border-accent-green/50 focus:border-accent-green focus:ring-1 focus:ring-accent-green'
-                                : 'border-accent-red/50 focus:border-accent-red focus:ring-1 focus:ring-accent-red'
+                          fieldSize="sm"
+                          invalid={!!confirmPassword && !passwordsMatch}
+                          className={`pr-9 ${
+                            confirmPassword && passwordsMatch
+                              ? 'border-accent-green/50 focus:border-accent-green focus:ring-accent-green'
+                              : ''
                           }`}
                         />
                         <button
@@ -244,17 +244,9 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
 
               {/* Action Button */}
               <div className="pt-3 flex items-center justify-end border-t border-border-color">
-                <button
-                  type="submit"
-                  disabled={isUpdating}
-                  className="w-full sm:w-auto flex items-center justify-center gap-2 rounded-xl bg-accent-red hover:bg-accent-red-hover px-5 py-2 text-xs font-black tracking-wider text-text-inverted shadow-xs disabled:opacity-50 transition-all cursor-pointer font-mono"
-                >
-                  {isUpdating ? (
-                    <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-text-inverted border-t-transparent" />
-                  ) : (
-                    <span>{t.saveChanges || 'Save'}</span>
-                  )}
-                </button>
+                <Button type="submit" variant="primary" size="sm" loading={isUpdating} className="w-full sm:w-auto">
+                  <span>{t.saveChanges || 'Save'}</span>
+                </Button>
               </div>
             </form>
           </div>

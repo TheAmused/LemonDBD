@@ -15,7 +15,6 @@ export default {
   legendPartial: "Charakter teilweise freigeschaltet (nur Perks freigeschaltet)",
   legendCustomizeHint: "Tipp: Klappe ein Kapitel, das du nicht besitzt, auf und nutze die Perks-Schaltfläche eines Charakters, um einzelne Perks freizuschalten, ohne den ganzen Charakter zu besitzen.",
   ownChapterButton: "Ich besitze dieses Kapitel",
-  lockChapterButton: "Ich besitze dieses Kapitel nicht",
   selectAllButton: "Ich besitze alles",
   deselectAllButton: "Alle abwählen",
   searchPlaceholder: "Kapitel oder Charaktere suchen...",

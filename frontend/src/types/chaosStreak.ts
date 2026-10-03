@@ -5,8 +5,6 @@ export type Difficulty = 'easy' | 'medium' | 'hell';
 
 export type AddonRarity = 'Common' | 'Uncommon' | 'Rare' | 'Very Rare' | 'Ultra Rare';
 
-export interface ChaosPerk extends Perk {}
-
 export interface ChaosRun {
   id: number;
   user_id: number;
@@ -53,10 +51,6 @@ export interface ChaosStats {
 }
 
 export interface ChaosRunResponse {
-  run: ChaosRun;
-}
-
-export interface ChaosSubmitResultResponse {
   run: ChaosRun;
 }
 

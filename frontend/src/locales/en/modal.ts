@@ -13,11 +13,7 @@ export default {
   unownedPerk: "Unowned perk",
   equipment: "Equipment",
   temporarilyDisabled: "Temporarily disabled",
-  whyDisabled: "Why is {item} disabled?",
   wasDisabledTemporarily: "{item} was disabled temporarily.",
   reasonLabel: "Reason",
-  done: 'Done',
-  clickOutsideToClose: 'Click outside or press ESC to close',
-  copySlug: 'Copy ID Slug',
-  slugCopied: 'Slug Copied!',
+  done: 'Done'
 } as const;

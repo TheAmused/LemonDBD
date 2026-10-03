@@ -1,10 +1,13 @@
 'use client';
 // frontend/src/app/[locale]/admin/page.tsx
 
+import { Tabs } from '@/components/common/Tabs';
 import React, { useState, useEffect, useCallback, use, Suspense } from 'react';
+import { usePersistentString } from '@/hooks/usePersistentString';
+import { ErrorPage } from '@/components/layout/ErrorPage';
+import { Button } from '@/components/common/Button';
 import dynamic from 'next/dynamic';
-import { useRouter } from 'next/navigation';
-import { getBackendBaseUrl } from '@/utils/api';
+import { getBackendBaseUrl, authHeaders, getAuthToken, getErrorMessage } from '@/utils/api';
 import { useAuth } from '@/context/AuthContext';
 import { PageShell } from '@/components/layout/PageShell';
 import { AdminHeader } from '@/components/admin/AdminHeader';
@@ -20,10 +23,10 @@ import type {
   BugReportStats,
   ActionMessage,
 } from '@/types/admin';
-import { Users, ShieldAlert, BarChart3, ScrollText } from 'lucide-react';
+import { Users, ShieldAlert, BarChart3, ScrollText, Settings2 } from 'lucide-react';
 import { useDictionary } from '@/context/DictionaryContext';
-import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { FogReportIcon } from '@/components/icons/DbdIcons';
+import { formatMessage } from '@/utils/i18nFormat';
 
 const AdminBugReportsWorkbench = dynamic(
   () => import('@/components/admin/AdminBugReportsWorkbench').then((m) => m.AdminBugReportsWorkbench),
@@ -41,15 +44,23 @@ const AdminAuditLogView = dynamic(
   () => import('@/components/admin/AdminAuditLogView').then((m) => m.AdminAuditLogView),
   { ssr: false, loading: () => <AdminTabContentSkeleton /> }
 );
+const AdminSettingsPanel = dynamic(
+  () => import('@/components/admin/AdminSettingsPanel').then((m) => m.AdminSettingsPanel),
+  { ssr: false, loading: () => <AdminTabContentSkeleton /> }
+);
 const AdminCreateUserModal = dynamic(
   () => import('@/components/admin/AdminCreateUserModal').then((m) => m.AdminCreateUserModal),
+  { ssr: false }
+);
+const ScoreboardCheckModal = dynamic(
+  () => import('@/components/common/ScoreboardCheckModal').then((m) => m.ScoreboardCheckModal),
   { ssr: false }
 );
 const ScraperConfigModal = dynamic(
   () => import('@/components/ScraperConfigModal').then((m) => m.ScraperConfigModal),
   { ssr: false }
 );
-const ConfirmModal = dynamic(() => import('@/components/ConfirmModal').then((m) => m.ConfirmModal), {
+const ConfirmModal = dynamic(() => import('@/components/common/ConfirmModal').then((m) => m.ConfirmModal), {
   ssr: false,
 });
 
@@ -57,16 +68,20 @@ interface AdminPageProps {
   params: Promise<{ locale: string }>;
 }
 
-type AdminTab = 'users' | 'bugs' | 'challenges' | 'challenge_stats' | 'audit';
+type AdminTab = 'users' | 'bugs' | 'challenges' | 'challenge_stats' | 'audit' | 'settings';
+
+const ADMIN_TABS: readonly AdminTab[] = ['users', 'bugs', 'challenges', 'challenge_stats', 'audit', 'settings'];
+const isAdminTab = (value: string): value is AdminTab => (ADMIN_TABS as readonly string[]).includes(value);
+/** localStorage key remembering the open tab across refreshes. */
+const ADMIN_TAB_STORAGE_KEY = 'lemondbd_admin_tab';
 
 export default function AdminPanelPage({ params }: AdminPageProps) {
   const resolvedParams = use(params);
-  const router = useRouter();
   const currentLocale = (resolvedParams?.locale as Locale) || 'en';
   const { user, isAdmin, isAuthenticated, isLoading } = useAuth();
 
   const dict = useDictionary();
-  const [activeTab, setActiveTab] = useState<AdminTab>('users');
+  const [activeTab, setActiveTab] = usePersistentString<AdminTab>(ADMIN_TAB_STORAGE_KEY, 'users', isAdminTab);
   const [stats, setStats] = useState<AdminStats | null>(null);
   const [actionMessage, setActionMessage] = useState<ActionMessage | null>(null);
 
@@ -91,6 +106,7 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
 
   // Modals & Maintenance State
   const [isConfigOpen, setIsConfigOpen] = useState<boolean>(false);
+  const [isOcrCheckOpen, setIsOcrCheckOpen] = useState<boolean>(false);
   const [modalTab, setModalTab] = useState<'export' | 'import' | 'purge'>('export');
   const [isCreateUserOpen, setIsCreateUserOpen] = useState<boolean>(false);
   const [userPendingDeletion, setUserPendingDeletion] = useState<UserRow | null>(null);
@@ -100,18 +116,6 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
 
   const API_BASE = getBackendBaseUrl();
 
-  useDocumentTitle(dict?.app?.adminPageTitle || 'LemonDBD - Admin Control Center');
-
-  useEffect(() => {
-    if (!isLoading && (!isAuthenticated || !isAdmin)) {
-      router.replace(`/${currentLocale}`);
-    }
-  }, [isLoading, isAuthenticated, isAdmin, currentLocale, router]);
-
-  const getAuthToken = (): string | null => {
-    if (typeof window === 'undefined') return null;
-    return localStorage.getItem('lemondbd_token');
-  };
 
   const fetchAdminData = useCallback(async () => {
     const token = getAuthToken();
@@ -122,7 +126,7 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
       const timestamp = Date.now();
       const statsRes = await fetch(`${API_BASE}/api/v1/admin/stats?_t=${timestamp}`, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          ...authHeaders(token),
           'Cache-Control': 'no-cache, no-store, must-revalidate',
         },
         cache: 'no-store',
@@ -142,7 +146,7 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
 
       const usersRes = await fetch(`${API_BASE}/api/v1/users?${query.toString()}`, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          ...authHeaders(token),
           'Cache-Control': 'no-cache, no-store, must-revalidate',
         },
         cache: 'no-store',
@@ -174,7 +178,7 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
 
       const res = await fetch(`${API_BASE}/api/v1/admin/bug-reports?${query.toString()}`, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          ...authHeaders(token),
           'Cache-Control': 'no-cache',
         },
       });
@@ -225,21 +229,21 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
+          ...authHeaders(token),
         },
         body: JSON.stringify({ role: newRole }),
       });
       if (res.ok) {
         setActionMessage({
           type: 'success',
-          text: dict?.admin?.roleUpdated
-            ? dict.admin.roleUpdated.replace('{username}', targetUser.username).replace('{role}', newRole.toUpperCase())
+          text: dict.admin.roleUpdated
+            ? formatMessage(dict.admin.roleUpdated, { username: targetUser.username, role: newRole.toUpperCase() })
             : `${targetUser.username} role updated to ${newRole.toUpperCase()}.`,
         });
         await fetchAdminData();
       }
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : dict?.admin?.networkError || 'Network error.';
+      const msg = getErrorMessage(err, dict.admin.networkError);
       setActionMessage({ type: 'error', text: msg });
     }
   };
@@ -254,7 +258,7 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
+          ...authHeaders(token),
         },
         body: JSON.stringify({ is_active: newActive }),
       });
@@ -262,13 +266,13 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
         setActionMessage({
           type: 'success',
           text: newActive
-            ? dict?.admin?.statusUpdatedActive?.replace('{username}', targetUser.username) || `${targetUser.username} is active.`
-            : dict?.admin?.statusUpdatedSuspended?.replace('{username}', targetUser.username) || `${targetUser.username} is suspended.`,
+            ? formatMessage(dict.admin.statusUpdatedActive, { username: targetUser.username }) || `${targetUser.username} is active.`
+            : formatMessage(dict.admin.statusUpdatedSuspended, { username: targetUser.username }) || `${targetUser.username} is suspended.`,
         });
         await fetchAdminData();
       }
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : dict?.admin?.networkError || 'Network error.';
+      const msg = getErrorMessage(err, dict.admin.networkError);
       setActionMessage({ type: 'error', text: msg });
     }
   };
@@ -287,17 +291,17 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
     try {
       const res = await fetch(`${API_BASE}/api/v1/users/${targetUser.id}`, {
         method: 'DELETE',
-        headers: { Authorization: `Bearer ${token}` },
+        headers: authHeaders(token),
       });
       if (res.ok) {
         setActionMessage({
           type: 'success',
-          text: dict?.admin?.userDeletedSuccess?.replace('{username}', targetUser.username) || `${targetUser.username} deleted.`,
+          text: formatMessage(dict.admin.userDeletedSuccess, { username: targetUser.username }) || `${targetUser.username} deleted.`,
         });
         await fetchAdminData();
       }
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : dict?.admin?.networkError || 'Network error.';
+      const msg = getErrorMessage(err, dict.admin.networkError);
       setActionMessage({ type: 'error', text: msg });
     } finally {
       setIsDeletingUser(false);
@@ -319,7 +323,7 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
+          ...authHeaders(token),
         },
         body: JSON.stringify(userData),
       });
@@ -327,7 +331,7 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
       if (res.ok) {
         setActionMessage({
           type: 'success',
-          text: dict?.admin?.userCreatedSuccess?.replace('{username}', userData.username) || `${userData.username} created successfully.`,
+          text: formatMessage(dict.admin.userCreatedSuccess, { username: userData.username }) || `${userData.username} created successfully.`,
         });
         setIsCreateUserOpen(false);
         await fetchAdminData();
@@ -335,11 +339,11 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
         const errorData: { error?: string } = await res.json().catch(() => ({}));
         setActionMessage({
           type: 'error',
-          text: errorData.error || dict?.admin?.userCreateFailed || 'Failed to create user.',
+          text: errorData.error || dict.admin.userCreateFailed,
         });
       }
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : dict?.admin?.networkError || 'Network error.';
+      const msg = getErrorMessage(err, dict.admin.networkError);
       setActionMessage({ type: 'error', text: msg });
     }
   };
@@ -359,7 +363,7 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
+          ...authHeaders(token),
         },
         body: JSON.stringify(payload),
       });
@@ -367,12 +371,12 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
       if (res.ok) {
         setActionMessage({
           type: 'success',
-          text: dict?.admin?.ticketUpdatedSuccess?.replace('{id}', reportId.toString()) || `Report #${reportId} updated.`,
+          text: formatMessage(dict.admin.ticketUpdatedSuccess, { id: reportId.toString() }) || `Report #${reportId} updated.`,
         });
         await fetchBugReports();
       }
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : dict?.admin?.networkError || 'Failed to update report.';
+      const msg = getErrorMessage(err, dict.admin.networkError);
       setActionMessage({ type: 'error', text: msg });
     }
   };
@@ -391,18 +395,18 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
     try {
       const res = await fetch(`${API_BASE}/api/v1/admin/bug-reports/${reportId}`, {
         method: 'DELETE',
-        headers: { Authorization: `Bearer ${token}` },
+        headers: authHeaders(token),
       });
 
       if (res.ok) {
         setActionMessage({
           type: 'success',
-          text: dict?.admin?.ticketDeleteSuccess?.replace('{id}', reportId.toString()) || `Report #${reportId} deleted.`,
+          text: formatMessage(dict.admin.ticketDeleteSuccess, { id: reportId.toString() }) || `Report #${reportId} deleted.`,
         });
         await fetchBugReports();
       }
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : dict?.admin?.ticketDeleteFailed || 'Failed to delete report.';
+      const msg = getErrorMessage(err, dict.admin.ticketDeleteFailed);
       setActionMessage({ type: 'error', text: msg });
     } finally {
       setIsDeletingBugReport(false);
@@ -410,14 +414,16 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
     }
   };
 
-  if (!dict || isLoading || !isAuthenticated || !isAdmin) {
-    return <AdminPanelSkeleton dict={dict} />;
+  if (!dict || isLoading) {
+    return <AdminPanelSkeleton />;
+  }
+  if (!isAuthenticated || !isAdmin) {
+    return <ErrorPage variant="forbidden" />;
   }
 
   return (
     <PageShell
       locale={currentLocale}
-      dict={dict}
       activeCategory="admin"
       mainId="main-admin-content"
       mainClassName="overflow-y-auto"
@@ -429,8 +435,8 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
               if (tab) setModalTab(tab);
               setIsConfigOpen(true);
             }}
+            onOpenOcrCheck={() => setIsOcrCheckOpen(true)}
             onRefreshData={() => (activeTab === 'users' ? fetchAdminData() : fetchBugReports())}
-            dict={dict}
           />
 
           {actionMessage && (
@@ -444,105 +450,52 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
               }`}
             >
               <span>{actionMessage.text}</span>
-              <button
-                type="button"
+              <Button
+                variant="ghost"
+                size="xs"
+                icon
                 onClick={() => setActionMessage(null)}
-                className="text-text-muted hover:text-text-primary text-sm leading-none ml-3 cursor-pointer p-1 rounded-md focus:outline-none"
-                aria-label={dict?.admin?.closeSymbol || 'Close'}
+                className="ml-3"
+                aria-label={dict.admin.closeSymbol}
               >
-                {dict?.admin?.closeSymbol || '×'}
-              </button>
+                {dict.admin.closeSymbol}
+              </Button>
             </div>
           )}
 
           {/* Subtab Switcher */}
-          <nav
-            aria-label={dict?.admin?.adminSections || 'Admin Sections'}
-            className="flex flex-wrap sm:flex-nowrap items-center gap-2 border-b border-border-color pb-2"
-          >
-            <button
-              type="button"
-              role="tab"
-              aria-selected={activeTab === 'users'}
-              onClick={() => setActiveTab('users')}
-              className={`min-h-[48px] flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-accent-red ${
-                activeTab === 'users'
-                  ? 'bg-accent-red/15 text-accent-red border border-accent-red/40 shadow-xs'
-                  : 'text-text-secondary hover:text-text-primary hover:bg-bg-surface border border-transparent'
-              }`}
-            >
-              <Users className="h-4 w-4" />
-              <span>
-                {dict?.admin?.userDirectoryLabel || 'Users'} ({totalUsers})
-              </span>
-            </button>
-
-            <button
-              type="button"
-              role="tab"
-              aria-selected={activeTab === 'bugs'}
-              onClick={() => setActiveTab('bugs')}
-              className={`min-h-[48px] flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-accent-red ${
-                activeTab === 'bugs'
-                  ? 'bg-accent-red/15 text-accent-red border border-accent-red/40 shadow-xs'
-                  : 'text-text-secondary hover:text-text-primary hover:bg-bg-surface border border-transparent'
-              }`}
-            >
-              <FogReportIcon className="h-4 w-4" />
-              <span>
-                {dict?.admin?.bugReportsLabel || 'Bug Reports'} ({bugStats?.pending ?? 0} {dict?.admin?.pending || 'Pending'})
-              </span>
-            </button>
-
-            <button
-              type="button"
-              role="tab"
-              aria-selected={activeTab === 'challenges'}
-              onClick={() => setActiveTab('challenges')}
-              className={`min-h-[48px] flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-accent-red ${
-                activeTab === 'challenges'
-                  ? 'bg-accent-red/15 text-accent-red border border-accent-red/40 shadow-xs'
-                  : 'text-text-secondary hover:text-text-primary hover:bg-bg-surface border border-transparent'
-              }`}
-            >
-              <ShieldAlert className="h-4 w-4" />
-              <span>{dict?.admin?.killSwitches || 'Kill Switches'}</span>
-            </button>
-
-            <button
-              type="button"
-              role="tab"
-              aria-selected={activeTab === 'challenge_stats'}
-              onClick={() => setActiveTab('challenge_stats')}
-              className={`min-h-[48px] flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-accent-red ${
-                activeTab === 'challenge_stats'
-                  ? 'bg-accent-red/15 text-accent-red border border-accent-red/40 shadow-xs'
-                  : 'text-text-secondary hover:text-text-primary hover:bg-bg-surface border border-transparent'
-              }`}
-            >
-              <BarChart3 className="h-4 w-4" />
-              <span>{dict?.admin?.challengeStats || 'Challenge Stats'}</span>
-            </button>
-
-            <button
-              type="button"
-              role="tab"
-              aria-selected={activeTab === 'audit'}
-              onClick={() => setActiveTab('audit')}
-              className={`min-h-[48px] flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-accent-red ${
-                activeTab === 'audit'
-                  ? 'bg-accent-red/15 text-accent-red border border-accent-red/40 shadow-xs'
-                  : 'text-text-secondary hover:text-text-primary hover:bg-bg-surface border border-transparent'
-              }`}
-            >
-              <ScrollText className="h-4 w-4" />
-              <span>{dict?.admin?.auditLog || 'Audit Log'}</span>
-            </button>
-          </nav>
+          <Tabs
+            ariaLabel={dict.admin.adminSections}
+            value={activeTab}
+            onChange={setActiveTab}
+            panels={false}
+            variant="pill"
+            size="lg"
+            wrap
+            className="border-b border-border-color pb-2"
+            tabClassName="flex-1 sm:flex-initial"
+            tabs={[
+              {
+                value: 'users',
+                icon: <Users className="h-4 w-4" />,
+                label: dict.admin.userDirectoryLabel,
+                count: totalUsers,
+              },
+              {
+                value: 'bugs',
+                icon: <FogReportIcon className="h-4 w-4" />,
+                label: `${dict.admin.bugReportsLabel} (${bugStats?.pending ?? 0} ${dict.admin.pending})`,
+              },
+              { value: 'challenges', icon: <ShieldAlert className="h-4 w-4" />, label: dict.admin.killSwitches },
+              { value: 'challenge_stats', icon: <BarChart3 className="h-4 w-4" />, label: dict.admin.challengeStats },
+              { value: 'audit', icon: <ScrollText className="h-4 w-4" />, label: dict.admin.auditLog },
+              { value: 'settings', icon: <Settings2 className="h-4 w-4" />, label: dict.admin.configTab },
+            ]}
+          />
 
           {activeTab === 'users' ? (
             <div className="space-y-6">
-              <AdminStatsGrid stats={stats} dict={dict} />
+              <AdminStatsGrid stats={stats} />
               <AdminUserTable
                 users={users}
                 totalUsers={totalUsers}
@@ -551,7 +504,6 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
                 roleFilter={roleFilter}
                 loading={loadingData}
                 currentUserId={user?.id}
-                dict={dict}
                 onSearchChange={(val) => {
                   setSearch(val);
                   setPage(1);
@@ -568,19 +520,23 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
               />
             </div>
           ) : activeTab === 'challenges' ? (
-            <Suspense fallback={<AdminTabContentSkeleton dict={dict} />}>
-              <AdminChallengeControl onActionMessage={setActionMessage} dict={dict} />
+            <Suspense fallback={<AdminTabContentSkeleton />}>
+              <AdminChallengeControl onActionMessage={setActionMessage} />
             </Suspense>
           ) : activeTab === 'challenge_stats' ? (
-            <Suspense fallback={<AdminTabContentSkeleton dict={dict} />}>
-              <AdminChallengeStats stats={stats} dict={dict} />
+            <Suspense fallback={<AdminTabContentSkeleton />}>
+              <AdminChallengeStats stats={stats} />
+            </Suspense>
+          ) : activeTab === 'settings' ? (
+            <Suspense fallback={<AdminTabContentSkeleton />}>
+              <AdminSettingsPanel onActionMessage={setActionMessage} />
             </Suspense>
           ) : activeTab === 'audit' ? (
-            <Suspense fallback={<AdminTabContentSkeleton dict={dict} />}>
-              <AdminAuditLogView dict={dict} />
+            <Suspense fallback={<AdminTabContentSkeleton />}>
+              <AdminAuditLogView />
             </Suspense>
           ) : (
-            <Suspense fallback={<AdminTabContentSkeleton dict={dict} />}>
+            <Suspense fallback={<AdminTabContentSkeleton />}>
               <AdminBugReportsWorkbench
                 bugReports={bugReports}
                 bugStats={bugStats}
@@ -591,7 +547,6 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
                 selectedBugId={selectedBugId}
                 editingNotes={editingNotes}
                 loading={loadingBugs}
-                dict={dict}
                 onSearchChange={(val) => {
                   setBugSearch(val);
                   setBugPage(1);
@@ -616,15 +571,15 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
         isOpen={isCreateUserOpen}
         onClose={() => setIsCreateUserOpen(false)}
         onSubmit={handleCreateUser}
-        dict={dict}
       />
+
+      <ScoreboardCheckModal isOpen={isOcrCheckOpen} onClose={() => setIsOcrCheckOpen(false)} />
 
       <ScraperConfigModal
         key={modalTab}
         isOpen={isConfigOpen}
         initialTab={modalTab}
         onClose={() => setIsConfigOpen(false)}
-        dict={dict}
         onPurgeSuccess={() => {
           fetchAdminData();
           fetchBugReports();
@@ -633,16 +588,16 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
 
       <ConfirmModal
         open={userPendingDeletion !== null}
-        title={dict?.admin?.deleteUserTitle || 'Delete user?'}
+        title={dict.admin.deleteUserTitle}
         message={
           <>
-            {dict?.admin?.confirmDeleteUserPrefix || 'Delete'}{' '}
+            {dict.admin.confirmDeleteUserPrefix}{' '}
             <strong className="font-bold text-accent-red">{userPendingDeletion?.username}</strong>?
             <br />
-            {dict?.admin?.cannotBeUndone || 'This action cannot be undone.'}
+            {dict.admin.cannotBeUndone}
           </>
         }
-        confirmLabel={dict?.admin?.delete || 'Delete'}
+        confirmLabel={dict.admin.delete}
         busy={isDeletingUser}
         onConfirm={confirmDeleteUser}
         onCancel={() => setUserPendingDeletion(null)}
@@ -650,13 +605,13 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
 
       <ConfirmModal
         open={bugReportPendingDeletion !== null}
-        title={dict?.admin?.deleteBugReportTitle || 'Delete report?'}
+        title={dict.admin.deleteBugReportTitle}
         message={
-          dict?.admin?.confirmDeleteBugReport
-            ? dict.admin.confirmDeleteBugReport.replace('{id}', (bugReportPendingDeletion ?? 0).toString())
+          dict.admin.confirmDeleteBugReport
+            ? formatMessage(dict.admin.confirmDeleteBugReport, { id: (bugReportPendingDeletion ?? 0).toString() })
             : `Delete report #${bugReportPendingDeletion}?`
         }
-        confirmLabel={dict?.admin?.delete || 'Delete'}
+        confirmLabel={dict.admin.delete}
         busy={isDeletingBugReport}
         onConfirm={confirmDeleteBugReport}
         onCancel={() => setBugReportPendingDeletion(null)}

@@ -46,11 +46,3 @@ class OwnershipService:
 
     def bulk_set_perk_ownership(self, user_id: int, updates: list[dict[str, Any]]) -> dict[str, Any]:
         return bulk_mutate_perk_ownership(user_id, updates, self.get_user_ownership_summary)
-
-    def get_owned_perk_names_set(self, user_id: int | None = None) -> set[str]:
-        summary = self.get_user_ownership_summary(user_id)
-        return set(summary.get("owned_perk_names", []))
-
-    def get_owned_perk_ids_set(self, user_id: int | None = None) -> set[int]:
-        summary = self.get_user_ownership_summary(user_id)
-        return set(summary.get("owned_perk_ids", []))

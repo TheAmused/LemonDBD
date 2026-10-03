@@ -101,7 +101,8 @@ class TestChallengeCompletionTrophyWorkflow:
         assert len(active_runs4["history"]) > 0
         # Confirm the medium-mode run appears somewhere in the list.
         history_modes = [
-            entry.get("mode") for entry in active_runs4["history"] if isinstance(entry, dict)
+            entry.get("mode") if isinstance(entry, dict) else entry
+            for entry in active_runs4["history"]
         ]
         assert "medium" in history_modes, (
             f"Expected mode='medium' in history active_runs; got entries: {active_runs4['history']}"

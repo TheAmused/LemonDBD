@@ -37,7 +37,7 @@ export const MapCard: React.FC<MapCardProps> = ({ map, backendBase, onSelect }) 
           <ImageOff className="h-8 w-8 text-text-muted" />
         )}
       </div>
-      <span className="text-xs sm:text-sm font-bold text-text-primary text-center line-clamp-2">
+      <span className="type-strong-fluid text-text-primary text-center line-clamp-2">
         {map.name}
       </span>
     </button>

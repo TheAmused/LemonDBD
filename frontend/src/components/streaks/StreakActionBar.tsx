@@ -1,6 +1,7 @@
 'use client';
 // frontend/src/components/streaks/StreakActionBar.tsx
 
+import { Button } from '@/components/common/Button';
 import React from 'react';
 
 /** Fixed, sidebar-aware bar at the bottom of a challenge board, so its actions
@@ -14,17 +15,12 @@ export const StreakActionBar: React.FC<{ children: React.ReactNode }> = ({ child
   </div>
 );
 
-const VARIANT_CLASSES = {
-  green: 'bg-accent-green hover:bg-accent-green-hover',
-  red: 'bg-accent-red hover:bg-accent-red-hover',
-} as const;
+const BUTTON_VARIANT = { green: 'success', red: 'primary' } as const;
 
 interface StreakActionButtonProps {
-  variant: keyof typeof VARIANT_CLASSES;
+  variant: keyof typeof BUTTON_VARIANT;
   onClick: () => void;
   disabled?: boolean;
-  /** Smaller padding/text for boards that are already tight on vertical space. */
-  compact?: boolean;
   children: React.ReactNode;
 }
 
@@ -32,17 +28,15 @@ export const StreakActionButton: React.FC<StreakActionButtonProps> = ({
   variant,
   onClick,
   disabled,
-  compact = false,
   children,
 }) => (
-  <button
-    type="button"
+  <Button
+    variant={BUTTON_VARIANT[variant]}
+    size="md"
     onClick={onClick}
     disabled={disabled}
-    className={`flex-1 ${VARIANT_CLASSES[variant]} disabled:opacity-50 text-text-inverted font-extrabold rounded-xl shadow-xs transition-all cursor-pointer ${
-      compact ? 'max-w-[180px] text-sm py-2.5 px-5' : 'max-w-xs text-base py-3.5 px-6'
-    }`}
+    className="flex-1 max-w-[180px]"
   >
     {children}
-  </button>
+  </Button>
 );

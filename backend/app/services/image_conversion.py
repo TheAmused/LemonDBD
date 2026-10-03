@@ -87,42 +87,6 @@ def is_png(content: bytes) -> bool:
     return content[:8] == PNG_MAGIC
 
 
-def ensure_format_bytes(content: bytes, relative_path: str, quality: int = 92) -> bytes:
-    """Make `content` match the extension of `relative_path` (.webp or .png).
-
-    Returns the bytes unchanged if they're already valid for that format,
-    otherwise decodes and re-encodes. Falls back to the original bytes if
-    Pillow can't decode them (and logs a warning) so callers never crash
-    on a bad/unexpected download.
-    """
-    suffix = relative_path.lower()
-    if suffix.endswith(".webp"):
-        if is_webp(content):
-            return content
-        try:
-            return to_webp_bytes(content, quality=quality)
-        except Exception as err:
-            logger.warning(f"Could not re-encode [{relative_path}] to WebP: {err}")
-            return content
-    if suffix.endswith(".png"):
-        if is_png(content):
-            return content
-        try:
-            return to_png_bytes(content)
-        except Exception as err:
-            logger.warning(f"Could not re-encode [{relative_path}] to PNG: {err}")
-            return content
-    return content
-
-
-def save_webp(image_bytes: bytes, output_path: str | Path, quality: int = 90) -> Path:
-    """Convert `image_bytes` to WebP and write it to `output_path` (suffix forced to .webp)."""
-    target_path = Path(output_path).with_suffix(".webp")
-    target_path.parent.mkdir(parents=True, exist_ok=True)
-    target_path.write_bytes(to_webp_bytes(image_bytes, quality=quality))
-    return target_path
-
-
 _perk_frame_template_cache: Image.Image | None = None
 
 
@@ -134,33 +98,3 @@ def get_perk_frame_template(template_path: Path) -> Image.Image | None:
     return _perk_frame_template_cache
 
 
-def composite_perk_diamond_frame(icon_bytes: bytes, template_path: Path, quality: int = 92) -> bytes:
-    """Composite a perk icon onto the canonical diamond frame and export as WebP.
-
-    Falls back to a plain WebP re-encode of the icon (no frame) if the
-    template is missing, and to the original bytes if decoding fails entirely.
-    """
-    template = get_perk_frame_template(template_path)
-    if template is None:
-        try:
-            return to_webp_bytes(icon_bytes, quality=quality)
-        except Exception:
-            return icon_bytes
-
-    try:
-        size = template.size[0]
-        canvas = template.copy()
-
-        with Image.open(io.BytesIO(icon_bytes)) as icon:
-            icon_rgba = icon.convert("RGBA")
-            icon_size = int(size * 0.85)
-            icon_resized = icon_rgba.resize((icon_size, icon_size), Image.Resampling.LANCZOS)
-            offset = ((size - icon_size) // 2, (size - icon_size) // 2)
-            canvas.alpha_composite(icon_resized, offset)
-
-        out_buf = io.BytesIO()
-        canvas.save(out_buf, format="WEBP", quality=quality, method=6)
-        return out_buf.getvalue()
-    except Exception as err:
-        logger.warning(f"Could not composite perk diamond frame: {err}")
-        return icon_bytes

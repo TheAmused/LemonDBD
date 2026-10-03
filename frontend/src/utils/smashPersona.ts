@@ -1,6 +1,7 @@
 // frontend/src/utils/smashPersona.ts
 
 import type { EntityItem, CustomRomanceArchetype, ArchetypeRule } from '@/types/smashOrPass';
+import { isKiller, isSurvivor } from '@/utils/characterUtils';
 
 export interface VoteRecord {
   character: EntityItem;
@@ -63,7 +64,7 @@ export interface RomancePersonaResult {
   evaluatedKillers?: number;
 }
 
-export const ARCHETYPE_VISUALS: Record<string, ArchetypeVisualConfig> = {
+const ARCHETYPE_VISUALS: Record<string, ArchetypeVisualConfig> = {
   untappedSoul: {
     archKey: 'untappedSoul',
     badgeColor: 'from-bg-elevated via-bg-surface to-bg-primary',
@@ -140,7 +141,7 @@ export function calculateRomancePersona(
         badgeColor: fallbackArch.badge_color || 'from-bg-elevated via-bg-surface to-bg-primary',
         borderColor: 'border-border-color',
         glowColor: 'rgba(0, 0, 0, 0)',
-        iconName: (fallbackArch.icon_name as any) || 'compass',
+        iconName: fallbackArch.icon_name || 'compass',
         iconUrl: fallbackArch.icon_url,
         badgeImageUrl: fallbackArch.badge_image_url,
         killerAffinity: 0,
@@ -245,10 +246,10 @@ export function calculateRomancePersona(
       title: chosenArch.title,
       subtitle: chosenArch.subtitle,
       description: chosenArch.description,
-      badgeColor: chosenArch.badge_color || 'from-purple-600 to-indigo-950',
+      badgeColor: chosenArch.badge_color || 'from-accent-purple to-accent-indigo-deep',
       borderColor: 'border-accent-red/60',
       glowColor: 'rgba(220, 38, 38, 0.35)',
-      iconName: (chosenArch.icon_name as any) || 'sparkles',
+      iconName: chosenArch.icon_name || 'sparkles',
       iconUrl: chosenArch.icon_url,
       badgeImageUrl: chosenArch.badge_image_url,
       killerAffinity: getRoleAffinity('Killer'),
@@ -288,11 +289,11 @@ export function calculateRomancePersona(
   const total = votes.length;
   const smashRate = Math.round((smashes.length / total) * 100);
 
-  const evaluatedKillers = votes.filter((v) => v.character?.role === 'Killer').length;
-  const evaluatedSurvivors = votes.filter((v) => v.character?.role === 'Survivor').length;
+  const evaluatedKillers = votes.filter((v) => isKiller(v.character?.role)).length;
+  const evaluatedSurvivors = votes.filter((v) => isSurvivor(v.character?.role)).length;
 
-  const smashedKillers = smashes.filter((v) => v.character?.role === 'Killer').length;
-  const smashedSurvivors = smashes.filter((v) => v.character?.role === 'Survivor').length;
+  const smashedKillers = smashes.filter((v) => isKiller(v.character?.role)).length;
+  const smashedSurvivors = smashes.filter((v) => isSurvivor(v.character?.role)).length;
   const smashedMonsters = smashes.filter((v) => v.character?.gender === 'monster_other').length;
 
   let survivorAffinity = 0;
@@ -510,44 +511,4 @@ export function buildFacebookShareUrl(shareUrl: string, shareText?: string): str
   return base;
 }
 
-/**
- * Robust clipboard copy with fallback to document.execCommand('copy').
- */
-export async function copyTextWithFallback(text: string): Promise<boolean> {
-  if (
-    typeof navigator !== 'undefined' &&
-    navigator.clipboard &&
-    typeof navigator.clipboard.writeText === 'function'
-  ) {
-    try {
-      await navigator.clipboard.writeText(text);
-      return true;
-    } catch (err) {
-      console.warn('navigator.clipboard.writeText failed, trying execCommand fallback:', err);
-    }
-  }
-
-  // Fallback to hidden textarea with document.execCommand('copy')
-  if (typeof document !== 'undefined') {
-    try {
-      const textarea = document.createElement('textarea');
-      textarea.value = text;
-      textarea.setAttribute('readonly', '');
-      textarea.style.position = 'fixed';
-      textarea.style.top = '-9999px';
-      textarea.style.left = '-9999px';
-      textarea.style.opacity = '0';
-      document.body.appendChild(textarea);
-      textarea.focus();
-      textarea.select();
-      const successful = document.execCommand('copy');
-      document.body.removeChild(textarea);
-      return Boolean(successful);
-    } catch (err) {
-      console.error('execCommand copy fallback failed:', err);
-      return false;
-    }
-  }
-
-  return false;
-}
+export { copyTextWithFallback } from '@/utils/clipboard';

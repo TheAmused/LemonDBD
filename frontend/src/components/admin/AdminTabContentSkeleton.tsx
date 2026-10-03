@@ -3,15 +3,16 @@
 
 import React from 'react';
 import type { Dictionary } from '@/locales/types';
-import { DbdSpinner } from '@/components/DbdSpinner';
+import { DbdSpinner } from '@/components/common/DbdSpinner';
+import { useDictionary } from "@/context/DictionaryContext";
 
 interface AdminTabContentSkeletonProps {
-  dict?: Dictionary | null;
   rows?: number;
 }
 
-export const AdminTabContentSkeleton: React.FC<AdminTabContentSkeletonProps> = ({ dict }) => {
-  const loadingLabel = dict?.admin?.loading || 'Loading admin tab...';
+export const AdminTabContentSkeleton: React.FC<AdminTabContentSkeletonProps> = () => {
+  const dict = useDictionary();
+  const loadingLabel = dict.admin.loading;
 
   return (
     <div
@@ -26,11 +27,7 @@ export const AdminTabContentSkeleton: React.FC<AdminTabContentSkeletonProps> = (
         accent="blood"
         needleSpeed={1.3}
         label={loadingLabel}
-        dict={dict}
       />
     </div>
   );
 };
-
-export default AdminTabContentSkeleton;
-

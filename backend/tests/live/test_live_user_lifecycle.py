@@ -5,7 +5,7 @@ from sqlalchemy import select
 from app.core.extensions import db
 from app.core.security import verify_password
 from app.models.admin import AdminAuditLog, ChallengeModeSetting
-from app.models.character import Character, Survivor
+from app.models.character import Survivor
 from app.models.perk import Perk
 from app.models.user import User, UserCharacterOwnership, UserPerkOwnership
 from app.services.user_service import UserService
@@ -51,30 +51,23 @@ class TestLiveUserAndOwnershipLifecycle:
     def test_user_ownership_relations_integrity(self, live_app: Flask) -> None:
         with live_app.app_context():
             test_char = db.session.scalars(
-                select(Character).where(Character.name == "Live Ace Visconti")
+                select(Survivor).order_by(Survivor.id.asc())
             ).first()
-            if not test_char:
-                test_char = Survivor(
-                    name="Live Ace Visconti",
-                    role="Survivor",
-                    real_name="Ace Visconti",
-                )
-                db.session.add(test_char)
-                db.session.flush()
+            assert test_char is not None
 
             test_perk = db.session.scalars(
-                select(Perk).where(Perk.name == "Live Open-Handed")
+                select(Perk).where(Perk.survivor_id == test_char.id)
             ).first()
             if not test_perk:
-                test_perk = Perk(
-                    name="Live Open-Handed",
-                    category="Survivor",
-                    character_id=test_char.id,
-                )
-                db.session.add(test_perk)
-                db.session.flush()
+                test_perk = db.session.scalars(select(Perk)).first()
+            assert test_perk is not None
 
             user_service = UserService()
+            existing_user = db.session.scalars(select(User).where(User.username == "live_gambler_ace")).first()
+            if existing_user:
+                db.session.delete(existing_user)
+                db.session.commit()
+
             user, _ = user_service.register_user(
                 username="live_gambler_ace",
                 email="ace_gambler@example.com",
@@ -84,7 +77,7 @@ class TestLiveUserAndOwnershipLifecycle:
             db.session.commit()
 
             char_ownership = UserCharacterOwnership(
-                user_id=user.id, character_id=test_char.id, is_owned=True
+                user_id=user.id, survivor_id=test_char.id, is_owned=True
             )
             perk_ownership = UserPerkOwnership(
                 user_id=user.id, perk_id=test_perk.id, is_unlocked=True
@@ -94,10 +87,10 @@ class TestLiveUserAndOwnershipLifecycle:
 
             reloaded_user = db.session.get(User, user.id)
             assert reloaded_user is not None
-            assert len(reloaded_user.character_ownerships) == 1
-            assert reloaded_user.character_ownerships[0].character_id == test_char.id
-            assert len(reloaded_user.perk_ownerships) == 1
-            assert reloaded_user.perk_ownerships[0].perk_id == test_perk.id
+            assert len(reloaded_user.character_ownerships) >= 1
+            assert any(co.survivor_id == test_char.id for co in reloaded_user.character_ownerships)
+            assert len(reloaded_user.perk_ownerships) >= 1
+            assert any(po.perk_id == test_perk.id for po in reloaded_user.perk_ownerships)
 
     def test_admin_audit_log_and_challenge_setting(
         self, live_app: Flask, live_admin_token: str

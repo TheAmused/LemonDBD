@@ -10,8 +10,8 @@ import { PageShellFallback } from '@/components/layout/PageShellFallback';
 import { PerkFilters } from '@/components/PerkFilters';
 import { PerkCard } from '@/components/PerkCard';
 import { PerksGridSkeleton } from '@/components/PerksSkeleton';
-import { EmptyState } from '@/components/EmptyState';
-import { Pagination } from '@/components/Pagination';
+import { EmptyState } from '@/components/common/EmptyState';
+import { Pagination } from '@/components/common/Pagination';
 import { Locale } from '@/i18n/config';
 import { SearchX } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
@@ -26,16 +26,12 @@ import {
   PerkDictionary,
 } from '@/types/perks';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
-import { useImagePrefetch } from '@/components/ImagePreloadProvider';
+import { useImagePrefetch } from '@/components/common/ImagePreloadProvider';
 import { useDictionary } from '@/context/DictionaryContext';
 import { useCachedData } from '@/hooks/useCachedData';
 import { fetchCached, fetchJson } from '@/services/dataCache';
 
 const PerkModal = dynamic(() => import('@/components/PerkModal').then((m) => m.PerkModal), { ssr: false });
-const CampfireParticles = dynamic(
-  () => import('@/components/common/CampfireParticles').then((m) => m.CampfireParticles),
-  { ssr: false }
-);
 
 interface PerksResponse {
   data?: Perk[];
@@ -155,7 +151,7 @@ function PerksContent() {
     if (paramRole === 'Killer' || paramRole === 'Survivor') {
       setRole(paramRole);
     }
-    document.title = dict?.app?.perksVaultPageTitle || 'LemonDBD - Dead by Daylight Perks Vault';
+    document.title = dict.app.perksVaultPageTitle;
   }, [paramRole, dict]);
 
   const handleSelectCategoryFromSidebar = (selected: string) => {
@@ -295,7 +291,6 @@ function PerksContent() {
   return (
     <PageShell
       locale={locale}
-      dict={dict}
       activeCategory="perks"
       onSelectCategory={handleSelectCategoryFromSidebar}
       totalPerksCount={totalVaultPerks}
@@ -303,10 +298,9 @@ function PerksContent() {
       killerCount={killerCount}
       characterCount={characterCount}
       padding="tight"
-      outerClassName="h-dvh overflow-hidden bg-bg-primary text-text-primary flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300"
+      outerClassName="h-dvh overflow-hidden text-text-primary flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300"
       mainClassName="relative flex h-full min-h-0 flex-col overflow-hidden gap-3 sm:gap-4"
     >
-        <CampfireParticles />
         <div className="relative z-10 flex h-full min-h-0 flex-col overflow-hidden gap-3 sm:gap-4">
         <div className="shrink-0">
           <PerkFilters
@@ -331,7 +325,6 @@ function PerksContent() {
             setSortBy={(s) => setSortBy(s)}
             order={order}
             setOrder={(o) => setOrder(o)}
-            dict={dict}
             onReset={handleResetFilters}
             locale={locale}
             survivorCount={survivorCount}
@@ -343,24 +336,23 @@ function PerksContent() {
 
         <div className="flex min-h-0 flex-1 flex-col overflow-y-auto">
           {loading ? (
-            <PerksGridSkeleton dict={dict} />
+            <PerksGridSkeleton />
           ) : perks.length === 0 ? (
             <EmptyState
               variant="solid"
               icon={SearchX}
               iconClassName="mx-auto h-12 w-12 text-text-muted mb-3"
-              title={dict?.empty?.title || 'No Perks Found'}
+              title={dict.empty.title}
               subtitle={
-                dict?.empty?.subtitle ||
-                'Try clearing your search query or switching ownership filters.'
+                dict.empty.subtitle
               }
               action={{
-                label: dict?.app?.resetFilters || dict?.filters?.resetAllFilters || 'Reset Filters',
+                label: dict.app.resetFilters,
                 onClick: handleResetFilters,
               }}
             />
           ) : (
-            <section aria-label={dict?.filters?.viewMode || 'Perks Grid'} className="flex min-h-0 flex-1 flex-col">
+            <section aria-label={dict.filters.viewMode} className="flex min-h-0 flex-1 flex-col">
               <div
                 ref={measureGridArea}
                 className="grid min-h-0 w-full flex-1 grid-cols-3 min-[480px]:grid-cols-4 sm:grid-cols-5 gap-3"
@@ -372,7 +364,6 @@ function PerksContent() {
                     perk={perk}
                     size="fill"
                     onSelect={setSelectedPerk}
-                    dict={dict}
                   />
                 ))}
               </div>
@@ -392,7 +383,6 @@ function PerksContent() {
                 setLimit(newLimit);
                 setPage(1);
               }}
-              dict={dict}
             />
           </div>
         )}
@@ -401,7 +391,6 @@ function PerksContent() {
           <PerkModal
             perk={selectedPerk}
             onClose={() => setSelectedPerk(null)}
-            dict={dict}
           />
         )}
         </div>
@@ -414,7 +403,7 @@ export default function PerksPage() {
     <Suspense
       fallback={
         <PageShellFallback
-          outerClassName="h-dvh overflow-hidden bg-bg-primary text-text-primary flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300"
+          outerClassName="h-dvh overflow-hidden text-text-primary flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300"
           padding="tight"
           mainClassName="flex h-full min-h-0 flex-col overflow-hidden gap-3 sm:gap-4"
           skeleton={<PerksGridSkeleton />}
@@ -424,4 +413,4 @@ export default function PerksPage() {
       <PerksContent />
     </Suspense>
   );
-}
+}

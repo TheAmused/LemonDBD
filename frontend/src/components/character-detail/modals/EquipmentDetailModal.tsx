@@ -1,7 +1,8 @@
 // frontend/src/components/character-detail/modals/EquipmentDetailModal.tsx
 import React from 'react';
-import { X } from 'lucide-react';
-import { AddonItem, EquipmentItem, getAssetUrl, getRarityTileStyle, getLocalizedRarity, renderFormattedDbdText } from '../types';
+import { AddonItem, EquipmentItem, getAssetUrl, getRarityTileStyle, getLocalizedRarity } from '../types';
+import { RichText } from '@/components/common/RichText';
+import { Modal } from '@/components/common/Modal';
 
 interface EquipmentDetailModalProps {
   item: AddonItem | EquipmentItem | null;
@@ -17,66 +18,38 @@ export const EquipmentDetailModal: React.FC<EquipmentDetailModalProps> = ({
   t,
 }) => {
   if (!item) return null;
+  const rarityTile = getRarityTileStyle(item.rarity);
 
   return (
-    <div
-      role="dialog"
-      aria-modal="true"
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-bg-primary/80 backdrop-blur-md animate-in fade-in duration-200"
-      onClick={(e) => {
-        if (e.target === e.currentTarget) onClose();
-      }}
+    <Modal
+      isOpen
+      onClose={onClose}
+      variant="dialog"
+      size="lg"
+      title={item.name}
+      subtitle={item.rarity ? getLocalizedRarity(item.rarity, t) : undefined}
+      closeButtonAriaLabel={t.close || 'Close'}
+      headerLeft={
+        <div
+          className={`h-14 w-14 rounded-2xl border-2 p-1.5 flex items-center justify-center shrink-0 shadow-md overflow-hidden ${rarityTile.bg}`}
+          style={rarityTile.style}
+        >
+          <img
+            src={getAssetUrl(backendBase, item.icon_local_path, item.icon_url)}
+            alt=""
+            className="h-full w-full object-contain"
+          />
+        </div>
+      }
+      padded
+      bodyClassName="space-y-4 text-sm leading-relaxed text-text-secondary"
     >
-      <div
-        className="relative w-full max-w-lg bg-bg-surface border border-border-color rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh] animate-in zoom-in-95 duration-200"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="p-5 border-b border-border-color flex items-center justify-between">
-          <div className="flex items-center gap-3.5">
-            <div
-              className={`h-14 w-14 rounded-2xl border-2 p-1.5 flex items-center justify-center shrink-0 shadow-md overflow-hidden ${getRarityTileStyle(
-                item.rarity
-              ).bg}`}
-            >
-              <img
-                src={getAssetUrl(backendBase, item.icon_local_path, item.icon_url)}
-                alt={item.name}
-                className="h-full w-full object-contain"
-              />
-            </div>
-            <div>
-              {item.rarity && (
-                <span className="text-[10px] font-mono font-bold uppercase text-text-secondary block">
-                  {getLocalizedRarity(item.rarity, t)}
-                </span>
-              )}
-              <h2 className="text-base sm:text-lg font-black text-text-primary font-mono leading-snug">
-                {item.name}
-              </h2>
-            </div>
-          </div>
-          <button
-            type="button"
-            onClick={onClose}
-            className="p-2 rounded-xl text-text-muted hover:text-text-primary hover:bg-bg-elevated transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red"
-            aria-label={t.close || 'Close'}
-          >
-            <X className="w-5 h-5" />
-          </button>
+      {item.associated_target && (
+        <div className="type-strong text-text-secondary">
+          {t.compatibleTarget || 'Compatible Target:'} <span className="text-text-primary">{item.associated_target}</span>
         </div>
-
-        <div className="p-6 overflow-y-auto space-y-4 text-sm leading-relaxed font-sans text-text-secondary">
-          {item.associated_target && (
-            <div className="text-xs font-mono font-bold text-text-secondary">
-              {t.compatibleTarget || 'Compatible Target:'} <span className="text-text-primary">{item.associated_target}</span>
-            </div>
-          )}
-          <div className="p-4 rounded-2xl bg-bg-elevated border border-border-color space-y-2 text-sm">
-            {renderFormattedDbdText(item.description || '', false)}
-          </div>
-        </div>
-      </div>
-    </div>
+      )}
+      <RichText text={item.description} block variant="game" />
+    </Modal>
   );
 };
-

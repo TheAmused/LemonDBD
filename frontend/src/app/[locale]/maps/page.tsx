@@ -8,7 +8,7 @@ import { useParams, useSearchParams } from 'next/navigation';
 import { Search, Mic } from 'lucide-react';
 import { PageShell } from '@/components/layout/PageShell';
 import { PageShellFallback } from '@/components/layout/PageShellFallback';
-import { ToggleSwitch, ToggleSwitchOption } from '@/components/common/ToggleSwitch';
+import { SegmentedControl, SegmentedControlOption } from '@/components/common/SegmentedControl';
 import { MapExplorer } from '@/components/maps/MapExplorer';
 import { MapsPageSkeleton } from '@/components/maps/MapsSkeleton';
 import { Locale } from '@/i18n/config';
@@ -16,17 +16,12 @@ import { MapRealm } from '@/types/map';
 import { Perk } from '@/types/perks';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 import { useDictionary } from '@/context/DictionaryContext';
-import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { usePersistentString } from '@/hooks/usePersistentString';
 
 const isValidSearchMode = (v: string): v is 'text' | 'voice' => v === 'text' || v === 'voice';
 
 const VoiceCommandBanner = dynamic(
   () => import('@/components/maps/VoiceCommandBanner').then((m) => m.VoiceCommandBanner),
-  { ssr: false }
-);
-const CampfireParticles = dynamic(
-  () => import('@/components/common/CampfireParticles').then((m) => m.CampfireParticles),
   { ssr: false }
 );
 
@@ -58,24 +53,23 @@ function MapsPageInner() {
   const backendBase = getBackendBaseUrl();
 
   const searchModeOptions: readonly [
-    ToggleSwitchOption<'text' | 'voice'>,
-    ToggleSwitchOption<'text' | 'voice'>,
+    SegmentedControlOption<'text' | 'voice'>,
+    SegmentedControlOption<'text' | 'voice'>,
   ] = [
     {
       value: 'text',
       icon: <Search className="h-4 w-4" aria-hidden="true" />,
-      label: dict?.maps?.searchTextTab || 'Search',
+      label: dict.maps.searchTextTab,
       activeClassName: 'bg-accent-red',
     },
     {
       value: 'voice',
       icon: <Mic className="h-4 w-4" aria-hidden="true" />,
-      label: dict?.maps?.searchVoiceTab || 'Voice',
+      label: dict.maps.searchVoiceTab,
       activeClassName: 'bg-accent-red',
     },
   ];
 
-  useDocumentTitle(dict?.maps?.pageTitle || 'LemonDBD - Tactical Map Command Explorer');
 
   const handleSourceChange = useCallback(() => {}, []);
   const handleSelectMap = useCallback((name: string) => {
@@ -84,10 +78,10 @@ function MapsPageInner() {
   const handleAction = useCallback(() => {}, []);
 
   const toggleSwitchElement = (
-    <ToggleSwitch
+    <SegmentedControl
       value={searchMode}
       onChange={setSearchMode}
-      ariaLabel={dict?.maps?.searchModeAria || 'Search mode'}
+      ariaLabel={dict.maps.searchModeAria}
       options={searchModeOptions}
     />
   );
@@ -96,7 +90,6 @@ function MapsPageInner() {
     () => (
       <VoiceCommandBanner
         locale={locale}
-        dict={dict}
         currentSource="hens333"
         onSourceChange={handleSourceChange}
         onSelectMap={handleSelectMap}
@@ -119,13 +112,11 @@ function MapsPageInner() {
   return (
     <PageShell
       locale={locale}
-      dict={dict}
       activeCategory="maps"
       onSelectCategory={handleSelectCategory}
       customPadding="p-4 sm:p-6 lg:p-7"
       mainClassName="relative min-h-screen flex flex-col gap-4"
     >
-      <CampfireParticles />
       <div className="relative z-10 flex flex-col gap-4">
         <MapExplorer
           initialMapName={selectedMap.mapName}
@@ -134,7 +125,6 @@ function MapsPageInner() {
             setAvailableMaps(maps);
           }}
           backendBase={backendBase}
-          dict={dict}
           locale={locale}
           hideSearch={searchMode === 'voice'}
           voiceSlot={voiceBanner}

@@ -32,7 +32,7 @@ export interface DbdButtonProps
 const SIZE_STYLES: Record<DbdButtonSize, string> = {
   lg: 'gap-2 px-6 py-3.5 text-sm sm:gap-3 sm:px-10 sm:py-4 sm:text-base xl:gap-3.5 xl:px-12 xl:py-4.5 xl:text-lg 2xl:gap-4 2xl:px-14 2xl:py-5 2xl:text-xl wide:gap-4.5 wide:px-16 wide:py-5.5 wide:text-2xl wide-2k:gap-5 wide-2k:px-20 wide-2k:py-6 wide-2k:text-2xl',
   md: 'gap-2 px-5 py-3 text-xs sm:gap-2.5 sm:px-8 sm:py-3.5 sm:text-sm xl:gap-3 xl:px-10 xl:py-4 xl:text-base 2xl:px-12 2xl:py-4.5 2xl:text-lg',
-  sm: 'gap-1.5 px-4 py-2.5 text-[11px] sm:gap-2 sm:px-6 sm:py-3 sm:text-xs xl:px-7 xl:py-3 xl:text-sm',
+  sm: 'gap-1.5 px-4 py-2.5 text-mini sm:gap-2 sm:px-6 sm:py-3 sm:text-xs xl:px-7 xl:py-3 xl:text-sm',
 };
 
 const ICON_SIZE: Record<DbdButtonSize, string> = {

@@ -1,5 +1,6 @@
-﻿// frontend/src/hooks/usePersistentDrawer.ts
 'use client';
+
+﻿// frontend/src/hooks/usePersistentDrawer.ts
 
 import { useState, useEffect, useCallback } from 'react';
 

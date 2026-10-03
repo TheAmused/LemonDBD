@@ -1,6 +1,6 @@
 // frontend/src/app/[locale]/tier-lists/new/loading.tsx
 import React from 'react';
-import { DbdSpinner } from '@/components/DbdSpinner';
+import { DbdSpinner } from '@/components/common/DbdSpinner';
 import { PageShellFallback } from '@/components/layout/PageShellFallback';
 
 export default function TierListsLoading() {
@@ -13,7 +13,7 @@ export default function TierListsLoading() {
           layout="inline"
           accent="blood"
           needleSpeed={1.6}
-          label="Loading tier lists..."
+          labelKey="tierLists.loading"
         />
       }
     />

@@ -13,11 +13,7 @@ export default {
   unownedPerk: "未所持パーク",
   equipment: "装備・アドオン",
   temporarilyDisabled: "一時的に無効化中",
-  whyDisabled: "なぜ {item} は無効化されているのですか？",
   wasDisabledTemporarily: "{item} は一時的に無効化されています。",
   reasonLabel: "理由",
-  done: '完了',
-  clickOutsideToClose: '枠外をクリックまたはESCで閉じる',
-  copySlug: 'IDスラッグをコピー',
-  slugCopied: 'スラッグをコピーしました！',
+  done: '完了'
 } as const;

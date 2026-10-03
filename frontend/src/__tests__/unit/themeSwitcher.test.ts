@@ -2,12 +2,13 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import React from 'react';
-import { renderToStaticMarkup } from 'react-dom/server';
 import { SidebarBottomControls } from '@/components/sidebar/SidebarBottomControls';
+import enDict from '@/locales/en';
+import { renderWithDictionary } from '../helpers/renderWithDictionary';
 
 describe('SidebarBottomControls Theme Switcher', () => {
   it('renders a closed dropdown button with listbox semantics', () => {
-    const html = renderToStaticMarkup(
+    const html = renderWithDictionary(
       React.createElement(SidebarBottomControls, {
         currentLocale: 'en',
         onOpenBugModal: () => {},
@@ -17,28 +18,24 @@ describe('SidebarBottomControls Theme Switcher', () => {
 
     assert.ok(html.includes('aria-haspopup="listbox"'), 'Must expose a listbox popup');
     assert.ok(html.includes('aria-expanded="false"'), 'Must start closed');
-    assert.ok(html.includes('aria-label="Theme selector"'), 'Must have a default aria-label');
+    assert.ok(html.includes(`aria-label="${enDict.sidebar.toggleTheme}"`), 'Must label the selector from the dictionary');
   });
 
   it('uses dict toggleTheme aria-label when available', () => {
-    const html = renderToStaticMarkup(
+    const html = renderWithDictionary(
       React.createElement(SidebarBottomControls, {
         currentLocale: 'en',
-        dict: {
-          sidebar: {
-            toggleTheme: 'Custom Theme Selector',
-          },
-        } as any,
         onOpenBugModal: () => {},
         onOpenCoffeeModal: () => {},
-      })
+      }),
+      { overrides: { sidebar: { toggleTheme: 'Custom Theme Selector' } } }
     );
 
     assert.ok(html.includes('aria-label="Custom Theme Selector"'), 'Must use custom dict toggleTheme');
   });
 
   it('shows the current theme label on the closed button when theme is "light"', () => {
-    const html = renderToStaticMarkup(
+    const html = renderWithDictionary(
       React.createElement(SidebarBottomControls, {
         currentLocale: 'en',
         theme: 'light',
@@ -51,7 +48,7 @@ describe('SidebarBottomControls Theme Switcher', () => {
   });
 
   it('shows the current theme label on the closed button when theme is "light-lemon"', () => {
-    const html = renderToStaticMarkup(
+    const html = renderWithDictionary(
       React.createElement(SidebarBottomControls, {
         currentLocale: 'en',
         theme: 'light-lemon',
@@ -64,7 +61,7 @@ describe('SidebarBottomControls Theme Switcher', () => {
   });
 
   it('shows the current theme label on the closed button when theme is "dark"', () => {
-    const html = renderToStaticMarkup(
+    const html = renderWithDictionary(
       React.createElement(SidebarBottomControls, {
         currentLocale: 'en',
         theme: 'dark',
@@ -77,7 +74,7 @@ describe('SidebarBottomControls Theme Switcher', () => {
   });
 
   it('shows the current theme label on the closed button when theme is "system"', () => {
-    const html = renderToStaticMarkup(
+    const html = renderWithDictionary(
       React.createElement(SidebarBottomControls, {
         currentLocale: 'en',
         theme: 'system',
@@ -90,7 +87,7 @@ describe('SidebarBottomControls Theme Switcher', () => {
   });
 
   it('falls back to the Laptop/system option when theme is unset or unrecognized', () => {
-    const html = renderToStaticMarkup(
+    const html = renderWithDictionary(
       React.createElement(SidebarBottomControls, {
         currentLocale: 'en',
         theme: 'some-unknown-theme',
@@ -103,21 +100,23 @@ describe('SidebarBottomControls Theme Switcher', () => {
   });
 
   it('uses dictionary fallbacks for light, light-lemon, dark, and system labels when provided', () => {
-    const html = renderToStaticMarkup(
+    const html = renderWithDictionary(
       React.createElement(SidebarBottomControls, {
         currentLocale: 'en',
-        dict: {
+        theme: 'dark',
+        onOpenBugModal: () => {},
+        onOpenCoffeeModal: () => {},
+      }),
+      {
+        overrides: {
           sidebar: {
             themeLight: 'Jasny',
             themeLightLemon: 'Jasny (Cytryna)',
             themeDark: 'Ciemny',
             themeSystem: 'Systemowy',
           },
-        } as any,
-        theme: 'dark',
-        onOpenBugModal: () => {},
-        onOpenCoffeeModal: () => {},
-      })
+        },
+      }
     );
 
     assert.ok(html.includes('Ciemny'), 'Must render custom dark label on the closed button');

@@ -2,17 +2,18 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import React from 'react';
-import { renderToStaticMarkup } from 'react-dom/server';
-import { DbdSpinner } from '@/components/DbdSpinner';
+import { DbdSpinner } from '@/components/common/DbdSpinner';
+import type { Locale } from '@/i18n/config';
 import enDict from '@/locales/en';
 import deDict from '@/locales/de';
 import esDict from '@/locales/es';
 import jaDict from '@/locales/ja';
 import plDict from '@/locales/pl';
+import { renderWithDictionary } from '../helpers/renderWithDictionary';
 
 describe('DbdSpinner: Core Visual & Dead by Daylight Skill Check Rendering', () => {
   it('renders Dead by Daylight Skill Check dial SVG with correct viewBox and geometry', () => {
-    const html = renderToStaticMarkup(
+    const html = renderWithDictionary(
       React.createElement(DbdSpinner, {
         size: 'lg',
         accent: 'crimson',
@@ -30,7 +31,7 @@ describe('DbdSpinner: Core Visual & Dead by Daylight Skill Check Rendering', () 
   });
 
   it('renders central LemonDBD emblem icon when showEmblem is true', () => {
-    const htmlWith = renderToStaticMarkup(
+    const htmlWith = renderWithDictionary(
       React.createElement(DbdSpinner, {
         size: 'md',
         showEmblem: true,
@@ -45,7 +46,7 @@ describe('DbdSpinner: Layout Modes, Sizes & Accents', () => {
   const layouts = ['fullscreen', 'page', 'card', 'inline', 'compact'] as const;
   for (const layout of layouts) {
     it(`Renders in layout ${layout}`, () => {
-      const html = renderToStaticMarkup(
+      const html = renderWithDictionary(
         React.createElement(DbdSpinner, { layout })
       );
       assert.ok(html.includes('role="status"'), 'Layout must have role=status');
@@ -55,7 +56,7 @@ describe('DbdSpinner: Layout Modes, Sizes & Accents', () => {
   const sizes = ['xs', 'sm', 'md', 'lg', 'xl', '2xl', 'responsive', 240] as const;
   for (const size of sizes) {
     it(`Renders in size ${size}`, () => {
-      const html = renderToStaticMarkup(
+      const html = renderWithDictionary(
         React.createElement(DbdSpinner, { size })
       );
       assert.ok(html.includes('role="status"'), 'Size must render valid status container');
@@ -65,7 +66,7 @@ describe('DbdSpinner: Layout Modes, Sizes & Accents', () => {
   const accents = ['crimson', 'amber', 'emerald', 'cyan', 'violet', 'blood', 'gold', 'neon'] as const;
   for (const accent of accents) {
     it(`Renders with accent ${accent}`, () => {
-      const html = renderToStaticMarkup(
+      const html = renderWithDictionary(
         React.createElement(DbdSpinner, { accent })
       );
       assert.ok(html.includes('role="status"'), 'Accent must have role=status');
@@ -73,7 +74,7 @@ describe('DbdSpinner: Layout Modes, Sizes & Accents', () => {
   }
 
   it('Renders with customColors overrides correctly', () => {
-    const html = renderToStaticMarkup(
+    const html = renderWithDictionary(
       React.createElement(DbdSpinner, {
         customColors: {
           greatZone: '#ff0055',
@@ -98,9 +99,7 @@ describe('DbdSpinner: i18n Localization Parity', () => {
   ];
   for (const { code, dict } of locales) {
     it(`Locale ${code} has valid loading label fallback`, () => {
-      const html = renderToStaticMarkup(
-        React.createElement(DbdSpinner, { dict })
-      );
+      const html = renderWithDictionary(React.createElement(DbdSpinner), { dict, locale: code as Locale });
       const expectedLabel = dict.app?.loading || dict.characterDetail?.loading;
       assert.ok(expectedLabel && expectedLabel.length > 0, 'Valid label found');
       assert.ok(html.includes(expectedLabel), 'Spinner must render localized label');

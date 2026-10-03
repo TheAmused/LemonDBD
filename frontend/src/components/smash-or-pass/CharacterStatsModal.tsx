@@ -13,31 +13,38 @@ import {
 } from 'lucide-react';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 import { getAvatarUrl as resolveAvatarUrl } from '@/components/character-detail/types';
-import { EntityStatItem } from '@/types/smashOrPass';
+import { EntityItem, EntityStatItem } from '@/types/smashOrPass';
 import { localizedProfile } from '@/utils/entityProfile';
 import { Modal } from '@/components/common/Modal';
 import type { Dictionary } from '@/locales/types';
 import { FriendzoneIcon, EldritchVoidIcon } from '@/components/icons/DbdIcons';
+import { Surface } from '@/components/common/Surface';
+import { formatNumber } from '@/utils/format';
+import { isSurvivor as isSurvivorRole } from '@/utils/characterUtils';
+import { useDictionary } from "@/context/DictionaryContext";
+
+/** An entity, optionally carrying legacy vote-response fields. */
+type StatsCharacter = EntityItem & {
+  character_slug?: string;
+  character_name?: string;
+  total_votes?: number;
+  smash_count?: number;
+  pass_count?: number;
+  smash_rate?: number;
+};
 
 interface CharacterStatsModalProps {
   isOpen: boolean;
   onClose: () => void;
-  character: any;
+  character: StatsCharacter | null;
   stats?: EntityStatItem;
   locale?: string;
-  dict?: Dictionary | any;
 }
 
-export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({
-  isOpen,
-  onClose,
-  character: rawCharacter,
-  stats,
-  locale = 'en',
-  dict,
-}) => {
+export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({ isOpen, onClose, character: rawCharacter, stats, locale = 'en' }) => {
+  const dict = useDictionary();
   const backendBase = getBackendBaseUrl();
-  const rawSmashDict = dict?.smashOrPass;
+  const rawSmashDict = dict.smashOrPass;
 
   const slug = rawCharacter?.slug || rawCharacter?.character_slug || rawCharacter?.id || '';
 
@@ -51,7 +58,7 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({
 
   const name = rawCharacter?.name || rawCharacter?.character_name || 'Candidate';
   const role = rawCharacter?.role || 'Survivor';
-  const isSurvivor = role === 'Survivor';
+  const isSurvivor = isSurvivorRole(role);
   // The old `title` chain (locMeta.title || meta.title || meta.archetype || ...tagline) is
   // dropped entirely: it was never rendered here — the modal header shows `name`.
 
@@ -83,7 +90,7 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({
   const tierInfo = useMemo(() => {
     if (smashRate >= 85) {
       return {
-        tier: rawSmashDict?.tiers?.godTier || 'God Tier',
+        tier: rawSmashDict.tiers.godTier,
         color: 'text-accent-amber',
         bg: 'bg-accent-amber/15 border-accent-amber/40',
         glow: '',
@@ -92,7 +99,7 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({
     }
     if (smashRate >= 65) {
       return {
-        tier: rawSmashDict?.tiers?.fatalAttraction || 'Fatal Attraction',
+        tier: rawSmashDict.tiers.fatalAttraction,
         color: 'text-accent-red',
         bg: 'bg-accent-red/15 border-accent-red/40',
         glow: '',
@@ -101,7 +108,7 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({
     }
     if (smashRate >= 40) {
       return {
-        tier: rawSmashDict?.tiers?.friendzone || 'Friendzone',
+        tier: rawSmashDict.tiers.friendzone,
         color: 'text-text-secondary',
         bg: 'bg-bg-elevated border-border-color',
         glow: '',
@@ -109,7 +116,7 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({
       };
     }
     return {
-      tier: rawSmashDict?.tiers?.eldritchVoid || 'Eldritch Void',
+      tier: rawSmashDict.tiers.eldritchVoid,
       color: 'text-text-muted',
       bg: 'bg-bg-elevated border-border-color',
       glow: '',
@@ -118,26 +125,26 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({
   }, [smashRate, rawSmashDict]);
 
   const roleLabel = isSurvivor
-    ? rawSmashDict?.filters?.survivors || 'Survivor'
-    : rawSmashDict?.filters?.killers || 'Killer';
+    ? rawSmashDict.filters.survivors
+    : rawSmashDict.filters.killers;
 
-  const communityConsensusLabel = rawSmashDict?.communityConsensus || 'Community Consensus';
-  const smashRateLabel = rawSmashDict?.statsDetail?.communitySmashRate || rawSmashDict?.statsDetail?.smashRate || 'Smash Rate';
-  const smashesLabel = rawSmashDict?.statsDetail?.smashCount || 'Smashes';
-  const passesLabel = rawSmashDict?.statsDetail?.passCount || 'Passes';
-  const totalVotesLabel = rawSmashDict?.statsDetail?.totalVotes || 'Total Votes';
-  const globalRankLabel = rawSmashDict?.statsDetail?.rank || 'Global Rank';
-  const loreQuoteLabel = rawSmashDict?.loreLabels?.signatureQuote || 'Signature Quote';
-  const loreProfileLabel = rawSmashDict?.loreLabels?.bio || 'Bio';
-  const greenFlagsLabel = rawSmashDict?.loreLabels?.greenFlag || 'Green Flags';
-  const redFlagsLabel = rawSmashDict?.loreLabels?.redFlag || 'Red Flags';
-  const turnOnLabel = rawSmashDict?.loreLabels?.turn_on || 'Turn On:';
-  const dealbreakerLabel = rawSmashDict?.loreLabels?.dealbreaker || 'Dealbreaker:';
-  const percentSign = rawSmashDict?.percentSign || '%';
+  const communityConsensusLabel = rawSmashDict.communityConsensus;
+  const smashRateLabel = rawSmashDict.statsDetail.communitySmashRate;
+  const smashesLabel = rawSmashDict.statsDetail.smashCount;
+  const passesLabel = rawSmashDict.statsDetail.passCount;
+  const totalVotesLabel = rawSmashDict.statsDetail.totalVotes;
+  const globalRankLabel = rawSmashDict.statsDetail.rank;
+  const loreQuoteLabel = rawSmashDict.loreLabels.signatureQuote;
+  const loreProfileLabel = rawSmashDict.loreLabels.bio;
+  const greenFlagsLabel = rawSmashDict.loreLabels.greenFlag;
+  const redFlagsLabel = rawSmashDict.loreLabels.redFlag;
+  const turnOnLabel = rawSmashDict.loreLabels.turn_on;
+  const dealbreakerLabel = rawSmashDict.loreLabels.dealbreaker;
+  const percentSign = rawSmashDict.percentSign;
 
   const roleBadge = (
     <span
-      className={`text-[10px] font-black uppercase font-mono px-2 py-0.5 rounded-lg border ${
+      className={`text-tiny font-black uppercase px-2 py-0.5 rounded-lg border ${
         isSurvivor
           ? 'bg-accent-green/15 text-accent-green border-accent-green/40'
           : 'bg-accent-red/15 text-accent-red border-accent-red/40'
@@ -181,17 +188,17 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({
               {tierInfo.icon}
             </div>
             <div>
-              <span className="text-[10px] font-bold uppercase tracking-widest text-text-muted block font-mono">
+              <span className="type-label-2xs text-text-muted block">
                 {communityConsensusLabel}
               </span>
-              <span className={`text-sm font-black font-mono ${tierInfo.color}`}>
+              <span className={`text-sm font-black ${tierInfo.color}`}>
                 {tierInfo.tier}
               </span>
             </div>
           </div>
 
-          <div className="text-right font-mono">
-            <span className="text-[10px] text-text-muted block">{smashRateLabel}</span>
+          <div className="text-right">
+            <span className="type-micro text-text-muted block">{smashRateLabel}</span>
             <span className="text-xl font-black text-accent-red flex items-center gap-1 justify-end">
               <Heart className="h-4 w-4 fill-accent-red" /> {smashRate}{percentSign}
             </span>
@@ -199,13 +206,13 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({
         </div>
 
         {/* 2. Vote Breakdown Progress Bar */}
-        <div className="space-y-1.5 p-3.5 rounded-2xl bg-bg-elevated border border-border-color font-mono">
-          <div className="flex justify-between text-xs font-bold">
+        <Surface tone="elevated" radius="2xl" padding="none" className="space-y-1.5 p-3.5">
+          <div className="flex justify-between type-strong">
             <span className="flex items-center gap-1 text-accent-red">
-              <Heart className="h-3.5 w-3.5 fill-accent-red" /> {smashCount.toLocaleString()} {smashesLabel} ({smashPct}{percentSign})
+              <Heart className="h-3.5 w-3.5 fill-accent-red" /> {formatNumber(smashCount)} {smashesLabel} ({smashPct}{percentSign})
             </span>
             <span className="flex items-center gap-1 text-text-muted">
-              <ThumbsDown className="h-3.5 w-3.5" /> {passCount.toLocaleString()} {passesLabel} ({passPct}{percentSign})
+              <ThumbsDown className="h-3.5 w-3.5" /> {formatNumber(passCount)} {passesLabel} ({passPct}{percentSign})
             </span>
           </div>
           <div className="h-3 w-full bg-bg-elevated rounded-full overflow-hidden flex shadow-inner">
@@ -218,32 +225,32 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({
               className="h-full bg-border-color transition-all duration-500"
             />
           </div>
-          <div className="flex justify-between text-[10px] text-text-muted pt-1">
-            <span>{totalVotesLabel}: {totalVotes.toLocaleString()}</span>
+          <div className="flex justify-between type-micro text-text-muted pt-1">
+            <span>{totalVotesLabel}: {formatNumber(totalVotes)}</span>
             {stats?.rank && <span>{globalRankLabel}: #{stats.rank}</span>}
           </div>
-        </div>
+        </Surface>
 
         {/* 3. Lore Quote */}
         {quote && (
-          <div className="p-3.5 rounded-2xl bg-bg-elevated border border-border-color space-y-1">
-            <div className="flex items-center gap-1 text-accent-amber text-[10px] uppercase font-bold font-mono">
+          <Surface tone="elevated" radius="2xl" padding="none" className="p-3.5 space-y-1">
+            <div className="flex items-center gap-1 text-accent-amber type-label-2xs">
               <Quote className="h-3.5 w-3.5" />
               <span>{loreQuoteLabel}</span>
             </div>
-            <p className="text-xs text-text-secondary font-serif italic leading-relaxed">
+            <p className="type-body text-text-secondary italic">
               {quote}
             </p>
-          </div>
+          </Surface>
         )}
 
         {/* 4. Bio Profile */}
         {bio && (
           <div className="space-y-1">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-text-muted font-mono">
+            <span className="type-label-2xs text-text-muted">
               {loreProfileLabel}
             </span>
-            <p className="text-xs text-text-secondary leading-relaxed bg-bg-elevated p-3 rounded-2xl border border-border-color font-sans">
+            <p className="type-body text-text-secondary bg-bg-elevated p-3 rounded-2xl border border-border-color">
               {bio}
             </p>
           </div>
@@ -253,17 +260,17 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({
 
         {/* 6. Turn On & Dealbreaker */}
         {(profile.turn_on || dealbreaker) && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs font-mono">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
             {profile.turn_on && (
               <div className="bg-bg-elevated border border-border-color p-2.5 rounded-2xl space-y-0.5">
-                <span className="font-bold text-accent-red uppercase text-[10px] block">{turnOnLabel}</span>
-                <p className="text-text-secondary text-[11px] leading-tight font-sans">{profile.turn_on}</p>
+                <span className="type-label-2xs text-accent-red block">{turnOnLabel}</span>
+                <p className="text-text-secondary text-mini leading-tight">{profile.turn_on}</p>
               </div>
             )}
             {dealbreaker && (
               <div className="bg-bg-elevated border border-border-color p-2.5 rounded-2xl space-y-0.5">
-                <span className="font-bold text-accent-amber uppercase text-[10px] block">{dealbreakerLabel}</span>
-                <p className="text-text-secondary text-[11px] leading-tight font-sans">{dealbreaker}</p>
+                <span className="type-label-2xs text-accent-amber block">{dealbreakerLabel}</span>
+                <p className="text-text-secondary text-mini leading-tight">{dealbreaker}</p>
               </div>
             )}
           </div>

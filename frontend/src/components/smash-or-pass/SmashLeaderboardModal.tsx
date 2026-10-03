@@ -11,23 +11,22 @@ import {
   Flame,
   Sparkles,
   Layers,
-  ThumbsDown,
   User,
   Users,
 } from 'lucide-react';
-import type { Dictionary } from '@/locales/types';
 import type { LeaderboardItem } from '@/types/smashOrPass';
 import { localizedProfile } from '@/utils/entityProfile';
 import { Modal } from '@/components/common/Modal';
 import { CustomDropdown, type DropdownOption } from '@/components/common/CustomDropdown';
 import { Tooltip } from '@/components/common/Tooltip';
-import { getAvatarUrl as resolveAvatarUrl } from '@/components/character-detail/types';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
-import { SmashSounds } from '@/components/smash-or-pass/SmashSoundEffects';
 import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
 import { FriendzoneIcon, EldritchVoidIcon } from '@/components/icons/DbdIcons';
 import { IridescentShardIcon } from '@/components/icons/DbdIcons';
-import { RankFirstIcon, RankPlacedIcon } from '@/components/icons/DbdIcons';
+import { Button } from '@/components/common/Button';
+import { Input } from '@/components/common/Field';
+import { CandidateRow, type TierConfig } from "./SmashLeaderboardParts";
+import { useDictionary } from "@/context/DictionaryContext";
 
 export interface SmashLeaderboardModalProps {
   isOpen: boolean;
@@ -38,290 +37,24 @@ export interface SmashLeaderboardModalProps {
   editionName?: string;
   isAuthenticated?: boolean;
   locale?: string;
-  dict?: Dictionary | any;
 }
 
 type TierKey = 'godTier' | 'fatalAttraction' | 'friendzone' | 'eldritchVoid';
-
-interface TierConfig {
-  name: string;
-  style: string;
-  icon: React.ReactNode;
-  range: string;
-}
-
 // LocalizedMetadata is gone: it described the duplicate `i18n` / `translations` blobs and
 // the `title` twin of `archetype`. EntityProfile (via localizedProfile) covers it now.
-
-interface CandidateRowProps {
-  item: LeaderboardItem;
-  index: number;
-  isTop3: boolean;
-  hasUserSmashed: boolean;
-  tier: TierConfig | null;
-  locale: string;
-  backendBase: string;
-  rawSmashDict: any;
-  survivorsLabel: string;
-  killersLabel: string;
-  unratedLabel: string;
-  noVotesDesc: string;
-  percentSign: string;
-  votesWord: string;
-  onSelectCharacter?: (character: LeaderboardItem) => void;
-  onDragStateCheck: () => boolean;
-  onMouseDownCheck: () => boolean;
-}
-
-/**
- * Highly optimized, memoized candidate row for the Hall of Fame leaderboard.
- * Uses native title attributes for badges to avoid mounting hundreds of nested Tooltip portals.
- */
-const CandidateRow = React.memo<CandidateRowProps>(({
-  item,
-  index,
-  isTop3,
-  hasUserSmashed,
-  tier,
-  locale,
-  backendBase,
-  rawSmashDict,
-  survivorsLabel,
-  killersLabel,
-  unratedLabel,
-  noVotesDesc,
-  percentSign,
-  votesWord,
-  onSelectCharacter,
-  onDragStateCheck,
-  onMouseDownCheck,
-}) => {
-  const itemSlug = item.slug || item.character_slug || '';
-  const itemName = item.name || item.character_name || itemSlug;
-  const isSurvivor = item.role === 'Survivor';
-  const totalVotes = item.total_votes ?? item.stat?.total_votes ?? 0;
-  const smashRate = item.smash_rate ?? item.stat?.smash_rate ?? 0;
-  const smashCount = item.smash_count ?? item.stat?.smash_count ?? 0;
-  const passCount = item.pass_count ?? item.stat?.pass_count ?? 0;
-  const hasVotes = totalVotes > 0;
-
-  const avatarSrc =
-    item.media_url?.startsWith('http') || item.media_url?.startsWith('/static')
-      ? `${item.media_url.startsWith('http') ? '' : backendBase}${item.media_url}`
-      : resolveAvatarUrl(
-          backendBase,
-          {
-            name: itemName,
-            category: item.role,
-            avatar_local_path: `avatars/${isSurvivor ? 'survivors' : 'killers'}/${itemSlug}.png`,
-          },
-          isSurvivor
-        );
-
-  const profile = localizedProfile(item.metadata, locale || 'en');
-  // `|| item.role` is the render-level default for an entity with no archetype yet.
-  const itemSubtitle = profile.archetype || profile.tagline || item.role;
-
-  const candidateAriaLabel = rawSmashDict?.candidateRankLabel
-    ? rawSmashDict.candidateRankLabel
-        .replace('{name}', itemName)
-        .replace('{rank}', String(index + 1))
-        .replace('{rate}', String(smashRate))
-    : `${itemName} #${index + 1} (${smashRate}%)`;
-
-  return (
-    <div
-      role="button"
-      tabIndex={0}
-      onClick={() => {
-        if (onDragStateCheck()) return;
-        SmashSounds.playHoverTick();
-        onSelectCharacter?.({ ...item, slug: itemSlug, name: itemName });
-      }}
-      onMouseEnter={() => {
-        if (!onMouseDownCheck()) {
-          SmashSounds.playHoverTick();
-        }
-      }}
-      onMouseDown={() => {
-        SmashSounds.playCardGrabSound();
-      }}
-      onKeyDown={(e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          onSelectCharacter?.({ ...item, slug: itemSlug, name: itemName });
-        }
-      }}
-      aria-label={candidateAriaLabel}
-      className={`group relative flex flex-col sm:flex-row items-stretch sm:items-center justify-between p-3.5 sm:p-4 rounded-3xl border transition-all duration-150 cursor-pointer select-none hover:-translate-y-0.5 hover:shadow-xl active:translate-y-0 active:scale-[0.99] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red gap-3.5 sm:gap-4 ${
-        hasUserSmashed
-          ? 'bg-accent-red/10 border-accent-red/50 hover:border-accent-red'
-          : 'bg-bg-surface border-border-color hover:border-border-subtle hover:bg-bg-elevated hover:shadow-lg'
-      }`}
-    >
-      {/* Left Section: Rank + Avatar + Details */}
-      <div className="flex items-center gap-3.5 sm:gap-4 min-w-0 flex-1">
-        {/* Special Luxury Rank Medals for #1, #2, #3 */}
-        <div
-          className={`flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-2xl font-black font-mono text-xs sm:text-sm shrink-0 transition-transform group-hover:scale-105 ${
-            isTop3
-              ? index === 0
-                ? 'medal-gold'
-                : index === 1
-                  ? 'medal-silver'
-                  : 'medal-bronze'
-              : 'bg-bg-elevated text-text-muted border border-border-color'
-          }`}
-        >
-          {isTop3 ? (
-            index === 0 ? (
-              <RankFirstIcon className="h-5 w-5 fill-current stroke-current" />
-            ) : (
-              <RankPlacedIcon className="h-5 w-5" />
-            )
-          ) : (
-            `#${index + 1}`
-          )}
-        </div>
-
-        {/* Avatar Portrait */}
-        <div className="relative h-13 w-13 sm:h-14 sm:w-14 rounded-2xl overflow-hidden bg-bg-elevated border border-border-color shrink-0 shadow-inner group-hover:border-accent-red/50 transition-colors">
-          <img
-            src={avatarSrc}
-            alt=""
-            loading="lazy"
-            decoding="async"
-            className="h-full w-full object-cover object-top"
-            onError={(e) => {
-              const target = e.target as HTMLImageElement;
-              if (!target.dataset.triedFallback) {
-                target.dataset.triedFallback = '1';
-                target.src = `${backendBase}/static/avatars/survivors/sable_ward.webp`;
-              }
-            }}
-          />
-          {hasUserSmashed && (
-            <div
-              className="absolute top-1 right-1 flex h-4 w-4 items-center justify-center rounded-full bg-accent-red text-text-inverted ring-2 ring-bg-surface"
-              title={rawSmashDict?.youSmashedThis || ''}
-              aria-label={rawSmashDict?.youSmashedThis || ''}
-            >
-              <Heart className="h-2.5 w-2.5 fill-text-inverted text-text-inverted" />
-            </div>
-          )}
-        </div>
-
-        {/* Details: Name + Icon-Only Badges */}
-        <div className="min-w-0 text-left flex-1">
-          <div className="flex items-center gap-2 flex-wrap mb-1">
-            <span className="text-sm sm:text-base font-black font-mono text-text-primary group-hover:text-accent-red truncate">
-              {itemName}
-            </span>
-
-            {/* Role Icon Badge (Accessible native tooltip) */}
-            <span
-              title={isSurvivor ? survivorsLabel : killersLabel}
-              aria-label={isSurvivor ? survivorsLabel : killersLabel}
-              className={`flex h-6 w-6 items-center justify-center rounded-lg border shrink-0 transition-transform hover:scale-110 ${
-                isSurvivor
-                  ? 'bg-accent-green/15 border-accent-green/40 text-accent-green'
-                  : 'bg-accent-red/15 border-accent-red/40 text-accent-red'
-              }`}
-            >
-              {isSurvivor ? <SurvivorIcon className="h-3.5 w-3.5" /> : <KillerIcon className="h-3.5 w-3.5" />}
-            </span>
-
-            {/* Tier Icon Badge or Unrated "?" Badge (Accessible native tooltip) */}
-            {tier ? (
-              <span
-                title={`${tier.name} (${tier.range})`}
-                aria-label={`${tier.name} (${tier.range})`}
-                className={`flex h-6 w-6 items-center justify-center rounded-lg border shrink-0 transition-transform hover:scale-110 ${tier.style}`}
-              >
-                {tier.icon}
-              </span>
-            ) : (
-              <span
-                title={`${unratedLabel} - ${noVotesDesc}`}
-                aria-label={`${unratedLabel} - ${noVotesDesc}`}
-                className="flex h-6 w-6 items-center justify-center rounded-lg border border-border-color bg-bg-elevated text-text-muted font-black font-mono text-xs shadow-inner shrink-0 transition-transform hover:scale-110"
-              >
-                ?
-              </span>
-            )}
-          </div>
-
-          <p className="text-xs text-text-muted font-sans italic line-clamp-1">
-            {itemSubtitle}
-          </p>
-        </div>
-      </div>
-
-      {/* Right Section: Visual Progress Bar + Smash Percentage + Vote Breakdown */}
-      <div className="flex items-center justify-between sm:justify-end gap-3.5 shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-border-color">
-        {/* Progress Bar */}
-        <div className="flex flex-col gap-1 w-28 sm:w-32 shrink-0">
-          <div className="flex items-center justify-between text-[11px] font-mono">
-            <span className={`font-bold flex items-center gap-1 ${hasVotes ? 'text-accent-red' : 'text-text-muted'}`}>
-              <Heart className={`h-3 w-3 ${hasVotes ? 'fill-accent-red text-accent-red' : 'text-text-muted'}`} />
-              {hasVotes ? `${smashRate}${percentSign}` : '—'}
-            </span>
-            <span className="text-text-muted">
-              {hasVotes ? `${100 - smashRate}${percentSign}` : '—'}
-            </span>
-          </div>
-
-          <div className="h-2 w-full rounded-full bg-bg-elevated overflow-hidden flex shadow-inner">
-            {hasVotes ? (
-              <>
-                <div
-                  style={{ width: `${Math.max(4, Math.min(100, smashRate))}%` }}
-                  className="h-full bg-accent-red transition-all duration-300"
-                />
-                <div
-                  style={{ width: `${Math.max(0, 100 - smashRate)}%` }}
-                  className="h-full bg-border-color"
-                />
-              </>
-            ) : (
-              <div className="h-full w-full bg-border-color" />
-            )}
-          </div>
-
-          <span className="text-[10px] font-mono text-text-muted text-right">
-            {totalVotes.toLocaleString()} {votesWord}
-          </span>
-        </div>
-
-        {/* Smashes / Passes Numeric Counts */}
-        <div className="text-right font-mono text-xs shrink-0 min-w-[65px]">
-          <div className="flex items-center gap-1.5 justify-end text-accent-red font-black">
-            <Heart className="h-3.5 w-3.5 fill-accent-red" />
-            <span>{smashCount}</span>
-          </div>
-          <div className="flex items-center gap-1.5 justify-end text-text-muted text-[11px] font-semibold mt-0.5">
-            <ThumbsDown className="h-3 w-3 text-text-muted" />
-            <span>{passCount}</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-});
-
 CandidateRow.displayName = 'CandidateRow';
 
 export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
-  isOpen,
-  onClose,
-  items,
-  userSmashes = [],
-  onSelectCharacter,
-  editionName = '',
-  isAuthenticated = false,
-  locale = 'en',
-  dict,
-}) => {
+      isOpen,
+      onClose,
+      items,
+      userSmashes = [],
+      onSelectCharacter,
+      editionName = '',
+      isAuthenticated = false,
+      locale = 'en',
+    }) => {
+  const dict = useDictionary();
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [roleFilter, setRoleFilter] = useState<'all' | 'Survivor' | 'Killer'>('all');
   const [genderFilter, setGenderFilter] = useState<'all' | 'female' | 'male' | 'monster_other'>('all');
@@ -391,7 +124,7 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
   const checkMouseDown = useCallback(() => isMouseDownRef.current, []);
 
   const backendBase = getBackendBaseUrl();
-  const rawSmashDict = dict?.smashOrPass;
+  const rawSmashDict = dict.smashOrPass;
 
   const userVotedSet = useMemo(() => {
     return new Set(userSmashes.map((s) => s.slug));
@@ -408,25 +141,25 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
   const tierMetadata: Record<TierKey, TierConfig> = useMemo(
     () => ({
       godTier: {
-        name: rawSmashDict?.tiers?.godTier || rawSmashDict?.godTier || 'God Tier',
+        name: rawSmashDict.tiers.godTier,
         style: 'border-accent-amber/50 bg-accent-amber/15 text-accent-amber',
         icon: <Sparkles className="h-3.5 w-3.5 text-accent-amber" aria-hidden="true" />,
         range: '>= 85%',
       },
       fatalAttraction: {
-        name: rawSmashDict?.tiers?.fatalAttraction || rawSmashDict?.fatalAttraction || 'Fatal Attraction',
+        name: rawSmashDict.tiers.fatalAttraction,
         style: 'border-accent-red/50 bg-accent-red/15 text-accent-red',
         icon: <Flame className="h-3.5 w-3.5 text-accent-red" aria-hidden="true" />,
         range: '65% - 84%',
       },
       friendzone: {
-        name: rawSmashDict?.tiers?.friendzone || rawSmashDict?.friendzone || 'Friendzone',
+        name: rawSmashDict.tiers.friendzone,
         style: 'border-border-color bg-bg-elevated text-text-secondary',
         icon: <FriendzoneIcon className="h-3.5 w-3.5 text-text-secondary" aria-hidden="true" />,
         range: '40% - 64%',
       },
       eldritchVoid: {
-        name: rawSmashDict?.tiers?.eldritchVoid || rawSmashDict?.eldritchVoid || 'Eldritch Void',
+        name: rawSmashDict.tiers.eldritchVoid,
         style: 'border-border-color bg-bg-elevated text-text-muted',
         icon: <EldritchVoidIcon className="h-3.5 w-3.5 text-text-muted" aria-hidden="true" />,
         range: '< 40%',
@@ -506,29 +239,29 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
     return groups;
   }, [filteredItems]);
 
-  const title = rawSmashDict?.modals?.leaderboardTitle || rawSmashDict?.leaderboard || 'Hall of Fame Leaderboard';
-  const searchPlaceholder = rawSmashDict?.search || 'Search candidates...';
-  const allRolesLabel = rawSmashDict?.filters?.allRoles || 'All Roles';
-  const survivorsLabel = rawSmashDict?.filters?.survivors || 'Survivors';
-  const killersLabel = rawSmashDict?.filters?.killers || 'Killers';
-  const allGendersLabel = rawSmashDict?.filters?.allGenders || 'All Genders';
-  const femaleOnlyLabel = rawSmashDict?.filters?.femaleOnly || 'Female';
-  const maleOnlyLabel = rawSmashDict?.filters?.maleOnly || 'Male';
-  const monstersLabel = rawSmashDict?.filters?.monsters || 'Monsters & Eldritch';
-  const allTiersLabel = rawSmashDict?.allTiers || rawSmashDict?.all || 'All Tiers';
-  const unratedLabel = rawSmashDict?.tiers?.unrated || 'Unrated';
+  const title = rawSmashDict.modals.leaderboardTitle;
+  const searchPlaceholder = rawSmashDict.search;
+  const allRolesLabel = rawSmashDict.filters.allRoles;
+  const survivorsLabel = rawSmashDict.filters.survivors;
+  const killersLabel = rawSmashDict.filters.killers;
+  const allGendersLabel = rawSmashDict.filters.allGenders;
+  const femaleOnlyLabel = rawSmashDict.filters.femaleOnly;
+  const maleOnlyLabel = rawSmashDict.filters.maleOnly;
+  const monstersLabel = rawSmashDict.filters.monsters;
+  const allTiersLabel = rawSmashDict.allTiers;
+  const unratedLabel = rawSmashDict.tiers.unrated;
 
-  const groupByTierLabel = rawSmashDict?.groupByTier || 'Group by Tier';
-  const rankedListLabel = rawSmashDict?.rankedList || 'Ranked List';
-  const sortSmashRateLabel = rawSmashDict?.sortSmashRate || 'Smash Rate (%)';
-  const sortTotalVotesLabel = rawSmashDict?.sortTotalVotes || 'Total Votes';
-  const sortMostSmashesLabel = rawSmashDict?.sortMostSmashes || 'Most Smashes';
-  const noVotesTitle = rawSmashDict?.noCommunityVotesTitle || 'No Community Votes Yet';
-  const noVotesDesc = rawSmashDict?.noCommunityVotesDesc || 'Cast votes to populate the Hall of Fame rankings.';
-  const noMatchesText = rawSmashDict?.noCandidatesFound || 'No candidates found matching your filter criteria.';
-  const votesWord = rawSmashDict?.votesWord || rawSmashDict?.votes || 'votes';
-  const candidatesWord = rawSmashDict?.candidatesWord || rawSmashDict?.candidates || 'candidates';
-  const percentSign = rawSmashDict?.percentSign || '%';
+  const groupByTierLabel = rawSmashDict.groupByTier;
+  const rankedListLabel = rawSmashDict.rankedList;
+  const sortSmashRateLabel = rawSmashDict.sortSmashRate;
+  const sortTotalVotesLabel = rawSmashDict.sortTotalVotes;
+  const sortMostSmashesLabel = rawSmashDict.sortMostSmashes;
+  const noVotesTitle = rawSmashDict.noCommunityVotesTitle;
+  const noVotesDesc = rawSmashDict.noCommunityVotesDesc;
+  const noMatchesText = rawSmashDict.noCandidatesFound;
+  const votesWord = rawSmashDict.votesWord;
+  const candidatesWord = rawSmashDict.candidatesWord;
+  const percentSign = rawSmashDict.percentSign;
 
   // Dropdown Options with Full Icon Coverage
   const roleOptions: DropdownOption<'all' | 'Survivor' | 'Killer'>[] = [
@@ -542,12 +275,12 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
     {
       value: 'female',
       label: femaleOnlyLabel,
-      icon: <span className="flex h-3.5 w-3.5 items-center justify-center font-bold text-accent-red text-xs">♀</span>,
+      icon: <span className="flex h-3.5 w-3.5 items-center justify-center type-strong text-accent-red">♀</span>,
     },
     {
       value: 'male',
       label: maleOnlyLabel,
-      icon: <span className="flex h-3.5 w-3.5 items-center justify-center font-bold text-text-secondary text-xs">♂</span>,
+      icon: <span className="flex h-3.5 w-3.5 items-center justify-center type-strong text-text-secondary">♂</span>,
     },
     { value: 'monster_other', label: monstersLabel, icon: <Skull className="h-3.5 w-3.5 text-text-muted" /> },
   ];
@@ -587,7 +320,7 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
   ];
 
   const headerBadge = editionName ? (
-    <span className="px-2.5 py-0.5 rounded-full bg-accent-red/20 text-accent-red border border-accent-red/40 text-xs font-bold font-mono truncate max-w-[200px]">
+    <span className="px-2.5 py-0.5 rounded-full bg-accent-red/20 text-accent-red border border-accent-red/40 type-strong truncate max-w-[200px]">
       {editionName}
     </span>
   ) : null;
@@ -610,22 +343,23 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
           {/* 1. Search Bar */}
           <div className="relative flex-1 min-w-[140px]">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-text-muted" aria-hidden="true" />
-            <input
+            <Input
+              fieldSize="sm"
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder={searchPlaceholder}
               aria-label={searchPlaceholder}
-              className="w-full pl-9 pr-8 py-2 rounded-xl bg-bg-surface border border-border-color text-xs text-text-primary placeholder-text-muted focus:outline-none focus:border-accent-red font-mono shadow-inner transition-colors"
+              className="pl-9 pr-8"
             />
             {searchQuery && (
-              <button
-                type="button"
+              <Button
+                variant="ghost" size="xs" icon
                 onClick={() => setSearchQuery('')}
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-text-muted hover:text-text-primary cursor-pointer p-0.5"
+                className="absolute right-1.5 top-1/2 -translate-y-1/2"
               >
                 <X className="h-3.5 w-3.5" />
-              </button>
+              </Button>
             )}
           </div>
 
@@ -671,27 +405,23 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
           />
 
           {/* 6. View Mode Toggle with Reusable Tooltip Component */}
-          <Tooltip
+          <Tooltip variant="action"
             title={viewMode === 'flat' ? groupByTierLabel : rankedListLabel}
             description={
               viewMode === 'flat'
-                ? (rawSmashDict?.tooltips?.groupByTierDesc || '')
-                : (rawSmashDict?.tooltips?.rankedListDesc || '')
+                ? (rawSmashDict.tooltips.groupByTierDesc)
+                : (rawSmashDict.tooltips.rankedListDesc)
             }
             placement="bottom"
           >
-            <button
-              type="button"
+            <Button
+              variant={viewMode === 'grouped' ? 'soft' : 'secondary'} size="sm" icon
               onClick={() => setViewMode(viewMode === 'flat' ? 'grouped' : 'flat')}
               aria-label={viewMode === 'flat' ? groupByTierLabel : rankedListLabel}
-              className={`flex items-center justify-center h-8 w-8 sm:h-9 sm:w-9 rounded-xl border text-xs font-mono font-bold transition-all cursor-pointer shrink-0 hover:scale-105 active:scale-95 ${
-                viewMode === 'grouped'
-                  ? 'bg-accent-red/20 border-accent-red/60 text-accent-red'
-                  : 'bg-bg-surface border-border-color text-text-muted hover:text-text-primary hover:border-border-subtle'
-              }`}
+              className="h-8 w-8 sm:h-9 sm:w-9 rounded-xl"
             >
               <Layers className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-            </button>
+            </Button>
           </Tooltip>
         </div>
       </div>
@@ -714,14 +444,14 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
               <Heart className="h-8 w-8 fill-accent-red/30 text-accent-red animate-pulse" />
             </div>
             <div className="space-y-1.5 max-w-md">
-              <h3 className="text-lg font-black text-text-primary font-mono">{noVotesTitle}</h3>
-              <p className="text-xs sm:text-sm text-text-muted font-sans">
+              <h3 className="text-lg font-black text-text-primary">{noVotesTitle}</h3>
+              <p className="text-xs sm:text-sm text-text-muted">
                 {noVotesDesc}
               </p>
             </div>
           </div>
         ) : filteredItems.length === 0 ? (
-          <div className="py-16 text-center text-xs sm:text-sm text-text-muted font-mono">
+          <div className="py-16 text-center text-xs sm:text-sm text-text-muted">
             {noMatchesText}
           </div>
         ) : viewMode === 'grouped' ? (
@@ -735,10 +465,10 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
                 <div className={`flex items-center justify-between px-4 py-2 rounded-2xl border ${meta.style}`}>
                   <div className="flex items-center gap-2">
                     {meta.icon}
-                    <span className="font-mono font-black text-xs sm:text-sm uppercase tracking-wider">{meta.name}</span>
-                    <span className="text-[11px] opacity-85 font-mono">({meta.range})</span>
+                    <span className="font-black text-xs sm:text-sm uppercase tracking-wider">{meta.name}</span>
+                    <span className="type-caption opacity-85">({meta.range})</span>
                   </div>
-                  <span className="text-xs font-mono font-black">
+                  <span className="type-strong">
                     {tierList.length} {candidatesWord}
                   </span>
                 </div>
@@ -818,4 +548,4 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
   );
 };
 
-export default SmashLeaderboardModal;
+export default SmashLeaderboardModal;

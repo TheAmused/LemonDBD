@@ -44,6 +44,10 @@ def create_app(config_class: Type[Config] | None = None) -> Flask:
         supports_credentials=True,
     )
 
+    from app.core.security import enforce_cookie_csrf_protection
+
+    flask_app.before_request(enforce_cookie_csrf_protection)
+
     db_uri = str(flask_app.config.get("SQLALCHEMY_DATABASE_URI", ""))
     if "sqlite" in db_uri.lower():
         engine_opts = dict(flask_app.config.get("SQLALCHEMY_ENGINE_OPTIONS", {}))
@@ -157,7 +161,9 @@ def create_app(config_class: Type[Config] | None = None) -> Flask:
     from app.routes.changelog import changelog_bp
     from app.routes.gauntlet_streak import gauntlet_streak_bp
     from app.routes.history_streak import history_streak_bp
+    from app.routes.avatars import avatars_bp
     from app.routes.maps import maps_bp
+    from app.routes.privacy import privacy_bp
     from app.routes.smash_or_pass import smash_or_pass_bp
     from app.routes.challenge_completions import challenge_completions_bp
     from app.routes.page_streak import page_streak_bp
@@ -165,12 +171,16 @@ def create_app(config_class: Type[Config] | None = None) -> Flask:
     from app.routes.synergy import synergy_bp
     from app.routes.tier_lists import tier_lists_bp
     from app.routes.users import users_bp
+    from app.routes.minigames import minigames_bp
+    from app.routes.scoreboard import scoreboard_bp
 
     flask_app.register_blueprint(auth_bp)
     flask_app.register_blueprint(users_bp)
     flask_app.register_blueprint(perks_bp)
     flask_app.register_blueprint(synergy_bp)
     flask_app.register_blueprint(maps_bp)
+    flask_app.register_blueprint(avatars_bp)
+    flask_app.register_blueprint(privacy_bp)
     flask_app.register_blueprint(page_streak_bp)
     flask_app.register_blueprint(challenge_completions_bp)
     flask_app.register_blueprint(gauntlet_streak_bp)
@@ -182,6 +192,8 @@ def create_app(config_class: Type[Config] | None = None) -> Flask:
     flask_app.register_blueprint(bug_reports_bp)
     flask_app.register_blueprint(admin_control_bp)
     flask_app.register_blueprint(tier_lists_bp)
+    flask_app.register_blueprint(minigames_bp)
+    flask_app.register_blueprint(scoreboard_bp)
 
 
     with flask_app.app_context():
@@ -193,6 +205,7 @@ def create_app(config_class: Type[Config] | None = None) -> Flask:
     if not flask_app.config.get("TESTING") and flask_app.config.get("SCHEDULER_ENABLED", True):
         def _run_inactivity_job():
             with flask_app.app_context():
+                from app.services.site_settings import streak_prune_days
                 from app.services.streak_cleanup_service import apply_inactivity_losses
 
                 is_pg = False
@@ -206,11 +219,11 @@ def create_app(config_class: Type[Config] | None = None) -> Flask:
                         acquired = conn.execute(text("SELECT pg_try_advisory_lock(8882027);")).scalar()
                         if acquired:
                             try:
-                                apply_inactivity_losses(flask_app.config["STREAK_INACTIVITY_PRUNE_DAYS"])
+                                apply_inactivity_losses(streak_prune_days())
                             finally:
                                 conn.execute(text("SELECT pg_advisory_unlock(8882027);"))
                 else:
-                    apply_inactivity_losses(flask_app.config["STREAK_INACTIVITY_PRUNE_DAYS"])
+                    apply_inactivity_losses(streak_prune_days())
 
         scheduler = BackgroundScheduler(daemon=True)
         scheduler.add_job(

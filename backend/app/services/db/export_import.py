@@ -14,6 +14,7 @@ from app.models.character import Killer, Survivor
 from app.models.perk import Perk
 from app.models.equipment import Item, ItemAddon, ItemCategory, KillerAddon, Offering
 from app.models.chapter import Chapter
+from app.services.db._common import parse_datetime
 from app.services.db.parsing import parse_movement_speed, parse_release_date
 from app.models.map import MapRealm, MapSource, Realm
 from app.models.user import User, UserCharacterOwnership, UserPerkOwnership, UserShowcase
@@ -111,18 +112,6 @@ SMASH_ENTITY_FIELDS = [
     "is_active",
 ]
 
-
-
-def _parse_datetime(val: str | datetime | None) -> datetime | None:
-    if not val:
-        return None
-    try:
-        if isinstance(val, datetime):
-            return val
-        clean = val.replace("Z", "+00:00")
-        return datetime.fromisoformat(clean)
-    except Exception:
-        return None
 
 
 def _with_asset(row: dict[str, Any], path_field: str, static_dir: Path, include_assets: bool) -> None:
@@ -598,7 +587,8 @@ class DatabaseExportImportService:
 
             _SHARED_CHARACTER_FIELDS = [
                 "name", "chapter_id", "portrait_url", "real_name",
-                "avatar_local_path", "is_disabled", "disabled_reason",
+                "avatar_local_path", "gender", "emoji_riddle",
+                "is_disabled", "disabled_reason",
                 "lore", "translations",
             ]
 
@@ -610,13 +600,13 @@ class DatabaseExportImportService:
 
             def _set_created_at(char_obj: Survivor | Killer, row: dict[str, Any]) -> None:
                 if row.get("created_at"):
-                    parsed_dt = _parse_datetime(row["created_at"])
+                    parsed_dt = parse_datetime(row["created_at"])
                     if parsed_dt:
                         char_obj.created_at = parsed_dt
 
             _upsert_by_id(
                 data, target_keys, summary, "survivors", Survivor,
-                update_fields=_SHARED_CHARACTER_FIELDS,
+                update_fields=_SHARED_CHARACTER_FIELDS + ["height"],
                 defaults=_character_defaults,
                 post_process=_set_created_at,
                 asset_fields=["avatar_local_path"], static_dir=static_dir,
@@ -649,6 +639,7 @@ class DatabaseExportImportService:
                     "power_name", "power_description", "power_icon_url",
                     "power_icon_local_path", "terror_radius",
                     "terror_radius_meters", "height",
+                    "chase_music_url", "chase_music_local_path",
                 ],
                 defaults=lambda row: {
                     **_character_defaults(row),
@@ -838,7 +829,7 @@ class DatabaseExportImportService:
                         u_updated += 1
 
                     if row.get("created_at"):
-                        parsed_dt = _parse_datetime(row["created_at"])
+                        parsed_dt = parse_datetime(row["created_at"])
                         if parsed_dt:
                             user_obj.created_at = parsed_dt
 
@@ -1098,7 +1089,7 @@ class DatabaseExportImportService:
                                 session_id=vote_row.get("session_id"),
                                 vote_type=vote_row.get("vote_type", "smash"),
                             )
-                            created_at = _parse_datetime(vote_row.get("created_at"))
+                            created_at = parse_datetime(vote_row.get("created_at"))
                             if created_at:
                                 vote.created_at = created_at
                             db.session.add(vote)

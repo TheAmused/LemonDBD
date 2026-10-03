@@ -1,4 +1,5 @@
 // frontend/src/types/perks.ts
+import type { ChaosMutator } from './chaos';
 export type RoleCategory = 'Survivor' | 'Killer';
 export type GeneratorMode = 'instant' | 'wheel' | 'slot' | 'tarot' | 'crate';
 export type ScopeFilter = 'all' | 'general';
@@ -40,12 +41,6 @@ export interface CharacterItem {
   disabled_reason?: string | null;
 }
 
-export interface CharacterOption {
-  value: string;
-  label: string;
-  real_name?: string;
-}
-
 export interface PerkSuggestion {
   id?: number;
   name: string;
@@ -70,21 +65,7 @@ export interface GeneratorStoredState {
   loadout: (DrawnSlot | null)[];
   activeSlotIdx: number;
   blindMode: boolean;
-  activeMutator?: any;
-}
-
-export interface GeneratorConfigResponse {
-  role?: RoleCategory;
-  gen_mode?: GeneratorMode;
-  no_repeat_perks?: number | boolean;
-  spin_duration_sec?: number;
-}
-
-export interface PaginationInfo {
-  page: number;
-  limit: number;
-  total_pages: number;
-  total: number;
+  activeMutator?: ChaosMutator | null;
 }
 
 export interface PerkDictionary {
@@ -221,5 +202,5 @@ export interface PerkDictionary {
     noPerks?: string;
     [key: string]: string | undefined;
   };
-  [key: string]: any;
+  [key: string]: unknown;
 }

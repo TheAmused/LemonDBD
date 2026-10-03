@@ -12,7 +12,6 @@ export * from './KillerDetailView';
 
 interface CharacterSubpageViewProps {
   currentLocale: string;
-  dict?: any;
   detailData: CharacterDetailPayload;
   allCharacters?: CharacterItem[];
 }
@@ -29,6 +28,3 @@ export const CharacterSubpageView: React.FC<CharacterSubpageViewProps> = (props)
 
   return <KillerDetailView {...props} />;
 };
-
-export default CharacterSubpageView;
-

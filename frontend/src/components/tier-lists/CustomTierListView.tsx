@@ -5,7 +5,7 @@ import React, { useCallback, useMemo } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { ChevronLeft, SearchX } from 'lucide-react';
-import { EmptyState } from '@/components/EmptyState';
+import { EmptyState } from '@/components/common/EmptyState';
 import type { Dictionary } from '@/locales/types';
 import {
   TIER_LIST_FORMAT,
@@ -21,15 +21,16 @@ import { documentItemsToItems } from '@/utils/tierLists/items';
 import { deleteCustomList, saveCustomList, type SaveResult } from '@/utils/tierLists/storage';
 import { TierListEditor } from './TierListEditor';
 import { TierListSkeleton } from './TierListSkeleton';
+import { useDictionary } from "@/context/DictionaryContext";
 
 interface CustomTierListViewProps {
   id: string;
   locale: string;
-  dict: Dictionary;
 }
 
 /** A user's own tier list, living entirely in this browser. */
-export function CustomTierListView({ id, locale, dict }: CustomTierListViewProps) {
+export function CustomTierListView({ id, locale }: CustomTierListViewProps) {
+  const dict = useDictionary();
   const t = dict.tierLists;
   const router = useRouter();
   const { state, hydrated } = useTierListStore();
@@ -101,14 +102,14 @@ export function CustomTierListView({ id, locale, dict }: CustomTierListViewProps
     router.push(`/${locale}/tier-lists`);
   }, [id, locale, router]);
 
-  if (!hydrated) return <TierListSkeleton dict={dict} />;
+  if (!hydrated) return <TierListSkeleton />;
 
   if (!list) {
     return (
       <div className="relative z-10 flex flex-col gap-2">
         <Link
           href={`/${locale}/tier-lists`}
-          className="inline-flex min-h-[44px] w-fit items-center gap-1 text-xs font-bold uppercase tracking-wider text-text-secondary hover:text-accent-red"
+          className="inline-flex min-h-[44px] w-fit items-center gap-1 type-label-sm text-text-secondary hover:text-accent-red"
         >
           <ChevronLeft className="h-4 w-4" aria-hidden="true" />
           {t.backToHub}
@@ -141,7 +142,6 @@ export function CustomTierListView({ id, locale, dict }: CustomTierListViewProps
       editHref={`/${locale}/tier-lists/new?edit=${id}`}
       onDelete={onDelete}
       locale={locale}
-      dict={dict}
     />
   );
 }

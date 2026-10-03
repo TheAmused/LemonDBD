@@ -4,7 +4,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ChevronDown, FileJson, LayoutList, Plus, RotateCcw, Sparkles, Trash2, TriangleAlert } from 'lucide-react';
-import { EmptyState } from '@/components/EmptyState';
+import { EmptyState } from '@/components/common/EmptyState';
 import { Modal } from '@/components/common/Modal';
 import type { Dictionary } from '@/locales/types';
 import type { TierListDocument } from '@/types/tierList';
@@ -16,17 +16,20 @@ import { createCustomListId, deleteCustomList, saveCustomList, saveRanking, type
 import { CustomTierListCard, OfficialTierListCard } from './TierListCards';
 import { TierListImportModal } from './TierListImportModal';
 import { TierListSkeleton } from './TierListSkeleton';
-import { BTN_PRIMARY, BTN_SECONDARY } from './styles';
+import { TOUCH_BTN } from './styles';
+import { Button } from '@/components/common/Button';
+import { formatMessage } from '@/utils/i18nFormat';
+import { useDictionary } from "@/context/DictionaryContext";
 
 interface TierListHubProps {
   locale: string;
-  dict: Dictionary;
 }
 
 // Capped ranges: an open-ended xl: rule would shadow wide: (px breakpoints are emitted first).
 const GRID = 'grid grid-cols-1 gap-3 sm:gap-4 sm:max-xl:grid-cols-2 xl:max-wide:grid-cols-3 wide:grid-cols-4';
 
-export function TierListHub({ locale, dict }: TierListHubProps) {
+export function TierListHub({ locale }: TierListHubProps) {
+  const dict = useDictionary();
   const t = dict.tierLists;
   const router = useRouter();
   const { lists, loading, error, refresh } = useTierListSummaries(locale);
@@ -60,6 +63,8 @@ export function TierListHub({ locale, dict }: TierListHubProps) {
     () => Object.values(state.custom).sort((a, b) => b.updatedAt - a.updatedAt),
     [state.custom]
   );
+
+  const customCount = hydrated ? customLists.length : 0;
 
   const rankedCount = useCallback(
     (slug: string) =>
@@ -95,8 +100,9 @@ export function TierListHub({ locale, dict }: TierListHubProps) {
 
   return (
     <div className="relative z-10 flex flex-col gap-8">
+      <h1 className="sr-only">{t.pageTitle}</h1>
       {saveError && !saveError.ok && (
-        <p role="alert" className="flex items-start gap-2 rounded-2xl border border-accent-red/40 bg-accent-red/10 p-3 text-sm font-semibold text-accent-red">
+        <p role="alert" className="flex items-start gap-2 rounded-2xl border border-accent-red/40 bg-accent-red/10 p-3 type-card-title text-accent-red">
           <TriangleAlert className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
           {saveError.reason === 'quota' ? t.saveFailedQuota : t.saveFailedUnavailable}
         </p>
@@ -124,17 +130,16 @@ export function TierListHub({ locale, dict }: TierListHubProps) {
           <div className="relative z-10 w-8 hidden sm:block pointer-events-none" aria-hidden="true" />
           <div className="relative z-10 flex-1 text-center min-w-0 px-2">
             <div className="inline-flex items-center gap-2">
-              <h2 id="tier-lists-official" className="text-xs sm:text-sm 2xl:text-base font-black uppercase tracking-widest text-text-primary font-mono group-hover:text-accent-red transition-colors">
+              <h2 id="tier-lists-official" className="type-section-title text-text-primary group-hover:text-accent-red transition-colors">
                 {t.officialSection}
               </h2>
-              <span className="inline-flex items-center rounded-full bg-accent-red/10 px-2 py-0.5 text-[11px] font-bold text-accent-red border border-accent-red/25 font-mono">
-                {lists.length}
-              </span>
             </div>
-            <p className="text-[11px] sm:text-xs 2xl:text-sm text-text-secondary mt-0.5 font-mono truncate">
-              {lists.length === 1
+            <p className="type-section-subtitle text-text-secondary mt-0.5 truncate">
+              {(lists.length === 1
                 ? t.curatedTemplatesSingular
-                : (t.curatedTemplatesCount || '{count} curated templates').replace('{count}', String(lists.length))}
+                : formatMessage((t.curatedTemplatesCount), { count: lists.length }, locale))}
+              {' · '}
+              {t.officialSavedNote}
             </p>
           </div>
           <div className="relative z-10 w-8 flex justify-end">
@@ -154,7 +159,7 @@ export function TierListHub({ locale, dict }: TierListHubProps) {
           <div className="overflow-hidden">
             <div className="p-4 sm:p-6 border-t border-border-color">
               {loading && !error ? (
-                <TierListSkeleton dict={dict} className="min-h-[240px]" />
+                <TierListSkeleton className="min-h-[240px]" />
               ) : error && lists.length === 0 ? (
                 <EmptyState
                   icon={TriangleAlert}
@@ -180,7 +185,6 @@ export function TierListHub({ locale, dict }: TierListHubProps) {
                       list={list}
                       rankedCount={hydrated ? rankedCount(list.slug) : 0}
                       locale={locale}
-                      dict={dict}
                     />
                   ))}
                 </div>
@@ -213,7 +217,7 @@ export function TierListHub({ locale, dict }: TierListHubProps) {
             `overflow-hidden` used to do automatically for whichever part
             happened to be the visual bottom. */}
         <div
-          className={`sticky top-16 z-20 lg:top-0 w-full min-h-[64px] sm:min-h-[72px] overflow-hidden ${
+          className={`group sticky top-16 z-20 lg:top-0 w-full min-h-[64px] sm:min-h-[72px] overflow-hidden ${
             isCustomOpen ? 'rounded-t-3xl' : 'rounded-3xl'
           }`}
         >
@@ -247,29 +251,31 @@ export function TierListHub({ locale, dict }: TierListHubProps) {
               actions group back in so it alone stays independently
               clickable. */}
           <div className="relative z-10 flex flex-wrap items-center justify-between gap-3 py-4 px-5 sm:py-4.5 sm:px-7 2xl:py-5.5 2xl:px-9 min-h-[64px] sm:min-h-[72px] pointer-events-none">
-            <div className="min-w-0">
-              <div className="inline-flex items-center gap-2">
-                <h2 id="tier-lists-custom" className="text-xs sm:text-sm 2xl:text-base font-black uppercase tracking-widest text-text-primary font-mono">
+            <div className="hidden lg:flex w-56 shrink-0 pointer-events-none" aria-hidden="true" />
+            <div className="flex-1 text-center min-w-0 px-2">
+              <div className="inline-flex items-center justify-center gap-2">
+                <h2 id="tier-lists-custom" className="type-section-title text-text-primary group-hover:text-accent-red transition-colors">
                   {t.mySection}
                 </h2>
-                <span className="inline-flex items-center rounded-full bg-accent-amber/10 px-2 py-0.5 text-[11px] font-bold text-accent-amber border border-accent-amber/25 font-mono">
-                  {hydrated ? customLists.length : 0}
-                </span>
               </div>
-              <p className="text-[11px] sm:text-xs 2xl:text-sm text-text-secondary mt-0.5 font-mono truncate">
-                {t.localOnlyNote}
+              <p className="type-section-subtitle text-text-secondary mt-0.5 truncate">
+                {(customCount === 1
+                  ? t.customListsSingular
+                  : formatMessage((t.customListsCount), { count: customCount }, locale))}
+                {' · '}
+                {t.customSavedNote}
               </p>
             </div>
 
-            <div className="pointer-events-auto flex shrink-0 items-center gap-2">
-              <button type="button" onClick={() => setImportOpen(true)} className={BTN_SECONDARY}>
+            <div className="pointer-events-auto flex shrink-0 items-center justify-end gap-2 lg:w-56">
+              <Button variant="secondary" onClick={() => setImportOpen(true)} className={TOUCH_BTN}>
                 <FileJson className="h-4 w-4" aria-hidden="true" />
                 <span className="hidden sm:inline">{t.importJson}</span>
-              </button>
-              <button type="button" onClick={createBlank} className={BTN_PRIMARY}>
+              </Button>
+              <Button variant="primary" onClick={createBlank} className={TOUCH_BTN}>
                 <Plus className="h-4 w-4" aria-hidden="true" />
                 <span className="hidden sm:inline">{t.newCustomList}</span>
-              </button>
+              </Button>
               <ChevronDown
                 className={`h-4 w-4 sm:h-5 sm:w-5 2xl:h-6 2xl:w-6 text-accent-red transition-transform duration-300 ease-in-out shrink-0 ${
                   isCustomOpen ? 'rotate-180' : 'rotate-0'
@@ -308,7 +314,6 @@ export function TierListHub({ locale, dict }: TierListHubProps) {
                       key={list.id}
                       list={list}
                       locale={locale}
-                      dict={dict}
                       onDelete={(id, title) => setListToDelete({ id, title })}
                     />
                   ))}
@@ -328,24 +333,24 @@ export function TierListHub({ locale, dict }: TierListHubProps) {
           size="sm"
           footer={
             <div className="flex w-full justify-end gap-2">
-              <button type="button" onClick={() => setListToDelete(null)} className={BTN_SECONDARY}>
+              <Button variant="secondary" onClick={() => setListToDelete(null)} className={TOUCH_BTN}>
                 {t.cancel}
-              </button>
-              <button
-                type="button"
+              </Button>
+              <Button
+                variant="primary"
                 onClick={() => {
                   deleteCustomList(listToDelete.id);
                   setListToDelete(null);
                 }}
-                className={BTN_PRIMARY}
+                className={TOUCH_BTN}
               >
                 {t.deleteTier}
-              </button>
+              </Button>
             </div>
           }
         >
           <p className="text-sm text-text-secondary">
-            {t.creator.removeItemAria.replace('{name}', `"${listToDelete.title}"`)}?
+            {formatMessage(t.creator.removeItemAria, { name: `"${listToDelete.title}"` })}?
           </p>
         </Modal>
       )}
@@ -359,7 +364,6 @@ export function TierListHub({ locale, dict }: TierListHubProps) {
           setSharePayload(null);
         }}
         onImport={handleImport}
-        dict={dict}
       />
     </div>
   );

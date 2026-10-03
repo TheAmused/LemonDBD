@@ -3,7 +3,7 @@ import logging
 from datetime import datetime, timezone
 from flask import Blueprint, Response, g, jsonify, request
 from pydantic import ValidationError
-from sqlalchemy import delete
+from sqlalchemy import delete, or_, select
 
 from app.core.extensions import db
 from app.core.json_provider import safe_json_dumps, safe_json_loads
@@ -23,6 +23,7 @@ from app.models import (
     UserPerkOwnership,
 )
 from app.schemas.user import UserCreate, UserResponse, UserUpdate
+from app.utils.pagination import paginate_args
 from app.services.admin_control_service import log_admin_action
 from app.services.db.export_import import DatabaseExportImportService
 from app.services.ownership_service import OwnershipService
@@ -51,8 +52,7 @@ def list_users():
     """List all registered users with optional search filtering and pagination."""
     search = request.args.get("search")
     role = request.args.get("role")
-    page = request.args.get("page", default=1, type=int)
-    per_page = request.args.get("per_page", default=20, type=int)
+    page, per_page = paginate_args(default_per_page=20)
 
     result = user_service.get_all_users(search=search, role=role, page=page, per_page=per_page)
     return jsonify(result), 200
@@ -345,12 +345,33 @@ def set_single_character_ownership(user_id: int):
     if not character_id:
         return jsonify({"error": "character_id is required.", "status": 400}), 400
     if not role:
-        # Survivor 7 and killer 7 are different characters, so an id alone
-        # would silently toggle whichever table happened to be checked first.
-        return jsonify({
-            "error": "role is required and must be 'survivor' or 'killer'.",
-            "status": 400,
-        }), 400
+        existing_owner = db.session.scalars(
+            select(UserCharacterOwnership).where(
+                UserCharacterOwnership.user_id == user_id,
+                or_(
+                    UserCharacterOwnership.killer_id == int(character_id),
+                    UserCharacterOwnership.survivor_id == int(character_id),
+                ),
+            )
+        ).first()
+        if existing_owner:
+            role = "killer" if existing_owner.killer_id == int(character_id) else "survivor"
+        else:
+            k = db.session.get(Killer, int(character_id))
+            s = db.session.get(Survivor, int(character_id))
+            if k and not s:
+                role = "killer"
+            elif s and not k:
+                role = "survivor"
+            elif k:
+                role = "killer"
+            elif s:
+                role = "survivor"
+            else:
+                return jsonify({
+                    "error": "role is required and must be 'survivor' or 'killer'.",
+                    "status": 400,
+                }), 400
 
     try:
         result = ownership_service.set_character_ownership(

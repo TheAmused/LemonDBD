@@ -3,6 +3,7 @@ import React from 'react';
 import { AdeptBadgeIcon } from '@/components/icons/DbdIcons';
 import { FullRosterLaurelIcon } from '@/components/icons/DbdIcons';
 
+import { tip } from '@/components/common/Tooltip';
 export type TrophyVariant = 'owned' | 'all';
 
 interface TrophySlotProps {
@@ -22,7 +23,7 @@ export const TrophySlot: React.FC<TrophySlotProps> = ({ variant, badgeLabel, hov
 
   return (
     <div
-      title={hoverText}
+      {...tip(hoverText, undefined, 'status')}
       className={`flex flex-col items-center gap-1.5 rounded-xl border p-3 w-24 transition-colors ${
         unlocked
           ? 'border-accent-amber/40 bg-accent-amber/10'
@@ -36,7 +37,7 @@ export const TrophySlot: React.FC<TrophySlotProps> = ({ variant, badgeLabel, hov
         strokeWidth={1.5}
         aria-hidden="true"
       />
-      <span className="text-center text-[9px] font-bold uppercase tracking-wider text-text-muted">
+      <span className="text-center text-micro font-bold uppercase tracking-wider text-text-muted">
         {badgeLabel}
       </span>
     </div>

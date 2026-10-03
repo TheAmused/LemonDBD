@@ -13,11 +13,7 @@ export default {
   unownedPerk: "Nieposiadana umiejętność",
   equipment: "Wyposażenie",
   temporarilyDisabled: "Tymczasowo wyłączone",
-  whyDisabled: "Dlaczego {item} jest wyłączone?",
   wasDisabledTemporarily: "{item} zostało tymczasowo zablokowane.",
   reasonLabel: "Powód",
-  done: 'Gotowe',
-  clickOutsideToClose: 'Kliknij poza oknem lub naciśnij ESC, aby zamknąć',
-  copySlug: 'Kopiuj ID / Slug',
-  slugCopied: 'Skopiowano ID!',
+  done: 'Gotowe'
 } as const;

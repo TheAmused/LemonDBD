@@ -135,7 +135,7 @@ if [ "$SKIP_UP_FLOW" = false ]; then
   export PYTHONPATH="$(pwd)/backend:${PYTHONPATH:-}"
 
   # 1.1 Backend Unit Tests
-  echo -e "\n${YELLOW}> [1/2] Running Backend Unit Tests (pytest)...${NC}"
+  echo -e "\n${YELLOW}> [1/3] Running Backend Unit Tests (pytest)...${NC}"
   PYTHON_CMD="python3"
   if ! command -v python3 &> /dev/null; then
     if command -v py &> /dev/null; then
@@ -153,13 +153,35 @@ if [ "$SKIP_UP_FLOW" = false ]; then
   echo -e "${GREEN}[PASS] Backend Unit Tests Passed.${NC}"
 
   # 1.2 Frontend Unit Tests
-  echo -e "\n${YELLOW}> [2/2] Running Frontend Unit Tests (npm run test:unit)...${NC}"
+  echo -e "\n${YELLOW}> [2/3] Running Frontend Unit Tests (npm run test:unit)...${NC}"
   if ! (cd frontend && npm run test:unit); then
     echo -e "\n${RED}[FAIL] Frontend unit tests did not pass!${NC}"
     echo -e "${RED}[STOP] Docker build and startup has been ABORTED.${NC}"
     exit 1
   fi
   echo -e "${GREEN}[PASS] Frontend Unit Tests Passed.${NC}"
+
+  # 1.3 Frontend static checks (npm run check): hardcoded strings, global styles/typography and the
+  # architecture/i18n/quality guard suites.
+  echo -e "\n${YELLOW}> [3/3] Running Frontend Checks (npm run check)...${NC}"
+  if ! (cd frontend && npm run check); then
+    echo -e "\n${RED}[FAIL] Frontend checks did not pass!${NC}"
+    echo -e "${RED}[STOP] Docker build and startup has been ABORTED.${NC}"
+    exit 1
+  fi
+  echo -e "${GREEN}[PASS] Frontend Checks Passed.${NC}"
+
+  # 1.4 Built-output check (npm run check:built) runs as `postbuild`, so the Docker image build in
+  # Gate 2 already enforces it. Strict mode also builds locally so the failure shows up here first.
+  if $STRICT; then
+    echo -e "\n${YELLOW}> [Strict] Production build + built-output check (npm run build -> check:built)...${NC}"
+    if ! (cd frontend && npm run build); then
+      echo -e "\n${RED}[FAIL] Frontend build or built-output check did not pass!${NC}"
+      echo -e "${RED}[STOP] Docker build and startup has been ABORTED.${NC}"
+      exit 1
+    fi
+    echo -e "${GREEN}[PASS] Built-output check passed.${NC}"
+  fi
 
   # ====================================================================
   # [GATE 2] Build & Start Docker Cluster
@@ -221,7 +243,7 @@ if [ "$SKIP_UP_FLOW" = false ]; then
     echo -e "${MAGENTA}========================================================${NC}"
 
     # 3.1 Backend Live Tests
-    echo -e "\n${YELLOW}> [1/2] Running Backend Live Tests (PostgreSQL Clone)...${NC}"
+    echo -e "\n${YELLOW}> [1/3] Running Backend Live Tests (PostgreSQL Clone)...${NC}"
     export POSTGRES_HOST=127.0.0.1
     export POSTGRES_PORT=5432
 
@@ -232,12 +254,20 @@ if [ "$SKIP_UP_FLOW" = false ]; then
     echo -e "${GREEN}[PASS] Backend live tests passed.${NC}"
 
     # 3.2 Frontend Live Tests
-    echo -e "\n${YELLOW}> [2/2] Running Frontend Live Tests (Next.js)...${NC}"
+    echo -e "\n${YELLOW}> [2/3] Running Frontend Live Tests (Next.js)...${NC}"
     if ! (cd frontend && npm run test:live); then
       echo -e "\n${RED}[FAIL] Frontend Live Tests Failed!${NC}"
       exit 1
     fi
     echo -e "${GREEN}[PASS] Frontend live tests passed.${NC}"
+
+    # 3.3 Rendered checks: real touch-target sizes + text contrast in all three themes
+    echo -e "\n${YELLOW}> [3/3] Rendered checks (touch targets + 3-theme contrast, needs Playwright chromium)...${NC}"
+    if ! (cd frontend && npm run check:rendered); then
+      echo -e "\n${RED}[FAIL] Rendered checks failed! (first time: npx playwright install chromium)${NC}"
+      exit 1
+    fi
+    echo -e "${GREEN}[PASS] Rendered checks passed.${NC}"
 
     echo -e "\n${GREEN}[SUCCESS] ALL UNIT & STRICT LIVE TESTS PASSED! System 100% verified.${NC}"
   fi

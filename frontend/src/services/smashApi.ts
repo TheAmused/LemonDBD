@@ -1,5 +1,6 @@
 // frontend/src/services/smashApi.ts
 import {
+  EntityItem,
   RosterItem,
   FeedResponse,
   VoteType,
@@ -9,20 +10,9 @@ import {
   SmashLeaderboardOptions,
 } from '@/types/smashOrPass';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
+import { authHeaders } from '@/utils/api';
 
 const SESSION_KEY = 'smash_session_id';
-
-/**
- * Retrieves the stored JWT authentication token from localStorage if available.
- */
-function getAuthToken(): string | null {
-  if (typeof window === 'undefined') return null;
-  try {
-    return localStorage.getItem('lemondbd_token') || null;
-  } catch {
-    return null;
-  }
-}
 
 /**
  * Constructs universal request headers attaching both persistent Session ID and Bearer Auth Token.
@@ -33,11 +23,7 @@ function getRequestHeaders(customHeaders: Record<string, string> = {}): Record<s
     'X-Session-ID': getSessionId(),
     ...customHeaders,
   };
-  const token = getAuthToken();
-  if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
-  }
-  return headers;
+  return { ...headers, ...authHeaders() };
 }
 
 /**
@@ -144,7 +130,7 @@ export async function castVote(
   const backendBase = getBackendBaseUrl();
   const sessionId = getSessionId();
 
-  const payload: Record<string, any> = {
+  const payload: Record<string, unknown> = {
     entity_id: entityId,
     vote_type: voteType,
     session_id: sessionId,
@@ -201,7 +187,7 @@ export async function resetSessionVotes(
   const backendBase = getBackendBaseUrl();
   const sessionId = getSessionId();
 
-  const payload: Record<string, any> = {
+  const payload: Record<string, unknown> = {
     session_id: sessionId,
   };
   if (slug) {
@@ -233,7 +219,7 @@ export async function resetUserVotes(
   slug?: string
 ): Promise<{ status: string; reset_count: number }> {
   const backendBase = getBackendBaseUrl();
-  const payload: Record<string, any> = {};
+  const payload: Record<string, unknown> = {};
   if (slug) {
     payload.roster_slug = slug;
   }
@@ -261,7 +247,7 @@ export async function resetUserVotes(
  */
 export async function fetchUserVotes(
   slug: string = 'canon'
-): Promise<Array<{ character_slug: string; vote_type: 'smash' | 'pass' | 'super_smash'; created_at?: string; entity?: any }>> {
+): Promise<Array<{ character_slug: string; vote_type: 'smash' | 'pass' | 'super_smash'; created_at?: string; entity?: EntityItem; character_name?: string; role?: string; gender?: string }>> {
   const backendBase = getBackendBaseUrl();
   const sessionId = getSessionId();
   const params = new URLSearchParams();
@@ -281,10 +267,9 @@ export async function fetchUserVotes(
         cache: 'no-store',
       }
     );
-    const data = await handleResponse<{ data: any[]; count: number }>(response);
+    const data = await handleResponse<{ data: Array<{ character_slug: string; vote_type: 'smash' | 'pass' | 'super_smash'; created_at?: string; entity?: EntityItem; character_name?: string; role?: string; gender?: string }>; count: number }>(response);
     return data.data || [];
-  } catch (err) {
-    console.debug('Failed to fetch user votes:', err);
+  } catch {
     return [];
   }
 }
@@ -294,11 +279,11 @@ export async function fetchUserVotes(
  */
 export async function syncSessionVotes(
   slug?: string
-): Promise<{ status: string; synced_count: number; synced_votes?: any[] }> {
+): Promise<{ status: string; synced_count: number; synced_votes?: unknown[] }> {
   const backendBase = getBackendBaseUrl();
   const sessionId = getSessionId();
 
-  const payload: Record<string, any> = {
+  const payload: Record<string, unknown> = {
     session_id: sessionId,
   };
   if (slug) {
@@ -313,14 +298,13 @@ export async function syncSessionVotes(
       }),
       body: JSON.stringify(payload),
     });
-    const result = await handleResponse<{ data?: { status: string; synced_count: number; synced_votes?: any[] }; status: string; synced_count?: number }>(response);
+    const result = await handleResponse<{ data?: { status: string; synced_count: number; synced_votes?: unknown[] }; status: string; synced_count?: number }>(response);
     if (result.data) return result.data;
     return {
       status: result.status || 'success',
       synced_count: result.synced_count ?? 0,
     };
-  } catch (err) {
-    console.debug('Failed to sync session votes:', err);
+  } catch {
     return { status: 'error', synced_count: 0 };
   }
 }

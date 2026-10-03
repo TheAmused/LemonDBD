@@ -12,7 +12,7 @@ of a twenty-revision chain and then replay everything after it, so that each of
 those migrations could run its "real DDL" against whatever create_all() had
 built. That required every one of them to be individually guarded against a
 schema that already looked finished, and a single missed guard was a boot loop.
-The chain is squashed into `0001_initial_schema`, which is idempotent, so the
+The chain is squashed into `0002_baseline`, which is idempotent, so the
 special case is gone: always upgrade, from wherever the database actually is.
 """
 import logging
@@ -53,7 +53,7 @@ def _clear_unknown_revision(app) -> bool:
     upgrade from a revision it cannot find -- it raises "Can't locate revision
     identified by ..." and the container never starts. Such a database already
     holds the schema those revisions produced, which is the schema
-    `0001_initial_schema` describes, so the honest repair is to forget the
+    `0002_baseline` describes, so the honest repair is to forget the
     stamp and re-stamp at the new baseline rather than to demand a volume wipe.
     """
     engine = db.engine
@@ -69,7 +69,7 @@ def _clear_unknown_revision(app) -> bool:
 
     logger.warning(
         "alembic_version names %s, which no longer exists (the migration chain "
-        "was squashed into 0001_initial_schema). The schema itself is already "
+        "was squashed into 0002_baseline). The schema itself is already "
         "what that squash describes, so clearing the stamp and re-stamping.",
         ", ".join(stale),
     )

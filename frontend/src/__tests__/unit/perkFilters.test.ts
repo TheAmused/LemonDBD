@@ -77,18 +77,18 @@ test('the old "Every Perk" ownership button is no longer rendered by PerkFilters
   assert.ok(!PERK_FILTERS_SRC.includes('everyPerk'));
 });
 
-test('PerkFilters renders the role/ownership/sort controls as ToggleSwitch instances, not raw button pairs', () => {
-  const toggleSwitchUsageCount = (PERK_FILTERS_SRC.match(/<ToggleSwitch/g) || []).length;
+test('PerkFilters renders the role/ownership/sort controls as SegmentedControl instances, not raw button pairs', () => {
+  const segmentedControlUsageCount = (PERK_FILTERS_SRC.match(/<SegmentedControl/g) || []).length;
   // Role, Ownership, Sort field, Sort order = 4 real switches, rendered
   // twice: once inside the mobile "Filters" dropdown panel (stacked
   // vertically, below sm) and once in the desktop inline row (hidden
   // below sm, shown at sm+) -- same 4 controls, two physical instances so
   // each layout can be shown/hidden independently with plain CSS.
-  assert.strictEqual(toggleSwitchUsageCount, 8);
+  assert.strictEqual(segmentedControlUsageCount, 8);
 });
 
 test('General Only is a checkbox, not a second two-way toggle', () => {
-  assert.ok(PERK_FILTERS_SRC.includes('type="checkbox"'));
+  assert.ok(PERK_FILTERS_SRC.includes('<Checkbox'));
   assert.ok(PERK_FILTERS_SRC.includes("scope === 'general'"));
 });
 
@@ -133,18 +133,18 @@ test('PerkFilters no longer hides controls behind a horizontal scrollbar', () =>
   assert.ok(PERK_FILTERS_SRC.includes('flex-wrap'));
 });
 
-test('PerkFilters no longer forces a fixed/min width on any ToggleSwitch (labels size to their own content)', () => {
+test('PerkFilters no longer forces a fixed/min width on any SegmentedControl (labels size to their own content)', () => {
   assert.ok(!PERK_FILTERS_SRC.includes('min-w-56'));
   assert.ok(!PERK_FILTERS_SRC.includes('min-w-40'));
   assert.ok(!PERK_FILTERS_SRC.includes('min-w-36'));
 });
 
 const TOGGLE_SWITCH_SRC = fs.readFileSync(
-  path.join(__dirname, '../../components/common/ToggleSwitch.tsx'),
+  path.join(__dirname, '../../components/common/SegmentedControl.tsx'),
   'utf-8'
 );
 
-test('ToggleSwitch never truncates its label text', () => {
+test('SegmentedControl never truncates its label text', () => {
   assert.ok(!TOGGLE_SWITCH_SRC.includes('className="truncate"'));
   assert.ok(TOGGLE_SWITCH_SRC.includes('whitespace-nowrap'));
 });

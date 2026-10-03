@@ -2,6 +2,7 @@
 import React from 'react';
 import { Lock, Check } from 'lucide-react';
 
+import { tip } from '@/components/common/Tooltip';
 export interface OwnershipClipOverlayProps {
   isOwned: boolean;
   isPartial: boolean;
@@ -78,7 +79,7 @@ export const CharacterOwnershipOverlay: React.FC<CharacterOwnershipOverlayProps>
       {!isOwned && (
         <div
           className={`absolute ${badgeClasses} z-10 flex items-center justify-center rounded-full bg-bg-surface/90 border border-accent-amber text-accent-amber shadow-xs backdrop-blur-md`}
-          title={lockedTitle}
+          {...tip(lockedTitle, undefined, 'status')}
         >
           <Lock className={iconClasses} />
         </div>
@@ -86,7 +87,7 @@ export const CharacterOwnershipOverlay: React.FC<CharacterOwnershipOverlayProps>
       {isOwned && (
         <div
           className={`absolute ${badgeClasses} z-10 flex items-center justify-center rounded-full bg-accent-green/20 border border-accent-green/40 text-accent-green backdrop-blur-md shadow-xs`}
-          title={ownedTitle}
+          {...tip(ownedTitle, undefined, 'status')}
         >
           <Check className={iconClasses} />
         </div>
@@ -95,5 +96,3 @@ export const CharacterOwnershipOverlay: React.FC<CharacterOwnershipOverlayProps>
     </>
   );
 };
-
-export default CharacterOwnershipOverlay;

@@ -15,13 +15,13 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import React from 'react';
-import { renderToStaticMarkup } from 'react-dom/server';
 import { PerkFilters } from '@/components/PerkFilters';
 import { CustomDropdown, type DropdownOption } from '@/components/common/CustomDropdown';
-import { Pagination } from '@/components/Pagination';
+import { Pagination } from '@/components/common/Pagination';
+import { renderWithDictionary } from '../helpers/renderWithDictionary';
 
 function renderFilters(overrides: Partial<React.ComponentProps<typeof PerkFilters>> = {}) {
-  return renderToStaticMarkup(
+  return renderWithDictionary(
     React.createElement(PerkFilters, {
       search: '',
       setSearch: () => {},
@@ -36,20 +36,6 @@ function renderFilters(overrides: Partial<React.ComponentProps<typeof PerkFilter
       order: 'asc',
       setOrder: () => {},
       onReset: () => {},
-      dict: {
-        filters: {
-          survivor: 'Survivors',
-          killer: 'Killers',
-          allPerks: 'All',
-          ownedOnly: 'Owned',
-          generalOnly: 'General Only',
-          sortByName: 'Name',
-          sortByCharacter: 'Character',
-          orderAsc: 'A-Z',
-          orderDesc: 'Z-A',
-          filtersTitle: 'Filters',
-        },
-      } as never,
       ...overrides,
     })
   );
@@ -67,10 +53,10 @@ describe('PerkFilters mobile Settings dropdown', () => {
     assert.match(html, /class="hidden sm:contents"/, 'expected the desktop row to be display:none below sm and display:contents at sm+');
   });
 
-  it('by default (dropdown closed) only the desktop row\'s 4 ToggleSwitch controls are mounted -- the mobile panel\'s copies do not exist in the DOM until opened, so there is no hidden duplicate work or a11y noise', () => {
+  it('by default (dropdown closed) only the desktop row\'s 4 SegmentedControl controls are mounted -- the mobile panel\'s copies do not exist in the DOM until opened, so there is no hidden duplicate work or a11y noise', () => {
     const html = renderFilters();
     const radiogroupCount = (html.match(/role="radiogroup"/g) || []).length;
-    assert.strictEqual(radiogroupCount, 4, `expected 4 mounted ToggleSwitch radiogroups while the mobile dropdown is closed, found ${radiogroupCount}`);
+    assert.strictEqual(radiogroupCount, 4, `expected 4 mounted SegmentedControl radiogroups while the mobile dropdown is closed, found ${radiogroupCount}`);
   });
 
   it('the mobile "Filters" trigger starts collapsed', () => {
@@ -99,7 +85,7 @@ describe('CustomDropdown backward compatibility + new children mode', () => {
   ];
 
   it('classic value/onChange/options mode renders exactly as before (existing callers unaffected)', () => {
-    const html = renderToStaticMarkup(
+    const html = renderWithDictionary(
       React.createElement(CustomDropdown, {
         value: 'b',
         onChange: () => {},
@@ -112,7 +98,7 @@ describe('CustomDropdown backward compatibility + new children mode', () => {
   });
 
   it('new children + label mode renders a static label and arbitrary panel content, with no options required', () => {
-    const html = renderToStaticMarkup(
+    const html = renderWithDictionary(
       React.createElement(
         CustomDropdown,
         { label: 'Settings', ariaLabel: 'Settings' },
@@ -126,7 +112,7 @@ describe('CustomDropdown backward compatibility + new children mode', () => {
 
 describe('Pagination count text on very small screens', () => {
   it('the "X-Y / Z" count is sr-only below 400px but still present for screen readers', () => {
-    const html = renderToStaticMarkup(
+    const html = renderWithDictionary(
       React.createElement(Pagination, {
         page: 1,
         totalPages: 12,

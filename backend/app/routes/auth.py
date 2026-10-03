@@ -1,11 +1,18 @@
 # backend/app/routes/auth.py
+import json
 import logging
 import os
 from flask import Blueprint, current_app, g, jsonify, make_response, request, send_from_directory
 from pydantic import ValidationError
 
 from app.core.limiter import limiter, validate_honeypot
-from app.core.security import get_current_user, login_required
+from app.core.security import (
+    clear_session_cookie,
+    get_current_user,
+    login_required,
+    set_session_cookie,
+    widen_legacy_session_cookie,
+)
 from app.schemas.user import UserCreate, UserResponse
 from app.services.altcha_service import AltchaService
 from app.services.ownership_service import OwnershipService
@@ -45,14 +52,15 @@ def register():
     token = user_service.generate_auth_token(user)
     summary = ownership_service.get_user_ownership_summary(user.id)
 
-    return jsonify({
+    response = make_response(jsonify({
         "status": "success",
         "message": "User registered successfully",
         "token": token,
         "token_type": "Bearer",
         "user": UserResponse.model_validate(user).model_dump(),
         "ownership": summary,
-    }), 201
+    }), 201)
+    return set_session_cookie(response, token)
 
 
 @auth_bp.route("/login", methods=["POST"])
@@ -71,14 +79,15 @@ def login():
 
     summary = ownership_service.get_user_ownership_summary(user.id)
 
-    return jsonify({
+    response = make_response(jsonify({
         "status": "success",
         "message": "Login successful",
         "token": token,
         "token_type": "Bearer",
         "user": UserResponse.model_validate(user).model_dump(),
         "ownership": summary,
-    }), 200
+    }), 200)
+    return set_session_cookie(response, token)
 
 
 @auth_bp.route("/verify-email", methods=["POST"])
@@ -148,7 +157,8 @@ def reset_password():
 
 @auth_bp.route("/logout", methods=["POST"])
 def logout():
-    return jsonify({"status": "success", "message": "Logged out successfully"}), 200
+    response = make_response(jsonify({"status": "success", "message": "Logged out successfully"}), 200)
+    return clear_session_cookie(response)
 
 
 @auth_bp.route("/me", methods=["GET"])
@@ -175,7 +185,7 @@ def get_current_user_profile():
         "ownership": summary,
     }))
     resp.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
-    return resp, 200
+    return widen_legacy_session_cookie(resp), 200
 
 
 @auth_bp.route("/profile", methods=["PUT"])
@@ -237,6 +247,35 @@ def delete_avatar():
         "avatar_url": updated_user.avatar_url,
         "user": UserResponse.model_validate(updated_user).model_dump(),
     }), 200
+
+
+@auth_bp.route("/account/export", methods=["GET"])
+@limiter.limit("10 per hour")
+@login_required
+def export_account_data():
+    """Download everything the server holds about the signed-in account as JSON."""
+    data = user_service.export_user_data(g.current_user.id)
+    if data is None:
+        return jsonify({"error": "Account not found.", "status": 404}), 404
+    response = make_response(json.dumps(data, ensure_ascii=False, indent=2), 200)
+    response.headers["Content-Type"] = "application/json; charset=utf-8"
+    response.headers["Content-Disposition"] = 'attachment; filename="lemondbd-my-data.json"'
+    response.headers["Cache-Control"] = "no-store"
+    return response
+
+
+@auth_bp.route("/account", methods=["DELETE"])
+@limiter.limit("5 per minute")
+@login_required
+def delete_account():
+    """Permanently delete the signed-in account (requires the current password)."""
+    data = request.get_json(silent=True) or {}
+    ok, err = user_service.delete_own_account(g.current_user.id, str(data.get("password") or ""))
+    if not ok:
+        status = 403 if err == "Incorrect password." else 400
+        return jsonify({"error": err, "status": status}), status
+    response = make_response(jsonify({"status": "success", "message": "Account deleted."}), 200)
+    return clear_session_cookie(response)
 
 
 @auth_bp.route("/avatar/file/<path:filename>", methods=["GET"])

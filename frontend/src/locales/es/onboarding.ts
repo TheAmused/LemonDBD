@@ -15,7 +15,6 @@ export default {
   legendPartial: "Personaje parcialmente desbloqueado (solo habilidades desbloqueadas)",
   legendCustomizeHint: "Consejo: en un capítulo que no posees, despliégalo y usa el botón Habilidades de un personaje para desbloquear habilidades individuales sin poseer el personaje completo.",
   ownChapterButton: "Poseo este capítulo",
-  lockChapterButton: "No poseo este capítulo",
   selectAllButton: "Lo poseo todo",
   deselectAllButton: "Deseleccionar todo",
   searchPlaceholder: "Buscar capítulos o personajes...",

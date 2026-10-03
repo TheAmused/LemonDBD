@@ -9,7 +9,7 @@
 import type { MapRealm } from '@/types/map';
 import type { CharacterItem, Perk } from '@/types/perks';
 import type { TierItem, TierListApiCustomItem, TierListDocumentItem } from '@/types/tierList';
-import { getMapImageSrc } from '@/utils/mapUtils';
+import { getMapImageSrc, getMapThumbSrc } from '@/utils/mapUtils';
 import { perkIconUrl } from '@/utils/staticUrl';
 import { staticUrl } from '@/utils/api';
 import { sanitizeImageUrl } from './codec';
@@ -89,7 +89,8 @@ export function mapsToItems(maps: readonly MapRealm[], itemIds?: readonly number
         items.push({
           key,
           name: m.name,
-          image: getMapImageSrc(m) || null,
+          image: getMapThumbSrc(m) || null,
+          fullImage: getMapImageSrc(m) || null,
           subtitle: m.realm || undefined,
         });
       }

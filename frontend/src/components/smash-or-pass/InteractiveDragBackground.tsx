@@ -2,6 +2,7 @@
 'use client';
 
 import React, { useEffect, useRef } from 'react';
+import { themeColor } from '@/utils/themeColor';
 
 interface InteractiveDragBackgroundProps {
   dragX?: number; // < 0 is Pass (left), > 0 is Smash (right)
@@ -93,7 +94,7 @@ export const InteractiveDragBackground: React.FC<InteractiveDragBackgroundProps>
         speedX: (Math.random() - 0.5) * 0.3,
         alpha: Math.random() * 0.4 + 0.1,
         baseAlpha: Math.random() * 0.4 + 0.1,
-        color: Math.random() > 0.5 ? '#dc2626' : '#f59e0b',
+        color: Math.random() > 0.5 ? themeColor('--accent-red') : '#f59e0b',
         type: 'ember',
         rotation: 0,
         rotationSpeed: 0,
@@ -102,7 +103,7 @@ export const InteractiveDragBackground: React.FC<InteractiveDragBackgroundProps>
 
     // Dynamic Smash Hearts Pool (Falling / Floating)
     const smashHearts: Particle[] = [];
-    const pinkPalette = ['#dc2626', '#ef4444', '#f87171', '#b91c1c', '#fca5a5', '#e11d48'];
+    const pinkPalette = [themeColor('--accent-red'), '#ef4444', '#f87171', '#b91c1c', '#fca5a5', '#e11d48'];
     for (let i = 0; i < 40; i++) {
       smashHearts.push({
         x: Math.random() * width,
@@ -121,7 +122,7 @@ export const InteractiveDragBackground: React.FC<InteractiveDragBackgroundProps>
 
     // Dynamic Sad Ash / Broken Heart Rain Pool
     const sadParticles: Particle[] = [];
-    const sadPalette = ['#71717a', '#52525b', '#3f3f46', '#27272a', '#a1a1aa', '#18181b'];
+    const sadPalette = [themeColor('--text-muted'), '#52525b', '#3f3f46', themeColor('--bg-elevated'), '#a1a1aa', themeColor('--bg-primary')];
     for (let i = 0; i < 35; i++) {
       sadParticles.push({
         x: Math.random() * width,
@@ -182,7 +183,7 @@ export const InteractiveDragBackground: React.FC<InteractiveDragBackgroundProps>
       context.scale(size / 20, size / 20);
       context.globalAlpha = Math.max(0, Math.min(1, alpha));
       context.fillStyle = color;
-      context.strokeStyle = '#18181b';
+      context.strokeStyle = themeColor('--bg-primary');
       context.lineWidth = 2;
 
       context.beginPath();
@@ -193,7 +194,7 @@ export const InteractiveDragBackground: React.FC<InteractiveDragBackgroundProps>
       context.stroke();
 
       // Jagged crack down center
-      context.strokeStyle = '#27272a';
+      context.strokeStyle = themeColor('--bg-elevated');
       context.beginPath();
       context.moveTo(0, -5);
       context.lineTo(-2, 4);
@@ -265,7 +266,7 @@ export const InteractiveDragBackground: React.FC<InteractiveDragBackgroundProps>
               speedY: Math.sin(angle) * spd + 2.5, // dropping heavy
               alpha: 1,
               baseAlpha: 1,
-              color: '#18181b',
+              color: themeColor('--bg-primary'),
               type: 'shattered_shard',
               rotation: Math.random() * Math.PI,
               rotationSpeed: (Math.random() - 0.5) * 0.2,
@@ -285,7 +286,7 @@ export const InteractiveDragBackground: React.FC<InteractiveDragBackgroundProps>
               speedY: Math.sin(angle) * spd - 3,
               alpha: 1,
               baseAlpha: 1,
-              color: Math.random() > 0.3 ? '#fbbf24' : '#f59e0b',
+              color: Math.random() > 0.3 ? themeColor('--accent-amber') : '#f59e0b',
               type: 'heart',
               rotation: Math.random() * Math.PI,
               rotationSpeed: (Math.random() - 0.5) * 0.15,
@@ -390,7 +391,7 @@ export const InteractiveDragBackground: React.FC<InteractiveDragBackgroundProps>
           ctx.translate(p.x, p.y);
           ctx.rotate(p.rotation);
           ctx.globalAlpha = alpha;
-          ctx.fillStyle = '#18181b';
+          ctx.fillStyle = themeColor('--bg-primary');
           ctx.strokeStyle = '#52525b';
           ctx.lineWidth = 1.5;
           ctx.beginPath();

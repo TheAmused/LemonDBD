@@ -2,24 +2,21 @@
 // frontend/src/components/streaks/StreaksSkeleton.tsx
 
 import React from 'react';
-import { DbdSpinner } from '@/components/DbdSpinner';
+import { DbdSpinner } from '@/components/common/DbdSpinner';
 import type { Dictionary } from '@/locales/types';
+import { useDictionary } from "@/context/DictionaryContext";
 
 interface StreaksSkeletonProps {
   className?: string;
-  dict?: Dictionary | any;
   ariaLabel?: string;
 }
 
 /**
  * Universal DBD Skill Check Framer Motion Loading Spinner for Streaks & Challenges Hub (/streaks).
  */
-export const StreaksHubSkeleton: React.FC<StreaksSkeletonProps> = ({
-  className = '',
-  dict,
-  ariaLabel,
-}) => {
-  const loadingLabel = ariaLabel || dict?.streaks?.loadingStreak || dict?.app?.loading || 'Loading trials and streak gauntlets...';
+export const StreaksHubSkeleton: React.FC<StreaksSkeletonProps> = ({ className = '', ariaLabel }) => {
+  const dict = useDictionary();
+  const loadingLabel = ariaLabel || dict.streaks.loadingStreak;
 
   return (
     <div
@@ -34,7 +31,6 @@ export const StreaksHubSkeleton: React.FC<StreaksSkeletonProps> = ({
         accent="blood"
         needleSpeed={1.1}
         label={loadingLabel}
-        dict={dict}
       />
     </div>
   );
@@ -43,12 +39,9 @@ export const StreaksHubSkeleton: React.FC<StreaksSkeletonProps> = ({
 /**
  * Universal DBD Skill Check Framer Motion Loading Spinner for Streak Board (/streaks/[role]/[streakId]).
  */
-export const StreakBoardSkeleton: React.FC<StreaksSkeletonProps> = ({
-  className = '',
-  dict,
-  ariaLabel,
-}) => {
-  const loadingLabel = ariaLabel || dict?.streaks?.loadingStreak || dict?.app?.loading || 'Calibrating streak board...';
+export const StreakBoardSkeleton: React.FC<StreaksSkeletonProps> = ({ className = '', ariaLabel }) => {
+  const dict = useDictionary();
+  const loadingLabel = ariaLabel || dict.streaks.loadingStreak;
 
   return (
     <div
@@ -63,10 +56,7 @@ export const StreakBoardSkeleton: React.FC<StreaksSkeletonProps> = ({
         accent="blood"
         needleSpeed={1.1}
         label={loadingLabel}
-        dict={dict}
       />
     </div>
   );
 };
-
-export default StreaksHubSkeleton;

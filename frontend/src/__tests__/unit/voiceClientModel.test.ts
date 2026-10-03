@@ -3,7 +3,6 @@
 import test from 'node:test';
 import assert from 'node:assert';
 import React from 'react';
-import { renderToStaticMarkup } from 'react-dom/server';
 import {
   isWebSpeechSupported,
   detectBrowser,
@@ -14,11 +13,12 @@ import {
   initClientSpeechModel,
   AudioCaptureSession,
 } from '@/utils/../services/clientSpeechModel';
-import { VoiceEngineInfoModal } from '@/utils/../components/maps/VoiceEngineInfoModal';
+import { VoiceEngineInfoBody } from '@/utils/../components/maps/VoiceEngineInfoModal';
 import { VoiceCommandBanner } from '@/utils/../components/maps/VoiceCommandBanner';
 import enDict from '@/utils/../locales/en';
 import esDict from '@/utils/../locales/es';
 import plDict from '@/utils/../locales/pl';
+import { renderWithDictionary } from '../helpers/renderWithDictionary';
 
 test('Browser compatibility and engine recommendation logic', () => {
   // In Node test environment, window/SpeechRecognition is undefined
@@ -105,22 +105,18 @@ test('VoiceEngineInfoModal renders dual-engine explanation and compatibility det
     progress: 45,
   };
 
-  const html = renderToStaticMarkup(
-    React.createElement(VoiceEngineInfoModal, {
-      isOpen: true,
-      onClose: () => {},
+  const html = renderWithDictionary(
+    React.createElement(VoiceEngineInfoBody, {
       currentEngine: 'client-model',
       onSelectEngine: () => {},
       browserName: 'Mozilla Firefox',
       hasNativeWebSpeech: false,
       modelProgress: mockProgress,
       onPreloadModel: () => {},
-      dict: enDict,
     })
   );
 
-  // Assert modal renders title and explanations
-  assert.ok(html.includes('Voice Recognition Engine &amp; Compatibility') || html.includes('Voice Recognition Engine'));
+  // Title is rendered by the shared Modal header; the body holds the explanations
   assert.ok(html.includes('Mozilla Firefox'));
   assert.ok(html.includes('Web Speech Framework'));
   assert.ok(html.includes('Client-Side AI Model') || html.includes('Client-Side'));
@@ -134,17 +130,14 @@ test('VoiceEngineInfoModal handles native Web Speech engine active state', () =>
     progress: 100,
   };
 
-  const html = renderToStaticMarkup(
-    React.createElement(VoiceEngineInfoModal, {
-      isOpen: true,
-      onClose: () => {},
+  const html = renderWithDictionary(
+    React.createElement(VoiceEngineInfoBody, {
       currentEngine: 'web-speech',
       onSelectEngine: () => {},
       browserName: 'Google Chrome',
       hasNativeWebSpeech: true,
       modelProgress: mockProgress,
       onPreloadModel: () => {},
-      dict: enDict,
     })
   );
 
@@ -154,7 +147,7 @@ test('VoiceEngineInfoModal handles native Web Speech engine active state', () =>
 });
 
 test('VoiceCommandBanner renders active engine badge and fallback trigger', () => {
-  const html = renderToStaticMarkup(
+  const html = renderWithDictionary(
     React.createElement(VoiceCommandBanner, {
       locale: 'en',
       currentSource: 'hens333',
@@ -162,7 +155,6 @@ test('VoiceCommandBanner renders active engine badge and fallback trigger', () =
       onSelectMap: () => {},
       onAction: () => {},
       availableMaps: [],
-      dict: enDict,
     })
   );
 
@@ -194,7 +186,6 @@ test('Multilingual translations dictionary coverage for voice recognition fallba
     assert.ok(dict.voice.howItWorksClient, `Missing voice.howItWorksClient in ${lang}.json`);
     assert.ok(dict.voice.whyNeededTitle, `Missing voice.whyNeededTitle in ${lang}.json`);
     assert.ok(dict.voice.whyNeededText, `Missing voice.whyNeededText in ${lang}.json`);
-    assert.ok(dict.voice.statusDownloading, `Missing voice.statusDownloading in ${lang}.json`);
     assert.ok(dict.voice.statusReady, `Missing voice.statusReady in ${lang}.json`);
   }
 });

@@ -13,11 +13,7 @@ export default {
   unownedPerk: "Nicht besessenes Talent",
   equipment: "Ausrüstung",
   temporarilyDisabled: "Vorübergehend deaktiviert",
-  whyDisabled: "Warum ist {item} deaktiviert?",
   wasDisabledTemporarily: "{item} wurde vorübergehend deaktiviert.",
   reasonLabel: "Grund",
-  done: 'Fertig',
-  clickOutsideToClose: 'Außerhalb klicken oder ESC drücken zum Schließen',
-  copySlug: 'ID-Slug kopieren',
-  slugCopied: 'Slug kopiert!',
+  done: 'Fertig'
 } as const;

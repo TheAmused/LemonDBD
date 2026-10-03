@@ -2,7 +2,6 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import React from 'react';
-import { renderToStaticMarkup } from 'react-dom/server';
 import {
   CharactersGridSkeleton,
   CharacterDetailSkeleton,
@@ -13,12 +12,12 @@ import deDict from '@/locales/de';
 import esDict from '@/locales/es';
 import jaDict from '@/locales/ja';
 import plDict from '@/locales/pl';
+import { renderWithDictionary } from '../helpers/renderWithDictionary';
 
 describe('Characters: Skeletons & DBD Framer Motion Spinner Integrity', () => {
   it('CharactersGridSkeleton renders with role="status", aria-busy="true", and DBD Skill Check Spinner', () => {
-    const html = renderToStaticMarkup(
+    const html = renderWithDictionary(
       React.createElement(CharactersGridSkeleton, {
-        dict: enDict,
       })
     );
 
@@ -28,9 +27,8 @@ describe('Characters: Skeletons & DBD Framer Motion Spinner Integrity', () => {
   });
 
   it('CharacterDetailSkeleton renders with role="status", aria-busy="true", and DBD Skill Check Spinner', () => {
-    const html = renderToStaticMarkup(
+    const html = renderWithDictionary(
       React.createElement(CharacterDetailSkeleton, {
-        dict: enDict,
       })
     );
 

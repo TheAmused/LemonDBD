@@ -1,9 +1,9 @@
 'use client';
 // frontend/src/components/tier-lists/creator/ItemSources.tsx
 
+import { Tabs } from '@/components/common/Tabs';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Check, ClipboardPaste, Gamepad2, ImagePlus, Loader2, Plus, Search, Upload } from 'lucide-react';
-import { ToggleSwitch, type ToggleSwitchOption } from '@/components/common/ToggleSwitch';
+import { Check, ClipboardPaste, Gamepad2, ImagePlus, Plus, Search, Upload } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { useTierListItems } from '@/hooks/useTierListItems';
 import type { TierListKind } from '@/types/tierList';
@@ -14,7 +14,13 @@ import { sanitizeImageUrl } from '@/utils/tierLists/codec';
 import { nameFromFileName, nameFromUrl, parseLinkLines } from '@/utils/tierLists/creator';
 import { fileToTileImage } from '@/utils/tierLists/imageFiles';
 import { TierItemTile } from '../TierItemTile';
-import { BTN_PRIMARY, BTN_SECONDARY, FIELD, LABEL } from '../styles';
+import { LABEL, TOUCH_BTN, TOUCH_FIELD } from '../styles';
+import { Spinner } from '@/components/common/Spinner';
+import { Button } from '@/components/common/Button';
+import { Input } from '@/components/common/Field';
+import { CustomDropdown } from '@/components/common/CustomDropdown';
+import { formatMessage } from '@/utils/i18nFormat';
+import { useDictionary } from "@/context/DictionaryContext";
 
 export interface IncomingItem {
   name: string;
@@ -27,15 +33,21 @@ type SourceTab = 'upload' | 'links' | 'catalog';
 type CatalogKind = Exclude<TierListKind, 'custom'>;
 const CATALOG_KINDS: CatalogKind[] = ['survivors', 'killers', 'survivor_perks', 'killer_perks', 'maps'];
 
+interface TabOption {
+  value: SourceTab;
+  label: string;
+  icon: React.ReactNode;
+}
+
 interface ItemSourcesProps {
   onAdd: (items: IncomingItem[]) => void;
   existingIds: ReadonlySet<string>;
   locale: string;
-  dict: Dictionary;
 }
 
 /** The three ways into a custom list: upload pictures, paste links, or pick from the game's catalog. */
-export function ItemSources({ onAdd, existingIds, locale, dict }: ItemSourcesProps) {
+export function ItemSources({ onAdd, existingIds, locale }: ItemSourcesProps) {
+  const dict = useDictionary();
   const c = dict.tierLists.creator;
   const { isAdmin } = useAuth();
   const [tab, setTab] = useState<SourceTab>('links');
@@ -43,7 +55,7 @@ export function ItemSources({ onAdd, existingIds, locale, dict }: ItemSourcesPro
   // Direct file upload is admin-only (guests and regular users don't get the
   // tab at all, not just a disabled one) -- everyone else adds items by
   // pasting a link or picking from the game's own catalog.
-  const options: readonly ToggleSwitchOption<SourceTab>[] = [
+  const options: readonly TabOption[] = [
     ...(isAdmin
       ? [{ value: 'upload' as const, label: c.tabUpload, icon: <Upload className="h-3.5 w-3.5" aria-hidden="true" /> }]
       : []),
@@ -59,19 +71,28 @@ export function ItemSources({ onAdd, existingIds, locale, dict }: ItemSourcesPro
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="overflow-x-auto">
-        <ToggleSwitch value={tab} onChange={setTab} options={options} ariaLabel={c.itemSourceAria} className="w-full min-w-max" />
+      <div className="flex justify-center w-full">
+        <Tabs
+          ariaLabel={c.itemSourceAria}
+          value={tab}
+          onChange={setTab}
+          panels={false}
+          variant="boxed"
+          tabClassName="min-h-[38px] gap-2 rounded-md px-3.5"
+          tabs={options}
+        />
       </div>
-      {tab === 'upload' && isAdmin && <UploadSource onAdd={onAdd} dict={dict} />}
-      {tab === 'links' && <LinksSource onAdd={onAdd} dict={dict} />}
-      {tab === 'catalog' && <CatalogSource onAdd={onAdd} existingIds={existingIds} locale={locale} dict={dict} />}
+      {tab === 'upload' && isAdmin && <UploadSource onAdd={onAdd} />}
+      {tab === 'links' && <LinksSource onAdd={onAdd} />}
+      {tab === 'catalog' && <CatalogSource onAdd={onAdd} existingIds={existingIds} locale={locale} />}
     </div>
   );
 }
 
 // ---------------------------------------------------------------------------
 
-function UploadSource({ onAdd, dict }: { onAdd: (items: IncomingItem[]) => void; dict: Dictionary }) {
+function UploadSource({ onAdd }: { onAdd: (items: IncomingItem[]) => void; }) {
+  const dict = useDictionary();
   const c = dict.tierLists.creator;
   const inputRef = useRef<HTMLInputElement>(null);
   const [dragging, setDragging] = useState<boolean>(false);
@@ -111,26 +132,26 @@ function UploadSource({ onAdd, dict }: { onAdd: (items: IncomingItem[]) => void;
           void handleFiles(e.dataTransfer.files);
         }}
         className={cn(
-          'flex flex-col items-center justify-center gap-3 rounded-2xl border-2 border-dashed p-6 sm:p-8 text-center transition-colors',
+          'flex flex-col items-center justify-center gap-3 rounded-xl border-2 border-dashed p-6 sm:p-8 text-center transition-colors',
           dragging ? 'border-accent-red bg-accent-red/5' : 'border-border-color bg-bg-primary/20'
         )}
       >
-        <span className="flex h-14 w-14 items-center justify-center rounded-2xl border border-border-color bg-bg-surface text-text-muted">
-          <ImagePlus className="h-7 w-7" aria-hidden="true" />
+        <span className="flex h-12 w-12 items-center justify-center rounded-lg border border-border-color bg-bg-surface text-text-muted">
+          <ImagePlus className="h-6 w-6" aria-hidden="true" />
         </span>
         <div>
           <p className="text-base font-black text-text-primary">{c.dropTitle}</p>
           <p className="mt-1 max-w-md text-xs text-text-muted">{c.dropSubtitle}</p>
         </div>
-        <button
-          type="button"
-          disabled={processing}
+        <Button
+          variant="primary"
+          loading={processing}
           onClick={() => inputRef.current?.click()}
-          className={cn(BTN_PRIMARY, processing && 'cursor-wait opacity-70')}
+          leftIcon={<Upload className="h-4 w-4" aria-hidden="true" />}
+          className={TOUCH_BTN}
         >
-          {processing ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" /> : <Upload className="h-4 w-4" aria-hidden="true" />}
           {c.chooseFiles}
-        </button>
+        </Button>
         <input
           ref={inputRef}
           type="file"
@@ -144,13 +165,13 @@ function UploadSource({ onAdd, dict }: { onAdd: (items: IncomingItem[]) => void;
         />
       </div>
       {processing && (
-        <p role="status" className="text-xs font-semibold text-text-muted text-center">
+        <p role="status" className="type-strong text-text-muted text-center">
           {c.processing}
         </p>
       )}
       {!processing && skipped > 0 && (
-        <p role="alert" className="text-xs font-semibold text-accent-red text-center">
-          {c.uploadSkipped.replace('{count}', String(skipped))}
+        <p role="alert" className="type-strong text-accent-red text-center">
+          {formatMessage(c.uploadSkipped, { count: skipped })}
         </p>
       )}
     </div>
@@ -159,7 +180,8 @@ function UploadSource({ onAdd, dict }: { onAdd: (items: IncomingItem[]) => void;
 
 // ---------------------------------------------------------------------------
 
-function LinksSource({ onAdd, dict }: { onAdd: (items: IncomingItem[]) => void; dict: Dictionary }) {
+function LinksSource({ onAdd }: { onAdd: (items: IncomingItem[]) => void; }) {
+  const dict = useDictionary();
   const t = dict.tierLists;
   const [itemName, setItemName] = useState<string>('');
   const [imageUrl, setImageUrl] = useState<string>('');
@@ -196,7 +218,7 @@ function LinksSource({ onAdd, dict }: { onAdd: (items: IncomingItem[]) => void; 
       <div className="grid gap-3 sm:grid-cols-2">
         <label className="flex flex-col gap-1.5">
           <span className={LABEL}>{t.itemName}</span>
-          <input
+          <Input
             type="text"
             value={itemName}
             onChange={(e) => {
@@ -205,12 +227,12 @@ function LinksSource({ onAdd, dict }: { onAdd: (items: IncomingItem[]) => void; 
             }}
             onKeyDown={(e) => e.key === 'Enter' && handleAdd()}
             placeholder={t.itemName}
-            className={FIELD}
+            className={TOUCH_FIELD}
           />
         </label>
         <label className="flex flex-col gap-1.5">
           <span className={LABEL}>{t.itemImage}</span>
-          <input
+          <Input
             type="url"
             value={imageUrl}
             onChange={(e) => {
@@ -219,42 +241,39 @@ function LinksSource({ onAdd, dict }: { onAdd: (items: IncomingItem[]) => void; 
             }}
             onKeyDown={(e) => e.key === 'Enter' && handleAdd()}
             placeholder={t.itemImagePlaceholder}
-            className={FIELD}
+            className={TOUCH_FIELD}
           />
         </label>
       </div>
-      <p className="text-xs text-text-muted">{t.itemImageHint}</p>
+      <p className="text-xs text-text-muted text-center">{t.itemImageHint}</p>
       {error && (
-        <p role="alert" className="text-xs font-semibold text-accent-red">
+        <p role="alert" className="type-strong text-accent-red text-center">
           {error}
         </p>
       )}
-      <button
-        type="button"
-        disabled={!itemName.trim() && !imageUrl.trim()}
-        onClick={handleAdd}
-        className={cn(BTN_PRIMARY, 'self-start min-h-[42px] px-4')}
-      >
-        <Plus className="h-4 w-4" aria-hidden="true" />
-        {t.addItemTitle}
-      </button>
+      <div className="flex justify-center w-full pt-1">
+        <Button
+          variant="primary"
+          disabled={!itemName.trim() && !imageUrl.trim()}
+          onClick={handleAdd}
+          leftIcon={<Plus className="h-4 w-4" aria-hidden="true" />}
+          className="min-h-[40px] rounded-lg px-6"
+        >
+          {t.addItemTitle}
+        </Button>
+      </div>
     </div>
   );
 }
 
 // ---------------------------------------------------------------------------
 
-function CatalogSource({
-  onAdd,
-  existingIds,
-  locale,
-  dict,
-}: {
+function CatalogSource({ onAdd, existingIds, locale }: {
   onAdd: (items: IncomingItem[]) => void;
   existingIds: ReadonlySet<string>;
   locale: string;
-  dict: Dictionary;
 }) {
+  const dict = useDictionary();
   const t = dict.tierLists;
   const c = t.creator;
   const [kind, setKind] = useState<CatalogKind>('survivors');
@@ -286,7 +305,8 @@ function CatalogSource({
 
   return (
     <div className="flex flex-col gap-3">
-      <div className="flex flex-wrap gap-2" role="group" aria-label={c.catalogSource}>
+      {/* Wide screens: every type as a pill. Phones: a dropdown next to the search box, to save rows. */}
+      <div className="hidden sm:flex flex-wrap justify-center gap-2" role="group" aria-label={c.catalogSource}>
         {CATALOG_KINDS.map((k) => (
           <button
             key={k}
@@ -297,7 +317,7 @@ function CatalogSource({
             }}
             aria-pressed={kind === k}
             className={cn(
-              'min-h-[44px] rounded-xl border px-3 text-xs sm:text-sm font-bold transition-colors cursor-pointer',
+              'min-h-[38px] rounded-lg border px-3 text-xs sm:text-sm font-bold transition-colors cursor-pointer',
               kind === k
                 ? 'border-accent-red bg-accent-red/10 text-accent-red'
                 : 'border-border-color bg-bg-surface text-text-secondary hover:bg-bg-elevated hover:text-text-primary'
@@ -309,41 +329,57 @@ function CatalogSource({
       </div>
 
       <div className="flex flex-col gap-2 sm:flex-row">
-        <div className="relative flex-1">
-          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-text-muted" aria-hidden="true" />
-          <input
-            type="search"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder={c.catalogSearch}
-            aria-label={c.catalogSearchAria}
-            className={`${FIELD} pl-9`}
-          />
+        <div className="flex gap-2 sm:contents">
+          <div className="shrink-0 sm:hidden">
+            <CustomDropdown
+              value={kind}
+              onChange={(k) => {
+                setKind(k as CatalogKind);
+                setSelected(new Set());
+              }}
+              options={CATALOG_KINDS.map((k) => ({ value: k, label: t.kinds[k] }))}
+              ariaLabel={c.catalogSource}
+              buttonClassName="min-h-[44px] justify-between"
+              minWidthClass="min-w-[200px]"
+            />
+          </div>
+          <div className="relative min-w-0 flex-1">
+            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-text-muted" aria-hidden="true" />
+            <Input
+              type="search"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder={c.catalogSearch}
+              aria-label={c.catalogSearchAria}
+              className={`${TOUCH_FIELD} pl-9`}
+            />
+          </div>
         </div>
-        <div className="flex gap-2">
-          <button
-            type="button"
+        <div className="flex justify-center gap-2">
+          <Button
+            variant="secondary"
+            size="sm"
             onClick={() =>
               setSelected((prev) => new Set([...prev, ...visible.filter((i) => !existingIds.has(i.key)).map((i) => i.key)]))
             }
-            className={BTN_SECONDARY}
+            className="min-h-[38px]"
           >
             {c.selectAll}
-          </button>
-          <button type="button" disabled={selected.size === 0} onClick={() => setSelected(new Set())} className={BTN_SECONDARY}>
+          </Button>
+          <Button variant="secondary" size="sm" disabled={selected.size === 0} onClick={() => setSelected(new Set())} className="min-h-[38px]">
             {c.clearSelection}
-          </button>
+          </Button>
         </div>
       </div>
 
-      <div className="max-h-[360px] overflow-y-auto overscroll-contain rounded-2xl border border-border-color bg-bg-primary/40 p-2">
+      <div className="max-h-[360px] overflow-y-auto overscroll-contain rounded-lg border border-border-color bg-bg-primary/40 p-2">
         {loading ? (
-          <p className="flex items-center justify-center gap-2 py-10 text-sm font-semibold text-text-muted">
-            <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+          <p className="flex items-center justify-center gap-2 py-10 type-card-title text-text-muted">
+            <Spinner size="sm" tone="current" />
             {c.catalogLoading}
           </p>
         ) : (
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap justify-center gap-2">
             {visible.map((item) => {
               const added = existingIds.has(item.key);
               const isSelected = selected.has(item.key);
@@ -355,7 +391,7 @@ function CatalogSource({
                   onClick={() => toggle(item.key)}
                   aria-pressed={isSelected}
                   aria-label={item.name}
-                  className="relative rounded-xl cursor-pointer disabled:cursor-not-allowed disabled:opacity-40"
+                  className="relative rounded-lg cursor-pointer disabled:cursor-not-allowed disabled:opacity-40"
                 >
                   <TierItemTile
                     item={item}
@@ -378,10 +414,11 @@ function CatalogSource({
         )}
       </div>
 
-      <button type="button" disabled={selected.size === 0} onClick={add} className={cn(BTN_PRIMARY, 'self-start')}>
-        <Plus className="h-4 w-4" aria-hidden="true" />
-        {c.addSelected.replace('{count}', String(selected.size))}
-      </button>
+      <div className="flex justify-center w-full">
+        <Button variant="primary" disabled={selected.size === 0} onClick={add} leftIcon={<Plus className="h-4 w-4" aria-hidden="true" />} className="min-h-[40px] rounded-lg px-6">
+          {formatMessage(c.addSelected, { count: selected.size })}
+        </Button>
+      </div>
     </div>
   );
 }

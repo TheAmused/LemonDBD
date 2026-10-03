@@ -3,7 +3,6 @@ import type { Dictionary } from '@/locales/types';
 // frontend/src/app/[locale]/characters/[slug]/page.tsx
 
 import React, { useEffect, useState, Suspense } from 'react';
-import dynamic from 'next/dynamic';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { ChevronLeft, UserX } from 'lucide-react';
@@ -22,10 +21,6 @@ import { useCachedData } from '@/hooks/useCachedData';
 import { fetchJson } from '@/services/dataCache';
 import { getBackendBaseUrl } from '@/utils/api';
 
-const CampfireParticles = dynamic(
-  () => import('@/components/common/CampfireParticles').then((m) => m.CampfireParticles),
-  { ssr: false }
-);
 
 export default function CharacterDetailPage() {
   const params = useParams();
@@ -86,41 +81,37 @@ export default function CharacterDetailPage() {
   return (
     <PageShell
       locale={locale}
-      dict={dict}
       activeCategory="characters"
       mainClassName="relative overflow-y-auto"
     >
-      <CampfireParticles />
       <div className="relative z-10">
         {loading ? (
-          <CharacterDetailSkeleton dict={dict} />
+          <CharacterDetailSkeleton />
         ) : notFound || !detailData ? (
           <div className="min-h-[60vh] flex flex-col items-center justify-center space-y-5 text-center p-6">
             <div className="flex h-16 w-16 items-center justify-center rounded-3xl bg-bg-elevated border border-border-color text-text-muted">
               <UserX className="h-8 w-8" />
             </div>
             <div className="space-y-1 max-w-md">
-              <h2 className="text-xl sm:text-2xl font-black text-text-primary font-mono">
-                {t.notFoundTitle || 'Character Not Found'}
+              <h2 className="type-page-title text-text-primary">
+                {t.notFoundTitle}
               </h2>
-              <p className="text-xs sm:text-sm text-text-muted leading-relaxed">
-                {t.notFoundDesc ||
-                  'The character you are looking for does not exist or could not be found in the archives.'}
+              <p className="type-body-fluid text-text-muted">
+                {t.notFoundDesc}
               </p>
             </div>
             <Link
               href={`/${locale}/characters`}
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-accent-red hover:bg-accent-red-hover text-text-inverted text-xs font-bold transition-all shadow-xs active:scale-95 cursor-pointer"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-accent-red hover:bg-accent-red-hover text-text-inverted type-strong transition-all shadow-xs active:scale-95 cursor-pointer"
             >
               <ChevronLeft className="h-4 w-4" />
-              <span>{t.backToCharacters || 'Back to Characters'}</span>
+              <span>{t.backToCharacters}</span>
             </Link>
           </div>
         ) : (
-          <Suspense fallback={<CharacterDetailSkeleton dict={dict} />}>
+          <Suspense fallback={<CharacterDetailSkeleton />}>
             <CharacterSubpageView
               currentLocale={locale}
-              dict={dict}
               detailData={detailData}
               allCharacters={allCharacters}
             />

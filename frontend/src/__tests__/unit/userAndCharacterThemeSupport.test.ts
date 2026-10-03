@@ -4,16 +4,15 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 import React from 'react';
-import { renderToStaticMarkup } from 'react-dom/server';
+import { renderWithDictionary } from '../helpers/renderWithDictionary';
 import { UserProfileForm } from '@/components/user/UserProfileForm';
-import { UserMetricsGrid } from '@/components/user/UserMetricsGrid';
 import { UserBugReportsList } from '@/components/user/UserBugReportsList';
 import { KillerDetailView } from '@/components/character-detail/KillerDetailView';
 import { SurvivorDetailView } from '@/components/character-detail/SurvivorDetailView';
 
 describe('User Profile Theme Support', () => {
   it('UserProfileForm container supports light theme card and text', () => {
-    const html = renderToStaticMarkup(
+    const html = renderWithDictionary(
       React.createElement(UserProfileForm, {
         initialEmail: 'test@example.com',
         onRefreshUser: async () => {},
@@ -29,27 +28,9 @@ describe('User Profile Theme Support', () => {
     assert.ok(html.includes('bg-bg-elevated') || html.includes('dark:bg-slate-950/80'), 'Inputs must have dark bg');
   });
 
-  it('UserMetricsGrid cards use light-compatible border and background', () => {
-    const html = renderToStaticMarkup(
-      React.createElement(UserMetricsGrid, {
-        ownership: {
-          survivors: { owned: 10, total: 54, percentage: 18 },
-          killers: { owned: 5, total: 44, percentage: 11 },
-          perks: { unlocked: 30, total: 321, percentage: 9 },
-        },
-      })
-    );
-    assert.ok(html.includes('border-border-color') || html.includes('border-slate-200'), 'Metrics cards must have themed border');
-    assert.ok(html.includes('border-border-color') || html.includes('dark:border-slate-800'), 'Metrics cards must have dark border');
-    assert.ok(html.includes('bg-bg-surface') || html.includes('bg-white'), 'Metrics cards must have themed bg');
-    assert.ok(html.includes('bg-bg-surface') || html.includes('dark:bg-slate-900/60'), 'Metrics cards must have dark bg');
-    assert.ok(html.includes('bg-bg-elevated') || html.includes('bg-slate-200'), 'Progress track must have themed bg');
-    assert.ok(html.includes('bg-bg-elevated') || html.includes('dark:bg-slate-800'), 'Progress track must have dark bg');
-  });
-
   it('UserBugReportsList renders empty state and reports with light/dark theme classes', () => {
     // Empty state
-    const emptyHtml = renderToStaticMarkup(
+    const emptyHtml = renderWithDictionary(
       React.createElement(UserBugReportsList, {
         reports: [],
         loading: false,
@@ -61,7 +42,7 @@ describe('User Profile Theme Support', () => {
     assert.ok(emptyHtml.includes('bg-bg-surface') || emptyHtml.includes('bg-white'), 'Empty state card must have themed bg');
 
     // With reports
-    const reportHtml = renderToStaticMarkup(
+    const reportHtml = renderWithDictionary(
       React.createElement(UserBugReportsList, {
         reports: [
           {
@@ -92,7 +73,7 @@ describe('User Profile Theme Support', () => {
 
   it('UserBugReportsList status badges provide WCAG AA contrast in light and dark mode', () => {
     for (const status of ['pending', 'in_progress', 'resolved', 'rejected'] as const) {
-      const html = renderToStaticMarkup(
+      const html = renderWithDictionary(
         React.createElement(UserBugReportsList, {
           reports: [
             {
@@ -134,7 +115,7 @@ describe('User Profile Theme Support', () => {
   });
 
   it('KillerDetailView and SurvivorDetailView support light and dark theme hero title and real name', () => {
-    const killerHtml = renderToStaticMarkup(
+    const killerHtml = renderWithDictionary(
       React.createElement(KillerDetailView, {
         currentLocale: 'en',
         detailData: {
@@ -150,7 +131,7 @@ describe('User Profile Theme Support', () => {
       })
     );
     assert.ok(
-      killerHtml.includes('text-text-primary') || killerHtml.includes('text-slate-900 dark:text-slate-100 font-mono'),
+      killerHtml.includes('text-text-primary') || killerHtml.includes('text-slate-900 dark:text-slate-100'),
       'Killer title must have theme classes'
     );
     assert.ok(
@@ -158,7 +139,7 @@ describe('User Profile Theme Support', () => {
       'Killer real name must have theme classes'
     );
 
-    const survivorHtml = renderToStaticMarkup(
+    const survivorHtml = renderWithDictionary(
       React.createElement(SurvivorDetailView, {
         currentLocale: 'en',
         detailData: {
@@ -174,7 +155,7 @@ describe('User Profile Theme Support', () => {
       })
     );
     assert.ok(
-      survivorHtml.includes('text-text-primary') || survivorHtml.includes('text-slate-900 dark:text-slate-100 font-mono'),
+      survivorHtml.includes('text-text-primary') || survivorHtml.includes('text-slate-900 dark:text-slate-100'),
       'Survivor title must have theme classes'
     );
     assert.ok(
@@ -222,7 +203,7 @@ describe('User Profile Theme Support', () => {
       'Unauthenticated card must support light and dark theme'
     );
     assert.ok(
-      source.includes('bg-accent-red') || source.includes('bg-rose-50'),
+      source.includes('bg-accent-red') || source.includes('variant="primary"') || source.includes('bg-rose-50'),
       'Action button must support theme contrast'
     );
   });

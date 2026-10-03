@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react';
 import type { TierItem } from '@/types/tierList';
 import { cn } from '@/utils/cn';
 
+import { tip } from '@/components/common/Tooltip';
 export type TierTileShape = 'square' | 'wide';
 
 // Breakpoints are written as non-overlapping ranges on purpose: Tailwind emits the
@@ -12,13 +13,13 @@ export type TierTileShape = 'square' | 'wide';
 // `lg:` rule would override `wide-2k:` on the same property.
 const SHAPE_CLASSES: Record<TierTileShape, string> = {
   // >= 56px on the smallest screens: comfortably above the 44px touch minimum.
-  square: 'w-14 sm:max-lg:w-16 lg:max-wide-2k:w-[72px] wide-2k:w-24',
-  wide: 'w-[88px] sm:max-lg:w-24 lg:max-wide-2k:w-28 wide-2k:w-36',
+  square: 'w-12 min-[480px]:w-14 sm:max-lg:w-16 lg:max-wide-2k:w-[72px] wide-2k:w-24',
+  wide: 'w-[76px] min-[480px]:w-[88px] sm:max-lg:w-24 lg:max-wide-2k:w-28 wide-2k:w-36',
 };
 
 const IMAGE_CLASSES: Record<TierTileShape, string> = {
-  square: 'h-14 sm:max-lg:h-16 lg:max-wide-2k:h-[72px] wide-2k:h-24',
-  wide: 'h-14 sm:max-lg:h-16 lg:max-wide-2k:h-[72px] wide-2k:h-24',
+  square: 'h-12 min-[480px]:h-14 sm:max-lg:h-16 lg:max-wide-2k:h-[72px] wide-2k:h-24',
+  wide: 'h-12 min-[480px]:h-14 sm:max-lg:h-16 lg:max-wide-2k:h-[72px] wide-2k:h-24',
 };
 
 /** `William "Bill" Overbeck` -> `WB`: first letter of the first two words that have one. */
@@ -62,11 +63,11 @@ export const TierItemTile = React.forwardRef<HTMLDivElement, TierItemTileProps>(
   return (
     <div
       ref={ref}
-      title={item.name}
+      {...tip(item.name, undefined, 'item')}
       aria-label={item.name}
       className={cn(
         'group relative flex shrink-0 select-none flex-col items-center gap-1 rounded-xl outline-none',
-        'touch-manipulation focus-visible:ring-2 focus-visible:ring-accent-amber',
+        'touch-pan-y [-webkit-touch-callout:none] focus-visible:ring-2 focus-visible:ring-accent-amber',
         size === 'sm' ? 'w-11' : SHAPE_CLASSES[shape],
         ghost && 'opacity-30',
         overlay && 'cursor-grabbing scale-105 drop-shadow-2xl',
@@ -86,7 +87,6 @@ export const TierItemTile = React.forwardRef<HTMLDivElement, TierItemTileProps>(
         )}
       >
         {hasImage ? (
-          // eslint-disable-next-line @next/next/no-img-element -- images are unoptimized app-wide and may be user-supplied URLs
           <img
             src={item.image as string}
             alt=""
@@ -101,13 +101,13 @@ export const TierItemTile = React.forwardRef<HTMLDivElement, TierItemTileProps>(
             )}
           />
         ) : (
-          <span className="px-1 text-center font-mono text-sm font-black text-text-secondary" aria-hidden="true">
+          <span className="px-1 text-center type-card-title text-text-secondary" aria-hidden="true">
             {initials(item.name)}
           </span>
         )}
       </div>
       {showName && (
-        <span aria-hidden="true" className="w-full text-center text-[10px] sm:text-[11px] font-bold leading-tight text-text-secondary line-clamp-2 break-words">
+        <span aria-hidden="true" className="w-full text-center text-tiny sm:text-mini font-bold leading-tight text-text-secondary line-clamp-2 break-words">
           {item.name}
         </span>
       )}

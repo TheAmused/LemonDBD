@@ -1,5 +1,6 @@
 // frontend/src/services/streakApiClient.ts
 import { backendBase } from '@/utils/staticUrl';
+import { authHeaders } from '@/utils/api';
 
 async function handleResponse<T>(response: Response): Promise<T> {
   if (!response.ok) {
@@ -7,10 +8,6 @@ async function handleResponse<T>(response: Response): Promise<T> {
     throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
   }
   return response.json();
-}
-
-function authHeaders(token: string): HeadersInit {
-  return { Authorization: `Bearer ${token}` };
 }
 
 /**

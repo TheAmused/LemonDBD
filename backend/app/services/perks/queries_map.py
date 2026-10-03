@@ -48,38 +48,6 @@ def fetch_maps(
     return service._maps_cache
 
 
-def fetch_map_detail(
-    service,
-    map_id: str,
-    seed: str | None = None,
-    floor: int | None = None,
-) -> dict[str, Any] | None:
-    """Retrieve full map details.
-
-    `map_id` keeps its name because it is the route parameter, but the string
-    key it used to hold is gone: `map_realms.map_id` spelled out the callout
-    provider, the realm and the map name, all three of which are columns on the
-    same row. A value that parses as an integer is the primary key; anything
-    else is matched against `name`, case-insensitively and with underscores or
-    hyphens read as spaces, because the 58 map names are unique and are the
-    only human-readable handle left.
-
-    `seed` and `floor` are echoed back untouched. They used to pick a row set
-    out of `map_tiles`/`map_objectives`; those tables are gone, so they now
-    only travel through to the response so its shape is unchanged.
-    """
-    try:
-        m = _resolve_map(map_id)
-        if m is not None:
-            res = m.to_dict()
-            res["seed_variant"] = seed or "seed_a"
-            res["floor"] = floor or 1
-            return res
-    except Exception:
-        pass
-    return None
-
-
 def _resolve_map(map_id: str) -> MapRealm | None:
     """Find one map from a route parameter that may be an id or a name."""
     clean = (map_id or "").strip()

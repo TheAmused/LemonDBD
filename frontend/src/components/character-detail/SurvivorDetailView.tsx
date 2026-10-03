@@ -18,21 +18,18 @@ import { SurvivorEquipmentSection } from './components/SurvivorEquipmentSection'
 import { OfferingsSection } from './components/OfferingsSection';
 import { Perk, PerkDictionary } from '@/types/perks';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
+import { Button } from '@/components/common/Button';
+import { useDictionary } from "@/context/DictionaryContext";
 
 const LoreModal = dynamic(() => import('./modals/LoreModal').then((m) => m.LoreModal), { ssr: false });
 const Model3DModal = dynamic(() => import('./modals/Model3DModal').then((m) => m.Model3DModal), { ssr: false });
 const EquipmentDetailModal = dynamic(() => import('./modals/EquipmentDetailModal').then((m) => m.EquipmentDetailModal), { ssr: false });
 const PerkModal = dynamic(() => import('@/components/PerkModal').then((m) => m.PerkModal), { ssr: false });
 
-export const SurvivorDetailView: React.FC<CharacterViewBaseProps> = ({
-  currentLocale,
-  dict,
-  detailData,
-  allCharacters = [],
-}) => {
+export const SurvivorDetailView: React.FC<CharacterViewBaseProps> = ({ currentLocale, detailData, allCharacters = [] }) => {
+  const dict = useDictionary();
   const backendBase = getBackendBaseUrl();
-  const rawDict = (dict || {}) as Record<string, Record<string, string>>;
-  const t: Record<string, string> = rawDict.characterDetail || rawDict.characters || {};
+  const t: Record<string, string> = dict.characterDetail;
 
   const character = detailData?.character || { name: '', category: 'Survivor' };
   const perks = Array.isArray(detailData?.perks) ? detailData.perks : [];
@@ -80,11 +77,11 @@ export const SurvivorDetailView: React.FC<CharacterViewBaseProps> = ({
         <div className="lg:col-span-8 space-y-5">
           <header className="flex flex-col items-center text-center gap-4 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:text-left">
             <div>
-              <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black text-text-primary font-mono tracking-tight">
+              <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black text-text-primary tracking-tight">
                 {character.name}
               </h1>
               {character.real_name && character.real_name !== character.name && (
-                <p className="text-xs sm:text-sm font-semibold text-text-secondary mt-0.5">
+                <p className="type-strong-fluid text-text-secondary mt-0.5">
                   {t.realName || ''}:{' '}
                   <span className="text-text-primary">{character.real_name}</span>
                 </p>
@@ -92,28 +89,28 @@ export const SurvivorDetailView: React.FC<CharacterViewBaseProps> = ({
             </div>
 
             <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2.5">
-              <button
-                type="button"
+              <Button
+                variant="secondary"
                 onClick={() => setIsLoreModalOpen(true)}
-                className="flex items-center gap-1.5 px-4 py-2.5 rounded-2xl bg-bg-elevated hover:bg-bg-surface text-text-secondary border border-border-color text-xs font-bold transition-all cursor-pointer shadow-xs active:scale-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red"
+                leftIcon={<BookOpen className="h-4 w-4" aria-hidden="true" />}
+                className="rounded-2xl"
               >
-                <BookOpen className="h-4 w-4" aria-hidden="true" />
                 <span>{t.viewLore || ''}</span>
-              </button>
+              </Button>
 
               {chapterName && (
-                <span className="flex items-center gap-1.5 px-3 py-2 rounded-2xl bg-bg-elevated border border-border-color text-xs font-bold text-text-secondary select-none">
+                <span className="flex items-center gap-1.5 px-3 py-2 rounded-2xl bg-bg-elevated border border-border-color type-strong text-text-secondary select-none">
                   <Bookmark className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
                   {chapterName}
                 </span>
               )}
 
-              <span className="flex items-center gap-1.5 px-3 py-2 rounded-2xl bg-bg-elevated border border-border-color text-xs font-bold text-text-secondary select-none">
+              <span className="flex items-center gap-1.5 px-3 py-2 rounded-2xl bg-bg-elevated border border-border-color type-strong text-text-secondary select-none">
                 <Calendar className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
                 {releaseDate}
               </span>
 
-              <span className="flex items-center gap-1.5 px-3 py-2 rounded-2xl bg-bg-elevated border border-border-color text-xs font-bold text-text-secondary select-none">
+              <span className="flex items-center gap-1.5 px-3 py-2 rounded-2xl bg-bg-elevated border border-border-color type-strong text-text-secondary select-none">
                 <ShieldCheck className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
                 {character.is_licensed
                   ? t.licensedFranchise || t.dlcLicensed || ''
@@ -176,9 +173,8 @@ export const SurvivorDetailView: React.FC<CharacterViewBaseProps> = ({
         <PerkModal
           perk={selectedPerk}
           onClose={() => setSelectedPerk(null)}
-          dict={dict as PerkDictionary}
         />
       )}
     </article>
   );
-};
+};

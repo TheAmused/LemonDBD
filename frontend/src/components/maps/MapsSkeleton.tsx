@@ -2,12 +2,12 @@
 // frontend/src/components/maps/MapsSkeleton.tsx
 
 import React from 'react';
-import { DbdSpinner } from '@/components/DbdSpinner';
+import { DbdSpinner } from '@/components/common/DbdSpinner';
 import type { Dictionary } from '@/locales/types';
+import { useDictionary } from "@/context/DictionaryContext";
 
 interface MapsSkeletonProps {
   className?: string;
-  dict?: Dictionary | any;
   ariaLabel?: string;
   count?: number;
 }
@@ -15,12 +15,9 @@ interface MapsSkeletonProps {
 /**
  * Universal DBD Skill Check Framer Motion Loading Spinner for Tactical Maps Explorer (/maps).
  */
-export const MapsPageSkeleton: React.FC<MapsSkeletonProps> = ({
-  className = '',
-  dict,
-  ariaLabel,
-}) => {
-  const loadingLabel = ariaLabel || dict?.maps?.initializingTacticalMap || dict?.app?.loading || 'Initializing tactical realm coordinates...';
+export const MapsPageSkeleton: React.FC<MapsSkeletonProps> = ({ className = '', ariaLabel }) => {
+  const dict = useDictionary();
+  const loadingLabel = ariaLabel || dict.maps.initializingTacticalMap;
 
   return (
     <div
@@ -35,10 +32,7 @@ export const MapsPageSkeleton: React.FC<MapsSkeletonProps> = ({
         accent="blood"
         needleSpeed={1.6}
         label={loadingLabel}
-        dict={dict}
       />
     </div>
   );
 };
-
-export default MapsPageSkeleton;

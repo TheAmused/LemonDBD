@@ -12,6 +12,8 @@ import { SortableTierItem } from './SortableTierItem';
 import { TierBadge } from './TierBadge';
 import type { TierTileShape } from './TierItemTile';
 import { containerDndId, itemDndId } from './dndIds';
+import { formatMessage } from '@/utils/i18nFormat';
+import { useDictionary } from "@/context/DictionaryContext";
 
 interface TierRowProps {
   tier: TierDefinition;
@@ -24,36 +26,35 @@ interface TierRowProps {
   onPreview: (key: string) => void;
   onMoveSelectedHere: (containerId: string) => void;
   onEdit: (tierId: string) => void;
-  dict: Dictionary;
 }
 
 export const TierRow = React.memo(function TierRow({
-  tier,
-  keys,
-  itemsByKey,
-  shape,
-  showNames,
-  selectedKey,
-  onSelect,
-  onPreview,
-  onMoveSelectedHere,
-  onEdit,
-  dict,
-}: TierRowProps) {
+      tier,
+      keys,
+      itemsByKey,
+      shape,
+      showNames,
+      selectedKey,
+      onSelect,
+      onPreview,
+      onMoveSelectedHere,
+      onEdit,
+    }: TierRowProps) {
+  const dict = useDictionary();
   const t = dict.tierLists;
   const { setNodeRef, isOver } = useDroppable({ id: containerDndId(tier.id) });
   const canReceiveSelection = selectedKey !== null && !keys.includes(selectedKey);
 
   return (
     <section
-      aria-label={t.tierAria.replace('{label}', tier.label)}
-      className="grid grid-cols-[4.75rem_minmax(0,1fr)] sm:max-wide-2k:grid-cols-[6.5rem_minmax(0,1fr)] wide-2k:grid-cols-[9rem_minmax(0,1fr)] overflow-hidden rounded-2xl border border-border-color bg-bg-surface shadow-xs"
+      aria-label={formatMessage(t.tierAria, { label: tier.label })}
+      className="grid grid-cols-[3.5rem_minmax(0,1fr)] min-[480px]:grid-cols-[4.75rem_minmax(0,1fr)] sm:max-wide-2k:grid-cols-[6.5rem_minmax(0,1fr)] wide-2k:grid-cols-[9rem_minmax(0,1fr)] overflow-hidden rounded-2xl border border-border-color bg-bg-surface shadow-xs"
     >
       <button
         type="button"
         onClick={() => onEdit(tier.id)}
-        aria-label={t.editTierAria.replace('{label}', tier.label)}
-        className="group relative min-h-[72px] sm:max-wide-2k:min-h-[84px] wide-2k:min-h-[112px] overflow-hidden text-center cursor-pointer transition-[filter] hover:brightness-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent-amber"
+        aria-label={formatMessage(t.editTierAria, { label: tier.label })}
+        className="group relative min-h-[56px] min-[480px]:min-h-[72px] sm:max-wide-2k:min-h-[84px] wide-2k:min-h-[112px] overflow-hidden text-center cursor-pointer transition-[filter] hover:brightness-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent-amber"
       >
         <TierBadge
           label={tier.label}
@@ -72,7 +73,8 @@ export const TierRow = React.memo(function TierRow({
         ref={setNodeRef}
         onClick={canReceiveSelection ? () => onMoveSelectedHere(tier.id) : undefined}
         className={cn(
-          'relative flex min-h-[72px] sm:max-wide-2k:min-h-[84px] wide-2k:min-h-[112px] flex-wrap content-start items-start gap-1.5 sm:gap-2 p-2 transition-colors',
+          'relative flex min-h-[56px] min-[480px]:min-h-[72px] sm:max-wide-2k:min-h-[84px] wide-2k:min-h-[112px] flex-wrap content-start items-start gap-1 min-[480px]:gap-1.5 sm:gap-2 p-1.5 min-[480px]:p-2 transition-colors',
+          keys.length === 0 && 'content-center items-center justify-center',
           isOver && 'bg-accent-red/10',
           canReceiveSelection && 'cursor-pointer hover:bg-accent-amber/10'
         )}
@@ -95,7 +97,7 @@ export const TierRow = React.memo(function TierRow({
         </SortableContext>
 
         {keys.length === 0 && !canReceiveSelection && (
-          <span className="pointer-events-none self-center px-2 text-xs font-semibold text-text-muted">
+          <span className="pointer-events-none self-center px-2 text-sm sm:text-base font-semibold text-text-muted">
             {t.dropHere}
           </span>
         )}
@@ -107,7 +109,7 @@ export const TierRow = React.memo(function TierRow({
               e.stopPropagation();
               onMoveSelectedHere(tier.id);
             }}
-            className="inline-flex min-h-[44px] items-center gap-1.5 self-center rounded-xl border border-dashed border-accent-amber/60 bg-accent-amber/10 px-3 text-xs font-bold text-accent-amber cursor-pointer"
+            className="inline-flex min-h-[44px] items-center gap-1.5 self-center rounded-xl border border-dashed border-accent-amber/60 bg-accent-amber/10 px-3 type-strong text-accent-amber cursor-pointer"
           >
             <ArrowDownToLine className="h-3.5 w-3.5" aria-hidden="true" />
             {t.moveHere}

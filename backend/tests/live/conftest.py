@@ -75,7 +75,6 @@ def live_app(live_database_url: str) -> Flask:
     """Create and configure the live Flask application connected to PostgreSQL clone."""
     os.environ["DATABASE_URL"] = live_database_url
     os.environ["TESTING"] = "True"
-    os.environ["INITIAL_SCRAPE_ENABLED"] = "False"
 
     from app import create_app
     from app.core.config import Config
@@ -84,7 +83,6 @@ def live_app(live_database_url: str) -> Flask:
         TESTING = True
         DEBUG = False
         SQLALCHEMY_DATABASE_URI = live_database_url
-        INITIAL_SCRAPE_ENABLED = False
         SECRET_KEY = "live-test-secret-key-32-chars-length!!"
         JWT_SECRET_KEY = "live-test-secret-key-32-chars-length!!"
 

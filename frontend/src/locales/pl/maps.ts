@@ -9,10 +9,7 @@ export default {
   zoomOutAria: "Oddal",
   resetPanZoom: "Zresetuj Pozycję i Przybliżenie",
   resetPanAndZoomAria: "Zresetuj Pozycję i Przybliżenie",
-  fullscreenMode: "Pełnoekranowy Tryb Interaktywny",
   noMapsFound: "Nie Znaleziono Map",
-  mapVariantsAria: "Warianty Krainy Mapy",
-  mapVariants: "Warianty Mapy:",
   variants: "Warianty:",
   engineControlsAria: "Sterowanie Przybliżeniem i Resetem Silnika",
   fullscreenEngineAria: "Pełnoekranowy Silnik Mapy 2D",
@@ -68,4 +65,5 @@ export default {
   layoutOutdoor: 'Otwarty',
   layoutIndoor: 'Zamknięty',
   layoutHybrid: 'Hybrydowy',
+  loadingTacticalMapsSub: 'Mapowanie wariantów kafelków, pętli i współrzędnych spawnu',
 } as const;

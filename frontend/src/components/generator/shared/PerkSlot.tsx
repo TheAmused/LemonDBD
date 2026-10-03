@@ -7,6 +7,7 @@ import { Perk, RoleCategory } from '@/types/perks';
 import { Dictionary } from '@/locales/types';
 import { cn } from '@/utils/cn';
 import { PerkCard } from '@/components/PerkCard';
+import { useDictionary } from "@/context/DictionaryContext";
 
 export type PerkSlotSize = 'default' | 'large' | 'fill' | 'tarot' | 'compact' | 'wheelFlank';
 
@@ -44,7 +45,6 @@ export interface PerkSlotProps {
    * Blind Mode always shows it. */
   isBlind?: boolean;
   onClick?: () => void;
-  dict?: Dictionary;
 }
 
 const SLOT_OUTER_PADDING: Record<PerkSlotSize, string> = {
@@ -57,17 +57,17 @@ const SLOT_OUTER_PADDING: Record<PerkSlotSize, string> = {
 };
 
 export const PerkSlot: React.FC<PerkSlotProps> = ({
-  perk,
-  page,
-  slot,
-  isObscured = false,
-  isActive = false,
-  announce = false,
-  size = 'default',
-  isBlind = false,
-  onClick,
-  dict,
-}) => {
+      perk,
+      page,
+      slot,
+      isObscured = false,
+      isActive = false,
+      announce = false,
+      size = 'default',
+      isBlind = false,
+      onClick,
+    }) => {
+  const dict = useDictionary();
   if (isObscured) {
     return (
       <div className={cn('flex items-center justify-center w-full', SLOT_OUTER_PADDING[size])}>
@@ -80,8 +80,8 @@ export const PerkSlot: React.FC<PerkSlotProps> = ({
           )}
         >
           <EyeOff className="h-10 w-10 animate-pulse" />
-          <span className="text-[11px] font-black uppercase tracking-wide text-center px-2">
-            {dict?.generator?.clickToReveal || '??? (Click to Reveal)'}
+          <span className="type-label-xs text-center px-2">
+            {dict.generator.clickToReveal}
           </span>
         </button>
       </div>
@@ -98,8 +98,8 @@ export const PerkSlot: React.FC<PerkSlotProps> = ({
           )}
         >
           <ImageOff className="h-8 w-8 text-text-muted" />
-          <span className="text-[11px] font-bold text-text-muted text-center px-2">
-            {dict?.generator?.emptySlot || 'Empty Slot'}
+          <span className="type-strong-xs text-text-muted text-center px-2">
+            {dict.generator.emptySlot}
           </span>
         </div>
       </div>
@@ -113,7 +113,6 @@ export const PerkSlot: React.FC<PerkSlotProps> = ({
       <PerkCard
         perk={perk}
         onSelect={() => onClick?.()}
-        dict={dict}
         coordinate={coordinate}
         size={size}
         isBlind={isBlind}

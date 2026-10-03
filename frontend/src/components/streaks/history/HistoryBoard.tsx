@@ -1,39 +1,32 @@
 'use client';
 // frontend/src/components/streaks/history/HistoryBoard.tsx
+import { Button } from '@/components/common/Button';
 import type { Dictionary } from '@/locales/types';
 
 import React, { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
-import Link from 'next/link';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
-import { ArrowLeft, RotateCcw } from 'lucide-react';
 import { HistoryMode } from '@/types/historyStreak';
-import { CONFETTI_LIFETIME_MS } from '../Confetti';
 import { useHistoryRun } from './useHistoryRun';
 import { useKillerPerkPool } from '../chaos/useKillerPerkPool';
 import { KillerPickerGrid } from '../chaos/KillerPickerGrid';
+import { ChallengeErrorBanner, ChallengePanel, ChallengeVictoryCard } from '../ChallengePanel';
+import { ChallengeProgress } from '../ChallengeProgress';
+import { everyNthCheckpoint } from '@/utils/challengeCheckpoints';
+import { ChallengeCompletionHistoryDrawer, Confetti, ResetConfirmModal } from '../lazyChallengeParts';
+import { useCelebration } from '../useCelebration';
 import { HistoryHeader } from './HistoryHeader';
 import { HistoryPerkPoolPanel } from './HistoryPerkPoolPanel';
 import { HistoryNextRowPreview } from './HistoryNextRowPreview';
 import { HistoryRowClearedBanner } from './HistoryRowClearedBanner';
 import { Perk } from '@/types/gauntletStreak';
 import { saveHistoryMode } from '@/utils/streakDifficultyPrefs';
-import { useStreaksDict } from '@/context/StreaksDictContext';
+import { useDictionary } from '@/context/DictionaryContext';
 import { useChallengeCompletionStatus } from '../useChallengeCompletionStatus';
-import { AdeptBadgeIcon } from '@/components/icons/DbdIcons';
 import { StreakActionBar, StreakActionButton } from '../StreakActionBar';
 
-const Confetti = dynamic(() => import('../Confetti').then((m) => m.Confetti), { ssr: false });
-const ResetConfirmModal = dynamic(
-  () => import('../ResetConfirmModal').then((m) => m.ResetConfirmModal),
-  { ssr: false }
-);
 const HistoryStatsDrawer = dynamic(
   () => import('./HistoryStatsDrawer').then((m) => m.HistoryStatsDrawer),
-  { ssr: false }
-);
-const ChallengeCompletionHistoryDrawer = dynamic(
-  () => import('../ChallengeCompletionHistoryDrawer').then((m) => m.ChallengeCompletionHistoryDrawer),
   { ssr: false }
 );
 const HistoryPerkModal = dynamic(
@@ -54,7 +47,7 @@ interface HistoryBoardProps {
 }
 
 export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
-  const dict = useStreaksDict();
+  const dict = useDictionary();
   const completionStatus = useChallengeCompletionStatus();
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -66,7 +59,7 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
 
   const [selectedKillerId, setSelectedKillerId] = useState<string | null>(null);
   const [acceptedKillerId, setAcceptedKillerId] = useState<string | null>(null);
-  const [celebrating, setCelebrating] = useState(false);
+  const { celebrating, celebrate } = useCelebration();
   const [confirmingReset, setConfirmingReset] = useState(false);
   const [isRulesOpen, setIsRulesOpen] = useState(false);
   const [isStatsOpen, setIsStatsOpen] = useState(false);
@@ -110,10 +103,7 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
         setRowClearedNumber(updated.current_row_index);
       }
     }
-    if (updated.status === 'completed') {
-      setCelebrating(true);
-      setTimeout(() => setCelebrating(false), CONFETTI_LIFETIME_MS);
-    }
+    if (updated.status === 'completed') celebrate();
   };
 
   const handleReset = () => {
@@ -123,68 +113,51 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
   };
 
   return (
-    <div className="pb-24">
+    <div className="pb-16">
       <Confetti active={celebrating} />
 
-      <Link
-        href={`/${locale}/streaks/killer`}
-        className="inline-flex items-center gap-1.5 rounded text-xs font-bold text-text-muted hover:text-text-primary transition-colors focus:outline-none focus:ring-2 focus:ring-accent-red"
-      >
-        <ArrowLeft className="h-3.5 w-3.5" />
-        <span>{dict?.streaks?.backToKillerStreaks || 'Back to killer streaks'}</span>
-      </Link>
+      <div className="[&>*:last-child]:mb-0">
+        {error && <ChallengeErrorBanner message={error} />}
 
-      <div className="mt-4">
-        {error && (
-          <div className="mb-6 p-4 rounded-xl bg-accent-red/10 border border-accent-red/40 text-accent-red text-sm flex items-center justify-between shadow-lg">
-            <span>{error}</span>
-          </div>
-        )}
-
+        <ChallengePanel
+          progress={
+            <ChallengeProgress
+              current={run?.total_killers_beaten ?? 0}
+              total={run?.total_owned_killers ?? 0}
+              checkpoints={everyNthCheckpoint(mode === 'medium' ? (run?.row_size ?? 0) : 0, run?.total_owned_killers ?? 0)}
+            />
+          }
+          header={
         <HistoryHeader
           mode={mode}
           totalKillersBeaten={run?.total_killers_beaten || 0}
           bestKillersBeaten={run?.best_killers_beaten || 0}
-          checkpointRowIndex={run?.checkpoint_row_index || 0}
           poolFrozen={poolFrozen}
           onOpenRules={() => setIsRulesOpen(true)}
           onOpenStats={() => setIsStatsOpen(true)}
           onOpenHistory={() => setIsHistoryOpen(true)}
           onOpenReset={() => setConfirmingReset(true)}
           onChangeMode={() => setIsChangeModeOpen(true)}
-          dict={dict}
         />
+          }
+        >
 
         {isCompleted ? (
-          <div className="mb-8 rounded-2xl border-2 border-accent-green/40 bg-accent-green/10 px-6 py-10 text-center shadow-lg">
-            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl border-2 border-accent-green bg-accent-green/15 text-accent-green">
-              <AdeptBadgeIcon className="h-8 w-8" />
-            </div>
-            <p className="mb-1 text-xs font-bold uppercase tracking-widest text-accent-green">
-              {dict?.streaks?.victoryCongrats || 'Congratulations'}
-            </p>
-            <h2 className="text-2xl font-black tracking-tight text-text-primary">
-              {dict?.streaks?.historyStreakComplete || 'You won the History Streak'}
-            </h2>
-            <button
-              onClick={reset}
-              disabled={busy}
-              className="mt-6 inline-flex items-center justify-center gap-2 rounded-xl bg-accent-green px-6 py-3 text-sm font-extrabold text-text-inverted shadow-lg transition-colors hover:bg-accent-green-hover disabled:opacity-50 cursor-pointer"
-            >
-              <RotateCcw className="h-4 w-4" />
-              {dict?.streaks?.startNewRun || 'Start a new run'}
-            </button>
-          </div>
+          <ChallengeVictoryCard
+            title={dict.streaks.historyStreakComplete}
+            onRestart={reset}
+            busy={busy}
+          />
         ) : (
-          <div className="mb-6 rounded-2xl border border-border-color bg-bg-surface backdrop-blur-sm p-5 shadow-sm">
+          <div>
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 mb-3 text-center sm:text-left">
-              <h3 className="text-sm font-bold text-text-secondary uppercase tracking-wider">
-                {dict?.streaks?.pickYourKiller || 'Pick your killer'}
+              <h3 className="type-label text-text-secondary">
+                {dict.streaks.pickYourKiller}
               </h3>
               {run && (
-                <p className="text-xs text-text-muted font-mono">
-                  {dict?.streaks?.rowLabel || 'Row'} {run.current_row_index + 1}{' '}
-                  {dict?.streaks?.ofLabel || 'of'} {run.total_rows}
+                <p className="text-xs text-text-muted">
+                  {dict.streaks.rowLabel} {run.current_row_index + 1}{' '}
+                  {dict.streaks.ofLabel} {run.total_rows}
                 </p>
               )}
             </div>
@@ -197,7 +170,6 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
               disabled={busy || Boolean(acceptedKillerId)}
               loading={loading}
               center
-              dict={dict}
             />
 
             {run && (
@@ -205,7 +177,6 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
                 killers={run.owned_killers}
                 rowSize={run.row_size}
                 currentRowIndex={run.current_row_index}
-                dict={dict}
               />
             )}
 
@@ -216,33 +187,33 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
                   onClick={() => selectedKillerId && setAcceptedKillerId(selectedKillerId)}
                   disabled={busy || !selectedKillerId}
                 >
-                  {dict?.streaks?.acceptPick || 'ACCEPT PICK'}
+                  {dict.streaks.accept}
                 </StreakActionButton>
               ) : (
                 <>
-                  <StreakActionButton variant="green" onClick={() => handleResult('win')} disabled={busy}>
-                    {dict?.streaks?.winMatch || 'WIN MATCH'}
-                  </StreakActionButton>
                   <StreakActionButton variant="red" onClick={() => handleResult('loss')} disabled={busy}>
-                    {dict?.streaks?.loseMatch || 'LOSE MATCH'}
+                    {dict.streaks.loseMatch}
+                  </StreakActionButton>
+                  <StreakActionButton variant="green" onClick={() => handleResult('win')} disabled={busy}>
+                    {dict.streaks.winMatch}
                   </StreakActionButton>
                 </>
               )}
             </StreakActionBar>
           </div>
         )}
+        </ChallengePanel>
 
         {!isCompleted && run && (
-          <HistoryPerkPoolPanel pool={perkPool} unlockedPerkNames={run.unlocked_perk_names || []} dict={dict} />
+          <HistoryPerkPoolPanel pool={perkPool} unlockedPerkNames={run.unlocked_perk_names || []} />
         )}
 
         <ResetConfirmModal
           open={confirmingReset}
           busy={busy}
-          message={dict?.streaks?.historyResetConfirmPrompt || 'Row progress and every unlocked perk go back to the start. This cannot be undone.'}
+          message={dict.streaks.historyResetConfirmPrompt}
           onCancel={() => setConfirmingReset(false)}
           onConfirm={handleReset}
-          dict={dict}
         />
 
         <HistoryStatsDrawer
@@ -250,25 +221,21 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
           onClose={() => setIsStatsOpen(false)}
           stats={stats}
           attempts={run?.attempts}
-          dict={dict}
         />
         <ChallengeCompletionHistoryDrawer
           isOpen={isHistoryOpen}
           onClose={() => setIsHistoryOpen(false)}
-          title={dict?.streaks?.historyStreak || 'History Streak'}
-          accent="amber"
           completions={completions}
-          subjectLabel={dict?.streaks?.killersLabel || 'killers'}
-          dict={dict}
+          subjectLabel={dict.streaks.killersLabel}
         />
-        <HistoryRulesModal isOpen={isRulesOpen} onClose={() => setIsRulesOpen(false)} dict={dict} />
+        <HistoryRulesModal isOpen={isRulesOpen} onClose={() => setIsRulesOpen(false)} />
         <HistoryPerkModal
           killerName={perkModal?.killerName ?? null}
           perks={perkModal?.perks ?? []}
+          locale={locale}
           onClose={() => setPerkModal(null)}
-          dict={dict}
         />
-        <HistoryRowClearedBanner rowNumber={rowClearedNumber} onClose={() => setRowClearedNumber(null)} dict={dict} />
+        <HistoryRowClearedBanner rowNumber={rowClearedNumber} onClose={() => setRowClearedNumber(null)} />
         <HistoryModeModal
           isOpen={isChangeModeOpen}
           onClose={() => setIsChangeModeOpen(false)}
@@ -281,7 +248,6 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
             setIsChangeModeOpen(false);
             router.push(`${pathname}?mode=${newMode}`);
           }}
-          dict={dict}
         />
       </div>
     </div>

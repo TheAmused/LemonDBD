@@ -2,7 +2,7 @@
 import { describe, it, beforeEach } from 'node:test';
 import assert from 'node:assert/strict';
 import React, { useEffect } from 'react';
-import { renderToStaticMarkup } from 'react-dom/server';
+import { renderWithDictionary } from '../helpers/renderWithDictionary';
 import { usePersistentDrawer } from '@/hooks/usePersistentDrawer';
 
 class MockLocalStorage {
@@ -42,7 +42,7 @@ describe('usePersistentDrawer Hook', () => {
       return React.createElement('div', null, String(isExpanded));
     }
 
-    renderToStaticMarkup(React.createElement(TestComp));
+    renderWithDictionary(React.createElement(TestComp));
     assert.equal(capturedState, false);
 
     function TestCompOpen() {
@@ -51,7 +51,7 @@ describe('usePersistentDrawer Hook', () => {
       return React.createElement('div', null, String(isExpanded));
     }
 
-    renderToStaticMarkup(React.createElement(TestCompOpen));
+    renderWithDictionary(React.createElement(TestCompOpen));
     assert.equal(capturedState, true);
   });
 
@@ -77,7 +77,7 @@ describe('usePersistentDrawer Hook', () => {
       return null;
     }
 
-    renderToStaticMarkup(React.createElement(TestClientComp));
+    renderWithDictionary(React.createElement(TestClientComp));
     assert.equal(accountExpanded, false); // initial SSR render is false
   });
 
@@ -99,7 +99,7 @@ describe('usePersistentDrawer Hook', () => {
     }
 
     assert.doesNotThrow(() => {
-      renderToStaticMarkup(React.createElement(TestProtected));
+      renderWithDictionary(React.createElement(TestProtected));
     });
     assert.equal(state, true);
   });

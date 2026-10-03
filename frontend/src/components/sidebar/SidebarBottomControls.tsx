@@ -10,8 +10,12 @@ import { Sun, Moon, Laptop, Citrus } from 'lucide-react';
 import { FlagIcon } from './FlagIcon';
 import { FogReportIcon, CampfireMugIcon } from '@/components/icons/DbdIcons';
 
+import { tip } from '@/components/common/Tooltip';
+import { FitText } from '@/components/common/FitText';
+import { useDictionary } from "@/context/DictionaryContext";
+
 // Keep in sync with the backend's own locale list -- SUPPORTED_LOCALES in
-// backend/app/services/translations/translation_service.py. No shared
+// backend/app/utils/lang.py. No shared
 // source of truth across the Python/TypeScript boundary; a locale added to
 // only one side means the backend can reject a language this list offers
 // (or vice versa).
@@ -27,7 +31,6 @@ type ThemeOptionId = 'light' | 'light-lemon' | 'dark' | 'system';
 
 export interface SidebarBottomControlsProps {
   currentLocale: string;
-  dict?: Dictionary;
   onOpenBugModal: () => void;
   onOpenCoffeeModal: () => void;
   theme?: string;
@@ -64,14 +67,14 @@ function useDismissOnOutsideOrEscape(
 const FOCUS_RING = 'focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red';
 
 export const SidebarBottomControls: React.FC<SidebarBottomControlsProps> = ({
-  currentLocale,
-  dict,
-  onOpenBugModal,
-  onOpenCoffeeModal,
-  theme: propTheme,
-  setTheme: propSetTheme,
-  mounted: propMounted,
-}) => {
+      currentLocale,
+      onOpenBugModal,
+      onOpenCoffeeModal,
+      theme: propTheme,
+      setTheme: propSetTheme,
+      mounted: propMounted,
+    }) => {
+  const dict = useDictionary();
   const themeContext = useTheme();
   const theme = propTheme ?? themeContext.theme;
   const setTheme = propSetTheme ?? themeContext.setTheme;
@@ -96,16 +99,17 @@ export const SidebarBottomControls: React.FC<SidebarBottomControlsProps> = ({
   useDismissOnOutsideOrEscape(isLangMenuOpen, langMenuRef, () => setIsLangMenuOpen(false));
   useDismissOnOutsideOrEscape(isThemeMenuOpen, themeMenuRef, () => setIsThemeMenuOpen(false));
 
-  const lightLabel = dict?.sidebar?.themeLight || 'Light mode';
-  const lightLemonLabel = dict?.sidebar?.themeLightLemon || 'Light mode (Lemon)';
-  const darkLabel = dict?.sidebar?.themeDark || 'Dark mode';
-  const systemLabel = dict?.sidebar?.themeSystem || 'System theme';
+  const lightLabel = dict.sidebar.themeLight;
+  const lightLemonLabel = dict.sidebar.themeLightLemon;
+  const darkLabel = dict.sidebar.themeDark;
+  const systemLabel = dict.sidebar.themeSystem;
 
-  const THEME_OPTIONS: { id: ThemeOptionId; label: string; icon: React.ReactNode }[] = [
-    { id: 'light', label: lightLabel, icon: <Sun className="h-4 w-4" /> },
-    { id: 'light-lemon', label: lightLemonLabel, icon: <Citrus className="h-4 w-4" /> },
-    { id: 'dark', label: darkLabel, icon: <Moon className="h-4 w-4" /> },
-    { id: 'system', label: systemLabel, icon: <Laptop className="h-4 w-4" /> },
+  // Short wordings for the narrow trigger button ("Light mode (Lemon)" -> "Lemon").
+  const THEME_OPTIONS: { id: ThemeOptionId; label: string; short: string; icon: React.ReactNode }[] = [
+    { id: 'light', label: lightLabel, short: dict.sidebar.themeLightShort, icon: <Sun className="h-4 w-4" /> },
+    { id: 'light-lemon', label: lightLemonLabel, short: dict.sidebar.themeLightLemonShort, icon: <Citrus className="h-4 w-4" /> },
+    { id: 'dark', label: darkLabel, short: dict.sidebar.themeDarkShort, icon: <Moon className="h-4 w-4" /> },
+    { id: 'system', label: systemLabel, short: dict.sidebar.themeSystemShort, icon: <Laptop className="h-4 w-4" /> },
   ];
   const currentThemeOption =
     THEME_OPTIONS.find((t) => t.id === theme) ?? THEME_OPTIONS.find((t) => t.id === 'system')!;
@@ -147,11 +151,11 @@ export const SidebarBottomControls: React.FC<SidebarBottomControlsProps> = ({
           <button
             type="button"
             onClick={() => !isSwitchingLang && setIsLangMenuOpen((v) => !v)}
-            aria-label={dict?.sidebar?.switchLanguage || 'Switch Language'}
+            aria-label={dict.sidebar.switchLanguage}
             aria-haspopup="listbox"
             aria-expanded={isLangMenuOpen}
             aria-disabled={isSwitchingLang}
-            className={`flex h-8 w-full items-center justify-center gap-1.5 rounded-xl border border-border-color bg-bg-elevated/50 text-xs font-semibold text-text-secondary hover:bg-bg-elevated transition-colors cursor-pointer ${FOCUS_RING} ${isSwitchingLang ? 'pointer-events-none opacity-60' : ''}`}
+            className={`pointer-coarse:min-h-11 pointer-coarse:min-w-11 flex h-8 w-full items-center justify-center gap-1.5 rounded-xl border border-border-color bg-bg-elevated/50 text-xs font-semibold text-text-secondary hover:bg-bg-elevated transition-colors cursor-pointer ${FOCUS_RING} ${isSwitchingLang ? 'pointer-events-none opacity-60' : ''}`}
           >
             <FlagIcon code={currentLanguage.code} />
             <span className="uppercase">{currentLanguage.code}</span>
@@ -197,10 +201,10 @@ export const SidebarBottomControls: React.FC<SidebarBottomControlsProps> = ({
           <button
             type="button"
             onClick={() => setIsThemeMenuOpen((v) => !v)}
-            aria-label={dict?.sidebar?.toggleTheme || 'Theme selector'}
+            aria-label={dict.sidebar.toggleTheme}
             aria-haspopup="listbox"
             aria-expanded={isThemeMenuOpen}
-            className={`flex h-8 w-full min-w-0 items-center justify-center gap-1.5 rounded-xl border border-border-color bg-bg-elevated/50 px-2 text-xs font-semibold text-text-secondary hover:bg-bg-elevated transition-colors cursor-pointer ${FOCUS_RING}`}
+            className={`pointer-coarse:min-h-11 pointer-coarse:min-w-11 flex h-8 w-full min-w-0 items-center justify-center gap-1.5 rounded-xl border border-border-color bg-bg-elevated/50 px-2 text-xs font-semibold text-text-secondary hover:bg-bg-elevated transition-colors cursor-pointer ${FOCUS_RING}`}
           >
             {/* The stored theme is only known after mount; the server always
                 renders the "system" icon, so the client must too until then
@@ -209,13 +213,13 @@ export const SidebarBottomControls: React.FC<SidebarBottomControlsProps> = ({
             <span className="shrink-0">
               {isMounted ? currentThemeOption.icon : THEME_OPTIONS[THEME_OPTIONS.length - 1].icon}
             </span>
-            <span className="min-w-0 truncate">{isMounted ? currentThemeOption.label : ''}</span>
+            <FitText minScale={0.8} alternatives={isMounted ? [currentThemeOption.short] : undefined} className="min-w-0 text-center">{isMounted ? currentThemeOption.label : ''}</FitText>
           </button>
 
           {isThemeMenuOpen && (
             <div
               role="listbox"
-              aria-label={dict?.sidebar?.toggleTheme || 'Theme selector'}
+              aria-label={dict.sidebar.toggleTheme}
               className="absolute bottom-full right-0 z-50 mb-2 w-56 overflow-hidden rounded-xl border border-border-color bg-bg-surface shadow-lg"
             >
               {THEME_OPTIONS.map((opt) => (
@@ -228,7 +232,7 @@ export const SidebarBottomControls: React.FC<SidebarBottomControlsProps> = ({
                     setTheme(opt.id);
                     setIsThemeMenuOpen(false);
                   }}
-                  title={opt.label} /* i18n-ignore */
+                  {...tip(opt.label, undefined, 'action')} aria-label={opt.label}
                   className={
                     `flex w-full items-center gap-2.5 px-3 py-2 text-xs font-semibold transition-colors cursor-pointer ${FOCUS_RING} ` +
                     (isMounted && theme === opt.id
@@ -250,21 +254,21 @@ export const SidebarBottomControls: React.FC<SidebarBottomControlsProps> = ({
         <button
           type="button"
           onClick={onOpenBugModal}
-          aria-label={dict?.sidebar?.reportBug || 'Report Bug'}
-          className={`flex min-h-8 items-center justify-center gap-1.5 rounded-xl border border-border-color bg-bg-elevated/50 px-2 py-1.5 text-[11px] font-semibold text-text-secondary hover:bg-bg-elevated transition-colors cursor-pointer ${FOCUS_RING}`}
+          aria-label={dict.sidebar.reportBug}
+          className={`flex min-h-8 items-center justify-center gap-1.5 rounded-xl border border-border-color bg-bg-elevated/50 px-2 py-1.5 text-mini font-semibold text-text-secondary hover:bg-bg-elevated transition-colors cursor-pointer ${FOCUS_RING}`}
         >
           <FogReportIcon className="h-3.5 w-3.5 shrink-0 text-accent-red" />
-          <span className="text-center">{dict?.sidebar?.reportBug || 'Report Bug'}</span>
+          <FitText minScale={0.6} maxLines={2} className="min-w-0 text-center">{dict.sidebar.reportBug}</FitText>
         </button>
 
         <button
           type="button"
           onClick={onOpenCoffeeModal}
-          aria-label={dict?.sidebar?.buyCoffee || 'Buy Coffee'}
-          className={`flex min-h-8 items-center justify-center gap-1.5 rounded-xl border border-border-color bg-bg-elevated/50 px-2 py-1.5 text-[11px] font-semibold text-text-secondary hover:bg-bg-elevated transition-colors cursor-pointer ${FOCUS_RING}`}
+          aria-label={dict.sidebar.buyCoffee}
+          className={`flex min-h-8 items-center justify-center gap-1.5 rounded-xl border border-border-color bg-bg-elevated/50 px-2 py-1.5 text-mini font-semibold text-text-secondary hover:bg-bg-elevated transition-colors cursor-pointer ${FOCUS_RING}`}
         >
           <CampfireMugIcon className="h-3.5 w-3.5 shrink-0 text-accent-amber" />
-          <span className="text-center">{dict?.sidebar?.buyCoffee || 'Buy Coffee'}</span>
+          <FitText minScale={0.6} maxLines={2} className="min-w-0 text-center">{dict.sidebar.buyCoffee}</FitText>
         </button>
       </div>
     </div>

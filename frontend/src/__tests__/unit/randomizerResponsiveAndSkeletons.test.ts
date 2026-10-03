@@ -4,7 +4,6 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 import React from 'react';
-import { renderToStaticMarkup } from 'react-dom/server';
 import { RandomizerPageSkeleton } from '@/components/generator/RandomizerSkeleton';
 import { computeEligiblePool, computePlayablePool } from '@/components/generator/lib/perkPicker';
 import { Perk } from '@/types/perks';
@@ -13,12 +12,12 @@ import deDict from '@/locales/de';
 import esDict from '@/locales/es';
 import jaDict from '@/locales/ja';
 import plDict from '@/locales/pl';
+import { renderWithDictionary } from '../helpers/renderWithDictionary';
 
 describe('Randomizer: Skeletons & DBD Framer Motion Spinner Integrity', () => {
   it('RandomizerPageSkeleton renders with role="status", aria-busy="true", and DBD Skill Check Spinner', () => {
-    const html = renderToStaticMarkup(
+    const html = renderWithDictionary(
       React.createElement(RandomizerPageSkeleton, {
-        dict: enDict,
       })
     );
 

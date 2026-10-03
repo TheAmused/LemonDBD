@@ -1,7 +1,7 @@
 'use client';
 
+import { Button } from '@/components/common/Button';
 import React, { useEffect, useMemo, useState, useRef, useCallback } from 'react';
-import { createPortal } from 'react-dom';
 import {
   X,
   ZoomIn,
@@ -17,21 +17,22 @@ import type { MapRealm } from '@/types/map';
 import type { Dictionary } from '@/locales/types';
 import { getLayoutTypeLabel, getMapImageSrc } from '@/utils/mapUtils';
 
+import { tip } from '@/components/common/Tooltip';
+import { Modal } from '@/components/common/Modal';
+import { formatNumber } from '@/utils/format';
+import { formatMessage } from '@/utils/i18nFormat';
+import { useDictionary } from "@/context/DictionaryContext";
+
 interface FullscreenMapEngineProps {
   mapId: number;
   onClose: () => void;
   availableMaps?: MapRealm[];
   backendBase: string;
-  dict?: Dictionary;
 }
 
-export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
-  mapId,
-  onClose,
-  availableMaps = [],
-  backendBase,
-  dict,
-}) => {
+/** The map chrome + pan/zoom engine, without the Modal shell (also what the unit tests render). */
+export const FullscreenMapEngineView: React.FC<FullscreenMapEngineProps> = ({ mapId, onClose, availableMaps = [], backendBase }) => {
+  const dict = useDictionary();
   const [imageFailed, setImageFailed] = useState<boolean>(false);
 
   useEffect(() => {
@@ -55,19 +56,6 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const pointerDownPosRef = useRef<{ x: number; y: number } | null>(null);
   const draggedRef = useRef<boolean>(false);
-
-  useEffect(() => {
-    const prevOverflow = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => {
-      document.body.style.overflow = prevOverflow;
-      window.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [onClose]);
 
   const handleWheel = (e: React.WheelEvent) => {
     e.preventDefault();
@@ -178,34 +166,21 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
     }
   };
 
-  // Portaled to document.body to avoid stacking context collisions with
-  // page background particle layers. Positioned beside the desktop sidebar
-  // via `left-[var(--sidebar-width)]` (expanding to 100% when collapsed),
-  // and covering 100% fullscreen on mobile screens (< 1024px).
-  const engineContent = (
-    <div
-      role="dialog"
-      aria-modal="true"
-      data-testid="fullscreen-map-engine"
-      aria-label={dict?.maps?.fullscreenEngineAria || 'Tactical Map Command Viewer'}
-      className="fixed inset-y-0 right-0 left-[var(--sidebar-width,0rem)] z-40 lg:z-30 bg-bg-primary flex flex-col justify-between overflow-hidden select-none text-text-primary transition-[left] duration-300 ease-in-out"
-    >
+  return (
+    <div className="relative flex min-h-0 flex-1 flex-col justify-between overflow-hidden text-text-primary">
       <header className="relative shrink-0 z-40 px-3 sm:px-6 py-2 sm:py-2.5 bg-bg-primary border-b border-border-color/80 shadow-2xl">
         <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
           {activeMap && (
             <div className="min-w-0 flex-1 flex flex-wrap items-center justify-center sm:justify-start gap-1.5 text-xs">
               {activeMap.size_sq_tiles != null ? (
-                <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-bg-elevated border border-accent-red/40 text-text-secondary font-mono shadow-sm shrink-0">
+                <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-bg-elevated border border-accent-red/40 text-text-secondary shadow-sm shrink-0">
                   <Maximize2 className="w-3.5 h-3.5 text-accent-red shrink-0" />
-                  <span className="text-text-muted">{dict?.maps?.surfaceArea || 'Surface Area'}</span>
-                  <span className="font-bold text-text-primary text-xs">{activeMap.size_sq_tiles}</span>
-                  <span className="text-accent-red font-bold">{dict?.maps?.sqTilesUnit || 'sqT'}</span>
+                  <span className="text-text-muted">{dict.maps.surfaceArea}</span>
+                  <span className="type-strong text-text-primary">{activeMap.size_sq_tiles}</span>
+                  <span className="text-accent-red font-bold">{dict.maps.sqTilesUnit}</span>
                   {activeMap.size_sq_meters != null && (
-                    <span className="text-text-muted text-[10px] pl-0.5">
-                      {(dict?.maps?.sqMetersSuffix || '({value} m²)').replace(
-                        '{value}',
-                        activeMap.size_sq_meters.toLocaleString()
-                      )}
+                    <span className="text-text-muted type-micro pl-0.5">
+                      {formatMessage((dict.maps.sqMetersSuffix), { value: formatNumber(activeMap.size_sq_meters) })}
                     </span>
                   )}
                 </div>
@@ -218,32 +193,34 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
                   )}`}
                 >
                   <Compass className="w-3.5 h-3.5 shrink-0" />
-                  {getLayoutTypeLabel(activeMap.layout_type, dict?.maps)}
+                  {getLayoutTypeLabel(activeMap.layout_type, dict.maps)}
                 </span>
               )}
 
               <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl border text-xs font-semibold shrink-0 ${structureBadge(activeMap.is_shack)}`}>
                 <Home className="w-3.5 h-3.5 shrink-0" />
-                {activeMap.is_shack ? (dict?.maps?.shackYes || 'Shack') : (dict?.maps?.shackNo || 'No Shack')}
+                {activeMap.is_shack ? (dict.maps.shackYes) : (dict.maps.shackNo)}
               </span>
               <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl border text-xs font-semibold shrink-0 ${structureBadge(activeMap.is_main_building)}`}>
                 <Building2 className="w-3.5 h-3.5 shrink-0" />
                 {activeMap.is_main_building
-                  ? (dict?.maps?.mainBuildingYes || 'Main Building')
-                  : (dict?.maps?.mainBuildingNo || 'No Main Building')}
+                  ? (dict.maps.mainBuildingYes)
+                  : (dict.maps.mainBuildingNo)}
               </span>
             </div>
           )}
 
           <div className="flex items-center gap-2 shrink-0">
-            <button
-              type="button"
+            <Button
+              variant="ghost"
+              size="md"
+              icon
+              data-modal-close
               onClick={onClose}
-              aria-label={dict?.modal?.close || 'Close'}
-              className="rounded-xl p-2 text-text-muted hover:text-text-primary hover:bg-bg-elevated border border-transparent hover:border-border-subtle transition-all cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red"
+              aria-label={dict.modal.close}
             >
-              <X className="w-5 h-5" />
-            </button>
+              <X className="h-5 w-5" aria-hidden="true" />
+            </Button>
           </div>
         </div>
       </header>
@@ -280,8 +257,8 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
         ) : (
           <div className="flex flex-col items-center gap-3 text-text-muted">
             <ImageOff className="w-12 h-12" />
-            <span className="text-xs font-bold uppercase tracking-wider">
-              {dict?.maps?.noMapsFound || 'No Tactical Callout Image Available'}
+            <span className="type-label-sm">
+              {dict.maps.noMapsFound}
             </span>
           </div>
         )}
@@ -290,48 +267,77 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
       <footer className="absolute inset-x-0 bottom-4 sm:inset-x-auto sm:right-6 z-40 flex justify-center sm:justify-end pointer-events-none">
         <div
           role="toolbar"
-          aria-label={dict?.maps?.engineControlsAria || 'Viewport Zoom Toolbar'}
+          aria-label={dict.maps.engineControlsAria}
           className="pointer-events-auto shrink-0 flex items-center gap-2 bg-bg-elevated/90 border border-border-color p-2 rounded-2xl backdrop-blur-xl shadow-2xl"
         >
-          <button
-            type="button"
+          <Button
+            variant="ghost"
+            size="sm"
+            icon
             onClick={() => setZoom((z) => Math.max(z - 0.2, 0.5))}
-            className="p-2 rounded-xl text-text-muted hover:text-text-primary hover:bg-bg-elevated transition-colors cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-accent-red"
-            title={dict?.maps?.zoomOut || 'Zoom Out'}
-            aria-label={dict?.maps?.zoomOutAria || 'Zoom Out'}
+            {...tip(dict.maps.zoomOut, undefined, 'action')}
+            aria-label={dict.maps.zoomOutAria}
           >
             <ZoomOut className="w-4 h-4" />
-          </button>
+          </Button>
 
-          <span className="text-xs font-mono font-bold text-text-primary px-2 min-w-[50px] text-center">
-            {Math.round(zoom * 100)}{dict?.maps?.percentSign || '%'}
+          <span className="type-strong text-text-primary px-2 min-w-[50px] text-center">
+            {Math.round(zoom * 100)}{dict.maps.percentSign}
           </span>
 
-          <button
-            type="button"
+          <Button
+            variant="ghost"
+            size="sm"
+            icon
             onClick={() => setZoom((z) => Math.min(z + 0.2, 5.0))}
-            className="p-2 rounded-xl text-text-muted hover:text-text-primary hover:bg-bg-elevated transition-colors cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-accent-red"
-            title={dict?.maps?.zoomIn || 'Zoom In'}
-            aria-label={dict?.maps?.zoomInAria || 'Zoom In'}
+            {...tip(dict.maps.zoomIn, undefined, 'action')}
+            aria-label={dict.maps.zoomInAria}
           >
             <ZoomIn className="w-4 h-4" />
-          </button>
+          </Button>
 
           <div className="w-px h-4 bg-border-color my-auto" />
 
-          <button
-            type="button"
+          <Button
+            variant="ghost"
+            size="sm"
+            icon
             onClick={handleResetView}
-            className="p-2 rounded-xl text-text-muted hover:text-text-primary hover:bg-bg-elevated transition-colors cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-accent-red"
-            title={dict?.maps?.resetPanZoom || 'Reset Pan and Zoom'}
-            aria-label={dict?.maps?.resetPanAndZoomAria || 'Reset Pan and Zoom'}
+            {...tip(dict.maps.resetPanZoom, undefined, 'action')}
+            aria-label={dict.maps.resetPanAndZoomAria}
           >
             <RotateCcw className="w-4 h-4" />
-          </button>
+          </Button>
         </div>
       </footer>
     </div>
   );
+};
 
-  return typeof document !== 'undefined' ? createPortal(engineContent, document.body) : engineContent;
+/**
+ * Shared fullscreen <Modal> (portal, scroll lock, Escape, focus trap) around the
+ * engine. Only the chrome is wrapped: the pan/zoom/pinch engine stays
+ * hand-written. The container is offset by the desktop sidebar width
+ * (`--sidebar-width`, 0 on mobile) so the sidebar stays reachable, like before.
+ */
+export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = (props) => {
+  const dict = useDictionary();
+  return (
+  <Modal
+    isOpen
+    onClose={props.onClose}
+    variant="fullscreen"
+    testId="fullscreen-map-engine"
+    ariaLabel={dict.maps.fullscreenEngineAria}
+    closeButton="none"
+    backdrop="none"
+    borderless
+    zIndexClassName="z-40 lg:z-30"
+    containerClassName="left-[var(--sidebar-width,0rem)] transition-[left] duration-300 ease-in-out"
+    className="bg-bg-primary"
+    bodyClassName="flex flex-col overflow-hidden"
+  >
+    <FullscreenMapEngineView {...props} />
+  </Modal>
+  );
 };

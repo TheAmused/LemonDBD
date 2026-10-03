@@ -30,7 +30,6 @@ export function usePersistentString<T extends string>(
     }
     // Only re-check when the key itself changes (e.g. a role-scoped key
     // switching character role) — not on every isValid identity change.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [storageKey]);
 
   const setPersistent = useCallback(

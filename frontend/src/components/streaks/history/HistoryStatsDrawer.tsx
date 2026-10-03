@@ -4,36 +4,33 @@ import type { Dictionary } from '@/locales/types';
 
 import React from 'react';
 import { HistoryStats, HistoryMatchLog } from '@/types/historyStreak';
-import { StreakStatsDrawer } from '../StreakStatsDrawer';
+import { StreakStatsDrawer, streakAtResult } from '../StreakStatsDrawer';
 import { useCharacterDisplayName } from '@/context/DisplayNamesContext';
+import { useDictionary } from "@/context/DictionaryContext";
 
 export interface HistoryStatsDrawerProps {
   isOpen: boolean;
   onClose: () => void;
   stats: HistoryStats | null;
   attempts?: number;
-  dict?: Dictionary;
 }
 
-export const HistoryStatsDrawer: React.FC<HistoryStatsDrawerProps> = ({ isOpen, onClose, stats, attempts, dict }) => {
+export const HistoryStatsDrawer: React.FC<HistoryStatsDrawerProps> = ({ isOpen, onClose, stats, attempts }) => {
+  const dict = useDictionary();
   const characterDisplayName = useCharacterDisplayName();
   return (
   <StreakStatsDrawer<HistoryMatchLog>
     isOpen={isOpen}
     onClose={onClose}
-    title={dict?.streaks?.historyStreak || 'History Streak'}
-    accent="amber"
     stats={stats}
     attempts={attempts}
-    dict={dict}
     renderLabel={(log) => (
-      <div className="text-sm font-bold text-text-primary">{characterDisplayName(log.killer_id)}</div>
+      <div className="text-base font-bold text-text-primary">{characterDisplayName(log.killer_id)}</div>
     )}
     renderMeta={(log) => (
       <span>
-        {dict?.streaks?.killersColonLabel || 'Killers:'} {log.streak_before}{' '}
-        {dict?.streaks?.streakArrow || '→'} {log.streak_after} {dict?.streaks?.middotSeparator || '·'}{' '}
-        {dict?.streaks?.rowLabel || 'Row'} {log.row_index + 1}
+        {dict.streaks.killersColonLabel} {streakAtResult(log)} {dict.streaks.middotSeparator}{' '}
+        {dict.streaks.rowLabel} {log.row_index + 1}
       </span>
     )}
   />

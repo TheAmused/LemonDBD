@@ -2,7 +2,7 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import React from 'react';
-import { renderToStaticMarkup } from 'react-dom/server';
+import { renderWithDictionary } from '../helpers/renderWithDictionary';
 import { CampfireHeader } from '@/components/user/CampfireHeader';
 import { VaultMasteryDials } from '@/components/user/VaultMasteryDials';
 import { PerkDiamondSlot } from '@/components/user/PerkDiamondSlot';
@@ -10,7 +10,6 @@ import { MainCard } from '@/components/user/MainCard';
 import { DualMainsShowcase } from '@/components/user/DualMainsShowcase';
 import { UserBugReportsDrawer } from '@/components/user/UserBugReportsDrawer';
 import { UserProfileForm } from '@/components/user/UserProfileForm';
-import { StreakTrophyCard } from '@/components/user/StreakTrophyCard';
 import { DEFAULT_SHOWCASE_STATE } from '@/types/userShowcase';
 import type { Perk } from '@/types/perks';
 
@@ -24,7 +23,7 @@ describe('Campfire Dossier: CampfireHeader', () => {
   };
 
   it('renders player username, title, and hides devotion, grade, email, and status badges', () => {
-    const html = renderToStaticMarkup(
+    const html = renderWithDictionary(
       React.createElement(CampfireHeader, {
         user: mockUser,
         showcase: DEFAULT_SHOWCASE_STATE,
@@ -46,7 +45,7 @@ describe('Campfire Dossier: CampfireHeader', () => {
   });
 
   it('renders square-ish avatar container matching block height', () => {
-    const html = renderToStaticMarkup(
+    const html = renderWithDictionary(
       React.createElement(CampfireHeader, {
         user: mockUser,
         showcase: DEFAULT_SHOWCASE_STATE,
@@ -70,7 +69,7 @@ describe('Campfire Dossier: VaultMasteryDials', () => {
       perks: { unlocked: 250, total: 321, percentage: 78 },
     };
 
-    const html = renderToStaticMarkup(
+    const html = renderWithDictionary(
       React.createElement(VaultMasteryDials, { ownership: mockOwnership })
     );
 
@@ -89,7 +88,7 @@ describe('Campfire Dossier: VaultMasteryDials', () => {
       perks: { unlocked: 250, total: 321, percentage: 78 },
     };
 
-    const html = renderToStaticMarkup(
+    const html = renderWithDictionary(
       React.createElement(VaultMasteryDials, { ownership: mockOwnership })
     );
 
@@ -102,7 +101,7 @@ describe('Campfire Dossier: VaultMasteryDials', () => {
 
 describe('Campfire Dossier: PerkDiamondSlot', () => {
   it('renders empty slot with rotate-45 diamond container and empty label', () => {
-    const html = renderToStaticMarkup(
+    const html = renderWithDictionary(
       React.createElement(PerkDiamondSlot, {
         slotIndex: 0,
         perk: null,
@@ -126,7 +125,7 @@ describe('Campfire Dossier: PerkDiamondSlot', () => {
       icon_local_path: 'sprint.png',
     };
 
-    const html = renderToStaticMarkup(
+    const html = renderWithDictionary(
       React.createElement(PerkDiamondSlot, {
         slotIndex: 0,
         perk: mockPerk,
@@ -142,7 +141,7 @@ describe('Campfire Dossier: PerkDiamondSlot', () => {
 
 describe('Campfire Dossier: MainCard', () => {
   it('renders Survivor main card with character name and 4 diamond slots', () => {
-    const html = renderToStaticMarkup(
+    const html = renderWithDictionary(
       React.createElement(MainCard, {
         role: 'Survivor',
         loadout: {
@@ -166,7 +165,7 @@ describe('Campfire Dossier: MainCard', () => {
   });
 
   it('renders Killer main card with character name', () => {
-    const html = renderToStaticMarkup(
+    const html = renderWithDictionary(
       React.createElement(MainCard, {
         role: 'Killer',
         loadout: {
@@ -189,29 +188,9 @@ describe('Campfire Dossier: MainCard', () => {
   });
 });
 
-describe('Campfire Dossier: StreakTrophyCard', () => {
-  it('renders trial trophy links and strictly ignores "Others" and quests', () => {
-    const html = renderToStaticMarkup(
-      React.createElement(StreakTrophyCard, { currentLocale: 'en' })
-    );
-
-    assert.ok(html.includes('/en/streaks'));
-    assert.ok(html.includes('/en/streaks/killer/gauntlet-streak'));
-    assert.ok(html.includes('/en/streaks/killer/chaos-streak'));
-    assert.ok(html.includes('/en/streaks/killer/page-streak'));
-
-    // Assert strict omission of quests and "Others"
-    assert.ok(!html.toLowerCase().includes('quest'));
-    assert.ok(!html.includes('guesser'));
-    assert.ok(!html.includes('draft'));
-    assert.ok(!html.includes('swf'));
-    assert.ok(!html.includes('killer-calculator'));
-  });
-});
-
 describe('User Profile Drawers: DualMainsShowcase & UserBugReportsDrawer', () => {
   it('DualMainsShowcase has centered text, no SlidersHorizontal icon, no Show Loadouts button, and smooth drawer grid animation', () => {
-    const html = renderToStaticMarkup(
+    const html = renderWithDictionary(
       React.createElement(DualMainsShowcase, {
         showcase: DEFAULT_SHOWCASE_STATE,
         onSurvivorCharacterChange: () => {},
@@ -239,7 +218,7 @@ describe('User Profile Drawers: DualMainsShowcase & UserBugReportsDrawer', () =>
   });
 
   it('UserBugReportsDrawer has centered text, no icons in header, and smooth drawer grid animation', () => {
-    const html = renderToStaticMarkup(
+    const html = renderWithDictionary(
       React.createElement(UserBugReportsDrawer, {
         reports: [],
         loading: false,
@@ -262,7 +241,7 @@ describe('User Profile Drawers: DualMainsShowcase & UserBugReportsDrawer', () =>
   });
 
   it('UserProfileForm renders as Account Management drawer with centered header and banner', () => {
-    const html = renderToStaticMarkup(
+    const html = renderWithDictionary(
       React.createElement(UserProfileForm, {
         initialEmail: 'test@lemondbd.com',
         onRefreshUser: async () => {},

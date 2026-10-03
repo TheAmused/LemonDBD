@@ -7,15 +7,14 @@ import { ImageOff, Lock, HelpCircle } from 'lucide-react';
 import { Perk, PerkDictionary } from '@/types/perks';
 import { getPerkIconUrl, getCharacterAvatarUrl } from '@/utils/perkUtils';
 import { DisabledBadge } from '@/components/DisabledBadge';
-import { UnifiedHoverModal, ActiveHoverState } from '@/components/common/UnifiedHoverModal';
+
+import { tip } from '@/components/common/Tooltip';
+import { useDictionary } from "@/context/DictionaryContext";
 
 const DisabledReasonModal = dynamic(
   () => import('@/components/DisabledReasonModal').then((m) => m.DisabledReasonModal),
   { ssr: false }
 );
-
-export type { Perk };
-
 const GRID_SIZE_CLASSES: Record<'default' | 'large' | 'fill' | 'tarot' | 'compact' | 'wheelFlank', string> = {
   default: 'h-24 w-24 sm:h-28 sm:w-28 md:h-32 md:w-32 lg:h-36 lg:w-36 xl:h-44 xl:w-44 2xl:h-52 2xl:w-52 min-[1800px]:h-60 min-[1800px]:w-60',
   large: 'h-32 w-32 sm:h-40 sm:w-40 md:h-44 md:w-44 lg:h-44 lg:w-44 xl:h-52 xl:w-52 2xl:h-60 2xl:w-60 min-[1800px]:h-68 min-[1800px]:w-68 wide:h-76 wide:w-76 wide-2k:h-88 wide-2k:w-88 wide-4k:h-96 wide-4k:w-96',
@@ -28,24 +27,16 @@ const GRID_SIZE_CLASSES: Record<'default' | 'large' | 'fill' | 'tarot' | 'compac
 interface PerkCardProps {
   perk: Perk;
   onSelect: (perk: Perk) => void;
-  dict?: PerkDictionary;
   coordinate?: { page: number; slot: number };
   size?: 'default' | 'large' | 'fill' | 'tarot' | 'compact' | 'wheelFlank';
   isBlind?: boolean;
 }
 
-export const PerkCard: React.FC<PerkCardProps> = ({
-  perk,
-  onSelect,
-  dict,
-  coordinate,
-  size = 'default',
-  isBlind = false,
-}) => {
+export const PerkCard: React.FC<PerkCardProps> = ({ perk, onSelect, coordinate, size = 'default', isBlind = false }) => {
+  const dict = useDictionary();
   const [imgError, setImgError] = useState(false);
   const [avatarError, setAvatarError] = useState(false);
   const [showDisabledModal, setShowDisabledModal] = useState(false);
-  const [activeHover, setActiveHover] = useState<ActiveHoverState | null>(null);
 
   const iconSrc = getPerkIconUrl(perk);
   const avatarSrc = getCharacterAvatarUrl(
@@ -59,21 +50,16 @@ export const PerkCard: React.FC<PerkCardProps> = ({
     Boolean(perk.is_generic_counterpart);
   const isOwned = perk.is_owned !== false;
 
-  const generalLabel = dict?.modal?.generalPerk;
+  const generalLabel = dict.modal.generalPerk;
   const roleLabel =
     perk.category === 'Killer'
-      ? dict?.modal?.killerPerk
-      : dict?.modal?.survivorPerk;
+      ? dict.modal.killerPerk
+      : dict.modal.survivorPerk;
 
-  const handleMouseEnter = (e: React.MouseEvent<HTMLButtonElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    setActiveHover({ item: perk, rect });
-  };
-  const handleMouseLeave = () => setActiveHover(null);
   const ariaLabel = `${perk.name}${isGeneral ? (generalLabel ? ` - ${generalLabel}` : '') : (perk.character ? ` - ${perk.character}` : '')}`;
 
   const coordinateLabel = coordinate
-    ? `${dict?.generator?.coordOpenPage || '['}${coordinate.page}${dict?.generator?.coordSlot || '/'}${coordinate.slot}${dict?.generator?.coordClose || ']'}`
+    ? `${dict.generator.coordOpenPage}${coordinate.page}${dict.generator.coordSlot}${coordinate.slot}${dict.generator.coordClose}`
     : null;
 
   if (isBlind) {
@@ -82,13 +68,13 @@ export const PerkCard: React.FC<PerkCardProps> = ({
         className={`relative flex flex-col items-center justify-center gap-2 p-2 ${GRID_SIZE_CLASSES[size]}`}
       >
         {coordinateLabel && (
-          <span className="absolute top-1 left-1 z-10 font-mono text-[10px] font-black text-accent-amber">
+          <span className="absolute top-1 left-1 z-10 type-strong-2xs text-accent-amber">
             {coordinateLabel}
           </span>
         )}
         <HelpCircle className="h-10 w-10 text-text-muted" />
-        {dict?.generator?.hiddenPerkLabel && (
-          <span className="text-[11px] font-bold text-text-muted text-center px-2">
+        {dict.generator.hiddenPerkLabel && (
+          <span className="type-strong-xs text-text-muted text-center px-2">
             {dict.generator.hiddenPerkLabel}
           </span>
         )}
@@ -109,8 +95,7 @@ export const PerkCard: React.FC<PerkCardProps> = ({
       <button
         type="button"
         onClick={() => onSelect(perk)}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
+        {...tip(perk.name, undefined, 'item')}
         aria-label={ariaLabel}
         className={`relative flex cursor-pointer items-center justify-center transition-transform duration-200 ${
           size === 'tarot' || size === 'compact' ? 'group-hover:scale-102 active:scale-95' : 'group-hover:scale-105 active:scale-95'
@@ -118,10 +103,10 @@ export const PerkCard: React.FC<PerkCardProps> = ({
       >
         {coordinateLabel && (
           <span
-            className={`absolute z-10 font-mono font-black pointer-events-none ${
+            className={`absolute z-10 font-black pointer-events-none ${
               size === 'tarot' || size === 'compact'
-                ? 'top-0 left-0 text-[8px] sm:text-[9px] md:text-[10px] xl:text-xs 2xl:text-sm text-accent-amber bg-bg-primary/80 px-1 py-0.5 rounded shadow-xs'
-                : 'top-1 left-1 text-[10px] text-accent-amber'
+                ? 'top-0 left-0 text-micro sm:text-micro md:text-tiny xl:text-xs 2xl:text-sm text-accent-amber bg-bg-primary/80 px-1 py-0.5 rounded shadow-xs'
+                : 'top-1 left-1 text-tiny text-accent-amber'
             }`}
           >
             {coordinateLabel}
@@ -191,7 +176,7 @@ export const PerkCard: React.FC<PerkCardProps> = ({
           !isOwned && (
             <div
               className="absolute top-1 right-1 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-bg-primary/90 shadow-xs border border-border-color"
-              title={dict?.modal?.unownedPerk}
+              {...tip(dict.modal.unownedPerk, undefined, 'status')}
             >
               <Lock className="h-3.5 w-3.5 text-text-muted" />
             </div>
@@ -206,12 +191,6 @@ export const PerkCard: React.FC<PerkCardProps> = ({
         reason={perk.disabled_reason}
       />
 
-      <UnifiedHoverModal
-        activeHover={activeHover}
-        placement="auto"
-        t={dict?.modal as unknown as Record<string, string>}
-        isPerk={true}
-      />
     </div>
   );
 };

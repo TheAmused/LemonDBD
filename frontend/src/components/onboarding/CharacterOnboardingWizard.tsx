@@ -6,11 +6,9 @@ import Link from 'next/link';
 import { ownershipKey, ownsPerk } from '@/utils/characterUtils';
 import { useRouter } from 'next/navigation';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Check, ChevronDown, Info, Loader2, Search, User as UserIcon, X } from 'lucide-react';
-import type { Dictionary } from '@/locales/types';
+import { Check, ChevronDown, Info, Search, User as UserIcon, X } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
-import { getAvatarUrl } from '@/components/character-detail/types';
 import { CharacterOwnershipOverlay, OwnershipClipOverlay } from '@/components/characters/CharacterOwnershipOverlay';
 import { PerksTogglePopup } from '@/components/characters/PerksTogglePopup';
 import { SkipOnboardingModal } from '@/components/onboarding/SkipOnboardingModal';
@@ -20,222 +18,32 @@ import { LANGUAGES } from '@/components/sidebar/SidebarBottomControls';
 import { FlagIcon } from '@/components/sidebar/FlagIcon';
 import { useResponsiveGridColumns } from '@/hooks/useResponsiveGridColumns';
 import { LemonIcon } from '@/components/LemonIcon';
-import { AmbientEmbers } from '@/components/layout/AmbientEmbers';
 import {
   clearOnboardingDraft,
   loadOnboardingDraft,
   saveOnboardingDraft,
 } from '@/utils/onboardingStorage';
-
-const AuthModal = dynamic(() => import('@/components/AuthModal').then((m) => m.AuthModal), { ssr: false });
-
-/** Which step to resume on after a language-triggered locale redirect.
- * `dict`/`locale` are resolved server-side by the `[locale]` layout, so
- * navigating to a different `/[locale]/welcome` remounts this component fresh
- * and the step it was on has to survive the reload. */
-const RESUME_VIEW_KEY = 'onboarding_view_after_language_redirect';
-
-type OnboardingView = 'intro' | 'language' | 'roster';
-
-export function resolveOnboardingView(stored: string | null): OnboardingView {
-  return stored === 'roster' || stored === 'language' ? stored : 'intro';
-}
-
-/** Ace Visconti, by convention -- matched by id, which is the stable identity
- * of a content row. His display name is translated, so it is not usable as a
- * key; the previous `wiki_slug` match was that same idea, but `wiki_slug` was
- * only `name` with underscores and no longer exists. */
-/** Ace Visconti, matched by key rather than by name because the name is
- *  translated. Survivor 7 -- killer 7 is The Doctor. */
-const LEGEND_SURVIVOR_ID = 7;
-
+import { Spinner } from '@/components/common/Spinner';
+import { SwitchTrack } from '@/components/common/Switch';
+import { Button } from '@/components/common/Button';
+import { Input } from '@/components/common/Field';
+import { type OnboardingCharacter, type OnboardingPerk, type OnboardingView, resolveOnboardingView, RESUME_VIEW_KEY, normalizeChapterKey, isDefaultUnlockedPerk, groupCharactersByChapter, CHAPTER_GRID_BREAKPOINTS, LEGEND_SURVIVOR_ID, type ChapterGroup, AuthModal, resolveOnboardingAvatar, slugifyChapterName } from "./CharacterOnboardingWizardParts";
+import { authHeaders } from '@/utils/api';
+import { useDictionary } from "@/context/DictionaryContext";
 // Minimum 3 columns on mobile small screens as requested.
-const CHAPTER_GRID_BREAKPOINTS: { minWidth: number; columns: number }[] = [
-  { minWidth: 1720, columns: 7 },
-  { minWidth: 1440, columns: 6 },
-  { minWidth: 1180, columns: 5 },
-  { minWidth: 880, columns: 4 },
-  { minWidth: 0, columns: 3 },
-];
 
 export interface ChapterBanner {
   banner_url: string | null;
   banner_local_path: string | null;
 }
 
-export interface OnboardingCharacter {
-  id: number;
-  name: string;
-  role: string;
-  category: string;
-  chapter_name: string | null;
-  release_number: number | null;
-  release_date: string | null;
-  is_owned: boolean;
-  is_free: boolean;
-  avatar_url?: string;
-  avatar_local_path?: string;
-}
-
-export interface OnboardingPerk {
-  perk_id: number;
-  name: string;
-  character_id: number | null;
-  role?: string;
-  survivor_id?: number | null;
-  killer_id?: number | null;
-  is_teachable: boolean;
-  is_unlocked: boolean;
-  is_general?: boolean;
-  is_generic_counterpart?: boolean;
-  icon_url?: string;
-  icon_local_path?: string;
-}
-
-/**
- * Determines whether a perk is unlocked by default based on model/API data attributes:
- * - Generic counterpart perks (perk.is_generic_counterpart)
- * - General baseline perks (perk.is_general)
- * - Free base game character perks (char.is_free)
- *
- * Driven strictly by data attributes rather than hardcoded character/chapter names.
- */
-export function isDefaultUnlockedPerk(
-  perk: OnboardingPerk,
-  characters: OnboardingCharacter[]
-): boolean {
-  if (perk.is_generic_counterpart || perk.is_general) {
-    return true;
-  }
-  const char = characters.find((c) => ownsPerk(perk, c.id, c.category));
-  return Boolean(char?.is_free);
-}
-
-export interface ChapterGroup {
-  chapterName: string;
-  releaseTimestamp: number;
-  characters: OnboardingCharacter[];
-}
-
-const MONTH_NAMES = [
-  'january', 'february', 'march', 'april', 'may', 'june',
-  'july', 'august', 'september', 'october', 'november', 'december',
-];
-
-/** Parses the backend scraper's `release_date` format -- always either
- * "<day> <Month name> <year>" (e.g. "14 June 2016") or, in its year-only
- * fallback case, a bare 4-digit year -- into a UTC timestamp for sorting.
- * Hand-rolled rather than `Date.parse(release_date)`: that string isn't
- * ISO-8601, and per spec, non-ISO date-string parsing is
- * implementation-defined, so relying on it risks a browser/engine that
- * parses it differently (or not at all) silently mis-sorting that chapter
- * instead of erroring loudly. Returns 0 (sorts first) when unparseable. */
-function parseReleaseDate(dateStr: string | null | undefined): number {
-  if (!dateStr) return 0;
-  const trimmed = dateStr.trim();
-
-  const dayMonthYear = /^(\d{1,2})\s+([A-Za-z]+)\s+(\d{4})$/.exec(trimmed);
-  if (dayMonthYear) {
-    const day = Number(dayMonthYear[1]);
-    const monthIndex = MONTH_NAMES.indexOf(dayMonthYear[2].toLowerCase());
-    const year = Number(dayMonthYear[3]);
-    if (monthIndex !== -1) return Date.UTC(year, monthIndex, day);
-  }
-
-  const yearOnly = /^(\d{4})$/.exec(trimmed);
-  if (yearOnly) return Date.UTC(Number(yearOnly[1]), 0, 1);
-
-  return 0;
-}
-
-/** Groups characters by `chapter_name` (falling back to "Base Game" for
- * null, matching the backend's own default in Character.to_dict), ordered
- * by each chapter's real release date ascending.
- *
- * Sorts by `release_date` (an actual calendar date), not `release_number` --
- * release_number is meant to be a sequential release index but isn't
- * reliable across chapters (e.g. Chucky's single character carries
- * release_number 34, same as Forged in Fog, even though Chucky actually
- * released a full year later per its release_date; the two fields disagree
- * for reasons that look like a scraper data-quality issue rather than
- * anything this grouping can correct for). release_date is read off every
- * character in the group and the latest one wins, for the same reason
- * described below for why a single first-seen character isn't enough. */
-export function groupCharactersByChapter(characters: OnboardingCharacter[]): ChapterGroup[] {
-  const byChapter = new Map<string, ChapterGroup>();
-
-  for (const c of characters) {
-    const chapterName = c.chapter_name || 'Base Game';
-    if (!byChapter.has(chapterName)) {
-      byChapter.set(chapterName, {
-        chapterName,
-        releaseTimestamp: 0,
-        characters: [],
-      });
-    }
-    const group = byChapter.get(chapterName)!;
-    // A chapter's killer and survivor don't always both have this populated
-    // (scraper gaps), so it's read off every character in the group rather
-    // than just whichever happens to be first.
-    const parsed = parseReleaseDate(c.release_date);
-    if (parsed > group.releaseTimestamp) {
-      group.releaseTimestamp = parsed;
-    }
-    group.characters.push(c);
-  }
-
-  return Array.from(byChapter.values()).sort((a, b) => a.releaseTimestamp - b.releaseTimestamp);
-}
-
-/** Turns a chapter name into an id-safe token for the accordion header's
- * `aria-controls`/panel `id` pair -- chapter names contain spaces and
- * punctuation, which are not valid inside an HTML id. */
-function slugifyChapterName(chapterName: string): string {
-  return chapterName
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '');
-}
-
-/** Normalizes a chapter name for matching a character's `chapter_name`
- * against the `chapters` banner lookup's `name` -- the two come from
- * separate scrapers that don't always agree on a leading "The " or a
- * trailing "(Chapter)"/" Chapter" suffix, so an exact-string key would miss
- * real matches. */
-export function normalizeChapterKey(chapterName: string): string {
-  return chapterName
-    .trim()
-    .toLowerCase()
-    .replace(/\s*\(chapter\)\s*$/, '')
-    .replace(/\s+chapter\s*$/, '')
-    .replace(/^the\s+/, '')
-    .trim();
-}
-
-function resolveOnboardingAvatar(backendBase: string, c: OnboardingCharacter): string {
-  return getAvatarUrl(
-    backendBase,
-    {
-      name: c.name,
-      category: c.category,
-      avatar_url: c.avatar_url,
-      avatar_local_path: c.avatar_local_path,
-    },
-    c.role === 'Survivor'
-  );
-}
-
 export interface CharacterOnboardingWizardProps {
   locale: string;
-  dict?: Dictionary;
   onFinished: () => void;
 }
 
-export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps> = ({
-  locale,
-  dict,
-  onFinished,
-}) => {
+export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps> = ({ locale, onFinished }) => {
+  const dict = useDictionary();
   const {
     user,
     token,
@@ -248,7 +56,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
   } = useAuth();
   const router = useRouter();
   const backendBase = getBackendBaseUrl();
-  const t = dict?.onboarding;
+  const t = dict.onboarding;
 
   const [characters, setCharacters] = useState<OnboardingCharacter[]>([]);
   const [allPerks, setAllPerks] = useState<OnboardingPerk[]>([]);
@@ -391,7 +199,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
     // by id, so the canonical structure used for grouping never changes.
     if (!user || !token) return;
     let cancelled = false;
-    const headers = { Authorization: `Bearer ${token}` };
+    const headers = authHeaders(token);
     // The two /users/... reads stay bare: they carry the bearer token, so they
     // are personalised and neither cache will touch them. The third is the
     // public catalog under the same key the roster page uses, so a visitor who
@@ -708,36 +516,34 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
   if (!authLoading && !isAuthenticated) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center p-6 text-center">
-        <AmbientEmbers />
         <div className="w-full max-w-md space-y-4 rounded-3xl border border-border-color bg-bg-surface p-8 shadow-xl">
           <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl border border-accent-red/30 bg-accent-red/15">
             <LemonIcon className="h-10 w-10 text-accent-red" />
           </div>
           <h1 className="text-xl font-black tracking-wider text-text-primary">
-            {dict?.user?.authRequiredTitle || 'Authentication Required'}
+            {dict.user.authRequiredTitle}
           </h1>
-          <p className="text-xs leading-relaxed text-text-secondary">
-            {dict?.user?.authRequiredDesc ||
-              'Please sign in or create an account to view your LemonDBD profile, manage your teachables, and track game challenges.'}
+          <p className="type-body text-text-secondary">
+            {dict.user.authRequiredDesc}
           </p>
           <div className="flex flex-col gap-3 pt-2">
-            <button
-              type="button"
+            <Button
+              variant="primary"
               onClick={() => setIsAuthModalOpen(true)}
-              className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-accent-red hover:bg-accent-red-hover py-3 text-xs font-black uppercase tracking-wider text-text-inverted shadow-xs transition-all"
+              leftIcon={<UserIcon className="h-4 w-4" />}
+              className="w-full"
             >
-              <UserIcon className="h-4 w-4" />
-              <span>{dict?.user?.signIn || 'Sign In / Register'}</span>
-            </button>
+              <span>{dict.user.signIn}</span>
+            </Button>
             <Link
               href={`/${locale}`}
               className="py-1 text-xs text-text-muted transition-colors hover:text-accent-red"
             >
-              {dict?.user?.returnToHome || 'Return to Home'}
+              {dict.user.returnToHome}
             </Link>
           </div>
         </div>
-        <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} dict={dict} />
+        <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
       </div>
     );
   }
@@ -745,28 +551,22 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
   if (loading || authLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-accent-red" />
+        <Spinner size="lg" tone="accent" />
       </div>
     );
   }
 
   if (view === 'intro') {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-bg-primary p-4">
-        <AmbientEmbers />
+      <div className="min-h-screen flex items-center justify-center p-4">
         <div className="w-full max-w-md rounded-2xl border border-border-color bg-bg-surface p-8 text-center space-y-4 shadow-2xl">
-          <h1 className="text-xl font-black">{t?.introTitle || 'Welcome to LemonDBD'}</h1>
+          <h1 className="text-xl font-black">{t.introTitle}</h1>
           <p className="text-sm text-text-secondary">
-            {t?.introBody ||
-              'To tailor the site to your progress in the game, please mark which chapters, characters, and perks you already own.'}
+            {t.introBody}
           </p>
-          <button
-            type="button"
-            onClick={() => setView('language')}
-            className="w-full rounded-xl bg-accent-red hover:bg-accent-red-hover py-3 text-sm font-black uppercase tracking-wider text-text-inverted cursor-pointer"
-          >
-            {t?.introContinueButton || 'Get Started'}
-          </button>
+          <Button variant="primary" onClick={() => setView('language')} className="w-full">
+            {t.introContinueButton}
+          </Button>
         </div>
       </div>
     );
@@ -774,12 +574,11 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
 
   if (view === 'language') {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-bg-primary p-4">
-        <AmbientEmbers />
+      <div className="min-h-screen flex items-center justify-center p-4">
         <div className="w-full max-w-md rounded-2xl border border-border-color bg-bg-surface p-8 text-center space-y-4 shadow-2xl">
-          <h1 className="text-xl font-black">{t?.languageStepTitle || 'Choose your language'}</h1>
+          <h1 className="text-xl font-black">{t.languageStepTitle}</h1>
           <p className="text-sm text-text-secondary">
-            {t?.languageStepBody || 'Pick the language you want to use across the site. You can change this again later.'}
+            {t.languageStepBody}
           </p>
           <div className="grid grid-cols-1 gap-2">
             {LANGUAGES.map((lang) => (
@@ -799,24 +598,18 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
               </button>
             ))}
           </div>
-          <button
-            type="button"
-            disabled={savingLanguage}
-            onClick={handleLanguageContinue}
-            className="w-full rounded-xl bg-accent-red hover:bg-accent-red-hover py-3 text-sm font-black uppercase tracking-wider text-text-inverted disabled:opacity-50 cursor-pointer"
-          >
+          <Button variant="primary" disabled={savingLanguage} onClick={handleLanguageContinue} className="w-full">
             {savingLanguage
-              ? t?.savingLabel || 'Saving...'
-              : t?.languageContinueButton || 'Continue'}
-          </button>
+              ? t.savingLabel
+              : t.languageContinueButton}
+          </Button>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-bg-primary p-2.5 sm:p-5 lg:p-6 pb-32 sm:pb-36 lg:pb-36">
-      <AmbientEmbers />
+    <div className="min-h-screen p-2.5 sm:p-5 lg:p-6 pb-32 sm:pb-36 lg:pb-36">
       <div className="mx-auto w-full max-w-[96rem] 2xl:max-w-[110rem] 3xl:max-w-[124rem]">
         {/* Unified Card Container */}
         <div className="rounded-2xl border border-border-color bg-bg-surface p-3 sm:p-5 lg:p-6 shadow-2xl space-y-3.5 sm:space-y-4">
@@ -828,23 +621,22 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
                 onClick={() => setIsSkipModalOpen(true)}
                 className="shrink-0 rounded-xl border border-accent-amber/50 bg-accent-amber/10 px-4 py-2 sm:px-5 sm:py-2.5 lg:px-6 lg:py-3 text-xs sm:text-sm lg:text-base font-bold text-accent-amber hover:bg-accent-amber/20 hover:border-accent-amber transition-all cursor-pointer shadow-xs"
               >
-                {t?.skipButton || 'Skip'}
+                {t.skipButton}
               </button>
             </div>
-            <h1 className="text-lg sm:text-xl md:text-2xl font-black font-mono tracking-tight text-text-primary px-2">
-              {t?.heading || 'Which characters do you already own?'}
+            <h1 className="text-lg sm:text-xl md:text-2xl font-black tracking-tight text-text-primary px-2">
+              {t.heading}
             </h1>
             <p className="text-xs sm:text-sm text-text-secondary max-w-xl mx-auto px-2">
-              {t?.subheading ||
-                'Pick the chapters you own so the perk randomizer and streaks only offer you perks you can actually use. You can always change this later from your Characters page.'}
+              {t.subheading}
             </p>
             <div className="sm:hidden pt-0.5">
               <button
                 type="button"
                 onClick={() => setIsSkipModalOpen(true)}
-                className="shrink-0 rounded-xl border border-accent-amber/50 bg-accent-amber/10 px-3 py-1 text-xs font-bold text-accent-amber hover:bg-accent-amber/20 transition-colors cursor-pointer"
+                className="shrink-0 rounded-xl border border-accent-amber/50 bg-accent-amber/10 px-3 py-1 type-strong text-accent-amber hover:bg-accent-amber/20 transition-colors cursor-pointer"
               >
-                {t?.skipButton || 'Skip'}
+                {t.skipButton}
               </button>
             </div>
           </header>
@@ -853,8 +645,8 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
 
           {/* Legend Section ("Jak to działa") */}
           <section className="flex flex-col items-center text-center space-y-1.5 sm:space-y-2">
-            <h2 className="text-sm sm:text-base md:text-lg font-black uppercase tracking-wider text-text-primary font-mono">
-              {t?.legendTitle || 'How this works'}
+            <h2 className="text-sm sm:text-base md:text-lg font-black uppercase tracking-wider text-text-primary">
+              {t.legendTitle}
             </h2>
             <div className="grid grid-cols-3 items-start justify-items-center gap-2 sm:gap-6 w-full max-w-xl mx-auto">
               {/* Locked */}
@@ -875,8 +667,8 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
                     badgeSize="sm"
                   />
                 </span>
-                <span className="text-[10px] sm:text-xs font-semibold text-text-primary leading-tight">
-                  {t?.legendLocked || 'Locked - not available yet'}
+                <span className="text-tiny sm:text-xs font-semibold text-text-primary leading-tight">
+                  {t.legendLocked}
                 </span>
               </div>
 
@@ -898,8 +690,8 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
                     badgeSize="sm"
                   />
                 </span>
-                <span className="text-[10px] sm:text-xs font-semibold text-text-primary leading-tight">
-                  {t?.legendPartial || 'Partially unlocked - some perks unlocked by hand'}
+                <span className="text-tiny sm:text-xs font-semibold text-text-primary leading-tight">
+                  {t.legendPartial}
                 </span>
               </div>
 
@@ -921,8 +713,8 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
                     badgeSize="sm"
                   />
                 </span>
-                <span className="text-[10px] sm:text-xs font-semibold text-text-primary leading-tight">
-                  {t?.legendOwned || 'Owned - fully available'}
+                <span className="text-tiny sm:text-xs font-semibold text-text-primary leading-tight">
+                  {t.legendOwned}
                 </span>
               </div>
             </div>
@@ -934,10 +726,10 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
           <section className="space-y-3">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
               <div className="flex items-center gap-2.5">
-                <span className="text-xs font-black uppercase tracking-wider text-text-secondary font-mono">
-                  {t?.chaptersTitle || 'Chapters'}
+                <span className="type-label-sm text-text-secondary">
+                  {t.chaptersTitle}
                 </span>
-                <span className="rounded-full border border-border-color bg-bg-elevated px-2 py-0.5 text-[11px] font-bold text-text-secondary">
+                <span className="rounded-full border border-border-color bg-bg-elevated px-2 py-0.5 type-strong-xs text-text-secondary">
                   {ownedChaptersCount} / {chapterGroups.length}
                 </span>
               </div>
@@ -945,17 +737,19 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
               <div className="flex items-center gap-2 w-full sm:w-auto">
                 <div className="relative flex-1 sm:w-56">
                   <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-text-muted" />
-                  <input
+                  <Input
                     type="text"
+                    fieldSize="sm"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder={t?.searchPlaceholder || 'Search chapters or characters...'}
-                    className="w-full rounded-lg border border-border-color bg-bg-elevated pl-8 pr-7 py-1.5 text-xs text-text-primary placeholder:text-text-muted focus:border-accent-red focus:outline-none transition-colors"
+                    placeholder={t.searchPlaceholder}
+                    className="pl-8 pr-7"
                   />
                   {searchQuery && (
                     <button
                       type="button"
                       onClick={() => setSearchQuery('')}
+                      aria-label={dict.filters.clearSearch}
                       className="absolute right-2 top-1/2 -translate-y-1/2 text-text-muted hover:text-text-primary cursor-pointer"
                     >
                       <X className="h-3 w-3" />
@@ -985,32 +779,22 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
                     >
                       {isAllOwned && <Check className="h-3 w-3 sm:h-3.5 sm:w-3.5 stroke-[3]" />}
                     </span>
-                    <span className="text-xs font-bold font-mono tracking-tight">
-                      {t?.selectAllButton || 'I own everything'}
+                    <span className="text-xs font-bold tracking-tight">
+                      {t.selectAllButton}
                     </span>
                   </button>
 
-                  <button
-                    type="button"
-                    disabled={!hasAnySelection}
-                    onClick={handleDeselectAllChapters}
-                    className={`rounded-lg border px-2.5 sm:px-3 py-1.5 text-xs font-bold transition-all ${
-                      !hasAnySelection
-                        ? 'border-border-color/40 bg-bg-surface/40 text-text-muted/40 cursor-not-allowed'
-                        : 'border-border-color bg-bg-surface text-text-muted hover:border-accent-red hover:text-accent-red cursor-pointer'
-                    }`}
-                  >
-                    {t?.deselectAllButton || 'Clear all'}
-                  </button>
+                  <Button variant="secondary" size="sm" disabled={!hasAnySelection} onClick={handleDeselectAllChapters}>
+                    {t.deselectAllButton}
+                  </Button>
                 </div>
               </div>
             </div>
 
-            <p className="flex items-start gap-1.5 text-[10px] sm:text-[11px] text-text-secondary">
+            <p className="flex items-start gap-1.5 text-tiny sm:text-mini text-text-secondary">
               <Info className="h-3 w-3 sm:h-3.5 sm:w-3.5 shrink-0 mt-0.5" />
               <span>
-                {t?.legendCustomizeHint ||
-                  "Tip: for a chapter you don't own, expand it and use a character's Perks button to unlock individual perks without owning the whole character."}
+                {t.legendCustomizeHint}
               </span>
             </p>
 
@@ -1032,7 +816,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
             // Display only -- expandedChapter/aria-id/banner lookups all key off
             // the canonical group.chapterName above, never this localized text.
             const chapterDisplayName = translatedChapterNames[group.chapterName] || group.chapterName;
-            const chapterSwitchLabel = `${t?.ownChapterButton || 'I own this chapter'}: ${chapterDisplayName}`;
+            const chapterSwitchLabel = `${t.ownChapterButton}: ${chapterDisplayName}`;
             const chapterPanelId = `chapter-panel-${slugifyChapterName(group.chapterName)}`;
 
             return (
@@ -1058,7 +842,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
                         className="h-full w-full object-cover"
                       />
                     ) : (
-                      <span className="px-1 sm:px-2 text-center text-[10px] sm:text-sm font-extrabold text-text-secondary line-clamp-2">{chapterDisplayName}</span>
+                      <span className="px-1 sm:px-2 text-center text-tiny sm:text-sm font-extrabold text-text-secondary line-clamp-2">{chapterDisplayName}</span>
                     )}
                     <OwnershipClipOverlay
                       isOwned={chapterOwned}
@@ -1071,8 +855,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
                   </button>
                   {/* The whole footer toggles ownership, not just the small
                       switch -- Switch renders its own <button>, so it can't
-                      be nested here; its visuals are reproduced on a plain
-                      <span> instead. */}
+                      be nested here; SwitchTrack is its presentational half. */}
                   <button
                     type="button"
                     onClick={() => toggleChapter(group, !chapterOwned)}
@@ -1081,21 +864,10 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
                     aria-label={chapterSwitchLabel}
                     className="flex w-full items-center justify-between gap-1 sm:gap-2 border-t border-border-color px-1.5 py-1 sm:px-2.5 sm:py-2 text-left cursor-pointer hover:bg-bg-elevated transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent-red"
                   >
-                    <h3 className="flex-1 text-[9px] sm:text-xs font-bold sm:font-extrabold leading-tight line-clamp-2 min-h-[22px] sm:min-h-[32px] flex items-center text-text-primary break-words">
+                    <h3 className="flex-1 text-micro sm:text-xs font-bold sm:font-extrabold leading-tight line-clamp-2 min-h-[22px] sm:min-h-[32px] flex items-center text-text-primary break-words">
                       {chapterDisplayName}
                     </h3>
-                    <span
-                      aria-hidden="true"
-                      className={`relative inline-flex h-3.5 w-6 sm:h-5 sm:w-9 shrink-0 items-center rounded-full transition-colors ${
-                        chapterOwned ? 'bg-accent-green' : 'bg-bg-elevated border border-border-color'
-                      }`}
-                    >
-                      <span
-                        className={`inline-block h-2.5 w-2.5 sm:h-3.5 sm:w-3.5 transform rounded-full bg-text-inverted shadow transition-transform ${
-                          chapterOwned ? 'translate-x-2.5 sm:translate-x-4' : 'translate-x-0.5'
-                        }`}
-                      />
-                    </span>
+                    <SwitchTrack checked={chapterOwned} size="sm" />
                   </button>
                 </div>
 
@@ -1153,10 +925,10 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
                                 isOwned={isOwned}
                                 hasPartialPerks={hasPartialPerks}
                                 avatarSrc={resolveOnboardingAvatar(backendBase, c)}
-                                lockedTitle={dict?.modal?.unownedPerk}
-                                ownedTitle={dict?.filters?.ownedOnly}
+                                lockedTitle={dict.modal.unownedPerk}
+                                ownedTitle={dict.filters.ownedOnly}
                               />
-                              <span className="absolute bottom-1 left-1 right-1 truncate rounded bg-bg-primary/80 px-1.5 py-0.5 text-[10px] font-bold text-text-inverted text-center">
+                              <span className="absolute bottom-1 left-1 right-1 truncate rounded bg-bg-primary/80 px-1.5 py-0.5 type-strong-2xs text-text-inverted text-center">
                                 {c.name}
                               </span>
                             </button>
@@ -1164,9 +936,9 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
                               <button
                                 type="button"
                                 onClick={() => setPerksPopupCharacter(c)}
-                                className="w-full border-t border-border-color bg-accent-amber/10 px-1.5 py-1 text-[10px] font-bold text-accent-amber hover:bg-accent-amber/20 transition-colors cursor-pointer"
+                                className="w-full border-t border-border-color bg-accent-amber/10 px-1.5 py-1 type-strong-2xs text-accent-amber hover:bg-accent-amber/20 transition-colors cursor-pointer"
                               >
-                                {t?.perksButton || 'Perks'} ({perkStats.unlocked}/{perkStats.total})
+                                {t.perksButton} ({perkStats.unlocked}/{perkStats.total})
                               </button>
                             )}
                           </div>
@@ -1191,14 +963,9 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
       {/* Sticky full-screen bottom continue banner so Continue stays reachable while scrolling */}
       <div className="fixed bottom-0 inset-x-0 z-30 w-full border-t border-border-color bg-bg-surface/95 backdrop-blur-md shadow-2xl">
         <div className="mx-auto flex w-full max-w-7xl justify-center px-4 py-3 sm:py-4">
-          <button
-            type="button"
-            disabled={saving}
-            onClick={handleContinue}
-            className="w-full max-w-sm sm:max-w-md rounded-xl bg-accent-red hover:bg-accent-red-hover px-6 py-2.5 text-sm sm:text-base font-black uppercase tracking-wider text-text-inverted disabled:opacity-50 cursor-pointer shadow-lg transition-colors"
-          >
-            {saving ? t?.savingLabel || 'Saving...' : t?.continueButton || 'Continue'}
-          </button>
+          <Button variant="primary" disabled={saving} onClick={handleContinue} className="w-full max-w-sm sm:max-w-md">
+            {saving ? t.savingLabel : t.continueButton}
+          </Button>
         </div>
       </div>
 
@@ -1210,18 +977,17 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
         onTogglePerk={togglePerkUnlocked}
         onClose={() => setPerksPopupCharacter(null)}
         backendBase={backendBase}
-        perksLabel={t?.perksButton || 'Perks'}
-        dict={dict}
+        perksLabel={t.perksButton}
       />
 
       <SkipOnboardingModal
         isOpen={isSkipModalOpen}
         onCancel={() => setIsSkipModalOpen(false)}
         onConfirm={handleSkipConfirm}
-        dict={dict}
       />
     </div>
   );
 };
 
-export default CharacterOnboardingWizard;
+export { resolveOnboardingView, isDefaultUnlockedPerk, groupCharactersByChapter, normalizeChapterKey } from "./CharacterOnboardingWizardParts";
+export type { OnboardingCharacter, OnboardingPerk, ChapterGroup } from "./CharacterOnboardingWizardParts";

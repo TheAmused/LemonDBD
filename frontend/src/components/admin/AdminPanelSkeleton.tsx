@@ -3,22 +3,23 @@
 
 import React from 'react';
 import type { Dictionary } from '@/locales/types';
-import { DbdSpinner } from '@/components/DbdSpinner';
+import { DbdSpinner } from '@/components/common/DbdSpinner';
+import { useDictionary } from "@/context/DictionaryContext";
 
 interface AdminPanelSkeletonProps {
-  dict?: Dictionary | null;
   className?: string;
 }
 
-export const AdminPanelSkeleton: React.FC<AdminPanelSkeletonProps> = ({ dict, className = '' }) => {
-  const loadingLabel = dict?.admin?.verifyingAdminAccess || dict?.admin?.loading || '';
+export const AdminPanelSkeleton: React.FC<AdminPanelSkeletonProps> = ({ className = '' }) => {
+  const dict = useDictionary();
+  const loadingLabel = dict.admin.verifyingAdminAccess;
 
   return (
     <div
       role="status"
       aria-busy="true"
       aria-label={loadingLabel}
-      className={`min-h-screen bg-bg-primary text-text-primary flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-200 ${className}`}
+      className={`min-h-screen text-text-primary flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-200 ${className}`}
     >
       <div
         aria-hidden="true"
@@ -32,12 +33,8 @@ export const AdminPanelSkeleton: React.FC<AdminPanelSkeletonProps> = ({ dict, cl
           accent="blood"
           needleSpeed={1.3}
           label={loadingLabel}
-          dict={dict}
         />
       </main>
     </div>
   );
 };
-
-export default AdminPanelSkeleton;
-

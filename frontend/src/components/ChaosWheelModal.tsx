@@ -2,12 +2,18 @@
 // frontend/src/components/ChaosWheelModal.tsx
 
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { Skull, Sparkles, X, Check, Trash2 } from 'lucide-react';
+import { Skull, Sparkles, Check, Trash2 } from 'lucide-react';
 import type { Dictionary } from '@/locales/types';
 import type { ChaosMutator } from '@/types/chaos';
+import { lookup, type ChaosMutatorCopy } from '@/utils/lookup';
 import { CHAOS_MUTATORS, getChaosMutatorsForRole } from '@/constants/chaosMutators';
 import { DbdButton, DbdButtonRole } from './generator/shared/DbdButton';
 import { getLocalizedMutator } from './generator/lib/chaosMutatorLocalization';
+
+import { tip } from '@/components/common/Tooltip';
+import { Modal } from '@/components/common/Modal';
+import { canvasEmojiFont, canvasFont } from '@/utils/canvasFont';
+import { useDictionary } from "@/context/DictionaryContext";
 
 export { CHAOS_MUTATORS };
 export type { ChaosMutator };
@@ -19,7 +25,6 @@ interface ChaosWheelModalProps {
   onSelectMutator: (mutator: ChaosMutator) => void;
   onClearMutator?: () => void;
   activeMutator: ChaosMutator | null;
-  dict?: Dictionary;
 }
 
 export function getMutatorDisplayLines(
@@ -30,7 +35,7 @@ export function getMutatorDisplayLines(
   const id = typeof m === 'string' ? m : m.id;
 
   // Check localized dictionary if available
-  const localized = (dict?.generator as any)?.chaosMutators?.[id];
+  const localized = lookup<ChaosMutatorCopy>(dict?.generator.chaosMutators, id);
   if (localized?.line1) {
     return [localized.line1, localized.line2 || ''];
   }
@@ -59,16 +64,15 @@ export function getMutatorDisplayLines(
 }
 
 
-export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({
-  isOpen,
-  role,
-  onClose,
-  onSelectMutator,
-  onClearMutator,
-  activeMutator,
-  dict,
-}) => {
+export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({ isOpen, role, onClose, onSelectMutator, onClearMutator, activeMutator }) => {
+  const dict = useDictionary();
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  // Modal mounts its content one render after `isOpen` flips, so the first draw must wait for the canvas.
+  const [canvasEl, setCanvasEl] = useState<HTMLCanvasElement | null>(null);
+  const setCanvas = useCallback((el: HTMLCanvasElement | null) => {
+    canvasRef.current = el;
+    setCanvasEl(el);
+  }, []);
   const animFrameRef = useRef<number | null>(null);
   const angleRef = useRef<number>(0);
 
@@ -136,13 +140,13 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({
 
       ctx.save();
       // Draw icon - Always faces the user upright (no rotation)
-      ctx.font = `${iconFontSize}px "Apple Color Emoji", "Segoe UI Emoji", sans-serif`;
+      ctx.font = canvasEmojiFont(iconFontSize);
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       ctx.fillText(m.icon, cx, cy - 18 * scale);
 
       // Draw label lines - Always faces the user upright (no rotation)
-      ctx.font = `bold ${textFontSize}px system-ui, -apple-system, sans-serif`;
+      ctx.font = canvasFont('bold', textFontSize);
       ctx.fillStyle = '#f8fafc';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
@@ -170,12 +174,12 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({
     ctx.stroke();
 
     ctx.fillStyle = '#f59e0b';
-    ctx.font = `900 ${Math.round(13 * scale)}px system-ui, -apple-system, sans-serif`;
+    ctx.font = canvasFont('900', Math.round(13 * scale));
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillText('CHAOS', center, center - 7 * scale);
     ctx.fillStyle = '#a1a1aa';
-    ctx.font = `800 ${Math.round(10 * scale)}px system-ui, -apple-system, sans-serif`;
+    ctx.font = canvasFont('800', Math.round(10 * scale));
     ctx.fillText('WHEEL', center, center + 9 * scale);
 
     // Top pointer
@@ -195,7 +199,7 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({
     if (isOpen) {
       drawWheel();
     }
-  }, [isOpen, drawWheel]);
+  }, [isOpen, drawWheel, canvasEl]);
 
   useEffect(() => {
     return () => {
@@ -204,17 +208,6 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({
       }
     };
   }, []);
-
-  useEffect(() => {
-    if (!isOpen) return;
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        onClose();
-      }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, onClose]);
 
   const spinChaosWheel = () => {
     if (isSpinning) return;
@@ -269,139 +262,118 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({
     ? getLocalizedMutator(activeMutator, dict) : null;
 
   return (
-    <div
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="chaos-modal-title"
-      aria-describedby="chaos-modal-desc"
-      onClick={onClose}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-bg-primary/70 p-3 sm:p-4 backdrop-blur-md cursor-pointer animate-in fade-in duration-200 select-none lemon-modal-overlay-sidebar-aware"
+    <Modal
+      isOpen
+      onClose={onClose}
+      variant="dialog"
+      size="xl"
+      icon={<Skull className="h-5 w-5 animate-pulse" />}
+      title={dict.generator.chaosWheelTitle}
+      closeButtonAriaLabel={dict.modal.close}
+      ariaLabel={dict.generator.chaosWheelTitle}
+      ariaDescribedBy="chaos-modal-desc"
+      padded
     >
-      <div
-        onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-[480px] xl:max-w-2xl 2xl:max-w-[700px] rounded-3xl border border-border-color bg-bg-surface p-4 sm:p-6 xl:p-7 shadow-2xl text-text-primary cursor-default animate-in zoom-in-95 duration-200 transition-all max-h-[94vh] overflow-y-auto"
+    {dict.generator.chaosWheelDesc && (
+      <p id="chaos-modal-desc" className="max-w-lg mx-auto text-center type-strong-fluid text-text-secondary">
+        {dict.generator.chaosWheelDesc}
+      </p>
+    )}
+
+    <div className="relative flex flex-col items-center justify-center my-2 sm:my-4">
+      <canvas
+        ref={setCanvas}
+        width={800}
+        height={800}
+        aria-label={dict.generator.chaosWheelTitle}
+        className="w-[260px] h-[260px] xs:w-[290px] xs:h-[290px] sm:w-[330px] sm:h-[330px] md:w-[370px] md:h-[370px] lg:w-[370px] lg:h-[370px] xl:w-[480px] xl:h-[480px] 2xl:w-[540px] 2xl:h-[540px] max-w-full aspect-square transition-all duration-300"
+      />
+
+      <DbdButton
+        role={role}
+        size="md"
+        onClick={spinChaosWheel}
+        disabled={isSpinning}
+        className="mt-3 sm:mt-4 xl:mt-5"
+        icon={<Sparkles className={`h-4 w-4 xl:h-5 xl:w-5 ${isSpinning ? 'animate-spin' : ''}`} />}
       >
-        <button
-          type="button"
-          onClick={onClose}
-          aria-label={dict?.modal?.close}
-          className="absolute right-3 top-3 sm:right-4 sm:top-4 rounded-xl p-2 text-text-muted hover:bg-bg-elevated hover:text-text-primary transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red"
-        >
-          <X className="h-5 w-5" aria-hidden="true" />
-        </button>
-
-        <div className="flex items-center gap-3 mb-3 sm:mb-4 pr-8">
-          <div className="flex h-9 w-9 sm:h-10 sm:w-10 xl:h-11 xl:w-11 shrink-0 items-center justify-center rounded-xl bg-bg-elevated border border-border-color text-text-secondary shadow-xs" aria-hidden="true">
-            <Skull className="h-5 w-5 sm:h-6 sm:w-6 xl:h-7 xl:w-7 animate-pulse" />
-          </div>
-          {dict?.generator?.chaosWheelTitle && (
-            <h2 id="chaos-modal-title" className="text-base sm:text-lg xl:text-xl font-black tracking-wide text-text-primary">
-              {dict.generator.chaosWheelTitle}
-            </h2>
-          )}
-        </div>
-
-        {dict?.generator?.chaosWheelDesc && (
-          <p id="chaos-modal-desc" className="max-w-lg mx-auto text-center text-xs sm:text-sm font-bold text-text-secondary">
-            {dict.generator.chaosWheelDesc}
-          </p>
-        )}
-
-        <div className="relative flex flex-col items-center justify-center my-2 sm:my-4">
-          <canvas
-            ref={canvasRef}
-            width={800}
-            height={800}
-            aria-label={dict?.generator?.chaosWheelTitle}
-            className="w-[260px] h-[260px] xs:w-[290px] xs:h-[290px] sm:w-[330px] sm:h-[330px] md:w-[370px] md:h-[370px] lg:w-[370px] lg:h-[370px] xl:w-[480px] xl:h-[480px] 2xl:w-[540px] 2xl:h-[540px] max-w-full aspect-square transition-all duration-300"
-          />
-
-          <DbdButton
-            role={role}
-            size="md"
-            onClick={spinChaosWheel}
-            disabled={isSpinning}
-            className="mt-3 sm:mt-4 xl:mt-5"
-            icon={<Sparkles className={`h-4 w-4 xl:h-5 xl:w-5 ${isSpinning ? 'animate-spin' : ''}`} />}
-          >
-            {isSpinning
-              ? dict?.generator?.spinningCurses
-              : dict?.generator?.spinChaosWheel}
-          </DbdButton>
-        </div>
-
-        {/* --- Spin result card --- */}
-        {wonMutator && locWon && (
-          <div
-            aria-live="polite"
-            className={`mt-3 sm:mt-4 xl:mt-5 rounded-2xl border p-3 sm:p-4 xl:p-5 backdrop-blur-sm transition-all shadow-xs ${wonMutator.borderColor || 'border-border-color'} bg-bg-primary`}
-          >
-            {/* Result header row -- the Clear button sits at the top-right,
-                next to the curse's icon/title, instead of a separate action
-                row at the bottom of the card. The X/backdrop already close
-                the modal, so clearing the curse is the only action needed
-                here. */}
-            <div className="flex items-start justify-between gap-2">
-              <div className="flex items-center gap-2.5 sm:gap-3.5 min-w-0">
-                <span className="text-xl sm:text-2xl xl:text-3xl shrink-0" aria-hidden="true">
-                  {wonMutator.icon}
-                </span>
-                <div className="min-w-0">
-                  <h3 className={`text-xs sm:text-sm xl:text-base font-extrabold truncate ${wonMutator.textColor}`}>
-                    {locWon.name}
-                  </h3>
-                  <p className="text-xs sm:text-sm text-text-secondary mt-0.5 line-clamp-3">
-                    {locWon.description}
-                  </p>
-                </div>
-              </div>
-
-              {/* Clear */}
-              <button
-                type="button"
-                onClick={handleClearCurse}
-                title={dict?.generator?.clearMutatorTooltip || 'Remove active curse'}
-                className="flex items-center gap-1 text-xs sm:text-sm text-accent-red hover:text-accent-red-hover font-bold px-2 py-1.5 rounded-lg hover:bg-accent-red/10 transition-colors cursor-pointer shrink-0"
-              >
-                <Trash2 className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                <span className="hidden xs:inline">{dict?.generator?.clearMutator || 'Clear'}</span>
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* Previously active mutator (shown when modal opened without spinning) */}
-        {!wonMutator && activeMutator && locActive && (
-          <div className="mt-3 sm:mt-4 xl:mt-5 rounded-2xl border border-border-color p-3 sm:p-4 bg-bg-primary">
-            <div className="flex items-center justify-between gap-2">
-              <div className="flex items-center gap-2.5 min-w-0">
-                <span className="text-xl sm:text-2xl shrink-0">{activeMutator.icon}</span>
-                <div className="min-w-0">
-                  <h3 className={`text-xs sm:text-sm font-extrabold truncate ${activeMutator.textColor}`}>
-                    {locActive.name}
-                  </h3>
-                  <p className="text-xs text-text-secondary mt-0.5 line-clamp-2">{locActive.description}</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-2 shrink-0">
-                <button
-                  type="button"
-                  onClick={handleClearCurse}
-                  title={dict?.generator?.clearMutatorTooltip || 'Remove active curse'}
-                  className="flex items-center gap-1 text-xs sm:text-sm text-accent-red hover:text-accent-red-hover font-bold px-2 py-1 rounded-lg hover:bg-accent-red/10 transition-colors cursor-pointer"
-                >
-                  <Trash2 className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                  <span className="hidden xs:inline">{dict?.generator?.clearMutator || 'Clear'}</span>
-                </button>
-                <div className="flex items-center gap-1 text-accent-green font-bold text-xs sm:text-sm bg-accent-green/10 px-2.5 py-1 rounded-lg border border-accent-green/30">
-                  <Check className="h-3.5 w-3.5 sm:h-4 sm:w-4" aria-hidden="true" />
-                  <span>{dict?.smashOrPass?.active || 'Active'}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
+        {isSpinning
+          ? dict.generator.spinningCurses
+          : dict.generator.spinChaosWheel}
+      </DbdButton>
     </div>
+
+    {/* --- Spin result card --- */}
+    {wonMutator && locWon && (
+      <div
+        aria-live="polite"
+        className={`mt-3 sm:mt-4 xl:mt-5 rounded-2xl border p-3 sm:p-4 xl:p-5 backdrop-blur-sm transition-all shadow-xs ${wonMutator.borderColor || 'border-border-color'} bg-bg-primary`}
+      >
+        {/* Result header row -- the Clear button sits at the top-right,
+            next to the curse's icon/title, instead of a separate action
+            row at the bottom of the card. The X/backdrop already close
+            the modal, so clearing the curse is the only action needed
+            here. */}
+        <div className="flex items-start justify-between gap-2">
+          <div className="flex items-center gap-2.5 sm:gap-3.5 min-w-0">
+            <span className="text-xl sm:text-2xl xl:text-3xl shrink-0" aria-hidden="true">
+              {wonMutator.icon}
+            </span>
+            <div className="min-w-0">
+              <h3 className={`text-xs sm:text-sm xl:text-base font-extrabold truncate ${wonMutator.textColor}`}>
+                {locWon.name}
+              </h3>
+              <p className="text-xs sm:text-sm text-text-secondary mt-0.5 line-clamp-3">
+                {locWon.description}
+              </p>
+            </div>
+          </div>
+
+          {/* Clear */}
+          <button
+            type="button"
+            onClick={handleClearCurse}
+            {...tip(dict.generator.clearMutatorTooltip, undefined, 'action')} aria-label={dict.generator.clearMutatorTooltip}
+            className="flex items-center gap-1 type-strong-fluid text-accent-red hover:text-accent-red-hover px-2 py-1.5 rounded-lg hover:bg-accent-red/10 transition-colors cursor-pointer shrink-0"
+          >
+            <Trash2 className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+            <span className="hidden xs:inline">{dict.generator.clearMutator}</span>
+          </button>
+        </div>
+      </div>
+    )}
+
+    {/* Previously active mutator (shown when modal opened without spinning) */}
+    {!wonMutator && activeMutator && locActive && (
+      <div className="mt-3 sm:mt-4 xl:mt-5 rounded-2xl border border-border-color p-3 sm:p-4 bg-bg-primary">
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2.5 min-w-0">
+            <span className="text-xl sm:text-2xl shrink-0">{activeMutator.icon}</span>
+            <div className="min-w-0">
+              <h3 className={`text-xs sm:text-sm font-extrabold truncate ${activeMutator.textColor}`}>
+                {locActive.name}
+              </h3>
+              <p className="text-xs text-text-secondary mt-0.5 line-clamp-2">{locActive.description}</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2 shrink-0">
+            <button
+              type="button"
+              onClick={handleClearCurse}
+              {...tip(dict.generator.clearMutatorTooltip, undefined, 'action')} aria-label={dict.generator.clearMutatorTooltip}
+              className="flex items-center gap-1 type-strong-fluid text-accent-red hover:text-accent-red-hover px-2 py-1 rounded-lg hover:bg-accent-red/10 transition-colors cursor-pointer"
+            >
+              <Trash2 className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+              <span className="hidden xs:inline">{dict.generator.clearMutator}</span>
+            </button>
+            <div className="flex items-center gap-1 text-accent-green type-strong-fluid bg-accent-green/10 px-2.5 py-1 rounded-lg border border-accent-green/30">
+              <Check className="h-3.5 w-3.5 sm:h-4 sm:w-4" aria-hidden="true" />
+              <span>{dict.smashOrPass.active}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    )}
+    </Modal>
   );
 };

@@ -1,11 +1,11 @@
 # backend/app/services/db/run_family_export.py
-from datetime import datetime
 from typing import Any
 from sqlalchemy import select, delete
 from app.core.extensions import db
 from app.core.json_provider import safe_json_loads
 from app.models.base import column_dict
 from app.models.user import User
+from app.services.db._common import parse_datetime
 
 _DATETIME_FIELDS = {"timestamp", "created_at", "updated_at", "snapshot_at"}
 
@@ -30,15 +30,6 @@ _LEGACY_JSON_COLUMNS = {
     "checkpoint_unlocked_perk_names_json": "checkpoint_unlocked_perk_names",
     "pages_json": "pages",
 }
-
-
-def _parse_datetime(val: str | None) -> datetime | None:
-    if not val:
-        return None
-    try:
-        return datetime.fromisoformat(val.replace("Z", "+00:00"))
-    except Exception:
-        return None
 
 
 def _upgrade_legacy_keys(row: dict[str, Any]) -> dict[str, Any]:
@@ -124,7 +115,7 @@ def import_run_family(
         for k, v in row.items():
             if k in skip_fields or k == "id" or not hasattr(run_obj, k):
                 continue
-            setattr(run_obj, k, _parse_datetime(v) if k in _DATETIME_FIELDS else v)
+            setattr(run_obj, k, parse_datetime(v) if k in _DATETIME_FIELDS else v)
 
         db.session.flush()
         if is_new:
@@ -138,7 +129,7 @@ def import_run_family(
             for k, v in log_row.items():
                 if k == "id" or not hasattr(log_model, k):
                     continue
-                log_kwargs[k] = _parse_datetime(v) if k in _DATETIME_FIELDS else v
+                log_kwargs[k] = parse_datetime(v) if k in _DATETIME_FIELDS else v
             log_kwargs[run_fk_column] = run_obj.id
             db.session.add(log_model(**log_kwargs))
 

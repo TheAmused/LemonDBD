@@ -8,6 +8,9 @@ import { avatarUrlForCharacter } from '@/utils/staticUrl';
 import { useCharacterDisplayName } from '@/context/DisplayNamesContext';
 import { KillerIcon } from '@/components/icons/DbdIcons';
 
+import { tip } from '@/components/common/Tooltip';
+import { useDictionary } from "@/context/DictionaryContext";
+
 export const avatarUrlFor = (name: string) => avatarUrlForCharacter(name, 'killers');
 
 const KillerTile: React.FC<{
@@ -32,7 +35,7 @@ const KillerTile: React.FC<{
       type="button"
       onClick={() => onSelect(name)}
       disabled={disabled || isCompleted}
-      title={`${displayName}${isCompleted ? ' (Cleared)' : ''}`}
+      {...tip(`${displayName}${isCompleted ? ' (Cleared)' : ''}`, undefined, 'character')} aria-label={`${displayName}${isCompleted ? ' (Cleared)' : ''}`}
       className={`relative flex flex-col items-center gap-1.5 rounded-lg border p-1.5 transition-all cursor-pointer disabled:cursor-not-allowed ${
         isCompleted ? '' : 'disabled:opacity-40'
       } ${cardBorder}`}
@@ -54,7 +57,7 @@ const KillerTile: React.FC<{
           <KillerIcon className="w-6 h-6 text-text-muted" />
         )}
       </div>
-      <span className="text-[11px] font-medium text-center text-text-secondary truncate w-full">
+      <span className="text-mini leading-tight font-medium text-center text-text-secondary line-clamp-2 min-h-[2.4em] w-full">
         {displayName}
       </span>
     </button>
@@ -69,25 +72,24 @@ export interface KillerPickerGridProps {
   disabled?: boolean;
   loading?: boolean;
   center?: boolean;
-  dict?: Dictionary;
 }
 
 export const KillerPickerGrid: React.FC<KillerPickerGridProps> = ({
-  killers,
-  completedKillers,
-  selectedKillerId,
-  onSelect,
-  disabled = false,
-  loading = false,
-  center = false,
-  dict,
-}) => {
+      killers,
+      completedKillers,
+      selectedKillerId,
+      onSelect,
+      disabled = false,
+      loading = false,
+      center = false,
+    }) => {
+  const dict = useDictionary();
   const displayName = useCharacterDisplayName();
 
   if (loading) {
     return (
       <p className="text-xs text-text-secondary">
-        {dict?.streaks?.loadingKillers || 'Loading your killers...'}
+        {dict.streaks.loadingKillers}
       </p>
     );
   }
@@ -115,7 +117,7 @@ export const KillerPickerGrid: React.FC<KillerPickerGridProps> = ({
   }
 
   return (
-    <div className="grid grid-cols-5 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-2">
+    <div className="grid grid-cols-5 sm:grid-cols-6 md:grid-cols-[repeat(13,minmax(0,1fr))] gap-2">
       {tiles}
     </div>
   );

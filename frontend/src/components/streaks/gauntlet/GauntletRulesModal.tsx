@@ -2,6 +2,7 @@
 // frontend/src/components/streaks/gauntlet/GauntletRulesModal.tsx
 
 import React from 'react';
+import { Lock } from 'lucide-react';
 import type { Dictionary } from '@/locales/types';
 import type { GauntletGameMode, Role } from '@/types/gauntletStreak';
 import { RulesModalShell } from '../RulesModalShell';
@@ -44,7 +45,7 @@ const SURVIVOR_TIERS: TierDefinition[] = [
     level: 0,
     nameKey: 'tierWarmUp',
     defaultName: 'The Warm Up',
-    streakRange: '0 - 9',
+    streakRange: '1 - 10',
     perkLimit: 4,
     badgeColor: 'bg-accent-green/20 text-accent-green border-accent-green/30',
   },
@@ -52,7 +53,7 @@ const SURVIVOR_TIERS: TierDefinition[] = [
     level: 1,
     nameKey: 'tierThinning',
     defaultName: 'The Thinning',
-    streakRange: '10 - 19',
+    streakRange: '11 - 20',
     perkLimit: 3,
     badgeColor: 'bg-accent-amber/20 text-accent-amber border-accent-amber/30',
   },
@@ -60,7 +61,7 @@ const SURVIVOR_TIERS: TierDefinition[] = [
     level: 2,
     nameKey: 'tierStruggle',
     defaultName: 'The Struggle',
-    streakRange: '20 - 29',
+    streakRange: '21 - 30',
     perkLimit: 2,
     badgeColor: 'bg-accent-amber/20 text-accent-amber border-accent-amber/30',
   },
@@ -68,7 +69,7 @@ const SURVIVOR_TIERS: TierDefinition[] = [
     level: 3,
     nameKey: 'tierHardcore',
     defaultName: 'The Hardcore',
-    streakRange: '30 - 39',
+    streakRange: '31 - 40',
     perkLimit: 1,
     badgeColor: 'bg-accent-amber/20 text-accent-amber border-accent-amber/30',
   },
@@ -76,21 +77,21 @@ const SURVIVOR_TIERS: TierDefinition[] = [
     level: 4,
     nameKey: 'tierLegend',
     defaultName: 'The Legend',
-    streakRange: '40+',
+    streakRange: '41+',
     perkLimit: 0,
     badgeColor: 'bg-accent-red/20 text-accent-red border-accent-red/30',
   },
 ];
 
 // Duo and squad step a tier every 6 wins.
-const TEAM_STREAK_RANGES = ['0 - 5', '6 - 11', '12 - 17', '18+'];
+const TEAM_STREAK_RANGES = ['1 - 6', '7 - 12', '13 - 18', '19+'];
 
 const KILLER_TIERS: TierDefinition[] = [
   {
     level: 0,
     nameKey: 'tierBloodbath',
     defaultName: 'The Bloodbath',
-    streakRange: '0 - 9',
+    streakRange: '1 - 10',
     perkLimit: 3,
     badgeColor: 'bg-accent-green/20 text-accent-green border-accent-green/30',
   },
@@ -98,7 +99,7 @@ const KILLER_TIERS: TierDefinition[] = [
     level: 1,
     nameKey: 'tierObsession',
     defaultName: 'The Obsession',
-    streakRange: '10 - 19',
+    streakRange: '11 - 20',
     perkLimit: 2,
     badgeColor: 'bg-accent-amber/20 text-accent-amber border-accent-amber/30',
   },
@@ -106,7 +107,7 @@ const KILLER_TIERS: TierDefinition[] = [
     level: 2,
     nameKey: 'tierExecutioner',
     defaultName: 'The Executioner',
-    streakRange: '20 - 29',
+    streakRange: '21 - 30',
     perkLimit: 1,
     badgeColor: 'bg-accent-amber/20 text-accent-amber border-accent-amber/30',
   },
@@ -114,7 +115,7 @@ const KILLER_TIERS: TierDefinition[] = [
     level: 3,
     nameKey: 'tierEntity',
     defaultName: 'The Entity',
-    streakRange: '30+',
+    streakRange: '31+',
     perkLimit: 0,
     badgeColor: 'bg-accent-red/20 text-accent-red border-accent-red/30',
   },
@@ -268,7 +269,10 @@ export const GauntletRulesModal: React.FC<GauntletRulesModalProps> = ({ isOpen, 
                 </div>
 
                 <div className="flex items-center justify-between sm:justify-end gap-4 w-full sm:w-auto">
-                  <span className="type-strong text-text-secondary whitespace-nowrap">{perkLimitText}</span>
+                  <div className="flex items-center gap-1.5 type-strong text-text-secondary whitespace-nowrap">
+                    <Lock className="w-3.5 h-3.5" aria-hidden="true" />
+                    <span>{perkLimitText}</span>
+                  </div>
                 </div>
               </div>
             );

@@ -156,4 +156,5 @@ export default {
   deleteAccountWrongPassword: "パスワードが正しくありません。",
   deleteAccountFailed: "アカウントを削除できませんでした。もう一度お試しください。",
   deleteAccountLastAdmin: "唯一の管理者アカウントは削除できません。",
+  loadingProfileSub: "プレイヤーの所持品とパーク習熟度を取得中",
 } as const;

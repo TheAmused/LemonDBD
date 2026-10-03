@@ -68,4 +68,5 @@ export default {
   layoutOutdoor: 'Outdoor',
   layoutIndoor: 'Indoor',
   layoutHybrid: 'Hybrid',
+  loadingTacticalMapsSub: 'Mapping tile variants, loops, and spawn coordinates',
 } as const;

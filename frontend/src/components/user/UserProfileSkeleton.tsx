@@ -29,7 +29,7 @@ export const UserProfileSkeleton: React.FC<UserProfileSkeletonProps> = ({ classN
           accent="blood"
           needleSpeed={1.3}
           label={loadingLabel}
-          sublabel="Retrieving player inventory and perk mastery"
+          sublabel={dict.user.loadingProfileSub}
         />
       </main>
     </div>

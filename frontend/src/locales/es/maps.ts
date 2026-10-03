@@ -68,4 +68,5 @@ export default {
   layoutOutdoor: 'Exterior',
   layoutIndoor: 'Interior',
   layoutHybrid: 'Híbrido',
+  loadingTacticalMapsSub: 'Cartografiando variantes de casillas, bucles y coordenadas de aparición',
 } as const;

@@ -274,4 +274,6 @@ export default {
   historyCheckpointRule: "Un punto de control guarda tu progreso, así que una derrota retrocede hasta tu último punto de control en lugar de a cero.",
   pageStreakKillWinCondition: "Victoria = 3 sacrificios o más.",
   runFreezeNotice: "Tu intento se congela. Los nuevos desbloqueos se unen tras tu próximo reinicio, derrota a cero, o finalización.",
+  loadingTrialStreaks: 'Sincronizando rachas de pruebas...',
+  loadingTrialStreaksSub: 'Validando récords de gauntlet y métricas de victoria',
 } as const;

@@ -28,7 +28,7 @@ export const CharacterAutocomplete: React.FC<CharacterAutocompleteProps> = ({
   targetType = 'character',
   onSelect,
   disabled = false,
-  placeholder = 'Search item...',
+  placeholder,
   excludeIds = [],
   excludeKeys = [],
   autoFocus = false,
@@ -230,7 +230,7 @@ export const CharacterAutocomplete: React.FC<CharacterAutocompleteProps> = ({
           }}
           onKeyDown={handleKeyDown}
           disabled={disabled}
-          placeholder={placeholder}
+          placeholder={placeholder ?? dict.minigames.searchItemPlaceholder}
           autoFocus={autoFocus}
           className="bg-bg-surface pl-11 pr-10 shadow-lg"
         />

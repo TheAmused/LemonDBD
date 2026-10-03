@@ -4,6 +4,7 @@
 import React from 'react';
 import { LemonIcon } from '@/components/LemonIcon';
 import type { Dictionary } from '@/locales/types';
+import { resolveDictionaryPath, type DictionaryPath } from '@/utils/dictionaryPath';
 import { useDictionary } from "@/context/DictionaryContext";
 
 export type DbdSpinnerSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'responsive' | number;
@@ -32,6 +33,9 @@ export interface DbdSpinnerProps {
   layout?: DbdSpinnerLayout;
   label?: string;
   sublabel?: string;
+  /** Dictionary keys for server components (loading.tsx) that can't read the dictionary themselves. */
+  labelKey?: DictionaryPath;
+  sublabelKey?: DictionaryPath;
   accent?: DbdSpinnerAccent;
   customColors?: DbdSpinnerCustomColors;
   className?: string;
@@ -53,8 +57,10 @@ const SIZE_MAP: Record<'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl', number> = {
 export const DbdSpinner: React.FC<DbdSpinnerProps> = ({
       size = 'md',
       layout = 'inline',
-      label,
-      sublabel,
+      label: labelProp,
+      sublabel: sublabelProp,
+      labelKey,
+      sublabelKey,
       accent = 'crimson',
       customColors,
       className = '',
@@ -76,6 +82,8 @@ export const DbdSpinner: React.FC<DbdSpinnerProps> = ({
     dimension = SIZE_MAP[size] || SIZE_MAP.md;
   }
 
+  const label = labelProp ?? resolveDictionaryPath(dict, labelKey);
+  const sublabel = sublabelProp ?? resolveDictionaryPath(dict, sublabelKey);
   const resolvedLabel =
     label ||
     ariaLabel ||

@@ -18,6 +18,7 @@
     "check:styles": "tsx scripts/check-global-styles.ts",
     "check:styles:strict": "tsx scripts/check-global-styles.ts --strict",
     "check:built": "tsx scripts/check-built-output.ts",
+    "check:rendered": "tsx scripts/check-rendered.ts",
     "postbuild": "npm run check:built",
     "test:guards": "tsx --test src/__tests__/unit/backgroundEffects.test.ts src/__tests__/unit/i18nArchitecture.test.ts src/__tests__/unit/i18nHygiene.test.ts src/__tests__/unit/codeQualityGuards.test.ts src/__tests__/unit/structureGuards.test.ts src/__tests__/unit/uiGuards.test.ts",
     "baselines:update": "tsx scripts/update-baselines.ts",

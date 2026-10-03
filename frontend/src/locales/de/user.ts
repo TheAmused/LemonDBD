@@ -156,4 +156,5 @@ export default {
   deleteAccountWrongPassword: "Falsches Passwort.",
   deleteAccountFailed: "Das Konto konnte nicht gelöscht werden. Bitte versuche es erneut.",
   deleteAccountLastAdmin: "Das einzige Administratorkonto kann nicht gelöscht werden.",
+  loadingProfileSub: "Spielerinventar und Perk-Meisterschaft werden abgerufen",
 } as const;

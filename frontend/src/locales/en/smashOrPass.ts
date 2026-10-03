@@ -544,4 +544,6 @@ export default {
     telegramNotice: 'Telegram opened! Message text copied to clipboard.',
   },
   communityConsensus: 'Community Consensus',
+  loadingArenaSub: 'Summoning community rating candidates',
+  loadingCreator: 'Loading roster creator...',
 } as const;

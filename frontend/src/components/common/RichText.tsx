@@ -34,6 +34,7 @@
 
 import React from 'react';
 import { cn } from '@/utils/cn';
+import { RichTextNoticeLabel } from './RichTextNoticeLabel';
 
 /* ------------------------------------------------------------------ *
  * Style registry - the single place class names for text live.
@@ -234,7 +235,7 @@ function tokenClasses(classAttr: string | undefined): string {
 interface Ctx {
   v: RichVariant;
   compact: boolean;
-  noticeLabel: string;
+  noticeLabel?: string;
 }
 
 /** Inline markdown inside one text run. */
@@ -377,7 +378,7 @@ function renderParagraph(el: ElNode, ctx: Ctx, key: string): React.ReactNode {
   if (el.attrs.class?.split(/\s+/).includes('notice')) {
     return (
       <div key={key} className={v.notice}>
-        <span className={v.noticeLabel}>{ctx.noticeLabel}</span>
+        <RichTextNoticeLabel className={v.noticeLabel} label={ctx.noticeLabel} />
         <span className="leading-relaxed">{kids}</span>
       </div>
     );
@@ -422,7 +423,7 @@ function renderBlocks(nodes: Node[], ctx: Ctx, key: string): React.ReactNode[] {
       if (/^\s*!!\s+/.test(first)) {
         out.push(
           <div key={k} className={ctx.v.notice}>
-            <span className={ctx.v.noticeLabel}>{ctx.noticeLabel}</span>
+            <RichTextNoticeLabel className={ctx.v.noticeLabel} label={ctx.noticeLabel} />
             <span className="leading-relaxed">{renderInline(stripPrefix(para, /^\s*!!\s+/), ctx, k)}</span>
           </div>
         );
@@ -484,7 +485,7 @@ export const RichText: React.FC<RichTextProps> = ({
   block = false,
   variant = 'ui',
   compact = false,
-  noticeLabel = 'Notice',
+  noticeLabel,
 }) => {
   if (!text) return null;
 

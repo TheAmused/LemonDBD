@@ -198,4 +198,5 @@ export default {
     days: "日",
   },
   toggleSuggestions: '候補の表示/非表示',
+  searchItemPlaceholder: 'アイテムを検索...',
 };

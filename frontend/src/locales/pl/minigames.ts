@@ -198,4 +198,5 @@ export default {
     days: "Dni",
   },
   toggleSuggestions: 'Pokaż lub ukryj podpowiedzi',
+  searchItemPlaceholder: 'Szukaj elementu...',
 };

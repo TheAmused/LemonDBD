@@ -90,3 +90,38 @@ describe('i18n hygiene: page metadata', () => {
     assert.deepEqual(bad, [], bad.join('\n'));
   });
 });
+
+describe('i18n hygiene: no English baked into components', () => {
+  // Props that carry user-visible words. `labelKey`, `className`, `aria-hidden` etc. don't match.
+  const TEXTY = /^(aria-label|aria-description|(\w*[Ll]abel|\w*[Pp]laceholder|\w*[Tt]itle|\w*[Tt]ext|\w*[Mm]essage|\w*[Dd]escription|\w*[Hh]int|\w*[Cc]aption|\w*[Hh]eading|\w*[Tt]ooltip|\w*[Pp]rompt))$/;
+  const hasWords = (s: string) => /[A-Za-z]{3}/.test(s);
+
+  it('loading.tsx and skeleton/fallback components pass no literal text props (use labelKey / the dictionary)', () => {
+    const bad = scanAst(
+      (n) => {
+        if (!ts.isJsxAttribute(n) || !TEXTY.test(n.name.getText())) return false;
+        const init = n.initializer;
+        if (!init) return false;
+        if (ts.isStringLiteral(init)) return hasWords(init.text);
+        return ts.isJsxExpression(init) && !!init.expression && ts.isStringLiteralLike(init.expression) && hasWords(init.expression.text);
+      },
+      (m) => !/(^|\/)(loading\.tsx|[A-Za-z]*(Skeleton|Fallback)[A-Za-z]*\.tsx)$/.test(m.file)
+    );
+    assert.deepEqual(bad, [], `Hardcoded English in a loading/skeleton file:\n${bad.join('\n')}`);
+  });
+
+  it('component props never default to an English string (`placeholder = \'Search...\'`); read the dictionary instead', () => {
+    const bad = scanAst(
+      (n) =>
+        (ts.isParameter(n) || ts.isBindingElement(n)) &&
+        !!n.initializer &&
+        ts.isStringLiteralLike(n.initializer) &&
+        hasWords(n.initializer.text) &&
+        TEXTY.test(n.name.getText()) &&
+        // component props only: a destructured object parameter
+        ts.isObjectBindingPattern(ts.isBindingElement(n) ? n.parent : n.parent) &&
+        /\.tsx$/.test(n.getSourceFile().fileName)
+    );
+    assert.deepEqual(bad, [], `English default prop values:\n${bad.join('\n')}`);
+  });
+});

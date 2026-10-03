@@ -1,4 +1,5 @@
 // frontend/src/components/user/PerkDiamondSlot.tsx
+import { useDictionary } from '@/context/DictionaryContext';
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { Plus, X, Sparkles } from 'lucide-react';
@@ -21,9 +22,12 @@ export const PerkDiamondSlot: React.FC<PerkDiamondSlotProps> = ({
   perk,
   onClick,
   onClear,
-  emptyLabel = 'Empty Slot',
-  clearLabel = 'Clear Perk',
+  emptyLabel: emptyLabelProp,
+  clearLabel: clearLabelProp,
 }) => {
+  const dict = useDictionary();
+  const emptyLabel = emptyLabelProp ?? dict.user.emptySlot;
+  const clearLabel = clearLabelProp ?? dict.user.clearPerk;
   const [imgError, setImgError] = useState(false);
 
   useEffect(() => {

@@ -544,4 +544,6 @@ export default {
     telegramNotice: 'Telegramを開きました！メッセージテキストがクリップボードにコピーされました。',
   },
   communityConsensus: 'コミュニティの総意',
+  loadingArenaSub: 'コミュニティ評価の候補を召喚中',
+  loadingCreator: 'リストクリエイターを読み込み中...',
 } as const;

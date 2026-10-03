@@ -68,4 +68,5 @@ export default {
   layoutOutdoor: '屋外',
   layoutIndoor: '屋内',
   layoutHybrid: 'ハイブリッド',
+  loadingTacticalMapsSub: 'タイルのバリエーション、ループ、スポーン座標をマッピング中',
 } as const;

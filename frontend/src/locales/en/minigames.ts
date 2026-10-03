@@ -194,4 +194,5 @@ export default {
     days: "Days",
   },
   toggleSuggestions: 'Show or hide suggestions',
+  searchItemPlaceholder: 'Search item...',
 };

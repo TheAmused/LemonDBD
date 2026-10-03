@@ -156,4 +156,5 @@ export default {
   deleteAccountWrongPassword: "Nieprawidłowe hasło.",
   deleteAccountFailed: "Nie udało się usunąć konta. Spróbuj ponownie.",
   deleteAccountLastAdmin: "Jedynego konta administratora nie można usunąć.",
+  loadingProfileSub: "Pobieranie ekwipunku gracza i mistrzostwa perków",
 } as const;

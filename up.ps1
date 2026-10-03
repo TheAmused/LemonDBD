@@ -101,7 +101,7 @@ if (-not $skipUpFlow) {
 
     # 1.1 Backend Unit Tests
     Write-Host ""
-    Write-Host "> [1/2] Running Backend Unit Tests (pytest)..." -ForegroundColor Yellow
+    Write-Host "> [1/3] Running Backend Unit Tests (pytest)..." -ForegroundColor Yellow
     $env:PYTHONPATH = "$PSScriptRoot\backend"
     & $pythonCmd -m pytest backend/tests/unit -v --tb=short
 
@@ -120,7 +120,7 @@ if (-not $skipUpFlow) {
     # runner that calls `npm run test:unit` gets the style check for free,
     # instead of every platform script needing its own separate step.)
     Write-Host ""
-    Write-Host "> [2/2] Running Frontend Unit Tests (npm run test:unit)..." -ForegroundColor Yellow
+    Write-Host "> [2/3] Running Frontend Unit Tests (npm run test:unit)..." -ForegroundColor Yellow
     Push-Location "$PSScriptRoot\frontend"
     try {
         npm run test:unit
@@ -134,6 +134,46 @@ if (-not $skipUpFlow) {
         Pop-Location
     }
     Write-Host "[PASS] Frontend Unit Tests Passed." -ForegroundColor Green
+
+    # 1.3 Frontend static checks (npm run check): hardcoded strings, global styles/typography
+    # and the architecture/i18n/quality guard suites. Fast, so it runs every time.
+    Write-Host ""
+    Write-Host "> [3/3] Running Frontend Checks (npm run check)..." -ForegroundColor Yellow
+    Push-Location "$PSScriptRoot\frontend"
+    try {
+        npm run check
+        if ($LASTEXITCODE -ne 0) {
+            Write-Host ""
+            Write-Host "[FAIL] Frontend checks did not pass!" -ForegroundColor Red
+            Write-Host "[STOP] Docker build and startup has been ABORTED." -ForegroundColor Red
+            exit 1
+        }
+    } finally {
+        Pop-Location
+    }
+    Write-Host "[PASS] Frontend Checks Passed." -ForegroundColor Green
+
+    # 1.4 Built-output check (npm run check:built): the dictionary must stay out of the HTML and
+    # every route must stay within its JS budget. It runs as `postbuild`, so it already runs inside
+    # the Docker image build in Gate 2 (a failure there stops the stack from starting). Strict mode
+    # additionally builds locally first so the failure shows up here, before any image work.
+    if ($Strict) {
+        Write-Host ""
+        Write-Host "> [Strict] Production build + built-output check (npm run build -> check:built)..." -ForegroundColor Yellow
+        Push-Location "$PSScriptRoot\frontend"
+        try {
+            npm run build
+            if ($LASTEXITCODE -ne 0) {
+                Write-Host ""
+                Write-Host "[FAIL] Frontend build or built-output check did not pass!" -ForegroundColor Red
+                Write-Host "[STOP] Docker build and startup has been ABORTED." -ForegroundColor Red
+                exit 1
+            }
+        } finally {
+            Pop-Location
+        }
+        Write-Host "[PASS] Built-output check passed." -ForegroundColor Green
+    }
 
 
     # ====================================================================
@@ -149,6 +189,7 @@ if (-not $skipUpFlow) {
         docker compose build --no-cache
         if ($LASTEXITCODE -ne 0) {
             Write-Host "[FAIL] Docker image build failed!" -ForegroundColor Red
+            Write-Host "       (the frontend image runs the built-output check as part of its build: see the log above)" -ForegroundColor Red
             exit 1
         }
         docker compose up -d --wait
@@ -211,7 +252,7 @@ if (-not $skipUpFlow) {
 
         # 3.1 Backend Live Tests (PostgreSQL Clone)
         Write-Host ""
-        Write-Host "> [1/2] Running Backend Live Tests (PostgreSQL Clone)..." -ForegroundColor Yellow
+        Write-Host "> [1/3] Running Backend Live Tests (PostgreSQL Clone)..." -ForegroundColor Yellow
         $env:POSTGRES_HOST = "127.0.0.1"
         $env:POSTGRES_PORT = "5432"
 
@@ -226,7 +267,7 @@ if (-not $skipUpFlow) {
 
         # 3.2 Frontend Live Tests
         Write-Host ""
-        Write-Host "> [2/2] Running Frontend Live Tests (Next.js)..." -ForegroundColor Yellow
+        Write-Host "> [2/3] Running Frontend Live Tests (Next.js)..." -ForegroundColor Yellow
         Push-Location "$PSScriptRoot\frontend"
         try {
             npm run test:live
@@ -239,6 +280,22 @@ if (-not $skipUpFlow) {
             Pop-Location
         }
         Write-Host "[PASS] Frontend live tests passed." -ForegroundColor Green
+
+        # 3.3 Rendered checks: real touch-target sizes + text contrast in all three themes
+        Write-Host ""
+        Write-Host "> [3/3] Rendered checks (touch targets + 3-theme contrast, needs Playwright chromium)..." -ForegroundColor Yellow
+        Push-Location "$PSScriptRoot\frontend"
+        try {
+            npm run check:rendered
+            if ($LASTEXITCODE -ne 0) {
+                Write-Host ""
+                Write-Host "[FAIL] Rendered checks failed! (first time: npx playwright install chromium)" -ForegroundColor Red
+                exit 1
+            }
+        } finally {
+            Pop-Location
+        }
+        Write-Host "[PASS] Rendered checks passed." -ForegroundColor Green
 
         Write-Host ""
         Write-Host "[SUCCESS] ALL UNIT & STRICT LIVE TESTS PASSED! System 100% verified." -ForegroundColor Green

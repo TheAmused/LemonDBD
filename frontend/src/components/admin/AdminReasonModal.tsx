@@ -18,7 +18,7 @@ export interface AdminReasonModalProps {
   onConfirm: (reason: string) => void;
 }
 
-export const AdminReasonModal: React.FC<AdminReasonModalProps> = ({ isOpen, title, subtitle, confirmLabel = 'Disable', onCancel, onConfirm }) => {
+export const AdminReasonModal: React.FC<AdminReasonModalProps> = ({ isOpen, title, subtitle, confirmLabel, onCancel, onConfirm }) => {
   const dict = useDictionary();
   const [reason, setReason] = useState('');
 
@@ -46,7 +46,7 @@ export const AdminReasonModal: React.FC<AdminReasonModalProps> = ({ isOpen, titl
             {dict.admin.cancel}
           </Button>
           <Button variant="primary" size="sm" onClick={() => onConfirm(reason.trim())} className="w-full sm:w-auto">
-            {confirmLabel}
+            {confirmLabel ?? dict.admin.disable}
           </Button>
         </>
       }

@@ -32,4 +32,5 @@ export default {
   loadingSWFPlanner: "Cargando Planificador SWF...",
   loadingQuests: "Cargando Misiones...",
   notice: "Aviso",
+  loadingPerksSub: 'Sincronizando las ventajas de supervivientes y asesinos',
 } as const;

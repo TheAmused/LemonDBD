@@ -252,8 +252,10 @@ const SlotLever: React.FC<{ down: boolean; disabled: boolean; onPull: () => void
   down,
   disabled,
   onPull,
-  label = 'Pull the lever',
+  label: labelProp,
 }) => {
+  const dict = useDictionary();
+  const label = labelProp ?? dict.streaks.pullTheLever;
   const panelRef = useRef<HTMLDivElement | null>(null);
   const rodRef = useRef<HTMLDivElement | null>(null);
   const ballRef = useRef<HTMLDivElement | null>(null);

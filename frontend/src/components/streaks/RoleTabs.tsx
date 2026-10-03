@@ -3,9 +3,9 @@
 import type { Dictionary } from '@/locales/types';
 
 import React, { useEffect } from 'react';
+import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Puzzle } from 'lucide-react';
-import { SegmentedControl, SegmentedControlOption } from '@/components/common/SegmentedControl';
 import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
 import { saveStreakRole, type StreakRole } from '@/utils/streakDifficultyPrefs';
 import { useDictionary } from "@/context/DictionaryContext";
@@ -16,7 +16,13 @@ interface RoleTabsProps {
 
 const ROLE_IDS: readonly StreakRole[] = ['survivor', 'killer', 'challenge'];
 
-const noop = () => {};
+interface RoleTabOption {
+  value: StreakRole;
+  href: string;
+  icon: React.ReactNode;
+  label: string;
+  activeClassName: string;
+}
 
 export const RoleTabs: React.FC<RoleTabsProps> = ({ locale }) => {
   const dict = useDictionary();
@@ -33,36 +39,52 @@ export const RoleTabs: React.FC<RoleTabsProps> = ({ locale }) => {
   const survivorLabel = dict.characterDetail.roleSurvivor;
   const killerLabel = dict.characterDetail.roleKiller;
 
-  const options: readonly SegmentedControlOption<StreakRole>[] = [
+  const options: readonly RoleTabOption[] = [
     {
       value: 'survivor',
       href: `/${locale}/streaks/survivor`,
       icon: <SurvivorIcon className="h-3.5 w-3.5" />,
       label: survivorLabel,
-      activeClassName: 'bg-accent-green text-text-inverted',
+      activeClassName: 'bg-accent-green border-accent-green text-text-inverted',
     },
     {
       value: 'killer',
       href: `/${locale}/streaks/killer`,
       icon: <KillerIcon className="h-3.5 w-3.5" />,
       label: killerLabel,
-      activeClassName: 'bg-accent-red text-text-inverted',
+      activeClassName: 'bg-accent-red border-accent-red text-text-inverted',
     },
     {
       value: 'challenge',
       href: `/${locale}/streaks/challenge`,
       icon: <Puzzle className="h-3.5 w-3.5" />,
       label: `${survivorLabel}/${killerLabel}`,
-      activeClassName: 'bg-accent-amber text-text-inverted',
+      activeClassName: 'bg-accent-amber border-accent-amber text-text-inverted',
     },
   ];
 
   return (
-    <SegmentedControl
-      ariaLabel={dict.streaks.streakRoleTabs}
-      value={activeRole}
-      onChange={noop}
-      options={options}
-    />
+    <div role="radiogroup" aria-label={dict.streaks.streakRoleTabs} className="flex flex-wrap items-center gap-2">
+      {options.map((opt) => {
+        const isActive = opt.value === activeRole;
+        return (
+          <Link
+            key={opt.value}
+            href={opt.href}
+            role="radio"
+            aria-checked={isActive}
+            aria-current={isActive ? 'page' : undefined}
+            className={`flex items-center gap-1.5 sm:gap-2 whitespace-nowrap rounded-xl border px-3 sm:px-4 py-2 sm:py-2.5 text-mini sm:text-xs font-black shadow-sm transition-colors cursor-pointer ${
+              isActive
+                ? opt.activeClassName
+                : 'border-border-color bg-bg-elevated text-text-secondary hover:text-text-primary hover:border-text-secondary'
+            }`}
+          >
+            {opt.icon}
+            <span>{opt.label}</span>
+          </Link>
+        );
+      })}
+    </div>
   );
 };

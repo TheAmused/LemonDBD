@@ -4,7 +4,7 @@ export default {
   heading: "Privacy Policy",
   backToAbout: "Back to About us",
   lastUpdatedLabel: "Last updated",
-  lastUpdated: "October 1, 2026",
+  lastUpdated: "October 3, 2026",
   intro:
     "This page explains what personal data <brand>LemonDBD</brand> collects, why, who sees it and what you can do about it. We kept it short and plain on purpose.",
   summaryHeading: "The short version",
@@ -20,6 +20,14 @@ export default {
       paragraphs: [
         "<brand>LemonDBD</brand> is a free, fan-made companion site for <i>Dead by Daylight</i>, run by <brand>LemonTeam</brand>. We are the controller of the personal data described on this page.",
         "<brand>LemonDBD</brand> is unofficial and is not affiliated with or endorsed by Behaviour Interactive Inc. <i>Dead by Daylight</i> and its names, images and other game content belong to their respective owners.",
+      ],
+      items: [],
+    },
+    aiContent: {
+      heading: "AI-generated content",
+      paragraphs: [
+        "Some content on <brand>LemonDBD</brand>, such as images, may be generated, edited or upscaled with AI tools.",
+        "AI-assisted content can contain mistakes or odd details. If you spot something wrong or would like a piece of content reviewed or removed, contact us.",
       ],
       items: [],
     },

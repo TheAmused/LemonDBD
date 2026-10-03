@@ -21,6 +21,7 @@ import {
   streakCopy,
   type RuleEntryDef,
 } from '../RulesModalSections';
+import { formatMessage } from '@/utils/i18nFormat';
 
 export interface GauntletRulesModalProps {
   isOpen: boolean;
@@ -178,7 +179,7 @@ export const GauntletRulesModal: React.FC<GauntletRulesModalProps> = ({
   const rawStreaks = streakCopy(dict);
 
   const modalTitle = rawStreaks.gauntletRulesTitle
-    ? rawStreaks.gauntletRulesTitle.replace('{role}', roleLabel)
+    ? formatMessage(rawStreaks.gauntletRulesTitle, { role: roleLabel })
     : roleLabel;
 
   const concept = (isSolo || isDuo || isSquad) && rawStreaks.soloDevNote
@@ -257,7 +258,7 @@ export const GauntletRulesModal: React.FC<GauntletRulesModalProps> = ({
             const tierName = rawStreaks[tier.nameKey] || tier.defaultName;
             const streakRange = isTeam && role === 'survivor' ? TEAM_STREAK_RANGES[tier.level] : tier.streakRange;
             const streakRangeFormatted = rawStreaks.streakRangeLabel
-              ? rawStreaks.streakRangeLabel.replace('{range}', streakRange)
+              ? formatMessage(rawStreaks.streakRangeLabel, { range: streakRange })
               : streakRange;
 
             const perkLimitText =
@@ -266,7 +267,7 @@ export const GauntletRulesModal: React.FC<GauntletRulesModalProps> = ({
                   ? rawStreaks.soloRandomPerkBadge || '1 random unique perk'
                   : rawStreaks.perklessTrial || '0 Perks'
                 : rawStreaks.perksAllowedCount
-                  ? rawStreaks.perksAllowedCount.replace('{count}', String(tier.perkLimit))
+                  ? formatMessage(rawStreaks.perksAllowedCount, { count: tier.perkLimit })
                   : `${tier.perkLimit} ${tier.perkLimit > 1 ? (rawStreaks.perksAllowedPlural || '') : (rawStreaks.perksAllowedSingular || '')}`.trim();
 
             return (

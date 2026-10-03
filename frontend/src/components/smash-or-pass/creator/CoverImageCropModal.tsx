@@ -10,6 +10,8 @@ import type { Dictionary } from '@/locales/types';
 import { tip } from '@/components/common/Tooltip';
 import { Button } from '@/components/common/Button';
 import { Surface } from '@/components/common/Surface';
+import { formatMessage } from '@/utils/i18nFormat';
+
 interface CoverImageCropModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -359,7 +361,7 @@ export const CoverImageCropModal: React.FC<CoverImageCropModalProps> = ({
 
             {/* Hint overlay */}
             <div className="absolute bottom-3 left-3 px-2.5 py-1 rounded-lg bg-bg-primary/80 backdrop-blur-md border border-border-subtle type-micro text-text-secondary pointer-events-none">
-              {cm.dragHint ? cm.dragHint.replace('{zoom}', String(Math.round(zoom * 100))) : ''}
+              {cm.dragHint ? formatMessage(cm.dragHint, { zoom: Math.round(zoom * 100) }) : ''}
             </div>
           </div>
         </div>

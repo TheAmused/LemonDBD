@@ -18,6 +18,8 @@ import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
 
 import { tip } from '@/components/common/Tooltip';
 import { authHeaders, getAuthToken, getErrorMessage } from '@/utils/api';
+import { formatMessage } from '@/utils/i18nFormat';
+
 interface AdminChallengeControlProps {
   onActionMessage: (msg: ActionMessage) => void;
   dict?: Dictionary;
@@ -183,7 +185,7 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
     setPendingAction(null);
   };
 
-  const disableTitle = (name: string) => (dict?.admin?.disableConfirmTitle || 'Disable {name}?').replace('{name}', name);
+  const disableTitle = (name: string) => formatMessage((dict?.admin?.disableConfirmTitle || 'Disable {name}?'), { name });
 
   const modalCopy = (() => {
     if (!pendingAction) return null;

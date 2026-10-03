@@ -199,7 +199,7 @@ export default {
   lowPoolTitle: "Kończą się perki",
   lowPoolEmptyDesc: "Tryb Bez Powtórzeń wylosował już wszystkie dostępne perki. Nie ma nic więcej do wylosowania, więc zresetuj pamięć wylosowanych perków, aby ponownie otworzyć pulę.",
   lowPoolDescOne: "W puli został tylko 1 perk przy włączonym Trybie Bez Powtórzeń, to za mało na pełny zestaw {size}. Zresetuj pamięć wylosowanych perków, aby ponownie otworzyć pulę.",
-  lowPoolDescMany: "W puli zostało tylko {count} perków przy włączonym Trybie Bez Powtórzeń, to za mało na pełny zestaw {size}. Zresetuj pamięć wylosowanych perków, aby ponownie otworzyć pulę.",
+  lowPoolDescMany: "W puli zostało tylko {count, plural, one {# perk} few {# perki} many {# perków} other {# perka}} przy włączonym Trybie Bez Powtórzeń, to za mało na pełny zestaw {size}. Zresetuj pamięć wylosowanych perków, aby ponownie otworzyć pulę.",
   lowPoolResetButton: "Zresetuj Wylosowane Perki",
   lowPoolCloseButton: "Zamknij",
   modeInstantTooltip: "Losuje wszystkie cztery perki naraz, bez ceregieli, sam wynik.",

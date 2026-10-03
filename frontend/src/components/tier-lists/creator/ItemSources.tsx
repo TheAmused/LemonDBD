@@ -19,6 +19,7 @@ import { Spinner } from '@/components/common/Spinner';
 import { Button } from '@/components/common/Button';
 import { Input } from '@/components/common/Field';
 import { CustomDropdown } from '@/components/common/CustomDropdown';
+import { formatMessage } from '@/utils/i18nFormat';
 
 export interface IncomingItem {
   name: string;
@@ -168,7 +169,7 @@ function UploadSource({ onAdd, dict }: { onAdd: (items: IncomingItem[]) => void;
       )}
       {!processing && skipped > 0 && (
         <p role="alert" className="type-strong text-accent-red text-center">
-          {c.uploadSkipped.replace('{count}', String(skipped))}
+          {formatMessage(c.uploadSkipped, { count: skipped })}
         </p>
       )}
     </div>
@@ -417,7 +418,7 @@ function CatalogSource({
 
       <div className="flex justify-center w-full">
         <Button variant="primary" disabled={selected.size === 0} onClick={add} leftIcon={<Plus className="h-4 w-4" aria-hidden="true" />} className="min-h-[40px] rounded-lg px-6">
-          {c.addSelected.replace('{count}', String(selected.size))}
+          {formatMessage(c.addSelected, { count: selected.size })}
         </Button>
       </div>
     </div>

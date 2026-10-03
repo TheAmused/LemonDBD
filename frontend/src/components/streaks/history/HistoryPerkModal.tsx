@@ -9,15 +9,11 @@ import { Perk } from '@/types/gauntletStreak';
 import { perkIconUrl as perkIconFor } from '@/utils/staticUrl';
 import { usePerkDisplayName } from '@/context/DisplayNamesContext';
 import { CELEBRATION_CARD_CLASSES, CELEBRATION_LABEL_CLASSES, CelebrationBadge } from '../CelebrationBadge';
-
-const PLURAL_SUFFIX = { one: 'One', few: 'Few', many: 'Many' } as const;
+import { formatMessage } from '@/utils/i18nFormat';
 
 /** "You unlocked 3 new perks", worded and declined for the locale. */
 function unlockedPerksMessage(dict: Dictionary | undefined, locale: string, count: number): string {
-  const category = new Intl.PluralRules(locale).select(count);
-  const suffix = PLURAL_SUFFIX[category as keyof typeof PLURAL_SUFFIX] ?? 'Other';
-  const template = dict?.streaks?.[`unlockedPerks${suffix}` as 'unlockedPerksOther'] || 'You unlocked {count} new perks';
-  return template.replace('{count}', String(count));
+  return formatMessage(dict?.streaks?.unlockedPerks || 'You unlocked {count, plural, one {# new perk} other {# new perks}}', { count }, locale);
 }
 
 type LockPhase = 'locked' | 'shaking' | 'breaking' | 'unlocked';

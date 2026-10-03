@@ -64,6 +64,7 @@ import { IridescentShardIcon } from '@/components/icons/DbdIcons';
 import { Button } from '@/components/common/Button';
 import { Surface } from '@/components/common/Surface';
 import { isKiller as isKillerRole, isSurvivor as isSurvivorRole } from '@/utils/characterUtils';
+import { formatMessage } from '@/utils/i18nFormat';
 
 // Dynamic client-side imports for heavy visual layers and interactive modals
 const SmashAnimations = dynamic(
@@ -120,6 +121,15 @@ interface SmashOrPassHubProps {
   dict?: Dictionary;
   locale?: string;
 }
+
+/** Roster slugs from the API -> the key their names live under in dict.smashOrPass.rosters. */
+const ROSTER_DICT_KEY: Record<string, string> = {
+  hooked_on_you: 'hoy',
+  legendary_characters: 'legendary',
+  cyberpunk_2077: 'cyberpunk',
+  anime_manga: 'anime',
+  gothic_eldritch: 'gothic',
+};
 
 export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = 'en' }) => {
   const backendBase = getBackendBaseUrl();
@@ -537,14 +547,9 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
   const getRosterDisplayName = useCallback(
     (r: { slug: string; name?: string }) => {
       if (r.name) return r.name;
-      const locName = (dict?.smashOrPass?.rosters as any)?.[r.slug]?.name;
+      const key = ROSTER_DICT_KEY[r.slug] ?? r.slug;
+      const locName = (dict?.smashOrPass?.rosters as Record<string, { name?: string } | undefined>)?.[key]?.name;
       if (locName) return locName;
-      if (r.slug === 'canon') return locale === 'pl' ? 'Dead by Daylight: Kanon Mgły' : 'Dead by Daylight: Fog Canon';
-      if (r.slug === 'hooked_on_you') return locale === 'pl' ? 'Hooked on You: Romans na Wyspie' : 'Hooked on You: Island Romance';
-      if (r.slug === 'legendary_characters') return locale === 'pl' ? 'Legendarne Skórki i Kolaboracje' : 'Legendary Skins & Collabs';
-      if (r.slug === 'cyberpunk_2077') return locale === 'pl' ? 'Cyberpunk Mgła 2077' : 'Cyberpunk Fog 2077';
-      if (r.slug === 'anime_manga') return locale === 'pl' ? 'Estetyka Anime / Mangi' : 'Fog Anime / Manga Aesthetic';
-      if (r.slug === 'gothic_eldritch') return locale === 'pl' ? 'Wiktoriańskie i Gotyckie Legendy' : 'Victorian & Gothic Eldritch';
       return r.name || r.slug;
     },
     [dict, locale]
@@ -834,7 +839,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
                 <Layers className="h-4 w-4 text-text-secondary" />
                 <span className="text-text-primary font-black text-sm sm:text-base">{remainingInDeck}</span>
                 <span className="text-mini sm:text-xs text-text-muted font-medium">
-                  {hudLabels.left || (locale === 'pl' ? 'pozostało' : 'left')}
+                  {hudLabels.left}
                 </span>
               </span>
               <span className="text-border-color">{dict?.smashOrPass?.pipeSeparator || '|'}</span>
@@ -1457,10 +1462,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
           }
         >
           <p className="type-body text-text-muted">
-            {(dict?.smashOrPass?.picker?.deleteConfirmDesc || 'This permanently removes "{name}" from this browser. This cannot be undone.').replace(
-              '{name}',
-              rosterPendingDelete.name
-            )}
+            {formatMessage((dict?.smashOrPass?.picker?.deleteConfirmDesc || 'This permanently removes "{name}" from this browser. This cannot be undone.'), { name: rosterPendingDelete.name })}
           </p>
         </Modal>
       )}

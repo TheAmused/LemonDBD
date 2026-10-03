@@ -10,6 +10,7 @@ import { TOUCH_BTN } from '../styles';
 import { TierItemEditModal } from './TierItemEditModal';
 import { EmptyState } from '@/components/common/EmptyState';
 import { Button } from '@/components/common/Button';
+import { formatMessage } from '@/utils/i18nFormat';
 
 interface CreatorItemsProps {
   items: TierListDocumentItem[];
@@ -30,7 +31,7 @@ export function CreatorItems({ items, onRename, onUpdateItem, onRemove, onClear,
       <div className="flex items-center justify-between gap-2 w-full">
         <div className="w-20 hidden sm:block pointer-events-none" aria-hidden="true" />
         <h3 className="flex-1 text-center text-xs sm:text-sm font-black uppercase tracking-wider text-text-secondary">
-          {c.itemsHeading.replace('{count}', String(items.length)).replace('{max}', String(TIER_LIST_LIMITS.maxItems))}
+          {formatMessage(c.itemsHeading, { count: items.length, max: TIER_LIST_LIMITS.maxItems })}
         </h3>
         <div className="w-20 flex justify-end">
           {items.length > 0 && (
@@ -71,7 +72,7 @@ export function CreatorItems({ items, onRename, onUpdateItem, onRemove, onClear,
                 <button
                   type="button"
                   onClick={() => setEditingItem(item)}
-                  aria-label={c.editItemAria.replace('{name}', item.name)}
+                  aria-label={formatMessage(c.editItemAria, { name: item.name })}
                   className="absolute inset-0 z-0 flex items-center justify-center bg-bg-primary/50 opacity-0 group-hover/item:opacity-100 transition-opacity backdrop-blur-xs cursor-pointer"
                 >
                   <span className="flex h-7 w-7 items-center justify-center rounded-md bg-bg-surface/90 text-accent-red shadow-sm border border-border-color/60">
@@ -84,7 +85,7 @@ export function CreatorItems({ items, onRename, onUpdateItem, onRemove, onClear,
                 <button
                   type="button"
                   onClick={() => onRemove(item.id)}
-                  aria-label={c.removeItemAria.replace('{name}', item.name)}
+                  aria-label={formatMessage(c.removeItemAria, { name: item.name })}
                   className="absolute top-1 right-1 z-10 flex h-5 w-5 items-center justify-center rounded-md bg-bg-surface/90 text-text-muted opacity-80 sm:opacity-0 group-hover/item:opacity-100 hover:!opacity-100 hover:bg-accent-red hover:text-text-inverted transition-all shadow-xs cursor-pointer border border-border-color/40"
                 >
                   <X className="h-3 w-3" aria-hidden="true" />
@@ -96,7 +97,7 @@ export function CreatorItems({ items, onRename, onUpdateItem, onRemove, onClear,
                 value={item.name}
                 maxLength={TIER_LIST_LIMITS.maxItemName}
                 onChange={(e) => onRename(item.id, e.target.value)}
-                aria-label={c.renameItemAria.replace('{name}', item.name)}
+                aria-label={formatMessage(c.renameItemAria, { name: item.name })}
                 className="mt-1 h-6 w-full rounded-sm border border-transparent bg-transparent px-1 text-center type-strong text-text-secondary transition-colors hover:text-text-primary hover:bg-bg-elevated/40 focus:border-accent-red focus:bg-bg-surface focus:text-text-primary focus:outline-hidden truncate"
               />
             </li>

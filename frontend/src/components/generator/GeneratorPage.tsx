@@ -31,6 +31,8 @@ import { RoleToggle } from './shared/RoleToggle';
 import { motion } from 'framer-motion';
 import { StageFrame } from './shared/StageFrame';
 import type { ChaosMutator } from '../ChaosWheelModal';
+import { formatMessage } from '@/utils/i18nFormat';
+import { useLocale } from '@/context/DictionaryContext';
 
 const ChaosWheelModal = dynamic(() => import('../ChaosWheelModal').then((m) => m.ChaosWheelModal), { ssr: false });
 const ConfirmModal = dynamic(() => import('../common/ConfirmModal').then((m) => m.ConfirmModal), { ssr: false });
@@ -51,6 +53,7 @@ const KNOWN_MODES: GeneratorMode[] = ['wheel', 'instant', 'slot', 'tarot', 'crat
 const FULL_LOADOUT_SIZE = 4;
 
 export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelectPerk, dict }) => {
+  const locale = useLocale();
   const { user } = useAuth();
   const backendBase = getBackendBaseUrl();
 
@@ -414,10 +417,8 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
             ? dict?.generator?.lowPoolEmptyDesc ||
               "No-Repeat Mode has drawn every playable perk. There's nothing left to pull, so reset your drawn-perk memory to open the pool back up."
             : totalPlayableCount === 1
-              ? (dict?.generator?.lowPoolDescOne || 'Only 1 perk left in the pool with No-Repeat Mode on, not enough for a full loadout of {size}. Reset your drawn-perk memory to open the pool back up.').replace('{size}', String(FULL_LOADOUT_SIZE))
-              : (dict?.generator?.lowPoolDescMany || 'Only {count} perks left in the pool with No-Repeat Mode on, not enough for a full loadout of {size}. Reset your drawn-perk memory to open the pool back up.')
-                  .replace('{count}', String(totalPlayableCount))
-                  .replace('{size}', String(FULL_LOADOUT_SIZE))
+              ? formatMessage((dict?.generator?.lowPoolDescOne || 'Only 1 perk left in the pool with No-Repeat Mode on, not enough for a full loadout of {size}. Reset your drawn-perk memory to open the pool back up.'), { size: FULL_LOADOUT_SIZE })
+              : formatMessage((dict?.generator?.lowPoolDescMany || 'Only {count} perks left in the pool with No-Repeat Mode on, not enough for a full loadout of {size}. Reset your drawn-perk memory to open the pool back up.'), { count: totalPlayableCount, size: FULL_LOADOUT_SIZE }, locale)
         }
         confirmLabel={dict?.generator?.lowPoolResetButton || 'Reset Drawn Perks'}
         confirmIcon={<RotateCcw className="h-4 w-4" />}

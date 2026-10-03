@@ -32,6 +32,7 @@ import { Button } from '@/components/common/Button';
 import { Input } from '@/components/common/Field';
 import { formatNumber } from '@/utils/format';
 import { isSurvivor as isSurvivorRole } from '@/utils/characterUtils';
+import { formatMessage } from '@/utils/i18nFormat';
 
 export interface SmashLeaderboardModalProps {
   isOpen: boolean;
@@ -127,10 +128,7 @@ const CandidateRow = React.memo<CandidateRowProps>(({
   const itemSubtitle = profile.archetype || profile.tagline || item.role;
 
   const candidateAriaLabel = rawSmashDict?.candidateRankLabel
-    ? rawSmashDict.candidateRankLabel
-        .replace('{name}', itemName)
-        .replace('{rank}', String(index + 1))
-        .replace('{rate}', String(smashRate))
+    ? formatMessage(rawSmashDict.candidateRankLabel, { name: itemName, rank: index + 1, rate: smashRate })
     : `${itemName} #${index + 1} (${smashRate}%)`;
 
   return (

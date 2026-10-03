@@ -18,6 +18,7 @@ import { TierListImportModal } from './TierListImportModal';
 import { TierListSkeleton } from './TierListSkeleton';
 import { TOUCH_BTN } from './styles';
 import { Button } from '@/components/common/Button';
+import { formatMessage } from '@/utils/i18nFormat';
 
 interface TierListHubProps {
   locale: string;
@@ -135,7 +136,7 @@ export function TierListHub({ locale, dict }: TierListHubProps) {
             <p className="type-section-subtitle text-text-secondary mt-0.5 truncate">
               {(lists.length === 1
                 ? t.curatedTemplatesSingular
-                : (t.curatedTemplatesCount || '{count} curated templates').replace('{count}', String(lists.length)))}
+                : formatMessage((t.curatedTemplatesCount || '{count} curated templates'), { count: lists.length }, locale))}
               {' · '}
               {t.officialSavedNote}
             </p>
@@ -260,7 +261,7 @@ export function TierListHub({ locale, dict }: TierListHubProps) {
               <p className="type-section-subtitle text-text-secondary mt-0.5 truncate">
                 {(customCount === 1
                   ? t.customListsSingular
-                  : (t.customListsCount || '{count} custom lists').replace('{count}', String(customCount)))}
+                  : formatMessage((t.customListsCount || '{count} custom lists'), { count: customCount }, locale))}
                 {' · '}
                 {t.customSavedNote}
               </p>
@@ -350,7 +351,7 @@ export function TierListHub({ locale, dict }: TierListHubProps) {
           }
         >
           <p className="text-sm text-text-secondary">
-            {t.creator.removeItemAria.replace('{name}', `"${listToDelete.title}"`)}?
+            {formatMessage(t.creator.removeItemAria, { name: `"${listToDelete.title}"` })}?
           </p>
         </Modal>
       )}

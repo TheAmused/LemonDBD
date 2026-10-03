@@ -140,7 +140,7 @@ export default {
   accountSettingsSubtitle: "Manage your email address and password",
   encryptedNotice: "Encrypted & Secure Credentials",
   searchPerksPrompt: "Type at least 3 characters to search perks...",
-  searchPerksMinChars: "Type {count} more character(s) to search...",
+  searchPerksMinChars: "Type {count, plural, one {# more character} other {# more characters}} to search...",
   downloadDataTitle: "Download my data",
   downloadDataDesc: "Get a copy of everything we store about your account (profile, ownership, showcase, streaks, stats, votes and bug reports) as a JSON file.",
   downloadDataButton: "Download my data",

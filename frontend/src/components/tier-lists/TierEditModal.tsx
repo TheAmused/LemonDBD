@@ -15,6 +15,7 @@ import { tierColorProps } from './tierColor';
 import { Button } from '@/components/common/Button';
 import { Input } from '@/components/common/Field';
 import { themeColor } from '@/utils/themeColor';
+import { formatMessage } from '@/utils/i18nFormat';
 
 interface TierEditModalProps {
   tier: TierDefinition | null;
@@ -144,7 +145,7 @@ export function TierEditModal({
                   key={token}
                   type="button"
                   onClick={() => setColor(token)}
-                  aria-label={t.colorSwatchAria.replace('{name}', token.toUpperCase())}
+                  aria-label={formatMessage(t.colorSwatchAria, { name: token.toUpperCase() })}
                   aria-pressed={color === token}
                   className={cn(
                     'flex h-11 w-11 items-center justify-center rounded-xl border-2 cursor-pointer transition-transform hover:scale-105',

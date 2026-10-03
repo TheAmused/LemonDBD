@@ -23,6 +23,7 @@ import type {
   ModelQuality,
   ModelDescriptor,
 } from '@/services/clientSpeechModel';
+import { formatMessage } from '@/utils/i18nFormat';
 
 export interface VoiceEngineInfoModalProps {
   isOpen: boolean;
@@ -195,7 +196,7 @@ export const VoiceEngineInfoBody: React.FC<Omit<VoiceEngineInfoModalProps, 'isOp
               </p>
               {sizeMb !== null && (
                 <p className="type-strong-2xs text-text-muted">
-                  {(t.modelSize || '').replace('{size}', String(sizeMb))}
+                  {formatMessage((t.modelSize || ''), { size: sizeMb })}
                 </p>
               )}
             </button>
@@ -222,7 +223,7 @@ export const VoiceEngineInfoBody: React.FC<Omit<VoiceEngineInfoModalProps, 'isOp
           <DownloadCloud className="h-4 w-4 text-accent-red" aria-hidden="true" />
           <span className="type-strong text-text-primary">
             {modelProgress.status === 'downloading'
-              ? (t.downloadProgress || '').replace('{progress}', String(modelProgress.progress))
+              ? formatMessage((t.downloadProgress || ''), { progress: modelProgress.progress })
               : modelProgress.status === 'ready'
                 ? t.statusReady || ''
                 : t.modelCacheInfo || t.modelCached || ''}

@@ -140,7 +140,7 @@ export default {
   accountSettingsSubtitle: "Administra tu dirección de correo y contraseña",
   encryptedNotice: "Credenciales Encriptadas y Seguras",
   searchPerksPrompt: "Escribe al menos 3 caracteres para buscar habilidades...",
-  searchPerksMinChars: "Escribe {count} caracteres más para buscar...",
+  searchPerksMinChars: "Escribe {count, plural, one {# carácter más} other {# caracteres más}} para buscar...",
   downloadDataTitle: "Descargar mis datos",
   downloadDataDesc: "Obtén una copia de todo lo que guardamos sobre tu cuenta (perfil, colección, vitrina, rachas, estadísticas, votos e informes de errores) en un archivo JSON.",
   downloadDataButton: "Descargar mis datos",

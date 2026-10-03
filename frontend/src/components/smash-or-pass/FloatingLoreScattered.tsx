@@ -18,6 +18,8 @@ import { localizedProfile } from '@/utils/entityProfile';
 import { resolveWatermarks } from '@/utils/smashWatermarks';
 import { FitText } from '@/components/common/FitText';
 import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
+import { useDictionary } from '@/context/DictionaryContext';
+import { formatMessage } from '@/utils/i18nFormat';
 import { isKiller as isKillerRole, isSurvivor as isSurvivorRole } from '@/utils/characterUtils';
 
 interface FloatingLoreScatteredProps {
@@ -27,31 +29,14 @@ interface FloatingLoreScatteredProps {
   customLabels?: RosterCustomLabels;
 }
 
-// Known DBD signature quote translations
-const KNOWN_QUOTES_PL: Record<string, string> = {
-  claudette_morel: '„Rośliny cię nie oceniają. Po prostu leczą, jeśli traktujesz je z szacunkiem.”',
-  claudette_morel_hoy: '„Nawet na tropikalnej plaży zioła lecznicze rosną w cieniu palm.”',
-  meg_thomas: '„Biegnij tak szybko, jak potrafisz. Nigdy się nie zatrzymuj.”',
-  sable_ward: '„Mrok ma swój własny powab, jeśli tylko nie boisz się w niego zanurzyć.”',
-  dwight_fairfield: '„Jeśli będziemy trzymać się razem, przetrwamy wszystko.”',
-  nea_karlsson: '„Zasady są po to, by je łamać, zwłaszcza we Mgle.”',
-  feng_min: '„GG WP, albo postawisz mi boba tea i zagramy rewanż?”',
-  the_trapper: '„Każdy krok może być twoim ostatnim potknięciem.”',
-  the_huntress: '„Lulajże, lulaj... las nie wybacza słabości.”',
-  the_trickster: '„Twój krzyk to najpiękniejsza symfonia na mojej scenie.”',
-  the_spirit: '„Gniew przepływa przez moje żyły niczym lodowate ostrze.”',
-  the_wraith: '„Dźwięk dzwonu zwiastuje twój nieuchronny koniec.”',
-  the_nurse: '„Pozwól, że uwolnię cię od cierpienia tej próby.”',
-  mikaela_reid: '„Wyciągnęłam z talii Kochanków i Wieżę. Szykuj się na dramat.”',
-  yui_kimura: '„Ryk silnika daje mi wolność, której Byt nie zdoła odebrać.”',
-};
-
 export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({
   character,
   locale = 'en',
   dict,
   customLabels,
 }) => {
+  const ctxDict = useDictionary();
+  const t = (dict ?? ctxDict).smashOrPass;
   if (!character) return null;
 
   const isSurvivor = isSurvivorRole(character.role);
@@ -64,38 +49,16 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({
   const currentLoc = locale || 'en';
   const profile = localizedProfile(character.metadata, currentLoc);
 
-  // The remaining `||` chains here are hardcoded copy defaults for an entity with no
-  // profile yet — not data fallbacks; localizedProfile already resolved locale vs. English.
-  const charTitle =
-    profile.archetype ||
-    (currentLoc === 'pl' ? (isSurvivor ? 'Ocalały we Mgle' : 'Zabójca we Mgle') : character.role);
+  // Defaults for an entity with no profile yet -- localized copy from the dictionary,
+  // not data fallbacks; localizedProfile already resolved locale vs. English.
+  const charTitle = profile.archetype || (isSurvivor ? t.loreTitleSurvivor : isKiller ? t.loreTitleKiller : character.role);
+  const charTagline = profile.tagline || (isSurvivor ? t.loreTaglineSurvivor : t.loreTaglineKiller);
 
-  const charTagline =
-    profile.tagline ||
-    (isSurvivor
-      ? currentLoc === 'pl'
-        ? 'Szuka drogi ucieczki w mrocznym wymiarze próby.'
-        : 'Searching for an escape in the fog'
-      : currentLoc === 'pl'
-      ? 'Poluje na swoje ofiary w królestwie Bytu.'
-      : 'Stalking prey in the entity’s realm');
-
-  // Quote resolution: profile quote -> known Polish quote -> generic copy.
-  // The old `locMeta.quote.startsWith('"Plants')` sniff is gone: it existed only because
-  // the dead `i18n` blob held the untranslated English under `pl.quote`. `translations`
-  // was always the good copy and is now the only one shipped.
-  let charQuote = profile.quote;
-  if (!charQuote) {
-    if (currentLoc === 'pl') {
-      charQuote =
-        KNOWN_QUOTES_PL[character.slug] ||
-        (isSurvivor
-          ? `„W obliczu próby liczy się determinacja i zaufanie.” – ${character.name}`
-          : `„Nikt nie ucieknie przed wyrokiem Bytu w tej mgle.” – ${character.name}`);
-    } else {
-      charQuote = `"${character.name}"`;
-    }
-  }
+  // Quote resolution: profile quote -> known signature quote for this locale -> generic copy.
+  const charQuote =
+    profile.quote ||
+    t.knownQuotes[character.slug] ||
+    formatMessage(isSurvivor ? t.loreQuoteSurvivor : t.loreQuoteKiller, { name: character.name });
 
   const displayGreenFlags: string[] = profile.green_flags.length
     ? profile.green_flags

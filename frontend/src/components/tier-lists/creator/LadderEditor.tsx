@@ -15,6 +15,7 @@ import { Button } from '@/components/common/Button';
 import { Input } from '@/components/common/Field';
 import { CustomDropdown } from '@/components/common/CustomDropdown';
 import { themeColor } from '@/utils/themeColor';
+import { formatMessage } from '@/utils/i18nFormat';
 
 function PresetSwatch({ colors }: { colors: readonly string[] }) {
   return (
@@ -126,7 +127,7 @@ export function LadderEditor({ tiers, onChange, onPreset, activePreset, dict }: 
                   type="button"
                   onClick={() => setPaletteFor(open ? null : tier.id)}
                   aria-expanded={open}
-                  aria-label={c.tierColorAria.replace('{label}', tier.label)}
+                  aria-label={formatMessage(c.tierColorAria, { label: tier.label })}
                   className="relative w-16 sm:w-20 shrink-0 flex items-center justify-center cursor-pointer border-r border-border-color/80 transition-opacity hover:opacity-90"
                 >
                   <TierBadge
@@ -143,7 +144,7 @@ export function LadderEditor({ tiers, onChange, onPreset, activePreset, dict }: 
                   value={tier.label}
                   maxLength={TIER_LIST_LIMITS.maxTierLabel}
                   onChange={(e) => update(tier.id, { label: e.target.value })}
-                  aria-label={c.tierLabelAria.replace('{index}', String(index + 1))}
+                  aria-label={formatMessage(c.tierLabelAria, { index: index + 1 })}
                   className="min-w-0 flex-1 bg-transparent px-3 type-card-title text-text-primary focus:outline-hidden focus:bg-bg-elevated/40 transition-colors"
                 />
 
@@ -153,7 +154,7 @@ export function LadderEditor({ tiers, onChange, onPreset, activePreset, dict }: 
                     type="button"
                     disabled={index === 0}
                     onClick={() => move(index, -1)}
-                    aria-label={c.moveTierUpAria.replace('{label}', tier.label)}
+                    aria-label={formatMessage(c.moveTierUpAria, { label: tier.label })}
                     className="flex h-full w-9 sm:w-10 items-center justify-center text-text-muted hover:text-text-primary hover:bg-bg-elevated disabled:opacity-20 cursor-pointer disabled:cursor-not-allowed transition-colors"
                   >
                     <ChevronUp className="h-4 w-4" aria-hidden="true" />
@@ -162,7 +163,7 @@ export function LadderEditor({ tiers, onChange, onPreset, activePreset, dict }: 
                     type="button"
                     disabled={index === tiers.length - 1}
                     onClick={() => move(index, 1)}
-                    aria-label={c.moveTierDownAria.replace('{label}', tier.label)}
+                    aria-label={formatMessage(c.moveTierDownAria, { label: tier.label })}
                     className="flex h-full w-9 sm:w-10 items-center justify-center text-text-muted hover:text-text-primary hover:bg-bg-elevated disabled:opacity-20 cursor-pointer disabled:cursor-not-allowed transition-colors"
                   >
                     <ChevronDown className="h-4 w-4" aria-hidden="true" />
@@ -171,7 +172,7 @@ export function LadderEditor({ tiers, onChange, onPreset, activePreset, dict }: 
                     type="button"
                     disabled={tiers.length <= 1}
                     onClick={() => onChange(tiers.filter((x) => x.id !== tier.id))}
-                    aria-label={c.removeTierAria.replace('{label}', tier.label)}
+                    aria-label={formatMessage(c.removeTierAria, { label: tier.label })}
                     className="flex h-full w-9 sm:w-10 items-center justify-center text-text-muted hover:text-accent-red hover:bg-accent-red/10 disabled:opacity-20 cursor-pointer disabled:cursor-not-allowed transition-colors"
                   >
                     <X className="h-4 w-4" aria-hidden="true" />
@@ -190,7 +191,7 @@ export function LadderEditor({ tiers, onChange, onPreset, activePreset, dict }: 
                         key={token}
                         type="button"
                         onClick={() => update(tier.id, { color: token })}
-                        aria-label={t.colorSwatchAria.replace('{name}', token.toUpperCase())}
+                        aria-label={formatMessage(t.colorSwatchAria, { name: token.toUpperCase() })}
                         aria-pressed={active}
                         className={cn(
                           'flex h-7 w-7 items-center justify-center rounded-md border-2 cursor-pointer transition-transform hover:scale-105',

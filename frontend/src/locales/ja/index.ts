@@ -24,6 +24,7 @@ import minigames from './minigames';
 import privacy from './privacy';
 import errorPages from './errorPages';
 import scoreboardCheck from './scoreboardCheck';
+import type { Dictionary } from '../types';
 
 const ja = {
   app,
@@ -51,7 +52,7 @@ const ja = {
   privacy,
   errorPages,
   scoreboardCheck,
-};
+} satisfies Dictionary;
 
 export default ja;
 

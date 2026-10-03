@@ -29,6 +29,7 @@ import { buildChallengeShareUrl, encodeChallengeShare } from '@/utils/minigames/
 import { publishOfficialChallenge } from '@/services/minigameApi';
 import { RoundEditorCard } from './RoundEditorCard';
 import { copyTextWithFallback } from '@/utils/clipboard';
+import { formatMessage } from '@/utils/i18nFormat';
 
 interface MinigameCreatorProps {
   catalog: MinigameCatalog;
@@ -129,7 +130,7 @@ export const MinigameCreator: React.FC<MinigameCreatorProps> = ({
     }
     for (let i = 0; i < rounds.length; i++) {
       if (!rounds[i].target_id) {
-        setErrorMsg(c.targetRequired.replace('{number}', String(i + 1)));
+        setErrorMsg(formatMessage(c.targetRequired, { number: i + 1 }));
         return null;
       }
     }

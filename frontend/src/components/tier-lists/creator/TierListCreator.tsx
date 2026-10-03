@@ -31,6 +31,7 @@ import { LadderEditor } from './LadderEditor';
 import { Checkbox } from '@/components/common/Checkbox';
 import { Button } from '@/components/common/Button';
 import { Input } from '@/components/common/Field';
+import { formatMessage } from '@/utils/i18nFormat';
 
 /** Unfinished work survives a reload or an accidental back-navigation. Only
  * used for a brand-new list -- editing an existing one (see `editId` below)
@@ -486,7 +487,7 @@ export function TierListCreator({ locale, dict, editId }: TierListCreatorProps) 
             <ItemSources onAdd={addItems} existingIds={existingIds} locale={locale} dict={dict} />
             {skipped > 0 && (
               <p role="status" className="text-xs 2xl:text-sm font-semibold text-accent-amber">
-                {c.itemsSkipped.replace('{count}', String(skipped))}
+                {formatMessage(c.itemsSkipped, { count: skipped }, locale)}
               </p>
             )}
             <CreatorItems
@@ -506,7 +507,7 @@ export function TierListCreator({ locale, dict, editId }: TierListCreatorProps) 
             />
             {hasInlineImages && (
               <p className={cn('text-xs 2xl:text-sm', bytes > STORAGE_WARN_BYTES ? 'font-semibold text-accent-amber' : 'text-text-muted')}>
-                {c.storageUsage.replace('{size}', formatBytes(bytes, locale))}{' '}
+                {formatMessage(c.storageUsage, { size: formatBytes(bytes, locale) })}{' '}
                 {bytes > STORAGE_WARN_BYTES && c.storageWarning}
               </p>
             )}

@@ -14,6 +14,7 @@ import {
 } from '@/utils/tierLists/codec';
 import { TIER_LIST_LIMITS } from '@/utils/tierLists/constants';
 import { LABEL, TOUCH_BTN, TOUCH_FIELD } from './styles';
+import { formatMessage } from '@/utils/i18nFormat';
 
 /**
  * Where the import is going, which decides what a payload is allowed to be:
@@ -43,13 +44,13 @@ function contextFor(doc: TierListDocument, target: ImportTarget, t: Dictionary['
     if (target.kind === 'custom') return { tone: 'error', text: t.expectedCustom };
     if (target.kind === 'template') {
       return doc.template === target.slug
-        ? { tone: 'info', text: t.importAsRanking.replace('{title}', target.title) }
+        ? { tone: 'info', text: formatMessage(t.importAsRanking, { title: target.title }) }
         : { tone: 'error', text: t.wrongTemplate };
     }
     const title = target.templates[doc.template];
     return title
-      ? { tone: 'info', text: t.importAsRanking.replace('{title}', title) }
-      : { tone: 'error', text: t.templateMissing.replace('{slug}', doc.template) };
+      ? { tone: 'info', text: formatMessage(t.importAsRanking, { title }) }
+      : { tone: 'error', text: formatMessage(t.templateMissing, { slug: doc.template }) };
   }
   if (target.kind === 'template') return { tone: 'error', text: t.wrongTemplate };
   if (target.kind === 'custom') return { tone: 'info', text: t.importReplacesCustom };
@@ -77,11 +78,7 @@ export function TierListImportModal({ open, target, sharePayload, onClose, onImp
   const errorText = (code: TierListErrorCode) => t.errors[code];
 
   const preview = result?.ok
-    ? t.importPreview
-        .replace('{title}', result.doc.title || t.untitled)
-        .replace('{tiers}', String(result.doc.tiers.length))
-        .replace('{items}', String(result.doc.items?.length ?? Object.values(result.doc.placements).flat().length))
-        .replace('{placed}', String(Object.values(result.doc.placements).flat().length))
+    ? formatMessage(t.importPreview, { title: result.doc.title || t.untitled, tiers: result.doc.tiers.length, items: result.doc.items?.length ?? Object.values(result.doc.placements).flat().length, placed: Object.values(result.doc.placements).flat().length })
     : '';
 
   return (
@@ -121,7 +118,7 @@ export function TierListImportModal({ open, target, sharePayload, onClose, onImp
           <ImportPreview text={preview} />
           {note && <Notice tone={note.tone} text={note.text} />}
           {result.warnings.map((w) => (
-            <Notice key={w.code} tone="warning" text={t.warnings[w.code].replace('{count}', String(w.count))} />
+            <Notice key={w.code} tone="warning" text={formatMessage(t.warnings[w.code], { count: w.count })} />
           ))}
         </>
       )}

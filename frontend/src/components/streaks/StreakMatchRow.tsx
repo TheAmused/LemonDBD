@@ -5,6 +5,8 @@ import type { Dictionary } from '@/locales/types';
 import React from 'react';
 import { Clock } from 'lucide-react';
 import type { StreakMatchLogBase } from './StreakStatsDrawer';
+import { formatDate } from '@/utils/format';
+import { useLocale } from '@/context/DictionaryContext';
 
 export interface StreakMatchRowProps<TLog extends StreakMatchLogBase> {
   log: TLog;
@@ -20,6 +22,7 @@ export function StreakMatchRow<TLog extends StreakMatchLogBase>({
   renderMeta,
   dict,
 }: StreakMatchRowProps<TLog>) {
+  const locale = useLocale();
   const isWin = log.result === 'win';
   return (
     <div className="flex items-center justify-between px-4 py-3.5 rounded-xl bg-bg-elevated border border-border-color hover:border-border-subtle transition-colors shadow-sm">
@@ -47,7 +50,7 @@ export function StreakMatchRow<TLog extends StreakMatchLogBase>({
         </div>
         {log.timestamp && (
           <div className="type-caption text-text-secondary mt-1">
-            {new Date(log.timestamp).toLocaleDateString()}
+            {formatDate(log.timestamp, locale)}
           </div>
         )}
       </div>

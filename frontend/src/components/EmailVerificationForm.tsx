@@ -6,6 +6,7 @@ import { useAuth } from '@/context/AuthContext';
 import type { UserProfile } from '@/context/AuthContext';
 import type { Dictionary } from '@/locales/types';
 import { Button } from '@/components/common/Button';
+import { formatMessage } from '@/utils/i18nFormat';
 
 interface EmailVerificationFormProps {
   email: string;
@@ -119,7 +120,7 @@ export const EmailVerificationForm: React.FC<EmailVerificationFormProps> = ({
             value={digit}
             onChange={(e) => handleChange(index, e.target.value)}
             onKeyDown={(e) => handleKeyDown(index, e)}
-            aria-label={t?.digitAriaLabel?.replace('{n}', String(index + 1))}
+            aria-label={formatMessage(t?.digitAriaLabel, { n: index + 1 })}
             className="h-11 w-9 rounded-lg border border-border-color bg-bg-primary text-center text-base text-text-primary focus:border-accent-red focus:outline-none focus:ring-1 focus:ring-accent-red shadow-inner transition-colors"
           />
         ))}
@@ -142,7 +143,7 @@ export const EmailVerificationForm: React.FC<EmailVerificationFormProps> = ({
           className="type-strong-xs underline text-accent-amber hover:opacity-80 disabled:opacity-60 cursor-pointer"
         >
           {cooldown > 0
-            ? t?.resendCodeIn?.replace('{seconds}', String(cooldown))
+            ? formatMessage(t?.resendCodeIn, { seconds: cooldown })
             : t?.resendCode}
         </button>
       )}

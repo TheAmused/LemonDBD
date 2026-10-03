@@ -18,6 +18,8 @@ import { LABEL } from './styles';
 import { tip } from '@/components/common/Tooltip';
 import { Button } from '@/components/common/Button';
 import { Input, Textarea } from '@/components/common/Field';
+import { formatMessage } from '@/utils/i18nFormat';
+
 export interface DraftEntity {
   /** Stable client-only key -- never sent anywhere, just for React lists and
    * keying this entity's translation overrides. */
@@ -128,7 +130,7 @@ export function CandidateFormInputs({
           <Button
             variant="ghost" size="xs"
             onClick={onRemove}
-            aria-label={(c.removeCandidateAria || 'Remove {name}').replace('{name}', entity.name || displayIndex)}
+            aria-label={formatMessage((c.removeCandidateAria || 'Remove {name}'), { name: entity.name || displayIndex })}
             className=""
             {...tip(c.removeCandidate || 'Remove candidate', undefined, 'action')}
           >
@@ -512,7 +514,7 @@ export function CandidateTiles({
                     e.stopPropagation();
                     onRemove(entity.key);
                   }}
-                  aria-label={(c.removeCandidateAria || 'Remove {name}').replace('{name}', entity.name || displayIndex)}
+                  aria-label={formatMessage((c.removeCandidateAria || 'Remove {name}'), { name: entity.name || displayIndex })}
                   className="absolute top-1 right-1 z-10 flex h-5 w-5 items-center justify-center rounded-md bg-bg-surface/90 text-text-muted opacity-80 sm:opacity-0 group-hover/item:opacity-100 hover:!opacity-100 hover:bg-accent-red hover:text-text-inverted transition-all shadow-xs cursor-pointer border border-border-color/40"
                 >
                   <X className="h-3 w-3" aria-hidden="true" />
@@ -526,7 +528,7 @@ export function CandidateTiles({
                 onChange={(e) => onRename(entity.key, e.target.value)}
                 onFocus={() => onSelect(entity.key)}
                 placeholder={c.unnamedCandidate || 'Unnamed'}
-                aria-label={(c.renameCandidateAria || 'Rename {name}').replace('{name}', entity.name || displayIndex)}
+                aria-label={formatMessage((c.renameCandidateAria || 'Rename {name}'), { name: entity.name || displayIndex })}
                 className="mt-1 h-6 w-full rounded-sm border border-transparent bg-transparent px-1 text-center type-strong text-text-secondary transition-colors hover:text-text-primary hover:bg-bg-elevated/40 focus:border-accent-red focus:bg-bg-surface focus:text-text-primary focus:outline-hidden truncate"
               />
             </li>

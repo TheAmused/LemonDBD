@@ -235,7 +235,7 @@ export const FitText: React.FC<FitTextProps> = ({
       ref={wrapperRef}
       data-text={text}
       data-flow={flowing ? 'static' : 'overlay'}
-      {...tip(title ?? (clamped || fit.index > 0 ? text : undefined), undefined, 'status')}
+      {...tip(title ?? (clamped || fit.index > 0 ? text : undefined), undefined, 'action')}
       className={cn(
         'relative inline-block min-w-0 max-w-full align-bottom',
         // Reserves the natural one-line size; see the header comment.

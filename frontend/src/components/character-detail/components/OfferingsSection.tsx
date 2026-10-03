@@ -359,7 +359,7 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
               // The count only shows on the selected tab, same idea as the
               // mobile dropdown's countLabel.
               count: selectedCategory === cat.key ? sortedAndFilteredOfferings.length : undefined,
-              buttonProps: { ...tip(`${cat.label} - ${cat.desc}`, undefined, 'default'), 'aria-label': `${cat.label} - ${cat.desc}` },
+              buttonProps: { ...tip(`${cat.label} - ${cat.desc}`, undefined, 'action'), 'aria-label': `${cat.label} - ${cat.desc}` },
             };
           })}
         />

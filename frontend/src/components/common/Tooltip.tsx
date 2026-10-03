@@ -31,39 +31,17 @@ export const TOOLTIP_CONFIG = {
   },
   /** Visual presets. Add a key here to give a family of tooltips its own look. */
   variants: {
-    default: {
-      content: '',
-      title: '',
-      arrowBorder: 'var(--border-color)',
-    },
-    item: {
-      content: 'border-accent-amber/50',
-      title: ' text-xs sm:text-sm normal-case tracking-normal text-accent-amber',
-      arrowBorder: 'color-mix(in srgb, var(--accent-amber) 50%, transparent)',
-    },
-    /** Buttons, toggles and other controls: a short verb-like label. */
+    /** Controls, badges, categories and any plain label or hint. */
     action: {
       content: '',
-      title: 'normal-case tracking-normal text-xs',
+      title: 'text-text-primary',
       arrowBorder: 'var(--border-color)',
     },
-    /** Character / killer names. */
-    character: {
-      content: 'border-accent-red/40',
-      title: 'tracking-wide',
-      arrowBorder: 'color-mix(in srgb, var(--accent-red) 40%, transparent)',
-    },
-    /** State badges: trophies, ownership, admin, completion. */
-    status: {
-      content: 'border-accent-green/40',
-      title: 'normal-case tracking-normal text-accent-green',
-      arrowBorder: 'color-mix(in srgb, var(--accent-green) 40%, transparent)',
-    },
-    /** Add-on / item rarity labels. */
-    rarity: {
-      content: 'border-accent-purple/50',
-      title: 'tracking-widest text-accent-purple',
-      arrowBorder: 'color-mix(in srgb, rgb(168 85 247) 50%, transparent)',
+    /** Named things: perks, items, offerings, characters, rarity labels. */
+    item: {
+      content: 'border-accent-amber/50',
+      title: 'text-accent-amber',
+      arrowBorder: 'color-mix(in srgb, var(--accent-amber) 50%, transparent)',
     },
   },
 } as const;
@@ -71,7 +49,7 @@ export const TOOLTIP_CONFIG = {
 export type TooltipVariant = keyof typeof TOOLTIP_CONFIG.variants;
 
 const resolveVariant = (name?: string | null) =>
-  TOOLTIP_CONFIG.variants[(name as TooltipVariant) in TOOLTIP_CONFIG.variants ? (name as TooltipVariant) : 'default'];
+  TOOLTIP_CONFIG.variants[(name as TooltipVariant) in TOOLTIP_CONFIG.variants ? (name as TooltipVariant) : 'action'];
 
 type MaybeText = string | false | null | undefined;
 
@@ -213,8 +191,6 @@ const TooltipBubble: React.FC<TooltipBubbleProps> = ({
           contentClassName
         )}
       >
-        <span className="pointer-events-none absolute inset-0 opacity-[0.03] [background-image:repeating-linear-gradient(45deg,currentColor_0,currentColor_1px,transparent_1px,transparent_10px)]" />
-        <span className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-border-color to-transparent" />
         {hasBody ? (
           <div className="relative flex min-h-0 flex-1 flex-col">{children}</div>
         ) : (
@@ -222,7 +198,7 @@ const TooltipBubble: React.FC<TooltipBubbleProps> = ({
             {title && (
               <span
                 className={cn(
-                  'relative block whitespace-normal text-mini font-black uppercase tracking-wider text-text-primary',
+                  'relative block whitespace-normal text-xs font-bold leading-snug',
                   look.title
                 )}
               >
@@ -232,8 +208,8 @@ const TooltipBubble: React.FC<TooltipBubbleProps> = ({
             {description && (
               <span
                 className={cn(
-                  'relative block whitespace-normal text-mini font-medium italic leading-snug text-text-secondary',
-                  title && 'mt-1'
+                  'relative block whitespace-normal type-caption font-medium leading-snug text-text-secondary',
+                  title && 'mt-px'
                 )}
               >
                 {description}

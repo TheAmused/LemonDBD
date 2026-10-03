@@ -702,7 +702,7 @@ export function ScraperConfigModal({ isOpen, onClose, onPurgeSuccess, initialTab
           ) : importFile ? (
             <div className="space-y-1">
               <div className="flex items-center justify-center gap-2">
-                <p className="type-strong text-text-primary max-w-[280px] sm:max-w-md truncate" {...tip(importFile.name, undefined, 'default')}>
+                <p className="type-strong text-text-primary max-w-[280px] sm:max-w-md truncate" {...tip(importFile.name, undefined, 'action')}>
                   {importFile.name}
                 </p>
                 <Button

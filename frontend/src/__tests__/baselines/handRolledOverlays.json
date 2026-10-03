@@ -1,0 +1,7 @@
+{
+  "components/common/CampfireParticles.tsx": 1,
+  "components/smash-or-pass/InteractiveDragBackground.tsx": 1,
+  "components/smash-or-pass/SmashAnimations.tsx": 1,
+  "components/smash-or-pass/SmashOrPassHub.tsx": 1,
+  "components/streaks/gauntlet/GauntletFireBackground.tsx": 1
+}

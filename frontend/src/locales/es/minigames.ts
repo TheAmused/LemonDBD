@@ -197,4 +197,5 @@ export default {
     best: "Mejor Racha",
     days: "Días",
   },
+  toggleSuggestions: 'Mostrar u ocultar sugerencias',
 };

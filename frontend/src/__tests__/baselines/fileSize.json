@@ -1,0 +1,23 @@
+{
+  "app/[locale]/admin/page.tsx": 650,
+  "components/CharactersHub.tsx": 700,
+  "components/common/Modal.tsx": 750,
+  "components/generator/modes/SlotMachineStage.tsx": 900,
+  "components/generator/modes/WheelStage.tsx": 800,
+  "components/maps/VoiceCommandBanner.tsx": 1300,
+  "components/onboarding/CharacterOnboardingWizard.tsx": 1200,
+  "components/ScraperConfigModal.tsx": 1000,
+  "components/smash-or-pass/CharacterCard.tsx": 700,
+  "components/smash-or-pass/creator/EntityEditor.tsx": 650,
+  "components/smash-or-pass/creator/SmashRosterCreator.tsx": 1150,
+  "components/smash-or-pass/RomancePersonaModal.tsx": 650,
+  "components/smash-or-pass/RosterSelectModal.tsx": 800,
+  "components/smash-or-pass/SmashLeaderboardModal.tsx": 850,
+  "components/smash-or-pass/SmashOrPassHub.tsx": 1600,
+  "components/smash-or-pass/SmashSoundEffects.ts": 650,
+  "components/streaks/gauntlet/ActiveTargetStage.tsx": 650,
+  "components/tier-lists/creator/TierListCreator.tsx": 650,
+  "services/clientSpeechModel.ts": 700,
+  "utils/mapVoiceData.ts": 1150,
+  "utils/mapVoiceMatcher.ts": 700
+}

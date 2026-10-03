@@ -1,0 +1,20 @@
+{
+  "components/changelog/WhatsNewLauncher.tsx": 1,
+  "components/common/Modal.tsx": 2,
+  "components/common/ScoreboardCheckModal.tsx": 1,
+  "components/generator/modes/WheelStage.tsx": 1,
+  "components/maps/MapExplorer.tsx": 3,
+  "components/smash-or-pass/creator/CoverImageCropModal.tsx": 1,
+  "components/smash-or-pass/creator/EntityEditor.tsx": 2,
+  "components/smash-or-pass/creator/RomanceArchetypeBuilder.tsx": 1,
+  "components/smash-or-pass/creator/SmashRosterCreator.tsx": 1,
+  "components/streaks/StreakStatTiles.tsx": 1,
+  "components/tier-lists/creator/CreatorItems.tsx": 1,
+  "components/tier-lists/creator/TierItemEditModal.tsx": 1,
+  "components/tier-lists/creator/TierListCreator.tsx": 1,
+  "components/tier-lists/TierItemPreviewModal.tsx": 1,
+  "components/tier-lists/TierItemTile.tsx": 1,
+  "components/tier-lists/TierListCards.tsx": 2,
+  "hooks/usePersistentString.ts": 1,
+  "utils/shareCodec.ts": 1
+}

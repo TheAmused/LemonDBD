@@ -197,4 +197,5 @@ export default {
     best: "Beste Serie",
     days: "Tage",
   },
+  toggleSuggestions: 'Vorschläge ein- oder ausblenden',
 };

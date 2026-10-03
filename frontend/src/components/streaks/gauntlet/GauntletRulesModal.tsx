@@ -45,7 +45,7 @@ const SURVIVOR_TIERS: TierDefinition[] = [
     level: 0,
     nameKey: 'tierWarmUp',
     defaultName: 'The Warm Up',
-    streakRange: '0 - 9',
+    streakRange: '1 - 10',
     perkLimit: 4,
     badgeColor: 'bg-accent-green/20 text-accent-green border-accent-green/30',
   },
@@ -53,7 +53,7 @@ const SURVIVOR_TIERS: TierDefinition[] = [
     level: 1,
     nameKey: 'tierThinning',
     defaultName: 'The Thinning',
-    streakRange: '10 - 19',
+    streakRange: '11 - 20',
     perkLimit: 3,
     badgeColor: 'bg-accent-amber/20 text-accent-amber border-accent-amber/30',
   },
@@ -61,7 +61,7 @@ const SURVIVOR_TIERS: TierDefinition[] = [
     level: 2,
     nameKey: 'tierStruggle',
     defaultName: 'The Struggle',
-    streakRange: '20 - 29',
+    streakRange: '21 - 30',
     perkLimit: 2,
     badgeColor: 'bg-accent-amber/20 text-accent-amber border-accent-amber/30',
   },
@@ -69,7 +69,7 @@ const SURVIVOR_TIERS: TierDefinition[] = [
     level: 3,
     nameKey: 'tierHardcore',
     defaultName: 'The Hardcore',
-    streakRange: '30 - 39',
+    streakRange: '31 - 40',
     perkLimit: 1,
     badgeColor: 'bg-accent-amber/20 text-accent-amber border-accent-amber/30',
   },
@@ -77,21 +77,21 @@ const SURVIVOR_TIERS: TierDefinition[] = [
     level: 4,
     nameKey: 'tierLegend',
     defaultName: 'The Legend',
-    streakRange: '40+',
+    streakRange: '41 - 52',
     perkLimit: 0,
     badgeColor: 'bg-accent-red/20 text-accent-red border-accent-red/30',
   },
 ];
 
 // Duo and squad step a tier every 6 wins.
-const TEAM_STREAK_RANGES = ['0 - 5', '6 - 11', '12 - 17', '18+'];
+const TEAM_STREAK_RANGES = ['1 - 6', '7 - 12', '13 - 18', '19 - 26'];
 
 const KILLER_TIERS: TierDefinition[] = [
   {
     level: 0,
     nameKey: 'tierBloodbath',
     defaultName: 'The Bloodbath',
-    streakRange: '0 - 9',
+    streakRange: '1 - 10',
     perkLimit: 3,
     badgeColor: 'bg-accent-green/20 text-accent-green border-accent-green/30',
   },
@@ -99,7 +99,7 @@ const KILLER_TIERS: TierDefinition[] = [
     level: 1,
     nameKey: 'tierObsession',
     defaultName: 'The Obsession',
-    streakRange: '10 - 19',
+    streakRange: '11 - 20',
     perkLimit: 2,
     badgeColor: 'bg-accent-amber/20 text-accent-amber border-accent-amber/30',
   },
@@ -107,7 +107,7 @@ const KILLER_TIERS: TierDefinition[] = [
     level: 2,
     nameKey: 'tierExecutioner',
     defaultName: 'The Executioner',
-    streakRange: '20 - 29',
+    streakRange: '21 - 30',
     perkLimit: 1,
     badgeColor: 'bg-accent-amber/20 text-accent-amber border-accent-amber/30',
   },
@@ -115,7 +115,7 @@ const KILLER_TIERS: TierDefinition[] = [
     level: 3,
     nameKey: 'tierEntity',
     defaultName: 'The Entity',
-    streakRange: '30+',
+    streakRange: '31 - 43',
     perkLimit: 0,
     badgeColor: 'bg-accent-red/20 text-accent-red border-accent-red/30',
   },
@@ -177,14 +177,6 @@ export const GauntletRulesModal: React.FC<GauntletRulesModalProps> = ({ isOpen, 
     ? formatMessage(rawStreaks.gauntletRulesTitle, { role: roleLabel })
     : roleLabel;
 
-  const concept = (isSolo || isDuo || isSquad) && rawStreaks.soloDevNote
-    ? rawStreaks.soloDevNote
-    : role === 'killer'
-    ? (rawStreaks.gauntletConceptKiller ||
-        'Face every killer, one trial at a time. Your perk loadout shrinks with every tier, until you win with none at all.')
-    : (rawStreaks.gauntletConceptSurvivor ||
-        'Face every survivor, one trial at a time. Your perk loadout shrinks with every tier, until you win with none at all.');
-
   const winCondition = isSolo && rawStreaks.soloWinCondition
     ? rawStreaks.soloWinCondition
     : isDuo && rawStreaks.duoWinCondition
@@ -234,15 +226,13 @@ export const GauntletRulesModal: React.FC<GauntletRulesModalProps> = ({ isOpen, 
       onClose={onClose}
       title={modalTitle}
     >
-      <RulesConceptCard
-        tone="red"
-        title={
-          isSolo || isDuo || isSquad
-            ? rawStreaks.devNoteTitle || 'Note from the devs'
-            : rawStreaks.gauntletConcept || 'Gauntlet Concept'
-        }
-        text={concept}
-      />
+      {(isSolo || isDuo || isSquad) && rawStreaks.soloDevNote && (
+        <RulesConceptCard
+          tone="red"
+          title={rawStreaks.devNoteTitle || 'Note from the devs'}
+          text={rawStreaks.soloDevNote}
+        />
+      )}
 
       <RulesHowItWorks tone="red" title={rawStreaks.howItWorks || 'How it works'} items={howItWorks} />
 
@@ -279,8 +269,8 @@ export const GauntletRulesModal: React.FC<GauntletRulesModalProps> = ({ isOpen, 
                 </div>
 
                 <div className="flex items-center justify-between sm:justify-end gap-4 w-full sm:w-auto">
-                  <div className="flex items-center gap-1.5 type-strong text-accent-amber bg-accent-amber/10 px-3 py-1 rounded-lg border border-accent-amber/20 whitespace-nowrap">
-                    <Lock className="w-3.5 h-3.5 text-accent-amber" aria-hidden="true" />
+                  <div className="flex items-center gap-1.5 type-strong text-text-secondary whitespace-nowrap">
+                    <Lock className="w-3.5 h-3.5" aria-hidden="true" />
                     <span>{perkLimitText}</span>
                   </div>
                 </div>

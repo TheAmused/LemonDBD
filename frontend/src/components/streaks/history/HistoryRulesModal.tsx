@@ -6,7 +6,6 @@ import React from 'react';
 import { RulesModalShell } from '../RulesModalShell';
 import {
   DIFFICULTY_BADGE,
-  RulesConceptCard,
   RulesDifficultyRows,
   RulesSection,
   RulesHowItWorks,
@@ -32,15 +31,6 @@ export const HistoryRulesModal: React.FC<HistoryRulesModalProps> = ({ isOpen, on
       onClose={onClose}
       title={s.rules || 'Rules'}
     >
-      <RulesConceptCard
-        tone="neutral"
-        title={s.historyConceptLabel || 'Concept'}
-        text={
-          s.historyConceptShort ||
-          'Killers are grouped into rows of 5, sorted by release order. Clear a row to unlock the next.'
-        }
-      />
-
       <RulesHowItWorks
         tone="neutral"
         title={s.howItWorks || 'How it works'}

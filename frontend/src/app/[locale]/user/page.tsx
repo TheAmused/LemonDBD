@@ -18,7 +18,6 @@ import { UserBugReportsDrawer } from '@/components/user/UserBugReportsDrawer';
 import { DeleteAccountSection } from '@/components/user/DeleteAccountSection';
 import { DownloadDataSection } from '@/components/user/DownloadDataSection';
 import { UserProfileSkeleton } from '@/components/user/UserProfileSkeleton';
-import { UserCampfireParticles } from '@/components/user/UserCampfireParticles';
 import { Locale } from '@/i18n/config';
 import { UserBugReport, StatusFeedback } from '@/types/userProfile';
 import { fetchMyBugReports, uploadAvatar, ApiError } from '@/services/userProfileApi';
@@ -173,7 +172,6 @@ export default function UserProfilePage() {
       activeCategory="user"
       mainClassName="overflow-y-auto relative"
     >
-        <UserCampfireParticles />
         <div className="relative z-10 max-w-5xl xl:max-w-6xl 2xl:max-w-[1700px] 3xl:max-w-[2000px] w-full mx-auto space-y-6 sm:space-y-8 2xl:space-y-10 py-4 sm:py-6 lg:py-8 2xl:py-10">
           {/* Hidden avatar file input */}
           <input

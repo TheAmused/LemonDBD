@@ -18,10 +18,6 @@ import { useCachedData } from '@/hooks/useCachedData';
 import { fetchJson } from '@/services/dataCache';
 
 const PerkModal = dynamic(() => import('@/components/PerkModal').then((m) => m.PerkModal), { ssr: false });
-const CampfireParticles = dynamic(
-  () => import('@/components/common/CampfireParticles').then((m) => m.CampfireParticles),
-  { ssr: false }
-);
 
 function RandomizerContent() {
   const params = useParams();
@@ -83,10 +79,8 @@ function RandomizerContent() {
       killerCount={killerCount}
       characterCount={characterCount}
       padding="flush"
-      decoration={<span className="hidden" />}
       mainClassName="min-h-screen overflow-y-auto flex flex-col relative"
     >
-      <CampfireParticles />
       <div className="relative z-10 flex flex-col flex-1 min-h-0">
         {perksLoading ? (
           <RandomizerPageSkeleton dict={dict} />

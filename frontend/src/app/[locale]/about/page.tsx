@@ -7,7 +7,6 @@ import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { ChevronDown, ShieldCheck } from 'lucide-react';
 import { PageShell } from '@/components/layout/PageShell';
-import { CampfireParticles } from '@/components/common/CampfireParticles';
 import { RichText } from '@/components/common/RichText';
 import { Locale } from '@/i18n/config';
 import { useDictionary } from '@/context/DictionaryContext';
@@ -190,7 +189,6 @@ export default function AboutPage() {
       padding="spacious"
       mainClassName="flex flex-col items-center justify-center min-h-[calc(100vh-4rem)] lg:min-h-screen overflow-y-auto relative"
     >
-      <CampfireParticles />
       <div className="relative z-10 mx-auto my-auto flex w-full max-w-5xl xl:max-w-6xl flex-col gap-6 sm:gap-8 py-6 sm:py-10">
         {/* Header */}
         <header className="flex flex-col items-center text-center gap-2.5 sm:gap-3 pt-2 sm:pt-4">

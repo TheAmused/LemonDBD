@@ -6,7 +6,7 @@ import { PageShellFallback } from '@/components/layout/PageShellFallback';
 export default function PerksLoading() {
   return (
     <PageShellFallback
-      outerClassName="h-dvh overflow-hidden bg-bg-primary text-text-primary flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300"
+      outerClassName="h-dvh overflow-hidden text-text-primary flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300"
       padding="tight"
       mainClassName="flex h-full min-h-0 flex-col items-center justify-center"
       skeleton={

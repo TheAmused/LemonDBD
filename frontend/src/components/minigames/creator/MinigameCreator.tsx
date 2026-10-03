@@ -30,18 +30,15 @@ import { publishOfficialChallenge } from '@/services/minigameApi';
 import { RoundEditorCard } from './RoundEditorCard';
 import { copyTextWithFallback } from '@/utils/clipboard';
 import { formatMessage } from '@/utils/i18nFormat';
+import { useDictionary } from "@/context/DictionaryContext";
 
 interface MinigameCreatorProps {
   catalog: MinigameCatalog;
-  dict: Dictionary;
   locale: string;
 }
 
-export const MinigameCreator: React.FC<MinigameCreatorProps> = ({
-  catalog,
-  dict,
-  locale,
-}) => {
+export const MinigameCreator: React.FC<MinigameCreatorProps> = ({ catalog, locale }) => {
+  const dict = useDictionary();
   const t = dict.minigames;
   const c = t.creator;
   const router = useRouter();
@@ -280,7 +277,6 @@ export const MinigameCreator: React.FC<MinigameCreatorProps> = ({
             index={idx}
             totalRounds={rounds.length}
             catalog={catalog}
-            dict={dict}
             onUpdate={(updated) => handleUpdateRound(idx, updated)}
             onRemove={() => handleRemoveRound(idx)}
             onMoveUp={() => handleMoveRound(idx, 'up')}

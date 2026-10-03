@@ -187,4 +187,5 @@ export default {
   perk: "パーク",
   lullabyRadius: "子守唄範囲",
   clickOutsideToClose: '外側をクリックして閉じる',
+  saveOwnershipError: '所持状況の変更を保存できませんでした。もう一度お試しください。',
 } as const;

@@ -7,16 +7,14 @@ import { Check, X } from 'lucide-react';
 import type { GuessRecord } from '@/types/minigame';
 import type { Dictionary } from '@/locales/types';
 import { staticUrl } from '@/utils/api';
+import { useDictionary } from "@/context/DictionaryContext";
 
 interface ClassicPerkGuesserProps {
   guesses: GuessRecord[];
-  dict: Dictionary;
 }
 
-export const ClassicPerkGuesser: React.FC<ClassicPerkGuesserProps> = ({
-  guesses,
-  dict,
-}) => {
+export const ClassicPerkGuesser: React.FC<ClassicPerkGuesserProps> = ({ guesses }) => {
+  const dict = useDictionary();
   if (guesses.length === 0) return null;
   const t = dict.minigames;
 

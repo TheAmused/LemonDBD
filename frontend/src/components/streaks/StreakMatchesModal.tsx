@@ -7,6 +7,7 @@ import { Modal } from '@/components/common/Modal';
 import { Pagination } from '@/components/common/Pagination';
 import { StreakMatchRow } from './StreakMatchRow';
 import type { StreakMatchLogBase } from './StreakStatsDrawer';
+import { useDictionary } from "@/context/DictionaryContext";
 
 const DEFAULT_PAGE_SIZE = 15;
 
@@ -16,18 +17,11 @@ export interface StreakMatchesModalProps<TLog extends StreakMatchLogBase> {
   logs: TLog[];
   renderLabel: (log: TLog) => React.ReactNode;
   renderMeta: (log: TLog) => React.ReactNode;
-  dict?: Dictionary;
 }
 
 /** Every logged match of one streak mode, paginated. Opened from the stats drawer. */
-export function StreakMatchesModal<TLog extends StreakMatchLogBase>({
-  isOpen,
-  onClose,
-  logs,
-  renderLabel,
-  renderMeta,
-  dict,
-}: StreakMatchesModalProps<TLog>) {
+export function StreakMatchesModal<TLog extends StreakMatchLogBase>({ isOpen, onClose, logs, renderLabel, renderMeta }: StreakMatchesModalProps<TLog>) {
+  const dict = useDictionary();
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(DEFAULT_PAGE_SIZE);
 
@@ -44,8 +38,8 @@ export function StreakMatchesModal<TLog extends StreakMatchLogBase>({
       onClose={onClose}
       variant="dialog"
       size="lg"
-      title={dict?.streaks?.recentMatchHistory || 'Recent Match History'}
-      closeButtonAriaLabel={dict?.modal?.close || 'Close'}
+      title={dict.streaks.recentMatchHistory}
+      closeButtonAriaLabel={dict.modal.close}
       bodyClassName="space-y-2.5 p-5"
       footer={
         <Pagination
@@ -58,12 +52,11 @@ export function StreakMatchesModal<TLog extends StreakMatchLogBase>({
             setLimit(next);
             setPage(1);
           }}
-          dict={dict}
         />
       }
     >
       {pageLogs.map((log) => (
-        <StreakMatchRow key={log.id} log={log} renderLabel={renderLabel} renderMeta={renderMeta} dict={dict} />
+        <StreakMatchRow key={log.id} log={log} renderLabel={renderLabel} renderMeta={renderMeta} />
       ))}
     </Modal>
   );

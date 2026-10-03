@@ -187,4 +187,5 @@ export default {
   perk: "Perk",
   lullabyRadius: "Wiegenlied-Radius",
   clickOutsideToClose: 'Außerhalb klicken zum Schließen',
+  saveOwnershipError: 'Deine Besitzänderungen konnten nicht gespeichert werden. Bitte versuche es erneut.',
 } as const;

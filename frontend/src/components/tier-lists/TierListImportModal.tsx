@@ -15,6 +15,7 @@ import {
 import { TIER_LIST_LIMITS } from '@/utils/tierLists/constants';
 import { LABEL, TOUCH_BTN, TOUCH_FIELD } from './styles';
 import { formatMessage } from '@/utils/i18nFormat';
+import { useDictionary } from "@/context/DictionaryContext";
 
 /**
  * Where the import is going, which decides what a payload is allowed to be:
@@ -34,7 +35,6 @@ interface TierListImportModalProps {
   sharePayload?: string | null;
   onClose: () => void;
   onImport: (doc: TierListDocument) => void;
-  dict: Dictionary;
 }
 
 type ContextNote = { tone: 'info' | 'error'; text: string };
@@ -60,7 +60,8 @@ function contextFor(doc: TierListDocument, target: ImportTarget, t: Dictionary['
 const TOO_LARGE: TierListParseResult = { ok: false, error: 'tooLarge' };
 const toText = (r: TierListParseResult) => (r.ok ? serializeTierListDocument(r.doc) : null);
 
-export function TierListImportModal({ open, target, sharePayload, onClose, onImport, dict }: TierListImportModalProps) {
+export function TierListImportModal({ open, target, sharePayload, onClose, onImport }: TierListImportModalProps) {
+  const dict = useDictionary();
   const t = dict.tierLists;
   const { text, result, fileError, changeText, readFile } = useImportDraft<TierListParseResult>({
     isOpen: open,

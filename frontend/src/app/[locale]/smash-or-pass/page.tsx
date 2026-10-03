@@ -21,13 +21,12 @@ export default function SmashOrPassPage() {
   return (
     <PageShell
       locale={locale}
-      dict={dict || ({} as Dictionary)}
       activeCategory="smash-or-pass"
       mainClassName="overflow-y-auto theme-smash"
     >
       <React.Suspense fallback={<SmashHubSkeleton />}>
         {dict ? (
-          <SmashOrPassHub dict={dict} locale={locale} />
+          <SmashOrPassHub locale={locale} />
         ) : (
           <SmashHubSkeleton />
         )}

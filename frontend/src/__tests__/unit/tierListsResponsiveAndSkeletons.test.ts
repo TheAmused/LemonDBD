@@ -5,7 +5,6 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 import React from 'react';
-import { renderToStaticMarkup } from 'react-dom/server';
 import { TierListSkeleton } from '@/components/tier-lists/TierListSkeleton';
 import { TierItemTile } from '@/components/tier-lists/TierItemTile';
 import { tierColorProps } from '@/components/tier-lists/tierColor';
@@ -15,13 +14,14 @@ import deDict from '@/locales/de';
 import esDict from '@/locales/es';
 import jaDict from '@/locales/ja';
 import plDict from '@/locales/pl';
+import { renderWithDictionary } from '../helpers/renderWithDictionary';
 
 const SRC = path.resolve(__dirname, '../..');
 const read = (rel: string) => fs.readFileSync(path.join(SRC, rel), 'utf-8');
 
 describe('Tier lists: skeleton', () => {
   it('renders role="status", aria-busy and the DBD skill-check spinner', () => {
-    const html = renderToStaticMarkup(React.createElement(TierListSkeleton, { dict: enDict }));
+    const html = renderWithDictionary(React.createElement(TierListSkeleton, {}));
     assert.ok(html.includes('role="status"'));
     assert.ok(html.includes('aria-busy="true"'));
     assert.ok(html.includes('viewBox="0 0 160 160"'), 'must render the DBD Skill Check SVG');
@@ -31,7 +31,7 @@ describe('Tier lists: skeleton', () => {
 
 describe('Tier lists: tiles and colors', () => {
   it('falls back to initials when an item has no image, and never renders an empty src', () => {
-    const html = renderToStaticMarkup(
+    const html = renderWithDictionary(
       React.createElement(TierItemTile, { item: { key: 'x', name: 'Dwight Fairfield', image: null } })
     );
     assert.ok(html.includes('>DF<'));

@@ -19,16 +19,17 @@ import { TierListSkeleton } from './TierListSkeleton';
 import { TOUCH_BTN } from './styles';
 import { Button } from '@/components/common/Button';
 import { formatMessage } from '@/utils/i18nFormat';
+import { useDictionary } from "@/context/DictionaryContext";
 
 interface TierListHubProps {
   locale: string;
-  dict: Dictionary;
 }
 
 // Capped ranges: an open-ended xl: rule would shadow wide: (px breakpoints are emitted first).
 const GRID = 'grid grid-cols-1 gap-3 sm:gap-4 sm:max-xl:grid-cols-2 xl:max-wide:grid-cols-3 wide:grid-cols-4';
 
-export function TierListHub({ locale, dict }: TierListHubProps) {
+export function TierListHub({ locale }: TierListHubProps) {
+  const dict = useDictionary();
   const t = dict.tierLists;
   const router = useRouter();
   const { lists, loading, error, refresh } = useTierListSummaries(locale);
@@ -136,7 +137,7 @@ export function TierListHub({ locale, dict }: TierListHubProps) {
             <p className="type-section-subtitle text-text-secondary mt-0.5 truncate">
               {(lists.length === 1
                 ? t.curatedTemplatesSingular
-                : formatMessage((t.curatedTemplatesCount || '{count} curated templates'), { count: lists.length }, locale))}
+                : formatMessage((t.curatedTemplatesCount), { count: lists.length }, locale))}
               {' · '}
               {t.officialSavedNote}
             </p>
@@ -158,7 +159,7 @@ export function TierListHub({ locale, dict }: TierListHubProps) {
           <div className="overflow-hidden">
             <div className="p-4 sm:p-6 border-t border-border-color">
               {loading && !error ? (
-                <TierListSkeleton dict={dict} className="min-h-[240px]" />
+                <TierListSkeleton className="min-h-[240px]" />
               ) : error && lists.length === 0 ? (
                 <EmptyState
                   icon={TriangleAlert}
@@ -184,7 +185,6 @@ export function TierListHub({ locale, dict }: TierListHubProps) {
                       list={list}
                       rankedCount={hydrated ? rankedCount(list.slug) : 0}
                       locale={locale}
-                      dict={dict}
                     />
                   ))}
                 </div>
@@ -261,7 +261,7 @@ export function TierListHub({ locale, dict }: TierListHubProps) {
               <p className="type-section-subtitle text-text-secondary mt-0.5 truncate">
                 {(customCount === 1
                   ? t.customListsSingular
-                  : formatMessage((t.customListsCount || '{count} custom lists'), { count: customCount }, locale))}
+                  : formatMessage((t.customListsCount), { count: customCount }, locale))}
                 {' · '}
                 {t.customSavedNote}
               </p>
@@ -314,7 +314,6 @@ export function TierListHub({ locale, dict }: TierListHubProps) {
                       key={list.id}
                       list={list}
                       locale={locale}
-                      dict={dict}
                       onDelete={(id, title) => setListToDelete({ id, title })}
                     />
                   ))}
@@ -365,7 +364,6 @@ export function TierListHub({ locale, dict }: TierListHubProps) {
           setSharePayload(null);
         }}
         onImport={handleImport}
-        dict={dict}
       />
     </div>
   );

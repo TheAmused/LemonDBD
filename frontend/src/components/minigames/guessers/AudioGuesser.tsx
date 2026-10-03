@@ -11,23 +11,18 @@ import { soundEngine } from '@/utils/minigames/MinigameSoundEngine';
 import { staticUrl } from '@/utils/api';
 
 import { tip } from '@/components/common/Tooltip';
+import { useDictionary } from "@/context/DictionaryContext";
+
 interface AudioGuesserProps {
   roundConfig: RoundConfig;
   characters: CatalogCharacter[];
   guesses: GuessRecord[];
   isSolved: boolean;
-  dict: Dictionary;
   children?: React.ReactNode;
 }
 
-export const AudioGuesser: React.FC<AudioGuesserProps> = ({
-  roundConfig,
-  characters,
-  guesses,
-  isSolved,
-  dict,
-  children,
-}) => {
+export const AudioGuesser: React.FC<AudioGuesserProps> = ({ roundConfig, characters, guesses, isSolved, children }) => {
+  const dict = useDictionary();
   const [isPlaying, setIsPlaying] = useState(false);
   const [audioProgress, setAudioProgress] = useState(0);
   const [duration, setDuration] = useState(0);

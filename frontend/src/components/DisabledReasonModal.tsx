@@ -6,25 +6,19 @@ import type { Dictionary } from '@/locales/types';
 import { AlertTriangle } from 'lucide-react';
 import { Modal } from '@/components/common/Modal';
 import { formatMessage } from '@/utils/i18nFormat';
+import { useDictionary } from "@/context/DictionaryContext";
 
 interface DisabledReasonModalProps {
   isOpen: boolean;
   onClose: () => void;
   label: string;
   reason?: string | null;
-  dict?: Dictionary;
   t?: Record<string, string>;
 }
 
-export const DisabledReasonModal: React.FC<DisabledReasonModalProps> = ({
-  isOpen,
-  onClose,
-  label,
-  reason,
-  dict,
-  t: propT,
-}) => {
-  const t: Record<string, string> | undefined = propT || dict?.modal;
+export const DisabledReasonModal: React.FC<DisabledReasonModalProps> = ({ isOpen, onClose, label, reason, t: propT }) => {
+  const dict = useDictionary();
+  const t: Record<string, string> | undefined = propT || dict.modal;
   const wasDisabledText = t?.wasDisabledTemporarily
     ? formatMessage(t.wasDisabledTemporarily, { item: label })
     : label;

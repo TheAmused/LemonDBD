@@ -55,7 +55,6 @@ export default function DbdIdlePage() {
   return (
     <PageShell
       locale={locale}
-      dict={dict}
       activeCategory="minigames"
       mainClassName="relative flex flex-col items-center justify-center min-h-[70vh]"
     >
@@ -73,7 +72,6 @@ export default function DbdIdlePage() {
         <ChallengeRunner
           challenge={challenge}
           catalog={catalog}
-          dict={dict}
           locale={locale}
         />
       ) : null}

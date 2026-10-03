@@ -14,6 +14,7 @@ import { PerkSlot } from '../shared/PerkSlot';
 import { useJackpotCelebration } from '../shared/useJackpotCelebration';
 import { playReelThud, playCardFlip } from '@/utils/perkAudio';
 import { formatMessage } from '@/utils/i18nFormat';
+import { useDictionary } from "@/context/DictionaryContext";
 
 export interface LootCrateStageProps {
   role: RoleCategory;
@@ -24,7 +25,6 @@ export interface LootCrateStageProps {
   onRevealSlot: (idx: number) => void;
   onSelectPerk: (perk: Perk) => void;
   isBlind?: boolean;
-  dict?: Dictionary;
   backendBase?: string;
 }
 
@@ -96,17 +96,17 @@ function scatterPointStyle(point: { xPct: number; yPct: number }): { left: strin
 }
 
 export const LootCrateStage: React.FC<LootCrateStageProps> = ({
-  role,
-  activePlayablePerks,
-  activeMutator,
-  onRollComplete,
-  revealedSlots,
-  onRevealSlot,
-  onSelectPerk,
-  isBlind = false,
-  dict,
-  backendBase,
-}) => {
+      role,
+      activePlayablePerks,
+      activeMutator,
+      onRollComplete,
+      revealedSlots,
+      onRevealSlot,
+      onSelectPerk,
+      isBlind = false,
+      backendBase,
+    }) => {
+  const dict = useDictionary();
   const [phase, setPhase] = useState<CratePhase>('closed');
   const [scatterPool, setScatterPool] = useState<ScatterItem[]>([]);
   const [lockedItems, setLockedItems] = useState<ScatterItem[]>([]);
@@ -222,8 +222,7 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
   };
 
   const scatterPrompt = formatMessage((
-      dict?.generator?.scatterPrompt ||
-      'Pick one. Choosing it costs the Entity 1-2 of the others. {count}/4 locked in.'
+      dict.generator.scatterPrompt
     ), { count: selected.length });
 
   return (
@@ -231,8 +230,7 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
       {(phase === 'closed' || phase === 'shaking') && (
         <>
           <p className="max-w-lg xl:max-w-2xl 2xl:max-w-3xl wide:max-w-4xl text-center text-xs sm:text-base xl:text-lg wide:text-xl font-semibold text-text-secondary">
-            {dict?.generator?.cratePrompt ||
-              'A sealed Trial Offering awaits. Crack it open and the Entity scatters perks around the block for you to pick from.'}
+            {dict.generator.cratePrompt}
           </p>
           <motion.button
             type="button"
@@ -258,7 +256,7 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
           {phase === 'closed' && (
             <>
               <p className="text-xs sm:text-sm xl:text-base 2xl:text-lg wide:text-xl font-black uppercase tracking-wide text-text-muted">
-                {dict?.generator?.crateTapToOpen || 'Tap the Trial Offering'}
+                {dict.generator.crateTapToOpen}
               </p>
               <DbdButton
                 role={role}
@@ -266,13 +264,13 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
                 onClick={handleOpen}
                 disabled={activePlayablePerks.length === 0}
               >
-                {dict?.generator?.crateTapToOpen || 'Crack Open Offering'}
+                {dict.generator.crateTapToOpen}
               </DbdButton>
             </>
           )}
           {phase === 'shaking' && (
             <p aria-live="polite" className="text-xs sm:text-sm xl:text-base 2xl:text-lg wide:text-xl font-black uppercase tracking-wide text-accent-amber animate-pulse">
-              {dict?.generator?.crateOpening || 'Cracking Open...'}
+              {dict.generator.crateOpening}
             </p>
           )}
         </>
@@ -293,7 +291,7 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
                 return locked ? (
                   <div key={`mob-tray-locked-${locked.id}`} className="relative">
                     <div className="rounded-xl ring-2 ring-accent-amber/60">
-                      <PerkSlot perk={locked.perk} role={role} page={locked.page} slot={locked.slot} size="compact" dict={dict} />
+                      <PerkSlot perk={locked.perk} role={role} page={locked.page} slot={locked.slot} size="compact" />
                     </div>
                     <div className="absolute -top-1.5 -right-1.5 z-30 flex h-5 w-5 items-center justify-center rounded-full bg-accent-amber text-text-inverted shadow-xs">
                       <Lock className="h-3 w-3" />
@@ -331,7 +329,6 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
                       slot={item.slot}
                       size="compact"
                       onClick={() => handlePick(item)}
-                      dict={dict}
                     />
                   </motion.div>
                 ))}
@@ -352,7 +349,7 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
               >
                 <div className="relative">
                   <div className="rounded-xl ring-2 ring-accent-amber/60">
-                    <PerkSlot perk={item.perk} role={role} page={item.page} slot={item.slot} dict={dict} />
+                    <PerkSlot perk={item.perk} role={role} page={item.page} slot={item.slot} />
                   </div>
                   <div className="absolute -top-2 -right-2 z-30 flex h-6 w-6 items-center justify-center rounded-full bg-accent-amber text-text-inverted shadow-xs">
                     <Lock className="h-3.5 w-3.5" />
@@ -379,7 +376,6 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
                     page={item.page}
                     slot={item.slot}
                     onClick={() => handlePick(item)}
-                    dict={dict}
                   />
                 </motion.div>
               ))}
@@ -391,7 +387,7 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
       {phase === 'complete' && (
         <>
           <p className="text-sm font-bold text-text-secondary text-center sm:text-base">
-            {dict?.generator?.scatterComplete || 'Your loadout is locked in.'}
+            {dict.generator.scatterComplete}
           </p>
           <div ref={resultsRef} className="grid grid-cols-2 gap-3 lg:grid-cols-4">
             {selected.map((slot, idx) => {
@@ -414,7 +410,6 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
                   isObscured={isObscured}
                   isBlind={isBlind}
                   onClick={onClick}
-                  dict={dict}
                 />
               );
             })}
@@ -424,7 +419,7 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
             size="md"
             onClick={handleReset}
           >
-            {dict?.generator?.crateOpenAnother || 'Crack Open Another'}
+            {dict.generator.crateOpenAnother}
           </DbdButton>
         </>
       )}

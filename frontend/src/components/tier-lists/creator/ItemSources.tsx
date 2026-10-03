@@ -20,6 +20,7 @@ import { Button } from '@/components/common/Button';
 import { Input } from '@/components/common/Field';
 import { CustomDropdown } from '@/components/common/CustomDropdown';
 import { formatMessage } from '@/utils/i18nFormat';
+import { useDictionary } from "@/context/DictionaryContext";
 
 export interface IncomingItem {
   name: string;
@@ -42,11 +43,11 @@ interface ItemSourcesProps {
   onAdd: (items: IncomingItem[]) => void;
   existingIds: ReadonlySet<string>;
   locale: string;
-  dict: Dictionary;
 }
 
 /** The three ways into a custom list: upload pictures, paste links, or pick from the game's catalog. */
-export function ItemSources({ onAdd, existingIds, locale, dict }: ItemSourcesProps) {
+export function ItemSources({ onAdd, existingIds, locale }: ItemSourcesProps) {
+  const dict = useDictionary();
   const c = dict.tierLists.creator;
   const { isAdmin } = useAuth();
   const [tab, setTab] = useState<SourceTab>('links');
@@ -81,16 +82,17 @@ export function ItemSources({ onAdd, existingIds, locale, dict }: ItemSourcesPro
           tabs={options}
         />
       </div>
-      {tab === 'upload' && isAdmin && <UploadSource onAdd={onAdd} dict={dict} />}
-      {tab === 'links' && <LinksSource onAdd={onAdd} dict={dict} />}
-      {tab === 'catalog' && <CatalogSource onAdd={onAdd} existingIds={existingIds} locale={locale} dict={dict} />}
+      {tab === 'upload' && isAdmin && <UploadSource onAdd={onAdd} />}
+      {tab === 'links' && <LinksSource onAdd={onAdd} />}
+      {tab === 'catalog' && <CatalogSource onAdd={onAdd} existingIds={existingIds} locale={locale} />}
     </div>
   );
 }
 
 // ---------------------------------------------------------------------------
 
-function UploadSource({ onAdd, dict }: { onAdd: (items: IncomingItem[]) => void; dict: Dictionary }) {
+function UploadSource({ onAdd }: { onAdd: (items: IncomingItem[]) => void; }) {
+  const dict = useDictionary();
   const c = dict.tierLists.creator;
   const inputRef = useRef<HTMLInputElement>(null);
   const [dragging, setDragging] = useState<boolean>(false);
@@ -178,7 +180,8 @@ function UploadSource({ onAdd, dict }: { onAdd: (items: IncomingItem[]) => void;
 
 // ---------------------------------------------------------------------------
 
-function LinksSource({ onAdd, dict }: { onAdd: (items: IncomingItem[]) => void; dict: Dictionary }) {
+function LinksSource({ onAdd }: { onAdd: (items: IncomingItem[]) => void; }) {
+  const dict = useDictionary();
   const t = dict.tierLists;
   const [itemName, setItemName] = useState<string>('');
   const [imageUrl, setImageUrl] = useState<string>('');
@@ -265,17 +268,12 @@ function LinksSource({ onAdd, dict }: { onAdd: (items: IncomingItem[]) => void; 
 
 // ---------------------------------------------------------------------------
 
-function CatalogSource({
-  onAdd,
-  existingIds,
-  locale,
-  dict,
-}: {
+function CatalogSource({ onAdd, existingIds, locale }: {
   onAdd: (items: IncomingItem[]) => void;
   existingIds: ReadonlySet<string>;
   locale: string;
-  dict: Dictionary;
 }) {
+  const dict = useDictionary();
   const t = dict.tierLists;
   const c = t.creator;
   const [kind, setKind] = useState<CatalogKind>('survivors');

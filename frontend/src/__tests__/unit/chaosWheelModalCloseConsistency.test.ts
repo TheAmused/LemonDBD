@@ -24,7 +24,7 @@ test('backdrop click closes the modal via onClose (shared <Modal> handles the ba
 });
 
 test('the X button closes the modal via onClose', () => {
-  assert.match(src, /closeButtonAriaLabel=\{dict\?\.modal\?\.close\}/, 'the Modal close button lost its localized label');
+  assert.match(src, /closeButtonAriaLabel=\{dict\.modal\.close\}/, 'the Modal close button lost its localized label');
   assert.doesNotMatch(src, /closeButton="none"|hideCloseButton/, 'the X button must stay visible');
 });
 

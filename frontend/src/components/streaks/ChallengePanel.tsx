@@ -4,6 +4,7 @@ import type { Dictionary } from '@/locales/types';
 import React from 'react';
 import { BarChart2, ChevronDown, History, RotateCcw } from 'lucide-react';
 import { CELEBRATION_CARD_CLASSES, CELEBRATION_LABEL_CLASSES, CelebrationBadge } from './CelebrationBadge';
+import { useDictionary } from "@/context/DictionaryContext";
 
 interface ChallengePanelProps {
   /** Stats and actions strip, rendered as the top section of the card. */
@@ -146,43 +147,38 @@ interface StandardHeaderActionsProps {
   onOpenReset: () => void;
   /** Mode-specific buttons (change mode, perk pool), placed right after Rules. */
   extra?: React.ReactNode;
-  dict?: Dictionary;
 }
 
 /** The action row every challenge header shares, so they cannot drift apart. */
-export const StandardHeaderActions: React.FC<StandardHeaderActionsProps> = ({
-  onOpenRules,
-  onOpenStats,
-  onOpenHistory,
-  onOpenReset,
-  extra,
-  dict,
-}) => (
+export const StandardHeaderActions: React.FC<StandardHeaderActionsProps> = ({ onOpenRules, onOpenStats, onOpenHistory, onOpenReset, extra }) => {
+  const dict = useDictionary();
+  return (
   <>
     <HeaderButton
       onClick={onOpenRules}
-      title={dict?.streaks?.rules || 'Rules'}
-      label={dict?.streaks?.rules || 'Rules'}
+      title={dict.streaks.rules}
+      label={dict.streaks.rules}
     />
     {extra}
     <HeaderButton
       onClick={onOpenStats}
-      title={dict?.streaks?.stats || 'Statistics'}
+      title={dict.streaks.stats}
       icon={<BarChart2 className="h-5 w-5" aria-hidden="true" />}
     />
     <HeaderButton
       onClick={onOpenHistory}
-      title={dict?.streaks?.pastWins || 'Win History'}
+      title={dict.streaks.pastWins}
       icon={<History className="h-5 w-5" aria-hidden="true" />}
     />
     <HeaderButton
       danger
       onClick={onOpenReset}
-      title={dict?.streaks?.resetRun || 'Reset this run'}
+      title={dict.streaks.resetRun}
       icon={<RotateCcw className="h-5 w-5" aria-hidden="true" />}
     />
   </>
 );
+};
 
 /** Error strip shown above a challenge board. */
 export const ChallengeErrorBanner: React.FC<{ message: string }> = ({ message }) => (
@@ -200,14 +196,15 @@ interface ChallengeVictoryCardProps {
   subtitle?: string;
   onRestart: () => void;
   busy: boolean;
-  dict?: Dictionary;
 }
 
 /** The win screen every challenge shows once its run is completed. */
-export const ChallengeVictoryCard: React.FC<ChallengeVictoryCardProps> = ({ title, subtitle, onRestart, busy, dict }) => (
+export const ChallengeVictoryCard: React.FC<ChallengeVictoryCardProps> = ({ title, subtitle, onRestart, busy }) => {
+  const dict = useDictionary();
+  return (
   <div className={`${CELEBRATION_CARD_CLASSES} px-6 py-10`}>
     <CelebrationBadge />
-    <p className={`mt-6 ${CELEBRATION_LABEL_CLASSES}`}>{dict?.streaks?.victoryCongrats || 'Congratulations'}</p>
+    <p className={`mt-6 ${CELEBRATION_LABEL_CLASSES}`}>{dict.streaks.victoryCongrats}</p>
     <h2 className="mt-2 text-2xl font-black tracking-tight text-text-primary">{title}</h2>
     {subtitle && <p className="mt-1 type-card-title text-text-secondary">{subtitle}</p>}
     <button
@@ -216,7 +213,8 @@ export const ChallengeVictoryCard: React.FC<ChallengeVictoryCardProps> = ({ titl
       disabled={busy}
       className="mt-6 inline-flex items-center justify-center gap-2 rounded-xl bg-accent-amber px-6 py-3 type-card-title text-text-inverted shadow-xs transition-colors hover:bg-accent-amber-hover disabled:opacity-50 cursor-pointer"
     >
-      {dict?.streaks?.startNewRun || 'Start a new run'}
+      {dict.streaks.startNewRun}
     </button>
   </div>
 );
+};

@@ -26,6 +26,7 @@ import { staticUrl } from '@/utils/api';
 
 import { tip } from '@/components/common/Tooltip';
 import { formatMessage } from '@/utils/i18nFormat';
+import { useDictionary } from "@/context/DictionaryContext";
 
 const ALL_MODES: MinigameMode[] = [
   'classic_character',
@@ -48,24 +49,14 @@ interface RoundEditorCardProps {
   index: number;
   totalRounds: number;
   catalog: MinigameCatalog;
-  dict: Dictionary;
   onUpdate: (updated: RoundConfig) => void;
   onRemove: () => void;
   onMoveUp: () => void;
   onMoveDown: () => void;
 }
 
-export const RoundEditorCard: React.FC<RoundEditorCardProps> = ({
-  round,
-  index,
-  totalRounds,
-  catalog,
-  dict,
-  onUpdate,
-  onRemove,
-  onMoveUp,
-  onMoveDown,
-}) => {
+export const RoundEditorCard: React.FC<RoundEditorCardProps> = ({ round, index, totalRounds, catalog, onUpdate, onRemove, onMoveUp, onMoveDown }) => {
+  const dict = useDictionary();
   const t = dict.minigames;
   const c = t.creator;
 

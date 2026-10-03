@@ -4,20 +4,21 @@ import type { Dictionary } from '@/locales/types';
 import React from 'react';
 import { TrophySlot } from './TrophySlot';
 import type { TrophyShelfDef } from './shelves';
+import { useDictionary } from "@/context/DictionaryContext";
 
 interface TrophyShelfProps {
   shelf: TrophyShelfDef;
-  dict?: Dictionary;
 }
 
-export const TrophyShelf: React.FC<TrophyShelfProps> = ({ shelf, dict }) => {
-  const t = dict?.achievements;
-  const ownedBadge = t?.ownedBadgeLabel || 'Owned roster';
-  const allBadge = t?.allBadgeLabel || 'Full roster';
-  const beatPrefix = t?.beatChallengePrefix || 'Beat this challenge at';
-  const difficultyWord = t?.difficultyWord || 'difficulty';
-  const ownedSuffix = t?.ownedCharactersSuffix || 'using only your unlocked characters.';
-  const allSuffix = t?.allCharactersSuffix || 'using every character in the game.';
+export const TrophyShelf: React.FC<TrophyShelfProps> = ({ shelf }) => {
+  const dict = useDictionary();
+  const t = dict.achievements;
+  const ownedBadge = t.ownedBadgeLabel;
+  const allBadge = t.allBadgeLabel;
+  const beatPrefix = t.beatChallengePrefix;
+  const difficultyWord = t.difficultyWord;
+  const ownedSuffix = t.ownedCharactersSuffix;
+  const allSuffix = t.allCharactersSuffix;
 
   return (
     <div className="rounded-2xl border border-accent-amber/30 bg-gradient-to-b from-accent-amber/10 to-accent-amber/5 p-5 shadow-sm">

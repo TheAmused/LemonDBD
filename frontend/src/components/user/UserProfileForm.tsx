@@ -9,21 +9,17 @@ import { updateUserProfile, ApiError } from '@/services/userProfileApi';
 import { usePersistentDrawer } from '@/hooks/usePersistentDrawer';
 import { Button } from '@/components/common/Button';
 import { Input } from '@/components/common/Field';
+import { useDictionary } from "@/context/DictionaryContext";
 
 interface UserProfileFormProps {
   initialEmail: string;
   onRefreshUser: () => Promise<void>;
-  dict?: Dictionary;
   t?: Record<string, string>;
 }
 
-export const UserProfileForm: React.FC<UserProfileFormProps> = ({
-  initialEmail,
-  onRefreshUser,
-  dict,
-  t: propT,
-}) => {
-  const t: Record<string, string> = propT || dict?.user || {};
+export const UserProfileForm: React.FC<UserProfileFormProps> = ({ initialEmail, onRefreshUser, t: propT }) => {
+  const dict = useDictionary();
+  const t: Record<string, string> = propT || dict.user || {};
   const [isExpanded, toggleExpanded] = usePersistentDrawer('lemondbd_drawer_account', false);
 
   const [newEmail, setNewEmail] = useState(initialEmail);
@@ -114,10 +110,10 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
         <div className="relative z-10 w-8 hidden sm:block" aria-hidden="true" />
         <div className="relative z-10 flex-1 text-center">
           <h2 className="type-section-title text-text-primary group-hover:text-accent-red transition-colors">
-            {dict?.user?.tabSanctum || 'Account Management'}
+            {dict.user.tabSanctum}
           </h2>
           <p className="type-section-subtitle text-text-secondary mt-0.5">
-            {dict?.user?.accountSettingsSubtitle || 'Manage your email address and password'}
+            {dict.user.accountSettingsSubtitle}
           </p>
         </div>
         <div className="relative z-10 w-8 flex justify-end">
@@ -160,7 +156,7 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
                 {/* Email Address */}
                 <div className="space-y-1.5">
                   <label className="block type-label-xs text-text-secondary">
-                    {dict?.user?.emailLabel || 'Email Address'}
+                    {dict.user.emailLabel}
                   </label>
                   <div className="relative">
                     <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-text-muted">
@@ -182,7 +178,7 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
                   <div className="flex items-center justify-between">
                     <span className="type-label-sm text-text-primary flex items-center gap-2">
                       <Lock className="h-3.5 w-3.5 text-accent-amber" />
-                      <span>{dict?.user?.passwordLabel || 'Password'}</span>
+                      <span>{dict.user.passwordLabel}</span>
                     </span>
                     <span className="type-caption text-text-muted">
                       {t.passwordPlaceholder || 'Leave blank to keep current'}

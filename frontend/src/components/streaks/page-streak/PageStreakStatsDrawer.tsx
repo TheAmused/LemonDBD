@@ -6,6 +6,7 @@ import React from 'react';
 import { PageStreakStats, PageStreakMatchLog } from '@/types/pageStreak';
 import { StreakStatsDrawer } from '../StreakStatsDrawer';
 import { useCharacterDisplayName } from '@/context/DisplayNamesContext';
+import { useDictionary } from "@/context/DictionaryContext";
 
 export interface PageStreakStatsDrawerProps {
   isOpen: boolean;
@@ -13,10 +14,10 @@ export interface PageStreakStatsDrawerProps {
   stats: PageStreakStats | null;
   /** The open killer's current attempt number. */
   attempts?: number;
-  dict?: Dictionary;
 }
 
-export const PageStreakStatsDrawer: React.FC<PageStreakStatsDrawerProps> = ({ isOpen, onClose, stats, attempts, dict }) => {
+export const PageStreakStatsDrawer: React.FC<PageStreakStatsDrawerProps> = ({ isOpen, onClose, stats, attempts }) => {
+  const dict = useDictionary();
   const characterDisplayName = useCharacterDisplayName();
   return (
   <StreakStatsDrawer<PageStreakMatchLog>
@@ -24,13 +25,12 @@ export const PageStreakStatsDrawer: React.FC<PageStreakStatsDrawerProps> = ({ is
     onClose={onClose}
     stats={stats}
     attempts={attempts}
-    dict={dict}
     renderLabel={(log) => (
       <div className="text-base font-bold text-text-primary">{characterDisplayName(log.killer)}</div>
     )}
     renderMeta={(log) => (
       <span>
-        {dict?.streaks?.attemptLabel || 'Attempt'} {log.attempt} {dict?.streaks?.middotSeparator || '·'} {dict?.streaks?.pageLabel || 'Page'} {log.page_number}
+        {dict.streaks.attemptLabel} {log.attempt} {dict.streaks.middotSeparator} {dict.streaks.pageLabel} {log.page_number}
       </span>
     )}
   />

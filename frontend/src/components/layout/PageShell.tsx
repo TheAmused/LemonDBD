@@ -2,6 +2,7 @@
 import type { ReactNode } from 'react';
 import { Sidebar } from '@/components/Sidebar';
 import type { Dictionary } from '@/locales/types';
+import { useDictionary } from "@/context/DictionaryContext";
 
 /**
  * The 4 padding scales actually in use across pages: tight (dense grids like
@@ -19,7 +20,6 @@ export const PAGE_SHELL_PADDING_CLASSES: Record<PageShellPadding, string> = {
 
 interface PageShellProps {
   locale: string;
-  dict: Dictionary;
   activeCategory?: string;
   onSelectCategory?: (category: string) => void;
   totalPerksCount?: number;
@@ -49,21 +49,21 @@ export const DEFAULT_OUTER_CLASSNAME =
  * caused the sitewide padding regression this shell class was named after.
  */
 export function PageShell({
-  locale,
-  dict,
-  activeCategory,
-  onSelectCategory,
-  totalPerksCount,
-  survivorCount,
-  killerCount,
-  characterCount,
-  padding = 'comfortable',
-  customPadding,
-  mainClassName = '',
-  mainId,
-  outerClassName,
-  children,
-}: PageShellProps) {
+      locale,
+      activeCategory,
+      onSelectCategory,
+      totalPerksCount,
+      survivorCount,
+      killerCount,
+      characterCount,
+      padding = 'comfortable',
+      customPadding,
+      mainClassName = '',
+      mainId,
+      outerClassName,
+      children,
+    }: PageShellProps) {
+  const dict = useDictionary();
   // The flush margin variant (`lemon-shell-main--flush`) is keyed off
   // `padding`, not `customPadding` -- `customPadding` overrides only the
   // spacing classes (see mainClasses below), so a page can still combine
@@ -83,7 +83,6 @@ export function PageShell({
     <div className={outerClassName ?? DEFAULT_OUTER_CLASSNAME}>
       <Sidebar
         currentLocale={locale}
-        dict={dict}
         activeCategory={activeCategory}
         onSelectCategory={onSelectCategory}
         totalPerksCount={totalPerksCount}

@@ -8,7 +8,7 @@ import { RulesModalListSection, RulesModalNotices, type RuleListEntry } from './
 /** The `dict.streaks` copy bag, loosened so keys can be looked up dynamically. */
 export type StreakCopy = Record<string, string | undefined>;
 
-export const streakCopy = (dict?: Dictionary): StreakCopy => (dict?.streaks ?? {}) as unknown as StreakCopy;
+export const streakCopy = (dict: Dictionary): StreakCopy => dict.streaks as unknown as StreakCopy;
 
 export type RulesTone = 'red' | 'neutral';
 

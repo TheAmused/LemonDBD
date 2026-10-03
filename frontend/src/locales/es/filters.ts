@@ -38,4 +38,9 @@ export default {
   mostUpvoted: "Más Votadas",
   resetAllFilters: "Restablecer Filtros",
   viewMode: "Cuadrícula de Habilidades",
+  clearSearch: "Borrar búsqueda",
+  filtersTitle: "Filtros",
+  ownershipFilter: "Filtrar por posesión",
+  sortFields: "Campo de orden",
+  sortOrderLabel: "Orden de clasificación",
 } as const;

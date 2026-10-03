@@ -194,6 +194,8 @@ export default {
     signatureQuote: 'Charakterystyczny Cytat',
     greenFlag: 'Zielone Flagi',
     redFlag: 'Czerwone Flagi',
+    turn_on: 'Kręci go/ją:',
+    dealbreaker: 'Wykluczające:',
   },
   hud: {
     swipeLeftHint: 'Przesuń w lewo, aby odrzucić (Pass)',
@@ -310,6 +312,8 @@ export default {
     playBgm: 'Włącz muzykę (B)',
     unmute: 'Włącz dźwięki FX (M)',
     mute: 'Wycisz dźwięki FX (M)',
+    groupByTierDesc: 'Grupuj postacie w tiery według odsetka Smash.',
+    rankedListDesc: 'Pokaż jedną listę uszeregowaną według odsetka Smash.',
   },
   picker: {
     yours: 'Twoje',
@@ -470,6 +474,7 @@ export default {
     draftRestored: 'Przywrócono Twój niedokończony szkic.',
     startOver: 'Zacznij od nowa',
     closeToast: 'Zamknij',
+    unnamedCandidate: 'Kandydat bez nazwy',
   },
   cropModal: {
     title: 'Przytnij i wykadruj obraz okładki',
@@ -554,4 +559,5 @@ export default {
     facebookNotice: 'Otwarto Facebooka! Treść posta skopiowano do schowka (wklej za pomocą Ctrl+V).',
     telegramNotice: 'Otwarto Telegram! Treść wiadomości skopiowano do schowka.',
   },
+  communityConsensus: 'Konsensus społeczności',
 } as const;

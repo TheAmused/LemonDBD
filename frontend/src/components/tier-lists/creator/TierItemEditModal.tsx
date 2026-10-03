@@ -13,17 +13,18 @@ import { TierItemTile } from '../TierItemTile';
 import { LABEL, TOUCH_BTN, TOUCH_FIELD } from '../styles';
 import { Button } from '@/components/common/Button';
 import { Input } from '@/components/common/Field';
+import { useDictionary } from "@/context/DictionaryContext";
 
 interface TierItemEditModalProps {
   item: TierListDocumentItem | null;
   isOpen: boolean;
   onClose: () => void;
   onSave: (id: string, patch: { name: string; image?: string }) => void;
-  dict: Dictionary;
 }
 
 /** Modal to edit both the item's name and image URL / avatar with live preview and validation. */
-export function TierItemEditModal({ item, isOpen, onClose, onSave, dict }: TierItemEditModalProps) {
+export function TierItemEditModal({ item, isOpen, onClose, onSave }: TierItemEditModalProps) {
+  const dict = useDictionary();
   const t = dict.tierLists;
   const c = t.creator;
 

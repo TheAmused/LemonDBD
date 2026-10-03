@@ -23,6 +23,7 @@ import { LABEL } from './styles';
 import { Checkbox } from '@/components/common/Checkbox';
 import { Button } from '@/components/common/Button';
 import { Input, Select, Textarea } from '@/components/common/Field';
+import { useDictionary } from "@/context/DictionaryContext";
 
 const ICON_PRESETS: Array<{ name: string; icon: React.ComponentType<{ className?: string }> }> = [
   { name: 'sparkles', icon: Sparkles },
@@ -49,17 +50,10 @@ interface RomanceArchetypeBuilderProps {
   availableRoles: string[];
   availableGenders: string[];
   embedded?: boolean;
-  dict: Dictionary;
 }
 
-export function RomanceArchetypeBuilder({
-  archetypes,
-  onChange,
-  availableRoles,
-  availableGenders,
-  embedded = false,
-  dict,
-}: RomanceArchetypeBuilderProps) {
+export function RomanceArchetypeBuilder({ archetypes, onChange, availableRoles, availableGenders, embedded = false }: RomanceArchetypeBuilderProps) {
+  const dict = useDictionary();
   const ab = dict.smashOrPass.archetypeBuilder;
 
   const [expandedId, setExpandedId] = useState<string | null>(archetypes[0]?.id || null);

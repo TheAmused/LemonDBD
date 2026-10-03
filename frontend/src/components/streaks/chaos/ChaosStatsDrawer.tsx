@@ -9,15 +9,17 @@ import { ADDON_RARITY_ICONS } from '@/constants/addonRarityIcons';
 import { useCharacterDisplayName } from '@/context/DisplayNamesContext';
 
 import { tip } from '@/components/common/Tooltip';
+import { useDictionary } from "@/context/DictionaryContext";
+
 export interface ChaosStatsDrawerProps {
   isOpen: boolean;
   onClose: () => void;
   stats: ChaosStats | null;
   attempts?: number;
-  dict?: Dictionary;
 }
 
-export const ChaosStatsDrawer: React.FC<ChaosStatsDrawerProps> = ({ isOpen, onClose, stats, attempts, dict }) => {
+export const ChaosStatsDrawer: React.FC<ChaosStatsDrawerProps> = ({ isOpen, onClose, stats, attempts }) => {
+  const dict = useDictionary();
   const characterDisplayName = useCharacterDisplayName();
   return (
   <StreakStatsDrawer<ChaosMatchLog>
@@ -25,14 +27,13 @@ export const ChaosStatsDrawer: React.FC<ChaosStatsDrawerProps> = ({ isOpen, onCl
     onClose={onClose}
     stats={stats}
     attempts={attempts}
-    dict={dict}
     renderLabel={(log) => (
       <div className="text-base font-bold text-text-primary">{characterDisplayName(log.killer_id)}</div>
     )}
     renderMeta={(log) => (
       <span className="inline-flex items-center gap-1.5">
-        {dict?.streaks?.streakLabel || 'Streak:'} {streakAtResult(log)}
-        <span>{dict?.streaks?.middotSeparator || '·'}</span>
+        {dict.streaks.streakLabel} {streakAtResult(log)}
+        <span>{dict.streaks.middotSeparator}</span>
         {log.addon_rarities.map((rarity, i) => (
           <img
             key={i}

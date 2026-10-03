@@ -3,14 +3,15 @@
 import type { Dictionary } from '@/locales/types';
 import React from 'react';
 import { DbdSpinner } from '@/components/common/DbdSpinner';
+import { useDictionary } from "@/context/DictionaryContext";
 
 interface UserBugReportsSkeletonProps {
-  dict?: Dictionary | null;
   count?: number;
 }
 
-export const UserBugReportsSkeleton: React.FC<UserBugReportsSkeletonProps> = ({ dict }) => {
-  const loadingLabel = dict?.user?.loadingReports || dict?.app?.loading || 'Loading your reported tickets...';
+export const UserBugReportsSkeleton: React.FC<UserBugReportsSkeletonProps> = () => {
+  const dict = useDictionary();
+  const loadingLabel = dict.user.loadingReports;
 
   return (
     <div
@@ -25,7 +26,6 @@ export const UserBugReportsSkeleton: React.FC<UserBugReportsSkeletonProps> = ({ 
         accent="blood"
         needleSpeed={1.3}
         label={loadingLabel}
-        dict={dict}
       />
     </div>
   );

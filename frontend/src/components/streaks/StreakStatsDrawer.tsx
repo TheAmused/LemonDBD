@@ -8,6 +8,7 @@ import { Button } from '@/components/common/Button';
 import { Modal } from '@/components/common/Modal';
 import { StreakMatchRow } from './StreakMatchRow';
 import { StreakMatchesModal } from './StreakMatchesModal';
+import { useDictionary } from "@/context/DictionaryContext";
 
 const VISIBLE_MATCHES = 10;
 
@@ -41,7 +42,6 @@ export interface StreakStatsDrawerProps<TLog extends StreakMatchLogBase> {
   renderLabel: (log: TLog) => React.ReactNode;
   /** Secondary line under the label, e.g. "Streak: 4" or "Attempt 2, Page 3". */
   renderMeta: (log: TLog) => React.ReactNode;
-  dict?: Dictionary;
 }
 
 /**
@@ -51,15 +51,8 @@ export interface StreakStatsDrawerProps<TLog extends StreakMatchLogBase> {
  * inactivity badge) with small visual drift between copies. Only the
  * per-mode label/meta for each row differs now, via render props.
  */
-export function StreakStatsDrawer<TLog extends StreakMatchLogBase>({
-  isOpen,
-  onClose,
-  stats,
-  attempts,
-  renderLabel,
-  renderMeta,
-  dict,
-}: StreakStatsDrawerProps<TLog>) {
+export function StreakStatsDrawer<TLog extends StreakMatchLogBase>({ isOpen, onClose, stats, attempts, renderLabel, renderMeta }: StreakStatsDrawerProps<TLog>) {
+  const dict = useDictionary();
   const [isAllOpen, setIsAllOpen] = useState(false);
 
   const winRate = stats ? stats.win_rate : 0;
@@ -74,18 +67,18 @@ export function StreakStatsDrawer<TLog extends StreakMatchLogBase>({
         isOpen={isOpen}
         onClose={onClose}
         variant="drawer-right"
-        title={dict?.streaks?.stats || 'Statistics'}
-        closeButtonAriaLabel={dict?.modal?.close || 'Close'}
+        title={dict.streaks.stats}
+        closeButtonAriaLabel={dict.modal.close}
         bodyClassName="space-y-6 p-5 sm:p-6"
       >
         <div className="grid grid-cols-2 gap-4">
           <div className="col-span-2 bg-bg-elevated border border-border-color rounded-xl p-5 flex items-center justify-between shadow-inner">
             <div>
               <span className="type-label-sm text-text-secondary">
-                {dict?.streaks?.winRate || 'Win Rate'}
+                {dict.streaks.winRate}
               </span>
               <div className="text-4xl font-extrabold text-text-primary mt-1">
-                {winRate.toFixed(1)}{dict?.streaks?.percentSign || '%'}
+                {winRate.toFixed(1)}{dict.streaks.percentSign}
               </div>
             </div>
             <div className="relative w-16 h-16 flex items-center justify-center rounded-full bg-bg-elevated border-4 border-accent-red font-bold text-lg shadow-sm">
@@ -95,7 +88,7 @@ export function StreakStatsDrawer<TLog extends StreakMatchLogBase>({
 
           <div className="bg-bg-elevated border border-border-color rounded-xl p-4 shadow-sm">
             <div className="type-label-sm text-text-secondary">
-              {dict?.streaks?.matches || 'Matches'}
+              {dict.streaks.matches}
             </div>
             <div className="text-2xl font-black text-text-primary mt-1">{totalMatches}</div>
           </div>
@@ -103,7 +96,7 @@ export function StreakStatsDrawer<TLog extends StreakMatchLogBase>({
           {attempts !== undefined && (
             <div className="bg-bg-elevated border border-border-color rounded-xl p-4 shadow-sm">
               <div className="type-label-sm text-text-secondary">
-                {dict?.streaks?.attempts || 'Attempts'}
+                {dict.streaks.attempts}
               </div>
               <div className="text-2xl font-black text-text-primary mt-1">{attempts}</div>
             </div>
@@ -111,14 +104,14 @@ export function StreakStatsDrawer<TLog extends StreakMatchLogBase>({
 
           <div className="bg-bg-elevated border border-border-color rounded-xl p-4 shadow-sm">
             <div className="type-label-sm text-accent-green">
-              {dict?.streaks?.wins || 'Wins'}
+              {dict.streaks.wins}
             </div>
             <div className="text-2xl font-black text-accent-green mt-1">{wins}</div>
           </div>
 
           <div className="bg-bg-elevated border border-border-color rounded-xl p-4 shadow-sm">
             <div className="type-label-sm text-accent-red">
-              {dict?.streaks?.losses || 'Losses'}
+              {dict.streaks.losses}
             </div>
             <div className="text-2xl font-black text-accent-red mt-1">{losses}</div>
           </div>
@@ -126,21 +119,21 @@ export function StreakStatsDrawer<TLog extends StreakMatchLogBase>({
 
         <div>
           <h3 className="type-label text-text-secondary mb-4">
-            {dict?.streaks?.recentMatchHistory || 'Recent Match History'}
+            {dict.streaks.recentMatchHistory}
           </h3>
 
           {recentLogs.length === 0 ? (
             <div className="text-center py-8 text-text-muted text-xs bg-bg-elevated rounded-xl border border-border-color">
-              {dict?.streaks?.noMatchesLogged || 'No matches logged yet. Complete your first match!'}
+              {dict.streaks.noMatchesLogged}
             </div>
           ) : (
             <div className="space-y-2.5">
               {recentLogs.slice(0, VISIBLE_MATCHES).map((log) => (
-                <StreakMatchRow key={log.id} log={log} renderLabel={renderLabel} renderMeta={renderMeta} dict={dict} />
+                <StreakMatchRow key={log.id} log={log} renderLabel={renderLabel} renderMeta={renderMeta} />
               ))}
               {recentLogs.length > VISIBLE_MATCHES && (
                 <Button variant="secondary" size="md" className="w-full" onClick={() => setIsAllOpen(true)}>
-                  {dict?.streaks?.viewAllWins || 'View all'} ({recentLogs.length})
+                  {dict.streaks.viewAllWins} ({recentLogs.length})
                 </Button>
               )}
             </div>
@@ -154,7 +147,6 @@ export function StreakStatsDrawer<TLog extends StreakMatchLogBase>({
         logs={recentLogs}
         renderLabel={renderLabel}
         renderMeta={renderMeta}
-        dict={dict}
       />
     </>
   );

@@ -194,6 +194,8 @@ export default {
     signatureQuote: 'Cita distintiva',
     greenFlag: 'Banderas Verdes',
     redFlag: 'Banderas Rojas',
+    turn_on: 'Le enciende:',
+    dealbreaker: 'Inaceptable:',
   },
   hud: {
     swipeLeftHint: 'Desliza a la izquierda para Pass',
@@ -294,6 +296,8 @@ export default {
     playBgm: 'Reproducir música (B)',
     unmute: 'Activar sonido FX (M)',
     mute: 'Silenciar sonido FX (M)',
+    groupByTierDesc: 'Agrupa a los personajes en tiers según su tasa de Smash.',
+    rankedListDesc: 'Muestra una única lista ordenada por tasa de Smash.',
   },
   picker: {
     yours: 'Tuyos',
@@ -454,6 +458,7 @@ export default {
     draftRestored: 'Se ha recuperado tu borrador sin terminar.',
     startOver: 'Empezar de nuevo',
     closeToast: 'Cerrar',
+    unnamedCandidate: 'Candidato sin nombre',
   },
   cropModal: {
     title: 'Recortar y encuadrar imagen de portada',
@@ -538,4 +543,5 @@ export default {
     facebookNotice: '¡Facebook abierto! Texto de la publicación copiado al portapapeles (pegar con Ctrl+V).',
     telegramNotice: '¡Telegram abierto! Texto del mensaje copiado al portapapeles.',
   },
+  communityConsensus: 'Consenso de la comunidad',
 } as const;

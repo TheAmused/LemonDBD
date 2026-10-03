@@ -18,6 +18,7 @@ import { cn } from '@/utils/cn';
 import { Tooltip } from '@/components/common/Tooltip';
 import { DbdButton } from '../shared/DbdButton';
 import { formatMessage } from '@/utils/i18nFormat';
+import { useDictionary } from "@/context/DictionaryContext";
 
 export interface SlotMachineStageProps {
   role: RoleCategory;
@@ -28,7 +29,6 @@ export interface SlotMachineStageProps {
   onRevealSlot: (idx: number) => void;
   onSelectPerk: (perk: Perk) => void;
   isBlind?: boolean;
-  dict?: Dictionary;
   backendBase?: string;
 }
 
@@ -123,17 +123,17 @@ function buildStrip(pool: Perk[], landedPerk: Perk | null, broken: boolean, mobi
 }
 
 export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
-  role,
-  activePlayablePerks,
-  activeMutator,
-  onRollComplete,
-  revealedSlots,
-  onRevealSlot,
-  onSelectPerk,
-  isBlind = false,
-  dict,
-  backendBase,
-}) => {
+      role,
+      activePlayablePerks,
+      activeMutator,
+      onRollComplete,
+      revealedSlots,
+      onRevealSlot,
+      onSelectPerk,
+      isBlind = false,
+      backendBase,
+    }) => {
+  const dict = useDictionary();
   const [phase, setPhase] = useState<MachinePhase>('idle');
   const [reels, setReels] = useState<Reel[]>([]);
   const [spinningIds, setSpinningIds] = useState<Set<number>>(new Set());
@@ -426,10 +426,10 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
   const canConfirm = staged.size >= range.min && staged.size <= range.max;
   const confirmHint =
     range.min === range.max
-      ? formatMessage((dict?.generator?.slotSelectExact || 'Select exactly {count} to continue'), { count: range.min })
+      ? formatMessage((dict.generator.slotSelectExact), { count: range.min })
       : range.min === 0
-        ? formatMessage((dict?.generator?.slotSelectUpTo || 'Select up to {max} (optional)'), { max: range.max })
-        : formatMessage((dict?.generator?.slotSelectRange || 'Select {min}-{max} to continue'), { min: range.min, max: range.max });
+        ? formatMessage((dict.generator.slotSelectUpTo), { max: range.max })
+        : formatMessage((dict.generator.slotSelectRange), { min: range.min, max: range.max });
 
   return (
     <div className="flex h-full w-full flex-col items-center justify-center gap-2 sm:gap-4 py-1 sm:py-4">
@@ -443,11 +443,9 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
         {phase === 'idle' && (
           <div className="flex flex-col items-center justify-center gap-3 sm:gap-6 xl:gap-8 2xl:gap-10 py-2 sm:py-6 wide:py-8">
             <p className="max-w-lg xl:max-w-2xl 2xl:max-w-3xl wide:max-w-4xl text-center text-xs sm:text-base xl:text-lg wide:text-xl font-semibold text-text-secondary leading-relaxed">
-              {dict?.generator?.slotMachinePrompt ||
-                'Pull the lever, then lock in perks over up to 3 cycles until your loadout is full.'}
+              {dict.generator.slotMachinePrompt}
               {' '}
-              {dict?.generator?.slotCursedFlavor ||
-                "Eight reels spin at once, but the machine's cursed, so a reel or two may jam broken."}
+              {dict.generator.slotCursedFlavor}
             </p>
             <button
               type="button"
@@ -468,7 +466,7 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
               onClick={handlePullLever}
               disabled={activePlayablePerks.length === 0}
             >
-              {dict?.generator?.slotMachineSpinButton || 'Pull the Lever'}
+              {dict.generator.slotMachineSpinButton}
             </DbdButton>
           </div>
         )}
@@ -476,9 +474,9 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
       {(phase === 'spinning' || phase === 'awaiting') && (
         <>
           <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 text-xs sm:text-sm font-black uppercase tracking-wide text-accent-amber">
-            <span>{formatMessage((dict?.generator?.slotCycleLabel || 'Cycle {cycle}/3'), { cycle: cycleIndex + 1 })}</span>
+            <span>{formatMessage((dict.generator.slotCycleLabel), { cycle: cycleIndex + 1 })}</span>
             <span className="text-text-muted">{'•'}</span>
-            <span>{formatMessage((dict?.generator?.slotLockedCount || '{count}/4 Locked'), { count: selected.length })}</span>
+            <span>{formatMessage((dict.generator.slotLockedCount), { count: selected.length })}</span>
           </div>
 
           {isMobile ? (
@@ -531,7 +529,7 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
                       {reel.strip.map((cell, i) => {
                         const coordLabel =
                           cell.perk && cell.page !== undefined && cell.slot !== undefined
-                            ? `${dict?.generator?.coordOpenPage || '[P'}${cell.page}${dict?.generator?.coordSlot || '/S'}${cell.slot}${dict?.generator?.coordClose || ']'}`
+                            ? `${dict.generator.coordOpenPage}${cell.page}${dict.generator.coordSlot}${cell.slot}${dict.generator.coordClose}`
                             : null;
                         return (
                           <div
@@ -614,9 +612,9 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
                         )}
                       >
                         {reel.locked
-                          ? (dict?.generator?.slotLockedLabel || '')
+                          ? (dict.generator.slotLockedLabel)
                           : landedBroken
-                          ? (dict?.generator?.slotBrokenLabel || '')
+                          ? (dict.generator.slotBrokenLabel)
                           : `#${reel.id + 1}`}
                       </span>
                       {reel.locked ? (
@@ -629,10 +627,9 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
                     {/* Horizontal Reel Window */}
                     {landedBroken ? (
                       <Tooltip variant="action"
-                        title={dict?.generator?.slotJammedTitle || 'Jammed'}
+                        title={dict.generator.slotJammedTitle}
                         description={
-                          dict?.generator?.slotJammedDesc ||
-                          'This reel is broken for the whole draw, so it can never be picked. Pull a brand-new draw to clear it.'
+                          dict.generator.slotJammedDesc
                         }
                       >
                         {mobileWindow}
@@ -718,7 +715,7 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
                       {reel.strip.map((cell, i) => {
                         const coordLabel =
                           cell.perk && cell.page !== undefined && cell.slot !== undefined
-                            ? `${dict?.generator?.coordOpenPage || '[P'}${cell.page}${dict?.generator?.coordSlot || '/S'}${cell.slot}${dict?.generator?.coordClose || ']'}`
+                            ? `${dict.generator.coordOpenPage}${cell.page}${dict.generator.coordSlot}${cell.slot}${dict.generator.coordClose}`
                             : null;
                         return (
                           <div
@@ -766,10 +763,9 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
                     <div className="relative">
                       {landedBroken ? (
                         <Tooltip variant="action"
-                          title={dict?.generator?.slotJammedTitle || 'Jammed'}
+                          title={dict.generator.slotJammedTitle}
                           description={
-                            dict?.generator?.slotJammedDesc ||
-                            'This reel is broken for the whole draw, so it can never be picked. Pull a brand-new draw to clear it.'
+                            dict.generator.slotJammedDesc
                           }
                         >
                           {reelWindow}
@@ -789,7 +785,7 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
                         reel.locked ? 'text-accent-amber' : landedBroken ? 'text-accent-red' : 'text-text-muted'
                       )}
                     >
-                      {reel.locked ? (dict?.generator?.slotLockedLabel || 'Locked') : landedBroken ? (dict?.generator?.slotBrokenLabel || 'Broken') : `#${reel.id + 1}`}
+                      {reel.locked ? (dict.generator.slotLockedLabel) : landedBroken ? (dict.generator.slotBrokenLabel) : `#${reel.id + 1}`}
                     </span>
                   </div>
                 );
@@ -816,7 +812,7 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
               onClick={handleConfirm}
               disabled={!canConfirm || phase !== 'awaiting'}
             >
-              {dict?.generator?.slotConfirmSelection || 'Confirm Selection'}
+              {dict.generator.slotConfirmSelection}
             </DbdButton>
           </div>
         </>
@@ -825,7 +821,7 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
       {phase === 'complete' && (
         <>
           <p className="text-sm font-bold text-text-secondary text-center sm:text-base">
-            {dict?.generator?.scatterComplete || 'Your loadout is locked in.'}
+            {dict.generator.scatterComplete}
           </p>
           <div ref={resultsRef} className="grid grid-cols-2 gap-3 lg:grid-cols-4">
             {selected.map((slot, idx) => {
@@ -848,7 +844,6 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
                   isObscured={isObscured}
                   isBlind={isBlind}
                   onClick={onClick}
-                  dict={dict}
                 />
               );
             })}
@@ -858,7 +853,7 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
             size="md"
             onClick={handleReset}
           >
-            {dict?.generator?.slotMachineSpinButton || 'Pull the Lever'}
+            {dict.generator.slotMachineSpinButton}
           </DbdButton>
         </>
       )}

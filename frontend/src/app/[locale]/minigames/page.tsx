@@ -15,11 +15,10 @@ export default function MinigamesPage() {
   return (
     <PageShell
       locale={locale}
-      dict={dict}
       activeCategory="minigames"
       mainClassName="relative flex flex-col"
     >
-      <MinigamesHub locale={locale} dict={dict} />
+      <MinigamesHub locale={locale} />
     </PageShell>
   );
 }

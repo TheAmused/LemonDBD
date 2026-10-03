@@ -37,6 +37,8 @@ import { Input } from '@/components/common/Field';
 import { Surface } from '@/components/common/Surface';
 import { copyTextWithFallback } from '@/utils/clipboard';
 import { isSurvivor } from '@/utils/characterUtils';
+import { useDictionary } from "@/context/DictionaryContext";
+
 interface PersonaArchetypeEntry {
   title?: string;
   subtitle?: string;
@@ -50,26 +52,17 @@ interface RomancePersonaModalProps {
   sharedPayload?: SharedArchetypePayload | null;
   onResetAll?: () => void;
   locale?: string;
-  dict?: Dictionary | any;
   customArchetypes?: CustomRomanceArchetype[];
 }
 
-export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
-  isOpen,
-  onClose,
-  votes,
-  sharedPayload,
-  onResetAll,
-  locale = 'en',
-  dict,
-  customArchetypes,
-}) => {
+export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({ isOpen, onClose, votes, sharedPayload, onResetAll, locale = 'en', customArchetypes }) => {
+  const dict = useDictionary();
   const [copied, setCopied] = useState<boolean>(false);
   const [isSharingView, setIsSharingView] = useState<boolean>(false);
   const [copiedLink, setCopiedLink] = useState<boolean>(false);
   const [feedbackNotice, setFeedbackNotice] = useState<string | null>(null);
   const backendBase = getBackendBaseUrl();
-  const rawSmash = dict?.smashOrPass;
+  const rawSmash = dict.smashOrPass;
 
   // Reset sharing view and notices when modal closes
   React.useEffect(() => {
@@ -88,7 +81,7 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
   };
 
   const persona: RomancePersonaResult = useMemo(() => {
-    const rawArchetypes = (rawSmash?.personaArchetypes || {}) as Record<string, PersonaArchetypeEntry>;
+    const rawArchetypes = (rawSmash.personaArchetypes || {}) as Record<string, PersonaArchetypeEntry>;
     if (sharedPayload) {
       return reconstructSharedPersona(sharedPayload, rawArchetypes);
     }
@@ -110,7 +103,7 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
     });
   }, [persona]);
 
-  const shareTitle = `${rawSmash?.modals?.personaTitle || 'Trial Romance Archetype'}: ${persona.title}`;
+  const shareTitle = `${rawSmash.modals.personaTitle}: ${persona.title}`;
   const shareText = `"${persona.title}" (${persona.smashRate}% Smash Rate) in Dead by Daylight Smash or Pass!`;
 
   const handleCopyLinkOnly = async () => {
@@ -165,10 +158,7 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
         onClick: async () => {
           await copyTextWithFallback(`${shareText} - ${shareUrl}`);
           showFeedbackNotice(
-            rawSmash?.sharing?.telegramNotice ||
-              (locale === 'pl'
-                ? 'Otwarto Telegram! Treść wiadomości skopiowano do schowka.'
-                : 'Telegram opened! Message text copied to clipboard.')
+            rawSmash.sharing.telegramNotice
           );
         },
         icon: (
@@ -185,10 +175,7 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
           e.preventDefault();
           await copyTextWithFallback(`${shareText} - ${shareUrl}`);
           showFeedbackNotice(
-            rawSmash?.sharing?.copiedForDiscord ||
-              (locale === 'pl'
-                ? 'Skopiowano treść z linkiem dla Discorda!'
-                : 'Copied quote & link for Discord!')
+            rawSmash.sharing.copiedForDiscord
           );
         },
         icon: (
@@ -226,25 +213,25 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
 
   const isSharedView = Boolean(persona.isShared);
   const personaModalTitle = isSharedView
-    ? rawSmash?.modals?.sharedPersonaTitle || (locale === 'pl' ? 'Udostępniony Archetyp Randkowy' : 'Shared Romance Archetype')
-    : rawSmash?.modals?.personaTitle || 'Trial Romance Archetype';
+    ? rawSmash.modals.sharedPersonaTitle
+    : rawSmash.modals.personaTitle;
 
-  const survivorsLabel = rawSmash?.filters?.survivors || 'Survivors';
-  const killersLabel = rawSmash?.filters?.killers || 'Killers';
-  const roleAffinityLabel = rawSmash?.roleAffinity || 'Faction Affinity Balance';
-  const noSmashesRecordedLabel = rawSmash?.noSmashesRecorded || 'No smashes recorded yet';
-  const datingPsychologyLabel = rawSmash?.datingPsychology || 'Dating Psychology Breakdown';
-  const totalEvaluatedLabel = rawSmash?.totalEvaluated || 'Total Evaluated:';
-  const candidatesLabel = rawSmash?.candidates || rawSmash?.candidatesWord || 'candidates';
-  const copiedToClipboardLabel = rawSmash?.copiedToClipboard || 'Copied to Clipboard!';
-  const shareArchetypeLabel = rawSmash?.shareArchetype || 'Share Archetype';
-  const resetVotesLabel = rawSmash?.tooltips?.resetAllVotes || 'Reset All Votes';
-  const percentSign = rawSmash?.percentSign || '%';
-  const smashRateLabel = rawSmash?.statsDetail?.smashRate || 'Smash Rate';
-  const firstSmashLabel = rawSmash?.statsDetail?.firstSmash || 'First Smash';
-  const startVotingLabel = rawSmash?.startVoting || 'Start Rating Candidates';
-  const playToDiscoverLabel = rawSmash?.playToDiscover || (locale === 'pl' ? 'Zagraj i Odkryj Swój Archetyp!' : 'Play & Discover Yours!');
-  const sharedResultBadge = rawSmash?.sharedBadge || (locale === 'pl' ? 'Udostępniony Wynik Znajomego' : "Friend's Shared Result");
+  const survivorsLabel = rawSmash.filters.survivors;
+  const killersLabel = rawSmash.filters.killers;
+  const roleAffinityLabel = rawSmash.roleAffinity;
+  const noSmashesRecordedLabel = rawSmash.noSmashesRecorded;
+  const datingPsychologyLabel = rawSmash.datingPsychology;
+  const totalEvaluatedLabel = rawSmash.totalEvaluated;
+  const candidatesLabel = rawSmash.candidates;
+  const copiedToClipboardLabel = rawSmash.copiedToClipboard;
+  const shareArchetypeLabel = rawSmash.shareArchetype;
+  const resetVotesLabel = rawSmash.tooltips.resetAllVotes;
+  const percentSign = rawSmash.percentSign;
+  const smashRateLabel = rawSmash.statsDetail.smashRate;
+  const firstSmashLabel = rawSmash.statsDetail.firstSmash;
+  const startVotingLabel = rawSmash.startVoting;
+  const playToDiscoverLabel = rawSmash.playToDiscover;
+  const sharedResultBadge = rawSmash.sharedBadge;
 
   const hasVotes = persona.totalVotes > 0 || isSharedView;
 
@@ -295,7 +282,7 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
       size="xl"
       title={
         isSharingView
-          ? rawSmash?.shareArchetype || (locale === 'pl' ? 'Udostępnij Swój Archetyp' : 'Share Your Archetype')
+          ? rawSmash.shareArchetype
           : personaModalTitle
       }
       icon={
@@ -311,8 +298,8 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
           <Button
             variant="secondary" size="md" icon
             onClick={() => setIsSharingView(false)}
-            {...tip(rawSmash?.sharing?.backToBreakdownTitle || 'Back to breakdown', undefined, 'action')}
-            aria-label={rawSmash?.sharing?.backAriaLabel || 'Back'}
+            {...tip(rawSmash.sharing.backToBreakdownTitle, undefined, 'action')}
+            aria-label={rawSmash.sharing.backAriaLabel}
           >
             <ArrowLeft className="h-4 w-4 sm:h-5 sm:w-5 text-accent-red" />
           </Button>
@@ -364,7 +351,7 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
               <div className="flex items-center justify-between gap-3">
                 <div className="min-w-0">
                   <span className="text-tiny uppercase tracking-widest text-text-inverted/75 block">
-                    {rawSmash?.modals?.personaTitle || 'Trial Romance Archetype'}
+                    {rawSmash.modals.personaTitle}
                   </span>
                   <h4 className="text-xl sm:text-2xl font-black tracking-tight truncate text-text-inverted">
                     {persona.title}
@@ -398,7 +385,7 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
             <div className="space-y-2 pt-1">
               <span className="type-label-2xs text-text-muted flex items-center gap-1.5">
                 <Share2 className="h-3 w-3 text-accent-red" />
-                {rawSmash?.sharing?.shareDirectly || 'Share Directly'}
+                {rawSmash.sharing.shareDirectly}
               </span>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs">
                 {socialLinks.map((item) => (
@@ -428,7 +415,7 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
             {/* Direct Link Copy (Single Canonical Copy Button) */}
             <div className="space-y-2 pt-1">
               <span className="type-label-2xs text-text-muted">
-                {rawSmash?.sharing?.directLink || 'Direct Link to Archetype'}
+                {rawSmash.sharing.directLink}
               </span>
               <div className="flex items-center gap-2">
                 <Input
@@ -444,7 +431,7 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
                   onClick={handleCopyLinkOnly}
                 >
                   {copiedLink ? <Check className="h-3.5 w-3.5 stroke-[3]" /> : <Copy className="h-3.5 w-3.5" />}
-                  <span>{copiedLink ? (rawSmash?.sharing?.copied || 'Copied!') : (rawSmash?.sharing?.copyLink || 'Copy Link')}</span>
+                  <span>{copiedLink ? (rawSmash.sharing.copied) : (rawSmash.sharing.copyLink)}</span>
                 </Button>
               </div>
             </div>
@@ -457,7 +444,7 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
                 className="w-full rounded-2xl"
               >
                 <ArrowLeft className="h-4 w-4 text-accent-red" />
-                <span>{rawSmash?.sharing?.backToBreakdown || 'Back to Archetype Breakdown'}</span>
+                <span>{rawSmash.sharing.backToBreakdown}</span>
               </Button>
             </div>
           </div>
@@ -555,7 +542,7 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
                 {persona.totalSmashes !== undefined && (
                   <span className="type-micro text-text-muted">
                     {persona.totalSmashes > 0
-                      ? `${persona.totalSmashes} ${rawSmash?.statsDetail?.smashCount || 'smashes'}`
+                      ? `${persona.totalSmashes} ${rawSmash.statsDetail.smashCount}`
                       : noSmashesRecordedLabel}
                   </span>
                 )}
@@ -646,4 +633,4 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
       </div>
     </Modal>
   );
-};
+};

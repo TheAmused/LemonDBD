@@ -16,6 +16,7 @@ import { containerDndId, itemDndId } from './dndIds';
 import { Input } from '@/components/common/Field';
 import { Badge } from '@/components/common/Badge';
 import { formatMessage } from '@/utils/i18nFormat';
+import { useDictionary } from "@/context/DictionaryContext";
 
 interface TierPoolProps {
   keys: string[];
@@ -27,7 +28,6 @@ interface TierPoolProps {
   onPreview: (key: string) => void;
   onMoveSelectedHere: (containerId: string) => void;
   emptyLabel: string;
-  dict: Dictionary;
 }
 
 /**
@@ -37,17 +37,17 @@ interface TierPoolProps {
  * auto-scrolls them while an item is dragged over their edges.
  */
 export function TierPool({
-  keys,
-  itemsByKey,
-  shape,
-  showNames,
-  selectedKey,
-  onSelect,
-  onPreview,
-  onMoveSelectedHere,
-  emptyLabel,
-  dict,
-}: TierPoolProps) {
+      keys,
+      itemsByKey,
+      shape,
+      showNames,
+      selectedKey,
+      onSelect,
+      onPreview,
+      onMoveSelectedHere,
+      emptyLabel,
+    }: TierPoolProps) {
+  const dict = useDictionary();
   const t = dict.tierLists;
   const [query, setQuery] = useState<string>('');
   const [collapsed, setCollapsed] = useState<boolean>(false);

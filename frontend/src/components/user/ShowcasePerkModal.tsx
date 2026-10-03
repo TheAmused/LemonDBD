@@ -14,6 +14,7 @@ import { Modal } from '@/components/common/Modal';
 import { Spinner } from '@/components/common/Spinner';
 import { EmptyState } from '@/components/common/EmptyState';
 import { formatMessage } from '@/utils/i18nFormat';
+import { useDictionary } from "@/context/DictionaryContext";
 
 interface ShowcasePerkModalProps {
   isOpen: boolean;
@@ -23,7 +24,6 @@ interface ShowcasePerkModalProps {
   onSelect: (perkId: number) => void;
   onClear: () => void;
   onClose: () => void;
-  dict?: Dictionary | null;
   locale?: string;
 }
 
@@ -82,17 +82,8 @@ const PerkGridItem: React.FC<{
   );
 };
 
-export const ShowcasePerkModal: React.FC<ShowcasePerkModalProps> = ({
-  isOpen,
-  role,
-  currentPerkId,
-  slotIndex,
-  onSelect,
-  onClear,
-  onClose,
-  dict,
-  locale = 'en',
-}) => {
+export const ShowcasePerkModal: React.FC<ShowcasePerkModalProps> = ({ isOpen, role, currentPerkId, slotIndex, onSelect, onClear, onClose, locale = 'en' }) => {
+  const dict = useDictionary();
   const [search, setSearch] = useState('');
   const [perks, setPerks] = useState<Perk[]>([]);
   const [loading, setLoading] = useState(false);
@@ -136,7 +127,7 @@ export const ShowcasePerkModal: React.FC<ShowcasePerkModalProps> = ({
       isOpen={isOpen}
       onClose={onClose}
       size="2xl"
-      title={`${dict?.user?.selectPerk || 'Select Perk'} (${role})`}
+      title={`${dict.user.selectPerk} (${role})`}
       icon={<Sparkles className="h-5 w-5 text-accent-red" />}
       className="max-h-[85vh] flex flex-col"
       bodyClassName="flex flex-col min-h-0 overflow-hidden"
@@ -148,7 +139,7 @@ export const ShowcasePerkModal: React.FC<ShowcasePerkModalProps> = ({
           wrapperClassName="flex-1 w-full"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          placeholder={dict?.user?.searchPerks || 'Search perks...'}
+          placeholder={dict.user.searchPerks}
           autoFocus
         />
 
@@ -162,7 +153,7 @@ export const ShowcasePerkModal: React.FC<ShowcasePerkModalProps> = ({
             leftIcon={<Trash2 className="h-3.5 w-3.5" />}
             className="w-full sm:w-auto"
           >
-            <span>{dict?.user?.clearPerk || 'Clear Slot'}</span>
+            <span>{dict.user.clearPerk}</span>
           </Button>
         )}
       </div>
@@ -173,7 +164,7 @@ export const ShowcasePerkModal: React.FC<ShowcasePerkModalProps> = ({
           <div className="flex flex-col items-center justify-center py-16 space-y-3">
             <Spinner size="lg" tone="accent" />
             <p className="text-xs text-text-muted">
-              {dict?.user?.loadingPerks || 'Channeling teachable knowledge...'}
+              {dict.user.loadingPerks}
             </p>
           </div>
         ) : !isSearchActive ? (
@@ -183,12 +174,12 @@ export const ShowcasePerkModal: React.FC<ShowcasePerkModalProps> = ({
             </div>
             <p className="text-xs sm:text-sm text-text-secondary">
               {cleanQuery.length === 0
-                ? dict?.user?.searchPerksPrompt || 'Type at least 3 characters to search perks...'
-                : formatMessage((dict?.user?.searchPerksMinChars || 'Type {count} more character(s) to search...'), { count: 3 - cleanQuery.length }, locale)}
+                ? dict.user.searchPerksPrompt
+                : formatMessage((dict.user.searchPerksMinChars), { count: 3 - cleanQuery.length }, locale)}
             </p>
           </div>
         ) : filteredPerks.length === 0 ? (
-          <EmptyState variant="inline" title={dict?.user?.noPerksFound || 'No matching perks found.'} />
+          <EmptyState variant="inline" title={dict.user.noPerksFound} />
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
             {filteredPerks.map((perk) => (

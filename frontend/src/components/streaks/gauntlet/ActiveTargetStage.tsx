@@ -21,6 +21,8 @@ import { StreakActionBar, StreakActionButton } from '../StreakActionBar';
 
 import { tip } from '@/components/common/Tooltip';
 import { Spinner } from '@/components/common/Spinner';
+import { useDictionary } from "@/context/DictionaryContext";
+
 export const avatarUrlFor = (name: string, role: Role, characters: OwnedCharacterItem[] = []) => {
   if (!name) return null;
   const owned = characters.find((c) => c.name === name)?.avatar_local_path;
@@ -45,7 +47,6 @@ export interface ActiveTargetStageProps {
   holdReel?: boolean;
   shownTarget: string | null;
   onShownTargetChange: (name: string | null) => void;
-  dict?: Dictionary;
 }
 
 const RevealPortrait: React.FC<{ name?: string; role: Role; phase: DrawPhase; characters: OwnedCharacterItem[] }> = ({
@@ -163,23 +164,21 @@ const TEACHABLE_ACCENT = {
 
 /** The "own unique perk goes here" slot, always paired with its badge.
  * `accent` lets squad color each player's slot differently. */
-const TeachableSlot: React.FC<{ size: SlotSize; title: string; accent?: 'amber' | 'red'; dict?: Dictionary }> = ({
-  size,
-  title,
-  accent = 'amber',
-  dict,
-}) => (
+const TeachableSlot: React.FC<{ size: SlotSize; title: string; accent?: 'amber' | 'red'; }> = ({ size, title, accent = 'amber' }) => {
+  const dict = useDictionary();
+  return (
   <SlotChip
     size={size}
     iconClassName={TEACHABLE_ACCENT[accent]}
-    caption={(dict?.streaks?.ownPerkOf || 'Own perk').replace(/:$/, '')}
+    caption={(dict.streaks.ownPerkOf).replace(/:$/, '')}
     title={title}
-    badge={dict?.streaks?.teachableBadge || 'Teachable'}
+    badge={dict.streaks.teachableBadge}
     badgeColor={accent}
   >
     <Star className={SLOT_ICON_SIZE[size]} />
   </SlotChip>
 );
+};
 
 interface PerkSlotsRowProps {
   tierInfo: TierInfo;
@@ -188,15 +187,15 @@ interface PerkSlotsRowProps {
   displayName: string;
   size?: SlotSize;
   teachableAccent?: 'amber' | 'red';
-  dict?: Dictionary;
 }
 
 /** A single horizontal row of labelled slot chips. */
-const PerkSlotsRow: React.FC<PerkSlotsRowProps> = ({ tierInfo, charPerks, randomPerks, displayName, size = 'small', teachableAccent, dict }) => {
+const PerkSlotsRow: React.FC<PerkSlotsRowProps> = ({ tierInfo, charPerks, randomPerks, displayName, size = 'small', teachableAccent }) => {
+  const dict = useDictionary();
   const perkLimit = tierInfo.perk_limit;
   const charactersPerksOnly = tierInfo.character_perks_only;
   const slots = [0, 1, 2, 3];
-  const slotLabel = dict?.streaks?.slotLabel || 'Slot';
+  const slotLabel = dict.streaks.slotLabel;
   const perkDisplayName = usePerkDisplayName();
   const large = size === 'large';
   const iconSize = SLOT_ICON_SIZE[size];
@@ -206,8 +205,8 @@ const PerkSlotsRow: React.FC<PerkSlotsRowProps> = ({ tierInfo, charPerks, random
     <div>
       {charactersPerksOnly && perkLimit === 0 && (
         <p className="mb-1.5 type-caption text-text-secondary">
-          {dict?.streaks?.noPerksThisTrial || 'No perks this trial.'} {displayName}{' '}
-          {dict?.streaks?.goesInBare || 'goes in bare.'}
+          {dict.streaks.noPerksThisTrial} {displayName}{' '}
+          {dict.streaks.goesInBare}
         </p>
       )}
       <div className={large ? 'flex items-center gap-12' : size === 'compact' ? 'flex items-center gap-6' : 'flex items-center gap-10'} role="list">
@@ -233,8 +232,8 @@ const PerkSlotsRow: React.FC<PerkSlotsRowProps> = ({ tierInfo, charPerks, random
                 key={`locked-${idx}`}
                 size={size}
                 iconClassName="bg-bg-elevated/60 border-dashed border-border-color opacity-60 text-text-muted"
-                caption={dict?.streaks?.lockedSuffix ? dict.streaks.lockedSuffix[0].toUpperCase() + dict.streaks.lockedSuffix.slice(1) : 'Locked'}
-                title={`${slotLabel} ${idx + 1} ${dict?.streaks?.lockedSuffix || 'locked'} — ${dict?.streaks?.tierLabel || 'Tier'} ${tierInfo.tier_level} ${dict?.streaks?.ruleSuffix || 'rule'}`}
+                caption={dict.streaks.lockedSuffix ? dict.streaks.lockedSuffix[0].toUpperCase() + dict.streaks.lockedSuffix.slice(1) : 'Locked'}
+                title={`${slotLabel} ${idx + 1} ${dict.streaks.lockedSuffix} — ${dict.streaks.tierLabel} ${tierInfo.tier_level} ${dict.streaks.ruleSuffix}`}
               >
                 <Lock className={iconSize} />
               </SlotChip>
@@ -249,7 +248,7 @@ const PerkSlotsRow: React.FC<PerkSlotsRowProps> = ({ tierInfo, charPerks, random
                 key={`char-slot-${idx}`}
                 size={size}
                 iconClassName={ownPerk ? 'border-transparent' : 'bg-accent-red/10 border-accent-red/40 text-accent-red'}
-                caption={ownPerk ? perkDisplayName(ownPerk.name) : (dict?.streaks?.ownPerkOf || 'Own perk').replace(/:$/, '')}
+                caption={ownPerk ? perkDisplayName(ownPerk.name) : (dict.streaks.ownPerkOf).replace(/:$/, '')}
               >
                 {ownPerk ? <PerkArt perk={ownPerk} size={perkArtSize} /> : <HelpCircle className={iconSize} />}
               </SlotChip>
@@ -261,11 +260,11 @@ const PerkSlotsRow: React.FC<PerkSlotsRowProps> = ({ tierInfo, charPerks, random
             // for "your character's own unique perk goes here", not a preview.
             const title =
               charPerks.length > 0
-                ? `${dict?.streaks?.slotOneOfThese || 'One of these'}: ${charPerks
+                ? `${dict.streaks.slotOneOfThese}: ${charPerks
                     .map((p) => perkDisplayName(p.name))
                     .join(', ')}`
-                : dict?.streaks?.noTeachablePerks || 'No teachable perks on record for this character.';
-            return <TeachableSlot key="character-slot" size={size} title={title} accent={teachableAccent} dict={dict} />;
+                : dict.streaks.noTeachablePerks;
+            return <TeachableSlot key="character-slot" size={size} title={title} accent={teachableAccent} />;
           }
 
           return (
@@ -273,7 +272,7 @@ const PerkSlotsRow: React.FC<PerkSlotsRowProps> = ({ tierInfo, charPerks, random
               key={`free-${idx}`}
               size={size}
               iconClassName="bg-bg-elevated border-border-color text-text-muted"
-              caption={dict?.streaks?.freePickCaption || 'Free pick'}
+              caption={dict.streaks.freePickCaption}
             >
               <HelpCircle className={iconSize} />
             </SlotChip>
@@ -292,24 +291,15 @@ interface CompactPlayerBuildProps {
   tierInfo: TierInfo;
   playersPerCharacter: number;
   isTeam: boolean;
-  dict?: Dictionary;
 }
 
-const CompactPlayerBuild: React.FC<CompactPlayerBuildProps> = ({
-  index,
-  player,
-  role,
-  characters,
-  tierInfo,
-  playersPerCharacter,
-  isTeam,
-  dict,
-}) => {
+const CompactPlayerBuild: React.FC<CompactPlayerBuildProps> = ({ index, player, role, characters, tierInfo, playersPerCharacter, isTeam }) => {
+  const dict = useDictionary();
   const displayName = useCharacterDisplayName()(player.character);
   const [avatarError, setAvatarError] = useState<boolean>(false);
   const avatarSrc = avatarUrlFor(player.character, role, characters);
   const shared = playersPerCharacter > 1;
-  const playerLabel = dict?.streaks?.playerLabel || 'Player';
+  const playerLabel = dict.streaks.playerLabel;
 
   const avatarBox = (sizeClass: string, iconClass: string) => (
     <div
@@ -345,7 +335,6 @@ const CompactPlayerBuild: React.FC<CompactPlayerBuildProps> = ({
             randomPerks={player.random_perks ?? []}
             displayName={displayName}
             size="large"
-            dict={dict}
           />
         </div>
       </div>
@@ -373,7 +362,6 @@ const CompactPlayerBuild: React.FC<CompactPlayerBuildProps> = ({
               displayName={displayName}
               size={shared ? 'compact' : 'small'}
               teachableAccent={shared ? (n === 0 ? 'amber' : 'red') : undefined}
-              dict={dict}
             />
           </div>
         ))}
@@ -383,21 +371,21 @@ const CompactPlayerBuild: React.FC<CompactPlayerBuildProps> = ({
 };
 
 export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
-  run,
-  role,
-  characters,
-  loading = false,
-  onWin,
-  onLoss,
-  onReveal,
-  pickCharacter = false,
-  pendingPick = null,
-  onAcceptPick,
-  holdReel = false,
-  shownTarget,
-  onShownTargetChange,
-  dict,
-}) => {
+      run,
+      role,
+      characters,
+      loading = false,
+      onWin,
+      onLoss,
+      onReveal,
+      pickCharacter = false,
+      pendingPick = null,
+      onAcceptPick,
+      holdReel = false,
+      shownTarget,
+      onShownTargetChange,
+    }) => {
+  const dict = useDictionary();
   const characterDisplayName = useCharacterDisplayName();
 
   const targetName = run?.current_character_id || run?.current_loadout?.character || '';
@@ -481,7 +469,7 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
       <div className="w-full rounded-xl p-6 text-center">
         <Spinner size="md" tone="accent" className="mx-auto mb-2" />
         <p className="text-text-muted text-sm">
-          {dict?.streaks?.loadingStreak || 'Loading active gauntlet stage...'}
+          {dict.streaks.loadingStreak}
         </p>
       </div>
     );
@@ -492,12 +480,12 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
       <>
         <div className="w-full flex items-center justify-center rounded-xl px-4 py-[92px]">
           <h2 className="text-sm sm:text-base font-black text-text-primary">
-            {dict?.streaks?.soloPickTitle || 'Choose your survivor'}
+            {dict.streaks.soloPickTitle}
           </h2>
         </div>
         <StreakActionBar>
           <StreakActionButton variant="red" onClick={() => onAcceptPick?.()} disabled={loading || !pendingPick}>
-            {dict?.streaks?.acceptPick || 'ACCEPT PICK'}
+            {dict.streaks.acceptPick}
           </StreakActionButton>
         </StreakActionBar>
       </>
@@ -531,7 +519,7 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
         }}
         disabled={loading}
       >
-        {dict?.streaks?.startGame || 'START GAME'}
+        {dict.streaks.startGame}
       </Button>
     );
 
@@ -612,10 +600,10 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
   const actionButtons = (
     <StreakActionBar>
       <StreakActionButton variant="red" onClick={onLoss} disabled={loading}>
-        {dict?.streaks?.loseMatch || 'LOST'}
+        {dict.streaks.loseMatch}
       </StreakActionButton>
       <StreakActionButton variant="green" onClick={onWin} disabled={loading}>
-        {dict?.streaks?.winMatch || 'WON'}
+        {dict.streaks.winMatch}
       </StreakActionButton>
     </StreakActionBar>
   );
@@ -638,7 +626,6 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
               tierInfo={tierInfo}
               playersPerCharacter={loadout.players_per_character ?? 1}
               isTeam={isTeam}
-              dict={dict}
             />
           ))}
         </div>

@@ -1,6 +1,7 @@
 'use client';
 // frontend/src/components/tier-lists/TierListEditor.tsx
 
+import { useDictionary } from '@/context/DictionaryContext';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import {
@@ -71,7 +72,6 @@ export interface TierListEditorProps {
   editHref?: string;
   onDelete?: () => void;
   locale: string;
-  dict: Dictionary;
 }
 
 const MENU_ITEM =
@@ -110,8 +110,8 @@ export function TierListEditor(props: TierListEditorProps) {
     editHref,
     onDelete,
     locale,
-    dict,
   } = props;
+  const dict = useDictionary();
   const t = dict.tierLists;
 
   const [dialog, setDialog] = useState<Dialog>(null);
@@ -376,7 +376,6 @@ export function TierListEditor(props: TierListEditorProps) {
         shape={shape}
         showNames={showNames}
         poolEmptyLabel={poolEmptyLabel}
-        dict={dict}
       />
 
       <TierEditModal
@@ -389,7 +388,6 @@ export function TierListEditor(props: TierListEditorProps) {
         onClear={(id) => applyLadder((s) => clearTier(s, id, catalogOrder))}
         onDelete={(id) => applyLadder((s) => removeTier(s, id, catalogOrder))}
         onAddBelow={(at) => applyLadder((s) => addTier(s, t.newTierLabel, nextColor, at))}
-        dict={dict}
       />
 
       <ConfirmModal
@@ -423,7 +421,7 @@ export function TierListEditor(props: TierListEditorProps) {
         />
       )}
 
-      <TierListExportModal doc={exportDoc} onClose={() => setDialog(null)} locale={locale} dict={dict} />
+      <TierListExportModal doc={exportDoc} onClose={() => setDialog(null)} locale={locale} />
 
       <TierListImportModal
         open={dialog === 'import'}
@@ -434,7 +432,6 @@ export function TierListEditor(props: TierListEditorProps) {
           setSelectedKey(null);
           setDialog(null);
         }}
-        dict={dict}
       />
 
     </div>

@@ -7,26 +7,19 @@ import { Button } from '@/components/common/Button';
 import type { Dictionary } from '@/locales/types';
 import { Ban } from 'lucide-react';
 import { Modal } from '@/components/common/Modal';
+import { useDictionary } from "@/context/DictionaryContext";
 
 export interface AdminReasonModalProps {
   isOpen: boolean;
   title: string;
   subtitle?: string;
   confirmLabel?: string;
-  dict?: Dictionary;
   onCancel: () => void;
   onConfirm: (reason: string) => void;
 }
 
-export const AdminReasonModal: React.FC<AdminReasonModalProps> = ({
-  isOpen,
-  title,
-  subtitle,
-  confirmLabel = 'Disable',
-  dict,
-  onCancel,
-  onConfirm,
-}) => {
+export const AdminReasonModal: React.FC<AdminReasonModalProps> = ({ isOpen, title, subtitle, confirmLabel = 'Disable', onCancel, onConfirm }) => {
+  const dict = useDictionary();
   const [reason, setReason] = useState('');
 
   useEffect(() => {
@@ -43,14 +36,14 @@ export const AdminReasonModal: React.FC<AdminReasonModalProps> = ({
       icon={<Ban className="h-5 w-5" aria-hidden="true" />}
       title={title}
       subtitle={subtitle}
-      closeButtonAriaLabel={dict?.admin?.closeSymbol || 'Close'}
+      closeButtonAriaLabel={dict.admin.closeSymbol}
       padded
       bodyClassName="space-y-3"
       footerClassName="justify-end flex-col-reverse sm:flex-row"
       footer={
         <>
           <Button size="sm" onClick={onCancel} className="w-full sm:w-auto">
-            {dict?.admin?.cancel || 'Cancel'}
+            {dict.admin.cancel}
           </Button>
           <Button variant="primary" size="sm" onClick={() => onConfirm(reason.trim())} className="w-full sm:w-auto">
             {confirmLabel}
@@ -59,7 +52,7 @@ export const AdminReasonModal: React.FC<AdminReasonModalProps> = ({
       }
     >
       <label className="block type-label-xs text-text-secondary">
-        {dict?.admin?.reasonShownToPlayers || 'Reason'}
+        {dict.admin.reasonShownToPlayers}
       </label>
       <Textarea
         value={reason}
@@ -67,7 +60,7 @@ export const AdminReasonModal: React.FC<AdminReasonModalProps> = ({
         rows={3}
         maxLength={255}
         data-autofocus
-        placeholder={dict?.admin?.reasonPlaceholder || ''}
+        placeholder={dict.admin.reasonPlaceholder}
         className="resize-none"
       />
       <p className="text-right type-micro text-text-muted">{reason.length}/255</p>

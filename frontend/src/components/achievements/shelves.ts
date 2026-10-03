@@ -14,41 +14,41 @@ export interface TrophyShelfDef {
   tiers: TrophyTierDef[];
 }
 
-export function getTrophyShelves(dict?: Dictionary): TrophyShelfDef[] {
-  const t = dict?.achievements;
+export function getTrophyShelves(dict: Dictionary): TrophyShelfDef[] {
+  const t = dict.achievements;
   return [
     {
       id: 'gauntlet',
-      title: t?.gauntletShelf || 'Gauntlet',
-      tiers: [{ id: 'gauntlet_original', label: t?.originalLabel || 'Original' }],
+      title: t.gauntletShelf,
+      tiers: [{ id: 'gauntlet_original', label: t.originalLabel }],
     },
     {
       id: 'chaos',
-      title: t?.chaosShelf || 'Chaos Streak',
+      title: t.chaosShelf,
       tiers: [
-        { id: 'chaos_easy', label: t?.easyLabel || 'Easy' },
-        { id: 'chaos_medium', label: t?.mediumLabel || 'Medium' },
-        { id: 'chaos_hell', label: t?.hellLabel || 'Hell' },
+        { id: 'chaos_easy', label: t.easyLabel },
+        { id: 'chaos_medium', label: t.mediumLabel },
+        { id: 'chaos_hell', label: t.hellLabel },
       ],
     },
     {
       id: 'history',
-      title: t?.historyShelf || 'History Streak',
+      title: t.historyShelf,
       tiers: [
-        { id: 'history_medium', label: t?.mediumLabel || 'Medium' },
-        { id: 'history_hell', label: t?.hellLabel || 'Hell' },
+        { id: 'history_medium', label: t.mediumLabel },
+        { id: 'history_hell', label: t.hellLabel },
       ],
     },
     {
       id: 'page_streak',
-      title: t?.pageStreakShelf || 'Page Streak',
+      title: t.pageStreakShelf,
       tiers: [
         {
           id: 'page_streak_all_killers',
-          label: t?.allKillersLabel || 'All Killers',
+          label: t.allKillersLabel,
           hoverText: {
-            owned: t?.pageStreakOwnedHover || 'Complete a full Page Streak run with every killer you own.',
-            all: t?.pageStreakAllHover || 'Complete a full Page Streak run with every killer in the game.',
+            owned: t.pageStreakOwnedHover,
+            all: t.pageStreakAllHover,
           },
         },
       ],

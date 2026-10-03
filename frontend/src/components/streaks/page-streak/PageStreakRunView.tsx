@@ -16,7 +16,7 @@ import { ChallengeProgress } from '../ChallengeProgress';
 import { ChallengeCompletionHistoryDrawer, Confetti, ResetConfirmModal } from '../lazyChallengeParts';
 import { useCelebrateOnRise, useCelebration } from '../useCelebration';
 import { staticUrl } from '@/utils/staticUrl';
-import { useStreaksDict } from '@/context/StreaksDictContext';
+import { useDictionary } from '@/context/DictionaryContext';
 import { useCharacterDisplayName } from '@/context/DisplayNamesContext';
 
 interface PageStreakRunViewProps {
@@ -25,7 +25,7 @@ interface PageStreakRunViewProps {
 }
 
 export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, killer }) => {
-  const dict = useStreaksDict();
+  const dict = useDictionary();
   const killerDisplayName = useCharacterDisplayName()(killer);
   const { run, stats, completions, loading, busy, error, startRun, submitResult, resetRun } = usePageStreakRun(killer);
   const iconByPerk = React.useMemo(() => {
@@ -84,7 +84,7 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
         className="inline-flex items-center gap-1.5 rounded type-strong text-text-secondary transition-colors hover:text-accent-red focus:outline-none focus:ring-2 focus:ring-accent-red"
       >
         <ArrowLeft className="h-3.5 w-3.5" />
-        <span>{dict?.streaks?.backToKillers || 'Back to killers'}</span>
+        <span>{dict.streaks.backToKillers}</span>
       </Link>
 
       {error && (
@@ -95,7 +95,7 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
 
       {loading && (
         <p className="py-10 text-center text-xs text-text-muted">
-          {dict?.streaks?.loadingStreak || 'Loading streak…'}
+          {dict.streaks.loadingStreak}
         </p>
       )}
 
@@ -107,7 +107,6 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
                 current={run.status === 'completed' ? run.page_count : run.current_page - 1}
                 total={run.page_count}
                 checkpoints={[]}
-                dict={dict}
               />
             }
             header={
@@ -118,17 +117,15 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
                 onOpenRules={() => setIsRulesOpen(true)}
                 onOpenStats={() => setIsStatsOpen(true)}
                 onOpenHistory={() => setIsHistoryOpen(true)}
-                dict={dict}
               />
             }
           >
           {run.status === 'completed' ? (
             <ChallengeVictoryCard
-              title={dict?.streaks?.pageStreakVictoryTitle || 'You won the Page Streak'}
-              subtitle={`${dict?.streaks?.pageStreakVictoryPrefix || 'on'} ${killerDisplayName}`}
+              title={dict.streaks.pageStreakVictoryTitle}
+              subtitle={`${dict.streaks.pageStreakVictoryPrefix} ${killerDisplayName}`}
               onRestart={() => setConfirmingReset(true)}
               busy={busy}
-              dict={dict}
             />
           ) : (
             <>
@@ -143,7 +140,7 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
                         submitResult(run.current_page, selected, 'loss');
                       }}
                     >
-                      {dict?.streaks?.loseMatch || 'LOSE MATCH'}
+                      {dict.streaks.loseMatch}
                     </StreakActionButton>
                     <StreakActionButton
                       variant="green"
@@ -153,7 +150,7 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
                         submitResult(run.current_page, selected, 'win');
                       }}
                     >
-                      {dict?.streaks?.winMatch || 'WIN MATCH'}
+                      {dict.streaks.winMatch}
                     </StreakActionButton>
                   </>
                 ) : (
@@ -162,7 +159,7 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
                     disabled={busy || selected.length !== buildSize}
                     onClick={() => setConfirmed(true)}
                   >
-                    {dict?.streaks?.confirmBuild || 'Confirm'}
+                    {dict.streaks.confirmBuild}
                   </StreakActionButton>
                 )}
               </StreakActionBar>
@@ -180,7 +177,6 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
                   selected={selected}
                   size={buildSize}
                   iconByPerk={iconByPerk}
-                  dict={dict}
                 />
               </div>
 
@@ -198,7 +194,7 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
                       }`}
                     />
                     <span>
-                      {dict?.streaks?.pageLabel || 'Page'} {run.current_page + 1}
+                      {dict.streaks.pageLabel} {run.current_page + 1}
                     </span>
                     <span className="h-px flex-1 bg-border-color" />
                   </button>
@@ -222,28 +218,25 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
           <ResetConfirmModal
             open={confirmingReset}
             busy={busy}
-            message={`${dict?.streaks?.pageStreakResetConfirmPrefix || 'Reset'} ${killerDisplayName} ${dict?.streaks?.pageStreakResetConfirmSuffix || 'to page 1?'}`}
+            message={`${dict.streaks.pageStreakResetConfirmPrefix} ${killerDisplayName} ${dict.streaks.pageStreakResetConfirmSuffix}`}
             onCancel={() => setConfirmingReset(false)}
             onConfirm={() => {
               setConfirmingReset(false);
               resetRun();
             }}
-            dict={dict}
           />
 
-          <PageStreakRulesModal isOpen={isRulesOpen} onClose={() => setIsRulesOpen(false)} dict={dict} />
+          <PageStreakRulesModal isOpen={isRulesOpen} onClose={() => setIsRulesOpen(false)} />
           <PageStreakStatsDrawer
             isOpen={isStatsOpen}
             onClose={() => setIsStatsOpen(false)}
             stats={stats}
             attempts={run.attempt}
-            dict={dict}
           />
           <ChallengeCompletionHistoryDrawer
             isOpen={isHistoryOpen}
             onClose={() => setIsHistoryOpen(false)}
             completions={completions}
-            dict={dict}
           />
         </div>
       )}

@@ -29,7 +29,6 @@ function LandingContent() {
   return (
     <PageShell
       locale={locale}
-      dict={dict}
       activeCategory=""
       customPadding="p-4 sm:p-8 lg:p-12"
       mainClassName="flex items-center justify-center min-h-[calc(100vh-4rem)] lg:min-h-screen"
@@ -41,27 +40,27 @@ function LandingContent() {
           </div>
 
           {/* Badge */}
-          {dict?.landing?.welcomeBadge && (
+          {dict.landing.welcomeBadge && (
             <div className="inline-flex items-center rounded-full border border-accent-red/30 bg-accent-red/10 px-4 py-1.5 type-label-sm text-accent-red mb-5">
               <span>{dict.landing.welcomeBadge}</span>
             </div>
           )}
 
           {/* Welcoming Words */}
-          {dict?.landing?.welcomeTitle && (
+          {dict.landing.welcomeTitle && (
             <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-text-primary">
               {dict.landing.welcomeTitle}
             </h1>
           )}
 
-          {dict?.landing?.welcomeSubtitle && (
+          {dict.landing.welcomeSubtitle && (
             <p className="mt-4 text-sm sm:text-base text-text-secondary leading-relaxed font-medium max-w-md">
               {dict.landing.welcomeSubtitle}
             </p>
           )}
 
           {/* Direct CTA to Perks */}
-          {dict?.landing?.enterButton && (
+          {dict.landing.enterButton && (
             <div className="mt-8">
               <Link
                 href={`/${locale}/perks`}

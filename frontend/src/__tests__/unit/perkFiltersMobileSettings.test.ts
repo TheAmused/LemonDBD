@@ -15,13 +15,13 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import React from 'react';
-import { renderToStaticMarkup } from 'react-dom/server';
 import { PerkFilters } from '@/components/PerkFilters';
 import { CustomDropdown, type DropdownOption } from '@/components/common/CustomDropdown';
 import { Pagination } from '@/components/common/Pagination';
+import { renderWithDictionary } from '../helpers/renderWithDictionary';
 
 function renderFilters(overrides: Partial<React.ComponentProps<typeof PerkFilters>> = {}) {
-  return renderToStaticMarkup(
+  return renderWithDictionary(
     React.createElement(PerkFilters, {
       search: '',
       setSearch: () => {},
@@ -36,20 +36,6 @@ function renderFilters(overrides: Partial<React.ComponentProps<typeof PerkFilter
       order: 'asc',
       setOrder: () => {},
       onReset: () => {},
-      dict: {
-        filters: {
-          survivor: 'Survivors',
-          killer: 'Killers',
-          allPerks: 'All',
-          ownedOnly: 'Owned',
-          generalOnly: 'General Only',
-          sortByName: 'Name',
-          sortByCharacter: 'Character',
-          orderAsc: 'A-Z',
-          orderDesc: 'Z-A',
-          filtersTitle: 'Filters',
-        },
-      } as never,
       ...overrides,
     })
   );
@@ -99,7 +85,7 @@ describe('CustomDropdown backward compatibility + new children mode', () => {
   ];
 
   it('classic value/onChange/options mode renders exactly as before (existing callers unaffected)', () => {
-    const html = renderToStaticMarkup(
+    const html = renderWithDictionary(
       React.createElement(CustomDropdown, {
         value: 'b',
         onChange: () => {},
@@ -112,7 +98,7 @@ describe('CustomDropdown backward compatibility + new children mode', () => {
   });
 
   it('new children + label mode renders a static label and arbitrary panel content, with no options required', () => {
-    const html = renderToStaticMarkup(
+    const html = renderWithDictionary(
       React.createElement(
         CustomDropdown,
         { label: 'Settings', ariaLabel: 'Settings' },
@@ -126,7 +112,7 @@ describe('CustomDropdown backward compatibility + new children mode', () => {
 
 describe('Pagination count text on very small screens', () => {
   it('the "X-Y / Z" count is sr-only below 400px but still present for screen readers', () => {
-    const html = renderToStaticMarkup(
+    const html = renderWithDictionary(
       React.createElement(Pagination, {
         page: 1,
         totalPages: 12,

@@ -9,6 +9,7 @@ import {
   type ChallengeIntroTile,
 } from './ChallengeIntroModalShell';
 import { cascadeCompletedTiers, tierCompletionCount } from '@/utils/challengeTierCompletion';
+import { useDictionary } from "@/context/DictionaryContext";
 
 export interface TierTileDef {
   value: string;
@@ -57,7 +58,6 @@ export interface ChallengeModeModalProps {
   title?: string;
   onBack?: () => void;
   backLabel?: string;
-  dict?: Dictionary;
 }
 
 /**
@@ -67,39 +67,38 @@ export interface ChallengeModeModalProps {
  * supplies its tiles, intro copy, and rules content.
  */
 export const ChallengeModeModal: React.FC<ChallengeModeModalProps> = ({
-  isOpen,
-  onClose,
-  tiles,
-  onSelectTile,
-  tileGridClassName,
-  intro,
-  showRules = true,
-  renderRules,
-  selectedValue,
-  title,
-  onBack,
-  backLabel,
-  dict,
-}) => {
+      isOpen,
+      onClose,
+      tiles,
+      onSelectTile,
+      tileGridClassName,
+      intro,
+      showRules = true,
+      renderRules,
+      selectedValue,
+      title,
+      onBack,
+      backLabel,
+    }) => {
+  const dict = useDictionary();
   const [isRulesOpen, setIsRulesOpen] = useState(false);
   return (
     <>
       <ChallengeIntroModalShell
         isOpen={isOpen}
         onClose={onClose}
-        title={title ?? (dict?.streaks?.chooseMode || 'Choose a mode')}
+        title={title ?? (dict.streaks.chooseMode)}
         intro={intro}
-        rulesLabel={dict?.streaks?.rules || 'Rules'}
+        rulesLabel={dict.streaks.rules}
         onOpenRules={showRules ? () => setIsRulesOpen(true) : undefined}
         tiles={tiles}
         onSelectTile={onSelectTile}
         tileGridClassName={tileGridClassName}
         escapeDisabled={isRulesOpen}
         selectedValue={selectedValue}
-        currentLabel={dict?.streaks?.current || 'Current'}
+        currentLabel={dict.streaks.current}
         onBack={onBack}
         backLabel={backLabel}
-        dict={dict}
       />
       {renderRules({ isOpen: isRulesOpen, onClose: () => setIsRulesOpen(false) })}
     </>

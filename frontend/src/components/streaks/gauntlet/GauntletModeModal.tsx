@@ -8,6 +8,7 @@ import { ChallengeIntroTile, NEUTRAL_TILE_ACCENT } from '../ChallengeIntroModalS
 import { ChallengeModeModal } from '../ChallengeModeModal';
 import { GauntletRulesModal } from './GauntletRulesModal';
 import { GAUNTLET_GAME_MODES, GauntletGameMode } from '@/types/gauntletStreak';
+import { useDictionary } from "@/context/DictionaryContext";
 
 export interface GauntletModeModalProps {
   isOpen: boolean;
@@ -25,56 +26,55 @@ export interface GauntletModeModalProps {
   originalCompletedFullCount?: number | null;
   /** Hide the intro box when the player is switching mode mid-run. */
   showIntro?: boolean;
-  dict?: Dictionary;
 }
 
 type Stage = 'root' | 'lemon';
 
-function lemonRootTile(role: 'killer' | 'survivor', dict?: Dictionary): ChallengeIntroTile {
-  const label = dict?.streaks?.lemonVersion || 'Lemon version';
+function lemonRootTile(role: 'killer' | 'survivor', dict: Dictionary): ChallengeIntroTile {
+  const label = dict.streaks.lemonVersion;
   if (role !== 'survivor') {
     return {
       value: 'lemon',
       label,
-      description: dict?.streaks?.gauntletLemonDesc || 'A lightly modified, easier take on the Gauntlet.',
+      description: dict.streaks.gauntletLemonDesc,
       icon: Lock,
       accentClassName: 'border-border-color bg-bg-elevated/50',
       disabled: true,
-      disabledBadge: dict?.streaks?.comingSoon || 'Coming soon.',
+      disabledBadge: dict.streaks.comingSoon,
     };
   }
   return {
     value: 'lemon',
     label,
-    description: dict?.streaks?.gauntletLemonPlayersDesc || 'Our own version of the Gauntlet.',
+    description: dict.streaks.gauntletLemonPlayersDesc,
     icon: Sparkles,
     image: '/images/streaks/modes/gauntlet-lemon.webp',
     accentClassName: NEUTRAL_TILE_ACCENT,
   };
 }
 
-function lemonPlayerTiles(dict?: Dictionary): ChallengeIntroTile[] {
+function lemonPlayerTiles(dict: Dictionary): ChallengeIntroTile[] {
   return [
     {
       value: 'lemon_solo',
-      label: dict?.streaks?.lemonSolo || 'Solo',
-      description: dict?.streaks?.lemonSoloDesc || '1 player',
+      label: dict.streaks.lemonSolo,
+      description: dict.streaks.lemonSoloDesc,
       icon: User,
       image: '/images/streaks/modes/gauntlet-1-player.webp',
       accentClassName: NEUTRAL_TILE_ACCENT,
     },
     {
       value: 'lemon_duo',
-      label: dict?.streaks?.lemonDuo || 'Duo',
-      description: dict?.streaks?.lemonDuoDesc || '2 players',
+      label: dict.streaks.lemonDuo,
+      description: dict.streaks.lemonDuoDesc,
       icon: Users,
       image: '/images/streaks/modes/gauntlet-2-players.webp',
       accentClassName: NEUTRAL_TILE_ACCENT,
     },
     {
       value: 'lemon_squad',
-      label: dict?.streaks?.lemonSquad || 'Squad',
-      description: dict?.streaks?.lemonSquadDesc || '4 players',
+      label: dict.streaks.lemonSquad,
+      description: dict.streaks.lemonSquadDesc,
       icon: UsersRound,
       image: '/images/streaks/modes/gauntlet-4-players.webp',
       accentClassName: NEUTRAL_TILE_ACCENT,
@@ -83,18 +83,18 @@ function lemonPlayerTiles(dict?: Dictionary): ChallengeIntroTile[] {
 }
 
 export const GauntletModeModal: React.FC<GauntletModeModalProps> = ({
-  isOpen,
-  onClose,
-  onSelectMode,
-  role,
-  currentMode,
-  originalCompleted = false,
-  originalCompletedCount = null,
-  originalCompletedFull = false,
-  originalCompletedFullCount = null,
-  showIntro = true,
-  dict,
-}) => {
+      isOpen,
+      onClose,
+      onSelectMode,
+      role,
+      currentMode,
+      originalCompleted = false,
+      originalCompletedCount = null,
+      originalCompletedFull = false,
+      originalCompletedFullCount = null,
+      showIntro = true,
+    }) => {
+  const dict = useDictionary();
   const [stage, setStage] = useState<Stage>('root');
 
   useEffect(() => {
@@ -106,9 +106,9 @@ export const GauntletModeModal: React.FC<GauntletModeModalProps> = ({
   const rootTiles: ChallengeIntroTile[] = [
     {
       value: 'original',
-      label: dict?.streaks?.original || 'Original',
+      label: dict.streaks.original,
       description:
-        dict?.streaks?.gauntletOriginalDesc || 'Classic, original Gauntlet rules. A checkpoint every 10 wins.',
+        dict.streaks.gauntletOriginalDesc,
       icon: Swords,
       image: '/images/streaks/modes/gauntlet-original.webp',
       accentClassName: NEUTRAL_TILE_ACCENT,
@@ -128,17 +128,15 @@ export const GauntletModeModal: React.FC<GauntletModeModalProps> = ({
       onClose={onClose}
       title={
         isLemonStage
-          ? dict?.streaks?.chooseLemonPlayers || 'How many players?'
-          : dict?.streaks?.chooseMode || 'Choose a mode'
+          ? dict.streaks.chooseLemonPlayers
+          : dict.streaks.chooseMode
       }
       intro={
         isLemonStage || !showIntro
           ? undefined
           : role === 'killer'
-            ? dict?.streaks?.gauntletIntroKiller ||
-              'Face a random owned killer with a shrinking perk loadout. Win to raise your streak, lose and fall back to your last checkpoint.'
-            : dict?.streaks?.gauntletIntroSurvivor ||
-              'Face a random owned survivor with a shrinking perk loadout. Win to raise your streak, lose and fall back to your last checkpoint.'
+            ? dict.streaks.gauntletIntroKiller
+            : dict.streaks.gauntletIntroSurvivor
       }
       showRules={!isLemonStage && showIntro}
       tiles={isLemonStage ? lemonPlayerTiles(dict) : rootTiles}
@@ -153,9 +151,8 @@ export const GauntletModeModal: React.FC<GauntletModeModalProps> = ({
       tileGridClassName={isLemonStage ? 'sm:grid-cols-3' : 'sm:grid-cols-2'}
       selectedValue={isLemonStage ? currentMode : rootSelected}
       onBack={isLemonStage ? () => setStage('root') : undefined}
-      backLabel={dict?.streaks?.back || 'Back'}
-      renderRules={(rules) => <GauntletRulesModal {...rules} role={role} dict={dict} />}
-      dict={dict}
+      backLabel={dict.streaks.back}
+      renderRules={(rules) => <GauntletRulesModal {...rules} role={role} />}
     />
   );
 };

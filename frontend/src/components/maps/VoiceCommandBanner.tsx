@@ -42,6 +42,7 @@ import { tip } from '@/components/common/Tooltip';
 import { Spinner } from '@/components/common/Spinner';
 import { formatMessage } from '@/utils/i18nFormat';
 import { localeMetaFor } from '@/i18n/config';
+import { useDictionary } from "@/context/DictionaryContext";
 
 const VoiceEngineInfoModal = dynamic(
   () => import('./VoiceEngineInfoModal').then((m) => m.VoiceEngineInfoModal),
@@ -56,7 +57,6 @@ export interface VoiceCommandBannerProps {
   onAction?: (action: 'zoom_in' | 'zoom_out' | 'fullscreen' | 'close') => void;
   availableMaps?: Array<{ id: number; name: string; realm?: string; source?: string }>;
   className?: string;
-  dict?: Dictionary | any;
   /** False when the banner is kept mounted but hidden (e.g. behind another
    * mode's UI). Disables the "hold V to talk" hotkey and tears down any
    * in-progress mic session -- both would otherwise keep responding while
@@ -220,18 +220,18 @@ function renderHoldKeyHint(template: string | undefined, key: string): React.Rea
 }
 
 export function VoiceCommandBanner({
-  locale = 'en',
-  currentSource,
-  onSourceChange,
-  onSelectMap,
-  onAction,
-  availableMaps,
-  className = '',
-  dict,
-  active = true,
-  centerHeaderSlot,
-  embedded = false,
-}: VoiceCommandBannerProps) {
+      locale = 'en',
+      currentSource,
+      onSourceChange,
+      onSelectMap,
+      onAction,
+      availableMaps,
+      className = '',
+      active = true,
+      centerHeaderSlot,
+      embedded = false,
+    }: VoiceCommandBannerProps) {
+  const dict = useDictionary();
   const [voiceStatus, setVoiceStatus] = useState<VoiceStatusState>('idle');
   const [liveTranscript, setLiveTranscript] = useState<string>('');
   const [matchedResult, setMatchedResult] = useState<MatchResult | null>(null);
@@ -568,8 +568,8 @@ export function VoiceCommandBanner({
             err instanceof DOMException && err.name === 'NotAllowedError';
           setErrorMessage(
             isPermissionErr
-              ? dict?.voice?.micBlocked || ''
-              : dict?.voice?.micAccessError || ''
+              ? dict.voice.micBlocked
+              : dict.voice.micAccessError
           );
         }
         return;
@@ -662,7 +662,7 @@ export function VoiceCommandBanner({
             setActiveEngine('client-model');
             initClientSpeechModel(locale);
             setVoiceStatus('nomatch');
-            setErrorMessage(dict?.voice?.switchedToLocalEngine || '');
+            setErrorMessage(dict.voice.switchedToLocalEngine);
             if (resetTimerRef.current) clearTimeout(resetTimerRef.current);
             resetTimerRef.current = setTimeout(() => {
               setVoiceStatus('idle');
@@ -670,7 +670,7 @@ export function VoiceCommandBanner({
           } else if (event.error === 'not-allowed') {
             setVoiceStatus('error');
             setErrorMessage(
-              dict?.voice?.micBlocked || ''
+              dict.voice.micBlocked
             );
           } else if (event.error === 'no-speech') {
             setVoiceStatus('nomatch');
@@ -680,7 +680,7 @@ export function VoiceCommandBanner({
           } else {
             setVoiceStatus('error');
             setErrorMessage(
-              dict?.voice?.speechRecognitionErrorPrefix
+              dict.voice.speechRecognitionErrorPrefix
                 ? `${dict.voice.speechRecognitionErrorPrefix} ${event.error || ''}`
                 : event.error || ''
             );
@@ -736,7 +736,7 @@ export function VoiceCommandBanner({
         isListeningRef.current = false;
         isHoldingRef.current = false;
         setVoiceStatus('error');
-        const message = err instanceof Error ? err.message : dict?.voice?.failedToInitialize || '';
+        const message = err instanceof Error ? err.message : dict.voice.failedToInitialize;
         setErrorMessage(message);
       }
     },
@@ -794,7 +794,7 @@ export function VoiceCommandBanner({
     };
   }, [active, startListening, stopListeningAndProcess]);
 
-  const rawVoiceDict = (dict?.voice || {}) as Record<string, string>;
+  const rawVoiceDict = (dict.voice || {}) as Record<string, string>;
 
   const statusConfig = {
     idle: {
@@ -851,7 +851,7 @@ export function VoiceCommandBanner({
     // Below `md` the controls wrap to a second line and would collide, so they
     // stay in the flow there.
     <section
-      aria-label={dict?.maps?.voiceEngineAria || ''}
+      aria-label={dict.maps.voiceEngineAria}
       className={
         embedded
           ? `relative flex flex-1 h-full w-full flex-col ${className}`
@@ -872,9 +872,9 @@ export function VoiceCommandBanner({
             type="button"
             onClick={() => setIsInfoModalOpen(true)}
             {...tip(activeEngine === 'web-speech'
-                ? dict?.voice?.webSpeechTooltip || ''
-                : dict?.voice?.clientModelTooltip || '', undefined, 'action')}
-            aria-label={dict?.voice?.viewEngineInfo || ''}
+                ? dict.voice.webSpeechTooltip
+                : dict.voice.clientModelTooltip, undefined, 'action')}
+            aria-label={dict.voice.viewEngineInfo}
             className="inline-flex items-center gap-2 rounded-full border border-accent-red/30 bg-accent-red/10 px-3.5 py-1.5 text-compact font-bold text-accent-red transition-all cursor-pointer shadow-sm hover:scale-105 hover:bg-accent-red/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red"
           >
             {activeEngine === 'web-speech' ? (
@@ -893,8 +893,8 @@ export function VoiceCommandBanner({
           <button
             type="button"
             onClick={() => setSoundEnabled((prev) => !prev)}
-            {...tip(soundEnabled ? dict?.voice?.muteSound || '' : dict?.voice?.enableSound || '', undefined, 'action')}
-            aria-label={soundEnabled ? dict?.voice?.muteSound || '' : dict?.voice?.enableSound || ''}
+            {...tip(soundEnabled ? dict.voice.muteSound : dict.voice.enableSound, undefined, 'action')}
+            aria-label={soundEnabled ? dict.voice.muteSound : dict.voice.enableSound}
             className="flex h-9 w-9 items-center justify-center rounded-xl border border-border-color bg-bg-elevated text-text-secondary transition hover:border-border-subtle hover:text-text-primary cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-accent-red"
           >
             {soundEnabled ? (
@@ -918,9 +918,9 @@ export function VoiceCommandBanner({
             type="button"
             onClick={() => setIsInfoModalOpen(true)}
             {...tip(activeEngine === 'web-speech'
-                ? dict?.voice?.webSpeechTooltip || ''
-                : dict?.voice?.clientModelTooltip || '', undefined, 'action')}
-            aria-label={dict?.voice?.viewEngineInfo || ''}
+                ? dict.voice.webSpeechTooltip
+                : dict.voice.clientModelTooltip, undefined, 'action')}
+            aria-label={dict.voice.viewEngineInfo}
             className="inline-flex items-center gap-1.5 rounded-full border border-accent-red/30 bg-accent-red/10 px-2.5 py-1 type-strong text-accent-red transition-all cursor-pointer hover:bg-accent-red/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red shadow-xs"
           >
             {activeEngine === 'web-speech' ? (
@@ -939,8 +939,8 @@ export function VoiceCommandBanner({
           <button
             type="button"
             onClick={() => setSoundEnabled((prev) => !prev)}
-            {...tip(soundEnabled ? dict?.voice?.muteSound || '' : dict?.voice?.enableSound || '', undefined, 'action')}
-            aria-label={soundEnabled ? dict?.voice?.muteSound || '' : dict?.voice?.enableSound || ''}
+            {...tip(soundEnabled ? dict.voice.muteSound : dict.voice.enableSound, undefined, 'action')}
+            aria-label={soundEnabled ? dict.voice.muteSound : dict.voice.enableSound}
             className="flex h-7 w-7 items-center justify-center rounded-full border border-border-color bg-bg-elevated text-text-secondary transition hover:border-border-subtle hover:text-text-primary cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-accent-red shadow-xs"
           >
             {soundEnabled ? (
@@ -954,10 +954,10 @@ export function VoiceCommandBanner({
             className="inline-flex items-center gap-1.5 rounded-full border border-border-color bg-bg-elevated px-2.5 py-1 text-xs text-text-secondary shadow-xs"
           >
             <span className="type-label-2xs text-text-muted">
-              {dict?.maps?.sourceLabel || 'Źródło:'}
+              {dict.maps.sourceLabel}
             </span>
             <span className="font-extrabold text-accent-red">
-              {dict?.maps?.sourceHens || 'Hens333'}
+              {dict.maps.sourceHens}
             </span>
           </div>
         </div>
@@ -966,11 +966,11 @@ export function VoiceCommandBanner({
         <div className="hidden md:flex flex-wrap items-center justify-end gap-2 order-3 flex-1">
           <div
             role="group"
-            aria-label={dict?.maps?.providerAria || ''}
+            aria-label={dict.maps.providerAria}
             className="flex items-center gap-1.5 rounded-full border border-border-color bg-bg-elevated p-1"
           >
             <span className="px-1.5 type-label-xs text-text-muted">
-              {dict?.maps?.sourceLabel || ''}
+              {dict.maps.sourceLabel}
             </span>
             <button
               type="button"
@@ -981,18 +981,18 @@ export function VoiceCommandBanner({
                   : 'text-text-secondary hover:bg-bg-surface hover:text-text-primary'
                 }`}
             >
-              {dict?.maps?.sourceHensClock || ''}
+              {dict.maps.sourceHensClock}
             </button>
 
             <button
               type="button"
               disabled
-              {...tip(dict?.maps?.lemonDbdSourceLocked || '', undefined, 'action')} aria-label={dict?.maps?.lemonDbdSourceLocked || ''}
+              {...tip(dict.maps.lemonDbdSourceLocked, undefined, 'action')} aria-label={dict.maps.lemonDbdSourceLocked}
               aria-disabled="true"
               className="flex items-center gap-1.5 rounded-full px-3 py-1 text-compact font-extrabold text-text-muted cursor-not-allowed"
             >
               <Lock className="h-3 w-3" aria-hidden="true" />
-              {dict?.maps?.sourceLemonDbd || ''}
+              {dict.maps.sourceLemonDbd}
             </button>
           </div>
         </div>
@@ -1189,7 +1189,7 @@ export function VoiceCommandBanner({
                 </div>
                 {liveTranscript && (
                   <span className="type-micro text-accent-green/90 truncate max-w-[280px] sm:max-w-xl">
-                    {dict?.maps?.heardLabel || ''} {dict?.maps?.openQuote || '“'}{liveTranscript}{dict?.maps?.closeQuote || '”'} {matchPercentText}
+                    {dict.maps.heardLabel} {dict.maps.openQuote}{liveTranscript}{dict.maps.closeQuote} {matchPercentText}
                   </span>
                 )}
               </div>
@@ -1201,7 +1201,7 @@ export function VoiceCommandBanner({
                   <AlertCircle className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
                   <span className="truncate max-w-[280px] sm:max-w-xl">
                     {liveTranscript
-                      ? `${dict?.maps?.heardLabel || ''} “${liveTranscript}” (${rawVoiceDict.noDbdMatch || ''})`
+                      ? `${dict.maps.heardLabel} “${liveTranscript}” (${rawVoiceDict.noDbdMatch || ''})`
                       : rawVoiceDict.noSpeechDetected || ''}
                   </span>
                 </div>
@@ -1227,10 +1227,10 @@ export function VoiceCommandBanner({
               <div className="w-full text-center px-2 max-w-full">
                 <p className="text-xs sm:text-compact text-text-muted leading-relaxed text-center break-words max-w-full">
                   <span className="md:hidden">
-                    {rawVoiceDict.tapToTalkMobileHint || dict?.voice?.tapToTalkMobileHint || TAP_HINT_FALLBACK}
+                    {rawVoiceDict.tapToTalkMobileHint || dict.voice.tapToTalkMobileHint}
                   </span>
                   <span className="hidden md:inline">
-                    {renderHoldKeyHint(rawVoiceDict.holdVToTalkHint, dict?.maps?.keyV || 'V')}
+                    {renderHoldKeyHint(rawVoiceDict.holdVToTalkHint, dict.maps.keyV)}
                   </span>
                 </p>
               </div>
@@ -1241,7 +1241,7 @@ export function VoiceCommandBanner({
       {disambiguationVariants.length > 0 && (
         <div className="relative z-10 mt-2.5 rounded-2xl border border-border-color bg-bg-elevated p-2.5 backdrop-blur-sm flex flex-wrap items-center gap-2">
           <div className="flex items-center gap-1.5 type-strong text-text-secondary">
-            <span>{dict?.maps?.variants || ''}</span>
+            <span>{dict.maps.variants}</span>
           </div>
 
           <div className="flex flex-wrap gap-1.5">
@@ -1284,10 +1284,9 @@ export function VoiceCommandBanner({
           }
         }}
         modelDescriptor={resolveModelDescriptor(locale, modelQuality)}
-        dict={dict}
       />
     </section>
   );
 }
 
-export default VoiceCommandBanner;
+export default VoiceCommandBanner;

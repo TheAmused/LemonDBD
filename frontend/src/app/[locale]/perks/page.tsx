@@ -151,7 +151,7 @@ function PerksContent() {
     if (paramRole === 'Killer' || paramRole === 'Survivor') {
       setRole(paramRole);
     }
-    document.title = dict?.app?.perksVaultPageTitle || 'LemonDBD - Dead by Daylight Perks Vault';
+    document.title = dict.app.perksVaultPageTitle;
   }, [paramRole, dict]);
 
   const handleSelectCategoryFromSidebar = (selected: string) => {
@@ -291,7 +291,6 @@ function PerksContent() {
   return (
     <PageShell
       locale={locale}
-      dict={dict}
       activeCategory="perks"
       onSelectCategory={handleSelectCategoryFromSidebar}
       totalPerksCount={totalVaultPerks}
@@ -326,7 +325,6 @@ function PerksContent() {
             setSortBy={(s) => setSortBy(s)}
             order={order}
             setOrder={(o) => setOrder(o)}
-            dict={dict}
             onReset={handleResetFilters}
             locale={locale}
             survivorCount={survivorCount}
@@ -338,24 +336,23 @@ function PerksContent() {
 
         <div className="flex min-h-0 flex-1 flex-col overflow-y-auto">
           {loading ? (
-            <PerksGridSkeleton dict={dict} />
+            <PerksGridSkeleton />
           ) : perks.length === 0 ? (
             <EmptyState
               variant="solid"
               icon={SearchX}
               iconClassName="mx-auto h-12 w-12 text-text-muted mb-3"
-              title={dict?.empty?.title || 'No Perks Found'}
+              title={dict.empty.title}
               subtitle={
-                dict?.empty?.subtitle ||
-                'Try clearing your search query or switching ownership filters.'
+                dict.empty.subtitle
               }
               action={{
-                label: dict?.app?.resetFilters || dict?.filters?.resetAllFilters || 'Reset Filters',
+                label: dict.app.resetFilters,
                 onClick: handleResetFilters,
               }}
             />
           ) : (
-            <section aria-label={dict?.filters?.viewMode || 'Perks Grid'} className="flex min-h-0 flex-1 flex-col">
+            <section aria-label={dict.filters.viewMode} className="flex min-h-0 flex-1 flex-col">
               <div
                 ref={measureGridArea}
                 className="grid min-h-0 w-full flex-1 grid-cols-3 min-[480px]:grid-cols-4 sm:grid-cols-5 gap-3"
@@ -367,7 +364,6 @@ function PerksContent() {
                     perk={perk}
                     size="fill"
                     onSelect={setSelectedPerk}
-                    dict={dict}
                   />
                 ))}
               </div>
@@ -387,7 +383,6 @@ function PerksContent() {
                 setLimit(newLimit);
                 setPage(1);
               }}
-              dict={dict}
             />
           </div>
         )}
@@ -396,7 +391,6 @@ function PerksContent() {
           <PerkModal
             perk={selectedPerk}
             onClose={() => setSelectedPerk(null)}
-            dict={dict}
           />
         )}
         </div>
@@ -419,4 +413,4 @@ export default function PerksPage() {
       <PerksContent />
     </Suspense>
   );
-}
+}

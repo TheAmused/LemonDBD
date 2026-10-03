@@ -31,6 +31,7 @@ import { SidewaysPointerSensor } from './touchSensors';
 import { TierRow } from './TierRow';
 import { parseContainerDndId, parseItemDndId } from './dndIds';
 import { formatMessage } from '@/utils/i18nFormat';
+import { useDictionary } from "@/context/DictionaryContext";
 
 interface TierListBoardProps {
   items: TierItem[];
@@ -44,7 +45,6 @@ interface TierListBoardProps {
   shape: TierTileShape;
   showNames: boolean;
   poolEmptyLabel: string;
-  dict: Dictionary;
 }
 
 /**
@@ -81,18 +81,18 @@ function sameBoard(a: BoardContainers, b: BoardContainers): boolean {
 }
 
 export function TierListBoard({
-  items,
-  tiers,
-  board,
-  onBoardChange,
-  onEditTier,
-  selectedKey,
-  onSelectedKeyChange,
-  shape,
-  showNames,
-  poolEmptyLabel,
-  dict,
-}: TierListBoardProps) {
+      items,
+      tiers,
+      board,
+      onBoardChange,
+      onEditTier,
+      selectedKey,
+      onSelectedKeyChange,
+      shape,
+      showNames,
+      poolEmptyLabel,
+    }: TierListBoardProps) {
+  const dict = useDictionary();
   const t = dict.tierLists;
   const itemsByKey = useMemo(() => new Map(items.map((i) => [i.key, i])), [items]);
   const catalogOrder = useMemo(() => items.map((i) => i.key), [items]);
@@ -294,7 +294,6 @@ export function TierListBoard({
               onPreview={handlePreview}
               onMoveSelectedHere={handleMoveSelectedHere}
               onEdit={onEditTier}
-              dict={dict}
             />
           ))}
         </div>
@@ -309,7 +308,6 @@ export function TierListBoard({
           onPreview={handlePreview}
           onMoveSelectedHere={handleMoveSelectedHere}
           emptyLabel={poolEmptyLabel}
-          dict={dict}
         />
       </div>
 

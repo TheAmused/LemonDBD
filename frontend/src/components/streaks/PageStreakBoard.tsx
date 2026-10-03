@@ -7,14 +7,14 @@ import { PageStreakRoster } from './page-streak/PageStreakRoster';
 import { fetchRoster, resetAllRuns } from '@/services/pageStreakApi';
 import { RosterEntry } from '@/types/pageStreak';
 import { useAuth } from '@/context/AuthContext';
-import { useStreaksDict } from '@/context/StreaksDictContext';
+import { useDictionary } from '@/context/DictionaryContext';
 
 interface PageStreakBoardProps {
   locale: string;
 }
 
 export const PageStreakBoard: React.FC<PageStreakBoardProps> = ({ locale }) => {
-  const dict = useStreaksDict();
+  const dict = useDictionary();
   const { token } = useAuth();
   const [roster, setRoster] = useState<RosterEntry[]>([]);
   const [loading, setLoading] = useState(true);
@@ -63,25 +63,24 @@ export const PageStreakBoard: React.FC<PageStreakBoardProps> = ({ locale }) => {
           className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-bg-elevated hover:bg-accent-red/10 text-text-secondary hover:text-accent-red border border-border-color type-strong transition-colors shadow-sm cursor-pointer"
         >
           <RotateCcw className="w-3.5 h-3.5" />
-          {dict?.streaks?.resetAllRuns || 'Reset all killers'}
+          {dict.streaks.resetAllRuns}
         </button>
       </div>
 
       <ConfirmModal
         open={confirmingResetAll}
-        title={dict?.streaks?.resetAllRunsTitle || 'Are you sure you want to start over?'}
+        title={dict.streaks.resetAllRunsTitle}
         message={
-          dict?.streaks?.resetAllRunsPrompt ||
-          'This resets progress on every killer and clears every Page Streak win. This cannot be undone.'
+          dict.streaks.resetAllRunsPrompt
         }
-        confirmLabel={dict?.streaks?.resetConfirm || 'Reset'}
-        cancelLabel={dict?.streaks?.cancel || 'Cancel'}
+        confirmLabel={dict.streaks.resetConfirm}
+        cancelLabel={dict.streaks.cancel}
         busy={resettingAll}
         onConfirm={handleResetAll}
         onCancel={() => setConfirmingResetAll(false)}
       />
 
-      <PageStreakRoster locale={locale} roster={roster} loading={loading} error={error} onRetry={load} dict={dict} />
+      <PageStreakRoster locale={locale} roster={roster} loading={loading} error={error} onRetry={load} />
     </div>
   );
 };

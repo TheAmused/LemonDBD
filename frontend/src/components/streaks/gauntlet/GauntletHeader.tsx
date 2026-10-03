@@ -8,6 +8,7 @@ import { FreezeBadge } from '../FreezeBadge';
 import { ChallengeHeaderLayout, ModeSelectButton, StandardHeaderActions } from '../ChallengePanel';
 import { AdeptBadgeIcon } from '@/components/icons/DbdIcons';
 import { StreakStatTiles } from '../StreakStatTiles';
+import { useDictionary } from "@/context/DictionaryContext";
 
 export interface GauntletHeaderProps {
   currentStreak: number;
@@ -21,53 +22,53 @@ export interface GauntletHeaderProps {
   onOpenReset: () => void;
   /** Omit to hide the button, e.g. for a role with only one playable mode. */
   onChangeMode?: () => void;
-  dict?: Dictionary;
 }
 
 export const GauntletHeader: React.FC<GauntletHeaderProps> = ({
-  currentStreak,
-  bestStreak,
-  poolFrozen = false,
-  modeLabel,
-  onOpenStats,
-  onOpenHistory,
-  onOpenRules,
-  onOpenReset,
-  onChangeMode,
-  dict,
-}) => (
-  <ChallengeHeaderLayout
-    stats={
-      <>
-        <StreakStatTiles
-          current={currentStreak}
-          best={bestStreak}
-          currentLabel={dict?.streaks?.current || 'Current'}
-          bestLabel={dict?.streaks?.best || 'Best'}
-          currentIcon={<Flame className="h-5 w-5" />}
-          bestIcon={<AdeptBadgeIcon className="h-5 w-5" />}
-        />
-        <FreezeBadge frozen={poolFrozen} dict={dict} />
-      </>
-    }
-    actions={
-      <StandardHeaderActions
-        onOpenRules={onOpenRules}
-        onOpenStats={onOpenStats}
-        onOpenHistory={onOpenHistory}
-        onOpenReset={onOpenReset}
-        dict={dict}
-        extra={
-          modeLabel && (
-            <ModeSelectButton
-              label={modeLabel}
-              tone="amber"
-              onClick={onChangeMode}
-              title={dict?.streaks?.changeMode || 'Change Mode'}
+      currentStreak,
+      bestStreak,
+      poolFrozen = false,
+      modeLabel,
+      onOpenStats,
+      onOpenHistory,
+      onOpenRules,
+      onOpenReset,
+      onChangeMode,
+    }) => {
+      const dict = useDictionary();
+      return (
+      <ChallengeHeaderLayout
+        stats={
+          <>
+            <StreakStatTiles
+              current={currentStreak}
+              best={bestStreak}
+              currentLabel={dict.streaks.current}
+              bestLabel={dict.streaks.best}
+              currentIcon={<Flame className="h-5 w-5" />}
+              bestIcon={<AdeptBadgeIcon className="h-5 w-5" />}
             />
-          )
+            <FreezeBadge frozen={poolFrozen} />
+          </>
+        }
+        actions={
+          <StandardHeaderActions
+            onOpenRules={onOpenRules}
+            onOpenStats={onOpenStats}
+            onOpenHistory={onOpenHistory}
+            onOpenReset={onOpenReset}
+            extra={
+              modeLabel && (
+                <ModeSelectButton
+                  label={modeLabel}
+                  tone="amber"
+                  onClick={onChangeMode}
+                  title={dict.streaks.changeMode}
+                />
+              )
+            }
+          />
         }
       />
-    }
-  />
-);
+    );
+    };

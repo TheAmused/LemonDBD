@@ -56,6 +56,7 @@ import { RomanceArchetypeBuilder } from './RomanceArchetypeBuilder';
 import { Button } from '@/components/common/Button';
 import { Input, Textarea } from '@/components/common/Field';
 import { Badge } from '@/components/common/Badge';
+import { useDictionary } from "@/context/DictionaryContext";
 
 function newKey(): string {
   if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') return crypto.randomUUID();
@@ -251,15 +252,15 @@ function errorMessage(t: any, code: SmashRosterErrorCode): string {
 
 interface SmashRosterCreatorProps {
   locale: string;
-  dict: Dictionary;
   /** A custom roster id to edit in place, instead of building a new one.
    * Official rosters have no backend update path, so `editId` only ever
    * refers to a locally-stored roster. */
   editId?: string;
 }
 
-export function SmashRosterCreator({ locale, dict, editId }: SmashRosterCreatorProps) {
-  const t = dict?.smashOrPass as any;
+export function SmashRosterCreator({ locale, editId }: SmashRosterCreatorProps) {
+  const dict = useDictionary();
+  const t = dict.smashOrPass as any;
   const c = t?.creator || {};
   const router = useRouter();
   const { isAdmin, token, user } = useAuth();
@@ -931,7 +932,6 @@ export function SmashRosterCreator({ locale, dict, editId }: SmashRosterCreatorP
           defaultOpen={false}
         >
           <RosterTaxonomyBlock
-            dict={dict}
             roles={draft.custom_roles || []}
             genders={draft.custom_genders || []}
             onChangeRoles={(roles) => patch({ custom_roles: roles })}
@@ -989,7 +989,6 @@ export function SmashRosterCreator({ locale, dict, editId }: SmashRosterCreatorP
                     translations={entityTranslations[activeEntity.key] || {}}
                     onTranslationChange={(loc, field, value) => setEntityTranslation(activeEntity.key, loc, field, value)}
                     locale={locale}
-                    dict={dict}
                     isSimpleMode={isSimpleMode}
                     customLabels={draft.custom_labels}
                     availableRoles={effectiveRoles}
@@ -1010,7 +1009,6 @@ export function SmashRosterCreator({ locale, dict, editId }: SmashRosterCreatorP
                   onRemove={(k) => removeEntity(k)}
                   onAdd={addEntity}
                   canAdd={draft.entities.length < SMASH_ROSTER_LIMITS.maxEntities}
-                  dict={dict}
                 />
               </>
             )}
@@ -1026,7 +1024,6 @@ export function SmashRosterCreator({ locale, dict, editId }: SmashRosterCreatorP
           defaultOpen={false}
         >
           <RomanceArchetypeBuilder
-            dict={dict}
             archetypes={draft.romance_archetypes}
             onChange={(archetypes) => patch({ romance_archetypes: archetypes })}
             availableRoles={effectiveRoles}
@@ -1038,7 +1035,7 @@ export function SmashRosterCreator({ locale, dict, editId }: SmashRosterCreatorP
 
       {/* Feedback Alerts */}
       <div className="w-full max-w-4xl 2xl:max-wide-2k:max-w-6xl wide-2k:max-w-[1800px] mx-auto flex flex-col gap-4">
-        <Feedback errors={errors as string[]} saveError={saveError} submitError={submitError} publishError={publishError} dict={dict} />
+        <Feedback errors={errors as string[]} saveError={saveError} submitError={submitError} publishError={publishError} />
       </div>
 
       {/* Cover Image 16:9 Viewport Crop Modal */}
@@ -1048,7 +1045,6 @@ export function SmashRosterCreator({ locale, dict, editId }: SmashRosterCreatorP
         imageUrl={draft.cover_image_url}
         themeColor={draft.theme_color}
         isAdmin={isUserAdmin}
-        dict={dict}
         onApplyCrop={(croppedUrl) => {
           patch({ cover_image_url: croppedUrl });
           setIsCropModalOpen(false);
@@ -1127,20 +1123,14 @@ function Section({ title, badge, defaultOpen = true, headerAction, toggleAria, c
   );
 }
 
-function Feedback({
-  errors,
-  saveError,
-  submitError,
-  publishError,
-  dict,
-}: {
+function Feedback({ errors, saveError, submitError, publishError }: {
   errors: string[];
   saveError: 'quota' | 'unavailable' | null;
   submitError?: string | null;
   publishError?: string | null;
-  dict?: Dictionary | any;
 }) {
-  const im = dict?.smashOrPass?.importModal || {};
+  const dict = useDictionary();
+  const im = dict.smashOrPass.importModal || {};
   const saveErrorText = saveError === 'quota' ? im.saveFailedQuota : saveError === 'unavailable' ? im.saveFailedUnavailable : null;
   const messages = [...errors, ...(saveErrorText ? [saveErrorText] : []), ...(submitError ? [submitError] : []), ...(publishError ? [publishError] : [])];
   if (messages.length === 0) return null;

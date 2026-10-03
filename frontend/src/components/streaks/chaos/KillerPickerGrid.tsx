@@ -9,6 +9,8 @@ import { useCharacterDisplayName } from '@/context/DisplayNamesContext';
 import { KillerIcon } from '@/components/icons/DbdIcons';
 
 import { tip } from '@/components/common/Tooltip';
+import { useDictionary } from "@/context/DictionaryContext";
+
 export const avatarUrlFor = (name: string) => avatarUrlForCharacter(name, 'killers');
 
 const KillerTile: React.FC<{
@@ -70,25 +72,24 @@ export interface KillerPickerGridProps {
   disabled?: boolean;
   loading?: boolean;
   center?: boolean;
-  dict?: Dictionary;
 }
 
 export const KillerPickerGrid: React.FC<KillerPickerGridProps> = ({
-  killers,
-  completedKillers,
-  selectedKillerId,
-  onSelect,
-  disabled = false,
-  loading = false,
-  center = false,
-  dict,
-}) => {
+      killers,
+      completedKillers,
+      selectedKillerId,
+      onSelect,
+      disabled = false,
+      loading = false,
+      center = false,
+    }) => {
+  const dict = useDictionary();
   const displayName = useCharacterDisplayName();
 
   if (loading) {
     return (
       <p className="text-xs text-text-secondary">
-        {dict?.streaks?.loadingKillers || 'Loading your killers...'}
+        {dict.streaks.loadingKillers}
       </p>
     );
   }

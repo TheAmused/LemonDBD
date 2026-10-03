@@ -12,6 +12,7 @@ import { PerkDescription } from '@/components/PerkDescription';
 import { tip } from '@/components/common/Tooltip';
 import { Modal } from '@/components/common/Modal';
 import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
+import { useDictionary } from "@/context/DictionaryContext";
 
 /** Perk icon and owner avatar share this size. */
 const SLOT_SIZE = 'h-14 w-14 min-[480px]:h-20 min-[480px]:w-20 md:h-24 md:w-24';
@@ -19,14 +20,10 @@ const SLOT_SIZE = 'h-14 w-14 min-[480px]:h-20 min-[480px]:w-20 md:h-24 md:w-24';
 interface PerkModalProps {
   perk: Perk | null;
   onClose: () => void;
-  dict?: PerkDictionary;
 }
 
-export const PerkModal: React.FC<PerkModalProps> = ({
-  perk,
-  onClose,
-  dict,
-}) => {
+export const PerkModal: React.FC<PerkModalProps> = ({ perk, onClose }) => {
+  const dict = useDictionary();
   const [imgError, setImgError] = useState(false);
   const [avatarError, setAvatarError] = useState(false);
 
@@ -69,7 +66,7 @@ export const PerkModal: React.FC<PerkModalProps> = ({
         </h2>
         {perk.alternate_name && (
           <p className="mt-1.5 type-strong text-accent-amber">
-            {dict?.modal?.alias && `${dict.modal.alias}: `}
+            {dict.modal.alias && `${dict.modal.alias}: `}
             {perk.alternate_name}
           </p>
         )}
@@ -78,7 +75,7 @@ export const PerkModal: React.FC<PerkModalProps> = ({
       <div
         className={`flex ${SLOT_SIZE} shrink-0 items-center justify-center`}
         {...tip(
-          isGeneral ? dict?.modal?.generalPerk : perk.character,
+          isGeneral ? dict.modal.generalPerk : perk.character,
           undefined,
           'character'
         )}
@@ -106,7 +103,7 @@ export const PerkModal: React.FC<PerkModalProps> = ({
       variant="dialog"
       size="2xl"
       closeButton="floating"
-      closeButtonAriaLabel={dict?.modal?.close}
+      closeButtonAriaLabel={dict.modal.close}
       ariaLabel={perk.name}
       ariaDescribedBy="perk-modal-description"
       header={header}

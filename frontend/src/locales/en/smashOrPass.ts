@@ -194,6 +194,8 @@ export default {
     signatureQuote: 'Signature Quote',
     greenFlag: 'Green Flags',
     redFlag: 'Red Flags',
+    turn_on: 'Turn On:',
+    dealbreaker: 'Dealbreaker:',
   },
   hud: {
     swipeLeftHint: 'Swipe left to Pass',
@@ -294,6 +296,8 @@ export default {
     playBgm: 'Play BGM (B)',
     unmute: 'Unmute Sound FX (M)',
     mute: 'Mute Sound FX (M)',
+    groupByTierDesc: 'Group characters into tiers by smash rate.',
+    rankedListDesc: 'Show one flat list ranked by smash rate.',
   },
   picker: {
     yours: 'Yours',
@@ -454,6 +458,7 @@ export default {
     draftRestored: 'Your unfinished draft was restored.',
     startOver: 'Start over',
     closeToast: 'Dismiss',
+    unnamedCandidate: 'Unnamed Candidate',
   },
   cropModal: {
     title: 'Crop & Frame Cover Image',
@@ -538,4 +543,5 @@ export default {
     facebookNotice: 'Facebook opened! Post text copied to clipboard (paste with Ctrl+V).',
     telegramNotice: 'Telegram opened! Message text copied to clipboard.',
   },
+  communityConsensus: 'Community Consensus',
 } as const;

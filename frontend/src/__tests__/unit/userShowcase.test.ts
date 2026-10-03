@@ -2,7 +2,7 @@
 import { describe, it, beforeEach } from 'node:test';
 import assert from 'node:assert/strict';
 import React from 'react';
-import { renderToStaticMarkup } from 'react-dom/server';
+import { renderWithDictionary } from '../helpers/renderWithDictionary';
 import {
   DEFAULT_SHOWCASE_STATE,
   PLAYER_TITLES,
@@ -186,7 +186,7 @@ describe('User Showcase: Hook & State Actions', () => {
       return React.createElement('div', null, capturedHook.showcase.playerTitle);
     }
 
-    renderToStaticMarkup(React.createElement(TestComponent));
+    renderWithDictionary(React.createElement(TestComponent));
 
     assert.ok(capturedHook);
     assert.deepEqual(capturedHook.showcase, DEFAULT_SHOWCASE_STATE);
@@ -227,7 +227,7 @@ describe('User Showcase: Hook & State Actions', () => {
       return React.createElement('div', null, capturedHook.showcase.playerTitle);
     }
 
-    renderToStaticMarkup(React.createElement(TestComponent));
+    renderWithDictionary(React.createElement(TestComponent));
 
     assert.deepEqual(capturedHook.showcase, existing);
     assert.equal(capturedHook.state.playerTitle, 'Killer');
@@ -241,7 +241,7 @@ describe('User Showcase: Hook & State Actions', () => {
       return React.createElement('div', null, capturedHook.showcase.playerTitle);
     }
 
-    renderToStaticMarkup(React.createElement(TestComponent));
+    renderWithDictionary(React.createElement(TestComponent));
 
     // Test title update
     capturedHook.setPlayerTitle('Killer');

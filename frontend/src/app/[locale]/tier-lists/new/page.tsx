@@ -21,12 +21,11 @@ export default function NewTierListPage() {
   return (
     <PageShell
       locale={locale}
-      dict={dict}
       activeCategory="tier-lists"
       padding="tight"
       mainClassName="relative flex flex-col"
     >
-      <TierListCreator locale={locale} dict={dict} editId={editId} />
+      <TierListCreator locale={locale} editId={editId} />
     </PageShell>
   );
 }

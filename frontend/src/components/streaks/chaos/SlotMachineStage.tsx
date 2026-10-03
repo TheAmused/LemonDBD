@@ -11,6 +11,7 @@ import { useSlotReels, ReelDirection, REEL_SPIN_MS } from './useSlotReels';
 import { perkIconUrl as perkIconFor } from '@/utils/staticUrl';
 import { usePerkDisplayName } from '@/context/DisplayNamesContext';
 import { Spinner } from '@/components/common/Spinner';
+import { useDictionary } from "@/context/DictionaryContext";
 
 const REEL_DIRECTIONS: ReelDirection[] = ['up', 'down', 'down', 'up'];
 const STRIP_LENGTH = 16;
@@ -142,18 +143,10 @@ export interface SlotMachineStageProps {
   onPullLever: () => void;
   loading?: boolean;
   locked?: boolean;
-  dict?: Dictionary;
 }
 
-export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
-  perks,
-  addonRarities,
-  revealed,
-  onPullLever,
-  loading = false,
-  locked = false,
-  dict,
-}) => {
+export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({ perks, addonRarities, revealed, onPullLever, loading = false, locked = false }) => {
+  const dict = useDictionary();
   const { spinToken, start, reportLanded } = useSlotReels(4);
   const [leverPulled, setLeverPulled] = useState(false);
   const [hasSpunThisBuild, setHasSpunThisBuild] = useState(revealed);
@@ -222,7 +215,7 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
               </div>
             ) : (
               <p className="text-lg sm:text-xl font-black leading-tight text-text-primary">
-                {dict?.streaks?.pullTheLever || 'Pull the lever!'}
+                {dict.streaks.pullTheLever}
               </p>
             )}
           </div>
@@ -235,7 +228,7 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
         }`}
       >
         <Spinner size="xs" tone="current" />
-        <span>{dict?.app?.loading || 'Loading...'}</span>
+        <span>{dict.app.loading}</span>
       </div>
     </div>
   );

@@ -13,6 +13,7 @@ import { TierBadge } from './TierBadge';
 import type { TierTileShape } from './TierItemTile';
 import { containerDndId, itemDndId } from './dndIds';
 import { formatMessage } from '@/utils/i18nFormat';
+import { useDictionary } from "@/context/DictionaryContext";
 
 interface TierRowProps {
   tier: TierDefinition;
@@ -25,22 +26,21 @@ interface TierRowProps {
   onPreview: (key: string) => void;
   onMoveSelectedHere: (containerId: string) => void;
   onEdit: (tierId: string) => void;
-  dict: Dictionary;
 }
 
 export const TierRow = React.memo(function TierRow({
-  tier,
-  keys,
-  itemsByKey,
-  shape,
-  showNames,
-  selectedKey,
-  onSelect,
-  onPreview,
-  onMoveSelectedHere,
-  onEdit,
-  dict,
-}: TierRowProps) {
+      tier,
+      keys,
+      itemsByKey,
+      shape,
+      showNames,
+      selectedKey,
+      onSelect,
+      onPreview,
+      onMoveSelectedHere,
+      onEdit,
+    }: TierRowProps) {
+  const dict = useDictionary();
   const t = dict.tierLists;
   const { setNodeRef, isOver } = useDroppable({ id: containerDndId(tier.id) });
   const canReceiveSelection = selectedKey !== null && !keys.includes(selectedKey);

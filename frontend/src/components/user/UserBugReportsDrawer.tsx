@@ -8,12 +8,12 @@ import { UserBugReportsList } from './UserBugReportsList';
 import { usePersistentDrawer } from '@/hooks/usePersistentDrawer';
 import type { UserBugReport } from '@/types/userProfile';
 import type { Dictionary } from '@/locales/types';
+import { useDictionary } from "@/context/DictionaryContext";
 
 interface UserBugReportsDrawerProps {
   reports: UserBugReport[];
   loading: boolean;
   onOpenReportModal: () => void;
-  dict?: Dictionary | null;
   total: number;
   page: number;
   perPage: number;
@@ -21,22 +21,13 @@ interface UserBugReportsDrawerProps {
   onPageChange: (page: number) => void;
 }
 
-export const UserBugReportsDrawer: React.FC<UserBugReportsDrawerProps> = ({
-  reports,
-  loading,
-  onOpenReportModal,
-  dict,
-  total,
-  page,
-  perPage,
-  totalPages,
-  onPageChange,
-}) => {
+export const UserBugReportsDrawer: React.FC<UserBugReportsDrawerProps> = ({ reports, loading, onOpenReportModal, total, page, perPage, totalPages, onPageChange }) => {
+  const dict = useDictionary();
   const [isExpanded, toggleExpanded] = usePersistentDrawer('lemondbd_drawer_bugs', false);
 
   const getSubtitle = () => {
     if (total === 0) {
-      return dict?.user?.noReportsTitle || 'No Bug Reports Submitted';
+      return dict.user.noReportsTitle;
     }
     if (total === 1) {
       return '1 report submitted';
@@ -59,14 +50,14 @@ export const UserBugReportsDrawer: React.FC<UserBugReportsDrawerProps> = ({
           type="button"
           onClick={toggleExpanded}
           aria-expanded={isExpanded}
-          aria-label={dict?.user?.tabBugReports || 'My Bug Reports'}
+          aria-label={dict.user.tabBugReports}
           className="absolute inset-0 z-[1] cursor-pointer"
         />
 
         <div aria-hidden="true" />
         <div className="relative z-10 text-center pointer-events-none">
           <h2 className="type-section-title text-text-primary group-hover:text-accent-red transition-colors">
-            {dict?.user?.tabBugReports || 'My Bug Reports'}
+            {dict.user.tabBugReports}
           </h2>
           <p className="type-section-subtitle text-text-secondary mt-0.5">
             {getSubtitle()}
@@ -80,7 +71,7 @@ export const UserBugReportsDrawer: React.FC<UserBugReportsDrawerProps> = ({
             leftIcon={<Plus className="h-3.5 w-3.5" />}
             className="relative z-[2] pointer-events-auto h-7 py-0 text-xs"
           >
-            <span>{dict?.user?.reportNewBug || 'Report New Bug'}</span>
+            <span>{dict.user.reportNewBug}</span>
           </Button>
           <ChevronDown
             className={`h-4 w-4 sm:h-5 sm:w-5 2xl:h-6 2xl:w-6 text-accent-red transition-transform duration-300 ease-in-out ${
@@ -102,7 +93,6 @@ export const UserBugReportsDrawer: React.FC<UserBugReportsDrawerProps> = ({
               reports={reports}
               loading={loading}
               onOpenReportModal={onOpenReportModal}
-              dict={dict ?? undefined}
               total={total}
               page={page}
               perPage={perPage}

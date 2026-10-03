@@ -41,15 +41,15 @@ function ResetPasswordContent() {
     setError(null);
 
     if (!token) {
-      setError(dict?.user?.missingResetToken || 'Missing reset token.');
+      setError(dict.user.missingResetToken);
       return;
     }
     if (password.length < 6) {
-      setError(dict?.user?.passwordTooShort || 'Password must be at least 6 characters long.');
+      setError(dict.user.passwordTooShort);
       return;
     }
     if (password !== confirmPassword) {
-      setError(dict?.user?.passwordsDoNotMatch || 'Passwords do not match.');
+      setError(dict.user.passwordsDoNotMatch);
       return;
     }
 
@@ -60,7 +60,7 @@ function ResetPasswordContent() {
     if (res.success) {
       setDone(true);
     } else {
-      setError(res.error || dict?.user?.failedToResetPassword || 'Failed to reset password.');
+      setError(res.error || dict.user.failedToResetPassword);
     }
   };
 
@@ -72,7 +72,7 @@ function ResetPasswordContent() {
             <LemonIcon className="h-9 w-9" />
           </div>
           <h1 className="text-xl font-black tracking-wider">
-            {dict?.user?.setNewPassword || 'Set a New Password'}
+            {dict.user.setNewPassword}
           </h1>
         </div>
 
@@ -80,13 +80,13 @@ function ResetPasswordContent() {
           <div className="text-center">
             <CheckCircle2 className="mx-auto h-10 w-10 text-accent-green mb-3" />
             <p className="text-sm text-text-secondary mb-5">
-              {dict?.user?.passwordResetSuccess || 'Your password has been reset. You can now sign in with your new password.'}
+              {dict.user.passwordResetSuccess}
             </p>
             <Link
               href={`/${locale}`}
               className="inline-flex items-center justify-center gap-2 rounded-xl bg-accent-red px-5 py-2.5 type-label-sm text-text-inverted shadow-xs hover:bg-accent-red-hover transition-all"
             >
-              {dict?.user?.goToHome || 'Go to LemonDBD'}
+              {dict.user.goToHome}
             </Link>
           </div>
         ) : (
@@ -103,7 +103,7 @@ function ResetPasswordContent() {
 
             <div>
               <label className="block type-label-xs text-text-secondary mb-1">
-                {dict?.user?.newPassword || 'New Password'}
+                {dict.user.newPassword}
               </label>
               <div className="relative">
                 <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-text-muted" />
@@ -120,7 +120,7 @@ function ResetPasswordContent() {
 
             <div>
               <label className="block type-label-xs text-text-secondary mb-1">
-                {dict?.user?.confirmPassword || 'Confirm Password'}
+                {dict.user.confirmPassword}
               </label>
               <div className="relative">
                 <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-text-muted" />
@@ -136,7 +136,7 @@ function ResetPasswordContent() {
             </div>
 
             <Button type="submit" variant="primary" loading={loading} className="w-full mt-2">
-              <span>{dict?.user?.resetPassword || 'Reset Password'}</span>
+              <span>{dict.user.resetPassword}</span>
             </Button>
           </form>
         )}

@@ -6,6 +6,7 @@ import type { Dictionary } from '@/locales/types';
 import { Rows3, BookOpen } from 'lucide-react';
 import { AdminStats, ChallengeCompletionBreakdown } from '@/types/admin';
 import { GauntletGloveIcon, ChaosSwirlIcon } from '@/components/icons/DbdIcons';
+import { useDictionary } from "@/context/DictionaryContext";
 
 const MODE_CARD_CONFIG = [
   { key: 'gauntlet', icon: GauntletGloveIcon, color: 'text-text-secondary', border: 'border-border-color' },
@@ -16,40 +17,42 @@ const MODE_CARD_CONFIG = [
 
 interface AdminChallengeStatsProps {
   stats: AdminStats | null;
-  dict?: Dictionary;
 }
 
 const VariantRow: React.FC<{
   label: string;
   breakdown: { completed_runs: number; unique_users: number };
-  dict?: Dictionary;
-}> = ({ label, breakdown, dict }) => (
+}> = ({ label, breakdown }) => {
+  const dict = useDictionary();
+  return (
   <div className="flex items-center justify-between text-xs px-3 py-2.5 rounded-lg bg-bg-primary border border-border-subtle">
     <span className="font-bold text-text-primary">{label}</span>
     <span className="text-text-secondary">
       <span className="text-text-primary font-black">{breakdown.completed_runs}</span>{' '}
-      {dict?.admin?.completionsLabel || 'completions'} {dict?.admin?.middotSeparator || '·'}{' '}
-      {breakdown.unique_users} {dict?.admin?.usersLabel || 'users'}
+      {dict.admin.completionsLabel} {dict.admin.middotSeparator}{' '}
+      {breakdown.unique_users} {dict.admin.usersLabel}
     </span>
   </div>
 );
+};
 
-export const AdminChallengeStats: React.FC<AdminChallengeStatsProps> = ({ stats, dict }) => {
+export const AdminChallengeStats: React.FC<AdminChallengeStatsProps> = ({ stats }) => {
+  const dict = useDictionary();
   const completions = stats?.challenge_completions;
 
   const MODE_LABELS: Record<string, string> = {
-    gauntlet: dict?.streaks?.gauntlet || 'Gauntlet',
-    chaos: dict?.streaks?.chaosStreak || 'Chaos Streak',
-    history: dict?.streaks?.historyStreak || 'History Streak',
-    page_streak: dict?.streaks?.pageStreak || 'Page Streak',
+    gauntlet: dict.streaks.gauntlet,
+    chaos: dict.streaks.chaosStreak,
+    history: dict.streaks.historyStreak,
+    page_streak: dict.streaks.pageStreak,
   };
 
   const VARIANT_LABELS: Record<string, string> = {
-    survivor: dict?.characterDetail?.roleSurvivor || 'Survivor',
-    killer: dict?.characterDetail?.roleKiller || 'Killer',
-    easy: dict?.admin?.difficultyEasy || 'Easy',
-    medium: dict?.admin?.difficultyMedium || 'Medium',
-    hell: dict?.admin?.difficultyHell || 'Hell',
+    survivor: dict.characterDetail.roleSurvivor,
+    killer: dict.characterDetail.roleKiller,
+    easy: dict.admin.difficultyEasy,
+    medium: dict.admin.difficultyMedium,
+    hell: dict.admin.difficultyHell,
   };
 
   return (
@@ -83,13 +86,12 @@ export const AdminChallengeStats: React.FC<AdminChallengeStatsProps> = ({ stats,
                     key={variant}
                     label={VARIANT_LABELS[variant] || variant}
                     breakdown={counts}
-                    dict={dict}
                   />
                 ))}
               </div>
             ) : (
               <p className="type-caption text-text-muted">
-                {dict?.admin?.pageStreakCompletionsNotice || 'Completions tracked as total runs.'}
+                {dict.admin.pageStreakCompletionsNotice}
               </p>
             )}
           </div>

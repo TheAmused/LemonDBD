@@ -59,13 +59,13 @@ function MapsPageInner() {
     {
       value: 'text',
       icon: <Search className="h-4 w-4" aria-hidden="true" />,
-      label: dict?.maps?.searchTextTab || 'Search',
+      label: dict.maps.searchTextTab,
       activeClassName: 'bg-accent-red',
     },
     {
       value: 'voice',
       icon: <Mic className="h-4 w-4" aria-hidden="true" />,
-      label: dict?.maps?.searchVoiceTab || 'Voice',
+      label: dict.maps.searchVoiceTab,
       activeClassName: 'bg-accent-red',
     },
   ];
@@ -81,7 +81,7 @@ function MapsPageInner() {
     <SegmentedControl
       value={searchMode}
       onChange={setSearchMode}
-      ariaLabel={dict?.maps?.searchModeAria || 'Search mode'}
+      ariaLabel={dict.maps.searchModeAria}
       options={searchModeOptions}
     />
   );
@@ -90,7 +90,6 @@ function MapsPageInner() {
     () => (
       <VoiceCommandBanner
         locale={locale}
-        dict={dict}
         currentSource="hens333"
         onSourceChange={handleSourceChange}
         onSelectMap={handleSelectMap}
@@ -113,7 +112,6 @@ function MapsPageInner() {
   return (
     <PageShell
       locale={locale}
-      dict={dict}
       activeCategory="maps"
       onSelectCategory={handleSelectCategory}
       customPadding="p-4 sm:p-6 lg:p-7"
@@ -127,7 +125,6 @@ function MapsPageInner() {
             setAvailableMaps(maps);
           }}
           backendBase={backendBase}
-          dict={dict}
           locale={locale}
           hideSearch={searchMode === 'voice'}
           voiceSlot={voiceBanner}

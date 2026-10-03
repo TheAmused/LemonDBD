@@ -13,16 +13,17 @@ import {
 } from '@/utils/tierLists/codec';
 import { TIER_LIST_LIMITS } from '@/utils/tierLists/constants';
 import { LABEL, TOUCH_BTN, TOUCH_FIELD } from './styles';
+import { useDictionary } from "@/context/DictionaryContext";
 
 interface TierListExportModalProps {
   doc: TierListDocument | null;
   onClose: () => void;
   locale: string;
-  dict: Dictionary;
 }
 
 /** JSON download / copy, and a self-contained share link (the list rides in the URL fragment). */
-export function TierListExportModal({ doc, onClose, locale, dict }: TierListExportModalProps) {
+export function TierListExportModal({ doc, onClose, locale }: TierListExportModalProps) {
+  const dict = useDictionary();
   const t = dict.tierLists;
   return (
     <ExportModal

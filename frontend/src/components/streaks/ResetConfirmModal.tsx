@@ -4,6 +4,7 @@ import type { Dictionary } from '@/locales/types';
 
 import React from 'react';
 import { ConfirmModal } from '@/components/common/ConfirmModal';
+import { useDictionary } from "@/context/DictionaryContext";
 
 export interface ResetConfirmModalProps {
   open: boolean;
@@ -11,25 +12,20 @@ export interface ResetConfirmModalProps {
   busy?: boolean;
   onConfirm: () => void;
   onCancel: () => void;
-  dict?: Dictionary;
 }
 
-export const ResetConfirmModal: React.FC<ResetConfirmModalProps> = ({
-  open,
-  message,
-  busy = false,
-  onConfirm,
-  onCancel,
-  dict,
-}) => (
+export const ResetConfirmModal: React.FC<ResetConfirmModalProps> = ({ open, message, busy = false, onConfirm, onCancel }) => {
+  const dict = useDictionary();
+  return (
   <ConfirmModal
     open={open}
-    title={dict?.streaks?.resetRunTitle || 'Reset this run?'}
+    title={dict.streaks.resetRunTitle}
     message={message}
-    confirmLabel={dict?.streaks?.resetConfirm || 'Reset'}
-    cancelLabel={dict?.streaks?.cancel || 'Cancel'}
+    confirmLabel={dict.streaks.resetConfirm}
+    cancelLabel={dict.streaks.cancel}
     busy={busy}
     onConfirm={onConfirm}
     onCancel={onCancel}
   />
 );
+};

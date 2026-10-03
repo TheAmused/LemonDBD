@@ -24,6 +24,7 @@ import type {
   ModelDescriptor,
 } from '@/services/clientSpeechModel';
 import { formatMessage } from '@/utils/i18nFormat';
+import { useDictionary } from "@/context/DictionaryContext";
 
 export interface VoiceEngineInfoModalProps {
   isOpen: boolean;
@@ -37,22 +38,21 @@ export interface VoiceEngineInfoModalProps {
   modelQuality?: ModelQuality;
   onSelectModelQuality?: (quality: ModelQuality) => void;
   modelDescriptor?: ModelDescriptor;
-  dict?: Dictionary | any;
 }
 
 export const VoiceEngineInfoBody: React.FC<Omit<VoiceEngineInfoModalProps, 'isOpen' | 'onClose'>> = ({
-  currentEngine,
-  onSelectEngine,
-  browserName,
-  hasNativeWebSpeech,
-  modelProgress,
-  onPreloadModel,
-  modelQuality = 'fast',
-  onSelectModelQuality,
-  modelDescriptor,
-  dict,
-}) => {
-  const t = (dict?.voice || {}) as Record<string, string>;
+      currentEngine,
+      onSelectEngine,
+      browserName,
+      hasNativeWebSpeech,
+      modelProgress,
+      onPreloadModel,
+      modelQuality = 'fast',
+      onSelectModelQuality,
+      modelDescriptor,
+    }) => {
+  const dict = useDictionary();
+  const t = (dict.voice || {}) as Record<string, string>;
 
   return (
     <div className="space-y-6">
@@ -61,7 +61,7 @@ export const VoiceEngineInfoBody: React.FC<Omit<VoiceEngineInfoModalProps, 'isOp
       <div className="flex items-center justify-between">
         <span className="type-label-xs text-text-muted flex items-center gap-1.5">
           <Laptop className="h-3.5 w-3.5 text-text-muted" aria-hidden="true" />
-          {dict?.maps?.detectedBrowser || ''}
+          {dict.maps.detectedBrowser}
         </span>
         <span className="rounded-full bg-bg-surface px-2.5 py-0.5 type-strong text-text-primary">
           {browserName}
@@ -71,7 +71,7 @@ export const VoiceEngineInfoBody: React.FC<Omit<VoiceEngineInfoModalProps, 'isOp
       <div className="flex items-center justify-between pt-1">
         <span className="type-label-xs text-text-muted flex items-center gap-1.5">
           <Sparkles className="h-3.5 w-3.5 text-text-muted" aria-hidden="true" />
-          {dict?.maps?.activeRecognitionEngine || ''}
+          {dict.maps.activeRecognitionEngine}
         </span>
         <span
           className="rounded-full px-2.5 py-0.5 type-strong border bg-accent-red/10 text-accent-red border-accent-red/30"
@@ -114,7 +114,7 @@ export const VoiceEngineInfoBody: React.FC<Omit<VoiceEngineInfoModalProps, 'isOp
 
         <div className="pt-1 flex items-center gap-1.5 type-strong-2xs text-text-muted">
           <span className="h-1.5 w-1.5 rounded-full bg-text-muted" aria-hidden="true" />
-          <span>{dict?.maps?.chromeEdgeSafari || ''}</span>
+          <span>{dict.maps.chromeEdgeSafari}</span>
         </div>
       </div>
 
@@ -144,7 +144,7 @@ export const VoiceEngineInfoBody: React.FC<Omit<VoiceEngineInfoModalProps, 'isOp
 
         <div className="pt-1 flex items-center gap-1.5 type-strong-2xs text-text-secondary">
           <ShieldCheck className="h-3.5 w-3.5" aria-hidden="true" />
-          <span>{dict?.maps?.universalPrivateInBrowser || ''}</span>
+          <span>{dict.maps.universalPrivateInBrowser}</span>
         </div>
       </div>
     </div>
@@ -230,7 +230,7 @@ export const VoiceEngineInfoBody: React.FC<Omit<VoiceEngineInfoModalProps, 'isOp
           </span>
         </div>
         <span className="type-strong-2xs text-text-muted">
-          {modelProgress.progress}{dict?.maps?.percentSign || '%'}
+          {modelProgress.progress}{dict.maps.percentSign}
         </span>
       </div>
 
@@ -249,7 +249,7 @@ export const VoiceEngineInfoBody: React.FC<Omit<VoiceEngineInfoModalProps, 'isOp
             onClick={onPreloadModel}
           >
             <RefreshCw className="h-3 w-3" aria-hidden="true" />
-            <span>{dict?.maps?.preloadModel || ''}</span>
+            <span>{dict.maps.preloadModel}</span>
           </Button>
         </div>
       )}
@@ -263,8 +263,8 @@ export const VoiceEngineInfoModal: React.FC<VoiceEngineInfoModalProps> = ({
   onClose,
   ...bodyProps
 }) => {
-  const { dict } = bodyProps;
-  const t = (dict?.voice || {}) as Record<string, string>;
+  const dict = useDictionary();
+  const t = dict.voice as Record<string, string>;
 
   return (
     <Modal
@@ -276,7 +276,7 @@ export const VoiceEngineInfoModal: React.FC<VoiceEngineInfoModalProps> = ({
       icon={<Cpu className="h-5 w-5" aria-hidden="true" />}
       title={t.howItWorksTitle || ''}
       ariaLabel={t.howItWorksTitle || 'Voice engine info'}
-      closeButtonAriaLabel={dict?.modal?.close || ''}
+      closeButtonAriaLabel={dict.modal.close}
       testId="voice-engine-info-modal"
       padded
     >

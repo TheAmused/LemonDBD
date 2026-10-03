@@ -7,7 +7,7 @@ import { RotateCcw, Users, Swords } from 'lucide-react';
 import { Modal } from '@/components/common/Modal';
 import type { ChallengeCompletion } from '@/types/challengeCompletion';
 import { formatDate } from '@/utils/format';
-import { useLocale } from '@/context/DictionaryContext';
+import { useLocale, useDictionary } from '@/context/DictionaryContext';
 
 export interface ChallengeCompletionHistoryDrawerProps {
   isOpen: boolean;
@@ -17,7 +17,6 @@ export interface ChallengeCompletionHistoryDrawerProps {
    *  Omit to hide that stat entirely -- not every mode tracks it meaningfully (Page Streak
    *  is scoped to one killer per completion, so an "owned" count doesn't apply). */
   subjectLabel?: string;
-  dict?: Dictionary;
 }
 
 /**
@@ -26,26 +25,21 @@ export interface ChallengeCompletionHistoryDrawerProps {
  * wipes its match logs). Lets a player compare attempts taken across past
  * clears to see whether they're actually getting better.
  */
-export const ChallengeCompletionHistoryDrawer: React.FC<ChallengeCompletionHistoryDrawerProps> = ({
-  isOpen,
-  onClose,
-  completions,
-  subjectLabel,
-  dict,
-}) => {
+export const ChallengeCompletionHistoryDrawer: React.FC<ChallengeCompletionHistoryDrawerProps> = ({ isOpen, onClose, completions, subjectLabel }) => {
+  const dict = useDictionary();
   const locale = useLocale();
   return (
     <Modal
       isOpen={isOpen}
       onClose={onClose}
       variant="drawer-right"
-      title={dict?.streaks?.pastWins || 'Win History'}
-      closeButtonAriaLabel={dict?.modal?.close || 'Close'}
+      title={dict.streaks.pastWins}
+      closeButtonAriaLabel={dict.modal.close}
       bodyClassName="p-5 sm:p-6"
     >
       {completions.length === 0 ? (
         <div className="text-center py-8 text-text-muted text-xs bg-bg-elevated rounded-xl border border-border-color">
-          {dict?.streaks?.noCompletionsLogged || 'No completed runs yet. Finish the whole challenge to see it here!'}
+          {dict.streaks.noCompletionsLogged}
         </div>
       ) : (
         <div className="space-y-2.5">
@@ -57,11 +51,11 @@ export const ChallengeCompletionHistoryDrawer: React.FC<ChallengeCompletionHisto
               <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5">
                 <div className="flex items-center gap-1.5 type-strong text-text-secondary">
                   <Swords className="w-3.5 h-3.5 text-text-muted" />
-                  {entry.matches_played} {dict?.streaks?.matches || 'Matches'}
+                  {entry.matches_played} {dict.streaks.matches}
                 </div>
                 <div className="flex items-center gap-1.5 type-strong text-text-secondary">
                   <RotateCcw className="w-3.5 h-3.5 text-text-muted" />
-                  {entry.attempts_taken} {dict?.streaks?.attempts || 'Attempts'}
+                  {entry.attempts_taken} {dict.streaks.attempts}
                 </div>
                 {subjectLabel && (
                   <div className="flex items-center gap-1.5 type-strong text-text-secondary">

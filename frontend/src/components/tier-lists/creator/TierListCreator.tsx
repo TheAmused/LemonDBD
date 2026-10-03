@@ -32,6 +32,7 @@ import { Checkbox } from '@/components/common/Checkbox';
 import { Button } from '@/components/common/Button';
 import { Input } from '@/components/common/Field';
 import { formatMessage } from '@/utils/i18nFormat';
+import { useDictionary } from "@/context/DictionaryContext";
 
 /** Unfinished work survives a reload or an accidental back-navigation. Only
  * used for a brand-new list -- editing an existing one (see `editId` below)
@@ -82,12 +83,12 @@ function formatBytes(bytes: number, locale: string): string {
 
 interface TierListCreatorProps {
   locale: string;
-  dict: Dictionary;
   /** A custom list id to edit in place, instead of building a new one. */
   editId?: string;
 }
 
-export function TierListCreator({ locale, dict, editId }: TierListCreatorProps) {
+export function TierListCreator({ locale, editId }: TierListCreatorProps) {
+  const dict = useDictionary();
   const t = dict.tierLists;
   const c = t.creator;
   const router = useRouter();
@@ -475,7 +476,6 @@ export function TierListCreator({ locale, dict, editId }: TierListCreatorProps) 
             activePreset={draft.preset}
             onChange={(tiers) => patch({ tiers, preset: null })}
             onPreset={(id) => patch({ tiers: buildLadder(id, translateFeeling), preset: id })}
-            dict={dict}
           />
         </Section>
       </div>
@@ -484,7 +484,7 @@ export function TierListCreator({ locale, dict, editId }: TierListCreatorProps) 
       <div className="w-full max-w-4xl 2xl:max-wide-2k:max-w-6xl wide-2k:max-w-[1800px] mx-auto">
         <Section title={c.stepItems}>
           <div className="flex flex-col gap-6 2xl:gap-8">
-            <ItemSources onAdd={addItems} existingIds={existingIds} locale={locale} dict={dict} />
+            <ItemSources onAdd={addItems} existingIds={existingIds} locale={locale} />
             {skipped > 0 && (
               <p role="status" className="text-xs 2xl:text-sm font-semibold text-accent-amber">
                 {formatMessage(c.itemsSkipped, { count: skipped }, locale)}
@@ -503,7 +503,6 @@ export function TierListCreator({ locale, dict, editId }: TierListCreatorProps) 
               }
               onRemove={(id) => setDraft((d) => ({ ...d, items: d.items.filter((i) => i.id !== id) }))}
               onClear={() => patch({ items: [] })}
-              dict={dict}
             />
             {hasInlineImages && (
               <p className={cn('text-xs 2xl:text-sm', bytes > STORAGE_WARN_BYTES ? 'font-semibold text-accent-amber' : 'text-text-muted')}>
@@ -517,7 +516,7 @@ export function TierListCreator({ locale, dict, editId }: TierListCreatorProps) 
 
       {/* Feedback Alerts */}
       <div className="w-full max-w-4xl 2xl:max-wide-2k:max-w-6xl wide-2k:max-w-[1800px] mx-auto flex flex-col gap-4">
-        <Feedback errors={errors as string[]} saveError={saveError} publishError={publishError} dict={dict} />
+        <Feedback errors={errors as string[]} saveError={saveError} publishError={publishError} />
       </div>
 
       <CreatorPreviewModal
@@ -529,7 +528,6 @@ export function TierListCreator({ locale, dict, editId }: TierListCreatorProps) 
         items={draft.items}
         backgroundImage={safeBackground}
         locale={locale}
-        dict={dict}
       />
     </div>
   );
@@ -577,17 +575,12 @@ function Section({ title, defaultOpen = true, children }: { title: string; defau
   );
 }
 
-function Feedback({
-  errors,
-  saveError,
-  publishError,
-  dict,
-}: {
+function Feedback({ errors, saveError, publishError }: {
   errors: string[];
   saveError: 'quota' | 'unavailable' | null;
   publishError?: string | null;
-  dict: Dictionary;
 }) {
+  const dict = useDictionary();
   const t = dict.tierLists;
   const messages = [
     ...errors,

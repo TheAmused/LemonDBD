@@ -5,13 +5,14 @@ import type { Dictionary } from '@/locales/types';
 import React, { useRef, useState } from 'react';
 import { Snowflake } from 'lucide-react';
 import { Popover } from '@/components/common/Popover';
+import { useDictionary } from "@/context/DictionaryContext";
 
 export interface FreezeBadgeProps {
   frozen: boolean;
-  dict?: Dictionary;
 }
 
-export const FreezeBadge: React.FC<FreezeBadgeProps> = ({ frozen, dict }) => {
+export const FreezeBadge: React.FC<FreezeBadgeProps> = ({ frozen }) => {
+  const dict = useDictionary();
   const [hovered, setHovered] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -40,10 +41,9 @@ export const FreezeBadge: React.FC<FreezeBadgeProps> = ({ frozen, dict }) => {
         className="w-56 rounded-xl border border-border-color bg-bg-surface px-3 py-2.5 text-mini leading-snug text-text-secondary shadow-2xl backdrop-blur-md"
       >
         <span className="font-bold text-text-primary">
-          {dict?.streaks?.challengeStarted || 'Challenge started.'}
+          {dict.streaks.challengeStarted}
         </span>{' '}
-        {dict?.streaks?.freezeNotice ||
-          "Unlocking or locking perks/characters won't affect this run until a win, a loss back to 0, or a reset."}
+        {dict.streaks.freezeNotice}
       </Popover>
     </div>
   );

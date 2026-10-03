@@ -41,12 +41,14 @@ import { tip } from '@/components/common/Tooltip';
 import { ConfirmModal } from '@/components/common/ConfirmModal';
 import { EmptyState } from '@/components/common/EmptyState';
 import { copyTextWithFallback } from '@/utils/clipboard';
+import { useDictionary } from "@/context/DictionaryContext";
+
 interface MinigamesHubProps {
   locale: string;
-  dict: Dictionary;
 }
 
-export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale, dict }) => {
+export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
+  const dict = useDictionary();
   const t = dict.minigames;
   const [customTrials, setCustomTrials] = useState<ChallengeDefinition[]>([]);
   const [streakData, setStreakData] = useState<DailyStreakData>({

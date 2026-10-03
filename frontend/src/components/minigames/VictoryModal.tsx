@@ -10,24 +10,18 @@ import type { ChallengeDefinition, GuessRecord } from '@/types/minigame';
 import type { Dictionary } from '@/locales/types';
 import { Modal } from '@/components/common/Modal';
 import { copyTextWithFallback } from '@/utils/clipboard';
+import { useDictionary } from "@/context/DictionaryContext";
 
 interface VictoryModalProps {
   challenge: ChallengeDefinition;
   roundGuesses: Record<number, GuessRecord[]>;
   roundStatus: Record<number, 'won' | 'lost' | 'in_progress'>;
   locale: string;
-  dict: Dictionary;
   onPlayAgain?: () => void;
 }
 
-export const VictoryModal: React.FC<VictoryModalProps> = ({
-  challenge,
-  roundGuesses,
-  roundStatus,
-  locale,
-  dict,
-  onPlayAgain,
-}) => {
+export const VictoryModal: React.FC<VictoryModalProps> = ({ challenge, roundGuesses, roundStatus, locale, onPlayAgain }) => {
+  const dict = useDictionary();
   const [copied, setCopied] = useState(false);
   const t = dict.minigames;
 

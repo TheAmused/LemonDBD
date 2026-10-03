@@ -94,7 +94,6 @@ function PlayTrialContent() {
   return (
     <PageShell
       locale={locale}
-      dict={dict}
       activeCategory="minigames"
       mainClassName="relative flex flex-col items-center justify-center min-h-[70vh]"
     >
@@ -112,7 +111,6 @@ function PlayTrialContent() {
         <ChallengeRunner
           challenge={challenge}
           catalog={catalog}
-          dict={dict}
           locale={locale}
         />
       ) : null}

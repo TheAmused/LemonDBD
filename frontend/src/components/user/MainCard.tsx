@@ -13,6 +13,8 @@ import { CATALOG_TTL_MS, catalogKey, fetchCached, fetchJson } from '@/services/d
 
 import { tip } from '@/components/common/Tooltip';
 import { isSurvivor as isSurvivorRole } from '@/utils/characterUtils';
+import { useDictionary } from "@/context/DictionaryContext";
+
 interface MainCardProps {
   role: RoleCategory;
   loadout: MainLoadout;
@@ -21,21 +23,20 @@ interface MainCardProps {
   onPerkChange: (slotIndex: number, perkId: number | null) => void;
   onOpenCharacterModal: () => void;
   onOpenPerkModal: (slotIndex: number) => void;
-  dict?: Dictionary | null;
   locale?: string;
 }
 
 export const MainCard: React.FC<MainCardProps> = ({
-  role,
-  loadout,
-  onCharacterChange,
-  onPrestigeChange,
-  onPerkChange,
-  onOpenCharacterModal,
-  onOpenPerkModal,
-  dict,
-  locale = 'en',
-}) => {
+      role,
+      loadout,
+      onCharacterChange,
+      onPrestigeChange,
+      onPerkChange,
+      onOpenCharacterModal,
+      onOpenPerkModal,
+      locale = 'en',
+    }) => {
+  const dict = useDictionary();
   const isSurvivor = isSurvivorRole(role);
   const [allPerks, setAllPerks] = useState<Perk[]>([]);
   const [imgError, setImgError] = useState(false);
@@ -68,7 +69,7 @@ export const MainCard: React.FC<MainCardProps> = ({
 
   return (
     <div
-      aria-label={isSurvivor ? (dict?.user?.survivorMain || 'Survivor Main') : (dict?.user?.killerMain || 'Killer Main')}
+      aria-label={isSurvivor ? (dict.user.survivorMain) : (dict.user.killerMain)}
       className="relative overflow-hidden p-4 sm:p-5"
     >
       {/* Side-by-side: Survivor (Left = Avatar, Right = Perks) vs Killer (Left = Perks, Right = Avatar) */}
@@ -88,8 +89,8 @@ export const MainCard: React.FC<MainCardProps> = ({
                 onOpenCharacterModal();
               }
             }}
-            {...tip(dict?.user?.changeMain || 'Change Main', undefined, 'action')}
-            aria-label={dict?.user?.changeMain || 'Change Main'}
+            {...tip(dict.user.changeMain, undefined, 'action')}
+            aria-label={dict.user.changeMain}
             className="relative group w-28 h-28 sm:w-36 sm:h-36 rounded-2xl overflow-hidden border-2 border-border-color hover:border-accent-red cursor-pointer shadow-lg bg-bg-elevated shrink-0 transition-all hover:scale-102 focus:outline-none focus:ring-2 focus:ring-accent-red"
           >
             {avatarSrc && !imgError ? (
@@ -113,7 +114,7 @@ export const MainCard: React.FC<MainCardProps> = ({
               </div>
             )}
             <div className="absolute inset-0 bg-bg-primary/70 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center type-label-sm text-text-inverted backdrop-blur-xs">
-              {dict?.user?.changeMain || 'Change'}
+              {dict.user.changeMain}
             </div>
           </div>
 
@@ -124,7 +125,7 @@ export const MainCard: React.FC<MainCardProps> = ({
 
         {/* Right: 4-Perk Signature Diamond Loadout */}
         <div
-          aria-label={dict?.user?.signatureLoadout || '4-Perk Signature Loadout'}
+          aria-label={dict.user.signatureLoadout}
           className="relative flex flex-col items-center justify-center p-2 shrink-0"
         >
           {/* Subtle diamond connector crosshairs */}
@@ -140,8 +141,8 @@ export const MainCard: React.FC<MainCardProps> = ({
               perkId={loadout.perkIds[0]}
               onClick={() => onOpenPerkModal(0)}
               onClear={() => onPerkChange(0, null)}
-              emptyLabel={dict?.user?.emptySlot || 'Empty Slot'}
-              clearLabel={dict?.user?.clearPerk || 'Clear'}
+              emptyLabel={dict.user.emptySlot}
+              clearLabel={dict.user.clearPerk}
             />
           </div>
 
@@ -153,8 +154,8 @@ export const MainCard: React.FC<MainCardProps> = ({
               perkId={loadout.perkIds[3]}
               onClick={() => onOpenPerkModal(3)}
               onClear={() => onPerkChange(3, null)}
-              emptyLabel={dict?.user?.emptySlot || 'Empty Slot'}
-              clearLabel={dict?.user?.clearPerk || 'Clear'}
+              emptyLabel={dict.user.emptySlot}
+              clearLabel={dict.user.clearPerk}
             />
             <PerkDiamondSlot
               slotIndex={1}
@@ -162,8 +163,8 @@ export const MainCard: React.FC<MainCardProps> = ({
               perkId={loadout.perkIds[1]}
               onClick={() => onOpenPerkModal(1)}
               onClear={() => onPerkChange(1, null)}
-              emptyLabel={dict?.user?.emptySlot || 'Empty Slot'}
-              clearLabel={dict?.user?.clearPerk || 'Clear'}
+              emptyLabel={dict.user.emptySlot}
+              clearLabel={dict.user.clearPerk}
             />
           </div>
 
@@ -175,8 +176,8 @@ export const MainCard: React.FC<MainCardProps> = ({
               perkId={loadout.perkIds[2]}
               onClick={() => onOpenPerkModal(2)}
               onClear={() => onPerkChange(2, null)}
-              emptyLabel={dict?.user?.emptySlot || 'Empty Slot'}
-              clearLabel={dict?.user?.clearPerk || 'Clear'}
+              emptyLabel={dict.user.emptySlot}
+              clearLabel={dict.user.clearPerk}
             />
           </div>
         </div>

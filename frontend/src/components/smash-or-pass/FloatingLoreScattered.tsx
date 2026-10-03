@@ -25,16 +25,11 @@ import { isKiller as isKillerRole, isSurvivor as isSurvivorRole } from '@/utils/
 interface FloatingLoreScatteredProps {
   character: EntityItem | null;
   locale?: string;
-  dict?: Dictionary;
   customLabels?: RosterCustomLabels;
 }
 
-export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({
-  character,
-  locale = 'en',
-  dict,
-  customLabels,
-}) => {
+export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({ character, locale = 'en', customLabels }) => {
+  const dict = useDictionary();
   const ctxDict = useDictionary();
   const t = (dict ?? ctxDict).smashOrPass;
   if (!character) return null;
@@ -73,7 +68,7 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({
     : ['Unpredictable in the fog'];
 
   // Localized Labels
-  const loreLabels: any = dict?.smashOrPass?.loreLabels || {};
+  const loreLabels: any = dict.smashOrPass.loreLabels || {};
   const trialClassificationLabel = loreLabels.trialClassification || (currentLoc === 'pl' ? 'Klasyfikacja Próby' : 'Trial Classification');
   const datingArchetypeLabel = customLabels?.dating_vibe || loreLabels.datingArchetype || (currentLoc === 'pl' ? 'Archetyp Randkowy' : 'Dating Archetype');
   const greenFlagLabel = loreLabels.greenFlag || (currentLoc === 'pl' ? 'Zielona Flaga' : 'Trial Green Flag');
@@ -90,8 +85,8 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({
     : loreLabels.male || (currentLoc === 'pl' ? 'Mężczyzna' : 'Male');
 
   const roleLabel = isSurvivor
-    ? dict?.smashOrPass?.filters?.survivors || (currentLoc === 'pl' ? 'Ocalały' : 'Survivor')
-    : dict?.smashOrPass?.filters?.killers || (currentLoc === 'pl' ? 'Zabójca' : 'Killer');
+    ? dict.smashOrPass.filters.survivors
+    : dict.smashOrPass.filters.killers;
 
   const handleCardHover = () => {
     SmashSounds.playHoverTick();

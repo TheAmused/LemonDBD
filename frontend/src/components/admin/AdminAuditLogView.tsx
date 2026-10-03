@@ -9,6 +9,7 @@ import { AdminAuditLogEntry } from '@/types/admin';
 import { backendBase } from '@/utils/staticUrl';
 import { authHeaders, getAuthToken } from '@/utils/api';
 import { formatDateTime } from '@/utils/format';
+import { useDictionary } from "@/context/DictionaryContext";
 
 const ACTION_COLORS: Record<string, string> = {
   character_disabled: 'text-accent-red',
@@ -20,7 +21,8 @@ const ACTION_COLORS: Record<string, string> = {
   user_deleted: 'text-accent-red',
 };
 
-export const AdminAuditLogView: React.FC<{ dict?: Dictionary }> = ({ dict }) => {
+export const AdminAuditLogView: React.FC<{ }> = () => {
+  const dict = useDictionary();
   const [logs, setLogs] = useState<AdminAuditLogEntry[]>([]);
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
@@ -69,31 +71,31 @@ export const AdminAuditLogView: React.FC<{ dict?: Dictionary }> = ({ dict }) => 
       <div className="flex items-center justify-between mb-4">
         <h3 className="flex items-center gap-2 type-label text-text-primary">
           <ScrollText className="h-4 w-4 text-text-secondary" />
-          <span>{dict?.admin?.auditLog || 'Activity Log'}</span>
+          <span>{dict.admin.auditLog}</span>
         </h3>
         <span className="text-xs text-text-secondary font-medium">
-          {total} {dict?.admin?.totalActionsLabel || 'total actions'}
+          {total} {dict.admin.totalActionsLabel}
         </span>
       </div>
 
       {loading ? (
         <p className="text-xs text-text-muted py-8 text-center">
-          {dict?.admin?.loadingAuditLog || 'Loading activity...'}
+          {dict.admin.loadingAuditLog}
         </p>
       ) : logs.length === 0 ? (
         <p className="text-xs text-text-muted py-8 text-center">
-          {dict?.admin?.noAuditLogs || 'No records found.'}
+          {dict.admin.noAuditLogs}
         </p>
       ) : (
         <div className="overflow-x-auto">
           <table className="w-full text-xs">
             <thead>
               <tr className="text-left uppercase tracking-wider text-text-secondary border-b border-border-color">
-                <th className="py-2.5 pr-3 font-bold">{dict?.admin?.thAdmin || 'User'}</th>
-                <th className="py-2.5 pr-3 font-bold">{dict?.admin?.thAction || 'Action'}</th>
-                <th className="py-2.5 pr-3 font-bold">{dict?.admin?.thTarget || 'Target'}</th>
-                <th className="py-2.5 pr-3 font-bold">{dict?.admin?.thReason || 'Reason'}</th>
-                <th className="py-2.5 font-bold text-right">{dict?.admin?.thWhen || 'Time'}</th>
+                <th className="py-2.5 pr-3 font-bold">{dict.admin.thAdmin}</th>
+                <th className="py-2.5 pr-3 font-bold">{dict.admin.thAction}</th>
+                <th className="py-2.5 pr-3 font-bold">{dict.admin.thTarget}</th>
+                <th className="py-2.5 pr-3 font-bold">{dict.admin.thReason}</th>
+                <th className="py-2.5 font-bold text-right">{dict.admin.thWhen}</th>
               </tr>
             </thead>
             <tbody>
@@ -131,19 +133,19 @@ export const AdminAuditLogView: React.FC<{ dict?: Dictionary }> = ({ dict }) => 
             size="sm"
             disabled={page <= 1}
             onClick={() => setPage((p) => Math.max(1, p - 1))}
-            aria-label={dict?.admin?.prevPage || 'Previous page'}
+            aria-label={dict.admin.prevPage}
           >
             <ChevronLeft className="h-4 w-4" />
           </Button>
           <span className="text-xs text-text-secondary font-medium">
-            {dict?.admin?.pageLabel || 'Page'} {page} {dict?.admin?.ofLabel || 'of'} {totalPages}
+            {dict.admin.pageLabel} {page} {dict.admin.ofLabel} {totalPages}
           </span>
           <Button
             icon
             size="sm"
             disabled={page >= totalPages}
             onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-            aria-label={dict?.admin?.nextPage || 'Next page'}
+            aria-label={dict.admin.nextPage}
           >
             <ChevronRight className="h-4 w-4" />
           </Button>

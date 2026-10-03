@@ -98,7 +98,7 @@ export default function UserProfilePage() {
     if (!file) return;
 
     if (file.size > 10 * 1024 * 1024) {
-      setAvatarFeedback({ type: 'error', text: dict?.user?.avatarSizeLimit || 'Avatar file size must be under 10MB.' });
+      setAvatarFeedback({ type: 'error', text: dict.user.avatarSizeLimit });
       return;
     }
 
@@ -109,12 +109,12 @@ export default function UserProfilePage() {
 
     try {
       await uploadAvatar(file);
-      setAvatarFeedback({ type: 'success', text: dict?.user?.avatarUpdateSuccess || 'Avatar updated successfully!' });
+      setAvatarFeedback({ type: 'success', text: dict.user.avatarUpdateSuccess });
       await refreshUser();
       setOptimisticPreview(null);
     } catch (err: unknown) {
       setOptimisticPreview(null);
-      const fallback = dict?.user?.avatarUploadFailed || 'Failed to upload avatar.';
+      const fallback = dict.user.avatarUploadFailed;
       const errorMsg = err instanceof ApiError ? err.message || fallback : fallback;
       setAvatarFeedback({ type: 'error', text: errorMsg });
     } finally {
@@ -124,7 +124,7 @@ export default function UserProfilePage() {
   };
 
   if (!dict || isLoading) {
-    return <UserProfileSkeleton dict={dict} />;
+    return <UserProfileSkeleton />;
   }
 
   if (!isAuthenticated || !user) {
@@ -135,10 +135,10 @@ export default function UserProfilePage() {
             <LemonIcon className="h-10 w-10 text-accent-amber" />
           </div>
           <h1 className="text-xl sm:text-2xl font-black tracking-wider text-text-primary">
-            {dict?.user?.authRequiredTitle || 'Authentication Required'}
+            {dict.user.authRequiredTitle}
           </h1>
           <p className="type-body text-text-secondary">
-            {dict?.user?.authRequiredDesc || 'Please sign in or create an account to view your LemonDBD profile, manage your teachables, and track game challenges.'}
+            {dict.user.authRequiredDesc}
           </p>
           <div className="flex flex-col gap-3 pt-2">
             <Button
@@ -147,18 +147,18 @@ export default function UserProfilePage() {
               leftIcon={<User className="h-4 w-4" />}
               className="w-full"
             >
-              <span>{dict?.user?.signIn || 'Sign In / Register'}</span>
+              <span>{dict.user.signIn}</span>
             </Button>
             <Link
               href={`/${currentLocale}`}
               className="text-xs text-text-muted hover:text-accent-amber transition-colors py-1"
             >
-              {dict?.user?.returnToHome || 'Return to Home'}
+              {dict.user.returnToHome}
             </Link>
           </div>
         </div>
 
-        <AuthModal isOpen={authModalOpen} onClose={() => setAuthModalOpen(false)} dict={dict} />
+        <AuthModal isOpen={authModalOpen} onClose={() => setAuthModalOpen(false)} />
       </div>
     );
   }
@@ -166,7 +166,6 @@ export default function UserProfilePage() {
   return (
     <PageShell
       locale={currentLocale}
-      dict={dict}
       activeCategory="user"
       mainClassName="overflow-y-auto relative"
     >
@@ -190,7 +189,6 @@ export default function UserProfilePage() {
             onTitleChange={showcaseHook.setPlayerTitle}
             onDevotionChange={showcaseHook.setDevotionLevel}
             onGradeRankChange={showcaseHook.setGradeRank}
-            dict={dict}
             currentLocale={currentLocale}
             previewUrl={optimisticPreview}
             isUploadingAvatar={isUploadingAvatar}
@@ -198,8 +196,8 @@ export default function UserProfilePage() {
             avatarFeedback={avatarFeedback}
             actions={
               <>
-                <DownloadDataSection dict={dict} />
-                <DeleteAccountSection dict={dict} />
+                <DownloadDataSection />
+                <DeleteAccountSection />
               </>
             }
           />
@@ -208,7 +206,6 @@ export default function UserProfilePage() {
           <UserProfileForm
             initialEmail={user.email || ''}
             onRefreshUser={refreshUser}
-            dict={dict}
           />
 
           {/* 2. MIDDLE BLOCK: Dual Mains Signature Showcase (Survivor & Killer Loadouts) */}
@@ -220,7 +217,6 @@ export default function UserProfilePage() {
             onKillerCharacterChange={showcaseHook.setKillerCharacter}
             onKillerPrestigeChange={showcaseHook.setKillerPrestige}
             onKillerPerkChange={showcaseHook.setKillerPerk}
-            dict={dict}
             locale={currentLocale}
           />
 
@@ -229,7 +225,6 @@ export default function UserProfilePage() {
             reports={myReports}
             loading={loadingReports}
             onOpenReportModal={() => setBugModalOpen(true)}
-            dict={dict}
             total={reportsTotal}
             page={reportsPage}
             perPage={REPORTS_PER_PAGE}
@@ -245,7 +240,6 @@ export default function UserProfilePage() {
           setBugModalOpen(false);
           fetchMyReports();
         }}
-        dict={dict}
       />
     </PageShell>
   );

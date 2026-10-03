@@ -7,24 +7,18 @@ import { MapPin, Eye, Check, X } from 'lucide-react';
 import type { GuessRecord, RoundConfig, CatalogRealm } from '@/types/minigame';
 import type { Dictionary } from '@/locales/types';
 import { staticUrl } from '@/utils/api';
+import { useDictionary } from "@/context/DictionaryContext";
 
 interface RealmGuesserProps {
   roundConfig: RoundConfig;
   realms: CatalogRealm[];
   guesses: GuessRecord[];
   isSolved: boolean;
-  dict: Dictionary;
   children?: React.ReactNode;
 }
 
-export const RealmGuesser: React.FC<RealmGuesserProps> = ({
-  roundConfig,
-  realms,
-  guesses,
-  isSolved,
-  dict,
-  children,
-}) => {
+export const RealmGuesser: React.FC<RealmGuesserProps> = ({ roundConfig, realms, guesses, isSolved, children }) => {
+  const dict = useDictionary();
   const targetRealm = useMemo(() => {
     return realms.find((r) => r.id === roundConfig.target_id);
   }, [realms, roundConfig.target_id]);

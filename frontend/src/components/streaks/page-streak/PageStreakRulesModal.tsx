@@ -13,21 +13,21 @@ import {
   resolveRuleEntries,
   streakCopy,
 } from '../RulesModalSections';
+import { useDictionary } from "@/context/DictionaryContext";
 
 export interface PageStreakRulesModalProps {
   isOpen: boolean;
   onClose: () => void;
-  dict?: Dictionary;
 }
 
-export const PageStreakRulesModal: React.FC<PageStreakRulesModalProps> = ({ isOpen, onClose, dict }) => {
+export const PageStreakRulesModal: React.FC<PageStreakRulesModalProps> = ({ isOpen, onClose }) => {
+  const dict = useDictionary();
   const s = streakCopy(dict);
   return (
     <RulesModalShell
       isOpen={isOpen}
       onClose={onClose}
       title={s.rules || 'Rules'}
-      dict={dict}
     >
       <RulesConceptCard
         tone="red"

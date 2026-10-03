@@ -38,4 +38,9 @@ export default {
   mostUpvoted: "Most Upvoted",
   resetAllFilters: "Reset Filters",
   viewMode: "Perks Grid",
+  clearSearch: "Clear search",
+  filtersTitle: "Filters",
+  ownershipFilter: "Filter by ownership",
+  sortFields: "Sort field",
+  sortOrderLabel: "Sort order",
 } as const;

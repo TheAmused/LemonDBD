@@ -2,7 +2,7 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import React from 'react';
-import { renderToStaticMarkup } from 'react-dom/server';
+import { renderWithDictionary } from '../helpers/renderWithDictionary';
 import { Flame } from 'lucide-react';
 import { selectOwnedRoster } from '@/components/streaks/useOwnedRoster';
 import { buildCompletionTiles } from '@/components/streaks/ChallengeModeModal';
@@ -84,15 +84,15 @@ describe('rules entries', () => {
     assert.equal(resolveRuleEntries({ soloText: 'Solo!' }, [def])[0].text, 'All available.');
   });
 
-  it('streakCopy tolerates a missing dictionary', () => {
-    assert.deepEqual(streakCopy(undefined), {});
+  it('streakCopy exposes the streaks namespace of the dictionary', () => {
+    assert.equal(streakCopy(enDict) as unknown, enDict.streaks);
   });
 });
 
 describe('rules sections static render', () => {
   it('renders concept, how-it-works items, difficulty rows and footer sections', () => {
     const copy = streakCopy(enDict);
-    const html = renderToStaticMarkup(
+    const html = renderWithDictionary(
       el(
         'div',
         null,

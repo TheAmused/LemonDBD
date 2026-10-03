@@ -13,13 +13,14 @@ import {
 import { SmashSounds } from './SmashSoundEffects';
 
 import { tip } from '@/components/common/Tooltip';
+import { useDictionary } from "@/context/DictionaryContext";
+
 export interface TactileKeycapsProps {
   onPass: () => void;
   onSmash: () => void;
   onStats: () => void;
   onReset: () => void;
   disabled?: boolean;
-  dict?: Dictionary;
   className?: string;
 }
 
@@ -42,22 +43,15 @@ interface KeycapConfig {
   keys: string[];
 }
 
-export const TactileKeycaps: React.FC<TactileKeycapsProps> = ({
-  onPass,
-  onSmash,
-  onStats,
-  onReset,
-  disabled = false,
-  dict,
-  className,
-}) => {
+export const TactileKeycaps: React.FC<TactileKeycapsProps> = ({ onPass, onSmash, onStats, onReset, disabled = false, className }) => {
+  const dict = useDictionary();
   const [activeKey, setActiveKey] = useState<string | null>(null);
 
   // Localized Labels
-  const passLabel = dict?.smashOrPass?.controls?.pass || dict?.smashOrPass?.pass || 'Pass';
-  const smashLabel = dict?.smashOrPass?.controls?.smash || dict?.smashOrPass?.smash || 'Smash';
-  const statsLabel = dict?.smashOrPass?.controls?.stats || dict?.smashOrPass?.stats || 'Info';
-  const resetLabel = dict?.smashOrPass?.controls?.reset || dict?.smashOrPass?.reset || 'Reset';
+  const passLabel = dict.smashOrPass.controls.pass;
+  const smashLabel = dict.smashOrPass.controls.smash;
+  const statsLabel = dict.smashOrPass.controls.stats;
+  const resetLabel = dict.smashOrPass.controls.reset;
 
   // 4 Keycaps: Left (Pass), Up (Stats), Right (Smash), R (Reset)
   const keycaps: KeycapConfig[] = useMemo(() => [
@@ -230,7 +224,7 @@ export const TactileKeycaps: React.FC<TactileKeycapsProps> = ({
       <div className="flex items-center gap-1.5 text-mini font-medium text-text-muted pt-0.5">
         <span className="inline-block w-1.5 h-1.5 rounded-full bg-accent-red animate-pulse" />
         <span>
-          {dict?.smashOrPass?.controls?.hint || 'Użyj strzałek lub przeciągnij, aby zagłosować'}
+          {dict.smashOrPass.controls.hint}
         </span>
       </div>
     </div>

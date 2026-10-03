@@ -29,13 +29,13 @@ import { tip } from '@/components/common/Tooltip';
 import { Button } from '@/components/common/Button';
 import { authHeaders, getAuthToken, getErrorMessage } from '@/utils/api';
 import { formatMessage } from '@/utils/i18nFormat';
+import { useDictionary } from "@/context/DictionaryContext";
 
 interface ScraperConfigModalProps {
   isOpen: boolean;
   onClose: () => void;
   onPurgeSuccess?: () => void;
   initialTab?: 'export' | 'import' | 'purge';
-  dict?: Dictionary;
 }
 
 interface TargetItem {
@@ -106,17 +106,12 @@ const TARGET_GROUPS_CONFIG = [
   { key: 'settings' as const, labelKey: 'groupSettings' as const, fallbackLabel: 'Configuration & System', icon: Settings },
 ];
 
-export function ScraperConfigModal({
-  isOpen,
-  onClose,
-  onPurgeSuccess,
-  initialTab = 'export',
-  dict,
-}: ScraperConfigModalProps) {
+export function ScraperConfigModal({ isOpen, onClose, onPurgeSuccess, initialTab = 'export' }: ScraperConfigModalProps) {
+  const dict = useDictionary();
   const [activeTab, setActiveTab] = useState<'export' | 'import' | 'purge'>(initialTab);
 
   const localizedTargets = React.useMemo(() => {
-    const adminDict = (dict?.admin || {}) as Record<string, string>;
+    const adminDict = (dict.admin || {}) as Record<string, string>;
     return ALL_TARGETS.map((target) => {
       const pascal = TARGET_KEY_MAP[target.id];
       return {
@@ -203,13 +198,13 @@ export function ScraperConfigModal({
 
   const handleExecuteExport = async () => {
     if (exportTargets.length === 0) {
-      setExportError(dict?.admin?.tokenNotFound || 'Please select at least one target.');
+      setExportError(dict.admin.tokenNotFound);
       return;
     }
 
     const token = getAuthToken();
     if (!token) {
-      setExportError(dict?.admin?.tokenNotFound || 'Unauthorized.');
+      setExportError(dict.admin.tokenNotFound);
       return;
     }
 
@@ -250,7 +245,7 @@ export function ScraperConfigModal({
 
       setExportSuccess(`Successfully exported ${exportTargets.length} categories.`);
     } catch (err: unknown) {
-      const msg = getErrorMessage(err, dict?.admin?.networkError || 'Export error.');
+      const msg = getErrorMessage(err, dict.admin.networkError);
       setExportError(msg);
     } finally {
       setIsExporting(false);
@@ -261,7 +256,7 @@ export function ScraperConfigModal({
     const isJsonExt = file.name.toLowerCase().endsWith('.json');
     const isJsonMime = file.type === 'application/json' || file.type === 'text/json';
     if (!isJsonExt && !isJsonMime) {
-      setImportError(dict?.admin?.invalidJsonFile || 'Please select a valid .json file.');
+      setImportError(dict.admin.invalidJsonFile);
       setImportFile(null);
       setImportJsonText('');
       return;
@@ -282,13 +277,13 @@ export function ScraperConfigModal({
         }
         setImportJsonText(text);
       } catch (jsonErr: any) {
-        setImportError(jsonErr?.message || dict?.admin?.invalidJsonFile || 'Invalid JSON file.');
+        setImportError(jsonErr?.message || dict.admin.invalidJsonFile);
         setImportFile(null);
         setImportJsonText('');
       }
     };
     reader.onerror = () => {
-      setImportError(dict?.admin?.networkError || 'Failed to read file.');
+      setImportError(dict.admin.networkError);
       setImportFile(null);
       setImportJsonText('');
     };
@@ -372,7 +367,7 @@ export function ScraperConfigModal({
     setShowReplaceConfirm(false);
     const token = getAuthToken();
     if (!token) {
-      setImportError(dict?.admin?.tokenNotFound || 'Unauthorized.');
+      setImportError(dict.admin.tokenNotFound);
       return;
     }
 
@@ -413,7 +408,7 @@ export function ScraperConfigModal({
         await onPurgeSuccess();
       }
     } catch (err: unknown) {
-      const msg = getErrorMessage(err, dict?.admin?.networkError || 'Import error.');
+      const msg = getErrorMessage(err, dict.admin.networkError);
       setImportError(msg);
     } finally {
       setIsImporting(false);
@@ -433,7 +428,7 @@ export function ScraperConfigModal({
     setShowPurgeConfirm(false);
     const token = getAuthToken();
     if (!token) {
-      setPurgeError(dict?.admin?.tokenNotFound || 'Unauthorized.');
+      setPurgeError(dict.admin.tokenNotFound);
       return;
     }
 
@@ -465,7 +460,7 @@ export function ScraperConfigModal({
         setPurgeError(data.error || 'Purge failed.');
       }
     } catch (err: unknown) {
-      const message = getErrorMessage(err, dict?.admin?.networkError || 'Purge network error.');
+      const message = getErrorMessage(err, dict.admin.networkError);
       setPurgeError(message);
     } finally {
       setIsPurging(false);
@@ -481,8 +476,8 @@ export function ScraperConfigModal({
         size="2xl"
         busy={isExporting || isImporting || isPurging}
         icon={<Database className="h-5 w-5" />}
-        title={dict?.admin?.dbBackupSnapshots}
-        closeButtonAriaLabel={dict?.admin?.closeDbModal || dict?.modal?.close}
+        title={dict.admin.dbBackupSnapshots}
+        closeButtonAriaLabel={dict.admin.closeDbModal}
         padded
       >
         <div
@@ -501,7 +496,7 @@ export function ScraperConfigModal({
         }`}
       >
         <Download className="h-3.5 w-3.5 text-accent-red" />
-        <span>{dict?.admin?.exportJson}</span>
+        <span>{dict.admin.exportJson}</span>
       </button>
 
       <button
@@ -514,7 +509,7 @@ export function ScraperConfigModal({
         }`}
       >
         <Upload className="h-3.5 w-3.5 text-accent-green" />
-        <span>{dict?.admin?.importJson}</span>
+        <span>{dict.admin.importJson}</span>
       </button>
 
       <button
@@ -527,7 +522,7 @@ export function ScraperConfigModal({
         }`}
       >
         <Trash2 className="h-3.5 w-3.5 text-accent-red" />
-        <span>{dict?.admin?.purgeReset}</span>
+        <span>{dict.admin.purgeReset}</span>
       </button>
     </div>
 
@@ -550,7 +545,7 @@ export function ScraperConfigModal({
 
         <div className="flex items-center justify-between pb-1 border-b border-border-color">
           <span className="type-label-xs text-text-secondary">
-            {dict?.admin?.selectBackupEntities}
+            {dict.admin.selectBackupEntities}
           </span>
           <button
             type="button"
@@ -558,8 +553,8 @@ export function ScraperConfigModal({
             className="type-strong text-accent-amber hover:underline cursor-pointer"
           >
             {exportTargets.length === ALL_TARGETS.length
-              ? dict?.admin?.deselectAll
-              : dict?.admin?.selectAll}
+              ? dict.admin.deselectAll
+              : dict.admin.selectAll}
           </button>
         </div>
 
@@ -569,7 +564,7 @@ export function ScraperConfigModal({
             const selectedInGroup = groupTargets.filter((t) => exportTargets.includes(t.id));
             const allGroupSelected = selectedInGroup.length === groupTargets.length && groupTargets.length > 0;
             const GroupIcon = group.icon;
-            const groupLabel = dict?.admin?.[group.labelKey] || group.fallbackLabel;
+            const groupLabel = dict.admin?.[group.labelKey] || group.fallbackLabel;
 
             return (
               <div key={group.key} className="rounded-xl border border-border-color bg-bg-primary/40 p-3 space-y-2">
@@ -588,7 +583,7 @@ export function ScraperConfigModal({
                     onClick={() => toggleGroupExport(group.key)}
                     className="type-strong-xs text-accent-amber hover:underline cursor-pointer"
                   >
-                    {allGroupSelected ? dict?.admin?.deselectAll : dict?.admin?.selectAll}
+                    {allGroupSelected ? dict.admin.deselectAll : dict.admin.selectAll}
                   </button>
                 </div>
 
@@ -635,7 +630,7 @@ export function ScraperConfigModal({
             leftIcon={<Download className="h-3.5 w-3.5" />}
           >
             <span>
-              {isExporting ? dict?.admin?.exportingStatus : dict?.admin?.downloadBackup} ({exportTargets.length})
+              {isExporting ? dict.admin.exportingStatus : dict.admin.downloadBackup} ({exportTargets.length})
             </span>
           </Button>
         </div>
@@ -670,7 +665,7 @@ export function ScraperConfigModal({
         <div
           role="button"
           tabIndex={0}
-          aria-label={dict?.admin?.clickOrDragBackup || 'Upload JSON backup file'}
+          aria-label={dict.admin.clickOrDragBackup}
           onClick={() => fileInputRef.current?.click()}
           onKeyDown={(e) => {
             if (e.key === 'Enter' || e.key === ' ') {
@@ -701,7 +696,7 @@ export function ScraperConfigModal({
           {isDragging ? (
             <div>
               <p className="type-card-title text-accent-green animate-bounce">
-                {dict?.admin?.dropFilePrompt || 'Drop the .json backup file here...'}
+                {dict.admin.dropFilePrompt}
               </p>
             </div>
           ) : importFile ? (
@@ -716,25 +711,25 @@ export function ScraperConfigModal({
                   variant="ghost"
                   onClick={handleClearFile}
                   className="rounded-full"
-                  {...tip(dict?.admin?.removeFile || 'Remove file', undefined, 'action')}
-                  aria-label={dict?.admin?.removeFile || 'Remove file'}
+                  {...tip(dict.admin.removeFile, undefined, 'action')}
+                  aria-label={dict.admin.removeFile}
                 >
                   <X className="h-3.5 w-3.5" />
                 </Button>
               </div>
               <p className="type-strong-xs text-accent-green">
-                {(importFile.size / 1024).toFixed(1)} {dict?.admin?.kbReadySuffix || 'KB, ready to restore'}
+                {(importFile.size / 1024).toFixed(1)} {dict.admin.kbReadySuffix}
               </p>
               <p className="type-micro text-text-muted hover:text-text-secondary transition-colors">
-                {dict?.admin?.changeFile || 'Click or drag another file to replace'}
+                {dict.admin.changeFile}
               </p>
             </div>
           ) : (
             <div>
               <p className="type-strong text-text-secondary">
-                {dict?.admin?.clickOrDragBackupPrefix || 'Click or drag & drop a'}{' '}
+                {dict.admin.clickOrDragBackupPrefix}{' '}
                 <span className="text-accent-green font-black">.json</span>{' '}
-                {dict?.admin?.clickOrDragBackupSuffix || 'backup file'}
+                {dict.admin.clickOrDragBackupSuffix}
               </p>
             </div>
           )}
@@ -742,7 +737,7 @@ export function ScraperConfigModal({
 
         <div className="space-y-2">
           <span className="type-label-xs text-text-secondary">
-            {dict?.admin?.chooseImportStrategy}
+            {dict.admin.chooseImportStrategy}
           </span>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             <div
@@ -755,8 +750,8 @@ export function ScraperConfigModal({
             >
               <ShieldCheck className="h-4 w-4 text-accent-green mt-0.5 shrink-0" />
               <div>
-                <p className="type-strong">{dict?.admin?.mergeUpdate}</p>
-                <p className="type-micro text-text-muted">{dict?.admin?.mergeUpdateDesc}</p>
+                <p className="type-strong">{dict.admin.mergeUpdate}</p>
+                <p className="type-micro text-text-muted">{dict.admin.mergeUpdateDesc}</p>
               </div>
             </div>
 
@@ -770,8 +765,8 @@ export function ScraperConfigModal({
             >
               <RotateCcw className="h-4 w-4 text-accent-amber mt-0.5 shrink-0" />
               <div>
-                <p className="type-strong">{dict?.admin?.wipeReplace}</p>
-                <p className="type-micro text-text-muted">{dict?.admin?.wipeReplaceDesc}</p>
+                <p className="type-strong">{dict.admin.wipeReplace}</p>
+                <p className="type-micro text-text-muted">{dict.admin.wipeReplaceDesc}</p>
               </div>
             </div>
           </div>
@@ -780,17 +775,17 @@ export function ScraperConfigModal({
         {importSummary && (
           <div className="rounded-xl border border-border-color bg-bg-primary p-3 max-h-36 overflow-y-auto space-y-1.5">
             <span className="type-label-xs text-text-muted">
-              {dict?.admin?.importResultsBreakdown}
+              {dict.admin.importResultsBreakdown}
             </span>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5 text-xs">
               {Object.entries(importSummary).map(([key, counts]) => (
                 <div key={key} className="rounded-lg bg-bg-surface p-1.5 border border-border-color">
                   <p className="type-strong-2xs text-text-muted capitalize">{key}</p>
                   <p className="type-strong text-accent-green">
-                    {dict?.admin?.createdCountPrefix || '+'}
+                    {dict.admin.createdCountPrefix}
                     {counts.created}{' '}
                     <span className="text-text-muted font-normal">
-                      ({counts.updated} {dict?.admin?.updatedCountSuffix || 'updated'})
+                      ({counts.updated} {dict.admin.updatedCountSuffix})
                     </span>
                   </p>
                 </div>
@@ -809,7 +804,7 @@ export function ScraperConfigModal({
             leftIcon={<Upload className="h-3.5 w-3.5" />}
           >
             <span>
-              {isImporting ? dict?.admin?.importingStatus || 'Importing...' : dict?.admin?.executeImport || 'Execute Import'}
+              {isImporting ? dict.admin.importingStatus : dict.admin.executeImport}
             </span>
           </Button>
         </div>
@@ -835,7 +830,7 @@ export function ScraperConfigModal({
 
         <div className="flex items-center justify-between pb-1 border-b border-border-color">
           <span className="type-label-xs text-text-secondary">
-            {dict?.admin?.selectTablesToWipe}
+            {dict.admin.selectTablesToWipe}
           </span>
           <button
             type="button"
@@ -843,8 +838,8 @@ export function ScraperConfigModal({
             className="type-strong text-accent-amber hover:underline cursor-pointer"
           >
             {purgeTargets.length === ALL_TARGETS.length
-              ? dict?.admin?.deselectAll
-              : dict?.admin?.selectAll}
+              ? dict.admin.deselectAll
+              : dict.admin.selectAll}
           </button>
         </div>
 
@@ -854,7 +849,7 @@ export function ScraperConfigModal({
             const selectedInGroup = groupTargets.filter((t) => purgeTargets.includes(t.id));
             const allGroupSelected = selectedInGroup.length === groupTargets.length && groupTargets.length > 0;
             const GroupIcon = group.icon;
-            const groupLabel = dict?.admin?.[group.labelKey] || group.fallbackLabel;
+            const groupLabel = dict.admin?.[group.labelKey] || group.fallbackLabel;
 
             return (
               <div key={group.key} className="rounded-xl border border-border-color bg-bg-primary/40 p-3 space-y-2">
@@ -873,7 +868,7 @@ export function ScraperConfigModal({
                     onClick={() => toggleGroupPurge(group.key)}
                     className="type-strong-xs text-accent-amber hover:underline cursor-pointer"
                   >
-                    {allGroupSelected ? dict?.admin?.deselectAll : dict?.admin?.selectAll}
+                    {allGroupSelected ? dict.admin.deselectAll : dict.admin.selectAll}
                   </button>
                 </div>
 
@@ -912,7 +907,7 @@ export function ScraperConfigModal({
 
         <div className="flex items-center justify-between pt-3 border-t border-border-color">
           <Button variant="secondary" size="sm" onClick={onClose} disabled={isPurging}>
-            {dict?.admin?.close}
+            {dict.admin.close}
           </Button>
 
           <Button
@@ -925,8 +920,8 @@ export function ScraperConfigModal({
           >
             <span>
               {isPurging
-                ? dict?.admin?.purgingStatus || 'Purging...'
-                : formatMessage((dict?.admin?.purgeSelected || 'Purge Selected ({count})'), { count: purgeTargets.length })}
+                ? dict.admin.purgingStatus
+                : formatMessage((dict.admin.purgeSelected), { count: purgeTargets.length })}
             </span>
           </Button>
         </div>
@@ -937,9 +932,9 @@ export function ScraperConfigModal({
 
       <ConfirmModal
         open={showReplaceConfirm}
-        title={dict?.admin?.wipeReplace || 'Wipe & Replace'}
+        title={dict.admin.wipeReplace}
         message="Existing data in target tables will be wiped and replaced with the backup. Are you sure?"
-        confirmLabel={dict?.admin?.wipeReplace || 'Wipe & Replace'}
+        confirmLabel={dict.admin.wipeReplace}
         busy={isImporting}
         onConfirm={runImport}
         onCancel={() => setShowReplaceConfirm(false)}
@@ -947,9 +942,9 @@ export function ScraperConfigModal({
 
       <ConfirmModal
         open={showPurgeConfirm}
-        title={dict?.admin?.purgeReset || 'Purge Tables'}
+        title={dict.admin.purgeReset}
         message={`Are you sure you want to PURGE ${purgeTargets.length} table category(ies)? This action is permanent.`}
-        confirmLabel={dict?.admin?.purgeReset || 'Purge'}
+        confirmLabel={dict.admin.purgeReset}
         busy={isPurging}
         onConfirm={runPurge}
         onCancel={() => setShowPurgeConfirm(false)}

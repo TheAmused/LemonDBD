@@ -38,4 +38,9 @@ export default {
   mostUpvoted: "Meiste Upvotes",
   resetAllFilters: "Filter zurücksetzen",
   viewMode: "Talente-Gitter",
+  clearSearch: "Suche löschen",
+  filtersTitle: "Filter",
+  ownershipFilter: "Nach Besitz filtern",
+  sortFields: "Sortierfeld",
+  sortOrderLabel: "Sortierreihenfolge",
 } as const;

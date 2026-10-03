@@ -16,21 +16,21 @@ import {
   resolveRuleEntries,
   streakCopy,
 } from '../RulesModalSections';
+import { useDictionary } from "@/context/DictionaryContext";
 
 export interface HistoryRulesModalProps {
   isOpen: boolean;
   onClose: () => void;
-  dict?: Dictionary;
 }
 
-export const HistoryRulesModal: React.FC<HistoryRulesModalProps> = ({ isOpen, onClose, dict }) => {
+export const HistoryRulesModal: React.FC<HistoryRulesModalProps> = ({ isOpen, onClose }) => {
+  const dict = useDictionary();
   const s = streakCopy(dict);
   return (
     <RulesModalShell
       isOpen={isOpen}
       onClose={onClose}
       title={s.rules || 'Rules'}
-      dict={dict}
     >
       <RulesConceptCard
         tone="neutral"

@@ -30,6 +30,7 @@ import { SwitchTrack } from '@/components/common/Switch';
 import { Button } from '@/components/common/Button';
 import { Input } from '@/components/common/Field';
 import { authHeaders } from '@/utils/api';
+import { useDictionary } from "@/context/DictionaryContext";
 
 const AuthModal = dynamic(() => import('@/components/AuthModal').then((m) => m.AuthModal), { ssr: false });
 
@@ -231,15 +232,11 @@ function resolveOnboardingAvatar(backendBase: string, c: OnboardingCharacter): s
 
 export interface CharacterOnboardingWizardProps {
   locale: string;
-  dict?: Dictionary;
   onFinished: () => void;
 }
 
-export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps> = ({
-  locale,
-  dict,
-  onFinished,
-}) => {
+export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps> = ({ locale, onFinished }) => {
+  const dict = useDictionary();
   const {
     user,
     token,
@@ -252,7 +249,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
   } = useAuth();
   const router = useRouter();
   const backendBase = getBackendBaseUrl();
-  const t = dict?.onboarding;
+  const t = dict.onboarding;
 
   const [characters, setCharacters] = useState<OnboardingCharacter[]>([]);
   const [allPerks, setAllPerks] = useState<OnboardingPerk[]>([]);
@@ -717,11 +714,10 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
             <LemonIcon className="h-10 w-10 text-accent-red" />
           </div>
           <h1 className="text-xl font-black tracking-wider text-text-primary">
-            {dict?.user?.authRequiredTitle || 'Authentication Required'}
+            {dict.user.authRequiredTitle}
           </h1>
           <p className="type-body text-text-secondary">
-            {dict?.user?.authRequiredDesc ||
-              'Please sign in or create an account to view your LemonDBD profile, manage your teachables, and track game challenges.'}
+            {dict.user.authRequiredDesc}
           </p>
           <div className="flex flex-col gap-3 pt-2">
             <Button
@@ -730,17 +726,17 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
               leftIcon={<UserIcon className="h-4 w-4" />}
               className="w-full"
             >
-              <span>{dict?.user?.signIn || 'Sign In / Register'}</span>
+              <span>{dict.user.signIn}</span>
             </Button>
             <Link
               href={`/${locale}`}
               className="py-1 text-xs text-text-muted transition-colors hover:text-accent-red"
             >
-              {dict?.user?.returnToHome || 'Return to Home'}
+              {dict.user.returnToHome}
             </Link>
           </div>
         </div>
-        <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} dict={dict} />
+        <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
       </div>
     );
   }
@@ -757,13 +753,12 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
     return (
       <div className="min-h-screen flex items-center justify-center bg-bg-primary p-4">
         <div className="w-full max-w-md rounded-2xl border border-border-color bg-bg-surface p-8 text-center space-y-4 shadow-2xl">
-          <h1 className="text-xl font-black">{t?.introTitle || 'Welcome to LemonDBD'}</h1>
+          <h1 className="text-xl font-black">{t.introTitle}</h1>
           <p className="text-sm text-text-secondary">
-            {t?.introBody ||
-              'To tailor the site to your progress in the game, please mark which chapters, characters, and perks you already own.'}
+            {t.introBody}
           </p>
           <Button variant="primary" onClick={() => setView('language')} className="w-full">
-            {t?.introContinueButton || 'Get Started'}
+            {t.introContinueButton}
           </Button>
         </div>
       </div>
@@ -774,9 +769,9 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
     return (
       <div className="min-h-screen flex items-center justify-center bg-bg-primary p-4">
         <div className="w-full max-w-md rounded-2xl border border-border-color bg-bg-surface p-8 text-center space-y-4 shadow-2xl">
-          <h1 className="text-xl font-black">{t?.languageStepTitle || 'Choose your language'}</h1>
+          <h1 className="text-xl font-black">{t.languageStepTitle}</h1>
           <p className="text-sm text-text-secondary">
-            {t?.languageStepBody || 'Pick the language you want to use across the site. You can change this again later.'}
+            {t.languageStepBody}
           </p>
           <div className="grid grid-cols-1 gap-2">
             {LANGUAGES.map((lang) => (
@@ -798,8 +793,8 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
           </div>
           <Button variant="primary" disabled={savingLanguage} onClick={handleLanguageContinue} className="w-full">
             {savingLanguage
-              ? t?.savingLabel || 'Saving...'
-              : t?.languageContinueButton || 'Continue'}
+              ? t.savingLabel
+              : t.languageContinueButton}
           </Button>
         </div>
       </div>
@@ -819,15 +814,14 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
                 onClick={() => setIsSkipModalOpen(true)}
                 className="shrink-0 rounded-xl border border-accent-amber/50 bg-accent-amber/10 px-4 py-2 sm:px-5 sm:py-2.5 lg:px-6 lg:py-3 text-xs sm:text-sm lg:text-base font-bold text-accent-amber hover:bg-accent-amber/20 hover:border-accent-amber transition-all cursor-pointer shadow-xs"
               >
-                {t?.skipButton || 'Skip'}
+                {t.skipButton}
               </button>
             </div>
             <h1 className="text-lg sm:text-xl md:text-2xl font-black tracking-tight text-text-primary px-2">
-              {t?.heading || 'Which characters do you already own?'}
+              {t.heading}
             </h1>
             <p className="text-xs sm:text-sm text-text-secondary max-w-xl mx-auto px-2">
-              {t?.subheading ||
-                'Pick the chapters you own so the perk randomizer and streaks only offer you perks you can actually use. You can always change this later from your Characters page.'}
+              {t.subheading}
             </p>
             <div className="sm:hidden pt-0.5">
               <button
@@ -835,7 +829,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
                 onClick={() => setIsSkipModalOpen(true)}
                 className="shrink-0 rounded-xl border border-accent-amber/50 bg-accent-amber/10 px-3 py-1 type-strong text-accent-amber hover:bg-accent-amber/20 transition-colors cursor-pointer"
               >
-                {t?.skipButton || 'Skip'}
+                {t.skipButton}
               </button>
             </div>
           </header>
@@ -845,7 +839,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
           {/* Legend Section ("Jak to działa") */}
           <section className="flex flex-col items-center text-center space-y-1.5 sm:space-y-2">
             <h2 className="text-sm sm:text-base md:text-lg font-black uppercase tracking-wider text-text-primary">
-              {t?.legendTitle || 'How this works'}
+              {t.legendTitle}
             </h2>
             <div className="grid grid-cols-3 items-start justify-items-center gap-2 sm:gap-6 w-full max-w-xl mx-auto">
               {/* Locked */}
@@ -867,7 +861,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
                   />
                 </span>
                 <span className="text-tiny sm:text-xs font-semibold text-text-primary leading-tight">
-                  {t?.legendLocked || 'Locked - not available yet'}
+                  {t.legendLocked}
                 </span>
               </div>
 
@@ -890,7 +884,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
                   />
                 </span>
                 <span className="text-tiny sm:text-xs font-semibold text-text-primary leading-tight">
-                  {t?.legendPartial || 'Partially unlocked - some perks unlocked by hand'}
+                  {t.legendPartial}
                 </span>
               </div>
 
@@ -913,7 +907,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
                   />
                 </span>
                 <span className="text-tiny sm:text-xs font-semibold text-text-primary leading-tight">
-                  {t?.legendOwned || 'Owned - fully available'}
+                  {t.legendOwned}
                 </span>
               </div>
             </div>
@@ -926,7 +920,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
               <div className="flex items-center gap-2.5">
                 <span className="type-label-sm text-text-secondary">
-                  {t?.chaptersTitle || 'Chapters'}
+                  {t.chaptersTitle}
                 </span>
                 <span className="rounded-full border border-border-color bg-bg-elevated px-2 py-0.5 type-strong-xs text-text-secondary">
                   {ownedChaptersCount} / {chapterGroups.length}
@@ -941,7 +935,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
                     fieldSize="sm"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder={t?.searchPlaceholder || 'Search chapters or characters...'}
+                    placeholder={t.searchPlaceholder}
                     className="pl-8 pr-7"
                   />
                   {searchQuery && (
@@ -978,12 +972,12 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
                       {isAllOwned && <Check className="h-3 w-3 sm:h-3.5 sm:w-3.5 stroke-[3]" />}
                     </span>
                     <span className="text-xs font-bold tracking-tight">
-                      {t?.selectAllButton || 'I own everything'}
+                      {t.selectAllButton}
                     </span>
                   </button>
 
                   <Button variant="secondary" size="sm" disabled={!hasAnySelection} onClick={handleDeselectAllChapters}>
-                    {t?.deselectAllButton || 'Clear all'}
+                    {t.deselectAllButton}
                   </Button>
                 </div>
               </div>
@@ -992,8 +986,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
             <p className="flex items-start gap-1.5 text-tiny sm:text-mini text-text-secondary">
               <Info className="h-3 w-3 sm:h-3.5 sm:w-3.5 shrink-0 mt-0.5" />
               <span>
-                {t?.legendCustomizeHint ||
-                  "Tip: for a chapter you don't own, expand it and use a character's Perks button to unlock individual perks without owning the whole character."}
+                {t.legendCustomizeHint}
               </span>
             </p>
 
@@ -1015,7 +1008,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
             // Display only -- expandedChapter/aria-id/banner lookups all key off
             // the canonical group.chapterName above, never this localized text.
             const chapterDisplayName = translatedChapterNames[group.chapterName] || group.chapterName;
-            const chapterSwitchLabel = `${t?.ownChapterButton || 'I own this chapter'}: ${chapterDisplayName}`;
+            const chapterSwitchLabel = `${t.ownChapterButton}: ${chapterDisplayName}`;
             const chapterPanelId = `chapter-panel-${slugifyChapterName(group.chapterName)}`;
 
             return (
@@ -1124,8 +1117,8 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
                                 isOwned={isOwned}
                                 hasPartialPerks={hasPartialPerks}
                                 avatarSrc={resolveOnboardingAvatar(backendBase, c)}
-                                lockedTitle={dict?.modal?.unownedPerk}
-                                ownedTitle={dict?.filters?.ownedOnly}
+                                lockedTitle={dict.modal.unownedPerk}
+                                ownedTitle={dict.filters.ownedOnly}
                               />
                               <span className="absolute bottom-1 left-1 right-1 truncate rounded bg-bg-primary/80 px-1.5 py-0.5 type-strong-2xs text-text-inverted text-center">
                                 {c.name}
@@ -1137,7 +1130,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
                                 onClick={() => setPerksPopupCharacter(c)}
                                 className="w-full border-t border-border-color bg-accent-amber/10 px-1.5 py-1 type-strong-2xs text-accent-amber hover:bg-accent-amber/20 transition-colors cursor-pointer"
                               >
-                                {t?.perksButton || 'Perks'} ({perkStats.unlocked}/{perkStats.total})
+                                {t.perksButton} ({perkStats.unlocked}/{perkStats.total})
                               </button>
                             )}
                           </div>
@@ -1163,7 +1156,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
       <div className="fixed bottom-0 inset-x-0 z-30 w-full border-t border-border-color bg-bg-surface/95 backdrop-blur-md shadow-2xl">
         <div className="mx-auto flex w-full max-w-7xl justify-center px-4 py-3 sm:py-4">
           <Button variant="primary" disabled={saving} onClick={handleContinue} className="w-full max-w-sm sm:max-w-md">
-            {saving ? t?.savingLabel || 'Saving...' : t?.continueButton || 'Continue'}
+            {saving ? t.savingLabel : t.continueButton}
           </Button>
         </div>
       </div>
@@ -1176,15 +1169,13 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
         onTogglePerk={togglePerkUnlocked}
         onClose={() => setPerksPopupCharacter(null)}
         backendBase={backendBase}
-        perksLabel={t?.perksButton || 'Perks'}
-        dict={dict}
+        perksLabel={t.perksButton}
       />
 
       <SkipOnboardingModal
         isOpen={isSkipModalOpen}
         onCancel={() => setIsSkipModalOpen(false)}
         onConfirm={handleSkipConfirm}
-        dict={dict}
       />
     </div>
   );

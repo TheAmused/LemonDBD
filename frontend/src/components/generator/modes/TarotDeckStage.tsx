@@ -12,6 +12,7 @@ import { getSlotInteraction } from '../lib/blindnessCurse';
 import { PerkSlot } from '../shared/PerkSlot';
 import { useJackpotCelebration } from '../shared/useJackpotCelebration';
 import { playCardFlip } from '@/utils/perkAudio';
+import { useDictionary } from "@/context/DictionaryContext";
 
 export interface TarotDeckStageProps {
   role: RoleCategory;
@@ -22,7 +23,6 @@ export interface TarotDeckStageProps {
   onRevealSlot: (idx: number) => void;
   onSelectPerk: (perk: Perk) => void;
   isBlind?: boolean;
-  dict?: Dictionary;
   backendBase?: string;
 }
 
@@ -108,23 +108,23 @@ const CardImage: React.FC<{ type: TarotType; side: TarotSide }> = ({ type, side 
 };
 
 export const TarotDeckStage: React.FC<TarotDeckStageProps> = ({
-  role,
-  activePlayablePerks,
-  activeMutator,
-  onRollComplete,
-  revealedSlots,
-  onRevealSlot,
-  onSelectPerk,
-  isBlind = false,
-  dict,
-  backendBase,
-}) => {
+      role,
+      activePlayablePerks,
+      activeMutator,
+      onRollComplete,
+      revealedSlots,
+      onRevealSlot,
+      onSelectPerk,
+      isBlind = false,
+      backendBase,
+    }) => {
+  const dict = useDictionary();
   const [cards, setCards] = useState<TarotCard[] | null>(null);
   const resultsRef = useRef<HTMLDivElement | null>(null);
   const { celebrate } = useJackpotCelebration();
   const reduceMotion = useReducedMotion();
 
-  const typeNames = dict?.generator?.tarotCardNames || DEFAULT_TYPE_NAMES;
+  const typeNames = dict.generator.tarotCardNames || DEFAULT_TYPE_NAMES;
 
   const handleShuffle = () => {
     if (activePlayablePerks.length === 0) return;
@@ -158,8 +158,7 @@ export const TarotDeckStage: React.FC<TarotDeckStageProps> = ({
   return (
     <div className="flex flex-col items-center justify-center gap-3 sm:gap-6 xl:gap-8 2xl:gap-10 py-2 sm:py-6 wide:py-8">
       <p className="max-w-lg xl:max-w-2xl 2xl:max-w-3xl wide:max-w-4xl text-center text-xs sm:text-base xl:text-lg wide:text-xl font-semibold text-text-secondary">
-        {dict?.generator?.tarotTapToFlip ||
-          'Tap any card to flip it and reveal the perk hidden beneath. Flip all four to lock in your loadout.'}
+        {dict.generator.tarotTapToFlip}
       </p>
 
       {cards ? (
@@ -229,7 +228,6 @@ export const TarotDeckStage: React.FC<TarotDeckStageProps> = ({
                             isObscured={isObscured}
                             isBlind={isBlind}
                             onClick={onClick}
-                            dict={dict}
                           />
                         </div>
                       </>
@@ -262,7 +260,7 @@ export const TarotDeckStage: React.FC<TarotDeckStageProps> = ({
         onClick={handleShuffle}
         disabled={activePlayablePerks.length === 0}
       >
-        {dict?.generator?.tarotShuffleButton || 'Shuffle & Draw'}
+        {dict.generator.tarotShuffleButton}
       </DbdButton>
     </div>
   );

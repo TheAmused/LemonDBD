@@ -22,17 +22,18 @@ import { resolveTiers } from '@/utils/tierLists/board';
 import { clearRanking, saveRanking } from '@/utils/tierLists/storage';
 import { TierListEditor } from './TierListEditor';
 import { TierListSkeleton } from './TierListSkeleton';
+import { useDictionary } from "@/context/DictionaryContext";
 
 interface OfficialTierListViewProps {
   slug: string;
   locale: string;
-  dict: Dictionary;
 }
 
 const EMPTY: TierPlacements = {};
 
 /** An official (database) tier list, ranked by this browser's user. */
-export function OfficialTierListView({ slug, locale, dict }: OfficialTierListViewProps) {
+export function OfficialTierListView({ slug, locale }: OfficialTierListViewProps) {
+  const dict = useDictionary();
   const t = dict.tierLists;
   const { template, loading: templateLoading, error: templateError, refresh } = useTierListTemplate(slug, locale);
   const { items, loading: itemsLoading, error: itemsError, refresh: refreshItems } = useTierListItems(template, locale);
@@ -83,7 +84,7 @@ export function OfficialTierListView({ slug, locale, dict }: OfficialTierListVie
   if (!template) {
     // `loading` stays true after a failed first fetch (there is still nothing
     // to show), so an error has to win over it here.
-    if (templateLoading && !templateError) return <TierListSkeleton dict={dict} />;
+    if (templateLoading && !templateError) return <TierListSkeleton />;
     const notFound = isNotFoundError(templateError);
     return (
       <div className="relative z-10 flex flex-col gap-2">
@@ -135,7 +136,7 @@ export function OfficialTierListView({ slug, locale, dict }: OfficialTierListVie
   // Wait for localStorage as well as the catalog: painting the empty board and
   // then snapping every item into its saved tier a frame later is worse than
   // a spinner.
-  if (itemsLoading || !hydrated) return <TierListSkeleton dict={dict} label={t.loadingItems} />;
+  if (itemsLoading || !hydrated) return <TierListSkeleton label={t.loadingItems} />;
 
   return (
     <TierListEditor
@@ -165,7 +166,6 @@ export function OfficialTierListView({ slug, locale, dict }: OfficialTierListVie
       importTarget={{ kind: 'template', slug, title: template.title }}
       onImport={onImport}
       locale={locale}
-      dict={dict}
     />
   );
 }

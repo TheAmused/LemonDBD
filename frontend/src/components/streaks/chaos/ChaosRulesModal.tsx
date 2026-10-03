@@ -16,21 +16,21 @@ import {
   resolveRuleEntries,
   streakCopy,
 } from '../RulesModalSections';
+import { useDictionary } from "@/context/DictionaryContext";
 
 export interface ChaosRulesModalProps {
   isOpen: boolean;
   onClose: () => void;
-  dict?: Dictionary;
 }
 
-export const ChaosRulesModal: React.FC<ChaosRulesModalProps> = ({ isOpen, onClose, dict }) => {
+export const ChaosRulesModal: React.FC<ChaosRulesModalProps> = ({ isOpen, onClose }) => {
+  const dict = useDictionary();
   const s = streakCopy(dict);
   return (
     <RulesModalShell
       isOpen={isOpen}
       onClose={onClose}
       title={s.rules || 'Rules'}
-      dict={dict}
     >
       <RulesConceptCard
         tone="red"

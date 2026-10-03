@@ -10,6 +10,7 @@ import { Modal } from '@/components/common/Modal';
 import { toneFromIconClass } from '@/components/streaks/RulesModalShell';
 import { AdeptBadgeIcon } from '@/components/icons/DbdIcons';
 import { HEADER_BUTTON_CLASSES } from './ChallengePanel';
+import { useDictionary } from "@/context/DictionaryContext";
 
 export const NEUTRAL_TILE_ACCENT = 'border-border-color bg-bg-elevated hover:bg-bg-elevated/80 text-text-secondary';
 
@@ -54,28 +55,27 @@ export interface ChallengeIntroModalShellProps {
   /** Set on a second-level screen to show a back arrow next to the title. */
   onBack?: () => void;
   backLabel?: string;
-  dict?: Dictionary;
 }
 
 export const ChallengeIntroModalShell: React.FC<ChallengeIntroModalShellProps> = ({
-  isOpen,
-  onClose,
-  icon: Icon,
-  iconClassName,
-  title,
-  intro,
-  rulesLabel,
-  onOpenRules,
-  tiles,
-  onSelectTile,
-  tileGridClassName,
-  escapeDisabled,
-  selectedValue,
-  currentLabel,
-  onBack,
-  backLabel,
-  dict,
-}) => {
+      isOpen,
+      onClose,
+      icon: Icon,
+      iconClassName,
+      title,
+      intro,
+      rulesLabel,
+      onOpenRules,
+      tiles,
+      onSelectTile,
+      tileGridClassName,
+      escapeDisabled,
+      selectedValue,
+      currentLabel,
+      onBack,
+      backLabel,
+    }) => {
+  const dict = useDictionary();
   return (
     <Modal
       isOpen={isOpen}
@@ -86,7 +86,7 @@ export const ChallengeIntroModalShell: React.FC<ChallengeIntroModalShellProps> =
       tone={toneFromIconClass(iconClassName)}
       icon={Icon ? <Icon className="h-5 w-5" aria-hidden="true" /> : undefined}
       title={title}
-      closeButtonAriaLabel={dict?.modal?.close || 'Close'}
+      closeButtonAriaLabel={dict.modal.close}
       headerLeft={
         onBack ? (
           <Button

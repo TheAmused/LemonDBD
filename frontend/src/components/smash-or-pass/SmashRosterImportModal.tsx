@@ -16,7 +16,7 @@ import { localRosterSlug } from '@/utils/smashOrPass/localRoster';
 import { createCustomRosterId, saveCustomRoster } from '@/utils/smashOrPass/storage';
 import { LABEL } from './creator/styles';
 import { formatMessage } from '@/utils/i18nFormat';
-import { useLocale } from '@/context/DictionaryContext';
+import { useLocale, useDictionary } from '@/context/DictionaryContext';
 
 interface SmashRosterImportModalProps {
   isOpen: boolean;
@@ -25,15 +25,15 @@ interface SmashRosterImportModalProps {
   sharePayload?: string | null;
   /** Called with the new roster's `local:<id>` slug once it has been saved. */
   onImported: (slug: string) => void;
-  dict?: Dictionary | any;
 }
 
 const TOO_LARGE: SmashRosterParseResult = { ok: false, error: 'tooLarge' };
 const toText = (r: SmashRosterParseResult) => (r.ok ? serializeSmashRosterDocument(r.doc) : null);
 
-export function SmashRosterImportModal({ isOpen, onClose, sharePayload, onImported, dict }: SmashRosterImportModalProps) {
+export function SmashRosterImportModal({ isOpen, onClose, sharePayload, onImported }: SmashRosterImportModalProps) {
+  const dict = useDictionary();
   const locale = useLocale();
-  const t = dict?.smashOrPass?.importModal || {};
+  const t = dict.smashOrPass.importModal || {};
   const [saveError, setSaveError] = useState<'quota' | 'unavailable' | null>(null);
   const { text, result, fileError, changeText, readFile } = useImportDraft<SmashRosterParseResult>({
     isOpen,
@@ -53,7 +53,7 @@ export function SmashRosterImportModal({ isOpen, onClose, sharePayload, onImport
   const errorText = (code: SmashRosterErrorCode) => t.errors?.[code] || code;
 
   const preview = result?.ok
-    ? formatMessage((t.preview || 'Importing "{name}" with {count} entities'), { name: result.doc.name, count: result.doc.entities.length }, locale)
+    ? formatMessage((t.preview), { name: result.doc.name, count: result.doc.entities.length }, locale)
     : '';
 
   const doImport = () => {
@@ -73,14 +73,14 @@ export function SmashRosterImportModal({ isOpen, onClose, sharePayload, onImport
       onClose={onClose}
       idPrefix="smash-roster"
       labels={{
-        title: t.title || 'Import a Roster',
-        subtitle: t.subtitle || 'Paste JSON, upload a file, or open a shared link.',
-        sharedLinkDetected: t.sharedLinkDetected || 'A shared roster link was detected and loaded below.',
-        pasteLabel: t.pasteLabel || 'Paste roster JSON',
-        uploadFile: t.uploadFile || 'Upload file',
-        pastePlaceholder: t.pastePlaceholder || 'Paste a roster JSON document here...',
-        cancel: t.cancel || 'Cancel',
-        importAction: t.importAction || 'Import',
+        title: t.title,
+        subtitle: t.subtitle,
+        sharedLinkDetected: t.sharedLinkDetected,
+        pasteLabel: t.pasteLabel,
+        uploadFile: t.uploadFile,
+        pastePlaceholder: t.pastePlaceholder,
+        cancel: t.cancel,
+        importAction: t.importAction,
       }}
       text={text}
       onTextChange={changeText}
@@ -92,12 +92,12 @@ export function SmashRosterImportModal({ isOpen, onClose, sharePayload, onImport
       fieldClassName="sm:text-xs leading-relaxed"
       buttonClassName="min-h-[44px]"
     >
-      {fileError && <Notice tone="error" text={t.readFileError || 'Could not read that file.'} />}
+      {fileError && <Notice tone="error" text={t.readFileError} />}
       {result && !result.ok && <Notice tone="error" text={errorText(result.error)} />}
       {saveError && (
         <Notice
           tone="error"
-          text={saveError === 'quota' ? (t.saveFailedQuota || 'Not saved: storage is full.') : (t.saveFailedUnavailable || 'Not saved: storage is unavailable.')}
+          text={saveError === 'quota' ? (t.saveFailedQuota) : (t.saveFailedUnavailable)}
         />
       )}
       {result?.ok && (

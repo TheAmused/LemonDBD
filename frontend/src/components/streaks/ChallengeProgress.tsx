@@ -3,6 +3,7 @@ import type { Dictionary } from '@/locales/types';
 
 import React from 'react';
 import { Trophy } from 'lucide-react';
+import { useDictionary } from "@/context/DictionaryContext";
 
 const NODE_SIZE_PX = 28;
 
@@ -11,7 +12,6 @@ interface ChallengeProgressProps {
   total: number;
   /** Win counts that bank a checkpoint, each between 0 and `total`. The finish is always added as the last trophy. */
   checkpoints: number[];
-  dict?: Dictionary;
 }
 
 /** Green at the start, amber halfway, red as the run nears its end. */
@@ -27,7 +27,8 @@ const nodeLeft = (percent: number) => `calc(${percent}% + ${(0.5 - percent / 100
  * Progress through a challenge: a bar that warms from red to green as the run
  * advances, with a trophy at every checkpoint and one at the finish.
  */
-export const ChallengeProgress: React.FC<ChallengeProgressProps> = ({ current, total, checkpoints, dict }) => {
+export const ChallengeProgress: React.FC<ChallengeProgressProps> = ({ current, total, checkpoints }) => {
+  const dict = useDictionary();
   if (total <= 0) return null;
 
   const cleared = Math.min(current, total);
@@ -35,16 +36,16 @@ export const ChallengeProgress: React.FC<ChallengeProgressProps> = ({ current, t
   const percent = ratio * 100;
   const trophyPositions = [...checkpoints.filter((c) => c > 0 && c < total), total];
 
-  const s = dict?.streaks;
+  const s = dict.streaks;
 
   return (
     <div>
       <div className="mb-4 flex items-center justify-between gap-3">
         <h3 className="type-label-sm text-text-primary">
-          {s?.progressTitle || 'Progress'}
+          {s.progressTitle}
         </h3>
         <span className="type-strong text-text-secondary">
-          {dict?.stats?.completed || s?.completed || 'Completed'}:{' '}
+          {dict.stats.completed}:{' '}
           <span className="font-extrabold text-accent-green">{cleared}</span> / {total}
         </span>
       </div>
@@ -55,7 +56,7 @@ export const ChallengeProgress: React.FC<ChallengeProgressProps> = ({ current, t
           aria-valuemin={0}
           aria-valuemax={total}
           aria-valuenow={cleared}
-          aria-label={s?.progressTitle || 'Progress'}
+          aria-label={s.progressTitle}
           className="relative h-3 rounded-full border border-border-color bg-bg-primary/60"
         >
           <div

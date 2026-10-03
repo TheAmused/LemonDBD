@@ -9,9 +9,11 @@ import type { Dictionary } from '@/locales/types';
 import { Button } from '@/components/common/Button';
 import { tip } from '@/components/common/Tooltip';
 import { downloadMyData } from '@/services/userProfileApi';
+import { useDictionary } from "@/context/DictionaryContext";
 
-export const DownloadDataSection: React.FC<{ dict?: Dictionary }> = ({ dict }) => {
-  const t = (dict?.user || {}) as Record<string, string>;
+export const DownloadDataSection: React.FC<{ }> = () => {
+  const dict = useDictionary();
+  const t = (dict.user || {}) as Record<string, string>;
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState(false);
 

@@ -24,12 +24,12 @@ import { FogReportIcon } from '@/components/icons/DbdIcons';
 import { OverseerEyeIcon } from '@/components/icons/DbdIcons';
 import { EmptyState } from '@/components/common/EmptyState';
 import { formatDate } from '@/utils/format';
+import { useDictionary } from "@/context/DictionaryContext";
 
 interface UserBugReportsListProps {
   reports: UserBugReport[];
   loading: boolean;
   onOpenReportModal: () => void;
-  dict?: Dictionary;
   t?: Record<string, string>;
   total?: number;
   page?: number;
@@ -40,19 +40,19 @@ interface UserBugReportsListProps {
 }
 
 export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
-  reports,
-  loading,
-  onOpenReportModal,
-  dict,
-  t: propT,
-  total,
-  page = 1,
-  perPage = 10,
-  totalPages = 1,
-  onPageChange,
-  hideHeading = false,
-}) => {
-  const t: Record<string, string> = propT || dict?.user || {};
+      reports,
+      loading,
+      onOpenReportModal,
+      t: propT,
+      total,
+      page = 1,
+      perPage = 10,
+      totalPages = 1,
+      onPageChange,
+      hideHeading = false,
+    }) => {
+  const dict = useDictionary();
+  const t: Record<string, string> = propT || dict.user || {};
   const totalCount = total ?? reports.length;
 
   // Individual droppable drawer states for each bug report
@@ -168,7 +168,7 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
       ) : null}
 
       {loading ? (
-        <UserBugReportsSkeleton dict={dict} count={3} />
+        <UserBugReportsSkeleton count={3} />
       ) : reports.length === 0 ? (
         <EmptyState
           variant="compact"
@@ -319,7 +319,6 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
             limit={perPage}
             onPageChange={onPageChange}
             onLimitChange={() => {}}
-            dict={dict as any}
           />
         </div>
       )}
@@ -334,7 +333,7 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
         className="overflow-visible"
       >
         <div className="relative flex items-center justify-center">
-          <PreviewCloseButton label={dict?.modal?.close || t.close || 'Close image preview'} />
+          <PreviewCloseButton label={dict.modal.close} />
           <div className="relative max-h-[82dvh] w-auto max-w-full overflow-hidden rounded-2xl border border-border-color/80 shadow-2xl bg-bg-primary/60 flex items-center justify-center">
             {previewImage && (
               <img

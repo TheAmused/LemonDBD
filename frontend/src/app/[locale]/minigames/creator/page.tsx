@@ -50,7 +50,6 @@ export default function MinigameCreatorPage() {
   return (
     <PageShell
       locale={locale}
-      dict={dict}
       activeCategory="minigames"
       mainClassName="relative flex flex-col items-center justify-center min-h-[70vh]"
     >
@@ -65,7 +64,7 @@ export default function MinigameCreatorPage() {
           <p className="text-xs text-text-muted">{error}</p>
         </div>
       ) : catalog ? (
-        <MinigameCreator catalog={catalog} dict={dict} locale={locale} />
+        <MinigameCreator catalog={catalog} locale={locale} />
       ) : null}
     </PageShell>
   );

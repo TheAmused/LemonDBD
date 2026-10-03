@@ -187,4 +187,5 @@ export default {
   perk: "Habilidad",
   lullabyRadius: "Radio de Nana",
   clickOutsideToClose: 'Haz clic fuera para cerrar',
+  saveOwnershipError: 'No se pudieron guardar tus cambios de posesión. Inténtalo de nuevo.',
 } as const;

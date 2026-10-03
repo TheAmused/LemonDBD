@@ -7,6 +7,7 @@ import { UserPlus } from 'lucide-react';
 import { Modal } from '@/components/common/Modal';
 import { Button } from '@/components/common/Button';
 import { Input, Select } from '@/components/common/Field';
+import { useDictionary } from "@/context/DictionaryContext";
 
 interface AdminCreateUserModalProps {
   isOpen: boolean;
@@ -17,15 +18,10 @@ interface AdminCreateUserModalProps {
     password: string;
     role: 'user' | 'admin';
   }) => Promise<void>;
-  dict?: Dictionary;
 }
 
-export const AdminCreateUserModal: React.FC<AdminCreateUserModalProps> = ({
-  isOpen,
-  onClose,
-  onSubmit,
-  dict,
-}) => {
+export const AdminCreateUserModal: React.FC<AdminCreateUserModalProps> = ({ isOpen, onClose, onSubmit }) => {
+  const dict = useDictionary();
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -54,15 +50,15 @@ export const AdminCreateUserModal: React.FC<AdminCreateUserModalProps> = ({
       size="md"
       tone="warning"
       icon={<UserPlus className="h-5 w-5" aria-hidden="true" />}
-      title={dict?.admin?.createUserTitle || 'Create New User'}
-      closeButtonAriaLabel={dict?.admin?.closeSymbol || 'Close'}
+      title={dict.admin.createUserTitle}
+      closeButtonAriaLabel={dict.admin.closeSymbol}
       busy={isSubmitting}
       padded
       footerClassName="justify-end flex-col-reverse sm:flex-row"
       footer={
         <>
           <Button size="sm" onClick={onClose} disabled={isSubmitting} className="w-full sm:w-auto">
-            {dict?.admin?.cancel || 'Cancel'}
+            {dict.admin.cancel}
           </Button>
           <Button
             type="submit"
@@ -73,7 +69,7 @@ export const AdminCreateUserModal: React.FC<AdminCreateUserModalProps> = ({
             leftIcon={<UserPlus className="h-3.5 w-3.5" />}
             className="w-full sm:w-auto"
           >
-            <span>{dict?.admin?.createAccount || 'Create Account'}</span>
+            <span>{dict.admin.createAccount}</span>
           </Button>
         </>
       }
@@ -81,7 +77,7 @@ export const AdminCreateUserModal: React.FC<AdminCreateUserModalProps> = ({
     <form id="admin-create-user-form" onSubmit={handleSubmit} className="space-y-4">
       <div>
         <label className="block type-label-xs text-text-secondary mb-1">
-          {dict?.admin?.thUsername || 'Username'}
+          {dict.admin.thUsername}
         </label>
         <Input
           type="text"
@@ -89,47 +85,47 @@ export const AdminCreateUserModal: React.FC<AdminCreateUserModalProps> = ({
           required
           value={username}
           onChange={(e) => setUsername(e.target.value)}
-          placeholder={dict?.admin?.createUserUsernamePlaceholder || ''}
+          placeholder={dict.admin.createUserUsernamePlaceholder}
         />
       </div>
 
       <div>
         <label className="block type-label-xs text-text-secondary mb-1">
-          {dict?.admin?.thEmail || 'Email Address'}
+          {dict.admin.thEmail}
         </label>
         <Input
           type="email"
           required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          placeholder={dict?.admin?.createUserEmailPlaceholder || ''}
+          placeholder={dict.admin.createUserEmailPlaceholder}
         />
       </div>
 
       <div>
         <label className="block type-label-xs text-text-secondary mb-1">
-          {dict?.admin?.thPassword || 'Password'}
+          {dict.admin.thPassword}
         </label>
         <Input
           type="password"
           required
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          placeholder={dict?.admin?.createUserPasswordPlaceholder || ''}
+          placeholder={dict.admin.createUserPasswordPlaceholder}
         />
       </div>
 
       <div>
         <label className="block type-label-xs text-text-secondary mb-1">
-          {dict?.admin?.rolePrivilege || 'Role Privilege'}
+          {dict.admin.rolePrivilege}
         </label>
         <Select
           value={role}
           onChange={(e) => setRole(e.target.value as 'user' | 'admin')}
           className="[&>option]:bg-bg-surface [&>option]:text-text-primary"
         >
-          <option value="user">{dict?.admin?.roleStandard || 'Standard User'}</option>
-          <option value="admin">{dict?.admin?.roleAdministrator || 'Administrator'}</option>
+          <option value="user">{dict.admin.roleStandard}</option>
+          <option value="admin">{dict.admin.roleAdministrator}</option>
         </Select>
       </div>
       </form>

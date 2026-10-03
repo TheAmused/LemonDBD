@@ -8,11 +8,12 @@ import { avatarUrlFor } from '../chaos/KillerPickerGrid';
 import { KillerIcon } from '@/components/icons/DbdIcons';
 
 import { tip } from '@/components/common/Tooltip';
+import { useDictionary } from "@/context/DictionaryContext";
+
 export interface HistoryNextRowPreviewProps {
   killers: string[];
   rowSize: number;
   currentRowIndex: number;
-  dict?: Dictionary;
 }
 
 const PreviewTile: React.FC<{ name: string }> = ({ name }) => {
@@ -37,12 +38,8 @@ const PreviewTile: React.FC<{ name: string }> = ({ name }) => {
   );
 };
 
-export const HistoryNextRowPreview: React.FC<HistoryNextRowPreviewProps> = ({
-  killers,
-  rowSize,
-  currentRowIndex,
-  dict,
-}) => {
+export const HistoryNextRowPreview: React.FC<HistoryNextRowPreviewProps> = ({ killers, rowSize, currentRowIndex }) => {
+  const dict = useDictionary();
   const [expanded, setExpanded] = useState(false);
   const nextRowStart = (currentRowIndex + 1) * rowSize;
   const nextRow = killers.slice(nextRowStart, nextRowStart + rowSize);
@@ -56,8 +53,8 @@ export const HistoryNextRowPreview: React.FC<HistoryNextRowPreviewProps> = ({
         className="flex w-full items-center justify-center gap-1.5 text-left cursor-pointer"
       >
         <span className="type-label-sm text-text-muted">
-          {dict?.streaks?.nextRowPreviewLabel || 'Next row preview'}{' '}
-          {dict?.streaks?.middotSeparator || '·'} {dict?.streaks?.rowLabel || 'Row'} {currentRowIndex + 2}
+          {dict.streaks.nextRowPreviewLabel}{' '}
+          {dict.streaks.middotSeparator} {dict.streaks.rowLabel} {currentRowIndex + 2}
         </span>
         <ChevronDown
           className={`h-4 w-4 text-text-muted transition-transform ${expanded ? 'rotate-180' : ''}`}

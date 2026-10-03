@@ -6,22 +6,17 @@ import React from 'react';
 import { Clock } from 'lucide-react';
 import type { StreakMatchLogBase } from './StreakStatsDrawer';
 import { formatDate } from '@/utils/format';
-import { useLocale } from '@/context/DictionaryContext';
+import { useLocale, useDictionary } from '@/context/DictionaryContext';
 
 export interface StreakMatchRowProps<TLog extends StreakMatchLogBase> {
   log: TLog;
   renderLabel: (log: TLog) => React.ReactNode;
   renderMeta: (log: TLog) => React.ReactNode;
-  dict?: Dictionary;
 }
 
 /** One match in a streak mode's history, shared by the stats drawer and the "view all" modal. */
-export function StreakMatchRow<TLog extends StreakMatchLogBase>({
-  log,
-  renderLabel,
-  renderMeta,
-  dict,
-}: StreakMatchRowProps<TLog>) {
+export function StreakMatchRow<TLog extends StreakMatchLogBase>({ log, renderLabel, renderMeta }: StreakMatchRowProps<TLog>) {
+  const dict = useDictionary();
   const locale = useLocale();
   const isWin = log.result === 'win';
   return (
@@ -30,7 +25,7 @@ export function StreakMatchRow<TLog extends StreakMatchLogBase>({
         {log.triggered_by === 'inactivity' ? (
           <div className="flex items-center gap-1 type-card-title text-text-secondary">
             <Clock className="w-3.5 h-3.5" />
-            {dict?.streaks?.autoLossInactive || 'Auto-loss, run was inactive'}
+            {dict.streaks.autoLossInactive}
           </div>
         ) : (
           renderLabel(log)

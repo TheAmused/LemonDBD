@@ -3,14 +3,15 @@
 import type { Dictionary } from '@/locales/types';
 import React from 'react';
 import { DbdSpinner } from '@/components/common/DbdSpinner';
+import { useDictionary } from "@/context/DictionaryContext";
 
 interface UserProfileSkeletonProps {
-  dict?: Dictionary | null;
   className?: string;
 }
 
-export const UserProfileSkeleton: React.FC<UserProfileSkeletonProps> = ({ dict, className = '' }) => {
-  const loadingLabel = dict?.characterDetail?.loading || dict?.app?.loading || 'Loading profile...';
+export const UserProfileSkeleton: React.FC<UserProfileSkeletonProps> = ({ className = '' }) => {
+  const dict = useDictionary();
+  const loadingLabel = dict.characterDetail.loading;
 
   return (
     <div
@@ -29,7 +30,6 @@ export const UserProfileSkeleton: React.FC<UserProfileSkeletonProps> = ({ dict, 
           needleSpeed={1.3}
           label={loadingLabel}
           sublabel="Retrieving player inventory and perk mastery"
-          dict={dict}
         />
       </main>
     </div>

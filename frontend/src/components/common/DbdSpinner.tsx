@@ -4,6 +4,7 @@
 import React from 'react';
 import { LemonIcon } from '@/components/LemonIcon';
 import type { Dictionary } from '@/locales/types';
+import { useDictionary } from "@/context/DictionaryContext";
 
 export type DbdSpinnerSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'responsive' | number;
 export type DbdSpinnerLayout = 'fullscreen' | 'page' | 'card' | 'inline' | 'compact';
@@ -33,7 +34,6 @@ export interface DbdSpinnerProps {
   sublabel?: string;
   accent?: DbdSpinnerAccent;
   customColors?: DbdSpinnerCustomColors;
-  dict?: Dictionary | any;
   className?: string;
   needleSpeed?: number;
   showEmblem?: boolean;
@@ -51,19 +51,19 @@ const SIZE_MAP: Record<'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl', number> = {
 };
 
 export const DbdSpinner: React.FC<DbdSpinnerProps> = ({
-  size = 'md',
-  layout = 'inline',
-  label,
-  sublabel,
-  accent = 'crimson',
-  customColors,
-  dict,
-  className = '',
-  needleSpeed = 1.3,
-  showEmblem = true,
-  ariaLabel,
-  minHeight,
-}) => {
+      size = 'md',
+      layout = 'inline',
+      label,
+      sublabel,
+      accent = 'crimson',
+      customColors,
+      className = '',
+      needleSpeed = 1.3,
+      showEmblem = true,
+      ariaLabel,
+      minHeight,
+    }) => {
+  const dict = useDictionary();
   let dimension: number = 150;
   let isResponsive = false;
 
@@ -79,10 +79,7 @@ export const DbdSpinner: React.FC<DbdSpinnerProps> = ({
   const resolvedLabel =
     label ||
     ariaLabel ||
-    dict?.app?.loading ||
-    dict?.characterDetail?.loading ||
-    dict?.perks?.loading ||
-    dict?.admin?.loading;
+    dict.app.loading;
 
   const basePalettes: Record<DbdSpinnerAccent, DbdSpinnerCustomColors> = {
     crimson: {

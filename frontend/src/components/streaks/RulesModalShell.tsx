@@ -6,13 +6,13 @@ import type { Dictionary } from '@/locales/types';
 import React from 'react';
 import type { LucideIcon } from 'lucide-react';
 import { Modal, type ModalTone } from '@/components/common/Modal';
+import { useDictionary } from "@/context/DictionaryContext";
 
 export interface RulesModalShellProps {
   isOpen: boolean;
   onClose: () => void;
   title: string;
   children: React.ReactNode;
-  dict?: Dictionary;
 }
 
 /**
@@ -86,13 +86,8 @@ export const RulesModalListSection: React.FC<{
   </div>
 );
 
-export const RulesModalShell: React.FC<RulesModalShellProps> = ({
-  isOpen,
-  onClose,
-  title,
-  children,
-  dict,
-}) => {
+export const RulesModalShell: React.FC<RulesModalShellProps> = ({ isOpen, onClose, title, children }) => {
+  const dict = useDictionary();
   return (
     <Modal
       isOpen={isOpen}
@@ -101,7 +96,7 @@ export const RulesModalShell: React.FC<RulesModalShellProps> = ({
       size="3xl"
       layer="top"
       title={<span className="capitalize">{title}</span>}
-      closeButtonAriaLabel={dict?.modal?.close || 'Close'}
+      closeButtonAriaLabel={dict.modal.close}
       bodyClassName="space-y-6 p-5 text-sm text-text-secondary sm:p-6"
     >
       {children}

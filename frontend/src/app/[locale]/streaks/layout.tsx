@@ -50,7 +50,7 @@ export default function StreaksLayout({ children }: { children: React.ReactNode 
   const isPickerPage = segmentsAfterStreaks.length <= 1;
 
   return (
-    <div className="min-h-screen bg-bg-primary text-text-primary flex flex-col lg:flex-row transition-colors duration-300">
+    <div className="min-h-screen text-text-primary flex flex-col lg:flex-row transition-colors duration-300">
       <Sidebar
         currentLocale={locale}
         dict={dict}

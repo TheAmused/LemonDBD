@@ -130,7 +130,7 @@ export const HeaderButton: React.FC<HeaderButtonProps> = ({ onClick, title, icon
   <button
     type="button"
     onClick={onClick}
-    {...tip(title, undefined, 'status')}
+    {...(label ? {} : tip(title, undefined, 'status'))}
     aria-label={title}
     className={`${HEADER_BUTTON_CLASSES} ${danger ? 'hover:bg-accent-red/10 hover:text-accent-red' : ''} ${
       label ? 'gap-1.5 px-3 py-2.5 text-xs font-bold' : 'justify-center p-2.5'

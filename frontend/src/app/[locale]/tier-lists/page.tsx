@@ -5,14 +5,12 @@ import React from 'react';
 import { PageShell } from '@/components/layout/PageShell';
 import { TierListHub } from '@/components/tier-lists/TierListHub';
 import { useDictionary, useLocale } from '@/context/DictionaryContext';
-import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 
 
 export default function TierListsPage() {
   const dict = useDictionary();
   const locale = useLocale();
 
-  useDocumentTitle(dict.tierLists.pageTitle);
 
   return (
     <PageShell

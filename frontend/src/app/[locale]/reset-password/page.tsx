@@ -12,7 +12,6 @@ import { LemonIcon } from '@/components/LemonIcon';
 import { Locale } from '@/i18n/config';
 import { useAuth } from '@/context/AuthContext';
 import { useDictionary } from '@/context/DictionaryContext';
-import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 
 export default function ResetPasswordPage() {
   return (
@@ -36,7 +35,6 @@ function ResetPasswordContent() {
   const [loading, setLoading] = useState(false);
   const [done, setDone] = useState(false);
 
-  useDocumentTitle(dict?.app?.resetPasswordPageTitle || 'LemonDBD - Reset Password');
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

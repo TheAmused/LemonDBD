@@ -3,6 +3,8 @@ import React from 'react';
 import type { Metadata } from 'next';
 import { UmamiScript } from '@/components/UmamiScript';
 import { i18n, type Locale } from '@/i18n/config';
+import { getDictionary } from '@/i18n/get-dictionary';
+import { resolveLocale, siteUrl } from '@/i18n/metadata';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import { AuthProvider } from '@/context/AuthContext';
 import { LocaleDictionaryProvider } from '@/context/LocaleDictionaryProvider';
@@ -15,18 +17,24 @@ import '@/app/globals.css';
 // Self-hosted at build time by next/font (no request to Google from visitors' browsers).
 const playfair = Playfair_Display({ subsets: ['latin', 'latin-ext'], variable: '--font-playfair', display: 'swap' });
 
-export const metadata: Metadata = {
-  title: {
-    template: 'LemonDBD - %s',
-    default: 'LemonDBD - Dead by Daylight Hub & Tools',
-  },
-  description: 'LemonDBD: Ultimate Dead by Daylight database, perk randomizer, map explorer, and player companion.',
-  icons: {
-    icon: '/icon.png',
-    shortcut: '/icon.png',
-    apple: '/icon.png',
-  },
-};
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const locale = resolveLocale((await params).locale);
+  const dict = await getDictionary(locale);
+  const base = siteUrl();
+  return {
+    ...(base ? { metadataBase: base } : {}),
+    title: {
+      template: 'LemonDBD - %s',
+      default: dict.app.homePageTitle,
+    },
+    description: dict.app.siteDescription,
+    icons: {
+      icon: '/icon.png',
+      shortcut: '/icon.png',
+      apple: '/icon.png',
+    },
+  };
+}
 
 export async function generateStaticParams() {
   return i18n.locales.map((locale) => ({ locale }));

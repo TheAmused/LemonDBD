@@ -1,6 +1,8 @@
 // frontend/src/locales/es/minigames.ts
 export default {
   pageTitle: "LemonDBD - Minijuegos y DBD Idle",
+  creatorPageTitle: 'LemonDBD - Creador de desafíos de prueba',
+  idlePageTitle: 'LemonDBD - DBD Idle: adivinador clásico de la niebla',
   metaDescription: "Juega desafíos diarios de adivinanzas de Dead by Daylight, adivinanzas de mapas y audios, o crea y comparte tus propios desafíos.",
   hubTitle: "Minijuegos de Dead by Daylight",
   hubSubtitle: "Pon a prueba tus conocimientos de la Niebla con pruebas diarias, práctica infinita o desafíos creados por jugadores.",

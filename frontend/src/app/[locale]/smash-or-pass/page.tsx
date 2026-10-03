@@ -10,7 +10,6 @@ import { Locale } from '@/i18n/config';
 
 import { SmashHubSkeleton } from '@/components/smash-or-pass/SmashOrPassSkeleton';
 import { useDictionary } from '@/context/DictionaryContext';
-import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 
 export default function SmashOrPassPage() {
   const params = useParams();
@@ -18,7 +17,6 @@ export default function SmashOrPassPage() {
 
   const dict = useDictionary();
 
-  useDocumentTitle(dict?.app?.smashOrPassPageTitle || 'LemonDBD - Smash or Pass | Dead by Daylight Romance');
 
   return (
     <PageShell

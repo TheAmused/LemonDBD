@@ -13,7 +13,7 @@ describe('Page Root Theme Wrapper Consistency', () => {
   // broke the light-lemon theme on every page still using it.
   const shellPageRoutes = [
     'admin/page.tsx',
-    'page.tsx',
+    '../../components/landing/HomePage.tsx',
     'perks/page.tsx',
     'characters/page.tsx',
     'characters/[slug]/page.tsx',

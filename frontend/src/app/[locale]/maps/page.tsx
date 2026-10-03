@@ -16,7 +16,6 @@ import { MapRealm } from '@/types/map';
 import { Perk } from '@/types/perks';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 import { useDictionary } from '@/context/DictionaryContext';
-import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { usePersistentString } from '@/hooks/usePersistentString';
 
 const isValidSearchMode = (v: string): v is 'text' | 'voice' => v === 'text' || v === 'voice';
@@ -71,7 +70,6 @@ function MapsPageInner() {
     },
   ];
 
-  useDocumentTitle(dict?.maps?.pageTitle || 'LemonDBD - Tactical Map Command Explorer');
 
   const handleSourceChange = useCallback(() => {}, []);
   const handleSelectMap = useCallback((name: string) => {

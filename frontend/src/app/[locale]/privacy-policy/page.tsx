@@ -10,7 +10,6 @@ import { PageShell } from '@/components/layout/PageShell';
 import { RichText } from '@/components/common/RichText';
 import { Locale } from '@/i18n/config';
 import { useDictionary } from '@/context/DictionaryContext';
-import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { usePersistentDrawer } from '@/hooks/usePersistentDrawer';
 import { apiUrl } from '@/utils/api';
 import { fillPrivacyPlaceholders, type PrivacyInfo } from '@/utils/privacyPlaceholders';
@@ -93,7 +92,6 @@ export default function PrivacyPolicyPage() {
   const dict = useDictionary();
   const privacy = dict?.privacy;
 
-  useDocumentTitle(privacy?.pageTitle || 'LemonDBD - Privacy Policy');
 
   // Contact address, lifetimes and mail provider come from the backend (admin-editable),
   // so the translated text only holds placeholders for them.

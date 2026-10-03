@@ -10,7 +10,6 @@ import { CharactersGridSkeleton } from '@/components/character-detail/Characters
 import { Locale } from '@/i18n/config';
 import { CharacterItem, PerkItem } from '@/components/character-detail/types';
 import { useDictionary } from '@/context/DictionaryContext';
-import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { getBackendBaseUrl } from '@/utils/api';
 
 
@@ -22,7 +21,6 @@ export default function CharactersPage() {
 
   const backendBase = getBackendBaseUrl();
 
-  useDocumentTitle((dict?.app as any)?.charactersPageTitle || 'LemonDBD - Characters & Teachables');
 
   return (
     <PageShell

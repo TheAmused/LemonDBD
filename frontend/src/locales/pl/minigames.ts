@@ -1,6 +1,8 @@
 // frontend/src/locales/pl/minigames.ts
 export default {
   pageTitle: "LemonDBD - Minigry i DBD Idle",
+  creatorPageTitle: 'LemonDBD - Kreator wyzwań próby',
+  idlePageTitle: 'LemonDBD - DBD Idle: klasyczny zgadywacz mgły',
   metaDescription: "Graj w codzienne wyzwania zgadywania Dead by Daylight, quizy map i dźwięków lub twórz i udostępniaj własne wyzwania.",
   hubTitle: "Minigry Dead by Daylight",
   hubSubtitle: "Sprawdź swoją wiedzę o Mgle w codziennych próbach, swobodnym treningu lub wyzwaniach społeczności.",

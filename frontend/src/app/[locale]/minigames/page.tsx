@@ -5,14 +5,12 @@ import React from 'react';
 import { PageShell } from '@/components/layout/PageShell';
 import { MinigamesHub } from '@/components/minigames/MinigamesHub';
 import { useDictionary, useLocale } from '@/context/DictionaryContext';
-import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 
 
 export default function MinigamesPage() {
   const dict = useDictionary();
   const locale = useLocale();
 
-  useDocumentTitle(dict.minigames.pageTitle);
 
   return (
     <PageShell

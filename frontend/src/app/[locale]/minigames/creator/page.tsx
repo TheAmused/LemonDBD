@@ -5,7 +5,6 @@ import React, { useState, useEffect } from 'react';
 import { PageShell } from '@/components/layout/PageShell';
 import { MinigameCreator } from '@/components/minigames/creator/MinigameCreator';
 import { useDictionary, useLocale } from '@/context/DictionaryContext';
-import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import type { MinigameCatalog } from '@/types/minigame';
 import { fetchMinigameCatalog } from '@/services/minigameApi';
 import { DbdSpinner } from '@/components/common/DbdSpinner';
@@ -19,7 +18,6 @@ export default function MinigameCreatorPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useDocumentTitle('Trial Challenge Creator - LemonDBD');
 
   useEffect(() => {
     let isMounted = true;

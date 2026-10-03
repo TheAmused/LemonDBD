@@ -25,7 +25,6 @@ import type {
 } from '@/types/admin';
 import { Users, ShieldAlert, BarChart3, ScrollText, Settings2 } from 'lucide-react';
 import { useDictionary } from '@/context/DictionaryContext';
-import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { FogReportIcon } from '@/components/icons/DbdIcons';
 import { formatMessage } from '@/utils/i18nFormat';
 
@@ -117,7 +116,6 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
 
   const API_BASE = getBackendBaseUrl();
 
-  useDocumentTitle(dict?.app?.adminPageTitle || 'LemonDBD - Admin Control Center');
 
   const fetchAdminData = useCallback(async () => {
     const token = getAuthToken();

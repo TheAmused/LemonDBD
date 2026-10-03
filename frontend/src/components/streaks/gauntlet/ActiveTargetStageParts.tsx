@@ -273,7 +273,6 @@ export const CompactPlayerBuild: React.FC<CompactPlayerBuildProps> = ({ index, p
 
   const avatarBox = (sizeClass: string, iconClass: string) => (
     <div
-      {...tip(displayName, undefined, 'character')}
       className={`${sizeClass} shrink-0 rounded-xl bg-bg-elevated border-2 border-border-color flex items-center justify-center overflow-hidden`}
     >
       {avatarSrc && !avatarError ? (

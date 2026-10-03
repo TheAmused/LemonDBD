@@ -6,7 +6,7 @@ import type { Dictionary } from '@/locales/types';
 import React from 'react';
 import { Button } from '@/components/common/Button';
 import Link from 'next/link';
-import { LogIn, LogOut, MailWarning } from 'lucide-react';
+import { LogIn, LogOut } from 'lucide-react';
 import { UserAvatar } from '@/components/UserAvatar';
 import { OverseerEyeIcon } from '@/components/icons/DbdIcons';
 
@@ -56,15 +56,7 @@ export const SidebarUserSection: React.FC<SidebarUserSectionProps> = ({
             >
               <UserAvatar user={user} size="sm" />
               <div className="truncate">
-                <p className="flex items-center gap-1 type-strong text-text-primary truncate">
-                  <span className="truncate">{user.username}</span>
-                  {user.is_verified === false && (
-                    <MailWarning
-                      className="h-3 w-3 shrink-0 text-accent-amber"
-                      aria-label={dict.sidebar.emailNotVerified}
-                    />
-                  )}
-                </p>
+                <p className="type-strong text-text-primary truncate">{user.username}</p>
                 <span
                   className={`inline-block rounded px-1 text-micro font-black uppercase tracking-wider ${
                     user.role === 'admin'

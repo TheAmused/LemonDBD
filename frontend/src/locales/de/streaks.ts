@@ -3,7 +3,6 @@ export default {
   backToKillerStreaks: "Zurück zu den Killer-Streaks",
   backToKillers: "Zurück zu den Killern",
   rules: "Regeln",
-  winRange: "{from} bis {to}",
   cancel: "Abbrechen",
   stats: "Statistiken",
   perkPool: "Perk-Pool",

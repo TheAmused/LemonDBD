@@ -97,7 +97,7 @@ export default {
   squadUniquePerkRule: "The two players sharing a character slot can't use the same unique perk of that character.",
   squadCheckpointRule: "You get a checkpoint every 6 wins, and it moves you to the next tier.",
   squadKillerDcText: "If the killer leaves before the first generator is done, or leaves because of a bug or server issue, the match doesn't count. If they leave after the first generator is done for any other reason, it counts as a win.",
-  lemonHooks: "Hooks",
+  lemonMode: "Lemon",
   hooksDevNote: "This is our own version of the challenge. It is easier, so that more people can take it on, and you win by hooking survivors instead of killing them.",
   hooksWinCondition: "Win = 9 hooks or more. Anything less breaks the streak.",
   hooksCountRule: "Every hook stage counts, so one survivor gives up to 3 hooks and a match up to 12. A mori counts as the hooks it skips. A survivor who disconnects changes nothing, the bot still plays.",

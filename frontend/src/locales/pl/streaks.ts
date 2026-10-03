@@ -97,7 +97,7 @@ export default {
   squadUniquePerkRule: "Dwóch graczy przypisanych do tego samego slotu postaci nie może używać tego samego unikalnego perka tej postaci.",
   squadCheckpointRule: "Co 6 wygranych zapisuje punkt kontrolny i przenosi was na kolejny tier.",
   squadKillerDcText: "Jeśli zabójca wyjdzie przed ukończeniem pierwszego generatora, albo wyjdzie z powodu buga lub problemu z serwerem, mecz się nie liczy. Jeśli wyjdzie po ukończeniu pierwszego generatora z jakiegokolwiek innego powodu, liczy się to jako wygrana.",
-  lemonHooks: "Hooki",
+  lemonMode: "Lemon",
   hooksDevNote: "To nasza własna wersja wyzwania. Jest łatwiejsza, żeby mogło się za nią zabrać więcej osób, a wygrywasz zawieszaniem survivorów na hakach, a nie zabijaniem ich.",
   hooksWinCondition: "Wygrana = 9 hooków lub więcej. Mniej przerywa serię.",
   hooksCountRule: "Liczy się każdy stan haka, więc jeden survivor daje maksymalnie 3 hooki, a cały mecz 12. Mori liczy się jako hooki, które pomija. Rozłączenie survivora niczego nie zmienia, bot dalej gra.",

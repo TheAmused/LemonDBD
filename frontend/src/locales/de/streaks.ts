@@ -97,7 +97,7 @@ export default {
   squadUniquePerkRule: "Die zwei Spieler, die sich einen Charakter-Slot teilen, dürfen nicht denselben einzigartigen Perk dieses Charakters nutzen.",
   squadCheckpointRule: "Alle 6 Siege wird ein Checkpoint gesichert und ihr steigt eine Stufe auf.",
   squadKillerDcText: "Wenn der Killer geht, bevor der erste Generator fertig ist, oder wegen eines Bugs oder Serverproblems geht, zählt das Match nicht. Geht er nach dem ersten fertigen Generator aus einem anderen Grund, zählt das als Sieg.",
-  lemonHooks: "Haken",
+  lemonMode: "Lemon",
   hooksDevNote: "Das ist unsere eigene Version der Challenge. Sie ist leichter, damit sich mehr Leute daran versuchen können, und du gewinnst durch Aufhängen der Survivor statt durch Töten.",
   hooksWinCondition: "Sieg = 9 Haken oder mehr. Weniger beendet die Serie.",
   hooksCountRule: "Jede Hakenstufe zählt, ein Survivor bringt also bis zu 3 Haken und ein Match bis zu 12. Ein Mori zählt als die Haken, die er überspringt. Trennt ein Survivor die Verbindung, ändert das nichts, der Bot spielt weiter.",

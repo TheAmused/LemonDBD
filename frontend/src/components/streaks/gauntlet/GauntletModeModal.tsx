@@ -33,7 +33,7 @@ type Stage = 'root' | 'lemon';
 function lemonRootTile(role: 'killer' | 'survivor', dict: Dictionary): ChallengeIntroTile {
   return {
     value: 'lemon',
-    label: dict.streaks.lemonVersion,
+    label: role === 'killer' ? dict.streaks.lemonMode : dict.streaks.lemonVersion,
     description: role === 'killer' ? dict.streaks.gauntletLemonDesc : dict.streaks.gauntletLemonPlayersDesc,
     icon: Sparkles,
     image: '/images/streaks/modes/gauntlet-lemon.webp',

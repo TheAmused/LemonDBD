@@ -5,13 +5,10 @@ import React, { useEffect, useState } from 'react';
 import type { Dictionary } from '@/locales/types';
 import { useAuth } from '@/context/AuthContext';
 import { useRouter, usePathname } from 'next/navigation';
-import { LemonIcon } from '@/components/LemonIcon';
 import { useAltcha } from '@/hooks/useAltcha';
 import { AltchaWidget } from '@/components/common/AltchaWidget';
 import {
-  Lock,
   Mail,
-  User as UserIcon,
   LogIn,
   UserPlus,
   AlertCircle,
@@ -150,7 +147,6 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
       variant="dialog"
       size="md"
       centerTitle
-      icon={<LemonIcon className="h-6 w-6 animate-pulse" />}
       title={
         notice?.type === 'verify-reminder' || notice?.type === 'register-success'
           ? dict.user.authVerifyEmailTitle
@@ -161,16 +157,6 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
               : mode === 'register'
                 ? dict.user.authRegisterTitle
                 : dict.user.resetPassword
-      }
-      subtitle={
-        notice?.type === 'verify-reminder' ||
-        notice?.type === 'register-success' ||
-        notice?.type === 'forgot-sent' ||
-        mode === 'forgot'
-          ? notice?.type === 'verify-reminder' || notice?.type === 'register-success'
-            ? dict.user.authVerifySubtitle
-            : dict.user.authResetSubtitle
-          : undefined
       }
       ariaLabel="Authentication"
       closeButtonAriaLabel={dict.modal.close}
@@ -187,7 +173,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
       )}
 
       {notice && (notice.type === 'verify-reminder' || notice.type === 'register-success') && (
-        <div className="mb-4 flex flex-col items-center gap-4 text-center animate-in fade-in duration-150">
+        <div className="animate-in fade-in duration-150">
           <EmailVerificationForm
             email={notice.email}
             onVerified={(verifiedUser) => {
@@ -197,11 +183,6 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
                 router.push(`/${locale}/welcome`);
               }
             }}
-            submitLabel={
-              notice.type === 'register-success'
-                ? dict.user.verifyAndContinue
-                : dict.user.verifyEmailAction
-            }
           />
         </div>
       )}
@@ -229,6 +210,10 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
 
       {!notice && (
         <form onSubmit={handleSubmit} className="space-y-3.5">
+          {mode === 'forgot' && (
+            <p className="type-body-lg text-text-secondary">{dict.user.authResetSubtitle}</p>
+          )}
+
           {mode !== 'forgot' && (
             <div>
               {dict.user.usernameOrEmailLabel && (
@@ -236,17 +221,13 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
                   {dict.user.usernameOrEmailLabel}
                 </label>
               )}
-              <div className="relative">
-                <UserIcon className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-text-muted" />
-                <Input
-                  type="text"
-                  required
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  placeholder={dict.user.usernameOrEmailPlaceholder}
-                  className="bg-bg-primary pl-10 pr-3.5 shadow-inner"
-                />
-              </div>
+              <Input
+                type="text"
+                required
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                className="bg-bg-primary px-3.5 shadow-inner"
+              />
             </div>
           )}
 
@@ -257,17 +238,13 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
                   {dict.user.emailLabel}
                 </label>
               )}
-              <div className="relative">
-                <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-text-muted" />
-                <Input
-                  type="email"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder={dict.user.emailPlaceholder}
-                  className="bg-bg-primary pl-10 pr-3.5 shadow-inner"
-                />
-              </div>
+              <Input
+                type="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="bg-bg-primary px-3.5 shadow-inner"
+              />
             </div>
           )}
 
@@ -278,17 +255,13 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
                   {dict.user.passwordLabel}
                 </label>
               )}
-              <div className="relative">
-                <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-text-muted" />
-                <Input
-                  type="password"
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
-                  className="bg-bg-primary pl-10 pr-3.5 shadow-inner"
-                />
-              </div>
+              <Input
+                type="password"
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="bg-bg-primary px-3.5 shadow-inner"
+              />
             </div>
           )}
 
@@ -364,20 +337,20 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
             className="text-xs text-text-muted hover:text-accent-amber transition-colors cursor-pointer"
           >
             {mode === 'forgot' ? (
-              <span className="font-bold text-accent-amber underline">
+              <span className="font-bold text-accent-amber">
                 {dict.user.backToSignIn}
               </span>
             ) : mode === 'register' ? (
               <>
                 {dict.user.alreadyHaveAccount}{' '}
-                <span className="font-bold text-accent-amber underline">
+                <span className="font-bold text-accent-amber">
                   {dict.user.signIn}
                 </span>
               </>
             ) : (
               <>
                 {dict.user.dontHaveAccount}{' '}
-                <span className="font-bold text-accent-amber underline">
+                <span className="font-bold text-accent-amber">
                   {dict.user.register}
                 </span>
               </>

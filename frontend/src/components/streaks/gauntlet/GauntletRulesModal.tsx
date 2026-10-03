@@ -2,7 +2,6 @@
 // frontend/src/components/streaks/gauntlet/GauntletRulesModal.tsx
 
 import React from 'react';
-import { Lock } from 'lucide-react';
 import type { Dictionary } from '@/locales/types';
 import type { GauntletGameMode, Role } from '@/types/gauntletStreak';
 import { RulesModalShell } from '../RulesModalShell';
@@ -269,10 +268,7 @@ export const GauntletRulesModal: React.FC<GauntletRulesModalProps> = ({ isOpen, 
                 </div>
 
                 <div className="flex items-center justify-between sm:justify-end gap-4 w-full sm:w-auto">
-                  <div className="flex items-center gap-1.5 type-strong text-accent-amber bg-accent-amber/10 px-3 py-1 rounded-lg border border-accent-amber/20 whitespace-nowrap">
-                    <Lock className="w-3.5 h-3.5 text-accent-amber" aria-hidden="true" />
-                    <span>{perkLimitText}</span>
-                  </div>
+                  <span className="type-strong text-text-secondary whitespace-nowrap">{perkLimitText}</span>
                 </div>
               </div>
             );

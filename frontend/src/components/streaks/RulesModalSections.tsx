@@ -15,8 +15,6 @@ export type RulesTone = 'red' | 'neutral';
 interface ToneClasses {
   conceptTitle: string;
   marker: string;
-  sectionHeader: string;
-  exceptionsBox: string;
   notices: string;
 }
 
@@ -24,15 +22,11 @@ const RULES_TONES: Record<RulesTone, ToneClasses> = {
   red: {
     conceptTitle: 'text-accent-red',
     marker: 'marker:text-accent-red',
-    sectionHeader: 'text-accent-red',
-    exceptionsBox: 'border-accent-red/20',
     notices: 'border-accent-amber/20 bg-accent-amber/5 text-accent-amber',
   },
   neutral: {
     conceptTitle: 'text-text-secondary',
     marker: 'marker:text-text-muted',
-    sectionHeader: 'text-text-secondary',
-    exceptionsBox: 'border-border-color',
     notices: 'border-border-color bg-bg-elevated text-text-secondary',
   },
 };
@@ -189,14 +183,10 @@ export const RulesModalFooterSections: React.FC<{
       <RulesModalListSection
         title={copy.exceptions || 'Exceptions'}
         intro={voidIntro || copy.voidMatchNotice || 'These void the match. Replay it.'}
-        headerColorClassName={t.sectionHeader}
-        boxClassName={t.exceptionsBox}
         items={exceptions}
       />
       <RulesModalListSection
         title={copy.clarifications || 'Clarifications'}
-        headerColorClassName={t.sectionHeader}
-        boxClassName="border-border-color"
         items={clarifications}
       />
       <RulesModalNotices

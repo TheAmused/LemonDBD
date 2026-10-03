@@ -77,14 +77,14 @@ const SURVIVOR_TIERS: TierDefinition[] = [
     level: 4,
     nameKey: 'tierLegend',
     defaultName: 'The Legend',
-    streakRange: '41+',
+    streakRange: '41 - 52',
     perkLimit: 0,
     badgeColor: 'bg-accent-red/20 text-accent-red border-accent-red/30',
   },
 ];
 
 // Duo and squad step a tier every 6 wins.
-const TEAM_STREAK_RANGES = ['1 - 6', '7 - 12', '13 - 18', '19+'];
+const TEAM_STREAK_RANGES = ['1 - 6', '7 - 12', '13 - 18', '19 - 26'];
 
 const KILLER_TIERS: TierDefinition[] = [
   {
@@ -115,7 +115,7 @@ const KILLER_TIERS: TierDefinition[] = [
     level: 3,
     nameKey: 'tierEntity',
     defaultName: 'The Entity',
-    streakRange: '31+',
+    streakRange: '31 - 43',
     perkLimit: 0,
     badgeColor: 'bg-accent-red/20 text-accent-red border-accent-red/30',
   },

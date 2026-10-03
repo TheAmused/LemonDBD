@@ -176,7 +176,7 @@ export const PerkCard: React.FC<PerkCardProps> = ({ perk, onSelect, coordinate, 
           !isOwned && (
             <div
               className="absolute top-1 right-1 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-bg-primary/90 shadow-xs border border-border-color"
-              {...tip(dict.modal.unownedPerk, undefined, 'status')}
+              {...tip(dict.modal.unownedPerk, undefined, 'action')}
             >
               <Lock className="h-3.5 w-3.5 text-text-muted" />
             </div>

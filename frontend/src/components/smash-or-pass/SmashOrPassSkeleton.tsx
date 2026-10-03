@@ -62,5 +62,3 @@ export const SmashLeaderboardSkeleton: React.FC<{ count?: number;
     </div>
   );
 };
-
-export default SmashHubSkeleton;

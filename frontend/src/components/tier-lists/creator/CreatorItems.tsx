@@ -54,7 +54,6 @@ export function CreatorItems({ items, onRename, onUpdateItem, onRemove, onClear 
               <div className="relative flex aspect-square w-full items-center justify-center overflow-hidden rounded-lg border border-border-color bg-bg-elevated transition-all duration-150 hover:border-accent-red/80 hover:shadow-md group-hover/item:border-accent-red/60 select-none">
                 {/* Edge-to-edge tile image or dark initials placeholder */}
                 {item.image ? (
-                  // eslint-disable-next-line @next/next/no-img-element
                   <img
                     src={item.image}
                     alt={item.name}
@@ -87,7 +86,7 @@ export function CreatorItems({ items, onRename, onUpdateItem, onRemove, onClear 
                   type="button"
                   onClick={() => onRemove(item.id)}
                   aria-label={formatMessage(c.removeItemAria, { name: item.name })}
-                  className="absolute top-1 right-1 z-10 flex h-5 w-5 items-center justify-center rounded-md bg-bg-surface/90 text-text-muted opacity-80 sm:opacity-0 group-hover/item:opacity-100 hover:!opacity-100 hover:bg-accent-red hover:text-text-inverted transition-all shadow-xs cursor-pointer border border-border-color/40"
+                  className="hit-area absolute top-1 right-1 z-10 flex h-5 w-5 items-center justify-center rounded-md bg-bg-surface/90 text-text-muted opacity-80 sm:opacity-0 group-hover/item:opacity-100 hover:!opacity-100 hover:bg-accent-red hover:text-text-inverted transition-all shadow-xs cursor-pointer border border-border-color/40"
                 >
                   <X className="h-3 w-3" aria-hidden="true" />
                 </button>

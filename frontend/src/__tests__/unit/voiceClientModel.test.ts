@@ -186,7 +186,6 @@ test('Multilingual translations dictionary coverage for voice recognition fallba
     assert.ok(dict.voice.howItWorksClient, `Missing voice.howItWorksClient in ${lang}.json`);
     assert.ok(dict.voice.whyNeededTitle, `Missing voice.whyNeededTitle in ${lang}.json`);
     assert.ok(dict.voice.whyNeededText, `Missing voice.whyNeededText in ${lang}.json`);
-    assert.ok(dict.voice.statusDownloading, `Missing voice.statusDownloading in ${lang}.json`);
     assert.ok(dict.voice.statusReady, `Missing voice.statusReady in ${lang}.json`);
   }
 });

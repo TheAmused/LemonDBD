@@ -1,3 +1,4 @@
+import { lookup, type ChaosMutatorCopy } from '@/utils/lookup';
 // frontend/src/components/generator/lib/chaosMutatorLocalization.ts
 import type { Dictionary } from '@/locales/types';
 import type { ChaosMutator } from '@/types/chaos';
@@ -21,7 +22,7 @@ export function getLocalizedMutator(
   const fallbackDesc = typeof mutator === 'string' ? '' : mutator.description;
   const fallbackEffect = typeof mutator === 'string' ? '' : mutator.effect || '';
 
-  const loc = (dict.generator as any)?.chaosMutators?.[id];
+  const loc = lookup<ChaosMutatorCopy>(dict.generator.chaosMutators, id);
   if (loc) {
     return {
       name: loc.name || fallbackName,

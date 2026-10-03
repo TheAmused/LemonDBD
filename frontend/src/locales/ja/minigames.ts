@@ -29,9 +29,6 @@ export default {
   dailySubtitle: "24時間ごとに更新される同期チャレンジ。デイリーストリークを維持しよう！",
   playDaily: "デイリー試練をプレイ",
   alreadyCompletedToday: "本日クリア済み！",
-  repeatableTrial: "エンドレス練習",
-  repeatableSubtitle: "いつでも挑戦できるランダム生成の試練で実力を磨こう。",
-  playRepeatable: "ランダム試練を開始",
   creatorTitle: "試練クリエイター",
   creatorSubtitle: "複数ラウンドのカスタム試練を構築し、JSONエクスポートや短縮リンクで友達と共有。",
   createChallenge: "クリエイターを開く",
@@ -45,8 +42,6 @@ export default {
   confirmDelete: "このカスタム試練を削除してもよろしいですか？",
   cancel: "キャンセル",
   playTrial: "プレイ",
-  editTrial: "編集",
-  adminPublish: "公式試練として公開",
   adminPublishSuccess: "公式チャレンジとして正常に公開されました！",
 
   // Runner
@@ -95,11 +90,7 @@ export default {
 
   // Audio & Interactive Controls
   audio: {
-    playSample: "音声を再生",
     playing: "再生中...",
-    audioNotSupported: "このブラウザでは音声プレビューに対応していません。",
-    distanceHint: "現在の距離: {distance}m",
-    nextClueUnlocked: "新しい音声ヒントが解放されました！",
     themeBadge: "Dead by Daylight 殺人鬼チェイス＆脅威範囲テーマ",
     pauseMusic: "音楽を一時停止",
     listenTheme: "殺人鬼テーマを聴く",
@@ -171,7 +162,6 @@ export default {
     customSpeakerPlaceholder: "例: アンノウン、クローデット...",
     customEmojisLabel: "ナゾナゾ絵文字",
     customEmojisPlaceholder: "例: 🔔👻🌲",
-    blurLevelLabel: "初期ぼかしレベル",
     saveToMyTrials: "マイ試練に保存",
     saveAndPlay: "保存してプレイ",
     publishOfficialModalTitle: "公式デイリー試練として公開",

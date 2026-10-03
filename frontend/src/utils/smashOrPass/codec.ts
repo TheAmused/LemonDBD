@@ -42,9 +42,6 @@ import {
   uniqueId,
 } from '@/utils/shareCodec';
 import { ENTITY_ID_PATTERN, SHARE_HASH_PARAM, SMASH_ROSTER_LIMITS } from './constants';
-
-export { uniqueId };
-
 export type SmashRosterErrorCode =
   | 'invalidJson'
   | 'notAnObject'

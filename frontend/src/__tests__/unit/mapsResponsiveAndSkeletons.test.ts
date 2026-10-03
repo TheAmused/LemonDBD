@@ -58,7 +58,6 @@ describe('Maps: i18n Localization Parity Across All 5 Locales', () => {
     'searchPlaceholder',
     'initializingTacticalMap',
     'noMapsFound',
-    'fullscreenMode',
   ];
 
   for (const { code, dict } of locales) {

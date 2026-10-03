@@ -60,5 +60,3 @@ export const StreakBoardSkeleton: React.FC<StreaksSkeletonProps> = ({ className 
     </div>
   );
 };
-
-export default StreaksHubSkeleton;

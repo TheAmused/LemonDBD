@@ -20,7 +20,7 @@ import { createPortal } from 'react-dom';
 import { cn } from '@/utils/cn';
 import { TOOLTIP_CONFIG } from './Tooltip';
 
-export const POPOVER_CONFIG = {
+const POPOVER_CONFIG = {
   /** Above Modal's 'system' layer (z-100), below tooltips. */
   zIndex: 120,
   gap: 6,

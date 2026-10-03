@@ -109,7 +109,7 @@ export function TierPool({
               type="button"
               onClick={() => setQuery('')}
               aria-label={t.clearSearch}
-              className="absolute right-2 top-1/2 flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-md text-text-muted hover:text-text-primary cursor-pointer"
+              className="hit-area absolute right-2 top-1/2 flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-md text-text-muted hover:text-text-primary cursor-pointer"
             >
               <X className="h-3.5 w-3.5" aria-hidden="true" />
             </button>

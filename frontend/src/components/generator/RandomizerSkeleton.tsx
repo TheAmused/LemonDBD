@@ -35,5 +35,3 @@ export const RandomizerPageSkeleton: React.FC<RandomizerSkeletonProps> = ({ clas
     </div>
   );
 };
-
-export default RandomizerPageSkeleton;

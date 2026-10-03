@@ -51,5 +51,3 @@ export const SkipOnboardingModal: React.FC<SkipOnboardingModalProps> = ({ isOpen
     </Modal>
   );
 };
-
-export default SkipOnboardingModal;

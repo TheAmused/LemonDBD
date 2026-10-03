@@ -36,5 +36,3 @@ export const MapsPageSkeleton: React.FC<MapsSkeletonProps> = ({ className = '', 
     </div>
   );
 };
-
-export default MapsPageSkeleton;

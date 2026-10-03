@@ -8,9 +8,9 @@ import type { ChallengeDefinition } from '@/types/minigame';
 import { decodeShareText, encodeShareText } from '@/utils/shareCodec';
 import { importChallengeFromJson } from '@/utils/minigames/jsonExportImport';
 
-export const MINIGAME_SHARE_PARAM = 'c';
+const MINIGAME_SHARE_PARAM = 'c';
 /** Longest payload we accept when opening a link (20 rounds fit comfortably). */
-export const MAX_MINIGAME_SHARE_CHARS = 60_000;
+const MAX_MINIGAME_SHARE_CHARS = 60_000;
 
 export async function encodeChallengeShare(challenge: ChallengeDefinition): Promise<string> {
   return encodeShareText(

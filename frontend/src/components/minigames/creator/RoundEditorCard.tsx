@@ -1,6 +1,7 @@
 // frontend/src/components/minigames/creator/RoundEditorCard.tsx
 'use client';
 
+import { lookup } from '@/utils/lookup';
 import { Button } from '@/components/common/Button';
 import { Input, Select, Textarea } from '@/components/common/Field';
 import React, { useMemo } from 'react';
@@ -125,7 +126,7 @@ export const RoundEditorCard: React.FC<RoundEditorCardProps> = ({ round, index, 
     });
   };
 
-  const handleCustomDataChange = (key: string, value: any) => {
+  const handleCustomDataChange = (key: string, value: unknown) => {
     onUpdate({
       ...round,
       custom_data: {
@@ -135,13 +136,14 @@ export const RoundEditorCard: React.FC<RoundEditorCardProps> = ({ round, index, 
     });
   };
 
+  const targetVisual: { avatar_url?: string; icon_url?: string; image_url?: string } = selectedTargetItem ?? {};
   const targetImgSrc =
-    staticUrl((selectedTargetItem as any)?.avatar_url) ||
-    staticUrl((selectedTargetItem as any)?.icon_url) ||
-    staticUrl((selectedTargetItem as any)?.image_url) ||
-    (selectedTargetItem as any)?.avatar_url ||
-    (selectedTargetItem as any)?.icon_url ||
-    (selectedTargetItem as any)?.image_url;
+    staticUrl(targetVisual.avatar_url) ||
+    staticUrl(targetVisual.icon_url) ||
+    staticUrl(targetVisual.image_url) ||
+    targetVisual.avatar_url ||
+    targetVisual.icon_url ||
+    targetVisual.image_url;
 
   return (
     <div data-round-card className="w-full p-5 rounded-2xl bg-bg-surface border border-border-color shadow-lg flex flex-col gap-4">
@@ -207,7 +209,7 @@ export const RoundEditorCard: React.FC<RoundEditorCardProps> = ({ round, index, 
           >
             {ALL_MODES.map((mode) => (
               <option key={mode} value={mode}>
-                {(t.modes as any)[mode] || mode}
+                {lookup<string>(t.modes, mode) || mode}
               </option>
             ))}
           </Select>

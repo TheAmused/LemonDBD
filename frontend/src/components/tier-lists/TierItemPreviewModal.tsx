@@ -48,7 +48,6 @@ export function TierItemPreviewModal({ item, onClose }: TierItemPreviewModalProp
           // modal or viewport, while `w-auto h-auto` let it shrink no
           // further than the image and its container actually need.
           <div className="flex w-full items-center justify-center">
-            {/* eslint-disable-next-line @next/next/no-img-element -- images are unoptimized app-wide and may be user-supplied URLs of unknown, varied aspect ratio */}
             <img
               src={(item.fullImage ?? item.image) as string}
               alt={item.name}

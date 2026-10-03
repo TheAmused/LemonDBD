@@ -33,6 +33,3 @@ export const PerksGridSkeleton: React.FC<PerksSkeletonProps> = ({ className = ''
     </div>
   );
 };
-
-export default PerksGridSkeleton;
-

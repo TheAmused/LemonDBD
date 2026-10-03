@@ -1,6 +1,7 @@
 'use client';
 // frontend/src/hooks/useAltcha.ts
 
+import { getErrorMessage, isAbortError } from '@/utils/api';
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 
@@ -98,11 +99,11 @@ export function useAltcha(autoSolve: boolean = true) {
       const data: AltchaChallenge = await res.json();
       setChallenge(data);
       return data;
-    } catch (err: any) {
-      if (signal?.aborted || err?.name === 'AbortError') {
+    } catch (err) {
+      if (signal?.aborted || isAbortError(err)) {
         return null;
       }
-      const msg = err?.message || 'Challenge fetch failed';
+      const msg = getErrorMessage(err, 'Challenge fetch failed');
       setError(msg);
       return null;
     } finally {
@@ -125,9 +126,9 @@ export function useAltcha(autoSolve: boolean = true) {
       } else {
         setError('Verification computation incomplete');
       }
-    } catch (err: any) {
-      if (signal?.aborted || err?.name === 'AbortError') return;
-      setError(err?.message || 'Verification error');
+    } catch (err) {
+      if (signal?.aborted || isAbortError(err)) return;
+      setError(getErrorMessage(err, 'Verification error'));
     } finally {
       setIsVerifying(false);
       solvingRef.current = false;

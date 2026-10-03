@@ -59,7 +59,6 @@ export const StreakStatTiles: React.FC<StreakStatTilesProps> = ({
     }
     if (effects.flash) setFlash((f) => ({ type: effects.flash, key: f.key + 1 }));
     // `record` is state this effect owns; re-running on it would re-derive from stale snapshots.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [current, best]);
 
   useEffect(() => {

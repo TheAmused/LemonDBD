@@ -71,7 +71,7 @@ export const ImagePreloadProvider: React.FC<{ children?: React.ReactNode }> = ({
     };
 
     if ('requestIdleCallback' in window) {
-      (window as any).requestIdleCallback(runPrefetch, { timeout: 2000 });
+      window.requestIdleCallback(runPrefetch, { timeout: 2000 });
     } else {
       setTimeout(runPrefetch, 500);
     }

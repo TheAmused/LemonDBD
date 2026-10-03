@@ -9,7 +9,7 @@ import type { MainLoadout } from '@/types/userShowcase';
 import type { RoleCategory, Perk } from '@/types/perks';
 import type { Dictionary } from '@/locales/types';
 import { getCharacterAvatarUrl } from '@/utils/perkUtils';
-import { CATALOG_TTL_MS, catalogKey, fetchCached, fetchJson } from '@/services/dataCache';
+import { CATALOG_TTL_MS, catalogKey, fetchCached, fetchJson, unwrapList, type ListPayload } from '@/services/dataCache';
 
 import { tip } from '@/components/common/Tooltip';
 import { isSurvivor as isSurvivorRole } from '@/utils/characterUtils';
@@ -50,9 +50,9 @@ export const MainCard: React.FC<MainCardProps> = ({
   // is reachable from several places and none of them should pay for it twice.
   useEffect(() => {
     const url = catalogKey('perks', { limit: 1000, lang: locale });
-    fetchCached<any>(url, () => fetchJson(url), { ttlMs: CATALOG_TTL_MS })
+    fetchCached<ListPayload<Perk>>(url, () => fetchJson<ListPayload<Perk>>(url), { ttlMs: CATALOG_TTL_MS })
       .then((data) => {
-        const list: Perk[] = Array.isArray(data) ? data : data?.data || [];
+        const list = unwrapList(data);
         setAllPerks(list);
       })
       .catch(() => {});

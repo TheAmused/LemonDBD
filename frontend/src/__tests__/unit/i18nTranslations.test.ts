@@ -60,25 +60,10 @@ test('Locales export parity: all 5 locales conform to English dictionary shape',
   }
 });
 
-test('Interpolation placeholders: {page}, {slot}, {drawn}, {total} preserved across all locales', () => {
-  const localeDicts: Record<Locale, Dictionary> = { en, es, pl, de, ja };
-
-  for (const loc of allLocales) {
-    const dict = localeDicts[loc];
-
-    assert.ok(dict.generator.spinWheels.includes('{slot}'), `generator.spinWheels in ${loc} must include {slot}`);
-    assert.ok(dict.generator.selectedPage.includes('{page}'), `generator.selectedPage in ${loc} must include {page}`);
-    assert.ok(dict.generator.slotBadge.includes('{page}'), `generator.slotBadge in ${loc} must include {page}`);
-    assert.ok(dict.generator.slotBadge.includes('{slot}'), `generator.slotBadge in ${loc} must include {slot}`);
-    assert.ok(dict.generator.drawnBadge.includes('{drawn}'), `generator.drawnBadge in ${loc} must include {drawn}`);
-    assert.ok(dict.generator.drawnBadge.includes('{total}'), `generator.drawnBadge in ${loc} must include {total}`);
-  }
-});
-
 test('Smash or Pass locale coverage: all roster categories and tiers present in all locales', () => {
   const localeDicts: Record<Locale, Dictionary> = { en, es, pl, de, ja };
   const expectedTiers = ['godTier', 'fatalAttraction', 'friendzone', 'eldritchVoid'] as const;
-  const expectedControls = ['pass', 'smash', 'superSmash', 'stats', 'reset', 'keybindings'] as const;
+  const expectedControls = ['pass', 'smash', 'superSmash', 'stats', 'reset'] as const;
   const expectedRosters = ['canon', 'hoy', 'legendary', 'cyberpunk', 'anime', 'gothic'] as const;
 
   for (const loc of allLocales) {
@@ -98,9 +83,6 @@ test('Smash or Pass locale coverage: all roster categories and tiers present in 
       assert.ok((sop.rosters as any)[roster].name, `Roster "${roster}.name" must exist in ${loc}`);
     }
 
-    assert.ok(sop.chaosRating, `chaosRating must exist in ${loc}`);
-    assert.ok(sop.dangerLevel, `dangerLevel must exist in ${loc}`);
-    assert.ok(sop.compatibilityScore, `compatibilityScore must exist in ${loc}`);
   }
 });
 
@@ -110,8 +92,6 @@ test('Modal and Hover i18n coverage: all inspection and role keys present in all
     'close',
     'character',
     'role',
-    'copySlug',
-    'slugCopied',
     'perkDescription',
     'generalPerk',
     'alias',
@@ -121,7 +101,6 @@ test('Modal and Hover i18n coverage: all inspection and role keys present in all
     'survivorPerk',
     'unownedPerk',
     'equipment',
-    'clickOutsideToClose',
   ] as const;
 
   for (const loc of allLocales) {
@@ -139,7 +118,6 @@ test('Sidebar Bug Report and Buy Coffee i18n coverage across all locales', () =>
   const localeDicts: Record<Locale, Dictionary> = { en, es, pl, de, ja };
   const expectedSidebarKeys = [
     'bugReportModalTitle',
-    'bugReportModalSubtitle',
     'bugCategoryPerks',
     'bugCategoryCharacters',
     'bugCategoryMaps',
@@ -157,16 +135,12 @@ test('Sidebar Bug Report and Buy Coffee i18n coverage across all locales', () =>
     'bugLoggedInAs',
     'bugScreenshotsLabel',
     'bugUploadImage',
-    'bugSecurityVerification',
     'bugSubmitButton',
     'bugSubmitting',
     'bugSuccessMessage',
     'bugErrorMessage',
     'bugCloseButton',
-    'bugAltchaVerifying',
-    'bugAltchaVerified',
     'coffeeTitle',
-    'coffeeSubtitle',
     'coffeeFuelNotice',
     'coffeeDonationMessage',
     'coffeeBuyMeCoffeeTagline',
@@ -191,8 +165,6 @@ test('Character Detail combat, terror radius, codex and sort options i18n covera
   const localeDicts: Record<Locale, Dictionary> = { en, es, pl, de, ja };
   const expectedDetailKeys = [
     'combatAttributes',
-    'clickTerrorRadiusVisualizer',
-    'clickOutsideToClose',
     'acousticRange',
     'entityArchives',
     'codex',
@@ -205,9 +177,6 @@ test('Character Detail combat, terror radius, codex and sort options i18n covera
     'survivorSprint',
     'straightGapClose',
     'straightLine',
-    'clickOfferingForDetails',
-    'clickAddonForDetails',
-    'clickItemForDetails',
     'clickToInspectPerk',
     'killerPerk',
     'survivorPerk',

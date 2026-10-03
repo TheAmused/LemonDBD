@@ -156,7 +156,7 @@ export function LadderEditor({ tiers, onChange, onPreset, activePreset }: Ladder
                     disabled={index === 0}
                     onClick={() => move(index, -1)}
                     aria-label={formatMessage(c.moveTierUpAria, { label: tier.label })}
-                    className="flex h-full w-9 sm:w-10 items-center justify-center text-text-muted hover:text-text-primary hover:bg-bg-elevated disabled:opacity-20 cursor-pointer disabled:cursor-not-allowed transition-colors"
+                    className="pointer-coarse:min-h-11 pointer-coarse:min-w-11 flex h-full w-9 sm:w-10 items-center justify-center text-text-muted hover:text-text-primary hover:bg-bg-elevated disabled:opacity-20 cursor-pointer disabled:cursor-not-allowed transition-colors"
                   >
                     <ChevronUp className="h-4 w-4" aria-hidden="true" />
                   </button>
@@ -165,7 +165,7 @@ export function LadderEditor({ tiers, onChange, onPreset, activePreset }: Ladder
                     disabled={index === tiers.length - 1}
                     onClick={() => move(index, 1)}
                     aria-label={formatMessage(c.moveTierDownAria, { label: tier.label })}
-                    className="flex h-full w-9 sm:w-10 items-center justify-center text-text-muted hover:text-text-primary hover:bg-bg-elevated disabled:opacity-20 cursor-pointer disabled:cursor-not-allowed transition-colors"
+                    className="pointer-coarse:min-h-11 pointer-coarse:min-w-11 flex h-full w-9 sm:w-10 items-center justify-center text-text-muted hover:text-text-primary hover:bg-bg-elevated disabled:opacity-20 cursor-pointer disabled:cursor-not-allowed transition-colors"
                   >
                     <ChevronDown className="h-4 w-4" aria-hidden="true" />
                   </button>
@@ -174,7 +174,7 @@ export function LadderEditor({ tiers, onChange, onPreset, activePreset }: Ladder
                     disabled={tiers.length <= 1}
                     onClick={() => onChange(tiers.filter((x) => x.id !== tier.id))}
                     aria-label={formatMessage(c.removeTierAria, { label: tier.label })}
-                    className="flex h-full w-9 sm:w-10 items-center justify-center text-text-muted hover:text-accent-red hover:bg-accent-red/10 disabled:opacity-20 cursor-pointer disabled:cursor-not-allowed transition-colors"
+                    className="pointer-coarse:min-h-11 pointer-coarse:min-w-11 flex h-full w-9 sm:w-10 items-center justify-center text-text-muted hover:text-accent-red hover:bg-accent-red/10 disabled:opacity-20 cursor-pointer disabled:cursor-not-allowed transition-colors"
                   >
                     <X className="h-4 w-4" aria-hidden="true" />
                   </button>
@@ -195,7 +195,7 @@ export function LadderEditor({ tiers, onChange, onPreset, activePreset }: Ladder
                         aria-label={formatMessage(t.colorSwatchAria, { name: token.toUpperCase() })}
                         aria-pressed={active}
                         className={cn(
-                          'flex h-7 w-7 items-center justify-center rounded-md border-2 cursor-pointer transition-transform hover:scale-105',
+                          'pointer-coarse:min-h-11 pointer-coarse:min-w-11 flex h-7 w-7 items-center justify-center rounded-md border-2 cursor-pointer transition-transform hover:scale-105',
                           swatch.className,
                           active ? 'border-text-primary' : 'border-transparent'
                         )}

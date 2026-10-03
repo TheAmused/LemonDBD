@@ -26,5 +26,3 @@ export function TierListSkeleton({ label, className = '' }: TierListSkeletonProp
     </div>
   );
 }
-
-export default TierListSkeleton;

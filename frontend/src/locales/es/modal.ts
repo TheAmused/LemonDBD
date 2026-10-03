@@ -13,11 +13,7 @@ export default {
   unownedPerk: "Habilidad no adquirida",
   equipment: "Equipo",
   temporarilyDisabled: "Desactivado temporalmente",
-  whyDisabled: "¿Por qué está desactivado {item}?",
   wasDisabledTemporarily: "{item} fue desactivado temporalmente.",
   reasonLabel: "Motivo",
-  done: 'Listo',
-  clickOutsideToClose: 'Haz clic fuera o presiona ESC para cerrar',
-  copySlug: 'Copiar identificador',
-  slugCopied: '¡Identificador copiado!',
+  done: 'Listo'
 } as const;

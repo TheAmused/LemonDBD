@@ -110,7 +110,7 @@ export interface TooltipBubbleProps {
   contentClassName?: string;
 }
 
-export const TooltipBubble: React.FC<TooltipBubbleProps> = ({
+const TooltipBubble: React.FC<TooltipBubbleProps> = ({
   anchor,
   title,
   description,

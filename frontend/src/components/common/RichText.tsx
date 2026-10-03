@@ -78,7 +78,7 @@ interface RichVariant {
 
 const NONE = '';
 
-export const RICH_VARIANTS: Readonly<Record<'ui' | 'game', RichVariant>> = {
+const RICH_VARIANTS: Readonly<Record<'ui' | 'game', RichVariant>> = {
   ui: {
     strong: 'font-bold text-text-primary',
     em: 'italic',

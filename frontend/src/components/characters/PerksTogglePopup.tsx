@@ -143,5 +143,3 @@ export const PerksTogglePopup: React.FC<PerksTogglePopupProps> = ({
     </Modal>
   );
 };
-
-export default PerksTogglePopup;

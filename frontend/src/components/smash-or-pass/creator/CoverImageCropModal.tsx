@@ -300,7 +300,6 @@ export const CoverImageCropModal: React.FC<CoverImageCropModalProps> = ({ isOpen
             style={{ touchAction: 'none' }}
           >
             {currentUrl && !imageError ? (
-              // eslint-disable-next-line @next/next/no-img-element -- Live interactive canvas crop
               <img
                 ref={imgRef}
                 src={currentUrl}

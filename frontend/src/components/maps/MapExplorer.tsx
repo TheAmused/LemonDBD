@@ -192,7 +192,6 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
       if (isRealmExpanded(realm)) set.add(realm);
     });
     return set;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [displayedGroups, isSearching, expandedRealm]);
   const activeRealmsSignature = [...activeRealms].sort().join('|');
   const activeRealmsRef = useRef(activeRealms);
@@ -260,7 +259,6 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
         exitTimers.current.set(r, timer);
       });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeRealmsSignature]);
 
   useEffect(() => {
@@ -273,7 +271,6 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
       const next = new Set([...prev].filter((r) => present.has(r)));
       return next.size === prev.size ? prev : next;
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [displayedGroups]);
 
   const rowPanels = useMemo(() => {

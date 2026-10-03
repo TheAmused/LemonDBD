@@ -645,7 +645,7 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
                           type="button"
                           onClick={() => toggleStage(reel.id)}
                           className={cn(
-                            'h-10 w-10 rounded-xl flex items-center justify-center font-black transition-all duration-200 cursor-pointer touch-manipulation border shadow-xs',
+                            'pointer-coarse:min-h-11 pointer-coarse:min-w-11 h-10 w-10 rounded-xl flex items-center justify-center font-black transition-all duration-200 cursor-pointer touch-manipulation border shadow-xs',
                             isStaged
                               ? 'bg-accent-green text-text-inverted border-accent-green hover:bg-accent-green/90 hover:scale-110 active:scale-95 hover:shadow-md hover:shadow-accent-green/40'
                               : 'bg-bg-elevated text-text-secondary border-border-color hover:text-text-primary hover:border-accent-amber hover:bg-bg-elevated/90 hover:scale-110 active:scale-95 hover:shadow-md hover:shadow-accent-amber/35'

@@ -158,7 +158,6 @@ export function RomanceArchetypeBuilder({ archetypes, onChange, availableRoles, 
                   <div className="flex items-center gap-3 min-w-0">
                     <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-bg-primary border border-border-color overflow-hidden">
                       {arch.icon_url ? (
-                        // eslint-disable-next-line @next/next/no-img-element
                         <img src={arch.icon_url} alt="" className="h-full w-full object-cover" />
                       ) : (
                         <Heart className="h-4 w-4 text-accent-red" />
@@ -254,7 +253,7 @@ export function RomanceArchetypeBuilder({ archetypes, onChange, availableRoles, 
                                   aria-pressed={isSelected}
                                   onClick={() => updateArchetype(arch.id, { icon_name: p.name, icon_url: undefined })}
                                   className={cn(
-                                    'flex h-8 w-8 items-center justify-center rounded-xl border transition-all cursor-pointer',
+                                    'pointer-coarse:min-h-11 pointer-coarse:min-w-11 flex h-8 w-8 items-center justify-center rounded-xl border transition-all cursor-pointer',
                                     isSelected
                                       ? 'border-accent-red bg-accent-red/20 text-accent-red'
                                       : 'border-border-color text-text-muted hover:text-text-primary'

@@ -12,19 +12,19 @@ export type SurfaceTone = 'flat' | 'elevated' | 'inset' | 'dashed';
 export type SurfacePadding = 'none' | 'sm' | 'md' | 'lg';
 export type SurfaceRadius = 'lg' | 'xl' | '2xl' | '3xl';
 
-export const SURFACE_TONES: Record<SurfaceTone, string> = {
+const SURFACE_TONES: Record<SurfaceTone, string> = {
   flat: 'border border-border-color bg-bg-surface',
   elevated: 'border border-border-color bg-bg-elevated',
   inset: 'bg-bg-primary/60',
   dashed: 'border border-dashed border-border-color bg-bg-surface/40',
 };
-export const SURFACE_PADDING: Record<SurfacePadding, string> = {
+const SURFACE_PADDING: Record<SurfacePadding, string> = {
   none: '',
   sm: 'p-3',
   md: 'p-4 sm:p-5',
   lg: 'p-6 sm:p-8',
 };
-export const SURFACE_RADIUS: Record<SurfaceRadius, string> = {
+const SURFACE_RADIUS: Record<SurfaceRadius, string> = {
   lg: 'rounded-lg',
   xl: 'rounded-xl',
   '2xl': 'rounded-2xl',
@@ -51,5 +51,3 @@ export const Surface: React.FC<SurfaceProps> = ({
     {children}
   </Tag>
 );
-
-export default Surface;

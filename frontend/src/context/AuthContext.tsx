@@ -41,13 +41,13 @@ interface AuthContextType {
   isAdmin: boolean;
   isLoading: boolean;
   ownership: OwnershipSummary | null;
-  login: (usernameOrEmail: string, password: string, extra?: Record<string, any>) => Promise<{ success: boolean; error?: string; user?: UserProfile }>;
-  register: (username: string, email: string, password: string, extra?: Record<string, any>) => Promise<{ success: boolean; error?: string; user?: UserProfile }>;
+  login: (usernameOrEmail: string, password: string, extra?: Record<string, unknown>) => Promise<{ success: boolean; error?: string; user?: UserProfile }>;
+  register: (username: string, email: string, password: string, extra?: Record<string, unknown>) => Promise<{ success: boolean; error?: string; user?: UserProfile }>;
   logout: () => void;
   resendVerification: (email: string) => Promise<{ success: boolean; error?: string }>;
   verifyEmail: (email: string, code: string) => Promise<{ success: boolean; error?: string; user?: UserProfile }>;
-  forgotPassword: (email: string, extra?: Record<string, any>) => Promise<{ success: boolean; error?: string }>;
-  resetPassword: (token: string, newPassword: string, extra?: Record<string, any>) => Promise<{ success: boolean; error?: string }>;
+  forgotPassword: (email: string, extra?: Record<string, unknown>) => Promise<{ success: boolean; error?: string }>;
+  resetPassword: (token: string, newPassword: string, extra?: Record<string, unknown>) => Promise<{ success: boolean; error?: string }>;
   refreshUser: () => Promise<void>;
   updateCharacterOwnership: (characterId: number, isOwned: boolean) => Promise<boolean>;
   bulkUpdateCharacterOwnership: (updates: CharacterOwnershipUpdate[]) => Promise<boolean>;
@@ -59,7 +59,7 @@ interface AuthContextType {
 
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 import type { CharacterOwnershipUpdate } from '@/utils/characterUtils';
-import { SESSION_MARKER, authHeaders, setSessionFlag } from '@/utils/api';
+import { SESSION_MARKER, authHeaders, setSessionFlag, getErrorMessage, isAbortError } from '@/utils/api';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -102,7 +102,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     fetchCurrentUser();
   }, [fetchCurrentUser]);
 
-  const login = async (usernameOrEmail: string, password: string, extra?: Record<string, any>) => {
+  const login = async (usernameOrEmail: string, password: string, extra?: Record<string, unknown>) => {
     try {
       const res = await fetch(`${API_BASE}/api/v1/auth/login`, {
         method: 'POST',
@@ -119,12 +119,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setUser(data.user);
       if (data.ownership) setOwnership(data.ownership);
       return { success: true, user: data.user as UserProfile };
-    } catch (err: any) {
-      return { success: false, error: err?.message || 'Network error occurred.' };
+    } catch (err) {
+      return { success: false, error: getErrorMessage(err, 'Network error occurred.') };
     }
   };
 
-  const register = async (username: string, email: string, password: string, extra?: Record<string, any>) => {
+  const register = async (username: string, email: string, password: string, extra?: Record<string, unknown>) => {
     try {
       const res = await fetch(`${API_BASE}/api/v1/auth/register`, {
         method: 'POST',
@@ -141,8 +141,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setUser(data.user);
       if (data.ownership) setOwnership(data.ownership);
       return { success: true, user: data.user as UserProfile };
-    } catch (err: any) {
-      return { success: false, error: err?.message || 'Network error occurred.' };
+    } catch (err) {
+      return { success: false, error: getErrorMessage(err, 'Network error occurred.') };
     }
   };
 
@@ -158,8 +158,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return { success: false, error: data.error || 'Failed to resend verification email.' };
       }
       return { success: true };
-    } catch (err: any) {
-      return { success: false, error: err?.message || 'Network error occurred.' };
+    } catch (err) {
+      return { success: false, error: getErrorMessage(err, 'Network error occurred.') };
     }
   };
 
@@ -175,12 +175,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return { success: false, error: data.message || 'Invalid verification code.' };
       }
       return { success: true, user: data.user as UserProfile };
-    } catch (err: any) {
-      return { success: false, error: err?.message || 'Network error occurred.' };
+    } catch (err) {
+      return { success: false, error: getErrorMessage(err, 'Network error occurred.') };
     }
   };
 
-  const forgotPassword = async (email: string, extra?: Record<string, any>) => {
+  const forgotPassword = async (email: string, extra?: Record<string, unknown>) => {
     try {
       const res = await fetch(`${API_BASE}/api/v1/auth/forgot-password`, {
         method: 'POST',
@@ -192,12 +192,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return { success: false, error: data.error || 'Failed to request password reset.' };
       }
       return { success: true };
-    } catch (err: any) {
-      return { success: false, error: err?.message || 'Network error occurred.' };
+    } catch (err) {
+      return { success: false, error: getErrorMessage(err, 'Network error occurred.') };
     }
   };
 
-  const resetPassword = async (token: string, newPassword: string, extra?: Record<string, any>) => {
+  const resetPassword = async (token: string, newPassword: string, extra?: Record<string, unknown>) => {
     try {
       const res = await fetch(`${API_BASE}/api/v1/auth/reset-password`, {
         method: 'POST',
@@ -209,8 +209,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return { success: false, error: data.error || 'Failed to reset password.' };
       }
       return { success: true };
-    } catch (err: any) {
-      return { success: false, error: err?.message || 'Network error occurred.' };
+    } catch (err) {
+      return { success: false, error: getErrorMessage(err, 'Network error occurred.') };
     }
   };
 
@@ -409,16 +409,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const actions = useMemo(
     () => ({
-      login: (usernameOrEmail: string, password: string, extra?: Record<string, any>) =>
+      login: (usernameOrEmail: string, password: string, extra?: Record<string, unknown>) =>
         handlersRef.current.login(usernameOrEmail, password, extra),
-      register: (username: string, email: string, password: string, extra?: Record<string, any>) =>
+      register: (username: string, email: string, password: string, extra?: Record<string, unknown>) =>
         handlersRef.current.register(username, email, password, extra),
       logout: () => handlersRef.current.logout(),
       resendVerification: (email: string) => handlersRef.current.resendVerification(email),
       verifyEmail: (email: string, code: string) => handlersRef.current.verifyEmail(email, code),
-      forgotPassword: (email: string, extra?: Record<string, any>) =>
+      forgotPassword: (email: string, extra?: Record<string, unknown>) =>
         handlersRef.current.forgotPassword(email, extra),
-      resetPassword: (token: string, newPassword: string, extra?: Record<string, any>) =>
+      resetPassword: (token: string, newPassword: string, extra?: Record<string, unknown>) =>
         handlersRef.current.resetPassword(token, newPassword, extra),
       refreshUser: () => handlersRef.current.refreshUser(),
       updateCharacterOwnership: (characterId: number, isOwned: boolean) =>

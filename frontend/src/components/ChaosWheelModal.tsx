@@ -5,6 +5,7 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { Skull, Sparkles, Check, Trash2 } from 'lucide-react';
 import type { Dictionary } from '@/locales/types';
 import type { ChaosMutator } from '@/types/chaos';
+import { lookup, type ChaosMutatorCopy } from '@/utils/lookup';
 import { CHAOS_MUTATORS, getChaosMutatorsForRole } from '@/constants/chaosMutators';
 import { DbdButton, DbdButtonRole } from './generator/shared/DbdButton';
 import { getLocalizedMutator } from './generator/lib/chaosMutatorLocalization';
@@ -34,7 +35,7 @@ export function getMutatorDisplayLines(
   const id = typeof m === 'string' ? m : m.id;
 
   // Check localized dictionary if available
-  const localized = (dict?.generator as any)?.chaosMutators?.[id];
+  const localized = lookup<ChaosMutatorCopy>(dict?.generator.chaosMutators, id);
   if (localized?.line1) {
     return [localized.line1, localized.line2 || ''];
   }

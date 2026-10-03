@@ -360,6 +360,3 @@ export const DbdSpinner: React.FC<DbdSpinnerProps> = ({
     </div>
   );
 };
-
-export default DbdSpinner;
-

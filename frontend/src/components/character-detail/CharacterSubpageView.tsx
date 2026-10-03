@@ -28,6 +28,3 @@ export const CharacterSubpageView: React.FC<CharacterSubpageViewProps> = (props)
 
   return <KillerDetailView {...props} />;
 };
-
-export default CharacterSubpageView;
-

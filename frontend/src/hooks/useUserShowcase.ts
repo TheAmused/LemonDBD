@@ -15,8 +15,6 @@ import {
 import { getLocalStorage } from '@/utils/safeStorage';
 import { getAuthToken } from '@/utils/api';
 
-export { getLocalStorage };
-
 export function getShowcaseStorageKey(userId?: number | string | null): string {
   return `lemondbd_showcase_${userId ?? 'guest'}`;
 }

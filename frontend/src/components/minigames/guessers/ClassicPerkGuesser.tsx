@@ -4,7 +4,7 @@
 import React from 'react';
 import Image from 'next/image';
 import { Check, X } from 'lucide-react';
-import type { GuessRecord } from '@/types/minigame';
+import type { AttributeEvaluation, GuessRecord } from '@/types/minigame';
 import type { Dictionary } from '@/locales/types';
 import { staticUrl } from '@/utils/api';
 import { useDictionary } from "@/context/DictionaryContext";
@@ -91,7 +91,7 @@ export const ClassicPerkGuesser: React.FC<ClassicPerkGuesserProps> = ({ guesses 
   );
 };
 
-const PerkAttrCell: React.FC<{ evaluation: any; value?: string | null }> = ({ evaluation, value }) => {
+const PerkAttrCell: React.FC<{ evaluation?: AttributeEvaluation; value?: string | null }> = ({ evaluation, value }) => {
   const status = typeof evaluation === 'string' ? evaluation : evaluation?.status || 'incorrect';
   const isCorrect = status === 'correct';
   const isPartial = status === 'partial';

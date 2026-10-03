@@ -117,6 +117,17 @@ export function getErrorMessage(err: unknown, fallback: string): string {
   return err instanceof Error && err.message ? err.message : fallback;
 }
 
+/** Common JSON error envelope returned by the backend. */
+export interface ApiErrorBody {
+  error?: string;
+  error_code?: string;
+}
+
+/** True when a fetch/promise was cancelled through an AbortController. */
+export function isAbortError(err: unknown): boolean {
+  return err instanceof Error && err.name === 'AbortError';
+}
+
 /** Error thrown by the user-profile / showcase API clients. */
 export class ApiError extends Error {
   status: number;

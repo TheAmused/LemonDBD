@@ -1,5 +1,8 @@
-// frontend/src/components/minigames/creator/MinigameCreator.tsx
 'use client';
+
+import { getErrorMessage } from "@/utils/api";
+
+// frontend/src/components/minigames/creator/MinigameCreator.tsx
 
 import { Input, Textarea } from '@/components/common/Field';
 import { Button } from '@/components/common/Button';
@@ -176,9 +179,9 @@ export const MinigameCreator: React.FC<MinigameCreatorProps> = ({ catalog, local
       setShareSuccess(true);
       setTimeout(() => setShareSuccess(false), 4000);
 
-    } catch (err: any) {
-      setErrorMsg(err.message || 'Failed to generate share link.');
-    } finally {
+    } catch (err) {
+        setErrorMsg(getErrorMessage(err, 'Failed to generate share link.'));
+      } finally {
       setIsSharing(false);
     }
   };
@@ -200,9 +203,9 @@ export const MinigameCreator: React.FC<MinigameCreatorProps> = ({ catalog, local
       });
       setSuccessMsg(t.adminPublishSuccess);
       setTimeout(() => setSuccessMsg(null), 5000);
-    } catch (err: any) {
-      setErrorMsg(err.message || 'Failed to publish official challenge.');
-    } finally {
+    } catch (err) {
+        setErrorMsg(getErrorMessage(err, 'Failed to publish official challenge.'));
+      } finally {
       setIsPublishingOfficial(false);
     }
   };

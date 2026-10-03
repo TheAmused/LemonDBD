@@ -1,4 +1,5 @@
 // frontend/src/types/perks.ts
+import type { ChaosMutator } from './chaos';
 export type RoleCategory = 'Survivor' | 'Killer';
 export type GeneratorMode = 'instant' | 'wheel' | 'slot' | 'tarot' | 'crate';
 export type ScopeFilter = 'all' | 'general';
@@ -64,7 +65,7 @@ export interface GeneratorStoredState {
   loadout: (DrawnSlot | null)[];
   activeSlotIdx: number;
   blindMode: boolean;
-  activeMutator?: any;
+  activeMutator?: ChaosMutator | null;
 }
 
 export interface PerkDictionary {
@@ -201,5 +202,5 @@ export interface PerkDictionary {
     noPerks?: string;
     [key: string]: string | undefined;
   };
-  [key: string]: any;
+  [key: string]: unknown;
 }

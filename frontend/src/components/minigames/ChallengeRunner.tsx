@@ -1,6 +1,7 @@
 // frontend/src/components/minigames/ChallengeRunner.tsx
 'use client';
 
+import { lookup } from '@/utils/lookup';
 import { Button } from '@/components/common/Button';
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import {
@@ -470,7 +471,7 @@ export const ChallengeRunner: React.FC<ChallengeRunnerProps> = ({ challenge, cat
                 <span>R{idx + 1}</span>
               )}
               <span className="truncate max-w-[100px]">
-                {(t.modes as any)[r.mode] || r.mode}
+                {lookup<string>(t.modes, r.mode) || r.mode}
               </span>
             </button>
           );
@@ -483,10 +484,10 @@ export const ChallengeRunner: React.FC<ChallengeRunnerProps> = ({ challenge, cat
           {formatMessage(t.roundIndicator, { current: currentRoundIndex + 1, total: rounds.length })}
         </div>
         <h2 className="text-xl font-bold text-text-primary">
-          {(t.modes as any)[currentRound.mode] || currentRound.mode}
+          {lookup<string>(t.modes, currentRound.mode) || currentRound.mode}
         </h2>
         <p className="text-xs text-text-secondary mt-1">
-          {(t.modeDescriptions as any)[currentRound.mode] || ''}
+          {lookup<string>(t.modeDescriptions, currentRound.mode) || ''}
         </p>
       </div>
 

@@ -101,6 +101,8 @@ export interface CatalogCharacter {
   name: string;
   full_name?: string;
   role: 'Killer' | 'Survivor';
+  /** Legacy discriminator some catalog payloads send instead of `role`. */
+  type?: 'killer' | 'survivor';
   gender: 'Male' | 'Female' | 'Other';
   chapter_name: string;
   release_year: number;

@@ -31,7 +31,7 @@ export function getPerkIconUrl(
   return perk.icon_url || null;
 }
 
-export const CHARACTER_AVATAR_NAME_MAP: Record<string, string> = {
+const CHARACTER_AVATAR_NAME_MAP: Record<string, string> = {
   'william_bill_overbeck': 'bill_overbeck',
   'bill_overbeck': 'bill_overbeck',
   'bill': 'bill_overbeck',

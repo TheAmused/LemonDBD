@@ -1,5 +1,8 @@
-// frontend/src/app/[locale]/minigames/creator/page.tsx
 'use client';
+
+import { getErrorMessage } from "@/utils/api";
+
+// frontend/src/app/[locale]/minigames/creator/page.tsx
 
 import React, { useState, useEffect } from 'react';
 import { PageShell } from '@/components/layout/PageShell';
@@ -29,11 +32,11 @@ export default function MinigameCreatorPage() {
         if (isMounted) {
           setCatalog(cat);
         }
-      } catch (err: any) {
-        if (isMounted) {
-          setError(err.message || 'Failed to load catalog.');
-        }
-      } finally {
+      } catch (err) {
+            if (isMounted) {
+              setError(getErrorMessage(err, 'Failed to load catalog.'));
+            }
+          } finally {
         if (isMounted) {
           setLoading(false);
         }

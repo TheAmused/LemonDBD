@@ -69,6 +69,9 @@ function measureTouch(min: number): TouchHit[] {
     // Inline links inside running text are exempt (WCAG 2.5.8 "inline" exception).
     if (el.tagName === 'A' && cs.display === 'inline' && (el.parentElement?.textContent ?? '').trim().length > (el.textContent ?? '').trim().length + 12) continue;
     if (r.width + 0.5 >= min && r.height + 0.5 >= min) continue;
+    // `hit-area` controls extend their tappable region with an absolutely-positioned ::after.
+    const after = getComputedStyle(el, '::after');
+    if (after.content !== 'none' && after.position === 'absolute' && parseFloat(after.width) + 0.5 >= min && parseFloat(after.height) + 0.5 >= min) continue;
     const name = (el.getAttribute('aria-label') || el.textContent || el.getAttribute('title') || el.getAttribute('placeholder') || '').replace(/\s+/g, ' ').trim().slice(0, 28);
     out.push({ tag: el.tagName.toLowerCase(), label: name || 'unnamed', w: Math.round(r.width), h: Math.round(r.height) });
   }

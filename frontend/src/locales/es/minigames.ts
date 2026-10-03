@@ -29,9 +29,6 @@ export default {
   dailySubtitle: "Nuevo desafío sincronizado cada 24 horas. ¡Mantén tu racha diaria activa!",
   playDaily: "Jugar Prueba Diaria",
   alreadyCompletedToday: "¡Completado Hoy!",
-  repeatableTrial: "Práctica Infinita",
-  repeatableSubtitle: "Pruebas aleatorias generadas al instante para entrenar tus habilidades.",
-  playRepeatable: "Comenzar Prueba Aleatoria",
   creatorTitle: "Creador de Pruebas",
   creatorSubtitle: "Diseña desafíos personalizados de varias rondas, expórtalos a JSON o compártelos con enlaces.",
   createChallenge: "Abrir Creador",
@@ -45,8 +42,6 @@ export default {
   confirmDelete: "¿Seguro que deseas eliminar este desafío personalizado?",
   cancel: "Cancelar",
   playTrial: "Jugar",
-  editTrial: "Editar",
-  adminPublish: "Publicar como Oficial",
   adminPublishSuccess: "¡Desafío publicado como oficial con éxito!",
 
   // Runner
@@ -95,11 +90,7 @@ export default {
 
   // Audio & Interactive Controls
   audio: {
-    playSample: "Reproducir Sonido",
     playing: "Reproduciendo...",
-    audioNotSupported: "Audio no soportado en este navegador.",
-    distanceHint: "Distancia actual: {distance}m",
-    nextClueUnlocked: "¡Nueva pista de audio desbloqueada!",
     themeBadge: "Tema de Persecución y Terror del Asesino de Dead by Daylight",
     pauseMusic: "Pausar Música",
     listenTheme: "Escuchar Tema del Asesino",
@@ -171,7 +162,6 @@ export default {
     customSpeakerPlaceholder: "ej., El Desconocido, Claudette...",
     customEmojisLabel: "Emojis del Acertijo",
     customEmojisPlaceholder: "ej., 🔔👻🌲",
-    blurLevelLabel: "Pixelación Inicial",
     saveToMyTrials: "Guardar en Mis Pruebas",
     saveAndPlay: "Guardar y Jugar",
     publishOfficialModalTitle: "Publicar como Prueba Oficial",

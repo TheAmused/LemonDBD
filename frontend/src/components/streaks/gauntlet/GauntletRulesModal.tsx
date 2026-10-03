@@ -177,14 +177,6 @@ export const GauntletRulesModal: React.FC<GauntletRulesModalProps> = ({ isOpen, 
     ? formatMessage(rawStreaks.gauntletRulesTitle, { role: roleLabel })
     : roleLabel;
 
-  const concept = (isSolo || isDuo || isSquad) && rawStreaks.soloDevNote
-    ? rawStreaks.soloDevNote
-    : role === 'killer'
-    ? (rawStreaks.gauntletConceptKiller ||
-        'Face every killer, one trial at a time. Your perk loadout shrinks with every tier, until you win with none at all.')
-    : (rawStreaks.gauntletConceptSurvivor ||
-        'Face every survivor, one trial at a time. Your perk loadout shrinks with every tier, until you win with none at all.');
-
   const winCondition = isSolo && rawStreaks.soloWinCondition
     ? rawStreaks.soloWinCondition
     : isDuo && rawStreaks.duoWinCondition
@@ -234,15 +226,13 @@ export const GauntletRulesModal: React.FC<GauntletRulesModalProps> = ({ isOpen, 
       onClose={onClose}
       title={modalTitle}
     >
-      <RulesConceptCard
-        tone="red"
-        title={
-          isSolo || isDuo || isSquad
-            ? rawStreaks.devNoteTitle || 'Note from the devs'
-            : rawStreaks.gauntletConcept || 'Gauntlet Concept'
-        }
-        text={concept}
-      />
+      {(isSolo || isDuo || isSquad) && rawStreaks.soloDevNote && (
+        <RulesConceptCard
+          tone="red"
+          title={rawStreaks.devNoteTitle || 'Note from the devs'}
+          text={rawStreaks.soloDevNote}
+        />
+      )}
 
       <RulesHowItWorks tone="red" title={rawStreaks.howItWorks || 'How it works'} items={howItWorks} />
 

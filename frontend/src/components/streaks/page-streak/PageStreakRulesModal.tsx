@@ -5,7 +5,6 @@ import type { Dictionary } from '@/locales/types';
 import React from 'react';
 import { RulesModalShell } from '../RulesModalShell';
 import {
-  RulesConceptCard,
   RulesHowItWorks,
   RulesModalFooterSections,
   STANDARD_CLARIFICATIONS_WITH_ADDONS,
@@ -29,12 +28,6 @@ export const PageStreakRulesModal: React.FC<PageStreakRulesModalProps> = ({ isOp
       onClose={onClose}
       title={s.rules || 'Rules'}
     >
-      <RulesConceptCard
-        tone="red"
-        title={s.pageStreakConceptLabel || 'Concept'}
-        text={s.pageStreakConceptShort || 'Pick a killer, then build a loadout from your perks, split across pages.'}
-      />
-
       <RulesHowItWorks
         tone="red"
         title={s.howItWorks || 'How it works'}

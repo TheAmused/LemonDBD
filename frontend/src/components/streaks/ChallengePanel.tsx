@@ -2,7 +2,7 @@
 import type { Dictionary } from '@/locales/types';
 
 import React from 'react';
-import { BarChart2, ChevronDown, History, RotateCcw } from 'lucide-react';
+import { BarChart2, BookOpen, ChevronDown, History, RotateCcw } from 'lucide-react';
 import { CELEBRATION_CARD_CLASSES, CELEBRATION_LABEL_CLASSES, CelebrationBadge } from './CelebrationBadge';
 import { useDictionary } from "@/context/DictionaryContext";
 
@@ -155,7 +155,7 @@ export const StandardHeaderActions: React.FC<StandardHeaderActionsProps> = ({ on
     <HeaderButton
       onClick={onOpenRules}
       title={dict.streaks.rules}
-      label={dict.streaks.rules}
+      icon={<BookOpen className="h-5 w-5" aria-hidden="true" />}
     />
     {extra}
     <HeaderButton

@@ -94,7 +94,7 @@ export const StreakPanel: React.FC<StreakPanelProps> = ({
         <span
           className="absolute right-3 top-3 z-10 flex items-center gap-1 rounded-full border border-accent-red/50 bg-accent-red/15 px-2 py-1 text-accent-red shadow-sm"
           aria-label={dict.streaks.completedFullRoster}
-          {...tip(dict.streaks.completedFullRoster, undefined, 'action')}
+          {...tip(dict.streaks.completedFullRoster, undefined, 'status')}
         >
           <AdeptBadgeIcon className="h-3.5 w-3.5" />
           {completedFullCount != null && (
@@ -105,7 +105,7 @@ export const StreakPanel: React.FC<StreakPanelProps> = ({
         <span
           className="absolute right-3 top-3 z-10 flex items-center gap-1 rounded-full border border-accent-amber/40 bg-accent-amber/15 px-2 py-1 text-accent-amber shadow-sm"
           aria-label={dict.streaks.completed}
-          {...tip(dict.streaks.completed, undefined, 'action')}
+          {...tip(dict.streaks.completed, undefined, 'status')}
         >
           <AdeptBadgeIcon className="h-3.5 w-3.5" />
           {completedCount != null && (

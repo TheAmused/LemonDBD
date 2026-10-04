@@ -171,7 +171,7 @@ export const CandidateRow = React.memo<CandidateRowProps>(({
           {hasUserSmashed && (
             <div
               className="absolute top-1 right-1 flex h-4 w-4 items-center justify-center rounded-full bg-accent-red text-text-inverted ring-2 ring-bg-surface"
-              {...tip(rawSmashDict?.youSmashedThis || '', undefined, 'action')}
+              {...tip(rawSmashDict?.youSmashedThis || '', undefined, 'status')}
               aria-label={rawSmashDict?.youSmashedThis || ''}
             >
               <Heart className="h-2.5 w-2.5 fill-text-inverted text-text-inverted" />
@@ -202,7 +202,7 @@ export const CandidateRow = React.memo<CandidateRowProps>(({
             {/* Tier Icon Badge or Unrated "?" Badge (Accessible native tooltip) */}
             {tier ? (
               <span
-                {...tip(`${tier.name} (${tier.range})`, undefined, 'action')}
+                {...tip(`${tier.name} (${tier.range})`, undefined, 'status')}
                 aria-label={`${tier.name} (${tier.range})`}
                 className={`flex h-6 w-6 items-center justify-center rounded-lg border shrink-0 transition-transform hover:scale-110 ${tier.style}`}
               >
@@ -210,7 +210,7 @@ export const CandidateRow = React.memo<CandidateRowProps>(({
               </span>
             ) : (
               <span
-                {...tip(`${unratedLabel} - ${noVotesDesc}`, undefined, 'action')}
+                {...tip(`${unratedLabel} - ${noVotesDesc}`, undefined, 'status')}
                 aria-label={`${unratedLabel} - ${noVotesDesc}`}
                 className="flex h-6 w-6 items-center justify-center rounded-lg border border-border-color bg-bg-elevated text-text-muted type-strong shadow-inner shrink-0 transition-transform hover:scale-110"
               >

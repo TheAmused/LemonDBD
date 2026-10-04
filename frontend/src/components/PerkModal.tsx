@@ -77,7 +77,7 @@ export const PerkModal: React.FC<PerkModalProps> = ({ perk, onClose }) => {
         {...tip(
           isGeneral ? dict.modal.generalPerk : perk.character,
           undefined,
-          'item'
+          'character'
         )}
       >
         {!isGeneral && avatarSrc && !avatarError ? (

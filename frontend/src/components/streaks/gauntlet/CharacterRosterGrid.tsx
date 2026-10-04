@@ -103,7 +103,7 @@ export const CharacterRosterGrid: React.FC<CharacterRosterGridProps> = ({
                 className={`relative group rounded-xl border p-2 flex flex-col items-center justify-between transition-all duration-200 ${cardBorder} ${
                   selectable ? 'cursor-pointer hover:border-accent-green focus:outline-none focus:ring-2 focus:ring-accent-green' : ''
                 }`}
-                {...tip(`${displayName(char.name)}${statusSuffix}`, undefined, 'item')}
+                {...tip(`${displayName(char.name)}${statusSuffix}`, undefined, 'character')}
                 {...(selectable
                   ? {
                       role: 'button',

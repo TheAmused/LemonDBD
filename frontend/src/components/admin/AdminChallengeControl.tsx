@@ -323,7 +323,7 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
                     key={c.id}
                     type="button"
                     onClick={() => requestCharacterToggle(c)}
-                    {...tip(c.disabled_reason ? `${c.name} — ${c.disabled_reason}` : c.name, undefined, 'action')} aria-label={c.disabled_reason ? `${c.name} — ${c.disabled_reason}` : c.name}
+                    {...tip(c.disabled_reason ? `${c.name} — ${c.disabled_reason}` : c.name, undefined, 'status')} aria-label={c.disabled_reason ? `${c.name} — ${c.disabled_reason}` : c.name}
                     className={`relative aspect-square rounded-xl border cursor-pointer transition-all overflow-hidden ${
                       c.is_disabled
                         ? 'border-accent-red bg-accent-red/10 hover:bg-accent-red/20'
@@ -358,7 +358,7 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
                     key={p.id}
                     type="button"
                     onClick={() => requestPerkToggle(p)}
-                    {...tip(p.disabled_reason ? `${p.name} — ${p.disabled_reason}` : p.name, undefined, 'action')} aria-label={p.disabled_reason ? `${p.name} — ${p.disabled_reason}` : p.name}
+                    {...tip(p.disabled_reason ? `${p.name} — ${p.disabled_reason}` : p.name, undefined, 'status')} aria-label={p.disabled_reason ? `${p.name} — ${p.disabled_reason}` : p.name}
                     className={`relative aspect-square rounded-xl border cursor-pointer transition-all overflow-hidden ${
                       p.is_disabled
                         ? 'border-accent-red bg-accent-red/10 hover:bg-accent-red/20'

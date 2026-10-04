@@ -213,7 +213,7 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
               label: (
                 <span className="mt-0.5 block max-w-[56px] truncate text-micro font-bold">{cat.label.split(' ')[0]}</span>
               ),
-              buttonProps: { ...tip(`${cat.label} - ${cat.desc}`, undefined, 'action'), 'aria-label': cat.label },
+              buttonProps: { ...tip(`${cat.label} - ${cat.desc}`, undefined, 'default'), 'aria-label': cat.label },
             };
           })}
         />

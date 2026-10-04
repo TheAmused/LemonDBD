@@ -35,7 +35,7 @@ const KillerTile: React.FC<{
       type="button"
       onClick={() => onSelect(name)}
       disabled={disabled || isCompleted}
-      {...tip(`${displayName}${isCompleted ? ' (Cleared)' : ''}`, undefined, 'item')} aria-label={`${displayName}${isCompleted ? ' (Cleared)' : ''}`}
+      {...tip(`${displayName}${isCompleted ? ' (Cleared)' : ''}`, undefined, 'character')} aria-label={`${displayName}${isCompleted ? ' (Cleared)' : ''}`}
       className={`relative flex flex-col items-center gap-1.5 rounded-lg border p-1.5 transition-all cursor-pointer disabled:cursor-not-allowed ${
         isCompleted ? '' : 'disabled:opacity-40'
       } ${cardBorder}`}

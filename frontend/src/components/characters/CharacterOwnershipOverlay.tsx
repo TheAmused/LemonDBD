@@ -79,7 +79,7 @@ export const CharacterOwnershipOverlay: React.FC<CharacterOwnershipOverlayProps>
       {!isOwned && (
         <div
           className={`absolute ${badgeClasses} z-10 flex items-center justify-center rounded-full bg-bg-surface/90 border border-accent-amber text-accent-amber shadow-xs backdrop-blur-md`}
-          {...tip(lockedTitle, undefined, 'action')}
+          {...tip(lockedTitle, undefined, 'status')}
         >
           <Lock className={iconClasses} />
         </div>
@@ -87,7 +87,7 @@ export const CharacterOwnershipOverlay: React.FC<CharacterOwnershipOverlayProps>
       {isOwned && (
         <div
           className={`absolute ${badgeClasses} z-10 flex items-center justify-center rounded-full bg-accent-green/20 border border-accent-green/40 text-accent-green backdrop-blur-md shadow-xs`}
-          {...tip(ownedTitle, undefined, 'action')}
+          {...tip(ownedTitle, undefined, 'status')}
         >
           <Check className={iconClasses} />
         </div>

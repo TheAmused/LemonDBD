@@ -4,7 +4,7 @@ from app.core.security import login_required
 from app.core.service_registry import make_service_getter
 from app.core.streak_blueprint import make_streak_blueprint, make_value_cleaner
 from app.services.gauntlet import GAME_MODES
-from app.services.gauntlet_service import GauntletService
+from app.services.gauntlet_service import GauntletService, dev_tools_enabled
 
 get_gauntlet_service = make_service_getter("GAUNTLET_SERVICE", GauntletService)
 _clean_role = make_value_cleaner(("survivor", "killer"))
@@ -77,6 +77,25 @@ def buy_boost():
 
     try:
         run = get_gauntlet_service().buy_boost(g.current_user.id, run_id, boost, character)
+    except ValueError as e:
+        status = 404 if "not found" in str(e).lower() else 400
+        return jsonify({"error": str(e)}), status
+    return jsonify({"run": run}), 200
+
+
+# TEMP DEV: jump a run to a streak. Answers 404 anywhere but the development environment.
+@gauntlet_streak_bp.route("/dev/streak", methods=["POST"])
+@login_required
+def dev_set_streak():
+    if not dev_tools_enabled():
+        return jsonify({"error": "Not found"}), 404
+    data = request.get_json(silent=True) or {}
+    run_id = data.get("run_id")
+    streak = data.get("streak")
+    if not run_id or not isinstance(streak, int) or isinstance(streak, bool):
+        return jsonify({"error": "Fields 'run_id' and 'streak' (integer) are required"}), 400
+    try:
+        run = get_gauntlet_service().dev_set_streak(g.current_user.id, run_id, streak)
     except ValueError as e:
         status = 404 if "not found" in str(e).lower() else 400
         return jsonify({"error": str(e)}), status

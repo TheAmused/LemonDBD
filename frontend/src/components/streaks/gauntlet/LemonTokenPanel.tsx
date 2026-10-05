@@ -7,8 +7,6 @@ import { useDictionary } from '@/context/DictionaryContext';
 import { formatMessage } from '@/utils/i18nFormat';
 import { canAddSlot } from '@/utils/perkSlots';
 import type { BoostConfig, BuyableBoost, TierInfo } from '@/types/gauntletStreak';
-import { TokenRoulette } from './TokenRoulette';
-import type { TokenRollPlay } from './useGauntletRun';
 
 interface LemonTokenPanelProps {
   boosts: BoostConfig;
@@ -18,8 +16,6 @@ interface LemonTokenPanelProps {
   /** False until the match is started, and once the run is over. */
   matchActive: boolean;
   busy: boolean;
-  tokenRoll: TokenRollPlay | null;
-  onRollDone: () => void;
   /** True while the player is choosing a killer from the roster. */
   picking: boolean;
   pendingPick: string | null;
@@ -36,8 +32,6 @@ export const LemonTokenPanel: React.FC<LemonTokenPanelProps> = ({
   bonusSlots,
   matchActive,
   busy,
-  tokenRoll,
-  onRollDone,
   picking,
   pendingPick,
   onStartPick,
@@ -47,10 +41,8 @@ export const LemonTokenPanel: React.FC<LemonTokenPanelProps> = ({
 }) => {
   const dict = useDictionary();
   const { prices } = boosts;
-  // While the roulette spins the balance still shows what it was before the win.
-  const shownTokens = tokenRoll ? tokenRoll.from : tokens;
   const price = (amount: number) => formatMessage(dict.streaks.boostPrice, { price: amount });
-  const locked = busy || !matchActive || tokenRoll !== null;
+  const locked = busy || !matchActive;
   const canPay = (amount: number) => !locked && tokens >= amount;
 
   return (
@@ -62,9 +54,8 @@ export const LemonTokenPanel: React.FC<LemonTokenPanelProps> = ({
         <h3 className="type-label text-text-primary">{dict.streaks.boostsTitle}</h3>
         <div className="flex items-center gap-2 type-card-title">
           <span>
-            {dict.streaks.tokensLabel}: {shownTokens} / {boosts.cap}
+            {dict.streaks.tokensLabel}: {tokens} / {boosts.cap}
           </span>
-          {tokenRoll && <TokenRoulette roll={tokenRoll.roll} onDone={onRollDone} />}
         </div>
       </div>
 

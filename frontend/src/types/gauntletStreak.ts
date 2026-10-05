@@ -96,6 +96,8 @@ export interface GauntletRun {
   last_token_roll: number;
   bonus_perk_slots: number;
   boosts: BoostConfig | null;
+  /** TEMP DEV: true in the development environment, where the tier jump buttons show. */
+  dev_tools: boolean;
   created_at?: string;
   updated_at?: string;
 }

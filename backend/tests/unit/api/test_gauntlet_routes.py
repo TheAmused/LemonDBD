@@ -1,5 +1,6 @@
 # backend/tests/unit/api/test_gauntlet_routes.py
 import pytest
+from pytest import MonkeyPatch
 from flask.testing import FlaskClient
 from sqlalchemy.orm import Session
 from app.models import Killer, Perk, Survivor
@@ -164,6 +165,19 @@ class TestGauntletRoutes:
             headers=headers,
         )
         assert plain.get_json()["previous_run"]["current_streak"] == 0
+
+    def test_dev_streak_route_is_hidden_outside_development(
+        self, client: FlaskClient, gauntlet_auth_setup: tuple[int, str, dict[str, str]], monkeypatch: MonkeyPatch
+    ) -> None:
+        monkeypatch.setattr("app.routes.gauntlet_streak.dev_tools_enabled", lambda: False)
+        _, _, headers = gauntlet_auth_setup
+        run = client.get(
+            "/api/v1/gauntlet-streak/run?role=killer&game_mode=lemon_killer", headers=headers
+        ).get_json()["run"]
+        res = client.post(
+            "/api/v1/gauntlet-streak/dev/streak", json={"run_id": run["id"], "streak": 30}, headers=headers
+        )
+        assert res.status_code == 404
 
     def test_get_run_auto_creates(
         self, client: FlaskClient, gauntlet_auth_setup: tuple[int, str, dict[str, str]]

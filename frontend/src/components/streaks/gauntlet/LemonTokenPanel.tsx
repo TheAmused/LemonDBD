@@ -6,6 +6,7 @@ import { Button } from '@/components/common/Button';
 import { useDictionary } from '@/context/DictionaryContext';
 import { formatMessage } from '@/utils/i18nFormat';
 import { canAddSlot } from '@/utils/perkSlots';
+import { BOOST_ICONS } from './boostIcons';
 import type { BoostConfig, BuyableBoost, TierInfo } from '@/types/gauntletStreak';
 
 interface LemonTokenPanelProps {
@@ -71,15 +72,28 @@ export const LemonTokenPanel: React.FC<LemonTokenPanelProps> = ({
         </div>
       ) : (
         <div className="mt-3 flex flex-wrap gap-2">
-          <Button variant="secondary" size="sm" onClick={() => onBuy('reroll')} disabled={!canPay(prices.reroll)}>
+          <Button
+            variant="secondary"
+            size="sm"
+            leftIcon={<BOOST_ICONS.reroll className="h-3.5 w-3.5" />}
+            onClick={() => onBuy('reroll')}
+            disabled={!canPay(prices.reroll)}
+          >
             {dict.streaks.boostReroll} ({price(prices.reroll)})
           </Button>
-          <Button variant="secondary" size="sm" onClick={onStartPick} disabled={!canPay(prices.pick)}>
+          <Button
+            variant="secondary"
+            size="sm"
+            leftIcon={<BOOST_ICONS.pick className="h-3.5 w-3.5" />}
+            onClick={onStartPick}
+            disabled={!canPay(prices.pick)}
+          >
             {dict.streaks.boostPick} ({price(prices.pick)})
           </Button>
           <Button
             variant="secondary"
             size="sm"
+            leftIcon={<BOOST_ICONS.slot className="h-3.5 w-3.5" />}
             onClick={() => onBuy('slot')}
             disabled={!canPay(prices.slot) || !canAddSlot(tierInfo, bonusSlots, boosts.max_perk_slots)}
           >

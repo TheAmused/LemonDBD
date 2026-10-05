@@ -8,11 +8,11 @@ BUILD_SIZE: int = 4
 GENERAL_CHARACTER: str = "General"
 
 # The first entry is the default. Every mode keeps its own run per (user, role).
-GAME_MODES: tuple[str, ...] = ("original", "lemon_solo", "lemon_duo", "lemon_squad", "lemon_hooks")
+GAME_MODES: tuple[str, ...] = ("original", "lemon_solo", "lemon_duo", "lemon_squad", "lemon_killer")
 DEFAULT_GAME_MODE: str = GAME_MODES[0]
 
 # Modes not listed here bank a checkpoint every CHECKPOINT_INTERVAL wins; perk tiers keep their own spacing.
-CHECKPOINT_INTERVALS: dict[str, int] = {"lemon_solo": 5, "lemon_hooks": 5}
+CHECKPOINT_INTERVALS: dict[str, int] = {"lemon_solo": 5, "lemon_killer": 5}
 # Survivor modes whose checkpoints, and with them the perk tiers, land on fixed win counts.
 # Each start opens the next tier, and the stage after the last one runs to the end of the run.
 CHECKPOINT_STAGE_STARTS: dict[str, tuple[int, ...]] = {"lemon_duo": (6, 12, 18), "lemon_squad": (6, 12, 18)}
@@ -23,7 +23,7 @@ PLAYERS_PER_CHARACTER: dict[str, int] = {"lemon_squad": 2}
 # The player picks the target character instead of the server rolling one.
 PICK_CHARACTER_MODES: tuple[str, ...] = ("lemon_solo",)
 # The last, perkless tier deals random unique perks of the target instead of an empty loadout.
-RANDOM_PERK_LAST_TIER_MODES: tuple[str, ...] = ("lemon_solo",)
+RANDOM_PERK_LAST_TIER_MODES: tuple[str, ...] = ("lemon_solo", "lemon_killer")
 RANDOM_PERK_COUNT: int = 1
 
 
@@ -76,9 +76,7 @@ def get_tier_info(streak: int, role: str, game_mode: str = DEFAULT_GAME_MODE) ->
             continue
         if streak >= min_streak:
             tier = candidate
-    deals_random_perks = (
-        role == "survivor" and tier["perk_limit"] == 0 and game_mode in RANDOM_PERK_LAST_TIER_MODES
-    )
+    deals_random_perks = tier["perk_limit"] == 0 and game_mode in RANDOM_PERK_LAST_TIER_MODES
     return {
         "name": tier["name"],
         "tier_level": tier["tier_level"],

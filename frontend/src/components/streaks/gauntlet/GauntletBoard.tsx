@@ -47,7 +47,7 @@ function gameModeLabel(mode: GauntletGameMode, dict: Dictionary['streaks']): str
       return dict.lemonDuo;
     case 'lemon_squad':
       return dict.lemonSquad;
-    case 'lemon_hooks':
+    case 'lemon_killer':
       return dict.lemonMode;
     default:
       return dict.original;

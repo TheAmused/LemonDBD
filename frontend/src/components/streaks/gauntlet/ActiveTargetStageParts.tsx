@@ -175,7 +175,7 @@ const PerkSlotsRow: React.FC<PerkSlotsRowProps> = ({ tierInfo, charPerks, random
 
   return (
     <div>
-      {charactersPerksOnly && perkLimit === 0 && (
+      {charactersPerksOnly && perkLimit === 0 && randomPerks.length === 0 && (
         <p className="mb-1.5 type-caption text-text-secondary">
           {dict.streaks.noPerksThisTrial} {displayName}{' '}
           {dict.streaks.goesInBare}

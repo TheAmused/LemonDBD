@@ -323,7 +323,7 @@ export const Modal: React.FC<ModalProps> = ({
           data-testid={testId}
           data-modal-variant={variant}
           className={cn(
-            'fixed inset-0 flex select-none',
+            'fixed inset-0 flex',
             zClass,
             fullscreenOnMobile ? 'max-sm:items-stretch max-sm:p-0' : null,
             spec.container,

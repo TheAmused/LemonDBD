@@ -164,7 +164,7 @@ export const GauntletRulesModal: React.FC<GauntletRulesModalProps> = ({ isOpen, 
   const isDuo = gameMode === 'lemon_duo';
   const isSquad = gameMode === 'lemon_squad';
   const isTeam = isDuo || isSquad;
-  const isHooks = gameMode === 'lemon_hooks';
+  const isLemonKiller = gameMode === 'lemon_killer';
   // Duo and squad have four stages, so they stop before the perkless tier.
   const tiers =
     role === 'killer' ? KILLER_TIERS : isTeam ? SURVIVOR_TIERS.slice(0, TEAM_STREAK_RANGES.length) : SURVIVOR_TIERS;
@@ -178,7 +178,7 @@ export const GauntletRulesModal: React.FC<GauntletRulesModalProps> = ({ isOpen, 
     ? formatMessage(rawStreaks.gauntletRulesTitle, { role: roleLabel })
     : roleLabel;
 
-  const devNote = isHooks ? rawStreaks.hooksDevNote : isSolo || isDuo || isSquad ? rawStreaks.soloDevNote : undefined;
+  const devNote = isLemonKiller ? rawStreaks.lemonKillerDevNote : isSolo || isDuo || isSquad ? rawStreaks.soloDevNote : undefined;
 
   const winCondition = isSolo && rawStreaks.soloWinCondition
     ? rawStreaks.soloWinCondition
@@ -186,14 +186,14 @@ export const GauntletRulesModal: React.FC<GauntletRulesModalProps> = ({ isOpen, 
     ? rawStreaks.duoWinCondition
     : isSquad && rawStreaks.squadWinCondition
     ? rawStreaks.squadWinCondition
-    : isHooks && rawStreaks.hooksWinCondition
-    ? rawStreaks.hooksWinCondition
+    : isLemonKiller && rawStreaks.lemonKillerWinCondition
+    ? rawStreaks.lemonKillerWinCondition
     : role === 'killer'
-    ? (rawStreaks.gauntletWinConditionKiller || 'Win = 3 kills or more. Anything less breaks the streak.')
+    ? (rawStreaks.gauntletWinConditionKiller || 'Win = 3 kills or more.')
     : (rawStreaks.gauntletWinConditionSurvivor || 'Win = escape, through the exit gates or the hatch. Anything else breaks the streak.');
 
   const perkRule = role === 'killer'
-    ? (rawStreaks.gauntletKillerPerkRule || 'You always run your own teachables. Start with all 3, lose one each tier.')
+    ? (rawStreaks.gauntletKillerPerkRule || 'You always run your own teachables.')
     : (isSolo && rawStreaks.soloPerkRule) ||
       rawStreaks.gauntletSurvivorPerkRule ||
       "One of your perks has to be the drawn character's own.";
@@ -206,8 +206,8 @@ export const GauntletRulesModal: React.FC<GauntletRulesModalProps> = ({ isOpen, 
   const exceptions = role === 'killer' ? STANDARD_EXCEPTIONS : SURVIVOR_EXCEPTIONS;
   const clarifications = role === 'killer' ? STANDARD_CLARIFICATIONS_WITH_ADDONS : SURVIVOR_CLARIFICATIONS;
 
-  // Hooks shares solo's "every 5 wins" wording.
-  const checkpointRule = isSolo || isHooks
+  // Lemon killer shares solo's "every 5 wins" wording.
+  const checkpointRule = isSolo || isLemonKiller
     ? rawStreaks.soloCheckpointRule
     : isDuo
     ? rawStreaks.duoCheckpointRule
@@ -217,7 +217,7 @@ export const GauntletRulesModal: React.FC<GauntletRulesModalProps> = ({ isOpen, 
 
   const howItWorks = [
     winCondition,
-    ...(isHooks ? [rawStreaks.hooksCountRule] : []),
+    ...(isLemonKiller ? [rawStreaks.lemonKillerCountRule] : []),
     ...(isSolo ? [rawStreaks.soloHalfWinRule, rawStreaks.soloPickRule] : []),
     ...(isDuo ? [rawStreaks.duoCharactersRule, rawStreaks.duoRematchRule, rawStreaks.duoHatchRule] : []),
     ...(isSquad ? [rawStreaks.squadCharactersRule, rawStreaks.squadRematchRule, rawStreaks.squadUniquePerkRule] : []),
@@ -250,7 +250,7 @@ export const GauntletRulesModal: React.FC<GauntletRulesModalProps> = ({ isOpen, 
 
             const perkLimitText =
               tier.perkLimit === 0
-                ? isSolo && role === 'survivor'
+                ? (isSolo && role === 'survivor') || (isLemonKiller && role === 'killer')
                   ? rawStreaks.soloRandomPerkBadge || '1 random unique perk'
                   : rawStreaks.perklessTrial || '0 Perks'
                 : rawStreaks.perksAllowedCount

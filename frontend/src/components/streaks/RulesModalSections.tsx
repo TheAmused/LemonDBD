@@ -182,7 +182,7 @@ export const RulesModalFooterSections: React.FC<{
     <>
       <RulesModalListSection
         title={copy.exceptions || 'Exceptions'}
-        intro={voidIntro || copy.voidMatchNotice || 'These void the match. Replay it.'}
+        intro={voidIntro || copy.voidMatchNotice || "These matches don't count. Replay them."}
         items={exceptions}
       />
       <RulesModalListSection

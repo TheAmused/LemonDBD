@@ -7,6 +7,7 @@ from app.models import GauntletMatchLog, GauntletRun, Killer, Perk, Survivor
 from app.services.gauntlet import CHECKPOINT_INTERVAL, get_owned_character_names, is_checkpoint
 from app.services.gauntlet import TOKEN_CAP, TOKEN_ROLLS, base_perk_slots, get_boost_config, get_tier_info, roll_tokens
 from app.services.challenge_completions import record_challenge_completion
+from app.schemas.gauntlet import GauntletRunState
 from app.services.gauntlet_service import GauntletService
 from app.services.ownership_service import OwnershipService
 from app.services.user_service import UserService
@@ -868,7 +869,7 @@ class TestLemonKillerTokens:
             setattr(run, name, value)
         db.session.commit()
 
-    def _submit(self, result: str, use_shield: bool = False):
+    def _submit(self, result: str, use_shield: bool = False) -> GauntletRunState:
         return self.service.submit_result(self.user_id, self.run["id"], result, use_shield=use_shield)
 
     def test_a_win_rolls_tokens(self, monkeypatch: MonkeyPatch) -> None:
@@ -927,10 +928,10 @@ class TestLemonKillerTokens:
         with pytest.raises(ValueError, match="This mode has no boosts"):
             self.service.submit_result(self.user_id, original["id"], "loss", use_shield=True)
 
-    def _buy(self, boost: str, character: str | None = None):
+    def _buy(self, boost: str, character: str | None = None) -> GauntletRunState:
         return self.service.buy_boost(self.user_id, self.run["id"], boost, character)
 
-    def _state(self):
+    def _state(self) -> GauntletRunState:
         return self.service.get_or_create_run(self.user_id, "killer", self.MODE)
 
     def test_reroll_costs_two_and_lands_on_a_different_killer(self) -> None:
@@ -1008,3 +1009,20 @@ class TestLemonKillerTokens:
 
         statement = self.service._run_by_id_query(self.user_id, self.run["id"])
         assert "FOR UPDATE" in str(statement.compile(dialect=postgresql.dialect()))
+
+    def test_picking_the_killer_already_in_play_is_refused_and_free(self) -> None:
+        self._set(tokens=6)
+        with pytest.raises(ValueError, match="That character is already in play"):
+            self._buy("pick", self._state()["current_character_id"])
+        assert self._state()["tokens"] == 6
+
+    def test_boosts_follow_the_admin_kill_switch(self) -> None:
+        from app.core.extensions import db
+        from app.models import ChallengeModeSetting
+
+        db.session.add(ChallengeModeSetting(mode="gauntlet", is_enabled=False))
+        db.session.commit()
+        self._set(tokens=20)
+        with pytest.raises(ValueError, match="temporarily disabled"):
+            self._buy("slot")
+        assert self._state()["tokens"] == 20

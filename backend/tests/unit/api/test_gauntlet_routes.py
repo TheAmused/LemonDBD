@@ -134,6 +134,37 @@ class TestGauntletRoutes:
         )
         assert unknown.status_code == 400
 
+    def test_result_route_passes_the_shield_through(
+        self, client: FlaskClient, gauntlet_auth_setup: tuple[int, str, dict[str, str]]
+    ) -> None:
+        from app.core.extensions import db
+        from app.models import GauntletRun
+
+        _, _, headers = gauntlet_auth_setup
+        run = client.get(
+            "/api/v1/gauntlet-streak/run?role=killer&game_mode=lemon_killer", headers=headers
+        ).get_json()["run"]
+        row = db.session.get(GauntletRun, run["id"])
+        row.tokens = 8
+        row.current_streak = 3
+        db.session.commit()
+
+        shielded = client.post(
+            "/api/v1/gauntlet-streak/result",
+            json={"role": "killer", "run_id": run["id"], "result": "loss", "use_shield": True},
+            headers=headers,
+        )
+        assert shielded.status_code == 200
+        previous = shielded.get_json()["previous_run"]
+        assert (previous["current_streak"], previous["tokens"]) == (3, 0)
+
+        plain = client.post(
+            "/api/v1/gauntlet-streak/result",
+            json={"role": "killer", "run_id": run["id"], "result": "loss"},
+            headers=headers,
+        )
+        assert plain.get_json()["previous_run"]["current_streak"] == 0
+
     def test_get_run_auto_creates(
         self, client: FlaskClient, gauntlet_auth_setup: tuple[int, str, dict[str, str]]
     ) -> None:

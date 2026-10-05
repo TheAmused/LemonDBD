@@ -6,7 +6,7 @@ from sqlalchemy import Select, select
 
 from app.core.extensions import db
 from app.models import GauntletMatchLog, GauntletRun
-from app.schemas.gauntlet import GauntletLoadout, GauntletMatchLogDict, GauntletRunState, TierInfo
+from app.schemas.gauntlet import BoostName, GauntletLoadout, GauntletMatchLogDict, GauntletRunState, TierInfo
 from app.schemas.streak import ChallengeCompletionDict, StreakStats
 from app.services.admin_control_service import assert_challenge_mode_enabled
 from app.services.gauntlet import (
@@ -82,7 +82,7 @@ class GauntletService(StreakRunService):
     def _find_run_by_id(self, user_id: int, run_id: int) -> GauntletRun | None:
         return db.session.scalars(self._run_by_id_query(user_id, run_id)).first()
 
-    def _spend_tokens(self, r: GauntletRun, boost: str) -> None:
+    def _spend_tokens(self, r: GauntletRun, boost: BoostName) -> None:
         config = get_boost_config(r.game_mode)
         if config is None:
             raise ValueError("This mode has no boosts")
@@ -209,6 +209,7 @@ class GauntletService(StreakRunService):
         """Spend tokens on the match in play: a different killer, a chosen killer or one more free perk slot."""
         if boost not in ("reroll", "pick", "slot"):
             raise ValueError("Unknown boost")
+        assert_challenge_mode_enabled("gauntlet")
         r = self._find_run_by_id(user_id, run_id)
         if not r:
             raise ValueError("Run not found")
@@ -233,6 +234,8 @@ class GauntletService(StreakRunService):
         if boost == "pick":
             if not character:
                 raise ValueError("Choose a character to pick")
+            if character == r.current_character_id:
+                raise ValueError("That character is already in play")
             self._validate_pick(r, character)
             self._spend_tokens(r, "pick")
             return self._apply_pick(r, character)

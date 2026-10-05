@@ -9,6 +9,7 @@ import { avatarUrlForCharacter, perkIconUrl, staticUrl } from '@/utils/staticUrl
 import { useCharacterDisplayName, usePerkDisplayName } from '@/context/DisplayNamesContext';
 import { KillerIcon } from '@/components/icons/DbdIcons';
 import { useDictionary } from '@/context/DictionaryContext';
+import { baseSlots } from '@/utils/perkSlots';
 
 const avatarUrlFor = (name: string, role: Role, characters: OwnedCharacterItem[] = []) => {
   if (!name) return null;
@@ -170,7 +171,7 @@ const PerkSlotsRow: React.FC<PerkSlotsRowProps> = ({ tierInfo, charPerks, random
   const perkLimit = tierInfo.perk_limit;
   const charactersPerksOnly = tierInfo.character_perks_only;
   const slots = [0, 1, 2, 3];
-  const ownSlots = Math.max(perkLimit, randomPerks.length > 0 ? 1 : 0);
+  const ownSlots = baseSlots(tierInfo);
   const perkDisplayName = usePerkDisplayName();
   const large = size === 'large';
   const iconSize = SLOT_ICON_SIZE[size];

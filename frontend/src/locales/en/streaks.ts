@@ -101,6 +101,8 @@ export default {
   lemonKillerDevNote: "This is our own version of the challenge. It is easier, so anyone can give it a go.",
   lemonKillerTokenRule: "Every win rolls 1, 2, 3 or 5 tokens, and you can hold up to 20. Spend them on boosts: reroll the killer (2), pick the killer (6), a free perk slot for one match (4, up to 4 slots in total) or a shield that cancels a loss (8). You keep your tokens when a loss drops you back to a checkpoint.",
   tokensLabel: "Tokens",
+  tokenRollTitle: "Congratulations!",
+  tokenRollResult: "You won {count, plural, one {# token} other {# tokens}}",
   boostsTitle: "Boosts",
   boostReroll: "Reroll killer",
   boostPick: "Pick killer",

@@ -101,6 +101,8 @@ export default {
   lemonKillerDevNote: "To nasza własna wersja wyzwania. Jest łatwiejsza, żeby każdy mógł spróbować.",
   lemonKillerTokenRule: "Każda wygrana losuje 1, 2, 3 lub 5 tokenów, a możesz mieć maksymalnie 20. Wydawaj je na boosty: reroll killera (2), wybór killera (6), wolny slot perka na jeden mecz (4, maksymalnie 4 sloty łącznie) albo tarczę, która anuluje przegraną (8). Tokeny zostają, gdy przegrana cofa cię do checkpointu.",
   tokensLabel: "Tokeny",
+  tokenRollTitle: "Gratulacje!",
+  tokenRollResult: "Wygrywasz {count, plural, one {# token} few {# tokeny} many {# tokenów} other {# tokenów}}",
   boostsTitle: "Boosty",
   boostReroll: "Reroll killera",
   boostPick: "Wybór killera",

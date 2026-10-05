@@ -101,6 +101,8 @@ export default {
   lemonKillerDevNote: "これは私たちオリジナルのチャレンジです。どなたでも挑戦できるよう易しくしてあります。",
   lemonKillerTokenRule: "勝利するたびに1、2、3、5のいずれかのトークンが手に入り、最大20まで持てます。ブーストに使えます。キラーのリロール(2)、キラーの指名(6)、1試合限定の自由なパークスロット(4、合計で最大4スロット)、敗北を取り消すシールド(8)。敗北でチェックポイントに戻されても、トークンはそのまま残ります。",
   tokensLabel: "トークン",
+  tokenRollTitle: "おめでとうございます!",
+  tokenRollResult: "{count}トークンを獲得しました",
   boostsTitle: "ブースト",
   boostReroll: "キラーをリロール",
   boostPick: "キラーを指名",

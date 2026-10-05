@@ -101,6 +101,8 @@ export default {
   lemonKillerDevNote: "Esta es nuestra propia versión del desafío. Es más fácil, para que cualquiera pueda intentarlo.",
   lemonKillerTokenRule: "Cada victoria lanza 1, 2, 3 o 5 tokens, y puedes tener hasta 20. Gástalos en mejoras: repetir el asesino (2), elegir el asesino (6), una ranura de habilidad libre para una partida (4, hasta 4 ranuras en total) o un escudo que anula una derrota (8). Conservas los tokens cuando una derrota te devuelve a un punto de control.",
   tokensLabel: "Tokens",
+  tokenRollTitle: "¡Felicidades!",
+  tokenRollResult: "Ganaste {count, plural, one {# token} other {# tokens}}",
   boostsTitle: "Mejoras",
   boostReroll: "Repetir asesino",
   boostPick: "Elegir asesino",

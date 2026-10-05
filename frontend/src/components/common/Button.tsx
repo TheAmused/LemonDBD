@@ -12,7 +12,8 @@ export type ButtonVariant =
   | 'soft' //      tinted red (accent-red/10..20), for secondary calls to action
   | 'ghost' //     no background until hover
   | 'danger' //    destructive, outlined red
-  | 'success'; //  solid green
+  | 'success' //   solid green
+  | 'amber'; //    solid amber, for amber-themed surfaces
 export type ButtonSize = 'xs' | 'sm' | 'md' | 'lg';
 
 export const BUTTON_VARIANTS: Record<ButtonVariant, string> = {
@@ -22,6 +23,7 @@ export const BUTTON_VARIANTS: Record<ButtonVariant, string> = {
   ghost: 'text-text-secondary hover:bg-bg-elevated hover:text-text-primary',
   danger: 'border border-accent-red/40 bg-accent-red/10 text-accent-red hover:bg-accent-red hover:text-text-inverted',
   success: 'bg-accent-green text-text-inverted shadow-sm hover:brightness-110',
+  amber: 'bg-accent-amber text-text-inverted shadow-sm hover:bg-accent-amber-hover',
 };
 
 export const BUTTON_SIZES: Record<ButtonSize, string> = {
@@ -79,7 +81,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
   },
   ref
 ) {
-  const spinnerTone = variant === 'primary' || variant === 'success' ? 'inverted' : 'current';
+  const spinnerTone = variant === 'primary' || variant === 'success' || variant === 'amber' ? 'inverted' : 'current';
   return (
     <button
       ref={ref}

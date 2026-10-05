@@ -13,7 +13,7 @@ import {
 import * as api from '@/services/gauntletStreakApi';
 import { useBankedCheckpoint, useChallengeRun } from '../useChallengeRun';
 
-/** A win's token roll waiting to be shown: what was rolled and the balance before it landed. */
+/** A win's token roll waiting to be shown: what was rolled and the balance before it landed. A roll of 0 means the balance was already full, so nothing was rolled. */
 export interface TokenRollPlay {
   roll: number;
   from: number;
@@ -45,7 +45,8 @@ export function useGauntletRun(role: Role, gameMode: GauntletGameMode = DEFAULT_
       }, 'Failed to record the result');
       if (!updated || !outcome) return;
       loadStats();
-      if (result === 'win' && outcome.previous_run.last_token_roll > 0) {
+      const tokensFull = run.boosts != null && tokensBefore >= run.boosts.cap;
+      if (result === 'win' && (outcome.previous_run.last_token_roll > 0 || tokensFull)) {
         setTokenRoll({ roll: outcome.previous_run.last_token_roll, from: tokensBefore });
       }
       // A win that banks a fresh checkpoint gets its own celebration. If that

@@ -110,6 +110,8 @@ export default {
   tokensLabel: "Tokeny",
   tokenRollTitle: "Gratulacje!",
   tokenRollResult: "Wygrywasz {count, plural, one {# token} few {# tokeny} many {# tokenów} other {# tokenów}}",
+  tokenFullTitle: "Tokeny pełne",
+  tokenFullText: "Masz już maksymalnie {cap} tokenów, więc ta wygrana ich nie losuje. Wydaj trochę, żeby losować dalej.",
   boostsTitle: "Boosty",
   boostReroll: "Reroll killera",
   boostPick: "Wybór killera",

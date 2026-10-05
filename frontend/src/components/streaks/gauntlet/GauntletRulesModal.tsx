@@ -191,7 +191,7 @@ export const GauntletRulesModal: React.FC<GauntletRulesModalProps> = ({ isOpen, 
     : (rawStreaks.gauntletWinConditionSurvivor || 'Win = escape, through the exit gates or the hatch. Anything else breaks the streak.');
 
   const perkRule = role === 'killer'
-    ? (rawStreaks.gauntletKillerPerkRule || 'You always run your own teachables.')
+    ? (isLemonKiller && rawStreaks.lemonKillerPerkRule) || (rawStreaks.gauntletKillerPerkRule || 'You always run your own teachables.')
     : (isSolo && rawStreaks.soloPerkRule) ||
       rawStreaks.gauntletSurvivorPerkRule ||
       "One of your perks has to be the drawn character's own.";
@@ -214,7 +214,15 @@ export const GauntletRulesModal: React.FC<GauntletRulesModalProps> = ({ isOpen, 
 
   const howItWorks = [
     winCondition,
-    ...(isLemonKiller ? [rawStreaks.lemonKillerTokenRule] : []),
+    ...(isLemonKiller
+      ? [
+          rawStreaks.lemonKillerTokenRule,
+          rawStreaks.lemonKillerBoostRule,
+          rawStreaks.lemonKillerSlotRule,
+          rawStreaks.lemonKillerShieldRule,
+          rawStreaks.lemonKillerTokenKeepRule,
+        ]
+      : []),
     ...(isSolo ? [rawStreaks.soloHalfWinRule, rawStreaks.soloPickRule] : []),
     ...(isDuo ? [rawStreaks.duoCharactersRule, rawStreaks.duoRematchRule, rawStreaks.duoHatchRule] : []),
     ...(isSquad ? [rawStreaks.squadCharactersRule, rawStreaks.squadRematchRule, rawStreaks.squadUniquePerkRule] : []),

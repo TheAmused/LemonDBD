@@ -23,7 +23,7 @@ import { GauntletHeader } from './GauntletHeader';
 import { ActiveTargetStage } from './ActiveTargetStage';
 import { LemonTokenPanel } from './LemonTokenPanel';
 import { TokenRollModal } from './TokenRollModal';
-import { ConfirmModal } from '@/components/common/ConfirmModal';
+import { ShieldPromptModal } from './ShieldPromptModal';
 import { formatMessage } from '@/utils/i18nFormat';
 import { CharacterRosterGrid } from './CharacterRosterGrid';
 import { useDictionary } from '@/context/DictionaryContext';
@@ -284,7 +284,7 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({
         />
 
         {boosts && (
-          <ConfirmModal
+          <ShieldPromptModal
             open={shieldPromptOpen}
             title={dict.streaks.shieldTitle}
             message={formatMessage(dict.streaks.shieldMessage, { price: boosts.prices.shield })}

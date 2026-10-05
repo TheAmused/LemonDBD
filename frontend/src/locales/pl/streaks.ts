@@ -109,7 +109,7 @@ export default {
   shieldMessage: "Koszt: {price} tokenów",
   shieldConfirm: "Tak",
   shieldDecline: "Nie",
-  boostPrice: "{price} tokenów",
+  boostPrice: "{price}",
   boostPickHint: "Wybierz killera z listy poniżej.",
   boostConfirmPick: "Wybierz",
   pageStreakIntro: "Wybierz zabójcę i stwórz najsilniejszy zestaw z jego aktualnej strony perków. Po wygranej przechodzisz do następnej strony, po porażce zaczynasz od nowa.",

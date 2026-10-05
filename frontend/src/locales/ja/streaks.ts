@@ -109,7 +109,7 @@ export default {
   shieldMessage: "コスト: {price}トークン",
   shieldConfirm: "はい",
   shieldDecline: "いいえ",
-  boostPrice: "{price}トークン",
+  boostPrice: "{price}",
   boostPickHint: "下の一覧からキラーを選んでください。",
   boostConfirmPick: "指名",
   pageStreakIntro: "キラーを選び、現在のパークページの枠内で最強構成を組んで挑みます。勝利で次のページへ進みます。",

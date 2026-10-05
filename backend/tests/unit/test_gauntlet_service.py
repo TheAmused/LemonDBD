@@ -1026,3 +1026,24 @@ class TestLemonKillerTokens:
         with pytest.raises(ValueError, match="temporarily disabled"):
             self._buy("slot")
         assert self._state()["tokens"] == 20
+
+    def test_dev_jump_moves_the_run_to_a_tier_and_rebuilds_the_loadout(self, monkeypatch: MonkeyPatch) -> None:
+        monkeypatch.setattr("app.services.gauntlet_service.dev_tools_enabled", lambda: True)
+        self._set(bonus_perk_slots=1)
+        jumped = self.service.dev_set_streak(self.user_id, self.run["id"], 30)
+        assert jumped["current_streak"] == 30
+        assert jumped["tier_info"]["tier_level"] == 3
+        assert jumped["bonus_perk_slots"] == 0
+        assert len(jumped["current_loadout"]["random_perks"]) == 1
+        assert jumped["dev_tools"] is True
+
+    def test_dev_jump_is_refused_outside_development(self, monkeypatch: MonkeyPatch) -> None:
+        monkeypatch.setattr("app.services.gauntlet_service.dev_tools_enabled", lambda: False)
+        with pytest.raises(ValueError, match="Dev tools are off"):
+            self.service.dev_set_streak(self.user_id, self.run["id"], 30)
+        assert self._state()["dev_tools"] is False
+
+    def test_dev_jump_rejects_a_streak_outside_the_run(self, monkeypatch: MonkeyPatch) -> None:
+        monkeypatch.setattr("app.services.gauntlet_service.dev_tools_enabled", lambda: True)
+        with pytest.raises(ValueError, match="Streak must be between 0 and 100"):
+            self.service.dev_set_streak(self.user_id, self.run["id"], 101)

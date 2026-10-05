@@ -22,6 +22,7 @@ import { useCelebrateOnRise, useCelebration } from '../useCelebration';
 import { GauntletHeader } from './GauntletHeader';
 import { ActiveTargetStage } from './ActiveTargetStage';
 import { LemonTokenPanel } from './LemonTokenPanel';
+import { TokenRollModal } from './TokenRollModal';
 import { ConfirmModal } from '@/components/common/ConfirmModal';
 import { formatMessage } from '@/utils/i18nFormat';
 import { CharacterRosterGrid } from './CharacterRosterGrid';
@@ -83,6 +84,7 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({
     reveal,
     chooseTarget,
     buyBoost,
+    devJumpToStreak,
     reset,
     tokenRoll,
     dismissTokenRoll,
@@ -130,6 +132,14 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({
       : run?.current_loadout?.players?.map((player) => player.character) ?? [shownTarget];
   const awaitingPick = pickCharacter && Boolean(run) && !run?.target_revealed && !isCompleted;
   const boosts = run?.boosts ?? null;
+  // TEMP DEV: the first streak of each tier, so a tier can be reached without playing up to it.
+  const devStreaks = run?.dev_tools
+    ? gameMode === 'lemon_duo' || gameMode === 'lemon_squad'
+      ? [0, 6, 12, 18]
+      : role === 'killer'
+      ? [0, 10, 20, 30]
+      : [0, 10, 20, 30, 40]
+    : undefined;
   const matchActive = Boolean(run?.target_revealed) && !isCompleted;
   // Only worth asking when the loss would actually cost progress: at a checkpoint there is nothing to protect.
   const shieldWouldHelp = (run?.current_streak ?? 0) > (run?.last_checkpoint_streak ?? 0);
@@ -170,6 +180,8 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({
           onOpenRules={() => setIsRulesOpen(true)}
           onOpenReset={() => setConfirmingReset(true)}
           onChangeMode={() => setIsChangeModeOpen(true)}
+          devStreaks={devStreaks}
+          onDevJump={devJumpToStreak}
         />
           }
         >
@@ -203,7 +215,7 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({
             onAcceptPick={() => {
               if (pendingPick) chooseTarget(pendingPick);
             }}
-            holdReel={justBankedCheckpoint != null}
+            holdReel={justBankedCheckpoint != null || tokenRoll != null}
             shownTarget={shownTarget}
             onShownTargetChange={setShownTarget}
           />
@@ -215,8 +227,6 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({
               bonusSlots={run.bonus_perk_slots}
               matchActive={matchActive}
               busy={busy}
-              tokenRoll={tokenRoll}
-              onRollDone={dismissTokenRoll}
               picking={buyingPick}
               pendingPick={pendingPick}
               onStartPick={() => setBuyingPick(true)}
@@ -324,7 +334,12 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({
           role={role}
           gameMode={gameMode}
         />
-        <CheckpointCelebrationModal checkpoint={justBankedCheckpoint} onClose={dismissCheckpointCelebration} />
+        <TokenRollModal tokenRoll={tokenRoll} tokens={run?.tokens ?? 0} cap={boosts?.cap ?? 0} onClose={dismissTokenRoll} />
+        {/* The token roll plays first; the checkpoint celebration follows once it is closed. */}
+        <CheckpointCelebrationModal
+          checkpoint={tokenRoll ? null : justBankedCheckpoint}
+          onClose={dismissCheckpointCelebration}
+        />
       </div>
     </div>
   );

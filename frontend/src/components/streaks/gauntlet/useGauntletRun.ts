@@ -80,6 +80,15 @@ export function useGauntletRun(role: Role, gameMode: GauntletGameMode = DEFAULT_
     [token, run, mutate]
   );
 
+  // TEMP DEV: jump to a streak to test a tier.
+  const devJumpToStreak = useCallback(
+    (streak: number) => {
+      if (!token || !run) return;
+      return mutate(() => api.devSetStreak(token, run.id, streak), 'Could not jump to that streak');
+    },
+    [token, run, mutate]
+  );
+
   const reset = useCallback(() => {
     if (!token) return;
     setJustBankedCheckpoint(null);
@@ -99,6 +108,7 @@ export function useGauntletRun(role: Role, gameMode: GauntletGameMode = DEFAULT_
     reveal,
     chooseTarget,
     buyBoost,
+    devJumpToStreak,
     reset,
     tokenRoll,
     dismissTokenRoll: () => setTokenRoll(null),

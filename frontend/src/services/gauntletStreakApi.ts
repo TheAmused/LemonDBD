@@ -52,6 +52,12 @@ export async function selectTarget(token: string, runId: number, character: stri
   return data.run;
 }
 
+/** TEMP DEV: jump a run to a streak. The server answers 404 outside development. */
+export async function devSetStreak(token: string, runId: number, streak: number): Promise<GauntletRun> {
+  const data = await postJson<RunResponse>(token, '/dev/streak', { run_id: runId, streak });
+  return data.run;
+}
+
 export async function resetRun(
   token: string,
   role: Role,

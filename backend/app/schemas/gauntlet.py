@@ -15,6 +15,20 @@ class TierInfo(TypedDict):
     random_perk_count: int
 
 
+class BoostPrices(TypedDict):
+    reroll: int
+    pick: int
+    slot: int
+    shield: int
+
+
+class BoostConfig(TypedDict):
+    """What a token mode lets the player do: the balance cap, the perk slot limit and the prices."""
+    cap: int
+    max_perk_slots: int
+    prices: BoostPrices
+
+
 class GauntletPlayerLoadout(TypedDict, total=False):
     character: str
     character_perks: list[PerkPayload]

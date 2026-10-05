@@ -4,6 +4,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 from app.models import GauntletMatchLog, GauntletRun, Killer, Perk, Survivor
 from app.services.gauntlet import CHECKPOINT_INTERVAL, get_owned_character_names, is_checkpoint
+from app.services.gauntlet import TOKEN_CAP, TOKEN_ROLLS, base_perk_slots, get_boost_config, get_tier_info, roll_tokens
 from app.services.challenge_completions import record_challenge_completion
 from app.services.gauntlet_service import GauntletService
 from app.services.ownership_service import OwnershipService
@@ -782,25 +783,25 @@ class TestSquadMode:
 
 @pytest.mark.unit
 class TestLemonKillerMode:
-    """The Lemon killer variant: checkpoints every 5 wins, perk tiers still step every 10."""
+    """The Lemon killer variant: checkpoints every 10 wins like the original, plus tokens (see TestLemonKillerTokens)."""
 
     MODE = "lemon_killer"
 
     @pytest.fixture(autouse=True)
     def setup_run(self, gauntlet_service: GauntletService, gauntlet_user: int) -> None:
-        for index in range(8):
+        for index in range(12):
             seed_killer(f"Killer {index}", perk_count=3)
         self.user_id = gauntlet_user
         self.service = gauntlet_service
         self.run = gauntlet_service.get_or_create_run(self.user_id, "killer", self.MODE)
 
-    def test_checkpoint_banks_every_5_wins_but_tiers_still_step_every_10(self) -> None:
-        for _ in range(4):
+    def test_checkpoint_banks_every_10_wins_like_the_original(self) -> None:
+        for _ in range(9):
             assert self.service.submit_result(self.user_id, self.run["id"], "win")["last_checkpoint_streak"] == 0
-        fifth = self.service.submit_result(self.user_id, self.run["id"], "win")
-        assert fifth["last_checkpoint_streak"] == 5
-        assert fifth["tier_info"]["tier_level"] == 0
-        assert self.service.submit_result(self.user_id, self.run["id"], "loss")["current_streak"] == 5
+        tenth = self.service.submit_result(self.user_id, self.run["id"], "win")
+        assert tenth["last_checkpoint_streak"] == 10
+        assert tenth["tier_info"]["tier_level"] == 1
+        assert self.service.submit_result(self.user_id, self.run["id"], "loss")["current_streak"] == 10
 
     def test_killer_tiers_keep_their_original_thresholds(self) -> None:
         levels = {streak: self.service.get_tier_info(streak, "killer", self.MODE)["tier_level"] for streak in (9, 10, 19, 20, 29, 30)}
@@ -809,3 +810,27 @@ class TestLemonKillerMode:
     def test_the_character_is_still_rolled_by_the_server(self) -> None:
         self.service.reveal_target(self.user_id, self.run["id"])
         assert self.service.prepare_next_match(self.user_id, "killer", self.MODE)["target_revealed"] is True
+
+
+@pytest.mark.unit
+class TestTokenRules:
+    def test_boost_config_exists_only_for_the_token_modes(self) -> None:
+        assert get_boost_config("lemon_killer") == {
+            "cap": 20,
+            "max_perk_slots": 4,
+            "prices": {"reroll": 2, "pick": 6, "slot": 4, "shield": 8},
+        }
+        assert get_boost_config("original") is None
+        assert get_boost_config("lemon_solo") is None
+
+    def test_rolls_are_one_two_three_or_five_and_two_is_the_most_common(self) -> None:
+        assert sorted(amount for amount, _ in TOKEN_ROLLS) == [1, 2, 3, 5]
+        assert max(TOKEN_ROLLS, key=lambda roll: roll[1])[0] == 2
+        assert {roll_tokens() for _ in range(300)} <= {1, 2, 3, 5}
+        assert TOKEN_CAP == 20
+
+    def test_base_perk_slots_counts_the_dealt_perk_on_the_last_tier(self) -> None:
+        assert base_perk_slots(get_tier_info(0, "killer", "lemon_killer")) == 3
+        assert base_perk_slots(get_tier_info(20, "killer", "lemon_killer")) == 1
+        assert base_perk_slots(get_tier_info(30, "killer", "lemon_killer")) == 1
+        assert base_perk_slots(get_tier_info(30, "killer")) == 0

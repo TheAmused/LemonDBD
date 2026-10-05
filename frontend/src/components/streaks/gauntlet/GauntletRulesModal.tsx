@@ -186,8 +186,6 @@ export const GauntletRulesModal: React.FC<GauntletRulesModalProps> = ({ isOpen, 
     ? rawStreaks.duoWinCondition
     : isSquad && rawStreaks.squadWinCondition
     ? rawStreaks.squadWinCondition
-    : isLemonKiller && rawStreaks.lemonKillerWinCondition
-    ? rawStreaks.lemonKillerWinCondition
     : role === 'killer'
     ? (rawStreaks.gauntletWinConditionKiller || 'Win = 3 kills or more.')
     : (rawStreaks.gauntletWinConditionSurvivor || 'Win = escape, through the exit gates or the hatch. Anything else breaks the streak.');
@@ -206,8 +204,7 @@ export const GauntletRulesModal: React.FC<GauntletRulesModalProps> = ({ isOpen, 
   const exceptions = role === 'killer' ? STANDARD_EXCEPTIONS : SURVIVOR_EXCEPTIONS;
   const clarifications = role === 'killer' ? STANDARD_CLARIFICATIONS_WITH_ADDONS : SURVIVOR_CLARIFICATIONS;
 
-  // Lemon killer shares solo's "every 5 wins" wording.
-  const checkpointRule = isSolo || isLemonKiller
+  const checkpointRule = isSolo
     ? rawStreaks.soloCheckpointRule
     : isDuo
     ? rawStreaks.duoCheckpointRule
@@ -217,7 +214,7 @@ export const GauntletRulesModal: React.FC<GauntletRulesModalProps> = ({ isOpen, 
 
   const howItWorks = [
     winCondition,
-    ...(isLemonKiller ? [rawStreaks.lemonKillerCountRule] : []),
+    ...(isLemonKiller ? [rawStreaks.lemonKillerTokenRule] : []),
     ...(isSolo ? [rawStreaks.soloHalfWinRule, rawStreaks.soloPickRule] : []),
     ...(isDuo ? [rawStreaks.duoCharactersRule, rawStreaks.duoRematchRule, rawStreaks.duoHatchRule] : []),
     ...(isSquad ? [rawStreaks.squadCharactersRule, rawStreaks.squadRematchRule, rawStreaks.squadUniquePerkRule] : []),

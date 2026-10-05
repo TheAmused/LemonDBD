@@ -29,6 +29,8 @@ export interface ActiveTargetStageProps {
   holdReel?: boolean;
   shownTarget: string | null;
   onShownTargetChange: (name: string | null) => void;
+  /** Free perk slots bought with tokens for this match. */
+  bonusSlots?: number;
 }
 
 export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
@@ -45,6 +47,7 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
       holdReel = false,
       shownTarget,
       onShownTargetChange,
+      bonusSlots = 0,
     }) => {
   const dict = useDictionary();
   const characterDisplayName = useCharacterDisplayName();
@@ -287,6 +290,7 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
               tierInfo={tierInfo}
               playersPerCharacter={loadout.players_per_character ?? 1}
               isTeam={isTeam}
+              bonusSlots={bonusSlots}
             />
           ))}
         </div>

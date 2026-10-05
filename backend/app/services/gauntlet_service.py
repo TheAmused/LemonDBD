@@ -2,7 +2,7 @@
 import logging
 import random
 
-from sqlalchemy import select
+from sqlalchemy import Select, select
 
 from app.core.extensions import db
 from app.models import GauntletMatchLog, GauntletRun
@@ -73,6 +73,14 @@ class GauntletService(StreakRunService):
             "tier_info": tier_info,
             "boosts": get_boost_config(r.game_mode),
         }
+
+    @staticmethod
+    def _run_by_id_query(user_id: int, run_id: int) -> Select[tuple[GauntletRun]]:
+        # Locked for the rest of the request, so two parallel requests cannot both spend the same tokens.
+        return select(GauntletRun).where(GauntletRun.id == run_id, GauntletRun.user_id == user_id).with_for_update()
+
+    def _find_run_by_id(self, user_id: int, run_id: int) -> GauntletRun | None:
+        return db.session.scalars(self._run_by_id_query(user_id, run_id)).first()
 
     def _spend_tokens(self, r: GauntletRun, boost: str) -> None:
         config = get_boost_config(r.game_mode)

@@ -2,7 +2,7 @@
 // frontend/src/components/streaks/gauntlet/GauntletBoard.tsx
 import { Button } from '@/components/common/Button';
 import type { Dictionary } from '@/locales/types';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import { DEFAULT_GAUNTLET_GAME_MODE, GauntletGameMode, PICK_CHARACTER_MODES, Role } from '@/types/gauntletStreak';
@@ -106,6 +106,8 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({
   // Lemon killer: choosing a killer to buy, and the shield question after a loss is reported.
   const [buyingPick, setBuyingPick] = useState(false);
   const [shieldPromptOpen, setShieldPromptOpen] = useState(false);
+  // The modal stays mounted while it animates out, so a second click on it must not report the loss again.
+  const shieldAnswered = useRef(false);
   const { celebrating, celebrate } = useCelebration();
   const [confirmingReset, setConfirmingReset] = useState(false);
   // The target the reel has actually finished landing on, kept separate from
@@ -129,7 +131,9 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({
   const awaitingPick = pickCharacter && Boolean(run) && !run?.target_revealed && !isCompleted;
   const boosts = run?.boosts ?? null;
   const matchActive = Boolean(run?.target_revealed) && !isCompleted;
-  const canAffordShield = boosts != null && (run?.tokens ?? 0) >= boosts.prices.shield;
+  // Only worth asking when the loss would actually cost progress: at a checkpoint there is nothing to protect.
+  const shieldWouldHelp = (run?.current_streak ?? 0) > (run?.last_checkpoint_streak ?? 0);
+  const canAffordShield = boosts != null && (run?.tokens ?? 0) >= boosts.prices.shield && shieldWouldHelp;
 
   useEffect(() => {
     if (!awaitingPick && !buyingPick) setPendingPick(null);
@@ -180,8 +184,12 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({
             onWin={() => submitResult('win')}
             onLoss={() => {
               // A reported loss is always sent; with the tokens for it the player is first asked about a shield.
-              if (canAffordShield) setShieldPromptOpen(true);
-              else submitResult('loss');
+              if (canAffordShield) {
+                shieldAnswered.current = false;
+                setShieldPromptOpen(true);
+              } else {
+                submitResult('loss');
+              }
             }}
             bonusSlots={run?.bonus_perk_slots ?? 0}
             onReveal={reveal}
@@ -259,10 +267,14 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({
             cancelLabel={dict.streaks.shieldDecline}
             busy={busy}
             onConfirm={() => {
+              if (shieldAnswered.current) return;
+              shieldAnswered.current = true;
               setShieldPromptOpen(false);
               submitResult('loss', true);
             }}
             onCancel={() => {
+              if (shieldAnswered.current) return;
+              shieldAnswered.current = true;
               setShieldPromptOpen(false);
               submitResult('loss', false);
             }}

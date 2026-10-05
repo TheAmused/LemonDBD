@@ -179,6 +179,23 @@ class TestGauntletRoutes:
         )
         assert res.status_code == 404
 
+    def test_a_loss_in_a_mode_without_boosts_goes_through_with_or_without_the_shield_flag(
+        self, client: FlaskClient, gauntlet_auth_setup: tuple[int, str, dict[str, str]]
+    ) -> None:
+        _, _, headers = gauntlet_auth_setup
+        for game_mode in ("original", "lemon_duo", "lemon_solo"):
+            role = "killer" if game_mode == "original" else "survivor"
+            run = client.get(
+                f"/api/v1/gauntlet-streak/run?role={role}&game_mode={game_mode}", headers=headers
+            ).get_json()["run"]
+            for body in ({}, {"use_shield": False}):
+                res = client.post(
+                    "/api/v1/gauntlet-streak/result",
+                    json={"role": role, "run_id": run["id"], "result": "loss", **body},
+                    headers=headers,
+                )
+                assert res.status_code == 200, (game_mode, body, res.get_json())
+
     def test_get_run_auto_creates(
         self, client: FlaskClient, gauntlet_auth_setup: tuple[int, str, dict[str, str]]
     ) -> None:

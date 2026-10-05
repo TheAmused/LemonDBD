@@ -107,6 +107,8 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({
   const [pendingPick, setPendingPick] = useState<string | null>(null);
   // Lemon killer: choosing a killer to buy, and the shield question after a loss is reported.
   const [buyingPick, setBuyingPick] = useState(false);
+  // The killer just bought with tokens; it appears at once instead of going through the draw reel.
+  const [instantTarget, setInstantTarget] = useState<string | null>(null);
   const [shieldPromptOpen, setShieldPromptOpen] = useState(false);
   // The modal stays mounted while it animates out, so a second click on it must not report the loss again.
   const shieldAnswered = useRef(false);
@@ -144,6 +146,11 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({
   // Only worth asking when the loss would actually cost progress: at a checkpoint there is nothing to protect.
   const shieldWouldHelp = (run?.current_streak ?? 0) > (run?.last_checkpoint_streak ?? 0);
   const canAffordShield = boosts != null && (run?.tokens ?? 0) >= boosts.prices.shield && shieldWouldHelp;
+
+  // Once the bought killer is on screen the draw rules apply again, so a later match can draw it normally.
+  useEffect(() => {
+    if (instantTarget && shownTarget === instantTarget) setInstantTarget(null);
+  }, [instantTarget, shownTarget]);
 
   // A result, a purchase or a mode switch ends any killer purchase still being chosen.
   useEffect(() => {
@@ -216,6 +223,7 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({
               if (pendingPick) chooseTarget(pendingPick);
             }}
             holdReel={justBankedCheckpoint != null || tokenRoll != null}
+            instantTarget={instantTarget}
             shownTarget={shownTarget}
             onShownTargetChange={setShownTarget}
           />
@@ -236,7 +244,9 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({
               }}
               onConfirmPick={async () => {
                 if (!pendingPick) return;
-                await buyBoost('pick', pendingPick);
+                setInstantTarget(pendingPick);
+                const bought = await buyBoost('pick', pendingPick);
+                if (!bought) setInstantTarget(null);
                 setBuyingPick(false);
                 setPendingPick(null);
               }}

@@ -26,8 +26,8 @@ describe('gauntletCheckpoints', () => {
     assert.deepEqual(gauntletCheckpoints('lemon_solo', 22), [5, 10, 15, 20]);
   });
 
-  it('uses every 5 wins for the Lemon killer mode', () => {
-    assert.deepEqual(gauntletCheckpoints('lemon_killer', 43), [5, 10, 15, 20, 25, 30, 35, 40]);
+  it('uses every 10 wins for the Lemon killer mode, like the original', () => {
+    assert.deepEqual(gauntletCheckpoints('lemon_killer', 43), [10, 20, 30, 40]);
   });
 
   it('uses fixed stage starts for duo and squad, dropping those past the end', () => {

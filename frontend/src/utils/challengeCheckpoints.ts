@@ -25,6 +25,6 @@ export function gauntletRunLength(mode: GauntletGameMode, rosterSize: number): n
 
 export function gauntletCheckpoints(mode: GauntletGameMode, total: number): number[] {
   if (isTeamMode(mode)) return GAUNTLET_TEAM_STAGE_STARTS.filter((n) => n < total);
-  const short = mode === 'lemon_solo' || mode === 'lemon_killer';
+  const short = mode === 'lemon_solo';
   return everyNthCheckpoint(short ? GAUNTLET_SHORT_INTERVAL : GAUNTLET_DEFAULT_INTERVAL, total);
 }

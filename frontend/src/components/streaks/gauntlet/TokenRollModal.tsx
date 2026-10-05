@@ -12,9 +12,6 @@ import type { TokenRollPlay } from './useGauntletRun';
 interface TokenRollModalProps {
   /** The win's token roll to play; null keeps the modal closed. */
   tokenRoll: TokenRollPlay | null;
-  /** The balance once the roll has landed. */
-  tokens: number;
-  cap: number;
   onClose: () => void;
 }
 
@@ -23,7 +20,7 @@ interface TokenRollModalProps {
  * closing it lets the next killer's draw begin, so the two never compete
  * for the player's eyes.
  */
-export const TokenRollModal: React.FC<TokenRollModalProps> = ({ tokenRoll, tokens, cap, onClose }) => {
+export const TokenRollModal: React.FC<TokenRollModalProps> = ({ tokenRoll, onClose }) => {
   const dict = useDictionary();
   const [landed, setLanded] = useState(false);
 
@@ -47,9 +44,6 @@ export const TokenRollModal: React.FC<TokenRollModalProps> = ({ tokenRoll, token
         <Coins className="h-12 w-12 text-accent-amber" aria-hidden="true" />
         <p className="type-label-sm tracking-spaced-md text-accent-amber">{dict.streaks.tokensLabel}</p>
         {tokenRoll && <TokenRoulette large roll={tokenRoll.roll} onDone={() => setLanded(true)} />}
-        <p className="type-caption text-text-secondary">
-          {landed ? `${dict.streaks.tokensLabel}: ${tokens} / ${cap}` : ' '}
-        </p>
         <Button variant="primary" size="md" onClick={onClose} disabled={!landed}>
           {dict.streaks.continueButton}
         </Button>

@@ -334,6 +334,9 @@ class GauntletService(StreakRunService):
                 streak_after = last_checkpoint
                 completed = list(checkpoint_chars)
                 r.attempts += 1
+                if streak_after == 0:
+                    # Back to the very start, so the tokens start over too.
+                    r.tokens = 0
 
         boosts = get_boost_config(r.game_mode)
         if boosts and result == "win":

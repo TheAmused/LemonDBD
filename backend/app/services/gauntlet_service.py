@@ -1,5 +1,6 @@
 # backend/app/services/gauntlet_service.py
 import logging
+import random
 
 from sqlalchemy import select
 
@@ -13,6 +14,7 @@ from app.services.gauntlet import (
     ORIGINAL_KILLER_ROSTER_LIMIT,
     ORIGINAL_SURVIVOR_ROSTER_LIMIT,
     PICK_CHARACTER_MODES,
+    base_perk_slots,
     build_loadout,
     build_team_loadout,
     fetch_gauntlet_user_stats,
@@ -169,6 +171,21 @@ class GauntletService(StreakRunService):
         db.session.commit()
         return self._state(r, self.get_tier_info(r.current_streak, r.role, r.game_mode))
 
+    def _validate_pick(self, r: GauntletRun, character: str) -> None:
+        self._freeze_pool_if_needed(r)
+        if character not in resolve_character_names_by_ids(r.owned_character_ids, role=r.role):
+            raise ValueError("That character is not in your roster")
+        if character in r.completed_characters:
+            raise ValueError("You already beat that character")
+
+    def _apply_pick(self, r: GauntletRun, character: str) -> GauntletRunState:
+        tier_info = self.get_tier_info(r.current_streak, r.role, r.game_mode)
+        r.current_character_id = character
+        r.current_loadout = build_loadout(character, tier_info)
+        r.target_revealed = True
+        db.session.commit()
+        return self._state(r, tier_info)
+
     def select_target(self, user_id: int, run_id: int, character: str) -> GauntletRunState:
         r = self._find_run_by_id(user_id, run_id)
         if not r:
@@ -177,18 +194,47 @@ class GauntletService(StreakRunService):
             raise ValueError("This mode picks the character for you")
         if r.status == "completed":
             raise ValueError("This run is already completed. Reset it to play again.")
-        self._freeze_pool_if_needed(r)
-        if character not in resolve_character_names_by_ids(r.owned_character_ids, role=r.role):
-            raise ValueError("That character is not in your roster")
-        if character in r.completed_characters:
-            raise ValueError("You already beat that character")
+        self._validate_pick(r, character)
+        return self._apply_pick(r, character)
 
+    def buy_boost(self, user_id: int, run_id: int, boost: str, character: str | None = None) -> GauntletRunState:
+        """Spend tokens on the match in play: a different killer, a chosen killer or one more free perk slot."""
+        if boost not in ("reroll", "pick", "slot"):
+            raise ValueError("Unknown boost")
+        r = self._find_run_by_id(user_id, run_id)
+        if not r:
+            raise ValueError("Run not found")
+        config = get_boost_config(r.game_mode)
+        if config is None:
+            raise ValueError("This mode has no boosts")
+        if r.status == "completed":
+            raise ValueError("This run is already completed. Reset it to play again.")
+        if not r.target_revealed:
+            raise ValueError("Start the match first")
+        self._freeze_pool_if_needed(r)
         tier_info = self.get_tier_info(r.current_streak, r.role, r.game_mode)
-        r.current_character_id = character
-        r.current_loadout = build_loadout(character, tier_info)
-        r.target_revealed = True
-        db.session.commit()
-        return self._state(r, tier_info)
+
+        if boost == "slot":
+            if base_perk_slots(tier_info) + r.bonus_perk_slots >= config["max_perk_slots"]:
+                raise ValueError("No free perk slots left")
+            self._spend_tokens(r, "slot")
+            r.bonus_perk_slots += 1
+            db.session.commit()
+            return self._state(r, tier_info)
+
+        if boost == "pick":
+            if not character:
+                raise ValueError("Choose a character to pick")
+            self._validate_pick(r, character)
+            self._spend_tokens(r, "pick")
+            return self._apply_pick(r, character)
+
+        names = resolve_character_names_by_ids(r.owned_character_ids, role=r.role)
+        others = [name for name in names if name not in r.completed_characters and name != r.current_character_id]
+        if not others:
+            raise ValueError("There is no other character to roll")
+        self._spend_tokens(r, "reroll")
+        return self._apply_pick(r, random.choice(others))
 
     def reset_run(self, user_id: int, role: str, game_mode: str = DEFAULT_GAME_MODE) -> GauntletRunState:
         return self._reset_run(user_id, role, game_mode)

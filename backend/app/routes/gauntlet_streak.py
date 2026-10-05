@@ -61,3 +61,23 @@ def select_target():
         status = 404 if "not found" in str(e).lower() else 400
         return jsonify({"error": str(e)}), status
     return jsonify({"run": run}), 200
+
+
+@gauntlet_streak_bp.route("/boost", methods=["POST"])
+@login_required
+def buy_boost():
+    data = request.get_json(silent=True) or {}
+    run_id = data.get("run_id")
+    boost = data.get("boost")
+    character = data.get("character")
+    if not run_id or boost not in ("reroll", "pick", "slot"):
+        return jsonify({"error": "Fields 'run_id' and 'boost' (reroll, pick or slot) are required"}), 400
+    if character is not None and not isinstance(character, str):
+        return jsonify({"error": "Field 'character' must be a string"}), 400
+
+    try:
+        run = get_gauntlet_service().buy_boost(g.current_user.id, run_id, boost, character)
+    except ValueError as e:
+        status = 404 if "not found" in str(e).lower() else 400
+        return jsonify({"error": str(e)}), status
+    return jsonify({"run": run}), 200

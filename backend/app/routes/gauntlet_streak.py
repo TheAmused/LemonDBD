@@ -28,6 +28,7 @@ def submit_result():
     role = _clean_role(data.get("role"))
     run_id = data.get("run_id")
     result = data.get("result")
+    use_shield = data.get("use_shield") is True
     if not role:
         return jsonify({"error": "Field 'role' must be 'survivor' or 'killer'"}), 400
     if not run_id or result not in ("win", "loss"):
@@ -35,7 +36,7 @@ def submit_result():
 
     service = get_gauntlet_service()
     try:
-        updated_run = service.submit_result(g.current_user.id, run_id, result)
+        updated_run = service.submit_result(g.current_user.id, run_id, result, use_shield=use_shield)
         if updated_run.get("status") == "completed":
             return jsonify({"run": updated_run, "previous_run": updated_run}), 200
         next_run = service.prepare_next_match(g.current_user.id, role, game_mode=updated_run["game_mode"])

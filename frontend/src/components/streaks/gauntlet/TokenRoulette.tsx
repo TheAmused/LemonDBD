@@ -74,7 +74,7 @@ export const TokenRoulette: React.FC<TokenRouletteProps> = ({ roll, onDone }) =>
     <div
       role="img"
       aria-label={String(roll)}
-      className={`relative h-24 w-36 overflow-hidden rounded-2xl border-2 border-accent-amber/60 bg-bg-elevated shadow-inner ${
+      className={`relative box-content h-24 w-36 overflow-hidden rounded-2xl border-2 border-accent-amber/60 bg-bg-elevated shadow-inner ${
         landed ? 'gn-land-glow' : ''
       }`}
     >

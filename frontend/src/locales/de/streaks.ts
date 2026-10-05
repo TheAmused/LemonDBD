@@ -101,6 +101,8 @@ export default {
   lemonKillerDevNote: "Das ist unsere eigene Version der Challenge. Sie ist leichter, damit es jeder versuchen kann.",
   lemonKillerTokenRule: "Jeder Sieg würfelt 1, 2, 3 oder 5 Tokens, du kannst bis zu 20 halten. Gib sie für Boosts aus: Killer neu würfeln (2), Killer wählen (6), ein freier Perk-Slot für ein Match (4, insgesamt bis zu 4 Slots) oder ein Schild, das eine Niederlage aufhebt (8). Deine Tokens bleiben, wenn dich eine Niederlage zum Checkpoint zurückwirft.",
   tokensLabel: "Tokens",
+  tokenRollTitle: "Glückwunsch!",
+  tokenRollResult: "Du hast {count, plural, one {# Token} other {# Tokens}} gewonnen",
   boostsTitle: "Boosts",
   boostReroll: "Killer neu würfeln",
   boostPick: "Killer wählen",

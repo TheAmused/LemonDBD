@@ -5,7 +5,8 @@ import React, { useEffect, useState } from 'react';
 import { Coins } from 'lucide-react';
 import { Button } from '@/components/common/Button';
 import { Modal } from '@/components/common/Modal';
-import { useDictionary } from '@/context/DictionaryContext';
+import { useDictionary, useLocale } from '@/context/DictionaryContext';
+import { formatMessage } from '@/utils/i18nFormat';
 import { TokenRoulette } from './TokenRoulette';
 import type { TokenRollPlay } from './useGauntletRun';
 
@@ -22,6 +23,7 @@ interface TokenRollModalProps {
  */
 export const TokenRollModal: React.FC<TokenRollModalProps> = ({ tokenRoll, onClose }) => {
   const dict = useDictionary();
+  const locale = useLocale();
   const [landed, setLanded] = useState(false);
 
   useEffect(() => {
@@ -40,11 +42,15 @@ export const TokenRollModal: React.FC<TokenRollModalProps> = ({ tokenRoll, onClo
       closeButton="none"
       ariaLabel={dict.streaks.tokensLabel}
     >
-      <div className="ck-card-in relative flex min-h-[22rem] w-full cursor-default flex-col items-center justify-center gap-4 overflow-hidden rounded-3xl border border-accent-amber/60 bg-gradient-to-b from-accent-amber/20 via-bg-surface to-bg-primary px-8 py-12 text-center">
+      <div className="ck-card-in relative flex min-h-[22rem] w-full cursor-default flex-col items-center justify-center gap-4 overflow-hidden rounded-3xl border border-accent-amber/60 bg-bg-surface px-8 py-12 text-center">
         <Coins className="h-12 w-12 text-accent-amber" aria-hidden="true" />
-        <p className="type-label-sm tracking-spaced-md text-accent-amber">{dict.streaks.tokensLabel}</p>
+        <p className="type-label-sm tracking-spaced-md text-accent-amber">{dict.streaks.tokenRollTitle}</p>
         {tokenRoll && <TokenRoulette roll={tokenRoll.roll} onDone={() => setLanded(true)} />}
-        <Button variant="primary" size="md" onClick={onClose} disabled={!landed}>
+        {/* Always laid out, so the card does not jump when the result appears. */}
+        <p className={`type-card-title text-text-primary ${landed ? '' : 'invisible'}`}>
+          {formatMessage(dict.streaks.tokenRollResult, { count: tokenRoll?.roll ?? 0 }, locale)}
+        </p>
+        <Button variant="amber" size="md" onClick={onClose} disabled={!landed}>
           {dict.streaks.continueButton}
         </Button>
       </div>

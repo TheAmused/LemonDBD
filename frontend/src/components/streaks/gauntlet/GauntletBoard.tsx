@@ -135,6 +135,11 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({
   const shieldWouldHelp = (run?.current_streak ?? 0) > (run?.last_checkpoint_streak ?? 0);
   const canAffordShield = boosts != null && (run?.tokens ?? 0) >= boosts.prices.shield && shieldWouldHelp;
 
+  // A result, a purchase or a mode switch ends any killer purchase still being chosen.
+  useEffect(() => {
+    setBuyingPick(false);
+  }, [run?.updated_at, gameMode]);
+
   useEffect(() => {
     if (!awaitingPick && !buyingPick) setPendingPick(null);
   }, [awaitingPick, buyingPick]);

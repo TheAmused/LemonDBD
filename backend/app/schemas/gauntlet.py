@@ -1,5 +1,5 @@
 # backend/app/schemas/gauntlet.py
-from typing import TypedDict
+from typing import Literal, TypedDict
 
 from app.schemas.streak import PerkPayload
 
@@ -13,6 +13,10 @@ class TierInfo(TypedDict):
     roster_limit: int
     # Unique (teachable) perks of the target dealt on a tier that otherwise allows none.
     random_perk_count: int
+
+
+# Every boost that has a price: the three bought mid-match plus the shield spent with a reported loss.
+BoostName = Literal["reroll", "pick", "slot", "shield"]
 
 
 class BoostPrices(TypedDict):

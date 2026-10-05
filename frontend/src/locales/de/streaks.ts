@@ -109,7 +109,7 @@ export default {
   shieldMessage: "Kosten: {price} Tokens",
   shieldConfirm: "Ja",
   shieldDecline: "Nein",
-  boostPrice: "{price} Tokens",
+  boostPrice: "{price}",
   boostPickHint: "Wähle einen Killer aus der Liste unten.",
   boostConfirmPick: "Wählen",
   pageStreakIntro: "Wähle einen Killer und baue den stärksten Build aus der aktuellen Perk-Seite. Sieg führt zur nächsten Seite.",

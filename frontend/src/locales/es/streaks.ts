@@ -109,7 +109,7 @@ export default {
   shieldMessage: "Coste: {price} tokens",
   shieldConfirm: "Sí",
   shieldDecline: "No",
-  boostPrice: "{price} tokens",
+  boostPrice: "{price}",
   boostPickHint: "Elige un asesino de la lista de abajo.",
   boostConfirmPick: "Elegir",
   pageStreakIntro: "Elige un asesino y arma la mejor combinación de su página actual. Gana para avanzar de página.",

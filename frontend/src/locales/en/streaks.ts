@@ -109,7 +109,7 @@ export default {
   shieldMessage: "Cost: {price} tokens",
   shieldConfirm: "Yes",
   shieldDecline: "No",
-  boostPrice: "{price} tokens",
+  boostPrice: "{price}",
   boostPickHint: "Choose a killer from the roster below.",
   boostConfirmPick: "Pick",
   pageStreakIntro: "Pick a killer and build the strongest loadout you can from their current perk page. After a win you move to the next page, after a loss you start over.",

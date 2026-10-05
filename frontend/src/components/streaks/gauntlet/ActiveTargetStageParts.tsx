@@ -156,7 +156,6 @@ const TeachableSlot: React.FC<{ size: SlotSize; accent?: 'amber' | 'red'; }> = (
 
 interface PerkSlotsRowProps {
   tierInfo: TierInfo;
-  charPerks: Perk[];
   randomPerks: Perk[];
   displayName: string;
   size?: SlotSize;
@@ -166,7 +165,7 @@ interface PerkSlotsRowProps {
 }
 
 /** A single horizontal row of labelled slot chips. */
-const PerkSlotsRow: React.FC<PerkSlotsRowProps> = ({ tierInfo, charPerks, randomPerks, displayName, size = 'small', teachableAccent, bonusSlots = 0 }) => {
+const PerkSlotsRow: React.FC<PerkSlotsRowProps> = ({ tierInfo, randomPerks, displayName, size = 'small', teachableAccent, bonusSlots = 0 }) => {
   const dict = useDictionary();
   const perkLimit = tierInfo.perk_limit;
   const charactersPerksOnly = tierInfo.character_perks_only;
@@ -227,23 +226,9 @@ const PerkSlotsRow: React.FC<PerkSlotsRowProps> = ({ tierInfo, charPerks, random
           }
 
           if (charactersPerksOnly) {
-            // Every filled slot is one of the killer's own teachables, not a free pick.
-            const ownPerk = charPerks[idx];
-            if (ownPerk && perkLimit < charPerks.length) {
-              // The tier allows fewer perks than the killer teaches, so which ones is the player's choice:
-              // a generic slot, not a specific perk that would look assigned.
-              return <TeachableSlot key={`char-slot-${idx}`} size={size} accent="red" />;
-            }
-            return (
-              <SlotChip
-                key={`char-slot-${idx}`}
-                size={size}
-                iconClassName={ownPerk ? 'border-transparent' : 'bg-accent-red/10 border-accent-red/40 text-accent-red'}
-                caption={ownPerk ? perkDisplayName(ownPerk.name) : undefined}
-              >
-                {ownPerk ? <PerkArt perk={ownPerk} size={perkArtSize} /> : <HelpCircle className={iconSize} />}
-              </SlotChip>
-            );
+            // Every filled slot is one of the killer's own teachables, and which ones is the player's pick,
+            // so it is drawn as the generic teachable slot rather than a specific perk that would look assigned.
+            return <TeachableSlot key={`char-slot-${idx}`} size={size} accent="red" />;
           }
 
           if (idx === 0) {
@@ -315,7 +300,6 @@ export const CompactPlayerBuild: React.FC<CompactPlayerBuildProps> = ({ index, p
         <div className="flex-1 min-w-0 flex items-center justify-center">
           <PerkSlotsRow
             tierInfo={tierInfo}
-            charPerks={player.character_perks ?? []}
             randomPerks={player.random_perks ?? []}
             displayName={displayName}
             size="large"
@@ -342,7 +326,6 @@ export const CompactPlayerBuild: React.FC<CompactPlayerBuildProps> = ({ index, p
             )}
             <PerkSlotsRow
               tierInfo={tierInfo}
-              charPerks={player.character_perks ?? []}
               randomPerks={player.random_perks ?? []}
               displayName={displayName}
               size={shared ? 'compact' : 'small'}

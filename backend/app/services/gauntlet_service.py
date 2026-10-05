@@ -16,6 +16,7 @@ from app.services.gauntlet import (
     build_loadout,
     build_team_loadout,
     fetch_gauntlet_user_stats,
+    get_boost_config,
     get_characters_per_match,
     get_owned_character_ids,
     get_players_per_character,
@@ -67,6 +68,7 @@ class GauntletService(StreakRunService):
             "pool_frozen": pool_frozen,
             "owned_characters": resolve_character_names_by_ids(ids, role=r.role),
             "tier_info": tier_info,
+            "boosts": get_boost_config(r.game_mode),
         }
 
     def get_or_create_run(self, user_id: int, role: str, game_mode: str = DEFAULT_GAME_MODE) -> GauntletRunState:

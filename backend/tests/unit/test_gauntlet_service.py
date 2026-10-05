@@ -1,5 +1,6 @@
 # backend/tests/unit/test_gauntlet_service.py
 import pytest
+from pytest import MonkeyPatch
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 from app.models import GauntletMatchLog, GauntletRun, Killer, Perk, Survivor
@@ -844,3 +845,84 @@ class TestTokenRules:
         assert token_run["boosts"] == get_boost_config("lemon_killer")
         original = gauntlet_service.get_or_create_run(gauntlet_user, "killer")
         assert original["boosts"] is None
+
+
+@pytest.mark.unit
+class TestLemonKillerTokens:
+    MODE = "lemon_killer"
+
+    @pytest.fixture(autouse=True)
+    def setup_run(self, gauntlet_service: GauntletService, gauntlet_user: int) -> None:
+        for index in range(12):
+            seed_killer(f"Killer {index}", perk_count=3)
+        self.user_id = gauntlet_user
+        self.service = gauntlet_service
+        self.run = gauntlet_service.get_or_create_run(self.user_id, "killer", self.MODE)
+        gauntlet_service.reveal_target(self.user_id, self.run["id"])
+
+    def _set(self, **fields: object) -> None:
+        from app.core.extensions import db
+
+        run = db.session.get(GauntletRun, self.run["id"])
+        for name, value in fields.items():
+            setattr(run, name, value)
+        db.session.commit()
+
+    def _submit(self, result: str, use_shield: bool = False):
+        return self.service.submit_result(self.user_id, self.run["id"], result, use_shield=use_shield)
+
+    def test_a_win_rolls_tokens(self, monkeypatch: MonkeyPatch) -> None:
+        monkeypatch.setattr("app.services.gauntlet_service.roll_tokens", lambda: 3)
+        won = self._submit("win")
+        assert (won["tokens"], won["last_token_roll"]) == (3, 3)
+
+    def test_the_balance_stops_at_the_cap(self, monkeypatch: MonkeyPatch) -> None:
+        monkeypatch.setattr("app.services.gauntlet_service.roll_tokens", lambda: 5)
+        self._set(tokens=19)
+        won = self._submit("win")
+        assert (won["tokens"], won["last_token_roll"]) == (20, 5)
+
+    def test_a_loss_keeps_the_tokens_and_clears_the_roll(self) -> None:
+        self._set(tokens=7, last_token_roll=3, current_streak=4)
+        lost = self._submit("loss")
+        assert (lost["tokens"], lost["last_token_roll"]) == (7, 0)
+        assert lost["current_streak"] == 0
+
+    def test_the_original_mode_rolls_no_tokens(self) -> None:
+        original = self.service.get_or_create_run(self.user_id, "killer")
+        won = self.service.submit_result(self.user_id, original["id"], "win")
+        assert (won["tokens"], won["last_token_roll"]) == (0, 0)
+
+    def test_a_shield_cancels_the_loss_and_costs_tokens(self) -> None:
+        self._set(tokens=9, current_streak=4, last_checkpoint_streak=0)
+        shielded = self._submit("loss", use_shield=True)
+        assert shielded["current_streak"] == 4
+        assert shielded["attempts"] == 0
+        assert shielded["tokens"] == 1
+        from app.core.extensions import db
+
+        log = db.session.scalars(
+            select(GauntletMatchLog).where(GauntletMatchLog.run_id == self.run["id"])
+        ).all()[-1]
+        assert (log.result, log.streak_before, log.streak_after) == ("loss", 4, 4)
+
+    def test_a_shield_at_streak_zero_changes_nothing_but_the_balance(self) -> None:
+        self._set(tokens=8)
+        shielded = self._submit("loss", use_shield=True)
+        assert (shielded["current_streak"], shielded["attempts"], shielded["tokens"]) == (0, 0, 0)
+
+    def test_a_shield_needs_the_tokens(self) -> None:
+        self._set(tokens=7, current_streak=4)
+        with pytest.raises(ValueError, match="Not enough tokens"):
+            self._submit("loss", use_shield=True)
+        assert self.service.get_or_create_run(self.user_id, "killer", self.MODE)["current_streak"] == 4
+
+    def test_a_shield_only_cancels_a_loss(self) -> None:
+        self._set(tokens=20)
+        with pytest.raises(ValueError, match="A shield only cancels a loss"):
+            self._submit("win", use_shield=True)
+
+    def test_a_shield_is_refused_in_a_mode_without_boosts(self) -> None:
+        original = self.service.get_or_create_run(self.user_id, "killer")
+        with pytest.raises(ValueError, match="This mode has no boosts"):
+            self.service.submit_result(self.user_id, original["id"], "loss", use_shield=True)

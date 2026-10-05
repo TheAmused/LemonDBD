@@ -103,6 +103,37 @@ class TestGauntletRoutes:
         missing = client.post("/api/v1/gauntlet-streak/target", json={"run_id": run["id"]}, headers=headers)
         assert missing.status_code == 400
 
+    def test_boost_route_spends_tokens(
+        self, client: FlaskClient, gauntlet_auth_setup: tuple[int, str, dict[str, str]]
+    ) -> None:
+        from app.core.extensions import db
+        from app.models import GauntletRun
+
+        _, _, headers = gauntlet_auth_setup
+        run = client.get(
+            "/api/v1/gauntlet-streak/run?role=killer&game_mode=lemon_killer", headers=headers
+        ).get_json()["run"]
+        client.post("/api/v1/gauntlet-streak/reveal", json={"run_id": run["id"]}, headers=headers)
+        row = db.session.get(GauntletRun, run["id"])
+        row.tokens = 4
+        db.session.commit()
+
+        bought = client.post(
+            "/api/v1/gauntlet-streak/boost", json={"run_id": run["id"], "boost": "slot"}, headers=headers
+        )
+        assert bought.status_code == 200
+        body = bought.get_json()["run"]
+        assert (body["tokens"], body["bonus_perk_slots"]) == (0, 1)
+
+        poor = client.post(
+            "/api/v1/gauntlet-streak/boost", json={"run_id": run["id"], "boost": "reroll"}, headers=headers
+        )
+        assert poor.status_code == 400
+        unknown = client.post(
+            "/api/v1/gauntlet-streak/boost", json={"run_id": run["id"], "boost": "teleport"}, headers=headers
+        )
+        assert unknown.status_code == 400
+
     def test_get_run_auto_creates(
         self, client: FlaskClient, gauntlet_auth_setup: tuple[int, str, dict[str, str]]
     ) -> None:

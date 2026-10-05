@@ -926,3 +926,79 @@ class TestLemonKillerTokens:
         original = self.service.get_or_create_run(self.user_id, "killer")
         with pytest.raises(ValueError, match="This mode has no boosts"):
             self.service.submit_result(self.user_id, original["id"], "loss", use_shield=True)
+
+    def _buy(self, boost: str, character: str | None = None):
+        return self.service.buy_boost(self.user_id, self.run["id"], boost, character)
+
+    def _state(self):
+        return self.service.get_or_create_run(self.user_id, "killer", self.MODE)
+
+    def test_reroll_costs_two_and_lands_on_a_different_killer(self) -> None:
+        self._set(tokens=5)
+        before = self._state()["current_character_id"]
+        after = self._buy("reroll")
+        assert after["current_character_id"] != before
+        assert after["current_loadout"]["character"] == after["current_character_id"]
+        assert after["tokens"] == 3
+
+    def test_reroll_is_refused_when_no_other_killer_is_left(self) -> None:
+        state = self._state()
+        others = [name for name in state["owned_characters"] if name != state["current_character_id"]]
+        self._set(tokens=5, completed_characters=others)
+        with pytest.raises(ValueError, match="There is no other character to roll"):
+            self._buy("reroll")
+        assert self._state()["tokens"] == 5
+
+    def test_pick_costs_six_and_sets_the_character(self) -> None:
+        self._set(tokens=6)
+        state = self._state()
+        wanted = next(name for name in state["owned_characters"] if name != state["current_character_id"])
+        picked = self._buy("pick", wanted)
+        assert picked["current_character_id"] == wanted
+        assert picked["current_loadout"]["character"] == wanted
+        assert (picked["tokens"], picked["target_revealed"]) == (0, True)
+
+    def test_a_rejected_pick_costs_nothing(self) -> None:
+        state = self._state()
+        beaten = next(name for name in state["owned_characters"] if name != state["current_character_id"])
+        self._set(tokens=6, completed_characters=[beaten])
+        with pytest.raises(ValueError, match="You already beat that character"):
+            self._buy("pick", beaten)
+        with pytest.raises(ValueError, match="That character is not in your roster"):
+            self._buy("pick", "Nobody")
+        assert self._state()["tokens"] == 6
+
+    def test_a_boost_needs_the_tokens(self) -> None:
+        self._set(tokens=1)
+        with pytest.raises(ValueError, match="Not enough tokens"):
+            self._buy("reroll")
+
+    def test_the_first_tier_takes_one_extra_slot_and_the_last_takes_three(self) -> None:
+        self._set(tokens=20)
+        assert self._buy("slot")["bonus_perk_slots"] == 1
+        with pytest.raises(ValueError, match="No free perk slots left"):
+            self._buy("slot")
+        assert self._state()["tokens"] == 16
+        self._set(tokens=20, bonus_perk_slots=0, current_streak=30)
+        for expected in (1, 2, 3):
+            assert self._buy("slot")["bonus_perk_slots"] == expected
+        with pytest.raises(ValueError, match="No free perk slots left"):
+            self._buy("slot")
+
+    def test_bought_slots_survive_a_reroll_and_reset_after_the_result(self) -> None:
+        self._set(tokens=20)
+        self._buy("slot")
+        assert self._buy("reroll")["bonus_perk_slots"] == 1
+        assert self._submit("win")["bonus_perk_slots"] == 0
+
+    def test_boosts_need_a_started_match_and_a_mode_that_has_them(self) -> None:
+        self._set(tokens=20, target_revealed=False)
+        with pytest.raises(ValueError, match="Start the match first"):
+            self._buy("slot")
+        original = self.service.get_or_create_run(self.user_id, "killer")
+        with pytest.raises(ValueError, match="This mode has no boosts"):
+            self.service.buy_boost(self.user_id, original["id"], "slot")
+
+    def test_unknown_boosts_are_refused(self) -> None:
+        with pytest.raises(ValueError, match="Unknown boost"):
+            self._buy("teleport")

@@ -228,7 +228,7 @@ const PerkSlotsRow: React.FC<PerkSlotsRowProps> = ({ tierInfo, randomPerks, disp
           if (charactersPerksOnly) {
             // Every filled slot is one of the killer's own teachables, and which ones is the player's pick,
             // so it is drawn as the generic teachable slot rather than a specific perk that would look assigned.
-            return <TeachableSlot key={`char-slot-${idx}`} size={size} accent="red" />;
+            return <TeachableSlot key={`char-slot-${idx}`} size={size} accent={teachableAccent} />;
           }
 
           if (idx === 0) {

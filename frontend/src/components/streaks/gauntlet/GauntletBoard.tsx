@@ -334,7 +334,7 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({
           role={role}
           gameMode={gameMode}
         />
-        <TokenRollModal tokenRoll={tokenRoll} tokens={run?.tokens ?? 0} cap={boosts?.cap ?? 0} onClose={dismissTokenRoll} />
+        <TokenRollModal tokenRoll={tokenRoll} onClose={dismissTokenRoll} />
         {/* The token roll plays first; the checkpoint celebration follows once it is closed. */}
         <CheckpointCelebrationModal
           checkpoint={tokenRoll ? null : justBankedCheckpoint}

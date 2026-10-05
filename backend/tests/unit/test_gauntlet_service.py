@@ -883,6 +883,12 @@ class TestLemonKillerTokens:
         won = self._submit("win")
         assert (won["tokens"], won["last_token_roll"]) == (20, 5)
 
+    def test_a_win_at_the_cap_rolls_nothing(self, monkeypatch: MonkeyPatch) -> None:
+        monkeypatch.setattr("app.services.gauntlet_service.roll_tokens", lambda: 5)
+        self._set(tokens=20)
+        won = self._submit("win")
+        assert (won["tokens"], won["last_token_roll"]) == (20, 0)
+
     def test_a_loss_back_to_zero_starts_over_with_no_tokens(self) -> None:
         self._set(tokens=12, current_streak=4, last_checkpoint_streak=0)
         assert self._submit("loss")["tokens"] == 0

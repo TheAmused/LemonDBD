@@ -13,6 +13,8 @@ import type { TokenRollPlay } from './useGauntletRun';
 interface TokenRollModalProps {
   /** The win's token roll to play; null keeps the modal closed. */
   tokenRoll: TokenRollPlay | null;
+  /** The balance limit, quoted when the balance was already full. */
+  cap: number;
   onClose: () => void;
 }
 
@@ -21,10 +23,12 @@ interface TokenRollModalProps {
  * closing it lets the next killer's draw begin, so the two never compete
  * for the player's eyes.
  */
-export const TokenRollModal: React.FC<TokenRollModalProps> = ({ tokenRoll, onClose }) => {
+export const TokenRollModal: React.FC<TokenRollModalProps> = ({ tokenRoll, cap, onClose }) => {
   const dict = useDictionary();
   const locale = useLocale();
   const [landed, setLanded] = useState(false);
+  // A full balance rolls nothing, so there is no reel to wait for.
+  const full = tokenRoll?.roll === 0;
 
   useEffect(() => {
     if (!tokenRoll) setLanded(false);
@@ -35,7 +39,7 @@ export const TokenRollModal: React.FC<TokenRollModalProps> = ({ tokenRoll, onClo
       isOpen={tokenRoll != null}
       // Closing while the reel still spins would hide the result.
       onClose={() => {
-        if (landed) onClose();
+        if (landed || full) onClose();
       }}
       variant="lightbox"
       size="sm"
@@ -44,13 +48,23 @@ export const TokenRollModal: React.FC<TokenRollModalProps> = ({ tokenRoll, onClo
     >
       <div className="ck-card-in relative flex min-h-[22rem] w-full cursor-default flex-col items-center justify-center gap-4 overflow-hidden rounded-3xl border border-accent-amber/60 bg-bg-surface px-8 py-12 text-center">
         <Coins className="h-12 w-12 text-accent-amber" aria-hidden="true" />
-        <p className="type-label-sm tracking-spaced-md text-accent-amber">{dict.streaks.tokenRollTitle}</p>
-        {tokenRoll && <TokenRoulette roll={tokenRoll.roll} onDone={() => setLanded(true)} />}
-        {/* Always laid out, so the card does not jump when the result appears. */}
-        <p className={`type-card-title text-text-primary ${landed ? '' : 'invisible'}`}>
-          {formatMessage(dict.streaks.tokenRollResult, { count: tokenRoll?.roll ?? 0 }, locale)}
+        <p className="type-label-sm tracking-spaced-md text-accent-amber">
+          {full ? dict.streaks.tokenFullTitle : dict.streaks.tokenRollTitle}
         </p>
-        <Button variant="amber" size="md" onClick={onClose} disabled={!landed}>
+        {full ? (
+          <p className="type-card-title max-w-xs text-text-primary">
+            {formatMessage(dict.streaks.tokenFullText, { cap })}
+          </p>
+        ) : (
+          <>
+            {tokenRoll && <TokenRoulette roll={tokenRoll.roll} onDone={() => setLanded(true)} />}
+            {/* Always laid out, so the card does not jump when the result appears. */}
+            <p className={`type-card-title text-text-primary ${landed ? '' : 'invisible'}`}>
+              {formatMessage(dict.streaks.tokenRollResult, { count: tokenRoll?.roll ?? 0 }, locale)}
+            </p>
+          </>
+        )}
+        <Button variant="amber" size="md" onClick={onClose} disabled={!landed && !full}>
           {dict.streaks.continueButton}
         </Button>
       </div>

@@ -110,6 +110,8 @@ export default {
   tokensLabel: "Tokens",
   tokenRollTitle: "Glückwunsch!",
   tokenRollResult: "Du hast {count, plural, one {# Token} other {# Tokens}} gewonnen",
+  tokenFullTitle: "Tokens voll",
+  tokenFullText: "Du hast bereits das Maximum von {cap} Tokens, daher würfelt dieser Sieg keine. Gib welche aus, um wieder zu würfeln.",
   boostsTitle: "Boosts",
   boostReroll: "Killer neu würfeln",
   boostPick: "Killer wählen",

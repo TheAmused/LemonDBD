@@ -339,7 +339,7 @@ class GauntletService(StreakRunService):
                     r.tokens = 0
 
         boosts = get_boost_config(r.game_mode)
-        if boosts and result == "win":
+        if boosts and result == "win" and r.tokens < boosts["cap"]:
             rolled = roll_tokens()
             r.tokens = min(boosts["cap"], r.tokens + rolled)
             r.last_token_roll = rolled

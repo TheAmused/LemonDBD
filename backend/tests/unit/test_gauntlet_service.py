@@ -1002,3 +1002,9 @@ class TestLemonKillerTokens:
     def test_unknown_boosts_are_refused(self) -> None:
         with pytest.raises(ValueError, match="Unknown boost"):
             self._buy("teleport")
+
+    def test_run_lookups_lock_the_row_so_two_requests_cannot_spend_the_same_tokens(self) -> None:
+        from sqlalchemy.dialects import postgresql
+
+        statement = self.service._run_by_id_query(self.user_id, self.run["id"])
+        assert "FOR UPDATE" in str(statement.compile(dialect=postgresql.dialect()))

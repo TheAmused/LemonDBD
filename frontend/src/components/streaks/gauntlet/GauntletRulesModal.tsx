@@ -217,9 +217,15 @@ export const GauntletRulesModal: React.FC<GauntletRulesModalProps> = ({ isOpen, 
     ...(isLemonKiller
       ? [
           rawStreaks.lemonKillerTokenRule,
-          rawStreaks.lemonKillerBoostRule,
-          rawStreaks.lemonKillerSlotRule,
-          rawStreaks.lemonKillerShieldRule,
+          <>
+            {rawStreaks.lemonKillerBoostRule}
+            <ul className="mt-1.5 list-[circle] space-y-1 pl-4">
+              <li>{rawStreaks.lemonKillerRerollRule}</li>
+              <li>{rawStreaks.lemonKillerPickRule}</li>
+              <li>{rawStreaks.lemonKillerSlotRule}</li>
+              <li>{rawStreaks.lemonKillerShieldRule}</li>
+            </ul>
+          </>,
           rawStreaks.lemonKillerTokenKeepRule,
         ]
       : []),

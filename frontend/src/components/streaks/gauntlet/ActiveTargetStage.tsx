@@ -27,6 +27,8 @@ export interface ActiveTargetStageProps {
   pendingPick?: string | null;
   onAcceptPick?: () => void;
   holdReel?: boolean;
+  /** A killer the player bought with tokens: it replaces the current one at once, with no draw. */
+  instantTarget?: string | null;
   shownTarget: string | null;
   onShownTargetChange: (name: string | null) => void;
   /** Free perk slots bought with tokens for this match. */
@@ -45,6 +47,7 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
       pendingPick = null,
       onAcceptPick,
       holdReel = false,
+      instantTarget = null,
       shownTarget,
       onShownTargetChange,
       bonusSlots = 0,
@@ -100,7 +103,7 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
 
   const isRevealed = Boolean(run?.target_revealed);
   // A player-picked character shows up at once; there is nothing to roll.
-  const skipDraw = pickCharacter;
+  const skipDraw = pickCharacter || (instantTarget != null && instantTarget === targetName);
   const awaitingDraw = !skipDraw && isRevealed && Boolean(targetName) && shownTarget !== targetName;
 
   useEffect(() => {

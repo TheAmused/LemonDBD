@@ -562,6 +562,13 @@ class TestSoloMode:
         assert self.service.get_tier_info(39, "survivor", self.MODE)["random_perk_count"] == 0
         assert self.service.get_tier_info(40, "survivor")["random_perk_count"] == 0
 
+    def test_lemon_killer_last_tier_deals_a_random_unique_perk(self) -> None:
+        info = self.service.get_tier_info(30, "killer", "lemon_killer")
+        assert info["perk_limit"] == 0
+        assert info["random_perk_count"] == 1
+        assert self.service.get_tier_info(29, "killer", "lemon_killer")["random_perk_count"] == 0
+        assert self.service.get_tier_info(30, "killer")["random_perk_count"] == 0
+
     def test_checkpoint_banks_every_5_wins_but_tiers_still_step_every_10(self) -> None:
         for expected in range(1, 5):
             assert self.service.submit_result(self.user_id, self.run["id"], "win")["last_checkpoint_streak"] == 0
@@ -774,10 +781,10 @@ class TestSquadMode:
 
 
 @pytest.mark.unit
-class TestHooksMode:
-    """The killer hooks variant: checkpoints every 5 wins, perk tiers still step every 10."""
+class TestLemonKillerMode:
+    """The Lemon killer variant: checkpoints every 5 wins, perk tiers still step every 10."""
 
-    MODE = "lemon_hooks"
+    MODE = "lemon_killer"
 
     @pytest.fixture(autouse=True)
     def setup_run(self, gauntlet_service: GauntletService, gauntlet_user: int) -> None:

@@ -131,7 +131,7 @@ export const GauntletModeModal: React.FC<GauntletModeModalProps> = ({
       onSelectTile={(value) => {
         if (value === 'lemon') {
           // Killers have a single lemon mode, so there is no player count to pick.
-          if (role === 'killer') onSelectMode('lemon_hooks');
+          if (role === 'killer') onSelectMode('lemon_killer');
           else setStage('lemon');
           return;
         }

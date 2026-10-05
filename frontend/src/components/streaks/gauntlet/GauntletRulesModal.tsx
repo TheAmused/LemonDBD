@@ -3,6 +3,7 @@
 
 import React from 'react';
 import { Lock } from 'lucide-react';
+import { BOOST_ICONS } from './boostIcons';
 import type { Dictionary } from '@/locales/types';
 import type { GauntletGameMode, Role } from '@/types/gauntletStreak';
 import { RulesModalShell } from '../RulesModalShell';
@@ -219,11 +220,23 @@ export const GauntletRulesModal: React.FC<GauntletRulesModalProps> = ({ isOpen, 
           rawStreaks.lemonKillerTokenRule,
           <>
             {rawStreaks.lemonKillerBoostRule}
-            <ul className="mt-1.5 list-[circle] space-y-1 pl-4">
-              <li>{rawStreaks.lemonKillerRerollRule}</li>
-              <li>{rawStreaks.lemonKillerPickRule}</li>
-              <li>{rawStreaks.lemonKillerSlotRule}</li>
-              <li>{rawStreaks.lemonKillerShieldRule}</li>
+            <ul className="mt-1.5 space-y-1.5">
+              {(
+                [
+                  ['reroll', rawStreaks.lemonKillerRerollRule],
+                  ['pick', rawStreaks.lemonKillerPickRule],
+                  ['slot', rawStreaks.lemonKillerSlotRule],
+                  ['shield', rawStreaks.lemonKillerShieldRule],
+                ] as const
+              ).map(([boost, text]) => {
+                const Icon = BOOST_ICONS[boost];
+                return (
+                  <li key={boost} className="flex items-start gap-2">
+                    <Icon className="mt-0.5 h-3.5 w-3.5 shrink-0 text-accent-red" aria-hidden="true" />
+                    <span>{text}</span>
+                  </li>
+                );
+              })}
             </ul>
           </>,
           rawStreaks.lemonKillerTokenKeepRule,

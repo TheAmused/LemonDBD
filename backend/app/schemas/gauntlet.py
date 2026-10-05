@@ -75,6 +75,9 @@ class GauntletRunDict(TypedDict):
     checkpoint_characters: list[str]
     current_loadout: GauntletLoadout
     owned_character_ids: list[int]
+    tokens: int
+    last_token_roll: int
+    bonus_perk_slots: int
     attempts: int
     created_at: str | None
     updated_at: str | None
@@ -85,3 +88,5 @@ class GauntletRunState(GauntletRunDict):
     pool_frozen: bool
     owned_characters: list[str]
     tier_info: TierInfo
+    # None in modes without boosts.
+    boosts: BoostConfig | None

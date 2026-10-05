@@ -834,3 +834,13 @@ class TestTokenRules:
         assert base_perk_slots(get_tier_info(20, "killer", "lemon_killer")) == 1
         assert base_perk_slots(get_tier_info(30, "killer", "lemon_killer")) == 1
         assert base_perk_slots(get_tier_info(30, "killer")) == 0
+
+    def test_a_new_run_starts_with_no_tokens_and_exposes_the_boost_config(
+        self, gauntlet_service: GauntletService, gauntlet_user: int
+    ) -> None:
+        seed_killer("Nurse")
+        token_run = gauntlet_service.get_or_create_run(gauntlet_user, "killer", "lemon_killer")
+        assert (token_run["tokens"], token_run["last_token_roll"], token_run["bonus_perk_slots"]) == (0, 0, 0)
+        assert token_run["boosts"] == get_boost_config("lemon_killer")
+        original = gauntlet_service.get_or_create_run(gauntlet_user, "killer")
+        assert original["boosts"] is None

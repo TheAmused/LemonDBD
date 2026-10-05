@@ -19,15 +19,11 @@ const HOLD_MS = 900;
 /** Lets the strip paint at rest once before it starts to move. */
 const START_DELAY_MS = 50;
 
-/** Random amounts with no number twice in a row, ending on the rolled one. */
+/** The amounts in order, repeating, cut so the last cell is the rolled one: the reel ticks 1, 2, 3, 5 around and around before it brakes. */
 function buildStrip(roll: number): number[] {
-  const cells: number[] = [];
-  for (let i = 0; i < FILLER_CELLS; i += 1) {
-    const choices = ROLL_AMOUNTS.filter((amount) => amount !== cells[i - 1]);
-    cells.push(choices[Math.floor(Math.random() * choices.length)]);
-  }
-  cells.push(roll);
-  return cells;
+  const last = FILLER_CELLS;
+  const start = (((ROLL_AMOUNTS.indexOf(roll) - last) % ROLL_AMOUNTS.length) + ROLL_AMOUNTS.length) % ROLL_AMOUNTS.length;
+  return Array.from({ length: last + 1 }, (_, i) => ROLL_AMOUNTS[(start + i) % ROLL_AMOUNTS.length]);
 }
 
 interface TokenRouletteProps {
@@ -87,7 +83,7 @@ export const TokenRoulette: React.FC<TokenRouletteProps> = ({ roll, onDone }) =>
       >
         {strip.map((amount, index) => (
           <div key={index} className="flex h-24 items-center justify-center text-5xl font-black text-accent-amber">
-            +{amount}
+            {amount}
           </div>
         ))}
       </div>

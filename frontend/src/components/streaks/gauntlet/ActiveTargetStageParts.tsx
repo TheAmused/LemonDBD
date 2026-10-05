@@ -229,6 +229,11 @@ const PerkSlotsRow: React.FC<PerkSlotsRowProps> = ({ tierInfo, charPerks, random
           if (charactersPerksOnly) {
             // Every filled slot is one of the killer's own teachables, not a free pick.
             const ownPerk = charPerks[idx];
+            if (ownPerk && perkLimit < charPerks.length) {
+              // The tier allows fewer perks than the killer teaches, so which ones is the player's choice:
+              // a generic slot, not a specific perk that would look assigned.
+              return <TeachableSlot key={`char-slot-${idx}`} size={size} accent="red" />;
+            }
             return (
               <SlotChip
                 key={`char-slot-${idx}`}

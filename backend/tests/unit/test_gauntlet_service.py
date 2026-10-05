@@ -925,10 +925,13 @@ class TestLemonKillerTokens:
         ).all()[-1]
         assert (log.result, log.streak_before, log.streak_after) == ("loss", 4, 4)
 
-    def test_a_shield_at_streak_zero_changes_nothing_but_the_balance(self) -> None:
+    def test_a_shield_on_a_checkpoint_is_not_charged_and_the_loss_counts_normally(self) -> None:
         self._set(tokens=8)
-        shielded = self._submit("loss", use_shield=True)
-        assert (shielded["current_streak"], shielded["attempts"], shielded["tokens"]) == (0, 0, 0)
+        at_zero = self._submit("loss", use_shield=True)
+        assert (at_zero["current_streak"], at_zero["attempts"], at_zero["tokens"]) == (0, 1, 0)
+        self._set(current_streak=10, last_checkpoint_streak=10, tokens=8)
+        at_checkpoint = self._submit("loss", use_shield=True)
+        assert (at_checkpoint["current_streak"], at_checkpoint["attempts"], at_checkpoint["tokens"]) == (10, 2, 8)
 
     def test_a_shield_needs_the_tokens(self) -> None:
         self._set(tokens=7, current_streak=4)

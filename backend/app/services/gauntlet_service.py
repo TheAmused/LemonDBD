@@ -310,6 +310,7 @@ class GauntletService(StreakRunService):
             match_names = [char_id]
             match_perks = loadout.get("character_perks", [])
 
+        shielding = False
         if result == "win":
             streak_after = current_streak + 1
             best_after = max(best_streak, streak_after)
@@ -326,7 +327,11 @@ class GauntletService(StreakRunService):
                 r.status = "completed"
         else:
             best_after = best_streak
-            if use_shield:
+            if use_shield and get_boost_config(r.game_mode) is None:
+                raise ValueError("This mode has no boosts")
+            # On a checkpoint a loss costs no progress, so there is nothing for a shield to keep and it is not charged.
+            shielding = use_shield and current_streak > last_checkpoint
+            if shielding:
                 # Paid for with tokens: nothing about the run moves, the match is still logged as a loss.
                 self._spend_tokens(r, "shield")
                 streak_after = current_streak
@@ -376,7 +381,7 @@ class GauntletService(StreakRunService):
                 roster_limit=ORIGINAL_KILLER_ROSTER_LIMIT if r.role == "killer" else ORIGINAL_SURVIVOR_ROSTER_LIMIT,
             )
             self._freeze_pool(r)
-        elif result == "loss" and streak_after == 0 and not use_shield:
+        elif result == "loss" and streak_after == 0 and not shielding:
             self._freeze_pool(r)
 
         db.session.commit()

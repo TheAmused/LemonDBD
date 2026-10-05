@@ -883,11 +883,23 @@ class TestLemonKillerTokens:
         won = self._submit("win")
         assert (won["tokens"], won["last_token_roll"]) == (20, 5)
 
-    def test_a_loss_keeps_the_tokens_and_clears_the_roll(self) -> None:
-        self._set(tokens=7, last_token_roll=3, current_streak=4)
+    def test_a_loss_back_to_zero_starts_over_with_no_tokens(self) -> None:
+        self._set(tokens=12, current_streak=4, last_checkpoint_streak=0)
+        assert self._submit("loss")["tokens"] == 0
+
+    def test_a_loss_back_to_a_checkpoint_keeps_the_tokens(self) -> None:
+        self._set(tokens=12, current_streak=14, last_checkpoint_streak=10)
         lost = self._submit("loss")
-        assert (lost["tokens"], lost["last_token_roll"]) == (7, 0)
-        assert lost["current_streak"] == 0
+        assert (lost["current_streak"], lost["tokens"]) == (10, 12)
+
+    def test_a_shielded_loss_keeps_the_remaining_tokens(self) -> None:
+        self._set(tokens=12, current_streak=4, last_checkpoint_streak=0)
+        assert self._submit("loss", use_shield=True)["tokens"] == 4
+
+    def test_a_loss_clears_the_roll(self) -> None:
+        self._set(tokens=7, last_token_roll=3, current_streak=14, last_checkpoint_streak=10)
+        lost = self._submit("loss")
+        assert (lost["tokens"], lost["last_token_roll"], lost["current_streak"]) == (7, 0, 10)
 
     def test_the_original_mode_rolls_no_tokens(self) -> None:
         original = self.service.get_or_create_run(self.user_id, "killer")

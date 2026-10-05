@@ -111,7 +111,7 @@ export default {
   tokenRollTitle: "Congratulations!",
   tokenRollResult: "You won {count, plural, one {# token} other {# tokens}}",
   tokenFullTitle: "Tokens full",
-  tokenFullText: "You already have the maximum of {cap} tokens, so this win rolls none. Spend some to roll more.",
+  tokenFullText: "You already have the maximum of {cap} tokens",
   boostsTitle: "Boosts",
   boostReroll: "Reroll killer",
   boostPick: "Pick killer",

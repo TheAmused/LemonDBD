@@ -111,7 +111,7 @@ export default {
   tokenRollTitle: "おめでとうございます!",
   tokenRollResult: "{count}トークンを獲得しました",
   tokenFullTitle: "トークンが満タン",
-  tokenFullText: "すでに上限の{cap}トークンを持っているため、この勝利ではトークンは入手できません。使うとまた手に入ります。",
+  tokenFullText: "すでに上限の{cap}トークンを持っています",
   boostsTitle: "ブースト",
   boostReroll: "キラーをリロール",
   boostPick: "キラーを指名",

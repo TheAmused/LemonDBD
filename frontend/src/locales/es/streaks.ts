@@ -111,7 +111,7 @@ export default {
   tokenRollTitle: "¡Felicidades!",
   tokenRollResult: "Ganaste {count, plural, one {# token} other {# tokens}}",
   tokenFullTitle: "Tokens al máximo",
-  tokenFullText: "Ya tienes el máximo de {cap} tokens, así que esta victoria no lanza ninguno. Gasta algunos para volver a lanzar.",
+  tokenFullText: "Ya tienes el máximo de {cap} tokens",
   boostsTitle: "Mejoras",
   boostReroll: "Repetir asesino",
   boostPick: "Elegir asesino",

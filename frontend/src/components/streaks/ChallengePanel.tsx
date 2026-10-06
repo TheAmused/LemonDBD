@@ -143,21 +143,24 @@ interface StandardHeaderActionsProps {
   onOpenStats: () => void;
   onOpenHistory: () => void;
   onOpenReset: () => void;
-  /** Mode-specific buttons (change mode, perk pool), placed right after Rules. */
+  /** The mode or difficulty picker, placed first, before Rules. */
+  modeSelect?: React.ReactNode;
+  /** Other mode-specific buttons (perk pool), placed between the picker and Rules. */
   extra?: React.ReactNode;
 }
 
 /** The action row every challenge header shares, so they cannot drift apart. */
-export const StandardHeaderActions: React.FC<StandardHeaderActionsProps> = ({ onOpenRules, onOpenStats, onOpenHistory, onOpenReset, extra }) => {
+export const StandardHeaderActions: React.FC<StandardHeaderActionsProps> = ({ onOpenRules, onOpenStats, onOpenHistory, onOpenReset, modeSelect, extra }) => {
   const dict = useDictionary();
   return (
   <>
+    {modeSelect}
+    {extra}
     <HeaderButton
       onClick={onOpenRules}
       title={dict.streaks.rules}
       icon={<BookOpen className="h-5 w-5" aria-hidden="true" />}
     />
-    {extra}
     <HeaderButton
       onClick={onOpenStats}
       title={dict.streaks.stats}

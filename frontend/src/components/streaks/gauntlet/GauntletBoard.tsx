@@ -2,7 +2,7 @@
 // frontend/src/components/streaks/gauntlet/GauntletBoard.tsx
 import { Button } from '@/components/common/Button';
 import type { Dictionary } from '@/locales/types';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import { DEFAULT_GAUNTLET_GAME_MODE, GauntletGameMode, PICK_CHARACTER_MODES, Role } from '@/types/gauntletStreak';
@@ -21,6 +21,10 @@ import {
 import { useCelebrateOnRise, useCelebration } from '../useCelebration';
 import { GauntletHeader } from './GauntletHeader';
 import { ActiveTargetStage } from './ActiveTargetStage';
+import { LemonTokenPanel } from './LemonTokenPanel';
+import { TokenRollModal } from './TokenRollModal';
+import { ShieldPromptModal } from './ShieldPromptModal';
+import { formatMessage } from '@/utils/i18nFormat';
 import { CharacterRosterGrid } from './CharacterRosterGrid';
 import { useDictionary } from '@/context/DictionaryContext';
 import { useChallengeCompletionStatus } from '../useChallengeCompletionStatus';
@@ -47,6 +51,8 @@ function gameModeLabel(mode: GauntletGameMode, dict: Dictionary['streaks']): str
       return dict.lemonDuo;
     case 'lemon_squad':
       return dict.lemonSquad;
+    case 'lemon_killer':
+      return dict.lemonMode;
     default:
       return dict.original;
   }
@@ -77,7 +83,10 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({
     submitResult,
     reveal,
     chooseTarget,
+    buyBoost,
     reset,
+    tokenRoll,
+    dismissTokenRoll,
     justBankedCheckpoint,
     dismissCheckpointCelebration,
   } = useGauntletRun(role, gameMode);
@@ -95,6 +104,13 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({
   const [isChangeModeOpen, setIsChangeModeOpen] = useState(false);
   // Solo picks in two steps: click a character in the roster, then accept.
   const [pendingPick, setPendingPick] = useState<string | null>(null);
+  // Lemon killer: choosing a killer to buy, and the shield question after a loss is reported.
+  const [buyingPick, setBuyingPick] = useState(false);
+  // The killer just bought with tokens; it appears at once instead of going through the draw reel.
+  const [instantTarget, setInstantTarget] = useState<string | null>(null);
+  const [shieldPromptOpen, setShieldPromptOpen] = useState(false);
+  // The modal stays mounted while it animates out, so a second click on it must not report the loss again.
+  const shieldAnswered = useRef(false);
   const { celebrating, celebrate } = useCelebration();
   const [confirmingReset, setConfirmingReset] = useState(false);
   // The target the reel has actually finished landing on, kept separate from
@@ -116,10 +132,29 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({
       ? []
       : run?.current_loadout?.players?.map((player) => player.character) ?? [shownTarget];
   const awaitingPick = pickCharacter && Boolean(run) && !run?.target_revealed && !isCompleted;
+  const boosts = run?.boosts ?? null;
+  const matchActive = Boolean(run?.target_revealed) && !isCompleted;
+  // Reroll and pick need an unbeaten killer other than the one in play.
+  const hasOtherKiller =
+    run?.owned_characters.some((name) => name !== run.current_character_id && !run.completed_characters.includes(name)) ??
+    false;
+  // Only worth asking when the loss would actually cost progress: at a checkpoint there is nothing to protect.
+  const shieldWouldHelp = (run?.current_streak ?? 0) > (run?.last_checkpoint_streak ?? 0);
+  const canAffordShield = boosts != null && (run?.tokens ?? 0) >= boosts.prices.shield && shieldWouldHelp;
+
+  // Once the bought killer is on screen the draw rules apply again, so a later match can draw it normally.
+  useEffect(() => {
+    if (instantTarget && shownTarget === instantTarget) setInstantTarget(null);
+  }, [instantTarget, shownTarget]);
+
+  // A result, a purchase or a mode switch ends any killer purchase still being chosen.
+  useEffect(() => {
+    setBuyingPick(false);
+  }, [run?.updated_at, gameMode]);
 
   useEffect(() => {
-    if (!awaitingPick) setPendingPick(null);
-  }, [awaitingPick]);
+    if (!awaitingPick && !buyingPick) setPendingPick(null);
+  }, [awaitingPick, buyingPick]);
 
   return (
     <div className="pb-16">
@@ -141,12 +176,12 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({
           currentStreak={run?.current_streak || 0}
           bestStreak={run?.best_streak || 0}
           poolFrozen={Boolean(run?.pool_frozen) && Boolean(run?.target_revealed)}
-          modeLabel={gameMode !== 'original' || role === 'survivor' ? gameModeLabel(gameMode, dict.streaks) : undefined}
+          modeLabel={gameModeLabel(gameMode, dict.streaks)}
           onOpenStats={() => setIsStatsOpen(true)}
           onOpenHistory={() => setIsHistoryOpen(true)}
           onOpenRules={() => setIsRulesOpen(true)}
           onOpenReset={() => setConfirmingReset(true)}
-          onChangeMode={role === 'survivor' ? () => setIsChangeModeOpen(true) : undefined}
+          onChangeMode={() => setIsChangeModeOpen(true)}
         />
           }
         >
@@ -157,23 +192,64 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({
             busy={busy}
           />
         ) : (
+          <>
           <ActiveTargetStage
             run={run}
             role={role}
             characters={rosterCharacters}
             loading={loading || busy}
             onWin={() => submitResult('win')}
-            onLoss={() => submitResult('loss')}
+            onLoss={() => {
+              // A reported loss is always sent; with the tokens for it the player is first asked about a shield.
+              if (canAffordShield) {
+                shieldAnswered.current = false;
+                setShieldPromptOpen(true);
+              } else {
+                submitResult('loss');
+              }
+            }}
+            bonusSlots={run?.bonus_perk_slots ?? 0}
             onReveal={reveal}
             pickCharacter={pickCharacter}
             pendingPick={pendingPick}
             onAcceptPick={() => {
               if (pendingPick) chooseTarget(pendingPick);
             }}
-            holdReel={justBankedCheckpoint != null}
+            holdReel={justBankedCheckpoint != null || tokenRoll != null}
+            instantTarget={instantTarget}
             shownTarget={shownTarget}
             onShownTargetChange={setShownTarget}
           />
+          {boosts && run && (
+            <LemonTokenPanel
+              boosts={boosts}
+              tokens={run.tokens}
+              tierInfo={run.tier_info}
+              bonusSlots={run.bonus_perk_slots}
+              matchActive={matchActive}
+              hasOtherKiller={hasOtherKiller}
+              busy={busy}
+              picking={buyingPick}
+              pendingPick={pendingPick}
+              onStartPick={() => setBuyingPick(true)}
+              onCancelPick={() => {
+                setBuyingPick(false);
+                setPendingPick(null);
+              }}
+              onConfirmPick={async () => {
+                if (!pendingPick) return;
+                setInstantTarget(pendingPick);
+                const bought = await buyBoost('pick', pendingPick);
+                if (!bought) setInstantTarget(null);
+                setBuyingPick(false);
+                setPendingPick(null);
+              }}
+              onBuy={(boost) => {
+                buyBoost(boost);
+              }}
+            />
+          )}
+          </>
         )}
         </ChallengePanel>
 
@@ -183,7 +259,7 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({
           completedCharacters={run?.completed_characters || []}
           checkpointCharacters={run?.checkpoint_characters || []}
           activeCharacterIds={activeCharacterIds}
-          onSelectCharacter={awaitingPick && !busy ? setPendingPick : undefined}
+          onSelectCharacter={(awaitingPick || buyingPick) && !busy ? setPendingPick : undefined}
           selectedCharacterId={pendingPick}
           loading={loadingRoster}
         />
@@ -195,9 +271,34 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({
           onCancel={() => setConfirmingReset(false)}
           onConfirm={() => {
             setConfirmingReset(false);
+            setShieldPromptOpen(false);
+            setBuyingPick(false);
             reset();
           }}
         />
+
+        {boosts && (
+          <ShieldPromptModal
+            open={shieldPromptOpen}
+            title={dict.streaks.shieldTitle}
+            message={formatMessage(dict.streaks.shieldMessage, { price: boosts.prices.shield })}
+            confirmLabel={dict.streaks.shieldConfirm}
+            cancelLabel={dict.streaks.shieldDecline}
+            busy={busy}
+            onConfirm={() => {
+              if (shieldAnswered.current) return;
+              shieldAnswered.current = true;
+              setShieldPromptOpen(false);
+              submitResult('loss', true);
+            }}
+            onCancel={() => {
+              if (shieldAnswered.current) return;
+              shieldAnswered.current = true;
+              setShieldPromptOpen(false);
+              submitResult('loss', false);
+            }}
+          />
+        )}
 
         <GauntletStatsDrawer
           isOpen={isStatsOpen}
@@ -237,7 +338,12 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({
           role={role}
           gameMode={gameMode}
         />
-        <CheckpointCelebrationModal checkpoint={justBankedCheckpoint} onClose={dismissCheckpointCelebration} />
+        <TokenRollModal tokenRoll={tokenRoll} cap={boosts?.cap ?? 0} onClose={dismissTokenRoll} />
+        {/* The token roll plays first; the checkpoint celebration follows once it is closed. */}
+        <CheckpointCelebrationModal
+          checkpoint={tokenRoll ? null : justBankedCheckpoint}
+          onClose={dismissCheckpointCelebration}
+        />
       </div>
     </div>
   );

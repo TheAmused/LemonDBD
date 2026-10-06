@@ -1,6 +1,6 @@
 # backend/app/models/gauntlet.py
 from typing import TYPE_CHECKING
-from sqlalchemy import Boolean, String, UniqueConstraint
+from sqlalchemy import Boolean, Integer, String, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.core.extensions import Base
 from app.models.challenge_mixins import StreakLogMixin, StreakRunMixin
@@ -25,6 +25,11 @@ class GauntletRun(StreakRunMixin, ColumnDictMixin["GauntletRunDict"], Base):
     checkpoint_characters: Mapped[list[str]] = mapped_column(JSON_LIST, default=list, nullable=False)
     current_loadout: Mapped[GauntletLoadout] = mapped_column(JSON_DICT, default=dict, nullable=False)
     owned_character_ids: Mapped[list[int]] = mapped_column(JSON_LIST, default=list, nullable=False)
+    # Lemon killer boosts: the spendable balance, what the last win rolled (0 after a loss),
+    # and the free perk slots bought for the match in play.
+    tokens: Mapped[int] = mapped_column(Integer, default=0, server_default="0", nullable=False)
+    last_token_roll: Mapped[int] = mapped_column(Integer, default=0, server_default="0", nullable=False)
+    bonus_perk_slots: Mapped[int] = mapped_column(Integer, default=0, server_default="0", nullable=False)
 
     match_logs: Mapped[list["GauntletMatchLog"]] = relationship(
         back_populates="run", cascade="all, delete-orphan", order_by="GauntletMatchLog.timestamp.asc()"

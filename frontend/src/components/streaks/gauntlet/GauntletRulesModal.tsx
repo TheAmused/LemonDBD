@@ -3,6 +3,7 @@
 
 import React from 'react';
 import { Lock } from 'lucide-react';
+import { BOOST_ICONS } from './boostIcons';
 import type { Dictionary } from '@/locales/types';
 import type { GauntletGameMode, Role } from '@/types/gauntletStreak';
 import { RulesModalShell } from '../RulesModalShell';
@@ -164,6 +165,7 @@ export const GauntletRulesModal: React.FC<GauntletRulesModalProps> = ({ isOpen, 
   const isDuo = gameMode === 'lemon_duo';
   const isSquad = gameMode === 'lemon_squad';
   const isTeam = isDuo || isSquad;
+  const isLemonKiller = gameMode === 'lemon_killer';
   // Duo and squad have four stages, so they stop before the perkless tier.
   const tiers =
     role === 'killer' ? KILLER_TIERS : isTeam ? SURVIVOR_TIERS.slice(0, TEAM_STREAK_RANGES.length) : SURVIVOR_TIERS;
@@ -177,6 +179,8 @@ export const GauntletRulesModal: React.FC<GauntletRulesModalProps> = ({ isOpen, 
     ? formatMessage(rawStreaks.gauntletRulesTitle, { role: roleLabel })
     : roleLabel;
 
+  const devNote = isLemonKiller ? rawStreaks.lemonKillerDevNote : isSolo || isDuo || isSquad ? rawStreaks.soloDevNote : undefined;
+
   const winCondition = isSolo && rawStreaks.soloWinCondition
     ? rawStreaks.soloWinCondition
     : isDuo && rawStreaks.duoWinCondition
@@ -184,11 +188,11 @@ export const GauntletRulesModal: React.FC<GauntletRulesModalProps> = ({ isOpen, 
     : isSquad && rawStreaks.squadWinCondition
     ? rawStreaks.squadWinCondition
     : role === 'killer'
-    ? (rawStreaks.gauntletWinConditionKiller || 'Win = 3 kills or more. Anything less breaks the streak.')
+    ? (rawStreaks.gauntletWinConditionKiller || 'Win = 3 kills or more.')
     : (rawStreaks.gauntletWinConditionSurvivor || 'Win = escape, through the exit gates or the hatch. Anything else breaks the streak.');
 
   const perkRule = role === 'killer'
-    ? (rawStreaks.gauntletKillerPerkRule || 'You always run your own teachables. Start with all 3, lose one each tier.')
+    ? (isLemonKiller && rawStreaks.lemonKillerPerkRule) || (rawStreaks.gauntletKillerPerkRule || 'You always run your own teachables.')
     : (isSolo && rawStreaks.soloPerkRule) ||
       rawStreaks.gauntletSurvivorPerkRule ||
       "One of your perks has to be the drawn character's own.";
@@ -207,10 +211,37 @@ export const GauntletRulesModal: React.FC<GauntletRulesModalProps> = ({ isOpen, 
     ? rawStreaks.duoCheckpointRule
     : isSquad
     ? rawStreaks.squadCheckpointRule
-    : rawStreaks.gauntletCheckpointRule || 'You get a checkpoint every 10 wins, so a loss only falls back that far, not to zero.';
+    : rawStreaks.gauntletCheckpointRule || 'You get a checkpoint every 10 wins, so a loss only falls back that far.';
 
   const howItWorks = [
     winCondition,
+    ...(isLemonKiller
+      ? [
+          rawStreaks.lemonKillerTokenRule,
+          <>
+            {rawStreaks.lemonKillerBoostRule}
+            <ul className="mt-1.5 space-y-1.5">
+              {(
+                [
+                  ['reroll', rawStreaks.lemonKillerRerollRule],
+                  ['pick', rawStreaks.lemonKillerPickRule],
+                  ['slot', rawStreaks.lemonKillerSlotRule],
+                  ['shield', rawStreaks.lemonKillerShieldRule],
+                ] as const
+              ).map(([boost, text]) => {
+                const Icon = BOOST_ICONS[boost];
+                return (
+                  <li key={boost} className="flex items-start gap-2">
+                    <Icon className="mt-0.5 h-3.5 w-3.5 shrink-0 text-accent-red" aria-hidden="true" />
+                    <span>{text}</span>
+                  </li>
+                );
+              })}
+            </ul>
+          </>,
+          rawStreaks.lemonKillerTokenKeepRule,
+        ]
+      : []),
     ...(isSolo ? [rawStreaks.soloHalfWinRule, rawStreaks.soloPickRule] : []),
     ...(isDuo ? [rawStreaks.duoCharactersRule, rawStreaks.duoRematchRule, rawStreaks.duoHatchRule] : []),
     ...(isSquad ? [rawStreaks.squadCharactersRule, rawStreaks.squadRematchRule, rawStreaks.squadUniquePerkRule] : []),
@@ -226,12 +257,8 @@ export const GauntletRulesModal: React.FC<GauntletRulesModalProps> = ({ isOpen, 
       onClose={onClose}
       title={modalTitle}
     >
-      {(isSolo || isDuo || isSquad) && rawStreaks.soloDevNote && (
-        <RulesConceptCard
-          tone="red"
-          title={rawStreaks.devNoteTitle || 'Note from the devs'}
-          text={rawStreaks.soloDevNote}
-        />
+      {devNote && (
+        <RulesConceptCard tone="red" title={rawStreaks.devNoteTitle || 'Note from the devs'} text={devNote} />
       )}
 
       <RulesHowItWorks tone="red" title={rawStreaks.howItWorks || 'How it works'} items={howItWorks} />
@@ -247,7 +274,7 @@ export const GauntletRulesModal: React.FC<GauntletRulesModalProps> = ({ isOpen, 
 
             const perkLimitText =
               tier.perkLimit === 0
-                ? isSolo && role === 'survivor'
+                ? (isSolo && role === 'survivor') || (isLemonKiller && role === 'killer')
                   ? rawStreaks.soloRandomPerkBadge || '1 random unique perk'
                   : rawStreaks.perklessTrial || '0 Perks'
                 : rawStreaks.perksAllowedCount

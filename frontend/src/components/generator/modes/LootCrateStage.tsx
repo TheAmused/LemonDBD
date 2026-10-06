@@ -254,19 +254,14 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
             />
           </motion.button>
           {phase === 'closed' && (
-            <>
-              <p className="text-xs sm:text-sm xl:text-base 2xl:text-lg wide:text-xl font-black uppercase tracking-wide text-text-muted">
-                {dict.generator.crateTapToOpen}
-              </p>
-              <DbdButton
-                role={role}
-                size="lg"
-                onClick={handleOpen}
-                disabled={activePlayablePerks.length === 0}
-              >
-                {dict.generator.crateTapToOpen}
-              </DbdButton>
-            </>
+            <DbdButton
+              role={role}
+              size="lg"
+              onClick={handleOpen}
+              disabled={activePlayablePerks.length === 0}
+            >
+              {dict.generator.crateTapToOpen}
+            </DbdButton>
           )}
           {phase === 'shaking' && (
             <p aria-live="polite" className="text-xs sm:text-sm xl:text-base 2xl:text-lg wide:text-xl font-black uppercase tracking-wide text-accent-amber animate-pulse">

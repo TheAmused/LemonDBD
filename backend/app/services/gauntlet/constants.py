@@ -1,17 +1,18 @@
 # backend/app/services/gauntlet/constants.py
+import random
 from typing import Any
 
-from app.schemas.gauntlet import TierInfo
+from app.schemas.gauntlet import BoostConfig, BoostPrices, TierInfo
 
 CHECKPOINT_INTERVAL: int = 10
 BUILD_SIZE: int = 4
 GENERAL_CHARACTER: str = "General"
 
 # The first entry is the default. Every mode keeps its own run per (user, role).
-GAME_MODES: tuple[str, ...] = ("original", "lemon_solo", "lemon_duo", "lemon_squad")
+GAME_MODES: tuple[str, ...] = ("original", "lemon_solo", "lemon_duo", "lemon_squad", "lemon_killer")
 DEFAULT_GAME_MODE: str = GAME_MODES[0]
 
-# Modes not listed here bank a checkpoint every CHECKPOINT_INTERVAL wins and step tiers on the same spacing.
+# Modes not listed here bank a checkpoint every CHECKPOINT_INTERVAL wins; perk tiers keep their own spacing.
 CHECKPOINT_INTERVALS: dict[str, int] = {"lemon_solo": 5}
 # Survivor modes whose checkpoints, and with them the perk tiers, land on fixed win counts.
 # Each start opens the next tier, and the stage after the last one runs to the end of the run.
@@ -23,8 +24,34 @@ PLAYERS_PER_CHARACTER: dict[str, int] = {"lemon_squad": 2}
 # The player picks the target character instead of the server rolling one.
 PICK_CHARACTER_MODES: tuple[str, ...] = ("lemon_solo",)
 # The last, perkless tier deals random unique perks of the target instead of an empty loadout.
-RANDOM_PERK_LAST_TIER_MODES: tuple[str, ...] = ("lemon_solo",)
+RANDOM_PERK_LAST_TIER_MODES: tuple[str, ...] = ("lemon_solo", "lemon_killer")
 RANDOM_PERK_COUNT: int = 1
+
+# Modes where every win rolls tokens the player spends on boosts (reroll, pick, perk slot, shield).
+TOKEN_MODES: tuple[str, ...] = ("lemon_killer",)
+TOKEN_CAP: int = 20
+# (tokens, weight) per possible roll; two tokens is the most common and there is no empty roll.
+TOKEN_ROLLS: tuple[tuple[int, int], ...] = ((1, 15), (2, 35), (3, 30), (5, 20))
+BOOST_PRICES: BoostPrices = {"reroll": 2, "pick": 6, "slot": 4, "shield": 8}
+# Perk slots in play at once in one match: the tier's own and the bought ones together.
+MAX_PERK_SLOTS: int = 4
+
+
+def get_boost_config(game_mode: str) -> BoostConfig | None:
+    if game_mode not in TOKEN_MODES:
+        return None
+    return {"cap": TOKEN_CAP, "max_perk_slots": MAX_PERK_SLOTS, "prices": BOOST_PRICES}
+
+
+def roll_tokens() -> int:
+    amounts = [amount for amount, _ in TOKEN_ROLLS]
+    weights = [weight for _, weight in TOKEN_ROLLS]
+    return random.choices(amounts, weights=weights)[0]
+
+
+def base_perk_slots(tier_info: TierInfo) -> int:
+    """Slots a tier fills on its own: its perk limit, or the one dealt perk on a perkless tier."""
+    return max(tier_info["perk_limit"], tier_info["random_perk_count"])
 
 
 def get_characters_per_match(game_mode: str) -> int:
@@ -76,9 +103,7 @@ def get_tier_info(streak: int, role: str, game_mode: str = DEFAULT_GAME_MODE) ->
             continue
         if streak >= min_streak:
             tier = candidate
-    deals_random_perks = (
-        role == "survivor" and tier["perk_limit"] == 0 and game_mode in RANDOM_PERK_LAST_TIER_MODES
-    )
+    deals_random_perks = tier["perk_limit"] == 0 and game_mode in RANDOM_PERK_LAST_TIER_MODES
     return {
         "name": tier["name"],
         "tier_level": tier["tier_level"],

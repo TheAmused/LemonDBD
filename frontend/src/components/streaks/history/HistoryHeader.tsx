@@ -64,7 +64,7 @@ export const HistoryHeader: React.FC<HistoryHeaderProps> = ({
           onOpenStats={onOpenStats}
           onOpenHistory={onOpenHistory}
           onOpenReset={onOpenReset}
-          extra={
+          modeSelect={
             <ModeSelectButton
               label={modeLabel}
               tone={MODE_TONE[mode]}

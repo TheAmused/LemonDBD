@@ -12,7 +12,7 @@ export default {
   others: "Inne",
   admin: "ADMINISTRATOR",
   adminControlCenter: "Panel Administracyjny",
-  signIn: "Zaloguj się / Zarejestruj",
+  signIn: "Zaloguj się",
   signOut: "Wyloguj się",
   emailNotVerified: "Zweryfikuj swoje konto",
   reportBug: "Zgłoś błąd",

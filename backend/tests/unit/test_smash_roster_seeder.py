@@ -162,7 +162,7 @@ EXPECTED_LEGENDARY_WATERMARKS = {
     "attack_titan": ("ATTACK", "TITAN"),
     "armored_titan": ("ARMORED", "TITAN"),
     "war_hammer_titan": ("WAR HAMMER", "TITAN"),
-    "mina": ("MINA", "HARKER"),
+    "mina": ("MINA", "VIRTUAL IDOL"),
     "tomie_kawakami": ("TOMIE", "KAWAKAMI"),
     "rize_kamishiro": ("RIZE", "KAMISHIRO"),
     "yellow_rabbit": ("YELLOW", "RABBIT"),

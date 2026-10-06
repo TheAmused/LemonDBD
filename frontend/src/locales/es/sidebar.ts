@@ -12,7 +12,7 @@ export default {
   others: "Otros",
   admin: "ADMIN",
   adminControlCenter: "Centro de Control Admin",
-  signIn: "Iniciar Sesión / Registrarse",
+  signIn: "Iniciar Sesión",
   signOut: "Cerrar Sesión",
   emailNotVerified: "Correo no verificado. Verificar ahora",
   reportBug: "Reportar Error",

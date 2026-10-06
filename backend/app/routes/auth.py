@@ -75,7 +75,7 @@ def login():
 
     user, token = user_service.authenticate(username_or_email.strip(), password.strip())
     if not user or not token:
-        return jsonify({"error": "Invalid credentials or account disabled.", "status": 401}), 401
+        return jsonify({"error": "Invalid credentials", "status": 401}), 401
 
     summary = ownership_service.get_user_ownership_summary(user.id)
 

@@ -8,8 +8,8 @@ import { User, Sparkles, Star, Lock, HelpCircle } from 'lucide-react';
 import { avatarUrlForCharacter, perkIconUrl, staticUrl } from '@/utils/staticUrl';
 import { useCharacterDisplayName, usePerkDisplayName } from '@/context/DisplayNamesContext';
 import { KillerIcon } from '@/components/icons/DbdIcons';
-import { tip } from '@/components/common/Tooltip';
 import { useDictionary } from '@/context/DictionaryContext';
+import { baseSlots } from '@/utils/perkSlots';
 
 const avatarUrlFor = (name: string, role: Role, characters: OwnedCharacterItem[] = []) => {
   if (!name) return null;
@@ -84,6 +84,12 @@ const SLOT_ICON_BASE: Record<SlotSize, string> = {
   compact: 'w-12 h-12',
 };
 
+const CAPTION_CLASS: Record<SlotSize, string> = {
+  large: 'mt-5 w-28',
+  small: 'mt-4 w-24',
+  compact: 'mt-3 w-20',
+};
+
 const slotIconBase = (size: SlotSize) =>
   `${SLOT_ICON_BASE[size]} shrink-0 rounded-md rotate-45 flex items-center justify-center border relative`;
 
@@ -100,14 +106,13 @@ const BADGE_BG: Record<'amber' | 'red', string> = {
 
 const SlotChip: React.FC<{
   iconClassName: string;
-  caption: string;
-  title?: string;
+  caption?: string;
   size: SlotSize;
   badge?: string;
   badgeColor?: 'amber' | 'red';
   children: React.ReactNode;
-}> = ({ iconClassName, caption, title, size, badge, badgeColor = 'amber', children }) => (
-  <div className="relative inline-flex shrink-0" {...tip(title || caption, undefined, 'status')}>
+}> = ({ iconClassName, caption, size, badge, badgeColor = 'amber', children }) => (
+  <div className="relative inline-flex shrink-0 flex-col items-center">
     {badge && (
       <div
         className={`absolute -top-2.5 left-1/2 -translate-x-1/2 z-10 ${BADGE_BG[badgeColor]} text-text-primary ${BADGE_TEXT_SIZE[size]} font-black uppercase tracking-wide px-1.5 py-0.5 rounded shadow-sm whitespace-nowrap`}
@@ -118,6 +123,7 @@ const SlotChip: React.FC<{
     <div className={`${slotIconBase(size)} ${iconClassName}`}>
       <div className="-rotate-45 flex items-center justify-center">{children}</div>
     </div>
+    {caption && <span className={`${CAPTION_CLASS[size]} text-center text-xs font-bold leading-tight text-text-primary line-clamp-2`}>{caption}</span>}
   </div>
 );
 
@@ -134,14 +140,12 @@ const TEACHABLE_ACCENT = {
 
 /** The "own unique perk goes here" slot, always paired with its badge.
  * `accent` lets squad color each player's slot differently. */
-const TeachableSlot: React.FC<{ size: SlotSize; title: string; accent?: 'amber' | 'red'; }> = ({ size, title, accent = 'amber' }) => {
+const TeachableSlot: React.FC<{ size: SlotSize; accent?: 'amber' | 'red'; }> = ({ size, accent = 'amber' }) => {
   const dict = useDictionary();
   return (
   <SlotChip
     size={size}
     iconClassName={TEACHABLE_ACCENT[accent]}
-    caption={(dict.streaks.ownPerkOf).replace(/:$/, '')}
-    title={title}
     badge={dict.streaks.teachableBadge}
     badgeColor={accent}
   >
@@ -152,20 +156,21 @@ const TeachableSlot: React.FC<{ size: SlotSize; title: string; accent?: 'amber' 
 
 interface PerkSlotsRowProps {
   tierInfo: TierInfo;
-  charPerks: Perk[];
   randomPerks: Perk[];
   displayName: string;
   size?: SlotSize;
   teachableAccent?: 'amber' | 'red';
+  /** Free slots bought with tokens for this match. */
+  bonusSlots?: number;
 }
 
 /** A single horizontal row of labelled slot chips. */
-const PerkSlotsRow: React.FC<PerkSlotsRowProps> = ({ tierInfo, charPerks, randomPerks, displayName, size = 'small', teachableAccent }) => {
+const PerkSlotsRow: React.FC<PerkSlotsRowProps> = ({ tierInfo, randomPerks, displayName, size = 'small', teachableAccent, bonusSlots = 0 }) => {
   const dict = useDictionary();
   const perkLimit = tierInfo.perk_limit;
   const charactersPerksOnly = tierInfo.character_perks_only;
   const slots = [0, 1, 2, 3];
-  const slotLabel = dict.streaks.slotLabel;
+  const ownSlots = baseSlots(tierInfo);
   const perkDisplayName = usePerkDisplayName();
   const large = size === 'large';
   const iconSize = SLOT_ICON_SIZE[size];
@@ -173,13 +178,13 @@ const PerkSlotsRow: React.FC<PerkSlotsRowProps> = ({ tierInfo, charPerks, random
 
   return (
     <div>
-      {charactersPerksOnly && perkLimit === 0 && (
+      {charactersPerksOnly && perkLimit === 0 && randomPerks.length === 0 && (
         <p className="mb-1.5 type-caption text-text-secondary">
           {dict.streaks.noPerksThisTrial} {displayName}{' '}
           {dict.streaks.goesInBare}
         </p>
       )}
-      <div className={large ? 'flex items-center gap-12' : size === 'compact' ? 'flex items-center gap-6' : 'flex items-center gap-10'} role="list">
+      <div className={large ? 'flex items-start gap-12' : size === 'compact' ? 'flex items-start gap-6' : 'flex items-start gap-10'} role="list">
         {slots.map((idx) => {
           if (idx === 0 && perkLimit === 0 && randomPerks.length > 0) {
             const perk = randomPerks[0];
@@ -189,9 +194,21 @@ const PerkSlotsRow: React.FC<PerkSlotsRowProps> = ({ tierInfo, charPerks, random
                 size={size}
                 iconClassName="border-transparent"
                 caption={perkDisplayName(perk.name)}
-                title={perkDisplayName(perk.name)}
               >
                 <PerkArt perk={perk} size={perkArtSize} />
+              </SlotChip>
+            );
+          }
+
+          if (idx >= ownSlots && idx < ownSlots + bonusSlots) {
+            // A slot bought with tokens: any perk the player likes, so it looks like a survivor's free slot.
+            return (
+              <SlotChip
+                key={`bonus-${idx}`}
+                size={size}
+                iconClassName="bg-bg-elevated border-border-color text-text-muted"
+              >
+                <HelpCircle className={iconSize} />
               </SlotChip>
             );
           }
@@ -202,8 +219,6 @@ const PerkSlotsRow: React.FC<PerkSlotsRowProps> = ({ tierInfo, charPerks, random
                 key={`locked-${idx}`}
                 size={size}
                 iconClassName="bg-bg-elevated/60 border-dashed border-border-color opacity-60 text-text-muted"
-                caption={dict.streaks.lockedSuffix ? dict.streaks.lockedSuffix[0].toUpperCase() + dict.streaks.lockedSuffix.slice(1) : 'Locked'}
-                title={`${slotLabel} ${idx + 1} ${dict.streaks.lockedSuffix} — ${dict.streaks.tierLabel} ${tierInfo.tier_level} ${dict.streaks.ruleSuffix}`}
               >
                 <Lock className={iconSize} />
               </SlotChip>
@@ -211,30 +226,15 @@ const PerkSlotsRow: React.FC<PerkSlotsRowProps> = ({ tierInfo, charPerks, random
           }
 
           if (charactersPerksOnly) {
-            // Every filled slot is one of the killer's own teachables, not a free pick.
-            const ownPerk = charPerks[idx];
-            return (
-              <SlotChip
-                key={`char-slot-${idx}`}
-                size={size}
-                iconClassName={ownPerk ? 'border-transparent' : 'bg-accent-red/10 border-accent-red/40 text-accent-red'}
-                caption={ownPerk ? perkDisplayName(ownPerk.name) : (dict.streaks.ownPerkOf).replace(/:$/, '')}
-              >
-                {ownPerk ? <PerkArt perk={ownPerk} size={perkArtSize} /> : <HelpCircle className={iconSize} />}
-              </SlotChip>
-            );
+            // Every filled slot is one of the killer's own teachables, and which ones is the player's pick,
+            // so it is drawn as the generic teachable slot rather than a specific perk that would look assigned.
+            return <TeachableSlot key={`char-slot-${idx}`} size={size} accent={teachableAccent} />;
           }
 
           if (idx === 0) {
             // One of several choices, not a specific assigned perk -- a symbol
             // for "your character's own unique perk goes here", not a preview.
-            const title =
-              charPerks.length > 0
-                ? `${dict.streaks.slotOneOfThese}: ${charPerks
-                    .map((p) => perkDisplayName(p.name))
-                    .join(', ')}`
-                : dict.streaks.noTeachablePerks;
-            return <TeachableSlot key="character-slot" size={size} title={title} accent={teachableAccent} />;
+            return <TeachableSlot key="character-slot" size={size} accent={teachableAccent} />;
           }
 
           return (
@@ -242,7 +242,6 @@ const PerkSlotsRow: React.FC<PerkSlotsRowProps> = ({ tierInfo, charPerks, random
               key={`free-${idx}`}
               size={size}
               iconClassName="bg-bg-elevated border-border-color text-text-muted"
-              caption={dict.streaks.freePickCaption}
             >
               <HelpCircle className={iconSize} />
             </SlotChip>
@@ -261,9 +260,10 @@ interface CompactPlayerBuildProps {
   tierInfo: TierInfo;
   playersPerCharacter: number;
   isTeam: boolean;
+  bonusSlots?: number;
 }
 
-export const CompactPlayerBuild: React.FC<CompactPlayerBuildProps> = ({ index, player, role, characters, tierInfo, playersPerCharacter, isTeam }) => {
+export const CompactPlayerBuild: React.FC<CompactPlayerBuildProps> = ({ index, player, role, characters, tierInfo, playersPerCharacter, isTeam, bonusSlots = 0 }) => {
   const dict = useDictionary();
   const displayName = useCharacterDisplayName()(player.character);
   const [avatarError, setAvatarError] = useState<boolean>(false);
@@ -273,7 +273,6 @@ export const CompactPlayerBuild: React.FC<CompactPlayerBuildProps> = ({ index, p
 
   const avatarBox = (sizeClass: string, iconClass: string) => (
     <div
-      {...tip(displayName, undefined, 'character')}
       className={`${sizeClass} shrink-0 rounded-xl bg-bg-elevated border-2 border-border-color flex items-center justify-center overflow-hidden`}
     >
       {avatarSrc && !avatarError ? (
@@ -301,10 +300,10 @@ export const CompactPlayerBuild: React.FC<CompactPlayerBuildProps> = ({ index, p
         <div className="flex-1 min-w-0 flex items-center justify-center">
           <PerkSlotsRow
             tierInfo={tierInfo}
-            charPerks={player.character_perks ?? []}
             randomPerks={player.random_perks ?? []}
             displayName={displayName}
             size="large"
+            bonusSlots={bonusSlots}
           />
         </div>
       </div>
@@ -327,11 +326,11 @@ export const CompactPlayerBuild: React.FC<CompactPlayerBuildProps> = ({ index, p
             )}
             <PerkSlotsRow
               tierInfo={tierInfo}
-              charPerks={player.character_perks ?? []}
               randomPerks={player.random_perks ?? []}
               displayName={displayName}
               size={shared ? 'compact' : 'small'}
               teachableAccent={shared ? (n === 0 ? 'amber' : 'red') : undefined}
+              bonusSlots={bonusSlots}
             />
           </div>
         ))}

@@ -1,11 +1,12 @@
 # backend/app/services/gauntlet_service.py
 import logging
+import random
 
-from sqlalchemy import select
+from sqlalchemy import Select, select
 
 from app.core.extensions import db
 from app.models import GauntletMatchLog, GauntletRun
-from app.schemas.gauntlet import GauntletLoadout, GauntletMatchLogDict, GauntletRunState, TierInfo
+from app.schemas.gauntlet import BoostName, GauntletLoadout, GauntletMatchLogDict, GauntletRunState, TierInfo
 from app.schemas.streak import ChallengeCompletionDict, StreakStats
 from app.services.admin_control_service import assert_challenge_mode_enabled
 from app.services.gauntlet import (
@@ -13,9 +14,11 @@ from app.services.gauntlet import (
     ORIGINAL_KILLER_ROSTER_LIMIT,
     ORIGINAL_SURVIVOR_ROSTER_LIMIT,
     PICK_CHARACTER_MODES,
+    base_perk_slots,
     build_loadout,
     build_team_loadout,
     fetch_gauntlet_user_stats,
+    get_boost_config,
     get_characters_per_match,
     get_owned_character_ids,
     get_players_per_character,
@@ -26,6 +29,7 @@ from app.services.gauntlet import (
     resolve_character_names_by_ids,
     roll_gauntlet_target,
     roll_gauntlet_team,
+    roll_tokens,
 )
 from app.services.ownership_service import OwnershipService
 from app.services.perk_service import PerkService
@@ -67,7 +71,25 @@ class GauntletService(StreakRunService):
             "pool_frozen": pool_frozen,
             "owned_characters": resolve_character_names_by_ids(ids, role=r.role),
             "tier_info": tier_info,
+            "boosts": get_boost_config(r.game_mode),
         }
+
+    @staticmethod
+    def _run_by_id_query(user_id: int, run_id: int) -> Select[tuple[GauntletRun]]:
+        # Locked for the rest of the request, so two parallel requests cannot both spend the same tokens.
+        return select(GauntletRun).where(GauntletRun.id == run_id, GauntletRun.user_id == user_id).with_for_update()
+
+    def _find_run_by_id(self, user_id: int, run_id: int) -> GauntletRun | None:
+        return db.session.scalars(self._run_by_id_query(user_id, run_id)).first()
+
+    def _spend_tokens(self, r: GauntletRun, boost: BoostName) -> None:
+        config = get_boost_config(r.game_mode)
+        if config is None:
+            raise ValueError("This mode has no boosts")
+        price = config["prices"][boost]
+        if r.tokens < price:
+            raise ValueError("Not enough tokens")
+        r.tokens -= price
 
     def get_or_create_run(self, user_id: int, role: str, game_mode: str = DEFAULT_GAME_MODE) -> GauntletRunState:
         return self._get_or_create_run(user_id, role, game_mode)
@@ -157,6 +179,21 @@ class GauntletService(StreakRunService):
         db.session.commit()
         return self._state(r, self.get_tier_info(r.current_streak, r.role, r.game_mode))
 
+    def _validate_pick(self, r: GauntletRun, character: str) -> None:
+        self._freeze_pool_if_needed(r)
+        if character not in resolve_character_names_by_ids(r.owned_character_ids, role=r.role):
+            raise ValueError("That character is not in your roster")
+        if character in r.completed_characters:
+            raise ValueError("You already beat that character")
+
+    def _apply_pick(self, r: GauntletRun, character: str) -> GauntletRunState:
+        tier_info = self.get_tier_info(r.current_streak, r.role, r.game_mode)
+        r.current_character_id = character
+        r.current_loadout = build_loadout(character, tier_info)
+        r.target_revealed = True
+        db.session.commit()
+        return self._state(r, tier_info)
+
     def select_target(self, user_id: int, run_id: int, character: str) -> GauntletRunState:
         r = self._find_run_by_id(user_id, run_id)
         if not r:
@@ -165,24 +202,60 @@ class GauntletService(StreakRunService):
             raise ValueError("This mode picks the character for you")
         if r.status == "completed":
             raise ValueError("This run is already completed. Reset it to play again.")
-        self._freeze_pool_if_needed(r)
-        if character not in resolve_character_names_by_ids(r.owned_character_ids, role=r.role):
-            raise ValueError("That character is not in your roster")
-        if character in r.completed_characters:
-            raise ValueError("You already beat that character")
+        self._validate_pick(r, character)
+        return self._apply_pick(r, character)
 
+    def buy_boost(self, user_id: int, run_id: int, boost: str, character: str | None = None) -> GauntletRunState:
+        """Spend tokens on the match in play: a different killer, a chosen killer or one more free perk slot."""
+        if boost not in ("reroll", "pick", "slot"):
+            raise ValueError("Unknown boost")
+        assert_challenge_mode_enabled("gauntlet")
+        r = self._find_run_by_id(user_id, run_id)
+        if not r:
+            raise ValueError("Run not found")
+        config = get_boost_config(r.game_mode)
+        if config is None:
+            raise ValueError("This mode has no boosts")
+        if r.status == "completed":
+            raise ValueError("This run is already completed. Reset it to play again.")
+        if not r.target_revealed:
+            raise ValueError("Start the match first")
+        self._freeze_pool_if_needed(r)
         tier_info = self.get_tier_info(r.current_streak, r.role, r.game_mode)
-        r.current_character_id = character
-        r.current_loadout = build_loadout(character, tier_info)
-        r.target_revealed = True
-        db.session.commit()
-        return self._state(r, tier_info)
+
+        if boost == "slot":
+            if base_perk_slots(tier_info) + r.bonus_perk_slots >= config["max_perk_slots"]:
+                raise ValueError("No free perk slots left")
+            self._spend_tokens(r, "slot")
+            r.bonus_perk_slots += 1
+            db.session.commit()
+            return self._state(r, tier_info)
+
+        if boost == "pick":
+            if not character:
+                raise ValueError("Choose a character to pick")
+            if character == r.current_character_id:
+                raise ValueError("That character is already in play")
+            self._validate_pick(r, character)
+            self._spend_tokens(r, "pick")
+            return self._apply_pick(r, character)
+
+        names = resolve_character_names_by_ids(r.owned_character_ids, role=r.role)
+        others = [name for name in names if name not in r.completed_characters and name != r.current_character_id]
+        if not others:
+            raise ValueError("There is no other character to roll")
+        self._spend_tokens(r, "reroll")
+        return self._apply_pick(r, random.choice(others))
 
     def reset_run(self, user_id: int, role: str, game_mode: str = DEFAULT_GAME_MODE) -> GauntletRunState:
         return self._reset_run(user_id, role, game_mode)
 
-    def submit_result(self, user_id: int, run_id: int, result: str, triggered_by: str = "player") -> GauntletRunState:
+    def submit_result(
+        self, user_id: int, run_id: int, result: str, triggered_by: str = "player", use_shield: bool = False
+    ) -> GauntletRunState:
         self._validate_result(result)
+        if use_shield and result != "loss":
+            raise ValueError("A shield only cancels a loss")
         if triggered_by != "inactivity":
             assert_challenge_mode_enabled("gauntlet")
 
@@ -204,6 +277,7 @@ class GauntletService(StreakRunService):
             match_names = [char_id]
             match_perks = loadout.get("character_perks", [])
 
+        shielding = False
         if result == "win":
             streak_after = current_streak + 1
             best_after = max(best_streak, streak_after)
@@ -219,10 +293,31 @@ class GauntletService(StreakRunService):
             if owned_names and all(name in completed for name in owned_names):
                 r.status = "completed"
         else:
-            streak_after = last_checkpoint
-            completed = list(checkpoint_chars)
             best_after = best_streak
-            r.attempts += 1
+            if use_shield and get_boost_config(r.game_mode) is None:
+                raise ValueError("This mode has no boosts")
+            # On a checkpoint a loss costs no progress, so there is nothing for a shield to keep and it is not charged.
+            shielding = use_shield and current_streak > last_checkpoint
+            if shielding:
+                # Paid for with tokens: nothing about the run moves, the match is still logged as a loss.
+                self._spend_tokens(r, "shield")
+                streak_after = current_streak
+            else:
+                streak_after = last_checkpoint
+                completed = list(checkpoint_chars)
+                r.attempts += 1
+                if streak_after == 0:
+                    # Back to the very start, so the tokens start over too.
+                    r.tokens = 0
+
+        boosts = get_boost_config(r.game_mode)
+        if boosts and result == "win" and r.tokens < boosts["cap"]:
+            rolled = roll_tokens()
+            r.tokens = min(boosts["cap"], r.tokens + rolled)
+            r.last_token_roll = rolled
+        else:
+            r.last_token_roll = 0
+        r.bonus_perk_slots = 0
 
         r.current_streak = streak_after
         r.best_streak = best_after
@@ -253,7 +348,7 @@ class GauntletService(StreakRunService):
                 roster_limit=ORIGINAL_KILLER_ROSTER_LIMIT if r.role == "killer" else ORIGINAL_SURVIVOR_ROSTER_LIMIT,
             )
             self._freeze_pool(r)
-        elif result == "loss" and streak_after == 0:
+        elif result == "loss" and streak_after == 0 and not shielding:
             self._freeze_pool(r)
 
         db.session.commit()

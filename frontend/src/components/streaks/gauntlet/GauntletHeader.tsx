@@ -57,7 +57,7 @@ export const GauntletHeader: React.FC<GauntletHeaderProps> = ({
             onOpenStats={onOpenStats}
             onOpenHistory={onOpenHistory}
             onOpenReset={onOpenReset}
-            extra={
+            modeSelect={
               modeLabel && (
                 <ModeSelectButton
                   label={modeLabel}

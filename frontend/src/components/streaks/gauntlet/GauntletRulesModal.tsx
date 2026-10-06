@@ -211,7 +211,7 @@ export const GauntletRulesModal: React.FC<GauntletRulesModalProps> = ({ isOpen, 
     ? rawStreaks.duoCheckpointRule
     : isSquad
     ? rawStreaks.squadCheckpointRule
-    : rawStreaks.gauntletCheckpointRule || 'You get a checkpoint every 10 wins, so a loss only falls back that far, not to zero.';
+    : rawStreaks.gauntletCheckpointRule || 'You get a checkpoint every 10 wins, so a loss only falls back that far.';
 
   const howItWorks = [
     winCondition,

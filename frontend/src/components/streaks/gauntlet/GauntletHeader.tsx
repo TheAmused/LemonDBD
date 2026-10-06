@@ -3,8 +3,7 @@
 import type { Dictionary } from '@/locales/types';
 
 import React from 'react';
-import { Flame, Wrench } from 'lucide-react';
-import { Button } from '@/components/common/Button';
+import { Flame } from 'lucide-react';
 import { FreezeBadge } from '../FreezeBadge';
 import { ChallengeHeaderLayout, ModeSelectButton, StandardHeaderActions } from '../ChallengePanel';
 import { AdeptBadgeIcon } from '@/components/icons/DbdIcons';
@@ -23,9 +22,6 @@ export interface GauntletHeaderProps {
   onOpenReset: () => void;
   /** Omit to hide the button, e.g. for a role with only one playable mode. */
   onChangeMode?: () => void;
-  /** TEMP DEV: streaks the tier jump buttons go to; omitted outside the development environment. */
-  devStreaks?: number[];
-  onDevJump?: (streak: number) => void;
 }
 
 export const GauntletHeader: React.FC<GauntletHeaderProps> = ({
@@ -38,8 +34,6 @@ export const GauntletHeader: React.FC<GauntletHeaderProps> = ({
       onOpenRules,
       onOpenReset,
       onChangeMode,
-      devStreaks,
-      onDevJump,
     }) => {
       const dict = useDictionary();
       return (
@@ -55,16 +49,6 @@ export const GauntletHeader: React.FC<GauntletHeaderProps> = ({
               bestIcon={<AdeptBadgeIcon className="h-5 w-5" />}
             />
             <FreezeBadge frozen={poolFrozen} />
-            {devStreaks && onDevJump && (
-              <div className="flex items-center gap-1">
-                <Wrench className="h-3.5 w-3.5 text-text-muted" aria-hidden="true" />
-                {devStreaks.map((streak) => (
-                  <Button key={streak} variant="secondary" size="xs" onClick={() => onDevJump(streak)}>
-                    {streak}
-                  </Button>
-                ))}
-              </div>
-            )}
           </>
         }
         actions={

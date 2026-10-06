@@ -4,7 +4,6 @@ import random
 
 from sqlalchemy import Select, select
 
-from app.core.config import Config
 from app.core.extensions import db
 from app.models import GauntletMatchLog, GauntletRun
 from app.schemas.gauntlet import BoostName, GauntletLoadout, GauntletMatchLogDict, GauntletRunState, TierInfo
@@ -37,11 +36,6 @@ from app.services.perk_service import PerkService
 from app.services.streak_run import StreakRunService
 
 logger = logging.getLogger(__name__)
-
-
-def dev_tools_enabled() -> bool:
-    # TEMP DEV: remove together with dev_set_streak and the /dev/streak route.
-    return Config.ENV == "development"
 
 
 class GauntletService(StreakRunService):
@@ -78,7 +72,6 @@ class GauntletService(StreakRunService):
             "owned_characters": resolve_character_names_by_ids(ids, role=r.role),
             "tier_info": tier_info,
             "boosts": get_boost_config(r.game_mode),
-            "dev_tools": dev_tools_enabled(),
         }
 
     @staticmethod
@@ -253,32 +246,6 @@ class GauntletService(StreakRunService):
             raise ValueError("There is no other character to roll")
         self._spend_tokens(r, "reroll")
         return self._apply_pick(r, random.choice(others))
-
-    def dev_set_streak(self, user_id: int, run_id: int, streak: int) -> GauntletRunState:
-        """TEMP DEV: jump a run to a streak so a tier can be tested without playing up to it."""
-        if not dev_tools_enabled():
-            raise ValueError("Dev tools are off")
-        if not 0 <= streak <= 100:
-            raise ValueError("Streak must be between 0 and 100")
-        r = self._find_run_by_id(user_id, run_id)
-        if not r:
-            raise ValueError("Run not found")
-        tier_info = self.get_tier_info(streak, r.role, r.game_mode)
-        players = r.current_loadout.get("players")
-        if players:
-            r.current_loadout = build_team_loadout(
-                [player["character"] for player in players],
-                tier_info,
-                r.current_loadout.get("players_per_character", 1),
-            )
-        else:
-            r.current_loadout = build_loadout(r.current_character_id, tier_info)
-        r.current_streak = streak
-        r.best_streak = max(r.best_streak, streak)
-        r.last_checkpoint_streak = 0
-        r.bonus_perk_slots = 0
-        db.session.commit()
-        return self._state(r, tier_info)
 
     def reset_run(self, user_id: int, role: str, game_mode: str = DEFAULT_GAME_MODE) -> GauntletRunState:
         return self._reset_run(user_id, role, game_mode)

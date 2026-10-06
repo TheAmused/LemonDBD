@@ -84,7 +84,6 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({
     reveal,
     chooseTarget,
     buyBoost,
-    devJumpToStreak,
     reset,
     tokenRoll,
     dismissTokenRoll,
@@ -134,15 +133,11 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({
       : run?.current_loadout?.players?.map((player) => player.character) ?? [shownTarget];
   const awaitingPick = pickCharacter && Boolean(run) && !run?.target_revealed && !isCompleted;
   const boosts = run?.boosts ?? null;
-  // TEMP DEV: the first streak of each tier, so a tier can be reached without playing up to it.
-  const devStreaks = run?.dev_tools
-    ? gameMode === 'lemon_duo' || gameMode === 'lemon_squad'
-      ? [0, 6, 12, 18]
-      : role === 'killer'
-      ? [0, 10, 20, 30]
-      : [0, 10, 20, 30, 40]
-    : undefined;
   const matchActive = Boolean(run?.target_revealed) && !isCompleted;
+  // Reroll and pick need an unbeaten killer other than the one in play.
+  const hasOtherKiller =
+    run?.owned_characters.some((name) => name !== run.current_character_id && !run.completed_characters.includes(name)) ??
+    false;
   // Only worth asking when the loss would actually cost progress: at a checkpoint there is nothing to protect.
   const shieldWouldHelp = (run?.current_streak ?? 0) > (run?.last_checkpoint_streak ?? 0);
   const canAffordShield = boosts != null && (run?.tokens ?? 0) >= boosts.prices.shield && shieldWouldHelp;
@@ -187,8 +182,6 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({
           onOpenRules={() => setIsRulesOpen(true)}
           onOpenReset={() => setConfirmingReset(true)}
           onChangeMode={() => setIsChangeModeOpen(true)}
-          devStreaks={devStreaks}
-          onDevJump={devJumpToStreak}
         />
           }
         >
@@ -234,6 +227,7 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({
               tierInfo={run.tier_info}
               bonusSlots={run.bonus_perk_slots}
               matchActive={matchActive}
+              hasOtherKiller={hasOtherKiller}
               busy={busy}
               picking={buyingPick}
               pendingPick={pendingPick}

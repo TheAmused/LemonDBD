@@ -94,5 +94,3 @@ class GauntletRunState(GauntletRunDict):
     tier_info: TierInfo
     # None in modes without boosts.
     boosts: BoostConfig | None
-    # TEMP DEV: the tier jump buttons are shown only while this is true (development environment).
-    dev_tools: bool

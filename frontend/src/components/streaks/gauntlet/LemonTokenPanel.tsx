@@ -17,6 +17,8 @@ interface LemonTokenPanelProps {
   bonusSlots: number;
   /** False until the match is started, and once the run is over. */
   matchActive: boolean;
+  /** False when the killer in play is the last one left to beat, so there is nobody to reroll or pick. */
+  hasOtherKiller: boolean;
   busy: boolean;
   /** True while the player is choosing a killer from the roster. */
   picking: boolean;
@@ -35,7 +37,7 @@ interface BoostTileProps {
   onClick: () => void;
 }
 
-/** One boost as a tile: icon, name and its price in tokens. */
+/** One boost as a compact button: icon, name and its price in tokens. */
 const BoostTile: React.FC<BoostTileProps> = ({ boost, label, price, disabled, onClick }) => {
   const Icon = BOOST_ICONS[boost];
   return (
@@ -43,14 +45,11 @@ const BoostTile: React.FC<BoostTileProps> = ({ boost, label, price, disabled, on
       type="button"
       onClick={onClick}
       disabled={disabled}
-      className="flex flex-col items-center gap-2 rounded-xl border border-border-color bg-bg-surface px-3 py-4 text-center transition-colors enabled:cursor-pointer enabled:hover:border-accent-amber/60 enabled:hover:bg-bg-elevated disabled:cursor-not-allowed disabled:opacity-45"
+      className="flex items-center gap-2 rounded-lg border border-border-color bg-bg-surface px-3 py-2 transition-colors enabled:cursor-pointer enabled:hover:border-accent-amber/60 enabled:hover:bg-bg-elevated disabled:cursor-not-allowed disabled:opacity-45"
     >
-      <Icon className="h-7 w-7 text-accent-amber" aria-hidden="true" />
+      <Icon className="h-5 w-5 shrink-0 text-accent-amber" aria-hidden="true" />
       <span className="type-caption text-text-primary">{label}</span>
-      <span className="inline-flex items-center gap-1 type-label-sm text-accent-amber">
-        <Coins className="h-3.5 w-3.5" aria-hidden="true" />
-        {price}
-      </span>
+      <span className="type-label-sm text-accent-amber">{price}</span>
     </button>
   );
 };
@@ -61,6 +60,7 @@ export const LemonTokenPanel: React.FC<LemonTokenPanelProps> = ({
   tierInfo,
   bonusSlots,
   matchActive,
+  hasOtherKiller,
   busy,
   picking,
   pendingPick,
@@ -77,9 +77,9 @@ export const LemonTokenPanel: React.FC<LemonTokenPanelProps> = ({
   return (
     <section
       aria-label={dict.streaks.boostsTitle}
-      className="mx-auto mt-3 w-full max-w-xl rounded-xl border border-border-color bg-bg-elevated p-4"
+      className="mt-3 flex w-full flex-wrap items-center justify-between gap-x-6 gap-y-2 rounded-xl border border-border-color bg-bg-elevated px-4 py-3"
     >
-      <div className="flex flex-col items-center gap-1 text-center">
+      <div className="flex items-center gap-3">
         <h3 className="type-label text-text-primary">{dict.streaks.boostsTitle}</h3>
         <div className="flex items-center gap-1.5 type-card-title">
           <Coins className="h-4 w-4 text-accent-amber" aria-hidden="true" />
@@ -90,31 +90,29 @@ export const LemonTokenPanel: React.FC<LemonTokenPanelProps> = ({
       </div>
 
       {picking ? (
-        <div className="mt-4 flex flex-col items-center gap-3 text-center">
+        <div className="flex flex-wrap items-center gap-3">
           <p className="text-xs text-text-secondary">{dict.streaks.boostPickHint}</p>
-          <div className="flex flex-wrap justify-center gap-2">
-            <Button variant="primary" size="sm" onClick={onConfirmPick} disabled={!pendingPick || !canPay(prices.pick)}>
-              {dict.streaks.boostConfirmPick} ({formatMessage(dict.streaks.boostPrice, { price: prices.pick })})
-            </Button>
-            <Button variant="secondary" size="sm" onClick={onCancelPick}>
-              {dict.streaks.cancel}
-            </Button>
-          </div>
+          <Button variant="primary" size="sm" onClick={onConfirmPick} disabled={!pendingPick || !canPay(prices.pick)}>
+            {dict.streaks.boostConfirmPick} ({formatMessage(dict.streaks.boostPrice, { price: prices.pick })})
+          </Button>
+          <Button variant="secondary" size="sm" onClick={onCancelPick}>
+            {dict.streaks.cancel}
+          </Button>
         </div>
       ) : (
-        <div className="mt-4 grid grid-cols-3 gap-2.5">
+        <div className="flex flex-wrap gap-2">
           <BoostTile
             boost="reroll"
             label={dict.streaks.boostReroll}
             price={prices.reroll}
-            disabled={!canPay(prices.reroll)}
+            disabled={!canPay(prices.reroll) || !hasOtherKiller}
             onClick={() => onBuy('reroll')}
           />
           <BoostTile
             boost="pick"
             label={dict.streaks.boostPick}
             price={prices.pick}
-            disabled={!canPay(prices.pick)}
+            disabled={!canPay(prices.pick) || !hasOtherKiller}
             onClick={onStartPick}
           />
           <BoostTile

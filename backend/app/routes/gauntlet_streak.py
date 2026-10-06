@@ -28,6 +28,7 @@ def submit_result():
     role = _clean_role(data.get("role"))
     run_id = data.get("run_id")
     result = data.get("result")
+    use_shield = data.get("use_shield") is True
     if not role:
         return jsonify({"error": "Field 'role' must be 'survivor' or 'killer'"}), 400
     if not run_id or result not in ("win", "loss"):
@@ -35,7 +36,7 @@ def submit_result():
 
     service = get_gauntlet_service()
     try:
-        updated_run = service.submit_result(g.current_user.id, run_id, result)
+        updated_run = service.submit_result(g.current_user.id, run_id, result, use_shield=use_shield)
         if updated_run.get("status") == "completed":
             return jsonify({"run": updated_run, "previous_run": updated_run}), 200
         next_run = service.prepare_next_match(g.current_user.id, role, game_mode=updated_run["game_mode"])
@@ -60,3 +61,24 @@ def select_target():
         status = 404 if "not found" in str(e).lower() else 400
         return jsonify({"error": str(e)}), status
     return jsonify({"run": run}), 200
+
+
+@gauntlet_streak_bp.route("/boost", methods=["POST"])
+@login_required
+def buy_boost():
+    data = request.get_json(silent=True) or {}
+    run_id = data.get("run_id")
+    boost = data.get("boost")
+    character = data.get("character")
+    if not run_id or boost not in ("reroll", "pick", "slot"):
+        return jsonify({"error": "Fields 'run_id' and 'boost' (reroll, pick or slot) are required"}), 400
+    if character is not None and not isinstance(character, str):
+        return jsonify({"error": "Field 'character' must be a string"}), 400
+
+    try:
+        run = get_gauntlet_service().buy_boost(g.current_user.id, run_id, boost, character)
+    except ValueError as e:
+        status = 404 if "not found" in str(e).lower() else 400
+        return jsonify({"error": str(e)}), status
+    return jsonify({"run": run}), 200
+

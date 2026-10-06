@@ -2,7 +2,7 @@
 export type Role = 'survivor' | 'killer';
 
 /** Mirrors the backend's GAME_MODES; each one keeps its own run per role. */
-export const GAUNTLET_GAME_MODES = ['original', 'lemon_solo', 'lemon_duo', 'lemon_squad'] as const;
+export const GAUNTLET_GAME_MODES = ['original', 'lemon_solo', 'lemon_duo', 'lemon_squad', 'lemon_killer'] as const;
 export type GauntletGameMode = (typeof GAUNTLET_GAME_MODES)[number];
 
 /** Modes where the player picks the character instead of the server rolling one. */
@@ -57,6 +57,23 @@ export interface TierInfo {
   random_perk_count: number;
 }
 
+export interface BoostPrices {
+  reroll: number;
+  pick: number;
+  slot: number;
+  shield: number;
+}
+
+/** What a token mode lets the player do; null on a run of a mode without boosts. */
+export interface BoostConfig {
+  cap: number;
+  max_perk_slots: number;
+  prices: BoostPrices;
+}
+
+/** Boosts bought one at a time; the shield is offered after a loss is reported and spent with it. */
+export type BuyableBoost = 'reroll' | 'pick' | 'slot';
+
 export interface GauntletRun {
   id: number;
   role: Role;
@@ -74,6 +91,11 @@ export interface GauntletRun {
   pool_frozen: boolean;
   attempts: number;
   tier_info: TierInfo;
+  /** Lemon killer: spendable balance, what the last win rolled (0 after a loss) and the free slots bought for this match. */
+  tokens: number;
+  last_token_roll: number;
+  bonus_perk_slots: number;
+  boosts: BoostConfig | null;
   created_at?: string;
   updated_at?: string;
 }

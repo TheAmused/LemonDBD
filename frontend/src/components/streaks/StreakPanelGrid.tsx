@@ -77,7 +77,6 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
   const gauntletCompletedVariants = completionStatus.completions.gauntlet ?? [];
   const chaosCompletedVariants = completionStatus.completions.chaos ?? [];
   const historyCompletedVariants = completionStatus.completions.history ?? [];
-  const gauntletActiveRuns = completionStatus.active_runs.gauntlet ?? [];
   const chaosActiveRuns = completionStatus.active_runs.chaos ?? [];
   const historyActiveRuns = completionStatus.active_runs.history ?? [];
   const gauntletCounts = completionStatus.completion_counts.gauntlet ?? {};
@@ -153,18 +152,8 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
               completedFull={gauntletCardFullCount != null}
               completedFullCount={gauntletCardFullCount}
               prefetchHrefs={[`/${locale}/streaks/${role}/gauntlet-streak`]}
-              onClick={() => {
-                const saved = getSavedGauntletMode(role as 'killer' | 'survivor');
-                const variant = `${role}_${saved}`;
-                const hasActiveRun = gauntletActiveRuns.includes(variant);
-                const savedCompleted = gauntletCompletedVariants.includes(variant);
-                // Survivors have several modes, so they always get the picker.
-                if (role !== 'survivor' && saved && (hasActiveRun || !savedCompleted)) {
-                  router.push(gauntletHref(saved));
-                } else {
-                  setIsModeModalOpen(true);
-                }
-              }}
+              // Both roles have several modes, so they always get the picker.
+              onClick={() => setIsModeModalOpen(true)}
             />
           );
         }

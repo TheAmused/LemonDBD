@@ -9,6 +9,7 @@ import { avatarUrlForCharacter, perkIconUrl, staticUrl } from '@/utils/staticUrl
 import { useCharacterDisplayName, usePerkDisplayName } from '@/context/DisplayNamesContext';
 import { KillerIcon } from '@/components/icons/DbdIcons';
 import { useDictionary } from '@/context/DictionaryContext';
+import { baseSlots } from '@/utils/perkSlots';
 
 const avatarUrlFor = (name: string, role: Role, characters: OwnedCharacterItem[] = []) => {
   if (!name) return null;
@@ -155,19 +156,21 @@ const TeachableSlot: React.FC<{ size: SlotSize; accent?: 'amber' | 'red'; }> = (
 
 interface PerkSlotsRowProps {
   tierInfo: TierInfo;
-  charPerks: Perk[];
   randomPerks: Perk[];
   displayName: string;
   size?: SlotSize;
   teachableAccent?: 'amber' | 'red';
+  /** Free slots bought with tokens for this match. */
+  bonusSlots?: number;
 }
 
 /** A single horizontal row of labelled slot chips. */
-const PerkSlotsRow: React.FC<PerkSlotsRowProps> = ({ tierInfo, charPerks, randomPerks, displayName, size = 'small', teachableAccent }) => {
+const PerkSlotsRow: React.FC<PerkSlotsRowProps> = ({ tierInfo, randomPerks, displayName, size = 'small', teachableAccent, bonusSlots = 0 }) => {
   const dict = useDictionary();
   const perkLimit = tierInfo.perk_limit;
   const charactersPerksOnly = tierInfo.character_perks_only;
   const slots = [0, 1, 2, 3];
+  const ownSlots = baseSlots(tierInfo);
   const perkDisplayName = usePerkDisplayName();
   const large = size === 'large';
   const iconSize = SLOT_ICON_SIZE[size];
@@ -175,7 +178,7 @@ const PerkSlotsRow: React.FC<PerkSlotsRowProps> = ({ tierInfo, charPerks, random
 
   return (
     <div>
-      {charactersPerksOnly && perkLimit === 0 && (
+      {charactersPerksOnly && perkLimit === 0 && randomPerks.length === 0 && (
         <p className="mb-1.5 type-caption text-text-secondary">
           {dict.streaks.noPerksThisTrial} {displayName}{' '}
           {dict.streaks.goesInBare}
@@ -197,6 +200,19 @@ const PerkSlotsRow: React.FC<PerkSlotsRowProps> = ({ tierInfo, charPerks, random
             );
           }
 
+          if (idx >= ownSlots && idx < ownSlots + bonusSlots) {
+            // A slot bought with tokens: any perk the player likes, so it looks like a survivor's free slot.
+            return (
+              <SlotChip
+                key={`bonus-${idx}`}
+                size={size}
+                iconClassName="bg-bg-elevated border-border-color text-text-muted"
+              >
+                <HelpCircle className={iconSize} />
+              </SlotChip>
+            );
+          }
+
           if (idx >= perkLimit) {
             return (
               <SlotChip
@@ -210,18 +226,9 @@ const PerkSlotsRow: React.FC<PerkSlotsRowProps> = ({ tierInfo, charPerks, random
           }
 
           if (charactersPerksOnly) {
-            // Every filled slot is one of the killer's own teachables, not a free pick.
-            const ownPerk = charPerks[idx];
-            return (
-              <SlotChip
-                key={`char-slot-${idx}`}
-                size={size}
-                iconClassName={ownPerk ? 'border-transparent' : 'bg-accent-red/10 border-accent-red/40 text-accent-red'}
-                caption={ownPerk ? perkDisplayName(ownPerk.name) : undefined}
-              >
-                {ownPerk ? <PerkArt perk={ownPerk} size={perkArtSize} /> : <HelpCircle className={iconSize} />}
-              </SlotChip>
-            );
+            // Every filled slot is one of the killer's own teachables, and which ones is the player's pick,
+            // so it is drawn as the generic teachable slot rather than a specific perk that would look assigned.
+            return <TeachableSlot key={`char-slot-${idx}`} size={size} accent={teachableAccent} />;
           }
 
           if (idx === 0) {
@@ -253,9 +260,10 @@ interface CompactPlayerBuildProps {
   tierInfo: TierInfo;
   playersPerCharacter: number;
   isTeam: boolean;
+  bonusSlots?: number;
 }
 
-export const CompactPlayerBuild: React.FC<CompactPlayerBuildProps> = ({ index, player, role, characters, tierInfo, playersPerCharacter, isTeam }) => {
+export const CompactPlayerBuild: React.FC<CompactPlayerBuildProps> = ({ index, player, role, characters, tierInfo, playersPerCharacter, isTeam, bonusSlots = 0 }) => {
   const dict = useDictionary();
   const displayName = useCharacterDisplayName()(player.character);
   const [avatarError, setAvatarError] = useState<boolean>(false);
@@ -292,10 +300,10 @@ export const CompactPlayerBuild: React.FC<CompactPlayerBuildProps> = ({ index, p
         <div className="flex-1 min-w-0 flex items-center justify-center">
           <PerkSlotsRow
             tierInfo={tierInfo}
-            charPerks={player.character_perks ?? []}
             randomPerks={player.random_perks ?? []}
             displayName={displayName}
             size="large"
+            bonusSlots={bonusSlots}
           />
         </div>
       </div>
@@ -318,11 +326,11 @@ export const CompactPlayerBuild: React.FC<CompactPlayerBuildProps> = ({ index, p
             )}
             <PerkSlotsRow
               tierInfo={tierInfo}
-              charPerks={player.character_perks ?? []}
               randomPerks={player.random_perks ?? []}
               displayName={displayName}
               size={shared ? 'compact' : 'small'}
               teachableAccent={shared ? (n === 0 ? 'amber' : 'red') : undefined}
+              bonusSlots={bonusSlots}
             />
           </div>
         ))}

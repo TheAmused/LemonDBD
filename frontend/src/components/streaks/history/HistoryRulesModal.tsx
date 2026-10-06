@@ -35,7 +35,7 @@ export const HistoryRulesModal: React.FC<HistoryRulesModalProps> = ({ isOpen, on
         tone="neutral"
         title={s.howItWorks || 'How it works'}
         items={[
-          s.historyWinCondition || 'Win = 3 kills or more. Anything less breaks the streak.',
+          s.historyWinCondition || 'Win = 3 kills or more.',
           s.historyStartingPerksNote || 'You start with every General perk unlocked.',
           s.historyPerkUnlockRule || 'Beating a killer adds their teachables to your pool.',
           s.historyCheckpointRule ||

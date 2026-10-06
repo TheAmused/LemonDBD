@@ -12399,7 +12399,7 @@
           "slug": "the_judgment",
           "name": "The Judgment",
           "role": "Killer",
-          "gender": "male",
+          "gender": "monster_other",
           "media_url": "/static/avatars/killers/the_judgment.webp",
           "media_type": "image",
           "archetype": "The Arcane Inquisitor",

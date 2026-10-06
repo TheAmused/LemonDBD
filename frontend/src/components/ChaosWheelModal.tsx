@@ -2,7 +2,7 @@
 // frontend/src/components/ChaosWheelModal.tsx
 
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { Skull, Sparkles, Check, Trash2 } from 'lucide-react';
+import { Check, Trash2 } from 'lucide-react';
 import type { Dictionary } from '@/locales/types';
 import type { ChaosMutator } from '@/types/chaos';
 import { lookup, type ChaosMutatorCopy } from '@/utils/lookup';
@@ -257,9 +257,9 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({ isOpen, role, 
 
   if (!isOpen) return null;
 
-  const locWon = wonMutator ? getLocalizedMutator(wonMutator, dict) : null;
-  const locActive = activeMutator && activeMutator !== wonMutator
-    ? getLocalizedMutator(activeMutator, dict) : null;
+  // Same card for a fresh spin result and for the curse that was already active when the modal opened.
+  const shownMutator = wonMutator ?? activeMutator;
+  const locShown = shownMutator ? getLocalizedMutator(shownMutator, dict) : null;
 
   return (
     <Modal
@@ -267,7 +267,6 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({ isOpen, role, 
       onClose={onClose}
       variant="dialog"
       size="xl"
-      icon={<Skull className="h-5 w-5 animate-pulse" />}
       title={dict.generator.chaosWheelTitle}
       closeButtonAriaLabel={dict.modal.close}
       ariaLabel={dict.generator.chaosWheelTitle}
@@ -286,7 +285,7 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({ isOpen, role, 
         width={800}
         height={800}
         aria-label={dict.generator.chaosWheelTitle}
-        className="w-[260px] h-[260px] xs:w-[290px] xs:h-[290px] sm:w-[330px] sm:h-[330px] md:w-[370px] md:h-[370px] lg:w-[370px] lg:h-[370px] xl:w-[480px] xl:h-[480px] 2xl:w-[540px] 2xl:h-[540px] max-w-full aspect-square transition-all duration-300"
+        className="w-[260px] h-[260px] xs:w-[290px] xs:h-[290px] sm:w-[330px] sm:h-[330px] md:w-[370px] md:h-[370px] lg:w-[370px] lg:h-[370px] xl:w-[min(480px,calc(100vh-480px))] xl:h-[min(480px,calc(100vh-480px))] 2xl:w-[min(540px,calc(100vh-480px))] 2xl:h-[min(540px,calc(100vh-480px))] max-w-full aspect-square transition-all duration-300"
       />
 
       <DbdButton
@@ -294,8 +293,7 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({ isOpen, role, 
         size="md"
         onClick={spinChaosWheel}
         disabled={isSpinning}
-        className="mt-3 sm:mt-4 xl:mt-5"
-        icon={<Sparkles className={`h-4 w-4 xl:h-5 xl:w-5 ${isSpinning ? 'animate-spin' : ''}`} />}
+        className="mt-3 sm:mt-4 xl:mt-4 xl:px-8 xl:py-3 xl:text-sm 2xl:px-9 2xl:py-3 2xl:text-base"
       >
         {isSpinning
           ? dict.generator.spinningCurses
@@ -303,57 +301,20 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({ isOpen, role, 
       </DbdButton>
     </div>
 
-    {/* --- Spin result card --- */}
-    {wonMutator && locWon && (
+    {/* Spin result and already active curse share one card, with the Active badge. */}
+    {shownMutator && locShown && (
       <div
         aria-live="polite"
-        className={`mt-3 sm:mt-4 xl:mt-5 rounded-2xl border p-3 sm:p-4 xl:p-5 backdrop-blur-sm transition-all shadow-xs ${wonMutator.borderColor || 'border-border-color'} bg-bg-primary`}
+        className={`mt-3 sm:mt-4 xl:mt-5 rounded-2xl border p-3 sm:p-4 bg-bg-primary ${shownMutator.borderColor || 'border-border-color'}`}
       >
-        {/* Result header row -- the Clear button sits at the top-right,
-            next to the curse's icon/title, instead of a separate action
-            row at the bottom of the card. The X/backdrop already close
-            the modal, so clearing the curse is the only action needed
-            here. */}
-        <div className="flex items-start justify-between gap-2">
-          <div className="flex items-center gap-2.5 sm:gap-3.5 min-w-0">
-            <span className="text-xl sm:text-2xl xl:text-3xl shrink-0" aria-hidden="true">
-              {wonMutator.icon}
-            </span>
-            <div className="min-w-0">
-              <h3 className={`text-xs sm:text-sm xl:text-base font-extrabold truncate ${wonMutator.textColor}`}>
-                {locWon.name}
-              </h3>
-              <p className="text-xs sm:text-sm text-text-secondary mt-0.5 line-clamp-3">
-                {locWon.description}
-              </p>
-            </div>
-          </div>
-
-          {/* Clear */}
-          <button
-            type="button"
-            onClick={handleClearCurse}
-            {...tip(dict.generator.clearMutatorTooltip, undefined, 'action')} aria-label={dict.generator.clearMutatorTooltip}
-            className="flex items-center gap-1 type-strong-fluid text-accent-red hover:text-accent-red-hover px-2 py-1.5 rounded-lg hover:bg-accent-red/10 transition-colors cursor-pointer shrink-0"
-          >
-            <Trash2 className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-            <span className="hidden xs:inline">{dict.generator.clearMutator}</span>
-          </button>
-        </div>
-      </div>
-    )}
-
-    {/* Previously active mutator (shown when modal opened without spinning) */}
-    {!wonMutator && activeMutator && locActive && (
-      <div className="mt-3 sm:mt-4 xl:mt-5 rounded-2xl border border-border-color p-3 sm:p-4 bg-bg-primary">
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-2.5 min-w-0">
-            <span className="text-xl sm:text-2xl shrink-0">{activeMutator.icon}</span>
+            <span className="text-xl sm:text-2xl shrink-0" aria-hidden="true">{shownMutator.icon}</span>
             <div className="min-w-0">
-              <h3 className={`text-xs sm:text-sm font-extrabold truncate ${activeMutator.textColor}`}>
-                {locActive.name}
+              <h3 className={`text-xs sm:text-sm font-extrabold truncate ${shownMutator.textColor}`}>
+                {locShown.name}
               </h3>
-              <p className="text-xs text-text-secondary mt-0.5 line-clamp-2">{locActive.description}</p>
+              <p className="text-xs text-text-secondary mt-0.5 line-clamp-2">{locShown.description}</p>
             </div>
           </div>
           <div className="flex items-center gap-2 shrink-0">

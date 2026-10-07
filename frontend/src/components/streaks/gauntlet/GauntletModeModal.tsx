@@ -69,10 +69,10 @@ function lemonPlayerTiles(dict: Dictionary): ChallengeIntroTile[] {
   ];
 }
 
-/** The mode whose summary and rules the highlighted tile stands for, or undefined when it only leads to the player count. */
-function highlightedMode(role: 'killer' | 'survivor', stage: Stage, value: string | undefined): GauntletGameMode | undefined {
-  if (stage === 'lemon') return GAUNTLET_GAME_MODES.find((mode) => mode === value);
-  if (value === 'lemon') return role === 'killer' ? 'lemon_killer' : undefined;
+/** The mode whose rules the highlighted tile stands for. The survivor lemon group has no rules of its own, so it shows the solo ones. */
+function highlightedMode(role: 'killer' | 'survivor', stage: Stage, value: string | undefined): GauntletGameMode {
+  if (stage === 'lemon') return GAUNTLET_GAME_MODES.find((mode) => mode === value) ?? 'lemon_solo';
+  if (value === 'lemon') return role === 'killer' ? 'lemon_killer' : 'lemon_solo';
   return 'original';
 }
 
@@ -84,6 +84,10 @@ function gauntletModeInfo(
 ): ModeInfo {
   const s = dict.streaks;
   const intro = role === 'killer' ? s.gauntletIntroKiller : s.gauntletIntroSurvivor;
+  const pickedPlayerCount = stage === 'lemon' && GAUNTLET_GAME_MODES.some((mode) => mode === value);
+  if (role === 'survivor' && !pickedPlayerCount && (stage === 'lemon' || value === 'lemon')) {
+    return { intro, detail: s.gauntletSummaryLemonSurvivor, showRules: true };
+  }
   switch (highlightedMode(role, stage, value)) {
     case 'lemon_killer':
       return { intro, detail: s.gauntletSummaryLemonKiller, showRules: true };
@@ -93,10 +97,8 @@ function gauntletModeInfo(
       return { intro, detail: s.gauntletSummaryLemonDuo, showRules: true };
     case 'lemon_squad':
       return { intro, detail: s.gauntletSummaryLemonSquad, showRules: true };
-    case 'original':
-      return { intro, detail: s.gauntletOriginalDesc, showRules: true };
     default:
-      return { intro, detail: s.gauntletSummaryLemonSurvivor, showRules: false };
+      return { intro, detail: s.gauntletOriginalDesc, showRules: true };
   }
 }
 

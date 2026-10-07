@@ -35,16 +35,16 @@ const KillerTile: React.FC<{
       onClick={() => onSelect(name)}
       disabled={disabled || isCompleted}
       aria-label={`${displayName}${isCompleted ? ' (Cleared)' : ''}`}
-      className={`relative flex flex-col items-center gap-1.5 rounded-lg border p-1.5 transition-all cursor-pointer disabled:cursor-not-allowed ${
+      className={`relative flex flex-col items-center overflow-hidden rounded-lg border transition-all cursor-pointer disabled:cursor-not-allowed ${
         isCompleted ? '' : 'disabled:opacity-40'
       } ${cardBorder}`}
     >
       {isCompleted && (
-        <div className="absolute -top-2 -right-2 bg-accent-green text-text-inverted p-1 rounded-full shadow-xs z-10">
+        <div className="absolute top-1 right-1 bg-accent-green text-text-inverted p-1 rounded-full shadow-xs z-10">
           <Check className="w-3.5 h-3.5 stroke-[3]" />
         </div>
       )}
-      <div className="relative w-full aspect-square rounded-md overflow-hidden bg-bg-primary flex items-center justify-center">
+      <div className="relative w-full aspect-square overflow-hidden bg-bg-primary flex items-center justify-center">
         {!failed ? (
           <img
             src={src}
@@ -56,7 +56,7 @@ const KillerTile: React.FC<{
           <KillerIcon className="w-6 h-6 text-text-muted" />
         )}
       </div>
-      <span className="text-mini leading-tight font-medium text-center text-text-secondary line-clamp-2 min-h-[2.4em] w-full">
+      <span className="text-mini leading-tight font-medium text-center text-text-secondary line-clamp-2 min-h-[2.4em] w-full px-1.5 py-2">
         {displayName}
       </span>
     </button>

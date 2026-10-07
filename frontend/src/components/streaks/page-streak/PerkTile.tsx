@@ -54,9 +54,9 @@ export const PerkTile: React.FC<PerkTileProps> = ({
         className={`pointer-events-none absolute inset-0 h-full w-full transition-opacity duration-150 ${
           selected ? 'opacity-100' : 'opacity-0'
         }`}
-        style={{ color: 'var(--text-primary)' }}
+        style={{ color: 'var(--accent-red)' }}
       >
-        <polygon points="50,2 98,50 50,98 2,50" fill="none" stroke="currentColor" strokeWidth="2.5" />
+        <polygon points="50,1.5 98.5,50 50,98.5 1.5,50" fill="none" stroke="currentColor" strokeWidth="1.5" />
       </svg>
     </>
   );

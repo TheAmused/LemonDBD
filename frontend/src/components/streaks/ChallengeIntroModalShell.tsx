@@ -148,9 +148,6 @@ export const ChallengeIntroModalShell: React.FC<ChallengeIntroModalShellProps> =
           const labelClassName = tile.disabled
             ? 'font-bold text-text-secondary'
             : 'font-bold text-text-primary';
-          const descriptionClassName = tile.disabled
-            ? 'text-xs text-text-muted text-balance'
-            : 'text-xs text-text-secondary text-balance';
           const badgeClassName = 'text-tiny font-bold uppercase tracking-wider text-text-muted';
 
           const content = (
@@ -165,7 +162,6 @@ export const ChallengeIntroModalShell: React.FC<ChallengeIntroModalShellProps> =
                 <TileIcon className={`w-6 h-6 ${tile.disabled ? 'text-text-muted' : ''}`} />
               )}
               <span className={labelClassName}>{tile.label}</span>
-              {tile.description && <span className={descriptionClassName}>{tile.description}</span>}
               {isCurrent && <span className={`${badgeClassName} text-current`}>{currentLabel}</span>}
               {tile.disabledBadge && <span className={badgeClassName}>{tile.disabledBadge}</span>}
             </>

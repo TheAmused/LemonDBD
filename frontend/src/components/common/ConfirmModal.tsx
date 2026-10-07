@@ -4,6 +4,8 @@
 import React from 'react';
 import { AlertTriangle } from 'lucide-react';
 import { Modal } from '@/components/common/Modal';
+import { MODAL_CONFIG } from '@/components/common/modalConfig';
+import { cn } from '@/utils/cn';
 
 export interface ConfirmModalProps {
   open: boolean;
@@ -36,9 +38,20 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
     variant="confirm"
     layer="top"
     tone="danger"
-    icon={<AlertTriangle className="h-5 w-5 sm:h-6 sm:w-6" aria-hidden="true" />}
-    title={title}
-    ariaLabel="Confirm"
+    header={
+      <div className="flex flex-col items-center gap-3 px-6 pt-6 text-center">
+        <span
+          className={cn(
+            'flex h-12 w-12 items-center justify-center rounded-2xl border shadow-xs',
+            MODAL_CONFIG.tones.danger
+          )}
+        >
+          <AlertTriangle className="h-6 w-6" aria-hidden="true" />
+        </span>
+        {title && <h2 className="text-lg font-black tracking-tight text-text-primary text-balance sm:text-xl">{title}</h2>}
+      </div>
+    }
+    ariaLabel={typeof title === 'string' ? title : 'Confirm'}
     closeButton="none"
     busy={busy}
     padded

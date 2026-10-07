@@ -2,7 +2,7 @@
 import type { Dictionary } from '@/locales/types';
 
 import React from 'react';
-import { BarChart2, BookOpen, ChevronDown, History, RotateCcw, Sparkles } from 'lucide-react';
+import { BarChart2, BookOpen, ChevronDown, History, RotateCcw } from 'lucide-react';
 import { CELEBRATION_CARD_CLASSES, CELEBRATION_LABEL_CLASSES, CelebrationBadge } from './CelebrationBadge';
 import { useDictionary } from "@/context/DictionaryContext";
 import { useChallengeAnimations } from './useChallengeAnimations';
@@ -12,16 +12,46 @@ interface ChallengePanelProps {
   header: React.ReactNode;
   /** Optional progress strip between the header and the main panel. */
   progress?: React.ReactNode;
+  /** Adds the draw animation switch under the panel, for challenges that draw something at random. */
+  hasDrawAnimations?: boolean;
   children: React.ReactNode;
 }
 
+/** Labelled on/off switch for the draw animations, shared by every challenge that has a draw. */
+const DrawAnimationSwitch: React.FC = () => {
+  const dict = useDictionary();
+  const [enabled, setEnabled] = useChallengeAnimations();
+  return (
+    <div className="flex justify-end border-t border-border-color px-4 py-2.5 sm:px-6">
+      <button
+        type="button"
+        role="switch"
+        aria-checked={enabled}
+        onClick={() => setEnabled(!enabled)}
+        className="flex cursor-pointer items-center gap-2.5 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red"
+      >
+        <span className="type-caption text-text-secondary">{dict.streaks.drawAnimations}</span>
+        <span
+          aria-hidden="true"
+          className={`relative h-5 w-9 rounded-full transition-colors ${enabled ? 'bg-accent-green' : 'bg-border-color'}`}
+        >
+          <span
+            className={`absolute top-0.5 h-4 w-4 rounded-full bg-text-inverted shadow-sm transition-all ${enabled ? 'left-[1.125rem]' : 'left-0.5'}`}
+          />
+        </span>
+      </button>
+    </div>
+  );
+};
+
 /** One card holding a challenge's header strip and its main panel. No backdrop filter or
  * transform here: it would trap the fixed StreakActionBar rendered inside the card. */
-export const ChallengePanel: React.FC<ChallengePanelProps> = ({ header, progress, children }) => (
+export const ChallengePanel: React.FC<ChallengePanelProps> = ({ header, progress, hasDrawAnimations = false, children }) => (
   <section className="mb-6 w-full overflow-hidden rounded-2xl border border-border-color bg-bg-surface shadow-sm">
     <div className="border-b border-border-color bg-bg-elevated/40 px-3 py-3 sm:px-4">{header}</div>
     {progress && <div className="border-b border-border-color px-4 pt-5 pb-4 sm:px-6">{progress}</div>}
     <div className="p-3 sm:p-4">{children}</div>
+    {hasDrawAnimations && <DrawAnimationSwitch />}
   </section>
 );
 
@@ -118,8 +148,6 @@ interface HeaderButtonProps {
   /** With a label the button reads as text (hidden below sm); without one it is a square icon button. */
   label?: string;
   danger?: boolean;
-  /** Makes it a toggle: the state is announced and the active look is applied. */
-  pressed?: boolean;
 }
 
 /** Look shared by the challenge header buttons (and any other button that should match them). */
@@ -127,13 +155,12 @@ export const HEADER_BUTTON_CLASSES =
   'flex items-center rounded-xl border border-border-color bg-bg-elevated text-text-secondary shadow-sm transition-colors cursor-pointer hover:bg-bg-elevated/70 hover:text-text-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red';
 
 /** Header action button shared by every challenge. */
-export const HeaderButton: React.FC<HeaderButtonProps> = ({ onClick, title, icon, label, danger = false, pressed }) => (
+export const HeaderButton: React.FC<HeaderButtonProps> = ({ onClick, title, icon, label, danger = false }) => (
   <button
     type="button"
     onClick={onClick}
     aria-label={title}
-    aria-pressed={pressed}
-    className={`${HEADER_BUTTON_CLASSES} ${danger ? 'hover:bg-accent-red/10 hover:text-accent-red' : ''} ${pressed ? 'text-accent-amber' : ''} ${
+    className={`${HEADER_BUTTON_CLASSES} ${danger ? 'hover:bg-accent-red/10 hover:text-accent-red' : ''} ${
       label ? 'gap-1.5 px-3 py-2.5 text-xs font-bold' : 'justify-center p-2.5'
     }`}
   >
@@ -141,25 +168,6 @@ export const HeaderButton: React.FC<HeaderButtonProps> = ({ onClick, title, icon
     {label && <span className="hidden sm:inline">{label}</span>}
   </button>
 );
-
-/** Switch for the draw animations; a struck-through sparkle means they are skipped. */
-const AnimationToggleButton: React.FC = () => {
-  const dict = useDictionary();
-  const [enabled, setEnabled] = useChallengeAnimations();
-  return (
-    <HeaderButton
-      pressed={enabled}
-      onClick={() => setEnabled(!enabled)}
-      title={enabled ? dict.streaks.animationsOn : dict.streaks.animationsOff}
-      icon={
-        <span className="relative flex">
-          <Sparkles className="h-5 w-5" aria-hidden="true" />
-          {!enabled && <span className="absolute left-1/2 top-1/2 h-0.5 w-6 -translate-x-1/2 -translate-y-1/2 -rotate-45 rounded-full bg-current" aria-hidden="true" />}
-        </span>
-      }
-    />
-  );
-};
 
 interface StandardHeaderActionsProps {
   onOpenRules: () => void;
@@ -170,18 +178,15 @@ interface StandardHeaderActionsProps {
   modeSelect?: React.ReactNode;
   /** Other mode-specific buttons (perk pool), placed between the picker and Rules. */
   extra?: React.ReactNode;
-  /** Shows the animation switch, for challenges that draw something at random. */
-  hasDrawAnimations?: boolean;
 }
 
 /** The action row every challenge header shares, so they cannot drift apart. */
-export const StandardHeaderActions: React.FC<StandardHeaderActionsProps> = ({ onOpenRules, onOpenStats, onOpenHistory, onOpenReset, modeSelect, extra, hasDrawAnimations = false }) => {
+export const StandardHeaderActions: React.FC<StandardHeaderActionsProps> = ({ onOpenRules, onOpenStats, onOpenHistory, onOpenReset, modeSelect, extra }) => {
   const dict = useDictionary();
   return (
   <>
     {modeSelect}
     {extra}
-    {hasDrawAnimations && <AnimationToggleButton />}
     <HeaderButton
       onClick={onOpenRules}
       title={dict.streaks.rules}

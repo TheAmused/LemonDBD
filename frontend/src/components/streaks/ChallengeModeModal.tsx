@@ -100,8 +100,11 @@ export const ChallengeModeModal: React.FC<ChallengeModeModalProps> = ({
     if (isOpen) setPending(defaultPending);
   }, [isOpen, defaultPending]);
 
-  const info = modeInfo ? modeInfo(pending) : { intro, showRules };
   const pendingTile = tiles.find((tile) => tile.value === pending);
+  // Without a dedicated summary, the highlighted tile's own description fills the box, and only the general intro brings the rules link.
+  const info = modeInfo
+    ? modeInfo(pending)
+    : { intro: pendingTile?.description ?? intro, showRules: Boolean(intro) && showRules };
 
   return (
     <>
@@ -111,7 +114,7 @@ export const ChallengeModeModal: React.FC<ChallengeModeModalProps> = ({
         title={title ?? (dict.streaks.chooseMode)}
         intro={info.intro}
         rulesLabel={dict.streaks.rules}
-        onOpenRules={info.intro && info.showRules ? () => setIsRulesOpen(true) : undefined}
+        onOpenRules={info.showRules ? () => setIsRulesOpen(true) : undefined}
         tiles={tiles}
         onPickTile={setPending}
         pendingValue={pending}

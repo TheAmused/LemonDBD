@@ -74,7 +74,7 @@ export default {
   chooseLemonPlayers: "¿Cuántos jugadores?",
   gauntletLemonPlayersDesc: "Nuestra propia versión del Guantelete.",
   gauntletSummaryLemonKiller: "Las victorias dan tokens para gastar en mejoras. Tus ranuras de habilidad son para las habilidades propias del asesino.",
-  gauntletSummaryLemonSurvivor: "El mismo objetivo, con modos solo, dúo y escuadrón que cambian ligeramente las reglas.",
+  gauntletSummaryLemonSurvivor: "Modos solo, dúo y escuadrón con reglas ligeramente cambiadas.",
   gauntletSummaryLemonSolo: "Juegas solo y eliges tu propio superviviente, cuya habilidad propia debes llevar. Se guarda un punto de control cada 5 victorias.",
   gauntletSummaryLemonDuo: "Jugáis los dos juntos, cada uno con un superviviente aleatorio distinto. Se guarda un punto de control cada 6 victorias y pasáis al siguiente nivel de habilidades.",
   gauntletSummaryLemonSquad: "Jugáis los cuatro juntos y compartís dos supervivientes aleatorios. Se guarda un punto de control cada 6 victorias y pasáis al siguiente nivel de habilidades.",

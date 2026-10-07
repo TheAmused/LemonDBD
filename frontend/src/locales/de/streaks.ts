@@ -74,7 +74,7 @@ export default {
   chooseLemonPlayers: "Wie viele Spieler?",
   gauntletLemonPlayersDesc: "Unsere eigene Version des Gauntlets.",
   gauntletSummaryLemonKiller: "Siege bringen Tokens für Boosts. Deine Perk-Slots sind für die eigenen Teachable-Perks des Killers.",
-  gauntletSummaryLemonSurvivor: "Gleiches Ziel, mit Solo-, Duo- und Squad-Modi, die die Regeln leicht verändern.",
+  gauntletSummaryLemonSurvivor: "Solo-, Duo- und Squad-Modi mit leicht veränderten Regeln.",
   gauntletSummaryLemonSolo: "Du spielst allein und wählst deinen eigenen Survivor, dessen Teachable-Perk du mitbringen musst. Alle 5 Siege wird ein Checkpoint gesichert.",
   gauntletSummaryLemonDuo: "Ihr spielt zu zweit, jeder mit einem anderen zufälligen Survivor. Alle 6 Siege wird ein Checkpoint gesichert, der euch in die nächste Perk-Stufe bringt.",
   gauntletSummaryLemonSquad: "Ihr spielt zu viert und teilt euch zwei zufällige Survivor. Alle 6 Siege wird ein Checkpoint gesichert, der euch in die nächste Perk-Stufe bringt.",

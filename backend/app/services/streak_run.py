@@ -21,6 +21,8 @@ class StreakRunService:
     #: Challenge mode name ("chaos", "gauntlet", "history").
     mode: str
     run_model: type
+    #: Run column holding the best streak, which survives a reset.
+    best_field: str = "best_streak"
     #: Run columns that, with `user_id`, identify one run; the order is the
     #: order of the variant arguments of `get_or_create_run` / `reset_run`.
     variant_fields: tuple[str, ...]
@@ -61,13 +63,20 @@ class StreakRunService:
         return self._present(run)
 
     def _reset_run(self, user_id: int, *variant: Any):
+        """Abandon the run in play. The best streak is a record, so the fresh run inherits it."""
         assert_challenge_mode_enabled(self.mode)
-        run = self._find_run(user_id, *variant)
-        if not run:
+        old_run = self._find_run(user_id, *variant)
+        if not old_run:
             raise ValueError("Run not found")
-        db.session.delete(run)
+        best = getattr(old_run, self.best_field)
+        db.session.delete(old_run)
         db.session.commit()
-        return self._get_or_create_run(user_id, *variant)
+
+        run = self._build_run(user_id, *variant)
+        setattr(run, self.best_field, best)
+        db.session.add(run)
+        db.session.commit()
+        return self._present(run)
 
     # -- guards --------------------------------------------------------------
 

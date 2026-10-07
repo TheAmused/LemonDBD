@@ -48,7 +48,7 @@ export const PerkTile: React.FC<PerkTileProps> = ({
           selected ? 'opacity-100' : 'opacity-0'
         }`}
       >
-        <polygon points="50,3 97,50 50,97 3,50" fill="currentColor" fillOpacity="0.2" stroke="currentColor" strokeWidth="4" />
+        <polygon points="50,3 97,50 50,97 3,50" fill="none" stroke="currentColor" strokeWidth="4" />
       </svg>
     </>
   );

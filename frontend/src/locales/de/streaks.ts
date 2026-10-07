@@ -63,7 +63,7 @@ export default {
   historyHellDesc: "Keine Kontrollpunkte. Eine Niederlage setzt alles zurück.",
   gauntletIntroKiller: "Gewinne mit jedem Killer, der in zufälliger Reihenfolge gezogen wird.",
   gauntletIntroSurvivor: "Gewinne mit jedem Survivor, der in zufälliger Reihenfolge gezogen wird.",
-  gauntletOriginalDesc: "Alle 10 Siege erreichst du einen Checkpoint und verlierst einen Perk-Slot.",
+  gauntletOriginalDesc: "Alle 10 Siege erreichst du einen Checkpoint und verlierst einen Perk-Slot. Einer deiner Perks muss der Teachable-Perk des Survivors sein.",
   gauntletOriginalDescKiller: "Alle 10 Siege erreichst du einen Checkpoint und verlierst einen Perk-Slot, der für die eigenen Teachable-Perks des Killers gedacht ist.",
   gauntletLemonDesc: "Leicht angepasste, zugänglichere Gauntlet-Variante.",
   lemonSolo: "Solo",

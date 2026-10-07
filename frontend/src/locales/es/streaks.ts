@@ -63,7 +63,7 @@ export default {
   historyHellDesc: "Sin puntos de control. Una sola derrota reinicia todo.",
   gauntletIntroKiller: "Gana con cada asesino, sorteado en orden aleatorio.",
   gauntletIntroSurvivor: "Gana con cada superviviente, sorteado en orden aleatorio.",
-  gauntletOriginalDesc: "Cada 10 victorias llegas a un punto de control y pierdes una ranura de habilidad.",
+  gauntletOriginalDesc: "Cada 10 victorias llegas a un punto de control y pierdes una ranura de habilidad. Una de tus habilidades debe ser la propia del superviviente.",
   gauntletOriginalDescKiller: "Cada 10 victorias llegas a un punto de control y pierdes una ranura de habilidad, que se usa para las habilidades propias del asesino.",
   gauntletLemonDesc: "Variante modificada y más accesible del Guantelete.",
   lemonSolo: "Solo",

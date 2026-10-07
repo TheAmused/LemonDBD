@@ -63,7 +63,7 @@ export default {
   historyHellDesc: "No checkpoints. One loss resets everything.",
   gauntletIntroKiller: "Win with every killer, drawn in a random order.",
   gauntletIntroSurvivor: "Win with every survivor, drawn in a random order.",
-  gauntletOriginalDesc: "Every 10 wins you reach a checkpoint and lose one perk slot.",
+  gauntletOriginalDesc: "Every 10 wins you reach a checkpoint and lose one perk slot. One of your perks has to be the survivor's own teachable.",
   gauntletOriginalDescKiller: "Every 10 wins you reach a checkpoint and lose one perk slot, used for the killer's own teachable perks.",
   gauntletLemonDesc: "A lightly modified, easier take on the Gauntlet.",
   lemonSolo: "Solo",

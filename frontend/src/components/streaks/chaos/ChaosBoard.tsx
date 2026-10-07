@@ -161,7 +161,6 @@ export const ChaosBoard: React.FC = () => {
         {error && <ChallengeErrorBanner message={error} />}
 
         <ChallengePanel
-          hasDrawAnimations
           progress={
             <ChallengeProgress
               current={run?.current_streak ?? 0}
@@ -291,7 +290,6 @@ export const ChaosBoard: React.FC = () => {
           isOpen={isChangeDifficultyOpen}
           onClose={() => setIsChangeDifficultyOpen(false)}
           currentDifficulty={difficulty}
-          showIntro={false}
           completedCounts={completionStatus.completion_counts.chaos ?? {}}
           completedFullCounts={completionStatus.full_roster.chaos ?? {}}
           onSelectDifficulty={(newDifficulty) => {

@@ -11,6 +11,8 @@ export default {
   resetConfirm: "Reiniciar",
   abandonConfirm: "Abandonar",
   drawAnimations: "Animaciones del sorteo",
+  drawAnimationsOnHint: "Haz clic para saltarte las animaciones del sorteo y ver el resultado al instante.",
+  drawAnimationsOffHint: "Haz clic para volver a ver las animaciones del sorteo.",
   progressTitle: "Progreso",
   checkpointSecured: "Punto de control asegurado",
   resetAllRuns: "Reiniciar todos los asesinos",

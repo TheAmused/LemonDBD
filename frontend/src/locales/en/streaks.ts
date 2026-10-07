@@ -11,6 +11,8 @@ export default {
   resetConfirm: "Reset",
   abandonConfirm: "Abandon",
   drawAnimations: "Draw animations",
+  drawAnimationsOnHint: "Click to skip the draw animations and see results at once.",
+  drawAnimationsOffHint: "Click to play the draw animations again.",
   progressTitle: "Progress",
   checkpointSecured: "Checkpoint secured",
   resetAllRuns: "Reset all killers",

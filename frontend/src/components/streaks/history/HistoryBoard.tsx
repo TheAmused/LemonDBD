@@ -240,7 +240,6 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
           isOpen={isChangeModeOpen}
           onClose={() => setIsChangeModeOpen(false)}
           currentMode={mode}
-          showIntro={false}
           completedCounts={completionStatus.completion_counts.history ?? {}}
           completedFullCounts={completionStatus.full_roster.history ?? {}}
           onSelectMode={(newMode) => {

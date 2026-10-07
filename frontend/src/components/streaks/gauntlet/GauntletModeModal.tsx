@@ -83,20 +83,20 @@ function gauntletModeInfo(
   dict: Dictionary
 ): ModeInfo {
   const s = dict.streaks;
-  const mode = highlightedMode(role, stage, value);
-  switch (mode) {
+  const intro = role === 'killer' ? s.gauntletIntroKiller : s.gauntletIntroSurvivor;
+  switch (highlightedMode(role, stage, value)) {
     case 'lemon_killer':
-      return { intro: s.gauntletSummaryLemonKiller, showRules: true };
+      return { intro, detail: s.gauntletSummaryLemonKiller, showRules: true };
     case 'lemon_solo':
-      return { intro: s.gauntletSummaryLemonSolo, showRules: true };
+      return { intro, detail: s.gauntletSummaryLemonSolo, showRules: true };
     case 'lemon_duo':
-      return { intro: s.gauntletSummaryLemonDuo, showRules: true };
+      return { intro, detail: s.gauntletSummaryLemonDuo, showRules: true };
     case 'lemon_squad':
-      return { intro: s.gauntletSummaryLemonSquad, showRules: true };
+      return { intro, detail: s.gauntletSummaryLemonSquad, showRules: true };
     case 'original':
-      return { intro: role === 'killer' ? s.gauntletIntroKiller : s.gauntletIntroSurvivor, showRules: true };
+      return { intro, detail: s.gauntletOriginalDesc, showRules: true };
     default:
-      return { intro: s.gauntletSummaryLemonSurvivor, showRules: false };
+      return { intro, detail: s.gauntletSummaryLemonSurvivor, showRules: false };
   }
 }
 

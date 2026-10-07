@@ -177,7 +177,6 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({
         {error && <ChallengeErrorBanner message={error} />}
 
         <ChallengePanel
-          hasDrawAnimations
           progress={
             <ChallengeProgress
               current={run?.current_streak ?? 0}

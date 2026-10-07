@@ -11,6 +11,8 @@ export default {
   resetConfirm: "Zurücksetzen",
   abandonConfirm: "Aufgeben",
   drawAnimations: "Zieh-Animationen",
+  drawAnimationsOnHint: "Klicken, um die Zieh-Animationen zu überspringen und das Ergebnis sofort zu sehen.",
+  drawAnimationsOffHint: "Klicken, um die Zieh-Animationen wieder abzuspielen.",
   progressTitle: "Fortschritt",
   checkpointSecured: "Checkpoint gesichert",
   resetAllRuns: "Alle Killer zurücksetzen",

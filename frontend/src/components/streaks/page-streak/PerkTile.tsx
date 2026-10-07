@@ -18,8 +18,8 @@ interface PerkTileProps {
   disabled?: boolean;
   /** Not part of the confirmed build. */
   faded?: boolean;
-  /** Others are picked and this one is not: it steps back so the picks stand out. */
-  muted?: boolean;
+  /** Its place in the build (1 to 4) when picked, 0 otherwise. */
+  order?: number;
   iconSrc?: string;
   onToggle?: (name: string) => void;
 }
@@ -30,7 +30,7 @@ export const PerkTile: React.FC<PerkTileProps> = ({
   selected = false,
   disabled = false,
   faded = false,
-  muted = false,
+  order = 0,
   iconSrc,
   onToggle,
 }) => {
@@ -51,12 +51,21 @@ export const PerkTile: React.FC<PerkTileProps> = ({
       ) : (
         <span className="text-tiny font-semibold text-text-muted">{label}</span>
       )}
+      {selected && order > 0 && (
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute bottom-[10%] left-1/2 flex -translate-x-1/2 items-center justify-center rounded-full bg-text-primary font-black leading-none text-bg-primary shadow-md"
+          style={{ width: 'calc(var(--perk-size) * 0.27)', height: 'calc(var(--perk-size) * 0.27)', fontSize: 'calc(var(--perk-size) * 0.15)' }}
+        >
+          {order}
+        </span>
+      )}
     </>
   );
 
   const shell = `relative grid aspect-square w-[var(--perk-size)] place-items-center transition-[filter,transform,opacity] duration-150 motion-reduce:transition-none ${
-    selected ? 'z-10 scale-110' : 'hover:brightness-125'
-  } ${faded ? 'opacity-35' : ''} ${muted ? 'opacity-55 saturate-50 hover:opacity-100 hover:saturate-100' : ''}`;
+    selected ? '' : 'hover:brightness-125'
+  } ${faded ? 'opacity-35' : ''}`;
 
   if (disabled || !onToggle) {
     return (

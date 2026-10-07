@@ -19,6 +19,13 @@ import { staticUrl } from '@/utils/staticUrl';
 import { useDictionary } from '@/context/DictionaryContext';
 import { useCharacterDisplayName } from '@/context/DisplayNamesContext';
 
+interface BuildState {
+  /** The page and attempt this build was made for. */
+  key: string;
+  selected: string[];
+  confirmed: boolean;
+}
+
 interface PageStreakRunViewProps {
   locale: string;
   killer: string;
@@ -34,9 +41,8 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
       entries.map(([name, path]) => [name, staticUrl(path)]).filter(([, url]) => url)
     ) as Record<string, string>;
   }, [run?.perk_icons]);
-  const [selected, setSelected] = useState<string[]>([]);
   const [showNextPage, setShowNextPage] = useState(false);
-  const [confirmed, setConfirmed] = useState(false);
+  const [build, setBuild] = useState<BuildState>({ key: '', selected: [], confirmed: false });
   const [confirmingReset, setConfirmingReset] = useState(false);
   const [isRulesOpen, setIsRulesOpen] = useState(false);
   const [isStatsOpen, setIsStatsOpen] = useState(false);
@@ -57,11 +63,10 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
     if (run) autoStartedRef.current = false;
   }, [run, killer]);
 
-  // A new page (or a new attempt) always starts from an empty, unconfirmed build.
-  useEffect(() => {
-    setSelected([]);
-    setConfirmed(false);
-  }, [run?.current_page, run?.attempt, run?.status]);
+  // A new page (or a new attempt) always starts from an empty, unconfirmed build. Derived while rendering rather than
+  // reset in an effect, so the old build never shows for a frame on the new page.
+  const buildKey = run ? `${run.attempt}-${run.current_page}-${run.status}` : '';
+  const { selected, confirmed } = build.key === buildKey ? build : { selected: [] as string[], confirmed: false };
 
   useCelebrateOnRise(run?.status === 'completed', celebrate);
 
@@ -69,12 +74,10 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
   const buildSize = Math.min(4, currentPagePerks.length);
   const nextPagePerks = run && run.current_page < run.page_count ? run.pages[run.current_page] : [];
 
-  const toggle = (name: string) =>
-    setSelected((prev) => {
-      if (prev.includes(name)) return prev.filter((n) => n !== name);
-      if (prev.length >= buildSize) return prev;
-      return [...prev, name];
-    });
+  const toggle = (name: string) => {
+    if (selected.includes(name)) setBuild({ key: buildKey, selected: selected.filter((n) => n !== name), confirmed });
+    else if (selected.length < buildSize) setBuild({ key: buildKey, selected: [...selected, name], confirmed });
+  };
 
   return (
     <div className={run && run.status !== 'completed' ? 'pb-16' : ''}>
@@ -156,7 +159,7 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
                   <StreakActionButton
                     variant="red"
                     disabled={busy || selected.length !== buildSize}
-                    onClick={() => setConfirmed(true)}
+                    onClick={() => setBuild({ key: buildKey, selected, confirmed: true })}
                   >
                     {dict.streaks.confirmBuild}
                   </StreakActionButton>
@@ -169,6 +172,7 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
                     perks={currentPagePerks}
                     selected={selected}
                     onToggle={confirmed ? undefined : toggle}
+                    locked={confirmed}
                     variant={lastWasLoss ? 'reset' : 'enter'}
                     iconByPerk={iconByPerk}
                   />

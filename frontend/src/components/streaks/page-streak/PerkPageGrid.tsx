@@ -9,6 +9,8 @@ interface PerkPageGridProps {
   selected?: string[];
   onToggle?: (name: string) => void;
   dimmed?: boolean;
+  /** The build is confirmed: perks that were not picked fade out. */
+  locked?: boolean;
   variant?: 'enter' | 'reset' | 'none';
   iconByPerk?: Record<string, string>;
 }
@@ -53,6 +55,7 @@ export const PerkPageGrid: React.FC<PerkPageGridProps> = ({
   selected = [],
   onToggle,
   dimmed = false,
+  locked = false,
   variant = 'none',
   iconByPerk = {},
 }) => {
@@ -87,6 +90,7 @@ export const PerkPageGrid: React.FC<PerkPageGridProps> = ({
                 key={name}
                 name={name}
                 selected={selected.includes(name)}
+                faded={locked && !selected.includes(name)}
                 disabled={dimmed || !onToggle}
                 iconSrc={iconByPerk[name]}
                 onToggle={onToggle}

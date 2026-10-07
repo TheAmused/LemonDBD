@@ -168,7 +168,7 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
                     key={`${run.attempt}-${run.current_page}`}
                     perks={currentPagePerks}
                     selected={selected}
-                    onToggle={toggle}
+                    onToggle={confirmed ? undefined : toggle}
                     variant={lastWasLoss ? 'reset' : 'enter'}
                     iconByPerk={iconByPerk}
                   />

@@ -16,6 +16,8 @@ interface PerkTileProps {
   name: string;
   selected?: boolean;
   disabled?: boolean;
+  /** Not part of the confirmed build. */
+  faded?: boolean;
   iconSrc?: string;
   onToggle?: (name: string) => void;
 }
@@ -25,6 +27,7 @@ export const PerkTile: React.FC<PerkTileProps> = ({
   name,
   selected = false,
   disabled = false,
+  faded = false,
   iconSrc,
   onToggle,
 }) => {
@@ -48,18 +51,19 @@ export const PerkTile: React.FC<PerkTileProps> = ({
       <svg
         viewBox="0 0 100 100"
         aria-hidden="true"
-        className={`pointer-events-none absolute inset-0 h-full w-full text-accent-red transition-opacity duration-150 ${
+        className={`pointer-events-none absolute inset-0 h-full w-full transition-opacity duration-150 ${
           selected ? 'opacity-100' : 'opacity-0'
         }`}
+        style={{ color: 'var(--accent-red)' }}
       >
         <polygon points="50,3 97,50 50,97 3,50" fill="none" stroke="currentColor" strokeWidth="4" />
       </svg>
     </>
   );
 
-  const shell = `relative grid aspect-square w-[var(--perk-size)] place-items-center transition-[filter,transform] duration-150 motion-reduce:transition-none ${
+  const shell = `relative grid aspect-square w-[var(--perk-size)] place-items-center transition-[filter,transform,opacity] duration-150 motion-reduce:transition-none ${
     selected ? '' : 'hover:brightness-125'
-  }`;
+  } ${faded ? 'opacity-35' : ''}`;
 
   if (disabled || !onToggle) {
     return (

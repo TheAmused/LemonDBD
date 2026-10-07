@@ -32,6 +32,8 @@ export interface ChallengeIntroTile {
   completedFull?: boolean;
   /** Killer count frozen at that full-roster completion, shown next to the badge. */
   completedFullCount?: number | null;
+  /** Accepting this tile only opens the next screen, so the button reads "Continue". */
+  advances?: boolean;
 }
 
 export interface ChallengeIntroModalShellProps {
@@ -47,9 +49,16 @@ export interface ChallengeIntroModalShellProps {
   rulesLabel?: string;
   onOpenRules?: () => void;
   tiles: ChallengeIntroTile[];
-  onSelectTile: (value: string) => void;
+  /** A tile was clicked: it is only highlighted until the player accepts. */
+  onPickTile: (value: string) => void;
+  /** The highlighted tile, waiting to be accepted. */
+  pendingValue?: string;
+  onAccept: () => void;
+  acceptLabel: string;
+  acceptDisabled: boolean;
   tileGridClassName: string;
   escapeDisabled?: boolean;
+  /** The mode that is active right now, marked with the "Current" label. */
   selectedValue?: string;
   currentLabel: string;
   /** Set on a second-level screen to show a back arrow next to the title. */
@@ -67,7 +76,11 @@ export const ChallengeIntroModalShell: React.FC<ChallengeIntroModalShellProps> =
       rulesLabel,
       onOpenRules,
       tiles,
-      onSelectTile,
+      onPickTile,
+      pendingValue,
+      onAccept,
+      acceptLabel,
+      acceptDisabled,
       tileGridClassName,
       escapeDisabled,
       selectedValue,
@@ -86,6 +99,7 @@ export const ChallengeIntroModalShell: React.FC<ChallengeIntroModalShellProps> =
       tone={toneFromIconClass(iconClassName)}
       icon={Icon ? <Icon className="h-5 w-5" aria-hidden="true" /> : undefined}
       title={title}
+      centerTitle
       closeButtonAriaLabel={dict.modal.close}
       headerLeft={
         onBack ? (
@@ -101,6 +115,12 @@ export const ChallengeIntroModalShell: React.FC<ChallengeIntroModalShellProps> =
         ) : undefined
       }
       bodyClassName="p-5 sm:p-6"
+      footerClassName="justify-center"
+      footer={
+        <Button variant="primary" size="md" onClick={onAccept} disabled={acceptDisabled} className="min-w-40">
+          {acceptLabel}
+        </Button>
+      }
     >
       {(intro || onOpenRules) && (
         <div className="pb-5">
@@ -124,6 +144,7 @@ export const ChallengeIntroModalShell: React.FC<ChallengeIntroModalShellProps> =
         {tiles.map((tile) => {
           const TileIcon = tile.icon;
           const isCurrent = tile.value === selectedValue;
+          const isPending = tile.value === pendingValue;
           const labelClassName = tile.disabled
             ? 'font-bold text-text-secondary'
             : 'font-bold text-text-primary';
@@ -164,9 +185,10 @@ export const ChallengeIntroModalShell: React.FC<ChallengeIntroModalShellProps> =
           return (
             <button
               key={tile.value}
-              onClick={() => onSelectTile(tile.value)}
+              onClick={() => onPickTile(tile.value)}
+              aria-pressed={isPending}
               className={`group relative flex flex-col items-center gap-3 rounded-2xl border p-6 sm:p-7 text-center transition-colors cursor-pointer ${tile.accentClassName} ${
-                isCurrent ? 'ring-2 ring-current ring-offset-2 ring-offset-bg-surface' : ''
+                isPending ? 'ring-2 ring-accent-red ring-offset-2 ring-offset-bg-surface' : ''
               }`}
             >
               {tile.completed && tile.completedFull ? (

@@ -10,6 +10,8 @@ export default {
   resetRunTitle: "Abandon this run?",
   resetConfirm: "Reset",
   abandonConfirm: "Abandon",
+  animationsOn: "Draw animations: on",
+  animationsOff: "Draw animations: off",
   progressTitle: "Progress",
   checkpointSecured: "Checkpoint secured",
   resetAllRuns: "Reset all killers",

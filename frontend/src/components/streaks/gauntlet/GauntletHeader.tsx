@@ -53,6 +53,7 @@ export const GauntletHeader: React.FC<GauntletHeaderProps> = ({
         }
         actions={
           <StandardHeaderActions
+            hasDrawAnimations
             onOpenRules={onOpenRules}
             onOpenStats={onOpenStats}
             onOpenHistory={onOpenHistory}

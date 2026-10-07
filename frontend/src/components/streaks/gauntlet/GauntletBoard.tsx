@@ -156,6 +156,19 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({
     if (!awaitingPick && !buyingPick) setPendingPick(null);
   }, [awaitingPick, buyingPick]);
 
+  const cancelPick = () => {
+    setBuyingPick(false);
+    setPendingPick(null);
+  };
+
+  const confirmPick = async () => {
+    if (!pendingPick) return;
+    setInstantTarget(pendingPick);
+    const bought = await buyBoost('pick', pendingPick);
+    if (!bought) setInstantTarget(null);
+    cancelPick();
+  };
+
   return (
     <div className="pb-16">
       <Confetti active={celebrating} />
@@ -219,6 +232,17 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({
             instantTarget={instantTarget}
             shownTarget={shownTarget}
             onShownTargetChange={setShownTarget}
+            buyPick={
+              buyingPick && boosts && run
+                ? {
+                    confirmLabel: `${dict.streaks.boostConfirmPick} (${formatMessage(dict.streaks.boostPrice, { price: boosts.prices.pick })})`,
+                    cancelLabel: dict.streaks.cancel,
+                    canConfirm: Boolean(pendingPick) && !busy && run.tokens >= boosts.prices.pick,
+                    onConfirm: confirmPick,
+                    onCancel: cancelPick,
+                  }
+                : undefined
+            }
           />
           {boosts && run && (
             <LemonTokenPanel
@@ -230,20 +254,7 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({
               hasOtherKiller={hasOtherKiller}
               busy={busy}
               picking={buyingPick}
-              pendingPick={pendingPick}
               onStartPick={() => setBuyingPick(true)}
-              onCancelPick={() => {
-                setBuyingPick(false);
-                setPendingPick(null);
-              }}
-              onConfirmPick={async () => {
-                if (!pendingPick) return;
-                setInstantTarget(pendingPick);
-                const bought = await buyBoost('pick', pendingPick);
-                if (!bought) setInstantTarget(null);
-                setBuyingPick(false);
-                setPendingPick(null);
-              }}
               onBuy={(boost) => {
                 buyBoost(boost);
               }}

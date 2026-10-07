@@ -10,6 +10,8 @@ export default {
   resetRunTitle: "Porzucić to podejście?",
   resetConfirm: "Zresetuj",
   abandonConfirm: "Porzuć",
+  animationsOn: "Animacje losowania: włączone",
+  animationsOff: "Animacje losowania: wyłączone",
   progressTitle: "Postęp",
   checkpointSecured: "Punkt kontrolny zdobyty",
   resetAllRuns: "Zresetuj wszystkich zabójców",

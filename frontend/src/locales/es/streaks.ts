@@ -10,6 +10,8 @@ export default {
   resetRunTitle: "¿Abandonar este intento?",
   resetConfirm: "Reiniciar",
   abandonConfirm: "Abandonar",
+  animationsOn: "Animaciones del sorteo: activadas",
+  animationsOff: "Animaciones del sorteo: desactivadas",
   progressTitle: "Progreso",
   checkpointSecured: "Punto de control asegurado",
   resetAllRuns: "Reiniciar todos los asesinos",

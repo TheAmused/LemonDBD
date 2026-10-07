@@ -10,6 +10,8 @@ export default {
   resetRunTitle: "この挑戦を放棄しますか？",
   resetConfirm: "リセット",
   abandonConfirm: "放棄",
+  animationsOn: "抽選アニメーション: オン",
+  animationsOff: "抽選アニメーション: オフ",
   progressTitle: "進行状況",
   checkpointSecured: "チェックポイント獲得",
   resetAllRuns: "全キラーをリセット",

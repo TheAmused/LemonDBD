@@ -91,7 +91,6 @@ export const PerkPageGrid: React.FC<PerkPageGridProps> = ({
                 name={name}
                 selected={selected.includes(name)}
                 faded={locked && !selected.includes(name)}
-                order={selected.indexOf(name) + 1}
                 disabled={dimmed || !onToggle}
                 iconSrc={iconByPerk[name]}
                 onToggle={onToggle}

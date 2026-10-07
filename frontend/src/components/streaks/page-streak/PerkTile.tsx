@@ -76,7 +76,7 @@ export const PerkTile: React.FC<PerkTileProps> = ({
       aria-pressed={selected}
       aria-label={label}
       {...tip(label, undefined, 'item')}
-      className={`${shell} cursor-pointer focus:outline-none focus-visible:brightness-150`}
+      className={`${shell} pointer-events-auto cursor-pointer focus:outline-none focus-visible:brightness-150`}
       style={{ clipPath: DIAMOND_CLIP }}
     >
       {content}

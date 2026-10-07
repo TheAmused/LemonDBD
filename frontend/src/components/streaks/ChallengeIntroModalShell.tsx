@@ -46,6 +46,8 @@ export interface ChallengeIntroModalShellProps {
   /** Omit to skip the explanatory intro box entirely, e.g. when a player is
    *  just switching difficulty mid-run and already knows how the mode works. */
   intro?: string;
+  /** What sets the highlighted tile apart, shown under the intro. */
+  detail?: string;
   rulesLabel?: string;
   onOpenRules?: () => void;
   tiles: ChallengeIntroTile[];
@@ -73,6 +75,7 @@ export const ChallengeIntroModalShell: React.FC<ChallengeIntroModalShellProps> =
       iconClassName,
       title,
       intro,
+      detail,
       rulesLabel,
       onOpenRules,
       tiles,
@@ -122,21 +125,24 @@ export const ChallengeIntroModalShell: React.FC<ChallengeIntroModalShellProps> =
         </Button>
       }
     >
-      {(intro || onOpenRules) && (
-        <div className="pb-5">
-          <div className="flex flex-col items-center gap-3 bg-bg-elevated border border-border-color rounded-xl p-4 shadow-sm text-center">
-            {intro && <p className="type-body-fluid text-text-secondary">{intro}</p>}
-            {onOpenRules && (
-              <button
-                type="button"
-                onClick={onOpenRules}
-                className={`${HEADER_BUTTON_CLASSES} gap-1.5 px-3 py-2 text-xs font-bold`}
-              >
-                <BookOpen className="h-4 w-4" aria-hidden="true" />
-                {rulesLabel}
-              </button>
-            )}
-          </div>
+      {(intro || detail || onOpenRules) && (
+        <div className="flex flex-col items-center gap-3 pb-5 text-center">
+          {intro && <p className="type-body-fluid text-text-secondary">{intro}</p>}
+          {detail && (
+            <p className="type-body-fluid font-semibold text-text-primary border-t border-border-color pt-3 w-full">
+              {detail}
+            </p>
+          )}
+          {onOpenRules && (
+            <button
+              type="button"
+              onClick={onOpenRules}
+              className={`${HEADER_BUTTON_CLASSES} gap-1.5 px-3 py-2 text-xs font-bold`}
+            >
+              <BookOpen className="h-4 w-4" aria-hidden="true" />
+              {rulesLabel}
+            </button>
+          )}
         </div>
       )}
 

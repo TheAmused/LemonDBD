@@ -11,6 +11,8 @@ export default {
   resetConfirm: "Zresetuj",
   abandonConfirm: "Porzuć",
   drawAnimations: "Animacje losowania",
+  drawAnimationsOnHint: "Kliknij, aby pominąć animacje losowania i od razu zobaczyć wynik.",
+  drawAnimationsOffHint: "Kliknij, aby ponownie włączyć animacje losowania.",
   progressTitle: "Postęp",
   checkpointSecured: "Punkt kontrolny zdobyty",
   resetAllRuns: "Zresetuj wszystkich zabójców",

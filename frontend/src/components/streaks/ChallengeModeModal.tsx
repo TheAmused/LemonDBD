@@ -45,6 +45,8 @@ export function buildCompletionTiles(
 /** What the summary box shows for the highlighted tile. */
 export interface ModeInfo {
   intro?: string;
+  /** What sets the highlighted tile apart, shown under the intro. */
+  detail?: string;
   /** False hides the rules link, e.g. when the highlighted tile only leads to another screen. */
   showRules: boolean;
 }
@@ -101,10 +103,9 @@ export const ChallengeModeModal: React.FC<ChallengeModeModalProps> = ({
   }, [isOpen, defaultPending]);
 
   const pendingTile = tiles.find((tile) => tile.value === pending);
-  // Without a dedicated summary, the highlighted tile's own description fills the box, and only the general intro brings the rules link.
   const info = modeInfo
     ? modeInfo(pending)
-    : { intro: pendingTile?.description ?? intro, showRules: Boolean(intro) && showRules };
+    : { intro, detail: pendingTile?.description, showRules: Boolean(intro) && showRules };
 
   return (
     <>
@@ -113,6 +114,7 @@ export const ChallengeModeModal: React.FC<ChallengeModeModalProps> = ({
         onClose={onClose}
         title={title ?? (dict.streaks.chooseMode)}
         intro={info.intro}
+        detail={info.detail}
         rulesLabel={dict.streaks.rules}
         onOpenRules={info.showRules ? () => setIsRulesOpen(true) : undefined}
         tiles={tiles}

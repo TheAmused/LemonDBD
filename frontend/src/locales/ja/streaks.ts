@@ -11,6 +11,8 @@ export default {
   resetConfirm: "リセット",
   abandonConfirm: "放棄",
   drawAnimations: "抽選アニメーション",
+  drawAnimationsOnHint: "クリックすると抽選アニメーションを省略して、結果をすぐに表示します。",
+  drawAnimationsOffHint: "クリックすると抽選アニメーションを再び再生します。",
   progressTitle: "進行状況",
   checkpointSecured: "チェックポイント獲得",
   resetAllRuns: "全キラーをリセット",

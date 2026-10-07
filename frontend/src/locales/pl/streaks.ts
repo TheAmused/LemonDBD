@@ -63,7 +63,7 @@ export default {
   historyHellDesc: "Brak punktów kontrolnych. Jedna porażka resetuje wszystko.",
   gauntletIntroKiller: "Wygraj każdym zabójcą, losowanym w przypadkowej kolejności.",
   gauntletIntroSurvivor: "Wygraj każdym survivorem, losowanym w przypadkowej kolejności.",
-  gauntletOriginalDesc: "Co 10 wygranych dochodzisz do punktu kontrolnego i tracisz jeden slot na perk.",
+  gauntletOriginalDesc: "Co 10 wygranych dochodzisz do punktu kontrolnego i tracisz jeden slot na perk. Jednym z perków musi być perk teachable danego survivora.",
   gauntletOriginalDescKiller: "Co 10 wygranych dochodzisz do punktu kontrolnego i tracisz jeden slot na perk, przeznaczony na perki teachable danego zabójcy.",
   gauntletLemonDesc: "Zmodyfikowana, przystępniejsza wersja Gauntleta.",
   lemonSolo: "Solo",

@@ -63,7 +63,7 @@ export default {
   historyHellDesc: "チェックポイントなし。1敗で全進捗がリセットされます。",
   gauntletIntroKiller: "全キラーで、ランダムな順番で勝利しよう。",
   gauntletIntroSurvivor: "全サバイバーで、ランダムな順番で勝利しよう。",
-  gauntletOriginalDesc: "10勝ごとにチェックポイントに到達し、パークスロットが1つ減ります。",
+  gauntletOriginalDesc: "10勝ごとにチェックポイントに到達し、パークスロットが1つ減ります。パークの1つは、そのサバイバー固有のティーチャブルパークにする必要があります。",
   gauntletOriginalDescKiller: "10勝ごとにチェックポイントに到達し、パークスロットが1つ減ります。スロットはキラー固有のティーチャブルパーク用です。",
   gauntletLemonDesc: "遊びやすく調整されたLemon独自アレンジ版。",
   lemonSolo: "ソロ",

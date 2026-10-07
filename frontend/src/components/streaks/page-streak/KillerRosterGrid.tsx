@@ -29,6 +29,7 @@ const KillerPortrait: React.FC<{ name: string; src?: string; done: boolean }> = 
         <img
           src={src}
           alt={name}
+          draggable={false}
           onError={() => setImgError(true)}
           className="h-full w-full object-cover"
         />
@@ -123,4 +124,4 @@ export const KillerRosterGrid: React.FC<KillerRosterGridProps> = ({ locale, rost
       })}
     </div>
   );
-};
+};

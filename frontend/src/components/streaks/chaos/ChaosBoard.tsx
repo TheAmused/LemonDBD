@@ -270,7 +270,7 @@ export const ChaosBoard: React.FC = () => {
           isOpen={isStatsOpen}
           onClose={() => setIsStatsOpen(false)}
           stats={stats}
-          attempts={run?.attempts}
+          attempts={run ? run.attempts + 1 : undefined}
         />
         <ChallengeCompletionHistoryDrawer
           isOpen={isHistoryOpen}

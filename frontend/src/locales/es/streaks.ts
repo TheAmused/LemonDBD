@@ -74,7 +74,7 @@ export default {
   lemonSquadDesc: "4 jugadores",
   chooseLemonPlayers: "¿Cuántos jugadores?",
   gauntletLemonPlayersDesc: "Nuestra propia versión del Guantelete.",
-  gauntletSummaryLemonKiller: 'Nuestra versión más fácil del Guantelete. Cada victoria sortea tokens para repetir asesino, elegir uno tú mismo, una ranura de habilidad libre o un escudo contra una derrota.',
+  gauntletSummaryLemonKiller: "Nuestra versión más fácil del Guantelete. Cada victoria te da tokens que puedes gastar en mejoras que te facilitan las partidas.",
   gauntletSummaryLemonSurvivor: 'Nuestra versión más fácil del Guantelete para supervivientes. Elegirás cuántos jugadores participan en la siguiente pantalla.',
   gauntletSummaryLemonSolo: 'Juegas solo y eliges tu propio superviviente en cada partida. Basta con un escape para ganar y obtienes un punto de control cada 5 victorias.',
   gauntletSummaryLemonDuo: 'Dos jugadores, cada uno con un superviviente aleatorio distinto. Es una victoria si escapa al menos uno de los dos y obtenéis un punto de control cada 6 victorias.',

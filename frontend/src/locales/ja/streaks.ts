@@ -74,7 +74,7 @@ export default {
   lemonSquadDesc: "4人",
   chooseLemonPlayers: "何人で遊びますか?",
   gauntletLemonPlayersDesc: "私たちオリジナルのガントレット。",
-  gauntletSummaryLemonKiller: 'ガントレットをより遊びやすくした私たちオリジナル版。勝つたびにトークンが抽選され、キラーのリロール、キラーの指名、自由なパークスロット、敗北を防ぐシールドに使えます。',
+  gauntletSummaryLemonKiller: "ガントレットをより遊びやすくした私たちオリジナル版。勝つたびにトークンがもらえ、ゲームを楽にするブーストと交換できます。",
   gauntletSummaryLemonSurvivor: 'サバイバー向けの、より遊びやすいオリジナル版ガントレット。参加人数は次の画面で選びます。',
   gauntletSummaryLemonSolo: '1人でプレイし、毎試合自分でサバイバーを選びます。1人脱出すれば勝利で、5勝ごとにチェックポイントが保存されます。',
   gauntletSummaryLemonDuo: '2人それぞれに異なるランダムなサバイバーが割り当てられます。2人のうち少なくとも1人が脱出すれば勝利で、6勝ごとにチェックポイントが保存されます。',

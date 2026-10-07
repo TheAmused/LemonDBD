@@ -74,7 +74,7 @@ export default {
   lemonSquadDesc: "4 Spieler",
   chooseLemonPlayers: "Wie viele Spieler?",
   gauntletLemonPlayersDesc: "Unsere eigene Version des Gauntlets.",
-  gauntletSummaryLemonKiller: 'Unsere leichtere Version des Gauntlets. Jeder Sieg würfelt Tokens, die du für einen neuen Killer, einen selbst gewählten Killer, einen freien Perk-Slot oder einen Schild gegen eine Niederlage ausgeben kannst.',
+  gauntletSummaryLemonKiller: "Unsere leichtere Version des Gauntlets. Für jeden Sieg bekommst du Tokens, mit denen du Boosts kaufen kannst, die dir das Spiel erleichtern.",
   gauntletSummaryLemonSurvivor: 'Unsere leichtere Version des Gauntlets für Survivor. Die Spielerzahl wählst du auf dem nächsten Bildschirm.',
   gauntletSummaryLemonSolo: 'Du spielst allein und wählst jedes Mal deinen eigenen Survivor. Eine Flucht reicht zum Sieg, und alle 5 Siege gibt es einen Checkpoint.',
   gauntletSummaryLemonDuo: 'Zwei Spieler, jeder mit einem anderen zufälligen Survivor. Es ist ein Sieg, wenn mindestens einer von euch entkommt, und alle 6 Siege gibt es einen Checkpoint.',

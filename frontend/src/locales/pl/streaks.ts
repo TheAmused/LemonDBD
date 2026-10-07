@@ -74,7 +74,7 @@ export default {
   lemonSquadDesc: "4 graczy",
   chooseLemonPlayers: "Ilu graczy?",
   gauntletLemonPlayersDesc: "Nasza własna wersja Gauntleta.",
-  gauntletSummaryLemonKiller: 'Nasza łatwiejsza wersja Gauntleta. Każda wygrana losuje tokeny, które wydasz na zmianę killera, wybór własnego, wolny slot perka albo tarczę chroniącą przed porażką.',
+  gauntletSummaryLemonKiller: "Nasza łatwiejsza wersja Gauntleta. Za każdą wygraną dostajesz tokeny, za które możesz kupić wspomagacze ułatwiające rozgrywkę.",
   gauntletSummaryLemonSurvivor: 'Nasza łatwiejsza wersja Gauntleta dla survivorów. Liczbę graczy wybierzesz na następnym ekranie.',
   gauntletSummaryLemonSolo: 'Grasz sam i za każdym razem wybierasz własnego survivora. Do wygranej wystarczy jedna ucieczka, a punkt kontrolny dostajesz co 5 wygranych.',
   gauntletSummaryLemonDuo: 'Dwóch graczy, każdy z innym losowym survivorem. Wygrana, gdy ucieknie przynajmniej jedno z was, a punkt kontrolny dostajecie co 6 wygranych.',

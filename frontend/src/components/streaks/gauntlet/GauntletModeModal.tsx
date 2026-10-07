@@ -97,7 +97,7 @@ function gauntletModeInfo(
     case 'lemon_squad':
       return { intro, detail: s.gauntletSummaryLemonSquad, showRules: true };
     default:
-      return { intro, detail: s.gauntletOriginalDesc, showRules: true };
+      return { intro, detail: role === 'killer' ? s.gauntletOriginalDescKiller : s.gauntletOriginalDesc, showRules: true };
   }
 }
 

@@ -18,6 +18,8 @@ interface PerkTileProps {
   disabled?: boolean;
   /** Not part of the confirmed build. */
   faded?: boolean;
+  /** Others are picked and this one is not: it steps back so the picks stand out. */
+  muted?: boolean;
   iconSrc?: string;
   onToggle?: (name: string) => void;
 }
@@ -28,6 +30,7 @@ export const PerkTile: React.FC<PerkTileProps> = ({
   selected = false,
   disabled = false,
   faded = false,
+  muted = false,
   iconSrc,
   onToggle,
 }) => {
@@ -53,7 +56,7 @@ export const PerkTile: React.FC<PerkTileProps> = ({
 
   const shell = `relative grid aspect-square w-[var(--perk-size)] place-items-center transition-[filter,transform,opacity] duration-150 motion-reduce:transition-none ${
     selected ? 'z-10 scale-110' : 'hover:brightness-125'
-  } ${faded ? 'opacity-35' : ''}`;
+  } ${faded ? 'opacity-35' : ''} ${muted ? 'opacity-55 saturate-50 hover:opacity-100 hover:saturate-100' : ''}`;
 
   if (disabled || !onToggle) {
     return (

@@ -7,7 +7,7 @@ import { ArrowLeft, ChevronRight } from 'lucide-react';
 import { usePageStreakRun } from './usePageStreakRun';
 import { RunHeader } from './RunHeader';
 import { PerkPageGrid } from './PerkPageGrid';
-import { BuildBar } from './BuildBar';
+import { BuildPanel } from './BuildPanel';
 import { StreakActionBar, StreakActionButton } from '../StreakActionBar';
 import { PageStreakRulesModal } from './PageStreakRulesModal';
 import { PageStreakStatsDrawer } from './PageStreakStatsDrawer';
@@ -112,7 +112,6 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
             header={
               <RunHeader
                 run={run}
-                avatarSrc={staticUrl(run.killer_avatar)}
                 onOpenReset={() => setConfirmingReset(true)}
                 onOpenRules={() => setIsRulesOpen(true)}
                 onOpenStats={() => setIsStatsOpen(true)}
@@ -163,54 +162,60 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
                   </StreakActionButton>
                 )}
               </StreakActionBar>
-              <PerkPageGrid
-                key={`${run.attempt}-${run.current_page}`}
-                perks={currentPagePerks}
-                selected={selected}
-                onToggle={toggle}
-                variant={lastWasLoss ? 'reset' : 'enter'}
-                iconByPerk={iconByPerk}
-              />
+              <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_25rem] lg:items-start">
+                <div>
+                  <PerkPageGrid
+                    key={`${run.attempt}-${run.current_page}`}
+                    perks={currentPagePerks}
+                    selected={selected}
+                    onToggle={toggle}
+                    variant={lastWasLoss ? 'reset' : 'enter'}
+                    iconByPerk={iconByPerk}
+                  />
 
-              <div className="mt-4">
-                <BuildBar
-                  selected={selected}
-                  size={buildSize}
-                  iconByPerk={iconByPerk}
-                />
+                  {nextPagePerks.length > 0 && (
+                    <>
+                      <button
+                        type="button"
+                        onClick={() => setShowNextPage((open) => !open)}
+                        aria-expanded={showNextPage}
+                        className={`mt-4 flex w-full items-center gap-2 rounded text-tiny uppercase tracking-widest text-text-muted transition-colors hover:text-accent-red focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red motion-reduce:transition-none ${showNextPage ? 'mb-2.5' : ''}`}
+                      >
+                        <ChevronRight
+                          className={`h-3.5 w-3.5 transition-transform duration-300 motion-reduce:transition-none ${
+                            showNextPage ? 'rotate-90' : ''
+                          }`}
+                        />
+                        <span>
+                          {dict.streaks.pageLabel} {run.current_page + 1}
+                        </span>
+                        <span className="h-px flex-1 bg-border-color" />
+                      </button>
+                      {/* grid-template-rows animates 0fr -> 1fr, which height:auto cannot do */}
+                      <div
+                        aria-hidden={!showNextPage}
+                        className={`grid transition-[grid-template-rows,opacity] duration-300 ease-out motion-reduce:transition-none ${
+                          showNextPage ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
+                        }`}
+                      >
+                        <div className="overflow-hidden">
+                          <PerkPageGrid perks={nextPagePerks} dimmed iconByPerk={iconByPerk} />
+                        </div>
+                      </div>
+                    </>
+                  )}
+                </div>
+
+                <aside className="order-first lg:sticky lg:top-20 lg:order-none">
+                  <BuildPanel
+                    selected={selected}
+                    size={buildSize}
+                    iconByPerk={iconByPerk}
+                    killerName={killerDisplayName}
+                    avatarSrc={staticUrl(run.killer_avatar)}
+                  />
+                </aside>
               </div>
-
-              {nextPagePerks.length > 0 && (
-                <>
-                  <button
-                    type="button"
-                    onClick={() => setShowNextPage((open) => !open)}
-                    aria-expanded={showNextPage}
-                    className={`mt-4 flex w-full items-center gap-2 rounded text-tiny uppercase tracking-widest text-text-muted transition-colors hover:text-accent-red focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red motion-reduce:transition-none ${showNextPage ? 'mb-2.5' : ''}`}
-                  >
-                    <ChevronRight
-                      className={`h-3.5 w-3.5 transition-transform duration-300 motion-reduce:transition-none ${
-                        showNextPage ? 'rotate-90' : ''
-                      }`}
-                    />
-                    <span>
-                      {dict.streaks.pageLabel} {run.current_page + 1}
-                    </span>
-                    <span className="h-px flex-1 bg-border-color" />
-                  </button>
-                  {/* grid-template-rows animates 0fr -> 1fr, which height:auto cannot do */}
-                  <div
-                    aria-hidden={!showNextPage}
-                    className={`grid transition-[grid-template-rows,opacity] duration-300 ease-out motion-reduce:transition-none ${
-                      showNextPage ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
-                    }`}
-                  >
-                    <div className="overflow-hidden">
-                      <PerkPageGrid perks={nextPagePerks} dimmed iconByPerk={iconByPerk} />
-                    </div>
-                  </div>
-                </>
-              )}
             </>
           )}
           </ChallengePanel>

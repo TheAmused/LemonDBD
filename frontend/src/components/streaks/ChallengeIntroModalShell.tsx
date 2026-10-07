@@ -32,8 +32,6 @@ export interface ChallengeIntroTile {
   completedFull?: boolean;
   /** Killer count frozen at that full-roster completion, shown next to the badge. */
   completedFullCount?: number | null;
-  /** Accepting this tile only opens the next screen, so the button reads "Continue". */
-  advances?: boolean;
 }
 
 export interface ChallengeIntroModalShellProps {

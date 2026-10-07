@@ -121,7 +121,7 @@ export const ChallengeModeModal: React.FC<ChallengeModeModalProps> = ({
         onPickTile={setPending}
         pendingValue={pending}
         onAccept={() => pending && onSelectTile(pending)}
-        acceptLabel={pendingTile?.advances ? dict.streaks.continueButton : dict.streaks.accept}
+        acceptLabel={dict.streaks.accept}
         acceptDisabled={!pending}
         tileGridClassName={tileGridClassName}
         escapeDisabled={isRulesOpen}

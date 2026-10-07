@@ -75,7 +75,8 @@ export const PerkPageGrid: React.FC<PerkPageGridProps> = ({
         {rows.map((row, rowIndex) => (
           <div
             key={rowIndex}
-            className="flex justify-center gap-x-[var(--perk-gap)]"
+            // Rows overlap, and a shifted one paints over the row above it; only the diamonds themselves may take clicks.
+            className="pointer-events-none flex justify-center gap-x-[var(--perk-gap)]"
             style={{
               marginTop: rowIndex === 0 ? undefined : 'calc((var(--perk-size) - var(--perk-gap)) / -2)',
               transform: staggered ? `translateX(calc((var(--perk-size) + var(--perk-gap)) * ${rowIndex % 2 ? 0.25 : -0.25}))` : undefined,

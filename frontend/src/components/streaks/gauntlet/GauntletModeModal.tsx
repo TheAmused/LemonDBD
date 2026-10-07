@@ -33,7 +33,6 @@ function lemonRootTile(role: 'killer' | 'survivor', dict: Dictionary): Challenge
     value: 'lemon',
     label: role === 'killer' ? dict.streaks.lemonMode : dict.streaks.lemonVersion,
     description: role === 'killer' ? dict.streaks.gauntletLemonDesc : dict.streaks.gauntletLemonPlayersDesc,
-    advances: role === 'survivor',
     icon: Sparkles,
     image: '/images/streaks/modes/gauntlet-lemon.webp',
     accentClassName: NEUTRAL_TILE_ACCENT,

@@ -10,6 +10,8 @@ export default {
   resetRunTitle: "Diesen Lauf aufgeben?",
   resetConfirm: "Zurücksetzen",
   abandonConfirm: "Aufgeben",
+  animationsOn: "Zieh-Animationen: an",
+  animationsOff: "Zieh-Animationen: aus",
   progressTitle: "Fortschritt",
   checkpointSecured: "Checkpoint gesichert",
   resetAllRuns: "Alle Killer zurücksetzen",

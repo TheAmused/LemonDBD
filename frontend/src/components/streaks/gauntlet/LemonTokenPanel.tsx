@@ -3,9 +3,7 @@
 
 import React from 'react';
 import { Coins } from 'lucide-react';
-import { Button } from '@/components/common/Button';
 import { useDictionary } from '@/context/DictionaryContext';
-import { formatMessage } from '@/utils/i18nFormat';
 import { canAddSlot } from '@/utils/perkSlots';
 import { BOOST_ICONS } from './boostIcons';
 import type { BoostConfig, BuyableBoost, TierInfo } from '@/types/gauntletStreak';
@@ -20,12 +18,9 @@ interface LemonTokenPanelProps {
   /** False when the killer in play is the last one left to beat, so there is nobody to reroll or pick. */
   hasOtherKiller: boolean;
   busy: boolean;
-  /** True while the player is choosing a killer from the roster. */
+  /** True while the player is choosing a killer from the roster; the confirm and cancel buttons live in the action bar. */
   picking: boolean;
-  pendingPick: string | null;
   onStartPick: () => void;
-  onCancelPick: () => void;
-  onConfirmPick: () => void;
   onBuy: (boost: BuyableBoost) => void;
 }
 
@@ -63,10 +58,7 @@ export const LemonTokenPanel: React.FC<LemonTokenPanelProps> = ({
   hasOtherKiller,
   busy,
   picking,
-  pendingPick,
   onStartPick,
-  onCancelPick,
-  onConfirmPick,
   onBuy,
 }) => {
   const dict = useDictionary();
@@ -90,15 +82,7 @@ export const LemonTokenPanel: React.FC<LemonTokenPanelProps> = ({
       </div>
 
       {picking ? (
-        <div className="flex flex-wrap items-center gap-3">
-          <p className="text-xs text-text-secondary">{dict.streaks.boostPickHint}</p>
-          <Button variant="primary" size="sm" onClick={onConfirmPick} disabled={!pendingPick || !canPay(prices.pick)}>
-            {dict.streaks.boostConfirmPick} ({formatMessage(dict.streaks.boostPrice, { price: prices.pick })})
-          </Button>
-          <Button variant="secondary" size="sm" onClick={onCancelPick}>
-            {dict.streaks.cancel}
-          </Button>
-        </div>
+        <p className="text-xs text-text-secondary">{dict.streaks.boostPickHint}</p>
       ) : (
         <div className="flex flex-wrap gap-2">
           <BoostTile

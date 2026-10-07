@@ -24,7 +24,7 @@ const KillerPortrait: React.FC<{ name: string; src?: string; done: boolean }> = 
   const [imgError, setImgError] = useState<boolean>(false);
 
   return (
-    <div className="flex aspect-square items-center justify-center overflow-hidden rounded-lg bg-bg-elevated border border-border-color">
+    <div className="flex aspect-square items-center justify-center overflow-hidden bg-bg-elevated">
       {src && !imgError ? (
         <img
           src={src}
@@ -68,7 +68,7 @@ export const KillerRosterGrid: React.FC<KillerRosterGridProps> = ({ locale, rost
           <Link
             key={entry.killer}
             href={`/${locale}/streaks/killer/page-streak/${encodeURIComponent(entry.killer)}`}
-            className={`relative flex flex-col gap-2 rounded-xl border p-3 transition-all shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-accent-red ${done
+            className={`relative flex flex-col overflow-hidden rounded-xl border pb-3 transition-all shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-accent-red ${done
                 ? 'border-accent-green/40 bg-accent-green/[0.07] hover:border-accent-green/60 ps-complete-pulse'
                 : active
                   ? 'border-accent-amber/45 bg-accent-amber/[0.07] hover:border-accent-amber/70'
@@ -77,7 +77,7 @@ export const KillerRosterGrid: React.FC<KillerRosterGridProps> = ({ locale, rost
           >
             {done && (
               <span
-                className="absolute right-2 top-2 flex h-5 w-5 items-center justify-center rounded-full bg-accent-green text-text-inverted shadow-sm"
+                className="absolute right-1.5 top-1.5 z-10 flex h-5 w-5 items-center justify-center rounded-full bg-accent-green text-text-inverted shadow-sm"
                 aria-label={dict.streaks.completed}
               >
                 <Check className="h-3 w-3" strokeWidth={3} aria-hidden="true" />
@@ -88,12 +88,12 @@ export const KillerRosterGrid: React.FC<KillerRosterGridProps> = ({ locale, rost
               src={staticUrl(entry.avatar_local_path)}
               done={done}
             />
-            <div className="text-center type-strong text-text-secondary truncate">
+            <div className="mt-2 px-3 text-center type-strong text-text-secondary truncate">
               {displayName}
             </div>
             {!done && (
               <div
-                className="h-1 overflow-hidden rounded-full bg-bg-elevated"
+                className="mx-3 mt-2 h-1 overflow-hidden rounded-full bg-bg-elevated"
                 role="progressbar"
                 aria-valuenow={pct}
                 aria-valuemin={0}
@@ -107,7 +107,7 @@ export const KillerRosterGrid: React.FC<KillerRosterGridProps> = ({ locale, rost
               </div>
             )}
             <div
-              className={`text-center text-tiny font-semibold ${done
+              className={`mt-2 px-3 text-center text-tiny font-semibold ${done
                   ? 'text-accent-green'
                   : active
                     ? 'text-accent-amber'

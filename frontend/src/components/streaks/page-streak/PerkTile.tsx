@@ -18,8 +18,6 @@ interface PerkTileProps {
   disabled?: boolean;
   /** Not part of the confirmed build. */
   faded?: boolean;
-  /** Its place in the build (1 to 4) when picked, 0 otherwise. */
-  order?: number;
   iconSrc?: string;
   onToggle?: (name: string) => void;
 }
@@ -30,7 +28,6 @@ export const PerkTile: React.FC<PerkTileProps> = ({
   selected = false,
   disabled = false,
   faded = false,
-  order = 0,
   iconSrc,
   onToggle,
 }) => {
@@ -51,15 +48,16 @@ export const PerkTile: React.FC<PerkTileProps> = ({
       ) : (
         <span className="text-tiny font-semibold text-text-muted">{label}</span>
       )}
-      {selected && order > 0 && (
-        <span
-          aria-hidden="true"
-          className="pointer-events-none absolute bottom-[10%] left-1/2 flex -translate-x-1/2 items-center justify-center rounded-full bg-text-primary font-black leading-none text-bg-primary shadow-md"
-          style={{ width: 'calc(var(--perk-size) * 0.27)', height: 'calc(var(--perk-size) * 0.27)', fontSize: 'calc(var(--perk-size) * 0.15)' }}
-        >
-          {order}
-        </span>
-      )}
+      <svg
+        viewBox="0 0 100 100"
+        aria-hidden="true"
+        className={`pointer-events-none absolute inset-0 h-full w-full transition-opacity duration-150 ${
+          selected ? 'opacity-100' : 'opacity-0'
+        }`}
+        style={{ color: 'var(--text-primary)' }}
+      >
+        <polygon points="50,2 98,50 50,98 2,50" fill="none" stroke="currentColor" strokeWidth="2.5" />
+      </svg>
     </>
   );
 

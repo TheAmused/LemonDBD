@@ -27,16 +27,11 @@ export interface StreakStatsBase<TLog extends StreakMatchLogBase> {
   recent_logs: TLog[];
 }
 
-/** The streak value worth showing for a match: the new streak on a win, the streak that was lost on a defeat. */
-export function streakAtResult(log: { result: 'win' | 'loss'; streak_before: number; streak_after: number }): number {
-  return log.result === 'win' ? log.streak_after : log.streak_before;
-}
-
 export interface StreakStatsDrawerProps<TLog extends StreakMatchLogBase> {
   isOpen: boolean;
   onClose: () => void;
   stats: StreakStatsBase<TLog> | null;
-  /** Losses since the current run's pool was last (re)frozen -- from the live run, not the match-log aggregate, so it survives independently of `stats`. */
+  /** The number of the attempt in progress, counting the first one -- from the live run, not the match-log aggregate, so it survives independently of `stats`. */
   attempts?: number;
   /** The main label for a match row: character/killer name, or the "Auto-loss" badge is handled for you. */
   renderLabel: (log: TLog) => React.ReactNode;

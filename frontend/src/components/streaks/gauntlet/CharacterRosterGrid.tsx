@@ -99,7 +99,7 @@ export const CharacterRosterGrid: React.FC<CharacterRosterGridProps> = ({
             return (
               <div
                 key={char.name}
-                className={`relative group overflow-hidden rounded-xl border flex flex-col items-center justify-between transition-all duration-200 ${cardBorder} ${
+                className={`relative group select-none overflow-hidden rounded-xl border flex flex-col items-center justify-between transition-all duration-200 ${cardBorder} ${
                   selectable ? 'cursor-pointer hover:border-accent-green focus:outline-none focus:ring-2 focus:ring-accent-green' : ''
                 }`}
                 aria-label={`${displayName(char.name)}${statusSuffix}`}
@@ -133,6 +133,7 @@ export const CharacterRosterGrid: React.FC<CharacterRosterGridProps> = ({
                     <img
                       src={avatarUrl}
                       alt={displayName(char.name)}
+                      draggable={false}
                       className={`w-full h-full object-cover transition-transform duration-300 group-hover:scale-105 ${completed ? 'brightness-105' : !active ? 'opacity-90' : ''
                         }`}
                       onError={() => handleImageError(char.name)}
@@ -154,4 +155,5 @@ export const CharacterRosterGrid: React.FC<CharacterRosterGridProps> = ({
       )}
     </div>
   );
-};
+};
+

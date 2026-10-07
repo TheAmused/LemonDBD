@@ -35,7 +35,7 @@ const KillerTile: React.FC<{
       onClick={() => onSelect(name)}
       disabled={disabled || isCompleted}
       aria-label={`${displayName}${isCompleted ? ' (Cleared)' : ''}`}
-      className={`relative flex flex-col items-center overflow-hidden rounded-lg border transition-all cursor-pointer disabled:cursor-not-allowed ${
+      className={`relative flex select-none flex-col items-center overflow-hidden rounded-lg border transition-all cursor-pointer disabled:cursor-not-allowed ${
         isCompleted ? '' : 'disabled:opacity-40'
       } ${cardBorder}`}
     >
@@ -49,6 +49,7 @@ const KillerTile: React.FC<{
           <img
             src={src}
             alt={displayName}
+            draggable={false}
             className={`w-full h-full object-cover ${isCompleted ? 'brightness-105' : ''}`}
             onError={() => setFailed(true)}
           />

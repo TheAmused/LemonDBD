@@ -69,7 +69,7 @@ export const LemonTokenPanel: React.FC<LemonTokenPanelProps> = ({
   return (
     <section
       aria-label={dict.streaks.boostsTitle}
-      className="mt-3 flex w-full flex-wrap items-center justify-between gap-x-6 gap-y-2 rounded-xl border border-border-color bg-bg-elevated px-4 py-3"
+      className="mt-4 flex w-full flex-wrap items-center justify-between gap-x-6 gap-y-2 border-t border-border-color px-1 pt-4"
     >
       <div className="flex items-center gap-3">
         <h3 className="type-label text-text-primary">{dict.streaks.boostsTitle}</h3>

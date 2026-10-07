@@ -321,7 +321,6 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({
           onClose={() => setIsChangeModeOpen(false)}
           role={role}
           currentMode={gameMode}
-          showIntro={false}
           originalCompleted={(completionStatus.completions.gauntlet ?? []).includes(`${role}_original`)}
           originalCompletedCount={completionStatus.completion_counts.gauntlet?.[`${role}_original`] ?? null}
           originalCompletedFull={completionStatus.full_roster.gauntlet?.[`${role}_original`] != null}

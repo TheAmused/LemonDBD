@@ -162,7 +162,7 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
                   </StreakActionButton>
                 )}
               </StreakActionBar>
-              <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_25rem] lg:items-start">
+              <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_25rem]">
                 <div>
                   <PerkPageGrid
                     key={`${run.attempt}-${run.current_page}`}
@@ -206,7 +206,7 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
                   )}
                 </div>
 
-                <aside className="order-first lg:sticky lg:top-20 lg:order-none">
+                <aside className="order-first lg:order-none lg:flex lg:items-center lg:justify-center lg:border-l lg:border-border-color lg:pl-6">
                   <BuildPanel
                     selected={selected}
                     size={buildSize}

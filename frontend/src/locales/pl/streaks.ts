@@ -218,7 +218,7 @@ export default {
   niceGuyStreakTitle: "Seria Dobrego Gościa",
   bloodMoneyStreakTitle: "Seria Krwawych Pieniędzy",
   copycatStreakTitle: "Seria Naśladowcy",
-  confirmBuild: 'Zatwierdź',
+  confirmBuild: 'ZATWIERDŹ',
   noPerksDrawnYet: 'Nie wylosowano jeszcze perków w tym cyklu.',
   perkPoolEmptyFreshCycle: 'Pula jest pusta; kolejne losowanie rozpocznie nowy cykl.',
   perkPoolTabs: 'Nawigacja po puli perków',

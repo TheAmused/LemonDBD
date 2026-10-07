@@ -41,7 +41,7 @@ export const BuildPanel: React.FC<BuildPanelProps> = ({ selected, size, iconByPe
   return (
     <section
       aria-label={dict.streaks.yourBuildForMatch}
-      className="flex items-center justify-center gap-6 py-2 lg:border-l lg:border-border-color lg:pl-6"
+      className="flex items-center justify-center gap-6 py-2"
     >
       <div className="flex min-w-0 flex-col items-center gap-2">
         <div className="flex h-24 w-24 items-center justify-center overflow-hidden rounded-2xl border-2 border-border-color bg-bg-surface shadow-lg sm:h-28 sm:w-28">

@@ -60,7 +60,7 @@ export const PerkPageGrid: React.FC<PerkPageGridProps> = ({
   const { rows, staggered } = layoutPage(perks);
   // The widest row is 5 diamonds and 4 gaps wide (plus half a pitch when staggered); the cap keeps them from growing huge on wide screens.
   const rowWidth = MAX_ROW + (MAX_ROW - 1) * GAP_RATIO + (staggered ? (1 + GAP_RATIO) / 2 : 0);
-  const maxSize = dimmed ? '3.5rem' : '8rem';
+  const maxSize = dimmed ? '5.5rem' : '8rem';
   const style = {
     '--perk-size': `min(${maxSize}, ${(100 / rowWidth).toFixed(2)}cqw)`,
     '--perk-gap': `calc(var(--perk-size) * ${GAP_RATIO})`,

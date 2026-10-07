@@ -34,6 +34,7 @@ export const ChallengeCompletionHistoryDrawer: React.FC<ChallengeCompletionHisto
       onClose={onClose}
       variant="drawer-right"
       title={dict.streaks.pastWins}
+      centerTitle
       closeButtonAriaLabel={dict.modal.close}
       bodyClassName="p-5 sm:p-6"
     >

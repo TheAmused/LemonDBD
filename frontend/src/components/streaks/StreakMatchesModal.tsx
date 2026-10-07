@@ -39,6 +39,7 @@ export function StreakMatchesModal<TLog extends StreakMatchLogBase>({ isOpen, on
       variant="dialog"
       size="lg"
       title={dict.streaks.recentMatchHistory}
+      centerTitle
       closeButtonAriaLabel={dict.modal.close}
       bodyClassName="space-y-2.5 p-5"
       footer={

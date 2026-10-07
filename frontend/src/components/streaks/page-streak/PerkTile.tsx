@@ -48,21 +48,11 @@ export const PerkTile: React.FC<PerkTileProps> = ({
       ) : (
         <span className="text-tiny font-semibold text-text-muted">{label}</span>
       )}
-      <svg
-        viewBox="0 0 100 100"
-        aria-hidden="true"
-        className={`pointer-events-none absolute inset-0 h-full w-full transition-opacity duration-150 ${
-          selected ? 'opacity-100' : 'opacity-0'
-        }`}
-        style={{ color: 'var(--accent-red)' }}
-      >
-        <polygon points="50,3 97,50 50,97 3,50" fill="none" stroke="currentColor" strokeWidth="4" />
-      </svg>
     </>
   );
 
   const shell = `relative grid aspect-square w-[var(--perk-size)] place-items-center transition-[filter,transform,opacity] duration-150 motion-reduce:transition-none ${
-    selected ? '' : 'hover:brightness-125'
+    selected ? 'z-10 scale-110' : 'hover:brightness-125'
   } ${faded ? 'opacity-35' : ''}`;
 
   if (disabled || !onToggle) {

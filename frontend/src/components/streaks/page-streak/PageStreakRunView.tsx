@@ -1,7 +1,7 @@
 'use client';
 // frontend/src/components/streaks/page-streak/PageStreakRunView.tsx
 import { Button } from '@/components/common/Button';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, ChevronRight } from 'lucide-react';
 import { usePageStreakRun } from './usePageStreakRun';
@@ -47,7 +47,8 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
   const [isRulesOpen, setIsRulesOpen] = useState(false);
   const [isStatsOpen, setIsStatsOpen] = useState(false);
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
-  const [lastWasLoss, setLastWasLoss] = useState(false);
+  // What the last reported result was. A ref, so reporting it does not re-render the page that is still on screen.
+  const lastResultRef = useRef<'win' | 'loss'>('win');
   const { celebrating, celebrate } = useCelebration();
 
   // Opening a killer with no run starts one straight away. A failed start sets `error`,
@@ -69,6 +70,10 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
   const { selected, confirmed } = build.key === buildKey ? build : { selected: [] as string[], confirmed: false };
 
   useCelebrateOnRise(run?.status === 'completed', celebrate);
+
+  // Fixed when the page changes, so the page that is leaving never replays an animation while the result is in flight.
+  const pageKey = run ? `${run.attempt}-${run.current_page}` : '';
+  const pageVariant = useMemo(() => (lastResultRef.current === 'loss' ? 'reset' : 'enter'), [pageKey]);
 
   const currentPagePerks = run ? run.pages[run.current_page - 1] ?? [] : [];
   const buildSize = Math.min(4, currentPagePerks.length);
@@ -138,7 +143,7 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
                       variant="red"
                       disabled={busy}
                       onClick={() => {
-                        setLastWasLoss(true);
+                        lastResultRef.current = 'loss';
                         submitResult(run.current_page, selected, 'loss');
                       }}
                     >
@@ -148,7 +153,7 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
                       variant="green"
                       disabled={busy}
                       onClick={() => {
-                        setLastWasLoss(false);
+                        lastResultRef.current = 'win';
                         submitResult(run.current_page, selected, 'win');
                       }}
                     >
@@ -168,12 +173,12 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
               <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_25rem]">
                 <div>
                   <PerkPageGrid
-                    key={`${run.attempt}-${run.current_page}`}
+                    key={pageKey}
                     perks={currentPagePerks}
                     selected={selected}
                     onToggle={confirmed ? undefined : toggle}
                     locked={confirmed}
-                    variant={lastWasLoss ? 'reset' : 'enter'}
+                    variant={pageVariant}
                     iconByPerk={iconByPerk}
                   />
 

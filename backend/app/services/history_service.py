@@ -24,6 +24,7 @@ logger = logging.getLogger(__name__)
 class HistoryService(StreakRunService):
     mode = "history"
     run_model = HistoryRun
+    best_field = "best_killers_beaten"
     variant_fields = ("mode",)
 
     def __init__(self, ownership_service: OwnershipService | None = None):

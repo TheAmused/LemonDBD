@@ -3,6 +3,10 @@
 
 import React, { useState } from 'react';
 import { usePerkDisplayName } from '@/context/DisplayNamesContext';
+import { tip } from '@/components/common/Tooltip';
+
+/** Clips the hit area to the diamond, so the overlapping squares of neighbouring rows never steal each other's clicks. */
+const DIAMOND_CLIP = 'polygon(50% 0, 100% 50%, 50% 100%, 0 50%)';
 
 interface PerkTileProps {
   name: string;
@@ -12,6 +16,7 @@ interface PerkTileProps {
   onToggle?: (name: string) => void;
 }
 
+/** One perk as an in-game diamond slot. Its size comes from `--perk-size` set by the grid. */
 export const PerkTile: React.FC<PerkTileProps> = ({
   name,
   selected = false,
@@ -25,28 +30,39 @@ export const PerkTile: React.FC<PerkTileProps> = ({
 
   const content = (
     <>
-      <span className="grid aspect-square w-full max-w-[96px] place-items-center">
-        {showImage && (
-          <img
-            src={iconSrc}
-            alt={label}
-            onError={() => setImgError(true)}
-            className="h-[86%] w-[86%] object-contain drop-shadow"
-          />
-        )}
-      </span>
-      <span className={`text-center text-tiny font-semibold leading-tight ${selected ? 'text-text-primary' : 'text-text-secondary'}`}>
-        {label}
-      </span>
+      {showImage ? (
+        <img
+          src={iconSrc}
+          alt={label}
+          draggable={false}
+          onError={() => setImgError(true)}
+          className="h-full w-full select-none object-contain"
+        />
+      ) : (
+        <span className="text-tiny font-semibold text-text-muted">{label}</span>
+      )}
+      <svg
+        viewBox="0 0 100 100"
+        aria-hidden="true"
+        className={`pointer-events-none absolute inset-0 h-full w-full text-accent-red transition-opacity duration-150 ${
+          selected ? 'opacity-100' : 'opacity-0'
+        }`}
+      >
+        <polygon points="50,3 97,50 50,97 3,50" fill="currentColor" fillOpacity="0.2" stroke="currentColor" strokeWidth="4" />
+      </svg>
     </>
   );
 
-  const shell = `flex flex-col items-center gap-1 rounded-xl border p-1.5 transition-all duration-150 motion-reduce:transition-none ${
-    selected ? 'border-accent-red bg-bg-surface' : 'border-transparent bg-bg-surface hover:bg-bg-elevated'
+  const shell = `relative grid aspect-square w-[var(--perk-size)] place-items-center transition-[filter,transform] duration-150 motion-reduce:transition-none ${
+    selected ? '' : 'hover:brightness-125'
   }`;
 
   if (disabled || !onToggle) {
-    return <div className={shell}>{content}</div>;
+    return (
+      <div className={shell} style={{ clipPath: DIAMOND_CLIP }}>
+        {content}
+      </div>
+    );
   }
 
   return (
@@ -54,7 +70,10 @@ export const PerkTile: React.FC<PerkTileProps> = ({
       type="button"
       onClick={() => onToggle(name)}
       aria-pressed={selected}
-      className={`${shell} focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red`}
+      aria-label={label}
+      {...tip(label, undefined, 'item')}
+      className={`${shell} cursor-pointer focus:outline-none focus-visible:brightness-150`}
+      style={{ clipPath: DIAMOND_CLIP }}
     >
       {content}
     </button>

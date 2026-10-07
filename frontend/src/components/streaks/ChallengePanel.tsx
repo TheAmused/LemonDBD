@@ -2,11 +2,10 @@
 import type { Dictionary } from '@/locales/types';
 
 import React from 'react';
-import { BarChart2, BookOpen, ChevronDown, History, RotateCcw, Dices } from 'lucide-react';
+import { BarChart2, BookOpen, ChevronDown, History, RotateCcw, Clapperboard } from 'lucide-react';
 import { CELEBRATION_CARD_CLASSES, CELEBRATION_LABEL_CLASSES, CelebrationBadge } from './CelebrationBadge';
 import { useDictionary } from "@/context/DictionaryContext";
 import { useChallengeAnimations } from './useChallengeAnimations';
-import { tip } from '@/components/common/Tooltip';
 
 interface ChallengePanelProps {
   /** Stats and actions strip, rendered as the top section of the card. */
@@ -119,8 +118,6 @@ interface HeaderButtonProps {
   /** With a label the button reads as text (hidden below sm); without one it is a square icon button. */
   label?: string;
   danger?: boolean;
-  /** Tooltip explaining what the button does; the title stays its accessible name. */
-  tooltipDescription?: string;
 }
 
 /** Look shared by the challenge header buttons (and any other button that should match them). */
@@ -128,12 +125,11 @@ export const HEADER_BUTTON_CLASSES =
   'flex items-center rounded-xl border border-border-color bg-bg-elevated text-text-secondary shadow-sm transition-colors cursor-pointer hover:bg-bg-elevated/70 hover:text-text-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red';
 
 /** Header action button shared by every challenge. */
-export const HeaderButton: React.FC<HeaderButtonProps> = ({ onClick, title, icon, label, danger = false, tooltipDescription }) => (
+export const HeaderButton: React.FC<HeaderButtonProps> = ({ onClick, title, icon, label, danger = false }) => (
   <button
     type="button"
     onClick={onClick}
     aria-label={title}
-    {...tip(title, tooltipDescription, 'action')}
     className={`${HEADER_BUTTON_CLASSES} ${danger ? 'hover:bg-accent-red/10 hover:text-accent-red' : ''} ${
       label ? 'gap-1.5 px-3 py-2.5 text-xs font-bold' : 'justify-center p-2.5'
     }`}
@@ -143,7 +139,7 @@ export const HeaderButton: React.FC<HeaderButtonProps> = ({ onClick, title, icon
   </button>
 );
 
-/** Dice button that turns the draw animations on or off; struck through while they are off. */
+/** Clapperboard button that turns the draw animations on or off; struck through while they are off. */
 const DrawAnimationButton: React.FC = () => {
   const dict = useDictionary();
   const [enabled, setEnabled] = useChallengeAnimations();
@@ -151,10 +147,9 @@ const DrawAnimationButton: React.FC = () => {
     <HeaderButton
       onClick={() => setEnabled(!enabled)}
       title={dict.streaks.drawAnimations}
-      tooltipDescription={enabled ? dict.streaks.drawAnimationsOnHint : dict.streaks.drawAnimationsOffHint}
       icon={
         <span className="relative flex">
-          <Dices className={`h-5 w-5 ${enabled ? '' : 'opacity-50'}`} aria-hidden="true" />
+          <Clapperboard className={`h-5 w-5 ${enabled ? '' : 'opacity-50'}`} aria-hidden="true" />
           {!enabled && (
             <span
               className="absolute left-1/2 top-1/2 h-0.5 w-6 -translate-x-1/2 -translate-y-1/2 -rotate-45 rounded-full bg-accent-red"

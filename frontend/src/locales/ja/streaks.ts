@@ -74,7 +74,7 @@ export default {
   chooseLemonPlayers: "何人で遊びますか?",
   gauntletLemonPlayersDesc: "私たちオリジナルのガントレット。",
   gauntletSummaryLemonKiller: "勝利でトークンを獲得し、ブーストに使えます。パークスロットはキラー固有のティーチャブルパーク用です。",
-  gauntletSummaryLemonSurvivor: "目的は同じで、ソロ・デュオ・スクワッドの各モードでルールが少し変わります。",
+  gauntletSummaryLemonSurvivor: "ソロ・デュオ・スクワッドの各モードで、ルールが少し変わります。",
   gauntletSummaryLemonSolo: "1人でプレイし、サバイバーを自分で選びます。そのサバイバーのティーチャブルパークを必ず持っていく必要があります。チェックポイントは5勝ごとに保存されます。",
   gauntletSummaryLemonDuo: "2人で一緒にプレイし、それぞれ異なるランダムなサバイバーが割り当てられます。チェックポイントは6勝ごとに保存され、次のパーク段階へ進みます。",
   gauntletSummaryLemonSquad: "4人で一緒にプレイし、2人のランダムなサバイバーを共有します。チェックポイントは6勝ごとに保存され、次のパーク段階へ進みます。",

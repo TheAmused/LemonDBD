@@ -74,7 +74,7 @@ export default {
   chooseLemonPlayers: "Ilu graczy?",
   gauntletLemonPlayersDesc: "Nasza własna wersja Gauntleta.",
   gauntletSummaryLemonKiller: "Za wygrane dostajesz tokeny na wspomagacze. Sloty na perki są tylko na perki teachable danego zabójcy.",
-  gauntletSummaryLemonSurvivor: "Ten sam cel, ale z trybami solo, duo i squad, które lekko zmieniają zasady.",
+  gauntletSummaryLemonSurvivor: "Tryby solo, duo i squad z lekko zmienionymi zasadami.",
   gauntletSummaryLemonSolo: "Grasz sam i wybierasz własnego survivora, którego perk teachable musisz zabrać. Punkt kontrolny zapisuje się co 5 wygranych.",
   gauntletSummaryLemonDuo: "Gracie we dwójkę, każde z innym losowym survivorem. Punkt kontrolny zapisuje się co 6 wygranych i przenosi was na kolejny poziom perków.",
   gauntletSummaryLemonSquad: "Gracie w czwórkę i dzielicie dwóch losowych survivorów. Punkt kontrolny zapisuje się co 6 wygranych i przenosi was na kolejny poziom perków.",

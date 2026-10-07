@@ -125,9 +125,9 @@ export const ChallengeIntroModalShell: React.FC<ChallengeIntroModalShellProps> =
     >
       {(intro || detail || onOpenRules) && (
         <div className="flex flex-col items-center gap-3 pb-5 text-center">
-          {intro && <p className="type-body-fluid text-text-secondary">{intro}</p>}
+          {intro && <p className="type-body-fluid font-semibold text-text-primary">{intro}</p>}
           {detail && (
-            <p className="type-body-fluid font-semibold text-text-primary border-t border-border-color pt-3 w-full">
+            <p className="type-body-fluid text-text-secondary border-t border-border-color pt-3 w-full">
               {detail}
             </p>
           )}

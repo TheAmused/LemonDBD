@@ -74,7 +74,7 @@ export default {
   chooseLemonPlayers: "How many players?",
   gauntletLemonPlayersDesc: "Our own version of the Gauntlet.",
   gauntletSummaryLemonKiller: "Wins earn tokens you can spend on boosts. Your perk slots are for the killer's own teachable perks.",
-  gauntletSummaryLemonSurvivor: "Same goal, with solo, duo and squad modes that change the rules slightly.",
+  gauntletSummaryLemonSurvivor: "Solo, duo and squad modes with slightly changed rules.",
   gauntletSummaryLemonSolo: "You play alone and pick your own survivor, whose teachable perk you must bring. A checkpoint is saved every 5 wins.",
   gauntletSummaryLemonDuo: "Two of you play together, each with a different random survivor. A checkpoint is saved every 6 wins and moves you to the next perk tier.",
   gauntletSummaryLemonSquad: "Four of you play together and share two random survivors. A checkpoint is saved every 6 wins and moves you to the next perk tier.",

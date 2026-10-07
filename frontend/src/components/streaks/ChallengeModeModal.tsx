@@ -111,7 +111,7 @@ export const ChallengeModeModal: React.FC<ChallengeModeModalProps> = ({
         title={title ?? (dict.streaks.chooseMode)}
         intro={info.intro}
         rulesLabel={dict.streaks.rules}
-        onOpenRules={info.showRules ? () => setIsRulesOpen(true) : undefined}
+        onOpenRules={info.intro && info.showRules ? () => setIsRulesOpen(true) : undefined}
         tiles={tiles}
         onPickTile={setPending}
         pendingValue={pending}

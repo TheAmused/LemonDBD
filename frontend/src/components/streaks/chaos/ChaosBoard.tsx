@@ -161,6 +161,7 @@ export const ChaosBoard: React.FC = () => {
         {error && <ChallengeErrorBanner message={error} />}
 
         <ChallengePanel
+          hasDrawAnimations
           progress={
             <ChallengeProgress
               current={run?.current_streak ?? 0}
@@ -302,4 +303,4 @@ export const ChaosBoard: React.FC = () => {
       </div>
     </div>
   );
-};
+};

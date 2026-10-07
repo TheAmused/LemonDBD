@@ -62,7 +62,6 @@ export const ChaosHeader: React.FC<ChaosHeaderProps> = ({
       }
       actions={
         <StandardHeaderActions
-          hasDrawAnimations
           onOpenRules={onOpenRules}
           onOpenStats={onOpenStats}
           onOpenHistory={onOpenHistory}

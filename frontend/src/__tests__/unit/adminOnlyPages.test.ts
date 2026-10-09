@@ -22,7 +22,9 @@ describe('adminOnlyPageFromPathname', () => {
     }
   });
 
-  it('lists minigames as admin-only', () => {
+  it('lists minigames and achievements (trophies) as admin-only', () => {
     assert.ok(ADMIN_ONLY_SEGMENTS.includes('minigames'));
+    assert.ok(ADMIN_ONLY_SEGMENTS.includes('achievements'));
+    assert.deepEqual(adminOnlyPageFromPathname('/en/achievements', LOCALES), { locale: 'en', segment: 'achievements' });
   });
 });

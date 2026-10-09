@@ -67,9 +67,9 @@ export default {
     storage: {
       heading: "Cookies, almacenamiento local y terceros",
       paragraphs: [
-        "Al iniciar sesión, LemonDBD establece una cookie estrictamente necesaria: una cookie de sesión que te mantiene conectado durante {sessionWindow} o hasta que cierres sesión. Es HttpOnly, por lo que los scripts de la página no pueden leerla, y nunca se usa para rastrearte. Además, el almacenamiento local de tu navegador guarda pequeños elementos que hacen funcionar el sitio o recuerdan tus elecciones, por ejemplo una marca de que has iniciado sesión, el estado de la barra lateral y los paneles, los ajustes de sonido, borradores, rosters seleccionados y tu ID de sesión de Smash or Pass.",
+        "Al iniciar sesión, <brand>LemonDBD</brand> establece una cookie estrictamente necesaria: una cookie de sesión que te mantiene conectado durante {sessionWindow} o hasta que cierres sesión. Es HttpOnly, por lo que los scripts de la página no pueden leerla, y nunca se usa para rastrearte. Además, el almacenamiento local de tu navegador guarda pequeños elementos que hacen funcionar el sitio o recuerdan tus elecciones, por ejemplo una marca de que has iniciado sesión, el estado de la barra lateral y los paneles, los ajustes de sonido, borradores, rosters seleccionados y tu ID de sesión de Smash or Pass.",
         "Estos elementos son estrictamente necesarios o simples ajustes de comodidad, por lo que no hace falta un banner de consentimiento. El almacenamiento local permanece en tu dispositivo y puedes borrarlo en el navegador cuando quieras; al cerrar sesión se elimina la cookie de sesión.",
-        "<b>Comandos de voz:</b> en Chrome, Edge y Safari, el reconocimiento de voz lo proporciona el fabricante del navegador (por ejemplo Google o Apple), por lo que el audio puede enviarse a ellos según su propia política de privacidad. En otros navegadores, LemonDBD descarga un pequeño modelo de voz y procesa el audio solo en tu dispositivo.",
+        "<b>Comandos de voz:</b> en Chrome, Edge y Safari, el reconocimiento de voz lo proporciona el fabricante del navegador (por ejemplo Google o Apple), por lo que el audio puede enviarse a ellos según su propia política de privacidad. En otros navegadores, <brand>LemonDBD</brand> descarga un pequeño modelo de voz y procesa el audio solo en tu dispositivo.",
       ],
       items: [],
     },
@@ -124,7 +124,7 @@ export default {
     children: {
       heading: "Menores",
       paragraphs: [
-        "LemonDBD no está dirigido a menores de 13 años (o de 16 donde tu país fije una edad de consentimiento superior) y no recogemos sus datos a sabiendas. Si crees que un menor nos ha dado datos personales, contáctanos y los eliminaremos.",
+        "<brand>LemonDBD</brand> no está dirigido a menores de 13 años (o de 16 donde tu país fije una edad de consentimiento superior) y no recogemos sus datos a sabiendas. Si crees que un menor nos ha dado datos personales, contáctanos y los eliminaremos.",
       ],
       items: [],
     },

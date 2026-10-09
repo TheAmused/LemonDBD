@@ -67,9 +67,9 @@ export default {
     storage: {
       heading: "Cookies, lokaler Speicher und Dritte",
       paragraphs: [
-        "Beim Anmelden setzt LemonDBD ein unbedingt erforderliches Cookie: ein Sitzungs-Cookie, das dich {sessionWindow} lang oder bis zum Abmelden angemeldet hält. Es ist HttpOnly, sodass Skripte auf der Seite es nicht lesen können, und wird nie zum Tracking verwendet. Daneben speichert der lokale Speicher deines Browsers kleine Einträge, die die Seite funktionieren lassen oder deine Auswahl merken, zum Beispiel eine Markierung, dass du angemeldet bist, Zustände von Seitenleiste und Panels, Soundeinstellungen, Entwürfe, gewählte Roster und deine Smash-or-Pass-Sitzungs-ID.",
+        "Beim Anmelden setzt <brand>LemonDBD</brand> ein unbedingt erforderliches Cookie: ein Sitzungs-Cookie, das dich {sessionWindow} lang oder bis zum Abmelden angemeldet hält. Es ist HttpOnly, sodass Skripte auf der Seite es nicht lesen können, und wird nie zum Tracking verwendet. Daneben speichert der lokale Speicher deines Browsers kleine Einträge, die die Seite funktionieren lassen oder deine Auswahl merken, zum Beispiel eine Markierung, dass du angemeldet bist, Zustände von Seitenleiste und Panels, Soundeinstellungen, Entwürfe, gewählte Roster und deine Smash-or-Pass-Sitzungs-ID.",
         "Diese Einträge sind unbedingt erforderlich oder reine Komforteinstellungen, ein Einwilligungsbanner ist daher nicht nötig. Der lokale Speicher bleibt auf deinem Gerät und kann jederzeit im Browser gelöscht werden; beim Abmelden wird das Sitzungs-Cookie gelöscht.",
-        "<b>Sprachbefehle:</b> In Chrome, Edge und Safari übernimmt der Browserhersteller (z. B. Google oder Apple) die Spracherkennung, sodass Audio gemäß deren Datenschutzerklärung dorthin gesendet werden kann. In anderen Browsern lädt LemonDBD ein kleines Sprachmodell herunter und verarbeitet Audio ausschließlich auf deinem Gerät.",
+        "<b>Sprachbefehle:</b> In Chrome, Edge und Safari übernimmt der Browserhersteller (z. B. Google oder Apple) die Spracherkennung, sodass Audio gemäß deren Datenschutzerklärung dorthin gesendet werden kann. In anderen Browsern lädt <brand>LemonDBD</brand> ein kleines Sprachmodell herunter und verarbeitet Audio ausschließlich auf deinem Gerät.",
       ],
       items: [],
     },
@@ -124,7 +124,7 @@ export default {
     children: {
       heading: "Kinder",
       paragraphs: [
-        "LemonDBD richtet sich nicht an Kinder unter 13 Jahren (oder unter 16, wo dein Land ein höheres Einwilligungsalter vorsieht), und wir erheben wissentlich keine Daten von ihnen. Wenn du glaubst, dass ein Kind uns personenbezogene Daten übermittelt hat, melde dich bei uns, und wir löschen sie.",
+        "<brand>LemonDBD</brand> richtet sich nicht an Kinder unter 13 Jahren (oder unter 16, wo dein Land ein höheres Einwilligungsalter vorsieht), und wir erheben wissentlich keine Daten von ihnen. Wenn du glaubst, dass ein Kind uns personenbezogene Daten übermittelt hat, melde dich bei uns, und wir löschen sie.",
       ],
       items: [],
     },

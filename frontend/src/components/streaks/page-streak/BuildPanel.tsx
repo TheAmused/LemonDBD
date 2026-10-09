@@ -24,9 +24,7 @@ const SLOT_OFFSETS = [
   { x: 0, y: 1 },
   { x: -1, y: 0 },
 ];
-/** One diamond's width. */
 const SLOT_SIZE = 4.5;
-/** Distance between neighbouring diamonds' edges. */
 const SLOT_GAP = 0.5;
 /** Centre-to-centre distance along each axis, so neighbouring diamonds sit a gap apart. */
 const STEP = (SLOT_SIZE + SLOT_GAP) / 2;

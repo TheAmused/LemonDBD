@@ -22,8 +22,9 @@ class TestChaosStats:
     def test_counts_wins_and_losses_for_given_difficulty_only(
         self, db_session: Session, sample_user: User
     ) -> None:
-        hell_run = ChaosRun(user_id=sample_user.id, difficulty="hell")
-        easy_run = ChaosRun(user_id=sample_user.id, difficulty="easy")
+        # The totals live on the run (old logs get pruned), so they are set here along with the logs.
+        hell_run = ChaosRun(user_id=sample_user.id, difficulty="hell", total_wins=1, total_losses=1)
+        easy_run = ChaosRun(user_id=sample_user.id, difficulty="easy", total_wins=1)
         db_session.add_all([hell_run, easy_run])
         db_session.commit()
 
@@ -74,8 +75,8 @@ class TestChaosStats:
         db_session.add(other_user)
         db_session.commit()
 
-        user1_run = ChaosRun(user_id=sample_user.id, difficulty="hell")
-        user2_run = ChaosRun(user_id=other_user.id, difficulty="hell")
+        user1_run = ChaosRun(user_id=sample_user.id, difficulty="hell", total_wins=1)
+        user2_run = ChaosRun(user_id=other_user.id, difficulty="hell", total_losses=1)
         db_session.add_all([user1_run, user2_run])
         db_session.commit()
 
@@ -118,7 +119,7 @@ class TestChaosStats:
     def test_stats_recent_logs_ordering_descending(
         self, db_session: Session, sample_user: User
     ) -> None:
-        run = ChaosRun(user_id=sample_user.id, difficulty="hell")
+        run = ChaosRun(user_id=sample_user.id, difficulty="hell", total_wins=6, total_losses=6)
         db_session.add(run)
         db_session.commit()
 

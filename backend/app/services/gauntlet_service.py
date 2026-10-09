@@ -31,6 +31,7 @@ from app.services.gauntlet import (
     roll_gauntlet_team,
     roll_tokens,
 )
+from app.services.match_log_retention import add_match_log
 from app.services.ownership_service import OwnershipService
 from app.services.perk_service import PerkService
 from app.services.streak_run import StreakRunService
@@ -268,6 +269,7 @@ class GauntletService(StreakRunService):
         completed = r.completed_characters
         checkpoint_chars = r.checkpoint_characters
         char_id = r.current_character_id
+        attempt = r.attempt
         loadout = r.current_loadout
         players = loadout.get("players")
         if players:
@@ -305,7 +307,7 @@ class GauntletService(StreakRunService):
             else:
                 streak_after = last_checkpoint
                 completed = list(checkpoint_chars)
-                r.attempts += 1
+                r.start_new_attempt()
                 if streak_after == 0:
                     # Back to the very start, so the tokens start over too.
                     r.tokens = 0
@@ -325,9 +327,11 @@ class GauntletService(StreakRunService):
         r.completed_characters = completed
         r.checkpoint_characters = checkpoint_chars
 
-        db.session.add(
+        add_match_log(
+            r,
             GauntletMatchLog(
                 run_id=run_id,
+                attempt=attempt,
                 role=r.role,
                 character_id=" + ".join(name[:45] for name in match_names)[:100],
                 result=result,

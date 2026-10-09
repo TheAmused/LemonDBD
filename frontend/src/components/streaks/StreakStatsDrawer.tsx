@@ -6,18 +6,13 @@ import React, { useState } from 'react';
 import { Percent } from 'lucide-react';
 import { Button } from '@/components/common/Button';
 import { Modal } from '@/components/common/Modal';
-import { StreakMatchRow } from './StreakMatchRow';
-import { StreakMatchesModal } from './StreakMatchesModal';
+import { StreakAttemptGroups, groupByAttempt, type StreakMatchLogBase } from './StreakAttemptGroups';
 import { useDictionary } from "@/context/DictionaryContext";
 
-const VISIBLE_MATCHES = 10;
+/** Attempts listed in the drawer itself; older ones open in a dialog. */
+const VISIBLE_ATTEMPTS = 10;
 
-export interface StreakMatchLogBase {
-  id: number;
-  result: 'win' | 'loss';
-  triggered_by: 'player' | 'inactivity';
-  timestamp?: string;
-}
+export type { StreakMatchLogBase };
 
 export interface StreakStatsBase<TLog extends StreakMatchLogBase> {
   total_matches: number;
@@ -31,12 +26,14 @@ export interface StreakStatsDrawerProps<TLog extends StreakMatchLogBase> {
   isOpen: boolean;
   onClose: () => void;
   stats: StreakStatsBase<TLog> | null;
-  /** The number of the attempt in progress, counting the first one -- from the live run, not the match-log aggregate, so it survives independently of `stats`. */
+  /** The number of the attempt in progress, counting the first one. Comes from the live run, not from `stats`. */
   attempts?: number;
   /** The main label for a match row: character/killer name, or the "Auto-loss" badge is handled for you. */
   renderLabel: (log: TLog) => React.ReactNode;
   /** Secondary line under the label, e.g. "Streak: 4" or "Attempt 2, Page 3". */
   renderMeta: (log: TLog) => React.ReactNode;
+  /** Extra text after "Attempt N" in an attempt's header, e.g. the killer when one drawer covers several runs. */
+  renderGroupLabel?: (log: TLog) => React.ReactNode;
 }
 
 /**
@@ -46,15 +43,21 @@ export interface StreakStatsDrawerProps<TLog extends StreakMatchLogBase> {
  * inactivity badge) with small visual drift between copies. Only the
  * per-mode label/meta for each row differs now, via render props.
  */
-export function StreakStatsDrawer<TLog extends StreakMatchLogBase>({ isOpen, onClose, stats, attempts, renderLabel, renderMeta }: StreakStatsDrawerProps<TLog>) {
+export function StreakStatsDrawer<TLog extends StreakMatchLogBase>({ isOpen, onClose, stats, attempts, renderLabel, renderMeta, renderGroupLabel }: StreakStatsDrawerProps<TLog>) {
   const dict = useDictionary();
-  const [isAllOpen, setIsAllOpen] = useState(false);
+  const [isOlderOpen, setIsOlderOpen] = useState(false);
 
   const winRate = stats ? stats.win_rate : 0;
   const totalMatches = stats ? stats.total_matches : 0;
   const wins = stats ? stats.wins : 0;
   const losses = stats ? stats.losses : 0;
   const recentLogs = stats ? stats.recent_logs || [] : [];
+  const groups = groupByAttempt(recentLogs);
+  const recentGroups = groups.slice(0, VISIBLE_ATTEMPTS);
+  const olderGroups = groups.slice(VISIBLE_ATTEMPTS);
+  // Old matches are pruned, so the totals can count more than the list still holds.
+  const hasPrunedMatches = totalMatches > recentLogs.length;
+  const listProps = { renderLabel, renderMeta, renderGroupLabel };
 
   return (
     <>
@@ -123,27 +126,33 @@ export function StreakStatsDrawer<TLog extends StreakMatchLogBase>({ isOpen, onC
               {dict.streaks.noMatchesLogged}
             </div>
           ) : (
-            <div className="space-y-2.5">
-              {recentLogs.slice(0, VISIBLE_MATCHES).map((log) => (
-                <StreakMatchRow key={log.id} log={log} renderLabel={renderLabel} renderMeta={renderMeta} />
-              ))}
-              {recentLogs.length > VISIBLE_MATCHES && (
-                <Button variant="secondary" size="md" className="w-full" onClick={() => setIsAllOpen(true)}>
-                  {dict.streaks.viewAllWins} ({recentLogs.length})
+            <>
+              <StreakAttemptGroups groups={recentGroups} openByDefault={groups[0].key} {...listProps} />
+              {olderGroups.length > 0 && (
+                <Button variant="secondary" size="md" className="mt-3 w-full" onClick={() => setIsOlderOpen(true)}>
+                  {dict.streaks.olderAttempts} ({olderGroups.length})
                 </Button>
               )}
-            </div>
+              {hasPrunedMatches && (
+                <p className="mt-3 text-center text-xs text-text-muted">{dict.streaks.olderMatchesNotStored}</p>
+              )}
+            </>
           )}
         </div>
       </Modal>
 
-      <StreakMatchesModal
-        isOpen={isAllOpen}
-        onClose={() => setIsAllOpen(false)}
-        logs={recentLogs}
-        renderLabel={renderLabel}
-        renderMeta={renderMeta}
-      />
+      <Modal
+        isOpen={isOlderOpen}
+        onClose={() => setIsOlderOpen(false)}
+        variant="dialog"
+        size="2xl"
+        title={dict.streaks.olderAttempts}
+        centerTitle
+        closeButtonAriaLabel={dict.modal.close}
+        bodyClassName="p-5"
+      >
+        <StreakAttemptGroups groups={olderGroups} {...listProps} />
+      </Modal>
     </>
   );
 }

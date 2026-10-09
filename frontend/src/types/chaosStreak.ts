@@ -36,6 +36,8 @@ export interface ChaosMatchLog {
   result: 'win' | 'loss';
   perks: Perk[];
   addon_rarities: AddonRarity[];
+  /** The run's attempt number when the match was played: the group it is filed under. */
+  attempt: number;
   streak_before: number;
   streak_after: number;
   timestamp?: string;

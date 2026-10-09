@@ -30,6 +30,7 @@ class PageStreakRunDict(TypedDict):
     id: int
     killer: str
     status: str
+    attempts: int
     attempt: int
     current_page: int
     best_page: int

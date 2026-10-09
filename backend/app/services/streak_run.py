@@ -9,12 +9,16 @@ inactivity-loss lookup, lazy pool freezing and the completion record.
 from collections.abc import Callable
 from typing import Any
 
-from sqlalchemy import select
+from sqlalchemy import inspect as sa_inspect, select
 
 from app.core.extensions import db
 from app.services.admin_control_service import assert_challenge_mode_enabled
 from app.services.challenge_completions import fetch_challenge_completions, record_challenge_completion
 from app.services.roster_milestone import get_full_roster_milestone
+
+
+#: Run columns that outlive an abandoned run: its identity, its attempt bookkeeping and its lifetime totals.
+_KEPT_ON_ABANDON = frozenset({"id", "user_id", "created_at", "updated_at", "attempt", "attempts", "total_wins", "total_losses"})
 
 
 class StreakRunService:
@@ -63,18 +67,28 @@ class StreakRunService:
         return self._present(run)
 
     def _reset_run(self, user_id: int, *variant: Any):
-        """Abandon the run in play. The best streak is a record, so the fresh run inherits it."""
-        assert_challenge_mode_enabled(self.mode)
-        old_run = self._find_run(user_id, *variant)
-        if not old_run:
-            raise ValueError("Run not found")
-        best = getattr(old_run, self.best_field)
-        db.session.delete(old_run)
-        db.session.commit()
+        """Abandon the run in play: back to zero in a new attempt, with every match played so far kept.
 
-        run = self._build_run(user_id, *variant)
-        setattr(run, self.best_field, best)
-        db.session.add(run)
+        The run row stays, so its match logs do. Its progress is overwritten with what a
+        brand new run starts with; the best streak is a record, so it is left alone.
+        """
+        assert_challenge_mode_enabled(self.mode)
+        run = self._find_run(user_id, *variant)
+        if not run:
+            raise ValueError("Run not found")
+        run.abandon_attempt()
+
+        fresh = self._build_run(user_id, *variant)
+        built = sa_inspect(fresh).dict
+        for column in self.run_model.__table__.columns:
+            if column.key in _KEPT_ON_ABANDON or column.key == self.best_field:
+                continue
+            if column.key in built:
+                setattr(run, column.key, built[column.key])
+            elif column.default is not None and column.default.is_scalar:
+                setattr(run, column.key, column.default.arg)
+            else:
+                raise RuntimeError(f"{self.run_model.__name__}.{column.key} is neither rebuilt nor given a plain default, so abandoning would keep its old value")
         db.session.commit()
         return self._present(run)
 
@@ -126,11 +140,11 @@ class StreakRunService:
             mode=self.mode,
             variant=variant,
             attempts_taken=run.attempts + 1,
-            matches_played=len(run.match_logs),
+            matches_played=run.playthrough_matches,
             unlocked_characters_count=len(owned_ids),
             full_roster=is_full,
         )
-        run.attempts = 0
+        run.finish_playthrough()
 
     def _completions(self, user_id: int, variant: str):
         return fetch_challenge_completions(user_id, self.mode, variant)

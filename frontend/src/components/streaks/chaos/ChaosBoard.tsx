@@ -75,7 +75,7 @@ export const ChaosBoard: React.FC = () => {
   // perks_revealed flips back to false after every round (win or loss), so
   // gating the freeze badge on it directly makes it flicker off between
   // rounds. Track whether THIS run has ever been revealed at least once
-  // instead -- that stays true for the run's whole lifetime, only resetting
+  // instead. That stays true for the run's whole lifetime, only resetting
   // when reset/completion swaps in a different run id.
   const [engagedRunId, setEngagedRunId] = useState<number | null>(null);
   useEffect(() => {

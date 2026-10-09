@@ -3,7 +3,7 @@
 import { Button } from '@/components/common/Button';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, ChevronRight } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import { usePageStreakRun } from './usePageStreakRun';
 import { RunHeader } from './RunHeader';
 import { PerkPageGrid } from './PerkPageGrid';
@@ -41,7 +41,8 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
       entries.map(([name, path]) => [name, staticUrl(path)]).filter(([, url]) => url)
     ) as Record<string, string>;
   }, [run?.perk_icons]);
-  const [showNextPage, setShowNextPage] = useState(false);
+  // The page the preview tab was opened on, so moving to the next page drops back to the current page tab.
+  const [previewPageKey, setPreviewPageKey] = useState('');
   const [build, setBuild] = useState<BuildState>({ key: '', selected: [], confirmed: false });
   const [confirmingReset, setConfirmingReset] = useState(false);
   const [isRulesOpen, setIsRulesOpen] = useState(false);
@@ -78,6 +79,7 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
   const currentPagePerks = run ? run.pages[run.current_page - 1] ?? [] : [];
   const buildSize = Math.min(4, currentPagePerks.length);
   const nextPagePerks = run && run.current_page < run.page_count ? run.pages[run.current_page] : [];
+  const viewingNext = nextPagePerks.length > 0 && previewPageKey === pageKey;
 
   const toggle = (name: string) => {
     if (selected.includes(name)) setBuild({ key: buildKey, selected: selected.filter((n) => n !== name), confirmed });
@@ -172,46 +174,43 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
               </StreakActionBar>
               <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_25rem]">
                 <div>
-                  <PerkPageGrid
-                    key={pageKey}
-                    perks={currentPagePerks}
-                    selected={selected}
-                    onToggle={confirmed ? undefined : toggle}
-                    locked={confirmed}
-                    variant={pageVariant}
-                    iconByPerk={iconByPerk}
-                  />
-
                   {nextPagePerks.length > 0 && (
-                    <>
-                      <button
-                        type="button"
-                        onClick={() => setShowNextPage((open) => !open)}
-                        aria-expanded={showNextPage}
-                        className={`mt-4 flex w-full items-center gap-2 rounded text-tiny uppercase tracking-widest text-text-muted transition-colors hover:text-accent-red focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red motion-reduce:transition-none ${showNextPage ? 'mb-2.5' : ''}`}
-                      >
-                        <ChevronRight
-                          className={`h-3.5 w-3.5 transition-transform duration-300 motion-reduce:transition-none ${
-                            showNextPage ? 'rotate-90' : ''
-                          }`}
-                        />
-                        <span>
-                          {dict.streaks.pageLabel} {run.current_page + 1}
-                        </span>
-                        <span className="h-px flex-1 bg-border-color" />
-                      </button>
-                      {/* grid-template-rows animates 0fr -> 1fr, which height:auto cannot do */}
-                      <div
-                        aria-hidden={!showNextPage}
-                        className={`grid transition-[grid-template-rows,opacity] duration-300 ease-out motion-reduce:transition-none ${
-                          showNextPage ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
-                        }`}
-                      >
-                        <div className="overflow-hidden">
-                          <PerkPageGrid perks={nextPagePerks} dimmed iconByPerk={iconByPerk} />
-                        </div>
+                    <div role="tablist" className="mb-3 flex justify-center">
+                      <div className="inline-flex rounded-full border border-border-color bg-bg-elevated/40 p-0.5">
+                        {[run.current_page, run.current_page + 1].map((page, index) => {
+                          const active = (index === 1) === viewingNext;
+                          return (
+                            <button
+                              key={page}
+                              type="button"
+                              role="tab"
+                              aria-selected={active}
+                              onClick={() => setPreviewPageKey(index === 1 ? pageKey : '')}
+                              className={`rounded-full px-4 py-1 text-tiny uppercase tracking-widest transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red motion-reduce:transition-none ${
+                                active
+                                  ? 'bg-bg-surface text-text-primary shadow-sm'
+                                  : 'text-text-muted hover:text-accent-red'
+                              }`}
+                            >
+                              {dict.streaks.pageLabel} {page}
+                            </button>
+                          );
+                        })}
                       </div>
-                    </>
+                    </div>
+                  )}
+                  {viewingNext ? (
+                    <PerkPageGrid key={`${pageKey}-next`} perks={nextPagePerks} dimmed iconByPerk={iconByPerk} />
+                  ) : (
+                    <PerkPageGrid
+                      key={pageKey}
+                      perks={currentPagePerks}
+                      selected={selected}
+                      onToggle={confirmed ? undefined : toggle}
+                      locked={confirmed}
+                      variant={pageVariant}
+                      iconByPerk={iconByPerk}
+                    />
                   )}
                 </div>
 
@@ -245,7 +244,7 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
             isOpen={isStatsOpen}
             onClose={() => setIsStatsOpen(false)}
             stats={stats}
-            attempts={run.attempt}
+            attempts={run.attempts + 1}
           />
           <ChallengeCompletionHistoryDrawer
             isOpen={isHistoryOpen}

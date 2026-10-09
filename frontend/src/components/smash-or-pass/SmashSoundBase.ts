@@ -1,49 +1,25 @@
 // frontend/src/components/smash-or-pass/SmashSoundBase.ts
-// Audio context and mix bus, mute / background-music state and the music's controls. The one-shot
-// effects live in SmashSoundEffects.ts, the music itself in sound/MusicEngine.ts.
+// Audio context and mix bus, and the music's controls. Whether anything plays is decided in one
+// place only: the viewer's saved Effects / Music choice (prefs/), applied through
+// `applyPreferences`. The one-shot effects live in SmashSoundEffects.ts, the music itself in
+// sound/MusicEngine.ts.
 import { getAudioContextCtor } from '@/utils/browserApis';
 import { createAudioBus, type AudioBus } from './sound/audioBus';
 import { MusicEngine } from './sound/MusicEngine';
 
-const MUTED_KEY = 'lemondbd_smash_sound_muted';
-const BGM_KEY = 'lemondbd_smash_bgm_playing';
 /** How loud the music sits under the effects. */
 const MUSIC_LEVEL = 0.1;
 const SILENT = 0.0001;
 
-function readFlag(key: string): boolean | null {
-  if (typeof window === 'undefined') return null;
-  try {
-    const saved = localStorage.getItem(key);
-    return saved === null ? null : saved === 'true';
-  } catch {
-    return null;
-  }
-}
-
-function writeFlag(key: string, value: boolean): void {
-  if (typeof window === 'undefined') return;
-  try {
-    localStorage.setItem(key, String(value));
-  } catch {
-    // Storage unavailable: the choice lasts for this visit only.
-  }
-}
-
 export abstract class SmashSoundBase {
   protected ctx: AudioContext | null = null;
   protected bus: AudioBus | null = null;
-  protected isMuted: boolean = false;
-  protected isBgmPlaying: boolean = false;
-  /** The viewer's choice on the page's warning: effects and music can each be switched off outright. */
-  protected effectsAllowed: boolean = true;
-  protected musicAllowed: boolean = true;
+  /** Nothing plays until the viewer has chosen; `applyPreferences` is what lets sound through. */
+  protected effectsAllowed: boolean = false;
+  protected musicAllowed: boolean = false;
   private music: MusicEngine | null = null;
 
   constructor() {
-    this.isMuted = readFlag(MUTED_KEY) ?? this.isMuted;
-    this.isBgmPlaying = readFlag(BGM_KEY) ?? this.isBgmPlaying;
-
     // A page nobody is looking at should not keep playing.
     if (typeof document !== 'undefined') {
       document.addEventListener('visibilitychange', () => {
@@ -73,9 +49,9 @@ export abstract class SmashSoundBase {
     return this.ctx;
   }
 
-  /** What an effect needs to play: the context and where to send it, or null when muted or unavailable. */
+  /** What an effect needs to play: the context and where to send it, or null when effects are off. */
   protected sfxTarget(): { ctx: AudioContext; out: AudioNode } | null {
-    if (this.isMuted || !this.effectsAllowed) return null;
+    if (!this.effectsAllowed) return null;
     const ctx = this.initContext();
     if (!ctx || !this.bus) return null;
     return { ctx, out: this.bus.sfx };
@@ -83,7 +59,7 @@ export abstract class SmashSoundBase {
 
   /** Lets the music dip for a moment so an effect lands clearly; `depth` is the fraction it dips to. */
   protected duckMusic(depth = 0.5, holdS = 0.25, releaseS = 0.6): void {
-    if (!this.ctx || !this.bus || this.isMuted || !this.isBgmPlaying) return;
+    if (!this.ctx || !this.bus || !this.music) return;
     const gain = this.bus.music.gain;
     const now = this.ctx.currentTime;
     gain.cancelScheduledValues(now);
@@ -91,103 +67,38 @@ export abstract class SmashSoundBase {
     gain.setTargetAtTime(MUSIC_LEVEL, now + holdS, releaseS / 3);
   }
 
-  /** Moves the music to its level for the current mute / playing state. */
+  /** Moves the music to its level: audible while it is playing, silent otherwise. */
   private applyMusicLevel(): void {
     if (!this.ctx || !this.bus) return;
-    const audible = !this.isMuted && this.isBgmPlaying;
     const gain = this.bus.music.gain;
     const now = this.ctx.currentTime;
     gain.cancelScheduledValues(now);
-    gain.setTargetAtTime(audible ? MUSIC_LEVEL : SILENT, now, 0.05);
+    gain.setTargetAtTime(this.music ? MUSIC_LEVEL : SILENT, now, 0.05);
   }
 
-  // Called on first user interaction anywhere on the window (click/touch/key)
+  /** Called on the first click, touch or key press anywhere: the browser lets audio start now. */
   public handleUserInteraction() {
     const ctx = this.initContext();
     if (ctx && ctx.state === 'suspended') {
       ctx.resume().catch(() => {});
     }
-    if (!this.isMuted && this.isBgmPlaying && !this.music) {
-      this.startBgm();
-    }
-  }
-
-  public getIsMuted(): boolean {
-    return this.isMuted;
-  }
-
-  public getIsBgmPlaying(): boolean {
-    return this.isBgmPlaying;
-  }
-
-  public toggleMute(): boolean {
-    this.setMuted(!this.isMuted);
-    return this.isMuted;
-  }
-
-  public setMuted(muted: boolean) {
-    this.isMuted = muted;
-    writeFlag(MUTED_KEY, muted);
-    this.applyMusicLevel();
-    if (!muted && this.isBgmPlaying && !this.music) this.startBgm();
-  }
-
-  public isSoundActive(): boolean {
-    return !this.isMuted;
-  }
-
-  public toggleMasterSound(): boolean {
-    if (this.isMuted || !this.isBgmPlaying) {
-      // Turn sound ON
-      this.isMuted = false;
-      this.isBgmPlaying = true;
-      writeFlag(MUTED_KEY, false);
-      writeFlag(BGM_KEY, true);
-      this.startBgm();
-      this.playSmashSound();
-      return true;
-    }
-    // Turn sound OFF
-    this.isMuted = true;
-    this.isBgmPlaying = false;
-    writeFlag(MUTED_KEY, true);
-    writeFlag(BGM_KEY, false);
-    this.stopBgm();
-    return false;
-  }
-
-  // ================= BACKGROUND MUSIC: "SEXY & TWISTED" DARK SYNTH AMBIENCE =================
-  public toggleBgm(): boolean {
-    if (this.isBgmPlaying) {
-      this.stopBgm();
-    } else {
-      this.startBgm();
-    }
-    return this.isBgmPlaying;
+    if (this.musicAllowed && !this.music) this.startBgm();
   }
 
   /**
-   * Applies the viewer's effects / music choice. Switching music off stops it for good; switching
-   * it on starts it, which only ever happens on their click (the warning's Continue button).
+   * Applies the viewer's effects / music choice -- the only thing that switches sound on or off.
+   * Music chosen starts it; until the page has had a click or key press the browser will not let
+   * audio start, so a saved choice then waits for the first one (see `handleUserInteraction`).
    */
   public applyPreferences({ effects, music }: { effects: boolean; music: boolean }): void {
     this.effectsAllowed = effects;
     this.musicAllowed = music;
     if (!music) {
-      this.music?.stop();
-      this.music = null;
-      this.applyMusicLevel();
+      this.stopBgm();
       return;
     }
-    // Music chosen: it plays from now on. Until the page has had a click or key press the browser
-    // will not let audio start, so a saved choice then waits for the first one (see
-    // `handleUserInteraction`) rather than opening a context that cannot run yet.
-    if (!this.isBgmPlaying) {
-      this.isBgmPlaying = true;
-      writeFlag(BGM_KEY, true);
-    }
     const userHasActed = typeof navigator !== 'undefined' && navigator.userActivation?.isActive === true;
-    if (!this.isMuted && !this.music && (this.ctx || userHasActed)) this.startBgm();
+    if (!this.music && (this.ctx || userHasActed)) this.startBgm();
   }
 
   public startBgm() {
@@ -195,21 +106,23 @@ export abstract class SmashSoundBase {
     const ctx = this.initContext();
     if (!ctx || !this.bus) return;
     this.music?.stop();
-
-    this.isBgmPlaying = true;
-    writeFlag(BGM_KEY, true);
-    this.applyMusicLevel();
-
     this.music = new MusicEngine(ctx, this.bus.music);
+    this.applyMusicLevel();
     this.music.start();
   }
 
   public stopBgm() {
-    this.isBgmPlaying = false;
-    writeFlag(BGM_KEY, false);
     this.music?.stop();
     this.music = null;
     this.applyMusicLevel();
+  }
+
+  /**
+   * Silences the music when the viewer leaves the page. Their choice is untouched, so coming back
+   * starts it again (see `applyPreferences`).
+   */
+  public pauseBgm(): void {
+    this.stopBgm();
   }
 
   abstract playSmashSound(): void;

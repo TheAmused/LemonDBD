@@ -36,7 +36,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ locale = 'en' })
   const { effectsEnabled } = prefs;
   const overlays = useHubOverlays(prefs.needsChoice || prefs.isSettingsOpen);
   const exit = useCardExit();
-  const { isSoundActive, toggleSound } = useSmashSound();
+  useSmashSound();
 
   const deck = useSmashDeck({
     selectedRosterSlug,
@@ -82,7 +82,6 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ locale = 'en' })
     currentCharacter: deck.currentCharacter,
     isExiting: exit.isExiting,
     handleVote,
-    toggleSound,
     toggleHowToPlay,
     openStats: setSelectedStatCharacter,
     openResetConfirm,
@@ -153,11 +152,9 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ locale = 'en' })
         sessionSmashRate={sessionSmashRate}
         isFilterActive={deck.roleFilter !== 'all' || deck.genderFilter !== 'all'}
         isFilterDrawerOpen={overlays.isFilterDrawerOpen}
-        isSoundActive={isSoundActive}
         effectsEnabled={effectsEnabled}
         onOpenRosters={() => overlays.setIsRosterModalOpen(true)}
         onToggleFilters={() => overlays.setIsFilterDrawerOpen((prev) => !prev)}
-        onToggleSound={toggleSound}
         onOpenEffects={prefs.openSettings}
         onOpenPersona={() => overlays.setIsPersonaOpen(true)}
         onOpenLeaderboard={() => overlays.setIsLeaderboardOpen(true)}

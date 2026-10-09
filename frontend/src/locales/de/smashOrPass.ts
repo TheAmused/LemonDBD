@@ -274,10 +274,6 @@ export default {
   tooltips: {
     filter: 'Kandidaten filtern',
     filterDesc: 'Nach Überlebenden/Killern und Geschlecht filtern.',
-    muteAudio: 'Audio stummschalten (M / B)',
-    muteAudioDesc: 'Hintergrundmusik und Soundeffekte stummschalten.',
-    unmuteAudio: 'Audio einschalten (M / B)',
-    unmuteAudioDesc: 'Synth-Atmosphäre und Soundeffekte aktivieren.',
     archetype: 'Romanzen-Archetyp',
     archetypeDesc: 'Entdecke dein Profil anhand deines Abstimmungsverhaltens.',
     leaderboard: 'Ruhmeshalle (Rangliste)',

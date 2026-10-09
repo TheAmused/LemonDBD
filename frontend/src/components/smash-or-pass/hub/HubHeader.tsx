@@ -12,8 +12,6 @@ import {
   Zap,
   ThumbsDown,
   Trash2,
-  Volume2,
-  VolumeX,
 } from 'lucide-react';
 import { Tooltip } from '@/components/common/Tooltip';
 import { Button } from '@/components/common/Button';
@@ -64,11 +62,9 @@ interface HubHeaderProps {
   sessionSmashRate: number;
   isFilterActive: boolean;
   isFilterDrawerOpen: boolean;
-  isSoundActive: boolean;
   effectsEnabled: boolean;
   onOpenRosters: () => void;
   onToggleFilters: () => void;
-  onToggleSound: () => void;
   onOpenEffects: () => void;
   onOpenPersona: () => void;
   onOpenLeaderboard: () => void;
@@ -90,11 +86,9 @@ export function HubHeader({
   sessionSmashRate,
   isFilterActive,
   isFilterDrawerOpen,
-  isSoundActive,
   effectsEnabled,
   onOpenRosters,
   onToggleFilters,
-  onToggleSound,
   onOpenEffects,
   onOpenPersona,
   onOpenLeaderboard,
@@ -181,20 +175,6 @@ export function HubHeader({
             <SlidersHorizontal className="h-4 w-4 sm:h-4 sm:w-4" />
             {isFilterActive && (
               <span className="absolute 1.5 sm:-top-0.5 1.5 sm:-right-0.5 h-2.5 w-2.5 rounded-full bg-accent-red ring-2 ring-bg-surface" />
-            )}
-          </DockAction>
-
-          <DockAction
-            title={isSoundActive ? tooltips.muteAudio : tooltips.unmuteAudio}
-            description={isSoundActive ? tooltips.muteAudioDesc : tooltips.unmuteAudioDesc}
-            ariaLabel={isSoundActive ? tooltips.muteAudio : tooltips.unmuteAudio}
-            variant={isSoundActive ? 'soft' : 'secondary'}
-            onClick={onToggleSound}
-          >
-            {isSoundActive ? (
-              <Volume2 className="h-4 w-4 sm:h-4 sm:w-4 text-accent-red animate-pulse" />
-            ) : (
-              <VolumeX className="h-4 w-4 sm:h-4 sm:w-4" />
             )}
           </DockAction>
 

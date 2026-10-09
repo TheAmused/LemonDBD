@@ -274,10 +274,6 @@ export default {
   tooltips: {
     filter: 'Filter Candidates',
     filterDesc: 'Filter by survivor/killer role and character gender.',
-    muteAudio: 'Mute Audio (M / B)',
-    muteAudioDesc: 'Mute all background music and sound effects.',
-    unmuteAudio: 'Enable Audio (M / B)',
-    unmuteAudioDesc: 'Enable dark synth music and sound effects.',
     archetype: 'Trial Romance Archetype',
     archetypeDesc: 'Discover your dating persona from your vote trends.',
     leaderboard: 'Hall of Fame Leaderboard',

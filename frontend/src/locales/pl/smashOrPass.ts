@@ -290,10 +290,6 @@ export default {
   tooltips: {
     filter: 'Filtruj kandydatów',
     filterDesc: 'Filtruj według roli (ocalały/zabójca) oraz płci.',
-    muteAudio: 'Wycisz dźwięk (M / B)',
-    muteAudioDesc: 'Wycisza muzykę w tle oraz efekty dźwiękowe.',
-    unmuteAudio: 'Włącz dźwięk (M / B)',
-    unmuteAudioDesc: 'Włącza mroczną muzykę i efekty dźwiękowe.',
     archetype: 'Archetyp Randkowy Próby',
     archetypeDesc: 'Odkryj swój profil randkowy na podstawie głosów.',
     leaderboard: 'Hala Sław (Ranking)',

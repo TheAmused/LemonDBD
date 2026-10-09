@@ -31,9 +31,9 @@ export function usePageStreakRun(killer: string) {
     [token, killer, mutate, loadStats, loadCompletions]
   );
 
-  const resetRun = useCallback(async () => {
-    if (token) await mutate(() => api.resetRun(token, killer));
+  const abandonRun = useCallback(async () => {
+    if (token) await mutate(() => api.abandonRun(token, killer));
   }, [token, killer, mutate]);
 
-  return { run, stats, completions, loading, busy, error, reload: load, startRun, submitResult, resetRun };
+  return { run, stats, completions, loading, busy, error, reload: load, startRun, submitResult, abandonRun };
 }

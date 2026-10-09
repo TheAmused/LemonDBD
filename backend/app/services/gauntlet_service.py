@@ -31,6 +31,7 @@ from app.services.gauntlet import (
     roll_gauntlet_team,
     roll_tokens,
 )
+from app.services.match_log_retention import add_match_log
 from app.services.ownership_service import OwnershipService
 from app.services.perk_service import PerkService
 from app.services.streak_run import StreakRunService
@@ -201,7 +202,7 @@ class GauntletService(StreakRunService):
         if r.game_mode not in PICK_CHARACTER_MODES:
             raise ValueError("This mode picks the character for you")
         if r.status == "completed":
-            raise ValueError("This run is already completed. Reset it to play again.")
+            raise ValueError("This run is already completed. Abandon it to play again.")
         self._validate_pick(r, character)
         return self._apply_pick(r, character)
 
@@ -217,7 +218,7 @@ class GauntletService(StreakRunService):
         if config is None:
             raise ValueError("This mode has no boosts")
         if r.status == "completed":
-            raise ValueError("This run is already completed. Reset it to play again.")
+            raise ValueError("This run is already completed. Abandon it to play again.")
         if not r.target_revealed:
             raise ValueError("Start the match first")
         self._freeze_pool_if_needed(r)
@@ -247,8 +248,8 @@ class GauntletService(StreakRunService):
         self._spend_tokens(r, "reroll")
         return self._apply_pick(r, random.choice(others))
 
-    def reset_run(self, user_id: int, role: str, game_mode: str = DEFAULT_GAME_MODE) -> GauntletRunState:
-        return self._reset_run(user_id, role, game_mode)
+    def abandon_run(self, user_id: int, role: str, game_mode: str = DEFAULT_GAME_MODE) -> GauntletRunState:
+        return self._abandon_run(user_id, role, game_mode)
 
     def submit_result(
         self, user_id: int, run_id: int, result: str, triggered_by: str = "player", use_shield: bool = False
@@ -268,6 +269,7 @@ class GauntletService(StreakRunService):
         completed = r.completed_characters
         checkpoint_chars = r.checkpoint_characters
         char_id = r.current_character_id
+        attempt = r.attempt
         loadout = r.current_loadout
         players = loadout.get("players")
         if players:
@@ -305,7 +307,7 @@ class GauntletService(StreakRunService):
             else:
                 streak_after = last_checkpoint
                 completed = list(checkpoint_chars)
-                r.attempts += 1
+                r.start_new_attempt()
                 if streak_after == 0:
                     # Back to the very start, so the tokens start over too.
                     r.tokens = 0
@@ -325,9 +327,11 @@ class GauntletService(StreakRunService):
         r.completed_characters = completed
         r.checkpoint_characters = checkpoint_chars
 
-        db.session.add(
+        add_match_log(
+            r,
             GauntletMatchLog(
                 run_id=run_id,
+                attempt=attempt,
                 role=r.role,
                 character_id=" + ".join(name[:45] for name in match_names)[:100],
                 result=result,

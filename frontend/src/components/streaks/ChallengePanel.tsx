@@ -2,9 +2,10 @@
 import type { Dictionary } from '@/locales/types';
 
 import React from 'react';
-import { BarChart2, BookOpen, ChevronDown, History, RotateCcw } from 'lucide-react';
+import { BarChart2, BookOpen, ChevronDown, History, RotateCcw, Clapperboard } from 'lucide-react';
 import { CELEBRATION_CARD_CLASSES, CELEBRATION_LABEL_CLASSES, CelebrationBadge } from './CelebrationBadge';
 import { useDictionary } from "@/context/DictionaryContext";
+import { useChallengeAnimations } from './useChallengeAnimations';
 
 interface ChallengePanelProps {
   /** Stats and actions strip, rendered as the top section of the card. */
@@ -138,24 +139,50 @@ export const HeaderButton: React.FC<HeaderButtonProps> = ({ onClick, title, icon
   </button>
 );
 
+/** Clapperboard button that turns the draw animations on or off; struck through while they are off. */
+const DrawAnimationButton: React.FC = () => {
+  const dict = useDictionary();
+  const [enabled, setEnabled] = useChallengeAnimations();
+  return (
+    <HeaderButton
+      onClick={() => setEnabled(!enabled)}
+      title={dict.streaks.drawAnimations}
+      icon={
+        <span className="relative flex">
+          <Clapperboard className={`h-5 w-5 ${enabled ? '' : 'opacity-50'}`} aria-hidden="true" />
+          {!enabled && (
+            <span
+              className="absolute left-1/2 top-1/2 h-0.5 w-6 -translate-x-1/2 -translate-y-1/2 -rotate-45 rounded-full bg-accent-red"
+              aria-hidden="true"
+            />
+          )}
+        </span>
+      }
+    />
+  );
+};
+
 interface StandardHeaderActionsProps {
   onOpenRules: () => void;
   onOpenStats: () => void;
   onOpenHistory: () => void;
-  onOpenReset: () => void;
+  onOpenAbandon: () => void;
   /** The mode or difficulty picker, placed first, before Rules. */
   modeSelect?: React.ReactNode;
   /** Other mode-specific buttons (perk pool), placed between the picker and Rules. */
   extra?: React.ReactNode;
+  /** Adds the draw animation button, for challenges that draw something at random. */
+  hasDrawAnimations?: boolean;
 }
 
 /** The action row every challenge header shares, so they cannot drift apart. */
-export const StandardHeaderActions: React.FC<StandardHeaderActionsProps> = ({ onOpenRules, onOpenStats, onOpenHistory, onOpenReset, modeSelect, extra }) => {
+export const StandardHeaderActions: React.FC<StandardHeaderActionsProps> = ({ onOpenRules, onOpenStats, onOpenHistory, onOpenAbandon, modeSelect, extra, hasDrawAnimations = false }) => {
   const dict = useDictionary();
   return (
   <>
     {modeSelect}
     {extra}
+    {hasDrawAnimations && <DrawAnimationButton />}
     <HeaderButton
       onClick={onOpenRules}
       title={dict.streaks.rules}
@@ -173,8 +200,8 @@ export const StandardHeaderActions: React.FC<StandardHeaderActionsProps> = ({ on
     />
     <HeaderButton
       danger
-      onClick={onOpenReset}
-      title={dict.streaks.resetRun}
+      onClick={onOpenAbandon}
+      title={dict.streaks.abandonRun}
       icon={<RotateCcw className="h-5 w-5" aria-hidden="true" />}
     />
   </>

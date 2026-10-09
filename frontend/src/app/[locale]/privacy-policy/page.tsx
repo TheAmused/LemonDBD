@@ -38,52 +38,45 @@ const ALL_BLOCK_IDS: readonly string[] = [SUMMARY_BLOCK, ...PRIVACY_SECTION_ORDE
 interface BlockCardProps {
   id: string;
   title: string;
-  accent?: boolean;
   children: React.ReactNode;
 }
 
-/** Collapsible card, the same drawer pattern the About page uses (state remembered per block). */
-function BlockCard({ id, title, accent, children }: BlockCardProps) {
-  const [isExpanded, toggleExpanded] = usePersistentDrawer(`lemondbd_drawer_privacy_${id}`, false);
+/** Full-width collapsible card (open by default, state remembered per block) with a left-aligned title. */
+function BlockCard({ id, title, children }: BlockCardProps) {
+  const [isExpanded, toggleExpanded] = usePersistentDrawer(`lemondbd_drawer_privacy_open_${id}`, true);
 
   return (
-    <div
+    <section
       id={id}
-      className="grid w-full scroll-mt-6 grid-cols-1 grid-rows-1 md:w-[calc(50%-0.75rem)] xl:w-[calc((100%-3rem)/3)]"
+      className={`w-full scroll-mt-6 overflow-hidden rounded-3xl border bg-bg-surface backdrop-blur-xl shadow-md transition-colors border-border-color`}
     >
-      <section
-        className={`col-start-1 row-start-1 z-10 flex flex-col overflow-hidden rounded-3xl border bg-bg-surface backdrop-blur-xl shadow-md transition-colors ${
-          accent ? 'border-accent-red/30' : 'border-border-color'
-        } ${isExpanded ? 'h-full self-stretch' : 'h-fit self-start'}`}
+      <button
+        type="button"
+        onClick={toggleExpanded}
+        aria-expanded={isExpanded}
+        className="relative flex w-full cursor-pointer select-none items-center px-4 py-4 pr-12 text-left sm:px-6 sm:pr-14"
       >
-        <button
-          type="button"
-          onClick={toggleExpanded}
-          aria-expanded={isExpanded}
-          className="relative flex w-full shrink-0 cursor-pointer select-none items-center justify-center px-12 py-4 text-center sm:px-14"
-        >
-          <h2 className="text-center text-xs font-bold uppercase tracking-widest text-accent-red sm:text-sm">
-            {title}
-          </h2>
-          <ChevronDown
-            className={`absolute right-5 h-4 w-4 text-accent-red transition-transform duration-300 ease-in-out sm:right-7 sm:h-5 sm:w-5 ${
-              isExpanded ? 'rotate-180' : 'rotate-0'
-            }`}
-          />
-        </button>
-        <div
-          className={`grid flex-1 transition-[grid-template-rows,opacity] duration-300 ease-in-out ${
-            isExpanded ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
+        <h2 className="text-left text-xs font-bold uppercase tracking-widest text-accent-red sm:text-sm">
+          {title}
+        </h2>
+        <ChevronDown
+          className={`absolute right-5 h-4 w-4 text-accent-red transition-transform duration-300 ease-in-out sm:right-7 sm:h-5 sm:w-5 ${
+            isExpanded ? 'rotate-180' : 'rotate-0'
           }`}
-        >
-          <div className="h-full overflow-hidden">
-            <div className="flex h-full flex-col gap-2 border-t border-border-color p-4 type-body-lg sm:p-6">
-              {children}
-            </div>
+        />
+      </button>
+      <div
+        className={`grid transition-[grid-template-rows,opacity] duration-300 ease-in-out ${
+          isExpanded ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
+        }`}
+      >
+        <div className="overflow-hidden">
+          <div className="flex flex-col gap-2 border-t border-border-color p-4 text-sm leading-relaxed sm:text-base sm:p-6">
+            {children}
           </div>
         </div>
-      </section>
-    </div>
+      </div>
+    </section>
   );
 }
 
@@ -183,13 +176,18 @@ export default function PrivacyPolicyPage() {
         </header>
 
         {privacy ? (
-          <div className="flex flex-wrap items-start justify-center gap-6">
-            {ALL_BLOCK_IDS.map((id) => (
-              <BlockCard key={id} id={id} title={blockTitle(id)} accent={id === SUMMARY_BLOCK}>
-                {renderBlockBody(id)}
-              </BlockCard>
-            ))}
-          </div>
+          <>
+            <p className="text-center text-text-muted text-sm leading-relaxed sm:text-base">
+              {privacy.translationNotice}
+            </p>
+            <div className="flex flex-col gap-6">
+              {ALL_BLOCK_IDS.map((id) => (
+                <BlockCard key={id} id={id} title={blockTitle(id)}>
+                  {renderBlockBody(id)}
+                </BlockCard>
+              ))}
+            </div>
+          </>
         ) : null}
       </div>
     </PageShell>

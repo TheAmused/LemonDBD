@@ -24,8 +24,8 @@ export async function submitHistoryResult(
   return data.run;
 }
 
-export async function resetHistoryRun(token: string, mode: HistoryMode): Promise<HistoryRun> {
-  const data = await postJson<HistoryRunResponse>(token, '/run/reset', { mode });
+export async function abandonHistoryRun(token: string, mode: HistoryMode): Promise<HistoryRun> {
+  const data = await postJson<HistoryRunResponse>(token, '/run/abandon', { mode });
   return data.run;
 }
 

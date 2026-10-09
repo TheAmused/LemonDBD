@@ -5,7 +5,7 @@ import type { Dictionary } from '@/locales/types';
 import React, { useEffect, useState } from 'react';
 import { Swords, Sparkles, User, Users, UsersRound } from 'lucide-react';
 import { ChallengeIntroTile, NEUTRAL_TILE_ACCENT } from '../ChallengeIntroModalShell';
-import { ChallengeModeModal } from '../ChallengeModeModal';
+import { ChallengeModeModal, type ModeInfo } from '../ChallengeModeModal';
 import { GauntletRulesModal } from './GauntletRulesModal';
 import { GAUNTLET_GAME_MODES, GauntletGameMode } from '@/types/gauntletStreak';
 import { useDictionary } from "@/context/DictionaryContext";
@@ -24,8 +24,6 @@ export interface GauntletModeModalProps {
   originalCompletedFull?: boolean;
   /** Killer count frozen at that full-roster completion. */
   originalCompletedFullCount?: number | null;
-  /** Hide the intro box when the player is switching mode mid-run. */
-  showIntro?: boolean;
 }
 
 type Stage = 'root' | 'lemon';
@@ -70,6 +68,39 @@ function lemonPlayerTiles(dict: Dictionary): ChallengeIntroTile[] {
   ];
 }
 
+/** The mode whose rules the highlighted tile stands for. The survivor lemon group has no rules of its own, so it shows the solo ones. */
+function highlightedMode(role: 'killer' | 'survivor', stage: Stage, value: string | undefined): GauntletGameMode {
+  if (stage === 'lemon') return GAUNTLET_GAME_MODES.find((mode) => mode === value) ?? 'lemon_solo';
+  if (value === 'lemon') return role === 'killer' ? 'lemon_killer' : 'lemon_solo';
+  return 'original';
+}
+
+function gauntletModeInfo(
+  role: 'killer' | 'survivor',
+  stage: Stage,
+  value: string | undefined,
+  dict: Dictionary
+): ModeInfo {
+  const s = dict.streaks;
+  const intro = role === 'killer' ? s.gauntletIntroKiller : s.gauntletIntroSurvivor;
+  const pickedPlayerCount = stage === 'lemon' && GAUNTLET_GAME_MODES.some((mode) => mode === value);
+  if (role === 'survivor' && !pickedPlayerCount && (stage === 'lemon' || value === 'lemon')) {
+    return { intro, detail: s.gauntletSummaryLemonSurvivor, showRules: true };
+  }
+  switch (highlightedMode(role, stage, value)) {
+    case 'lemon_killer':
+      return { intro, detail: s.gauntletSummaryLemonKiller, showRules: true };
+    case 'lemon_solo':
+      return { intro, detail: s.gauntletSummaryLemonSolo, showRules: true };
+    case 'lemon_duo':
+      return { intro, detail: s.gauntletSummaryLemonDuo, showRules: true };
+    case 'lemon_squad':
+      return { intro, detail: s.gauntletSummaryLemonSquad, showRules: true };
+    default:
+      return { intro, detail: role === 'killer' ? s.gauntletOriginalDescKiller : s.gauntletOriginalDesc, showRules: true };
+  }
+}
+
 export const GauntletModeModal: React.FC<GauntletModeModalProps> = ({
       isOpen,
       onClose,
@@ -80,7 +111,6 @@ export const GauntletModeModal: React.FC<GauntletModeModalProps> = ({
       originalCompletedCount = null,
       originalCompletedFull = false,
       originalCompletedFullCount = null,
-      showIntro = true,
     }) => {
   const dict = useDictionary();
   const [stage, setStage] = useState<Stage>('root');
@@ -112,6 +142,8 @@ export const GauntletModeModal: React.FC<GauntletModeModalProps> = ({
 
   return (
     <ChallengeModeModal
+      // Each screen starts with its own highlight, so the pick never carries over between them.
+      key={stage}
       isOpen={isOpen}
       onClose={onClose}
       title={
@@ -119,14 +151,7 @@ export const GauntletModeModal: React.FC<GauntletModeModalProps> = ({
           ? dict.streaks.chooseLemonPlayers
           : dict.streaks.chooseMode
       }
-      intro={
-        isLemonStage || !showIntro
-          ? undefined
-          : role === 'killer'
-            ? dict.streaks.gauntletIntroKiller
-            : dict.streaks.gauntletIntroSurvivor
-      }
-      showRules={!isLemonStage && showIntro}
+      modeInfo={(value) => gauntletModeInfo(role, stage, value, dict)}
       tiles={isLemonStage ? lemonPlayerTiles(dict) : rootTiles}
       onSelectTile={(value) => {
         if (value === 'lemon') {
@@ -142,7 +167,14 @@ export const GauntletModeModal: React.FC<GauntletModeModalProps> = ({
       selectedValue={isLemonStage ? currentMode : rootSelected}
       onBack={isLemonStage ? () => setStage('root') : undefined}
       backLabel={dict.streaks.back}
-      renderRules={(rules) => <GauntletRulesModal {...rules} role={role} />}
+      renderRules={({ isOpen: rulesOpen, onClose: closeRules, value }) => (
+        <GauntletRulesModal
+          isOpen={rulesOpen}
+          onClose={closeRules}
+          role={role}
+          gameMode={highlightedMode(role, stage, value)}
+        />
+      )}
     />
   );
 };

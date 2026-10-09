@@ -58,6 +58,7 @@ class GauntletMatchLogDict(TypedDict):
     character_id: str
     result: str
     perks: list[PerkPayload]
+    attempt: int
     streak_before: int
     streak_after: int
     timestamp: str | None
@@ -83,6 +84,10 @@ class GauntletRunDict(TypedDict):
     last_token_roll: int
     bonus_perk_slots: int
     attempts: int
+    attempt: int
+    total_wins: int
+    total_losses: int
+    playthrough_matches: int
     created_at: str | None
     updated_at: str | None
 

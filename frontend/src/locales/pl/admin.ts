@@ -141,7 +141,7 @@ export default {
   cancel: "Anuluj",
   reasonShownToPlayers: "Powód (widoczny dla graczy)",
   challengeModeKillSwitches: "Blokady trybów wyzwań",
-  pageStreakCompletionsNotice: "Page Streak ma jedno podejście na zabójcę, więc ukończenia nie są tu dalej rozbijane.",
+  pageStreakCompletionsNotice: "Page Streak ma jeden przebieg na zabójcę, więc ukończenia nie są tu dalej rozbijane.",
   dbBackupSnapshots: "Kopie zapasowe i migawki bazy",
   selectBackupEntities: "Wybierz elementy do uwzględnienia w kopii JSON",
   groupContent: "Zawartość gry",

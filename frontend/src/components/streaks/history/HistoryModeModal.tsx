@@ -15,9 +15,6 @@ export interface HistoryModeModalProps {
   onClose: () => void;
   onSelectMode: (mode: HistoryMode) => void;
   currentMode?: HistoryMode;
-  /** False when switching mode mid-run from the board header -- skips the
-   *  explanatory intro, since the player already knows how History works. */
-  showIntro?: boolean;
   /** Modes this user has ever fully completed, mapped to the killer count
    *  frozen at that completion -- clearing Hell marks Medium done too,
    *  inheriting its count. */
@@ -32,7 +29,6 @@ export const HistoryModeModal: React.FC<HistoryModeModalProps> = ({
       onClose,
       onSelectMode,
       currentMode,
-      showIntro = true,
       completedCounts = {},
       completedFullCounts = {},
     }) => {
@@ -64,11 +60,7 @@ export const HistoryModeModal: React.FC<HistoryModeModalProps> = ({
     <ChallengeModeModal
       isOpen={isOpen}
       onClose={onClose}
-      intro={
-        showIntro
-          ? s.historyIntro
-          : undefined
-      }
+      intro={s.historyIntro}
       tiles={tiles}
       onSelectTile={(value) => onSelectMode(value as HistoryMode)}
       tileGridClassName="sm:grid-cols-2"

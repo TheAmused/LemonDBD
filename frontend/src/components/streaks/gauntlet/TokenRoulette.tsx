@@ -4,6 +4,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useReducedMotion } from 'framer-motion';
 import { playReelThud, playReelTick } from '@/utils/perkAudio';
+import { useChallengeAnimations } from '../useChallengeAnimations';
 
 /** Every amount a win can roll. Mirrors TOKEN_ROLLS in the backend. */
 const ROLL_AMOUNTS = [1, 2, 3, 5];
@@ -16,6 +17,8 @@ const TICK_MS = 90;
 const EASE = 'cubic-bezier(0.13,0.82,0.22,1)';
 /** Beat spent on the landed number before the roll counts as done. */
 const HOLD_MS = 900;
+/** Shorter beat when the animations are off, just long enough to read the number. */
+const SKIPPED_HOLD_MS = 300;
 /** Lets the strip paint at rest once before it starts to move. */
 const START_DELAY_MS = 50;
 
@@ -35,34 +38,38 @@ interface TokenRouletteProps {
 
 export const TokenRoulette: React.FC<TokenRouletteProps> = ({ roll, onDone }) => {
   const reduceMotion = useReducedMotion();
+  const [animations] = useChallengeAnimations();
+  const animate = animations && !reduceMotion;
   const strip = useMemo(() => buildStrip(roll), [roll]);
   const [spinning, setSpinning] = useState(false);
   const [landed, setLanded] = useState(false);
   // The parent hands a fresh callback each render; the reel must run once per roll, not once per render.
   const onDoneRef = useRef(onDone);
   onDoneRef.current = onDone;
-  const spinMs = reduceMotion ? REDUCED_SPIN_MS : SPIN_MS;
+  const spinMs = animate ? SPIN_MS : REDUCED_SPIN_MS;
+  const holdMs = animate ? HOLD_MS : SKIPPED_HOLD_MS;
 
   useEffect(() => {
     let ticks = 0;
     const ticker = setInterval(() => {
+      if (!animate) return;
       ticks += 1;
       playReelTick(1 + ticks * 0.03);
     }, TICK_MS);
     const start = setTimeout(() => setSpinning(true), START_DELAY_MS);
     const land = setTimeout(() => {
       clearInterval(ticker);
-      playReelThud();
+      if (animate) playReelThud();
       setLanded(true);
     }, START_DELAY_MS + spinMs);
-    const done = setTimeout(() => onDoneRef.current(), START_DELAY_MS + spinMs + HOLD_MS);
+    const done = setTimeout(() => onDoneRef.current(), START_DELAY_MS + spinMs + holdMs);
     return () => {
       clearInterval(ticker);
       clearTimeout(start);
       clearTimeout(land);
       clearTimeout(done);
     };
-  }, [spinMs]);
+  }, [spinMs, holdMs, animate]);
 
   const restOffset = ((strip.length - 1) / strip.length) * 100;
 

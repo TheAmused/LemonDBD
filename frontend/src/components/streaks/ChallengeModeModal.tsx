@@ -2,7 +2,7 @@
 // frontend/src/components/streaks/ChallengeModeModal.tsx
 import type { Dictionary } from '@/locales/types';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   ChallengeIntroModalShell,
   NEUTRAL_TILE_ACCENT,
@@ -42,18 +42,30 @@ export function buildCompletionTiles(
   }));
 }
 
+/** What the summary box shows for the highlighted tile. */
+export interface ModeInfo {
+  intro?: string;
+  /** What sets the highlighted tile apart, shown under the intro. */
+  detail?: string;
+  /** False hides the rules link, e.g. when the highlighted tile only leads to another screen. */
+  showRules: boolean;
+}
+
 export interface ChallengeModeModalProps {
   isOpen: boolean;
   onClose: () => void;
   tiles: ChallengeIntroTile[];
+  /** Called with the tile the player accepted. */
   onSelectTile: (value: string) => void;
   tileGridClassName: string;
   /** Omit to skip the intro box (and with it the rules link). */
   intro?: string;
   /** Set false to hide the "Read full rules" link even when there is an intro. */
   showRules?: boolean;
-  /** Renders the mode's rules modal; the modal owns the open/close state. */
-  renderRules: (rules: { isOpen: boolean; onClose: () => void }) => React.ReactNode;
+  /** Summary and rules link for the highlighted tile; replaces `intro` and `showRules` when given. */
+  modeInfo?: (value: string | undefined) => ModeInfo;
+  /** Renders the mode's rules modal for the highlighted tile; the modal owns the open/close state. */
+  renderRules: (rules: { isOpen: boolean; onClose: () => void; value: string | undefined }) => React.ReactNode;
   selectedValue?: string;
   title?: string;
   onBack?: () => void;
@@ -74,6 +86,7 @@ export const ChallengeModeModal: React.FC<ChallengeModeModalProps> = ({
       tileGridClassName,
       intro,
       showRules = true,
+      modeInfo,
       renderRules,
       selectedValue,
       title,
@@ -82,17 +95,34 @@ export const ChallengeModeModal: React.FC<ChallengeModeModalProps> = ({
     }) => {
   const dict = useDictionary();
   const [isRulesOpen, setIsRulesOpen] = useState(false);
+  // A lone tile has nothing to compare against, so it starts highlighted.
+  const defaultPending = selectedValue ?? (tiles.length === 1 ? tiles[0].value : undefined);
+  const [pending, setPending] = useState(defaultPending);
+  useEffect(() => {
+    if (isOpen) setPending(defaultPending);
+  }, [isOpen, defaultPending]);
+
+  const pendingTile = tiles.find((tile) => tile.value === pending);
+  const info = modeInfo
+    ? modeInfo(pending)
+    : { intro, detail: pendingTile?.description, showRules: Boolean(intro) && showRules };
+
   return (
     <>
       <ChallengeIntroModalShell
         isOpen={isOpen}
         onClose={onClose}
         title={title ?? (dict.streaks.chooseMode)}
-        intro={intro}
+        intro={info.intro}
+        detail={info.detail}
         rulesLabel={dict.streaks.rules}
-        onOpenRules={showRules ? () => setIsRulesOpen(true) : undefined}
+        onOpenRules={info.showRules ? () => setIsRulesOpen(true) : undefined}
         tiles={tiles}
-        onSelectTile={onSelectTile}
+        onPickTile={setPending}
+        pendingValue={pending}
+        onAccept={() => pending && onSelectTile(pending)}
+        acceptLabel={dict.streaks.accept}
+        acceptDisabled={!pending}
         tileGridClassName={tileGridClassName}
         escapeDisabled={isRulesOpen}
         selectedValue={selectedValue}
@@ -100,7 +130,7 @@ export const ChallengeModeModal: React.FC<ChallengeModeModalProps> = ({
         onBack={onBack}
         backLabel={backLabel}
       />
-      {renderRules({ isOpen: isRulesOpen, onClose: () => setIsRulesOpen(false) })}
+      {renderRules({ isOpen: isRulesOpen, onClose: () => setIsRulesOpen(false), value: pending })}
     </>
   );
 };

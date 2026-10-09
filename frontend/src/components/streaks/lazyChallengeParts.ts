@@ -3,8 +3,8 @@ import dynamic from 'next/dynamic';
 
 /** Client-only pieces every challenge board loads lazily, declared once. */
 export const Confetti = dynamic(() => import('./Confetti').then((m) => m.Confetti), { ssr: false });
-export const ResetConfirmModal = dynamic(
-  () => import('./ResetConfirmModal').then((m) => m.ResetConfirmModal),
+export const AbandonConfirmModal = dynamic(
+  () => import('./AbandonConfirmModal').then((m) => m.AbandonConfirmModal),
   { ssr: false }
 );
 export const ChallengeCompletionHistoryDrawer = dynamic(

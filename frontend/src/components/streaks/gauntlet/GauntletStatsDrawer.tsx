@@ -4,7 +4,7 @@ import type { Dictionary } from '@/locales/types';
 
 import React from 'react';
 import { GauntletStats, MatchLog } from '@/types/gauntletStreak';
-import { StreakStatsDrawer, streakAtResult } from '../StreakStatsDrawer';
+import { StreakStatsDrawer } from '../StreakStatsDrawer';
 import { useCharacterDisplayName } from '@/context/DisplayNamesContext';
 import { useDictionary } from "@/context/DictionaryContext";
 
@@ -29,9 +29,9 @@ export const GauntletStatsDrawer: React.FC<GauntletStatsDrawerProps> = ({ isOpen
     )}
     renderMeta={(log: MatchLog) => (
       <span>
-        {dict.streaks.streakLabel} {streakAtResult(log)}
+        {dict.streaks.streakLabel} {log.streak_after}
       </span>
     )}
   />
   );
-};
+};

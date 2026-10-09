@@ -31,10 +31,10 @@ export function useHistoryRun(mode: HistoryMode) {
     [token, run, mutate, loadStats, loadCompletions]
   );
 
-  const reset = useCallback(async () => {
+  const abandon = useCallback(async () => {
     if (!token) return;
-    await mutate(() => api.resetHistoryRun(token, mode));
+    await mutate(() => api.abandonHistoryRun(token, mode));
   }, [token, mode, mutate]);
 
-  return { run, stats, completions, loading, busy, error, submitResult, reset, reload: load };
+  return { run, stats, completions, loading, busy, error, submitResult, abandon, reload: load };
 }

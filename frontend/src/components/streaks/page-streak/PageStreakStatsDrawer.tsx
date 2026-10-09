@@ -28,9 +28,10 @@ export const PageStreakStatsDrawer: React.FC<PageStreakStatsDrawerProps> = ({ is
     renderLabel={(log) => (
       <div className="text-base font-bold text-text-primary">{characterDisplayName(log.killer)}</div>
     )}
+    renderGroupLabel={(log) => characterDisplayName(log.killer)}
     renderMeta={(log) => (
       <span>
-        {dict.streaks.attemptLabel} {log.attempt} {dict.streaks.middotSeparator} {dict.streaks.pageLabel} {log.page_number}
+        {dict.streaks.pageLabel} {log.page_number}
       </span>
     )}
   />

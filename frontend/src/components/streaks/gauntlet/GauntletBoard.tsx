@@ -16,7 +16,7 @@ import {
   CheckpointCelebrationModal,
   ChallengeCompletionHistoryDrawer,
   Confetti,
-  ResetConfirmModal,
+  AbandonConfirmModal,
 } from '../lazyChallengeParts';
 import { useCelebrateOnRise, useCelebration } from '../useCelebration';
 import { GauntletHeader } from './GauntletHeader';
@@ -84,7 +84,7 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({
     reveal,
     chooseTarget,
     buyBoost,
-    reset,
+    abandon,
     tokenRoll,
     dismissTokenRoll,
     justBankedCheckpoint,
@@ -112,7 +112,7 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({
   // The modal stays mounted while it animates out, so a second click on it must not report the loss again.
   const shieldAnswered = useRef(false);
   const { celebrating, celebrate } = useCelebration();
-  const [confirmingReset, setConfirmingReset] = useState(false);
+  const [confirmingAbandon, setConfirmingAbandon] = useState(false);
   // The target the reel has actually finished landing on, kept separate from
   // run.current_character_id so the roster grid can't out-race the animation.
   const [shownTarget, setShownTarget] = useState<string | null>(null);
@@ -156,6 +156,19 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({
     if (!awaitingPick && !buyingPick) setPendingPick(null);
   }, [awaitingPick, buyingPick]);
 
+  const cancelPick = () => {
+    setBuyingPick(false);
+    setPendingPick(null);
+  };
+
+  const confirmPick = async () => {
+    if (!pendingPick) return;
+    setInstantTarget(pendingPick);
+    const bought = await buyBoost('pick', pendingPick);
+    if (!bought) setInstantTarget(null);
+    cancelPick();
+  };
+
   return (
     <div className="pb-16">
       <Confetti active={celebrating} />
@@ -180,7 +193,7 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({
           onOpenStats={() => setIsStatsOpen(true)}
           onOpenHistory={() => setIsHistoryOpen(true)}
           onOpenRules={() => setIsRulesOpen(true)}
-          onOpenReset={() => setConfirmingReset(true)}
+          onOpenAbandon={() => setConfirmingAbandon(true)}
           onChangeMode={() => setIsChangeModeOpen(true)}
         />
           }
@@ -188,7 +201,7 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({
         {isCompleted ? (
           <ChallengeVictoryCard
             title={dict.streaks.gauntletComplete}
-            onRestart={reset}
+            onRestart={abandon}
             busy={busy}
           />
         ) : (
@@ -219,6 +232,17 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({
             instantTarget={instantTarget}
             shownTarget={shownTarget}
             onShownTargetChange={setShownTarget}
+            buyPick={
+              buyingPick && boosts && run
+                ? {
+                    confirmLabel: `${dict.streaks.boostConfirmPick} (${formatMessage(dict.streaks.boostPrice, { price: boosts.prices.pick })})`,
+                    cancelLabel: dict.streaks.cancel,
+                    canConfirm: Boolean(pendingPick) && !busy && run.tokens >= boosts.prices.pick,
+                    onConfirm: confirmPick,
+                    onCancel: cancelPick,
+                  }
+                : undefined
+            }
           />
           {boosts && run && (
             <LemonTokenPanel
@@ -230,20 +254,7 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({
               hasOtherKiller={hasOtherKiller}
               busy={busy}
               picking={buyingPick}
-              pendingPick={pendingPick}
               onStartPick={() => setBuyingPick(true)}
-              onCancelPick={() => {
-                setBuyingPick(false);
-                setPendingPick(null);
-              }}
-              onConfirmPick={async () => {
-                if (!pendingPick) return;
-                setInstantTarget(pendingPick);
-                const bought = await buyBoost('pick', pendingPick);
-                if (!bought) setInstantTarget(null);
-                setBuyingPick(false);
-                setPendingPick(null);
-              }}
               onBuy={(boost) => {
                 buyBoost(boost);
               }}
@@ -264,16 +275,16 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({
           loading={loadingRoster}
         />
 
-        <ResetConfirmModal
-          open={confirmingReset}
+        <AbandonConfirmModal
+          open={confirmingAbandon}
           busy={busy}
-          message={`${dict.streaks.resetConfirmPrefix} ${dict.streaks?.[role] || role} ${dict.streaks.resetConfirmSuffix}`}
-          onCancel={() => setConfirmingReset(false)}
+          message={`${dict.streaks.abandonConfirmPrefix} ${dict.streaks?.[role] || role} ${dict.streaks.abandonConfirmSuffix}`}
+          onCancel={() => setConfirmingAbandon(false)}
           onConfirm={() => {
-            setConfirmingReset(false);
+            setConfirmingAbandon(false);
             setShieldPromptOpen(false);
             setBuyingPick(false);
-            reset();
+            abandon();
           }}
         />
 
@@ -304,7 +315,7 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({
           isOpen={isStatsOpen}
           onClose={() => setIsStatsOpen(false)}
           stats={stats}
-          attempts={run?.attempts}
+          attempts={run ? run.attempts + 1 : undefined}
         />
         <ChallengeCompletionHistoryDrawer
           isOpen={isHistoryOpen}
@@ -321,7 +332,6 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({
           onClose={() => setIsChangeModeOpen(false)}
           role={role}
           currentMode={gameMode}
-          showIntro={false}
           originalCompleted={(completionStatus.completions.gauntlet ?? []).includes(`${role}_original`)}
           originalCompletedCount={completionStatus.completion_counts.gauntlet?.[`${role}_original`] ?? null}
           originalCompletedFull={completionStatus.full_roster.gauntlet?.[`${role}_original`] != null}

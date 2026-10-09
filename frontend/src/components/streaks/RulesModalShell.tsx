@@ -94,6 +94,7 @@ export const RulesModalShell: React.FC<RulesModalShellProps> = ({ isOpen, onClos
       size="3xl"
       layer="top"
       title={<span className="capitalize">{title}</span>}
+      centerTitle
       closeButtonAriaLabel={dict.modal.close}
       bodyClassName="space-y-6 p-5 text-sm text-text-secondary sm:p-6"
     >

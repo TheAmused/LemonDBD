@@ -21,7 +21,7 @@ from app.services.page_streak import (
     get_perk_icon_map,
     get_user_killer_pool,
     record_match_result,
-    reset_active_run,
+    abandon_active_run,
     reset_all_runs,
 )
 from app.services.perk_service import PerkService
@@ -86,9 +86,9 @@ class PageStreakService:
         run = record_match_result(user_id, killer, page, perks, result, self.build_pages)
         return self._with_artwork(user_id, run)
 
-    def reset_run(self, user_id: int, killer: str) -> PageStreakRunState | None:
+    def abandon_run(self, user_id: int, killer: str) -> PageStreakRunState | None:
         assert_challenge_mode_enabled("page_streak")
-        return self._with_artwork(user_id, reset_active_run(user_id, killer, self.build_pages))
+        return self._with_artwork(user_id, abandon_active_run(user_id, killer, self.build_pages))
 
     def reset_all(self, user_id: int) -> None:
         assert_challenge_mode_enabled("page_streak")

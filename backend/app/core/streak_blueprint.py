@@ -28,7 +28,7 @@ def make_streak_blueprint(
     reveal_method: str = "reveal",
     game_modes: Sequence[str] | None = None,
 ) -> Blueprint:
-    """Build the run/reveal/reset/stats endpoints shared by every "pick a
+    """Build the run/reveal/abandon/stats endpoints shared by every "pick a
     mode, play a streak run" challenge (gauntlet, chaos, history). Each mode's
     `POST /result` stays hand-written in its own route module -- unlike these
     4 endpoints, it genuinely differs per mode (extra required fields,
@@ -82,9 +82,9 @@ def make_streak_blueprint(
                 return jsonify({"error": str(e)}), status
             return jsonify({"run": run}), 200
 
-    @bp.route("/run/reset", methods=["POST"])
+    @bp.route("/run/abandon", methods=["POST"])
     @login_required
-    def reset_run():
+    def abandon_run():
         data = request.get_json(silent=True) or {}
         value = clean_value(data.get(param_name))
         if not value:
@@ -94,7 +94,7 @@ def make_streak_blueprint(
             return mode_error
         service = get_service()
         try:
-            run = service.reset_run(g.current_user.id, value, **mode_kwargs)
+            run = service.abandon_run(g.current_user.id, value, **mode_kwargs)
         except ValueError as e:
             return jsonify({"error": str(e)}), 404
         return jsonify({"run": run}), 200

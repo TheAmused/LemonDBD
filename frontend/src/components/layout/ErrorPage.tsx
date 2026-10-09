@@ -62,9 +62,6 @@ export const ErrorPage: React.FC<ErrorPageProps> = ({ variant }) => {
 
         <h1 className="text-3xl font-black tracking-tight text-text-primary sm:text-5xl">{title}</h1>
         <p className="mt-4 max-w-md text-sm font-medium leading-relaxed text-text-secondary sm:text-base">{text}</p>
-        {variant === 'blocked' ? (
-          <p className="mt-3 max-w-md type-body text-text-muted">{copy.blocked.hint}</p>
-        ) : null}
 
         <div className="mt-8">
           <Link

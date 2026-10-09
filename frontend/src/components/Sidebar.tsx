@@ -21,7 +21,7 @@ import { LemonIcon } from './LemonIcon';
 import { useAuth } from '@/context/AuthContext';
 import dynamic from 'next/dynamic';
 import { SidebarNavLink } from './sidebar/SidebarNavLink';
-import { ADMIN_ONLY_SEGMENTS } from '@/utils/adminOnlyPages';
+import { adminOnlyPageFromPathname } from '@/utils/adminOnlyPages';
 import { SidebarUserSection } from './sidebar/SidebarUserSection';
 import { SidebarBottomControls } from './sidebar/SidebarBottomControls';
 import { i18n, type Locale } from '@/i18n/config';
@@ -261,7 +261,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           </p>
 
           {mainNavItems
-            .filter((item) => isAdmin || !ADMIN_ONLY_SEGMENTS.includes(item.id))
+            .filter((item) => isAdmin || !adminOnlyPageFromPathname(item.href, i18n.locales))
             .map((item) => (
             <SidebarNavLink
               key={item.id}

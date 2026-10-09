@@ -13,7 +13,7 @@ import { PageStreakRulesModal } from './PageStreakRulesModal';
 import { PageStreakStatsDrawer } from './PageStreakStatsDrawer';
 import { ChallengeErrorBanner, ChallengePanel, ChallengeVictoryCard } from '../ChallengePanel';
 import { ChallengeProgress } from '../ChallengeProgress';
-import { ChallengeCompletionHistoryDrawer, Confetti, ResetConfirmModal } from '../lazyChallengeParts';
+import { ChallengeCompletionHistoryDrawer, Confetti, AbandonConfirmModal } from '../lazyChallengeParts';
 import { useCelebrateOnRise, useCelebration } from '../useCelebration';
 import { staticUrl } from '@/utils/staticUrl';
 import { useDictionary } from '@/context/DictionaryContext';
@@ -34,7 +34,7 @@ interface PageStreakRunViewProps {
 export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, killer }) => {
   const dict = useDictionary();
   const killerDisplayName = useCharacterDisplayName()(killer);
-  const { run, stats, completions, loading, busy, error, startRun, submitResult, resetRun } = usePageStreakRun(killer);
+  const { run, stats, completions, loading, busy, error, startRun, submitResult, abandonRun } = usePageStreakRun(killer);
   const iconByPerk = React.useMemo(() => {
     const entries = Object.entries(run?.perk_icons ?? {});
     return Object.fromEntries(
@@ -44,7 +44,7 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
   // The page the preview tab was opened on, so moving to the next page drops back to the current page tab.
   const [previewPageKey, setPreviewPageKey] = useState('');
   const [build, setBuild] = useState<BuildState>({ key: '', selected: [], confirmed: false });
-  const [confirmingReset, setConfirmingReset] = useState(false);
+  const [confirmingAbandon, setConfirmingAbandon] = useState(false);
   const [isRulesOpen, setIsRulesOpen] = useState(false);
   const [isStatsOpen, setIsStatsOpen] = useState(false);
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
@@ -60,7 +60,7 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
     autoStartedRef.current = true;
     startRun();
   }, [loading, run, busy, error, startRun]);
-  // A reset (or another killer) leaves no run again, so allow the next auto-start.
+  // Abandoning (or another killer) leaves no run again, so allow the next auto-start.
   useEffect(() => {
     if (run) autoStartedRef.current = false;
   }, [run, killer]);
@@ -122,7 +122,7 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
             header={
               <RunHeader
                 run={run}
-                onOpenReset={() => setConfirmingReset(true)}
+                onOpenAbandon={() => setConfirmingAbandon(true)}
                 onOpenRules={() => setIsRulesOpen(true)}
                 onOpenStats={() => setIsStatsOpen(true)}
                 onOpenHistory={() => setIsHistoryOpen(true)}
@@ -133,7 +133,7 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
             <ChallengeVictoryCard
               title={dict.streaks.pageStreakVictoryTitle}
               subtitle={`${dict.streaks.pageStreakVictoryPrefix} ${killerDisplayName}`}
-              onRestart={() => setConfirmingReset(true)}
+              onRestart={() => setConfirmingAbandon(true)}
               busy={busy}
             />
           ) : (
@@ -228,14 +228,14 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
           )}
           </ChallengePanel>
 
-          <ResetConfirmModal
-            open={confirmingReset}
+          <AbandonConfirmModal
+            open={confirmingAbandon}
             busy={busy}
-            message={`${dict.streaks.pageStreakResetConfirmPrefix} ${killerDisplayName} ${dict.streaks.pageStreakResetConfirmSuffix}`}
-            onCancel={() => setConfirmingReset(false)}
+            message={dict.streaks.pageStreakAbandonConfirmPrompt}
+            onCancel={() => setConfirmingAbandon(false)}
             onConfirm={() => {
-              setConfirmingReset(false);
-              resetRun();
+              setConfirmingAbandon(false);
+              abandonRun();
             }}
           />
 

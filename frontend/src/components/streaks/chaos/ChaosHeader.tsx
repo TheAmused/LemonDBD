@@ -22,7 +22,7 @@ export interface ChaosHeaderProps {
   onOpenHistory: () => void;
   onOpenRules: () => void;
   onOpenPerkPool: () => void;
-  onOpenReset: () => void;
+  onOpenAbandon: () => void;
   onChangeDifficulty: () => void;
 }
 
@@ -35,7 +35,7 @@ export const ChaosHeader: React.FC<ChaosHeaderProps> = ({
       onOpenHistory,
       onOpenRules,
       onOpenPerkPool,
-      onOpenReset,
+      onOpenAbandon,
       onChangeDifficulty,
     }) => {
   const dict = useDictionary();
@@ -66,7 +66,7 @@ export const ChaosHeader: React.FC<ChaosHeaderProps> = ({
           onOpenRules={onOpenRules}
           onOpenStats={onOpenStats}
           onOpenHistory={onOpenHistory}
-          onOpenReset={onOpenReset}
+          onOpenAbandon={onOpenAbandon}
           modeSelect={
             <ModeSelectButton
               label={difficultyLabel}

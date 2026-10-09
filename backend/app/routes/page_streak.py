@@ -95,10 +95,10 @@ def get_stats():
     return jsonify({"stats": stats}), 200
 
 
-@page_streak_bp.route("/run/reset", methods=["POST"])
+@page_streak_bp.route("/run/abandon", methods=["POST"])
 @login_required
-def reset_run():
-    """Reset streak progress for a specific killer."""
+def abandon_run():
+    """Abandon the run for a specific killer."""
     payload = request.get_json(silent=True) or {}
     killer = payload.get("killer", "").strip()
     if not killer:
@@ -106,7 +106,7 @@ def reset_run():
 
     service = get_page_streak_service()
     try:
-        run = service.reset_run(g.current_user.id, killer)
+        run = service.abandon_run(g.current_user.id, killer)
     except ValueError as err:
         return jsonify({"error": str(err), "status": 400}), 400
 

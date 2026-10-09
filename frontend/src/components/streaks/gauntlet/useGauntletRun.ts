@@ -81,11 +81,11 @@ export function useGauntletRun(role: Role, gameMode: GauntletGameMode = DEFAULT_
     [token, run, mutate]
   );
 
-  const reset = useCallback(() => {
+  const abandon = useCallback(() => {
     if (!token) return;
     setJustBankedCheckpoint(null);
     setTokenRoll(null);
-    return mutate(() => api.resetRun(token, role, gameMode));
+    return mutate(() => api.abandonRun(token, role, gameMode));
   }, [token, role, gameMode, mutate, setJustBankedCheckpoint]);
 
   return {
@@ -100,7 +100,7 @@ export function useGauntletRun(role: Role, gameMode: GauntletGameMode = DEFAULT_
     reveal,
     chooseTarget,
     buyBoost,
-    reset,
+    abandon,
     tokenRoll,
     dismissTokenRoll: () => setTokenRoll(null),
     justBankedCheckpoint,

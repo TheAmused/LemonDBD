@@ -1,12 +1,12 @@
 'use client';
 import type { Dictionary } from '@/locales/types';
-// frontend/src/components/streaks/ResetConfirmModal.tsx
+// frontend/src/components/streaks/AbandonConfirmModal.tsx
 
 import React from 'react';
 import { ConfirmModal } from '@/components/common/ConfirmModal';
 import { useDictionary } from "@/context/DictionaryContext";
 
-export interface ResetConfirmModalProps {
+export interface AbandonConfirmModalProps {
   open: boolean;
   message: string;
   busy?: boolean;
@@ -14,12 +14,12 @@ export interface ResetConfirmModalProps {
   onCancel: () => void;
 }
 
-export const ResetConfirmModal: React.FC<ResetConfirmModalProps> = ({ open, message, busy = false, onConfirm, onCancel }) => {
+export const AbandonConfirmModal: React.FC<AbandonConfirmModalProps> = ({ open, message, busy = false, onConfirm, onCancel }) => {
   const dict = useDictionary();
   return (
   <ConfirmModal
     open={open}
-    title={dict.streaks.resetRunTitle}
+    title={dict.streaks.abandonRunTitle}
     message={message}
     confirmLabel={dict.streaks.abandonConfirm}
     cancelLabel={dict.streaks.cancel}

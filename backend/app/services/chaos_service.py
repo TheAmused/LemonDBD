@@ -136,8 +136,8 @@ class ChaosService(StreakRunService):
         db.session.commit()
         return self._state(r)
 
-    def reset_run(self, user_id: int, difficulty: str) -> ChaosRunState:
-        return self._reset_run(user_id, difficulty)
+    def abandon_run(self, user_id: int, difficulty: str) -> ChaosRunState:
+        return self._abandon_run(user_id, difficulty)
 
     def submit_result(self, user_id: int, run_id: int, result: str, killer_id: str) -> ChaosRunState:
         assert_challenge_mode_enabled("chaos")

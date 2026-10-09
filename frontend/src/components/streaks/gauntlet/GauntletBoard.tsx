@@ -16,7 +16,7 @@ import {
   CheckpointCelebrationModal,
   ChallengeCompletionHistoryDrawer,
   Confetti,
-  ResetConfirmModal,
+  AbandonConfirmModal,
 } from '../lazyChallengeParts';
 import { useCelebrateOnRise, useCelebration } from '../useCelebration';
 import { GauntletHeader } from './GauntletHeader';
@@ -84,7 +84,7 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({
     reveal,
     chooseTarget,
     buyBoost,
-    reset,
+    abandon,
     tokenRoll,
     dismissTokenRoll,
     justBankedCheckpoint,
@@ -112,7 +112,7 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({
   // The modal stays mounted while it animates out, so a second click on it must not report the loss again.
   const shieldAnswered = useRef(false);
   const { celebrating, celebrate } = useCelebration();
-  const [confirmingReset, setConfirmingReset] = useState(false);
+  const [confirmingAbandon, setConfirmingAbandon] = useState(false);
   // The target the reel has actually finished landing on, kept separate from
   // run.current_character_id so the roster grid can't out-race the animation.
   const [shownTarget, setShownTarget] = useState<string | null>(null);
@@ -193,7 +193,7 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({
           onOpenStats={() => setIsStatsOpen(true)}
           onOpenHistory={() => setIsHistoryOpen(true)}
           onOpenRules={() => setIsRulesOpen(true)}
-          onOpenReset={() => setConfirmingReset(true)}
+          onOpenAbandon={() => setConfirmingAbandon(true)}
           onChangeMode={() => setIsChangeModeOpen(true)}
         />
           }
@@ -201,7 +201,7 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({
         {isCompleted ? (
           <ChallengeVictoryCard
             title={dict.streaks.gauntletComplete}
-            onRestart={reset}
+            onRestart={abandon}
             busy={busy}
           />
         ) : (
@@ -275,16 +275,16 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({
           loading={loadingRoster}
         />
 
-        <ResetConfirmModal
-          open={confirmingReset}
+        <AbandonConfirmModal
+          open={confirmingAbandon}
           busy={busy}
-          message={`${dict.streaks.resetConfirmPrefix} ${dict.streaks?.[role] || role} ${dict.streaks.resetConfirmSuffix}`}
-          onCancel={() => setConfirmingReset(false)}
+          message={`${dict.streaks.abandonConfirmPrefix} ${dict.streaks?.[role] || role} ${dict.streaks.abandonConfirmSuffix}`}
+          onCancel={() => setConfirmingAbandon(false)}
           onConfirm={() => {
-            setConfirmingReset(false);
+            setConfirmingAbandon(false);
             setShieldPromptOpen(false);
             setBuyingPick(false);
-            reset();
+            abandon();
           }}
         />
 

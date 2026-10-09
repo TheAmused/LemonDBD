@@ -103,7 +103,7 @@ def validate_match_submission(run: PageStreakRunDict, page: int, perks: list[str
     if result not in ("win", "loss"):
         raise ValueError("Result must be 'win' or 'loss'")
     if run["status"] != "in_progress":
-        raise ValueError("This run is already completed — reset it to play again")
+        raise ValueError("This run is already completed — abandon it to play again")
     if page != run["current_page"]:
         raise ValueError(f"Page {page} is not the current page ({run['current_page']})")
 
@@ -193,15 +193,15 @@ def apply_inactivity_loss(run_id: int) -> None:
     db.session.commit()
 
 
-def reset_active_run(
+def abandon_active_run(
     user_id: int,
     killer: str,
     build_pages_fn: Callable[[int], list[list[str]]],
 ) -> PageStreakRunDict | None:
-    """Reset run progress to Page 1."""
+    """Abandon the run: back to Page 1 in a new attempt."""
     run = fetch_run(user_id, killer, build_pages_fn)
     if run is None:
-        raise ValueError(f"No run to reset for {killer}")
+        raise ValueError(f"No run to abandon for {killer}")
 
     if not build_pages_fn(user_id):
         raise ValueError("No perks available — the pool is empty")
@@ -220,7 +220,7 @@ def reset_active_run(
 def reset_all_runs(user_id: int) -> None:
     """Wipe every killer's Page Streak run AND their "already won" badges.
 
-    Deliberately more destructive than reset_active_run: a per-killer reset
+    Deliberately more destructive than abandon_active_run: a per-killer abandon
     leaves past completions alone (so the roster badge survives), but this
     "start completely over" action clears both -- the whole point is a clean
     slate across the entire roster.

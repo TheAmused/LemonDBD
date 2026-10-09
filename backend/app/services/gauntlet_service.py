@@ -202,7 +202,7 @@ class GauntletService(StreakRunService):
         if r.game_mode not in PICK_CHARACTER_MODES:
             raise ValueError("This mode picks the character for you")
         if r.status == "completed":
-            raise ValueError("This run is already completed. Reset it to play again.")
+            raise ValueError("This run is already completed. Abandon it to play again.")
         self._validate_pick(r, character)
         return self._apply_pick(r, character)
 
@@ -218,7 +218,7 @@ class GauntletService(StreakRunService):
         if config is None:
             raise ValueError("This mode has no boosts")
         if r.status == "completed":
-            raise ValueError("This run is already completed. Reset it to play again.")
+            raise ValueError("This run is already completed. Abandon it to play again.")
         if not r.target_revealed:
             raise ValueError("Start the match first")
         self._freeze_pool_if_needed(r)
@@ -248,8 +248,8 @@ class GauntletService(StreakRunService):
         self._spend_tokens(r, "reroll")
         return self._apply_pick(r, random.choice(others))
 
-    def reset_run(self, user_id: int, role: str, game_mode: str = DEFAULT_GAME_MODE) -> GauntletRunState:
-        return self._reset_run(user_id, role, game_mode)
+    def abandon_run(self, user_id: int, role: str, game_mode: str = DEFAULT_GAME_MODE) -> GauntletRunState:
+        return self._abandon_run(user_id, role, game_mode)
 
     def submit_result(
         self, user_id: int, run_id: int, result: str, triggered_by: str = "player", use_shield: bool = False

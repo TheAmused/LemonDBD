@@ -42,10 +42,10 @@ export function useChaosRun(difficulty: Difficulty) {
     return mutate(() => api.revealChaosBuild(token, run.id));
   }, [token, run, mutate]);
 
-  const reset = useCallback(() => {
+  const abandon = useCallback(() => {
     if (!token) return;
     setJustBankedCheckpoint(null);
-    return mutate(() => api.resetChaosRun(token, difficulty));
+    return mutate(() => api.abandonChaosRun(token, difficulty));
   }, [token, difficulty, mutate, setJustBankedCheckpoint]);
 
   return {
@@ -58,7 +58,7 @@ export function useChaosRun(difficulty: Difficulty) {
     reload: load,
     submitResult,
     reveal,
-    reset,
+    abandon,
     justBankedCheckpoint,
     dismissCheckpointCelebration,
   };

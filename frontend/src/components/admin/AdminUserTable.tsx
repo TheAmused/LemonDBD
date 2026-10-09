@@ -20,6 +20,7 @@ import { UserAvatar } from '@/components/UserAvatar';
 import { OverseerEyeIcon } from '@/components/icons/DbdIcons';
 
 import { tip } from '@/components/common/Tooltip';
+import { DownloadDataSection } from '@/components/user/DownloadDataSection';
 import { useDictionary } from "@/context/DictionaryContext";
 
 interface AdminUserTableProps {
@@ -37,6 +38,8 @@ interface AdminUserTableProps {
   onToggleRole: (user: UserRow) => void;
   onToggleActive: (user: UserRow) => void;
   onDeleteUser: (user: UserRow) => void;
+  /** Receives the message when a user-data download fails. */
+  onDownloadError?: (message: string) => void;
 }
 
 export const AdminUserTable: React.FC<AdminUserTableProps> = ({
@@ -54,6 +57,7 @@ export const AdminUserTable: React.FC<AdminUserTableProps> = ({
       onToggleRole,
       onToggleActive,
       onDeleteUser,
+      onDownloadError,
     }) => {
   const dict = useDictionary();
   return (
@@ -171,6 +175,12 @@ export const AdminUserTable: React.FC<AdminUserTableProps> = ({
                   >
                     <Lock className="h-4 w-4" />
                   </button>
+                  <DownloadDataSection
+                    userId={u.id}
+                    iconOnly
+                    onError={onDownloadError}
+                    className="border border-border-color bg-bg-surface text-text-primary hover:border-accent-amber hover:bg-bg-surface hover:text-accent-amber shadow-xs relative h-auto w-auto min-h-[44px] min-w-[44px] [&>svg]:h-4 [&>svg]:w-4"
+                  />
                   {u.id !== currentUserId && (
                     <button
                       type="button"
@@ -277,6 +287,13 @@ export const AdminUserTable: React.FC<AdminUserTableProps> = ({
                       >
                         <Lock className="h-3.5 w-3.5" />
                       </button>
+
+                      <DownloadDataSection
+                        userId={u.id}
+                        iconOnly
+                        onError={onDownloadError}
+                        className="border border-border-color bg-bg-surface text-text-primary hover:border-accent-amber hover:bg-bg-surface hover:text-accent-amber shadow-xs relative h-auto w-auto p-1.5 before:absolute before:-inset-2.5 before:content-['']"
+                      />
 
                       {u.id !== currentUserId && (
                         <button

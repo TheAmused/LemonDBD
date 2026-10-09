@@ -25,6 +25,9 @@ CREATE TABLE IF NOT EXISTS gauntlet_runs (
     completed_characters TEXT NOT NULL DEFAULT '[]',
     checkpoint_characters TEXT NOT NULL DEFAULT '[]',
     current_loadout TEXT NOT NULL DEFAULT '{}',
+    tokens INTEGER NOT NULL DEFAULT 0,
+    last_token_roll INTEGER NOT NULL DEFAULT 0,
+    bonus_perk_slots INTEGER NOT NULL DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

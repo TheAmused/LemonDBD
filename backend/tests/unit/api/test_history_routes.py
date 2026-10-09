@@ -87,7 +87,7 @@ class TestHistoryRoutes:
             headers=headers,
         )
         resp = client.post(
-            "/api/v1/history-streak/run/reset", json={"mode": "hell"}, headers=headers
+            "/api/v1/history-streak/run/abandon", json={"mode": "hell"}, headers=headers
         )
         assert resp.status_code == 200
         assert resp.get_json()["run"]["total_killers_beaten"] == 0

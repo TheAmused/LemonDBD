@@ -16,7 +16,7 @@ import {
   CheckpointCelebrationModal,
   ChallengeCompletionHistoryDrawer,
   Confetti,
-  ResetConfirmModal,
+  AbandonConfirmModal,
 } from '../lazyChallengeParts';
 import { useCelebrateOnRise, useCelebration } from '../useCelebration';
 import { ChaosHeader } from './ChaosHeader';
@@ -64,7 +64,7 @@ export const ChaosBoard: React.FC = () => {
     error,
     submitResult,
     reveal,
-    reset,
+    abandon,
     justBankedCheckpoint,
     dismissCheckpointCelebration,
   } = useChaosRun(difficulty);
@@ -75,8 +75,8 @@ export const ChaosBoard: React.FC = () => {
   // perks_revealed flips back to false after every round (win or loss), so
   // gating the freeze badge on it directly makes it flicker off between
   // rounds. Track whether THIS run has ever been revealed at least once
-  // instead -- that stays true for the run's whole lifetime, only resetting
-  // when reset/completion swaps in a different run id.
+  // instead. That stays true for the run's whole lifetime, only resetting
+  // when abandon/completion swaps in a different run id.
   const [engagedRunId, setEngagedRunId] = useState<number | null>(null);
   useEffect(() => {
     if (run?.perks_revealed && run.id !== engagedRunId) {
@@ -106,7 +106,7 @@ export const ChaosBoard: React.FC = () => {
 
   const [selectedKillerId, setSelectedKillerId] = useState<string | null>(null);
   const [acceptedKillerId, setAcceptedKillerId] = useState<string | null>(null);
-  const [confirmingReset, setConfirmingReset] = useState<boolean>(false);
+  const [confirmingAbandon, setConfirmingAbandon] = useState<boolean>(false);
   const [isStatsOpen, setIsStatsOpen] = useState<boolean>(false);
   const [isHistoryOpen, setIsHistoryOpen] = useState<boolean>(false);
   const [isRulesOpen, setIsRulesOpen] = useState<boolean>(false);
@@ -133,10 +133,10 @@ export const ChaosBoard: React.FC = () => {
     }
   };
 
-  const handleReset = () => {
-    setConfirmingReset(false);
+  const handleAbandon = () => {
+    setConfirmingAbandon(false);
     clearPick();
-    reset();
+    abandon();
   };
 
   const handleDevSkipToWin = async () => {
@@ -178,14 +178,14 @@ export const ChaosBoard: React.FC = () => {
           onOpenHistory={() => setIsHistoryOpen(true)}
           onOpenRules={() => setIsRulesOpen(true)}
           onOpenPerkPool={() => setIsPerkPoolOpen(true)}
-          onOpenReset={() => setConfirmingReset(true)}
+          onOpenAbandon={() => setConfirmingAbandon(true)}
           onChangeDifficulty={() => setIsChangeDifficultyOpen(true)}
         />
           }
         >
 
         {isCompleted ? (
-          <ChallengeVictoryCard title={completionTitle} onRestart={reset} busy={busy} />
+          <ChallengeVictoryCard title={completionTitle} onRestart={abandon} busy={busy} />
         ) : (
           <SlotMachineStage
             perks={run?.current_perks || []}
@@ -258,19 +258,19 @@ export const ChaosBoard: React.FC = () => {
           </div>
         )}
 
-        <ResetConfirmModal
-          open={confirmingReset}
+        <AbandonConfirmModal
+          open={confirmingAbandon}
           busy={busy}
-          message={dict.streaks.resetConfirmPrompt}
-          onCancel={() => setConfirmingReset(false)}
-          onConfirm={handleReset}
+          message={dict.streaks.abandonConfirmPrompt}
+          onCancel={() => setConfirmingAbandon(false)}
+          onConfirm={handleAbandon}
         />
 
         <ChaosStatsDrawer
           isOpen={isStatsOpen}
           onClose={() => setIsStatsOpen(false)}
           stats={stats}
-          attempts={run?.attempts}
+          attempts={run ? run.attempts + 1 : undefined}
         />
         <ChallengeCompletionHistoryDrawer
           isOpen={isHistoryOpen}
@@ -290,7 +290,6 @@ export const ChaosBoard: React.FC = () => {
           isOpen={isChangeDifficultyOpen}
           onClose={() => setIsChangeDifficultyOpen(false)}
           currentDifficulty={difficulty}
-          showIntro={false}
           completedCounts={completionStatus.completion_counts.chaos ?? {}}
           completedFullCounts={completionStatus.full_roster.chaos ?? {}}
           onSelectDifficulty={(newDifficulty) => {
@@ -302,4 +301,4 @@ export const ChaosBoard: React.FC = () => {
       </div>
     </div>
   );
-};
+};

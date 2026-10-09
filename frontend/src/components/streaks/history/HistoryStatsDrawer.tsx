@@ -4,7 +4,7 @@ import type { Dictionary } from '@/locales/types';
 
 import React from 'react';
 import { HistoryStats, HistoryMatchLog } from '@/types/historyStreak';
-import { StreakStatsDrawer, streakAtResult } from '../StreakStatsDrawer';
+import { StreakStatsDrawer } from '../StreakStatsDrawer';
 import { useCharacterDisplayName } from '@/context/DisplayNamesContext';
 import { useDictionary } from "@/context/DictionaryContext";
 
@@ -29,7 +29,7 @@ export const HistoryStatsDrawer: React.FC<HistoryStatsDrawerProps> = ({ isOpen, 
     )}
     renderMeta={(log) => (
       <span>
-        {dict.streaks.killersColonLabel} {streakAtResult(log)} {dict.streaks.middotSeparator}{' '}
+        {dict.streaks.killersColonLabel} {log.streak_after} {dict.streaks.middotSeparator}{' '}
         {dict.streaks.rowLabel} {log.row_index + 1}
       </span>
     )}

@@ -22,7 +22,7 @@ export interface HistoryHeaderProps {
   onOpenRules: () => void;
   onOpenStats: () => void;
   onOpenHistory: () => void;
-  onOpenReset: () => void;
+  onOpenAbandon: () => void;
   onChangeMode: () => void;
 }
 
@@ -34,7 +34,7 @@ export const HistoryHeader: React.FC<HistoryHeaderProps> = ({
       onOpenRules,
       onOpenStats,
       onOpenHistory,
-      onOpenReset,
+      onOpenAbandon,
       onChangeMode,
     }) => {
   const dict = useDictionary();
@@ -63,8 +63,8 @@ export const HistoryHeader: React.FC<HistoryHeaderProps> = ({
           onOpenRules={onOpenRules}
           onOpenStats={onOpenStats}
           onOpenHistory={onOpenHistory}
-          onOpenReset={onOpenReset}
-          extra={
+          onOpenAbandon={onOpenAbandon}
+          modeSelect={
             <ModeSelectButton
               label={modeLabel}
               tone={MODE_TONE[mode]}

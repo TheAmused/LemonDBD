@@ -69,11 +69,9 @@ export const RulesModalListSection: React.FC<{
   title: string;
   intro?: string;
   items: RuleListEntry[];
-  headerColorClassName: string;
-  boxClassName: string;
-}> = ({ title, intro, items, headerColorClassName, boxClassName }) => (
-  <div className={`bg-bg-elevated border rounded-xl p-4 space-y-3 shadow-sm ${boxClassName}`}>
-    <h3 className={`type-label ${headerColorClassName}`}>{title}</h3>
+}> = ({ title, intro, items }) => (
+  <div className="bg-bg-elevated border border-border-color rounded-xl p-4 space-y-3 shadow-sm">
+    <h3 className="type-label text-text-primary">{title}</h3>
     {intro && <p className="text-xs text-text-secondary">{intro}</p>}
     <ul className="space-y-2 type-body-fluid text-text-secondary">
       {items.map((item, i) => (
@@ -96,6 +94,7 @@ export const RulesModalShell: React.FC<RulesModalShellProps> = ({ isOpen, onClos
       size="3xl"
       layer="top"
       title={<span className="capitalize">{title}</span>}
+      centerTitle
       closeButtonAriaLabel={dict.modal.close}
       bodyClassName="space-y-6 p-5 text-sm text-text-secondary sm:p-6"
     >

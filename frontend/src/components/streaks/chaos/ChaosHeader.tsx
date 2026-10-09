@@ -22,7 +22,7 @@ export interface ChaosHeaderProps {
   onOpenHistory: () => void;
   onOpenRules: () => void;
   onOpenPerkPool: () => void;
-  onOpenReset: () => void;
+  onOpenAbandon: () => void;
   onChangeDifficulty: () => void;
 }
 
@@ -35,7 +35,7 @@ export const ChaosHeader: React.FC<ChaosHeaderProps> = ({
       onOpenHistory,
       onOpenRules,
       onOpenPerkPool,
-      onOpenReset,
+      onOpenAbandon,
       onChangeDifficulty,
     }) => {
   const dict = useDictionary();
@@ -62,24 +62,25 @@ export const ChaosHeader: React.FC<ChaosHeaderProps> = ({
       }
       actions={
         <StandardHeaderActions
+          hasDrawAnimations
           onOpenRules={onOpenRules}
           onOpenStats={onOpenStats}
           onOpenHistory={onOpenHistory}
-          onOpenReset={onOpenReset}
+          onOpenAbandon={onOpenAbandon}
+          modeSelect={
+            <ModeSelectButton
+              label={difficultyLabel}
+              tone={DIFFICULTY_TONE[difficulty]}
+              onClick={onChangeDifficulty}
+              title={dict.streaks.changeDifficulty}
+            />
+          }
           extra={
-            <>
-              <HeaderButton
-                onClick={onOpenPerkPool}
-                title={dict.streaks.perkPool}
-                label={dict.streaks.perkPool}
-              />
-              <ModeSelectButton
-                label={difficultyLabel}
-                tone={DIFFICULTY_TONE[difficulty]}
-                onClick={onChangeDifficulty}
-                title={dict.streaks.changeDifficulty}
-              />
-            </>
+            <HeaderButton
+              onClick={onOpenPerkPool}
+              title={dict.streaks.perkPool}
+              label={dict.streaks.perkPool}
+            />
           }
         />
       }

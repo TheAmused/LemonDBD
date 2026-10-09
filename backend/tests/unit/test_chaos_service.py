@@ -279,17 +279,17 @@ class TestCheckpointsEasyAndMedium:
 
 
 @pytest.mark.unit
-class TestResetRunAndStats:
+class TestAbandonRunAndStats:
     """Tests for manually resetting active Chaos runs and querying summary stats."""
 
-    def test_reset_wipes_and_starts_over(
+    def test_abandon_starts_over(
         self, chaos_service: ChaosService, chaos_user: int
     ) -> None:
         seed_killer("The Trapper")
         run = chaos_service.get_or_create_run(chaos_user, "hell")
         chaos_service.submit_result(chaos_user, run["id"], "win", "The Trapper")
 
-        reset = chaos_service.reset_run(chaos_user, "hell")
+        reset = chaos_service.abandon_run(chaos_user, "hell")
         assert reset["current_streak"] == 0
         assert reset["completed_killers"] == []
         assert reset["perks_revealed"] is False

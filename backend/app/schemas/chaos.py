@@ -11,6 +11,7 @@ class ChaosMatchLogDict(TypedDict):
     result: str
     perks: list[PerkPayload]
     addon_rarities: list[str]
+    attempt: int
     streak_before: int
     streak_after: int
     timestamp: str | None
@@ -35,6 +36,10 @@ class ChaosRunDict(TypedDict):
     unlocked_perk_ids: list[int]
     perks_revealed: bool
     attempts: int
+    attempt: int
+    total_wins: int
+    total_losses: int
+    playthrough_matches: int
     created_at: str | None
     updated_at: str | None
 

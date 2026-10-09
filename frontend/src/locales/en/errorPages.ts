@@ -16,6 +16,5 @@ export default {
     code: 'Blocked',
     title: 'Page blocked',
     text: 'This page isn\'t open to visitors right now.',
-    hint: 'It is only available to administrators for the moment. The rest of the site keeps working.',
   },
 } as const;

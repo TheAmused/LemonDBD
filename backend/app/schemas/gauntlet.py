@@ -1,5 +1,5 @@
 # backend/app/schemas/gauntlet.py
-from typing import TypedDict
+from typing import Literal, TypedDict
 
 from app.schemas.streak import PerkPayload
 
@@ -13,6 +13,24 @@ class TierInfo(TypedDict):
     roster_limit: int
     # Unique (teachable) perks of the target dealt on a tier that otherwise allows none.
     random_perk_count: int
+
+
+# Every boost that has a price: the three bought mid-match plus the shield spent with a reported loss.
+BoostName = Literal["reroll", "pick", "slot", "shield"]
+
+
+class BoostPrices(TypedDict):
+    reroll: int
+    pick: int
+    slot: int
+    shield: int
+
+
+class BoostConfig(TypedDict):
+    """What a token mode lets the player do: the balance cap, the perk slot limit and the prices."""
+    cap: int
+    max_perk_slots: int
+    prices: BoostPrices
 
 
 class GauntletPlayerLoadout(TypedDict, total=False):
@@ -40,6 +58,7 @@ class GauntletMatchLogDict(TypedDict):
     character_id: str
     result: str
     perks: list[PerkPayload]
+    attempt: int
     streak_before: int
     streak_after: int
     timestamp: str | None
@@ -61,7 +80,14 @@ class GauntletRunDict(TypedDict):
     checkpoint_characters: list[str]
     current_loadout: GauntletLoadout
     owned_character_ids: list[int]
+    tokens: int
+    last_token_roll: int
+    bonus_perk_slots: int
     attempts: int
+    attempt: int
+    total_wins: int
+    total_losses: int
+    playthrough_matches: int
     created_at: str | None
     updated_at: str | None
 
@@ -71,3 +97,5 @@ class GauntletRunState(GauntletRunDict):
     pool_frozen: bool
     owned_characters: list[str]
     tier_info: TierInfo
+    # None in modes without boosts.
+    boosts: BoostConfig | None

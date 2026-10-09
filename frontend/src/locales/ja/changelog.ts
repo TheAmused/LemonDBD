@@ -27,4 +27,5 @@ export default {
   publishEntry: '投稿を公開',
   noHighlight: 'ハイライトなし',
   linkPrompt: 'リンクURL (https://...)',
+  linkApply: 'リンクを追加',
 };

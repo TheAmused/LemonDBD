@@ -103,6 +103,85 @@ class TestGauntletRoutes:
         missing = client.post("/api/v1/gauntlet-streak/target", json={"run_id": run["id"]}, headers=headers)
         assert missing.status_code == 400
 
+    def test_boost_route_spends_tokens(
+        self, client: FlaskClient, gauntlet_auth_setup: tuple[int, str, dict[str, str]]
+    ) -> None:
+        from app.core.extensions import db
+        from app.models import GauntletRun
+
+        _, _, headers = gauntlet_auth_setup
+        run = client.get(
+            "/api/v1/gauntlet-streak/run?role=killer&game_mode=lemon_killer", headers=headers
+        ).get_json()["run"]
+        client.post("/api/v1/gauntlet-streak/reveal", json={"run_id": run["id"]}, headers=headers)
+        row = db.session.get(GauntletRun, run["id"])
+        row.tokens = 4
+        db.session.commit()
+
+        bought = client.post(
+            "/api/v1/gauntlet-streak/boost", json={"run_id": run["id"], "boost": "slot"}, headers=headers
+        )
+        assert bought.status_code == 200
+        body = bought.get_json()["run"]
+        assert (body["tokens"], body["bonus_perk_slots"]) == (0, 1)
+
+        poor = client.post(
+            "/api/v1/gauntlet-streak/boost", json={"run_id": run["id"], "boost": "reroll"}, headers=headers
+        )
+        assert poor.status_code == 400
+        unknown = client.post(
+            "/api/v1/gauntlet-streak/boost", json={"run_id": run["id"], "boost": "teleport"}, headers=headers
+        )
+        assert unknown.status_code == 400
+
+    def test_result_route_passes_the_shield_through(
+        self, client: FlaskClient, gauntlet_auth_setup: tuple[int, str, dict[str, str]]
+    ) -> None:
+        from app.core.extensions import db
+        from app.models import GauntletRun
+
+        _, _, headers = gauntlet_auth_setup
+        run = client.get(
+            "/api/v1/gauntlet-streak/run?role=killer&game_mode=lemon_killer", headers=headers
+        ).get_json()["run"]
+        row = db.session.get(GauntletRun, run["id"])
+        row.tokens = 8
+        row.current_streak = 3
+        db.session.commit()
+
+        shielded = client.post(
+            "/api/v1/gauntlet-streak/result",
+            json={"role": "killer", "run_id": run["id"], "result": "loss", "use_shield": True},
+            headers=headers,
+        )
+        assert shielded.status_code == 200
+        previous = shielded.get_json()["previous_run"]
+        assert (previous["current_streak"], previous["tokens"]) == (3, 0)
+
+        plain = client.post(
+            "/api/v1/gauntlet-streak/result",
+            json={"role": "killer", "run_id": run["id"], "result": "loss"},
+            headers=headers,
+        )
+        assert plain.get_json()["previous_run"]["current_streak"] == 0
+
+    def test_a_loss_in_a_mode_without_boosts_goes_through_with_or_without_the_shield_flag(
+        self, client: FlaskClient, gauntlet_auth_setup: tuple[int, str, dict[str, str]]
+    ) -> None:
+        _, _, headers = gauntlet_auth_setup
+        for game_mode in ("original", "lemon_duo", "lemon_solo"):
+            role = "killer" if game_mode == "original" else "survivor"
+            run = client.get(
+                f"/api/v1/gauntlet-streak/run?role={role}&game_mode={game_mode}", headers=headers
+            ).get_json()["run"]
+            for body in ({}, {"use_shield": False}):
+                res = client.post(
+                    "/api/v1/gauntlet-streak/result",
+                    json={"role": role, "run_id": run["id"], "result": "loss", **body},
+                    headers=headers,
+                )
+                assert res.status_code == 200, (game_mode, body, res.get_json())
+
     def test_get_run_auto_creates(
         self, client: FlaskClient, gauntlet_auth_setup: tuple[int, str, dict[str, str]]
     ) -> None:
@@ -148,7 +227,7 @@ class TestGauntletRoutes:
         _, _, headers = gauntlet_auth_setup
         client.get("/api/v1/gauntlet-streak/run?role=killer", headers=headers)
         res = client.post(
-            "/api/v1/gauntlet-streak/run/reset",
+            "/api/v1/gauntlet-streak/run/abandon",
             json={"role": "killer"},
             headers=headers,
         )

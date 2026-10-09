@@ -42,6 +42,9 @@ export interface PageStreakRun {
   id: number;
   killer: string;
   status: 'in_progress' | 'completed';
+  /** Failed or abandoned attempts since the run began or was last completed. */
+  attempts: number;
+  /** Which attempt group the next match is filed under; only ever grows. */
   attempt: number;
   current_page: number;
   best_page: number;

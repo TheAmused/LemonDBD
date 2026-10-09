@@ -30,6 +30,7 @@ export default {
   authRequiredTitle: "Wymagane Uwierzytelnienie",
   authRequiredDesc: "Zaloguj się lub załóż konto, aby przeglądać profil LemonDBD, zarządzać umiejętnościami uczalnymi i śledzić wyzwania w grze.",
   returnToHome: "Powrót do Strony Głównej",
+  usernameLabel: "Nazwa użytkownika",
   usernameOrEmailLabel: "Nazwa użytkownika lub E-mail",
   emailLabel: "Adres E-mail",
   passwordLabel: "Hasło",
@@ -68,6 +69,9 @@ export default {
   failedToRequestPasswordReset: "Nie udało się zażądać resetu hasła.",
   invalidCredentials: "Nieprawidłowe dane logowania.",
   registrationFailed: "Rejestracja nie powiodła się.",
+  acceptRulesLabel: "Akceptuję {rules}",
+  acceptRulesLink: "regulamin",
+  rulesNotAccepted: "Zaakceptuj regulamin, aby utworzyć konto.",
   unexpectedError: "Wystąpił nieoczekiwany błąd.",
 
   // --- /user page: perf & i18n hardening pass additions ---

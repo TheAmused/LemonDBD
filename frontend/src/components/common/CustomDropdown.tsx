@@ -12,6 +12,24 @@ export interface DropdownOption<T extends string = string> {
   icon?: React.ReactNode;
 }
 
+export type DropdownAccent = 'amber' | 'primary';
+
+// Full class strings so Tailwind can see them; `primary` is the site's red.
+const ACCENT_CLASSES: Record<DropdownAccent, { hover: string; open: string; chevron: string; selected: string }> = {
+  amber: {
+    hover: 'hover:border-accent-amber/50',
+    open: 'border-accent-amber bg-accent-amber/10 text-accent-amber',
+    chevron: 'text-accent-amber',
+    selected: 'bg-accent-amber',
+  },
+  primary: {
+    hover: 'hover:border-accent-red/50',
+    open: 'border-accent-red bg-accent-red/10 text-accent-red',
+    chevron: 'text-accent-red',
+    selected: 'bg-accent-red',
+  },
+};
+
 export interface CustomDropdownProps<T extends string = string> {
   /**
    * The classic mode: a single-select listbox. value/onChange/options stay
@@ -44,6 +62,7 @@ export interface CustomDropdownProps<T extends string = string> {
   menuClassName?: string;
   align?: 'left' | 'right';
   minWidthClass?: string;
+  accent?: DropdownAccent;
 }
 
 export function CustomDropdown<T extends string = string>({
@@ -59,7 +78,9 @@ export function CustomDropdown<T extends string = string>({
   menuClassName = '',
   align = 'left',
   minWidthClass = 'min-w-[160px]',
+  accent = 'amber',
 }: CustomDropdownProps<T>) {
+  const accentClasses = ACCENT_CLASSES[accent];
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -89,8 +110,8 @@ export function CustomDropdown<T extends string = string>({
         onClick={handleToggle}
         {...popoverTriggerProps(isOpen, children ? 'true' : 'listbox')}
         aria-label={ariaLabel || (typeof triggerLabel === 'string' ? triggerLabel : undefined)}
-        className={`flex items-center gap-2 px-3 py-2 rounded-xl bg-bg-surface border border-border-color hover:border-accent-amber/50 hover:bg-bg-elevated text-xs font-bold text-text-primary transition-all cursor-pointer shadow-xs select-none ${
-          isOpen ? 'border-accent-amber bg-accent-amber/10 text-accent-amber shadow-xs' : ''
+        className={`flex items-center gap-2 px-3 py-2 rounded-xl bg-bg-surface border border-border-color ${accentClasses.hover} hover:bg-bg-elevated text-xs font-bold text-text-primary transition-all cursor-pointer shadow-xs select-none ${
+          isOpen ? `${accentClasses.open} shadow-xs` : ''
         } ${buttonClassName}`}
       >
         {triggerIcon && (
@@ -99,7 +120,7 @@ export function CustomDropdown<T extends string = string>({
         {triggerLabel != null && <span className="truncate">{triggerLabel}</span>}
         <ChevronDown
           className={`h-3.5 w-3.5 text-text-secondary transition-transform duration-200 shrink-0 ${
-            isOpen ? 'rotate-180 text-accent-amber' : ''
+            isOpen ? `rotate-180 ${accentClasses.chevron}` : ''
           }`}
         />
       </button>
@@ -128,7 +149,7 @@ export function CustomDropdown<T extends string = string>({
                       onClick={() => handleSelect(opt.value)}
                       className={`flex items-center justify-between w-full px-3 py-2 rounded-xl text-xs font-bold transition-all text-left cursor-pointer ${
                         isSelected
-                          ? 'bg-accent-amber text-text-inverted font-black shadow-xs'
+                          ? `${accentClasses.selected} text-text-inverted font-black shadow-xs`
                           : 'text-text-secondary hover:text-text-primary hover:bg-bg-elevated'
                       }`}
                     >

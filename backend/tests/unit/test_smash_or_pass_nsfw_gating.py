@@ -146,11 +146,11 @@ class TestSmashOrPassNsfwGatingApi:
     ) -> None:
         """Confirms the gate is additive, not a regression on the un-flagged
         rosters: without an NSFW fixture present, count stays exactly what the
-        pre-existing test_get_rosters test already locks in (6)."""
+        pre-existing test_get_rosters test already locks in (7)."""
         seed_smash_rosters()
         client = app.test_client()
         res = client.get("/api/v1/smash-or-pass/rosters")
-        assert res.get_json()["count"] == 6
+        assert res.get_json()["count"] == 7
 
     def test_feed_endpoint_for_nsfw_roster_resolves_without_opt_in(
         self, app: Flask, db_session: Session

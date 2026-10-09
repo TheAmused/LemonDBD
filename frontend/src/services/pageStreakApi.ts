@@ -46,8 +46,8 @@ export async function submitResult(
   return data.run;
 }
 
-export async function resetRun(token: string, killer: string): Promise<PageStreakRun> {
-  const data = await postJson<{ run: PageStreakRun }>(token, '/run/reset', { killer });
+export async function abandonRun(token: string, killer: string): Promise<PageStreakRun> {
+  const data = await postJson<{ run: PageStreakRun }>(token, '/run/abandon', { killer });
   return data.run;
 }
 

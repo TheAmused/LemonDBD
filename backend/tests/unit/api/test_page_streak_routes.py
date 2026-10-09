@@ -94,7 +94,7 @@ class TestPageStreakRoutes:
         assert res.get_json()["run"]["current_page"] == 2
 
         res = client.post(
-            "/api/v1/page-streak/run/reset", json={"killer": "Nurse"}, headers=headers
+            "/api/v1/page-streak/run/abandon", json={"killer": "Nurse"}, headers=headers
         )
         assert res.status_code == 200
         assert res.get_json()["run"]["current_page"] == 1

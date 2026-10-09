@@ -162,7 +162,7 @@ EXPECTED_LEGENDARY_WATERMARKS = {
     "attack_titan": ("ATTACK", "TITAN"),
     "armored_titan": ("ARMORED", "TITAN"),
     "war_hammer_titan": ("WAR HAMMER", "TITAN"),
-    "mina": ("MINA", "HARKER"),
+    "mina": ("MINA", "VIRTUAL IDOL"),
     "tomie_kawakami": ("TOMIE", "KAWAKAMI"),
     "rize_kamishiro": ("RIZE", "KAMISHIRO"),
     "yellow_rabbit": ("YELLOW", "RABBIT"),
@@ -177,6 +177,8 @@ EXPECTED_LEGENDARY_WATERMARKS = {
     "artist_boulet": ("CARMINA", "BOULET"),
     "dredge_half_spirits_torments": ("TWISTED", "TORMENT"),
     "xenomorph_king": ("KING", "XENOMORPH"),
+    "2b": ("2B", "YORHA"),
+    "a2": ("A2", "RENEGADE"),
 }
 
 
@@ -184,7 +186,7 @@ EXPECTED_LEGENDARY_WATERMARKS = {
 class TestLegendaryRosterIntegrity:
     @pytest.fixture
     def legendary_raw(self) -> dict:
-        file_path = ROSTERS_DIR / "legendary_cosplay.json"
+        file_path = ROSTERS_DIR / "legendary_characters.json"
         with open(file_path, "r", encoding="utf-8") as f:
             return json.load(f)
 
@@ -206,8 +208,8 @@ class TestLegendaryRosterIntegrity:
             assert translations[locale].get("name"), f"legendary roster missing translated name for '{locale}'"
             assert translations[locale].get("description"), f"legendary roster missing translated description for '{locale}'"
 
-    def test_exactly_fifty_one_characters(self, legendary_entities: list[dict]) -> None:
-        assert len(legendary_entities) == 51, f"expected exactly 51 characters, got {len(legendary_entities)}"
+    def test_exactly_fifty_three_characters(self, legendary_entities: list[dict]) -> None:
+        assert len(legendary_entities) == 53, f"expected exactly 53 characters, got {len(legendary_entities)}"
 
     def test_expected_slugs_and_watermarks(self, legendary_entities: list[dict]) -> None:
         by_slug = {e["slug"]: e for e in legendary_entities}
@@ -240,8 +242,8 @@ class TestLegendaryRosterIntegrity:
             slug = char.get("slug")
             g_flags = char.get("green_flags") or []
             r_flags = char.get("red_flags") or []
-            assert 4 <= len(g_flags) <= 6, f"{slug}: expected 4-6 green_flags, got {len(g_flags)}"
-            assert 4 <= len(r_flags) <= 6, f"{slug}: expected 4-6 red_flags, got {len(r_flags)}"
+            assert 5 <= len(g_flags) <= 8, f"{slug}: expected 5-8 green_flags, got {len(g_flags)}"
+            assert 5 <= len(r_flags) <= 8, f"{slug}: expected 5-8 red_flags, got {len(r_flags)}"
             assert len(set(g_flags)) == len(g_flags), f"{slug}: duplicate green_flags found: {g_flags}"
             assert len(set(r_flags)) == len(r_flags), f"{slug}: duplicate red_flags found: {r_flags}"
 
@@ -266,8 +268,8 @@ class TestLegendaryRosterIntegrity:
                 # Check flags
                 g_flags = t_data.get("green_flags") or []
                 r_flags = t_data.get("red_flags") or []
-                assert 4 <= len(g_flags) <= 6, f"{slug}: locale '{locale}' expected 4-6 green_flags, got {len(g_flags)}"
-                assert 4 <= len(r_flags) <= 6, f"{slug}: locale '{locale}' expected 4-6 red_flags, got {len(r_flags)}"
+                assert 5 <= len(g_flags) <= 8, f"{slug}: locale '{locale}' expected 5-8 green_flags, got {len(g_flags)}"
+                assert 5 <= len(r_flags) <= 8, f"{slug}: locale '{locale}' expected 5-8 red_flags, got {len(r_flags)}"
                 assert len(set(g_flags)) == len(g_flags), f"{slug}: locale '{locale}' duplicate green_flags: {g_flags}"
                 assert len(set(r_flags)) == len(r_flags), f"{slug}: locale '{locale}' duplicate red_flags: {r_flags}"
                 assert len(g_flags) == en_g_count, f"{slug}: locale '{locale}' green_flags count ({len(g_flags)}) != EN count ({en_g_count})"

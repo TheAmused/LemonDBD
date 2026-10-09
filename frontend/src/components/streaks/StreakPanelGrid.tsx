@@ -77,7 +77,6 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
   const gauntletCompletedVariants = completionStatus.completions.gauntlet ?? [];
   const chaosCompletedVariants = completionStatus.completions.chaos ?? [];
   const historyCompletedVariants = completionStatus.completions.history ?? [];
-  const gauntletActiveRuns = completionStatus.active_runs.gauntlet ?? [];
   const chaosActiveRuns = completionStatus.active_runs.chaos ?? [];
   const historyActiveRuns = completionStatus.active_runs.history ?? [];
   const gauntletCounts = completionStatus.completion_counts.gauntlet ?? {};
@@ -120,6 +119,7 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
               key={panel.id}
               title={panel.title}
               image={panel.image}
+              creator={panel.creator}
               comingSoon
             />
           );
@@ -135,6 +135,7 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
               key={panel.id}
               title={panel.title}
               image={panel.image}
+              creator={panel.creator}
               href={`/${locale}/streaks/${role}/${panel.id}`}
               disabled
               disabledReason={mode?.disabled_reason}
@@ -148,23 +149,14 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
               key={panel.id}
               title={panel.title}
               image={panel.image}
+              creator={panel.creator}
               completed={gauntletCardCompleted}
               completedCount={gauntletCardCount}
               completedFull={gauntletCardFullCount != null}
               completedFullCount={gauntletCardFullCount}
               prefetchHrefs={[`/${locale}/streaks/${role}/gauntlet-streak`]}
-              onClick={() => {
-                const saved = getSavedGauntletMode(role as 'killer' | 'survivor');
-                const variant = `${role}_${saved}`;
-                const hasActiveRun = gauntletActiveRuns.includes(variant);
-                const savedCompleted = gauntletCompletedVariants.includes(variant);
-                // Survivors have several modes, so they always get the picker.
-                if (role !== 'survivor' && saved && (hasActiveRun || !savedCompleted)) {
-                  router.push(gauntletHref(saved));
-                } else {
-                  setIsModeModalOpen(true);
-                }
-              }}
+              // Both roles have several modes, so they always get the picker.
+              onClick={() => setIsModeModalOpen(true)}
             />
           );
         }
@@ -175,6 +167,7 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
               key={panel.id}
               title={panel.title}
               image={panel.image}
+              creator={panel.creator}
               completed={chaosCardCompleted}
               completedCount={chaosCardCount}
               completedFull={chaosCardFullCount != null}
@@ -199,6 +192,7 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
               key={panel.id}
               title={panel.title}
               image={panel.image}
+              creator={panel.creator}
               completed={historyCardCompleted}
               completedCount={historyCardCount}
               completedFull={historyCardFullCount != null}
@@ -223,6 +217,7 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
               key={panel.id}
               title={panel.title}
               image={panel.image}
+              creator={panel.creator}
               completed={pageStreakCardCompleted}
               completedCount={pageStreakCardCount}
               completedFull={pageStreakCardFullCount != null}
@@ -244,6 +239,7 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
             key={panel.id}
             title={panel.title}
             image={panel.image}
+            creator={panel.creator}
             href={`/${locale}/streaks/${role}/${panel.id}`}
           />
         );

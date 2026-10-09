@@ -10,6 +10,7 @@ import { AuthProvider } from '@/context/AuthContext';
 import { LocaleDictionaryProvider } from '@/context/LocaleDictionaryProvider';
 import { ImagePreloadProvider } from '@/components/common/ImagePreloadProvider';
 import { TooltipProvider } from '@/components/common/Tooltip';
+import { FormValidationProvider } from '@/components/common/FormValidation';
 import { AppBackground } from '@/components/layout/AppBackground';
 import { Playfair_Display } from 'next/font/google';
 import '@/app/globals.css';
@@ -84,6 +85,7 @@ export default async function RootLayout({
                 {children}
               </ImagePreloadProvider>
               <TooltipProvider />
+              <FormValidationProvider />
             </LocaleDictionaryProvider>
           </AuthProvider>
         </ThemeProvider>

@@ -15,7 +15,7 @@ export const StreakActionBar: React.FC<{ children: React.ReactNode }> = ({ child
   </div>
 );
 
-const BUTTON_VARIANT = { green: 'success', red: 'primary' } as const;
+const BUTTON_VARIANT = { green: 'success', red: 'primary', gray: 'secondary' } as const;
 
 interface StreakActionButtonProps {
   variant: keyof typeof BUTTON_VARIANT;

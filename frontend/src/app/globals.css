@@ -72,8 +72,8 @@
   --animate-dbd-spin: dbdSpinnerSpin var(--dbd-needle-speed, 1.3s) linear infinite;
   --animate-dbd-spin-reverse: dbdSpinnerSpinReverse 14s linear infinite;
   --animate-dbd-pulse: dbdSpinnerPulse 1.6s ease-in-out infinite;
-  --animate-ps-enter: psPageEnter 400ms ease-out both;
-  --animate-ps-reset: psPageReset 600ms ease-in-out both;
+  --animate-ps-enter: psPageEnter 300ms ease-out both;
+  --animate-ps-reset: psPageReset 450ms ease-out both;
   --animate-ps-rise: psRise 200ms ease-out both;
   --animate-ps-pulse: psCompletePulse 800ms ease-in-out 1;
   --animate-gn-frame: gnLandFrame 520ms cubic-bezier(0.22, 1.4, 0.36, 1) both;
@@ -544,7 +544,7 @@
 @keyframes psPageEnter {
   from {
     opacity: 0;
-    transform: translateX(24px);
+    transform: translateX(16px);
   }
 
   to {
@@ -553,19 +553,18 @@
   }
 }
 
+/* Back to page 1 after a loss: the page comes back from grey in a single pass. */
 @keyframes psPageReset {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+    filter: grayscale(1);
+  }
 
-  0%,
-  100% {
+  to {
     opacity: 1;
     transform: scale(1);
     filter: grayscale(0);
-  }
-
-  45% {
-    opacity: 0.35;
-    transform: scale(0.97);
-    filter: grayscale(1);
   }
 }
 
@@ -710,11 +709,11 @@
 
 /* Animation Utility Classes (Preserved for backwards compatibility) */
 .ps-page-enter {
-  animation: psPageEnter 400ms ease-out both;
+  animation: psPageEnter 300ms ease-out both;
 }
 
 .ps-page-reset {
-  animation: psPageReset 600ms ease-in-out both;
+  animation: psPageReset 450ms ease-out both;
 }
 
 .ps-rise {

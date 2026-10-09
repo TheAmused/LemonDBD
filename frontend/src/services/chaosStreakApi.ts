@@ -35,8 +35,8 @@ export async function submitChaosResult(
   return data.run;
 }
 
-export async function resetChaosRun(token: string, difficulty: Difficulty): Promise<ChaosRun> {
-  const data = await postJson<ChaosRunResponse>(token, '/run/reset', { difficulty });
+export async function abandonChaosRun(token: string, difficulty: Difficulty): Promise<ChaosRun> {
+  const data = await postJson<ChaosRunResponse>(token, '/run/abandon', { difficulty });
   return data.run;
 }
 

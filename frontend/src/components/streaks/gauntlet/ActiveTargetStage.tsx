@@ -12,6 +12,7 @@ import { StreakActionBar, StreakActionButton } from '../StreakActionBar';
 import { RevealPortrait, CompactPlayerBuild } from "./ActiveTargetStageParts";
 import { Spinner } from '@/components/common/Spinner';
 import { useDictionary } from "@/context/DictionaryContext";
+import { useChallengeAnimations } from '../useChallengeAnimations';
 
 export interface ActiveTargetStageProps {
   run: GauntletRun | null;
@@ -27,8 +28,14 @@ export interface ActiveTargetStageProps {
   pendingPick?: string | null;
   onAcceptPick?: () => void;
   holdReel?: boolean;
+  /** A killer the player bought with tokens: it replaces the current one at once, with no draw. */
+  instantTarget?: string | null;
   shownTarget: string | null;
   onShownTargetChange: (name: string | null) => void;
+  /** Free perk slots bought with tokens for this match. */
+  bonusSlots?: number;
+  /** While a killer is being bought, these buttons stand in for WON and LOST. */
+  buyPick?: { confirmLabel: string; cancelLabel: string; canConfirm: boolean; onConfirm: () => void; onCancel: () => void };
 }
 
 export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
@@ -43,11 +50,15 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
       pendingPick = null,
       onAcceptPick,
       holdReel = false,
+      instantTarget = null,
       shownTarget,
       onShownTargetChange,
+      bonusSlots = 0,
+      buyPick,
     }) => {
   const dict = useDictionary();
   const characterDisplayName = useCharacterDisplayName();
+  const [animations] = useChallengeAnimations();
 
   const targetName = run?.current_character_id || run?.current_loadout?.character || '';
   const completed = run?.completed_characters || [];
@@ -96,8 +107,8 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
   );
 
   const isRevealed = Boolean(run?.target_revealed);
-  // A player-picked character shows up at once; there is nothing to roll.
-  const skipDraw = pickCharacter;
+  // A player-picked character shows up at once, and so does every draw when the animations are off.
+  const skipDraw = pickCharacter || !animations || (instantTarget != null && instantTarget === targetName);
   const awaitingDraw = !skipDraw && isRevealed && Boolean(targetName) && shownTarget !== targetName;
 
   useEffect(() => {
@@ -258,7 +269,16 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
   const tierInfo =
     run.tier_info ||
     { name: 'The Warm Up', tier_level: 0, perk_limit: 4, character_perks_only: false, description: '' };
-  const actionButtons = (
+  const actionButtons = buyPick ? (
+    <StreakActionBar>
+      <StreakActionButton variant="gray" onClick={buyPick.onCancel} disabled={loading}>
+        {buyPick.cancelLabel}
+      </StreakActionButton>
+      <StreakActionButton variant="red" onClick={buyPick.onConfirm} disabled={loading || !buyPick.canConfirm}>
+        {buyPick.confirmLabel}
+      </StreakActionButton>
+    </StreakActionBar>
+  ) : (
     <StreakActionBar>
       <StreakActionButton variant="red" onClick={onLoss} disabled={loading}>
         {dict.streaks.loseMatch}
@@ -287,6 +307,7 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
               tierInfo={tierInfo}
               playersPerCharacter={loadout.players_per_character ?? 1}
               isTeam={isTeam}
+              bonusSlots={bonusSlots}
             />
           ))}
         </div>

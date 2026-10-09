@@ -312,6 +312,7 @@ export async function syncSessionVotes(
 /** A signed-in viewer's effects-and-music choice, as the backend stores it. */
 export interface RemoteSmashPrefs {
   effects: boolean;
+  sounds: boolean;
   music: boolean;
   chosen_at: number;
 }

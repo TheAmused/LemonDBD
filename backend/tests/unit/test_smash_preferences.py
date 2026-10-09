@@ -35,21 +35,35 @@ class TestSmashPreferences:
     def test_save_then_read_back(self, app: Flask, db_session: Session) -> None:
         user = _create_user(db_session)
         client = app.test_client()
-        res = client.put(URL, headers=_headers(user.id), json={"effects": False, "music": True, "chosen_at": 1000})
+        res = client.put(URL, headers=_headers(user.id), json={"effects": False, "sounds": True, "music": True, "chosen_at": 1000})
         assert res.status_code == 200
-        assert res.get_json() == {"data": {"effects": False, "music": True, "chosen_at": 1000}, "applied": True}
-        assert client.get(URL, headers=_headers(user.id)).get_json()["data"] == {
-            "effects": False,
-            "music": True,
-            "chosen_at": 1000,
-        }
+        saved = {"effects": False, "sounds": True, "music": True, "chosen_at": 1000}
+        assert res.get_json() == {"data": saved, "applied": True}
+        assert client.get(URL, headers=_headers(user.id)).get_json()["data"] == saved
+
+    def test_sound_effects_have_their_own_switch(self, app: Flask, db_session: Session) -> None:
+        user = _create_user(db_session)
+        client = app.test_client()
+        res = client.put(
+            URL, headers=_headers(user.id), json={"effects": True, "sounds": False, "music": True, "chosen_at": 5}
+        )
+        assert res.get_json()["data"] == {"effects": True, "sounds": False, "music": True, "chosen_at": 5}
+
+    def test_a_client_without_the_sounds_switch_gets_it_from_effects(self, app: Flask, db_session: Session) -> None:
+        user = _create_user(db_session)
+        client = app.test_client()
+        res = client.put(URL, headers=_headers(user.id), json={"effects": False, "music": True, "chosen_at": 5})
+        assert res.get_json()["data"] == {"effects": False, "sounds": False, "music": True, "chosen_at": 5}
 
     def test_a_later_choice_replaces_an_earlier_one(self, app: Flask, db_session: Session) -> None:
         user = _create_user(db_session)
         client = app.test_client()
         client.put(URL, headers=_headers(user.id), json={"effects": False, "music": False, "chosen_at": 1000})
         res = client.put(URL, headers=_headers(user.id), json={"effects": True, "music": True, "chosen_at": 2000})
-        assert res.get_json() == {"data": {"effects": True, "music": True, "chosen_at": 2000}, "applied": True}
+        assert res.get_json() == {
+            "data": {"effects": True, "sounds": True, "music": True, "chosen_at": 2000},
+            "applied": True,
+        }
         assert db_session.query(SmashUserPreference).count() == 1
 
     def test_an_older_choice_does_not_overwrite_a_newer_one(self, app: Flask, db_session: Session) -> None:
@@ -57,7 +71,10 @@ class TestSmashPreferences:
         client = app.test_client()
         client.put(URL, headers=_headers(user.id), json={"effects": False, "music": False, "chosen_at": 2000})
         res = client.put(URL, headers=_headers(user.id), json={"effects": True, "music": True, "chosen_at": 1000})
-        assert res.get_json() == {"data": {"effects": False, "music": False, "chosen_at": 2000}, "applied": False}
+        assert res.get_json() == {
+            "data": {"effects": False, "sounds": False, "music": False, "chosen_at": 2000},
+            "applied": False,
+        }
 
     def test_a_choice_dated_in_the_future_cannot_pin_the_account(self, app: Flask, db_session: Session) -> None:
         user = _create_user(db_session)
@@ -91,3 +108,4 @@ class TestSmashPreferences:
         exported = export_user_data(user.id, "self")
         assert exported["smash_or_pass_preferences"][0]["effects_enabled"] is False
         assert exported["smash_or_pass_preferences"][0]["music_enabled"] is True
+        assert "sounds_enabled" in exported["smash_or_pass_preferences"][0]

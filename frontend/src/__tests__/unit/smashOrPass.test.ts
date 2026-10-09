@@ -137,9 +137,9 @@ test('SmashOrPass: Sound Effects & Web Audio Synthesizer', async (t) => {
   });
 
   await t.test('SmashSounds plays only what the viewer chose (one switch: the preferences)', () => {
-    assert.doesNotThrow(() => SmashSounds.applyPreferences({ effects: false, music: false }));
+    assert.doesNotThrow(() => SmashSounds.applyPreferences({ sounds: false, music: false }));
     assert.doesNotThrow(() => SmashSounds.playSmashSound());
-    assert.doesNotThrow(() => SmashSounds.applyPreferences({ effects: true, music: false }));
+    assert.doesNotThrow(() => SmashSounds.applyPreferences({ sounds: true, music: false }));
   });
 
   await t.test('SmashSounds BGM controls can be invoked without throw', () => {

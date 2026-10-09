@@ -26,5 +26,6 @@ def write_preferences():
         payload = SmashPreferenceIn(**(request.get_json(silent=True) or {}))
     except ValidationError as err:
         return jsonify({"error": "Invalid preferences", "details": err.errors(include_url=False, include_context=False)}), 400
-    data, applied = save_preferences(g.current_user.id, payload.effects, payload.music, payload.chosen_at)
+    sounds = payload.effects if payload.sounds is None else payload.sounds
+    data, applied = save_preferences(g.current_user.id, payload.effects, sounds, payload.music, payload.chosen_at)
     return jsonify({"data": data, "applied": applied}), 200

@@ -1,4 +1,4 @@
-"""A signed-in viewer's effects-and-music choice for the Smash or Pass page."""
+"""A signed-in viewer's effects, sound-effects and music choice for the Smash or Pass page."""
 import time
 from typing import Any
 
@@ -12,7 +12,9 @@ def get_preferences(user_id: int) -> dict[str, Any] | None:
     return row.to_dict() if row else None
 
 
-def save_preferences(user_id: int, effects: bool, music: bool, chosen_at: int) -> tuple[dict[str, Any], bool]:
+def save_preferences(
+    user_id: int, effects: bool, sounds: bool, music: bool, chosen_at: int
+) -> tuple[dict[str, Any], bool]:
     """Stores the choice unless the account already holds a later one.
 
     Returns the choice the account ends up with and whether it is the one that was sent. A device
@@ -28,6 +30,7 @@ def save_preferences(user_id: int, effects: bool, music: bool, chosen_at: int) -
         row = SmashUserPreference(user_id=user_id)
         db.session.add(row)
     row.effects_enabled = effects
+    row.sounds_enabled = sounds
     row.music_enabled = music
     row.chosen_at = chosen_at
     db.session.commit()

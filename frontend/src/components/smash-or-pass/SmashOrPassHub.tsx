@@ -34,7 +34,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ locale = 'en' })
   const { activeRoster, selectedRosterSlug } = rosters;
   const prefs = useSmashPrefs();
   const { effectsEnabled } = prefs;
-  const overlays = useHubOverlays(prefs.needsChoice || prefs.isSettingsOpen);
+  const overlays = useHubOverlays(prefs.isOpen);
   const exit = useCardExit();
   useSmashSound();
 
@@ -221,11 +221,11 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ locale = 'en' })
       <RosterModals locale={locale} overlays={overlays} rosters={rosters} />
 
       <EffectsPreferenceModal
-        isOpen={prefs.needsChoice || prefs.isSettingsOpen}
-        mandatory={prefs.needsChoice}
-        current={prefs.prefs}
-        onSave={prefs.save}
-        onClose={prefs.closeSettings}
+        isOpen={prefs.isOpen}
+        mandatory={prefs.prefs === null}
+        values={prefs.shown}
+        onChange={prefs.update}
+        onClose={prefs.close}
       />
 
       <HubModals

@@ -1,22 +1,25 @@
 // frontend/src/components/smash-or-pass/prefs/smashPrefs.ts
 
 /**
- * What the viewer chose on the page's warning: whether visual and sound effects play, and
- * whether the music does. `chosenAt` is when (ms since the epoch); it is what decides which of
+ * What the viewer chose on the page's warning: whether visual effects (flashes, particles, card
+ * motion), sound effects and music play. `chosenAt` is when (ms since the epoch); it is what decides which of
  * two saved choices -- this device's and the account's -- is the newer one.
  */
 export interface SmashPrefs {
   effects: boolean;
+  sounds: boolean;
   music: boolean;
   chosenAt: number;
 }
 
 const PREFS_KEY = 'lemondbd_smash_prefs_v1';
 
-function isPrefs(value: unknown): value is SmashPrefs {
-  if (!value || typeof value !== 'object') return false;
+/** A saved choice, or null when it is malformed. One saved before sound effects had their own switch follows `effects`. */
+function parsePrefs(value: unknown): SmashPrefs | null {
+  if (!value || typeof value !== 'object') return null;
   const v = value as Record<string, unknown>;
-  return typeof v.effects === 'boolean' && typeof v.music === 'boolean' && typeof v.chosenAt === 'number';
+  if (typeof v.effects !== 'boolean' || typeof v.music !== 'boolean' || typeof v.chosenAt !== 'number') return null;
+  return { effects: v.effects, sounds: typeof v.sounds === 'boolean' ? v.sounds : v.effects, music: v.music, chosenAt: v.chosenAt };
 }
 
 /** This device's saved choice, or null when the viewer has not made one here. */
@@ -25,7 +28,7 @@ export function readLocalPrefs(): SmashPrefs | null {
   try {
     const raw = localStorage.getItem(PREFS_KEY);
     const parsed: unknown = raw ? JSON.parse(raw) : null;
-    return isPrefs(parsed) ? parsed : null;
+    return parsePrefs(parsed);
   } catch {
     return null;
   }
@@ -44,6 +47,12 @@ export function writeLocalPrefs(prefs: SmashPrefs): void {
 export function prefersReducedMotion(): boolean {
   if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') return false;
   return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+}
+
+/** What the switches show before the viewer has chosen: on, unless the device asks for less motion. */
+export function defaultPrefs(): Omit<SmashPrefs, 'chosenAt'> {
+  const reduced = prefersReducedMotion();
+  return { effects: !reduced, sounds: true, music: !reduced };
 }
 
 export interface Reconciled {

@@ -175,7 +175,7 @@ def serialize_smash_entity(e: Entity, username_by_user_id: dict[int, str]) -> di
         "role": e.role,
         "gender": e.gender,
         "media_url": e.media_url,
-        "media_type": e.media_type,
+        "media_display": e.media_display,
         "watermark_left": e.watermark_left,
         "watermark_right": e.watermark_right,
         "archetype": e.archetype,
@@ -193,7 +193,6 @@ def serialize_smash_entity(e: Entity, username_by_user_id: dict[int, str]) -> di
         "chaos_score": e.chaos_score,
         "translations": e.translations or {},
         "order_index": e.order_index,
-        "is_active": e.is_active,
         "stat": e.stat.to_dict() if e.stat else None,
         "votes": [
             {

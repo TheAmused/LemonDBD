@@ -117,9 +117,6 @@ function sanitizeEntity(
   const entity: SmashRosterDocumentEntity = { id, name, role, gender };
   if (media_url) entity.media_url = media_url;
 
-  const media_type = cleanText(entry.media_type, 16);
-  if (media_type) entity.media_type = media_type;
-
   const real_name = cleanText(entry.real_name, SMASH_ROSTER_LIMITS.maxRealName, counter);
   if (real_name) entity.real_name = real_name;
 

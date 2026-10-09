@@ -98,8 +98,10 @@ class TestSmashSeederService:
         active_rosters = service.get_rosters(active_only=True)
         all_rosters = service.get_rosters(active_only=False)
 
-        assert len(active_rosters) == 4
+        # canon_gemini is seeded but switched off, so it is in the full list and not the active one.
+        assert len(active_rosters) == 3
         assert len(all_rosters) == 7
+        assert "canon_gemini" not in {r["slug"] for r in active_rosters}
         canon = next((r for r in active_rosters if r["slug"] == "canon"), None)
         assert canon is not None
         assert canon["entity_count"] == 98

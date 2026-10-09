@@ -1,1574 +1,244 @@
 'use client';
 // frontend/src/components/smash-or-pass/SmashOrPassHub.tsx
-import type { Dictionary } from '@/locales/types';
-
-import React, { useState, useEffect, useCallback, useMemo, useRef, Suspense } from 'react';
-import dynamic from 'next/dynamic';
-import { useRouter } from 'next/navigation';
-import {
-  Heart,
-  Volume2,
-  VolumeX,
-  Music,
-  RotateCcw,
-  Sparkles,
-  Shuffle,
-  HelpCircle,
-  Layers,
-  ChevronDown,
-  Trash2,
-  AlertTriangle,
-  ThumbsDown,
-  RotateCw,
-  Maximize2,
-  Gamepad2,
-  SlidersHorizontal,
-} from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Tooltip } from '@/components/common/Tooltip';
-import { Modal } from '@/components/common/Modal';
-import { CharacterCard } from './CharacterCard';
-import { shuffleArray } from '@/utils/shuffleArray';
-import { hasAcknowledgedNsfwRoster, acknowledgeNsfwRoster } from '@/utils/nsfwAck';
-import { SmashSounds } from './SmashSoundEffects';
-import {
-  EntityItem,
-  RosterItem,
-  CharacterRole,
-  CharacterGender,
-  LeaderboardItem,
-} from '@/types/smashOrPass';
-import {
-  fetchRosters,
-  fetchRosterFeed,
-  castVote as apiCastVote,
-  fetchLeaderboard,
-  resetSessionVotes as apiResetSessionVotes,
-  resetUserVotes as apiResetUserVotes,
-  fetchUserVotes,
-  syncSessionVotes as apiSyncSessionVotes,
-} from '@/services/smashApi';
+import React, { Suspense, useCallback, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
-import { useSmashRosterStore } from '@/hooks/useSmashRosterStore';
-import { getBackendBaseUrl } from '@/utils/perkUtils';
-import { decodeArchetypeShare, type SharedArchetypePayload } from '@/utils/smashPersona';
-import {
-  customEntityToEntityItem,
-  customRosterToRosterItem,
-  isLocalRosterSlug,
-  localRosterIdFromSlug,
-} from '@/utils/smashOrPass/localRoster';
-import { deleteCustomRoster } from '@/utils/smashOrPass/storage';
-import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
-import { IridescentShardIcon } from '@/components/icons/DbdIcons';
-import { Button } from '@/components/common/Button';
-import { Surface } from '@/components/common/Surface';
-import { isKiller as isKillerRole, isSurvivor as isSurvivorRole } from '@/utils/characterUtils';
-import { formatMessage } from '@/utils/i18nFormat';
-import { useDictionary } from "@/context/DictionaryContext";
-
-// Dynamic client-side imports for heavy visual layers and interactive modals
-const SmashAnimations = dynamic(
-  () => import('./SmashAnimations').then((m) => m.SmashAnimations),
-  { ssr: false }
-);
-
-const InteractiveDragBackground = dynamic(
-  () => import('./InteractiveDragBackground').then((m) => m.InteractiveDragBackground),
-  { ssr: false }
-);
-
-const FloatingLoreScattered = dynamic(
-  () => import('./FloatingLoreScattered').then((m) => m.FloatingLoreScattered),
-  { ssr: false }
-);
-
-const TactileKeycaps = dynamic(
-  () => import('./TactileKeycaps').then((m) => m.TactileKeycaps),
-  { ssr: false }
-);
-
-const SmashLeaderboardModal = dynamic(
-  () => import('./SmashLeaderboardModal').then((m) => m.SmashLeaderboardModal),
-  { ssr: false }
-);
-
-const CharacterStatsModal = dynamic(
-  () => import('./CharacterStatsModal').then((m) => m.CharacterStatsModal),
-  { ssr: false }
-);
-
-const RomancePersonaModal = dynamic(
-  () => import('./RomancePersonaModal').then((m) => m.RomancePersonaModal),
-  { ssr: false }
-);
-
-const RosterSelectModal = dynamic(
-  () => import('./RosterSelectModal').then((m) => m.RosterSelectModal),
-  { ssr: false }
-);
-
-const SmashRosterImportModal = dynamic(
-  () => import('./SmashRosterImportModal').then((m) => m.SmashRosterImportModal),
-  { ssr: false }
-);
-
-const SmashRosterExportModal = dynamic(
-  () => import('./SmashRosterExportModal').then((m) => m.SmashRosterExportModal),
-  { ssr: false }
-);
+import { SmashSounds } from './SmashSoundEffects';
+import { CardArena } from './hub/CardArena';
+import { HowToPlayModal } from './hub/HowToPlayModal';
+import { HubFilterDrawer } from './hub/HubFilterDrawer';
+import { HubHeader } from './hub/HubHeader';
+import { HubModals } from './hub/HubModals';
+import { RosterModals } from './hub/RosterModals';
+import { FloatingLoreScattered, InteractiveDragBackground, SmashAnimations } from './hub/lazyParts';
+import { useCardExit } from './hub/useCardExit';
+import { useHubHotkeys } from './hub/useHubHotkeys';
+import { CalmVoteMark } from './hub/CalmVoteMark';
+import { useHubOverlays } from './hub/useHubOverlays';
+import { EffectsPreferenceModal } from './prefs/EffectsPreferenceModal';
+import { useSmashPrefs } from './prefs/useSmashPrefs';
+import { useSmashDeck } from './hub/useSmashDeck';
+import { useSmashRosters } from './hub/useSmashRosters';
+import { useSmashSound } from './hub/useSmashSound';
+import { useSmashVoting } from './hub/useSmashVoting';
+import { useSmashVotes } from './hub/useSmashVotes';
 
 interface SmashOrPassHubProps {
   locale?: string;
 }
 
-/** Roster slugs from the API -> the key their names live under in dict.smashOrPass.rosters. */
-const ROSTER_DICT_KEY: Record<string, string> = {
-  hooked_on_you: 'hoy',
-  legendary_characters: 'legendary',
-  cyberpunk_2077: 'cyberpunk',
-  anime_manga: 'anime',
-  gothic_eldritch: 'gothic',
-};
-
-/** One persisted vote; older saves put the slug on the vote itself instead of on `character`. */
-type StoredVote = { character: EntityItem; vote: 'smash' | 'pass'; timestamp: number; slug?: string; character_slug?: string };
-
-function voteSlug(v: StoredVote): string | undefined {
-  return v.character?.slug || v.slug || v.character_slug;
-}
-
 export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ locale = 'en' }) => {
-  const dict = useDictionary();
-  const backendBase = getBackendBaseUrl();
-  const router = useRouter();
-  const { user, token, isAuthenticated } = useAuth();
-  const { state: customRosterStore } = useSmashRosterStore();
+  const { isAuthenticated } = useAuth();
 
-  // Rosters State (Database-Driven)
-  const [rosters, setRosters] = useState<RosterItem[]>([]);
-  const [rosterPendingDelete, setRosterPendingDelete] = useState<{ id: string; name: string } | null>(null);
-  const [isImportModalOpen, setIsImportModalOpen] = useState<boolean>(false);
-  const [exportingRosterId, setExportingRosterId] = useState<string | null>(null);
+  // Order matters: the votes' initial state reads the roster the rosters hook just restored.
+  const rosters = useSmashRosters(locale);
+  const { activeRoster, selectedRosterSlug } = rosters;
+  const prefs = useSmashPrefs();
+  const { effectsEnabled } = prefs;
+  const overlays = useHubOverlays(prefs.isOpen);
+  const exit = useCardExit();
+  useSmashSound();
 
-  // Every pickable roster: the official ones the database serves, plus the
-  // viewer's own saved in this browser. The picker (and `activeRoster` below)
-  // never distinguish the two beyond `is_local` -- see utils/smashOrPass/localRoster.ts.
-  const allRosters = useMemo<RosterItem[]>(() => {
-    const local = Object.values(customRosterStore.custom).map(customRosterToRosterItem);
-    return [...rosters, ...local];
-  }, [rosters, customRosterStore]);
-  const [selectedRosterSlug, setSelectedRosterSlug] = useState<string>(() => {
-    if (typeof window !== 'undefined') {
-      // `?roster=<slug>` wins over the remembered choice -- the roster
-      // creator lands here with it set right after creating/publishing a
-      // roster, so the thing the viewer just built is what they see.
-      const fromQuery = new URLSearchParams(window.location.search).get('roster');
-      if (fromQuery) {
-        localStorage.setItem('dbd_smash_selected_roster', fromQuery);
-        return fromQuery;
-      }
-      return localStorage.getItem('dbd_smash_selected_roster') || 'canon';
-    }
-    return 'canon';
+  const deck = useSmashDeck({
+    selectedRosterSlug,
+    customRosterStore: rosters.customRosterStore,
+    onFeedSettled: exit.resetExit,
   });
+  const votes = useSmashVotes(selectedRosterSlug);
 
-  // Filters State
-  const [roleFilter, setRoleFilter] = useState<'all' | string>('all');
-  const [genderFilter, setGenderFilter] = useState<'all' | string>('all');
-
-  // Deck & Card State (Database-Driven Entities)
-  const [deck, setDeck] = useState<EntityItem[]>([]);
-  const [currentIndex, setCurrentIndex] = useState<number>(0);
-  const [totalRemaining, setTotalRemaining] = useState<number>(0);
-  const [leaderboardItems, setLeaderboardItems] = useState<LeaderboardItem[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-
-  // NSFW Content Gate: a roster flagged is_nsfw is blurred/blocked behind an
-  // explicit confirmation until the viewer clicks through it, once per roster
-  // per browser (persisted via nsfwAck.ts, not re-prompted every card).
-  const [nsfwAcknowledged, setNsfwAcknowledged] = useState<boolean>(false);
-
-  // Single-Card Exit Lifecycle (1.6s Full Duration)
-  const [isExiting, setIsExiting] = useState<boolean>(false);
-  const [exitVote, setExitVote] = useState<'smash' | 'pass' | null>(null);
-  const [exitOffset, setExitOffset] = useState<{ x: number; y: number } | undefined>(undefined);
-  const exitTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-
-  // Live Drag State
-  const [dragPhysics, setDragPhysics] = useState<{ x: number; y: number; isDragging: boolean }>({
-    x: 0,
-    y: 0,
-    isDragging: false,
-  });
-
-  // Voting History & Session State (Persisted in localStorage & synced with backend)
-  const [voteHistory, setVoteHistory] = useState<StoredVote[]>(() => {
-    if (typeof window !== 'undefined') {
-      try {
-        const storedRoster = localStorage.getItem('dbd_smash_selected_roster') || 'canon';
-        const raw = localStorage.getItem(`dbd_smash_votes_${storedRoster}`);
-        if (raw) {
-          const parsed = JSON.parse(raw);
-          if (Array.isArray(parsed)) return parsed;
-        }
-      } catch { }
-    }
-    return [];
-  });
-
-  const sessionSmashes = useMemo(() => {
-    return voteHistory.filter((v) => v.vote === 'smash').length;
-  }, [voteHistory]);
-
-  const sessionPasses = useMemo(() => {
-    return voteHistory.filter((v) => v.vote === 'pass').length;
-  }, [voteHistory]);
-
-  // Animation Triggers
-  const [animTrigger, setAnimTrigger] = useState<{
-    type: 'smash' | 'pass' | null;
-    key: number;
-    originX?: number;
-    originY?: number;
-  }>({ type: null, key: 0 });
-
-  // Modals & UI Controls
-  const [isRosterModalOpen, setIsRosterModalOpen] = useState<boolean>(false);
-  const [isFilterDrawerOpen, setIsFilterDrawerOpen] = useState<boolean>(false);
-  const [rosterSwitchEffect, setRosterSwitchEffect] = useState<string | null>(null);
-  const [isLeaderboardOpen, setIsLeaderboardOpen] = useState<boolean>(false);
-  const [isPersonaOpen, setIsPersonaOpen] = useState<boolean>(false);
-  const [sharedPayload, setSharedPayload] = useState<SharedArchetypePayload | null>(null);
-  const [isResetConfirmOpen, setIsResetConfirmOpen] = useState<boolean>(false);
-
-  // Decode Shared Archetype from URL query parameters if present
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-    try {
-      const searchParams = new URLSearchParams(window.location.search);
-      const encodedArchetype = searchParams.get('shared_archetype');
-      if (encodedArchetype) {
-        const decoded = decodeArchetypeShare(encodedArchetype);
-        if (decoded) {
-          setSharedPayload(decoded);
-          setIsPersonaOpen(true);
-        }
-      }
-    } catch {
-      // Best-effort: failure here is non-fatal.
-    }
-  }, []);
-  const [isHowToPlayOpen, setIsHowToPlayOpen] = useState<boolean>(false);
-  const [selectedStatCharacter, setSelectedStatCharacter] = useState<EntityItem | null>(null);
-  const [isMuted, setIsMuted] = useState<boolean>(SmashSounds.getIsMuted());
-  const [isBgmPlaying, setIsBgmPlaying] = useState<boolean>(SmashSounds.getIsBgmPlaying());
-  const [isSoundActive, setIsSoundActive] = useState<boolean>(!SmashSounds.getIsMuted());
-
-  // Active Roster Metadata
-  const activeRoster: RosterItem = useMemo(() => {
-    return (
-      allRosters.find((r) => r.slug === selectedRosterSlug) || {
-        id: 'canon',
-        slug: 'canon',
-        name: 'Dead by Daylight: Fog Canon',
-        description: 'Official 98 Characters',
-        theme_color: '#dc2626',
-        category: 'DBD Canon',
-        is_nsfw: false,
-        is_active: true,
-      }
-    );
-  }, [allRosters, selectedRosterSlug]);
-
-  const availableRoles = useMemo(() => {
-    if (isLocalRosterSlug(selectedRosterSlug)) {
-      const id = localRosterIdFromSlug(selectedRosterSlug);
-      const stored = customRosterStore.custom[id];
-      const set = new Set<string>();
-      (stored?.entities || []).forEach((e) => {
-        if (e.role) set.add(e.role);
-      });
-      if (set.size > 0) return Array.from(set);
-    }
-    return ['Survivor', 'Killer'];
-  }, [selectedRosterSlug, customRosterStore]);
-
-  const availableGenders = useMemo(() => {
-    if (isLocalRosterSlug(selectedRosterSlug)) {
-      const id = localRosterIdFromSlug(selectedRosterSlug);
-      const stored = customRosterStore.custom[id];
-      const set = new Set<string>();
-      (stored?.entities || []).forEach((e) => {
-        if (e.gender) set.add(e.gender);
-      });
-      if (set.size > 0) return Array.from(set);
-    }
-    return ['female', 'male', 'monster_other'];
-  }, [selectedRosterSlug, customRosterStore]);
-
-  // Re-check acknowledgment whenever the active roster changes (including on
-  // first mount for whatever roster was restored from localStorage).
-  useEffect(() => {
-    setNsfwAcknowledged(hasAcknowledgedNsfwRoster(activeRoster.slug));
-  }, [activeRoster.slug]);
-
-  const handleAcknowledgeNsfw = useCallback(() => {
-    acknowledgeNsfwRoster(activeRoster.slug);
-    setNsfwAcknowledged(true);
-  }, [activeRoster.slug]);
-
-  const getRosterCover = useCallback((r: RosterItem) => {
-    if (r.cover_image_url) {
-      return r.cover_image_url.startsWith('http') || r.cover_image_url.startsWith('data:')
-        ? r.cover_image_url
-        : `${getBackendBaseUrl()}${r.cover_image_url}`;
-    }
-    // A local roster has no backend static asset to fall back to.
-    if (r.is_local) return `${getBackendBaseUrl()}/static/avatars/survivors/sable_ward.webp`;
-    return `${getBackendBaseUrl()}/static/avatars/rosters/${r.slug}.webp`;
-  }, []);
-
-  // 1. Fetch available rosters from PostgreSQL database
-  const loadRosters = useCallback(async () => {
-    try {
-      const rosterList = await fetchRosters();
-      if (rosterList && rosterList.length > 0) {
-        setRosters(rosterList);
-      }
-    } catch {
-      // Best-effort: failure here is non-fatal.
-    }
-  }, []);
-
-  // 2. Fetch Leaderboard from PostgreSQL database
-  const loadLeaderboard = useCallback(async () => {
-    // No leaderboards for custom rosters (see the smash-or-pass roster
-    // creator plan's explicit non-goals) -- there is no shared vote table row
-    // for a roster the backend has never heard of.
-    if (isLocalRosterSlug(selectedRosterSlug)) {
-      setLeaderboardItems([]);
-      return;
-    }
-    try {
-      const items = await fetchLeaderboard(selectedRosterSlug);
-      if (items) {
-        setLeaderboardItems(items);
-      }
-    } catch {
-      // Best-effort: failure here is non-fatal.
-    }
-  }, [selectedRosterSlug]);
-
-  // 3. Fetch Roster Feed from PostgreSQL database
-  const loadFeed = useCallback(async () => {
-    setLoading(true);
-    try {
-      // A local roster has no server-side feed (no session, no vote table row
-      // to filter "already voted" candidates against) -- it is simply its own
-      // entity list, played in full every time, shuffled the same way an API
-      // feed's entities are.
-      if (isLocalRosterSlug(selectedRosterSlug)) {
-        const id = localRosterIdFromSlug(selectedRosterSlug);
-        const stored = customRosterStore.custom[id];
-        const entities = (stored?.entities ?? [])
-          .filter((e) => roleFilter === 'all' || e.role === roleFilter)
-          .filter((e) => genderFilter === 'all' || e.gender === genderFilter)
-          .map((e, i) => customEntityToEntityItem(selectedRosterSlug, e, i));
-        const shuffled = shuffleArray(entities);
-        setDeck(shuffled);
-        setCurrentIndex(0);
-        setTotalRemaining(shuffled.length);
-        return;
-      }
-
-      const feed = await fetchRosterFeed(selectedRosterSlug, {
-        role: roleFilter !== 'all' ? roleFilter : undefined,
-        gender: genderFilter !== 'all' ? genderFilter : undefined,
-        limit: 300,
-      });
-
-      if (feed && feed.entities) {
-        const shuffled = shuffleArray(feed.entities);
-        setDeck(shuffled);
-        setCurrentIndex(0);
-        setTotalRemaining(feed.total_remaining ?? feed.entities.length);
-      }
-    } catch {
-      // Best-effort: failure here is non-fatal.
-    } finally {
-      setLoading(false);
-      setIsExiting(false);
-      setExitVote(null);
-      setExitOffset(undefined);
-    }
-  }, [selectedRosterSlug, roleFilter, genderFilter, customRosterStore]);
-
-  // Synchronize vote history from LocalStorage & Backend
-  const syncVotes = useCallback(async (rosterSlug: string) => {
-    let currentVotes: StoredVote[] = [];
-    if (typeof window !== 'undefined') {
-      try {
-        const raw = localStorage.getItem(`dbd_smash_votes_${rosterSlug}`);
-        if (raw) {
-          const parsed = JSON.parse(raw);
-          if (Array.isArray(parsed)) currentVotes = parsed;
-        }
-      } catch { }
-    }
-
-    // A local roster has no backend session/account to sync against -- there
-    // is no server that has ever heard of it, so its vote history is exactly
-    // and only what is already in localStorage, read above.
-    if (!isLocalRosterSlug(rosterSlug)) {
-      // If user is authenticated, migrate any guest session votes to user account
-      if (isAuthenticated || token || user?.id) {
-        try {
-          await apiSyncSessionVotes(rosterSlug);
-        } catch {
-          // Best-effort: failure here is non-fatal.
-        }
-      }
-
-      try {
-        const backendVotes = await fetchUserVotes(rosterSlug);
-        if (backendVotes && backendVotes.length > 0) {
-          const existingSlugs = new Set(currentVotes.map((v) => voteSlug(v)));
-          const merged = [...currentVotes];
-
-          backendVotes.forEach((bv) => {
-            if (!existingSlugs.has(bv.character_slug)) {
-              const voteType: 'smash' | 'pass' = bv.vote_type === 'pass' ? 'pass' : 'smash';
-              merged.push({
-                character: (bv.entity || {
-                  id: bv.character_slug,
-                  slug: bv.character_slug,
-                  name: bv.character_name || bv.character_slug,
-                  role: bv.role || 'Survivor',
-                  gender: bv.gender || 'female',
-                  order_index: 0,
-                  is_active: true,
-                  roster_id: rosterSlug,
-                }) as EntityItem,
-                vote: voteType,
-                timestamp: bv.created_at ? new Date(bv.created_at).getTime() : Date.now(),
-              });
-              existingSlugs.add(bv.character_slug);
-            }
-          });
-
-          currentVotes = merged;
-        }
-      } catch {
-        // Best-effort: failure here is non-fatal.
-      }
-    }
-
-    if (typeof window !== 'undefined' && currentVotes.length > 0) {
-      try {
-        localStorage.setItem(`dbd_smash_votes_${rosterSlug}`, JSON.stringify(currentVotes));
-      } catch { }
-    }
-    setVoteHistory(currentVotes);
-  }, [isAuthenticated, token, user?.id]);
-
-  // Initial Load
-  useEffect(() => {
-    loadRosters();
-  }, [loadRosters]);
-
-  // Must stay separate from the vote sync below: `loadFeed` reshuffles the deck, and
-  // `syncVotes` is rebuilt on every auth transition, so sharing one effect reordered the
-  // deck under the user on load.
-  useEffect(() => {
-    loadFeed();
-    loadLeaderboard();
-  }, [loadFeed, loadLeaderboard]);
-
-  useEffect(() => {
-    syncVotes(selectedRosterSlug);
-  }, [syncVotes, selectedRosterSlug]);
-
-  // Auto-resume audio on first user gesture if user has audio enabled
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-    const handleFirstUserGesture = () => {
-      SmashSounds.handleUserInteraction();
-    };
-
-    window.addEventListener('pointerdown', handleFirstUserGesture, { once: true });
-    window.addEventListener('keydown', handleFirstUserGesture, { once: true });
-    window.addEventListener('touchstart', handleFirstUserGesture, { once: true });
-    window.addEventListener('click', handleFirstUserGesture, { once: true });
-
-    return () => {
-      window.removeEventListener('pointerdown', handleFirstUserGesture);
-      window.removeEventListener('keydown', handleFirstUserGesture);
-      window.removeEventListener('touchstart', handleFirstUserGesture);
-      window.removeEventListener('click', handleFirstUserGesture);
-    };
-  }, []);
-
-  const handleFilterChange = (type: 'role' | 'gender', value: string) => {
-    if (type === 'role') setRoleFilter(value);
-    if (type === 'gender') setGenderFilter(value);
-  };
-
-  const shuffleDeck = useCallback(() => {
-    setDeck((prev) => shuffleArray(prev));
-    setCurrentIndex(0);
-    SmashSounds.playFlipSound();
-  }, []);
-
-  const currentCharacter = deck[currentIndex] || null;
-  const nextCharacter = deck[currentIndex + 1] || null;
-  const thirdCharacter = deck[currentIndex + 2] || null;
-
-  // Preload next 3 images in queue
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-    const preloads = deck.slice(currentIndex + 1, currentIndex + 4);
-    preloads.forEach((item) => {
-      if (item.media_url) {
-        const img = new Image();
-        img.src = item.media_url.startsWith('http')
-          ? item.media_url
-          : `${getBackendBaseUrl()}${item.media_url}`;
-      }
-    });
-  }, [currentIndex, deck]);
-
-  // 4. Complete Exit Transition
+  const { finishExit } = exit;
+  const { advance, loadFeed, loadLeaderboard } = deck;
   const handleExitComplete = useCallback(() => {
-    if (exitTimeoutRef.current) clearTimeout(exitTimeoutRef.current);
+    finishExit();
+    advance();
+  }, [finishExit, advance]);
 
-    setCurrentIndex((idx) => idx + 1);
-    setTotalRemaining((r) => Math.max(0, r - 1));
-    setIsExiting(false);
-    setExitVote(null);
-    setExitOffset(undefined);
-    setDragPhysics({ x: 0, y: 0, isDragging: false });
-  }, []);
+  const { handleVote, animTrigger } = useSmashVoting({
+    currentCharacter: deck.currentCharacter,
+    selectedRosterSlug,
+    exit,
+    onExitComplete: handleExitComplete,
+    recordVote: votes.recordVote,
+    setLeaderboardItems: deck.setLeaderboardItems,
+    loadLeaderboard,
+    effectsEnabled,
+  });
 
-  const getRosterDisplayName = useCallback(
-    (r: { slug: string; name?: string }) => {
-      if (r.name) return r.name;
-      const key = ROSTER_DICT_KEY[r.slug] ?? r.slug;
-      const locName = (dict.smashOrPass.rosters as Record<string, { name?: string } | undefined>)?.[key]?.name;
-      if (locName) return locName;
-      return r.name || r.slug;
-    },
-    [dict, locale]
-  );
-
-  // 5. Handle Vote (Smash or Pass) with Database API & Local Persistence
-  const handleVote = useCallback(
-    async (vote: 'smash' | 'pass', origin?: { x: number; y: number }) => {
-      if (!currentCharacter || isExiting) return;
-
-      if (vote === 'smash') {
-        SmashSounds.playSmashSound();
-      } else {
-        SmashSounds.playPassSound();
-      }
-
-      setAnimTrigger((prev) => ({
-        type: vote,
-        key: prev.key + 1,
-        originX: origin?.x,
-        originY: origin?.y,
-      }));
-
-      const screenWidth = typeof window !== 'undefined' ? window.innerWidth : 800;
-      let initialOffset = { x: 0, y: 0 };
-      if (dragPhysics.x !== 0 || dragPhysics.y !== 0) {
-        initialOffset = {
-          x: dragPhysics.x > 0 ? screenWidth * 1.25 : -screenWidth * 1.25,
-          y: dragPhysics.y * 1.1,
-        };
-      } else {
-        initialOffset =
-          vote === 'smash'
-            ? { x: screenWidth * 1.25, y: -20 }
-            : { x: -screenWidth * 1.25, y: 20 };
-      }
-
-      setIsExiting(true);
-      setExitVote(vote);
-      setExitOffset(initialOffset);
-
-      if (exitTimeoutRef.current) clearTimeout(exitTimeoutRef.current);
-      // Smooth 480ms synchronized exit curve
-      exitTimeoutRef.current = setTimeout(() => {
-        handleExitComplete();
-      }, 480);
-
-      const newEntry = { character: currentCharacter, vote, timestamp: Date.now() };
-      setVoteHistory((prev) => {
-        const filtered = prev.filter(
-          (v) => voteSlug(v) !== currentCharacter.slug
-        );
-        const updated = [...filtered, newEntry];
-        if (typeof window !== 'undefined') {
-          try {
-            localStorage.setItem(
-              `dbd_smash_votes_${selectedRosterSlug}`,
-              JSON.stringify(updated)
-            );
-          } catch { }
-        }
-        return updated;
-      });
-
-      // A local roster's entities were never sent to the backend -- there is
-      // no `entity_id` there to vote for, and (per the plan) no leaderboard
-      // to update anyway. The vote is already recorded above, purely locally.
-      if (isLocalRosterSlug(selectedRosterSlug)) return;
-
-      // Call database API to cast vote
-      try {
-        const voteResponse = await apiCastVote(currentCharacter.id, vote, currentCharacter.slug);
-        const entityData = voteResponse?.data;
-        if (entityData) {
-          setLeaderboardItems((prev) => {
-            return prev.map((item) => {
-              const slug = item.slug || item.character_slug;
-              if (slug === currentCharacter.slug || item.id === currentCharacter.id) {
-                const sCount = entityData.smash_count ?? item.smash_count ?? 0;
-                const pCount = entityData.pass_count ?? item.pass_count ?? 0;
-                const ssCount = entityData.super_smash_count ?? item.super_smash_count ?? 0;
-                const tVotes = entityData.total_votes ?? item.total_votes ?? (sCount + pCount + ssCount);
-                const sRate = entityData.smash_rate ?? item.smash_rate ?? 0;
-
-                return {
-                  ...item,
-                  smash_count: sCount,
-                  pass_count: pCount,
-                  super_smash_count: ssCount,
-                  total_votes: tVotes,
-                  smash_rate: sRate,
-                  stat: item.stat
-                    ? {
-                      ...item.stat,
-                      smash_count: sCount,
-                      pass_count: pCount,
-                      super_smash_count: ssCount,
-                      total_votes: tVotes,
-                      smash_rate: sRate,
-                    }
-                    : null,
-                };
-              }
-              return item;
-            });
-          });
-        }
-        await loadLeaderboard();
-      } catch {
-          // Best-effort: failure here is non-fatal.
-      }
-    },
-    [currentCharacter, isExiting, dragPhysics, handleExitComplete, selectedRosterSlug, loadLeaderboard]
-  );
-
-  // 6. Reset All Votes via Database API
+  const { setIsResetConfirmOpen, setIsHowToPlayOpen, setSelectedStatCharacter } = overlays;
+  const { clearVotes } = votes;
+  const { resetFilters } = deck;
   const handleResetAllVotes = useCallback(async () => {
     setIsResetConfirmOpen(false);
-
-    if (!isLocalRosterSlug(selectedRosterSlug)) {
-      try {
-        if (isAuthenticated || token || user?.id) {
-          await apiResetUserVotes(selectedRosterSlug);
-        }
-        await apiResetSessionVotes(selectedRosterSlug);
-      } catch (err) {
-        console.error('Failed to reset votes on backend database:', err);
-      }
-    }
-
-    if (typeof window !== 'undefined') {
-      try {
-        localStorage.removeItem(`dbd_smash_votes_${selectedRosterSlug}`);
-      } catch { }
-    }
-
-    setVoteHistory([]);
-    setRoleFilter('all');
-    setGenderFilter('all');
+    await clearVotes();
+    resetFilters();
     await loadFeed();
     await loadLeaderboard();
     SmashSounds.playFlipSound();
-  }, [selectedRosterSlug, isAuthenticated, token, user?.id, loadFeed, loadLeaderboard]);
+  }, [setIsResetConfirmOpen, clearVotes, resetFilters, loadFeed, loadLeaderboard]);
 
-  const areModalsOpen =
-    isLeaderboardOpen ||
-    isPersonaOpen ||
-    isResetConfirmOpen ||
-    isHowToPlayOpen ||
-    Boolean(selectedStatCharacter);
-
-  // Keyboard Shortcuts (Deck Voting & Global HUD)
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (
-        document.activeElement?.tagName === 'INPUT' ||
-        document.activeElement?.tagName === 'TEXTAREA'
-      ) {
-        return;
-      }
-
-      // Audio & Modals
-      if (e.key === 'm' || e.key === 'M' || e.key === 'b' || e.key === 'B') {
-        e.preventDefault();
-        const active = SmashSounds.toggleMasterSound();
-        setIsSoundActive(active);
-        setIsMuted(!active);
-        setIsBgmPlaying(active);
-      } else if (e.key === '?' || e.key === '/') {
-        e.preventDefault();
-        setIsHowToPlayOpen((prev) => !prev);
-      }
-
-      // Deck voting keys (only when no modal is open and candidate is active)
-      if (areModalsOpen || !currentCharacter || isExiting) return;
-
-      if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') {
-        e.preventDefault();
-        handleVote('pass');
-      } else if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') {
-        e.preventDefault();
-        handleVote('smash');
-      } else if (e.key === 'ArrowUp' || e.key === 'w' || e.key === 'W') {
-        e.preventDefault();
-        setSelectedStatCharacter(currentCharacter);
-      } else if (e.key === 'r' || e.key === 'R') {
-        e.preventDefault();
-        setIsResetConfirmOpen(true);
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [areModalsOpen, currentCharacter, isExiting, handleVote]);
+  const toggleHowToPlay = useCallback(() => setIsHowToPlayOpen((prev) => !prev), [setIsHowToPlayOpen]);
+  const openResetConfirm = useCallback(() => setIsResetConfirmOpen(true), [setIsResetConfirmOpen]);
+  useHubHotkeys({
+    areModalsOpen: overlays.areModalsOpen,
+    currentCharacter: deck.currentCharacter,
+    isExiting: exit.isExiting,
+    handleVote,
+    toggleHowToPlay,
+    openStats: setSelectedStatCharacter,
+    openResetConfirm,
+  });
 
   // Auto-refresh leaderboard when the Hall of Fame modal opens
+  const { isLeaderboardOpen } = overlays;
   useEffect(() => {
     if (isLeaderboardOpen) {
       loadLeaderboard();
     }
   }, [isLeaderboardOpen, loadLeaderboard]);
 
-  const handleToggleMasterSound = () => {
-    const active = SmashSounds.toggleMasterSound();
-    setIsSoundActive(active);
-    setIsMuted(!active);
-    setIsBgmPlaying(active);
-  };
-
-  const userSmashesList = useMemo(() => {
-    return voteHistory
-      .filter((v) => v.vote === 'smash')
-      .map((v) => ({
-        slug: voteSlug(v) || '',
-        vote: v.vote,
-        timestamp: v.timestamp,
-      }));
-  }, [voteHistory]);
-
+  const { sessionSmashes, sessionPasses } = votes;
   const totalSessionVotes = sessionSmashes + sessionPasses;
-  const sessionSmashRate =
-    totalSessionVotes > 0 ? Math.round((sessionSmashes / totalSessionVotes) * 100) : 0;
-
-  const totalEditionCount = activeRoster.entity_count || deck.length;
-  const remainingInDeck = Math.max(0, deck.length - currentIndex);
-
-  // Localized Strings
-  const title = dict.smashOrPass.title;
-  const subtitle =
-    dict.smashOrPass.subtitle;
-  const allRolesLabel = dict.smashOrPass.filters.allRoles;
-  const survivorsLabel = dict.smashOrPass.filters.survivors;
-  const killersLabel = dict.smashOrPass.filters.killers;
-  const allGendersLabel = dict.smashOrPass.filters.allGenders;
-  const femaleOnlyLabel = dict.smashOrPass.filters.femaleOnly;
-  const maleOnlyLabel = dict.smashOrPass.filters.maleOnly;
-  const monstersLabel = dict.smashOrPass.filters.monsters;
-  const leaderboardLabel = dict.smashOrPass.modals.leaderboardTitle;
-  const hudLabels = dict.smashOrPass.hud;
+  const sessionSmashRate = totalSessionVotes > 0 ? Math.round((sessionSmashes / totalSessionVotes) * 100) : 0;
+  const remainingInDeck = Math.max(0, deck.deck.length - deck.currentIndex);
+  const rosterBadgeCount =
+    activeRoster.entity_count ?? activeRoster.character_count ?? deck.totalRemaining ?? deck.deck.length;
 
   return (
-    <div className="relative min-h-[calc(100vh-5rem)] flex flex-col justify-start space-y-3 pb-12 overflow-x-clip">
-      {/* Interactive Reactive Background */}
+    <div
+      className={`relative min-h-[calc(100vh-5rem)] flex flex-col justify-start space-y-3 pb-12 overflow-x-clip ${
+        effectsEnabled ? '' : '[&_*]:animate-none!'
+      }`}
+    >
+      {/* The ambient embers always stay; with effects off they just stop reacting to swipes and votes. */}
       <Suspense fallback={null}>
         <InteractiveDragBackground
-          dragX={dragPhysics.x}
-          dragY={dragPhysics.y}
-          isDragging={dragPhysics.isDragging}
-          actionTrigger={animTrigger.type}
-          triggerKey={animTrigger.key}
-          isPaused={areModalsOpen}
+          dragX={effectsEnabled ? exit.dragPhysics.x : 0}
+          dragY={effectsEnabled ? exit.dragPhysics.y : 0}
+          isDragging={effectsEnabled && exit.dragPhysics.isDragging}
+          actionTrigger={effectsEnabled ? animTrigger.type : null}
+          triggerKey={effectsEnabled ? animTrigger.key : 0}
+          isPaused={overlays.areModalsOpen}
         />
       </Suspense>
 
       {/* Scattered Ambient Lore Wings Flanking the Candidate Card */}
       <Suspense fallback={null}>
         <FloatingLoreScattered
-          character={currentCharacter}
+          character={deck.currentCharacter}
           locale={locale}
           customLabels={activeRoster?.custom_labels}
         />
       </Suspense>
 
       {/* Particle & Visual Overlay Animation Engine */}
-      <Suspense fallback={null}>
-        <SmashAnimations
-          triggerType={animTrigger.type}
-          triggerKey={animTrigger.key}
-          originX={animTrigger.originX}
-          originY={animTrigger.originY}
-        />
-      </Suspense>
-
-      {/* ========================================================================= */}
-      {/* REDESIGNED UNIFIED COMMAND DOCK (LEFT STATS | CENTER ROSTER | RIGHT ICONS) */}
-      {/* ========================================================================= */}
-      <header className="relative z-20 mx-auto w-full max-w-6xl rounded-3xl bg-bg-surface border border-border-color backdrop-blur-2xl p-3.5 sm:p-4 md:p-5 space-y-3.5 transition-all">
-        {/* MAIN ROW: Left Stats + Centered Roster Pill + Right Action Cluster */}
-        <div className="flex flex-col lg:flex-row items-center justify-between gap-3 sm:gap-4 w-full">
-          {/* LEFT: Live Session Telemetry Capsule */}
-          <div className="flex items-center justify-center lg:justify-start w-full lg:w-auto order-2 lg:order-1 shrink-0">
-            <div className="flex items-center gap-2 sm:gap-2.5 px-3.5 py-2 rounded-2xl bg-bg-elevated border border-border-color text-xs sm:text-sm shadow-inner">
-              <span className="flex items-center gap-1.5 text-text-secondary font-bold">
-                <Layers className="h-4 w-4 text-text-secondary" />
-                <span className="text-text-primary font-black text-sm sm:text-base">{remainingInDeck}</span>
-                <span className="text-mini sm:text-xs text-text-muted font-medium">
-                  {hudLabels.left}
-                </span>
-              </span>
-              <span className="text-border-color">{dict.smashOrPass.pipeSeparator}</span>
-              <span className="flex items-center gap-1.5 text-accent-red type-strong-fluid">
-                <Heart className="h-3.5 w-3.5 sm:h-4 sm:w-4 fill-accent-red" />
-                <span>{sessionSmashes}</span>
-              </span>
-              <span className="text-border-color">{dict.smashOrPass.pipeSeparator}</span>
-              <span className="flex items-center gap-1.5 text-text-muted type-strong-fluid">
-                <ThumbsDown className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-text-muted" />
-                <span>{sessionPasses}</span>
-              </span>
-              <span className="text-border-color">{dict.smashOrPass.pipeSeparator}</span>
-              <span className="text-accent-amber font-black text-xs sm:text-sm tracking-wide">
-                {sessionSmashRate}{dict.smashOrPass.percentSign}
-              </span>
-            </div>
-          </div>
-
-          {/* CENTER: Heart-Flanked Dynamic Roster Selector */}
-          <div className="flex items-center justify-center gap-2.5 sm:gap-3 w-full lg:w-auto order-1 lg:order-2">
-            <Heart className="h-4 w-4 sm:h-5 sm:w-5 text-accent-red fill-accent-red animate-pulse shrink-0" />
-
-            <button
-              type="button"
-              onClick={() => setIsRosterModalOpen(true)}
-              className="flex items-center gap-2.5 sm:gap-3 px-3.5 sm:px-4 py-2 sm:py-2.5 min-h-[44px] rounded-2xl bg-bg-surface border border-accent-red/50 hover:border-accent-red type-strong-fluid text-accent-red transition-all cursor-pointer group shrink-0 touch-manipulation"
-            >
-              <span className="relative flex h-5 w-5 sm:h-6 sm:w-6 items-center justify-center rounded-lg overflow-hidden border border-accent-red/60 shrink-0">
-                <img
-                  src={getRosterCover(activeRoster)}
-                  alt=""
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).src = `${getBackendBaseUrl()}/static/avatars/survivors/sable_ward.webp`;
-                  }}
-                  className="h-full w-full object-cover"
-                />
-              </span>
-              <span className="truncate max-w-[150px] sm:max-w-[220px] text-text-primary group-hover:text-accent-red font-black tracking-wide">
-                {getRosterDisplayName(activeRoster)}
-              </span>
-              <span className="px-2 py-0.5 rounded-lg bg-accent-red/20 text-accent-red text-tiny sm:text-xs font-black">
-                {activeRoster.entity_count ?? activeRoster.character_count ?? totalRemaining ?? deck.length}
-              </span>
-              <ChevronDown className="h-4 w-4 text-accent-red group-hover:translate-y-0.5 transition-transform" />
-            </button>
-
-            <Heart className="h-4 w-4 sm:h-5 sm:w-5 text-accent-red fill-accent-red animate-pulse shrink-0" />
-          </div>
-
-          {/* RIGHT: Action Cluster (Icons with Tooltips and >=44px Touch Targets) */}
-          <div className="flex items-center justify-center lg:justify-end gap-1.5 sm:gap-2 w-full lg:w-auto order-3 shrink-0 flex-wrap">
-            {/* Filter Settings Drawer Toggle */}
-            <Tooltip variant="action"
-              title={dict.smashOrPass.tooltips.filter}
-              description={dict.smashOrPass.tooltips.filterDesc}
-              placement="bottom"
-            >
-              <Button
-                variant={isFilterDrawerOpen || roleFilter !== 'all' || genderFilter !== 'all' ? 'soft' : 'secondary'} size="md" icon
-                onClick={() => setIsFilterDrawerOpen((prev) => !prev)}
-                aria-label={dict.smashOrPass.tooltips.filter}
-                className="relative h-11 w-11 sm:h-9 sm:w-9 min-h-[44px] min-w-[44px] sm:min-h-[38px] sm:min-w-[38px]"
-              >
-                <SlidersHorizontal className="h-4 w-4 sm:h-4 sm:w-4" />
-                {(roleFilter !== 'all' || genderFilter !== 'all') && (
-                  <span className="absolute 1.5 sm:-top-0.5 1.5 sm:-right-0.5 h-2.5 w-2.5 rounded-full bg-accent-red ring-2 ring-bg-surface" />
-                )}
-              </Button>
-            </Tooltip>
-
-            {/* Dynamic Sound Toggle */}
-            <Tooltip variant="action"
-              title={isSoundActive ? (dict.smashOrPass.tooltips.muteAudio) : (dict.smashOrPass.tooltips.unmuteAudio)}
-              description={isSoundActive ? (dict.smashOrPass.tooltips.muteAudioDesc) : (dict.smashOrPass.tooltips.unmuteAudioDesc)}
-              placement="bottom"
-            >
-              <Button
-                variant={isSoundActive ? 'soft' : 'secondary'} size="md" icon
-                onClick={handleToggleMasterSound}
-                aria-label={isSoundActive ? (dict.smashOrPass.tooltips.muteAudio) : (dict.smashOrPass.tooltips.unmuteAudio)}
-                className="h-11 w-11 sm:h-9 sm:w-9 min-h-[44px] min-w-[44px] sm:min-h-[38px] sm:min-w-[38px]"
-              >
-                {isSoundActive ? <Volume2 className="h-4 w-4 sm:h-4 sm:w-4 text-accent-red animate-pulse" /> : <VolumeX className="h-4 w-4 sm:h-4 sm:w-4" />}
-              </Button>
-            </Tooltip>
-
-            {/* Archetype Modal */}
-            <Tooltip variant="action"
-              title={dict.smashOrPass.modals.personaTitle}
-              description={dict.smashOrPass.tooltips.archetypeDesc}
-              placement="bottom"
-            >
-              <Button
-                variant="soft" size="md" icon
-                onClick={() => setIsPersonaOpen(true)}
-                aria-label={dict.smashOrPass.tooltips.archetype}
-                className="h-11 w-11 sm:h-9 sm:w-9 min-h-[44px] min-w-[44px] sm:min-h-[38px] sm:min-w-[38px]"
-              >
-                <Sparkles className="h-4 w-4 sm:h-4 sm:w-4 text-accent-red" />
-              </Button>
-            </Tooltip>
-
-            {/* Hall of Fame Leaderboard Modal */}
-            <Tooltip variant="action"
-              title={dict.smashOrPass.modals.leaderboardTitle}
-              description={dict.smashOrPass.tooltips.leaderboardDesc}
-              placement="bottom"
-            >
-              <button
-                type="button"
-                onClick={() => setIsLeaderboardOpen(true)}
-                aria-label={dict.smashOrPass.tooltips.leaderboard}
-                className="flex min-h-[44px] min-w-[44px] sm:min-h-[38px] sm:min-w-[38px] h-11 w-11 sm:h-9 sm:w-9 items-center justify-center rounded-xl bg-accent-amber/10 border border-accent-amber/30 hover:border-accent-amber/60 text-accent-amber transition-all shadow-md cursor-pointer hover:scale-105 active:scale-95 touch-manipulation"
-              >
-                <IridescentShardIcon className="h-4 w-4 sm:h-4 sm:w-4 text-accent-amber" />
-              </button>
-            </Tooltip>
-
-            {/* Shuffle */}
-            <Tooltip variant="action"
-              title={dict.smashOrPass.tooltips.shuffle}
-              description={dict.smashOrPass.tooltips.shuffleDesc}
-              placement="bottom"
-            >
-              <Button
-                variant="secondary" size="md" icon
-                onClick={shuffleDeck}
-                aria-label={dict.smashOrPass.tooltips.shuffle}
-                className="h-11 w-11 sm:h-9 sm:w-9 min-h-[44px] min-w-[44px] sm:min-h-[38px] sm:min-w-[38px]"
-              >
-                <Shuffle className="h-4 w-4 sm:h-4 sm:w-4" />
-              </Button>
-            </Tooltip>
-
-            {/* Reset */}
-            <Tooltip variant="action"
-              title={dict.smashOrPass.tooltips.resetAllVotes}
-              description={dict.smashOrPass.tooltips.resetDesc}
-              placement="bottom"
-            >
-              <Button
-                variant="secondary" size="md" icon
-                onClick={() => setIsResetConfirmOpen(true)}
-                aria-label={dict.smashOrPass.tooltips.resetAllVotes}
-                className="h-11 w-11 sm:h-9 sm:w-9 min-h-[44px] min-w-[44px] sm:min-h-[38px] sm:min-w-[38px]"
-              >
-                <Trash2 className="h-4 w-4 sm:h-4 sm:w-4" />
-              </Button>
-            </Tooltip>
-
-            {/* How to Play */}
-            <Tooltip variant="action"
-              title={dict.smashOrPass.tooltips.howToPlay}
-              description={dict.smashOrPass.tooltips.howToPlayDesc}
-              placement="bottom"
-            >
-              <Button
-                variant="secondary" size="md" icon
-                onClick={() => setIsHowToPlayOpen(true)}
-                aria-label={dict.smashOrPass.tooltips.howToPlay}
-                className="h-11 w-11 sm:h-9 sm:w-9 min-h-[44px] min-w-[44px] sm:min-h-[38px] sm:min-w-[38px]"
-              >
-                <HelpCircle className="h-4 w-4 sm:h-4 sm:w-4" />
-              </Button>
-            </Tooltip>
-          </div>
-        </div>
-
-        {/* FRAMER MOTION EXPANDABLE FILTER DRAWER */}
-        <AnimatePresence>
-          {isFilterDrawerOpen && (
-            <motion.div
-              key="smash-filter-drawer"
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: 'auto', opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
-              className="overflow-hidden border-t border-border-color pt-3"
-            >
-              <div className="flex flex-col md:flex-row items-center justify-between gap-3">
-                {/* Role Segmented Switch */}
-                <div className="flex items-center gap-1 p-1 bg-bg-elevated border border-border-color rounded-2xl w-full md:w-auto shadow-inner type-strong overflow-x-auto">
-                  <button
-                    type="button"
-                    onClick={() => handleFilterChange('role', 'all')}
-                    className={`flex-1 md:flex-none min-h-[44px] sm:min-h-[36px] flex items-center justify-center px-3.5 py-1.5 rounded-xl transition-all cursor-pointer touch-manipulation whitespace-nowrap ${roleFilter === 'all'
-                        ? 'bg-accent-red text-text-inverted'
-                        : 'text-text-muted hover:text-text-primary'
-                      }`}
-                  >
-                    {allRolesLabel}
-                  </button>
-                  {availableRoles.map((role) => {
-                    const isSurvivor = isSurvivorRole(role);
-                    const isKiller = isKillerRole(role);
-                    const label = isSurvivor ? survivorsLabel : isKiller ? killersLabel : role;
-                    return (
-                      <button
-                        key={role}
-                        type="button"
-                        onClick={() => handleFilterChange('role', role)}
-                        className={`flex-1 md:flex-none min-h-[44px] sm:min-h-[36px] flex items-center justify-center gap-1.5 px-3.5 py-1.5 rounded-xl transition-all cursor-pointer touch-manipulation whitespace-nowrap ${roleFilter === role
-                            ? isSurvivor ? 'bg-accent-green text-text-inverted font-black' : 'bg-accent-red text-text-inverted'
-                            : isSurvivor ? 'text-text-muted hover:text-accent-green' : 'text-text-muted hover:text-accent-red'
-                          }`}
-                      >
-                        {isSurvivor && <SurvivorIcon className="h-3.5 w-3.5" />}
-                        {isKiller && <KillerIcon className="h-3.5 w-3.5" />}
-                        {label}
-                      </button>
-                    );
-                  })}
-                </div>
-
-                {/* Gender Segmented Switch */}
-                <div className="flex items-center gap-1 p-1 bg-bg-elevated border border-border-color rounded-2xl w-full md:w-auto shadow-inner type-strong overflow-x-auto">
-                  <button
-                    type="button"
-                    onClick={() => handleFilterChange('gender', 'all')}
-                    className={`min-h-[44px] sm:min-h-[36px] flex items-center justify-center px-3 py-1.5 rounded-xl transition-all shrink-0 cursor-pointer touch-manipulation whitespace-nowrap ${genderFilter === 'all'
-                        ? 'bg-accent-red text-text-inverted'
-                        : 'text-text-muted hover:text-text-primary'
-                      }`}
-                  >
-                    {allGendersLabel}
-                  </button>
-                  {availableGenders.map((gender) => {
-                    const isFemale = gender === 'female';
-                    const isMale = gender === 'male';
-                    const isMonster = gender === 'monster_other';
-                    const label = isFemale
-                      ? femaleOnlyLabel
-                      : isMale
-                      ? maleOnlyLabel
-                      : isMonster
-                      ? monstersLabel
-                      : gender;
-                    return (
-                      <button
-                        key={gender}
-                        type="button"
-                        onClick={() => handleFilterChange('gender', gender)}
-                        className={`min-h-[44px] sm:min-h-[36px] flex items-center justify-center px-3 py-1.5 rounded-xl transition-all shrink-0 cursor-pointer touch-manipulation whitespace-nowrap ${genderFilter === gender
-                            ? isFemale
-                              ? 'bg-accent-red text-text-inverted'
-                              : isMale
-                              ? 'bg-accent-green text-text-inverted'
-                              : 'bg-border-subtle text-text-primary'
-                            : isFemale
-                            ? 'text-text-muted hover:text-accent-red'
-                            : isMale
-                            ? 'text-text-muted hover:text-accent-green'
-                            : 'text-text-muted hover:text-text-primary'
-                          }`}
-                      >
-                        {label}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </header>
-
-      {/* MAIN INTERACTIVE ARENA WITH MULTI-CARD STACK QUEUE */}
-      <main className="relative flex-1 flex flex-col items-center justify-center my-2 z-20 pointer-events-none">
-        {activeRoster.is_nsfw && !nsfwAcknowledged ? (
-          <div
-            data-testid="nsfw-content-gate"
-            className="relative flex flex-col items-center justify-center min-h-[460px] sm:min-h-[520px] pointer-events-auto select-none"
-          >
-            <div className="w-[88vw] max-w-[340px] sm:max-w-[380px] md:max-w-[420px] aspect-[9/14] sm:aspect-[9/15] rounded-[32px] sm:rounded-[36px] bg-bg-primary border-2 border-accent-red/60 flex flex-col items-center justify-center p-6 sm:p-8 space-y-4 text-center backdrop-blur-2xl">
-              <div className="flex h-14 w-14 sm:h-16 sm:w-16 items-center justify-center rounded-2xl bg-accent-red/15 border border-accent-red/40 text-accent-red">
-                <AlertTriangle className="h-7 w-7 sm:h-8 sm:w-8" aria-hidden="true" />
-              </div>
-              <h3 className="text-base sm:text-lg font-black text-text-primary">
-                {dict.smashOrPass.nsfw.title}
-              </h3>
-              <p className="text-xs sm:text-sm text-text-muted">
-                {dict.smashOrPass.nsfw.description}
-              </p>
-              <Button
-                variant="primary" size="md"
-                onClick={handleAcknowledgeNsfw}
-                data-testid="nsfw-content-gate-confirm"
-                className="mt-2 rounded-2xl"
-              >
-                {dict.smashOrPass.nsfw.confirm}
-              </Button>
-            </div>
-          </div>
-        ) : loading ? (
-          <div className="relative flex flex-col items-center justify-center min-h-[460px] sm:min-h-[520px] pointer-events-auto select-none animate-pulse">
-            <div className="w-[88vw] max-w-[340px] sm:max-w-[380px] md:max-w-[420px] aspect-[9/14] sm:aspect-[9/15] rounded-[32px] sm:rounded-[36px] bg-bg-primary border-2 border-accent-red/30 flex flex-col items-center justify-center p-6 space-y-4">
-              <Heart className="h-12 w-12 text-accent-red fill-accent-red/30 animate-pulse" />
-              <span className="type-strong text-text-secondary text-center">
-                {dict.smashOrPass.loadingRosterPrefix} {activeRoster.name || selectedRosterSlug} {dict.smashOrPass.loadingRosterSuffix}
-              </span>
-              <div className="h-1.5 w-32 rounded-full bg-bg-elevated overflow-hidden">
-                <div className="h-full bg-accent-red animate-[shimmer_1.5s_infinite]" />
-              </div>
-            </div>
-          </div>
-        ) : currentCharacter ? (
-          <div className="relative flex flex-col items-center justify-center pointer-events-auto min-h-[460px] sm:min-h-[520px]">
-            {/* CARD 3 IN QUEUE (DEPTH 2 - SMOOTH ENTER & ELEVATION) */}
-            {thirdCharacter && (
-              <div
-                key={`queue-3-${thirdCharacter.id || thirdCharacter.slug}`}
-                className="absolute inset-0 z-[5] flex items-center justify-center pointer-events-none anim-card-queue-enter"
-                style={{
-                  transform: dragPhysics.isDragging
-                    ? `scale(${0.86 + Math.min(0.07, Math.abs(dragPhysics.x) / 1200)}) translateY(${Math.max(14, 28 - Math.abs(dragPhysics.x) * 0.025)}px)`
-                    : isExiting
-                      ? 'scale(0.93) translateY(14px)'
-                      : 'scale(0.86) translateY(28px)',
-                  opacity: dragPhysics.isDragging
-                    ? 0.45 + Math.min(0.35, Math.abs(dragPhysics.x) / 1000)
-                    : isExiting
-                      ? 0.85
-                      : 0.45,
-                  filter: dragPhysics.isDragging
-                    ? `brightness(${0.75 + Math.min(0.15, Math.abs(dragPhysics.x) / 1000)})`
-                    : isExiting
-                      ? 'brightness(0.9)'
-                      : 'brightness(0.75)',
-                  willChange: 'transform, opacity, filter',
-                  transition: isExiting
-                    ? 'transform 480ms cubic-bezier(0.2, 0.9, 0.2, 1), opacity 480ms cubic-bezier(0.2, 0.9, 0.2, 1), filter 480ms cubic-bezier(0.2, 0.9, 0.2, 1)'
-                    : 'transform 240ms ease-out, opacity 240ms ease-out, filter 240ms ease-out',
-                }}
-              >
-                <CharacterCard
-                  character={thirdCharacter}
-                  onVote={() => { }}
-                  isTopCard={false}
-                  locale={locale}
-                  customLabels={activeRoster?.custom_labels}
-                  rosterMode={activeRoster?.roster_mode}
-                />
-              </div>
-            )}
-
-            {/* CARD 2 IN QUEUE (DEPTH 1 - DYNAMIC PROMOTION) */}
-            {nextCharacter && (
-              <div
-                key={`queue-2-${nextCharacter.id || nextCharacter.slug}`}
-                className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none"
-                style={{
-                  transform: dragPhysics.isDragging
-                    ? `scale(${0.93 + Math.min(0.07, Math.abs(dragPhysics.x) / 900)}) translateY(${Math.max(0, 14 - Math.abs(dragPhysics.x) * 0.035)}px)`
-                    : isExiting
-                      ? 'scale(1) translateY(0px)'
-                      : 'scale(0.93) translateY(14px)',
-                  opacity: dragPhysics.isDragging
-                    ? 0.85 + Math.min(0.15, Math.abs(dragPhysics.x) / 900)
-                    : isExiting
-                      ? 1
-                      : 0.85,
-                  filter: dragPhysics.isDragging
-                    ? `brightness(${0.9 + Math.min(0.1, Math.abs(dragPhysics.x) / 900)})`
-                    : isExiting
-                      ? 'brightness(1)'
-                      : 'brightness(0.9)',
-                  willChange: 'transform, opacity, filter',
-                  transition: isExiting
-                    ? 'transform 480ms cubic-bezier(0.2, 0.9, 0.2, 1), opacity 480ms cubic-bezier(0.2, 0.9, 0.2, 1), filter 480ms cubic-bezier(0.2, 0.9, 0.2, 1)'
-                    : 'transform 200ms ease-out, opacity 200ms ease-out, filter 200ms ease-out',
-                }}
-              >
-                <CharacterCard
-                  character={nextCharacter}
-                  onVote={() => { }}
-                  isTopCard={false}
-                  locale={locale}
-                  customLabels={activeRoster?.custom_labels}
-                  rosterMode={activeRoster?.roster_mode}
-                />
-              </div>
-            )}
-
-            {/* CARD 1 (ACTIVE TOP CARD) */}
-            <div className="relative z-20">
-              <CharacterCard
-                key={`${currentCharacter.id || currentCharacter.slug}-${currentIndex}`}
-                character={currentCharacter}
-                onVote={handleVote}
-                onDragUpdate={(x, y, isDragging) => setDragPhysics({ x, y, isDragging })}
-                isTopCard={true}
-                isExiting={isExiting}
-                exitType={exitVote}
-                initialExitOffset={exitOffset}
-                onExitComplete={handleExitComplete}
-                locale={locale}
-                customLabels={activeRoster?.custom_labels}
-                rosterMode={activeRoster?.roster_mode}
-              />
-            </div>
-          </div>
-        ) : (
-          // Finished Deck State
-          <div className="max-w-md w-full rounded-3xl border border-accent-red/30 bg-bg-surface p-8 text-center space-y-5 shadow-xl dark:shadow-2xl backdrop-blur-md pointer-events-auto">
-            <div className="flex h-16 w-16 mx-auto items-center justify-center rounded-2xl bg-accent-red/15 border border-accent-red/30 text-accent-red">
-              <Heart className="h-8 w-8 fill-accent-red animate-bounce" />
-            </div>
-
-            <div className="space-y-1">
-              <h3 className="text-xl font-black text-text-primary">{dict.smashOrPass.empty.title}</h3>
-              <p className="text-xs text-text-muted">
-                {dict.smashOrPass.empty.subtitle}
-              </p>
-            </div>
-
-            {/* Session Stats Summary */}
-            <div className="grid grid-cols-2 gap-3 py-2">
-              <Surface tone="elevated" radius="2xl" padding="none" className="p-4">
-                <span className="type-label-sm text-accent-red">{dict.smashOrPass.smash}</span>
-                <p className="text-2xl font-black text-text-primary">{sessionSmashes}</p>
-              </Surface>
-              <Surface tone="elevated" radius="2xl" padding="none" className="p-4">
-                <span className="type-label-sm text-text-muted">{dict.smashOrPass.pass}</span>
-                <p className="text-2xl font-black text-text-primary">{sessionPasses}</p>
-              </Surface>
-            </div>
-
-            <div className="flex flex-col sm:flex-row gap-3 pt-2">
-              <Button
-                variant="primary" size="md"
-                onClick={() => setIsPersonaOpen(true)}
-                className="flex-1 rounded-2xl"
-              >
-                <Sparkles className="h-4 w-4" />
-                <span>{hudLabels.archetype}</span>
-              </Button>
-
-              <Button
-                variant="secondary" size="md"
-                onClick={() => setIsResetConfirmOpen(true)}
-                className="flex-1 rounded-2xl"
-              >
-                <RotateCcw className="h-4 w-4 text-text-muted" />
-                <span>{dict.smashOrPass.empty.resetAction}</span>
-              </Button>
-            </div>
-          </div>
-        )}
-      </main>
-
-      {/* HOW TO PLAY MODAL (CONTAINING THE KEYBOARD KEYCAPS & CONTROLS EXPLANATION) */}
-      <Modal
-        isOpen={isHowToPlayOpen}
-        onClose={() => setIsHowToPlayOpen(false)}
-        variant="dialog"
-        size="lg"
-        icon={<Gamepad2 className="h-5 w-5" aria-hidden="true" />}
-        title={dict.smashOrPass.howToPlayModal.title}
-        closeButtonAriaLabel={dict.modal.close}
-        bodyClassName="p-5 sm:p-6"
-      >
-      <div className="space-y-3.5 text-xs text-text-secondary">
-        {/* 1. Drag / Swipe */}
-        <Surface tone="elevated" radius="2xl" padding="sm" className="flex items-start gap-3">
-          <span className="text-xl shrink-0">{dict.smashOrPass.howToPlayModal.swipeIcon}</span>
-          <div>
-            <span className="type-strong text-accent-red block">
-              {dict.smashOrPass.howToPlayModal.swipeTitle}
-            </span>
-            <p className="text-text-muted leading-relaxed pt-0.5">
-              {dict.smashOrPass.howToPlayModal.swipeDesc}
-            </p>
-          </div>
-        </Surface>
-
-        {/* 2. On-card Tactile Buttons */}
-        <Surface tone="elevated" radius="2xl" padding="sm" className="flex items-start gap-3">
-          <span className="text-xl shrink-0">{dict.smashOrPass.howToPlayModal.iconsIcon}</span>
-          <div>
-            <span className="type-strong text-accent-red block">
-              {dict.smashOrPass.howToPlayModal.iconsTitle}
-            </span>
-            <p className="text-text-muted leading-relaxed pt-0.5">
-              {dict.smashOrPass.howToPlayModal.iconsDesc}
-            </p>
-          </div>
-        </Surface>
-
-        {/* 3. Keyboard Keycaps Component INSIDE the Modal */}
-        <Surface tone="elevated" radius="2xl" padding="sm" className="space-y-2">
-          <div className="flex items-center gap-2">
-            <span className="text-xl shrink-0">{dict.smashOrPass.howToPlayModal.keycapsIcon}</span>
-            <span className="type-strong text-accent-red block">
-              {dict.smashOrPass.howToPlayModal.keycapsTitle}
-            </span>
-          </div>
-          <TactileKeycaps
-            onPass={() => {
-              handleVote('pass');
-              setIsHowToPlayOpen(false);
-            }}
-            onSmash={() => {
-              handleVote('smash');
-              setIsHowToPlayOpen(false);
-            }}
-            onStats={() => {
-              setIsHowToPlayOpen(false);
-              if (currentCharacter) setSelectedStatCharacter(currentCharacter);
-            }}
-            onReset={() => {
-              setIsHowToPlayOpen(false);
-              setIsResetConfirmOpen(true);
-            }}
-            className="my-1"
+      {!effectsEnabled && <CalmVoteMark triggerType={animTrigger.type} triggerKey={animTrigger.key} />}
+      {effectsEnabled && (
+        <Suspense fallback={null}>
+          <SmashAnimations
+            triggerType={animTrigger.type}
+            triggerKey={animTrigger.key}
+            originX={animTrigger.originX}
+            originY={animTrigger.originY}
           />
-        </Surface>
-
-        {/* 4. Background Lore & Atmosphere */}
-        <Surface tone="elevated" radius="2xl" padding="sm" className="flex items-start gap-3">
-          <span className="text-xl shrink-0">{dict.smashOrPass.howToPlayModal.atmosphereIcon}</span>
-          <div>
-            <span className="type-strong text-accent-red block">
-              {dict.smashOrPass.howToPlayModal.atmosphereTitle}
-            </span>
-            <p className="text-text-muted leading-relaxed pt-0.5">
-              {dict.smashOrPass.howToPlayModal.atmosphereDesc}
-            </p>
-          </div>
-        </Surface>
-      </div>
-      </Modal>
-
-      {/* MODALS */}
-      <RosterSelectModal
-        isOpen={isRosterModalOpen}
-        onClose={() => setIsRosterModalOpen(false)}
-        rosters={allRosters}
-        selectedRosterSlug={selectedRosterSlug}
-        onSelectRoster={(slug) => {
-          setSelectedRosterSlug(slug);
-          if (typeof window !== 'undefined') {
-            localStorage.setItem('dbd_smash_selected_roster', slug);
-          }
-          setRosterSwitchEffect(slug);
-          setTimeout(() => setRosterSwitchEffect(null), 1200);
-        }}
-        onCreateRoster={() => {
-          setIsRosterModalOpen(false);
-          router.push(`/${locale}/smash-or-pass/create`);
-        }}
-        onImportRoster={() => {
-          setIsRosterModalOpen(false);
-          setIsImportModalOpen(true);
-        }}
-        onEditRoster={(id) => {
-          setIsRosterModalOpen(false);
-          router.push(`/${locale}/smash-or-pass/create?edit=${id}`);
-        }}
-        onDeleteRoster={(id) => {
-          const roster = customRosterStore.custom[id];
-          setRosterPendingDelete({ id, name: roster?.name || 'Untitled Roster' });
-        }}
-        onExportRoster={(id) => {
-          // Unlike Edit/Create (which navigate away), Export is just an
-          // overlay -- leave the picker open underneath it, same as the
-          // delete-confirmation dialog, so closing it returns to the picker.
-          setExportingRosterId(id);
-        }}
-        locale={locale}
-      />
-
-      {/* DELETE CUSTOM ROSTER CONFIRMATION */}
-      {rosterPendingDelete && (
-        <Modal
-          isOpen
-          onClose={() => setRosterPendingDelete(null)}
-          variant="confirm"
-          tone="danger"
-          layer="top"
-          icon={<Trash2 className="h-5 w-5" aria-hidden="true" />}
-          title={dict.smashOrPass.picker.deleteConfirmTitle}
-          closeButtonAriaLabel={dict.modal.close}
-          bodyClassName="p-5 text-center"
-          footerClassName="p-4"
-          footer={
-            <div className="flex w-full flex-col-reverse gap-2.5 sm:flex-row">
-              <Button
-                variant="secondary" size="md"
-                onClick={() => setRosterPendingDelete(null)}
-                className="flex-1 rounded-xl"
-              >
-                {dict.smashOrPass.modals.cancel}
-              </Button>
-              <Button
-                variant="primary" size="md"
-                onClick={() => {
-                  const id = rosterPendingDelete.id;
-                  const slug = `local:${id}`;
-                  deleteCustomRoster(id);
-                  if (selectedRosterSlug === slug) {
-                    setSelectedRosterSlug('canon');
-                    if (typeof window !== 'undefined') {
-                      localStorage.setItem('dbd_smash_selected_roster', 'canon');
-                    }
-                  }
-                  setRosterPendingDelete(null);
-                }}
-                className="flex-1 rounded-xl"
-              >
-                {dict.smashOrPass.picker.deleteConfirmAction}
-              </Button>
-            </div>
-          }
-        >
-          <p className="type-body text-text-muted">
-            {formatMessage((dict.smashOrPass.picker.deleteConfirmDesc), { name: rosterPendingDelete.name })}
-          </p>
-        </Modal>
+        </Suspense>
       )}
 
-      <SmashRosterImportModal
-        isOpen={isImportModalOpen}
-        onClose={() => setIsImportModalOpen(false)}
-        onImported={(slug) => {
-          setIsImportModalOpen(false);
-          setSelectedRosterSlug(slug);
-          if (typeof window !== 'undefined') {
-            localStorage.setItem('dbd_smash_selected_roster', slug);
-          }
-        }}
-      />
-
-      {exportingRosterId && (
-        <SmashRosterExportModal
-          doc={(() => {
-            const roster = customRosterStore.custom[exportingRosterId];
-            if (!roster) return null;
-            const { id: _id, createdAt: _createdAt, updatedAt: _updatedAt, ...doc } = roster;
-            return doc;
-          })()}
-          onClose={() => setExportingRosterId(null)}
-          locale={locale}
-        />
-      )}
-
-      {/* ROSTER SWITCH STARTING ANIMATION EFFECT */}
-      {rosterSwitchEffect && (
-        <div className="fixed inset-0 z-50 pointer-events-none flex items-center justify-center animate-in fade-in duration-300">
-          <div className="absolute inset-0 bg-accent-red/15 backdrop-blur-sm animate-pulse" />
-          <div className="relative flex flex-col items-center gap-2 p-6 rounded-3xl bg-bg-primary/90 border-2 border-accent-red text-center animate-in zoom-in-75 duration-300">
-            <Heart className="h-14 w-14 text-accent-red fill-accent-red animate-bounce" />
-            <span className="text-xl font-black tracking-widest text-text-primary uppercase">
-              {getRosterDisplayName({ slug: rosterSwitchEffect })}
-            </span>
-          </div>
-        </div>
-      )}
-
-      <SmashLeaderboardModal
-        isOpen={isLeaderboardOpen}
-        onClose={() => setIsLeaderboardOpen(false)}
-        items={leaderboardItems}
-        userSmashes={userSmashesList}
-        editionName={activeRoster.name || selectedRosterSlug}
-        isAuthenticated={isAuthenticated}
-        onSelectCharacter={(char) => setSelectedStatCharacter(char as unknown as EntityItem)}
-        locale={locale}
-      />
-
-      <CharacterStatsModal
-        isOpen={Boolean(selectedStatCharacter)}
-        onClose={() => setSelectedStatCharacter(null)}
-        character={selectedStatCharacter}
-        stats={selectedStatCharacter?.stat ?? undefined}
-        locale={locale}
-      />
-
-      <RomancePersonaModal
-        isOpen={isPersonaOpen}
-        onClose={() => {
-          setIsPersonaOpen(false);
-          setSharedPayload(null);
-        }}
-        votes={voteHistory}
-        sharedPayload={sharedPayload}
-        onResetAll={() => setIsResetConfirmOpen(true)}
-        locale={locale}
-        customArchetypes={activeRoster?.romance_archetypes}
-      />
-
-      {/* RESET CONFIRMATION MODAL */}
-      <Modal
-        isOpen={isResetConfirmOpen}
-        onClose={() => setIsResetConfirmOpen(false)}
-        variant="confirm"
-        layer="top"
-        tone="danger"
-        icon={<AlertTriangle className="h-5 w-5" />}
-        title={dict.smashOrPass.modals.resetConfirmTitle}
-        closeButton="none"
-        footerClassName="flex-col-reverse sm:flex-row sm:justify-center gap-2.5"
-        footer={
-          <>
-            <Button
-              variant="secondary" size="md"
-              data-autofocus
-              onClick={() => setIsResetConfirmOpen(false)}
-              className="w-full sm:flex-1 rounded-xl"
-            >
-              {dict.smashOrPass.modals.cancel}
-            </Button>
-            <Button
-              variant="primary" size="md"
-              onClick={handleResetAllVotes}
-              className="w-full sm:flex-1 rounded-xl"
-            >
-              {dict.smashOrPass.modals.confirm}
-            </Button>
-          </>
-        }
+      <HubHeader
+        activeRoster={activeRoster}
+        rosterName={rosters.getRosterDisplayName(activeRoster)}
+        rosterBadgeCount={rosterBadgeCount}
+        remainingInDeck={remainingInDeck}
+        sessionSmashes={sessionSmashes}
+        sessionPasses={sessionPasses}
+        sessionSmashRate={sessionSmashRate}
+        isFilterActive={deck.roleFilter !== 'all' || deck.genderFilter !== 'all'}
+        isFilterDrawerOpen={overlays.isFilterDrawerOpen}
+        effectsEnabled={effectsEnabled}
+        onOpenRosters={() => overlays.setIsRosterModalOpen(true)}
+        onToggleFilters={() => overlays.setIsFilterDrawerOpen((prev) => !prev)}
+        onOpenEffects={prefs.openSettings}
+        onOpenPersona={() => overlays.setIsPersonaOpen(true)}
+        onOpenLeaderboard={() => overlays.setIsLeaderboardOpen(true)}
+        onShuffle={deck.shuffleDeck}
+        onReset={() => setIsResetConfirmOpen(true)}
+        onOpenHowToPlay={() => setIsHowToPlayOpen(true)}
       >
-        <p className="px-6 py-5 text-center type-body text-text-muted">
-          {dict.smashOrPass.modals.resetConfirmDesc}
-        </p>
-      </Modal>
+        <HubFilterDrawer
+          isOpen={overlays.isFilterDrawerOpen}
+          roleFilter={deck.roleFilter}
+          genderFilter={deck.genderFilter}
+          availableRoles={rosters.availableRoles}
+          availableGenders={rosters.availableGenders}
+          onFilterChange={deck.setFilter}
+        />
+      </HubHeader>
+
+      <CardArena
+        activeRoster={activeRoster}
+        selectedRosterSlug={selectedRosterSlug}
+        nsfwAcknowledged={rosters.nsfwAcknowledged}
+        loading={deck.loading}
+        currentCharacter={deck.currentCharacter}
+        nextCharacter={deck.nextCharacter}
+        thirdCharacter={deck.thirdCharacter}
+        currentIndex={deck.currentIndex}
+        locale={locale}
+        dragPhysics={exit.dragPhysics}
+        isExiting={exit.isExiting}
+        exitVote={exit.exitVote}
+        exitOffset={exit.exitOffset}
+        effectsEnabled={effectsEnabled}
+        sessionSmashes={sessionSmashes}
+        sessionPasses={sessionPasses}
+        onAcknowledgeNsfw={rosters.handleAcknowledgeNsfw}
+        onVote={handleVote}
+        onDragUpdate={(x, y, isDragging) => exit.setDragPhysics({ x, y, isDragging })}
+        onExitComplete={handleExitComplete}
+        onOpenPersona={() => overlays.setIsPersonaOpen(true)}
+        onReset={() => setIsResetConfirmOpen(true)}
+      />
+
+      <HowToPlayModal
+        isOpen={overlays.isHowToPlayOpen}
+        onClose={() => setIsHowToPlayOpen(false)}
+        onPass={() => {
+          handleVote('pass');
+          setIsHowToPlayOpen(false);
+        }}
+        onSmash={() => {
+          handleVote('smash');
+          setIsHowToPlayOpen(false);
+        }}
+        onStats={() => {
+          setIsHowToPlayOpen(false);
+          if (deck.currentCharacter) setSelectedStatCharacter(deck.currentCharacter);
+        }}
+        onReset={() => {
+          setIsHowToPlayOpen(false);
+          setIsResetConfirmOpen(true);
+        }}
+      />
+
+      <RosterModals locale={locale} overlays={overlays} rosters={rosters} />
+
+      <EffectsPreferenceModal
+        isOpen={prefs.isOpen}
+        mandatory={prefs.prefs === null}
+        values={prefs.shown}
+        onChange={prefs.update}
+        onClose={prefs.close}
+      />
+
+      <HubModals
+        locale={locale}
+        overlays={overlays}
+        activeRoster={activeRoster}
+        selectedRosterSlug={selectedRosterSlug}
+        isAuthenticated={isAuthenticated}
+        leaderboardItems={deck.leaderboardItems}
+        userSmashes={votes.userSmashesList}
+        voteHistory={votes.voteHistory}
+        onResetAllVotes={handleResetAllVotes}
+      />
     </div>
   );
 };

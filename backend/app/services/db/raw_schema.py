@@ -247,7 +247,7 @@ CREATE TABLE IF NOT EXISTS entities (
     role TEXT NOT NULL DEFAULT 'Survivor',
     gender TEXT NOT NULL DEFAULT 'female',
     media_url TEXT,
-    media_type TEXT NOT NULL DEFAULT 'image',
+    media_display TEXT,
     watermark_left TEXT,
     watermark_right TEXT,
     -- Was one `metadata_json` blob; the profile is columns now.
@@ -266,7 +266,6 @@ CREATE TABLE IF NOT EXISTS entities (
     chaos_score SMALLINT CHECK (chaos_score IS NULL OR (chaos_score >= 0 AND chaos_score <= 100)),
     translations TEXT DEFAULT '{}',
     order_index INTEGER NOT NULL DEFAULT 0,
-    is_active BOOLEAN NOT NULL DEFAULT 1,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (roster_id) REFERENCES rosters(id) ON DELETE CASCADE
 );
@@ -351,6 +350,14 @@ def init_raw_sqlite_schema(conn: sqlite3.Connection) -> None:
                         except Exception:
                             pass
                 conn.commit()
+
+        # An `entities` table from before `media_display` keeps its old shape (CREATE TABLE IF
+        # NOT EXISTS leaves it alone), and the ORM selects every mapped column.
+        cursor.execute("PRAGMA table_info(entities);")
+        entity_cols = [row[1] for row in cursor.fetchall()]
+        if entity_cols and "media_display" not in entity_cols:
+            cursor.execute("ALTER TABLE entities ADD COLUMN media_display TEXT;")
+            conn.commit()
 
         cursor.executescript(SQLITE_FALLBACK_DDL)
         conn.commit()

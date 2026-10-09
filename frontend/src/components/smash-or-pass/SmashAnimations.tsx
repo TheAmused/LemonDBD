@@ -88,11 +88,15 @@ function createLightningPath(
   return segments;
 }
 
+/** Two votes closer together than this count as fast voting. */
+const RAPID_VOTE_MS = 900;
+
 export const SmashAnimations: React.FC<SmashAnimationsProps> = ({ triggerType, triggerKey, originX, originY }) => {
   const dict = useDictionary();
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [activeOverlay, setActiveOverlay] = useState<'smash' | 'super_smash' | 'pass' | null>(null);
   const [chromaticShift, setChromaticShift] = useState(false);
+  const lastTriggerAtRef = useRef(0);
 
   const smashLabel = dict.smashOrPass.controls.smash;
   const superSmashLabel =
@@ -102,8 +106,14 @@ export const SmashAnimations: React.FC<SmashAnimationsProps> = ({ triggerType, t
   useEffect(() => {
     if (!triggerType) return;
 
-    setActiveOverlay(triggerType);
-    setChromaticShift(true);
+    // Voting fast: the full-screen flash and filter are what make the page stutter, and nobody
+    // can read them at this pace anyway -- the lighter burst below is all a swipe gets.
+    const now = performance.now();
+    const rapid = now - lastTriggerAtRef.current < RAPID_VOTE_MS;
+    lastTriggerAtRef.current = now;
+
+    setActiveOverlay(rapid ? null : triggerType);
+    setChromaticShift(!rapid);
 
     const shiftTimer = setTimeout(() => setChromaticShift(false), 240);
     const overlayTimer = setTimeout(() => setActiveOverlay(null), 450);
@@ -235,8 +245,8 @@ export const SmashAnimations: React.FC<SmashAnimationsProps> = ({ triggerType, t
     }
 
     // 2. Initialize Particles
-    const particleCount =
-      triggerType === 'super_smash' ? 80 : triggerType === 'smash' ? 55 : 35;
+    const fullCount = triggerType === 'super_smash' ? 80 : triggerType === 'smash' ? 55 : 35;
+    const particleCount = rapid ? Math.round(fullCount / 2) : fullCount;
 
     for (let i = 0; i < particleCount; i++) {
       const angle = Math.random() * Math.PI * 2;

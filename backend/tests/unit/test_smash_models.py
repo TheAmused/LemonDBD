@@ -108,7 +108,7 @@ class TestSmashModels:
             role="Killer",
             gender="male",
             media_url="/images/roster/trickster.png",
-            media_type="image",
+            media_display={"fit": "contain", "position": "50% 40%"},
             chaos_score=92,
             danger_level="Lethal",
             archetype="Neon Idol",
@@ -133,6 +133,9 @@ class TestSmashModels:
 
         entity_dict = entity.to_dict()
         assert entity_dict["slug"] == "cyber_trickster"
+        assert entity_dict["media_display"] == {"fit": "contain", "position": "50% 40%"}
+        # Activity is the roster's; an entity has neither a flag of its own nor a media type.
+        assert "is_active" not in entity_dict and "media_type" not in entity_dict
         assert entity_dict["metadata"]["chaos_score"] == 92
         assert entity_dict["role"] == "Killer"
 

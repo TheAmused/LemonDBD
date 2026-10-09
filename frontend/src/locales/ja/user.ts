@@ -30,6 +30,7 @@ export default {
   authRequiredTitle: "ログインが必要です",
   authRequiredDesc: "LemonDBDのプロフィール閲覧、固有パークの管理、ゲームチャレンジの記録を行うにはログインまたは新規登録してください。",
   returnToHome: "ホームに戻る",
+  usernameLabel: "ユーザー名",
   usernameOrEmailLabel: "ユーザー名またはメールアドレス",
   emailLabel: "メールアドレス",
   passwordLabel: "パスワード",
@@ -68,6 +69,9 @@ export default {
   failedToRequestPasswordReset: "パスワードリセットのリクエストに失敗しました。",
   invalidCredentials: "認証情報が無効です。",
   registrationFailed: "登録に失敗しました。",
+  acceptRulesLabel: "{rules}を読み、同意します",
+  acceptRulesLink: "ルール",
+  rulesNotAccepted: "アカウントを作成するには、ルールに同意してください。",
   unexpectedError: "予期しないエラーが発生しました。",
 
   // --- /user page: perf & i18n hardening pass additions ---

@@ -47,12 +47,13 @@ class TestSmashOrPassAPI:
         res = client.get("/api/v1/smash-or-pass/rosters")
         assert res.status_code == 200
         json_data = res.get_json()
-        assert json_data["count"] == 6
-        assert len(json_data["data"]) == 6
+        assert json_data["count"] == 7
+        assert len(json_data["data"]) == 7
 
         slugs = {r["slug"] for r in json_data["data"]}
         assert slugs == {
             "canon",
+            "canon_gemini",
             "hooked_on_you",
             "legendary_characters",
             "cyberpunk_2077",
@@ -114,7 +115,7 @@ class TestSmashOrPassAPI:
         assert res.status_code == 200
         feed_data = res.get_json()["data"]
         assert len(feed_data["entities"]) == 10
-        assert feed_data["total_remaining"] == 28
+        assert feed_data["total_remaining"] == 29
         assert all(
             e["role"] == "Survivor" and e["gender"] == "female"
             for e in feed_data["entities"]
@@ -137,7 +138,7 @@ class TestSmashOrPassAPI:
         )
         assert res_after.status_code == 200
         feed_after = res_after.get_json()["data"]
-        assert feed_after["total_remaining"] == 27
+        assert feed_after["total_remaining"] == 28
 
         remaining_ids = {e["id"] for e in feed_after["entities"]}
         assert first_entity["id"] not in remaining_ids

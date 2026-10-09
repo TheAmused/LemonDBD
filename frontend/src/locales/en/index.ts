@@ -22,8 +22,10 @@ import about from './about';
 import tierLists from './tierLists';
 import minigames from './minigames';
 import privacy from './privacy';
+import rules from './rules';
 import errorPages from './errorPages';
 import scoreboardCheck from './scoreboardCheck';
+import validation from './validation';
 
 const en = {
   app,
@@ -49,8 +51,10 @@ const en = {
   tierLists,
   minigames,
   privacy,
+  rules,
   errorPages,
   scoreboardCheck,
+  validation,
 };
 
 export default en;

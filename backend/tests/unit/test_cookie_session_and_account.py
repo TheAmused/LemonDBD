@@ -7,7 +7,7 @@ from flask.testing import FlaskClient
 
 from app.core.extensions import db
 from app.core.security import SESSION_COOKIE_NAME, generate_token, hash_password
-from app.models import BugReport, User
+from app.models import AdminAuditLog, BugReport, User
 
 PASSWORD = "password123"
 
@@ -234,3 +234,87 @@ class TestExportOwnData:
         assert "verification_code" not in body["account"]
         assert [r["title"] for r in body["bug_reports"]] == ["t"]
         assert body["streak_runs"]["chaos"] == {"runs": [], "match_log": []}
+        assert body["requested_by"] == "self"
+        assert "lemondbd-my-data.json" in res.headers["Content-Disposition"]
+        assert res.headers["Cache-Control"] == "no-store"
+
+
+class TestAdminExportUserData:
+    """GET /users/<id>/export: the user's own export, fetched by an admin."""
+
+    @staticmethod
+    def _target(name: str = "subject", **fields) -> User:
+        user = User(
+            username=name, email=f"{name}@example.com", password_hash=hash_password(PASSWORD), **fields
+        )
+        db.session.add(user)
+        db.session.commit()
+        return user
+
+    @staticmethod
+    def _auth(token: str) -> dict[str, str]:
+        return {"Authorization": f"Bearer {token}"}
+
+    def test_requires_login(self, client: FlaskClient) -> None:
+        assert client.get("/api/v1/users/1/export").status_code == 401
+
+    def test_regular_users_are_refused_even_for_themselves(self, client: FlaskClient) -> None:
+        user = self._target("plain")
+        token = generate_token(user.id, role="user")
+        res = client.get(f"/api/v1/users/{user.id}/export", headers=self._auth(token))
+        assert res.status_code == 403
+
+    def test_unknown_user_is_404_and_not_audited(self, client: FlaskClient) -> None:
+        _, token = _make_admin()
+        res = client.get("/api/v1/users/99999/export", headers=self._auth(token))
+        assert res.status_code == 404
+        assert db.session.query(AdminAuditLog).filter_by(action="user_data_exported").count() == 0
+
+    def test_admin_gets_the_same_file_without_any_credentials(self, client: FlaskClient) -> None:
+        target = self._target(
+            reset_token="RESET-TOKEN-VALUE", verification_code="123456", verification_attempts=2
+        )
+        db.session.add(BugReport(user_id=target.id, reporter_name="subject", title="t", message="m"))
+        db.session.commit()
+        _, token = _make_admin()
+
+        res = client.get(f"/api/v1/users/{target.id}/export", headers=self._auth(token))
+
+        assert res.status_code == 200
+        assert f"lemondbd-user-{target.id}-data.json" in res.headers["Content-Disposition"]
+        assert res.headers["Cache-Control"] == "no-store"
+        body = res.get_json()
+        assert body["requested_by"] == "admin"
+        assert body["account"]["username"] == "subject"
+        assert [r["title"] for r in body["bug_reports"]] == ["t"]
+        for secret in ("password_hash", "verification_code", "reset_token", "verification_attempts"):
+            assert secret not in body["account"]
+        raw = res.get_data(as_text=True)
+        assert "RESET-TOKEN-VALUE" not in raw
+        assert target.password_hash not in raw
+
+    def test_same_keys_as_the_users_own_export(self, client: FlaskClient) -> None:
+        data = _register(client, "twin").get_json()
+        own = client.get("/api/v1/auth/account/export").get_json()
+        _, token = _make_admin()
+        theirs = client.get(f"/api/v1/users/{data['user']['id']}/export", headers=self._auth(token)).get_json()
+        assert theirs.keys() == own.keys()
+        assert theirs["account"].keys() == own["account"].keys()
+
+    def test_disabled_accounts_can_still_be_exported(self, client: FlaskClient) -> None:
+        target = self._target("locked", is_active=False)
+        _, token = _make_admin()
+        res = client.get(f"/api/v1/users/{target.id}/export", headers=self._auth(token))
+        assert res.status_code == 200
+        assert res.get_json()["account"]["is_active"] is False
+
+    def test_every_download_is_audited_without_the_contents(self, client: FlaskClient) -> None:
+        target = self._target()
+        admin, token = _make_admin()
+        client.get(f"/api/v1/users/{target.id}/export", headers=self._auth(token))
+
+        row = db.session.query(AdminAuditLog).filter_by(action="user_data_exported").one()
+        assert row.admin_user_id == admin.id
+        assert row.target_type == "user"
+        assert row.target_id == str(target.id)
+        assert row.details is None

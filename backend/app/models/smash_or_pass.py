@@ -422,7 +422,7 @@ class SmashTaxonomy(Base):
 
 
 class SmashUserPreference(Base):
-    """A signed-in viewer's answer to the Smash or Pass page's effects-and-music warning.
+    """A signed-in viewer's answer to the Smash or Pass page's effects, sound-effects and music warning.
 
     One row per user. `chosen_at` is when the viewer made the choice on their device (milliseconds
     since the epoch), not when the row was written: it is what lets a choice made while signed out
@@ -435,6 +435,7 @@ class SmashUserPreference(Base):
         Integer, ForeignKey("users.id", ondelete="CASCADE"), primary_key=True
     )
     effects_enabled: Mapped[bool] = mapped_column(Boolean, nullable=False)
+    sounds_enabled: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
     music_enabled: Mapped[bool] = mapped_column(Boolean, nullable=False)
     chosen_at: Mapped[int] = mapped_column(BigInteger, nullable=False)
     updated_at: Mapped[datetime] = mapped_column(
@@ -444,6 +445,7 @@ class SmashUserPreference(Base):
     def to_dict(self) -> dict[str, Any]:
         return {
             "effects": self.effects_enabled,
+            "sounds": self.sounds_enabled,
             "music": self.music_enabled,
             "chosen_at": self.chosen_at,
         }

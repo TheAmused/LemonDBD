@@ -227,7 +227,10 @@ class SmashRosterAdminCreate(BaseModel):
 class SmashPreferenceIn(BaseModel):
     """The viewer's effects-and-music choice, as made on their device."""
 
+    #: Visual effects (flashes, particles, card motion).
     effects: bool
+    #: Sound effects. Absent from older clients, which had one "effects" switch for both.
+    sounds: bool | None = None
     music: bool
     #: When the choice was made, milliseconds since the epoch.
     chosen_at: int = Field(ge=0)

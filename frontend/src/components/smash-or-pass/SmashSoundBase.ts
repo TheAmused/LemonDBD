@@ -86,12 +86,12 @@ export abstract class SmashSoundBase {
   }
 
   /**
-   * Applies the viewer's effects / music choice -- the only thing that switches sound on or off.
+   * Applies the viewer's sound-effects / music choice -- the only thing that switches sound on or off.
    * Music chosen starts it; until the page has had a click or key press the browser will not let
    * audio start, so a saved choice then waits for the first one (see `handleUserInteraction`).
    */
-  public applyPreferences({ effects, music }: { effects: boolean; music: boolean }): void {
-    this.effectsAllowed = effects;
+  public applyPreferences({ sounds, music }: { sounds: boolean; music: boolean }): void {
+    this.effectsAllowed = sounds;
     this.musicAllowed = music;
     if (!music) {
       this.stopBgm();

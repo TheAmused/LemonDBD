@@ -9,8 +9,8 @@ const read = (rel: string) => fs.readFileSync(path.join(root, rel), 'utf8');
 
 test('SmashOrPass: effects and music choice', async (t) => {
   const { reconcilePrefs, readLocalPrefs, writeLocalPrefs } = await import('../../components/smash-or-pass/prefs/smashPrefs');
-  const older = { effects: true, music: true, chosenAt: 1000 };
-  const newer = { effects: false, music: false, chosenAt: 2000 };
+  const older = { effects: true, sounds: true, music: true, chosenAt: 1000 };
+  const newer = { effects: false, sounds: false, music: false, chosenAt: 2000 };
 
   await t.test('no choice on either side stays unchosen', () => {
     assert.deepStrictEqual(reconcilePrefs(null, null), { prefs: null, pushToAccount: false });
@@ -41,8 +41,12 @@ test('SmashOrPass: effects and music choice', async (t) => {
       assert.strictEqual(readLocalPrefs(), null);
       writeLocalPrefs(newer);
       assert.deepStrictEqual(readLocalPrefs(), newer);
-      store.set([...store.keys()][0], JSON.stringify({ effects: 'yes' }));
+      const key = [...store.keys()][0];
+      store.set(key, JSON.stringify({ effects: 'yes' }));
       assert.strictEqual(readLocalPrefs(), null);
+      // Saved before sound effects had a switch of their own: they follow `effects`.
+      store.set(key, JSON.stringify({ effects: false, music: true, chosenAt: 3 }));
+      assert.deepStrictEqual(readLocalPrefs(), { effects: false, sounds: false, music: true, chosenAt: 3 });
     } finally {
       (globalThis as Record<string, unknown>).window = original;
       delete (globalThis as Record<string, unknown>).localStorage;
@@ -55,8 +59,11 @@ test('SmashOrPass: effects and music choice', async (t) => {
     assert.match(modal, /closeOnEscape=\{!mandatory\}/);
     assert.match(modal, /closeOnBackdropClick=\{!mandatory\}/);
     const hub = read('SmashOrPassHub.tsx');
-    assert.match(hub, /mandatory=\{prefs\.needsChoice\}/);
-    assert.match(hub, /useHubOverlays\(prefs\.needsChoice \|\| prefs\.isSettingsOpen\)/);
+    assert.match(hub, /mandatory=\{prefs\.prefs === null\}/);
+    assert.match(hub, /useHubOverlays\(prefs\.isOpen\)/);
+    // Flipping a switch applies and saves it at once -- no confirm button is needed.
+    assert.match(hub, /onChange=\{prefs\.update\}/);
+    assert.doesNotMatch(modal, /onSave|cancel/);
   });
 
   await t.test('with effects off the vote particle layer and the card fling are gone, the ambient embers stay', () => {

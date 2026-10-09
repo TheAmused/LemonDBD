@@ -3,19 +3,26 @@ import { useCallback, useEffect, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { fetchSmashPreferences, saveSmashPreferences } from '@/services/smashApi';
 import { SmashSounds } from '../SmashSoundEffects';
-import { readLocalPrefs, reconcilePrefs, writeLocalPrefs, type SmashPrefs } from './smashPrefs';
+import { defaultPrefs, readLocalPrefs, reconcilePrefs, writeLocalPrefs, type SmashPrefs } from './smashPrefs';
+
+type Choice = Omit<SmashPrefs, 'chosenAt'>;
+
+function toRemote(prefs: SmashPrefs) {
+  return { effects: prefs.effects, sounds: prefs.sounds, music: prefs.music, chosen_at: prefs.chosenAt };
+}
 
 /**
- * The viewer's effects and music choice: kept in localStorage, saved on the account while signed
- * in, and reconciled with the account's copy whenever they sign in. Until a choice exists,
- * nothing plays and nothing animates, and `needsChoice` asks the page to put the warning up.
+ * The viewer's effects, sound-effects and music choice: applied the moment a switch is flipped,
+ * kept in localStorage, saved on the account while signed in, and reconciled with the account's
+ * copy whenever they sign in. Until a choice exists, nothing plays and nothing animates, and the
+ * page puts the warning up.
  */
 export function useSmashPrefs() {
   const { user, isAuthenticated, isLoading: isAuthLoading } = useAuth();
   const [prefs, setPrefs] = useState<SmashPrefs | null>(null);
   const [hasReadLocal, setHasReadLocal] = useState(false);
   const [accountCheckedFor, setAccountCheckedFor] = useState<number | null>(null);
-  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   // localStorage is read after mount so the server render and the first client render agree.
   useEffect(() => {
@@ -31,14 +38,14 @@ export function useSmashPrefs() {
     (async () => {
       const remote = await fetchSmashPreferences();
       if (cancelled) return;
-      const account = remote ? { effects: remote.effects, music: remote.music, chosenAt: remote.chosen_at } : null;
+      const account = remote
+        ? { effects: remote.effects, sounds: remote.sounds ?? remote.effects, music: remote.music, chosenAt: remote.chosen_at }
+        : null;
       const { prefs: winner, pushToAccount } = reconcilePrefs(readLocalPrefs(), account);
       if (winner) {
         writeLocalPrefs(winner);
         setPrefs(winner);
-        if (pushToAccount) {
-          saveSmashPreferences({ effects: winner.effects, music: winner.music, chosen_at: winner.chosenAt }).catch(() => {});
-        }
+        if (pushToAccount) saveSmashPreferences(toRemote(winner)).catch(() => {});
       }
       setAccountCheckedFor(userId);
     })();
@@ -53,36 +60,51 @@ export function useSmashPrefs() {
   }, [userId]);
 
   const effects = prefs?.effects ?? false;
+  const sounds = prefs?.sounds ?? false;
   const music = prefs?.music ?? false;
   useEffect(() => {
-    SmashSounds.applyPreferences({ effects, music });
-  }, [effects, music]);
+    SmashSounds.applyPreferences({ sounds, music });
+  }, [sounds, music]);
 
   /** Signed in, the page waits for the account's answer before asking: it may already have one. */
   const isSettled = hasReadLocal && !isAuthLoading && (userId === null || accountCheckedFor === userId);
   const needsChoice = isSettled && prefs === null;
 
-  const save = useCallback(
-    (choice: { effects: boolean; music: boolean }) => {
-      const next: SmashPrefs = { ...choice, chosenAt: Date.now() };
+  // The warning opens by itself for a first choice, and then stays up until it is closed -- a
+  // switch flipped in it is a choice already, but the viewer should finish reading.
+  useEffect(() => {
+    if (needsChoice) setIsOpen(true);
+  }, [needsChoice]);
+
+  /** What the switches show: the saved choice, or the defaults while there is none. */
+  const shown: Choice = prefs ?? defaultPrefs();
+
+  /** Applies and saves a change at once. */
+  const update = useCallback(
+    (change: Partial<Choice>) => {
+      const base: Choice = prefs ?? defaultPrefs();
+      const next: SmashPrefs = { ...base, ...change, chosenAt: Date.now() };
       writeLocalPrefs(next);
       setPrefs(next);
-      setIsSettingsOpen(false);
-      if (userId !== null) {
-        saveSmashPreferences({ effects: next.effects, music: next.music, chosen_at: next.chosenAt }).catch(() => {});
-      }
+      if (userId !== null) saveSmashPreferences(toRemote(next)).catch(() => {});
     },
-    [userId]
+    [prefs, userId]
   );
+
+  /** Closing with no choice made yet accepts what the switches show. */
+  const close = useCallback(() => {
+    if (prefs === null) update({});
+    setIsOpen(false);
+  }, [prefs, update]);
 
   return {
     prefs,
+    shown,
     effectsEnabled: effects,
-    musicEnabled: music,
     needsChoice,
-    isSettingsOpen,
-    openSettings: useCallback(() => setIsSettingsOpen(true), []),
-    closeSettings: useCallback(() => setIsSettingsOpen(false), []),
-    save,
+    isOpen,
+    openSettings: useCallback(() => setIsOpen(true), []),
+    close,
+    update,
   };
 }

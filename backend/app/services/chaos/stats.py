@@ -12,4 +12,4 @@ def fetch_chaos_user_stats(user_id: int, difficulty: str) -> StreakStats[ChaosMa
     run_ids = db.session.scalars(
         select(ChaosRun.id).where(ChaosRun.user_id == user_id, ChaosRun.difficulty == difficulty)
     ).all()
-    return fetch_streak_stats(run_ids, ChaosMatchLog, ChaosMatchLog.to_dict)
+    return fetch_streak_stats(run_ids, ChaosRun, ChaosMatchLog, ChaosMatchLog.to_dict)

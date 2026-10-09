@@ -231,7 +231,7 @@ class TestGauntletRun:
     ) -> None:
         original = gauntlet_service.get_or_create_run(gauntlet_user, "killer")
         gauntlet_service.get_or_create_run(gauntlet_user, "killer", "lemon_solo")
-        fresh = gauntlet_service.reset_run(gauntlet_user, "killer", "lemon_solo")
+        fresh = gauntlet_service.abandon_run(gauntlet_user, "killer", "lemon_solo")
         assert fresh["game_mode"] == "lemon_solo"
         assert gauntlet_service.get_or_create_run(gauntlet_user, "killer")["id"] == original["id"]
 
@@ -473,11 +473,19 @@ class TestGauntletCompletion:
         self._clear("Trapper")
         self._clear("Nurse")
 
-        fresh = self.service.reset_run(self.user_id, "killer")
+        fresh = self.service.abandon_run(self.user_id, "killer")
         assert fresh["status"] == "in_progress"
         assert fresh["current_streak"] == 0
         assert fresh["completed_characters"] == []
         assert fresh["target_revealed"] is False
+
+    def test_reset_keeps_the_best_streak(self) -> None:
+        self.service.get_or_create_run(self.user_id, "killer")
+        self._clear("Trapper")
+
+        fresh = self.service.abandon_run(self.user_id, "killer")
+        assert fresh["current_streak"] == 0
+        assert fresh["best_streak"] == 1
 
 @pytest.mark.unit
 class TestGauntletStats:

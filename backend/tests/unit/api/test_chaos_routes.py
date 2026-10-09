@@ -92,7 +92,7 @@ class TestChaosRoutes:
             headers=headers,
         )
         resp = client.post(
-            "/api/v1/chaos-streak/run/reset", json={"difficulty": "hell"}, headers=headers
+            "/api/v1/chaos-streak/run/abandon", json={"difficulty": "hell"}, headers=headers
         )
         assert resp.status_code == 200
         assert resp.get_json()["run"]["current_streak"] == 0

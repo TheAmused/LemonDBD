@@ -73,7 +73,7 @@ class TestSharedStreakRoutes:
     @mode_param
     def test_endpoints_require_login(self, client: FlaskClient, mode: StreakMode) -> None:
         assert client.get(f"{mode.prefix}/run?{_query(mode)}").status_code == 401
-        assert client.post(f"{mode.prefix}/run/reset", json={mode.param: mode.value}).status_code == 401
+        assert client.post(f"{mode.prefix}/run/abandon", json={mode.param: mode.value}).status_code == 401
         assert client.get(f"{mode.prefix}/stats?{_query(mode)}").status_code == 401
 
     @mode_param
@@ -98,7 +98,7 @@ class TestSharedStreakRoutes:
     def test_reset_requires_an_existing_run(
         self, client: FlaskClient, headers: dict[str, str], mode: StreakMode
     ) -> None:
-        resp = client.post(f"{mode.prefix}/run/reset", json={mode.param: mode.value}, headers=headers)
+        resp = client.post(f"{mode.prefix}/run/abandon", json={mode.param: mode.value}, headers=headers)
         assert resp.status_code == 404
 
     @mode_param
@@ -106,7 +106,7 @@ class TestSharedStreakRoutes:
         self, client: FlaskClient, headers: dict[str, str], mode: StreakMode
     ) -> None:
         client.get(f"{mode.prefix}/run?{_query(mode)}", headers=headers)
-        resp = client.post(f"{mode.prefix}/run/reset", json={mode.param: mode.value}, headers=headers)
+        resp = client.post(f"{mode.prefix}/run/abandon", json={mode.param: mode.value}, headers=headers)
         assert resp.status_code == 200
         assert resp.get_json()["run"][mode.param] == mode.value
 

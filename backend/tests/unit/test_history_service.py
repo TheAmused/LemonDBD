@@ -243,10 +243,10 @@ class TestMediumModeCheckpoint:
 
 
 @pytest.mark.unit
-class TestResetRun:
+class TestAbandonRun:
     """Tests for resetting in-progress History runs."""
 
-    def test_reset_wipes_and_starts_over(
+    def test_abandon_starts_over(
         self, history_service: HistoryService, history_user: int
     ) -> None:
         seed_general_perk("Whispers")
@@ -254,7 +254,7 @@ class TestResetRun:
         run = history_service.get_or_create_run(history_user, "hell")
         history_service.submit_result(history_user, run["id"], "win", "The Trapper")
 
-        reset = history_service.reset_run(history_user, "hell")
+        reset = history_service.abandon_run(history_user, "hell")
         assert reset["total_killers_beaten"] == 0
         assert reset["completed_killers"] == []
         assert reset["unlocked_perk_names"] == ["Whispers"]

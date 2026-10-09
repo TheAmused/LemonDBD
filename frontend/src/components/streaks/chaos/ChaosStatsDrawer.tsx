@@ -4,7 +4,7 @@ import type { Dictionary } from '@/locales/types';
 
 import React from 'react';
 import { ChaosStats, ChaosMatchLog } from '@/types/chaosStreak';
-import { StreakStatsDrawer, streakAtResult } from '../StreakStatsDrawer';
+import { StreakStatsDrawer } from '../StreakStatsDrawer';
 import { ADDON_RARITY_ICONS } from '@/constants/addonRarityIcons';
 import { useCharacterDisplayName } from '@/context/DisplayNamesContext';
 
@@ -32,7 +32,7 @@ export const ChaosStatsDrawer: React.FC<ChaosStatsDrawerProps> = ({ isOpen, onCl
     )}
     renderMeta={(log) => (
       <span className="inline-flex items-center gap-1.5">
-        {dict.streaks.streakLabel} {streakAtResult(log)}
+        {dict.streaks.streakLabel} {log.streak_after}
         <span>{dict.streaks.middotSeparator}</span>
         {log.addon_rarities.map((rarity, i) => (
           <img

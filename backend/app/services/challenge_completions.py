@@ -15,7 +15,7 @@ def record_challenge_completion(
     unlocked_characters_count: int,
     full_roster: bool = False,
 ) -> None:
-    """Snapshot a fully-completed challenge run so it survives the run's own reset.
+    """Snapshot a fully-completed challenge run so it survives the run's own abandon.
 
     Added to the session only -- the caller's existing commit (right after the
     run row itself is updated) persists this in the same transaction.
@@ -67,7 +67,7 @@ def fetch_completed_variants_by_mode(user_id: int) -> dict[str, list[str]]:
     """Every distinct (mode, variant) this user has ever fully completed, grouped by mode.
 
     Drives "already won" badges (challenge cards, difficulty tiles, page-streak
-    killer roster) -- these survive a run's own reset because they read this
+    killer roster) -- these survive a run's own abandon because they read this
     table, not the run row itself.
     """
     rows = db.session.execute(
@@ -127,7 +127,7 @@ def fetch_full_roster_counts_by_mode(user_id: int) -> dict[str, dict[str, int]]:
 def fetch_active_run_variants_by_mode(user_id: int) -> dict[str, list[str]]:
     """Every mode+variant this user currently has an in-progress run for.
 
-    A completion record is permanent by design (it must survive a reset), but
+    A completion record is permanent by design (it must survive an abandon), but
     that means a tier cleared once in the past would otherwise keep looking
     "already completed" forever -- including while the player is mid-way
     through a brand new attempt on that same tier after resetting. This lets
@@ -162,7 +162,7 @@ def fetch_active_run_variants_by_mode(user_id: int) -> dict[str, list[str]]:
 def delete_completions(user_id: int, mode: str) -> None:
     """Wipe every completion record for a user/mode -- used only by page streak's
     "reset everything" flow, which intentionally also clears the win badges
-    (unlike a normal per-run reset elsewhere, which leaves this table alone)."""
+    (unlike a normal per-run abandon elsewhere, which leaves this table alone)."""
     db.session.execute(
         delete(ChallengeCompletionRecord).where(
             ChallengeCompletionRecord.user_id == user_id,

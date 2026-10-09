@@ -15,9 +15,6 @@ export interface ChaosModeModalProps {
   onClose: () => void;
   onSelectDifficulty: (difficulty: Difficulty) => void;
   currentDifficulty?: Difficulty;
-  /** False when switching difficulty mid-run from the board header -- skips
-   *  the explanatory intro, since the player already knows how Chaos works. */
-  showIntro?: boolean;
   /** Difficulties this user has ever fully completed, mapped to the killer
    *  count frozen at that completion -- clearing a harder one marks every
    *  easier tile as done too, inheriting its count. */
@@ -32,7 +29,6 @@ export const ChaosModeModal: React.FC<ChaosModeModalProps> = ({
       onClose,
       onSelectDifficulty,
       currentDifficulty,
-      showIntro = true,
       completedCounts = {},
       completedFullCounts = {},
     }) => {
@@ -71,11 +67,7 @@ export const ChaosModeModal: React.FC<ChaosModeModalProps> = ({
     <ChallengeModeModal
       isOpen={isOpen}
       onClose={onClose}
-      intro={
-        showIntro
-          ? s.chaosIntro
-          : undefined
-      }
+      intro={s.chaosIntro}
       tiles={tiles}
       onSelectTile={(value) => onSelectDifficulty(value as Difficulty)}
       tileGridClassName="sm:grid-cols-3"

@@ -36,7 +36,7 @@ class ModeAdapter:
         return self.service.get_or_create_run(user_id, *self.variant)
 
     def reset(self, user_id: int) -> dict[str, Any]:
-        return self.service.reset_run(user_id, *self.variant)
+        return self.service.abandon_run(user_id, *self.variant)
 
     def submit(self, user_id: int, run: dict[str, Any], result: str, killer: str) -> dict[str, Any]:
         if self.name == "gauntlet":
@@ -160,3 +160,113 @@ class TestSharedStreakRunService:
         record = _record(user_id)
         assert record.full_roster is False
         assert record.unlocked_characters_count == 2
+
+
+def _logged_attempts(mode: ModeAdapter, user_id: int) -> list[int]:
+    run = db.session.scalars(select(mode.service.run_model).where(mode.service.run_model.user_id == user_id)).one()
+    return [log.attempt for log in sorted(run.match_logs, key=lambda log: log.id)]
+
+
+def _stored_run(mode: ModeAdapter, user_id: int):
+    db.session.expire_all()
+    return db.session.scalars(select(mode.service.run_model).where(mode.service.run_model.user_id == user_id)).one()
+
+
+@pytest.mark.unit
+class TestAttemptGroups:
+    def test_a_loss_stays_in_the_attempt_it_ended(self, mode: ModeAdapter, user_id: int) -> None:
+        run = mode.get_run(user_id)
+        mode.submit(user_id, run, "loss", KILLERS[0])
+        mode.submit(user_id, run, "loss", KILLERS[0])
+
+        assert _logged_attempts(mode, user_id) == [1, 2]
+        stored = _stored_run(mode, user_id)
+        assert (stored.attempt, stored.attempts) == (3, 2)
+
+    def test_abandoning_keeps_the_matches_and_opens_a_new_attempt(self, mode: ModeAdapter, user_id: int) -> None:
+        run = mode.get_run(user_id)
+        mode.submit(user_id, run, "win", KILLERS[0])
+        reset = mode.reset(user_id)
+
+        assert reset["id"] == run["id"]
+        assert reset["completed_killers" if "completed_killers" in reset else "completed_characters"] == []
+        stored = _stored_run(mode, user_id)
+        assert (stored.attempt, stored.attempts) == (2, 1)
+        assert stored.status == "in_progress"
+        assert (stored.total_wins, stored.total_losses, stored.playthrough_matches) == (1, 0, 0)
+        assert _logged_attempts(mode, user_id) == [1]
+
+        mode.submit(user_id, reset, "win", KILLERS[1])
+        assert _logged_attempts(mode, user_id) == [1, 2]
+
+    def test_replaying_after_a_completion_restarts_the_count_but_not_the_groups(
+        self, mode: ModeAdapter, user_id: int
+    ) -> None:
+        run = mode.get_run(user_id)
+        mode.submit(user_id, run, "loss", KILLERS[0])
+        _clear_roster(mode, user_id, run)
+        assert _logged_attempts(mode, user_id) == [1, 2, 2]
+
+        replay = mode.reset(user_id)
+        stored = _stored_run(mode, user_id)
+        assert (stored.attempt, stored.attempts) == (3, 0)
+
+        _clear_roster(mode, user_id, replay)
+        assert _logged_attempts(mode, user_id) == [1, 2, 2, 3, 3]
+        records = db.session.scalars(
+            select(ChallengeCompletionRecord)
+            .where(ChallengeCompletionRecord.user_id == user_id)
+            .order_by(ChallengeCompletionRecord.id)
+        ).all()
+        assert [(r.attempts_taken, r.matches_played) for r in records] == [(2, 3), (1, 2)]
+
+
+@pytest.mark.unit
+class TestMatchLogRetention:
+    def _play(self, mode: ModeAdapter, user_id: int, run: dict[str, Any], results: list[str]) -> None:
+        for result in results:
+            mode.submit(user_id, run, result, KILLERS[0])
+
+    def test_lifetime_totals_count_every_match(self, mode: ModeAdapter, user_id: int) -> None:
+        run = mode.get_run(user_id)
+        self._play(mode, user_id, run, ["loss", "loss"])
+        stored = _stored_run(mode, user_id)
+        assert (stored.total_wins, stored.total_losses, stored.playthrough_matches) == (0, 2, 2)
+
+    def test_whole_old_attempts_are_dropped_first(
+        self, mode: ModeAdapter, user_id: int, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        monkeypatch.setattr("app.services.match_log_retention.MAX_LOGGED_MATCHES", 3)
+        run = mode.get_run(user_id)
+        self._play(mode, user_id, run, ["loss", "loss", "loss"])
+        assert _logged_attempts(mode, user_id) == [1, 2, 3]
+
+        self._play(mode, user_id, run, ["loss"])
+        # Attempt 1 is gone as a whole; the rest are intact.
+        assert _logged_attempts(mode, user_id) == [2, 3, 4]
+        stored = _stored_run(mode, user_id)
+        assert (stored.total_losses, stored.playthrough_matches) == (4, 4)
+
+    def test_an_attempt_over_the_cap_loses_only_its_oldest_matches(
+        self, mode: ModeAdapter, user_id: int, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        monkeypatch.setattr("app.services.match_log_retention.MAX_LOGGED_MATCHES", 1)
+        run = mode.get_run(user_id)
+        mode.submit(user_id, run, "win", KILLERS[0])
+        mode.submit(user_id, run, "loss", KILLERS[1])  # attempt 1 now holds two matches
+
+        assert _logged_attempts(mode, user_id) == [1]
+        stored = _stored_run(mode, user_id)
+        assert (stored.total_wins, stored.total_losses) == (1, 1)
+
+    def test_a_completion_reports_the_playthrough_even_after_pruning(
+        self, mode: ModeAdapter, user_id: int, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        monkeypatch.setattr("app.services.match_log_retention.MAX_LOGGED_MATCHES", 2)
+        run = mode.get_run(user_id)
+        self._play(mode, user_id, run, ["loss", "loss"])
+        _clear_roster(mode, user_id, run)
+
+        record = _record(user_id)
+        assert (record.attempts_taken, record.matches_played) == (3, 4)
+        assert _stored_run(mode, user_id).playthrough_matches == 0

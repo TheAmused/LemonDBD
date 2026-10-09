@@ -4,7 +4,7 @@
 // Blocked page by the proxy and never sees the sidebar link. To open a page to everyone, remove
 // its segment here.
 
-export const ADMIN_ONLY_SEGMENTS: readonly string[] = ['minigames'];
+export const ADMIN_ONLY_SEGMENTS: readonly string[] = ['minigames', 'achievements'];
 
 /** The admin-only page a URL path belongs to (`/en/minigames/...`), or null. */
 export function adminOnlyPageFromPathname(

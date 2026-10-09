@@ -16,6 +16,5 @@ export default {
     code: 'Gesperrt',
     title: 'Seite gesperrt',
     text: 'Diese Seite ist für Besucher derzeit nicht geöffnet.',
-    hint: 'Sie ist vorerst nur für Administratoren verfügbar. Der Rest der Seite funktioniert weiterhin.',
   },
 } as const;

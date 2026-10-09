@@ -34,4 +34,9 @@ export default {
     heading: "Credits",
     text: "Thank you to everyone who helped us build this project.",
   },
+  contact: {
+    heading: "Contact us",
+    text: "Questions, feedback or ideas? Reach us by email or on our Discord server.",
+    discordLabel: "Join our Discord",
+  },
 };

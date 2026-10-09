@@ -5,61 +5,19 @@ import type { Dictionary } from '@/locales/types';
 import React from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
-import { ChevronDown, ShieldCheck } from 'lucide-react';
+import { ChevronDown, Mail, ShieldCheck } from 'lucide-react';
 import { PageShell } from '@/components/layout/PageShell';
 import { RichText } from '@/components/common/RichText';
+import { DiscordIcon } from '@/components/icons/DiscordIcon';
 import { Locale } from '@/i18n/config';
 import { useDictionary } from '@/context/DictionaryContext';
 import { usePersistentDrawer } from '@/hooks/usePersistentDrawer';
+import { usePrivacyInfo } from '@/hooks/usePrivacyInfo';
+
+const DISCORD_INVITE_URL = 'https://discord.gg/Veygfp6XfT';
 
 // Placeholder names, to be replaced with real contributors before publishing.
 const CREDITS = ['test1', 'test2', 'test3', 'test4', 'test5'] as const;
-
-interface AboutSectionProps {
-  id: string;
-  heading?: string;
-  className?: string;
-  children: React.ReactNode;
-}
-
-function AboutSection({ id, heading, className = '', children }: AboutSectionProps) {
-  const [isExpanded, toggleExpanded] = usePersistentDrawer(`lemondbd_drawer_about_${id}`, true);
-
-  return (
-    <section
-      className={`rounded-3xl border border-border-color bg-bg-surface backdrop-blur-xl shadow-md overflow-hidden transition-colors flex flex-col ${
-        isExpanded ? 'h-full' : 'h-fit'
-      } ${className}`}
-    >
-      <button
-        type="button"
-        onClick={toggleExpanded}
-        className="relative w-full flex items-center justify-center py-4 px-12 sm:px-14 cursor-pointer group select-none text-center shrink-0"
-        aria-expanded={isExpanded}
-      >
-        <h2 className="text-xs sm:text-sm font-bold uppercase tracking-widest text-accent-red text-center">
-          {heading}
-        </h2>
-        <ChevronDown
-          className={`absolute right-5 sm:right-7 h-4 w-4 sm:h-5 sm:w-5 text-accent-red transition-transform duration-300 ease-in-out ${
-            isExpanded ? 'rotate-180' : 'rotate-0'
-          }`}
-        />
-      </button>
-      <div
-        className={`grid transition-[grid-template-rows,opacity] duration-300 ease-in-out flex-1 ${
-          isExpanded ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
-        }`}
-      >
-        <div className="overflow-hidden h-full">
-          <div className="flex flex-col gap-2 border-t border-border-color p-4 sm:p-6 type-body-lg h-full">
-            {children}
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
 
 interface AboutSectionConfig {
   id: string;
@@ -174,6 +132,7 @@ export default function AboutPage() {
   const locale = (params?.locale as Locale) || 'en';
   const dict = useDictionary();
   const about = dict.about;
+  const contactEmail = usePrivacyInfo()?.contactEmail;
 
 
   const pageHeading = about.pageTitle
@@ -199,7 +158,7 @@ export default function AboutPage() {
           ) : null}
         </header>
 
-        {/* 2:2:1 Grid layout: Row 1 (2 cards equal height), Row 2 (2 cards equal height), Row 3 (1 card full width) */}
+        {/* 2:2:2 Grid layout: three rows of 2 cards, each pair kept equal height */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 items-stretch">
           {/* Row 1: Who are we? & Why did we build this? */}
           <SyncedAboutPair
@@ -245,17 +204,51 @@ export default function AboutPage() {
             }}
           />
 
-          {/* Row 3: Credits (full width spanning both columns, centered content) */}
-          <AboutSection id="credits" heading={about.credits.heading} className="lg:col-span-2">
-            <p className="text-text-muted text-center leading-relaxed">
-              <RichText text={about.credits.text} />
-            </p>
-            <ul className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-text-primary pt-1">
-              {CREDITS.map((name) => (
-                <li key={name} className="font-semibold">{name}</li>
-              ))}
-            </ul>
-          </AboutSection>
+          {/* Row 3: Credits & Contact us */}
+          <SyncedAboutPair
+            sectionA={{
+              id: 'credits',
+              heading: about.credits.heading,
+              children: (
+                <>
+                  <p className="text-text-muted text-justify [text-justify:inter-word] hyphens-auto">
+                    <RichText text={about.credits.text} />
+                  </p>
+                  <ul className="flex flex-wrap items-center justify-start gap-x-4 gap-y-1 text-text-primary pt-1">
+                    {CREDITS.map((name) => (
+                      <li key={name} className="font-semibold">{name}</li>
+                    ))}
+                  </ul>
+                </>
+              ),
+            }}
+            sectionB={{
+              id: 'contact',
+              heading: about.contact.heading,
+              children: (
+                <>
+                  <p className="text-text-muted text-justify [text-justify:inter-word] hyphens-auto">{about.contact.text}</p>
+                  <div className="flex flex-wrap items-center justify-start gap-3 pt-1">
+                    {contactEmail ? (
+                      <span className="inline-flex items-center gap-2 px-1 py-2 text-sm font-semibold text-text-primary">
+                        <Mail className="h-4 w-4 shrink-0 text-accent-red" aria-hidden="true" />
+                        {contactEmail}
+                      </span>
+                    ) : null}
+                    <a
+                      href={DISCORD_INVITE_URL}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 rounded-full border border-border-color bg-bg-elevated px-4 py-2 text-sm font-semibold text-brand-discord transition-colors hover:border-brand-discord hover:bg-brand-discord/10"
+                    >
+                      <DiscordIcon className="h-4 w-4" />
+                      {about.contact.discordLabel}
+                    </a>
+                  </div>
+                </>
+              ),
+            }}
+          />
 
           {/* Privacy Policy pill (links to its own page) */}
           <div className="lg:col-span-2 flex justify-center">

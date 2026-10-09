@@ -2,7 +2,7 @@
 // frontend/src/app/[locale]/privacy-policy/page.tsx
 import type { Dictionary } from '@/locales/types';
 
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { ArrowLeft, ChevronDown } from 'lucide-react';
@@ -11,8 +11,8 @@ import { RichText } from '@/components/common/RichText';
 import { Locale } from '@/i18n/config';
 import { useDictionary } from '@/context/DictionaryContext';
 import { usePersistentDrawer } from '@/hooks/usePersistentDrawer';
-import { apiUrl } from '@/utils/api';
-import { fillPrivacyPlaceholders, type PrivacyInfo } from '@/utils/privacyPlaceholders';
+import { usePrivacyInfo } from '@/hooks/usePrivacyInfo';
+import { fillPrivacyPlaceholders } from '@/utils/privacyPlaceholders';
 
 /** Render order of the policy sections (keys of `dict.privacy.sections`). */
 export const PRIVACY_SECTION_ORDER = [
@@ -89,19 +89,7 @@ export default function PrivacyPolicyPage() {
 
   // Contact address, lifetimes and mail provider come from the backend (admin-editable),
   // so the translated text only holds placeholders for them.
-  const [info, setInfo] = useState<PrivacyInfo | null>(null);
-  useEffect(() => {
-    let cancelled = false;
-    fetch(apiUrl('/api/v1/privacy-info'))
-      .then((res) => (res.ok ? res.json() : null))
-      .then((data: PrivacyInfo | null) => {
-        if (!cancelled && data) setInfo(data);
-      })
-      .catch(() => {});
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+  const info = usePrivacyInfo();
   const fill = (text?: string | null) => (text ? fillPrivacyPlaceholders(text, info, locale) : text);
 
   const blockTitle = (id: string): string =>

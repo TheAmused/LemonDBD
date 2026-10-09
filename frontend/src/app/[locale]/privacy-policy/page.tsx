@@ -3,14 +3,12 @@
 import type { Dictionary } from '@/locales/types';
 
 import React from 'react';
-import Link from 'next/link';
 import { useParams } from 'next/navigation';
-import { ArrowLeft, ChevronDown } from 'lucide-react';
-import { PageShell } from '@/components/layout/PageShell';
 import { RichText } from '@/components/common/RichText';
+import { BlockCard } from '@/components/common/BlockCard';
+import { LegalPageLayout } from '@/components/legal/LegalPage';
 import { Locale } from '@/i18n/config';
 import { useDictionary } from '@/context/DictionaryContext';
-import { usePersistentDrawer } from '@/hooks/usePersistentDrawer';
 import { usePrivacyInfo } from '@/hooks/usePrivacyInfo';
 import { fillPrivacyPlaceholders } from '@/utils/privacyPlaceholders';
 
@@ -34,51 +32,6 @@ export const PRIVACY_SECTION_ORDER = [
 
 const SUMMARY_BLOCK = 'summary';
 const ALL_BLOCK_IDS: readonly string[] = [SUMMARY_BLOCK, ...PRIVACY_SECTION_ORDER];
-
-interface BlockCardProps {
-  id: string;
-  title: string;
-  children: React.ReactNode;
-}
-
-/** Full-width collapsible card (open by default, state remembered per block) with a left-aligned title. */
-function BlockCard({ id, title, children }: BlockCardProps) {
-  const [isExpanded, toggleExpanded] = usePersistentDrawer(`lemondbd_drawer_privacy_open_${id}`, true);
-
-  return (
-    <section
-      id={id}
-      className={`w-full scroll-mt-6 overflow-hidden rounded-3xl border bg-bg-surface backdrop-blur-xl shadow-md transition-colors border-border-color`}
-    >
-      <button
-        type="button"
-        onClick={toggleExpanded}
-        aria-expanded={isExpanded}
-        className="relative flex w-full cursor-pointer select-none items-center px-4 py-4 pr-12 text-left sm:px-6 sm:pr-14"
-      >
-        <h2 className="text-left text-xs font-bold uppercase tracking-widest text-accent-red sm:text-sm">
-          {title}
-        </h2>
-        <ChevronDown
-          className={`absolute right-5 h-4 w-4 text-accent-red transition-transform duration-300 ease-in-out sm:right-7 sm:h-5 sm:w-5 ${
-            isExpanded ? 'rotate-180' : 'rotate-0'
-          }`}
-        />
-      </button>
-      <div
-        className={`grid transition-[grid-template-rows,opacity] duration-300 ease-in-out ${
-          isExpanded ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
-        }`}
-      >
-        <div className="overflow-hidden">
-          <div className="flex flex-col gap-2 border-t border-border-color p-4 text-sm leading-relaxed sm:text-base sm:p-6">
-            {children}
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
 
 export default function PrivacyPolicyPage() {
   const params = useParams();
@@ -141,43 +94,26 @@ export default function PrivacyPolicyPage() {
   };
 
   return (
-    <PageShell
+    <LegalPageLayout
       locale={locale}
-      padding="spacious"
-      mainClassName="flex flex-col items-center min-h-[calc(100vh-4rem)] lg:min-h-screen overflow-y-auto relative"
+      heading={privacy.heading}
+      backLabel={privacy.backToAbout}
+      lastUpdated={`${privacy.lastUpdatedLabel}: ${privacy.lastUpdated}`}
     >
-      <div className="relative z-10 mx-auto flex w-full max-w-[110rem] flex-col gap-6 py-6 sm:gap-8 sm:py-10">
-        <header className="grid grid-cols-2 items-center gap-x-4 gap-y-3 sm:grid-cols-[1fr_auto_1fr]">
-          <Link
-            href={`/${locale}/about`}
-            className="inline-flex w-fit items-center gap-1.5 type-strong-fluid text-text-muted transition-colors hover:text-accent-red"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            {privacy.backToAbout}
-          </Link>
-          <h1 className="col-span-2 row-start-2 text-center text-2xl font-black tracking-tight text-text-primary sm:col-span-1 sm:col-start-2 sm:row-start-1 sm:text-3xl md:text-4xl">
-            {privacy.heading}
-          </h1>
-          <p className="justify-self-end text-right text-mini uppercase tracking-widest text-text-muted sm:col-start-3 sm:row-start-1 sm:text-xs">
-            {privacy.lastUpdatedLabel}: {privacy.lastUpdated}
+      {privacy ? (
+        <>
+          <p className="text-center text-text-muted text-sm leading-relaxed sm:text-base">
+            {privacy.translationNotice}
           </p>
-        </header>
-
-        {privacy ? (
-          <>
-            <p className="text-center text-text-muted text-sm leading-relaxed sm:text-base">
-              {privacy.translationNotice}
-            </p>
-            <div className="flex flex-col gap-6">
-              {ALL_BLOCK_IDS.map((id) => (
-                <BlockCard key={id} id={id} title={blockTitle(id)}>
-                  {renderBlockBody(id)}
-                </BlockCard>
-              ))}
-            </div>
-          </>
-        ) : null}
-      </div>
-    </PageShell>
+          <div className="flex flex-col gap-6">
+            {ALL_BLOCK_IDS.map((id) => (
+              <BlockCard key={id} id={id} storageKey={`lemondbd_drawer_privacy_open_${id}`} title={blockTitle(id)}>
+                {renderBlockBody(id)}
+              </BlockCard>
+            ))}
+          </div>
+        </>
+      ) : null}
+    </LegalPageLayout>
   );
 }

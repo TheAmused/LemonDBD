@@ -5,12 +5,12 @@
   "rosters": [
     {
       "slug": "canon_gemini",
-      "name": "Dead by Daylight: Fog Canon",
-      "description": "Original trial survivors and killers from the canon realm.",
+      "name": "Dead by Daylight: Fog Canon (Gemini)",
+      "description": "An alternate, Gemini-written take on the 98 canon survivors and killers.",
       "translations": {
         "pl": {
-          "name": "Dead by Daylight: Kanon Mgły",
-          "description": "Oficjalne 98 postaci z mgły próby."
+          "name": "Dead by Daylight: Kanon Mgły (Gemini)",
+          "description": "Alternatywna wersja 98 postaci kanonu, napisana przez Gemini."
         }
       },
       "cover_image_url": "/static/avatars/rosters/canon.webp",
@@ -20,7 +20,7 @@
       "is_active": true,
       "entities": [
         {
-          "slug": "ada_wong",
+          "slug": "ada_wong_gemini",
           "name": "Ada Wong",
           "role": "Survivor",
           "gender": "female",
@@ -171,7 +171,7 @@
           "watermark_right": "WONG"
         },
         {
-          "slug": "sable_ward",
+          "slug": "sable_ward_gemini",
           "name": "Sable Ward",
           "role": "Survivor",
           "gender": "female",
@@ -327,7 +327,7 @@
           "watermark_right": "WARD"
         },
         {
-          "slug": "feng_min",
+          "slug": "feng_min_gemini",
           "name": "Feng Min",
           "role": "Survivor",
           "gender": "female",
@@ -483,7 +483,7 @@
           "watermark_right": "MIN"
         },
         {
-          "slug": "kate_denson",
+          "slug": "kate_denson_gemini",
           "name": "Kate Denson",
           "role": "Survivor",
           "gender": "female",
@@ -634,7 +634,7 @@
           "watermark_right": "DENSON"
         },
         {
-          "slug": "mikaela_reid",
+          "slug": "mikaela_reid_gemini",
           "name": "Mikaela Reid",
           "role": "Survivor",
           "gender": "female",
@@ -785,7 +785,7 @@
           "watermark_right": "REID"
         },
         {
-          "slug": "jill_valentine",
+          "slug": "jill_valentine_gemini",
           "name": "Jill Valentine",
           "role": "Survivor",
           "gender": "female",
@@ -936,7 +936,7 @@
           "watermark_right": "VALENTINE"
         },
         {
-          "slug": "lara_croft",
+          "slug": "lara_croft_gemini",
           "name": "Lara Croft",
           "role": "Survivor",
           "gender": "female",
@@ -1087,7 +1087,7 @@
           "watermark_right": "CROFT"
         },
         {
-          "slug": "rebecca_chambers",
+          "slug": "rebecca_chambers_gemini",
           "name": "Rebecca Chambers",
           "role": "Survivor",
           "gender": "female",
@@ -1238,7 +1238,7 @@
           "watermark_right": "CHAMBERS"
         },
         {
-          "slug": "jane_romero",
+          "slug": "jane_romero_gemini",
           "name": "Jane Romero",
           "role": "Survivor",
           "gender": "female",
@@ -1389,7 +1389,7 @@
           "watermark_right": "ROMERO"
         },
         {
-          "slug": "yui_kimura",
+          "slug": "yui_kimura_gemini",
           "name": "Yui Kimura",
           "role": "Survivor",
           "gender": "female",
@@ -1540,7 +1540,7 @@
           "watermark_right": "KIMURA"
         },
         {
-          "slug": "zarina_kassir",
+          "slug": "zarina_kassir_gemini",
           "name": "Zarina Kassir",
           "role": "Survivor",
           "gender": "female",
@@ -1691,7 +1691,7 @@
           "watermark_right": "KASSIR"
         },
         {
-          "slug": "thalita_lyra",
+          "slug": "thalita_lyra_gemini",
           "name": "Thalita Lyra",
           "role": "Survivor",
           "gender": "female",
@@ -1842,7 +1842,7 @@
           "watermark_right": "LYRA"
         },
         {
-          "slug": "cheryl_mason",
+          "slug": "cheryl_mason_gemini",
           "name": "Cheryl Mason",
           "role": "Survivor",
           "gender": "female",
@@ -1993,7 +1993,7 @@
           "watermark_right": "MASON"
         },
         {
-          "slug": "nea_karlsson",
+          "slug": "nea_karlsson_gemini",
           "name": "Nea Karlsson",
           "role": "Survivor",
           "gender": "female",
@@ -2139,7 +2139,7 @@
           "watermark_right": "KARLSSON"
         },
         {
-          "slug": "meg_thomas",
+          "slug": "meg_thomas_gemini",
           "name": "Meg Thomas",
           "role": "Survivor",
           "gender": "female",
@@ -2285,7 +2285,7 @@
           "watermark_right": "THOMAS"
         },
         {
-          "slug": "claudette_morel",
+          "slug": "claudette_morel_gemini",
           "name": "Claudette Morel",
           "role": "Survivor",
           "gender": "female",
@@ -2436,7 +2436,7 @@
           "watermark_right": "MOREL"
         },
         {
-          "slug": "laurie_strode",
+          "slug": "laurie_strode_gemini",
           "name": "Laurie Strode",
           "role": "Survivor",
           "gender": "female",
@@ -2582,7 +2582,7 @@
           "watermark_right": "STRODE"
         },
         {
-          "slug": "nancy_wheeler",
+          "slug": "nancy_wheeler_gemini",
           "name": "Nancy Wheeler",
           "role": "Survivor",
           "gender": "female",
@@ -2728,7 +2728,7 @@
           "watermark_right": "WHEELER"
         },
         {
-          "slug": "lee_yun_jin",
+          "slug": "lee_yun_jin_gemini",
           "name": "Yun-Jin Lee",
           "role": "Survivor",
           "gender": "female",
@@ -2874,7 +2874,7 @@
           "watermark_right": "LEE"
         },
         {
-          "slug": "élodie_rakoto",
+          "slug": "élodie_rakoto_gemini",
           "name": "Élodie Rakoto",
           "role": "Survivor",
           "gender": "female",
@@ -3020,7 +3020,7 @@
           "watermark_right": "RAKOTO"
         },
         {
-          "slug": "haddie_kaur",
+          "slug": "haddie_kaur_gemini",
           "name": "Haddie Kaur",
           "role": "Survivor",
           "gender": "female",
@@ -3166,7 +3166,7 @@
           "watermark_right": "KAUR"
         },
         {
-          "slug": "ellen_ripley",
+          "slug": "ellen_ripley_gemini",
           "name": "Ellen Ripley",
           "role": "Survivor",
           "gender": "female",
@@ -3317,7 +3317,7 @@
           "watermark_right": "RIPLEY"
         },
         {
-          "slug": "taurie_cain",
+          "slug": "taurie_cain_gemini",
           "name": "Taurie Cain",
           "role": "Survivor",
           "gender": "female",
@@ -3463,7 +3463,7 @@
           "watermark_right": "CAIN"
         },
         {
-          "slug": "michonne_grimes",
+          "slug": "michonne_grimes_gemini",
           "name": "Michonne Grimes",
           "role": "Survivor",
           "gender": "female",
@@ -3609,7 +3609,7 @@
           "watermark_right": "GRIMES"
         },
         {
-          "slug": "eleven",
+          "slug": "eleven_gemini",
           "name": "Eleven",
           "role": "Survivor",
           "gender": "female",
@@ -3760,7 +3760,7 @@
           "watermark_right": "011"
         },
         {
-          "slug": "aurora_stardotter",
+          "slug": "aurora_stardotter_gemini",
           "name": "Aurora Stardotter",
           "role": "Survivor",
           "gender": "female",
@@ -3906,7 +3906,7 @@
           "watermark_right": "STARDOTTER"
         },
         {
-          "slug": "vee_boonyasak",
+          "slug": "vee_boonyasak_gemini",
           "name": "Vee Boonyasak",
           "role": "Survivor",
           "gender": "female",
@@ -4052,7 +4052,7 @@
           "watermark_right": "BOONYASAK"
         },
         {
-          "slug": "orela_rose",
+          "slug": "orela_rose_gemini",
           "name": "Orela Rose",
           "role": "Survivor",
           "gender": "female",
@@ -4198,7 +4198,7 @@
           "watermark_right": "ROSE"
         },
         {
-          "slug": "leon_scott_kennedy",
+          "slug": "leon_scott_kennedy_gemini",
           "name": "Leon S. Kennedy",
           "role": "Survivor",
           "gender": "male",
@@ -4344,7 +4344,7 @@
           "watermark_right": "KENNEDY"
         },
         {
-          "slug": "felix_richter",
+          "slug": "felix_richter_gemini",
           "name": "Felix Richter",
           "role": "Survivor",
           "gender": "male",
@@ -4490,7 +4490,7 @@
           "watermark_right": "RICHTER"
         },
         {
-          "slug": "vittorio_toscano",
+          "slug": "vittorio_toscano_gemini",
           "name": "Vittorio Toscano",
           "role": "Survivor",
           "gender": "male",
@@ -4636,7 +4636,7 @@
           "watermark_right": "TOSCANO"
         },
         {
-          "slug": "david_king",
+          "slug": "david_king_gemini",
           "name": "David King",
           "role": "Survivor",
           "gender": "male",
@@ -4782,7 +4782,7 @@
           "watermark_right": "KING"
         },
         {
-          "slug": "steve_harrington",
+          "slug": "steve_harrington_gemini",
           "name": "Steve Harrington",
           "role": "Survivor",
           "gender": "male",
@@ -4928,7 +4928,7 @@
           "watermark_right": "HARRINGTON"
         },
         {
-          "slug": "nicolas_cage",
+          "slug": "nicolas_cage_gemini",
           "name": "Nicolas Cage",
           "role": "Survivor",
           "gender": "male",
@@ -5074,7 +5074,7 @@
           "watermark_right": "CAGE"
         },
         {
-          "slug": "alan_wake",
+          "slug": "alan_wake_gemini",
           "name": "Alan Wake",
           "role": "Survivor",
           "gender": "male",
@@ -5220,7 +5220,7 @@
           "watermark_right": "WAKE"
         },
         {
-          "slug": "dwight_fairfield",
+          "slug": "dwight_fairfield_gemini",
           "name": "Dwight Fairfield",
           "role": "Survivor",
           "gender": "male",
@@ -5366,7 +5366,7 @@
           "watermark_right": "FAIRFIELD"
         },
         {
-          "slug": "jake_park",
+          "slug": "jake_park_gemini",
           "name": "Jake Park",
           "role": "Survivor",
           "gender": "male",
@@ -5512,7 +5512,7 @@
           "watermark_right": "PARK"
         },
         {
-          "slug": "ace_visconti",
+          "slug": "ace_visconti_gemini",
           "name": "Ace Visconti",
           "role": "Survivor",
           "gender": "male",
@@ -5658,7 +5658,7 @@
           "watermark_right": "VISCONTI"
         },
         {
-          "slug": "ash_williams",
+          "slug": "ash_williams_gemini",
           "name": "Ash Williams",
           "role": "Survivor",
           "gender": "male",
@@ -5804,7 +5804,7 @@
           "watermark_right": "WILLIAMS"
         },
         {
-          "slug": "bill_overbeck",
+          "slug": "bill_overbeck_gemini",
           "name": "Bill Overbeck",
           "role": "Survivor",
           "gender": "male",
@@ -5950,7 +5950,7 @@
           "watermark_right": "OVERBECK"
         },
         {
-          "slug": "adam_francis",
+          "slug": "adam_francis_gemini",
           "name": "Adam Francis",
           "role": "Survivor",
           "gender": "male",
@@ -6096,7 +6096,7 @@
           "watermark_right": "FRANCIS"
         },
         {
-          "slug": "jeff_johansen",
+          "slug": "jeff_johansen_gemini",
           "name": "Jeff Johansen",
           "role": "Survivor",
           "gender": "male",
@@ -6242,7 +6242,7 @@
           "watermark_right": "JOHANSEN"
         },
         {
-          "slug": "jonah_vasquez",
+          "slug": "jonah_vasquez_gemini",
           "name": "Jonah Vasquez",
           "role": "Survivor",
           "gender": "male",
@@ -6388,7 +6388,7 @@
           "watermark_right": "VASQUEZ"
         },
         {
-          "slug": "quentin_smith",
+          "slug": "quentin_smith_gemini",
           "name": "Quentin Smith",
           "role": "Survivor",
           "gender": "male",
@@ -6534,7 +6534,7 @@
           "watermark_right": "SMITH"
         },
         {
-          "slug": "david_tapp",
+          "slug": "david_tapp_gemini",
           "name": "Detective Tapp",
           "role": "Survivor",
           "gender": "male",
@@ -6680,7 +6680,7 @@
           "watermark_right": "TAPP"
         },
         {
-          "slug": "rick_grimes",
+          "slug": "rick_grimes_gemini",
           "name": "Rick Grimes",
           "role": "Survivor",
           "gender": "male",
@@ -6826,7 +6826,7 @@
           "watermark_right": "GRIMES"
         },
         {
-          "slug": "dustin_henderson",
+          "slug": "dustin_henderson_gemini",
           "name": "Dustin Henderson",
           "role": "Survivor",
           "gender": "male",
@@ -6972,7 +6972,7 @@
           "watermark_right": "HENDERSON"
         },
         {
-          "slug": "kwon_tae_young",
+          "slug": "kwon_tae_young_gemini",
           "name": "Tae-Young",
           "role": "Survivor",
           "gender": "male",
@@ -7118,7 +7118,7 @@
           "watermark_right": "KWON"
         },
         {
-          "slug": "shane_wiigwaas",
+          "slug": "shane_wiigwaas_gemini",
           "name": "Shane",
           "role": "Survivor",
           "gender": "male",
@@ -7264,7 +7264,7 @@
           "watermark_right": "WIIGWAAS"
         },
         {
-          "slug": "renato_lyra",
+          "slug": "renato_lyra_gemini",
           "name": "Renato Lyra",
           "role": "Survivor",
           "gender": "male",
@@ -7410,7 +7410,7 @@
           "watermark_right": "LYRA"
         },
         {
-          "slug": "trevor_belmont",
+          "slug": "trevor_belmont_gemini",
           "name": "Trevor Belmont",
           "role": "Survivor",
           "gender": "male",
@@ -7556,7 +7556,7 @@
           "watermark_right": "BELMONT"
         },
         {
-          "slug": "yoichi_asakawa",
+          "slug": "yoichi_asakawa_gemini",
           "name": "Yoichi Asakawa",
           "role": "Survivor",
           "gender": "male",
@@ -7702,7 +7702,7 @@
           "watermark_right": "ASAKAWA"
         },
         {
-          "slug": "gabriel_soma",
+          "slug": "gabriel_soma_gemini",
           "name": "Gabriel Soma",
           "role": "Survivor",
           "gender": "male",
@@ -7848,7 +7848,7 @@
           "watermark_right": "SOMA"
         },
         {
-          "slug": "the_troupe",
+          "slug": "the_troupe_gemini",
           "name": "The Troupe",
           "role": "Survivor",
           "gender": "female",
@@ -7994,7 +7994,7 @@
           "watermark_right": "YAZAR"
         },
         {
-          "slug": "the_huntress",
+          "slug": "the_huntress_gemini",
           "name": "The Huntress",
           "role": "Killer",
           "gender": "female",
@@ -8140,7 +8140,7 @@
           "watermark_right": "ANNA"
         },
         {
-          "slug": "the_spirit",
+          "slug": "the_spirit_gemini",
           "name": "The Spirit",
           "role": "Killer",
           "gender": "female",
@@ -8286,7 +8286,7 @@
           "watermark_right": "RIN YAMAOKA"
         },
         {
-          "slug": "the_skull_merchant",
+          "slug": "the_skull_merchant_gemini",
           "name": "The Skull Merchant",
           "role": "Killer",
           "gender": "female",
@@ -8432,7 +8432,7 @@
           "watermark_right": "ADRIANA IMAI"
         },
         {
-          "slug": "the_pig",
+          "slug": "the_pig_gemini",
           "name": "The Pig",
           "role": "Killer",
           "gender": "female",
@@ -8578,7 +8578,7 @@
           "watermark_right": "AMANDA YOUNG"
         },
         {
-          "slug": "the_plague",
+          "slug": "the_plague_gemini",
           "name": "The Plague",
           "role": "Killer",
           "gender": "female",
@@ -8724,7 +8724,7 @@
           "watermark_right": "ADIRIS"
         },
         {
-          "slug": "the_artist",
+          "slug": "the_artist_gemini",
           "name": "The Artist",
           "role": "Killer",
           "gender": "female",
@@ -8870,7 +8870,7 @@
           "watermark_right": "CARMINA MORA"
         },
         {
-          "slug": "the_nurse",
+          "slug": "the_nurse_gemini",
           "name": "The Nurse",
           "role": "Killer",
           "gender": "female",
@@ -9016,7 +9016,7 @@
           "watermark_right": "SALLY SMITHSON"
         },
         {
-          "slug": "the_onryō",
+          "slug": "the_onryō_gemini",
           "name": "The Onryō",
           "role": "Killer",
           "gender": "female",
@@ -9162,7 +9162,7 @@
           "watermark_right": "SADAKO"
         },
         {
-          "slug": "the_hag",
+          "slug": "the_hag_gemini",
           "name": "The Hag",
           "role": "Killer",
           "gender": "female",
@@ -9308,7 +9308,7 @@
           "watermark_right": "LISA SHERWOOD"
         },
         {
-          "slug": "the_houndmaster",
+          "slug": "the_houndmaster_gemini",
           "name": "The Houndmaster",
           "role": "Killer",
           "gender": "female",
@@ -9454,7 +9454,7 @@
           "watermark_right": "PORTIA MAYE"
         },
         {
-          "slug": "the_krasue",
+          "slug": "the_krasue_gemini",
           "name": "The Krasue",
           "role": "Killer",
           "gender": "female",
@@ -9600,7 +9600,7 @@
           "watermark_right": "BURONG"
         },
         {
-          "slug": "the_twins",
+          "slug": "the_twins_gemini",
           "name": "The Twins",
           "role": "Killer",
           "gender": "female",
@@ -9746,7 +9746,7 @@
           "watermark_right": "CHARLOTTE & VICTOR"
         },
         {
-          "slug": "the_trickster",
+          "slug": "the_trickster_gemini",
           "name": "The Trickster",
           "role": "Killer",
           "gender": "male",
@@ -9892,7 +9892,7 @@
           "watermark_right": "JI-WOON HAK"
         },
         {
-          "slug": "the_ghost_face",
+          "slug": "the_ghost_face_gemini",
           "name": "The Ghost Face",
           "role": "Killer",
           "gender": "male",
@@ -10038,7 +10038,7 @@
           "watermark_right": "DANNY JOHNSON"
         },
         {
-          "slug": "the_executioner",
+          "slug": "the_executioner_gemini",
           "name": "The Executioner",
           "role": "Killer",
           "gender": "male",
@@ -10184,7 +10184,7 @@
           "watermark_right": "PYRAMID HEAD"
         },
         {
-          "slug": "the_mastermind",
+          "slug": "the_mastermind_gemini",
           "name": "The Mastermind",
           "role": "Killer",
           "gender": "male",
@@ -10330,7 +10330,7 @@
           "watermark_right": "ALBERT WESKER"
         },
         {
-          "slug": "the_shape",
+          "slug": "the_shape_gemini",
           "name": "The Shape",
           "role": "Killer",
           "gender": "male",
@@ -10476,7 +10476,7 @@
           "watermark_right": "MICHAEL MYERS"
         },
         {
-          "slug": "the_dark_lord",
+          "slug": "the_dark_lord_gemini",
           "name": "The Dark Lord",
           "role": "Killer",
           "gender": "male",
@@ -10622,7 +10622,7 @@
           "watermark_right": "DRACULA"
         },
         {
-          "slug": "the_legion",
+          "slug": "the_legion_gemini",
           "name": "The Legion",
           "role": "Killer",
           "gender": "male",
@@ -10768,7 +10768,7 @@
           "watermark_right": "FRANK & SUSIE"
         },
         {
-          "slug": "the_trapper",
+          "slug": "the_trapper_gemini",
           "name": "The Trapper",
           "role": "Killer",
           "gender": "male",
@@ -10914,7 +10914,7 @@
           "watermark_right": "EVAN MACMILLAN"
         },
         {
-          "slug": "the_wraith",
+          "slug": "the_wraith_gemini",
           "name": "The Wraith",
           "role": "Killer",
           "gender": "male",
@@ -11060,7 +11060,7 @@
           "watermark_right": "PHILIP OJOMO"
         },
         {
-          "slug": "the_deathslinger",
+          "slug": "the_deathslinger_gemini",
           "name": "The Deathslinger",
           "role": "Killer",
           "gender": "male",
@@ -11206,7 +11206,7 @@
           "watermark_right": "CALEB QUINN"
         },
         {
-          "slug": "the_oni",
+          "slug": "the_oni_gemini",
           "name": "The Oni",
           "role": "Killer",
           "gender": "male",
@@ -11352,7 +11352,7 @@
           "watermark_right": "KAZAN YAMAOKA"
         },
         {
-          "slug": "the_knight",
+          "slug": "the_knight_gemini",
           "name": "The Knight",
           "role": "Killer",
           "gender": "male",
@@ -11503,7 +11503,7 @@
           "watermark_right": "TARHOS KOVÁCS"
         },
         {
-          "slug": "the_lich",
+          "slug": "the_lich_gemini",
           "name": "The Lich",
           "role": "Killer",
           "gender": "male",
@@ -11649,7 +11649,7 @@
           "watermark_right": "VECNA"
         },
         {
-          "slug": "the_cenobite",
+          "slug": "the_cenobite_gemini",
           "name": "The Cenobite",
           "role": "Killer",
           "gender": "male",
@@ -11795,7 +11795,7 @@
           "watermark_right": "PINHEAD"
         },
         {
-          "slug": "the_hillbilly",
+          "slug": "the_hillbilly_gemini",
           "name": "The Hillbilly",
           "role": "Killer",
           "gender": "male",
@@ -11941,7 +11941,7 @@
           "watermark_right": "MAX THOMPSON"
         },
         {
-          "slug": "the_doctor",
+          "slug": "the_doctor_gemini",
           "name": "The Doctor",
           "role": "Killer",
           "gender": "male",
@@ -12087,7 +12087,7 @@
           "watermark_right": "HERMAN CARTER"
         },
         {
-          "slug": "the_blight",
+          "slug": "the_blight_gemini",
           "name": "The Blight",
           "role": "Killer",
           "gender": "male",
@@ -12233,7 +12233,7 @@
           "watermark_right": "TALBOT GRIMES"
         },
         {
-          "slug": "the_cannibal",
+          "slug": "the_cannibal_gemini",
           "name": "The Cannibal",
           "role": "Killer",
           "gender": "male",
@@ -12379,7 +12379,7 @@
           "watermark_right": "LEATHERFACE"
         },
         {
-          "slug": "the_clown",
+          "slug": "the_clown_gemini",
           "name": "The Clown",
           "role": "Killer",
           "gender": "male",
@@ -12525,7 +12525,7 @@
           "watermark_right": "JEFFREY HAWK"
         },
         {
-          "slug": "the_nemesis",
+          "slug": "the_nemesis_gemini",
           "name": "The Nemesis",
           "role": "Killer",
           "gender": "male",
@@ -12671,7 +12671,7 @@
           "watermark_right": "NEMESIS T-TYPE"
         },
         {
-          "slug": "the_nightmare",
+          "slug": "the_nightmare_gemini",
           "name": "The Nightmare",
           "role": "Killer",
           "gender": "male",
@@ -12817,7 +12817,7 @@
           "watermark_right": "FREDDY KRUEGER"
         },
         {
-          "slug": "the_good_guy",
+          "slug": "the_good_guy_gemini",
           "name": "The Good Guy",
           "role": "Killer",
           "gender": "male",
@@ -12963,7 +12963,7 @@
           "watermark_right": "CHUCKY"
         },
         {
-          "slug": "the_slasher",
+          "slug": "the_slasher_gemini",
           "name": "The Slasher",
           "role": "Killer",
           "gender": "male",
@@ -13109,7 +13109,7 @@
           "watermark_right": "JASON VOORHEES"
         },
         {
-          "slug": "the_first",
+          "slug": "the_first_gemini",
           "name": "The First",
           "role": "Killer",
           "gender": "male",
@@ -13255,7 +13255,7 @@
           "watermark_right": "HENRY CREEL"
         },
         {
-          "slug": "the_ghoul",
+          "slug": "the_ghoul_gemini",
           "name": "The Ghoul",
           "role": "Killer",
           "gender": "male",
@@ -13401,7 +13401,7 @@
           "watermark_right": "KEN KANEKI"
         },
         {
-          "slug": "the_judgment",
+          "slug": "the_judgment_gemini",
           "name": "The Judgment",
           "role": "Killer",
           "gender": "monster_other",
@@ -13547,7 +13547,7 @@
           "watermark_right": "THE JUDGMENT"
         },
         {
-          "slug": "the_xenomorph",
+          "slug": "the_xenomorph_gemini",
           "name": "The Xenomorph",
           "role": "Killer",
           "gender": "monster_other",
@@ -13693,7 +13693,7 @@
           "watermark_right": "XX121"
         },
         {
-          "slug": "the_demogorgon",
+          "slug": "the_demogorgon_gemini",
           "name": "The Demogorgon",
           "role": "Killer",
           "gender": "monster_other",
@@ -13839,7 +13839,7 @@
           "watermark_right": "DEMOGORGON"
         },
         {
-          "slug": "the_unknown",
+          "slug": "the_unknown_gemini",
           "name": "The Unknown",
           "role": "Killer",
           "gender": "monster_other",
@@ -13985,7 +13985,7 @@
           "watermark_right": "THE UNKNOWN"
         },
         {
-          "slug": "the_dredge",
+          "slug": "the_dredge_gemini",
           "name": "The Dredge",
           "role": "Killer",
           "gender": "monster_other",
@@ -14131,7 +14131,7 @@
           "watermark_right": "THE DREDGE"
         },
         {
-          "slug": "the_singularity",
+          "slug": "the_singularity_gemini",
           "name": "The Singularity",
           "role": "Killer",
           "gender": "monster_other",
@@ -14277,7 +14277,7 @@
           "watermark_right": "HUX-A7-13"
         },
         {
-          "slug": "the_animatronic",
+          "slug": "the_animatronic_gemini",
           "name": "The Animatronic",
           "role": "Killer",
           "gender": "monster_other",

@@ -10,6 +10,7 @@ from app.services.user import (
     clear_user_avatar,
     create_user_account,
     delete_own_account,
+    export_filename,
     export_user_data,
     fetch_admin_metrics,
     fetch_user_by_id,
@@ -110,8 +111,11 @@ class UserService:
     def admin_delete_user(self, user_id: int) -> bool:
         return admin_remove_user(user_id)
 
-    def export_user_data(self, user_id: int) -> dict | None:
-        return export_user_data(user_id)
+    def export_user_data(self, user_id: int, requested_by: str = "self") -> dict | None:
+        return export_user_data(user_id, requested_by)
+
+    def export_filename(self, user_id: int, requested_by: str = "self") -> str:
+        return export_filename(user_id, requested_by)
 
     def delete_own_account(self, user_id: int, password: str) -> tuple[bool, str | None]:
         return delete_own_account(user_id, password)

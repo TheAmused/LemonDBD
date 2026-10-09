@@ -70,6 +70,8 @@ describe('Locale Dictionaries: Semantic Tag Consistency', () => {
 describe('About Page: Layout, Typography & LocalStorage', () => {
   const pagePath = path.resolve(__dirname, '../../app/[locale]/about/page.tsx');
   const source = fs.readFileSync(pagePath, 'utf-8');
+  // The card itself (heading, accordion, animation) is shared with the Privacy Policy and Rules pages.
+  const cardSource = fs.readFileSync(path.resolve(__dirname, '../../components/common/BlockCard.tsx'), 'utf-8');
 
   it('uses RichText component rather than hardcoded language-specific regexes in page component', () => {
     assert.ok(source.includes("import { RichText } from '@/components/common/RichText'"), 'Must import RichText');
@@ -78,12 +80,13 @@ describe('About Page: Layout, Typography & LocalStorage', () => {
   });
 
   it('centers card titles and highlights them in bold accent-red', () => {
+    assert.ok(source.includes('centered: true'), 'About cards must centre their titles');
     assert.ok(
-      source.includes('text-accent-red') && source.includes('text-center'),
+      cardSource.includes('text-accent-red') && cardSource.includes('text-center'),
       'Card headings must be centered and colored with accent-red'
     );
     assert.ok(
-      source.includes('font-extrabold') || source.includes('font-bold'),
+      cardSource.includes('font-extrabold') || cardSource.includes('font-bold'),
       'Card headings must be bold'
     );
     assert.ok(
@@ -109,8 +112,8 @@ describe('About Page: Layout, Typography & LocalStorage', () => {
       'Must use responsive 2-column grid on desktop'
     );
     assert.ok(
-      source.includes('items-stretch'),
-      'Must use items-stretch so cards in the same row match heights and stay aligned'
+      source.includes('BlockCardPair'),
+      'Each row must be a BlockCardPair so cards in the same row match heights while both are open'
     );
     assert.ok(
       source.includes('lg:col-span-2'),
@@ -124,8 +127,8 @@ describe('About Page: Layout, Typography & LocalStorage', () => {
 
   it('persists card accordion expansion in LocalStorage via usePersistentDrawer', () => {
     assert.ok(
-      source.includes('usePersistentDrawer'),
-      'Must use usePersistentDrawer hook'
+      cardSource.includes('usePersistentDrawer'),
+      'Cards must use usePersistentDrawer hook'
     );
     assert.ok(
       source.includes('lemondbd_drawer_about_'),

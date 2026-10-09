@@ -1,5 +1,4 @@
 # backend/app/routes/auth.py
-import json
 import logging
 import os
 from flask import Blueprint, current_app, g, jsonify, make_response, request, send_from_directory
@@ -18,6 +17,7 @@ from app.services.altcha_service import AltchaService
 from app.services.ownership_service import OwnershipService
 from app.services.user_service import UserService
 from app.utils.api_i18n import error_response
+from app.utils.downloads import json_download_response
 
 logger = logging.getLogger(__name__)
 auth_bp = Blueprint("auth_bp", __name__, url_prefix="/api/v1/auth")
@@ -254,14 +254,11 @@ def delete_avatar():
 @login_required
 def export_account_data():
     """Download everything the server holds about the signed-in account as JSON."""
-    data = user_service.export_user_data(g.current_user.id)
+    user_id = g.current_user.id
+    data = user_service.export_user_data(user_id, requested_by="self")
     if data is None:
         return jsonify({"error": "Account not found.", "status": 404}), 404
-    response = make_response(json.dumps(data, ensure_ascii=False, indent=2), 200)
-    response.headers["Content-Type"] = "application/json; charset=utf-8"
-    response.headers["Content-Disposition"] = 'attachment; filename="lemondbd-my-data.json"'
-    response.headers["Cache-Control"] = "no-store"
-    return response
+    return json_download_response(data, user_service.export_filename(user_id, "self"))
 
 
 @auth_bp.route("/account", methods=["DELETE"])

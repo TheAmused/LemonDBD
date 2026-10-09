@@ -27,4 +27,5 @@ export default {
   publishEntry: 'Publish Entry',
   noHighlight: 'No highlight',
   linkPrompt: 'Link URL (https://...)',
+  linkApply: 'Add link',
 };

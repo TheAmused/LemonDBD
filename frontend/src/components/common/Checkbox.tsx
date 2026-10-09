@@ -11,6 +11,10 @@ export interface CheckboxProps {
   children?: React.ReactNode;
   ariaLabel?: string;
   disabled?: boolean;
+  /** Failed validation: red ring + aria-invalid. The page shows the message (like Field's error row). */
+  invalid?: boolean;
+  /** Id of the element that explains the error. */
+  ariaDescribedBy?: string;
   id?: string;
   className?: string;
   /** Classes for the box itself (size overrides). */
@@ -23,6 +27,8 @@ export const Checkbox: React.FC<CheckboxProps> = ({
   children,
   ariaLabel,
   disabled,
+  invalid,
+  ariaDescribedBy,
   id,
   className,
   boxClassName,
@@ -39,9 +45,11 @@ export const Checkbox: React.FC<CheckboxProps> = ({
       type="checkbox"
       checked={checked}
       disabled={disabled}
+      aria-invalid={invalid || undefined}
+      aria-describedby={ariaDescribedBy}
       aria-label={children ? undefined : ariaLabel}
       onChange={(e) => onChange(e.target.checked)}
-      className={cn('h-4 w-4 shrink-0 cursor-[inherit] rounded border-border-color accent-accent-red', boxClassName)}
+      className={cn('h-4 w-4 shrink-0 cursor-[inherit] rounded border-border-color accent-accent-red aria-invalid:ring-2 aria-invalid:ring-accent-red', invalid && 'ring-2 ring-accent-red', boxClassName)}
     />
     {children}
   </label>

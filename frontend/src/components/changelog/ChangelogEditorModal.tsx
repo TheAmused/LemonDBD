@@ -73,6 +73,10 @@ export const ChangelogEditorModal: React.FC<ChangelogEditorModalProps> = ({ open
   const [tag, setTag] = useState<ChangelogTag>('feature');
   const [isPublished, setIsPublished] = useState(true);
   const [openPicker, setOpenPicker] = useState<'color' | 'highlight' | null>(null);
+  const [linkOpen, setLinkOpen] = useState(false);
+  const [linkUrl, setLinkUrl] = useState('');
+  // Focus moves into the URL box, which drops the editor's selection; keep it to apply the link afterwards.
+  const linkRange = useRef<Range | null>(null);
 
   useEffect(() => {
     if (!open) return;
@@ -104,8 +108,30 @@ export const ChangelogEditorModal: React.FC<ChangelogEditorModalProps> = ({ open
   };
 
   const handleLink = () => {
-    const url = window.prompt(t.linkPrompt);
-    if (url) exec('createLink', url);
+    if (linkOpen) return setLinkOpen(false);
+    const sel = window.getSelection();
+    const inEditor = sel && sel.rangeCount > 0 && editorRef.current?.contains(sel.getRangeAt(0).commonAncestorContainer);
+    linkRange.current = inEditor ? sel.getRangeAt(0).cloneRange() : null;
+    setOpenPicker(null);
+    setLinkUrl('');
+    setLinkOpen(true);
+  };
+
+  const applyLink = () => {
+    const raw = linkUrl.trim();
+    if (!raw) return;
+    // Bare domains get https://; anything that is not http(s)/mailto (e.g. javascript:) is refused.
+    const url = /^[a-z][a-z0-9+.-]*:/i.test(raw) ? raw : `https://${raw}`;
+    if (!/^(https?:|mailto:)/i.test(url)) return;
+    editorRef.current?.focus();
+    const range = linkRange.current;
+    if (range) {
+      const sel = window.getSelection();
+      sel?.removeAllRanges();
+      sel?.addRange(range);
+    }
+    document.execCommand('createLink', false, url);
+    setLinkOpen(false);
   };
 
   const handleSave = () => {
@@ -191,7 +217,34 @@ export const ChangelogEditorModal: React.FC<ChangelogEditorModalProps> = ({ open
         <ToolbarButton icon={Heading3} onClick={() => exec('formatBlock', '<h3>')} label="Heading" />
         <ToolbarButton icon={List} onClick={() => exec('insertUnorderedList')} label="Bullet list" />
         <ToolbarButton icon={ListOrdered} onClick={() => exec('insertOrderedList')} label="Numbered list" />
-        <ToolbarButton icon={Link2} onClick={handleLink} label="Link" />
+        <div className="relative">
+          <ToolbarButton icon={Link2} onClick={handleLink} label="Link" active={linkOpen} />
+          {linkOpen && (
+            <div className="absolute left-0 top-full z-10 mt-1 flex w-72 max-w-[80vw] items-center gap-1.5 rounded-xl border border-border-color bg-bg-elevated p-2 shadow-xl">
+              <Input
+                autoFocus
+                fieldSize="sm"
+                type="url"
+                value={linkUrl}
+                onChange={(e) => setLinkUrl(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    applyLink();
+                  } else if (e.key === 'Escape') {
+                    e.stopPropagation();
+                    setLinkOpen(false);
+                  }
+                }}
+                placeholder={t.linkPrompt}
+                aria-label={t.linkPrompt}
+              />
+              <Button variant="primary" size="sm" onClick={applyLink} disabled={!linkUrl.trim()}>
+                {t.linkApply}
+              </Button>
+            </div>
+          )}
+        </div>
         <ToolbarDivider />
         <div className="relative">
           <ToolbarButton

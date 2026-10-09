@@ -3,7 +3,7 @@
 
 The three modes keep their own run models, win/loss rules and response
 payloads. What they repeated verbatim lives here: looking a run up, the
-find-or-create flow, reset, the guards in front of `submit_result`, the
+find-or-create flow, abandon, the guards in front of `submit_result`, the
 inactivity-loss lookup, lazy pool freezing and the completion record.
 """
 from collections.abc import Callable
@@ -25,10 +25,10 @@ class StreakRunService:
     #: Challenge mode name ("chaos", "gauntlet", "history").
     mode: str
     run_model: type
-    #: Run column holding the best streak, which survives a reset.
+    #: Run column holding the best streak, which survives an abandon.
     best_field: str = "best_streak"
     #: Run columns that, with `user_id`, identify one run; the order is the
-    #: order of the variant arguments of `get_or_create_run` / `reset_run`.
+    #: order of the variant arguments of `get_or_create_run` / `abandon_run`.
     variant_fields: tuple[str, ...]
 
     # -- lookup -----------------------------------------------------------
@@ -45,7 +45,7 @@ class StreakRunService:
             select(model).where(model.id == run_id, model.user_id == user_id)
         ).first()
 
-    # -- find-or-create / reset ---------------------------------------------
+    # -- find-or-create / abandon ---------------------------------------------
 
     def _build_run(self, user_id: int, *variant: Any):
         raise NotImplementedError
@@ -66,7 +66,7 @@ class StreakRunService:
         db.session.commit()
         return self._present(run)
 
-    def _reset_run(self, user_id: int, *variant: Any):
+    def _abandon_run(self, user_id: int, *variant: Any):
         """Abandon the run in play: back to zero in a new attempt, with every match played so far kept.
 
         The run row stays, so its match logs do. Its progress is overwritten with what a
@@ -109,7 +109,7 @@ class StreakRunService:
         if not run:
             raise ValueError("Run not found")
         if run.status == "completed":
-            raise ValueError("This run is already completed. Reset it to play again.")
+            raise ValueError("This run is already completed. Abandon it to play again.")
         return run
 
     def _load_run_for_inactivity(self, run_id: int):

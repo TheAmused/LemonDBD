@@ -19,7 +19,7 @@ export interface GauntletHeaderProps {
   onOpenStats: () => void;
   onOpenHistory: () => void;
   onOpenRules: () => void;
-  onOpenReset: () => void;
+  onOpenAbandon: () => void;
   /** Omit to hide the button, e.g. for a role with only one playable mode. */
   onChangeMode?: () => void;
 }
@@ -32,7 +32,7 @@ export const GauntletHeader: React.FC<GauntletHeaderProps> = ({
       onOpenStats,
       onOpenHistory,
       onOpenRules,
-      onOpenReset,
+      onOpenAbandon,
       onChangeMode,
     }) => {
       const dict = useDictionary();
@@ -57,7 +57,7 @@ export const GauntletHeader: React.FC<GauntletHeaderProps> = ({
             onOpenRules={onOpenRules}
             onOpenStats={onOpenStats}
             onOpenHistory={onOpenHistory}
-            onOpenReset={onOpenReset}
+            onOpenAbandon={onOpenAbandon}
             modeSelect={
               modeLabel && (
                 <ModeSelectButton

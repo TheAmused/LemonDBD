@@ -13,7 +13,7 @@ import { KillerPickerGrid } from '../chaos/KillerPickerGrid';
 import { ChallengeErrorBanner, ChallengePanel, ChallengeVictoryCard } from '../ChallengePanel';
 import { ChallengeProgress } from '../ChallengeProgress';
 import { everyNthCheckpoint } from '@/utils/challengeCheckpoints';
-import { ChallengeCompletionHistoryDrawer, Confetti, ResetConfirmModal } from '../lazyChallengeParts';
+import { ChallengeCompletionHistoryDrawer, Confetti, AbandonConfirmModal } from '../lazyChallengeParts';
 import { useCelebration } from '../useCelebration';
 import { HistoryHeader } from './HistoryHeader';
 import { HistoryPerkPoolPanel } from './HistoryPerkPoolPanel';
@@ -54,13 +54,13 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
   const pathname = usePathname();
   const mode = (searchParams.get('mode') as HistoryMode) || 'hell';
 
-  const { run, stats, completions, loading, busy, error, submitResult, reset } = useHistoryRun(mode);
+  const { run, stats, completions, loading, busy, error, submitResult, abandon } = useHistoryRun(mode);
   const { pool: perkPool } = useKillerPerkPool();
 
   const [selectedKillerId, setSelectedKillerId] = useState<string | null>(null);
   const [acceptedKillerId, setAcceptedKillerId] = useState<string | null>(null);
   const { celebrating, celebrate } = useCelebration();
-  const [confirmingReset, setConfirmingReset] = useState(false);
+  const [confirmingAbandon, setConfirmingAbandon] = useState(false);
   const [isRulesOpen, setIsRulesOpen] = useState(false);
   const [isStatsOpen, setIsStatsOpen] = useState(false);
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
@@ -79,7 +79,7 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
   // freeze badge on it directly makes it flicker off between rounds. Track
   // whether THIS run has ever had a pick accepted at least once instead --
   // that stays true for the run's whole lifetime, only resetting when
-  // reset/completion swaps in a different run id.
+  // abandon/completion swaps in a different run id.
   const [engagedRunId, setEngagedRunId] = useState<number | null>(null);
   useEffect(() => {
     if (acceptedKillerId && run?.id !== engagedRunId) {
@@ -106,10 +106,10 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
     if (updated.status === 'completed') celebrate();
   };
 
-  const handleReset = () => {
-    setConfirmingReset(false);
+  const handleAbandon = () => {
+    setConfirmingAbandon(false);
     clearPick();
-    reset();
+    abandon();
   };
 
   return (
@@ -136,7 +136,7 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
           onOpenRules={() => setIsRulesOpen(true)}
           onOpenStats={() => setIsStatsOpen(true)}
           onOpenHistory={() => setIsHistoryOpen(true)}
-          onOpenReset={() => setConfirmingReset(true)}
+          onOpenAbandon={() => setConfirmingAbandon(true)}
           onChangeMode={() => setIsChangeModeOpen(true)}
         />
           }
@@ -145,7 +145,7 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
         {isCompleted ? (
           <ChallengeVictoryCard
             title={dict.streaks.historyStreakComplete}
-            onRestart={reset}
+            onRestart={abandon}
             busy={busy}
           />
         ) : (
@@ -208,12 +208,12 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
           <HistoryPerkPoolPanel pool={perkPool} unlockedPerkNames={run.unlocked_perk_names || []} />
         )}
 
-        <ResetConfirmModal
-          open={confirmingReset}
+        <AbandonConfirmModal
+          open={confirmingAbandon}
           busy={busy}
-          message={dict.streaks.historyResetConfirmPrompt}
-          onCancel={() => setConfirmingReset(false)}
-          onConfirm={handleReset}
+          message={dict.streaks.historyAbandonConfirmPrompt}
+          onCancel={() => setConfirmingAbandon(false)}
+          onConfirm={handleAbandon}
         />
 
         <HistoryStatsDrawer

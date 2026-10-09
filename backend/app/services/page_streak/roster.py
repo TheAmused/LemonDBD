@@ -127,7 +127,7 @@ def build_roster_summary(
     runs = {r.killer: r for r in runs_db}
     avatar_map = get_killer_avatar_map(user_id, ownership_service)
     # Read from the persistent completion history, not the run's own status --
-    # a per-killer reset wipes the run's status back to "in_progress" but this
+    # a per-killer abandon wipes the run's status back to "in_progress" but this
     # badge must survive it (that's the whole point of tracking it separately).
     if completed_killers is None:
         completed_killers = fetch_completed_variants(user_id, "page_streak")

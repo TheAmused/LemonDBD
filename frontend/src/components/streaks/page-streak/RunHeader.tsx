@@ -16,13 +16,13 @@ import { useDictionary } from "@/context/DictionaryContext";
 
 interface RunHeaderProps {
   run: PageStreakRun;
-  onOpenReset: () => void;
+  onOpenAbandon: () => void;
   onOpenRules: () => void;
   onOpenStats: () => void;
   onOpenHistory: () => void;
 }
 
-export const RunHeader: React.FC<RunHeaderProps> = ({ run, onOpenReset, onOpenRules, onOpenStats, onOpenHistory }) => {
+export const RunHeader: React.FC<RunHeaderProps> = ({ run, onOpenAbandon, onOpenRules, onOpenStats, onOpenHistory }) => {
   const dict = useDictionary();
   const cleared = run.status === 'completed' ? run.page_count : run.current_page - 1;
 
@@ -46,7 +46,7 @@ export const RunHeader: React.FC<RunHeaderProps> = ({ run, onOpenReset, onOpenRu
           onOpenRules={onOpenRules}
           onOpenStats={onOpenStats}
           onOpenHistory={onOpenHistory}
-          onOpenReset={onOpenReset}
+          onOpenAbandon={onOpenAbandon}
         />
       }
     />

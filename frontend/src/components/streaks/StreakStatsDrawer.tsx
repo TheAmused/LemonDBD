@@ -55,8 +55,6 @@ export function StreakStatsDrawer<TLog extends StreakMatchLogBase>({ isOpen, onC
   const groups = groupByAttempt(recentLogs);
   const recentGroups = groups.slice(0, VISIBLE_ATTEMPTS);
   const olderGroups = groups.slice(VISIBLE_ATTEMPTS);
-  // Old matches are pruned, so the totals can count more than the list still holds.
-  const hasPrunedMatches = totalMatches > recentLogs.length;
   const listProps = { renderLabel, renderMeta, renderGroupLabel };
 
   return (
@@ -118,7 +116,7 @@ export function StreakStatsDrawer<TLog extends StreakMatchLogBase>({ isOpen, onC
 
         <div>
           <h3 className="type-label text-text-secondary mb-4">
-            {dict.streaks.recentMatchHistory}
+            {dict.streaks.matchHistory}
           </h3>
 
           {recentLogs.length === 0 ? (
@@ -127,14 +125,12 @@ export function StreakStatsDrawer<TLog extends StreakMatchLogBase>({ isOpen, onC
             </div>
           ) : (
             <>
+              <p className="mb-3 text-xs text-text-muted">{dict.streaks.matchHistoryLimitNote}</p>
               <StreakAttemptGroups groups={recentGroups} openByDefault={groups[0].key} {...listProps} />
               {olderGroups.length > 0 && (
                 <Button variant="secondary" size="md" className="mt-3 w-full" onClick={() => setIsOlderOpen(true)}>
                   {dict.streaks.olderAttempts} ({olderGroups.length})
                 </Button>
-              )}
-              {hasPrunedMatches && (
-                <p className="mt-3 text-center text-xs text-text-muted">{dict.streaks.olderMatchesNotStored}</p>
               )}
             </>
           )}

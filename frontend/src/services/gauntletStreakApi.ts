@@ -52,12 +52,12 @@ export async function selectTarget(token: string, runId: number, character: stri
   return data.run;
 }
 
-export async function resetRun(
+export async function abandonRun(
   token: string,
   role: Role,
   gameMode: GauntletGameMode = DEFAULT_GAUNTLET_GAME_MODE
 ): Promise<GauntletRun> {
-  const data = await postJson<RunResponse>(token, '/run/reset', { role, game_mode: gameMode });
+  const data = await postJson<RunResponse>(token, '/run/abandon', { role, game_mode: gameMode });
   return data.run;
 }
 

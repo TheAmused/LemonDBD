@@ -36,7 +36,7 @@ class ModeAdapter:
         return self.service.get_or_create_run(user_id, *self.variant)
 
     def reset(self, user_id: int) -> dict[str, Any]:
-        return self.service.reset_run(user_id, *self.variant)
+        return self.service.abandon_run(user_id, *self.variant)
 
     def submit(self, user_id: int, run: dict[str, Any], result: str, killer: str) -> dict[str, Any]:
         if self.name == "gauntlet":

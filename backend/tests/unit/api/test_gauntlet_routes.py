@@ -227,7 +227,7 @@ class TestGauntletRoutes:
         _, _, headers = gauntlet_auth_setup
         client.get("/api/v1/gauntlet-streak/run?role=killer", headers=headers)
         res = client.post(
-            "/api/v1/gauntlet-streak/run/reset",
+            "/api/v1/gauntlet-streak/run/abandon",
             json={"role": "killer"},
             headers=headers,
         )

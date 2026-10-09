@@ -50,7 +50,7 @@ export const KillerRosterGrid: React.FC<KillerRosterGridProps> = ({ locale, rost
     <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-10" role="list">
       {roster.map((entry) => {
         // ever_completed comes from the persistent completion history, so it
-        // survives a per-killer reset (which flips status back to in_progress).
+        // survives a per-killer abandon (which flips status back to in_progress).
         // status === 'completed' stays as a fallback for older data.
         const done = entry.ever_completed || entry.status === 'completed';
         const active = entry.status === 'in_progress';

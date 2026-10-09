@@ -166,7 +166,7 @@ interface StandardHeaderActionsProps {
   onOpenRules: () => void;
   onOpenStats: () => void;
   onOpenHistory: () => void;
-  onOpenReset: () => void;
+  onOpenAbandon: () => void;
   /** The mode or difficulty picker, placed first, before Rules. */
   modeSelect?: React.ReactNode;
   /** Other mode-specific buttons (perk pool), placed between the picker and Rules. */
@@ -176,7 +176,7 @@ interface StandardHeaderActionsProps {
 }
 
 /** The action row every challenge header shares, so they cannot drift apart. */
-export const StandardHeaderActions: React.FC<StandardHeaderActionsProps> = ({ onOpenRules, onOpenStats, onOpenHistory, onOpenReset, modeSelect, extra, hasDrawAnimations = false }) => {
+export const StandardHeaderActions: React.FC<StandardHeaderActionsProps> = ({ onOpenRules, onOpenStats, onOpenHistory, onOpenAbandon, modeSelect, extra, hasDrawAnimations = false }) => {
   const dict = useDictionary();
   return (
   <>
@@ -200,8 +200,8 @@ export const StandardHeaderActions: React.FC<StandardHeaderActionsProps> = ({ on
     />
     <HeaderButton
       danger
-      onClick={onOpenReset}
-      title={dict.streaks.resetRun}
+      onClick={onOpenAbandon}
+      title={dict.streaks.abandonRun}
       icon={<RotateCcw className="h-5 w-5" aria-hidden="true" />}
     />
   </>

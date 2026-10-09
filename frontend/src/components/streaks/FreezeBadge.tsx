@@ -1,7 +1,5 @@
 'use client';
 // frontend/src/components/streaks/FreezeBadge.tsx
-import type { Dictionary } from '@/locales/types';
-
 import React from 'react';
 import { Snowflake } from 'lucide-react';
 import { Tooltip } from '@/components/common/Tooltip';

@@ -55,15 +55,15 @@ export const TOOLTIP_CONFIG = {
     },
     /** State badges: trophies, ownership, admin, completion. */
     status: {
-      content: 'border-accent-green/40',
-      title: 'normal-case tracking-normal text-accent-green',
-      arrowBorder: 'color-mix(in srgb, var(--accent-green) 40%, transparent)',
+      content: 'border-accent-red/40',
+      title: 'normal-case tracking-normal text-accent-red',
+      arrowBorder: 'color-mix(in srgb, var(--accent-red) 40%, transparent)',
     },
     /** Add-on / item rarity labels. */
     rarity: {
-      content: 'border-accent-purple/50',
-      title: 'tracking-widest text-accent-purple',
-      arrowBorder: 'color-mix(in srgb, rgb(168 85 247) 50%, transparent)',
+      content: 'border-accent-amber/50',
+      title: 'tracking-widest text-accent-amber',
+      arrowBorder: 'color-mix(in srgb, var(--accent-amber) 50%, transparent)',
     },
   },
 } as const;
@@ -75,8 +75,7 @@ const resolveVariant = (name?: string | null) =>
 
 type MaybeText = string | false | null | undefined;
 
-/** Spread onto any native element to give it the global tooltip. */
-/** `variant` is required on purpose: every tooltip picks its look explicitly. */
+/** Spread onto any native element to give it the global tooltip. `variant` is required on purpose: every tooltip picks its look explicitly. */
 export const tip = (title: MaybeText, description: MaybeText, variant: TooltipVariant) => ({
   [TOOLTIP_CONFIG.attr.title]: title || undefined,
   [TOOLTIP_CONFIG.attr.description]: description || undefined,

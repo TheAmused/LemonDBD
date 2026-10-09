@@ -4,7 +4,7 @@
   "target": "rosters",
   "rosters": [
     {
-      "slug": "canon",
+      "slug": "canon_gemini",
       "name": "Dead by Daylight: Fog Canon",
       "description": "Original trial survivors and killers from the canon realm.",
       "translations": {

@@ -136,17 +136,15 @@ test('SmashOrPass: Sound Effects & Web Audio Synthesizer', async (t) => {
     assert.doesNotThrow(() => SmashSounds.playCardGrabSound());
   });
 
-  await t.test('SmashSounds mute state toggles correctly', () => {
-    const initial = SmashSounds.getIsMuted();
-    const toggled = SmashSounds.toggleMute();
-    assert.strictEqual(toggled, !initial);
-    SmashSounds.toggleMute(); // restore
+  await t.test('SmashSounds plays only what the viewer chose (one switch: the preferences)', () => {
+    assert.doesNotThrow(() => SmashSounds.applyPreferences({ effects: false, music: false }));
+    assert.doesNotThrow(() => SmashSounds.playSmashSound());
+    assert.doesNotThrow(() => SmashSounds.applyPreferences({ effects: true, music: false }));
   });
 
   await t.test('SmashSounds BGM controls can be invoked without throw', () => {
     assert.doesNotThrow(() => SmashSounds.startBgm());
     assert.doesNotThrow(() => SmashSounds.stopBgm());
-    assert.doesNotThrow(() => SmashSounds.toggleBgm());
     SmashSounds.stopBgm();
   });
 });

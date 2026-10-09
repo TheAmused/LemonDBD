@@ -7,7 +7,6 @@ interface UseHubHotkeysOptions {
   currentCharacter: EntityItem | null;
   isExiting: boolean;
   handleVote: (vote: 'smash' | 'pass') => void;
-  toggleSound: () => void;
   toggleHowToPlay: () => void;
   openStats: (character: EntityItem) => void;
   openResetConfirm: () => void;
@@ -23,7 +22,6 @@ export function useHubHotkeys({
   currentCharacter,
   isExiting,
   handleVote,
-  toggleSound,
   toggleHowToPlay,
   openStats,
   openResetConfirm,
@@ -37,11 +35,8 @@ export function useHubHotkeys({
         return;
       }
 
-      // Audio & Modals
-      if (e.key === 'm' || e.key === 'M' || e.key === 'b' || e.key === 'B') {
-        e.preventDefault();
-        toggleSound();
-      } else if (e.key === '?' || e.key === '/') {
+      // Help
+      if (e.key === '?' || e.key === '/') {
         e.preventDefault();
         toggleHowToPlay();
       }
@@ -66,5 +61,5 @@ export function useHubHotkeys({
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [areModalsOpen, currentCharacter, isExiting, handleVote, toggleSound, toggleHowToPlay, openStats, openResetConfirm]);
+  }, [areModalsOpen, currentCharacter, isExiting, handleVote, toggleHowToPlay, openStats, openResetConfirm]);
 }

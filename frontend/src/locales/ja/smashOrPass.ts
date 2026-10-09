@@ -274,10 +274,6 @@ export default {
   tooltips: {
     filter: '候補者を絞り込む',
     filterDesc: 'サバイバー/キラーの役割や性別で候補者を絞り込みます。',
-    muteAudio: '音声をミュート (M / B)',
-    muteAudioDesc: 'BGMと効果音をすべてミュートします。',
-    unmuteAudio: '音声をオン (M / B)',
-    unmuteAudioDesc: 'ダークシンセBGMと効果音を再生します。',
     archetype: 'ロマンスの原型',
     archetypeDesc: 'あなたの投票傾向から恋愛タイプを診断します。',
     leaderboard: '殿堂入りリーダーボード',

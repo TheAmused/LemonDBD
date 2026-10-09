@@ -1,13 +1,14 @@
 // frontend/src/components/smash-or-pass/hub/useSmashSound.ts
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { SmashSounds } from '../SmashSoundEffects';
 
 const FIRST_GESTURE_EVENTS = ['pointerdown', 'keydown', 'touchstart', 'click'] as const;
 
-/** The master sound switch, plus resuming audio on the first user gesture if it is enabled. */
+/**
+ * Audio housekeeping for the page: resumes it on the first user gesture, and stops the music when
+ * the viewer leaves. Whether anything plays is the Effects / Music choice alone (see prefs/).
+ */
 export function useSmashSound() {
-  const [isSoundActive, setIsSoundActive] = useState<boolean>(!SmashSounds.getIsMuted());
-
   useEffect(() => {
     if (typeof window === 'undefined') return;
     const handleFirstUserGesture = () => {
@@ -20,12 +21,8 @@ export function useSmashSound() {
       for (const type of FIRST_GESTURE_EVENTS) {
         window.removeEventListener(type, handleFirstUserGesture);
       }
+      // The music belongs to this page: it must not follow the viewer to /perks.
+      SmashSounds.pauseBgm();
     };
   }, []);
-
-  const toggleSound = useCallback(() => {
-    setIsSoundActive(SmashSounds.toggleMasterSound());
-  }, []);
-
-  return { isSoundActive, toggleSound };
 }

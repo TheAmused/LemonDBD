@@ -274,10 +274,6 @@ export default {
   tooltips: {
     filter: 'Filtrar candidatos',
     filterDesc: 'Filtrar por rol de superviviente/asesino y género.',
-    muteAudio: 'Silenciar audio (M / B)',
-    muteAudioDesc: 'Silencia la música ambiental y los efectos de sonido.',
-    unmuteAudio: 'Activar audio (M / B)',
-    unmuteAudioDesc: 'Activa la música synth y los efectos de sonido.',
     archetype: 'Arquetipo Romántico',
     archetypeDesc: 'Descubre tu personalidad según tus votos.',
     leaderboard: 'Salón de la Fama',

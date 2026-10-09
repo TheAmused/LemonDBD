@@ -76,9 +76,18 @@ test('SmashOrPass: effects and music choice', async (t) => {
     assert.doesNotMatch(mark, /animate-|drop-shadow|shadow-|blur|scale-|translate/);
   });
 
+  await t.test('leaving the page stops the music without clearing the choice', () => {
+    assert.match(read('hub/useSmashSound.ts'), /SmashSounds\.pauseBgm\(\)/);
+    const pause = read('SmashSoundBase.ts').match(/public pauseBgm\(\)[\s\S]*?\n  }/);
+    assert.ok(pause);
+    assert.doesNotMatch(pause[0], /musicAllowed|applyPreferences/);
+  });
+
   await t.test('sound effects and music each obey the choice', () => {
     const base = read('SmashSoundBase.ts');
-    assert.match(base, /this\.isMuted \|\| !this\.effectsAllowed/);
+    assert.match(base, /if \(!this\.effectsAllowed\) return null;/);
     assert.match(base, /if \(!this\.musicAllowed\) return;/);
+    // One source of truth: no second mute switch, no separately saved sound flags.
+    assert.doesNotMatch(base, /isMuted|toggleMute|toggleMasterSound|localStorage|writeFlag/);
   });
 });

@@ -457,6 +457,28 @@ class TestPageStreakResults:
         assert updated["status"] == "in_progress"
         assert updated["current_page"] == 1
 
+    def test_replay_restarts_the_attempt_count_but_not_the_attempt_groups(self) -> None:
+        from app.core.extensions import db
+        from app.models import ChallengeCompletionRecord
+
+        self.service.submit_result(self.user_id, "Nurse", 1, self.build_for(1), "loss")
+        for page in (1, 2, 3):
+            self.service.submit_result(self.user_id, "Nurse", page, self.build_for(page), "win")
+        completed = self.service.get_run(self.user_id, "Nurse")
+        assert (completed["attempts"], completed["attempt"]) == (0, 2)
+
+        replay = self.service.reset_run(self.user_id, "Nurse")
+        assert (replay["attempts"], replay["attempt"]) == (0, 3)
+        self.service.submit_result(self.user_id, "Nurse", 1, self.build_for(1), "loss")
+
+        updated = self.service.get_run(self.user_id, "Nurse")
+        assert (updated["attempts"], updated["attempt"]) == (1, 4)
+        assert [entry["attempt"] for entry in reversed(updated["history"])] == [1, 2, 2, 2, 3]
+        record = db.session.scalars(
+            select(ChallengeCompletionRecord).where(ChallengeCompletionRecord.user_id == self.user_id)
+        ).first()
+        assert (record.attempts_taken, record.matches_played) == (2, 4)
+
     def test_reset_without_a_run_is_rejected(self) -> None:
         with pytest.raises(ValueError):
             self.service.reset_run(self.user_id, "Trapper")

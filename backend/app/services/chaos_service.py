@@ -17,6 +17,7 @@ from app.services.chaos import (
     resolve_perk_names_by_ids,
     resolve_perks_by_ids,
 )
+from app.services.match_log_retention import add_match_log
 from app.services.ownership_service import OwnershipService
 from app.services.streak_run import StreakRunService
 
@@ -155,6 +156,7 @@ class ChaosService(StreakRunService):
         perks_this_round = r.current_perks
         addon_rarities_this_round = r.current_addon_rarities
         interval = checkpoint_interval(r.difficulty)
+        attempt = r.attempt
 
         if result == "win":
             if killer_id in completed:
@@ -176,10 +178,11 @@ class ChaosService(StreakRunService):
                 checkpoint_killers,
                 checkpoint_used_perks,
             ) = self._compute_loss_outcome(r)
-            r.attempts += 1
+            r.start_new_attempt()
 
-        db.session.add(ChaosMatchLog(
+        add_match_log(r, ChaosMatchLog(
             run_id=run_id,
+            attempt=attempt,
             killer_id=killer_id,
             result=result,
             perks=perks_this_round,
@@ -225,8 +228,9 @@ class ChaosService(StreakRunService):
             checkpoint_used_perks,
         ) = self._compute_loss_outcome(r)
 
-        db.session.add(ChaosMatchLog(
+        add_match_log(r, ChaosMatchLog(
             run_id=run_id,
+            attempt=r.attempt,
             killer_id="",
             result="loss",
             perks=r.current_perks,
@@ -241,7 +245,7 @@ class ChaosService(StreakRunService):
         r.completed_killers = completed
         r.checkpoint_killers = checkpoint_killers
         r.checkpoint_used_perks = checkpoint_used_perks
-        r.attempts += 1
+        r.start_new_attempt()
 
         self._redraw_and_maybe_refreeze(r, used_perks, streak_after)
         db.session.commit()

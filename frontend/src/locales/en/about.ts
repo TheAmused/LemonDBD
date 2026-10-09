@@ -2,7 +2,7 @@
 export default {
   pageTitle: "LemonDBD - About us",
   who: {
-    heading: "Who are we?",
+    heading: "Who we are",
     paragraphs: [
       "<brand>LemonDBD</brand> is created by 2 developers, <b>TheAmused</b> and <b>PabloPicasso</b>, also known as <brand>LemonTeam</brand>.",
       "We joined <i>Dead by Daylight</i> in 2021, when the <i>Portrait of a Murder</i> chapter came out (<i>The Artist</i> and <i>Jonah Vasquez</i>), and we have been big fans ever since.",

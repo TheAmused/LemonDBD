@@ -7,6 +7,7 @@ export default {
   lastUpdated: "3 de octubre de 2026",
   intro:
     "Esta página explica qué datos personales recoge <brand>LemonDBD</brand>, para qué, quién los ve y qué puedes hacer tú. La hemos escrito de forma breve y sencilla a propósito.",
+  translationNotice: "Si las versiones traducidas de esta página difieren de la inglesa, prevalece la versión en inglés.",
   summaryHeading: "En resumen",
   summary: [
     "Solo recogemos lo que el sitio necesita para funcionar: una cuenta, lo que guardas en ella y datos técnicos básicos.",
@@ -37,7 +38,7 @@ export default {
       items: [
         "<b>Datos de la cuenta:</b> nombre de usuario, correo electrónico, un hash de tu contraseña (nunca la contraseña en sí), avatar, idioma preferido y códigos temporales de verificación y de restablecimiento de contraseña.",
         "<b>Lo que guardas:</b> personajes y beneficios que posees, tu vitrina de perfil, rachas, logros de desafíos, estadísticas de minijuegos y votos de Smash or Pass. Tus tier lists, rosters de Smash or Pass y minijuegos personalizados se quedan en tu navegador y no se envían a nuestros servidores. Los visitantes sin cuenta reciben un ID de sesión aleatorio para recordar sus votos de Smash or Pass.",
-        "<b>Informes de errores y mensajes:</b> el texto, las capturas, el nombre y el correo que nos envías. Los invitados deben indicar un correo para que podamos responder.",
+        "<b>Informes de errores y mensajes:</b> el texto, las capturas y el correo que nos envías. Los invitados deben indicar un correo para que podamos responder.",
         "<b>Datos técnicos:</b> tu dirección IP, tipo de navegador y detalles de las solicitudes, usados para limitar el uso, prevenir abusos y corregir errores.",
         "<b>Comandos de voz (mapas):</b> si los activas, el audio del micrófono se usa para reconocer nombres de mapas. Cómo funciona se explica abajo, en la sección sobre almacenamiento y terceros.",
         "<b>Verificación por captura:</b> si subes el marcador de una partida para verificar un reto, la imagen se analiza en la memoria del servidor y se descarta en cuanto el resultado está listo. No se guarda ni se registra; solo se te devuelve el resultado (por ejemplo, ganada o no).",
@@ -50,15 +51,15 @@ export default {
         "Crear y gestionar tu cuenta, conservar tus datos guardados y enviar correos de verificación y de restablecimiento de contraseña (ejecución de nuestro servicio hacia ti).",
         "Responder a informes de errores y solicitudes (nuestro interés legítimo en dar soporte o tu solicitud).",
         "Mantener el sitio seguro, frenar el spam y los abusos y corregir errores (nuestro interés legítimo).",
-        "Entender qué páginas se usan y mejorar el sitio, con analítica respetuosa con la privacidad (nuestro interés legítimo).",
-        "Cuando pedimos tu consentimiento, por ejemplo para activar una función que lo requiere, puedes retirarlo en cualquier momento.",
+        "Entender qué páginas se usan y mejorar el sitio mediante analítica respetuosa con la privacidad (nuestro interés legítimo).",
+        "Si te pedimos tu consentimiento, puedes retirarlo en cualquier momento.",
       ],
     },
     analytics: {
       heading: "Analítica",
       paragraphs: [
         "Usamos <b>Umami</b>, una herramienta de analítica de código abierto que alojamos nosotros mismos. No usa cookies, no te sigue por otros sitios web y no guarda tu dirección IP.",
-        "Registra datos de visita anónimos como la página vista, la referencia, el navegador, el sistema operativo, el tipo de dispositivo, el tamaño de pantalla y el país aproximado.",
+        "Registra datos de visita anónimos como la página vista, la referencia, el navegador, el sistema operativo, el tipo de dispositivo, el tamaño de pantalla, el país aproximado y los clics en elementos seleccionados de la página. Los datos de analítica son anónimos.",
       ],
       items: [],
     },
@@ -77,7 +78,7 @@ export default {
       items: [
         "<b>Enlaces que compartes:</b> cuando compartes una tier list, un roster o un minijuego personalizado, va empaquetado en el propio enlace (la parte después de «#», que tu navegador nunca nos envía). No lo guardamos ni podemos verlo; solo pueden abrirlo quienes reciban el enlace.",
         "<b>Proveedores de servicios:</b> nuestro proveedor de alojamiento y {mailProvider} (que entrega nuestros correos de verificación y de restablecimiento de contraseña) tratan datos en nuestro nombre, solo para mantener el sitio y enviarte los correos que solicitas.",
-        "<b>Discord:</b> cuando envías un informe de error, su contenido (incluidos tu nombre, correo y capturas) se reenvía a un canal privado de nuestro equipo.",
+        "<b>Discord:</b> cuando envías un informe de error, su contenido (incluidos tu correo y capturas) se reenvía a un canal privado de nuestro equipo.",
         "<b>Motivos legales:</b> si la ley lo exige o para proteger el sitio y a sus usuarios de abusos.",
       ],
     },
@@ -91,8 +92,8 @@ export default {
     retention: {
       heading: "Cuánto tiempo los conservamos",
       paragraphs: [
-        "Los datos de la cuenta y lo que guardas se conservan mientras exista tu cuenta. Los códigos de verificación caducan a los {verificationWindow}, los enlaces de restablecimiento de contraseña a los {resetWindow} y las sesiones de inicio de sesión a los {sessionWindow}. Las rachas que permanecen inactivas durante {streakPrune} se terminan automáticamente. Los informes de errores se conservan el tiempo necesario para resolver el problema y para nuestros registros. Los registros del servidor se guardan solo brevemente. Los datos de analítica son anónimos.",
-        "Puedes eliminar tu cuenta tú mismo desde tu página de perfil o pedirnos que lo hagamos. Se eliminan entonces los datos de la cuenta, los personajes y beneficios que posees, la vitrina, las rachas, las estadísticas de minijuegos, los logros de desafíos y el avatar subido. Los votos de Smash or Pass permanecen como entradas anónimas que ya no están vinculadas a ti. Tus informes de errores se conservan en nuestros registros, pero se les quitan tu nombre y tu correo electrónico. Las copias ya enviadas a nuestro canal privado de Discord pueden permanecer.",
+        "Los datos de la cuenta y lo que guardas se conservan mientras exista tu cuenta. Los códigos de verificación caducan a los {verificationWindow}, los enlaces de restablecimiento de contraseña a los {resetWindow} y las sesiones de inicio de sesión a los {sessionWindow}. Las rachas que permanecen inactivas durante {streakPrune} se terminan automáticamente. Los informes de errores se conservan el tiempo necesario para resolver el problema y para nuestros registros. Los registros del servidor se guardan solo brevemente.",
+        "Puedes eliminar tu cuenta tú mismo desde tu página de perfil o pedirnos que lo hagamos. Se eliminan entonces los datos de la cuenta, los personajes y beneficios que posees, la vitrina, las rachas, las estadísticas de minijuegos, los logros de desafíos y el avatar subido. Los votos de Smash or Pass permanecen como entradas anónimas que ya no están vinculadas a ti. Tus informes de errores se conservan en nuestros registros, pero se les quita tu correo electrónico. Las copias ya enviadas a nuestro canal privado de Discord pueden permanecer.",
       ],
       items: [],
     },
@@ -137,7 +138,6 @@ export default {
       heading: "Contacto",
       paragraphs: [
         "Para ejercer tus derechos, hacer una pregunta de privacidad o pedir la eliminación de tu cuenta, escríbenos a [{contactEmail}](mailto:{contactEmail}). Los usuarios con sesión iniciada también pueden eliminar su cuenta desde su página de perfil. Escribe desde la dirección registrada en tu cuenta para que podamos verificar tu identidad.",
-        "Si las versiones traducidas de esta página difieren de la inglesa, prevalece la versión en inglés.",
       ],
       items: [],
     },

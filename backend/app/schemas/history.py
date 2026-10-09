@@ -8,6 +8,7 @@ class HistoryMatchLogDict(TypedDict):
     killer_id: str
     result: str
     row_index: int
+    attempt: int
     streak_before: int
     streak_after: int
     timestamp: str | None
@@ -27,6 +28,10 @@ class HistoryRunDict(TypedDict):
     owned_killer_ids: list[int]
     checkpoint_row_index: int
     attempts: int
+    attempt: int
+    total_wins: int
+    total_losses: int
+    playthrough_matches: int
     created_at: str | None
     updated_at: str | None
 

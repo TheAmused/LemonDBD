@@ -7,6 +7,7 @@ from app.core.extensions import db
 from app.models import PageStreakPageLog, PageStreakRun, utcnow
 from app.schemas.page_streak import PageStreakHistoryEntry, PageStreakRunDict
 from app.services.challenge_completions import delete_completions, record_challenge_completion
+from app.services.match_log_retention import add_match_log
 from app.services.page_streak.helpers import BUILD_SIZE, to_utc_iso
 
 
@@ -24,6 +25,7 @@ def run_to_dict(
         "id": r.id,
         "killer": r.killer,
         "status": r.status,
+        "attempts": r.attempts,
         "attempt": r.attempt,
         "current_page": r.current_page,
         "best_page": r.best_page,
@@ -84,6 +86,7 @@ def create_new_run(
         user_id=user_id,
         killer=killer,
         status="in_progress",
+        attempts=0,
         attempt=1,
         current_page=1,
         best_page=0,
@@ -143,7 +146,7 @@ def record_match_result(
         perks=list(perks),
         result=result,
     )
-    db.session.add(log)
+    add_match_log(r, log)
 
     if result == "win":
         r.best_page = max(r.best_page, page)
@@ -153,15 +156,16 @@ def record_match_result(
                 user_id=user_id,
                 mode="page_streak",
                 variant=killer,
-                attempts_taken=r.attempt,
-                matches_played=len(r.page_logs),
+                attempts_taken=r.attempts + 1,
+                matches_played=r.playthrough_matches,
                 unlocked_characters_count=0,
             )
+            r.finish_playthrough()
         else:
             r.current_page = page + 1
     else:
         r.current_page = 1
-        r.attempt = r.attempt + 1
+        r.start_new_attempt()
         r.pages = []
 
     db.session.commit()
@@ -173,7 +177,7 @@ def apply_inactivity_loss(run_id: int) -> None:
     if not r or r.status == "completed":
         return
 
-    db.session.add(PageStreakPageLog(
+    add_match_log(r, PageStreakPageLog(
         run_id=r.id,
         attempt=r.attempt,
         page_number=r.current_page,
@@ -183,7 +187,7 @@ def apply_inactivity_loss(run_id: int) -> None:
     ))
 
     r.current_page = 1
-    r.attempt = r.attempt + 1
+    r.start_new_attempt()
     r.pages = []
 
     db.session.commit()
@@ -203,9 +207,9 @@ def reset_active_run(
         raise ValueError("No perks available — the pool is empty")
 
     r = db.session.scalars(select(PageStreakRun).where(PageStreakRun.id == run["id"])).first()
+    r.abandon_attempt()
     r.status = "in_progress"
     r.current_page = 1
-    r.attempt = r.attempt + 1
     r.pages = []
     r.snapshot_at = utcnow()
     db.session.commit()

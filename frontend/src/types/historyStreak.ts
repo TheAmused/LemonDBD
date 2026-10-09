@@ -32,6 +32,8 @@ export interface HistoryMatchLog {
   killer_id: string;
   result: 'win' | 'loss';
   row_index: number;
+  /** The run's attempt number when the match was played: the group it is filed under. */
+  attempt: number;
   streak_before: number;
   streak_after: number;
   timestamp?: string;

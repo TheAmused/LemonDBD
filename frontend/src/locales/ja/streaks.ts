@@ -40,6 +40,7 @@ export default {
   original: "オリジナル版",
   lemonVersion: "Lemon版",
   comingSoon: "近日公開予定。",
+  createdBy: "作者: {name}",
   escape: "脱出",
   checkpoint: "チェックポイント",
   historyStreak: "ヒストリー・ストリーク",

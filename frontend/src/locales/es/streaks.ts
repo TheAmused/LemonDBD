@@ -40,6 +40,7 @@ export default {
   original: "Original",
   lemonVersion: "Versión Lemon",
   comingSoon: "Próximamente.",
+  createdBy: "Por {name}",
   escape: "escape",
   checkpoint: "punto de control",
   historyStreak: "Racha Histórica",

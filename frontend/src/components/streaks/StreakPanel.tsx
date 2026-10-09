@@ -8,6 +8,7 @@ import { AlertTriangle } from 'lucide-react';
 import { AdeptBadgeIcon } from '@/components/icons/DbdIcons';
 
 import { useDictionary } from "@/context/DictionaryContext";
+import { formatMessage } from '@/utils/i18nFormat';
 
 const PANEL_HOVER_CLASSES = 'hover:border-accent-red/50 focus:ring-accent-red';
 
@@ -19,6 +20,8 @@ const DisabledReasonModal = dynamic(
 interface StreakPanelBaseProps {
   title: string;
   image?: string;
+  /** Who came up with the challenge. */
+  creator?: string;
   disabled?: boolean;
   disabledReason?: string | null;
   /** Shows a trophy badge -- this challenge has already been fully cleared. */
@@ -47,6 +50,7 @@ type StreakPanelProps = StreakPanelBaseProps &
 export const StreakPanel: React.FC<StreakPanelProps> = ({
       title,
       image,
+      creator,
       href,
       onClick,
       comingSoon,
@@ -111,10 +115,13 @@ export const StreakPanel: React.FC<StreakPanelProps> = ({
         </span>
       ) : null}
 
-      <div className="relative flex flex-1 items-center pr-24 sm:pr-28">
+      <div className="relative flex flex-1 flex-col justify-center pr-24 sm:pr-28">
         <h3 className={`text-lg sm:text-xl font-extrabold tracking-wide ${comingSoon || disabled ? 'text-text-muted' : 'text-text-primary'}`}>
           {title}
         </h3>
+        {creator && (
+          <p className="mt-1 text-xs text-text-muted">{formatMessage(dict.streaks.createdBy, { name: creator })}</p>
+        )}
       </div>
     </>
   );

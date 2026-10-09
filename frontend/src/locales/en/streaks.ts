@@ -40,6 +40,7 @@ export default {
   original: "Original",
   lemonVersion: "Lemon version",
   comingSoon: "Coming soon.",
+  createdBy: "By {name}",
   escape: "escape",
   checkpoint: "checkpoint",
   historyStreak: "History Streak",

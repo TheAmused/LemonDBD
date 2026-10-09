@@ -40,6 +40,7 @@ export default {
   original: "Oryginalna",
   lemonVersion: "Wersja Lemon",
   comingSoon: "Wkrótce dostępne.",
+  createdBy: "Autor: {name}",
   escape: "ucieczka",
   checkpoint: "punkt kontrolny",
   historyStreak: "Seria Historyczna",

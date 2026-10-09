@@ -119,6 +119,7 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
               key={panel.id}
               title={panel.title}
               image={panel.image}
+              creator={panel.creator}
               comingSoon
             />
           );
@@ -134,6 +135,7 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
               key={panel.id}
               title={panel.title}
               image={panel.image}
+              creator={panel.creator}
               href={`/${locale}/streaks/${role}/${panel.id}`}
               disabled
               disabledReason={mode?.disabled_reason}
@@ -147,6 +149,7 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
               key={panel.id}
               title={panel.title}
               image={panel.image}
+              creator={panel.creator}
               completed={gauntletCardCompleted}
               completedCount={gauntletCardCount}
               completedFull={gauntletCardFullCount != null}
@@ -164,6 +167,7 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
               key={panel.id}
               title={panel.title}
               image={panel.image}
+              creator={panel.creator}
               completed={chaosCardCompleted}
               completedCount={chaosCardCount}
               completedFull={chaosCardFullCount != null}
@@ -188,6 +192,7 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
               key={panel.id}
               title={panel.title}
               image={panel.image}
+              creator={panel.creator}
               completed={historyCardCompleted}
               completedCount={historyCardCount}
               completedFull={historyCardFullCount != null}
@@ -212,6 +217,7 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
               key={panel.id}
               title={panel.title}
               image={panel.image}
+              creator={panel.creator}
               completed={pageStreakCardCompleted}
               completedCount={pageStreakCardCount}
               completedFull={pageStreakCardFullCount != null}
@@ -233,6 +239,7 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
             key={panel.id}
             title={panel.title}
             image={panel.image}
+            creator={panel.creator}
             href={`/${locale}/streaks/${role}/${panel.id}`}
           />
         );

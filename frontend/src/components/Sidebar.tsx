@@ -218,10 +218,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
       activeBg: 'bg-accent-red/10 text-accent-red border border-accent-red/20',
       href: `/${currentLocale}/achievements`,
     },
-    // TEMPORARY: remove once About us is linked permanently.
     {
       id: 'about',
-      label: 'About us',
+      label: dict.sidebar.about,
       icon: Info,
       color: 'text-accent-red',
       activeBg: 'bg-accent-red/10 text-accent-red border border-accent-red/20',

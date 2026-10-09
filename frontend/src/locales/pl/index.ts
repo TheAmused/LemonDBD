@@ -22,8 +22,10 @@ import about from './about';
 import tierLists from './tierLists';
 import minigames from './minigames';
 import privacy from './privacy';
+import rules from './rules';
 import errorPages from './errorPages';
 import scoreboardCheck from './scoreboardCheck';
+import validation from './validation';
 import type { Dictionary } from '../types';
 
 const pl = {
@@ -50,8 +52,10 @@ const pl = {
   tierLists,
   minigames,
   privacy,
+  rules,
   errorPages,
   scoreboardCheck,
+  validation,
 } satisfies Dictionary;
 
 export default pl;

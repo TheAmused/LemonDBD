@@ -20,6 +20,8 @@ import {
   Trash2,
   Check,
   Trophy,
+  AlertCircle,
+  X,
   History,
   Layers,
   MapPin,
@@ -55,6 +57,7 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
   const dict = useDictionary();
   const t = dict.minigames;
   const [customTrials, setCustomTrials] = useState<ChallengeDefinition[]>([]);
+  const [importError, setImportError] = useState<string | null>(null);
   const [streakData, setStreakData] = useState<DailyStreakData>({
     currentStreak: 0,
     maxStreak: 0,
@@ -109,6 +112,7 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
+    setImportError(null);
     const reader = new FileReader();
     reader.onload = (event) => {
       try {
@@ -117,8 +121,8 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
         const saved = saveCustomChallenge(imported);
         setCustomTrials(getCustomChallenges());
       } catch (err) {
-            alert(getErrorMessage(err, 'Failed to import trial.'));
-          }
+        setImportError(getErrorMessage(err, 'Failed to import trial.'));
+      }
     };
     reader.readAsText(file);
     if (fileInputRef.current) {
@@ -170,6 +174,24 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
           )}
         </div>
       </div>
+
+      {importError && (
+        <div
+          role="alert"
+          className="w-full mb-6 flex items-center gap-2.5 rounded-xl border border-accent-red/30 bg-accent-red/10 p-3 type-strong text-accent-red animate-in fade-in duration-150 shadow-xs"
+        >
+          <AlertCircle className="h-4 w-4 shrink-0" />
+          <span className="min-w-0 flex-1">{importError}</span>
+          <button
+            type="button"
+            onClick={() => setImportError(null)}
+            aria-label={dict.modal.close}
+            className="shrink-0 cursor-pointer rounded-md px-2 py-0.5 hover:bg-accent-red/20 transition-colors"
+          >
+            <X className="h-3.5 w-3.5" />
+          </button>
+        </div>
+      )}
 
       {/* Flagship Game Mode Cards Grid */}
       <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-5 mb-10">

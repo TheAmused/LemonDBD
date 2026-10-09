@@ -8,6 +8,7 @@ export default {
   tierLists: "Tier Lists",
   smashOrPass: "Smash or Pass",
   trophies: "Trophies",
+  about: "About us",
   navigation: "Navigation",
   others: "Others",
   admin: "ADMIN",

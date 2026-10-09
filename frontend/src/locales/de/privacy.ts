@@ -27,7 +27,8 @@ export default {
     aiContent: {
       heading: "KI-generierte Inhalte",
       paragraphs: [
-        "Einige Inhalte auf <brand>LemonDBD</brand>, zum Beispiel Bilder, können mit KI-Werkzeugen erstellt, bearbeitet oder hochskaliert worden sein.",
+        "Einige Inhalte auf <brand>LemonDBD</brand>, zum Beispiel Bilder und einige Texte, können mit KI-Werkzeugen erstellt, bearbeitet oder hochskaliert worden sein.",
+        "Manche Texte zum Lore der Charaktere können Ergänzungen enthalten, die über den Kanon hinausgehen und zum Spaß verfasst wurden.",
         "KI-gestützte Inhalte können Fehler oder seltsame Details enthalten. Wenn dir etwas auffällt oder du einen Inhalt prüfen oder entfernen lassen möchtest, kontaktiere uns.",
       ],
       items: [],

@@ -67,9 +67,9 @@ export default {
     storage: {
       heading: "Cookie, pamięć lokalna i podmioty trzecie",
       paragraphs: [
-        "Po zalogowaniu LemonDBD ustawia jeden ściśle niezbędny plik cookie: ciasteczko sesji, które utrzymuje Cię zalogowanym przez {sessionWindow} lub do wylogowania. Ma ono flagę HttpOnly, więc skrypty na stronie nie mogą go odczytać, i nigdy nie służy do śledzenia. Poza nim pamięć lokalna przeglądarki przechowuje drobne dane, dzięki którym strona działa lub pamięta Twoje wybory, np. znacznik zalogowania, stan paska bocznego i paneli, ustawienia dźwięku, wersje robocze, wybrane rostery i identyfikator sesji Smash or Pass.",
+        "Po zalogowaniu <brand>LemonDBD</brand> ustawia jeden ściśle niezbędny plik cookie: ciasteczko sesji, które utrzymuje Cię zalogowanym przez {sessionWindow} lub do wylogowania. Ma ono flagę HttpOnly, więc skrypty na stronie nie mogą go odczytać, i nigdy nie służy do śledzenia. Poza nim pamięć lokalna przeglądarki przechowuje drobne dane, dzięki którym strona działa lub pamięta Twoje wybory, np. znacznik zalogowania, stan paska bocznego i paneli, ustawienia dźwięku, wersje robocze, wybrane rostery i identyfikator sesji Smash or Pass.",
         "Są to dane ściśle niezbędne lub wyłącznie wygodnościowe, więc baner ze zgodą nie jest potrzebny. Pamięć lokalna zostaje na Twoim urządzeniu i możesz ją w każdej chwili wyczyścić w przeglądarce; wylogowanie usuwa ciasteczko sesji.",
-        "<b>Komendy głosowe:</b> w Chrome, Edge i Safari rozpoznawanie mowy zapewnia producent przeglądarki (np. Google lub Apple), więc dźwięk może być do niego wysyłany zgodnie z jego polityką prywatności. W innych przeglądarkach LemonDBD pobiera mały model mowy i przetwarza dźwięk wyłącznie na Twoim urządzeniu.",
+        "<b>Komendy głosowe:</b> w Chrome, Edge i Safari rozpoznawanie mowy zapewnia producent przeglądarki (np. Google lub Apple), więc dźwięk może być do niego wysyłany zgodnie z jego polityką prywatności. W innych przeglądarkach <brand>LemonDBD</brand> pobiera mały model mowy i przetwarza dźwięk wyłącznie na Twoim urządzeniu.",
       ],
       items: [],
     },
@@ -124,7 +124,7 @@ export default {
     children: {
       heading: "Dzieci",
       paragraphs: [
-        "LemonDBD nie jest skierowane do dzieci poniżej 13. roku życia (lub poniżej 16, jeśli w Twoim kraju obowiązuje wyższy wiek zgody) i świadomie nie zbieramy ich danych. Jeśli uważasz, że dziecko przekazało nam dane osobowe, skontaktuj się z nami, a je usuniemy.",
+        "<brand>LemonDBD</brand> nie jest skierowane do dzieci poniżej 13. roku życia (lub poniżej 16, jeśli w Twoim kraju obowiązuje wyższy wiek zgody) i świadomie nie zbieramy ich danych. Jeśli uważasz, że dziecko przekazało nam dane osobowe, skontaktuj się z nami, a je usuniemy.",
       ],
       items: [],
     },

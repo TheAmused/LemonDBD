@@ -67,9 +67,9 @@ export default {
     storage: {
       heading: "Cookies, local storage and third parties",
       paragraphs: [
-        "When you sign in, LemonDBD sets one strictly necessary cookie: a session cookie that keeps you signed in for {sessionWindow} or until you log out. It is HttpOnly, so scripts running on the page cannot read it, and it is never used for tracking. Besides it, your browser's local storage keeps small items that make the site work or remember your choices, for example a marker that you are signed in, sidebar and panel states, sound settings, drafts, selected rosters and your Smash or Pass session ID.",
+        "When you sign in, <brand>LemonDBD</brand> sets one strictly necessary cookie: a session cookie that keeps you signed in for {sessionWindow} or until you log out. It is HttpOnly, so scripts running on the page cannot read it, and it is never used for tracking. Besides it, your browser's local storage keeps small items that make the site work or remember your choices, for example a marker that you are signed in, sidebar and panel states, sound settings, drafts, selected rosters and your Smash or Pass session ID.",
         "These items are strictly necessary or purely convenience settings, so no consent banner is needed. Local storage stays on your device and you can clear it in your browser at any time; logging out deletes the session cookie.",
-        "<b>Voice commands:</b> in Chrome, Edge and Safari, speech recognition is provided by your browser vendor (for example Google or Apple), so audio may be sent to them under their own privacy policies. In other browsers, LemonDBD downloads a small speech model and processes audio only on your device.",
+        "<b>Voice commands:</b> in Chrome, Edge and Safari, speech recognition is provided by your browser vendor (for example Google or Apple), so audio may be sent to them under their own privacy policies. In other browsers, <brand>LemonDBD</brand> downloads a small speech model and processes audio only on your device.",
       ],
       items: [],
     },
@@ -124,7 +124,7 @@ export default {
     children: {
       heading: "Children",
       paragraphs: [
-        "LemonDBD is not directed at children under 13 (or under 16 where your country sets a higher age for consent), and we do not knowingly collect their data. If you believe a child has given us personal data, contact us and we will delete it.",
+        "<brand>LemonDBD</brand> is not directed at children under 13 (or under 16 where your country sets a higher age for consent), and we do not knowingly collect their data. If you believe a child has given us personal data, contact us and we will delete it.",
       ],
       items: [],
     },

@@ -55,9 +55,9 @@ export const TOOLTIP_CONFIG = {
     },
     /** State badges: trophies, ownership, admin, completion. */
     status: {
-      content: 'border-accent-green/40',
-      title: 'normal-case tracking-normal text-accent-green',
-      arrowBorder: 'color-mix(in srgb, var(--accent-green) 40%, transparent)',
+      content: 'border-accent-red/40',
+      title: 'normal-case tracking-normal text-accent-red',
+      arrowBorder: 'color-mix(in srgb, var(--accent-red) 40%, transparent)',
     },
     /** Form validation: the styled replacement for the browser's native "fill out this field" bubble. */
     error: {
@@ -67,9 +67,9 @@ export const TOOLTIP_CONFIG = {
     },
     /** Add-on / item rarity labels. */
     rarity: {
-      content: 'border-accent-purple/50',
-      title: 'tracking-widest text-accent-purple',
-      arrowBorder: 'color-mix(in srgb, rgb(168 85 247) 50%, transparent)',
+      content: 'border-accent-amber/50',
+      title: 'tracking-widest text-accent-amber',
+      arrowBorder: 'color-mix(in srgb, var(--accent-amber) 50%, transparent)',
     },
   },
 } as const;
@@ -81,8 +81,7 @@ const resolveVariant = (name?: string | null) =>
 
 type MaybeText = string | false | null | undefined;
 
-/** Spread onto any native element to give it the global tooltip. */
-/** `variant` is required on purpose: every tooltip picks its look explicitly. */
+/** Spread onto any native element to give it the global tooltip. `variant` is required on purpose: every tooltip picks its look explicitly. */
 export const tip = (title: MaybeText, description: MaybeText, variant: TooltipVariant) => ({
   [TOOLTIP_CONFIG.attr.title]: title || undefined,
   [TOOLTIP_CONFIG.attr.description]: description || undefined,
@@ -219,8 +218,6 @@ export const TooltipBubble: React.FC<TooltipBubbleProps> = ({
           contentClassName
         )}
       >
-        <span className="pointer-events-none absolute inset-0 opacity-[0.03] [background-image:repeating-linear-gradient(45deg,currentColor_0,currentColor_1px,transparent_1px,transparent_10px)]" />
-        <span className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-border-color to-transparent" />
         {hasBody ? (
           <div className="relative flex min-h-0 flex-1 flex-col">{children}</div>
         ) : (
@@ -228,7 +225,7 @@ export const TooltipBubble: React.FC<TooltipBubbleProps> = ({
             {title && (
               <span
                 className={cn(
-                  'relative block whitespace-normal text-mini font-black uppercase tracking-wider text-text-primary',
+                  'relative block whitespace-normal text-xs font-bold leading-snug text-text-primary',
                   look.title
                 )}
               >
@@ -238,8 +235,8 @@ export const TooltipBubble: React.FC<TooltipBubbleProps> = ({
             {description && (
               <span
                 className={cn(
-                  'relative block whitespace-normal text-mini font-medium italic leading-snug text-text-secondary',
-                  title && 'mt-1'
+                  'relative block whitespace-normal type-caption font-medium leading-snug text-text-secondary',
+                  title && 'mt-px'
                 )}
               >
                 {description}

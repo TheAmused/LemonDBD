@@ -12,6 +12,7 @@ from app.models.smash_or_pass import (
     Entity,
     EntityStat,
     Roster,
+    clean_media_display,
 )
 
 logger = logging.getLogger(__name__)
@@ -42,6 +43,7 @@ def _entity_profile(e_data: Dict[str, Any]) -> Dict[str, Any]:
         "real_name": e_data.get("real_name"),
         "watermark_left": e_data.get("watermark_left"),
         "watermark_right": e_data.get("watermark_right"),
+        "media_display": clean_media_display(e_data.get("media_display")),
         "archetype": e_data.get("archetype"),
         "red_flags": list(e_data.get("red_flags") or []),
         "green_flags": list(e_data.get("green_flags") or []),
@@ -190,9 +192,7 @@ def _seed_smash_rosters_impl():
                         role=e_data.get("role", "Survivor"),
                         gender=e_data.get("gender", "female"),
                         media_url=e_data.get("media_url"),
-                        media_type=e_data.get("media_type", "image"),
                         order_index=idx,
-                        is_active=True,
                         **profile,
                     )
                     db.session.add(entity)
@@ -205,7 +205,6 @@ def _seed_smash_rosters_impl():
                     for field, value in profile.items():
                         setattr(entity, field, value)
                     entity.order_index = idx
-                    entity.is_active = True
                     db.session.flush()
 
                 # Ensure associated EntityStat exists. Only the three counts and

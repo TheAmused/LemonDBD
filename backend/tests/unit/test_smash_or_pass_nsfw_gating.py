@@ -50,7 +50,6 @@ def _insert_nsfw_fixture_roster(db_session: Session) -> Roster:
         role="Survivor",
         gender="female",
         order_index=0,
-        is_active=True,
     )
     db_session.add(entity)
     db_session.commit()

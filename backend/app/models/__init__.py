@@ -28,6 +28,7 @@ from app.models.smash_or_pass import (
     EntityStat,
     Roster,
     SmashTaxonomy,
+    SmashUserPreference,
     Vote,
 )
 from app.models.minigame import (
@@ -69,6 +70,7 @@ __all__ = [
     "Entity",
     "EntityStat",
     "SmashTaxonomy",
+    "SmashUserPreference",
     "Vote",
     "BugReport",
     "User",

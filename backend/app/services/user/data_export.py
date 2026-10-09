@@ -34,6 +34,7 @@ from app.models import (
     User,
     UserCharacterOwnership,
     UserPerkOwnership,
+    SmashUserPreference,
     UserShowcase,
     Vote,
 )
@@ -121,5 +122,6 @@ def export_user_data(user_id: int, requested_by: str = "self") -> dict[str, Any]
         ),
         "minigame_stats": _rows(MinigameUserStat, MinigameUserStat.user_id == user_id),
         "smash_or_pass_votes": _rows(Vote, Vote.user_id == user_id),
+        "smash_or_pass_preferences": _rows(SmashUserPreference, SmashUserPreference.user_id == user_id),
         "bug_reports": _rows(BugReport, BugReport.user_id == user_id),
     }

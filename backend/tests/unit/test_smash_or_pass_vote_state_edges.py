@@ -39,7 +39,6 @@ def _make_roster(db_session: Session, slug: str, n_entities: int) -> Roster:
                 role="Survivor",
                 gender="female",
                 order_index=i,
-                is_active=True,
             )
         )
     db_session.commit()

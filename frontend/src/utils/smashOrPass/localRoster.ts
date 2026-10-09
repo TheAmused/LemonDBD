@@ -76,12 +76,10 @@ export function customEntityToEntityItem(rosterSlug: string, e: SmashRosterDocum
     role: e.role,
     gender: e.gender,
     media_url: e.media_url,
-    media_type: e.media_type || 'image',
     watermark_left: e.watermark_left,
     watermark_right: e.watermark_right,
     metadata,
     order_index: index,
-    is_active: true,
     stat: null,
   };
 }

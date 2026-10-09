@@ -67,7 +67,7 @@ function readEntities(raw: unknown): SmashRosterDocumentEntity[] {
     const media_url = sanitizeImageUrl(e.media_url);
     if (media_url) entity.media_url = media_url;
     for (const field of [
-      'media_type', 'real_name', 'watermark_left', 'watermark_right', 'archetype',
+      'real_name', 'watermark_left', 'watermark_right', 'archetype',
       'bio', 'tagline', 'quote', 'meme', 'turn_on', 'dealbreaker', 'dating_vibe',
       'chapter', 'danger_level',
     ] as const) {

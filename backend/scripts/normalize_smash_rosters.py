@@ -21,6 +21,10 @@ entities in the six roster files before any of this was written):
   stat.total_votes      == smash + pass + super_smash on 148/148.
   stat.smash_rate       derivable from the same three counts.
   votes                 empty on 148/148; votes are user data, not seed data.
+  is_active (entity)    true on 287/287, and the seeder reset it to true on every run;
+                        activity belongs to the roster, which keeps its own.
+  media_type            "image" on 287/287 and read by nothing; a picture's kind is its
+                        file extension.
 """
 import argparse
 import json
@@ -63,7 +67,8 @@ def normalize_entity(entity: dict[str, Any], stats: dict[str, Any]) -> dict[str,
         "role": entity.get("role") or "Survivor",
         "gender": entity.get("gender") or "female",
         "media_url": entity.get("media_url"),
-        "media_type": entity.get("media_type") or "image",
+        # Only an entity whose picture the default card crop spoils carries one; the seeder checks it.
+        "media_display": entity.get("media_display"),
         "watermark_left": _clean(entity.get("watermark_left")),
         "watermark_right": _clean(entity.get("watermark_right")),
         # `title` and `archetype` were the same string stored twice.
@@ -116,7 +121,6 @@ def normalize_entity(entity: dict[str, Any], stats: dict[str, Any]) -> dict[str,
     row["translations"] = translations
 
     row["order_index"] = entity.get("order_index", 0)
-    row["is_active"] = bool(entity.get("is_active", True))
 
     # Only the three counts survive; the other two are generated columns and
     # `id` was a surrogate key for a row identified by its entity.

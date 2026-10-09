@@ -25,7 +25,6 @@
           "role": "Killer",
           "gender": "male",
           "media_url": "/static/avatars/killers/cyber_trickster.webp",
-          "media_type": "image",
           "archetype": "Night City Virtuoso",
           "bio": "A chromed-out pop icon who turns combat into cybernetic synth symphonies under neon rain.",
           "tagline": "Holographic throwing blades, sub-dermal audio implants.",
@@ -116,8 +115,7 @@
               ]
             }
           },
-          "order_index": 0,
-          "is_active": true
+          "order_index": 0
         },
         {
           "slug": "netrunner_nea",
@@ -125,7 +123,6 @@
           "role": "Survivor",
           "gender": "female",
           "media_url": "/static/avatars/survivors/netrunner_nea.webp",
-          "media_type": "image",
           "archetype": "Cyberspace Street Rebel",
           "bio": "The ultimate ghost in the shell. She hacks corporate firewalls and tags the skyline with digital defiance.",
           "tagline": "Cyberdeck strapped to hip, graffiti overlays in augmented reality.",
@@ -216,8 +213,7 @@
               ]
             }
           },
-          "order_index": 1,
-          "is_active": true
+          "order_index": 1
         },
         {
           "slug": "chrome_wesker",
@@ -225,7 +221,6 @@
           "role": "Killer",
           "gender": "male",
           "media_url": "/static/avatars/killers/chrome_wesker.webp",
-          "media_type": "image",
           "archetype": "Arasaka Biotech Director",
           "bio": "Genius bio-cybernetic scientist who believes seven minutes is all he can spare to conquer your neural matrix.",
           "tagline": "Refined black trench coat, ocular cyberware, and complete global saturation.",
@@ -316,8 +311,7 @@
               ]
             }
           },
-          "order_index": 2,
-          "is_active": true
+          "order_index": 2
         },
         {
           "slug": "neon_sable",
@@ -325,7 +319,6 @@
           "role": "Survivor",
           "gender": "female",
           "media_url": "/static/avatars/survivors/neon_sable.webp",
-          "media_type": "image",
           "archetype": "Cyber-Goth Invoker",
           "bio": "Bridging ancient eldritch sorcery with dark-web cyber protocols, she channels void rituals through neural fibers.",
           "tagline": "Bioluminescent tattoo circuitry, dark web grimoires.",
@@ -416,8 +409,7 @@
               ]
             }
           },
-          "order_index": 3,
-          "is_active": true
+          "order_index": 3
         },
         {
           "slug": "cyber_feng_min",
@@ -425,7 +417,6 @@
           "role": "Survivor",
           "gender": "female",
           "media_url": "/static/avatars/survivors/cyber_feng_min.webp",
-          "media_type": "image",
           "archetype": "Holo-Arcade Champion",
           "bio": "Dominating both virtual cyber-arenas and the neon fog. She can out-reflex any security drone.",
           "tagline": "Augmented reality bunny ears, neural gaming rigs.",
@@ -516,8 +507,7 @@
               ]
             }
           },
-          "order_index": 4,
-          "is_active": true
+          "order_index": 4
         },
         {
           "slug": "meg_turbo",
@@ -525,7 +515,6 @@
           "role": "Survivor",
           "gender": "female",
           "media_url": "/static/avatars/survivors/meg_turbo.webp",
-          "media_type": "image",
           "archetype": "Sub-Orbital Courier",
           "bio": "Night City's fastest rooftop data courier. She delivers encrypted shards before the corps even know they are missing.",
           "tagline": "Bionic legs, hydraulic dash turbines, neon tracksuits.",
@@ -616,8 +605,7 @@
               ]
             }
           },
-          "order_index": 5,
-          "is_active": true
+          "order_index": 5
         },
         {
           "slug": "cyber_oni",
@@ -625,7 +613,6 @@
           "role": "Killer",
           "gender": "male",
           "media_url": "/static/avatars/killers/cyber_oni.webp",
-          "media_type": "image",
           "archetype": "Chromed Blood Titan",
           "bio": "An ancient warlord spirit housed within experimental heavy assault armor. His plasma club pulverizes titanium armor plates.",
           "tagline": "Hydraulic club, titanium horns, and boiling plasma fury.",
@@ -716,8 +703,7 @@
               ]
             }
           },
-          "order_index": 6,
-          "is_active": true
+          "order_index": 6
         },
         {
           "slug": "high_tech_trapper",
@@ -725,7 +711,6 @@
           "role": "Killer",
           "gender": "male",
           "media_url": "/static/avatars/killers/high_tech_trapper.webp",
-          "media_type": "image",
           "archetype": "Laser Snare Engineer",
           "bio": "Upgraded his industrial estate into a high-security automated containment grid with EMP bear snares.",
           "tagline": "Proximity laser traps, carbon fiber armor, reinforced bear claws.",
@@ -816,8 +801,7 @@
               ]
             }
           },
-          "order_index": 7,
-          "is_active": true
+          "order_index": 7
         },
         {
           "slug": "cyber_nurse",
@@ -825,7 +809,6 @@
           "role": "Killer",
           "gender": "female",
           "media_url": "/static/avatars/killers/cyber_nurse.webp",
-          "media_type": "image",
           "archetype": "Quantum Phase Medic",
           "bio": "Phasing through solid cyber-concrete at quantum frequencies, she seeks to purge all organic corruption.",
           "tagline": "Holographic phase-blink, medical laser scalpel, cybernetic levitation.",
@@ -916,8 +899,7 @@
               ]
             }
           },
-          "order_index": 8,
-          "is_active": true
+          "order_index": 8
         },
         {
           "slug": "cyber_david_king",
@@ -925,7 +907,6 @@
           "role": "Survivor",
           "gender": "male",
           "media_url": "/static/avatars/survivors/cyber_david_king.webp",
-          "media_type": "image",
           "archetype": "Chromed Fist Rebel",
           "bio": "Undefeated in the underground combat rings of Night City. He will take a hit for you and punch straight through security turrets.",
           "tagline": "Reinforced cyber-knuckles, leather jacket with neon trim, unyielding grit.",
@@ -1016,8 +997,7 @@
               ]
             }
           },
-          "order_index": 9,
-          "is_active": true
+          "order_index": 9
         }
       ]
     }

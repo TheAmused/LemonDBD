@@ -163,7 +163,6 @@ class TestLiveChallengesAndEntities:
                 role="Survivor",
                 gender="female",
                 order_index=1,
-                is_active=True,
             )
             db.session.add(entity)
             db.session.flush()

@@ -27,7 +27,8 @@ export default {
     aiContent: {
       heading: "Contenido generado con IA",
       paragraphs: [
-        "Parte del contenido de <brand>LemonDBD</brand>, como las imágenes, puede haberse generado, editado o escalado (upscaling) con herramientas de IA.",
+        "Parte del contenido de <brand>LemonDBD</brand>, como las imágenes y algunos textos, puede haberse generado, editado o escalado (upscaling) con herramientas de IA.",
+        "Algunos textos sobre el lore de los personajes pueden incluir añadidos que van más allá del lore canon, escritos con fines humorísticos.",
         "El contenido creado con ayuda de IA puede tener errores o detalles extraños. Si ves algo incorrecto o quieres que revisemos o retiremos un contenido, contáctanos.",
       ],
       items: [],

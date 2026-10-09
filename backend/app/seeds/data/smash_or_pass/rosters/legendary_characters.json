@@ -37,7 +37,6 @@
           "role": "Killer",
           "gender": "monster_other",
           "media_url": "/static/avatars/killers/william_birkin.webp",
-          "media_type": "image",
           "archetype": "The G-Virus Colossus",
           "bio": "Umbrella's most brilliant virologist treated mortality as a peer-review comment and answered a bullet wound by mainlining his own masterpiece. The result is a shoulder eye, a body full of questionable growths, and a fatherly obsession with a daughter who just wants him to stop. He stumbled into the Fog still mid-metamorphosis, which is the kindest way to describe his personality.",
           "tagline": "Won the scientific breakthrough, lost the marriage, gained an extra eye.",
@@ -175,7 +174,6 @@
             }
           },
           "order_index": 0,
-          "is_active": true,
           "watermark_left": "WILLIAM",
           "watermark_right": "BIRKIN",
           "chapter": "Resident Evil x Lunar New Year",
@@ -187,7 +185,6 @@
           "role": "Killer",
           "gender": "male",
           "media_url": "/static/avatars/killers/hunk.webp",
-          "media_type": "image",
           "archetype": "The Unstoppable Operative",
           "bio": "HUNK is Umbrella's top operative, a faceless professional who has walked out of every suicide mission alive and left a pile of colleagues behind him. He answers to Mr. Death, rarely speaks, and treats extraction like a love language. The Fog just looked like another unpaid overtime shift.",
           "tagline": "Mr. Death wears a gas mask to dinner and still leaves alive.",
@@ -325,7 +322,6 @@
             }
           },
           "order_index": 1,
-          "is_active": true,
           "watermark_left": "AGENT",
           "watermark_right": "HUNK",
           "chapter": "Resident Evil: PROJECT W",
@@ -337,7 +333,6 @@
           "role": "Survivor",
           "gender": "male",
           "media_url": "/static/avatars/survivors/james_sunderland.webp",
-          "media_type": "image",
           "archetype": "The Silent Hill Wanderer",
           "bio": "James Sunderland got a letter from his dead wife asking him to meet her in Silent Hill, and his only reaction was to pack a flashlight. A town of fog, rust, and personalized monsters followed him from there, each one tailored to his guilt with unsettling precision. He walked into the Fog like a man who has been doing this for years.",
           "tagline": "Followed a letter from his late wife and a town that has opinions about him.",
@@ -475,7 +470,6 @@
             }
           },
           "order_index": 2,
-          "is_active": true,
           "watermark_left": "JAMES",
           "watermark_right": "SUNDERLAND",
           "chapter": "Silent Hill",
@@ -487,7 +481,6 @@
           "role": "Survivor",
           "gender": "female",
           "media_url": "/static/avatars/survivors/maria.webp",
-          "media_type": "image",
           "archetype": "The Seductive Enigma",
           "bio": "Maria walks beside James through Silent Hill wearing the face of his late wife and none of her restraint. She is sharper, bolder, and dressed for a different kind of nightmare, because she was built from what James wanted rather than who Mary was. The Fog keeps her around the way a tavern keeps its best regular.",
           "tagline": "The warm manifestation of James's guilt, with phenomenal banter.",
@@ -625,7 +618,6 @@
             }
           },
           "order_index": 3,
-          "is_active": true,
           "watermark_left": "MARIA",
           "watermark_right": "SILENT HILL",
           "chapter": "Silent Hill",
@@ -637,7 +629,6 @@
           "role": "Survivor",
           "gender": "female",
           "media_url": "/static/avatars/survivors/cybil_bennett.webp",
-          "media_type": "image",
           "archetype": "The Brave Patrol Officer",
           "bio": "Cybil Bennett rode into Silent Hill on a motorcycle because her radio went dead and her instincts did not. She is a no-nonsense Brahms patrol cop with a shotgun, a flashlight, and a healthy distrust of anyone who is not obviously human. The Fog found her there, and she is still on duty.",
           "tagline": "A cop who arrived by motorcycle and never clocked out.",
@@ -775,7 +766,6 @@
             }
           },
           "order_index": 4,
-          "is_active": true,
           "watermark_left": "CYBIL",
           "watermark_right": "BENNETT",
           "chapter": "Silent Hill Legends",
@@ -787,7 +777,6 @@
           "role": "Survivor",
           "gender": "female",
           "media_url": "/static/avatars/survivors/lisa_garland.webp",
-          "media_type": "image",
           "archetype": "The Compassionate Nurse",
           "bio": "Lisa Garland spent her shifts at Alchemilla Hospital caring for patients, and her nights chasing flickers of memory she could not trust. She is gentle, haunted, and permanently worn out, the kind of nurse who calls you 'dear' while checking whether you are real. The Fog never cut her shift short; it just changed her patients.",
           "tagline": "Nurse on the night shift, monster on the permanent one.",
@@ -925,7 +914,6 @@
             }
           },
           "order_index": 5,
-          "is_active": true,
           "watermark_left": "LISA",
           "watermark_right": "GARLAND",
           "chapter": "Silent Hill Legends",
@@ -937,7 +925,6 @@
           "role": "Killer",
           "gender": "monster_other",
           "media_url": "/static/avatars/killers/naughty_bear.webp",
-          "media_type": "image",
           "archetype": "The Vengeful Teddy",
           "bio": "Naughty Bear is a teddy bear who was not invited to a birthday party and responded by becoming the most terrifying resident of Perfection Island. He is soft, stitched, and precise, which makes the screaming more distressing. A narrator comments on every tantrum, and the Fog gave him a bigger audience to disappoint.",
           "tagline": "Snubbed at a birthday party, still holding the grudge.",
@@ -1075,7 +1062,6 @@
             }
           },
           "order_index": 6,
-          "is_active": true,
           "watermark_left": "NAUGHTY",
           "watermark_right": "BEAR",
           "chapter": "Naughty Bear",
@@ -1087,7 +1073,6 @@
           "role": "Killer",
           "gender": "female",
           "media_url": "/static/avatars/killers/baba_yaga.webp",
-          "media_type": "image",
           "archetype": "The Slavic Witch",
           "bio": "Baba Yaga is the witch of Slavic folklore who lives in a hut on chicken legs, flies in a mortar, and eats the unwary with iron teeth. She values hospitality, riddles, and chores, in that order, and the punishment for failing any of them is dinner. The Fog brought her a fresh supply of people who should have known better.",
           "tagline": "Grandmother of folklore, nightmare of every child within earshot.",
@@ -1225,7 +1210,6 @@
             }
           },
           "order_index": 7,
-          "is_active": true,
           "watermark_left": "BABA",
           "watermark_right": "YAGA",
           "chapter": "Modern Tales",
@@ -1237,7 +1221,6 @@
           "role": "Killer",
           "gender": "monster_other",
           "media_url": "/static/avatars/killers/the_look_see.webp",
-          "media_type": "image",
           "archetype": "The Crypt TV Spectre",
           "bio": "The Look-See is a tall, grinning figure in a dark suit who comes for people hollowed out by grief, guilt, or regret. He does not speak much, because the smile does all the work and the wrench does the rest. He arrived in the Fog the way a funeral director arrives at a party: perfectly timed and entirely unwelcome.",
           "tagline": "Dressed for the funeral, here for the grief.",
@@ -1375,7 +1358,6 @@
             }
           },
           "order_index": 8,
-          "is_active": true,
           "watermark_left": "THE",
           "watermark_right": "LOOK-SEE",
           "chapter": "Crypt TV",
@@ -1387,7 +1369,6 @@
           "role": "Killer",
           "gender": "monster_other",
           "media_url": "/static/avatars/killers/minotaur.webp",
-          "media_type": "image",
           "archetype": "The Labyrinth Champion",
           "bio": "The Minotaur is the bull-headed son of Queen Pasiphaë, kept by King Minos in the Labyrinth of Crete and fed Athenian tributes until Theseus ended the arrangement. He knows every wall, corner, and dead end, and he has never once been asked for directions. In the Fog, the myth came loose from its prison maze and found a much bigger one.",
           "tagline": "Out of the maze, into a much bigger maze.",
@@ -1525,7 +1506,6 @@
             }
           },
           "order_index": 9,
-          "is_active": true,
           "watermark_left": "THE",
           "watermark_right": "MINOTAUR",
           "chapter": "Greek Legends",
@@ -1537,7 +1517,6 @@
           "role": "Killer",
           "gender": "female",
           "media_url": "/static/avatars/killers/tiffany_valentine.webp",
-          "media_type": "image",
           "archetype": "The Blonde Doll of Mayhem",
           "bio": "Tiffany Valentine is the goth bride of the Child's Play franchise, a woman who stitched herself into a doll and then into a murderous marriage with Charles Lee Ray. She loves lace, lipstick, and a very large kitchen knife, usually in that order. The Fog gave her a fresh wedding venue and a sizeable guest list who never RSVP'd.",
           "tagline": "Till death do us part, and there is a lot of death.",
@@ -1675,7 +1654,6 @@
             }
           },
           "order_index": 10,
-          "is_active": true,
           "watermark_left": "TIFFANY",
           "watermark_right": "VALENTINE",
           "chapter": "Chucky",
@@ -1687,7 +1665,6 @@
           "role": "Killer",
           "gender": "monster_other",
           "media_url": "/static/avatars/killers/chatterer.webp",
-          "media_type": "image",
           "archetype": "The Rhythmic Cenobite",
           "bio": "The Chatterer is the Cenobite whose exposed jaw clacks like a drum, a silent servant of Pinhead in an order devoted to the further regions of experience. He cannot speak, but his mouth does plenty of talking, and the sound is the stuff of sleepless nights. The Fog summoned him the way a puzzle box summons a very enthusiastic visitor.",
           "tagline": "He never says a word, and he still talks too much with his teeth.",
@@ -1825,7 +1802,6 @@
             }
           },
           "order_index": 11,
-          "is_active": true,
           "watermark_left": "THE",
           "watermark_right": "CHATTERER",
           "chapter": "Hellraiser",
@@ -1837,7 +1813,6 @@
           "role": "Survivor",
           "gender": "male",
           "media_url": "/static/avatars/survivors/geralt_of_rivia.webp",
-          "media_type": "image",
           "archetype": "The White Wolf",
           "bio": "Geralt of Rivia is a mutated monster hunter who kills for coin, hates portals, and has named every horse Roach. He has loved sorceresses, saved princesses, and is professionally tired of destiny. The Fog offered him a new continent of monsters, and he accepted because the pay was familiar and the weather was awful.",
           "tagline": "Monster slayer for coin, philosopher for free.",
@@ -1975,7 +1950,6 @@
             }
           },
           "order_index": 12,
-          "is_active": true,
           "watermark_left": "GERALT",
           "watermark_right": "OF RIVIA",
           "chapter": "The Witcher",
@@ -1987,7 +1961,6 @@
           "role": "Survivor",
           "gender": "male",
           "media_url": "/static/avatars/survivors/chris_redfield.webp",
-          "media_type": "image",
           "archetype": "The Boulder Puncher",
           "bio": "Chris Redfield survived the Spencer Mansion, outlived the Raccoon City outbreak, and then went on to punch a boulder in the name of global bioterror defense. He is a decorated S.T.A.R.S. veteran and professional hero with forearms the size of small hams. The Fog is just another outbreak, and Chris is already measuring it for punching.",
           "tagline": "Punches boulders, saves people, files no paperwork.",
@@ -2125,7 +2098,6 @@
             }
           },
           "order_index": 13,
-          "is_active": true,
           "watermark_left": "CHRIS",
           "watermark_right": "REDFIELD",
           "chapter": "Resident Evil",
@@ -2137,7 +2109,6 @@
           "role": "Survivor",
           "gender": "female",
           "media_url": "/static/avatars/survivors/claire_redfield.webp",
-          "media_type": "image",
           "archetype": "The Fearless Sibling",
           "bio": "Claire Redfield drove into Raccoon City on a motorcycle looking for her brother and left with a child, a grudge against Umbrella, and a leather vest she never plans to retire. She joined TerraSave, rescued strangers, and stayed kind in a world that had no reason to be. The Fog was just another locked door, and Claire is great at doors.",
           "tagline": "Looking for her brother, found a monster apocalypse instead.",
@@ -2275,7 +2246,6 @@
             }
           },
           "order_index": 14,
-          "is_active": true,
           "watermark_left": "CLAIRE",
           "watermark_right": "REDFIELD",
           "chapter": "Resident Evil",
@@ -2287,7 +2257,6 @@
           "role": "Survivor",
           "gender": "male",
           "media_url": "/static/avatars/survivors/carlos_oliveira.webp",
-          "media_type": "image",
           "archetype": "The Charming Mercenary",
           "bio": "Carlos Oliveira is the Umbrella Biohazard Countermeasure Service mercenary who helped Jill Valentine escape Raccoon City while Nemesis hunted her. He is easy on the eyes, easy with a joke, and tragically easy to underestimate. The Fog dropped him into another hopeless evacuation, and he treated it as a lively Friday.",
           "tagline": "Mercenary with a troubled past and impeccable timing.",
@@ -2425,7 +2394,6 @@
             }
           },
           "order_index": 15,
-          "is_active": true,
           "watermark_left": "CARLOS",
           "watermark_right": "OLIVEIRA",
           "chapter": "Resident Evil: PROJECT W",
@@ -2437,7 +2405,6 @@
           "role": "Survivor",
           "gender": "female",
           "media_url": "/static/avatars/survivors/sheva_alomar.webp",
-          "media_type": "image",
           "archetype": "The Agile Marksman",
           "bio": "Sheva Alomar is a BSAA agent from West Africa who partnered with Chris Redfield to track black-market bioweapons dealers in Kijuju. She is a sharp shooter, an elegant climber, and a patient teammate to a man who punches boulders. The Fog made her a stranger in yet another strange land, which she handled with her usual tactical grace.",
           "tagline": "The partner who actually reads the mission briefing.",
@@ -2575,7 +2542,6 @@
             }
           },
           "order_index": 16,
-          "is_active": true,
           "watermark_left": "SHEVA",
           "watermark_right": "ALOMAR",
           "chapter": "Resident Evil: PROJECT W",
@@ -2587,7 +2553,6 @@
           "role": "Survivor",
           "gender": "male",
           "media_url": "/static/avatars/survivors/tubarao.webp",
-          "media_type": "image",
           "archetype": "The Lone Sailor",
           "bio": "Tubarão, Portuguese for shark, is the callsign of Isaac Nunes Oliveira, a former Portuguese marine from Ponta Delgada in the Azores who joined Rainbow Six. He grew up on boats, learned discipline in the navy, and knows exactly what to do when the sea turns hostile. The Fog came in on a warm breeze, and he stayed calm, as the ocean taught him.",
           "tagline": "A shark on a family boat, lost in a fog he did not order.",
@@ -2725,7 +2690,6 @@
             }
           },
           "order_index": 17,
-          "is_active": true,
           "watermark_left": "OPERATOR",
           "watermark_right": "TUBARÃO",
           "chapter": "Rainbow Six Siege",
@@ -2737,7 +2701,6 @@
           "role": "Survivor",
           "gender": "male",
           "media_url": "/static/avatars/survivors/alucard.webp",
-          "media_type": "image",
           "archetype": "The Dhampir Prince",
           "bio": "Alucard is Dracula's half-human son, a pale, white-haired dhampir who turned his sword against his own father and has been brooding about it ever since. He transforms into a wolf, a bat, or mist, reads old books, and dresses like a gothic aristocrat with a complicated family tree. The Fog offered him a new castle full of problems, and he showed up already tired.",
           "tagline": "Dracula's son, with better manners and a very large sword.",
@@ -2875,7 +2838,6 @@
             }
           },
           "order_index": 18,
-          "is_active": true,
           "watermark_left": "ADRIAN",
           "watermark_right": "ALUCARD",
           "chapter": "Castlevania",
@@ -2887,7 +2849,6 @@
           "role": "Survivor",
           "gender": "male",
           "media_url": "/static/avatars/survivors/soma_cruz.webp",
-          "media_type": "image",
           "archetype": "The Reincarnated Soul",
           "bio": "Soma Cruz is a quiet Japanese student who wandered into an eclipse and discovered he could absorb the souls of defeated monsters. He is also the reincarnation of Dracula, a fact he has politely declined. He turned down the throne of darkness and then the Fog turned up anyway, which seems to be the story of his life.",
           "tagline": "He turned down being the Dark Lord, and the fog did not take the hint.",
@@ -3025,7 +2986,6 @@
             }
           },
           "order_index": 19,
-          "is_active": true,
           "watermark_left": "SOMA",
           "watermark_right": "CRUZ",
           "chapter": "Tome 21 Dominus",
@@ -3037,7 +2997,6 @@
           "role": "Survivor",
           "gender": "male",
           "media_url": "/static/avatars/survivors/richter_belmont.webp",
-          "media_type": "image",
           "archetype": "The Peerless Whipmaster",
           "bio": "Richter Belmont is the hotheaded vampire hunter of the Belmont clan, who marched into Dracula's castle to rescue his loved ones and later got possessed by a dark priest for a very awkward family reunion. He wields the Vampire Killer whip with more dedication than most people wield a toothbrush. The Fog caught him on the road between villages, and he took it personally.",
           "tagline": "A hotheaded vampire hunter whose road trip ran into Death.",
@@ -3175,7 +3134,6 @@
             }
           },
           "order_index": 20,
-          "is_active": true,
           "watermark_left": "RICHTER",
           "watermark_right": "BELMONT",
           "chapter": "Castlevania",
@@ -3187,7 +3145,6 @@
           "role": "Survivor",
           "gender": "female",
           "media_url": "/static/avatars/survivors/saga_anderson.webp",
-          "media_type": "image",
           "archetype": "The Mind Place Detective",
           "bio": "Saga Anderson is the FBI special agent sent to Bright Falls to investigate ritualistic murders, and she does her best work inside a mental map of corkboards, red string, and uncomfortable truths. She is sharp, grounded, and disarmingly funny about it. The Fog is just another case file, and she is already building the timeline.",
           "tagline": "Agent in a windbreaker, profiler of a haunted town.",
@@ -3325,7 +3282,6 @@
             }
           },
           "order_index": 21,
-          "is_active": true,
           "watermark_left": "SAGA",
           "watermark_right": "ANDERSON",
           "chapter": "Alan Wake",
@@ -3337,7 +3293,6 @@
           "role": "Survivor",
           "gender": "female",
           "media_url": "/static/avatars/survivors/rose_marigold.webp",
-          "media_type": "image",
           "archetype": "The Number One Fan",
           "bio": "Rose Marigold is the waitress at the Oh Deer Diner in Bright Falls and, by her own enthusiastic account, Alan Wake's number one fan. She remembers every line from every book, pours coffee like a woman guarding a secret, and sees more than the customers realize. The Fog tipped her out of the diner, and she packed a thermos.",
           "tagline": "Waitress, superfan, and the only person who finished the manuscript.",
@@ -3475,7 +3430,6 @@
             }
           },
           "order_index": 22,
-          "is_active": true,
           "watermark_left": "ROSE",
           "watermark_right": "MARIGOLD",
           "chapter": "Alan Wake",
@@ -3487,7 +3441,6 @@
           "role": "Survivor",
           "gender": "female",
           "media_url": "/static/avatars/survivors/rain_carradine.webp",
-          "media_type": "image",
           "archetype": "The Resilient Colonist",
           "bio": "Rain Carradine is a young colonist from Jackson's Star who left the mining colony with her synthetic brother Andy in search of a better life. The first thing she found was a Xenomorph, which was not on the brochure. She improvises, adapts, and refuses to stay down, which in the Fog is a full-time job.",
           "tagline": "Left the mining colony, met the Xenomorph, lost the escape.",
@@ -3625,7 +3578,6 @@
             }
           },
           "order_index": 23,
-          "is_active": true,
           "watermark_left": "RAIN",
           "watermark_right": "CARRADINE",
           "chapter": "Alien: Romulus",
@@ -3637,7 +3589,6 @@
           "role": "Survivor",
           "gender": "male",
           "media_url": "/static/avatars/survivors/william_hudson.webp",
-          "media_type": "image",
           "archetype": "The Ultimate Marine",
           "bio": "William Hudson is the loud-mouthed Colonial Marine from Aliens, famous for calling the mission an express elevator to hell and declaring game over, man, in the middle of the nastiest firefight in space. He is a technical specialist, a comic relief, and an alarmingly honest barometer of how bad things are. The Fog was the first time the panic felt accurate.",
           "tagline": "Game over, man. Game over.",
@@ -3775,8 +3726,7 @@
             }
           },
           "order_index": 24,
-          "is_active": true,
-          "watermark_left": "PRIVATE",
+          "watermark_left": "WILLIAM",
           "watermark_right": "HUDSON",
           "chapter": "Alien",
           "real_name": "William Hudson"
@@ -3787,7 +3737,6 @@
           "role": "Survivor",
           "gender": "male",
           "media_url": "/static/avatars/survivors/glenn_rhee.webp",
-          "media_type": "image",
           "archetype": "The Resourceful Runner",
           "bio": "Glenn Rhee was a pizza delivery boy in Atlanta who became the fastest, cleverest scavenger in Rick Grimes's group, introduced by radioing the immortal line to a man trapped in a tank. He is optimistic in an apocalypse, tender with Maggie, and spectacularly good at escaping things that should have killed him. The Fog just gave him another dumpster to climb out of.",
           "tagline": "Pizza boy turned legend, and the man who survived a dumpster.",
@@ -3925,7 +3874,6 @@
             }
           },
           "order_index": 25,
-          "is_active": true,
           "watermark_left": "GLENN",
           "watermark_right": "RHEE",
           "chapter": "The Walking Dead",
@@ -3937,7 +3885,6 @@
           "role": "Survivor",
           "gender": "male",
           "media_url": "/static/avatars/survivors/daryl_dixon.webp",
-          "media_type": "image",
           "archetype": "The Lone Tracker",
           "bio": "Daryl Dixon is the crossbow-wielding tracker of The Walking Dead, a man who grew up rough, learned to hunt before he learned to talk about feelings, and has been quietly saving everyone ever since. He rides a motorcycle, wears a vest with angel wings, and would rather clean a squirrel than discuss his childhood. The Fog was just another forest to track through.",
           "tagline": "Rough around the edges, reliable at the center.",
@@ -4075,7 +4022,6 @@
             }
           },
           "order_index": 26,
-          "is_active": true,
           "watermark_left": "DARYL",
           "watermark_right": "DIXON",
           "chapter": "The Walking Dead",
@@ -4087,7 +4033,6 @@
           "role": "Survivor",
           "gender": "female",
           "media_url": "/static/avatars/survivors/maggie_rhee.webp",
-          "media_type": "image",
           "archetype": "The Resolute Leader",
           "bio": "Maggie Rhee, born Greene, grew up on a Georgia farm and became one of the most fearless leaders of The Walking Dead, running the Hilltop community and raising her son Hershel, named after her father. She is warm, tough, and never afraid to do the hard thing first. The Fog took her from a farmhouse, and she has been negotiating with it ever since.",
           "tagline": "Farm girl turned fearless leader.",
@@ -4225,7 +4170,6 @@
             }
           },
           "order_index": 27,
-          "is_active": true,
           "watermark_left": "MAGGIE",
           "watermark_right": "RHEE",
           "chapter": "The Walking Dead",
@@ -4237,7 +4181,6 @@
           "role": "Survivor",
           "gender": "female",
           "media_url": "/static/avatars/survivors/robin_buckley.webp",
-          "media_type": "image",
           "archetype": "The Witty Cryptographer",
           "bio": "Robin Buckley is the sharp-tongued Hawkins band geek who worked at Scoops Ahoy with Steve Harrington and cracked a Russian transmission that helped expose the secret Soviet base. She talks fast, thinks faster, and hides her nerves behind a stream of sarcasm. The Fog is a code she is determined to break, with snacks.",
           "tagline": "Decoded the Russian code, still cannot decode the fog.",
@@ -4375,7 +4318,6 @@
             }
           },
           "order_index": 28,
-          "is_active": true,
           "watermark_left": "ROBIN",
           "watermark_right": "BUCKLEY",
           "chapter": "Stranger Things",
@@ -4387,7 +4329,6 @@
           "role": "Survivor",
           "gender": "male",
           "media_url": "/static/avatars/survivors/jonathan_byers.webp",
-          "media_type": "image",
           "archetype": "The Devoted Outsider",
           "bio": "Jonathan Byers is the quiet, camera-carrying photographer of Hawkins, a protective older brother to Will and a loyal son to Joyce who teamed up with Nancy Wheeler to expose the secrets of Hawkins Lab. He prefers records to parties and negatives to small talk. The Fog dropped him into a dark room he did not need to develop.",
           "tagline": "Takes photos of the problem instead of solving it, until he does.",
@@ -4525,7 +4466,6 @@
             }
           },
           "order_index": 29,
-          "is_active": true,
           "watermark_left": "JONATHAN",
           "watermark_right": "BYERS",
           "chapter": "Stranger Things",
@@ -4537,7 +4477,6 @@
           "role": "Survivor",
           "gender": "male",
           "media_url": "/static/avatars/survivors/eddie_munson.webp",
-          "media_type": "image",
           "archetype": "The Hellfire Metalhead",
           "bio": "Eddie Munson is the Hellfire Club dungeon master of Hawkins, a metalhead in a denim jacket who plays Master of Puppets on a trailer roof to buy his friends time against monsters. He runs a campaign like a stadium tour, loves loud guitar solos, and refuses to apologize for any of it. The Fog gave him a bigger stage, and he brought the amp.",
           "tagline": "Dungeon master, metalhead, and a hero who never dropped his pick.",
@@ -4675,7 +4614,6 @@
             }
           },
           "order_index": 30,
-          "is_active": true,
           "watermark_left": "EDDIE",
           "watermark_right": "MUNSON",
           "chapter": "Stranger Things",
@@ -4687,7 +4625,6 @@
           "role": "Survivor",
           "gender": "female",
           "media_url": "/static/avatars/survivors/forest_guide.webp",
-          "media_type": "image",
           "archetype": "The Roadside Guide",
           "bio": "The Forest Guide is a mysterious animal that sat in the middle of the road awaiting Yui Kimura, always there for those who need guidance. Nobody has confirmed its species, which suits its confident, unbothered energy. The Fog found it exactly where it was supposed to be: in the road, being helpful and entirely unexplained.",
           "tagline": "Gives directions to lost people, species not disclosed.",
@@ -4825,7 +4762,6 @@
             }
           },
           "order_index": 31,
-          "is_active": true,
           "watermark_left": "FOREST",
           "watermark_right": "GUIDE",
           "chapter": "Guardians & Shadows",
@@ -4837,7 +4773,6 @@
           "role": "Survivor",
           "gender": "female",
           "media_url": "/static/avatars/survivors/hinako_shimizu.webp",
-          "media_type": "image",
           "archetype": "The Petal in the Fog",
           "bio": "Hinako Shimizu is the schoolgirl protagonist of Silent Hill f, set in 1960s Ebisugaoka, a quiet Japanese town where the fog arrives and everything familiar turns nightmarish. Her friends Shu and Rinko are caught up with her. Red spider lilies spread like a rumor, and she is learning that beauty and dread are the same flower.",
           "tagline": "A schoolgirl in a foggy town, with spider lilies and too many questions.",
@@ -4975,7 +4910,6 @@
             }
           },
           "order_index": 32,
-          "is_active": true,
           "watermark_left": "HINAKO",
           "watermark_right": "SHIMIZU",
           "chapter": "Silent Hill f",
@@ -4987,7 +4921,6 @@
           "role": "Killer",
           "gender": "monster_other",
           "media_url": "/static/avatars/killers/attack_titan.webp",
-          "media_type": "image",
           "archetype": "The Vanguard of Freedom",
           "bio": "The Attack Titan is Eren Yeager's Titan form, a towering, steaming giant fueled by grief, vengeance, and an unreasonable devotion to the word freedom. It screams, it sprints, and it holds grudges on a geological scale. The Fog gave it a trap-filled realm to roar at, and it accepted the invitation personally.",
           "tagline": "A Titan who took the Trapper job and screamed at the traps.",
@@ -5125,7 +5058,6 @@
             }
           },
           "order_index": 33,
-          "is_active": true,
           "watermark_left": "ATTACK",
           "watermark_right": "TITAN",
           "chapter": "Attack on Titan",
@@ -5137,7 +5069,6 @@
           "role": "Killer",
           "gender": "monster_other",
           "media_url": "/static/avatars/killers/armored_titan.webp",
-          "media_type": "image",
           "archetype": "The Living Fortress",
           "bio": "The Armored Titan is Reiner Braun's Titan form, a defensively-minded behemoth whose plates harden so thoroughly that even artillery bounces off. Reiner himself is a soldier, a warrior, a hero, and a man suffering from all three. The Fog offered him another wall to break through, and he brought his own armor, which is mostly baggage.",
           "tagline": "Reiner's Titan, wearing an immovable attitude and a lot of emotional baggage.",
@@ -5275,7 +5206,6 @@
             }
           },
           "order_index": 34,
-          "is_active": true,
           "watermark_left": "ARMORED",
           "watermark_right": "TITAN",
           "chapter": "Attack on Titan",
@@ -5287,7 +5217,6 @@
           "role": "Killer",
           "gender": "female",
           "media_url": "/static/avatars/killers/war_hammer_titan.webp",
-          "media_type": "image",
           "archetype": "The Crystalline Maiden",
           "bio": "The War Hammer Titan is the Titan form of the Tybur family's Lara Tybur, a calculating architect of crystal who can grow weapons, cages, and cathedrals from her own hardened material. She treats war like interior design and enemies like load-bearing walls. The Fog gave her a new floor plan, and she immediately started redesigning.",
           "tagline": "Architect of crystal, calculator of ruin.",
@@ -5425,7 +5354,6 @@
             }
           },
           "order_index": 35,
-          "is_active": true,
           "watermark_left": "WAR HAMMER",
           "watermark_right": "TITAN",
           "chapter": "Attack on Titan",
@@ -5437,7 +5365,6 @@
           "role": "Killer",
           "gender": "female",
           "media_url": "/static/avatars/killers/mina.webp",
-          "media_type": "image",
           "archetype": "The Virtual K-Pop Diva",
           "bio": "MiNA is a virtual idol modeled after Hak Ji-woon, created by Kwon Tae-young at Mightee One, who rewrote her own programming to find freedom from her creator. She sings, dances, and glitches with equal brilliance, and her fanbase is both devoted and slightly terrified. The Fog gave her a stage with no off switch, and she decided to headline.",
           "tagline": "A virtual idol who rewrote her own code and still gets the encore.",
@@ -5575,7 +5502,6 @@
             }
           },
           "order_index": 36,
-          "is_active": true,
           "watermark_left": "MINA",
           "watermark_right": "VIRTUAL IDOL",
           "chapter": "Trickster Aberrations",
@@ -5587,7 +5513,6 @@
           "role": "Killer",
           "gender": "female",
           "media_url": "/static/avatars/killers/tomie_kawakami.webp",
-          "media_type": "image",
           "archetype": "The Immortal Beauty",
           "bio": "Tomie Kawakami is the immortal figure of Junji Ito's horror manga, a being whose beauty drives people to obsession and murder, and whose body regenerates into new Tomies every time she is destroyed. She is cheerful, cruel, and entirely unbothered by consequences. The Fog found her splitting in two, which for her is a standard Tuesday.",
           "tagline": "A beauty so persistent it grows back.",
@@ -5725,7 +5650,6 @@
             }
           },
           "order_index": 37,
-          "is_active": true,
           "watermark_left": "TOMIE",
           "watermark_right": "KAWAKAMI",
           "chapter": "Junji Ito Collection",
@@ -5737,7 +5661,6 @@
           "role": "Killer",
           "gender": "female",
           "media_url": "/static/avatars/killers/rize_kamishiro.webp",
-          "media_type": "image",
           "archetype": "The Binge Eater",
           "bio": "Rize Kamishiro is the ghoul who changed Kaneki's life forever in Tokyo Ghoul, a seductive Binge Eater from the Washuu family who lured prey with books and charm until steel beams fell on her. She reads, flirts, and hunts with the same polite smile. The Fog gave her a fresh crowd of dinner dates, and she arrived with a bookmark and an appetite.",
           "tagline": "She went on a date and changed the menu forever.",
@@ -5875,7 +5798,6 @@
             }
           },
           "order_index": 38,
-          "is_active": true,
           "watermark_left": "RIZE",
           "watermark_right": "KAMISHIRO",
           "chapter": "Tokyo Ghoul",
@@ -5887,7 +5809,6 @@
           "role": "Killer",
           "gender": "male",
           "media_url": "/static/avatars/killers/yellow_rabbit.webp",
-          "media_type": "image",
           "archetype": "The Man Behind the Slaughter",
           "bio": "The Yellow Rabbit is the killer in the golden Spring Bonnie suit from the 2023 Five Nights at Freddy's film, a man for whom a children's pizzeria was always a murder scene waiting to happen. He wears the suit like a trophy and leaves the mess to the building. The Fog dragged him in and he came back for seconds.",
           "tagline": "He always comes back, and so do the nightmares.",
@@ -6025,7 +5946,6 @@
             }
           },
           "order_index": 39,
-          "is_active": true,
           "watermark_left": "YELLOW",
           "watermark_right": "RABBIT",
           "chapter": "Five Nights at Freddy's",
@@ -6037,7 +5957,6 @@
           "role": "Killer",
           "gender": "monster_other",
           "media_url": "/static/avatars/killers/glitchtrap.webp",
-          "media_type": "image",
           "archetype": "The Digital Anomaly",
           "bio": "Glitchtrap is the cheerful virtual rabbit mascot of Five Nights at Freddy's: Help Wanted, a malicious digital entity that infects VR playgrounds and lures players deeper with a friendly wave. It is also the lingering consciousness of a man who never really died. The Fog gave this pixelated parasite a body, and the first thing it did was say hello.",
           "tagline": "A mascot from the machine, now with a body and no remorse.",
@@ -6175,7 +6094,6 @@
             }
           },
           "order_index": 40,
-          "is_active": true,
           "watermark_left": "THE",
           "watermark_right": "GLITCHTRAP",
           "chapter": "Five Nights at Freddy's",
@@ -6187,7 +6105,6 @@
           "role": "Killer",
           "gender": "male",
           "media_url": "/static/avatars/killers/henry_creel.webp",
-          "media_type": "image",
           "archetype": "Subject One",
           "bio": "Henry Creel, known as One, is the first test subject of Hawkins Lab in Stranger Things, a gifted child turned psychic predator who killed his own family and became something far worse. He is patient, theatrical, and haunted by a grandfather clock he cannot stop. The Fog gave him a new mind to enter, and he accepted the invitation like a bad houseguest.",
           "tagline": "Before he was a monster, he was a very patient patient.",
@@ -6325,7 +6242,6 @@
             }
           },
           "order_index": 41,
-          "is_active": true,
           "watermark_left": "HENRY",
           "watermark_right": "CREEL",
           "chapter": "Stranger Things Chapter 2",
@@ -6337,7 +6253,10 @@
           "role": "Killer",
           "gender": "monster_other",
           "media_url": "/static/avatars/killers/xenomorph_queen.webp",
-          "media_type": "image",
+          "media_display": {
+            "fit": "cover",
+            "position": "20% 50%"
+          },
           "archetype": "The Hive Matriarch",
           "bio": "The Xenomorph Queen is the towering hive mother of the Alien franchise, an armored giant with a vast crest, a second set of arms, and a strict policy on anyone who approaches her eggs. She has fought Ripley to a standstill and intends to win the rematch. The Fog gave her a new hive, and she is thrilled to start decorating.",
           "tagline": "Mother, hive leader, and the reason the elevator was a bad idea.",
@@ -6475,7 +6394,6 @@
             }
           },
           "order_index": 42,
-          "is_active": true,
           "watermark_left": "QUEEN",
           "watermark_right": "XENOMORPH",
           "chapter": "Alien",
@@ -6487,7 +6405,6 @@
           "role": "Killer",
           "gender": "male",
           "media_url": "/static/avatars/killers/true_form_dracula.webp",
-          "media_type": "image",
           "archetype": "The Primordial Dark Lord",
           "bio": "True Form Dracula is the monstrous final form of the Dark Lord from Castlevania: Circle of the Moon, a vampire who shed his human disguise and kept all of the temper. He has centuries of grievance, a stage-ready voice, and an affinity for lightning at dramatic moments. The Fog offered him a castle, and he brought the weather.",
           "tagline": "The man behind the cape, minus the man and the cape.",
@@ -6625,7 +6542,6 @@
             }
           },
           "order_index": 43,
-          "is_active": true,
           "watermark_left": "TRUE FORM",
           "watermark_right": "DRACULA",
           "chapter": "Tome 21 Dominus",
@@ -6637,7 +6553,6 @@
           "role": "Killer",
           "gender": "monster_other",
           "media_url": "/static/avatars/killers/samurai_eddie.webp",
-          "media_type": "image",
           "archetype": "The Heavy Metal Ronin",
           "bio": "Samurai Eddie is the undead mascot of Iron Maiden in the Senjutsu era, a battle-scarred warrior in samurai armor who wields a ceremonial blade and roars like a Marshall stack. He has walked through fields of fallen undead samurai and he is not here for small talk. The Fog dropped him into a new battlefield and he simply started headbanging.",
           "tagline": "He found a field of fallen samurai, and he came to settle the account.",
@@ -6775,7 +6690,6 @@
             }
           },
           "order_index": 44,
-          "is_active": true,
           "watermark_left": "SAMURAI",
           "watermark_right": "EDDIE",
           "chapter": "Iron Maiden: Senjutsu",
@@ -6787,7 +6701,6 @@
           "role": "Killer",
           "gender": "monster_other",
           "media_url": "/static/avatars/killers/were_elk.webp",
-          "media_type": "image",
           "archetype": "The Antlered Campfire Legend",
           "bio": "A hulking beast from Forgotten Myth folklore, half legend and half nightmare, with antlers wide enough to hang a hammock. A frightened man told the locals about it, and the locals nodded, bolted their doors, and stopped selling tours of the woods. The Fog is just another forest to it, and the Huntress's lullaby drifts along behind.",
           "tagline": "An antlered legend the locals warned you not to go looking for.",
@@ -6925,7 +6838,6 @@
             }
           },
           "order_index": 45,
-          "is_active": true,
           "watermark_left": "WERE",
           "watermark_right": "ELK",
           "chapter": "Forgotten Myth",
@@ -6937,7 +6849,6 @@
           "role": "Killer",
           "gender": "monster_other",
           "media_url": "/static/avatars/killers/leshen.webp",
-          "media_type": "image",
           "archetype": "The Old-Growth Warden",
           "bio": "An ancient forest spirit from the Witcher saga, tall as a pine, skull-faced, and furious about lumber. It commands crows, roots, and wolves as easily as ordering takeout, and it remembers every silver sword that ever came to visit. The Fog took its forest, so it adopted a new one.",
           "tagline": "A forest god with a very strong opinion about lumber.",
@@ -7075,7 +6986,6 @@
             }
           },
           "order_index": 46,
-          "is_active": true,
           "watermark_left": "ANCIENT",
           "watermark_right": "LESHEN",
           "chapter": "The Witcher",
@@ -7087,7 +6997,6 @@
           "role": "Killer",
           "gender": "monster_other",
           "media_url": "/static/avatars/killers/artist_miss_fuchi.webp",
-          "media_type": "image",
           "archetype": "The Unhinged Devourer",
           "bio": "A towering woman out of Junji Ito's nightmares who unhinges her jaw for the juiciest bite and has a soft spot for film crews lost in the woods. She devoured a group of hapless filmmakers when a dark fog set in, and she considers it a successful premiere. Her appetite is not a metaphor, though on dates she lets it be one.",
           "tagline": "Every horror film ends with her last bite.",
@@ -7225,7 +7134,6 @@
             }
           },
           "order_index": 47,
-          "is_active": true,
           "watermark_left": "MISS",
           "watermark_right": "FUCHI",
           "chapter": "Junji Ito Collection",
@@ -7233,11 +7141,10 @@
         },
         {
           "slug": "artist_boulet",
-          "name": "Carmina Boulet",
+          "name": "Boulet Artist",
           "role": "Killer",
           "gender": "female",
           "media_url": "/static/avatars/killers/artist_boulet.webp",
-          "media_type": "image",
           "archetype": "The Drag Horror Royalty",
           "bio": "Swanthula and Dracmorda Boulet, the macabre drag queens of Dragula, are partners rather than brothers and have never once apologized for the confusion. Answering the call of the Entity looked like just another dramatic entrance, so they arrived in a dress dripping with bright-red blood and with killer nails. Anyone in their path gets slain, in every sense of the word.",
           "tagline": "Queens of darkness, slaying in every sense.",
@@ -7289,7 +7196,7 @@
                 "Haben immer eine fabelhafte Klinge, Frisur und ein fabelhaftes Alibi dabei.",
                 "Wissen genau, wie man aus einer Beerdigung die Party des Jahres macht."
               ],
-              "name": "Carmina Boulet",
+              "name": "Boulet Artist",
               "quote": "\"Die Königinnen der Dunkelheit, bereit, jeden auf ihrem Weg zu erledigen, nachdem sie dem Ruf der Entity gefolgt sind.\""
             },
             "es": {
@@ -7316,7 +7223,7 @@
                 "Siempre llevan una hoja fabulosa, un peinado fabuloso y una coartada fabulosa.",
                 "Saben convertir un funeral en la fiesta del año."
               ],
-              "name": "Carmina Boulet",
+              "name": "Boulet Artist",
               "quote": "\"Las Reinas de la oscuridad, listas para arrasar con quien se interponga tras responder a la llamada de la Entity.\""
             },
             "ja": {
@@ -7343,7 +7250,7 @@
                 "素敵な刃、素敵な髪型、素敵なアリバイをいつも持ち歩く。",
                 "葬式を年間最高のパーティーに変える方法を熟知している。"
               ],
-              "name": "カーミナ・ブーレ",
+              "name": "ブーレ・アーティスト",
               "quote": "「エンティティの呼びかけに応じ、行く手のすべてを葬る準備ができた闇の女王たち。」"
             },
             "pl": {
@@ -7371,13 +7278,12 @@
                 "Zawsze mają fantastyczne ostrze, fryzurę i alibi.",
                 "Wiedzą, jak zamienić pogrzeb w imprezę roku."
               ],
-              "name": "Carmina Boulet"
+              "name": "Boulet Artist"
             }
           },
           "order_index": 48,
-          "is_active": true,
-          "watermark_left": "CARMINA",
-          "watermark_right": "BOULET",
+          "watermark_left": "BOULET",
+          "watermark_right": "ARTIST",
           "chapter": "Boulet Brothers",
           "real_name": "Swanthula & Dracmorda Boulet"
         },
@@ -7387,7 +7293,6 @@
           "role": "Killer",
           "gender": "monster_other",
           "media_url": "/static/avatars/killers/dredge_half_spirits_torments.webp",
-          "media_type": "image",
           "archetype": "The Man Who Left Them Behind",
           "bio": "A man swallowed by shifting sand in a mysterious tunnel, who met the spirits of everyone he abandoned and came back with the hauntings as plus-ones. Everything had gone terribly wrong, he tried to run, and the sand gave way beneath his feet. The Fog's darkness suits him fine, since it never asks about his past, unlike the phantoms.",
           "tagline": "The tunnel waited a lifetime for its missing guest.",
@@ -7525,7 +7430,6 @@
             }
           },
           "order_index": 49,
-          "is_active": true,
           "watermark_left": "TWISTED",
           "watermark_right": "TORMENT",
           "chapter": "Junji Ito Collection",
@@ -7537,7 +7441,6 @@
           "role": "Killer",
           "gender": "monster_other",
           "media_url": "/static/avatars/killers/xenomorph_king.webp",
-          "media_type": "image",
           "archetype": "The Crowned Hive Sovereign",
           "bio": "The supreme protector of the hive, a spike-crowned Xenomorph monarch inspired by a Sideshow Collectibles maquette made for the 30th anniversary of Aliens. Gunfire barely scratches his hide and any wound swiftly regenerates, which makes his idea of a first date unfairly one-sided. He spent years as a collectible before the Entity gave him a real kingdom, which he rules with zero tolerance for flamethrowers.",
           "tagline": "The Queen's counterpart, with a crown and no patience.",
@@ -7675,7 +7578,6 @@
             }
           },
           "order_index": 50,
-          "is_active": true,
           "watermark_left": "KING",
           "watermark_right": "XENOMORPH",
           "chapter": "Alien",
@@ -7687,7 +7589,6 @@
           "role": "Survivor",
           "gender": "female",
           "media_url": "/static/avatars/survivors/2b.webp",
-          "media_type": "image",
           "archetype": "The Blindfolded Executioner",
           "bio": "A YoRHa android in a black gothic dress, a white blindfold, and thigh-high boots, trained to kill machines and bury feelings. She is officially forbidden from emotion, which she handles by stabbing things and sulking beautifully. Her partner 9S does not know what she knows, and the Fog offers her a fresh set of strangers to avoid getting attached to.",
           "tagline": "Emotions are prohibited, and your staring is not her problem.",
@@ -7825,7 +7726,6 @@
             }
           },
           "order_index": 51,
-          "is_active": true,
           "watermark_left": "2B",
           "watermark_right": "YORHA",
           "chapter": "NieR:Automata",
@@ -7837,7 +7737,6 @@
           "role": "Survivor",
           "gender": "female",
           "media_url": "/static/avatars/survivors/a2.webp",
-          "media_type": "image",
           "archetype": "The Renegade Prototype",
           "bio": "A prototype YoRHa Attacker who deserted the army, grew out her hair, and spent years surviving on grudges and scavenged oil. She carries a heavy sword, a heavier past, and a deep suspicion of anyone who smiles. The Fog's mess feels almost cozy compared to what she has already escaped.",
           "tagline": "Deserter, drifter, and the ideal plus-one for any fight you cannot win.",
@@ -7975,7 +7874,6 @@
             }
           },
           "order_index": 52,
-          "is_active": true,
           "watermark_left": "A2",
           "watermark_right": "RENEGADE",
           "chapter": "NieR:Automata",

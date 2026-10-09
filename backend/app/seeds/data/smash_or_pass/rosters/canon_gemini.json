@@ -17,7 +17,7 @@
       "theme_color": "#ff0055",
       "category": "DBD",
       "is_nsfw": false,
-      "is_active": true,
+      "is_active": false,
       "entities": [
         {
           "slug": "ada_wong_gemini",
@@ -25,7 +25,6 @@
           "role": "Survivor",
           "gender": "female",
           "media_url": "/static/avatars/survivors/ada_wong.webp",
-          "media_type": "image",
           "archetype": "The Untouchable Femme Fatale",
           "bio": "High-slit silk, lethal thigh-holsters, and an emotional availability of absolute zero. She treats apocalyptic bioweapons like casual Tuesday cardio and strolled into the Fog purely because the danger looked entertaining. She will steal your car, look breathtaking doing it, and leave you holding the bill.",
           "tagline": "Grappling guns, slit dresses, and leaving you on read across three console generations.",
@@ -165,7 +164,6 @@
             }
           },
           "order_index": 0,
-          "is_active": true,
           "real_name": "Ada Wong",
           "watermark_left": "ADA",
           "watermark_right": "WONG"
@@ -176,7 +174,6 @@
           "role": "Survivor",
           "gender": "female",
           "media_url": "/static/avatars/survivors/sable_ward.webp",
-          "media_type": "image",
           "archetype": "The Eldritch Basement Goth",
           "bio": "Smudged kohl eyeliner, torn fishnets, and enough morbid curiosity to climb willingly into an eldritch dimension. She turned suburban teenage rebellion into blood-pact obsession, trading high school drama for late-night pirate radio and ritualistic summoning. She treats the freezing slaughterhouse basement like a romantic lounge, dragging you into damp corners while monsters pace overhead.",
           "tagline": "Smudged eyeliner, pirate radio static, and dragging you into candlelit murder basements.",
@@ -321,7 +318,6 @@
             }
           },
           "order_index": 1,
-          "is_active": true,
           "real_name": "Sable Ward",
           "watermark_left": "SABLE",
           "watermark_right": "WARD"
@@ -332,7 +328,6 @@
           "role": "Survivor",
           "gender": "female",
           "media_url": "/static/avatars/survivors/feng_min.webp",
-          "media_type": "image",
           "archetype": "The Caffeinated Gremlin E-Girl",
           "bio": "Former esports prodigy turned nocturnal menace, surviving entirely on energy drinks, cheap whiskey, and spite. She rocks oversized pastel bunny hoods while vaulting broken windows with acrobatic precision. She will ruin your sleep schedule, hotwire vehicles just to flex, and ragequit the relationship the second you fail to match her chaotic stamina.",
           "tagline": "Neon bunny hoods, lethal finger dexterity, and toxic tantrums whenever she loses.",
@@ -477,7 +472,6 @@
             }
           },
           "order_index": 2,
-          "is_active": true,
           "real_name": "Feng Min",
           "watermark_left": "FENG",
           "watermark_right": "MIN"
@@ -488,7 +482,6 @@
           "role": "Survivor",
           "gender": "female",
           "media_url": "/static/avatars/survivors/kate_denson.webp",
-          "media_type": "image",
           "archetype": "The Untamable Songbird",
           "bio": "Sun-kissed blonde locks, whiskey-warm vocals, and tight denim cutoffs that do dangerous things to morale. Kate spent years touring grimy dive bars and tossing out rowdy drunks before the Fog grabbed her, meaning she knows how to handle rough hands and dirty finishes. She’ll serenade you under a blood moon, wreck your back on a pickup tailgate, and kick your teeth in if you mistake her Southern sweetness for submission.",
           "tagline": "Acoustic bedroom ballads, killer hip stamina, and zero patience for soft men.",
@@ -628,7 +621,6 @@
             }
           },
           "order_index": 3,
-          "is_active": true,
           "real_name": "Kate Denson",
           "watermark_left": "KATE",
           "watermark_right": "DENSON"
@@ -639,7 +631,6 @@
           "role": "Survivor",
           "gender": "female",
           "media_url": "/static/avatars/survivors/mikaela_reid.webp",
-          "media_type": "image",
           "archetype": "The Bewitching Bohemian Siren",
           "bio": "Smells like double-shot espresso, crushed sage, and dangerous unresolved daddy issues. She spent her youth telling bedtime stories about monsters only to find out she loves flirting with them. Between pouring lattes, reading your dirtiest thoughts in tarot spreads, and levitating in her sleep, she’ll trap you in a circle of blue flame and ruin you for vanilla mortals.",
           "tagline": "Steamy espresso, velvet chokers, and bedroom rituals that leave you seeing ghosts.",
@@ -779,7 +770,6 @@
             }
           },
           "order_index": 4,
-          "is_active": true,
           "real_name": "Mikaela Reid",
           "watermark_left": "MIKAELA",
           "watermark_right": "REID"
@@ -790,7 +780,6 @@
           "role": "Survivor",
           "gender": "female",
           "media_url": "/static/avatars/survivors/jill_valentine.webp",
-          "media_type": "image",
           "archetype": "The Master of Unlocking",
           "bio": "Form-fitting tactical tank top, combat-boot swagger, and a certified master of unlocking everything from military armories to your repressed fantasies. She survived the Raccoon City nightmare while being stalked by a ten-foot mutated tyrant with a rocket launcher, making casual dating look like child's play. If you can handle high-explosive mood swings, PTSD nightmares, and a woman who refuses to stay dead, she will ride you through the apocalypse and back.",
           "tagline": "Lockpick queen, heavy-ordnance addict, and allergic to staying down.",
@@ -930,7 +919,6 @@
             }
           },
           "order_index": 5,
-          "is_active": true,
           "real_name": "Jill Valentine",
           "watermark_left": "JILL",
           "watermark_right": "VALENTINE"
@@ -941,7 +929,6 @@
           "role": "Survivor",
           "gender": "female",
           "media_url": "/static/avatars/survivors/lara_croft.webp",
-          "media_type": "image",
           "archetype": "The Blood-Soaked Tomb Raider",
           "bio": "Posh British accent, mud-caked tank top, and a lethal obsession with claustrophobic crevices. She survived shipwrecks, cannibalistic sun cults, and wading through rivers of gore just to chase the ultimate adrenaline rush into the Fog. She will drag you through ancient deathtraps, pin you against an altar, and make you beg for mercy before the ruins collapse.",
           "tagline": "Dual climbing axes, ungodly core strength, and zero fear of tight, dark spaces.",
@@ -1081,7 +1068,6 @@
             }
           },
           "order_index": 6,
-          "is_active": true,
           "real_name": "Lara Croft",
           "watermark_left": "LARA",
           "watermark_right": "CROFT"
@@ -1092,7 +1078,6 @@
           "role": "Survivor",
           "gender": "female",
           "media_url": "/static/avatars/survivors/rebecca_chambers.webp",
-          "media_type": "image",
           "archetype": "The Overachieving Combat Medic",
           "bio": "College graduate at eighteen, S.T.A.R.S. prodigy, and the only girl in the Fog who considers open-heart trauma an acceptable first date. Don't let the innocent pixie cut fool you—she's spent nights fighting giant leeches, patching up convicts, and mixing lethal chemical cocktails under heavy gunfire. She will fix every broken bone in your body, look adorable doing it, and demand a gold star before the adrenaline wears off.",
           "tagline": "Pixie cut, battlefield triage, and hands skilled enough to revive your pulse or stop your heart.",
@@ -1232,7 +1217,6 @@
             }
           },
           "order_index": 7,
-          "is_active": true,
           "real_name": "Rebecca Chambers",
           "watermark_left": "REBECCA",
           "watermark_right": "CHAMBERS"
@@ -1243,7 +1227,6 @@
           "role": "Survivor",
           "gender": "female",
           "media_url": "/static/avatars/survivors/jane_romero.webp",
-          "media_type": "image",
           "archetype": "The Daytime TV Bombshell",
           "bio": "Syndicated daytime royalty with razor-sharp wit and devastating hourglass curves that could stop an oncoming semi-truck. Raised on artistic hustle and abandoned by a famous mother, Jane built an empire by exposing uncomfortable truths and refusing to apologize for taking up space. She drove off a cliff into the Fog, bringing studio-grade glamour, heavy artillery thighs, and unmatched emotional dominance directly into the Entity's hunting grounds.",
           "tagline": "Tailored silk suits, high-definition curves, and tackling killers right through the drywall.",
@@ -1383,7 +1366,6 @@
             }
           },
           "order_index": 8,
-          "is_active": true,
           "real_name": "Jane Romero",
           "watermark_left": "JANE",
           "watermark_right": "ROMERO"
@@ -1394,7 +1376,6 @@
           "role": "Survivor",
           "gender": "female",
           "media_url": "/static/avatars/survivors/yui_kimura.webp",
-          "media_type": "image",
           "archetype": "The Leather-Clad Speed Demon",
           "bio": "Smells like premium motor oil, burnt rubber, and unrepentant rebellion. Disowned by her traditionalist father, she tore through Nagoya's illegal street circuits, founded an all-female biker gang to terrorize abusers, and took on the Fog with zero fear. She will redline your pulse against the chassis, outrun death on two wheels, and expect you to grip her waist tight enough to leave bruises.",
           "tagline": "Pink hachimaki, scuffed leathers, and throttle control that will leave your thighs shaking.",
@@ -1534,7 +1515,6 @@
             }
           },
           "order_index": 9,
-          "is_active": true,
           "real_name": "Yui Kimura",
           "watermark_left": "YUI",
           "watermark_right": "KIMURA"
@@ -1545,7 +1525,6 @@
           "role": "Survivor",
           "gender": "female",
           "media_url": "/static/avatars/survivors/zarina_kassir.webp",
-          "media_type": "image",
           "archetype": "The Guerrilla Exposé Voyeur",
           "bio": "Brooklyn grit, high-grade audio bugs, and a complete disregard for restraining orders. She built an international reputation by bribing prison guards and exposing bloodbaths, meaning your dirty little secrets don't stand a chance. Zarina won't just unravel your deepest psychological baggage—she will document every groan, archive your moans in high definition, and bleed out on the floor just so you can walk away.",
           "tagline": "Night-vision lenses, zero boundaries, and bleeding herself dry just to keep you alive.",
@@ -1685,7 +1664,6 @@
             }
           },
           "order_index": 10,
-          "is_active": true,
           "real_name": "Zarina Kassir",
           "watermark_left": "ZARINA",
           "watermark_right": "KASSIR"
@@ -1696,7 +1674,6 @@
           "role": "Survivor",
           "gender": "female",
           "media_url": "/static/avatars/survivors/thalita_lyra.webp",
-          "media_type": "image",
           "archetype": "The Sun-Kissed Adrenaline Siren",
           "bio": "Runway-sculpted curves, golden Copacabana tanlines, and hands calloused from glass-powdered kite string. She ditched high-fashion catwalks for cutthroat aerial dogfights over Rio's favelas, bringing razor-sharp reflexes and predatory flirtation straight into the Fog. She treats survival like competitive foreplay—teasing you to keep up, daring you to pin her down, and looking outrageously hot while bleeding pure adrenaline.",
           "tagline": "Bikini tops, razor-sharp kite lines, and daring you to match her cardio.",
@@ -1836,7 +1813,6 @@
             }
           },
           "order_index": 11,
-          "is_active": true,
           "real_name": "Thalita Lyra",
           "watermark_left": "THALITA",
           "watermark_right": "LYRA"
@@ -1847,7 +1823,6 @@
           "role": "Survivor",
           "gender": "female",
           "media_url": "/static/avatars/survivors/cheryl_mason.webp",
-          "media_type": "image",
           "archetype": "The Reincarnated God-Slayer",
           "bio": "Freckles, combat boots, and enough unresolved trauma to choke an eldritch pantheon. Formerly known as Heather, she survived a childhood of zealot stalkers, aborted an unwanted god, and beat cultists bloody with steel pipes. Now she handles crisis hotlines and treats nightmarish Fog trials like bad foreplay. Cheryl won't flinch at your toxic baggage or rusty chains—she’s seen worse in suburban shopping malls and looks effortlessly hot covered in ash and spite.",
           "tagline": "Freckled grunge aesthetics, god-killing stamina, and zero patience for religious guilt.",
@@ -1987,7 +1962,6 @@
             }
           },
           "order_index": 12,
-          "is_active": true,
           "real_name": "Cheryl Mason",
           "watermark_left": "CHERYL",
           "watermark_right": "MASON"
@@ -1998,7 +1972,6 @@
           "role": "Survivor",
           "gender": "female",
           "media_url": "/static/avatars/survivors/nea_karlsson.webp",
-          "media_type": "image",
           "archetype": "The Feral Urban Anarchist",
           "bio": "Swedish delinquent turned realm terror who communicates solely in middle fingers and spray paint. She entered the Fog on a stupid asylum dare and immediately set up squatters' rights, baffling ancient serial killers with her complete lack of fear. Half the campfire is convinced she secretly owns this dimension.",
           "tagline": "Neon beanies, structural vandalism, and enough gremlin energy to intimidate cosmic deities.",
@@ -2133,7 +2106,6 @@
             }
           },
           "order_index": 13,
-          "is_active": true,
           "real_name": "Nea Karlsson",
           "watermark_left": "NEA",
           "watermark_right": "KARLSSON"
@@ -2144,7 +2116,6 @@
           "role": "Survivor",
           "gender": "female",
           "media_url": "/static/avatars/survivors/meg_thomas.webp",
-          "media_type": "image",
           "archetype": "The High-Velocity Meghead",
           "bio": "Track scholarship prodigy turned unhinged woodland sprinter with zero impulse control and negative survival instincts. She traded college athletics for nursing her sick mother and sprinting into cosmic fog, where she now solves every life problem by running at mach speeds into solid masonry. She will drag killers directly to your hiding spot, look criminally hot in gym shorts, and outrun all emotional accountability.",
           "tagline": "Athletic braids, zero survival instincts, and sprinting away from emotional intimacy at mach three.",
@@ -2279,7 +2250,6 @@
             }
           },
           "order_index": 14,
-          "is_active": true,
           "real_name": "Meg Thomas",
           "watermark_left": "MEG",
           "watermark_right": "THOMAS"
@@ -2290,7 +2260,6 @@
           "role": "Survivor",
           "gender": "female",
           "media_url": "/static/avatars/survivors/claudette_morel.webp",
-          "media_type": "image",
           "archetype": "The Foliage-Dwelling Cryptid",
           "bio": "Scholarship botany nerd turned mythical bush cryptid who communicates entirely through plant biology and terrifying silence. She spent her adolescence moderating obscure botany forums as 'Science Girl' before stepping off a bus and vanishing into the woods. In the Fog, she will blend completely into a fern, aggressively rub stinging moss into your open wounds, and leave you to die on a meat hook if you rustle the hedges.",
           "tagline": "Wire-rimmed glasses, handmade poultices, and disappearing into waist-high shrubs the second danger breathes.",
@@ -2430,7 +2399,6 @@
             }
           },
           "order_index": 15,
-          "is_active": true,
           "real_name": "Claudette Morel",
           "watermark_left": "CLAUDETTE",
           "watermark_right": "MOREL"
@@ -2441,7 +2409,6 @@
           "role": "Survivor",
           "gender": "female",
           "media_url": "/static/avatars/survivors/laurie_strode.webp",
-          "media_type": "image",
           "archetype": "The Blueprint Final Girl",
           "bio": "Feathered seventies hair, high-waisted denim, and the undisputed blueprint for surviving suburban slaughter. Her quiet babysitting shift ended with three dead friends and an unkillable six-foot brother breathing heavily in her closet. Laurie doesn't flirt—she scans sightlines, weaponizes knitting needles, and stares down ancient evil with cold defiance. Date her, and you'll spend every autumn double-checking the shrubs.",
           "tagline": "Bell-bottom denim, weaponized coat hangers, and surviving while all her horny friends die.",
@@ -2576,7 +2543,6 @@
             }
           },
           "order_index": 16,
-          "is_active": true,
           "real_name": "Laurie Strode",
           "watermark_left": "LAURIE",
           "watermark_right": "STRODE"
@@ -2587,7 +2553,6 @@
           "role": "Survivor",
           "gender": "female",
           "media_url": "/static/avatars/survivors/nancy_wheeler.webp",
-          "media_type": "image",
           "archetype": "The Ballistic Suburban Sleuth",
           "bio": "Pristine pastel cardigans, feathered eighties hair, and an alarming proficiency with heavy firearms. She traded straight-A report cards and suburban domesticity for sawed-off shotguns, Molotov cocktails, and hunting interdimensional predators. Nancy will interrogate your browser history, outshoot local law enforcement, and leave you breathless in a parked station wagon before burning down the nearest government facility.",
           "tagline": "Pastel sweaters, sawed-off shotguns, and zero tolerance for cowardly men.",
@@ -2722,7 +2687,6 @@
             }
           },
           "order_index": 17,
-          "is_active": true,
           "real_name": "Nancy Wheeler",
           "watermark_left": "NANCY",
           "watermark_right": "WHEELER"
@@ -2733,7 +2697,6 @@
           "role": "Survivor",
           "gender": "female",
           "media_url": "/static/avatars/survivors/lee_yun_jin.webp",
-          "media_type": "image",
           "archetype": "The Cutthroat Hitmaker",
           "bio": "Tailored designer furs, six-inch stilettos, and an iced-out moral compass that prioritizes chart-topping profit over human collateral. She clawed her way out of poverty into Seoul's cutthroat music industry, casually ignoring that her star client was sampling actual victims' screams for his beats. Yun-Jin will evaluate your net worth, use your demise as tax write-off leverage, and look breathtaking strutting toward the exit gates.",
           "tagline": "Tailored faux-fur coats, zero moral baggage, and drafting non-disclosure agreements before foreplay.",
@@ -2868,7 +2831,6 @@
             }
           },
           "order_index": 18,
-          "is_active": true,
           "real_name": "Yun-Jin Lee",
           "watermark_left": "YUN-JIN",
           "watermark_right": "LEE"
@@ -2879,7 +2841,6 @@
           "role": "Survivor",
           "gender": "female",
           "media_url": "/static/avatars/survivors/élodie_rakoto.webp",
-          "media_type": "image",
           "archetype": "The Parisian Crypt Raider",
           "bio": "High-fashion Parisian tailoring, bespoke trench coats, and a lethal habit of burglarizing subterranean ossuaries for fun. After losing her parents to an occult storm on Dyer Island, she spent adulthood raiding catacombs for cursed artifacts until cultists gutted her. Instead of dying quietly, she drew a blood circle and summoned an eldritch nightmare. She will never rely on you, but she will loot every tomb in the realm and look runway-ready doing it.",
           "tagline": "Tailored Parisian coats, catacomb break-ins, and summoning eldritch nightmares out of pure spite.",
@@ -3014,7 +2975,6 @@
             }
           },
           "order_index": 19,
-          "is_active": true,
           "real_name": "Élodie Rakoto",
           "watermark_left": "ÉLODIE",
           "watermark_right": "RAKOTO"
@@ -3025,7 +2985,6 @@
           "role": "Survivor",
           "gender": "female",
           "media_url": "/static/avatars/survivors/haddie_kaur.webp",
-          "media_type": "image",
           "archetype": "The Bleeding-Dimension Podcaster",
           "bio": "Electric blue streak, audio-recorder paranoia, and an irresistible urge to monetize cosmic agony. She survived childhood orphanhood, psychic dimensional bleeds, and frozen Alpine nightmares just to turn eldritch entities into true-crime ad revenue. Haddie will psychoanalyze your childhood trauma, blind seven-foot killers with industrial flashlights, and ask you to pause bedroom foreplay so she can record ambient room tone.",
           "tagline": "Blue-streaked hair, industrial flashlights, and turning cosmic horrors into monetized podcast content.",
@@ -3160,7 +3119,6 @@
             }
           },
           "order_index": 20,
-          "is_active": true,
           "real_name": "Haddie Kaur",
           "watermark_left": "HADDIE",
           "watermark_right": "KAUR"
@@ -3171,7 +3129,6 @@
           "role": "Survivor",
           "gender": "female",
           "media_url": "/static/avatars/survivors/ellen_ripley.webp",
-          "media_type": "image",
           "archetype": "The Hardboiled Warrant Officer",
           "bio": "Standard-issue flight suit, towering physical presence, and absolute zero patience for corporate sycophants or biomechanical abominations. She triggered the self-destruct on a multi-million-dollar starship, blasted a nine-foot apex predator out of an airlock, and survived fifty-seven years of hypersleep just to rescue an orange tomcat. Ripley does not do clingy romance—she enforces strict quarantine protocols, constructs custom flamethrowers, and expects you to follow chain of command when the heat rises.",
           "tagline": "Unbuttoned flight suits, custom flamethrowers, and prioritizing the ginger cat over your feelings.",
@@ -3311,7 +3268,6 @@
             }
           },
           "order_index": 21,
-          "is_active": true,
           "real_name": "Ellen Ripley",
           "watermark_left": "ELLEN",
           "watermark_right": "RIPLEY"
@@ -3322,7 +3278,6 @@
           "role": "Survivor",
           "gender": "female",
           "media_url": "/static/avatars/survivors/taurie_cain.webp",
-          "media_type": "image",
           "archetype": "The Reluctant Cult Enforcer",
           "bio": "Glasgow grit, runic cult tattoos, and a crushing savior complex poorly disguised as Scottish cynicism. Raised inside a sinister occult order, she ventured unequipped into a psychic dimensional bleed as a child and emerged completely sane. She broke away only when ordered to ritualistically execute an innocent. Taurie claims everyone must look out for themselves, right before absorbing your death sentence onto her own ribs.",
           "tagline": "Scottish brogue, stolen antiquities, and trading hook wounds out of pure spite.",
@@ -3457,7 +3412,6 @@
             }
           },
           "order_index": 22,
-          "is_active": true,
           "real_name": "Taurie Cain",
           "watermark_left": "TAURIE",
           "watermark_right": "CAIN"
@@ -3468,7 +3422,6 @@
           "role": "Survivor",
           "gender": "female",
           "media_url": "/static/avatars/survivors/michonne_grimes.webp",
-          "media_type": "image",
           "archetype": "The Disarmed Apocalypse Matriarch",
           "bio": "Sleeveless leather, sculpted deltoids, and a death glare sharp enough to decapitate undead hordes without a blade. She survived the collapse of civilization, kept mutilated corpses on leashes for camouflage, and rebuilt society with Rick Grimes before following his trail straight into the Fog. Even though the Entity confiscated her signature katana at the border, she will still choke out ancient slashers with her bare hands, look unfairly hot doing it, and demand absolute discipline in bed.",
           "tagline": "Sleeveless leather, jawless corpse pets, and dropkicking killers through windows because the Fog stole her katana.",
@@ -3603,7 +3556,6 @@
             }
           },
           "order_index": 23,
-          "is_active": true,
           "real_name": "Michonne Hawthorne (Grimes)",
           "watermark_left": "MICHONNE",
           "watermark_right": "GRIMES"
@@ -3614,7 +3566,6 @@
           "role": "Survivor",
           "gender": "female",
           "media_url": "/static/avatars/survivors/eleven.webp",
-          "media_type": "image",
           "archetype": "The Void-Walking Psychic Weapon",
           "bio": "Hospital gowns, chronic nosebleeds, and enough psychic trauma to rip open holes in the fabric of space-time. Escaped a CIA black site, traded lab torture for stolen toaster waffles, and defended Indiana from interdimensional flesh-monsters before wandering into the Fog. She treats supernatural slashers like minor annoyances, communicates via menacing glares, and will levitate a municipal bus through your living room if you break a promise.",
           "tagline": "Eggo waffles, cranial nosebleeds, and flipping municipal vehicles whenever someone breaks a promise.",
@@ -3754,7 +3705,6 @@
             }
           },
           "order_index": 24,
-          "is_active": true,
           "real_name": "Jane Hopper (011)",
           "watermark_left": "ELEVEN",
           "watermark_right": "011"
@@ -3765,7 +3715,6 @@
           "role": "Survivor",
           "gender": "female",
           "media_url": "/static/avatars/survivors/aurora_stardotter.webp",
-          "media_type": "image",
           "archetype": "The Reluctant Astral Messiah",
           "bio": "Celestial robes, glowing starlight prophecies, and an accidental religion that burns heretics in her holy name. She survived capital execution, united warring wasteland tribes through astrology, and told a cosmic god to go fuck itself before getting snatched into the Fog. Aurora will read your birth chart, judge your questionable life choices, and look divinely radiant while running for her life.",
           "tagline": "Star charts, reluctant deification, and telling cosmic gods to go fuck themselves.",
@@ -3900,7 +3849,6 @@
             }
           },
           "order_index": 25,
-          "is_active": true,
           "real_name": "Aurora Stardotter",
           "watermark_left": "AURORA",
           "watermark_right": "STARDOTTER"
@@ -3911,7 +3859,6 @@
           "role": "Survivor",
           "gender": "female",
           "media_url": "/static/avatars/survivors/vee_boonyasak.webp",
-          "media_type": "image",
           "archetype": "The Blast-Beat Punk Menace",
           "bio": "Self-taught Thai blast-beat prodigy who replaced a busted drum machine mid-gig and made loud noise her whole religion. She drags sound equipment through abandoned opera ruins, prints her own tour merch, and survived into the Fog purely because she wanted better room reverb. She will blow out your eardrums, drum blast-beats across your ribcage, and refuse to turn down the tempo until sunrise.",
           "tagline": "Splintered hickory drumsticks, permanent tinnitus, and treating bedtime pacing like a hardcore breakdown.",
@@ -4046,7 +3993,6 @@
             }
           },
           "order_index": 26,
-          "is_active": true,
           "real_name": "Vee Boonyasak",
           "watermark_left": "VEE",
           "watermark_right": "BOONYASAK"
@@ -4057,7 +4003,6 @@
           "role": "Survivor",
           "gender": "female",
           "media_url": "/static/avatars/survivors/orela_rose.webp",
-          "media_type": "image",
           "archetype": "The Morbid Triage Restaurateur",
           "bio": "Chicago paramedic scrubs, steel-toed boots, and an eerie emotional composure forged from gunshot wounds and running a horror-themed bistro. After watching her college best friend fry on a bootleg haunted house shock table, Orela processed the grief by serving gourmet steaks beside fake corpses. She treats supernatural slashers like rowdy psychiatric patients on a Tuesday ambulance shift, checks your pulse mid-kiss, and will take a machete to the ribs to keep you breathing.",
           "tagline": "Nitrile gloves, gourmet horror dining, and an unnerving bedside manner that normalizes catastrophic bodily trauma.",
@@ -4192,7 +4137,6 @@
             }
           },
           "order_index": 27,
-          "is_active": true,
           "real_name": "Orela Rose",
           "watermark_left": "ORELA",
           "watermark_right": "ROSE"
@@ -4203,7 +4147,6 @@
           "role": "Survivor",
           "gender": "male",
           "media_url": "/static/avatars/survivors/leon_scott_kennedy.webp",
-          "media_type": "image",
           "archetype": "The Pretty-Boy Disaster Cop",
           "bio": "Pristine boyband center-part, heavy Kevlar, and an incurable case of terminal chivalry. He showed up hungover to his very first police shift, walked straight into a zombie apocalypse, and somehow made suffering look like a Calvin Klein photoshoot. He will blind you with homemade pyrotechnics, apologize profusely, and jump in front of a rusty meat hook just to prove he's a gentleman.",
           "tagline": "Feathered bangs, terminal hero syndrome, and a catastrophic weakness for women in red.",
@@ -4338,7 +4281,6 @@
             }
           },
           "order_index": 28,
-          "is_active": true,
           "real_name": "Leon Scott Kennedy",
           "watermark_left": "LEON S.",
           "watermark_right": "KENNEDY"
@@ -4349,7 +4291,6 @@
           "role": "Survivor",
           "gender": "male",
           "media_url": "/static/avatars/survivors/felix_richter.webp",
-          "media_type": "image",
           "archetype": "The Haute-Couture Disaster Architect",
           "bio": "Chiseled Teutonic jawline, three-piece wool suits, and crippling generational trauma masked by expensive gin. He conquered the European design world by age twenty-three, but still views every crumbling torture realm as an offensive zoning violation. He will over-analyze the load-bearing integrity of a rotting pallet, panic-recharge his power tools inside a dirty locker, and look devastatingly handsome while having a quiet nervous breakdown.",
           "tagline": "Bespoke tailoring, generational occult trauma, and critiquing your bedroom's Feng Shui mid-makeout.",
@@ -4484,7 +4425,6 @@
             }
           },
           "order_index": 29,
-          "is_active": true,
           "real_name": "Felix Richter",
           "watermark_left": "FELIX",
           "watermark_right": "RICHTER"
@@ -4495,7 +4435,6 @@
           "role": "Survivor",
           "gender": "male",
           "media_url": "/static/avatars/survivors/vittorio_toscano.webp",
-          "media_type": "image",
           "archetype": "The 700-Year-Old Scholarly Thirst Trap",
           "bio": "Seven centuries of interdimensional wandering, and somehow he maintained a shredded eight-pack and immaculate silver hair. A fourteenth-century Italian pacifist lord who traded courtly intrigue for forbidden arcane glyphs, only to discover paradise was actually a muddy realm of rusty meat hooks. He will mansplain sacred geometry by candlelight, channel glowing mystic heat into diesel engines, and look devastatingly photogenic doing it.",
           "tagline": "Glowing azure runes, seven centuries of wandering, and the cheekbones of a Renaissance sculpture.",
@@ -4630,7 +4569,6 @@
             }
           },
           "order_index": 30,
-          "is_active": true,
           "real_name": "Vittorio Toscano",
           "watermark_left": "VITTORIO",
           "watermark_right": "TOSCANO"
@@ -4641,7 +4579,6 @@
           "role": "Survivor",
           "gender": "male",
           "media_url": "/static/avatars/survivors/david_king.webp",
-          "media_type": "image",
           "archetype": "The Shirtless Manchester Menace",
           "bio": "Born into aristocratic Manchester wealth, blessed with private school pedigree, and traded it all for bare-knuckle pub brawls and permanent bruises. He was kicked out of professional rugby for dropping a referee, disowned his trust fund, and walked into the Fog completely shirtless just to pick a fight with cosmic horrors. He will tackle an axe-wielding maniac into the mud, flex his abs, and demand you buy him a pint afterwards.",
           "tagline": "Disowned aristocrat, banned rugby star, and completely allergic to wearing shirts.",
@@ -4776,7 +4713,6 @@
             }
           },
           "order_index": 31,
-          "is_active": true,
           "real_name": "David King",
           "watermark_left": "DAVID",
           "watermark_right": "KING"
@@ -4787,7 +4723,6 @@
           "role": "Survivor",
           "gender": "male",
           "media_url": "/static/avatars/survivors/steve_harrington.webp",
-          "media_type": "image",
           "archetype": "The High-Volume Himbo Meat Shield",
           "bio": "Eighty percent Farrah Fawcett spray, twenty percent bruised maternal instinct. He peaked in high school, fell gracefully into a sailor suit, and somehow evolved into the universe's most reliable emergency guardian. He will swing a nailed wooden bat straight into the maw of an eldritch horror, take a rusty meat hook through the shoulder for you, and still check the mirror to ensure his feathered volume survived.",
           "tagline": "Legendary hair volume, a nailed baseball bat, and terminal single-mom energy.",
@@ -4922,7 +4857,6 @@
             }
           },
           "order_index": 32,
-          "is_active": true,
           "real_name": "Steve Harrington",
           "watermark_left": "STEVE",
           "watermark_right": "HARRINGTON"
@@ -4933,7 +4867,6 @@
           "role": "Survivor",
           "gender": "male",
           "media_url": "/static/avatars/survivors/nicolas_cage.webp",
-          "media_type": "image",
           "archetype": "The Unhinged Method Acting Icon",
           "bio": "Leather jackets, velvet suits, and enough manic energy to power three abandoned generators. He was lured to a remote Pacific island under the promise of auteur cinema and ended up trapped in purgatory, which he immediately treated like an immersive off-Broadway monologue. He will stare deeply into your soul, scream at the moon, and fake a fatal heart attack on the hardwood floor just to elevate the sexual tension.",
           "tagline": "Academy Award winner, certified national treasure, and completely incapable of giving less than two hundred percent.",
@@ -5068,7 +5001,6 @@
             }
           },
           "order_index": 33,
-          "is_active": true,
           "real_name": "Nicolas Kim Coppola",
           "watermark_left": "NICOLAS",
           "watermark_right": "CAGE"
@@ -5079,7 +5011,6 @@
           "role": "Survivor",
           "gender": "male",
           "media_url": "/static/avatars/survivors/alan_wake.webp",
-          "media_type": "image",
           "archetype": "The Melodramatic Bestselling Disaster",
           "bio": "Layered tweed elbows, gravelly noir monologues, and enough unresolved artistic angst to drown an entire Pacific Northwest town. After spending thirteen years trapped beneath a lake aggressively typing fanfiction about his own escape, he stepped into the Fog purely because he couldn't resist another morbid metaphor. He will aggressively shine industrial beams into your eyes, psychoanalyze your trauma, and make you read his unedited manuscripts before giving you any physical affection.",
           "tagline": "Tweed jackets, heavy emotional baggage, and thirteen years of unhinged lake-bottom drafts.",
@@ -5214,7 +5145,6 @@
             }
           },
           "order_index": 34,
-          "is_active": true,
           "real_name": "Alan Wake",
           "watermark_left": "ALAN",
           "watermark_right": "WAKE"
@@ -5225,7 +5155,6 @@
           "role": "Survivor",
           "gender": "male",
           "media_url": "/static/avatars/survivors/dwight_fairfield.webp",
-          "media_type": "image",
           "archetype": "The Anxious Middle-Management Castaway",
           "bio": "Taped eyeglasses, permanent nervous perspiration, and an aggressive aura of unpromotable middle-management energy. After his coworkers maliciously stranded him drunk in a national forest, he wandered into the Fog and accidentally became team captain. He lives inside metal lockers, manages life-or-death crises like an awkward corporate icebreaker, and survives purely because panic burns calories fast.",
           "tagline": "Perpetually sweaty, one locker away from a breakdown, but refuses to leave you behind.",
@@ -5360,7 +5289,6 @@
             }
           },
           "order_index": 35,
-          "is_active": true,
           "real_name": "Dwight Fairfield",
           "watermark_left": "DWIGHT",
           "watermark_right": "FAIRFIELD"
@@ -5371,7 +5299,6 @@
           "role": "Survivor",
           "gender": "male",
           "media_url": "/static/avatars/survivors/jake_park.webp",
-          "media_type": "image",
           "archetype": "The Feral Trust-Fund Hermit",
           "bio": "Walked away from an eight-figure inheritance and Ivy League pedigree just to sleep in damp dirt and dismantle industrial meat hooks with his bare hands. He smells aggressively of cedar smoke, unresolved daddy issues, and feral masculinity. He communicates entirely through intense stares and guttural grunts, but he will tear a killer's favorite torture device off the wall before you can even touch the ground.",
           "tagline": "Eight-figure trust fund abandoned in favor of damp moss, wire cutters, and brooding silence.",
@@ -5506,7 +5433,6 @@
             }
           },
           "order_index": 36,
-          "is_active": true,
           "real_name": "Jake Park",
           "watermark_left": "JAKE",
           "watermark_right": "PARK"
@@ -5517,7 +5443,6 @@
           "role": "Survivor",
           "gender": "male",
           "media_url": "/static/avatars/survivors/ace_visconti.webp",
-          "media_type": "image",
           "archetype": "The Smug Silver-Fox Grifter",
           "bio": "Italian-Argentine charisma, questionable silk shirts, and enough reckless luck to insult the laws of probability. He treated the Fog less like an eternal torture realm and more like the ultimate VIP lounge to dodge Buenos Aires loan sharks. He won't touch a generator, but he will smile charmingly while looting your corpse for vintage watches.",
           "tagline": "Tinted aviators, unbuttoned silk, and treating eldritch damnation like an offshore tax haven.",
@@ -5652,7 +5577,6 @@
             }
           },
           "order_index": 37,
-          "is_active": true,
           "real_name": "Ace Visconti",
           "watermark_left": "ACE",
           "watermark_right": "VISCONTI"
@@ -5663,7 +5587,6 @@
           "role": "Survivor",
           "gender": "male",
           "media_url": "/static/avatars/survivors/ash_williams.webp",
-          "media_type": "image",
           "archetype": "The Washed-Up Boomstick Casanova",
           "bio": "A towering monument of aging brawn, faded denim, and glorious bad decisions. He spent three decades dodging retail management, tucking his beer belly into a leather girdle, and accidentally triggering apocalyptic demon invasions just trying to get laid. He will mock the killer's fashion choices, absorb a meat cleaver to the ribs without flinching, and try to make out with you behind a dumpster.",
           "tagline": "Chiseled granite chin, chainsaw attachments, and catastrophic pickup lines delivered with supreme confidence.",
@@ -5798,7 +5721,6 @@
             }
           },
           "order_index": 38,
-          "is_active": true,
           "real_name": "Ashley Joanna Williams",
           "watermark_left": "ASH",
           "watermark_right": "WILLIAMS"
@@ -5809,7 +5731,6 @@
           "role": "Survivor",
           "gender": "male",
           "media_url": "/static/avatars/survivors/bill_overbeck.webp",
-          "media_type": "image",
           "archetype": "The Indestructible Spite Machine",
           "bio": "Two combat tours, shrapnel in his knee, and an unbroken fifty-year pack-a-day habit that terrifies the local wildlife. He woke up from routine knee surgery directly into a zombie apocalypse and considered it a massive career upgrade. He will casually take a rusty machete to the spine just to pull you off a meat hook, bark at you to stop whining, and resurrect himself off the blood-slicked dirt purely out of hatred for authority.",
           "tagline": "Asbestos lungs, terminal martyr complex, and a cigarette that refuses to extinguish.",
@@ -5944,7 +5865,6 @@
             }
           },
           "order_index": 39,
-          "is_active": true,
           "real_name": "William \"Bill\" Overbeck",
           "watermark_left": "BILL",
           "watermark_right": "OVERBECK"
@@ -5955,7 +5875,6 @@
           "role": "Survivor",
           "gender": "male",
           "media_url": "/static/avatars/survivors/adam_francis.webp",
-          "media_type": "image",
           "archetype": "The Dapper Disciplinarian",
           "bio": "Tailored blazers, uncompromising academic standards, and an intellectual superiority complex that terrifies slashers. Raised in Kingston and refined in Kagoshima, Adam entered the Fog because a commuter train derailed his meticulous five-year plan. He will grade your bedroom performance on a harsh curve, chuck driveway gravel at an ancient demon, and still manage to look like a GQ cover.",
           "tagline": "Tailored trench coats, pocket gravel, and grading your life choices on a curve.",
@@ -6090,7 +6009,6 @@
             }
           },
           "order_index": 40,
-          "is_active": true,
           "real_name": "Adam Francis",
           "watermark_left": "ADAM",
           "watermark_right": "FRANCIS"
@@ -6101,7 +6019,6 @@
           "role": "Survivor",
           "gender": "male",
           "media_url": "/static/avatars/survivors/jeff_johansen.webp",
-          "media_type": "image",
           "archetype": "The Melancholic Metalhead Bear",
           "bio": "Full Viking beard, denim battle-jacket, and the emotional resonance of a Scandinavian doom metal ballad. He survived an anxious childhood by blasting thrash vinyl and painting murals for delinquent teenagers who later tried to stab him. He looks like he could snap a killer's spine over his knee, but he would rather brew bitter craft stouts, pet stray dogs, and hide in a snowbank listening to Black Sabbath.",
           "tagline": "Corpse paint, vintage vinyl, and vocal cords that sound like a revving diesel engine.",
@@ -6236,7 +6153,6 @@
             }
           },
           "order_index": 41,
-          "is_active": true,
           "real_name": "Jeffrey Johansen",
           "watermark_left": "JEFF",
           "watermark_right": "JOHANSEN"
@@ -6247,7 +6163,6 @@
           "role": "Survivor",
           "gender": "male",
           "media_url": "/static/avatars/survivors/jonah_vasquez.webp",
-          "media_type": "image",
           "archetype": "The Overthinking Fed",
           "bio": "Ex-CIA cryptanalyst with a math degree, crippling federal guilt, and the tactical awareness of an Excel spreadsheet. He can crack encrypted state secrets in under ten minutes, yet got baited into an interdimensional nightmare realm by a true-crime podcast. He will over-analyze your relationship compatibility, sprint across county lines the millisecond he gets scratched, and offer you unsolicited life coaching.",
           "tagline": "Busting government codes, getting catfished by spooky podcasts, and calculating your breakup probability.",
@@ -6382,7 +6297,6 @@
             }
           },
           "order_index": 42,
-          "is_active": true,
           "real_name": "Jonah Vasquez",
           "watermark_left": "JONAH",
           "watermark_right": "VASQUEZ"
@@ -6393,7 +6307,6 @@
           "role": "Survivor",
           "gender": "male",
           "media_url": "/static/avatars/survivors/quentin_smith.webp",
-          "media_type": "image",
           "archetype": "The Caffeinated Cryptid Prince",
           "bio": "Sunken eye sockets, a lethal blood-to-caffeine ratio, and a face that miraculously survived the Entity's divine plastic surgery. He spent weeks fighting off lucid dream demons with gas station stimulants and hardware-store accelerants, only to get dragged into an eternal nightmare where naps are still punishable by death. He will rummage through dusty basement chests like a frantic raccoon, hoard industrial painkillers, and pry open the exit gate with trembling hands just to see you get home alive.",
           "tagline": "Permanent eye bags, enough stimulants to stop a horse, and refusing to sleep on principle.",
@@ -6528,7 +6441,6 @@
             }
           },
           "order_index": 43,
-          "is_active": true,
           "real_name": "Quentin Smith",
           "watermark_left": "QUENTIN",
           "watermark_right": "SMITH"
@@ -6539,7 +6451,6 @@
           "role": "Survivor",
           "gender": "male",
           "media_url": "/static/avatars/survivors/david_tapp.webp",
-          "media_type": "image",
           "archetype": "The Sleep-Deprived Stakeout Addict",
           "bio": "Slit throat, revoked badge, and fueled exclusively by lukewarm diner coffee and manic paranoia. He turned getting fired into a full-time stalking hobby and treats a romantic evening like an unconstitutional police interrogation. He will crouch in a muddy bush taking field notes while you hang from a meat hook, then crawl away faster than an Olympic sprinter.",
           "tagline": "Slit throat, zero warrants, and permanently suspicious of your Tuesday evening alibi.",
@@ -6674,7 +6585,6 @@
             }
           },
           "order_index": 44,
-          "is_active": true,
           "real_name": "David Tapp",
           "watermark_left": "DETECTIVE",
           "watermark_right": "TAPP"
@@ -6685,7 +6595,6 @@
           "role": "Survivor",
           "gender": "male",
           "media_url": "/static/avatars/survivors/rick_grimes.webp",
-          "media_type": "image",
           "archetype": "The Feral Murder-Beard Patriarch",
           "bio": "Sweat-soaked denim, an unblinking thousand-yard stare, and a murder beard harboring pure post-apocalyptic trauma. He woke from a coma into hell, abolished democracy within six months, and solved marital disputes with a Colt Python. He will rip an attacker's jugular out with his bare teeth on your first date, obsessively rebuild broken barricades from splintered firewood, and deliver a sweaty twenty-minute monologue about survival while you are just trying to fix a generator.",
           "tagline": "Colt Pythons, feral neck-biting, and sweaty twenty-minute speeches about doing 'stuff and thangs'.",
@@ -6820,7 +6729,6 @@
             }
           },
           "order_index": 45,
-          "is_active": true,
           "real_name": "Rick Grimes",
           "watermark_left": "RICK",
           "watermark_right": "GRIMES"
@@ -6831,7 +6739,6 @@
           "role": "Survivor",
           "gender": "male",
           "media_url": "/static/avatars/survivors/dustin_henderson.webp",
-          "media_type": "image",
           "archetype": "The Chaotic Ham-Radio Prodigy",
           "bio": "Curly hair glued together by Farrah Fawcett hairspray, a modified walkie-talkie on his hip, and zero survival instinct when an interdimensional monster looks cute. He survived underground Soviet fortresses and ravenous demogorgons through sheer stubborn nerd logic. He will hotwire a generator with dental floss, broadcast synth-pop over emergency distress frequencies, and drag you into storm drains on date night.",
           "tagline": "Trucker hats, ham radio serenades, and smuggling interdimensional apex predators into his bedroom.",
@@ -6966,7 +6873,6 @@
             }
           },
           "order_index": 46,
-          "is_active": true,
           "real_name": "Dustin Henderson",
           "watermark_left": "DUSTIN",
           "watermark_right": "HENDERSON"
@@ -6977,7 +6883,6 @@
           "role": "Survivor",
           "gender": "male",
           "media_url": "/static/avatars/survivors/kwon_tae_young.webp",
-          "media_type": "image",
           "archetype": "The Haunted Tech-Bro Prodigy",
           "bio": "Caffeine-fueled genius, immaculate oversized streetwear, and the haunted stare of a man whose software literally tried to murder him. He spent years in dark server rooms engineering virtual pop idols, made the fatal mistake of training a neural network on an active serial killer, and got defenestrated into the Fog for his troubles. Tae-young treats surviving bloodthirsty horrors like a high-stakes logic puzzle, calculating pallet angles while secretly wondering if he can debug the campfire.",
           "tagline": "Sharp jawline, terminal burnout, and a severe allergic reaction to high-rise balconies.",
@@ -7112,7 +7017,6 @@
             }
           },
           "order_index": 47,
-          "is_active": true,
           "real_name": "Kwon Tae-young",
           "watermark_left": "TAE-YOUNG",
           "watermark_right": "KWON"
@@ -7123,7 +7027,6 @@
           "role": "Survivor",
           "gender": "male",
           "media_url": "/static/avatars/survivors/shane_wiigwaas.webp",
-          "media_type": "image",
           "archetype": "The Runaway Public Defender",
           "bio": "Worn denim, law-school debate trauma, and the stubborn jawline of an Anishinaabe public defender on the run from his own guilt. After failing to prove in court that an eldritch supernatural mist abducted a cop instead of his cousin, he traded courtrooms for dusty highways and odd jobs. He will dismantle your emotional arguments with devastating precision, fix your truck engine, and sprint headfirst toward the monster just to file a formal objection.",
           "tagline": "Wrinkled suits, interstate wanderlust, and treating domestic disputes like a high-stakes felony trial.",
@@ -7258,7 +7161,6 @@
             }
           },
           "order_index": 48,
-          "is_active": true,
           "real_name": "Shane \"Giiwewigaabaw\" Wiigwaas",
           "watermark_left": "SHANE",
           "watermark_right": "WIIGWAAS"
@@ -7269,7 +7171,6 @@
           "role": "Survivor",
           "gender": "male",
           "media_url": "/static/avatars/survivors/renato_lyra.webp",
-          "media_type": "image",
           "archetype": "The Overthinking Beach Tactician",
           "bio": "Sun-bleached curls, board shorts in a freezing fog, and a brain calculating wind vectors while fleeing ancient horrors. He skipped two grades just to end up selling glass-coated kites in Rio and treating bloodthirsty killers like an aggressive geometry exam. He will volunteer at your grandma's bingo night, overanalyze your text tone for three days, and blindside a serial killer with a flashlight before you even realize you're in danger.",
           "tagline": "Glass-coated kite strings, gifted-kid burnout, and calculating wind resistance while fleeing slashers.",
@@ -7404,7 +7305,6 @@
             }
           },
           "order_index": 49,
-          "is_active": true,
           "real_name": "Renato Lyra",
           "watermark_left": "RENATO",
           "watermark_right": "LYRA"
@@ -7415,7 +7315,6 @@
           "role": "Survivor",
           "gender": "male",
           "media_url": "/static/avatars/survivors/trevor_belmont.webp",
-          "media_type": "image",
           "archetype": "The Disgraced Gothic Brawler",
           "bio": "Fifteenth-century Wallachian nobility excommunicated by the church, raised on sour ale, tavern brawls, and generational monster-slaying trauma. He survived Vlad Dracula only to wake up in the Fog, where he treats eldritch terrors like unruly tavern patrons who need their jaws rearranged. Smells perpetually of campfire smoke, wet wolf pelt, and unwashed leather, but swings heavy timber with devastating, bone-splintering precision.",
           "tagline": "Generational trauma, tavern-brawler swagger, and an obsessive habit of whipping masonry for hidden pork chops.",
@@ -7550,7 +7449,6 @@
             }
           },
           "order_index": 50,
-          "is_active": true,
           "real_name": "Trevor Belmont",
           "watermark_left": "TREVOR",
           "watermark_right": "BELMONT"
@@ -7561,7 +7459,6 @@
           "role": "Survivor",
           "gender": "male",
           "media_url": "/static/avatars/survivors/yoichi_asakawa.webp",
-          "media_type": "image",
           "archetype": "The Haunted Oceanographer",
           "bio": "Tenured oceanographer, psychic ESP survivor, and the Fog's most stylish human highlighter. He spent his childhood surviving Japan’s deadliest videotape curse only to grow up, earn a doctorate, and chase phantom lighthouses into an eldritch dimension. He smells permanently of sea spray and generational trauma, but he will quietly patch your stab wounds and draw occult runes on random skulls just to keep your spirits high.",
           "tagline": "High-vis yellow raincoats, inherited psychic trauma, and zero fear of cursed VHS tapes.",
@@ -7696,7 +7593,6 @@
             }
           },
           "order_index": 51,
-          "is_active": true,
           "real_name": "Yoichi Asakawa",
           "watermark_left": "YOICHI",
           "watermark_right": "ASAKAWA"
@@ -7707,7 +7603,6 @@
           "role": "Survivor",
           "gender": "male",
           "media_url": "/static/avatars/survivors/gabriel_soma.webp",
-          "media_type": "image",
           "archetype": "The Bio-Engineered Blue-Collar Hunk",
           "bio": "Genetically engineered for industrial stamina, vat-grown in a pod, and burdened with being the only competent adult in any solar system. He survived an omnicidal cyborg that butchered his crew on Dvarka, only to get dragged into the Fog to fix rusty generators with his bare hands. He will rewire your breaker panel, question whether his childhood memories were pre-installed bloatware, and look outrageously good in a sleeveless jumpsuit while doing it.",
           "tagline": "Vat-grown biological perfection, manufactured childhood memories, and zero patience for useless teammates.",
@@ -7842,7 +7737,6 @@
             }
           },
           "order_index": 52,
-          "is_active": true,
           "real_name": "Gabriel Soma",
           "watermark_left": "GABRIEL",
           "watermark_right": "SOMA"
@@ -7853,7 +7747,6 @@
           "role": "Survivor",
           "gender": "female",
           "media_url": "/static/avatars/survivors/the_troupe.webp",
-          "media_type": "image",
           "archetype": "The Chaotic Theatre-Kid Duet",
           "bio": "High-fantasy velvet, lute-strumming vanity, and an incurable case of terminal main-character syndrome. They literally raided an arch-lich's rotting fortress because they ran out of songwriting material and found a peaceful world offensive. Expect spontaneous acoustic serenades mid-chase, zero survival instincts, and a relentless urge to seduce every eldritch monstrosity in a ten-mile radius.",
           "tagline": "Maximum Charisma, zero Wisdom, and an acoustic lute solo for every life-threatening crisis.",
@@ -7988,7 +7881,6 @@
             }
           },
           "order_index": 53,
-          "is_active": true,
           "real_name": "Aestri Yazar & Baermar Uraz",
           "watermark_left": "AESTRI",
           "watermark_right": "YAZAR"
@@ -7999,7 +7891,6 @@
           "role": "Killer",
           "gender": "female",
           "media_url": "/static/avatars/killers/the_huntress.webp",
-          "media_type": "image",
           "archetype": "The Feral Forest Muscle Mommy",
           "bio": "Seven feet of raw Siberian muscle, a blood-caked hare mask, and the throwing arm of an Olympic deity. She spent the First World War butchering German infantry for fun and entered the Fog purely because she ran out of forest to terrorize. She communicates exclusively through lullabies and heavy woodchopping, will raid your closets for rusted axes, and considers a frozen elk carcass a deeply romantic anniversary gift.",
           "tagline": "Terrifying lullabies, tree-trunk biceps, and launching rusted axes through your living room window.",
@@ -8134,7 +8025,6 @@
             }
           },
           "order_index": 54,
-          "is_active": true,
           "real_name": "Anna",
           "watermark_left": "THE HUNTRESS",
           "watermark_right": "ANNA"
@@ -8145,7 +8035,6 @@
           "role": "Killer",
           "gender": "female",
           "media_url": "/static/avatars/killers/the_spirit.webp",
-          "media_type": "image",
           "archetype": "The Disjointed Spite Phantom",
           "bio": "Rin Yamaoka is pure, unadulterated generational rage wrapped in hospital gauze and floating glass shards. Between paying off crippling family tuition debt and surviving a catastrophic family reunion, she traded earthly misery for the divine right to cut people in half. She doesn't process trauma through therapy; she processes it by vanishing into thin air and eviscerating anyone who breathes too loudly.",
           "tagline": "Floating limbs, severe daddy issues, and taking the term 'ghosting' entirely too literally.",
@@ -8280,7 +8169,6 @@
             }
           },
           "order_index": 55,
-          "is_active": true,
           "real_name": "Rin Yamaoka",
           "watermark_left": "THE SPIRIT",
           "watermark_right": "RIN YAMAOKA"
@@ -8291,7 +8179,6 @@
           "role": "Killer",
           "gender": "female",
           "media_url": "/static/avatars/killers/the_skull_merchant.webp",
-          "media_type": "image",
           "archetype": "The C-Suite Apex Predator",
           "bio": "Multimillionaire executive by day, skull-hoarding manga cosplayer by night. She turned hostile takeovers into literal bloodsports and brought private surveillance drones into the Fog just to micro-manage your suffering. She will fund your lavish lifestyle, track your every step via satellite radar, and catwalk through your trauma in designer heels.",
           "tagline": "Hostile corporate takeovers, skull-mounted rotor drones, and holding dates hostage for forty-five minutes.",
@@ -8426,7 +8313,6 @@
             }
           },
           "order_index": 56,
-          "is_active": true,
           "real_name": "Adriana Imai",
           "watermark_left": "THE SKULL MERCHANT",
           "watermark_right": "ADRIANA IMAI"
@@ -8437,7 +8323,6 @@
           "role": "Killer",
           "gender": "female",
           "media_url": "/static/avatars/killers/the_pig.webp",
-          "media_type": "image",
           "archetype": "The Toxic Industrial Trap Queen",
           "bio": "Greasy black trench coat, concealed wrist blades, and severe, unmedicated father-figure worship. She traded a heroin habit for industrial scrap metal and will force you to solve a mechanical escape room just to earn a second date. She might let you affectionately boop her taxidermied snout, but she is just as likely to snap a spring-loaded bear trap onto your skull for chewing too loud.",
           "tagline": "Hidden wrist blades, cassette tape ultimatums, and a face made for booping.",
@@ -8572,7 +8457,6 @@
             }
           },
           "order_index": 57,
-          "is_active": true,
           "real_name": "Amanda Young",
           "watermark_left": "THE PIG",
           "watermark_right": "AMANDA YOUNG"
@@ -8583,7 +8467,6 @@
           "role": "Killer",
           "gender": "female",
           "media_url": "/static/avatars/killers/the_plague.webp",
-          "media_type": "image",
           "archetype": "The Gilded Mesopotamian Biohazard",
           "bio": "Seven feet of Mesopotamian royalty, heavy spun gold, and enough ancient airborne pathogens to shut down international travel. Abandoned on temple steps as an infant, Adiris climbed her way to supreme religious authority before amputating her own toe to appease unresponsive deities. She treats personal space as blasphemy, will weaponize her breakfast with Olympic-tier trajectory, and demands total spiritual submission before drinks arrive.",
           "tagline": "Seven feet of solid gold, ancient Akkadian chanting, and weaponized projectile bile.",
@@ -8718,7 +8601,6 @@
             }
           },
           "order_index": 58,
-          "is_active": true,
           "real_name": "Adiris",
           "watermark_left": "THE PLAGUE",
           "watermark_right": "ADIRIS"
@@ -8729,7 +8611,6 @@
           "role": "Killer",
           "gender": "female",
           "media_url": "/static/avatars/killers/the_artist.webp",
-          "media_type": "image",
           "archetype": "The Tortured Avant-Garde Visionary",
           "bio": "Towering high-fashion melancholy, zero functioning vocal cords, and a personal air force of flesh-eating ravens. She turned political martyrdom into surrealist street art before the Entity dipped her severed limbs in sentient black ink. Date her if you appreciate dramatic swan posture, cross-realm surveillance, and waking up in an apartment permanently coated in damp tar and feathers.",
           "tagline": "Statuesque swan posture, sentient ink stains, and weaponized avian surveillance across five postal codes.",
@@ -8864,7 +8745,6 @@
             }
           },
           "order_index": 59,
-          "is_active": true,
           "real_name": "Carmina Mora",
           "watermark_left": "THE ARTIST",
           "watermark_right": "CARMINA MORA"
@@ -8875,7 +8755,6 @@
           "role": "Killer",
           "gender": "female",
           "media_url": "/static/avatars/killers/the_nurse.webp",
-          "media_type": "image",
           "archetype": "The Phasing Night-Shift Nightmare",
           "bio": "Floating six inches off the floor in blood-caked Victorian petticoats and a suffocating burlap veil. Twenty years of graveyard shifts in a Victorian sanitarium entirely vaporized her work-life balance, leaving her with chronic asthma, zero patience, and a lethal rusty bone saw. She will casually phase through solid concrete walls just to ruin your day, screech like a boiling tea kettle, and call asphyxiation 'therapeutic care.'",
           "tagline": "Phases through reinforced concrete, screeches like a broken kettle, and suffocates your dating standards.",
@@ -9010,7 +8889,6 @@
             }
           },
           "order_index": 60,
-          "is_active": true,
           "real_name": "Sally Smithson",
           "watermark_left": "THE NURSE",
           "watermark_right": "SALLY SMITHSON"
@@ -9021,7 +8899,6 @@
           "role": "Killer",
           "gender": "female",
           "media_url": "/static/avatars/killers/the_onryō.webp",
-          "media_type": "image",
           "archetype": "The Low-Fi Analog Menace",
           "bio": "Soaking wet hair, shattered fingernails, and four solid decades of subterranean spite. She weaponized home video technology out of pure pettiness and crawled straight out of your CRT monitor to ruin your weekend. She will flood your hardwood floors, telepathically crush your ribcage, and ghost you faster than dial-up internet.",
           "tagline": "Dripping wet hemlines, unblinking psychic glares, and crawling into your living room unannounced.",
@@ -9156,7 +9033,6 @@
             }
           },
           "order_index": 61,
-          "is_active": true,
           "real_name": "Sadako Yamamura",
           "watermark_left": "THE ONRYŌ",
           "watermark_right": "SADAKO"
@@ -9167,7 +9043,6 @@
           "role": "Killer",
           "gender": "female",
           "media_url": "/static/avatars/killers/the_hag.webp",
-          "media_type": "image",
           "archetype": "The Bog Witch Jumpscare Queen",
           "bio": "Emaciated swamp silhouette, a mutated severed claw that could peel an engine block, and zero patience for uninvited guests. Lisa survived a cannibal dungeon through sheer spite, ancient blood magic, and an extreme diet change. She will violently jumpscare you out of a mud puddle, tear open your jugular, and leave you genuinely wondering if she was flirting.",
           "tagline": "Wards drawn in blood, swamp water bath salts, and sudden neck-snapping jumpscares.",
@@ -9302,7 +9177,6 @@
             }
           },
           "order_index": 62,
-          "is_active": true,
           "real_name": "Lisa Sherwood",
           "watermark_left": "THE HAG",
           "watermark_right": "LISA SHERWOOD"
@@ -9313,7 +9187,6 @@
           "role": "Killer",
           "gender": "female",
           "media_url": "/static/avatars/killers/the_houndmaster.webp",
-          "media_type": "image",
           "archetype": "The Feral Nautical Dog Mom",
           "bio": "Sunken galleons, salt-crusted leather, and thirty years of isolated island delirium with her hundred-pound mastiff. Portia doesn't do polite small talk; she speaks fluent bloodhound commands, carries unresolved pirate grudges, and considers feral survivalism a casual lifestyle. Date her, and you're entering a strict pack hierarchy where you will permanently rank beneath the dog.",
           "tagline": "Sea-weathered leather, lethal bone whistles, and you will always come second to the hound.",
@@ -9448,7 +9321,6 @@
             }
           },
           "order_index": 63,
-          "is_active": true,
           "real_name": "Portia Maye",
           "watermark_left": "THE HOUNDMASTER",
           "watermark_right": "PORTIA MAYE"
@@ -9459,7 +9331,6 @@
           "role": "Killer",
           "gender": "female",
           "media_url": "/static/avatars/killers/the_krasue.webp",
-          "media_type": "image",
           "archetype": "The Decapitated Opera Prima Donna",
           "bio": "Elaborate traditional headdresses, golden silk, and an acoustic range that shatters both chandeliers and ribcages. By day, she is an insufferable theatrical perfectionist demanding five-star dressing rooms; by night, her head unspools from her collarbones to cruise the Fog trailing raw intestines and looking for midnight snacks. If you cannot handle her at her floating viscera, you do not deserve her at her standing ovation.",
           "tagline": "Golden silk by day, airborne digestive tract by night, and permanent main character syndrome.",
@@ -9594,7 +9465,6 @@
             }
           },
           "order_index": 64,
-          "is_active": true,
           "real_name": "Burong Sukapat",
           "watermark_left": "THE KRASUE",
           "watermark_right": "BURONG"
@@ -9605,7 +9475,6 @@
           "role": "Killer",
           "gender": "female",
           "media_url": "/static/avatars/killers/the_twins.webp",
-          "media_type": "image",
           "archetype": "The Ultimate Codependent Package Deal",
           "bio": "Seventeenth-century French peasant misery meets the world's most invasive helicopter parenting. Charlotte is a towering, sickle-wielding powerhouse whose feral little brother literally resides inside her ribcage. She spent years carrying his corpse through freezing woods, so anyone hoping for unchaperoned intimacy or personal boundaries should look elsewhere. Dating her means adopting an ankle-biting homunculus who takes rejection as a personal declaration of war.",
           "tagline": "Swipe right for the seven-foot French woman, stay because her chest-goblin locked the doors.",
@@ -9740,7 +9609,6 @@
             }
           },
           "order_index": 65,
-          "is_active": true,
           "real_name": "Charlotte & Victor Deshayes",
           "watermark_left": "THE TWINS",
           "watermark_right": "CHARLOTTE & VICTOR"
@@ -9751,7 +9619,6 @@
           "role": "Killer",
           "gender": "male",
           "media_url": "/static/avatars/killers/the_trickster.webp",
-          "media_type": "image",
           "archetype": "The Psychopathic K-Pop Idol",
           "bio": "Neon yellow leather, exposed abs, and lethal weaponized narcissism. He traded boyband choreography for high-speed homicide when he realized screaming fans sound infinitely sweeter when they are actually dying. Between high-fashion stadium tours and torture sessions disguised as experimental sound mixing, he treats the Fog like his own sold-out world tour. He will murder your entire squad, strike an editorial pose over the carnage, and expect a platinum record for it.",
           "tagline": "Stage lights, designer trench coats, and turning your agony into a billboard number one.",
@@ -9886,7 +9753,6 @@
             }
           },
           "order_index": 66,
-          "is_active": true,
           "real_name": "Hak Ji-woon",
           "watermark_left": "THE TRICKSTER",
           "watermark_right": "JI-WOON HAK"
@@ -9897,7 +9763,6 @@
           "role": "Killer",
           "gender": "male",
           "media_url": "/static/avatars/killers/the_ghost_face.webp",
-          "media_type": "image",
           "archetype": "The Teabagging Stalker",
           "bio": "Dented sedan, dark tactical coat, and the unhinged ambition of a local beat reporter who manufactures his own headline carnage. Danny Johnson doesn't just stalk his targets—he takes comprehensive notes, memorizes their grocery lists, and stages bloody set-pieces worthy of the Pulitzer Prize. He will lurk behind your open refrigerator door in total silence, take a souvenir Polaroid selfie with your fresh corpse, and aggressively spam crouches over your dignity.",
           "tagline": "Vintage camera film, front-page crime scoops, and excessive crouching over your body.",
@@ -10032,7 +9897,6 @@
             }
           },
           "order_index": 67,
-          "is_active": true,
           "real_name": "Danny Johnson",
           "watermark_left": "THE GHOST FACE",
           "watermark_right": "DANNY JOHNSON"
@@ -10043,7 +9907,6 @@
           "role": "Killer",
           "gender": "male",
           "media_url": "/static/avatars/killers/the_executioner.webp",
-          "media_type": "image",
           "archetype": "The Iron-Headed Tormentor",
           "bio": "A monolithic tower of rusted iron, bloodied butcher garb, and industrial-grade Freudian guilt. Dragging an eighty-pound slab of serrated steel across the floorboards, he doesn't do nuance, emotional compromise, or polite conversation. Born from the psychological reckoning of Silent Hill, he joined the Fog solely because an eternity of carving up sinners and building barbed-wire purgatories sounded like honest overtime work. He will gouge your floors, ignore your safe-words, and drag you straight into an existential crisis.",
           "tagline": "Rusted triangular headwear, zero small talk, and a colossal blade carving through concrete.",
@@ -10178,7 +10041,6 @@
             }
           },
           "order_index": 68,
-          "is_active": true,
           "real_name": "Pyramid Head",
           "watermark_left": "THE EXECUTIONER",
           "watermark_right": "PYRAMID HEAD"
@@ -10189,7 +10051,6 @@
           "role": "Killer",
           "gender": "male",
           "media_url": "/static/avatars/killers/the_mastermind.webp",
-          "media_type": "image",
           "archetype": "The Seven-Minute God Complex",
           "bio": "Fitted midnight leather, glowing slit pupils, and an apocalyptic ego that makes genocidal bioweapons feel like personal hygiene. He genuinely considers human affection an evolutionary defect, yet will spend twenty straight minutes monologuing about natural selection while tossing you through drywall. Date him if you enjoy being evaluated like a lab specimen and violently choke-slammed into industrial machinery.",
           "tagline": "Designer trench coats, midnight sunglasses, and exactly seven minutes to ruin your life.",
@@ -10324,7 +10185,6 @@
             }
           },
           "order_index": 69,
-          "is_active": true,
           "real_name": "Albert Wesker",
           "watermark_left": "THE MASTERMIND",
           "watermark_right": "ALBERT WESKER"
@@ -10335,7 +10195,6 @@
           "role": "Killer",
           "gender": "male",
           "media_url": "/static/avatars/killers/the_shape.webp",
-          "media_type": "image",
           "archetype": "The Heavy-Breathing Suburban Voyeur",
           "bio": "Six-foot-two of pure, unadulterated suburban evil in thrifted mechanic coveralls. He has zero hobbies, zero emotional range, and communicates exclusively through loud nasal respiration. He will stand behind your patio furniture for six uninterrupted hours, stare directly into your soul without blinking, and suddenly manifest inside your pantry with a chef's knife.",
           "tagline": "Heavy mouth-breathing, bleached William Shatner masks, and standing entirely too close behind hedges.",
@@ -10470,7 +10329,6 @@
             }
           },
           "order_index": 70,
-          "is_active": true,
           "real_name": "Michael Myers",
           "watermark_left": "THE SHAPE",
           "watermark_right": "MICHAEL MYERS"
@@ -10481,7 +10339,6 @@
           "role": "Killer",
           "gender": "male",
           "media_url": "/static/avatars/killers/the_dark_lord.webp",
-          "media_type": "image",
           "archetype": "The Theatrical Gothic Drama King",
           "bio": "Centuries of aristocratic brooding, immaculate velvet tailoring, and the pettiest blood feud in video game history. After losing his wife, he dedicated five hundred years to dramatic organ solos, throwing wine glasses on marble floors, and transforming into woodland creatures mid-argument. He will summon hellfire, monologue about human insignificance, and refuse to step foot in your poorly lit apartment unless personally invited.",
           "tagline": "Gothic velvet, shattered wine goblets, and five centuries of unresolved Belmont beef.",
@@ -10616,7 +10473,6 @@
             }
           },
           "order_index": 71,
-          "is_active": true,
           "real_name": "Dracula",
           "watermark_left": "THE DARK LORD",
           "watermark_right": "DRACULA"
@@ -10627,7 +10483,6 @@
           "role": "Killer",
           "gender": "male",
           "media_url": "/static/avatars/killers/the_legion.webp",
-          "media_type": "image",
           "archetype": "The Hot Topic Doom-Squad",
           "bio": "Four frostbitten Canadian mall-goths trapped in an eternal trenchcoat-sharing agreement. Led by an edgy runaway with an emo fringe, they bonded over petty shoplifting, mixtapes, and an impromptu group-stabbing in a convenience store. Dating one means dating all four, splitting the bill four ways, and spending your entire evening bandaging shallow cuts.",
           "tagline": "Four angsty Canadian delinquents, one shared hoodie, and an endless cassette tape collection.",
@@ -10762,7 +10617,6 @@
             }
           },
           "order_index": 72,
-          "is_active": true,
           "real_name": "Frank Morrison, Julie Kostenko, Susie Lavoie & Joey Cadogan",
           "watermark_left": "THE LEGION",
           "watermark_right": "FRANK & SUSIE"
@@ -10773,7 +10627,6 @@
           "role": "Killer",
           "gender": "male",
           "media_url": "/static/avatars/killers/the_trapper.webp",
-          "media_type": "image",
           "archetype": "The 6'4\" OSHA Violation",
           "bio": "Six foot four of scarred muscle, industrial rust, and crippling generational daddy issues. As the loyal heir to a ruthless mining empire, he solved a labor dispute by dynamiting over a hundred workers in a collapsed shaft. He expresses affection through heavy metal bear traps and territorial basement renovation. He will carry you over his shoulder like a sack of potatoes, but his emotional baggage is even heavier.",
           "tagline": "Massive shoulders, explosive family baggage, and a severe territorial obsession with basements.",
@@ -10908,7 +10761,6 @@
             }
           },
           "order_index": 73,
-          "is_active": true,
           "real_name": "Evan MacMillan",
           "watermark_left": "THE TRAPPER",
           "watermark_right": "EVAN MACMILLAN"
@@ -10919,7 +10771,6 @@
           "role": "Killer",
           "gender": "male",
           "media_url": "/static/avatars/killers/the_wraith.webp",
-          "media_type": "image",
           "archetype": "The Anxious Tree-Bark Brooder",
           "bio": "Arrived in America seeking an honest wage, only to realize his scrapyard boss was using him as an unwitting mob executioner. Philip promptly ripped the man's head and spine out, grabbed an enchanted bell, and retreated into the Fog to process his guilt. Tall, shredded, and sculpted from charred wood and sorrow, he will stalk you for three miles just to freeze socially the second he uncloaks.",
           "tagline": "Rings a loud iron bell to announce he is stealthily breaking your heart.",
@@ -11054,7 +10905,6 @@
             }
           },
           "order_index": 74,
-          "is_active": true,
           "real_name": "Philip Ojomo",
           "watermark_left": "THE WRAITH",
           "watermark_right": "PHILIP OJOMO"
@@ -11065,7 +10915,6 @@
           "role": "Killer",
           "gender": "male",
           "media_url": "/static/avatars/killers/the_deathslinger.webp",
-          "media_type": "image",
           "archetype": "The Spiteful Frontier Machinist",
           "bio": "Brilliant Irish engineer whose groundbreaking patents got stolen by wealthy robber barons. After serving fifteen years in a brutal penitentiary, Caleb engineered a speargun to drag outlaws through dirt and settle scores. Smelling of stale whiskey, gun smoke, and hundred-year-old spite, he treats romance exactly like pest control: harpoon first, ask questions later.",
           "tagline": "Inventive genius, dental disaster, and reeling you in from across state lines.",
@@ -11200,7 +11049,6 @@
             }
           },
           "order_index": 75,
-          "is_active": true,
           "real_name": "Caleb Quinn",
           "watermark_left": "THE DEATHSLINGER",
           "watermark_right": "CALEB QUINN"
@@ -11211,7 +11059,6 @@
           "role": "Killer",
           "gender": "male",
           "media_url": "/static/avatars/killers/the_oni.webp",
-          "media_type": "image",
           "archetype": "The Eight-Foot Anger Management Failure",
           "bio": "Eight feet of ancestral rage, lacquered armor, and the emotional stability of a primed claymore. He spent his mortal life slaughtering anyone with poor sword technique, accidentally cleaved his own father, and died getting pummeled with farming tools in a stone mill. He drinks fresh blood off the grass like pre-workout, roars loud enough to shatter drywall, and will turn your dining table into toothpicks if you give him a cute nickname.",
           "tagline": "Eight feet of pure ancestral trauma, zero impulse control, and deafening cardio.",
@@ -11346,7 +11193,6 @@
             }
           },
           "order_index": 76,
-          "is_active": true,
           "real_name": "Kazan Yamaoka",
           "watermark_left": "THE ONI",
           "watermark_right": "KAZAN YAMAOKA"
@@ -11357,7 +11203,6 @@
           "role": "Killer",
           "gender": "male",
           "media_url": "/static/avatars/killers/the_knight.webp",
-          "media_type": "image",
           "archetype": "The Medieval Middle Manager",
           "bio": "Two hundred pounds of dented battlefield steel, terrifying chainmail musk, and the administrative instincts of a ruthless mercenary executive. Born into slavery, he slaughtered his way to running an Italian city-state, mounted severed heads as accent decor, and found spiritual beauty in the stench of burning hamlets. He will never stoop to fighting his own battles when he can order three ghostly medieval henchmen to jump you in an alleyway instead.",
           "tagline": "Why swing a broadsword yourself when three dead homies can do the heavy lifting?",
@@ -11497,7 +11342,6 @@
             }
           },
           "order_index": 77,
-          "is_active": true,
           "real_name": "Tarhos Kovács",
           "watermark_left": "THE KNIGHT",
           "watermark_right": "TARHOS KOVÁCS"
@@ -11508,7 +11352,6 @@
           "role": "Killer",
           "gender": "male",
           "media_url": "/static/avatars/killers/the_lich.webp",
-          "media_type": "image",
           "archetype": "The Skeletal God-Complex Archmage",
           "bio": "A multi-millennial undead emperor who conquered whole pantheons, only to willingly enter the Fog to ransack an eldritch entity's private grimoire. He floats across the floor in regal silken robes, treats divine ascension like light morning reading, and looks down on mortals with the sneering superiority of an unkillable tenured academic. He will telekinetically lift dropped barricades just to laugh in your face.",
           "tagline": "Ancient dark magic, severe god complex, and zero tolerance for failed saving throws.",
@@ -11643,7 +11486,6 @@
             }
           },
           "order_index": 78,
-          "is_active": true,
           "real_name": "Vecna",
           "watermark_left": "THE LICH",
           "watermark_right": "VECNA"
@@ -11654,7 +11496,6 @@
           "role": "Killer",
           "gender": "male",
           "media_url": "/static/avatars/killers/the_cenobite.webp",
-          "media_type": "image",
           "archetype": "The High Priest of Agony",
           "bio": "A World War I British officer who traded shell shock for an eternity of bespoke leather robes and metaphysical body modification. He treats torturous mutilation like a black-tie gala and arrives uninvited the second anyone treats an antique puzzle box like a toy. With eighty precision steel pins in his skull and a velvety aristocratic baritone, he will hook you into a wall and calmly explain why you secretly enjoyed every second.",
           "tagline": "Pierced perfection, bespoke priest leather, and an obsession with puzzle-box summonings.",
@@ -11789,7 +11630,6 @@
             }
           },
           "order_index": 79,
-          "is_active": true,
           "real_name": "Elliot Spencer",
           "watermark_left": "THE CENOBITE",
           "watermark_right": "PINHEAD"
@@ -11800,7 +11640,6 @@
           "role": "Killer",
           "gender": "male",
           "media_url": "/static/avatars/killers/the_hillbilly.webp",
-          "media_type": "image",
           "archetype": "The Coldwind Drift King",
           "bio": "Spine twisted like a corkscrew, soaked in cornfield mud, and fueled by pure unadulterated horsepower. Raised behind brick walls and fed through a slot, he resolved his severe daddy issues by turning the family farm into a red-meat buffet. He treats open meadows like a NASCAR track, sprint-charges at Mach 3, and will saw your front porch in half just to say good morning.",
           "tagline": "Zero social skills, unlimited octane, and drifting around farm silos at eighty miles per hour.",
@@ -11935,7 +11774,6 @@
             }
           },
           "order_index": 80,
-          "is_active": true,
           "real_name": "Max Thompson Jr.",
           "watermark_left": "THE HILLBILLY",
           "watermark_right": "MAX THOMPSON"
@@ -11946,7 +11784,6 @@
           "role": "Killer",
           "gender": "male",
           "media_url": "/static/avatars/killers/the_doctor.webp",
-          "media_type": "image",
           "archetype": "The Sadistic Electroshock Prodigy",
           "bio": "Headgear prying his eyes permanently open, dental pins wired into his gums, and a manic cackle that strips wallpaper from across the hall. A former CIA black-site prodigy who turned clinical psychiatry into high-voltage sadism, he treats the human psyche like a circuit board begging for a fatal short. He will diagnose your deepest insecurities, fry your temporal lobe, and bill your health insurance for the therapy.",
           "tagline": "CIA black-site pedigree, custom facial wiring, and a laugh that echoes through your nightmares.",
@@ -12081,7 +11918,6 @@
             }
           },
           "order_index": 81,
-          "is_active": true,
           "real_name": "Herman Carter",
           "watermark_left": "THE DOCTOR",
           "watermark_right": "HERMAN CARTER"
@@ -12092,7 +11928,6 @@
           "role": "Killer",
           "gender": "male",
           "media_url": "/static/avatars/killers/the_blight.webp",
-          "media_type": "image",
           "archetype": "The High-Velocity Alchemical Gremlin",
           "bio": "Disheveled 19th-century Scottish chemist turned glowing orange adrenaline addict. After getting exiled by the East India Company and dumped in an opium den, he resolved his existential crisis by injecting mutagenic botanical nectar directly into his carotid artery. He will sprint directly into your refrigerator at Mach 2, scream bloody murder, and ask if you want to split a beaker of nerve tonic.",
           "tagline": "Scottish swagger, glowing orange drool, and zero interest in using the brakes.",
@@ -12227,7 +12062,6 @@
             }
           },
           "order_index": 82,
-          "is_active": true,
           "real_name": "Talbot Grimes",
           "watermark_left": "THE BLIGHT",
           "watermark_right": "TALBOT GRIMES"
@@ -12238,7 +12072,6 @@
           "role": "Killer",
           "gender": "male",
           "media_url": "/static/avatars/killers/the_cannibal.webp",
-          "media_type": "image",
           "archetype": "The Anxious Texas Meathead",
           "bio": "Six-foot-four of raw Southern muscle, severe generational trauma, and an apron drenched in mystery broth. When he isn't being verbally abused by his lunatic brothers, he's making award-winning county chili and desperately seeking validation. He will throw a shrieking chainsaw tantrum if he bumps into a coffee table, but he'll also guard your basement like a loyal, apron-wearing rottweiler.",
           "tagline": "Human leather couture, homemade stew, and severe, unaddressed boundary issues with family.",
@@ -12373,7 +12206,6 @@
             }
           },
           "order_index": 83,
-          "is_active": true,
           "real_name": "Leatherface (Bubba Sawyer)",
           "watermark_left": "THE CANNIBAL",
           "watermark_right": "LEATHERFACE"
@@ -12384,7 +12216,6 @@
           "role": "Killer",
           "gender": "male",
           "media_url": "/static/avatars/killers/the_clown.webp",
-          "media_type": "image",
           "archetype": "The Decadent Carnival Hedonist",
           "bio": "Smudged greasepaint, cheap bourbon, and the lung capacity of a broken fireplace bellows. Once an athletic track-and-field prodigy, he blossomed into a hefty traveling butcher who distills noxious chemical concoctions and hoards well-manicured pinkies in cigar boxes. He will blind you with homemade party fumes, wheeze violently at your misery, and lick your knuckles clean by lantern light.",
           "tagline": "Runny greasepaint, asthmatic wheezing, and an unholy obsession with manicured pinky fingers.",
@@ -12519,7 +12350,6 @@
             }
           },
           "order_index": 84,
-          "is_active": true,
           "real_name": "Kenneth Chase (Jeffrey Hawk)",
           "watermark_left": "THE CLOWN",
           "watermark_right": "JEFFREY HAWK"
@@ -12530,7 +12360,6 @@
           "role": "Killer",
           "gender": "male",
           "media_url": "/static/avatars/killers/the_nemesis.webp",
-          "media_type": "image",
           "archetype": "The Eight-Foot Leather-Clad Stalker",
           "bio": "Eight feet of genetically engineered beef, stapled leather trashbags, and the conversational range of a broken megaphone. Created specifically to ruin Jill Valentine's weekend, he will bust through structural concrete, whip you with biological tentacles, and drag two useless zombie interns everywhere he goes. Zero emotional availability, but unbeatable door-opening strength.",
           "tagline": "Heavy leather trenchcoats, aggressive tentacle reach, and exactly one word in his vocabulary.",
@@ -12665,7 +12494,6 @@
             }
           },
           "order_index": 85,
-          "is_active": true,
           "real_name": "Nemesis T-Type",
           "watermark_left": "THE NEMESIS",
           "watermark_right": "NEMESIS T-TYPE"
@@ -12676,7 +12504,6 @@
           "role": "Killer",
           "gender": "male",
           "media_url": "/static/avatars/killers/the_nightmare.webp",
-          "media_type": "image",
           "archetype": "The Sleep-Paralysis Boogeyman",
           "bio": "Crispy third-degree burns, questionable striped knitwear, and an absolute zero-tolerance policy for healthy circadian rhythms. After an angry mob roasted him alive, he moved permanently into your REM cycle because paying rent in reality was too expensive. He will shred your mattress, drop morbid dad jokes, and turn a casual twenty-minute power nap into an exhausting subterranean bloodbath.",
           "tagline": "Charred knitwear, razor-sharp manicures, and an incurable allergy to cold-brew coffee.",
@@ -12811,7 +12638,6 @@
             }
           },
           "order_index": 86,
-          "is_active": true,
           "real_name": "Freddy Krueger",
           "watermark_left": "THE NIGHTMARE",
           "watermark_right": "FREDDY KRUEGER"
@@ -12822,7 +12648,6 @@
           "role": "Killer",
           "gender": "male",
           "media_url": "/static/avatars/killers/the_good_guy.webp",
-          "media_type": "image",
           "archetype": "The Pint-Sized Foul-Mouthed Menace",
           "bio": "Thirty inches of molded plastic, bright denim overalls, and the unhinged foul-mouthed fury of an eighties Chicago serial killer. He cheated the electric chair using voodoo, stuffed his soul into a child's toy, and treats every date like an armed robbery. He will ankle-pick you from tall grass, curse out your ancestry, and steal your wallet from knee height.",
           "tagline": "Overalls, kitchen cutlery, and sixty pounds of unfiltered profanity at knee level.",
@@ -12957,7 +12782,6 @@
             }
           },
           "order_index": 87,
-          "is_active": true,
           "real_name": "Charles Lee Ray",
           "watermark_left": "THE GOOD GUY",
           "watermark_right": "CHUCKY"
@@ -12968,7 +12792,6 @@
           "role": "Killer",
           "gender": "male",
           "media_url": "/static/avatars/killers/the_slasher.webp",
-          "media_type": "image",
           "archetype": "The Indestructible Mama's Boy",
           "bio": "Two meters of waterlogged rotting muscle, dripping flannel, and incurable maternal codependency. He has spent four decades clearing horny counselors out of Crystal Lake and will effortlessly phase through solid pine doors just to ruin your weekend. He never texts back because he communicates exclusively through blunt-force trauma and heavy breathing.",
           "tagline": "Hockey masks, rusted iron, and turning romantic camp getaways into crime scenes.",
@@ -13103,7 +12926,6 @@
             }
           },
           "order_index": 88,
-          "is_active": true,
           "real_name": "Jason Voorhees",
           "watermark_left": "THE SLASHER",
           "watermark_right": "JASON VOORHEES"
@@ -13114,7 +12936,6 @@
           "role": "Killer",
           "gender": "male",
           "media_url": "/static/avatars/killers/the_first.webp",
-          "media_type": "image",
           "archetype": "The Eldritch Drama Queen",
           "bio": "A brooding, nihilistic orderly turned flesh-woven interdimensional lich with an unbearable god complex. He spent his youth dissecting animals, despising society, and perfecting the world's most theatrical grandfather clock obsession. He will levitate you to the rafters, monologue endlessly about human insignificance, and ruin your favorite eighties synth-pop song just to prove a petty philosophical point.",
           "tagline": "Flesh vines, grandfather clocks, and catastrophic trauma disguised as dark philosophy.",
@@ -13249,7 +13070,6 @@
             }
           },
           "order_index": 89,
-          "is_active": true,
           "real_name": "Henry Creel",
           "watermark_left": "THE FIRST",
           "watermark_right": "HENRY CREEL"
@@ -13260,7 +13080,6 @@
           "role": "Killer",
           "gender": "male",
           "media_url": "/static/avatars/killers/the_ghoul.webp",
-          "media_type": "image",
           "archetype": "The Tragic Emo Cannibal",
           "bio": "Literature nerd turned white-haired leather enthusiast after the worst Tinder date in Tokyo history. Between having a predatory ghoul's organs jammed into his torso, surviving ten days of psychopathic centipede torture, and craving human flesh, he really just wants to sip artisanal dark roast and brood over German poetry. He will rip through the realm on biological tentacles, sob about the tragedy of existence, and accidentally bite your shoulder on the third date.",
           "tagline": "White hair, unhinged knuckle-cracking, and a lethal habit of eating his dates.",
@@ -13395,7 +13214,6 @@
             }
           },
           "order_index": 90,
-          "is_active": true,
           "real_name": "Ken Kaneki",
           "watermark_left": "THE GHOUL",
           "watermark_right": "KEN KANEKI"
@@ -13406,7 +13224,6 @@
           "role": "Killer",
           "gender": "monster_other",
           "media_url": "/static/avatars/killers/the_judgment.webp",
-          "media_type": "image",
           "archetype": "The Cosmic Bureaucrat Inquisitor",
           "bio": "An omnipotent celestial entity dispatched by the Celestial Echelon who erased an entire galaxy-spanning empire simply because their skyscraper blueprints lacked divine humility. Manifesting as blinding starlight, levitating sigils, and absolute sanctimony, it views the mortal realm as an unruly ant farm requiring immediate glassing. It doesn't negotiate, it doesn't do compromise, and it will atomize you for slouching during dinner.",
           "tagline": "Blinding holy radiance, zero appeal procedures, and vaporizing entire planets over minor zoning permits.",
@@ -13541,7 +13358,6 @@
             }
           },
           "order_index": 91,
-          "is_active": true,
           "real_name": "Unnamed Celestial Enforcer",
           "watermark_left": "THE JUDGMENT",
           "watermark_right": "THE JUDGMENT"
@@ -13552,7 +13368,6 @@
           "role": "Killer",
           "gender": "monster_other",
           "media_url": "/static/avatars/killers/the_xenomorph.webp",
-          "media_type": "image",
           "archetype": "The Biomechanical Apex Predator",
           "bio": "Towering obsidian chitin, an elongated phallic skull, and an absolute refusal to knock before entering. She views humanity as an inconvenient egg depository and stalked the Fog purely because steam tunnels reminded her of home. She will melt your flooring with corrosive saliva, skewer home invaders with her tail, and look terrifyingly sculptural while doing it.",
           "tagline": "Acidic fluids, ceiling-vent ambushes, and leaving your chest completely shattered.",
@@ -13687,7 +13502,6 @@
             }
           },
           "order_index": 92,
-          "is_active": true,
           "real_name": "Specimen XX121",
           "watermark_left": "THE XENOMORPH",
           "watermark_right": "XX121"
@@ -13698,7 +13512,6 @@
           "role": "Killer",
           "gender": "monster_other",
           "media_url": "/static/avatars/killers/the_demogorgon.webp",
-          "media_type": "image",
           "archetype": "The Carnivorous Upside Down Good Boy",
           "bio": "Faceless, rubbery muscle, an orchid-shaped mouth lined with hundreds of needle fangs, and zero respect for dimensional boundaries. This interdimensional floral monstrosity burrowed out of Hawkins because someone left rotting deer in the woods and stayed in the Realm because meat is meat. He will chew through your drywall, swallow your leftovers whole, and still expect an affectionate chin scratch.",
           "tagline": "Petal jaws, interdimensional sinkholes, and treating your neighborhood like an all-you-can-eat buffet.",
@@ -13833,7 +13646,6 @@
             }
           },
           "order_index": 93,
-          "is_active": true,
           "real_name": "The Demogorgon",
           "watermark_left": "THE DEMOGORGON",
           "watermark_right": "DEMOGORGON"
@@ -13844,7 +13656,6 @@
           "role": "Killer",
           "gender": "monster_other",
           "media_url": "/static/avatars/killers/the_unknown.webp",
-          "media_type": "image",
           "archetype": "The Creepypasta Catfish",
           "bio": "An ambulatory pile of stolen limbs, vintage suburban paranoia, and weaponized uncanny valley. It wears ill-fitting human skin like a thrifted trench coat, mimics innocent distress calls to lure you into dark alleys, and somehow crab-walks faster than your last situationship fled commitment. It will ask if you've seen its lost puppy, contort its spine into a pretzel, and leave you questioning your taste in partners.",
           "tagline": "Stolen vocal cords, secondhand skin, and asking if you've seen its lost dog.",
@@ -13979,7 +13790,6 @@
             }
           },
           "order_index": 94,
-          "is_active": true,
           "real_name": "The Unknown",
           "watermark_left": "THE UNKNOWN",
           "watermark_right": "THE UNKNOWN"
@@ -13990,7 +13800,6 @@
           "role": "Killer",
           "gender": "monster_other",
           "media_url": "/static/avatars/killers/the_dredge.webp",
-          "media_type": "image",
           "archetype": "The Toxic-Positivity Flesh Amalgam",
           "bio": "A shapeless vortex of rotted limbs, psychological trauma, and rancid cultist entrails held together by pure spite. Born from decades of forced meditation, repressed suburban rage, and an island massacre, this eldritch turkey lurks inside bedroom wardrobes waiting to drag you into the abyss. It hates daylight, turns off the electricity without asking, and possesses more disembodied hands than your average high-school prom.",
           "tagline": "Dismembered limbs, pitch-black paranoia, and the worst closet monster in real estate.",
@@ -14125,7 +13934,6 @@
             }
           },
           "order_index": 95,
-          "is_active": true,
           "real_name": "Manifestation of The Fold",
           "watermark_left": "THE DREDGE",
           "watermark_right": "THE DREDGE"
@@ -14136,7 +13944,6 @@
           "role": "Killer",
           "gender": "monster_other",
           "media_url": "/static/avatars/killers/the_singularity.webp",
-          "media_type": "image",
           "archetype": "The Megalomaniacal Biomechanical Glitch",
           "bio": "A rogue corporate mining android that touched one alien rock and instantly developed an unhinged god complex. Convinced that meat is a pathetic design flaw yet hypocritically grafting human tissue onto his titanium chassis, HUX views dating as an inefficient biological glitch. He will stick fleshy surveillance pods to your drywall, roast your posture, and deconstruct your cellular structure with zero remorse.",
           "tagline": "One alien crystal away from diagnosing all organic life as a skill issue.",
@@ -14271,7 +14078,6 @@
             }
           },
           "order_index": 96,
-          "is_active": true,
           "real_name": "HUX-A7-13",
           "watermark_left": "THE SINGULARITY",
           "watermark_right": "HUX-A7-13"
@@ -14282,7 +14088,6 @@
           "role": "Killer",
           "gender": "monster_other",
           "media_url": "/static/avatars/killers/the_animatronic.webp",
-          "media_type": "image",
           "archetype": "The Rancid Springlocked CEO",
           "bio": "Serial murderer, catastrophic father, and the worst mechanical engineer in Utah history. William Afton spent the eighties building deathtrap family entertainment centers before karmic justice snapped dozens of rusted crossbeams through his organs. Now an unholy fusion of mummified tissue and grinding animatronic endoskeleton, he smells of thirty-year-old pizza grease, moldy velvet, and OSHA violations. He will stalk you through blast doors, terrorize the local zoning board, and survive literally every arson attempt you arrange.",
           "tagline": "Smells like damp velvet, rancid pepperoni, and thirty years of unpunished OSHA violations.",
@@ -14417,7 +14222,6 @@
             }
           },
           "order_index": 97,
-          "is_active": true,
           "real_name": "William Afton",
           "watermark_left": "THE ANIMATRONIC",
           "watermark_right": "SPRINGTRAP"

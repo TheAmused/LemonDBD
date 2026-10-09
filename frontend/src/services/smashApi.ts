@@ -309,5 +309,34 @@ export async function syncSessionVotes(
   }
 }
 
+/** A signed-in viewer's effects-and-music choice, as the backend stores it. */
+export interface RemoteSmashPrefs {
+  effects: boolean;
+  music: boolean;
+  chosen_at: number;
+}
 
+/** The account's saved choice, or null when it has none (or the request failed). */
+export async function fetchSmashPreferences(): Promise<RemoteSmashPrefs | null> {
+  try {
+    const response = await fetch(`${getBackendBaseUrl()}/api/v1/smash-or-pass/preferences`, {
+      method: 'GET',
+      headers: getRequestHeaders(),
+      cache: 'no-store',
+    });
+    const body = await handleResponse<{ data: RemoteSmashPrefs | null }>(response);
+    return body.data ?? null;
+  } catch {
+    return null;
+  }
+}
 
+/** Saves the choice on the account; the backend keeps a later one it already holds. */
+export async function saveSmashPreferences(prefs: RemoteSmashPrefs): Promise<void> {
+  const response = await fetch(`${getBackendBaseUrl()}/api/v1/smash-or-pass/preferences`, {
+    method: 'PUT',
+    headers: getRequestHeaders({ 'Content-Type': 'application/json' }),
+    body: JSON.stringify(prefs),
+  });
+  await handleResponse<unknown>(response);
+}

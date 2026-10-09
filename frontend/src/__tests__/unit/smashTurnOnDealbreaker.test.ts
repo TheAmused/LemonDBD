@@ -95,8 +95,13 @@ test('SmashOrPass: Simple Mode, Custom Labels, and Turn On / Dealbreaker Integra
   });
 
   await t.test('CharacterCard source renders Turn On and Dealbreaker on back-face with custom labels', () => {
-    const filePath = path.resolve(__dirname, '../../components/smash-or-pass/CharacterCard.tsx');
-    const source = fs.readFileSync(filePath, 'utf-8');
+    // The card is split into parts under card/; the back face lives there.
+    const smashDir = path.resolve(__dirname, '../../components/smash-or-pass');
+    const partsDir = path.join(smashDir, 'card');
+    const source = [
+      fs.readFileSync(path.join(smashDir, 'CharacterCard.tsx'), 'utf-8'),
+      ...fs.readdirSync(partsDir).map((name) => fs.readFileSync(path.join(partsDir, name), 'utf-8')),
+    ].join('\n');
 
     assert.ok(source.includes('customLabels?: RosterCustomLabels'), 'CharacterCard must accept customLabels');
     assert.ok(source.includes("rosterMode?: 'simple' | 'full'"), 'CharacterCard must accept rosterMode');
@@ -107,8 +112,13 @@ test('SmashOrPass: Simple Mode, Custom Labels, and Turn On / Dealbreaker Integra
   });
 
   await t.test('SmashOrPassHub wires customLabels, rosterMode, and dynamic taxonomies', () => {
-    const filePath = path.resolve(__dirname, '../../components/smash-or-pass/SmashOrPassHub.tsx');
-    const source = fs.readFileSync(filePath, 'utf-8');
+    // The Hub is split into hooks and parts under hub/; the wiring lives across them.
+    const smashDir = path.resolve(__dirname, '../../components/smash-or-pass');
+    const partsDir = path.join(smashDir, 'hub');
+    const source = [
+      fs.readFileSync(path.join(smashDir, 'SmashOrPassHub.tsx'), 'utf-8'),
+      ...fs.readdirSync(partsDir).map((name) => fs.readFileSync(path.join(partsDir, name), 'utf-8')),
+    ].join('\n');
 
     assert.ok(source.includes('customLabels={activeRoster?.custom_labels}'), 'Hub must pass customLabels to components');
     assert.ok(source.includes('rosterMode={activeRoster?.roster_mode}'), 'Hub must pass rosterMode to CharacterCard');

@@ -5,10 +5,5 @@
   "components/generator/modes/WheelStage.tsx": 800,
   "components/maps/VoiceCommandBanner.tsx": 1150,
   "components/onboarding/CharacterOnboardingWizard.tsx": 1000,
-  "components/ScraperConfigModal.tsx": 1000,
-  "components/smash-or-pass/CharacterCard.tsx": 700,
-  "components/smash-or-pass/creator/SmashRosterCreator.tsx": 900,
-  "components/smash-or-pass/RomancePersonaModal.tsx": 650,
-  "components/smash-or-pass/RosterSelectModal.tsx": 800,
-  "components/smash-or-pass/SmashOrPassHub.tsx": 1600
+  "components/ScraperConfigModal.tsx": 1000
 }

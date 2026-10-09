@@ -3,7 +3,7 @@ from datetime import datetime
 from typing import Any
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
-from app.models.smash_or_pass import TRANSLATABLE_LOCALES
+from app.models.smash_or_pass import TRANSLATABLE_LOCALES, clean_media_display
 from app.schemas.common import clean_image_url
 
 
@@ -33,7 +33,8 @@ class EntityResponse(BaseModel):
     role: str
     gender: str
     media_url: str | None = None
-    media_type: str = "image"
+    #: Picture placement override; null for every portrait the default card crop suits.
+    media_display: dict[str, Any] | None = None
     watermark_left: str | None = None
     watermark_right: str | None = None
 
@@ -58,7 +59,6 @@ class EntityResponse(BaseModel):
     #: once. It used to be emitted twice, as `metadata` and `metadata_json`.
     metadata: dict[str, Any] = {}
     order_index: int = 0
-    is_active: bool = True
     created_at: datetime | None = None
     stat: EntityStatResponse | None = None
 
@@ -165,7 +165,7 @@ class SmashEntityAdminCreate(BaseModel):
     role: str = Field(default="Survivor", min_length=1, max_length=32)
     gender: str = Field(default="female", min_length=1, max_length=32)
     media_url: str | None = None
-    media_type: str = Field(default="image", max_length=16)
+    media_display: dict[str, Any] | None = None
     watermark_left: str | None = Field(default=None, max_length=64)
     watermark_right: str | None = Field(default=None, max_length=64)
 
@@ -190,6 +190,11 @@ class SmashEntityAdminCreate(BaseModel):
     @classmethod
     def _clean_media(cls, value: str | None) -> str | None:
         return clean_image_url(value)
+
+    @field_validator("media_display", mode="before")
+    @classmethod
+    def _clean_display(cls, value: Any) -> dict[str, Any] | None:
+        return clean_media_display(value)
 
     @field_validator("translations", mode="before")
     @classmethod
@@ -217,3 +222,12 @@ class SmashRosterAdminCreate(BaseModel):
     @classmethod
     def _filter_translations(cls, value: Any) -> dict[str, Any]:
         return _filter_known_locales(value)
+
+
+class SmashPreferenceIn(BaseModel):
+    """The viewer's effects-and-music choice, as made on their device."""
+
+    effects: bool
+    music: bool
+    #: When the choice was made, milliseconds since the epoch.
+    chosen_at: int = Field(ge=0)

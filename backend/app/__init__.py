@@ -165,6 +165,7 @@ def create_app(config_class: Type[Config] | None = None) -> Flask:
     from app.routes.maps import maps_bp
     from app.routes.privacy import privacy_bp
     from app.routes.smash_or_pass import smash_or_pass_bp
+    from app.routes.smash_or_pass_preferences import smash_preferences_bp
     from app.routes.challenge_completions import challenge_completions_bp
     from app.routes.page_streak import page_streak_bp
     from app.routes.perks import perk_service, perks_bp
@@ -189,6 +190,7 @@ def create_app(config_class: Type[Config] | None = None) -> Flask:
     flask_app.register_blueprint(history_streak_bp)
     flask_app.register_blueprint(smash_or_pass_bp)
     flask_app.register_blueprint(smash_or_pass_bp, url_prefix="/api/v1/smash", name="smash_alias")
+    flask_app.register_blueprint(smash_preferences_bp)
     flask_app.register_blueprint(bug_reports_bp)
     flask_app.register_blueprint(admin_control_bp)
     flask_app.register_blueprint(tier_lists_bp)

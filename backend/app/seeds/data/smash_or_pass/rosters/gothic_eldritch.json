@@ -25,7 +25,6 @@
           "role": "Killer",
           "gender": "male",
           "media_url": "/static/avatars/killers/gothic_dracula.webp",
-          "media_type": "image",
           "archetype": "Victorian Sovereign",
           "bio": "An ancient nobleman who commands wolves, bats, and flame. He will invite you to candlelit waltzes in moonlit castles for eternity.",
           "tagline": "Crimson velvet cape, grand castle ballrooms, and timeless aristocratic charm.",
@@ -116,8 +115,7 @@
               ]
             }
           },
-          "order_index": 0,
-          "is_active": true
+          "order_index": 0
         },
         {
           "slug": "gothic_sable",
@@ -125,7 +123,6 @@
           "role": "Survivor",
           "gender": "female",
           "media_url": "/static/avatars/survivors/gothic_sable.webp",
-          "media_type": "image",
           "archetype": "Gothic Cemetery Maiden",
           "bio": "Melancholy, poetic, and utterly mesmerizing. She finds profound beauty in the macabre and will write you dark sonnets in cemetery crypts.",
           "tagline": "Lace corsets, black roses, and Victorian poetry by midnight tombstones.",
@@ -216,8 +213,7 @@
               ]
             }
           },
-          "order_index": 1,
-          "is_active": true
+          "order_index": 1
         },
         {
           "slug": "bloodborne_huntress",
@@ -225,7 +221,6 @@
           "role": "Killer",
           "gender": "female",
           "media_url": "/static/avatars/killers/bloodborne_huntress.webp",
-          "media_type": "image",
           "archetype": "Beast-Cleaving Huntress",
           "bio": "Stalking the cursed foggy moors, she hunts beasts by blood moonlight and keeps her partner safe from eldritch monstrosities.",
           "tagline": "Tricorn hunter hat, heavy bone-cleaver, and stalking the nightmare moon.",
@@ -316,8 +311,7 @@
               ]
             }
           },
-          "order_index": 2,
-          "is_active": true
+          "order_index": 2
         },
         {
           "slug": "dark_fantasy_mikaela",
@@ -325,7 +319,6 @@
           "role": "Survivor",
           "gender": "female",
           "media_url": "/static/avatars/survivors/dark_fantasy_mikaela.webp",
-          "media_type": "image",
           "archetype": "Arcane Scholar",
           "bio": "Deciphering forbidden grimoires by the bonfire light to shield her allies from ancient nightmare deities.",
           "tagline": "Dark grimoire, blood seal blessings, Gothic witch allure.",
@@ -416,8 +409,7 @@
               ]
             }
           },
-          "order_index": 3,
-          "is_active": true
+          "order_index": 3
         },
         {
           "slug": "eldritch_nurse",
@@ -425,7 +417,6 @@
           "role": "Killer",
           "gender": "female",
           "media_url": "/static/avatars/killers/eldritch_nurse.webp",
-          "media_type": "image",
           "archetype": "Star-Spawn Spectre",
           "bio": "A ghostly cosmic being who glides between the stars, weaving the fabric of the universe into gentle melodies.",
           "tagline": "Constellation shroud, void blink, cosmic lullabies.",
@@ -516,8 +507,7 @@
               ]
             }
           },
-          "order_index": 4,
-          "is_active": true
+          "order_index": 4
         },
         {
           "slug": "plague_priestess",
@@ -525,7 +515,6 @@
           "role": "Killer",
           "gender": "female",
           "media_url": "/static/avatars/killers/plague_priestess.webp",
-          "media_type": "image",
           "archetype": "Babylonian Sovereign",
           "bio": "A majestic high priestess dedicated to protecting her people through eternal ritual prayers and sacred incense.",
           "tagline": "Golden headdress, swinging censer, ancient sacred devotion.",
@@ -616,8 +605,7 @@
               ]
             }
           },
-          "order_index": 5,
-          "is_active": true
+          "order_index": 5
         },
         {
           "slug": "raven_artist",
@@ -625,7 +613,6 @@
           "role": "Killer",
           "gender": "female",
           "media_url": "/static/avatars/killers/raven_artist.webp",
-          "media_type": "image",
           "archetype": "Gothic Surrealist Painter",
           "bio": "A brilliant gothic artist whose paintings manifest into reality. She expresses profound grief through soaring crows and ink portraits.",
           "tagline": "Feather dress, ink-stained hands, flight of dire crows.",
@@ -716,8 +703,7 @@
               ]
             }
           },
-          "order_index": 6,
-          "is_active": true
+          "order_index": 6
         },
         {
           "slug": "occult_vittorio",
@@ -725,7 +711,6 @@
           "role": "Survivor",
           "gender": "male",
           "media_url": "/static/avatars/survivors/occult_vittorio.webp",
-          "media_type": "image",
           "archetype": "Centuries-Old Scholar",
           "bio": "Having wandered the Fog for centuries, Vittorio holds secrets of ancient kingdoms and will tell you stories of forgotten empires.",
           "tagline": "Glowing blue runes, medieval parchment, profound ancient wisdom.",
@@ -816,8 +801,7 @@
               ]
             }
           },
-          "order_index": 7,
-          "is_active": true
+          "order_index": 7
         },
         {
           "slug": "phantom_wraith",
@@ -825,7 +809,6 @@
           "role": "Killer",
           "gender": "male",
           "media_url": "/static/avatars/killers/phantom_wraith.webp",
-          "media_type": "image",
           "archetype": "Gothic Bell Mourner",
           "bio": "A melancholic spirit who chimes his ancient bell across misty Victorian graveyards, searching for warmth.",
           "tagline": "Spectral tattered cloak, wailing bell, graveyard mist.",
@@ -916,8 +899,7 @@
               ]
             }
           },
-          "order_index": 8,
-          "is_active": true
+          "order_index": 8
         },
         {
           "slug": "abyssal_dredge",
@@ -925,7 +907,6 @@
           "role": "Killer",
           "gender": "monster_other",
           "media_url": "/static/avatars/killers/abyssal_dredge.webp",
-          "media_type": "image",
           "archetype": "Amalgamation of Nightfall",
           "bio": "The manifestation of collective dread and dark thoughts. Inside the darkness is a being that just wants to envelop you in eternal embrace.",
           "tagline": "Nightfall shroud, thousands of whispering hands, cosmic darkness.",
@@ -1016,8 +997,7 @@
               ]
             }
           },
-          "order_index": 9,
-          "is_active": true
+          "order_index": 9
         }
       ]
     }

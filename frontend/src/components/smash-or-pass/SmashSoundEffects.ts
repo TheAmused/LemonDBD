@@ -1,372 +1,279 @@
 // frontend/src/components/smash-or-pass/SmashSoundEffects.ts
 import { SmashSoundBase } from './SmashSoundBase';
+import { jitter, playBell, playNoise, playTone } from './sound/voices';
+
+/** Smashes in a row closer together than this build a combo. */
+const COMBO_WINDOW_S = 8;
+const MAX_COMBO = 5;
+
+/** The romantic chord a smash rings: F4 A4 C5 E5 A5 C6, or the same with a G5 for a brighter turn. */
+const SMASH_VOICINGS = [
+  [349.23, 440.0, 523.25, 659.25, 880.0, 1046.5],
+  [349.23, 440.0, 523.25, 659.25, 783.99, 1046.5],
+];
 
 class SmashSoundEngine extends SmashSoundBase {
+  private smashCombo = 0;
+  private lastSmashAt = -Infinity;
+
   // ================= SOUND EFFECTS: SEXY SMASH & SAD PASS AUDIO SUITE =================
 
   // SEXY DRAG HOVER: Seductive ascending FM harmonic flutter when dragging towards Smash
   public playSensualHover() {
-    if (this.isMuted) return;
-    const ctx = this.initContext();
-    if (!ctx) return;
-
+    const target = this.sfxTarget();
+    if (!target) return;
+    const { ctx, out } = target;
     const now = ctx.currentTime;
 
     // Seductive harmonic arpeggio (A4 -> C#5 -> E5 -> G#5)
-    const notes = [440.0, 554.37, 659.25, 830.61];
-    notes.forEach((freq, idx) => {
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      const filter = ctx.createBiquadFilter();
-
-      const startTime = now + idx * 0.035;
-
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(freq, startTime);
-      osc.frequency.exponentialRampToValueAtTime(freq * 1.05, startTime + 0.18);
-
-      filter.type = 'lowpass';
-      filter.frequency.setValueAtTime(2200, startTime);
-      filter.frequency.exponentialRampToValueAtTime(800, startTime + 0.22);
-
-      gain.gain.setValueAtTime(0.001, startTime);
-      gain.gain.linearRampToValueAtTime(0.045, startTime + 0.02);
-      gain.gain.exponentialRampToValueAtTime(0.0001, startTime + 0.22);
-
-      osc.connect(filter);
-      filter.connect(gain);
-      gain.connect(ctx.destination);
-
-      osc.start(startTime);
-      osc.stop(startTime + 0.24);
+    [440.0, 554.37, 659.25, 830.61].forEach((freq, idx) => {
+      const start = now + idx * 0.035;
+      playTone(ctx, out, {
+        freq,
+        endFreq: freq * 1.05,
+        start,
+        dur: 0.22,
+        attack: 0.02,
+        peak: 0.045,
+        filter: { type: 'lowpass', from: 2200, to: 800 },
+      });
     });
   }
 
   // SAD DRAG HOVER: Melancholic descending cello sigh when dragging towards Pass
   public playSadHover() {
-    if (this.isMuted) return;
-    const ctx = this.initContext();
-    if (!ctx) return;
+    const target = this.sfxTarget();
+    if (!target) return;
+    const { ctx, out } = target;
 
-    const now = ctx.currentTime;
-
-    // Sorrowful descending minor tone glide (D4 -> C4 -> Bb3 -> A3)
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-    const filter = ctx.createBiquadFilter();
-
-    osc.type = 'triangle';
-    osc.frequency.setValueAtTime(293.66, now); // D4
-    osc.frequency.exponentialRampToValueAtTime(220.0, now + 0.28); // Glides down to A3
-
-    filter.type = 'lowpass';
-    filter.frequency.setValueAtTime(750, now);
-    filter.frequency.linearRampToValueAtTime(320, now + 0.28);
-
-    gain.gain.setValueAtTime(0.001, now);
-    gain.gain.linearRampToValueAtTime(0.055, now + 0.03);
-    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.3);
-
-    osc.connect(filter);
-    filter.connect(gain);
-    gain.connect(ctx.destination);
-
-    osc.start(now);
-    osc.stop(now + 0.32);
+    // Sorrowful descending minor glide (D4 -> A3)
+    playTone(ctx, out, {
+      type: 'triangle',
+      freq: 293.66,
+      endFreq: 220.0,
+      start: ctx.currentTime,
+      dur: 0.3,
+      attack: 0.03,
+      peak: 0.055,
+      filter: { type: 'lowpass', from: 750, to: 320 },
+    });
   }
 
   // TACTILE CARD LIFT / GRAB: Silky card touch
   public playCardGrabSound() {
-    if (this.isMuted) return;
-    const ctx = this.initContext();
-    if (!ctx) return;
-
+    const target = this.sfxTarget();
+    if (!target) return;
+    const { ctx, out } = target;
     const now = ctx.currentTime;
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-    const filter = ctx.createBiquadFilter();
 
-    osc.type = 'sine';
-    osc.frequency.setValueAtTime(380, now);
-    osc.frequency.exponentialRampToValueAtTime(190, now + 0.045);
-
-    filter.type = 'lowpass';
-    filter.frequency.setValueAtTime(1200, now);
-
-    gain.gain.setValueAtTime(0.03, now);
-    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.045);
-
-    osc.connect(filter);
-    filter.connect(gain);
-    gain.connect(ctx.destination);
-
-    osc.start(now);
-    osc.stop(now + 0.05);
+    playTone(ctx, out, {
+      freq: 380 * jitter(40),
+      endFreq: 190,
+      start: now,
+      dur: 0.05,
+      attack: 0.003,
+      peak: 0.03,
+      filter: { type: 'lowpass', from: 1200 },
+    });
+    // The brush of a thumb on the card
+    playNoise(ctx, out, {
+      start: now,
+      dur: 0.04,
+      attack: 0.004,
+      peak: 0.012,
+      filter: { type: 'bandpass', from: 2600, q: 0.8 },
+    });
   }
 
-  // SEXY SMASH: Warm 808 sub-drop + lush romantic FM harp chord + crystalline golden shimmer
+  // SEXY SMASH: Warm 808 sub-drop + lush romantic FM chord + golden shimmer; consecutive smashes climb
   public playSmashSound() {
-    if (this.isMuted) return;
-    const ctx = this.initContext();
-    if (!ctx) return;
-
+    const target = this.sfxTarget();
+    if (!target) return;
+    const { ctx, out } = target;
     const now = ctx.currentTime;
 
+    this.smashCombo = now - this.lastSmashAt < COMBO_WINDOW_S ? Math.min(this.smashCombo + 1, MAX_COMBO) : 0;
+    this.lastSmashAt = now;
+    const lift = Math.pow(2, this.smashCombo / 12); // one semitone higher per smash in the combo
+
     // 1. Sensual deep sub-bass drop (808 style)
-    const subOsc = ctx.createOscillator();
-    const subGain = ctx.createGain();
-    subOsc.type = 'sine';
-    subOsc.frequency.setValueAtTime(110, now);
-    subOsc.frequency.exponentialRampToValueAtTime(36, now + 0.38);
+    playTone(ctx, out, { freq: 110, endFreq: 36, start: now, dur: 0.4, attack: 0.004, peak: 0.3 });
 
-    subGain.gain.setValueAtTime(0.3, now);
-    subGain.gain.exponentialRampToValueAtTime(0.001, now + 0.38);
-
-    subOsc.connect(subGain);
-    subGain.connect(ctx.destination);
-    subOsc.start(now);
-    subOsc.stop(now + 0.4);
-
-    // 2. Lush romantic FM chime chord: F4 (349Hz), A4 (440Hz), C5 (523Hz), E5 (659Hz), A5 (880Hz), C6 (1046Hz)
-    const freqs = [349.23, 440.0, 523.25, 659.25, 880.0, 1046.5];
-    freqs.forEach((freq, idx) => {
-      const carrier = ctx.createOscillator();
-      const modulator = ctx.createOscillator();
-      const modGain = ctx.createGain();
-      const carrierGain = ctx.createGain();
-      const filter = ctx.createBiquadFilter();
-
-      const startTime = now + idx * 0.03;
-
-      carrier.type = 'sine';
-      carrier.frequency.setValueAtTime(freq, startTime);
-
-      modulator.type = 'triangle';
-      modulator.frequency.setValueAtTime(freq * 2, startTime);
-
-      modGain.gain.setValueAtTime(freq * 0.8, startTime);
-      modGain.gain.exponentialRampToValueAtTime(0.01, startTime + 0.5);
-
-      modulator.connect(modGain);
-      modGain.connect(carrier.frequency);
-
-      filter.type = 'lowpass';
-      filter.frequency.setValueAtTime(3200, startTime);
-      filter.frequency.exponentialRampToValueAtTime(900, startTime + 0.6);
-
-      carrierGain.gain.setValueAtTime(0.001, startTime);
-      carrierGain.gain.linearRampToValueAtTime(0.14 - idx * 0.018, startTime + 0.025);
-      carrierGain.gain.exponentialRampToValueAtTime(0.0001, startTime + 0.6);
-
-      carrier.connect(filter);
-      filter.connect(carrierGain);
-      carrierGain.connect(ctx.destination);
-
-      modulator.start(startTime);
-      carrier.start(startTime);
-      modulator.stop(startTime + 0.62);
-      carrier.stop(startTime + 0.62);
+    // 2. Lush romantic FM chime chord, strummed
+    const voicing = SMASH_VOICINGS[Math.floor(Math.random() * SMASH_VOICINGS.length)];
+    voicing.forEach((freq, idx) => {
+      playBell(ctx, out, {
+        freq: freq * lift,
+        start: now + idx * 0.03,
+        dur: 0.62,
+        attack: 0.025,
+        peak: 0.14 - idx * 0.018,
+        index: 0.8,
+        filter: { type: 'lowpass', from: 3200, to: 900 },
+      });
     });
 
     // 3. Delicate sparkle pop accent
-    const sparkleOsc = ctx.createOscillator();
-    const sparkleGain = ctx.createGain();
-    const sparkleFilter = ctx.createBiquadFilter();
+    playTone(ctx, out, {
+      freq: 1760 * lift,
+      endFreq: 3520 * lift,
+      start: now + 0.08,
+      dur: 0.3,
+      attack: 0.04,
+      peak: 0.08,
+      filter: { type: 'bandpass', from: 3400, q: 4 },
+    });
 
-    sparkleFilter.type = 'bandpass';
-    sparkleFilter.frequency.setValueAtTime(3400, now + 0.08);
-    sparkleFilter.Q.setValueAtTime(4.0, now + 0.08);
+    // 4. A combo earns a high bell that rings on
+    if (this.smashCombo >= 2) {
+      playBell(ctx, out, {
+        freq: 2093 * lift,
+        start: now + 0.12,
+        dur: 1.1,
+        attack: 0.01,
+        peak: 0.03 + this.smashCombo * 0.006,
+        index: 0.4,
+      });
+    }
 
-    sparkleOsc.type = 'sine';
-    sparkleOsc.frequency.setValueAtTime(1760, now + 0.08);
-    sparkleOsc.frequency.exponentialRampToValueAtTime(3520, now + 0.24);
-
-    sparkleGain.gain.setValueAtTime(0.001, now + 0.08);
-    sparkleGain.gain.linearRampToValueAtTime(0.08, now + 0.12);
-    sparkleGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.38);
-
-    sparkleOsc.connect(sparkleFilter);
-    sparkleFilter.connect(sparkleGain);
-    sparkleGain.connect(ctx.destination);
-
-    sparkleOsc.start(now + 0.08);
-    sparkleOsc.stop(now + 0.4);
+    this.duckMusic(0.55);
   }
 
-  // SAD PASS: Heartbreaking, poignant minor teardrop + sorrowful cello sigh + cold breeze whisper
+  // SAD PASS: Poignant minor cello sigh + teardrop + cold breeze whisper
   public playPassSound() {
-    if (this.isMuted) return;
-    const ctx = this.initContext();
-    if (!ctx) return;
-
+    const target = this.sfxTarget();
+    if (!target) return;
+    const { ctx, out } = target;
     const now = ctx.currentTime;
+    this.smashCombo = 0;
+    const drift = jitter(25);
 
-    // 1. Sad cello minor chord (D3 146Hz, F3 174Hz, A3 220Hz -> fading down to G2 98Hz)
-    const celloChords = [146.83, 174.61, 220.0];
-    celloChords.forEach((freq, idx) => {
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      const filter = ctx.createBiquadFilter();
-
-      osc.type = 'sawtooth';
-      osc.frequency.setValueAtTime(freq, now);
-      osc.frequency.exponentialRampToValueAtTime(freq * 0.82, now + 0.55);
-
-      filter.type = 'lowpass';
-      filter.frequency.setValueAtTime(420, now);
-      filter.frequency.linearRampToValueAtTime(160, now + 0.55);
-
-      gain.gain.setValueAtTime(0.001, now);
-      gain.gain.linearRampToValueAtTime(0.08 - idx * 0.02, now + 0.06);
-      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.58);
-
-      osc.connect(filter);
-      filter.connect(gain);
-      gain.connect(ctx.destination);
-
-      osc.start(now);
-      osc.stop(now + 0.6);
+    // 1. Sad cello minor chord (D3, F3, A3), sagging flat
+    [146.83, 174.61, 220.0].forEach((freq, idx) => {
+      playTone(ctx, out, {
+        type: 'sawtooth',
+        freq: freq * drift,
+        endFreq: freq * drift * 0.82,
+        start: now,
+        dur: 0.6,
+        attack: 0.06,
+        peak: 0.08 - idx * 0.02,
+        filter: { type: 'lowpass', from: 420, to: 160 },
+      });
     });
 
     // 2. Sorrowful teardrop resonance (descending triangle chime)
-    const dropOsc = ctx.createOscillator();
-    const dropGain = ctx.createGain();
-    const dropFilter = ctx.createBiquadFilter();
+    playTone(ctx, out, {
+      type: 'triangle',
+      freq: 587.33 * drift,
+      endFreq: 329.63,
+      start: now,
+      dur: 0.4,
+      attack: 0.04,
+      peak: 0.07,
+      filter: { type: 'lowpass', from: 1100, to: 300 },
+    });
 
-    dropOsc.type = 'triangle';
-    dropOsc.frequency.setValueAtTime(587.33, now); // D5
-    dropOsc.frequency.exponentialRampToValueAtTime(329.63, now + 0.35); // E4 sad drop
+    // 3. Gentle melancholic wind sigh
+    playNoise(ctx, out, {
+      start: now,
+      dur: 0.45,
+      attack: 0.05,
+      peak: 0.06,
+      filter: { type: 'bandpass', from: 800, to: 180, q: 2 },
+    });
 
-    dropFilter.type = 'lowpass';
-    dropFilter.frequency.setValueAtTime(1100, now);
-    dropFilter.frequency.exponentialRampToValueAtTime(300, now + 0.38);
-
-    dropGain.gain.setValueAtTime(0.001, now);
-    dropGain.gain.linearRampToValueAtTime(0.07, now + 0.04);
-    dropGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.38);
-
-    dropOsc.connect(dropFilter);
-    dropFilter.connect(dropGain);
-    dropGain.connect(ctx.destination);
-
-    dropOsc.start(now);
-    dropOsc.stop(now + 0.4);
-
-    // 3. Gentle melancholic wind sigh (filtered soft noise)
-    const bufferSize = Math.floor(ctx.sampleRate * 0.45);
-    const noiseBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
-    const output = noiseBuffer.getChannelData(0);
-    for (let i = 0; i < bufferSize; i++) {
-      output[i] = Math.random() * 2 - 1;
-    }
-
-    const whiteNoise = ctx.createBufferSource();
-    whiteNoise.buffer = noiseBuffer;
-
-    const windFilter = ctx.createBiquadFilter();
-    windFilter.type = 'bandpass';
-    windFilter.frequency.setValueAtTime(800, now);
-    windFilter.frequency.exponentialRampToValueAtTime(180, now + 0.45);
-    windFilter.Q.setValueAtTime(2.0, now);
-
-    const windGain = ctx.createGain();
-    windGain.gain.setValueAtTime(0.001, now);
-    windGain.gain.linearRampToValueAtTime(0.06, now + 0.05);
-    windGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.45);
-
-    whiteNoise.connect(windFilter);
-    windFilter.connect(windGain);
-    windGain.connect(ctx.destination);
-
-    whiteNoise.start(now);
-    whiteNoise.stop(now + 0.46);
+    this.duckMusic(0.7);
   }
 
-  // Tactile Tarot Card Flip Sound (Crisp, silky flick)
+  // Tactile card flip: a papery flick over a soft thump
   public playFlipSound() {
-    if (this.isMuted) return;
-    const ctx = this.initContext();
-    if (!ctx) return;
-
+    const target = this.sfxTarget();
+    if (!target) return;
+    const { ctx, out } = target;
     const now = ctx.currentTime;
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-    const filter = ctx.createBiquadFilter();
 
-    filter.type = 'lowpass';
-    filter.frequency.setValueAtTime(800, now);
+    playNoise(ctx, out, {
+      start: now,
+      dur: 0.1,
+      attack: 0.015,
+      peak: 0.05,
+      filter: { type: 'bandpass', from: 1800 * jitter(150), to: 5200, q: 0.9 },
+    });
+    playTone(ctx, out, {
+      freq: 320 * jitter(60),
+      endFreq: 140,
+      start: now,
+      dur: 0.07,
+      attack: 0.003,
+      peak: 0.05,
+      filter: { type: 'lowpass', from: 800 },
+    });
+  }
 
-    osc.type = 'sine';
-    osc.frequency.setValueAtTime(320, now);
-    osc.frequency.exponentialRampToValueAtTime(140, now + 0.06);
+  // Shuffling the deck: a quick riffle of cards ending in a settled tap
+  public playShuffleSound() {
+    const target = this.sfxTarget();
+    if (!target) return;
+    const { ctx, out } = target;
+    const now = ctx.currentTime;
 
-    gain.gain.setValueAtTime(0.06, now);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
-
-    osc.connect(filter);
-    filter.connect(gain);
-    gain.connect(ctx.destination);
-
-    osc.start(now);
-    osc.stop(now + 0.07);
+    const flicks = 9;
+    for (let i = 0; i < flicks; i++) {
+      playNoise(ctx, out, {
+        start: now + i * 0.034,
+        dur: 0.03,
+        attack: 0.002,
+        peak: 0.03 * (0.65 + Math.random() * 0.5),
+        filter: { type: 'bandpass', from: 3000 * jitter(300), q: 1.2 },
+      });
+    }
+    playTone(ctx, out, {
+      freq: 180,
+      endFreq: 110,
+      start: now + flicks * 0.034,
+      dur: 0.08,
+      attack: 0.003,
+      peak: 0.07,
+      filter: { type: 'lowpass', from: 600 },
+    });
   }
 
   // Warm anatomical heartbeat (Organic lub-dub double pulse)
   public playHeartbeat(speedMultiplier = 1.0) {
-    if (this.isMuted) return;
-    const ctx = this.initContext();
-    if (!ctx) return;
-
+    const target = this.sfxTarget();
+    if (!target) return;
+    const { ctx, out } = target;
     const now = ctx.currentTime;
-    const playThump = (time: number, freq: number, vol: number) => {
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      const filter = ctx.createBiquadFilter();
 
-      filter.type = 'lowpass';
-      filter.frequency.setValueAtTime(150, time);
-
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(freq, time);
-      osc.frequency.exponentialRampToValueAtTime(freq * 0.45, time + 0.12);
-
-      gain.gain.setValueAtTime(vol, time);
-      gain.gain.exponentialRampToValueAtTime(0.001, time + 0.12);
-
-      osc.connect(filter);
-      filter.connect(gain);
-      gain.connect(ctx.destination);
-
-      osc.start(time);
-      osc.stop(time + 0.13);
-    };
-
-    playThump(now, 72, 0.22);
-    playThump(now + 0.14 / speedMultiplier, 58, 0.16);
+    const thump = (start: number, freq: number, peak: number) =>
+      playTone(ctx, out, {
+        freq,
+        endFreq: freq * 0.45,
+        start,
+        dur: 0.13,
+        attack: 0.004,
+        peak,
+        filter: { type: 'lowpass', from: 150 },
+      });
+    thump(now, 72, 0.22);
+    thump(now + 0.14 / speedMultiplier, 58, 0.16);
   }
 
-  // Silky hover micro-tick
+  // Silky hover micro-tick, a little different every time
   public playHoverTick() {
-    if (this.isMuted) return;
-    const ctx = this.initContext();
-    if (!ctx) return;
+    const target = this.sfxTarget();
+    if (!target) return;
+    const { ctx, out } = target;
 
-    const now = ctx.currentTime;
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-
-    osc.type = 'sine';
-    osc.frequency.setValueAtTime(620, now);
-    osc.frequency.exponentialRampToValueAtTime(400, now + 0.025);
-
-    gain.gain.setValueAtTime(0.018, now);
-    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.025);
-
-    osc.connect(gain);
-    gain.connect(ctx.destination);
-
-    osc.start(now);
-    osc.stop(now + 0.03);
+    playTone(ctx, out, {
+      freq: 620 * jitter(80),
+      endFreq: 400,
+      start: ctx.currentTime,
+      dur: 0.03,
+      attack: 0.002,
+      peak: 0.018,
+    });
   }
 }
 

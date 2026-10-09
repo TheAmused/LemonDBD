@@ -38,7 +38,6 @@
           "role": "Killer",
           "gender": "male",
           "media_url": "/static/avatars/killers/the_trapper_hoy.webp",
-          "media_type": "image",
           "watermark_left": "THE TRAPPER",
           "watermark_right": "ISLAND",
           "archetype": "The Brooding Beach Jock",
@@ -167,8 +166,7 @@
               ]
             }
           },
-          "order_index": 0,
-          "is_active": true
+          "order_index": 0
         },
         {
           "slug": "the_huntress_hoy",
@@ -177,7 +175,6 @@
           "role": "Killer",
           "gender": "female",
           "media_url": "/static/avatars/killers/the_huntress_hoy.webp",
-          "media_type": "image",
           "watermark_left": "THE HUNTRESS",
           "watermark_right": "ISLAND",
           "archetype": "The Fierce Wilderness Protector",
@@ -306,8 +303,7 @@
               ]
             }
           },
-          "order_index": 1,
-          "is_active": true
+          "order_index": 1
         },
         {
           "slug": "the_spirit_hoy",
@@ -316,7 +312,6 @@
           "role": "Killer",
           "gender": "female",
           "media_url": "/static/avatars/killers/the_spirit_hoy.webp",
-          "media_type": "image",
           "watermark_left": "THE SPIRIT",
           "watermark_right": "ISLAND",
           "archetype": "The Melancholic Goth Bather",
@@ -445,8 +440,7 @@
               ]
             }
           },
-          "order_index": 2,
-          "is_active": true
+          "order_index": 2
         },
         {
           "slug": "the_wraith_hoy",
@@ -455,7 +449,6 @@
           "role": "Killer",
           "gender": "male",
           "media_url": "/static/avatars/killers/the_wraith_hoy.webp",
-          "media_type": "image",
           "watermark_left": "THE WRAITH",
           "watermark_right": "ISLAND",
           "archetype": "The Shy Philosophical Intellectual",
@@ -584,8 +577,7 @@
               ]
             }
           },
-          "order_index": 3,
-          "is_active": true
+          "order_index": 3
         },
         {
           "slug": "claudette_morel_hoy",
@@ -594,7 +586,6 @@
           "role": "Survivor",
           "gender": "female",
           "media_url": "/static/avatars/survivors/claudette_morel.webp",
-          "media_type": "image",
           "watermark_left": "CLAUDETTE",
           "watermark_right": "MOREL",
           "archetype": "The Sun-Kissed Island Botanist",
@@ -723,8 +714,7 @@
               ]
             }
           },
-          "order_index": 4,
-          "is_active": true
+          "order_index": 4
         },
         {
           "slug": "dwight_fairfield_hoy",
@@ -733,7 +723,6 @@
           "role": "Survivor",
           "gender": "male",
           "media_url": "/static/avatars/survivors/dwight_fairfield.webp",
-          "media_type": "image",
           "watermark_left": "DWIGHT",
           "watermark_right": "FAIRFIELD",
           "archetype": "The Anxious Beach Lifeguard",
@@ -862,8 +851,7 @@
               ]
             }
           },
-          "order_index": 5,
-          "is_active": true
+          "order_index": 5
         },
         {
           "slug": "the_ocean",
@@ -872,7 +860,6 @@
           "role": "Killer",
           "gender": "monster_other",
           "media_url": "/static/avatars/killers/the_ocean_hoy.webp",
-          "media_type": "image",
           "watermark_left": "THE",
           "watermark_right": "OCEAN",
           "archetype": "The Eldritch Island Sovereign",
@@ -1001,8 +988,7 @@
               ]
             }
           },
-          "order_index": 6,
-          "is_active": true
+          "order_index": 6
         },
         {
           "slug": "the_narrator",
@@ -1011,7 +997,6 @@
           "role": "Survivor",
           "gender": "male",
           "media_url": "/static/avatars/rosters/hooked_on_you.webp",
-          "media_type": "image",
           "watermark_left": "THE",
           "watermark_right": "NARRATOR",
           "archetype": "The Omniscient Sarcastic Host",
@@ -1140,8 +1125,7 @@
               ]
             }
           },
-          "order_index": 7,
-          "is_active": true
+          "order_index": 7
         }
       ]
     }

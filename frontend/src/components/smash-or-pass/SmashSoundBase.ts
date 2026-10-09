@@ -1,25 +1,59 @@
 // frontend/src/components/smash-or-pass/SmashSoundBase.ts
-// Audio context, mute/background-music state and the BGM synth. The one-shot effects live in SmashSoundEffects.ts.
+// Audio context and mix bus, mute / background-music state and the music's controls. The one-shot
+// effects live in SmashSoundEffects.ts, the music itself in sound/MusicEngine.ts.
 import { getAudioContextCtor } from '@/utils/browserApis';
+import { createAudioBus, type AudioBus } from './sound/audioBus';
+import { MusicEngine } from './sound/MusicEngine';
+
+const MUTED_KEY = 'lemondbd_smash_sound_muted';
+const BGM_KEY = 'lemondbd_smash_bgm_playing';
+/** How loud the music sits under the effects. */
+const MUSIC_LEVEL = 0.1;
+const SILENT = 0.0001;
+
+function readFlag(key: string): boolean | null {
+  if (typeof window === 'undefined') return null;
+  try {
+    const saved = localStorage.getItem(key);
+    return saved === null ? null : saved === 'true';
+  } catch {
+    return null;
+  }
+}
+
+function writeFlag(key: string, value: boolean): void {
+  if (typeof window === 'undefined') return;
+  try {
+    localStorage.setItem(key, String(value));
+  } catch {
+    // Storage unavailable: the choice lasts for this visit only.
+  }
+}
 
 export abstract class SmashSoundBase {
   protected ctx: AudioContext | null = null;
+  protected bus: AudioBus | null = null;
   protected isMuted: boolean = false;
   protected isBgmPlaying: boolean = false;
-  protected bgmGainNode: GainNode | null = null;
-  protected bgmIntervalId: ReturnType<typeof setInterval> | null = null;
-  protected bgmOscillators: OscillatorNode[] = [];
+  /** The viewer's choice on the page's warning: effects and music can each be switched off outright. */
+  protected effectsAllowed: boolean = true;
+  protected musicAllowed: boolean = true;
+  private music: MusicEngine | null = null;
 
   constructor() {
-    if (typeof window !== 'undefined') {
-      const savedMute = localStorage.getItem('lemondbd_smash_sound_muted');
-      if (savedMute !== null) {
-        this.isMuted = savedMute === 'true';
-      }
-      const savedBgm = localStorage.getItem('lemondbd_smash_bgm_playing');
-      if (savedBgm !== null) {
-        this.isBgmPlaying = savedBgm === 'true';
-      }
+    this.isMuted = readFlag(MUTED_KEY) ?? this.isMuted;
+    this.isBgmPlaying = readFlag(BGM_KEY) ?? this.isBgmPlaying;
+
+    // A page nobody is looking at should not keep playing.
+    if (typeof document !== 'undefined') {
+      document.addEventListener('visibilitychange', () => {
+        if (!this.ctx) return;
+        if (document.hidden) {
+          this.ctx.suspend().catch(() => {});
+        } else {
+          this.ctx.resume().catch(() => {});
+        }
+      });
     }
   }
 
@@ -29,12 +63,42 @@ export abstract class SmashSoundBase {
       const AudioCtx = getAudioContextCtor();
       if (AudioCtx) {
         this.ctx = new AudioCtx();
+        this.bus = createAudioBus(this.ctx);
+        this.applyMusicLevel();
       }
     }
-    if (this.ctx && this.ctx.state === 'suspended') {
+    if (this.ctx && this.ctx.state === 'suspended' && !(typeof document !== 'undefined' && document.hidden)) {
       this.ctx.resume().catch(() => {});
     }
     return this.ctx;
+  }
+
+  /** What an effect needs to play: the context and where to send it, or null when muted or unavailable. */
+  protected sfxTarget(): { ctx: AudioContext; out: AudioNode } | null {
+    if (this.isMuted || !this.effectsAllowed) return null;
+    const ctx = this.initContext();
+    if (!ctx || !this.bus) return null;
+    return { ctx, out: this.bus.sfx };
+  }
+
+  /** Lets the music dip for a moment so an effect lands clearly; `depth` is the fraction it dips to. */
+  protected duckMusic(depth = 0.5, holdS = 0.25, releaseS = 0.6): void {
+    if (!this.ctx || !this.bus || this.isMuted || !this.isBgmPlaying) return;
+    const gain = this.bus.music.gain;
+    const now = this.ctx.currentTime;
+    gain.cancelScheduledValues(now);
+    gain.setTargetAtTime(MUSIC_LEVEL * depth, now, 0.03);
+    gain.setTargetAtTime(MUSIC_LEVEL, now + holdS, releaseS / 3);
+  }
+
+  /** Moves the music to its level for the current mute / playing state. */
+  private applyMusicLevel(): void {
+    if (!this.ctx || !this.bus) return;
+    const audible = !this.isMuted && this.isBgmPlaying;
+    const gain = this.bus.music.gain;
+    const now = this.ctx.currentTime;
+    gain.cancelScheduledValues(now);
+    gain.setTargetAtTime(audible ? MUSIC_LEVEL : SILENT, now, 0.05);
   }
 
   // Called on first user interaction anywhere on the window (click/touch/key)
@@ -43,7 +107,7 @@ export abstract class SmashSoundBase {
     if (ctx && ctx.state === 'suspended') {
       ctx.resume().catch(() => {});
     }
-    if (!this.isMuted && this.isBgmPlaying && (!this.bgmGainNode || !this.bgmIntervalId)) {
+    if (!this.isMuted && this.isBgmPlaying && !this.music) {
       this.startBgm();
     }
   }
@@ -57,28 +121,15 @@ export abstract class SmashSoundBase {
   }
 
   public toggleMute(): boolean {
-    this.isMuted = !this.isMuted;
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('lemondbd_smash_sound_muted', String(this.isMuted));
-    }
-    if (this.isMuted && this.bgmGainNode && this.ctx) {
-      this.bgmGainNode.gain.setValueAtTime(0, this.ctx.currentTime);
-    } else if (!this.isMuted && this.isBgmPlaying && this.bgmGainNode && this.ctx) {
-      this.bgmGainNode.gain.setValueAtTime(0.08, this.ctx.currentTime);
-    }
+    this.setMuted(!this.isMuted);
     return this.isMuted;
   }
 
   public setMuted(muted: boolean) {
     this.isMuted = muted;
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('lemondbd_smash_sound_muted', String(muted));
-    }
-    if (this.isMuted && this.bgmGainNode && this.ctx) {
-      this.bgmGainNode.gain.setValueAtTime(0, this.ctx.currentTime);
-    } else if (!this.isMuted && this.isBgmPlaying && this.bgmGainNode && this.ctx) {
-      this.bgmGainNode.gain.setValueAtTime(0.08, this.ctx.currentTime);
-    }
+    writeFlag(MUTED_KEY, muted);
+    this.applyMusicLevel();
+    if (!muted && this.isBgmPlaying && !this.music) this.startBgm();
   }
 
   public isSoundActive(): boolean {
@@ -90,24 +141,19 @@ export abstract class SmashSoundBase {
       // Turn sound ON
       this.isMuted = false;
       this.isBgmPlaying = true;
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('lemondbd_smash_sound_muted', 'false');
-        localStorage.setItem('lemondbd_smash_bgm_playing', 'true');
-      }
+      writeFlag(MUTED_KEY, false);
+      writeFlag(BGM_KEY, true);
       this.startBgm();
       this.playSmashSound();
       return true;
-    } else {
-      // Turn sound OFF
-      this.isMuted = true;
-      this.isBgmPlaying = false;
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('lemondbd_smash_sound_muted', 'true');
-        localStorage.setItem('lemondbd_smash_bgm_playing', 'false');
-      }
-      this.stopBgm();
-      return false;
     }
+    // Turn sound OFF
+    this.isMuted = true;
+    this.isBgmPlaying = false;
+    writeFlag(MUTED_KEY, true);
+    writeFlag(BGM_KEY, false);
+    this.stopBgm();
+    return false;
   }
 
   // ================= BACKGROUND MUSIC: "SEXY & TWISTED" DARK SYNTH AMBIENCE =================
@@ -120,123 +166,50 @@ export abstract class SmashSoundBase {
     return this.isBgmPlaying;
   }
 
+  /**
+   * Applies the viewer's effects / music choice. Switching music off stops it for good; switching
+   * it on starts it, which only ever happens on their click (the warning's Continue button).
+   */
+  public applyPreferences({ effects, music }: { effects: boolean; music: boolean }): void {
+    this.effectsAllowed = effects;
+    this.musicAllowed = music;
+    if (!music) {
+      this.music?.stop();
+      this.music = null;
+      this.applyMusicLevel();
+      return;
+    }
+    // Music chosen: it plays from now on. Until the page has had a click or key press the browser
+    // will not let audio start, so a saved choice then waits for the first one (see
+    // `handleUserInteraction`) rather than opening a context that cannot run yet.
+    if (!this.isBgmPlaying) {
+      this.isBgmPlaying = true;
+      writeFlag(BGM_KEY, true);
+    }
+    const userHasActed = typeof navigator !== 'undefined' && navigator.userActivation?.isActive === true;
+    if (!this.isMuted && !this.music && (this.ctx || userHasActed)) this.startBgm();
+  }
+
   public startBgm() {
+    if (!this.musicAllowed) return;
     const ctx = this.initContext();
-    if (!ctx) return;
-    this.stopBgm();
+    if (!ctx || !this.bus) return;
+    this.music?.stop();
 
     this.isBgmPlaying = true;
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('lemondbd_smash_bgm_playing', 'true');
-    }
+    writeFlag(BGM_KEY, true);
+    this.applyMusicLevel();
 
-    // Main BGM master gain
-    const masterBgmGain = ctx.createGain();
-    masterBgmGain.gain.setValueAtTime(0.001, ctx.currentTime);
-    masterBgmGain.gain.linearRampToValueAtTime(this.isMuted ? 0 : 0.08, ctx.currentTime + 2.0);
-    masterBgmGain.connect(ctx.destination);
-    this.bgmGainNode = masterBgmGain;
-
-    // Dark sensual chord progression in D-minor: Dm9 -> Bbmaj7#11 -> Gm9 -> A7alt
-    const chords = [
-      [146.83, 220.0, 261.63, 329.63, 440.0], // D3, A3, C4, E4, A4 (Dm9)
-      [116.54, 233.08, 293.66, 369.99, 466.16], // Bb2, Bb3, D4, F#4, Bb4 (Bbmaj7#11)
-      [98.0, 196.0, 261.63, 293.66, 392.0], // G2, G3, C4, D4, G4 (Gm9)
-      [110.0, 220.0, 277.18, 329.63, 415.3], // A2, A3, C#4, E4, G#4 (A7alt)
-    ];
-
-    let chordStep = 0;
-
-    const playChordStep = () => {
-      if (!this.isBgmPlaying || !this.ctx || !this.bgmGainNode) return;
-      const now = this.ctx.currentTime;
-      const currentChord = chords[chordStep % chords.length];
-      chordStep++;
-
-      // Lowpass resonant filter for dark, filtered warmth
-      const filter = this.ctx.createBiquadFilter();
-      filter.type = 'lowpass';
-      filter.frequency.setValueAtTime(450, now);
-      filter.frequency.linearRampToValueAtTime(850, now + 3.0);
-      filter.frequency.linearRampToValueAtTime(400, now + 6.0);
-      filter.Q.setValueAtTime(2.5, now);
-      filter.connect(this.bgmGainNode);
-
-      currentChord.forEach((freq, idx) => {
-        if (!this.ctx) return;
-        const osc = this.ctx.createOscillator();
-        const oscGain = this.ctx.createGain();
-
-        // Layer warm sine and triangle with subtle detuning
-        osc.type = idx % 2 === 0 ? 'sine' : 'triangle';
-        const detune = (idx - 2) * 4;
-        osc.frequency.setValueAtTime(freq + detune * 0.1, now);
-
-        oscGain.gain.setValueAtTime(0.001, now);
-        oscGain.gain.linearRampToValueAtTime(idx === 0 ? 0.25 : 0.08, now + 1.8);
-        oscGain.gain.linearRampToValueAtTime(idx === 0 ? 0.2 : 0.06, now + 4.5);
-        oscGain.gain.linearRampToValueAtTime(0.001, now + 6.2);
-
-        osc.connect(oscGain);
-        oscGain.connect(filter);
-
-        osc.start(now);
-        osc.stop(now + 6.5);
-        this.bgmOscillators.push(osc);
-      });
-
-      // Sensual heartbeat pulse on 1 and 3
-      const playPulse = (offset: number) => {
-        if (!this.ctx || !this.bgmGainNode) return;
-        const pOsc = this.ctx.createOscillator();
-        const pGain = this.ctx.createGain();
-        pOsc.type = 'sine';
-        pOsc.frequency.setValueAtTime(65, now + offset);
-        pOsc.frequency.exponentialRampToValueAtTime(32, now + offset + 0.35);
-
-        pGain.gain.setValueAtTime(0.18, now + offset);
-        pGain.gain.exponentialRampToValueAtTime(0.001, now + offset + 0.35);
-
-        pOsc.connect(pGain);
-        pGain.connect(this.bgmGainNode);
-        pOsc.start(now + offset);
-        pOsc.stop(now + offset + 0.36);
-        this.bgmOscillators.push(pOsc);
-      };
-
-      playPulse(0);
-      playPulse(0.18);
-      playPulse(3.0);
-      playPulse(3.18);
-    };
-
-    playChordStep();
-    this.bgmIntervalId = setInterval(playChordStep, 6000);
+    this.music = new MusicEngine(ctx, this.bus.music);
+    this.music.start();
   }
 
   public stopBgm() {
     this.isBgmPlaying = false;
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('lemondbd_smash_bgm_playing', 'false');
-    }
-    if (this.bgmIntervalId) {
-      clearInterval(this.bgmIntervalId);
-      this.bgmIntervalId = null;
-    }
-    if (this.bgmGainNode && this.ctx) {
-      this.bgmGainNode.gain.linearRampToValueAtTime(0.001, this.ctx.currentTime + 0.5);
-      setTimeout(() => {
-        this.bgmOscillators.forEach((osc) => {
-          try {
-            osc.stop();
-            osc.disconnect();
-          } catch (_) {}
-        });
-        this.bgmOscillators = [];
-        this.bgmGainNode?.disconnect();
-        this.bgmGainNode = null;
-      }, 600);
-    }
+    writeFlag(BGM_KEY, false);
+    this.music?.stop();
+    this.music = null;
+    this.applyMusicLevel();
   }
 
   abstract playSmashSound(): void;

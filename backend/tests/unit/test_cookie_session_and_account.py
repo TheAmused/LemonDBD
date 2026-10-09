@@ -7,7 +7,7 @@ from flask.testing import FlaskClient
 
 from app.core.extensions import db
 from app.core.security import SESSION_COOKIE_NAME, generate_token, hash_password
-from app.models import AdminAuditLog, BugReport, User
+from app.models import AdminAuditLog, BugReport, SmashUserPreference, User
 
 PASSWORD = "password123"
 
@@ -263,6 +263,16 @@ class TestAdminExportUserData:
         token = generate_token(user.id, role="user")
         res = client.get(f"/api/v1/users/{user.id}/export", headers=self._auth(token))
         assert res.status_code == 403
+
+    def test_includes_the_users_smash_or_pass_preferences(self, client: FlaskClient) -> None:
+        target = self._target("prefs_subject")
+        db.session.add(SmashUserPreference(user_id=target.id, effects_enabled=False, music_enabled=True, chosen_at=42))
+        db.session.commit()
+        _, token = _make_admin()
+        res = client.get(f"/api/v1/users/{target.id}/export", headers=self._auth(token))
+        assert res.status_code == 200
+        rows = res.get_json()["smash_or_pass_preferences"]
+        assert [(r["effects_enabled"], r["music_enabled"], r["chosen_at"]) for r in rows] == [(False, True, 42)]
 
     def test_unknown_user_is_404_and_not_audited(self, client: FlaskClient) -> None:
         _, token = _make_admin()

@@ -72,6 +72,17 @@ export interface EntityStatItem {
   updated_at?: string | null;
 }
 
+/**
+ * How a portrait sits on its card. The default (`cover`, anchored to the top) suits nearly every
+ * portrait, so only an entity whose art that crop spoils carries one.
+ */
+export interface MediaDisplay {
+  fit?: 'cover' | 'contain';
+  /** A CSS `object-position` such as `50% 40%`. */
+  position?: string;
+  scale?: number;
+}
+
 export interface EntityItem {
   id: string;
   roster_id: string;
@@ -83,11 +94,10 @@ export interface EntityItem {
   role: CharacterRole | string;
   gender: CharacterGender | string;
   media_url?: string | null;
-  media_type?: string;
+  media_display?: MediaDisplay | null;
   // `metadata_json` is gone: the API used to emit the same dict twice per entity.
   metadata?: EntityMetadata;
   order_index?: number;
-  is_active?: boolean;
   stat?: EntityStatItem | null;
   created_at?: string | null;
 }
@@ -132,7 +142,6 @@ export interface LeaderboardItem {
   role: string;
   gender: string;
   media_url?: string | null;
-  media_type?: string;
   metadata?: EntityMetadata;
   stat?: EntityStatItem | null;
   tier: TierClassification | string;
@@ -203,7 +212,6 @@ export interface SmashRosterDocumentEntity {
   role: string;
   gender: string;
   media_url?: string;
-  media_type?: string;
   watermark_left?: string;
   watermark_right?: string;
   archetype?: string;

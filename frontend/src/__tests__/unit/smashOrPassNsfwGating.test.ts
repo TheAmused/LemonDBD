@@ -32,8 +32,29 @@ function resetStorage() {
   globalThis.localStorage = createMockLocalStorage() as unknown as Storage;
 }
 
-const HUB_PATH = path.join(__dirname, '..', '..', 'components', 'smash-or-pass', 'SmashOrPassHub.tsx');
-const ROSTER_MODAL_PATH = path.join(__dirname, '..', '..', 'components', 'smash-or-pass', 'RosterSelectModal.tsx');
+const SMASH_DIR = path.join(__dirname, '..', '..', 'components', 'smash-or-pass');
+const HUB_PATH = path.join(SMASH_DIR, 'SmashOrPassHub.tsx');
+const HUB_PARTS_DIR = path.join(SMASH_DIR, 'hub');
+
+/** The Hub is split into hooks and parts under hub/; the wiring lives across them. */
+function readHubSource(): string {
+  const parts = fs
+    .readdirSync(HUB_PARTS_DIR)
+    .sort()
+    .map((name) => fs.readFileSync(path.join(HUB_PARTS_DIR, name), 'utf-8'));
+  return [fs.readFileSync(HUB_PATH, 'utf-8'), ...parts].join('\n');
+}
+const ROSTER_MODAL_PATH = path.join(SMASH_DIR, 'RosterSelectModal.tsx');
+const ROSTER_PARTS_DIR = path.join(SMASH_DIR, 'roster-select');
+
+/** The picker is split into a hook and parts under roster-select/; the card markup lives there. */
+function readRosterModalSource(): string {
+  const parts = fs
+    .readdirSync(ROSTER_PARTS_DIR)
+    .sort()
+    .map((name) => fs.readFileSync(path.join(ROSTER_PARTS_DIR, name), 'utf-8'));
+  return [fs.readFileSync(ROSTER_MODAL_PATH, 'utf-8'), ...parts].join('\n');
+}
 
 test('nsfwAck: acknowledgment persistence behavior', async (t) => {
   await t.test('a roster with no prior acknowledgment reads as not acknowledged', () => {
@@ -94,7 +115,7 @@ test('nsfwAck: acknowledgment persistence behavior', async (t) => {
 });
 
 test('SmashOrPassHub: NSFW content gate is wired into the render tree', async (t) => {
-  const src = fs.readFileSync(HUB_PATH, 'utf-8');
+  const src = readHubSource();
 
   await t.test('the gate is keyed off activeRoster.is_nsfw and the acknowledgment state', () => {
     assert.match(
@@ -125,8 +146,13 @@ test('SmashOrPassHub: NSFW content gate is wired into the render tree', async (t
     // The onClick wiring itself, not just the handler existing somewhere unused.
     assert.match(
       src,
-      /onClick=\{handleAcknowledgeNsfw\}/,
-      'expected the gate confirm button to be wired to handleAcknowledgeNsfw via onClick'
+      /onAcknowledgeNsfw=\{rosters\.handleAcknowledgeNsfw\}/,
+      'expected the arena to be handed the acknowledgment handler'
+    );
+    assert.match(
+      src,
+      /onClick=\{onConfirm\}/,
+      'expected the gate confirm button to call the handler it was given'
     );
   });
 
@@ -156,7 +182,7 @@ test('SmashOrPassHub: NSFW content gate is wired into the render tree', async (t
 });
 
 test('RosterSelectModal: NSFW rosters are visually marked distinctly in the picker', async (t) => {
-  const src = fs.readFileSync(ROSTER_MODAL_PATH, 'utf-8');
+  const src = readRosterModalSource();
 
   await t.test('an NSFW badge is rendered conditionally on r.is_nsfw', () => {
     assert.match(

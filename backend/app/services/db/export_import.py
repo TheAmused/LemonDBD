@@ -91,7 +91,7 @@ SMASH_ENTITY_FIELDS = [
     "role",
     "gender",
     "media_url",
-    "media_type",
+    "media_display",
     "watermark_left",
     "watermark_right",
     "archetype",
@@ -109,7 +109,6 @@ SMASH_ENTITY_FIELDS = [
     "chaos_score",
     "translations",
     "order_index",
-    "is_active",
 ]
 
 

@@ -23,10 +23,12 @@ So the English is a column, the other four locales are a `translations` blob of
 three-deep fallback chain (`locMeta.x || meta.x || meta.camelX`) existed only to
 paper over those spellings; with one spelling it is one lookup.
 """
+import re
 import uuid
 from datetime import datetime
 from typing import Any
 from sqlalchemy import (
+    BigInteger,
     Boolean,
     CheckConstraint,
     Computed,
@@ -69,6 +71,37 @@ TRANSLATABLE_FIELDS = (
     "red_flags",
     "green_flags",
 )
+
+
+#: How an entity's picture sits on its card. Nearly every portrait is a square render shown
+#: in a tall frame, which the default (`cover`, anchored to the top) suits; an entity whose
+#: art does not survive that crop carries a `media_display` of its own and nothing else does.
+MEDIA_FITS = ("cover", "contain")
+_POSITION_TOKEN = r"(?:\d{1,3}(?:\.\d+)?%|left|right|center|top|bottom)"
+_MEDIA_POSITION_RE = re.compile(rf"^{_POSITION_TOKEN}(?: {_POSITION_TOKEN})?$")
+MEDIA_SCALE_RANGE = (0.25, 2.0)
+
+
+def clean_media_display(value: Any) -> dict[str, Any] | None:
+    """The keys the card understands (`fit`, `position`, `scale`), each checked.
+
+    Anything else, or a value that fails its check, is dropped rather than rejected, the way
+    an unknown translation key is. `None` when nothing survives, so a row never stores `{}`.
+    """
+    if not isinstance(value, dict):
+        return None
+    cleaned: dict[str, Any] = {}
+    fit = value.get("fit")
+    if fit in MEDIA_FITS:
+        cleaned["fit"] = fit
+    position = value.get("position")
+    if isinstance(position, str) and _MEDIA_POSITION_RE.match(position.strip()):
+        cleaned["position"] = position.strip()
+    scale = value.get("scale")
+    if isinstance(scale, (int, float)) and not isinstance(scale, bool):
+        if MEDIA_SCALE_RANGE[0] <= scale <= MEDIA_SCALE_RANGE[1]:
+            cleaned["scale"] = float(scale)
+    return cleaned or None
 
 
 class Roster(Base):
@@ -158,7 +191,9 @@ class Entity(Base):
     role: Mapped[str] = mapped_column(String(32), default="Survivor", nullable=False)
     gender: Mapped[str] = mapped_column(String(32), default="female", nullable=False)
     media_url: Mapped[str | None] = mapped_column(String(512), nullable=True)
-    media_type: Mapped[str] = mapped_column(String(16), default="image", nullable=False)
+    #: Per-entity picture placement override (see `clean_media_display`). NULL for all but the
+    #: few portraits the default card crop does not suit.
+    media_display: Mapped[dict[str, Any] | None] = _json_column(nullable=True)
     watermark_left: Mapped[str | None] = mapped_column(String(64), nullable=True)
     watermark_right: Mapped[str | None] = mapped_column(String(64), nullable=True)
 
@@ -184,7 +219,6 @@ class Entity(Base):
     translations: Mapped[dict[str, Any] | None] = _json_column(default=dict, nullable=True)
 
     order_index: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
-    is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=utcnow, nullable=False
     )
@@ -250,14 +284,13 @@ class Entity(Base):
             "role": self.role,
             "gender": self.gender,
             "media_url": self.media_url,
-            "media_type": self.media_type,
+            "media_display": self.media_display,
             "watermark_left": self.watermark_left,
             "watermark_right": self.watermark_right,
             # One key, not two. `metadata` and `metadata_json` were the same
             # dict emitted twice in every response.
             "metadata": self.metadata_dict(lang),
             "order_index": self.order_index,
-            "is_active": self.is_active,
             "created_at": self.created_at.isoformat() if self.created_at else None,
             "stat": self.stat.to_dict() if self.stat else None,
         }
@@ -385,4 +418,32 @@ class SmashTaxonomy(Base):
             "slug": self.slug,
             "is_predefined": self.is_predefined,
             "created_at": self.created_at.isoformat() if self.created_at else None,
+        }
+
+
+class SmashUserPreference(Base):
+    """A signed-in viewer's answer to the Smash or Pass page's effects-and-music warning.
+
+    One row per user. `chosen_at` is when the viewer made the choice on their device (milliseconds
+    since the epoch), not when the row was written: it is what lets a choice made while signed out
+    and one stored on the account be reconciled -- the later one wins -- when the viewer signs in.
+    """
+
+    __tablename__ = "smash_user_preferences"
+
+    user_id: Mapped[int] = mapped_column(
+        Integer, ForeignKey("users.id", ondelete="CASCADE"), primary_key=True
+    )
+    effects_enabled: Mapped[bool] = mapped_column(Boolean, nullable=False)
+    music_enabled: Mapped[bool] = mapped_column(Boolean, nullable=False)
+    chosen_at: Mapped[int] = mapped_column(BigInteger, nullable=False)
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=utcnow, onupdate=utcnow, nullable=False
+    )
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "effects": self.effects_enabled,
+            "music": self.music_enabled,
+            "chosen_at": self.chosen_at,
         }

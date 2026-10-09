@@ -124,9 +124,17 @@ export async function uploadAvatar(file: File): Promise<void> {
   }
 }
 
-/** Downloads everything the server holds about the signed-in account as a JSON file. */
-export async function downloadMyData(): Promise<void> {
-  const res = await fetch(`${apiBase()}/api/v1/auth/account/export`, {
+/**
+ * Downloads everything the server holds about one account as a JSON file.
+ *
+ * One function, two targets: with no `userId` it is the signed-in user's own
+ * data (`/auth/account/export`); with a `userId` it is an admin fetching that
+ * user's data (`/users/<id>/export`). The server builds the same file for both
+ * and never includes password hashes or one-time codes.
+ */
+export async function downloadAccountData(userId?: number): Promise<void> {
+  const path = userId === undefined ? '/api/v1/auth/account/export' : `/api/v1/users/${userId}/export`;
+  const res = await fetch(`${apiBase()}${path}`, {
     credentials: 'include',
     headers: { Accept: 'application/json', ...authHeaders() },
   });
@@ -134,10 +142,12 @@ export async function downloadMyData(): Promise<void> {
     const data = await parseJsonSafely(res);
     throw new ApiError(data.error || 'Failed to export data.', res.status, data.error_code);
   }
+  // The server names the file; the fallback covers a cross-origin API that does not expose the header.
+  const serverName = /filename="([^"]+)"/.exec(res.headers.get('Content-Disposition') ?? '')?.[1];
   const url = URL.createObjectURL(await res.blob());
   const a = document.createElement('a');
   a.href = url;
-  a.download = 'lemondbd-my-data.json';
+  a.download = serverName ?? (userId === undefined ? 'lemondbd-my-data.json' : `lemondbd-user-${userId}-data.json`);
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);

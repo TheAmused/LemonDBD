@@ -22,10 +22,11 @@ class TestSmashSeederService:
         seed_smash_rosters()
 
         rosters = db_session.scalars(select(Roster)).all()
-        assert len(rosters) == 6
+        assert len(rosters) == 7
         roster_slugs = {r.slug for r in rosters}
         assert roster_slugs == {
             "canon",
+            "canon_gemini",
             "hooked_on_you",
             "legendary_characters",
             "cyberpunk_2077",
@@ -47,7 +48,10 @@ class TestSmashSeederService:
         assert len(hoy_roster.entities) == 8
 
         leg_roster = db_session.scalar(select(Roster).where(Roster.slug == "legendary_characters"))
-        assert len(leg_roster.entities) == 54
+        assert len(leg_roster.entities) == 53
+
+        gemini_roster = db_session.scalar(select(Roster).where(Roster.slug == "canon_gemini"))
+        assert len(gemini_roster.entities) == 98
 
         cyber_roster = db_session.scalar(select(Roster).where(Roster.slug == "cyberpunk_2077"))
         assert len(cyber_roster.entities) == 10
@@ -59,7 +63,7 @@ class TestSmashSeederService:
         assert len(gothic_roster.entities) == 10
 
         all_entities = db_session.scalars(select(Entity)).all()
-        assert len(all_entities) == 98 + 8 + 54 + 10 + 10 + 10
+        assert len(all_entities) == 98 + 98 + 8 + 53 + 10 + 10 + 10
 
         for entity in all_entities:
             assert entity.stat is not None
@@ -94,8 +98,8 @@ class TestSmashSeederService:
         active_rosters = service.get_rosters(active_only=True)
         all_rosters = service.get_rosters(active_only=False)
 
-        assert len(active_rosters) == 3
-        assert len(all_rosters) == 6
+        assert len(active_rosters) == 4
+        assert len(all_rosters) == 7
         canon = next((r for r in active_rosters if r["slug"] == "canon"), None)
         assert canon is not None
         assert canon["entity_count"] == 98
@@ -155,8 +159,8 @@ class TestSmashSeederService:
             roster_slug="canon", role="Survivor", gender="female", limit=50
         )
         female_survivors = female_survivors_res["entities"]
-        assert len(female_survivors) == 28
-        assert female_survivors_res["total_remaining"] == 28
+        assert len(female_survivors) == 29
+        assert female_survivors_res["total_remaining"] == 29
         assert all(e["role"] == "Survivor" and e["gender"] == "female" for e in female_survivors)
 
     def test_service_cast_vote_atomic_counts_and_rate(self, db_session: Session) -> None:

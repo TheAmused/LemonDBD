@@ -517,6 +517,7 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
                 onToggleRole={handleToggleRole}
                 onToggleActive={handleToggleActive}
                 onDeleteUser={handleDeleteUser}
+                onDownloadError={(text) => setActionMessage({ type: 'error', text })}
               />
             </div>
           ) : activeTab === 'challenges' ? (

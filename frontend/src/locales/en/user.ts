@@ -30,6 +30,7 @@ export default {
   authRequiredTitle: "Authentication Required",
   authRequiredDesc: "Please sign in or create an account to view your LemonDBD profile, manage your teachables, and track game challenges.",
   returnToHome: "Return to Home",
+  usernameLabel: "Username",
   usernameOrEmailLabel: "Username or Email",
   emailLabel: "Email Address",
   passwordLabel: "Password",
@@ -68,6 +69,9 @@ export default {
   failedToRequestPasswordReset: "Failed to request password reset",
   invalidCredentials: "Invalid credentials",
   registrationFailed: "Registration failed",
+  acceptRulesLabel: "I have read and accept the {rules}",
+  acceptRulesLink: "rules",
+  rulesNotAccepted: "Please accept the rules to create an account.",
   unexpectedError: "An unexpected error occurred.",
 
   // --- /user page: perf & i18n hardening pass additions ---

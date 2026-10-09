@@ -27,4 +27,5 @@ export default {
   publishEntry: 'Opublikuj wpis',
   noHighlight: 'Brak podświetlenia',
   linkPrompt: 'Adres URL (https://...)',
+  linkApply: 'Dodaj link',
 };

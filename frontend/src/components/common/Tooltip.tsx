@@ -59,6 +59,12 @@ export const TOOLTIP_CONFIG = {
       title: 'normal-case tracking-normal text-accent-red',
       arrowBorder: 'color-mix(in srgb, var(--accent-red) 40%, transparent)',
     },
+    /** Form validation: the styled replacement for the browser's native "fill out this field" bubble. */
+    error: {
+      content: 'border-accent-red/60',
+      title: 'normal-case tracking-normal text-accent-red',
+      arrowBorder: 'color-mix(in srgb, var(--accent-red) 60%, transparent)',
+    },
     /** Add-on / item rarity labels. */
     rarity: {
       content: 'border-accent-amber/50',
@@ -109,7 +115,7 @@ export interface TooltipBubbleProps {
   contentClassName?: string;
 }
 
-const TooltipBubble: React.FC<TooltipBubbleProps> = ({
+export const TooltipBubble: React.FC<TooltipBubbleProps> = ({
   anchor,
   title,
   description,

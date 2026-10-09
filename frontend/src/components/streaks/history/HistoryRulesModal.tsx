@@ -6,7 +6,6 @@ import React from 'react';
 import { RulesModalShell } from '../RulesModalShell';
 import {
   DIFFICULTY_BADGE,
-  RulesConceptCard,
   RulesDifficultyRows,
   RulesSection,
   RulesHowItWorks,
@@ -32,20 +31,11 @@ export const HistoryRulesModal: React.FC<HistoryRulesModalProps> = ({ isOpen, on
       onClose={onClose}
       title={s.rules || 'Rules'}
     >
-      <RulesConceptCard
-        tone="neutral"
-        title={s.historyConceptLabel || 'Concept'}
-        text={
-          s.historyConceptShort ||
-          'Killers are grouped into rows of 5, sorted by release order. Clear a row to unlock the next.'
-        }
-      />
-
       <RulesHowItWorks
         tone="neutral"
         title={s.howItWorks || 'How it works'}
         items={[
-          s.historyWinCondition || 'Win = 3 kills or more. Anything less breaks the streak.',
+          s.historyWinCondition || 'Win = 3 kills or more.',
           s.historyStartingPerksNote || 'You start with every General perk unlocked.',
           s.historyPerkUnlockRule || 'Beating a killer adds their teachables to your pool.',
           s.historyCheckpointRule ||

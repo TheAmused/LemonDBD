@@ -8,6 +8,7 @@ export default {
   tierLists: "ティアリスト",
   smashOrPass: "スマッシュ・オア・パス",
   trophies: "トロフィー",
+  about: "私たちについて",
   navigation: "ナビゲーション",
   others: "その他",
   admin: "管理者",

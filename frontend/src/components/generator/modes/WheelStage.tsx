@@ -730,11 +730,7 @@ export const WheelStage: React.FC<WheelStageProps> = ({
               // makes them structurally identical, so they can never diverge.
               className={`w-[min(62vw,36dvh)] h-[min(62vw,36dvh)] min-w-[200px] min-h-[200px] sm:w-[min(285px,38dvh)] sm:h-[min(285px,38dvh)] md:w-[min(320px,38dvh)] md:h-[min(320px,38dvh)] lg:w-[min(350px,38dvh)] lg:h-[min(350px,38dvh)] xl:w-[min(480px,46dvh)] xl:h-[min(480px,46dvh)] 2xl:w-[min(600px,52dvh)] 2xl:h-[min(600px,52dvh)] wide:w-[min(720px,58dvh)]! wide:h-[min(720px,58dvh)]! wide-2k:w-[min(900px,60dvh)]! wide-2k:h-[min(900px,60dvh)]! wide-4k:w-[min(1100px,62dvh)]! wide-4k:h-[min(1100px,62dvh)]! transition-all duration-300 ease-out transform select-none ${
                 !isSpinning && sortedPerks.length > 0
-                  ? `cursor-pointer hover:scale-[1.02] active:scale-[0.98] ${
-                      isSurvivor(role)
-                        ? 'hover:drop-shadow-[0_0_24px_var(--color-accent-green)]'
-                        : 'hover:drop-shadow-[0_0_24px_var(--color-accent-red)]'
-                    }`
+                  ? 'cursor-pointer hover:scale-[1.02] active:scale-[0.98] hover:drop-shadow-[0_0_24px_var(--color-accent-amber)]'
                   : ''
               } ${
                 isMorphing && !reduceMotion ? 'scale-75 opacity-0 rotate-[180deg]' : 'scale-100 opacity-100 rotate-0'

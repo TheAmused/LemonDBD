@@ -12,6 +12,7 @@ import { perkIconUrl as perkIconFor } from '@/utils/staticUrl';
 import { usePerkDisplayName } from '@/context/DisplayNamesContext';
 import { Spinner } from '@/components/common/Spinner';
 import { useDictionary } from "@/context/DictionaryContext";
+import { useChallengeAnimations } from '../useChallengeAnimations';
 
 const REEL_DIRECTIONS: ReelDirection[] = ['up', 'down', 'down', 'up'];
 const STRIP_LENGTH = 16;
@@ -34,8 +35,10 @@ const ReelStrip: React.FC<{
   spinToken: number;
   direction: ReelDirection;
   durationMs: number;
+  /** False lands the reel at once, with no spin. */
+  animate: boolean;
   onLanded: () => void;
-}> = ({ finalPerk, pool, spinToken, direction, durationMs, onLanded }) => {
+}> = ({ finalPerk, pool, spinToken, direction, durationMs, animate, onLanded }) => {
   const windowRef = useRef<HTMLDivElement | null>(null);
   const [itemPx, setItemPx] = useState(0);
   const [spinning, setSpinning] = useState(false);
@@ -66,7 +69,7 @@ const ReelStrip: React.FC<{
     lastToken.current = spinToken;
     const landedOffset = direction === 'up' ? -(STRIP_LENGTH - 1) * itemPx : 0;
 
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    if (!animate || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       setSpinning(false);
       onLanded();
       return;
@@ -83,7 +86,7 @@ const ReelStrip: React.FC<{
       });
     });
     return () => cancelAnimationFrame(raf);
-  }, [spinToken, itemPx, finalPerk, direction, onLanded]);
+  }, [spinToken, itemPx, finalPerk, direction, animate, onLanded]);
 
   return (
     <div
@@ -148,6 +151,7 @@ export interface SlotMachineStageProps {
 export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({ perks, addonRarities, revealed, onPullLever, loading = false, locked = false }) => {
   const dict = useDictionary();
   const { spinToken, start, reportLanded } = useSlotReels(4);
+  const [animations] = useChallengeAnimations();
   const [leverPulled, setLeverPulled] = useState(false);
   const [hasSpunThisBuild, setHasSpunThisBuild] = useState(revealed);
   const pendingSpinRef = useRef(false);
@@ -200,12 +204,13 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({ perks, addon
                 spinToken={spinToken}
                 direction={REEL_DIRECTIONS[i]}
                 durationMs={REEL_SPIN_MS[i]}
+                animate={animations}
                 onLanded={reportLanded}
               />
             ))}
           </div>
 
-          <SlotLever down={revealed || leverPulled} disabled={revealed || loading || locked} onPull={handlePull} />
+          <SlotLever down={revealed || leverPulled} disabled={revealed || loading || locked} animate={animations} onPull={handlePull} />
 
           <div className="w-40 sm:w-48 shrink-0 pl-2 sm:pl-3">
             {revealed ? (
@@ -248,9 +253,10 @@ const easeOutBack = (t: number): number => {
   return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2);
 };
 
-const SlotLever: React.FC<{ down: boolean; disabled: boolean; onPull: () => void; label?: string }> = ({
+const SlotLever: React.FC<{ down: boolean; disabled: boolean; animate: boolean; onPull: () => void; label?: string }> = ({
   down,
   disabled,
+  animate,
   onPull,
   label: labelProp,
 }) => {
@@ -297,7 +303,7 @@ const SlotLever: React.FC<{ down: boolean; disabled: boolean; onPull: () => void
     const target = down ? Math.PI : 0;
     const from = angleRef.current;
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reduced || from === target) {
+    if (reduced || !animate || from === target) {
       angleRef.current = target;
       render(target);
       return;
@@ -312,7 +318,7 @@ const SlotLever: React.FC<{ down: boolean; disabled: boolean; onPull: () => void
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, [down, render]);
+  }, [down, animate, render]);
 
   useEffect(() => {
     const panel = panelRef.current;

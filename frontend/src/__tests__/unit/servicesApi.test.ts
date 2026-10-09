@@ -7,14 +7,14 @@ import {
   fetchRun as fetchPageRun,
   startRun as startPageRun,
   submitResult as submitPageResult,
-  resetRun as resetPageRun,
+  abandonRun as abandonPageRun,
   fetchStats as fetchPageStats,
 } from '@/utils/../services/pageStreakApi';
 import {
   fetchRun as fetchGauntletRun,
   submitMatchResult as submitGauntletResult,
   revealTarget as revealGauntletTarget,
-  resetRun as resetGauntletRun,
+  abandonRun as abandonGauntletRun,
   fetchStats as fetchGauntletStats,
 } from '@/utils/../services/gauntletStreakApi';
 import { createStreakApiClient } from '@/utils/../services/streakApiClient';

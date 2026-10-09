@@ -19,7 +19,9 @@ import {
 import { EmailVerificationForm } from '@/components/EmailVerificationForm';
 import { Modal } from '@/components/common/Modal';
 import { Button } from '@/components/common/Button';
+import { Checkbox } from '@/components/common/Checkbox';
 import { Input } from '@/components/common/Field';
+import { RulesModal } from '@/components/rules/RulesModal';
 import { useDictionary } from "@/context/DictionaryContext";
 
 interface AuthModalProps {
@@ -57,11 +59,18 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [notice, setNotice] = useState<Notice | null>(null);
+  const [acceptedRules, setAcceptedRules] = useState<boolean>(false);
+  const [rulesOpen, setRulesOpen] = useState<boolean>(false);
+  // Set by a submit with the box unticked, so the field error only shows after an attempt.
+  const [rulesAttempted, setRulesAttempted] = useState<boolean>(false);
 
   useEffect(() => {
     if (isOpen) {
       setMode(initialMode);
       setError(null);
+      setAcceptedRules(false);
+      setRulesAttempted(false);
+      setRulesOpen(false);
       setNotice(verifyEmailFor ? { type: 'verify-reminder', email: verifyEmailFor } : null);
     }
   }, [isOpen, initialMode, verifyEmailFor]);
@@ -103,6 +112,10 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
           setError(res.error || dict.user.invalidCredentials);
         }
       } else {
+        if (!acceptedRules) {
+          setRulesAttempted(true);
+          return;
+        }
         const res = await register(username, email, password, {
           website_trap: honeypotValue,
           altcha: altchaPayload,
@@ -139,6 +152,9 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
       setPassword('user');
     }
   };
+
+  const [rulesLabelBefore, rulesLabelAfter = ''] = dict.user.acceptRulesLabel.split('{rules}');
+  const showRulesError = rulesAttempted && !acceptedRules;
 
   return (
     <Modal
@@ -216,11 +232,9 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
 
           {mode !== 'forgot' && (
             <div>
-              {dict.user.usernameOrEmailLabel && (
-                <label className="block type-label-xs text-text-secondary mb-1">
-                  {dict.user.usernameOrEmailLabel}
-                </label>
-              )}
+              <label className="block type-label-xs text-text-secondary mb-1">
+                {mode === 'register' ? dict.user.usernameLabel : dict.user.usernameOrEmailLabel}
+              </label>
               <Input
                 type="text"
                 required
@@ -274,6 +288,36 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
               >
                 {dict.user.forgotPasswordLink}
               </button>
+            </div>
+          )}
+
+          {mode === 'register' && (
+            <div>
+              <Checkbox
+                checked={acceptedRules}
+                onChange={setAcceptedRules}
+                invalid={showRulesError}
+                ariaDescribedBy={showRulesError ? 'accept-rules-error' : undefined}
+                className="items-start"
+                boxClassName="mt-0.5"
+              >
+                <span className="type-body text-text-secondary">
+                  {rulesLabelBefore}
+                  <button
+                    type="button"
+                    onClick={() => setRulesOpen(true)}
+                    className="cursor-pointer font-bold text-accent-red underline underline-offset-2 hover:opacity-80"
+                  >
+                    {dict.user.acceptRulesLink}
+                  </button>
+                  {rulesLabelAfter}
+                </span>
+              </Checkbox>
+              {showRulesError ? (
+                <p id="accept-rules-error" role="alert" className="mt-1.5 pl-6 text-xs font-medium text-accent-red">
+                  {dict.user.rulesNotAccepted}
+                </p>
+              ) : null}
             </div>
           )}
 
@@ -358,6 +402,8 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
           </button>
         </div>
       )}
+
+      <RulesModal isOpen={rulesOpen} onClose={() => setRulesOpen(false)} onAccept={() => setAcceptedRules(true)} />
     </Modal>
   );
 };

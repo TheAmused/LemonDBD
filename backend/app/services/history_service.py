@@ -15,6 +15,7 @@ from app.services.history.roster import (
     get_owned_killer_ids_by_release,
     resolve_killer_names_by_ids,
 )
+from app.services.match_log_retention import add_match_log
 from app.services.ownership_service import OwnershipService
 from app.services.streak_run import StreakRunService
 
@@ -24,6 +25,7 @@ logger = logging.getLogger(__name__)
 class HistoryService(StreakRunService):
     mode = "history"
     run_model = HistoryRun
+    best_field = "best_killers_beaten"
     variant_fields = ("mode",)
 
     def __init__(self, ownership_service: OwnershipService | None = None):
@@ -118,8 +120,8 @@ class HistoryService(StreakRunService):
             checkpoint_unlocked_perk_names=general,
         )
 
-    def reset_run(self, user_id: int, mode: str) -> HistoryRunState:
-        return self._reset_run(user_id, mode)
+    def abandon_run(self, user_id: int, mode: str) -> HistoryRunState:
+        return self._abandon_run(user_id, mode)
 
     def submit_result(self, user_id: int, run_id: int, result: str, killer_id: str) -> HistoryRunState:
         assert_challenge_mode_enabled("history")
@@ -139,6 +141,7 @@ class HistoryService(StreakRunService):
         unlocked = run.unlocked_perk_names
         streak_before = run.total_killers_beaten
         row_index_for_log = run.current_row_index
+        attempt = run.attempt
         newly_unlocked: list[str] = []
         row_cleared = False
 
@@ -166,14 +169,15 @@ class HistoryService(StreakRunService):
                     run.checkpoint_unlocked_perk_names = unlocked
         else:
             completed, unlocked = self._resolve_loss(run)
-            run.attempts += 1
+            run.start_new_attempt()
 
         streak_after = run.total_killers_beaten
         run.completed_killers = completed
         run.unlocked_perk_names = unlocked
 
-        db.session.add(HistoryMatchLog(
+        add_match_log(run, HistoryMatchLog(
             run_id=run_id,
+            attempt=attempt,
             killer_id=killer_id,
             result=result,
             row_index=row_index_for_log,
@@ -200,15 +204,17 @@ class HistoryService(StreakRunService):
         streak_before = run.total_killers_beaten
         row_index_for_log = run.current_row_index
 
+        attempt = run.attempt
         completed, unlocked = self._resolve_loss(run)
-        run.attempts += 1
+        run.start_new_attempt()
 
         streak_after = run.total_killers_beaten
         run.completed_killers = completed
         run.unlocked_perk_names = unlocked
 
-        db.session.add(HistoryMatchLog(
+        add_match_log(run, HistoryMatchLog(
             run_id=run_id,
+            attempt=attempt,
             killer_id="",
             result="loss",
             row_index=row_index_for_log,

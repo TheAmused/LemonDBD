@@ -10,7 +10,6 @@ import { avatarUrlForCharacter, staticUrl } from '@/utils/staticUrl';
 import { useCharacterDisplayName } from '@/context/DisplayNamesContext';
 import { KillerIcon } from '@/components/icons/DbdIcons';
 
-import { tip } from '@/components/common/Tooltip';
 import { SkeletonBlock } from '@/components/common/Skeleton';
 import { useDictionary } from "@/context/DictionaryContext";
 
@@ -100,10 +99,10 @@ export const CharacterRosterGrid: React.FC<CharacterRosterGridProps> = ({
             return (
               <div
                 key={char.name}
-                className={`relative group rounded-xl border p-2 flex flex-col items-center justify-between transition-all duration-200 ${cardBorder} ${
+                className={`relative group select-none overflow-hidden rounded-xl border flex flex-col items-center justify-between transition-all duration-200 ${cardBorder} ${
                   selectable ? 'cursor-pointer hover:border-accent-green focus:outline-none focus:ring-2 focus:ring-accent-green' : ''
                 }`}
-                {...tip(`${displayName(char.name)}${statusSuffix}`, undefined, 'character')}
+                aria-label={`${displayName(char.name)}${statusSuffix}`}
                 {...(selectable
                   ? {
                       role: 'button',
@@ -119,21 +118,22 @@ export const CharacterRosterGrid: React.FC<CharacterRosterGridProps> = ({
                   : {})}
               >
                 {completed && (
-                  <div className="absolute -top-2 -right-2 bg-accent-green text-text-inverted p-1 rounded-full shadow-md z-10">
+                  <div className="absolute top-1 right-1 bg-accent-green text-text-inverted p-1 rounded-full shadow-md z-10">
                     <Check className="w-3.5 h-3.5 stroke-[3]" />
                   </div>
                 )}
                 {checkpoint && !completed && !active && (
-                  <div className="absolute -top-2 -right-2 bg-accent-amber text-text-inverted p-1 rounded-full shadow-md z-10">
+                  <div className="absolute top-1 right-1 bg-accent-amber text-text-inverted p-1 rounded-full shadow-md z-10">
                     <ShieldCheck className="w-3 h-3" />
                   </div>
                 )}
 
-                <div className="w-full aspect-square rounded-lg bg-bg-elevated border border-border-color overflow-hidden flex items-center justify-center relative mb-2 shadow-inner">
+                <div className="w-full aspect-square bg-bg-elevated overflow-hidden flex items-center justify-center relative">
                   {avatarUrl && !hasError ? (
                     <img
                       src={avatarUrl}
                       alt={displayName(char.name)}
+                      draggable={false}
                       className={`w-full h-full object-cover transition-transform duration-300 group-hover:scale-105 ${completed ? 'brightness-105' : !active ? 'opacity-90' : ''
                         }`}
                       onError={() => handleImageError(char.name)}
@@ -145,7 +145,7 @@ export const CharacterRosterGrid: React.FC<CharacterRosterGridProps> = ({
                   )}
                 </div>
 
-                <span className="text-mini leading-tight font-semibold text-center text-text-secondary line-clamp-2 min-h-[2.4em] w-full group-hover:text-accent-red transition-colors">
+                <span className="text-mini leading-tight font-semibold text-center text-text-secondary line-clamp-2 min-h-[2.4em] w-full px-1.5 py-2 group-hover:text-accent-red transition-colors">
                   {displayName(char.name)}
                 </span>
               </div>
@@ -155,4 +155,5 @@ export const CharacterRosterGrid: React.FC<CharacterRosterGridProps> = ({
       )}
     </div>
   );
-};
+};
+

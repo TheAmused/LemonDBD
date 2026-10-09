@@ -16,6 +16,5 @@ export default {
     code: 'Bloqueada',
     title: 'Página bloqueada',
     text: 'Esta página no está abierta a los visitantes por ahora.',
-    hint: 'De momento solo está disponible para administradores. El resto del sitio sigue funcionando.',
   },
 } as const;

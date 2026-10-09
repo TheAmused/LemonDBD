@@ -34,4 +34,9 @@ export default {
     heading: "Podziękowania",
     text: "Dziękujemy wszystkim, którzy pomogli nam w tworzeniu tego projektu.",
   },
+  contact: {
+    heading: "Kontakt",
+    text: "Pytania, opinie lub pomysły? Napisz do nas mailem albo dołącz do naszego serwera Discord.",
+    discordLabel: "Dołącz do Discorda",
+  },
 };

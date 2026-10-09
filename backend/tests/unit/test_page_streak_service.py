@@ -409,7 +409,7 @@ class TestPageStreakResults:
         self.service.submit_result(self.user_id, "Nurse", 2, self.build_for(2), "win")
         self.service.submit_result(self.user_id, "Nurse", 3, self.build_for(3), "win")
 
-        self.service.reset_run(self.user_id, "Nurse")
+        self.service.abandon_run(self.user_id, "Nurse")
 
         roster = {entry["killer"]: entry for entry in self.service.get_roster(self.user_id)}
         assert roster["Nurse"]["status"] == "in_progress"
@@ -441,7 +441,7 @@ class TestPageStreakResults:
             perk = db.session.scalars(select(Perk).where(Perk.name == f"Perk {i:03d}")).first()
             ownership_service.set_perk_ownership(self.user_id, perk.id, is_unlocked=False)
 
-        updated = self.service.reset_run(self.user_id, "Nurse")
+        updated = self.service.abandon_run(self.user_id, "Nurse")
         assert updated["current_page"] == 1
         assert updated["attempt"] == 2
         assert updated["status"] == "in_progress"
@@ -453,13 +453,35 @@ class TestPageStreakResults:
         self.service.submit_result(self.user_id, "Nurse", 1, self.build_for(1), "win")
         self.service.submit_result(self.user_id, "Nurse", 2, self.build_for(2), "win")
         self.service.submit_result(self.user_id, "Nurse", 3, self.build_for(3), "win")
-        updated = self.service.reset_run(self.user_id, "Nurse")
+        updated = self.service.abandon_run(self.user_id, "Nurse")
         assert updated["status"] == "in_progress"
         assert updated["current_page"] == 1
 
+    def test_replay_restarts_the_attempt_count_but_not_the_attempt_groups(self) -> None:
+        from app.core.extensions import db
+        from app.models import ChallengeCompletionRecord
+
+        self.service.submit_result(self.user_id, "Nurse", 1, self.build_for(1), "loss")
+        for page in (1, 2, 3):
+            self.service.submit_result(self.user_id, "Nurse", page, self.build_for(page), "win")
+        completed = self.service.get_run(self.user_id, "Nurse")
+        assert (completed["attempts"], completed["attempt"]) == (0, 2)
+
+        replay = self.service.abandon_run(self.user_id, "Nurse")
+        assert (replay["attempts"], replay["attempt"]) == (0, 3)
+        self.service.submit_result(self.user_id, "Nurse", 1, self.build_for(1), "loss")
+
+        updated = self.service.get_run(self.user_id, "Nurse")
+        assert (updated["attempts"], updated["attempt"]) == (1, 4)
+        assert [entry["attempt"] for entry in reversed(updated["history"])] == [1, 2, 2, 2, 3]
+        record = db.session.scalars(
+            select(ChallengeCompletionRecord).where(ChallengeCompletionRecord.user_id == self.user_id)
+        ).first()
+        assert (record.attempts_taken, record.matches_played) == (2, 4)
+
     def test_reset_without_a_run_is_rejected(self) -> None:
         with pytest.raises(ValueError):
-            self.service.reset_run(self.user_id, "Trapper")
+            self.service.abandon_run(self.user_id, "Trapper")
 
     def test_apply_inactivity_loss_resets_page_and_increments_attempt(self) -> None:
         self.service.submit_result(self.user_id, "Nurse", 1, self.build_for(1), "win")

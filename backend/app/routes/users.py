@@ -7,6 +7,7 @@ from sqlalchemy import delete, or_, select
 
 from app.core.extensions import db
 from app.core.json_provider import safe_json_dumps, safe_json_loads
+from app.core.limiter import limiter
 from app.core.security import admin_required, login_required
 from app.models import (
     ItemAddon,
@@ -28,6 +29,7 @@ from app.services.admin_control_service import log_admin_action
 from app.services.db.export_import import DatabaseExportImportService
 from app.services.ownership_service import OwnershipService
 from app.services.user_service import UserService
+from app.utils.downloads import json_download_response
 
 logger = logging.getLogger(__name__)
 users_bp = Blueprint("users_bp", __name__, url_prefix="/api/v1")
@@ -104,6 +106,24 @@ def get_user_detail(user_id: int):
         "user": UserResponse.model_validate(user).model_dump(),
         "ownership": summary,
     }), 200
+
+
+@users_bp.route("/users/<int:user_id>/export", methods=["GET"])
+@limiter.limit("30 per hour")
+@admin_required
+def export_user_data_by_admin(user_id: int):
+    """Download one user's data as JSON (same file as the user's own `GET /auth/account/export`).
+
+    Meant for answering an access / portability request sent by email, so it
+    works for disabled accounts too. Password hashes and one-time codes are
+    never included, and every download is written to the admin audit log.
+    """
+    data = user_service.export_user_data(user_id, requested_by="admin")
+    if data is None:
+        return jsonify({"error": "User not found.", "status": 404}), 404
+
+    log_admin_action(g.current_user.id, action="user_data_exported", target_type="user", target_id=user_id)
+    return json_download_response(data, user_service.export_filename(user_id, "admin"))
 
 
 @users_bp.route("/users/<int:user_id>", methods=["PUT"])

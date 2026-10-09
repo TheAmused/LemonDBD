@@ -18,4 +18,4 @@ def fetch_page_streak_user_stats(user_id: int) -> StreakStats[PageStreakStatsLog
     def with_killer(log: PageStreakPageLog) -> PageStreakStatsLog:
         return {**log.to_dict(), "killer": killer_by_run_id.get(log.run_id)}
 
-    return fetch_streak_stats(list(killer_by_run_id), PageStreakPageLog, with_killer)
+    return fetch_streak_stats(list(killer_by_run_id), PageStreakRun, PageStreakPageLog, with_killer)

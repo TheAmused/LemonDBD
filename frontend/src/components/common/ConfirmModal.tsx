@@ -2,7 +2,6 @@
 // frontend/src/components/common/ConfirmModal.tsx
 
 import React from 'react';
-import { AlertTriangle } from 'lucide-react';
 import { Modal } from '@/components/common/Modal';
 
 export interface ConfirmModalProps {
@@ -35,8 +34,6 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
     onClose={onCancel}
     variant="confirm"
     layer="top"
-    tone="danger"
-    icon={<AlertTriangle className="h-5 w-5 sm:h-6 sm:w-6" aria-hidden="true" />}
     title={title}
     ariaLabel="Confirm"
     closeButton="none"

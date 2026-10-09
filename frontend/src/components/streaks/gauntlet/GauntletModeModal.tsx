@@ -3,9 +3,9 @@
 import type { Dictionary } from '@/locales/types';
 
 import React, { useEffect, useState } from 'react';
-import { Swords, Lock, Sparkles, User, Users, UsersRound } from 'lucide-react';
+import { Swords, Sparkles, User, Users, UsersRound } from 'lucide-react';
 import { ChallengeIntroTile, NEUTRAL_TILE_ACCENT } from '../ChallengeIntroModalShell';
-import { ChallengeModeModal } from '../ChallengeModeModal';
+import { ChallengeModeModal, type ModeInfo } from '../ChallengeModeModal';
 import { GauntletRulesModal } from './GauntletRulesModal';
 import { GAUNTLET_GAME_MODES, GauntletGameMode } from '@/types/gauntletStreak';
 import { useDictionary } from "@/context/DictionaryContext";
@@ -24,29 +24,15 @@ export interface GauntletModeModalProps {
   originalCompletedFull?: boolean;
   /** Killer count frozen at that full-roster completion. */
   originalCompletedFullCount?: number | null;
-  /** Hide the intro box when the player is switching mode mid-run. */
-  showIntro?: boolean;
 }
 
 type Stage = 'root' | 'lemon';
 
 function lemonRootTile(role: 'killer' | 'survivor', dict: Dictionary): ChallengeIntroTile {
-  const label = dict.streaks.lemonVersion;
-  if (role !== 'survivor') {
-    return {
-      value: 'lemon',
-      label,
-      description: dict.streaks.gauntletLemonDesc,
-      icon: Lock,
-      accentClassName: 'border-border-color bg-bg-elevated/50',
-      disabled: true,
-      disabledBadge: dict.streaks.comingSoon,
-    };
-  }
   return {
     value: 'lemon',
-    label,
-    description: dict.streaks.gauntletLemonPlayersDesc,
+    label: role === 'killer' ? dict.streaks.lemonMode : dict.streaks.lemonVersion,
+    description: role === 'killer' ? dict.streaks.gauntletLemonDesc : dict.streaks.gauntletLemonPlayersDesc,
     icon: Sparkles,
     image: '/images/streaks/modes/gauntlet-lemon.webp',
     accentClassName: NEUTRAL_TILE_ACCENT,
@@ -82,6 +68,39 @@ function lemonPlayerTiles(dict: Dictionary): ChallengeIntroTile[] {
   ];
 }
 
+/** The mode whose rules the highlighted tile stands for. The survivor lemon group has no rules of its own, so it shows the solo ones. */
+function highlightedMode(role: 'killer' | 'survivor', stage: Stage, value: string | undefined): GauntletGameMode {
+  if (stage === 'lemon') return GAUNTLET_GAME_MODES.find((mode) => mode === value) ?? 'lemon_solo';
+  if (value === 'lemon') return role === 'killer' ? 'lemon_killer' : 'lemon_solo';
+  return 'original';
+}
+
+function gauntletModeInfo(
+  role: 'killer' | 'survivor',
+  stage: Stage,
+  value: string | undefined,
+  dict: Dictionary
+): ModeInfo {
+  const s = dict.streaks;
+  const intro = role === 'killer' ? s.gauntletIntroKiller : s.gauntletIntroSurvivor;
+  const pickedPlayerCount = stage === 'lemon' && GAUNTLET_GAME_MODES.some((mode) => mode === value);
+  if (role === 'survivor' && !pickedPlayerCount && (stage === 'lemon' || value === 'lemon')) {
+    return { intro, detail: s.gauntletSummaryLemonSurvivor, showRules: true };
+  }
+  switch (highlightedMode(role, stage, value)) {
+    case 'lemon_killer':
+      return { intro, detail: s.gauntletSummaryLemonKiller, showRules: true };
+    case 'lemon_solo':
+      return { intro, detail: s.gauntletSummaryLemonSolo, showRules: true };
+    case 'lemon_duo':
+      return { intro, detail: s.gauntletSummaryLemonDuo, showRules: true };
+    case 'lemon_squad':
+      return { intro, detail: s.gauntletSummaryLemonSquad, showRules: true };
+    default:
+      return { intro, detail: role === 'killer' ? s.gauntletOriginalDescKiller : s.gauntletOriginalDesc, showRules: true };
+  }
+}
+
 export const GauntletModeModal: React.FC<GauntletModeModalProps> = ({
       isOpen,
       onClose,
@@ -92,7 +111,6 @@ export const GauntletModeModal: React.FC<GauntletModeModalProps> = ({
       originalCompletedCount = null,
       originalCompletedFull = false,
       originalCompletedFullCount = null,
-      showIntro = true,
     }) => {
   const dict = useDictionary();
   const [stage, setStage] = useState<Stage>('root');
@@ -124,6 +142,8 @@ export const GauntletModeModal: React.FC<GauntletModeModalProps> = ({
 
   return (
     <ChallengeModeModal
+      // Each screen starts with its own highlight, so the pick never carries over between them.
+      key={stage}
       isOpen={isOpen}
       onClose={onClose}
       title={
@@ -131,18 +151,13 @@ export const GauntletModeModal: React.FC<GauntletModeModalProps> = ({
           ? dict.streaks.chooseLemonPlayers
           : dict.streaks.chooseMode
       }
-      intro={
-        isLemonStage || !showIntro
-          ? undefined
-          : role === 'killer'
-            ? dict.streaks.gauntletIntroKiller
-            : dict.streaks.gauntletIntroSurvivor
-      }
-      showRules={!isLemonStage && showIntro}
+      modeInfo={(value) => gauntletModeInfo(role, stage, value, dict)}
       tiles={isLemonStage ? lemonPlayerTiles(dict) : rootTiles}
       onSelectTile={(value) => {
         if (value === 'lemon') {
-          setStage('lemon');
+          // Killers have a single lemon mode, so there is no player count to pick.
+          if (role === 'killer') onSelectMode('lemon_killer');
+          else setStage('lemon');
           return;
         }
         const mode = GAUNTLET_GAME_MODES.find((candidate) => candidate === value);
@@ -152,7 +167,14 @@ export const GauntletModeModal: React.FC<GauntletModeModalProps> = ({
       selectedValue={isLemonStage ? currentMode : rootSelected}
       onBack={isLemonStage ? () => setStage('root') : undefined}
       backLabel={dict.streaks.back}
-      renderRules={(rules) => <GauntletRulesModal {...rules} role={role} />}
+      renderRules={({ isOpen: rulesOpen, onClose: closeRules, value }) => (
+        <GauntletRulesModal
+          isOpen={rulesOpen}
+          onClose={closeRules}
+          role={role}
+          gameMode={highlightedMode(role, stage, value)}
+        />
+      )}
     />
   );
 };

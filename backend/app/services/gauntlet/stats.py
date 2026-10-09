@@ -16,4 +16,4 @@ def fetch_gauntlet_user_stats(
             GauntletRun.user_id == user_id, GauntletRun.role == role, GauntletRun.game_mode == game_mode
         )
     ).all()
-    return fetch_streak_stats(run_ids, GauntletMatchLog, GauntletMatchLog.to_dict)
+    return fetch_streak_stats(run_ids, GauntletRun, GauntletMatchLog, GauntletMatchLog.to_dict)

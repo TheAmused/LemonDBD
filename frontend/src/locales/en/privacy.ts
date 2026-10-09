@@ -7,6 +7,7 @@ export default {
   lastUpdated: "October 3, 2026",
   intro:
     "This page explains what personal data <brand>LemonDBD</brand> collects, why, who sees it and what you can do about it. We kept it short and plain on purpose.",
+  translationNotice: "If the translated versions of this page differ from the English one, the English version prevails.",
   summaryHeading: "The short version",
   summary: [
     "We collect only what the site needs to work: an account, the things you save on it and basic technical data.",
@@ -26,7 +27,8 @@ export default {
     aiContent: {
       heading: "AI-generated content",
       paragraphs: [
-        "Some content on <brand>LemonDBD</brand>, such as images, may be generated, edited or upscaled with AI tools.",
+        "Some content on <brand>LemonDBD</brand>, such as images and some texts, may be generated, edited or upscaled with AI tools.",
+        "Some text related to character lore may include additions that go beyond canon lore, written for humor.",
         "AI-assisted content can contain mistakes or odd details. If you spot something wrong or would like a piece of content reviewed or removed, contact us.",
       ],
       items: [],
@@ -37,7 +39,7 @@ export default {
       items: [
         "<b>Account data:</b> username, email address, a hash of your password (never the password itself), avatar, preferred language, and short-lived verification and password-reset codes.",
         "<b>What you save:</b> character and perk ownership, your profile showcase, streak runs, challenge achievements, minigame stats and Smash or Pass votes. Your tier lists, Smash or Pass rosters and custom minigames stay in your own browser and are not sent to our servers. Visitors without an account get a random session ID so their Smash or Pass votes can be remembered.",
-        "<b>Bug reports and messages:</b> the text, screenshots, name and email address you send us. Guests must give an email address so we can answer.",
+        "<b>Bug reports and messages:</b> the text, screenshots and email address you send us. Guests must give an email address so we can answer.",
         "<b>Technical data:</b> your IP address, browser type and request details, used for rate limiting, abuse prevention and fixing errors.",
         "<b>Voice commands (maps):</b> if you turn them on, your microphone audio is used to recognize map names. See the section on storage and third parties below for how this works.",
         "<b>Screenshot check:</b> if you upload a match scoreboard to verify a challenge, the image is analysed in the server's memory and discarded as soon as the result is ready. It is never saved or logged; only the result (for example won or not) is returned to you.",
@@ -50,15 +52,15 @@ export default {
         "To create and run your account, keep your saved data and send verification and password-reset emails (performance of our service to you).",
         "To answer bug reports and requests (our legitimate interest in supporting users, or your request).",
         "To keep the site secure, stop spam and abuse and fix errors (our legitimate interest).",
-        "To understand which pages are used and improve the site, using privacy-friendly analytics (our legitimate interest).",
-        "Where we ask for your consent, for example to enable a feature that needs it, you can withdraw it at any time.",
+        "To understand which pages are used and to improve the site through privacy-friendly analytics (our legitimate interest).",
+        "If we ask for your consent, you can take it back at any time.",
       ],
     },
     analytics: {
       heading: "Analytics",
       paragraphs: [
         "We use <b>Umami</b>, an open-source analytics tool that we host ourselves. It does not use cookies, does not follow you across other websites and does not store your IP address.",
-        "It records anonymous visit data such as the page viewed, referrer, browser, operating system, device type, screen size and approximate country.",
+        "It records anonymous visit data such as the page viewed, referrer, browser, operating system, device type, screen size, approximate country and clicks on selected page elements. Analytics data is anonymous.",
       ],
       items: [],
     },
@@ -77,7 +79,7 @@ export default {
       items: [
         "<b>Links you share:</b> when you share a tier list, roster or custom minigame, it is packed into the link itself (the part after the “#”, which your browser never sends to us). We do not store it and cannot see it; only people who receive the link can open it.",
         "<b>Service providers:</b> our hosting provider and {mailProvider} (which delivers our verification and password-reset emails) handle data on our behalf, only to run the site and send you the emails you request.",
-        "<b>Discord:</b> when you submit a bug report, its content (including your name, email address and screenshots) is forwarded to a private channel used by our team.",
+        "<b>Discord:</b> when you submit a bug report, its content (including your email address and screenshots) is forwarded to a private channel used by our team.",
         "<b>Legal reasons:</b> if the law requires it or to protect the site and its users from abuse.",
       ],
     },
@@ -91,8 +93,8 @@ export default {
     retention: {
       heading: "How long we keep it",
       paragraphs: [
-        "Account data and what you save are kept while your account exists. Verification codes expire after {verificationWindow}, password-reset links after {resetWindow} and login sessions after {sessionWindow}. Streak runs that stay inactive for {streakPrune} are ended automatically. Bug reports are kept for as long as they are needed to resolve the issue and for our records. Server logs are kept only briefly. Analytics data is anonymous.",
-        "You can delete your account yourself from your profile page, or ask us to do it. Your account data, character and perk ownership, showcase, streak runs, minigame stats, challenge achievements and uploaded avatar are then removed. Smash or Pass votes stay as anonymous entries that are no longer tied to you. Your bug reports are kept for our records, but your name and email address are removed from them. Copies already sent to our private Discord channel may remain.",
+        "Account data and what you save are kept while your account exists. Verification codes expire after {verificationWindow}, password-reset links after {resetWindow} and login sessions after {sessionWindow}. Streak runs that stay inactive for {streakPrune} are ended automatically. Bug reports are kept for as long as they are needed to resolve the issue and for our records. Server logs are kept only briefly.",
+        "You can delete your account yourself from your profile page, or ask us to do it. Your account data, character and perk ownership, showcase, streak runs, minigame stats, challenge achievements and uploaded avatar are then removed. Smash or Pass votes stay as anonymous entries that are no longer tied to you. Your bug reports are kept for our records, but your email address is removed from them. Copies already sent to our private Discord channel may remain.",
       ],
       items: [],
     },
@@ -137,7 +139,6 @@ export default {
       heading: "Contact us",
       paragraphs: [
         "To use any of your rights, ask a privacy question or request account deletion, email us at [{contactEmail}](mailto:{contactEmail}). Signed-in users can also delete their account themselves from their profile page. Please write from the address registered on your account so we can verify who you are.",
-        "If the translated versions of this page differ from the English one, the English version prevails.",
       ],
       items: [],
     },

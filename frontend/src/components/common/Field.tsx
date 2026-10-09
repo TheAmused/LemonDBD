@@ -8,7 +8,7 @@ import { cn } from '@/utils/cn';
 export type FieldSize = 'sm' | 'md' | 'lg';
 
 const FIELD_BASE =
-  'w-full border border-border-color bg-bg-elevated text-text-primary placeholder:text-text-muted transition-colors focus:outline-none focus:border-accent-red focus:ring-1 focus:ring-accent-red/50 disabled:cursor-not-allowed disabled:opacity-50';
+  'w-full border border-border-color bg-bg-elevated text-text-primary placeholder:text-text-muted transition-colors focus:outline-none focus:border-accent-red focus:ring-1 focus:ring-accent-red/50 aria-invalid:border-accent-red aria-invalid:focus:ring-accent-red disabled:cursor-not-allowed disabled:opacity-50';
 const FIELD_ERROR = 'border-accent-red focus:ring-accent-red';
 // 16px on small screens stops iOS Safari from zooming into focused inputs.
 const FIELD_SIZES: Record<FieldSize, string> = {

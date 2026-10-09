@@ -21,7 +21,7 @@ export interface ChallengeCompletionHistoryDrawerProps {
 
 /**
  * Shared "Past Wins" drawer for gauntlet/chaos/history: every time a run is
- * fully completed, a permanent snapshot survives the run's own reset (which
+ * fully completed, a permanent snapshot survives the run's own abandon (which
  * wipes its match logs). Lets a player compare attempts taken across past
  * clears to see whether they're actually getting better.
  */
@@ -34,6 +34,7 @@ export const ChallengeCompletionHistoryDrawer: React.FC<ChallengeCompletionHisto
       onClose={onClose}
       variant="drawer-right"
       title={dict.streaks.pastWins}
+      centerTitle
       closeButtonAriaLabel={dict.modal.close}
       bodyClassName="p-5 sm:p-6"
     >

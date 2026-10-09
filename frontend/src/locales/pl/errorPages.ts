@@ -16,6 +16,5 @@ export default {
     code: 'Zablokowana',
     title: 'Strona zablokowana',
     text: 'Ta strona nie jest teraz dostępna dla odwiedzających.',
-    hint: 'Na razie jest dostępna tylko dla administratorów. Reszta serwisu działa normalnie.',
   },
 } as const;

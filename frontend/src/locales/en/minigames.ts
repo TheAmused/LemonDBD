@@ -75,7 +75,7 @@ export default {
     speed: "Speed",
     terror_radius: "Terror Radius",
     perk: "Perk",
-    perk_type: "Perk Type",
+    perk_types: "Perk Types",
     realm: "Realm",
   },
   attributeValues: {

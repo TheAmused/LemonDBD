@@ -80,7 +80,7 @@ def get_catalog(lang: str | None = None) -> dict[str, Any]:
             "id": p.id,
             "name": p.name,
             "role": p.role,
-            "perk_type": p.perk_type or "entity",
+            "perk_types": p.resolved_perk_types,
             "is_teachable": p.is_teachable,
             "character_name": p.character.name if p.character else "General",
             "icon_url": p.icon_url or f"/static/{p.icon_local_path}" if p.icon_local_path else "",

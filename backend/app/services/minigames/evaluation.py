@@ -68,6 +68,15 @@ def _evaluate_identity_guess(target_type: str, target_id: int, guess_type: str, 
     }
 
 
+def _compare_perk_types(target_types: list[str], guess_types: list[str]) -> str:
+    """Same set of types is "correct" (order does not matter), any overlap is
+    "partial", none is "incorrect"."""
+    target_set, guess_set = set(target_types), set(guess_types)
+    if target_set == guess_set:
+        return "correct"
+    return "partial" if target_set & guess_set else "incorrect"
+
+
 def _evaluate_classic_perk(target_id: int, guess_id: int, attempt_number: int) -> dict[str, Any]:
     """Calculates attribute comparison matrix between guess and target perk."""
     target = db.session.get(Perk, target_id)
@@ -84,8 +93,8 @@ def _evaluate_classic_perk(target_id: int, guess_id: int, attempt_number: int) -
     target_role = (target.role or "Survivor").capitalize()
     guess_role = (guess.role or "Survivor").capitalize()
 
-    target_type = (target.perk_type or "General").lower()
-    guess_type = (guess.perk_type or "General").lower()
+    target_types = target.resolved_perk_types
+    guess_types = guess.resolved_perk_types
 
     target_teachable = bool(target.is_teachable)
     guess_teachable = bool(guess.is_teachable)
@@ -102,14 +111,14 @@ def _evaluate_classic_perk(target_id: int, guess_id: int, attempt_number: int) -
             "name": guess.name,
             "role": guess_role,
             "character_name": guess_char_name,
-            "perk_type": guess.perk_type or "General",
+            "perk_types": guess_types,
             "is_teachable": guess_teachable,
             "icon_url": guess.icon_url or (f"/static/{guess.icon_local_path}" if guess.icon_local_path else ""),
         },
         "attributes": {
             "role": {"status": "correct" if target_role == guess_role else "incorrect"},
             "character_name": {"status": "correct" if target_char_name == guess_char_name else "incorrect"},
-            "perk_type": {"status": "correct" if target_type == guess_type else "incorrect"},
+            "perk_types": {"status": _compare_perk_types(target_types, guess_types)},
             "is_teachable": {"status": "correct" if target_teachable == guess_teachable else "incorrect"},
         },
         "unlocked_clues": clues,

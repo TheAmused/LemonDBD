@@ -39,7 +39,7 @@ function makePerk(name: string, perk_type: string, category: 'Survivor' | 'Kille
     description: '',
     icon_url: '',
     icon_local_path: '',
-    perk_type,
+    perk_types: [perk_type],
     ...( {} as Partial<Perk> ),
   } as Perk;
 }
@@ -99,7 +99,7 @@ const CURSE_CASES: CurseCase[] = [
 ];
 
 for (const { mutatorId, targetType, weight } of CURSE_CASES) {
-  test(`curse weighting statistics: ${mutatorId} on perk_type=${targetType} matches getPerkWeight's actual multiplier (not a hard filter, not a no-op)`, () => {
+  test(`curse weighting statistics: ${mutatorId} on perk type=${targetType} matches getPerkWeight's actual multiplier (not a hard filter, not a no-op)`, () => {
     const pool = buildPool(targetType, 20, 80);
     const mutator = makeMutator(mutatorId);
 
@@ -107,7 +107,7 @@ for (const { mutatorId, targetType, weight } of CURSE_CASES) {
     assert.strictEqual(getPerkWeight(pool[0], mutator), weight, 'getPerkWeight multiplier drifted from what this test expects -- update the test\'s expected weight to match the real one before trusting anything else here');
 
     const expected = expectedTargetRate(20, 80, weight);
-    const observed = observedTargetRate(pool, mutator, (p) => p.perk_type === targetType);
+    const observed = observedTargetRate(pool, mutator, (p) => p.perk_types?.[0] === targetType);
 
     assert.ok(
       Math.abs(observed - expected) <= TOLERANCE_PP,
@@ -125,7 +125,7 @@ test('hex_boon_only also boosts boon-category perks (both halves of the combined
   const pool = buildPool('boon', 20, 80);
   const mutator = makeMutator('hex_boon_only');
   const expected = expectedTargetRate(20, 80, 1.50);
-  const observed = observedTargetRate(pool, mutator, (p) => p.perk_type === 'boon');
+  const observed = observedTargetRate(pool, mutator, (p) => p.perk_types?.[0] === 'boon');
   assert.ok(Math.abs(observed - expected) <= TOLERANCE_PP, `expected ~${expected.toFixed(1)}%, observed ${observed.toFixed(1)}%`);
 });
 
@@ -133,13 +133,13 @@ test('getPerkWeight treats hex_roulette identically to hex_boon_only for weighti
   const pool = buildPool('boon', 20, 80, 'general', 'Killer');
   const mutator = makeMutator('hex_roulette');
   const expected = expectedTargetRate(20, 80, 1.50);
-  const observed = observedTargetRate(pool, mutator, (p) => p.perk_type === 'boon');
+  const observed = observedTargetRate(pool, mutator, (p) => p.perk_types?.[0] === 'boon');
   assert.ok(Math.abs(observed - expected) <= TOLERANCE_PP, `expected ~${expected.toFixed(1)}%, observed ${observed.toFixed(1)}%`);
 });
 
 test('baseline (no mutator): a soft-weighted category with no active curse draws at its raw population rate, proving the 20/80 harness itself is unbiased', () => {
   const pool = buildPool('exhaustion', 20, 80);
-  const observed = observedTargetRate(pool, null as unknown as ChaosMutator, (p) => p.perk_type === 'exhaustion');
+  const observed = observedTargetRate(pool, null as unknown as ChaosMutator, (p) => p.perk_types?.[0] === 'exhaustion');
   assert.ok(Math.abs(observed - 20) <= TOLERANCE_PP, `expected ~20% baseline, observed ${observed.toFixed(1)}%`);
 });
 
@@ -157,8 +157,8 @@ test('SANITY: this harness would have failed against the pre-fix hard-filter bug
   const pool = buildPool('exhaustion', 20, 80);
   let hits = 0;
   for (let i = 0; i < TRIALS; i++) {
-    const [picked] = hardFilterPick(pool, (p) => p.perk_type === 'exhaustion');
-    if (picked.perk_type === 'exhaustion') hits++;
+    const [picked] = hardFilterPick(pool, (p) => p.perk_types?.[0] === 'exhaustion');
+    if (picked.perk_types?.[0] === 'exhaustion') hits++;
   }
   const observedUnderOldBug = (hits / TRIALS) * 100;
 

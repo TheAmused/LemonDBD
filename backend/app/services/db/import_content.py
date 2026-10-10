@@ -4,6 +4,7 @@ from decimal import Decimal
 from pathlib import Path
 from typing import Any
 
+from pydantic import ValidationError
 from sqlalchemy import select
 
 from app.core.extensions import db
@@ -12,10 +13,39 @@ from app.models.character import Killer, Survivor
 from app.models.equipment import Item, ItemAddon, ItemCategory, KillerAddon, Offering
 from app.models.map import MapRealm, MapSource, Realm
 from app.models.perk import Perk
+from app.models.perk_types import DEFAULT_PERK_TYPES
+from app.schemas.perk import PerkTypeSpec
 from app.services.db._common import parse_datetime
 from app.services.db.asset_bundling import write_asset_base64
 from app.services.db.import_upserts import import_tier_lists, upsert_by_id
 from app.services.db.parsing import parse_release_date
+
+
+def _perk_types_from_row(row: dict[str, Any]) -> list[str] | None:
+    """The validated `perk_types` of a perk row, or None when the row says nothing.
+
+    The list goes through `PerkTypeSpec`, the same pydantic model the write
+    schema is built on, so a seed file or backup cannot smuggle in a type
+    combination the API would refuse. A bad row stops the import with a message
+    naming the perk: this is curated content, and a perk silently landing in
+    the wrong bucket is worse than a seed that says what to fix.
+
+    A payload written before the list existed carries the single `perk_type`
+    string instead; it becomes a one-entry list (empty or null meaning the
+    catch-all), the same way `category` is still read as `role` below.
+    """
+    if "perk_types" in row:
+        raw: Any = row["perk_types"]
+    elif "perk_type" in row:
+        raw = [row["perk_type"] or DEFAULT_PERK_TYPES[0]]
+    else:
+        return None
+    role = row.get("role") or row.get("category") or "Survivor"
+    try:
+        return PerkTypeSpec(role=role, perk_types=raw).perk_types
+    except ValidationError as err:
+        problems = "; ".join(str(e["msg"]) for e in err.errors())
+        raise ValueError(f"perks: invalid perk_types for {row.get('name')!r} (id {row.get('id')}): {problems}") from err
 
 
 def _import_reference_data(
@@ -161,6 +191,11 @@ def _import_equipment(
         if "survivor_id" in row or "killer_id" in row:
             perk_obj.survivor_id = row.get("survivor_id")
             perk_obj.killer_id = row.get("killer_id")
+        # Absent means "leave as is": a new row takes the column default
+        # (`['entity']`), an existing one keeps what it has.
+        perk_types = _perk_types_from_row(row)
+        if perk_types is not None:
+            perk_obj.perk_types = perk_types
 
     upsert_by_id(
         data, target_keys, summary, "perks", Perk,
@@ -169,7 +204,6 @@ def _import_equipment(
             "name", "survivor_id", "killer_id", "alternate_name",
             "is_generic_counterpart", "is_teachable", "role",
             "description", "icon_url", "icon_local_path", "translations",
-            "perk_type",
         ],
         defaults=lambda row: {
             "name": row.get("name") or "",

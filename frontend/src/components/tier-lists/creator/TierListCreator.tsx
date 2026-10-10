@@ -2,9 +2,8 @@
 // frontend/src/components/tier-lists/creator/TierListCreator.tsx
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { ChevronLeft, History, SearchX, X } from 'lucide-react';
+import { History, SearchX, X } from 'lucide-react';
 import { EmptyState } from '@/components/common/EmptyState';
 import { useAuth } from '@/context/AuthContext';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
@@ -159,13 +158,6 @@ export function TierListCreator({ locale, editId }: TierListCreatorProps) {
   if (editId && storeHydrated && !editingList) {
     return (
       <div className="relative z-10 flex flex-col gap-2">
-        <Link
-          href={`/${locale}/tier-lists`}
-          className="inline-flex min-h-[44px] w-fit items-center gap-1 type-label-sm text-text-secondary hover:text-accent-red"
-        >
-          <ChevronLeft className="h-4 w-4" aria-hidden="true" />
-          {t.backToHub}
-        </Link>
         <EmptyState icon={SearchX} title={t.customNotFoundTitle} subtitle={t.customNotFoundSubtitle} />
       </div>
     );
@@ -309,14 +301,7 @@ export function TierListCreator({ locale, editId }: TierListCreatorProps) {
       {/* TOP ROW: IN-LINE NAVIGATION (LEFT), THE BASICS BLOCK (MIDDLE), PREVIEW & CREATE (RIGHT) */}
       <header className="flex flex-col lg:flex-row items-stretch lg:items-start justify-between gap-3 lg:gap-4 w-full">
         {/* Mobile top bar (< lg) */}
-        <div className="flex lg:hidden items-center justify-between gap-2 w-full">
-          <Link
-            href={`/${locale}/tier-lists`}
-            className="inline-flex min-h-[44px] items-center gap-1.5 type-label-sm text-text-secondary hover:text-accent-red transition-colors"
-          >
-            <ChevronLeft className="h-4 w-4" aria-hidden="true" />
-            {t.backToHub}
-          </Link>
+        <div className="flex lg:hidden items-center justify-end gap-2 w-full">
           <div className="flex items-center gap-2">
             <Button
               variant="secondary"
@@ -331,15 +316,7 @@ export function TierListCreator({ locale, editId }: TierListCreatorProps) {
         </div>
 
         {/* Desktop top left navigation (>= lg) */}
-        <div className="hidden lg:flex shrink-0 lg:max-wide-2k:w-48 wide-2k:w-48 pt-2.5">
-          <Link
-            href={`/${locale}/tier-lists`}
-            className="inline-flex min-h-[44px] items-center gap-1.5 text-xs 2xl:text-sm font-bold uppercase tracking-wider text-text-secondary hover:text-accent-red transition-colors"
-          >
-            <ChevronLeft className="h-4 w-4 2xl:h-5 2xl:w-5" aria-hidden="true" />
-            {t.backToHub}
-          </Link>
-        </div>
+        <div className="hidden lg:block shrink-0 lg:max-wide-2k:w-48 wide-2k:w-48" aria-hidden="true" />
 
         {/* MIDDLE: THE BASICS BLOCK */}
         <div className="flex-1 w-full min-w-0 max-w-4xl 2xl:max-wide-2k:max-w-6xl wide-2k:max-w-[1800px] mx-auto">

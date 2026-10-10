@@ -2,19 +2,19 @@
 // frontend/src/components/tier-lists/TierEditModal.tsx
 
 import React, { useEffect, useState } from 'react';
-import { Check, ChevronDown, ChevronUp, Eraser, Palette, Plus, Trash2 } from 'lucide-react';
+import { Check, ChevronDown, ChevronUp, Eraser, Plus, Trash2 } from 'lucide-react';
 import { Modal } from '@/components/common/Modal';
 import type { TierDefinition } from '@/types/tierList';
 import type { Dictionary } from '@/locales/types';
 import { cn } from '@/utils/cn';
 import { sanitizeImageUrl } from '@/utils/tierLists/codec';
-import { HEX_COLOR_PATTERN, TIER_COLOR_TOKENS, TIER_LIST_LIMITS } from '@/utils/tierLists/constants';
+import { TIER_COLOR_TOKENS, TIER_LIST_LIMITS } from '@/utils/tierLists/constants';
 import { LABEL, TOUCH_BTN, TOUCH_FIELD } from './styles';
 import { TierBadge } from './TierBadge';
 import { tierColorProps } from './tierColor';
+import { TierColorPicker } from './TierColorPicker';
 import { Button } from '@/components/common/Button';
 import { Input } from '@/components/common/Field';
-import { themeColor } from '@/utils/themeColor';
 import { formatMessage } from '@/utils/i18nFormat';
 import { useDictionary } from "@/context/DictionaryContext";
 
@@ -49,7 +49,6 @@ export function TierEditModal({ tier, index, tierCount, onClose, onSave, onMove,
   if (!tier) return null;
 
   const trimmed = label.trim();
-  const customHex = HEX_COLOR_PATTERN.test(color) ? color : themeColor('--text-muted');
   const trimmedBg = backgroundImage.trim();
   const safeBg = trimmedBg ? sanitizeImageUrl(trimmedBg) : null;
   const bgInvalid = Boolean(trimmedBg) && !safeBg;
@@ -64,7 +63,7 @@ export function TierEditModal({ tier, index, tierCount, onClose, onSave, onMove,
       onClose={onClose}
       size="md"
       title={t.editTier}
-      icon={<Palette className="h-5 w-5" aria-hidden="true" />}
+      centerTitle
       bodyClassName="p-4 sm:p-6"
       footer={
         <div className="flex w-full flex-wrap items-center justify-center gap-3">
@@ -147,20 +146,7 @@ export function TierEditModal({ tier, index, tierCount, onClose, onSave, onMove,
                 </button>
               );
             })}
-            <label
-              className={cn(
-                'relative flex h-11 items-center gap-2 rounded-xl border-2 px-3 text-xs font-bold text-text-secondary cursor-pointer',
-                HEX_COLOR_PATTERN.test(color) ? 'border-text-primary' : 'border-border-color'
-              )}
-            >
-              <input
-                type="color"
-                value={customHex}
-                onChange={(e) => setColor(e.target.value)}
-                className="h-6 w-6 cursor-pointer rounded border-0 bg-transparent p-0"
-              />
-              {t.customColor}
-            </label>
+            <TierColorPicker color={color} onChange={setColor} />
           </div>
         </fieldset>
 

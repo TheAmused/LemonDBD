@@ -31,6 +31,8 @@ import { SidewaysPointerSensor } from './touchSensors';
 import { TierRow } from './TierRow';
 import { parseContainerDndId, parseItemDndId } from './dndIds';
 import { formatMessage } from '@/utils/i18nFormat';
+import { cn } from '@/utils/cn';
+import { useBoardFit } from './useBoardFit';
 import { useDictionary } from "@/context/DictionaryContext";
 
 interface TierListBoardProps {
@@ -114,6 +116,34 @@ export function TierListBoard({
     setDragBoardState(next);
   }, []);
   const shown = dragBoard ?? board;
+
+  // Tile size follows the room: measured from the committed board (not `shown`), so a drag never resizes anything.
+  const [poolCollapsed, setPoolCollapsed] = useState<boolean>(false);
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const tierCounts = useMemo(() => tiers.map((tier) => board[tier.id]?.length ?? 0), [tiers, board]);
+  const fit = useBoardFit(wrapRef, {
+    tierCounts,
+    poolCount: board[POOL_CONTAINER_ID]?.length ?? 0,
+    shape,
+    showNames,
+    poolCollapsed,
+  });
+  const namesShown = showNames && !fit?.namesHidden;
+  const fitStyle = fit
+    ? ({
+        '--tile': `${fit.tile}px`,
+        '--tile-w': `${fit.tileWidth}px`,
+        '--tile-gap': `${fit.gap}px`,
+        '--tile-pad': `${fit.pad}px`,
+        '--tile-fs': `${fit.nameFont}px`,
+        '--row-gap': `${fit.rowGap}px`,
+        '--row-min': `${fit.rowMin}px`,
+        '--badge-w': `${fit.badgeWidth}px`,
+        '--badge-fs': `${fit.badgeFont}px`,
+        '--pool-min-total': `${fit.poolMinTotal}px`,
+        '--pool-max-total': `${fit.poolMaxTotal}px`,
+      } as React.CSSProperties)
+    : undefined;
 
   const sensors = useSensors(
     // A few pixels of travel before a mouse drag starts, so a click selects.
@@ -278,9 +308,19 @@ export function TierListBoard({
       onDragCancel={finishDrag}
       accessibility={{ announcements, screenReaderInstructions: { draggable: t.dnd.instructions } }}
     >
-      {/* The page never scrolls (short landscape screens excepted). The rows take the height they need and scroll in their own area once they would overflow; the pool header sits right under them. The rows' cap always leaves room for the OPEN pool, so collapsing or expanding the pool never moves anything above or at its header. */}
-      <div className="flex flex-col w-full flex-1 min-h-0 gap-3 sm:gap-4 [--pool-h:min(50dvh,30rem)] sm:[--pool-h:min(40dvh,26rem)] [--pool-head:6.5rem] sm:[--pool-head:4rem]">
-        <div className="flex flex-col gap-2 w-full min-h-0 flex-initial overflow-y-auto overscroll-contain pr-1 [&>*]:shrink-0 max-h-[calc(100%-var(--pool-h)-1rem)] [@media(max-height:559px)]:max-h-none [@media(max-height:559px)]:overflow-visible">
+      {/* No scroll box of its own: `useBoardFit` picks the largest tile at which every tier and the pool header fit the room, and the tiers stretch to fill what is left. The pool alone scrolls, and only when its items outgrow its share. If even the smallest tile cannot fit (hundreds of items on a phone) the tiers scroll as before. */}
+      <div
+        ref={wrapRef}
+        data-fit={fit ? '' : undefined}
+        style={fitStyle}
+        className="group/board relative flex flex-col w-full flex-1 basis-0 min-h-0 gap-3 [@media(max-height:439px)]:flex-none [@media(max-height:439px)]:basis-auto"
+      >
+        <div
+          className={cn(
+            'flex flex-col gap-2 w-full group-data-[fit]/board:gap-(--row-gap)',
+            fit?.overflow ? 'min-h-0 flex-1 overflow-y-auto overscroll-contain [&>*]:shrink-0!' : 'shrink-0'
+          )}
+        >
           {tiers.map((tier) => (
             <TierRow
               key={tier.id}
@@ -288,7 +328,7 @@ export function TierListBoard({
               keys={shown[tier.id] ?? []}
               itemsByKey={itemsByKey}
               shape={shape}
-              showNames={showNames}
+              showNames={namesShown}
               selectedKey={selectedKey}
               onSelect={handleSelect}
               onPreview={handlePreview}
@@ -302,18 +342,20 @@ export function TierListBoard({
           keys={shown[POOL_CONTAINER_ID] ?? []}
           itemsByKey={itemsByKey}
           shape={shape}
-          showNames={showNames}
+          showNames={namesShown}
           selectedKey={selectedKey}
           onSelect={handleSelect}
           onPreview={handlePreview}
           onMoveSelectedHere={handleMoveSelectedHere}
           emptyLabel={poolEmptyLabel}
+          collapsed={poolCollapsed}
+          onCollapsedChange={setPoolCollapsed}
         />
-      </div>
 
-      <DragOverlay dropAnimation={{ duration: 180, easing: 'cubic-bezier(0.2, 0, 0, 1)' }}>
-        {activeItem ? <TierItemTile item={activeItem} shape={shape} showName={showNames} overlay /> : null}
-      </DragOverlay>
+        <DragOverlay dropAnimation={{ duration: 180, easing: 'cubic-bezier(0.2, 0, 0, 1)' }}>
+          {activeItem ? <TierItemTile item={activeItem} shape={shape} showName={namesShown} overlay /> : null}
+        </DragOverlay>
+      </div>
 
       <TierItemPreviewModal item={previewKey ? itemsByKey.get(previewKey) ?? null : null} onClose={closePreview} />
     </DndContext>

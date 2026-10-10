@@ -2,7 +2,7 @@
 // frontend/src/components/tier-lists/creator/TierItemEditModal.tsx
 
 import React, { useEffect, useState } from 'react';
-import { Check, Image as ImageIcon, ImageOff, Pencil } from 'lucide-react';
+import { Check, Image as ImageIcon, ImageOff } from 'lucide-react';
 import { Modal } from '@/components/common/Modal';
 import type { TierListDocumentItem } from '@/types/tierList';
 import type { Dictionary } from '@/locales/types';
@@ -70,7 +70,7 @@ export function TierItemEditModal({ item, isOpen, onClose, onSave }: TierItemEdi
       onClose={onClose}
       size="md"
       title={c.editItem}
-      icon={<Pencil className="h-5 w-5" aria-hidden="true" />}
+      centerTitle
       bodyClassName="p-4 sm:p-6"
       footer={
         <div className="flex w-full items-center justify-center gap-3 pt-1">

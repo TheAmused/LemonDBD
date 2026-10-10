@@ -3,7 +3,7 @@
 
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { ChevronDown, FileJson, LayoutList, Plus, RotateCcw, Sparkles, Trash2, TriangleAlert } from 'lucide-react';
+import { ChevronDown, FileJson, LayoutList, Plus, RotateCcw, TriangleAlert } from 'lucide-react';
 import { EmptyState } from '@/components/common/EmptyState';
 import { Modal } from '@/components/common/Modal';
 import type { Dictionary } from '@/locales/types';
@@ -134,13 +134,6 @@ export function TierListHub({ locale }: TierListHubProps) {
                 {t.officialSection}
               </h2>
             </div>
-            <p className="type-section-subtitle text-text-secondary mt-0.5 truncate">
-              {(lists.length === 1
-                ? t.curatedTemplatesSingular
-                : formatMessage((t.curatedTemplatesCount), { count: lists.length }, locale))}
-              {' · '}
-              {t.officialSavedNote}
-            </p>
           </div>
           <div className="relative z-10 w-8 flex justify-end">
             <ChevronDown
@@ -258,13 +251,6 @@ export function TierListHub({ locale }: TierListHubProps) {
                   {t.mySection}
                 </h2>
               </div>
-              <p className="type-section-subtitle text-text-secondary mt-0.5 truncate">
-                {(customCount === 1
-                  ? t.customListsSingular
-                  : formatMessage((t.customListsCount), { count: customCount }, locale))}
-                {' · '}
-                {t.customSavedNote}
-              </p>
             </div>
 
             <div className="pointer-events-auto flex shrink-0 items-center justify-end gap-2 lg:w-56">
@@ -293,20 +279,7 @@ export function TierListHub({ locale }: TierListHubProps) {
           <div className="overflow-hidden">
             <div className="p-4 sm:p-6 border-t border-border-color">
               {hydrated && customLists.length === 0 ? (
-                <EmptyState
-                  icon={Sparkles}
-                  title={t.noCustomLists}
-                  subtitle={t.noCustomListsSubtitle}
-                  action={{
-                    label: (
-                      <>
-                        <Plus className="h-3.5 w-3.5" aria-hidden="true" />
-                        {t.newCustomList}
-                      </>
-                    ),
-                    onClick: createBlank,
-                  }}
-                />
+                <EmptyState title={t.noCustomLists} subtitle={t.noCustomListsSubtitle} />
               ) : (
                 <div className={GRID}>
                   {customLists.map((list) => (
@@ -329,7 +302,7 @@ export function TierListHub({ locale }: TierListHubProps) {
           isOpen={true}
           onClose={() => setListToDelete(null)}
           title={t.deleteTier}
-          icon={<Trash2 className="h-5 w-5 text-accent-red" aria-hidden="true" />}
+          centerTitle
           size="sm"
           footer={
             <div className="flex w-full justify-end gap-2">

@@ -68,7 +68,7 @@ export const TierItemTile = React.forwardRef<HTMLDivElement, TierItemTileProps>(
       className={cn(
         'group relative flex shrink-0 select-none flex-col items-center gap-1 rounded-xl outline-none',
         'touch-pan-y [-webkit-touch-callout:none] focus-visible:ring-2 focus-visible:ring-accent-amber',
-        size === 'sm' ? 'w-11' : SHAPE_CLASSES[shape],
+        size === 'sm' ? 'w-11' : cn(SHAPE_CLASSES[shape], 'group-data-[fit]/board:w-(--tile-w)'),
         ghost && 'opacity-30',
         overlay && 'cursor-grabbing scale-105 drop-shadow-2xl',
         !overlay && 'cursor-grab active:cursor-grabbing',
@@ -79,7 +79,7 @@ export const TierItemTile = React.forwardRef<HTMLDivElement, TierItemTileProps>(
       <div
         className={cn(
           'relative flex w-full items-center justify-center overflow-hidden rounded-xl border bg-bg-elevated transition-[border-color,box-shadow] duration-150',
-          size === 'sm' ? 'h-11' : IMAGE_CLASSES[shape],
+          size === 'sm' ? 'h-11' : cn(IMAGE_CLASSES[shape], 'group-data-[fit]/board:h-(--tile)'),
           selected
             ? 'border-accent-amber ring-2 ring-accent-amber shadow-lg'
             : 'border-border-color group-hover:border-accent-red/60',
@@ -107,7 +107,7 @@ export const TierItemTile = React.forwardRef<HTMLDivElement, TierItemTileProps>(
         )}
       </div>
       {showName && (
-        <span aria-hidden="true" className="w-full text-center text-tiny sm:text-mini font-bold leading-tight text-text-secondary line-clamp-2 break-words">
+        <span aria-hidden="true" className="w-full text-center text-tiny sm:text-mini group-data-[fit]/board:text-(length:--tile-fs) font-bold leading-tight text-text-secondary line-clamp-2 break-words">
           {item.name}
         </span>
       )}

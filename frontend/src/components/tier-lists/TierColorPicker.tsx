@@ -78,7 +78,7 @@ export function TierColorPicker({ color, onChange, size = 'md' }: TierColorPicke
 
   return (
     <>
-      {/* Same square swatch as the preset colors: the chosen custom color, or a rainbow until one is picked. */}
+      {/* Same square swatch as the preset colors. Always the rainbow, so it reads the same whether or not a custom color is set; a check marks it when one is. */}
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
@@ -88,12 +88,15 @@ export function TierColorPicker({ color, onChange, size = 'md' }: TierColorPicke
         className={cn(
           'flex items-center justify-center border-2 cursor-pointer transition-transform hover:scale-105',
           small ? 'h-7 w-7 rounded-md pointer-coarse:min-h-11 pointer-coarse:min-w-11' : 'h-11 w-11 rounded-xl',
-          !isHex && 'bg-[conic-gradient(red,yellow,lime,aqua,blue,fuchsia,red)]',
+          'bg-[conic-gradient(red,yellow,lime,aqua,blue,fuchsia,red)]',
           isHex || open ? 'border-text-primary' : 'border-transparent'
         )}
-        style={isHex ? { backgroundColor: color } : undefined}
       >
-        {isHex && <Check className={small ? 'h-3.5 w-3.5 text-text-primary drop-shadow-sm' : 'h-4 w-4 text-text-primary drop-shadow-sm'} aria-hidden="true" />}
+        {isHex && (
+          <span className="flex items-center justify-center rounded-full bg-bg-primary/85 p-0.5 text-text-primary" aria-hidden="true">
+            <Check className={small ? 'h-3 w-3' : 'h-3.5 w-3.5'} />
+          </span>
+        )}
       </button>
 
       {open && (

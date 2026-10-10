@@ -50,7 +50,7 @@ def seeded_minigame_data(app, test_db):
         role="Survivor",
         is_teachable=True,
         survivor_id=1,
-        perk_type="exhaustion",
+        perk_types=["exhaustion"],
     )
     db.session.add(perk)
 

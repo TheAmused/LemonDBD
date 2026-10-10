@@ -75,7 +75,7 @@ export default {
     speed: "Velocidad",
     terror_radius: "Radio de Terror",
     perk: "Habilidad",
-    perk_type: "Tipo de Habilidad",
+    perk_types: "Tipos de Habilidad",
     realm: "Reino",
   },
   attributeValues: {

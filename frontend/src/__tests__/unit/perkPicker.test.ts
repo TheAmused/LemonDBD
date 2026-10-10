@@ -33,7 +33,7 @@ function makePerk(overrides: Partial<Perk>): Perk {
     description: '',
     icon_url: '',
     icon_local_path: '',
-    perk_type: 'entity',
+    perk_types: ['entity'],
     ...overrides,
   };
 }
@@ -72,9 +72,9 @@ const memeMutator: ChaosMutator = {
 };
 
 test('isExhaustionPerk: driven by perk_type, not perk name', () => {
-  assert.ok(isExhaustionPerk(makePerk({ name: 'Dead Hard', perk_type: 'exhaustion' })));
-  assert.ok(isExhaustionPerk(makePerk({ name: 'Sprint Burst', perk_type: 'exhaustion' })));
-  assert.ok(!isExhaustionPerk(makePerk({ name: 'Iron Will', perk_type: 'chase' })));
+  assert.ok(isExhaustionPerk(makePerk({ name: 'Dead Hard', perk_types: ['exhaustion'] })));
+  assert.ok(isExhaustionPerk(makePerk({ name: 'Sprint Burst', perk_types: ['exhaustion'] })));
+  assert.ok(!isExhaustionPerk(makePerk({ name: 'Iron Will', perk_types: ['chase'] })));
 });
 
 test('isExhaustionPerk: a perk whose description merely mentions exhaustion (e.g. removing it) is NOT classified exhaustion unless perk_type says so', () => {
@@ -83,27 +83,27 @@ test('isExhaustionPerk: a perk whose description merely mentions exhaustion (e.g
   // that REDUCE existing exhaustion rather than inflict it on their own
   // user. perk_type is the backend's ground truth classification and
   // must be respected even when the description contains those words.
-  assert.ok(!isExhaustionPerk(makePerk({ name: 'Vigil', description: 'Lose Exhausted faster.', perk_type: 'general' })));
+  assert.ok(!isExhaustionPerk(makePerk({ name: 'Vigil', description: 'Lose Exhausted faster.', perk_types: ['general'] })));
 });
 
 test('isHexOrBoonPerk: driven by perk_type', () => {
-  assert.ok(isHexOrBoonPerk(makePerk({ name: 'Hex: Ruin', perk_type: 'hex' })));
-  assert.ok(isHexOrBoonPerk(makePerk({ name: 'Boon: Circle of Healing', perk_type: 'boon' })));
-  assert.ok(!isHexOrBoonPerk(makePerk({ name: 'Sprint Burst', perk_type: 'exhaustion' })));
+  assert.ok(isHexOrBoonPerk(makePerk({ name: 'Hex: Ruin', perk_types: ['hex'] })));
+  assert.ok(isHexOrBoonPerk(makePerk({ name: 'Boon: Circle of Healing', perk_types: ['boon'] })));
+  assert.ok(!isHexOrBoonPerk(makePerk({ name: 'Sprint Burst', perk_types: ['exhaustion'] })));
 });
 
 test('isMemePerk: driven by entity perk_type (meme merged into entity wildcard bucket)', () => {
-  assert.ok(isMemePerk(makePerk({ name: 'No Mither', perk_type: 'entity' })));
-  assert.ok(isMemePerk(makePerk({ name: 'Plot Twist', perk_type: 'entity' })));
-  assert.ok(!isMemePerk(makePerk({ name: 'Sprint Burst', perk_type: 'exhaustion' })));
+  assert.ok(isMemePerk(makePerk({ name: 'No Mither', perk_types: ['entity'] })));
+  assert.ok(isMemePerk(makePerk({ name: 'Plot Twist', perk_types: ['entity'] })));
+  assert.ok(!isMemePerk(makePerk({ name: 'Sprint Burst', perk_types: ['exhaustion'] })));
 });
 
 test('isPerkBlockedByMutator: only no_exhaustion blocks, and only exhaustion-category perks', () => {
-  assert.ok(isPerkBlockedByMutator(makePerk({ name: 'Dead Hard', perk_type: 'exhaustion' }), noExhaustionMutator));
-  assert.ok(!isPerkBlockedByMutator(makePerk({ name: 'Iron Will', perk_type: 'chase' }), noExhaustionMutator));
-  assert.ok(!isPerkBlockedByMutator(makePerk({ name: 'Dead Hard', perk_type: 'exhaustion' }), hexBoonMutator));
-  assert.ok(!isPerkBlockedByMutator(makePerk({ name: 'Dead Hard', perk_type: 'exhaustion' }), null));
-  assert.ok(!isPerkBlockedByMutator(makePerk({ name: 'Dead Hard', perk_type: 'exhaustion' }), undefined));
+  assert.ok(isPerkBlockedByMutator(makePerk({ name: 'Dead Hard', perk_types: ['exhaustion'] }), noExhaustionMutator));
+  assert.ok(!isPerkBlockedByMutator(makePerk({ name: 'Iron Will', perk_types: ['chase'] }), noExhaustionMutator));
+  assert.ok(!isPerkBlockedByMutator(makePerk({ name: 'Dead Hard', perk_types: ['exhaustion'] }), hexBoonMutator));
+  assert.ok(!isPerkBlockedByMutator(makePerk({ name: 'Dead Hard', perk_types: ['exhaustion'] }), null));
+  assert.ok(!isPerkBlockedByMutator(makePerk({ name: 'Dead Hard', perk_types: ['exhaustion'] }), undefined));
 });
 
 test('filterPerksByMutator: returns all perks unchanged when mutator is null/undefined', () => {
@@ -113,15 +113,15 @@ test('filterPerksByMutator: returns all perks unchanged when mutator is null/und
 });
 
 test('getPerkWeight: assigns lower weight to exhaustion-category perks under no_exhaustion', () => {
-  const exhaustionPerk = makePerk({ name: 'Dead Hard', perk_type: 'exhaustion' });
-  const standardPerk = makePerk({ name: 'Iron Will', perk_type: 'chase' });
+  const exhaustionPerk = makePerk({ name: 'Dead Hard', perk_types: ['exhaustion'] });
+  const standardPerk = makePerk({ name: 'Iron Will', perk_types: ['chase'] });
   assert.strictEqual(getPerkWeight(exhaustionPerk, noExhaustionMutator), 0.50);
   assert.strictEqual(getPerkWeight(standardPerk, noExhaustionMutator), 1.0);
 });
 
 test('getPerkWeight: assigns lower weight to aura-category perks under blindness', () => {
-  const auraPerk = makePerk({ name: 'Bond', perk_type: 'aura' });
-  const standardPerk = makePerk({ name: 'Iron Will', perk_type: 'chase' });
+  const auraPerk = makePerk({ name: 'Bond', perk_types: ['aura'] });
+  const standardPerk = makePerk({ name: 'Iron Will', perk_types: ['chase'] });
   const blindnessMutator: ChaosMutator = {
     id: 'blindness',
     name: 'Curse of Blindness',
@@ -138,28 +138,28 @@ test('getPerkWeight: assigns lower weight to aura-category perks under blindness
 
 test('filterPerksByMutator: hex_boon_only keeps only hex/boon-category perks among the pool', () => {
   const perks = [
-    makePerk({ name: 'Hex: Ruin', perk_type: 'hex' }),
-    makePerk({ name: 'Boon: Shadow Step', perk_type: 'boon' }),
-    makePerk({ name: 'Iron Will', perk_type: 'chase' }),
+    makePerk({ name: 'Hex: Ruin', perk_types: ['hex'] }),
+    makePerk({ name: 'Boon: Shadow Step', perk_types: ['boon'] }),
+    makePerk({ name: 'Iron Will', perk_types: ['chase'] }),
   ];
   const result = filterPerksByMutator(perks, hexBoonMutator);
   assert.strictEqual(result.length, 2);
-  assert.ok(result.every((p) => p.perk_type === 'hex' || p.perk_type === 'boon'));
+  assert.ok(result.every((p) => p.perk_types?.[0] === 'hex' || p.perk_types?.[0] === 'boon'));
 });
 
 test('filterPerksByMutator: hex_boon_only falls back to the full pool when no hex/boon perks exist', () => {
-  const perks = [makePerk({ name: 'Iron Will', perk_type: 'chase' }), makePerk({ name: 'Sprint Burst', perk_type: 'exhaustion' })];
+  const perks = [makePerk({ name: 'Iron Will', perk_types: ['chase'] }), makePerk({ name: 'Sprint Burst', perk_types: ['exhaustion'] })];
   const result = filterPerksByMutator(perks, hexBoonMutator);
   assert.deepStrictEqual(result, perks);
 });
 
 test('filterPerksByMutator: meme_loadout keeps only entity-category perks (former meme bucket), falling back when none exist', () => {
-  const perksWithMeme = [makePerk({ name: 'Power Struggle', perk_type: 'entity' }), makePerk({ name: 'Iron Will', perk_type: 'chase' })];
+  const perksWithMeme = [makePerk({ name: 'Power Struggle', perk_types: ['entity'] }), makePerk({ name: 'Iron Will', perk_types: ['chase'] })];
   const resultWith = filterPerksByMutator(perksWithMeme, memeMutator);
   assert.strictEqual(resultWith.length, 1);
   assert.strictEqual(resultWith[0].name, 'Power Struggle');
 
-  const perksWithoutMeme = [makePerk({ name: 'Iron Will', perk_type: 'chase' }), makePerk({ name: 'Sprint Burst', perk_type: 'exhaustion' })];
+  const perksWithoutMeme = [makePerk({ name: 'Iron Will', perk_types: ['chase'] }), makePerk({ name: 'Sprint Burst', perk_types: ['exhaustion'] })];
   const resultWithout = filterPerksByMutator(perksWithoutMeme, memeMutator);
   assert.deepStrictEqual(resultWithout, perksWithoutMeme);
 });
@@ -226,12 +226,12 @@ test('pickRandomLoadout: no_exhaustion is a soft ~90% reduction, not a hard excl
   // not remove them from the pool entirely. Across enough draws from a pool
   // that's mostly exhaustion perks, at least one should still get picked.
   const pool = [
-    makePerk({ name: 'Dead Hard', perk_type: 'exhaustion' }),
-    makePerk({ name: 'Sprint Burst', perk_type: 'exhaustion' }),
-    makePerk({ name: 'Balanced Landing', perk_type: 'exhaustion' }),
-    makePerk({ name: 'Lithe', perk_type: 'exhaustion' }),
-    makePerk({ name: 'Overcome', perk_type: 'exhaustion' }),
-    makePerk({ name: 'Iron Will', perk_type: 'chase' }),
+    makePerk({ name: 'Dead Hard', perk_types: ['exhaustion'] }),
+    makePerk({ name: 'Sprint Burst', perk_types: ['exhaustion'] }),
+    makePerk({ name: 'Balanced Landing', perk_types: ['exhaustion'] }),
+    makePerk({ name: 'Lithe', perk_types: ['exhaustion'] }),
+    makePerk({ name: 'Overcome', perk_types: ['exhaustion'] }),
+    makePerk({ name: 'Iron Will', perk_types: ['chase'] }),
   ];
 
   let sawExhaustionPerk = false;
@@ -255,18 +255,18 @@ test('pickRandomLoadout: soft-boosts hex/boon perks under hex_boon_only WITHOUT 
   // every other type becoming literally impossible to draw. Non-hex/boon
   // perks must still be able to come up -- just less often.
   const pool = [
-    makePerk({ name: 'Hex: Ruin', perk_type: 'hex' }),
-    makePerk({ name: 'Boon: Shadow Step', perk_type: 'boon' }),
-    makePerk({ name: 'Iron Will', perk_type: 'chase' }),
-    makePerk({ name: 'Kindred', perk_type: 'aura_reading' }),
-    makePerk({ name: 'Spine Chill', perk_type: 'general' }),
-    makePerk({ name: 'Windows of Opportunity', perk_type: 'aura_reading' }),
+    makePerk({ name: 'Hex: Ruin', perk_types: ['hex'] }),
+    makePerk({ name: 'Boon: Shadow Step', perk_types: ['boon'] }),
+    makePerk({ name: 'Iron Will', perk_types: ['chase'] }),
+    makePerk({ name: 'Kindred', perk_types: ['aura_reading'] }),
+    makePerk({ name: 'Spine Chill', perk_types: ['general'] }),
+    makePerk({ name: 'Windows of Opportunity', perk_types: ['aura_reading'] }),
   ];
 
   let sawNonHexBoonPerk = false;
   for (let i = 0; i < 200; i++) {
     const picked = pickRandomLoadout(pool, hexBoonMutator, 1);
-    if (picked.some((p) => p.perk_type !== 'hex' && p.perk_type !== 'boon')) {
+    if (picked.some((p) => p.perk_types?.[0] !== 'hex' && p.perk_types?.[0] !== 'boon')) {
       sawNonHexBoonPerk = true;
       break;
     }
@@ -282,10 +282,10 @@ test('pickRandomLoadout: No-Repeat + a curse combine as two hard filters, not a 
   // removed from the pool passed in, it must NEVER reappear, no matter how
   // many draws happen or how hard Boon Ritual boosts that category.
   const fullPool = [
-    makePerk({ name: 'Hex: Ruin', perk_type: 'hex' }),
-    makePerk({ name: 'Boon: Shadow Step', perk_type: 'boon' }),
-    makePerk({ name: 'Iron Will', perk_type: 'chase' }),
-    makePerk({ name: 'Kindred', perk_type: 'aura_reading' }),
+    makePerk({ name: 'Hex: Ruin', perk_types: ['hex'] }),
+    makePerk({ name: 'Boon: Shadow Step', perk_types: ['boon'] }),
+    makePerk({ name: 'Iron Will', perk_types: ['chase'] }),
+    makePerk({ name: 'Kindred', perk_types: ['aura_reading'] }),
   ];
   const drawnNames = new Set(['Hex: Ruin', 'Boon: Shadow Step']);
   const noRepeatPool = fullPool.filter((p) => !drawnNames.has(p.name));
@@ -319,52 +319,52 @@ test('buildDrawnSlots: falls back to page 1 / slot 1 for a perk not found in the
 });
 
 test('isHexPerk / isBoonPerk: split the combined Hex/Boon check by perk_type', () => {
-  assert.ok(isHexPerk(makePerk({ name: 'Hex: Ruin', perk_type: 'hex' })));
-  assert.ok(!isBoonPerk(makePerk({ name: 'Hex: Ruin', perk_type: 'hex' })));
-  assert.ok(isBoonPerk(makePerk({ name: 'Boon: Circle of Healing', perk_type: 'boon' })));
-  assert.ok(!isHexPerk(makePerk({ name: 'Boon: Circle of Healing', perk_type: 'boon' })));
-  assert.ok(!isHexPerk(makePerk({ name: 'Sprint Burst', perk_type: 'exhaustion' })));
+  assert.ok(isHexPerk(makePerk({ name: 'Hex: Ruin', perk_types: ['hex'] })));
+  assert.ok(!isBoonPerk(makePerk({ name: 'Hex: Ruin', perk_types: ['hex'] })));
+  assert.ok(isBoonPerk(makePerk({ name: 'Boon: Circle of Healing', perk_types: ['boon'] })));
+  assert.ok(!isHexPerk(makePerk({ name: 'Boon: Circle of Healing', perk_types: ['boon'] })));
+  assert.ok(!isHexPerk(makePerk({ name: 'Sprint Burst', perk_types: ['exhaustion'] })));
 });
 
 test('isNegativePerk: driven by the sacrifice perk_type', () => {
-  assert.ok(isNegativePerk(makePerk({ name: 'No Mither', perk_type: 'sacrifice' })));
-  assert.ok(!isNegativePerk(makePerk({ name: 'Iron Will', perk_type: 'chase' })));
+  assert.ok(isNegativePerk(makePerk({ name: 'No Mither', perk_types: ['sacrifice'] })));
+  assert.ok(!isNegativePerk(makePerk({ name: 'Iron Will', perk_types: ['chase'] })));
 });
 
 test('isAuraPerk / isGeneratorPerk / isHealingPerk / isChasePerk: driven by tarot perk_type', () => {
-  assert.ok(isAuraPerk(makePerk({ name: 'Made-Up', perk_type: 'aura' })));
-  assert.ok(isGeneratorPerk(makePerk({ name: 'Made-Up', perk_type: 'generator' })));
-  assert.ok(isHealingPerk(makePerk({ name: 'Made-Up', perk_type: 'healing' })));
-  assert.ok(isChasePerk(makePerk({ name: 'Made-Up', perk_type: 'chase' })));
-  assert.ok(!isAuraPerk(makePerk({ name: 'Made-Up', perk_type: 'entity' })));
+  assert.ok(isAuraPerk(makePerk({ name: 'Made-Up', perk_types: ['aura'] })));
+  assert.ok(isGeneratorPerk(makePerk({ name: 'Made-Up', perk_types: ['generator'] })));
+  assert.ok(isHealingPerk(makePerk({ name: 'Made-Up', perk_types: ['healing'] })));
+  assert.ok(isChasePerk(makePerk({ name: 'Made-Up', perk_types: ['chase'] })));
+  assert.ok(!isAuraPerk(makePerk({ name: 'Made-Up', perk_types: ['entity'] })));
 });
 
 test('isStealthPerk: driven by the stealth perk_type (no longer keyword-based)', () => {
-  assert.ok(isStealthPerk(makePerk({ name: 'Made-Up', perk_type: 'stealth' })));
-  assert.ok(!isStealthPerk(makePerk({ name: 'Made-Up', perk_type: 'entity', description: 'Your Terror Radius is reduced.' })));
-  assert.ok(!isStealthPerk(makePerk({ name: 'Made-Up', perk_type: 'entity' })));
+  assert.ok(isStealthPerk(makePerk({ name: 'Made-Up', perk_types: ['stealth'] })));
+  assert.ok(!isStealthPerk(makePerk({ name: 'Made-Up', perk_types: ['entity'], description: 'Your Terror Radius is reduced.' })));
+  assert.ok(!isStealthPerk(makePerk({ name: 'Made-Up', perk_types: ['entity'] })));
 });
 
 test('getPerkTarotType: is a direct passthrough of perk_type — perk_type IS the tarot type', () => {
-  assert.strictEqual(getPerkTarotType(makePerk({ name: 'Hex: Ruin', perk_type: 'hex' })), 'hex');
-  assert.strictEqual(getPerkTarotType(makePerk({ name: 'Boon: Shadow Step', perk_type: 'boon' })), 'boon');
-  assert.strictEqual(getPerkTarotType(makePerk({ name: 'No Mither', perk_type: 'sacrifice' })), 'sacrifice');
-  assert.strictEqual(getPerkTarotType(makePerk({ name: 'Dead Hard', perk_type: 'exhaustion' })), 'exhaustion');
-  assert.strictEqual(getPerkTarotType(makePerk({ name: 'Blood Warden', perk_type: 'obsession' })), 'obsession');
-  assert.strictEqual(getPerkTarotType(makePerk({ name: 'Bond', perk_type: 'aura' })), 'aura');
-  assert.strictEqual(getPerkTarotType(makePerk({ name: 'Scourge Hook: Pain Resonance', perk_type: 'hooks' })), 'hooks');
-  assert.strictEqual(getPerkTarotType(makePerk({ name: 'Prove Thyself', perk_type: 'generator' })), 'generator');
-  assert.strictEqual(getPerkTarotType(makePerk({ name: 'Circle of Healing', perk_type: 'healing' })), 'healing');
-  assert.strictEqual(getPerkTarotType(makePerk({ name: 'Made for This', perk_type: 'chase' })), 'chase');
-  assert.strictEqual(getPerkTarotType(makePerk({ name: 'Iron Will', perk_type: 'stealth' })), 'stealth');
-  assert.strictEqual(getPerkTarotType(makePerk({ name: 'Power Struggle', perk_type: 'entity' })), 'entity');
+  assert.strictEqual(getPerkTarotType(makePerk({ name: 'Hex: Ruin', perk_types: ['hex'] })), 'hex');
+  assert.strictEqual(getPerkTarotType(makePerk({ name: 'Boon: Shadow Step', perk_types: ['boon'] })), 'boon');
+  assert.strictEqual(getPerkTarotType(makePerk({ name: 'No Mither', perk_types: ['sacrifice'] })), 'sacrifice');
+  assert.strictEqual(getPerkTarotType(makePerk({ name: 'Dead Hard', perk_types: ['exhaustion'] })), 'exhaustion');
+  assert.strictEqual(getPerkTarotType(makePerk({ name: 'Blood Warden', perk_types: ['obsession'] })), 'obsession');
+  assert.strictEqual(getPerkTarotType(makePerk({ name: 'Bond', perk_types: ['aura'] })), 'aura');
+  assert.strictEqual(getPerkTarotType(makePerk({ name: 'Scourge Hook: Pain Resonance', perk_types: ['hooks'] })), 'hooks');
+  assert.strictEqual(getPerkTarotType(makePerk({ name: 'Prove Thyself', perk_types: ['generator'] })), 'generator');
+  assert.strictEqual(getPerkTarotType(makePerk({ name: 'Circle of Healing', perk_types: ['healing'] })), 'healing');
+  assert.strictEqual(getPerkTarotType(makePerk({ name: 'Made for This', perk_types: ['chase'] })), 'chase');
+  assert.strictEqual(getPerkTarotType(makePerk({ name: 'Iron Will', perk_types: ['stealth'] })), 'stealth');
+  assert.strictEqual(getPerkTarotType(makePerk({ name: 'Power Struggle', perk_types: ['entity'] })), 'entity');
   // Unknown/missing perk_type falls back to entity
-  assert.strictEqual(getPerkTarotType(makePerk({ name: 'Unknown', perk_type: 'general' })), 'entity');
-  assert.strictEqual(getPerkTarotType(makePerk({ name: 'Unknown', perk_type: undefined })), 'entity');
+  assert.strictEqual(getPerkTarotType(makePerk({ name: 'Unknown', perk_types: ['general'] })), 'entity');
+  assert.strictEqual(getPerkTarotType(makePerk({ name: 'Unknown', perk_types: undefined })), 'entity');
 });
 
 test('getPerkTarotType: perk_type wins — no description needed (one source of truth)', () => {
-  const perk = makePerk({ name: 'Hex: The Third Seal', description: 'Blinds the Aura of the obsession.', perk_type: 'hex' });
+  const perk = makePerk({ name: 'Hex: The Third Seal', description: 'Blinds the Aura of the obsession.', perk_types: ['hex'] });
   assert.strictEqual(getPerkTarotType(perk), 'hex');
 });
 
@@ -380,12 +380,12 @@ const sacrificeMutator: ChaosMutator = {
 };
 
 test('filterPerksByMutator: negative_only keeps only sacrifice-category perks, falling back when none exist', () => {
-  const perksWithNegative = [makePerk({ name: 'No Mither', perk_type: 'sacrifice' }), makePerk({ name: 'Iron Will', perk_type: 'chase' })];
+  const perksWithNegative = [makePerk({ name: 'No Mither', perk_types: ['sacrifice'] }), makePerk({ name: 'Iron Will', perk_types: ['chase'] })];
   const resultWith = filterPerksByMutator(perksWithNegative, sacrificeMutator);
   assert.strictEqual(resultWith.length, 1);
   assert.strictEqual(resultWith[0].name, 'No Mither');
 
-  const perksWithoutNegative = [makePerk({ name: 'Iron Will', perk_type: 'chase' }), makePerk({ name: 'Sprint Burst', perk_type: 'exhaustion' })];
+  const perksWithoutNegative = [makePerk({ name: 'Iron Will', perk_types: ['chase'] }), makePerk({ name: 'Sprint Burst', perk_types: ['exhaustion'] })];
   const resultWithout = filterPerksByMutator(perksWithoutNegative, sacrificeMutator);
   assert.deepStrictEqual(resultWithout, perksWithoutNegative);
 });

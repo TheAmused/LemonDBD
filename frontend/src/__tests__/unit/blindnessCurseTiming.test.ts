@@ -22,7 +22,7 @@ import type { Perk } from '@/types/perks';
 import type { ChaosMutator } from '@/types/chaos';
 
 function makePerk(name = 'Perk'): Perk {
-  return { name, character: 'General', category: 'Survivor', description: '', icon_url: '', icon_local_path: '', perk_type: 'general' } as Perk;
+  return { name, character: 'General', category: 'Survivor', description: '', icon_url: '', icon_local_path: '', perk_types: ['general'] } as Perk;
 }
 
 const blindness: ChaosMutator = { id: 'blindness', name: 'Curse of Blindness', description: '', type: 'curse', icon: '', badgeBg: '', borderColor: '', textColor: '' };

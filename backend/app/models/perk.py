@@ -11,9 +11,10 @@ from sqlalchemy import (
     Text,
 )
 from sqlalchemy.dialects.postgresql import JSONB
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.orm import Mapped, mapped_column, relationship, validates
 
 from app.core.extensions import Base
+from app.models.perk_types import DEFAULT_PERK_TYPES, validate_perk_types
 
 if TYPE_CHECKING:
     from app.models.character import Killer, Survivor
@@ -50,12 +51,6 @@ class Perk(Base):
         ),
         Index("ix_perks_survivor_role", "survivor_id", "role"),
         Index("ix_perks_killer_role", "killer_id", "role"),
-        CheckConstraint(
-            "perk_type IS NULL OR perk_type IN ("
-            "'hex', 'boon', 'sacrifice', 'exhaustion', 'obsession', "
-            "'aura', 'generator', 'healing', 'chase', 'stealth', 'entity', 'hooks')",
-            name="ck_perks_perk_type",
-        ),
     )
 
     id: Mapped[int] = mapped_column(primary_key=True)
@@ -74,12 +69,20 @@ class Perk(Base):
     translations: Mapped[dict[str, Any] | None] = mapped_column(
         JSONB().with_variant(JSON(), "sqlite"), default=dict, nullable=True
     )
-    #: Tarot archetype this perk belongs to -- the single source of truth for
-    #: both Chaos Mutator weighting and the Tarot Deck randomizer card assignment.
-    #: One of: hex, boon, sacrifice, exhaustion, obsession, aura, generator,
-    #: healing, chase, stealth, entity, hooks. Nullable for backward-compatibility;
-    #: treat a missing value as 'entity' (the wildcard bucket).
-    perk_type: Mapped[str | None] = mapped_column(String(30), nullable=True)
+    #: What the perk is for -- the single source of truth for Chaos Mutator
+    #: weighting, the Tarot Deck card assignment and the Classic Perk Guesser.
+    #: An ordered list of 1-3 of: hex, boon, sacrifice, exhaustion, obsession,
+    #: aura, generator, healing, chase, stealth, entity, hooks. The first entry
+    #: is the primary type (the Tarot card); `entity` is the catch-all and only
+    #: appears alone. The rules are the pydantic ones in `app.models.perk_types`.
+    #: A JSON array cannot carry a portable CHECK on its elements (SQLite and
+    #: Postgres spell the JSON functions differently), so they are enforced on
+    #: assignment below and by `app.schemas.perk.PerkBase` on the way in.
+    perk_types: Mapped[list[str]] = mapped_column(
+        JSONB().with_variant(JSON(), "sqlite"),
+        default=lambda: list(DEFAULT_PERK_TYPES),
+        nullable=False,
+    )
 
     # One nullable key per table, at most one set, matching `role`. The 27
     # general perks leave both NULL.
@@ -92,6 +95,20 @@ class Perk(Base):
 
     survivor: Mapped["Survivor | None"] = relationship(back_populates="perks")
     killer: Mapped["Killer | None"] = relationship(back_populates="perks")
+
+    @validates("perk_types")
+    def _validate_perk_types(self, _key: str, value: object) -> list[str]:
+        return validate_perk_types(value)
+
+    @property
+    def resolved_perk_types(self) -> list[str]:
+        """`perk_types` as a fresh list; a perk not flushed yet reads as `['entity']`."""
+        return list(self.perk_types or DEFAULT_PERK_TYPES)
+
+    @property
+    def primary_perk_type(self) -> str:
+        """The first entry of `perk_types` -- the Tarot card this perk is drawn as."""
+        return self.resolved_perk_types[0]
 
     @property
     def character(self) -> "Survivor | Killer | None":
@@ -143,7 +160,7 @@ class Perk(Base):
             "description": description,
             "icon_url": self.icon_url or "",
             "icon_local_path": self.icon_local_path or "",
-            "perk_type": self.perk_type or "entity",
+            "perk_types": self.resolved_perk_types,
             "translations": self.translations or {},
             "is_disabled": self.is_disabled,
             "disabled_reason": self.disabled_reason,

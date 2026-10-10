@@ -200,6 +200,11 @@ def convert_perks(s: Conversion) -> None:
     for position, perk in enumerate(perks, start=1):
         row = prune(dict(perk), "character_name", "category", "character_id")
         row["id"] = assign_perk(perk, position)
+        # `perk_type` (one string) became `perk_types` (an ordered list whose
+        # first entry is the primary type); empty or null meant the catch-all.
+        legacy_perk_type = row.pop("perk_type", None)
+        if "perk_types" not in row:
+            row["perk_types"] = [str(legacy_perk_type or "entity").strip().lower()]
         row["role"] = (perk.get("role") or perk.get("category") or "Survivor").strip().title()
 
         owner = perk.get("character_name")

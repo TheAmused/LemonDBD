@@ -75,7 +75,7 @@ export default {
     speed: "Geschwindigkeit",
     terror_radius: "Terrorradius",
     perk: "Talent",
-    perk_type: "Talent-Typ",
+    perk_types: "Talent-Typen",
     realm: "Reich",
   },
   attributeValues: {

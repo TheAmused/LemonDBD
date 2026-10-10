@@ -19,7 +19,7 @@ function makePerk(name: string, perk_type = 'general'): Perk {
     description: '',
     icon_url: '',
     icon_local_path: '',
-    perk_type,
+    perk_types: [perk_type],
   } as Perk;
 }
 
@@ -94,13 +94,13 @@ test('No-Repeat with the eligible pool shrunk to nearly (but not fully) intersec
 test('No-Repeat where the curse-weighted category is ENTIRELY exhausted already: the fallback pool still respects No-Repeat (draws from what remains, never a duplicate) as long as anything remains', () => {
   // All 4 exhaustion perks have already been drawn; 10 filler perks have not.
   const pool = buildEligiblePool(14, 'exhaustion', 4);
-  const drawnAlready = pool.filter((p) => p.perk_type === 'exhaustion').map((p) => p.name);
+  const drawnAlready = pool.filter((p) => p.perk_types?.[0] === 'exhaustion').map((p) => p.name);
   const mutator = makeMutator('no_exhaustion'); // would otherwise try to avoid exhaustion perks anyway
 
   const playablePool = computePlayablePool(pool, true, drawnAlready);
   // The exhaustion perks are gone from the playable pool -- not because of
   // the curse, but because No-Repeat already excluded them.
-  assert.strictEqual(playablePool.some((p) => p.perk_type === 'exhaustion'), false);
+  assert.strictEqual(playablePool.some((p) => p.perk_types?.[0] === 'exhaustion'), false);
   assert.strictEqual(playablePool.length, 10);
 
   for (let i = 0; i < 200; i++) {

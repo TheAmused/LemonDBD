@@ -75,7 +75,7 @@ export default {
     speed: "移動速度",
     terror_radius: "脅威範囲",
     perk: "パーク",
-    perk_type: "パーク種別",
+    perk_types: "パーク種別",
     realm: "領域",
   },
   attributeValues: {

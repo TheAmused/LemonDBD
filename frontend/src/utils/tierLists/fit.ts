@@ -59,11 +59,11 @@ export interface FitResult {
 export const MIN_TILE = 18;
 /** With names on, a tile smaller than this is not worth it: dropping the labels gives a bigger, readable image instead. */
 export const NAMES_MIN_TILE = 44;
-export const MAX_TILE = 128;
+const MAX_TILE = 128;
 /** Wide (map) tiles are this much wider than tall. */
-export const WIDE_RATIO = 1.5;
+const WIDE_RATIO = 1.5;
 /** Space between the rows block and the pool (the board's `gap-3`). */
-export const SECTION_GAP = 12;
+const SECTION_GAP = 12;
 /** Border of a tier row / the pool (1px on each side). */
 const BORDER = 2;
 /** Room a classic scrollbar takes inside the pool, plus one px of rounding safety. */

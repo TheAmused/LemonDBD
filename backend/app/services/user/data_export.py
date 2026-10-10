@@ -43,6 +43,7 @@ from app.models import (
 _USER_SECRET_COLUMNS = frozenset(
     {
         "password_hash",
+        "token_version",
         "verification_code",
         "verification_code_expires_at",
         "verification_attempts",

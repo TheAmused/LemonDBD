@@ -76,8 +76,9 @@ class UserService:
         email: str | None = None,
         avatar_url: str | None = None,
         new_password: str | None = None,
+        current_password: str | None = None,
     ) -> tuple[User | None, str | None]:
-        return modify_user_profile(user_id, email, avatar_url, new_password)
+        return modify_user_profile(user_id, email, avatar_url, new_password, current_password)
 
     def mark_onboarding_complete(self, user_id: int) -> tuple[User | None, str | None]:
         return mark_onboarding_complete(user_id)

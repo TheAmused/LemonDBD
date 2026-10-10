@@ -11,6 +11,7 @@ from app.core.extensions import db
 from app.core.security import (
     decode_token,
     generate_token,
+    token_matches_user,
     hash_password,
     verify_password,
 )
@@ -234,6 +235,7 @@ def reset_password_with_token(token: str, new_password: str) -> tuple[User | Non
         return None, "This reset link has expired. Please request a new one."
 
     user.password_hash = hash_password(new_password)
+    user.token_version = int(user.token_version or 0) + 1  # signs out every existing session
     user.reset_token = None
     user.reset_token_expires_at = None
     db.session.commit()
@@ -296,7 +298,7 @@ def retrieve_user_from_jwt(token: str) -> User | None:
     try:
         user_id = int(payload["sub"])
         user = db.session.get(User, user_id)
-        if user and user.is_active:
+        if user and user.is_active and token_matches_user(payload, user):
             return user
     except (ValueError, TypeError):
         return None

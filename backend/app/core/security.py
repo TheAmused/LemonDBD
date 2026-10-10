@@ -5,6 +5,7 @@ from datetime import datetime, timedelta, timezone
 from typing import Any
 import jwt
 from flask import current_app, g, jsonify, request
+from sqlalchemy import select
 from werkzeug.security import check_password_hash, generate_password_hash
 from app.core.extensions import db
 from app.models.user import User
@@ -146,8 +147,49 @@ def verify_password(password: str, password_hash: str) -> bool:
         return False
 
 
-def generate_token(user_id: int, role: str = "user", extra_claims: dict[str, Any] | None = None) -> str:
-    """Generate a signed JWT for an authenticated user with fallback configuration."""
+ACCESS_TOKEN_TYPE = "access"
+
+
+def _current_token_version(user_id: int) -> int:
+    """The account's credential version right now (0 when it cannot be read)."""
+    try:
+        version = db.session.scalar(select(User.token_version).where(User.id == user_id))
+    except Exception as err:  # no app context / table not migrated yet
+        logger.debug(f"Could not read token_version for user {user_id}: {err}")
+        return 0
+    return int(version or 0)
+
+
+def token_matches_user(payload: dict[str, Any], user: User) -> bool:
+    """True when a decoded JWT is a session token that is still valid for this account.
+
+    Only ``typ == "access"`` tokens (or legacy tokens with no ``typ``) open a session, so a
+    short-lived token minted for some other purpose can never be used as one. The ``ver`` claim
+    must equal the account's current ``token_version``; a password change bumps it, which signs
+    out every session issued before. Legacy tokens without ``ver`` count as version 0.
+    """
+    if payload.get("typ", ACCESS_TOKEN_TYPE) != ACCESS_TOKEN_TYPE:
+        return False
+    try:
+        token_version = int(payload.get("ver", 0))
+    except (TypeError, ValueError):
+        return False
+    return token_version == int(user.token_version or 0)
+
+
+def generate_token(
+    user_id: int,
+    role: str = "user",
+    extra_claims: dict[str, Any] | None = None,
+    token_version: int | None = None,
+    token_type: str = ACCESS_TOKEN_TYPE,
+) -> str:
+    """Generate a signed JWT for an authenticated user with fallback configuration.
+
+    ``token_type`` (``typ``) says what the token may be used for and ``token_version`` (``ver``)
+    which generation of the account's credentials it belongs to; left unset, the account's
+    current version is looked up.
+    """
     now = datetime.now(timezone.utc)
 
     if current_app:
@@ -170,6 +212,8 @@ def generate_token(user_id: int, role: str = "user", extra_claims: dict[str, Any
         "role": role,
         "iat": now,
         "exp": now + expires_delta,
+        "typ": token_type,
+        "ver": token_version if token_version is not None else _current_token_version(user_id),
     }
 
     if extra_claims:
@@ -226,7 +270,7 @@ def get_current_user() -> User | None:
     try:
         user_id = int(payload["sub"])
         user = db.session.get(User, user_id)
-        if user and user.is_active:
+        if user and user.is_active and token_matches_user(payload, user):
             return user
     except Exception as err:
         logger.warning(f"Error fetching user from decoded token: {err}")

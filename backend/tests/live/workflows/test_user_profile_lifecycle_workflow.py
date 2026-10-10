@@ -30,6 +30,7 @@ class TestUserProfileLifecycleWorkflow:
                 "email": "prof_updated@example.com",
                 "avatar_url": "custom_avatar_icon",
                 "new_password": "NewStrongPassword456!",
+                "current_password": "InitialPass123!",
             },
             headers=headers,
         )

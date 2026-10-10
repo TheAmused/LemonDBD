@@ -88,6 +88,13 @@ class Config:
     SESSION_COOKIE_SECURE_MODE: str = os.getenv("SESSION_COOKIE_SECURE", "auto")
     JWT_ACCESS_TOKEN_EXPIRES: timedelta = timedelta(hours=int(os.getenv("JWT_EXPIRATION_HOURS", "24")))
 
+    # Optional two-factor sign-in. TOTP secrets are stored encrypted with this Fernet key (a
+    # comma-separated list: first encrypts, all decrypt). Unset = 2FA is unavailable (HTTP 503).
+    # Generate: python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"
+    TWO_FACTOR_ENCRYPTION_KEY: str = os.getenv("TWO_FACTOR_ENCRYPTION_KEY", "")
+    # Name shown in the authenticator app next to the account.
+    TWO_FACTOR_ISSUER: str = os.getenv("TWO_FACTOR_ISSUER", "LemonDBD")
+
     # Rate Limiting Configuration
     RATELIMIT_ENABLED: bool = os.getenv("RATELIMIT_ENABLED", "true").lower() in ("true", "1", "yes")
     RATELIMIT_STORAGE_URI: str = os.getenv("RATELIMIT_STORAGE_URI", "memory://")
@@ -133,6 +140,8 @@ class Config:
 
 class TestingConfig(Config):
     TESTING: bool = True
+    # A throwaway key that exists only for the test suite.
+    TWO_FACTOR_ENCRYPTION_KEY: str = "TZbfxN8fCG2Pccx-bBsj2fxcyN4dwABgUsIutMVLx4Y="
     DEBUG: bool = False
     SQLALCHEMY_DATABASE_URI: str = "sqlite:///:memory:"
     SQLALCHEMY_ENGINE_OPTIONS: dict[str, Any] = {}

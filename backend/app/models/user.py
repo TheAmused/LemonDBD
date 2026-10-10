@@ -19,6 +19,7 @@ if TYPE_CHECKING:
     from app.models.character import Killer, Survivor
     from app.models.community import BugReport
     from app.models.perk import Perk
+    from app.models.two_factor import UserRecoveryCode, UserTwoFactor
 
 
 class User(Base):
@@ -97,6 +98,14 @@ class User(Base):
     )
     showcase: Mapped["UserShowcase | None"] = relationship(
         back_populates="user", uselist=False, cascade="all, delete-orphan"
+    )
+    # Optional 2FA (app/models/two_factor.py): lazy-loaded, only touched by the 2FA service and
+    # by cascade on deletion.
+    two_factor: Mapped["UserTwoFactor | None"] = relationship(
+        back_populates="user", uselist=False, cascade="all, delete-orphan"
+    )
+    recovery_codes: Mapped[list["UserRecoveryCode"]] = relationship(
+        back_populates="user", cascade="all, delete-orphan"
     )
 
     def to_dict(self, include_sensitive: bool = False) -> dict[str, Any]:

@@ -15,6 +15,7 @@ from app.models import (
     UserPerkOwnership,
 )
 from app.services.streak_stats import fetch_challenge_completion_counts
+from app.services.user.two_factor import enabled_user_ids
 from app.services.user.avatar import (
     get_avatar_storage_directory,
     remove_stale_avatar_file,
@@ -75,9 +76,12 @@ def list_all_users_paginated(
         ).all()
         unlocked_perks_by_user = dict(perk_rows)
 
+    two_factor_users = enabled_user_ids(user_ids)
+
     user_list = []
     for u in users:
         d = u.to_dict()
+        d["two_factor_enabled"] = u.id in two_factor_users
         d["owned_characters_count"] = owned_chars_by_user.get(u.id, 0)
         d["unlocked_perks_count"] = unlocked_perks_by_user.get(u.id, 0)
         user_list.append(d)

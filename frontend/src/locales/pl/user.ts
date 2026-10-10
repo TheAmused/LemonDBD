@@ -73,9 +73,10 @@ export default {
   failedToRequestPasswordReset: "Nie udało się zażądać resetu hasła.",
   invalidCredentials: "Nieprawidłowe dane logowania.",
   registrationFailed: "Rejestracja nie powiodła się.",
-  acceptRulesLabel: "Akceptuję {rules}",
-  acceptRulesLink: "regulamin",
-  rulesNotAccepted: "Zaakceptuj regulamin, aby utworzyć konto.",
+  acceptLegalLabel: "Akceptuję {terms} oraz {rules}",
+  acceptTermsLink: "Regulamin serwisu",
+  acceptRulesLink: "Zasady społeczności",
+  legalNotAccepted: "Zaakceptuj Regulamin serwisu i Zasady społeczności, aby utworzyć konto.",
   unexpectedError: "Wystąpił nieoczekiwany błąd.",
 
   // --- /user page: perf & i18n hardening pass additions ---

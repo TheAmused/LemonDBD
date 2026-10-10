@@ -36,6 +36,7 @@ from app.models.minigame import (
     MinigameRepeatableChallenge,
     MinigameUserStat,
 )
+from app.models.two_factor import UserRecoveryCode, UserTwoFactor
 from app.models.user import (
     User,
     UserCharacterOwnership,
@@ -77,6 +78,8 @@ __all__ = [
     "UserCharacterOwnership",
     "UserPerkOwnership",
     "UserShowcase",
+    "UserTwoFactor",
+    "UserRecoveryCode",
     "ChallengeModeSetting",
     "SiteSetting",
     "AdminAuditLog",

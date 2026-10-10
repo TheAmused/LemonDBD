@@ -174,3 +174,50 @@ def send_password_reset_email(user: User) -> None:
         mail.send(message)
     except Exception as err:
         logger.warning(f"Failed to send password reset email to '{user.email}': {err}")
+
+
+_SECURITY_NOTICES: dict[str, tuple[str, str]] = {
+    "two_factor_enabled": (
+        "Two-factor authentication is now on",
+        "Two-factor authentication was turned on for your LemonDBD account. From now on, signing in "
+        "asks for a code from your authenticator app.",
+    ),
+    "two_factor_disabled": (
+        "Two-factor authentication was turned off",
+        "Two-factor authentication was turned off for your LemonDBD account.",
+    ),
+    "two_factor_reset": (
+        "Two-factor authentication was reset by an administrator",
+        "A LemonDBD administrator reset two-factor authentication on your account, so signing in no "
+        "longer asks for a code. You can turn it on again from your profile page.",
+    ),
+    "recovery_codes_regenerated": (
+        "New recovery codes were generated",
+        "New two-factor recovery codes were generated for your LemonDBD account. The previous codes "
+        "no longer work.",
+    ),
+}
+
+
+def send_security_notice_email(user: User, event: str) -> None:
+    """Best-effort heads-up that a security setting on the account changed. Never raises."""
+    subject, text = _SECURITY_NOTICES[event]
+    body_html = f"""\
+<p style="margin:0 0 4px; font-size:14px; color:#0f172a;">Hi {_greeting_name(user)},</p>
+<p style="margin:0 0 16px; font-size:13px; color:#64748b; line-height:1.6;">{html.escape(text)}</p>
+<p style="margin:0; font-size:12px; color:#94a3b8;">
+  If this wasn't you, reset your password right away and contact us.
+</p>
+"""
+    try:
+        message = Message(
+            subject=f"LemonDBD: {subject}",
+            recipients=[user.email],
+            body=f"Hi {user.username},\n\n{text}\n\nIf this wasn't you, reset your password right away and contact us.",
+            html=_email_shell(html.escape(subject), body_html),
+            charset=_BASE64_CHARSET,
+        )
+        _attach_logo(message)
+        mail.send(message)
+    except Exception as err:
+        logger.warning(f"Failed to send security notice '{event}' to '{user.email}': {err}")

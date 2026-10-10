@@ -91,6 +91,13 @@ def export_filename(user_id: int, requested_by: str = "self") -> str:
     return "lemondbd-my-data.json" if requested_by == "self" else f"lemondbd-user-{user_id}-data.json"
 
 
+def _two_factor_summary(user_id: int) -> dict[str, Any]:
+    from app.services.user.two_factor import status
+
+    summary = status(db.session.get(User, user_id))
+    return {key: summary[key] for key in ("enabled", "enabled_at", "recovery_codes_remaining")}
+
+
 def export_user_data(user_id: int, requested_by: str = "self") -> dict[str, Any] | None:
     """Collect the account's own records; None when the user does not exist."""
     if requested_by not in EXPORT_REQUESTERS:
@@ -125,4 +132,6 @@ def export_user_data(user_id: int, requested_by: str = "self") -> dict[str, Any]
         "smash_or_pass_votes": _rows(Vote, Vote.user_id == user_id),
         "smash_or_pass_preferences": _rows(SmashUserPreference, SmashUserPreference.user_id == user_id),
         "bug_reports": _rows(BugReport, BugReport.user_id == user_id),
+        # Only whether it is on: the secret and the recovery codes never leave the database.
+        "two_factor": _two_factor_summary(user_id),
     }

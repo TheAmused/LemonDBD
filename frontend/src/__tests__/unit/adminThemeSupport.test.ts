@@ -95,6 +95,7 @@ describe('Admin Theme Support', () => {
         onToggleRole: () => {},
         onToggleActive: () => {},
         onDeleteUser: () => {},
+        onResetTwoFactor: () => {},
       })
     );
     assert.ok(

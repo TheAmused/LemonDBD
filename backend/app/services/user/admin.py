@@ -181,7 +181,11 @@ def fetch_admin_metrics() -> dict[str, Any]:
 
 
 def seed_default_admin_if_empty() -> None:
-    """Invoke baseline admin seeders."""
+    """Invoke baseline admin seeders (development only: they create the demo accounts)."""
+    from app.core.config import demo_accounts_enabled
+
+    if not demo_accounts_enabled():
+        return
     try:
         from app.seeds.user_seeder import seed_default_users
 

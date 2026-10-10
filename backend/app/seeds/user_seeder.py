@@ -8,28 +8,34 @@ from app.models.user import User
 
 logger = logging.getLogger(__name__)
 
+# The development-only demo accounts. They are offered to the sign-in modal by
+# GET /api/v1/auth/demo-accounts and seeded by the static seeder, both only when
+# app.core.config.demo_accounts_enabled() is true (FLASK_ENV=development).
+DEMO_ACCOUNTS: tuple[dict[str, str], ...] = (
+    {
+        "username": "lemon",
+        "email": "lemon@lemondbd.com",
+        "password": "lemon",
+        "role": "admin",
+        "avatar_url": "default_avatar",
+    },
+    {
+        "username": "user",
+        "email": "survivor@lemondbd.com",
+        "password": "user",
+        "role": "user",
+        "avatar_url": "default_avatar",
+    },
+)
+
 
 def seed_default_users() -> None:
     """
-    Seeds baseline default admin and test user accounts.
+    Seeds baseline default admin and test user accounts (the development demo accounts).
+    Callers outside tests must check app.core.config.demo_accounts_enabled() first.
     Thread-safe and idempotent to prevent unique constraint crashes under Gunicorn concurrency.
     """
-    default_users = [
-        {
-            "username": "lemon",
-            "email": "lemon@lemondbd.com",
-            "password": "lemon",
-            "role": "admin",
-            "avatar_url": "default_avatar",
-        },
-        {
-            "username": "user",
-            "email": "survivor@lemondbd.com",
-            "password": "user",
-            "role": "user",
-            "avatar_url": "default_avatar",
-        },
-    ]
+    default_users = DEMO_ACCOUNTS
 
     try:
         for udata in default_users:

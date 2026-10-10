@@ -6,6 +6,7 @@ import type { Dictionary } from '@/locales/types';
 import { useAuth } from '@/context/AuthContext';
 import { useRouter, usePathname } from 'next/navigation';
 import { useAltcha } from '@/hooks/useAltcha';
+import { useDemoAccounts, type DemoAccount } from '@/hooks/useDemoAccounts';
 import { AltchaWidget } from '@/components/common/AltchaWidget';
 import {
   Mail,
@@ -142,15 +143,14 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
     }
   };
 
-  const handleFillDemo = (role: 'admin' | 'player') => {
+  // Development only: the backend lists the demo logins when FLASK_ENV=development, else nothing.
+  const demoAccounts = useDemoAccounts(isOpen);
+  const handleFillDemo = (role: DemoAccount['role']) => {
+    const account = demoAccounts.find((a) => a.role === role);
+    if (!account) return;
     switchMode('login');
-    if (role === 'admin') {
-      setUsername('lemon');
-      setPassword('lemon');
-    } else {
-      setUsername('user');
-      setPassword('user');
-    }
+    setUsername(account.username);
+    setPassword(account.password);
   };
 
   const [rulesLabelBefore, rulesLabelAfter = ''] = dict.user.acceptRulesLabel.split('{rules}');
@@ -350,7 +350,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
         </form>
       )}
 
-      {!notice && mode !== 'forgot' && (
+      {!notice && mode !== 'forgot' && demoAccounts.length > 0 && (
         <div className="mt-4 pt-4 border-t border-border-color">
           {dict.user.quickDemoAccounts && (
             <p className="type-label-2xs text-text-muted mb-2 text-center">

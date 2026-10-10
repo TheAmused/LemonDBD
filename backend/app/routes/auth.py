@@ -4,6 +4,7 @@ import os
 from flask import Blueprint, current_app, g, jsonify, make_response, request, send_from_directory
 from pydantic import ValidationError
 
+from app.core.config import demo_accounts_enabled
 from app.core.limiter import limiter, validate_honeypot
 from app.core.security import (
     clear_session_cookie,
@@ -305,5 +306,29 @@ def get_altcha_challenge():
     secret_key = current_app.config.get("SECRET_KEY", "lemon-dev-secret-key")
     challenge = AltchaService.create_challenge(secret_key=secret_key)
     resp = make_response(jsonify(challenge), 200)
+    resp.headers["Cache-Control"] = "no-store, no-cache, must-revalidate"
+    return resp
+
+
+@auth_bp.route("/demo-accounts", methods=["GET"])
+def get_demo_accounts():
+    """Development only: the demo logins the sign-in modal offers as quick-fill buttons.
+
+    Outside FLASK_ENV=development the list is empty, so a production build never
+    shows (or even receives) these credentials.
+    """
+    accounts: list[dict[str, str]] = []
+    if demo_accounts_enabled():
+        from app.seeds.user_seeder import DEMO_ACCOUNTS
+
+        accounts = [
+            {
+                "role": "admin" if account["role"] == "admin" else "player",
+                "username": account["username"],
+                "password": account["password"],
+            }
+            for account in DEMO_ACCOUNTS
+        ]
+    resp = make_response(jsonify({"enabled": bool(accounts), "accounts": accounts}), 200)
     resp.headers["Cache-Control"] = "no-store, no-cache, must-revalidate"
     return resp

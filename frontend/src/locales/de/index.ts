@@ -23,6 +23,7 @@ import tierLists from './tierLists';
 import minigames from './minigames';
 import privacy from './privacy';
 import rules from './rules';
+import terms from './terms';
 import errorPages from './errorPages';
 import scoreboardCheck from './scoreboardCheck';
 import validation from './validation';
@@ -53,6 +54,7 @@ const de = {
   minigames,
   privacy,
   rules,
+  terms,
   errorPages,
   scoreboardCheck,
   validation,

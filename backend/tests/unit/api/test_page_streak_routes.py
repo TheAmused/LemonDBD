@@ -5,7 +5,7 @@ from flask.testing import FlaskClient
 from sqlalchemy.orm import Session
 from app.services.page_streak_service import PageStreakService
 from app.services.user_service import UserService
-from tests.unit.test_page_streak_service import FakePerkService, make_perks, seed_perks
+from tests.unit.page_streak_support import FakePerkService, make_perks, seed_perks
 
 
 @pytest.fixture(autouse=True)

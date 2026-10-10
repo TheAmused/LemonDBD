@@ -92,7 +92,7 @@ def test_export_then_import_preserves_perk_type_for_every_perk(perk_seeded_app) 
 def test_import_of_a_legacy_export_missing_perk_type_key_entirely_does_not_crash(perk_seeded_app) -> None:
     """An export taken before `perk_type` existed (or hand-edited to strip
     it) must still import without raising -- the column is nullable and
-    `_upsert_by_id` should simply leave it unset, not KeyError."""
+    `upsert_by_id` should simply leave it unset, not KeyError."""
     exported = DatabaseExportImportService.export_database(targets=["perks"], include_assets=False)
     for row in _perks_rows(exported):
         row.pop("perk_type", None)

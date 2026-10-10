@@ -16,10 +16,12 @@ from app.services.perks.queries_map import (
     fetch_maps,
 )
 from app.services.perks.queries_perk import (
-    fetch_perk_by_identifier,
-    fetch_perk_suggestions,
     fetch_perks,
     fetch_perks_fallback,
+)
+from app.services.perks.queries_perk_lookup import (
+    fetch_perk_by_identifier,
+    fetch_perk_suggestions,
 )
 from app.services.perks.utils import (
     DEFAULT_KILLERS,

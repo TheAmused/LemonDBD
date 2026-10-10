@@ -1,8 +1,8 @@
 // frontend/src/__tests__/unit/adminDragAndDropBackup.test.ts
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
-import fs from 'node:fs';
 import path from 'node:path';
+import { readFeatureSource } from '../helpers/readFeatureSource';
 import enDict from '@/locales/en';
 import plDict from '@/locales/pl';
 import esDict from '@/locales/es';
@@ -10,8 +10,10 @@ import deDict from '@/locales/de';
 import jaDict from '@/locales/ja';
 
 describe('Admin Database Backup: Drag and Drop Import Modal', () => {
-  const modalSourcePath = path.resolve(__dirname, '../../components/ScraperConfigModal.tsx');
-  const modalSource = fs.readFileSync(modalSourcePath, 'utf-8');
+  // The modal is a composition root; the dropzone, hooks and targets live in components/scraper-config/.
+  const componentsDir = path.resolve(__dirname, '../../components');
+  const featureDir = path.join(componentsDir, 'scraper-config');
+  const modalSource = readFeatureSource(path.join(componentsDir, 'ScraperConfigModal.tsx'), featureDir);
 
   it('ScraperConfigModal source code attaches all drag and drop event listeners to the dropzone', () => {
     assert.ok(modalSource.includes('onDragEnter={handleDragEnter}'), 'Dropzone must implement onDragEnter');

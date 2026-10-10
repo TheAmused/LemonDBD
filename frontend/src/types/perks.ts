@@ -16,11 +16,13 @@ export interface Perk {
   character_real_name?: string;
   character_avatar_path?: string;
   category: RoleCategory | string;
-  //: Tarot archetype — the single source of truth for both Chaos Mutator
-  //: weighting and Tarot Deck card assignment. One of: hex, boon, sacrifice,
-  //: exhaustion, obsession, aura, generator, healing, chase, stealth, entity, hooks.
-  //: Optional/possibly missing on stale cached data; treat as 'entity'.
-  perk_type?: string;
+  //: What the perk is for — the single source of truth for Chaos Mutator
+  //: weighting, Tarot Deck card assignment and the Perk Guesser. An ordered
+  //: list of 1-3 of: hex, boon, sacrifice, exhaustion, obsession, aura,
+  //: generator, healing, chase, stealth, entity, hooks. The first entry is the
+  //: primary type (the Tarot card); `entity` only appears alone.
+  //: Optional/possibly missing on stale cached data; treat as ['entity'].
+  perk_types?: string[];
   description: string;
   icon_url: string;
   icon_local_path: string;

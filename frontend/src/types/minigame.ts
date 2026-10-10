@@ -33,7 +33,7 @@ export interface RoundCustomData {
   audio_synthetic_type?: string;
   blur_level?: number;
   distortion_type?: string;
-  perk_type?: string;
+  perk_types?: string[];
   power_name?: string;
   power_description?: string;
   hints?: string[];
@@ -124,7 +124,7 @@ export interface CatalogPerk {
   id: number;
   name: string;
   role: 'Killer' | 'Survivor';
-  perk_type?: string;
+  perk_types?: string[];
   is_teachable: boolean;
   character_name?: string;
   icon_url?: string;
@@ -160,7 +160,7 @@ export interface GuessedItem {
   height?: string;
   gender?: string;
   character_name?: string;
-  perk_type?: string;
+  perk_types?: string[];
   is_teachable?: boolean;
   [key: string]: unknown;
 }

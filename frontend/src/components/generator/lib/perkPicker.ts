@@ -1,21 +1,74 @@
 // frontend/src/components/generator/lib/perkPicker.ts
 //
-// perk.perk_type IS the Tarot archetype. One source of truth.
+// perk.perk_types is an ordered list of what the perk is for, and its first
+// entry IS the Tarot archetype. One source of truth.
 // No keyword scanning needed — the backend seed data classifies every perk
-// into exactly one of: hex | boon | sacrifice | exhaustion | obsession |
+// with 1-3 of: hex | boon | sacrifice | exhaustion | obsession |
 // aura | generator | healing | chase | stealth | entity | hooks
+// (`entity` is the catch-all and only ever appears alone).
 //
 import { Perk, RoleCategory, DrawnSlot } from '@/types/perks';
 import { ChaosMutator } from '@/types/chaos';
 
+const FALLBACK_PERK_TYPES: readonly string[] = ['entity'];
+
 /**
- * All classification below reads directly from `perk.perk_type` (set by the
- * backend seed, now using Tarot archetype values). No description-keyword
+ * Every type a perk has, primary first. A perk with no list at all (stale
+ * cached data, an old API response) or an empty one is treated as ['entity'].
+ */
+export function getPerkTypes(perk: Perk): readonly string[] {
+  const types = perk.perk_types;
+  return Array.isArray(types) && types.length > 0 ? types : FALLBACK_PERK_TYPES;
+}
+
+/**
+ * All classification below reads directly from `perk.perk_types` (set by the
+ * backend seed, using Tarot archetype values). A perk matches a category if
+ * the category is ANYWHERE in its list, so a perk that is both a generator and
+ * an aura perk is hit by a curse aimed at either. No description-keyword
  * matching, no hardcoded name lists -- the backend is the single source of
- * truth. A perk with no perk_type (stale cached data) is treated as 'entity'.
+ * truth.
  */
 function hasPerkType(perk: Perk, type: string): boolean {
-  return (perk.perk_type || 'entity') === type;
+  return getPerkTypes(perk).includes(type);
+}
+
+/**
+ * The relative weight of a secondary type (every entry of `perk_types` after
+ * the first) against the primary type's 1.0. It is used in two places:
+ *
+ * - Chaos Mutators: a curse aimed at a perk's PRIMARY type applies in full; one
+ *   that only matches a secondary entry moves the perk's weight half as far
+ *   from the neutral 1.0, so a +50% curse gives such a perk x1.25 and a -50%
+ *   curse x0.75.
+ * - Tarot Deck: a perk is dealt as its primary type's card with weight 1 and as
+ *   each secondary type's card with this weight (see `pickPerkTarotType`).
+ */
+export const SECONDARY_TYPE_EFFECT = 0.5;
+
+/**
+ * 1 if the perk's primary type is one of `types`, SECONDARY_TYPE_EFFECT if only
+ * a later entry is, otherwise 0. `types` is a category with its legacy aliases,
+ * so a perk matching several of them still counts once, at its strongest.
+ */
+function perkTypeStrength(perk: Perk, types: readonly string[]): number {
+  const own = getPerkTypes(perk);
+  if (types.includes(own[0])) return 1;
+  return own.some((t) => types.includes(t)) ? SECONDARY_TYPE_EFFECT : 0;
+}
+
+// Each curse category with the legacy spellings older cached data may carry.
+const EXHAUSTION_TYPES = ['exhaustion'] as const;
+const HEX_OR_BOON_TYPES = ['hex', 'boon'] as const;
+const MEME_TYPES = ['entity', 'meme'] as const;
+const GENERATOR_TYPES = ['generator', 'gen_slowdown'] as const;
+const HEALING_TYPES = ['healing', 'altruism_healing'] as const;
+const NEGATIVE_TYPES = ['sacrifice', 'handicap'] as const;
+const AURA_TYPES = ['aura', 'aura_reading'] as const;
+const CHASE_TYPES = ['chase'] as const;
+
+function matchesAny(perk: Perk, types: readonly string[]): boolean {
+  return perkTypeStrength(perk, types) > 0;
 }
 
 // ---------------------------------------------------------------------------
@@ -23,7 +76,7 @@ function hasPerkType(perk: Perk, type: string): boolean {
 // ---------------------------------------------------------------------------
 
 export function isExhaustionPerk(perk: Perk): boolean {
-  return hasPerkType(perk, 'exhaustion');
+  return matchesAny(perk, EXHAUSTION_TYPES);
 }
 
 export function isHexPerk(perk: Perk): boolean {
@@ -35,31 +88,31 @@ export function isBoonPerk(perk: Perk): boolean {
 }
 
 export function isHexOrBoonPerk(perk: Perk): boolean {
-  return isHexPerk(perk) || isBoonPerk(perk);
+  return matchesAny(perk, HEX_OR_BOON_TYPES);
 }
 
 export function isMemePerk(perk: Perk): boolean {
-  return hasPerkType(perk, 'entity') || hasPerkType(perk, 'meme');
+  return matchesAny(perk, MEME_TYPES);
 }
 
 export function isGenRegressionPerk(perk: Perk): boolean {
-  return hasPerkType(perk, 'generator') || hasPerkType(perk, 'gen_slowdown');
+  return matchesAny(perk, GENERATOR_TYPES);
 }
 
 export function isHealingOrAltruismPerk(perk: Perk): boolean {
-  return hasPerkType(perk, 'healing') || hasPerkType(perk, 'altruism_healing');
+  return matchesAny(perk, HEALING_TYPES);
 }
 
 export function isNegativePerk(perk: Perk): boolean {
-  return hasPerkType(perk, 'sacrifice') || hasPerkType(perk, 'handicap');
+  return matchesAny(perk, NEGATIVE_TYPES);
 }
 
 export function isAuraPerk(perk: Perk): boolean {
-  return hasPerkType(perk, 'aura') || hasPerkType(perk, 'aura_reading');
+  return matchesAny(perk, AURA_TYPES);
 }
 
 export function isChasePerk(perk: Perk): boolean {
-  return hasPerkType(perk, 'chase');
+  return matchesAny(perk, CHASE_TYPES);
 }
 
 export function isGeneratorPerk(perk: Perk): boolean {
@@ -89,59 +142,48 @@ export function isPerkBlockedByMutator(
 }
 
 /**
+ * Which perk types each curse reweights, and by how much for a perk whose
+ * PRIMARY type matches. Decreased probability is x0.50, increased x1.50.
+ */
+const CURSE_WEIGHT_RULES: Readonly<Record<string, { types: readonly string[]; weight: number }>> = {
+  // Curse of Blindness: aura perks drop chance reduced by 50%
+  blindness: { types: AURA_TYPES, weight: 0.5 },
+  // No Exhaustion: exhaustion perks drop chance reduced by 50%
+  no_exhaustion: { types: EXHAUSTION_TYPES, weight: 0.5 },
+  // No Gen Slowdown: generator perks drop chance reduced by 50%
+  no_slowdown: { types: GENERATOR_TYPES, weight: 0.5 },
+  // Curse of Solitude: healing perks drop chance reduced by 50%
+  solo_queue: { types: HEALING_TYPES, weight: 0.5 },
+  // Totem madness: hex and boon perks boosted by 50%
+  hex_boon_only: { types: HEX_OR_BOON_TYPES, weight: 1.5 },
+  hex_roulette: { types: HEX_OR_BOON_TYPES, weight: 1.5 },
+  // Curse of the Clown: entity (chaotic wildcard) perks boosted by 50%
+  meme_loadout: { types: MEME_TYPES, weight: 1.5 },
+  // Pure Bloodlust: chase perks boosted by 50%
+  chase_only: { types: CHASE_TYPES, weight: 1.5 },
+  // Curse of Sacrifice / Entity: sacrifice perks boosted by 50%
+  negative_only: { types: NEGATIVE_TYPES, weight: 1.5 },
+};
+
+/**
  * Probabilistic sampling weight for a perk given an active Chaos Mutator.
  * Default base weight is 1.0.
  * Decreased probability reduces weight by 50% (0.50).
  * Increased probability boosts weight by 50% (1.50).
+ *
+ * A perk can have several types. The full adjustment applies when the curse's
+ * category is the perk's primary type; when it is only a later (secondary)
+ * entry, the adjustment is scaled by SECONDARY_TYPE_EFFECT, i.e. x0.75 / x1.25.
  */
 export function getPerkWeight(perk: Perk, mutator?: ChaosMutator | null): number {
   if (!mutator) return 1.0;
 
-  switch (mutator.id) {
-    case 'blindness':
-      // Curse of Blindness: aura perks drop chance reduced by 50%
-      if (isAuraPerk(perk)) return 0.50;
-      return 1.0;
+  // Own keys only: an id such as "toString" must read as "no rule", not as a
+  // member inherited from Object.prototype.
+  if (!Object.prototype.hasOwnProperty.call(CURSE_WEIGHT_RULES, mutator.id)) return 1.0;
+  const rule = CURSE_WEIGHT_RULES[mutator.id];
 
-    case 'no_exhaustion':
-      // No Exhaustion: exhaustion perks drop chance reduced by 50%
-      if (isExhaustionPerk(perk)) return 0.50;
-      return 1.0;
-
-    case 'no_slowdown':
-      // No Gen Slowdown: generator perks drop chance reduced by 50%
-      if (isGeneratorPerk(perk)) return 0.50;
-      return 1.0;
-
-    case 'solo_queue':
-      // Curse of Solitude: healing perks drop chance reduced by 50%
-      if (isHealingPerk(perk)) return 0.50;
-      return 1.0;
-
-    case 'hex_boon_only':
-    case 'hex_roulette':
-      // Totem madness: hex and boon perks boosted by 50%
-      if (isHexOrBoonPerk(perk)) return 1.50;
-      return 1.0;
-
-    case 'meme_loadout':
-      // Curse of the Clown: entity (chaotic wildcard) perks boosted by 50%
-      if (isMemePerk(perk)) return 1.50;
-      return 1.0;
-
-    case 'chase_only':
-      // Pure Bloodlust: chase perks boosted by 50%
-      if (isChasePerk(perk)) return 1.50;
-      return 1.0;
-
-    case 'negative_only':
-      // Curse of Sacrifice / Entity: sacrifice perks boosted by 50%
-      if (isNegativePerk(perk)) return 1.50;
-      return 1.0;
-
-    default:
-      return 1.0;
-  }
+  return 1.0 + (rule.weight - 1.0) * perkTypeStrength(perk, rule.types);
 }
 
 /**
@@ -262,7 +304,7 @@ export function buildDrawnSlots(
 }
 
 // ---------------------------------------------------------------------------
-// Tarot Deck archetype resolution — now a trivial perk_type passthrough
+// Tarot Deck archetype resolution — the first entry of perk_types
 // ---------------------------------------------------------------------------
 
 export type TarotType =
@@ -279,18 +321,46 @@ export type TarotType =
   | 'entity'
   | 'hooks';
 
+const TAROT_TYPES: readonly string[] = [
+  'hex', 'boon', 'sacrifice', 'exhaustion', 'obsession',
+  'aura', 'generator', 'healing', 'chase', 'stealth', 'entity', 'hooks',
+];
+
+/** The perk's types that have a Tarot card, in order (unknown strings dropped). */
+function getPerkTarotTypes(perk: Perk): TarotType[] {
+  return getPerkTypes(perk).filter((t): t is TarotType => TAROT_TYPES.includes(t));
+}
+
 /**
- * Returns the perk's Tarot card archetype.
- *
- * perk.perk_type IS the TarotType — no secondary classification needed.
- * The backend seed is the single source of truth. Unknown/missing types
- * fall back to 'entity' (the wildcard).
+ * Returns the perk's PRIMARY Tarot card archetype: the first entry of
+ * `perk.perk_types`. Deterministic -- the card a perk is drawn as most often.
+ * The backend seed is the single source of truth. Unknown/missing types fall
+ * back to 'entity' (the wildcard).
  */
 export function getPerkTarotType(perk: Perk): TarotType {
-  const VALID: readonly string[] = [
-    'hex', 'boon', 'sacrifice', 'exhaustion', 'obsession',
-    'aura', 'generator', 'healing', 'chase', 'stealth', 'entity', 'hooks',
-  ];
-  const t = perk.perk_type || 'entity';
-  return (VALID.includes(t) ? t : 'entity') as TarotType;
+  return getPerkTarotTypes(perk)[0] ?? 'entity';
+}
+
+/**
+ * Picks the Tarot card a drawn perk is dealt as. A card shows exactly one
+ * type, so a perk with several is dealt as its primary type's card with weight
+ * 1 and as each secondary type's card with weight SECONDARY_TYPE_EFFECT: a
+ * two-type perk is dealt 2:1 (about 67% / 33%), a three-type perk 2:1:1
+ * (50% / 25% / 25%). A perk with one type always gets that card.
+ *
+ * Call it once when the card is dealt, not while rendering, or the card would
+ * change on every re-render. `random` is injectable for tests.
+ */
+export function pickPerkTarotType(perk: Perk, random: () => number = Math.random): TarotType {
+  const types = getPerkTarotTypes(perk);
+  if (types.length === 0) return 'entity';
+  if (types.length === 1) return types[0];
+
+  const weights = types.map((_, i) => (i === 0 ? 1 : SECONDARY_TYPE_EFFECT));
+  let r = random() * weights.reduce((sum, w) => sum + w, 0);
+  for (let i = 0; i < types.length; i++) {
+    r -= weights[i];
+    if (r < 0) return types[i];
+  }
+  return types[0];
 }

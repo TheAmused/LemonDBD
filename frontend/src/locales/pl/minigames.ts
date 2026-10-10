@@ -75,7 +75,7 @@ export default {
     speed: "Prędkość",
     terror_radius: "Promień Terroru",
     perk: "Umiejętność",
-    perk_type: "Typ Umiejętności",
+    perk_types: "Typy Umiejętności",
     realm: "Kraina",
   },
   attributeValues: {

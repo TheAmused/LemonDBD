@@ -7,7 +7,7 @@ import { DbdButton } from '../shared/DbdButton';
 import { Perk, RoleCategory, DrawnSlot } from '@/types/perks';
 import { ChaosMutator } from '@/types/chaos';
 import { Dictionary } from '@/locales/types';
-import { pickRandomLoadout, buildDrawnSlots, getPerkTarotType, TarotType } from '../lib/perkPicker';
+import { pickRandomLoadout, buildDrawnSlots, pickPerkTarotType, TarotType } from '../lib/perkPicker';
 import { getSlotInteraction } from '../lib/blindnessCurse';
 import { PerkSlot } from '../shared/PerkSlot';
 import { useJackpotCelebration } from '../shared/useJackpotCelebration';
@@ -133,7 +133,9 @@ export const TarotDeckStage: React.FC<TarotDeckStageProps> = ({
     const slots = buildDrawnSlots(picked, activePlayablePerks);
 
     const next: TarotCard[] = slots.map((slot) => ({
-      type: slot.perk ? getPerkTarotType(slot.perk) : 'entity',
+      // Dealt once here, never while rendering: a perk with a secondary type
+      // can come up as that type's card (see pickPerkTarotType).
+      type: slot.perk ? pickPerkTarotType(slot.perk) : 'entity',
       slot,
       flipped: false,
     }));

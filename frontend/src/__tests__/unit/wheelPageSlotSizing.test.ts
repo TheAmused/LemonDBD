@@ -24,7 +24,7 @@ function makePool(n: number): Perk[] {
       description: '',
       icon_url: '',
       icon_local_path: '',
-      perk_type: 'general',
+      perk_types: ['general'],
     } as Perk);
   }
   return pool;
@@ -82,7 +82,7 @@ test('wheelTotalPages/wheelLastPagePerks: grid sizing tracks the pool as it shri
 
 test('buildDrawnSlots: a perk not found in the sorted pool (e.g. stale reference after a role switch) falls back to page 1 / slot 1 rather than throwing or producing a negative index', () => {
   const pool = makePool(5);
-  const strayPerk: Perk = { name: 'not-in-pool', character: 'General', category: 'Survivor', description: '', icon_url: '', icon_local_path: '', perk_type: 'general' } as Perk;
+  const strayPerk: Perk = { name: 'not-in-pool', character: 'General', category: 'Survivor', description: '', icon_url: '', icon_local_path: '', perk_types: ['general'] } as Perk;
   const slots = buildDrawnSlots([strayPerk], pool, 15);
   assert.strictEqual(slots[0].page, 1);
   assert.strictEqual(slots[0].slot, 1);
@@ -90,8 +90,8 @@ test('buildDrawnSlots: a perk not found in the sorted pool (e.g. stale reference
 
 test('computeEligiblePool + buildDrawnSlots together: sorting by name is exactly what buildDrawnSlots indexes against, so page/slot stays consistent with what the UI actually renders sorted by', () => {
   const unsorted: Perk[] = [
-    { name: 'Zebra Perk', character: 'General', category: 'Survivor', description: '', icon_url: '', icon_local_path: '', perk_type: 'general', is_owned: true } as Perk,
-    { name: 'Alpha Perk', character: 'General', category: 'Survivor', description: '', icon_url: '', icon_local_path: '', perk_type: 'general', is_owned: true } as Perk,
+    { name: 'Zebra Perk', character: 'General', category: 'Survivor', description: '', icon_url: '', icon_local_path: '', perk_types: ['general'], is_owned: true } as Perk,
+    { name: 'Alpha Perk', character: 'General', category: 'Survivor', description: '', icon_url: '', icon_local_path: '', perk_types: ['general'], is_owned: true } as Perk,
   ];
   const sorted = computeEligiblePool(unsorted, 'Survivor', true);
   assert.strictEqual(sorted[0].name, 'Alpha Perk');

@@ -1,0 +1,44 @@
+/* frontend/src/app/styles/type-roles.css
+ * Typography roles (`type-*` utilities). */
+
+/* ---------------------------------------------------------------------------
+ * Type roles -- THE single source of truth for how text looks.
+ * A component names a role (`type-label`); it never assembles size + weight + tracking itself.
+ * Change a role here and every page that uses it follows. Colour stays a separate token class
+ * (text-text-primary, text-accent-red, ...), so one role works on every theme and surface.
+ * scripts/check-typography.ts fails when a class list spells out exactly what a role already is.
+ * --------------------------------------------------------------------------- */
+@utility type-page-title { @apply text-xl sm:text-2xl font-black; }
+@utility type-section-title { @apply text-xs sm:text-sm 2xl:text-base font-black uppercase tracking-widest; }
+@utility type-section-subtitle { @apply text-mini sm:text-xs 2xl:text-sm; }
+@utility type-card-title { @apply text-sm font-bold; }
+@utility type-label { @apply text-sm font-bold uppercase tracking-wider; }
+@utility type-label-sm { @apply text-xs font-bold uppercase tracking-wider; }
+@utility type-label-xs { @apply text-mini font-bold uppercase tracking-wider; }
+@utility type-label-2xs { @apply text-tiny font-bold uppercase tracking-wider; }
+@utility type-strong { @apply text-xs font-bold; }
+@utility type-strong-fluid { @apply text-xs sm:text-sm font-bold; }
+/* Grows the tappable area of a small, absolutely-positioned control to the 44px minimum without changing how it looks.
+   In-flow controls use `pointer-coarse:min-h-11 pointer-coarse:min-w-11` instead. */
+@utility hit-area {
+  &:not(.absolute, .fixed, .sticky, .relative) { position: relative; }
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: max(100%, 2.75rem);
+    height: max(100%, 2.75rem);
+    transform: translate(-50%, -50%);
+  }
+}
+@utility type-strong-xs { @apply text-mini font-bold; }
+@utility type-strong-2xs { @apply text-tiny font-bold; }
+@utility type-strong-wide { @apply text-mini sm:text-xs wide:text-sm wide-2k:text-base font-bold; }
+@utility type-strong-wide-sm { @apply text-tiny sm:text-mini wide:text-xs wide-2k:text-sm font-bold; }
+@utility type-strong-wide-caps { @apply text-mini sm:text-xs wide:text-sm wide-2k:text-base font-bold uppercase tracking-wider; }
+@utility type-body { @apply text-xs leading-relaxed; }
+@utility type-body-fluid { @apply text-xs sm:text-sm leading-relaxed; }
+@utility type-body-lg { @apply text-sm leading-relaxed; }
+@utility type-caption { @apply text-mini; }
+@utility type-micro { @apply text-tiny; }

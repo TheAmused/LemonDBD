@@ -47,7 +47,7 @@ test('no raw type="checkbox" / role="switch" outside Checkbox and Switch', () =>
       'components/common/Checkbox.tsx',
       'components/common/Switch.tsx',
       // Whole-row switch button that hosts SwitchTrack (a button cannot nest a Switch).
-      'components/onboarding/CharacterOnboardingWizard.tsx',
+      'components/onboarding/wizard/ChapterCard.tsx',
     ]),
     []
   );

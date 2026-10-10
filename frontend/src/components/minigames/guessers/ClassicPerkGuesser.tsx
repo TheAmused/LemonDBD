@@ -26,7 +26,7 @@ export const ClassicPerkGuesser: React.FC<ClassicPerkGuesserProps> = ({ guesses 
             <th className="p-2 w-32 text-left">{dict.filters.perks}</th>
             <th className="p-2 w-24">{t.attributes.role}</th>
             <th className="p-2 w-36">{dict.sidebar.characters}</th>
-            <th className="p-2 w-28">{t.attributes.perk_type}</th>
+            <th className="p-2 w-28">{t.attributes.perk_types}</th>
             <th className="p-2 w-24">{t.attributes.is_licensed}</th>
           </tr>
         </thead>
@@ -74,8 +74,9 @@ export const ClassicPerkGuesser: React.FC<ClassicPerkGuesserProps> = ({ guesses 
                 />
 
                 <PerkAttrCell
-                  evaluation={attrs.perk_type}
-                  value={guess.perk_type || 'General'}
+                  evaluation={attrs.perk_types}
+                  value={formatPerkTypes(guess.perk_types)}
+                  wrap
                 />
 
                 <PerkAttrCell
@@ -91,7 +92,12 @@ export const ClassicPerkGuesser: React.FC<ClassicPerkGuesserProps> = ({ guesses 
   );
 };
 
-const PerkAttrCell: React.FC<{ evaluation?: AttributeEvaluation; value?: string | null }> = ({ evaluation, value }) => {
+/** "generator, aura" -- primary type first, the order the backend sends. */
+const formatPerkTypes = (types?: string[] | null): string =>
+  types && types.length > 0 ? types.join(', ') : 'General';
+
+// `wrap` lets a long value (several perk types) break onto lines instead of being cut off.
+const PerkAttrCell: React.FC<{ evaluation?: AttributeEvaluation; value?: string | null; wrap?: boolean }> = ({ evaluation, value, wrap = false }) => {
   const status = typeof evaluation === 'string' ? evaluation : evaluation?.status || 'incorrect';
   const isCorrect = status === 'correct';
   const isPartial = status === 'partial';
@@ -105,7 +111,7 @@ const PerkAttrCell: React.FC<{ evaluation?: AttributeEvaluation; value?: string 
   return (
     <td className={`p-2.5 rounded-xl border shadow-md font-semibold text-xs transition-all ${bgStyle}`}>
       <div className="flex items-center justify-center gap-1">
-        <span className="truncate max-w-[140px]">{value ?? '-'}</span>
+        <span className={wrap ? 'max-w-[140px] break-words' : 'truncate max-w-[140px]'}>{value ?? '-'}</span>
         {isCorrect && <Check className="w-3.5 h-3.5 text-text-inverted flex-shrink-0" />}
       </div>
     </td>

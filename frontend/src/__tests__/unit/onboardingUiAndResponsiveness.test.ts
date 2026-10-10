@@ -1,14 +1,15 @@
 // frontend/src/__tests__/unit/onboardingUiAndResponsiveness.test.ts
 import test, { describe, it } from 'node:test';
 import assert from 'node:assert';
-import fs from 'node:fs';
 import path from 'node:path';
+import { readFeatureSource } from '../helpers/readFeatureSource';
 
 describe('CharacterOnboardingWizard UI & Responsiveness', () => {
-  const source = fs.readFileSync(
-    path.join(process.cwd(), 'src/components/onboarding/CharacterOnboardingWizard.tsx'),
-    'utf-8'
-  );
+  // The wizard is a composition root plus hooks/components under onboarding/wizard/;
+  // these contracts hold for the feature as a whole, wherever the code lives.
+  const onboardingDir = path.join(process.cwd(), 'src/components/onboarding');
+  const wizardDir = path.join(onboardingDir, 'wizard');
+  const source = readFeatureSource(path.join(onboardingDir, 'CharacterOnboardingWizard.tsx'), wizardDir);
 
   it('enforces a minimum of 3 columns on mobile (never 1 or 2 single columns)', () => {
     assert.ok(

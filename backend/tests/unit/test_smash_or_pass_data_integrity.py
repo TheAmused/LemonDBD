@@ -2,7 +2,7 @@
 """Standing regression tests for smash-or-pass roster seed data integrity.
 
 The perk system already suffered a class of bug where a 321-row dataset drifted
-silently (missing/mismatched `perk_type`). The smash-or-pass roster JSON files
+silently (missing/mismatched `perk_types`). The smash-or-pass roster JSON files
 (backend/app/seeds/data/smash_or_pass/rosters/*.json) are the same kind of
 hand/script-maintained dataset -- 6 files, ~187 entities combined -- so these
 tests assert the same invariants generically over every roster the *real*

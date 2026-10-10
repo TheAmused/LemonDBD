@@ -1,12 +1,11 @@
 // frontend/src/__tests__/unit/themeCssAndTokens.test.ts
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
-import fs from 'node:fs';
 import path from 'node:path';
+import { readGlobalCss } from '../../../scripts/lib/globalCss';
 
 describe('Theme CSS & Fog Overlay Rules', () => {
-  const cssPath = path.resolve(__dirname, '../../app/globals.css');
-  const cssContent = fs.readFileSync(cssPath, 'utf-8');
+  const cssContent = readGlobalCss(path.resolve(__dirname, '../../app/globals.css'));
 
   it('dbd-fog-overlay uses background-image rather than background shorthand', () => {
     // Ensure shorthand background: is not used in either base or dark overlay rules
@@ -62,8 +61,7 @@ describe('Theme CSS & Fog Overlay Rules', () => {
 });
 
 describe('App shell sidebar geometry', () => {
-  const cssPath = path.resolve(__dirname, '../../app/globals.css');
-  const cssContent = fs.readFileSync(cssPath, 'utf-8');
+  const cssContent = readGlobalCss(path.resolve(__dirname, '../../app/globals.css'));
 
   it('defines --sidebar-width CSS variable for responsive in-flow layout', () => {
     // Mobile root default: 0rem

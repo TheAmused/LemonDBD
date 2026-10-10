@@ -77,7 +77,6 @@ describe('popover migration', () => {
   const read = (rel: string) => fs.readFileSync(path.join(process.cwd(), 'src', rel), 'utf-8');
   const migrated = [
     'components/character-detail/components/CategoryPicker.tsx',
-    'components/streaks/FreezeBadge.tsx',
     'components/common/CustomDropdown.tsx',
   ];
   for (const file of migrated) {
@@ -89,4 +88,12 @@ describe('popover migration', () => {
       assert.ok(src.includes('<Popover'), 'must render <Popover>');
     });
   }
+
+  it('components/streaks/FreezeBadge.tsx uses the shared tooltip and no longer portals itself', () => {
+    const src = read('components/streaks/FreezeBadge.tsx');
+    assert.ok(!src.includes('createPortal'), 'must not call createPortal');
+    assert.ok(!src.includes("from 'react-dom'"), 'must not import react-dom');
+    assert.ok(src.includes("@/components/common/Tooltip"), 'must import the shared tooltip');
+    assert.ok(src.includes('tip('), 'must spread tip(...) onto the badge');
+  });
 });

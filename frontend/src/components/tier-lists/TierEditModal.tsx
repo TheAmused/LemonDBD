@@ -67,9 +67,6 @@ export function TierEditModal({ tier, index, tierCount, onClose, onSave, onMove,
       bodyClassName="p-4 sm:p-6"
       footer={
         <div className="flex w-full flex-wrap items-center justify-center gap-3">
-          <Button variant="secondary" onClick={onClose} className={cn(TOUCH_BTN, 'min-h-[42px] px-5')}>
-            {t.cancel}
-          </Button>
           <Button
             variant="primary"
             disabled={!trimmed || bgInvalid}

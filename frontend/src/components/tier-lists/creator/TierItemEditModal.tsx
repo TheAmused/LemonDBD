@@ -74,9 +74,6 @@ export function TierItemEditModal({ item, isOpen, onClose, onSave }: TierItemEdi
       bodyClassName="p-4 sm:p-6"
       footer={
         <div className="flex w-full items-center justify-center gap-3 pt-1">
-          <Button variant="secondary" onClick={onClose} className={cn(TOUCH_BTN, 'min-h-[42px] px-5')}>
-            {t.cancel}
-          </Button>
           <Button
             variant="primary"
             disabled={nameInvalid || urlInvalid}
@@ -97,7 +94,7 @@ export function TierItemEditModal({ item, isOpen, onClose, onSave }: TierItemEdi
         className="flex flex-col gap-4"
       >
         {/* Centered Live Preview Showcase */}
-        <div className="flex flex-col items-center justify-center p-5 rounded-xl border border-border-color bg-bg-primary/40 text-center">
+        <div className="flex flex-col items-center justify-center text-center">
           <div className="relative h-20 w-20 sm:h-24 sm:w-24 overflow-hidden rounded-xl border-2 border-border-color bg-bg-elevated shadow-md flex items-center justify-center transition-all">
             {safeImage ? (
               <img

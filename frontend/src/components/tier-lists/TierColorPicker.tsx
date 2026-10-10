@@ -3,7 +3,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { HexColorInput, HexColorPicker } from 'react-colorful';
-import { Pipette } from 'lucide-react';
+import { Check, Pipette } from 'lucide-react';
 import { cn } from '@/utils/cn';
 import { HEX_COLOR_PATTERN } from '@/utils/tierLists/constants';
 import { themeColor } from '@/utils/themeColor';
@@ -78,22 +78,22 @@ export function TierColorPicker({ color, onChange, size = 'md' }: TierColorPicke
 
   return (
     <>
+      {/* Same square swatch as the preset colors: the chosen custom color, or a rainbow until one is picked. */}
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
         aria-expanded={open}
+        aria-label={t.customColor}
+        aria-pressed={isHex}
         className={cn(
-          'flex items-center gap-2 border bg-bg-surface font-bold text-text-secondary cursor-pointer transition-colors hover:text-text-primary',
-          small ? 'h-7 rounded-md px-2 text-xs pointer-coarse:min-h-11' : 'h-11 rounded-xl border-2 px-3 text-xs',
-          isHex || open ? 'border-text-primary' : 'border-border-color'
+          'flex items-center justify-center border-2 cursor-pointer transition-transform hover:scale-105',
+          small ? 'h-7 w-7 rounded-md pointer-coarse:min-h-11 pointer-coarse:min-w-11' : 'h-11 w-11 rounded-xl',
+          !isHex && 'bg-[conic-gradient(red,yellow,lime,aqua,blue,fuchsia,red)]',
+          isHex || open ? 'border-text-primary' : 'border-transparent'
         )}
+        style={isHex ? { backgroundColor: color } : undefined}
       >
-        <span
-          className={cn('shrink-0 rounded-sm border border-border-color', small ? 'h-4 w-4' : 'h-6 w-6')}
-          style={{ backgroundColor: isHex ? color : draft }}
-          aria-hidden="true"
-        />
-        {t.customColor}
+        {isHex && <Check className={small ? 'h-3.5 w-3.5 text-text-primary drop-shadow-sm' : 'h-4 w-4 text-text-primary drop-shadow-sm'} aria-hidden="true" />}
       </button>
 
       {open && (

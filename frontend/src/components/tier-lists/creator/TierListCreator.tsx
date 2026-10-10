@@ -298,102 +298,66 @@ export function TierListCreator({ locale, editId }: TierListCreatorProps) {
         </div>
       )}
 
-      {/* TOP ROW: IN-LINE NAVIGATION (LEFT), THE BASICS BLOCK (MIDDLE), PREVIEW & CREATE (RIGHT) */}
-      <header className="flex flex-col lg:flex-row items-stretch lg:items-start justify-between gap-3 lg:gap-4 w-full">
-        {/* Mobile top bar (< lg) */}
-        <div className="flex lg:hidden items-center justify-end gap-2 w-full">
-          <div className="flex items-center gap-2">
-            <Button
-              variant="secondary"
-              size="sm"
-              onClick={() => setPreviewOpen(true)}
-              className="min-h-[40px] uppercase tracking-wider"
-            >
-              {c.previewHeading}
-            </Button>
-            {submitButton('min-h-[40px] px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider')}
-          </div>
-        </div>
-
-        {/* Desktop top left navigation (>= lg) */}
-        <div className="hidden lg:block shrink-0 lg:max-wide-2k:w-48 wide-2k:w-48" aria-hidden="true" />
-
-        {/* MIDDLE: THE BASICS BLOCK */}
-        <div className="flex-1 w-full min-w-0 max-w-4xl 2xl:max-wide-2k:max-w-6xl wide-2k:max-w-[1800px] mx-auto">
-          <Section title={c.stepBasics}>
-            <div className="grid gap-4 2xl:gap-6 md:grid-cols-2">
-              <label className="md:col-span-1">
-                <span className={LABEL}>{c.titleLabel}</span>
-                <Input
-                  value={draft.title}
-                  maxLength={TIER_LIST_LIMITS.maxTitle}
-                  onChange={(e) => patch({ title: e.target.value })}
-                  placeholder={c.titlePlaceholder}
-                  invalid={attempted && titleMissing}
-                  className={cn(TOUCH_FIELD, '2xl:min-h-[50px] 2xl:text-base')}
-                />
-              </label>
-              <label className="md:col-span-1">
-                <span className={LABEL}>{c.descriptionLabel}</span>
-                <Input
-                  value={draft.description}
-                  maxLength={TIER_LIST_LIMITS.maxDescription}
-                  onChange={(e) => patch({ description: e.target.value })}
-                  placeholder={c.descriptionPlaceholder}
-                  className={cn(TOUCH_FIELD, '2xl:min-h-[50px] 2xl:text-base')}
-                />
-              </label>
-              <label className="md:col-span-2">
-                <span className={LABEL}>{c.backgroundImageLabel}</span>
-                <Input
-                  value={draft.backgroundImage}
-                  onChange={(e) => patch({ backgroundImage: e.target.value })}
-                  placeholder={c.backgroundImagePlaceholder}
-                  inputMode="url"
-                  invalid={attempted && backgroundInvalid}
-                  className={cn(TOUCH_FIELD, '2xl:min-h-[50px] 2xl:text-base')}
-                />
-                <span
-                  className={cn(
-                    'mt-1 block text-xs 2xl:text-sm',
-                    attempted && backgroundInvalid ? 'font-semibold text-accent-red' : 'text-text-muted'
-                  )}
-                >
-                  {attempted && backgroundInvalid ? t.invalidImage : c.backgroundImageHint}
-                </span>
-                {safeBackground && (
-                  <div className="mt-2 h-24 w-full max-w-sm mx-auto overflow-hidden rounded-lg border border-border-color bg-bg-elevated">
-                    <img src={safeBackground} alt="" referrerPolicy="no-referrer" className="h-full w-full object-cover" />
-                  </div>
+      {/* THE BASICS BLOCK */}
+      <div className="w-full max-w-4xl 2xl:max-wide-2k:max-w-6xl wide-2k:max-w-[1800px] mx-auto">
+        <Section title={c.stepBasics}>
+          <div className="grid gap-4 2xl:gap-6 md:grid-cols-2">
+            <label className="md:col-span-1">
+              <span className={LABEL}>{c.titleLabel}</span>
+              <Input
+                value={draft.title}
+                maxLength={TIER_LIST_LIMITS.maxTitle}
+                onChange={(e) => patch({ title: e.target.value })}
+                placeholder={c.titlePlaceholder}
+                invalid={attempted && titleMissing}
+                className={cn(TOUCH_FIELD, '2xl:min-h-[50px] 2xl:text-base')}
+              />
+            </label>
+            <label className="md:col-span-1">
+              <span className={LABEL}>{c.descriptionLabel}</span>
+              <Input
+                value={draft.description}
+                maxLength={TIER_LIST_LIMITS.maxDescription}
+                onChange={(e) => patch({ description: e.target.value })}
+                placeholder={c.descriptionPlaceholder}
+                className={cn(TOUCH_FIELD, '2xl:min-h-[50px] 2xl:text-base')}
+              />
+            </label>
+            <label className="md:col-span-2">
+              <span className={LABEL}>{c.backgroundImageLabel}</span>
+              <Input
+                value={draft.backgroundImage}
+                onChange={(e) => patch({ backgroundImage: e.target.value })}
+                placeholder={c.backgroundImagePlaceholder}
+                inputMode="url"
+                invalid={attempted && backgroundInvalid}
+                className={cn(TOUCH_FIELD, '2xl:min-h-[50px] 2xl:text-base')}
+              />
+              <span
+                className={cn(
+                  'mt-1 block text-xs 2xl:text-sm',
+                  attempted && backgroundInvalid ? 'font-semibold text-accent-red' : 'text-text-muted'
                 )}
-              </label>
-              {isAdmin && !editId && (
-                <Checkbox checked={official} onChange={setOfficial} className="md:col-span-2 justify-center gap-2.5">
-                  <span className="text-center">
-                    <span className={cn(LABEL, 'inline')}>{c.official}</span>
-                    <span className="ml-2 text-xs 2xl:text-sm text-text-muted">{c.officialHint}</span>
-                  </span>
-                </Checkbox>
+              >
+                {attempted && backgroundInvalid ? t.invalidImage : c.backgroundImageHint}
+              </span>
+              {safeBackground && (
+                <div className="mt-2 h-24 w-full max-w-sm mx-auto overflow-hidden rounded-lg border border-border-color bg-bg-elevated">
+                  <img src={safeBackground} alt="" referrerPolicy="no-referrer" className="h-full w-full object-cover" />
+                </div>
               )}
-            </div>
-          </Section>
-        </div>
-
-        {/* Desktop top right buttons (>= lg) */}
-        <div className="hidden lg:flex shrink-0 lg:max-wide-2k:w-48 wide-2k:w-48 items-center justify-end gap-2.5 sm:gap-3 pt-2">
-          <Button
-            variant="secondary"
-            size="sm"
-            onClick={() => setPreviewOpen(true)}
-            className="min-h-[40px] 2xl:min-h-[46px] 2xl:px-5 2xl:text-sm uppercase tracking-wider"
-          >
-            {c.previewHeading}
-          </Button>
-          {submitButton(
-            'min-h-[40px] 2xl:min-h-[46px] px-4 2xl:px-6 py-1.5 text-xs 2xl:text-sm font-bold uppercase tracking-wider'
-          )}
-        </div>
-      </header>
+            </label>
+            {isAdmin && !editId && (
+              <Checkbox checked={official} onChange={setOfficial} className="md:col-span-2 justify-center gap-2.5">
+                <span className="text-center">
+                  <span className={cn(LABEL, 'inline')}>{c.official}</span>
+                  <span className="ml-2 text-xs 2xl:text-sm text-text-muted">{c.officialHint}</span>
+                </span>
+              </Checkbox>
+            )}
+          </div>
+        </Section>
+      </div>
 
       {/* TIERS BLOCK */}
       <div className="w-full max-w-4xl 2xl:max-wide-2k:max-w-6xl wide-2k:max-w-[1800px] mx-auto">
@@ -439,6 +403,18 @@ export function TierListCreator({ locale, editId }: TierListCreatorProps) {
             )}
           </div>
         </Section>
+      </div>
+
+      {/* Preview and save, centered under all the sections. */}
+      <div className="flex flex-wrap items-center justify-center gap-3 2xl:gap-4">
+        <Button
+          variant="secondary"
+          onClick={() => setPreviewOpen(true)}
+          className="min-h-[44px] 2xl:min-h-[50px] px-6 2xl:px-8 uppercase tracking-wider"
+        >
+          {c.previewHeading}
+        </Button>
+        {submitButton('min-h-[44px] 2xl:min-h-[50px] px-6 2xl:px-8 text-sm 2xl:text-base font-bold uppercase tracking-wider')}
       </div>
 
       {/* Feedback Alerts */}

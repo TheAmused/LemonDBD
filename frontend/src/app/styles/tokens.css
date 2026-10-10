@@ -1,0 +1,115 @@
+/* frontend/src/app/styles/tokens.css
+ * Tailwind custom variants and the @theme design tokens. */
+
+/* ---------------------------------------------------------------------------
+ * Tailwind v4 Custom Variant Declarations
+ * --------------------------------------------------------------------------- */
+@custom-variant dark (&:where(.dark, .dark *));
+@custom-variant lemon (&:where(.light-lemon, .light-lemon *));
+
+/* ---------------------------------------------------------------------------
+ * Design Tokens & Theme Mapping
+ * --------------------------------------------------------------------------- */
+@theme {
+  /* Dynamic Theme Variables */
+  --color-bg-primary: var(--bg-primary);
+  --color-bg-surface: var(--bg-surface);
+  --color-bg-elevated: var(--bg-elevated);
+  --color-border-color: var(--border-color);
+  --color-border-subtle: var(--border-subtle);
+
+  --color-accent-red: var(--accent-red);
+  --color-accent-red-hover: var(--accent-red-hover);
+  --color-accent-red-text: var(--accent-red-text);
+  --color-accent-amber: var(--accent-amber);
+  --color-accent-amber-hover: var(--accent-amber-hover);
+  --color-accent-green: var(--accent-green);
+  --color-accent-green-hover: var(--accent-green-hover);
+  --color-accent-blue: var(--accent-blue);
+  --color-accent-purple: var(--accent-purple);
+  --color-accent-cyan: var(--accent-cyan);
+  --color-accent-rose: var(--accent-rose);
+  --color-accent-pink: var(--accent-pink);
+  --color-accent-orange: var(--accent-orange);
+  --color-accent-indigo: var(--accent-indigo);
+  --color-accent-red-deep: #450a0a;
+  --color-accent-rose-deep: #4c0519;
+  --color-accent-purple-deep: #3b0764;
+  --color-accent-amber-deep: #451a03;
+  --color-accent-indigo-deep: #1e1b4b;
+  --color-scrim: #000000;
+  --color-brand-reddit: #ff4500;
+  --color-brand-whatsapp: #25d366;
+  --color-brand-telegram: #229ed9;
+  --color-brand-discord: #5865f2;
+
+  /* Dusty tan lettering of the tarot card art (same in every theme: the cards are always dark). */
+  --color-tarot-ink: #b39e82;
+
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted: var(--text-muted);
+  --color-text-inverted: var(--text-inverted);
+
+  /* Ergonomic Semantic Aliases (Enables bg-surface, text-muted, border-base) */
+  --color-surface: var(--bg-surface);
+  --color-elevated: var(--bg-elevated);
+  --color-border: var(--border-color);
+
+  /* Tier list ladder colors (see utils/tierLists/constants.ts). Calibrated
+   * per theme so dark ink (--tier-ink) keeps >= 4.5:1 on every one of them. */
+  --color-tier-s: var(--tier-s);
+  --color-tier-a: var(--tier-a);
+  --color-tier-b: var(--tier-b);
+  --color-tier-c: var(--tier-c);
+  --color-tier-d: var(--tier-d);
+  --color-tier-e: var(--tier-e);
+  --color-tier-f: var(--tier-f);
+  --color-tier-neutral: var(--tier-neutral);
+  --color-tier-ink: var(--tier-ink);
+
+  /* First-class animation tokens */
+  --animate-dbd-spin: dbdSpinnerSpin var(--dbd-needle-speed, 1.3s) linear infinite;
+  --animate-dbd-spin-reverse: dbdSpinnerSpinReverse 14s linear infinite;
+  --animate-dbd-pulse: dbdSpinnerPulse 1.6s ease-in-out infinite;
+  --animate-ps-enter: psPageEnter 300ms ease-out both;
+  --animate-ps-reset: psPageReset 450ms ease-out both;
+  --animate-ps-rise: psRise 200ms ease-out both;
+  --animate-ps-pulse: psCompletePulse 800ms ease-in-out 1;
+  --animate-gn-frame: gnLandFrame 520ms cubic-bezier(0.22, 1.4, 0.36, 1) both;
+  --animate-gn-glow: gnLandGlow 900ms ease-out both;
+  --animate-chaos-pop: chaosBadgePop 380ms cubic-bezier(0.22, 1.4, 0.36, 1) both;
+  --animate-lock-shake: historyLockShake 380ms ease-in-out;
+
+  /* ONE font system for the whole site. No component picks a font family:
+   *   --font-sans    everything (the Challenges page look); system stack, nothing to download
+   *   --font-display Smash or Pass headings only, via the .theme-smash scope below
+   *   --font-mono    real code only (<code>, <pre>, <kbd>, <samp>)
+   */
+  --font-sans: ui-sans-serif, system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  --font-display: var(--font-playfair), Georgia, "Times New Roman", serif;
+
+  /* Type scale below Tailwind's text-xs, plus em-relative sizes for inline code. */
+  --text-micro: 0.5625rem;
+  --text-tiny: 0.625rem;
+  --text-mini: 0.6875rem;
+  --text-compact: 0.8125rem;
+  --text-relative: 0.9em;
+  --text-relative-sm: 0.85em;
+  /* Wide letter-spacing steps for spaced-out headings. */
+  --tracking-spaced-sm: 0.18em;
+  --tracking-spaced: 0.2em;
+  --tracking-spaced-md: 0.25em;
+  --tracking-spaced-lg: 0.35em;
+  --leading-flat: 0.95;
+  --font-mono: Consolas, "Cascadia Code", "Segoe UI Mono", Menlo, Monaco, "Liberation Mono", ui-monospace, monospace;
+
+  /* Named ultra-wide breakpoints (registered in the theme scale, not as
+   * arbitrary min-[Npx] variants) so Tailwind sorts their generated media
+   * queries correctly against the built-in sm/md/lg/xl/2xl ones instead of
+   * emitting them in source-scan order, where a later 2xl block can win
+   * the cascade at viewports that should hit these wider tiers instead. */
+  --breakpoint-wide: 1800px;
+  --breakpoint-wide-2k: 2400px;
+  --breakpoint-wide-4k: 3400px;
+}

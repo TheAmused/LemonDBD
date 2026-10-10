@@ -175,7 +175,7 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
               <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_25rem]">
                 <div>
                   {nextPagePerks.length > 0 && (
-                    <div role="tablist" className="mb-3 flex justify-center">
+                    <div role="group" aria-label={dict.streaks.pageLabel} className="mb-3 flex justify-center">
                       <div className="inline-flex rounded-full border border-border-color bg-bg-elevated/40 p-0.5">
                         {[run.current_page, run.current_page + 1].map((page, index) => {
                           const active = (index === 1) === viewingNext;
@@ -183,8 +183,7 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
                             <button
                               key={page}
                               type="button"
-                              role="tab"
-                              aria-selected={active}
+                              aria-pressed={active}
                               onClick={() => setPreviewPageKey(index === 1 ? pageKey : '')}
                               className={`rounded-full px-4 py-1 text-tiny uppercase tracking-widest transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red motion-reduce:transition-none ${
                                 active

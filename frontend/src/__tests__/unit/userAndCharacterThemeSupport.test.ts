@@ -5,10 +5,18 @@ import fs from 'node:fs';
 import path from 'node:path';
 import React from 'react';
 import { renderWithDictionary } from '../helpers/renderWithDictionary';
+import { readFeatureSource } from '../helpers/readFeatureSource';
 import { UserProfileForm } from '@/components/user/UserProfileForm';
 import { UserBugReportsList } from '@/components/user/UserBugReportsList';
 import { KillerDetailView } from '@/components/character-detail/KillerDetailView';
 import { SurvivorDetailView } from '@/components/character-detail/SurvivorDetailView';
+
+/** CharactersHub is a composition root; its toolbar, cards and bars live in components/characters/hub/. */
+function readCharactersHubSource(): string {
+  const componentsDir = path.resolve(__dirname, '../../components');
+  const hubDir = path.join(componentsDir, 'characters', 'hub');
+  return readFeatureSource(path.join(componentsDir, 'CharactersHub.tsx'), hubDir);
+}
 
 describe('User Profile Theme Support', () => {
   it('UserProfileForm container supports light theme card and text', () => {
@@ -165,8 +173,7 @@ describe('User Profile Theme Support', () => {
   });
 
   it('CharactersHub ownership button and save bar contain light and dark theme classes', () => {
-    const hubPath = path.resolve(__dirname, '../../components/CharactersHub.tsx');
-    const source = fs.readFileSync(hubPath, 'utf-8');
+    const source = readCharactersHubSource();
     assert.ok(
       source.includes('border-border-color') || source.includes('border-slate-200'),
       'CharactersHub must contain themed border'
@@ -186,8 +193,7 @@ describe('User Profile Theme Support', () => {
   });
 
   it('CharactersHub toast container respects --sidebar-width and centers relative to content area', () => {
-    const hubPath = path.resolve(__dirname, '../../components/CharactersHub.tsx');
-    const source = fs.readFileSync(hubPath, 'utf-8');
+    const source = readCharactersHubSource();
     assert.ok(
       source.includes('left-[var(--sidebar-width,0rem)] right-0'),
       'CharactersHub toast container must span left-[var(--sidebar-width,0rem)] right-0 to center relative to content area'

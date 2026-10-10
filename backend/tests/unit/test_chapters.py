@@ -36,7 +36,7 @@ def test_chapter_name_is_unique(db_session: Session) -> None:
 def test_sync_chapters_to_db_updates_existing_row_on_case_and_whitespace_drift(db_session: Session) -> None:
     """Re-importing a chapter payload for the same id updates the existing row in place.
 
-    `_upsert_by_id` (the generic importer's row matcher) keys strictly on an
+    `upsert_by_id` (the generic importer's row matcher) keys strictly on an
     integer `id` now -- no name lookup, no case/whitespace-insensitive
     fallback -- so both payloads have to carry the same id for the second
     import to update rather than create a new row.

@@ -21,21 +21,21 @@ function makePerk(overrides: Partial<Perk>): Perk {
     description: '',
     icon_url: '',
     icon_local_path: '',
-    perk_type: 'entity',
+    perk_types: ['entity'],
     ...overrides,
   };
 }
 
 // perk_type now IS the tarot type — one source of truth from the backend seed.
-const exhaustionPerk = makePerk({ name: 'Sprint Burst', description: 'Causes Exhaustion for 40 seconds', perk_type: 'exhaustion' });
-const hexPerk = makePerk({ name: 'Hex: Ruin', description: 'A Hex that affects generator regression', perk_type: 'hex' });
-const boonPerk = makePerk({ name: 'Boon: Circle of Healing', description: 'A Boon totem perk', perk_type: 'boon' });
-const memePerk = makePerk({ name: 'Power Struggle', description: 'Drop a pallet while being carried', perk_type: 'entity' });
-const negativePerk = makePerk({ name: 'No Mither', description: 'Start injured and broken', perk_type: 'sacrifice' });
-const standardPerk1 = makePerk({ name: 'Bond', description: 'See survivor auras within range', perk_type: 'aura' });
-const standardPerk2 = makePerk({ name: 'Iron Will', description: 'Lowers grunts of pain', perk_type: 'chase' });
-const standardPerk3 = makePerk({ name: 'Kindred', description: 'Aura reading when hooked', perk_type: 'aura' });
-const standardPerk4 = makePerk({ name: 'Deja Vu', description: 'Highlights three generators', perk_type: 'aura' });
+const exhaustionPerk = makePerk({ name: 'Sprint Burst', description: 'Causes Exhaustion for 40 seconds', perk_types: ['exhaustion'] });
+const hexPerk = makePerk({ name: 'Hex: Ruin', description: 'A Hex that affects generator regression', perk_types: ['hex'] });
+const boonPerk = makePerk({ name: 'Boon: Circle of Healing', description: 'A Boon totem perk', perk_types: ['boon'] });
+const memePerk = makePerk({ name: 'Power Struggle', description: 'Drop a pallet while being carried', perk_types: ['entity'] });
+const negativePerk = makePerk({ name: 'No Mither', description: 'Start injured and broken', perk_types: ['sacrifice'] });
+const standardPerk1 = makePerk({ name: 'Bond', description: 'See survivor auras within range', perk_types: ['aura'] });
+const standardPerk2 = makePerk({ name: 'Iron Will', description: 'Lowers grunts of pain', perk_types: ['chase'] });
+const standardPerk3 = makePerk({ name: 'Kindred', description: 'Aura reading when hooked', perk_types: ['aura'] });
+const standardPerk4 = makePerk({ name: 'Deja Vu', description: 'Highlights three generators', perk_types: ['aura'] });
 
 const noExhaustionMutator = CHAOS_MUTATORS.find((m) => m.id === 'no_exhaustion')!;
 const blindnessMutator = CHAOS_MUTATORS.find((m) => m.id === 'blindness')!;

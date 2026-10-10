@@ -1,8 +1,8 @@
 // frontend/src/__tests__/unit/perkPickerMalformedInputResilience.test.ts
 //
 // Adversarial/malformed input resilience for the perk-picker pipeline:
-// a perk with no perk_type at all (old/incomplete seed data), a perk with
-// an unrecognized perk_type string, and pools where the curse-targeted
+// a perk with no perk_types at all (old/incomplete seed data), a perk with
+// an unrecognized perk type string, and pools where the curse-targeted
 // category has zero eligible members after filtering -- confirming the
 // documented fallback ("never return empty" / "fall back to the full
 // pool") behaves correctly, with no crash and no infinite loop, and that
@@ -12,6 +12,8 @@ import assert from 'node:assert';
 import {
   isExhaustionPerk,
   isHexOrBoonPerk,
+  getPerkTarotType,
+  pickPerkTarotType,
   getPerkWeight,
   filterPerksByMutator,
   pickRandomLoadout,
@@ -20,9 +22,12 @@ import {
 import type { Perk } from '@/types/perks';
 import type { ChaosMutator } from '@/types/chaos';
 
-function makePerk(name: string, perk_type?: string | null): Perk {
+// `perk_types` may be anything the old/stale/garbage data could hold, so it is
+// typed loosely here: undefined leaves the key off the object entirely, and a
+// bare string is shorthand for a one-entry list.
+function makePerk(name: string, perk_types?: unknown): Perk {
   const perk: any = { name, character: 'General', category: 'Survivor', description: '', icon_url: '', icon_local_path: '' };
-  if (perk_type !== undefined) perk.perk_type = perk_type;
+  if (perk_types !== undefined) perk.perk_types = typeof perk_types === 'string' ? [perk_types] : perk_types;
   return perk as Perk;
 }
 
@@ -30,20 +35,20 @@ function makeMutator(id: string): ChaosMutator {
   return { id, name: id, description: '', type: 'curse', icon: '', badgeBg: '', borderColor: '', textColor: '' };
 }
 
-test('a perk object with perk_type entirely absent (not even null -- old/incomplete data) is treated as "general", never matches a specific category', () => {
-  const perk = makePerk('Old Data Perk'); // perk_type key not present at all
+test('a perk object with perk_types entirely absent (not even null -- old/incomplete data) is treated as the entity catch-all, never matches a specific category', () => {
+  const perk = makePerk('Old Data Perk'); // perk_types key not present at all
   assert.strictEqual(isExhaustionPerk(perk), false);
   assert.strictEqual(isHexOrBoonPerk(perk), false);
   assert.strictEqual(getPerkWeight(perk, makeMutator('no_exhaustion')), 1.0);
 });
 
-test('a perk with perk_type explicitly null behaves identically to one with it absent', () => {
+test('a perk with perk_types explicitly null behaves identically to one with it absent', () => {
   const perk = makePerk('Null Perk Type', null);
   assert.strictEqual(isExhaustionPerk(perk), false);
   assert.strictEqual(getPerkWeight(perk, makeMutator('no_exhaustion')), 1.0);
 });
 
-test('a perk with an unknown/garbage perk_type string never matches any real category and never crashes any picker function', () => {
+test('a perk with an unknown/garbage perk type never matches any real category and never crashes any picker function', () => {
   const perk = makePerk('Garbage Perk', 'totally_not_a_real_category_xyz');
   assert.strictEqual(isExhaustionPerk(perk), false);
   assert.strictEqual(isHexOrBoonPerk(perk), false);
@@ -51,7 +56,7 @@ test('a perk with an unknown/garbage perk_type string never matches any real cat
   assert.strictEqual(getPerkWeight(perk, makeMutator('hex_boon_only')), 1.0);
 });
 
-test('pickRandomLoadout with a mix of missing/null/garbage perk_type perks alongside valid ones: never throws, always returns the requested count when available', () => {
+test('pickRandomLoadout with a mix of missing/null/garbage perk_types perks alongside valid ones: never throws, always returns the requested count when available', () => {
   const pool = [
     makePerk('No Type At All'),
     makePerk('Null Type', null),
@@ -99,4 +104,29 @@ test('pickRandomLoadout requesting more perks than the pool has: returns exactly
   const picked = pickRandomLoadout(pool, null, 4);
   assert.strictEqual(picked.length, 2);
   assert.strictEqual(new Set(picked.map((p) => p.name)).size, 2);
+});
+
+test('perk_types in a shape the API never sends (empty list, a bare string, a number, a list of junk) reads as the entity catch-all and never crashes any picker function', () => {
+  const shapes: unknown[] = [[], 'aura', 42, {}, [null, 7, {}], [undefined]];
+  for (const shape of shapes) {
+    const perk = makePerk('Odd Shape', undefined);
+    (perk as any).perk_types = shape;
+
+    assert.doesNotThrow(() => {
+      isExhaustionPerk(perk);
+      isHexOrBoonPerk(perk);
+      getPerkWeight(perk, makeMutator('meme_loadout'));
+      getPerkWeight(perk, makeMutator('blindness'));
+      getPerkTarotType(perk);
+      pickPerkTarotType(perk);
+    }, `perk_types=${JSON.stringify(shape)} threw`);
+    assert.strictEqual(isExhaustionPerk(perk), false);
+  }
+});
+
+test('a mutator id inherited from Object.prototype ("toString", "constructor") is "no rule", not a crash', () => {
+  const perk = makePerk('Any Perk', 'aura');
+  assert.strictEqual(getPerkWeight(perk, makeMutator('toString')), 1.0);
+  assert.strictEqual(getPerkWeight(perk, makeMutator('constructor')), 1.0);
+  assert.strictEqual(getPerkWeight(perk, makeMutator('__proto__')), 1.0);
 });

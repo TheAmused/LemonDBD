@@ -42,7 +42,7 @@ def test_static_db_seeder_applies_folder_update(app, tmp_path, monkeypatch):
         fake_updates_dir.mkdir(parents=True, exist_ok=True)
         monkeypatch.setattr("app.seeds.static_db_seeder._find_updates_dirs", lambda: [fake_updates_dir])
 
-        # `_upsert_by_id` keys strictly on an integer `id` now -- no name
+        # `upsert_by_id` keys strictly on an integer `id` now -- no name
         # lookup -- so the patch has to carry Sprint Burst's real seeded id.
         sprint_burst_before = db.session.scalar(select(Perk).where(Perk.name == "Sprint Burst"))
         assert sprint_burst_before is not None
@@ -87,7 +87,7 @@ def test_import_update_file_directly(app, tmp_path):
     with app.app_context():
         seed_from_static_json(force=True)
 
-        # `_upsert_by_id` (the generic importer's row matcher) keys strictly
+        # `upsert_by_id` (the generic importer's row matcher) keys strictly
         # on an integer `id` -- no name lookup, no slug fallback -- so the
         # patch has to carry The Trapper's real id under the "killers" target
         # (there is no top-level "characters" target; that split into

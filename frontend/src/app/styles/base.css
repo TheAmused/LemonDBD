@@ -1,0 +1,298 @@
+/* frontend/src/app/styles/base.css
+ * Base layer: element defaults and the light / light-lemon / dark colour themes. */
+
+/* ---------------------------------------------------------------------------
+ * Base Layers & Color Themes (Calibrated for WCAG 2.1 AA / AAA Compliance)
+ * --------------------------------------------------------------------------- */
+
+@layer base {
+
+  code, kbd, pre, samp {
+    font-family: var(--font-mono);
+  }
+
+  /* Smash or Pass: same body font as the rest of the site, a more elegant display face on headings and key controls. */
+  .theme-smash :is(h1, h2, h3, h4, [role="tab"], .font-display) {
+    font-family: var(--font-display);
+    letter-spacing: 0.01em;
+  }
+
+  :root,
+  .light {
+    color-scheme: light;
+    --bg-primary: #eef1f4;
+    --bg-surface: #ffffff;
+    --bg-elevated: #e2e6eb;
+    --border-color: #cbd2d9;
+    --border-subtle: #e2e6ea;
+
+    /* High-contrast accessible accents */
+    --accent-red: #b91c1c;
+    /* 6.5:1 on white (AAA Large / AA Body) */
+    --accent-red-hover: #991b1b;
+    --accent-red-text: var(--accent-red);
+    --accent-amber: #92400e;
+    /* 5.8:1 on white (AA Body) */
+    --accent-amber-hover: #78350f;
+    --accent-green: #15803d;
+    /* 4.6:1 on white (AA Body) */
+    --accent-green-hover: #166534;
+    --accent-blue: #0369a1;
+    --accent-purple: #7e22ce;
+    --accent-cyan: #0e7490;
+    --accent-rose: #be123c;
+    --accent-pink: #be185d;
+    --accent-orange: #c2410c;
+    --accent-indigo: #4338ca;
+
+    /* Text hierarchy */
+    --text-primary: #111827;
+    /* 16.1:1 on white (AAA) */
+    --text-secondary: #374151;
+    /* 10.2:1 on white (AAA) */
+    --text-muted: #596370;
+    /* 4.95:1 on bg-primary (AA Compliant) */
+    --text-inverted: #ffffff;
+
+    /* Tier list ladder (dark ink on top of each) */
+    --tier-s: #ff8080;
+    --tier-a: #ffb870;
+    --tier-b: #ffd966;
+    --tier-c: #f2f26d;
+    --tier-d: #b7eb74;
+    --tier-e: #7fdca0;
+    --tier-f: #8cc4ff;
+    --tier-neutral: #cfd5dd;
+    --tier-ink: #141414;
+  }
+
+  /* `--bg-primary` etc. are otherwise only ever set inside an explicit
+   * `.light` / `.light-lemon` / `.dark` class block, all applied client-side
+   * by next-themes. Any frame where `<html>` carries none of those classes
+   * yet -- before that script has run, or a `<html>` attribute momentarily
+   * dropped and re-applied during a same-tree client navigation -- falls
+   * through to the bare `:root` rule above, which is hardcoded to the LIGHT
+   * palette. For a user whose system/chosen theme is dark, that frame paints
+   * near-white (#eef1f4) instead of dark: the reported "white flash". This
+   * media query makes the *unclassed* default itself follow the OS color
+   * scheme (matching next-themes' own `defaultTheme="system"`), so that gap
+   * frame is dark for dark-system users instead of always-light.
+   *
+   * `:not(.light, .light-lemon, .dark)` is load-bearing here, not decorative:
+   * `:root` matches `<html>` unconditionally, regardless of what other class
+   * is also on it, so without this exclusion the plain `:root` selector
+   * below and this one have equal specificity and this one -- being later
+   * in the file -- would win the cascade and silently override an
+   * explicitly-picked `.light` theme back to dark on any OS set to dark
+   * (exactly the "light mode is broken, it's just dark mode now" bug this
+   * caused once already). This rule may now only ever match the genuinely
+   * unclassed gap frame it was written for. */
+  @media (prefers-color-scheme: dark) {
+    :root:not(.light, .light-lemon, .dark) {
+      color-scheme: dark;
+      --bg-primary: #0a0a0c;
+      --bg-surface: #141418;
+      --bg-elevated: #1d1d22;
+      --border-color: #2e2e38;
+      --border-subtle: #1e1e26;
+
+      --accent-red: #dc2626;
+      --accent-red-hover: #b91c1c;
+      --accent-red-text: #f87171;
+      --accent-amber: #f59e0b;
+      --accent-amber-hover: #fbbf24;
+      --accent-green: #22c55e;
+      --accent-green-hover: #4ade80;
+      --accent-blue: #38bdf8;
+      --accent-purple: #c084fc;
+      --accent-cyan: #22d3ee;
+      --accent-rose: #fb7185;
+      --accent-pink: #f472b6;
+      --accent-orange: #fb923c;
+      --accent-indigo: #818cf8;
+
+      --text-primary: #f4f4f6;
+      --text-secondary: #a3a3af;
+      --text-muted: #888896;
+      --text-inverted: #ffffff;
+
+      --tier-s: #f05252;
+      --tier-a: #f7893b;
+      --tier-b: #f5b82e;
+      --tier-c: #e3d23a;
+      --tier-d: #98cf3f;
+      --tier-e: #3fc27a;
+      --tier-f: #5b9cf5;
+      --tier-neutral: #a1a1aa;
+      --tier-ink: #141414;
+    }
+  }
+
+  /* A warmer, citrus-tinted alternative to the default light theme */
+  .light-lemon {
+    color-scheme: light;
+    --bg-primary: #fbf6ea;
+    --bg-surface: #ffffff;
+    --bg-elevated: #f4e8bf;
+    --border-color: #dcc776;
+    --border-subtle: #ede1b4;
+
+    --accent-red: #b91c1c;
+    /* 5.8:1 on #fbf6ea */
+    --accent-red-hover: #991b1b;
+    --accent-red-text: var(--accent-red);
+    --accent-amber: #874900;
+    /* 5.3:1 on #fbf6ea */
+    --accent-amber-hover: #6c3a00;
+    --accent-green: #166534;
+    /* 5.8:1 on #fbf6ea */
+    --accent-green-hover: #14532d;
+    --accent-blue: #0369a1;
+    --accent-purple: #7e22ce;
+    --accent-cyan: #0e7490;
+    --accent-rose: #be123c;
+    --accent-pink: #be185d;
+    --accent-orange: #c2410c;
+    --accent-indigo: #4338ca;
+
+    --text-primary: #1e1704;
+    /* 15.2:1 on #fbf6ea (AAA) */
+    --text-secondary: #483d1c;
+    /* 8.1:1 on #fbf6ea (AAA) */
+    --text-muted: #695e3f;
+    /* 4.8:1 on #fbf6ea (AA Compliant) */
+    --text-inverted: #ffffff;
+
+    /* Tier list ladder -- warmer to sit on the citrus background */
+    --tier-s: #f98173;
+    --tier-a: #fbb36b;
+    --tier-b: #f9d55e;
+    --tier-c: #ecea6a;
+    --tier-d: #b5e27a;
+    --tier-e: #86d6a0;
+    --tier-f: #93c1f0;
+    --tier-neutral: #e3d9b8;
+    --tier-ink: #1e1704;
+  }
+
+  .dark {
+    color-scheme: dark;
+    --bg-primary: #0a0a0c;
+    --bg-surface: #141418;
+    --bg-elevated: #1d1d22;
+    --border-color: #2e2e38;
+    --border-subtle: #1e1e26;
+
+    /* High-contrast, radiant accents on dark backgrounds */
+    --accent-red: #dc2626;
+    /* Fill colour: 4.8:1 against white label text. Red used AS text uses --accent-red-text. */
+    --accent-red-hover: #b91c1c;
+    --accent-red-text: #f87171;
+    --accent-amber: #f59e0b;
+    /* 9.2:1 on #0a0a0c (AAA) */
+    --accent-amber-hover: #fbbf24;
+    --accent-green: #22c55e;
+    /* 6.3:1 on #0a0a0c (AA Compliant) */
+    --accent-green-hover: #4ade80;
+    --accent-blue: #38bdf8;
+    --accent-purple: #c084fc;
+    --accent-cyan: #22d3ee;
+    --accent-rose: #fb7185;
+    --accent-pink: #f472b6;
+    --accent-orange: #fb923c;
+    --accent-indigo: #818cf8;
+
+    --text-primary: #f4f4f6;
+    /* 18.5:1 on #0a0a0c (AAA) */
+    --text-secondary: #a3a3af;
+    /* 7.5:1 on #0a0a0c (AAA) */
+    --text-muted: #888896;
+    /* 4.8:1 on #141418 (AA Compliant - fixed from 3.6:1) */
+    /* Text on accent/image fills stays white in every theme */
+    --text-inverted: #ffffff;
+
+    /* Tier list ladder: saturated on the near-black stage, dark ink >= 4.8:1 */
+    --tier-s: #f05252;
+    --tier-a: #f7893b;
+    --tier-b: #f5b82e;
+    --tier-c: #e3d23a;
+    --tier-d: #98cf3f;
+    --tier-e: #3fc27a;
+    --tier-f: #5b9cf5;
+    --tier-neutral: #a1a1aa;
+    --tier-ink: #141414;
+  }
+
+  html {
+    scrollbar-gutter: stable;
+  }
+
+  body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    transition: background-color 200ms ease, color 200ms ease;
+  }
+
+  ::selection {
+    background-color: var(--accent-red);
+    color: var(--text-inverted);
+  }
+
+  /* Universal accessible focus indicators (WCAG 2.4.7) */
+  :focus-visible {
+    outline: 2px solid var(--accent-amber);
+    outline-offset: 2px;
+  }
+
+  /* Theme-adaptive inputs and form controls */
+  input,
+  select,
+  textarea {
+    background-color: var(--bg-surface);
+    color: var(--text-primary);
+    border-color: var(--border-color);
+  }
+
+  input::placeholder,
+  textarea::placeholder {
+    color: var(--text-muted);
+    opacity: 1;
+  }
+
+  /* High-contrast perk stat highlights */
+  strong {
+    font-weight: 700;
+    color: var(--accent-amber);
+  }
+
+  /* Standard Cross-Browser Scrollbars */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-color) transparent;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: var(--border-color);
+    border-radius: 9999px;
+    transition: background-color 150ms ease;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: var(--accent-red);
+  }
+}

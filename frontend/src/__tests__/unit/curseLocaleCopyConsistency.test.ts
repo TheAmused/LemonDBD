@@ -20,14 +20,14 @@ import pl from '@/locales/pl/generator';
 const LOCALES: Record<string, any> = { en, de, es, ja, pl };
 
 function makePerk(perk_type: string): Perk {
-  return { name: 'X', character: 'General', category: 'Survivor', description: '', icon_url: '', icon_local_path: '', perk_type } as Perk;
+  return { name: 'X', character: 'General', category: 'Survivor', description: '', icon_url: '', icon_local_path: '', perk_types: [perk_type] } as Perk;
 }
 
 function makeMutator(id: string): ChaosMutator {
   return { id, name: id, description: '', type: 'curse', icon: '', badgeBg: '', borderColor: '', textColor: '' };
 }
 
-// mutatorId -> the perk_type getPerkWeight actually weights for it.
+// mutatorId -> the perk type getPerkWeight actually weights for it.
 const MUTATOR_TARGET_TYPE: Record<string, string> = {
   no_exhaustion: 'exhaustion',
   no_slowdown: 'gen_slowdown',

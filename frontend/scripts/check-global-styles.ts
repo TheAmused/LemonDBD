@@ -1,5 +1,5 @@
 // frontend/scripts/check-global-styles.ts
-import { readFileSync } from "fs";
+import { readGlobalCss } from "./lib/globalCss";
 import { Project, SyntaxKind, Node } from "ts-morph";
 
 const isStrict = process.argv.includes("--strict");
@@ -19,7 +19,7 @@ const GLOBALS_CSS_PATH = "src/app/globals.css";
  */
 function readProjectColorTokens(): Set<string> {
   try {
-    const css = readFileSync(GLOBALS_CSS_PATH, "utf-8");
+    const css = readGlobalCss(GLOBALS_CSS_PATH);
     const names = new Set<string>();
     for (const m of css.matchAll(/--color-([a-zA-Z0-9-]+)\s*:/g)) {
       names.add(m[1]);

@@ -123,7 +123,7 @@ export const FormValidationProvider: React.FC = () => {
   return (
     <>
       <TooltipBubble anchor={active.el} placement="bottom" variant="error">
-        <span className="flex items-center gap-2 text-xs font-bold text-text-primary">
+        <span className="flex items-center gap-2 type-strong text-text-primary">
           <AlertCircle aria-hidden="true" className="h-4 w-4 shrink-0 text-accent-red" />
           <span>{active.message}</span>
         </span>

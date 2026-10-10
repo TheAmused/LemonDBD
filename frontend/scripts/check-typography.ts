@@ -20,6 +20,7 @@
 //   DIRECTIVE any `*-ignore` comment (styles-ignore, i18n-ignore, fonts-ignore, ...).
 import { readdirSync, readFileSync, statSync } from "fs";
 import { join, relative, sep } from "path";
+import { readGlobalCss } from "./lib/globalCss";
 
 const SRC = "src";
 const EXEMPT_FILES = new Set(["src/utils/canvasFont.ts"]);
@@ -56,7 +57,7 @@ const problems: string[] = [];
 
 // ---- type roles, read live from globals.css so there is exactly one definition ----
 const ROLES = new Map<string, Set<string>>();
-for (const m of readFileSync("src/app/globals.css", "utf-8").matchAll(/@utility (type-[\w-]+) \{ @apply ([^;]+); \}/g)) {
+for (const m of readGlobalCss("src/app/globals.css").matchAll(/@utility (type-[\w-]+) \{ @apply ([^;]+); \}/g)) {
   ROLES.set(m[1], new Set(m[2].trim().split(/\s+/)));
 }
 const TYPO_TOKEN = new RegExp(

@@ -4,6 +4,7 @@ import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
+import { readGlobalCss } from '../../../scripts/lib/globalCss';
 import React from 'react';
 import { TierListSkeleton } from '@/components/tier-lists/TierListSkeleton';
 import { TierItemTile } from '@/components/tier-lists/TierItemTile';
@@ -68,7 +69,7 @@ describe('Tier lists: tiles and colors', () => {
   });
 
   it('every token color has a literal Tailwind class backed by a --color-tier-* theme token in all 3 themes', () => {
-    const css = read('app/globals.css');
+    const css = readGlobalCss(path.resolve(__dirname, '../../app/globals.css'));
 
     // `@media (prefers-color-scheme: dark) { :root:not(.light, .light-lemon,
     // .dark) {...} }` is a deliberate, byte-for-byte mirror of `.dark` (see

@@ -1,0 +1,256 @@
+/* frontend/src/app/styles/animations.css
+ * Keyframes and the animation classes built on them. */
+
+/* ---------------------------------------------------------------------------
+ * Keyframes & Animation Library
+ * --------------------------------------------------------------------------- */
+@keyframes dbdSpinnerSpin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes dbdSpinnerSpinReverse {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(-360deg);
+  }
+}
+
+@keyframes dbdSpinnerPulse {
+
+  0%,
+  100% {
+    transform: scale(0.92);
+  }
+
+  50% {
+    transform: scale(1.09);
+  }
+}
+
+@keyframes dbdSpinnerLabelPulse {
+
+  0%,
+  100% {
+    opacity: 0.8;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes psPageEnter {
+  from {
+    opacity: 0;
+    transform: translateX(16px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Back to page 1 after a loss: the page comes back from grey in a single pass. */
+@keyframes psPageReset {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+    filter: grayscale(1);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+    filter: grayscale(0);
+  }
+}
+
+@keyframes psRise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes psCompletePulse {
+
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 transparent;
+  }
+
+  50% {
+    box-shadow: 0 0 0 6px var(--accent-green);
+  }
+}
+
+@keyframes gnSpinFrame {
+  from {
+    opacity: 0.35;
+    transform: scale(0.96);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes gnLandFrame {
+  0% {
+    transform: scale(1);
+  }
+
+  40% {
+    transform: scale(1.09);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes gnLandGlow {
+  0% {
+    box-shadow: 0 0 0 0 var(--accent-red);
+  }
+
+  70% {
+    box-shadow: 0 0 0 18px transparent;
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 transparent;
+  }
+}
+
+@keyframes freezeBadgeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes chaosBadgePop {
+  0% {
+    transform: scale(0.6);
+    opacity: 0;
+  }
+
+  60% {
+    transform: scale(1.08);
+    opacity: 1;
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes historyLockShake {
+
+  0%,
+  100% {
+    transform: translateX(0) rotate(0deg);
+  }
+
+  20% {
+    transform: translateX(-2px) rotate(-8deg);
+  }
+
+  40% {
+    transform: translateX(2px) rotate(8deg);
+  }
+
+  60% {
+    transform: translateX(-2px) rotate(-6deg);
+  }
+
+  80% {
+    transform: translateX(2px) rotate(6deg);
+  }
+}
+
+/* Spinner Hardware Accelerated Classes */
+.dbd-spinner-runes {
+  transform-origin: 80px 80px;
+  animation: dbdSpinnerSpinReverse 14s linear infinite;
+  will-change: transform;
+}
+
+.dbd-spinner-needle {
+  transform-origin: 80px 80px;
+  animation: dbdSpinnerSpin var(--dbd-needle-speed, 1.3s) linear infinite;
+  will-change: transform;
+}
+
+.dbd-spinner-emblem {
+  animation: dbdSpinnerPulse 1.6s ease-in-out infinite;
+  will-change: transform;
+}
+
+.dbd-spinner-label {
+  animation: dbdSpinnerLabelPulse 1.8s ease-in-out infinite;
+}
+
+/* Animation Utility Classes (Preserved for backwards compatibility) */
+.ps-page-enter {
+  animation: psPageEnter 300ms ease-out both;
+}
+
+.ps-page-reset {
+  animation: psPageReset 450ms ease-out both;
+}
+
+.ps-rise {
+  animation: psRise 200ms ease-out both;
+}
+
+.ps-complete-pulse {
+  animation: psCompletePulse 800ms ease-in-out 1;
+}
+
+.gn-spin-frame {
+  animation: gnSpinFrame 140ms ease-out both;
+}
+
+.gn-land-frame {
+  animation: gnLandFrame 520ms cubic-bezier(0.22, 1.4, 0.36, 1) both;
+}
+
+.gn-land-glow {
+  animation: gnLandGlow 900ms ease-out both;
+}
+
+.freeze-badge-in {
+  animation: freezeBadgeIn 480ms cubic-bezier(0.22, 1.4, 0.36, 1) both;
+}
+
+.chaos-badge-pop {
+  animation: chaosBadgePop 380ms cubic-bezier(0.22, 1.4, 0.36, 1) both;
+}
+
+.history-lock-shake {
+  animation: historyLockShake 380ms ease-in-out;
+}

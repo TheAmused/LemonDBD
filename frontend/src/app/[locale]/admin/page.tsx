@@ -1,13 +1,10 @@
 'use client';
 // frontend/src/app/[locale]/admin/page.tsx
 
-import { Tabs } from '@/components/common/Tabs';
-import React, { useState, useEffect, useCallback, use, Suspense } from 'react';
+import React, { useState, useEffect, use, Suspense } from 'react';
+import dynamic from 'next/dynamic';
 import { usePersistentString } from '@/hooks/usePersistentString';
 import { ErrorPage } from '@/components/layout/ErrorPage';
-import { Button } from '@/components/common/Button';
-import dynamic from 'next/dynamic';
-import { getBackendBaseUrl, authHeaders, getAuthToken, getErrorMessage } from '@/utils/api';
 import { useAuth } from '@/context/AuthContext';
 import { PageShell } from '@/components/layout/PageShell';
 import { AdminHeader } from '@/components/admin/AdminHeader';
@@ -15,17 +12,14 @@ import { AdminStatsGrid } from '@/components/admin/AdminStatsGrid';
 import { AdminUserTable } from '@/components/admin/AdminUserTable';
 import { AdminPanelSkeleton } from '@/components/admin/AdminPanelSkeleton';
 import { AdminTabContentSkeleton } from '@/components/admin/AdminTabContentSkeleton';
+import { AdminActionAlert } from '@/components/admin/AdminActionAlert';
+import { AdminSectionTabs } from '@/components/admin/AdminSectionTabs';
+import { ADMIN_TAB_STORAGE_KEY, isAdminTab, type AdminTab } from '@/components/admin/adminTabs';
+import { useAdminBugReports } from '@/components/admin/useAdminBugReports';
+import { useAdminUsers } from '@/components/admin/useAdminUsers';
 import { Locale } from '@/i18n/config';
-import type {
-  AdminStats,
-  UserRow,
-  AdminBugReport,
-  BugReportStats,
-  ActionMessage,
-} from '@/types/admin';
-import { Users, ShieldAlert, BarChart3, ScrollText, Settings2 } from 'lucide-react';
+import type { ActionMessage } from '@/types/admin';
 import { useDictionary } from '@/context/DictionaryContext';
-import { FogReportIcon } from '@/components/icons/DbdIcons';
 import { formatMessage } from '@/utils/i18nFormat';
 
 const AdminBugReportsWorkbench = dynamic(
@@ -68,13 +62,6 @@ interface AdminPageProps {
   params: Promise<{ locale: string }>;
 }
 
-type AdminTab = 'users' | 'bugs' | 'challenges' | 'challenge_stats' | 'audit' | 'settings';
-
-const ADMIN_TABS: readonly AdminTab[] = ['users', 'bugs', 'challenges', 'challenge_stats', 'audit', 'settings'];
-const isAdminTab = (value: string): value is AdminTab => (ADMIN_TABS as readonly string[]).includes(value);
-/** localStorage key remembering the open tab across refreshes. */
-const ADMIN_TAB_STORAGE_KEY = 'lemondbd_admin_tab';
-
 export default function AdminPanelPage({ params }: AdminPageProps) {
   const resolvedParams = use(params);
   const currentLocale = (resolvedParams?.locale as Locale) || 'en';
@@ -82,132 +69,28 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
 
   const dict = useDictionary();
   const [activeTab, setActiveTab] = usePersistentString<AdminTab>(ADMIN_TAB_STORAGE_KEY, 'users', isAdminTab);
-  const [stats, setStats] = useState<AdminStats | null>(null);
   const [actionMessage, setActionMessage] = useState<ActionMessage | null>(null);
-
-  // Users State
-  const [users, setUsers] = useState<UserRow[]>([]);
-  const [search, setSearch] = useState<string>('');
-  const [roleFilter, setRoleFilter] = useState<string>('all');
-  const [page, setPage] = useState<number>(1);
-  const [totalUsers, setTotalUsers] = useState<number>(0);
-  const [loadingData, setLoadingData] = useState<boolean>(true);
-
-  // Bug Reports State
-  const [bugReports, setBugReports] = useState<AdminBugReport[]>([]);
-  const [bugStats, setBugStats] = useState<BugReportStats | null>(null);
-  const [bugSearch, setBugSearch] = useState<string>('');
-  const [bugStatusFilter, setBugStatusFilter] = useState<string>('all');
-  const [bugPage, setBugPage] = useState<number>(1);
-  const [totalBugReports, setTotalBugReports] = useState<number>(0);
-  const [loadingBugs, setLoadingBugs] = useState<boolean>(false);
-  const [selectedBugId, setSelectedBugId] = useState<number | null>(null);
-  const [editingNotes, setEditingNotes] = useState<Record<number, string>>({});
 
   // Modals & Maintenance State
   const [isConfigOpen, setIsConfigOpen] = useState<boolean>(false);
   const [isOcrCheckOpen, setIsOcrCheckOpen] = useState<boolean>(false);
   const [modalTab, setModalTab] = useState<'export' | 'import' | 'purge'>('export');
   const [isCreateUserOpen, setIsCreateUserOpen] = useState<boolean>(false);
-  const [userPendingDeletion, setUserPendingDeletion] = useState<UserRow | null>(null);
-  const [isDeletingUser, setIsDeletingUser] = useState<boolean>(false);
-  const [bugReportPendingDeletion, setBugReportPendingDeletion] = useState<number | null>(null);
-  const [isDeletingBugReport, setIsDeletingBugReport] = useState<boolean>(false);
 
-  const API_BASE = getBackendBaseUrl();
-
-
-  const fetchAdminData = useCallback(async () => {
-    const token = getAuthToken();
-    if (!token) return;
-
-    setLoadingData(true);
-    try {
-      const timestamp = Date.now();
-      const statsRes = await fetch(`${API_BASE}/api/v1/admin/stats?_t=${timestamp}`, {
-        headers: {
-          ...authHeaders(token),
-          'Cache-Control': 'no-cache, no-store, must-revalidate',
-        },
-        cache: 'no-store',
-      });
-      if (statsRes.ok) {
-        const sData: AdminStats = await statsRes.json();
-        setStats(sData);
-      }
-
-      const query = new URLSearchParams({
-        page: page.toString(),
-        per_page: '15',
-        _t: timestamp.toString(),
-      });
-      if (search.trim()) query.set('search', search.trim());
-      if (roleFilter !== 'all') query.set('role', roleFilter);
-
-      const usersRes = await fetch(`${API_BASE}/api/v1/users?${query.toString()}`, {
-        headers: {
-          ...authHeaders(token),
-          'Cache-Control': 'no-cache, no-store, must-revalidate',
-        },
-        cache: 'no-store',
-      });
-      if (usersRes.ok) {
-        const uData: { users: UserRow[]; total: number } = await usersRes.json();
-        setUsers(uData.users || []);
-        setTotalUsers(uData.total || 0);
-      }
-    } catch (err: unknown) {
-      console.error('Failed to load admin data:', err);
-    } finally {
-      setLoadingData(false);
-    }
-  }, [API_BASE, page, roleFilter, search]);
-
-  const fetchBugReports = useCallback(async () => {
-    const token = getAuthToken();
-    if (!token) return;
-
-    setLoadingBugs(true);
-    try {
-      const query = new URLSearchParams({
-        page: bugPage.toString(),
-        per_page: '20',
-      });
-      if (bugSearch.trim()) query.set('search', bugSearch.trim());
-      if (bugStatusFilter !== 'all') query.set('status', bugStatusFilter);
-
-      const res = await fetch(`${API_BASE}/api/v1/admin/bug-reports?${query.toString()}`, {
-        headers: {
-          ...authHeaders(token),
-          'Cache-Control': 'no-cache',
-        },
-      });
-
-      if (res.ok) {
-        const data: { reports: AdminBugReport[]; stats: BugReportStats; total: number } = await res.json();
-        const reportsList = data.reports || [];
-        setBugReports(reportsList);
-        setBugStats(data.stats || null);
-        setTotalBugReports(data.total || 0);
-
-        const initialNotes: Record<number, string> = {};
-        reportsList.forEach((r) => {
-          initialNotes[r.id] = r.admin_notes || '';
-        });
-        setEditingNotes(initialNotes);
-
-        if (reportsList.length > 0) {
-          setSelectedBugId((prev) => (reportsList.some((r) => r.id === prev) ? prev : reportsList[0].id));
-        } else {
-          setSelectedBugId(null);
-        }
-      }
-    } catch (err: unknown) {
-      console.error('Failed to load bug reports:', err);
-    } finally {
-      setLoadingBugs(false);
-    }
-  }, [API_BASE, bugPage, bugSearch, bugStatusFilter]);
+  const {
+    stats, users, search, setSearch, roleFilter, setRoleFilter, page, setPage, totalUsers, loadingData,
+    fetchAdminData, userPendingDeletion, setUserPendingDeletion, isDeletingUser,
+    handleToggleRole, handleToggleActive, handleDeleteUser, confirmDeleteUser, handleCreateUser,
+  } = useAdminUsers({
+    onActionMessage: setActionMessage,
+    onUserCreated: () => setIsCreateUserOpen(false),
+  });
+  const {
+    bugReports, bugStats, bugSearch, setBugSearch, bugStatusFilter, setBugStatusFilter, bugPage, setBugPage,
+    totalBugReports, loadingBugs, selectedBugId, setSelectedBugId, editingNotes, setEditingNotes,
+    fetchBugReports, bugReportPendingDeletion, setBugReportPendingDeletion, isDeletingBugReport,
+    handleUpdateBugReport, handleDeleteBugReport, confirmDeleteBugReport,
+  } = useAdminBugReports({ onActionMessage: setActionMessage });
 
   useEffect(() => {
     if (isAuthenticated && isAdmin) {
@@ -218,201 +101,6 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
       }
     }
   }, [isAuthenticated, isAdmin, activeTab, fetchAdminData, fetchBugReports]);
-
-  const handleToggleRole = async (targetUser: UserRow) => {
-    const token = getAuthToken();
-    if (!token) return;
-
-    const newRole = targetUser.role === 'admin' ? 'user' : 'admin';
-    try {
-      const res = await fetch(`${API_BASE}/api/v1/users/${targetUser.id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          ...authHeaders(token),
-        },
-        body: JSON.stringify({ role: newRole }),
-      });
-      if (res.ok) {
-        setActionMessage({
-          type: 'success',
-          text: dict.admin.roleUpdated
-            ? formatMessage(dict.admin.roleUpdated, { username: targetUser.username, role: newRole.toUpperCase() })
-            : `${targetUser.username} role updated to ${newRole.toUpperCase()}.`,
-        });
-        await fetchAdminData();
-      }
-    } catch (err: unknown) {
-      const msg = getErrorMessage(err, dict.admin.networkError);
-      setActionMessage({ type: 'error', text: msg });
-    }
-  };
-
-  const handleToggleActive = async (targetUser: UserRow) => {
-    const token = getAuthToken();
-    if (!token) return;
-
-    const newActive = !targetUser.is_active;
-    try {
-      const res = await fetch(`${API_BASE}/api/v1/users/${targetUser.id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          ...authHeaders(token),
-        },
-        body: JSON.stringify({ is_active: newActive }),
-      });
-      if (res.ok) {
-        setActionMessage({
-          type: 'success',
-          text: newActive
-            ? formatMessage(dict.admin.statusUpdatedActive, { username: targetUser.username }) || `${targetUser.username} is active.`
-            : formatMessage(dict.admin.statusUpdatedSuspended, { username: targetUser.username }) || `${targetUser.username} is suspended.`,
-        });
-        await fetchAdminData();
-      }
-    } catch (err: unknown) {
-      const msg = getErrorMessage(err, dict.admin.networkError);
-      setActionMessage({ type: 'error', text: msg });
-    }
-  };
-
-  const handleDeleteUser = (targetUser: UserRow) => {
-    setUserPendingDeletion(targetUser);
-  };
-
-  const confirmDeleteUser = async () => {
-    const targetUser = userPendingDeletion;
-    if (!targetUser || isDeletingUser) return;
-    const token = getAuthToken();
-    if (!token) return;
-
-    setIsDeletingUser(true);
-    try {
-      const res = await fetch(`${API_BASE}/api/v1/users/${targetUser.id}`, {
-        method: 'DELETE',
-        headers: authHeaders(token),
-      });
-      if (res.ok) {
-        setActionMessage({
-          type: 'success',
-          text: formatMessage(dict.admin.userDeletedSuccess, { username: targetUser.username }) || `${targetUser.username} deleted.`,
-        });
-        await fetchAdminData();
-      }
-    } catch (err: unknown) {
-      const msg = getErrorMessage(err, dict.admin.networkError);
-      setActionMessage({ type: 'error', text: msg });
-    } finally {
-      setIsDeletingUser(false);
-      setUserPendingDeletion(null);
-    }
-  };
-
-  const handleCreateUser = async (userData: {
-    username: string;
-    email: string;
-    password: string;
-    role: 'user' | 'admin';
-  }) => {
-    const token = getAuthToken();
-    if (!token) return;
-
-    try {
-      const res = await fetch(`${API_BASE}/api/v1/users`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          ...authHeaders(token),
-        },
-        body: JSON.stringify(userData),
-      });
-
-      if (res.ok) {
-        setActionMessage({
-          type: 'success',
-          text: formatMessage(dict.admin.userCreatedSuccess, { username: userData.username }) || `${userData.username} created successfully.`,
-        });
-        setIsCreateUserOpen(false);
-        await fetchAdminData();
-      } else {
-        const errorData: { error?: string } = await res.json().catch(() => ({}));
-        setActionMessage({
-          type: 'error',
-          text: errorData.error || dict.admin.userCreateFailed,
-        });
-      }
-    } catch (err: unknown) {
-      const msg = getErrorMessage(err, dict.admin.networkError);
-      setActionMessage({ type: 'error', text: msg });
-    }
-  };
-
-  const handleUpdateBugReport = async (reportId: number, newStatus?: string) => {
-    const token = getAuthToken();
-    if (!token) return;
-
-    const payload: Record<string, string> = {};
-    if (newStatus) payload.status = newStatus;
-    if (editingNotes[reportId] !== undefined) {
-      payload.admin_notes = editingNotes[reportId];
-    }
-
-    try {
-      const res = await fetch(`${API_BASE}/api/v1/admin/bug-reports/${reportId}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          ...authHeaders(token),
-        },
-        body: JSON.stringify(payload),
-      });
-
-      if (res.ok) {
-        setActionMessage({
-          type: 'success',
-          text: formatMessage(dict.admin.ticketUpdatedSuccess, { id: reportId.toString() }) || `Report #${reportId} updated.`,
-        });
-        await fetchBugReports();
-      }
-    } catch (err: unknown) {
-      const msg = getErrorMessage(err, dict.admin.networkError);
-      setActionMessage({ type: 'error', text: msg });
-    }
-  };
-
-  const handleDeleteBugReport = (reportId: number) => {
-    setBugReportPendingDeletion(reportId);
-  };
-
-  const confirmDeleteBugReport = async () => {
-    const reportId = bugReportPendingDeletion;
-    if (reportId === null || isDeletingBugReport) return;
-    const token = getAuthToken();
-    if (!token) return;
-
-    setIsDeletingBugReport(true);
-    try {
-      const res = await fetch(`${API_BASE}/api/v1/admin/bug-reports/${reportId}`, {
-        method: 'DELETE',
-        headers: authHeaders(token),
-      });
-
-      if (res.ok) {
-        setActionMessage({
-          type: 'success',
-          text: formatMessage(dict.admin.ticketDeleteSuccess, { id: reportId.toString() }) || `Report #${reportId} deleted.`,
-        });
-        await fetchBugReports();
-      }
-    } catch (err: unknown) {
-      const msg = getErrorMessage(err, dict.admin.ticketDeleteFailed);
-      setActionMessage({ type: 'error', text: msg });
-    } finally {
-      setIsDeletingBugReport(false);
-      setBugReportPendingDeletion(null);
-    }
-  };
 
   if (!dict || isLoading) {
     return <AdminPanelSkeleton />;
@@ -440,57 +128,15 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
           />
 
           {actionMessage && (
-            <div
-              role="alert"
-              aria-live="polite"
-              className={`flex items-center justify-between rounded-xl border p-4 text-xs font-semibold shadow-xs ${
-                actionMessage.type === 'success'
-                  ? 'border-accent-green/40 bg-accent-green/10 text-accent-green'
-                  : 'border-accent-red/40 bg-accent-red/10 text-accent-red'
-              }`}
-            >
-              <span>{actionMessage.text}</span>
-              <Button
-                variant="ghost"
-                size="xs"
-                icon
-                onClick={() => setActionMessage(null)}
-                className="ml-3"
-                aria-label={dict.admin.closeSymbol}
-              >
-                {dict.admin.closeSymbol}
-              </Button>
-            </div>
+            <AdminActionAlert message={actionMessage} onDismiss={() => setActionMessage(null)} />
           )}
 
           {/* Subtab Switcher */}
-          <Tabs
-            ariaLabel={dict.admin.adminSections}
-            value={activeTab}
+          <AdminSectionTabs
+            activeTab={activeTab}
             onChange={setActiveTab}
-            panels={false}
-            variant="pill"
-            size="lg"
-            wrap
-            className="border-b border-border-color pb-2"
-            tabClassName="flex-1 sm:flex-initial"
-            tabs={[
-              {
-                value: 'users',
-                icon: <Users className="h-4 w-4" />,
-                label: dict.admin.userDirectoryLabel,
-                count: totalUsers,
-              },
-              {
-                value: 'bugs',
-                icon: <FogReportIcon className="h-4 w-4" />,
-                label: `${dict.admin.bugReportsLabel} (${bugStats?.pending ?? 0} ${dict.admin.pending})`,
-              },
-              { value: 'challenges', icon: <ShieldAlert className="h-4 w-4" />, label: dict.admin.killSwitches },
-              { value: 'challenge_stats', icon: <BarChart3 className="h-4 w-4" />, label: dict.admin.challengeStats },
-              { value: 'audit', icon: <ScrollText className="h-4 w-4" />, label: dict.admin.auditLog },
-              { value: 'settings', icon: <Settings2 className="h-4 w-4" />, label: dict.admin.configTab },
-            ]}
+            totalUsers={totalUsers}
+            pendingBugs={bugStats?.pending ?? 0}
           />
 
           {activeTab === 'users' ? (
@@ -620,4 +266,3 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
     </PageShell>
   );
 }
-

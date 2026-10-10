@@ -82,9 +82,9 @@ export function StreakAttemptGroups<TLog extends StreakMatchLogBase>({
                 {dict.streaks.attemptLabel} {group.attempt}
                 {renderGroupLabel && <> {dict.streaks.middotSeparator} {renderGroupLabel(group.logs[0])}</>}
               </span>
-              <span className="text-xs font-black text-accent-green" {...tip(dict.streaks.wins, undefined, 'status')}>{group.wins}</span>
+              <span className="type-strong text-accent-green" {...tip(dict.streaks.wins, undefined, 'status')}>{group.wins}</span>
               <span className="text-xs text-text-muted" aria-hidden="true">/</span>
-              <span className="text-xs font-black text-accent-red" {...tip(dict.streaks.losses, undefined, 'status')}>{group.losses}</span>
+              <span className="type-strong text-accent-red" {...tip(dict.streaks.losses, undefined, 'status')}>{group.losses}</span>
             </button>
             {/* grid-template-rows animates 0fr -> 1fr, which height:auto cannot do */}
             <div

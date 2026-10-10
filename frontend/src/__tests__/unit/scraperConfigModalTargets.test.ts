@@ -4,12 +4,15 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { readFeatureSource } from '../helpers/readFeatureSource';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 describe('ScraperConfigModal export/import targets', () => {
-  const modalPath = path.resolve(__dirname, '../../components/ScraperConfigModal.tsx');
-  const modalContent = fs.readFileSync(modalPath, 'utf-8');
+  // The modal is a composition root; targets, hooks and tabs live in components/scraper-config/.
+  const componentsDir = path.resolve(__dirname, '../../components');
+  const featureDir = path.join(componentsDir, 'scraper-config');
+  const modalContent = readFeatureSource(path.join(componentsDir, 'ScraperConfigModal.tsx'), featureDir);
 
   const expectedNewTargets = [
     'offerings',
@@ -45,7 +48,8 @@ describe('ScraperConfigModal export/import targets', () => {
   });
 
   it('ALL_TARGETS covers all 24 supported database targets', () => {
-    const idMatches = modalContent.match(/id:\s*'[a-z_]+'/g) || [];
+    const targetsContent = fs.readFileSync(path.join(featureDir, 'scraperTargets.ts'), 'utf-8');
+    const idMatches = targetsContent.match(/id:\s*'[a-z_]+'/g) || [];
     assert.equal(idMatches.length, 24, 'ALL_TARGETS should contain exactly 24 target entries');
   });
 

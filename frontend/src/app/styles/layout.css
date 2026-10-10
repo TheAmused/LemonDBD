@@ -1,0 +1,45 @@
+/* frontend/src/app/styles/layout.css
+ * App shell geometry and sidebar variables. */
+
+/* ---------------------------------------------------------------------------
+ * App Shell Geometry & Sidebar Variables
+ * --------------------------------------------------------------------------- */
+:root {
+  --sidebar-width: 0rem;
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --sidebar-width: 16rem;
+  }
+
+  :root[data-sidebar="collapsed"] {
+    --sidebar-width: 0rem;
+  }
+
+  .lemon-shell-aside {
+    width: var(--sidebar-width);
+    transition: width 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  :root[data-sidebar="collapsed"] .lemon-shell-aside {
+    border-right-width: 0;
+  }
+
+  .lemon-modal-overlay-sidebar-aware {
+    padding-left: var(--sidebar-width);
+    transition: padding-left 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}
+
+.lemon-sidebar-icon-collapsed {
+  display: none;
+}
+
+:root[data-sidebar="collapsed"] .lemon-sidebar-icon-collapsed {
+  display: block;
+}
+
+:root[data-sidebar="collapsed"] .lemon-sidebar-icon-expanded {
+  display: none;
+}

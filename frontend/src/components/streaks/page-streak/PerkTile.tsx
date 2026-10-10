@@ -46,7 +46,7 @@ export const PerkTile: React.FC<PerkTileProps> = ({
           className="h-full w-full select-none object-contain"
         />
       ) : (
-        <span className="text-tiny font-semibold text-text-muted">{label}</span>
+        <span className="type-strong-2xs text-text-muted">{label}</span>
       )}
       <svg
         viewBox="0 0 100 100"

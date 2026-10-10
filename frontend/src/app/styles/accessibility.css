@@ -1,0 +1,43 @@
+/* frontend/src/app/styles/accessibility.css
+ * Reduced-motion safety and contrast fixes (must load last). */
+
+/* ---------------------------------------------------------------------------
+ * Universal Accessibility & Motion Safety
+ * --------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .dbd-spinner-runes,
+  .dbd-spinner-needle,
+  .dbd-spinner-emblem,
+  .dbd-spinner-label,
+  .gn-spin-frame,
+  .gn-land-frame,
+  .gn-land-glow,
+  .freeze-badge-in,
+  .chaos-badge-pop,
+  .history-lock-shake,
+  .ps-page-enter,
+  .ps-page-reset,
+  .ps-rise,
+  .ps-complete-pulse,
+  .ck-card-in,
+  .ck-trophy-pop,
+  .ck-rays,
+  .ck-ring,
+  .ck-spark,
+  .ck-shine-text,
+  .stat-bump,
+  .stat-record-burst,
+  .stat-record-shimmer {
+    animation: none !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Red as TEXT needs a lighter shade than red as a FILL on dark themes (no single red passes 4.5:1 both ways). */
+:root .text-accent-red,
+:root .hover\:text-accent-red:hover,
+:root .group-hover\:text-accent-red:is(:where(.group):hover *) {
+  color: var(--accent-red-text);
+}

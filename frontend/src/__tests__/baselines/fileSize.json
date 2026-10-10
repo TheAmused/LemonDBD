@@ -1,9 +1,1 @@
-{
-  "app/[locale]/admin/page.tsx": 650,
-  "components/CharactersHub.tsx": 700,
-  "components/generator/modes/SlotMachineStage.tsx": 900,
-  "components/generator/modes/WheelStage.tsx": 800,
-  "components/maps/VoiceCommandBanner.tsx": 1150,
-  "components/onboarding/CharacterOnboardingWizard.tsx": 1000,
-  "components/ScraperConfigModal.tsx": 1000
-}
+{}

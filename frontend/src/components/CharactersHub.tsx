@@ -1,77 +1,33 @@
 'use client';
 // frontend/src/components/CharactersHub.tsx
 
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import {
-  buildCharacterOwnershipDraft,
-  changedCharacterUpdates,
-  ownershipKey,
-  ownsPerk,
-} from '@/utils/characterUtils';
+import React, { useEffect, useMemo, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { useRouter, useParams, useSearchParams } from 'next/navigation';
-import {
-  Search,
-  X,
-  User,
-  Lock,
-  Check,
-  MailWarning,
-} from 'lucide-react';
+import { User } from 'lucide-react';
+import { ownershipKey } from '@/utils/characterUtils';
 import { useAuth } from '@/context/AuthContext';
-import { DisabledBadge } from '@/components/DisabledBadge';
-import { CharacterOwnershipOverlay } from '@/components/characters/CharacterOwnershipOverlay';
-import { Modal } from '@/components/common/Modal';
 import { PerksTogglePopup } from '@/components/characters/PerksTogglePopup';
 import { CharactersGridSkeleton } from '@/components/character-detail/CharactersSkeleton';
 import { useCachedData } from '@/hooks/useCachedData';
-import { fetchJson, invalidate } from '@/services/dataCache';
-
+import { fetchJson } from '@/services/dataCache';
 import { EmptyState } from '@/components/common/EmptyState';
+import { CharacterCard } from '@/components/characters/hub/CharacterCard';
+import { CharactersToolbar } from '@/components/characters/hub/CharactersToolbar';
+import { OwnershipSaveBar } from '@/components/characters/hub/OwnershipSaveBar';
+import { SavedChangesModal } from '@/components/characters/hub/SavedChangesModal';
+import { VerificationNotice } from '@/components/characters/hub/VerificationNotice';
+import { useCharacterOwnership } from '@/components/characters/hub/useCharacterOwnership';
+import { CharacterItem, PerkItem, AddonItem, EquipmentItem } from '@/components/character-detail/types';
+import { RoleCategory } from '@/types/perks';
+import { getBackendBaseUrl } from '@/utils/perkUtils';
+import { useDictionary } from '@/context/DictionaryContext';
+
 const AuthModal = dynamic(() => import('@/components/AuthModal').then((m) => m.AuthModal), { ssr: false });
 const DisabledReasonModal = dynamic(
   () => import('@/components/DisabledReasonModal').then((m) => m.DisabledReasonModal),
   { ssr: false }
 );
-import {
-  CharacterItem,
-  PerkItem,
-  AddonItem,
-  EquipmentItem,
-  getCharacterSlug,
-  getAvatarUrl as resolveAvatarUrl,
-  getAvatarThumbUrl,
-} from '@/components/character-detail/types';
-import { RoleCategory, PerkDictionary } from '@/types/perks';
-import type { Dictionary } from '@/locales/types';
-import { getBackendBaseUrl } from '@/utils/perkUtils';
-import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
-import { Button } from '@/components/common/Button';
-import { Input } from '@/components/common/Field';
-import { authHeaders } from '@/utils/api';
-import { useDictionary } from "@/context/DictionaryContext";
-
-interface OwnedCharacter {
-  id: number;
-  name: string;
-  role: string;
-  is_owned: boolean;
-}
-
-interface OwnedPerk {
-  perk_id: number;
-  name: string;
-  /** Scoped to the perk's own role. Survivor 7 and killer 7 are different
-   *  characters, so this is only meaningful next to `role`. */
-  character_id: number | null;
-  role: string;
-  survivor_id: number | null;
-  killer_id: number | null;
-  is_teachable: boolean;
-  is_unlocked: boolean;
-  icon_url?: string;
-  icon_local_path?: string;
-}
 
 export interface CharacterDetailData {
   character: CharacterItem;
@@ -80,22 +36,13 @@ export interface CharacterDetailData {
   items?: EquipmentItem[];
 }
 
-interface CharactersHubProps {
-}
-
-export const CharactersHub: React.FC<CharactersHubProps> = () => {
+export const CharactersHub: React.FC = () => {
   const dict = useDictionary();
   const router = useRouter();
   const params = useParams();
   const searchParams = useSearchParams();
   const locale = (params?.locale as string) || 'en';
-  const {
-    isAuthenticated,
-    token,
-    user,
-    bulkUpdateCharacterOwnership,
-    bulkUpdatePerkOwnership,
-  } = useAuth();
+  const { user } = useAuth();
 
   const [activeTab, setActiveTab] = useState<RoleCategory>('Survivor');
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -121,40 +68,22 @@ export const CharactersHub: React.FC<CharactersHubProps> = () => {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState<boolean>(false);
   const [authModalIntent, setAuthModalIntent] = useState<'login' | 'verify'>('login');
   const [verificationNoticeOpen, setVerificationNoticeOpen] = useState<boolean>(false);
-  const [ownershipMode, setOwnershipMode] = useState<boolean>(false);
-  const [ownershipLoading, setOwnershipLoading] = useState<boolean>(false);
-  const [ownershipSaving, setOwnershipSaving] = useState<boolean>(false);
-  const [ownershipSaveError, setOwnershipSaveError] = useState<string | null>(null);
-  const [savedModalOpen, setSavedModalOpen] = useState<boolean>(false);
-  const savedModalTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  const closeSavedModal = useCallback(() => {
-    if (savedModalTimerRef.current) clearTimeout(savedModalTimerRef.current);
-    setSavedModalOpen(false);
-  }, []);
-
-  const triggerSavedModal = useCallback(() => {
-    if (savedModalTimerRef.current) clearTimeout(savedModalTimerRef.current);
-    setSavedModalOpen(true);
-    savedModalTimerRef.current = setTimeout(() => {
-      closeSavedModal();
-    }, 1800);
-  }, [closeSavedModal]);
-
-  useEffect(() => {
-    return () => {
-      if (savedModalTimerRef.current) clearTimeout(savedModalTimerRef.current);
-    };
-  }, []);
-
-  // Keyed by "survivor:7" / "killer:7", not by a bare id: survivors and
-  // killers are numbered separately now, so an id alone collides.
-  const [characterOwnershipDraft, setCharacterOwnershipDraft] = useState<Record<string, boolean>>({});
-  const loadedCharacterOwnership = useRef<Record<string, boolean>>({});
-  const [perkUnlockDraft, setPerkUnlockDraft] = useState<Record<number, boolean>>({});
-  const [allPerks, setAllPerks] = useState<OwnedPerk[]>([]);
-  const [perksPopupCharacter, setPerksPopupCharacter] = useState<CharacterItem | null>(null);
   const [disabledModalCharacter, setDisabledModalCharacter] = useState<CharacterItem | null>(null);
+
+  const ownership = useCharacterOwnership({
+    locale,
+    onLoginRequired: () => {
+      setAuthModalIntent('login');
+      setIsAuthModalOpen(true);
+    },
+    onVerificationRequired: () => setVerificationNoticeOpen(true),
+  });
+  const {
+    ownershipMode, ownershipLoading, ownershipSaving, ownershipSaveError, savedModalOpen, closeSavedModal,
+    characterOwnershipDraft, allPerks, perkUnlockDraft, perksPopupCharacter, setPerksPopupCharacter,
+    handleToggleOwnershipMode, handleToggleCharacterOwned, handleTogglePerkUnlocked,
+    handleCancelOwnershipMode, handleSaveOwnership, getCharacterPerkStats,
+  } = ownership;
 
   const backendBase = getBackendBaseUrl();
 
@@ -165,140 +94,6 @@ export const CharactersHub: React.FC<CharactersHubProps> = () => {
 
   const characters = charactersResponse?.data ?? [];
   const loading = charactersLoading;
-
-  const handleToggleOwnershipMode = async () => {
-    if (ownershipMode) {
-      setOwnershipMode(false);
-      return;
-    }
-    if (!isAuthenticated || !token || !user) {
-      setAuthModalIntent('login');
-      setIsAuthModalOpen(true);
-      return;
-    }
-    if (!user.is_verified) {
-      setVerificationNoticeOpen(true);
-      return;
-    }
-
-    setOwnershipLoading(true);
-    try {
-      const [charsRes, perksRes] = await Promise.all([
-        fetch(`${backendBase}/api/v1/users/${user.id}/characters`, {
-          headers: authHeaders(token),
-        }),
-        fetch(`${backendBase}/api/v1/users/${user.id}/perks?lang=${locale}`, {
-          headers: authHeaders(token),
-        }),
-      ]);
-
-      let charDraft: Record<string, boolean> = {};
-      if (charsRes.ok) {
-        const data = await charsRes.json();
-        charDraft = buildCharacterOwnershipDraft(data.data as OwnedCharacter[]);
-      }
-
-      const perkDraft: Record<number, boolean> = {};
-      let perksList: OwnedPerk[] = [];
-      if (perksRes.ok) {
-        const data = await perksRes.json();
-        perksList = data.data as OwnedPerk[];
-        perksList.forEach((p) => {
-          perkDraft[p.perk_id] = p.is_unlocked;
-        });
-      }
-
-      loadedCharacterOwnership.current = charDraft;
-      setCharacterOwnershipDraft(charDraft);
-      setPerkUnlockDraft(perkDraft);
-      setAllPerks(perksList);
-      setOwnershipMode(true);
-    } catch (err: unknown) {
-      console.error('Failed to load ownership state:', err);
-    } finally {
-      setOwnershipLoading(false);
-    }
-  };
-
-  const handleToggleCharacterOwned = (characterId: number, role: string) => {
-    const key = ownershipKey(characterId, role);
-    const newIsOwned = !(characterOwnershipDraft[key] ?? true);
-    setCharacterOwnershipDraft((prev) => ({
-      ...prev,
-      [key]: newIsOwned,
-    }));
-
-    setPerkUnlockDraft((prev) => {
-      const next = { ...prev };
-      allPerks
-        .filter((p) => ownsPerk(p, characterId, role))
-        .forEach((p) => {
-          next[p.perk_id] = newIsOwned;
-        });
-      return next;
-    });
-  };
-
-  const handleTogglePerkUnlocked = (perkId: number) => {
-    setPerkUnlockDraft((prev) => ({
-      ...prev,
-      [perkId]: !(prev[perkId] ?? true),
-    }));
-  };
-
-  const handleCancelOwnershipMode = () => {
-    setOwnershipMode(false);
-    setCharacterOwnershipDraft({});
-    setPerkUnlockDraft({});
-    setAllPerks([]);
-    setPerksPopupCharacter(null);
-    setOwnershipSaveError(null);
-  };
-
-  const handleSaveOwnership = async () => {
-    setOwnershipSaving(true);
-    setOwnershipSaveError(null);
-    try {
-      const characterUpdates = changedCharacterUpdates(
-        loadedCharacterOwnership.current,
-        characterOwnershipDraft,
-      );
-      const perkUpdates = Object.entries(perkUnlockDraft).map(([perkId, isUnlocked]) => ({
-        perk_id: Number(perkId),
-        is_unlocked: isUnlocked,
-      }));
-
-      const charactersOk =
-        characterUpdates.length === 0 || (await bulkUpdateCharacterOwnership(characterUpdates));
-      const perksOk = perkUpdates.length === 0 || (await bulkUpdatePerkOwnership(perkUpdates));
-
-      if (!charactersOk || !perksOk) {
-        setOwnershipSaveError(dict.characterDetail.saveOwnershipError);
-        return;
-      }
-
-      handleCancelOwnershipMode();
-      triggerSavedModal();
-      requestAnimationFrame(() => {
-        setTimeout(() => {
-          invalidate(`${backendBase}/api/v1/perks`);
-          invalidate(`${backendBase}/api/v1/characters`);
-        }, 150);
-      });
-    } catch (err: unknown) {
-      console.error('Failed to save ownership changes:', err);
-      setOwnershipSaveError(dict.characterDetail.saveOwnershipError);
-    } finally {
-      setOwnershipSaving(false);
-    }
-  };
-
-  const getCharacterPerkStats = (characterId?: number, role?: string) => {
-    if (!characterId) return { total: 0, unlocked: 0 };
-    const perksForChar = allPerks.filter((p) => ownsPerk(p, characterId, role));
-    const unlocked = perksForChar.filter((p) => perkUnlockDraft[p.perk_id] ?? true).length;
-    return { total: perksForChar.length, unlocked };
-  };
 
   const filteredCharacters = useMemo(() => {
     return characters.filter((c) => {
@@ -318,95 +113,17 @@ export const CharactersHub: React.FC<CharactersHubProps> = () => {
 
   return (
     <div className={`space-y-6 ${ownershipMode ? 'pb-20' : ''}`}>
-      <section
-        aria-label={dict.characterDetail.characterOverview}
-        className="flex flex-col sm:flex-row gap-4 justify-between items-center"
-      >
-        <div
-          role="group"
-          aria-label={dict.filters.category}
-          className="order-2 sm:order-1 relative flex items-center w-full sm:w-72 h-11 p-1 bg-bg-primary border border-border-color rounded-2xl shadow-inner select-none transition-colors"
-        >
-          <span
-            aria-hidden="true"
-            className={`absolute top-1 bottom-1 left-1 w-[calc(50%-4px)] rounded-xl shadow-md transition-transform duration-300 ease-out ${
-              activeTab === 'Survivor'
-                ? 'translate-x-0 bg-accent-green'
-                : 'translate-x-[calc(100%+8px)] bg-accent-red'
-            }`}
-          />
-          <button
-            type="button"
-            onClick={() => handleTabChange('Survivor')}
-            aria-pressed={activeTab === 'Survivor'}
-            className={`relative z-10 flex-1 flex items-center justify-center gap-1.5 h-full min-h-[40px] rounded-xl text-xs font-bold transition-colors cursor-pointer touch-manipulation ${
-              activeTab === 'Survivor'
-                ? 'text-text-inverted'
-                : 'text-text-secondary hover:text-accent-green'
-            }`}
-          >
-            <SurvivorIcon className="h-3.5 w-3.5" />
-            <span>{dict.filters.survivor}</span> ({survivorCount})
-          </button>
-          <button
-            type="button"
-            onClick={() => handleTabChange('Killer')}
-            aria-pressed={activeTab === 'Killer'}
-            className={`relative z-10 flex-1 flex items-center justify-center gap-1.5 h-full min-h-[40px] rounded-xl text-xs font-bold transition-colors cursor-pointer touch-manipulation ${
-              activeTab === 'Killer'
-                ? 'text-text-inverted'
-                : 'text-text-secondary hover:text-accent-red'
-            }`}
-          >
-            <KillerIcon className="h-3.5 w-3.5" />
-            <span>{dict.filters.killer}</span> ({killerCount})
-          </button>
-        </div>
-
-        <div className="order-1 sm:order-2 flex items-center justify-center sm:justify-start gap-3 w-full sm:w-auto">
-          <button
-            type="button"
-            onClick={handleToggleOwnershipMode}
-            disabled={ownershipLoading}
-            className={`flex items-center justify-center gap-1.5 px-4 py-2.5 min-h-[44px] rounded-2xl text-xs font-bold transition-all cursor-pointer disabled:opacity-60 disabled:cursor-wait touch-manipulation shadow-xs ${
-              ownershipMode
-                ? 'bg-accent-amber text-text-inverted border border-accent-amber shadow-accent-amber/20'
-                : 'border border-border-color bg-bg-surface text-text-primary hover:border-accent-amber/50 hover:text-accent-amber'
-            }`}
-          >
-            {ownershipMode ? <X className="h-3.5 w-3.5" /> : <Lock className="h-3.5 w-3.5" />}
-            <span>
-              {ownershipLoading
-                ? dict.app.loading
-                : ownershipMode
-                  ? dict.characterDetail.exitSelection
-                  : dict.characterDetail.myCharacters}
-            </span>
-          </button>
-        </div>
-
-        <div className="order-3 relative w-full sm:w-72">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-text-muted" />
-          <Input
-            type="text"
-            placeholder={dict.filters.filterByCharacter}
-            aria-label={dict.filters.filterByCharacter}
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10 pr-10 min-h-[44px] rounded-2xl bg-bg-primary font-semibold shadow-inner"
-          />
-          {searchQuery && (
-            <button
-              type="button"
-              onClick={() => setSearchQuery('')}
-              aria-label={dict.filters.clearSearch}
-              className="absolute right-1 top-1/2 -translate-y-1/2 flex min-h-[40px] min-w-[40px] items-center justify-center text-text-muted hover:text-text-primary cursor-pointer touch-manipulation"
-            >
-              <X className="h-4 w-4" />
-            </button>
-          )}
-        </div>
-      </section>
+      <CharactersToolbar
+        activeTab={activeTab}
+        onTabChange={handleTabChange}
+        survivorCount={survivorCount}
+        killerCount={killerCount}
+        ownershipMode={ownershipMode}
+        ownershipLoading={ownershipLoading}
+        onToggleOwnershipMode={handleToggleOwnershipMode}
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+      />
 
       {loading ? (
         <div className="w-full py-12 flex items-center justify-center">
@@ -439,117 +156,26 @@ export const CharactersHub: React.FC<CharactersHubProps> = () => {
           className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-3 sm:gap-4 md:gap-6"
         >
           {filteredCharacters.map((char, idx) => {
-            const isSurvivor = char.category?.toLowerCase() === 'survivor';
             const isOwned = char.id
               ? characterOwnershipDraft[ownershipKey(char.id, char.category)] ?? true
               : true;
             const perkStats = ownershipMode
               ? getCharacterPerkStats(char.id, char.category)
               : { total: 0, unlocked: 0 };
-            const hasPartialPerks = !isOwned && perkStats.unlocked > 0;
-            const showLockedOverlay = !isOwned;
-            const avatarSrc = resolveAvatarUrl(backendBase, char, isSurvivor);
-            const avatarThumbSrc = getAvatarThumbUrl(backendBase, char, isSurvivor);
-            const detailHref = `/${locale}/characters/${getCharacterSlug(char.name)}`;
 
             return (
-              <div
+              <CharacterCard
                 key={`${char.name}-${idx}`}
-                onMouseEnter={() => {
-                  if (!ownershipMode) router.prefetch(detailHref);
-                }}
-                onFocus={() => {
-                  if (!ownershipMode) router.prefetch(detailHref);
-                }}
-                onClick={() => {
-                  if (ownershipMode) {
-                    if (char.id) handleToggleCharacterOwned(char.id, char.category);
-                  } else {
-                    router.push(detailHref);
-                  }
-                }}
-                className="group relative flex flex-col overflow-hidden rounded-2xl border border-border-color bg-bg-surface hover:bg-bg-elevated hover:border-accent-red/50 shadow-xs hover:shadow-lg transition-all duration-300 cursor-pointer touch-manipulation aspect-[3/4] w-full"
-              >
-                <div className="absolute top-1.5 right-1.5 sm:top-2 sm:right-2 z-20">
-                  <span
-                    className={`inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 sm:px-2 text-micro sm:text-tiny font-bold border backdrop-blur-md ${
-                      isSurvivor
-                        ? 'bg-accent-green/10 text-accent-green border-accent-green/30'
-                        : 'bg-accent-red/10 text-accent-red border-accent-red/30'
-                    }`}
-                  >
-                    {isSurvivor ? <SurvivorIcon className="h-3 w-3" /> : <KillerIcon className="h-3 w-3" />}
-                    <span>
-                      {isSurvivor
-                        ? dict.characterDetail.roleSurvivor
-                        : dict.characterDetail.roleKiller}
-                    </span>
-                  </span>
-                </div>
-
-                {char.is_disabled && !ownershipMode && (
-                  <DisabledBadge
-                    label={char.name}
-                    onClick={() => setDisabledModalCharacter(char)}
-                    position="top-2 left-2"
-                  />
-                )}
-
-                <div className="relative h-full w-full overflow-hidden bg-bg-elevated">
-                  <img
-                    src={avatarThumbSrc}
-                    alt={char.name}
-                    loading="lazy"
-                    decoding="async"
-                    className={`h-full w-full object-cover object-top transition-transform duration-500 ${
-                      char.is_disabled ? 'grayscale opacity-60' : ''
-                    } ${ownershipMode && showLockedOverlay ? '' : 'group-hover:scale-105'}`}
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement;
-                      if (!target.dataset.triedFull && avatarThumbSrc !== avatarSrc) {
-                        // Thumbnail route unavailable: use the full image instead.
-                        target.dataset.triedFull = '1';
-                        target.src = avatarSrc;
-                      } else if (!target.dataset.triedFallback) {
-                        target.dataset.triedFallback = '1';
-                        target.src = `${backendBase}/static/avatars/${isSurvivor ? 'survivors' : 'killers'}/${getCharacterSlug(char.name)}.webp`;
-                      } else if (target.dataset.triedFallback === '1') {
-                        target.dataset.triedFallback = '2';
-                        target.src = `${backendBase}/static/avatars/${isSurvivor ? 'survivors' : 'killers'}/${getCharacterSlug(char.name)}.png`;
-                      }
-                    }}
-                  />
-                  {ownershipMode && (
-                    <CharacterOwnershipOverlay
-                      isOwned={isOwned}
-                      hasPartialPerks={hasPartialPerks}
-                      avatarSrc={avatarSrc}
-                      lockedTitle={dict.modal.unownedPerk}
-                      ownedTitle={dict.filters.ownedOnly}
-                    />
-                  )}
-                </div>
-
-                {/* Sticky bottom overlay with centered name and perks button above */}
-                <div className="absolute inset-x-0 bottom-0 z-20 flex flex-col items-center justify-end px-2 pt-10 pb-2 sm:pb-2.5 bg-gradient-to-t from-bg-surface via-bg-surface/85 to-transparent pointer-events-none">
-                  {ownershipMode && !isOwned && (
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setPerksPopupCharacter(char);
-                      }}
-                      className="mb-1 sm:mb-1.5 inline-flex items-center justify-center gap-1 rounded-full border border-accent-amber/50 bg-bg-surface/90 px-2.5 py-0.5 text-micro sm:text-tiny font-bold text-accent-amber hover:bg-accent-amber/20 hover:border-accent-amber transition-colors shadow-xs cursor-pointer pointer-events-auto select-none"
-                    >
-                      <span>{dict.filters.perks}</span>
-                      {perkStats.total > 0 && ` (${perkStats.unlocked}/${perkStats.total})`}
-                    </button>
-                  )}
-                  <h3 className="w-full text-center font-extrabold text-mini sm:text-xs md:text-sm text-text-primary group-hover:text-accent-red transition-colors truncate px-1 pointer-events-auto leading-tight">
-                    {char.name}
-                  </h3>
-                </div>
-              </div>
+                char={char}
+                locale={locale}
+                backendBase={backendBase}
+                ownershipMode={ownershipMode}
+                isOwned={isOwned}
+                perkStats={perkStats}
+                onToggleOwned={handleToggleCharacterOwned}
+                onOpenPerks={setPerksPopupCharacter}
+                onOpenDisabled={setDisabledModalCharacter}
+              />
             );
           })}
         </section>
@@ -566,80 +192,25 @@ export const CharactersHub: React.FC<CharactersHubProps> = () => {
       />
 
       {ownershipMode && (
-        <div
-          className="fixed left-[var(--sidebar-width,0rem)] right-0 bottom-0 z-30 border-t border-border-color bg-bg-surface/95 shadow-2xl backdrop-blur-md transition-[left] duration-300"
-        >
-          {ownershipSaveError && (
-            <p
-              role="alert"
-              className="px-5 sm:px-7 lg:px-9 pt-2 text-center type-strong-xs text-accent-red"
-            >
-              {ownershipSaveError}
-            </p>
-          )}
-          <div className="flex items-center justify-center gap-3 px-5 sm:px-7 lg:px-9 py-2.5">
-            <Button variant="secondary" size="sm" onClick={handleCancelOwnershipMode} disabled={ownershipSaving} className="px-5">
-              {dict.admin.cancel}
-            </Button>
-            <Button variant="success" size="sm" onClick={handleSaveOwnership} disabled={ownershipSaving} className="px-6">
-              {ownershipSaving ? dict.characterDetail.saving : dict.characterDetail.accept}
-            </Button>
-          </div>
-        </div>
+        <OwnershipSaveBar
+          ownershipSaveError={ownershipSaveError}
+          ownershipSaving={ownershipSaving}
+          onCancel={handleCancelOwnershipMode}
+          onSave={handleSaveOwnership}
+        />
       )}
 
-      <Modal
-        isOpen={savedModalOpen}
-        onClose={closeSavedModal}
-        variant="confirm"
-        size="sm"
-        layer="top"
-        ariaLabel={dict.characterDetail.changesSaved}
-        closeButton="floating"
-        closeButtonAriaLabel={dict.characterDetail.dismiss}
-        padded
-        bodyClassName="flex flex-col items-center justify-center text-center sm:p-8"
-      >
-        <div
-          className="flex h-16 w-16 sm:h-20 sm:w-20 items-center justify-center rounded-2xl border border-accent-green/40 bg-accent-green/15 text-accent-green mb-4 ring-4 ring-accent-green/15 shadow-inner"
-          aria-hidden="true"
-        >
-          <Check className="h-8 w-8 sm:h-10 sm:w-10 stroke-[2.5]" />
-        </div>
-
-        <h2 className="text-lg sm:text-xl font-extrabold tracking-tight text-text-primary">
-          {dict.characterDetail.changesSaved}
-        </h2>
-      </Modal>
+      <SavedChangesModal open={savedModalOpen} onClose={closeSavedModal} />
 
       {verificationNoticeOpen && user && (
-        <div className="fixed top-6 left-[var(--sidebar-width,0rem)] right-0 z-50 flex justify-center pointer-events-none transition-[left] duration-300 px-4">
-          <div
-            role="status"
-            className="pointer-events-auto flex items-center gap-3 rounded-2xl bg-accent-amber px-5 py-3 type-strong text-text-inverted shadow-2xl ring-2 ring-accent-amber/50 animate-in fade-in slide-in-from-top-4 duration-300"
-          >
-            <MailWarning className="h-4 w-4 shrink-0" />
-            <span>{dict.user.verifyEmailRequired}</span>
-            <button
-              type="button"
-              onClick={() => {
-                setVerificationNoticeOpen(false);
-                setAuthModalIntent('verify');
-                setIsAuthModalOpen(true);
-              }}
-              className="rounded-lg bg-text-inverted/20 px-3 py-1 type-label-xs hover:bg-text-inverted/30 transition-colors cursor-pointer"
-            >
-              {dict.streaks.verifyEmail}
-            </button>
-            <button
-              type="button"
-              onClick={() => setVerificationNoticeOpen(false)}
-              className="type-strong-xs underline cursor-pointer"
-            >
-              {dict.characterDetail.dismiss}
-            </button>
-          </div>
-        </div>
+        <VerificationNotice
+          onVerify={() => {
+            setVerificationNoticeOpen(false);
+            setAuthModalIntent('verify');
+            setIsAuthModalOpen(true);
+          }}
+          onDismiss={() => setVerificationNoticeOpen(false)}
+        />
       )}
 
       <DisabledReasonModal
@@ -657,4 +228,3 @@ export const CharactersHub: React.FC<CharactersHubProps> = () => {
     </div>
   );
 };
-

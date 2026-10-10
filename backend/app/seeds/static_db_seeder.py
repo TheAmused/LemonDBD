@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import Any
 from sqlalchemy import func, select, text
 
+from app.core.config import demo_accounts_enabled
 from app.core.extensions import db
 from app.core.redis_cache import bump_catalog_version
 from app.models.character import Killer, Survivor
@@ -148,6 +149,14 @@ def _find_data_dir() -> Path | None:
     return SEEDS_DATA_DIR if SEEDS_DATA_DIR.exists() else None
 
 
+def _seed_subfolders() -> list[str]:
+    """Seed-data folders to load. `users/` holds the demo accounts, so it is development-only."""
+    folders = ["content", "settings", "smash_or_pass"]
+    if demo_accounts_enabled():
+        folders.append("users")
+    return folders
+
+
 def _find_updates_dirs() -> list[Path]:
     """The patch-drop folder: the bind mount in a container, the repository
     folder it is mounted from otherwise. Both spellings of one directory."""
@@ -160,7 +169,7 @@ def _find_updates_dirs() -> list[Path]:
 def load_static_seed_payload(data_dir: Path) -> dict[str, Any]:
     """Combines modular JSON files from content/, settings/, smash_or_pass/, users/ subfolders."""
     combined_data: dict[str, Any] = {}
-    for sub in ["content", "settings", "smash_or_pass", "users"]:
+    for sub in _seed_subfolders():
         folder = data_dir / sub
         if not folder.exists():
             continue
@@ -289,7 +298,7 @@ def apply_pending_updates() -> dict[str, Any]:
     # 2. Check if any core seed file in seeds/data has been edited directly
     data_dir = _find_data_dir()
     if data_dir and data_dir.exists():
-        for sub in ["content", "settings", "smash_or_pass", "users"]:
+        for sub in _seed_subfolders():
             subfolder = data_dir / sub
             if not subfolder.exists():
                 continue
@@ -371,7 +380,7 @@ def seed_from_static_json(force: bool = False) -> dict[str, Any]:
         initial_result = DatabaseExportImportService.import_database(payload, mode="merge")
 
         # Record initial hashes for all core seed files so future boots know baseline
-        for sub in ["content", "settings", "smash_or_pass", "users"]:
+        for sub in _seed_subfolders():
             subfolder = data_dir / sub
             if not subfolder.exists():
                 continue

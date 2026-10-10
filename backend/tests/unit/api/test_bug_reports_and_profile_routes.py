@@ -151,7 +151,9 @@ class TestProfileAndAvatarRoutes:
         self, client: FlaskClient, user_headers: dict[str, str]
     ) -> None:
         res = client.put(
-            "/api/v1/auth/profile", json={"email": "updated@example.com"}, headers=user_headers
+            "/api/v1/auth/profile",
+            json={"email": "updated@example.com", "current_password": "Password123!"},
+            headers=user_headers,
         )
         assert res.status_code == 200
         data = res.get_json()
@@ -166,10 +168,12 @@ class TestProfileAndAvatarRoutes:
         db_session.commit()
 
         res = client.put(
-            "/api/v1/auth/profile", json={"email": "taken@example.com"}, headers=user_headers
+            "/api/v1/auth/profile",
+            json={"email": "taken@example.com", "current_password": "Password123!"},
+            headers=user_headers,
         )
         assert res.status_code == 400
-        assert "error" in res.get_json()
+        assert "already in use" in res.get_json()["error"]
 
     def test_upload_avatar_without_file_returns_localized_error(
         self, client: FlaskClient, user_headers: dict[str, str]

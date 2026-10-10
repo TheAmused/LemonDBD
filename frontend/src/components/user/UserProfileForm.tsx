@@ -5,7 +5,7 @@ import type { Dictionary } from '@/locales/types';
 import React, { useState } from 'react';
 import { Lock, Mail, Eye, EyeOff, CheckCircle2, AlertCircle, ChevronDown } from 'lucide-react';
 import { StatusFeedback } from '@/types/userProfile';
-import { updateUserProfile, ApiError } from '@/services/userProfileApi';
+import { updateUserProfile, ApiError, type UpdateProfilePayload } from '@/services/userProfileApi';
 import { usePersistentDrawer } from '@/hooks/usePersistentDrawer';
 import { Button } from '@/components/common/Button';
 import { Input } from '@/components/common/Field';
@@ -23,6 +23,8 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({ initialEmail, 
   const [isExpanded, toggleExpanded] = usePersistentDrawer('lemondbd_drawer_account', false);
 
   const [newEmail, setNewEmail] = useState(initialEmail);
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showNewPassword, setShowNewPassword] = useState(false);
@@ -53,18 +55,28 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({ initialEmail, 
       return;
     }
 
-    const payload: { email?: string; password?: string } = {};
+    const payload: UpdateProfilePayload = {};
     if (newEmail !== initialEmail && newEmail.trim()) {
       payload.email = newEmail.trim();
     }
     if (newPassword) {
-      payload.password = newPassword;
+      payload.new_password = newPassword;
     }
 
     // Nothing to update
     if (Object.keys(payload).length === 0) {
       return;
     }
+
+    // The server wants the current password for either change.
+    if (!currentPassword) {
+      setStatusMessage({
+        type: 'error',
+        text: t.currentPasswordRequired || 'Enter your current password to change your email or password.',
+      });
+      return;
+    }
+    payload.current_password = currentPassword;
 
     setIsUpdating(true);
     try {
@@ -73,11 +85,17 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({ initialEmail, 
         type: 'success',
         text: t.profileUpdateSuccessMsg || 'Profile updated successfully!',
       });
+      setCurrentPassword('');
       setNewPassword('');
       setConfirmPassword('');
       await onRefreshUser();
     } catch (err: unknown) {
-      if (err instanceof ApiError) {
+      if (err instanceof ApiError && err.status === 403) {
+        setStatusMessage({
+          type: 'error',
+          text: t.currentPasswordIncorrect || 'Your current password is incorrect.',
+        });
+      } else if (err instanceof ApiError) {
         setStatusMessage({ type: 'error', text: err.message || t.profileUpdateFailedMsg || 'Failed to update profile.' });
       } else {
         setStatusMessage({
@@ -171,6 +189,35 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({ initialEmail, 
                       className="pl-10"
                     />
                   </div>
+                </div>
+
+                {/* Current password: proves it is really the owner changing the email / password */}
+                <div className="space-y-1.5">
+                  <label className="block type-label-xs text-text-secondary" htmlFor="profile-current-password">
+                    {t.currentPassword || 'Current Password'}
+                  </label>
+                  <div className="relative">
+                    <Input
+                      id="profile-current-password"
+                      type={showCurrentPassword ? 'text' : 'password'}
+                      autoComplete="current-password"
+                      value={currentPassword}
+                      onChange={(e) => setCurrentPassword(e.target.value)}
+                      fieldSize="sm"
+                      className="pr-9"
+                    />
+                    <button
+                      type="button"
+                      tabIndex={-1}
+                      onClick={() => setShowCurrentPassword((prev) => !prev)}
+                      className="absolute inset-y-0 right-0 flex items-center pr-2.5 text-text-muted hover:text-text-primary cursor-pointer"
+                    >
+                      {showCurrentPassword ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
+                    </button>
+                  </div>
+                  <p className="type-caption text-text-muted">
+                    {t.currentPasswordHint || 'Required to change your email or password'}
+                  </p>
                 </div>
 
                 {/* Password Management */}

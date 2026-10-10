@@ -8,7 +8,7 @@ from flask import Flask, jsonify
 from flask_cors import CORS
 from sqlalchemy import text
 
-from app.core.config import Config
+from app.core.config import Config, weak_secret_warnings
 from app.core.extensions import db, mail, migrate
 from app.core.json_provider import ORJSONProvider
 from app.core.limiter import limiter
@@ -28,6 +28,13 @@ def create_app(config_class: Type[Config] | None = None) -> Flask:
         level=logging.INFO,
         format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
     )
+
+    for problem in weak_secret_warnings(flask_app.config):
+        logging.getLogger(__name__).warning(
+            "SECURITY: %s. Anyone can forge login sessions with it; set a long random value "
+            "(for example `python -c \"import secrets; print(secrets.token_urlsafe(48))\"`).",
+            problem,
+        )
 
     raw_cors = flask_app.config.get("CORS_ORIGINS", "*")
     if isinstance(raw_cors, str) and "," in raw_cors:

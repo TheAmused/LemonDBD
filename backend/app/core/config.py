@@ -30,6 +30,16 @@ except ImportError:
     pass
 
 
+def demo_accounts_enabled() -> bool:
+    """True only when the app runs with FLASK_ENV=development.
+
+    The demo accounts (lemon / user), their seed files and the sign-in quick-fill
+    buttons all hang off this one switch. Anything else, including an unset
+    variable, counts as production. Read at call time so a test can flip it.
+    """
+    return os.getenv("FLASK_ENV", "production").strip().lower() == "development"
+
+
 class Config:
     HOST: str = os.getenv("FLASK_RUN_HOST", os.getenv("HOST", "0.0.0.0"))
     PORT: int = int(os.getenv("FLASK_RUN_PORT", os.getenv("PORT", "5000")))

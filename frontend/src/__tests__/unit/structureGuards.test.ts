@@ -22,6 +22,7 @@ const STATIC_PAGES = new Set([
   'app/[locale]/privacy-policy/page.tsx',
   'app/[locale]/reset-password/page.tsx',
   'app/[locale]/rules/page.tsx',
+  'app/[locale]/terms-of-service/page.tsx',
 ]);
 
 describe('structure: route-level loading UI', () => {

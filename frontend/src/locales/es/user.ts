@@ -73,9 +73,10 @@ export default {
   failedToRequestPasswordReset: "No se pudo solicitar el restablecimiento de contraseña.",
   invalidCredentials: "Credenciales inválidas.",
   registrationFailed: "Registro fallido.",
-  acceptRulesLabel: "He leído y acepto las {rules}",
-  acceptRulesLink: "normas",
-  rulesNotAccepted: "Acepta las normas para crear una cuenta.",
+  acceptLegalLabel: "He leído y acepto los {terms} y las {rules}",
+  acceptTermsLink: "Términos del servicio",
+  acceptRulesLink: "Normas",
+  legalNotAccepted: "Acepta los Términos del servicio y las Normas para crear una cuenta.",
   unexpectedError: "Ocurrió un error inesperado.",
 
   // --- /user page: perf & i18n hardening pass additions ---

@@ -73,9 +73,10 @@ export default {
   failedToRequestPasswordReset: "パスワードリセットのリクエストに失敗しました。",
   invalidCredentials: "認証情報が無効です。",
   registrationFailed: "登録に失敗しました。",
-  acceptRulesLabel: "{rules}を読み、同意します",
+  acceptLegalLabel: "{terms}と{rules}を読み、同意します",
+  acceptTermsLink: "利用規約",
   acceptRulesLink: "ルール",
-  rulesNotAccepted: "アカウントを作成するには、ルールに同意してください。",
+  legalNotAccepted: "アカウントを作成するには、利用規約とルールに同意してください。",
   unexpectedError: "予期しないエラーが発生しました。",
 
   // --- /user page: perf & i18n hardening pass additions ---

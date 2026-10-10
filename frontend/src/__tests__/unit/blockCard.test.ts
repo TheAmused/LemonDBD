@@ -38,11 +38,11 @@ test('BlockCard: the box never switches between stretched and fit-content, which
   assert.ok(source.includes('transition-[grid-template-rows'), 'the row change is transitioned');
 });
 
-test('About, Privacy Policy and Rules all use the shared card instead of their own copies', () => {
+test('About, Privacy Policy, Terms and Rules all use the shared card instead of their own copies', () => {
   assert.ok(read('app/[locale]/about/page.tsx').includes('BlockCardPair'));
   assert.ok(read('app/[locale]/privacy-policy/page.tsx').includes('BlockCard'));
-  assert.ok(read('components/rules/RulesSections.tsx').includes('BlockCardPair'));
-  for (const rel of ['app/[locale]/about/page.tsx', 'app/[locale]/privacy-policy/page.tsx', 'components/rules/RulesSections.tsx']) {
+  assert.ok(read('components/legal/LegalSections.tsx').includes('BlockCardPair'));
+  for (const rel of ['app/[locale]/about/page.tsx', 'app/[locale]/privacy-policy/page.tsx', 'components/legal/LegalSections.tsx']) {
     assert.ok(!read(rel).includes('usePersistentDrawer'), `${rel} leaves drawer state to BlockCard`);
   }
 });

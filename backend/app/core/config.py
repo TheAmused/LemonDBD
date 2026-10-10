@@ -1,5 +1,6 @@
 # backend/app/core/config.py
 import os
+from collections.abc import Mapping
 from datetime import timedelta
 from pathlib import Path
 from typing import Any
@@ -28,6 +29,48 @@ try:
             load_dotenv()
 except ImportError:
     pass
+
+
+def demo_accounts_enabled() -> bool:
+    """True only when the app runs with FLASK_ENV=development.
+
+    The demo accounts (lemon / user), their seed files and the sign-in quick-fill
+    buttons all hang off this one switch. Anything else, including an unset
+    variable, counts as production. Read at call time so a test can flip it.
+    """
+    return os.getenv("FLASK_ENV", "production").strip().lower() == "development"
+
+
+# Values that ship in the repo, the compose file or .env.example: anyone can read them, so a
+# production deployment that still signs sessions with one of them can be impersonated.
+KNOWN_PLACEHOLDER_SECRETS = frozenset(
+    {
+        "dbd-lemon-secret-key-2026",
+        "dev-secret-key-dbd-lemon-2026",
+        "changeme",
+        "change-me",
+        "secret",
+        "secret-key",
+    }
+)
+MIN_SECRET_KEY_LENGTH = 32
+
+
+def weak_secret_warnings(config: Mapping[str, Any]) -> list[str]:
+    """Human-readable problems with the signing keys, empty when they look fine.
+
+    Skipped (empty) for tests and for FLASK_ENV=development, where the placeholder keys are expected.
+    """
+    if config.get("TESTING") or demo_accounts_enabled():
+        return []
+    warnings: list[str] = []
+    for name in ("SECRET_KEY", "JWT_SECRET_KEY"):
+        value = str(config.get(name) or "")
+        if value.strip().lower() in KNOWN_PLACEHOLDER_SECRETS:
+            warnings.append(f"{name} is a publicly known placeholder value")
+        elif len(value) < MIN_SECRET_KEY_LENGTH:
+            warnings.append(f"{name} is shorter than {MIN_SECRET_KEY_LENGTH} characters")
+    return warnings
 
 
 class Config:

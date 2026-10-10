@@ -80,6 +80,8 @@ export async function fetchMyBugReports(
 export interface UpdateProfilePayload {
   email?: string;
   new_password?: string;
+  /** Required by the server whenever `email` changes or `new_password` is set. */
+  current_password?: string;
 }
 
 export async function updateUserProfile(payload: UpdateProfilePayload): Promise<void> {

@@ -3,7 +3,7 @@ from typing import Any
 from sqlalchemy import select
 
 from app.core.extensions import db
-from app.core.security import hash_password
+from app.core.security import hash_password, verify_password
 from app.models import Killer, Survivor, User, UserShowcase
 from app.models.base import utcnow
 
@@ -33,29 +33,43 @@ def modify_user_profile(
     email: str | None = None,
     avatar_url: str | None = None,
     new_password: str | None = None,
+    current_password: str | None = None,
 ) -> tuple[User | None, str | None]:
-    """Update profile attributes including email address, avatar, or password."""
+    """Update profile attributes including email address, avatar, or password.
+
+    Changing the email or the password is what an attacker holding a stolen session would do to
+    take the account over, so both need the current password. A password change also bumps
+    ``token_version``, which signs out every other session.
+    """
     user = db.session.get(User, user_id)
     if not user:
         return None, "User not found."
 
-    if email:
-        clean_email = email.strip().lower()
-        if clean_email != user.email:
-            existing = db.session.scalars(
-                select(User).where(User.email.ilike(clean_email), User.id != user_id)
-            ).first()
-            if existing:
-                return None, "Email address is already in use."
-            user.email = clean_email
+    clean_email = email.strip().lower() if email else None
+    changing_email = bool(clean_email) and clean_email != user.email
+    if changing_email or new_password:
+        if not current_password:
+            return None, "Current password is required."
+        if not verify_password(current_password, user.password_hash):
+            return None, "Incorrect password."
+
+    if new_password and len(new_password) < 6:
+        return None, "New password must be at least 6 characters long."
+
+    if changing_email:
+        existing = db.session.scalars(
+            select(User).where(User.email.ilike(clean_email), User.id != user_id)
+        ).first()
+        if existing:
+            return None, "Email address is already in use."
+        user.email = clean_email
 
     if avatar_url:
         user.avatar_url = avatar_url.strip()
 
     if new_password:
-        if len(new_password) < 6:
-            return None, "New password must be at least 6 characters long."
         user.password_hash = hash_password(new_password)
+        user.token_version = int(user.token_version or 0) + 1
 
     db.session.commit()
     return user, None

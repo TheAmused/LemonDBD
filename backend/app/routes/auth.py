@@ -4,6 +4,7 @@ import os
 from flask import Blueprint, current_app, g, jsonify, make_response, request, send_from_directory
 from pydantic import ValidationError
 
+from app.core.config import demo_accounts_enabled
 from app.core.limiter import limiter, validate_honeypot
 from app.core.security import (
     clear_session_cookie,
@@ -189,6 +190,7 @@ def get_current_user_profile():
 
 
 @auth_bp.route("/profile", methods=["PUT"])
+@limiter.limit("20 per minute")
 @login_required
 def update_profile():
     user = g.current_user
@@ -196,21 +198,32 @@ def update_profile():
     email = data.get("email")
     avatar_url = data.get("avatar_url")
     new_password = data.get("new_password")
+    current_password = data.get("current_password")
 
     updated_user, err = user_service.update_user_profile(
         user_id=user.id,
         email=email,
         avatar_url=avatar_url,
         new_password=new_password,
+        current_password=str(current_password) if current_password else None,
     )
     if err:
-        return jsonify({"error": err, "status": 400}), 400
+        status = 403 if err == "Incorrect password." else 400
+        return jsonify({"error": err, "status": status}), status
 
-    return jsonify({
+    body: dict = {
         "status": "success",
         "message": "Profile updated successfully",
         "user": UserResponse.model_validate(updated_user).model_dump(),
-    }), 200
+    }
+    if not new_password:
+        return jsonify(body), 200
+
+    # The password changed, so every older session was just signed out: hand this one a fresh token.
+    token = user_service.generate_auth_token(updated_user)
+    body["token"] = token
+    body["token_type"] = "Bearer"
+    return set_session_cookie(make_response(jsonify(body), 200), token)
 
 
 @auth_bp.route("/avatar", methods=["POST"])
@@ -305,5 +318,29 @@ def get_altcha_challenge():
     secret_key = current_app.config.get("SECRET_KEY", "lemon-dev-secret-key")
     challenge = AltchaService.create_challenge(secret_key=secret_key)
     resp = make_response(jsonify(challenge), 200)
+    resp.headers["Cache-Control"] = "no-store, no-cache, must-revalidate"
+    return resp
+
+
+@auth_bp.route("/demo-accounts", methods=["GET"])
+def get_demo_accounts():
+    """Development only: the demo logins the sign-in modal offers as quick-fill buttons.
+
+    Outside FLASK_ENV=development the list is empty, so a production build never
+    shows (or even receives) these credentials.
+    """
+    accounts: list[dict[str, str]] = []
+    if demo_accounts_enabled():
+        from app.seeds.user_seeder import DEMO_ACCOUNTS
+
+        accounts = [
+            {
+                "role": "admin" if account["role"] == "admin" else "player",
+                "username": account["username"],
+                "password": account["password"],
+            }
+            for account in DEMO_ACCOUNTS
+        ]
+    resp = make_response(jsonify({"enabled": bool(accounts), "accounts": accounts}), 200)
     resp.headers["Cache-Control"] = "no-store, no-cache, must-revalidate"
     return resp

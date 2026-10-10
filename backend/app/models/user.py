@@ -63,6 +63,11 @@ class User(Base):
     preferred_language: Mapped[str | None] = mapped_column(
         String(5), nullable=True
     )
+    # Bumped whenever the credentials change (password change / reset): every session token
+    # carries the version it was issued under and is refused once it no longer matches.
+    token_version: Mapped[int] = mapped_column(
+        Integer, default=0, server_default="0", nullable=False
+    )
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=utcnow, nullable=False
     )

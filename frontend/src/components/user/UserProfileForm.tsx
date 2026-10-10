@@ -10,6 +10,7 @@ import { usePersistentDrawer } from '@/hooks/usePersistentDrawer';
 import { Button } from '@/components/common/Button';
 import { Input } from '@/components/common/Field';
 import { useDictionary } from "@/context/DictionaryContext";
+import { twoFactorErrorMessage } from '@/utils/twoFactorErrors';
 
 interface UserProfileFormProps {
   initialEmail: string;
@@ -24,6 +25,9 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({ initialEmail, 
 
   const [newEmail, setNewEmail] = useState(initialEmail);
   const [currentPassword, setCurrentPassword] = useState('');
+  // Set once the server says the account has two-factor on: the change then needs a code as well.
+  const [needsTwoFactorCode, setNeedsTwoFactorCode] = useState(false);
+  const [twoFactorCode, setTwoFactorCode] = useState('');
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -77,6 +81,9 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({ initialEmail, 
       return;
     }
     payload.current_password = currentPassword;
+    if (needsTwoFactorCode) {
+      payload.two_factor_code = twoFactorCode.trim();
+    }
 
     setIsUpdating(true);
     try {
@@ -86,11 +93,18 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({ initialEmail, 
         text: t.profileUpdateSuccessMsg || 'Profile updated successfully!',
       });
       setCurrentPassword('');
+      setTwoFactorCode('');
+      setNeedsTwoFactorCode(false);
       setNewPassword('');
       setConfirmPassword('');
       await onRefreshUser();
     } catch (err: unknown) {
-      if (err instanceof ApiError && err.status === 403) {
+      if (err instanceof ApiError && err.code === 'two_factor_required') {
+        setNeedsTwoFactorCode(true);
+        setStatusMessage({ type: 'error', text: dict.twoFactor.codeRequiredHint });
+      } else if (err instanceof ApiError && err.code && err.code !== 'incorrect_password' && err.code.includes('two_factor')) {
+        setStatusMessage({ type: 'error', text: twoFactorErrorMessage(dict.twoFactor, err.code) });
+      } else if (err instanceof ApiError && err.status === 403) {
         setStatusMessage({
           type: 'error',
           text: t.currentPasswordIncorrect || 'Your current password is incorrect.',
@@ -219,6 +233,23 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({ initialEmail, 
                     {t.currentPasswordHint || 'Required to change your email or password'}
                   </p>
                 </div>
+
+                {needsTwoFactorCode && (
+                  <div className="space-y-1.5">
+                    <label className="block type-label-xs text-text-secondary" htmlFor="profile-two-factor-code">
+                      {dict.twoFactor.codeOrRecoveryLabel}
+                    </label>
+                    <Input
+                      id="profile-two-factor-code"
+                      type="text"
+                      autoComplete="one-time-code"
+                      spellCheck={false}
+                      fieldSize="sm"
+                      value={twoFactorCode}
+                      onChange={(e) => setTwoFactorCode(e.target.value)}
+                    />
+                  </div>
+                )}
 
                 {/* Password Management */}
                 <div className="space-y-3 pt-3 border-t border-border-color">

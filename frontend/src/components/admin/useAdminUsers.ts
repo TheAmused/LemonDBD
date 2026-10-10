@@ -23,6 +23,8 @@ export function useAdminUsers({ onActionMessage, onUserCreated }: AdminUsersInpu
   const [loadingData, setLoadingData] = useState<boolean>(true);
   const [userPendingDeletion, setUserPendingDeletion] = useState<UserRow | null>(null);
   const [isDeletingUser, setIsDeletingUser] = useState<boolean>(false);
+  const [userPendingTwoFactorReset, setUserPendingTwoFactorReset] = useState<UserRow | null>(null);
+  const [isResettingTwoFactor, setIsResettingTwoFactor] = useState<boolean>(false);
 
   const fetchAdminData = useCallback(async () => {
     const token = getAuthToken();
@@ -160,6 +162,31 @@ export function useAdminUsers({ onActionMessage, onUserCreated }: AdminUsersInpu
     }
   };
 
+  const confirmTwoFactorReset = async () => {
+    const targetUser = userPendingTwoFactorReset;
+    if (!targetUser || isResettingTwoFactor) return;
+
+    setIsResettingTwoFactor(true);
+    try {
+      const res = await fetch(`${API_BASE}/api/v1/users/${targetUser.id}/two-factor/reset`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: authHeaders(getAuthToken()),
+      });
+      onActionMessage(
+        res.ok
+          ? { type: 'success', text: formatMessage(dict.admin.twoFactorResetDone, { username: targetUser.username }) }
+          : { type: 'error', text: dict.admin.twoFactorResetFailed }
+      );
+      if (res.ok) await fetchAdminData();
+    } catch (err: unknown) {
+      onActionMessage({ type: 'error', text: getErrorMessage(err, dict.admin.networkError) });
+    } finally {
+      setIsResettingTwoFactor(false);
+      setUserPendingTwoFactorReset(null);
+    }
+  };
+
   const handleCreateUser = async (userData: {
     username: string;
     email: string;
@@ -214,6 +241,10 @@ export function useAdminUsers({ onActionMessage, onUserCreated }: AdminUsersInpu
     userPendingDeletion,
     setUserPendingDeletion,
     isDeletingUser,
+    userPendingTwoFactorReset,
+    setUserPendingTwoFactorReset,
+    isResettingTwoFactor,
+    confirmTwoFactorReset,
     handleToggleRole,
     handleToggleActive,
     handleDeleteUser,

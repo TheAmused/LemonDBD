@@ -35,6 +35,7 @@ export interface UserRow {
   created_at: string;
   owned_characters_count: number;
   unlocked_perks_count: number;
+  two_factor_enabled?: boolean;
 }
 
 export interface AdminBugReport {

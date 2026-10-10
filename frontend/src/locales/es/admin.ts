@@ -252,4 +252,12 @@ export default {
   configUnit_hours: 'horas',
   configUnit_minutes: 'minutos',
   configUnit_days: 'días',
+  twoFactorBadge: "2FA",
+  twoFactorOn: "La autenticación en dos pasos está activada",
+  resetTwoFactor: "Restablecer la autenticación en dos pasos",
+  resetTwoFactorTitle: "¿Restablecer la autenticación en dos pasos?",
+  resetTwoFactorMessage: "Esto desactiva el inicio de sesión en dos pasos de {username}, que puede haber perdido su dispositivo y sus códigos de recuperación. Se le enviará un correo y el restablecimiento queda registrado en el registro de auditoría.",
+  resetTwoFactorConfirm: "Restablecer 2FA",
+  twoFactorResetDone: "Se restableció la autenticación en dos pasos de {username}.",
+  twoFactorResetFailed: "No se pudo restablecer la autenticación en dos pasos.",
 } as const;

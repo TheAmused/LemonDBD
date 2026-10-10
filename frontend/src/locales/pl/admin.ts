@@ -252,4 +252,12 @@ export default {
   configUnit_hours: 'godz.',
   configUnit_minutes: 'min',
   configUnit_days: 'dni',
+  twoFactorBadge: "2FA",
+  twoFactorOn: "Uwierzytelnianie dwuskładnikowe jest włączone",
+  resetTwoFactor: "Zresetuj uwierzytelnianie dwuskładnikowe",
+  resetTwoFactorTitle: "Zresetować uwierzytelnianie dwuskładnikowe?",
+  resetTwoFactorMessage: "To wyłączy logowanie dwuskładnikowe dla {username}, który mógł utracić urządzenie i kody odzyskiwania. Użytkownik dostanie e-mail, a reset zostanie zapisany w dzienniku audytu.",
+  resetTwoFactorConfirm: "Zresetuj 2FA",
+  twoFactorResetDone: "Zresetowano uwierzytelnianie dwuskładnikowe dla {username}.",
+  twoFactorResetFailed: "Nie udało się zresetować uwierzytelniania dwuskładnikowego.",
 } as const;

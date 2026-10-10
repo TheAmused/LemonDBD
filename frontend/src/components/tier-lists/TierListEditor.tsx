@@ -5,7 +5,6 @@ import { useDictionary } from '@/context/DictionaryContext';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import {
-  ChevronLeft,
   Ellipsis,
   Eye,
   EyeOff,
@@ -186,13 +185,7 @@ export function TierListEditor(props: TierListEditorProps) {
     <div className="relative z-10 flex flex-col gap-3 sm:gap-4 h-full min-h-0">
       {/* Phones: one compact row (back, title, actions menu). Wider screens use the full header below. */}
       <div className="flex shrink-0 items-center gap-2 sm:hidden">
-        <Link
-          href={`/${locale}/tier-lists`}
-          className="inline-flex min-h-[44px] shrink-0 items-center gap-0.5 rounded-xl pr-1 type-label-sm text-text-secondary hover:text-accent-red transition-colors"
-        >
-          <ChevronLeft className="h-4 w-4" aria-hidden="true" />
-          {t.backShort}
-        </Link>
+        <span className="w-11 shrink-0" aria-hidden="true" />
         <h1 className="min-w-0 flex-1 truncate text-center type-label text-text-primary">
           {pageTitle}
         </h1>
@@ -202,7 +195,7 @@ export function TierListEditor(props: TierListEditorProps) {
           onClick={() => setMenuOpen((o) => !o)}
           aria-label={t.toolbarAria}
           {...popoverTriggerProps(menuOpen, 'menu')}
-          className={cn(BUTTON_BASE, BUTTON_VARIANTS.secondary, BUTTON_SIZES.md, TOUCH_BTN, 'shrink-0')}
+          className={cn(BUTTON_BASE, BUTTON_VARIANTS.secondary, BUTTON_SIZES.md, TOUCH_BTN, 'w-11 shrink-0 px-0')}
         >
           <Ellipsis className="h-4 w-4" aria-hidden="true" />
         </button>
@@ -246,16 +239,9 @@ export function TierListEditor(props: TierListEditorProps) {
         </Popover>
       </div>
 
-      <header className="hidden sm:flex flex-col gap-3 shrink-0">
-        <div className="flex flex-col gap-3 xl:grid xl:grid-cols-[minmax(0,1fr)_minmax(0,auto)_minmax(0,1fr)] xl:items-center">
+      <header className="hidden sm:flex flex-col gap-3 [@media(max-height:559px)]:gap-1 shrink-0">
+        <div className="flex flex-col gap-3 [@media(max-height:559px)]:flex-row [@media(max-height:559px)]:items-center [@media(max-height:559px)]:justify-between [@media(max-height:559px)]:gap-2 xl:grid xl:grid-cols-[minmax(0,1fr)_minmax(0,auto)_minmax(0,1fr)] xl:items-center">
           <div className="flex items-center justify-center xl:justify-start gap-3 shrink-0 xl:justify-self-start">
-            <Link
-              href={`/${locale}/tier-lists`}
-              className="inline-flex min-h-[44px] w-fit items-center gap-1 rounded-xl pr-3 type-label-sm text-text-secondary hover:text-accent-red transition-colors"
-            >
-              <ChevronLeft className="h-4 w-4" aria-hidden="true" />
-              {t.backToHub}
-            </Link>
             {badges}
           </div>
 
@@ -271,7 +257,7 @@ export function TierListEditor(props: TierListEditorProps) {
               </h1>
             </div>
             {description && (
-              <p className="mt-1 hidden sm:block text-xs sm:text-sm text-text-secondary max-w-2xl mx-auto text-center line-clamp-2">
+              <p className="mt-1 hidden sm:block [@media(max-height:719px)]:hidden text-xs sm:text-sm text-text-secondary max-w-2xl mx-auto text-center line-clamp-2">
                 {description}
               </p>
             )}
@@ -286,30 +272,30 @@ export function TierListEditor(props: TierListEditorProps) {
               className={TOUCH_BTN}
             >
               {showNames ? <EyeOff className="h-4 w-4" aria-hidden="true" /> : <Eye className="h-4 w-4" aria-hidden="true" />}
-              <span className="hidden sm:inline">{showNames ? t.hideNames : t.showNames}</span>
+              <span className="hidden sm:inline [@media(max-height:559px)]:hidden!">{showNames ? t.hideNames : t.showNames}</span>
             </Button>
             <Button variant="secondary" onClick={() => setDialog('import')} aria-label={t.import} className={TOUCH_BTN}>
               <Upload className="h-4 w-4" aria-hidden="true" />
-              <span className="hidden sm:inline">{t.import}</span>
+              <span className="hidden sm:inline [@media(max-height:559px)]:hidden!">{t.import}</span>
             </Button>
             <Button variant="secondary" onClick={() => setDialog('export')} aria-label={t.export} className={TOUCH_BTN}>
               <Share2 className="h-4 w-4" aria-hidden="true" />
-              <span className="hidden sm:inline">{t.export}</span>
+              <span className="hidden sm:inline [@media(max-height:559px)]:hidden!">{t.export}</span>
             </Button>
             <Button variant="secondary" onClick={() => setDialog('reset')} aria-label={t.reset} className={TOUCH_BTN}>
               <RotateCcw className="h-4 w-4" aria-hidden="true" />
-              <span className="hidden sm:inline">{t.reset}</span>
+              <span className="hidden sm:inline [@media(max-height:559px)]:hidden!">{t.reset}</span>
             </Button>
             {mode === 'custom' && editHref && (
               <Link href={editHref} aria-label={t.editDetails} className={cn(BUTTON_BASE, BUTTON_VARIANTS.secondary, BUTTON_SIZES.md, TOUCH_BTN)}>
                 <Pencil className="h-4 w-4" aria-hidden="true" />
-                <span className="hidden sm:inline">{t.editDetails}</span>
+                <span className="hidden sm:inline [@media(max-height:559px)]:hidden!">{t.editDetails}</span>
               </Link>
             )}
             {mode === 'custom' && onDelete && (
               <Button variant="soft" onClick={() => setDialog('delete')} aria-label={t.deleteList} className={TOUCH_BTN}>
                 <Trash2 className="h-4 w-4" aria-hidden="true" />
-                <span className="hidden sm:inline">{t.deleteList}</span>
+                <span className="hidden sm:inline [@media(max-height:559px)]:hidden!">{t.deleteList}</span>
               </Button>
             )}
           </div>

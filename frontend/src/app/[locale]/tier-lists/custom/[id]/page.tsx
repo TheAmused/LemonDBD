@@ -17,8 +17,8 @@ export default function CustomTierListPage({ params }: { params: Promise<{ id: s
       locale={locale}
       activeCategory="tier-lists"
       padding="tight"
-      outerClassName="h-dvh overflow-hidden [@media(max-height:559px)]:h-auto [@media(max-height:559px)]:min-h-dvh [@media(max-height:559px)]:overflow-visible text-text-primary flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300"
-      mainClassName="relative flex min-h-0 flex-col overflow-hidden [@media(max-height:559px)]:overflow-visible"
+      outerClassName="h-dvh overflow-hidden [@media(max-height:439px)]:h-auto [@media(max-height:439px)]:min-h-dvh [@media(max-height:439px)]:overflow-visible text-text-primary flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300"
+      mainClassName="relative flex min-h-0 flex-col overflow-hidden [@media(max-height:439px)]:overflow-visible"
     >
       <CustomTierListView key={id} id={decodeURIComponent(id)} locale={locale} />
     </PageShell>

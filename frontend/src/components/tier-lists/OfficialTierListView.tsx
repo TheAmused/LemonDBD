@@ -2,8 +2,7 @@
 // frontend/src/components/tier-lists/OfficialTierListView.tsx
 
 import React, { useCallback, useMemo } from 'react';
-import Link from 'next/link';
-import { ChevronLeft, Crown, RotateCcw, SearchX, TriangleAlert } from 'lucide-react';
+import { Crown, RotateCcw, SearchX, TriangleAlert } from 'lucide-react';
 import { EmptyState } from '@/components/common/EmptyState';
 import type { Dictionary } from '@/locales/types';
 import {
@@ -71,16 +70,6 @@ export function OfficialTierListView({ slug, locale }: OfficialTierListViewProps
     [slug]
   );
 
-  const backLink = (
-    <Link
-      href={`/${locale}/tier-lists`}
-      className="inline-flex min-h-[44px] w-fit items-center gap-1 type-label-sm text-text-secondary hover:text-accent-red"
-    >
-      <ChevronLeft className="h-4 w-4" aria-hidden="true" />
-      {t.backToHub}
-    </Link>
-  );
-
   if (!template) {
     // `loading` stays true after a failed first fetch (there is still nothing
     // to show), so an error has to win over it here.
@@ -88,7 +77,6 @@ export function OfficialTierListView({ slug, locale }: OfficialTierListViewProps
     const notFound = isNotFoundError(templateError);
     return (
       <div className="relative z-10 flex flex-col gap-2">
-        {backLink}
         <EmptyState
           icon={notFound ? SearchX : TriangleAlert}
           title={notFound ? t.notFoundTitle : t.loadError}
@@ -114,7 +102,6 @@ export function OfficialTierListView({ slug, locale }: OfficialTierListViewProps
   if (itemsError && items.length === 0) {
     return (
       <div className="relative z-10 flex flex-col gap-2">
-        {backLink}
         <EmptyState
           icon={TriangleAlert}
           title={t.loadError}

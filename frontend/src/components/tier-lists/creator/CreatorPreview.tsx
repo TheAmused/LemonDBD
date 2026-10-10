@@ -122,6 +122,7 @@ export function CreatorPreviewModal({ isOpen, onClose, title, description, tiers
       onClose={onClose}
       variant="dialog"
       size="5xl"
+      centerTitle
       title={dict.tierLists.creator.previewHeading}
       closeButtonAriaLabel={dict.characterDetail.close}
       bodyClassName="p-4 sm:p-6"

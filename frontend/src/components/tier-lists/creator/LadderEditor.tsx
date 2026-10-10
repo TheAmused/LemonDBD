@@ -6,15 +6,15 @@ import { Check, ChevronDown, ChevronUp, ListOrdered, Plus, X } from 'lucide-reac
 import type { TierDefinition } from '@/types/tierList';
 import type { Dictionary } from '@/locales/types';
 import { cn } from '@/utils/cn';
-import { HEX_COLOR_PATTERN, TIER_COLOR_TOKENS, TIER_LIST_LIMITS } from '@/utils/tierLists/constants';
+import { TIER_COLOR_TOKENS, TIER_LIST_LIMITS } from '@/utils/tierLists/constants';
 import { sanitizeImageUrl, slugifyItemId, uniqueId } from '@/utils/tierLists/codec';
 import { LADDER_PRESETS, type LadderPresetId } from '@/utils/tierLists/creator';
 import { TierBadge } from '../TierBadge';
 import { tierColorProps } from '../tierColor';
+import { TierColorPicker } from '../TierColorPicker';
 import { Button } from '@/components/common/Button';
 import { Input } from '@/components/common/Field';
 import { CustomDropdown } from '@/components/common/CustomDropdown';
-import { themeColor } from '@/utils/themeColor';
 import { formatMessage } from '@/utils/i18nFormat';
 import { useDictionary } from "@/context/DictionaryContext";
 
@@ -204,20 +204,7 @@ export function LadderEditor({ tiers, onChange, onPreset, activePreset }: Ladder
                       </button>
                     );
                   })}
-                  <label
-                    className={cn(
-                      'flex h-7 items-center gap-1.5 rounded-md border px-2 text-xs font-bold text-text-secondary cursor-pointer bg-bg-surface',
-                      HEX_COLOR_PATTERN.test(tier.color) ? 'border-text-primary' : 'border-border-color'
-                    )}
-                  >
-                    <input
-                      type="color"
-                      value={HEX_COLOR_PATTERN.test(tier.color) ? tier.color : themeColor('--text-muted')}
-                      onChange={(e) => update(tier.id, { color: e.target.value })}
-                      className="h-4 w-4 cursor-pointer rounded border-0 bg-transparent p-0"
-                    />
-                    {t.customColor}
-                  </label>
+                  <TierColorPicker size="sm" color={tier.color} onChange={(hex) => update(tier.id, { color: hex })} />
                   <label className="flex min-w-0 basis-full flex-col gap-1 mt-1">
                     <span className="type-strong text-text-secondary">{t.tierBackgroundImage}</span>
                     <Input

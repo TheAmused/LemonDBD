@@ -34,8 +34,12 @@ function buildPath(rows: boolean[][], border: number): string {
 export const QrCode: React.FC<QrCodeProps> = ({ value, label, className }) => {
   const { path, size } = useMemo(() => {
     const border = 4; // the quiet zone scanners need around the code
-    const { data, size: modules } = encode(value, { ecc: 'M', border: 0 });
-    return { path: buildPath(data, border), size: modules + border * 2 };
+    try {
+      const { data, size: modules } = encode(value || ' ', { ecc: 'M', border: 0 });
+      return { path: buildPath(data, border), size: modules + border * 2 };
+    } catch {
+      return { path: '', size: 29 };
+    }
   }, [value]);
 
   // Always black on white, whatever the site theme: scanners need that contrast, so these two
@@ -44,6 +48,8 @@ export const QrCode: React.FC<QrCodeProps> = ({ value, label, className }) => {
     <svg
       role="img"
       aria-label={label}
+      width={192}
+      height={192}
       viewBox={`0 0 ${size} ${size}`}
       shapeRendering="crispEdges"
       className={`rounded-lg ${className ?? ''}`}

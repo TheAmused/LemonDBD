@@ -37,7 +37,8 @@ async function call<T extends object>(path: string, method: 'GET' | 'POST', body
     data = undefined;
   }
   if (!res.ok) {
-    throw new ApiError(data?.error ?? 'Two-factor request failed.', res.status, data?.error_code);
+    const code = data?.error_code ?? (res.status === 401 ? 'auth_required' : undefined);
+    throw new ApiError(data?.error ?? 'Two-factor request failed.', res.status, code);
   }
   return (data ?? {}) as T;
 }

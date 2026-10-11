@@ -108,6 +108,15 @@ class User(Base):
         back_populates="user", cascade="all, delete-orphan"
     )
 
+    @property
+    def two_factor_enabled(self) -> bool:
+        try:
+            from app.services.user.two_factor import is_enabled
+
+            return is_enabled(self.id) if self.id is not None else False
+        except Exception:
+            return False
+
     def to_dict(self, include_sensitive: bool = False) -> dict[str, Any]:
         data: dict[str, Any] = {
             "id": self.id,

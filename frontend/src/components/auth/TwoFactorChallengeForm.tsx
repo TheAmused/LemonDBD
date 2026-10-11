@@ -87,6 +87,7 @@ export const TwoFactorChallengeForm: React.FC<TwoFactorChallengeFormProps> = ({ 
         <button
           type="button"
           onClick={switchMethod}
+          aria-label={useRecovery ? t.useAppCode : t.useRecoveryCode}
           className="type-strong text-accent-amber hover:opacity-80 cursor-pointer"
         >
           {useRecovery ? t.useAppCode : t.useRecoveryCode}

@@ -30,13 +30,34 @@ export const CodeInput: React.FC<CodeInputProps> = ({ value, onChange, disabled,
   };
 
   const handleChange = (index: number, raw: string) => {
-    const digit = raw.replace(/\D/g, '').slice(-1);
-    setDigitAt(index, digit);
-    if (digit && index < CODE_LENGTH - 1) inputsRef.current[index + 1]?.focus();
+    const cleaned = raw.replace(/\D/g, '');
+    if (!cleaned) {
+      setDigitAt(index, '');
+      return;
+    }
+    if (cleaned.length > 1) {
+      const next = [...digits];
+      for (let i = 0; i < cleaned.length && index + i < CODE_LENGTH; i += 1) {
+        next[index + i] = cleaned[i];
+      }
+      onChange(next.join('').slice(0, CODE_LENGTH));
+      inputsRef.current[Math.min(index + cleaned.length, CODE_LENGTH - 1)]?.focus();
+      return;
+    }
+    setDigitAt(index, cleaned);
+    if (index < CODE_LENGTH - 1) inputsRef.current[index + 1]?.focus();
   };
 
   const handleKeyDown = (index: number, e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Backspace' && !digits[index] && index > 0) inputsRef.current[index - 1]?.focus();
+    if (e.key === 'Backspace' && !digits[index] && index > 0) {
+      inputsRef.current[index - 1]?.focus();
+    } else if (e.key === 'ArrowLeft' && index > 0) {
+      inputsRef.current[index - 1]?.focus();
+    } else if (e.key === 'ArrowRight' && index < CODE_LENGTH - 1) {
+      inputsRef.current[index + 1]?.focus();
+    } else if (!e.ctrlKey && !e.metaKey && !e.altKey && e.key.length === 1 && !/\d/.test(e.key)) {
+      e.preventDefault();
+    }
   };
 
   const handlePaste = (e: React.ClipboardEvent<HTMLDivElement>) => {
@@ -57,9 +78,10 @@ export const CodeInput: React.FC<CodeInputProps> = ({ value, onChange, disabled,
           }}
           type="text"
           inputMode="numeric"
+          pattern="[0-9]*"
           autoComplete="one-time-code"
           autoFocus={autoFocus && index === 0}
-          maxLength={1}
+          maxLength={CODE_LENGTH}
           value={digit}
           disabled={disabled}
           aria-invalid={invalid || undefined}

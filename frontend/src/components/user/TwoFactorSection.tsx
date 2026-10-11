@@ -14,7 +14,12 @@ import { localeMetaFor } from '@/i18n/config';
 import { fetchTwoFactorStatus, type TwoFactorStatus } from '@/services/twoFactorApi';
 import { formatMessage } from '@/utils/i18nFormat';
 
-export const TwoFactorSection: React.FC = () => {
+interface TwoFactorSectionProps {
+  refreshTrigger?: number;
+  onStatusChange?: () => void;
+}
+
+export const TwoFactorSection: React.FC<TwoFactorSectionProps> = ({ refreshTrigger = 0, onStatusChange }) => {
   const dict = useDictionary();
   const t = dict.twoFactor;
   const params = useParams();
@@ -35,67 +40,67 @@ export const TwoFactorSection: React.FC = () => {
 
   useEffect(() => {
     load();
-  }, [load]);
+  }, [load, refreshTrigger]);
 
   const enabledOn = status?.enabled_at
     ? new Intl.DateTimeFormat(locale, { dateStyle: 'medium' }).format(new Date(status.enabled_at))
     : null;
 
   return (
-    <section className="flex flex-col gap-4 rounded-3xl border border-border-color bg-bg-surface p-4 shadow-md backdrop-blur-xl sm:p-6 2xl:p-8">
-      <div className="mx-auto flex w-full max-w-2xl flex-col gap-4">
-        <div className="flex items-start gap-3">
-          <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-accent-amber" />
-          <div className="flex-1">
-            <h2 className="type-section-title text-text-primary">{t.sectionTitle}</h2>
-            <p className="type-section-subtitle mt-0.5 text-text-secondary">{t.sectionSubtitle}</p>
-          </div>
-          {status?.available ? (
-            <span
-              className={`rounded-full px-2.5 py-1 type-label-2xs ${
-                status.enabled ? 'bg-accent-green/15 text-accent-green' : 'bg-bg-primary text-text-muted'
-              }`}
-            >
-              {status.enabled ? t.statusOn : t.statusOff}
-            </span>
-          ) : null}
-        </div>
-
-        <p className="type-caption text-text-muted">{t.optionalNote}</p>
-
-        {loadFailed ? (
-          <p role="alert" className="type-strong text-accent-red">
-            {t.loadFailed}
-          </p>
-        ) : null}
-
-        {status && !status.available ? <p className="type-strong text-text-muted">{t.unavailable}</p> : null}
-
-        {status?.available && !status.enabled ? (
+    <section className="mx-auto flex w-full max-w-2xl flex-col gap-3 border-t border-border-color pt-4 text-left">
+      <div className="flex items-start justify-between gap-3">
+        <div className="flex items-start gap-2">
+          <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-accent-amber" />
           <div>
-            <Button variant="primary" size="sm" onClick={() => setSetupOpen(true)} leftIcon={<KeyRound className="h-3.5 w-3.5" />}>
-              <span>{t.enableButton}</span>
-            </Button>
+            <h3 className="type-label-sm text-text-primary">{t.sectionTitle}</h3>
+            <p className="type-caption mt-0.5 text-text-secondary">{t.sectionSubtitle}</p>
           </div>
-        ) : null}
-
-        {status?.available && status.enabled ? (
-          <>
-            <ul className="flex flex-col gap-0.5 type-body text-text-secondary">
-              {enabledOn ? <li>{formatMessage(t.enabledSince, { date: enabledOn })}</li> : null}
-              <li>{formatMessage(t.recoveryRemaining, { count: status.recovery_codes_remaining })}</li>
-            </ul>
-            <div className="flex flex-wrap gap-2">
-              <Button variant="secondary" size="sm" onClick={() => setAction('regenerate')}>
-                <span>{t.regenerateButton}</span>
-              </Button>
-              <Button variant="danger" size="sm" onClick={() => setAction('disable')}>
-                <span>{t.disableButton}</span>
-              </Button>
-            </div>
-          </>
+        </div>
+        {status?.available ? (
+          <span
+            className={`rounded-full px-2.5 py-1 type-label-2xs ${
+              status.enabled ? 'bg-accent-green/15 text-accent-green' : 'bg-bg-primary text-text-muted'
+            }`}
+          >
+            {status.enabled ? t.statusOn : t.statusOff}
+          </span>
         ) : null}
       </div>
+
+      <p className="type-caption text-text-muted">{t.optionalNote}</p>
+
+      {loadFailed ? (
+        <p role="alert" className="type-strong text-accent-red">
+          {t.loadFailed}
+        </p>
+      ) : null}
+
+      {status && !status.available ? <p className="type-strong text-text-muted">{t.unavailable}</p> : null}
+
+      {status?.available && !status.enabled ? (
+        <div>
+          <Button variant="primary" size="sm" onClick={() => setSetupOpen(true)} leftIcon={<KeyRound className="h-3.5 w-3.5" />}>
+            <span>{t.enableButton}</span>
+          </Button>
+        </div>
+      ) : null}
+
+      {status?.available && status.enabled ? (
+        <>
+          <ul className="flex flex-col gap-0.5 type-body text-text-secondary">
+            {enabledOn ? <li>{formatMessage(t.enabledSince, { date: enabledOn })}</li> : null}
+            <li>{formatMessage(t.recoveryRemaining, { count: status.recovery_codes_remaining })}</li>
+          </ul>
+          <div className="flex flex-wrap gap-2">
+            <Button variant="secondary" size="sm" onClick={() => setAction('regenerate')}>
+              <span>{t.regenerateButton}</span>
+            </Button>
+            <Button variant="danger" size="sm" onClick={() => setAction('disable')}>
+              <span>{t.disableButton}</span>
+            </Button>
+          </div>
+        </>
+      ) : null}
 
       <TwoFactorSetupModal
         isOpen={setupOpen}
@@ -103,6 +108,7 @@ export const TwoFactorSection: React.FC = () => {
         onEnabled={() => {
           setSetupOpen(false);
           load();
+          onStatusChange?.();
         }}
       />
       <TwoFactorConfirmModal
@@ -111,6 +117,7 @@ export const TwoFactorSection: React.FC = () => {
         onDone={() => {
           setAction(null);
           load();
+          onStatusChange?.();
         }}
       />
     </section>

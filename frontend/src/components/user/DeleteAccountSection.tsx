@@ -18,13 +18,14 @@ import { twoFactorErrorMessage } from '@/utils/twoFactorErrors';
 export const DeleteAccountSection: React.FC<{ }> = () => {
   const dict = useDictionary();
   const t = (dict.user || {}) as Record<string, string>;
-  const { logout } = useAuth();
+  const { user, logout } = useAuth();
   const [open, setOpen] = useState(false);
   const [password, setPassword] = useState('');
   const [needsCode, setNeedsCode] = useState(false);
   const [code, setCode] = useState('');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const requiresCode = Boolean(user?.two_factor_enabled) || needsCode;
 
   const close = () => {
     if (busy) return;
@@ -36,11 +37,11 @@ export const DeleteAccountSection: React.FC<{ }> = () => {
   };
 
   const confirm = async () => {
-    if (!password || busy || (needsCode && !code.trim())) return;
+    if (!password || busy || (requiresCode && !code.trim())) return;
     setBusy(true);
     setError(null);
     try {
-      await deleteAccount(password, needsCode ? code.trim() : undefined);
+      await deleteAccount(password, requiresCode ? code.trim() : undefined);
       logout(); // the server already cleared the session cookie; this resets state and leaves /user
     } catch (err) {
       const status = err instanceof ApiError ? err.status : 0;
@@ -87,7 +88,7 @@ export const DeleteAccountSection: React.FC<{ }> = () => {
             <Button variant="secondary" onClick={close} disabled={busy} className="flex-1">
               <span>{t.deleteAccountCancel}</span>
             </Button>
-            <Button variant="danger" onClick={confirm} loading={busy} disabled={!password || (needsCode && !code.trim())} className="flex-1">
+            <Button variant="danger" onClick={confirm} loading={busy} disabled={!password || (requiresCode && !code.trim())} className="flex-1">
               <span>{t.deleteAccountConfirm}</span>
             </Button>
           </div>
@@ -108,7 +109,7 @@ export const DeleteAccountSection: React.FC<{ }> = () => {
             invalid={!!error}
             autoFocus
           />
-          {needsCode ? (
+          {requiresCode ? (
             <Input
               type="text"
               autoComplete="one-time-code"

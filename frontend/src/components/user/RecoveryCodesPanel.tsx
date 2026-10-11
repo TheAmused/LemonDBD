@@ -4,7 +4,7 @@
 // The one-time display of freshly generated recovery codes. The server never shows them again, so
 // "Done" stays disabled until the person says they saved them.
 
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Check, Copy, Download } from 'lucide-react';
 import { Button } from '@/components/common/Button';
 import { Checkbox } from '@/components/common/Checkbox';
@@ -19,12 +19,21 @@ export const RecoveryCodesPanel: React.FC<RecoveryCodesPanelProps> = ({ codes, o
   const t = useDictionary().twoFactor;
   const [saved, setSaved] = useState(false);
   const [copied, setCopied] = useState(false);
+  const copyTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(
+    () => () => {
+      if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
+    },
+    []
+  );
 
   const copy = async () => {
     try {
       await navigator.clipboard.writeText(codes.join('\n'));
       setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+      if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
+      copyTimerRef.current = setTimeout(() => setCopied(false), 2000);
     } catch {
       // Clipboard blocked: the codes are on screen and can still be downloaded.
     }

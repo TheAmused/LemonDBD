@@ -70,6 +70,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
   const [legalAttempted, setLegalAttempted] = useState<boolean>(false);
 
   useEffect(() => {
+    setPassword('');
     if (isOpen) {
       setMode(initialMode);
       setError(null);
@@ -88,6 +89,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
 
   // A completed sign-in: unverified accounts are asked for their email code, everyone else is in.
   const finishSignIn = (signedIn?: { is_verified: boolean; email: string }) => {
+    setPassword('');
     if (signedIn && !signedIn.is_verified) {
       setNotice({ type: 'verify-reminder', email: signedIn.email });
     } else {
@@ -117,6 +119,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
           altcha: altchaPayload,
         });
         if (res.twoFactorToken) {
+          setPassword('');
           setNotice({ type: 'two-factor', token: res.twoFactorToken });
         } else if (res.success) {
           finishSignIn(res.user);
@@ -133,6 +136,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
           altcha: altchaPayload,
         });
         if (res.success) {
+          setPassword('');
           if (res.user && !res.user.is_verified) {
             setNotice({ type: 'register-success', email: res.user?.email || email });
           } else {

@@ -90,7 +90,7 @@ def login():
         return jsonify({"error": "Username/email and password are required.", "status": 400}), 400
 
     user, token = user_service.authenticate(username_or_email.strip(), password.strip())
-    if not user or not token:
+    if not user:
         return jsonify({"error": "Invalid credentials", "status": 401}), 401
 
     if two_factor.is_enabled(user.id):
@@ -101,7 +101,7 @@ def login():
             "methods": ["totp", "recovery"],
         }), 200
 
-    return session_response(user, token, "Login successful")
+    return session_response(user, token or user_service.generate_auth_token(user), "Login successful")
 
 
 @auth_bp.route("/verify-email", methods=["POST"])
@@ -213,20 +213,17 @@ def update_profile():
     new_password = data.get("new_password")
     current_password = data.get("current_password")
 
-    changes_credentials = bool(new_password) or bool(email and str(email).strip().lower() != user.email)
-    if changes_credentials and two_factor.is_enabled(user.id):
-        try:  # password first, then the 2FA code: a wrong password never burns a valid code
-            two_factor.require_recent_auth(user, str(current_password or ""), data.get("two_factor_code"))
-        except two_factor.TwoFactorError as err:
-            return coded_error_response(err)
-
-    updated_user, err = user_service.update_user_profile(
-        user_id=user.id,
-        email=email,
-        avatar_url=avatar_url,
-        new_password=new_password,
-        current_password=str(current_password) if current_password else None,
-    )
+    try:
+        updated_user, err = user_service.update_user_profile(
+            user_id=user.id,
+            email=email,
+            avatar_url=avatar_url,
+            new_password=new_password,
+            current_password=str(current_password) if current_password else None,
+            two_factor_code=data.get("two_factor_code"),
+        )
+    except two_factor.TwoFactorError as err:
+        return coded_error_response(err)
     if err:
         status = 403 if err == "Incorrect password." else 400
         return jsonify({"error": err, "status": status}), status
@@ -300,14 +297,12 @@ def export_account_data():
 def delete_account():
     """Permanently delete the signed-in account (requires the current password)."""
     data = request.get_json(silent=True) or {}
-    if two_factor.is_enabled(g.current_user.id):
-        try:
-            two_factor.require_recent_auth(
-                g.current_user, str(data.get("password") or ""), data.get("two_factor_code")
-            )
-        except two_factor.TwoFactorError as err:
-            return coded_error_response(err)
-    ok, err = user_service.delete_own_account(g.current_user.id, str(data.get("password") or ""))
+    try:
+        ok, err = user_service.delete_own_account(
+            g.current_user.id, str(data.get("password") or ""), data.get("two_factor_code")
+        )
+    except two_factor.TwoFactorError as err:
+        return coded_error_response(err)
     if not ok:
         status = 403 if err == "Incorrect password." else 400
         return jsonify({"error": err, "status": status}), status

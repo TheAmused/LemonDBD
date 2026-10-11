@@ -274,6 +274,7 @@ def confirm_setup(user: User, code: str | None) -> list[str]:
     if not _accept_totp(row, code or ""):
         raise _register_failure(row)
     row.enabled_at = utcnow()
+    user.token_version = int(user.token_version or 0) + 1
     codes = _issue_recovery_codes(user.id)
     db.session.commit()
     send_security_notice_email(user, "two_factor_enabled")
@@ -285,6 +286,7 @@ def disable(user: User, password: str | None, code: str | None) -> None:
     if not is_enabled(user.id):
         raise TwoFactorError("two_factor_not_enabled", 409)
     require_recent_auth(user, password, code)
+    user.token_version = int(user.token_version or 0) + 1
     _remove(user.id)
     send_security_notice_email(user, "two_factor_disabled")
 
@@ -311,6 +313,8 @@ def admin_reset(target: User) -> bool:
     """Switch 2FA off for someone who lost their device and codes. True if it was on."""
     had_it = _remove(target.id)
     if had_it:
+        target.token_version = int(target.token_version or 0) + 1
+        db.session.commit()
         send_security_notice_email(target, "two_factor_reset")
     return had_it
 
@@ -325,6 +329,8 @@ def create_challenge(user: User) -> str:
 
 def complete_login(challenge: str | None, code: str | None) -> tuple[User, str]:
     """Second step of a sign-in: challenge token + code -> (user, method used)."""
+    from app.services.user.auth import auto_verify_if_disabled
+
     payload = decode_token(challenge or "")
     if not payload or payload.get("typ") != CHALLENGE_TOKEN_TYPE:
         raise TwoFactorError("two_factor_challenge_invalid", 401)
@@ -341,4 +347,5 @@ def complete_login(challenge: str | None, code: str | None) -> tuple[User, str]:
         if err.code == "two_factor_not_enabled":
             raise TwoFactorError("two_factor_challenge_invalid", 401)
         raise
+    auto_verify_if_disabled(user)
     return user, method

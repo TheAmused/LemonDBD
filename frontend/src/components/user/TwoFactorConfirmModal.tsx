@@ -4,7 +4,7 @@
 // The two actions that need the password *and* a code: turning two-factor off and generating a new
 // set of recovery codes (which retires the old ones).
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button } from '@/components/common/Button';
 import { Input } from '@/components/common/Field';
 import { Modal } from '@/components/common/Modal';
@@ -38,6 +38,10 @@ export const TwoFactorConfirmModal: React.FC<TwoFactorConfirmModalProps> = ({ ac
     setBusy(false);
     setNewCodes(null);
   };
+
+  useEffect(() => {
+    if (action === null) reset();
+  }, [action]);
 
   const close = () => {
     if (busy || newCodes) return; // fresh recovery codes are shown once: only "Done" leaves

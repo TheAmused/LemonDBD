@@ -1,9 +1,9 @@
 # backend/app/routes/auth_two_factor.py
 """Optional two-factor sign-in endpoints (see app/services/user/two_factor.py)."""
-from flask import Blueprint, g, jsonify, request
+from flask import Blueprint, g, jsonify, make_response, request
 
 from app.core.limiter import limiter
-from app.core.security import login_required
+from app.core.security import SESSION_COOKIE_NAME, login_required, set_session_cookie
 from app.routes.auth import session_response, user_service
 from app.services.user import two_factor
 from app.utils.api_i18n import coded_error_response
@@ -18,6 +18,15 @@ def _body() -> dict:
 def _no_store(response):
     """Secrets and recovery codes must never be cached by a browser or a proxy."""
     response.headers["Cache-Control"] = "no-store"
+    return response
+
+
+def _with_fresh_session(payload: dict):
+    """Enabling or disabling 2FA bumps token_version; keep the active session signed in."""
+    token = user_service.generate_auth_token(g.current_user)
+    response = _no_store(make_response(jsonify({**payload, "token": token}), 200))
+    if SESSION_COOKIE_NAME in request.cookies:
+        set_session_cookie(response, token)
     return response
 
 
@@ -66,7 +75,7 @@ def two_factor_enable():
         codes = two_factor.confirm_setup(g.current_user, _body().get("code"))
     except two_factor.TwoFactorError as err:
         return coded_error_response(err)
-    return _no_store(jsonify({"status": "success", "recovery_codes": codes}))
+    return _with_fresh_session({"status": "success", "recovery_codes": codes})
 
 
 @auth_two_factor_bp.route("/two-factor/disable", methods=["POST"])
@@ -78,7 +87,7 @@ def two_factor_disable():
         two_factor.disable(g.current_user, data.get("password"), data.get("code"))
     except two_factor.TwoFactorError as err:
         return coded_error_response(err)
-    return _no_store(jsonify({"status": "success"}))
+    return _with_fresh_session({"status": "success"})
 
 
 @auth_two_factor_bp.route("/two-factor/recovery-codes", methods=["POST"])

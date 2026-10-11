@@ -4,7 +4,7 @@
 // Turning two-factor on: confirm the password -> scan the QR code and prove the app works ->
 // save the recovery codes. Nothing is switched on server-side until the code check passes.
 
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Check, Copy } from 'lucide-react';
 import { Button } from '@/components/common/Button';
 import { Input } from '@/components/common/Field';
@@ -36,8 +36,10 @@ export const TwoFactorSetupModal: React.FC<TwoFactorSetupModalProps> = ({ isOpen
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [keyCopied, setKeyCopied] = useState(false);
+  const copyTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const reset = () => {
+    if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
     setStep('password');
     setPassword('');
     setSetup(null);
@@ -45,7 +47,15 @@ export const TwoFactorSetupModal: React.FC<TwoFactorSetupModalProps> = ({ isOpen
     setCodes([]);
     setError(null);
     setBusy(false);
+    setKeyCopied(false);
   };
+
+  useEffect(() => {
+    if (!isOpen) reset();
+    return () => {
+      if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
+    };
+  }, [isOpen]);
 
   const close = () => {
     if (busy || step === 'codes') return; // the recovery codes are shown once: only "Done" leaves that step
@@ -93,7 +103,8 @@ export const TwoFactorSetupModal: React.FC<TwoFactorSetupModalProps> = ({ isOpen
     try {
       await navigator.clipboard.writeText(setup.secret);
       setKeyCopied(true);
-      setTimeout(() => setKeyCopied(false), 2000);
+      if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
+      copyTimerRef.current = setTimeout(() => setKeyCopied(false), 2000);
     } catch {
       // Clipboard blocked: the key is on screen to type by hand.
     }

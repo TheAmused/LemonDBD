@@ -11,6 +11,8 @@ pydantic>=2.10.6
 email-validator>=2.2.0
 Pillow>=11.1.0
 PyJWT>=2.10.1
+# Encrypts the optional two-factor (TOTP) secrets at rest (app/core/two_factor_crypto.py).
+cryptography>=43.0.0
 requests>=2.32.3
 python-dotenv>=1.0.1
 APScheduler>=3.10.4

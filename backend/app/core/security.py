@@ -183,12 +183,14 @@ def generate_token(
     extra_claims: dict[str, Any] | None = None,
     token_version: int | None = None,
     token_type: str = ACCESS_TOKEN_TYPE,
+    lifetime: timedelta | None = None,
 ) -> str:
     """Generate a signed JWT for an authenticated user with fallback configuration.
 
     ``token_type`` (``typ``) says what the token may be used for and ``token_version`` (``ver``)
     which generation of the account's credentials it belongs to; left unset, the account's
-    current version is looked up.
+    current version is looked up. ``lifetime`` overrides the session lifetime (used by
+    short-lived, single-purpose tokens).
     """
     now = datetime.now(timezone.utc)
 
@@ -206,6 +208,9 @@ def generate_token(
         expires_delta = DEFAULT_EXPIRATION
         secret_key = DEFAULT_SECRET_KEY
         algorithm = DEFAULT_JWT_ALGORITHM
+
+    if lifetime is not None:
+        expires_delta = lifetime
 
     payload: dict[str, Any] = {
         "sub": str(user_id),

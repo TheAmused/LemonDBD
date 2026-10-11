@@ -15,9 +15,10 @@ from app.core.security import (
 )
 from app.schemas.user import UserCreate, UserResponse
 from app.services.altcha_service import AltchaService
+from app.services.user import two_factor
 from app.services.ownership_service import OwnershipService
 from app.services.user_service import UserService
-from app.utils.api_i18n import error_response
+from app.utils.api_i18n import coded_error_response, error_response
 from app.utils.downloads import json_download_response
 
 logger = logging.getLogger(__name__)
@@ -64,6 +65,20 @@ def register():
     return set_session_cookie(response, token)
 
 
+def session_response(user, token: str, message: str, status: int = 200, extra: dict | None = None):
+    """The JSON body (plus session cookie) returned when a sign-in completes."""
+    response = make_response(jsonify({
+        "status": "success",
+        "message": message,
+        "token": token,
+        "token_type": "Bearer",
+        "user": UserResponse.model_validate(user).model_dump(),
+        "ownership": ownership_service.get_user_ownership_summary(user.id),
+        **(extra or {}),
+    }), status)
+    return set_session_cookie(response, token)
+
+
 @auth_bp.route("/login", methods=["POST"])
 @limiter.limit("10 per minute")
 def login():
@@ -75,20 +90,18 @@ def login():
         return jsonify({"error": "Username/email and password are required.", "status": 400}), 400
 
     user, token = user_service.authenticate(username_or_email.strip(), password.strip())
-    if not user or not token:
+    if not user:
         return jsonify({"error": "Invalid credentials", "status": 401}), 401
 
-    summary = ownership_service.get_user_ownership_summary(user.id)
+    if two_factor.is_enabled(user.id):
+        # Password accepted, but no session yet: the client must finish with POST /auth/login/two-factor.
+        return jsonify({
+            "status": "two_factor_required",
+            "two_factor_token": two_factor.create_challenge(user),
+            "methods": ["totp", "recovery"],
+        }), 200
 
-    response = make_response(jsonify({
-        "status": "success",
-        "message": "Login successful",
-        "token": token,
-        "token_type": "Bearer",
-        "user": UserResponse.model_validate(user).model_dump(),
-        "ownership": summary,
-    }), 200)
-    return set_session_cookie(response, token)
+    return session_response(user, token or user_service.generate_auth_token(user), "Login successful")
 
 
 @auth_bp.route("/verify-email", methods=["POST"])
@@ -200,13 +213,17 @@ def update_profile():
     new_password = data.get("new_password")
     current_password = data.get("current_password")
 
-    updated_user, err = user_service.update_user_profile(
-        user_id=user.id,
-        email=email,
-        avatar_url=avatar_url,
-        new_password=new_password,
-        current_password=str(current_password) if current_password else None,
-    )
+    try:
+        updated_user, err = user_service.update_user_profile(
+            user_id=user.id,
+            email=email,
+            avatar_url=avatar_url,
+            new_password=new_password,
+            current_password=str(current_password) if current_password else None,
+            two_factor_code=data.get("two_factor_code"),
+        )
+    except two_factor.TwoFactorError as err:
+        return coded_error_response(err)
     if err:
         status = 403 if err == "Incorrect password." else 400
         return jsonify({"error": err, "status": status}), status
@@ -280,7 +297,12 @@ def export_account_data():
 def delete_account():
     """Permanently delete the signed-in account (requires the current password)."""
     data = request.get_json(silent=True) or {}
-    ok, err = user_service.delete_own_account(g.current_user.id, str(data.get("password") or ""))
+    try:
+        ok, err = user_service.delete_own_account(
+            g.current_user.id, str(data.get("password") or ""), data.get("two_factor_code")
+        )
+    except two_factor.TwoFactorError as err:
+        return coded_error_response(err)
     if not ok:
         status = 403 if err == "Incorrect password." else 400
         return jsonify({"error": err, "status": status}), status

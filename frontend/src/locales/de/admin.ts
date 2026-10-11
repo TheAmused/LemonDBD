@@ -252,4 +252,12 @@ export default {
   configUnit_hours: 'Std.',
   configUnit_minutes: 'Min.',
   configUnit_days: 'Tage',
+  twoFactorBadge: "2FA",
+  twoFactorOn: "Zwei-Faktor-Authentifizierung ist aktiv",
+  resetTwoFactor: "Zwei-Faktor-Authentifizierung zurücksetzen",
+  resetTwoFactorTitle: "Zwei-Faktor-Authentifizierung zurücksetzen?",
+  resetTwoFactorMessage: "Dadurch wird die Anmeldung mit zwei Faktoren für {username} deaktiviert, der sein Gerät und seine Wiederherstellungscodes möglicherweise verloren hat. Die Person wird per E-Mail benachrichtigt, und das Zurücksetzen wird im Audit-Protokoll festgehalten.",
+  resetTwoFactorConfirm: "2FA zurücksetzen",
+  twoFactorResetDone: "Die Zwei-Faktor-Authentifizierung für {username} wurde zurückgesetzt.",
+  twoFactorResetFailed: "Die Zwei-Faktor-Authentifizierung konnte nicht zurückgesetzt werden.",
 } as const;

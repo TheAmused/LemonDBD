@@ -130,9 +130,6 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({ initialEmail, 
           <h2 className="type-section-title text-text-primary group-hover:text-accent-red transition-colors">
             {dict.user.tabSanctum}
           </h2>
-          <p className="type-section-subtitle text-text-secondary mt-0.5">
-            {dict.user.accountSettingsSubtitle}
-          </p>
         </div>
         <div className="relative z-10 w-8 flex justify-end">
           <ChevronDown

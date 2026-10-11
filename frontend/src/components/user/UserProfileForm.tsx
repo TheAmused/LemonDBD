@@ -9,6 +9,9 @@ import { updateUserProfile, ApiError, type UpdateProfilePayload } from '@/servic
 import { usePersistentDrawer } from '@/hooks/usePersistentDrawer';
 import { Button } from '@/components/common/Button';
 import { Input } from '@/components/common/Field';
+import { tip } from '@/components/common/Tooltip';
+import { DownloadDataSection } from '@/components/user/DownloadDataSection';
+import { DeleteAccountSection } from '@/components/user/DeleteAccountSection';
 import { useDictionary } from "@/context/DictionaryContext";
 
 interface UserProfileFormProps {
@@ -192,6 +195,13 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({ initialEmail, 
                 <div className="space-y-1.5">
                   <label className="block type-label-xs text-text-secondary" htmlFor="profile-current-password">
                     {t.currentPassword || 'Current Password'}
+                    <span
+                      className="ml-1 text-accent-red"
+                      aria-hidden="true"
+                      {...tip(t.currentPasswordHint || 'Required to change your email or password', undefined, 'action')}
+                    >
+                      *
+                    </span>
                   </label>
                   <div className="relative">
                     <Input
@@ -200,6 +210,7 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({ initialEmail, 
                       autoComplete="current-password"
                       value={currentPassword}
                       onChange={(e) => setCurrentPassword(e.target.value)}
+                      aria-required="true"
                       fieldSize="sm"
                       className="pr-9"
                     />
@@ -212,9 +223,6 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({ initialEmail, 
                       {showCurrentPassword ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
                     </button>
                   </div>
-                  <p className="type-caption text-text-muted">
-                    {t.currentPasswordHint || 'Required to change your email or password'}
-                  </p>
                 </div>
 
                 {/* Password Management */}
@@ -287,7 +295,11 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({ initialEmail, 
               </div>
 
               {/* Action Button */}
-              <div className="pt-3 flex items-center justify-end border-t border-border-color">
+              <div className="flex items-center justify-between gap-3">
+                <div className="flex items-center gap-2">
+                  <DownloadDataSection iconOnly />
+                  <DeleteAccountSection iconOnly />
+                </div>
                 <Button type="submit" variant="primary" size="sm" loading={isUpdating} className="w-full sm:w-auto">
                   <span>{t.saveChanges || 'Save'}</span>
                 </Button>

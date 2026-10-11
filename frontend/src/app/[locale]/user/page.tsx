@@ -15,8 +15,6 @@ import { CampfireHeader } from '@/components/user/CampfireHeader';
 import { DualMainsShowcase } from '@/components/user/DualMainsShowcase';
 import { UserProfileForm } from '@/components/user/UserProfileForm';
 import { UserBugReportsDrawer } from '@/components/user/UserBugReportsDrawer';
-import { DeleteAccountSection } from '@/components/user/DeleteAccountSection';
-import { DownloadDataSection } from '@/components/user/DownloadDataSection';
 import { UserProfileSkeleton } from '@/components/user/UserProfileSkeleton';
 import { Locale } from '@/i18n/config';
 import { UserBugReport, StatusFeedback } from '@/types/userProfile';
@@ -194,12 +192,6 @@ export default function UserProfilePage() {
             isUploadingAvatar={isUploadingAvatar}
             onAvatarClick={() => fileInputRef.current?.click()}
             avatarFeedback={avatarFeedback}
-            actions={
-              <>
-                <DownloadDataSection />
-                <DeleteAccountSection />
-              </>
-            }
           />
 
           {/* 1. TOP BLOCK: Account Management */}

@@ -14,7 +14,7 @@ import { useAuth } from '@/context/AuthContext';
 import { ApiError, deleteAccount } from '@/services/userProfileApi';
 import { useDictionary } from "@/context/DictionaryContext";
 
-export const DeleteAccountSection: React.FC<{ }> = () => {
+export const DeleteAccountSection: React.FC<{ iconOnly?: boolean }> = ({ iconOnly = false }) => {
   const dict = useDictionary();
   const t = (dict.user || {}) as Record<string, string>;
   const { logout } = useAuth();
@@ -55,12 +55,13 @@ export const DeleteAccountSection: React.FC<{ }> = () => {
       <Button
         variant="danger"
         size="sm"
+        icon={iconOnly}
         onClick={() => setOpen(true)}
         leftIcon={<Trash2 className="h-3.5 w-3.5" />}
         aria-label={t.deleteAccountTitle || 'Delete account'}
         {...tip(t.deleteAccountTitle || 'Delete account', t.deleteAccountDesc, 'action')}
       >
-        <span>{t.deleteAccountButton || 'Delete my account'}</span>
+        {iconOnly ? null : <span>{t.deleteAccountButton || 'Delete my account'}</span>}
       </Button>
 
       <Modal

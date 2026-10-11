@@ -41,6 +41,7 @@ export const ROUTE_BACKGROUND_EFFECTS: ReadonlyArray<{ prefix: readonly string[]
   { prefix: ['randomizer'], effect: 'campfire' },
   { prefix: ['reset-password'], effect: 'campfire' },
   { prefix: ['rules'], effect: 'campfire' },
+  { prefix: ['terms-of-service'], effect: 'campfire' },
   { prefix: ['smash-or-pass'], effect: 'campfire' },  // hub
   { prefix: ['smash-or-pass', 'create'], effect: 'campfire' },
   { prefix: ['streaks'], effect: 'campfire' },  // hub

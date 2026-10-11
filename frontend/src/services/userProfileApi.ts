@@ -82,6 +82,8 @@ export interface UpdateProfilePayload {
   new_password?: string;
   /** Required by the server whenever `email` changes or `new_password` is set. */
   current_password?: string;
+  /** Needed as well when the account has two-factor sign-in on (the server answers `two_factor_required`). */
+  two_factor_code?: string;
 }
 
 export async function updateUserProfile(payload: UpdateProfilePayload): Promise<void> {
@@ -157,12 +159,12 @@ export async function downloadAccountData(userId?: number): Promise<void> {
 }
 
 /** Permanently deletes the signed-in account; the server re-checks the password. */
-export async function deleteAccount(password: string): Promise<void> {
+export async function deleteAccount(password: string, twoFactorCode?: string): Promise<void> {
   const res = await fetch(`${apiBase()}/api/v1/auth/account`, {
     method: 'DELETE',
     credentials: 'include',
     headers: { 'Content-Type': 'application/json', ...authHeaders() },
-    body: JSON.stringify({ password }),
+    body: JSON.stringify({ password, ...(twoFactorCode ? { two_factor_code: twoFactorCode } : {}) }),
   });
   const data = await parseJsonSafely(res);
   if (!res.ok) {

@@ -197,6 +197,7 @@ export default function UserProfilePage() {
           {/* 1. TOP BLOCK: Account Management */}
           <UserProfileForm
             initialEmail={user.email || ''}
+            twoFactorEnabled={Boolean(user.two_factor_enabled)}
             onRefreshUser={refreshUser}
           />
 

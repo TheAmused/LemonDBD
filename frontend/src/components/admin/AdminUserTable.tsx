@@ -14,6 +14,8 @@ import {
   XCircle,
   ChevronLeft,
   ChevronRight,
+  ShieldCheck,
+  ShieldOff,
 } from 'lucide-react';
 import { UserRow } from '@/types/admin';
 import { UserAvatar } from '@/components/UserAvatar';
@@ -38,6 +40,8 @@ interface AdminUserTableProps {
   onToggleRole: (user: UserRow) => void;
   onToggleActive: (user: UserRow) => void;
   onDeleteUser: (user: UserRow) => void;
+  /** Asks to switch off a user's two-factor sign-in (they lost their device and recovery codes). */
+  onResetTwoFactor: (user: UserRow) => void;
   /** Receives the message when a user-data download fails. */
   onDownloadError?: (message: string) => void;
 }
@@ -57,6 +61,7 @@ export const AdminUserTable: React.FC<AdminUserTableProps> = ({
       onToggleRole,
       onToggleActive,
       onDeleteUser,
+      onResetTwoFactor,
       onDownloadError,
     }) => {
   const dict = useDictionary();
@@ -144,17 +149,28 @@ export const AdminUserTable: React.FC<AdminUserTableProps> = ({
               </div>
 
               <div className="flex items-center justify-between pt-1 border-t border-border-color">
-                {u.is_active ? (
-                  <span className="inline-flex items-center gap-1 type-strong-xs text-accent-green">
-                    <CheckCircle className="h-3.5 w-3.5" />
-                    <span>{dict.stats.active}</span>
-                  </span>
-                ) : (
-                  <span className="inline-flex items-center gap-1 type-strong-xs text-accent-red">
-                    <XCircle className="h-3.5 w-3.5" />
-                    <span>{dict.sidebar.disabled}</span>
+                <div className="flex items-center gap-3">
+                  {u.is_active ? (
+                    <span className="inline-flex items-center gap-1 type-strong-xs text-accent-green">
+                      <CheckCircle className="h-3.5 w-3.5" />
+                      <span>{dict.stats.active}</span>
+                    </span>
+                  ) : (
+                    <span className="inline-flex items-center gap-1 type-strong-xs text-accent-red">
+                      <XCircle className="h-3.5 w-3.5" />
+                      <span>{dict.sidebar.disabled}</span>
+                    </span>
+                  )}
+                  {u.two_factor_enabled && (
+                  <span
+                    {...tip(dict.admin.twoFactorOn, undefined, 'action')}
+                    className="inline-flex items-center gap-1 type-strong-xs text-accent-green"
+                  >
+                    <ShieldCheck className="h-3.5 w-3.5" />
+                    <span>{dict.admin.twoFactorBadge}</span>
                   </span>
                 )}
+                </div>
 
                 <div className="flex items-center gap-1.5">
                   <button
@@ -175,6 +191,17 @@ export const AdminUserTable: React.FC<AdminUserTableProps> = ({
                   >
                     <Lock className="h-4 w-4" />
                   </button>
+                  {u.two_factor_enabled && (
+                    <button
+                      type="button"
+                      onClick={() => onResetTwoFactor(u)}
+                      {...tip(dict.admin.resetTwoFactor, undefined, 'action')}
+                      aria-label={dict.admin.resetTwoFactor}
+                      className="relative min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg border border-border-color bg-bg-surface text-text-primary hover:border-accent-amber hover:text-accent-amber transition-colors shadow-xs cursor-pointer"
+                    >
+                      <ShieldOff className="h-4 w-4" />
+                    </button>
+                  )}
                   <DownloadDataSection
                     userId={u.id}
                     iconOnly
@@ -254,17 +281,28 @@ export const AdminUserTable: React.FC<AdminUserTableProps> = ({
                     {u.unlocked_perks_count ?? 0}
                   </td>
                   <td className="px-4 py-3">
-                    {u.is_active ? (
-                      <span className="inline-flex items-center gap-1 type-strong-xs text-accent-green">
-                        <CheckCircle className="h-3.5 w-3.5" />
-                        <span>{dict.stats.active}</span>
-                      </span>
-                    ) : (
-                      <span className="inline-flex items-center gap-1 type-strong-xs text-accent-red">
-                        <XCircle className="h-3.5 w-3.5" />
-                        <span>{dict.sidebar.disabled}</span>
-                      </span>
-                    )}
+                    <div className="flex items-center gap-3">
+                      {u.is_active ? (
+                        <span className="inline-flex items-center gap-1 type-strong-xs text-accent-green">
+                          <CheckCircle className="h-3.5 w-3.5" />
+                          <span>{dict.stats.active}</span>
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center gap-1 type-strong-xs text-accent-red">
+                          <XCircle className="h-3.5 w-3.5" />
+                          <span>{dict.sidebar.disabled}</span>
+                        </span>
+                      )}
+                      {u.two_factor_enabled && (
+                        <span
+                          {...tip(dict.admin.twoFactorOn, undefined, 'action')}
+                          className="inline-flex items-center gap-1 type-strong-xs text-accent-green"
+                        >
+                          <ShieldCheck className="h-3.5 w-3.5" />
+                          <span>{dict.admin.twoFactorBadge}</span>
+                        </span>
+                      )}
+                    </div>
                   </td>
                   <td className="px-4 py-3 text-right">
                     <div className="flex items-center justify-end gap-1.5">
@@ -287,6 +325,18 @@ export const AdminUserTable: React.FC<AdminUserTableProps> = ({
                       >
                         <Lock className="h-3.5 w-3.5" />
                       </button>
+
+                      {u.two_factor_enabled && (
+                        <button
+                          type="button"
+                          onClick={() => onResetTwoFactor(u)}
+                          {...tip(dict.admin.resetTwoFactor, undefined, 'action')}
+                          aria-label={dict.admin.resetTwoFactor}
+                          className="relative rounded-lg border border-border-color bg-bg-surface p-1.5 text-text-primary hover:border-accent-amber hover:text-accent-amber transition-colors shadow-xs cursor-pointer before:absolute before:-inset-2.5 before:content-['']"
+                        >
+                          <ShieldOff className="h-3.5 w-3.5" />
+                        </button>
+                      )}
 
                       <DownloadDataSection
                         userId={u.id}

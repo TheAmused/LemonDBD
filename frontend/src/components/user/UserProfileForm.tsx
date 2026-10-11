@@ -13,20 +13,32 @@ import { tip } from '@/components/common/Tooltip';
 import { DownloadDataSection } from '@/components/user/DownloadDataSection';
 import { DeleteAccountSection } from '@/components/user/DeleteAccountSection';
 import { useDictionary } from "@/context/DictionaryContext";
+import { twoFactorErrorMessage } from '@/utils/twoFactorErrors';
+import { TwoFactorSection } from '@/components/user/TwoFactorSection';
 
 interface UserProfileFormProps {
   initialEmail: string;
+  twoFactorEnabled?: boolean;
   onRefreshUser: () => Promise<void>;
   t?: Record<string, string>;
 }
 
-export const UserProfileForm: React.FC<UserProfileFormProps> = ({ initialEmail, onRefreshUser, t: propT }) => {
+export const UserProfileForm: React.FC<UserProfileFormProps> = ({
+  initialEmail,
+  twoFactorEnabled = false,
+  onRefreshUser,
+  t: propT,
+}) => {
   const dict = useDictionary();
   const t: Record<string, string> = propT || dict.user || {};
   const [isExpanded, toggleExpanded] = usePersistentDrawer('lemondbd_drawer_account', false);
 
   const [newEmail, setNewEmail] = useState(initialEmail);
   const [currentPassword, setCurrentPassword] = useState('');
+  // Set once the server says the account has two-factor on: the change then needs a code as well.
+  const [needsTwoFactorCode, setNeedsTwoFactorCode] = useState(false);
+  const [twoFactorCode, setTwoFactorCode] = useState('');
+  const [twoFactorRefresh, setTwoFactorRefresh] = useState(0);
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -36,6 +48,7 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({ initialEmail, 
   const [statusMessage, setStatusMessage] = useState<StatusFeedback | null>(null);
 
   const passwordsMatch = newPassword === confirmPassword;
+  const requiresTwoFactor = twoFactorEnabled || needsTwoFactorCode;
 
   const handleUpdateProfile = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -80,6 +93,13 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({ initialEmail, 
       return;
     }
     payload.current_password = currentPassword;
+    if (requiresTwoFactor) {
+      if (!twoFactorCode.trim()) {
+        setStatusMessage({ type: 'error', text: dict.twoFactor.codeRequiredHint });
+        return;
+      }
+      payload.two_factor_code = twoFactorCode.trim();
+    }
 
     setIsUpdating(true);
     try {
@@ -89,11 +109,19 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({ initialEmail, 
         text: t.profileUpdateSuccessMsg || 'Profile updated successfully!',
       });
       setCurrentPassword('');
+      setTwoFactorCode('');
+      setNeedsTwoFactorCode(false);
       setNewPassword('');
       setConfirmPassword('');
+      setTwoFactorRefresh((n) => n + 1);
       await onRefreshUser();
     } catch (err: unknown) {
-      if (err instanceof ApiError && err.status === 403) {
+      if (err instanceof ApiError && err.code === 'two_factor_required') {
+        setNeedsTwoFactorCode(true);
+        setStatusMessage({ type: 'error', text: dict.twoFactor.codeRequiredHint });
+      } else if (err instanceof ApiError && err.code && err.code !== 'incorrect_password' && err.code.includes('two_factor')) {
+        setStatusMessage({ type: 'error', text: twoFactorErrorMessage(dict.twoFactor, err.code) });
+      } else if (err instanceof ApiError && err.status === 403) {
         setStatusMessage({
           type: 'error',
           text: t.currentPasswordIncorrect || 'Your current password is incorrect.',
@@ -225,6 +253,23 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({ initialEmail, 
                   </div>
                 </div>
 
+                {requiresTwoFactor && (
+                  <div className="space-y-1.5">
+                    <label className="block type-label-xs text-text-secondary" htmlFor="profile-two-factor-code">
+                      {dict.twoFactor.codeOrRecoveryLabel}
+                    </label>
+                    <Input
+                      id="profile-two-factor-code"
+                      type="text"
+                      autoComplete="one-time-code"
+                      spellCheck={false}
+                      fieldSize="sm"
+                      value={twoFactorCode}
+                      onChange={(e) => setTwoFactorCode(e.target.value)}
+                    />
+                  </div>
+                )}
+
                 {/* Password Management */}
                 <div className="space-y-3 pt-3 border-t border-border-color">
                   <div className="flex items-center justify-between">
@@ -305,6 +350,12 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({ initialEmail, 
                 </Button>
               </div>
             </form>
+
+            {/* Optional second sign-in step (authenticator app) inside Account Management */}
+            <TwoFactorSection
+              refreshTrigger={twoFactorRefresh}
+              onStatusChange={onRefreshUser}
+            />
           </div>
         </div>
       </div>

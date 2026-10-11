@@ -252,4 +252,12 @@ export default {
   configUnit_hours: '時間',
   configUnit_minutes: '分',
   configUnit_days: '日',
+  twoFactorBadge: "2FA",
+  twoFactorOn: "二要素認証はオンです",
+  resetTwoFactor: "二要素認証をリセット",
+  resetTwoFactorTitle: "二要素認証をリセットしますか？",
+  resetTwoFactorMessage: "{username} の二要素認証ログインをオフにします。デバイスとリカバリーコードを紛失した可能性があります。本人にメールで通知され、リセットは監査ログに記録されます。",
+  resetTwoFactorConfirm: "2FAをリセット",
+  twoFactorResetDone: "{username} の二要素認証をリセットしました。",
+  twoFactorResetFailed: "二要素認証をリセットできませんでした。",
 } as const;

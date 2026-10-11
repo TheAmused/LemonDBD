@@ -252,4 +252,12 @@ export default {
   configUnit_hours: 'hours',
   configUnit_minutes: 'minutes',
   configUnit_days: 'days',
+  twoFactorBadge: "2FA",
+  twoFactorOn: "Two-factor authentication is on",
+  resetTwoFactor: "Reset two-factor authentication",
+  resetTwoFactorTitle: "Reset two-factor authentication?",
+  resetTwoFactorMessage: "This turns off two-factor sign-in for {username}, who may have lost their device and recovery codes. They will be emailed, and the reset is recorded in the audit log.",
+  resetTwoFactorConfirm: "Reset 2FA",
+  twoFactorResetDone: "Two-factor authentication was reset for {username}.",
+  twoFactorResetFailed: "Could not reset two-factor authentication.",
 } as const;

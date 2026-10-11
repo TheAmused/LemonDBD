@@ -244,6 +244,26 @@ def reset_password_with_token(token: str, new_password: str) -> tuple[User | Non
     return user, None
 
 
+def auto_verify_if_disabled(user: User) -> None:
+    """When REQUIRE_EMAIL_VERIFICATION is off, mark an unverified user as verified once sign-in completes."""
+    require_verification = True
+    try:
+        if current_app:
+            require_verification = current_app.config.get("REQUIRE_EMAIL_VERIFICATION", True)
+    except RuntimeError:
+        require_verification = Config.REQUIRE_EMAIL_VERIFICATION
+
+    if not require_verification and not user.is_verified:
+        user.is_verified = True
+        user.verification_code = None
+        user.verification_code_expires_at = None
+        user.verification_attempts = 0
+        db.session.commit()
+        logger.info(
+            f"User '{user.username}' auto-verified upon login (REQUIRE_EMAIL_VERIFICATION is disabled)."
+        )
+
+
 @retry_on_transient_db_error()
 def authenticate_user_credentials(
     username_or_email: str,
@@ -267,23 +287,12 @@ def authenticate_user_credentials(
         return None, None
 
     if verify_password(password, user.password_hash):
-        require_verification = True
-        try:
-            if current_app:
-                require_verification = current_app.config.get("REQUIRE_EMAIL_VERIFICATION", True)
-        except RuntimeError:
-            require_verification = Config.REQUIRE_EMAIL_VERIFICATION
+        from app.services.user import two_factor
 
-        if not require_verification and not user.is_verified:
-            user.is_verified = True
-            user.verification_code = None
-            user.verification_code_expires_at = None
-            user.verification_attempts = 0
-            db.session.commit()
-            logger.info(
-                f"User '{user.username}' auto-verified upon login (REQUIRE_EMAIL_VERIFICATION is disabled)."
-            )
+        if two_factor.is_enabled(user.id):
+            return user, None
 
+        auto_verify_if_disabled(user)
         token = generate_token(user.id, user.role)
         return user, token
 

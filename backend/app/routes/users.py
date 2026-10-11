@@ -28,6 +28,7 @@ from app.utils.pagination import paginate_args
 from app.services.admin_control_service import log_admin_action
 from app.services.db.export_import import DatabaseExportImportService
 from app.services.ownership_service import OwnershipService
+from app.services.user import two_factor
 from app.services.user_service import UserService
 from app.utils.downloads import json_download_response
 
@@ -158,6 +159,26 @@ def update_user_by_admin(user_id: int):
         "message": "User updated successfully",
         "user": UserResponse.model_validate(user).model_dump(),
     }), 200
+
+
+@users_bp.route("/users/<int:user_id>/two-factor/reset", methods=["POST"])
+@limiter.limit("30 per hour")
+@admin_required
+def reset_user_two_factor(user_id: int):
+    """Switch 2FA off for a user who lost their device and recovery codes (audited, the user is emailed)."""
+    target = user_service.get_user_by_id(user_id)
+    if not target:
+        return jsonify({"error": "User not found.", "status": 404}), 404
+
+    had_two_factor = two_factor.admin_reset(target)
+    log_admin_action(
+        g.current_user.id,
+        action="user_two_factor_reset",
+        target_type="user",
+        target_id=user_id,
+        details={"had_two_factor": had_two_factor},
+    )
+    return jsonify({"status": "success", "had_two_factor": had_two_factor}), 200
 
 
 @users_bp.route("/users/<int:user_id>", methods=["DELETE"])

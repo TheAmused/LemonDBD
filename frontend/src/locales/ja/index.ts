@@ -12,6 +12,7 @@ import characterDetail from './characterDetail';
 import sidebar from './sidebar';
 import smashOrPass from './smashOrPass';
 import user from './user';
+import twoFactor from './twoFactor';
 import streaks from './streaks';
 import admin from './admin';
 import maps from './maps';
@@ -43,6 +44,7 @@ const ja = {
   sidebar,
   smashOrPass,
   user,
+  twoFactor,
   streaks,
   admin,
   maps,

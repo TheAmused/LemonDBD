@@ -77,8 +77,11 @@ class UserService:
         avatar_url: str | None = None,
         new_password: str | None = None,
         current_password: str | None = None,
+        two_factor_code: str | None = None,
     ) -> tuple[User | None, str | None]:
-        return modify_user_profile(user_id, email, avatar_url, new_password, current_password)
+        return modify_user_profile(
+            user_id, email, avatar_url, new_password, current_password, two_factor_code
+        )
 
     def mark_onboarding_complete(self, user_id: int) -> tuple[User | None, str | None]:
         return mark_onboarding_complete(user_id)
@@ -118,8 +121,10 @@ class UserService:
     def export_filename(self, user_id: int, requested_by: str = "self") -> str:
         return export_filename(user_id, requested_by)
 
-    def delete_own_account(self, user_id: int, password: str) -> tuple[bool, str | None]:
-        return delete_own_account(user_id, password)
+    def delete_own_account(
+        self, user_id: int, password: str, two_factor_code: str | None = None
+    ) -> tuple[bool, str | None]:
+        return delete_own_account(user_id, password, two_factor_code)
 
     def get_admin_system_stats(self) -> dict[str, Any]:
         return fetch_admin_metrics()

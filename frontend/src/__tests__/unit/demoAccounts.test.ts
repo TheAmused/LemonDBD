@@ -36,7 +36,7 @@ describe('parseDemoAccounts', () => {
 describe('AuthModal demo shortcuts', () => {
   it('has no credentials in the source', () => {
     assert.ok(!/['"]lemon['"]/.test(authModal), 'no hardcoded lemon login');
-    assert.ok(!/setPassword\(['"]/.test(authModal), 'no hardcoded password');
+    assert.ok(!/setPassword\(['"][^'"]/.test(authModal), 'no hardcoded password');
   });
 
   it('renders the quick-fill block only when the backend returned demo accounts', () => {

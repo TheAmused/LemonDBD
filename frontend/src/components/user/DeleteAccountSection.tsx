@@ -13,34 +13,46 @@ import { tip } from '@/components/common/Tooltip';
 import { useAuth } from '@/context/AuthContext';
 import { ApiError, deleteAccount } from '@/services/userProfileApi';
 import { useDictionary } from "@/context/DictionaryContext";
+import { twoFactorErrorMessage } from '@/utils/twoFactorErrors';
 
 export const DeleteAccountSection: React.FC<{ iconOnly?: boolean }> = ({ iconOnly = false }) => {
   const dict = useDictionary();
   const t = (dict.user || {}) as Record<string, string>;
-  const { logout } = useAuth();
+  const { user, logout } = useAuth();
   const [open, setOpen] = useState(false);
   const [password, setPassword] = useState('');
+  const [needsCode, setNeedsCode] = useState(false);
+  const [code, setCode] = useState('');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const requiresCode = Boolean(user?.two_factor_enabled) || needsCode;
 
   const close = () => {
     if (busy) return;
     setOpen(false);
     setPassword('');
+    setCode('');
+    setNeedsCode(false);
     setError(null);
   };
 
   const confirm = async () => {
-    if (!password || busy) return;
+    if (!password || busy || (requiresCode && !code.trim())) return;
     setBusy(true);
     setError(null);
     try {
-      await deleteAccount(password);
+      await deleteAccount(password, requiresCode ? code.trim() : undefined);
       logout(); // the server already cleared the session cookie; this resets state and leaves /user
     } catch (err) {
       const status = err instanceof ApiError ? err.status : 0;
+      const apiCode = err instanceof ApiError ? err.code : undefined;
+      if (apiCode === 'two_factor_required') setNeedsCode(true);
       setError(
-        status === 403
+        apiCode === 'two_factor_required'
+          ? dict.twoFactor.codeRequiredHint
+          : apiCode && apiCode.includes('two_factor')
+            ? twoFactorErrorMessage(dict.twoFactor, apiCode)
+            : status === 403
           ? t.deleteAccountWrongPassword
           : status === 400 && err instanceof Error && /administrator/i.test(err.message)
             ? t.deleteAccountLastAdmin
@@ -77,7 +89,7 @@ export const DeleteAccountSection: React.FC<{ iconOnly?: boolean }> = ({ iconOnl
             <Button variant="secondary" onClick={close} disabled={busy} className="flex-1">
               <span>{t.deleteAccountCancel}</span>
             </Button>
-            <Button variant="danger" onClick={confirm} loading={busy} disabled={!password} className="flex-1">
+            <Button variant="danger" onClick={confirm} loading={busy} disabled={!password || (requiresCode && !code.trim())} className="flex-1">
               <span>{t.deleteAccountConfirm}</span>
             </Button>
           </div>
@@ -98,6 +110,20 @@ export const DeleteAccountSection: React.FC<{ iconOnly?: boolean }> = ({ iconOnl
             invalid={!!error}
             autoFocus
           />
+          {requiresCode ? (
+            <Input
+              type="text"
+              autoComplete="one-time-code"
+              spellCheck={false}
+              placeholder={dict.twoFactor.codeOrRecoveryLabel}
+              aria-label={dict.twoFactor.codeOrRecoveryLabel}
+              value={code}
+              onChange={(e) => setCode(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') confirm();
+              }}
+            />
+          ) : null}
           {error ? (
             <p role="alert" className="type-strong text-accent-red">
               {error}

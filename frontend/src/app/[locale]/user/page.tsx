@@ -14,7 +14,6 @@ import { PageShell } from '@/components/layout/PageShell';
 import { CampfireHeader } from '@/components/user/CampfireHeader';
 import { DualMainsShowcase } from '@/components/user/DualMainsShowcase';
 import { UserProfileForm } from '@/components/user/UserProfileForm';
-import { TwoFactorSection } from '@/components/user/TwoFactorSection';
 import { UserBugReportsDrawer } from '@/components/user/UserBugReportsDrawer';
 import { DeleteAccountSection } from '@/components/user/DeleteAccountSection';
 import { DownloadDataSection } from '@/components/user/DownloadDataSection';
@@ -206,11 +205,9 @@ export default function UserProfilePage() {
           {/* 1. TOP BLOCK: Account Management */}
           <UserProfileForm
             initialEmail={user.email || ''}
+            twoFactorEnabled={Boolean(user.two_factor_enabled)}
             onRefreshUser={refreshUser}
           />
-
-          {/* Optional second sign-in step (authenticator app) */}
-          <TwoFactorSection />
 
           {/* 2. MIDDLE BLOCK: Dual Mains Signature Showcase (Survivor & Killer Loadouts) */}
           <DualMainsShowcase

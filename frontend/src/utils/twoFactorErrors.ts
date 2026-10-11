@@ -10,6 +10,7 @@ export function twoFactorErrorMessage(t: Dictionary['twoFactor'], code?: string)
     case 'two_factor_locked':
       return t.errLocked;
     case 'two_factor_challenge_invalid':
+    case 'auth_required':
       return t.errChallengeExpired;
     case 'incorrect_password':
       return t.errIncorrectPassword;

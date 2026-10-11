@@ -442,6 +442,40 @@ class TestSensitiveActionsAskForTheCode:
         )
         assert ok.status_code == 200
 
+    def test_profile_or_delete_validation_error_does_not_burn_code_or_recovery_code(
+        self, client: FlaskClient, db_session
+    ) -> None:
+        admin = _make_user("boss", role="admin")
+        other = _make_user("taken")
+        secret, codes = _enrol(client, admin)
+        totp_code = _next_code(secret)
+        too_short = client.put(
+            "/api/v1/auth/profile",
+            json={"new_password": "123", "current_password": PASSWORD, "two_factor_code": totp_code},
+            headers=_bearer(admin),
+        )
+        assert too_short.status_code == 400
+        dup_email = client.put(
+            "/api/v1/auth/profile",
+            json={"email": other.email, "current_password": PASSWORD, "two_factor_code": codes[0]},
+            headers=_bearer(admin),
+        )
+        assert dup_email.status_code == 400
+        last_admin = client.delete(
+            "/api/v1/auth/account",
+            json={"password": PASSWORD, "two_factor_code": codes[0]},
+            headers=_bearer(admin),
+        )
+        assert last_admin.status_code == 400
+        # Neither the TOTP step nor the recovery code was consumed by the rejected requests:
+        ok = client.put(
+            "/api/v1/auth/profile",
+            json={"new_password": "brand-new-pass", "current_password": PASSWORD, "two_factor_code": totp_code},
+            headers=_bearer(admin),
+        )
+        assert ok.status_code == 200
+        assert client.get("/api/v1/auth/two-factor", headers=_bearer(admin)).get_json()["recovery_codes_remaining"] == 10
+
     def test_deleting_the_account_asks_for_a_code_and_removes_the_2fa_rows(self, client: FlaskClient, db_session) -> None:
         user = _make_user()
         secret, _ = _enrol(client, user)
@@ -457,6 +491,24 @@ class TestSensitiveActionsAskForTheCode:
         assert db.session.scalar(db.select(db.func.count(UserTwoFactor.id)).where(UserTwoFactor.user_id == user_id)) == 0
         assert db.session.scalar(db.select(db.func.count(UserRecoveryCode.id)).where(UserRecoveryCode.user_id == user_id)) == 0
 
+    def test_enabling_disabling_or_resetting_revokes_older_sessions_and_me_reports_flag(
+        self, client: FlaskClient, db_session
+    ) -> None:
+        user = _make_user()
+        pre_enrol_headers = _bearer(user)
+        assert client.get("/api/v1/auth/me", headers=pre_enrol_headers).get_json()["user"]["two_factor_enabled"] is False
+        secret, _ = _enrol(client, user)
+        assert client.get("/api/v1/auth/me", headers=pre_enrol_headers).get_json()["authenticated"] is False
+        post_enrol_headers = _bearer(user)
+        assert client.get("/api/v1/auth/me", headers=post_enrol_headers).get_json()["user"]["two_factor_enabled"] is True
+        dis = client.post(
+            "/api/v1/auth/two-factor/disable",
+            json={"password": PASSWORD, "code": _next_code(secret)},
+            headers=post_enrol_headers,
+        )
+        assert dis.status_code == 200 and dis.get_json().get("token")
+        assert client.get("/api/v1/auth/me", headers=post_enrol_headers).get_json()["authenticated"] is False
+
 
 @pytest.mark.unit
 class TestAdminSide:
@@ -464,9 +516,11 @@ class TestAdminSide:
         admin = _make_user("boss", role="admin")
         victim = _make_user("victim")
         _enrol(client, victim)
+        victim_session = _bearer(victim)
         with mail.record_messages() as outbox:
             res = client.post(f"/api/v1/users/{victim.id}/two-factor/reset", headers=_bearer(admin))
         assert res.status_code == 200 and res.get_json()["had_two_factor"] is True
+        assert client.get("/api/v1/auth/me", headers=victim_session).get_json()["authenticated"] is False
         assert [m.subject for m in outbox] == ["LemonDBD: Two-factor authentication was reset by an administrator"]
         log = db.session.scalar(db.select(AdminAuditLog).where(AdminAuditLog.action == "user_two_factor_reset"))
         assert log.admin_user_id == admin.id and log.target_id == str(victim.id)

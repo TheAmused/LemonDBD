@@ -125,13 +125,17 @@ def admin_remove_user(user_id: int) -> bool:
     return True
 
 
-def delete_own_account(user_id: int, password: str) -> tuple[bool, str | None]:
+def delete_own_account(
+    user_id: int, password: str, two_factor_code: str | None = None
+) -> tuple[bool, str | None]:
     """Self-service account deletion, confirmed with the current password.
 
     Everything keyed to the user cascades away with the row. Bug reports are kept
     for the team's records but stripped of the reporter's identity first. The only
     remaining admin cannot delete itself (that would lock the site out).
     """
+    from app.services.user import two_factor
+
     user = db.session.get(User, user_id)
     if not user:
         return False, "Account not found."
@@ -143,6 +147,10 @@ def delete_own_account(user_id: int, password: str) -> tuple[bool, str | None]:
         )
         if not other_admins:
             return False, "The last administrator account cannot be deleted."
+    if two_factor.is_enabled(user.id):
+        if not (two_factor_code or "").strip():
+            raise two_factor.TwoFactorError("two_factor_required", 403)
+        two_factor.verify_second_factor(user, two_factor_code)
 
     for report in db.session.scalars(select(BugReport).where(BugReport.user_id == user.id)):
         report.reporter_name = "Deleted user"

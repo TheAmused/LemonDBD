@@ -45,6 +45,13 @@ describe('QrCode', () => {
     assert.equal(again, html);
   });
 
+  it('includes explicit dimensions to prevent layout shift and survives empty input', () => {
+    assert.match(html, /width="192"/);
+    assert.match(html, /height="192"/);
+    const empty = renderWithDictionary(React.createElement(QrCode, { value: '', label: 'empty' }));
+    assert.match(empty, /<svg[^>]*role="img"/);
+  });
+
   it('never sends the secret anywhere: no network call in the module', () => {
     const code = src('components/auth/QrCode.tsx');
     assert.doesNotMatch(code, /fetch\(|XMLHttpRequest|https?:\/\//);
@@ -52,14 +59,22 @@ describe('QrCode', () => {
 });
 
 describe('CodeInput', () => {
-  it('renders six one-time-code digit boxes holding the typed digits', () => {
+  it('renders six one-time-code digit boxes holding the typed digits with numeric pattern', () => {
     const html = renderWithDictionary(React.createElement(CodeInput, { value: '123', onChange: () => {} }));
     assert.equal((html.match(/<input/g) ?? []).length, 6);
     assert.equal((html.match(/autoComplete="one-time-code"|autocomplete="one-time-code"/gi) ?? []).length, 6);
+    assert.equal((html.match(/pattern="\[0-9\]\*"/g) ?? []).length, 6);
     assert.deepEqual(
       [...html.matchAll(/value="(\d?)"/g)].map((m) => m[1]),
       ['1', '2', '3', '', '', '']
     );
+  });
+
+  it('strips non-digits on change and paste and blocks non-numeric printable keys', () => {
+    const code = src('components/auth/CodeInput.tsx');
+    assert.match(code, /raw\.replace\(\/\\D\/g,\s*''\)/);
+    assert.match(code, /clipboardData\.getData\('text'\)\.replace\(\/\\D\/g,\s*''\)/);
+    assert.match(code, /!\/\\d\/\.test\(e\.key\)/);
   });
 });
 
@@ -84,6 +99,7 @@ describe('twoFactorErrorMessage', () => {
     assert.equal(twoFactorErrorMessage(t, 'invalid_two_factor_code'), t.errInvalidCode);
     assert.equal(twoFactorErrorMessage(t, 'two_factor_locked'), t.errLocked);
     assert.equal(twoFactorErrorMessage(t, 'two_factor_challenge_invalid'), t.errChallengeExpired);
+    assert.equal(twoFactorErrorMessage(t, 'auth_required'), t.errChallengeExpired);
     assert.equal(twoFactorErrorMessage(t, 'incorrect_password'), t.errIncorrectPassword);
     assert.equal(twoFactorErrorMessage(t, 'two_factor_unavailable'), t.errUnavailable);
   });
@@ -125,22 +141,30 @@ describe('twoFactorApi', () => {
     assert.deepEqual(JSON.parse(String(calls[3].init.body)), { password: 'pw', code: '123456' });
   });
 
-  it('raises an ApiError carrying the backend error_code', async () => {
+  it('raises an ApiError carrying the backend error_code and maps bare 401 to auth_required', async () => {
     mockFetch(401, { error: 'bad', error_code: 'invalid_two_factor_code' });
     await assert.rejects(enableTwoFactor('000000'), (err: Error & { status?: number; code?: string }) => {
       assert.equal(err.status, 401);
       assert.equal(err.code, 'invalid_two_factor_code');
       return true;
     });
+    mockFetch(401, { error: 'Authentication required' });
+    await assert.rejects(startTwoFactorSetup('pw'), (err: Error & { status?: number; code?: string }) => {
+      assert.equal(err.status, 401);
+      assert.equal(err.code, 'auth_required');
+      return true;
+    });
   });
 });
 
 describe('two-factor wiring', () => {
-  it('the login modal switches to the challenge step when the server asks for it', () => {
+  it('the login modal switches to the challenge step and clears password when the server asks for it', () => {
     const modal = src('components/AuthModal.tsx');
     assert.match(modal, /res\.twoFactorToken/);
     assert.match(modal, /<TwoFactorChallengeForm/);
     assert.match(src('context/AuthContext.tsx'), /data\.status === 'two_factor_required'/);
+    const challengeBranch = modal.slice(modal.indexOf('if (res.twoFactorToken)'), modal.indexOf('} else if (res.success)'));
+    assert.match(challengeBranch, /setPassword\(''\)/);
   });
 
   it('no session is stored until the second step succeeds', () => {
@@ -149,15 +173,17 @@ describe('two-factor wiring', () => {
     assert.ok(login.indexOf("two_factor_required") < login.indexOf('setSessionFlag(true)'));
   });
 
-  it('password-gated actions ask for a code when the server says so', () => {
+  it('password-gated actions ask for a code proactively when two_factor_enabled is true or when the server says so', () => {
     for (const file of ['components/user/UserProfileForm.tsx', 'components/user/DeleteAccountSection.tsx']) {
-      assert.match(src(file), /two_factor_required/, file);
+      const content = src(file);
+      assert.match(content, /two_factor_required/, file);
+      assert.match(content, /twoFactorEnabled|two_factor_enabled/, file);
     }
   });
 
-  it('the card is on the profile page, after the account form', () => {
-    const page = src('app/[locale]/user/page.tsx');
-    assert.ok(page.indexOf('<UserProfileForm') < page.indexOf('<TwoFactorSection'));
+  it('the 2FA section is inside the Account Management banner drawer, after the profile form', () => {
+    const form = src('components/user/UserProfileForm.tsx');
+    assert.ok(form.indexOf('</form>') < form.indexOf('<TwoFactorSection'));
   });
 
   it('the admin table shows the 2FA state and offers a reset', () => {

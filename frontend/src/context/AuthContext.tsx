@@ -11,6 +11,7 @@ export interface UserProfile {
   avatar_url?: string;
   is_active: boolean;
   is_verified: boolean;
+  two_factor_enabled?: boolean;
   created_at?: string;
   onboarding_completed_at?: string | null;
   preferred_language?: string | null;

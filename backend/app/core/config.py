@@ -47,8 +47,10 @@ KNOWN_PLACEHOLDER_SECRETS = frozenset(
     {
         "dbd-lemon-secret-key-2026",
         "dev-secret-key-dbd-lemon-2026",
+        "tzbfxn8fcg2pccx-bbsj2fxcyn4dwabgusiutmvlx4y=",
         "changeme",
         "change-me",
+        "change_me",
         "secret",
         "secret-key",
     }
@@ -70,6 +72,11 @@ def weak_secret_warnings(config: Mapping[str, Any]) -> list[str]:
             warnings.append(f"{name} is a publicly known placeholder value")
         elif len(value) < MIN_SECRET_KEY_LENGTH:
             warnings.append(f"{name} is shorter than {MIN_SECRET_KEY_LENGTH} characters")
+    two_factor_key = str(config.get("TWO_FACTOR_ENCRYPTION_KEY") or "").strip().lower()
+    if two_factor_key and any(
+        part.strip() in KNOWN_PLACEHOLDER_SECRETS for part in two_factor_key.split(",")
+    ):
+        warnings.append("TWO_FACTOR_ENCRYPTION_KEY is a publicly known placeholder value")
     return warnings
 
 
@@ -89,9 +96,12 @@ class Config:
     JWT_ACCESS_TOKEN_EXPIRES: timedelta = timedelta(hours=int(os.getenv("JWT_EXPIRATION_HOURS", "24")))
 
     # Optional two-factor sign-in. TOTP secrets are stored encrypted with this Fernet key (a
-    # comma-separated list: first encrypts, all decrypt). Unset = 2FA is unavailable (HTTP 503).
+    # comma-separated list: first encrypts, all decrypt). Defaults to the dev key (flagged by
+    # weak_secret_warnings in production if not replaced).
     # Generate: python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"
-    TWO_FACTOR_ENCRYPTION_KEY: str = os.getenv("TWO_FACTOR_ENCRYPTION_KEY", "")
+    TWO_FACTOR_ENCRYPTION_KEY: str = (
+        os.getenv("TWO_FACTOR_ENCRYPTION_KEY") or "TZbfxN8fCG2Pccx-bBsj2fxcyN4dwABgUsIutMVLx4Y="
+    )
     # Name shown in the authenticator app next to the account.
     TWO_FACTOR_ISSUER: str = os.getenv("TWO_FACTOR_ISSUER", "LemonDBD")
 

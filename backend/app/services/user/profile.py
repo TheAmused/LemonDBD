@@ -34,6 +34,7 @@ def modify_user_profile(
     avatar_url: str | None = None,
     new_password: str | None = None,
     current_password: str | None = None,
+    two_factor_code: str | None = None,
 ) -> tuple[User | None, str | None]:
     """Update profile attributes including email address, avatar, or password.
 
@@ -41,6 +42,8 @@ def modify_user_profile(
     take the account over, so both need the current password. A password change also bumps
     ``token_version``, which signs out every other session.
     """
+    from app.services.user import two_factor
+
     user = db.session.get(User, user_id)
     if not user:
         return None, "User not found."
@@ -52,6 +55,8 @@ def modify_user_profile(
             return None, "Current password is required."
         if not verify_password(current_password, user.password_hash):
             return None, "Incorrect password."
+        if two_factor.is_enabled(user.id) and not (two_factor_code or "").strip():
+            raise two_factor.TwoFactorError("two_factor_required", 403)
 
     if new_password and len(new_password) < 6:
         return None, "New password must be at least 6 characters long."
@@ -62,6 +67,11 @@ def modify_user_profile(
         ).first()
         if existing:
             return None, "Email address is already in use."
+
+    if (changing_email or new_password) and two_factor.is_enabled(user.id):
+        two_factor.verify_second_factor(user, two_factor_code)
+
+    if changing_email:
         user.email = clean_email
 
     if avatar_url:

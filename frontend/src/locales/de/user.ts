@@ -110,7 +110,6 @@ export default {
   loadingPerks: "Perk-Wissen wird abgerufen...",
   noPerksFound: "Keine passenden Perks gefunden.",
   dualMainsTitle: "Signatur-Builds",
-  accountSettingsSubtitle: "Verwalte deine E-Mail-Adresse und dein Passwort",
   searchPerksPrompt: "Mindestens 3 Zeichen eingeben, um Talente zu suchen...",
   searchPerksMinChars: "Noch {count} Zeichen eingeben, um zu suchen...",
   downloadDataTitle: "Meine Daten herunterladen",

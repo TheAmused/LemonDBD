@@ -296,11 +296,11 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({ initialEmail, 
 
               {/* Action Button */}
               <div className="flex items-center justify-between gap-3">
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 shrink-0">
                   <DownloadDataSection iconOnly />
                   <DeleteAccountSection iconOnly />
                 </div>
-                <Button type="submit" variant="primary" size="sm" loading={isUpdating} className="w-full sm:w-auto">
+                <Button type="submit" variant="primary" size="sm" loading={isUpdating} className="flex-1 sm:flex-none min-w-0">
                   <span>{t.saveChanges || 'Save'}</span>
                 </Button>
               </div>

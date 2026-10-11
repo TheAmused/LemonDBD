@@ -44,8 +44,6 @@ interface CampfireHeaderProps {
   isUploadingAvatar?: boolean;
   onAvatarClick?: () => void;
   avatarFeedback?: StatusFeedback | null;
-  /** Stacked, vertically centred action buttons shown at the right edge of the card. */
-  actions?: React.ReactNode;
 }
 
 export const CampfireHeader: React.FC<CampfireHeaderProps> = ({
@@ -58,7 +56,6 @@ export const CampfireHeader: React.FC<CampfireHeaderProps> = ({
       isUploadingAvatar,
       onAvatarClick,
       avatarFeedback,
-      actions,
     }) => {
   const dict = useDictionary();
   return (
@@ -166,20 +163,13 @@ export const CampfireHeader: React.FC<CampfireHeaderProps> = ({
         </div>
 
         {/* Right Column: Vault Mastery Radial Dials (7 cols on xl+) */}
-        <div className="xl:col-span-4 2xl:col-span-4 flex flex-col items-center justify-center w-full pt-6 xl:pt-0 border-t xl:border-t-0 border-border-color">
+        <div className="xl:col-span-7 flex flex-col items-center justify-center w-full pt-6 xl:pt-0 border-t xl:border-t-0 border-border-color">
           <VaultMasteryDials
             ownership={ownership}
             compact={false}
             hideTitle={false}
           />
         </div>
-
-        {/* Far right: account actions, stacked and vertically centred */}
-        {actions ? (
-          <div className="xl:col-span-3 flex flex-row xl:flex-col flex-wrap xl:flex-nowrap items-center xl:items-stretch justify-center xl:self-center xl:justify-self-end xl:w-max gap-2 w-full pt-6 xl:pt-0 border-t xl:border-t-0 border-border-color [&>*]:whitespace-nowrap">
-            {actions}
-          </div>
-        ) : null}
       </div>
     </div>
   );

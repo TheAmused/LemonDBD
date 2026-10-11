@@ -110,7 +110,6 @@ export default {
   loadingPerks: "Wczytywanie wiedzy o perkach...",
   noPerksFound: "Nie znaleziono pasujących perków.",
   dualMainsTitle: "Główne Zestawy",
-  accountSettingsSubtitle: "Zarządzaj adresem e-mail i hasłem",
   searchPerksPrompt: "Wpisz co najmniej 3 znaki, aby wyszukać umiejętności...",
   searchPerksMinChars: "Wpisz jeszcze {count, plural, one {# znak} few {# znaki} many {# znaków} other {# znaku}}, aby wyszukać...",
   downloadDataTitle: "Pobierz moje dane",

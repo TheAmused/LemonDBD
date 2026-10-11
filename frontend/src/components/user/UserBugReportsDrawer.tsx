@@ -25,16 +25,6 @@ export const UserBugReportsDrawer: React.FC<UserBugReportsDrawerProps> = ({ repo
   const dict = useDictionary();
   const [isExpanded, toggleExpanded] = usePersistentDrawer('lemondbd_drawer_bugs', false);
 
-  const getSubtitle = () => {
-    if (total === 0) {
-      return dict.user.noReportsTitle;
-    }
-    if (total === 1) {
-      return '1 report submitted';
-    }
-    return `${total} reports submitted`;
-  };
-
   return (
     <div className="rounded-3xl border border-border-color bg-bg-surface backdrop-blur-xl shadow-md overflow-hidden transition-colors flex flex-col">
       {/* Connected Header with Collapsible Drawer Toggle */}
@@ -59,9 +49,6 @@ export const UserBugReportsDrawer: React.FC<UserBugReportsDrawerProps> = ({ repo
           <h2 className="type-section-title text-text-primary group-hover:text-accent-red transition-colors">
             {dict.user.tabBugReports}
           </h2>
-          <p className="type-section-subtitle text-text-secondary mt-0.5">
-            {getSubtitle()}
-          </p>
         </div>
         <div className="relative z-10 flex items-center justify-end gap-3 shrink-0 pointer-events-none">
           <Button

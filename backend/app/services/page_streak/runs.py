@@ -228,3 +228,27 @@ def reset_all_runs(user_id: int) -> None:
     db.session.execute(delete(PageStreakRun).where(PageStreakRun.user_id == user_id))
     delete_completions(user_id, "page_streak")
     db.session.commit()
+
+
+def refresh_untouched_run(
+    user_id: int,
+    killer: str,
+    build_pages_fn: Callable[[int], list[list[str]]],
+) -> None:
+    """A run with no match played in its current attempt follows the live perk pool,
+    so unlocking killers or perks after it was created does not leave it on old pages."""
+    r = db.session.scalars(
+        select(PageStreakRun)
+        .options(joinedload(PageStreakRun.page_logs))
+        .where(PageStreakRun.user_id == user_id, PageStreakRun.killer == killer)
+    ).first()
+    if r is None or r.status != "in_progress" or r.current_page != 1:
+        return
+    if any(log.attempt == r.attempt for log in r.page_logs):
+        return
+    pages = build_pages_fn(user_id)
+    if not pages or pages == r.pages:
+        return
+    r.pages = pages
+    r.snapshot_at = utcnow()
+    db.session.commit()

@@ -144,7 +144,7 @@ export const ChallengeIntroModalShell: React.FC<ChallengeIntroModalShellProps> =
         </div>
       )}
 
-      <div className={`grid grid-cols-1 gap-4 ${tileGridClassName}`}>
+      <div className={`grid gap-3 sm:gap-4 ${tileGridClassName}`}>
         {tiles.map((tile) => {
           const TileIcon = tile.icon;
           const isCurrent = tile.value === selectedValue;
@@ -160,7 +160,7 @@ export const ChallengeIntroModalShell: React.FC<ChallengeIntroModalShellProps> =
                 <img
                   src={tile.image}
                   alt=""
-                  className="w-full max-w-[10rem] aspect-square rounded-xl object-cover shadow-sm"
+                  className="w-full max-w-[5.5rem] sm:max-w-[7rem] aspect-square rounded-xl object-cover shadow-sm"
                 />
               ) : (
                 <TileIcon className={`w-6 h-6 ${tile.disabled ? 'text-text-muted' : ''}`} />
@@ -175,7 +175,7 @@ export const ChallengeIntroModalShell: React.FC<ChallengeIntroModalShellProps> =
             return (
               <div
                 key={tile.value}
-                className="flex flex-col items-center gap-2 rounded-2xl border border-border-color bg-bg-elevated/50 p-6 text-center opacity-70"
+                className="flex flex-col items-center gap-2 rounded-2xl border border-border-color bg-bg-elevated/50 p-3 sm:p-4 text-center opacity-70"
               >
                 {content}
               </div>
@@ -187,7 +187,7 @@ export const ChallengeIntroModalShell: React.FC<ChallengeIntroModalShellProps> =
               key={tile.value}
               onClick={() => onPickTile(tile.value)}
               aria-pressed={isPending}
-              className={`group relative flex flex-col items-center gap-3 rounded-2xl border p-6 sm:p-7 text-center transition-colors cursor-pointer ${tile.accentClassName} ${
+              className={`group relative flex flex-col items-center gap-2 rounded-2xl border p-3 sm:p-4 text-center transition-colors cursor-pointer ${tile.accentClassName} ${
                 isPending ? 'ring-2 ring-accent-red ring-offset-2 ring-offset-bg-surface' : ''
               }`}
             >

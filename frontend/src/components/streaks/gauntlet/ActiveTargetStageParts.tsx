@@ -79,14 +79,14 @@ const PerkArt: React.FC<{ perk: Perk; size: string }> = ({ perk, size }) => {
 type SlotSize = 'large' | 'small' | 'compact';
 
 const SLOT_ICON_BASE: Record<SlotSize, string> = {
-  large: 'w-[4.5rem] h-[4.5rem]',
-  small: 'w-16 h-16',
-  compact: 'w-12 h-12',
+  large: 'w-11 h-11 sm:w-14 sm:h-14 xl:w-[4.5rem] xl:h-[4.5rem]',
+  small: 'w-11 h-11 xl:w-16 xl:h-16',
+  compact: 'w-10 h-10 xl:w-12 xl:h-12',
 };
 
 const CAPTION_CLASS: Record<SlotSize, string> = {
-  large: 'mt-5 w-28',
-  small: 'mt-4 w-24',
+  large: 'mt-4 w-20 sm:w-24 xl:mt-5 xl:w-28',
+  small: 'mt-3 w-20 xl:mt-4 xl:w-24',
   compact: 'mt-3 w-20',
 };
 
@@ -94,9 +94,9 @@ const slotIconBase = (size: SlotSize) =>
   `${SLOT_ICON_BASE[size]} shrink-0 rounded-md rotate-45 flex items-center justify-center border relative`;
 
 const BADGE_TEXT_SIZE: Record<SlotSize, string> = {
-  large: 'text-micro',
-  small: 'text-micro',
-  compact: 'text-micro',
+  large: 'text-[0.5rem] sm:text-micro',
+  small: 'text-[0.5rem] sm:text-micro',
+  compact: 'text-[0.5rem] sm:text-micro',
 };
 
 const BADGE_BG: Record<'amber' | 'red', string> = {
@@ -115,7 +115,7 @@ const SlotChip: React.FC<{
   <div className="relative inline-flex shrink-0 flex-col items-center">
     {badge && (
       <div
-        className={`absolute -top-2.5 left-1/2 -translate-x-1/2 z-10 ${BADGE_BG[badgeColor]} text-text-primary ${BADGE_TEXT_SIZE[size]} font-black uppercase tracking-wide px-1.5 py-0.5 rounded shadow-sm whitespace-nowrap`}
+        className={`absolute -top-2.5 left-1/2 hidden -translate-x-1/2 z-10 sm:block ${BADGE_BG[badgeColor]} text-text-primary ${BADGE_TEXT_SIZE[size]} font-black uppercase tracking-normal sm:tracking-wide px-1 sm:px-1.5 py-0 sm:py-0.5 rounded shadow-sm whitespace-nowrap`}
       >
         {badge}
       </div>
@@ -128,8 +128,8 @@ const SlotChip: React.FC<{
 );
 
 const SLOT_ICON_SIZE: Record<SlotSize, string> = {
-  large: 'w-7 h-7',
-  small: 'w-6 h-6',
+  large: 'w-5 h-5 sm:w-6 sm:h-6 xl:w-7 xl:h-7',
+  small: 'w-5 h-5 xl:w-6 xl:h-6',
   compact: 'w-4 h-4',
 };
 
@@ -174,7 +174,7 @@ const PerkSlotsRow: React.FC<PerkSlotsRowProps> = ({ tierInfo, randomPerks, disp
   const perkDisplayName = usePerkDisplayName();
   const large = size === 'large';
   const iconSize = SLOT_ICON_SIZE[size];
-  const perkArtSize = large ? 'w-28 h-28' : size === 'compact' ? 'w-14 h-14' : 'w-20 h-20';
+  const perkArtSize = large ? 'w-14 h-14 sm:w-20 sm:h-20 xl:w-28 xl:h-28' : size === 'compact' ? 'w-12 h-12 xl:w-14 xl:h-14' : 'w-14 h-14 xl:w-20 xl:h-20';
 
   return (
     <div>
@@ -184,7 +184,7 @@ const PerkSlotsRow: React.FC<PerkSlotsRowProps> = ({ tierInfo, randomPerks, disp
           {dict.streaks.goesInBare}
         </p>
       )}
-      <div className={large ? 'flex items-start gap-12' : size === 'compact' ? 'flex items-start gap-6' : 'flex items-start gap-10'} role="list">
+      <div className={large ? 'flex items-start gap-5 sm:gap-7 xl:gap-12' : size === 'compact' ? 'flex items-start gap-4 xl:gap-6' : 'flex items-start gap-5 xl:gap-10'} role="list">
         {slots.map((idx) => {
           if (idx === 0 && perkLimit === 0 && randomPerks.length > 0) {
             const perk = randomPerks[0];
@@ -292,12 +292,12 @@ export const CompactPlayerBuild: React.FC<CompactPlayerBuildProps> = ({ index, p
 
   if (!isTeam) {
     return (
-      <div className="flex w-full items-center gap-8">
-        <div className="w-1/3 shrink-0 flex flex-col items-center gap-3 border-r border-border-color pr-8">
-          {avatarBox('w-24 h-24 sm:w-28 sm:h-28', 'w-12 h-12')}
+      <div className="flex w-full flex-col items-center gap-5 sm:flex-row sm:gap-8">
+        <div className="flex shrink-0 items-center gap-3 sm:w-1/3 sm:flex-col sm:border-r sm:border-border-color sm:pr-8">
+          {avatarBox('w-16 h-16 sm:w-28 sm:h-28', 'w-8 h-8 sm:w-12 sm:h-12')}
           <span className="text-base font-bold text-text-primary text-center leading-tight">{displayName}</span>
         </div>
-        <div className="flex-1 min-w-0 flex items-center justify-center">
+        <div className="flex min-w-0 items-center justify-center sm:flex-1">
           <PerkSlotsRow
             tierInfo={tierInfo}
             randomPerks={player.random_perks ?? []}
@@ -311,16 +311,16 @@ export const CompactPlayerBuild: React.FC<CompactPlayerBuildProps> = ({ index, p
   }
 
   return (
-    <div className="flex w-full items-center gap-4 px-3 sm:px-4 min-h-[178px]">
-      <div className="w-1/3 shrink-0 flex flex-col items-center gap-2 border-r border-border-color pr-4">
-        {avatarBox('w-20 h-20 sm:w-24 sm:h-24', 'w-10 h-10')}
+    <div className="flex w-full flex-col items-center gap-4 px-1 sm:min-h-[178px] sm:flex-row sm:px-4">
+      <div className="flex shrink-0 items-center gap-3 sm:w-1/3 sm:flex-col sm:gap-2 sm:border-r sm:border-border-color sm:pr-4">
+        {avatarBox('w-14 h-14 sm:w-24 sm:h-24', 'w-8 h-8 sm:w-10 sm:h-10')}
         <span className="text-xs font-bold text-text-primary text-center leading-tight">{displayName}</span>
       </div>
-      <div className="flex-1 min-w-0 flex flex-col items-center justify-center gap-9">
+      <div className="flex min-w-0 flex-col items-center justify-center gap-6 sm:flex-1 sm:gap-9">
         {Array.from({ length: playersPerCharacter }, (_, n) => (
-          <div key={n} className="flex items-center gap-4">
+          <div key={n} className="flex items-center gap-2 sm:gap-4">
             {shared && (
-              <span className="w-14 shrink-0 text-micro uppercase font-black text-accent-red tracking-wider">
+              <span className="w-10 shrink-0 text-micro sm:w-14 uppercase font-black text-accent-red tracking-wider">
                 {playerLabel} {index * playersPerCharacter + n + 1}
               </span>
             )}

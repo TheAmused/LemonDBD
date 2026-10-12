@@ -45,7 +45,7 @@ export const HistoryNextRowPreview: React.FC<HistoryNextRowPreviewProps> = ({ ki
   if (nextRow.length === 0) return null;
 
   return (
-    <div className="mt-5 pt-4 border-t border-border-color">
+    <div className="mt-4">
       <button
         onClick={() => setExpanded((v) => !v)}
         className="flex w-full items-center justify-center gap-1.5 text-left cursor-pointer"
@@ -65,9 +65,9 @@ export const HistoryNextRowPreview: React.FC<HistoryNextRowPreviewProps> = ({ ki
         }`}
       >
         <div className="overflow-hidden">
-          <div className="mt-4 flex flex-wrap justify-center gap-3">
+          <div className="mt-4 flex flex-wrap justify-center gap-2">
             {nextRow.map((name) => (
-              <div key={name} className="w-32 sm:w-36">
+              <div key={name} className="w-[calc((100%-1rem)/3)] sm:w-[calc((100%-2rem)/5)] sm:max-w-36">
                 <PreviewTile name={name} />
               </div>
             ))}

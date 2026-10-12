@@ -57,6 +57,7 @@ class StreakRunService:
     def _get_or_create_run(self, user_id: int, *variant: Any):
         run = self._find_run(user_id, *variant)
         if run:
+            self._refresh_if_untouched(run, user_id, *variant)
             return self._present(run)
 
         assert_challenge_mode_enabled(self.mode)
@@ -77,7 +78,12 @@ class StreakRunService:
         if not run:
             raise ValueError("Run not found")
         run.abandon_attempt()
+        self._reset_to_fresh(run, user_id, *variant)
+        db.session.commit()
+        return self._present(run)
 
+    def _reset_to_fresh(self, run, user_id: int, *variant: Any) -> None:
+        """Overwrite the run's progress with what a brand new run starts with."""
         fresh = self._build_run(user_id, *variant)
         built = sa_inspect(fresh).dict
         for column in self.run_model.__table__.columns:
@@ -89,8 +95,22 @@ class StreakRunService:
                 setattr(run, column.key, column.default.arg)
             else:
                 raise RuntimeError(f"{self.run_model.__name__}.{column.key} is neither rebuilt nor given a plain default, so abandoning would keep its old value")
+
+    def _is_untouched(self, run) -> bool:
+        """True while nothing has been played or revealed in the run, so its frozen pool can still change."""
+        return False
+
+    def _pool_is_stale(self, run) -> bool:
+        """True when the run's frozen pool no longer matches the user's live roster."""
+        return False
+
+    def _refresh_if_untouched(self, run, user_id: int, *variant: Any) -> None:
+        """A run that has not started yet follows the live roster, so unlocking characters
+        after it was created does not leave it stuck on the old pool."""
+        if run.status != "in_progress" or not self._is_untouched(run) or not self._pool_is_stale(run):
+            return
+        self._reset_to_fresh(run, user_id, *variant)
         db.session.commit()
-        return self._present(run)
 
     # -- guards --------------------------------------------------------------
 

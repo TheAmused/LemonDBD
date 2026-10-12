@@ -63,7 +63,7 @@ export const HistoryModeModal: React.FC<HistoryModeModalProps> = ({
       intro={s.historyIntro}
       tiles={tiles}
       onSelectTile={(value) => onSelectMode(value as HistoryMode)}
-      tileGridClassName="sm:grid-cols-2"
+      tileGridClassName="grid-cols-2"
       selectedValue={currentMode}
       renderRules={(rules) => <HistoryRulesModal {...rules} />}
     />

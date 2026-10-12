@@ -150,17 +150,9 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
           />
         ) : (
           <div>
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 mb-3 text-center sm:text-left">
-              <h3 className="type-label text-text-secondary">
-                {dict.streaks.pickYourKiller}
-              </h3>
-              {run && (
-                <p className="text-xs text-text-muted">
-                  {dict.streaks.rowLabel} {run.current_row_index + 1}{' '}
-                  {dict.streaks.ofLabel} {run.total_rows}
-                </p>
-              )}
-            </div>
+            <h3 className="mb-3 text-center type-label text-text-secondary sm:text-left">
+              {dict.streaks.pickYourKiller}
+            </h3>
 
             <KillerPickerGrid
               killers={run?.current_row_killers || []}

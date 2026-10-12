@@ -14,6 +14,7 @@ from app.services.page_streak import (
     create_new_run,
     fetch_page_streak_user_stats,
     fetch_run,
+    refresh_untouched_run,
     get_configured_perks_per_page,
     get_killer_avatar_map,
     get_live_roster_badge,
@@ -63,6 +64,7 @@ class PageStreakService:
         return get_live_roster_badge(user_id, self.ownership_service)
 
     def _with_artwork(self, user_id: int, data: PageStreakRunDict | None) -> PageStreakRunState | None:
+        refresh_untouched_run(user_id, killer, self.build_pages)
         if data is None:
             return None
         return {

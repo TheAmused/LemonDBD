@@ -10,6 +10,7 @@ import { ADDON_RARITY_ICONS } from '@/constants/addonRarityIcons';
 import { useSlotReels, ReelDirection, REEL_SPIN_MS } from './useSlotReels';
 import { perkIconUrl as perkIconFor } from '@/utils/staticUrl';
 import { usePerkDisplayName } from '@/context/DisplayNamesContext';
+import { Button } from '@/components/common/Button';
 import { Spinner } from '@/components/common/Spinner';
 import { useDictionary } from "@/context/DictionaryContext";
 import { useChallengeAnimations } from '../useChallengeAnimations';
@@ -91,7 +92,7 @@ const ReelStrip: React.FC<{
   return (
     <div
       ref={windowRef}
-      className={`relative w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 shrink-0 overflow-hidden rounded-xl border-2 transition-shadow ${
+      className={`relative aspect-square w-full min-w-0 sm:aspect-auto sm:h-24 sm:w-24 sm:shrink-0 md:h-28 md:w-28 lg:h-32 lg:w-32 overflow-hidden rounded-xl border-2 transition-shadow ${
         !spinning && finalPerk
           ? 'border-accent-red'
           : 'border-accent-red/30'
@@ -126,13 +127,13 @@ const ReelStrip: React.FC<{
 };
 
 const RarityBadge: React.FC<{ rarity: AddonRarity; visible: boolean }> = ({ rarity, visible }) => {
-  if (!visible) return <div className="h-10" />;
+  if (!visible) return <div className="h-9 w-28 sm:h-10" />;
   return (
-    <span className="chaos-badge-pop inline-flex items-center gap-2 rounded-lg border border-accent-red/30 bg-bg-surface/80 pl-1 pr-3 py-1 type-card-title text-text-primary">
+    <span className="chaos-badge-pop inline-flex items-center gap-1.5 rounded-lg border border-accent-red/30 bg-bg-surface/80 pl-1 pr-2.5 py-1 text-sm font-bold text-text-primary sm:gap-2 sm:pr-3 sm:type-card-title">
       <img
         src={ADDON_RARITY_ICONS[rarity]}
         alt=""
-        className="h-9 w-9 rounded object-cover border border-border-color"
+        className="h-7 w-7 rounded object-cover border border-border-color sm:h-9 sm:w-9"
       />
       {rarity}
     </span>
@@ -192,10 +193,10 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({ perks, addon
   };
 
   return (
-    <div className="relative w-full overflow-hidden rounded-xl p-6 sm:p-8">
+    <div className="relative w-full overflow-hidden rounded-xl p-3 pb-8 sm:p-8">
       <div className="relative z-10">
-        <div className="flex items-center justify-center gap-4 sm:gap-6">
-          <div className="flex items-end gap-2">
+        <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6">
+          <div className="grid w-full grid-cols-4 items-end gap-2 sm:flex sm:w-auto">
             {[0, 1, 2, 3].map((i) => (
               <ReelStrip
                 key={i}
@@ -210,11 +211,18 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({ perks, addon
             ))}
           </div>
 
-          <SlotLever down={revealed || leverPulled} disabled={revealed || loading || locked} animate={animations} onPull={handlePull} />
+          <div className="max-sm:hidden">
+            <SlotLever down={revealed || leverPulled} disabled={revealed || loading || locked} animate={animations} onPull={handlePull} />
+          </div>
+          {!revealed && (
+            <Button variant="primary" size="md" onClick={handlePull} disabled={locked} loading={loading} className="w-full sm:hidden">
+              {dict.streaks.pullTheLever}
+            </Button>
+          )}
 
-          <div className="w-40 sm:w-48 shrink-0 pl-2 sm:pl-3">
+          <div className={`min-w-0 shrink-0 xl:w-48 xl:pl-3 ${revealed ? '' : 'max-sm:hidden'}`}>
             {revealed ? (
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-row flex-wrap justify-center gap-2 xl:flex-col xl:justify-start">
                 <RarityBadge rarity={addonRarities[0]} visible={hasSpunThisBuild} />
                 <RarityBadge rarity={addonRarities[1]} visible={hasSpunThisBuild} />
               </div>
@@ -338,7 +346,7 @@ const SlotLever: React.FC<{ down: boolean; disabled: boolean; animate: boolean; 
     >
       <div
         ref={panelRef}
-        className="relative h-24 sm:h-28 md:h-32 w-16 sm:w-[72px] rounded-2xl border border-border-color"
+        className="relative h-20 w-14 sm:h-24 sm:w-[72px] md:h-28 lg:h-32 rounded-2xl border border-border-color"
        
       >
         <div

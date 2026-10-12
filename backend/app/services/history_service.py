@@ -36,6 +36,13 @@ class HistoryService(StreakRunService):
         run.owned_killer_ids = ids
         return resolve_killer_names_by_ids(ids)
 
+    def _is_untouched(self, run: HistoryRun) -> bool:
+        return run.total_killers_beaten == 0 and run.current_row_index == 0 and not run.completed_killers
+
+    def _pool_is_stale(self, run: HistoryRun) -> bool:
+        live = get_owned_killer_ids_by_release(run.user_id, self.ownership_service)
+        return sorted(run.owned_killer_ids) != sorted(live)
+
     def _is_unfrozen(self, run: HistoryRun) -> bool:
         return not run.owned_killer_ids
 

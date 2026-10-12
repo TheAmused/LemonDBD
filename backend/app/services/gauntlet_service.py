@@ -56,6 +56,19 @@ class GauntletService(StreakRunService):
         r.owned_character_ids = ids
         return ids
 
+    def _is_untouched(self, run: GauntletRun) -> bool:
+        return (
+            run.current_streak == 0
+            and not run.completed_characters
+            and not run.target_revealed
+            and run.tokens == 0
+            and run.bonus_perk_slots == 0
+        )
+
+    def _pool_is_stale(self, run: GauntletRun) -> bool:
+        live = get_owned_character_ids(run.user_id, run.role, self.ownership_service)
+        return sorted(run.owned_character_ids) != sorted(live)
+
     def _freeze_pool_if_needed(self, r: GauntletRun) -> None:
         self._freeze_if_empty(
             r, "owned_character_ids", lambda: get_owned_character_ids(r.user_id, r.role, self.ownership_service)

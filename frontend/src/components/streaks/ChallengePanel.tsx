@@ -1,7 +1,7 @@
 // frontend/src/components/streaks/ChallengePanel.tsx
 import type { Dictionary } from '@/locales/types';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { BarChart2, BookOpen, ChevronDown, History, RotateCcw, Clapperboard } from 'lucide-react';
 import { CELEBRATION_CARD_CLASSES, CELEBRATION_LABEL_CLASSES, CelebrationBadge } from './CelebrationBadge';
 import { useDictionary } from "@/context/DictionaryContext";
@@ -20,7 +20,7 @@ interface ChallengePanelProps {
 export const ChallengePanel: React.FC<ChallengePanelProps> = ({ header, progress, children }) => (
   <section className="mb-6 w-full overflow-hidden rounded-2xl border border-border-color bg-bg-surface shadow-sm">
     <div className="border-b border-border-color bg-bg-elevated/40 px-3 py-3 sm:px-4">{header}</div>
-    {progress && <div className="border-b border-border-color px-4 pt-5 pb-4 sm:px-6">{progress}</div>}
+    {progress && <div className="border-b border-border-color px-3 pt-3 pb-1 sm:px-6 sm:pt-5 sm:pb-4">{progress}</div>}
     <div className="p-3 sm:p-4">{children}</div>
   </section>
 );
@@ -32,9 +32,9 @@ interface ChallengeHeaderLayoutProps {
 
 /** Splits the header strip into a stats zone and an actions zone. */
 export const ChallengeHeaderLayout: React.FC<ChallengeHeaderLayoutProps> = ({ stats, actions }) => (
-  <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
-    <div className="flex flex-wrap items-center justify-center gap-2.5 lg:justify-start">{stats}</div>
-    <div className="flex flex-wrap items-center justify-center gap-2.5 lg:justify-end">{actions}</div>
+  <div className="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto_auto] items-center gap-2 sm:flex sm:flex-wrap sm:justify-between sm:gap-x-4 sm:gap-y-3">
+    <div className="contents sm:flex sm:flex-wrap sm:items-center sm:gap-2.5">{stats}</div>
+    <div className="contents sm:ml-auto sm:flex sm:flex-wrap sm:items-center sm:justify-end sm:gap-2.5">{actions}</div>
   </div>
 );
 
@@ -58,11 +58,11 @@ export const ModeSelectButton: React.FC<ModeSelectButtonProps> = ({ label, tone,
   const content = (
     <>
       <span className={`h-2.5 w-2.5 rounded-full ${MODE_DOT_TONES[tone]}`} aria-hidden="true" />
-      <span className="type-label-sm text-text-primary">{label}</span>
+      <span className="type-label-sm max-w-[9rem] truncate text-text-primary ">{label}</span>
       {onClick && <ChevronDown className="h-4 w-4 text-text-muted" aria-hidden="true" />}
     </>
   );
-  const shell = 'flex items-center gap-2 rounded-xl border border-border-color bg-bg-elevated px-3 py-2.5 shadow-sm';
+  const shell = 'flex min-w-0 items-center justify-center gap-2 rounded-xl border border-border-color bg-bg-elevated h-11 px-3 shadow-sm';
 
   return onClick ? (
     <button
@@ -99,11 +99,11 @@ export const StatTile: React.FC<StatTileProps> = ({
   valueClassName = '',
 }) => (
   <div
-    className={`flex items-center gap-2.5 rounded-xl border border-border-color bg-bg-elevated px-3.5 py-2 text-text-secondary shadow-sm transition-colors duration-500 ${className}`}
+    className={`flex min-w-0 flex-1 items-center justify-center gap-2.5 rounded-xl sm:justify-start border border-border-color bg-bg-elevated h-11 px-2.5 text-text-secondary sm:flex-none lg:px-3 shadow-sm transition-colors duration-500 ${className}`}
   >
     <span className={`flex transition-colors duration-500 ${iconClassName}`}>{icon}</span>
     <div className="flex flex-col">
-      <span className="text-tiny font-bold uppercase leading-none tracking-wider text-text-muted">{label}</span>
+      <span className="text-tiny font-bold uppercase leading-none tracking-wider text-text-muted max-lg:sr-only">{label}</span>
       <span className={`mt-0.5 text-lg font-black leading-none text-text-primary transition-colors duration-500 ${valueClassName}`}>
         {value}
       </span>
@@ -115,9 +115,10 @@ interface HeaderButtonProps {
   onClick: () => void;
   title: string;
   icon?: React.ReactNode;
-  /** With a label the button reads as text (hidden below sm); without one it is a square icon button. */
+  /** With a label the button reads as text; without one it is a square icon button. */
   label?: string;
   danger?: boolean;
+  className?: string;
 }
 
 /** Look shared by the challenge header buttons (and any other button that should match them). */
@@ -125,17 +126,17 @@ export const HEADER_BUTTON_CLASSES =
   'flex items-center rounded-xl border border-border-color bg-bg-elevated text-text-secondary shadow-sm transition-colors cursor-pointer hover:bg-bg-elevated/70 hover:text-text-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red';
 
 /** Header action button shared by every challenge. */
-export const HeaderButton: React.FC<HeaderButtonProps> = ({ onClick, title, icon, label, danger = false }) => (
+export const HeaderButton: React.FC<HeaderButtonProps> = ({ onClick, title, icon, label, danger = false, className = '' }) => (
   <button
     type="button"
     onClick={onClick}
     aria-label={title}
-    className={`${HEADER_BUTTON_CLASSES} ${danger ? 'hover:bg-accent-red/10 hover:text-accent-red' : ''} ${
-      label ? 'gap-1.5 px-3 py-2.5 text-xs font-bold' : 'justify-center p-2.5'
+    className={`${HEADER_BUTTON_CLASSES} ${className} ${danger ? 'hover:bg-accent-red/10 hover:text-accent-red' : ''} ${
+      label ? 'h-11 justify-center gap-1.5 px-3 text-xs font-bold' : 'h-11 justify-center px-2 sm:w-10 sm:px-0 lg:w-11'
     }`}
   >
     {icon}
-    {label && <span className="hidden sm:inline">{label}</span>}
+    {label && <span>{label}</span>}
   </button>
 );
 
@@ -162,6 +163,11 @@ const DrawAnimationButton: React.FC = () => {
   );
 };
 
+/** On phones the picker and the fold toggle form one full-width row, and the remaining buttons
+ * sit in a second row that stays folded until toggled. From sm up the groups dissolve (`contents`)
+ * so every button sits in one wrapping row. */
+const ACTION_GROUP_CLASSES = 'flex gap-1.5 sm:contents [&>*]:min-w-0 [&>*]:flex-1 sm:[&>*]:flex-none';
+
 interface StandardHeaderActionsProps {
   onOpenRules: () => void;
   onOpenStats: () => void;
@@ -178,9 +184,16 @@ interface StandardHeaderActionsProps {
 /** The action row every challenge header shares, so they cannot drift apart. */
 export const StandardHeaderActions: React.FC<StandardHeaderActionsProps> = ({ onOpenRules, onOpenStats, onOpenHistory, onOpenAbandon, modeSelect, extra, hasDrawAnimations = false }) => {
   const dict = useDictionary();
+  const [open, setOpen] = useState(false);
   return (
   <>
-    {modeSelect}
+    <div className="flex min-w-0 shrink-0 sm:contents">{modeSelect}</div>
+    <div
+      className={`max-sm:col-span-full max-sm:grid basis-full transition-[grid-template-rows,opacity,margin,visibility] duration-300 ease-in-out sm:contents ${
+        open ? 'max-sm:grid-rows-[1fr] max-sm:opacity-100' : 'max-sm:invisible max-sm:-mt-2 max-sm:grid-rows-[0fr] max-sm:opacity-0'
+      }`}
+    >
+    <div className={`min-h-0 overflow-hidden ${ACTION_GROUP_CLASSES}`}>
     {extra}
     {hasDrawAnimations && <DrawAnimationButton />}
     <HeaderButton
@@ -204,6 +217,17 @@ export const StandardHeaderActions: React.FC<StandardHeaderActionsProps> = ({ on
       title={dict.streaks.abandonRun}
       icon={<RotateCcw className="h-5 w-5" aria-hidden="true" />}
     />
+    </div>
+    </div>
+    <button
+      type="button"
+      onClick={() => setOpen((v) => !v)}
+      aria-expanded={open}
+      aria-label={dict.streaks.moreActions}
+      className="col-span-full flex h-5 w-full cursor-pointer items-center justify-center rounded-lg text-text-muted transition-colors hover:text-text-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red sm:hidden"
+    >
+      <ChevronDown className={`h-5 w-5 transition-transform duration-300 ${open ? 'rotate-180' : ''}`} aria-hidden="true" />
+    </button>
   </>
 );
 };

@@ -11,6 +11,7 @@ export default {
   resetConfirm: "リセット",
   abandonConfirm: "放棄",
   drawAnimations: "抽選アニメーション",
+  moreActions: "その他の操作",
   progressTitle: "進行状況",
   checkpointSecured: "チェックポイント獲得",
   resetAllRuns: "全キラーをリセット",

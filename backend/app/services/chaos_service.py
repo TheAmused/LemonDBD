@@ -36,6 +36,14 @@ class ChaosService(StreakRunService):
         r.owned_killer_ids = get_owned_killer_ids(r.user_id, self.ownership_service)
         r.unlocked_perk_ids = get_unlocked_killer_perk_ids(r.user_id, self.ownership_service)
 
+    def _is_untouched(self, run: ChaosRun) -> bool:
+        return run.current_streak == 0 and not run.completed_killers and not run.perks_revealed
+
+    def _pool_is_stale(self, run: ChaosRun) -> bool:
+        live_killers = get_owned_killer_ids(run.user_id, self.ownership_service)
+        live_perks = get_unlocked_killer_perk_ids(run.user_id, self.ownership_service)
+        return sorted(run.owned_killer_ids) != sorted(live_killers) or sorted(run.unlocked_perk_ids) != sorted(live_perks)
+
     def _freeze_pools_if_needed(self, r: ChaosRun) -> None:
         self._freeze_if_empty(
             r, "owned_killer_ids", lambda: get_owned_killer_ids(r.user_id, self.ownership_service)

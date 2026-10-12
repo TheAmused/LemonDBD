@@ -19,7 +19,7 @@ const UnlockedTile: React.FC<{ perk: Perk; displayName: string; justUnlocked: bo
   const src = perkIconFor(perk);
   return (
     <div
-      className={`flex flex-col items-center gap-1.5 p-2 rounded-lg bg-bg-elevated border border-border-color ${
+      className={`flex flex-col items-center gap-1 p-1.5 sm:gap-1.5 sm:p-2 rounded-lg bg-bg-elevated border border-border-color ${
         justUnlocked ? 'chaos-badge-pop' : ''
       }`}
     >
@@ -28,7 +28,7 @@ const UnlockedTile: React.FC<{ perk: Perk; displayName: string; justUnlocked: bo
           <img
             src={src}
             alt={displayName}
-            className="w-full h-full object-contain p-1.5"
+            className="w-full h-full object-contain p-0.5 sm:p-1"
             onError={() => setFailed(true)}
           />
         ) : (
@@ -46,13 +46,13 @@ const LockedTile: React.FC<{ perk: Perk; displayName: string }> = ({ perk, displ
   const [failed, setFailed] = useState(false);
   const src = perkIconFor(perk);
   return (
-    <div className="relative flex flex-col items-center gap-1.5 p-2 rounded-lg bg-bg-elevated border border-dashed border-2 border-border-color overflow-hidden">
+    <div className="relative flex flex-col items-center gap-1 p-1.5 sm:gap-1.5 sm:p-2 rounded-lg bg-bg-elevated border border-dashed border-2 border-border-color overflow-hidden">
       <div className="w-full aspect-square rounded-md overflow-hidden bg-bg-elevated flex items-center justify-center grayscale opacity-40">
         {src && !failed ? (
           <img
             src={src}
             alt={displayName}
-            className="w-full h-full object-contain p-1.5"
+            className="w-full h-full object-contain p-0.5 sm:p-1"
             onError={() => setFailed(true)}
           />
         ) : (
@@ -113,7 +113,7 @@ export const HistoryPerkPoolPanel: React.FC<HistoryPerkPoolPanelProps> = ({ pool
   }, [unlockedPerkNames]);
 
   return (
-    <div className="mt-10 rounded-2xl border border-border-color bg-bg-surface backdrop-blur-sm p-5 shadow-sm">
+    <div className="mt-10 rounded-2xl border border-border-color bg-bg-surface backdrop-blur-sm p-3 sm:p-5 shadow-sm">
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
         <h3 className="type-label text-text-secondary">
           {dict.streaks.perkPool}
@@ -150,7 +150,7 @@ export const HistoryPerkPoolPanel: React.FC<HistoryPerkPoolPanelProps> = ({ pool
           {normalizedQuery ? noMatchText : dict.streaks.noPerksUnlockedYet}
         </p>
       ) : (
-        <div className="mb-5 grid grid-cols-3 sm:grid-cols-6 md:grid-cols-10 lg:grid-cols-[repeat(15,minmax(0,1fr))] gap-2">
+        <div className="mb-5 grid grid-cols-4 min-[460px]:grid-cols-5 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 xl:grid-cols-[repeat(15,minmax(0,1fr))] gap-2">
           {unlocked.map((perk) => (
             <UnlockedTile
               key={perk.id ?? perk.name}
@@ -171,7 +171,7 @@ export const HistoryPerkPoolPanel: React.FC<HistoryPerkPoolPanelProps> = ({ pool
           {normalizedQuery ? noMatchText : dict.streaks.everyPerkUnlocked}
         </p>
       ) : (
-        <div className="grid grid-cols-3 sm:grid-cols-6 md:grid-cols-10 lg:grid-cols-[repeat(15,minmax(0,1fr))] gap-2">
+        <div className="grid grid-cols-4 min-[460px]:grid-cols-5 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 xl:grid-cols-[repeat(15,minmax(0,1fr))] gap-2">
           {locked.map((perk) => (
             <LockedTile key={perk.id ?? perk.name} perk={perk} displayName={localName(perk)} />
           ))}

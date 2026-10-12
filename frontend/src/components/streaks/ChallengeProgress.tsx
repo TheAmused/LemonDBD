@@ -40,7 +40,7 @@ export const ChallengeProgress: React.FC<ChallengeProgressProps> = ({ current, t
 
   return (
     <div>
-      <div className="mb-4 flex items-center justify-between gap-3">
+      <div className="mb-2 flex items-center justify-between gap-3 sm:mb-4">
         <h3 className="type-label-sm text-text-primary">
           {s.progressTitle}
         </h3>
@@ -50,7 +50,7 @@ export const ChallengeProgress: React.FC<ChallengeProgressProps> = ({ current, t
         </span>
       </div>
 
-      <div className="pb-6">
+      <div className="pb-2.5 sm:pb-7">
         <div
           role="progressbar"
           aria-valuemin={0}
@@ -87,7 +87,7 @@ export const ChallengeProgress: React.FC<ChallengeProgressProps> = ({ current, t
                   <Trophy className="h-3.5 w-3.5" aria-hidden="true" />
                 </div>
                 <span
-                  className={`absolute left-1/2 top-full mt-1 -translate-x-1/2 text-mini font-bold ${
+                  className={`absolute left-1/2 top-full mt-1 -translate-x-1/2 text-mini font-bold max-sm:hidden ${
                     reached ? 'text-accent-amber' : 'text-text-muted'
                   }`}
                 >

@@ -37,7 +37,7 @@ export const PageStreakModeModal: React.FC<PageStreakModeModalProps> = ({ isOpen
       }
       tiles={tiles}
       onSelectTile={() => onStart()}
-      tileGridClassName="sm:grid-cols-1 max-w-xs mx-auto"
+      tileGridClassName="grid-cols-1 max-w-xs mx-auto"
       renderRules={(rules) => <PageStreakRulesModal {...rules} />}
     />
   );

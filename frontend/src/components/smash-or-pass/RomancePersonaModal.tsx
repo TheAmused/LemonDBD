@@ -3,7 +3,8 @@
 
 import { isAbortError } from '@/utils/api';
 import React, { useMemo, useState } from 'react';
-import { Sparkles, Share2, Compass, ArrowRight, ArrowLeft } from 'lucide-react';
+import { Share2, Compass, ArrowRight, ArrowLeft } from 'lucide-react';
+import { PersonaSigilIcon } from '@/components/icons/DbdIcons';
 import type { CustomRomanceArchetype } from '@/types/smashOrPass';
 import { Modal } from '@/components/common/Modal';
 import {
@@ -158,7 +159,7 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({ isOpen
         isSharingView ? (
           <Share2 className="h-6 w-6 text-accent-red" />
         ) : (
-          <Sparkles className="h-6 w-6 text-accent-red" />
+          <PersonaSigilIcon className="h-6 w-6 text-accent-red" />
         )
       }
       centerTitle={!isSharingView}

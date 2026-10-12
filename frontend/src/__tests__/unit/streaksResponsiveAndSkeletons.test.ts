@@ -92,7 +92,6 @@ describe('Streaks: i18n Localization Parity Across All 5 Locales', () => {
     'chaosStreak',
     'historyStreak',
     'pageStreak',
-    'backToKillerStreaks',
   ];
 
   for (const { code, dict } of locales) {

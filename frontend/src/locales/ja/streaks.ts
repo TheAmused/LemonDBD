@@ -1,7 +1,5 @@
 // frontend/src/locales/ja/streaks.ts
 export default {
-  backToKillerStreaks: "キラーストリークに戻る",
-  backToKillers: "キラー一覧に戻る",
   rules: "ルール",
   cancel: "キャンセル",
   stats: "統計",

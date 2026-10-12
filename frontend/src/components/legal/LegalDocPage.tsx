@@ -18,7 +18,6 @@ export function LegalDocPage({ doc }: { doc: LegalDocId }) {
     <LegalPageLayout
       locale={locale}
       heading={text.heading}
-      backLabel={text.backToAbout}
       lastUpdated={`${text.lastUpdatedLabel}: ${text.lastUpdated}`}
     >
       <div className="mx-auto flex max-w-3xl flex-col items-center gap-3 text-center">

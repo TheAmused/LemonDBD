@@ -96,6 +96,7 @@ services:
       - FRONTEND_URL=${FRONTEND_URL:-https://localhost}
       - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID:-}
       - RATELIMIT_ENABLED=${RATELIMIT_ENABLED:-true}
+      - ALTCHA_ENFORCED=${ALTCHA_ENFORCED:-true}
       - SCHEDULER_ENABLED=${SCHEDULER_ENABLED:-true}
     depends_on:
       db:

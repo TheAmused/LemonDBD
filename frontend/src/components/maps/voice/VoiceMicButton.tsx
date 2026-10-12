@@ -33,13 +33,6 @@ export function VoiceMicButton({
   return (
     <div className="flex items-center justify-center">
      <div className="relative inline-flex items-center justify-center">
-      {voiceStatus === 'listening' && (
-        <>
-          <span className="absolute h-20 w-20 animate-ping rounded-full bg-accent-red/20 pointer-events-none" aria-hidden="true" />
-          <span className="absolute h-24 w-24 animate-ping rounded-full bg-accent-red/10 [animation-delay:200ms] pointer-events-none" aria-hidden="true" />
-        </>
-      )}
-
       <button
         id="voice-command-mic-btn"
         type="button"
@@ -105,7 +98,7 @@ export function VoiceMicButton({
         }}
         aria-label={currentCfg.badge || ''}
         aria-pressed={voiceStatus === 'listening'}
-        className={`relative z-10 flex h-16 w-16 items-center justify-center rounded-[1.4rem] shadow-xl transition-all duration-200 focus:outline-none focus-visible:ring-4 focus-visible:ring-accent-red/50 cursor-pointer active:scale-95 hover:scale-105 select-none ${currentCfg.buttonColor}`}
+        className={`relative z-10 flex h-16 w-16 items-center justify-center rounded-2xl transition-all duration-200 focus:outline-none focus-visible:ring-4 focus-visible:ring-accent-red/50 cursor-pointer active:scale-95 hover:scale-105 select-none ${currentCfg.buttonColor}`}
       >
         <StatusIcon
           className={`h-7 w-7 ${voiceStatus === 'listening' ? 'animate-bounce' : ''}`}

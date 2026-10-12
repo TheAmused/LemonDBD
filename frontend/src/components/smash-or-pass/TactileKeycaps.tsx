@@ -8,7 +8,6 @@ import {
   ArrowRight,
   ArrowUp,
   RotateCcw,
-  Sparkles,
 } from 'lucide-react';
 import { SmashSounds } from './SmashSoundEffects';
 

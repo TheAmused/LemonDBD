@@ -2,7 +2,6 @@
 export default {
   pageTitle: "LemonDBD - Polityka prywatności",
   heading: "Polityka prywatności",
-  backToAbout: "Wróć do strony O nas",
   lastUpdatedLabel: "Ostatnia aktualizacja",
   lastUpdated: "10 października 2026",
   intro:

@@ -1,6 +1,12 @@
 'use client';
 // frontend/src/components/smash-or-pass/roster-select/RosterCarouselCard.tsx
-import { AlertTriangle, Check, Flame, Lock, Sparkles } from 'lucide-react';
+import {
+  CardStackIcon,
+  CautionVeilIcon,
+  PadlockHeartIcon,
+  SealCheckIcon,
+  ThornHeartIcon,
+} from '@/components/icons/DbdIcons';
 import { useDictionary } from '@/context/DictionaryContext';
 import type { RosterItem } from '@/types/smashOrPass';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
@@ -79,7 +85,7 @@ export function RosterCarouselCard({
           if (isRosterEnabled) onCommit();
         }
       }}
-      className={`absolute w-[var(--card-w)] h-[var(--card-h)] rounded-[28px] sm:rounded-[36px] overflow-hidden cursor-pointer ${isCenter
+      className={`absolute w-[var(--card-w)] h-[var(--card-h)] rounded-3xl overflow-hidden cursor-pointer ${isCenter
         ? isRosterEnabled
           ? 'border-2 sm:border-[3px] border-accent-red'
           : 'border-2 border-border-color'
@@ -121,7 +127,7 @@ export function RosterCarouselCard({
         <div
           className="absolute top-4 left-4 sm:top-5 sm:left-5 flex items-center gap-1.5 px-3 py-1.5 rounded-2xl bg-bg-primary/80 backdrop-blur-md border border-border-color text-text-inverted type-strong-fluid shadow-md pointer-events-none"
         >
-          <Flame className="h-4 w-4 text-accent-red fill-accent-red" aria-hidden="true" />
+          <CardStackIcon className="h-4 w-4 text-accent-red" aria-hidden="true" />
           <span>{count}</span>
         </div>
       )}
@@ -131,7 +137,7 @@ export function RosterCarouselCard({
           data-testid="roster-nsfw-badge"
           className="absolute top-4 left-1/2 -translate-x-1/2 sm:top-5 flex items-center gap-1 px-2.5 py-1 rounded-2xl bg-accent-red text-text-inverted text-tiny sm:text-xs font-black uppercase tracking-wide shadow-md pointer-events-none"
         >
-          <AlertTriangle className="h-3 w-3" aria-hidden="true" />
+          <CautionVeilIcon className="h-3.5 w-3.5" aria-hidden="true" />
           <span>{dict.smashOrPass.nsfw.badge}</span>
         </div>
       )}
@@ -141,7 +147,6 @@ export function RosterCarouselCard({
           data-testid="roster-local-badge"
           className="absolute bottom-[5.5rem] left-1/2 -translate-x-1/2 sm:bottom-24 flex items-center gap-1 px-2.5 py-1 rounded-2xl bg-bg-primary/85 backdrop-blur-md border border-accent-amber/40 text-accent-amber text-tiny sm:text-xs font-black uppercase tracking-wide shadow-md pointer-events-none"
         >
-          <Sparkles className="h-3 w-3" aria-hidden="true" />
           <span>{dict.smashOrPass.picker.yours}</span>
         </div>
       )}
@@ -150,14 +155,14 @@ export function RosterCarouselCard({
         <div
           className="absolute top-4 right-4 sm:top-5 sm:right-5 flex items-center gap-1 px-3 py-1.5 rounded-2xl bg-accent-red text-text-inverted type-strong pointer-events-none"
         >
-          <Check className="h-3.5 w-3.5 stroke-[3]" aria-hidden="true" />
+          <SealCheckIcon className="h-4 w-4" aria-hidden="true" />
           <span>{dict.smashOrPass.active}</span>
         </div>
       )}
 
       {!isRosterEnabled && !isCurrentlyActive && (
         <div className="absolute top-4 right-4 sm:top-5 sm:right-5 flex items-center gap-1.5 px-3 py-1.5 rounded-2xl bg-bg-elevated border border-border-color text-text-secondary type-strong shadow-lg pointer-events-none">
-          <Lock className="h-3.5 w-3.5 text-text-muted" aria-hidden="true" />
+          <PadlockHeartIcon className="h-4 w-4 text-text-muted" aria-hidden="true" />
           <span>{dict.smashOrPass.comingSoon}</span>
         </div>
       )}
@@ -166,11 +171,11 @@ export function RosterCarouselCard({
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none" aria-hidden="true">
           {isRosterEnabled ? (
             <div className="flex h-16 w-16 sm:h-20 sm:w-20 items-center justify-center rounded-full bg-accent-red/20 border-2 border-accent-red/50 backdrop-blur-sm animate-pulse">
-              <Flame className="h-8 w-8 sm:h-10 sm:w-10 text-accent-red fill-accent-red" />
+              <ThornHeartIcon className="h-8 w-8 sm:h-10 sm:w-10 text-accent-red" />
             </div>
           ) : (
             <div className="flex h-16 w-16 sm:h-20 sm:w-20 items-center justify-center rounded-full bg-bg-elevated border-2 border-border-color shadow-2xl backdrop-blur-sm">
-              <Lock className="h-8 w-8 sm:h-9 sm:w-9 text-text-muted" />
+              <PadlockHeartIcon className="h-8 w-8 sm:h-9 sm:w-9 text-text-muted" />
             </div>
           )}
         </div>
@@ -190,7 +195,7 @@ export function RosterCarouselCard({
 
       {isCenter && (
         <div
-          className={`absolute inset-0 rounded-[28px] sm:rounded-[36px] border-2 pointer-events-none ${isRosterEnabled ? 'border-accent-red/50' : 'border-border-color'
+          className={`absolute inset-0 rounded-3xl border-2 pointer-events-none ${isRosterEnabled ? 'border-accent-red/50' : 'border-border-color'
             }`}
           aria-hidden="true"
         />

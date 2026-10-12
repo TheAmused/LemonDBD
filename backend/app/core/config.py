@@ -110,6 +110,8 @@ class Config:
     RATELIMIT_STORAGE_URI: str = os.getenv("RATELIMIT_STORAGE_URI", "memory://")
     RATELIMIT_STRATEGY: str = os.getenv("RATELIMIT_STRATEGY", "fixed-window")
     RATELIMIT_DEFAULT: str = os.getenv("RATELIMIT_DEFAULT", "200 per minute")
+    # Sign-up / sign-in / password reset / guest bug reports must carry a solved ALTCHA challenge.
+    ALTCHA_ENFORCED: bool = os.getenv("ALTCHA_ENFORCED", "true").lower() in ("true", "1", "yes")
 
     raw_db_url = os.getenv(
         "DATABASE_URL",
@@ -158,4 +160,5 @@ class TestingConfig(Config):
     SQLALCHEMY_DATABASE_URI: str = "sqlite:///:memory:"
     SQLALCHEMY_ENGINE_OPTIONS: dict[str, Any] = {}
     RATELIMIT_ENABLED: bool = False
+    ALTCHA_ENFORCED: bool = False
     SCHEDULER_ENABLED: bool = False

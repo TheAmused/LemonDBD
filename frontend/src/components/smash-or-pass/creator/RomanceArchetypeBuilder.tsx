@@ -116,7 +116,6 @@ export function RomanceArchetypeBuilder({ archetypes, onChange, availableRoles, 
         <div>
           {!embedded && (
             <div className="flex items-center gap-2">
-              <Sparkles className="h-5 w-5 text-accent-red" />
               <h3 className="text-sm sm:text-base font-black uppercase tracking-wider text-text-primary">
                 {ab.sectionTitle}
               </h3>

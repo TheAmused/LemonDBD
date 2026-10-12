@@ -12,6 +12,7 @@ from curl_cffi import requests
 from flask import Blueprint, current_app, g, jsonify, request
 from sqlalchemy import case, desc, func, or_, select
 
+from app.core.altcha_guard import altcha_rejection
 from app.core.extensions import db
 from app.core.json_provider import safe_json_dumps
 from app.core.limiter import limiter, validate_honeypot
@@ -142,6 +143,10 @@ def submit_bug_report():
         return jsonify({"error": "Spam detected.", "status": 400}), 400
 
     user = get_current_user()
+    if not user:
+        rejected = altcha_rejection(data)
+        if rejected is not None:
+            return rejected
 
     title = data.get("title", "").strip()
     message = data.get("message", "").strip()

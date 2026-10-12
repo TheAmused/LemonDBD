@@ -38,5 +38,7 @@ export default {
     heading: "お問い合わせ",
     text: "ご質問、ご意見、アイデアがあれば、メールまたはDiscordサーバーまでお気軽にどうぞ。",
     discordLabel: "Discordに参加",
+    copyEmailLabel: "メールアドレスをコピー",
+    emailCopied: "コピーしました！",
   },
 };

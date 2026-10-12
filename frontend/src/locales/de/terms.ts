@@ -3,7 +3,6 @@ export default {
   pageTitle: "LemonDBD - Nutzungsbedingungen",
   heading: "Nutzungsbedingungen",
   tagline: "Die Bedingungen, zu denen die Website von LemonDBD und unser Discord-Server angeboten werden.",
-  backToAbout: "Zurück zu Über uns",
   lastUpdatedLabel: "Zuletzt aktualisiert",
   lastUpdated: "10. Oktober 2026",
   translationNotice: "Falls die übersetzten Fassungen dieser Seite von der englischen abweichen, gilt die englische Fassung.",

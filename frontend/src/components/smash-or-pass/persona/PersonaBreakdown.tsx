@@ -1,6 +1,6 @@
 'use client';
 // frontend/src/components/smash-or-pass/persona/PersonaBreakdown.tsx
-import { Check, Compass, Gamepad2, Heart, RotateCcw, Share2, Sparkles } from 'lucide-react';
+import { Check, Compass, Gamepad2, Heart, RotateCcw, Share2 } from 'lucide-react';
 import { Button } from '@/components/common/Button';
 import { Surface } from '@/components/common/Surface';
 import { tip } from '@/components/common/Tooltip';
@@ -56,7 +56,6 @@ export function PersonaBreakdown({ persona, isSharedView, copied, onShare, onClo
         {isSharedView && (
           <div className="mb-2">
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-bg-primary/50 border border-border-color text-mini font-bold tracking-wider text-text-inverted backdrop-blur-md shadow-sm">
-              <Sparkles className="h-3 w-3 text-text-inverted" />
               {text.sharedBadge}
             </span>
           </div>
@@ -83,7 +82,6 @@ export function PersonaBreakdown({ persona, isSharedView, copied, onShare, onClo
       {/* Dating Psychology Card */}
       <Surface tone="elevated" radius="2xl" padding="none" className="p-4 sm:p-5 space-y-2 shadow-inner">
         <span className="type-label-xs text-accent-red flex items-center gap-1.5">
-          <Sparkles className="h-3.5 w-3.5" />
           {text.datingPsychology}
         </span>
         <p className="text-text-secondary type-body-fluid">

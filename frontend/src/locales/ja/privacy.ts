@@ -2,7 +2,6 @@
 export default {
   pageTitle: "LemonDBD - プライバシーポリシー",
   heading: "プライバシーポリシー",
-  backToAbout: "私たちについてへ戻る",
   lastUpdatedLabel: "最終更新日",
   lastUpdated: "2026年10月10日",
   intro:

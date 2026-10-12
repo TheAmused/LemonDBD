@@ -25,6 +25,7 @@ import { getBackendBaseUrl } from '@/utils/perkUtils';
 
 import { tip } from '@/components/common/Tooltip';
 import { Button } from '@/components/common/Button';
+import { InfoChip } from '@/components/common/InfoChip';
 import { useDictionary } from "@/context/DictionaryContext";
 
 const LoreModal = dynamic(() => import('./modals/LoreModal').then((m) => m.LoreModal), { ssr: false });
@@ -93,7 +94,7 @@ export const KillerDetailView: React.FC<CharacterViewBaseProps> = ({ currentLoca
       />
 
       {/* 2. Main Hero Showcase */}
-      <section className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      <section className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start lg:items-stretch">
         {/* Left: Avatar Showcase */}
         <CharacterHeroAvatar
           character={character}
@@ -105,7 +106,7 @@ export const KillerDetailView: React.FC<CharacterViewBaseProps> = ({ currentLoca
         />
 
         {/* Right: Character Info & Identity */}
-        <div className="lg:col-span-8 space-y-5">
+        <div className="lg:col-span-8 flex flex-col gap-5">
           <header className="flex flex-col items-center text-center gap-4 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:text-left">
             <div className="flex items-center gap-4 sm:gap-5">
               {killerPower && (
@@ -162,23 +163,23 @@ export const KillerDetailView: React.FC<CharacterViewBaseProps> = ({ currentLoca
               </Button>
 
               {chapterName && (
-                <span className="flex items-center gap-1.5 px-3 py-2 rounded-2xl bg-bg-elevated border border-border-color type-strong text-text-secondary select-none">
+                <InfoChip>
                   <Bookmark className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
                   {chapterName}
-                </span>
+                </InfoChip>
               )}
 
-              <span className="flex items-center gap-1.5 px-3 py-2 rounded-2xl bg-bg-elevated border border-border-color type-strong text-text-secondary select-none">
+              <InfoChip>
                 <Calendar className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
                 {releaseDate}
-              </span>
+              </InfoChip>
 
-              <span className="flex items-center gap-1.5 px-3 py-2 rounded-2xl bg-bg-elevated border border-border-color type-strong text-text-secondary select-none">
+              <InfoChip>
                 <ShieldCheck className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
                 {character.is_licensed
                   ? t.licensedFranchise || t.dlcLicensed || ''
                   : t.originalChapter || t.dlcOriginal || ''}
-              </span>
+              </InfoChip>
             </div>
           </header>
 

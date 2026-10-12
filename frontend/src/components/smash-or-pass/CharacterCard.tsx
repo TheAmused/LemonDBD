@@ -2,7 +2,8 @@
 // frontend/src/components/smash-or-pass/CharacterCard.tsx
 
 import React, { useState, useEffect, useMemo } from 'react';
-import { Heart, RotateCw, Maximize2, X, ThumbsDown } from 'lucide-react';
+import { X } from 'lucide-react';
+import { PortraitLoupeIcon, SnuffedCandleIcon, TarotTurnIcon, ThornHeartIcon } from '@/components/icons/DbdIcons';
 import { CardDisintegrationOverlay } from './CardDisintegrationOverlay';
 import { CardAvatarImage } from './card/CardAvatarImage';
 import { CardBackFace } from './card/CardBackFace';
@@ -70,7 +71,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
     }) => {
   const dict = useDictionary();
   const [isZoomed, setIsZoomed] = useState<boolean>(false);
-  const { isFlipped, startFlip, turnStyle } = useCardFlip(character.slug, character.id);
+  const { isFlipped, isTurned, startFlip, turnStyle } = useCardFlip(character.slug, character.id);
   const { cardRef, dragOffset, tilt, isDragging, handleMouseMove, handleMouseLeave, handleTouchStart } = useCardDrag({
     isTopCard,
     isExiting,
@@ -137,6 +138,8 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
     <>
       <div
         ref={cardRef}
+        data-smash-card={isTopCard ? 'top' : undefined}
+        data-flipped={isTopCard && isTurned ? 'true' : undefined}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
         onMouseDown={handleTouchStart}
@@ -161,7 +164,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
           willChange: isDragging || isExiting ? 'transform, opacity' : 'auto',
           opacity: isExiting ? 0 : 1,
         }}
-        className={`relative select-none w-[88vw] max-w-[340px] sm:max-w-[380px] md:max-w-[420px] aspect-[9/14] sm:aspect-[9/15] ${isTopCard ? 'cursor-grab active:cursor-grabbing z-30' : 'pointer-events-none'
+        className={`relative select-none smash-card-size ${isTopCard ? 'cursor-grab active:cursor-grabbing z-30' : 'pointer-events-none'
           }`}
       >
         {effects && isExiting && exitType && (
@@ -177,7 +180,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
             }}
             className="absolute top-6 left-6 z-40 border-4 border-accent-red bg-accent-red/20 p-3 sm:p-4 rounded-3xl backdrop-blur-md transition-all duration-75"
           >
-            <Heart className="h-8 w-8 sm:h-10 sm:w-10 fill-accent-red text-accent-red animate-pulse" aria-hidden="true" />
+            <ThornHeartIcon className="h-8 w-8 sm:h-10 sm:w-10 text-accent-red animate-pulse" aria-hidden="true" />
           </div>
         )}
 
@@ -190,7 +193,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
             }}
             className="absolute top-6 right-6 z-40 border-4 border-border-subtle bg-bg-elevated/90 p-3 sm:p-4 rounded-3xl backdrop-blur-md transition-all duration-75"
           >
-            <ThumbsDown className="h-8 w-8 sm:h-10 sm:w-10 text-text-secondary" aria-hidden="true" />
+            <SnuffedCandleIcon className="h-8 w-8 sm:h-10 sm:w-10 text-text-secondary" aria-hidden="true" />
           </div>
         )}
 
@@ -212,7 +215,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
                   ? `0 0 ${35 + swipeProgress * 35}px rgba(113, 113, 122, ${0.4 + swipeProgress * 0.5})`
                   : '0 0 35px rgba(0, 0, 0, 0.85)',
             }}
-            className={`absolute inset-0 h-full w-full rounded-[32px] sm:rounded-[36px] overflow-hidden border-2 transition-colors duration-150 flex flex-col justify-between ${isSmashDrag
+            className={`absolute inset-0 h-full w-full rounded-3xl overflow-hidden border-2 transition-colors duration-150 flex flex-col justify-between ${isSmashDrag
                 ? 'border-accent-red bg-accent-red/10'
                 : isPassDrag
                   ? 'border-border-subtle bg-bg-primary'
@@ -259,7 +262,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
                 aria-label={rawSmashDict.flipToDatingProfile}
                 className="flex min-h-[48px] min-w-[48px] h-12 w-12 sm:h-12 sm:w-12 items-center justify-center rounded-2xl bg-bg-primary/85 border border-accent-red/40 text-accent-red hover:text-text-inverted hover:border-accent-red hover:scale-110 active:scale-95 transition-all shadow-2xl backdrop-blur-md cursor-pointer touch-manipulation"
               >
-                <RotateCw className="h-5 w-5" aria-hidden="true" />
+                <TarotTurnIcon className="h-5 w-5" aria-hidden="true" />
               </button>
 
               <button
@@ -275,7 +278,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
                 aria-label={rawSmashDict.zoomFullPortrait}
                 className="flex min-h-[48px] min-w-[48px] h-12 w-12 sm:h-12 sm:w-12 items-center justify-center rounded-2xl bg-bg-primary/85 border border-border-color text-text-secondary hover:text-text-inverted hover:border-accent-red hover:scale-110 active:scale-95 transition-all shadow-2xl backdrop-blur-md cursor-pointer touch-manipulation"
               >
-                <Maximize2 className="h-5 w-5" aria-hidden="true" />
+                <PortraitLoupeIcon className="h-5 w-5" aria-hidden="true" />
               </button>
             </div>
 
@@ -293,7 +296,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
                 aria-label={rawSmashDict.pass}
                 className="flex min-h-[48px] min-w-[48px] h-13 w-13 sm:h-14 sm:w-14 items-center justify-center rounded-2xl bg-bg-primary/90 border-2 border-border-color text-text-muted hover:text-text-primary hover:border-border-subtle hover:scale-110 active:scale-95 transition-all shadow-2xl backdrop-blur-md cursor-pointer touch-manipulation"
               >
-                <ThumbsDown className="h-6 w-6 sm:h-7 sm:w-7" aria-hidden="true" />
+                <SnuffedCandleIcon className="h-6 w-6 sm:h-7 sm:w-7" aria-hidden="true" />
               </button>
 
               <button
@@ -309,7 +312,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
                 aria-label={rawSmashDict.smash}
                 className="flex min-h-[48px] min-w-[48px] h-13 w-13 sm:h-14 sm:w-14 items-center justify-center rounded-2xl bg-accent-red hover:bg-accent-red-hover text-text-inverted hover:scale-110 active:scale-95 transition-all cursor-pointer touch-manipulation"
               >
-                <Heart className="h-6 w-6 sm:h-7 sm:w-7 fill-text-inverted" aria-hidden="true" />
+                <ThornHeartIcon className="h-6 w-6 sm:h-7 sm:w-7" aria-hidden="true" />
               </button>
             </div>
           </div>
@@ -322,6 +325,8 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
             isFlipped={isFlipped}
             customLabels={customLabels}
             rosterMode={rosterMode}
+            greenFlags={sampledGreenFlags}
+            redFlags={sampledRedFlags}
             onFlip={() => {
               SmashSounds.playFlipSound();
               startFlip();

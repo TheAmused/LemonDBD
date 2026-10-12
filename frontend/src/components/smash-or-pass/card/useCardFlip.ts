@@ -41,5 +41,8 @@ export function useCardFlip(slug: string | undefined, id: string | number | unde
     transition: turn === 'far' ? 'none' : `transform ${FLIP_HALF_MS}ms ease-in-out`,
   };
 
-  return { isFlipped, startFlip, turnStyle };
+  /** True from the first frame of a turn until the card is back face up, so nothing shows through the edge-on card. */
+  const isTurned = isFlipped || turn !== 'settled';
+
+  return { isFlipped, isTurned, startFlip, turnStyle };
 }

@@ -52,5 +52,6 @@ export default {
   errChallengeExpired: "Dieser Anmeldeschritt ist abgelaufen. Gehe zurück und melde dich erneut an.",
   errIncorrectPassword: "Falsches Passwort.",
   errUnavailable: "Die Zwei-Faktor-Authentifizierung ist derzeit nicht verfügbar.",
+  needsPasswordHint: "Lege zuerst ein Passwort fest (siehe oben). Die Zwei-Faktor-Authentifizierung braucht es, um zu bestätigen, dass du es wirklich bist.",
   errGeneric: "Etwas ist schiefgelaufen. Versuche es erneut.",
 } as const;

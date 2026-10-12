@@ -34,6 +34,8 @@ class UserUpdate(BaseModel):
 class UserResponse(UserBase):
     id: int
     two_factor_enabled: bool = False
+    has_password: bool = True
+    google_linked: bool = False
     created_at: datetime | None = None
     updated_at: datetime | None = None
     onboarding_completed_at: datetime | None = None

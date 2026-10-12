@@ -147,6 +147,8 @@ class Config:
 
     FRONTEND_URL: str = os.getenv("FRONTEND_URL", "https://localhost")
 
+    GOOGLE_CLIENT_ID: str = os.getenv("GOOGLE_CLIENT_ID", "").strip()
+
 
 class TestingConfig(Config):
     TESTING: bool = True

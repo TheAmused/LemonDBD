@@ -52,5 +52,6 @@ export default {
   errChallengeExpired: "Ten krok logowania wygasł. Wróć i zaloguj się ponownie.",
   errIncorrectPassword: "Nieprawidłowe hasło.",
   errUnavailable: "Uwierzytelnianie dwuskładnikowe jest chwilowo niedostępne.",
+  needsPasswordHint: "Najpierw ustaw hasło (patrz wyżej). 2FA wymaga go, aby potwierdzić, że to naprawdę Ty.",
   errGeneric: "Coś poszło nie tak. Spróbuj ponownie.",
 } as const;

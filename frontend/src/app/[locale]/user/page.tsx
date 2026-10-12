@@ -198,6 +198,7 @@ export default function UserProfilePage() {
           <UserProfileForm
             initialEmail={user.email || ''}
             twoFactorEnabled={Boolean(user.two_factor_enabled)}
+            hasPassword={user.has_password !== false}
             onRefreshUser={refreshUser}
           />
 

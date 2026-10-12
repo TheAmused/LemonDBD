@@ -132,7 +132,7 @@ def hash_password(password: str) -> str:
     return generate_password_hash(password)
 
 
-def verify_password(password: str, password_hash: str) -> bool:
+def verify_password(password: str, password_hash: str | None) -> bool:
     """Verify a plaintext password against a stored password hash."""
     if not password or not password_hash:
         return False

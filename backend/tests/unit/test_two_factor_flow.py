@@ -25,7 +25,7 @@ def _mail_sender(app: Flask, monkeypatch: pytest.MonkeyPatch) -> None:
 
 def _make_user(name: str = "alice", role: str = "user") -> User:
     user = User(
-        username=name,
+        login=name, username=name,
         email=f"{name}@example.com",
         password_hash=hash_password(PASSWORD),
         role=role,
@@ -59,7 +59,7 @@ def _next_code(secret: str, ahead: int = 1) -> str:
 
 
 def _challenge(client: FlaskClient, user: User) -> str:
-    res = client.post("/api/v1/auth/login", json={"username": user.username, "password": PASSWORD})
+    res = client.post("/api/v1/auth/login", json={"login": user.username, "password": PASSWORD})
     assert res.status_code == 200
     return res.get_json()["two_factor_token"]
 
@@ -72,7 +72,7 @@ def _finish(client: FlaskClient, challenge: str, code: str):
 class TestOptionalByDefault:
     def test_accounts_log_in_with_just_a_password_until_they_opt_in(self, client: FlaskClient, db_session) -> None:
         user = _make_user()
-        res = client.post("/api/v1/auth/login", json={"username": user.username, "password": PASSWORD})
+        res = client.post("/api/v1/auth/login", json={"login": user.username, "password": PASSWORD})
         assert res.status_code == 200
         assert res.get_json()["status"] == "success"
         assert any(h.startswith(f"{SESSION_COOKIE_NAME}=") for h in res.headers.getlist("Set-Cookie"))
@@ -84,7 +84,7 @@ class TestOptionalByDefault:
 
     def test_admins_are_not_forced_either(self, client: FlaskClient, db_session) -> None:
         admin = _make_user("boss", role="admin")
-        res = client.post("/api/v1/auth/login", json={"username": admin.username, "password": PASSWORD})
+        res = client.post("/api/v1/auth/login", json={"login": admin.username, "password": PASSWORD})
         assert res.get_json()["status"] == "success"
 
     def test_endpoints_need_a_session(self, client: FlaskClient, db_session) -> None:
@@ -118,7 +118,7 @@ class TestEnrolment:
     def test_a_pending_setup_does_not_gate_login(self, client: FlaskClient, db_session) -> None:
         user = _make_user()
         client.post("/api/v1/auth/two-factor/setup", json={"password": PASSWORD}, headers=_bearer(user))
-        res = client.post("/api/v1/auth/login", json={"username": user.username, "password": PASSWORD})
+        res = client.post("/api/v1/auth/login", json={"login": user.username, "password": PASSWORD})
         assert res.get_json()["status"] == "success"
 
     def test_restarting_setup_replaces_the_secret(self, client: FlaskClient, db_session) -> None:
@@ -183,7 +183,7 @@ class TestLoginChallenge:
         user = _make_user()
         _enrol(client, user)
         client.delete_cookie(SESSION_COOKIE_NAME)
-        res = client.post("/api/v1/auth/login", json={"username": user.username, "password": PASSWORD})
+        res = client.post("/api/v1/auth/login", json={"login": user.username, "password": PASSWORD})
         body = res.get_json()
         assert res.status_code == 200
         assert body["status"] == "two_factor_required"
@@ -194,7 +194,7 @@ class TestLoginChallenge:
     def test_wrong_password_still_looks_like_any_wrong_password(self, client: FlaskClient, db_session) -> None:
         user = _make_user()
         _enrol(client, user)
-        res = client.post("/api/v1/auth/login", json={"username": user.username, "password": "wrong-pass"})
+        res = client.post("/api/v1/auth/login", json={"login": user.username, "password": "wrong-pass"})
         assert res.status_code == 401
 
     def test_the_challenge_is_not_a_session_by_any_route(self, client: FlaskClient, db_session) -> None:
@@ -397,7 +397,7 @@ class TestSensitiveActionsAskForTheCode:
         assert [m.subject for m in outbox] == ["LemonDBD: Two-factor authentication was turned off"]
         assert db.session.scalar(db.select(db.func.count(UserTwoFactor.id))) == 0
         assert db.session.scalar(db.select(db.func.count(UserRecoveryCode.id))) == 0
-        login = client.post("/api/v1/auth/login", json={"username": user.username, "password": PASSWORD})
+        login = client.post("/api/v1/auth/login", json={"login": user.username, "password": PASSWORD})
         assert login.get_json()["status"] == "success"
 
     def test_disable_with_a_recovery_code(self, client: FlaskClient, db_session) -> None:
@@ -524,7 +524,7 @@ class TestAdminSide:
         assert [m.subject for m in outbox] == ["LemonDBD: Two-factor authentication was reset by an administrator"]
         log = db.session.scalar(db.select(AdminAuditLog).where(AdminAuditLog.action == "user_two_factor_reset"))
         assert log.admin_user_id == admin.id and log.target_id == str(victim.id)
-        login = client.post("/api/v1/auth/login", json={"username": "victim", "password": PASSWORD})
+        login = client.post("/api/v1/auth/login", json={"login": "victim", "password": PASSWORD})
         assert login.get_json()["status"] == "success"
 
     def test_reset_on_an_account_without_2fa_is_harmless_and_silent(self, client: FlaskClient, db_session) -> None:

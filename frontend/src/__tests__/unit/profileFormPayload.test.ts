@@ -16,9 +16,9 @@ describe('UserProfileForm request body', () => {
     assert.doesNotMatch(form, /payload\.password\b/);
   });
 
-  it('always attaches the current password to a change and refuses to send one without it', () => {
+  it('attaches the current password to an email or password change and refuses to send one without it', () => {
     assert.match(form, /payload\.current_password\s*=\s*currentPassword/);
-    assert.match(form, /if \(!currentPassword\)/);
+    assert.match(form, /if \(needsPassword && !currentPassword\)/);
   });
 
   it('types the body with the shared UpdateProfilePayload so a wrong key fails the type-check', () => {

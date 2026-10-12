@@ -38,7 +38,7 @@ def seeded_app(tmp_path: Path, monkeypatch) -> Flask:
     test_app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///:memory:"
     with test_app.app_context():
         db.create_all()
-        db.session.add(User(username="migrator", email="migrator@test.com", password_hash="h", role="admin"))
+        db.session.add(User(login="migrator", username="migrator", email="migrator@test.com", password_hash="h", role="admin"))
         chapter = Chapter(name="Base Game")
         db.session.add(chapter)
         db.session.flush()

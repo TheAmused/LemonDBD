@@ -9,6 +9,7 @@ def test_fresh_user_has_no_onboarding_timestamp(client: FlaskClient) -> None:
     reg_res = client.post(
         "/api/v1/auth/register",
         json={
+            "login": "onboardcheck",
             "username": "onboardcheck",
             "email": "onboardcheck@example.com",
             "password": "password123",
@@ -30,6 +31,7 @@ def test_mark_onboarding_complete_endpoint(client: FlaskClient) -> None:
     reg_res = client.post(
         "/api/v1/auth/register",
         json={
+            "login": "onboardmarker",
             "username": "onboardmarker",
             "email": "onboardmarker@example.com",
             "password": "password123",
@@ -53,11 +55,11 @@ def test_mark_onboarding_complete_endpoint(client: FlaskClient) -> None:
 def test_mark_onboarding_complete_rejects_other_users(client: FlaskClient) -> None:
     reg_a = client.post(
         "/api/v1/auth/register",
-        json={"username": "userA", "email": "usera@example.com", "password": "password123"},
+        json={"login": "userA", "username": "userA", "email": "usera@example.com", "password": "password123"},
     ).get_json()
     reg_b = client.post(
         "/api/v1/auth/register",
-        json={"username": "userB", "email": "userb@example.com", "password": "password123"},
+        json={"login": "userB", "username": "userB", "email": "userb@example.com", "password": "password123"},
     ).get_json()
 
     headers_a = {"Authorization": f"Bearer {reg_a['token']}"}
@@ -71,6 +73,7 @@ def test_set_preferred_language_endpoint(client: FlaskClient) -> None:
     reg_res = client.post(
         "/api/v1/auth/register",
         json={
+            "login": "langpicker",
             "username": "langpicker",
             "email": "langpicker@example.com",
             "password": "password123",
@@ -97,6 +100,7 @@ def test_set_preferred_language_rejects_unsupported_locale(client: FlaskClient) 
     reg_res = client.post(
         "/api/v1/auth/register",
         json={
+            "login": "badlangpicker",
             "username": "badlangpicker",
             "email": "badlangpicker@example.com",
             "password": "password123",
@@ -116,11 +120,11 @@ def test_set_preferred_language_rejects_unsupported_locale(client: FlaskClient) 
 def test_set_preferred_language_rejects_other_users(client: FlaskClient) -> None:
     reg_a = client.post(
         "/api/v1/auth/register",
-        json={"username": "langA", "email": "langa@example.com", "password": "password123"},
+        json={"login": "langA", "username": "langA", "email": "langa@example.com", "password": "password123"},
     ).get_json()
     reg_b = client.post(
         "/api/v1/auth/register",
-        json={"username": "langB", "email": "langb@example.com", "password": "password123"},
+        json={"login": "langB", "username": "langB", "email": "langb@example.com", "password": "password123"},
     ).get_json()
 
     headers_a = {"Authorization": f"Bearer {reg_a['token']}"}

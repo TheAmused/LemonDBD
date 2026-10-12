@@ -27,6 +27,7 @@ export interface AdminStats {
 
 export interface UserRow {
   id: number;
+  login: string;
   username: string;
   email: string;
   role: string;

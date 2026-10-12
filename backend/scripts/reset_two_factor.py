@@ -4,7 +4,7 @@
 For the case no admin can fix from the website: the only administrator lost their phone and
 their recovery codes. Run it where the backend runs, e.g.
 
-    docker compose exec backend python scripts/reset_two_factor.py <username-or-email>
+    docker compose exec backend python scripts/reset_two_factor.py <login-or-email>
 
 The account's TOTP secret and recovery codes are deleted and a notice is emailed to it.
 """
@@ -25,22 +25,22 @@ from app.services.user import two_factor  # noqa: E402
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Turn off two-factor sign-in for one account.")
-    parser.add_argument("account", help="username or email of the account")
+    parser.add_argument("account", help="login or email of the account")
     args = parser.parse_args(argv)
 
     app = create_app(Config)
     with app.app_context():
         needle = args.account.strip()
         user = db.session.scalars(
-            select(User).where(or_(User.username.ilike(needle), User.email.ilike(needle.lower())))
+            select(User).where(or_(User.login.ilike(needle), User.email.ilike(needle.lower())))
         ).first()
         if user is None:
             print(f"No account matches '{needle}'.", file=sys.stderr)
             return 1
         if two_factor.admin_reset(user):
-            print(f"Two-factor sign-in turned off for '{user.username}'.")
+            print(f"Two-factor sign-in turned off for '{user.login}'.")
         else:
-            print(f"'{user.username}' did not have two-factor sign-in turned on.")
+            print(f"'{user.login}' did not have two-factor sign-in turned on.")
     return 0
 
 

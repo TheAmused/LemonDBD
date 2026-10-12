@@ -20,7 +20,7 @@ def setup_page_streak(app: Flask, db_session: Session) -> None:
 @pytest.fixture
 def auth_headers() -> dict[str, str]:
     user_service = UserService()
-    user, err = user_service.register_user("completionstatususer", "status@test.com", "password123")
+    user, err = user_service.register_user("completionstatususer", "completionstatususer", "status@test.com", "password123")
     assert err is None
     token = user_service.generate_token(user.id)
     return {"Authorization": f"Bearer {token}"}

@@ -112,7 +112,7 @@ def live_admin_token(live_app: Flask) -> str:
         ).first()
         if not admin_user:
             admin_user, _ = user_service.register_user(
-                username="admin_live_tester",
+                login="admin_live_tester", username="admin_live_tester",
                 email="admin_live@example.com",
                 password="adminpassword123",
                 role="admin",
@@ -183,7 +183,7 @@ def auth_client_factory(
             user = db.session.scalars(select(User).where(User.username == username)).first()
             if not user:
                 user, _ = user_service.register_user(
-                    username=username, email=email, password=password, role=role
+                    login=username, username=username, email=email, password=password, role=role
                 )
                 user.is_verified = True
                 db.session.commit()

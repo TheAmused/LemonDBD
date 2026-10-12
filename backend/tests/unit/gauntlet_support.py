@@ -63,6 +63,6 @@ def gauntlet_service() -> GauntletService:
 
 @pytest.fixture
 def gauntlet_user(user_service: UserService) -> int:
-    user, err = user_service.register_user("gauntlet_master", "master@example.com", "Password123!")
+    user, err = user_service.register_user("gauntlet_master", "gauntlet_master", "master@example.com", "Password123!")
     assert err is None
     return user.id

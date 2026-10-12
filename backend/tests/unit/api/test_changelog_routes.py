@@ -15,7 +15,7 @@ class TestChangelogRoutes:
     @pytest.fixture
     def admin_user(self, db_session) -> User:
         user = User(
-            username="route_admin",
+            login="route_admin", username="route_admin",
             email="route_admin@example.com",
             password_hash="hashed",
             role="admin",
@@ -27,7 +27,7 @@ class TestChangelogRoutes:
     @pytest.fixture
     def plain_user(self, db_session) -> User:
         user = User(
-            username="route_user",
+            login="route_user", username="route_user",
             email="route_user@example.com",
             password_hash="hashed",
             role="user",

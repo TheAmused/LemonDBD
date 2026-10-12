@@ -9,7 +9,7 @@ test("Live Frontend Workflow: Challenges, Streaks & Killswitch Governance", asyn
   const regRes = await fetch(`${API_BASE}/api/v1/auth/register`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ username, email: `${username}@test.com`, password: "Password123!" }),
+    body: JSON.stringify({ login: username, username, email: `${username}@test.com`, password: "Password123!" }),
   });
   assert.strictEqual(regRes.status, 201);
   const playerHeaders = {
@@ -41,7 +41,7 @@ test("Live Frontend Workflow: Challenges, Streaks & Killswitch Governance", asyn
   const adminLoginRes = await fetch(`${API_BASE}/api/v1/auth/login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ username: "lemon", password: "lemon" }),
+    body: JSON.stringify({ login: "lemon", password: "lemon" }),
   });
   assert.strictEqual(adminLoginRes.status, 200);
   const adminHeaders = {
@@ -63,7 +63,7 @@ test("Live Frontend Workflow: Challenges, Streaks & Killswitch Governance", asyn
     const reg2Res = await fetch(`${API_BASE}/api/v1/auth/register`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username: user2Name, email: `${user2Name}@test.com`, password: "Password123!" }),
+      body: JSON.stringify({ login: user2Name, username: user2Name, email: `${user2Name}@test.com`, password: "Password123!" }),
     });
     assert.strictEqual(reg2Res.status, 201);
     const user2Headers = {

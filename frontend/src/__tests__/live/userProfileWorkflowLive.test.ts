@@ -15,7 +15,7 @@ test("Live Frontend Workflow: User Profile Management & Password Security", asyn
   const regRes = await fetch(`${API_BASE}/api/v1/auth/register`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ username, email, password: initialPassword }),
+    body: JSON.stringify({ login: username, username, email, password: initialPassword }),
   });
   assert.strictEqual(regRes.status, 201);
   const regData = await regRes.json();
@@ -50,7 +50,7 @@ test("Live Frontend Workflow: User Profile Management & Password Security", asyn
   const oldLoginRes = await fetch(`${API_BASE}/api/v1/auth/login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ username, password: initialPassword }),
+    body: JSON.stringify({ login: username, password: initialPassword }),
   });
   assert.ok(oldLoginRes.status === 400 || oldLoginRes.status === 401);
 
@@ -58,7 +58,7 @@ test("Live Frontend Workflow: User Profile Management & Password Security", asyn
   const newLoginRes = await fetch(`${API_BASE}/api/v1/auth/login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ username, password: newPassword }),
+    body: JSON.stringify({ login: username, password: newPassword }),
   });
   assert.strictEqual(newLoginRes.status, 200);
   const newToken = (await newLoginRes.json()).token;

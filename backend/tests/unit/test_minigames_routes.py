@@ -13,7 +13,7 @@ from app.models.user import User
 def auth_tokens(app, test_db):
     """Create test admin and standard user tokens."""
     admin_user = User(
-        username="admin_lemon",
+        login="admin_lemon", username="admin_lemon",
         email="admin@lemondbd.com",
         password_hash="mock_admin_hash",
         role="admin",
@@ -22,7 +22,7 @@ def auth_tokens(app, test_db):
     db.session.add(admin_user)
 
     normal_user = User(
-        username="regular_user",
+        login="regular_user", username="regular_user",
         email="user@lemondbd.com",
         password_hash="mock_user_hash",
         role="user",

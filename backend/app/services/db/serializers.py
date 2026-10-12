@@ -149,7 +149,7 @@ def serialize_item_addon(a: ItemAddon) -> dict[str, Any]:
 
 def serialize_user_showcase(sc: UserShowcase) -> dict[str, Any]:
     return {
-        "username": sc.user.username if sc.user else None,
+        "login": sc.user.login if sc.user else None,
         "player_title": sc.player_title,
         "devotion_level": sc.devotion_level,
         "grade_rank": sc.grade_rank,
@@ -163,7 +163,7 @@ def serialize_user_showcase(sc: UserShowcase) -> dict[str, Any]:
     }
 
 
-def serialize_smash_entity(e: Entity, username_by_user_id: dict[int, str]) -> dict[str, Any]:
+def serialize_smash_entity(e: Entity, login_by_user_id: dict[int, str]) -> dict[str, Any]:
     """The profile is columns now, so it exports as columns. `metadata_json` --
     one blob restating those columns in up to three spellings apiece -- is gone;
     so are `compatibility_tags` and the `en` half of `translations`, both of
@@ -196,7 +196,7 @@ def serialize_smash_entity(e: Entity, username_by_user_id: dict[int, str]) -> di
         "stat": e.stat.to_dict() if e.stat else None,
         "votes": [
             {
-                "username": username_by_user_id.get(v.user_id) if v.user_id else None,
+                "login": login_by_user_id.get(v.user_id) if v.user_id else None,
                 "session_id": v.session_id,
                 "vote_type": v.vote_type,
                 "created_at": v.created_at.isoformat() if v.created_at else None,
@@ -206,7 +206,7 @@ def serialize_smash_entity(e: Entity, username_by_user_id: dict[int, str]) -> di
     }
 
 
-def serialize_roster(r: Roster, username_by_user_id: dict[int, str]) -> dict[str, Any]:
+def serialize_roster(r: Roster, login_by_user_id: dict[int, str]) -> dict[str, Any]:
     return {
         "slug": r.slug,
         "name": r.name,
@@ -217,14 +217,14 @@ def serialize_roster(r: Roster, username_by_user_id: dict[int, str]) -> dict[str
         "category": r.category,
         "is_nsfw": r.is_nsfw,
         "is_active": r.is_active,
-        "entities": [serialize_smash_entity(e, username_by_user_id) for e in r.entities],
+        "entities": [serialize_smash_entity(e, login_by_user_id) for e in r.entities],
     }
 
 
 def serialize_admin_audit_log(log: AdminAuditLog) -> dict[str, Any]:
     admin_user = db.session.get(User, log.admin_user_id) if log.admin_user_id else None
     return {
-        "admin_username": admin_user.username if admin_user else None,
+        "admin_login": admin_user.login if admin_user else None,
         "action": log.action,
         "target_type": log.target_type,
         "target_id": log.target_id,
@@ -240,7 +240,7 @@ def serialize_changelog_post(post: ChangelogPost) -> dict[str, Any]:
         "tag": post.tag,
         "position": post.position,
         "is_published": post.is_published,
-        "author_username": post.author.username if post.author else None,
+        "author_login": post.author.login if post.author else None,
         "author_name": post.author_name,
         "created_at": post.created_at.isoformat() if post.created_at else None,
     }
@@ -298,6 +298,7 @@ def user_avatar_relative_path(avatar_url: str | None) -> str | None:
 
 def serialize_user(u: User) -> dict[str, Any]:
     return {
+        "login": u.login,
         "username": u.username,
         "email": u.email,
         "password_hash": u.password_hash,

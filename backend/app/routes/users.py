@@ -73,6 +73,7 @@ def create_user_by_admin():
         return jsonify({"error": "Validation failed", "details": err.errors(), "status": 400}), 400
 
     user, err = user_service.register_user(
+        login=validated_data.login,
         username=validated_data.username,
         email=validated_data.email,
         password=validated_data.password,
@@ -264,7 +265,7 @@ def purge_database_tables():
             purged.append("game_runs")
 
         db.session.commit()
-        logger.info(f"Admin {g.current_user.username} purged tables: {purged}")
+        logger.info(f"Admin {g.current_user.login} purged tables: {purged}")
         return jsonify({
             "status": "success",
             "message": f"Successfully purged tables: {', '.join(purged)}",
@@ -343,7 +344,7 @@ def import_database():
             mode=mode,
             targets=targets,
         )
-        logger.info(f"Admin {g.current_user.username} imported database (mode={mode}): {result.get('summary')}")
+        logger.info(f"Admin {g.current_user.login} imported database (mode={mode}): {result.get('summary')}")
         return jsonify(result), 200
     except Exception as e:
         logger.error(f"Database import error: {e}", exc_info=True)

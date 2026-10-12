@@ -32,7 +32,7 @@ def gauntlet_auth_setup(db_session: Session) -> tuple[int, str, dict[str, str]]:
     seed_killer("Trapper")
 
     user_service = UserService()
-    user, err = user_service.register_user("streakuser", "gauntlet@test.com", "password123")
+    user, err = user_service.register_user("streakuser", "streakuser", "gauntlet@test.com", "password123")
     assert err is None
     token = user_service.generate_token(user.id)
     headers = {"Authorization": f"Bearer {token}"}
@@ -242,7 +242,7 @@ class TestGauntletRoutes:
         _, _, headers = gauntlet_auth_setup
         user_service = UserService()
         other, err = user_service.register_user(
-            "otherstreakuser", "other-gauntlet@test.com", "password123"
+            "otherstreakuser", "otherstreakuser", "other-gauntlet@test.com", "password123"
         )
         assert err is None
         other_headers = {"Authorization": f"Bearer {user_service.generate_token(other.id)}"}

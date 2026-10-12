@@ -3,7 +3,7 @@ import logging
 import secrets
 from datetime import datetime, timedelta, timezone
 from flask import current_app
-from sqlalchemy import or_, select
+from sqlalchemy import func, or_, select
 
 from app.core.config import Config
 from app.core.db_retry import retry_on_transient_db_error
@@ -32,6 +32,7 @@ def _generate_verification_code() -> str:
 
 @retry_on_transient_db_error()
 def create_user_account(
+    login: str,
     username: str,
     email: str,
     password: str,
@@ -49,9 +50,14 @@ def create_user_account(
     normal "already taken" error instead of a 500. Either outcome is
     correct; neither double-creates an account.
     """
+    clean_login = (login or "").strip()
     clean_username = (username or "").strip()
     clean_email = (email or "").strip().lower()
 
+    if not clean_login or len(clean_login) < 3:
+        return None, "Login must be at least 3 characters long."
+    if "@" in clean_login or any(ch.isspace() for ch in clean_login):
+        return None, "Login cannot contain spaces or the @ sign."
     if not clean_username or len(clean_username) < 3:
         return None, "Username must be at least 3 characters long."
     if not clean_email or "@" not in clean_email:
@@ -59,11 +65,11 @@ def create_user_account(
     if not password or len(password) < 6:
         return None, "Password must be at least 6 characters long."
 
-    existing_username = db.session.scalars(
-        select(User).where(User.username.ilike(clean_username))
+    existing_login = db.session.scalars(
+        select(User).where(func.lower(User.login) == clean_login.lower())
     ).first()
-    if existing_username:
-        return None, "Username is already taken."
+    if existing_login:
+        return None, "Login is already taken."
 
     existing_email = db.session.scalars(
         select(User).where(User.email.ilike(clean_email))
@@ -91,6 +97,7 @@ def create_user_account(
         verif_expires = None
 
     new_user = User(
+        login=clean_login,
         username=clean_username,
         email=clean_email,
         password_hash=pw_hash,
@@ -106,11 +113,11 @@ def create_user_account(
     db.session.commit()
 
     if require_verification:
-        logger.info(f"User '{new_user.username}' registered with role '{new_user.role}'.")
+        logger.info(f"User '{new_user.login}' registered with role '{new_user.role}'.")
         send_verification_email(new_user)
     else:
         logger.info(
-            f"User '{new_user.username}' registered and auto-verified (REQUIRE_EMAIL_VERIFICATION is disabled)."
+            f"User '{new_user.login}' registered and auto-verified (REQUIRE_EMAIL_VERIFICATION is disabled)."
         )
     return new_user, None
 
@@ -151,7 +158,7 @@ def verify_email_code(email: str, code: str) -> tuple[User | None, str | None]:
     user.verification_attempts = 0
     db.session.commit()
 
-    logger.info(f"User '{user.username}' verified their email.")
+    logger.info(f"User '{user.login}' verified their email.")
     return user, None
 
 
@@ -240,7 +247,7 @@ def reset_password_with_token(token: str, new_password: str) -> tuple[User | Non
     user.reset_token_expires_at = None
     db.session.commit()
 
-    logger.info(f"User '{user.username}' reset their password.")
+    logger.info(f"User '{user.login}' reset their password.")
     return user, None
 
 
@@ -260,25 +267,25 @@ def auto_verify_if_disabled(user: User) -> None:
         user.verification_attempts = 0
         db.session.commit()
         logger.info(
-            f"User '{user.username}' auto-verified upon login (REQUIRE_EMAIL_VERIFICATION is disabled)."
+            f"User '{user.login}' auto-verified upon login (REQUIRE_EMAIL_VERIFICATION is disabled)."
         )
 
 
 @retry_on_transient_db_error()
 def authenticate_user_credentials(
-    username_or_email: str,
+    login_or_email: str,
     password: str,
 ) -> tuple[User | None, str | None]:
-    """Verify username/email and password against stored database hash."""
-    clean_id = (username_or_email or "").strip()
+    """Verify login/email and password against stored database hash."""
+    clean_id = (login_or_email or "").strip()
     if not clean_id or not password:
         return None, None
 
     user = db.session.scalars(
         select(User).where(
             or_(
-                User.username.ilike(clean_id),
-                User.email.ilike(clean_id.lower()),
+                func.lower(User.login) == clean_id.lower(),
+                func.lower(User.email) == clean_id.lower(),
             )
         )
     ).first()

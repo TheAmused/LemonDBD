@@ -15,6 +15,7 @@ class UserBase(BaseModel):
 
 
 class UserCreate(BaseModel):
+    login: str = Field(..., min_length=3, max_length=50, pattern=r"^[^@\s]+$")
     username: str = Field(..., min_length=3, max_length=50)
     email: EmailStr
     password: str = Field(..., min_length=6)
@@ -33,6 +34,7 @@ class UserUpdate(BaseModel):
 
 class UserResponse(UserBase):
     id: int
+    login: str
     two_factor_enabled: bool = False
     has_password: bool = True
     google_linked: bool = False

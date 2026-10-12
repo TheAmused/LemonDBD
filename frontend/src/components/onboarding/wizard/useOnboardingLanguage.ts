@@ -41,6 +41,8 @@ export function useOnboardingLanguage(locale: string) {
     await setPreferredLanguage(selectedLanguage);
     if (selectedLanguage !== locale) {
       router.push(`/${selectedLanguage}/welcome`);
+    } else {
+      sessionStorage.removeItem(RESUME_VIEW_KEY);
     }
     setSavingLanguage(false);
     setView('roster');

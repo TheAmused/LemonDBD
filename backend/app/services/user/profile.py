@@ -35,8 +35,9 @@ def modify_user_profile(
     new_password: str | None = None,
     current_password: str | None = None,
     two_factor_code: str | None = None,
+    username: str | None = None,
 ) -> tuple[User | None, str | None]:
-    """Update profile attributes including email address, avatar, or password.
+    """Update profile attributes including the public username, email address, avatar, or password.
 
     Changing the email or the password is what an attacker holding a stolen session would do to
     take the account over, so both need the current password. A password change also bumps
@@ -48,11 +49,16 @@ def modify_user_profile(
     if not user:
         return None, "User not found."
 
+    clean_username = username.strip() if username else None
+    if clean_username is not None and not 3 <= len(clean_username) <= 50:
+        return None, "Username must be between 3 and 50 characters long."
+
     clean_email = email.strip().lower() if email else None
     changing_email = bool(clean_email) and clean_email != user.email
-    if (changing_email or new_password) and not user.has_password:
+    changing_username = bool(clean_username) and clean_username != user.username
+    if (changing_email or changing_username or new_password) and not user.has_password:
         return None, "Set a password with the reset link first."
-    if changing_email or new_password:
+    if changing_email or changing_username or new_password:
         if not current_password:
             return None, "Current password is required."
         if not verify_password(current_password, user.password_hash):
@@ -70,11 +76,14 @@ def modify_user_profile(
         if existing:
             return None, "Email address is already in use."
 
-    if (changing_email or new_password) and two_factor.is_enabled(user.id):
+    if (changing_email or changing_username or new_password) and two_factor.is_enabled(user.id):
         two_factor.verify_second_factor(user, two_factor_code)
 
     if changing_email:
         user.email = clean_email
+
+    if changing_username:
+        user.username = clean_username
 
     if avatar_url:
         user.avatar_url = avatar_url.strip()

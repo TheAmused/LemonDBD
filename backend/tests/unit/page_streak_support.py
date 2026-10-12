@@ -117,6 +117,6 @@ def ownership_service() -> OwnershipService:
 
 @pytest.fixture
 def streak_user(user_service: UserService) -> int:
-    user, err = user_service.register_user("streak_player", "streak@example.com", "Password123!")
+    user, err = user_service.register_user("streak_player", "streak_player", "streak@example.com", "Password123!")
     assert err is None
     return user.id

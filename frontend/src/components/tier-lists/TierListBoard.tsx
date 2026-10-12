@@ -312,8 +312,9 @@ export function TierListBoard({
       <div
         ref={wrapRef}
         data-fit={fit ? '' : undefined}
+        data-scroll={fit?.pageScroll ? '' : undefined}
         style={fitStyle}
-        className="group/board relative flex flex-col w-full flex-1 basis-0 min-h-0 gap-3 [@media(max-height:439px)]:flex-none [@media(max-height:439px)]:basis-auto"
+        className="group/board relative flex flex-col w-full flex-1 basis-0 min-h-0 gap-3 data-[scroll]:overflow-y-auto data-[scroll]:overscroll-contain data-[scroll]:[&>*]:shrink-0 [@media(max-height:439px)]:flex-none [@media(max-height:439px)]:basis-auto"
       >
         <div
           className={cn(

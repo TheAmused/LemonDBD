@@ -2,7 +2,6 @@
 // frontend/src/components/streaks/ChallengeModeGate.tsx
 
 import React, { useEffect, useState } from 'react';
-import Link from 'next/link';
 import { AlertTriangle } from 'lucide-react';
 import { fetchChallengeModeStatus } from '@/services/challengeModesApi';
 import { useDictionary } from '@/context/DictionaryContext';
@@ -10,15 +9,13 @@ import { useDictionary } from '@/context/DictionaryContext';
 interface ChallengeModeGateProps {
   /** Backend `ChallengeModeSetting.mode` key (gauntlet/chaos/history/page_streak). */
   mode: string;
-  locale: string;
-  role: string;
   children: React.ReactNode;
 }
 
 /** Guards a challenge mode's route: while its admin kill switch is on, the
  * actual game board never mounts -- this renders a block screen instead,
  * regardless of how the URL was reached. */
-export const ChallengeModeGate: React.FC<ChallengeModeGateProps> = ({ mode, locale, role, children }) => {
+export const ChallengeModeGate: React.FC<ChallengeModeGateProps> = ({ mode, children }) => {
   const dict = useDictionary();
   const [status, setStatus] = useState<'loading' | 'enabled' | 'disabled'>('loading');
   const [reason, setReason] = useState<string | null>(null);
@@ -54,12 +51,6 @@ export const ChallengeModeGate: React.FC<ChallengeModeGateProps> = ({ mode, loca
             {dict.modal.reasonLabel}: {reason}
           </p>
         )}
-        <Link
-          href={`/${locale}/streaks/${role}`}
-          className="mt-2 rounded-xl border border-border-color bg-bg-surface px-4 py-2 type-strong text-text-secondary hover:border-accent-amber/50 hover:text-accent-amber transition-colors"
-        >
-          {dict.streaks.backToKillerStreaks}
-        </Link>
       </div>
     );
   }

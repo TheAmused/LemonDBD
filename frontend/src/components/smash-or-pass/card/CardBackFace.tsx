@@ -1,17 +1,13 @@
 'use client';
 // frontend/src/components/smash-or-pass/card/CardBackFace.tsx
-import { AlertTriangle, Flame, Heart, Quote, RotateCw, Sparkles, ThumbsDown } from 'lucide-react';
+import { SnuffedCandleIcon, TarotTurnIcon, ThornHeartIcon } from '@/components/icons/DbdIcons';
 import { Button } from '@/components/common/Button';
 import { Surface } from '@/components/common/Surface';
 import { tip } from '@/components/common/Tooltip';
 import { useDictionary } from '@/context/DictionaryContext';
 import type { EntityItem, RosterCustomLabels } from '@/types/smashOrPass';
-import { cn } from '@/utils/cn';
 import type { localizedProfile } from '@/utils/entityProfile';
 import { SmashSounds } from '../SmashSoundEffects';
-
-/** The dating-profile back face is not ready yet: its content sits blurred behind a "Soon..." badge. */
-const BACK_FACE_COMING_SOON = true;
 
 interface CardBackFaceProps {
   character: EntityItem;
@@ -20,11 +16,14 @@ interface CardBackFaceProps {
   isFlipped: boolean;
   customLabels?: RosterCustomLabels;
   rosterMode?: 'simple' | 'full';
+  /** The green / red flags to list, already picked by the card (see `sampleFlags`). */
+  greenFlags?: string[];
+  redFlags?: string[];
   onFlip: () => void;
   onVote: (type: 'smash' | 'pass', origin?: { x: number; y: number }) => void;
 }
 
-/** The dating-profile side of the card: vibe, turn on, dealbreaker, quote, and the vote buttons. */
+/** The dating-profile side of the card: vibe, turn on, dealbreaker, quote, flags, and the vote buttons. */
 export function CardBackFace({
   character,
   profile,
@@ -32,6 +31,8 @@ export function CardBackFace({
   isFlipped,
   customLabels,
   rosterMode = 'full',
+  greenFlags = [],
+  redFlags = [],
   onFlip,
   onVote,
 }: CardBackFaceProps) {
@@ -44,6 +45,12 @@ export function CardBackFace({
   const charBio = profile.bio;
   const charQuote = profile.quote;
   const charMeme: string = profile.meme;
+  // Everything past the short version sits behind "Show more".
+  const moreGreen = greenFlags.slice(1);
+  const moreRed = redFlags.slice(1);
+  const showBio = rosterMode !== 'simple' && Boolean(charBio);
+  const showMeme = rosterMode !== 'simple' && Boolean(charMeme);
+  const hasMore = Boolean(charTagline) || Boolean(charQuote) || moreGreen.length > 0 || moreRed.length > 0 || showBio || showMeme;
 
   return (
     <div
@@ -55,7 +62,7 @@ export function CardBackFace({
         SmashSounds.playFlipSound();
         onFlip();
       }}
-      className="absolute inset-0 h-full w-full rounded-[32px] sm:rounded-[36px] overflow-hidden border-2 border-accent-red/50 bg-bg-primary/95 backdrop-blur-2xl p-4 sm:p-5 flex flex-col justify-between text-text-primary cursor-pointer select-none"
+      className="absolute inset-0 h-full w-full rounded-3xl overflow-hidden border-2 border-accent-red/50 bg-bg-primary p-4 sm:p-5 flex flex-col justify-between text-text-primary cursor-pointer select-none"
     >
       {/* Top Bar with accessible Flip Back button and Title */}
       <div className="relative z-30 flex items-center justify-between pb-2 border-b border-border-color shrink-0 pointer-events-auto">
@@ -72,11 +79,10 @@ export function CardBackFace({
           aria-label={text.flipBack}
           className="pointer-coarse:min-h-11 pointer-coarse:min-w-11 flex min-h-[40px] min-w-[40px] h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-2xl bg-bg-elevated border border-accent-red/40 text-accent-red hover:text-text-inverted hover:border-accent-red hover:scale-110 active:scale-95 transition-all shadow-lg cursor-pointer touch-manipulation"
         >
-          <RotateCw className="h-5 w-5" aria-hidden="true" />
+          <TarotTurnIcon className="h-5 w-5" aria-hidden="true" />
         </button>
 
         <div className="flex items-center gap-1.5 px-2 min-w-0">
-          <Sparkles className="h-4 w-4 text-accent-red shrink-0" aria-hidden="true" />
           <h3 className="text-xs sm:text-sm font-black uppercase tracking-wider text-text-primary truncate max-w-[150px] sm:max-w-[180px]">
             {character.name}
           </h3>
@@ -98,86 +104,106 @@ export function CardBackFace({
       {/* Scrollable Back Content */}
       <div className="relative my-2 flex-1 min-h-0">
       <div
-        className={cn(
-          'space-y-2.5 h-full pr-1 scrollbar-thin scrollbar-thumb-border-color',
-          BACK_FACE_COMING_SOON
-            ? 'overflow-hidden blur-sm opacity-40 select-none pointer-events-none'
-            : 'overflow-y-auto select-text pointer-events-auto'
-        )}
-        aria-hidden={BACK_FACE_COMING_SOON || undefined}
+        className="space-y-2 h-full pr-1 overflow-y-auto select-text pointer-events-auto scrollbar-thin scrollbar-thumb-border-color"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Archetype / Dating Vibe */}
+        {/* The short version: who they are, what works, what ends it, one flag each way */}
         <div className="p-2.5 rounded-2xl bg-bg-elevated border border-accent-red/30 space-y-0.5">
-          <span className="type-label-2xs text-accent-red flex items-center gap-1">
-            <Flame className="h-3 w-3 text-accent-red" aria-hidden="true" />
-            {customLabels?.dating_vibe || 'Dating Vibe'}: {charTitle}
+          <span className="type-label-2xs text-accent-red block">
+            {customLabels?.dating_vibe || text.loreLabels.datingArchetype}
           </span>
-          {charTagline && <p className="text-mini text-text-secondary italic leading-snug">{charTagline}</p>}
+          <p className="type-strong text-text-primary leading-snug">{charTitle}</p>
         </div>
 
-        {/* Turn On (Visible & Optional) */}
         {profile.turn_on && (
           <div className="p-2.5 rounded-2xl bg-accent-green/10 border border-accent-green/40 space-y-0.5">
-            <span className="type-label-2xs text-accent-green flex items-center gap-1">
-              <Flame className="h-3 w-3 text-accent-green" aria-hidden="true" />
-              {customLabels?.turn_on || ''}
+            <span className="type-label-2xs text-accent-green block">
+              {customLabels?.turn_on || text.loreLabels.turn_on}
             </span>
             <p className="text-mini text-text-primary leading-snug">{profile.turn_on}</p>
           </div>
         )}
 
-        {/* Dealbreaker (Visible & Optional) */}
         {profile.dealbreaker && (
           <div className="p-2.5 rounded-2xl bg-accent-red/10 border border-accent-red/40 space-y-0.5">
-            <span className="type-label-2xs text-accent-red flex items-center gap-1">
-              <AlertTriangle className="h-3 w-3 text-accent-red" aria-hidden="true" />
-              {customLabels?.dealbreaker || ''}
+            <span className="type-label-2xs text-accent-red block">
+              {customLabels?.dealbreaker || text.loreLabels.dealbreaker}
             </span>
             <p className="text-mini text-text-primary leading-snug">{profile.dealbreaker}</p>
           </div>
         )}
 
-        {/* Signature Quote */}
-        {charQuote && (
-          <div className="p-2.5 rounded-2xl bg-bg-elevated border border-accent-amber/30 space-y-0.5">
-            <span className="type-label-2xs text-accent-amber flex items-center gap-1">
-              <Quote className="h-3 w-3 text-accent-amber" aria-hidden="true" />
-              {customLabels?.quote || 'Quote'}
-            </span>
-            <p className="text-mini text-text-secondary italic leading-relaxed">{charQuote}</p>
+        {(greenFlags.length > 0 || redFlags.length > 0) && (
+          <div className="p-2.5 rounded-2xl bg-bg-elevated border border-border-color space-y-1.5">
+            {greenFlags.length > 0 && (
+              <p className="text-mini text-text-primary leading-snug">
+                <span className="type-label-2xs text-accent-green block">{text.greenFlags}</span>
+                {greenFlags[0]}
+              </p>
+            )}
+            {redFlags.length > 0 && (
+              <p className="text-mini text-text-primary leading-snug">
+                <span className="type-label-2xs text-accent-red block">{text.redFlags}</span>
+                {redFlags[0]}
+              </p>
+            )}
           </div>
         )}
 
-        {/* Full Mode Extras */}
-        {rosterMode !== 'simple' && charBio && (
-          <Surface tone="elevated" radius="2xl" padding="none" className="p-2.5 space-y-1">
-            <span className="type-label-2xs text-text-muted">
-              {text.loreAndPersonality}
-            </span>
-            <p className="type-body text-text-secondary">{charBio}</p>
-          </Surface>
-        )}
+        {/* The long version, one tap away */}
+        {hasMore && (
+          <details className="group space-y-2.5">
+            <summary className="flex min-h-9 pointer-coarse:min-h-11 cursor-pointer list-none items-center justify-center rounded-2xl border border-border-color type-label-xs text-text-secondary transition-colors hover:text-text-primary [&::-webkit-details-marker]:hidden">
+              <span className="group-open:hidden">{text.showMore}</span>
+              <span className="hidden group-open:inline">{text.showLess}</span>
+            </summary>
 
-        {rosterMode !== 'simple' && charMeme && (
-          <Surface tone="elevated" radius="2xl" padding="none" className="p-2.5 space-y-0.5">
-            <span className="flex items-center gap-1.5 type-label-2xs text-text-secondary">
-              <Sparkles className="h-3 w-3 text-text-muted" aria-hidden="true" />
-              {customLabels?.meme || text.trialRumor}
-            </span>
-            <p className="text-mini text-text-secondary italic leading-snug">{charMeme}</p>
-          </Surface>
+            {charTagline && <p className="px-1 text-mini text-text-secondary italic leading-snug">{charTagline}</p>}
+
+            {charQuote && (
+              <div className="p-2.5 rounded-2xl bg-bg-elevated border border-accent-amber/30 space-y-0.5">
+                <span className="type-label-2xs text-accent-amber block">
+                  {customLabels?.quote || text.loreLabels.signatureQuote}
+                </span>
+                <p className="text-mini text-text-secondary italic leading-relaxed">{charQuote}</p>
+              </div>
+            )}
+
+            {(moreGreen.length > 0 || moreRed.length > 0) && (
+              <div className="p-2.5 rounded-2xl bg-bg-elevated border border-border-color space-y-1.5">
+                {moreGreen.length > 0 && (
+                  <ul className="text-mini text-text-primary leading-snug space-y-0.5 pl-4 list-disc marker:text-accent-green">
+                    {moreGreen.map((flag, i) => (
+                      <li key={`g${i}-${flag}`}>{flag}</li>
+                    ))}
+                  </ul>
+                )}
+                {moreRed.length > 0 && (
+                  <ul className="text-mini text-text-primary leading-snug space-y-0.5 pl-4 list-disc marker:text-accent-red">
+                    {moreRed.map((flag, i) => (
+                      <li key={`r${i}-${flag}`}>{flag}</li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            )}
+
+            {showBio && (
+              <Surface tone="elevated" radius="2xl" padding="none" className="p-2.5 space-y-1">
+                <span className="type-label-2xs text-text-muted">{text.loreAndPersonality}</span>
+                <p className="type-body text-text-secondary">{charBio}</p>
+              </Surface>
+            )}
+
+            {showMeme && (
+              <Surface tone="elevated" radius="2xl" padding="none" className="p-2.5 space-y-0.5">
+                <span className="type-label-2xs text-text-secondary block">{customLabels?.meme || text.trialRumor}</span>
+                <p className="text-mini text-text-secondary italic leading-snug">{charMeme}</p>
+              </Surface>
+            )}
+          </details>
         )}
       </div>
-      {BACK_FACE_COMING_SOON && (
-        <div className="absolute inset-0 z-20 flex items-center justify-center pointer-events-none">
-          <div className="px-6 py-3 rounded-2xl bg-bg-primary/80 border border-border-color/60 backdrop-blur-md shadow-2xl">
-            <span className="text-2xl sm:text-3xl font-black tracking-widest text-text-primary uppercase drop-shadow-md">
-              {text.soon}
-            </span>
-          </div>
-        </div>
-      )}
       </div>
 
       {/* Bottom Actions Bar */}
@@ -193,7 +219,7 @@ export function CardBackFace({
           }}
           className="flex-1"
         >
-          <ThumbsDown className="h-4 w-4" aria-hidden="true" />
+          <SnuffedCandleIcon className="h-5 w-5" aria-hidden="true" />
           <span>{text.pass}</span>
         </Button>
         <Button
@@ -207,7 +233,7 @@ export function CardBackFace({
           }}
           className="flex-1"
         >
-          <Heart className="h-4 w-4 fill-text-inverted" aria-hidden="true" />
+          <ThornHeartIcon className="h-5 w-5" aria-hidden="true" />
           <span>{text.smash}</span>
         </Button>
       </div>

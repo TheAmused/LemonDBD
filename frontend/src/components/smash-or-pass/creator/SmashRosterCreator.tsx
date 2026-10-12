@@ -15,8 +15,7 @@
  * single-locale, matching the agreed plan's explicit non-goal.
  */
 import { useMemo, useState } from 'react';
-import Link from 'next/link';
-import { ChevronLeft, History, Plus, SearchX, X } from 'lucide-react';
+import { History, Plus, SearchX, X } from 'lucide-react';
 import { EmptyState } from '@/components/common/EmptyState';
 import { useAuth } from '@/context/AuthContext';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
@@ -36,6 +35,12 @@ import { useDictionary } from "@/context/DictionaryContext";
 import { GENDER_QUICK_PICKS, ROLE_QUICK_PICKS } from '@/utils/smashOrPass/constants';
 import { useRosterDraft } from './useRosterDraft';
 import { useRosterSubmit } from './useRosterSubmit';
+
+/**
+ * One column width for every block of the creator (basics, taxonomy, candidates, archetypes,
+ * feedback AND the Create button), so the button is centred under exactly the column it submits.
+ */
+const CREATOR_COLUMN = 'w-full min-w-0 mx-auto max-w-4xl 2xl:max-wide-2k:max-w-6xl wide-2k:max-w-[1800px]';
 
 interface SmashRosterCreatorProps {
   locale: string;
@@ -129,13 +134,6 @@ export function SmashRosterCreator({ locale, editId }: SmashRosterCreatorProps) 
   if (editId && storeHydrated && !editingRoster) {
     return (
       <div className="relative z-10 flex flex-col gap-2">
-        <Link
-          href={`/${locale}/smash-or-pass`}
-          className="inline-flex min-h-[44px] w-fit items-center gap-1 type-label-sm text-text-secondary hover:text-accent-red"
-        >
-          <ChevronLeft className="h-4 w-4" aria-hidden="true" />
-          {c.title || 'Create a Roster'}
-        </Link>
         <EmptyState icon={SearchX} title={t?.empty?.title || 'Not Found'} subtitle={t?.empty?.subtitle || ''} />
       </div>
     );
@@ -155,14 +153,14 @@ export function SmashRosterCreator({ locale, editId }: SmashRosterCreatorProps) 
         ? (c.saveShort || 'Save')
         : (c.create || 'Create');
 
-  const submitButton = (extra?: string) => (
+  const submitButton = (
     <Button
       variant="primary"
       size="lg"
       onClick={submit}
       loading={publishingNow}
       data-roster-create=""
-      className={extra ?? 'min-h-[48px] 2xl:min-h-[54px] px-8 2xl:px-10 2xl:text-lg'}
+      className="min-h-[48px] 2xl:min-h-[54px] px-8 2xl:px-10 2xl:text-lg"
     >
       {submitLabel}
     </Button>
@@ -204,68 +202,33 @@ export function SmashRosterCreator({ locale, editId }: SmashRosterCreatorProps) 
         </div>
       )}
 
-      {/* TOP ROW: IN-LINE NAVIGATION (LEFT), THE BASICS BLOCK (MIDDLE), CREATE (RIGHT) */}
-      <header className="flex flex-col lg:flex-row items-stretch lg:items-start justify-between gap-3 lg:gap-4 w-full">
-        {/* Mobile top bar (< lg) */}
-        <div className="flex lg:hidden items-center justify-between gap-2 w-full">
-          <Link
-            href={`/${locale}/smash-or-pass`}
-            className="inline-flex min-h-[44px] items-center gap-1.5 type-label-sm text-text-secondary hover:text-accent-red transition-colors"
-          >
-            <ChevronLeft className="h-4 w-4" aria-hidden="true" />
-            {c.backToHub || 'Smash or Pass'}
-          </Link>
-          <div className="flex items-center gap-2">
-            {submitButton('min-h-[40px] px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider')}
-          </div>
-        </div>
-
-        {/* Desktop top left navigation (>= lg) */}
-        <div className="hidden lg:flex shrink-0 lg:max-wide-2k:w-48 wide-2k:w-48 pt-2.5">
-          <Link
-            href={`/${locale}/smash-or-pass`}
-            className="inline-flex min-h-[44px] items-center gap-1.5 text-xs 2xl:text-sm font-bold uppercase tracking-wider text-text-secondary hover:text-accent-red transition-colors"
-          >
-            <ChevronLeft className="h-4 w-4 2xl:h-5 2xl:w-5" aria-hidden="true" />
-            {c.backToHub || 'Smash or Pass'}
-          </Link>
-        </div>
-
-        {/* MIDDLE: THE BASICS BLOCK */}
-        <div className="flex-1 w-full min-w-0 max-w-4xl 2xl:max-wide-2k:max-w-6xl wide-2k:max-w-[1800px] mx-auto">
-          <RosterBasicsSection
-            draft={draft}
-            patch={patch}
-            attempted={attempted}
-            nameMissing={nameMissing}
-            coverInvalid={coverInvalid}
-            safeCover={safeCover}
-            isUserAdmin={isUserAdmin}
-            official={official}
-            onOfficialChange={setOfficial}
-            onOpenCrop={() => setIsCropModalOpen(true)}
-          >
-            {showTranslations && (
-              <RosterTranslationsPanel
-                activeLocale={activeTranslationLocale}
-                onLocaleChange={setActiveTranslationLocale}
-                translations={rosterTranslations}
-                setTranslations={setRosterTranslations}
-              />
-            )}
-          </RosterBasicsSection>
-        </div>
-
-        {/* Desktop top right buttons (>= lg) */}
-        <div className="hidden lg:flex shrink-0 lg:max-wide-2k:w-48 wide-2k:w-48 items-center justify-end gap-2.5 sm:gap-3 pt-2">
-          {submitButton(
-            'min-h-[40px] 2xl:min-h-[46px] px-4 2xl:px-6 py-1.5 text-xs 2xl:text-sm font-bold uppercase tracking-wider'
+      {/* BLOCK 1: THE BASICS */}
+      <div className={CREATOR_COLUMN}>
+        <RosterBasicsSection
+          draft={draft}
+          patch={patch}
+          attempted={attempted}
+          nameMissing={nameMissing}
+          coverInvalid={coverInvalid}
+          safeCover={safeCover}
+          isUserAdmin={isUserAdmin}
+          official={official}
+          onOfficialChange={setOfficial}
+          onOpenCrop={() => setIsCropModalOpen(true)}
+        >
+          {showTranslations && (
+            <RosterTranslationsPanel
+              activeLocale={activeTranslationLocale}
+              onLocaleChange={setActiveTranslationLocale}
+              translations={rosterTranslations}
+              setTranslations={setRosterTranslations}
+            />
           )}
-        </div>
-      </header>
+        </RosterBasicsSection>
+      </div>
 
       {/* BLOCK 2: ROLES & GENDERS */}
-      <div className="w-full max-w-4xl 2xl:max-wide-2k:max-w-6xl wide-2k:max-w-[1800px] mx-auto">
+      <div className={CREATOR_COLUMN}>
         <Section
           title={c.rolesGendersTitle}
           badge={`${effectiveRoles.length} roles • ${effectiveGenders.length} genders`}
@@ -282,7 +245,7 @@ export function SmashRosterCreator({ locale, editId }: SmashRosterCreatorProps) 
       </div>
 
       {/* BLOCK 3: CANDIDATES */}
-      <div className="w-full max-w-4xl 2xl:max-wide-2k:max-w-6xl wide-2k:max-w-[1800px] mx-auto">
+      <div className={CREATOR_COLUMN}>
         <Section
           title={c.stepEntities || 'Candidates'}
           badge={draft.entities.length}
@@ -357,7 +320,7 @@ export function SmashRosterCreator({ locale, editId }: SmashRosterCreatorProps) 
       </div>
 
       {/* BLOCK 4: CUSTOM ROMANCE ARCHETYPES & PERSONALITY RULES */}
-      <div className="w-full max-w-4xl 2xl:max-wide-2k:max-w-6xl wide-2k:max-w-[1800px] mx-auto">
+      <div className={CREATOR_COLUMN}>
         <Section
           title={c.customArchetypesTitle}
           badge={draft.romance_archetypes.length}
@@ -374,8 +337,13 @@ export function SmashRosterCreator({ locale, editId }: SmashRosterCreatorProps) 
       </div>
 
       {/* Feedback Alerts */}
-      <div className="w-full max-w-4xl 2xl:max-wide-2k:max-w-6xl wide-2k:max-w-[1800px] mx-auto flex flex-col gap-4">
+      <div className={`${CREATOR_COLUMN} flex flex-col gap-4`}>
         <Feedback errors={errors as string[]} saveError={saveError} submitError={submitError} publishError={publishError} />
+      </div>
+
+      {/* THE ONE SUBMIT BUTTON: centred under the same column as every block above it */}
+      <div className={`${CREATOR_COLUMN} flex justify-center pb-4`}>
+        {submitButton}
       </div>
 
       {/* Cover Image 16:9 Viewport Crop Modal */}

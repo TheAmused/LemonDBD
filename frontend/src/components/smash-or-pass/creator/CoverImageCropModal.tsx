@@ -2,7 +2,7 @@
 'use client';
 
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { Crop, ZoomIn, ZoomOut, RotateCcw, Check, Upload, AlertCircle, Sparkles, Image as ImageIcon } from 'lucide-react';
+import { Crop, ZoomIn, ZoomOut, RotateCcw, Check, Upload, AlertCircle, Image as ImageIcon } from 'lucide-react';
 import { Modal } from '@/components/common/Modal';
 
 import type { Dictionary } from '@/locales/types';

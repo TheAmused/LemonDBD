@@ -7,12 +7,11 @@ import { Button } from '@/components/common/Button';
 interface OwnershipSaveBarProps {
   ownershipSaveError: string | null;
   ownershipSaving: boolean;
-  onCancel: () => void;
   onSave: () => void;
 }
 
-/** Sticky bottom bar with Cancel / Accept while editing ownership. */
-export function OwnershipSaveBar({ ownershipSaveError, ownershipSaving, onCancel, onSave }: OwnershipSaveBarProps) {
+/** Sticky bottom bar with Accept while editing ownership (leaving without saving is the toolbar's "Exit selection"). */
+export function OwnershipSaveBar({ ownershipSaveError, ownershipSaving, onSave }: OwnershipSaveBarProps) {
   const dict = useDictionary();
 
   return (
@@ -28,9 +27,6 @@ export function OwnershipSaveBar({ ownershipSaveError, ownershipSaving, onCancel
         </p>
       )}
       <div className="flex items-center justify-center gap-3 px-5 sm:px-7 lg:px-9 py-2.5">
-        <Button variant="secondary" size="sm" onClick={onCancel} disabled={ownershipSaving} className="px-5">
-          {dict.admin.cancel}
-        </Button>
         <Button variant="success" size="sm" onClick={onSave} disabled={ownershipSaving} className="px-6">
           {ownershipSaving ? dict.characterDetail.saving : dict.characterDetail.accept}
         </Button>

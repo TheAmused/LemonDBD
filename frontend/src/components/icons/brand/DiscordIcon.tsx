@@ -1,4 +1,4 @@
-// frontend/src/components/icons/DiscordIcon.tsx
+// frontend/src/components/icons/brand/DiscordIcon.tsx
 import type { SVGProps } from 'react';
 
 /** Discord logo (lucide ships no brand icons); inherits colour via `fill-current`. */

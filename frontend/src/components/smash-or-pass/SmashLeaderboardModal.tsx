@@ -3,13 +3,11 @@
 
 import React, { useState, useMemo, useRef, useEffect, useCallback } from 'react';
 import {
-  Heart,
   Skull,
   Search,
   ArrowUpDown,
   X,
   Flame,
-  Sparkles,
   Layers,
   User,
   Users,
@@ -22,7 +20,7 @@ import { Tooltip } from '@/components/common/Tooltip';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
 import { FriendzoneIcon, EldritchVoidIcon } from '@/components/icons/DbdIcons';
-import { IridescentShardIcon } from '@/components/icons/DbdIcons';
+import { RankFirstIcon, ThornHeartIcon } from '@/components/icons/DbdIcons';
 import { Button } from '@/components/common/Button';
 import { Input } from '@/components/common/Field';
 import { CandidateRow, type TierConfig } from "./SmashLeaderboardParts";
@@ -143,7 +141,7 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
       godTier: {
         name: rawSmashDict.tiers.godTier,
         style: 'border-accent-amber/50 bg-accent-amber/15 text-accent-amber',
-        icon: <Sparkles className="h-3.5 w-3.5 text-accent-amber" aria-hidden="true" />,
+        icon: <RankFirstIcon className="h-3.5 w-3.5 text-accent-amber" aria-hidden="true" />,
         range: '>= 85%',
       },
       fatalAttraction: {
@@ -271,7 +269,7 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
   ];
 
   const genderOptions: DropdownOption<'all' | 'female' | 'male' | 'monster_other'>[] = [
-    { value: 'all', label: allGendersLabel, icon: <Sparkles className="h-3.5 w-3.5 text-text-muted" /> },
+    { value: 'all', label: allGendersLabel },
     {
       value: 'female',
       label: femaleOnlyLabel,
@@ -291,7 +289,7 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
       value: 'godTier',
       label: tierMetadata.godTier.name,
       sublabel: tierMetadata.godTier.range,
-      icon: <Sparkles className="h-3.5 w-3.5 text-accent-amber" />,
+      icon: <RankFirstIcon className="h-3.5 w-3.5 text-accent-amber" />,
     },
     {
       value: 'fatalAttraction',
@@ -314,16 +312,10 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
   ];
 
   const sortOptions: DropdownOption<'smash_rate' | 'total_votes' | 'smash_count'>[] = [
-    { value: 'smash_rate', label: sortSmashRateLabel, icon: <Heart className="h-3.5 w-3.5 text-accent-red fill-accent-red" /> },
+    { value: 'smash_rate', label: sortSmashRateLabel, icon: <ThornHeartIcon className="h-4 w-4 text-accent-red" /> },
     { value: 'total_votes', label: sortTotalVotesLabel, icon: <Users className="h-3.5 w-3.5 text-text-secondary" /> },
     { value: 'smash_count', label: sortMostSmashesLabel, icon: <Flame className="h-3.5 w-3.5 text-accent-amber" /> },
   ];
-
-  const headerBadge = editionName ? (
-    <span className="px-2.5 py-0.5 rounded-full bg-accent-red/20 text-accent-red border border-accent-red/40 type-strong truncate max-w-[200px]">
-      {editionName}
-    </span>
-  ) : null;
 
   return (
     <Modal
@@ -331,8 +323,7 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
       onClose={onClose}
       size="5xl"
       title={title}
-      icon={<IridescentShardIcon className="h-6 w-6 text-accent-amber" />}
-      badge={headerBadge}
+      subtitle={editionName || undefined}
       centerTitle={true}
       className="h-[88vh] max-h-[850px] min-h-[480px]"
       bodyClassName="flex flex-col"
@@ -388,7 +379,6 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
             value={tierFilter}
             onChange={setTierFilter}
             options={tierOptions}
-            icon={<Sparkles className="h-3.5 w-3.5" />}
             ariaLabel={allTiersLabel}
             minWidthClass="min-w-[190px]"
           />
@@ -441,7 +431,7 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
         {totalCommunityVotes === 0 && !searchQuery.trim() ? (
           <div className="flex flex-col items-center justify-center py-16 text-center space-y-3.5">
             <div className="flex h-16 w-16 items-center justify-center rounded-3xl bg-accent-red/15 border border-accent-red/30 text-accent-red" aria-hidden="true">
-              <Heart className="h-8 w-8 fill-accent-red/30 text-accent-red animate-pulse" />
+              <ThornHeartIcon className="h-8 w-8 text-accent-red animate-pulse" />
             </div>
             <div className="space-y-1.5 max-w-md">
               <h3 className="text-lg font-black text-text-primary">{noVotesTitle}</h3>

@@ -14,6 +14,8 @@ interface CharactersToolbarProps {
   killerCount: number;
   ownershipMode: boolean;
   ownershipLoading: boolean;
+  /** A save is in flight: leaving now would look like a cancel while the changes still go through. */
+  ownershipSaving: boolean;
   onToggleOwnershipMode: () => void;
   searchQuery: string;
   setSearchQuery: (query: string) => void;
@@ -27,6 +29,7 @@ export function CharactersToolbar({
   killerCount,
   ownershipMode,
   ownershipLoading,
+  ownershipSaving,
   onToggleOwnershipMode,
   searchQuery,
   setSearchQuery,
@@ -83,7 +86,7 @@ export function CharactersToolbar({
         <button
           type="button"
           onClick={onToggleOwnershipMode}
-          disabled={ownershipLoading}
+          disabled={ownershipLoading || ownershipSaving}
           className={`flex items-center justify-center gap-1.5 px-4 py-2.5 min-h-[44px] rounded-2xl text-xs font-bold transition-all cursor-pointer disabled:opacity-60 disabled:cursor-wait touch-manipulation shadow-xs ${
             ownershipMode
               ? 'bg-accent-amber text-text-inverted border border-accent-amber shadow-accent-amber/20'

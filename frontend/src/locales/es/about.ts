@@ -38,5 +38,7 @@ export default {
     heading: "Contacto",
     text: "¿Preguntas, comentarios o ideas? Escríbenos por correo o en nuestro servidor de Discord.",
     discordLabel: "Unirse a Discord",
+    copyEmailLabel: "Copiar correo electrónico",
+    emailCopied: "¡Copiado!",
   },
 };

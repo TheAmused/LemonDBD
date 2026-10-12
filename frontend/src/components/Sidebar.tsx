@@ -231,7 +231,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
 
   const renderSidebarContent = () => (
-    <div className="flex h-full flex-col justify-between p-4 overflow-y-auto">
+    <div className="flex h-full flex-col justify-between bg-bg-sidebar p-4 overflow-y-auto">
       <div>
         <div className="flex items-center justify-between px-1 py-2">
           <Link
@@ -313,7 +313,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     <>
       <aside
         aria-label={dict.sidebar.navAria}
-        className="lemon-shell-aside hidden lg:flex lg:flex-col lg:sticky lg:top-0 lg:h-screen lg:shrink-0 border-r border-border-color bg-bg-surface backdrop-blur-xl z-50"
+        className="lemon-shell-aside hidden lg:flex lg:flex-col lg:sticky lg:top-0 lg:h-screen lg:shrink-0 border-r border-border-color bg-bg-sidebar z-50"
       >
         <div className="w-full h-full overflow-hidden flex flex-col">
           <div className="w-64 h-full flex flex-col shrink-0">
@@ -328,7 +328,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           {...tip(dict.sidebar.toggleSidebar, undefined, 'action')}
           aria-label={dict.sidebar.toggleSidebar}
           aria-expanded={!isCollapsed}
-          className="hit-area hidden lg:flex absolute top-1/2 -right-6 -translate-y-1/2 h-16 w-6 items-center justify-center rounded-r-2xl border border-l-0 border-border-color bg-bg-surface text-text-primary shadow-md hover:bg-bg-elevated hover:w-7 hover:text-accent-red active:scale-95 transition-all duration-200 cursor-pointer z-50 group"
+          className="hit-area hidden lg:flex absolute top-1/2 -right-6 -translate-y-1/2 h-16 w-6 items-center justify-center rounded-r-2xl border border-l-0 border-border-color bg-bg-sidebar text-text-primary shadow-md hover:bg-bg-sidebar-hover hover:w-7 hover:text-accent-red active:scale-95 transition-all duration-200 cursor-pointer z-50 group"
         >
           <ChevronRight
             aria-hidden="true"
@@ -341,7 +341,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </button>
       </aside>
 
-      <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-border-color bg-bg-surface px-4 backdrop-blur-xl lg:hidden">
+      <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-border-color bg-bg-sidebar px-4 lg:hidden">
         <Link
           href={`/${currentLocale}`}
           className="flex items-center gap-2.5"

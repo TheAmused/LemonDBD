@@ -2,7 +2,6 @@
 export default {
   pageTitle: "LemonDBD - Datenschutzerklärung",
   heading: "Datenschutzerklärung",
-  backToAbout: "Zurück zu Über uns",
   lastUpdatedLabel: "Zuletzt aktualisiert",
   lastUpdated: "10. Oktober 2026",
   intro:

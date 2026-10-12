@@ -91,12 +91,12 @@ export function CardStack({
   // The cards behind come forward over exactly as long as the top one takes to leave.
   const exitMs = effectsEnabled ? 480 : CALM_EXIT_MS;
   return (
-    <div className="relative flex flex-col items-center justify-center pointer-events-auto min-h-[460px] sm:min-h-[520px]">
+    <div className="smash-stack relative flex flex-col items-center justify-center pointer-events-auto min-h-[var(--smash-card-h,43.75rem)]">
       {/* CARD 3 IN QUEUE (DEPTH 2 - SMOOTH ENTER & ELEVATION) */}
       {thirdCharacter && (
         <div
           key={`queue-3-${thirdCharacter.id || thirdCharacter.slug}`}
-          className="absolute inset-0 z-[5] flex items-center justify-center pointer-events-none anim-card-queue-enter"
+          className="smash-queued absolute inset-0 z-[5] flex items-center justify-center pointer-events-none anim-card-queue-enter"
           style={thirdCardStyle(dragPhysics, isExiting, exitMs)}
         >
           <QueuedCard
@@ -114,7 +114,7 @@ export function CardStack({
       {nextCharacter && (
         <div
           key={`queue-2-${nextCharacter.id || nextCharacter.slug}`}
-          className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none"
+          className="smash-queued absolute inset-0 z-10 flex items-center justify-center pointer-events-none"
           style={nextCardStyle(dragPhysics, isExiting, exitMs)}
         >
           <QueuedCard

@@ -28,8 +28,8 @@ export const KillerCombatStats: React.FC<KillerCombatStatsProps> = ({
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         {/* Movement Speed */}
-        <div className="flex items-center gap-3 p-2.5 rounded-xl bg-bg-elevated border border-border-color">
-          <div className="h-9 w-9 rounded-xl bg-bg-surface border border-border-color flex items-center justify-center text-text-secondary shrink-0">
+        <div className="flex items-center gap-3 p-2.5 rounded-xl bg-bg-elevated/60 cursor-default">
+          <div className="h-9 w-9 rounded-xl bg-bg-surface flex items-center justify-center text-text-secondary shrink-0">
             <Gauge className="h-4 w-4" />
           </div>
           <div>
@@ -43,8 +43,8 @@ export const KillerCombatStats: React.FC<KillerCombatStatsProps> = ({
         </div>
 
         {/* Terror Radius (Visualizer disabled for now) */}
-        <div className="flex items-center gap-3 p-2.5 rounded-xl bg-bg-elevated border border-border-color">
-          <div className="h-9 w-9 rounded-xl bg-bg-surface border border-border-color flex items-center justify-center text-text-secondary shrink-0">
+        <div className="flex items-center gap-3 p-2.5 rounded-xl bg-bg-elevated/60 cursor-default">
+          <div className="h-9 w-9 rounded-xl bg-bg-surface flex items-center justify-center text-text-secondary shrink-0">
             <Radio className="h-4 w-4" />
           </div>
           <div>
@@ -58,8 +58,8 @@ export const KillerCombatStats: React.FC<KillerCombatStatsProps> = ({
         </div>
 
         {/* Height */}
-        <div className="flex items-center gap-3 p-2.5 rounded-xl bg-bg-elevated border border-border-color">
-          <div className="h-9 w-9 rounded-xl bg-bg-surface border border-border-color flex items-center justify-center text-text-secondary shrink-0">
+        <div className="flex items-center gap-3 p-2.5 rounded-xl bg-bg-elevated/60 cursor-default">
+          <div className="h-9 w-9 rounded-xl bg-bg-surface flex items-center justify-center text-text-secondary shrink-0">
             <ArrowUpDown className="h-4 w-4" />
           </div>
           <div>

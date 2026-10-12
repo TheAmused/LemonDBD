@@ -1,0 +1,76 @@
+/* frontend/src/app/styles/smash-or-pass.css
+ * Smash or Pass play-page geometry.
+ *
+ * The app shell takes 256px for the sidebar from 1024px up, so the *viewport* width says little
+ * about the room the hub really has. The hub therefore asks its own width: `.smash-hub` is a size
+ * container (named "hub") and everything inside it that changes layout uses `@container hub`
+ * rules or Tailwind's `@[Npx]/hub:` variants. The container wraps only the stage (header, card,
+ * lore): it holds no `position: fixed` content (the animations and modals sit outside it, popovers
+ * portal to <body>), because a size container becomes the containing block of fixed descendants.
+ *
+ * `.smash-stage` (inside the container) publishes the card size as custom properties:
+ *   --smash-card-h   the card height: what is left of the viewport after the shell and header,
+ *                    never under 25rem (a very short window scrolls instead) nor over 43.75rem
+ *   --smash-card-w   the card width: 3:5 of that height, at most 88% of the hub, at most 26.25rem
+ * so the card, its loading placeholder and the skeleton all size from one source.
+ */
+
+.smash-hub {
+  container-type: inline-size;
+  container-name: hub;
+}
+
+.smash-stage {
+  --smash-shell: 4rem; /* mobile top bar; the sidebar layout has none */
+  --smash-pad: 1rem; /* <main> padding, top and bottom */
+  --smash-header: 10.5rem; /* the hub header at phone width (three rows) */
+  --smash-gaps: 3rem; /* gaps around the card, plus a little air under it */
+  --smash-card-h: clamp(
+    25rem,
+    calc(100dvh - var(--smash-shell) - 2 * var(--smash-pad) - var(--smash-header) - var(--smash-gaps)),
+    43.75rem
+  );
+  --smash-card-w: min(88cqw, calc(var(--smash-card-h) * 0.6), 26.25rem);
+}
+
+@media (min-width: 640px) {
+  .smash-stage {
+    --smash-pad: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .smash-stage {
+    --smash-shell: 0rem;
+    --smash-pad: 2rem;
+  }
+}
+
+/* two-row header */
+@container hub (min-width: 560px) {
+  .smash-stage {
+    --smash-header: 8rem;
+  }
+}
+
+/* one-row header */
+@container hub (min-width: 1016px) {
+  .smash-stage {
+    --smash-header: 5.5rem;
+  }
+}
+
+/* The card's size, shared by the live card, the queued cards, the loading placeholder and the skeleton. */
+@utility smash-card-size {
+  width: var(--smash-card-w, min(88vw, 26.25rem));
+  aspect-ratio: 3 / 5;
+}
+
+/* From the first frame of a flip until the top card is face up again, the cards queued behind it
+ * must not show through (the card is edge-on halfway). `data-flipped` covers the whole turn.
+ * Hiding is instant; they fade back in afterwards. `!important` because the queue wrappers carry
+ * inline opacity/transform styles. */
+.smash-stack:has([data-smash-card="top"][data-flipped="true"]) .smash-queued {
+  opacity: 0 !important;
+  transition: none !important; /* the wrappers' inline 240ms opacity transition would otherwise fade them out slowly */
+}

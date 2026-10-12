@@ -3,7 +3,6 @@ export default {
   pageTitle: "LemonDBD - ルール",
   heading: "ルール",
   tagline: "短くて、公平で、ほんの少しだけ呪われています。一度読んだら、板をぐるぐる回しに行きましょう。",
-  backToAbout: "私たちについてへ戻る",
   lastUpdatedLabel: "最終更新日",
   lastUpdated: "2026年10月10日",
   translationNotice: "このページの翻訳版が英語版と異なる場合は、英語版が優先されます。",

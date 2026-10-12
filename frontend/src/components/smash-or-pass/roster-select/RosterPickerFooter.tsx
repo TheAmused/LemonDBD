@@ -1,6 +1,12 @@
 'use client';
 // frontend/src/components/smash-or-pass/roster-select/RosterPickerFooter.tsx
-import { Check, Lock, Pencil, Share2, Trash2 } from 'lucide-react';
+import {
+  AshUrnIcon,
+  LetterSendIcon,
+  PadlockHeartIcon,
+  QuillEditIcon,
+  SealCheckIcon,
+} from '@/components/icons/DbdIcons';
 import { Button } from '@/components/common/Button';
 import { useDictionary } from '@/context/DictionaryContext';
 import type { RosterItem } from '@/types/smashOrPass';
@@ -39,7 +45,7 @@ export function RosterPickerFooter({
           onClick={onCommit}
           className="rounded-2xl px-8 sm:px-10 uppercase tracking-widest"
         >
-          <Check className="h-4 w-4 sm:h-5 sm:w-5 stroke-[3]" aria-hidden="true" />
+          <SealCheckIcon className="h-5 w-5" aria-hidden="true" />
           <span>
             {dict.smashOrPass.selectPrefix ? `${dict.smashOrPass.selectPrefix} ` : ''}
             {rosterDisplayName(activeRosterInCenter)}
@@ -51,7 +57,7 @@ export function RosterPickerFooter({
           disabled
           className="rounded-2xl px-8 sm:px-10 uppercase tracking-widest"
         >
-          <Lock className="h-4 w-4 sm:h-5 sm:w-5 text-text-muted" aria-hidden="true" />
+          <PadlockHeartIcon className="h-5 w-5 text-text-muted" aria-hidden="true" />
           <span>
             {rosterDisplayName(activeRosterInCenter)} ({dict.smashOrPass.comingSoon})
           </span>
@@ -67,7 +73,7 @@ export function RosterPickerFooter({
               aria-label={dict.smashOrPass.picker.editRoster}
               className="h-11 w-11 sm:h-[52px] sm:w-[52px] rounded-2xl"
             >
-              <Pencil className="h-4 w-4 sm:h-5 sm:w-5" aria-hidden="true" />
+              <QuillEditIcon className="h-5 w-5" aria-hidden="true" />
             </Button>
           )}
           {onExportRoster && (
@@ -77,7 +83,7 @@ export function RosterPickerFooter({
               aria-label={dict.smashOrPass.picker.exportRoster}
               className="h-11 w-11 sm:h-[52px] sm:w-[52px] rounded-2xl"
             >
-              <Share2 className="h-4 w-4 sm:h-5 sm:w-5" aria-hidden="true" />
+              <LetterSendIcon className="h-5 w-5" aria-hidden="true" />
             </Button>
           )}
           {onDeleteRoster && (
@@ -87,7 +93,7 @@ export function RosterPickerFooter({
               aria-label={dict.smashOrPass.picker.deleteRoster}
               className="h-11 w-11 sm:h-[52px] sm:w-[52px] rounded-2xl"
             >
-              <Trash2 className="h-4 w-4 sm:h-5 sm:w-5" aria-hidden="true" />
+              <AshUrnIcon className="h-5 w-5" aria-hidden="true" />
             </Button>
           )}
         </>

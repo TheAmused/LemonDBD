@@ -16,7 +16,7 @@ export interface VoiceCommandBannerProps {
   active?: boolean;
   /** Optional slot rendered at the center of the header row (e.g. the mode toggle switch) */
   centerHeaderSlot?: React.ReactNode;
-  /** When true, omits outer card frame (border, rounded corners, blur glows) for embedding inside a parent container */
+  /** When true, omits outer card frame (border, rounded corners) for embedding inside a parent container */
   embedded?: boolean;
 }
 

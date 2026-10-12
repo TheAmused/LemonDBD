@@ -3,7 +3,6 @@ export default {
   pageTitle: "LemonDBD - Zasady społeczności",
   heading: "Zasady społeczności",
   tagline: "Krótkie, uczciwe i tylko odrobinę przeklęte. Przeczytaj raz i wracaj kręcić morderców wokół palet.",
-  backToAbout: "Wróć do strony O nas",
   lastUpdatedLabel: "Ostatnia aktualizacja",
   lastUpdated: "10 października 2026",
   translationNotice: "Jeśli przetłumaczone wersje tej strony różnią się od angielskiej, pierwszeństwo ma wersja angielska.",

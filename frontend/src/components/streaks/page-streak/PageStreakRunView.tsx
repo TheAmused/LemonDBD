@@ -2,8 +2,6 @@
 // frontend/src/components/streaks/page-streak/PageStreakRunView.tsx
 import { Button } from '@/components/common/Button';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import Link from 'next/link';
-import { ArrowLeft } from 'lucide-react';
 import { usePageStreakRun } from './usePageStreakRun';
 import { RunHeader } from './RunHeader';
 import { PerkPageGrid } from './PerkPageGrid';
@@ -27,11 +25,10 @@ interface BuildState {
 }
 
 interface PageStreakRunViewProps {
-  locale: string;
   killer: string;
 }
 
-export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, killer }) => {
+export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ killer }) => {
   const dict = useDictionary();
   const killerDisplayName = useCharacterDisplayName()(killer);
   const { run, stats, completions, loading, busy, error, startRun, submitResult, abandonRun } = usePageStreakRun(killer);
@@ -89,13 +86,6 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
   return (
     <div className={run && run.status !== 'completed' ? 'pb-16' : ''}>
       <Confetti active={celebrating} />
-      <Link
-        href={`/${locale}/streaks/killer/page-streak`}
-        className="inline-flex items-center gap-1.5 rounded type-strong text-text-secondary transition-colors hover:text-accent-red focus:outline-none focus:ring-2 focus:ring-accent-red"
-      >
-        <ArrowLeft className="h-3.5 w-3.5" />
-        <span>{dict.streaks.backToKillers}</span>
-      </Link>
 
       {error && (
         <div className="mt-4">

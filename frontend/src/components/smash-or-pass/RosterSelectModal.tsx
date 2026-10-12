@@ -2,7 +2,7 @@
 // frontend/src/components/smash-or-pass/RosterSelectModal.tsx
 
 import React from 'react';
-import { ChevronLeft, ChevronRight, Flame, Sparkles, Upload } from 'lucide-react';
+import { CardStackIcon, ImportScrollIcon, ThornChevronIcon } from '@/components/icons/DbdIcons';
 import type { RosterItem } from '@/types/smashOrPass';
 import { cn } from '@/utils/cn';
 import { Modal } from '@/components/common/Modal';
@@ -82,7 +82,7 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
       ariaLabel={selectRosterTitle}
       closeButtonAriaLabel={dict.modal.close}
       backdrop="blur"
-      className="h-[94dvh] max-h-[1100px] min-h-[580px] max-w-[1600px] border-2 border-accent-red/35 rounded-[32px] sm:rounded-[44px]"
+      className="h-[94dvh] max-h-[1100px] min-h-[580px] max-w-[1600px] border-2 border-accent-red/35 rounded-3xl"
       bodyClassName="flex flex-col overflow-hidden"
     >
       <div className="relative flex min-h-0 w-full flex-1 flex-col items-center justify-between overflow-hidden p-4 sm:p-6 md:p-8">
@@ -99,7 +99,6 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
                   : 'text-text-secondary hover:text-text-primary'
               )}
             >
-              <Flame className="h-3 w-3" />
               <span>{dict.smashOrPass.picker.officialTab} ({officialRosters.length})</span>
             </button>
             <button
@@ -112,7 +111,6 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
                   : 'text-text-secondary hover:text-text-primary'
               )}
             >
-              <Sparkles className="h-3 w-3" />
               <span>{dict.smashOrPass.picker.customTab} ({customRosters.length})</span>
             </button>
           </div>
@@ -131,7 +129,6 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
                   onClick={onCreateRoster}
                   className="inline-flex items-center gap-1.5 px-3.5 py-1.5 min-h-[36px] rounded-xl bg-accent-red/10 border border-accent-red/40 text-accent-red type-label-sm hover:bg-accent-red/20 transition-colors cursor-pointer"
                 >
-                  <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
                   {dict.smashOrPass.picker.createRoster}
                 </button>
               )}
@@ -141,7 +138,7 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
                   onClick={onImportRoster}
                   className="inline-flex items-center gap-1.5 px-3.5 py-1.5 min-h-[36px] rounded-xl bg-bg-elevated border border-border-color text-text-secondary type-label-sm hover:text-text-primary hover:border-border-subtle transition-colors cursor-pointer"
                 >
-                  <Upload className="h-3.5 w-3.5" aria-hidden="true" />
+                  <ImportScrollIcon className="h-4 w-4" aria-hidden="true" />
                   {dict.smashOrPass.picker.importRoster}
                 </button>
               )}
@@ -176,7 +173,7 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
                 onClick={stepPrev}
                 className="absolute left-2 sm:left-4 md:left-8 z-50 flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-full bg-bg-surface border border-accent-red/40 text-accent-red hover:bg-accent-red hover:text-text-inverted hover:border-accent-red hover:scale-110 active:scale-95 transition-all cursor-pointer pointer-events-auto select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red"
               >
-                <ChevronLeft className="h-6 w-6 sm:h-7 sm:w-7 stroke-[2.5]" aria-hidden="true" />
+                <ThornChevronIcon className="h-6 w-6 sm:h-7 sm:w-7 rotate-180" aria-hidden="true" />
               </button>
 
               <button
@@ -189,14 +186,14 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
                 onClick={stepNext}
                 className="absolute right-2 sm:right-4 md:right-8 z-50 flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-full bg-bg-surface border border-accent-red/40 text-accent-red hover:bg-accent-red hover:text-text-inverted hover:border-accent-red hover:scale-110 active:scale-95 transition-all cursor-pointer pointer-events-auto select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red"
               >
-                <ChevronRight className="h-6 w-6 sm:h-7 sm:w-7 stroke-[2.5]" aria-hidden="true" />
+                <ThornChevronIcon className="h-6 w-6 sm:h-7 sm:w-7" aria-hidden="true" />
               </button>
             </>
           )}
 
           {N === 0 ? (
             <div className="relative z-10 flex flex-col items-center justify-center gap-3 p-8 rounded-3xl border border-dashed border-border-color bg-bg-elevated/40 text-center max-w-md mx-auto">
-              <Sparkles className="h-10 w-10 text-accent-red animate-pulse" />
+              <CardStackIcon className="h-10 w-10 text-accent-red animate-pulse" aria-hidden="true" />
               <h3 className="text-base font-bold text-text-primary uppercase tracking-wide">
                 {filter === 'custom'
                   ? dict.smashOrPass.picker.noCustomRostersFound
@@ -215,7 +212,6 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
                     onCreateRoster();
                   }}
                 >
-                  <Sparkles className="h-3.5 w-3.5" />
                   <span>{dict.smashOrPass.picker.createFirstRoster}</span>
                 </Button>
               )}

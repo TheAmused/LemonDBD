@@ -3,7 +3,6 @@ export default {
   pageTitle: "LemonDBD - Regulamin serwisu",
   heading: "Regulamin serwisu",
   tagline: "Warunki, na jakich udostępniamy stronę LemonDBD i nasz serwer Discord.",
-  backToAbout: "Wróć do strony O nas",
   lastUpdatedLabel: "Ostatnia aktualizacja",
   lastUpdated: "10 października 2026",
   translationNotice: "Jeśli przetłumaczone wersje tej strony różnią się od angielskiej, pierwszeństwo ma wersja angielska.",

@@ -3,7 +3,6 @@ export default {
   pageTitle: "LemonDBD - 利用規約",
   heading: "利用規約",
   tagline: "LemonDBDのウェブサイトとDiscordサーバーを提供する際の条件です。",
-  backToAbout: "私たちについてへ戻る",
   lastUpdatedLabel: "最終更新日",
   lastUpdated: "2026年10月10日",
   translationNotice: "このページの翻訳版が英語版と異なる場合は、英語版が優先されます。",

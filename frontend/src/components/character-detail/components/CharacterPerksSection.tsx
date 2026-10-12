@@ -28,14 +28,14 @@ export const CharacterPerksSection: React.FC<CharacterPerksSectionProps> = ({
   if (perks.length === 0) return null;
 
   return (
-    <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-10 pt-4 w-full">
+    <div className="mt-auto grid w-full grid-cols-[repeat(auto-fit,minmax(8rem,1fr))] gap-4 pt-2 sm:gap-6">
       {perks.map((perk, idx) => {
         const iconSrc = getAssetUrl(backendBase, perk.icon_local_path, perk.icon_url);
 
         return (
           <div
             key={`${perk.name}-${idx}`}
-            className="relative"
+            className="relative flex justify-center"
             {...tip(perk.name, undefined, 'item')}
           >
             <button
@@ -51,13 +51,13 @@ export const CharacterPerksSection: React.FC<CharacterPerksSectionProps> = ({
                   icon_local_path: perk.icon_local_path || '',
                 })
               }
-              className="h-24 w-24 sm:h-32 sm:w-32 flex items-center justify-center hover:scale-110 active:scale-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red rounded-2xl transition-all duration-300 cursor-pointer"
+              className="flex w-full max-w-44 flex-col items-center gap-2 rounded-2xl p-1 hover:scale-105 active:scale-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red transition-all duration-300 cursor-pointer"
               aria-label={`${perk.name} - ${t.clickToInspect || 'Click to inspect perk'}`}
             >
               <img
                 src={iconSrc}
-                alt={perk.name}
-                className={`h-full w-full object-contain ${
+                alt=""
+                className={`aspect-square w-full object-contain ${
                   perk.is_disabled ? 'grayscale opacity-50' : ''
                 }`}
                 loading="lazy"
@@ -65,6 +65,7 @@ export const CharacterPerksSection: React.FC<CharacterPerksSectionProps> = ({
                   (e.target as HTMLImageElement).style.display = 'none';
                 }}
               />
+              <span className="line-clamp-2 text-center type-strong text-text-secondary">{perk.name}</span>
             </button>
 
             {perk.is_disabled && (

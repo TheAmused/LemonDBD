@@ -8,8 +8,11 @@ import { EmptyState } from '@/components/common/EmptyState';
 import { useAuth } from '@/context/AuthContext';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { useTierListStore } from '@/hooks/useTierListStore';
-import { apiUrl } from '@/utils/api';
+import { useTierListTemplate } from '@/hooks/useTierListTemplates';
+import { updateOfficialTierList } from '@/services/tierListApi';
+import { apiUrl, authFetch } from '@/utils/api';
 import { cn } from '@/utils/cn';
+import { resolveTiers } from '@/utils/tierLists/board';
 import { sanitizeImageUrl } from '@/utils/tierLists/codec';
 import { TIER_LIST_LIMITS } from '@/utils/tierLists/constants';
 import {
@@ -35,16 +38,19 @@ interface TierListCreatorProps {
   locale: string;
   /** A custom list id to edit in place, instead of building a new one. */
   editId?: string;
+  /** Admin-only: an official custom tier list slug to edit in the database. */
+  officialSlug?: string;
 }
 
-export function TierListCreator({ locale, editId }: TierListCreatorProps) {
+export function TierListCreator({ locale, editId, officialSlug }: TierListCreatorProps) {
   const dict = useDictionary();
   const t = dict.tierLists;
   const c = t.creator;
   const router = useRouter();
-  const { isAdmin, token } = useAuth();
+  const { isAdmin, isLoading: authLoading, token } = useAuth();
   const { state: storeState, hydrated: storeHydrated } = useTierListStore();
   const editingList = editId ? storeState.custom[editId] : undefined;
+  const { template: officialTemplate, loading: officialLoading } = useTierListTemplate(officialSlug ?? null, locale);
 
   const translateFeeling = useCallback((key: FeelingLabelKey) => c.feelings[key], [c.feelings]);
   const freshDraft = useCallback(
@@ -70,13 +76,21 @@ export function TierListCreator({ locale, editId }: TierListCreatorProps) {
   const [publishError, setPublishError] = useState<string | null>(null);
   const loaded = useRef<boolean>(false);
 
-  useDocumentTitle(editId ? `LemonDBD - ${editingList?.title || t.untitled}` : c.pageTitle);
+  const isEditing = Boolean(editId || officialSlug);
+
+  useDocumentTitle(
+    editId
+      ? `LemonDBD - ${editingList?.title || t.untitled}`
+      : officialSlug
+        ? `LemonDBD - ${officialTemplate?.title || t.untitled}`
+        : c.pageTitle
+  );
 
   // Restore after mount (localStorage is client-only), then autosave -- new
   // lists only. Editing an existing one is seeded from the store instead
   // (below), never through this scratch-draft key.
   useEffect(() => {
-    if (editId) {
+    if (isEditing) {
       loaded.current = true;
       return;
     }
@@ -86,7 +100,7 @@ export function TierListCreator({ locale, editId }: TierListCreatorProps) {
       setRestored(true);
     }
     loaded.current = true;
-  }, [editId]);
+  }, [isEditing]);
 
   useEffect(() => {
     if (!restored) return;
@@ -97,7 +111,7 @@ export function TierListCreator({ locale, editId }: TierListCreatorProps) {
   }, [restored]);
 
   useEffect(() => {
-    if (!loaded.current || editId) return;
+    if (!loaded.current || isEditing) return;
     const timer = window.setTimeout(() => {
       try {
         if (draft.title || draft.description || draft.items.length) localStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
@@ -107,7 +121,7 @@ export function TierListCreator({ locale, editId }: TierListCreatorProps) {
       }
     }, 400);
     return () => window.clearTimeout(timer);
-  }, [draft, editId]);
+  }, [draft, isEditing]);
 
   // Edit mode: once the store has hydrated, seed the draft from the saved
   // list -- once per `editId`, so it doesn't clobber in-progress edits on
@@ -127,6 +141,23 @@ export function TierListCreator({ locale, editId }: TierListCreatorProps) {
       backgroundImage: editingList.backgroundImage ?? '',
     });
   }, [editId, storeHydrated, editingList]);
+
+  useEffect(() => {
+    if (!officialSlug || !officialTemplate || editSeeded.current === `official:${officialSlug}`) return;
+    editSeeded.current = `official:${officialSlug}`;
+    setDraft({
+      title: officialTemplate.title,
+      description: officialTemplate.description ?? '',
+      tiers: resolveTiers(null, officialTemplate.tiers),
+      items: (officialTemplate.custom_items ?? []).map((item) => ({
+        id: item.id,
+        name: item.name,
+        ...(item.image_url ? { image: item.image_url } : item.image_local_path ? { image: item.image_local_path } : {}),
+      })),
+      preset: null,
+      backgroundImage: officialTemplate.cover_image_url ?? '',
+    });
+  }, [officialSlug, officialTemplate]);
 
   const patch = (next: Partial<Draft>) => setDraft((d) => ({ ...d, ...next }));
 
@@ -152,10 +183,13 @@ export function TierListCreator({ locale, editId }: TierListCreatorProps) {
   const safeBackground = trimmedBackground ? sanitizeImageUrl(trimmedBackground) : null;
   const backgroundInvalid = Boolean(trimmedBackground) && !safeBackground;
 
-  // Editing a list the store doesn't have (deleted, or a stale/bad link):
-  // nothing to prefill, so send them back rather than silently falling
-  // through to "create a new list" under someone else's edit link.
-  if (editId && storeHydrated && !editingList) {
+  // Editing a list the store doesn't have (deleted, or a stale/bad link), or a
+  // non-admin attempting to edit an official list: nothing to prefill.
+  if (
+    (editId && storeHydrated && !editingList) ||
+    (officialSlug && !authLoading && !isAdmin) ||
+    (officialSlug && !officialLoading && !officialTemplate)
+  ) {
     return (
       <div className="relative z-10 flex flex-col gap-2">
         <EmptyState icon={SearchX} title={t.customNotFoundTitle} subtitle={t.customNotFoundSubtitle} />
@@ -173,6 +207,39 @@ export function TierListCreator({ locale, editId }: TierListCreatorProps) {
       items: draft.items.map((i) => ({ ...i, name: i.name.trim() || i.id })),
       ...(safeBackground ? { backgroundImage: safeBackground } : {}),
     };
+
+    if (officialSlug && isAdmin) {
+      setPublishError(null);
+      setPublishing(true);
+      try {
+        await updateOfficialTierList(
+          officialSlug,
+          {
+            title: payload.title,
+            description: payload.description,
+            cover_image_url: safeBackground ?? null,
+            tiers: payload.tiers.map((tier) => ({
+              id: tier.id,
+              label: tier.label,
+              color: tier.color,
+              ...(tier.backgroundImage ? { backgroundImage: tier.backgroundImage } : {}),
+            })),
+            items: payload.items.map((i) => ({
+              id: i.id,
+              name: i.name,
+              ...(i.image ? { image_url: i.image } : {}),
+            })),
+          },
+          locale,
+          token
+        );
+        router.push(`/${locale}/tier-lists/${officialSlug}`);
+      } catch (err) {
+        setPublishError(err instanceof Error ? err.message : c.publishFailed);
+        setPublishing(false);
+      }
+      return;
+    }
 
     if (editId && editingList) {
       // Editing in place: keep the id, its rankings and its creation date --
@@ -195,8 +262,9 @@ export function TierListCreator({ locale, editId }: TierListCreatorProps) {
       setPublishError(null);
       setPublishing(true);
       try {
-        const res = await fetch(apiUrl('/api/v1/tier-lists'), {
+        const res = await authFetch(apiUrl('/api/v1/tier-lists'), {
           method: 'POST',
+          token,
           headers: {
             'Content-Type': 'application/json',
           },
@@ -257,8 +325,8 @@ export function TierListCreator({ locale, editId }: TierListCreatorProps) {
     setAttempted(false);
   };
 
-  const publishingNow = publishing && official && isAdmin && !editId;
-  const submitLabel = editId ? t.save : official && isAdmin ? (publishingNow ? c.publishing : c.publish) : c.create;
+  const publishingNow = publishing && isAdmin && (official || Boolean(officialSlug));
+  const submitLabel = isEditing ? (publishingNow ? c.publishing : t.save) : official && isAdmin ? (publishingNow ? c.publishing : c.publish) : c.create;
   const submitButton = (extra?: string) => (
     <Button
       variant="primary"
@@ -280,7 +348,7 @@ export function TierListCreator({ locale, editId }: TierListCreatorProps) {
 
   return (
     <div className="relative z-10 flex flex-col gap-6 2xl:gap-8 max-w-7xl 2xl:max-wide-2k:max-w-[1800px] wide-2k:max-w-[2400px] mx-auto w-full px-4 sm:px-6">
-      <h1 className="sr-only">{editId ? t.editDetails : c.pageTitle}</h1>
+      <h1 className="sr-only">{isEditing ? t.editDetails : c.pageTitle}</h1>
       {restored && (
         <div
           role="status"
@@ -347,7 +415,7 @@ export function TierListCreator({ locale, editId }: TierListCreatorProps) {
                 </div>
               )}
             </label>
-            {isAdmin && !editId && (
+            {isAdmin && !isEditing && (
               <Checkbox checked={official} onChange={setOfficial} className="md:col-span-2 justify-center gap-2.5">
                 <span className="text-center">
                   <span className={cn(LABEL, 'inline')}>{c.official}</span>

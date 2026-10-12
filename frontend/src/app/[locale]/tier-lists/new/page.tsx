@@ -16,7 +16,9 @@ export default function NewTierListPage() {
   // the creator prefills from that list and saves back onto it in place.
   // `TierListCreator` sets the document title itself (it knows whether it's
   // creating or editing).
-  const editId = useSearchParams().get('edit') ?? undefined;
+  const searchParams = useSearchParams();
+  const editId = searchParams.get('edit') ?? undefined;
+  const officialSlug = searchParams.get('official') ?? undefined;
 
   return (
     <PageShell
@@ -25,7 +27,7 @@ export default function NewTierListPage() {
       padding="tight"
       mainClassName="relative flex flex-col"
     >
-      <TierListCreator locale={locale} editId={editId} />
+      <TierListCreator locale={locale} editId={editId} officialSlug={officialSlug} />
     </PageShell>
   );
 }

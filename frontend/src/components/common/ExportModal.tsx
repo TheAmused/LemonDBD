@@ -14,7 +14,7 @@ export type CopyState = 'idle' | 'copied' | 'failed';
 
 export interface ExportModalLabels {
   title: string;
-  subtitle: string;
+  subtitle?: string;
   shareLinkLabel: string;
   preparingLink: string;
   copyLink: string;
@@ -123,7 +123,6 @@ export function ExportModal<D>({
       onClose={onClose}
       size="2xl"
       title={labels.title}
-      subtitle={labels.subtitle}
       icon={plainHeader ? undefined : <Share2 className="h-5 w-5" aria-hidden="true" />}
       centerTitle={plainHeader}
       bodyClassName="p-4 sm:p-6"

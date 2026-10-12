@@ -14,54 +14,41 @@ const base: FitInput = {
   poolHeadHeight: 48,
 };
 
-describe('Tier list fit: tile size follows the room', () => {
-  it('grows with the screen and shrinks with it', () => {
+describe('Tier list fit: tile size follows the screen width and keeps constant size when adding items', () => {
+  it('grows with the screen width and shrinks on smaller screens', () => {
     const tile = (w: number, h: number) => computeFit({ ...base, width: w, height: h }).tile;
     assert.ok(tile(2560, 1440) > tile(1920, 1080));
     assert.ok(tile(1920, 1080) > tile(1024, 768));
     assert.ok(tile(1024, 768) > tile(480, 854));
   });
 
-  it('never exceeds the cap for the screen, and a nearly empty list does not balloon', () => {
-    const fit = computeFit({ ...base, tierCounts: [0, 0, 0, 0, 0, 0], poolCount: 0 });
-    assert.ok(fit.tile <= maxTileFor(base.width, base.height));
-    assert.equal(fit.overflow, false);
+  it('never exceeds the cap for the screen, and an empty list has the same tile size as a populated list', () => {
+    const emptyFit = computeFit({ ...base, tierCounts: [0, 0, 0, 0, 0, 0], poolCount: 0 });
+    const fullFit = computeFit({ ...base, tierCounts: [30, 40, 60, 60, 40, 20], poolCount: 120 });
+    assert.equal(emptyFit.tile, maxTileFor(base.width, base.height));
+    assert.equal(fullFit.tile, emptyFit.tile, 'adding items to tiers must not shrink tiles');
+    assert.equal(emptyFit.overflow, false);
   });
 
-  it('a fitting result does not overflow and stays above the minimum', () => {
+  it('stays above the minimum and sets rowMin to 1 row height', () => {
     const fit = computeFit(base);
     assert.equal(fit.overflow, false);
     assert.ok(fit.tile >= MIN_TILE);
     assert.equal(fit.rowMin, fit.tile + 2 * fit.pad);
   });
 
-  it('more items give smaller tiles on small screens', () => {
-    const small = { ...base, width: 600, height: 800 };
-    const few = computeFit({ ...small, tierCounts: [2, 2, 2, 2, 2, 2] });
-    const many = computeFit({ ...small, tierCounts: [30, 40, 60, 60, 40, 20] });
-    assert.ok(many.tile < few.tile);
-  });
-
-  it('on a desktop a crowded board keeps comfortable tiles and scrolls instead of shrinking', () => {
+  it('enables pageScroll when the tiers and pool exceed viewport height while keeping comfortable tiles', () => {
     const fit = computeFit({ ...base, width: 1920, height: 1080, tierCounts: [30, 40, 60, 60, 40, 20], poolCount: 143 });
     assert.equal(fit.pageScroll, true);
-    assert.ok(fit.tile >= 64);
-    assert.equal(computeFit({ ...base, width: 1920, height: 1080, poolCount: 3 }).pageScroll, false);
+    assert.ok(fit.tile >= 80);
+    assert.equal(computeFit({ ...base, width: 1920, height: 1080, tierCounts: [0, 0, 0, 0, 0, 0], poolCount: 3 }).pageScroll, false);
   });
 
-  it('hides item names instead of shrinking the image below the readable size', () => {
-    const cramped = computeFit({ ...base, width: 854, height: 480, showNames: true });
-    assert.equal(cramped.namesHidden, true);
+  it('keeps item names visible at comfortable tile sizes', () => {
     const roomy = computeFit({ ...base, width: 2560, height: 1440, showNames: true });
     assert.equal(roomy.namesHidden, false);
     assert.ok(roomy.tile >= NAMES_MIN_TILE);
-    assert.equal(computeFit({ ...base, showNames: false }).namesHidden, false, 'a setting that is already off is not reported as hidden');
-  });
-
-  it('falls back to overflow only when even the minimum tile cannot fit', () => {
-    const fit = computeFit({ ...base, width: 420, height: 480, tierCounts: [60, 80, 120, 120, 80, 40], poolCount: 40 });
-    assert.equal(fit.overflow, true);
-    assert.equal(fit.tile, MIN_TILE);
+    assert.equal(computeFit({ ...base, showNames: false }).namesHidden, false);
   });
 
   it('wide (map) tiles are 1.5x as wide as tall', () => {
@@ -73,4 +60,25 @@ describe('Tier list fit: tile size follows the room', () => {
     const fit = computeFit({ ...base, poolCollapsed: true });
     assert.equal(fit.poolMinTotal, base.poolHeadHeight + 2);
   });
+
+  it('scales tiles proportionally across percentage scale steps and shrinks to fit screen in fit mode', () => {
+    const at100 = computeFit({ ...base, scale: 100 });
+    const at55 = computeFit({ ...base, scale: 55 });
+    const at130 = computeFit({ ...base, scale: 130 });
+    assert.ok(at55.tile < at100.tile);
+    assert.ok(at130.tile > at100.tile);
+    assert.equal(at100.fitMode, false);
+
+    const crowdedFit = computeFit({
+      ...base,
+      width: 1280,
+      height: 720,
+      tierCounts: [35, 35, 35, 35, 35, 35],
+      poolCount: 20,
+      scale: 'fit',
+    });
+    assert.equal(crowdedFit.fitMode, true);
+    assert.ok(crowdedFit.tile < at100.tile, 'fit mode shrinks crowded tiers so they fit on screen');
+  });
 });
+

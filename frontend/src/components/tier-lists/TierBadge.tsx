@@ -2,6 +2,7 @@
 // frontend/src/components/tier-lists/TierBadge.tsx
 
 import React from 'react';
+import { FitText } from '@/components/common/FitText';
 import type { TierColor } from '@/types/tierList';
 import { cn } from '@/utils/cn';
 import { tierColorProps } from './tierColor';
@@ -40,7 +41,9 @@ export function TierBadge({ label, color, backgroundImage, className, labelClass
   const swatch = tierColorProps(color);
   return (
     <div className={cn(swatch.className, className)} style={swatch.style}>
-      <span className={labelClassName}>{label}</span>
+      <FitText minScale={0.22} maxLines={1} className={cn('w-full text-center', labelClassName)}>
+        {label}
+      </FitText>
     </div>
   );
 }

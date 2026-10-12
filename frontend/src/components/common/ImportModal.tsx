@@ -119,12 +119,12 @@ export function ImportPreview({ text }: { text: string }) {
 
 export interface ImportModalLabels {
   title: string;
-  subtitle: string;
+  subtitle?: string;
   sharedLinkDetected: string;
   pasteLabel: string;
   uploadFile: string;
   pastePlaceholder: string;
-  cancel: string;
+  cancel?: string;
   importAction: string;
 }
 
@@ -170,7 +170,6 @@ export function ImportModal({
   labelClassName,
   fieldClassName,
   buttonClassName,
-  cancelClassName,
   importClassName,
   footerClassName,
   plainHeader,
@@ -183,15 +182,11 @@ export function ImportModal({
       onClose={onClose}
       size="2xl"
       title={labels.title}
-      subtitle={labels.subtitle}
       icon={plainHeader ? undefined : <FileJson className="h-5 w-5" aria-hidden="true" />}
       centerTitle={plainHeader}
       bodyClassName="p-4 sm:p-6"
       footer={
-        <div className={footerClassName ?? 'flex w-full flex-wrap items-center justify-end gap-2'}>
-          <Button variant="secondary" onClick={onClose} className={cancelClassName ?? buttonClassName}>
-            {labels.cancel}
-          </Button>
+        <div className={footerClassName ?? 'flex w-full flex-wrap items-center justify-center gap-2'}>
           <Button variant="primary" disabled={!canImport} onClick={onImport} className={importClassName ?? buttonClassName}>
             <Upload className="h-4 w-4" aria-hidden="true" />
             {labels.importAction}

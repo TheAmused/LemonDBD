@@ -355,3 +355,41 @@ class TestTierListAdminCreate:
 
         assert res.status_code == 201
         assert res.get_json()["data"]["tiers"][0]["backgroundImage"] == "https://example.com/s.png"
+
+    def test_update_requires_admin(
+        self, client: FlaskClient, db_session: Session, user_headers: dict[str, str]
+    ) -> None:
+        _make(db_session, id=1, slug="killers", kind="killers", title="Killers")
+        assert client.put("/api/v1/tier-lists/killers", json={"tiers": [{"id": "s", "label": "S+", "color": "s"}]}).status_code == 401
+        assert client.put("/api/v1/tier-lists/killers", json={"tiers": [{"id": "s", "label": "S+", "color": "s"}]}, headers=user_headers).status_code == 403
+
+    def test_admin_can_update_official_tier_list_tiers_and_default_placements(
+        self, client: FlaskClient, db_session: Session, admin_headers: dict[str, str]
+    ) -> None:
+        _make(db_session, id=1, slug="killers", kind="killers", title="Killers")
+
+        res = client.put(
+            "/api/v1/tier-lists/killers",
+            json={
+                "tiers": [
+                    {"id": "s", "label": "S+", "color": "s"},
+                    {"id": "a", "label": "A", "color": "a"},
+                ],
+                "default_placements": {"s": ["killer:1", "killer:2"], "unknown": ["killer:3"]},
+            },
+            headers=admin_headers,
+        )
+
+        assert res.status_code == 200
+        data = res.get_json()["data"]
+        assert data["tiers"] == [
+            {"id": "s", "label": "S+", "color": "s"},
+            {"id": "a", "label": "A", "color": "a"},
+        ]
+        assert data["default_placements"] == {"s": ["killer:1", "killer:2"]}
+        assert data["has_default_placements"] is True
+
+        assert self.seed_path.exists()
+        written = json.loads(self.seed_path.read_text(encoding="utf-8"))
+        assert written["tier_lists"][0]["default_placements"] == {"s": ["killer:1", "killer:2"]}
+

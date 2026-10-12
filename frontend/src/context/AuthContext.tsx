@@ -12,6 +12,8 @@ export interface UserProfile {
   is_active: boolean;
   is_verified: boolean;
   two_factor_enabled?: boolean;
+  has_password?: boolean;
+  google_linked?: boolean;
   created_at?: string;
   onboarding_completed_at?: string | null;
   preferred_language?: string | null;
@@ -44,6 +46,7 @@ interface AuthContextType {
   ownership: OwnershipSummary | null;
   /** `twoFactorToken` is set instead of `success` when the account needs a second step (see completeTwoFactorLogin). */
   login: (usernameOrEmail: string, password: string, extra?: Record<string, unknown>) => Promise<{ success: boolean; error?: string; user?: UserProfile; twoFactorToken?: string }>;
+  loginWithGoogle: (credential: string) => Promise<{ success: boolean; error?: string; user?: UserProfile; twoFactorToken?: string }>;
   completeTwoFactorLogin: (twoFactorToken: string, code: string) => Promise<{ success: boolean; error?: string; errorCode?: string; user?: UserProfile }>;
   register: (username: string, email: string, password: string, extra?: Record<string, unknown>) => Promise<{ success: boolean; error?: string; user?: UserProfile }>;
   logout: () => void;
@@ -119,6 +122,31 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
       if (data.status === 'two_factor_required' && data.two_factor_token) {
         // Password accepted but there is no session yet: the caller asks for the authenticator code.
+        return { success: false, twoFactorToken: data.two_factor_token as string };
+      }
+      setToken(SESSION_MARKER);
+      setSessionFlag(true);
+      setUser(data.user);
+      if (data.ownership) setOwnership(data.ownership);
+      return { success: true, user: data.user as UserProfile };
+    } catch (err) {
+      return { success: false, error: getErrorMessage(err, 'Network error occurred.') };
+    }
+  };
+
+  const loginWithGoogle = async (credential: string) => {
+    try {
+      const res = await fetch(`${API_BASE}/api/v1/auth/google`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ credential }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        return { success: false, error: data.error as string | undefined };
+      }
+      if (data.status === 'two_factor_required' && data.two_factor_token) {
         return { success: false, twoFactorToken: data.two_factor_token as string };
       }
       setToken(SESSION_MARKER);
@@ -405,6 +433,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // auth state that consumers actually care about.
   const handlersRef = useRef({
     login,
+    loginWithGoogle,
     completeTwoFactorLogin,
     register,
     logout,
@@ -422,6 +451,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   });
   handlersRef.current = {
     login,
+    loginWithGoogle,
     completeTwoFactorLogin,
     register,
     logout,
@@ -442,6 +472,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     () => ({
       login: (usernameOrEmail: string, password: string, extra?: Record<string, unknown>) =>
         handlersRef.current.login(usernameOrEmail, password, extra),
+      loginWithGoogle: (credential: string) => handlersRef.current.loginWithGoogle(credential),
       completeTwoFactorLogin: (twoFactorToken: string, code: string) =>
         handlersRef.current.completeTwoFactorLogin(twoFactorToken, code),
       register: (username: string, email: string, password: string, extra?: Record<string, unknown>) =>

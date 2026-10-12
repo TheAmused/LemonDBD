@@ -52,5 +52,6 @@ export default {
   errChallengeExpired: "This sign-in step expired. Go back and sign in again.",
   errIncorrectPassword: "Incorrect password.",
   errUnavailable: "Two-factor authentication is not available right now.",
+  needsPasswordHint: "Set a password first (see above). Two-factor needs it to confirm that it is really you.",
   errGeneric: "Something went wrong. Try again.",
 } as const;

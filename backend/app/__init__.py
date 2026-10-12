@@ -163,6 +163,7 @@ def create_app(config_class: Type[Config] | None = None) -> Flask:
 
     from app.routes.admin_control import admin_control_bp
     from app.routes.auth import auth_bp
+    from app.routes.auth_google import auth_google_bp
     from app.routes.auth_two_factor import auth_two_factor_bp
     from app.routes.bug_reports import bug_reports_bp
     from app.routes.chaos_streak import chaos_streak_bp
@@ -185,6 +186,7 @@ def create_app(config_class: Type[Config] | None = None) -> Flask:
 
     flask_app.register_blueprint(auth_bp)
     flask_app.register_blueprint(auth_two_factor_bp)
+    flask_app.register_blueprint(auth_google_bp)
     flask_app.register_blueprint(users_bp)
     flask_app.register_blueprint(perks_bp)
     flask_app.register_blueprint(synergy_bp)

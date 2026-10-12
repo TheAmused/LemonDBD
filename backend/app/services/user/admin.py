@@ -15,6 +15,7 @@ from app.models import (
     UserPerkOwnership,
 )
 from app.services.streak_stats import fetch_challenge_completion_counts
+from app.services.user import google_auth
 from app.services.user.two_factor import enabled_user_ids
 from app.services.user.avatar import (
     get_avatar_storage_directory,
@@ -126,9 +127,13 @@ def admin_remove_user(user_id: int) -> bool:
 
 
 def delete_own_account(
-    user_id: int, password: str, two_factor_code: str | None = None
+    user_id: int,
+    password: str,
+    two_factor_code: str | None = None,
+    google_credential: str | None = None,
 ) -> tuple[bool, str | None]:
     """Self-service account deletion, confirmed with the current password.
+
 
     Everything keyed to the user cascades away with the row. Bug reports are kept
     for the team's records but stripped of the reporter's identity first. The only
@@ -139,7 +144,11 @@ def delete_own_account(
     user = db.session.get(User, user_id)
     if not user:
         return False, "Account not found."
-    if not password or not verify_password(password, user.password_hash):
+    if user.has_password:
+        confirmed = bool(password) and verify_password(password, user.password_hash)
+    else:
+        confirmed = google_auth.credential_belongs_to(user, google_credential)
+    if not confirmed:
         return False, "Incorrect password."
     if user.role == "admin":
         other_admins = db.session.scalar(

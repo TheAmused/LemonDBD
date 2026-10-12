@@ -299,7 +299,10 @@ def delete_account():
     data = request.get_json(silent=True) or {}
     try:
         ok, err = user_service.delete_own_account(
-            g.current_user.id, str(data.get("password") or ""), data.get("two_factor_code")
+            g.current_user.id,
+            str(data.get("password") or ""),
+            data.get("two_factor_code"),
+            data.get("google_credential"),
         )
     except two_factor.TwoFactorError as err:
         return coded_error_response(err)

@@ -13,12 +13,14 @@ import { tip } from '@/components/common/Tooltip';
 import { DownloadDataSection } from '@/components/user/DownloadDataSection';
 import { DeleteAccountSection } from '@/components/user/DeleteAccountSection';
 import { useDictionary } from "@/context/DictionaryContext";
+import { useAuth } from '@/context/AuthContext';
 import { twoFactorErrorMessage } from '@/utils/twoFactorErrors';
 import { TwoFactorSection } from '@/components/user/TwoFactorSection';
 
 interface UserProfileFormProps {
   initialEmail: string;
   twoFactorEnabled?: boolean;
+  hasPassword?: boolean;
   onRefreshUser: () => Promise<void>;
   t?: Record<string, string>;
 }
@@ -26,6 +28,7 @@ interface UserProfileFormProps {
 export const UserProfileForm: React.FC<UserProfileFormProps> = ({
   initialEmail,
   twoFactorEnabled = false,
+  hasPassword = true,
   onRefreshUser,
   t: propT,
 }) => {
@@ -46,6 +49,20 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
   const [statusMessage, setStatusMessage] = useState<StatusFeedback | null>(null);
+  const [isSendingSetPassword, setIsSendingSetPassword] = useState(false);
+  const { forgotPassword } = useAuth();
+
+  const handleSendSetPasswordLink = async () => {
+    setStatusMessage(null);
+    setIsSendingSetPassword(true);
+    const res = await forgotPassword(initialEmail);
+    setIsSendingSetPassword(false);
+    setStatusMessage(
+      res.success
+        ? { type: 'success', text: t.setPasswordSent }
+        : { type: 'error', text: res.error || t.profileUpdateFailedMsg || 'Failed to update profile.' }
+    );
+  };
 
   const passwordsMatch = newPassword === confirmPassword;
   const requiresTwoFactor = twoFactorEnabled || needsTwoFactorCode;
@@ -211,6 +228,7 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
                     <Input
                       type="email"
                       required
+                      readOnly={!hasPassword}
                       fieldSize="sm"
                       value={newEmail}
                       onChange={(e) => setNewEmail(e.target.value)}
@@ -220,6 +238,7 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
                 </div>
 
                 {/* Current password: proves it is really the owner changing the email / password */}
+                {hasPassword && (
                 <div className="space-y-1.5">
                   <label className="block type-label-xs text-text-secondary" htmlFor="profile-current-password">
                     {t.currentPassword || 'Current Password'}
@@ -252,8 +271,9 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
                     </button>
                   </div>
                 </div>
+                )}
 
-                {requiresTwoFactor && (
+                {hasPassword && requiresTwoFactor && (
                   <div className="space-y-1.5">
                     <label className="block type-label-xs text-text-secondary" htmlFor="profile-two-factor-code">
                       {dict.twoFactor.codeOrRecoveryLabel}
@@ -270,7 +290,28 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
                   </div>
                 )}
 
+                {!hasPassword && (
+                  <div className="space-y-3 pt-3 border-t border-border-color">
+                    <span className="type-label-sm text-text-primary flex items-center gap-2">
+                      <Lock className="h-3.5 w-3.5 text-accent-amber" />
+                      <span>{t.setPasswordTitle}</span>
+                    </span>
+                    <p className="type-caption text-text-secondary">{t.setPasswordDesc}</p>
+                    <Button
+                      type="button"
+                      variant="secondary"
+                      size="sm"
+                      loading={isSendingSetPassword}
+                      onClick={handleSendSetPasswordLink}
+                      leftIcon={<Mail className="h-3.5 w-3.5" />}
+                    >
+                      <span>{t.setPasswordButton}</span>
+                    </Button>
+                  </div>
+                )}
+
                 {/* Password Management */}
+                {hasPassword && (
                 <div className="space-y-3 pt-3 border-t border-border-color">
                   <div className="flex items-center justify-between">
                     <span className="type-label-sm text-text-primary flex items-center gap-2">
@@ -337,6 +378,7 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
                     </div>
                   </div>
                 </div>
+                )}
               </div>
 
               {/* Action Button */}
@@ -355,6 +397,7 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
             <TwoFactorSection
               refreshTrigger={twoFactorRefresh}
               onStatusChange={onRefreshUser}
+              needsPassword={!hasPassword}
             />
           </div>
         </div>

@@ -122,7 +122,13 @@ export interface LadderState {
   board: BoardContainers;
 }
 
-export function addTier(state: LadderState, label: string, color: string, atIndex?: number): LadderState {
+export function addTier(
+  state: LadderState,
+  label: string,
+  color: string,
+  atIndex?: number,
+  backgroundImage?: string
+): LadderState {
   if (state.tiers.length >= TIER_LIST_LIMITS.maxTiers) return state;
   const id = uniqueId(slugifyItemId(label || 'tier'), new Set([...state.tiers.map((t) => t.id), POOL_CONTAINER_ID]));
   const tiers = [...state.tiers];
@@ -130,6 +136,7 @@ export function addTier(state: LadderState, label: string, color: string, atInde
     id,
     label: label.slice(0, TIER_LIST_LIMITS.maxTierLabel),
     color,
+    ...(backgroundImage ? { backgroundImage } : {}),
   });
   return { tiers, board: { ...state.board, [id]: [] } };
 }
@@ -168,5 +175,16 @@ export function moveTier(state: LadderState, id: string, direction: -1 | 1): Lad
   if (index < 0 || target < 0 || target >= state.tiers.length) return state;
   const tiers = [...state.tiers];
   [tiers[index], tiers[target]] = [tiers[target], tiers[index]];
+  return { ...state, tiers };
+}
+
+export function reorderTiers(state: LadderState, fromId: string, toId: string): LadderState {
+  if (fromId === toId) return state;
+  const fromIndex = state.tiers.findIndex((t) => t.id === fromId);
+  const toIndex = state.tiers.findIndex((t) => t.id === toId);
+  if (fromIndex < 0 || toIndex < 0 || fromIndex === toIndex) return state;
+  const tiers = [...state.tiers];
+  const [moved] = tiers.splice(fromIndex, 1);
+  tiers.splice(toIndex, 0, moved);
   return { ...state, tiers };
 }

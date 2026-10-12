@@ -8,9 +8,13 @@ import {
   Ellipsis,
   Eye,
   EyeOff,
+  Maximize2,
+  Minus,
   MousePointerClick,
   Pencil,
+  Plus,
   RotateCcw,
+  Save,
   Share2,
   Trash2,
   TriangleAlert,
@@ -19,7 +23,6 @@ import {
 } from 'lucide-react';
 import { ConfirmModal } from '@/components/common/ConfirmModal';
 import type { TierDefinition, TierItem, TierListDocument, TierPlacements } from '@/types/tierList';
-import type { Dictionary } from '@/locales/types';
 import { usePersistentString } from '@/hooks/usePersistentString';
 import {
   type BoardContainers,
@@ -27,12 +30,13 @@ import {
   addTier,
   buildBoard,
   clearTier,
-  moveTier,
   placementsFromBoard,
   removeTier,
+  reorderTiers,
   updateTier,
 } from '@/utils/tierLists/board';
-import { TIER_COLOR_TOKENS } from '@/utils/tierLists/constants';
+import { TIER_COLOR_TOKENS, TIER_LIST_LIMITS } from '@/utils/tierLists/constants';
+import { BOARD_SCALE_STEPS, type BoardScale } from '@/utils/tierLists/fit';
 import type { SaveResult } from '@/utils/tierLists/storage';
 import { TierEditModal } from './TierEditModal';
 import { TierListBoard } from './TierListBoard';
@@ -43,6 +47,7 @@ import { TOUCH_BTN } from './styles';
 import { Button, BUTTON_BASE, BUTTON_SIZES, BUTTON_VARIANTS } from '@/components/common/Button';
 import { cn } from '@/utils/cn';
 import { Popover, popoverTriggerProps } from '@/components/common/Popover';
+import { tip } from '@/components/common/Tooltip';
 import { formatMessage } from '@/utils/i18nFormat';
 
 export interface TierListEditorProps {
@@ -61,13 +66,18 @@ export interface TierListEditorProps {
   defaultShowNames: boolean;
   resetMessage: string;
   poolEmptyLabel: string;
+  /** Whether the user can add, edit, delete, or reorder tiers (true for custom lists and admins on official lists). */
+  canEditTiers?: boolean;
   onSave: (tiers: TierDefinition[], placements: TierPlacements) => SaveResult;
+  /** Admin-only callback on official tier lists to persist tiers and default placements to the database. */
+  onSaveOfficial?: (tiers: TierDefinition[], placements: TierPlacements) => Promise<void>;
+  savingOfficial?: boolean;
   onReset: () => SaveResult;
   buildExportDoc: (tiers: TierDefinition[], placements: TierPlacements) => TierListDocument;
   importTarget: ImportTarget;
   onImport: (doc: TierListDocument) => SaveResult;
   onRemoveItem?: (key: string) => SaveResult;
-  /** Custom lists only: where "Edit details" sends them -- the creator, prefilled. */
+  /** Where "Edit details" sends them -- the creator, prefilled. */
   editHref?: string;
   onDelete?: () => void;
   locale: string;
@@ -75,6 +85,8 @@ export interface TierListEditorProps {
 
 const MENU_ITEM =
   'flex w-full min-h-[44px] items-center gap-2.5 rounded-xl px-3 py-2 text-left text-sm font-semibold text-text-primary hover:bg-bg-elevated cursor-pointer transition-colors';
+
+const TOOLBAR_BTN = 'min-h-[36px] shrink-0 whitespace-nowrap rounded-lg px-2.5 text-xs cursor-pointer';
 
 type Dialog = 'reset' | 'export' | 'import' | 'delete' | null;
 
@@ -90,7 +102,6 @@ export function TierListEditor(props: TierListEditorProps) {
     mode,
     preferenceKey,
     title,
-    description,
     kindLabel,
     badges,
     items,
@@ -100,7 +111,10 @@ export function TierListEditor(props: TierListEditorProps) {
     defaultShowNames,
     resetMessage,
     poolEmptyLabel,
+    canEditTiers = mode === 'custom',
     onSave,
+    onSaveOfficial,
+    savingOfficial = false,
     onReset,
     buildExportDoc,
     importTarget,
@@ -117,14 +131,30 @@ export function TierListEditor(props: TierListEditorProps) {
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
   const menuRef = React.useRef<HTMLButtonElement>(null);
   const [editingTierId, setEditingTierId] = useState<string | null>(null);
+  const [addingTier, setAddingTier] = useState<boolean>(false);
   const [selectedKey, setSelectedKey] = useState<string | null>(null);
   const [saveError, setSaveError] = useState<'quota' | 'unavailable' | null>(null);
+  const [scale, setScale] = useState<BoardScale>(100);
   const [showNamesPref, setShowNamesPref] = usePersistentString<'on' | 'off'>(
     `lemondbd_tier_lists_names_${preferenceKey}`,
     defaultShowNames ? 'on' : 'off',
     isOnOff
   );
   const showNames = showNamesPref === 'on';
+
+  const numericScale = scale === 'fit' ? 100 : scale;
+  const scaleIndex = BOARD_SCALE_STEPS.indexOf(numericScale);
+  const canZoomOut = scale === 'fit' || scaleIndex > 0;
+  const canZoomIn = scale === 'fit' || (scaleIndex >= 0 && scaleIndex < BOARD_SCALE_STEPS.length - 1);
+  const stepScale = useCallback(
+    (dir: -1 | 1) => {
+      const current = scale === 'fit' ? 100 : scale;
+      const idx = BOARD_SCALE_STEPS.indexOf(current);
+      const nextIdx = Math.max(0, Math.min(BOARD_SCALE_STEPS.length - 1, (idx < 0 ? 4 : idx) + dir));
+      setScale(BOARD_SCALE_STEPS[nextIdx]);
+    },
+    [scale]
+  );
 
   const board = useMemo(() => buildBoard(items, tiers, placements), [items, tiers, placements]);
   const visibleKeys = useMemo(() => new Set(items.map((i) => i.key)), [items]);
@@ -160,11 +190,22 @@ export function TierListEditor(props: TierListEditorProps) {
 
   const applyLadder = useCallback(
     (fn: (state: LadderState) => LadderState) => {
+      if (!canEditTiers) return;
       const next = fn({ tiers, board });
-      commit(next.tiers, next.board);
+      const nextPlacements = placementsFromBoard(next.board, next.tiers, placements, visibleKeys);
+      report(onSave(next.tiers, nextPlacements));
+      if (onSaveOfficial) {
+        void onSaveOfficial(next.tiers, nextPlacements);
+      }
     },
-    [tiers, board, commit]
+    [canEditTiers, tiers, board, placements, visibleKeys, report, onSave, onSaveOfficial]
   );
+
+  const handleSaveOfficialClick = useCallback(() => {
+    if (!onSaveOfficial) return;
+    const currentPlacements = placementsFromBoard(board, tiers, placements, visibleKeys);
+    void onSaveOfficial(tiers, currentPlacements);
+  }, [onSaveOfficial, board, tiers, placements, visibleKeys]);
 
   const nextColor = TIER_COLOR_TOKENS[Math.min(tiers.length, TIER_COLOR_TOKENS.length - 1)];
   const editingIndex = tiers.findIndex((tier) => tier.id === editingTierId);
@@ -180,15 +221,24 @@ export function TierListEditor(props: TierListEditorProps) {
     kindLabel && pageTitle && kindLabel.trim().toLowerCase() === pageTitle.trim().toLowerCase()
   );
   const showKindBadge = Boolean(kindLabel && !isDuplicateKind);
+  const hasExtendedToolbar = mode === 'custom' || canEditTiers || Boolean(onSaveOfficial);
+  const secondaryLabelClass = hasExtendedToolbar ? 'sr-only' : 'hidden xl:inline [@media(max-height:559px)]:hidden!';
 
   return (
-    <div className="relative z-10 flex flex-col gap-3 sm:gap-4 h-full min-h-0">
+    <div className="relative z-10 flex flex-col gap-3 sm:gap-3.5 w-full">
       {/* Phones: one compact row (back, title, actions menu). Wider screens use the full header below. */}
       <div className="flex shrink-0 items-center gap-2 sm:hidden">
         <span className="w-11 shrink-0" aria-hidden="true" />
-        <h1 className="min-w-0 flex-1 truncate text-center type-label text-text-primary">
-          {pageTitle}
-        </h1>
+        <div className="min-w-0 flex-1 flex flex-col items-center justify-center text-center">
+          {showKindBadge && (
+            <span className="type-label-xs text-text-muted mb-0.5">
+              {kindLabel}
+            </span>
+          )}
+          <h1 className="max-w-full truncate text-center type-label text-text-primary">
+            {pageTitle}
+          </h1>
+        </div>
         <button
           ref={menuRef}
           type="button"
@@ -206,8 +256,81 @@ export function TierListEditor(props: TierListEditorProps) {
           align="end"
           role="menu"
           ariaLabel={t.toolbarAria}
-          className="min-w-[13rem] rounded-2xl border border-border-color bg-bg-surface p-1.5 shadow-xl"
+          className="min-w-[14rem] rounded-2xl border border-border-color bg-bg-surface p-1.5 shadow-xl"
         >
+          <div className="flex items-center justify-between gap-1 rounded-xl bg-bg-elevated/60 px-2 py-1.5 mb-1">
+            <button
+              type="button"
+              disabled={!canZoomOut}
+              onClick={() => stepScale(-1)}
+              aria-label={t.scaleZoomOut}
+              className="flex h-8 w-8 items-center justify-center rounded-lg text-text-secondary hover:bg-bg-surface hover:text-text-primary disabled:opacity-40 cursor-pointer"
+            >
+              <Minus className="h-4 w-4" aria-hidden="true" />
+            </button>
+            <button
+              type="button"
+              onClick={() => setScale(100)}
+              aria-label={t.scaleReset}
+              className="min-w-[3.25rem] px-1.5 h-8 rounded-lg type-label-xs text-text-primary hover:bg-bg-surface cursor-pointer tabular-nums"
+            >
+              {scale === 'fit' ? t.scaleFit : `${scale}%`}
+            </button>
+            <button
+              type="button"
+              disabled={!canZoomIn}
+              onClick={() => stepScale(1)}
+              aria-label={t.scaleZoomIn}
+              className="flex h-8 w-8 items-center justify-center rounded-lg text-text-secondary hover:bg-bg-surface hover:text-text-primary disabled:opacity-40 cursor-pointer"
+            >
+              <Plus className="h-4 w-4" aria-hidden="true" />
+            </button>
+            <button
+              type="button"
+              onClick={() => setScale(scale === 'fit' ? 100 : 'fit')}
+              aria-pressed={scale === 'fit'}
+              aria-label={t.scaleFitHint}
+              className={cn(
+                'inline-flex h-8 items-center gap-1 rounded-lg px-2.5 type-label-xs cursor-pointer transition-colors',
+                scale === 'fit'
+                  ? 'bg-accent-amber/20 text-accent-amber'
+                  : 'text-text-secondary hover:bg-bg-surface hover:text-text-primary'
+              )}
+            >
+              <Maximize2 className="h-3.5 w-3.5" aria-hidden="true" />
+              <span>{t.scaleFit}</span>
+            </button>
+          </div>
+          {canEditTiers && (
+            <button
+              type="button"
+              role="menuitem"
+              disabled={tiers.length >= TIER_LIST_LIMITS.maxTiers}
+              className={cn(MENU_ITEM, 'disabled:opacity-40 disabled:cursor-not-allowed')}
+              onClick={() => {
+                setMenuOpen(false);
+                setAddingTier(true);
+              }}
+            >
+              <Plus className="h-4 w-4" aria-hidden="true" />
+              {t.addTier}
+            </button>
+          )}
+          {onSaveOfficial && (
+            <button
+              type="button"
+              role="menuitem"
+              disabled={savingOfficial}
+              className={cn(MENU_ITEM, 'disabled:opacity-40 disabled:cursor-not-allowed')}
+              onClick={() => {
+                setMenuOpen(false);
+                handleSaveOfficialClick();
+              }}
+            >
+              <Save className="h-4 w-4" aria-hidden="true" />
+              {savingOfficial ? t.creator.publishing : t.save}
+            </button>
+          )}
           <button type="button" role="menuitem" className={MENU_ITEM} onClick={() => { setMenuOpen(false); setShowNamesPref(showNames ? 'off' : 'on'); }}>
             {showNames ? <EyeOff className="h-4 w-4" aria-hidden="true" /> : <Eye className="h-4 w-4" aria-hidden="true" />}
             {showNames ? t.hideNames : t.showNames}
@@ -224,7 +347,7 @@ export function TierListEditor(props: TierListEditorProps) {
             <RotateCcw className="h-4 w-4" aria-hidden="true" />
             {t.reset}
           </button>
-          {mode === 'custom' && editHref && (
+          {editHref && (
             <Link href={editHref} role="menuitem" className={MENU_ITEM} onClick={() => setMenuOpen(false)}>
               <Pencil className="h-4 w-4" aria-hidden="true" />
               {t.editDetails}
@@ -239,63 +362,169 @@ export function TierListEditor(props: TierListEditorProps) {
         </Popover>
       </div>
 
-      <header className="hidden sm:flex flex-col gap-3 [@media(max-height:559px)]:gap-1 shrink-0">
-        <div className="flex flex-col gap-3 [@media(max-height:559px)]:flex-row [@media(max-height:559px)]:items-center [@media(max-height:559px)]:justify-between [@media(max-height:559px)]:gap-2 xl:grid xl:grid-cols-[minmax(0,1fr)_minmax(0,auto)_minmax(0,1fr)] xl:items-center">
-          <div className="flex items-center justify-center xl:justify-start gap-3 shrink-0 xl:justify-self-start">
+      <header className="hidden sm:flex flex-col shrink-0">
+        <div className="grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-2">
+          <div className="flex items-center justify-start gap-2 shrink-0 justify-self-start">
             {badges}
-          </div>
-
-          <div className="min-w-0 text-center px-2">
-            <div className="inline-flex flex-wrap items-center justify-center gap-2">
-              {showKindBadge && (
-                <span className="rounded-lg border border-accent-red/30 bg-accent-red/10 px-2 py-0.5 type-label-xs text-accent-red">
-                  {kindLabel}
-                </span>
-              )}
-              <h1 className="text-base sm:text-lg lg:text-xl font-black uppercase tracking-wider text-text-primary truncate">
-                {pageTitle}
-              </h1>
+            <div className="inline-flex items-center rounded-lg border border-border-color bg-bg-surface p-0.5 shadow-2xs">
+              <button
+                type="button"
+                disabled={!canZoomOut}
+                onClick={() => stepScale(-1)}
+                aria-label={t.scaleZoomOut}
+                {...tip(t.scaleZoomOut, undefined, 'action')}
+                className="flex h-7 w-7 items-center justify-center rounded-md text-text-secondary hover:bg-bg-elevated hover:text-text-primary disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer transition-colors"
+              >
+                <Minus className="h-3.5 w-3.5" aria-hidden="true" />
+              </button>
+              <button
+                type="button"
+                onClick={() => setScale(100)}
+                aria-label={t.scaleReset}
+                {...tip(t.scaleReset, undefined, 'action')}
+                className="min-w-[3.25rem] px-1.5 h-7 rounded-md type-label-xs text-text-primary hover:bg-bg-elevated cursor-pointer transition-colors tabular-nums"
+              >
+                {scale === 'fit' ? t.scaleFit : `${scale}%`}
+              </button>
+              <button
+                type="button"
+                disabled={!canZoomIn}
+                onClick={() => stepScale(1)}
+                aria-label={t.scaleZoomIn}
+                {...tip(t.scaleZoomIn, undefined, 'action')}
+                className="flex h-7 w-7 items-center justify-center rounded-md text-text-secondary hover:bg-bg-elevated hover:text-text-primary disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer transition-colors"
+              >
+                <Plus className="h-3.5 w-3.5" aria-hidden="true" />
+              </button>
+              <div className="mx-0.5 h-4 w-px bg-border-color" aria-hidden="true" />
+              <button
+                type="button"
+                onClick={() => setScale(scale === 'fit' ? 100 : 'fit')}
+                aria-pressed={scale === 'fit'}
+                aria-label={t.scaleFitHint}
+                {...tip(t.scaleFitHint, undefined, 'action')}
+                className={cn(
+                  'inline-flex h-7 items-center gap-1 rounded-md px-2 type-label-xs cursor-pointer transition-colors',
+                  scale === 'fit'
+                    ? 'bg-accent-amber/20 text-accent-amber'
+                    : 'text-text-secondary hover:bg-bg-elevated hover:text-text-primary'
+                )}
+              >
+                <Maximize2 className="h-3 w-3" aria-hidden="true" />
+                <span>{t.scaleFit}</span>
+              </button>
             </div>
-            {description && (
-              <p className="mt-1 hidden sm:block [@media(max-height:719px)]:hidden text-xs sm:text-sm text-text-secondary max-w-2xl mx-auto text-center line-clamp-2">
-                {description}
-              </p>
-            )}
           </div>
 
-          <div role="toolbar" aria-label={t.toolbarAria} className="flex flex-wrap items-center gap-2 shrink-0 justify-center xl:justify-self-end xl:justify-end">
+          <div className="min-w-0 flex flex-col items-center justify-center text-center px-2">
+            {showKindBadge && (
+              <span className="type-label-xs text-text-muted mb-0.5 [@media(max-height:559px)]:hidden">
+                {kindLabel}
+              </span>
+            )}
+            <h1 className="max-w-full text-base sm:text-lg lg:text-xl font-black uppercase tracking-wider text-text-primary truncate leading-tight">
+              {pageTitle}
+            </h1>
+          </div>
+
+          <div role="toolbar" aria-label={t.toolbarAria} className="flex flex-nowrap items-center gap-1.5 shrink-0 justify-self-end justify-end">
+            {canEditTiers && (
+              <Button
+                variant="secondary"
+                size="sm"
+                disabled={tiers.length >= TIER_LIST_LIMITS.maxTiers}
+                onClick={() => setAddingTier(true)}
+                aria-label={t.addTier}
+                {...tip(t.addTier, undefined, 'action')}
+                className={TOOLBAR_BTN}
+              >
+                <Plus className="h-3.5 w-3.5" aria-hidden="true" />
+                <span className="hidden lg:inline [@media(max-height:559px)]:hidden!">{t.addTier}</span>
+              </Button>
+            )}
+            {onSaveOfficial && (
+              <Button
+                variant="primary"
+                size="sm"
+                disabled={savingOfficial}
+                onClick={handleSaveOfficialClick}
+                aria-label={t.save}
+                {...tip(t.save, undefined, 'action')}
+                className={TOOLBAR_BTN}
+              >
+                <Save className="h-3.5 w-3.5" aria-hidden="true" />
+                <span className="hidden lg:inline [@media(max-height:559px)]:hidden!">
+                  {savingOfficial ? t.creator.publishing : t.save}
+                </span>
+              </Button>
+            )}
             <Button
               variant="secondary"
+              size="sm"
               onClick={() => setShowNamesPref(showNames ? 'off' : 'on')}
               aria-pressed={showNames}
               aria-label={showNames ? t.hideNames : t.showNames}
-              className={TOUCH_BTN}
+              {...tip(showNames ? t.hideNames : t.showNames, undefined, 'action')}
+              className={TOOLBAR_BTN}
             >
-              {showNames ? <EyeOff className="h-4 w-4" aria-hidden="true" /> : <Eye className="h-4 w-4" aria-hidden="true" />}
-              <span className="hidden sm:inline [@media(max-height:559px)]:hidden!">{showNames ? t.hideNames : t.showNames}</span>
+              {showNames ? <EyeOff className="h-3.5 w-3.5" aria-hidden="true" /> : <Eye className="h-3.5 w-3.5" aria-hidden="true" />}
+              <span className={secondaryLabelClass}>{showNames ? t.hideNames : t.showNames}</span>
             </Button>
-            <Button variant="secondary" onClick={() => setDialog('import')} aria-label={t.import} className={TOUCH_BTN}>
-              <Upload className="h-4 w-4" aria-hidden="true" />
-              <span className="hidden sm:inline [@media(max-height:559px)]:hidden!">{t.import}</span>
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={() => setDialog('import')}
+              aria-label={t.import}
+              {...tip(t.import, undefined, 'action')}
+              className={TOOLBAR_BTN}
+            >
+              <Upload className="h-3.5 w-3.5" aria-hidden="true" />
+              <span className={secondaryLabelClass}>{t.import}</span>
             </Button>
-            <Button variant="secondary" onClick={() => setDialog('export')} aria-label={t.export} className={TOUCH_BTN}>
-              <Share2 className="h-4 w-4" aria-hidden="true" />
-              <span className="hidden sm:inline [@media(max-height:559px)]:hidden!">{t.export}</span>
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={() => setDialog('export')}
+              aria-label={t.export}
+              {...tip(t.export, undefined, 'action')}
+              className={TOOLBAR_BTN}
+            >
+              <Share2 className="h-3.5 w-3.5" aria-hidden="true" />
+              <span className={secondaryLabelClass}>{t.export}</span>
             </Button>
-            <Button variant="secondary" onClick={() => setDialog('reset')} aria-label={t.reset} className={TOUCH_BTN}>
-              <RotateCcw className="h-4 w-4" aria-hidden="true" />
-              <span className="hidden sm:inline [@media(max-height:559px)]:hidden!">{t.reset}</span>
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={() => setDialog('reset')}
+              aria-label={t.reset}
+              {...tip(t.reset, undefined, 'action')}
+              className={TOOLBAR_BTN}
+            >
+              <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
+              <span className={secondaryLabelClass}>{t.reset}</span>
             </Button>
-            {mode === 'custom' && editHref && (
-              <Link href={editHref} aria-label={t.editDetails} className={cn(BUTTON_BASE, BUTTON_VARIANTS.secondary, BUTTON_SIZES.md, TOUCH_BTN)}>
-                <Pencil className="h-4 w-4" aria-hidden="true" />
-                <span className="hidden sm:inline [@media(max-height:559px)]:hidden!">{t.editDetails}</span>
+            {editHref && (
+              <Link
+                href={editHref}
+                aria-label={t.editDetails}
+                {...tip(t.editDetails, undefined, 'action')}
+                className={cn(BUTTON_BASE, BUTTON_VARIANTS.secondary, BUTTON_SIZES.sm, TOOLBAR_BTN)}
+              >
+                <Pencil className="h-3.5 w-3.5" aria-hidden="true" />
+                <span className="hidden xl:inline [@media(max-height:559px)]:hidden!">{t.editDetails}</span>
               </Link>
             )}
             {mode === 'custom' && onDelete && (
-              <Button variant="soft" onClick={() => setDialog('delete')} aria-label={t.deleteList} className={TOUCH_BTN}>
-                <Trash2 className="h-4 w-4" aria-hidden="true" />
-                <span className="hidden sm:inline [@media(max-height:559px)]:hidden!">{t.deleteList}</span>
+              <Button
+                variant="soft"
+                size="sm"
+                onClick={() => setDialog('delete')}
+                aria-label={t.deleteList}
+                {...tip(t.deleteList, undefined, 'action')}
+                className={TOOLBAR_BTN}
+              >
+                <Trash2 className="h-3.5 w-3.5" aria-hidden="true" />
+                <span className="sr-only">{t.deleteList}</span>
               </Button>
             )}
           </div>
@@ -356,25 +585,37 @@ export function TierListEditor(props: TierListEditorProps) {
         tiers={tiers}
         board={board}
         onBoardChange={handleBoardChange}
-        onEditTier={setEditingTierId}
+        onReorderTiers={canEditTiers ? (fromId, toId) => applyLadder((s) => reorderTiers(s, fromId, toId)) : undefined}
+        onEditTier={(id) => {
+          if (!canEditTiers) return;
+          setAddingTier(false);
+          setEditingTierId(id);
+        }}
+        canEditTiers={canEditTiers}
         selectedKey={selectedKey}
         onSelectedKeyChange={setSelectedKey}
         shape={shape}
         showNames={showNames}
+        scale={scale}
         poolEmptyLabel={poolEmptyLabel}
       />
 
-      <TierEditModal
-        tier={editingIndex >= 0 ? tiers[editingIndex] : null}
-        index={editingIndex}
-        tierCount={tiers.length}
-        onClose={() => setEditingTierId(null)}
-        onSave={(id, patch) => applyLadder((s) => updateTier(s, id, patch))}
-        onMove={(id, dir) => applyLadder((s) => moveTier(s, id, dir))}
-        onClear={(id) => applyLadder((s) => clearTier(s, id, catalogOrder))}
-        onDelete={(id) => applyLadder((s) => removeTier(s, id, catalogOrder))}
-        onAddBelow={(at) => applyLadder((s) => addTier(s, t.newTierLabel, nextColor, at))}
-      />
+      {canEditTiers && (
+        <TierEditModal
+          mode={addingTier ? 'add' : 'edit'}
+          tier={!addingTier && editingIndex >= 0 ? tiers[editingIndex] : null}
+          defaultColor={nextColor}
+          tierCount={tiers.length}
+          onClose={() => {
+            setEditingTierId(null);
+            setAddingTier(false);
+          }}
+          onSave={(id, patch) => applyLadder((s) => updateTier(s, id, patch))}
+          onCreate={(patch) => applyLadder((s) => addTier(s, patch.label, patch.color, undefined, patch.backgroundImage))}
+          onClear={(id) => applyLadder((s) => clearTier(s, id, catalogOrder))}
+          onDelete={(id) => applyLadder((s) => removeTier(s, id, catalogOrder))}
+        />
+      )}
 
       <ConfirmModal
         open={dialog === 'reset'}

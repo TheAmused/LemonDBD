@@ -4,7 +4,7 @@ from pydantic import ValidationError
 
 from app.core.http_cache import cache_catalog
 from app.core.security import admin_required
-from app.schemas.tier_list import TierListAdminCreate
+from app.schemas.tier_list import TierListAdminCreate, TierListAdminUpdate
 from app.services import tier_list_service
 from app.services.admin_control_service import log_admin_action
 from app.utils.lang import extract_lang
@@ -70,3 +70,49 @@ def create_tier_list():
         details={"slug": row.slug, "title": row.title, "item_count": row.item_count()},
     )
     return jsonify({"status": "success", "data": row.to_dict()}), 201
+
+
+@tier_lists_bp.route("/<string:slug>", methods=["PUT", "PATCH"])
+@admin_required
+def update_tier_list(slug: str):
+    """Admin-only update of an official tier list's tiers, default placements,
+    or custom metadata in the database.
+    """
+    body = request.get_json(silent=True) or {}
+    try:
+        payload = TierListAdminUpdate(**body)
+    except ValidationError as err:
+        return jsonify({"error": "Invalid tier list", "details": err.errors()}), 400
+
+    fields_set = payload.model_fields_set
+    kwargs: dict[str, object] = {}
+    if "title" in fields_set and payload.title is not None:
+        kwargs["title"] = payload.title
+    if "description" in fields_set and payload.description is not None:
+        kwargs["description"] = payload.description
+    if "cover_image_url" in fields_set:
+        kwargs["cover_image_url"] = payload.cover_image_url
+    if "tiers" in fields_set and payload.tiers is not None:
+        kwargs["tiers"] = [t.model_dump(exclude_none=True) for t in payload.tiers]
+    if "items" in fields_set and payload.items is not None:
+        kwargs["custom_items"] = [i.model_dump(exclude_none=True) for i in payload.items]
+    if "default_placements" in fields_set:
+        kwargs["default_placements"] = payload.default_placements
+
+    try:
+        row = tier_list_service.update_tier_list(slug, **kwargs)
+    except ValueError as err:
+        return jsonify({"error": str(err)}), 400
+
+    if row is None:
+        return jsonify({"error": "Tier list not found", "status": 404}), 404
+
+    log_admin_action(
+        g.current_user.id,
+        "tier_list.update",
+        target_type="tier_list",
+        target_id=row.id,
+        details={"slug": row.slug, "updated_fields": sorted(fields_set)},
+    )
+    return jsonify({"status": "success", "data": row.to_dict(extract_lang())}), 200
+

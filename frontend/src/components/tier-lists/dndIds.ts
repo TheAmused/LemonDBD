@@ -6,9 +6,11 @@
  */
 const ITEM_PREFIX = 'item|';
 const CONTAINER_PREFIX = 'zone|';
+const TIER_PREFIX = 'tier|';
 
 export const itemDndId = (key: string): string => `${ITEM_PREFIX}${key}`;
 export const containerDndId = (id: string): string => `${CONTAINER_PREFIX}${id}`;
+export const tierDndId = (id: string): string => `${TIER_PREFIX}${id}`;
 
 export function parseItemDndId(id: string | number | null | undefined): string | null {
   const s = String(id ?? '');
@@ -18,4 +20,9 @@ export function parseItemDndId(id: string | number | null | undefined): string |
 export function parseContainerDndId(id: string | number | null | undefined): string | null {
   const s = String(id ?? '');
   return s.startsWith(CONTAINER_PREFIX) ? s.slice(CONTAINER_PREFIX.length) : null;
+}
+
+export function parseTierDndId(id: string | number | null | undefined): string | null {
+  const s = String(id ?? '');
+  return s.startsWith(TIER_PREFIX) ? s.slice(TIER_PREFIX.length) : null;
 }

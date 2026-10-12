@@ -68,6 +68,13 @@ export function TierPool({
   }, [keys, itemsByKey, query]);
 
   const canReceiveSelection = selectedKey !== null && !keys.includes(selectedKey);
+  const handleItemSelect = React.useCallback(
+    (key: string) => {
+      if (canReceiveSelection) onMoveSelectedHere(POOL_CONTAINER_ID);
+      else onSelect(key);
+    },
+    [canReceiveSelection, onMoveSelectedHere, onSelect]
+  );
 
   return (
     <aside
@@ -76,14 +83,14 @@ export function TierPool({
       className={cn(
         'w-full flex flex-col overflow-hidden border border-border-color bg-bg-surface shadow-xs rounded-3xl transition-all',
         'shrink-0 bg-bg-surface/95 shadow-sm',
-        'group-data-[fit]/board:shrink group-data-[fit]/board:min-h-(--pool-min-total) group-data-[fit]/board:max-h-(--pool-max-total)'
+        'group-data-[fit]/board:min-h-(--pool-min-total) group-data-[fit-mode]/board:max-h-(--pool-max-total)'
       )}
     >
       {/* Header: search on the left (always reachable, even collapsed), title centred on the panel, collapse toggle on the right. */}
       <div
         data-pool-head=""
         onClick={() => onCollapsedChange(!collapsed)}
-        className="relative grid w-full cursor-pointer select-none grid-cols-[2.5rem_minmax(0,1fr)_2.5rem] items-center gap-x-3 gap-y-2 overflow-hidden px-3 py-2.5 sm:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] sm:px-4 sm:min-h-[64px] [@media(max-height:559px)]:py-1 [@media(max-height:559px)]:sm:min-h-0">
+        className="relative grid w-full cursor-pointer select-none grid-cols-[2.5rem_minmax(0,1fr)_2.5rem] items-center gap-x-3 gap-y-1.5 overflow-hidden px-3 py-1.5 sm:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] sm:px-4 sm:min-h-[48px] [@media(max-height:559px)]:py-1 [@media(max-height:559px)]:sm:min-h-0">
         {/* Atmospheric DBD Banner Backdrop */}
         <div
           className="absolute inset-0 bg-cover bg-center opacity-15 dark:opacity-25 mix-blend-luminosity filter pointer-events-none"
@@ -173,15 +180,14 @@ export function TierPool({
             ref={setNodeRef}
             onClick={canReceiveSelection ? () => onMoveSelectedHere(POOL_CONTAINER_ID) : undefined}
             className={cn(
-              'min-h-[100px] max-h-[40dvh] flex-1 overflow-y-auto overscroll-contain p-3 sm:p-4 transition-colors',
-              'group-data-[fit]/board:min-h-0 group-data-[fit]/board:max-h-none group-data-[fit]/board:p-(--tile-pad)',
-              // Showing in full on a scrolling board: no scroll box here, or it would swallow the wheel meant for the page.
-              'group-data-[scroll]/board:overflow-visible group-data-[scroll]/board:overscroll-auto',
+              'min-h-[84px] p-3 sm:p-4 transition-colors',
+              'group-data-[fit]/board:min-h-0! group-data-[fit]/board:p-(--tile-pad)!',
+              'group-data-[fit-mode]/board:flex-1 group-data-[fit-mode]/board:overflow-y-auto group-data-[fit-mode]/board:overscroll-contain',
               isOver && 'bg-accent-red/10',
               canReceiveSelection && 'cursor-pointer hover:bg-accent-amber/5'
             )}
           >
-          <div className="flex flex-wrap content-start justify-center gap-1 min-[480px]:gap-1.5 sm:gap-2 group-data-[fit]/board:gap-(--tile-gap)">
+          <div className="flex flex-wrap content-start justify-start gap-1 min-[480px]:gap-1.5 sm:gap-2 group-data-[fit]/board:gap-(--tile-gap)!">
             <SortableContext items={visibleKeys.map(itemDndId)} strategy={rectSortingStrategy}>
               {visibleKeys.map((key) => {
                 const item = itemsByKey.get(key);
@@ -192,7 +198,7 @@ export function TierPool({
                     shape={shape}
                     showName={showNames}
                     selected={selectedKey === key}
-                    onSelect={onSelect}
+                    onSelect={handleItemSelect}
                     onPreview={onPreview}
                   />
                 ) : null;

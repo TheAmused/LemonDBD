@@ -4,9 +4,6 @@
 import { useLayoutEffect, useMemo, useState, type RefObject } from 'react';
 import { computeFit, type FitInput, type FitResult } from '@/utils/tierLists/fit';
 
-/** Below this window height the page scrolls instead of being locked to the viewport (see the tier list pages). */
-const SHORT_VIEWPORT_QUERY = '(max-height: 439px)';
-
 interface Box {
   width: number;
   height: number;
@@ -16,11 +13,8 @@ interface Box {
 export type BoardFitParams = Omit<FitInput, 'width' | 'height' | 'poolHeadHeight'>;
 
 /**
- * Measures the board and returns the tile sizing that makes everything fit it
- * (null until the first measurement). The measured box is the board's own,
- * which does not depend on its content, so the result cannot feed back into
- * what it measures -- except on short windows, where the page is allowed to
- * grow and the window height is used instead.
+ * Measures the board width and available viewport height below the board top
+ * to compute tile sizing for the chosen scale or 'fit' screenshot mode.
  */
 export function useBoardFit(ref: RefObject<HTMLElement | null>, params: BoardFitParams): FitResult | null {
   const [box, setBox] = useState<Box | null>(null);
@@ -30,10 +24,10 @@ export function useBoardFit(ref: RefObject<HTMLElement | null>, params: BoardFit
     if (!el) return;
     const head = () => el.querySelector<HTMLElement>('[data-pool-head]');
     const read = () => {
-      const short = window.matchMedia(SHORT_VIEWPORT_QUERY).matches;
+      const top = Math.max(0, Math.round(el.getBoundingClientRect().top));
       const next: Box = {
         width: el.clientWidth,
-        height: short ? window.innerHeight : el.clientHeight,
+        height: Math.max(320, window.innerHeight - Math.min(top, 140) - 16),
         poolHead: head()?.offsetHeight ?? 64,
       };
       if (next.width <= 0 || next.height <= 0) return;
@@ -53,8 +47,7 @@ export function useBoardFit(ref: RefObject<HTMLElement | null>, params: BoardFit
     };
   }, [ref]);
 
-  const { tierCounts, poolCount, shape, showNames, poolCollapsed } = params;
-  // Tier counts arrive as a fresh array each render; key on the numbers.
+  const { tierCounts, poolCount, shape, showNames, poolCollapsed, scale } = params;
   const countsKey = tierCounts.join(',');
   return useMemo(
     () =>
@@ -68,8 +61,9 @@ export function useBoardFit(ref: RefObject<HTMLElement | null>, params: BoardFit
             shape,
             showNames,
             poolCollapsed,
+            scale,
           })
         : null,
-    [box, countsKey, poolCount, shape, showNames, poolCollapsed]
+    [box, countsKey, poolCount, shape, showNames, poolCollapsed, scale]
   );
 }

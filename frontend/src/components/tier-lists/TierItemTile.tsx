@@ -2,6 +2,7 @@
 // frontend/src/components/tier-lists/TierItemTile.tsx
 
 import React, { useEffect, useState } from 'react';
+import { FitText } from '@/components/common/FitText';
 import type { TierItem } from '@/types/tierList';
 import { cn } from '@/utils/cn';
 
@@ -68,9 +69,9 @@ export const TierItemTile = React.forwardRef<HTMLDivElement, TierItemTileProps>(
       className={cn(
         'group relative flex shrink-0 select-none flex-col items-center gap-1 rounded-xl outline-none',
         'touch-pan-y [-webkit-touch-callout:none] focus-visible:ring-2 focus-visible:ring-accent-amber',
-        size === 'sm' ? 'w-11' : cn(SHAPE_CLASSES[shape], 'group-data-[fit]/board:w-(--tile-w)'),
+        size === 'sm' ? 'w-11' : cn(SHAPE_CLASSES[shape], 'group-data-[fit]/board:w-(--tile-w)!'),
         ghost && 'opacity-30',
-        overlay && 'cursor-grabbing scale-105 drop-shadow-2xl',
+        overlay && 'cursor-grabbing scale-105',
         !overlay && 'cursor-grab active:cursor-grabbing',
         className
       )}
@@ -78,14 +79,13 @@ export const TierItemTile = React.forwardRef<HTMLDivElement, TierItemTileProps>(
     >
       <div
         className={cn(
-          'relative flex w-full items-center justify-center overflow-hidden rounded-xl border transition-[border-color,box-shadow] duration-150',
-          size === 'sm' ? 'h-11' : cn(IMAGE_CLASSES[shape], 'group-data-[fit]/board:h-(--tile)'),
+          'relative flex w-full items-center justify-center overflow-hidden rounded-xl border transition-[border-color] duration-150',
+          size === 'sm' ? 'h-11' : cn(IMAGE_CLASSES[shape], 'group-data-[fit]/board:h-(--tile)!'),
           // A bare icon sits straight on the board; the plate and border only come back for selection, hover and the placeholder.
           hasImage ? 'bg-transparent' : 'bg-bg-elevated',
           selected
-            ? 'border-accent-amber ring-2 ring-accent-amber shadow-lg'
-            : cn('group-hover:border-accent-red/60', hasImage ? 'border-transparent' : 'border-border-color'),
-          overlay && 'border-accent-red shadow-xl shadow-accent-red/20'
+            ? 'border-accent-amber ring-2 ring-accent-amber'
+            : cn('group-hover:border-accent-red/60', hasImage ? 'border-transparent' : 'border-border-color')
         )}
       >
         {hasImage ? (
@@ -93,8 +93,6 @@ export const TierItemTile = React.forwardRef<HTMLDivElement, TierItemTileProps>(
             src={item.image as string}
             alt=""
             draggable={false}
-            loading="lazy"
-            decoding="async"
             referrerPolicy="no-referrer"
             onError={() => setFailed(true)}
             className={cn(
@@ -109,9 +107,14 @@ export const TierItemTile = React.forwardRef<HTMLDivElement, TierItemTileProps>(
         )}
       </div>
       {showName && (
-        <span aria-hidden="true" className="w-full text-center text-tiny sm:text-mini group-data-[fit]/board:text-(length:--tile-fs) font-bold leading-tight text-text-secondary line-clamp-2 break-words">
+        <FitText
+          aria-hidden="true"
+          minScale={0.65}
+          maxLines={1}
+          className="w-full text-center text-tiny sm:text-mini group-data-[fit]/board:text-(length:--tile-fs) font-bold leading-tight text-text-secondary"
+        >
           {item.name}
-        </span>
+        </FitText>
       )}
     </div>
   );

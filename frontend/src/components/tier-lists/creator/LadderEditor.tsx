@@ -1,10 +1,9 @@
 'use client';
 // frontend/src/components/tier-lists/creator/LadderEditor.tsx
 
-import React, { useState } from 'react';
-import { Check, ChevronDown, ChevronUp, ListOrdered, Plus, X } from 'lucide-react';
+import React, { useRef, useState } from 'react';
+import { Check, GripVertical, ListOrdered, Plus, X } from 'lucide-react';
 import type { TierDefinition } from '@/types/tierList';
-import type { Dictionary } from '@/locales/types';
 import { cn } from '@/utils/cn';
 import { TIER_COLOR_TOKENS, TIER_LIST_LIMITS } from '@/utils/tierLists/constants';
 import { sanitizeImageUrl, slugifyItemId, uniqueId } from '@/utils/tierLists/codec';
@@ -35,16 +34,16 @@ interface LadderEditorProps {
   activePreset: LadderPresetId | null;
 }
 
-/** Inline tier ladder editing for the creator: presets, then label / color / order per row. */
+/** Inline tier ladder editing for the creator: presets, then label / color / drag-order per row. */
 export function LadderEditor({ tiers, onChange, onPreset, activePreset }: LadderEditorProps) {
   const dict = useDictionary();
   const t = dict.tierLists;
   const c = t.creator;
   const [paletteFor, setPaletteFor] = useState<string | null>(null);
-  // Free-typed background-image text per tier row, so a URL mid-typing isn't
-  // clobbered by the sanitized value the moment it fails to parse yet. Keyed
-  // by tier id; a row not in here just shows its saved `backgroundImage`.
   const [bgDrafts, setBgDrafts] = useState<Record<string, string>>({});
+  const [draggingId, setDraggingId] = useState<string | null>(null);
+  const tiersRef = useRef(tiers);
+  tiersRef.current = tiers;
 
   const update = (id: string, patch: Partial<TierDefinition>) =>
     onChange(tiers.map((tier) => (tier.id === id ? { ...tier, ...patch } : tier)));
@@ -58,16 +57,44 @@ export function LadderEditor({ tiers, onChange, onPreset, activePreset }: Ladder
     }
     const safe = sanitizeImageUrl(trimmed);
     if (safe) update(tier.id, { backgroundImage: safe });
-    // Invalid but non-empty: leave the saved value alone (nothing to apply
-    // yet) while the draft text keeps the input responsive to typing.
   };
 
-  const move = (index: number, dir: -1 | 1) => {
-    const target = index + dir;
-    if (target < 0 || target >= tiers.length) return;
-    const next = [...tiers];
-    [next[index], next[target]] = [next[target], next[index]];
+  const moveById = (fromId: string, toId: string) => {
+    if (fromId === toId) return;
+    const current = tiersRef.current;
+    const oldIndex = current.findIndex((tier) => tier.id === fromId);
+    const newIndex = current.findIndex((tier) => tier.id === toId);
+    if (oldIndex < 0 || newIndex < 0 || oldIndex === newIndex) return;
+    const next = [...current];
+    const [moved] = next.splice(oldIndex, 1);
+    next.splice(newIndex, 0, moved);
+    tiersRef.current = next;
     onChange(next);
+  };
+
+  const startPointerDrag = (tierId: string, e: React.PointerEvent<HTMLButtonElement>) => {
+    if (e.button !== 0 && e.pointerType === 'mouse') return;
+    e.preventDefault();
+    setDraggingId(tierId);
+
+    const onMove = (ev: PointerEvent) => {
+      const target = document.elementFromPoint(ev.clientX, ev.clientY)?.closest<HTMLElement>('li[data-ladder-tier-id]');
+      const overId = target?.dataset.ladderTierId;
+      if (overId && overId !== tierId) {
+        moveById(tierId, overId);
+      }
+    };
+
+    const onUp = () => {
+      setDraggingId(null);
+      window.removeEventListener('pointermove', onMove);
+      window.removeEventListener('pointerup', onUp);
+      window.removeEventListener('pointercancel', onUp);
+    };
+
+    window.addEventListener('pointermove', onMove);
+    window.addEventListener('pointerup', onUp);
+    window.addEventListener('pointercancel', onUp);
   };
 
   const add = () => {
@@ -75,6 +102,7 @@ export function LadderEditor({ tiers, onChange, onPreset, activePreset }: Ladder
     const id = uniqueId(slugifyItemId(t.newTierLabel), new Set(tiers.map((tier) => tier.id)));
     const color = TIER_COLOR_TOKENS[Math.min(tiers.length, TIER_COLOR_TOKENS.length - 1)];
     onChange([...tiers, { id, label: t.newTierLabel, color }]);
+    setPaletteFor(id);
   };
 
   return (
@@ -120,9 +148,35 @@ export function LadderEditor({ tiers, onChange, onPreset, activePreset }: Ladder
           const open = paletteFor === tier.id;
           const bgDraft = bgDrafts[tier.id] ?? tier.backgroundImage ?? '';
           const bgInvalid = Boolean(bgDraft.trim()) && !sanitizeImageUrl(bgDraft.trim());
+          const isDragging = draggingId === tier.id;
           return (
-            <li key={tier.id} className="rounded-lg border border-border-color bg-bg-surface shadow-xs overflow-hidden transition-colors">
+            <li
+              key={tier.id}
+              data-ladder-tier-id={tier.id}
+              onDragOver={(e) => {
+                if (!draggingId || draggingId === tier.id) return;
+                e.preventDefault();
+                moveById(draggingId, tier.id);
+              }}
+              className={cn(
+                'rounded-lg border border-border-color bg-bg-surface shadow-xs overflow-hidden transition-colors',
+                isDragging && 'z-20 relative border-accent-amber opacity-90'
+              )}
+            >
               <div className="flex items-stretch min-h-[44px] sm:min-h-[48px]">
+                {/* Drag Handle */}
+                <button
+                  type="button"
+                  draggable
+                  onDragStart={() => setDraggingId(tier.id)}
+                  onDragEnd={() => setDraggingId(null)}
+                  onPointerDown={(e) => startPointerDrag(tier.id, e)}
+                  aria-label={formatMessage(t.tierAria, { label: tier.label })}
+                  className="pointer-coarse:min-h-11 pointer-coarse:min-w-11 flex w-9 sm:w-10 shrink-0 items-center justify-center border-r border-border-color/80 text-text-muted hover:text-text-primary hover:bg-bg-elevated cursor-grab active:cursor-grabbing touch-none select-none transition-colors"
+                >
+                  <GripVertical className="h-4 w-4" aria-hidden="true" />
+                </button>
+
                 {/* Tier Color & Label Badge Button */}
                 <button
                   type="button"
@@ -135,8 +189,8 @@ export function LadderEditor({ tiers, onChange, onPreset, activePreset }: Ladder
                     label={tier.label || '?'}
                     color={tier.color}
                     backgroundImage={tier.backgroundImage}
-                    className="absolute inset-0 flex items-center justify-center text-sm sm:text-base font-black"
-                    labelClassName="max-w-full truncate px-1"
+                    className="absolute inset-0 flex items-center justify-center text-sm sm:text-base font-black p-1"
+                    labelClassName="px-0.5 leading-tight"
                   />
                 </button>
 
@@ -149,26 +203,8 @@ export function LadderEditor({ tiers, onChange, onPreset, activePreset }: Ladder
                   className="min-w-0 flex-1 bg-transparent px-3 type-card-title text-text-primary focus:outline-hidden focus:bg-bg-elevated/40 transition-colors"
                 />
 
-                {/* Integrated Reorder & Delete Toolbar */}
-                <div className="flex shrink-0 items-center border-l border-border-color/80 bg-bg-surface divide-x divide-border-color/60">
-                  <button
-                    type="button"
-                    disabled={index === 0}
-                    onClick={() => move(index, -1)}
-                    aria-label={formatMessage(c.moveTierUpAria, { label: tier.label })}
-                    className="pointer-coarse:min-h-11 pointer-coarse:min-w-11 flex h-full w-9 sm:w-10 items-center justify-center text-text-muted hover:text-text-primary hover:bg-bg-elevated disabled:opacity-20 cursor-pointer disabled:cursor-not-allowed transition-colors"
-                  >
-                    <ChevronUp className="h-4 w-4" aria-hidden="true" />
-                  </button>
-                  <button
-                    type="button"
-                    disabled={index === tiers.length - 1}
-                    onClick={() => move(index, 1)}
-                    aria-label={formatMessage(c.moveTierDownAria, { label: tier.label })}
-                    className="pointer-coarse:min-h-11 pointer-coarse:min-w-11 flex h-full w-9 sm:w-10 items-center justify-center text-text-muted hover:text-text-primary hover:bg-bg-elevated disabled:opacity-20 cursor-pointer disabled:cursor-not-allowed transition-colors"
-                  >
-                    <ChevronDown className="h-4 w-4" aria-hidden="true" />
-                  </button>
+                {/* Delete Button */}
+                <div className="flex shrink-0 items-center border-l border-border-color/80 bg-bg-surface">
                   <button
                     type="button"
                     disabled={tiers.length <= 1}

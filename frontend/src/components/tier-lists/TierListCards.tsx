@@ -53,7 +53,6 @@ export function OfficialTierListCard({ list, rankedCount, locale }: OfficialCard
           </h3>
         </div>
       </div>
-      {list.description && <p className="line-clamp-2 text-sm text-text-secondary text-center sm:text-left">{list.description}</p>}
       <div className="mt-auto flex flex-wrap items-center justify-center sm:justify-start gap-2 pt-1 type-strong">
         {list.item_count !== null && (
           <span className="text-text-muted">{formatMessage(t.itemsCount, { count: list.item_count })}</span>
@@ -95,7 +94,7 @@ export function CustomTierListCard({ list, locale, onDelete, disabled }: CustomC
   const t = dict.tierLists;
   const ranked = Object.values(list.placements).reduce((n, keys) => n + keys.length, 0);
   const preview = list.items.filter((i) => i.image).slice(0, 5);
-  const date = formatDate(list.updatedAt, locale) || null;
+  const date = list.updatedAt > 0 ? formatDate(list.updatedAt, locale) || null : null;
   const customTitle = list.title || t.untitled;
   const background = list.backgroundImage ? coverSrc(list.backgroundImage) : null;
 

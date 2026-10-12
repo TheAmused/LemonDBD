@@ -2,7 +2,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Tag, Plus, X, Sparkles, Shield, User } from 'lucide-react';
+import { Tag, Plus, X, Shield, User } from 'lucide-react';
 import type { Dictionary } from '@/locales/types';
 import { LABEL } from './styles';
 import { Button } from '@/components/common/Button';

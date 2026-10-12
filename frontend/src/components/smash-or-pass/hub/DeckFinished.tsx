@@ -1,6 +1,6 @@
 'use client';
 // frontend/src/components/smash-or-pass/hub/DeckFinished.tsx
-import { Heart, RotateCcw, Sparkles } from 'lucide-react';
+import { Heart, RotateCcw } from 'lucide-react';
 import { Button } from '@/components/common/Button';
 import { Surface } from '@/components/common/Surface';
 import { useDictionary } from '@/context/DictionaryContext';
@@ -40,7 +40,6 @@ export function DeckFinished({ sessionSmashes, sessionPasses, onOpenPersona, onR
 
       <div className="flex flex-col sm:flex-row gap-3 pt-2">
         <Button variant="primary" size="md" onClick={onOpenPersona} className="flex-1 rounded-2xl">
-          <Sparkles className="h-4 w-4" />
           <span>{dict.smashOrPass.hud.archetype}</span>
         </Button>
 

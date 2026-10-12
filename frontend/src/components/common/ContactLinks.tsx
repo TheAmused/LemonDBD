@@ -5,7 +5,7 @@
 // Shared by the About us "Contact us" card and the Rules "See something? Say something" card.
 import React, { useEffect, useRef, useState } from 'react';
 import { Check, Copy, Mail } from 'lucide-react';
-import { DiscordIcon } from '@/components/icons/DiscordIcon';
+import { DiscordIcon } from '@/components/icons/DbdIcons';
 import { ActionPill, LinkPill } from '@/components/common/LinkPill';
 import { useDictionary } from '@/context/DictionaryContext';
 import { copyTextWithFallback } from '@/utils/clipboard';

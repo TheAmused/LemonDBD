@@ -3,15 +3,6 @@
 import type { Dictionary } from '@/locales/types';
 
 import React from 'react';
-import {
-  CheckCircle2,
-  Sparkles,
-  Quote,
-  User,
-  AlertTriangle,
-  Zap,
-  Flame,
-} from 'lucide-react';
 import { SmashSounds } from './SmashSoundEffects';
 import { EntityItem, RosterCustomLabels } from '@/types/smashOrPass';
 import { localizedProfile } from '@/utils/entityProfile';
@@ -54,18 +45,6 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({ ch
     profile.quote ||
     t.knownQuotes[character.slug] ||
     formatMessage(isSurvivor ? t.loreQuoteSurvivor : t.loreQuoteKiller, { name: character.name });
-
-  const displayGreenFlags: string[] = profile.green_flags.length
-    ? profile.green_flags
-    : currentLoc === 'pl'
-    ? ['Niezłomna lojalność w próbie', 'Instynkt przetrwania']
-    : ['Loyal trial companion', 'Protective instincts'];
-
-  const displayRedFlags: string[] = profile.red_flags.length
-    ? profile.red_flags
-    : currentLoc === 'pl'
-    ? ['Nieprzewidywalność we mgle']
-    : ['Unpredictable in the fog'];
 
   // Localized Labels
   const loreLabels = dict.smashOrPass.loreLabels;
@@ -133,19 +112,19 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({ ch
       </div>
 
       {/* 2. LEFT FLANKING DOSSIER WING */}
-      <div className="absolute left-4 xl:left-8 2xl:left-14 top-24 bottom-12 hidden lg:flex flex-col justify-between max-w-[270px] xl:max-w-[310px] pointer-events-none space-y-3">
+      <div className="pointer-events-none absolute left-0 top-[calc(var(--smash-header)+1rem)] bottom-12 hidden @[880px]/hub:flex flex-col justify-between w-[clamp(12rem,calc((100cqw-var(--smash-card-w,26.25rem))/2-1.5rem),19.375rem)] space-y-3">
         {/* Left Item 1: Trial Classification - Hidden for now */}
 
         {/* Left Item 2: Dating Archetype (Tilt Right +2deg & Crimson Flare) */}
         <div
           key={`title-${character.slug}`}
-          className="pointer-events-auto anim-lore-dissolve transition-all duration-300 hover:scale-105 hover:rotate-2 cursor-pointer group"
+          data-lore-card=""
+          className="pointer-events-auto anim-lore-dissolve transition-all duration-300 hover:scale-[1.02] @[1040px]/hub:hover:scale-105 @[1040px]/hub:hover:rotate-2 cursor-pointer group"
           style={{ animationDelay: '80ms' }}
           onMouseEnter={handleCardHover}
         >
-          <div className="relative overflow-hidden p-3.5 xl:p-4 rounded-3xl bg-bg-surface/95 border-2 border-accent-red/40 backdrop-blur-2xl shadow-2xl space-y-1 transition-all duration-300 group-hover:border-accent-red group-hover:shadow-[0_0_16px_color-mix(in_oklab,var(--accent-red)_30%,transparent)]">
-            <div className="flex items-center gap-1.5 text-accent-red">
-              <Sparkles className="h-3.5 w-3.5 animate-spin group-hover:scale-125 transition-transform" style={{ animationDuration: '4s' }} />
+          <div className="relative overflow-hidden p-3 @[1040px]/hub:p-4 rounded-3xl bg-bg-surface/95 border-2 border-accent-red/40 backdrop-blur-2xl shadow-2xl space-y-1 transition-all duration-300 group-hover:border-accent-red group-hover:shadow-[0_0_16px_color-mix(in_oklab,var(--accent-red)_30%,transparent)]">
+            <div data-lore-label="" className="sr-only @[1040px]/hub:not-sr-only text-accent-red">
               <span className="type-label-2xs">
                 {datingArchetypeLabel}
               </span>
@@ -163,13 +142,13 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({ ch
         {profile.turn_on && (
           <div
             key={`turn-on-${character.slug}`}
-            className="pointer-events-auto anim-lore-dissolve transition-all duration-300 hover:scale-105 hover:-rotate-1 cursor-pointer group"
+            data-lore-card=""
+          className="pointer-events-auto anim-lore-dissolve transition-all duration-300 hover:scale-[1.02] @[1040px]/hub:hover:scale-105 @[1040px]/hub:hover:-rotate-1 cursor-pointer group"
             style={{ animationDelay: '140ms' }}
             onMouseEnter={handleCardHover}
           >
-            <div className="relative overflow-hidden p-3.5 xl:p-4 rounded-3xl bg-bg-surface/95 border-2 border-accent-green/40 backdrop-blur-2xl shadow-2xl space-y-1 transition-all duration-300 group-hover:border-accent-green group-hover:shadow-[0_0_16px_color-mix(in_oklab,var(--accent-green)_30%,transparent)]">
-              <div className="flex items-center gap-1.5 text-accent-green">
-                <Flame className="h-3.5 w-3.5 group-hover:scale-125 transition-transform" />
+            <div className="relative overflow-hidden p-3 @[1040px]/hub:p-4 rounded-3xl bg-bg-surface/95 border-2 border-accent-green/40 backdrop-blur-2xl shadow-2xl space-y-1 transition-all duration-300 group-hover:border-accent-green group-hover:shadow-[0_0_16px_color-mix(in_oklab,var(--accent-green)_30%,transparent)]">
+              <div data-lore-label="" className="sr-only @[1040px]/hub:not-sr-only text-accent-green">
                 <span className="type-label-2xs">
                   {turnOnLabel}
                 </span>
@@ -183,19 +162,19 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({ ch
       </div>
 
       {/* 3. RIGHT FLANKING DOSSIER WING */}
-      <div className="absolute right-4 xl:right-8 2xl:right-14 top-24 bottom-12 hidden lg:flex flex-col justify-between max-w-[270px] xl:max-w-[310px] pointer-events-none space-y-3">
+      <div className="pointer-events-none absolute right-0 top-[calc(var(--smash-header)+1rem)] bottom-12 hidden @[880px]/hub:flex flex-col justify-between w-[clamp(12rem,calc((100cqw-var(--smash-card-w,26.25rem))/2-1.5rem),19.375rem)] space-y-3">
         {/* Right Item 1: Identity Profile - Hidden for now */}
 
         {/* Right Item 2: Signature Quote (Tilt Left -1deg & Gold Halo) */}
         <div
           key={`quote-${character.slug}`}
-          className="pointer-events-auto anim-lore-dissolve transition-all duration-300 hover:scale-105 hover:-rotate-1 cursor-pointer group"
+          data-lore-card=""
+          className="pointer-events-auto anim-lore-dissolve transition-all duration-300 hover:scale-[1.02] @[1040px]/hub:hover:scale-105 @[1040px]/hub:hover:-rotate-1 cursor-pointer group"
           style={{ animationDelay: '120ms' }}
           onMouseEnter={handleCardHover}
         >
-          <div className="relative overflow-hidden p-4 rounded-3xl bg-bg-surface/95 border-2 border-accent-amber/40 backdrop-blur-2xl shadow-2xl space-y-1.5 transition-all duration-300 group-hover:border-accent-amber group-hover:shadow-[0_0_16px_color-mix(in_oklab,var(--accent-amber)_30%,transparent)]">
-            <div className="flex items-center gap-1.5 text-accent-amber">
-              <Quote className="h-3.5 w-3.5 group-hover:scale-125 group-hover:rotate-12 transition-transform" />
+          <div className="relative overflow-hidden p-3 @[1040px]/hub:p-4 rounded-3xl bg-bg-surface/95 border-2 border-accent-amber/40 backdrop-blur-2xl shadow-2xl space-y-1.5 transition-all duration-300 group-hover:border-accent-amber group-hover:shadow-[0_0_16px_color-mix(in_oklab,var(--accent-amber)_30%,transparent)]">
+            <div data-lore-label="" className="sr-only @[1040px]/hub:not-sr-only text-accent-amber">
               <span className="type-label-2xs">
                 {signatureQuoteLabel}
               </span>
@@ -210,13 +189,13 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({ ch
         {profile.dealbreaker && (
           <div
             key={`dealbreaker-${character.slug}`}
-            className="pointer-events-auto anim-lore-dissolve transition-all duration-300 hover:scale-105 hover:rotate-1 cursor-pointer group"
+            data-lore-card=""
+            className="pointer-events-auto anim-lore-dissolve transition-all duration-300 hover:scale-[1.02] @[1040px]/hub:hover:scale-105 @[1040px]/hub:hover:rotate-1 cursor-pointer group"
             style={{ animationDelay: '160ms' }}
             onMouseEnter={handleCardHover}
           >
-            <div className="relative overflow-hidden p-3.5 xl:p-4 rounded-3xl bg-bg-surface/95 border-2 border-accent-red/40 backdrop-blur-2xl shadow-2xl space-y-1 transition-all duration-300 group-hover:border-accent-red group-hover:shadow-[0_0_16px_color-mix(in_oklab,var(--accent-red)_30%,transparent)]">
-              <div className="flex items-center gap-1.5 text-accent-red">
-                <AlertTriangle className="h-3.5 w-3.5 group-hover:scale-125 transition-transform" />
+            <div className="relative overflow-hidden p-3 @[1040px]/hub:p-4 rounded-3xl bg-bg-surface/95 border-2 border-accent-red/40 backdrop-blur-2xl shadow-2xl space-y-1 transition-all duration-300 group-hover:border-accent-red group-hover:shadow-[0_0_16px_color-mix(in_oklab,var(--accent-red)_30%,transparent)]">
+              <div data-lore-label="" className="sr-only @[1040px]/hub:not-sr-only text-accent-red">
                 <span className="type-label-2xs">
                   {dealbreakerLabel}
                 </span>

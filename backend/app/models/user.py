@@ -32,7 +32,10 @@ class User(Base):
     email: Mapped[str] = mapped_column(
         String(120), unique=True, index=True, nullable=False
     )
-    password_hash: Mapped[str] = mapped_column(String(255), nullable=False)
+    password_hash: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    google_sub: Mapped[str | None] = mapped_column(
+        String(64), unique=True, index=True, nullable=True
+    )
     role: Mapped[str] = mapped_column(String(20), default="user", nullable=False)
     avatar_url: Mapped[str] = mapped_column(
         String(255), default="default_avatar", nullable=False
@@ -117,11 +120,21 @@ class User(Base):
         except Exception:
             return False
 
+    @property
+    def has_password(self) -> bool:
+        return bool(self.password_hash)
+
+    @property
+    def google_linked(self) -> bool:
+        return self.google_sub is not None
+
     def to_dict(self, include_sensitive: bool = False) -> dict[str, Any]:
         data: dict[str, Any] = {
             "id": self.id,
             "username": self.username,
             "email": self.email,
+            "has_password": self.has_password,
+            "google_linked": self.google_linked,
             "role": self.role,
             "avatar_url": self.avatar_url,
             "is_active": self.is_active,

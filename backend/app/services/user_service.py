@@ -122,9 +122,13 @@ class UserService:
         return export_filename(user_id, requested_by)
 
     def delete_own_account(
-        self, user_id: int, password: str, two_factor_code: str | None = None
+        self,
+        user_id: int,
+        password: str,
+        two_factor_code: str | None = None,
+        google_credential: str | None = None,
     ) -> tuple[bool, str | None]:
-        return delete_own_account(user_id, password, two_factor_code)
+        return delete_own_account(user_id, password, two_factor_code, google_credential)
 
     def get_admin_system_stats(self) -> dict[str, Any]:
         return fetch_admin_metrics()

@@ -4,7 +4,7 @@ import type { Dictionary } from '@/locales/types';
 
 import React, { Suspense, useEffect, useState } from 'react';
 import { Input } from '@/components/common/Field';
-import { Button } from '@/components/common/Button';
+import { Button, buttonClassName } from '@/components/common/Button';
 import { useParams, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { CheckCircle2, Lock, AlertCircle } from 'lucide-react';
@@ -67,14 +67,16 @@ function ResetPasswordContent() {
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
       <div className="w-full max-w-md rounded-2xl border border-border-color bg-bg-surface p-8 text-text-primary shadow-2xl">
-        <div className="flex flex-col items-center text-center mb-6">
-          <div className="relative mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-bg-elevated p-2.5 border border-border-color shadow-sm">
-            <LemonIcon className="h-9 w-9" />
+        {!done && (
+          <div className="flex flex-col items-center text-center mb-6">
+            <div className="relative mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-bg-elevated p-2.5 border border-border-color shadow-sm">
+              <LemonIcon className="h-9 w-9" />
+            </div>
+            <h1 className="text-xl font-black tracking-wider">
+              {dict.user.setNewPassword}
+            </h1>
           </div>
-          <h1 className="text-xl font-black tracking-wider">
-            {dict.user.setNewPassword}
-          </h1>
-        </div>
+        )}
 
         {done ? (
           <div className="text-center">
@@ -84,7 +86,7 @@ function ResetPasswordContent() {
             </p>
             <Link
               href={`/${locale}`}
-              className="inline-flex items-center justify-center gap-2 rounded-xl bg-accent-red px-5 py-2.5 type-label-sm text-text-inverted shadow-xs hover:bg-accent-red-hover transition-all"
+              className={buttonClassName('primary', 'md')}
             >
               {dict.user.goToHome}
             </Link>
@@ -112,7 +114,6 @@ function ResetPasswordContent() {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
                   className="pl-10"
                 />
               </div>
@@ -129,14 +130,13 @@ function ResetPasswordContent() {
                   required
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  placeholder="••••••••"
                   className="pl-10"
                 />
               </div>
             </div>
 
             <Button type="submit" variant="primary" loading={loading} className="w-full mt-2">
-              <span>{dict.user.resetPassword}</span>
+              <span>{dict.user.confirmNewPassword}</span>
             </Button>
           </form>
         )}

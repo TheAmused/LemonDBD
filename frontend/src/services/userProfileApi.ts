@@ -159,12 +159,20 @@ export async function downloadAccountData(userId?: number): Promise<void> {
 }
 
 /** Permanently deletes the signed-in account; the server re-checks the password. */
-export async function deleteAccount(password: string, twoFactorCode?: string): Promise<void> {
+export async function deleteAccount(
+  password: string,
+  twoFactorCode?: string,
+  googleCredential?: string
+): Promise<void> {
   const res = await fetch(`${apiBase()}/api/v1/auth/account`, {
     method: 'DELETE',
     credentials: 'include',
     headers: { 'Content-Type': 'application/json', ...authHeaders() },
-    body: JSON.stringify({ password, ...(twoFactorCode ? { two_factor_code: twoFactorCode } : {}) }),
+    body: JSON.stringify({
+      password,
+      ...(twoFactorCode ? { two_factor_code: twoFactorCode } : {}),
+      ...(googleCredential ? { google_credential: googleCredential } : {}),
+    }),
   });
   const data = await parseJsonSafely(res);
   if (!res.ok) {

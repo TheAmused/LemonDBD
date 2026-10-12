@@ -50,6 +50,8 @@ def modify_user_profile(
 
     clean_email = email.strip().lower() if email else None
     changing_email = bool(clean_email) and clean_email != user.email
+    if (changing_email or new_password) and not user.has_password:
+        return None, "Set a password with the reset link first."
     if changing_email or new_password:
         if not current_password:
             return None, "Current password is required."

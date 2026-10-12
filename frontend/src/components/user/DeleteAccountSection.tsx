@@ -11,6 +11,8 @@ import { Input } from '@/components/common/Field';
 import { Modal } from '@/components/common/Modal';
 import { tip } from '@/components/common/Tooltip';
 import { useAuth } from '@/context/AuthContext';
+import { GoogleSignInButton } from '@/components/auth/GoogleSignInButton';
+import { useGoogleClientId } from '@/hooks/useGoogleConfig';
 import { ApiError, deleteAccount } from '@/services/userProfileApi';
 import { useDictionary } from "@/context/DictionaryContext";
 import { twoFactorErrorMessage } from '@/utils/twoFactorErrors';
@@ -36,12 +38,15 @@ export const DeleteAccountSection: React.FC<{ iconOnly?: boolean }> = ({ iconOnl
     setError(null);
   };
 
-  const confirm = async () => {
-    if (!password || busy || (requiresCode && !code.trim())) return;
+  const usesGoogle = user?.has_password === false;
+  const googleClientId = useGoogleClientId(open && usesGoogle);
+
+  const confirm = async (googleCredential?: string) => {
+    if (busy || (usesGoogle ? !googleCredential : !password) || (requiresCode && !code.trim())) return;
     setBusy(true);
     setError(null);
     try {
-      await deleteAccount(password, requiresCode ? code.trim() : undefined);
+      await deleteAccount(password, requiresCode ? code.trim() : undefined, googleCredential);
       logout(); // the server already cleared the session cookie; this resets state and leaves /user
     } catch (err) {
       const status = err instanceof ApiError ? err.status : 0;
@@ -89,27 +94,37 @@ export const DeleteAccountSection: React.FC<{ iconOnly?: boolean }> = ({ iconOnl
             <Button variant="secondary" onClick={close} disabled={busy} className="flex-1">
               <span>{t.deleteAccountCancel}</span>
             </Button>
-            <Button variant="danger" onClick={confirm} loading={busy} disabled={!password || (requiresCode && !code.trim())} className="flex-1">
-              <span>{t.deleteAccountConfirm}</span>
-            </Button>
+            {usesGoogle ? null : (
+              <Button variant="danger" onClick={() => confirm()} loading={busy} disabled={!password || (requiresCode && !code.trim())} className="flex-1">
+                <span>{t.deleteAccountConfirm}</span>
+              </Button>
+            )}
           </div>
         }
       >
         <div className="flex flex-col gap-3 text-left">
-          <p className="type-body-lg text-text-muted">{t.deleteAccountConfirmDesc}</p>
-          <Input
-            type="password"
-            autoComplete="current-password"
-            placeholder={t.deleteAccountPassword}
-            aria-label={t.deleteAccountPassword}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') confirm();
-            }}
-            invalid={!!error}
-            autoFocus
-          />
+          <p className="type-body-lg text-text-muted">
+            {usesGoogle ? t.deleteAccountGoogleDesc : t.deleteAccountConfirmDesc}
+          </p>
+          {usesGoogle ? (
+            googleClientId && (
+              <GoogleSignInButton clientId={googleClientId} onCredential={confirm} />
+            )
+          ) : (
+            <Input
+              type="password"
+              autoComplete="current-password"
+              placeholder={t.deleteAccountPassword}
+              aria-label={t.deleteAccountPassword}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') confirm();
+              }}
+              invalid={!!error}
+              autoFocus
+            />
+          )}
           {requiresCode ? (
             <Input
               type="text"

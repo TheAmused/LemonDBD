@@ -120,6 +120,7 @@ export const CharactersHub: React.FC = () => {
         killerCount={killerCount}
         ownershipMode={ownershipMode}
         ownershipLoading={ownershipLoading}
+        ownershipSaving={ownershipSaving}
         onToggleOwnershipMode={handleToggleOwnershipMode}
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}

@@ -1,4 +1,6 @@
 # backend/tests/unit/test_google_login.py
+import re
+
 import pytest
 from flask import Flask
 from flask.testing import FlaskClient
@@ -67,7 +69,7 @@ def test_first_sign_in_creates_a_verified_passwordless_account(
     res = client.post(URL, json={"credential": "x"})
     assert res.status_code == 201
     body = res.get_json()
-    assert body["user"]["username"] == "jane.doe"
+    assert re.fullmatch(r"player\d{8}", body["user"]["username"])
     assert body["user"]["email"] == "jane.doe@gmail.com"
     assert body["user"]["is_verified"] is True
     assert body["user"]["has_password"] is False
@@ -128,27 +130,18 @@ def test_disabled_account_cannot_sign_in(client: FlaskClient, as_google) -> None
     assert client.post(URL, json={"credential": "x"}).status_code == 403
 
 
-def test_username_collisions_get_a_number_within_the_length_limit(app: Flask) -> None:
-    long_local = "a" * 60
+def test_username_is_random_digits_not_the_email(app: Flask) -> None:
     with app.app_context():
-        first = google_auth.unique_username(f"{long_local}@example.com")
-        assert len(first) == 50
-        _user(first)
-        second = google_auth.unique_username(f"{long_local}@example.com")
-        assert second == "a" * 49 + "2"
-        assert len(second) == 50
+        name = google_auth.unique_username()
+    assert re.fullmatch(r"player\d{8}", name)
 
 
-def test_short_or_symbol_only_local_parts_are_padded(app: Flask) -> None:
+def test_taken_username_is_retried(app: Flask, monkeypatch: pytest.MonkeyPatch) -> None:
+    numbers = iter([42, 42, 7])
+    monkeypatch.setattr(google_auth.secrets, "randbelow", lambda limit: next(numbers))
     with app.app_context():
-        assert len(google_auth.unique_username("a@example.com")) >= 3
-        assert len(google_auth.unique_username("++@example.com")) >= 3
-
-
-def test_username_match_ignores_case_and_wildcards(app: Flask) -> None:
-    with app.app_context():
-        _user("Bob")
-        assert google_auth.unique_username("bob@example.com") == "bob2"
+        _user("player00000042")
+        assert google_auth.unique_username() == "player00000007"
 
 
 def test_passwordless_account_cannot_log_in_with_a_password_or_change_it(
@@ -159,7 +152,7 @@ def test_passwordless_account_cannot_log_in_with_a_password_or_change_it(
     user = db.session.query(User).filter_by(email="gina@example.com").one()
 
     assert client.post(
-        "/api/v1/auth/login", json={"username": "gina", "password": "anything1"}
+        "/api/v1/auth/login", json={"username": "gina@example.com", "password": "anything1"}
     ).status_code == 401
     headers = {"Authorization": f"Bearer {generate_token(user.id, user.role)}"}
     res = client.put(
@@ -184,7 +177,7 @@ def test_passwordless_account_can_set_a_password_by_reset_link(
     )
     assert res.status_code == 200
     assert client.post(
-        "/api/v1/auth/login", json={"username": "rita", "password": "brandnew123"}
+        "/api/v1/auth/login", json={"username": "rita@example.com", "password": "brandnew123"}
     ).status_code == 200
 
 

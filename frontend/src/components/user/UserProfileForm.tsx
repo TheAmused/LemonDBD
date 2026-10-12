@@ -9,21 +9,36 @@ import { updateUserProfile, ApiError, type UpdateProfilePayload } from '@/servic
 import { usePersistentDrawer } from '@/hooks/usePersistentDrawer';
 import { Button } from '@/components/common/Button';
 import { Input } from '@/components/common/Field';
+import { tip } from '@/components/common/Tooltip';
+import { DownloadDataSection } from '@/components/user/DownloadDataSection';
+import { DeleteAccountSection } from '@/components/user/DeleteAccountSection';
 import { useDictionary } from "@/context/DictionaryContext";
+import { twoFactorErrorMessage } from '@/utils/twoFactorErrors';
+import { TwoFactorSection } from '@/components/user/TwoFactorSection';
 
 interface UserProfileFormProps {
   initialEmail: string;
+  twoFactorEnabled?: boolean;
   onRefreshUser: () => Promise<void>;
   t?: Record<string, string>;
 }
 
-export const UserProfileForm: React.FC<UserProfileFormProps> = ({ initialEmail, onRefreshUser, t: propT }) => {
+export const UserProfileForm: React.FC<UserProfileFormProps> = ({
+  initialEmail,
+  twoFactorEnabled = false,
+  onRefreshUser,
+  t: propT,
+}) => {
   const dict = useDictionary();
   const t: Record<string, string> = propT || dict.user || {};
   const [isExpanded, toggleExpanded] = usePersistentDrawer('lemondbd_drawer_account', false);
 
   const [newEmail, setNewEmail] = useState(initialEmail);
   const [currentPassword, setCurrentPassword] = useState('');
+  // Set once the server says the account has two-factor on: the change then needs a code as well.
+  const [needsTwoFactorCode, setNeedsTwoFactorCode] = useState(false);
+  const [twoFactorCode, setTwoFactorCode] = useState('');
+  const [twoFactorRefresh, setTwoFactorRefresh] = useState(0);
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -33,6 +48,7 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({ initialEmail, 
   const [statusMessage, setStatusMessage] = useState<StatusFeedback | null>(null);
 
   const passwordsMatch = newPassword === confirmPassword;
+  const requiresTwoFactor = twoFactorEnabled || needsTwoFactorCode;
 
   const handleUpdateProfile = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -77,6 +93,13 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({ initialEmail, 
       return;
     }
     payload.current_password = currentPassword;
+    if (requiresTwoFactor) {
+      if (!twoFactorCode.trim()) {
+        setStatusMessage({ type: 'error', text: dict.twoFactor.codeRequiredHint });
+        return;
+      }
+      payload.two_factor_code = twoFactorCode.trim();
+    }
 
     setIsUpdating(true);
     try {
@@ -86,11 +109,19 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({ initialEmail, 
         text: t.profileUpdateSuccessMsg || 'Profile updated successfully!',
       });
       setCurrentPassword('');
+      setTwoFactorCode('');
+      setNeedsTwoFactorCode(false);
       setNewPassword('');
       setConfirmPassword('');
+      setTwoFactorRefresh((n) => n + 1);
       await onRefreshUser();
     } catch (err: unknown) {
-      if (err instanceof ApiError && err.status === 403) {
+      if (err instanceof ApiError && err.code === 'two_factor_required') {
+        setNeedsTwoFactorCode(true);
+        setStatusMessage({ type: 'error', text: dict.twoFactor.codeRequiredHint });
+      } else if (err instanceof ApiError && err.code && err.code !== 'incorrect_password' && err.code.includes('two_factor')) {
+        setStatusMessage({ type: 'error', text: twoFactorErrorMessage(dict.twoFactor, err.code) });
+      } else if (err instanceof ApiError && err.status === 403) {
         setStatusMessage({
           type: 'error',
           text: t.currentPasswordIncorrect || 'Your current password is incorrect.',
@@ -130,9 +161,6 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({ initialEmail, 
           <h2 className="type-section-title text-text-primary group-hover:text-accent-red transition-colors">
             {dict.user.tabSanctum}
           </h2>
-          <p className="type-section-subtitle text-text-secondary mt-0.5">
-            {dict.user.accountSettingsSubtitle}
-          </p>
         </div>
         <div className="relative z-10 w-8 flex justify-end">
           <ChevronDown
@@ -195,6 +223,13 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({ initialEmail, 
                 <div className="space-y-1.5">
                   <label className="block type-label-xs text-text-secondary" htmlFor="profile-current-password">
                     {t.currentPassword || 'Current Password'}
+                    <span
+                      className="ml-1 text-accent-red"
+                      aria-hidden="true"
+                      {...tip(t.currentPasswordHint || 'Required to change your email or password', undefined, 'action')}
+                    >
+                      *
+                    </span>
                   </label>
                   <div className="relative">
                     <Input
@@ -203,6 +238,7 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({ initialEmail, 
                       autoComplete="current-password"
                       value={currentPassword}
                       onChange={(e) => setCurrentPassword(e.target.value)}
+                      aria-required="true"
                       fieldSize="sm"
                       className="pr-9"
                     />
@@ -215,10 +251,24 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({ initialEmail, 
                       {showCurrentPassword ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
                     </button>
                   </div>
-                  <p className="type-caption text-text-muted">
-                    {t.currentPasswordHint || 'Required to change your email or password'}
-                  </p>
                 </div>
+
+                {requiresTwoFactor && (
+                  <div className="space-y-1.5">
+                    <label className="block type-label-xs text-text-secondary" htmlFor="profile-two-factor-code">
+                      {dict.twoFactor.codeOrRecoveryLabel}
+                    </label>
+                    <Input
+                      id="profile-two-factor-code"
+                      type="text"
+                      autoComplete="one-time-code"
+                      spellCheck={false}
+                      fieldSize="sm"
+                      value={twoFactorCode}
+                      onChange={(e) => setTwoFactorCode(e.target.value)}
+                    />
+                  </div>
+                )}
 
                 {/* Password Management */}
                 <div className="space-y-3 pt-3 border-t border-border-color">
@@ -290,12 +340,22 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({ initialEmail, 
               </div>
 
               {/* Action Button */}
-              <div className="pt-3 flex items-center justify-end border-t border-border-color">
-                <Button type="submit" variant="primary" size="sm" loading={isUpdating} className="w-full sm:w-auto">
+              <div className="flex items-center justify-between gap-3">
+                <div className="flex items-center gap-2 shrink-0">
+                  <DownloadDataSection iconOnly />
+                  <DeleteAccountSection iconOnly />
+                </div>
+                <Button type="submit" variant="primary" size="sm" loading={isUpdating} className="flex-1 sm:flex-none min-w-0">
                   <span>{t.saveChanges || 'Save'}</span>
                 </Button>
               </div>
             </form>
+
+            {/* Optional second sign-in step (authenticator app) inside Account Management */}
+            <TwoFactorSection
+              refreshTrigger={twoFactorRefresh}
+              onStatusChange={onRefreshUser}
+            />
           </div>
         </div>
       </div>

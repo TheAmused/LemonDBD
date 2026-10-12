@@ -4,7 +4,7 @@ export default {
   heading: "Polityka prywatności",
   backToAbout: "Wróć do strony O nas",
   lastUpdatedLabel: "Ostatnia aktualizacja",
-  lastUpdated: "3 października 2026",
+  lastUpdated: "10 października 2026",
   intro:
     "Ta strona wyjaśnia, jakie dane osobowe zbiera <brand>LemonDBD</brand>, po co, kto ma do nich dostęp i co możesz z nimi zrobić. Celowo napisaliśmy ją krótko i prostym językiem.",
   translationNotice: "Jeśli przetłumaczone wersje tej strony różnią się od angielskiej, pierwszeństwo ma wersja angielska.",
@@ -38,6 +38,7 @@ export default {
       paragraphs: ["Z większości strony możesz korzystać bez konta. W zależności od tego, co robisz, przetwarzamy:"],
       items: [
         "<b>Dane konta:</b> nazwę użytkownika, adres e-mail, skrót (hash) hasła (nigdy samo hasło), awatar, preferowany język oraz krótkotrwałe kody weryfikacyjne i resetu hasła.",
+        "<b>Logowanie dwuetapowe (opcjonalne):</b> tylko jeśli włączysz je na stronie profilu. Przechowujemy tajny klucz Twojej aplikacji uwierzytelniającej (zaszyfrowany), jednorazowe kody odzyskiwania w postaci skrótów (hash), moment włączenia, ostatni zaakceptowany krok kodu (aby kodu nie dało się użyć ponownie) oraz licznik ostatnich błędnych kodów z czasem tymczasowej blokady. Kody generuje aplikacja uwierzytelniająca na Twoim urządzeniu; numer telefonu nie jest potrzebny.",
         "<b>To, co zapisujesz:</b> posiadane postacie i perki, prezentację profilu, serie, osiągnięcia w wyzwaniach, statystyki minigier i głosy w Smash or Pass. Twoje tier listy, rostery Smash or Pass i własne minigry zostają w Twojej przeglądarce i nie są wysyłane na nasze serwery. Osoby bez konta otrzymują losowy identyfikator sesji, aby zapamiętać ich głosy w Smash or Pass.",
         "<b>Zgłoszenia błędów i wiadomości:</b> treść, zrzuty ekranu i adres e-mail, które nam wysyłasz. Goście muszą podać e-mail, abyśmy mogli odpowiedzieć.",
         "<b>Dane techniczne:</b> adres IP, typ przeglądarki i szczegóły żądań, używane do ograniczania liczby zapytań, zapobiegania nadużyciom i naprawiania błędów.",
@@ -49,9 +50,9 @@ export default {
       heading: "Po co ich używamy",
       paragraphs: ["Dane osobowe wykorzystujemy tylko do poniższych celów, a tam, gdzie obowiązuje RODO, opieramy się na tych podstawach prawnych:"],
       items: [
-        "Aby założyć i prowadzić Twoje konto, przechowywać zapisane dane oraz wysyłać e-maile weryfikacyjne i do resetu hasła (wykonanie usługi na Twoją rzecz).",
+        "Aby założyć i prowadzić Twoje konto, przechowywać zapisane dane oraz wysyłać e-maile weryfikacyjne i do resetu hasła oraz, jeśli to włączysz, sprawdzać kod dwuetapowy przy logowaniu (wykonanie usługi na Twoją rzecz).",
         "Aby odpowiadać na zgłoszenia błędów i prośby (nasz uzasadniony interes we wspieraniu użytkowników lub Twoja prośba).",
-        "Aby chronić stronę, powstrzymywać spam i nadużycia oraz naprawiać błędy (nasz uzasadniony interes).",
+        "Aby chronić stronę i konta, w tym ograniczać błędne kody dwuetapowe, powstrzymywać spam i nadużycia oraz naprawiać błędy (nasz uzasadniony interes).",
         "Aby dzięki analityce przyjaznej prywatności wiedzieć, z których podstron korzystacie, i ulepszać stronę (nasz uzasadniony interes).",
         "Jeśli prosimy o Twoją zgodę, możesz ją w każdej chwili cofnąć.",
       ],
@@ -78,7 +79,7 @@ export default {
       paragraphs: ["Nie sprzedajemy danych osobowych ani nie używamy ich do reklam. Udostępniamy je tylko w razie potrzeby:"],
       items: [
         "<b>Linki, które udostępniasz:</b> gdy udostępniasz tier listę, roster lub własną minigrę, jest ona zapakowana w sam link (część po znaku „#”, której przeglądarka nigdy do nas nie wysyła). Nie zapisujemy jej i nie możemy jej zobaczyć; otworzyć ją mogą tylko osoby, które dostaną link.",
-        "<b>Dostawcy usług:</b> nasz dostawca hostingu oraz {mailProvider} (który dostarcza nasze e-maile weryfikacyjne i do resetu hasła) przetwarzają dane w naszym imieniu, wyłącznie by utrzymać stronę i wysłać e-maile, o które prosisz.",
+        "<b>Dostawcy usług:</b> nasz dostawca hostingu oraz {mailProvider} (który dostarcza nasze e-maile weryfikacyjne i do resetu hasła) przetwarzają dane w naszym imieniu, wyłącznie by utrzymać stronę i wysłać e-maile, o które prosisz, w tym powiadomienia o zmianie ustawienia bezpieczeństwa konta. Kody dwuetapowe tworzy Twoja własna aplikacja uwierzytelniająca, a sprawdzamy je na naszym serwerze; nie korzystamy w tym celu z usług podmiotów trzecich i nic o nich nie trafia do Google, Microsoftu, Apple ani nikogo innego.",
         "<b>Discord:</b> gdy wysyłasz zgłoszenie błędu, jego treść (w tym adres e-mail i zrzuty ekranu) trafia na prywatny kanał naszego zespołu.",
         "<b>Powody prawne:</b> jeśli wymaga tego prawo lub aby chronić stronę i użytkowników przed nadużyciami.",
       ],
@@ -93,15 +94,15 @@ export default {
     retention: {
       heading: "Jak długo je przechowujemy",
       paragraphs: [
-        "Dane konta i zapisane treści są przechowywane, dopóki istnieje Twoje konto. Kody weryfikacyjne wygasają po {verificationWindow}, linki do resetu hasła po {resetWindow}, a sesje logowania po {sessionWindow}. Serie nieaktywne przez {streakPrune} są kończone automatycznie. Zgłoszenia błędów przechowujemy tak długo, jak trzeba do rozwiązania problemu i do naszej dokumentacji. Logi serwera są przechowywane tylko krótko.",
-        "Konto możesz usunąć samodzielnie na stronie swojego profilu lub poprosić nas o to. Usuwamy wtedy dane konta, posiadane postacie i perki, prezentację, serie, statystyki minigier, osiągnięcia w wyzwaniach i wgrany awatar. Głosy w Smash or Pass zostają jako anonimowe wpisy, niepowiązane już z Tobą. Zgłoszenia błędów zostają w naszych zapisach, ale usuwamy z nich Twój adres e-mail. Kopie wysłane już na nasz prywatny kanał Discord mogą pozostać.",
+        "Dane konta i zapisane treści są przechowywane, dopóki istnieje Twoje konto. Kody weryfikacyjne wygasają po {verificationWindow}, linki do resetu hasła po {resetWindow}, a sesje logowania po {sessionWindow}. Serie nieaktywne przez {streakPrune} są kończone automatycznie. Zgłoszenia błędów przechowujemy tak długo, jak trzeba do rozwiązania problemu i do naszej dokumentacji. Logi serwera są przechowywane tylko krótko. Etap logowania dwuetapowego wygasa po 5 minutach, a tymczasowa blokada po kilku błędnych kodach trwa 15 minut.",
+        "Konto możesz usunąć samodzielnie na stronie swojego profilu lub poprosić nas o to. Usuwamy wtedy dane konta, posiadane postacie i perki, prezentację, serie, statystyki minigier, osiągnięcia w wyzwaniach, wgrany awatar oraz konfigurację dwuetapową i kody odzyskiwania. Wyłączenie logowania dwuetapowego również je usuwa. Głosy w Smash or Pass zostają jako anonimowe wpisy, niepowiązane już z Tobą. Zgłoszenia błędów zostają w naszych zapisach, ale usuwamy z nich Twój adres e-mail. Kopie wysłane już na nasz prywatny kanał Discord mogą pozostać.",
       ],
       items: [],
     },
     security: {
       heading: "Bezpieczeństwo",
       paragraphs: [
-        "Chronimy Twoje dane m.in. szyfrowanym połączeniem (HTTPS), haszowaniem haseł, ograniczaniem liczby zapytań i ochroną przed spamem. Żadna usługa online nie jest w pełni bezpieczna, dlatego używaj silnego, unikalnego hasła.",
+        "Chronimy Twoje dane m.in. szyfrowanym połączeniem (HTTPS), haszowaniem haseł, ograniczaniem liczby zapytań, ochroną przed spamem i opcjonalnym logowaniem dwuetapowym (tajny klucz jest przechowywany w postaci zaszyfrowanej, a kody odzyskiwania jako skróty). Zmiana lub reset hasła wylogowuje Cię na pozostałych urządzeniach. Żadna usługa online nie jest w pełni bezpieczna, dlatego używaj silnego, unikalnego hasła.",
       ],
       items: [],
     },
@@ -109,7 +110,7 @@ export default {
       heading: "Twoje prawa",
       paragraphs: [
         "W zależności od miejsca zamieszkania (np. w EOG lub Wielkiej Brytanii) masz prawo do:",
-        "Na stronie profilu możesz zmienić dane profilu, pobrać kopię swoich danych i samodzielnie usunąć konto. Aby skorzystać z innego prawa, napisz na [{contactEmail}](mailto:{contactEmail}); odpowiadamy w ciągu miesiąca.",
+        "Na stronie profilu możesz zmienić dane profilu, włączyć lub wyłączyć logowanie dwuetapowe, pobrać kopię swoich danych i samodzielnie usunąć konto. Aby skorzystać z innego prawa, napisz na [{contactEmail}](mailto:{contactEmail}); odpowiadamy w ciągu miesiąca.",
       ],
       items: [
         "dostępu do danych osobowych, które o Tobie przechowujemy, i otrzymania ich kopii;",
@@ -138,7 +139,7 @@ export default {
     contact: {
       heading: "Kontakt",
       paragraphs: [
-        "Aby skorzystać z jakiegokolwiek prawa, zadać pytanie o prywatność lub poprosić o usunięcie konta, napisz do nas na [{contactEmail}](mailto:{contactEmail}). Zalogowani użytkownicy mogą też sami usunąć konto na stronie profilu. Pisz z adresu przypisanego do konta, abyśmy mogli potwierdzić tożsamość.",
+        "Aby skorzystać z jakiegokolwiek prawa, zadać pytanie o prywatność lub poprosić o usunięcie konta, napisz do nas na [{contactEmail}](mailto:{contactEmail}). Zalogowani użytkownicy mogą też sami usunąć konto na stronie profilu. Pisz z adresu przypisanego do konta, abyśmy mogli potwierdzić tożsamość. Jeśli stracisz zarówno aplikację uwierzytelniającą, jak i kody odzyskiwania, możemy wyłączyć logowanie dwuetapowe na Twoim koncie po potwierdzeniu tożsamości.",
       ],
       items: [],
     },

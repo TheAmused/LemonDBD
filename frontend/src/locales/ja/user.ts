@@ -110,7 +110,6 @@ export default {
   loadingPerks: "ティーチャブルパークを召喚中...",
   noPerksFound: "該当するパークが見つかりません。",
   dualMainsTitle: "シグネチャー構成",
-  accountSettingsSubtitle: "メールアドレスとパスワードを管理",
   searchPerksPrompt: "パークを検索するには3文字以上入力してください...",
   searchPerksMinChars: "あと{count}文字入力してください...",
   downloadDataTitle: "自分のデータをダウンロード",

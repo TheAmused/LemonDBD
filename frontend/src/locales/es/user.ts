@@ -110,7 +110,6 @@ export default {
   loadingPerks: "Canalizando conocimiento de habilidades...",
   noPerksFound: "No se encontraron habilidades coincidentes.",
   dualMainsTitle: "Equipamientos Distintivos",
-  accountSettingsSubtitle: "Administra tu dirección de correo y contraseña",
   searchPerksPrompt: "Escribe al menos 3 caracteres para buscar habilidades...",
   searchPerksMinChars: "Escribe {count, plural, one {# carácter más} other {# caracteres más}} para buscar...",
   downloadDataTitle: "Descargar mis datos",

@@ -69,9 +69,6 @@ export const DualMainsShowcase: React.FC<DualMainsShowcaseProps> = ({
           <h2 className="type-section-title text-text-primary group-hover:text-accent-red transition-colors">
             {dict.user.dualMainsTitle}
           </h2>
-          <p className="type-section-subtitle text-text-secondary mt-0.5">
-            {showcase.survivorMain.characterName} • {showcase.killerMain.characterName}
-          </p>
         </div>
         <div className="relative z-10 w-8 flex justify-end">
           <ChevronDown

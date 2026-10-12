@@ -4,7 +4,7 @@ export default {
   heading: "Privacy Policy",
   backToAbout: "Back to About us",
   lastUpdatedLabel: "Last updated",
-  lastUpdated: "October 3, 2026",
+  lastUpdated: "October 10, 2026",
   intro:
     "This page explains what personal data <brand>LemonDBD</brand> collects, why, who sees it and what you can do about it. We kept it short and plain on purpose.",
   translationNotice: "If the translated versions of this page differ from the English one, the English version prevails.",
@@ -38,6 +38,7 @@ export default {
       paragraphs: ["You can use most of the site without an account. Depending on what you do, we process:"],
       items: [
         "<b>Account data:</b> username, email address, a hash of your password (never the password itself), avatar, preferred language, and short-lived verification and password-reset codes.",
+        "<b>Two-factor sign-in (optional):</b> only if you turn it on from your profile page. We store the secret key behind your authenticator app (encrypted), hashed one-time recovery codes, when you turned it on, the last code step we accepted (so a code cannot be reused) and a counter of recent wrong codes with a temporary lock time. Your authenticator app generates the codes on your device; no phone number is needed.",
         "<b>What you save:</b> character and perk ownership, your profile showcase, streak runs, challenge achievements, minigame stats and Smash or Pass votes. Your tier lists, Smash or Pass rosters and custom minigames stay in your own browser and are not sent to our servers. Visitors without an account get a random session ID so their Smash or Pass votes can be remembered.",
         "<b>Bug reports and messages:</b> the text, screenshots and email address you send us. Guests must give an email address so we can answer.",
         "<b>Technical data:</b> your IP address, browser type and request details, used for rate limiting, abuse prevention and fixing errors.",
@@ -49,9 +50,9 @@ export default {
       heading: "Why we use it",
       paragraphs: ["We use personal data only for the purposes below, and rely on these legal bases where the GDPR applies:"],
       items: [
-        "To create and run your account, keep your saved data and send verification and password-reset emails (performance of our service to you).",
+        "To create and run your account, keep your saved data and send verification and password-reset emails, and, if you turn it on, to check your two-factor code when you sign in (performance of our service to you).",
         "To answer bug reports and requests (our legitimate interest in supporting users, or your request).",
-        "To keep the site secure, stop spam and abuse and fix errors (our legitimate interest).",
+        "To keep the site and accounts secure, including limiting wrong two-factor codes, stop spam and abuse and fix errors (our legitimate interest).",
         "To understand which pages are used and to improve the site through privacy-friendly analytics (our legitimate interest).",
         "If we ask for your consent, you can take it back at any time.",
       ],
@@ -78,7 +79,7 @@ export default {
       paragraphs: ["We do not sell your personal data or use it for advertising. We share it only as needed:"],
       items: [
         "<b>Links you share:</b> when you share a tier list, roster or custom minigame, it is packed into the link itself (the part after the “#”, which your browser never sends to us). We do not store it and cannot see it; only people who receive the link can open it.",
-        "<b>Service providers:</b> our hosting provider and {mailProvider} (which delivers our verification and password-reset emails) handle data on our behalf, only to run the site and send you the emails you request.",
+        "<b>Service providers:</b> our hosting provider and {mailProvider} (which delivers our verification and password-reset emails) handle data on our behalf, only to run the site and send you the emails you request, including notices when a security setting on your account changes. Two-factor codes are produced by your own authenticator app and checked on our server; we do not use a third-party service for them, and nothing about them is sent to Google, Microsoft, Apple or anyone else.",
         "<b>Discord:</b> when you submit a bug report, its content (including your email address and screenshots) is forwarded to a private channel used by our team.",
         "<b>Legal reasons:</b> if the law requires it or to protect the site and its users from abuse.",
       ],
@@ -93,15 +94,15 @@ export default {
     retention: {
       heading: "How long we keep it",
       paragraphs: [
-        "Account data and what you save are kept while your account exists. Verification codes expire after {verificationWindow}, password-reset links after {resetWindow} and login sessions after {sessionWindow}. Streak runs that stay inactive for {streakPrune} are ended automatically. Bug reports are kept for as long as they are needed to resolve the issue and for our records. Server logs are kept only briefly.",
-        "You can delete your account yourself from your profile page, or ask us to do it. Your account data, character and perk ownership, showcase, streak runs, minigame stats, challenge achievements and uploaded avatar are then removed. Smash or Pass votes stay as anonymous entries that are no longer tied to you. Your bug reports are kept for our records, but your email address is removed from them. Copies already sent to our private Discord channel may remain.",
+        "Account data and what you save are kept while your account exists. Verification codes expire after {verificationWindow}, password-reset links after {resetWindow} and login sessions after {sessionWindow}. Streak runs that stay inactive for {streakPrune} are ended automatically. Bug reports are kept for as long as they are needed to resolve the issue and for our records. Server logs are kept only briefly. A two-factor sign-in step expires after 5 minutes, and a temporary lock after repeated wrong codes lasts 15 minutes.",
+        "You can delete your account yourself from your profile page, or ask us to do it. Your account data, character and perk ownership, showcase, streak runs, minigame stats, challenge achievements uploaded avatar and any two-factor setup and recovery codes are then removed. Turning two-factor sign-in off removes them as well. Smash or Pass votes stay as anonymous entries that are no longer tied to you. Your bug reports are kept for our records, but your email address is removed from them. Copies already sent to our private Discord channel may remain.",
       ],
       items: [],
     },
     security: {
       heading: "Security",
       paragraphs: [
-        "We protect your data with measures such as encrypted connections (HTTPS), hashed passwords, rate limiting and spam protection. No online service is perfectly secure, so please use a strong, unique password.",
+        "We protect your data with measures such as encrypted connections (HTTPS), hashed passwords, rate limiting, spam protection and optional two-factor sign-in (the secret behind it is stored encrypted and recovery codes are stored hashed). Changing or resetting your password signs your other devices out. No online service is perfectly secure, so please use a strong, unique password.",
       ],
       items: [],
     },
@@ -109,7 +110,7 @@ export default {
       heading: "Your rights",
       paragraphs: [
         "Depending on where you live (for example in the EEA or UK), you have the right to:",
-        "On your profile page you can update your profile details, download a copy of your data and delete your account yourself. To use any other right, email [{contactEmail}](mailto:{contactEmail}); we answer within one month.",
+        "On your profile page you can update your profile details, turn two-factor sign-in on or off, download a copy of your data and delete your account yourself. To use any other right, email [{contactEmail}](mailto:{contactEmail}); we answer within one month.",
       ],
       items: [
         "access the personal data we hold about you and get a copy;",
@@ -138,7 +139,7 @@ export default {
     contact: {
       heading: "Contact us",
       paragraphs: [
-        "To use any of your rights, ask a privacy question or request account deletion, email us at [{contactEmail}](mailto:{contactEmail}). Signed-in users can also delete their account themselves from their profile page. Please write from the address registered on your account so we can verify who you are.",
+        "To use any of your rights, ask a privacy question or request account deletion, email us at [{contactEmail}](mailto:{contactEmail}). Signed-in users can also delete their account themselves from their profile page. Please write from the address registered on your account so we can verify who you are. If you lose both your authenticator app and your recovery codes, we can switch two-factor off for your account once we have verified you.",
       ],
       items: [],
     },

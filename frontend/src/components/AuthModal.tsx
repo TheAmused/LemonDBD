@@ -18,6 +18,7 @@ import {
   MailWarning,
 } from 'lucide-react';
 import { EmailVerificationForm } from '@/components/EmailVerificationForm';
+import { TwoFactorChallengeForm } from '@/components/auth/TwoFactorChallengeForm';
 import { Modal } from '@/components/common/Modal';
 import { Button } from '@/components/common/Button';
 import { Checkbox } from '@/components/common/Checkbox';
@@ -37,7 +38,8 @@ type AuthMode = 'login' | 'register' | 'forgot';
 type Notice =
   | { type: 'verify-reminder'; email: string }
   | { type: 'register-success'; email: string }
-  | { type: 'forgot-sent' };
+  | { type: 'forgot-sent' }
+  | { type: 'two-factor'; token: string };
 
 export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode = 'login', verifyEmailFor }) => {
   const dict = useDictionary();
@@ -68,6 +70,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
   const [legalAttempted, setLegalAttempted] = useState<boolean>(false);
 
   useEffect(() => {
+    setPassword('');
     if (isOpen) {
       setMode(initialMode);
       setError(null);
@@ -82,6 +85,16 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
     setMode(next);
     setError(null);
     setNotice(null);
+  };
+
+  // A completed sign-in: unverified accounts are asked for their email code, everyone else is in.
+  const finishSignIn = (signedIn?: { is_verified: boolean; email: string }) => {
+    setPassword('');
+    if (signedIn && !signedIn.is_verified) {
+      setNotice({ type: 'verify-reminder', email: signedIn.email });
+    } else {
+      onClose();
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -105,12 +118,11 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
           website_trap: honeypotValue,
           altcha: altchaPayload,
         });
-        if (res.success) {
-          if (res.user && !res.user.is_verified) {
-            setNotice({ type: 'verify-reminder', email: res.user.email });
-          } else {
-            onClose();
-          }
+        if (res.twoFactorToken) {
+          setPassword('');
+          setNotice({ type: 'two-factor', token: res.twoFactorToken });
+        } else if (res.success) {
+          finishSignIn(res.user);
         } else {
           setError(res.error || dict.user.invalidCredentials);
         }
@@ -124,6 +136,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
           altcha: altchaPayload,
         });
         if (res.success) {
+          setPassword('');
           if (res.user && !res.user.is_verified) {
             setNotice({ type: 'register-success', email: res.user?.email || email });
           } else {
@@ -169,6 +182,8 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
       title={
         notice?.type === 'verify-reminder' || notice?.type === 'register-success'
           ? dict.user.authVerifyEmailTitle
+          : notice?.type === 'two-factor'
+            ? dict.twoFactor.challengeTitle
           : notice?.type === 'forgot-sent'
             ? dict.user.resetPassword
             : mode === 'login'
@@ -201,6 +216,19 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
                 const locale = pathname?.split('/')[1] || 'en';
                 router.push(`/${locale}/welcome`);
               }
+            }}
+          />
+        </div>
+      )}
+
+      {notice && notice.type === 'two-factor' && (
+        <div className="animate-in fade-in duration-150">
+          <TwoFactorChallengeForm
+            twoFactorToken={notice.token}
+            onSuccess={finishSignIn}
+            onBack={() => {
+              setNotice(null);
+              setPassword('');
             }}
           />
         </div>

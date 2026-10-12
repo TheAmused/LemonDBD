@@ -24,7 +24,7 @@ class TestLiveChallengesAndEntities:
             user = db.session.scalars(select(User).where(User.username == username)).first()
             if not user:
                 user, _ = user_service.register_user(
-                    username=username,
+                    login=username, username=username,
                     email="runner@example.com",
                     password="RunnerPassword123!",
                     role="user",
@@ -83,7 +83,7 @@ class TestLiveChallengesAndEntities:
             user = db.session.scalars(select(User).where(User.username == username)).first()
             if not user:
                 user, _ = user_service.register_user(
-                    username=username,
+                    login=username, username=username,
                     email="poly@example.com",
                     password="PolyPassword123!",
                     role="user",

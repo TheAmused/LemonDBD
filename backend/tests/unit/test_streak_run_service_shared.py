@@ -74,7 +74,7 @@ def mode(request, db_session) -> ModeAdapter:
 
 @pytest.fixture
 def user_id() -> int:
-    user, err = UserService().register_user("streak_player", "streak@example.com", "SecurePass123!")
+    user, err = UserService().register_user("streak_player", "streak_player", "streak@example.com", "SecurePass123!")
     assert err is None
     return user.id
 

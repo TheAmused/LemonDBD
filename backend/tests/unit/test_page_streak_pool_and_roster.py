@@ -63,7 +63,7 @@ class TestPageStreakPool:
     def test_pool_is_per_user(self, user_service: UserService, ownership_service: OwnershipService) -> None:
         from app.core.extensions import db
 
-        other_user, _ = user_service.register_user("other_streak_user", "other_s@test.com", "Pass123!")
+        other_user, _ = user_service.register_user("other_streak_user", "other_streak_user", "other_s@test.com", "Pass123!")
         perk = db.session.scalars(select(Perk).where(Perk.name == "Perk 001")).first()
         ownership_service.set_perk_ownership(self.user_id, perk.id, is_unlocked=False)
 
@@ -187,7 +187,7 @@ class TestPageStreakRoster:
         assert roster["Trapper"]["status"] == "not_started"
 
     def test_runs_are_isolated_per_user(self, user_service: UserService) -> None:
-        other_user, _ = user_service.register_user("other_roster_user", "other_r@test.com", "Pass123!")
+        other_user, _ = user_service.register_user("other_roster_user", "other_roster_user", "other_r@test.com", "Pass123!")
         self.service.start_run(self.user_id, "Nurse")
         assert self.service.get_run(other_user.id, "Nurse") is None
         other_roster = {e["killer"]: e for e in self.service.get_roster(other_user.id)}

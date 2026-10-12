@@ -28,7 +28,7 @@ class TestLiveUserAndOwnershipLifecycle:
                 db.session.commit()
 
             user, token = user_service.register_user(
-                username=username,
+                login=username, username=username,
                 email=email,
                 password=password,
                 role="user",
@@ -69,7 +69,7 @@ class TestLiveUserAndOwnershipLifecycle:
                 db.session.commit()
 
             user, _ = user_service.register_user(
-                username="live_gambler_ace",
+                login="live_gambler_ace", username="live_gambler_ace",
                 email="ace_gambler@example.com",
                 password="acePassword777!",
                 role="user",

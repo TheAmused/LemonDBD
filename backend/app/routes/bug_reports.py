@@ -234,8 +234,6 @@ def get_my_bug_reports():
         conditions = [BugReport.user_id == user.id]
         if user.email:
             conditions.append(func.lower(BugReport.reporter_email) == user.email.lower())
-        if user.username:
-            conditions.append(func.lower(BugReport.reporter_name) == user.username.lower())
 
         stmt = (
             select(BugReport)

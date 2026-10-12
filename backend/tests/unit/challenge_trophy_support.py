@@ -23,7 +23,7 @@ def _make_app() -> Flask:
 
 def _make_user(username: str = "tester") -> User:
     user = User(
-        username=username,
+        login=username, username=username,
         email=f"{username}@test.com",
         password_hash="hashed",
         role="user",

@@ -14,7 +14,7 @@ def test_create_user_account_with_verification_enabled(app: Flask):
 
     with patch("app.services.user.auth.send_verification_email") as mock_send_email:
         user, err = user_service.register_user(
-            username="verified_mode_user",
+            login="verified_mode_user", username="verified_mode_user",
             email="verif_on@example.com",
             password="password123",
         )
@@ -34,7 +34,7 @@ def test_create_user_account_with_verification_disabled(app: Flask):
 
     with patch("app.services.user.auth.send_verification_email") as mock_send_email:
         user, err = user_service.register_user(
-            username="auto_verified_user",
+            login="auto_verified_user", username="auto_verified_user",
             email="verif_off@example.com",
             password="password123",
         )
@@ -54,7 +54,7 @@ def test_authenticate_auto_verifies_unverified_user_when_disabled(app: Flask):
 
     with patch("app.services.user.auth.send_verification_email"):
         user, err = user_service.register_user(
-            username="unverified_legacy_user",
+            login="unverified_legacy_user", username="unverified_legacy_user",
             email="legacy_unverified@example.com",
             password="password123",
         )
@@ -65,7 +65,7 @@ def test_authenticate_auto_verifies_unverified_user_when_disabled(app: Flask):
     app.config["REQUIRE_EMAIL_VERIFICATION"] = False
 
     authenticated_user, token = user_service.authenticate(
-        username_or_email="unverified_legacy_user",
+        login_or_email="unverified_legacy_user",
         password="password123",
     )
     assert authenticated_user is not None

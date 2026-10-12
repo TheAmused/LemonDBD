@@ -15,7 +15,7 @@ class TestSecurityGuards:
         "clean_payload",
         [
             {},
-            {"username": "entity", "email": "entity@lemondbd.com"},
+            {"login": "entity", "username": "entity", "email": "entity@lemondbd.com"},
             {"website_trap": "", "honeypot_verification": None, "company_fax": "  "},
             {"website_trap": False, "honeypot_verification": None},
             None,
@@ -78,6 +78,7 @@ class TestSecurityGuards:
 
     def test_register_honeypot_rejection_string(self, client: FlaskClient) -> None:
         payload = {
+            "login": "spambot1",
             "username": "spambot1",
             "email": "spambot1@test.com",
             "password": "Password123!",
@@ -91,6 +92,7 @@ class TestSecurityGuards:
 
     def test_register_honeypot_rejection_boolean(self, client: FlaskClient) -> None:
         payload = {
+            "login": "spambot2",
             "username": "spambot2",
             "email": "spambot2@test.com",
             "password": "Password123!",

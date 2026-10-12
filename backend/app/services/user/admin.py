@@ -46,7 +46,9 @@ def list_all_users_paginated(
 
     if search and search.strip():
         pat = f"%{search.strip().lower()}%"
-        stmt = stmt.where(or_(User.username.ilike(pat), User.email.ilike(pat)))
+        stmt = stmt.where(
+            or_(User.login.ilike(pat), User.username.ilike(pat), User.email.ilike(pat))
+        )
 
     total = db.session.scalar(select(func.count()).select_from(stmt.subquery())) or 0
     stmt = stmt.order_by(User.id.asc()).offset((page - 1) * per_page).limit(per_page)
@@ -133,7 +135,6 @@ def delete_own_account(
     google_credential: str | None = None,
 ) -> tuple[bool, str | None]:
     """Self-service account deletion, confirmed with the current password.
-
 
     Everything keyed to the user cascades away with the row. Bug reports are kept
     for the team's records but stripped of the reporter's identity first. The only

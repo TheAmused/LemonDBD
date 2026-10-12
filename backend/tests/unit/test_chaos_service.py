@@ -51,7 +51,7 @@ def user_service() -> UserService:
 
 @pytest.fixture
 def chaos_user(user_service: UserService) -> int:
-    user, err = user_service.register_user("chaos_challenger", "challenger@example.com", "SecurePass123!")
+    user, err = user_service.register_user("chaos_challenger", "chaos_challenger", "challenger@example.com", "SecurePass123!")
     assert err is None
     return user.id
 

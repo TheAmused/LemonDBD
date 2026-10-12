@@ -127,7 +127,7 @@ export const AdminUserTable: React.FC<AdminUserTableProps> = ({
                         </span>
                       )}
                     </div>
-                    <span className="block type-caption text-text-muted truncate">{u.email}</span>
+                    <span className="block type-caption text-text-muted truncate">{u.login} · {u.email}</span>
                   </div>
                 </div>
                 <span
@@ -255,6 +255,7 @@ export const AdminUserTable: React.FC<AdminUserTableProps> = ({
                   <td className="px-4 py-3 font-bold text-text-primary flex items-center gap-2">
                     <UserAvatar user={u} size="xs" />
                     <span className="truncate max-w-[120px]">{u.username}</span>
+                    <span className="truncate max-w-[120px] type-caption font-normal text-text-muted">{u.login}</span>
                     {u.id === currentUserId && (
                       <span className="rounded-md bg-accent-amber/15 border border-accent-amber/30 px-1.5 py-0.5 text-micro font-black uppercase tracking-wider text-accent-amber">
                         {dict.admin.you}

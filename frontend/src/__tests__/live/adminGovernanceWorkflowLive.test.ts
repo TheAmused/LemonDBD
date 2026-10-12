@@ -9,7 +9,7 @@ test("Live Frontend Workflow: Admin Governance & User Management", async () => {
   const adminLoginRes = await fetch(`${API_BASE}/api/v1/auth/login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ username: "lemon", password: "lemon" }),
+    body: JSON.stringify({ login: "lemon", password: "lemon" }),
   });
   assert.strictEqual(adminLoginRes.status, 200);
   const adminToken = (await adminLoginRes.json()).token;
@@ -32,6 +32,7 @@ test("Live Frontend Workflow: Admin Governance & User Management", async () => {
     method: "POST",
     headers: adminHeaders,
     body: JSON.stringify({
+      login: targetUsername,
       username: targetUsername,
       email: `${targetUsername}@test.com`,
       password: "ManagedPassword123!",
@@ -64,7 +65,7 @@ test("Live Frontend Workflow: Admin Governance & User Management", async () => {
   const bannedLogin = await fetch(`${API_BASE}/api/v1/auth/login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ username: targetUsername, password: "ManagedPassword123!" }),
+    body: JSON.stringify({ login: targetUsername, password: "ManagedPassword123!" }),
   });
   assert.ok(bannedLogin.status === 400 || bannedLogin.status === 401 || bannedLogin.status === 403);
 

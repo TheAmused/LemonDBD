@@ -78,6 +78,7 @@ export async function fetchMyBugReports(
 }
 
 export interface UpdateProfilePayload {
+  username?: string;
   email?: string;
   new_password?: string;
   /** Required by the server whenever `email` changes or `new_password` is set. */

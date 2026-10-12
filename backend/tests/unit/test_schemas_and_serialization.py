@@ -22,6 +22,7 @@ class TestUserSchemas:
 
     def test_user_create_valid(self) -> None:
         payload = {
+            "login": "ClaudetteM",
             "username": "ClaudetteM",
             "email": "claudette@example.com",
             "password": "strongPassword123",
@@ -52,6 +53,7 @@ class TestUserSchemas:
         now = datetime.now(timezone.utc)
         mock_data = {
             "id": 10,
+            "login": "FengMin",
             "username": "FengMin",
             "email": "feng@example.com",
             "role": "user",

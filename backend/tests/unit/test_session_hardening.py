@@ -15,7 +15,7 @@ PASSWORD = "password123"
 
 def _make_user(name: str = "hardened") -> User:
     user = User(
-        username=name,
+        login=name, username=name,
         email=f"{name}@example.com",
         password_hash=hash_password(PASSWORD),
         is_verified=True,
@@ -121,7 +121,7 @@ class TestPasswordChangeSignsOutOtherSessions:
         )
         assert res.status_code == 200
         assert client.get("/api/v1/auth/me", headers=_bearer(old_token)).get_json()["authenticated"] is False
-        login = client.post("/api/v1/auth/login", json={"username": user.username, "password": "another-pass"})
+        login = client.post("/api/v1/auth/login", json={"login": user.username, "password": "another-pass"})
         assert login.status_code == 200
         assert decode_token(login.get_json()["token"])["ver"] == 1
 

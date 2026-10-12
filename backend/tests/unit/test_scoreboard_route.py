@@ -33,7 +33,7 @@ class TestEngine:
 def _login(client: FlaskClient) -> None:
     res = client.post(
         "/api/v1/auth/register",
-        json={"username": "shotuser", "email": "shotuser@example.com", "password": "password123"},
+        json={"login": "shotuser", "username": "shotuser", "email": "shotuser@example.com", "password": "password123"},
     )
     assert res.status_code == 201
 

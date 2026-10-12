@@ -74,6 +74,7 @@ describe('Admin Theme Support', () => {
         users: [
           {
             id: 1,
+            login: 'admin',
             username: 'admin',
             email: 'admin@test.com',
             role: 'admin',

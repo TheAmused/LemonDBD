@@ -198,7 +198,7 @@ class TestGauntletRun:
     def test_runs_are_isolated_per_user(
         self, gauntlet_service: GauntletService, gauntlet_user: int, user_service: UserService
     ) -> None:
-        other_user, _ = user_service.register_user("other_g_user", "other_g@example.com", "Pass123!")
+        other_user, _ = user_service.register_user("other_g_user", "other_g_user", "other_g@example.com", "Pass123!")
         run1 = gauntlet_service.get_or_create_run(gauntlet_user, "killer")
         run2 = gauntlet_service.get_or_create_run(other_user.id, "killer")
         assert run1["id"] != run2["id"]

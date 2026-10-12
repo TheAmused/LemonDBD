@@ -13,6 +13,7 @@ logger = logging.getLogger(__name__)
 # app.core.config.demo_accounts_enabled() is true (FLASK_ENV=development).
 DEMO_ACCOUNTS: tuple[dict[str, str], ...] = (
     {
+        "login": "lemon",
         "username": "lemon",
         "email": "lemon@lemondbd.com",
         "password": "lemon",
@@ -20,6 +21,7 @@ DEMO_ACCOUNTS: tuple[dict[str, str], ...] = (
         "avatar_url": "default_avatar",
     },
     {
+        "login": "user",
         "username": "user",
         "email": "survivor@lemondbd.com",
         "password": "user",
@@ -42,13 +44,14 @@ def seed_default_users() -> None:
             existing = db.session.scalar(
                 select(User).where(
                     or_(
-                        User.username == udata["username"],
+                        User.login == udata["login"],
                         User.email == udata["email"],
                     )
                 )
             )
             if not existing:
                 new_user = User(
+                    login=udata["login"],
                     username=udata["username"],
                     email=udata["email"],
                     password_hash=hash_password(udata["password"]),
@@ -60,19 +63,19 @@ def seed_default_users() -> None:
                 db.session.add(new_user)
                 try:
                     db.session.commit()
-                    logger.info(f"Default user seeded: {udata['username']} ({udata['role']})")
+                    logger.info(f"Default user seeded: {udata['login']} ({udata['role']})")
                 except Exception as commit_err:
                     db.session.rollback()
-                    logger.debug(f"Worker concurrency notice seeding user {udata['username']}: {commit_err}")
+                    logger.debug(f"Worker concurrency notice seeding user {udata['login']}: {commit_err}")
             else:
                 changed = False
                 # Ensure the primary user retains admin role
-                if existing.username == "lemon" and existing.role != "admin":
+                if existing.login == "lemon" and existing.role != "admin":
                     existing.role = "admin"
                     changed = True
 
                 # Ensure default users are marked verified
-                if existing.username in ("lemon", "user") and not existing.is_verified:
+                if existing.login in ("lemon", "user") and not existing.is_verified:
                     existing.is_verified = True
                     changed = True
 
@@ -95,7 +98,7 @@ def seed_default_users() -> None:
                         existing.password_hash = hash_password(udata["password"])
                         changed = True
                         logger.info(
-                            f"Re-hashed stale/incompatible password hash for seeded user '{udata['username']}'."
+                            f"Re-hashed stale/incompatible password hash for seeded user '{udata['login']}'."
                         )
 
                 if changed:

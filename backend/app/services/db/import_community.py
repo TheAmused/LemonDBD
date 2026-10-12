@@ -59,7 +59,8 @@ def _import_admin_audit_logs(
     if "admin_audit_logs" in target_keys and "admin_audit_logs" in data:
         created = 0
         for row in data["admin_audit_logs"]:
-            admin_id = user_map.get(row.get("admin_username")) if row.get("admin_username") else None
+            admin_login = row.get("admin_login") or row.get("admin_username")
+            admin_id = user_map.get(admin_login) if admin_login else None
             db.session.add(AdminAuditLog(
                 admin_user_id=admin_id,
                 action=row.get("action", "unknown"),
@@ -82,7 +83,8 @@ def _import_changelog_posts(
     if "changelog_posts" in target_keys and "changelog_posts" in data:
         created = 0
         for row in data["changelog_posts"]:
-            author_id = user_map.get(row.get("author_username")) if row.get("author_username") else None
+            author_login = row.get("author_login") or row.get("author_username")
+            author_id = user_map.get(author_login) if author_login else None
             db.session.add(ChangelogPost(
                 title=row.get("title", "Untitled"),
                 content_html=row.get("content_html", ""),
@@ -158,10 +160,10 @@ def _import_rosters(
 
                 db.session.execute(delete(Vote).where(Vote.entity_id == entity_obj.id))
                 for vote_row in e_row.get("votes", []):
-                    vote_username = vote_row.get("username")
+                    vote_login = vote_row.get("login") or vote_row.get("username")
                     vote = Vote(
                         entity_id=entity_obj.id,
-                        user_id=user_map.get(vote_username) if vote_username else None,
+                        user_id=user_map.get(vote_login) if vote_login else None,
                         session_id=vote_row.get("session_id"),
                         vote_type=vote_row.get("vote_type", "smash"),
                     )

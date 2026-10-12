@@ -13,6 +13,7 @@ interface AdminCreateUserModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (userData: {
+    login: string;
     username: string;
     email: string;
     password: string;
@@ -22,6 +23,7 @@ interface AdminCreateUserModalProps {
 
 export const AdminCreateUserModal: React.FC<AdminCreateUserModalProps> = ({ isOpen, onClose, onSubmit }) => {
   const dict = useDictionary();
+  const [login, setLogin] = useState('');
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -32,7 +34,8 @@ export const AdminCreateUserModal: React.FC<AdminCreateUserModalProps> = ({ isOp
     e.preventDefault();
     setIsSubmitting(true);
     try {
-      await onSubmit({ username, email, password, role });
+      await onSubmit({ login, username, email, password, role });
+      setLogin('');
       setUsername('');
       setEmail('');
       setPassword('');
@@ -77,11 +80,24 @@ export const AdminCreateUserModal: React.FC<AdminCreateUserModalProps> = ({ isOp
     <form id="admin-create-user-form" onSubmit={handleSubmit} className="space-y-4">
       <div>
         <label className="block type-label-xs text-text-secondary mb-1">
-          {dict.admin.thUsername}
+          {dict.admin.thLogin}
         </label>
         <Input
           type="text"
             data-autofocus
+          required
+          value={login}
+          onChange={(e) => setLogin(e.target.value)}
+          placeholder={dict.admin.createUserLoginPlaceholder}
+        />
+      </div>
+
+      <div>
+        <label className="block type-label-xs text-text-secondary mb-1">
+          {dict.admin.thUsername}
+        </label>
+        <Input
+          type="text"
           required
           value={username}
           onChange={(e) => setUsername(e.target.value)}

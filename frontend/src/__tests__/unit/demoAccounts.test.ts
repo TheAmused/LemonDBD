@@ -11,7 +11,7 @@ import { parseDemoAccounts } from '../../hooks/useDemoAccounts';
 const authModal = fs.readFileSync(path.join(process.cwd(), 'src/components/AuthModal.tsx'), 'utf-8');
 
 describe('parseDemoAccounts', () => {
-  const account = { role: 'admin', username: 'a', password: 'b' };
+  const account = { role: 'admin', login: 'a', password: 'b' };
 
   it('returns the accounts when the backend enables them', () => {
     assert.deepEqual(parseDemoAccounts({ enabled: true, accounts: [account] }), [account]);
@@ -27,7 +27,7 @@ describe('parseDemoAccounts', () => {
     assert.deepEqual(parseDemoAccounts('nope'), []);
     assert.deepEqual(parseDemoAccounts({ enabled: true }), []);
     assert.deepEqual(
-      parseDemoAccounts({ enabled: true, accounts: [{ role: 'root', username: 'x', password: 'y' }, account, 5] }),
+      parseDemoAccounts({ enabled: true, accounts: [{ role: 'root', login: 'x', password: 'y' }, account, 5] }),
       [account]
     );
   });

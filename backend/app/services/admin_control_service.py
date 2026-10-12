@@ -44,7 +44,7 @@ def get_audit_logs(page: int = 1, per_page: int = 25) -> dict[str, Any]:
 
     admin_ids = {row.admin_user_id for row in rows if row.admin_user_id is not None}
     usernames = {
-        u.id: u.username
+        u.id: u.login
         for u in db.session.scalars(select(User).where(User.id.in_(admin_ids))).all()
     } if admin_ids else {}
 

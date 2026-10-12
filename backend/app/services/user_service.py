@@ -52,20 +52,21 @@ class UserService:
 
     def register_user(
         self,
+        login: str,
         username: str,
         email: str,
         password: str,
         role: str = "user",
         avatar_url: str = "default_avatar",
     ) -> tuple[User | None, str | None]:
-        return create_user_account(username, email, password, role, avatar_url)
+        return create_user_account(login, username, email, password, role, avatar_url)
 
     def authenticate(
         self,
-        username_or_email: str,
+        login_or_email: str,
         password: str,
     ) -> tuple[User | None, str | None]:
-        return authenticate_user_credentials(username_or_email, password)
+        return authenticate_user_credentials(login_or_email, password)
 
     def get_user_by_id(self, user_id: int) -> User | None:
         return fetch_user_by_id(user_id)
@@ -78,9 +79,10 @@ class UserService:
         new_password: str | None = None,
         current_password: str | None = None,
         two_factor_code: str | None = None,
+        username: str | None = None,
     ) -> tuple[User | None, str | None]:
         return modify_user_profile(
-            user_id, email, avatar_url, new_password, current_password, two_factor_code
+            user_id, email, avatar_url, new_password, current_password, two_factor_code, username
         )
 
     def mark_onboarding_complete(self, user_id: int) -> tuple[User | None, str | None]:

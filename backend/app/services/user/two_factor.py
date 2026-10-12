@@ -259,7 +259,7 @@ def begin_setup(user: User, password: str | None) -> dict[str, str]:
         row.locked_until = None
     db.session.commit()
     issuer = str(current_app.config.get("TWO_FACTOR_ISSUER") or "LemonDBD")
-    return {"secret": secret, "otpauth_uri": totp.provisioning_uri(secret, user.username, issuer)}
+    return {"secret": secret, "otpauth_uri": totp.provisioning_uri(secret, user.login, issuer)}
 
 
 def confirm_setup(user: User, code: str | None) -> list[str]:

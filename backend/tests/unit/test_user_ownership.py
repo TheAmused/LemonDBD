@@ -84,7 +84,7 @@ class TestUserAndOwnership:
 
     def test_user_registration_and_auth(self, user_service: UserService) -> None:
         user, err = user_service.register_user(
-            "testkiller", "killer@test.com", "killerpassword", role="user"
+            "testkiller", "testkiller", "killer@test.com", "killerpassword", role="user"
         )
         assert err is None
         assert user is not None
@@ -92,7 +92,7 @@ class TestUserAndOwnership:
         assert user.role == "user"
 
         dup, dup_err = user_service.register_user(
-            "testkiller", "other@test.com", "killerpassword"
+            "testkiller", "testkiller", "other@test.com", "killerpassword"
         )
         assert dup_err is not None
 
@@ -107,7 +107,7 @@ class TestUserAndOwnership:
     def test_default_state_is_all_owned_and_unlocked(
         self, user_service: UserService, ownership_service: OwnershipService
     ) -> None:
-        user, _ = user_service.register_user("freshuser", "fresh@test.com", "password123")
+        user, _ = user_service.register_user("freshuser", "freshuser", "fresh@test.com", "password123")
 
         characters = ownership_service.get_user_characters(user.id)
         assert len(characters) > 0
@@ -123,7 +123,7 @@ class TestUserAndOwnership:
         ownership_service: OwnershipService,
         db_session: Session,
     ) -> None:
-        user, _ = user_service.register_user("trappermain", "trapper@test.com", "password123")
+        user, _ = user_service.register_user("trappermain", "trappermain", "trapper@test.com", "password123")
         trapper = db_session.scalars(
             select(Killer).where(Killer.name == "The Trapper")
         ).first()
@@ -155,7 +155,7 @@ class TestUserAndOwnership:
         ownership_service: OwnershipService,
         db_session: Session,
     ) -> None:
-        user, _ = user_service.register_user("partialuser", "partial@test.com", "password123")
+        user, _ = user_service.register_user("partialuser", "partialuser", "partial@test.com", "password123")
         trapper = db_session.scalars(
             select(Killer).where(Killer.name == "The Trapper")
         ).first()
@@ -184,7 +184,7 @@ class TestUserAndOwnership:
         ownership_service: OwnershipService,
         db_session: Session,
     ) -> None:
-        user, _ = user_service.register_user("trappermain2", "trapper2@test.com", "password123")
+        user, _ = user_service.register_user("trappermain2", "trappermain2", "trapper2@test.com", "password123")
         trapper = db_session.scalars(
             select(Killer).where(Killer.name == "The Trapper")
         ).first()
@@ -213,7 +213,7 @@ class TestUserAndOwnership:
         ownership_service: OwnershipService,
         db_session: Session,
     ) -> None:
-        user, _ = user_service.register_user("bulkuser", "bulk@test.com", "password123")
+        user, _ = user_service.register_user("bulkuser", "bulkuser", "bulk@test.com", "password123")
         trapper = db_session.scalars(
             select(Killer).where(Killer.name == "The Trapper")
         ).first()
@@ -243,7 +243,7 @@ class TestUserAndOwnership:
         ownership_service: OwnershipService,
         db_session: Session,
     ) -> None:
-        user, _ = user_service.register_user("summaryuser", "summary@test.com", "password123")
+        user, _ = user_service.register_user("summaryuser", "summaryuser", "summary@test.com", "password123")
         trapper = db_session.scalars(
             select(Killer).where(Killer.name == "The Trapper")
         ).first()
@@ -270,6 +270,7 @@ class TestUserAndOwnership:
         reg_res = client.post(
             "/api/v1/auth/register",
             json={
+                "login": "apicheck",
                 "username": "apicheck",
                 "email": "api@check.com",
                 "password": "password123",
@@ -328,11 +329,11 @@ class TestUserAndOwnership:
         admin, admin_token = user_service.authenticate("admin", "admin123")
         if not admin:
             admin, _ = user_service.register_user(
-                "adminuser", "adm@test.com", "adminpass", role="admin"
+                "adminuser", "adminuser", "adm@test.com", "adminpass", role="admin"
             )
             admin_token = user_service.generate_token(admin.id)
         user, _ = user_service.register_user(
-            "regular", "reg@test.com", "regpass", role="user"
+            "regular", "regular", "reg@test.com", "regpass", role="user"
         )
 
         admin_headers = {"Authorization": f"Bearer {admin_token}"}
@@ -389,6 +390,7 @@ class TestUserAndOwnership:
         res = client.post(
             "/api/v1/users",
             json={
+                "login": "custom_player",
                 "username": "custom_player",
                 "email": "custom@player.com",
                 "password": "secretpassword",

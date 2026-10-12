@@ -243,6 +243,8 @@ describe('User Profile Drawers: DualMainsShowcase & UserBugReportsDrawer', () =>
   it('UserProfileForm renders as Account Management drawer with centered header and banner', () => {
     const html = renderWithDictionary(
       React.createElement(UserProfileForm, {
+        login: 'tester',
+        initialUsername: 'Tester',
         initialEmail: 'test@lemondbd.com',
         onRefreshUser: async () => {},
       })

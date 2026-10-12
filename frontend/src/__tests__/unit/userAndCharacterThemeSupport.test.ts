@@ -22,6 +22,8 @@ describe('User Profile Theme Support', () => {
   it('UserProfileForm container supports light theme card and text', () => {
     const html = renderWithDictionary(
       React.createElement(UserProfileForm, {
+        login: 'tester',
+        initialUsername: 'Tester',
         initialEmail: 'test@example.com',
         onRefreshUser: async () => {},
       })

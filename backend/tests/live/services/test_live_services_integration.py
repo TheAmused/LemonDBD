@@ -22,7 +22,7 @@ class TestLiveServicesIntegration:
     def test_live_user_service_registration_and_token(self, live_app: Flask) -> None:
         with live_app.app_context():
             user_service = UserService()
-            user, err = user_service.register_user("service_tester", "serv@example.com", "secure123")
+            user, err = user_service.register_user("service_tester", "service_tester", "serv@example.com", "secure123")
             assert err is None
             assert user.id is not None
 

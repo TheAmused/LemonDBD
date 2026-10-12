@@ -1,5 +1,7 @@
 // frontend/src/__tests__/unit/smashOrPassResponsiveAndSkeletons.test.ts
 import test from 'node:test';
+import fs from 'node:fs';
+import path from 'node:path';
 import assert from 'node:assert';
 import React from 'react';
 import enDict from '@/locales/en';
@@ -12,7 +14,7 @@ test('SmashOrPass: Skeletons & DBD Framer Motion Spinner Suite', async (t) => {
     assert.ok(html.includes('role="status"'));
     assert.ok(html.includes('aria-busy="true"'));
     assert.ok(html.includes(`aria-label="${enDict.smashOrPass.loadingArena}"`));
-    assert.ok(html.includes('min-h-[calc(100vh-5rem)]'));
+    assert.ok(html.includes('min-h-[calc(100dvh-5rem)]'));
   });
 
   await t.test('SmashLeaderboardSkeleton renders with status role and accessibility label', () => {
@@ -41,11 +43,17 @@ test('SmashOrPass: Responsive Design & Touch Target Sizes', async (t) => {
     assert.ok(checkTouchClasses(dockActionClasses), 'Dock action buttons must have min-h and min-w >= 44px');
   });
 
-  await t.test('Card stack container preserves exact responsive aspect ratios', () => {
-    const cardContainerClasses = 'w-[88vw] max-w-[340px] sm:max-w-[380px] md:max-w-[420px] aspect-[9/14] sm:aspect-[9/15]';
-    assert.ok(cardContainerClasses.includes('aspect-[9/14]'), 'Includes mobile 9:14 aspect ratio');
-    assert.ok(cardContainerClasses.includes('sm:aspect-[9/15]'), 'Includes desktop 9:15 aspect ratio');
-    assert.ok(cardContainerClasses.includes('max-w-[340px]'), 'Includes base max width for narrow viewports');
+  await t.test('The card is sized from the window height by one shared rule (styles/smash-or-pass.css)', () => {
+    const css = fs.readFileSync(path.resolve(__dirname, '../../app/styles/smash-or-pass.css'), 'utf8');
+    assert.ok(css.includes('--smash-card-h:'), 'publishes the card height');
+    assert.ok(css.includes('100dvh'), 'height follows the dynamic viewport, not 100vh');
+    assert.ok(css.includes('--smash-card-w:'), 'publishes the card width');
+    assert.ok(css.includes('aspect-ratio: 3 / 5'), 'one 3:5 aspect ratio on every screen size');
+    assert.ok(/25rem/.test(css), 'keeps a 400px floor so very short windows scroll instead of shrinking the card');
+
+    const card = fs.readFileSync(path.resolve(__dirname, '../../components/smash-or-pass/CharacterCard.tsx'), 'utf8');
+    assert.ok(card.includes('smash-card-size'), 'the card uses the shared sizing utility');
+    assert.ok(!/w-\[88vw\]/.test(card), 'no viewport-width card sizing is left on the card');
   });
 
   await t.test('Calculates responsive swipe rotation and card scale transforms', () => {

@@ -5,7 +5,6 @@ import React, { useMemo } from 'react';
 import {
   Heart,
   Flame,
-  Sparkles,
   Quote,
   CheckCircle2,
   AlertTriangle,
@@ -17,7 +16,7 @@ import { EntityItem, EntityStatItem } from '@/types/smashOrPass';
 import { localizedProfile } from '@/utils/entityProfile';
 import { Modal } from '@/components/common/Modal';
 import type { Dictionary } from '@/locales/types';
-import { FriendzoneIcon, EldritchVoidIcon } from '@/components/icons/DbdIcons';
+import { EldritchVoidIcon, FriendzoneIcon, RankFirstIcon } from '@/components/icons/DbdIcons';
 import { Surface } from '@/components/common/Surface';
 import { formatNumber } from '@/utils/format';
 import { isSurvivor as isSurvivorRole } from '@/utils/characterUtils';
@@ -94,7 +93,7 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({ isOpen
         color: 'text-accent-amber',
         bg: 'bg-accent-amber/15 border-accent-amber/40',
         glow: '',
-        icon: <Sparkles className="h-4 w-4 text-accent-amber" />,
+        icon: <RankFirstIcon className="h-4 w-4 text-accent-amber" />,
       };
     }
     if (smashRate >= 65) {

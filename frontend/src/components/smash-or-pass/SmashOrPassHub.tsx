@@ -104,7 +104,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ locale = 'en' })
 
   return (
     <div
-      className={`relative min-h-[calc(100vh-5rem)] flex flex-col justify-start space-y-3 pb-12 overflow-x-clip ${
+      className={`relative min-h-[calc(100dvh-5rem)] flex flex-col justify-start space-y-3 pb-12 overflow-x-clip ${
         effectsEnabled ? '' : '[&_*]:animate-none!'
       }`}
     >
@@ -117,15 +117,6 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ locale = 'en' })
           actionTrigger={effectsEnabled ? animTrigger.type : null}
           triggerKey={effectsEnabled ? animTrigger.key : 0}
           isPaused={overlays.areModalsOpen}
-        />
-      </Suspense>
-
-      {/* Scattered Ambient Lore Wings Flanking the Candidate Card */}
-      <Suspense fallback={null}>
-        <FloatingLoreScattered
-          character={deck.currentCharacter}
-          locale={locale}
-          customLabels={activeRoster?.custom_labels}
         />
       </Suspense>
 
@@ -142,60 +133,74 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ locale = 'en' })
         </Suspense>
       )}
 
-      <HubHeader
-        activeRoster={activeRoster}
-        rosterName={rosters.getRosterDisplayName(activeRoster)}
-        rosterBadgeCount={rosterBadgeCount}
-        remainingInDeck={remainingInDeck}
-        sessionSmashes={sessionSmashes}
-        sessionPasses={sessionPasses}
-        sessionSmashRate={sessionSmashRate}
-        isFilterActive={deck.roleFilter !== 'all' || deck.genderFilter !== 'all'}
-        isFilterDrawerOpen={overlays.isFilterDrawerOpen}
-        effectsEnabled={effectsEnabled}
-        onOpenRosters={() => overlays.setIsRosterModalOpen(true)}
-        onToggleFilters={() => overlays.setIsFilterDrawerOpen((prev) => !prev)}
-        onOpenEffects={prefs.openSettings}
-        onOpenPersona={() => overlays.setIsPersonaOpen(true)}
-        onOpenLeaderboard={() => overlays.setIsLeaderboardOpen(true)}
-        onShuffle={deck.shuffleDeck}
-        onReset={() => setIsResetConfirmOpen(true)}
-        onOpenHowToPlay={() => setIsHowToPlayOpen(true)}
-      >
-        <HubFilterDrawer
-          isOpen={overlays.isFilterDrawerOpen}
-          roleFilter={deck.roleFilter}
-          genderFilter={deck.genderFilter}
-          availableRoles={rosters.availableRoles}
-          availableGenders={rosters.availableGenders}
-          onFilterChange={deck.setFilter}
-        />
-      </HubHeader>
+      {/* The stage: the one size container of the hub (see styles/smash-or-pass.css). */}
+      <div className="smash-hub flex-1 flex flex-col">
+        <div className="smash-stage relative flex-1 flex flex-col space-y-3">
+          {/* Scattered Ambient Lore Wings Flanking the Candidate Card */}
+          <Suspense fallback={null}>
+            <FloatingLoreScattered
+              character={deck.currentCharacter}
+              locale={locale}
+              customLabels={activeRoster?.custom_labels}
+            />
+          </Suspense>
 
-      <CardArena
-        activeRoster={activeRoster}
-        selectedRosterSlug={selectedRosterSlug}
-        nsfwAcknowledged={rosters.nsfwAcknowledged}
-        loading={deck.loading}
-        currentCharacter={deck.currentCharacter}
-        nextCharacter={deck.nextCharacter}
-        thirdCharacter={deck.thirdCharacter}
-        currentIndex={deck.currentIndex}
-        locale={locale}
-        dragPhysics={exit.dragPhysics}
-        isExiting={exit.isExiting}
-        exitVote={exit.exitVote}
-        exitOffset={exit.exitOffset}
-        effectsEnabled={effectsEnabled}
-        sessionSmashes={sessionSmashes}
-        sessionPasses={sessionPasses}
-        onAcknowledgeNsfw={rosters.handleAcknowledgeNsfw}
-        onVote={handleVote}
-        onDragUpdate={(x, y, isDragging) => exit.setDragPhysics({ x, y, isDragging })}
-        onExitComplete={handleExitComplete}
-        onOpenPersona={() => overlays.setIsPersonaOpen(true)}
-        onReset={() => setIsResetConfirmOpen(true)}
-      />
+          <HubHeader
+            activeRoster={activeRoster}
+            rosterName={rosters.getRosterDisplayName(activeRoster)}
+            rosterBadgeCount={rosterBadgeCount}
+            remainingInDeck={remainingInDeck}
+            sessionSmashes={sessionSmashes}
+            sessionPasses={sessionPasses}
+            sessionSmashRate={sessionSmashRate}
+            isFilterActive={deck.roleFilter !== 'all' || deck.genderFilter !== 'all'}
+            isFilterDrawerOpen={overlays.isFilterDrawerOpen}
+            effectsEnabled={effectsEnabled}
+            onOpenRosters={() => overlays.setIsRosterModalOpen(true)}
+            onToggleFilters={() => overlays.setIsFilterDrawerOpen((prev) => !prev)}
+            onOpenEffects={prefs.openSettings}
+            onOpenPersona={() => overlays.setIsPersonaOpen(true)}
+            onOpenLeaderboard={() => overlays.setIsLeaderboardOpen(true)}
+            onShuffle={deck.shuffleDeck}
+            onReset={() => setIsResetConfirmOpen(true)}
+            onOpenHowToPlay={() => setIsHowToPlayOpen(true)}
+          >
+            <HubFilterDrawer
+              isOpen={overlays.isFilterDrawerOpen}
+              roleFilter={deck.roleFilter}
+              genderFilter={deck.genderFilter}
+              availableRoles={rosters.availableRoles}
+              availableGenders={rosters.availableGenders}
+              onFilterChange={deck.setFilter}
+            />
+          </HubHeader>
+
+          <CardArena
+            activeRoster={activeRoster}
+            selectedRosterSlug={selectedRosterSlug}
+            nsfwAcknowledged={rosters.nsfwAcknowledged}
+            loading={deck.loading}
+            currentCharacter={deck.currentCharacter}
+            nextCharacter={deck.nextCharacter}
+            thirdCharacter={deck.thirdCharacter}
+            currentIndex={deck.currentIndex}
+            locale={locale}
+            dragPhysics={exit.dragPhysics}
+            isExiting={exit.isExiting}
+            exitVote={exit.exitVote}
+            exitOffset={exit.exitOffset}
+            effectsEnabled={effectsEnabled}
+            sessionSmashes={sessionSmashes}
+            sessionPasses={sessionPasses}
+            onAcknowledgeNsfw={rosters.handleAcknowledgeNsfw}
+            onVote={handleVote}
+            onDragUpdate={(x, y, isDragging) => exit.setDragPhysics({ x, y, isDragging })}
+            onExitComplete={handleExitComplete}
+            onOpenPersona={() => overlays.setIsPersonaOpen(true)}
+            onReset={() => setIsResetConfirmOpen(true)}
+          />
+        </div>
+      </div>
 
       <HowToPlayModal
         isOpen={overlays.isHowToPlayOpen}

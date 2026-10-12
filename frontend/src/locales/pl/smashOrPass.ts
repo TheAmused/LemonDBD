@@ -416,7 +416,6 @@ export default {
     saveShort: 'Zapisz',
     create: 'Stwórz',
     publish: 'Publikuj',
-    backToHub: 'Smash or Pass',
     saving: 'Zapisywanie...',
     saveError: 'Coś poszło nie tak podczas zapisywania tej listy. Spróbuj ponownie.',
     validationNameRequired: 'Nadaj tej liście nazwę.',

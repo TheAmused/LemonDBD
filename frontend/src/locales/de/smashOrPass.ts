@@ -400,7 +400,6 @@ export default {
     saveShort: 'Speichern',
     create: 'Erstellen',
     publish: 'Veröffentlichen',
-    backToHub: 'Smash or Pass',
     saving: 'Speichern...',
     saveError: 'Beim Speichern dieser Liste ist etwas schiefgelaufen. Bitte versuche es erneut.',
     validationNameRequired: 'Gib dieser Liste einen Namen.',

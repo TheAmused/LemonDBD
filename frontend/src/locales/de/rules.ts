@@ -3,7 +3,6 @@ export default {
   pageTitle: "LemonDBD - Regeln",
   heading: "Regeln",
   tagline: "Kurz, fair und nur ein bisschen verflucht. Einmal lesen, dann ab zum Paletten-Looping.",
-  backToAbout: "Zurück zu Über uns",
   lastUpdatedLabel: "Zuletzt aktualisiert",
   lastUpdated: "10. Oktober 2026",
   translationNotice: "Falls die übersetzten Fassungen dieser Seite von der englischen abweichen, gilt die englische Fassung.",

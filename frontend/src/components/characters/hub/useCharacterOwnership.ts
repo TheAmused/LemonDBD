@@ -85,7 +85,8 @@ export function useCharacterOwnership({ locale, onLoginRequired, onVerificationR
 
   const handleToggleOwnershipMode = async () => {
     if (ownershipMode) {
-      setOwnershipMode(false);
+      // "Exit selection" is the only way out without saving, so it also throws the drafts away.
+      handleCancelOwnershipMode();
       return;
     }
     if (!isAuthenticated || !token || !user) {

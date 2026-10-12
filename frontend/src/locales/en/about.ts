@@ -38,5 +38,7 @@ export default {
     heading: "Contact us",
     text: "Questions, feedback or ideas? Reach us by email or on our Discord server.",
     discordLabel: "Join our Discord",
+    copyEmailLabel: "Copy email address",
+    emailCopied: "Copied!",
   },
 };

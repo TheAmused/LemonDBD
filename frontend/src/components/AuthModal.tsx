@@ -103,6 +103,8 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
     e.preventDefault();
     setError(null);
     setLoading(true);
+    // Each solved ALTCHA challenge is single-use: after a request goes out, fetch and solve a fresh one.
+    let requestSent = true;
 
     try {
       if (mode === 'forgot') {
@@ -131,6 +133,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
       } else {
         if (!acceptedLegal) {
           setLegalAttempted(true);
+          requestSent = false;
           return;
         }
         const res = await register(username, email, password, {
@@ -157,6 +160,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
       setError(message);
     } finally {
       setLoading(false);
+      if (requestSent) void refreshChallenge();
     }
   };
 
@@ -393,7 +397,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
             honeypotProps={honeypotProps}
           />
 
-          <Button type="submit" variant="primary" loading={loading} className="w-full mt-2">
+          <Button type="submit" variant="primary" loading={loading} disabled={!isAltchaVerified} className="w-full mt-2">
             {mode === 'login' ? (
               <>
                 <LogIn className="h-4 w-4" />

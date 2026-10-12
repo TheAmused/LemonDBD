@@ -3,7 +3,6 @@ export default {
   pageTitle: "LemonDBD - Terms of Service",
   heading: "Terms of Service",
   tagline: "The terms on which the LemonDBD website and our Discord server are provided.",
-  backToAbout: "Back to About us",
   lastUpdatedLabel: "Last updated",
   lastUpdated: "October 10, 2026",
   translationNotice: "If the translated versions of this page differ from the English one, the English version prevails.",

@@ -400,7 +400,6 @@ export default {
     saveShort: 'Guardar',
     create: 'Crear',
     publish: 'Publicar',
-    backToHub: 'Smash or Pass',
     saving: 'Guardando...',
     saveError: 'Algo salió mal al guardar esta lista. Inténtalo de nuevo.',
     validationNameRequired: 'Ponle un nombre a esta lista.',

@@ -212,7 +212,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
                   ? `0 0 ${35 + swipeProgress * 35}px rgba(113, 113, 122, ${0.4 + swipeProgress * 0.5})`
                   : '0 0 35px rgba(0, 0, 0, 0.85)',
             }}
-            className={`absolute inset-0 h-full w-full rounded-[32px] sm:rounded-[36px] overflow-hidden border-2 transition-colors duration-150 flex flex-col justify-between ${isSmashDrag
+            className={`absolute inset-0 h-full w-full rounded-3xl overflow-hidden border-2 transition-colors duration-150 flex flex-col justify-between ${isSmashDrag
                 ? 'border-accent-red bg-accent-red/10'
                 : isPassDrag
                   ? 'border-border-subtle bg-bg-primary'

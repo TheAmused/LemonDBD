@@ -400,7 +400,6 @@ export default {
     saveShort: 'Save',
     create: 'Create',
     publish: 'Publish',
-    backToHub: 'Smash or Pass',
     saving: 'Saving...',
     saveError: 'Something went wrong saving this roster. Please try again.',
     validationNameRequired: 'Give this roster a name.',

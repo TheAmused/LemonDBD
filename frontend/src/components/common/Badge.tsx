@@ -9,7 +9,7 @@ export type BadgeTone = 'neutral' | 'red' | 'amber' | 'green' | 'blue' | 'purple
 export type BadgeSize = 'xs' | 'sm' | 'md';
 
 const BADGE_TONES: Record<BadgeTone, string> = {
-  neutral: 'bg-bg-elevated text-text-secondary border-border-color',
+  neutral: 'bg-bg-elevated/70 text-text-secondary border-transparent',
   red: 'bg-accent-red/10 text-accent-red border-accent-red/30',
   amber: 'bg-accent-amber/10 text-accent-amber border-accent-amber/30',
   green: 'bg-accent-green/10 text-accent-green border-accent-green/30',
@@ -28,7 +28,7 @@ export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
   size?: BadgeSize;
   /** Uppercase mono label (default) or plain text. */
   plain?: boolean;
-  /** Fully rounded (default) or squarer. */
+  /** Fully rounded (default) or squarer. A neutral badge is always the flat, squarer kind: it is never clickable. */
   square?: boolean;
   icon?: React.ReactNode;
 }
@@ -47,7 +47,7 @@ export const Badge: React.FC<BadgeProps> = ({
     className={cn(
       'inline-flex max-w-full shrink-0 items-center gap-1 border font-black tracking-wider whitespace-nowrap',
       !plain && ' uppercase',
-      square ? 'rounded-md' : 'rounded-full',
+      square || tone === 'neutral' ? 'rounded-md' : 'rounded-full',
       BADGE_TONES[tone],
       BADGE_SIZES[size],
       className

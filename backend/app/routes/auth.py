@@ -5,6 +5,7 @@ from flask import Blueprint, current_app, g, jsonify, make_response, request, se
 from pydantic import ValidationError
 
 from app.core.config import demo_accounts_enabled
+from app.core.altcha_guard import require_altcha
 from app.core.limiter import limiter, validate_honeypot
 from app.core.security import (
     clear_session_cookie,
@@ -30,6 +31,7 @@ ownership_service = OwnershipService()
 
 @auth_bp.route("/register", methods=["POST"])
 @limiter.limit("10 per minute")
+@require_altcha
 def register():
     payload = request.get_json(silent=True) or {}
 
@@ -81,6 +83,7 @@ def session_response(user, token: str, message: str, status: int = 200, extra: d
 
 @auth_bp.route("/login", methods=["POST"])
 @limiter.limit("10 per minute")
+@require_altcha
 def login():
     data = request.get_json(silent=True) or {}
     username_or_email = data.get("username") or data.get("email") or data.get("username_or_email")
@@ -139,6 +142,7 @@ def resend_verification():
 
 @auth_bp.route("/forgot-password", methods=["POST"])
 @limiter.limit("5 per minute")
+@require_altcha
 def forgot_password():
     data = request.get_json(silent=True) or {}
     email = data.get("email")
@@ -340,7 +344,7 @@ def get_avatar_file(filename: str):
 
 @auth_bp.route("/altcha-challenge", methods=["GET"])
 def get_altcha_challenge():
-    secret_key = current_app.config.get("SECRET_KEY", "lemon-dev-secret-key")
+    secret_key = current_app.config.get("SECRET_KEY") or ""
     challenge = AltchaService.create_challenge(secret_key=secret_key)
     resp = make_response(jsonify(challenge), 200)
     resp.headers["Cache-Control"] = "no-store, no-cache, must-revalidate"

@@ -10,7 +10,7 @@ export default async function HistoryStreakPage({
 }) {
   const { locale } = await params;
   return (
-    <ChallengeModeGate mode="history" locale={locale} role="killer">
+    <ChallengeModeGate mode="history">
       <HistoryBoard locale={locale} />
     </ChallengeModeGate>
   );

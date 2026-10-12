@@ -10,7 +10,7 @@ export default async function PageStreakPage({
 }) {
   const { locale } = await params;
   return (
-    <ChallengeModeGate mode="page_streak" locale={locale} role="killer">
+    <ChallengeModeGate mode="page_streak">
       <PageStreakBoard locale={locale} />
     </ChallengeModeGate>
   );

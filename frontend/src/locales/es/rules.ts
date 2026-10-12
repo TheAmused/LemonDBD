@@ -3,7 +3,6 @@ export default {
   pageTitle: "LemonDBD - Normas",
   heading: "Normas",
   tagline: "Cortas, justas y solo un poco malditas. Léelas una vez y vuelve a marear a un asesino con un palet.",
-  backToAbout: "Volver a Sobre nosotros",
   lastUpdatedLabel: "Última actualización",
   lastUpdated: "10 de octubre de 2026",
   translationNotice: "Si las versiones traducidas de esta página difieren de la inglesa, prevalece la versión en inglés.",

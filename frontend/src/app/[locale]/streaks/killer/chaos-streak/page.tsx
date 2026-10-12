@@ -9,7 +9,7 @@ export default async function ChaosStreakPage({
 }) {
   const { locale } = await params;
   return (
-    <ChallengeModeGate mode="chaos" locale={locale} role="killer">
+    <ChallengeModeGate mode="chaos">
       <ChaosBoard />
     </ChallengeModeGate>
   );

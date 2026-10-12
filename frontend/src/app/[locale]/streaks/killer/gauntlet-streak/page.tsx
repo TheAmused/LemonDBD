@@ -14,7 +14,7 @@ export default async function KillerGauntletStreakPage({
   const { locale } = await params;
   const { mode } = await searchParams;
   return (
-    <ChallengeModeGate mode="gauntlet" locale={locale} role="killer">
+    <ChallengeModeGate mode="gauntlet">
       <GauntletBoard locale={locale} role="killer" gameMode={parseGauntletGameMode(mode)} />
     </ChallengeModeGate>
   );

@@ -1,7 +1,5 @@
 // frontend/src/locales/es/streaks.ts
 export default {
-  backToKillerStreaks: "Volver a rachas de asesino",
-  backToKillers: "Volver a asesinos",
   rules: "Reglas",
   cancel: "Cancelar",
   stats: "Estadísticas",

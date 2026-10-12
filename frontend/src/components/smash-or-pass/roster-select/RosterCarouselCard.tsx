@@ -79,7 +79,7 @@ export function RosterCarouselCard({
           if (isRosterEnabled) onCommit();
         }
       }}
-      className={`absolute w-[var(--card-w)] h-[var(--card-h)] rounded-[28px] sm:rounded-[36px] overflow-hidden cursor-pointer ${isCenter
+      className={`absolute w-[var(--card-w)] h-[var(--card-h)] rounded-3xl overflow-hidden cursor-pointer ${isCenter
         ? isRosterEnabled
           ? 'border-2 sm:border-[3px] border-accent-red'
           : 'border-2 border-border-color'
@@ -190,7 +190,7 @@ export function RosterCarouselCard({
 
       {isCenter && (
         <div
-          className={`absolute inset-0 rounded-[28px] sm:rounded-[36px] border-2 pointer-events-none ${isRosterEnabled ? 'border-accent-red/50' : 'border-border-color'
+          className={`absolute inset-0 rounded-3xl border-2 pointer-events-none ${isRosterEnabled ? 'border-accent-red/50' : 'border-border-color'
             }`}
           aria-hidden="true"
         />

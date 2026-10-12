@@ -5,7 +5,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ChevronDown, FileJson, LayoutList, Plus, RotateCcw, TriangleAlert } from 'lucide-react';
 import { EmptyState } from '@/components/common/EmptyState';
-import { Modal } from '@/components/common/Modal';
+import { ConfirmModal } from '@/components/common/ConfirmModal';
 import type { Dictionary } from '@/locales/types';
 import type { TierListDocument } from '@/types/tierList';
 import { usePersistentDrawer } from '@/hooks/usePersistentDrawer';
@@ -93,6 +93,7 @@ export function TierListHub({ locale }: TierListHubProps) {
       items: doc.items ?? [],
       placements: doc.placements,
       createdAt: Date.now(),
+      ...(doc.backgroundImage ? { backgroundImage: doc.backgroundImage } : {}),
     });
     if (!result.ok) setSaveError(result);
     router.push(`/${locale}/tier-lists/custom/${id}`);
@@ -297,36 +298,24 @@ export function TierListHub({ locale }: TierListHubProps) {
         </div>
       </section>
 
-      {listToDelete && (
-        <Modal
-          isOpen={true}
-          onClose={() => setListToDelete(null)}
-          title={t.deleteTier}
-          centerTitle
-          size="sm"
-          footer={
-            <div className="flex w-full justify-end gap-2">
-              <Button variant="secondary" onClick={() => setListToDelete(null)} className={TOUCH_BTN}>
-                {t.cancel}
-              </Button>
-              <Button
-                variant="primary"
-                onClick={() => {
-                  deleteCustomList(listToDelete.id);
-                  setListToDelete(null);
-                }}
-                className={TOUCH_BTN}
-              >
-                {t.deleteTier}
-              </Button>
-            </div>
+      <ConfirmModal
+        open={Boolean(listToDelete)}
+        onCancel={() => setListToDelete(null)}
+        title={t.deleteListTitle}
+        message={
+          listToDelete
+            ? `${listToDelete.title ? `"${listToDelete.title}": ` : ''}${t.deleteListMessage}`
+            : undefined
+        }
+        confirmLabel={t.deleteList}
+        cancelLabel={t.cancel}
+        onConfirm={() => {
+          if (listToDelete) {
+            deleteCustomList(listToDelete.id);
+            setListToDelete(null);
           }
-        >
-          <p className="text-sm text-text-secondary">
-            {formatMessage(t.creator.removeItemAria, { name: `"${listToDelete.title}"` })}?
-          </p>
-        </Modal>
-      )}
+        }}
+      />
 
       <TierListImportModal
         open={importOpen}

@@ -7,11 +7,11 @@ import { Check, ClipboardPaste, Gamepad2, ImagePlus, Plus, Search, Upload } from
 import { useAuth } from '@/context/AuthContext';
 import { useTierListItems } from '@/hooks/useTierListItems';
 import type { TierListKind } from '@/types/tierList';
-import type { Dictionary } from '@/locales/types';
 import { cn } from '@/utils/cn';
 import { normalizeSearchText } from '@/utils/perkUtils';
 import { sanitizeImageUrl } from '@/utils/tierLists/codec';
-import { nameFromFileName, nameFromUrl, parseLinkLines } from '@/utils/tierLists/creator';
+import { TIER_LIST_LIMITS } from '@/utils/tierLists/constants';
+import { nameFromFileName, nameFromUrl } from '@/utils/tierLists/creator';
 import { fileToTileImage } from '@/utils/tierLists/imageFiles';
 import { TierItemTile } from '../TierItemTile';
 import { LABEL, TOUCH_BTN, TOUCH_FIELD } from '../styles';
@@ -221,6 +221,7 @@ function LinksSource({ onAdd }: { onAdd: (items: IncomingItem[]) => void; }) {
           <Input
             type="text"
             value={itemName}
+            maxLength={TIER_LIST_LIMITS.maxItemName}
             onChange={(e) => {
               setItemName(e.target.value);
               if (error) setError(null);

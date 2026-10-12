@@ -24,6 +24,7 @@ import {
 import { ConfirmModal } from '@/components/common/ConfirmModal';
 import type { TierDefinition, TierItem, TierListDocument, TierPlacements } from '@/types/tierList';
 import { usePersistentString } from '@/hooks/usePersistentString';
+import { useFinePointer } from '@/hooks/useFinePointer';
 import {
   type BoardContainers,
   type LadderState,
@@ -36,12 +37,13 @@ import {
   updateTier,
 } from '@/utils/tierLists/board';
 import { TIER_COLOR_TOKENS, TIER_LIST_LIMITS } from '@/utils/tierLists/constants';
-import { BOARD_SCALE_STEPS, type BoardScale } from '@/utils/tierLists/fit';
+import { BOARD_SCALE_STEPS, isBoardScale, type BoardScale, type BoardScaleStep } from '@/utils/tierLists/fit';
 import type { SaveResult } from '@/utils/tierLists/storage';
 import { TierEditModal } from './TierEditModal';
 import { TierListBoard } from './TierListBoard';
 import { TierListExportModal } from './TierListExportModal';
 import { type ImportTarget, TierListImportModal } from './TierListImportModal';
+import { TierListScaleControl } from './TierListScaleControl';
 import type { TierTileShape } from './TierItemTile';
 import { TOUCH_BTN } from './styles';
 import { Button, BUTTON_BASE, BUTTON_SIZES, BUTTON_VARIANTS } from '@/components/common/Button';
@@ -134,27 +136,22 @@ export function TierListEditor(props: TierListEditorProps) {
   const [addingTier, setAddingTier] = useState<boolean>(false);
   const [selectedKey, setSelectedKey] = useState<string | null>(null);
   const [saveError, setSaveError] = useState<'quota' | 'unavailable' | null>(null);
-  const [scale, setScale] = useState<BoardScale>(100);
+  // Device-wide, like the names preference; stored as '40'..'130' or 'fit'.
+  const [scalePref, setScalePref] = usePersistentString<string>(
+    'lemondbd_tier_lists_scale',
+    '100',
+    (v): v is string => isBoardScale(v)
+  );
+  const scale: BoardScale = scalePref === 'fit' ? 'fit' : (Number(scalePref) as BoardScaleStep);
+  const setScale = useCallback((next: BoardScale) => setScalePref(String(next)), [setScalePref]);
+  // Mouse users get the name from the tile tooltip, so the toggle only exists on touch devices.
+  const finePointer = useFinePointer();
   const [showNamesPref, setShowNamesPref] = usePersistentString<'on' | 'off'>(
     `lemondbd_tier_lists_names_${preferenceKey}`,
     defaultShowNames ? 'on' : 'off',
     isOnOff
   );
-  const showNames = showNamesPref === 'on';
-
-  const numericScale = scale === 'fit' ? 100 : scale;
-  const scaleIndex = BOARD_SCALE_STEPS.indexOf(numericScale);
-  const canZoomOut = scale === 'fit' || scaleIndex > 0;
-  const canZoomIn = scale === 'fit' || (scaleIndex >= 0 && scaleIndex < BOARD_SCALE_STEPS.length - 1);
-  const stepScale = useCallback(
-    (dir: -1 | 1) => {
-      const current = scale === 'fit' ? 100 : scale;
-      const idx = BOARD_SCALE_STEPS.indexOf(current);
-      const nextIdx = Math.max(0, Math.min(BOARD_SCALE_STEPS.length - 1, (idx < 0 ? 4 : idx) + dir));
-      setScale(BOARD_SCALE_STEPS[nextIdx]);
-    },
-    [scale]
-  );
+  const showNames = showNamesPref === 'on' && !finePointer;
 
   const board = useMemo(() => buildBoard(items, tiers, placements), [items, tiers, placements]);
   const visibleKeys = useMemo(() => new Set(items.map((i) => i.key)), [items]);
@@ -258,49 +255,7 @@ export function TierListEditor(props: TierListEditorProps) {
           ariaLabel={t.toolbarAria}
           className="min-w-[14rem] rounded-2xl border border-border-color bg-bg-surface p-1.5 shadow-xl"
         >
-          <div className="flex items-center justify-between gap-1 rounded-xl bg-bg-elevated/60 px-2 py-1.5 mb-1">
-            <button
-              type="button"
-              disabled={!canZoomOut}
-              onClick={() => stepScale(-1)}
-              aria-label={t.scaleZoomOut}
-              className="flex h-8 w-8 items-center justify-center rounded-lg text-text-secondary hover:bg-bg-surface hover:text-text-primary disabled:opacity-40 cursor-pointer"
-            >
-              <Minus className="h-4 w-4" aria-hidden="true" />
-            </button>
-            <button
-              type="button"
-              onClick={() => setScale(100)}
-              aria-label={t.scaleReset}
-              className="min-w-[3.25rem] px-1.5 h-8 rounded-lg type-label-xs text-text-primary hover:bg-bg-surface cursor-pointer tabular-nums"
-            >
-              {scale === 'fit' ? t.scaleFit : `${scale}%`}
-            </button>
-            <button
-              type="button"
-              disabled={!canZoomIn}
-              onClick={() => stepScale(1)}
-              aria-label={t.scaleZoomIn}
-              className="flex h-8 w-8 items-center justify-center rounded-lg text-text-secondary hover:bg-bg-surface hover:text-text-primary disabled:opacity-40 cursor-pointer"
-            >
-              <Plus className="h-4 w-4" aria-hidden="true" />
-            </button>
-            <button
-              type="button"
-              onClick={() => setScale(scale === 'fit' ? 100 : 'fit')}
-              aria-pressed={scale === 'fit'}
-              aria-label={t.scaleFitHint}
-              className={cn(
-                'inline-flex h-8 items-center gap-1 rounded-lg px-2.5 type-label-xs cursor-pointer transition-colors',
-                scale === 'fit'
-                  ? 'bg-accent-amber/20 text-accent-amber'
-                  : 'text-text-secondary hover:bg-bg-surface hover:text-text-primary'
-              )}
-            >
-              <Maximize2 className="h-3.5 w-3.5" aria-hidden="true" />
-              <span>{t.scaleFit}</span>
-            </button>
-          </div>
+          <TierListScaleControl scale={scale} onScaleChange={setScale} variant="menu" />
           {canEditTiers && (
             <button
               type="button"
@@ -331,10 +286,12 @@ export function TierListEditor(props: TierListEditorProps) {
               {savingOfficial ? t.creator.publishing : t.save}
             </button>
           )}
-          <button type="button" role="menuitem" className={MENU_ITEM} onClick={() => { setMenuOpen(false); setShowNamesPref(showNames ? 'off' : 'on'); }}>
-            {showNames ? <EyeOff className="h-4 w-4" aria-hidden="true" /> : <Eye className="h-4 w-4" aria-hidden="true" />}
-            {showNames ? t.hideNames : t.showNames}
-          </button>
+          {!finePointer && (
+            <button type="button" role="menuitem" className={MENU_ITEM} onClick={() => { setMenuOpen(false); setShowNamesPref(showNames ? 'off' : 'on'); }}>
+              {showNames ? <EyeOff className="h-4 w-4" aria-hidden="true" /> : <Eye className="h-4 w-4" aria-hidden="true" />}
+              {showNames ? t.hideNames : t.showNames}
+            </button>
+          )}
           <button type="button" role="menuitem" className={MENU_ITEM} onClick={() => { setMenuOpen(false); setDialog('import'); }}>
             <Upload className="h-4 w-4" aria-hidden="true" />
             {t.import}
@@ -366,54 +323,7 @@ export function TierListEditor(props: TierListEditorProps) {
         <div className="grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-2">
           <div className="flex items-center justify-start gap-2 shrink-0 justify-self-start">
             {badges}
-            <div className="inline-flex items-center rounded-lg border border-border-color bg-bg-surface p-0.5 shadow-2xs">
-              <button
-                type="button"
-                disabled={!canZoomOut}
-                onClick={() => stepScale(-1)}
-                aria-label={t.scaleZoomOut}
-                {...tip(t.scaleZoomOut, undefined, 'action')}
-                className="flex h-7 w-7 items-center justify-center rounded-md text-text-secondary hover:bg-bg-elevated hover:text-text-primary disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer transition-colors"
-              >
-                <Minus className="h-3.5 w-3.5" aria-hidden="true" />
-              </button>
-              <button
-                type="button"
-                onClick={() => setScale(100)}
-                aria-label={t.scaleReset}
-                {...tip(t.scaleReset, undefined, 'action')}
-                className="min-w-[3.25rem] px-1.5 h-7 rounded-md type-label-xs text-text-primary hover:bg-bg-elevated cursor-pointer transition-colors tabular-nums"
-              >
-                {scale === 'fit' ? t.scaleFit : `${scale}%`}
-              </button>
-              <button
-                type="button"
-                disabled={!canZoomIn}
-                onClick={() => stepScale(1)}
-                aria-label={t.scaleZoomIn}
-                {...tip(t.scaleZoomIn, undefined, 'action')}
-                className="flex h-7 w-7 items-center justify-center rounded-md text-text-secondary hover:bg-bg-elevated hover:text-text-primary disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer transition-colors"
-              >
-                <Plus className="h-3.5 w-3.5" aria-hidden="true" />
-              </button>
-              <div className="mx-0.5 h-4 w-px bg-border-color" aria-hidden="true" />
-              <button
-                type="button"
-                onClick={() => setScale(scale === 'fit' ? 100 : 'fit')}
-                aria-pressed={scale === 'fit'}
-                aria-label={t.scaleFitHint}
-                {...tip(t.scaleFitHint, undefined, 'action')}
-                className={cn(
-                  'inline-flex h-7 items-center gap-1 rounded-md px-2 type-label-xs cursor-pointer transition-colors',
-                  scale === 'fit'
-                    ? 'bg-accent-amber/20 text-accent-amber'
-                    : 'text-text-secondary hover:bg-bg-elevated hover:text-text-primary'
-                )}
-              >
-                <Maximize2 className="h-3 w-3" aria-hidden="true" />
-                <span>{t.scaleFit}</span>
-              </button>
-            </div>
+            <TierListScaleControl scale={scale} onScaleChange={setScale} />
           </div>
 
           <div className="min-w-0 flex flex-col items-center justify-center text-center px-2">
@@ -458,18 +368,20 @@ export function TierListEditor(props: TierListEditorProps) {
                 </span>
               </Button>
             )}
-            <Button
-              variant="secondary"
-              size="sm"
-              onClick={() => setShowNamesPref(showNames ? 'off' : 'on')}
-              aria-pressed={showNames}
-              aria-label={showNames ? t.hideNames : t.showNames}
-              {...tip(showNames ? t.hideNames : t.showNames, undefined, 'action')}
-              className={TOOLBAR_BTN}
-            >
-              {showNames ? <EyeOff className="h-3.5 w-3.5" aria-hidden="true" /> : <Eye className="h-3.5 w-3.5" aria-hidden="true" />}
-              <span className={secondaryLabelClass}>{showNames ? t.hideNames : t.showNames}</span>
-            </Button>
+            {!finePointer && (
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => setShowNamesPref(showNames ? 'off' : 'on')}
+                aria-pressed={showNames}
+                aria-label={showNames ? t.hideNames : t.showNames}
+                {...tip(showNames ? t.hideNames : t.showNames, undefined, 'action')}
+                className={TOOLBAR_BTN}
+              >
+                {showNames ? <EyeOff className="h-3.5 w-3.5" aria-hidden="true" /> : <Eye className="h-3.5 w-3.5" aria-hidden="true" />}
+                <span className={secondaryLabelClass}>{showNames ? t.hideNames : t.showNames}</span>
+              </Button>
+            )}
             <Button
               variant="secondary"
               size="sm"

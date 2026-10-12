@@ -9,11 +9,11 @@ import { useAuth } from '@/context/AuthContext';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { useTierListStore } from '@/hooks/useTierListStore';
 import { useTierListTemplate } from '@/hooks/useTierListTemplates';
-import { updateOfficialTierList } from '@/services/tierListApi';
-import { apiUrl, authFetch } from '@/utils/api';
+import { createOfficialTierList, updateOfficialTierList } from '@/services/tierListApi';
+import { apiUrl, authFetch, staticUrl } from '@/utils/api';
 import { cn } from '@/utils/cn';
 import { resolveTiers } from '@/utils/tierLists/board';
-import { sanitizeImageUrl } from '@/utils/tierLists/codec';
+import { normalizePlacements, sanitizeImageUrl } from '@/utils/tierLists/codec';
 import { TIER_LIST_LIMITS } from '@/utils/tierLists/constants';
 import {
   type FeelingLabelKey,
@@ -152,7 +152,11 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
       items: (officialTemplate.custom_items ?? []).map((item) => ({
         id: item.id,
         name: item.name,
-        ...(item.image_url ? { image: item.image_url } : item.image_local_path ? { image: item.image_local_path } : {}),
+        ...(item.image_url
+          ? { image: item.image_url }
+          : item.image_local_path
+          ? { image: item.image_local_path.startsWith('/static/') ? item.image_local_path : staticUrl(item.image_local_path) }
+          : {}),
       })),
       preset: null,
       backgroundImage: officialTemplate.cover_image_url ?? '',
@@ -188,7 +192,7 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
   if (
     (editId && storeHydrated && !editingList) ||
     (officialSlug && !authLoading && !isAdmin) ||
-    (officialSlug && !officialLoading && !officialTemplate)
+    (officialSlug && !officialLoading && (!officialTemplate || officialTemplate.kind !== 'custom'))
   ) {
     return (
       <div className="relative z-10 flex flex-col gap-2">
@@ -242,12 +246,18 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
     }
 
     if (editId && editingList) {
-      // Editing in place: keep the id, its rankings and its creation date --
-      // only the fields the creator actually edits are replaced.
+      // Editing in place: normalize placements against current tiers and items
+      // so orphaned keys do not inflate the ranked count.
+      const itemIds = new Set(payload.items.map((i) => i.id));
+      const normalizedPlacements = normalizePlacements(
+        editingList.placements,
+        payload.tiers.map((t) => t.id),
+        (k) => itemIds.has(k)
+      ).placements;
       const result = saveCustomList({
         id: editId,
         ...payload,
-        placements: editingList.placements,
+        placements: normalizedPlacements,
         createdAt: editingList.createdAt,
       });
       if (!result.ok) {
@@ -262,15 +272,11 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
       setPublishError(null);
       setPublishing(true);
       try {
-        const res = await authFetch(apiUrl('/api/v1/tier-lists'), {
-          method: 'POST',
-          token,
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
+        const created = await createOfficialTierList(
+          {
             title: payload.title,
             description: payload.description,
+            cover_image_url: safeBackground ?? null,
             tiers: payload.tiers.map((tier) => ({
               id: tier.id,
               label: tier.label,
@@ -282,24 +288,18 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
               name: i.name,
               ...(i.image ? { image_url: i.image } : {}),
             })),
-            ...(safeBackground ? { cover_image_url: safeBackground } : {}),
-          }),
-        });
-        if (!res.ok) {
-          const errorData: { error?: string } = await res.json().catch(() => ({}));
-          setPublishError(errorData.error || c.publishFailed);
-          setPublishing(false);
-          return;
-        }
-        const body: { data: { slug: string } } = await res.json();
+          },
+          locale,
+          token
+        );
         try {
           localStorage.removeItem(DRAFT_KEY);
         } catch {
           // ignore
         }
-        router.push(`/${locale}/tier-lists/${body.data.slug}`);
-      } catch {
-        setPublishError(c.publishFailed);
+        router.push(`/${locale}/tier-lists/${created.slug}`);
+      } catch (err) {
+        setPublishError(err instanceof Error ? err.message : c.publishFailed);
         setPublishing(false);
       }
       return;
@@ -457,7 +457,12 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
               onUpdateItem={(id, patch) =>
                 setDraft((d) => ({
                   ...d,
-                  items: d.items.map((i) => (i.id === id ? { ...i, ...patch } : i)),
+                  items: d.items.map((i) => {
+                    if (i.id !== id) return i;
+                    const nextItem: typeof i = { id: i.id, name: patch.name };
+                    if (patch.image) nextItem.image = patch.image;
+                    return nextItem;
+                  }),
                 }))
               }
               onRemove={(id) => setDraft((d) => ({ ...d, items: d.items.filter((i) => i.id !== id) }))}

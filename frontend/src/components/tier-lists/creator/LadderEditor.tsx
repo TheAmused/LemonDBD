@@ -1,7 +1,7 @@
 'use client';
 // frontend/src/components/tier-lists/creator/LadderEditor.tsx
 
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Check, GripVertical, ListOrdered, Plus, X } from 'lucide-react';
 import type { TierDefinition } from '@/types/tierList';
 import { cn } from '@/utils/cn';
@@ -44,6 +44,13 @@ export function LadderEditor({ tiers, onChange, onPreset, activePreset }: Ladder
   const [draggingId, setDraggingId] = useState<string | null>(null);
   const tiersRef = useRef(tiers);
   tiersRef.current = tiers;
+  const dragCleanupRef = useRef<(() => void) | null>(null);
+
+  useEffect(() => {
+    return () => {
+      dragCleanupRef.current?.();
+    };
+  }, []);
 
   const update = (id: string, patch: Partial<TierDefinition>) =>
     onChange(tiers.map((tier) => (tier.id === id ? { ...tier, ...patch } : tier)));
@@ -56,7 +63,7 @@ export function LadderEditor({ tiers, onChange, onPreset, activePreset }: Ladder
       return;
     }
     const safe = sanitizeImageUrl(trimmed);
-    if (safe) update(tier.id, { backgroundImage: safe });
+    update(tier.id, { backgroundImage: safe ?? undefined });
   };
 
   const moveById = (fromId: string, toId: string) => {
@@ -75,6 +82,7 @@ export function LadderEditor({ tiers, onChange, onPreset, activePreset }: Ladder
   const startPointerDrag = (tierId: string, e: React.PointerEvent<HTMLButtonElement>) => {
     if (e.button !== 0 && e.pointerType === 'mouse') return;
     e.preventDefault();
+    dragCleanupRef.current?.();
     setDraggingId(tierId);
 
     const onMove = (ev: PointerEvent) => {
@@ -90,8 +98,10 @@ export function LadderEditor({ tiers, onChange, onPreset, activePreset }: Ladder
       window.removeEventListener('pointermove', onMove);
       window.removeEventListener('pointerup', onUp);
       window.removeEventListener('pointercancel', onUp);
+      dragCleanupRef.current = null;
     };
 
+    dragCleanupRef.current = onUp;
     window.addEventListener('pointermove', onMove);
     window.addEventListener('pointerup', onUp);
     window.addEventListener('pointercancel', onUp);
@@ -167,9 +177,6 @@ export function LadderEditor({ tiers, onChange, onPreset, activePreset }: Ladder
                 {/* Drag Handle */}
                 <button
                   type="button"
-                  draggable
-                  onDragStart={() => setDraggingId(tier.id)}
-                  onDragEnd={() => setDraggingId(null)}
                   onPointerDown={(e) => startPointerDrag(tier.id, e)}
                   aria-label={formatMessage(t.tierAria, { label: tier.label })}
                   className="pointer-coarse:min-h-11 pointer-coarse:min-w-11 flex w-9 sm:w-10 shrink-0 items-center justify-center border-r border-border-color/80 text-text-muted hover:text-text-primary hover:bg-bg-elevated cursor-grab active:cursor-grabbing touch-none select-none transition-colors"

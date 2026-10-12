@@ -140,7 +140,7 @@ class TierList(Base):
                 raise ValueError(f"Tier ids must be present and unique: {tier!r}")
             seen.add(tier_id)
             color = tier.get("color")
-            if color is not None and color not in TIER_COLOR_TOKENS and not HEX_COLOR_PATTERN.match(str(color)):
+            if not color or (color not in TIER_COLOR_TOKENS and not HEX_COLOR_PATTERN.match(str(color))):
                 raise ValueError(f"Tier color must be a token or #rrggbb: {color!r}")
         return value
 

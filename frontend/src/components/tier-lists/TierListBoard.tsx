@@ -8,6 +8,7 @@ import {
   KeyboardSensor,
   MeasuringStrategy,
   MouseSensor,
+  closestCenter,
   closestCorners,
   pointerWithin,
   useSensor,
@@ -19,9 +20,8 @@ import {
   type DragOverEvent,
   type DragStartEvent,
 } from '@dnd-kit/core';
-import { arrayMove, sortableKeyboardCoordinates } from '@dnd-kit/sortable';
+import { SortableContext, arrayMove, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import type { TierDefinition, TierItem } from '@/types/tierList';
-import type { Dictionary } from '@/locales/types';
 import { type BoardContainers, findContainer, moveItem } from '@/utils/tierLists/board';
 import { POOL_CONTAINER_ID } from '@/utils/tierLists/constants';
 import { TierItemPreviewModal } from './TierItemPreviewModal';
@@ -29,8 +29,11 @@ import { TierItemTile, type TierTileShape } from './TierItemTile';
 import { TierPool } from './TierPool';
 import { SidewaysPointerSensor } from './touchSensors';
 import { TierRow } from './TierRow';
-import { parseContainerDndId, parseItemDndId } from './dndIds';
+import { parseContainerDndId, parseItemDndId, parseTierDndId, tierDndId } from './dndIds';
 import { formatMessage } from '@/utils/i18nFormat';
+import { cn } from '@/utils/cn';
+import { useBoardFit } from './useBoardFit';
+import type { BoardScale } from '@/utils/tierLists/fit';
 import { useDictionary } from "@/context/DictionaryContext";
 
 interface TierListBoardProps {
@@ -39,11 +42,14 @@ interface TierListBoardProps {
   board: BoardContainers;
   /** Called once per completed move -- a drop, or a tap-to-move -- never mid-drag. */
   onBoardChange: (board: BoardContainers) => void;
+  onReorderTiers?: (fromId: string, toId: string) => void;
   onEditTier: (tierId: string) => void;
+  canEditTiers?: boolean;
   selectedKey: string | null;
   onSelectedKeyChange: (key: string | null) => void;
   shape: TierTileShape;
   showNames: boolean;
+  scale?: BoardScale;
   poolEmptyLabel: string;
 }
 
@@ -58,15 +64,21 @@ interface TierListBoardProps {
  */
 function createCollisionDetection(lastOver: { current: UniqueIdentifier | null }): CollisionDetection {
   return (args) => {
-    const hits = args.pointerCoordinates ? pointerWithin(args) : [];
+    if (parseTierDndId(args.active.id) !== null) {
+      const tierContainers = args.droppableContainers.filter((c) => parseTierDndId(c.id) !== null);
+      return closestCenter({ ...args, droppableContainers: tierContainers });
+    }
+    const itemContainers = args.droppableContainers.filter((c) => parseTierDndId(c.id) === null);
+    const itemArgs = { ...args, droppableContainers: itemContainers };
+    const hits = itemArgs.pointerCoordinates ? pointerWithin(itemArgs) : [];
     if (hits.length) {
       const itemHits = hits.filter((hit) => parseItemDndId(hit.id) !== null);
       const result = itemHits.length ? itemHits : hits;
       lastOver.current = result[0].id;
       return result;
     }
-    if (args.pointerCoordinates) return lastOver.current === null ? [] : [{ id: lastOver.current }];
-    return closestCorners(args);
+    if (itemArgs.pointerCoordinates) return lastOver.current === null ? [] : [{ id: lastOver.current }];
+    return closestCorners(itemArgs);
   };
 }
 
@@ -85,11 +97,14 @@ export function TierListBoard({
       tiers,
       board,
       onBoardChange,
+      onReorderTiers,
       onEditTier,
+      canEditTiers = true,
       selectedKey,
       onSelectedKeyChange,
       shape,
       showNames,
+      scale = 100,
       poolEmptyLabel,
     }: TierListBoardProps) {
   const dict = useDictionary();
@@ -114,6 +129,35 @@ export function TierListBoard({
     setDragBoardState(next);
   }, []);
   const shown = dragBoard ?? board;
+
+  // Tile size follows the room: measured from the committed board (not `shown`), so a drag never resizes anything.
+  const [poolCollapsed, setPoolCollapsed] = useState<boolean>(false);
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const tierCounts = useMemo(() => tiers.map((tier) => board[tier.id]?.length ?? 0), [tiers, board]);
+  const fit = useBoardFit(wrapRef, {
+    tierCounts,
+    poolCount: board[POOL_CONTAINER_ID]?.length ?? 0,
+    shape,
+    showNames,
+    poolCollapsed,
+    scale,
+  });
+  const namesShown = showNames && !fit?.namesHidden;
+  const fitStyle = fit
+    ? ({
+        '--tile': `${fit.tile}px`,
+        '--tile-w': `${fit.tileWidth}px`,
+        '--tile-gap': `${fit.gap}px`,
+        '--tile-pad': `${fit.pad}px`,
+        '--tile-fs': `${fit.nameFont}px`,
+        '--row-gap': `${fit.rowGap}px`,
+        '--row-min': `${fit.rowMin}px`,
+        '--badge-w': `${fit.badgeWidth}px`,
+        '--badge-fs': `${fit.badgeFont}px`,
+        '--pool-min-total': `${fit.poolMinTotal}px`,
+        '--pool-max-total': `${fit.poolMaxTotal}px`,
+      } as React.CSSProperties)
+    : undefined;
 
   const sensors = useSensors(
     // A few pixels of travel before a mouse drag starts, so a click selects.
@@ -224,6 +268,16 @@ export function TierListBoard({
 
   const handleDragEnd = useCallback(
     ({ active, over }: DragEndEvent) => {
+      const fromTier = parseTierDndId(active.id);
+      if (fromTier) {
+        const toTier = over ? parseTierDndId(over.id) : null;
+        finishDrag();
+        if (toTier && fromTier !== toTier && onReorderTiers) {
+          onReorderTiers(fromTier, toTier);
+        }
+        return;
+      }
+
       const key = parseItemDndId(active.id);
       const current = dragBoardRef.current;
       const start = startBoard.current;
@@ -244,7 +298,7 @@ export function TierListBoard({
       }
       if (!sameBoard(next, start)) onBoardChange(next);
     },
-    [finishDrag, hopTo, onBoardChange]
+    [finishDrag, hopTo, onBoardChange, onReorderTiers]
   );
 
   const handleSelect = useCallback(
@@ -278,42 +332,57 @@ export function TierListBoard({
       onDragCancel={finishDrag}
       accessibility={{ announcements, screenReaderInstructions: { draggable: t.dnd.instructions } }}
     >
-      {/* The page never scrolls (short landscape screens excepted). The rows take the height they need and scroll in their own area once they would overflow; the pool header sits right under them. The rows' cap always leaves room for the OPEN pool, so collapsing or expanding the pool never moves anything above or at its header. */}
-      <div className="flex flex-col w-full flex-1 min-h-0 gap-3 sm:gap-4 [--pool-h:min(50dvh,30rem)] sm:[--pool-h:min(40dvh,26rem)] [--pool-head:6.5rem] sm:[--pool-head:4rem]">
-        <div className="flex flex-col gap-2 w-full min-h-0 flex-initial overflow-y-auto overscroll-contain pr-1 [&>*]:shrink-0 max-h-[calc(100%-var(--pool-h)-1rem)] [@media(max-height:559px)]:max-h-none [@media(max-height:559px)]:overflow-visible">
-          {tiers.map((tier) => (
-            <TierRow
-              key={tier.id}
-              tier={tier}
-              keys={shown[tier.id] ?? []}
-              itemsByKey={itemsByKey}
-              shape={shape}
-              showNames={showNames}
-              selectedKey={selectedKey}
-              onSelect={handleSelect}
-              onPreview={handlePreview}
-              onMoveSelectedHere={handleMoveSelectedHere}
-              onEdit={onEditTier}
-            />
-          ))}
+      <div
+        ref={wrapRef}
+        data-fit={fit ? '' : undefined}
+        data-fit-mode={fit?.fitMode ? '' : undefined}
+        data-scroll={fit?.pageScroll ? '' : undefined}
+        style={fitStyle}
+        className="group/board relative flex flex-col w-full gap-3"
+      >
+        <div
+          className={cn(
+            'flex flex-col gap-2 w-full group-data-[fit]/board:gap-(--row-gap)! shrink-0'
+          )}
+        >
+          <SortableContext items={tiers.map((tier) => tierDndId(tier.id))} strategy={verticalListSortingStrategy}>
+            {tiers.map((tier) => (
+              <TierRow
+                key={tier.id}
+                tier={tier}
+                keys={shown[tier.id] ?? []}
+                itemsByKey={itemsByKey}
+                shape={shape}
+                showNames={namesShown}
+                selectedKey={selectedKey}
+                onSelect={handleSelect}
+                onPreview={handlePreview}
+                onMoveSelectedHere={handleMoveSelectedHere}
+                onEdit={onEditTier}
+                canEdit={canEditTiers}
+              />
+            ))}
+          </SortableContext>
         </div>
 
         <TierPool
           keys={shown[POOL_CONTAINER_ID] ?? []}
           itemsByKey={itemsByKey}
           shape={shape}
-          showNames={showNames}
+          showNames={namesShown}
           selectedKey={selectedKey}
           onSelect={handleSelect}
           onPreview={handlePreview}
           onMoveSelectedHere={handleMoveSelectedHere}
           emptyLabel={poolEmptyLabel}
+          collapsed={poolCollapsed}
+          onCollapsedChange={setPoolCollapsed}
         />
-      </div>
 
-      <DragOverlay dropAnimation={{ duration: 180, easing: 'cubic-bezier(0.2, 0, 0, 1)' }}>
-        {activeItem ? <TierItemTile item={activeItem} shape={shape} showName={showNames} overlay /> : null}
-      </DragOverlay>
+        <DragOverlay dropAnimation={{ duration: 180, easing: 'cubic-bezier(0.2, 0, 0, 1)' }}>
+          {activeItem ? <TierItemTile item={activeItem} shape={shape} showName={namesShown} overlay /> : null}
+        </DragOverlay>
+      </div>
 
       <TierItemPreviewModal item={previewKey ? itemsByKey.get(previewKey) ?? null : null} onClose={closePreview} />
     </DndContext>

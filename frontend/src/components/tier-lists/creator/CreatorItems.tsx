@@ -29,15 +29,20 @@ export function CreatorItems({ items, onRename, onUpdateItem, onRemove, onClear 
 
   return (
     <div className="flex flex-col gap-3">
-      <div className="flex items-center justify-between gap-2 w-full">
-        <div className="w-20 hidden sm:block pointer-events-none" aria-hidden="true" />
-        <h3 className="flex-1 text-center text-xs sm:text-sm font-black uppercase tracking-wider text-text-secondary">
+      <div className="flex flex-wrap items-center justify-between gap-2 w-full sm:grid sm:grid-cols-[1fr_auto_1fr]">
+        <div className="hidden sm:block pointer-events-none" aria-hidden="true" />
+        <h3 className="text-center text-xs sm:text-sm font-black uppercase tracking-wider text-text-secondary">
           {formatMessage(c.itemsHeading, { count: items.length, max: TIER_LIST_LIMITS.maxItems })}
         </h3>
-        <div className="w-20 flex justify-end">
+        <div className="flex justify-end">
           {items.length > 0 && (
-            <Button variant="soft" onClick={onClear} className={TOUCH_BTN}>
-              <Trash2 className="h-4 w-4" aria-hidden="true" />
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={onClear}
+              leftIcon={<Trash2 className="h-3.5 w-3.5 text-accent-red" aria-hidden="true" />}
+              className="min-h-[36px] shrink-0 whitespace-nowrap rounded-lg px-3 hover:border-accent-red/50 hover:text-accent-red"
+            >
               {c.removeAll}
             </Button>
           )}

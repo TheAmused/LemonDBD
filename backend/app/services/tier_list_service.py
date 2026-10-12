@@ -130,6 +130,92 @@ def create_tier_list(
     return row
 
 
+_UNSET: Any = object()
+
+
+def update_tier_list(
+    slug: str,
+    *,
+    title: str | None = _UNSET,
+    description: str | None = _UNSET,
+    cover_image_url: str | None = _UNSET,
+    tiers: list[dict[str, Any]] | None = _UNSET,
+    custom_items: list[dict[str, Any]] | None = _UNSET,
+    default_placements: dict[str, list[str]] | None = _UNSET,
+) -> TierList | None:
+    """Updates an active official tier list in place and rewrites the seed file
+    so future reseeds retain the admin's edits.
+    """
+    normalized = (slug or "").strip().lower()
+    if not normalized:
+        return None
+    row = db.session.scalar(
+        select(TierList).where(TierList.slug == normalized, TierList.is_active.is_(True))
+    )
+    if row is None:
+        return None
+
+    if title is not _UNSET and title is not None:
+        row.title = title.strip()
+        if isinstance(row.translations, dict):
+            row.translations = {
+                lang: {k: v for k, v in entry.items() if k != "title"} if isinstance(entry, dict) else entry
+                for lang, entry in row.translations.items()
+            }
+    if description is not _UNSET and description is not None:
+        row.description = description.strip()
+        if isinstance(row.translations, dict):
+            row.translations = {
+                lang: {k: v for k, v in entry.items() if k != "description"} if isinstance(entry, dict) else entry
+                for lang, entry in row.translations.items()
+            }
+    if cover_image_url is not _UNSET:
+        row.cover_image_url = cover_image_url
+    if tiers is not _UNSET and tiers is not None:
+        row.tiers = tiers
+        if isinstance(row.translations, dict):
+            row.translations = {
+                lang: {k: v for k, v in entry.items() if k != "tiers"} if isinstance(entry, dict) else entry
+                for lang, entry in row.translations.items()
+            }
+    if custom_items is not _UNSET and custom_items is not None:
+        if row.kind != "custom":
+            raise ValueError(f"Tier list {row.slug!r} ranks {row.kind!r} and cannot carry custom_items")
+        row.custom_items = custom_items
+        if isinstance(row.translations, dict):
+            row.translations = {
+                lang: {k: v for k, v in entry.items() if k != "items"} if isinstance(entry, dict) else entry
+                for lang, entry in row.translations.items()
+            }
+
+    if default_placements is not _UNSET:
+        row.default_placements = default_placements
+
+    if row.default_placements:
+        tier_ids = {str(t.get("id")) for t in (row.tiers or [])} or {"s", "a", "b", "c", "d", "f"}
+        allowed_items = (
+            {str(i.get("id")) for i in (row.custom_items or [])}
+            if row.kind == "custom" and row.custom_items is not None
+            else None
+        )
+        pruned: dict[str, list[str]] = {}
+        for k, v in row.default_placements.items():
+            if k in tier_ids and isinstance(v, list):
+                filtered = [item for item in v if allowed_items is None or item in allowed_items]
+                if filtered:
+                    pruned[k] = filtered
+        row.default_placements = pruned or None
+
+    row.updated_at = datetime.now(timezone.utc)
+    validate_tier_list(row)
+    db.session.commit()
+
+    bump_catalog_version()
+    _rewrite_seed_file()
+    return row
+
+
+
 def _rewrite_seed_file() -> None:
     """Regenerates `seeds/data/content/tier_lists.json` from the live table.
 

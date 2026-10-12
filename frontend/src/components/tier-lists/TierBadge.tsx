@@ -2,9 +2,12 @@
 // frontend/src/components/tier-lists/TierBadge.tsx
 
 import React from 'react';
+import { FitText } from '@/components/common/FitText';
 import type { TierColor } from '@/types/tierList';
 import { cn } from '@/utils/cn';
 import { tierColorProps } from './tierColor';
+
+import { staticUrl } from '@/utils/api';
 
 interface TierBadgeProps {
   label: string;
@@ -30,8 +33,10 @@ interface TierBadgeProps {
  */
 export function TierBadge({ label, color, backgroundImage, className, labelClassName }: TierBadgeProps) {
   if (backgroundImage) {
+    const resolved = backgroundImage.startsWith('/static/') ? (staticUrl(backgroundImage) ?? backgroundImage) : backgroundImage;
+    const safeUrl = resolved.replace(/\\/g, '%5C').replace(/'/g, '%27');
     return (
-      <div className={cn('bg-cover bg-center', className)} style={{ backgroundImage: `url('${backgroundImage}')` }}>
+      <div className={cn('bg-cover bg-center', className)} style={{ backgroundImage: `url('${safeUrl}')` }}>
         <span className="sr-only">{label}</span>
       </div>
     );
@@ -40,7 +45,9 @@ export function TierBadge({ label, color, backgroundImage, className, labelClass
   const swatch = tierColorProps(color);
   return (
     <div className={cn(swatch.className, className)} style={swatch.style}>
-      <span className={labelClassName}>{label}</span>
+      <FitText minScale={0.22} maxLines={1} className={cn('w-full text-center', labelClassName)}>
+        {label}
+      </FitText>
     </div>
   );
 }

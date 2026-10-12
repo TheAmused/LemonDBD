@@ -89,9 +89,46 @@ export function base64UrlToBytes(value: string): Uint8Array {
   return bytes;
 }
 
-async function pipeThrough(bytes: Uint8Array, stream: CompressionStream | DecompressionStream): Promise<Uint8Array> {
+async function pipeThrough(bytes: Uint8Array, stream: CompressionStream): Promise<Uint8Array> {
   const piped = new Blob([bytes as BlobPart]).stream().pipeThrough(stream);
   return new Uint8Array(await new Response(piped).arrayBuffer());
+}
+
+async function decompressBounded(bytes: Uint8Array, maxBytes: number): Promise<Uint8Array | null> {
+  const stream = new Blob([bytes as BlobPart]).stream().pipeThrough(new DecompressionStream('deflate-raw'));
+  const reader = stream.getReader();
+  const chunks: Uint8Array[] = [];
+  let totalLength = 0;
+
+  try {
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      if (value) {
+        totalLength += value.length;
+        if (totalLength > maxBytes) {
+          await reader.cancel();
+          return null;
+        }
+        chunks.push(value);
+      }
+    }
+  } catch (err) {
+    try {
+      await reader.cancel();
+    } catch {
+      // ignore
+    }
+    throw err;
+  }
+
+  const result = new Uint8Array(totalLength);
+  let offset = 0;
+  for (const chunk of chunks) {
+    result.set(chunk, offset);
+    offset += chunk.length;
+  }
+  return result;
 }
 
 const canCompress = () =>
@@ -119,11 +156,17 @@ export async function decodeShareText(payload: string, maxPayloadChars: number):
   let bytes = base64UrlToBytes(body);
   if (scheme === 'z.') {
     if (!canCompress()) return { ok: false, error: 'invalidShareLink' };
-    bytes = await pipeThrough(bytes, new DecompressionStream('deflate-raw'));
+    const decompressed = await decompressBounded(bytes, maxPayloadChars * 4);
+    if (!decompressed) return { ok: false, error: 'tooLarge' };
+    bytes = decompressed;
   } else if (scheme !== 'j.') {
     return { ok: false, error: 'invalidShareLink' };
   }
-  return { ok: true, text: new TextDecoder().decode(bytes) };
+  const text = new TextDecoder().decode(bytes);
+  if (text.length > maxPayloadChars) {
+    return { ok: false, error: 'tooLarge' };
+  }
+  return { ok: true, text };
 }
 
 /** Reads the share payload out of a `location.hash`, or null if there is none. */

@@ -7,11 +7,11 @@ import { Check, ClipboardPaste, Gamepad2, ImagePlus, Plus, Search, Upload } from
 import { useAuth } from '@/context/AuthContext';
 import { useTierListItems } from '@/hooks/useTierListItems';
 import type { TierListKind } from '@/types/tierList';
-import type { Dictionary } from '@/locales/types';
 import { cn } from '@/utils/cn';
 import { normalizeSearchText } from '@/utils/perkUtils';
 import { sanitizeImageUrl } from '@/utils/tierLists/codec';
-import { nameFromFileName, nameFromUrl, parseLinkLines } from '@/utils/tierLists/creator';
+import { TIER_LIST_LIMITS } from '@/utils/tierLists/constants';
+import { nameFromFileName, nameFromUrl } from '@/utils/tierLists/creator';
 import { fileToTileImage } from '@/utils/tierLists/imageFiles';
 import { TierItemTile } from '../TierItemTile';
 import { LABEL, TOUCH_BTN, TOUCH_FIELD } from '../styles';
@@ -221,6 +221,7 @@ function LinksSource({ onAdd }: { onAdd: (items: IncomingItem[]) => void; }) {
           <Input
             type="text"
             value={itemName}
+            maxLength={TIER_LIST_LIMITS.maxItemName}
             onChange={(e) => {
               setItemName(e.target.value);
               if (error) setError(null);
@@ -372,14 +373,14 @@ function CatalogSource({ onAdd, existingIds, locale }: {
         </div>
       </div>
 
-      <div className="max-h-[360px] overflow-y-auto overscroll-contain rounded-lg border border-border-color bg-bg-primary/40 p-2">
+      <div className="max-h-[480px] sm:max-h-[540px] overflow-y-auto overscroll-contain rounded-lg border border-border-color bg-bg-primary/40 p-2">
         {loading ? (
           <p className="flex items-center justify-center gap-2 py-10 type-card-title text-text-muted">
             <Spinner size="sm" tone="current" />
             {c.catalogLoading}
           </p>
         ) : (
-          <div className="flex flex-wrap justify-center gap-2">
+          <div className="flex flex-wrap items-start justify-center gap-2">
             {visible.map((item) => {
               const added = existingIds.has(item.key);
               const isSelected = selected.has(item.key);
@@ -391,7 +392,7 @@ function CatalogSource({ onAdd, existingIds, locale }: {
                   onClick={() => toggle(item.key)}
                   aria-pressed={isSelected}
                   aria-label={item.name}
-                  className="relative rounded-lg cursor-pointer disabled:cursor-not-allowed disabled:opacity-40"
+                  className="relative flex flex-col items-center justify-start self-start rounded-lg cursor-pointer disabled:cursor-not-allowed disabled:opacity-40"
                 >
                   <TierItemTile
                     item={item}

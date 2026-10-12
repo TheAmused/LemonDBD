@@ -50,3 +50,40 @@ class TierListAdminCreate(BaseModel):
     @classmethod
     def _clean_cover(cls, value: str | None) -> str | None:
         return _clean_image_url(value)
+
+
+class TierListAdminUpdate(BaseModel):
+    title: str | None = Field(default=None, min_length=1, max_length=150)
+    description: str | None = Field(default=None, max_length=2000)
+    cover_image_url: str | None = None
+    tiers: list[TierListAdminTier] | None = Field(default=None, min_length=1, max_length=20)
+    items: list[TierListAdminItem] | None = Field(default=None, min_length=1, max_length=400)
+    default_placements: dict[str, list[str]] | None = None
+
+    @field_validator("cover_image_url")
+    @classmethod
+    def _clean_cover(cls, value: str | None) -> str | None:
+        return _clean_image_url(value)
+
+    @field_validator("default_placements")
+    @classmethod
+    def _clean_placements(cls, value: dict[str, list[str]] | None) -> dict[str, list[str]] | None:
+        if value is None:
+            return None
+        cleaned: dict[str, list[str]] = {}
+        placed_keys: set[str] = set()
+        for tier_id, keys in value.items():
+            tid = str(tier_id).strip()[:40]
+            if not tid or not isinstance(keys, list):
+                continue
+            valid_keys: list[str] = []
+            for k in keys:
+                if isinstance(k, str):
+                    s = k.strip()[:64]
+                    if s and s not in placed_keys:
+                        placed_keys.add(s)
+                        valid_keys.append(s)
+            if valid_keys:
+                cleaned[tid] = valid_keys[:400]
+        return cleaned or None
+

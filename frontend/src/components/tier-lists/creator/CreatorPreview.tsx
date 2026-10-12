@@ -32,17 +32,20 @@ export function CreatorPreview({ title, description, tiers, items, backgroundIma
   // navigation, no delete button) mode, so this preview can never drift
   // from what "My Custom Lists" really renders.
   const cardPreviewList: StoredCustomList = useMemo(
-    () => ({
-      id: 'preview',
-      title,
-      description: description ?? '',
-      tiers,
-      items,
-      placements: {},
-      createdAt: 0,
-      updatedAt: 0,
-      ...(backgroundImage ? { backgroundImage } : {}),
-    }),
+    () => {
+      const now = Date.now();
+      return {
+        id: 'preview',
+        title,
+        description: description ?? '',
+        tiers,
+        items,
+        placements: {},
+        createdAt: now,
+        updatedAt: now,
+        ...(backgroundImage ? { backgroundImage } : {}),
+      };
+    },
     [title, description, tiers, items, backgroundImage]
   );
 
@@ -59,9 +62,6 @@ export function CreatorPreview({ title, description, tiers, items, backgroundIma
         <h3 className="text-2xl sm:text-3xl font-black text-text-primary break-words">
           {title.trim() || t.untitled}
         </h3>
-        {description?.trim() && (
-          <p className="mt-1 text-sm text-text-secondary max-w-xl mx-auto">{description.trim()}</p>
-        )}
       </div>
 
       <div className="flex flex-col gap-2 w-full">
@@ -75,7 +75,7 @@ export function CreatorPreview({ title, description, tiers, items, backgroundIma
               color={tier.color}
               backgroundImage={tier.backgroundImage}
               className="flex min-h-[72px] sm:max-wide-2k:min-h-[84px] wide-2k:min-h-[112px] items-center justify-center p-2 text-center select-none"
-              labelClassName="text-base sm:text-lg font-black leading-tight break-words [overflow-wrap:anywhere]"
+              labelClassName="text-base sm:text-lg font-black leading-tight"
             />
             <div className="bg-bg-primary/40 p-2 sm:p-2.5 flex flex-wrap items-center gap-2 min-h-[72px] sm:max-wide-2k:min-h-[84px] wide-2k:min-h-[112px]" />
           </div>
@@ -122,6 +122,7 @@ export function CreatorPreviewModal({ isOpen, onClose, title, description, tiers
       onClose={onClose}
       variant="dialog"
       size="5xl"
+      centerTitle
       title={dict.tierLists.creator.previewHeading}
       closeButtonAriaLabel={dict.characterDetail.close}
       bodyClassName="p-4 sm:p-6"

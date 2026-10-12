@@ -1,11 +1,9 @@
 'use client';
 // frontend/src/components/tier-lists/OfficialTierListView.tsx
 
-import React, { useCallback, useMemo } from 'react';
-import Link from 'next/link';
-import { ChevronLeft, Crown, RotateCcw, SearchX, TriangleAlert } from 'lucide-react';
+import React, { useCallback, useMemo, useState } from 'react';
+import { Crown, RotateCcw, SearchX, TriangleAlert } from 'lucide-react';
 import { EmptyState } from '@/components/common/EmptyState';
-import type { Dictionary } from '@/locales/types';
 import {
   TIER_LIST_FORMAT,
   TIER_LIST_FORMAT_VERSION,
@@ -13,11 +11,12 @@ import {
   type TierListDocument,
   type TierPlacements,
 } from '@/types/tierList';
+import { useAuth } from '@/context/AuthContext';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { useTierListItems } from '@/hooks/useTierListItems';
 import { useTierListStore } from '@/hooks/useTierListStore';
 import { useTierListTemplate } from '@/hooks/useTierListTemplates';
-import { isNotFoundError } from '@/services/tierListApi';
+import { isNotFoundError, updateOfficialTierList } from '@/services/tierListApi';
 import { resolveTiers } from '@/utils/tierLists/board';
 import { clearRanking, saveRanking } from '@/utils/tierLists/storage';
 import { TierListEditor } from './TierListEditor';
@@ -35,21 +34,55 @@ const EMPTY: TierPlacements = {};
 export function OfficialTierListView({ slug, locale }: OfficialTierListViewProps) {
   const dict = useDictionary();
   const t = dict.tierLists;
+  const { isAdmin, token } = useAuth();
   const { template, loading: templateLoading, error: templateError, refresh } = useTierListTemplate(slug, locale);
   const { items, loading: itemsLoading, error: itemsError, refresh: refreshItems } = useTierListItems(template, locale);
   const { state, hydrated } = useTierListStore();
+  const [savingOfficial, setSavingOfficial] = useState<boolean>(false);
 
   useDocumentTitle(template ? `LemonDBD - ${template.title}` : t.pageTitle);
 
   const ranking = state.rankings[slug];
-  const tiers = useMemo(() => resolveTiers(ranking?.tiers, template?.tiers), [ranking?.tiers, template?.tiers]);
+  const tiers = useMemo(
+    () => resolveTiers(isAdmin ? ranking?.tiers : null, template?.tiers),
+    [isAdmin, ranking?.tiers, template?.tiers]
+  );
   // No ranking yet: start from the official LemonDBD ranking when there is one.
   const placements = ranking?.placements ?? template?.default_placements ?? EMPTY;
 
   const onSave = useCallback(
     (nextTiers: TierDefinition[], nextPlacements: TierPlacements) =>
-      saveRanking(slug, { tiers: nextTiers, placements: nextPlacements }),
-    [slug]
+      saveRanking(slug, { tiers: isAdmin ? nextTiers : null, placements: nextPlacements }),
+    [slug, isAdmin]
+  );
+
+  const handleSaveOfficial = useCallback(
+    async (nextTiers: TierDefinition[], nextPlacements: TierPlacements) => {
+      if (!isAdmin) return;
+      setSavingOfficial(true);
+      try {
+        await updateOfficialTierList(
+          slug,
+          {
+            tiers: nextTiers.map((tier) => ({
+              id: tier.id,
+              label: tier.label,
+              color: tier.color,
+              ...(tier.backgroundImage ? { backgroundImage: tier.backgroundImage } : {}),
+            })),
+            default_placements: nextPlacements,
+          },
+          locale,
+          token
+        );
+        saveRanking(slug, { tiers: null, placements: nextPlacements });
+      } catch (err) {
+        console.error('Failed to save official tier list:', err);
+      } finally {
+        setSavingOfficial(false);
+      }
+    },
+    [isAdmin, slug, locale, token]
   );
 
   const onReset = useCallback(() => clearRanking(slug), [slug]);
@@ -67,18 +100,9 @@ export function OfficialTierListView({ slug, locale }: OfficialTierListViewProps
   );
 
   const onImport = useCallback(
-    (doc: TierListDocument) => saveRanking(slug, { tiers: doc.tiers, placements: doc.placements }),
-    [slug]
-  );
-
-  const backLink = (
-    <Link
-      href={`/${locale}/tier-lists`}
-      className="inline-flex min-h-[44px] w-fit items-center gap-1 type-label-sm text-text-secondary hover:text-accent-red"
-    >
-      <ChevronLeft className="h-4 w-4" aria-hidden="true" />
-      {t.backToHub}
-    </Link>
+    (doc: TierListDocument) =>
+      saveRanking(slug, { tiers: isAdmin ? doc.tiers : null, placements: doc.placements }),
+    [slug, isAdmin]
   );
 
   if (!template) {
@@ -88,7 +112,6 @@ export function OfficialTierListView({ slug, locale }: OfficialTierListViewProps
     const notFound = isNotFoundError(templateError);
     return (
       <div className="relative z-10 flex flex-col gap-2">
-        {backLink}
         <EmptyState
           icon={notFound ? SearchX : TriangleAlert}
           title={notFound ? t.notFoundTitle : t.loadError}
@@ -114,7 +137,6 @@ export function OfficialTierListView({ slug, locale }: OfficialTierListViewProps
   if (itemsError && items.length === 0) {
     return (
       <div className="relative z-10 flex flex-col gap-2">
-        {backLink}
         <EmptyState
           icon={TriangleAlert}
           title={t.loadError}
@@ -160,7 +182,11 @@ export function OfficialTierListView({ slug, locale }: OfficialTierListViewProps
       defaultShowNames={template.kind === 'maps' || template.kind === 'custom'}
       resetMessage={template.has_default_placements ? t.resetToOfficialMessage : t.resetMessage}
       poolEmptyLabel={t.poolEmpty}
+      canEditTiers={isAdmin}
       onSave={onSave}
+      onSaveOfficial={isAdmin ? handleSaveOfficial : undefined}
+      savingOfficial={savingOfficial}
+      editHref={isAdmin && template.kind === 'custom' ? `/${locale}/tier-lists/new?official=${encodeURIComponent(slug)}` : undefined}
       onReset={onReset}
       buildExportDoc={buildExportDoc}
       importTarget={{ kind: 'template', slug, title: template.title }}
@@ -169,3 +195,4 @@ export function OfficialTierListView({ slug, locale }: OfficialTierListViewProps
     />
   );
 }
+

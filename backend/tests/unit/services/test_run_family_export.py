@@ -20,7 +20,7 @@ def app_with_run() -> Flask:
     test_app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///:memory:"
     with test_app.app_context():
         db.create_all()
-        user = User(username="runner", email="runner@test.com", password_hash="h", role="user")
+        user = User(login="runner", username="runner", email="runner@test.com", password_hash="h", role="user")
         db.session.add(user)
         db.session.commit()
         run = GauntletRun(
@@ -38,7 +38,7 @@ def app_with_run() -> Flask:
         db.drop_all()
 
 
-def test_export_run_family_nests_match_logs_under_username(app_with_run: Flask) -> None:
+def test_export_run_family_nests_match_logs_under_login(app_with_run: Flask) -> None:
     with app_with_run.app_context():
         export_data: dict = {}
         counts: dict[str, int] = {}
@@ -47,7 +47,7 @@ def test_export_run_family_nests_match_logs_under_username(app_with_run: Flask) 
 
         assert counts["gauntlet_runs"] == 1
         row = export_data["gauntlet_runs"][0]
-        assert row["username"] == "runner"
+        assert row["login"] == "runner"
         assert row["role"] == "Survivor"
         assert len(row["match_logs"]) == 1
         assert row["match_logs"][0]["character_id"] == "claudette"

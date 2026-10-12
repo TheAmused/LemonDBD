@@ -42,6 +42,7 @@ def register():
         return jsonify({"error": "Validation failed", "details": err.errors(), "status": 400}), 400
 
     user, err = user_service.register_user(
+        login=validated_data.login,
         username=validated_data.username,
         email=validated_data.email,
         password=validated_data.password,
@@ -83,13 +84,13 @@ def session_response(user, token: str, message: str, status: int = 200, extra: d
 @limiter.limit("10 per minute")
 def login():
     data = request.get_json(silent=True) or {}
-    username_or_email = data.get("username") or data.get("email") or data.get("username_or_email")
+    login_or_email = data.get("login") or data.get("email") or data.get("login_or_email") or data.get("username_or_email")
     password = data.get("password")
 
-    if not username_or_email or not password:
-        return jsonify({"error": "Username/email and password are required.", "status": 400}), 400
+    if not login_or_email or not password:
+        return jsonify({"error": "Login/email and password are required.", "status": 400}), 400
 
-    user, token = user_service.authenticate(username_or_email.strip(), password.strip())
+    user, token = user_service.authenticate(login_or_email.strip(), password.strip())
     if not user:
         return jsonify({"error": "Invalid credentials", "status": 401}), 401
 
@@ -221,6 +222,7 @@ def update_profile():
             new_password=new_password,
             current_password=str(current_password) if current_password else None,
             two_factor_code=data.get("two_factor_code"),
+            username=data.get("username"),
         )
     except two_factor.TwoFactorError as err:
         return coded_error_response(err)
@@ -361,7 +363,7 @@ def get_demo_accounts():
         accounts = [
             {
                 "role": "admin" if account["role"] == "admin" else "player",
-                "username": account["username"],
+                "login": account["login"],
                 "password": account["password"],
             }
             for account in DEMO_ACCOUNTS

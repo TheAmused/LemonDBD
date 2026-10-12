@@ -71,7 +71,7 @@ class TestChaosStats:
     def test_stats_isolation_across_different_users(
         self, db_session: Session, sample_user: User
     ) -> None:
-        other_user = User(username="other_player", email="other@test.com", password_hash="x")
+        other_user = User(login="other_player", username="other_player", email="other@test.com", password_hash="x")
         db_session.add(other_user)
         db_session.commit()
 

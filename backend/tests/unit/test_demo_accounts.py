@@ -44,7 +44,7 @@ class TestDemoAccountsEndpoint:
         body = client.get("/api/v1/auth/demo-accounts").get_json()
         assert body["enabled"] is True
         assert {a["role"] for a in body["accounts"]} == {"admin", "player"}
-        assert {a["username"] for a in body["accounts"]} == {"lemon", "user"}
+        assert {a["login"] for a in body["accounts"]} == {"lemon", "user"}
 
 
 @pytest.mark.unit

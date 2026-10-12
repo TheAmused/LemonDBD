@@ -56,7 +56,7 @@ def history_service(ownership_service: OwnershipService) -> HistoryService:
 
 @pytest.fixture
 def history_user(user_service: UserService) -> int:
-    user, err = user_service.register_user("history_player", "history@example.com", "SecurePass123!")
+    user, err = user_service.register_user("history_player", "history_player", "history@example.com", "SecurePass123!")
     assert err is None
     return user.id
 

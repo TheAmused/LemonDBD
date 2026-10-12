@@ -83,7 +83,7 @@ class TestGauntletResults:
         assert updated["best_streak"] == 3
 
     def test_rejects_result_for_another_users_run(self, user_service: UserService) -> None:
-        other_user, _ = user_service.register_user("intruder_g", "intruder_g@test.com", "Pass123!")
+        other_user, _ = user_service.register_user("intruder_g", "intruder_g", "intruder_g@test.com", "Pass123!")
         with pytest.raises(ValueError):
             self.service.submit_result(other_user.id, self.run["id"], "win")
 

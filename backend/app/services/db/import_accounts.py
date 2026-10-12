@@ -30,31 +30,33 @@ def import_users(
     summary: dict[str, dict[str, int]],
     static_dir: Path,
 ) -> None:
-    """Upsert users by username, resolving email clashes."""
+    """Upsert users by login (older files carry it as `username`), resolving email clashes."""
     if "users" in target_keys and "users" in data:
         u_created, u_updated = 0, 0
         for row in data["users"]:
-            username = row.get("username")
-            if not username:
+            login = row.get("login") or row.get("username")
+            if not login:
                 continue
-            user_obj = db.session.scalar(select(User).where(User.username == username))
-            candidate_email = row.get("email") or f"{username}@lemondbd.com"
+            username = row.get("username") or login
+            user_obj = db.session.scalar(select(User).where(User.login == login))
+            candidate_email = row.get("email") or f"{login}@lemondbd.com"
             email_conflict = db.session.scalar(
-                select(User).where(User.email == candidate_email, User.username != username)
+                select(User).where(User.email == candidate_email, User.login != login)
             )
 
             if not user_obj:
                 final_email = candidate_email
                 if email_conflict:
-                    final_email = f"{username}_{int(datetime.now(timezone.utc).timestamp())}@lemondbd.com"
+                    final_email = f"{login}_{int(datetime.now(timezone.utc).timestamp())}@lemondbd.com"
                 user_obj = User(
+                    login=login,
                     username=username,
                     email=final_email,
                     password_hash=row.get("password_hash", ""),
                     role=row.get("role", "user"),
                     avatar_url=row.get("avatar_url", "default_avatar"),
                     is_active=row.get("is_active", True),
-                    is_verified=row.get("is_verified", True if username in ("lemon", "user") else False),
+                    is_verified=row.get("is_verified", True if login in ("lemon", "user") else False),
                 )
                 db.session.add(user_obj)
                 u_created += 1
@@ -64,7 +66,9 @@ def import_users(
                 for field in ["password_hash", "role", "avatar_url", "is_active", "is_verified"]:
                     if field in row and row[field] is not None:
                         setattr(user_obj, field, row[field])
-                if username in ("lemon", "user"):
+                if row.get("login") and row.get("username"):
+                    user_obj.username = row["username"]
+                if login in ("lemon", "user"):
                     user_obj.is_verified = True
                 u_updated += 1
 
@@ -81,7 +85,7 @@ def import_users(
 
 def build_account_lookups() -> AccountLookups:
     """Name -> id maps the ownership, showcase and run-family imports resolve through."""
-    user_map: dict[str, int] = {u.username: u.id for u in db.session.scalars(select(User)).all()}
+    user_map: dict[str, int] = {u.login: u.id for u in db.session.scalars(select(User)).all()}
     perk_map: dict[str, int] = {p.name.strip().lower(): p.id for p in db.session.scalars(select(Perk)).all()}
     # Ownership rows name their character. An id alone would not
     # identify one any more -- survivor 7 and killer 7 both exist -- so
@@ -103,7 +107,7 @@ def import_ownerships(
     summary: dict[str, dict[str, int]],
     lookups: AccountLookups,
 ) -> None:
-    """Character and perk ownership rows, matched by username and name."""
+    """Character and perk ownership rows, matched by login and name."""
     user_map, perk_map, char_map = lookups.user_map, lookups.perk_map, lookups.char_map
     if "ownerships" in target_keys and "ownerships" in data:
         raw_owns = data["ownerships"]
@@ -116,7 +120,7 @@ def import_ownerships(
             for co in db.session.scalars(select(UserCharacterOwnership)).all()
         }
         for co_data in raw_owns.get("characters", []):
-            uname = co_data.get("username")
+            uname = co_data.get("login") or co_data.get("username")
             cname = co_data.get("character_name")
             u_id = user_map.get(uname) if uname else None
             found = char_map.get(cname.strip().lower()) if cname else None
@@ -141,7 +145,7 @@ def import_ownerships(
             for po in db.session.scalars(select(UserPerkOwnership)).all()
         }
         for po_data in raw_owns.get("perks", []):
-            uname = po_data.get("username")
+            uname = po_data.get("login") or po_data.get("username")
             pname = po_data.get("perk_name")
             u_id = user_map.get(uname) if uname else None
             p_id = perk_map.get(pname.strip().lower()) if pname else None
@@ -172,7 +176,7 @@ def import_user_showcases(
     if "user_showcases" in target_keys and "user_showcases" in data:
         sc_created = sc_updated = 0
         for row in data["user_showcases"]:
-            u_id = user_map.get(row.get("username"))
+            u_id = user_map.get(row.get("login") or row.get("username"))
             if not u_id:
                 continue
             existing_showcase = db.session.scalar(select(UserShowcase).where(UserShowcase.user_id == u_id))

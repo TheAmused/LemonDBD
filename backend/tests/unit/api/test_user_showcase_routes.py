@@ -15,14 +15,14 @@ from app.models import Chapter, Killer, Survivor, User
 class TestUserShowcaseRoutes:
     @pytest.fixture
     def user(self, db_session) -> User:
-        user = User(username="showcase_user", email="showcase@example.com", password_hash="hashed")
+        user = User(login="showcase_user", username="showcase_user", email="showcase@example.com", password_hash="hashed")
         db_session.add(user)
         db_session.commit()
         return user
 
     @pytest.fixture
     def other_user(self, db_session) -> User:
-        user = User(username="other_user", email="other@example.com", password_hash="hashed")
+        user = User(login="other_user", username="other_user", email="other@example.com", password_hash="hashed")
         db_session.add(user)
         db_session.commit()
         return user

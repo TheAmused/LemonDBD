@@ -10,6 +10,7 @@ test("Live Frontend Workflow: Game Streaks & Challenges", async () => {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
+      login: username,
       username,
       email: `${username}@test.com`,
       password: "Password123!",

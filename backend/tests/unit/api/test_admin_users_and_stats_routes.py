@@ -20,14 +20,14 @@ class TestAdminUserDirectoryRoute:
 
     @pytest.fixture
     def admin_user(self, db_session) -> User:
-        user = User(username="dir_admin", email="dir_admin@example.com", password_hash="hashed", role="admin")
+        user = User(login="dir_admin", username="dir_admin", email="dir_admin@example.com", password_hash="hashed", role="admin")
         db_session.add(user)
         db_session.commit()
         return user
 
     @pytest.fixture
     def plain_user(self, db_session) -> User:
-        user = User(username="dir_user", email="dir_user@example.com", password_hash="hashed", role="user")
+        user = User(login="dir_user", username="dir_user", email="dir_user@example.com", password_hash="hashed", role="user")
         db_session.add(user)
         db_session.commit()
         return user
@@ -76,8 +76,8 @@ class TestAdminUserDirectoryRoute:
     def test_search_filters_by_username_or_email(
         self, client: FlaskClient, db_session, admin_headers: dict[str, str]
     ) -> None:
-        db_session.add(User(username="findme_zebra", email="zebra@example.com", password_hash="hashed"))
-        db_session.add(User(username="someone_else", email="other@example.com", password_hash="hashed"))
+        db_session.add(User(login="findme_zebra", username="findme_zebra", email="zebra@example.com", password_hash="hashed"))
+        db_session.add(User(login="someone_else", username="someone_else", email="other@example.com", password_hash="hashed"))
         db_session.commit()
 
         res = client.get("/api/v1/users?search=zebra", headers=admin_headers)
@@ -86,8 +86,8 @@ class TestAdminUserDirectoryRoute:
         assert any(u["username"] == "findme_zebra" for u in data["users"])
 
     def test_role_filter(self, client: FlaskClient, db_session, admin_headers: dict[str, str]) -> None:
-        db_session.add(User(username="second_admin", email="second_admin@example.com", password_hash="hashed", role="admin"))
-        db_session.add(User(username="regular_joe", email="regular_joe@example.com", password_hash="hashed", role="user"))
+        db_session.add(User(login="second_admin", username="second_admin", email="second_admin@example.com", password_hash="hashed", role="admin"))
+        db_session.add(User(login="regular_joe", username="regular_joe", email="regular_joe@example.com", password_hash="hashed", role="user"))
         db_session.commit()
 
         res = client.get("/api/v1/users?role=admin", headers=admin_headers)
@@ -98,7 +98,7 @@ class TestAdminUserDirectoryRoute:
         self, client: FlaskClient, db_session, admin_headers: dict[str, str]
     ) -> None:
         for i in range(5):
-            db_session.add(User(username=f"bulk_user_{i}", email=f"bulk{i}@example.com", password_hash="hashed"))
+            db_session.add(User(login=f"bulk_user_{i}", username=f"bulk_user_{i}", email=f"bulk{i}@example.com", password_hash="hashed"))
         db_session.commit()
 
         res = client.get("/api/v1/users?page=1&per_page=3", headers=admin_headers)
@@ -120,7 +120,7 @@ class TestAdminUserDirectoryRoute:
         db_session.flush()
 
         for i in range(20):
-            u = User(username=f"n1_user_{i}", email=f"n1_{i}@example.com", password_hash="hashed")
+            u = User(login=f"n1_user_{i}", username=f"n1_user_{i}", email=f"n1_{i}@example.com", password_hash="hashed")
             db_session.add(u)
             db_session.flush()
             db_session.add(UserCharacterOwnership(user_id=u.id, killer_id=char.id, is_owned=True))
@@ -152,7 +152,7 @@ class TestAdminUserDirectoryRoute:
 class TestAdminStatsRoute:
     @pytest.fixture
     def admin_headers(self, app: Flask, db_session) -> dict[str, str]:
-        user = User(username="stats_admin", email="stats_admin@example.com", password_hash="hashed", role="admin")
+        user = User(login="stats_admin", username="stats_admin", email="stats_admin@example.com", password_hash="hashed", role="admin")
         db_session.add(user)
         db_session.commit()
         with app.app_context():

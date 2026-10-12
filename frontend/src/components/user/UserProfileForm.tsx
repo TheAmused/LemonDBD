@@ -18,6 +18,8 @@ import { twoFactorErrorMessage } from '@/utils/twoFactorErrors';
 import { TwoFactorSection } from '@/components/user/TwoFactorSection';
 
 interface UserProfileFormProps {
+  login: string;
+  initialUsername: string;
   initialEmail: string;
   twoFactorEnabled?: boolean;
   hasPassword?: boolean;
@@ -26,6 +28,8 @@ interface UserProfileFormProps {
 }
 
 export const UserProfileForm: React.FC<UserProfileFormProps> = ({
+  login,
+  initialUsername,
   initialEmail,
   twoFactorEnabled = false,
   hasPassword = true,
@@ -36,6 +40,7 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
   const t: Record<string, string> = propT || dict.user || {};
   const [isExpanded, toggleExpanded] = usePersistentDrawer('lemondbd_drawer_account', false);
 
+  const [newUsername, setNewUsername] = useState(initialUsername);
   const [newEmail, setNewEmail] = useState(initialEmail);
   const [currentPassword, setCurrentPassword] = useState('');
   // Set once the server says the account has two-factor on: the change then needs a code as well.
@@ -89,6 +94,9 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
     }
 
     const payload: UpdateProfilePayload = {};
+    if (newUsername.trim() !== initialUsername && newUsername.trim()) {
+      payload.username = newUsername.trim();
+    }
     if (newEmail !== initialEmail && newEmail.trim()) {
       payload.email = newEmail.trim();
     }
@@ -101,16 +109,18 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
       return;
     }
 
-    // The server wants the current password for either change.
-    if (!currentPassword) {
+    const needsPassword = Boolean(payload.username || payload.email || payload.new_password);
+    if (needsPassword && !currentPassword) {
       setStatusMessage({
         type: 'error',
-        text: t.currentPasswordRequired || 'Enter your current password to change your email or password.',
+        text: t.currentPasswordRequired || 'You must enter your current password to update your account details.',
       });
       return;
     }
-    payload.current_password = currentPassword;
-    if (requiresTwoFactor) {
+    if (needsPassword) {
+      payload.current_password = currentPassword;
+    }
+    if (needsPassword && requiresTwoFactor) {
       if (!twoFactorCode.trim()) {
         setStatusMessage({ type: 'error', text: dict.twoFactor.codeRequiredHint });
         return;
@@ -216,6 +226,30 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
 
             <form onSubmit={handleUpdateProfile} className="max-w-2xl w-full mx-auto space-y-4 sm:space-y-5">
               <div className="space-y-4 sm:space-y-5">
+                <div className="space-y-1.5">
+                  <label className="block type-label-xs text-text-secondary" htmlFor="profile-login">
+                    {t.loginLabel}
+                  </label>
+                  <Input id="profile-login" type="text" disabled fieldSize="sm" value={login} />
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="block type-label-xs text-text-secondary" htmlFor="profile-username">
+                    {t.usernameLabel}
+                  </label>
+                  <Input
+                    id="profile-username"
+                    type="text"
+                    required
+                    minLength={3}
+                    maxLength={50}
+                    readOnly={!hasPassword}
+                    fieldSize="sm"
+                    value={newUsername}
+                    onChange={(e) => setNewUsername(e.target.value)}
+                  />
+                </div>
+
                 {/* Email Address */}
                 <div className="space-y-1.5">
                   <label className="block type-label-xs text-text-secondary">
@@ -245,7 +279,7 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
                     <span
                       className="ml-1 text-accent-red"
                       aria-hidden="true"
-                      {...tip(t.currentPasswordHint || 'Required to change your email or password', undefined, 'action')}
+                      {...tip(t.currentPasswordHint || 'Required to update your account details', undefined, 'action')}
                     >
                       *
                     </span>

@@ -20,7 +20,7 @@ def setup_page_streak_routes(app: Flask, db_session: Session) -> None:
 @pytest.fixture
 def streak_auth_setup() -> tuple[int, str, dict[str, str]]:
     user_service = UserService()
-    user, err = user_service.register_user("streakuser", "streak@test.com", "password123")
+    user, err = user_service.register_user("streakuser", "streakuser", "streak@test.com", "password123")
     assert err is None
     token = user_service.generate_token(user.id)
     headers = {"Authorization": f"Bearer {token}"}
@@ -141,7 +141,7 @@ class TestPageStreakRoutes:
     ) -> None:
         _, _, headers = streak_auth_setup
         user_service = UserService()
-        other, err = user_service.register_user("otherstreakuser", "other@test.com", "password123")
+        other, err = user_service.register_user("otherstreakuser", "otherstreakuser", "other@test.com", "password123")
         assert err is None
         other_headers = {"Authorization": f"Bearer {user_service.generate_token(other.id)}"}
 

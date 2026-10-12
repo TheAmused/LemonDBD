@@ -1,5 +1,6 @@
 # backend/app/services/user/google_auth.py
 import logging
+import re
 import secrets
 from dataclasses import dataclass
 
@@ -15,10 +16,13 @@ logger = logging.getLogger(__name__)
 
 GOOGLE_CERTS_URL = "https://www.googleapis.com/oauth2/v3/certs"
 GOOGLE_ISSUERS = ["https://accounts.google.com", "accounts.google.com"]
-USERNAME_PREFIX = "player"
-USERNAME_DIGITS = 8
+LOGIN_PREFIX = "player"
+LOGIN_DIGITS = 8
+USERNAME_MIN = 3
+USERNAME_MAX = 50
+_USERNAME_FILLER = "player"
 _CREATE_ATTEMPTS = 5
-_USERNAME_ATTEMPTS = 20
+_LOGIN_ATTEMPTS = 20
 # A server clock a few seconds behind Google's would otherwise reject a fresh token ("iat" in the future).
 CLOCK_SKEW_SECONDS = 30
 
@@ -75,18 +79,25 @@ def verify_id_token(credential: str | None) -> GoogleIdentity:
     return GoogleIdentity(sub=str(claims["sub"]), email=email)
 
 
-def _username_taken(candidate: str) -> bool:
+def _login_taken(candidate: str) -> bool:
     return db.session.scalar(
-        select(User.id).where(func.lower(User.username) == candidate.lower()).limit(1)
+        select(User.id).where(func.lower(User.login) == candidate.lower()).limit(1)
     ) is not None
 
 
-def unique_username() -> str:
-    for _ in range(_USERNAME_ATTEMPTS):
-        candidate = f"{USERNAME_PREFIX}{secrets.randbelow(10**USERNAME_DIGITS):0{USERNAME_DIGITS}d}"
-        if not _username_taken(candidate):
+def unique_login() -> str:
+    for _ in range(_LOGIN_ATTEMPTS):
+        candidate = f"{LOGIN_PREFIX}{secrets.randbelow(10**LOGIN_DIGITS):0{LOGIN_DIGITS}d}"
+        if not _login_taken(candidate):
             return candidate
-    return f"{USERNAME_PREFIX}{secrets.token_hex(8)}"
+    return f"{LOGIN_PREFIX}{secrets.token_hex(8)}"
+
+
+def display_username(email: str) -> str:
+    local = re.sub(r"[^A-Za-z0-9_.-]", "", email.split("@", 1)[0])
+    if len(local) < USERNAME_MIN:
+        local = f"{local}{_USERNAME_FILLER}"
+    return local[:USERNAME_MAX]
 
 
 def _find(identity: GoogleIdentity) -> User | None:
@@ -110,7 +121,7 @@ def _link(user: User, identity: GoogleIdentity) -> None:
         user.is_verified = True
     user.google_sub = identity.sub
     db.session.commit()
-    logger.info("Linked Google account to user '%s'.", user.username)
+    logger.info("Linked Google account to user '%s'.", user.login)
 
 
 def credential_belongs_to(user: User, credential: str | None) -> bool:
@@ -137,7 +148,8 @@ def sign_in(credential: str | None) -> tuple[User, bool]:
             return user, False
 
         new_user = User(
-            username=unique_username(),
+            login=unique_login(),
+            username=display_username(identity.email),
             email=identity.email,
             password_hash=None,
             google_sub=identity.sub,
@@ -150,7 +162,7 @@ def sign_in(credential: str | None) -> tuple[User, bool]:
         except IntegrityError:
             db.session.rollback()
             continue
-        logger.info("User '%s' registered with Google.", new_user.username)
+        logger.info("User '%s' registered with Google.", new_user.login)
         return new_user, True
 
     raise GoogleAuthError("Could not create the account, please try again.", 503)

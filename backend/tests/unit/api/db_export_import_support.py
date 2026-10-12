@@ -35,7 +35,7 @@ def export_import_app() -> Flask:
         admin_user = db.session.scalars(select(User).where(User.username == "admin_test")).first()
         if not admin_user:
             admin_user = User(
-                username="admin_test",
+                login="admin_test", username="admin_test",
                 email="admin@test.com",
                 password_hash="hash",
                 role="admin",
@@ -45,7 +45,7 @@ def export_import_app() -> Flask:
         reg_user = db.session.scalars(select(User).where(User.username == "player_test")).first()
         if not reg_user:
             reg_user = User(
-                username="player_test",
+                login="player_test", username="player_test",
                 email="player@test.com",
                 password_hash="hash",
                 role="user",

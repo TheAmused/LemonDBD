@@ -23,14 +23,14 @@ from app.models.user import User
 class TestSmashOrPassAdminCreate:
     @pytest.fixture
     def admin_user(self, db_session: Session) -> User:
-        user = User(username="sp_admin", email="sp_admin@example.com", password_hash="hashed", role="admin")
+        user = User(login="sp_admin", username="sp_admin", email="sp_admin@example.com", password_hash="hashed", role="admin")
         db_session.add(user)
         db_session.commit()
         return user
 
     @pytest.fixture
     def plain_user(self, db_session: Session) -> User:
-        user = User(username="sp_user", email="sp_user@example.com", password_hash="hashed", role="user")
+        user = User(login="sp_user", username="sp_user", email="sp_user@example.com", password_hash="hashed", role="user")
         db_session.add(user)
         db_session.commit()
         return user

@@ -58,7 +58,7 @@ def headers(db_session: Session) -> dict[str, str]:
     _seed_killer(1, "The Trapper")
     _seed_killer(2, "The Wraith")
     user_service = UserService()
-    _, err = user_service.register_user("routeuser", "route@test.com", "password123")
+    _, err = user_service.register_user("routeuser", "routeuser", "route@test.com", "password123")
     assert err is None
     token = user_service.authenticate("routeuser", "password123")[1]
     return {"Authorization": f"Bearer {token}"}

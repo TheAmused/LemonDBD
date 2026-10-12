@@ -8,7 +8,7 @@ test("Live Frontend Workflow: Admin System Metrics & Export", async () => {
   const adminLogin = await fetch(`${API_BASE}/api/v1/auth/login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ username: "lemon", password: "lemon" }),
+    body: JSON.stringify({ login: "lemon", password: "lemon" }),
   });
   assert.strictEqual(adminLogin.status, 200);
   const adminHeaders = {

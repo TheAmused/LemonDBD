@@ -58,7 +58,7 @@ class TestChallengeCompletions:
     def test_completions_are_isolated_per_user(
         self, db_session: Session, sample_user: User
     ) -> None:
-        other = User(username="other_completer", email="other_c@test.com", password_hash="x")
+        other = User(login="other_completer", username="other_completer", email="other_c@test.com", password_hash="x")
         db_session.add(other)
         db_session.commit()
 
@@ -222,7 +222,7 @@ class TestActiveRunVariants:
     def test_active_runs_are_isolated_per_user(
         self, db_session: Session, sample_user: User
     ) -> None:
-        other = User(username="other_active_runner", email="other_ar@test.com", password_hash="x")
+        other = User(login="other_active_runner", username="other_active_runner", email="other_ar@test.com", password_hash="x")
         db_session.add(other)
         db_session.commit()
 

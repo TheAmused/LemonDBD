@@ -10,6 +10,7 @@ export function registerUser(vuId = (typeof __VU !== 'undefined' ? __VU : 1), it
 
   const startTime = Date.now();
   const regRes = client.post('/api/v1/auth/register', {
+    login: username,
     username: username,
     email: email,
     password: password,
@@ -33,7 +34,7 @@ export function registerUser(vuId = (typeof __VU !== 'undefined' ? __VU : 1), it
 export function loginUser(username, password = 'K6P@ssword123!', client = defaultClient) {
   const startTime = Date.now();
   const loginRes = client.post('/api/v1/auth/login', {
-    username: username,
+    login: username,
     password: password,
   }, { tags: { type: 'auth', operation: 'login' } });
 

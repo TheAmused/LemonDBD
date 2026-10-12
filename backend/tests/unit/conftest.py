@@ -75,7 +75,7 @@ def client(app: Flask) -> FlaskClient:
 def sample_user(db_session: Session) -> User:
     """Create and commit a standard test user."""
     user = User(
-        username="standard_tester",
+        login="standard_tester", username="standard_tester",
         email="tester@example.com",
         password_hash="hashed_pw_12345",
     )

@@ -93,7 +93,7 @@ class TestDatabaseExportImportAuditLogAndChangelog:
             exported = DatabaseExportImportService.export_database(targets=["admin_audit_logs", "changelog_posts"])
             assert exported["counts"]["admin_audit_logs"] == 1
             assert exported["counts"]["changelog_posts"] == 1
-            assert _flat(exported)["admin_audit_logs"][0]["admin_username"] == "admin_test"
+            assert _flat(exported)["admin_audit_logs"][0]["admin_login"] == "admin_test"
 
             summary = DatabaseExportImportService.import_database(
                 exported, mode="merge", targets=["admin_audit_logs", "changelog_posts"]

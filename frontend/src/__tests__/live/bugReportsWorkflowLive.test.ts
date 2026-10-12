@@ -11,6 +11,7 @@ test("Live Frontend Workflow: Bug Report Submission, Triage & Resolution", async
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
+      login: username,
       username,
       email: `${username}@test.com`,
       password: "Password123!",
@@ -51,7 +52,7 @@ test("Live Frontend Workflow: Bug Report Submission, Triage & Resolution", async
   const adminLoginRes = await fetch(`${API_BASE}/api/v1/auth/login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ username: "lemon", password: "lemon" }),
+    body: JSON.stringify({ login: "lemon", password: "lemon" }),
   });
   assert.strictEqual(adminLoginRes.status, 200);
   const adminHeaders = {

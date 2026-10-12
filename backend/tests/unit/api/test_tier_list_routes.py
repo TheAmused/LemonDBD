@@ -215,14 +215,14 @@ class TestTierListAdminCreate:
 
     @pytest.fixture
     def admin_user(self, db_session: Session) -> User:
-        user = User(username="tl_admin", email="tl_admin@example.com", password_hash="hashed", role="admin")
+        user = User(login="tl_admin", username="tl_admin", email="tl_admin@example.com", password_hash="hashed", role="admin")
         db_session.add(user)
         db_session.commit()
         return user
 
     @pytest.fixture
     def plain_user(self, db_session: Session) -> User:
-        user = User(username="tl_user", email="tl_user@example.com", password_hash="hashed", role="user")
+        user = User(login="tl_user", username="tl_user", email="tl_user@example.com", password_hash="hashed", role="user")
         db_session.add(user)
         db_session.commit()
         return user

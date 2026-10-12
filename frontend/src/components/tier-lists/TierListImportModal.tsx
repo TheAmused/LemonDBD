@@ -111,6 +111,7 @@ export function TierListImportModal({ open, target, sharePayload, onClose, onImp
       cancelClassName={`${TOUCH_BTN} min-h-[42px] px-5`}
       importClassName={`${TOUCH_BTN} min-h-[42px] px-6`}
       footerClassName="flex w-full flex-wrap items-center justify-center gap-3"
+      plainHeader
     >
       {fileError && <Notice tone="error" text={t.errors.readFile} />}
       {result && !result.ok && <Notice tone="error" text={errorText(result.error)} />}

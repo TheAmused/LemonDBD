@@ -133,17 +133,17 @@ describe('creator: page wiring', () => {
     }
   });
 
-  it('TierListCreator header has no border-b, includes Preview and Create in top header, and no duplicate preview at bottom', () => {
+  it('TierListCreator puts one centered Preview + Save row under all the sections', () => {
     const creator = fs.readFileSync(path.join(SRC, 'components/tier-lists/creator/TierListCreator.tsx'), 'utf-8');
-    // No horizontal line under header navigation
-    assert.ok(!creator.includes('border-b border-border-color pb-4'), 'must not have horizontal border under header navigation');
-    // Floating toast for draft restored
+    assert.ok(!creator.includes('border-b border-border-color pb-4'), 'must not have a horizontal border under the header');
     assert.ok(creator.includes('fixed top-5 right-5 z-50'), 'restored draft must render as fixed top-right toast');
-    // Top header includes preview and submitButton
-    assert.ok(creator.includes('c.previewHeading'), 'header must include preview button');
-    // Header is in-line with the basics block in the middle
-    assert.ok(creator.includes('flex flex-col lg:flex-row items-stretch lg:items-start justify-between'), 'header must be in-line');
-    assert.ok(creator.includes('c.stepBasics'), 'the basics block must be in the header row');
+    assert.equal(creator.split('setPreviewOpen(true)').length - 1, 1, 'exactly one Preview button');
+    assert.equal(creator.split('submitButton(').length - 1, 1, 'the save button is rendered once');
+    const items = creator.indexOf('c.stepItems');
+    const actions = creator.indexOf('setPreviewOpen(true)');
+    assert.ok(items !== -1 && actions > items, 'the buttons come after the last section');
+    assert.ok(creator.slice(actions - 400, actions).includes('justify-center'), 'and are centered');
+    assert.ok(creator.includes('c.stepBasics'));
     // CreatorItems wires onUpdateItem
     assert.ok(creator.includes('onUpdateItem='), 'CreatorItems must receive onUpdateItem handler');
   });

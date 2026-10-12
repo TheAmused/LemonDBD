@@ -135,13 +135,13 @@ describe('Tier lists: pages and navigation', () => {
     assert.ok(sidebar.includes('href: `/${currentLocale}/tier-lists`'));
   });
 
-  it('the page is viewport-locked and the pool keeps a reserved height so toggling it never moves its header', () => {
-    const pool = read('components/tier-lists/TierPool.tsx');
-    assert.ok(pool.includes('var(--pool-h)'));
+  it('the page scrolls naturally and the board sizes tiles from useBoardFit', () => {
     const board = read('components/tier-lists/TierListBoard.tsx');
-    assert.ok(board.includes('--pool-h:'));
-    assert.ok(board.includes('max-h-[calc(100%-var(--pool-h)'));
-    assert.ok(read('app/[locale]/tier-lists/[slug]/page.tsx').includes('h-dvh overflow-hidden'));
+    assert.ok(board.includes('useBoardFit(') && board.includes('--tile'), 'tile size comes from the fit hook');
+    assert.ok(!board.includes('--pool-h'), 'no fixed pool reserve any more');
+    const pool = read('components/tier-lists/TierPool.tsx');
+    assert.ok(pool.includes('--pool-min-total'));
+    assert.ok(!read('app/[locale]/tier-lists/[slug]/page.tsx').includes('h-dvh overflow-hidden'));
     assert.ok(board.includes('SidewaysPointerSensor') && board.includes('KeyboardSensor'), 'touch and keyboard dragging');
   });
 });

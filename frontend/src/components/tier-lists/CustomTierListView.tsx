@@ -2,9 +2,8 @@
 // frontend/src/components/tier-lists/CustomTierListView.tsx
 
 import React, { useCallback, useMemo } from 'react';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { ChevronLeft, SearchX } from 'lucide-react';
+import { SearchX } from 'lucide-react';
 import { EmptyState } from '@/components/common/EmptyState';
 import type { Dictionary } from '@/locales/types';
 import {
@@ -107,13 +106,6 @@ export function CustomTierListView({ id, locale }: CustomTierListViewProps) {
   if (!list) {
     return (
       <div className="relative z-10 flex flex-col gap-2">
-        <Link
-          href={`/${locale}/tier-lists`}
-          className="inline-flex min-h-[44px] w-fit items-center gap-1 type-label-sm text-text-secondary hover:text-accent-red"
-        >
-          <ChevronLeft className="h-4 w-4" aria-hidden="true" />
-          {t.backToHub}
-        </Link>
         <EmptyState icon={SearchX} title={t.customNotFoundTitle} subtitle={t.customNotFoundSubtitle} />
       </div>
     );

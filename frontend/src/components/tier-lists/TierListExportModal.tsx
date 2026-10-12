@@ -41,6 +41,7 @@ export function TierListExportModal({ doc, onClose, locale }: TierListExportModa
       jsonFieldClassName={`${TOUCH_FIELD} py-2 text-xs`}
       buttonClassName={TOUCH_BTN}
       actionsClassName="items-center justify-center"
+      plainHeader
       labels={{
         title: t.exportTitle,
         subtitle: t.exportSubtitle,

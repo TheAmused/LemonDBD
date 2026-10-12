@@ -1177,7 +1177,7 @@
         },
         "pl": {
           "name": "Pokrewieństwo",
-          "description": "Gdy wisisz na **haku** i gdy inny ocalały znajdzie się odległości **16 m**, odliczanie zatrzymuje się na **26/30/34 s**.\n> „Jak już się tam dostaniesz, pamiętaj — udawaj, że masz to gdzieś. Właśnie tak, uczysz się, przyjacielu. Uczysz się”. – Steve Harrington"
+          "description": "Gdy wisisz na **haku** i gdy inny ocalały znajdzie się odległości **16 m**, odliczanie zatrzymuje się na **26/30/34 s**.\n> „Jak już się tam dostaniesz, pamiętaj, udawaj, że masz to gdzieś. Właśnie tak, uczysz się, przyjacielu. Uczysz się”. – Steve Harrington"
         }
       },
       "perk_types": [
@@ -1890,7 +1890,7 @@
         },
         "pl": {
           "name": "Zakłócenie",
-          "description": "Na początku próby, i po pościgu przez zabójcę przez **30/25/20 s**, otrzymujesz określoną liczbę żetonów (1), maksymalnie 3.\nNie będąc powalonym, za każdym razem, gdy zabójca próbuje zobaczyć twoją **aurę**, wydajesz żeton (3). Przez następne **6/8/10 s**:\n• Zabójca nie może zobaczyć twojej **aury**.\n• Nie zostawiasz czerwonych zarysowań.\n> „Zgłębianie mitologii nordyckiej: odwaga może ukryć nasze wady, nawet gdy jesteśmy najbardziej bezbronni”. — Jeff, ołówek na barwionym papierze"
+          "description": "Na początku próby, i po pościgu przez zabójcę przez **30/25/20 s**, otrzymujesz określoną liczbę żetonów (1), maksymalnie 3.\nNie będąc powalonym, za każdym razem, gdy zabójca próbuje zobaczyć twoją **aurę**, wydajesz żeton (3). Przez następne **6/8/10 s**:\n• Zabójca nie może zobaczyć twojej **aury**.\n• Nie zostawiasz czerwonych zarysowań.\n> „Zgłębianie mitologii nordyckiej: odwaga może ukryć nasze wady, nawet gdy jesteśmy najbardziej bezbronni”. – Jeff, ołówek na barwionym papierze"
         }
       },
       "perk_types": [
@@ -2571,7 +2571,7 @@
         },
         "pl": {
           "name": "Notatki ducha",
-          "description": "Gdy masz efekt **Wyczerpany**, twoje czerwone zarysowania znikają **50%** szybciej.\nTracisz efekt **Wyczerpany 10/12.5/15%** szybciej.\n> „Czas na przejście!” — Vee Boonyasak"
+          "description": "Gdy masz efekt **Wyczerpany**, twoje czerwone zarysowania znikają **50%** szybciej.\nTracisz efekt **Wyczerpany 10/12.5/15%** szybciej.\n> „Czas na przejście!” – Vee Boonyasak"
         }
       },
       "perk_types": [
@@ -4100,7 +4100,7 @@
         },
         "pl": {
           "name": "Fałszywy trop",
-          "description": "Po naprawianiu **generatora** przez przynajmniej **3 s**, widzisz jego **aurę**.\nGdy chowasz się w szafce, zabójca jest alarmowany przez **generator**. Czas odnawiania: **60/50/40 s**.\n> „Wiadomości pomijają to, co jest trudne i skomplikowane — czyli prawdę”. – Zarina Kassir"
+          "description": "Po naprawianiu **generatora** przez przynajmniej **3 s**, widzisz jego **aurę**.\nGdy chowasz się w szafce, zabójca jest alarmowany przez **generator**. Czas odnawiania: **60/50/40 s**.\n> „Wiadomości pomijają to, co jest trudne i skomplikowane, czyli prawdę”. – Zarina Kassir"
         }
       },
       "perk_types": [
@@ -4715,7 +4715,7 @@
         },
         "pl": {
           "name": "Solidarność",
-          "description": "Gdy jesteś ranny i leczysz innego ocalałego, otrzymujesz także postęp leczenia z prędkością **65/70/75%**.\n> „Pojawianie się w trudnych chwilach i wspieranie potrzebujących — w ten sposób zdobywasz siłę i rozwijasz się”. – Jane Romero"
+          "description": "Gdy jesteś ranny i leczysz innego ocalałego, otrzymujesz także postęp leczenia z prędkością **65/70/75%**.\n> „Pojawianie się w trudnych chwilach i wspieranie potrzebujących, w ten sposób zdobywasz siłę i rozwijasz się”. – Jane Romero"
         }
       },
       "perk_types": [
@@ -9183,7 +9183,7 @@
         },
         "pl": {
           "name": "Wygłodniały",
-          "description": "Za każdym razem, gdy powiesisz danego ocalałego po raz pierwszy, otrzymujesz żeton (1). Za każdy żeton:\n• Otrzymujesz **4%** efektu **Pośpiech**, gdy niesiesz ocalałych.\n• Wieszasz ocalałych na **haku** **4%** szybciej.\nGdy zbierzesz 4 żetony, wszyscy ocalali:\n• Krzyczą.\n• Otrzymują efekt Narażony na **80/85/90 s**.\n> „Płynie krew płaczącej Ginewry / Diabeł wyczuwa słabych”. — „Ginewra”, Fabbro Barone"
+          "description": "Za każdym razem, gdy powiesisz danego ocalałego po raz pierwszy, otrzymujesz żeton (1). Za każdy żeton:\n• Otrzymujesz **4%** efektu **Pośpiech**, gdy niesiesz ocalałych.\n• Wieszasz ocalałych na **haku** **4%** szybciej.\nGdy zbierzesz 4 żetony, wszyscy ocalali:\n• Krzyczą.\n• Otrzymują efekt Narażony na **80/85/90 s**.\n> „Płynie krew płaczącej Ginewry / Diabeł wyczuwa słabych”. – „Ginewra”, Fabbro Barone"
         }
       },
       "perk_types": [

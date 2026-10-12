@@ -2,16 +2,18 @@
 // frontend/src/components/tier-lists/creator/TierListCreator.tsx
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { ChevronLeft, History, SearchX, X } from 'lucide-react';
+import { History, SearchX, X } from 'lucide-react';
 import { EmptyState } from '@/components/common/EmptyState';
 import { useAuth } from '@/context/AuthContext';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { useTierListStore } from '@/hooks/useTierListStore';
-import { apiUrl } from '@/utils/api';
+import { useTierListTemplate } from '@/hooks/useTierListTemplates';
+import { createOfficialTierList, updateOfficialTierList } from '@/services/tierListApi';
+import { apiUrl, authFetch, staticUrl } from '@/utils/api';
 import { cn } from '@/utils/cn';
-import { sanitizeImageUrl } from '@/utils/tierLists/codec';
+import { resolveTiers } from '@/utils/tierLists/board';
+import { normalizePlacements, sanitizeImageUrl } from '@/utils/tierLists/codec';
 import { TIER_LIST_LIMITS } from '@/utils/tierLists/constants';
 import {
   type FeelingLabelKey,
@@ -36,16 +38,19 @@ interface TierListCreatorProps {
   locale: string;
   /** A custom list id to edit in place, instead of building a new one. */
   editId?: string;
+  /** Admin-only: an official custom tier list slug to edit in the database. */
+  officialSlug?: string;
 }
 
-export function TierListCreator({ locale, editId }: TierListCreatorProps) {
+export function TierListCreator({ locale, editId, officialSlug }: TierListCreatorProps) {
   const dict = useDictionary();
   const t = dict.tierLists;
   const c = t.creator;
   const router = useRouter();
-  const { isAdmin, token } = useAuth();
+  const { isAdmin, isLoading: authLoading, token } = useAuth();
   const { state: storeState, hydrated: storeHydrated } = useTierListStore();
   const editingList = editId ? storeState.custom[editId] : undefined;
+  const { template: officialTemplate, loading: officialLoading } = useTierListTemplate(officialSlug ?? null, locale);
 
   const translateFeeling = useCallback((key: FeelingLabelKey) => c.feelings[key], [c.feelings]);
   const freshDraft = useCallback(
@@ -71,13 +76,21 @@ export function TierListCreator({ locale, editId }: TierListCreatorProps) {
   const [publishError, setPublishError] = useState<string | null>(null);
   const loaded = useRef<boolean>(false);
 
-  useDocumentTitle(editId ? `LemonDBD - ${editingList?.title || t.untitled}` : c.pageTitle);
+  const isEditing = Boolean(editId || officialSlug);
+
+  useDocumentTitle(
+    editId
+      ? `LemonDBD - ${editingList?.title || t.untitled}`
+      : officialSlug
+        ? `LemonDBD - ${officialTemplate?.title || t.untitled}`
+        : c.pageTitle
+  );
 
   // Restore after mount (localStorage is client-only), then autosave -- new
   // lists only. Editing an existing one is seeded from the store instead
   // (below), never through this scratch-draft key.
   useEffect(() => {
-    if (editId) {
+    if (isEditing) {
       loaded.current = true;
       return;
     }
@@ -87,7 +100,7 @@ export function TierListCreator({ locale, editId }: TierListCreatorProps) {
       setRestored(true);
     }
     loaded.current = true;
-  }, [editId]);
+  }, [isEditing]);
 
   useEffect(() => {
     if (!restored) return;
@@ -98,7 +111,7 @@ export function TierListCreator({ locale, editId }: TierListCreatorProps) {
   }, [restored]);
 
   useEffect(() => {
-    if (!loaded.current || editId) return;
+    if (!loaded.current || isEditing) return;
     const timer = window.setTimeout(() => {
       try {
         if (draft.title || draft.description || draft.items.length) localStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
@@ -108,7 +121,7 @@ export function TierListCreator({ locale, editId }: TierListCreatorProps) {
       }
     }, 400);
     return () => window.clearTimeout(timer);
-  }, [draft, editId]);
+  }, [draft, isEditing]);
 
   // Edit mode: once the store has hydrated, seed the draft from the saved
   // list -- once per `editId`, so it doesn't clobber in-progress edits on
@@ -128,6 +141,27 @@ export function TierListCreator({ locale, editId }: TierListCreatorProps) {
       backgroundImage: editingList.backgroundImage ?? '',
     });
   }, [editId, storeHydrated, editingList]);
+
+  useEffect(() => {
+    if (!officialSlug || !officialTemplate || editSeeded.current === `official:${officialSlug}`) return;
+    editSeeded.current = `official:${officialSlug}`;
+    setDraft({
+      title: officialTemplate.title,
+      description: officialTemplate.description ?? '',
+      tiers: resolveTiers(null, officialTemplate.tiers),
+      items: (officialTemplate.custom_items ?? []).map((item) => ({
+        id: item.id,
+        name: item.name,
+        ...(item.image_url
+          ? { image: item.image_url }
+          : item.image_local_path
+          ? { image: item.image_local_path.startsWith('/static/') ? item.image_local_path : staticUrl(item.image_local_path) }
+          : {}),
+      })),
+      preset: null,
+      backgroundImage: officialTemplate.cover_image_url ?? '',
+    });
+  }, [officialSlug, officialTemplate]);
 
   const patch = (next: Partial<Draft>) => setDraft((d) => ({ ...d, ...next }));
 
@@ -153,19 +187,15 @@ export function TierListCreator({ locale, editId }: TierListCreatorProps) {
   const safeBackground = trimmedBackground ? sanitizeImageUrl(trimmedBackground) : null;
   const backgroundInvalid = Boolean(trimmedBackground) && !safeBackground;
 
-  // Editing a list the store doesn't have (deleted, or a stale/bad link):
-  // nothing to prefill, so send them back rather than silently falling
-  // through to "create a new list" under someone else's edit link.
-  if (editId && storeHydrated && !editingList) {
+  // Editing a list the store doesn't have (deleted, or a stale/bad link), or a
+  // non-admin attempting to edit an official list: nothing to prefill.
+  if (
+    (editId && storeHydrated && !editingList) ||
+    (officialSlug && !authLoading && !isAdmin) ||
+    (officialSlug && !officialLoading && (!officialTemplate || officialTemplate.kind !== 'custom'))
+  ) {
     return (
       <div className="relative z-10 flex flex-col gap-2">
-        <Link
-          href={`/${locale}/tier-lists`}
-          className="inline-flex min-h-[44px] w-fit items-center gap-1 type-label-sm text-text-secondary hover:text-accent-red"
-        >
-          <ChevronLeft className="h-4 w-4" aria-hidden="true" />
-          {t.backToHub}
-        </Link>
         <EmptyState icon={SearchX} title={t.customNotFoundTitle} subtitle={t.customNotFoundSubtitle} />
       </div>
     );
@@ -182,13 +212,52 @@ export function TierListCreator({ locale, editId }: TierListCreatorProps) {
       ...(safeBackground ? { backgroundImage: safeBackground } : {}),
     };
 
+    if (officialSlug && isAdmin) {
+      setPublishError(null);
+      setPublishing(true);
+      try {
+        await updateOfficialTierList(
+          officialSlug,
+          {
+            title: payload.title,
+            description: payload.description,
+            cover_image_url: safeBackground ?? null,
+            tiers: payload.tiers.map((tier) => ({
+              id: tier.id,
+              label: tier.label,
+              color: tier.color,
+              ...(tier.backgroundImage ? { backgroundImage: tier.backgroundImage } : {}),
+            })),
+            items: payload.items.map((i) => ({
+              id: i.id,
+              name: i.name,
+              ...(i.image ? { image_url: i.image } : {}),
+            })),
+          },
+          locale,
+          token
+        );
+        router.push(`/${locale}/tier-lists/${officialSlug}`);
+      } catch (err) {
+        setPublishError(err instanceof Error ? err.message : c.publishFailed);
+        setPublishing(false);
+      }
+      return;
+    }
+
     if (editId && editingList) {
-      // Editing in place: keep the id, its rankings and its creation date --
-      // only the fields the creator actually edits are replaced.
+      // Editing in place: normalize placements against current tiers and items
+      // so orphaned keys do not inflate the ranked count.
+      const itemIds = new Set(payload.items.map((i) => i.id));
+      const normalizedPlacements = normalizePlacements(
+        editingList.placements,
+        payload.tiers.map((t) => t.id),
+        (k) => itemIds.has(k)
+      ).placements;
       const result = saveCustomList({
         id: editId,
         ...payload,
-        placements: editingList.placements,
+        placements: normalizedPlacements,
         createdAt: editingList.createdAt,
       });
       if (!result.ok) {
@@ -203,14 +272,11 @@ export function TierListCreator({ locale, editId }: TierListCreatorProps) {
       setPublishError(null);
       setPublishing(true);
       try {
-        const res = await fetch(apiUrl('/api/v1/tier-lists'), {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
+        const created = await createOfficialTierList(
+          {
             title: payload.title,
             description: payload.description,
+            cover_image_url: safeBackground ?? null,
             tiers: payload.tiers.map((tier) => ({
               id: tier.id,
               label: tier.label,
@@ -222,24 +288,18 @@ export function TierListCreator({ locale, editId }: TierListCreatorProps) {
               name: i.name,
               ...(i.image ? { image_url: i.image } : {}),
             })),
-            ...(safeBackground ? { cover_image_url: safeBackground } : {}),
-          }),
-        });
-        if (!res.ok) {
-          const errorData: { error?: string } = await res.json().catch(() => ({}));
-          setPublishError(errorData.error || c.publishFailed);
-          setPublishing(false);
-          return;
-        }
-        const body: { data: { slug: string } } = await res.json();
+          },
+          locale,
+          token
+        );
         try {
           localStorage.removeItem(DRAFT_KEY);
         } catch {
           // ignore
         }
-        router.push(`/${locale}/tier-lists/${body.data.slug}`);
-      } catch {
-        setPublishError(c.publishFailed);
+        router.push(`/${locale}/tier-lists/${created.slug}`);
+      } catch (err) {
+        setPublishError(err instanceof Error ? err.message : c.publishFailed);
         setPublishing(false);
       }
       return;
@@ -265,8 +325,8 @@ export function TierListCreator({ locale, editId }: TierListCreatorProps) {
     setAttempted(false);
   };
 
-  const publishingNow = publishing && official && isAdmin && !editId;
-  const submitLabel = editId ? t.save : official && isAdmin ? (publishingNow ? c.publishing : c.publish) : c.create;
+  const publishingNow = publishing && isAdmin && (official || Boolean(officialSlug));
+  const submitLabel = isEditing ? (publishingNow ? c.publishing : t.save) : official && isAdmin ? (publishingNow ? c.publishing : c.publish) : c.create;
   const submitButton = (extra?: string) => (
     <Button
       variant="primary"
@@ -288,7 +348,7 @@ export function TierListCreator({ locale, editId }: TierListCreatorProps) {
 
   return (
     <div className="relative z-10 flex flex-col gap-6 2xl:gap-8 max-w-7xl 2xl:max-wide-2k:max-w-[1800px] wide-2k:max-w-[2400px] mx-auto w-full px-4 sm:px-6">
-      <h1 className="sr-only">{editId ? t.editDetails : c.pageTitle}</h1>
+      <h1 className="sr-only">{isEditing ? t.editDetails : c.pageTitle}</h1>
       {restored && (
         <div
           role="status"
@@ -306,117 +366,66 @@ export function TierListCreator({ locale, editId }: TierListCreatorProps) {
         </div>
       )}
 
-      {/* TOP ROW: IN-LINE NAVIGATION (LEFT), THE BASICS BLOCK (MIDDLE), PREVIEW & CREATE (RIGHT) */}
-      <header className="flex flex-col lg:flex-row items-stretch lg:items-start justify-between gap-3 lg:gap-4 w-full">
-        {/* Mobile top bar (< lg) */}
-        <div className="flex lg:hidden items-center justify-between gap-2 w-full">
-          <Link
-            href={`/${locale}/tier-lists`}
-            className="inline-flex min-h-[44px] items-center gap-1.5 type-label-sm text-text-secondary hover:text-accent-red transition-colors"
-          >
-            <ChevronLeft className="h-4 w-4" aria-hidden="true" />
-            {t.backToHub}
-          </Link>
-          <div className="flex items-center gap-2">
-            <Button
-              variant="secondary"
-              size="sm"
-              onClick={() => setPreviewOpen(true)}
-              className="min-h-[40px] uppercase tracking-wider"
-            >
-              {c.previewHeading}
-            </Button>
-            {submitButton('min-h-[40px] px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider')}
-          </div>
-        </div>
-
-        {/* Desktop top left navigation (>= lg) */}
-        <div className="hidden lg:flex shrink-0 lg:max-wide-2k:w-48 wide-2k:w-48 pt-2.5">
-          <Link
-            href={`/${locale}/tier-lists`}
-            className="inline-flex min-h-[44px] items-center gap-1.5 text-xs 2xl:text-sm font-bold uppercase tracking-wider text-text-secondary hover:text-accent-red transition-colors"
-          >
-            <ChevronLeft className="h-4 w-4 2xl:h-5 2xl:w-5" aria-hidden="true" />
-            {t.backToHub}
-          </Link>
-        </div>
-
-        {/* MIDDLE: THE BASICS BLOCK */}
-        <div className="flex-1 w-full min-w-0 max-w-4xl 2xl:max-wide-2k:max-w-6xl wide-2k:max-w-[1800px] mx-auto">
-          <Section title={c.stepBasics}>
-            <div className="grid gap-4 2xl:gap-6 md:grid-cols-2">
-              <label className="md:col-span-1">
-                <span className={LABEL}>{c.titleLabel}</span>
-                <Input
-                  value={draft.title}
-                  maxLength={TIER_LIST_LIMITS.maxTitle}
-                  onChange={(e) => patch({ title: e.target.value })}
-                  placeholder={c.titlePlaceholder}
-                  invalid={attempted && titleMissing}
-                  className={cn(TOUCH_FIELD, '2xl:min-h-[50px] 2xl:text-base')}
-                />
-              </label>
-              <label className="md:col-span-1">
-                <span className={LABEL}>{c.descriptionLabel}</span>
-                <Input
-                  value={draft.description}
-                  maxLength={TIER_LIST_LIMITS.maxDescription}
-                  onChange={(e) => patch({ description: e.target.value })}
-                  placeholder={c.descriptionPlaceholder}
-                  className={cn(TOUCH_FIELD, '2xl:min-h-[50px] 2xl:text-base')}
-                />
-              </label>
-              <label className="md:col-span-2">
-                <span className={LABEL}>{c.backgroundImageLabel}</span>
-                <Input
-                  value={draft.backgroundImage}
-                  onChange={(e) => patch({ backgroundImage: e.target.value })}
-                  placeholder={c.backgroundImagePlaceholder}
-                  inputMode="url"
-                  invalid={attempted && backgroundInvalid}
-                  className={cn(TOUCH_FIELD, '2xl:min-h-[50px] 2xl:text-base')}
-                />
-                <span
-                  className={cn(
-                    'mt-1 block text-xs 2xl:text-sm',
-                    attempted && backgroundInvalid ? 'font-semibold text-accent-red' : 'text-text-muted'
-                  )}
-                >
-                  {attempted && backgroundInvalid ? t.invalidImage : c.backgroundImageHint}
-                </span>
-                {safeBackground && (
-                  <div className="mt-2 h-24 w-full max-w-sm mx-auto overflow-hidden rounded-lg border border-border-color bg-bg-elevated">
-                    <img src={safeBackground} alt="" referrerPolicy="no-referrer" className="h-full w-full object-cover" />
-                  </div>
+      {/* THE BASICS BLOCK */}
+      <div className="w-full max-w-4xl 2xl:max-wide-2k:max-w-6xl wide-2k:max-w-[1800px] mx-auto">
+        <Section title={c.stepBasics}>
+          <div className="grid gap-4 2xl:gap-6 md:grid-cols-2">
+            <label className="md:col-span-1">
+              <span className={LABEL}>{c.titleLabel}</span>
+              <Input
+                value={draft.title}
+                maxLength={TIER_LIST_LIMITS.maxTitle}
+                onChange={(e) => patch({ title: e.target.value })}
+                placeholder={c.titlePlaceholder}
+                invalid={attempted && titleMissing}
+                className={cn(TOUCH_FIELD, '2xl:min-h-[50px] 2xl:text-base')}
+              />
+            </label>
+            <label className="md:col-span-1">
+              <span className={LABEL}>{c.descriptionLabel}</span>
+              <Input
+                value={draft.description}
+                maxLength={TIER_LIST_LIMITS.maxDescription}
+                onChange={(e) => patch({ description: e.target.value })}
+                placeholder={c.descriptionPlaceholder}
+                className={cn(TOUCH_FIELD, '2xl:min-h-[50px] 2xl:text-base')}
+              />
+            </label>
+            <label className="md:col-span-2">
+              <span className={LABEL}>{c.backgroundImageLabel}</span>
+              <Input
+                value={draft.backgroundImage}
+                onChange={(e) => patch({ backgroundImage: e.target.value })}
+                placeholder={c.backgroundImagePlaceholder}
+                inputMode="url"
+                invalid={attempted && backgroundInvalid}
+                className={cn(TOUCH_FIELD, '2xl:min-h-[50px] 2xl:text-base')}
+              />
+              <span
+                className={cn(
+                  'mt-1 block text-xs 2xl:text-sm',
+                  attempted && backgroundInvalid ? 'font-semibold text-accent-red' : 'text-text-muted'
                 )}
-              </label>
-              {isAdmin && !editId && (
-                <Checkbox checked={official} onChange={setOfficial} className="md:col-span-2 justify-center gap-2.5">
-                  <span className="text-center">
-                    <span className={cn(LABEL, 'inline')}>{c.official}</span>
-                    <span className="ml-2 text-xs 2xl:text-sm text-text-muted">{c.officialHint}</span>
-                  </span>
-                </Checkbox>
+              >
+                {attempted && backgroundInvalid ? t.invalidImage : c.backgroundImageHint}
+              </span>
+              {safeBackground && (
+                <div className="mt-2 h-24 w-full max-w-sm mx-auto overflow-hidden rounded-lg border border-border-color bg-bg-elevated">
+                  <img src={safeBackground} alt="" referrerPolicy="no-referrer" className="h-full w-full object-cover" />
+                </div>
               )}
-            </div>
-          </Section>
-        </div>
-
-        {/* Desktop top right buttons (>= lg) */}
-        <div className="hidden lg:flex shrink-0 lg:max-wide-2k:w-48 wide-2k:w-48 items-center justify-end gap-2.5 sm:gap-3 pt-2">
-          <Button
-            variant="secondary"
-            size="sm"
-            onClick={() => setPreviewOpen(true)}
-            className="min-h-[40px] 2xl:min-h-[46px] 2xl:px-5 2xl:text-sm uppercase tracking-wider"
-          >
-            {c.previewHeading}
-          </Button>
-          {submitButton(
-            'min-h-[40px] 2xl:min-h-[46px] px-4 2xl:px-6 py-1.5 text-xs 2xl:text-sm font-bold uppercase tracking-wider'
-          )}
-        </div>
-      </header>
+            </label>
+            {isAdmin && !isEditing && (
+              <Checkbox checked={official} onChange={setOfficial} className="md:col-span-2 justify-center gap-2.5">
+                <span className="text-center">
+                  <span className={cn(LABEL, 'inline')}>{c.official}</span>
+                  <span className="ml-2 text-xs 2xl:text-sm text-text-muted">{c.officialHint}</span>
+                </span>
+              </Checkbox>
+            )}
+          </div>
+        </Section>
+      </div>
 
       {/* TIERS BLOCK */}
       <div className="w-full max-w-4xl 2xl:max-wide-2k:max-w-6xl wide-2k:max-w-[1800px] mx-auto">
@@ -448,7 +457,12 @@ export function TierListCreator({ locale, editId }: TierListCreatorProps) {
               onUpdateItem={(id, patch) =>
                 setDraft((d) => ({
                   ...d,
-                  items: d.items.map((i) => (i.id === id ? { ...i, ...patch } : i)),
+                  items: d.items.map((i) => {
+                    if (i.id !== id) return i;
+                    const nextItem: typeof i = { id: i.id, name: patch.name };
+                    if (patch.image) nextItem.image = patch.image;
+                    return nextItem;
+                  }),
                 }))
               }
               onRemove={(id) => setDraft((d) => ({ ...d, items: d.items.filter((i) => i.id !== id) }))}
@@ -462,6 +476,18 @@ export function TierListCreator({ locale, editId }: TierListCreatorProps) {
             )}
           </div>
         </Section>
+      </div>
+
+      {/* Preview and save, centered under all the sections. */}
+      <div className="flex flex-wrap items-center justify-center gap-3 2xl:gap-4">
+        <Button
+          variant="secondary"
+          onClick={() => setPreviewOpen(true)}
+          className="min-h-[44px] 2xl:min-h-[50px] px-6 2xl:px-8 uppercase tracking-wider"
+        >
+          {c.previewHeading}
+        </Button>
+        {submitButton('min-h-[44px] 2xl:min-h-[50px] px-6 2xl:px-8 text-sm 2xl:text-base font-bold uppercase tracking-wider')}
       </div>
 
       {/* Feedback Alerts */}

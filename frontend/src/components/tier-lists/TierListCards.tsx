@@ -53,7 +53,6 @@ export function OfficialTierListCard({ list, rankedCount, locale }: OfficialCard
           </h3>
         </div>
       </div>
-      {list.description && <p className="line-clamp-2 text-sm text-text-secondary text-center sm:text-left">{list.description}</p>}
       <div className="mt-auto flex flex-wrap items-center justify-center sm:justify-start gap-2 pt-1 type-strong">
         {list.item_count !== null && (
           <span className="text-text-muted">{formatMessage(t.itemsCount, { count: list.item_count })}</span>
@@ -95,7 +94,7 @@ export function CustomTierListCard({ list, locale, onDelete, disabled }: CustomC
   const t = dict.tierLists;
   const ranked = Object.values(list.placements).reduce((n, keys) => n + keys.length, 0);
   const preview = list.items.filter((i) => i.image).slice(0, 5);
-  const date = formatDate(list.updatedAt, locale) || null;
+  const date = list.updatedAt > 0 ? formatDate(list.updatedAt, locale) || null : null;
   const customTitle = list.title || t.untitled;
   const background = list.backgroundImage ? coverSrc(list.backgroundImage) : null;
 
@@ -110,7 +109,7 @@ export function CustomTierListCard({ list, locale, onDelete, disabled }: CustomC
           <div
             aria-hidden="true"
             className="absolute inset-0 bg-cover bg-center opacity-20 dark:opacity-30 mix-blend-luminosity"
-            style={{ backgroundImage: `url('${background}')` }}
+            style={{ backgroundImage: `url('${background.replace(/\\/g, '%5C').replace(/'/g, '%27')}')` }}
           />
           <div
             aria-hidden="true"
@@ -157,8 +156,8 @@ export function CustomTierListCard({ list, locale, onDelete, disabled }: CustomC
                   e.stopPropagation();
                   onDelete(list.id, customTitle);
                 }}
-                {...tip(t.deleteTier, undefined, 'action')}
-                aria-label={`${t.deleteTier} ${customTitle}`}
+                {...tip(t.deleteList, undefined, 'action')}
+                aria-label={`${t.deleteList} ${customTitle}`}
                 className="p-1.5 rounded-xl border border-border-color bg-bg-surface text-text-muted hover:text-accent-red hover:border-accent-red/40 hover:bg-accent-red/10 transition-colors cursor-pointer"
               >
                 <Trash2 className="h-4 w-4" aria-hidden="true" />

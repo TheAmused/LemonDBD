@@ -1,6 +1,7 @@
 // frontend/src/services/tierListApi.ts
-import type { TierListSummary, TierListTemplate } from '@/types/tierList';
-import { catalogKey } from '@/services/dataCache';
+import type { TierDefinition, TierListSummary, TierListTemplate, TierPlacements } from '@/types/tierList';
+import { catalogKey, invalidate, writeCache } from '@/services/dataCache';
+import { apiUrl, authFetch } from '@/utils/api';
 
 /*
  * Official tier lists are seed content, served by `@cache_catalog` endpoints
@@ -35,3 +36,64 @@ export function tierListCacheKey(slug: string, lang: string): string {
 export function isNotFoundError(error: unknown): boolean {
   return error instanceof Error && /\(404\)/.test(error.message);
 }
+
+export interface OfficialTierListUpdatePayload {
+  title?: string;
+  description?: string;
+  cover_image_url?: string | null;
+  tiers?: TierDefinition[];
+  items?: Array<{ id: string; name: string; image_url?: string }>;
+  default_placements?: TierPlacements | null;
+}
+
+export async function updateOfficialTierList(
+  slug: string,
+  payload: OfficialTierListUpdatePayload,
+  lang: string,
+  token?: string | null
+): Promise<TierListTemplate> {
+  const res = await authFetch(apiUrl(`/api/v1/tier-lists/${encodeURIComponent(slug)}?lang=${encodeURIComponent(lang)}`), {
+    method: 'PUT',
+    token,
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) {
+    const errBody: { error?: string } = await res.json().catch(() => ({}));
+    throw new Error(errBody.error || `Request failed (${res.status})`);
+  }
+  const body = (await res.json()) as { data: TierListTemplate };
+  writeCache<TierListResponse>(tierListCacheKey(slug, lang), { data: body.data });
+  invalidate(catalogKey('tier-lists'));
+  return body.data;
+}
+
+export interface OfficialTierListCreatePayload {
+  title: string;
+  description?: string;
+  cover_image_url?: string | null;
+  tiers: TierDefinition[];
+  items: Array<{ id: string; name: string; image_url?: string }>;
+}
+
+export async function createOfficialTierList(
+  payload: OfficialTierListCreatePayload,
+  lang: string,
+  token?: string | null
+): Promise<TierListTemplate> {
+  const res = await authFetch(apiUrl(`/api/v1/tier-lists?lang=${encodeURIComponent(lang)}`), {
+    method: 'POST',
+    token,
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) {
+    const errBody: { error?: string } = await res.json().catch(() => ({}));
+    throw new Error(errBody.error || `Request failed (${res.status})`);
+  }
+  const body = (await res.json()) as { data: TierListTemplate };
+  writeCache<TierListResponse>(tierListCacheKey(body.data.slug, lang), { data: body.data });
+  invalidate(catalogKey('tier-lists'));
+  return body.data;
+}
+

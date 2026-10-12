@@ -14,7 +14,7 @@ export type CopyState = 'idle' | 'copied' | 'failed';
 
 export interface ExportModalLabels {
   title: string;
-  subtitle: string;
+  subtitle?: string;
   shareLinkLabel: string;
   preparingLink: string;
   copyLink: string;
@@ -50,6 +50,8 @@ export interface ExportModalProps<D> {
   buttonClassName?: string;
   /** Layout of the JSON action row. */
   actionsClassName?: string;
+  /** Centered title with no header icon. */
+  plainHeader?: boolean;
 }
 
 /** Triggers a browser download of `text` as `fileName`. */
@@ -85,6 +87,7 @@ export function ExportModal<D>({
   jsonFieldClassName,
   buttonClassName,
   actionsClassName,
+  plainHeader,
 }: ExportModalProps<D>) {
   const json = useMemo(() => (doc ? serialize(doc) : ''), [doc, serialize]);
   const [shareUrl, setShareUrl] = useState<string>('');
@@ -120,8 +123,8 @@ export function ExportModal<D>({
       onClose={onClose}
       size="2xl"
       title={labels.title}
-      subtitle={labels.subtitle}
-      icon={<Share2 className="h-5 w-5" aria-hidden="true" />}
+      icon={plainHeader ? undefined : <Share2 className="h-5 w-5" aria-hidden="true" />}
+      centerTitle={plainHeader}
       bodyClassName="p-4 sm:p-6"
     >
       <div className="flex flex-col gap-6">

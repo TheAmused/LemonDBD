@@ -7,6 +7,8 @@ import { useAuth } from '@/context/AuthContext';
 import { useRouter, usePathname } from 'next/navigation';
 import { useAltcha } from '@/hooks/useAltcha';
 import { useDemoAccounts, type DemoAccount } from '@/hooks/useDemoAccounts';
+import { useGoogleClientId } from '@/hooks/useGoogleConfig';
+import { GoogleSignInButton } from '@/components/auth/GoogleSignInButton';
 import { AltchaWidget } from '@/components/common/AltchaWidget';
 import {
   Mail,
@@ -43,7 +45,7 @@ type Notice =
 
 export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode = 'login', verifyEmailFor }) => {
   const dict = useDictionary();
-  const { login, register, forgotPassword } = useAuth();
+  const { login, loginWithGoogle, register, forgotPassword } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
   const {
@@ -153,6 +155,32 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : dict.user.unexpectedError;
       setError(message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const googleClientId = useGoogleClientId(isOpen);
+  const handleGoogleCredential = async (credential: string) => {
+    if (mode === 'register' && !acceptedLegal) {
+      setLegalAttempted(true);
+      return;
+    }
+    setError(null);
+    setLoading(true);
+    try {
+      const res = await loginWithGoogle(credential);
+      if (res.twoFactorToken) {
+        setNotice({ type: 'two-factor', token: res.twoFactorToken });
+      } else if (res.success) {
+        onClose();
+        if (res.user && !res.user.onboarding_completed_at) {
+          const locale = pathname?.split('/')[1] || 'en';
+          router.push(`/${locale}/welcome`);
+        }
+      } else {
+        setError(res.error || dict.user.googleSignInFailed);
+      }
     } finally {
       setLoading(false);
     }
@@ -384,6 +412,20 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
             )}
           </Button>
         </form>
+      )}
+
+      {!notice && mode !== 'forgot' && googleClientId && (
+        <div className="mt-4 space-y-3">
+          <div className="flex items-center gap-3" role="separator">
+            <span className="h-px flex-1 bg-border-color" />
+            <span className="type-label-2xs text-text-muted">{dict.user.googleOrDivider}</span>
+            <span className="h-px flex-1 bg-border-color" />
+          </div>
+          <GoogleSignInButton
+            clientId={googleClientId}
+            onCredential={handleGoogleCredential}
+          />
+        </div>
       )}
 
       {!notice && mode !== 'forgot' && demoAccounts.length > 0 && (

@@ -52,5 +52,6 @@ export default {
   errChallengeExpired: "このログイン手順は期限切れです。戻ってもう一度ログインしてください。",
   errIncorrectPassword: "パスワードが正しくありません。",
   errUnavailable: "現在、二要素認証は利用できません。",
+  needsPasswordHint: "先にパスワードを設定してください（上記参照）。二段階認証の設定には、本人確認のためにパスワードが必要です。",
   errGeneric: "問題が発生しました。もう一度お試しください。",
 } as const;

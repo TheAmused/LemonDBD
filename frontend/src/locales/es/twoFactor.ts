@@ -52,5 +52,6 @@ export default {
   errChallengeExpired: "Este paso de inicio de sesión caducó. Vuelve atrás e inicia sesión de nuevo.",
   errIncorrectPassword: "Contraseña incorrecta.",
   errUnavailable: "La autenticación en dos pasos no está disponible en este momento.",
+  needsPasswordHint: "Primero establece una contraseña (ver arriba). La verificación en dos pasos la necesita para confirmar que eres tú.",
   errGeneric: "Algo salió mal. Inténtalo de nuevo.",
 } as const;

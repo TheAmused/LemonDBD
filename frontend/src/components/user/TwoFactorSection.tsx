@@ -17,9 +17,14 @@ import { formatMessage } from '@/utils/i18nFormat';
 interface TwoFactorSectionProps {
   refreshTrigger?: number;
   onStatusChange?: () => void;
+  needsPassword?: boolean;
 }
 
-export const TwoFactorSection: React.FC<TwoFactorSectionProps> = ({ refreshTrigger = 0, onStatusChange }) => {
+export const TwoFactorSection: React.FC<TwoFactorSectionProps> = ({
+  refreshTrigger = 0,
+  onStatusChange,
+  needsPassword = false,
+}) => {
   const dict = useDictionary();
   const t = dict.twoFactor;
   const params = useParams();
@@ -79,9 +84,16 @@ export const TwoFactorSection: React.FC<TwoFactorSectionProps> = ({ refreshTrigg
 
       {status?.available && !status.enabled ? (
         <div>
-          <Button variant="primary" size="sm" onClick={() => setSetupOpen(true)} leftIcon={<KeyRound className="h-3.5 w-3.5" />}>
+          <Button
+            variant="primary"
+            size="sm"
+            disabled={needsPassword}
+            onClick={() => setSetupOpen(true)}
+            leftIcon={<KeyRound className="h-3.5 w-3.5" />}
+          >
             <span>{t.enableButton}</span>
           </Button>
+          {needsPassword ? <p className="type-caption mt-2 text-text-muted">{t.needsPasswordHint}</p> : null}
         </div>
       ) : null}
 

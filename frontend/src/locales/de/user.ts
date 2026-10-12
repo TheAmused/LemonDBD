@@ -130,7 +130,7 @@ export default {
   googleOrDivider: "oder",
   googleSignInFailed: "Anmeldung mit Google fehlgeschlagen. Versuche es erneut.",
   setPasswordTitle: "Passwort",
-  setPasswordDesc: "Da du dich über Google angemeldet hast, hat dieses Konto noch kein Passwort. Um eines festzulegen, senden wir dir einen Link per E-Mail. Danach kannst du dich auch mit E-Mail und Passwort anmelden.",
+  setPasswordDesc: "Da du dich über Google angemeldet hast, hat dieses Konto noch kein Passwort. Um eines festzulegen, senden wir dir einen Link per E-Mail.",
   setPasswordButton: "Neues Passwort festlegen",
   setPasswordSent: "Ein Link zum Festlegen deines Passworts wurde an deine E-Mail gesendet.",
   deleteAccountGoogleDesc: "Bestätige mit Google, um dein Konto zu löschen. Dein Konto und die gespeicherten Daten werden endgültig entfernt.",

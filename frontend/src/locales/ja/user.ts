@@ -130,7 +130,7 @@ export default {
   googleOrDivider: "または",
   googleSignInFailed: "Googleでのログインに失敗しました。もう一度お試しください。",
   setPasswordTitle: "パスワード",
-  setPasswordDesc: "Googleでログインしたため、このアカウントにはまだパスワードがありません。設定用のリンクをメールで送信します。その後はメールアドレスとパスワードでもログインできます。",
+  setPasswordDesc: "Googleでログインしたため、このアカウントにはまだパスワードがありません。設定用のリンクをメールで送信します。",
   setPasswordButton: "新しいパスワードを設定",
   setPasswordSent: "パスワード設定リンクをメールで送信しました。",
   deleteAccountGoogleDesc: "Googleで確認してアカウントを削除します。アカウントと保存データは完全に削除されます。",

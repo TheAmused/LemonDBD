@@ -7,6 +7,8 @@ import type { TierColor } from '@/types/tierList';
 import { cn } from '@/utils/cn';
 import { tierColorProps } from './tierColor';
 
+import { staticUrl } from '@/utils/api';
+
 interface TierBadgeProps {
   label: string;
   color: TierColor;
@@ -31,8 +33,10 @@ interface TierBadgeProps {
  */
 export function TierBadge({ label, color, backgroundImage, className, labelClassName }: TierBadgeProps) {
   if (backgroundImage) {
+    const resolved = backgroundImage.startsWith('/static/') ? (staticUrl(backgroundImage) ?? backgroundImage) : backgroundImage;
+    const safeUrl = resolved.replace(/\\/g, '%5C').replace(/'/g, '%27');
     return (
-      <div className={cn('bg-cover bg-center', className)} style={{ backgroundImage: `url('${backgroundImage}')` }}>
+      <div className={cn('bg-cover bg-center', className)} style={{ backgroundImage: `url('${safeUrl}')` }}>
         <span className="sr-only">{label}</span>
       </div>
     );

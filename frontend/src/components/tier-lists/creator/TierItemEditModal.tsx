@@ -59,7 +59,7 @@ export function TierItemEditModal({ item, isOpen, onClose, onSave }: TierItemEdi
     }
     onSave(item.id, {
       name: trimmedName,
-      ...(safeImage ? { image: safeImage } : {}),
+      image: safeImage ?? undefined,
     });
     onClose();
   };

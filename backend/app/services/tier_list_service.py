@@ -157,33 +157,53 @@ def update_tier_list(
 
     if title is not _UNSET and title is not None:
         row.title = title.strip()
+        if isinstance(row.translations, dict):
+            row.translations = {
+                lang: {k: v for k, v in entry.items() if k != "title"} if isinstance(entry, dict) else entry
+                for lang, entry in row.translations.items()
+            }
     if description is not _UNSET and description is not None:
         row.description = description.strip()
+        if isinstance(row.translations, dict):
+            row.translations = {
+                lang: {k: v for k, v in entry.items() if k != "description"} if isinstance(entry, dict) else entry
+                for lang, entry in row.translations.items()
+            }
     if cover_image_url is not _UNSET:
         row.cover_image_url = cover_image_url
     if tiers is not _UNSET and tiers is not None:
         row.tiers = tiers
         if isinstance(row.translations, dict):
-            next_trans = {}
-            for lang_key, entry in row.translations.items():
-                if isinstance(entry, dict) and "tiers" in entry:
-                    copy_entry = dict(entry)
-                    copy_entry.pop("tiers", None)
-                    next_trans[lang_key] = copy_entry
-                else:
-                    next_trans[lang_key] = entry
-            row.translations = next_trans
+            row.translations = {
+                lang: {k: v for k, v in entry.items() if k != "tiers"} if isinstance(entry, dict) else entry
+                for lang, entry in row.translations.items()
+            }
     if custom_items is not _UNSET and custom_items is not None:
         if row.kind != "custom":
             raise ValueError(f"Tier list {row.slug!r} ranks {row.kind!r} and cannot carry custom_items")
         row.custom_items = custom_items
+        if isinstance(row.translations, dict):
+            row.translations = {
+                lang: {k: v for k, v in entry.items() if k != "items"} if isinstance(entry, dict) else entry
+                for lang, entry in row.translations.items()
+            }
 
     if default_placements is not _UNSET:
         row.default_placements = default_placements
 
     if row.default_placements:
         tier_ids = {str(t.get("id")) for t in (row.tiers or [])} or {"s", "a", "b", "c", "d", "f"}
-        pruned = {k: v for k, v in row.default_placements.items() if k in tier_ids and v}
+        allowed_items = (
+            {str(i.get("id")) for i in (row.custom_items or [])}
+            if row.kind == "custom" and row.custom_items is not None
+            else None
+        )
+        pruned: dict[str, list[str]] = {}
+        for k, v in row.default_placements.items():
+            if k in tier_ids and isinstance(v, list):
+                filtered = [item for item in v if allowed_items is None or item in allowed_items]
+                if filtered:
+                    pruned[k] = filtered
         row.default_placements = pruned or None
 
     row.updated_at = datetime.now(timezone.utc)

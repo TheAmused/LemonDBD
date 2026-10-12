@@ -71,11 +71,18 @@ class TierListAdminUpdate(BaseModel):
         if value is None:
             return None
         cleaned: dict[str, list[str]] = {}
+        placed_keys: set[str] = set()
         for tier_id, keys in value.items():
             tid = str(tier_id).strip()[:40]
             if not tid or not isinstance(keys, list):
                 continue
-            valid_keys = [str(k).strip()[:64] for k in keys if isinstance(k, str) and str(k).strip()]
+            valid_keys: list[str] = []
+            for k in keys:
+                if isinstance(k, str):
+                    s = k.strip()[:64]
+                    if s and s not in placed_keys:
+                        placed_keys.add(s)
+                        valid_keys.append(s)
             if valid_keys:
                 cleaned[tid] = valid_keys[:400]
         return cleaned or None

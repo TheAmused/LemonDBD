@@ -10,6 +10,12 @@ export const BOARD_SCALE_STEPS = [40, 55, 70, 85, 100, 115, 130] as const;
 export type BoardScaleStep = (typeof BOARD_SCALE_STEPS)[number];
 export type BoardScale = BoardScaleStep | 'fit';
 
+export const isBoardScale = (value: unknown): value is BoardScale => {
+  if (value === 'fit') return true;
+  const num = typeof value === 'number' ? value : Number(value);
+  return (BOARD_SCALE_STEPS as readonly number[]).includes(num);
+};
+
 export interface FitInput {
   /** Board box, in CSS px. */
   width: number;
@@ -58,7 +64,7 @@ export interface FitResult {
 }
 
 export const MIN_TILE = 18;
-export const BASE_MIN_TILE = 48;
+const BASE_MIN_TILE = 48;
 export const NAMES_MIN_TILE = 44;
 const BASE_MAX_TILE = 96;
 const SCALED_MAX_TILE = 128;

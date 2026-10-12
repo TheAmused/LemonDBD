@@ -26,6 +26,8 @@ def clean_image_url(value: str | None) -> str | None:
         return None
     if value.startswith("data:"):
         return value if len(value) <= _MAX_DATA_IMAGE_CHARS and _DATA_IMAGE_PATTERN.match(value) else None
+    if any(c in value for c in ('"', "'", "\\", "<", ">")) or any(ord(c) <= 32 or ord(c) == 127 for c in value):
+        return None
     if value.startswith("/static/"):
         return value if ".." not in value and "//" not in value else None
     if len(value) > 2048:

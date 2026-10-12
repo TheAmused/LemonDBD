@@ -1,16 +1,14 @@
 'use client';
 // frontend/src/app/[locale]/tier-lists/new/page.tsx
 
-import React from 'react';
+import React, { Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { PageShell } from '@/components/layout/PageShell';
 import { TierListCreator } from '@/components/tier-lists/creator/TierListCreator';
-import { useDictionary, useLocale } from '@/context/DictionaryContext';
+import { useLocale } from '@/context/DictionaryContext';
+import TierListsLoading from '../loading';
 
-
-export default function NewTierListPage() {
-  const dict = useDictionary();
-  const locale = useLocale();
+function NewTierListContent({ locale }: { locale: string }) {
   // `?edit=<id>` -- reused by "Edit details" on a custom list's own page
   // (`CustomTierListView.tsx`) instead of a title/description-only modal:
   // the creator prefills from that list and saves back onto it in place.
@@ -20,6 +18,12 @@ export default function NewTierListPage() {
   const editId = searchParams.get('edit') ?? undefined;
   const officialSlug = searchParams.get('official') ?? undefined;
 
+  return <TierListCreator locale={locale} editId={editId} officialSlug={officialSlug} />;
+}
+
+export default function NewTierListPage() {
+  const locale = useLocale();
+
   return (
     <PageShell
       locale={locale}
@@ -27,7 +31,9 @@ export default function NewTierListPage() {
       padding="tight"
       mainClassName="relative flex flex-col"
     >
-      <TierListCreator locale={locale} editId={editId} officialSlug={officialSlug} />
+      <Suspense fallback={<TierListsLoading />}>
+        <NewTierListContent locale={locale} />
+      </Suspense>
     </PageShell>
   );
 }

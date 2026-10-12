@@ -68,3 +68,32 @@ export async function updateOfficialTierList(
   return body.data;
 }
 
+export interface OfficialTierListCreatePayload {
+  title: string;
+  description?: string;
+  cover_image_url?: string | null;
+  tiers: TierDefinition[];
+  items: Array<{ id: string; name: string; image_url?: string }>;
+}
+
+export async function createOfficialTierList(
+  payload: OfficialTierListCreatePayload,
+  lang: string,
+  token?: string | null
+): Promise<TierListTemplate> {
+  const res = await authFetch(apiUrl(`/api/v1/tier-lists?lang=${encodeURIComponent(lang)}`), {
+    method: 'POST',
+    token,
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) {
+    const errBody: { error?: string } = await res.json().catch(() => ({}));
+    throw new Error(errBody.error || `Request failed (${res.status})`);
+  }
+  const body = (await res.json()) as { data: TierListTemplate };
+  writeCache<TierListResponse>(tierListCacheKey(body.data.slug, lang), { data: body.data });
+  invalidate(catalogKey('tier-lists'));
+  return body.data;
+}
+

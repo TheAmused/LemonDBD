@@ -35,10 +35,18 @@ describe('Tier list fit: tile size follows the room', () => {
     assert.equal(fit.rowMin, fit.tile + 2 * fit.pad);
   });
 
-  it('more items give smaller tiles', () => {
-    const few = computeFit({ ...base, tierCounts: [2, 2, 2, 2, 2, 2] });
-    const many = computeFit({ ...base, tierCounts: [30, 40, 60, 60, 40, 20] });
+  it('more items give smaller tiles on small screens', () => {
+    const small = { ...base, width: 600, height: 800 };
+    const few = computeFit({ ...small, tierCounts: [2, 2, 2, 2, 2, 2] });
+    const many = computeFit({ ...small, tierCounts: [30, 40, 60, 60, 40, 20] });
     assert.ok(many.tile < few.tile);
+  });
+
+  it('on a desktop a crowded board keeps comfortable tiles and scrolls instead of shrinking', () => {
+    const fit = computeFit({ ...base, width: 1920, height: 1080, tierCounts: [30, 40, 60, 60, 40, 20], poolCount: 143 });
+    assert.equal(fit.pageScroll, true);
+    assert.ok(fit.tile >= 64);
+    assert.equal(computeFit({ ...base, width: 1920, height: 1080, poolCount: 3 }).pageScroll, false);
   });
 
   it('hides item names instead of shrinking the image below the readable size', () => {

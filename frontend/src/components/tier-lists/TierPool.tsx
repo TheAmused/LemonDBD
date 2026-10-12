@@ -175,6 +175,8 @@ export function TierPool({
             className={cn(
               'min-h-[100px] max-h-[40dvh] flex-1 overflow-y-auto overscroll-contain p-3 sm:p-4 transition-colors',
               'group-data-[fit]/board:min-h-0 group-data-[fit]/board:max-h-none group-data-[fit]/board:p-(--tile-pad)',
+              // Showing in full on a scrolling board: no scroll box here, or it would swallow the wheel meant for the page.
+              'group-data-[scroll]/board:overflow-visible group-data-[scroll]/board:overscroll-auto',
               isOver && 'bg-accent-red/10',
               canReceiveSelection && 'cursor-pointer hover:bg-accent-amber/5'
             )}

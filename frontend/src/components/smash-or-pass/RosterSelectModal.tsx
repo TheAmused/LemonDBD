@@ -82,7 +82,7 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
       ariaLabel={selectRosterTitle}
       closeButtonAriaLabel={dict.modal.close}
       backdrop="blur"
-      className="h-[94dvh] max-h-[1100px] min-h-[580px] max-w-[1600px] border-2 border-accent-red/35 rounded-[32px] sm:rounded-[44px]"
+      className="h-[94dvh] max-h-[1100px] min-h-[580px] max-w-[1600px] border-2 border-accent-red/35 rounded-3xl"
       bodyClassName="flex flex-col overflow-hidden"
     >
       <div className="relative flex min-h-0 w-full flex-1 flex-col items-center justify-between overflow-hidden p-4 sm:p-6 md:p-8">

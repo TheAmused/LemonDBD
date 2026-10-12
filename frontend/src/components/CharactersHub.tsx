@@ -82,7 +82,7 @@ export const CharactersHub: React.FC = () => {
     ownershipMode, ownershipLoading, ownershipSaving, ownershipSaveError, savedModalOpen, closeSavedModal,
     characterOwnershipDraft, allPerks, perkUnlockDraft, perksPopupCharacter, setPerksPopupCharacter,
     handleToggleOwnershipMode, handleToggleCharacterOwned, handleTogglePerkUnlocked,
-    handleCancelOwnershipMode, handleSaveOwnership, getCharacterPerkStats,
+    handleSaveOwnership, getCharacterPerkStats,
   } = ownership;
 
   const backendBase = getBackendBaseUrl();
@@ -195,7 +195,6 @@ export const CharactersHub: React.FC = () => {
         <OwnershipSaveBar
           ownershipSaveError={ownershipSaveError}
           ownershipSaving={ownershipSaving}
-          onCancel={handleCancelOwnershipMode}
           onSave={handleSaveOwnership}
         />
       )}

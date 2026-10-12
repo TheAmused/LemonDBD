@@ -10,8 +10,8 @@ export default async function PageStreakKillerPage({
 }) {
   const { locale, killer } = await params;
   return (
-    <ChallengeModeGate mode="page_streak" locale={locale} role="killer">
-      <PageStreakRunView locale={locale} killer={decodeURIComponent(killer)} />
+    <ChallengeModeGate mode="page_streak">
+      <PageStreakRunView killer={decodeURIComponent(killer)} />
     </ChallengeModeGate>
   );
 }

@@ -15,8 +15,7 @@
  * single-locale, matching the agreed plan's explicit non-goal.
  */
 import { useMemo, useState } from 'react';
-import Link from 'next/link';
-import { ChevronLeft, History, Plus, SearchX, X } from 'lucide-react';
+import { History, Plus, SearchX, X } from 'lucide-react';
 import { EmptyState } from '@/components/common/EmptyState';
 import { useAuth } from '@/context/AuthContext';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
@@ -129,13 +128,6 @@ export function SmashRosterCreator({ locale, editId }: SmashRosterCreatorProps) 
   if (editId && storeHydrated && !editingRoster) {
     return (
       <div className="relative z-10 flex flex-col gap-2">
-        <Link
-          href={`/${locale}/smash-or-pass`}
-          className="inline-flex min-h-[44px] w-fit items-center gap-1 type-label-sm text-text-secondary hover:text-accent-red"
-        >
-          <ChevronLeft className="h-4 w-4" aria-hidden="true" />
-          {c.title || 'Create a Roster'}
-        </Link>
         <EmptyState icon={SearchX} title={t?.empty?.title || 'Not Found'} subtitle={t?.empty?.subtitle || ''} />
       </div>
     );
@@ -204,32 +196,17 @@ export function SmashRosterCreator({ locale, editId }: SmashRosterCreatorProps) 
         </div>
       )}
 
-      {/* TOP ROW: IN-LINE NAVIGATION (LEFT), THE BASICS BLOCK (MIDDLE), CREATE (RIGHT) */}
+      {/* TOP ROW: SPACER (LEFT, keeps the basics block centred), THE BASICS BLOCK (MIDDLE), CREATE (RIGHT) */}
       <header className="flex flex-col lg:flex-row items-stretch lg:items-start justify-between gap-3 lg:gap-4 w-full">
         {/* Mobile top bar (< lg) */}
-        <div className="flex lg:hidden items-center justify-between gap-2 w-full">
-          <Link
-            href={`/${locale}/smash-or-pass`}
-            className="inline-flex min-h-[44px] items-center gap-1.5 type-label-sm text-text-secondary hover:text-accent-red transition-colors"
-          >
-            <ChevronLeft className="h-4 w-4" aria-hidden="true" />
-            {c.backToHub || 'Smash or Pass'}
-          </Link>
+        <div className="flex lg:hidden items-center justify-end gap-2 w-full">
           <div className="flex items-center gap-2">
             {submitButton('min-h-[40px] px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider')}
           </div>
         </div>
 
-        {/* Desktop top left navigation (>= lg) */}
-        <div className="hidden lg:flex shrink-0 lg:max-wide-2k:w-48 wide-2k:w-48 pt-2.5">
-          <Link
-            href={`/${locale}/smash-or-pass`}
-            className="inline-flex min-h-[44px] items-center gap-1.5 text-xs 2xl:text-sm font-bold uppercase tracking-wider text-text-secondary hover:text-accent-red transition-colors"
-          >
-            <ChevronLeft className="h-4 w-4 2xl:h-5 2xl:w-5" aria-hidden="true" />
-            {c.backToHub || 'Smash or Pass'}
-          </Link>
-        </div>
+        {/* Desktop left spacer (>= lg) */}
+        <div aria-hidden="true" className="hidden lg:block shrink-0 lg:max-wide-2k:w-48 wide-2k:w-48" />
 
         {/* MIDDLE: THE BASICS BLOCK */}
         <div className="flex-1 w-full min-w-0 max-w-4xl 2xl:max-wide-2k:max-w-6xl wide-2k:max-w-[1800px] mx-auto">

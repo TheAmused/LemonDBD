@@ -192,6 +192,8 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({ isOpen, onClose 
       setErrorMsg(msg);
     } finally {
       setIsSubmitting(false);
+      // A solved ALTCHA challenge works once; guests need a fresh one for the next report.
+      if (!isAuthenticated) void refreshChallenge();
     }
   };
 
@@ -216,6 +218,7 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({ isOpen, onClose 
             form="bug-report-form"
             variant="primary"
             loading={isSubmitting}
+            disabled={!isAuthenticated && !isAltchaVerified}
             className="w-full sm:w-auto"
           >
             {isSubmitting ? <span>{t.bugSubmitting || ''}</span> : <span>{t.bugSubmitButton || ''}</span>}

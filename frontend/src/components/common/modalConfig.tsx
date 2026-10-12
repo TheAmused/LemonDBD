@@ -75,7 +75,7 @@ export const MODAL_CONFIG = {
   variants: {
     dialog: {
       container: 'items-center justify-center p-2.5 sm:p-4 md:p-6',
-      panel: 'rounded-[28px] sm:rounded-[36px] max-h-[92dvh] sm:max-h-[90dvh]',
+      panel: 'rounded-3xl max-h-[92dvh] sm:max-h-[90dvh]',
       motion: 'scale',
       defaultSize: '3xl',
       chrome: true,
@@ -83,7 +83,7 @@ export const MODAL_CONFIG = {
     sheet: {
       container: 'items-end justify-center p-0 sm:items-center sm:p-4 md:p-6',
       panel:
-        'rounded-t-[28px] rounded-b-none sm:rounded-[36px] max-h-[92dvh] sm:max-h-[90dvh] pb-[env(safe-area-inset-bottom)] sm:pb-0',
+        'rounded-t-3xl rounded-b-none sm:rounded-3xl max-h-[92dvh] sm:max-h-[90dvh] pb-[env(safe-area-inset-bottom)] sm:pb-0',
       motion: 'sheet',
       defaultSize: '3xl',
       chrome: true,
@@ -109,7 +109,7 @@ export const MODAL_CONFIG = {
     },
     confirm: {
       container: 'items-center justify-center p-2.5 sm:p-4',
-      panel: 'rounded-[28px] max-h-[92dvh]',
+      panel: 'rounded-3xl max-h-[92dvh]',
       motion: 'scale',
       defaultSize: 'sm',
       chrome: true,

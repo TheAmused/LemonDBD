@@ -97,7 +97,6 @@ export default function PrivacyPolicyPage() {
     <LegalPageLayout
       locale={locale}
       heading={privacy.heading}
-      backLabel={privacy.backToAbout}
       lastUpdated={`${privacy.lastUpdatedLabel}: ${privacy.lastUpdated}`}
     >
       {privacy ? (

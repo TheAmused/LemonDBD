@@ -400,7 +400,6 @@ export default {
     saveShort: '保存',
     create: '作成',
     publish: '公開',
-    backToHub: 'スマッシュ・オア・パス',
     saving: '保存中...',
     saveError: 'このリストの保存中に問題が発生しました。もう一度お試しください。',
     validationNameRequired: 'このリストに名前を付けてください。',

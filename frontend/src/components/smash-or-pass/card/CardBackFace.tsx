@@ -55,7 +55,7 @@ export function CardBackFace({
         SmashSounds.playFlipSound();
         onFlip();
       }}
-      className="absolute inset-0 h-full w-full rounded-[32px] sm:rounded-[36px] overflow-hidden border-2 border-accent-red/50 bg-bg-primary/95 backdrop-blur-2xl p-4 sm:p-5 flex flex-col justify-between text-text-primary cursor-pointer select-none"
+      className="absolute inset-0 h-full w-full rounded-3xl overflow-hidden border-2 border-accent-red/50 bg-bg-primary/95 backdrop-blur-2xl p-4 sm:p-5 flex flex-col justify-between text-text-primary cursor-pointer select-none"
     >
       {/* Top Bar with accessible Flip Back button and Title */}
       <div className="relative z-30 flex items-center justify-between pb-2 border-b border-border-color shrink-0 pointer-events-auto">

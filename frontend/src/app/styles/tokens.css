@@ -89,6 +89,12 @@
   --font-sans: ui-sans-serif, system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
   --font-display: var(--font-playfair), Georgia, "Times New Roman", serif;
 
+  /* Corner radii. One scale for the whole site: cards and modals top out at 18px, controls sit
+   * at 15-16px, small chips stay at Tailwind's lg/md. No rounded-[Npx] in components. */
+  --radius-xl: 0.9375rem;
+  --radius-2xl: 1rem;
+  --radius-3xl: 1.125rem;
+
   /* Type scale below Tailwind's text-xs, plus em-relative sizes for inline code. */
   --text-micro: 0.5625rem;
   --text-tiny: 0.625rem;

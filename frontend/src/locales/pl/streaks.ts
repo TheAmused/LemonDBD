@@ -1,7 +1,5 @@
 // frontend/src/locales/pl/streaks.ts
 export default {
-  backToKillerStreaks: "Powrót do serii zabójców",
-  backToKillers: "Powrót do zabójców",
   rules: "Zasady",
   cancel: "Anuluj",
   stats: "Statystyki",

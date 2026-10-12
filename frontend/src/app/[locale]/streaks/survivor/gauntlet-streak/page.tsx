@@ -14,7 +14,7 @@ export default async function SurvivorGauntletStreakPage({
   const { locale } = await params;
   const { mode } = await searchParams;
   return (
-    <ChallengeModeGate mode="gauntlet" locale={locale} role="survivor">
+    <ChallengeModeGate mode="gauntlet">
       <GauntletBoard locale={locale} role="survivor" gameMode={parseGauntletGameMode(mode)} />
     </ChallengeModeGate>
   );

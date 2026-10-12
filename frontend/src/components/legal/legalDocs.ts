@@ -22,7 +22,6 @@ export interface LegalDocText {
   pageTitle: string;
   heading: string;
   tagline: string;
-  backToAbout: string;
   lastUpdatedLabel: string;
   lastUpdated: string;
   translationNotice: string;

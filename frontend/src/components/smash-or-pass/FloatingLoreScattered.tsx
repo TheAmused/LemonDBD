@@ -108,7 +108,7 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({ ch
             minScale={0.5}
             maxLines={4}
             wrapFirst
-            className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl leading-flat font-black uppercase tracking-wider text-text-primary group-hover:text-accent-red group-hover:drop-shadow-[0_0_60px_var(--accent-red)] transition-all duration-500 group-hover:scale-105 transform"
+            className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl leading-flat font-black uppercase tracking-wider text-text-primary group-hover:text-accent-red group-hover:drop-shadow-[0_0_20px_color-mix(in_oklab,var(--accent-red)_35%,transparent)] transition-all duration-500 group-hover:scale-105 transform"
           >
             {leftWatermark}
           </FitText>
@@ -125,7 +125,7 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({ ch
             minScale={0.5}
             maxLines={4}
             wrapFirst
-            className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl leading-flat font-black uppercase tracking-wider text-text-primary group-hover:text-accent-red group-hover:drop-shadow-[0_0_60px_var(--accent-red)] transition-all duration-500 group-hover:scale-105 transform"
+            className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl leading-flat font-black uppercase tracking-wider text-text-primary group-hover:text-accent-red group-hover:drop-shadow-[0_0_20px_color-mix(in_oklab,var(--accent-red)_35%,transparent)] transition-all duration-500 group-hover:scale-105 transform"
           >
             {rightWatermark}
           </FitText>
@@ -143,7 +143,7 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({ ch
           style={{ animationDelay: '80ms' }}
           onMouseEnter={handleCardHover}
         >
-          <div className="relative overflow-hidden p-3.5 xl:p-4 rounded-3xl bg-bg-surface/95 border-2 border-accent-red/40 backdrop-blur-2xl shadow-2xl space-y-1 transition-all duration-300 group-hover:border-accent-red group-hover:shadow-[0_0_50px_var(--accent-red)]">
+          <div className="relative overflow-hidden p-3.5 xl:p-4 rounded-3xl bg-bg-surface/95 border-2 border-accent-red/40 backdrop-blur-2xl shadow-2xl space-y-1 transition-all duration-300 group-hover:border-accent-red group-hover:shadow-[0_0_16px_color-mix(in_oklab,var(--accent-red)_30%,transparent)]">
             <div className="flex items-center gap-1.5 text-accent-red">
               <Sparkles className="h-3.5 w-3.5 animate-spin group-hover:scale-125 transition-transform" style={{ animationDuration: '4s' }} />
               <span className="type-label-2xs">
@@ -167,7 +167,7 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({ ch
             style={{ animationDelay: '140ms' }}
             onMouseEnter={handleCardHover}
           >
-            <div className="relative overflow-hidden p-3.5 xl:p-4 rounded-3xl bg-bg-surface/95 border-2 border-accent-green/40 backdrop-blur-2xl shadow-2xl space-y-1 transition-all duration-300 group-hover:border-accent-green group-hover:shadow-[0_0_50px_var(--accent-green)]">
+            <div className="relative overflow-hidden p-3.5 xl:p-4 rounded-3xl bg-bg-surface/95 border-2 border-accent-green/40 backdrop-blur-2xl shadow-2xl space-y-1 transition-all duration-300 group-hover:border-accent-green group-hover:shadow-[0_0_16px_color-mix(in_oklab,var(--accent-green)_30%,transparent)]">
               <div className="flex items-center gap-1.5 text-accent-green">
                 <Flame className="h-3.5 w-3.5 group-hover:scale-125 transition-transform" />
                 <span className="type-label-2xs">
@@ -193,7 +193,7 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({ ch
           style={{ animationDelay: '120ms' }}
           onMouseEnter={handleCardHover}
         >
-          <div className="relative overflow-hidden p-4 rounded-3xl bg-bg-surface/95 border-2 border-accent-amber/40 backdrop-blur-2xl shadow-2xl space-y-1.5 transition-all duration-300 group-hover:border-accent-amber group-hover:shadow-[0_0_50px_var(--accent-amber)]">
+          <div className="relative overflow-hidden p-4 rounded-3xl bg-bg-surface/95 border-2 border-accent-amber/40 backdrop-blur-2xl shadow-2xl space-y-1.5 transition-all duration-300 group-hover:border-accent-amber group-hover:shadow-[0_0_16px_color-mix(in_oklab,var(--accent-amber)_30%,transparent)]">
             <div className="flex items-center gap-1.5 text-accent-amber">
               <Quote className="h-3.5 w-3.5 group-hover:scale-125 group-hover:rotate-12 transition-transform" />
               <span className="type-label-2xs">
@@ -214,7 +214,7 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({ ch
             style={{ animationDelay: '160ms' }}
             onMouseEnter={handleCardHover}
           >
-            <div className="relative overflow-hidden p-3.5 xl:p-4 rounded-3xl bg-bg-surface/95 border-2 border-accent-red/40 backdrop-blur-2xl shadow-2xl space-y-1 transition-all duration-300 group-hover:border-accent-red group-hover:shadow-[0_0_50px_var(--accent-red)]">
+            <div className="relative overflow-hidden p-3.5 xl:p-4 rounded-3xl bg-bg-surface/95 border-2 border-accent-red/40 backdrop-blur-2xl shadow-2xl space-y-1 transition-all duration-300 group-hover:border-accent-red group-hover:shadow-[0_0_16px_color-mix(in_oklab,var(--accent-red)_30%,transparent)]">
               <div className="flex items-center gap-1.5 text-accent-red">
                 <AlertTriangle className="h-3.5 w-3.5 group-hover:scale-125 transition-transform" />
                 <span className="type-label-2xs">

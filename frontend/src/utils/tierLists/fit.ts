@@ -50,6 +50,8 @@ export interface FitResult {
   /** The same bounds for the whole pool panel (header and borders included). */
   poolMinTotal: number;
   poolMaxTotal: number;
+  /** True when the pool is shown in full at a comfortable tile size and the whole board scrolls instead of the pool. */
+  pageScroll: boolean;
   /** True when even the smallest tile does not fit: the rows fall back to scrolling. */
   overflow: boolean;
   /** True when item names were switched off to buy a bigger tile (the user's setting is untouched). */
@@ -71,6 +73,11 @@ const POOL_SCROLLBAR = 16;
 const EMPTY_POOL_BODY = 44;
 /** Share of the board the pool may take before it scrolls. */
 const POOL_SHARE = 0.45;
+/** Smallest tile at which showing the entire pool at once is still worth it. */
+const FULL_POOL_MIN_TILE = 64;
+/** Tile size aimed at when the board is allowed to scroll. */
+const SCROLL_TILE = 84;
+const SCROLL_MIN_WIDTH = 900;
 
 const clamp = (n: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, n));
 
@@ -133,26 +140,40 @@ function poolBodies(input: FitInput, m: TileMetrics): { min: number; content: nu
   return { min: Math.min(content, Math.round(m.cellHeight * 1.5) + 2 * m.pad), content };
 }
 
-function needed(input: FitInput, m: TileMetrics): number {
+function needed(input: FitInput, m: TileMetrics, fullPool: boolean): number {
   const rows =
     input.tierCounts.reduce((sum, n) => sum + rowHeight(n, input.width, m), 0) +
     Math.max(0, input.tierCounts.length - 1) * m.rowGap;
-  const pool = input.poolHeadHeight + BORDER + (input.poolCollapsed ? 0 : poolBodies(input, m).min);
+  const pool = input.poolHeadHeight + BORDER + (input.poolCollapsed ? 0 : fullPool ? poolBodies(input, m).content : poolBodies(input, m).min);
   return rows + SECTION_GAP + pool;
 }
 
-function largestTile(input: FitInput, showNames: boolean): { tile: number; overflow: boolean } {
+function largestTile(input: FitInput, showNames: boolean, fullPool: boolean): { tile: number; overflow: boolean } {
   for (let t = maxTileFor(input.width, input.height); t >= MIN_TILE; t--) {
-    if (needed(input, metricsFor(t, input.shape, showNames)) <= input.height) return { tile: t, overflow: false };
+    if (needed(input, metricsFor(t, input.shape, showNames), fullPool) <= input.height) return { tile: t, overflow: false };
   }
   return { tile: MIN_TILE, overflow: true };
 }
 
+/**
+ * Prefers a board that shows everything on one screen, but only while the tiles stay big (FULL_POOL_MIN_TILE).
+ * Otherwise the tiles are sized for comfort (up to SCROLL_TILE) and the whole board scrolls.
+ */
 export function computeFit(input: FitInput): FitResult {
+  const full = fitWith(input, true);
+  if (!full.overflow && !full.namesHidden && full.tile >= FULL_POOL_MIN_TILE) return full;
+  // Phones and small tablets keep shrinking tiles to fit: a scrolling board is awkward under a thumb.
+  if (input.width < SCROLL_MIN_WIDTH) return fitWith(input, false);
+  const tile = Math.min(maxTileFor(input.width, input.height), SCROLL_TILE);
+  if (tile <= full.tile && !full.overflow) return full;
+  return fitWith(input, true, tile);
+}
+
+function fitWith(input: FitInput, fullPool: boolean, forcedTile?: number): FitResult {
   let showNames = input.showNames;
-  let { tile, overflow } = largestTile(input, showNames);
-  if (showNames && tile < NAMES_MIN_TILE) {
-    const bare = largestTile(input, false);
+  let { tile, overflow } = forcedTile ? { tile: forcedTile, overflow: false } : largestTile(input, showNames, fullPool);
+  if (!forcedTile && showNames && tile < NAMES_MIN_TILE) {
+    const bare = largestTile(input, false, fullPool);
     // Also when neither fits: labels are the first thing to give, they only make the cramped rows taller.
     if (bare.tile > tile || overflow) {
       showNames = false;
@@ -162,7 +183,7 @@ export function computeFit(input: FitInput): FitResult {
   const m = metricsFor(tile, input.shape, showNames);
   const pool = poolBodies(input, m);
   const chrome = input.poolHeadHeight + BORDER;
-  const maxBody = Math.max(pool.min, Math.floor(input.height * POOL_SHARE) - chrome);
+  const maxBody = fullPool ? pool.content : Math.max(pool.min, Math.floor(input.height * POOL_SHARE) - chrome);
   return {
     tile: m.tile,
     tileWidth: m.tileWidth,
@@ -170,13 +191,15 @@ export function computeFit(input: FitInput): FitResult {
     pad: m.pad,
     rowGap: m.rowGap,
     nameFont: m.nameFont,
-    badgeWidth: m.badgeWidth,
-    badgeFont: m.badgeFont,
-    rowMin: m.tile + 2 * m.pad,
-    poolMinBody: pool.min,
+    // On the scrolling board the tier strip is slimmer, so the rows do not dwarf the pool below them.
+    badgeWidth: forcedTile ? Math.round(m.badgeWidth * 0.75) : m.badgeWidth,
+    badgeFont: forcedTile ? Math.round(m.badgeFont * 0.7) : m.badgeFont,
+    rowMin: forcedTile ? Math.round(m.tile * 0.7) + 2 * m.pad : m.tile + 2 * m.pad,
+    poolMinBody: fullPool ? pool.content : pool.min,
     poolMaxBody: maxBody,
-    poolMinTotal: chrome + (input.poolCollapsed ? 0 : pool.min),
+    poolMinTotal: chrome + (input.poolCollapsed ? 0 : fullPool ? pool.content : pool.min),
     poolMaxTotal: chrome + (input.poolCollapsed ? 0 : maxBody),
+    pageScroll: forcedTile !== undefined && needed(input, m, fullPool) > input.height,
     overflow,
     namesHidden: input.showNames && !showNames,
   };

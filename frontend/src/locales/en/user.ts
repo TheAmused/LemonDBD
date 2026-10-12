@@ -110,7 +110,6 @@ export default {
   loadingPerks: "Channeling teachable knowledge...",
   noPerksFound: "No matching perks found.",
   dualMainsTitle: "Signature Loadouts",
-  accountSettingsSubtitle: "Manage your email address and password",
   searchPerksPrompt: "Type at least 3 characters to search perks...",
   searchPerksMinChars: "Type {count, plural, one {# more character} other {# more characters}} to search...",
   downloadDataTitle: "Download my data",

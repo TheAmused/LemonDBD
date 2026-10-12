@@ -15,6 +15,7 @@ from app.models import (
     UserPerkOwnership,
 )
 from app.services.streak_stats import fetch_challenge_completion_counts
+from app.services.user.two_factor import enabled_user_ids
 from app.services.user.avatar import (
     get_avatar_storage_directory,
     remove_stale_avatar_file,
@@ -75,9 +76,12 @@ def list_all_users_paginated(
         ).all()
         unlocked_perks_by_user = dict(perk_rows)
 
+    two_factor_users = enabled_user_ids(user_ids)
+
     user_list = []
     for u in users:
         d = u.to_dict()
+        d["two_factor_enabled"] = u.id in two_factor_users
         d["owned_characters_count"] = owned_chars_by_user.get(u.id, 0)
         d["unlocked_perks_count"] = unlocked_perks_by_user.get(u.id, 0)
         user_list.append(d)
@@ -121,13 +125,17 @@ def admin_remove_user(user_id: int) -> bool:
     return True
 
 
-def delete_own_account(user_id: int, password: str) -> tuple[bool, str | None]:
+def delete_own_account(
+    user_id: int, password: str, two_factor_code: str | None = None
+) -> tuple[bool, str | None]:
     """Self-service account deletion, confirmed with the current password.
 
     Everything keyed to the user cascades away with the row. Bug reports are kept
     for the team's records but stripped of the reporter's identity first. The only
     remaining admin cannot delete itself (that would lock the site out).
     """
+    from app.services.user import two_factor
+
     user = db.session.get(User, user_id)
     if not user:
         return False, "Account not found."
@@ -139,6 +147,10 @@ def delete_own_account(user_id: int, password: str) -> tuple[bool, str | None]:
         )
         if not other_admins:
             return False, "The last administrator account cannot be deleted."
+    if two_factor.is_enabled(user.id):
+        if not (two_factor_code or "").strip():
+            raise two_factor.TwoFactorError("two_factor_required", 403)
+        two_factor.verify_second_factor(user, two_factor_code)
 
     for report in db.session.scalars(select(BugReport).where(BugReport.user_id == user.id)):
         report.reporter_name = "Deleted user"

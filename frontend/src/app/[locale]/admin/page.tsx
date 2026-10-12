@@ -80,6 +80,7 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
   const {
     stats, users, search, setSearch, roleFilter, setRoleFilter, page, setPage, totalUsers, loadingData,
     fetchAdminData, userPendingDeletion, setUserPendingDeletion, isDeletingUser,
+    userPendingTwoFactorReset, setUserPendingTwoFactorReset, isResettingTwoFactor, confirmTwoFactorReset,
     handleToggleRole, handleToggleActive, handleDeleteUser, confirmDeleteUser, handleCreateUser,
   } = useAdminUsers({
     onActionMessage: setActionMessage,
@@ -163,6 +164,7 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
                 onToggleRole={handleToggleRole}
                 onToggleActive={handleToggleActive}
                 onDeleteUser={handleDeleteUser}
+                onResetTwoFactor={setUserPendingTwoFactorReset}
                 onDownloadError={(text) => setActionMessage({ type: 'error', text })}
               />
             </div>
@@ -248,6 +250,16 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
         busy={isDeletingUser}
         onConfirm={confirmDeleteUser}
         onCancel={() => setUserPendingDeletion(null)}
+      />
+
+      <ConfirmModal
+        open={userPendingTwoFactorReset !== null}
+        title={dict.admin.resetTwoFactorTitle}
+        message={formatMessage(dict.admin.resetTwoFactorMessage, { username: userPendingTwoFactorReset?.username ?? '' })}
+        confirmLabel={dict.admin.resetTwoFactorConfirm}
+        busy={isResettingTwoFactor}
+        onConfirm={confirmTwoFactorReset}
+        onCancel={() => setUserPendingTwoFactorReset(null)}
       />
 
       <ConfirmModal

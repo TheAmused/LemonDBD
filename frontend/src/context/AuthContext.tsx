@@ -11,6 +11,7 @@ export interface UserProfile {
   avatar_url?: string;
   is_active: boolean;
   is_verified: boolean;
+  two_factor_enabled?: boolean;
   created_at?: string;
   onboarding_completed_at?: string | null;
   preferred_language?: string | null;
@@ -41,7 +42,9 @@ interface AuthContextType {
   isAdmin: boolean;
   isLoading: boolean;
   ownership: OwnershipSummary | null;
-  login: (usernameOrEmail: string, password: string, extra?: Record<string, unknown>) => Promise<{ success: boolean; error?: string; user?: UserProfile }>;
+  /** `twoFactorToken` is set instead of `success` when the account needs a second step (see completeTwoFactorLogin). */
+  login: (usernameOrEmail: string, password: string, extra?: Record<string, unknown>) => Promise<{ success: boolean; error?: string; user?: UserProfile; twoFactorToken?: string }>;
+  completeTwoFactorLogin: (twoFactorToken: string, code: string) => Promise<{ success: boolean; error?: string; errorCode?: string; user?: UserProfile }>;
   register: (username: string, email: string, password: string, extra?: Record<string, unknown>) => Promise<{ success: boolean; error?: string; user?: UserProfile }>;
   logout: () => void;
   resendVerification: (email: string) => Promise<{ success: boolean; error?: string }>;
@@ -113,6 +116,32 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const data = await res.json();
       if (!res.ok) {
         return { success: false, error: data.error || 'Login failed' };
+      }
+      if (data.status === 'two_factor_required' && data.two_factor_token) {
+        // Password accepted but there is no session yet: the caller asks for the authenticator code.
+        return { success: false, twoFactorToken: data.two_factor_token as string };
+      }
+      setToken(SESSION_MARKER);
+      setSessionFlag(true);
+      setUser(data.user);
+      if (data.ownership) setOwnership(data.ownership);
+      return { success: true, user: data.user as UserProfile };
+    } catch (err) {
+      return { success: false, error: getErrorMessage(err, 'Network error occurred.') };
+    }
+  };
+
+  const completeTwoFactorLogin = async (twoFactorToken: string, code: string) => {
+    try {
+      const res = await fetch(`${API_BASE}/api/v1/auth/login/two-factor`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ two_factor_token: twoFactorToken, code }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        return { success: false, error: data.error as string | undefined, errorCode: data.error_code as string | undefined };
       }
       setToken(SESSION_MARKER);
       setSessionFlag(true);
@@ -376,6 +405,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // auth state that consumers actually care about.
   const handlersRef = useRef({
     login,
+    completeTwoFactorLogin,
     register,
     logout,
     resendVerification,
@@ -392,6 +422,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   });
   handlersRef.current = {
     login,
+    completeTwoFactorLogin,
     register,
     logout,
     resendVerification,
@@ -411,6 +442,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     () => ({
       login: (usernameOrEmail: string, password: string, extra?: Record<string, unknown>) =>
         handlersRef.current.login(usernameOrEmail, password, extra),
+      completeTwoFactorLogin: (twoFactorToken: string, code: string) =>
+        handlersRef.current.completeTwoFactorLogin(twoFactorToken, code),
       register: (username: string, email: string, password: string, extra?: Record<string, unknown>) =>
         handlersRef.current.register(username, email, password, extra),
       logout: () => handlersRef.current.logout(),

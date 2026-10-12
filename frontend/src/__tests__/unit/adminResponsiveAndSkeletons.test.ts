@@ -85,6 +85,7 @@ describe('Admin Page: AdminUserTable responsive card/table split', () => {
         onToggleRole: noop,
         onToggleActive: noop,
         onDeleteUser: noop,
+        onResetTwoFactor: noop,
       })
     );
   }

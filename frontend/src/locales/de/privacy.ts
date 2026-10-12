@@ -4,7 +4,7 @@ export default {
   heading: "Datenschutzerklärung",
   backToAbout: "Zurück zu Über uns",
   lastUpdatedLabel: "Zuletzt aktualisiert",
-  lastUpdated: "3. Oktober 2026",
+  lastUpdated: "10. Oktober 2026",
   intro:
     "Diese Seite erklärt, welche personenbezogenen Daten <brand>LemonDBD</brand> erhebt, warum, wer sie sieht und was du damit tun kannst. Wir haben sie bewusst kurz und verständlich gehalten.",
   translationNotice: "Falls die übersetzten Fassungen dieser Seite von der englischen abweichen, gilt die englische Fassung.",
@@ -38,6 +38,7 @@ export default {
       paragraphs: ["Du kannst den Großteil der Seite ohne Konto nutzen. Je nachdem, was du tust, verarbeiten wir:"],
       items: [
         "<b>Kontodaten:</b> Benutzername, E-Mail-Adresse, einen Hash deines Passworts (nie das Passwort selbst), Avatar, bevorzugte Sprache sowie kurzlebige Bestätigungs- und Passwort-Zurücksetzen-Codes.",
+        "<b>Zwei-Faktor-Anmeldung (optional):</b> nur, wenn du sie auf deiner Profilseite einschaltest. Wir speichern den geheimen Schlüssel deiner Authenticator-App (verschlüsselt), gehashte Einmal-Wiederherstellungscodes, den Zeitpunkt der Aktivierung, den zuletzt akzeptierten Code-Schritt (damit ein Code nicht erneut verwendet werden kann) sowie einen Zähler für kürzliche falsche Codes mit der Zeit einer vorübergehenden Sperre. Die Codes erzeugt deine Authenticator-App auf deinem Gerät; eine Telefonnummer ist nicht nötig.",
         "<b>Was du speicherst:</b> Charakter- und Perk-Besitz, dein Profil-Showcase, Streak-Läufe, Challenge-Erfolge, Minispiel-Statistiken und Smash-or-Pass-Stimmen. Deine Tier Lists, Smash-or-Pass-Roster und eigenen Minispiele bleiben in deinem Browser und werden nicht an unsere Server gesendet. Besucher ohne Konto erhalten eine zufällige Sitzungs-ID, damit ihre Smash-or-Pass-Stimmen gemerkt werden können.",
         "<b>Fehlermeldungen und Nachrichten:</b> Text, Screenshots und E-Mail-Adresse, die du uns schickst. Gäste müssen eine E-Mail-Adresse angeben, damit wir antworten können.",
         "<b>Technische Daten:</b> deine IP-Adresse, Browsertyp und Anfragedetails, genutzt für Ratenbegrenzung, Missbrauchsschutz und Fehlerbehebung.",
@@ -49,9 +50,9 @@ export default {
       heading: "Wofür wir sie nutzen",
       paragraphs: ["Wir verwenden personenbezogene Daten nur für die folgenden Zwecke und stützen uns, wo die DSGVO gilt, auf diese Rechtsgrundlagen:"],
       items: [
-        "Um dein Konto zu erstellen und zu betreiben, deine gespeicherten Daten zu verwalten und Bestätigungs- und Passwort-Zurücksetzen-E-Mails zu senden (Erfüllung unseres Dienstes dir gegenüber).",
+        "Um dein Konto zu erstellen und zu betreiben, deine gespeicherten Daten zu verwalten und Bestätigungs- und Passwort-Zurücksetzen-E-Mails zu senden und, wenn du sie einschaltest, bei der Anmeldung deinen Zwei-Faktor-Code zu prüfen (Erfüllung unseres Dienstes dir gegenüber).",
         "Um Fehlermeldungen und Anfragen zu beantworten (unser berechtigtes Interesse an Nutzerunterstützung oder deine Anfrage).",
-        "Um die Seite zu sichern, Spam und Missbrauch zu verhindern und Fehler zu beheben (unser berechtigtes Interesse).",
+        "Um die Seite und Konten zu sichern, einschließlich der Begrenzung falscher Zwei-Faktor-Codes, Spam und Missbrauch zu verhindern und Fehler zu beheben (unser berechtigtes Interesse).",
         "Um mithilfe datenschutzfreundlicher Analyse zu verstehen, welche Seiten genutzt werden, und die Seite zu verbessern (unser berechtigtes Interesse).",
         "Wenn wir dich um deine Einwilligung bitten, kannst du sie jederzeit zurücknehmen.",
       ],
@@ -78,7 +79,7 @@ export default {
       paragraphs: ["Wir verkaufen deine personenbezogenen Daten nicht und nutzen sie nicht für Werbung. Wir teilen sie nur, soweit nötig:"],
       items: [
         "<b>Links, die du teilst:</b> Wenn du eine Tier List, ein Roster oder ein eigenes Minispiel teilst, steckt der Inhalt im Link selbst (dem Teil nach dem „#“, den dein Browser nie an uns sendet). Wir speichern ihn nicht und können ihn nicht sehen; nur wer den Link erhält, kann ihn öffnen.",
-        "<b>Dienstleister:</b> Unser Hosting-Anbieter und {mailProvider} (der unsere Bestätigungs- und Passwort-Zurücksetzen-E-Mails zustellt) verarbeiten Daten in unserem Auftrag, nur um die Seite zu betreiben und die von dir angeforderten E-Mails zu senden.",
+        "<b>Dienstleister:</b> Unser Hosting-Anbieter und {mailProvider} (der unsere Bestätigungs- und Passwort-Zurücksetzen-E-Mails zustellt) verarbeiten Daten in unserem Auftrag, nur um die Seite zu betreiben und die von dir angeforderten E-Mails zu senden, einschließlich Hinweisen, wenn sich eine Sicherheitseinstellung deines Kontos ändert. Zwei-Faktor-Codes erzeugt deine eigene Authenticator-App und wir prüfen sie auf unserem Server; wir nutzen dafür keinen Drittdienst und nichts darüber wird an Google, Microsoft, Apple oder andere gesendet.",
         "<b>Discord:</b> Wenn du eine Fehlermeldung einreichst, wird ihr Inhalt (einschließlich E-Mail-Adresse und Screenshots) an einen privaten Kanal unseres Teams weitergeleitet.",
         "<b>Rechtliche Gründe:</b> wenn das Gesetz es verlangt oder um die Seite und ihre Nutzer vor Missbrauch zu schützen.",
       ],
@@ -93,15 +94,15 @@ export default {
     retention: {
       heading: "Wie lange wir sie aufbewahren",
       paragraphs: [
-        "Kontodaten und gespeicherte Inhalte bleiben, solange dein Konto besteht. Bestätigungscodes verfallen nach {verificationWindow}, Passwort-Zurücksetzen-Links nach {resetWindow} und Anmeldesitzungen nach {sessionWindow}. Streaks, die {streakPrune} inaktiv bleiben, werden automatisch beendet. Fehlermeldungen werden so lange aufbewahrt, wie sie zur Lösung und für unsere Unterlagen nötig sind. Serverprotokolle werden nur kurz gespeichert.",
-        "Du kannst dein Konto auf deiner Profilseite selbst löschen oder uns darum bitten. Dann werden Kontodaten, Charakter- und Perk-Besitz, Showcase, Streak-Läufe, Minispiel-Statistiken, Challenge-Erfolge und hochgeladener Avatar entfernt. Smash-or-Pass-Stimmen bleiben als anonyme Einträge bestehen, die nicht mehr mit dir verknüpft sind. Fehlermeldungen bleiben für unsere Unterlagen erhalten, deine E-Mail-Adresse wird daraus entfernt. Bereits an unseren privaten Discord-Kanal gesendete Kopien können bestehen bleiben.",
+        "Kontodaten und gespeicherte Inhalte bleiben, solange dein Konto besteht. Bestätigungscodes verfallen nach {verificationWindow}, Passwort-Zurücksetzen-Links nach {resetWindow} und Anmeldesitzungen nach {sessionWindow}. Streaks, die {streakPrune} inaktiv bleiben, werden automatisch beendet. Fehlermeldungen werden so lange aufbewahrt, wie sie zur Lösung und für unsere Unterlagen nötig sind. Serverprotokolle werden nur kurz gespeichert. Ein Schritt der Zwei-Faktor-Anmeldung verfällt nach 5 Minuten, und eine vorübergehende Sperre nach mehreren falschen Codes dauert 15 Minuten.",
+        "Du kannst dein Konto auf deiner Profilseite selbst löschen oder uns darum bitten. Dann werden Kontodaten, Charakter- und Perk-Besitz, Showcase, Streak-Läufe, Minispiel-Statistiken, Challenge-Erfolge, hochgeladener Avatar sowie Zwei-Faktor-Einrichtung und Wiederherstellungscodes entfernt. Auch das Ausschalten der Zwei-Faktor-Anmeldung entfernt sie. Smash-or-Pass-Stimmen bleiben als anonyme Einträge bestehen, die nicht mehr mit dir verknüpft sind. Fehlermeldungen bleiben für unsere Unterlagen erhalten, deine E-Mail-Adresse wird daraus entfernt. Bereits an unseren privaten Discord-Kanal gesendete Kopien können bestehen bleiben.",
       ],
       items: [],
     },
     security: {
       heading: "Sicherheit",
       paragraphs: [
-        "Wir schützen deine Daten unter anderem durch verschlüsselte Verbindungen (HTTPS), gehashte Passwörter, Ratenbegrenzung und Spam-Schutz. Kein Online-Dienst ist vollkommen sicher, daher nutze bitte ein starkes, einzigartiges Passwort.",
+        "Wir schützen deine Daten unter anderem durch verschlüsselte Verbindungen (HTTPS), gehashte Passwörter, Ratenbegrenzung, Spam-Schutz und die optionale Zwei-Faktor-Anmeldung (der geheime Schlüssel wird verschlüsselt, Wiederherstellungscodes werden gehasht gespeichert). Wenn du dein Passwort änderst oder zurücksetzt, wirst du auf deinen anderen Geräten abgemeldet. Kein Online-Dienst ist vollkommen sicher, daher nutze bitte ein starkes, einzigartiges Passwort.",
       ],
       items: [],
     },
@@ -109,7 +110,7 @@ export default {
       heading: "Deine Rechte",
       paragraphs: [
         "Je nach Wohnort (z. B. im EWR oder im Vereinigten Königreich) hast du das Recht auf:",
-        "Auf deiner Profilseite kannst du deine Profildaten ändern, eine Kopie deiner Daten herunterladen und dein Konto selbst löschen. Für jedes andere Recht schreibe an [{contactEmail}](mailto:{contactEmail}); wir antworten innerhalb eines Monats.",
+        "Auf deiner Profilseite kannst du deine Profildaten ändern, die Zwei-Faktor-Anmeldung ein- oder ausschalten, eine Kopie deiner Daten herunterladen und dein Konto selbst löschen. Für jedes andere Recht schreibe an [{contactEmail}](mailto:{contactEmail}); wir antworten innerhalb eines Monats.",
       ],
       items: [
         "Auskunft über die von uns gespeicherten personenbezogenen Daten und eine Kopie;",
@@ -138,7 +139,7 @@ export default {
     contact: {
       heading: "Kontakt",
       paragraphs: [
-        "Um deine Rechte auszuüben, eine Datenschutzfrage zu stellen oder die Löschung deines Kontos zu beantragen, schreibe uns an [{contactEmail}](mailto:{contactEmail}). Angemeldete Nutzer können ihr Konto auch selbst auf der Profilseite löschen. Bitte schreibe von der Adresse, die in deinem Konto hinterlegt ist, damit wir deine Identität prüfen können.",
+        "Um deine Rechte auszuüben, eine Datenschutzfrage zu stellen oder die Löschung deines Kontos zu beantragen, schreibe uns an [{contactEmail}](mailto:{contactEmail}). Angemeldete Nutzer können ihr Konto auch selbst auf der Profilseite löschen. Bitte schreibe von der Adresse, die in deinem Konto hinterlegt ist, damit wir deine Identität prüfen können. Wenn du sowohl deine Authenticator-App als auch deine Wiederherstellungscodes verlierst, können wir die Zwei-Faktor-Anmeldung für dein Konto ausschalten, sobald wir dich verifiziert haben.",
       ],
       items: [],
     },

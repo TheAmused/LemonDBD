@@ -78,11 +78,13 @@ export const TierItemTile = React.forwardRef<HTMLDivElement, TierItemTileProps>(
     >
       <div
         className={cn(
-          'relative flex w-full items-center justify-center overflow-hidden rounded-xl border bg-bg-elevated transition-[border-color,box-shadow] duration-150',
+          'relative flex w-full items-center justify-center overflow-hidden rounded-xl border transition-[border-color,box-shadow] duration-150',
           size === 'sm' ? 'h-11' : cn(IMAGE_CLASSES[shape], 'group-data-[fit]/board:h-(--tile)'),
+          // A bare icon sits straight on the board; the plate and border only come back for selection, hover and the placeholder.
+          hasImage ? 'bg-transparent' : 'bg-bg-elevated',
           selected
             ? 'border-accent-amber ring-2 ring-accent-amber shadow-lg'
-            : 'border-border-color group-hover:border-accent-red/60',
+            : cn('group-hover:border-accent-red/60', hasImage ? 'border-transparent' : 'border-border-color'),
           overlay && 'border-accent-red shadow-xl shadow-accent-red/20'
         )}
       >

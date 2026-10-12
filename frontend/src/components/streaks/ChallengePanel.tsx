@@ -132,7 +132,7 @@ export const HeaderButton: React.FC<HeaderButtonProps> = ({ onClick, title, icon
     onClick={onClick}
     aria-label={title}
     className={`${HEADER_BUTTON_CLASSES} ${className} ${danger ? 'hover:bg-accent-red/10 hover:text-accent-red' : ''} ${
-      label ? 'h-11 justify-center gap-1.5 px-3 text-xs font-bold' : 'h-11 justify-center px-2 sm:w-10 sm:px-0 lg:w-11'
+      label ? 'h-11 justify-center gap-1.5 px-3 text-xs font-bold' : "relative h-11 justify-center px-2 before:absolute before:-inset-0.5 before:content-[''] sm:w-10 sm:px-0 lg:w-11"
     }`}
   >
     {icon}
@@ -163,9 +163,8 @@ const DrawAnimationButton: React.FC = () => {
   );
 };
 
-/** On phones the picker and the fold toggle form one full-width row, and the remaining buttons
- * sit in a second row that stays folded until toggled. From sm up the groups dissolve (`contents`)
- * so every button sits in one wrapping row. */
+/** The foldable button row: on phones its buttons share one full-width row; from sm up it dissolves
+ * (`contents`) so every action sits in the header's wrapping row. */
 const ACTION_GROUP_CLASSES = 'flex gap-1.5 sm:contents [&>*]:min-w-0 [&>*]:flex-1 sm:[&>*]:flex-none';
 
 interface StandardHeaderActionsProps {
@@ -224,7 +223,7 @@ export const StandardHeaderActions: React.FC<StandardHeaderActionsProps> = ({ on
       onClick={() => setOpen((v) => !v)}
       aria-expanded={open}
       aria-label={dict.streaks.moreActions}
-      className="col-span-full flex h-5 w-full cursor-pointer items-center justify-center rounded-lg text-text-muted transition-colors hover:text-text-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red sm:hidden"
+      className="relative col-span-full flex h-5 w-full cursor-pointer before:absolute before:-inset-y-3 before:inset-x-0 before:content-[''] items-center justify-center rounded-lg text-text-muted transition-colors hover:text-text-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red sm:hidden"
     >
       <ChevronDown className={`h-5 w-5 transition-transform duration-300 ${open ? 'rotate-180' : ''}`} aria-hidden="true" />
     </button>

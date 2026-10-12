@@ -150,7 +150,7 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
   if (pickCharacter && !run.target_revealed) {
     return (
       <>
-        <div className="w-full flex items-center justify-center rounded-xl px-4 py-[92px]">
+        <div className="w-full flex items-center justify-center rounded-xl px-4 min-h-[12.25rem]">
           <h2 className="text-sm sm:text-base font-black text-text-primary">
             {dict.streaks.soloPickTitle}
           </h2>
@@ -197,7 +197,7 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
 
     if (!drawing) {
       return (
-        <div className="w-full flex items-center justify-center rounded-xl p-2 sm:min-h-[164px]">
+        <div className="w-full flex items-center justify-center rounded-xl p-2 min-h-[12.25rem]">
           {startButton}
         </div>
       );
@@ -207,7 +207,7 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
       const reel = reels[0];
       const displayPhase = reel.phase === 'idle' ? 'landed' : reel.phase;
       return (
-        <div className="w-full flex items-center justify-center gap-3 rounded-xl p-2 sm:min-h-[164px]">
+        <div className="w-full flex items-center justify-center gap-3 rounded-xl p-2 min-h-[12.25rem]">
           <div className="flex flex-col items-center gap-3">
             <div
               className={`w-24 h-24 sm:w-28 sm:h-28 rounded-xl p-1 bg-bg-elevated border-2 border-border-color flex items-center justify-center overflow-hidden ${
@@ -231,7 +231,7 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
     }
 
     return (
-      <div className="w-full flex flex-wrap items-center gap-4 rounded-xl p-2 sm:min-h-[194px]">
+      <div className="w-full flex flex-wrap items-center gap-4 rounded-xl p-2 min-h-[12.25rem]">
         <div className="flex-1 flex items-center justify-center gap-4 flex-wrap">
           <div className="flex items-center gap-6 sm:gap-24">
             {reels.map((reel, idx) => {
@@ -295,7 +295,7 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
 
   return (
     <>
-      <div className="w-full rounded-xl p-2 sm:min-h-[164px]">
+      <div className="w-full rounded-xl p-2 min-h-[12.25rem]">
         <div className={isTeam ? 'grid grid-cols-1 xl:grid-cols-2 gap-3 divide-y xl:divide-y-0 xl:divide-x divide-border-color' : ''}>
           {players.map((player, index) => (
             <CompactPlayerBuild

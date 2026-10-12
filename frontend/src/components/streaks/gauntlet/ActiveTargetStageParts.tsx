@@ -94,9 +94,9 @@ const slotIconBase = (size: SlotSize) =>
   `${SLOT_ICON_BASE[size]} shrink-0 rounded-md rotate-45 flex items-center justify-center border relative`;
 
 const BADGE_TEXT_SIZE: Record<SlotSize, string> = {
-  large: 'text-[0.5rem] sm:text-micro',
-  small: 'text-[0.5rem] sm:text-micro',
-  compact: 'text-[0.5rem] sm:text-micro',
+  large: 'text-micro',
+  small: 'text-micro',
+  compact: 'text-micro',
 };
 
 const BADGE_BG: Record<'amber' | 'red', string> = {
@@ -115,7 +115,7 @@ const SlotChip: React.FC<{
   <div className="relative inline-flex shrink-0 flex-col items-center">
     {badge && (
       <div
-        className={`absolute -top-2.5 left-1/2 hidden -translate-x-1/2 z-10 sm:block ${BADGE_BG[badgeColor]} text-text-primary ${BADGE_TEXT_SIZE[size]} font-black uppercase tracking-normal sm:tracking-wide px-1 sm:px-1.5 py-0 sm:py-0.5 rounded shadow-sm whitespace-nowrap`}
+        className={`absolute -top-2.5 left-1/2 hidden -translate-x-1/2 z-10 sm:block ${BADGE_BG[badgeColor]} text-text-primary ${BADGE_TEXT_SIZE[size]} font-black uppercase tracking-wide px-1.5 py-0.5 rounded shadow-sm whitespace-nowrap`}
       >
         {badge}
       </div>

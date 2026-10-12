@@ -36,7 +36,7 @@ def history_auth_setup(db_session: Session) -> tuple[int, str, dict[str, str]]:
     seed_killer("The Wraith", release_number=2)
 
     user_service = UserService()
-    user, err = user_service.register_user("routeuser", "route@test.com", "password123")
+    user, err = user_service.register_user("routeuser", "routeuser", "route@test.com", "password123")
     assert err is None
     token = user_service.authenticate("routeuser", "password123")[1]
     headers = {"Authorization": f"Bearer {token}"}

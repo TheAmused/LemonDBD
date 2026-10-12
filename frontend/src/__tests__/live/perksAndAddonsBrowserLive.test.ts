@@ -38,7 +38,7 @@ test("Live Frontend Workflow: Character Catalog, Addons & Generator Integration"
   const regRes = await fetch(`${API_BASE}/api/v1/auth/register`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ username, email: `${username}@test.com`, password: "Password123!" }),
+    body: JSON.stringify({ login: username, username, email: `${username}@test.com`, password: "Password123!" }),
   });
   assert.strictEqual(regRes.status, 201);
   const playerHeaders = {

@@ -14,7 +14,7 @@ class TestChangelogService:
     @pytest.fixture
     def admin(self, db_session) -> User:
         user = User(
-            username="admin_tester",
+            login="admin_tester", username="admin_tester",
             email="admin_tester@example.com",
             password_hash="hashed",
             role="admin",

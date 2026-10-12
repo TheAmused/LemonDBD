@@ -5,6 +5,7 @@ import React, { createContext, useContext, useState, useEffect, useCallback, use
 
 export interface UserProfile {
   id: number;
+  login: string;
   username: string;
   email: string;
   role: 'user' | 'admin';
@@ -45,10 +46,10 @@ interface AuthContextType {
   isLoading: boolean;
   ownership: OwnershipSummary | null;
   /** `twoFactorToken` is set instead of `success` when the account needs a second step (see completeTwoFactorLogin). */
-  login: (usernameOrEmail: string, password: string, extra?: Record<string, unknown>) => Promise<{ success: boolean; error?: string; user?: UserProfile; twoFactorToken?: string }>;
+  login: (loginOrEmail: string, password: string, extra?: Record<string, unknown>) => Promise<{ success: boolean; error?: string; user?: UserProfile; twoFactorToken?: string }>;
   loginWithGoogle: (credential: string) => Promise<{ success: boolean; error?: string; user?: UserProfile; twoFactorToken?: string }>;
   completeTwoFactorLogin: (twoFactorToken: string, code: string) => Promise<{ success: boolean; error?: string; errorCode?: string; user?: UserProfile }>;
-  register: (username: string, email: string, password: string, extra?: Record<string, unknown>) => Promise<{ success: boolean; error?: string; user?: UserProfile }>;
+  register: (login: string, username: string, email: string, password: string, extra?: Record<string, unknown>) => Promise<{ success: boolean; error?: string; user?: UserProfile }>;
   logout: () => void;
   resendVerification: (email: string) => Promise<{ success: boolean; error?: string }>;
   verifyEmail: (email: string, code: string) => Promise<{ success: boolean; error?: string; user?: UserProfile }>;
@@ -108,13 +109,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     fetchCurrentUser();
   }, [fetchCurrentUser]);
 
-  const login = async (usernameOrEmail: string, password: string, extra?: Record<string, unknown>) => {
+  const login = async (loginOrEmail: string, password: string, extra?: Record<string, unknown>) => {
     try {
       const res = await fetch(`${API_BASE}/api/v1/auth/login`, {
         method: 'POST',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username_or_email: usernameOrEmail, password, ...extra }),
+        body: JSON.stringify({ login_or_email: loginOrEmail, password, ...extra }),
       });
       const data = await res.json();
       if (!res.ok) {
@@ -181,13 +182,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  const register = async (username: string, email: string, password: string, extra?: Record<string, unknown>) => {
+  const register = async (login: string, username: string, email: string, password: string, extra?: Record<string, unknown>) => {
     try {
       const res = await fetch(`${API_BASE}/api/v1/auth/register`, {
         method: 'POST',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, email, password, ...extra }),
+        body: JSON.stringify({ login, username, email, password, ...extra }),
       });
       const data = await res.json();
       if (!res.ok) {
@@ -470,13 +471,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const actions = useMemo(
     () => ({
-      login: (usernameOrEmail: string, password: string, extra?: Record<string, unknown>) =>
-        handlersRef.current.login(usernameOrEmail, password, extra),
+      login: (loginOrEmail: string, password: string, extra?: Record<string, unknown>) =>
+        handlersRef.current.login(loginOrEmail, password, extra),
       loginWithGoogle: (credential: string) => handlersRef.current.loginWithGoogle(credential),
       completeTwoFactorLogin: (twoFactorToken: string, code: string) =>
         handlersRef.current.completeTwoFactorLogin(twoFactorToken, code),
-      register: (username: string, email: string, password: string, extra?: Record<string, unknown>) =>
-        handlersRef.current.register(username, email, password, extra),
+      register: (login: string, username: string, email: string, password: string, extra?: Record<string, unknown>) =>
+        handlersRef.current.register(login, username, email, password, extra),
       logout: () => handlersRef.current.logout(),
       resendVerification: (email: string) => handlersRef.current.resendVerification(email),
       verifyEmail: (email: string, code: string) => handlersRef.current.verifyEmail(email, code),

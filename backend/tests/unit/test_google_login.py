@@ -31,7 +31,7 @@ def as_google(monkeypatch: pytest.MonkeyPatch):
 
 def _user(name: str, **overrides: object) -> User:
     user = User(
-        username=name,
+        login=name, username=name,
         email=f"{name}@example.com",
         password_hash=hash_password("password123"),
         is_verified=True,
@@ -69,7 +69,8 @@ def test_first_sign_in_creates_a_verified_passwordless_account(
     res = client.post(URL, json={"credential": "x"})
     assert res.status_code == 201
     body = res.get_json()
-    assert re.fullmatch(r"player\d{8}", body["user"]["username"])
+    assert re.fullmatch(r"player\d{8}", body["user"]["login"])
+    assert body["user"]["username"] == "jane.doe"
     assert body["user"]["email"] == "jane.doe@gmail.com"
     assert body["user"]["is_verified"] is True
     assert body["user"]["has_password"] is False
@@ -92,7 +93,7 @@ def test_existing_verified_account_is_linked_and_keeps_its_password(
     assert existing.google_sub == "sub-sam"
     assert existing.has_password
     assert client.post(
-        "/api/v1/auth/login", json={"username": "sam", "password": "password123"}
+        "/api/v1/auth/login", json={"login": "sam", "password": "password123"}
     ).status_code == 200
 
 
@@ -112,7 +113,7 @@ def test_linking_an_unverified_account_drops_the_squatters_password(
     assert squatted.password_hash is None
     assert squatted.token_version == version + 1
     assert client.post(
-        "/api/v1/auth/login", json={"username": "victim", "password": "password123"}
+        "/api/v1/auth/login", json={"login": "victim", "password": "password123"}
     ).status_code == 401
 
 
@@ -130,18 +131,25 @@ def test_disabled_account_cannot_sign_in(client: FlaskClient, as_google) -> None
     assert client.post(URL, json={"credential": "x"}).status_code == 403
 
 
-def test_username_is_random_digits_not_the_email(app: Flask) -> None:
+def test_login_is_random_digits_not_the_email(app: Flask) -> None:
     with app.app_context():
-        name = google_auth.unique_username()
+        name = google_auth.unique_login()
     assert re.fullmatch(r"player\d{8}", name)
 
 
-def test_taken_username_is_retried(app: Flask, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_taken_login_is_retried(app: Flask, monkeypatch: pytest.MonkeyPatch) -> None:
     numbers = iter([42, 42, 7])
     monkeypatch.setattr(google_auth.secrets, "randbelow", lambda limit: next(numbers))
     with app.app_context():
         _user("player00000042")
-        assert google_auth.unique_username() == "player00000007"
+        assert google_auth.unique_login() == "player00000007"
+
+
+def test_display_username_comes_from_the_email_and_stays_within_limits(app: Flask) -> None:
+    assert google_auth.display_username("Jane.Doe@gmail.com") == "Jane.Doe"
+    assert len(google_auth.display_username(f"{'a' * 60}@example.com")) == 50
+    assert len(google_auth.display_username("a@example.com")) >= 3
+    assert len(google_auth.display_username("++@example.com")) >= 3
 
 
 def test_passwordless_account_cannot_log_in_with_a_password_or_change_it(
@@ -152,7 +160,7 @@ def test_passwordless_account_cannot_log_in_with_a_password_or_change_it(
     user = db.session.query(User).filter_by(email="gina@example.com").one()
 
     assert client.post(
-        "/api/v1/auth/login", json={"username": "gina@example.com", "password": "anything1"}
+        "/api/v1/auth/login", json={"login": "gina@example.com", "password": "anything1"}
     ).status_code == 401
     headers = {"Authorization": f"Bearer {generate_token(user.id, user.role)}"}
     res = client.put(
@@ -177,7 +185,7 @@ def test_passwordless_account_can_set_a_password_by_reset_link(
     )
     assert res.status_code == 200
     assert client.post(
-        "/api/v1/auth/login", json={"username": "rita@example.com", "password": "brandnew123"}
+        "/api/v1/auth/login", json={"login": "rita@example.com", "password": "brandnew123"}
     ).status_code == 200
 
 

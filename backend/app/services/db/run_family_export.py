@@ -56,7 +56,7 @@ def export_run_family(
 ) -> None:
     """Export every row of `run_model`, nesting its `log_relation_attr` collection
     (already ordered by the model's own relationship `order_by`) as `match_logs`,
-    with the owning user resolved to `username` instead of the source DB's `user_id`."""
+    with the owning user resolved to `login` instead of the source DB's `user_id`."""
     runs = db.session.scalars(select(run_model).order_by(run_model.id)).all()
     serialized = []
     for run in runs:
@@ -64,7 +64,7 @@ def export_run_family(
         if not owner:
             continue
         row: dict[str, object] = column_dict(run, {"id", "user_id"})
-        row["username"] = owner.username
+        row["login"] = owner.login
         row["match_logs"] = [
             column_dict(log, {"id", "run_id"}) for log in getattr(run, log_relation_attr)
         ]
@@ -97,8 +97,8 @@ def import_run_family(
     run_fk_column = next(iter(log_model.__mapper__.relationships[run_fk_attr].local_columns)).name
 
     for row in map(_upgrade_legacy_keys, data[name]):
-        username = row.get("username")
-        u_id = user_map.get(username) if username else None
+        owner_login = row.get("login") or row.get("username")
+        u_id = user_map.get(owner_login) if owner_login else None
         if not u_id:
             continue
 
@@ -111,7 +111,7 @@ def import_run_family(
             run_obj = run_model(user_id=u_id, **{key: row.get(key) for key in run_natural_keys})
             db.session.add(run_obj)
 
-        skip_fields = {"username", "match_logs", "user_id"} | set(run_natural_keys)
+        skip_fields = {"login", "username", "match_logs", "user_id"} | set(run_natural_keys)
         for k, v in row.items():
             if k in skip_fields or k == "id" or not hasattr(run_obj, k):
                 continue

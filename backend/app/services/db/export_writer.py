@@ -90,7 +90,7 @@ def _export_ownerships(export_data: dict[str, Any], counts: dict[str, int]) -> N
     export_data["ownerships"] = {
         "characters": [
             {
-                "username": co.user.username if co.user else None,
+                "login": co.user.login if co.user else None,
                 "character_name": co.character.name if co.character else None,
                 # Names are unique across both tables, so the role is
                 # not needed to resolve the row -- it is exported so a
@@ -103,7 +103,7 @@ def _export_ownerships(export_data: dict[str, Any], counts: dict[str, int]) -> N
         ],
         "perks": [
             {
-                "username": po.user.username if po.user else None,
+                "login": po.user.login if po.user else None,
                 "perk_name": po.perk.name if po.perk else None,
                 "is_unlocked": po.is_unlocked,
             }
@@ -148,9 +148,9 @@ def build_export(target_set: set[str], include_assets: bool, static_dir: Path) -
         export_run_family(export_data, counts, "page_streak_runs", PageStreakRun, PageStreakPageLog, "page_logs")
 
     if "rosters" in target_set:
-        username_by_user_id = {u.id: u.username for u in db.session.scalars(select(User)).all()}
+        login_by_user_id = {u.id: u.login for u in db.session.scalars(select(User)).all()}
         rosters = db.session.scalars(select(Roster).order_by(Roster.id)).all()
-        export_data["rosters"] = [serialize_roster(r, username_by_user_id) for r in rosters]
+        export_data["rosters"] = [serialize_roster(r, login_by_user_id) for r in rosters]
         counts["rosters"] = len(export_data["rosters"])
 
     # Organize export into semantic groups

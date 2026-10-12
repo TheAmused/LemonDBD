@@ -9,7 +9,7 @@ test("Live Frontend Workflow: Page Streak Multi-Page Lifecycle", async () => {
   const regRes = await fetch(`${API_BASE}/api/v1/auth/register`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ username, email: `${username}@test.com`, password: "Password123!" }),
+    body: JSON.stringify({ login: username, username, email: `${username}@test.com`, password: "Password123!" }),
   });
   assert.strictEqual(regRes.status, 201);
   const token = (await regRes.json()).token;

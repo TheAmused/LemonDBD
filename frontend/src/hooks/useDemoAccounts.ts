@@ -11,7 +11,7 @@ import { apiUrl } from '@/utils/api';
 
 export interface DemoAccount {
   role: 'admin' | 'player';
-  username: string;
+  login: string;
   password: string;
 }
 
@@ -20,7 +20,7 @@ function isDemoAccount(value: unknown): value is DemoAccount {
   const v = value as Record<string, unknown>;
   return (
     (v.role === 'admin' || v.role === 'player') &&
-    typeof v.username === 'string' &&
+    typeof v.login === 'string' &&
     typeof v.password === 'string'
   );
 }

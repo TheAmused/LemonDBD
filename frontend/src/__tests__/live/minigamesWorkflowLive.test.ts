@@ -144,6 +144,7 @@ test("Live Frontend Workflow: Minigames & DBD Idle End-to-End Suite", async () =
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
+      login: testUser,
       username: testUser,
       email: `${testUser}@test.com`,
       password: "Password123!",
@@ -190,7 +191,7 @@ test("Live Frontend Workflow: Minigames & DBD Idle End-to-End Suite", async () =
   const adminLoginRes = await fetch(`${API_BASE}/api/v1/auth/login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ username: "lemon", password: "lemon" }),
+    body: JSON.stringify({ login: "lemon", password: "lemon" }),
   });
   assert.strictEqual(adminLoginRes.status, 200, "Admin login must succeed");
   const adminToken = (await adminLoginRes.json()).token;

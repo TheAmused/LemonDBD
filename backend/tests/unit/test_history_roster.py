@@ -49,7 +49,7 @@ def user_service() -> UserService:
 
 @pytest.fixture
 def roster_user(user_service: UserService) -> int:
-    user, err = user_service.register_user("roster_player", "roster@test.com", "Pass1234!")
+    user, err = user_service.register_user("roster_player", "roster_player", "roster@test.com", "Pass1234!")
     assert err is None
     return user.id
 

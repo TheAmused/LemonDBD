@@ -26,7 +26,7 @@ def create_user(
     role: str = "user",
 ) -> User:
     user = User(
-        username=username,
+        login=username, username=username,
         email=email,
         password_hash=hash_password("password123"),
         role=role,

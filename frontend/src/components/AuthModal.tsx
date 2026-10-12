@@ -59,6 +59,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
   } = useAltcha();
 
   const [mode, setMode] = useState<AuthMode>(initialMode);
+  const [loginName, setLoginName] = useState<string>('');
   const [username, setUsername] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
@@ -116,7 +117,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
           setError(res.error || dict.user.failedToRequestPasswordReset);
         }
       } else if (mode === 'login') {
-        const res = await login(username, password, {
+        const res = await login(loginName, password, {
           website_trap: honeypotValue,
           altcha: altchaPayload,
         });
@@ -133,7 +134,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
           setLegalAttempted(true);
           return;
         }
-        const res = await register(username, email, password, {
+        const res = await register(loginName, username, email, password, {
           website_trap: honeypotValue,
           altcha: altchaPayload,
         });
@@ -192,7 +193,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
     const account = demoAccounts.find((a) => a.role === role);
     if (!account) return;
     switchMode('login');
-    setUsername(account.username);
+    setLoginName(account.login);
     setPassword(account.password);
   };
 
@@ -292,11 +293,28 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
           {mode !== 'forgot' && (
             <div>
               <label className="block type-label-xs text-text-secondary mb-1">
-                {mode === 'register' ? dict.user.usernameLabel : dict.user.usernameOrEmailLabel}
+                {mode === 'register' ? dict.user.loginLabel : dict.user.loginOrEmailLabel}
               </label>
               <Input
                 type="text"
                 required
+                value={loginName}
+                onChange={(e) => setLoginName(e.target.value)}
+                className="bg-bg-primary px-3.5 shadow-inner"
+              />
+            </div>
+          )}
+
+          {mode === 'register' && (
+            <div>
+              <label className="block type-label-xs text-text-secondary mb-1">
+                {dict.user.usernameLabel}
+              </label>
+              <Input
+                type="text"
+                required
+                minLength={3}
+                maxLength={50}
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 className="bg-bg-primary px-3.5 shadow-inner"
@@ -393,8 +411,8 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
             honeypotProps={honeypotProps}
           />
 
-          <Button type="submit" variant="primary" loading={loading} className="w-full mt-2">
-            {mode === 'login' ? (
+          <Button type="submit" variant="primary" loading={loading} className="w-full mt-2 min-h-10">
+            {loading ? null : mode === 'login' ? (
               <>
                 <LogIn className="h-4 w-4" />
                 <span>{dict.user.signIn}</span>

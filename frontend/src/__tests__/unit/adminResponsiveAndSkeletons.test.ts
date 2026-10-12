@@ -56,6 +56,7 @@ describe('Admin Page: AdminUserTable responsive card/table split', () => {
   const sampleUsers: UserRow[] = [
     {
       id: 1,
+      login: 'sign_in_42',
       username: 'lemon_admin',
       email: 'lemon@example.com',
       role: 'admin',

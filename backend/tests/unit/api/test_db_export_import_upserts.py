@@ -100,8 +100,8 @@ class TestDatabaseExportImportGroupsAndUpsertHardening:
 
     def test_import_database_upsert_users_safe_email_conflict(self, export_import_app):
         with export_import_app.app_context():
-            u1 = User(username="user_alpha", email="alpha@conflict.com", password_hash="h1", role="user")
-            u2 = User(username="user_beta", email="beta@conflict.com", password_hash="h2", role="user")
+            u1 = User(login="user_alpha", username="user_alpha", email="alpha@conflict.com", password_hash="h1", role="user")
+            u2 = User(login="user_beta", username="user_beta", email="beta@conflict.com", password_hash="h2", role="user")
             db.session.add_all([u1, u2])
             db.session.commit()
 
@@ -110,6 +110,7 @@ class TestDatabaseExportImportGroupsAndUpsertHardening:
                 "data": {
                     "users": [
                         {
+                            "login": "user_beta",
                             "username": "user_beta",
                             "email": "alpha@conflict.com",
                             "role": "admin"

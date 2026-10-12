@@ -196,6 +196,8 @@ export default function UserProfilePage() {
 
           {/* 1. TOP BLOCK: Account Management */}
           <UserProfileForm
+            login={user.login}
+            initialUsername={user.username}
             initialEmail={user.email || ''}
             twoFactorEnabled={Boolean(user.two_factor_enabled)}
             hasPassword={user.has_password !== false}

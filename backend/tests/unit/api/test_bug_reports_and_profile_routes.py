@@ -20,14 +20,14 @@ class TestMyBugReportsRoute:
 
     @pytest.fixture
     def owner(self, db_session) -> User:
-        user = User(username="report_owner", email="owner@example.com", password_hash="hashed")
+        user = User(login="report_owner", username="report_owner", email="owner@example.com", password_hash="hashed")
         db_session.add(user)
         db_session.commit()
         return user
 
     @pytest.fixture
     def other_user(self, db_session) -> User:
-        user = User(username="someone_else", email="someone@example.com", password_hash="hashed")
+        user = User(login="someone_else", username="someone_else", email="someone@example.com", password_hash="hashed")
         db_session.add(user)
         db_session.commit()
         return user
@@ -129,7 +129,7 @@ class TestProfileAndAvatarRoutes:
         from app.core.security import hash_password
 
         user = User(
-            username="profile_owner",
+            login="profile_owner", username="profile_owner",
             email="profile_owner@example.com",
             password_hash=hash_password("Password123!"),
         )
@@ -163,7 +163,7 @@ class TestProfileAndAvatarRoutes:
     def test_update_profile_rejects_email_already_in_use(
         self, client: FlaskClient, db_session, plain_user: User, user_headers: dict[str, str]
     ) -> None:
-        taken = User(username="taken_email_user", email="taken@example.com", password_hash="hashed")
+        taken = User(login="taken_email_user", username="taken_email_user", email="taken@example.com", password_hash="hashed")
         db_session.add(taken)
         db_session.commit()
 

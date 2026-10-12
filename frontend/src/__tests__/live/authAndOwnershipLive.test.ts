@@ -14,6 +14,7 @@ test("Live Frontend Workflow: Authentication & Character Ownership Cascade", asy
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
+      login: testUsername,
       username: testUsername,
       email: testEmail,
       password: testPassword,

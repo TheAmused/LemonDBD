@@ -15,7 +15,7 @@ PASSWORD = "password123"
 def _register(client: FlaskClient, name: str) -> dict:
     res = client.post(
         "/api/v1/auth/register",
-        json={"username": name, "email": f"{name}@example.com", "password": PASSWORD},
+        json={"login": name, "username": name, "email": f"{name}@example.com", "password": PASSWORD},
     )
     assert res.status_code == 201
     return res
@@ -23,7 +23,7 @@ def _register(client: FlaskClient, name: str) -> dict:
 
 def _make_admin(name: str = "boss") -> tuple[User, str]:
     user = User(
-        username=name,
+        login=name, username=name,
         email=f"{name}@example.com",
         password_hash=hash_password(PASSWORD),
         role="admin",
@@ -245,7 +245,7 @@ class TestAdminExportUserData:
     @staticmethod
     def _target(name: str = "subject", **fields) -> User:
         user = User(
-            username=name, email=f"{name}@example.com", password_hash=hash_password(PASSWORD), **fields
+            login=name, username=name, email=f"{name}@example.com", password_hash=hash_password(PASSWORD), **fields
         )
         db.session.add(user)
         db.session.commit()

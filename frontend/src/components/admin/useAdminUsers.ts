@@ -188,6 +188,7 @@ export function useAdminUsers({ onActionMessage, onUserCreated }: AdminUsersInpu
   };
 
   const handleCreateUser = async (userData: {
+    login: string;
     username: string;
     email: string;
     password: string;

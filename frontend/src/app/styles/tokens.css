@@ -15,6 +15,8 @@
   --color-bg-primary: var(--bg-primary);
   --color-bg-surface: var(--bg-surface);
   --color-bg-elevated: var(--bg-elevated);
+  --color-bg-sidebar: var(--bg-sidebar);
+  --color-bg-sidebar-hover: var(--bg-sidebar-hover);
   --color-border-color: var(--border-color);
   --color-border-subtle: var(--border-subtle);
 

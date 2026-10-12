@@ -20,22 +20,28 @@
   :root,
   .light {
     color-scheme: light;
-    --bg-primary: #e5e8ed;
-    --bg-surface: #f3f5f7;
-    --bg-elevated: #dbe0e6;
-    --border-color: #c3cad3;
-    --border-subtle: #d9dee4;
+    --bg-primary: #dfe3e9;
+    /* Cards. Deliberately a real grey: #f3f5f7 and even #edf0f3 still read as "pure white"
+     * on a monitor (luminance 0.91 / 0.86); this is 0.84 and sits clearly above the page. */
+    --bg-surface: #e9ecf0;
+    --bg-elevated: #d6dbe2;
+    /* App sidebar / mobile top bar: its own grey, a step darker than the page so the
+     * navigation reads as a separate region. Text/accents keep >= 4.5:1 on it. */
+    --bg-sidebar: #d6dce3;
+    --bg-sidebar-hover: #e4e8ed;
+    --border-color: #bcc4ce;
+    --border-subtle: #d0d6de;
 
     /* High-contrast accessible accents */
     --accent-red: #b91c1c;
-    /* 5.3:1 on bg-primary (AA Body) */
+    /* 5.0:1 on bg-primary (AA Body) */
     --accent-red-hover: #991b1b;
     --accent-red-text: var(--accent-red);
     --accent-amber: #92400e;
-    /* 5.8:1 on bg-primary (AA Body) */
+    /* 5.5:1 on bg-primary (AA Body) */
     --accent-amber-hover: #78350f;
     --accent-green: #126a33;
-    /* 5.5:1 on bg-primary, 6.1:1 on surface */
+    /* 5.2:1 on bg-primary, 5.7:1 on surface */
     --accent-green-hover: #166534;
     --accent-blue: #0369a1;
     --accent-purple: #7e22ce;
@@ -47,11 +53,11 @@
 
     /* Text hierarchy */
     --text-primary: #111827;
-    /* 14.4:1 on bg-primary (AAA) */
+    /* 13.8:1 on bg-primary (AAA) */
     --text-secondary: #374151;
-    /* 8.4:1 on bg-primary (AAA) */
+    /* 8.0:1 on bg-primary (AAA) */
     --text-muted: #525c69;
-    /* 5.5:1 on bg-primary, 5.1:1 on bg-elevated (AA) */
+    /* 5.3:1 on bg-primary, 4.9:1 on bg-elevated (AA) */
     --text-inverted: #ffffff;
 
     /* Tier list ladder (dark ink on top of each) */
@@ -93,6 +99,8 @@
       --bg-primary: #0a0a0c;
       --bg-surface: #141418;
       --bg-elevated: #1d1d22;
+      --bg-sidebar: #141418;
+      --bg-sidebar-hover: #1d1d22;
       --border-color: #2e2e38;
       --border-subtle: #1e1e26;
 
@@ -132,8 +140,10 @@
   .light-lemon {
     color-scheme: light;
     --bg-primary: #f6efdc;
-    --bg-surface: #fffbee;
+    --bg-surface: #fbf5e2;
     --bg-elevated: #efe2b8;
+    --bg-sidebar: #efe6c8;
+    --bg-sidebar-hover: #f6efdc;
     --border-color: #dcc776;
     --border-subtle: #ede1b4;
 
@@ -180,6 +190,8 @@
     --bg-primary: #0a0a0c;
     --bg-surface: #141418;
     --bg-elevated: #1d1d22;
+    --bg-sidebar: #141418;
+    --bg-sidebar-hover: #1d1d22;
     --border-color: #2e2e38;
     --border-subtle: #1e1e26;
 

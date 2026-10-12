@@ -58,16 +58,9 @@ export function VoiceCommandBanner({
       className={
         embedded
           ? `relative flex flex-1 h-full w-full flex-col ${className}`
-          : `relative flex w-full flex-col overflow-hidden rounded-3xl border border-border-color bg-bg-surface px-4 pt-3.5 pb-4 sm:px-6 sm:pt-4 sm:pb-5 md:min-h-[14rem] backdrop-blur-xl shadow-xl dark:shadow-2xl transition-all duration-300 ${className}`
+          : `relative flex w-full flex-col overflow-hidden rounded-3xl border border-border-color bg-bg-surface px-4 pt-3.5 pb-4 sm:px-6 sm:pt-4 sm:pb-5 md:min-h-[14rem] shadow-sm transition-all duration-300 ${className}`
       }
     >
-      {!embedded && (
-        <>
-          <div className="pointer-events-none absolute -left-16 -top-16 h-48 w-48 rounded-full bg-accent-red/5 blur-3xl" />
-          <div className="pointer-events-none absolute -right-16 -bottom-16 h-48 w-48 rounded-full bg-accent-red/5 blur-3xl" />
-        </>
-      )}
-
       <VoiceBannerHeader
         activeEngine={activeEngine}
         modelProgress={modelProgress}

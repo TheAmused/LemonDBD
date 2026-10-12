@@ -130,7 +130,7 @@ export default {
   googleOrDivider: "o",
   googleSignInFailed: "No se pudo iniciar sesión con Google. Inténtalo de nuevo.",
   setPasswordTitle: "Contraseña",
-  setPasswordDesc: "Como iniciaste sesión con Google, esta cuenta aún no tiene contraseña. Para establecer una, te enviaremos un enlace por correo. Después también podrás entrar con tu correo y contraseña.",
+  setPasswordDesc: "Como iniciaste sesión con Google, esta cuenta aún no tiene contraseña. Para establecer una, te enviaremos un enlace por correo.",
   setPasswordButton: "Establecer una nueva contraseña",
   setPasswordSent: "Te hemos enviado un enlace para establecer tu contraseña.",
   deleteAccountGoogleDesc: "Confirma con Google para eliminar tu cuenta. Tu cuenta y los datos guardados se eliminarán para siempre.",

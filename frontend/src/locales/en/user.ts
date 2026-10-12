@@ -130,7 +130,7 @@ export default {
   googleOrDivider: "or",
   googleSignInFailed: "Google sign-in failed. Try again.",
   setPasswordTitle: "Password",
-  setPasswordDesc: "Because you signed in with Google, this account has no password yet. To set one, we will email you a link. After that you can also sign in with your email and password.",
+  setPasswordDesc: "Because you signed in with Google, this account has no password yet. To set one, we will email you a link.",
   setPasswordButton: "Set a new password",
   setPasswordSent: "A link to set your password is on its way to your email.",
   deleteAccountGoogleDesc: "Confirm with Google to delete your account. Your account and saved data are removed for good.",

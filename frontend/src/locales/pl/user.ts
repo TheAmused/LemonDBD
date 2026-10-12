@@ -130,7 +130,7 @@ export default {
   googleOrDivider: "lub",
   googleSignInFailed: "Logowanie przez Google nie powiodło się. Spróbuj ponownie.",
   setPasswordTitle: "Hasło",
-  setPasswordDesc: "Ponieważ zalogowałeś się przez Google, to konto nie ma jeszcze hasła. Aby je ustawić, wyślemy Ci link na e-mail. Potem będziesz mógł logować się także e-mailem i hasłem.",
+  setPasswordDesc: "Ponieważ zalogowałeś się przez Google, to konto nie ma jeszcze hasła. Aby je ustawić, wyślemy Ci link na e-mail.",
   setPasswordButton: "Ustaw nowe hasło",
   setPasswordSent: "Link do ustawienia hasła został wysłany na Twój e-mail.",
   deleteAccountGoogleDesc: "Potwierdź przez Google, aby usunąć konto. Konto i zapisane dane zostaną usunięte na zawsze.",

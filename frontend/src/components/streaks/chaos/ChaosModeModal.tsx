@@ -70,7 +70,7 @@ export const ChaosModeModal: React.FC<ChaosModeModalProps> = ({
       intro={s.chaosIntro}
       tiles={tiles}
       onSelectTile={(value) => onSelectDifficulty(value as Difficulty)}
-      tileGridClassName="sm:grid-cols-3"
+      tileGridClassName="grid-cols-3"
       selectedValue={currentDifficulty}
       renderRules={(rules) => <ChaosRulesModal {...rules} />}
     />

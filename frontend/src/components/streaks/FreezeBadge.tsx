@@ -19,7 +19,7 @@ export const FreezeBadge: React.FC<FreezeBadgeProps> = ({ frozen }) => {
   return (
     <div
       {...tip(dict.streaks.challengeStarted, dict.streaks.freezeNotice, 'status')}
-      className="freeze-badge-in flex items-center justify-center rounded-xl bg-bg-elevated border border-border-color text-text-secondary shadow-sm px-3.5 py-3"
+      className="freeze-badge-in flex shrink-0 items-center justify-center rounded-xl bg-bg-elevated border border-border-color text-text-secondary shadow-sm h-11 px-3 sm:w-10 sm:px-0 lg:w-11"
     >
       <Snowflake className="w-6 h-6" />
     </div>

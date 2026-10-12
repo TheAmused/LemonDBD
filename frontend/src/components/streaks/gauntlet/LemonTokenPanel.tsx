@@ -40,10 +40,10 @@ const BoostTile: React.FC<BoostTileProps> = ({ boost, label, price, disabled, on
       type="button"
       onClick={onClick}
       disabled={disabled}
-      className="flex items-center gap-2 rounded-lg border border-border-color bg-bg-surface px-3 py-2 transition-colors enabled:cursor-pointer enabled:hover:border-accent-amber/60 enabled:hover:bg-bg-elevated disabled:cursor-not-allowed disabled:opacity-45"
+      className="flex min-w-0 flex-col items-center justify-center gap-1 rounded-lg border border-border-color bg-bg-surface px-2 py-2 text-center transition-colors sm:flex-row sm:gap-2 sm:px-3 sm:text-left enabled:cursor-pointer enabled:hover:border-accent-amber/60 enabled:hover:bg-bg-elevated disabled:cursor-not-allowed disabled:opacity-45"
     >
       <Icon className="h-5 w-5 shrink-0 text-accent-amber" aria-hidden="true" />
-      <span className="type-caption text-text-primary">{label}</span>
+      <span className="type-caption min-w-0 text-text-primary max-sm:text-xs max-sm:leading-tight">{label}</span>
       <span className="type-label-sm text-accent-amber">{price}</span>
     </button>
   );
@@ -69,22 +69,12 @@ export const LemonTokenPanel: React.FC<LemonTokenPanelProps> = ({
   return (
     <section
       aria-label={dict.streaks.boostsTitle}
-      className="mt-4 flex w-full flex-wrap items-center justify-between gap-x-6 gap-y-2 border-t border-border-color px-1 pt-4"
+      className="mt-4 flex w-full flex-wrap items-center justify-between gap-x-6 gap-y-3 border-t border-border-color px-1 pt-4"
     >
-      <div className="flex items-center gap-3">
-        <h3 className="type-label text-text-primary">{dict.streaks.boostsTitle}</h3>
-        <div className="flex items-center gap-1.5 type-card-title">
-          <Coins className="h-4 w-4 text-accent-amber" aria-hidden="true" />
-          <span>
-            {dict.streaks.tokensLabel}: {tokens} / {boosts.cap}
-          </span>
-        </div>
-      </div>
-
       {picking ? (
         <p className="text-xs text-text-secondary">{dict.streaks.boostPickHint}</p>
       ) : (
-        <div className="flex flex-wrap gap-2">
+        <div className="grid w-full grid-cols-3 gap-2 sm:flex sm:w-auto sm:flex-wrap">
           <BoostTile
             boost="reroll"
             label={dict.streaks.boostReroll}
@@ -108,6 +98,13 @@ export const LemonTokenPanel: React.FC<LemonTokenPanelProps> = ({
           />
         </div>
       )}
+
+      <div className="ml-auto flex items-center gap-1.5 type-card-title max-sm:order-first">
+        <Coins className="h-4 w-4 text-accent-amber" aria-hidden="true" />
+        <span>
+          {dict.streaks.tokensLabel}: {tokens} / {boosts.cap}
+        </span>
+      </div>
     </section>
   );
 };

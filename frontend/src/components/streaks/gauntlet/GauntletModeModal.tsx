@@ -163,7 +163,7 @@ export const GauntletModeModal: React.FC<GauntletModeModalProps> = ({
         const mode = GAUNTLET_GAME_MODES.find((candidate) => candidate === value);
         if (mode) onSelectMode(mode);
       }}
-      tileGridClassName={isLemonStage ? 'sm:grid-cols-3' : 'sm:grid-cols-2'}
+      tileGridClassName={isLemonStage ? 'grid-cols-3' : 'grid-cols-2'}
       selectedValue={isLemonStage ? currentMode : rootSelected}
       onBack={isLemonStage ? () => setStage('root') : undefined}
       backLabel={dict.streaks.back}

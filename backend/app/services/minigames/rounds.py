@@ -4,6 +4,8 @@ import random
 from datetime import date
 from typing import Any
 
+from sqlalchemy import select
+
 from app.core.extensions import db
 from app.models.character import Killer, Survivor
 from app.models.map import Realm
@@ -261,9 +263,13 @@ def _quote_lore_round(rng: random.Random, survivors: list[Survivor], killers: li
 def _addon_guesser_round(rng: random.Random) -> list[dict[str, Any]] | None:
     """Round definition for the `addon_guesser` mode."""
     from app.models.equipment import KillerAddon
-    addons = db.session.query(KillerAddon).join(Killer).filter(
-        KillerAddon.description != None,
-        KillerAddon.description != ""
+    addons = db.session.scalars(
+        select(KillerAddon)
+        .join(Killer)
+        .where(
+            KillerAddon.description.is_not(None),
+            KillerAddon.description != "",
+        )
     ).all()
     if addons:
         chosen_addon = rng.choice(addons)
@@ -321,10 +327,10 @@ def _fallback_round(game_mode: str, rng: random.Random, killers: list[Killer]) -
 
 def generate_rounds_for_mode(game_mode: str, rng: random.Random) -> list[dict[str, Any]]:
     """Generates round definitions for single or multi-round game modes."""
-    survivors = db.session.query(Survivor).all()
-    killers = db.session.query(Killer).all()
-    perks = db.session.query(Perk).all()
-    realms = db.session.query(Realm).all()
+    survivors = db.session.scalars(select(Survivor)).all()
+    killers = db.session.scalars(select(Killer)).all()
+    perks = db.session.scalars(select(Perk)).all()
+    realms = db.session.scalars(select(Realm)).all()
 
     if game_mode in ("classic", "classic_character"):
         return _classic_character_round(rng, survivors, killers)

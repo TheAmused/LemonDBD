@@ -9,6 +9,8 @@ import random
 from datetime import date, datetime, timedelta, timezone
 from typing import Any
 
+from sqlalchemy import select
+
 from app.core.extensions import db
 from app.models.minigame import MinigameDailyChallenge, MinigameRepeatableChallenge
 from app.services.minigames.catalog import get_catalog
@@ -25,9 +27,13 @@ class MinigameService:
 
     def get_or_create_daily(self, game_mode: str, target_date: date, lang: str | None = None) -> dict[str, Any]:
         """Fetches cached daily challenge from PostgreSQL, or deterministically generates it."""
-        existing = db.session.query(MinigameDailyChallenge).filter_by(
-            challenge_date=target_date, game_mode=game_mode, is_active=True
-        ).first()
+        existing = db.session.scalar(
+            select(MinigameDailyChallenge).where(
+                MinigameDailyChallenge.challenge_date == target_date,
+                MinigameDailyChallenge.game_mode == game_mode,
+                MinigameDailyChallenge.is_active.is_(True),
+            )
+        )
 
         if existing:
             return existing.to_dict()

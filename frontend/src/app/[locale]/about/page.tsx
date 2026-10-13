@@ -146,13 +146,13 @@ export default function AboutPage() {
 
           {/* Legal pills (each links to its own page), side by side and wrapping on narrow screens */}
           <div className="lg:col-span-2 flex flex-wrap items-center justify-center gap-3">
-            <LegalLinkPill href={`/${locale}/terms-of-service`} icon={<FileText className="h-4 w-4" />}>
+            <LegalLinkPill href={`/${locale}/terms-of-service`} target="terms-of-service" icon={<FileText className="h-4 w-4" />}>
               {dict.terms.heading}
             </LegalLinkPill>
-            <LegalLinkPill href={`/${locale}/privacy-policy`} icon={<ShieldCheck className="h-4 w-4" />}>
+            <LegalLinkPill href={`/${locale}/privacy-policy`} target="privacy-policy" icon={<ShieldCheck className="h-4 w-4" />}>
               {dict.privacy.heading}
             </LegalLinkPill>
-            <LegalLinkPill href={`/${locale}/rules`} icon={<ScrollText className="h-4 w-4" />}>
+            <LegalLinkPill href={`/${locale}/rules`} target="rules" icon={<ScrollText className="h-4 w-4" />}>
               {dict.rules.heading}
             </LegalLinkPill>
           </div>

@@ -1,7 +1,7 @@
 # backend/app/services/page_streak/runs.py
 from collections.abc import Callable
 from sqlalchemy import delete, select
-from sqlalchemy.orm import joinedload
+from sqlalchemy.orm import selectinload
 
 from app.core.extensions import db
 from app.models import PageStreakPageLog, PageStreakRun, utcnow
@@ -45,7 +45,7 @@ def fetch_run(
     """Retrieve run state and sorted page logs for a given user and killer."""
     r = db.session.scalars(
         select(PageStreakRun)
-        .options(joinedload(PageStreakRun.page_logs))
+        .options(selectinload(PageStreakRun.page_logs))
         .where(PageStreakRun.user_id == user_id, PageStreakRun.killer == killer)
     ).first()
     if r is None:
@@ -239,7 +239,7 @@ def refresh_untouched_run(
     so unlocking killers or perks after it was created does not leave it on old pages."""
     r = db.session.scalars(
         select(PageStreakRun)
-        .options(joinedload(PageStreakRun.page_logs))
+        .options(selectinload(PageStreakRun.page_logs))
         .where(PageStreakRun.user_id == user_id, PageStreakRun.killer == killer)
     ).first()
     if r is None or r.status != "in_progress" or r.current_page != 1:

@@ -3,7 +3,8 @@
 import time
 from typing import Any
 
-from sqlalchemy.orm import joinedload
+from sqlalchemy import select
+from sqlalchemy.orm import joinedload, selectinload
 
 from app.core.extensions import db
 from app.models.character import Killer, Survivor
@@ -24,10 +25,10 @@ def get_catalog(lang: str | None = None) -> dict[str, Any]:
         if now - ts < _CATALOG_TTL_SECONDS:
             return cached_data
 
-    survivors = db.session.query(Survivor).options(joinedload(Survivor.chapter)).all()
-    killers = db.session.query(Killer).options(joinedload(Killer.chapter)).all()
-    perks = db.session.query(Perk).options(joinedload(Perk.survivor), joinedload(Perk.killer)).all()
-    realms = db.session.query(Realm).options(joinedload(Realm.maps)).all()
+    survivors = db.session.scalars(select(Survivor).options(joinedload(Survivor.chapter))).all()
+    killers = db.session.scalars(select(Killer).options(joinedload(Killer.chapter))).all()
+    perks = db.session.scalars(select(Perk).options(joinedload(Perk.survivor), joinedload(Perk.killer))).all()
+    realms = db.session.scalars(select(Realm).options(selectinload(Realm.maps))).all()
 
     characters_list = []
     for s in survivors:

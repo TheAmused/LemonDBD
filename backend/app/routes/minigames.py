@@ -8,6 +8,7 @@ from datetime import date, datetime, timezone
 from typing import Any
 
 from flask import Blueprint, current_app, g, jsonify, request, send_from_directory
+from sqlalchemy import select
 from app.core.extensions import db
 from app.core.limiter import limiter
 from app.core.security import admin_required, get_current_user
@@ -136,9 +137,12 @@ def create_official_challenge():
         target_date = datetime.now(timezone.utc).date()
 
     # Upsert daily challenge for date and mode
-    existing = db.session.query(MinigameDailyChallenge).filter_by(
-        challenge_date=target_date, game_mode=game_mode
-    ).first()
+    existing = db.session.scalar(
+        select(MinigameDailyChallenge).where(
+            MinigameDailyChallenge.challenge_date == target_date,
+            MinigameDailyChallenge.game_mode == game_mode,
+        )
+    )
 
     if existing:
         existing.title = title
@@ -164,9 +168,12 @@ def create_official_challenge():
 @minigames_bp.route("/official", methods=["GET"])
 def list_official_challenges():
     """Lists official daily challenges."""
-    challenges = db.session.query(MinigameDailyChallenge).filter_by(is_active=True).order_by(
-        MinigameDailyChallenge.challenge_date.desc()
-    ).limit(30).all()
+    challenges = db.session.scalars(
+        select(MinigameDailyChallenge)
+        .where(MinigameDailyChallenge.is_active.is_(True))
+        .order_by(MinigameDailyChallenge.challenge_date.desc())
+        .limit(30)
+    ).all()
     return jsonify([c.to_dict() for c in challenges]), 200
 
 
@@ -177,7 +184,9 @@ def get_user_stats():
     if not user:
         return jsonify({"error": "Authentication required"}), 401
 
-    stats = db.session.query(MinigameUserStat).filter_by(user_id=user.id).all()
+    stats = db.session.scalars(
+        select(MinigameUserStat).where(MinigameUserStat.user_id == user.id)
+    ).all()
     stats_map = {s.game_mode: s.to_dict() for s in stats}
     return jsonify({"user_id": user.id, "stats": stats_map}), 200
 
@@ -195,7 +204,12 @@ def update_user_stats():
     attempts_taken = data.get("attempts_taken")
     today = datetime.now(timezone.utc).date()
 
-    stat = db.session.query(MinigameUserStat).filter_by(user_id=user.id, game_mode=game_mode).first()
+    stat = db.session.scalar(
+        select(MinigameUserStat).where(
+            MinigameUserStat.user_id == user.id,
+            MinigameUserStat.game_mode == game_mode,
+        )
+    )
     if not stat:
         stat = MinigameUserStat(
             user_id=user.id,

@@ -5,6 +5,7 @@ import React, { useEffect, useRef } from 'react';
 
 export interface CardDisintegrationOverlayProps {
   exitType: 'smash' | 'pass' | 'super_smash';
+  duration?: number;
   onComplete?: () => void;
 }
 
@@ -38,6 +39,7 @@ interface DigitalGlitchSlice {
 
 export const CardDisintegrationOverlay: React.FC<CardDisintegrationOverlayProps> = ({
   exitType,
+  duration: durationProp = 480,
   onComplete,
 }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -56,7 +58,7 @@ export const CardDisintegrationOverlay: React.FC<CardDisintegrationOverlayProps>
     const height = (canvas.height = canvas.parentElement?.clientHeight || 580);
 
     const startTime = performance.now();
-    const duration = 1500; // 1.5s duration
+    const duration = durationProp;
     const variant = variantRef.current;
 
     // Fallback watchdog timer
@@ -65,7 +67,7 @@ export const CardDisintegrationOverlay: React.FC<CardDisintegrationOverlayProps>
         completedRef.current = true;
         onComplete?.();
       }
-    }, duration + 100);
+    }, duration + 50);
 
     const crimsonPalette =['#dc2626', '#b91c1c', '#ef4444', '#f87171', '#fecaca', '#ffffff'];
     const goldPalette = ['#fbbf24', '#f59e0b', '#fde68a', '#d97706', '#fff7ed', '#ffffff'];

@@ -80,3 +80,218 @@
   color: var(--text-muted);
   pointer-events: none;
 }
+
+/* ---------------------------------------------------------------------------
+ * Smash or Pass: Lore Ash & Charred Cinder Card Borders
+ * --------------------------------------------------------------------------- */
+@utility lore-ash-card {
+  position: relative;
+  background-clip: padding-box, border-box;
+  background-origin: padding-box, border-box;
+  border-width: 1.5px;
+  border-style: solid;
+  border-color: transparent;
+  box-shadow:
+    inset 0 0 16px 2px rgba(0, 0, 0, 0.45),
+    0 4px 16px -2px rgba(0, 0, 0, 0.4);
+  transition: transform 300ms ease, box-shadow 300ms ease, border-color 300ms ease;
+
+  &:where(.dark, .dark *) {
+    box-shadow:
+      inset 0 0 20px 3px rgba(0, 0, 0, 0.75),
+      0 4px 20px -2px rgba(0, 0, 0, 0.7);
+  }
+}
+
+.lore-ash-card {
+  position: relative;
+  background-clip: padding-box, border-box;
+  background-origin: padding-box, border-box;
+  border-width: 1.5px;
+  border-style: solid;
+  border-color: transparent;
+  box-shadow:
+    inset 0 0 16px 2px rgba(0, 0, 0, 0.45),
+    0 4px 16px -2px rgba(0, 0, 0, 0.4);
+  transition: transform 300ms ease, box-shadow 300ms ease, border-color 300ms ease;
+}
+
+.dark .lore-ash-card {
+  box-shadow:
+    inset 0 0 20px 3px rgba(0, 0, 0, 0.75),
+    0 4px 20px -2px rgba(0, 0, 0, 0.7);
+}
+
+@utility lore-ash-crimson {
+  background-image:
+    linear-gradient(var(--bg-surface), var(--bg-surface)),
+    repeating-linear-gradient(
+      125deg,
+      #3f3f46 0px,
+      #18181b 5px,
+      #71717a 10px,
+      color-mix(in srgb, var(--accent-red) 75%, #18181b) 16px,
+      #27272a 22px,
+      #a1a1aa 28px,
+      #18181b 34px
+    );
+}
+
+.lore-ash-crimson {
+  background-image:
+    linear-gradient(var(--bg-surface), var(--bg-surface)),
+    repeating-linear-gradient(
+      125deg,
+      #3f3f46 0px,
+      #18181b 5px,
+      #71717a 10px,
+      color-mix(in srgb, var(--accent-red) 75%, #18181b) 16px,
+      #27272a 22px,
+      #a1a1aa 28px,
+      #18181b 34px
+    );
+}
+
+.lore-ash-crimson:hover,
+.group:hover .lore-ash-crimson {
+  box-shadow:
+    inset 0 0 18px 2px rgba(0, 0, 0, 0.65),
+    0 0 16px color-mix(in srgb, var(--accent-red) 35%, transparent);
+}
+
+@utility lore-ash-emerald {
+  background-image:
+    linear-gradient(var(--bg-surface), var(--bg-surface)),
+    repeating-linear-gradient(
+      125deg,
+      #3f3f46 0px,
+      #18181b 5px,
+      #71717a 10px,
+      color-mix(in srgb, var(--accent-green) 75%, #18181b) 16px,
+      #27272a 22px,
+      #a1a1aa 28px,
+      #18181b 34px
+    );
+}
+
+.lore-ash-emerald {
+  background-image:
+    linear-gradient(var(--bg-surface), var(--bg-surface)),
+    repeating-linear-gradient(
+      125deg,
+      #3f3f46 0px,
+      #18181b 5px,
+      #71717a 10px,
+      color-mix(in srgb, var(--accent-green) 75%, #18181b) 16px,
+      #27272a 22px,
+      #a1a1aa 28px,
+      #18181b 34px
+    );
+}
+
+.lore-ash-emerald:hover,
+.group:hover .lore-ash-emerald {
+  box-shadow:
+    inset 0 0 18px 2px rgba(0, 0, 0, 0.65),
+    0 0 16px color-mix(in srgb, var(--accent-green) 35%, transparent);
+}
+
+@utility lore-ash-amber {
+  background-image:
+    linear-gradient(var(--bg-surface), var(--bg-surface)),
+    repeating-linear-gradient(
+      125deg,
+      #3f3f46 0px,
+      #18181b 5px,
+      #71717a 10px,
+      color-mix(in srgb, var(--accent-amber) 80%, #18181b) 16px,
+      #27272a 22px,
+      #a1a1aa 28px,
+      #18181b 34px
+    );
+}
+
+.lore-ash-amber {
+  background-image:
+    linear-gradient(var(--bg-surface), var(--bg-surface)),
+    repeating-linear-gradient(
+      125deg,
+      #3f3f46 0px,
+      #18181b 5px,
+      #71717a 10px,
+      color-mix(in srgb, var(--accent-amber) 80%, #18181b) 16px,
+      #27272a 22px,
+      #a1a1aa 28px,
+      #18181b 34px
+    );
+}
+
+.lore-ash-amber:hover,
+.group:hover .lore-ash-amber {
+  box-shadow:
+    inset 0 0 18px 2px rgba(0, 0, 0, 0.65),
+    0 0 16px color-mix(in srgb, var(--accent-amber) 35%, transparent);
+}
+
+/* ---------------------------------------------------------------------------
+ * Smash or Pass: Candidate Character Card Ash Border
+ * --------------------------------------------------------------------------- */
+@utility card-ash-border {
+  background-clip: padding-box, border-box;
+  background-origin: padding-box, border-box;
+  border-width: 2px;
+  border-style: solid;
+  border-color: transparent;
+  background-image:
+    linear-gradient(var(--bg-primary), var(--bg-primary)),
+    repeating-linear-gradient(
+      130deg,
+      #3f3f46 0px,
+      #18181b 6px,
+      #71717a 12px,
+      color-mix(in srgb, var(--accent-red) 75%, #18181b) 18px,
+      #27272a 25px,
+      #a1a1aa 32px,
+      #18181b 40px
+    );
+  box-shadow:
+    inset 0 0 24px 2px rgba(0, 0, 0, 0.75),
+    0 0 35px rgba(0, 0, 0, 0.85);
+}
+
+.card-ash-border {
+  background-clip: padding-box, border-box;
+  background-origin: padding-box, border-box;
+  border-width: 2px;
+  border-style: solid;
+  border-color: transparent;
+  background-image:
+    linear-gradient(var(--bg-primary), var(--bg-primary)),
+    repeating-linear-gradient(
+      130deg,
+      #3f3f46 0px,
+      #18181b 6px,
+      #71717a 12px,
+      color-mix(in srgb, var(--accent-red) 75%, #18181b) 18px,
+      #27272a 25px,
+      #a1a1aa 32px,
+      #18181b 40px
+    );
+  box-shadow:
+    inset 0 0 24px 2px rgba(0, 0, 0, 0.75),
+    0 0 35px rgba(0, 0, 0, 0.85);
+}
+
+@utility archetype-plaque {
+  box-shadow:
+    inset 0 0 24px rgba(0, 0, 0, 0.65),
+    0 4px 20px rgba(0, 0, 0, 0.45);
+}
+
+.archetype-plaque {
+  box-shadow:
+    inset 0 0 24px rgba(0, 0, 0, 0.65),
+    0 4px 20px rgba(0, 0, 0, 0.45);
+}
+
+

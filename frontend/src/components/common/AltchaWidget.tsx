@@ -56,17 +56,15 @@ export const AltchaWidget: React.FC<AltchaWidgetProps> = ({
           ) : error ? (
             <>
               <ShieldAlert className="w-3.5 h-3.5 text-accent-red shrink-0" />
-              {failedText && (
-                <span className="text-accent-red font-bold">{failedText}</span>
-              )}
-              {onRetry && retryLabel && (
+              <span className="text-accent-red font-bold">{failedText || error}</span>
+              {onRetry && (
                 <button
                   type="button"
                   onClick={onRetry}
-                  aria-label={retryLabel}
+                  aria-label={retryLabel || 'Retry'}
                   className="ml-auto underline text-accent-amber hover:opacity-80 type-strong cursor-pointer focus:outline-none"
                 >
-                  {retryLabel}
+                  {retryLabel || 'Retry'}
                 </button>
               )}
             </>

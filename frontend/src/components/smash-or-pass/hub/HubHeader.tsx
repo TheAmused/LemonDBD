@@ -117,7 +117,7 @@ export function HubHeader({
   return (
     <header
       data-hub-header=""
-      className="relative z-20 mx-auto w-full max-w-6xl rounded-3xl bg-bg-surface border border-border-color backdrop-blur-2xl p-2.5 @[560px]/hub:p-4 @[1016px]/hub:p-5 space-y-3 transition-all"
+      className={`relative ${isFilterDrawerOpen ? 'z-40' : 'z-30'} mx-auto w-full max-w-6xl rounded-3xl bg-bg-surface border border-border-color backdrop-blur-2xl p-2.5 @[560px]/hub:p-4 @[1016px]/hub:p-5 transition-all`}
     >
       {/* Below 1016px of hub width: roster on row 1, stats + actions on row 2 (phones: three rows).
           From 1016px: one row, stats | roster | actions. */}

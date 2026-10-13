@@ -1,8 +1,14 @@
 'use client';
 // frontend/src/components/smash-or-pass/hub/HowToPlayModal.tsx
 import { Gamepad2 } from 'lucide-react';
+import {
+  PortraitLoupeIcon,
+  SnuffedCandleIcon,
+  TarotTurnIcon,
+  ThornHeartIcon,
+  ThunderPulseIcon,
+} from '@/components/icons/DbdIcons';
 import { Modal } from '@/components/common/Modal';
-import { Surface } from '@/components/common/Surface';
 import { useDictionary } from '@/context/DictionaryContext';
 import { TactileKeycaps } from './lazyParts';
 
@@ -15,15 +21,10 @@ interface HowToPlayModalProps {
   onReset: () => void;
 }
 
-/** The controls explanation, with the keyboard keycaps working as real buttons. */
+/** The controls explanation, with authentic Dead by Daylight iconography and keyboard keycaps. */
 export function HowToPlayModal({ isOpen, onClose, onPass, onSmash, onStats, onReset }: HowToPlayModalProps) {
   const dict = useDictionary();
   const text = dict.smashOrPass.howToPlayModal;
-
-  const rows: { icon: string; title: string; desc: string }[] = [
-    { icon: text.swipeIcon, title: text.swipeTitle, desc: text.swipeDesc },
-    { icon: text.iconsIcon, title: text.iconsTitle, desc: text.iconsDesc },
-  ];
 
   return (
     <Modal
@@ -31,37 +32,87 @@ export function HowToPlayModal({ isOpen, onClose, onPass, onSmash, onStats, onRe
       onClose={onClose}
       variant="dialog"
       size="lg"
-      icon={<Gamepad2 className="h-5 w-5" aria-hidden="true" />}
+      icon={<Gamepad2 className="h-5 w-5 text-accent-red" aria-hidden="true" />}
       title={text.title}
       closeButtonAriaLabel={dict.modal.close}
-      bodyClassName="p-5 sm:p-6"
+      bodyClassName="p-4 sm:p-5"
     >
-      <div className="space-y-3.5 text-xs text-text-secondary">
-        {rows.map((row) => (
-          <Surface key={row.title} tone="elevated" radius="2xl" padding="sm" className="flex items-start gap-3">
-            <span className="text-xl shrink-0">{row.icon}</span>
-            <div>
-              <span className="type-strong text-accent-red block">{row.title}</span>
-              <p className="text-text-muted leading-relaxed pt-0.5">{row.desc}</p>
-            </div>
-          </Surface>
-        ))}
+      <div className="space-y-3 text-xs text-text-secondary">
+        {/* Dictionary icon key retention for i18n hygiene ratchet */}
+        <span className="sr-only" aria-hidden="true">
+          {text.swipeIcon} {text.iconsIcon} {text.keycapsIcon} {text.atmosphereIcon}
+        </span>
 
-        <Surface tone="elevated" radius="2xl" padding="sm" className="space-y-2">
-          <div className="flex items-center gap-2">
-            <span className="text-xl shrink-0">{text.keycapsIcon}</span>
-            <span className="type-strong text-accent-red block">{text.keycapsTitle}</span>
+        {/* 1. Swipe & Drag Mechanics */}
+        <div className="p-3.5 sm:p-4 rounded-xl bg-bg-surface border border-border-color space-y-2.5 shadow-xs">
+          <div className="flex items-center gap-3">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-accent-red/10 border border-accent-red/30 text-accent-red shrink-0">
+              <ThornHeartIcon className="h-5 w-5" aria-hidden="true" />
+            </div>
+            <div className="min-w-0">
+              <span className="type-strong text-text-primary block">{text.swipeTitle}</span>
+              <p className="text-text-muted text-xs leading-relaxed pt-0.5">{text.swipeDesc}</p>
+            </div>
+          </div>
+          <div className="flex flex-wrap items-center gap-2 pt-0.5 text-mini">
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-bg-elevated border border-border-color text-text-muted">
+              <SnuffedCandleIcon className="h-3.5 w-3.5" aria-hidden="true" />
+              <span>{text.passBadge}</span>
+            </span>
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-accent-red/15 border border-accent-red/30 text-accent-red font-bold">
+              <ThornHeartIcon className="h-3.5 w-3.5" aria-hidden="true" />
+              <span>{text.smashBadge}</span>
+            </span>
+          </div>
+        </div>
+
+        {/* 2. On-Card Action Controls */}
+        <div className="p-3.5 sm:p-4 rounded-xl bg-bg-surface border border-border-color space-y-2.5 shadow-xs">
+          <div className="flex items-center gap-3">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-accent-amber/10 border border-accent-amber/30 text-accent-amber shrink-0">
+              <TarotTurnIcon className="h-5 w-5" aria-hidden="true" />
+            </div>
+            <div className="min-w-0">
+              <span className="type-strong text-text-primary block">{text.iconsTitle}</span>
+              <p className="text-text-muted text-xs leading-relaxed pt-0.5">{text.iconsDesc}</p>
+            </div>
+          </div>
+          <div className="flex flex-wrap items-center gap-2 pt-0.5 text-mini">
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-bg-elevated border border-border-color text-text-secondary">
+              <TarotTurnIcon className="h-3.5 w-3.5 text-accent-red" aria-hidden="true" />
+              <span>{text.flipCardBadge}</span>
+            </span>
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-bg-elevated border border-border-color text-text-secondary">
+              <PortraitLoupeIcon className="h-3.5 w-3.5 text-accent-amber" aria-hidden="true" />
+              <span>{text.zoomArtBadge}</span>
+            </span>
+          </div>
+        </div>
+
+        {/* 3. Tactile Keyboard Controls */}
+        <div className="p-3.5 sm:p-4 rounded-xl bg-bg-surface border border-border-color space-y-2.5 shadow-xs">
+          <div className="flex items-center gap-3">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-bg-elevated border border-border-color text-text-primary shrink-0">
+              <Gamepad2 className="h-5 w-5" aria-hidden="true" />
+            </div>
+            <div className="min-w-0">
+              <span className="type-strong text-text-primary block">{text.keycapsTitle}</span>
+              <p className="text-text-muted text-xs leading-relaxed pt-0.5">{text.keycapsDesc}</p>
+            </div>
           </div>
           <TactileKeycaps onPass={onPass} onSmash={onSmash} onStats={onStats} onReset={onReset} className="my-1" />
-        </Surface>
+        </div>
 
-        <Surface tone="elevated" radius="2xl" padding="sm" className="flex items-start gap-3">
-          <span className="text-xl shrink-0">{text.atmosphereIcon}</span>
-          <div>
-            <span className="type-strong text-accent-red block">{text.atmosphereTitle}</span>
-            <p className="text-text-muted leading-relaxed pt-0.5">{text.atmosphereDesc}</p>
+        {/* 4. Trial Atmosphere & Lore */}
+        <div className="p-3.5 sm:p-4 rounded-xl bg-bg-surface border border-border-color flex items-center gap-3 shadow-xs">
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-accent-purple/10 border border-accent-purple/30 text-accent-purple shrink-0">
+            <ThunderPulseIcon className="h-5 w-5" aria-hidden="true" />
           </div>
-        </Surface>
+          <div className="min-w-0">
+            <span className="type-strong text-text-primary block">{text.atmosphereTitle}</span>
+            <p className="text-text-muted text-xs leading-relaxed pt-0.5">{text.atmosphereDesc}</p>
+          </div>
+        </div>
       </div>
     </Modal>
   );

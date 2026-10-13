@@ -225,7 +225,7 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
       checked={scope === 'general'}
       onChange={(checked) => setScope(checked ? 'general' : 'all')}
       ariaLabel={dict.filters.generalOnly}
-      className="w-full shrink-0 gap-1.5 whitespace-nowrap rounded-full border border-border-color bg-bg-elevated/60 px-3 py-2 text-mini font-extrabold text-text-secondary shadow-inner sm:w-auto sm:gap-2 sm:px-3.5 sm:text-xs lg:py-2.5 wide:gap-2.5 wide:px-5 wide:py-3 wide:text-sm"
+      className="w-full shrink-0 gap-1.5 whitespace-nowrap rounded-2xl border border-border-color bg-bg-elevated/60 px-3 py-2 text-mini font-extrabold text-text-secondary shadow-inner sm:w-auto sm:gap-2 sm:px-3.5 sm:text-xs lg:py-2.5 wide:gap-2.5 wide:px-5 wide:py-3 wide:text-sm"
       boxClassName="h-3.5 w-3.5 wide:h-4 wide:w-4"
     >
       {dict.filters.generalOnly && <span>{dict.filters.generalOnly}</span>}

@@ -3,7 +3,7 @@
 import logging
 from typing import Any
 
-from sqlalchemy import case, func, or_, select
+from sqlalchemy import and_, case, func, or_, select
 
 from app.core.extensions import db
 from app.models.base import utcnow
@@ -281,7 +281,7 @@ class SmashVotesMixin:
             if session_id:
                 conds.append(Vote.session_id == session_id)
 
-            stmt = select(Vote).where(or_(*conds))
+            stmt = select(Vote).where(and_(*conds))
             if target_slug:
                 roster = db.session.scalar(select(Roster).where(Roster.slug == target_slug))
                 if roster:

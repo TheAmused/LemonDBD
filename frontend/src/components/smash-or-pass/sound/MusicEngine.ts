@@ -64,6 +64,9 @@ export class MusicEngine {
   }
 
   private schedule(): void {
+    if (this.nextTime < this.ctx.currentTime) {
+      this.nextTime = this.ctx.currentTime + 0.05;
+    }
     while (this.nextTime < this.ctx.currentTime + LOOKAHEAD_S) {
       this.scheduleStep(this.step, this.nextTime);
       this.nextTime += STEP;

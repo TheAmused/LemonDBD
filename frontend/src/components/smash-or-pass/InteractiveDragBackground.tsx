@@ -54,11 +54,17 @@ export const InteractiveDragBackground: React.FC<InteractiveDragBackgroundProps>
     isPaused: false,
   });
 
+  const isLoopActiveRef = useRef(false);
+  const kickRenderRef = useRef<() => void>(() => {});
+
   useEffect(() => {
     stateRef.current.dragX = dragX;
     stateRef.current.dragY = dragY;
     stateRef.current.isDragging = isDragging;
     stateRef.current.isPaused = isPaused;
+    if (!isPaused) {
+      kickRenderRef.current();
+    }
   }, [dragX, dragY, isDragging, isPaused]);
 
   useEffect(() => {
@@ -209,9 +215,10 @@ export const InteractiveDragBackground: React.FC<InteractiveDragBackgroundProps>
 
     const render = () => {
       if (stateRef.current.isPaused) {
-        animationFrameId = requestAnimationFrame(render);
+        isLoopActiveRef.current = false;
         return;
       }
+      isLoopActiveRef.current = true;
 
       ctx.clearRect(0, 0, width, height);
 
@@ -412,10 +419,19 @@ export const InteractiveDragBackground: React.FC<InteractiveDragBackgroundProps>
       animationFrameId = requestAnimationFrame(render);
     };
 
+    kickRenderRef.current = () => {
+      if (!isLoopActiveRef.current && !stateRef.current.isPaused) {
+        isLoopActiveRef.current = true;
+        animationFrameId = requestAnimationFrame(render);
+      }
+    };
+
+    isLoopActiveRef.current = true;
     render();
 
     return () => {
       window.removeEventListener('resize', handleResize);
+      isLoopActiveRef.current = false;
       cancelAnimationFrame(animationFrameId);
     };
   }, []);

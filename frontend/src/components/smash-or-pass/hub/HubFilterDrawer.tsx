@@ -1,5 +1,6 @@
 'use client';
 // frontend/src/components/smash-or-pass/hub/HubFilterDrawer.tsx
+import { useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
 import { useDictionary } from '@/context/DictionaryContext';
@@ -12,6 +13,7 @@ interface HubFilterDrawerProps {
   availableRoles: string[];
   availableGenders: string[];
   onFilterChange: (type: 'role' | 'gender', value: string) => void;
+  onClose?: () => void;
 }
 
 /** The role and gender segmented switches that expand under the command dock. */
@@ -22,22 +24,32 @@ export function HubFilterDrawer({
   availableRoles,
   availableGenders,
   onFilterChange,
+  onClose,
 }: HubFilterDrawerProps) {
   const dict = useDictionary();
   const filters = dict.smashOrPass.filters;
+
+  useEffect(() => {
+    if (!isOpen || !onClose) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [isOpen, onClose]);
 
   return (
     <AnimatePresence>
       {isOpen && (
         <motion.div
           key="smash-filter-drawer"
-          initial={{ height: 0, opacity: 0 }}
-          animate={{ height: 'auto', opacity: 1 }}
-          exit={{ height: 0, opacity: 0 }}
-          transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
-          className="overflow-hidden border-t border-border-color pt-3"
+          initial={{ opacity: 0, y: -6, scale: 0.99 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, y: -6, scale: 0.99 }}
+          transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
+          className="absolute top-full left-0 right-0 mt-2 z-40 p-2.5 sm:p-3 rounded-2xl bg-bg-surface/95 border border-border-color backdrop-blur-2xl shadow-2xl"
         >
-          <div className="flex flex-col md:flex-row items-center justify-between gap-3">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-2.5 sm:gap-3">
             {/* Role Segmented Switch */}
             <div className="flex items-center gap-1 p-1 bg-bg-elevated border border-border-color rounded-2xl w-full md:w-auto shadow-inner type-strong overflow-x-auto">
               <button

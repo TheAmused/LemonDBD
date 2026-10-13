@@ -52,16 +52,16 @@ test('SmashOrPass: Types & Roster/Entity Contracts', async (t) => {
 test('SmashOrPass: Tier Classification & Calculations', async (t) => {
   await t.test('calculates correct tier bands for smash rates', () => {
     const getTier = (rate: number) => {
-      if (rate >= 85) return 'God Tier';
-      if (rate >= 65) return 'Fatal Attraction';
+      if (rate >= 80) return 'God Tier';
+      if (rate >= 60) return 'Fatal Attraction';
       if (rate >= 40) return 'Friendzone';
       return 'Eldritch Void';
     };
 
     assert.strictEqual(getTier(95), 'God Tier');
-    assert.strictEqual(getTier(85), 'God Tier');
+    assert.strictEqual(getTier(80), 'God Tier');
     assert.strictEqual(getTier(75), 'Fatal Attraction');
-    assert.strictEqual(getTier(65), 'Fatal Attraction');
+    assert.strictEqual(getTier(60), 'Fatal Attraction');
     assert.strictEqual(getTier(50), 'Friendzone');
     assert.strictEqual(getTier(40), 'Friendzone');
     assert.strictEqual(getTier(30), 'Eldritch Void');

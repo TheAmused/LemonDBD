@@ -69,7 +69,7 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({ isOpen, onClose 
     refreshChallenge,
     honeypotValue,
     honeypotProps,
-  } = useAltcha();
+  } = useAltcha(!isAuthenticated && isOpen);
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 

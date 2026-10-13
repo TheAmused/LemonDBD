@@ -11,6 +11,7 @@ import { Button } from '@/components/common/Button';
 import { tip } from '@/components/common/Tooltip';
 import { downloadAccountData } from '@/services/userProfileApi';
 import { useDictionary } from '@/context/DictionaryContext';
+import { trackEvent } from '@/utils/analytics';
 
 interface DownloadDataSectionProps {
   /** Whose data to download. Omit for the signed-in user's own (profile page). */
@@ -39,6 +40,7 @@ export const DownloadDataSection: React.FC<DownloadDataSectionProps> = ({ userId
     setFailed(false);
     try {
       await downloadAccountData(userId);
+      if (own) trackEvent('data_download');
     } catch {
       if (onError) onError(failedText);
       else setFailed(true);

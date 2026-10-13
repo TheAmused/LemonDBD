@@ -22,44 +22,7 @@ smash_or_pass_bp = Blueprint("smash_or_pass", __name__, url_prefix="/api/v1/smas
 smash_service = SmashOrPassService()
 
 
-class SlidingWindowRateLimiter:
-    """In-memory sliding window rate limiter per client identifier with auto-pruning."""
-
-    def __init__(self, max_requests: int = 60, window_seconds: int = 60, prune_interval: int = 50):
-        self.max_requests = max_requests
-        self.window_seconds = window_seconds
-        self.prune_interval = prune_interval
-        self._requests: dict[str, list[float]] = defaultdict(list)
-        self._lock = threading.Lock()
-        self._call_count = 0
-
-    def is_allowed(self, client_key: str) -> bool:
-        now = time.time()
-        cutoff = now - self.window_seconds
-        with self._lock:
-            self._call_count += 1
-            if self._call_count >= self.prune_interval:
-                self._prune_stale_keys(cutoff)
-                self._call_count = 0
-
-            timestamps = self._requests[client_key]
-            filtered = [t for t in timestamps if t > cutoff]
-            if len(filtered) >= self.max_requests:
-                self._requests[client_key] = filtered
-                return False
-            filtered.append(now)
-            self._requests[client_key] = filtered
-            return True
-
-    def _prune_stale_keys(self, cutoff: float) -> None:
-        stale_keys = [k for k, v in self._requests.items() if not v or max(v) <= cutoff]
-        for k in stale_keys:
-            del self._requests[k]
-
-    def reset(self) -> None:
-        with self._lock:
-            self._requests.clear()
-            self._call_count = 0
+from app.utils.rate_limit import SlidingWindowRateLimiter
 
 
 vote_rate_limiter = SlidingWindowRateLimiter(max_requests=60, window_seconds=60)
@@ -523,48 +486,7 @@ def get_user_votes():
         return jsonify({"error": str(e)}), 500
 
 
-def _is_private_host(hostname: str) -> bool:
-    import ipaddress
-    import socket
-
-    lower = hostname.lower().strip("[]")
-    if lower in ("localhost", "backend", "frontend", "db", "redis", "nginx", "umami"):
-        return True
-    if lower.endswith(".local") or lower.endswith(".internal"):
-        return True
-
-    try:
-        ip = ipaddress.ip_address(lower)
-        return (
-            ip.is_private
-            or ip.is_loopback
-            or ip.is_reserved
-            or ip.is_unspecified
-            or ip.is_link_local
-        )
-    except ValueError:
-        pass
-
-    try:
-        addr_infos = socket.getaddrinfo(lower, None)
-        if not addr_infos:
-            return True
-        for info in addr_infos:
-            sockaddr = info[4]
-            ip_str = sockaddr[0]
-            ip = ipaddress.ip_address(ip_str)
-            if (
-                ip.is_private
-                or ip.is_loopback
-                or ip.is_reserved
-                or ip.is_unspecified
-                or ip.is_link_local
-            ):
-                return True
-    except (socket.gaierror, ValueError, OSError):
-        return True
-
-    return False
+from app.utils.network import is_private_host as _is_private_host
 
 
 @smash_or_pass_bp.route("/proxy-image", methods=["GET"])

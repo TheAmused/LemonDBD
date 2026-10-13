@@ -39,9 +39,14 @@ class TierListAdminItem(BaseModel):
         return _clean_image_url(value)
 
 
+#: Longest seeded description/translation is 147 chars; rounded up to the next hundred.
+#: Keep in sync with `TIER_LIST_LIMITS.maxDescription` on the frontend.
+TIER_LIST_DESCRIPTION_MAX = 200
+
+
 class TierListAdminCreate(BaseModel):
     title: str = Field(..., min_length=1, max_length=150)
-    description: str = Field(default="", max_length=2000)
+    description: str = Field(default="", max_length=TIER_LIST_DESCRIPTION_MAX)
     cover_image_url: str | None = None
     tiers: list[TierListAdminTier] = Field(..., min_length=1, max_length=20)
     items: list[TierListAdminItem] = Field(..., min_length=1, max_length=400)
@@ -54,7 +59,7 @@ class TierListAdminCreate(BaseModel):
 
 class TierListAdminUpdate(BaseModel):
     title: str | None = Field(default=None, min_length=1, max_length=150)
-    description: str | None = Field(default=None, max_length=2000)
+    description: str | None = Field(default=None, max_length=TIER_LIST_DESCRIPTION_MAX)
     cover_image_url: str | None = None
     tiers: list[TierListAdminTier] | None = Field(default=None, min_length=1, max_length=20)
     items: list[TierListAdminItem] | None = Field(default=None, min_length=1, max_length=400)

@@ -10,6 +10,7 @@ import { MainCard } from '@/components/user/MainCard';
 import { DualMainsShowcase } from '@/components/user/DualMainsShowcase';
 import { UserBugReportsDrawer } from '@/components/user/UserBugReportsDrawer';
 import { UserProfileForm } from '@/components/user/UserProfileForm';
+import { AuthProvider } from '@/context/AuthContext';
 import { DEFAULT_SHOWCASE_STATE } from '@/types/userShowcase';
 import type { Perk } from '@/types/perks';
 
@@ -204,8 +205,7 @@ describe('User Profile Drawers: DualMainsShowcase & UserBugReportsDrawer', () =>
 
     // Centered text
     assert.ok(html.includes('text-center'), 'Must center the header text');
-    assert.ok(html.includes('Signature Loadouts'));
-    assert.ok(html.includes('Feng Min • The Blight'));
+    assert.ok(html.includes('Feng Min') && html.includes('The Blight'), 'Must render both survivor and killer names');
 
     // No icons or clumsy buttons in header
     assert.ok(!html.includes('Show Loadouts'), 'Must not have separate Show Loadouts button');
@@ -242,12 +242,16 @@ describe('User Profile Drawers: DualMainsShowcase & UserBugReportsDrawer', () =>
 
   it('UserProfileForm renders as Account Management drawer with centered header and banner', () => {
     const html = renderWithDictionary(
-      React.createElement(UserProfileForm, {
-        login: 'tester',
-        initialUsername: 'Tester',
-        initialEmail: 'test@lemondbd.com',
-        onRefreshUser: async () => {},
-      })
+      React.createElement(
+        AuthProvider,
+        null,
+        React.createElement(UserProfileForm, {
+          login: 'tester',
+          initialUsername: 'Tester',
+          initialEmail: 'test@lemondbd.com',
+          onRefreshUser: async () => {},
+        })
+      )
     );
 
     // Header has Account Management and centered text

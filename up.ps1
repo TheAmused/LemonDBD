@@ -79,7 +79,15 @@ if ($isPerfRequested -and -not $Strict) {
     }
 }
 
-$pythonCmd = if (Get-Command py -ErrorAction SilentlyContinue) { "py" } else { "python" }
+$pythonCmd = if (Test-Path "$PSScriptRoot\.venv\Scripts\python.exe") {
+    "$PSScriptRoot\.venv\Scripts\python.exe"
+} elseif (Test-Path "$PSScriptRoot\backend\.venv\Scripts\python.exe") {
+    "$PSScriptRoot\backend\.venv\Scripts\python.exe"
+} elseif (Get-Command py -ErrorAction SilentlyContinue) {
+    "py"
+} else {
+    "python"
+}
 
 if (-not $skipUpFlow) {
     # ====================================================================

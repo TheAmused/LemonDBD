@@ -40,6 +40,7 @@ test("Live Frontend Workflow: User Profile Management & Password Security", asyn
       email: updatedEmail,
       avatar_url: "profile_avatar_custom",
       new_password: newPassword,
+      current_password: initialPassword,
     }),
   });
   assert.strictEqual(updateRes.status, 200);

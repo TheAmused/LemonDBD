@@ -9,6 +9,7 @@ import { buildShareUrl, encodeSharePayload, exportFileName, serializeSmashRoster
 import { SMASH_ROSTER_LIMITS } from '@/utils/smashOrPass/constants';
 import { LABEL } from './creator/styles';
 import { useDictionary } from "@/context/DictionaryContext";
+import { trackEvent } from '@/utils/analytics';
 
 interface SmashRosterExportModalProps {
   doc: SmashRosterDocument | null;
@@ -26,6 +27,7 @@ export function SmashRosterExportModal({ doc, onClose, locale }: SmashRosterExpo
       onClose={onClose}
       locale={locale}
       idPrefix="smash-roster"
+      onExport={(method) => trackEvent('smash_roster_export', { method })}
       serialize={serializeSmashRosterDocument}
       fileName={exportFileName}
       encodePayload={encodeSharePayload}

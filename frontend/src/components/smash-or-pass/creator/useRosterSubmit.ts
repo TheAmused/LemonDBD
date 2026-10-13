@@ -16,6 +16,7 @@ import {
   errorMessage,
   toRawEntity,
 } from './SmashRosterCreatorParts';
+import { trackEvent } from '@/utils/analytics';
 
 interface UseRosterSubmitOptions {
   locale: string;
@@ -161,6 +162,7 @@ export function useRosterSubmit({
       setSaveError(saveResult.reason);
       return;
     }
+    trackEvent('smash_roster_create', { mode: isSimpleMode ? 'simple' : 'full', nsfw: Boolean(result.doc.is_nsfw) });
     try {
       localStorage.removeItem(DRAFT_KEY);
     } catch {

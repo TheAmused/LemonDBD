@@ -9,6 +9,7 @@ import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
 import { useDictionary } from '@/context/DictionaryContext';
 import { isSurvivor } from '@/utils/characterUtils';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
+import { sanitizeImageUrl } from '@/utils/smashOrPass/codec';
 import type { RomancePersonaResult } from '@/utils/smashPersona';
 import { PersonaIcon } from './PersonaIcon';
 
@@ -42,63 +43,68 @@ export function PersonaBreakdown({ persona, isSharedView, copied, onShare, onClo
         )
     : null;
 
+  const safeBadgeUrl = persona.badgeImageUrl ? sanitizeImageUrl(persona.badgeImageUrl) : null;
+
   return (
     <>
+      {/* Trial Archetype Plaque */}
       <div
-        className={`relative overflow-hidden rounded-3xl p-5 sm:p-6 bg-gradient-to-br ${persona.badgeColor} border-2 ${persona.borderColor} text-text-inverted shadow-2xl transition-all`}
-        style={{
-          boxShadow: `0 0 40px ${persona.glowColor}`,
-          backgroundImage: persona.badgeImageUrl ? `url(${persona.badgeImageUrl})` : undefined,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-        }}
+        className="archetype-plaque relative overflow-hidden rounded-2xl p-4 sm:p-5 bg-gradient-to-br from-bg-elevated via-bg-surface to-bg-primary border border-border-color shadow-xl bg-cover bg-center"
+        style={
+          safeBadgeUrl
+            ? { backgroundImage: `url(${JSON.stringify(safeBadgeUrl)})` }
+            : undefined
+        }
       >
         {isSharedView && (
-          <div className="mb-2">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-bg-primary/50 border border-border-color text-mini font-bold tracking-wider text-text-inverted backdrop-blur-md shadow-sm">
+          <div className="mb-2.5">
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-lg bg-bg-primary/80 border border-border-color text-micro font-bold tracking-wider text-text-primary backdrop-blur-md shadow-xs">
               {text.sharedBadge}
             </span>
           </div>
         )}
 
-        <div className="relative z-10 flex items-start justify-between gap-4">
+        <div className="relative z-10 flex items-center justify-between gap-4">
           <div className="space-y-1 flex-1 min-w-0">
-            <h3 className="text-2xl sm:text-3xl font-black tracking-tight text-text-inverted drop-shadow-md">
+            <span className="type-label-2xs text-accent-red uppercase tracking-wider font-bold block">
+              {text.modals.personaTitle}
+            </span>
+            <h3 className="text-xl sm:text-2xl font-black tracking-tight text-text-primary">
               {persona.title}
             </h3>
             {persona.subtitle && (
-              <p className="text-xs sm:text-sm text-text-inverted/90 leading-relaxed font-medium">
+              <p className="text-xs text-text-secondary leading-relaxed font-normal">
                 {persona.subtitle}
               </p>
             )}
           </div>
 
-          <div className="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-2xl bg-bg-primary/40 border border-border-color backdrop-blur-md shrink-0 shadow-lg">
+          <div className="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-xl bg-bg-surface/80 border border-border-color/80 shadow-md shrink-0">
             <PersonaIcon persona={persona} />
           </div>
         </div>
       </div>
 
       {/* Dating Psychology Card */}
-      <Surface tone="elevated" radius="2xl" padding="none" className="p-4 sm:p-5 space-y-2 shadow-inner">
-        <span className="type-label-xs text-accent-red flex items-center gap-1.5">
+      <div className="p-4 rounded-xl bg-bg-surface border-l-2 border-l-accent-red border border-border-color/60 space-y-1.5 shadow-xs">
+        <span className="type-label-2xs text-accent-red flex items-center gap-1.5 font-bold uppercase tracking-wider">
           {text.datingPsychology}
         </span>
         <p className="text-text-secondary type-body-fluid">
           {persona.description}
         </p>
-      </Surface>
+      </div>
 
       {/* Telemetry Matrix */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs">
-        <div className="p-3.5 rounded-2xl bg-bg-surface border border-border-color flex flex-col justify-between gap-1 shadow-inner">
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 text-xs">
+        <div className="p-3.5 rounded-xl bg-bg-surface border border-border-color/60 flex flex-col justify-between gap-1 shadow-xs">
           <span className="text-text-muted type-caption">{text.totalEvaluated}</span>
           <span className="text-lg font-black text-text-primary">
             {persona.totalVotes} <span className="text-xs font-normal text-text-muted">{text.candidates}</span>
           </span>
         </div>
 
-        <div className="p-3.5 rounded-2xl bg-bg-surface border border-border-color flex flex-col justify-between gap-1 shadow-inner">
+        <div className="p-3.5 rounded-xl bg-bg-surface border border-border-color/60 flex flex-col justify-between gap-1 shadow-xs">
           <span className="text-text-muted type-caption">{text.statsDetail.smashRate}</span>
           <span className="text-lg font-black text-accent-red flex items-center gap-1">
             <Heart className="h-4 w-4 fill-accent-red" />
@@ -107,9 +113,9 @@ export function PersonaBreakdown({ persona, isSharedView, copied, onShare, onClo
         </div>
 
         {persona.favoriteChar && (
-          <div className="col-span-2 sm:col-span-1 p-3.5 rounded-2xl bg-bg-surface border border-border-color flex items-center gap-3 shadow-inner">
+          <div className="col-span-2 sm:col-span-1 p-3.5 rounded-xl bg-bg-surface border border-border-color/60 flex items-center gap-3 shadow-xs">
             {favoriteCharAvatar && (
-              <div className="h-10 w-10 rounded-xl overflow-hidden bg-bg-primary border border-accent-red/40 shrink-0">
+              <div className="h-10 w-10 rounded-lg overflow-hidden bg-bg-primary border border-accent-red/40 shrink-0">
                 <img src={favoriteCharAvatar} alt="" className="h-full w-full object-cover" />
               </div>
             )}
@@ -124,8 +130,8 @@ export function PersonaBreakdown({ persona, isSharedView, copied, onShare, onClo
       </div>
 
       {/* Role Affinity Scale (Survivor vs Killer) */}
-      <Surface tone="elevated" radius="2xl" padding="none" className="p-4 sm:p-5 space-y-3">
-        <div className="flex items-center justify-between pb-0.5 border-b border-border-color/40">
+      <div className="p-4 rounded-xl bg-bg-surface border border-border-color/60 space-y-2.5 shadow-xs">
+        <div className="flex items-center justify-between pb-1 border-b border-border-color/40">
           <span className="type-label-xs text-text-secondary flex items-center gap-1.5">
             <Compass className="h-3.5 w-3.5 text-accent-red" />
             {text.roleAffinity}
@@ -157,7 +163,7 @@ export function PersonaBreakdown({ persona, isSharedView, copied, onShare, onClo
         </div>
 
         <div
-          className="h-3 w-full bg-bg-surface rounded-full overflow-hidden flex border border-border-color shadow-inner"
+          className="h-2.5 w-full bg-bg-elevated rounded-full overflow-hidden flex border border-border-color/60 shadow-inner"
           role="progressbar"
           aria-valuenow={persona.survivorAffinity}
           aria-valuemin={0}
@@ -178,7 +184,7 @@ export function PersonaBreakdown({ persona, isSharedView, copied, onShare, onClo
             </>
           )}
         </div>
-      </Surface>
+      </div>
 
       {/* Bottom Actions */}
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-2">

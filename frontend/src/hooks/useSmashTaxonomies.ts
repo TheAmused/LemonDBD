@@ -2,7 +2,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { apiUrl } from '@/utils/api';
+import { apiUrl, authHeaders } from '@/utils/api';
 
 const DEFAULT_ROLES = ['Survivor', 'Killer'];
 const DEFAULT_GENDERS = ['female', 'male', 'monster_other'];
@@ -79,7 +79,7 @@ export function useSmashTaxonomies() {
     try {
       await fetch(apiUrl('/api/v1/smash-or-pass/taxonomies'), {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', ...authHeaders() },
         body: JSON.stringify({ type, name: trimmed }),
       });
     } catch {

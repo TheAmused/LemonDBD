@@ -42,6 +42,11 @@ export function useHubOverlays(isPrefsOpen = false) {
     isResetConfirmOpen ||
     isHowToPlayOpen ||
     isPrefsOpen ||
+    isRosterModalOpen ||
+    isFilterDrawerOpen ||
+    isImportModalOpen ||
+    Boolean(exportingRosterId) ||
+    Boolean(rosterPendingDelete) ||
     Boolean(selectedStatCharacter);
 
   return {

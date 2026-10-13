@@ -6,6 +6,8 @@ import { isLocalRosterSlug } from '@/utils/smashOrPass/localRoster';
 import { SmashSounds } from '../SmashSoundEffects';
 import { applyVoteToLeaderboard } from './leaderboardPatch';
 import { exitOffsetFor, CALM_EXIT_MS, type useCardExit } from './useCardExit';
+import { trackEvent } from '@/utils/analytics';
+import { createRosterPlayTracker, rosterTag } from '@/utils/smashOrPass/analytics';
 
 interface UseSmashVotingOptions {
   currentCharacter: EntityItem | null;
@@ -43,6 +45,7 @@ export function useSmashVoting({
 }: UseSmashVotingOptions) {
   const [animTrigger, setAnimTrigger] = useState<AnimTrigger>({ type: null, key: 0 });
   const { isExiting, dragPhysics, beginExit } = exit;
+  const rosterPlayedRef = useRef(createRosterPlayTracker());
 
   // Each vote already patches the leaderboard in place; the full re-fetch only reconciles the
   // ranking, so it waits for a pause instead of running (and re-rendering the page) per swipe.
@@ -67,6 +70,11 @@ export function useSmashVoting({
   const handleVote = useCallback(
     async (vote: 'smash' | 'pass', origin?: { x: number; y: number }) => {
       if (!currentCharacter || isExiting) return;
+
+      trackEvent('smash_vote', { vote, roster: rosterTag(selectedRosterSlug) });
+      if (rosterPlayedRef.current(selectedRosterSlug)) {
+        trackEvent('smash_roster_play', { roster: rosterTag(selectedRosterSlug) });
+      }
 
       if (vote === 'smash') {
         SmashSounds.playSmashSound();

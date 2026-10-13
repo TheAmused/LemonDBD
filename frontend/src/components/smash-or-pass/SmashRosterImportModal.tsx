@@ -17,6 +17,7 @@ import { createCustomRosterId, saveCustomRoster } from '@/utils/smashOrPass/stor
 import { LABEL } from './creator/styles';
 import { formatMessage } from '@/utils/i18nFormat';
 import { useLocale, useDictionary } from '@/context/DictionaryContext';
+import { trackEvent } from '@/utils/analytics';
 
 interface SmashRosterImportModalProps {
   isOpen: boolean;
@@ -64,6 +65,7 @@ export function SmashRosterImportModal({ isOpen, onClose, sharePayload, onImport
       setSaveError(saveResult.reason);
       return;
     }
+    trackEvent('smash_roster_import', { via: sharePayload ? 'link' : 'manual' });
     onImported(localRosterSlug(id));
   };
 

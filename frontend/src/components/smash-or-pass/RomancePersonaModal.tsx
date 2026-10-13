@@ -23,6 +23,7 @@ import { useDictionary } from "@/context/DictionaryContext";
 import { PersonaBreakdown } from './persona/PersonaBreakdown';
 import { PersonaShareView } from './persona/PersonaShareView';
 import { buildSocialLinks } from './persona/socialLinks';
+import { trackEvent } from '@/utils/analytics';
 
 interface PersonaArchetypeEntry {
   title?: string;
@@ -93,6 +94,7 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({ isOpen
   const handleCopyLinkOnly = async () => {
     const success = await copyTextWithFallback(shareUrl);
     if (success) {
+      trackEvent('smash_persona_share', { method: 'copy_link' });
       setCopiedLink(true);
       setTimeout(() => setCopiedLink(false), 2500);
     }
@@ -107,7 +109,13 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({ isOpen
         telegramNotice: rawSmash.sharing.telegramNotice,
         copiedForDiscord: rawSmash.sharing.copiedForDiscord,
         onNotice: showFeedbackNotice,
-      }),
+      }).map((link) => ({
+        ...link,
+        onClick: async (e: React.MouseEvent) => {
+          trackEvent('smash_persona_share', { method: link.id });
+          await link.onClick?.(e);
+        },
+      })),
     [shareUrl, shareText, shareTitle, rawSmash, locale]
   );
 
@@ -121,6 +129,7 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({ isOpen
           text: shareText,
           url: shareUrl,
         });
+        trackEvent('smash_persona_share', { method: 'native' });
         return;
       } catch (err) {
         // Dismissed by user (Cancel clicked in native share) -> do nothing

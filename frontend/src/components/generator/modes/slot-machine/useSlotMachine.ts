@@ -18,10 +18,12 @@ interface SlotMachineInput {
   activePlayablePerks: Perk[];
   activeMutator: ChaosMutator | null;
   onRollComplete: (slots: DrawnSlot[]) => void;
+  /** Fires once the loadout is full (analytics). */
+  onLoadoutComplete?: () => void;
 }
 
 /** The slot machine's whole state machine: pull, spin, stage reels, confirm, repeat until the loadout is full. */
-export function useSlotMachine({ role, activePlayablePerks, activeMutator, onRollComplete }: SlotMachineInput) {
+export function useSlotMachine({ role, activePlayablePerks, activeMutator, onRollComplete, onLoadoutComplete }: SlotMachineInput) {
   const dict = useDictionary();
   const [phase, setPhase] = useState<MachinePhase>('idle');
   const [reels, setReels] = useState<Reel[]>([]);
@@ -213,6 +215,7 @@ export function useSlotMachine({ role, activePlayablePerks, activeMutator, onRol
       setPhase('complete');
       celebrate(role, resultsRef.current);
       onRollComplete(nextSelected);
+      onLoadoutComplete?.();
       return;
     }
 

@@ -25,6 +25,8 @@ import {
   getActiveMutatorForRole,
   saveActiveMutatorForRole,
 } from './lib/generatorStorage';
+import { trackEvent } from '@/utils/analytics';
+import { buildRollProps } from './lib/rollTracking';
 import { Toolbar } from './Toolbar';
 import { ModeSwitcher } from './ModeSwitcher';
 import { RoleToggle } from './shared/RoleToggle';
@@ -211,7 +213,17 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
     setShowLowPoolWarning(false);
   }, [role]);
 
+  /** One finished loadout (all 4 perks drawn), whichever mode produced it. */
+  const trackRoll = useCallback(() => {
+    trackEvent(
+      'randomizer_roll',
+      buildRollProps({ mode: genMode, role, blindMode, activeMutator, noRepeatPerks, audioEnabled })
+    );
+  }, [genMode, role, blindMode, activeMutator, noRepeatPerks, audioEnabled]);
+
   const handleWheelWinSlot = useCallback((wonData: DrawnSlot) => {
+    // The wheel fills one slot per spin: the 4th win is the finished loadout.
+    if (activeSlotIdx === 3) trackRoll();
     setLoadout((prev) => {
       const next = [...prev];
       next[activeSlotIdx] = wonData;
@@ -228,7 +240,7 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
         return next;
       });
     }
-  }, [activeSlotIdx, noRepeatPerks, role]);
+  }, [activeSlotIdx, noRepeatPerks, role, trackRoll]);
 
   const handleBatchRollComplete = useCallback((slots: DrawnSlot[]) => {
     setRevealedSlots([false, false, false, false]);
@@ -334,6 +346,7 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
                 activePlayablePerks={activePlayablePerks}
                 activeMutator={activeMutator}
                 onRollComplete={handleBatchRollComplete}
+                onLoadoutComplete={trackRoll}
                 onRollStart={() => setRevealedSlots([false, false, false, false])}
                 revealedSlots={revealedSlots}
                 onRevealSlot={handleRevealSlot}
@@ -348,6 +361,7 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
                 activePlayablePerks={activePlayablePerks}
                 activeMutator={activeMutator}
                 onRollComplete={handleBatchRollComplete}
+                onLoadoutComplete={trackRoll}
                 revealedSlots={revealedSlots}
                 onRevealSlot={handleRevealSlot}
                 onSelectPerk={onSelectPerk}
@@ -361,6 +375,7 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
                 activePlayablePerks={activePlayablePerks}
                 activeMutator={activeMutator}
                 onRollComplete={handleBatchRollComplete}
+                onLoadoutComplete={trackRoll}
                 revealedSlots={revealedSlots}
                 onRevealSlot={handleRevealSlot}
                 onSelectPerk={onSelectPerk}
@@ -374,6 +389,7 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
                 activePlayablePerks={activePlayablePerks}
                 activeMutator={activeMutator}
                 onRollComplete={handleBatchRollComplete}
+                onLoadoutComplete={trackRoll}
                 revealedSlots={revealedSlots}
                 onRevealSlot={handleRevealSlot}
                 onSelectPerk={onSelectPerk}

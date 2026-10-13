@@ -57,7 +57,6 @@ class StreakRunService:
     def _get_or_create_run(self, user_id: int, *variant: Any):
         run = self._find_run(user_id, *variant)
         if run:
-            self._refresh_if_untouched(run, user_id, *variant)
             return self._present(run)
 
         assert_challenge_mode_enabled(self.mode)

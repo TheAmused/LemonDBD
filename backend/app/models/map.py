@@ -15,7 +15,7 @@ from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.extensions import Base
-from app.models.base import utcnow
+from app.models.base import TranslatableModelMixin, utcnow
 
 if TYPE_CHECKING:
     from app.models.equipment import Offering
@@ -32,7 +32,7 @@ DEFAULT_IS_SHACK = True
 DEFAULT_IS_MAIN_BUILDING = False
 
 
-class Realm(Base):
+class Realm(Base, TranslatableModelMixin):
     """A realm -- the themed environment a set of maps belongs to."""
 
     __tablename__ = "realms"
@@ -50,13 +50,6 @@ class Realm(Base):
 
     maps: Mapped[list["MapRealm"]] = relationship(back_populates="realm")
     offerings: Mapped[list["Offering"]] = relationship(back_populates="realm")
-
-    def localized_name(self, lang: str | None = None) -> str:
-        if lang and self.translations:
-            trans = self.translations.get(lang)
-            if isinstance(trans, dict) and trans.get("name"):
-                return str(trans["name"])
-        return self.name
 
     def to_dict(self, lang: str | None = None) -> dict[str, Any]:
         return {
@@ -83,7 +76,7 @@ class MapSource(Base):
         return {"id": self.id, "code": self.code, "label": self.label}
 
 
-class MapRealm(Base):
+class MapRealm(Base, TranslatableModelMixin):
     """A single map within a realm, including layout figures and sizes."""
 
     __tablename__ = "map_realms"
@@ -131,11 +124,7 @@ class MapRealm(Base):
     source: Mapped["MapSource"] = relationship(back_populates="maps", lazy="joined")
 
     def to_dict(self, lang: str | None = None) -> dict[str, Any]:
-        name = self.name
-        if lang and self.translations:
-            trans = self.translations.get(lang) or {}
-            if isinstance(trans, dict):
-                name = trans.get("name") or name
+        name = self.localized(lang, "name", self.name)
 
         return {
             "id": self.id,

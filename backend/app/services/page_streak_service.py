@@ -73,7 +73,6 @@ class PageStreakService:
         }
 
     def get_run(self, user_id: int, killer: str) -> PageStreakRunState | None:
-        refresh_untouched_run(user_id, killer, self.build_pages)
         return self._with_artwork(user_id, fetch_run(user_id, killer, self.build_pages))
 
     def start_run(self, user_id: int, killer: str) -> PageStreakRunState | None:

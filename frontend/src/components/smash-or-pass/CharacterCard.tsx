@@ -164,8 +164,9 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
           willChange: isDragging || isExiting ? 'transform, opacity' : 'auto',
           opacity: isExiting ? 0 : 1,
         }}
-        className={`relative select-none smash-card-size ${isTopCard ? 'cursor-grab active:cursor-grabbing z-30' : 'pointer-events-none'
-          }`}
+        className={`relative select-none smash-card-size ${
+          isTopCard ? 'cursor-grab active:cursor-grabbing z-30 touch-none' : 'pointer-events-none'
+        }`}
       >
         {effects && isExiting && exitType && (
           <CardDisintegrationOverlay exitType={exitType} onComplete={onExitComplete} />
@@ -215,11 +216,11 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
                   ? `0 0 ${35 + swipeProgress * 35}px rgba(113, 113, 122, ${0.4 + swipeProgress * 0.5})`
                   : '0 0 35px rgba(0, 0, 0, 0.85)',
             }}
-            className={`absolute inset-0 h-full w-full rounded-3xl overflow-hidden border-2 transition-colors duration-150 flex flex-col justify-between ${isSmashDrag
-                ? 'border-accent-red bg-accent-red/10'
+            className={`!absolute inset-0 h-full w-full rounded-3xl overflow-hidden card-ash-border transition-colors duration-150 flex flex-col justify-between ${isSmashDrag
+                ? '!border-accent-red bg-accent-red/10'
                 : isPassDrag
-                  ? 'border-border-subtle bg-bg-primary'
-                  : 'border-accent-red/40 bg-bg-primary'
+                  ? '!border-border-subtle bg-bg-primary'
+                  : 'bg-bg-primary'
               }`}
           >
             <div
@@ -343,12 +344,12 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
         size="2xl"
         layer="top"
         ariaLabel={zoomAriaLabel}
-        containerClassName="backdrop-blur-2xl"
+        backdrop="blur"
         className="overflow-visible"
         bodyClassName="flex justify-center overflow-visible"
       >
         <ZoomCloseButton label={dict.modal.close} />
-        <div className="relative overflow-hidden rounded-3xl border-2 border-accent-red/40 bg-bg-primary">
+        <div className="relative overflow-hidden rounded-3xl card-ash-border bg-bg-primary">
           <CardAvatarImage
             src={avatarSrc}
             name={character.name}

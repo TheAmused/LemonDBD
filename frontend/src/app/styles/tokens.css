@@ -96,6 +96,7 @@
   --radius-xl: 0.9375rem;
   --radius-2xl: 1rem;
   --radius-3xl: 1.125rem;
+  --radius-full: 9999px;
 
   /* Type scale below Tailwind's text-xs, plus em-relative sizes for inline code. */
   --text-micro: 0.5625rem;

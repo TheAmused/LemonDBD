@@ -57,7 +57,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
     refreshChallenge,
     honeypotValue,
     honeypotProps,
-  } = useAltcha();
+  } = useAltcha(isOpen);
 
   const [mode, setMode] = useState<AuthMode>(initialMode);
   const [loginName, setLoginName] = useState<string>('');
@@ -106,10 +106,11 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
     setError(null);
     setLoading(true);
     // Each solved ALTCHA challenge is single-use: after a request goes out, fetch and solve a fresh one.
-    let requestSent = true;
+    let requestSent = false;
 
     try {
       if (mode === 'forgot') {
+        requestSent = true;
         const res = await forgotPassword(email, {
           website_trap: honeypotValue,
           altcha: altchaPayload,
@@ -121,6 +122,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
           setError(res.error || dict.user.failedToRequestPasswordReset);
         }
       } else if (mode === 'login') {
+        requestSent = true;
         const res = await login(loginName, password, {
           website_trap: honeypotValue,
           altcha: altchaPayload,
@@ -136,9 +138,9 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
       } else {
         if (!acceptedLegal) {
           setLegalAttempted(true);
-          requestSent = false;
           return;
         }
+        requestSent = true;
         const res = await register(loginName, username, email, password, {
           website_trap: honeypotValue,
           altcha: altchaPayload,
@@ -391,9 +393,8 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
                         key={i}
                         type="button"
                         onClick={() => {
-                          const doc = part === '{terms}' ? 'terms' : 'rules';
-                          trackEvent('legal_preview_open', { doc });
-                          setLegalDoc(doc);
+                          trackEvent('legal_preview_open', { doc: part === '{terms}' ? 'terms' : 'rules' });
+                          setLegalDoc(part === '{terms}' ? 'terms' : 'rules');
                         }}
                         className="cursor-pointer font-bold text-accent-red underline underline-offset-2 hover:opacity-80"
                       >

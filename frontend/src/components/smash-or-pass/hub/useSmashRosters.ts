@@ -1,6 +1,5 @@
 // frontend/src/components/smash-or-pass/hub/useSmashRosters.ts
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useDictionary } from '@/context/DictionaryContext';
 import { useSmashRosterStore } from '@/hooks/useSmashRosterStore';
 import { fetchRosters } from '@/services/smashApi';
 import type { RosterItem } from '@/types/smashOrPass';
@@ -11,15 +10,6 @@ import {
   localRosterIdFromSlug,
 } from '@/utils/smashOrPass/localRoster';
 import { initialRosterSlug, rememberRoster } from './voteStorage';
-
-/** Roster slugs from the API -> the key their names live under in dict.smashOrPass.rosters. */
-const ROSTER_DICT_KEY: Record<string, string> = {
-  hooked_on_you: 'hoy',
-  legendary_characters: 'legendary',
-  cyberpunk_2077: 'cyberpunk',
-  anime_manga: 'anime',
-  gothic_eldritch: 'gothic',
-};
 
 /** What stands in while the roster list is still loading, or the remembered slug no longer exists. */
 const CANON_PLACEHOLDER: RosterItem = {
@@ -40,7 +30,6 @@ const CANON_PLACEHOLDER: RosterItem = {
  * `is_local` -- see utils/smashOrPass/localRoster.ts.
  */
 export function useSmashRosters(locale: string) {
-  const dict = useDictionary();
   const { state: customRosterStore } = useSmashRosterStore();
 
   const [rosters, setRosters] = useState<RosterItem[]>([]);
@@ -112,13 +101,9 @@ export function useSmashRosters(locale: string) {
 
   const getRosterDisplayName = useCallback(
     (r: { slug: string; name?: string }) => {
-      if (r.name) return r.name;
-      const key = ROSTER_DICT_KEY[r.slug] ?? r.slug;
-      const locName = (dict.smashOrPass.rosters as Record<string, { name?: string } | undefined>)?.[key]?.name;
-      if (locName) return locName;
       return r.name || r.slug;
     },
-    [dict, locale]
+    []
   );
 
   /** Switches roster and remembers the choice. */

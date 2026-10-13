@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 
 from app.core.security import hash_password
 from app.models.user import User
-from app.routes.smash_or_pass import vote_rate_limiter
+from app.routes.smash_or_pass import proxy_rate_limiter, taxonomy_rate_limiter, vote_rate_limiter
 from app.seeds.smash_roster_seeder import seed_smash_rosters
 
 
@@ -15,8 +15,12 @@ from app.seeds.smash_roster_seeder import seed_smash_rosters
 def setup_smash_data(db_session: Session) -> Generator[None, None, None]:
     seed_smash_rosters()
     vote_rate_limiter.reset()
+    taxonomy_rate_limiter.reset()
+    proxy_rate_limiter.reset()
     yield
     vote_rate_limiter.reset()
+    taxonomy_rate_limiter.reset()
+    proxy_rate_limiter.reset()
 
 
 def create_user(

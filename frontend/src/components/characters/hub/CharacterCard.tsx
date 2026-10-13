@@ -132,7 +132,7 @@ export function CharacterCard({
               e.stopPropagation();
               onOpenPerks(char);
             }}
-            className="mb-1 sm:mb-1.5 inline-flex items-center justify-center gap-1 rounded-full border border-accent-amber/50 bg-bg-surface/90 px-2.5 py-0.5 text-micro sm:text-tiny font-bold text-accent-amber hover:bg-accent-amber/20 hover:border-accent-amber transition-colors shadow-xs cursor-pointer pointer-events-auto select-none"
+            className="mb-1 sm:mb-1.5 inline-flex items-center justify-center gap-1 rounded-xl border border-accent-amber/50 bg-bg-surface/90 px-2.5 py-0.5 text-micro sm:text-tiny font-bold text-accent-amber hover:bg-accent-amber/20 hover:border-accent-amber transition-colors shadow-xs cursor-pointer pointer-events-auto select-none"
           >
             <span>{dict.filters.perks}</span>
             {perkStats.total > 0 && ` (${perkStats.unlocked}/${perkStats.total})`}

@@ -9,7 +9,7 @@ from sqlalchemy import select
 
 from app.core.extensions import db
 from app.core.limiter import get_client_ip
-from app.core.security import admin_required, get_current_user
+from app.core.security import admin_required, get_current_user, login_required
 from app.models.smash_or_pass import Roster
 from app.schemas.smash_or_pass import SmashRosterAdminCreate
 from app.services.admin_control_service import log_admin_action
@@ -63,6 +63,8 @@ class SlidingWindowRateLimiter:
 
 
 vote_rate_limiter = SlidingWindowRateLimiter(max_requests=60, window_seconds=60)
+taxonomy_rate_limiter = SlidingWindowRateLimiter(max_requests=20, window_seconds=60)
+proxy_rate_limiter = SlidingWindowRateLimiter(max_requests=60, window_seconds=60)
 
 
 @smash_or_pass_bp.route("/rosters", methods=["GET"])
@@ -107,8 +109,13 @@ def get_taxonomies():
 
 
 @smash_or_pass_bp.route("/taxonomies", methods=["POST"])
+@login_required
 def register_taxonomy():
     """Register a custom role or gender in the database."""
+    client_ip = get_client_ip()
+    if not taxonomy_rate_limiter.is_allowed(client_ip):
+        return jsonify({"error": "Too many requests. Please try again later."}), 429
+
     body = request.get_json(silent=True) or {}
     term_type = (body.get("type") or "").strip().lower()
     name = (body.get("name") or "").strip()
@@ -518,16 +525,46 @@ def get_user_votes():
 
 def _is_private_host(hostname: str) -> bool:
     import ipaddress
+    import socket
+
+    lower = hostname.lower().strip("[]")
+    if lower in ("localhost", "backend", "frontend", "db", "redis", "nginx", "umami"):
+        return True
+    if lower.endswith(".local") or lower.endswith(".internal"):
+        return True
+
     try:
-        ip = ipaddress.ip_address(hostname)
-        return ip.is_private or ip.is_loopback or ip.is_reserved or ip.is_unspecified
+        ip = ipaddress.ip_address(lower)
+        return (
+            ip.is_private
+            or ip.is_loopback
+            or ip.is_reserved
+            or ip.is_unspecified
+            or ip.is_link_local
+        )
     except ValueError:
-        lower = hostname.lower()
-        if lower in ("localhost", "backend", "frontend", "db", "redis", "nginx", "umami"):
+        pass
+
+    try:
+        addr_infos = socket.getaddrinfo(lower, None)
+        if not addr_infos:
             return True
-        if lower.endswith(".local") or lower.endswith(".internal"):
-            return True
-        return False
+        for info in addr_infos:
+            sockaddr = info[4]
+            ip_str = sockaddr[0]
+            ip = ipaddress.ip_address(ip_str)
+            if (
+                ip.is_private
+                or ip.is_loopback
+                or ip.is_reserved
+                or ip.is_unspecified
+                or ip.is_link_local
+            ):
+                return True
+    except (socket.gaierror, ValueError, OSError):
+        return True
+
+    return False
 
 
 @smash_or_pass_bp.route("/proxy-image", methods=["GET"])
@@ -536,6 +573,10 @@ def proxy_image():
     import requests
     from urllib.parse import urlparse
     from flask import Response
+
+    client_ip = get_client_ip()
+    if not proxy_rate_limiter.is_allowed(client_ip):
+        return jsonify({"error": "Too many requests. Please try again later."}), 429
 
     target_url = request.args.get("url")
     if not target_url:
@@ -552,6 +593,8 @@ def proxy_image():
     if not parsed.hostname or _is_private_host(parsed.hostname):
         return jsonify({"error": "Host not allowed"}), 403
 
+    MAX_BYTES = 5 * 1024 * 1024  # 5MB maximum to prevent memory exhaustion
+
     try:
         resp = requests.get(
             target_url,
@@ -564,16 +607,32 @@ def proxy_image():
                 "Accept": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8",
                 "Referer": f"{parsed.scheme}://{parsed.netloc}/",
             },
-            timeout=12,
+            timeout=10,
+            allow_redirects=False,
+            stream=True,
         )
+        if resp.is_redirect or resp.status_code in (301, 302, 303, 307, 308):
+            return jsonify({"error": "Redirects are not allowed"}), 403
+
         if not resp.ok:
             return jsonify({"error": f"Upstream returned status {resp.status_code}"}), resp.status_code
+
+        content_length = resp.headers.get("content-length")
+        if content_length and int(content_length) > MAX_BYTES:
+            return jsonify({"error": "Image exceeds maximum allowed size (5MB)"}), 413
+
+        downloaded = bytearray()
+        for chunk in resp.iter_content(chunk_size=65536):
+            if chunk:
+                downloaded.extend(chunk)
+                if len(downloaded) > MAX_BYTES:
+                    return jsonify({"error": "Image exceeds maximum allowed size (5MB)"}), 413
 
         content_type = resp.headers.get("content-type", "image/jpeg")
         if not content_type.startswith("image/"):
             content_type = "image/jpeg"
 
-        response = Response(resp.content, status=200, mimetype=content_type)
+        response = Response(bytes(downloaded), status=200, mimetype=content_type)
         response.headers["Access-Control-Allow-Origin"] = "*"
         response.headers["Access-Control-Allow-Methods"] = "GET, OPTIONS"
         response.headers["Cache-Control"] = "public, max-age=86400"

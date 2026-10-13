@@ -82,21 +82,18 @@ export function useAltcha(autoSolve: boolean = true) {
   const [error, setError] = useState<string | null>(null);
   const [honeypotValue, setHoneypotValue] = useState<string>('');
 
-  const fetchingRef = useRef<boolean>(false);
-  const solvingRef = useRef<boolean>(false);
   const abortControllerRef = useRef<AbortController | null>(null);
 
   const fetchChallenge = useCallback(async (signal?: AbortSignal): Promise<AltchaChallenge | null> => {
-    if (fetchingRef.current) return null;
-    fetchingRef.current = true;
-
     try {
       setError(null);
       const apiBase = getBackendBaseUrl();
       const url = `${apiBase}/api/v1/auth/altcha-challenge`;
       const res = await fetch(url, { signal });
       if (!res.ok) throw new Error('Failed to fetch security challenge');
+      if (signal?.aborted) return null;
       const data: AltchaChallenge = await res.json();
+      if (signal?.aborted) return null;
       setChallenge(data);
       return data;
     } catch (err) {
@@ -106,14 +103,11 @@ export function useAltcha(autoSolve: boolean = true) {
       const msg = getErrorMessage(err, 'Challenge fetch failed');
       setError(msg);
       return null;
-    } finally {
-      fetchingRef.current = false;
     }
   }, []);
 
   const solveChallenge = useCallback(async (ch: AltchaChallenge, signal?: AbortSignal) => {
-    if (solvingRef.current) return;
-    solvingRef.current = true;
+    if (signal?.aborted) return;
     setIsVerifying(true);
     setError(null);
 
@@ -130,8 +124,9 @@ export function useAltcha(autoSolve: boolean = true) {
       if (signal?.aborted || isAbortError(err)) return;
       setError(getErrorMessage(err, 'Verification error'));
     } finally {
-      setIsVerifying(false);
-      solvingRef.current = false;
+      if (!signal?.aborted) {
+        setIsVerifying(false);
+      }
     }
   }, []);
 
@@ -145,6 +140,7 @@ export function useAltcha(autoSolve: boolean = true) {
     setIsVerified(false);
     setAltchaPayload(null);
     setChallenge(null);
+    setError(null);
 
     const ch = await fetchChallenge(controller.signal);
     if (ch && !controller.signal.aborted) {
@@ -153,16 +149,26 @@ export function useAltcha(autoSolve: boolean = true) {
   }, [fetchChallenge, solveChallenge]);
 
   useEffect(() => {
-    if (autoSolve && !challenge && !isVerifying && !isVerified) {
-      refreshChallenge();
+    if (autoSolve) {
+      void refreshChallenge();
+    } else {
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+        abortControllerRef.current = null;
+      }
+      setIsVerifying(false);
+      setIsVerified(false);
+      setAltchaPayload(null);
+      setChallenge(null);
     }
 
     return () => {
       if (abortControllerRef.current) {
         abortControllerRef.current.abort();
+        abortControllerRef.current = null;
       }
     };
-  }, [autoSolve, challenge, isVerifying, isVerified, refreshChallenge]);
+  }, [autoSolve, refreshChallenge]);
 
   return {
     altchaPayload,

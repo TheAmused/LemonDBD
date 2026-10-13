@@ -45,12 +45,8 @@ export function CardBackFace({
   const charBio = profile.bio;
   const charQuote = profile.quote;
   const charMeme: string = profile.meme;
-  // Everything past the short version sits behind "Show more".
-  const moreGreen = greenFlags.slice(1);
-  const moreRed = redFlags.slice(1);
   const showBio = rosterMode !== 'simple' && Boolean(charBio);
   const showMeme = rosterMode !== 'simple' && Boolean(charMeme);
-  const hasMore = Boolean(charTagline) || Boolean(charQuote) || moreGreen.length > 0 || moreRed.length > 0 || showBio || showMeme;
 
   return (
     <div
@@ -62,7 +58,7 @@ export function CardBackFace({
         SmashSounds.playFlipSound();
         onFlip();
       }}
-      className="absolute inset-0 h-full w-full rounded-3xl overflow-hidden border-2 border-accent-red/50 bg-bg-primary p-4 sm:p-5 flex flex-col justify-between text-text-primary cursor-pointer select-none"
+      className="!absolute inset-0 h-full w-full rounded-3xl overflow-hidden card-ash-border bg-bg-primary p-4 sm:p-5 flex flex-col justify-between text-text-primary cursor-pointer select-none"
     >
       {/* Top Bar with accessible Flip Back button and Title */}
       <div className="relative z-30 flex items-center justify-between pb-2 border-b border-border-color shrink-0 pointer-events-auto">
@@ -107,52 +103,79 @@ export function CardBackFace({
         className="space-y-2 h-full pr-1 overflow-y-auto select-text pointer-events-auto scrollbar-thin scrollbar-thumb-border-color"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* The short version: who they are, what works, what ends it, one flag each way */}
-        <div className="p-2.5 rounded-2xl bg-bg-elevated border border-accent-red/30 space-y-0.5">
-          <span className="type-label-2xs text-accent-red block">
-            {customLabels?.dating_vibe || text.loreLabels.datingArchetype}
-          </span>
-          <p className="type-strong text-text-primary leading-snug">{charTitle}</p>
+        {/* Mobile-only fallback (<880px): show Turn On & Dealbreaker only when floating lore fragments are hidden */}
+        <div className="@[880px]/hub:hidden space-y-2">
+          <div className="p-2.5 rounded-2xl bg-bg-elevated border border-accent-red/30 space-y-0.5">
+            <span className="type-label-2xs text-accent-red block">
+              {customLabels?.dating_vibe || text.loreLabels.datingArchetype}
+            </span>
+            <p className="type-strong text-text-primary leading-snug">{charTitle}</p>
+          </div>
+
+          {profile.turn_on && (
+            <div className="p-2.5 rounded-2xl bg-accent-green/10 border border-accent-green/40 space-y-0.5">
+              <span className="type-label-2xs text-accent-green block">
+                {customLabels?.turn_on || text.loreLabels.turn_on}
+              </span>
+              <p className="text-mini text-text-primary leading-snug">{profile.turn_on}</p>
+            </div>
+          )}
+
+          {profile.dealbreaker && (
+            <div className="p-2.5 rounded-2xl bg-accent-red/10 border border-accent-red/40 space-y-0.5">
+              <span className="type-label-2xs text-accent-red block">
+                {customLabels?.dealbreaker || text.loreLabels.dealbreaker}
+              </span>
+              <p className="text-mini text-text-primary leading-snug">{profile.dealbreaker}</p>
+            </div>
+          )}
         </div>
 
-        {profile.turn_on && (
-          <div className="p-2.5 rounded-2xl bg-accent-green/10 border border-accent-green/40 space-y-0.5">
-            <span className="type-label-2xs text-accent-green block">
-              {customLabels?.turn_on || text.loreLabels.turn_on}
-            </span>
-            <p className="text-mini text-text-primary leading-snug">{profile.turn_on}</p>
-          </div>
-        )}
-
-        {profile.dealbreaker && (
-          <div className="p-2.5 rounded-2xl bg-accent-red/10 border border-accent-red/40 space-y-0.5">
-            <span className="type-label-2xs text-accent-red block">
-              {customLabels?.dealbreaker || text.loreLabels.dealbreaker}
-            </span>
-            <p className="text-mini text-text-primary leading-snug">{profile.dealbreaker}</p>
-          </div>
-        )}
-
+        {/* Green & Red Flags (Prominent and unique to the card back) */}
         {(greenFlags.length > 0 || redFlags.length > 0) && (
-          <div className="p-2.5 rounded-2xl bg-bg-elevated border border-border-color space-y-1.5">
+          <div className="p-2.5 rounded-2xl bg-bg-elevated border border-border-color space-y-2">
             {greenFlags.length > 0 && (
-              <p className="text-mini text-text-primary leading-snug">
+              <div className="space-y-1">
                 <span className="type-label-2xs text-accent-green block">{text.greenFlags}</span>
-                {greenFlags[0]}
-              </p>
+                <ul className="text-mini text-text-primary leading-snug space-y-1 pl-4 list-disc marker:text-accent-green">
+                  {greenFlags.map((flag, i) => (
+                    <li key={`g-${i}-${flag}`}>{flag}</li>
+                  ))}
+                </ul>
+              </div>
             )}
             {redFlags.length > 0 && (
-              <p className="text-mini text-text-primary leading-snug">
+              <div className="space-y-1">
                 <span className="type-label-2xs text-accent-red block">{text.redFlags}</span>
-                {redFlags[0]}
-              </p>
+                <ul className="text-mini text-text-primary leading-snug space-y-1 pl-4 list-disc marker:text-accent-red">
+                  {redFlags.map((flag, i) => (
+                    <li key={`r-${i}-${flag}`}>{flag}</li>
+                  ))}
+                </ul>
+              </div>
             )}
           </div>
         )}
 
-        {/* The long version, one tap away */}
-        {hasMore && (
-          <details className="group space-y-2.5">
+        {/* Bio / Lore & Personality */}
+        {showBio && (
+          <Surface tone="elevated" radius="2xl" padding="none" className="p-2.5 space-y-1">
+            <span className="type-label-2xs text-text-muted">{text.loreAndPersonality}</span>
+            <p className="type-body text-text-secondary leading-snug">{charBio}</p>
+          </Surface>
+        )}
+
+        {/* Trial Rumor / Meme */}
+        {showMeme && (
+          <Surface tone="elevated" radius="2xl" padding="none" className="p-2.5 space-y-0.5">
+            <span className="type-label-2xs text-text-secondary block">{customLabels?.meme || text.trialRumor}</span>
+            <p className="text-mini text-text-secondary italic leading-snug">{charMeme}</p>
+          </Surface>
+        )}
+
+        {/* Mobile-only details (quote/tagline when fragments are hidden) */}
+        {(Boolean(charTagline) || Boolean(charQuote)) && (
+          <details className="@[880px]/hub:hidden group space-y-2.5">
             <summary className="flex min-h-9 pointer-coarse:min-h-11 cursor-pointer list-none items-center justify-center rounded-2xl border border-border-color type-label-xs text-text-secondary transition-colors hover:text-text-primary [&::-webkit-details-marker]:hidden">
               <span className="group-open:hidden">{text.showMore}</span>
               <span className="hidden group-open:inline">{text.showLess}</span>
@@ -167,39 +190,6 @@ export function CardBackFace({
                 </span>
                 <p className="text-mini text-text-secondary italic leading-relaxed">{charQuote}</p>
               </div>
-            )}
-
-            {(moreGreen.length > 0 || moreRed.length > 0) && (
-              <div className="p-2.5 rounded-2xl bg-bg-elevated border border-border-color space-y-1.5">
-                {moreGreen.length > 0 && (
-                  <ul className="text-mini text-text-primary leading-snug space-y-0.5 pl-4 list-disc marker:text-accent-green">
-                    {moreGreen.map((flag, i) => (
-                      <li key={`g${i}-${flag}`}>{flag}</li>
-                    ))}
-                  </ul>
-                )}
-                {moreRed.length > 0 && (
-                  <ul className="text-mini text-text-primary leading-snug space-y-0.5 pl-4 list-disc marker:text-accent-red">
-                    {moreRed.map((flag, i) => (
-                      <li key={`r${i}-${flag}`}>{flag}</li>
-                    ))}
-                  </ul>
-                )}
-              </div>
-            )}
-
-            {showBio && (
-              <Surface tone="elevated" radius="2xl" padding="none" className="p-2.5 space-y-1">
-                <span className="type-label-2xs text-text-muted">{text.loreAndPersonality}</span>
-                <p className="type-body text-text-secondary">{charBio}</p>
-              </Surface>
-            )}
-
-            {showMeme && (
-              <Surface tone="elevated" radius="2xl" padding="none" className="p-2.5 space-y-0.5">
-                <span className="type-label-2xs text-text-secondary block">{customLabels?.meme || text.trialRumor}</span>
-                <p className="text-mini text-text-secondary italic leading-snug">{charMeme}</p>
-              </Surface>
             )}
           </details>
         )}

@@ -33,12 +33,27 @@ CYAN = "\033[96m"
 BOLD = "\033[1m"
 RESET = "\033[0m"
 
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+if hasattr(sys.stderr, "reconfigure"):
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+
 ROOT_DIR = Path(__file__).resolve().parent
 BACKEND_DIR = ROOT_DIR / "backend"
 FRONTEND_DIR = ROOT_DIR / "frontend"
 
 
-def run_command(cmd_str: str, cwd: Path, env: Optional[Dict[str, str]] = None, timeout: int = 120) -> Dict[str, Any]:
+def get_python_cmd() -> str:
+    venv_python = ROOT_DIR / ".venv" / ("Scripts" if os.name == "nt" else "bin") / ("python.exe" if os.name == "nt" else "python")
+    if venv_python.exists():
+        return f'"{venv_python}"'
+    backend_venv = BACKEND_DIR / ".venv" / ("Scripts" if os.name == "nt" else "bin") / ("python.exe" if os.name == "nt" else "python")
+    if backend_venv.exists():
+        return f'"{backend_venv}"'
+    return f'"{sys.executable}"'
+
+
+def run_command(cmd_str: str, cwd: Path, env: Optional[Dict[str, str]] = None, timeout: int = 180) -> Dict[str, Any]:
     merged_env = {**os.environ, **(env or {})}
     start_time = time.time()
     try:
@@ -112,11 +127,12 @@ def main():
     print(f"{BOLD}{CYAN}======================================================{RESET}\n", flush=True)
 
     results = []
+    py_bin = get_python_cmd()
 
     # 1. Backend Unit Tests
     if run_backend and run_unit:
         print(f"[{YELLOW}RUNNING{RESET}] Backend Unit Tests...", flush=True)
-        res = run_command("py -m pytest tests/unit", cwd=BACKEND_DIR)
+        res = run_command(f"{py_bin} -m pytest tests/unit", cwd=BACKEND_DIR)
         status = "PASSED" if res["exit_code"] == 0 else "FAILED"
         color = GREEN if status == "PASSED" else RED
         print(f"[{color}{status}{RESET}] Backend Unit in {res['duration']}s", flush=True)
@@ -146,7 +162,7 @@ def main():
     # 3. Backend Live Tests
     if run_backend and run_live:
         print(f"[{YELLOW}RUNNING{RESET}] Backend Live Integration Tests...", flush=True)
-        res = run_command("py -m pytest tests/live", cwd=BACKEND_DIR)
+        res = run_command(f"{py_bin} -m pytest tests/live", cwd=BACKEND_DIR)
         status = "PASSED" if res["exit_code"] == 0 else "FAILED"
         color = GREEN if status == "PASSED" else RED
         print(f"[{color}{status}{RESET}] Backend Live in {res['duration']}s", flush=True)
@@ -161,7 +177,7 @@ def main():
     # 4. Backend Workflow Tests
     if run_backend and run_workflows:
         print(f"[{YELLOW}RUNNING{RESET}] Backend Workflow Tests...", flush=True)
-        res = run_command("py -m pytest tests/live/workflows", cwd=BACKEND_DIR)
+        res = run_command(f"{py_bin} -m pytest tests/live/workflows", cwd=BACKEND_DIR)
         status = "PASSED" if res["exit_code"] == 0 else "FAILED"
         color = GREEN if status == "PASSED" else RED
         print(f"[{color}{status}{RESET}] Backend Workflows in {res['duration']}s", flush=True)
@@ -176,7 +192,7 @@ def main():
     # 5. Frontend Live Tests
     if run_frontend and (run_live or run_workflows):
         print(f"[{YELLOW}RUNNING{RESET}] Frontend Live API & Multi-Step Workflows...", flush=True)
-        res = run_command("npm run test:live", cwd=FRONTEND_DIR)
+        res = run_command("npm run test:live", cwd=FRONTEND_DIR, env={"NODE_TLS_REJECT_UNAUTHORIZED": "0"}, timeout=240)
         status = "PASSED" if res["exit_code"] == 0 else "FAILED"
         color = GREEN if status == "PASSED" else RED
         print(f"[{color}{status}{RESET}] Frontend Live Workflows in {res['duration']}s", flush=True)

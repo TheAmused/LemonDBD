@@ -87,7 +87,13 @@ def session_response(user, token: str, message: str, status: int = 200, extra: d
 @require_altcha
 def login():
     data = request.get_json(silent=True) or {}
-    login_or_email = data.get("login") or data.get("email") or data.get("login_or_email") or data.get("username_or_email")
+    login_or_email = (
+        data.get("login")
+        or data.get("username")
+        or data.get("email")
+        or data.get("login_or_email")
+        or data.get("username_or_email")
+    )
     password = data.get("password")
 
     if not login_or_email or not password:

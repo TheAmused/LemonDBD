@@ -8,9 +8,8 @@ from typing import Any
 from sqlalchemy import select
 
 from app.core.extensions import db
-from app.models.tier_list import TierList
+from app.models.tier_list import TIER_LIST_FIELDS, TierList
 from app.services.db.asset_bundling import write_asset_base64
-from app.services.db.serializers import TIER_LIST_FIELDS
 from app.services.tier_list_service import validate_tier_list
 
 logger = logging.getLogger(__name__)

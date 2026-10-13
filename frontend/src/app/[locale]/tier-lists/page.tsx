@@ -1,24 +1,12 @@
-'use client';
 // frontend/src/app/[locale]/tier-lists/page.tsx
+import { pageMetadata } from '@/i18n/metadata';
+import { TierListHubClient } from '@/components/tier-lists/TierListHubClient';
 
-import React from 'react';
-import { PageShell } from '@/components/layout/PageShell';
-import { TierListHub } from '@/components/tier-lists/TierListHub';
-import { useDictionary, useLocale } from '@/context/DictionaryContext';
-
+export const generateMetadata = pageMetadata('/tier-lists', (d) => ({
+  title: d.tierLists.pageTitle,
+  description: d.tierLists.metaDescription,
+}));
 
 export default function TierListsPage() {
-  const dict = useDictionary();
-  const locale = useLocale();
-
-
-  return (
-    <PageShell
-      locale={locale}
-      activeCategory="tier-lists"
-      mainClassName="relative flex flex-col"
-    >
-      <TierListHub locale={locale} />
-    </PageShell>
-  );
+  return <TierListHubClient />;
 }

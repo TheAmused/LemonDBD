@@ -82,3 +82,13 @@ describe('Tier list fit: tile size follows the screen width and keeps constant s
   });
 });
 
+describe('Tier list fit: FIT shows tiers and the whole pool without scrolling when it can', () => {
+  it('keeps the pool fully visible for a modest list and falls back to a scrolling pool when crowded', () => {
+    const modest = computeFit({ ...base, tierCounts: [3, 3, 3, 3, 3, 3], poolCount: 20, scale: 'fit' });
+    assert.equal(modest.fitMode, true);
+    assert.equal(modest.overflow, false);
+    assert.equal(modest.poolMaxBody, modest.poolMinBody, 'whole pool is visible, so its body is not capped');
+    const crowded = computeFit({ ...base, tierCounts: [35, 35, 35, 35, 35, 35], poolCount: 200, scale: 'fit' });
+    assert.ok(crowded.tile >= MIN_TILE);
+  });
+});

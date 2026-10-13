@@ -43,7 +43,8 @@ export const TIER_LIST_LIMITS = {
   maxTiers: 20,
   maxItems: 400,
   maxTitle: 120,
-  maxDescription: 500,
+  /** Longest seeded description/translation is 147 chars; rounded up to the next hundred. */
+  maxDescription: 200,
   maxTierLabel: 32,
   maxItemName: 80,
   maxItemId: 64,

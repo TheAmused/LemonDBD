@@ -22,6 +22,7 @@ export interface StartListeningContext {
   locale: string;
   executeMatch: (result: MatchResult) => void;
   stopListeningAndProcess: () => Promise<void>;
+  reportVoiceOutcome: (result: 'matched' | 'nomatch') => void;
   recognitionRef: RefObject<SpeechRecognitionInstance | null>;
   audioSessionRef: RefObject<AudioCaptureSession | null>;
   resetTimerRef: RefObject<NodeJS.Timeout | null>;
@@ -43,7 +44,7 @@ export interface StartListeningContext {
 /** Starts a microphone session on the active engine (local model or the browser's Web Speech API). */
 export function useStartListening(ctx: StartListeningContext) {
   const {
-    activeEngine, locale, executeMatch, stopListeningAndProcess,
+    activeEngine, locale, executeMatch, stopListeningAndProcess, reportVoiceOutcome,
     recognitionRef, audioSessionRef, resetTimerRef, silenceTimerRef, isListeningRef,
     liveTranscriptRef, pendingMatchRef, isHoldingRef, holdStartTimeRef, propsRef,
     setVoiceStatus, setLiveTranscript, setMatchedResult, setErrorMessage, setAudioLevel, setActiveEngine,
@@ -259,6 +260,7 @@ export function useStartListening(ctx: StartListeningContext) {
               executeMatch(matchToExecute);
               return;
             }
+            reportVoiceOutcome('nomatch');
           }
 
           setVoiceStatus((prev) => {
@@ -284,7 +286,7 @@ export function useStartListening(ctx: StartListeningContext) {
       }
     },
     [
-      activeEngine, locale, executeMatch, stopListeningAndProcess, dict,
+      activeEngine, locale, executeMatch, stopListeningAndProcess, reportVoiceOutcome, dict,
       recognitionRef, audioSessionRef, resetTimerRef, silenceTimerRef, isListeningRef,
       liveTranscriptRef, pendingMatchRef, isHoldingRef, holdStartTimeRef, propsRef,
       setVoiceStatus, setLiveTranscript, setMatchedResult, setErrorMessage, setAudioLevel, setActiveEngine,

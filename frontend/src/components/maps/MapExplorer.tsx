@@ -17,6 +17,7 @@ import {
   getLayoutTypeOptions,
   getMapImageSrc,
   hasActiveMapFilters,
+  mapOpenProps,
   type MapAttributeFilters,
   type MapSizeBucket,
   type MapSortOrder,
@@ -25,6 +26,7 @@ import { CustomDropdown, type DropdownOption } from '@/components/common/CustomD
 import { MapCard } from './MapCard';
 import { EmptyState } from '@/components/common/EmptyState';
 import { useDictionary } from "@/context/DictionaryContext";
+import { trackEvent } from '@/utils/analytics';
 
 // Sentinel dropdown value for "no filter"; real attribute values never collide with it.
 // Also what "no filter" persists as in localStorage, since the filter fields
@@ -56,7 +58,7 @@ const PANEL_EXIT_MS = 300;
 
 export interface MapExplorerProps {
   initialMapName?: string;
-  selectedMap?: { mapName: string; timestamp: number } | string;
+  selectedMap?: { mapName: string; timestamp: number; via?: 'voice' | 'link' } | string;
   onAvailableMapsLoaded?: (maps: MapRealm[]) => void;
   backendBase: string;
   locale?: string;
@@ -96,6 +98,7 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
     initialMapName,
     selectedMap,
     onAvailableMapsLoaded,
+    onAutoOpen: (map, via) => trackEvent('map_open', mapOpenProps(map, via)),
     locale,
   });
 
@@ -470,7 +473,15 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
                             )}
                             <div className="grid grid-cols-3 gap-2 justify-items-center sm:flex sm:flex-wrap sm:justify-start sm:gap-3">
                               {group.maps.map((m) => (
-                                <MapCard key={m.id} map={m} backendBase={backendBase} onSelect={(map) => setOpenMapId(map.id)} />
+                                <MapCard
+                                  key={m.id}
+                                  map={m}
+                                  backendBase={backendBase}
+                                  onSelect={(map) => {
+                                    trackEvent('map_open', mapOpenProps(map, isSearching ? 'search' : 'browse'));
+                                    setOpenMapId(map.id);
+                                  }}
+                                />
                               ))}
                             </div>
                           </div>

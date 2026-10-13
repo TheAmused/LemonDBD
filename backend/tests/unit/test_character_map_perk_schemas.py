@@ -305,6 +305,21 @@ class TestMapSchemas:
         )
         assert resp.callout_image_url == resp.image_url == "azarovs.png"
 
+    def test_map_realm_response_carries_english_names(self) -> None:
+        resp = MapRealmResponse.model_validate(
+            {
+                "id": 1,
+                "name": "Azarovs Ruhestätte",
+                "raw_name": "Azarov's Resting Place",
+                "realm": "Autowerkstatt",
+                "raw_realm": "Autohaven Wreckers",
+                "realm_id": 1,
+                "source_id": 1,
+            }
+        )
+        assert resp.raw_name == "Azarov's Resting Place"
+        assert resp.raw_realm == "Autohaven Wreckers"
+
     def test_no_map_tile_or_map_objective_schema_exists(self) -> None:
         # The tables are gone; nothing should reintroduce a schema for them.
         import app.schemas.map as map_schemas

@@ -21,6 +21,7 @@ import { useSmashRosters } from './hub/useSmashRosters';
 import { useSmashSound } from './hub/useSmashSound';
 import { useSmashVoting } from './hub/useSmashVoting';
 import { useSmashVotes } from './hub/useSmashVotes';
+import { trackEvent } from '@/utils/analytics';
 
 interface SmashOrPassHubProps {
   locale?: string;
@@ -69,6 +70,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ locale = 'en' })
   const handleResetAllVotes = useCallback(async () => {
     setIsResetConfirmOpen(false);
     await clearVotes();
+    trackEvent('smash_reset');
     resetFilters();
     await loadFeed();
     await loadLeaderboard();
@@ -94,6 +96,21 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ locale = 'en' })
       loadLeaderboard();
     }
   }, [isLeaderboardOpen, loadLeaderboard]);
+
+  // Opening events fire on the closed to open transition, not whenever a dependency changes.
+  const isOwnPersonaOpen = overlays.isPersonaOpen && !overlays.sharedPayload;
+  useEffect(() => {
+    if (isOwnPersonaOpen) trackEvent('smash_persona_open');
+  }, [isOwnPersonaOpen]);
+
+  useEffect(() => {
+    if (isLeaderboardOpen) trackEvent('smash_leaderboard_open');
+  }, [isLeaderboardOpen]);
+
+  const isStatsOpen = Boolean(overlays.selectedStatCharacter);
+  useEffect(() => {
+    if (isStatsOpen) trackEvent('smash_stats_open');
+  }, [isStatsOpen]);
 
   const { sessionSmashes, sessionPasses } = votes;
   const totalSessionVotes = sessionSmashes + sessionPasses;

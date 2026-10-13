@@ -26,6 +26,8 @@ export interface InstantStageProps {
    * Curse of Blindness if the same slot had been revealed on the previous
    * roll. */
   onRollStart?: () => void;
+  /** Fires once a full loadout has been drawn (analytics). */
+  onLoadoutComplete?: () => void;
   revealedSlots: boolean[];
   onRevealSlot: (idx: number) => void;
   onSelectPerk: (perk: Perk) => void;
@@ -39,6 +41,7 @@ export const InstantStage: React.FC<InstantStageProps> = ({
       activeMutator,
       onRollComplete,
       onRollStart,
+      onLoadoutComplete,
       revealedSlots,
       onRevealSlot,
       onSelectPerk,
@@ -77,6 +80,7 @@ export const InstantStage: React.FC<InstantStageProps> = ({
     const finalTimeoutId = window.setTimeout(() => {
       celebrate(role, resultsRef.current);
       onRollComplete(slots);
+      onLoadoutComplete?.();
     }, slots.length * 150 + 200);
     stopTimeoutsRef.current.push(finalTimeoutId);
   };

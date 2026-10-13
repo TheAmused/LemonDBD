@@ -22,6 +22,7 @@ import { fetchMyBugReports, uploadAvatar, ApiError } from '@/services/userProfil
 import { useUserShowcase } from '@/hooks/useUserShowcase';
 import { User } from 'lucide-react';
 import { useDictionary } from '@/context/DictionaryContext';
+import { trackEvent } from '@/utils/analytics';
 
 // Modals are only needed once the user interacts (sign-in prompt, bug report
 // form) -- code-split them out of the initial /user bundle. `ssr: false`
@@ -107,6 +108,7 @@ export default function UserProfilePage() {
 
     try {
       await uploadAvatar(file);
+      trackEvent('avatar_upload');
       setAvatarFeedback({ type: 'success', text: dict.user.avatarUpdateSuccess });
       await refreshUser();
       setOptimisticPreview(null);

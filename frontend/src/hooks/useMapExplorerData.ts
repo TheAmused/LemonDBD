@@ -11,8 +11,10 @@ const SEARCH_DEBOUNCE_MS = 300;
 
 export interface UseMapExplorerDataOptions {
   initialMapName?: string;
-  selectedMap?: { mapName: string; timestamp: number } | string;
+  selectedMap?: { mapName: string; timestamp: number; via?: 'voice' | 'link' } | string;
   onAvailableMapsLoaded?: (maps: MapRealm[]) => void;
+  /** Called when a map opens by itself (a voice command or a `?mapName=` link), not from a card click. */
+  onAutoOpen?: (map: MapRealm, via: 'voice' | 'link') => void;
   locale?: string;
 }
 
@@ -69,7 +71,7 @@ export interface UseMapExplorerDataReturn {
 }
 
 export function useMapExplorerData(options: UseMapExplorerDataOptions = {}): UseMapExplorerDataReturn {
-  const { initialMapName = '', selectedMap, onAvailableMapsLoaded, locale } = options;
+  const { initialMapName = '', selectedMap, onAvailableMapsLoaded, onAutoOpen, locale } = options;
 
   // Seed straight from the cache during the first render. Waiting for the
   // effect below would repaint the spinner for a frame on every return visit,
@@ -96,6 +98,13 @@ export function useMapExplorerData(options: UseMapExplorerDataOptions = {}): Use
   useEffect(() => {
     onAvailableMapsLoadedRef.current = onAvailableMapsLoaded;
   }, [onAvailableMapsLoaded]);
+
+  const onAutoOpenRef = useRef(onAutoOpen);
+  useEffect(() => {
+    onAutoOpenRef.current = onAutoOpen;
+  }, [onAutoOpen]);
+  const openMapIdRef = useRef<number | null>(null);
+  openMapIdRef.current = openMapId;
 
   useEffect(() => {
     const trimmed = search.trim();
@@ -172,8 +181,14 @@ export function useMapExplorerData(options: UseMapExplorerDataOptions = {}): Use
 
     const match = findMapByName(maps, targetMapName);
     if (match) {
+      // Opening the map that is already open is not an open (a voice command can repeat itself).
+      const alreadyOpen = openMapIdRef.current === match.id;
       setOpenMapId(match.id);
       lastHandledTargetRef.current = targetKey;
+      if (!alreadyOpen) {
+        const via = typeof rawTarget === 'object' && rawTarget !== null ? rawTarget.via ?? 'link' : 'link';
+        onAutoOpenRef.current?.(match, via);
+      }
     }
   }, [initialMapName, selectedMap, maps]);
 

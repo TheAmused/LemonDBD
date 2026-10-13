@@ -39,13 +39,15 @@ function MapsPageInner() {
   const [selectedMap, setSelectedMap] = useState<{
     mapName: string;
     timestamp: number;
+    via?: 'voice' | 'link';
   }>({
     mapName: initialMapName,
     timestamp: Date.now(),
+    via: 'link',
   });
   useEffect(() => {
     if (initialMapName) {
-      setSelectedMap({ mapName: initialMapName, timestamp: Date.now() });
+      setSelectedMap({ mapName: initialMapName, timestamp: Date.now(), via: 'link' });
     }
   }, [initialMapName]);
 
@@ -73,7 +75,7 @@ function MapsPageInner() {
 
   const handleSourceChange = useCallback(() => {}, []);
   const handleSelectMap = useCallback((name: string) => {
-    setSelectedMap({ mapName: name, timestamp: Date.now() });
+    setSelectedMap({ mapName: name, timestamp: Date.now(), via: 'voice' });
   }, []);
   const handleAction = useCallback(() => {}, []);
 

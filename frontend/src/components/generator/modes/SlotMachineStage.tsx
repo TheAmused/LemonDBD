@@ -19,6 +19,7 @@ export interface SlotMachineStageProps {
   activePlayablePerks: Perk[];
   activeMutator: ChaosMutator | null;
   onRollComplete: (slots: DrawnSlot[]) => void;
+  onLoadoutComplete?: () => void;
   revealedSlots: boolean[];
   onRevealSlot: (idx: number) => void;
   onSelectPerk: (perk: Perk) => void;
@@ -31,6 +32,7 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
   activePlayablePerks,
   activeMutator,
   onRollComplete,
+  onLoadoutComplete,
   revealedSlots,
   onRevealSlot,
   onSelectPerk,
@@ -38,7 +40,7 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
   backendBase,
 }) => {
   const dict = useDictionary();
-  const machine = useSlotMachine({ role, activePlayablePerks, activeMutator, onRollComplete });
+  const machine = useSlotMachine({ role, activePlayablePerks, activeMutator, onRollComplete, onLoadoutComplete });
   const {
     phase, reels, spinningIds, staged, cycleIndex, selected, cellPx, isMobile,
     reelAreaRef, resultsRef, canConfirm, confirmHint,

@@ -6,6 +6,7 @@
 // components/common/BlockCard. A page supplies only its content.
 import React from 'react';
 import { LinkPill } from '@/components/common/LinkPill';
+import { trackEvent } from '@/utils/analytics';
 import { PageShell } from '@/components/layout/PageShell';
 import type { Locale } from '@/i18n/config';
 
@@ -45,12 +46,18 @@ interface LegalLinkPillProps {
   href: string;
   icon: React.ReactNode;
   children: React.ReactNode;
+  target: 'terms-of-service' | 'privacy-policy' | 'rules';
 }
 
 /** The "go to this legal page" capsule used on About us. */
-export function LegalLinkPill({ href, icon, children }: LegalLinkPillProps) {
+export function LegalLinkPill({ href, icon, children, target }: LegalLinkPillProps) {
   return (
-    <LinkPill href={href} icon={icon} className="text-xs sm:text-sm font-bold uppercase tracking-widest">
+    <LinkPill
+      href={href}
+      icon={icon}
+      className="text-xs sm:text-sm font-bold uppercase tracking-widest"
+      onClick={() => trackEvent('legal_link_click', { target })}
+    >
       {children}
     </LinkPill>
   );

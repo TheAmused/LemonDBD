@@ -213,7 +213,9 @@ def test_map_realm_to_dict_keys_completeness(db_session: Session) -> None:
     required_keys = {
         "id",
         "name",
+        "raw_name",
         "realm",
+        "raw_realm",
         "realm_id",
         "source_id",
         "source",
@@ -234,3 +236,27 @@ def test_map_realm_to_dict_keys_completeness(db_session: Session) -> None:
     assert output["source"] == "hens333"
     assert output["source_label"] == "Hens333 12-Clock Callouts"
     assert output["realm"] == "Gideon Meat Plant"
+
+
+@pytest.mark.unit
+def test_map_realm_to_dict_exposes_english_names(db_session: Session) -> None:
+    """raw_name / raw_realm stay English whatever `lang` is (used by analytics)."""
+    realm = Realm(name="Autohaven Wreckers", translations={"de": {"name": "Autowerkstatt"}})
+    source = MapSource(code="hens333", label="Hens333 12-Clock Callouts")
+    db_session.add_all([realm, source])
+    db_session.flush()
+
+    azarov = MapRealm(
+        name="Azarov's Resting Place",
+        realm_id=realm.id,
+        source_id=source.id,
+        translations={"de": {"name": "Azarovs Ruhestätte"}},
+    )
+    db_session.add(azarov)
+    db_session.commit()
+
+    data = azarov.to_dict(lang="de")
+    assert data["name"] == "Azarovs Ruhestätte"
+    assert data["raw_name"] == "Azarov's Resting Place"
+    assert data["realm"] == "Autowerkstatt"
+    assert data["raw_realm"] == "Autohaven Wreckers"

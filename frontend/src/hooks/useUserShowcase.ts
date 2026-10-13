@@ -14,6 +14,7 @@ import {
 } from '@/services/userShowcaseApi';
 import { getLocalStorage } from '@/utils/safeStorage';
 import { getAuthToken } from '@/utils/api';
+import { reportCompleteShowcaseRoles } from '@/utils/userShowcaseAnalytics';
 
 export function getShowcaseStorageKey(userId?: number | string | null): string {
   return `lemondbd_showcase_${userId ?? 'guest'}`;
@@ -202,6 +203,7 @@ export function useUserShowcase(
             showcaseRef.current = dbData;
             saveStoredShowcase(userId, dbData);
             setShowcase(dbData);
+            reportCompleteShowcaseRoles(userId, dbData);
           }
           setIsLoading(false);
         }
@@ -237,6 +239,7 @@ export function useUserShowcase(
       showcaseRef.current = next;
       saveStoredShowcase(userId, next);
       setShowcase(next);
+      reportCompleteShowcaseRoles(userId, next);
 
       if (userId && userId !== 'guest') {
         if (saveTimeoutRef.current) {

@@ -1,5 +1,6 @@
 // frontend/src/utils/mapUtils.ts
 import type { MapRealm } from '@/types/map';
+import type { AnalyticsEvents } from '@/utils/analytics';
 import type { Dictionary } from '@/locales/types';
 import { getBackendBaseUrl } from '@/utils/api';
 
@@ -142,4 +143,14 @@ function translateValue(labels: Record<string, LabelEntry>, value: string, dict?
 /** Localized name of a map's layout type ("Outdoor" -> "Otwarty"). */
 export function getLayoutTypeLabel(value: string, dict?: MapsDictionary): string {
   return translateValue(LAYOUT_LABELS, value, dict);
+}
+
+export type MapOpenVia = AnalyticsEvents['map_open']['via'];
+
+/** `map_open` props: English names (readable in the dashboard, stable across site languages). */
+export function mapOpenProps(
+  map: Pick<MapRealm, 'id' | 'name' | 'realm'> & Partial<Pick<MapRealm, 'raw_name' | 'raw_realm'>>,
+  via: MapOpenVia
+): AnalyticsEvents['map_open'] {
+  return { map: map.raw_name ?? map.name, map_id: map.id, realm: map.raw_realm ?? map.realm, via };
 }

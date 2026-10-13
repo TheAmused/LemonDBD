@@ -67,16 +67,55 @@ declare global {
   }
 }
 
-/** Sends an event. Returns true only when it was handed to Umami. */
-export function trackEvent<K extends EventName>(name: K, ...args: EventArgs<K>): boolean {
+interface QueuedEvent {
+  name: string;
+  props: EventProps | undefined;
+}
+
+/** Events fired before the Umami script finished loading (it is injected after a client fetch). */
+const MAX_QUEUED_EVENTS = 20;
+const queuedEvents: QueuedEvent[] = [];
+
+function dispatch(name: string, props: EventProps | undefined, queueIfNotLoaded: boolean): boolean {
   try {
     if (typeof window === 'undefined') return false;
     const umami = window.umami;
-    if (!umami || typeof umami.track !== 'function') return false;
-    umami.track(name, args[0] as EventProps | undefined);
+    if (!umami || typeof umami.track !== 'function') {
+      if (queueIfNotLoaded && queuedEvents.length < MAX_QUEUED_EVENTS) queuedEvents.push({ name, props });
+      return false;
+    }
+    umami.track(name, props);
     return true;
   } catch {
     return false;
+  }
+}
+
+/**
+ * Sends an event. Returns true only when it was handed to Umami right now; an event fired before
+ * the script has loaded is kept (at most 20) and sent by `flushQueuedEvents`.
+ */
+export function trackEvent<K extends EventName>(name: K, ...args: EventArgs<K>): boolean {
+  return dispatch(name, args[0] as EventProps | undefined, true);
+}
+
+/** Sends what was fired before Umami loaded. Called once the script is there; returns how many went out. */
+export function flushQueuedEvents(): number {
+  try {
+    if (typeof window === 'undefined') return 0;
+    const umami = window.umami;
+    if (!umami || typeof umami.track !== 'function') return 0;
+    const pending = queuedEvents.splice(0, queuedEvents.length);
+    for (const { name, props } of pending) {
+      try {
+        umami.track(name, props);
+      } catch {
+        // Best effort: one bad event must not stop the rest.
+      }
+    }
+    return pending.length;
+  } catch {
+    return 0;
   }
 }
 
@@ -86,7 +125,8 @@ export function trackEvent<K extends EventName>(name: K, ...args: EventArgs<K>):
  */
 export function trackOnce<K extends EventName>(storageKey: string, name: K, ...args: EventArgs<K>): boolean {
   if (safeGetItem(storageKey) !== null) return false;
-  if (!trackEvent(name, ...args)) return false;
+  // Not queued: the caller tries again on its own, and a queued copy would then be sent twice.
+  if (!dispatch(name, args[0] as EventProps | undefined, false)) return false;
   safeSetItem(storageKey, '1');
   return true;
 }

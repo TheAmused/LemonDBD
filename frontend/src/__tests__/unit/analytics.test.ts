@@ -1,7 +1,7 @@
 // frontend/src/__tests__/unit/analytics.test.ts
 import { afterEach, beforeEach, describe, it } from 'node:test';
 import assert from 'node:assert/strict';
-import { contactPageFromPath, createDeduper, trackEvent, trackOnce } from '@/utils/analytics';
+import { contactPageFromPath, createDeduper, flushQueuedEvents, trackEvent, trackOnce } from '@/utils/analytics';
 
 type Call = { name: string; data: unknown };
 const g = globalThis as { window?: unknown; localStorage?: unknown };
@@ -112,5 +112,68 @@ describe('contactPageFromPath', () => {
     assert.equal(contactPageFromPath('/en/maps'), 'other');
     assert.equal(contactPageFromPath(null), 'other');
     assert.equal(contactPageFromPath(''), 'other');
+  });
+});
+
+describe('events fired before the Umami script has loaded', () => {
+  beforeEach(() => {
+    // Drain anything an earlier test left in the module level queue.
+    g.window = { umami: { track: () => undefined } };
+    flushQueuedEvents();
+    delete g.window;
+    delete g.localStorage;
+  });
+  afterEach(() => {
+    delete g.window;
+    delete g.localStorage;
+  });
+
+  it('are queued and sent in order once the script is there', () => {
+    g.window = {};
+    assert.equal(trackEvent('avatar_upload'), false);
+    assert.equal(trackEvent('smash_vote', { vote: 'pass', roster: 'canon' }), false);
+    const calls: Call[] = [];
+    installUmami(calls);
+    assert.equal(flushQueuedEvents(), 2);
+    assert.deepEqual(
+      calls.map((c) => c.name),
+      ['avatar_upload', 'smash_vote']
+    );
+    assert.equal(flushQueuedEvents(), 0);
+  });
+
+  it('are not queued on the server', () => {
+    assert.equal(trackEvent('avatar_upload'), false);
+    const calls: Call[] = [];
+    installUmami(calls);
+    assert.equal(flushQueuedEvents(), 0);
+    assert.equal(calls.length, 0);
+  });
+
+  it('keep at most 20 events', () => {
+    g.window = {};
+    for (let i = 0; i < 25; i++) trackEvent('avatar_upload');
+    const calls: Call[] = [];
+    installUmami(calls);
+    assert.equal(flushQueuedEvents(), 20);
+    assert.equal(calls.length, 20);
+  });
+
+  it('are not queued by trackOnce, which retries on its own later', () => {
+    g.window = {};
+    installStorage();
+    assert.equal(trackOnce('k3', 'showcase_complete', { role: 'killer' }), false);
+    const calls: Call[] = [];
+    installUmami(calls);
+    assert.equal(flushQueuedEvents(), 0);
+  });
+
+  it('flush does nothing while the script is still missing', () => {
+    g.window = {};
+    trackEvent('avatar_upload');
+    assert.equal(flushQueuedEvents(), 0);
+    const calls: Call[] = [];
+    installUmami(calls);
+    assert.equal(flushQueuedEvents(), 1);
   });
 });

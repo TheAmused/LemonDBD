@@ -3,6 +3,7 @@
 
 import { useEffect, useState } from 'react';
 import Script from 'next/script';
+import { flushQueuedEvents } from '@/utils/analytics';
 
 interface UmamiConfig {
   websiteId: string;
@@ -45,6 +46,8 @@ export function UmamiScript() {
       strategy="afterInteractive"
       src={scriptSrc}
       data-website-id={config.websiteId}
+      // Events fired while the script was still loading (a map opened from a shared link, say).
+      onLoad={flushQueuedEvents}
     />
   );
 }

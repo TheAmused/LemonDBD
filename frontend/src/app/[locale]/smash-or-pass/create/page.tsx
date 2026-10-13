@@ -2,10 +2,10 @@
 // frontend/src/app/[locale]/smash-or-pass/create/page.tsx
 
 import React, { Suspense } from 'react';
-import { useParams, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { PageShell } from '@/components/layout/PageShell';
 import { SmashRosterCreator } from '@/components/smash-or-pass/creator/SmashRosterCreator';
-import { useDictionary } from '@/context/DictionaryContext';
+import { useDictionary, useLocale } from '@/context/DictionaryContext';
 import { Locale } from '@/i18n/config';
 
 function SmashRosterCreateContent({ locale }: { locale: Locale }) {
@@ -19,8 +19,7 @@ function SmashRosterCreateContent({ locale }: { locale: Locale }) {
 }
 
 export default function SmashRosterCreatePage() {
-  const params = useParams();
-  const locale = (params?.locale as Locale) || 'en';
+  const locale = useLocale();
   const dict = useDictionary();
 
   if (!dict) return null;

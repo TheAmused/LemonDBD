@@ -6,7 +6,6 @@ import React, { useState, useEffect, useCallback, useRef, Suspense } from 'react
 import { Button } from '@/components/common/Button';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
-import { useParams } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { LemonIcon } from '@/components/LemonIcon';
 import { PageShell } from '@/components/layout/PageShell';
@@ -20,7 +19,7 @@ import { UserBugReport, StatusFeedback } from '@/types/userProfile';
 import { fetchMyBugReports, uploadAvatar, ApiError } from '@/services/userProfileApi';
 import { useUserShowcase } from '@/hooks/useUserShowcase';
 import { User } from 'lucide-react';
-import { useDictionary } from '@/context/DictionaryContext';
+import { useDictionary, useLocale } from '@/context/DictionaryContext';
 import { trackEvent } from '@/utils/analytics';
 
 // Modals are only needed once the user interacts (sign-in prompt, bug report
@@ -35,8 +34,7 @@ const BugReportModal = dynamic(
 );
 
 export default function UserProfilePage() {
-  const params = useParams();
-  const currentLocale = (params?.locale as Locale) || 'en';
+  const currentLocale = useLocale();
   const { user, isAuthenticated, isLoading, ownership, refreshUser } = useAuth();
 
   const dict = useDictionary();

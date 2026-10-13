@@ -3,7 +3,7 @@
 
 import React, { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
-import { useParams, usePathname } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { Lock, MailWarning } from 'lucide-react';
 import { Sidebar } from '@/components/Sidebar';
 import { RoleTabs } from '@/components/streaks/RoleTabs';
@@ -11,14 +11,13 @@ import { StreaksHubSkeleton } from '@/components/streaks/StreaksSkeleton';
 import { Locale } from '@/i18n/config';
 import { useAuth } from '@/context/AuthContext';
 import { DisplayNamesProvider } from '@/context/DisplayNamesContext';
-import { useDictionary } from '@/context/DictionaryContext';
+import { useDictionary, useLocale } from '@/context/DictionaryContext';
 import { getBackendBaseUrl } from '@/utils/api';
 
 const AuthModal = dynamic(() => import('@/components/AuthModal').then((m) => m.AuthModal), { ssr: false });
 
 export function StreaksLayoutShell({ children }: { children: React.ReactNode }) {
-  const params = useParams();
-  const locale = (params?.locale as Locale) || 'en';
+  const locale = useLocale();
   const pathname = usePathname();
   const { user, isAuthenticated, isLoading: authLoading } = useAuth();
   const [isAuthModalOpen, setIsAuthModalOpen] = useState<boolean>(false);

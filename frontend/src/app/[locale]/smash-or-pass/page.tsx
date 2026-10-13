@@ -2,17 +2,15 @@
 // frontend/src/app/[locale]/smash-or-pass/page.tsx
 
 import React from 'react';
-import { useParams } from 'next/navigation';
 import { PageShell } from '@/components/layout/PageShell';
 import { SmashOrPassHub } from '@/components/smash-or-pass/SmashOrPassHub';
 import { Locale } from '@/i18n/config';
 
 import { SmashHubSkeleton } from '@/components/smash-or-pass/SmashOrPassSkeleton';
-import { useDictionary } from '@/context/DictionaryContext';
+import { useDictionary, useLocale } from '@/context/DictionaryContext';
 
 export default function SmashOrPassPage() {
-  const params = useParams();
-  const locale = (params?.locale as Locale) || 'en';
+  const locale = useLocale();
 
   const dict = useDictionary();
 

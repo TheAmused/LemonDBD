@@ -3,18 +3,17 @@
 
 import React, { useEffect, useState, Suspense } from 'react';
 import Link from 'next/link';
-import { useParams } from 'next/navigation';
+import { } from 'next/navigation';
 import { PageShell } from '@/components/layout/PageShell';
 import { LemonIcon } from '@/components/LemonIcon';
 import { i18n, type Locale } from '@/i18n/config';
 import { Sparkles, ArrowRight } from 'lucide-react';
 import { DbdSpinner } from '@/components/common/DbdSpinner';
 import { useImagePrefetch } from '@/components/common/ImagePreloadProvider';
-import { useDictionary } from '@/context/DictionaryContext';
+import { useDictionary, useLocale } from '@/context/DictionaryContext';
 
 function LandingContent() {
-  const params = useParams();
-  const locale = (params?.locale as Locale) || i18n.defaultLocale;
+  const locale = useLocale();
   const { prefetchImages } = useImagePrefetch();
 
   const dict = useDictionary();

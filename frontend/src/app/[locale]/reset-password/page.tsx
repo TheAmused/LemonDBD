@@ -10,7 +10,7 @@ import { CheckCircle2, Lock, AlertCircle } from 'lucide-react';
 import { LemonIcon } from '@/components/LemonIcon';
 import { Locale } from '@/i18n/config';
 import { useAuth } from '@/context/AuthContext';
-import { useDictionary } from '@/context/DictionaryContext';
+import { useDictionary, useLocale } from '@/context/DictionaryContext';
 
 export default function ResetPasswordPage() {
   return (

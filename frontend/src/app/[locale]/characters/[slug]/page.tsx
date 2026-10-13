@@ -14,7 +14,7 @@ import {
   PerkItem,
 } from '@/components/character-detail/CharacterSubpageView';
 import { Locale } from '@/i18n/config';
-import { useDictionary } from '@/context/DictionaryContext';
+import { useDictionary, useLocale } from '@/context/DictionaryContext';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { useCachedData } from '@/hooks/useCachedData';
 import { fetchJson } from '@/services/dataCache';

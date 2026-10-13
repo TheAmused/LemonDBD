@@ -3,7 +3,7 @@
 import React, { Suspense } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { Locale } from '@/i18n/config';
-import { useDictionary } from '@/context/DictionaryContext';
+import { useDictionary, useLocale } from '@/context/DictionaryContext';
 import { CharacterOnboardingWizard } from '@/components/onboarding/CharacterOnboardingWizard';
 
 export default function WelcomePage() {

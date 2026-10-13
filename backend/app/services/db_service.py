@@ -1,11 +1,12 @@
 # backend/app/services/db_service.py
 import logging
+from pathlib import Path
 from flask import current_app
+from sqlalchemy import create_engine
 
 from app.core.extensions import db
 from app.services.db.connection import MemConnectionWrapper, create_sqlite_connection
 from app.services.db.maintenance import prune_stale_character_rows as _prune_rows
-from app.services.db.raw_schema import init_raw_sqlite_schema
 from app.services.db.seeders import seed_default_configs
 
 logger = logging.getLogger(__name__)
@@ -19,7 +20,14 @@ class DatabaseService:
         if self.db_path == ":memory:":
             raw = create_sqlite_connection(":memory:")
             self._mem_conn = MemConnectionWrapper(raw)
-            init_raw_sqlite_schema(self._mem_conn)
+            try:
+                engine = create_engine("sqlite://", creator=lambda: raw)
+                try:
+                    db.metadata.create_all(bind=engine)
+                finally:
+                    engine.dispose()
+            except Exception as e:
+                logger.debug(f"In-memory declarative schema init notice: {e}")
 
     def get_connection(self):
         """SQLite connection helper for standalone scripts and backwards-compatibility."""
@@ -32,11 +40,15 @@ class DatabaseService:
         `translations`, comes only from the seed JSON files (seeds/data/content)."""
         if self.db_path != ":memory:":
             try:
-                conn = self.get_connection()
-                init_raw_sqlite_schema(conn)
-                conn.close()
-            except Exception as raw_e:
-                logger.debug(f"Raw sqlite schema init notice: {raw_e}")
+                p = Path(self.db_path)
+                p.parent.mkdir(parents=True, exist_ok=True)
+                engine = create_engine(f"sqlite:///{self.db_path}")
+                try:
+                    db.metadata.create_all(bind=engine)
+                finally:
+                    engine.dispose()
+            except Exception as schema_e:
+                logger.debug(f"Declarative sqlite schema init notice: {schema_e}")
 
         try:
             if current_app:

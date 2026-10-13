@@ -67,6 +67,7 @@ interface AuthContextType {
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 import type { CharacterOwnershipUpdate } from '@/utils/characterUtils';
 import { SESSION_MARKER, authHeaders, setSessionFlag, getErrorMessage, isAbortError } from '@/utils/api';
+import { trackEvent } from '@/utils/analytics';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -129,6 +130,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setSessionFlag(true);
       setUser(data.user);
       if (data.ownership) setOwnership(data.ownership);
+      trackEvent('login', { method: 'password' });
       return { success: true, user: data.user as UserProfile };
     } catch (err) {
       return { success: false, error: getErrorMessage(err, 'Network error occurred.') };
@@ -154,6 +156,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setSessionFlag(true);
       setUser(data.user);
       if (data.ownership) setOwnership(data.ownership);
+      // The API has no "new account" flag; a user without a finished onboarding is the one
+      // the app sends to /welcome, so that is what counts as a signup.
+      if (data.user?.onboarding_completed_at) trackEvent('login', { method: 'google' });
+      else trackEvent('signup', { method: 'google' });
       return { success: true, user: data.user as UserProfile };
     } catch (err) {
       return { success: false, error: getErrorMessage(err, 'Network error occurred.') };
@@ -176,6 +182,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setSessionFlag(true);
       setUser(data.user);
       if (data.ownership) setOwnership(data.ownership);
+      trackEvent('login', { method: 'two_factor' });
       return { success: true, user: data.user as UserProfile };
     } catch (err) {
       return { success: false, error: getErrorMessage(err, 'Network error occurred.') };
@@ -198,6 +205,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setSessionFlag(true);
       setUser(data.user);
       if (data.ownership) setOwnership(data.ownership);
+      trackEvent('signup', { method: 'password' });
       return { success: true, user: data.user as UserProfile };
     } catch (err) {
       return { success: false, error: getErrorMessage(err, 'Network error occurred.') };
@@ -232,6 +240,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (!res.ok) {
         return { success: false, error: data.message || 'Invalid verification code.' };
       }
+      trackEvent('email_verified');
       return { success: true, user: data.user as UserProfile };
     } catch (err) {
       return { success: false, error: getErrorMessage(err, 'Network error occurred.') };

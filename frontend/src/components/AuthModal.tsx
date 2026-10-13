@@ -28,6 +28,7 @@ import { Input } from '@/components/common/Field';
 import { LegalDocModal } from '@/components/legal/LegalDocModal';
 import type { LegalDocId } from '@/components/legal/legalDocs';
 import { useDictionary } from "@/context/DictionaryContext";
+import { trackEvent } from '@/utils/analytics';
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -114,6 +115,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
           altcha: altchaPayload,
         });
         if (res.success) {
+          trackEvent('forgot_password_request');
           setNotice({ type: 'forgot-sent' });
         } else {
           setError(res.error || dict.user.failedToRequestPasswordReset);
@@ -388,7 +390,11 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
                       <button
                         key={i}
                         type="button"
-                        onClick={() => setLegalDoc(part === '{terms}' ? 'terms' : 'rules')}
+                        onClick={() => {
+                          const doc = part === '{terms}' ? 'terms' : 'rules';
+                          trackEvent('legal_preview_open', { doc });
+                          setLegalDoc(doc);
+                        }}
                         className="cursor-pointer font-bold text-accent-red underline underline-offset-2 hover:opacity-80"
                       >
                         {part === '{terms}' ? dict.user.acceptTermsLink : dict.user.acceptRulesLink}

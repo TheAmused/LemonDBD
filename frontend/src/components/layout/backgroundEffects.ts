@@ -45,14 +45,10 @@ export const ROUTE_BACKGROUND_EFFECTS: ReadonlyArray<{ prefix: readonly string[]
   { prefix: ['smash-or-pass'], effect: 'campfire' },  // hub
   { prefix: ['smash-or-pass', 'create'], effect: 'campfire' },
   { prefix: ['streaks'], effect: 'campfire' },  // hub
-  { prefix: ['streaks', 'challenge'], effect: 'campfire' },
-  { prefix: ['streaks', 'killer'], effect: 'campfire' },
+  { prefix: ['streaks', 'gauntlet-streak'], effect: 'campfire' },
   { prefix: ['streaks', 'killer', 'chaos-streak'], effect: 'campfire' },
-  { prefix: ['streaks', 'killer', 'gauntlet-streak'], effect: 'campfire' },
   { prefix: ['streaks', 'killer', 'history-streak'], effect: 'campfire' },
   { prefix: ['streaks', 'killer', 'page-streak'], effect: 'campfire' },  // picker + [killer] run
-  { prefix: ['streaks', 'survivor'], effect: 'campfire' },
-  { prefix: ['streaks', 'survivor', 'gauntlet-streak'], effect: 'campfire' },
   { prefix: ['tier-lists'], effect: 'campfire' },  // list + [slug] view
   { prefix: ['tier-lists', 'custom'], effect: 'campfire' },  // custom/[id]
   { prefix: ['tier-lists', 'new'], effect: 'campfire' },

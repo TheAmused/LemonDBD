@@ -57,6 +57,7 @@ export default {
   authSignInTitle: "ログイン",
   authRegisterTitle: "アカウント作成",
   authResetSubtitle: "パスワード再設定用のリンクをメールで送信します。",
+  authSecurityCheck: "セキュリティチェック中",
   authVerifySubtitle: "{email} に送信したコードを入力してください。",
   verifyEmailAction: "確認",
   verifying: "確認中...",

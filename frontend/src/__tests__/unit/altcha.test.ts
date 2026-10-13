@@ -42,6 +42,8 @@ describe('ALTCHA Proof-of-Work Engine', () => {
     assert.strictEqual(solution.algorithm, 'SHA-256');
     assert.strictEqual(solution.signature, 'test_signature_hmac_123');
     assert.strictEqual(solution.expires, challenge.expires);
+    // The server signs challenge:salt:maxnumber:expires, so a payload without maxnumber is always rejected.
+    assert.strictEqual(solution.maxnumber, challenge.maxnumber);
 
     // Verify cryptographic equation: SHA256(salt + number) == challenge
     const checkHash = crypto.createHash('sha256').update(`${solution.salt}${solution.number}`).digest('hex');

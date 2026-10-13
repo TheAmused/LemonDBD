@@ -21,6 +21,7 @@ export interface AltchaPayload {
   salt: string;
   signature: string;
   expires: number;
+  maxnumber: number;
 }
 
 export async function sha256Hex(str: string): Promise<string> {
@@ -68,6 +69,7 @@ export async function solveAltchaPoW(
       salt: challenge.salt,
       signature: challenge.signature,
       expires: challenge.expires,
+      maxnumber: challenge.maxnumber,
     };
   }
 

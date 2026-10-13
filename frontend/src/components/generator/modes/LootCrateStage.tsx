@@ -21,6 +21,8 @@ export interface LootCrateStageProps {
   activePlayablePerks: Perk[];
   activeMutator: ChaosMutator | null;
   onRollComplete: (slots: DrawnSlot[]) => void;
+  /** Fires once the loadout is full (analytics). */
+  onLoadoutComplete?: () => void;
   revealedSlots: boolean[];
   onRevealSlot: (idx: number) => void;
   onSelectPerk: (perk: Perk) => void;
@@ -100,6 +102,7 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
       activePlayablePerks,
       activeMutator,
       onRollComplete,
+      onLoadoutComplete,
       revealedSlots,
       onRevealSlot,
       onSelectPerk,
@@ -208,6 +211,7 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
       setPhase('complete');
       celebrate(role, resultsRef.current);
       onRollComplete(nextSelected);
+      onLoadoutComplete?.();
     }
   };
 

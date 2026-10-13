@@ -2,7 +2,6 @@
 // frontend/src/components/Sidebar.tsx
 
 import { Modal } from '@/components/common/Modal';
-import type { Dictionary } from '@/locales/types';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useParams } from 'next/navigation';

@@ -7,7 +7,6 @@ import { Button } from '@/components/common/Button';
 import { UserBugReportsList } from './UserBugReportsList';
 import { usePersistentDrawer } from '@/hooks/usePersistentDrawer';
 import type { UserBugReport } from '@/types/userProfile';
-import type { Dictionary } from '@/locales/types';
 import { useDictionary } from "@/context/DictionaryContext";
 
 interface UserBugReportsDrawerProps {

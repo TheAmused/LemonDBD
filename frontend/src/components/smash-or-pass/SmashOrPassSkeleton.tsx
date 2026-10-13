@@ -3,7 +3,6 @@
 
 import React from 'react';
 import { DbdSpinner } from '@/components/common/DbdSpinner';
-import type { Dictionary } from '@/locales/types';
 import { useDictionary } from "@/context/DictionaryContext";
 
 interface SmashOrPassSkeletonProps {

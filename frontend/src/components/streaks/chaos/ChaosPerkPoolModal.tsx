@@ -4,7 +4,6 @@
 import { Tabs, TabPanel } from '@/components/common/Tabs';
 import React, { useId, useMemo, useState } from 'react';
 import { CheckCircle2, Circle, Sparkles } from 'lucide-react';
-import type { Dictionary } from '@/locales/types';
 import type { Perk } from '@/types/gauntletStreak';
 import { perkIconUrl as perkIconFor } from '@/utils/staticUrl';
 import { Modal } from '@/components/common/Modal';

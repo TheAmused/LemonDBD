@@ -1,5 +1,4 @@
 'use client';
-import type { Dictionary } from '@/locales/types';
 // frontend/src/app/[locale]/maps/page.tsx
 
 import React, { Suspense, useCallback, useEffect, useMemo, useState } from 'react';

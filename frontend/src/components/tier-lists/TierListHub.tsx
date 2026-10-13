@@ -6,7 +6,6 @@ import { useRouter } from 'next/navigation';
 import { ChevronDown, FileJson, LayoutList, Plus, RotateCcw, TriangleAlert } from 'lucide-react';
 import { EmptyState } from '@/components/common/EmptyState';
 import { ConfirmModal } from '@/components/common/ConfirmModal';
-import type { Dictionary } from '@/locales/types';
 import type { TierListDocument } from '@/types/tierList';
 import { usePersistentDrawer } from '@/hooks/usePersistentDrawer';
 import { useTierListStore } from '@/hooks/useTierListStore';

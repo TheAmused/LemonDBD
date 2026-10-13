@@ -30,7 +30,6 @@ import {
   Eye,
   BookOpen,
 } from 'lucide-react';
-import type { Dictionary } from '@/locales/types';
 import type { ChallengeDefinition } from '@/types/minigame';
 import {
   getCustomChallenges,

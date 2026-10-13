@@ -1,7 +1,6 @@
 // frontend/src/components/streaks/page-streak/PageStreakModeModal.tsx
 'use client';
 
-import type { Dictionary } from '@/locales/types';
 
 import React from 'react';
 import { BookOpen } from 'lucide-react';

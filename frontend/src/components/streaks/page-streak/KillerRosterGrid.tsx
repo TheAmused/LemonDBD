@@ -5,7 +5,6 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { Check } from 'lucide-react';
 import type { RosterEntry } from '@/types/pageStreak';
-import type { Dictionary } from '@/locales/types';
 import { staticUrl } from '@/utils/staticUrl';
 import { useCharacterDisplayName } from '@/context/DisplayNamesContext';
 import { KillerIcon } from '@/components/icons/DbdIcons';

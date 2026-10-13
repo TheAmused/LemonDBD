@@ -1,5 +1,4 @@
 'use client';
-import type { Dictionary } from '@/locales/types';
 // frontend/src/components/streaks/AbandonConfirmModal.tsx
 
 import React from 'react';

@@ -4,7 +4,6 @@
 import React, { useEffect, useState } from 'react';
 import { Textarea } from '@/components/common/Field';
 import { Button } from '@/components/common/Button';
-import type { Dictionary } from '@/locales/types';
 import { Ban } from 'lucide-react';
 import { Modal } from '@/components/common/Modal';
 import { useDictionary } from "@/context/DictionaryContext";

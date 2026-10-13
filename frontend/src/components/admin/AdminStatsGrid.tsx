@@ -2,7 +2,6 @@
 // frontend/src/components/admin/AdminStatsGrid.tsx
 
 import React from 'react';
-import type { Dictionary } from '@/locales/types';
 import { Users, Layers, Sparkles, Database } from 'lucide-react';
 import { AdminStats } from '@/types/admin';
 import { OverseerEyeIcon } from '@/components/icons/DbdIcons';

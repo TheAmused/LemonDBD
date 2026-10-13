@@ -11,7 +11,6 @@ import { RandomizerPageSkeleton } from '@/components/generator/RandomizerSkeleto
 import { Locale } from '@/i18n/config';
 import { useAuth } from '@/context/AuthContext';
 import { Perk, CharacterItem } from '@/types/perks';
-import type { Dictionary } from '@/locales/types';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 import { useDictionary } from '@/context/DictionaryContext';
 import { useCachedData } from '@/hooks/useCachedData';

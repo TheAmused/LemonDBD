@@ -6,7 +6,6 @@ import { useDroppable } from '@dnd-kit/core';
 import { SortableContext, rectSortingStrategy } from '@dnd-kit/sortable';
 import { ArrowDownToLine, ChevronDown, Search, X } from 'lucide-react';
 import type { TierItem } from '@/types/tierList';
-import type { Dictionary } from '@/locales/types';
 import { cn } from '@/utils/cn';
 import { normalizeSearchText } from '@/utils/perkUtils';
 import { POOL_CONTAINER_ID } from '@/utils/tierLists/constants';

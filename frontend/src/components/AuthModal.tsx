@@ -2,7 +2,6 @@
 // frontend/src/components/AuthModal.tsx
 
 import React, { useEffect, useState } from 'react';
-import type { Dictionary } from '@/locales/types';
 import { useAuth } from '@/context/AuthContext';
 import { useRouter, usePathname } from 'next/navigation';
 import { useAltcha } from '@/hooks/useAltcha';

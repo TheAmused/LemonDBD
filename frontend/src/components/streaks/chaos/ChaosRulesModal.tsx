@@ -1,6 +1,5 @@
 'use client';
 // frontend/src/components/streaks/chaos/ChaosRulesModal.tsx
-import type { Dictionary } from '@/locales/types';
 
 import React from 'react';
 import { RulesModalShell } from '../RulesModalShell';

@@ -1,6 +1,5 @@
 // frontend/src/components/streaks/gauntlet/CharacterRosterGrid.tsx
 'use client';
-import type { Dictionary } from '@/locales/types';
 
 import React, { useState } from 'react';
 import { Role } from '@/types/gauntletStreak';

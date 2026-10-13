@@ -2,7 +2,6 @@
 // frontend/src/components/DisabledReasonModal.tsx
 
 import React from 'react';
-import type { Dictionary } from '@/locales/types';
 import { AlertTriangle } from 'lucide-react';
 import { Modal } from '@/components/common/Modal';
 import { formatMessage } from '@/utils/i18nFormat';

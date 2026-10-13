@@ -1,6 +1,5 @@
 // frontend/src/app/[locale]/perks/page.tsx
 'use client';
-import type { Dictionary } from '@/locales/types';
 
 import React, { useEffect, useState, useCallback, useRef, Suspense } from 'react';
 import dynamic from 'next/dynamic';
@@ -413,4 +412,4 @@ export default function PerksPage() {
       <PerksContent />
     </Suspense>
   );
-}
+}

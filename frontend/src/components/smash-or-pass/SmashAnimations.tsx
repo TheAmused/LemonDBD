@@ -1,6 +1,5 @@
 'use client';
 // frontend/src/components/smash-or-pass/SmashAnimations.tsx
-import type { Dictionary } from '@/locales/types';
 
 import React, { useEffect, useRef, useState } from 'react';
 import { Heart, Flame, Skull, Zap } from 'lucide-react';

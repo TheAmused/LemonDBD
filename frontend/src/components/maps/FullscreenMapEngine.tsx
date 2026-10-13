@@ -14,7 +14,6 @@ import {
   Maximize2,
 } from 'lucide-react';
 import type { MapRealm } from '@/types/map';
-import type { Dictionary } from '@/locales/types';
 import { getLayoutTypeLabel, getMapImageSrc } from '@/utils/mapUtils';
 
 import { tip } from '@/components/common/Tooltip';

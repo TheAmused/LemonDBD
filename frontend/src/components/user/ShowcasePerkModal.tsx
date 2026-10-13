@@ -7,7 +7,6 @@ import { Button } from '@/components/common/Button';
 import Image from 'next/image';
 import { Search, Trash2, Sparkles, Check } from 'lucide-react';
 import type { RoleCategory, Perk } from '@/types/perks';
-import type { Dictionary } from '@/locales/types';
 import { getBackendBaseUrl, getPerkIconUrl, matchesPerkSearch } from '@/utils/perkUtils';
 import { fetchCached, fetchJson, unwrapList, type ListPayload } from '@/services/dataCache';
 import { Modal } from '@/components/common/Modal';

@@ -365,6 +365,8 @@ export function TierListBoard({
           </SortableContext>
         </div>
 
+        {/* FIT hides the unranked pool so the tiers alone cover the screen. */}
+        {!fit?.fitMode && (
         <TierPool
           keys={shown[POOL_CONTAINER_ID] ?? []}
           itemsByKey={itemsByKey}
@@ -378,6 +380,7 @@ export function TierListBoard({
           collapsed={poolCollapsed}
           onCollapsedChange={setPoolCollapsed}
         />
+        )}
 
         <DragOverlay dropAnimation={{ duration: 180, easing: 'cubic-bezier(0.2, 0, 0, 1)' }}>
           {activeItem ? <TierItemTile item={activeItem} shape={shape} showName={namesShown} overlay /> : null}

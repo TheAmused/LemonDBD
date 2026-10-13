@@ -82,12 +82,23 @@ describe('Tier list fit: tile size follows the screen width and keeps constant s
   });
 });
 
-describe('Tier list fit: FIT shows tiers and the whole pool without scrolling when it can', () => {
-  it('keeps the pool fully visible for a modest list and falls back to a scrolling pool when crowded', () => {
-    const modest = computeFit({ ...base, tierCounts: [3, 3, 3, 3, 3, 3], poolCount: 20, scale: 'fit' });
-    assert.equal(modest.fitMode, true);
-    assert.equal(modest.overflow, false);
-    assert.equal(modest.poolMaxBody, modest.poolMinBody, 'whole pool is visible, so its body is not capped');
+describe('Tier list fit: FIT hides the pool and makes the tiers cover the screen', () => {
+  it('hides the pool, may grow tiles past 100%, and never overflows a list that can fit', () => {
+    const small = computeFit({ ...base, tierCounts: [1, 2, 2, 1], poolCount: 40, scale: 'fit' });
+    const at100 = computeFit({ ...base, tierCounts: [1, 2, 2, 1], poolCount: 40, scale: 100 });
+    assert.equal(small.fitMode, true);
+    assert.equal(small.poolMaxTotal, 0, 'pool takes no space in FIT');
+    assert.ok(small.tile >= at100.tile, 'a small list gets bigger tiles than 100%');
+    assert.equal(small.overflow, false);
+  });
+
+  it('shares leftover height between rows so the board fills the screen', () => {
+    const fit = computeFit({ ...base, tierCounts: [1, 2, 2, 1], poolCount: 0, scale: 'fit' });
+    const natural = fit.tile + 2 * fit.pad;
+    assert.ok(fit.rowMin >= natural, 'rows never get smaller than a tile row');
+  });
+
+  it('falls back to small tiles for a crowded list', () => {
     const crowded = computeFit({ ...base, tierCounts: [35, 35, 35, 35, 35, 35], poolCount: 200, scale: 'fit' });
     assert.ok(crowded.tile >= MIN_TILE);
   });

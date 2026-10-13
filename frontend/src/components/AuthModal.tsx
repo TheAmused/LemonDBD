@@ -10,6 +10,7 @@ import { useDemoAccounts, type DemoAccount } from '@/hooks/useDemoAccounts';
 import { useGoogleClientId } from '@/hooks/useGoogleConfig';
 import { GoogleSignInButton } from '@/components/auth/GoogleSignInButton';
 import { AltchaWidget } from '@/components/common/AltchaWidget';
+import { Spinner } from '@/components/common/Spinner';
 import {
   Mail,
   LogIn,
@@ -208,6 +209,9 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
   // The label holds {terms} and {rules}; each becomes a link that previews that document.
   const legalLabelParts = dict.user.acceptLegalLabel.split(/(\{terms\}|\{rules\})/);
   const showLegalError = legalAttempted && !acceptedLegal;
+  // While the ALTCHA challenge is being solved the form can't be submitted, so the whole body gives way to the loader.
+  const showSecurityCheck = !notice && isAltchaVerifying;
+  const showAuthBody = !notice && !isAltchaVerifying;
 
   return (
     <Modal
@@ -292,7 +296,14 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
         </div>
       )}
 
-      {!notice && (
+      {showSecurityCheck && (
+        <div className="flex flex-col items-center justify-center gap-4 py-12">
+          <Spinner tone="accent" className="h-14 w-14 border-4" />
+          <p role="status" className="type-body text-text-secondary">{dict.user.authSecurityCheck}</p>
+        </div>
+      )}
+
+      {showAuthBody && (
         <form onSubmit={handleSubmit} className="space-y-3.5">
           {mode === 'forgot' && (
             <p className="type-body-lg text-text-secondary">{dict.user.authResetSubtitle}</p>
@@ -443,7 +454,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
         </form>
       )}
 
-      {!notice && mode !== 'forgot' && googleClientId && (
+      {showAuthBody && mode !== 'forgot' && googleClientId && (
         <div className="mt-4 space-y-3">
           <div className="flex items-center gap-3" role="separator">
             <span className="h-px flex-1 bg-border-color" />
@@ -457,7 +468,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
         </div>
       )}
 
-      {!notice && mode !== 'forgot' && demoAccounts.length > 0 && (
+      {showAuthBody && mode !== 'forgot' && demoAccounts.length > 0 && (
         <div className="mt-4 pt-4 border-t border-border-color">
           {dict.user.quickDemoAccounts && (
             <p className="type-label-2xs text-text-muted mb-2 text-center">
@@ -480,7 +491,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
         </div>
       )}
 
-      {!notice && (
+      {showAuthBody && (
         <div className="mt-4 text-center">
           <button
             type="button"

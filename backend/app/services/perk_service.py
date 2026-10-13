@@ -139,5 +139,6 @@ class PerkService:
         realm: str | None = None,
         search: str | None = None,
         source: str | None = None,
+        lang: str | None = None,
     ) -> list[dict[str, Any]]:
-        return _fetch_maps_fn(self, realm=realm, search=search, source=source)
+        return _fetch_maps_fn(self._use_sqlalchemy, self.db_service, realm=realm, search=search, source=source, lang=lang)

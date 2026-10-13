@@ -79,8 +79,8 @@ services:
       - TWO_FACTOR_ENCRYPTION_KEY=${TWO_FACTOR_ENCRYPTION_KEY:-TZbfxN8fCG2Pccx-bBsj2fxcyN4dwABgUsIutMVLx4Y=}
       - TWO_FACTOR_ISSUER=${TWO_FACTOR_ISSUER:-LemonDBD}
       - DATABASE_URL=${DATABASE_URL:-postgresql+psycopg://postgres:postgres@db:5432/dbd_db}
-      - DB_POOL_SIZE=${DB_POOL_SIZE:-20}
-      - DB_MAX_OVERFLOW=${DB_MAX_OVERFLOW:-30}
+      - DB_POOL_SIZE=${DB_POOL_SIZE:-10}
+      - DB_MAX_OVERFLOW=${DB_MAX_OVERFLOW:-5}
       # Unset this and the app still boots: the catalog cache falls back to a
       # per-worker dict and the limiter to per-worker counters.
       - REDIS_URL=${REDIS_URL:-redis://redis:6379/0}

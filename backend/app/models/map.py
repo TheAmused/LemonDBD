@@ -140,7 +140,9 @@ class MapRealm(Base):
         return {
             "id": self.id,
             "name": name,
+            "raw_name": self.name,
             "realm": self.realm.localized_name(lang) if self.realm else "",
+            "raw_realm": self.realm.name if self.realm else "",
             "realm_id": self.realm_id,
             "source_id": self.source_id,
             "source": self.source.code if self.source else DEFAULT_SOURCE_CODE,

@@ -70,7 +70,9 @@ class MapRealmResponse(BaseModel):
 
     id: int
     name: str
+    raw_name: str = ""
     realm: str = ""
+    raw_realm: str = ""
     realm_id: int
     source_id: int
     source: str = DEFAULT_SOURCE_CODE

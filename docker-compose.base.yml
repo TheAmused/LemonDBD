@@ -1,7 +1,7 @@
 # docker-compose.base.yml - Shared core services for LemonDBD
 services:
   db:
-    image: postgres:alpine
+    image: postgres:17.11-alpine
     container_name: dbd_db
     restart: unless-stopped
     command: postgres -c max_connections=200
@@ -12,7 +12,7 @@ services:
     ports:
       - "${POSTGRES_PORT:-5432}:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql
+      - postgres_data:/var/lib/postgresql/data
       - ./docker/postgres-init:/docker-entrypoint-initdb.d:ro
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-dbd_db}"]
@@ -36,7 +36,7 @@ services:
   # Redis evicts rather than starts refusing writes, since a cache that
   # fails closed would take the API down with it.
   redis:
-    image: redis:alpine
+    image: redis:8.10-alpine
     container_name: dbd_redis
     restart: unless-stopped
     command: >
@@ -97,7 +97,7 @@ services:
       - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID:-}
       - RATELIMIT_ENABLED=${RATELIMIT_ENABLED:-true}
       - ALTCHA_ENFORCED=${ALTCHA_ENFORCED:-true}
-      - SCHEDULER_ENABLED=${SCHEDULER_ENABLED:-true}
+      - SCHEDULER_ENABLED=${SCHEDULER_ENABLED:-false}
     depends_on:
       db:
         condition: service_healthy
@@ -112,8 +112,31 @@ services:
     networks:
       - dbd_network
 
+  scheduler:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: dbd_scheduler
+    restart: unless-stopped
+    command: python scripts/run_scheduler.py
+    volumes:
+      - backend_data:/app/data
+      - ./backend/app/static:/app/app/static
+      - ./data/updates:/app/updates
+    environment:
+      - FLASK_ENV=${FLASK_ENV:-production}
+      - DATABASE_URL=${DATABASE_URL:-postgresql+psycopg://postgres:postgres@db:5432/dbd_db}
+      - DB_POOL_SIZE=2
+      - DB_MAX_OVERFLOW=1
+      - SCHEDULER_ENABLED=true
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - dbd_network
+
   umami:
-    image: docker.umami.is/umami-software/umami:postgresql-latest
+    image: docker.umami.is/umami-software/umami:postgresql-v3.4.0
     container_name: dbd_umami
     restart: unless-stopped
     environment:
@@ -135,7 +158,7 @@ services:
       - dbd_network
 
   pgadmin:
-    image: dpage/pgadmin4:latest
+    image: dpage/pgadmin4:9.18
     container_name: dbd_pgadmin
     restart: unless-stopped
     environment:

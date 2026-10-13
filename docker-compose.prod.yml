@@ -9,7 +9,7 @@ services:
 
   # Production-only WAF/IP-ban layer -- reads live nginx access logs and bans abusive IPs
   crowdsec:
-    image: crowdsecurity/crowdsec:latest
+    image: crowdsecurity/crowdsec:v1.8.1
     container_name: dbd_crowdsec
     restart: unless-stopped
     environment:

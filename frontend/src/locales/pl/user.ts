@@ -57,6 +57,7 @@ export default {
   authSignInTitle: "Zaloguj się",
   authRegisterTitle: "Utwórz konto",
   authResetSubtitle: "Wyślemy link do resetu hasła na Twój e-mail.",
+  authSecurityCheck: "Trwa kontrola bezpieczeństwa",
   authVerifySubtitle: "Wpisz kod, który wysłaliśmy na {email}.",
   verifyEmailAction: "Zweryfikuj",
   verifying: "Weryfikowanie...",

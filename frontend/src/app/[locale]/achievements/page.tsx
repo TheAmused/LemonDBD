@@ -2,15 +2,13 @@
 // frontend/src/app/[locale]/achievements/page.tsx
 
 import React from 'react';
-import { useParams } from 'next/navigation';
 import { PageShell } from '@/components/layout/PageShell';
 import { AchievementsHub } from '@/components/achievements/AchievementsHub';
 import { Locale } from '@/i18n/config';
-import { useDictionary } from '@/context/DictionaryContext';
+import { useDictionary, useLocale } from '@/context/DictionaryContext';
 
 export default function AchievementsPage() {
-  const params = useParams();
-  const locale = (params?.locale as Locale) || 'en';
+  const locale = useLocale();
   const dict = useDictionary();
 
 

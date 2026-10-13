@@ -2,19 +2,17 @@
 // frontend/src/app/[locale]/characters/page.tsx
 
 import React, { useEffect, useState, Suspense } from 'react';
-import { useParams } from 'next/navigation';
 import { PageShell } from '@/components/layout/PageShell';
 import { CharactersHub } from '@/components/CharactersHub';
 import { CharactersGridSkeleton } from '@/components/character-detail/CharactersSkeleton';
 import { Locale } from '@/i18n/config';
 import { CharacterItem, PerkItem } from '@/components/character-detail/types';
-import { useDictionary } from '@/context/DictionaryContext';
+import { useDictionary, useLocale } from '@/context/DictionaryContext';
 import { getBackendBaseUrl } from '@/utils/api';
 
 
 export default function CharactersPage() {
-  const params = useParams();
-  const locale = (params?.locale as Locale) || 'en';
+  const locale = useLocale();
 
   const dict = useDictionary();
 

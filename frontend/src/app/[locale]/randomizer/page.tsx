@@ -3,7 +3,6 @@
 
 import React, { useEffect, useState, useCallback, Suspense } from 'react';
 import dynamic from 'next/dynamic';
-import { useParams } from 'next/navigation';
 import { PageShell } from '@/components/layout/PageShell';
 import { PageShellFallback } from '@/components/layout/PageShellFallback';
 import { GeneratorPage } from '@/components/generator/GeneratorPage';
@@ -12,15 +11,14 @@ import { Locale } from '@/i18n/config';
 import { useAuth } from '@/context/AuthContext';
 import { Perk, CharacterItem } from '@/types/perks';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
-import { useDictionary } from '@/context/DictionaryContext';
+import { useDictionary, useLocale } from '@/context/DictionaryContext';
 import { useCachedData } from '@/hooks/useCachedData';
 import { fetchJson } from '@/services/dataCache';
 
 const PerkModal = dynamic(() => import('@/components/PerkModal').then((m) => m.PerkModal), { ssr: false });
 
 function RandomizerContent() {
-  const params = useParams();
-  const locale = (params?.locale as Locale) || 'en';
+  const locale = useLocale();
   const { user } = useAuth();
   const backendBase = getBackendBaseUrl();
 

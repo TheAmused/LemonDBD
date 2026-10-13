@@ -14,7 +14,7 @@ import { Locale } from '@/i18n/config';
 import { MapRealm } from '@/types/map';
 import { Perk } from '@/types/perks';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
-import { useDictionary } from '@/context/DictionaryContext';
+import { useDictionary, useLocale } from '@/context/DictionaryContext';
 import { usePersistentString } from '@/hooks/usePersistentString';
 
 const isValidSearchMode = (v: string): v is 'text' | 'voice' => v === 'text' || v === 'voice';

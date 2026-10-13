@@ -2,12 +2,11 @@
 // frontend/src/app/[locale]/privacy-policy/page.tsx
 
 import React from 'react';
-import { useParams } from 'next/navigation';
 import { RichText } from '@/components/common/RichText';
 import { BlockCard } from '@/components/common/BlockCard';
 import { LegalPageLayout } from '@/components/legal/LegalPage';
 import { Locale } from '@/i18n/config';
-import { useDictionary } from '@/context/DictionaryContext';
+import { useDictionary, useLocale } from '@/context/DictionaryContext';
 import { usePrivacyInfo } from '@/hooks/usePrivacyInfo';
 import { fillPrivacyPlaceholders } from '@/utils/privacyPlaceholders';
 
@@ -33,8 +32,7 @@ const SUMMARY_BLOCK = 'summary';
 const ALL_BLOCK_IDS: readonly string[] = [SUMMARY_BLOCK, ...PRIVACY_SECTION_ORDER];
 
 export default function PrivacyPolicyPage() {
-  const params = useParams();
-  const locale = (params?.locale as Locale) || 'en';
+  const locale = useLocale();
   const dict = useDictionary();
   const privacy = dict.privacy;
 

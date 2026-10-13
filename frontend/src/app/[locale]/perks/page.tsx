@@ -26,7 +26,7 @@ import {
 } from '@/types/perks';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 import { useImagePrefetch } from '@/components/common/ImagePreloadProvider';
-import { useDictionary } from '@/context/DictionaryContext';
+import { useDictionary, useLocale } from '@/context/DictionaryContext';
 import { useCachedData } from '@/hooks/useCachedData';
 import { fetchCached, fetchJson } from '@/services/dataCache';
 

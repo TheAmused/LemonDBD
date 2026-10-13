@@ -2,7 +2,6 @@
 // frontend/src/app/[locale]/about/page.tsx
 
 import React from 'react';
-import { useParams } from 'next/navigation';
 import { FileText, ScrollText, ShieldCheck } from 'lucide-react';
 import { PageShell } from '@/components/layout/PageShell';
 import { ContactLinks } from '@/components/common/ContactLinks';
@@ -10,7 +9,7 @@ import { BlockCardPair, type BlockCardProps } from '@/components/common/BlockCar
 import { RichText } from '@/components/common/RichText';
 import { LegalLinkPill } from '@/components/legal/LegalPage';
 import { Locale } from '@/i18n/config';
-import { useDictionary } from '@/context/DictionaryContext';
+import { useDictionary, useLocale } from '@/context/DictionaryContext';
 import { usePrivacyInfo } from '@/hooks/usePrivacyInfo';
 
 // Placeholder names, to be replaced with real contributors before publishing.
@@ -37,8 +36,7 @@ function SyncedAboutPair({ sectionA, sectionB }: { sectionA: AboutSectionConfig;
 }
 
 export default function AboutPage() {
-  const params = useParams();
-  const locale = (params?.locale as Locale) || 'en';
+  const locale = useLocale();
   const dict = useDictionary();
   const about = dict.about;
   const contactEmail = usePrivacyInfo()?.contactEmail;

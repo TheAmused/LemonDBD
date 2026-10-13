@@ -1,33 +1,12 @@
-'use client';
 // frontend/src/app/[locale]/smash-or-pass/page.tsx
+import { pageMetadata } from '@/i18n/metadata';
+import { SmashOrPassClient } from '@/components/smash-or-pass/SmashOrPassClient';
 
-import React from 'react';
-import { PageShell } from '@/components/layout/PageShell';
-import { SmashOrPassHub } from '@/components/smash-or-pass/SmashOrPassHub';
-import { Locale } from '@/i18n/config';
-
-import { SmashHubSkeleton } from '@/components/smash-or-pass/SmashOrPassSkeleton';
-import { useDictionary, useLocale } from '@/context/DictionaryContext';
+export const generateMetadata = pageMetadata('/smash-or-pass', (d) => ({
+  title: d.app.smashOrPassPageTitle,
+  description: d.smashOrPass.subtitle,
+}));
 
 export default function SmashOrPassPage() {
-  const locale = useLocale();
-
-  const dict = useDictionary();
-
-
-  return (
-    <PageShell
-      locale={locale}
-      activeCategory="smash-or-pass"
-      mainClassName="overflow-y-auto theme-smash"
-    >
-      <React.Suspense fallback={<SmashHubSkeleton />}>
-        {dict ? (
-          <SmashOrPassHub locale={locale} />
-        ) : (
-          <SmashHubSkeleton />
-        )}
-      </React.Suspense>
-    </PageShell>
-  );
+  return <SmashOrPassClient />;
 }

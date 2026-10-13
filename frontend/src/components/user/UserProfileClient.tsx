@@ -1,0 +1,228 @@
+'use client';
+// frontend/src/components/user/UserProfileClient.tsx
+
+import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { Button } from '@/components/common/Button';
+import dynamic from 'next/dynamic';
+import Link from 'next/link';
+import { useAuth } from '@/context/AuthContext';
+import { LemonIcon } from '@/components/LemonIcon';
+import { PageShell } from '@/components/layout/PageShell';
+import { CampfireHeader } from '@/components/user/CampfireHeader';
+import { DualMainsShowcase } from '@/components/user/DualMainsShowcase';
+import { UserProfileForm } from '@/components/user/UserProfileForm';
+import { UserBugReportsDrawer } from '@/components/user/UserBugReportsDrawer';
+import { UserProfileSkeleton } from '@/components/user/UserProfileSkeleton';
+import { UserBugReport, StatusFeedback } from '@/types/userProfile';
+import { fetchMyBugReports, uploadAvatar, ApiError } from '@/services/userProfileApi';
+import { useUserShowcase } from '@/hooks/useUserShowcase';
+import { User } from 'lucide-react';
+import { useDictionary, useLocale } from '@/context/DictionaryContext';
+import { trackEvent } from '@/utils/analytics';
+
+const AuthModal = dynamic(() => import('@/components/AuthModal').then((m) => m.AuthModal), {
+  ssr: false,
+});
+const BugReportModal = dynamic(
+  () => import('@/components/sidebar/BugReportModal').then((m) => m.BugReportModal),
+  { ssr: false }
+);
+
+export function UserProfileClient() {
+  const currentLocale = useLocale();
+  const { user, isAuthenticated, isLoading, ownership, refreshUser } = useAuth();
+
+  const dict = useDictionary();
+  const [authModalOpen, setAuthModalOpen] = useState(false);
+  const [bugModalOpen, setBugModalOpen] = useState(false);
+
+  const showcaseHook = useUserShowcase(user?.id);
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
+  const [optimisticPreview, setOptimisticPreview] = useState<string | null>(null);
+  const [avatarFeedback, setAvatarFeedback] = useState<StatusFeedback | null>(null);
+
+  const [myReports, setMyReports] = useState<UserBugReport[]>([]);
+  const [loadingReports, setLoadingReports] = useState(false);
+  const [reportsTotal, setReportsTotal] = useState(0);
+  const [reportsPage, setReportsPage] = useState(1);
+  const [reportsTotalPages, setReportsTotalPages] = useState(1);
+  const REPORTS_PER_PAGE = 10;
+
+  const fetchMyReports = useCallback(async (page: number = 1, signal?: AbortSignal) => {
+    if (!isAuthenticated) return;
+
+    setLoadingReports(true);
+    try {
+      const result = await fetchMyBugReports(page, REPORTS_PER_PAGE, signal);
+      setMyReports(result.reports);
+      setReportsTotal(result.total);
+      setReportsPage(result.page);
+      setReportsTotalPages(result.totalPages);
+    } catch (err) {
+      if (err instanceof DOMException && err.name === 'AbortError') return;
+      console.error('Failed to fetch user bug reports:', err);
+    } finally {
+      setLoadingReports(false);
+    }
+  }, [isAuthenticated]);
+
+  useEffect(() => {
+    if (!isAuthenticated) return;
+    const controller = new AbortController();
+    fetchMyReports(1, controller.signal);
+    return () => controller.abort();
+  }, [isAuthenticated, fetchMyReports]);
+
+  const handleReportsPageChange = useCallback(
+    (page: number) => {
+      fetchMyReports(page);
+    },
+    [fetchMyReports]
+  );
+
+  const handleAvatarFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.size > 10 * 1024 * 1024) {
+      setAvatarFeedback({ type: 'error', text: dict.user.avatarSizeLimit });
+      return;
+    }
+
+    const localBlobUrl = URL.createObjectURL(file);
+    setOptimisticPreview(localBlobUrl);
+    setIsUploadingAvatar(true);
+    setAvatarFeedback(null);
+
+    try {
+      await uploadAvatar(file);
+      trackEvent('avatar_upload');
+      setAvatarFeedback({ type: 'success', text: dict.user.avatarUpdateSuccess });
+      await refreshUser();
+      setOptimisticPreview(null);
+    } catch (err: unknown) {
+      setOptimisticPreview(null);
+      const fallback = dict.user.avatarUploadFailed;
+      const errorMsg = err instanceof ApiError ? err.message || fallback : fallback;
+      setAvatarFeedback({ type: 'error', text: errorMsg });
+    } finally {
+      setIsUploadingAvatar(false);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    }
+  };
+
+  if (!dict || isLoading) {
+    return <UserProfileSkeleton />;
+  }
+
+  if (!isAuthenticated || !user) {
+    return (
+      <div className="min-h-screen text-text-primary flex flex-col items-center justify-center p-6 text-center dbd-fog-overlay transition-colors duration-300">
+        <div className="max-w-md w-full rounded-3xl border border-border-color bg-bg-surface text-text-primary p-8 backdrop-blur-xl shadow-xl space-y-4">
+          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-accent-amber/15 border border-accent-amber/30">
+            <LemonIcon className="h-10 w-10 text-accent-amber" />
+          </div>
+          <h1 className="text-xl sm:text-2xl font-black tracking-wider text-text-primary">
+            {dict.user.authRequiredTitle}
+          </h1>
+          <p className="type-body text-text-secondary">
+            {dict.user.authRequiredDesc}
+          </p>
+          <div className="flex flex-col gap-3 pt-2">
+            <Button
+              variant="primary"
+              onClick={() => setAuthModalOpen(true)}
+              leftIcon={<User className="h-4 w-4" />}
+              className="w-full"
+            >
+              <span>{dict.user.signIn}</span>
+            </Button>
+            <Link
+              href={`/${currentLocale}`}
+              className="text-xs text-text-muted hover:text-accent-amber transition-colors py-1"
+            >
+              {dict.user.returnToHome}
+            </Link>
+          </div>
+        </div>
+
+        <AuthModal isOpen={authModalOpen} onClose={() => setAuthModalOpen(false)} />
+      </div>
+    );
+  }
+
+  return (
+    <PageShell
+      locale={currentLocale}
+      activeCategory="user"
+      mainClassName="overflow-y-auto relative"
+    >
+      <div className="relative z-10 max-w-5xl xl:max-w-6xl 2xl:max-w-[1700px] 3xl:max-w-[2000px] w-full mx-auto space-y-6 sm:space-y-8 2xl:space-y-10 py-4 sm:py-6 lg:py-8 2xl:py-10">
+        <input
+          type="file"
+          ref={fileInputRef}
+          onChange={handleAvatarFileChange}
+          accept="image/png,image/jpeg,image/webp,image/gif"
+          className="hidden"
+        />
+
+        <CampfireHeader
+          user={user}
+          showcase={showcaseHook.showcase}
+          ownership={ownership}
+          isSaving={showcaseHook.isSaving}
+          saveError={showcaseHook.saveError}
+          onTitleChange={showcaseHook.setPlayerTitle}
+          onDevotionChange={showcaseHook.setDevotionLevel}
+          onGradeRankChange={showcaseHook.setGradeRank}
+          currentLocale={currentLocale}
+          previewUrl={optimisticPreview}
+          isUploadingAvatar={isUploadingAvatar}
+          onAvatarClick={() => fileInputRef.current?.click()}
+          avatarFeedback={avatarFeedback}
+        />
+
+        <UserProfileForm
+          login={user.login}
+          initialUsername={user.username}
+          initialEmail={user.email || ''}
+          twoFactorEnabled={Boolean(user.two_factor_enabled)}
+          hasPassword={user.has_password !== false}
+          onRefreshUser={refreshUser}
+        />
+
+        <DualMainsShowcase
+          showcase={showcaseHook.showcase}
+          onSurvivorCharacterChange={showcaseHook.setSurvivorCharacter}
+          onSurvivorPrestigeChange={showcaseHook.setSurvivorPrestige}
+          onSurvivorPerkChange={showcaseHook.setSurvivorPerk}
+          onKillerCharacterChange={showcaseHook.setKillerCharacter}
+          onKillerPrestigeChange={showcaseHook.setKillerPrestige}
+          onKillerPerkChange={showcaseHook.setKillerPerk}
+          locale={currentLocale}
+        />
+
+        <UserBugReportsDrawer
+          reports={myReports}
+          loading={loadingReports}
+          onOpenReportModal={() => setBugModalOpen(true)}
+          total={reportsTotal}
+          page={reportsPage}
+          perPage={REPORTS_PER_PAGE}
+          totalPages={reportsTotalPages}
+          onPageChange={handleReportsPageChange}
+        />
+      </div>
+
+      <BugReportModal
+        isOpen={bugModalOpen}
+        onClose={() => {
+          setBugModalOpen(false);
+          fetchMyReports();
+        }}
+      />
+    </PageShell>
+  );
+}

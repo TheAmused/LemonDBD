@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import type { GauntletPlayerLoadout, Perk, Role, TierInfo } from '@/types/gauntletStreak';
-import type { OwnedCharacterItem } from '@/components/streaks/gauntlet/useOwnedCharacters';
+import type { OwnedCharacterItem } from '@/components/streaks/useOwnedRoster';
 import { DrawPhase } from '@/components/streaks/gauntlet/useTargetDraw';
 import { User, Sparkles, Star, Lock, HelpCircle } from 'lucide-react';
 import { avatarUrlForCharacter, perkIconUrl, staticUrl } from '@/utils/staticUrl';

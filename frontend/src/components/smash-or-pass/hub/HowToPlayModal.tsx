@@ -51,10 +51,10 @@ export function HowToPlayModal({ isOpen, onClose, onPass, onSmash, onStats, onRe
             </div>
             <div className="min-w-0">
               <span className="type-strong text-text-primary block">{text.swipeTitle}</span>
-              <p className="text-text-muted text-xs leading-relaxed pt-0.5">{text.swipeDesc}</p>
+              <p className="type-body text-text-muted pt-0.5">{text.swipeDesc}</p>
             </div>
           </div>
-          <div className="flex flex-wrap items-center gap-2 pt-0.5 text-mini">
+          <div className="flex flex-wrap items-center gap-2 pt-0.5 type-caption">
             <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-bg-elevated border border-border-color text-text-muted">
               <SnuffedCandleIcon className="h-3.5 w-3.5" aria-hidden="true" />
               <span>{text.passBadge}</span>
@@ -74,10 +74,10 @@ export function HowToPlayModal({ isOpen, onClose, onPass, onSmash, onStats, onRe
             </div>
             <div className="min-w-0">
               <span className="type-strong text-text-primary block">{text.iconsTitle}</span>
-              <p className="text-text-muted text-xs leading-relaxed pt-0.5">{text.iconsDesc}</p>
+              <p className="type-body text-text-muted pt-0.5">{text.iconsDesc}</p>
             </div>
           </div>
-          <div className="flex flex-wrap items-center gap-2 pt-0.5 text-mini">
+          <div className="flex flex-wrap items-center gap-2 pt-0.5 type-caption">
             <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-bg-elevated border border-border-color text-text-secondary">
               <TarotTurnIcon className="h-3.5 w-3.5 text-accent-red" aria-hidden="true" />
               <span>{text.flipCardBadge}</span>
@@ -97,7 +97,7 @@ export function HowToPlayModal({ isOpen, onClose, onPass, onSmash, onStats, onRe
             </div>
             <div className="min-w-0">
               <span className="type-strong text-text-primary block">{text.keycapsTitle}</span>
-              <p className="text-text-muted text-xs leading-relaxed pt-0.5">{text.keycapsDesc}</p>
+              <p className="type-body text-text-muted pt-0.5">{text.keycapsDesc}</p>
             </div>
           </div>
           <TactileKeycaps onPass={onPass} onSmash={onSmash} onStats={onStats} onReset={onReset} className="my-1" />
@@ -110,7 +110,7 @@ export function HowToPlayModal({ isOpen, onClose, onPass, onSmash, onStats, onRe
           </div>
           <div className="min-w-0">
             <span className="type-strong text-text-primary block">{text.atmosphereTitle}</span>
-            <p className="text-text-muted text-xs leading-relaxed pt-0.5">{text.atmosphereDesc}</p>
+            <p className="type-body text-text-muted pt-0.5">{text.atmosphereDesc}</p>
           </div>
         </div>
       </div>

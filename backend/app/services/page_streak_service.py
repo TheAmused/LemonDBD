@@ -64,7 +64,6 @@ class PageStreakService:
         return get_live_roster_badge(user_id, self.ownership_service)
 
     def _with_artwork(self, user_id: int, data: PageStreakRunDict | None) -> PageStreakRunState | None:
-        refresh_untouched_run(user_id, killer, self.build_pages)
         if data is None:
             return None
         return {
@@ -74,6 +73,7 @@ class PageStreakService:
         }
 
     def get_run(self, user_id: int, killer: str) -> PageStreakRunState | None:
+        refresh_untouched_run(user_id, killer, self.build_pages)
         return self._with_artwork(user_id, fetch_run(user_id, killer, self.build_pages))
 
     def start_run(self, user_id: int, killer: str) -> PageStreakRunState | None:

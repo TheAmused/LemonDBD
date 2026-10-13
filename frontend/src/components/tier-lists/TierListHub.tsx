@@ -134,6 +134,11 @@ export function TierListHub({ locale }: TierListHubProps) {
               <h2 id="tier-lists-official" className="type-section-title text-text-primary group-hover:text-accent-red transition-colors">
                 {t.officialSection}
               </h2>
+              {lists.length > 0 && (
+                <span className="rounded-full bg-accent-red/10 border border-accent-red/30 px-2.5 py-0.5 type-strong-xs text-accent-red">
+                  {lists.length}
+                </span>
+              )}
             </div>
           </div>
           <div className="relative z-10 w-8 flex justify-end">
@@ -251,15 +256,20 @@ export function TierListHub({ locale }: TierListHubProps) {
                 <h2 id="tier-lists-custom" className="type-section-title text-text-primary group-hover:text-accent-red transition-colors">
                   {t.mySection}
                 </h2>
+                {hydrated && (
+                  <span className="rounded-full bg-accent-red/10 border border-accent-red/30 px-2.5 py-0.5 type-strong-xs text-accent-red">
+                    {customCount}
+                  </span>
+                )}
               </div>
             </div>
 
-            <div className="pointer-events-auto flex shrink-0 items-center justify-end gap-2 lg:w-56">
-              <Button variant="secondary" onClick={() => setImportOpen(true)} className={TOUCH_BTN}>
+            <div className="pointer-events-none flex shrink-0 items-center justify-end gap-2 lg:w-56">
+              <Button variant="secondary" onClick={() => setImportOpen(true)} className={`pointer-events-auto ${TOUCH_BTN}`}>
                 <FileJson className="h-4 w-4" aria-hidden="true" />
                 <span className="hidden sm:inline">{t.importJson}</span>
               </Button>
-              <Button variant="primary" onClick={createBlank} className={TOUCH_BTN}>
+              <Button variant="primary" onClick={createBlank} className={`pointer-events-auto ${TOUCH_BTN}`}>
                 <Plus className="h-4 w-4" aria-hidden="true" />
                 <span className="hidden sm:inline">{t.newCustomList}</span>
               </Button>
@@ -267,6 +277,7 @@ export function TierListHub({ locale }: TierListHubProps) {
                 className={`h-4 w-4 sm:h-5 sm:w-5 2xl:h-6 2xl:w-6 text-accent-red transition-transform duration-300 ease-in-out shrink-0 ${
                   isCustomOpen ? 'rotate-180' : 'rotate-0'
                 }`}
+                aria-hidden="true"
               />
             </div>
           </div>
@@ -280,7 +291,19 @@ export function TierListHub({ locale }: TierListHubProps) {
           <div className="overflow-hidden">
             <div className="p-4 sm:p-6 border-t border-border-color">
               {hydrated && customLists.length === 0 ? (
-                <EmptyState title={t.noCustomLists} subtitle={t.noCustomListsSubtitle} />
+                <EmptyState
+                  title={t.noCustomLists}
+                  subtitle={t.noCustomListsSubtitle}
+                  action={{
+                    label: (
+                      <>
+                        <Plus className="h-3.5 w-3.5" aria-hidden="true" />
+                        {t.newCustomList}
+                      </>
+                    ),
+                    onClick: createBlank,
+                  }}
+                />
               ) : (
                 <div className={GRID}>
                   {customLists.map((list) => (

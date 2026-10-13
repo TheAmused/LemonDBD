@@ -75,6 +75,8 @@ const SECTION_GAP = 12;
 /** Border of a tier row / the pool (1px on each side). */
 const BORDER = 2;
 const EMPTY_POOL_BODY = 44;
+/** FIT first tries to show the rows AND the whole pool without any scrolling; below this tile size that is not worth it. */
+const ALL_FIT_MIN_TILE = 32;
 
 const clamp = (n: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, n));
 
@@ -168,7 +170,21 @@ function fitToScreen(input: FitInput): FitResult {
   let chosen = MIN_TILE;
   let overflow = true;
 
-  for (let t = maxTile; t >= MIN_TILE; t--) {
+  // Pass 1: the largest readable tile at which tiers and the whole pool are visible at once (nothing scrolls).
+  let allOnScreen = false;
+  for (let t = maxTile; t >= ALL_FIT_MIN_TILE && !allOnScreen; t--) {
+    const names = input.showNames && t >= NAMES_MIN_TILE;
+    const m = metricsFor(t, input.shape, names);
+    if (neededFull(input, m) <= input.height) {
+      allOnScreen = true;
+      chosen = t;
+      showNames = names;
+      overflow = false;
+    }
+  }
+
+  // Pass 2: too crowded for that -- fit only the tiers and let the pool scroll inside the screen.
+  for (let t = maxTile; t >= MIN_TILE && !allOnScreen; t--) {
     if (fitsAt(t, showNames)) {
       chosen = t;
       overflow = false;
@@ -176,7 +192,7 @@ function fitToScreen(input: FitInput): FitResult {
     }
   }
 
-  if (showNames && chosen < NAMES_MIN_TILE) {
+  if (!allOnScreen && showNames && chosen < NAMES_MIN_TILE) {
     for (let t = maxTile; t >= MIN_TILE; t--) {
       if (fitsAt(t, false)) {
         if (t > chosen || overflow) {

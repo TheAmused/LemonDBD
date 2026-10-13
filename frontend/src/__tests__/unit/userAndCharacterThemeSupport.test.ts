@@ -7,6 +7,7 @@ import React from 'react';
 import { renderWithDictionary } from '../helpers/renderWithDictionary';
 import { readFeatureSource } from '../helpers/readFeatureSource';
 import { UserProfileForm } from '@/components/user/UserProfileForm';
+import { AuthProvider } from '@/context/AuthContext';
 import { UserBugReportsList } from '@/components/user/UserBugReportsList';
 import { KillerDetailView } from '@/components/character-detail/KillerDetailView';
 import { SurvivorDetailView } from '@/components/character-detail/SurvivorDetailView';
@@ -21,12 +22,16 @@ function readCharactersHubSource(): string {
 describe('User Profile Theme Support', () => {
   it('UserProfileForm container supports light theme card and text', () => {
     const html = renderWithDictionary(
-      React.createElement(UserProfileForm, {
-        login: 'tester',
-        initialUsername: 'Tester',
-        initialEmail: 'test@example.com',
-        onRefreshUser: async () => {},
-      })
+      React.createElement(
+        AuthProvider,
+        null,
+        React.createElement(UserProfileForm, {
+          login: 'tester',
+          initialUsername: 'Tester',
+          initialEmail: 'test@example.com',
+          onRefreshUser: async () => {},
+        })
+      )
     );
     assert.ok(html.includes('border-border-color') || html.includes('border-slate-200'), 'Card must have themed border');
     assert.ok(html.includes('border-border-color') || html.includes('dark:border-slate-800'), 'Card must have dark border');

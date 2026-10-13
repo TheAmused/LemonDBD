@@ -1,6 +1,5 @@
 'use client';
 // frontend/src/components/streaks/chaos/SlotMachineStage.tsx
-import type { Dictionary } from '@/locales/types';
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { RefreshCw } from 'lucide-react';

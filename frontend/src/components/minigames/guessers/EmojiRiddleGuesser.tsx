@@ -4,7 +4,6 @@
 import React from 'react';
 import { HelpCircle, Check, X } from 'lucide-react';
 import type { GuessRecord, RoundConfig, CatalogCharacter, CatalogPerk } from '@/types/minigame';
-import type { Dictionary } from '@/locales/types';
 import { useDictionary } from "@/context/DictionaryContext";
 
 interface EmojiRiddleGuesserProps {

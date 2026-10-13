@@ -1,6 +1,5 @@
 'use client';
 // frontend/src/components/streaks/StreaksLayoutShell.tsx
-import type { Dictionary } from '@/locales/types';
 
 import React, { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';

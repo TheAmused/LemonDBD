@@ -4,7 +4,6 @@
 import React from 'react';
 import { ExportModal } from '@/components/common/ExportModal';
 import type { SmashRosterDocument } from '@/types/smashOrPass';
-import type { Dictionary } from '@/locales/types';
 import { buildShareUrl, encodeSharePayload, exportFileName, serializeSmashRosterDocument } from '@/utils/smashOrPass/codec';
 import { SMASH_ROSTER_LIMITS } from '@/utils/smashOrPass/constants';
 import { LABEL } from './creator/styles';

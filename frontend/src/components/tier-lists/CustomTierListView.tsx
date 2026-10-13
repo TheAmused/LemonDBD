@@ -5,7 +5,6 @@ import React, { useCallback, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { SearchX } from 'lucide-react';
 import { EmptyState } from '@/components/common/EmptyState';
-import type { Dictionary } from '@/locales/types';
 import {
   TIER_LIST_FORMAT,
   TIER_LIST_FORMAT_VERSION,

@@ -7,7 +7,6 @@ import { Sparkles } from 'lucide-react';
 import { PerkDiamondSlot } from './PerkDiamondSlot';
 import type { MainLoadout } from '@/types/userShowcase';
 import type { RoleCategory, Perk } from '@/types/perks';
-import type { Dictionary } from '@/locales/types';
 import { getCharacterAvatarUrl } from '@/utils/perkUtils';
 import { CATALOG_TTL_MS, catalogKey, fetchCached, fetchJson, unwrapList, type ListPayload } from '@/services/dataCache';
 

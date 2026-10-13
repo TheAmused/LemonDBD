@@ -1,5 +1,4 @@
 // frontend/src/components/streaks/ChallengePanel.tsx
-import type { Dictionary } from '@/locales/types';
 
 import React, { useState } from 'react';
 import { BarChart2, BookOpen, ChevronDown, History, RotateCcw, Clapperboard } from 'lucide-react';

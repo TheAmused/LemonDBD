@@ -1,6 +1,5 @@
 'use client';
 // frontend/src/app/[locale]/about/page.tsx
-import type { Dictionary } from '@/locales/types';
 
 import React from 'react';
 import { useParams } from 'next/navigation';

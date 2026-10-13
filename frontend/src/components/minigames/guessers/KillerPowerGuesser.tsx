@@ -4,7 +4,6 @@
 import React, { useMemo } from 'react';
 import { Flame, Check, X } from 'lucide-react';
 import type { GuessRecord, RoundConfig, CatalogCharacter } from '@/types/minigame';
-import type { Dictionary } from '@/locales/types';
 import { useDictionary } from "@/context/DictionaryContext";
 
 interface KillerPowerGuesserProps {

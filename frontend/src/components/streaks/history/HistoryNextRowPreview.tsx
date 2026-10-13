@@ -1,6 +1,5 @@
 'use client';
 // frontend/src/components/streaks/history/HistoryNextRowPreview.tsx
-import type { Dictionary } from '@/locales/types';
 
 import React, { useState } from 'react';
 import { ChevronDown } from 'lucide-react';

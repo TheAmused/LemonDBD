@@ -21,7 +21,6 @@ import type {
   RoundConfig,
   TargetType,
 } from '@/types/minigame';
-import type { Dictionary } from '@/locales/types';
 import { submitGuess } from '@/services/minigameApi';
 import { soundEngine } from '@/utils/minigames/MinigameSoundEngine';
 import {

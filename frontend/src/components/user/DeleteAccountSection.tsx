@@ -5,7 +5,6 @@
 
 import React, { useState } from 'react';
 import { Trash2 } from 'lucide-react';
-import type { Dictionary } from '@/locales/types';
 import { Button } from '@/components/common/Button';
 import { Input } from '@/components/common/Field';
 import { Modal } from '@/components/common/Modal';

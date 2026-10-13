@@ -16,7 +16,6 @@ import {
   Gauge,
 } from 'lucide-react';
 import { Modal } from '@/components/common/Modal';
-import type { Dictionary } from '@/locales/types';
 import type {
   VoiceEngineType,
   ModelProgressInfo,

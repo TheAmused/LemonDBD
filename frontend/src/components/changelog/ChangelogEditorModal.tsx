@@ -18,7 +18,6 @@ import {
   AlignJustify,
   Trash2,
 } from 'lucide-react';
-import type { Dictionary } from '@/locales/types';
 import type { ChangelogPost, ChangelogPostDraft, ChangelogTag } from '@/types/changelog';
 import {
   CHANGELOG_HIGHLIGHT_COLORS,

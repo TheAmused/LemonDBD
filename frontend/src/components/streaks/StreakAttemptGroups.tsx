@@ -1,6 +1,5 @@
 'use client';
 // frontend/src/components/streaks/StreakAttemptGroups.tsx
-import type { Dictionary } from '@/locales/types';
 
 import React, { useState } from 'react';
 import { ChevronRight } from 'lucide-react';

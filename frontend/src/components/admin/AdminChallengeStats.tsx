@@ -2,7 +2,6 @@
 // frontend/src/components/admin/AdminChallengeStats.tsx
 
 import React from 'react';
-import type { Dictionary } from '@/locales/types';
 import { Rows3, BookOpen } from 'lucide-react';
 import { AdminStats, ChallengeCompletionBreakdown } from '@/types/admin';
 import { GauntletGloveIcon, ChaosSwirlIcon } from '@/components/icons/DbdIcons';

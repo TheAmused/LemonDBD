@@ -1,6 +1,5 @@
 'use client';
 // frontend/src/components/streaks/StreakStatsDrawer.tsx
-import type { Dictionary } from '@/locales/types';
 
 import React, { useState } from 'react';
 import { Percent } from 'lucide-react';

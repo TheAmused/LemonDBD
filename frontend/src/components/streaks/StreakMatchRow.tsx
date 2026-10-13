@@ -1,6 +1,5 @@
 'use client';
 // frontend/src/components/streaks/StreakMatchRow.tsx
-import type { Dictionary } from '@/locales/types';
 
 import React from 'react';
 import { Clock } from 'lucide-react';

@@ -21,7 +21,6 @@ import type {
   MinigameCatalog,
   TargetType,
 } from '@/types/minigame';
-import type { Dictionary } from '@/locales/types';
 import { CharacterAutocomplete, type AutocompleteItem } from '../CharacterAutocomplete';
 import { staticUrl } from '@/utils/api';
 

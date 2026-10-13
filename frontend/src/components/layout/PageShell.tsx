@@ -1,7 +1,6 @@
 // frontend/src/components/layout/PageShell.tsx
 import type { ReactNode } from 'react';
 import { Sidebar } from '@/components/Sidebar';
-import type { Dictionary } from '@/locales/types';
 import { useDictionary } from "@/context/DictionaryContext";
 
 /**

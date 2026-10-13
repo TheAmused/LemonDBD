@@ -24,7 +24,6 @@ import type {
   RoundConfig,
   MinigameCatalog,
 } from '@/types/minigame';
-import type { Dictionary } from '@/locales/types';
 import { useAuth } from '@/context/AuthContext';
 import { saveCustomChallenge } from '@/utils/minigames/storage';
 import { exportChallengeToJson } from '@/utils/minigames/jsonExportImport';

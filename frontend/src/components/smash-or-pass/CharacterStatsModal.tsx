@@ -15,7 +15,6 @@ import { getAvatarUrl as resolveAvatarUrl } from '@/components/character-detail/
 import { EntityItem, EntityStatItem } from '@/types/smashOrPass';
 import { localizedProfile } from '@/utils/entityProfile';
 import { Modal } from '@/components/common/Modal';
-import type { Dictionary } from '@/locales/types';
 import { EldritchVoidIcon, FriendzoneIcon, RankFirstIcon } from '@/components/icons/DbdIcons';
 import { Surface } from '@/components/common/Surface';
 import { formatNumber } from '@/utils/format';

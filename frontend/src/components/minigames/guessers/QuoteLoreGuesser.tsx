@@ -5,7 +5,6 @@ import React, { useMemo } from 'react';
 import Image from 'next/image';
 import { Quote, BookOpen, Check, X, Sparkles } from 'lucide-react';
 import type { GuessRecord, RoundConfig, CatalogCharacter, CatalogPerk } from '@/types/minigame';
-import type { Dictionary } from '@/locales/types';
 import { staticUrl } from '@/utils/api';
 import { useDictionary } from "@/context/DictionaryContext";
 

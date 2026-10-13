@@ -10,25 +10,26 @@
       "slug": "survivor-perks",
       "kind": "survivor_perks",
       "title": "Survivor Perks",
-      "description": "Rank every survivor perk, from meta staples to hidden gems.",
+      "description": "Second-chance crutches or sandbagging trash. Rank the perks that keep your ass off the hook.",
       "translations": {
         "de": {
-          "title": "Überlebenden-Fähigkeiten",
-          "description": "Bewerte jede Überlebenden-Fähigkeit – von Meta-Klassikern bis zu versteckten Perlen."
+          "title": "Überlebenden-Perks",
+          "description": "Second-Chance-Crutches oder Sandbagging-Müll? Bewerte die Perks, die deinen Arsch vor dem Haken retten."
         },
         "es": {
-          "title": "Habilidades de superviviente",
-          "description": "Clasifica todas las habilidades de superviviente, desde las imprescindibles del meta hasta las joyas ocultas."
+          "title": "Perks de superviviente",
+          "description": "¿Muletas de segunda oportunidad o basura para hacer sandbagging? Clasifica los perks que te salvan el culo del gancho."
         },
         "ja": {
           "title": "サバイバーのパーク",
-          "description": "定番のメタから隠れた名作まで、サバイバーのパークをすべてランク付けしよう。"
+          "description": "ガチの救済パークか、味方を売る地雷か。フック送りを拒否るためのパークを格付けしろ。"
         },
         "pl": {
           "title": "Perki ocalałych",
-          "description": "Oceń każdy perk ocalałego – od metowych klasyków po ukryte perełki."
+          "description": "Crutche na drugą szansę czy sandbagujący team syf? Oceń perki, które ratują ci dupę przed zawiśnięciem na haku."
         }
       },
+      "cover_image_url": "/static/tier-lists/banner_survivor_perks.webp",
       "is_featured": true,
       "is_active": true,
       "sort_order": 10
@@ -38,25 +39,26 @@
       "slug": "killer-perks",
       "kind": "killer_perks",
       "title": "Killer Perks",
-      "description": "Rank every killer perk, from game-winning slowdown to pure memes.",
+      "description": "Sweaty gen-kick slowdown or meme builds that get you teabagged at the exit gate. Rank the meta.",
       "translations": {
         "de": {
-          "title": "Killer-Fähigkeiten",
-          "description": "Bewerte jede Killer-Fähigkeit – vom spielentscheidenden Slowdown bis zum reinen Meme."
+          "title": "Killer-Perks",
+          "description": "Verschwitzter Gen-Kick-Slowdown oder Meme-Builds, für die du am Exit-Gate geteabaggt wirst? Bewerte die Meta."
         },
         "es": {
-          "title": "Habilidades de asesino",
-          "description": "Clasifica todas las habilidades de asesino, desde la ralentización decisiva hasta los memes."
+          "title": "Perks de asesino",
+          "description": "¿Slowdown tryhard de patear motores o memes para que te hagan teabag en la puerta de salida? Clasifica el meta."
         },
         "ja": {
           "title": "キラーのパーク",
-          "description": "勝敗を分ける遅延パークからネタパークまで、キラーのパークをすべてランク付けしよう。"
+          "description": "ガチガチの遅延構成か、脱出ゲート前で屈伸煽りを食らうネタ枠か。キラーのメタを格付けしろ。"
         },
         "pl": {
           "title": "Perki zabójców",
-          "description": "Oceń każdy perk zabójcy – od decydującego spowolnienia po czyste memy."
+          "description": "Spocony gen-kick i slowdown czy memiczny szrot, za który zteabagują cię w bramie? Oceń zabójczą metę."
         }
       },
+      "cover_image_url": "/static/tier-lists/banner_killer_perks.webp",
       "is_featured": true,
       "is_active": true,
       "sort_order": 20
@@ -66,25 +68,26 @@
       "slug": "survivors",
       "kind": "survivors",
       "title": "Survivors",
-      "description": "Who is the best survivor in the Fog? Rank the whole roster.",
+      "description": "Loop gods or crouching deadweight. Rank the Entity’s meat sacks from clutch masters to free hooks.",
       "translations": {
         "de": {
           "title": "Überlebende",
-          "description": "Wer ist der beste Überlebende im Nebel? Bewerte die gesamte Riege."
+          "description": "Loop-Götter oder feige Buschhocker? Bewerte die Fleischsäcke des Entitus – von Clutch-Kings bis zu Free-Hooks."
         },
         "es": {
           "title": "Supervivientes",
-          "description": "¿Quién es el mejor superviviente de la Niebla? Clasifica a todo el elenco."
+          "description": "¿Dioses del loop o arbustos inútiles? Clasifica a los sacos de carne del Ente: de maestros del clutch a cuelgues regalados."
         },
         "ja": {
           "title": "サバイバー",
-          "description": "霧の森で最高のサバイバーは誰？全員をランク付けしよう。"
+          "description": "チェイスの神か、隠密しかしない寄生虫か。クラッチを決める英雄からカモの肉塊まで、生贄どもを格付けしろ。"
         },
         "pl": {
           "title": "Ocaleni",
-          "description": "Kto jest najlepszym ocalałym we Mgle? Oceń całą obsadę."
+          "description": "Bogowie looperki czy zadekowane w krzakach warzywa? Oceń survów – od clutchowych kotów po darmowe haki."
         }
       },
+      "cover_image_url": "/static/tier-lists/banner_survivors.webp",
       "is_featured": true,
       "is_active": true,
       "sort_order": 30
@@ -94,25 +97,26 @@
       "slug": "killers",
       "kind": "killers",
       "title": "Killers",
-      "description": "From M1 killers to anti-loop monsters: rank every killer.",
+      "description": "Oppressive 4K sweatlords or bullied M1 clowns eating flashlights. Rank the killers from living nightmares to free escapes.",
       "translations": {
         "de": {
           "title": "Killer",
-          "description": "Von M1-Killern bis zu Anti-Loop-Monstern: Bewerte jeden Killer."
+          "description": "Gnadenlose 4K-Sweatlords oder gemobbte M1-Clowns, die Taschenlampen fressen? Bewerte die Killer vom Albtraum bis zum Free-Escape."
         },
         "es": {
           "title": "Asesinos",
-          "description": "De asesinos M1 a monstruos anti-loop: clasifica a todos los asesinos."
+          "description": "¿Sweatlords implacables del 4K o payasos M1 humillados a clicks de linterna? Clasifica a los asesinos de pesadillas a escape regalado."
         },
         "ja": {
           "title": "キラー",
-          "description": "M1キラーから対チェイス特化まで、すべてのキラーをランク付けしよう。"
+          "description": "無慈悲な4K殲滅マシーンか、ライト連打に泣くお散歩M1キラーか。純粋な悪夢から接待枠まで格付けしろ。"
         },
         "pl": {
           "title": "Zabójcy",
-          "description": "Od zabójców M1 po potwory anty-loopowe: oceń każdego zabójcę."
+          "description": "Tryhardzi od bezlitosnego 4K czy popychadła M1 klikane latarkami w pysk? Oceń killerów od żywych koszmarów po darmowy escape."
         }
       },
+      "cover_image_url": "/static/tier-lists/banner_killers.webp",
       "is_featured": true,
       "is_active": true,
       "sort_order": 40
@@ -122,25 +126,26 @@
       "slug": "maps",
       "kind": "maps",
       "title": "Maps",
-      "description": "Survivor-sided, killer-sided or perfectly balanced? Rank every realm's maps.",
+      "description": "God-pallet playgrounds or suffocating dead zones. Rank the maps that make you want to smash Alt+F4 on the loading screen.",
       "translations": {
         "de": {
-          "title": "Karten",
-          "description": "Überlebenden-freundlich, Killer-freundlich oder ausgeglichen? Bewerte jede Karte."
+          "title": "Maps",
+          "description": "God-Pallet-Paradies oder abgefuckte Dead-Zones? Bewerte die Maps, bei denen du schon im Ladebildschirm Alt+F4 reinhämmern willst."
         },
         "es": {
           "title": "Mapas",
-          "description": "¿A favor de los supervivientes, del asesino o equilibrado? Clasifica todos los mapas."
+          "description": "¿Paraísos de god pallets o ratoneras llenas de dead zones? Clasifica los mapas que te hacen querer tirar de Alt+F4 ya en la puta pantalla de carga."
         },
         "ja": {
           "title": "マップ",
-          "description": "サバイバー有利？キラー有利？それとも互角？すべてのマップをランク付けしよう。"
+          "description": "強板だらけの天国か、逃げ場ゼロの窒息デッドゾーンか。ロード画面の時点でAlt+F4を叩き込みたくなるクソマップを格付けしろ。"
         },
         "pl": {
           "title": "Mapy",
-          "description": "Po stronie ocalałych, zabójcy czy idealnie wyważone? Oceń każdą mapę."
+          "description": "Eldorado god-palet czy zasyfione dead-zone'ami rzeźnie? Oceń mapy, na których masz ochotę jebnąć Alt+F4 już na ekranie ładowania."
         }
       },
+      "cover_image_url": "/static/tier-lists/banner_maps.webp",
       "is_featured": true,
       "is_active": true,
       "sort_order": 50

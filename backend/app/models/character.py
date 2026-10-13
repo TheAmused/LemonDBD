@@ -43,7 +43,7 @@ from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, declared_attr, mapped_column, relationship
 
 from app.core.extensions import Base
-from app.models.base import utcnow
+from app.models.base import TranslatableModelMixin, utcnow
 from app.models.chapter import dlc_type_label
 
 if TYPE_CHECKING:
@@ -74,7 +74,7 @@ def _decimal_str(value: Decimal | float | None) -> str:
     return format(Decimal(str(value)).normalize(), "f")
 
 
-class _CharacterMixin:
+class _CharacterMixin(TranslatableModelMixin):
     """Everything a survivor and a killer genuinely have in common.
 
     A mixin, not a base table: the two tables are independent, with their own
@@ -145,13 +145,6 @@ class _CharacterMixin:
             for c in (*chapter.survivors, *chapter.killers)
             if not (type(c) is type(self) and c.id == self.id)
         ]
-
-    def localized(self, lang: str | None, field: str, fallback: str) -> str:
-        if lang and self.translations:
-            trans = self.translations.get(lang)
-            if isinstance(trans, dict) and trans.get(field):
-                return str(trans[field])
-        return fallback
 
     def _base_dict(self, lang: str | None = None) -> dict[str, Any]:
         chapter = self.chapter

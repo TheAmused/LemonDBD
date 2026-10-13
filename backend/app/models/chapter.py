@@ -15,7 +15,7 @@ from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.extensions import Base
-from app.models.base import utcnow
+from app.models.base import TranslatableModelMixin, utcnow
 
 if TYPE_CHECKING:
     from app.models.character import Killer, Survivor
@@ -49,7 +49,7 @@ def dlc_type_label(value: str | None) -> str:
 BASE_GAME_NAME = "Base Game"
 
 
-class Chapter(Base):
+class Chapter(Base, TranslatableModelMixin):
     """A released chapter (or the base game).
 
     Holds every attribute that is a property of the *release* rather than of an
@@ -114,18 +114,6 @@ class Chapter(Base):
         if not value:
             return ""
         return f"{value.day} {value.strftime('%B')} {value.year}"
-
-    def localized_name(self, lang: str | None = None) -> str:
-        """Chapter name in `lang`, falling back to the canonical English name.
-
-        These strings used to live on every character (98 rows x 5 languages =
-        490 copies of 52 distinct names). They live here now, once each.
-        """
-        if lang and self.translations:
-            trans = self.translations.get(lang)
-            if isinstance(trans, dict) and trans.get("name"):
-                return str(trans["name"])
-        return self.name
 
     def to_dict(self, lang: str | None = None) -> dict[str, Any]:
         return {

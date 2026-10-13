@@ -15,7 +15,7 @@ from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.extensions import Base
-from app.models.base import TranslatableModelMixin, utcnow
+from app.models.base import ColumnDictMixin, TranslatableModelMixin, utcnow
 
 if TYPE_CHECKING:
     from app.models.equipment import Offering
@@ -61,7 +61,7 @@ class Realm(Base, TranslatableModelMixin):
         }
 
 
-class MapSource(Base):
+class MapSource(Base, ColumnDictMixin):
     """Who produced a set of map callouts."""
 
     __tablename__ = "map_sources"
@@ -71,9 +71,6 @@ class MapSource(Base):
     label: Mapped[str] = mapped_column(String(100), nullable=False)
 
     maps: Mapped[list["MapRealm"]] = relationship(back_populates="source")
-
-    def to_dict(self) -> dict[str, Any]:
-        return {"id": self.id, "code": self.code, "label": self.label}
 
 
 class MapRealm(Base, TranslatableModelMixin):

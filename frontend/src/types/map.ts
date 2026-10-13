@@ -16,7 +16,11 @@ export interface MapSource {
 export interface MapRealm {
   id: number;
   name: string;
+  /** English name, whatever the page language is (used by analytics). */
+  raw_name?: string;
   realm: string;
+  /** English realm name, whatever the page language is (used by analytics). */
+  raw_realm?: string;
   realm_id?: number;
   source_id?: number;
   source?: string;

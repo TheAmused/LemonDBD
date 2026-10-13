@@ -19,6 +19,8 @@ export interface TarotDeckStageProps {
   activePlayablePerks: Perk[];
   activeMutator: ChaosMutator | null;
   onRollComplete: (slots: DrawnSlot[]) => void;
+  /** Fires once every card is flipped (analytics). The shuffle is not a finished loadout. */
+  onLoadoutComplete?: () => void;
   revealedSlots: boolean[];
   onRevealSlot: (idx: number) => void;
   onSelectPerk: (perk: Perk) => void;
@@ -112,6 +114,7 @@ export const TarotDeckStage: React.FC<TarotDeckStageProps> = ({
       activePlayablePerks,
       activeMutator,
       onRollComplete,
+      onLoadoutComplete,
       revealedSlots,
       onRevealSlot,
       onSelectPerk,
@@ -154,6 +157,7 @@ export const TarotDeckStage: React.FC<TarotDeckStageProps> = ({
     if (next.every((c) => c.flipped)) {
       celebrate(role, resultsRef.current);
       onRollComplete(next.map((c) => c.slot));
+      onLoadoutComplete?.();
     }
   };
 

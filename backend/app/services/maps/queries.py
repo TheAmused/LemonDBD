@@ -96,7 +96,9 @@ def fetch_maps(
         maps.append({
             "id": r["id"],
             "name": r["name"],
+            "raw_name": r["name"],
             "realm": r["realm_name"] if "realm_name" in row_keys else "",
+            "raw_realm": r["realm_name"] if "realm_name" in row_keys else "",
             "realm_id": r["realm_id"],
             "source_id": r["source_id"],
             "source": r["source_code"] or DEFAULT_SOURCE_CODE,

@@ -4,6 +4,8 @@ import { buildTelegramShareUrl } from '@/utils/smashPersona';
 import { copyTextWithFallback } from '@/utils/clipboard';
 
 export interface SocialLink {
+  /** Stable key, also the `method` of the share event. */
+  id: string;
   name: string;
   color: string;
   url: string;
@@ -37,6 +39,7 @@ export function buildSocialLinks({
 
   return [
     {
+      id: 'twitter',
       name: 'X / Twitter',
       color: 'hover:border-text-primary hover:bg-bg-surface text-text-primary',
       url: `https://twitter.com/intent/tweet?text=${encodedText}&url=${encodedUrl}`,
@@ -47,6 +50,7 @@ export function buildSocialLinks({
       ),
     },
     {
+      id: 'reddit',
       name: 'Reddit',
       color: 'hover:border-brand-reddit hover:bg-brand-reddit/10 text-brand-reddit',
       url: `https://www.reddit.com/submit?title=${encodedTitle}&url=${encodedUrl}`,
@@ -57,6 +61,7 @@ export function buildSocialLinks({
       ),
     },
     {
+      id: 'whatsapp',
       name: 'WhatsApp',
       color: 'hover:border-brand-whatsapp hover:bg-brand-whatsapp/10 text-brand-whatsapp',
       url: `https://api.whatsapp.com/send?text=${encodeURIComponent(`${shareText} ${shareUrl}`)}`,
@@ -67,6 +72,7 @@ export function buildSocialLinks({
       ),
     },
     {
+      id: 'telegram',
       name: 'Telegram',
       color: 'hover:border-brand-telegram hover:bg-brand-telegram/10 text-brand-telegram',
       url: buildTelegramShareUrl(shareUrl, shareText, isMobile),
@@ -83,6 +89,7 @@ export function buildSocialLinks({
       ),
     },
     {
+      id: 'discord',
       name: 'Discord',
       color: 'hover:border-brand-discord hover:bg-brand-discord/10 text-brand-discord',
       url: '#',

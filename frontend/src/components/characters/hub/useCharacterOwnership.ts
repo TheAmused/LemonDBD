@@ -3,6 +3,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   buildCharacterOwnershipDraft,
   changedCharacterUpdates,
+  countChangedPerks,
   ownershipKey,
   ownsPerk,
 } from '@/utils/characterUtils';
@@ -10,6 +11,7 @@ import { useAuth } from '@/context/AuthContext';
 import { useDictionary } from '@/context/DictionaryContext';
 import { invalidate } from '@/services/dataCache';
 import { authHeaders } from '@/utils/api';
+import { trackEvent } from '@/utils/analytics';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 import type { CharacterItem } from '@/components/character-detail/types';
 
@@ -90,10 +92,12 @@ export function useCharacterOwnership({ locale, onLoginRequired, onVerificationR
       return;
     }
     if (!isAuthenticated || !token || !user) {
+      trackEvent('ownership_blocked', { reason: 'login' });
       onLoginRequired();
       return;
     }
     if (!user.is_verified) {
+      trackEvent('ownership_blocked', { reason: 'verify' });
       onVerificationRequired();
       return;
     }
@@ -130,6 +134,7 @@ export function useCharacterOwnership({ locale, onLoginRequired, onVerificationR
       setPerkUnlockDraft(perkDraft);
       setAllPerks(perksList);
       setOwnershipMode(true);
+      trackEvent('ownership_mode_enter');
     } catch (err: unknown) {
       console.error('Failed to load ownership state:', err);
     } finally {
@@ -193,6 +198,12 @@ export function useCharacterOwnership({ locale, onLoginRequired, onVerificationR
         setOwnershipSaveError(dict.characterDetail.saveOwnershipError);
         return;
       }
+
+      // Counted before the cancel below clears the drafts.
+      trackEvent('ownership_save', {
+        characters_changed: characterUpdates.length,
+        perks_changed: countChangedPerks(allPerks, perkUnlockDraft),
+      });
 
       handleCancelOwnershipMode();
       triggerSavedModal();

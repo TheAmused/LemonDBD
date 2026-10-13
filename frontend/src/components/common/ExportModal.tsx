@@ -52,6 +52,8 @@ export interface ExportModalProps<D> {
   actionsClassName?: string;
   /** Centered title with no header icon. */
   plainHeader?: boolean;
+  /** Called after a successful copy of the link or the JSON, or after the file download starts. */
+  onExport?: (method: 'link' | 'json_copy' | 'file') => void;
 }
 
 /** Triggers a browser download of `text` as `fileName`. */
@@ -88,6 +90,7 @@ export function ExportModal<D>({
   buttonClassName,
   actionsClassName,
   plainHeader,
+  onExport,
 }: ExportModalProps<D>) {
   const json = useMemo(() => (doc ? serialize(doc) : ''), [doc, serialize]);
   const [shareUrl, setShareUrl] = useState<string>('');
@@ -143,7 +146,11 @@ export function ExportModal<D>({
             <Button
               variant="primary"
               disabled={!shareUrl}
-              onClick={async () => setLinkCopy((await copyTextWithFallback(shareUrl)) ? 'copied' : 'failed')}
+              onClick={async () => {
+                const ok = await copyTextWithFallback(shareUrl);
+                setLinkCopy(ok ? 'copied' : 'failed');
+                if (ok) onExport?.('link');
+              }}
               className={buttonClassName}
               aria-live="polite"
             >
@@ -172,13 +179,24 @@ export function ExportModal<D>({
             className={cn(jsonFieldClassName ?? fieldClassName, ' leading-relaxed')}
           />
           <div className={cn('flex flex-wrap gap-2', actionsClassName)}>
-            <Button variant="secondary" onClick={() => downloadTextFile(json, fileName(doc))} className={buttonClassName}>
+            <Button
+              variant="secondary"
+              onClick={() => {
+                downloadTextFile(json, fileName(doc));
+                onExport?.('file');
+              }}
+              className={buttonClassName}
+            >
               <Download className="h-4 w-4" aria-hidden="true" />
               {labels.downloadFile}
             </Button>
             <Button
               variant="secondary"
-              onClick={async () => setJsonCopy((await copyTextWithFallback(json)) ? 'copied' : 'failed')}
+              onClick={async () => {
+                const ok = await copyTextWithFallback(json);
+                setJsonCopy(ok ? 'copied' : 'failed');
+                if (ok) onExport?.('json_copy');
+              }}
               className={buttonClassName}
               aria-live="polite"
             >

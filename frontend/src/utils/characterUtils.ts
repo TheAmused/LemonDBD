@@ -86,3 +86,11 @@ export function ownsPerk(
     ? perk.killer_id === characterId
     : perk.survivor_id === characterId;
 }
+
+/** How many perks the draft changed compared with what was loaded. The save request sends every perk, so its length is not this number. */
+export function countChangedPerks(
+  perks: { perk_id: number; is_unlocked: boolean }[],
+  draft: Record<number, boolean>
+): number {
+  return perks.filter((p) => (draft[p.perk_id] ?? p.is_unlocked) !== p.is_unlocked).length;
+}

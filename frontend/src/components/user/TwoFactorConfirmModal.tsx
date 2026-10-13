@@ -13,6 +13,7 @@ import { useDictionary } from '@/context/DictionaryContext';
 import { ApiError } from '@/utils/api';
 import { disableTwoFactor, regenerateRecoveryCodes } from '@/services/twoFactorApi';
 import { twoFactorErrorMessage } from '@/utils/twoFactorErrors';
+import { trackEvent } from '@/utils/analytics';
 
 export type TwoFactorAction = 'disable' | 'regenerate';
 
@@ -56,6 +57,7 @@ export const TwoFactorConfirmModal: React.FC<TwoFactorConfirmModalProps> = ({ ac
     try {
       if (action === 'disable') {
         await disableTwoFactor(password, code.trim());
+        trackEvent('two_factor_change', { action: 'disabled' });
         reset();
         onDone();
       } else {

@@ -21,7 +21,7 @@ interface PillBase {
 }
 
 /** A capsule that navigates. Internal hrefs use next/link, absolute ones open in a new tab. */
-export function LinkPill({ href, icon, children, className }: PillBase & { href: string }) {
+export function LinkPill({ href, icon, children, className, onClick }: PillBase & { href: string; onClick?: () => void }) {
   const external = /^https?:\/\//i.test(href);
   const content = (
     <>
@@ -36,13 +36,13 @@ export function LinkPill({ href, icon, children, className }: PillBase & { href:
   );
   if (external) {
     return (
-      <a href={href} target="_blank" rel="noopener noreferrer" className={cn(PILL_CLASS, className)}>
+      <a href={href} target="_blank" rel="noopener noreferrer" className={cn(PILL_CLASS, className)} onClick={onClick}>
         {content}
       </a>
     );
   }
   return (
-    <Link href={href} className={cn(PILL_CLASS, className)}>
+    <Link href={href} className={cn(PILL_CLASS, className)} onClick={onClick}>
       {content}
     </Link>
   );

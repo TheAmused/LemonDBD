@@ -4,6 +4,7 @@ import { useAuth } from '@/context/AuthContext';
 import { fetchSmashPreferences, saveSmashPreferences } from '@/services/smashApi';
 import { SmashSounds } from '../SmashSoundEffects';
 import { defaultPrefs, readLocalPrefs, reconcilePrefs, writeLocalPrefs, type SmashPrefs } from './smashPrefs';
+import { trackEvent } from '@/utils/analytics';
 
 type Choice = Omit<SmashPrefs, 'chosenAt'>;
 
@@ -86,6 +87,11 @@ export function useSmashPrefs() {
       const next: SmashPrefs = { ...base, ...change, chosenAt: Date.now() };
       writeLocalPrefs(next);
       setPrefs(next);
+      // A first choice (the mandatory modal) or a flip of the effects switch; sound and music
+      // switches are not this event.
+      if (prefs === null || change.effects !== undefined) {
+        trackEvent('smash_effects_choice', { effects: next.effects ? 'on' : 'off' });
+      }
       if (userId !== null) saveSmashPreferences(toRemote(next)).catch(() => {});
     },
     [prefs, userId]

@@ -16,6 +16,7 @@ import { useGoogleClientId } from '@/hooks/useGoogleConfig';
 import { ApiError, deleteAccount } from '@/services/userProfileApi';
 import { useDictionary } from "@/context/DictionaryContext";
 import { twoFactorErrorMessage } from '@/utils/twoFactorErrors';
+import { trackEvent } from '@/utils/analytics';
 
 export const DeleteAccountSection: React.FC<{ iconOnly?: boolean }> = ({ iconOnly = false }) => {
   const dict = useDictionary();
@@ -47,6 +48,7 @@ export const DeleteAccountSection: React.FC<{ iconOnly?: boolean }> = ({ iconOnl
     setError(null);
     try {
       await deleteAccount(password, requiresCode ? code.trim() : undefined, googleCredential);
+      trackEvent('account_delete'); // before logout() sends the page away
       logout(); // the server already cleared the session cookie; this resets state and leaves /user
     } catch (err) {
       const status = err instanceof ApiError ? err.status : 0;

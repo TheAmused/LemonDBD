@@ -16,6 +16,7 @@ import { useDictionary } from '@/context/DictionaryContext';
 import { ApiError } from '@/utils/api';
 import { enableTwoFactor, startTwoFactorSetup, type TwoFactorSetup } from '@/services/twoFactorApi';
 import { twoFactorErrorMessage } from '@/utils/twoFactorErrors';
+import { trackEvent } from '@/utils/analytics';
 
 type Step = 'password' | 'scan' | 'codes';
 
@@ -87,6 +88,7 @@ export const TwoFactorSetupModal: React.FC<TwoFactorSetupModalProps> = ({ isOpen
     setError(null);
     try {
       setCodes(await enableTwoFactor(code));
+      trackEvent('two_factor_change', { action: 'enabled' });
       setPassword('');
       setSetup(null);
       setStep('codes');

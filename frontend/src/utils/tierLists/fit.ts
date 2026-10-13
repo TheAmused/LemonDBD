@@ -75,8 +75,8 @@ const SECTION_GAP = 12;
 /** Border of a tier row / the pool (1px on each side). */
 const BORDER = 2;
 const EMPTY_POOL_BODY = 44;
-/** FIT first tries to show the rows AND the whole pool without any scrolling; below this tile size that is not worth it. */
-const ALL_FIT_MIN_TILE = 32;
+/** FIT may grow tiles past the normal 100% size, up to this. */
+const FIT_MAX_TILE = 144;
 
 const clamp = (n: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, n));
 
@@ -157,60 +157,57 @@ function neededFull(input: FitInput, m: TileMetrics): number {
   return rows + SECTION_GAP + pool;
 }
 
+/**
+ * FIT = "cover the screen": the unranked pool is hidden (FIT is for reviewing / screenshotting the ranking), the
+ * tiles grow to the largest size at which every tier still fits the viewport -- larger than the normal 100%
+ * size when the list is small -- and whatever height is left over is shared out between the rows so the board
+ * fills the screen instead of leaving a gap at the bottom.
+ */
 function fitToScreen(input: FitInput): FitResult {
-  const maxTile = maxTileFor(input.width, input.height);
-  const chrome = input.poolHeadHeight + BORDER;
+  const maxTile = Math.min(FIT_MAX_TILE, Math.max(maxTileFor(input.width, input.height), Math.round(input.width / 9)));
 
-  const fitsAt = (t: number, names: boolean) => {
-    const m = metricsFor(t, input.shape, names);
-    return rowsTotalHeight(input, m) <= input.height;
-  };
+  const fitsAt = (t: number, names: boolean) => rowsTotalHeight(input, metricsFor(t, input.shape, names)) <= input.height;
 
   let showNames = input.showNames;
   let chosen = MIN_TILE;
   let overflow = true;
 
-  // Pass 1: the largest readable tile at which tiers and the whole pool are visible at once (nothing scrolls).
-  let allOnScreen = false;
-  for (let t = maxTile; t >= ALL_FIT_MIN_TILE && !allOnScreen; t--) {
-    const names = input.showNames && t >= NAMES_MIN_TILE;
-    const m = metricsFor(t, input.shape, names);
-    if (neededFull(input, m) <= input.height) {
-      allOnScreen = true;
+  for (let t = maxTile; t >= MIN_TILE; t--) {
+    if (fitsAt(t, showNames && t >= NAMES_MIN_TILE)) {
       chosen = t;
-      showNames = names;
-      overflow = false;
-    }
-  }
-
-  // Pass 2: too crowded for that -- fit only the tiers and let the pool scroll inside the screen.
-  for (let t = maxTile; t >= MIN_TILE && !allOnScreen; t--) {
-    if (fitsAt(t, showNames)) {
-      chosen = t;
+      showNames = showNames && t >= NAMES_MIN_TILE;
       overflow = false;
       break;
     }
   }
 
-  if (!allOnScreen && showNames && chosen < NAMES_MIN_TILE) {
+  // Even the smallest named tile does not fit: drop the names and see whether bare tiles do.
+  if (overflow && showNames) {
     for (let t = maxTile; t >= MIN_TILE; t--) {
       if (fitsAt(t, false)) {
-        if (t > chosen || overflow) {
-          showNames = false;
-          chosen = t;
-          overflow = false;
-        }
+        showNames = false;
+        chosen = t;
+        overflow = false;
         break;
       }
     }
   }
 
   const m = metricsFor(chosen, input.shape, showNames);
-  const rows = rowsTotalHeight(input, m);
-  const content = poolContentHeight(input, m);
-  const remainingBody = Math.max(EMPTY_POOL_BODY, input.height - rows - SECTION_GAP - chrome);
-  const maxBody = input.poolCollapsed ? 0 : Math.min(content, remainingBody);
-  const minBody = input.poolCollapsed ? 0 : Math.min(content, maxBody);
+  const single = m.cellHeight + 2 * m.pad + BORDER;
+
+  // Largest extra height per row (capped, so a nearly empty board does not turn into giant bars) at which the
+  // rows -- each at least `single + extra`, or taller when its tiles wrap -- still fit the viewport.
+  const totalWithExtra = (extra: number) =>
+    input.tierCounts.reduce((sum, n) => sum + Math.max(rowHeight(n, input.width, m), single + extra), 0) +
+    Math.max(0, input.tierCounts.length - 1) * m.rowGap;
+  let lo = 0;
+  let hi = Math.round(chosen * 0.75);
+  while (lo < hi) {
+    const mid = Math.ceil((lo + hi) / 2);
+    if (totalWithExtra(mid) <= input.height) lo = mid;
+    else hi = mid - 1;
+  }
 
   return {
     tile: m.tile,
@@ -221,11 +218,11 @@ function fitToScreen(input: FitInput): FitResult {
     nameFont: m.nameFont,
     badgeWidth: m.badgeWidth,
     badgeFont: m.badgeFont,
-    rowMin: m.cellHeight + 2 * m.pad,
-    poolMinBody: minBody,
-    poolMaxBody: maxBody,
-    poolMinTotal: chrome + minBody,
-    poolMaxTotal: chrome + maxBody,
+    rowMin: m.cellHeight + 2 * m.pad + (overflow ? 0 : lo),
+    poolMinBody: 0,
+    poolMaxBody: 0,
+    poolMinTotal: 0,
+    poolMaxTotal: 0,
     pageScroll: false,
     fitMode: true,
     overflow,

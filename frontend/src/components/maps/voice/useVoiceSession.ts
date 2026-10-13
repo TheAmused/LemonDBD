@@ -1,5 +1,6 @@
 // frontend/src/components/maps/voice/useVoiceSession.ts
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { createDeduper, trackEvent } from '@/utils/analytics';
 import {
   AudioCaptureSession,
   getBrowserCompatibility,
@@ -143,6 +144,16 @@ export function useVoiceSession({
     }
   }, [active, cleanupListening]);
 
+  const engineRef = useRef<VoiceEngineType>(activeEngine);
+  engineRef.current = activeEngine;
+  // recognition.onend can run again after stopListeningAndProcess already reported the same
+  // command, so one command is reported at most once per 1.5 s.
+  const outcomeDedupeRef = useRef(createDeduper(1500));
+  const reportVoiceOutcome = useCallback((result: 'matched' | 'nomatch') => {
+    if (!outcomeDedupeRef.current()) return;
+    trackEvent('map_voice_command', { result, engine: engineRef.current });
+  }, []);
+
   const executeMatch = useCallback((result: MatchResult) => {
     setMatchedResult(result);
     pendingMatchRef.current = null;
@@ -180,6 +191,7 @@ export function useVoiceSession({
     }
 
     if (result.matchedMapName) {
+      reportVoiceOutcome('matched');
       setVoiceStatus('matched');
       if (isSoundOn) playMatchSuccessSound();
       triggerSelectMap(result.matchedMapName, result.matchedMapId, result.source);
@@ -200,12 +212,13 @@ export function useVoiceSession({
       return;
     }
 
+    reportVoiceOutcome('nomatch');
     setVoiceStatus('nomatch');
     if (resetTimerRef.current) clearTimeout(resetTimerRef.current);
     resetTimerRef.current = setTimeout(() => {
       setVoiceStatus('idle');
     }, 2200);
-  }, []);
+  }, [reportVoiceOutcome]);
 
   const handleExecuteCommand = useCallback(
     (queryText: string) => {
@@ -221,13 +234,14 @@ export function useVoiceSession({
       if (result) {
         executeMatch(result);
       } else {
+        reportVoiceOutcome('nomatch');
         setVoiceStatus('nomatch');
         resetTimerRef.current = setTimeout(() => {
           setVoiceStatus('idle');
         }, 2000);
       }
     },
-    [executeMatch]
+    [executeMatch, reportVoiceOutcome]
   );
 
   const stopListeningAndProcess = useCallback(async () => {
@@ -265,6 +279,7 @@ export function useVoiceSession({
           }
         }
 
+        reportVoiceOutcome('nomatch');
         setVoiceStatus('nomatch');
         if (resetTimerRef.current) clearTimeout(resetTimerRef.current);
         resetTimerRef.current = setTimeout(() => {
@@ -296,6 +311,7 @@ export function useVoiceSession({
         executeMatch(match);
         return;
       } else {
+        reportVoiceOutcome('nomatch');
         setVoiceStatus('nomatch');
         if (resetTimerRef.current) clearTimeout(resetTimerRef.current);
         resetTimerRef.current = setTimeout(() => {
@@ -306,11 +322,11 @@ export function useVoiceSession({
     }
 
     setVoiceStatus('idle');
-  }, [activeEngine, locale, executeMatch]);
+  }, [activeEngine, locale, executeMatch, reportVoiceOutcome]);
 
 
   const startListening = useStartListening({
-    activeEngine, locale, executeMatch, stopListeningAndProcess,
+    activeEngine, locale, executeMatch, stopListeningAndProcess, reportVoiceOutcome,
     recognitionRef, audioSessionRef, resetTimerRef, silenceTimerRef, isListeningRef,
     liveTranscriptRef, pendingMatchRef, isHoldingRef, holdStartTimeRef, propsRef,
     setVoiceStatus, setLiveTranscript, setMatchedResult, setErrorMessage, setAudioLevel, setActiveEngine,

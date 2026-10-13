@@ -139,45 +139,6 @@ export const TactileKeycaps: React.FC<TactileKeycapsProps> = ({ onPass, onSmash,
     }, 200);
   }, [disabled]);
 
-  // Global physical keyboard binding
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (disabled) return;
-
-      // Ignore when user is typing in inputs/textareas
-      const target = e.target as HTMLElement;
-      if (target?.tagName === 'INPUT' || target?.tagName === 'TEXTAREA' || target?.isContentEditable) {
-        return;
-      }
-
-      for (const cap of keycaps) {
-        if (cap.keys.includes(e.key)) {
-          e.preventDefault();
-          setActiveKey(cap.id);
-          cap.action();
-          break;
-        }
-      }
-    };
-
-    const handleKeyUp = (e: KeyboardEvent) => {
-      for (const cap of keycaps) {
-        if (cap.keys.includes(e.key)) {
-          setActiveKey((curr) => (curr === cap.id ? null : curr));
-          break;
-        }
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    window.addEventListener('keyup', handleKeyUp);
-
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-      window.removeEventListener('keyup', handleKeyUp);
-    };
-  }, [disabled, keycaps]);
-
   return (
     <div className={`flex flex-col items-center justify-center gap-2 select-none ${className || ''}`}>
       {/* 3D Tactile Keycaps Container */}

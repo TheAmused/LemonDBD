@@ -97,7 +97,7 @@ export function SegmentedControl<T extends string>({
       role="radiogroup"
       aria-label={ariaLabel}
       className={cn(
-        'relative inline-flex shrink-0 min-w-0 select-none items-stretch rounded-full border border-border-color bg-bg-elevated p-1 shadow-inner',
+        'relative inline-flex shrink-0 min-w-0 select-none items-stretch rounded-2xl border border-border-color bg-bg-elevated p-1 shadow-inner',
         className
       )}
     >
@@ -105,7 +105,7 @@ export function SegmentedControl<T extends string>({
         aria-hidden="true"
         style={thumbRect ? { left: thumbRect.left, width: thumbRect.width } : undefined}
         className={cn(
-          'absolute inset-y-1 rounded-full shadow-md transition-[left,width] duration-200 ease-out',
+          'absolute inset-y-1 rounded-xl shadow-md transition-[left,width] duration-200 ease-out',
           !thumbRect && 'opacity-0',
           options[activeIndex]?.activeClassName || DEFAULT_THUMB
         )}
@@ -114,7 +114,7 @@ export function SegmentedControl<T extends string>({
         const isActive = value === opt.value;
         const activeTextClass = opt.activeTextColor || 'text-text-inverted';
         const optionClassName = cn(
-          'relative z-10 flex flex-1 cursor-pointer items-center justify-center gap-1 sm:gap-1.5 wide:gap-2 whitespace-nowrap rounded-full px-2 sm:px-3 wide:px-4 wide-2k:px-5 transition-colors duration-200',
+          'relative z-10 flex flex-1 cursor-pointer items-center justify-center gap-1 sm:gap-1.5 wide:gap-2 whitespace-nowrap rounded-xl px-2 sm:px-3 wide:px-4 wide-2k:px-5 transition-colors duration-200',
           padY,
           textSize,
           isActive ? activeTextClass : 'text-text-primary hover:text-accent-red'

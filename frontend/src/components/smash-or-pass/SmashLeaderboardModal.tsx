@@ -130,8 +130,8 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
 
   const getItemTierKey = (smashRate: number, totalVotes: number): TierKey | null => {
     if (totalVotes === 0) return null;
-    if (smashRate >= 85) return 'godTier';
-    if (smashRate >= 65) return 'fatalAttraction';
+    if (smashRate >= 80) return 'godTier';
+    if (smashRate >= 60) return 'fatalAttraction';
     if (smashRate >= 40) return 'friendzone';
     return 'eldritchVoid';
   };
@@ -142,19 +142,19 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
         name: rawSmashDict.tiers.godTier,
         style: 'border-accent-amber/50 bg-accent-amber/15 text-accent-amber',
         icon: <RankFirstIcon className="h-3.5 w-3.5 text-accent-amber" aria-hidden="true" />,
-        range: '>= 85%',
+        range: '>= 80%',
       },
       fatalAttraction: {
         name: rawSmashDict.tiers.fatalAttraction,
         style: 'border-accent-red/50 bg-accent-red/15 text-accent-red',
         icon: <Flame className="h-3.5 w-3.5 text-accent-red" aria-hidden="true" />,
-        range: '65% - 84%',
+        range: '60% - 79%',
       },
       friendzone: {
         name: rawSmashDict.tiers.friendzone,
         style: 'border-border-color bg-bg-elevated text-text-secondary',
         icon: <FriendzoneIcon className="h-3.5 w-3.5 text-text-secondary" aria-hidden="true" />,
-        range: '40% - 64%',
+        range: '40% - 59%',
       },
       eldritchVoid: {
         name: rawSmashDict.tiers.eldritchVoid,

@@ -166,7 +166,7 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ killer }) 
                 <div>
                   {nextPagePerks.length > 0 && (
                     <div role="group" aria-label={dict.streaks.pageLabel} className="mb-3 flex justify-center">
-                      <div className="inline-flex rounded-full border border-border-color bg-bg-elevated/40 p-0.5">
+                      <div className="inline-flex rounded-2xl border border-border-color bg-bg-elevated/40 p-0.5">
                         {[run.current_page, run.current_page + 1].map((page, index) => {
                           const active = (index === 1) === viewingNext;
                           return (
@@ -175,7 +175,7 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ killer }) 
                               type="button"
                               aria-pressed={active}
                               onClick={() => setPreviewPageKey(index === 1 ? pageKey : '')}
-                              className={`rounded-full px-4 py-1 text-tiny uppercase tracking-widest transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red motion-reduce:transition-none ${
+                              className={`rounded-xl px-4 py-1 text-tiny uppercase tracking-widest transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red motion-reduce:transition-none ${
                                 active
                                   ? 'bg-bg-surface text-text-primary shadow-sm'
                                   : 'text-text-muted hover:text-accent-red'

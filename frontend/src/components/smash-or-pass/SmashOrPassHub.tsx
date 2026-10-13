@@ -189,6 +189,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ locale = 'en' })
               availableRoles={rosters.availableRoles}
               availableGenders={rosters.availableGenders}
               onFilterChange={deck.setFilter}
+              onClose={() => overlays.setIsFilterDrawerOpen(false)}
             />
           </HubHeader>
 

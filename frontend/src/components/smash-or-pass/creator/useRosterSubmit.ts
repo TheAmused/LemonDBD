@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useDictionary } from '@/context/DictionaryContext';
-import { apiUrl } from '@/utils/api';
+import { apiUrl, authHeaders } from '@/utils/api';
 import { validateSmashRosterDocument } from '@/utils/smashOrPass/codec';
 import { createCustomRosterId, saveCustomRoster } from '@/utils/smashOrPass/storage';
 import type { StoredCustomRoster } from '@/types/smashOrPass';
@@ -95,6 +95,7 @@ export function useRosterSubmit({
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            ...authHeaders(),
           },
           body: JSON.stringify({
             name: result.doc.name,

@@ -87,7 +87,7 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({ isOpen
   const passPct = 100 - smashPct;
 
   const tierInfo = useMemo(() => {
-    if (smashRate >= 85) {
+    if (smashRate >= 80) {
       return {
         tier: rawSmashDict.tiers.godTier,
         color: 'text-accent-amber',
@@ -96,7 +96,7 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({ isOpen
         icon: <RankFirstIcon className="h-4 w-4 text-accent-amber" />,
       };
     }
-    if (smashRate >= 65) {
+    if (smashRate >= 60) {
       return {
         tier: rawSmashDict.tiers.fatalAttraction,
         color: 'text-accent-red',

@@ -61,12 +61,12 @@ export function CardArena({
   const dict = useDictionary();
 
   return (
-    <main className="relative flex-1 flex flex-col items-center justify-center my-2 z-20 pointer-events-none">
+    <section className="relative flex-1 flex flex-col items-center justify-center my-2 z-20 pointer-events-none">
       {activeRoster.is_nsfw && !nsfwAcknowledged ? (
         <NsfwGate onConfirm={onAcknowledgeNsfw} />
       ) : loading ? (
         <div className="relative flex flex-col items-center justify-center min-h-[var(--smash-card-h,43.75rem)] pointer-events-auto select-none animate-pulse">
-          <div className="smash-card-size rounded-3xl bg-bg-primary border-2 border-accent-red/30 flex flex-col items-center justify-center p-6 space-y-4">
+          <div className="relative smash-card-size rounded-3xl card-ash-border bg-bg-primary flex flex-col items-center justify-center p-6 space-y-4">
             <Heart className="h-12 w-12 text-accent-red fill-accent-red/30 animate-pulse" />
             <span className="type-strong text-text-secondary text-center">
               {dict.smashOrPass.loadingRosterPrefix} {activeRoster.name || selectedRosterSlug} {dict.smashOrPass.loadingRosterSuffix}
@@ -101,6 +101,6 @@ export function CardArena({
           onReset={onReset}
         />
       )}
-    </main>
+    </section>
   );
 }

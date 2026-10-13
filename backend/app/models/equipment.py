@@ -13,7 +13,7 @@ from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, declared_attr, mapped_column, relationship
 
 from app.core.extensions import Base
-from app.models.base import TranslatableModelMixin
+from app.models.base import ColumnDictMixin, TranslatableModelMixin
 
 if TYPE_CHECKING:
     from app.models.character import Killer
@@ -32,7 +32,7 @@ _RARITY_SQL = "('Common', 'Uncommon', 'Rare', 'Very Rare', 'Ultra Rare', 'Specia
 OFFERING_ROLES = ("Survivor", "Killer", "All")
 
 
-class ItemCategory(Base):
+class ItemCategory(Base, ColumnDictMixin):
     """A class of survivor item -- Flashlight, Med-Kit, Toolbox, Key, Map, ...
 
     This table is what makes `addons.associated_target` tractable. That column
@@ -55,14 +55,6 @@ class ItemCategory(Base):
 
     items: Mapped[list["Item"]] = relationship(back_populates="category")
     addons: Mapped[list["ItemAddon"]] = relationship(back_populates="item_category")
-
-    def to_dict(self) -> dict[str, Any]:
-        return {
-            "id": self.id,
-            "name": self.name,
-            "addon_target_label": self.addon_target_label,
-            "role": self.role,
-        }
 
 
 class Item(Base, TranslatableModelMixin):

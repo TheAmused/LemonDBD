@@ -21,7 +21,9 @@ function walk(dir: string, out: string[] = []): string[] {
 
 const catalogue = fs.readFileSync(path.join(SRC, 'utils/analytics.ts'), 'utf8');
 // Only the event lines of the interface are indented exactly two spaces and end in a colon.
-const declared = [...catalogue.matchAll(/^ {2}([a-z0-9_]+): /gm)].map((m) => m[1]);
+const catalogueStart = catalogue.indexOf('export interface AnalyticsEvents');
+const catalogueBlock = catalogue.slice(catalogueStart, catalogue.indexOf('\n}', catalogueStart));
+const declared = [...catalogueBlock.matchAll(/^ {2}([a-z0-9_]+): /gm)].map((m) => m[1]);
 
 const sources = walk(SRC)
   .filter((f) => !f.endsWith(path.join('utils', 'analytics.ts')))
@@ -46,6 +48,16 @@ describe('analytics wiring', () => {
   });
 
   it('never writes an em dash in the analytics module', () => {
-    assert.equal(catalogue.includes('—'), false);
+    assert.equal(catalogue.includes(String.fromCharCode(0x2014)), false);
+  });
+});
+
+describe('voice variant pills', () => {
+  it('are not reported as a new voice command', () => {
+    const session = fs.readFileSync(path.join(SRC, 'components/maps/voice/useVoiceSession.ts'), 'utf8');
+    const handler = session.slice(session.indexOf('const handleExecuteCommand'), session.indexOf('const stopListeningAndProcess'));
+    assert.match(handler, /outcomeMutedRef\.current = true/);
+    assert.match(handler, /outcomeMutedRef\.current = false/);
+    assert.match(session, /if \(outcomeMutedRef\.current\) return;/);
   });
 });

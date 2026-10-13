@@ -149,7 +149,10 @@ export function useVoiceSession({
   // recognition.onend can run again after stopListeningAndProcess already reported the same
   // command, so one command is reported at most once per 1.5 s.
   const outcomeDedupeRef = useRef(createDeduper(1500));
+  // A variant pill click replays a command that was already reported; it is not a new one.
+  const outcomeMutedRef = useRef(false);
   const reportVoiceOutcome = useCallback((result: 'matched' | 'nomatch') => {
+    if (outcomeMutedRef.current) return;
     if (!outcomeDedupeRef.current()) return;
     trackEvent('map_voice_command', { result, engine: engineRef.current });
   }, []);
@@ -231,14 +234,19 @@ export function useVoiceSession({
         propsRef.current.availableMaps
       );
 
-      if (result) {
-        executeMatch(result);
-      } else {
-        reportVoiceOutcome('nomatch');
-        setVoiceStatus('nomatch');
-        resetTimerRef.current = setTimeout(() => {
-          setVoiceStatus('idle');
-        }, 2000);
+      outcomeMutedRef.current = true;
+      try {
+        if (result) {
+          executeMatch(result);
+        } else {
+          reportVoiceOutcome('nomatch');
+          setVoiceStatus('nomatch');
+          resetTimerRef.current = setTimeout(() => {
+            setVoiceStatus('idle');
+          }, 2000);
+        }
+      } finally {
+        outcomeMutedRef.current = false;
       }
     },
     [executeMatch, reportVoiceOutcome]

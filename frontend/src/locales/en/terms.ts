@@ -46,7 +46,7 @@ export default {
       heading: "The Site",
       tldr: "Free, provided as it is, and subject to change.",
       paragraphs: [
-        "The Site is provided free of charge. It offers fan-made tools and information about <i>Dead by Daylight</i>, such as databases, randomisers, tier lists, minigames, challenges and a Smash or Pass game.",
+        "The Site is provided free of charge. It offers fan-made tools and information about <i>Dead by Daylight</i>, such as databases, randomizers, tier lists, minigames, challenges and a Smash or Pass game.",
         "Game data may be inaccurate or out of date, and some content is created with the help of AI. We do not guarantee that the Site is complete, accurate, uninterrupted or free of errors, and you should not rely on it for decisions that matter.",
         "We may change, suspend or discontinue any feature, or the Site as a whole, at any time. Where a change significantly affects registered users, we will announce it on the Site where reasonably possible.",
       ],

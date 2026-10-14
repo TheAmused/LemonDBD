@@ -34,6 +34,12 @@ from app.services.admin_control_service import (
     set_character_disabled as svc_set_character_disabled,
     set_perk_disabled as svc_set_perk_disabled,
 )
+from app.services.content_moderation_service import (
+    get_admin_reports,
+    get_report_preview,
+    purge_expired_evidence,
+    resolve_report,
+)
 from app.services.db.export_import import DatabaseExportImportService
 from app.services.user.admin import fetch_admin_metrics
 from pydantic import ValidationError
@@ -403,3 +409,59 @@ def import_database():
     except Exception as e:
         logger.error(f"Database import error: {e}", exc_info=True)
         return jsonify({"error": f"Database import failed: {str(e)}", "status": 500}), 500
+
+
+@admin_control_bp.route("/content-reports", methods=["GET"])
+@admin_required
+def list_content_reports():
+    """List content reports with pagination and status filter."""
+    status = request.args.get("status", "pending")
+    page, per_page = paginate_args(default_per_page=20)
+    result = get_admin_reports(status=status, page=page, per_page=per_page)
+    return jsonify(result), 200
+
+
+@admin_control_bp.route("/content-reports/<int:report_id>/preview", methods=["GET"])
+@admin_required
+def preview_content_report(report_id: int):
+    """Retrieve full preview of a report including evidence payload."""
+    preview = get_report_preview(report_id)
+    if preview is None:
+        return api_error("Content report not found", 404)
+    return jsonify(preview), 200
+
+
+@admin_control_bp.route("/content-reports/<int:report_id>/resolve", methods=["POST"])
+@admin_required
+def resolve_content_report_endpoint(report_id: int):
+    """Resolve report by banning content (and optionally author) or dismissing."""
+    body = request.get_json(silent=True)
+    if not isinstance(body, dict):
+        return api_error("Invalid JSON body", 400)
+
+    action = body.get("action")
+    if not isinstance(action, str) or action not in ("ban", "dismiss"):
+        return api_error("Action must be 'ban' or 'dismiss'", 400)
+
+    ban_author = bool(body.get("ban_author", False))
+    admin_notes = body.get("admin_notes")
+    if admin_notes is not None and not isinstance(admin_notes, str):
+        return api_error("admin_notes must be a string", 400)
+
+    resp, status_code = resolve_report(
+        admin=g.current_user,
+        report_id=report_id,
+        action=action,
+        ban_author=ban_author,
+        admin_notes=admin_notes,
+    )
+    return jsonify(resp), status_code
+
+
+@admin_control_bp.route("/content-reports/purge-expired", methods=["POST"])
+@admin_required
+def purge_expired_content_reports():
+    """Purge expired evidence payloads for pending reports past their expiry date."""
+    purged_count = purge_expired_evidence()
+    return jsonify({"purged_count": purged_count}), 200
+

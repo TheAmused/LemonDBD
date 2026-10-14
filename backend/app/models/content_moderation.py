@@ -10,6 +10,8 @@ from app.models.base import ColumnDictMixin, utcnow
 class ContentReport(Base, ColumnDictMixin):
     __tablename__ = "content_reports"
 
+    _api_exclude = frozenset({"evidence_payload"})
+
     id: Mapped[int] = mapped_column(primary_key=True)
     content_type: Mapped[str] = mapped_column(String(32), nullable=False)
     content_hash: Mapped[str] = mapped_column(String(64), index=True, nullable=False)

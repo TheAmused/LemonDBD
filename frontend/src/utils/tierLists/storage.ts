@@ -28,6 +28,7 @@ import type {
   TierPlacements,
 } from '@/types/tierList';
 import { createRandomId, createVersionedStore, isRecord, readNumber, type SaveResult } from '@/utils/versionedStore';
+import { sanitizeManifest } from '@/utils/shareCodec';
 import { isTierColor, normalizePlacements, sanitizeImageUrl } from './codec';
 import { ITEM_ID_PATTERN, TIER_LIST_LIMITS } from './constants';
 
@@ -115,6 +116,7 @@ export function migrateTierListState(raw: unknown): TierListStoreState {
       const items = readItems(value.items);
       const itemIds = new Set(items.map((i) => i.id));
       const backgroundImage = sanitizeImageUrl(value.backgroundImage);
+      const manifest = sanitizeManifest(value._manifest);
       custom[id] = {
         id,
         title: typeof value.title === 'string' ? value.title : '',
@@ -125,6 +127,7 @@ export function migrateTierListState(raw: unknown): TierListStoreState {
         createdAt: readNumber(value.createdAt, 0),
         updatedAt: readNumber(value.updatedAt, 0),
         ...(backgroundImage ? { backgroundImage } : {}),
+        ...(manifest ? { _manifest: manifest } : {}),
       };
     }
   }

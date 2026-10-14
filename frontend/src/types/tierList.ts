@@ -93,6 +93,8 @@ export interface TierItem {
 export const TIER_LIST_FORMAT = 'lemondbd-tier-list' as const;
 export const TIER_LIST_FORMAT_VERSION = 1 as const;
 
+import type { ContentManifest } from '@/utils/contentSigning';
+
 export interface TierListDocumentItem {
   id: string;
   name: string;
@@ -113,6 +115,7 @@ export interface TierListDocument {
   placements: TierPlacements;
   /** Custom lists only: an https:/data: image shown behind the list's card and page. */
   backgroundImage?: string;
+  _manifest?: ContentManifest | null;
 }
 
 // ---------------------------------------------------------------------------
@@ -137,6 +140,7 @@ export interface StoredCustomList {
   updatedAt: number;
   /** An https:/data: image shown behind this list's card and its own page. Unset means none. */
   backgroundImage?: string;
+  _manifest?: ContentManifest | null;
 }
 
 export interface TierListStoreState {

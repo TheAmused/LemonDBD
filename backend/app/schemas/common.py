@@ -33,3 +33,10 @@ def clean_image_url(value: str | None) -> str | None:
     if len(value) > 2048:
         return None
     return value if value.startswith("https://") else None
+
+
+from typing import Annotated
+from pydantic import BeforeValidator
+
+CleanImageUrl = Annotated[str | None, BeforeValidator(clean_image_url)]
+

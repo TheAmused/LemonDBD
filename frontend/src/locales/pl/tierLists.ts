@@ -105,7 +105,6 @@ export default {
   itemNameRequired: "Nadaj elementowi nazwę.",
 
   exportTitle: "Eksportuj tier listę",
-  exportSubtitle: "Zapisz ją jako JSON albo udostępnij link zawierający całą listę.",
   jsonLabel: "JSON",
   shareLinkLabel: "Link do udostępnienia",
   downloadJson: "Pobierz .json",
@@ -117,7 +116,6 @@ export default {
   linkTooLong: "Ten link ma {count} znaków. Niektóre komunikatory ucinają długie linki, więc lepiej wyślij plik .json.",
 
   importTitle: "Importuj tier listę",
-  importSubtitle: "Wklej JSON, wgraj plik .json albo otwórz udostępniony link.",
   pasteLabel: "Dane JSON",
   pastePlaceholder: "{ \"title\": \"Moja lista\", \"items\": [{ \"name\": \"...\", \"image\": \"https://...\" }] }",
   uploadFile: "Wgraj .json",

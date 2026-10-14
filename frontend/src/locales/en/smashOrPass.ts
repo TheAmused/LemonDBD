@@ -321,7 +321,6 @@ export default {
   },
   importModal: {
     title: 'Import a Roster',
-    subtitle: 'Paste JSON, upload a file, or open a shared link.',
     cancel: 'Cancel',
     importAction: 'Import',
     pasteLabel: 'Paste roster JSON',
@@ -349,7 +348,6 @@ export default {
   },
   exportModal: {
     title: 'Export Roster',
-    subtitle: 'Copy a shareable link, or download the roster as a JSON file.',
     close: 'Close',
     shareLinkLabel: 'Shareable link',
     copyLink: 'Copy Link',

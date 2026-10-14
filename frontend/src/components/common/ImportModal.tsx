@@ -119,7 +119,6 @@ export function ImportPreview({ text }: { text: string }) {
 
 export interface ImportModalLabels {
   title: string;
-  subtitle?: string;
   sharedLinkDetected: string;
   pasteLabel: string;
   uploadFile: string;

@@ -39,7 +39,6 @@ export function SmashRosterExportModal({ doc, onClose, locale }: SmashRosterExpo
       buttonClassName="min-h-[44px]"
       labels={{
         title: t.title,
-        subtitle: t.subtitle,
         shareLinkLabel: t.shareLinkLabel,
         preparingLink: t.preparingLink,
         copyLink: t.copyLink,

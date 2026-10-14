@@ -1,5 +1,5 @@
-// frontend/src/utils/minigames/jsonExportImport.ts
 import { getErrorMessage } from '@/utils/api';
+import { downloadFile } from '@/utils/download';
 import type { ChallengeDefinition, RoundConfig, MinigameMode } from '@/types/minigame';
 
 const VALID_MODES: Set<MinigameMode> = new Set([
@@ -41,21 +41,12 @@ export function exportChallengeToJson(challenge: ChallengeDefinition): void {
   };
 
   const jsonStr = JSON.stringify(exportData, null, 2);
-  const blob = new Blob([jsonStr], { type: 'application/json' });
-  const url = URL.createObjectURL(blob);
-
   const safeTitle = (challenge.title || 'custom_minigame')
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, '_')
     .slice(0, 40);
 
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `lemondbd_challenge_${safeTitle}.json`;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
+  downloadFile(jsonStr, `lemondbd_challenge_${safeTitle}.json`, 'application/json');
 }
 
 interface RawRound {

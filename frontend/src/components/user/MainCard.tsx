@@ -1,13 +1,13 @@
 // frontend/src/components/user/MainCard.tsx
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { PerkIcon } from '@/components/ui/PerkIcon';
 import { PerkDiamondSlot } from './PerkDiamondSlot';
 import type { MainLoadout } from '@/types/userShowcase';
-import type { RoleCategory, Perk } from '@/types/perks';
+import type { RoleCategory } from '@/types/perks';
 import { getCharacterAvatarUrl } from '@/utils/perkUtils';
-import { CATALOG_TTL_MS, catalogKey, fetchCached, fetchJson, unwrapList, type ListPayload } from '@/services/dataCache';
+import { useCatalogPerks } from '@/hooks/useCatalogPerks';
 
 import { tip } from '@/components/common/Tooltip';
 import { isSurvivor as isSurvivorRole } from '@/utils/characterUtils';
@@ -47,20 +47,9 @@ export const MainCard: React.FC<MainCardProps> = ({
     }) => {
   const dict = useDictionary();
   const isSurvivor = isSurvivorRole(role);
-  const [allPerks, setAllPerks] = useState<Perk[]>([]);
-
-  // Pre-load perks mapping so slot icons render with images. This is the whole
-  // perk table for four icons, so it leans on the catalog window: the showcase
-  // is reachable from several places and none of them should pay for it twice.
-  useEffect(() => {
-    const url = catalogKey('perks', { limit: 1000, lang: locale });
-    fetchCached<ListPayload<Perk>>(url, () => fetchJson<ListPayload<Perk>>(url), { ttlMs: CATALOG_TTL_MS })
-      .then((data) => {
-        const list = unwrapList(data);
-        setAllPerks(list);
-      })
-      .catch(() => {});
-  }, [locale]);
+  // The whole perk table for four icons: it leans on the shared catalog cache,
+  // so the showcase and its perk picker never pay for it twice.
+  const { perks: allPerks } = useCatalogPerks(locale);
 
   const perksBySlot = loadout.perkIds.map((id) =>
     id !== null ? allPerks.find((p) => p.id === id) || null : null

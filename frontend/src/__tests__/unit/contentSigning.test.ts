@@ -62,8 +62,8 @@ describe('contentSigning: signExportPayload', () => {
     assert.equal(capturedInit?.method, 'POST');
     assert.equal(capturedInit?.credentials, 'include');
 
-    const headers = capturedInit?.headers as Record<string, string>;
-    assert.equal(headers?.['Content-Type'], 'application/json');
+    const headers = new Headers(capturedInit?.headers);
+    assert.equal(headers.get('content-type'), 'application/json');
 
     const sentBody = JSON.parse(String(capturedInit?.body));
     assert.equal(sentBody.content_type, 'tier_list');
@@ -204,6 +204,8 @@ describe('contentSigning: isContentManifest', () => {
     assert.equal(isContentManifest({ ...MOCK_MANIFEST, signature: '' }), false);
     assert.equal(isContentManifest({ ...MOCK_MANIFEST, content_hash: 'short' }), false);
     assert.equal(isContentManifest({ ...MOCK_MANIFEST, author_id: -5 }), false);
+    assert.equal(isContentManifest({ ...MOCK_MANIFEST, content_hash: 'z'.repeat(64) }), false);
+    assert.equal(isContentManifest({ ...MOCK_MANIFEST, signature: 'g'.repeat(64) }), false);
   });
 });
 
@@ -236,6 +238,12 @@ describe('shareCodec: manifest handling and round-trip', () => {
       signature: 'too-short',
     });
     assert.equal(corrupt, null);
+
+    const nonHex = sanitizeManifest({
+      ...MOCK_MANIFEST,
+      content_hash: 'x'.repeat(64),
+    });
+    assert.equal(nonHex, null);
 
     assert.equal(sanitizeManifest(null), null);
     assert.equal(sanitizeManifest({}), null);

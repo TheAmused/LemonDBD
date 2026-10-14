@@ -164,8 +164,6 @@ class TestMyBugReportsRoute:
 
 @pytest.mark.unit
 class TestAdminFeedbackFlag:
-    """Only a written developer reply counts as news for the reporter, not a status change."""
-
     @pytest.fixture
     def admin_headers(self, app: Flask, db_session) -> dict[str, str]:
         admin = User(login="feedback_admin", username="feedback_admin", email="feedback_admin@example.com",

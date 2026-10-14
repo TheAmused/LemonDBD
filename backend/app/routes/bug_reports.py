@@ -216,7 +216,6 @@ def submit_bug_report():
 
 
 def _owned_by(user: User) -> ColumnElement[bool]:
-    """Reports filed by this account, plus guest reports sent from the same email."""
     conditions = [BugReport.user_id == user.id]
     if user.email:
         conditions.append(func.lower(BugReport.reporter_email) == user.email.lower())
@@ -269,7 +268,6 @@ def get_my_bug_reports():
 
 @bug_reports_bp.route("/bug-reports/<int:report_id>/seen", methods=["POST"])
 def mark_bug_report_seen(report_id: int):
-    """Clears the "new feedback" flag once the reporter has opened their report."""
     lang = extract_lang()
     user = get_current_user()
     if not user:
@@ -369,7 +367,6 @@ def admin_update_bug_report(report_id: int):
 
             if admin_notes is not None and admin_notes.strip() != (report.admin_notes or ""):
                 report.admin_notes = admin_notes.strip()
-                # Only a written reply is news for the reporter; a status change or a cleared note is not.
                 report.feedback_unread = bool(report.admin_notes)
 
         log_admin_action(

@@ -73,7 +73,6 @@ export function useAdminBugReports({ onActionMessage }: { onActionMessage: (mess
     if (!token) return;
 
     const payload: Record<string, string> = {};
-    // A status change sends only the status, so a half-written reply is never published (or flagged as news) by it.
     if (newStatus) {
       payload.status = newStatus;
     } else if (editingNotes[reportId] !== undefined) {

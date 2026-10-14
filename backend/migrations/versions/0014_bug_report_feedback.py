@@ -38,7 +38,6 @@ def upgrade() -> None:
 def downgrade() -> None:
     columns = _bug_report_columns()
     if "category" not in columns:
-        # The old values are gone for good; every report comes back as "General".
         op.add_column(
             "bug_reports",
             sa.Column("category", sa.String(length=50), nullable=False, server_default="General"),

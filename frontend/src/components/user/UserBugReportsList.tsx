@@ -37,7 +37,6 @@ interface UserBugReportsListProps {
   totalPages?: number;
   onPageChange?: (page: number) => void;
   hideHeading?: boolean;
-  /** Called when the reporter opens a report that carries unseen developer feedback. */
   onReportSeen?: (id: number) => void;
 }
 
@@ -58,7 +57,6 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
   const t: Record<string, string> = propT || dict.user || {};
   const totalCount = total ?? reports.length;
 
-  // Reports the reader has opened; every report starts collapsed.
   const [openReports, setOpenReports] = useState<Record<number, boolean>>({});
 
   // Image popup lightbox state
@@ -250,7 +248,6 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
                         </div>
                       )}
 
-                      {/* Nothing from the developers yet */}
                       {awaitingReply && (
                         <p className="mt-2 flex items-center gap-2 rounded-xl border border-border-color bg-bg-elevated/60 p-3 type-caption text-text-muted">
                           <Clock className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />

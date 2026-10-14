@@ -209,7 +209,8 @@ describe('User Profile Theme Support', () => {
 
   it('user/page.tsx unauthenticated prompt and sign-in controls support light and dark theme classes', () => {
     const userPagePath = path.resolve(__dirname, '../../app/[locale]/user/page.tsx');
-    const source = fs.readFileSync(userPagePath, 'utf-8');
+    const clientPath = path.resolve(__dirname, '../../components/user/UserProfileClient.tsx');
+    const source = fs.readFileSync(userPagePath, 'utf-8') + (fs.existsSync(clientPath) ? fs.readFileSync(clientPath, 'utf-8') : '');
     assert.ok(
       (source.includes('border-border-color') && source.includes('bg-bg-surface')) ||
       source.includes('border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950/90 text-slate-900 dark:text-slate-100'),

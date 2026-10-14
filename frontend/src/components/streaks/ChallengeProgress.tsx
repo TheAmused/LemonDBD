@@ -1,5 +1,5 @@
+'use client';
 // frontend/src/components/streaks/ChallengeProgress.tsx
-import type { Dictionary } from '@/locales/types';
 
 import React, { useEffect, useRef, useState } from 'react';
 import { Trophy } from 'lucide-react';

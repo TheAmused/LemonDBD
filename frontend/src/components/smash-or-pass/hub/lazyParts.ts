@@ -1,3 +1,4 @@
+'use client';
 // frontend/src/components/smash-or-pass/hub/lazyParts.ts
 //
 // The heavy visual layers and interactive modals, loaded client-side only and on demand so none

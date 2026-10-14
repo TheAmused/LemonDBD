@@ -3,8 +3,8 @@ import pytest
 from flask import Flask
 from flask.testing import FlaskClient
 from sqlalchemy.orm import Session
-from app.services.page_streak_service import PageStreakService
-from app.services.user_service import UserService
+from app.services.page_streak import PageStreakService
+from app.services.user import UserService
 from tests.unit.page_streak_support import FakePerkService, make_perks, seed_perks
 
 

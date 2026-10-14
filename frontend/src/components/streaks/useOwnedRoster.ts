@@ -1,10 +1,11 @@
 // frontend/src/components/streaks/useOwnedRoster.ts
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { sortByReleaseNumber } from '@/utils/characterUtils';
 import { backendBase } from '@/utils/staticUrl';
+import type { Role } from '@/types/gauntletStreak';
 
 export interface OwnedCharacterItem {
   name: string;
@@ -77,4 +78,19 @@ export function useOwnedRoster(role: OwnedRosterRole, rosterLimit?: number) {
   }, [load]);
 
   return { characters, loading, releaseOrder, reload: load };
+}
+
+/**
+ * Original mode caps its roster at the source challenge's cutoff; see
+ * `useOwnedRoster` for how `rosterLimit` is applied.
+ */
+export function useOwnedCharacters(role: Role, rosterLimit?: number) {
+  return useOwnedRoster(role === 'killer' ? 'Killer' : 'Survivor', rosterLimit);
+}
+
+/** Owned killer names in release order (thin wrapper over the shared roster hook). */
+export function useOwnedKillers() {
+  const { characters, loading, releaseOrder, reload } = useOwnedRoster('Killer');
+  const killers = useMemo(() => characters.map((c) => c.name), [characters]);
+  return { killers, loading, releaseOrder, reload };
 }

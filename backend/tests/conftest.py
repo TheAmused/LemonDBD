@@ -2,6 +2,9 @@
 import os
 import pytest
 
+os.environ.setdefault("TESTING", "True")
+os.environ.setdefault("DATABASE_URL", "sqlite:///:memory:")
+
 
 def pytest_configure(config: pytest.Config) -> None:
     """Configure custom pytest markers and test environment flags."""

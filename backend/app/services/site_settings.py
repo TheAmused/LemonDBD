@@ -13,6 +13,7 @@ from flask import current_app, has_app_context
 from sqlalchemy import select
 
 from app.core.extensions import db
+from app.core.transaction import transaction
 from app.models.admin import SiteSetting
 from app.utils.site_settings_spec import SETTING_SPECS, SPEC_BY_KEY, validate_setting
 
@@ -115,15 +116,16 @@ def update_settings(changes: dict[str, Any]) -> dict[str, Any]:
             raise ValueError(f"Unknown setting '{key}'.")
         cleaned[key] = None if raw is None else validate_setting(key, raw)
 
-    existing = {row.key: row for row in db.session.scalars(select(SiteSetting)).all()}
-    for key, value in cleaned.items():
-        row = existing.get(key)
-        if value is None:
-            if row is not None:
-                db.session.delete(row)
-        elif row is not None:
-            row.value = str(value)
-        else:
-            db.session.add(SiteSetting(key=key, value=str(value)))
-    db.session.commit()
+    with transaction():
+        existing = {row.key: row for row in db.session.scalars(select(SiteSetting)).all()}
+        for key, value in cleaned.items():
+            row = existing.get(key)
+            if value is None:
+                if row is not None:
+                    db.session.delete(row)
+            elif row is not None:
+                row.value = str(value)
+            else:
+                db.session.add(SiteSetting(key=key, value=str(value)))
     return {key: (default_value(key) if value is None else value) for key, value in cleaned.items()}
+

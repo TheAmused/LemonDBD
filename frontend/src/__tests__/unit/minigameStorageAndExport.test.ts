@@ -143,6 +143,36 @@ describe('minigame JSON import validation', () => {
     assert.equal(parsed.rounds[0].max_attempts, 5);
   });
 
+  it('imports challenge and preserves valid _manifest', () => {
+    const mockManifest = {
+      content_type: 'minigame',
+      content_hash: 'c'.repeat(64),
+      author_id: 10,
+      author_login: 'trapper',
+      signature: 'd'.repeat(64),
+      created_at: '2026-10-14T12:00:00Z',
+    };
+
+    const rawJson = JSON.stringify({
+      lemondbd_version: '1.0',
+      type: 'minigame_challenge',
+      _manifest: mockManifest,
+      challenge: {
+        title: 'Manifest Gauntlet',
+        game_mode: 'custom',
+        rounds: [{ mode: 'realm_guesser', target_id: 2 }],
+      },
+    });
+
+    const parsed = importChallengeFromJson(rawJson);
+    assert.deepEqual(parsed._manifest, mockManifest);
+
+    const saved = saveCustomChallenge(parsed);
+    assert.deepEqual(saved._manifest, mockManifest);
+    const retrieved = getCustomChallenges();
+    assert.deepEqual(retrieved[0]._manifest, mockManifest);
+  });
+
   it('rejects invalid JSON or unsupported modes', () => {
     assert.throws(() => importChallengeFromJson('not valid json'), /Invalid JSON format/);
     assert.throws(

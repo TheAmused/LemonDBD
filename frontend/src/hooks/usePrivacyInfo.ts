@@ -1,3 +1,4 @@
+'use client';
 // frontend/src/hooks/usePrivacyInfo.ts
 import { useEffect, useState } from 'react';
 import { apiUrl } from '@/utils/api';

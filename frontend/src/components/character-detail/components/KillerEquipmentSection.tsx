@@ -1,3 +1,4 @@
+'use client';
 // frontend/src/components/character-detail/components/KillerEquipmentSection.tsx
 import React, { useMemo } from 'react';
 import { Flame } from 'lucide-react';

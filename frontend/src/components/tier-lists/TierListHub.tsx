@@ -2,11 +2,13 @@
 // frontend/src/components/tier-lists/TierListHub.tsx
 
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 import { ChevronDown, FileJson, LayoutList, Plus, RotateCcw, TriangleAlert } from 'lucide-react';
 import { EmptyState } from '@/components/common/EmptyState';
 import { ConfirmModal } from '@/components/common/ConfirmModal';
-import type { Dictionary } from '@/locales/types';
+import { AuthRequiredState } from '@/components/common/AuthRequiredState';
+import { useAuth } from '@/context/AuthContext';
 import type { TierListDocument } from '@/types/tierList';
 import { usePersistentDrawer } from '@/hooks/usePersistentDrawer';
 import { useTierListStore } from '@/hooks/useTierListStore';
@@ -21,6 +23,8 @@ import { Button } from '@/components/common/Button';
 import { formatMessage } from '@/utils/i18nFormat';
 import { useDictionary } from "@/context/DictionaryContext";
 
+const AuthModal = dynamic(() => import('@/components/AuthModal').then((m) => m.AuthModal), { ssr: false });
+
 interface TierListHubProps {
   locale: string;
 }
@@ -32,6 +36,8 @@ export function TierListHub({ locale }: TierListHubProps) {
   const dict = useDictionary();
   const t = dict.tierLists;
   const router = useRouter();
+  const { isAuthenticated } = useAuth();
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState<boolean>(false);
   const { lists, loading, error, refresh } = useTierListSummaries(locale);
   const { state, hydrated } = useTierListStore();
   const [importOpen, setImportOpen] = useState<boolean>(false);
@@ -48,6 +54,10 @@ export function TierListHub({ locale }: TierListHubProps) {
     const consume = () => {
       const payload = readShareFragment(window.location.hash);
       if (!payload) return;
+      if (!isAuthenticated) {
+        setIsAuthModalOpen(true);
+        return;
+      }
       setSharePayload(payload);
       setImportOpen(true);
       window.history.replaceState(null, '', window.location.pathname + window.location.search);
@@ -55,7 +65,7 @@ export function TierListHub({ locale }: TierListHubProps) {
     consume();
     window.addEventListener('hashchange', consume);
     return () => window.removeEventListener('hashchange', consume);
-  }, []);
+  }, [isAuthenticated]);
 
   const templates = useMemo(() => Object.fromEntries(lists.map((l) => [l.slug, l.title])), [lists]);
 
@@ -73,7 +83,21 @@ export function TierListHub({ locale }: TierListHubProps) {
   );
 
   // The creator page builds the list (title, ladder, items) before anything is saved.
-  const createBlank = () => router.push(`/${locale}/tier-lists/new`);
+  const createBlank = () => {
+    if (!isAuthenticated) {
+      setIsAuthModalOpen(true);
+      return;
+    }
+    router.push(`/${locale}/tier-lists/new`);
+  };
+
+  const handleOpenImport = () => {
+    if (!isAuthenticated) {
+      setIsAuthModalOpen(true);
+      return;
+    }
+    setImportOpen(true);
+  };
 
   const handleImport = (doc: TierListDocument) => {
     setImportOpen(false);
@@ -265,7 +289,7 @@ export function TierListHub({ locale }: TierListHubProps) {
             </div>
 
             <div className="pointer-events-none flex shrink-0 items-center justify-end gap-2 lg:w-56">
-              <Button variant="secondary" onClick={() => setImportOpen(true)} className={`pointer-events-auto ${TOUCH_BTN}`}>
+              <Button variant="secondary" onClick={handleOpenImport} className={`pointer-events-auto ${TOUCH_BTN}`}>
                 <FileJson className="h-4 w-4" aria-hidden="true" />
                 <span className="hidden sm:inline">{t.importJson}</span>
               </Button>
@@ -290,7 +314,13 @@ export function TierListHub({ locale }: TierListHubProps) {
         >
           <div className="overflow-hidden">
             <div className="p-4 sm:p-6 border-t border-border-color">
-              {hydrated && customLists.length === 0 ? (
+              {!isAuthenticated ? (
+                <AuthRequiredState
+                  variant="compact"
+                  title={t.loginToManage}
+                  subtitle={t.loginToManageDesc}
+                />
+              ) : hydrated && customLists.length === 0 ? (
                 <EmptyState
                   title={t.noCustomLists}
                   subtitle={t.noCustomListsSubtitle}
@@ -350,6 +380,13 @@ export function TierListHub({ locale }: TierListHubProps) {
         }}
         onImport={handleImport}
       />
+
+      {isAuthModalOpen && (
+        <AuthModal
+          isOpen={isAuthModalOpen}
+          onClose={() => setIsAuthModalOpen(false)}
+        />
+      )}
     </div>
   );
 }

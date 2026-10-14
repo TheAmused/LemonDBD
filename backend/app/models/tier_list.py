@@ -23,7 +23,7 @@ from sqlalchemy import Boolean, CheckConstraint, DateTime, Integer, String, Text
 from sqlalchemy.orm import Mapped, mapped_column, validates
 
 from app.core.extensions import Base
-from app.models.base import JSON_DICT, JSON_LIST, utcnow
+from app.models.base import JSON_DICT, JSON_LIST, TranslatableModelMixin, utcnow
 
 #: What a list ranks. Everything but `custom` is resolved against the live
 #: catalog on the client, so a new perk or killer appears in its list the day
@@ -49,15 +49,26 @@ SLUG_PATTERN = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 TIER_COLOR_TOKENS = frozenset({"s", "a", "b", "c", "d", "e", "f", "neutral"})
 HEX_COLOR_PATTERN = re.compile(r"^#[0-9a-fA-F]{6}$")
 
+#: Every column a tier-list seed row may carry, in seed-file order. Shared by
+#: the exporter and the importer, so a round trip cannot drop a field one side forgot.
+TIER_LIST_FIELDS = (
+    "slug",
+    "kind",
+    "title",
+    "description",
+    "cover_image_url",
+    "tiers",
+    "item_ids",
+    "custom_items",
+    "default_placements",
+    "translations",
+    "is_featured",
+    "is_active",
+    "sort_order",
+)
 
-def _localized(translations: dict[str, Any] | None, lang: str | None) -> dict[str, Any]:
-    if not lang or not translations:
-        return {}
-    entry = translations.get(lang)
-    return entry if isinstance(entry, dict) else {}
 
-
-class TierList(Base):
+class TierList(Base, TranslatableModelMixin):
     __tablename__ = "tier_lists"
     __table_args__ = (
         CheckConstraint(
@@ -167,7 +178,7 @@ class TierList(Base):
     def _localized_tiers(self, lang: str | None) -> list[dict[str, Any]] | None:
         if self.tiers is None:
             return None
-        labels = _localized(self.translations, lang).get("tiers") or {}
+        labels = self.get_translation(lang).get("tiers") or {}
         result = []
         for t in self.tiers:
             entry: dict[str, Any] = {
@@ -187,7 +198,7 @@ class TierList(Base):
     def _localized_items(self, lang: str | None) -> list[dict[str, Any]] | None:
         if self.custom_items is None:
             return None
-        names = _localized(self.translations, lang).get("items") or {}
+        names = self.get_translation(lang).get("items") or {}
         return [
             {
                 "id": str(item.get("id")),
@@ -212,7 +223,7 @@ class TierList(Base):
 
     def to_summary_dict(self, lang: str | None = None) -> dict[str, Any]:
         """The hub card: everything but the item payloads."""
-        trans = _localized(self.translations, lang)
+        trans = self.get_translation(lang)
         return {
             "id": self.id,
             "slug": self.slug,

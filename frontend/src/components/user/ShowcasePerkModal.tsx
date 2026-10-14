@@ -4,11 +4,10 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { SearchInput } from '@/components/common/Field';
 import { Button } from '@/components/common/Button';
-import Image from 'next/image';
+import { PerkIcon } from '@/components/ui/PerkIcon';
 import { Search, Trash2, Sparkles, Check } from 'lucide-react';
 import type { RoleCategory, Perk } from '@/types/perks';
-import type { Dictionary } from '@/locales/types';
-import { getBackendBaseUrl, getPerkIconUrl, matchesPerkSearch } from '@/utils/perkUtils';
+import { getBackendBaseUrl, matchesPerkSearch } from '@/utils/perkUtils';
 import { fetchCached, fetchJson, unwrapList, type ListPayload } from '@/services/dataCache';
 import { Modal } from '@/components/common/Modal';
 import { Spinner } from '@/components/common/Spinner';
@@ -33,9 +32,7 @@ const PerkGridItem: React.FC<{
   onSelect: (id: number) => void;
   onClose: () => void;
 }> = ({ perk, isSelected, onSelect, onClose }) => {
-  const [imgError, setImgError] = useState(false);
   const perkId = perk.id ?? 0;
-  const iconSrc = getPerkIconUrl(perk);
 
   return (
     <button
@@ -52,19 +49,13 @@ const PerkGridItem: React.FC<{
     >
       {/* Perk Icon — just the icon, no shape/background/border behind it */}
       <div className="relative w-[84px] h-[84px] flex items-center justify-center mb-2 group-hover:scale-105 transition-transform pointer-events-none">
-        {iconSrc && !imgError ? (
-          <Image
-            src={iconSrc}
-            alt={perk.name}
-            width={84}
-            height={84}
-            className="object-contain"
-            onError={() => setImgError(true)}
-            unoptimized
-          />
-        ) : (
-          <Sparkles className="h-8 w-8 text-accent-red" />
-        )}
+        <PerkIcon
+          perk={perk}
+          size={84}
+          alt={perk.name}
+          fallbackIcon={<Sparkles className="h-8 w-8 text-accent-red" />}
+          className="object-contain"
+        />
       </div>
 
       {/* Name */}

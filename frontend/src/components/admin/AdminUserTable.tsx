@@ -4,7 +4,6 @@
 import React from 'react';
 import { Select, SearchInput } from '@/components/common/Field';
 import { Button } from '@/components/common/Button';
-import type { Dictionary } from '@/locales/types';
 import {
   Users,
   UserPlus,

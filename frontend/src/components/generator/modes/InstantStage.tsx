@@ -3,7 +3,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
-import { DbdButton } from '../shared/DbdButton';
+import { DbdButton } from '@/components/common/Button';
 import { Perk, RoleCategory, DrawnSlot } from '@/types/perks';
 import { ChaosMutator } from '@/types/chaos';
 import { Dictionary } from '@/locales/types';

@@ -36,6 +36,7 @@ import {
 } from '@/types/smashOrPass';
 import { createRandomId, createVersionedStore, isRecord, readNumber, type SaveResult } from '@/utils/versionedStore';
 import { sanitizeImageUrl } from './codec';
+import { sanitizeManifest } from '@/utils/shareCodec';
 import { ENTITY_ID_PATTERN, SMASH_ROSTER_LIMITS } from './constants';
 
 const SMASH_ROSTER_STORAGE_KEY = 'lemondbd_smash_rosters';
@@ -103,6 +104,7 @@ export function migrateSmashRosterState(raw: unknown): SmashRosterStoreState {
       const entities = readEntities(value.entities);
       // A roster with no entities yet is legitimate -- "New roster" starts empty.
       const cover_image_url = sanitizeImageUrl(value.cover_image_url);
+      const manifest = sanitizeManifest(value._manifest);
       custom[id] = {
         id,
         format: SMASH_ROSTER_FORMAT,
@@ -121,6 +123,7 @@ export function migrateSmashRosterState(raw: unknown): SmashRosterStoreState {
         ...(Array.isArray(value.custom_genders) ? { custom_genders: value.custom_genders as string[] } : {}),
         ...(isRecord(value.custom_labels) ? { custom_labels: value.custom_labels as StoredCustomRoster['custom_labels'] } : {}),
         ...(Array.isArray(value.romance_archetypes) ? { romance_archetypes: value.romance_archetypes as StoredCustomRoster['romance_archetypes'] } : {}),
+        ...(manifest ? { _manifest: manifest } : {}),
       };
     }
   }

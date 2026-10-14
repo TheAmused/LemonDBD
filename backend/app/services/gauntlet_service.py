@@ -33,7 +33,7 @@ from app.services.gauntlet import (
 )
 from app.services.match_log_retention import add_match_log
 from app.services.ownership_service import OwnershipService
-from app.services.perk_service import PerkService
+from app.services.perks import PerkService
 from app.services.streak_run import StreakRunService
 
 logger = logging.getLogger(__name__)

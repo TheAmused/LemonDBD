@@ -14,13 +14,14 @@ from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column, relationship, validates
 
 from app.core.extensions import Base
+from app.models.base import TranslatableModelMixin
 from app.models.perk_types import DEFAULT_PERK_TYPES, validate_perk_types
 
 if TYPE_CHECKING:
     from app.models.character import Killer, Survivor
 
 
-class Perk(Base):
+class Perk(Base, TranslatableModelMixin):
     """A perk, optionally taught by a character.
 
     This was already the one properly normalized relation in the static
@@ -135,13 +136,8 @@ class Perk(Base):
             char_real = owner.real_name or char_name
             char_avatar = owner.avatar_local_path or ""
 
-        name = self.name
-        description = self.description
-        if lang and self.translations and lang in self.translations:
-            trans = self.translations.get(lang) or {}
-            if isinstance(trans, dict):
-                name = trans.get("name") or name
-                description = trans.get("description") or description
+        name = self.localized(lang, "name", self.name)
+        description = self.localized(lang, "description", self.description)
 
         return {
             "id": self.id,

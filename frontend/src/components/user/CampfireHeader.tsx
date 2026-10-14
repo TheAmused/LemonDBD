@@ -15,7 +15,6 @@ import { VaultMasteryDials } from '@/components/user/VaultMasteryDials';
 import { CustomDropdown } from '@/components/common/CustomDropdown';
 import { PLAYER_TITLES, type UserShowcaseState } from '@/types/userShowcase';
 import type { StatusFeedback } from '@/types/userProfile';
-import type { Dictionary } from '@/locales/types';
 import { OverseerEyeIcon } from '@/components/icons/DbdIcons';
 
 import { tip } from '@/components/common/Tooltip';

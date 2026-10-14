@@ -3,7 +3,7 @@
 import pytest
 from sqlalchemy import select
 from app.models import Killer, Perk, Survivor
-from app.services.user_service import UserService
+from app.services.user import UserService
 from app.services.ownership_service import OwnershipService
 from tests.unit.conftest import make_chapter
 

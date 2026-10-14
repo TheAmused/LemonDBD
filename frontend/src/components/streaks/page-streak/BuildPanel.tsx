@@ -4,6 +4,7 @@
 import React, { useState } from 'react';
 import { AnimatePresence, MotionConfig, motion } from 'framer-motion';
 import { Plus } from 'lucide-react';
+import { PerkIcon } from '@/components/ui/PerkIcon';
 import { KillerIcon } from '@/components/icons/DbdIcons';
 import { tip } from '@/components/common/Tooltip';
 import { usePerkDisplayName } from '@/context/DisplayNamesContext';
@@ -34,7 +35,6 @@ const BOX = SLOT_SIZE + 2 * STEP;
 export const BuildPanel: React.FC<BuildPanelProps> = ({ selected, size, iconByPerk = {}, killerName, avatarSrc }) => {
   const dict = useDictionary();
   const displayName = usePerkDisplayName();
-  const [imgError, setImgError] = useState(false);
 
   return (
     <section
@@ -43,17 +43,12 @@ export const BuildPanel: React.FC<BuildPanelProps> = ({ selected, size, iconByPe
     >
       <div className="flex min-w-0 flex-col items-center gap-2">
         <div className="flex h-24 w-24 items-center justify-center overflow-hidden rounded-2xl border-2 border-border-color bg-bg-surface shadow-lg sm:h-28 sm:w-28">
-          {avatarSrc && !imgError ? (
-            <img
-              src={avatarSrc}
-              alt={killerName}
-              draggable={false}
-              onError={() => setImgError(true)}
-              className="h-full w-full select-none object-cover"
-            />
-          ) : (
-            <KillerIcon className="h-8 w-8 text-text-muted" aria-hidden="true" />
-          )}
+          <PerkIcon
+            src={avatarSrc}
+            alt={killerName}
+            imageClassName="h-full w-full select-none object-cover"
+            fallbackIcon={<KillerIcon className="h-8 w-8 text-text-muted" aria-hidden="true" />}
+          />
         </div>
         <h3 className="max-w-[8rem] truncate text-sm font-black tracking-wide text-text-primary">{killerName}</h3>
       </div>

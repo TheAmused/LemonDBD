@@ -195,7 +195,7 @@ class TestDatabaseExportImportGroupsAndUpsertHardening:
         "now" for every character would collapse that feature's whole notion
         of "who existed before whom"."""
         from datetime import datetime, timezone
-        from app.services.db.serializers import serialize_killer
+        from app.services.db.export_registry import serialize_killer
 
         with export_import_app.app_context():
             chapter = db.session.scalar(select(Chapter)) or Chapter(name="Roundtrip Chapter")

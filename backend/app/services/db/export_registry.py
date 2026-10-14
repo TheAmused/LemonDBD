@@ -8,7 +8,9 @@ whose export and replace-mode clearing need no custom code.
 from collections.abc import Callable
 from typing import Any
 
+from app.core.extensions import db
 from app.models.admin import AdminAuditLog, ChallengeModeSetting
+from app.models.base import column_dict
 from app.models.changelog import ChangelogPost
 from app.models.chaos import ChaosRun
 from app.models.chapter import Chapter
@@ -20,14 +22,120 @@ from app.models.history import HistoryRun
 from app.models.map import MapSource
 from app.models.page_streak import PageStreakRun
 from app.models.perk import Perk
-from app.models.tier_list import TierList
+from app.models.tier_list import TIER_LIST_FIELDS, TierList
 from app.models.user import User, UserShowcase
-from app.services.db.serializers import (
-    serialize_admin_audit_log, serialize_changelog_post, serialize_chapter,
-    serialize_item, serialize_item_addon, serialize_item_category, serialize_killer,
-    serialize_killer_addon, serialize_offering, serialize_perk, serialize_survivor,
-    serialize_tier_list, serialize_user,
-)
+
+_TIER_LIST_OPTIONAL = {
+    "cover_image_url",
+    "tiers",
+    "item_ids",
+    "custom_items",
+    "default_placements",
+    "translations",
+}
+
+
+def power_icon_local_path(power_name: str | None) -> str | None:
+    if not power_name:
+        return None
+    p_clean = power_name.lower().replace(" ", "_").replace("'", "").replace("-", "_")
+    return f"icons/powers/{p_clean}.webp" if p_clean else None
+
+
+def user_avatar_relative_path(avatar_url: str | None) -> str | None:
+    if not avatar_url or avatar_url == "default_avatar":
+        return None
+    filename = avatar_url.rsplit("/", 1)[-1].split("?")[0]
+    return f"uploads/avatars/{filename}" if filename else None
+
+
+def serialize_survivor(s: Survivor) -> dict[str, Any]:
+    return column_dict(s)
+
+
+def serialize_killer(k: Killer) -> dict[str, Any]:
+    row = column_dict(k)
+    row["power_icon_local_path"] = k.power_icon_local_path or power_icon_local_path(k.power_name)
+    return row
+
+
+def serialize_perk(p: Perk) -> dict[str, Any]:
+    return column_dict(p)
+
+
+def serialize_item_category(c: ItemCategory) -> dict[str, Any]:
+    return c.to_dict()
+
+
+def serialize_item(i: Item) -> dict[str, Any]:
+    return column_dict(i)
+
+
+def serialize_killer_addon(a: KillerAddon) -> dict[str, Any]:
+    return column_dict(a)
+
+
+def serialize_item_addon(a: ItemAddon) -> dict[str, Any]:
+    return column_dict(a)
+
+
+def serialize_offering(o: Offering) -> dict[str, Any]:
+    return column_dict(o)
+
+
+def serialize_chapter(c: Chapter) -> dict[str, Any]:
+    return column_dict(c)
+
+
+def serialize_user(u: User) -> dict[str, Any]:
+    return {
+        "login": u.login,
+        "username": u.username,
+        "email": u.email,
+        "password_hash": u.password_hash,
+        "role": u.role,
+        "avatar_url": u.avatar_url,
+        "avatar_relative_path": user_avatar_relative_path(u.avatar_url),
+        "is_active": u.is_active,
+        "is_verified": u.is_verified,
+        "created_at": u.created_at.isoformat() if u.created_at else None,
+        "updated_at": u.updated_at.isoformat() if u.updated_at else None,
+    }
+
+
+def serialize_admin_audit_log(log: AdminAuditLog) -> dict[str, Any]:
+    admin_user = db.session.get(User, log.admin_user_id) if log.admin_user_id else None
+    return {
+        "admin_login": admin_user.login if admin_user else None,
+        "action": log.action,
+        "target_type": log.target_type,
+        "target_id": log.target_id,
+        "details": log.details,
+        "created_at": log.created_at.isoformat() if log.created_at else None,
+    }
+
+
+def serialize_changelog_post(post: ChangelogPost) -> dict[str, Any]:
+    return {
+        "title": post.title,
+        "content_html": post.content_html,
+        "tag": post.tag,
+        "position": post.position,
+        "is_published": post.is_published,
+        "author_login": post.author.login if post.author else None,
+        "author_name": post.author_name,
+        "created_at": post.created_at.isoformat() if post.created_at else None,
+    }
+
+
+def serialize_tier_list(t: TierList) -> dict[str, Any]:
+    row: dict[str, Any] = {"id": t.id}
+    for field in TIER_LIST_FIELDS:
+        value = getattr(t, field)
+        if field in _TIER_LIST_OPTIONAL and not value:
+            continue
+        row[field] = value
+    return row
 
 TARGET_GROUPS: dict[str, list[str]] = {
     "content": [

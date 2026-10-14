@@ -6,7 +6,6 @@ import { SearchInput } from '@/components/common/Field';
 import Image from 'next/image';
 import { UserCheck, Sparkles } from 'lucide-react';
 import type { RoleCategory, CharacterItem } from '@/types/perks';
-import type { Dictionary } from '@/locales/types';
 import { getBackendBaseUrl, getCharacterAvatarUrl, normalizeSearchText } from '@/utils/perkUtils';
 import { CATALOG_TTL_MS, catalogKey, fetchCached, fetchJson, unwrapList, type ListPayload } from '@/services/dataCache';
 import { Modal } from '@/components/common/Modal';

@@ -4,7 +4,7 @@
 import { Tabs, TabPanel } from '@/components/common/Tabs';
 import React, { useId, useMemo, useState } from 'react';
 import { CheckCircle2, Circle, Sparkles } from 'lucide-react';
-import type { Dictionary } from '@/locales/types';
+import { PerkIcon } from '@/components/ui/PerkIcon';
 import type { Perk } from '@/types/gauntletStreak';
 import { perkIconUrl as perkIconFor } from '@/utils/staticUrl';
 import { Modal } from '@/components/common/Modal';
@@ -12,21 +12,15 @@ import { usePerkDisplayName } from '@/context/DisplayNamesContext';
 import { useDictionary } from "@/context/DictionaryContext";
 
 const PerkTile: React.FC<{ perk: Perk; displayName: string }> = ({ perk, displayName }) => {
-  const [failed, setFailed] = useState<boolean>(false);
-  const src = perkIconFor(perk);
   return (
     <div className="flex flex-col items-center gap-1.5 p-2 rounded-lg bg-bg-elevated border border-border-color">
-      <div className="w-full aspect-square rounded-md overflow-hidden bg-bg-primary flex items-center justify-center">
-        {src && !failed ? (
-          <img
-            src={src}
-            alt={displayName}
-            className="w-full h-full object-contain p-1.5"
-            onError={() => setFailed(true)}
-          />
-        ) : (
-          <Sparkles className="w-6 h-6 text-text-muted" aria-hidden="true" />
-        )}
+      <div className="w-full aspect-square rounded-md overflow-hidden bg-bg-primary flex items-center justify-center p-1.5">
+        <PerkIcon
+          perk={perk}
+          src={perkIconFor(perk)}
+          alt={displayName}
+          fallbackIcon={<Sparkles className="w-6 h-6 text-text-muted" aria-hidden="true" />}
+        />
       </div>
       <span className="text-mini font-medium text-center text-text-secondary leading-tight line-clamp-2">
         {displayName}

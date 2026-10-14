@@ -35,6 +35,8 @@ from app.services.user.profile import (
     update_user_showcase,
 )
 
+from app.services.user.service import UserService
+
 __all__ = [
     "ALLOWED_EXTENSIONS",
     "is_allowed_avatar_file",
@@ -64,4 +66,5 @@ __all__ = [
     "export_user_data",
     "fetch_admin_metrics",
     "seed_default_admin_if_empty",
+    "UserService",
 ]

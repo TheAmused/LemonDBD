@@ -1,12 +1,14 @@
-// frontend/src/components/user/PerkDiamondSlot.tsx
-import { useDictionary } from '@/context/DictionaryContext';
-import React, { useState, useEffect } from 'react';
-import Image from 'next/image';
+'use client';
+import React from 'react';
 import { Plus, X, Sparkles } from 'lucide-react';
+import { PerkIcon } from '@/components/ui/PerkIcon';
 import type { Perk } from '@/types/perks';
 import { getPerkIconUrl } from '@/utils/perkUtils';
-
 import { tip } from '@/components/common/Tooltip';
+import { useDictionary } from '@/context/DictionaryContext';
+
+import { DiamondSlot } from '@/components/ui/DiamondSlot';
+
 interface PerkDiamondSlotProps {
   slotIndex: number;
   perk?: Perk | null;
@@ -28,47 +30,33 @@ export const PerkDiamondSlot: React.FC<PerkDiamondSlotProps> = ({
   const dict = useDictionary();
   const emptyLabel = emptyLabelProp ?? dict.user.emptySlot;
   const clearLabel = clearLabelProp ?? dict.user.clearPerk;
-  const [imgError, setImgError] = useState(false);
-
-  useEffect(() => {
-    setImgError(false);
-  }, [perk?.id]);
 
   const iconUrl = perk ? getPerkIconUrl(perk) : null;
 
   return (
     <div className="relative flex flex-col items-center group">
       {/* 45-degree diamond container */}
-      <button
-        type="button"
+      <DiamondSlot
+        size="md"
+        active={!!perk}
+        dashed={!perk}
         onClick={onClick}
-        className={`relative flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 rotate-45 rounded-xl border-2 transition-all cursor-pointer shadow-md ${
-          perk
-            ? 'border-accent-red/80 bg-bg-elevated hover:scale-105 hover:border-accent-red'
-            : 'border-dashed border-border-color bg-bg-elevated/40 hover:border-accent-amber/60 hover:bg-accent-amber/5 hover:scale-105'
-        }`}
+        ariaLabel={perk?.name || emptyLabel}
+        className={perk ? 'bg-bg-elevated' : undefined}
         {...tip(perk?.name || emptyLabel, undefined, perk ? 'item' : 'action')}
-        aria-label={perk?.name || emptyLabel}
       >
-        {/* Un-rotated inside content */}
-        <div className="-rotate-45 relative flex items-center justify-center w-full h-full pointer-events-none">
-          {perk && iconUrl && !imgError ? (
-            <Image
-              src={iconUrl}
-              alt={perk.name}
-              width={42}
-              height={42}
-              className="object-contain drop-shadow-md"
-              onError={() => setImgError(true)}
-              unoptimized
-            />
-          ) : perk ? (
-            <Sparkles className="h-5 w-5 text-accent-red" />
-          ) : (
-            <Plus className="h-5 w-5 text-text-muted group-hover:text-accent-amber transition-colors" />
-          )}
-        </div>
-      </button>
+        {perk ? (
+          <PerkIcon
+            perk={perk}
+            src={iconUrl}
+            className="w-10 h-10"
+            imageClassName="object-contain drop-shadow-md w-full h-full"
+            fallbackIcon={<Sparkles className="h-5 w-5 text-accent-red" />}
+          />
+        ) : (
+          <Plus className="h-5 w-5 text-text-muted group-hover:text-accent-amber transition-colors" />
+        )}
+      </DiamondSlot>
 
       {/* Clear button on hover when perk is present */}
       {perk && onClear && (

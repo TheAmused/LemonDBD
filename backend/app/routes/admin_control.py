@@ -1,21 +1,57 @@
-# backend/app/routes/admin_control.py
+import logging
+from datetime import datetime, timezone
 from typing import Any
-from flask import Blueprint, g, jsonify, request
-from sqlalchemy import and_, case, select
+from flask import Blueprint, Response, g, jsonify, request
+from sqlalchemy import and_, case, delete, select
 
 from app.core.extensions import db
+from app.core.json_provider import safe_json_dumps, safe_json_loads
 from app.core.redis_cache import bump_catalog_version
 from app.core.security import admin_required
 from app.utils.pagination import paginate_args
-from app.models import Killer, Perk, Survivor
+from app.models import (
+    GauntletRun,
+    Item,
+    ItemAddon,
+    Killer,
+    KillerAddon,
+    MapRealm,
+    PageStreakRun,
+    Perk,
+    Realm,
+    Survivor,
+    UserCharacterOwnership,
+    UserPerkOwnership,
+)
 from app.models.admin import CHALLENGE_MODES
 from app.services import site_settings
 from app.services.admin_control_service import (
     get_audit_logs,
     get_challenge_mode_settings,
     log_admin_action,
+    purge_database_tables,
     set_challenge_mode_enabled,
+    set_character_disabled as svc_set_character_disabled,
+    set_perk_disabled as svc_set_perk_disabled,
 )
+from app.services.content_moderation_service import (
+    get_admin_reports,
+    get_report_preview,
+    purge_expired_evidence,
+    resolve_report,
+)
+from app.services.db.export_import import DatabaseExportImportService
+from app.services.user.admin import fetch_admin_metrics
+from pydantic import ValidationError
+from app.schemas.admin import (
+    DisableItemDTO,
+    PurgeDatabaseDTO,
+    UpdateChallengeModeDTO,
+    UpdateSiteSettingsDTO,
+)
+from app.utils.responses import api_error
+
+logger = logging.getLogger(__name__)
 
 admin_control_bp = Blueprint("admin_control", __name__, url_prefix="/api/v1/admin")
 
@@ -80,44 +116,31 @@ def set_character_disabled(character_id: int):
     characters, so disabling "character 7" no longer names one row. It is read
     from the query string or the body, whichever the caller uses.
     """
-    data = request.get_json(silent=True) or {}
-    role = (request.args.get("role") or data.get("role") or "").strip().rstrip("s").lower()
-    model = {"survivor": Survivor, "killer": Killer}.get(role)
-    if model is not None:
-        character = db.session.get(model, character_id)
-    else:
-        character = db.session.get(Killer, character_id) or db.session.get(Survivor, character_id)
-
-    if not character:
-        return jsonify({"error": "Character not found."}), 404
-
-    is_disabled = data.get("is_disabled")
-    if not isinstance(is_disabled, bool):
-        return jsonify({"error": "Field 'is_disabled' (bool) is required."}), 400
     try:
-        reason = _clean_reason(data)
+        dto = DisableItemDTO.model_validate(request.get_json(silent=True) or {})
+    except ValidationError as err:
+        return api_error("Field 'is_disabled' (bool) is required.", 400, details=err.errors())
+
+    try:
+        reason = _clean_reason({"reason": dto.reason})
     except ValueError as e:
-        return jsonify({"error": str(e)}), 400
+        return api_error(str(e), 400)
 
-    character.is_disabled = is_disabled
-    character.disabled_reason = reason if is_disabled else None
-    db.session.commit()
-
-    # `is_disabled`/`disabled_reason` are serialized into the cached character
-    # and perk catalog responses, so a kill switch that does not invalidate
-    # them keeps the disabled character on the site for a day.
-    bump_catalog_version()
+    role = (request.args.get("role") or dto.role or "").strip().rstrip("s").lower()
+    character, err = svc_set_character_disabled(character_id, dto.is_disabled, reason, role)
+    if err:
+        return api_error(err, 404)
 
     log_admin_action(
         g.current_user.id,
-        action="character_disabled" if is_disabled else "character_enabled",
+        action="character_disabled" if dto.is_disabled else "character_enabled",
         target_type="character",
         target_id=character.id,
         details={"name": character.name, "reason": reason},
     )
 
     return jsonify({
-        "message": f"{character.name} is now {'disabled' if is_disabled else 'enabled'}.",
+        "message": f"{character.name} is now {'disabled' if dto.is_disabled else 'enabled'}.",
         "character": {
             "id": character.id,
             "name": character.name,
@@ -168,39 +191,30 @@ def list_perks_for_admin():
 @admin_required
 def set_perk_disabled(perk_id: int):
     """Enables/disables a single perk from being offered in new challenge pools/pages."""
-    perk = db.session.get(Perk, perk_id)
-    if not perk:
-        return jsonify({"error": "Perk not found."}), 404
-
-    # This line was missing: `data` was read below without ever being assigned,
-    # so every call to this endpoint raised NameError and returned a 500. The
-    # sibling `set_character_disabled` has always had it.
-    data = request.get_json(silent=True) or {}
-
-    is_disabled = data.get("is_disabled")
-    if not isinstance(is_disabled, bool):
-        return jsonify({"error": "Field 'is_disabled' (bool) is required."}), 400
     try:
-        reason = _clean_reason(data)
+        dto = DisableItemDTO.model_validate(request.get_json(silent=True) or {})
+    except ValidationError as err:
+        return api_error("Field 'is_disabled' (bool) is required.", 400, details=err.errors())
+
+    try:
+        reason = _clean_reason({"reason": dto.reason})
     except ValueError as e:
-        return jsonify({"error": str(e)}), 400
+        return api_error(str(e), 400)
 
-    perk.is_disabled = is_disabled
-    perk.disabled_reason = reason if is_disabled else None
-    db.session.commit()
-
-    bump_catalog_version()
+    perk, err = svc_set_perk_disabled(perk_id, dto.is_disabled, reason)
+    if err:
+        return api_error(err, 404)
 
     log_admin_action(
         g.current_user.id,
-        action="perk_disabled" if is_disabled else "perk_enabled",
+        action="perk_disabled" if dto.is_disabled else "perk_enabled",
         target_type="perk",
         target_id=perk.id,
         details={"name": perk.name, "reason": reason},
     )
 
     return jsonify({
-        "message": f"{perk.name} is now {'disabled' if is_disabled else 'enabled'}.",
+        "message": f"{perk.name} is now {'disabled' if dto.is_disabled else 'enabled'}.",
         "perk": {
             "id": perk.id,
             "name": perk.name,
@@ -220,16 +234,18 @@ def list_challenge_modes():
 @admin_required
 def update_challenge_mode(mode: str):
     if mode not in CHALLENGE_MODES:
-        return jsonify({"error": f"Unknown challenge mode '{mode}'."}), 400
+        return api_error(f"Unknown challenge mode '{mode}'.", 400)
 
-    data = request.get_json(silent=True) or {}
-    is_enabled = data.get("is_enabled")
-    if not isinstance(is_enabled, bool):
-        return jsonify({"error": "Field 'is_enabled' (bool) is required."}), 400
     try:
-        reason = _clean_reason(data)
+        dto = UpdateChallengeModeDTO.model_validate(request.get_json(silent=True) or {})
+    except ValidationError as err:
+        return api_error("Field 'is_enabled' (bool) is required.", 400, details=err.errors())
+
+    is_enabled = dto.is_enabled
+    try:
+        reason = _clean_reason({"reason": dto.reason})
     except ValueError as e:
-        return jsonify({"error": str(e)}), 400
+        return api_error(str(e), 400)
 
     updated = set_challenge_mode_enabled(mode, is_enabled, reason)
 
@@ -268,14 +284,16 @@ def list_site_settings():
 @admin_required
 def update_site_settings():
     """Body: ``{"settings": {key: value | null}}``; ``null`` restores the config default."""
-    data = request.get_json(silent=True) or {}
-    changes = data.get("settings")
-    if not isinstance(changes, dict) or not changes:
-        return jsonify({"error": "Field 'settings' (object) is required."}), 400
+    try:
+        dto = UpdateSiteSettingsDTO.model_validate(request.get_json(silent=True) or {})
+    except ValidationError as err:
+        return api_error("Field 'settings' (object) is required.", 400, details=err.errors())
+
+    changes = dto.settings
     try:
         applied = site_settings.update_settings(changes)
     except ValueError as err:
-        return jsonify({"error": str(err)}), 400
+        return api_error(str(err), 400)
 
     log_admin_action(
         g.current_user.id,
@@ -284,3 +302,166 @@ def update_site_settings():
         details={"changes": {k: ("<default>" if changes[k] is None else applied[k]) for k in applied}},
     )
     return jsonify({"message": "Settings saved.", "settings": site_settings.list_settings()}), 200
+
+
+@admin_control_bp.route("/stats", methods=["GET"])
+@admin_required
+def get_admin_stats():
+    """Retrieve system-wide entity and registration metrics."""
+    stats = fetch_admin_metrics()
+    return jsonify(stats), 200
+
+
+@admin_control_bp.route("/database/purge", methods=["POST"])
+@admin_required
+def purge_database_tables():
+    """Purge specific database entity tables on demand."""
+    try:
+        dto = PurgeDatabaseDTO.model_validate(request.get_json(silent=True) or {})
+    except ValidationError as err:
+        return api_error("No valid purge targets specified.", 400, details=err.errors())
+
+    targets: list[str] = dto.targets
+    try:
+        purged = purge_database_tables(targets)
+        logger.info(f"Admin {g.current_user.login} purged tables: {purged}")
+        return jsonify({
+            "status": "success",
+            "message": f"Successfully purged tables: {', '.join(purged)}",
+            "purged_tables": purged,
+            "stats": fetch_admin_metrics(),
+        }), 200
+
+
+    except Exception as e:
+        db.session.rollback()
+        logger.error(f"Error purging database tables: {e}", exc_info=True)
+        return jsonify({"error": f"Database purge failed: {str(e)}", "status": 500}), 500
+
+
+@admin_control_bp.route("/database/export", methods=["GET"])
+@admin_required
+def export_database():
+    """Export complete or selective database entities as JSON."""
+    targets_param = request.args.get("targets")
+    targets = [t.strip() for t in targets_param.split(",") if t.strip()] if targets_param else None
+    include_assets = request.args.get("include_assets", "true").lower() not in ["false", "0", "no"]
+
+    try:
+        data = DatabaseExportImportService.export_database(targets=targets, include_assets=include_assets)
+        download = request.args.get("download", "false").lower() in ["true", "1", "yes"]
+        if download:
+            timestamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
+            json_str = safe_json_dumps(data)
+            return Response(
+                json_str,
+                mimetype="application/json",
+                headers={
+                    "Content-Disposition": f"attachment; filename=lemondbd_export_{timestamp}.json"
+                },
+            )
+        return jsonify(data), 200
+    except Exception as e:
+        logger.error(f"Database export error: {e}", exc_info=True)
+        return jsonify({"error": f"Failed to export database: {str(e)}", "status": 500}), 500
+
+
+@admin_control_bp.route("/database/import", methods=["POST"])
+@admin_required
+def import_database():
+    """Import database entities from JSON payload or uploaded .json file."""
+    mode = request.form.get("mode") or request.args.get("mode") or "merge"
+    targets_param = request.form.get("targets") or request.args.get("targets")
+    targets = [t.strip() for t in targets_param.split(",") if t.strip()] if targets_param else None
+
+    payload = None
+
+    if "file" in request.files:
+        file = request.files["file"]
+        if not file or not file.filename:
+            return jsonify({"error": "Uploaded file is empty.", "status": 400}), 400
+        try:
+            content = file.read().decode("utf-8")
+            payload = safe_json_loads(content)
+        except Exception as json_err:
+            return jsonify({"error": f"Invalid JSON file: {str(json_err)}", "status": 400}), 400
+
+    if payload is None:
+        body = request.get_json(silent=True) or {}
+        if not isinstance(body, dict):
+            return jsonify({"error": "Invalid JSON payload: root must be an object.", "status": 400}), 400
+        mode = body.get("mode", mode)
+        if "targets" in body and isinstance(body["targets"], list):
+            targets = body["targets"]
+        payload = body.get("data", body)
+
+    if not payload or not isinstance(payload, dict):
+        return jsonify({"error": "No valid JSON payload provided for import.", "status": 400}), 400
+
+    try:
+        result = DatabaseExportImportService.import_database(
+            payload=payload,
+            mode=mode,
+            targets=targets,
+        )
+        logger.info(f"Admin {g.current_user.login} imported database (mode={mode}): {result.get('summary')}")
+        return jsonify(result), 200
+    except Exception as e:
+        logger.error(f"Database import error: {e}", exc_info=True)
+        return jsonify({"error": f"Database import failed: {str(e)}", "status": 500}), 500
+
+
+@admin_control_bp.route("/content-reports", methods=["GET"])
+@admin_required
+def list_content_reports():
+    """List content reports with pagination and status filter."""
+    status = request.args.get("status", "pending")
+    page, per_page = paginate_args(default_per_page=20)
+    result = get_admin_reports(status=status, page=page, per_page=per_page)
+    return jsonify(result), 200
+
+
+@admin_control_bp.route("/content-reports/<int:report_id>/preview", methods=["GET"])
+@admin_required
+def preview_content_report(report_id: int):
+    """Retrieve full preview of a report including evidence payload."""
+    preview = get_report_preview(report_id)
+    if preview is None:
+        return api_error("Content report not found", 404)
+    return jsonify(preview), 200
+
+
+@admin_control_bp.route("/content-reports/<int:report_id>/resolve", methods=["POST"])
+@admin_required
+def resolve_content_report_endpoint(report_id: int):
+    """Resolve report by banning content (and optionally author) or dismissing."""
+    body = request.get_json(silent=True)
+    if not isinstance(body, dict):
+        return api_error("Invalid JSON body", 400)
+
+    action = body.get("action")
+    if not isinstance(action, str) or action not in ("ban", "dismiss"):
+        return api_error("Action must be 'ban' or 'dismiss'", 400)
+
+    ban_author = bool(body.get("ban_author", False))
+    admin_notes = body.get("admin_notes")
+    if admin_notes is not None and not isinstance(admin_notes, str):
+        return api_error("admin_notes must be a string", 400)
+
+    resp, status_code = resolve_report(
+        admin=g.current_user,
+        report_id=report_id,
+        action=action,
+        ban_author=ban_author,
+        admin_notes=admin_notes,
+    )
+    return jsonify(resp), status_code
+
+
+@admin_control_bp.route("/content-reports/purge-expired", methods=["POST"])
+@admin_required
+def purge_expired_content_reports():
+    """Purge expired evidence payloads for pending reports past their expiry date."""
+    purged_count = purge_expired_evidence()
+    return jsonify({"purged_count": purged_count}), 200
+

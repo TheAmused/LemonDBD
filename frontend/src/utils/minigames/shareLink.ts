@@ -19,6 +19,7 @@ export async function encodeChallengeShare(challenge: ChallengeDefinition): Prom
       description: challenge.description || '',
       game_mode: challenge.game_mode || 'custom',
       rounds: challenge.rounds,
+      ...(challenge._manifest ? { _manifest: challenge._manifest } : {}),
     })
   );
 }

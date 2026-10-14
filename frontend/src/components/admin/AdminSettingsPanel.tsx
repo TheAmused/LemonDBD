@@ -7,7 +7,6 @@
 
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Hourglass, KeyRound, ShieldCheck, type LucideIcon } from 'lucide-react';
-import type { Dictionary } from '@/locales/types';
 import type { ActionMessage, AdminSiteSetting } from '@/types/admin';
 import { Button } from '@/components/common/Button';
 import { Input } from '@/components/common/Field';

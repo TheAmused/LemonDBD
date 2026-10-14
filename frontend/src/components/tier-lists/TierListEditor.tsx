@@ -8,8 +8,7 @@ import {
   Ellipsis,
   Eye,
   EyeOff,
-  Maximize2,
-  Minus,
+  Flag,
   MousePointerClick,
   Pencil,
   Plus,
@@ -82,6 +81,7 @@ export interface TierListEditorProps {
   /** Where "Edit details" sends them -- the creator, prefilled. */
   editHref?: string;
   onDelete?: () => void;
+  onReport?: () => void;
   locale: string;
 }
 
@@ -124,6 +124,7 @@ export function TierListEditor(props: TierListEditorProps) {
     onRemoveItem,
     editHref,
     onDelete,
+    onReport,
     locale,
   } = props;
   const dict = useDictionary();
@@ -316,6 +317,12 @@ export function TierListEditor(props: TierListEditorProps) {
               {t.deleteList}
             </button>
           )}
+          {onReport && (
+            <button type="button" role="menuitem" className={MENU_ITEM} onClick={() => { setMenuOpen(false); onReport(); }}>
+              <Flag className="h-4 w-4" aria-hidden="true" />
+              {t.reportButton}
+            </button>
+          )}
         </Popover>
       </div>
 
@@ -382,39 +389,24 @@ export function TierListEditor(props: TierListEditorProps) {
                 <span className={secondaryLabelClass}>{showNames ? t.hideNames : t.showNames}</span>
               </Button>
             )}
-            <Button
-              variant="secondary"
-              size="sm"
-              onClick={() => setDialog('import')}
-              aria-label={t.import}
-              {...tip(t.import, undefined, 'action')}
-              className={TOOLBAR_BTN}
-            >
+            <Button variant="secondary" size="sm" onClick={() => setDialog('import')} aria-label={t.import} {...tip(t.import, undefined, 'action')} className={TOOLBAR_BTN}>
               <Upload className="h-3.5 w-3.5" aria-hidden="true" />
               <span className={secondaryLabelClass}>{t.import}</span>
             </Button>
-            <Button
-              variant="secondary"
-              size="sm"
-              onClick={() => setDialog('export')}
-              aria-label={t.export}
-              {...tip(t.export, undefined, 'action')}
-              className={TOOLBAR_BTN}
-            >
+            <Button variant="secondary" size="sm" onClick={() => setDialog('export')} aria-label={t.export} {...tip(t.export, undefined, 'action')} className={TOOLBAR_BTN}>
               <Share2 className="h-3.5 w-3.5" aria-hidden="true" />
               <span className={secondaryLabelClass}>{t.export}</span>
             </Button>
-            <Button
-              variant="secondary"
-              size="sm"
-              onClick={() => setDialog('reset')}
-              aria-label={t.reset}
-              {...tip(t.reset, undefined, 'action')}
-              className={TOOLBAR_BTN}
-            >
+            <Button variant="secondary" size="sm" onClick={() => setDialog('reset')} aria-label={t.reset} {...tip(t.reset, undefined, 'action')} className={TOOLBAR_BTN}>
               <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
               <span className={secondaryLabelClass}>{t.reset}</span>
             </Button>
+            {onReport && (
+              <Button variant="secondary" size="sm" onClick={onReport} aria-label={t.reportButtonAria} {...tip(t.reportButton, undefined, 'action')} className={TOOLBAR_BTN}>
+                <Flag className="h-3.5 w-3.5" aria-hidden="true" />
+                <span className={secondaryLabelClass}>{t.reportButton}</span>
+              </Button>
+            )}
             {editHref && (
               <Link
                 href={editHref}

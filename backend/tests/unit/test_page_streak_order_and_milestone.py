@@ -3,7 +3,7 @@
 import pytest
 from app.models import Killer
 from app.services.ownership_service import OwnershipService
-from app.services.page_streak_service import PageStreakService
+from app.services.page_streak import PageStreakService
 from tests.unit.conftest import make_chapter
 from tests.unit.page_streak_support import (
     FakePerkService,

@@ -1,3 +1,4 @@
+'use client';
 // frontend/src/components/streaks/lazyChallengeParts.ts
 import dynamic from 'next/dynamic';
 

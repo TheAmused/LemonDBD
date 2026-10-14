@@ -4,7 +4,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import type { UserProfile } from '@/context/AuthContext';
-import type { Dictionary } from '@/locales/types';
 import { Button } from '@/components/common/Button';
 import { formatMessage } from '@/utils/i18nFormat';
 import { useDictionary } from "@/context/DictionaryContext";

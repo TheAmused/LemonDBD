@@ -1,6 +1,5 @@
 'use client';
 // frontend/src/components/streaks/history/HistoryStatsDrawer.tsx
-import type { Dictionary } from '@/locales/types';
 
 import React from 'react';
 import { HistoryStats, HistoryMatchLog } from '@/types/historyStreak';

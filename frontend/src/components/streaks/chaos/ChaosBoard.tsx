@@ -7,7 +7,7 @@ import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import type { Difficulty } from '@/types/chaosStreak';
 import type { Perk } from '@/types/gauntletStreak';
 import { useChaosRun } from './useChaosRun';
-import { useOwnedKillers } from './useOwnedKillers';
+import { useOwnedKillers } from '../useOwnedRoster';
 import { useKillerPerkPool } from './useKillerPerkPool';
 import { ChallengeErrorBanner, ChallengePanel, ChallengeVictoryCard } from '../ChallengePanel';
 import { ChallengeProgress } from '../ChallengeProgress';

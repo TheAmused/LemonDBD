@@ -1,11 +1,29 @@
 # backend/app/services/admin_control_service.py
 import logging
 from typing import Any
-from sqlalchemy import desc, func, select
+from sqlalchemy import delete, desc, func, select
 
 from app.core.extensions import db
 from app.core.json_provider import safe_json_dumps
-from app.models import AdminAuditLog, ChallengeModeSetting, User
+from app.core.redis_cache import bump_catalog_version
+from app.core.transaction import transaction
+from app.models import (
+    AdminAuditLog,
+    ChallengeModeSetting,
+    GauntletRun,
+    Item,
+    ItemAddon,
+    Killer,
+    KillerAddon,
+    MapRealm,
+    PageStreakRun,
+    Perk,
+    Realm,
+    Survivor,
+    User,
+    UserCharacterOwnership,
+    UserPerkOwnership,
+)
 from app.models.admin import CHALLENGE_MODES
 
 logger = logging.getLogger(__name__)
@@ -20,16 +38,15 @@ def log_admin_action(
 ) -> None:
     """Appends one row to the admin audit log. Never raises exceptions."""
     try:
-        db.session.add(AdminAuditLog(
-            admin_user_id=admin_user_id,
-            action=action,
-            target_type=target_type,
-            target_id=str(target_id) if target_id is not None else None,
-            details=safe_json_dumps(details) if details is not None else None,
-        ))
-        db.session.commit()
+        with transaction():
+            db.session.add(AdminAuditLog(
+                admin_user_id=admin_user_id,
+                action=action,
+                target_type=target_type,
+                target_id=str(target_id) if target_id is not None else None,
+                details=safe_json_dumps(details) if details is not None else None,
+            ))
     except Exception as err:
-        db.session.rollback()
         logger.error(f"Failed to write admin audit log for action '{action}': {err}")
 
 
@@ -69,12 +86,12 @@ def get_challenge_mode_settings() -> list[dict[str, Any]]:
         for row in db.session.scalars(select(ChallengeModeSetting)).all()
     }
     missing = [m for m in CHALLENGE_MODES if m not in existing]
-    for mode in missing:
-        row = ChallengeModeSetting(mode=mode, is_enabled=True)
-        db.session.add(row)
-        existing[mode] = row
     if missing:
-        db.session.commit()
+        with transaction():
+            for mode in missing:
+                row = ChallengeModeSetting(mode=mode, is_enabled=True)
+                db.session.add(row)
+                existing[mode] = row
 
     return [existing[mode].to_dict() for mode in CHALLENGE_MODES]
 
@@ -83,16 +100,17 @@ def set_challenge_mode_enabled(mode: str, is_enabled: bool, reason: str | None =
     if mode not in CHALLENGE_MODES:
         raise ValueError(f"Unknown challenge mode: {mode}")
 
-    row = db.session.scalars(
-        select(ChallengeModeSetting).where(ChallengeModeSetting.mode == mode)
-    ).first()
-    if row is None:
-        row = ChallengeModeSetting(mode=mode)
-        db.session.add(row)
+    with transaction():
+        row = db.session.scalars(
+            select(ChallengeModeSetting).where(ChallengeModeSetting.mode == mode)
+        ).first()
+        if row is None:
+            row = ChallengeModeSetting(mode=mode)
+            db.session.add(row)
 
-    row.is_enabled = is_enabled
-    row.disabled_reason = None if is_enabled else (reason or None)
-    db.session.commit()
+        row.is_enabled = is_enabled
+        row.disabled_reason = None if is_enabled else (reason or None)
+
     return row.to_dict()
 
 
@@ -104,3 +122,87 @@ def assert_challenge_mode_enabled(mode: str) -> None:
     if row and not row.is_enabled:
         reason = f" ({row.disabled_reason})" if row.disabled_reason else ""
         raise ValueError(f"This challenge is temporarily disabled{reason}. Please check back later.")
+
+
+def set_character_disabled(
+    character_id: int,
+    is_disabled: bool,
+    reason: str | None = None,
+    role: str | None = None,
+) -> tuple[Any, str | None]:
+    """Enables or disables a character (killer or survivor) atomically."""
+    clean_role = (role or "").strip().rstrip("s").lower()
+    model = {"survivor": Survivor, "killer": Killer}.get(clean_role)
+    if model is not None:
+        character = db.session.get(model, character_id)
+    else:
+        character = db.session.get(Killer, character_id) or db.session.get(Survivor, character_id)
+
+    if not character:
+        return None, "Character not found."
+
+    with transaction():
+        character.is_disabled = is_disabled
+        character.disabled_reason = reason if is_disabled else None
+
+    bump_catalog_version()
+    return character, None
+
+
+def set_perk_disabled(
+    perk_id: int,
+    is_disabled: bool,
+    reason: str | None = None,
+) -> tuple[Perk | None, str | None]:
+    """Enables or disables a perk atomically."""
+    perk = db.session.get(Perk, perk_id)
+    if not perk:
+        return None, "Perk not found."
+
+    with transaction():
+        perk.is_disabled = is_disabled
+        perk.disabled_reason = reason if is_disabled else None
+
+    bump_catalog_version()
+    return perk, None
+
+
+def purge_database_tables(targets: list[str]) -> list[str]:
+    """Purges selected entity tables atomically within a single transaction block."""
+    purged: list[str] = []
+    with transaction():
+        if "perks" in targets:
+            db.session.execute(delete(Perk))
+            purged.append("perks")
+
+        if "addons" in targets:
+            db.session.execute(delete(KillerAddon))
+            db.session.execute(delete(ItemAddon))
+            purged.append("addons")
+
+        if "characters" in targets:
+            db.session.execute(delete(KillerAddon))
+            db.session.execute(delete(Survivor))
+            db.session.execute(delete(Killer))
+            purged.append("characters")
+
+        if "items" in targets:
+            db.session.execute(delete(Item))
+            purged.append("items")
+
+        if "maps" in targets:
+            db.session.execute(delete(MapRealm))
+            db.session.execute(delete(Realm))
+            purged.append("maps")
+
+        if "ownerships" in targets:
+            db.session.execute(delete(UserCharacterOwnership))
+            db.session.execute(delete(UserPerkOwnership))
+            purged.append("ownerships")
+
+        if "game_runs" in targets:
+            db.session.execute(delete(GauntletRun))
+            db.session.execute(delete(PageStreakRun))
+            purged.append("game_runs")
+
+    return purged

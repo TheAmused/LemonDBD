@@ -4,7 +4,7 @@
 import { Button } from '@/components/common/Button';
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import type { GauntletPlayerLoadout, GauntletRun, Role } from '@/types/gauntletStreak';
-import type { OwnedCharacterItem } from './useOwnedCharacters';
+import type { OwnedCharacterItem } from '../useOwnedRoster';
 import { useTargetDraw } from './useTargetDraw';
 import { staticUrl } from '@/utils/staticUrl';
 import { useCharacterDisplayName } from '@/context/DisplayNamesContext';

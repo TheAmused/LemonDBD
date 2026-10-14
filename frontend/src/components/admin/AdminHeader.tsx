@@ -3,7 +3,6 @@
 
 import React from 'react';
 import { Button } from '@/components/common/Button';
-import type { Dictionary } from '@/locales/types';
 import { Database, RefreshCw, Download, Upload, LineChart, ScanText } from 'lucide-react';
 import { OverseerEyeIcon } from '@/components/icons/DbdIcons';
 

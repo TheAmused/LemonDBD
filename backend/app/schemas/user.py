@@ -15,34 +15,12 @@ class UserBase(BaseModel):
 
 
 class UserCreate(BaseModel):
-    login: str | None = Field(default=None, min_length=3, max_length=50, pattern=r"^[^@\s]+$")
-    username: str | None = Field(default=None, min_length=3, max_length=50)
+    login: str = Field(..., min_length=3, max_length=50, pattern=r"^[^@\s]+$")
+    username: str = Field(..., min_length=3, max_length=50)
     email: EmailStr
     password: str = Field(..., min_length=6)
     role: str | None = "user"
     avatar_url: str | None = "default_avatar"
-
-    @model_validator(mode="before")
-    @classmethod
-    def populate_login_and_username(cls, data: Any) -> Any:
-        if isinstance(data, dict):
-            login = data.get("login")
-            username = data.get("username")
-            if not login and username:
-                data["login"] = username
-            elif not username and login:
-                data["username"] = login
-        return data
-
-    @model_validator(mode="after")
-    def validate_identifiers(self) -> Self:
-        if not self.login and not self.username:
-            raise ValueError("Either login or username must be provided")
-        if not self.login:
-            self.login = self.username
-        if not self.username:
-            self.username = self.login
-        return self
 
 
 class UserUpdate(BaseModel):

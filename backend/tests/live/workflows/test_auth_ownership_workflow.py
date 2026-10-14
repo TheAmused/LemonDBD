@@ -22,6 +22,7 @@ class TestAuthOwnershipWorkflow:
         reg_res = live_client.post(
             "/api/v1/auth/register",
             json={
+                "login": "workflow_owner_1",
                 "username": "workflow_owner_1",
                 "email": "owner1@example.com",
                 "password": "StrongPassword123!",
@@ -35,7 +36,7 @@ class TestAuthOwnershipWorkflow:
         login_res = live_client.post(
             "/api/v1/auth/login",
             json={
-                "username": "workflow_owner_1",
+                "login": "workflow_owner_1",
                 "password": "StrongPassword123!",
             },
         )

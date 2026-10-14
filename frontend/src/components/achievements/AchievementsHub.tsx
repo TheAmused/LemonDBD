@@ -1,6 +1,5 @@
 'use client';
 // frontend/src/components/achievements/AchievementsHub.tsx
-import type { Dictionary } from '@/locales/types';
 
 import React, { useMemo } from 'react';
 import { TrophyShelf } from './TrophyShelf';

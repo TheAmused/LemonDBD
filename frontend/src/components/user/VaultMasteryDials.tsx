@@ -3,7 +3,6 @@
 
 import React from 'react';
 import { Sparkles } from 'lucide-react';
-import type { Dictionary } from '@/locales/types';
 import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
 import { useDictionary } from "@/context/DictionaryContext";
 

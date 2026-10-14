@@ -39,10 +39,12 @@ test('BlockCard: the box never switches between stretched and fit-content, which
 });
 
 test('About, Privacy Policy, Terms and Rules all use the shared card instead of their own copies', () => {
-  assert.ok(read('app/[locale]/about/page.tsx').includes('BlockCardPair'));
-  assert.ok(read('app/[locale]/privacy-policy/page.tsx').includes('BlockCard'));
+  const aboutSrc = read('app/[locale]/about/page.tsx') + (fs.existsSync(path.resolve(__dirname, '../../components/about/AboutClient.tsx')) ? read('components/about/AboutClient.tsx') : '');
+  const privacySrc = read('app/[locale]/privacy-policy/page.tsx') + (fs.existsSync(path.resolve(__dirname, '../../components/legal/PrivacyPolicyClient.tsx')) ? read('components/legal/PrivacyPolicyClient.tsx') : '');
+  assert.ok(aboutSrc.includes('BlockCardPair'));
+  assert.ok(privacySrc.includes('BlockCard'));
   assert.ok(read('components/legal/LegalSections.tsx').includes('BlockCardPair'));
-  for (const rel of ['app/[locale]/about/page.tsx', 'app/[locale]/privacy-policy/page.tsx', 'components/legal/LegalSections.tsx']) {
-    assert.ok(!read(rel).includes('usePersistentDrawer'), `${rel} leaves drawer state to BlockCard`);
+  for (const src of [aboutSrc, privacySrc, read('components/legal/LegalSections.tsx')]) {
+    assert.ok(!src.includes('usePersistentDrawer'), `leaves drawer state to BlockCard`);
   }
 });

@@ -1,3 +1,4 @@
+'use client';
 // frontend/src/components/smash-or-pass/hub/useSmashVotes.ts
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';

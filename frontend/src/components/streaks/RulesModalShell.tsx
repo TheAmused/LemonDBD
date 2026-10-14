@@ -1,7 +1,6 @@
 // frontend/src/components/streaks/RulesModalShell.tsx
 'use client';
 
-import type { Dictionary } from '@/locales/types';
 
 import React from 'react';
 import type { LucideIcon } from 'lucide-react';

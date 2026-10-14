@@ -7,6 +7,8 @@
  * Pure functions only -- no React, no storage.
  */
 
+import { HEX_64_PATTERN, type ContentManifest } from './contentSigning';
+
 /** Hash parameter a share link carries its payload in (`/tier-lists#import=...`). */
 export const SHARE_HASH_PARAM = 'import';
 
@@ -175,3 +177,43 @@ export function readShareFragment(hash: string): string | null {
   const value = params.get(SHARE_HASH_PARAM);
   return value && value.length > 2 ? value : null;
 }
+
+/**
+ * Safely parses and validates a content manifest from an untrusted document or payload.
+ * Returns the manifest if structurally valid, or null otherwise.
+ */
+export function sanitizeManifest(raw: unknown): ContentManifest | null {
+  if (!isRecord(raw)) return null;
+  const content_type = cleanText(raw.content_type, 64);
+  const content_hash = cleanText(raw.content_hash, 128);
+  const author_login = cleanText(raw.author_login, 64);
+  const signature = cleanText(raw.signature, 128);
+  const created_at = cleanText(raw.created_at, 64);
+  const author_id =
+    typeof raw.author_id === 'number' && Number.isInteger(raw.author_id) && raw.author_id > 0
+      ? raw.author_id
+      : null;
+
+  if (
+    !content_type ||
+    !content_hash ||
+    !HEX_64_PATTERN.test(content_hash) ||
+    !author_id ||
+    !author_login ||
+    !signature ||
+    !HEX_64_PATTERN.test(signature) ||
+    !created_at
+  ) {
+    return null;
+  }
+
+  return {
+    content_type,
+    content_hash,
+    author_id,
+    author_login,
+    signature,
+    created_at,
+  };
+}
+

@@ -1,3 +1,4 @@
+'use client';
 // frontend/src/components/generator/modes/slot-machine/useSlotMachine.ts
 import React, { useEffect, useRef, useState } from 'react';
 import { useReducedMotion } from 'framer-motion';

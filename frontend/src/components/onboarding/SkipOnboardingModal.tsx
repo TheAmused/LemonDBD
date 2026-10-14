@@ -2,7 +2,6 @@
 'use client';
 import React from 'react';
 import { AlertTriangle } from 'lucide-react';
-import type { Dictionary } from '@/locales/types';
 import { Modal } from '@/components/common/Modal';
 import { Button } from '@/components/common/Button';
 import { useDictionary } from "@/context/DictionaryContext";

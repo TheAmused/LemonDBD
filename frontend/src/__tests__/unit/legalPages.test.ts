@@ -65,7 +65,6 @@ test('legal documents: placeholders are the known ones and are kept in every loc
       const text = allText(doc).join('\n');
       for (const [, name] of text.matchAll(/\{(\w+)\}/g)) assert.ok(known.has(name), `${loc}.${id}: unknown placeholder {${name}}`);
       for (const name of known) assert.equal(countOf(text, `{${name}}`), countOf(base, `{${name}}`), `${loc}.${id}: {${name}} count`);
-      assert.ok(doc.numberLabel.includes('{n}'), `${loc}.${id}.numberLabel has {n}`);
       const contact = doc.sections[LEGAL_DOCS[id].contactSection].paragraphs.join(' ');
       assert.ok(contact.includes('{contactEmail}'), `${loc}.${id}: the contact section quotes {contactEmail}`);
     }
@@ -150,7 +149,7 @@ test('Checkbox: `invalid` gives the box the site error ring and aria-invalid', (
   assert.match(checkbox, /invalid && 'ring-2 ring-accent-red'/);
 });
 
-test('legal documents: cards carry no icons (only the "Rule N" / "Section N" eyebrow) and titles are centred', () => {
+test('legal documents: cards carry no icons and titles are centred', () => {
   const sections = read('components/legal/LegalSections.tsx');
   const page = read('components/legal/LegalDocPage.tsx');
   assert.ok(!sections.includes('lucide-react'), 'LegalSections draws no icons');

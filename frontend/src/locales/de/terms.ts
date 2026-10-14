@@ -6,7 +6,6 @@ export default {
   lastUpdatedLabel: "Zuletzt aktualisiert",
   lastUpdated: "10. Oktober 2026",
   translationNotice: "Falls die übersetzten Fassungen dieser Seite von der englischen abweichen, gilt die englische Fassung.",
-  numberLabel: "Abschnitt {n}",
   tldrLabel: "Kurz gesagt",
   tldrNotice: "Die Kurz-gesagt-Zeilen und die Zusammenfassung sind nur eine Lesehilfe. Sie sind nicht Teil der Bedingungen und haben keine rechtliche Wirkung. Weichen sie vom vollständigen Text darunter ab, gilt der vollständige Text.",
   summaryHeading: "Die Bedingungen im Überblick",
@@ -47,7 +46,7 @@ export default {
       heading: "Die Seite",
       tldr: "Kostenlos, wie besehen und änderbar.",
       paragraphs: [
-        "Die Seite wird kostenlos bereitgestellt. Sie bietet von Fans erstellte Werkzeuge und Informationen zu <i>Dead by Daylight</i>, etwa Datenbanken, Generatoren, Tier-Listen, Minispiele, Herausforderungen und ein Smash-or-Pass-Spiel.",
+        "Die Seite wird kostenlos bereitgestellt. Sie bietet von Fans erstellte Werkzeuge und Informationen zu <i>Dead by Daylight</i>, etwa Datenbanken, Zufallsgeneratoren, Tier-Listen, Minispiele, Herausforderungen und ein Smash-or-Pass-Spiel.",
         "Spieldaten können ungenau oder veraltet sein, und manche Inhalte entstehen mit KI-Unterstützung. Wir garantieren nicht, dass die Seite vollständig, richtig, unterbrechungsfrei oder fehlerfrei ist, und du solltest dich für wichtige Entscheidungen nicht auf sie verlassen.",
         "Wir können jede Funktion oder die gesamte Seite jederzeit ändern, aussetzen oder einstellen. Betrifft eine Änderung registrierte Nutzer erheblich, kündigen wir sie nach Möglichkeit auf der Seite an.",
       ],

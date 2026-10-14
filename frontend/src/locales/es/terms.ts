@@ -6,7 +6,6 @@ export default {
   lastUpdatedLabel: "Última actualización",
   lastUpdated: "10 de octubre de 2026",
   translationNotice: "Si las versiones traducidas de esta página difieren de la inglesa, prevalece la versión en inglés.",
-  numberLabel: "Apartado {n}",
   tldrLabel: "Resumen",
   tldrNotice: "Las líneas de resumen y el compendio son solo una ayuda de lectura. No forman parte de los Términos y no tienen efectos jurídicos. Si difieren del texto completo que hay debajo, se aplica el texto completo.",
   summaryHeading: "Los Términos de un vistazo",
@@ -47,7 +46,7 @@ export default {
       heading: "El Sitio",
       tldr: "Gratuito, ofrecido tal cual y sujeto a cambios.",
       paragraphs: [
-        "El Sitio se ofrece de forma gratuita. Ofrece herramientas e información hechas por fans sobre <i>Dead by Daylight</i>, como bases de datos, generadores, listas de niveles, minijuegos, desafíos y un juego de Smash or Pass.",
+        "El Sitio se ofrece de forma gratuita. Ofrece herramientas e información hechas por fans sobre <i>Dead by Daylight</i>, como bases de datos, generadores aleatorios, listas de niveles, minijuegos, desafíos y un juego de Smash or Pass.",
         "Los datos del juego pueden ser inexactos o estar desactualizados, y parte del contenido se crea con ayuda de IA. No garantizamos que el Sitio sea completo, exacto, ininterrumpido ni esté libre de errores, y no debes basarte en él para decisiones importantes.",
         "Podemos modificar, suspender o interrumpir cualquier función, o el Sitio en su conjunto, en cualquier momento. Cuando un cambio afecte de forma significativa a los usuarios registrados, lo anunciaremos en el Sitio siempre que sea razonablemente posible.",
       ],

@@ -6,7 +6,6 @@ export default {
   lastUpdatedLabel: "Ostatnia aktualizacja",
   lastUpdated: "10 października 2026",
   translationNotice: "Jeśli przetłumaczone wersje tej strony różnią się od angielskiej, pierwszeństwo ma wersja angielska.",
-  numberLabel: "Punkt {n}",
   tldrLabel: "W skrócie",
   tldrNotice: "Linie „W skrócie” i podsumowanie są wyłącznie pomocą w czytaniu. Nie stanowią części Regulaminu i nie mają skutków prawnych. Jeśli różnią się od pełnego tekstu pod nimi, obowiązuje pełny tekst.",
   summaryHeading: "Regulamin w pigułce",
@@ -47,7 +46,7 @@ export default {
       heading: "Serwis",
       tldr: "Za darmo, w stanie takim, jaki jest, i z możliwością zmian.",
       paragraphs: [
-        "Serwis jest udostępniany bezpłatnie. Oferuje fanowskie narzędzia i informacje o <i>Dead by Daylight</i>, takie jak bazy danych, generatory, tier listy, minigry, wyzwania i grę Smash or Pass.",
+        "Serwis jest udostępniany bezpłatnie. Oferuje fanowskie narzędzia i informacje o <i>Dead by Daylight</i>, takie jak bazy danych, losowniki, tier listy, minigry, wyzwania i grę Smash or Pass.",
         "Dane o grze mogą być niedokładne lub nieaktualne, a część treści powstaje z pomocą AI. Nie gwarantujemy, że Serwis jest kompletny, dokładny, dostępny bez przerw ani wolny od błędów, i nie należy opierać na nim ważnych decyzji.",
         "Możemy w każdej chwili zmienić, zawiesić lub zakończyć działanie dowolnej funkcji albo całego Serwisu. Jeśli zmiana istotnie dotyka zarejestrowanych użytkowników, w miarę możliwości ogłosimy ją w Serwisie.",
       ],

@@ -25,8 +25,6 @@ export interface LegalDocText {
   lastUpdatedLabel: string;
   lastUpdated: string;
   translationNotice: string;
-  /** "Rule {n}" / "Section {n}" */
-  numberLabel: string;
   tldrLabel: string;
   /** States that the headings and TL;DR lines are not legally binding. */
   tldrNotice: string;

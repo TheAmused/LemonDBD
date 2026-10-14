@@ -1,13 +1,28 @@
-# backend/app/routes/admin_control.py
+import logging
+from datetime import datetime, timezone
 from typing import Any
-from flask import Blueprint, g, jsonify, request
-from sqlalchemy import and_, case, select
+from flask import Blueprint, Response, g, jsonify, request
+from sqlalchemy import and_, case, delete, select
 
 from app.core.extensions import db
+from app.core.json_provider import safe_json_dumps, safe_json_loads
 from app.core.redis_cache import bump_catalog_version
 from app.core.security import admin_required
 from app.utils.pagination import paginate_args
-from app.models import Killer, Perk, Survivor
+from app.models import (
+    GauntletRun,
+    Item,
+    ItemAddon,
+    Killer,
+    KillerAddon,
+    MapRealm,
+    PageStreakRun,
+    Perk,
+    Realm,
+    Survivor,
+    UserCharacterOwnership,
+    UserPerkOwnership,
+)
 from app.models.admin import CHALLENGE_MODES
 from app.services import site_settings
 from app.services.admin_control_service import (
@@ -16,6 +31,10 @@ from app.services.admin_control_service import (
     log_admin_action,
     set_challenge_mode_enabled,
 )
+from app.services.db.export_import import DatabaseExportImportService
+from app.services.user.admin import fetch_admin_metrics
+
+logger = logging.getLogger(__name__)
 
 admin_control_bp = Blueprint("admin_control", __name__, url_prefix="/api/v1/admin")
 
@@ -284,3 +303,156 @@ def update_site_settings():
         details={"changes": {k: ("<default>" if changes[k] is None else applied[k]) for k in applied}},
     )
     return jsonify({"message": "Settings saved.", "settings": site_settings.list_settings()}), 200
+
+
+@admin_control_bp.route("/stats", methods=["GET"])
+@admin_required
+def get_admin_stats():
+    """Retrieve system-wide entity and registration metrics."""
+    stats = fetch_admin_metrics()
+    return jsonify(stats), 200
+
+
+@admin_control_bp.route("/database/purge", methods=["POST"])
+@admin_required
+def purge_database_tables():
+    """Purge specific database entity tables on demand."""
+    data = request.get_json(silent=True) or {}
+    targets: list[str] = data.get("targets", [])
+    if not isinstance(targets, list) or not targets:
+        return jsonify({"error": "No valid purge targets specified.", "status": 400}), 400
+
+    purged: list[str] = []
+    try:
+        # Order matters now that these are real foreign keys: add-ons
+        # reference both characters and item categories, perks reference
+        # characters, items reference item categories. Children first.
+        if "perks" in targets:
+            db.session.execute(delete(Perk))
+            purged.append("perks")
+
+        if "addons" in targets:
+            # One target, two tables: `addons` split into `killer_addons` (880
+            # rows) and `item_addons` (51). The purge target keeps its name
+            # because it is what the admin UI sends, and it still means every
+            # add-on in the game.
+            db.session.execute(delete(KillerAddon))
+            db.session.execute(delete(ItemAddon))
+            purged.append("addons")
+
+        if "characters" in targets:
+            # Only `killer_addons` references a killer, so only it has to be
+            # cleared ahead of the characters; the 51 item add-ons hang off
+            # `item_categories` and survive a character purge.
+            db.session.execute(delete(KillerAddon))
+            db.session.execute(delete(Survivor))
+            db.session.execute(delete(Killer))
+            purged.append("characters")
+
+        if "items" in targets:
+            db.session.execute(delete(Item))
+            purged.append("items")
+
+        if "maps" in targets:
+            # `map_tiles` and `map_objectives` used to be cleared here. Neither
+            # table exists: one was empty on all 58 maps and the other held
+            # five placeholder names copied onto every one of them.
+            db.session.execute(delete(MapRealm))
+            db.session.execute(delete(Realm))
+            purged.append("maps")
+
+        if "ownerships" in targets:
+            db.session.execute(delete(UserCharacterOwnership))
+            db.session.execute(delete(UserPerkOwnership))
+            purged.append("ownerships")
+
+        if "game_runs" in targets:
+            db.session.execute(delete(GauntletRun))
+            db.session.execute(delete(PageStreakRun))
+            purged.append("game_runs")
+
+        db.session.commit()
+        logger.info(f"Admin {g.current_user.login} purged tables: {purged}")
+        return jsonify({
+            "status": "success",
+            "message": f"Successfully purged tables: {', '.join(purged)}",
+            "purged_tables": purged,
+            "stats": fetch_admin_metrics(),
+        }), 200
+
+    except Exception as e:
+        db.session.rollback()
+        logger.error(f"Error purging database tables: {e}", exc_info=True)
+        return jsonify({"error": f"Database purge failed: {str(e)}", "status": 500}), 500
+
+
+@admin_control_bp.route("/database/export", methods=["GET"])
+@admin_required
+def export_database():
+    """Export complete or selective database entities as JSON."""
+    targets_param = request.args.get("targets")
+    targets = [t.strip() for t in targets_param.split(",") if t.strip()] if targets_param else None
+    include_assets = request.args.get("include_assets", "true").lower() not in ["false", "0", "no"]
+
+    try:
+        data = DatabaseExportImportService.export_database(targets=targets, include_assets=include_assets)
+        download = request.args.get("download", "false").lower() in ["true", "1", "yes"]
+        if download:
+            timestamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
+            json_str = safe_json_dumps(data)
+            return Response(
+                json_str,
+                mimetype="application/json",
+                headers={
+                    "Content-Disposition": f"attachment; filename=lemondbd_export_{timestamp}.json"
+                },
+            )
+        return jsonify(data), 200
+    except Exception as e:
+        logger.error(f"Database export error: {e}", exc_info=True)
+        return jsonify({"error": f"Failed to export database: {str(e)}", "status": 500}), 500
+
+
+@admin_control_bp.route("/database/import", methods=["POST"])
+@admin_required
+def import_database():
+    """Import database entities from JSON payload or uploaded .json file."""
+    mode = request.form.get("mode") or request.args.get("mode") or "merge"
+    targets_param = request.form.get("targets") or request.args.get("targets")
+    targets = [t.strip() for t in targets_param.split(",") if t.strip()] if targets_param else None
+
+    payload = None
+
+    if "file" in request.files:
+        file = request.files["file"]
+        if not file or not file.filename:
+            return jsonify({"error": "Uploaded file is empty.", "status": 400}), 400
+        try:
+            content = file.read().decode("utf-8")
+            payload = safe_json_loads(content)
+        except Exception as json_err:
+            return jsonify({"error": f"Invalid JSON file: {str(json_err)}", "status": 400}), 400
+
+    if payload is None:
+        body = request.get_json(silent=True) or {}
+        if not isinstance(body, dict):
+            return jsonify({"error": "Invalid JSON payload: root must be an object.", "status": 400}), 400
+        mode = body.get("mode", mode)
+        if "targets" in body and isinstance(body["targets"], list):
+            targets = body["targets"]
+        payload = body.get("data", body)
+
+    if not payload or not isinstance(payload, dict):
+        return jsonify({"error": "No valid JSON payload provided for import.", "status": 400}), 400
+
+    try:
+        result = DatabaseExportImportService.import_database(
+            payload=payload,
+            mode=mode,
+            targets=targets,
+        )
+        logger.info(f"Admin {g.current_user.login} imported database (mode={mode}): {result.get('summary')}")
+        return jsonify(result), 200
+    except Exception as e:
+        logger.error(f"Database import error: {e}", exc_info=True)
+        return jsonify({"error": f"Database import failed: {str(e)}", "status": 500}), 500

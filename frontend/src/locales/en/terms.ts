@@ -39,7 +39,7 @@ export default {
         "be at least 18 years old;",
         "provide a valid email address that you can access, because we use it for verification and password resets;",
         "keep one account per person. Additional accounts created to evade a restriction or to inflate statistics are not permitted;",
-        "choose a username that does not infringe the rights of others, imitate our team or contain offensive language;",
+        "choose a username that does not infringe the rights of others, imitate our team or contain unlawful content;",
         "keep your password confidential and tell us promptly if you suspect unauthorised access. You are responsible for activity under your account, unless it results from our fault.",
       ],
     },

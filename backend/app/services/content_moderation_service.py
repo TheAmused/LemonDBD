@@ -4,7 +4,7 @@ import logging
 from datetime import datetime, timezone, timedelta
 from typing import Any
 
-from sqlalchemy import desc, func, select
+from sqlalchemy import func, select
 
 from app.core.extensions import db
 from app.core.json_provider import safe_json_dumps
@@ -291,13 +291,7 @@ def get_report_preview(report_id: int) -> dict[str, Any] | None:
     if report is None:
         return None
     return {
-        "id": report.id,
-        "content_type": report.content_type,
-        "content_hash": report.content_hash,
-        "author_login": report.author_login,
-        "report_count": report.report_count,
-        "primary_reason": report.primary_reason,
-        "status": report.status,
+        **report.to_dict(),
         "evidence_payload": report.evidence_payload,
     }
 
@@ -320,6 +314,12 @@ def resolve_report(
         if report is None:
             return {"error": "Content report not found", "status": 404}, 404
 
+        if report.status in ("resolved_banned", "dismissed"):
+            return {
+                "error": f"Content report #{report_id} has already been resolved as '{report.status}'",
+                "status": 409,
+            }, 409
+
         if action == "ban":
             existing_rev = db.session.scalar(
                 select(ContentRevocation).where(ContentRevocation.content_hash == report.content_hash)
@@ -336,7 +336,7 @@ def resolve_report(
 
             if ban_author and report.author_id is not None:
                 author = db.session.get(User, report.author_id)
-                if author is not None:
+                if author is not None and author.role != "admin":
                     author.is_active = False
 
             report.status = "resolved_banned"

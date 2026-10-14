@@ -2,6 +2,8 @@
 
 export interface MainLoadout {
   characterName: string;
+  /** The character's key. The name can be a translation the backend does not store, so saving sends the id when there is one. */
+  characterId?: number;
   prestige: number; // 1 to 100
   perkIds: (number | null)[]; // 4 slots
 }

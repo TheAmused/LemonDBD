@@ -8,7 +8,7 @@ export default {
   translationNotice: "If the translated versions of this page differ from the English one, the English version prevails.",
   tldrLabel: "TL;DR",
   tldrNotice: "The TL;DR lines and the summary are only a reading aid. They are not part of the Terms and have no legal effect. If they differ from the full text below them, the full text applies.",
-  summaryHeading: "Terms at a glance",
+  summaryHeading: "Summary",
   summary: [
     "LemonDBD is a free, unofficial fan project run by LemonTeam.",
     "To have an account you must be at least 18 and follow the Rules.",

@@ -8,7 +8,7 @@ export default {
   translationNotice: "このページの翻訳版が英語版と異なる場合は、英語版が優先されます。",
   tldrLabel: "要点",
   tldrNotice: "「要点」の行とまとめは、読みやすさのための補助にすぎません。本規約の一部ではなく、法的効力もありません。その下の本文と異なる場合は、本文が優先されます。",
-  summaryHeading: "規約のあらまし",
+  summaryHeading: "概要",
   summary: [
     "LemonDBDは、LemonTeamが運営する無料の非公式ファンプロジェクトです。",
     "アカウントを持つには18歳以上で、ルールを守る必要があります。",

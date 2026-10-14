@@ -8,7 +8,7 @@ export default {
   translationNotice: "Falls die übersetzten Fassungen dieser Seite von der englischen abweichen, gilt die englische Fassung.",
   tldrLabel: "Kurz gesagt",
   tldrNotice: "Die Kurz-gesagt-Zeilen und die Zusammenfassung sind nur eine Lesehilfe. Sie sind nicht Teil der Bedingungen und haben keine rechtliche Wirkung. Weichen sie vom vollständigen Text darunter ab, gilt der vollständige Text.",
-  summaryHeading: "Die Bedingungen im Überblick",
+  summaryHeading: "Zusammenfassung",
   summary: [
     "LemonDBD ist ein kostenloses, inoffizielles Fanprojekt, betrieben von LemonTeam.",
     "Für ein Konto musst du mindestens 18 Jahre alt sein und die Regeln einhalten.",

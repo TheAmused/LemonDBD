@@ -4,6 +4,7 @@
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { Sparkles } from 'lucide-react';
+import { PerkIcon } from '@/components/ui/PerkIcon';
 import { PerkDiamondSlot } from './PerkDiamondSlot';
 import type { MainLoadout } from '@/types/userShowcase';
 import type { RoleCategory, Perk } from '@/types/perks';
@@ -38,11 +39,6 @@ export const MainCard: React.FC<MainCardProps> = ({
   const dict = useDictionary();
   const isSurvivor = isSurvivorRole(role);
   const [allPerks, setAllPerks] = useState<Perk[]>([]);
-  const [imgError, setImgError] = useState(false);
-
-  useEffect(() => {
-    setImgError(false);
-  }, [loadout.characterName]);
 
   // Pre-load perks mapping so slot icons render with images. This is the whole
   // perk table for four icons, so it leans on the catalog window: the showcase
@@ -92,26 +88,21 @@ export const MainCard: React.FC<MainCardProps> = ({
             aria-label={dict.user.changeMain}
             className="relative group w-28 h-28 sm:w-36 sm:h-36 rounded-2xl overflow-hidden border-2 border-border-color hover:border-accent-red cursor-pointer shadow-lg bg-bg-elevated shrink-0 transition-all hover:scale-102 focus:outline-none focus:ring-2 focus:ring-accent-red"
           >
-            {avatarSrc && !imgError ? (
-              <Image
-                src={avatarSrc}
-                alt={loadout.characterName}
-                fill
-                sizes="(max-width: 640px) 112px, 144px"
-                className="object-cover"
-                onError={() => setImgError(true)}
-                unoptimized
-              />
-            ) : (
-              <div className="w-full h-full flex flex-col items-center justify-center bg-bg-elevated text-text-muted font-bold">
-                <span className="text-2xl sm:text-3xl tracking-wider text-text-primary">
-                  {loadout.characterName.slice(0, 2).toUpperCase()}
-                </span>
-                <span className="type-micro text-text-muted">
-                  {role.toUpperCase()}
-                </span>
-              </div>
-            )}
+            <PerkIcon
+              src={avatarSrc}
+              alt={loadout.characterName}
+              imageClassName="object-cover h-full w-full"
+              fallbackIcon={
+                <div className="w-full h-full flex flex-col items-center justify-center bg-bg-elevated text-text-muted font-bold">
+                  <span className="text-2xl sm:text-3xl tracking-wider text-text-primary">
+                    {loadout.characterName.slice(0, 2).toUpperCase()}
+                  </span>
+                  <span className="type-micro text-text-muted">
+                    {role.toUpperCase()}
+                  </span>
+                </div>
+              }
+            />
             <div className="absolute inset-0 bg-bg-primary/70 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center type-label-sm text-text-inverted backdrop-blur-xs">
               {dict.user.changeMain}
             </div>

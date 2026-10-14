@@ -1,12 +1,11 @@
-// frontend/src/components/user/PerkDiamondSlot.tsx
-import { useDictionary } from '@/context/DictionaryContext';
-import React, { useState, useEffect } from 'react';
-import Image from 'next/image';
+import React from 'react';
 import { Plus, X, Sparkles } from 'lucide-react';
+import { PerkIcon } from '@/components/ui/PerkIcon';
 import type { Perk } from '@/types/perks';
 import { getPerkIconUrl } from '@/utils/perkUtils';
-
 import { tip } from '@/components/common/Tooltip';
+import { useDictionary } from '@/context/DictionaryContext';
+
 interface PerkDiamondSlotProps {
   slotIndex: number;
   perk?: Perk | null;
@@ -28,11 +27,6 @@ export const PerkDiamondSlot: React.FC<PerkDiamondSlotProps> = ({
   const dict = useDictionary();
   const emptyLabel = emptyLabelProp ?? dict.user.emptySlot;
   const clearLabel = clearLabelProp ?? dict.user.clearPerk;
-  const [imgError, setImgError] = useState(false);
-
-  useEffect(() => {
-    setImgError(false);
-  }, [perk?.id]);
 
   const iconUrl = perk ? getPerkIconUrl(perk) : null;
 
@@ -52,18 +46,14 @@ export const PerkDiamondSlot: React.FC<PerkDiamondSlotProps> = ({
       >
         {/* Un-rotated inside content */}
         <div className="-rotate-45 relative flex items-center justify-center w-full h-full pointer-events-none">
-          {perk && iconUrl && !imgError ? (
-            <Image
+          {perk ? (
+            <PerkIcon
+              perk={perk}
               src={iconUrl}
-              alt={perk.name}
-              width={42}
-              height={42}
-              className="object-contain drop-shadow-md"
-              onError={() => setImgError(true)}
-              unoptimized
+              className="w-10 h-10"
+              imageClassName="object-contain drop-shadow-md w-full h-full"
+              fallbackIcon={<Sparkles className="h-5 w-5 text-accent-red" />}
             />
-          ) : perk ? (
-            <Sparkles className="h-5 w-5 text-accent-red" />
           ) : (
             <Plus className="h-5 w-5 text-text-muted group-hover:text-accent-amber transition-colors" />
           )}

@@ -8,6 +8,7 @@ import { User, Sparkles, Star, Lock, HelpCircle } from 'lucide-react';
 import { avatarUrlForCharacter, perkIconUrl, staticUrl } from '@/utils/staticUrl';
 import { useCharacterDisplayName, usePerkDisplayName } from '@/context/DisplayNamesContext';
 import { KillerIcon } from '@/components/icons/DbdIcons';
+import { PerkIcon } from '@/components/ui/PerkIcon';
 import { useDictionary } from '@/context/DictionaryContext';
 import { baseSlots } from '@/utils/perkSlots';
 
@@ -54,24 +55,20 @@ export const RevealPortrait: React.FC<{ name?: string; role: Role; phase: DrawPh
 };
 
 const PerkArt: React.FC<{ perk: Perk; size: string }> = ({ perk, size }) => {
-  const [failed, setFailed] = useState<boolean>(false);
   const displayName = usePerkDisplayName()(perk.name);
   const src = perkIconFor(perk);
 
-  if (!src || failed) {
-    return (
-      <div className={`${size} flex items-center justify-center text-text-muted`}>
-        <Sparkles className="w-1/2 h-1/2" aria-hidden="true" />
-      </div>
-    );
-  }
-
   return (
-    <img
+    <PerkIcon
+      perk={perk}
       src={src}
       alt={displayName}
-      className={`${size} max-w-none object-contain`}
-      onError={() => setFailed(true)}
+      imageClassName={`${size} max-w-none object-contain`}
+      fallbackIcon={
+        <div className={`${size} flex items-center justify-center text-text-muted`}>
+          <Sparkles className="w-1/2 h-1/2" aria-hidden="true" />
+        </div>
+      }
     />
   );
 };

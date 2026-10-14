@@ -2,6 +2,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { PerkIcon } from '@/components/ui/PerkIcon';
 import { usePerkDisplayName } from '@/context/DisplayNamesContext';
 import { tip } from '@/components/common/Tooltip';
 
@@ -32,22 +33,15 @@ export const PerkTile: React.FC<PerkTileProps> = ({
   onToggle,
 }) => {
   const label = usePerkDisplayName()(name);
-  const [imgError, setImgError] = useState(false);
-  const showImage = Boolean(iconSrc) && !imgError;
 
   const content = (
     <>
-      {showImage ? (
-        <img
-          src={iconSrc}
-          alt={label}
-          draggable={false}
-          onError={() => setImgError(true)}
-          className="h-full w-full select-none object-contain"
-        />
-      ) : (
-        <span className="type-strong-2xs text-text-muted">{label}</span>
-      )}
+      <PerkIcon
+        src={iconSrc}
+        alt={label}
+        imageClassName="h-full w-full select-none object-contain"
+        fallbackIcon={<span className="type-strong-2xs text-text-muted">{label}</span>}
+      />
       <svg
         viewBox="0 0 100 100"
         aria-hidden="true"

@@ -20,7 +20,7 @@ export function sanitizeCharacterNameForAvatar(name: string): string {
 }
 
 export function getPerkIconUrl(
-  perk?: Pick<Perk, 'icon_local_path' | 'icon_url'> | null,
+  perk?: Partial<Pick<Perk, 'icon_local_path' | 'icon_url'>> | null,
   backendBase: string = getBackendBaseUrl()
 ): string | null {
   if (!perk) return null;

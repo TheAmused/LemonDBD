@@ -99,7 +99,9 @@ def verify_content_signature(
         return False
 
     try:
-        expected_sig = sign_content(user_id, content_hash, secret_key)
-        return hmac.compare_digest(signature.lower(), expected_sig.lower())
+        clean_hash = content_hash.strip().lower()
+        expected_sig = sign_content(user_id, clean_hash, secret_key)
+        return hmac.compare_digest(signature.strip().lower(), expected_sig.lower())
     except Exception:
         return False
+

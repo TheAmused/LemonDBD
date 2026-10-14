@@ -1,6 +1,15 @@
 // frontend/src/types/perks.ts
 import type { ChaosMutator } from './chaos';
 export type RoleCategory = 'Survivor' | 'Killer';
+export type LowercaseRole = 'survivor' | 'killer';
+
+export function toRoleCategory(role: string): RoleCategory {
+  return role.toLowerCase() === 'killer' ? 'Killer' : 'Survivor';
+}
+
+export function toLowercaseRole(role: RoleCategory | string): LowercaseRole {
+  return role.toLowerCase() === 'killer' ? 'killer' : 'survivor';
+}
 export type GeneratorMode = 'instant' | 'wheel' | 'slot' | 'tarot' | 'crate';
 export type ScopeFilter = 'all' | 'general';
 export type OwnershipFilter = 'all' | 'owned';

@@ -1,6 +1,6 @@
-// frontend/src/types/smashOrPass.ts
+import type { RoleCategory } from './perks';
 
-export type CharacterRole = 'Survivor' | 'Killer' | 'all';
+export type CharacterRole = RoleCategory | 'all';
 export type CharacterGender = 'female' | 'male' | 'monster_other' | 'all';
 export type VoteType = 'smash' | 'pass' | 'super_smash';
 

@@ -15,10 +15,10 @@ import { useDictionary } from "@/context/DictionaryContext";
 
 interface DualMainsShowcaseProps {
   showcase: UserShowcaseState;
-  onSurvivorCharacterChange: (name: string) => void;
+  onSurvivorCharacterChange: (name: string, characterId?: number) => void;
   onSurvivorPrestigeChange: (prestige: number) => void;
   onSurvivorPerkChange: (slotIndex: number, perkId: number | null) => void;
-  onKillerCharacterChange: (name: string) => void;
+  onKillerCharacterChange: (name: string, characterId?: number) => void;
   onKillerPrestigeChange: (prestige: number) => void;
   onKillerPerkChange: (slotIndex: number, perkId: number | null) => void;
   locale?: string;
@@ -40,12 +40,8 @@ export const DualMainsShowcase: React.FC<DualMainsShowcaseProps> = ({
   // Modal state for characters
   const [characterModalRole, setCharacterModalRole] = useState<RoleCategory | null>(null);
 
-  // Modal state for perks
-  const [perkModalConfig, setPerkModalConfig] = useState<{
-    role: RoleCategory;
-    slotIndex: number;
-    currentPerkId: number | null;
-  } | null>(null);
+  // Modal state for perks: one panel picks the whole build of a role
+  const [perkModalRole, setPerkModalRole] = useState<RoleCategory | null>(null);
 
   return (
     <div className="rounded-3xl border border-border-color bg-bg-surface backdrop-blur-xl shadow-md overflow-hidden transition-colors">
@@ -96,13 +92,7 @@ export const DualMainsShowcase: React.FC<DualMainsShowcaseProps> = ({
             onPrestigeChange={onSurvivorPrestigeChange}
             onPerkChange={onSurvivorPerkChange}
             onOpenCharacterModal={() => setCharacterModalRole('Survivor')}
-            onOpenPerkModal={(slotIndex) =>
-              setPerkModalConfig({
-                role: 'Survivor',
-                slotIndex,
-                currentPerkId: showcase.survivorMain.perkIds[slotIndex],
-              })
-            }
+            onOpenPerkModal={() => setPerkModalRole('Survivor')}
             locale={locale}
           />
 
@@ -114,13 +104,7 @@ export const DualMainsShowcase: React.FC<DualMainsShowcaseProps> = ({
             onPrestigeChange={onKillerPrestigeChange}
             onPerkChange={onKillerPerkChange}
             onOpenCharacterModal={() => setCharacterModalRole('Killer')}
-            onOpenPerkModal={(slotIndex) =>
-              setPerkModalConfig({
-                role: 'Killer',
-                slotIndex,
-                currentPerkId: showcase.killerMain.perkIds[slotIndex],
-              })
-            }
+            onOpenPerkModal={() => setPerkModalRole('Killer')}
             locale={locale}
           />
             </div>
@@ -138,11 +122,16 @@ export const DualMainsShowcase: React.FC<DualMainsShowcaseProps> = ({
               ? showcase.survivorMain.characterName
               : showcase.killerMain.characterName
           }
-          onSelect={(name) => {
+          currentCharacterId={
+            isSurvivor(characterModalRole)
+              ? showcase.survivorMain.characterId
+              : showcase.killerMain.characterId
+          }
+          onSelect={(name, characterId) => {
             if (isSurvivor(characterModalRole)) {
-              onSurvivorCharacterChange(name);
+              onSurvivorCharacterChange(name, characterId);
             } else {
-              onKillerCharacterChange(name);
+              onKillerCharacterChange(name, characterId);
             }
           }}
           onClose={() => setCharacterModalRole(null)}
@@ -151,27 +140,13 @@ export const DualMainsShowcase: React.FC<DualMainsShowcaseProps> = ({
       )}
 
       {/* Perk Selector Modal */}
-      {perkModalConfig && (
+      {perkModalRole && (
         <ShowcasePerkModal
-          isOpen={Boolean(perkModalConfig)}
-          role={perkModalConfig.role}
-          slotIndex={perkModalConfig.slotIndex}
-          currentPerkId={perkModalConfig.currentPerkId}
-          onSelect={(perkId) => {
-            if (isSurvivor(perkModalConfig.role)) {
-              onSurvivorPerkChange(perkModalConfig.slotIndex, perkId);
-            } else {
-              onKillerPerkChange(perkModalConfig.slotIndex, perkId);
-            }
-          }}
-          onClear={() => {
-            if (isSurvivor(perkModalConfig.role)) {
-              onSurvivorPerkChange(perkModalConfig.slotIndex, null);
-            } else {
-              onKillerPerkChange(perkModalConfig.slotIndex, null);
-            }
-          }}
-          onClose={() => setPerkModalConfig(null)}
+          isOpen={Boolean(perkModalRole)}
+          role={perkModalRole}
+          perkIds={isSurvivor(perkModalRole) ? showcase.survivorMain.perkIds : showcase.killerMain.perkIds}
+          onSetPerk={isSurvivor(perkModalRole) ? onSurvivorPerkChange : onKillerPerkChange}
+          onClose={() => setPerkModalRole(null)}
           locale={locale}
         />
       )}

@@ -115,7 +115,7 @@ describe('Campfire Dossier: PerkDiamondSlot', () => {
     assert.ok(html.includes('Empty Slot'));
   });
 
-  it('renders equipped perk with accent diamond border and perk name', () => {
+  it('renders equipped perk as a bare icon: no border, no visible name, name kept for readers', () => {
     const mockPerk: Perk = {
       id: 99,
       name: 'Sprint Burst',
@@ -135,8 +135,9 @@ describe('Campfire Dossier: PerkDiamondSlot', () => {
       })
     );
 
-    assert.ok(html.includes('Sprint Burst'));
-    assert.ok(html.includes('border-accent-red'));
+    assert.ok(html.includes('aria-label="Sprint Burst"'));
+    assert.ok(!html.includes('>Sprint Burst<'), 'The perk name is not printed under the diamond');
+    assert.ok(!html.includes('border-accent-red'), 'A filled slot has no frame around the icon');
   });
 });
 

@@ -1,6 +1,5 @@
-// frontend/src/app/[locale]/streaks/layout.tsx
 import { pageMetadata } from '@/i18n/metadata';
-import { StreaksLayoutShell } from '@/components/streaks/StreaksLayoutShell';
+import { StreaksLayoutShell } from '@/features/streaks';
 
 export const generateMetadata = pageMetadata('/streaks', (d) => ({ title: d.app.streaksPageTitle }));
 

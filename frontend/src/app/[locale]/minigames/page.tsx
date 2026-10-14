@@ -1,6 +1,5 @@
-// frontend/src/app/[locale]/minigames/page.tsx
 import { pageMetadata } from '@/i18n/metadata';
-import { MinigamesHubClient } from '@/components/minigames/MinigamesHubClient';
+import { MinigamesHubClient } from '@/features/minigames';
 
 export const generateMetadata = pageMetadata('/minigames', (d) => ({ title: d.minigames.pageTitle }));
 

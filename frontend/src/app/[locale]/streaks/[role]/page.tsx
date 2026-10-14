@@ -1,7 +1,7 @@
 // frontend/src/app/[locale]/streaks/[role]/page.tsx
 import React from 'react';
 import { notFound } from 'next/navigation';
-import { StreakPanelGrid } from '@/components/streaks/StreakPanelGrid';
+import { StreakPanelGrid } from '@/features/streaks';
 
 const VALID_ROLES = ['killer', 'survivor', 'challenge'] as const;
 type StreakRole = (typeof VALID_ROLES)[number];

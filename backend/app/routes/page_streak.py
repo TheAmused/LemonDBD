@@ -43,12 +43,21 @@ def get_pool_summary():
     }), 200
 
 
+from pydantic import ValidationError
+
+from app.schemas.streak import PageStreakResultDTO, StreakRunStartDTO
+
+
 @page_streak_bp.route("/run/start", methods=["POST"])
 @login_required
 def start_run():
     """Start a new Page Streak challenge run."""
-    payload = request.get_json(silent=True) or {}
-    killer = payload.get("killer", "").strip() if isinstance(payload.get("killer"), str) else ""
+    try:
+        dto = StreakRunStartDTO.model_validate(request.get_json(silent=True) or {})
+    except ValidationError as err:
+        return api_error("Field 'killer' is required", 400, details=err.errors())
+
+    killer = dto.killer.strip()
     if not killer:
         return api_error("Field 'killer' is required", 400)
 
@@ -65,21 +74,22 @@ def start_run():
 @login_required
 def submit_result():
     """Record match outcome (win/loss) and update current streak state."""
-    payload = request.get_json(silent=True) or {}
-    killer = payload.get("killer", "").strip() if isinstance(payload.get("killer"), str) else ""
-    page = payload.get("page")
-    perks = payload.get("perks")
-    result = payload.get("result", "").strip().lower() if isinstance(payload.get("result"), str) else ""
-
-    if not killer or not isinstance(page, int) or not isinstance(perks, list) or result not in ("win", "loss"):
+    try:
+        dto = PageStreakResultDTO.model_validate(request.get_json(silent=True) or {})
+    except ValidationError as err:
         return api_error(
             "Fields 'killer', 'page' (int), 'perks' (list), and 'result' ('win' or 'loss') are required.",
             400,
+            details=err.errors(),
         )
+
+    killer = dto.killer.strip()
+    if not killer:
+        return api_error("Field 'killer' is required", 400)
 
     service = get_page_streak_service()
     try:
-        run = service.submit_result(g.current_user.id, killer, page, perks, result)
+        run = service.submit_result(g.current_user.id, killer, dto.page, dto.perks, dto.result)
     except ValueError as err:
         return api_error(str(err), 400)
 

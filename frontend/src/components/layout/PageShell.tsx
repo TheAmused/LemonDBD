@@ -1,3 +1,4 @@
+'use client';
 // frontend/src/components/layout/PageShell.tsx
 import type { ReactNode } from 'react';
 import { Sidebar } from '@/components/Sidebar';

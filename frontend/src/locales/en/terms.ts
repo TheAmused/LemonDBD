@@ -12,7 +12,7 @@ export default {
   summaryHeading: "Terms at a glance",
   summary: [
     "LemonDBD is a free, unofficial fan project run by LemonTeam.",
-    "To have an account you must be at least 13 and follow the Rules.",
+    "To have an account you must be at least 18 and follow the Rules.",
     "You keep ownership of what you upload and allow us to store and display it so that the Site works.",
     "The Site is provided as it is, and our liability is limited as far as the law allows.",
     "You can delete your account at any time. We may restrict or close accounts that breach these Terms.",
@@ -25,18 +25,18 @@ export default {
       paragraphs: [
         "<brand>LemonDBD</brand> is an unofficial fan website about <i>Dead by Daylight</i> (the “Site”), operated by <brand>LemonTeam</brand> (“we”, “us”). We also run a related Discord server (the “Server”). You can reach us at [{contactEmail}](mailto:{contactEmail}).",
         "These Terms of Service (the “Terms”) govern your access to and use of the Site and the Server. They apply together with our [Rules]({rulesPath}), which form part of the Terms, and our [Privacy Policy]({privacyPath}), which explains how we process personal data. If these documents conflict, the Terms prevail over the Rules, except that the Privacy Policy alone governs the processing of personal data.",
-        "By creating an account, joining the Server or otherwise using the Site, you agree to these Terms. If you do not agree, please do not use the Site.",
+        "By creating an account, you accept these Terms. If you do not agree, please do not create an account.",
       ],
       items: [],
     },
     accounts: {
       heading: "Accounts and eligibility",
-      tldr: "13 or older, a real email, one account, and a password kept private.",
+      tldr: "18 or older, a real email, one account, and a password kept private.",
       paragraphs: [
         "Most of the Site can be browsed without an account. An account is needed to save progress and to use personalised features. To create and keep an account, you must:",
       ],
       items: [
-        "be at least 13 years old, or older if the law of your country requires a higher age to use online services without the consent of a parent or guardian;",
+        "be at least 18 years old;",
         "provide a valid email address that you can access, because we use it for verification and password resets;",
         "keep one account per person. Additional accounts created to evade a restriction or to inflate statistics are not permitted;",
         "choose a username that does not infringe the rights of others, imitate our team or contain offensive language;",

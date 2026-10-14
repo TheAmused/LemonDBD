@@ -12,7 +12,7 @@ export default {
   summaryHeading: "Los Términos de un vistazo",
   summary: [
     "LemonDBD es un proyecto de fans gratuito y no oficial gestionado por LemonTeam.",
-    "Para tener una cuenta debes tener al menos 13 años y cumplir las Normas.",
+    "Para tener una cuenta debes tener al menos 18 años y cumplir las Normas.",
     "Conservas la propiedad de lo que subes y nos permites almacenarlo y mostrarlo para que el Sitio funcione.",
     "El Sitio se ofrece tal cual y nuestra responsabilidad está limitada en la medida que permite la ley.",
     "Puedes eliminar tu cuenta en cualquier momento. Podemos restringir o cerrar las cuentas que incumplan estos Términos.",
@@ -25,18 +25,18 @@ export default {
       paragraphs: [
         "<brand>LemonDBD</brand> es un sitio web de fans no oficial sobre <i>Dead by Daylight</i> (el «Sitio»), gestionado por <brand>LemonTeam</brand> («nosotros»). También gestionamos un servidor de Discord relacionado (el «Servidor»). Puedes contactarnos en [{contactEmail}](mailto:{contactEmail}).",
         "Estos Términos del servicio (los «Términos») regulan tu acceso y uso del Sitio y del Servidor. Se aplican junto con nuestras [Normas]({rulesPath}), que forman parte de los Términos, y nuestra [Política de privacidad]({privacyPath}), que explica cómo tratamos los datos personales. Si estos documentos entran en conflicto, los Términos prevalecen sobre las Normas, salvo que el tratamiento de datos personales se rige únicamente por la Política de privacidad.",
-        "Al crear una cuenta, unirte al Servidor o usar el Sitio de cualquier otra forma, aceptas estos Términos. Si no estás de acuerdo, no uses el Sitio.",
+        "Al crear una cuenta, aceptas estos Términos. Si no estás de acuerdo, no crees una cuenta.",
       ],
       items: [],
     },
     accounts: {
       heading: "Cuentas y requisitos",
-      tldr: "13 años o más, un correo real, una cuenta y la contraseña en privado.",
+      tldr: "18 años o más, un correo real, una cuenta y la contraseña en privado.",
       paragraphs: [
         "Gran parte del Sitio puede consultarse sin cuenta. Se necesita una cuenta para guardar el progreso y usar funciones personalizadas. Para crear y mantener una cuenta, debes:",
       ],
       items: [
-        "tener al menos 13 años, o más si la ley de tu país exige una edad superior para usar servicios en línea sin el consentimiento de un progenitor o tutor;",
+        "tener al menos 18 años;",
         "facilitar una dirección de correo válida a la que tengas acceso, ya que la usamos para la verificación y el restablecimiento de contraseñas;",
         "tener una sola cuenta por persona. No se permiten cuentas adicionales creadas para eludir una restricción o inflar estadísticas;",
         "elegir un nombre de usuario que no vulnere derechos de terceros, no suplante a nuestro equipo y no contenga lenguaje ofensivo;",

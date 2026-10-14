@@ -209,7 +209,7 @@ test('Terms: the claims they make about the site are backed by the code', () => 
   // Self-service account deletion exists, as the Terms and the Privacy Policy say.
   assert.match(en.terms.sections.termination.paragraphs[0], /delete your account yourself/);
   assert.match(en.privacy.sections.rights.paragraphs.join(' '), /delete your account yourself/);
-  // Registration enforces a minimum age of 13 in the documents, not in a field: the number must agree everywhere.
-  assert.match(en.terms.sections.accounts.items[0], /13/);
-  assert.match(en.privacy.sections.children.paragraphs.join(' '), /under 13/);
+  // Registration enforces a minimum age of 18 in the documents, not in a field: the number must agree everywhere.
+  assert.match(en.terms.sections.accounts.items[0], /18/);
+  assert.match(en.privacy.sections.children.paragraphs.join(' '), /under 18/);
 });

@@ -124,7 +124,7 @@ export default {
     children: {
       heading: "Dzieci",
       paragraphs: [
-        "<brand>LemonDBD</brand> nie jest skierowane do dzieci poniżej 13. roku życia (lub poniżej 16, jeśli w Twoim kraju obowiązuje wyższy wiek zgody) i świadomie nie zbieramy ich danych. Jeśli uważasz, że dziecko przekazało nam dane osobowe, skontaktuj się z nami, a je usuniemy.",
+        "<brand>LemonDBD</brand> jest przeznaczone wyłącznie dla osób pełnoletnich i nie jest skierowane do osób poniżej 18. roku życia, a ich danych świadomie nie zbieramy. Jeśli uważasz, że osoba niepełnoletnia przekazała nam dane osobowe, skontaktuj się z nami, a je usuniemy.",
       ],
       items: [],
     },

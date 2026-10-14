@@ -14,6 +14,11 @@ from app.models.chaos import ChaosMatchLog, ChaosRun
 from app.models.challenge_completion import ChallengeCompletionRecord
 from app.models.history import HistoryMatchLog, HistoryRun
 from app.models.community import BugReport
+from app.models.content_moderation import (
+    ContentReport,
+    ContentReportSubscriber,
+    ContentRevocation,
+)
 from app.models.equipment import Item, ItemAddon, ItemCategory, KillerAddon, Offering
 from app.models.gauntlet import (
     GauntletMatchLog,
@@ -74,6 +79,9 @@ __all__ = [
     "SmashUserPreference",
     "Vote",
     "BugReport",
+    "ContentReport",
+    "ContentReportSubscriber",
+    "ContentRevocation",
     "User",
     "UserCharacterOwnership",
     "UserPerkOwnership",

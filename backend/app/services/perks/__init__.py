@@ -63,4 +63,6 @@ __all__ = [
     "fetch_items",
     "fetch_addons",
     "fetch_maps",
+    "PerkService",
 ]
+from app.services.perks.service import PerkService

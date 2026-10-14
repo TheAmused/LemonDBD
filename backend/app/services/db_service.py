@@ -59,9 +59,8 @@ class DatabaseService:
                 is_testing = current_app.config.get("TESTING", False) or ("PYTEST_CURRENT_TEST" in os.environ)
                 if not is_testing:
                     try:
-                        from app.services.perk_service import PerkService
-                        perk_service = PerkService()
-                        perk_service.reload_data()
+                        from app.services.perks import reload_service_data
+                        reload_service_data(None)
                     except Exception as seed_err:
                         logger.debug(f"Baseline data seeding notice: {seed_err}")
         except Exception as e:

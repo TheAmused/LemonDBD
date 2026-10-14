@@ -1,4 +1,4 @@
-# backend/app/services/page_streak_service.py
+# backend/app/services/page_streak/service.py
 import logging
 from typing import Any
 
@@ -7,25 +7,28 @@ from app.schemas.streak import ChallengeCompletionDict, StreakStats
 from app.services.admin_control_service import assert_challenge_mode_enabled
 from app.services.challenge_completions import fetch_challenge_completions, fetch_completed_variants
 from app.services.ownership_service import OwnershipService
-from app.services.page_streak import (
-    BUILD_SIZE,
-    build_roster_summary,
+from app.services.page_streak.helpers import BUILD_SIZE
+from app.services.page_streak.pool import (
     build_user_perk_pages,
-    create_new_run,
-    fetch_page_streak_user_stats,
-    fetch_run,
-    refresh_untouched_run,
     get_configured_perks_per_page,
+    get_perk_icon_map,
+    get_user_killer_pool,
+)
+from app.services.page_streak.roster import (
+    build_roster_summary,
     get_killer_avatar_map,
     get_live_roster_badge,
     get_owned_killers_ordered,
-    get_perk_icon_map,
-    get_user_killer_pool,
-    record_match_result,
+)
+from app.services.page_streak.runs import (
     abandon_active_run,
+    create_new_run,
+    fetch_run,
+    record_match_result,
     reset_all_runs,
 )
-from app.services.perk_service import PerkService
+from app.services.page_streak.stats import fetch_page_streak_user_stats
+from app.services.perks import PerkService
 
 logger = logging.getLogger(__name__)
 

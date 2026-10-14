@@ -31,8 +31,8 @@ from app.services.admin_control_service import (
     log_admin_action,
     purge_database_tables,
     set_challenge_mode_enabled,
-    set_character_disabled,
-    set_perk_disabled,
+    set_character_disabled as svc_set_character_disabled,
+    set_perk_disabled as svc_set_perk_disabled,
 )
 from app.services.db.export_import import DatabaseExportImportService
 from app.services.user.admin import fetch_admin_metrics
@@ -121,7 +121,7 @@ def set_character_disabled(character_id: int):
         return api_error(str(e), 400)
 
     role = (request.args.get("role") or dto.role or "").strip().rstrip("s").lower()
-    character, err = set_character_disabled(character_id, dto.is_disabled, reason, role)
+    character, err = svc_set_character_disabled(character_id, dto.is_disabled, reason, role)
     if err:
         return api_error(err, 404)
 
@@ -134,7 +134,7 @@ def set_character_disabled(character_id: int):
     )
 
     return jsonify({
-        "message": f"{character.name} is now {'disabled' if is_disabled else 'enabled'}.",
+        "message": f"{character.name} is now {'disabled' if dto.is_disabled else 'enabled'}.",
         "character": {
             "id": character.id,
             "name": character.name,
@@ -195,7 +195,7 @@ def set_perk_disabled(perk_id: int):
     except ValueError as e:
         return api_error(str(e), 400)
 
-    perk, err = set_perk_disabled(perk_id, dto.is_disabled, reason)
+    perk, err = svc_set_perk_disabled(perk_id, dto.is_disabled, reason)
     if err:
         return api_error(err, 404)
 
@@ -208,7 +208,7 @@ def set_perk_disabled(perk_id: int):
     )
 
     return jsonify({
-        "message": f"{perk.name} is now {'disabled' if is_disabled else 'enabled'}.",
+        "message": f"{perk.name} is now {'disabled' if dto.is_disabled else 'enabled'}.",
         "perk": {
             "id": perk.id,
             "name": perk.name,

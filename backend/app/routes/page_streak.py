@@ -3,7 +3,7 @@ from flask import g, jsonify, request
 from app.core.security import login_required
 from app.core.service_registry import make_service_getter
 from app.core.streak_blueprint import make_streak_blueprint
-from app.services.page_streak_service import PageStreakService
+from app.services.page_streak import PageStreakService
 from app.utils.responses import api_error
 
 get_page_streak_service = make_service_getter("PAGE_STREAK_SERVICE", PageStreakService)

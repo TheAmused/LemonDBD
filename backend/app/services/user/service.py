@@ -1,41 +1,55 @@
-# backend/app/services/user_service.py
+# backend/app/services/user/service.py
 import logging
+import warnings
 from typing import Any
+
 from app.core.security import generate_token
 from app.models import User
-from app.services.user import (
+from app.services.user.admin import (
     admin_modify_user,
     admin_remove_user,
-    authenticate_user_credentials,
-    clear_user_avatar,
-    create_user_account,
     delete_own_account,
-    export_filename,
-    export_user_data,
     fetch_admin_metrics,
-    fetch_user_by_id,
-    get_avatar_storage_directory,
-    get_or_create_user_showcase,
-    get_user_showcase,
     list_all_users_paginated,
-    mark_onboarding_complete,
-    modify_user_profile,
-    set_preferred_language,
-    process_and_save_avatar,
+    seed_default_admin_if_empty,
+)
+from app.services.user.auth import (
+    authenticate_user_credentials,
+    create_user_account,
     request_password_reset,
     resend_verification_email,
     reset_password_with_token,
     retrieve_user_from_jwt,
-    seed_default_admin_if_empty,
-    update_user_showcase,
     verify_email_code,
+)
+from app.services.user.avatar import (
+    clear_user_avatar,
+    get_avatar_storage_directory,
+    process_and_save_avatar,
+)
+from app.services.user.data_export import export_filename, export_user_data
+from app.services.user.profile import (
+    fetch_user_by_id,
+    get_or_create_user_showcase,
+    get_user_showcase,
+    mark_onboarding_complete,
+    modify_user_profile,
+    set_preferred_language,
+    update_user_showcase,
 )
 
 logger = logging.getLogger(__name__)
 
 
 class UserService:
+    """Deprecated class facade for user services. Use domain package functions directly."""
+
     def __init__(self, secret_key: str | None = None):
+        warnings.warn(
+            "UserService is deprecated; call domain functions from app.services.user directly.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         self._secret_key = secret_key
 
     def _get_avatar_dir(self) -> str:
@@ -157,4 +171,3 @@ class UserService:
         self, user_id: int, data: dict[str, Any]
     ) -> tuple[dict[str, Any] | None, str | None]:
         return update_user_showcase(user_id, data)
-

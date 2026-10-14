@@ -6,7 +6,7 @@ from app.models.chapter import Chapter
 from app.models.character import Killer, Survivor
 from app.models.perk import Perk
 from app.models.map import Realm
-from app.services.minigame_service import MinigameService
+from app.services.minigames import MinigameService
 
 
 @pytest.fixture

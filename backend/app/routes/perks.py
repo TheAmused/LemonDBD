@@ -9,14 +9,22 @@ from app.core import redis_cache
 from app.core.extensions import db
 from app.core.http_cache import cache_catalog
 from app.core.security import get_current_user
-from app.services.perk_service import PerkService
+from app.services.perks import (
+    fetch_addons,
+    fetch_character_detail,
+    fetch_character_suggestions,
+    fetch_characters,
+    fetch_items,
+    fetch_perk_by_identifier,
+    fetch_perk_suggestions,
+    fetch_perks,
+)
 from app.utils.lang import extract_lang as _extract_lang
 from app.utils.pagination import paginate_args
 from sqlalchemy import select
 
 logger = logging.getLogger(__name__)
 perks_bp = Blueprint("perks", __name__)
-perk_service = PerkService()
 
 
 def _extract_optional_user_id() -> int | None:
@@ -68,7 +76,7 @@ def list_perks():
 
     user_id = _extract_optional_user_id()
 
-    result = perk_service.get_perks(
+    result = fetch_perks(
         category=category,
         character=character,
         scope=scope,
@@ -91,7 +99,7 @@ def get_perk_suggestions():
     category = request.args.get("category")
     limit = request.args.get("limit", default=10, type=int)
     lang = _extract_lang()
-    suggestions = perk_service.get_perk_suggestions(query=q, category=category, limit=limit, lang=lang)
+    suggestions = fetch_perk_suggestions(query=q, category=category, limit=limit, lang=lang)
     return jsonify({"data": suggestions, "count": len(suggestions)}), 200
 
 
@@ -101,7 +109,7 @@ def get_character_suggestions():
     q = request.args.get("q", default="", type=str)
     category = request.args.get("category")
     limit = request.args.get("limit", default=15, type=int)
-    suggestions = perk_service.get_character_suggestions(query=q, category=category, limit=limit)
+    suggestions = fetch_character_suggestions(query=q, category=category, limit=limit)
     return jsonify({"data": suggestions, "count": len(suggestions)}), 200
 
 
@@ -109,7 +117,7 @@ def get_character_suggestions():
 @cache_catalog(ttl=86400, vary=("lang",))
 def get_perk(identifier: str):
     lang = _extract_lang()
-    perk = perk_service.get_by_identifier(identifier, lang=lang)
+    perk = fetch_perk_by_identifier(identifier=identifier, lang=lang)
     if not perk:
         return jsonify({"error": "Perk not found", "status": 404}), 404
     return jsonify({"data": perk}), 200
@@ -120,7 +128,7 @@ def get_perk(identifier: str):
 def list_characters():
     category = request.args.get("category")
     lang = _extract_lang()
-    characters = perk_service.get_characters(category, lang=lang)
+    characters = fetch_characters(category=category, lang=lang)
     return jsonify({"count": len(characters), "data": characters}), 200
 
 
@@ -191,7 +199,7 @@ def stats_summary():
 @cache_catalog(ttl=86400, vary=("lang",))
 def get_character_detail(character_name: str):
     lang = _extract_lang()
-    detail = perk_service.get_character_detail(character_name, lang=lang)
+    detail = fetch_character_detail(character_name=character_name, lang=lang)
     if not detail:
         return jsonify({"error": "Character not found", "status": 404}), 404
     return jsonify({"data": detail}), 200
@@ -208,7 +216,7 @@ def list_challenge_modes_public():
 @cache_catalog(ttl=86400, vary=("lang",))
 def list_survivors():
     lang = _extract_lang()
-    survivors = perk_service.get_characters("Survivor", lang=lang)
+    survivors = fetch_characters(category="Survivor", lang=lang)
     return jsonify({"count": len(survivors), "data": survivors}), 200
 
 
@@ -216,7 +224,7 @@ def list_survivors():
 @cache_catalog(ttl=86400, vary=("lang",))
 def list_killers():
     lang = _extract_lang()
-    killers = perk_service.get_characters("Killer", lang=lang)
+    killers = fetch_characters(category="Killer", lang=lang)
     return jsonify({"count": len(killers), "data": killers}), 200
 
 
@@ -226,7 +234,7 @@ def list_items():
     category = request.args.get("category")
     search = request.args.get("search")
     lang = _extract_lang()
-    items = perk_service.get_items(category=category, search=search, lang=lang)
+    items = fetch_items(category=category, search=search, lang=lang)
     return jsonify({"count": len(items), "data": items}), 200
 
 
@@ -237,7 +245,7 @@ def list_addons():
     target = request.args.get("target") or request.args.get("associated_target")
     search = request.args.get("search")
     lang = _extract_lang()
-    addons = perk_service.get_addons(category=category, target=target, search=search, lang=lang)
+    addons = fetch_addons(category=category, target=target, search=search, lang=lang)
     return jsonify({"count": len(addons), "data": addons}), 200
 
 

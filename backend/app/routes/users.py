@@ -18,8 +18,20 @@ from app.schemas.user import UserCreate, UserResponse, UserUpdate
 from app.utils.pagination import paginate_args
 from app.services.admin_control_service import log_admin_action
 from app.services.ownership_service import OwnershipService
-from app.services.user import two_factor
-from app.services.user_service import UserService
+from app.services.user import (
+    admin_modify_user,
+    admin_remove_user,
+    create_user_account,
+    export_filename,
+    export_user_data,
+    fetch_user_by_id,
+    get_user_showcase as fetch_user_showcase,
+    list_all_users_paginated,
+    mark_onboarding_complete,
+    set_preferred_language,
+    two_factor,
+    update_user_showcase as modify_user_showcase,
+)
 from app.utils.downloads import json_download_response
 from app.utils.lang import extract_lang
 from app.utils.responses import api_error
@@ -27,7 +39,6 @@ from app.utils.responses import api_error
 logger = logging.getLogger(__name__)
 users_bp = Blueprint("users_bp", __name__, url_prefix="/api/v1")
 
-user_service = UserService()
 ownership_service = OwnershipService()
 
 
@@ -49,7 +60,7 @@ def list_users():
     role = request.args.get("role")
     page, per_page = paginate_args(default_per_page=20)
 
-    result = user_service.get_all_users(search=search, role=role, page=page, per_page=per_page)
+    result = list_all_users_paginated(search=search, role=role, page=page, per_page=per_page)
     return jsonify(result), 200
 
 
@@ -64,7 +75,7 @@ def create_user_by_admin():
     except ValidationError as err:
         return api_error("Validation failed", 400, details=err.errors())
 
-    user, err = user_service.register_user(
+    user, err = create_user_account(
         login=validated_data.login,
         username=validated_data.username,
         email=validated_data.email,
@@ -91,7 +102,7 @@ def get_user_detail(user_id: int):
     if err_resp := _self_or_admin_error(user_id, "Unauthorized access to user profile."):
         return err_resp
 
-    user = user_service.get_user_by_id(user_id)
+    user = fetch_user_by_id(user_id)
     if not user:
         return api_error("User not found.", 404)
 
@@ -112,12 +123,12 @@ def export_user_data_by_admin(user_id: int):
     works for disabled accounts too. Password hashes and one-time codes are
     never included, and every download is written to the admin audit log.
     """
-    data = user_service.export_user_data(user_id, requested_by="admin")
+    data = export_user_data(user_id, requested_by="admin")
     if data is None:
         return api_error("User not found.", 404)
 
     log_admin_action(g.current_user.id, action="user_data_exported", target_type="user", target_id=user_id)
-    return json_download_response(data, user_service.export_filename(user_id, "admin"))
+    return json_download_response(data, export_filename(user_id, "admin"))
 
 
 @users_bp.route("/users/<int:user_id>", methods=["PUT"])
@@ -131,7 +142,7 @@ def update_user_by_admin(user_id: int):
     except ValidationError as err:
         return api_error("Validation failed", 400, details=err.errors())
 
-    user, err = user_service.admin_update_user(
+    user, err = admin_modify_user(
         user_id=user_id,
         role=validated_data.role,
         is_active=validated_data.is_active,
@@ -159,7 +170,7 @@ def update_user_by_admin(user_id: int):
 @admin_required
 def reset_user_two_factor(user_id: int):
     """Switch 2FA off for a user who lost their device and recovery codes (audited, the user is emailed)."""
-    target = user_service.get_user_by_id(user_id)
+    target = fetch_user_by_id(user_id)
     if not target:
         return api_error("User not found.", 404)
 
@@ -181,7 +192,7 @@ def delete_user_by_admin(user_id: int):
     if g.current_user.id == user_id:
         return api_error("Cannot delete your own admin account.", 400)
 
-    success = user_service.admin_delete_user(user_id)
+    success = admin_remove_user(user_id)
     if not success:
         return api_error("User not found.", 404)
 
@@ -284,7 +295,7 @@ def mark_user_onboarding_complete(user_id: int):
     if err_resp := _self_or_admin_error(user_id):
         return err_resp
 
-    user, err = user_service.mark_onboarding_complete(user_id)
+    user, err = mark_onboarding_complete(user_id)
     if err:
         return api_error(err, 404)
 
@@ -306,7 +317,7 @@ def set_user_preferred_language(user_id: int):
     if not isinstance(language, str) or not language:
         return api_error("language is required.", 400)
 
-    user, err = user_service.set_preferred_language(user_id, language)
+    user, err = set_preferred_language(user_id, language)
     if err:
         status = 404 if err == "User not found." else 400
         return api_error(err, status)
@@ -387,11 +398,11 @@ def get_user_ownership_summary(user_id: int):
 @users_bp.route("/users/<int:user_id>/showcase", methods=["GET"])
 def get_user_showcase(user_id: int):
     """Retrieve custom player showcase data (title, devotion, mains, perks)."""
-    user = user_service.get_user_by_id(user_id)
+    user = fetch_user_by_id(user_id)
     if not user:
         return api_error("User not found.", 404)
 
-    data = user_service.get_user_showcase(user_id)
+    data = fetch_user_showcase(user_id)
     return jsonify({"status": "success", "data": data}), 200
 
 
@@ -402,12 +413,12 @@ def update_user_showcase(user_id: int):
     if err_resp := _self_or_admin_error(user_id, "Unauthorized access to user profile."):
         return err_resp
 
-    user = user_service.get_user_by_id(user_id)
+    user = fetch_user_by_id(user_id)
     if not user:
         return api_error("User not found.", 404)
 
     payload = request.get_json(silent=True) or {}
-    saved, err = user_service.update_user_showcase(user_id, payload)
+    saved, err = modify_user_showcase(user_id, payload)
     if err:
         return api_error(err, 400)
 

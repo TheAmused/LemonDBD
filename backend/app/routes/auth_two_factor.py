@@ -4,8 +4,8 @@ from flask import Blueprint, g, jsonify, make_response, request
 from pydantic import ValidationError
 
 from app.core.limiter import limiter
-from app.core.security import SESSION_COOKIE_NAME, login_required, set_session_cookie
-from app.routes.auth import session_response, user_service
+from app.core.security import SESSION_COOKIE_NAME, generate_token, login_required, set_session_cookie
+from app.routes.auth import session_response
 from app.schemas.auth import (
     TwoFactorConfirmDTO,
     TwoFactorDisableDTO,
@@ -28,7 +28,7 @@ def _no_store(response):
 
 def _with_fresh_session(payload: dict):
     """Enabling or disabling 2FA bumps token_version; keep the active session signed in."""
-    token = user_service.generate_auth_token(g.current_user)
+    token = generate_token(g.current_user.id, g.current_user.role)
     response = _no_store(make_response(jsonify({**payload, "token": token}), 200))
     if SESSION_COOKIE_NAME in request.cookies:
         set_session_cookie(response, token)
@@ -50,7 +50,7 @@ def login_two_factor():
         return coded_error_response(err)
     return session_response(
         user,
-        user_service.generate_auth_token(user),
+        generate_token(user.id, user.role),
         "Login successful",
         extra={
             "two_factor_method": method,

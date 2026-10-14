@@ -33,6 +33,7 @@ from app.services.page_streak.runs import (
     validate_match_submission,
 )
 from app.services.page_streak.stats import fetch_page_streak_user_stats
+from app.services.page_streak.service import PageStreakService
 
 __all__ = [
     "DEFAULT_PERKS_PER_PAGE",
@@ -61,4 +62,5 @@ __all__ = [
     "reset_all_runs",
     "apply_inactivity_loss",
     "fetch_page_streak_user_stats",
+    "PageStreakService",
 ]

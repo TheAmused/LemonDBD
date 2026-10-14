@@ -20,7 +20,11 @@ def create_app(config_class: Type[Config] | None = None) -> Flask:
     flask_app.json = ORJSONProvider(flask_app)
 
     if config_class is None:
-        flask_app.config.from_object(Config)
+        if os.getenv("TESTING", "").lower() in ("true", "1", "yes"):
+            from app.core.config import TestingConfig
+            flask_app.config.from_object(TestingConfig)
+        else:
+            flask_app.config.from_object(Config)
     else:
         flask_app.config.from_object(config_class)
 
@@ -177,7 +181,7 @@ def create_app(config_class: Type[Config] | None = None) -> Flask:
     from app.routes.smash_or_pass_preferences import smash_preferences_bp
     from app.routes.challenge_completions import challenge_completions_bp
     from app.routes.page_streak import page_streak_bp
-    from app.routes.perks import perk_service, perks_bp
+    from app.routes.perks import perks_bp
     from app.routes.synergy import synergy_bp
     from app.routes.tier_lists import tier_lists_bp
     from app.routes.users import users_bp

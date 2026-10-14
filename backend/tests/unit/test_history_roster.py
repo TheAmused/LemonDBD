@@ -10,7 +10,7 @@ from app.services.history.roster import (
     get_owned_killer_names_by_release,
 )
 from app.services.ownership_service import OwnershipService
-from app.services.user_service import UserService
+from app.services.user import UserService
 from tests.unit.conftest import make_chapter
 
 

@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from app.models import HistoryMatchLog, Killer, Perk, User
 from app.services.history_service import HistoryService
 from app.services.ownership_service import OwnershipService
-from app.services.user_service import UserService
+from app.services.user import UserService
 from tests.unit.conftest import make_chapter
 
 

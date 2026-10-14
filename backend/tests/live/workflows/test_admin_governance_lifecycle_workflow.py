@@ -20,6 +20,7 @@ class TestAdminGovernanceLifecycleWorkflow:
         create_res = admin_client.post(
             "/api/v1/users",
             json={
+                "login": "managed_player_1",
                 "username": "managed_player_1",
                 "email": "managed1@example.com",
                 "password": "PlayerPass123!",

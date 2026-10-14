@@ -398,3 +398,6 @@ export function readShareFragment(hash: string): string | null {
 export function buildShareUrl(origin: string, locale: string, payload: string): string {
   return `${origin}/${locale}/smash-or-pass#${SHARE_HASH_PARAM}=${payload}`;
 }
+
+export { copyToClipboard, copyTextWithFallback } from '@/utils/clipboard';
+

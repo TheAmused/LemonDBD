@@ -10,7 +10,7 @@ from typing import Any
 
 from curl_cffi import requests
 from flask import Blueprint, current_app, g, jsonify, request
-from sqlalchemy import case, desc, func, or_, select
+from sqlalchemy import ColumnElement, case, desc, func, or_, select
 
 from app.core.altcha_guard import altcha_rejection
 from app.core.extensions import db
@@ -18,7 +18,7 @@ from app.core.json_provider import safe_json_dumps
 from app.core.limiter import limiter, validate_honeypot
 from app.core.security import admin_required, get_current_user
 from app.core.transaction import transaction
-from app.models import BugReport
+from app.models import BugReport, User
 from app.utils.api_i18n import error_response
 from app.utils.lang import extract_lang
 from app.utils.pagination import paginate_args
@@ -100,7 +100,6 @@ def _dispatch_discord_webhook(report_dict: dict[str, Any], webhook_url: str | No
             fields = [
                 {"name": "👤 Submitter", "value": f"`{report_dict.get('reporter_name', 'Guest')}`", "inline": True},
                 {"name": "📧 Contact", "value": f"`{report_dict.get('reporter_email') or 'Not Provided'}`", "inline": True},
-                {"name": "📂 Category", "value": f"`{report_dict.get('category', 'General')}`", "inline": True},
                 {"name": "📌 Status", "value": f"**{str(report_dict.get('status', 'pending')).upper()}**", "inline": True},
                 {"name": "🆔 Ticket ID", "value": f"#{report_id}", "inline": True},
                 {"name": "🖼️ Attachments", "value": f"{len(images)} screenshot(s)", "inline": True},
@@ -151,7 +150,6 @@ def submit_bug_report():
 
     title = data.get("title", "").strip()
     message = data.get("message", "").strip()
-    category = data.get("category", "General").strip()
     raw_images = data.get("images", [])
 
     if not title or not message:
@@ -185,7 +183,6 @@ def submit_bug_report():
         reporter_name=reporter_name,
         reporter_email=reporter_email,
         title=title,
-        category=category,
         message=message,
         images_json=safe_json_dumps(processed_images, default_val="[]"),
         status="pending",
@@ -200,7 +197,6 @@ def submit_bug_report():
             "id": new_report.id,
             "title": new_report.title,
             "message": new_report.message,
-            "category": new_report.category,
             "status": new_report.status,
             "reporter_name": new_report.reporter_name,
             "reporter_email": new_report.reporter_email,
@@ -217,6 +213,14 @@ def submit_bug_report():
         db.session.rollback()
         logger.error(f"Failed to save bug report: {e}", exc_info=True)
         return jsonify({"error": "Internal server error while saving bug report."}), 500
+
+
+def _owned_by(user: User) -> ColumnElement[bool]:
+    """Reports filed by this account, plus guest reports sent from the same email."""
+    conditions = [BugReport.user_id == user.id]
+    if user.email:
+        conditions.append(func.lower(BugReport.reporter_email) == user.email.lower())
+    return or_(*conditions)
 
 
 @bug_reports_bp.route("/bug-reports/my", methods=["GET"])
@@ -238,17 +242,13 @@ def get_my_bug_reports():
         return error_response("invalid_pagination", 400, lang=lang)
 
     try:
-        conditions = [BugReport.user_id == user.id]
-        if user.email:
-            conditions.append(func.lower(BugReport.reporter_email) == user.email.lower())
-
-        stmt = (
-            select(BugReport)
-            .where(or_(*conditions))
-            .order_by(desc(BugReport.created_at), desc(BugReport.id))
-        )
+        owned = _owned_by(user)
+        stmt = select(BugReport).where(owned).order_by(desc(BugReport.created_at), desc(BugReport.id))
 
         total = db.session.scalar(select(func.count()).select_from(stmt.subquery())) or 0
+        unread_count = db.session.scalar(
+            select(func.count()).select_from(BugReport).where(owned, BugReport.feedback_unread.is_(True))
+        ) or 0
         paginated_stmt = stmt.offset((page - 1) * per_page).limit(per_page)
         reports = db.session.scalars(paginated_stmt).all()
 
@@ -257,6 +257,7 @@ def get_my_bug_reports():
         return jsonify({
             "reports": [BugReportResponse.model_validate(r).model_dump() for r in reports],
             "total": total,
+            "unread_count": unread_count,
             "page": page,
             "per_page": per_page,
             "total_pages": total_pages,
@@ -266,22 +267,40 @@ def get_my_bug_reports():
         return error_response("bug_reports_fetch_failed", 500, lang=lang)
 
 
+@bug_reports_bp.route("/bug-reports/<int:report_id>/seen", methods=["POST"])
+def mark_bug_report_seen(report_id: int):
+    """Clears the "new feedback" flag once the reporter has opened their report."""
+    lang = extract_lang()
+    user = get_current_user()
+    if not user:
+        return error_response("auth_required", 401, lang=lang)
+
+    report = db.session.scalar(select(BugReport).where(BugReport.id == report_id, _owned_by(user)))
+    if not report:
+        return error_response("bug_report_not_found", 404, lang=lang)
+
+    if report.feedback_unread:
+        try:
+            with transaction():
+                report.feedback_unread = False
+        except Exception as e:
+            logger.error(f"Error marking bug report #{report_id} as seen: {e}", exc_info=True)
+            return error_response("bug_report_seen_failed", 500, lang=lang)
+    return jsonify({"report": BugReportResponse.model_validate(report).model_dump()}), 200
+
+
 @bug_reports_bp.route("/admin/bug-reports", methods=["GET"])
 @admin_required
 def admin_get_bug_reports():
     """Retrieves all bug reports with pagination and filtering for administrators."""
     page, per_page = paginate_args(default_per_page=15)
     status = request.args.get("status", "all").strip().lower()
-    category = request.args.get("category", "all").strip()
     search = request.args.get("search", "").strip()
 
     stmt = select(BugReport)
 
     if status and status != "all":
         stmt = stmt.where(func.lower(BugReport.status) == status)
-
-    if category and category != "all":
-        stmt = stmt.where(func.lower(BugReport.category) == category.lower())
 
     if search:
         search_fmt = f"%{search.lower()}%"
@@ -348,8 +367,10 @@ def admin_update_bug_report(report_id: int):
             if new_status:
                 report.status = new_status.lower()
 
-            if admin_notes is not None:
+            if admin_notes is not None and admin_notes.strip() != (report.admin_notes or ""):
                 report.admin_notes = admin_notes.strip()
+                # Only a written reply is news for the reporter; a status change or a cleared note is not.
+                report.feedback_unread = bool(report.admin_notes)
 
         log_admin_action(
             g.current_user.id,

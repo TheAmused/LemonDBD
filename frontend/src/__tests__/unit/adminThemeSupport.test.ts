@@ -155,7 +155,6 @@ describe('Admin Theme Support', () => {
             id: 1,
             title: 'Test bug',
             message: 'A test report',
-            category: 'gameplay',
             status: 'pending',
             reporter_name: 'tester',
             reporter_email: 'tester@test.com',

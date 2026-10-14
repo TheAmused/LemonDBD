@@ -225,15 +225,18 @@ describe('User Profile Drawers: DualMainsShowcase & UserBugReportsDrawer', () =>
         loading: false,
         onOpenReportModal: () => {},
         total: 0,
+        unreadCount: 0,
         page: 1,
         perPage: 10,
         totalPages: 1,
         onPageChange: () => {},
+        onReportSeen: () => {},
       })
     );
 
     // Centered text
     assert.ok(html.includes('text-center'), 'Must center header text in Bug Reports drawer');
+    assert.ok(!html.includes('animate-ping'), 'No unread dot when nothing is new');
     assert.ok(html.includes('My Bug Reports'));
 
     // Smooth drawer grid animation (collapsed by default)

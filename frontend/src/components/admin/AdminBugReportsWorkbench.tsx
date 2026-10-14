@@ -2,7 +2,7 @@
 // frontend/src/components/admin/AdminBugReportsWorkbench.tsx
 
 import React from 'react';
-import { Input, Select, SearchInput } from '@/components/common/Field';
+import { Select, SearchInput, Textarea } from '@/components/common/Field';
 import { Button } from '@/components/common/Button';
 import {
   HelpCircle,
@@ -15,7 +15,6 @@ import {
   Image as ImageIcon,
   ExternalLink,
   MessageSquare,
-  Save,
   Eye,
 } from 'lucide-react';
 import type { AdminBugReport, BugReportStats } from '@/types/admin';
@@ -334,9 +333,6 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
                     <span className="type-strong text-accent-red">
                       #{selectedBug.id}
                     </span>
-                    <span className="rounded-md bg-bg-elevated text-text-secondary border border-border-color px-2 py-0.5 type-strong-2xs">
-                      {selectedBug.category}
-                    </span>
                     <span className="type-caption text-text-muted">
                       {formatDateTime(selectedBug.created_at)}
                     </span>
@@ -422,23 +418,17 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
                   <MessageSquare className="h-3.5 w-3.5 text-accent-amber" />
                   {dict.admin.devFeedbackLabel}
                 </label>
-                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
-                  <Input
-                    id={`dev-feedback-${selectedBug.id}`}
-                    type="text"
-                    fieldSize="sm"
-                    value={editingNotes[selectedBug.id] ?? ''}
-                    onChange={(e) => onNoteChange(selectedBug.id, e.target.value)}
-                    placeholder={dict.admin.reasonPlaceholder}
-                    className="flex-1 sm:w-auto"
-                  />
-                  <Button
-                    variant="primary"
-                    size="sm"
-                    onClick={() => onUpdateBug(selectedBug.id)}
-                    leftIcon={<Save className="h-3.5 w-3.5" />}
-                  >
-                    <span>{dict.admin.saveNote}</span>
+                <Textarea
+                  id={`dev-feedback-${selectedBug.id}`}
+                  rows={4}
+                  fieldSize="sm"
+                  value={editingNotes[selectedBug.id] ?? ''}
+                  onChange={(e) => onNoteChange(selectedBug.id, e.target.value)}
+                  placeholder={dict.admin.devFeedbackPlaceholder}
+                />
+                <div className="flex justify-end">
+                  <Button variant="primary" size="sm" onClick={() => onUpdateBug(selectedBug.id)}>
+                    <span>{dict.admin.devFeedbackSubmit}</span>
                   </Button>
                 </div>
               </div>

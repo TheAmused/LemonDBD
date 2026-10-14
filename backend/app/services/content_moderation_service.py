@@ -4,10 +4,12 @@ import logging
 from datetime import datetime, timezone, timedelta
 from typing import Any
 
-from sqlalchemy import select
+from sqlalchemy import desc, func, select
 
 from app.core.extensions import db
+from app.core.json_provider import safe_json_dumps
 from app.core.transaction import transaction
+from app.models.admin import AdminAuditLog
 from app.models.content_moderation import ContentReport, ContentReportSubscriber, ContentRevocation
 from app.models.user import User
 from app.services.content_crypto import (
@@ -245,3 +247,155 @@ def check_revocations(hashes: list[str]) -> list[str]:
     ).all()
 
     return list(revoked)
+
+
+def get_admin_reports(
+    status: str | None = "pending",
+    page: int = 1,
+    per_page: int = 20,
+) -> dict[str, Any]:
+    """Retrieve paginated content reports ordered by report count descending."""
+    base_stmt = select(ContentReport)
+    count_stmt = select(func.count(ContentReport.id))
+
+    if status and status.strip().lower() != "all":
+        clean_status = status.strip()
+        base_stmt = base_stmt.where(ContentReport.status == clean_status)
+        count_stmt = count_stmt.where(ContentReport.status == clean_status)
+
+    total = db.session.scalar(count_stmt) or 0
+
+    stmt = (
+        base_stmt.order_by(
+            ContentReport.report_count.desc(),
+            ContentReport.created_at.desc(),
+        )
+        .offset((page - 1) * per_page)
+        .limit(per_page)
+    )
+
+    reports = db.session.scalars(stmt).all()
+    items = [r.to_dict() for r in reports]
+
+    return {
+        "items": items,
+        "total": total,
+        "page": page,
+        "per_page": per_page,
+    }
+
+
+def get_report_preview(report_id: int) -> dict[str, Any] | None:
+    """Retrieve full preview of a report including evidence payload."""
+    report = db.session.get(ContentReport, report_id)
+    if report is None:
+        return None
+    return {
+        "id": report.id,
+        "content_type": report.content_type,
+        "content_hash": report.content_hash,
+        "author_login": report.author_login,
+        "report_count": report.report_count,
+        "primary_reason": report.primary_reason,
+        "status": report.status,
+        "evidence_payload": report.evidence_payload,
+    }
+
+
+def resolve_report(
+    admin: User,
+    report_id: int,
+    action: str,
+    ban_author: bool = False,
+    admin_notes: str | None = None,
+) -> tuple[dict[str, Any], int]:
+    """Resolve a content report with ban or dismiss action and zero-retention hard wipe."""
+    if action not in ("ban", "dismiss"):
+        return {"error": "Action must be 'ban' or 'dismiss'", "status": 400}, 400
+
+    clean_notes = admin_notes.strip() if isinstance(admin_notes, str) and admin_notes.strip() else None
+
+    with transaction():
+        report = db.session.get(ContentReport, report_id)
+        if report is None:
+            return {"error": "Content report not found", "status": 404}, 404
+
+        if action == "ban":
+            existing_rev = db.session.scalar(
+                select(ContentRevocation).where(ContentRevocation.content_hash == report.content_hash)
+            )
+            if existing_rev is None:
+                rev = ContentRevocation(
+                    content_hash=report.content_hash,
+                    content_type=report.content_type,
+                    author_id=report.author_id,
+                    reason=report.primary_reason,
+                    revoked_by_id=admin.id,
+                )
+                db.session.add(rev)
+
+            if ban_author and report.author_id is not None:
+                author = db.session.get(User, report.author_id)
+                if author is not None:
+                    author.is_active = False
+
+            report.status = "resolved_banned"
+
+            db.session.add(
+                AdminAuditLog(
+                    admin_user_id=admin.id,
+                    action="content_ban",
+                    target_type="content",
+                    target_id=str(report.content_hash),
+                    details=safe_json_dumps({
+                        "report_id": report.id,
+                        "admin_notes": clean_notes,
+                        "ban_author": ban_author,
+                    }),
+                )
+            )
+        elif action == "dismiss":
+            report.status = "dismissed"
+
+            db.session.add(
+                AdminAuditLog(
+                    admin_user_id=admin.id,
+                    action="content_dismiss",
+                    target_type="content",
+                    target_id=str(report.content_hash),
+                    details=safe_json_dumps({
+                        "report_id": report.id,
+                        "admin_notes": clean_notes,
+                    }),
+                )
+            )
+
+        # CRITICAL ZERO-RETENTION HARD WIPE: wipe evidence payload permanently
+        report.evidence_payload = None
+        report.resolved_by_id = admin.id
+        report.resolved_at = datetime.now(timezone.utc)
+        report.admin_notes = clean_notes
+
+    return {
+        "message": f"Report successfully resolved with action '{action}'",
+        "report_id": report.id,
+    }, 200
+
+
+def purge_expired_evidence() -> int:
+    """Wipe evidence payloads and mark expired for all pending reports past their expiry date."""
+    now = datetime.now(timezone.utc)
+    stmt = (
+        select(ContentReport)
+        .where(
+            ContentReport.status == "pending",
+            ContentReport.expires_at <= now,
+        )
+    )
+    with transaction():
+        reports = db.session.scalars(stmt).all()
+        for r in reports:
+            r.evidence_payload = None
+            r.status = "expired"
+        return len(reports)
+

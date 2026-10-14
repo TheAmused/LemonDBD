@@ -1,7 +1,7 @@
 'use client';
 // frontend/src/components/common/ExportModal.tsx
 
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Check, Copy, Download, Link2, Share2, TriangleAlert } from 'lucide-react';
 import { Modal } from '@/components/common/Modal';
 import { Button } from '@/components/common/Button';
@@ -9,6 +9,9 @@ import { Input, Textarea } from '@/components/common/Field';
 import { copyTextWithFallback } from '@/utils/clipboard';
 import { cn } from '@/utils/cn';
 import { formatMessage } from '@/utils/i18nFormat';
+import { useAuth } from '@/context/AuthContext';
+import { isRecord } from '@/utils/shareCodec';
+import { embedManifest, signExportPayload } from '@/utils/contentSigning';
 
 export type CopyState = 'idle' | 'copied' | 'failed';
 
@@ -54,6 +57,8 @@ export interface ExportModalProps<D> {
   plainHeader?: boolean;
   /** Called after a successful copy of the link or the JSON, or after the file download starts. */
   onExport?: (method: 'link' | 'json_copy' | 'file') => void;
+  /** Content type classification for cryptographic signing (e.g. 'tier_list', 'smash_roster'). */
+  contentType?: string;
 }
 
 import { downloadFile } from '@/utils/download';
@@ -85,8 +90,15 @@ export function ExportModal<D>({
   actionsClassName,
   plainHeader,
   onExport,
+  contentType,
 }: ExportModalProps<D>) {
-  const json = useMemo(() => (doc ? serialize(doc) : ''), [doc, serialize]);
+  const { user } = useAuth();
+  const resolvedContentType =
+    contentType ||
+    (idPrefix === 'tier-list' ? 'tier_list' : idPrefix === 'smash-roster' ? 'smash_roster' : idPrefix.replace(/-/g, '_'));
+
+  const [exportedDoc, setExportedDoc] = useState<D | null>(doc);
+  const [exportedJson, setExportedJson] = useState<string>(() => (doc ? serialize(doc) : ''));
   const [shareUrl, setShareUrl] = useState<string>('');
   const [jsonCopy, setJsonCopy] = useState<CopyState>('idle');
   const [linkCopy, setLinkCopy] = useState<CopyState>('idle');
@@ -95,19 +107,48 @@ export function ExportModal<D>({
     setJsonCopy('idle');
     setLinkCopy('idle');
     setShareUrl('');
-    if (!doc) return;
+    if (!doc) {
+      setExportedDoc(null);
+      setExportedJson('');
+      return;
+    }
     let cancelled = false;
-    encodePayload(doc)
-      .then((payload) => {
-        if (!cancelled) setShareUrl(buildShareUrl(window.location.origin, locale, payload));
-      })
-      .catch(() => {
-        if (!cancelled) setShareUrl('');
-      });
+
+    async function prepareExport() {
+      let finalDoc = doc as D;
+      if (user && isRecord(doc)) {
+        try {
+          const manifest = await signExportPayload(resolvedContentType, doc as Record<string, unknown>);
+          if (manifest && !cancelled) {
+            finalDoc = embedManifest(doc as Record<string, unknown>, manifest) as unknown as D;
+          }
+        } catch {
+          // Gracefully continue with unsigned document if signing fails
+        }
+      }
+      if (cancelled) return;
+      setExportedDoc(finalDoc);
+      setExportedJson(serialize(finalDoc));
+
+      try {
+        const payload = await encodePayload(finalDoc);
+        if (!cancelled) {
+          setShareUrl(buildShareUrl(window.location.origin, locale, payload));
+        }
+      } catch {
+        if (!cancelled) {
+          setShareUrl('');
+        }
+      }
+    }
+
+    void prepareExport();
+
     return () => {
       cancelled = true;
     };
-  }, [doc, locale, encodePayload, buildShareUrl]);
+  }, [doc, locale, user, resolvedContentType, serialize, encodePayload, buildShareUrl]);
+
 
   if (!doc) return null;
 
@@ -167,7 +208,7 @@ export function ExportModal<D>({
           <Textarea
             id={`${idPrefix}-json`}
             readOnly
-            value={json}
+            value={exportedJson}
             rows={10}
             onFocus={(e) => e.currentTarget.select()}
             className={cn(jsonFieldClassName ?? fieldClassName, ' leading-relaxed')}
@@ -176,7 +217,7 @@ export function ExportModal<D>({
             <Button
               variant="secondary"
               onClick={() => {
-                downloadTextFile(json, fileName(doc));
+                downloadTextFile(exportedJson, fileName(exportedDoc || doc));
                 onExport?.('file');
               }}
               className={buttonClassName}
@@ -187,7 +228,7 @@ export function ExportModal<D>({
             <Button
               variant="secondary"
               onClick={async () => {
-                const ok = await copyTextWithFallback(json);
+                const ok = await copyTextWithFallback(exportedJson);
                 setJsonCopy(ok ? 'copied' : 'failed');
                 if (ok) onExport?.('json_copy');
               }}

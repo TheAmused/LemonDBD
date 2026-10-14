@@ -92,7 +92,7 @@ export function ExportModal<D>({
   onExport,
   contentType,
 }: ExportModalProps<D>) {
-  const { user } = useAuth();
+  const { user, isLoading: authLoading } = useAuth();
   const resolvedContentType =
     contentType ||
     (idPrefix === 'tier-list' ? 'tier_list' : idPrefix === 'smash-roster' ? 'smash_roster' : idPrefix.replace(/-/g, '_'));
@@ -103,6 +103,7 @@ export function ExportModal<D>({
   const [shareUrl, setShareUrl] = useState<string>('');
   const [jsonCopy, setJsonCopy] = useState<CopyState>('idle');
   const [linkCopy, setLinkCopy] = useState<CopyState>('idle');
+  const [isSigning, setIsSigning] = useState<boolean>(Boolean(user || authLoading));
 
   useEffect(() => {
     setJsonCopy('idle');
@@ -116,19 +117,35 @@ export function ExportModal<D>({
     if (!doc) {
       return;
     }
+
+    if (authLoading) {
+      setIsSigning(true);
+      return;
+    }
+
     let cancelled = false;
 
     async function prepareExport() {
       let finalDoc = currentUnsignedDoc as D;
       if (user && isRecord(doc)) {
+        setIsSigning(true);
         try {
-          const manifest = await signExportPayload(resolvedContentType, doc as Record<string, unknown>);
+          const manifest = await signExportPayload(
+            resolvedContentType,
+            currentUnsignedDoc as Record<string, unknown>
+          );
           if (manifest && !cancelled) {
             finalDoc = embedManifest(currentUnsignedDoc as Record<string, unknown>, manifest) as unknown as D;
           }
         } catch {
           finalDoc = currentUnsignedDoc as D;
+        } finally {
+          if (!cancelled) {
+            setIsSigning(false);
+          }
         }
+      } else {
+        setIsSigning(false);
       }
       if (cancelled) return;
       setExportedDoc(finalDoc);
@@ -151,7 +168,7 @@ export function ExportModal<D>({
     return () => {
       cancelled = true;
     };
-  }, [doc, locale, user, resolvedContentType, serialize, encodePayload, buildShareUrl]);
+  }, [doc, locale, user, authLoading, resolvedContentType, serialize, encodePayload, buildShareUrl]);
 
 
   if (!doc) return null;
@@ -220,6 +237,7 @@ export function ExportModal<D>({
           <div className={cn('flex flex-wrap gap-2', actionsClassName)}>
             <Button
               variant="secondary"
+              disabled={isSigning || authLoading || !exportedJson}
               onClick={() => {
                 downloadTextFile(exportedJson, fileName(exportedDoc || doc));
                 onExport?.('file');
@@ -231,6 +249,7 @@ export function ExportModal<D>({
             </Button>
             <Button
               variant="secondary"
+              disabled={isSigning || authLoading || !exportedJson}
               onClick={async () => {
                 const ok = await copyTextWithFallback(exportedJson);
                 setJsonCopy(ok ? 'copied' : 'failed');

@@ -242,7 +242,7 @@ export default {
   reportError: "Meldung konnte nicht gesendet werden. Bitte versuche es erneut.",
   reportButton: "Melden",
   reportButtonAria: "Inhalt melden",
-  reportNoManifest: "Dies ist ein lokaler Entwurf oder eine unsignierte Liste, die nicht an den Autor gemeldet werden kann.",
+  reportNoManifest: "Dies ist ein nicht signierter Entwurf ohne verifizierte Ersteller-Signatur. Nur geteilte oder exportierte Inhalte mit Autoren-Signatur können an die Moderatoren gemeldet werden.",
 
   dnd: {
     pickedUp: "{name} aufgenommen.",

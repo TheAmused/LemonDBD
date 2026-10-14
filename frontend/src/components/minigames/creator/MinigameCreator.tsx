@@ -29,6 +29,7 @@ import { AuthRequiredState } from '@/components/common/AuthRequiredState';
 import { saveCustomChallenge } from '@/utils/minigames/storage';
 import { exportChallengeToJson } from '@/utils/minigames/jsonExportImport';
 import { buildChallengeShareUrl, encodeChallengeShare } from '@/utils/minigames/shareLink';
+import { signExportPayload } from '@/utils/contentSigning';
 import { publishOfficialChallenge } from '@/services/minigameApi';
 import { RoundEditorCard } from './RoundEditorCard';
 import { copyTextWithFallback } from '@/utils/clipboard';
@@ -160,11 +161,27 @@ export const MinigameCreator: React.FC<MinigameCreatorProps> = ({ catalog, local
     router.push(`/${locale}/minigames/play?id=${encodeURIComponent(String(saved.id))}`);
   };
 
-  const handleExportJson = () => {
+  const handleExportJson = async () => {
     const validated = validateChallenge();
     if (!validated) return;
 
-    exportChallengeToJson(validated);
+    let finalDoc = validated;
+    if (user) {
+      try {
+        const manifest = await signExportPayload('minigame', {
+          title: validated.title,
+          description: validated.description || '',
+          game_mode: validated.game_mode || 'custom',
+          rounds: validated.rounds,
+        });
+        if (manifest) {
+          finalDoc = { ...validated, _manifest: manifest };
+        }
+      } catch {
+        finalDoc = validated;
+      }
+    }
+    exportChallengeToJson(finalDoc);
   };
 
   const handleShareLink = async () => {
@@ -173,15 +190,30 @@ export const MinigameCreator: React.FC<MinigameCreatorProps> = ({ catalog, local
 
     setIsSharing(true);
     try {
+      let finalDoc = validated;
+      if (user) {
+        try {
+          const manifest = await signExportPayload('minigame', {
+            title: validated.title,
+            description: validated.description || '',
+            game_mode: validated.game_mode || 'custom',
+            rounds: validated.rounds,
+          });
+          if (manifest) {
+            finalDoc = { ...validated, _manifest: manifest };
+          }
+        } catch {
+          finalDoc = validated;
+        }
+      }
       const origin = typeof window !== 'undefined' ? window.location.origin : '';
-      const fullUrl = buildChallengeShareUrl(origin, await encodeChallengeShare(validated));
+      const fullUrl = buildChallengeShareUrl(origin, await encodeChallengeShare(finalDoc));
       if (!(await copyTextWithFallback(fullUrl))) throw new Error('Failed to copy share link.');
       setShareSuccess(true);
       setTimeout(() => setShareSuccess(false), 4000);
-
     } catch (err) {
-        setErrorMsg(getErrorMessage(err, 'Failed to generate share link.'));
-      } finally {
+      setErrorMsg(getErrorMessage(err, 'Failed to generate share link.'));
+    } finally {
       setIsSharing(false);
     }
   };

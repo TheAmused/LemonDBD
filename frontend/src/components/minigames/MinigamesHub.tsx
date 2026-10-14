@@ -43,6 +43,7 @@ import {
 } from '@/utils/minigames/storage';
 import { exportChallengeToJson, importChallengeFromJson } from '@/utils/minigames/jsonExportImport';
 import { buildChallengeShareUrl, encodeChallengeShare } from '@/utils/minigames/shareLink';
+import { signExportPayload } from '@/utils/contentSigning';
 
 import { tip } from '@/components/common/Tooltip';
 import { ConfirmModal } from '@/components/common/ConfirmModal';
@@ -60,7 +61,7 @@ interface MinigamesHubProps {
 export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
   const dict = useDictionary();
   const t = dict.minigames;
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [customTrials, setCustomTrials] = useState<ChallengeDefinition[]>([]);
   const [importError, setImportError] = useState<string | null>(null);
@@ -93,16 +94,39 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
     setPendingDeleteId(null);
   };
 
-  const handleExport = (trial: ChallengeDefinition) => {
-    exportChallengeToJson(trial);
+  const ensureSignedTrial = async (trial: ChallengeDefinition): Promise<ChallengeDefinition> => {
+    if (trial._manifest || !user) return trial;
+    try {
+      const manifest = await signExportPayload('minigame', {
+        title: trial.title,
+        description: trial.description || '',
+        game_mode: trial.game_mode || 'custom',
+        rounds: trial.rounds,
+      });
+      if (manifest) {
+        const signed = { ...trial, _manifest: manifest };
+        saveCustomChallenge(signed);
+        setCustomTrials(getCustomChallenges());
+        return signed;
+      }
+    } catch {
+      // fallback to unsigned
+    }
+    return trial;
+  };
+
+  const handleExport = async (trial: ChallengeDefinition) => {
+    const signed = await ensureSignedTrial(trial);
+    exportChallengeToJson(signed);
   };
 
   const handleShare = async (trial: ChallengeDefinition) => {
     if (!trial.id) return;
     setShareLoadingId(trial.id);
     try {
+      const signed = await ensureSignedTrial(trial);
       const origin = typeof window !== 'undefined' ? window.location.origin : '';
-      const fullUrl = buildChallengeShareUrl(origin, await encodeChallengeShare(trial));
+      const fullUrl = buildChallengeShareUrl(origin, await encodeChallengeShare(signed));
       if (!(await copyTextWithFallback(fullUrl))) throw new Error('Copy failed');
       setCopiedId(trial.id);
       setTimeout(() => setCopiedId(null), 3000);

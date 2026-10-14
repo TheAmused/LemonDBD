@@ -242,7 +242,7 @@ export default {
   reportError: "Failed to submit report. Please try again.",
   reportButton: "Report",
   reportButtonAria: "Report content",
-  reportNoManifest: "This is a local draft or unsigned list and cannot be reported to its author.",
+  reportNoManifest: "This is an unsigned draft without a verified creator signature. Only shared or exported content with an author signature can be reported to administrators.",
 
   dnd: {
     pickedUp: "Picked up {name}.",

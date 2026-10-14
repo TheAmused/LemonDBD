@@ -29,7 +29,14 @@ describe('Page Root Theme Wrapper Consistency', () => {
   for (const relPath of shellPageRoutes) {
     it(`${relPath} renders its shell via <PageShell> with theme-token colors, not a raw hex background`, () => {
       const fullPath = path.resolve(__dirname, '../../app/[locale]', relPath);
-      const content = fs.readFileSync(fullPath, 'utf-8');
+      let content = fs.readFileSync(fullPath, 'utf-8');
+      const clientImport = content.match(/from\s+['"](@\/components\/[^'"]+)['"]/);
+      if (clientImport) {
+        const clientFile = path.resolve(__dirname, '../../', clientImport[1].replace('@/', '') + '.tsx');
+        if (fs.existsSync(clientFile)) {
+          content += '\n' + fs.readFileSync(clientFile, 'utf-8');
+        }
+      }
       assert.ok(!content.includes('bg-[#070b12]'), `${relPath} still contains raw hardcoded bg-[#070b12]`);
       assert.ok(content.includes('<PageShell'), `${relPath} must render through the shared <PageShell> component`);
       // A page may override PageShell's default outer wrapper (e.g. for a

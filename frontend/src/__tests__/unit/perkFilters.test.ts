@@ -56,10 +56,11 @@ test('computeHasActiveFilters is true for a non-default sort field or order', ()
 // old two-button filter pairs are gone, and every locale's labels actually
 // got shortened -- not just the English fallback strings.
 
-const PERKS_PAGE_SRC = fs.readFileSync(
-  path.join(__dirname, '../../app/[locale]/perks/page.tsx'),
-  'utf-8'
-);
+const PERKS_PAGE_SRC =
+  fs.readFileSync(path.join(__dirname, '../../app/[locale]/perks/page.tsx'), 'utf-8') +
+  (fs.existsSync(path.join(__dirname, '../../components/perks/PerksClient.tsx'))
+    ? fs.readFileSync(path.join(__dirname, '../../components/perks/PerksClient.tsx'), 'utf-8')
+    : '');
 const PERK_FILTERS_SRC = fs.readFileSync(path.join(__dirname, '../../components/PerkFilters.tsx'), 'utf-8');
 
 test('the Perks Vault stat banner ("Vault Total" / stat pill row) is gone from the page', () => {

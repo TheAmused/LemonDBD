@@ -108,15 +108,18 @@ test('legal dialog: a read-only preview, with the X as its only way out and no s
 });
 
 test('Terms, Privacy Policy and Rules share one page frame and one card', () => {
-  assert.ok(read('app/[locale]/privacy-policy/page.tsx').includes('<LegalPageLayout'));
+  const privacySrc = read('app/[locale]/privacy-policy/page.tsx') + (fs.existsSync(path.resolve(__dirname, '../../components/legal/PrivacyPolicyClient.tsx')) ? read('components/legal/PrivacyPolicyClient.tsx') : '');
+  assert.ok(privacySrc.includes('<LegalPageLayout'));
   assert.ok(read('components/legal/LegalDocPage.tsx').includes('<LegalPageLayout'));
   assert.ok(read('components/legal/LegalSections.tsx').includes('BlockCardPair'));
-  assert.match(read('app/[locale]/terms-of-service/layout.tsx'), /pageMetadata\('\/terms-of-service'/);
-  assert.match(read('app/[locale]/rules/layout.tsx'), /pageMetadata\('\/rules'/);
+  const termsMeta = fs.existsSync(path.resolve(__dirname, '../../app/[locale]/terms-of-service/layout.tsx')) ? read('app/[locale]/terms-of-service/layout.tsx') : read('app/[locale]/terms-of-service/page.tsx');
+  const rulesMeta = fs.existsSync(path.resolve(__dirname, '../../app/[locale]/rules/layout.tsx')) ? read('app/[locale]/rules/layout.tsx') : read('app/[locale]/rules/page.tsx');
+  assert.match(termsMeta, /pageMetadata\('\/terms-of-service'/);
+  assert.match(rulesMeta, /pageMetadata\('\/rules'/);
 });
 
 test('about page: Terms, Privacy Policy and Rules pills sit in one wrapping row, Rules right after Privacy', () => {
-  const about = read('app/[locale]/about/page.tsx');
+  const about = read('app/[locale]/about/page.tsx') + (fs.existsSync(path.resolve(__dirname, '../../components/about/AboutClient.tsx')) ? read('components/about/AboutClient.tsx') : '');
   assert.match(about, /terms-of-service`[\s\S]{0,300}privacy-policy`[\s\S]{0,300}\/rules`/, 'the three pills are adjacent, in that order');
   for (const key of ['dict.terms.heading', 'dict.privacy.heading', 'dict.rules.heading']) assert.ok(about.includes(key), `${key} labels a pill`);
   assert.match(about, /flex flex-wrap items-center justify-center gap-3[\s\S]{0,200}LegalLinkPill/, 'pills share a wrapping flex row');

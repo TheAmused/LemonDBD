@@ -6,7 +6,7 @@ import { DbdSpinner } from '@/components/common/DbdSpinner';
 export default function SmashOrPassLoading() {
   return (
     <PageShellFallback
-      mainClassName="min-h-[500px] flex items-center justify-center"
+      mainClassName="min-h-[500px] flex items-center justify-center text-text-primary"
       skeleton={
         <DbdSpinner
           size="responsive"

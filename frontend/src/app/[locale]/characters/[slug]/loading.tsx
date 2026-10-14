@@ -6,7 +6,7 @@ import { CharacterDetailSkeleton } from '@/components/character-detail/Character
 export default function CharacterDetailLoading() {
   return (
     <PageShellFallback
-      mainClassName="overflow-y-auto"
+      mainClassName="overflow-y-auto text-text-primary"
       skeleton={<CharacterDetailSkeleton />}
     />
   );

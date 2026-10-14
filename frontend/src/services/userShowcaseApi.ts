@@ -10,6 +10,7 @@ function apiBase(): string {
 }
 
 interface BackendMain {
+  character_id?: unknown;
   character_name?: string;
   prestige?: unknown;
   perk_ids?: unknown;
@@ -25,6 +26,11 @@ interface BackendShowcase {
 
 interface ShowcaseResponse extends ApiErrorBody {
   data?: BackendShowcase;
+}
+
+/** `{ characterId }` when the id is a number, nothing otherwise, so states without one stay free of the key. */
+function characterIdField(id: unknown): { characterId?: number } {
+  return typeof id === 'number' ? { characterId: id } : {};
 }
 
 export function mapBackendToShowcaseState(raw: unknown): UserShowcaseState {
@@ -45,15 +51,22 @@ export function mapBackendToShowcaseState(raw: unknown): UserShowcaseState {
     gradeRank: typeof data.grade_rank === 'string' && data.grade_rank ? data.grade_rank : 'Iridescent I',
     survivorMain: {
       characterName: data.survivor_main?.character_name || 'Feng Min',
+      ...characterIdField(data.survivor_main?.character_id),
       prestige: typeof data.survivor_main?.prestige === 'number' ? Math.max(1, Math.min(100, data.survivor_main.prestige)) : 9,
       perkIds: [0, 1, 2, 3].map((i) => (typeof sPerks[i] === 'number' ? sPerks[i] : null)),
     },
     killerMain: {
       characterName: data.killer_main?.character_name || 'The Blight',
+      ...characterIdField(data.killer_main?.character_id),
       prestige: typeof data.killer_main?.prestige === 'number' ? Math.max(1, Math.min(100, data.killer_main.prestige)) : 7,
       perkIds: [0, 1, 2, 3].map((i) => (typeof kPerks[i] === 'number' ? kPerks[i] : null)),
     },
   };
+}
+
+/** The backend prefers `character_id` over the name, which may be a translation it has no row for. */
+function backendCharacterIdField(id: number | undefined): { character_id?: number } {
+  return id === undefined ? {} : { character_id: id };
 }
 
 export function mapShowcaseStateToBackend(state: UserShowcaseState): Record<string, unknown> {
@@ -63,11 +76,13 @@ export function mapShowcaseStateToBackend(state: UserShowcaseState): Record<stri
     grade_rank: state.gradeRank,
     survivor_main: {
       character_name: state.survivorMain.characterName,
+      ...backendCharacterIdField(state.survivorMain.characterId),
       prestige: state.survivorMain.prestige,
       perk_ids: state.survivorMain.perkIds,
     },
     killer_main: {
       character_name: state.killerMain.characterName,
+      ...backendCharacterIdField(state.killerMain.characterId),
       prestige: state.killerMain.prestige,
       perk_ids: state.killerMain.perkIds,
     },

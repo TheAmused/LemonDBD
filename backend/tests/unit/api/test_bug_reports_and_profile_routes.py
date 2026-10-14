@@ -38,14 +38,17 @@ class TestMyBugReportsRoute:
             token = generate_token(owner.id, role="user")
         return {"Authorization": f"Bearer {token}"}
 
-    def _make_report(self, db_session, *, user_id=None, title="Bug", reporter_name="x", reporter_email="x@x.com"):
+    def _make_report(
+        self, db_session, *, user_id=None, title="Bug", reporter_name="x", reporter_email="x@x.com",
+        feedback_unread=False,
+    ):
         report = BugReport(
             user_id=user_id,
             reporter_name=reporter_name,
             reporter_email=reporter_email,
             title=title,
-            category="General",
             message="Something broke.",
+            feedback_unread=feedback_unread,
         )
         db_session.add(report)
         db_session.commit()
@@ -118,6 +121,92 @@ class TestMyBugReportsRoute:
         res = client.get("/api/v1/bug-reports/my", headers=owner_headers)
         titles = [r["title"] for r in res.get_json()["reports"]]
         assert titles == ["Newest", "Oldest"]
+
+    def test_unread_count_covers_every_page(
+        self, client: FlaskClient, db_session, owner: User, other_user: User, owner_headers: dict[str, str]
+    ) -> None:
+        for i in range(3):
+            self._make_report(db_session, user_id=owner.id, title=f"Answered {i}", feedback_unread=True)
+        self._make_report(db_session, user_id=owner.id, title="Quiet")
+        self._make_report(db_session, user_id=other_user.id, title="Not mine", feedback_unread=True)
+
+        res = client.get("/api/v1/bug-reports/my?per_page=1", headers=owner_headers)
+        data = res.get_json()
+        assert len(data["reports"]) == 1
+        assert data["unread_count"] == 3
+
+    def test_mark_seen_clears_the_flag(
+        self, client: FlaskClient, db_session, owner: User, owner_headers: dict[str, str]
+    ) -> None:
+        report = self._make_report(db_session, user_id=owner.id, feedback_unread=True)
+
+        res = client.post(f"/api/v1/bug-reports/{report.id}/seen", headers=owner_headers)
+        assert res.status_code == 200
+        assert res.get_json()["report"]["feedback_unread"] is False
+        assert client.get("/api/v1/bug-reports/my", headers=owner_headers).get_json()["unread_count"] == 0
+
+    def test_mark_seen_rejects_someone_elses_report(
+        self, client: FlaskClient, db_session, other_user: User, owner_headers: dict[str, str]
+    ) -> None:
+        report = self._make_report(
+            db_session, user_id=other_user.id, reporter_email="someone@example.com", feedback_unread=True
+        )
+
+        res = client.post(f"/api/v1/bug-reports/{report.id}/seen", headers=owner_headers)
+        assert res.status_code == 404
+        assert res.get_json()["error_code"] == "bug_report_not_found"
+        db_session.refresh(report)
+        assert report.feedback_unread is True
+
+    def test_mark_seen_requires_authentication(self, client: FlaskClient) -> None:
+        assert client.post("/api/v1/bug-reports/1/seen").status_code == 401
+
+
+@pytest.mark.unit
+class TestAdminFeedbackFlag:
+    @pytest.fixture
+    def admin_headers(self, app: Flask, db_session) -> dict[str, str]:
+        admin = User(login="feedback_admin", username="feedback_admin", email="feedback_admin@example.com",
+                     password_hash="hashed", role="admin")
+        db_session.add(admin)
+        db_session.commit()
+        with app.app_context():
+            token = generate_token(admin.id, role="admin")
+        return {"Authorization": f"Bearer {token}"}
+
+    @pytest.fixture
+    def report(self, db_session) -> BugReport:
+        report = BugReport(reporter_name="x", reporter_email="x@x.com", title="Bug", message="Broke.")
+        db_session.add(report)
+        db_session.commit()
+        return report
+
+    def _update(self, client: FlaskClient, headers: dict[str, str], report_id: int, **body: str):
+        return client.put(f"/api/v1/admin/bug-reports/{report_id}", json=body, headers=headers)
+
+    def test_status_change_alone_does_not_flag_feedback(self, client, admin_headers, report) -> None:
+        res = self._update(client, admin_headers, report.id, status="resolved")
+        assert res.status_code == 200
+        assert res.get_json()["report"]["feedback_unread"] is False
+
+    def test_written_reply_flags_feedback(self, client, admin_headers, report) -> None:
+        res = self._update(client, admin_headers, report.id, status="in_progress", admin_notes="On it.")
+        assert res.get_json()["report"]["feedback_unread"] is True
+
+    def test_resubmitting_the_same_reply_does_not_flag_it_again(
+        self, client, db_session, admin_headers, report
+    ) -> None:
+        self._update(client, admin_headers, report.id, admin_notes="On it.")
+        report.feedback_unread = False
+        db_session.commit()
+
+        res = self._update(client, admin_headers, report.id, status="resolved", admin_notes="On it.")
+        assert res.get_json()["report"]["feedback_unread"] is False
+
+    def test_clearing_the_reply_unflags_feedback(self, client, admin_headers, report) -> None:
+        self._update(client, admin_headers, report.id, admin_notes="On it.")
+        res = self._update(client, admin_headers, report.id, admin_notes="")
+        assert res.get_json()["report"]["feedback_unread"] is False
 
 
 @pytest.mark.unit

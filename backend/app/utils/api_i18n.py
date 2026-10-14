@@ -31,6 +31,20 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "es": "No se pudieron obtener los informes de errores.",
         "ja": "バグ報告の取得に失敗しました。",
     },
+    "bug_report_not_found": {
+        "en": "Bug report not found.",
+        "pl": "Nie znaleziono zgłoszenia błędu.",
+        "de": "Fehlerbericht nicht gefunden.",
+        "es": "Informe de error no encontrado.",
+        "ja": "バグ報告が見つかりません。",
+    },
+    "bug_report_seen_failed": {
+        "en": "Failed to mark the bug report as seen.",
+        "pl": "Nie udało się oznaczyć zgłoszenia jako przeczytanego.",
+        "de": "Der Fehlerbericht konnte nicht als gelesen markiert werden.",
+        "es": "No se pudo marcar el informe de error como visto.",
+        "ja": "バグ報告を既読にできませんでした。",
+    },
     "invalid_pagination": {
         "en": "Invalid page or per_page parameter.",
         "pl": "Nieprawidłowy parametr page lub per_page.",

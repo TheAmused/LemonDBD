@@ -16,6 +16,8 @@ export default {
   reportedOn: "報告日時",
   attachments: "添付ファイル",
   devResponse: "開発者からの回答",
+  noDevResponseYet: "開発者からの回答はまだありません。後ほどもう一度ご確認ください。",
+  newFeedback: "開発者からの新しい回答",
   saveChanges: "保存",
   newPassword: "新しいパスワード",
   confirmPassword: "新しいパスワード（確認）",

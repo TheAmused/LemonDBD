@@ -4,6 +4,7 @@
 import React, { useState } from 'react';
 import { ChevronDown, Plus } from 'lucide-react';
 import { Button } from '@/components/common/Button';
+import { UnreadDot } from '@/components/common/UnreadDot';
 import { UserBugReportsList } from './UserBugReportsList';
 import { usePersistentDrawer } from '@/hooks/usePersistentDrawer';
 import type { UserBugReport } from '@/types/userProfile';
@@ -14,13 +15,15 @@ interface UserBugReportsDrawerProps {
   loading: boolean;
   onOpenReportModal: () => void;
   total: number;
+  unreadCount: number;
   page: number;
   perPage: number;
   totalPages: number;
   onPageChange: (page: number) => void;
+  onReportSeen: (id: number) => void;
 }
 
-export const UserBugReportsDrawer: React.FC<UserBugReportsDrawerProps> = ({ reports, loading, onOpenReportModal, total, page, perPage, totalPages, onPageChange }) => {
+export const UserBugReportsDrawer: React.FC<UserBugReportsDrawerProps> = ({ reports, loading, onOpenReportModal, total, unreadCount, page, perPage, totalPages, onPageChange, onReportSeen }) => {
   const dict = useDictionary();
   const [isExpanded, toggleExpanded] = usePersistentDrawer('lemondbd_drawer_bugs', false);
 
@@ -45,8 +48,11 @@ export const UserBugReportsDrawer: React.FC<UserBugReportsDrawerProps> = ({ repo
 
         <div aria-hidden="true" />
         <div className="relative z-10 text-center pointer-events-none">
-          <h2 className="type-section-title text-text-primary group-hover:text-accent-red transition-colors">
+          <h2 className="relative inline-block type-section-title text-text-primary group-hover:text-accent-red transition-colors">
             {dict.user.tabBugReports}
+            {unreadCount > 0 && (
+              <UnreadDot className="absolute -right-4 top-0" label={dict.user.newFeedback} />
+            )}
           </h2>
         </div>
         <div className="relative z-10 flex items-center justify-end gap-3 shrink-0 pointer-events-none">
@@ -84,6 +90,7 @@ export const UserBugReportsDrawer: React.FC<UserBugReportsDrawerProps> = ({ repo
               perPage={perPage}
               totalPages={totalPages}
               onPageChange={onPageChange}
+              onReportSeen={onReportSeen}
               hideHeading={true}
             />
           </div>

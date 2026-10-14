@@ -5,6 +5,8 @@ import React, { useCallback, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { SearchX } from 'lucide-react';
 import { EmptyState } from '@/components/common/EmptyState';
+import { AuthRequiredState } from '@/components/common/AuthRequiredState';
+import { useAuth } from '@/context/AuthContext';
 import {
   TIER_LIST_FORMAT,
   TIER_LIST_FORMAT_VERSION,
@@ -32,6 +34,7 @@ export function CustomTierListView({ id, locale }: CustomTierListViewProps) {
   const t = dict.tierLists;
   const router = useRouter();
   const { state, hydrated } = useTierListStore();
+  const { isAuthenticated, isLoading: authLoading } = useAuth();
   const list = state.custom[id];
 
   useDocumentTitle(list ? `LemonDBD - ${list.title || t.untitled}` : t.pageTitle);
@@ -100,7 +103,18 @@ export function CustomTierListView({ id, locale }: CustomTierListViewProps) {
     router.push(`/${locale}/tier-lists`);
   }, [id, locale, router]);
 
-  if (!hydrated) return <TierListSkeleton />;
+  if (authLoading || !hydrated) return <TierListSkeleton />;
+
+  if (!isAuthenticated) {
+    return (
+      <div className="relative z-10 flex flex-col gap-2">
+        <AuthRequiredState
+          title={t.authRequiredTitle}
+          subtitle={t.authRequiredDesc}
+        />
+      </div>
+    );
+  }
 
   if (!list) {
     return (

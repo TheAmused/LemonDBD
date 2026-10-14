@@ -25,6 +25,7 @@ import type {
   MinigameCatalog,
 } from '@/types/minigame';
 import { useAuth } from '@/context/AuthContext';
+import { AuthRequiredState } from '@/components/common/AuthRequiredState';
 import { saveCustomChallenge } from '@/utils/minigames/storage';
 import { exportChallengeToJson } from '@/utils/minigames/jsonExportImport';
 import { buildChallengeShareUrl, encodeChallengeShare } from '@/utils/minigames/shareLink';
@@ -44,7 +45,7 @@ export const MinigameCreator: React.FC<MinigameCreatorProps> = ({ catalog, local
   const t = dict.minigames;
   const c = t.creator;
   const router = useRouter();
-  const { user, isAdmin, token } = useAuth();
+  const { user, isAdmin, token, isAuthenticated, isLoading: authLoading } = useAuth();
 
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -208,6 +209,21 @@ export const MinigameCreator: React.FC<MinigameCreatorProps> = ({ catalog, local
       setIsPublishingOfficial(false);
     }
   };
+
+  if (authLoading) {
+    return <div className="min-h-[400px]" />;
+  }
+
+  if (!isAuthenticated) {
+    return (
+      <div className="w-full max-w-4xl mx-auto px-4 py-8">
+        <AuthRequiredState
+          title={t.authRequiredTitle}
+          subtitle={t.authRequiredDesc}
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="w-full max-w-4xl mx-auto px-4 py-8 flex flex-col items-center">

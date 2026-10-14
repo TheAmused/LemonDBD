@@ -26,6 +26,10 @@ export default {
   notFoundSubtitle: "Mogła zostać wycofana albo link jest błędny.",
   customNotFoundTitle: "Nie znaleziono własnej listy",
   customNotFoundSubtitle: "Własne listy istnieją tylko w tej przeglądarce. Mogła zostać usunięta albo utworzona na innym urządzeniu.",
+  authRequiredTitle: "Wymagane logowanie",
+  authRequiredDesc: "Musisz być zalogowany, aby tworzyć, edytować lub przeglądać własne tier listy.",
+  loginToManage: "Zaloguj się, aby zarządzać tier listami",
+  loginToManageDesc: "Zaloguj się, aby tworzyć, importować i zapisywać własne tier listy.",
   untitled: "Tier lista bez nazwy",
   kinds: {
     survivor_perks: "Perki ocalałych",

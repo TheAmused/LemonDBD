@@ -26,6 +26,10 @@ export default {
   notFoundSubtitle: "Sie wurde vielleicht entfernt, oder der Link ist falsch.",
   customNotFoundTitle: "Eigene Liste nicht gefunden",
   customNotFoundSubtitle: "Eigene Listen existieren nur in diesem Browser. Sie wurde vielleicht gelöscht oder auf einem anderen Gerät erstellt.",
+  authRequiredTitle: "Anmeldung erforderlich",
+  authRequiredDesc: "Du musst angemeldet sein, um eigene Tierlisten zu erstellen, zu bearbeiten oder anzusehen.",
+  loginToManage: "Anmelden zur Verwaltung von Tierlisten",
+  loginToManageDesc: "Melde dich an, um deine eigenen Tierlisten zu erstellen, zu importieren und zu speichern.",
   untitled: "Unbenannte Tierliste",
   kinds: {
     survivor_perks: "Überlebenden-Fähigkeiten",

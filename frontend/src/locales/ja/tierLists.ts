@@ -26,6 +26,10 @@ export default {
   notFoundSubtitle: "公開が終了したか、リンクが間違っている可能性があります。",
   customNotFoundTitle: "カスタムリストが見つかりません",
   customNotFoundSubtitle: "カスタムリストはこのブラウザにのみ存在します。削除されたか、別の端末で作成された可能性があります。",
+  authRequiredTitle: "ログインが必要です",
+  authRequiredDesc: "カスタムティアリストを作成、編集、閲覧するにはログインが必要です。",
+  loginToManage: "ログインしてティアリストを管理",
+  loginToManageDesc: "カスタムティアリストを作成、インポート、保存するにはログインしてください。",
   untitled: "無題のティアリスト",
   kinds: {
     survivor_perks: "サバイバーのパーク",

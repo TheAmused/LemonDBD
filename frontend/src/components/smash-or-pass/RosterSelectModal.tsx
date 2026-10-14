@@ -7,6 +7,8 @@ import type { RosterItem } from '@/types/smashOrPass';
 import { cn } from '@/utils/cn';
 import { Modal } from '@/components/common/Modal';
 import { Button } from '@/components/common/Button';
+import { AuthRequiredState } from '@/components/common/AuthRequiredState';
+import { useAuth } from '@/context/AuthContext';
 import { useDictionary } from "@/context/DictionaryContext";
 import { RosterCarouselCard } from './roster-select/RosterCarouselCard';
 import { RosterPickerFooter } from './roster-select/RosterPickerFooter';
@@ -49,6 +51,7 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
       locale = 'en',
     }) => {
   const dict = useDictionary();
+  const { isAuthenticated } = useAuth();
   const {
     filter,
     handleFilterChange,
@@ -191,7 +194,15 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
             </>
           )}
 
-          {N === 0 ? (
+          {filter === 'custom' && !isAuthenticated ? (
+            <div className="relative z-10 max-w-md mx-auto my-auto p-4">
+              <AuthRequiredState
+                variant="compact"
+                title={dict.smashOrPass.loginToManage}
+                subtitle={dict.smashOrPass.loginToManageDesc}
+              />
+            </div>
+          ) : N === 0 ? (
             <div className="relative z-10 flex flex-col items-center justify-center gap-3 p-8 rounded-3xl border border-dashed border-border-color bg-bg-elevated/40 text-center max-w-md mx-auto">
               <CardStackIcon className="h-10 w-10 text-accent-red animate-pulse" aria-hidden="true" />
               <h3 className="text-base font-bold text-text-primary uppercase tracking-wide">

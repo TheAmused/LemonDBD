@@ -42,6 +42,10 @@ export default {
   confirmDelete: "このカスタム試練を削除してもよろしいですか？",
   cancel: "キャンセル",
   playTrial: "プレイ",
+  authRequiredTitle: "ログインが必要です",
+  authRequiredDesc: "カスタムトライアルを作成またはプレイするにはログインが必要です。",
+  loginToManage: "ログインしてトライアルを管理",
+  loginToManageDesc: "コミュニティトライアルを作成、インポート、プレイするにはログインしてください。",
   adminPublishSuccess: "公式チャレンジとして正常に公開されました！",
 
   // Runner

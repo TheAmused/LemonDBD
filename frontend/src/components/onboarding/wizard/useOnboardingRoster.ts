@@ -1,3 +1,4 @@
+'use client';
 // frontend/src/components/onboarding/wizard/useOnboardingRoster.ts
 import { useEffect, useMemo, useState } from 'react';
 import { ownershipKey, ownsPerk } from '@/utils/characterUtils';

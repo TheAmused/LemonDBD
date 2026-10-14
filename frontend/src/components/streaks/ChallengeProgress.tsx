@@ -1,3 +1,4 @@
+'use client';
 // frontend/src/components/streaks/ChallengeProgress.tsx
 
 import React, { useEffect, useRef, useState } from 'react';

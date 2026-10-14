@@ -1,3 +1,4 @@
+'use client';
 // frontend/src/components/streaks/ChallengePanel.tsx
 
 import React, { useState } from 'react';

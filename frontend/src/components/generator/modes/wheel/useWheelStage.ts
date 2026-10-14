@@ -1,3 +1,4 @@
+'use client';
 // frontend/src/components/generator/modes/wheel/useWheelStage.ts
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { Perk, RoleCategory, DrawnSlot } from '@/types/perks';

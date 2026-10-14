@@ -1,3 +1,4 @@
+'use client';
 // frontend/src/components/smash-or-pass/hub/useSmashSound.ts
 import { useEffect } from 'react';
 import { SmashSounds } from '../SmashSoundEffects';

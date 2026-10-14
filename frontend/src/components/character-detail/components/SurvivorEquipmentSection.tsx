@@ -1,3 +1,4 @@
+'use client';
 // frontend/src/components/character-detail/components/SurvivorEquipmentSection.tsx
 import { Tabs } from '@/components/common/Tabs';
 import React, { useMemo } from 'react';

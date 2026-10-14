@@ -1,3 +1,4 @@
+'use client';
 // frontend/src/components/smash-or-pass/hub/useSmashDeck.ts
 import { useCallback, useEffect, useState } from 'react';
 import { fetchLeaderboard, fetchRosterFeed } from '@/services/smashApi';

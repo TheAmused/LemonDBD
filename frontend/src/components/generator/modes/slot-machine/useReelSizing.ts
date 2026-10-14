@@ -1,3 +1,4 @@
+'use client';
 // frontend/src/components/generator/modes/slot-machine/useReelSizing.ts
 import { useEffect, useRef, useState } from 'react';
 import { REEL_COUNT, REEL_GAP_PX, REEL_MAX_PX, REEL_MIN_PX } from './slotMachineStrip';

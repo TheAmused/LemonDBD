@@ -73,9 +73,10 @@ export function createVersionedStore<S>({ key, empty, migrate }: VersionedStoreC
       const raw = storage.getItem(key);
       if (!raw) return empty;
       return migrate(JSON.parse(raw));
-    } catch {
+    } catch (err) {
       // Corrupt JSON: start empty rather than crash the page. The bad value is
       // left in place until the next successful save overwrites it.
+      console.warn(`[versionedStore] Corrupt data in localStorage key "${key}", falling back to empty state:`, err);
       return empty;
     }
   }

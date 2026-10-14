@@ -8,6 +8,7 @@ from app.core.config import demo_accounts_enabled
 from app.core.altcha_guard import require_altcha
 from app.core.limiter import limiter, validate_honeypot
 from app.core.security import (
+    generate_token,
     clear_session_cookie,
     get_current_user,
     login_required,
@@ -16,10 +17,24 @@ from app.core.security import (
 )
 from app.schemas.user import UserCreate, UserResponse
 from app.services.altcha_service import AltchaService
-from app.services.user import two_factor
+from app.services.user import (
+    authenticate_user_credentials,
+    clear_user_avatar,
+    create_user_account,
+    delete_own_account,
+    export_filename,
+    export_user_data,
+    get_avatar_storage_directory,
+    modify_user_profile,
+    process_and_save_avatar,
+    request_password_reset,
+    resend_verification_email,
+    reset_password_with_token,
+    two_factor,
+    verify_email_code,
+)
 from app.services.user.profile import auto_verify_user
 from app.services.ownership_service import OwnershipService
-from app.services.user_service import UserService
 from app.utils.api_i18n import coded_error_response, error_response
 from app.utils.downloads import json_download_response
 from app.utils.responses import api_error
@@ -27,7 +42,6 @@ from app.utils.responses import api_error
 logger = logging.getLogger(__name__)
 auth_bp = Blueprint("auth_bp", __name__, url_prefix="/api/v1/auth")
 
-user_service = UserService()
 ownership_service = OwnershipService()
 
 
@@ -45,7 +59,7 @@ def register():
     except ValidationError as err:
         return api_error("Validation failed", 400, details=err.errors())
 
-    user, err = user_service.register_user(
+    user, err = create_user_account(
         login=validated_data.login,
         username=validated_data.username,
         email=validated_data.email,
@@ -56,7 +70,7 @@ def register():
         return api_error(err, 400)
 
     ownership_service.seed_default_ownership_for_new_user(user.id)
-    token = user_service.generate_auth_token(user)
+    token = generate_token(user.id, user.role)
     summary = ownership_service.get_user_ownership_summary(user.id)
 
     response = make_response(jsonify({
@@ -101,7 +115,7 @@ def login():
     if not login_or_email or not password:
         return api_error("Login/email and password are required.", 400)
 
-    user, token = user_service.authenticate(login_or_email.strip(), password.strip())
+    user, token = authenticate_user_credentials(login_or_email.strip(), password.strip())
     if not user:
         return api_error("Invalid credentials", 401)
 
@@ -113,7 +127,7 @@ def login():
             "methods": ["totp", "recovery"],
         }), 200
 
-    return session_response(user, token or user_service.generate_auth_token(user), "Login successful")
+    return session_response(user, token or generate_token(user.id, user.role), "Login successful")
 
 
 @auth_bp.route("/verify-email", methods=["POST"])
@@ -121,7 +135,7 @@ def verify_email():
     data = request.get_json(silent=True) or {}
     email = data.get("email")
     code = data.get("code")
-    user, err = user_service.verify_email(email, code)
+    user, err = verify_email_code(email, code)
     if err:
         return jsonify({"status": "error", "message": err}), 400
 
@@ -139,7 +153,7 @@ def resend_verification():
     if not email:
         return api_error("Email is required.", 400)
 
-    ok, err = user_service.resend_verification(email)
+    ok, err = resend_verification_email(email)
     if not ok:
         return api_error(err, 429)
 
@@ -158,7 +172,7 @@ def forgot_password():
     if not email:
         return api_error("Email is required.", 400)
 
-    ok, err = user_service.request_password_reset(email)
+    ok, err = request_password_reset(email)
     if not ok:
         return api_error(err, 429)
 
@@ -175,7 +189,7 @@ def reset_password():
     token = data.get("token")
     new_password = data.get("new_password")
 
-    user, err = user_service.reset_password(token, new_password)
+    user, err = reset_password_with_token(token, new_password)
     if err:
         return api_error(err, 400)
 
@@ -223,7 +237,7 @@ def update_profile():
     current_password = data.get("current_password")
 
     try:
-        updated_user, err = user_service.update_user_profile(
+        updated_user, err = modify_user_profile(
             user_id=user.id,
             email=email,
             avatar_url=avatar_url,
@@ -247,7 +261,7 @@ def update_profile():
         return jsonify(body), 200
 
     # The password changed, so every older session was just signed out: hand this one a fresh token.
-    token = user_service.generate_auth_token(updated_user)
+    token = generate_token(updated_user.id, updated_user.role)
     body["token"] = token
     body["token_type"] = "Bearer"
     return set_session_cookie(make_response(jsonify(body), 200), token)
@@ -261,7 +275,7 @@ def upload_avatar():
     if not file:
         return error_response("no_avatar_file", 400)
 
-    updated_user, err = user_service.save_user_avatar(user.id, file)
+    updated_user, err = process_and_save_avatar(user.id, file)
     if err:
         return api_error(err, 400)
 
@@ -277,7 +291,7 @@ def upload_avatar():
 @login_required
 def delete_avatar():
     user = g.current_user
-    updated_user, err = user_service.delete_user_avatar(user.id)
+    updated_user, err = clear_user_avatar(user.id)
     if err:
         return api_error(err, 400)
 
@@ -295,10 +309,10 @@ def delete_avatar():
 def export_account_data():
     """Download everything the server holds about the signed-in account as JSON."""
     user_id = g.current_user.id
-    data = user_service.export_user_data(user_id, requested_by="self")
+    data = export_user_data(user_id, requested_by="self")
     if data is None:
         return api_error("Account not found.", 404)
-    return json_download_response(data, user_service.export_filename(user_id, "self"))
+    return json_download_response(data, export_filename(user_id, "self"))
 
 
 @auth_bp.route("/account", methods=["DELETE"])
@@ -308,7 +322,7 @@ def delete_account():
     """Permanently delete the signed-in account (requires the current password)."""
     data = request.get_json(silent=True) or {}
     try:
-        ok, err = user_service.delete_own_account(
+        ok, err = delete_own_account(
             g.current_user.id,
             str(data.get("password") or ""),
             data.get("two_factor_code"),
@@ -326,7 +340,7 @@ def delete_account():
 @auth_bp.route("/avatar/file/<path:filename>", methods=["GET"])
 def get_avatar_file(filename: str):
     clean_filename = os.path.basename(filename)
-    primary_dir = user_service._get_avatar_dir()
+    primary_dir = get_avatar_storage_directory()
     
     candidate_dirs = [
         primary_dir,

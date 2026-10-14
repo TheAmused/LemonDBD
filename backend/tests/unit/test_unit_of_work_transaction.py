@@ -6,7 +6,7 @@ from app.core.extensions import db
 from app.core.transaction import transaction
 from app.models import BugReport, User
 from app.models.minigame import MinigameUserStat
-from app.services.minigame_service import MinigameService
+from app.services.minigames import record_minigame_round
 
 
 def test_transaction_commits_cleanly(app):
@@ -132,8 +132,7 @@ def test_minigame_service_transaction_boundary(app):
         with transaction():
             db.session.add(user)
 
-        service = MinigameService()
-        stat = service.record_minigame_round(
+        stat = record_minigame_round(
             user_id=user.id,
             game_mode="perk_guesser",
             won=True,

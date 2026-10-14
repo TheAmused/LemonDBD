@@ -9,7 +9,7 @@ from app.services.perks.utils import HEADER_EXCLUSIONS
 
 
 def fetch_items(
-    service,
+    service: Any = None,
     category: str | None = None,
     search: str | None = None,
     lang: str | None = None,
@@ -50,7 +50,7 @@ def fetch_items(
 
 
 def fetch_addons(
-    service,
+    service: Any = None,
     category: str | None = None,
     target: str | None = None,
     search: str | None = None,

@@ -1,44 +1,44 @@
-# backend/app/services/perk_service.py
+# backend/app/services/perks/service.py
 import logging
+import warnings
 from pathlib import Path
 from typing import Any
 
-from app.services.perks import (
-    AddonModel,
-    CharacterModel,
-    ItemModel,
-    MapModel,
-    PerkModel,
-    fetch_addons as _fetch_addons_fn,
+from app.services.perks.loader import reload_service_data as _reload_service_data_fn
+from app.services.perks.queries_character import (
     fetch_character_detail as _fetch_character_detail_fn,
     fetch_character_suggestions as _fetch_character_suggestions_fn,
     fetch_characters as _fetch_characters_fn,
+)
+from app.services.perks.queries_equipment import (
+    fetch_addons as _fetch_addons_fn,
     fetch_items as _fetch_items_fn,
-    fetch_maps as _fetch_maps_fn,
+)
+from app.services.maps.queries import fetch_maps as _fetch_maps_fn
+from app.services.perks.queries_perk import (
+    fetch_perks as _fetch_perks_fn,
+)
+from app.services.perks.queries_perk_lookup import (
     fetch_perk_by_identifier as _fetch_perk_by_identifier_fn,
     fetch_perk_suggestions as _fetch_perk_suggestions_fn,
-    fetch_perks as _fetch_perks_fn,
-    reload_service_data as _reload_service_data_fn,
 )
 
 logger = logging.getLogger(__name__)
 
-__all__ = [
-    "PerkService",
-    "CharacterModel",
-    "PerkModel",
-    "ItemModel",
-    "AddonModel",
-    "MapModel",
-]
-
 
 class PerkService:
+    """Deprecated class facade for perks and catalog queries. Use domain package functions directly."""
+
     ALLOWED_SORT_FIELDS: set[str] = {"name", "character", "category"}
 
     def __init__(self, data_path: Path | None = None):
+        warnings.warn(
+            "PerkService is deprecated; call domain functions from app.services.perks directly.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         if data_path is None:
-            data_path = Path(__file__).resolve().parent.parent.parent / "data" / "perks.json"
+            data_path = Path(__file__).resolve().parent.parent.parent.parent / "data" / "perks.json"
         self.data_path = Path(data_path)
         self.characters_path = self.data_path.parent / "characters.json"
         self.items_path = self.data_path.parent / "items.json"
@@ -126,12 +126,6 @@ class PerkService:
         search: str | None = None,
         lang: str | None = None,
     ) -> list[dict[str, Any]]:
-        """Serve `/api/v1/addons` as one list drawn from two tables.
-
-        `category` and `target` keep their meanings and their spellings; they
-        now choose between `killer_addons` and `item_addons` rather than
-        filtering one combined table, and the two result sets are concatenated.
-        """
         return _fetch_addons_fn(self, category=category, target=target, search=search, lang=lang)
 
     def get_maps(
@@ -141,4 +135,4 @@ class PerkService:
         source: str | None = None,
         lang: str | None = None,
     ) -> list[dict[str, Any]]:
-        return _fetch_maps_fn(self._use_sqlalchemy, self.db_service, realm=realm, search=search, source=source, lang=lang)
+        return _fetch_maps_fn(realm=realm, search=search, source=source, lang=lang)

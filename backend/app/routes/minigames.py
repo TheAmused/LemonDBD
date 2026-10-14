@@ -20,7 +20,15 @@ from app.models.minigame import (
 )
 from pydantic import ValidationError
 
-from app.services.minigame_service import MinigameService
+from app.services.minigames import (
+    create_repeatable,
+    evaluate_guess,
+    get_catalog,
+    get_or_create_daily,
+    record_minigame_round,
+    update_killer_chase_music,
+    upsert_daily_challenge,
+)
 from app.schemas.minigames import (
     MinigameGuessSubmissionDTO,
     MinigameOfficialCreateDTO,
@@ -33,14 +41,13 @@ from app.utils.responses import api_error
 logger = logging.getLogger(__name__)
 
 minigames_bp = Blueprint("minigames", __name__, url_prefix="/api/v1/minigames")
-minigame_service = MinigameService()
 
 
 @minigames_bp.route("/catalog", methods=["GET"])
 def get_minigames_catalog():
     """Retrieve full catalog of characters, perks, and realms for search autocomplete."""
     lang = extract_lang()
-    catalog = minigame_service.get_catalog(lang=lang)
+    catalog = get_catalog(lang=lang)
     return jsonify(catalog), 200
 
 
@@ -60,7 +67,7 @@ def get_daily_challenge():
 
     lang = extract_lang()
     try:
-        challenge = minigame_service.get_or_create_daily(game_mode=game_mode, target_date=target_date, lang=lang)
+        challenge = get_or_create_daily(game_mode=game_mode, target_date=target_date, lang=lang)
         return jsonify(challenge), 200
     except Exception as e:
         logger.error(f"Error fetching daily minigame: {e}")
@@ -74,7 +81,7 @@ def get_repeatable_challenge():
     session_id = request.headers.get("X-Session-ID") or secrets.token_hex(16)
 
     try:
-        challenge = minigame_service.create_repeatable(game_mode=game_mode, session_id=session_id)
+        challenge = create_repeatable(game_mode=game_mode, session_id=session_id)
         return jsonify(challenge), 200
     except Exception as e:
         logger.error(f"Error creating repeatable minigame: {e}")
@@ -117,7 +124,7 @@ def submit_guess():
     if not round_data:
         return api_error("Challenge or round not found", 404)
 
-    result = minigame_service.evaluate_guess(
+    result = evaluate_guess(
         round_data=round_data,
         guess_type=guess_type,
         guess_id=guess_id,
@@ -153,7 +160,7 @@ def create_official_challenge():
     else:
         target_date = datetime.now(timezone.utc).date()
 
-    challenge = minigame_service.upsert_daily_challenge(
+    challenge = upsert_daily_challenge(
         game_mode=game_mode,
         title=title,
         description=description,
@@ -204,7 +211,7 @@ def update_user_stats():
     except ValidationError as err:
         return api_error("Validation failed", 400, details=err.errors())
 
-    stat = minigame_service.record_minigame_round(
+    stat = record_minigame_round(
         user_id=user.id,
         game_mode=dto.game_mode,
         won=dto.won,
@@ -248,7 +255,7 @@ def stream_killer_terror_radius(killer_id: int):
                     with open(local_path, "wb") as f:
                         f.write(data)
             # Save local path directly to Killer model
-            minigame_service.update_killer_chase_music(killer.id, f"audio/cache/{mp3_filename}")
+            update_killer_chase_music(killer.id, f"audio/cache/{mp3_filename}")
         except Exception as e:
             logger.error(f"Failed to fetch audio for {killer.name} from wiki: {e}")
             return api_error(f"Failed to retrieve audio: {str(e)}", 502)

@@ -5,7 +5,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 from app.models import GauntletMatchLog, GauntletRun
 from app.services.gauntlet_service import GauntletService
-from app.services.user_service import UserService
+from app.services.user import UserService
 from tests.unit.gauntlet_support import (
     seed_killer,
     seed_survivor,

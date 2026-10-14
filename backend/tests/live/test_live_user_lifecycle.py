@@ -8,7 +8,7 @@ from app.models.admin import AdminAuditLog, ChallengeModeSetting
 from app.models.character import Survivor
 from app.models.perk import Perk
 from app.models.user import User, UserCharacterOwnership, UserPerkOwnership
-from app.services.user_service import UserService
+from app.services.user import UserService
 
 
 @pytest.mark.live

@@ -242,8 +242,8 @@ def import_update_file(file_path: Path) -> dict[str, Any]:
     _sync_all_postgres_sequences()
 
     try:
-        from app.services.perk_service import PerkService
-        PerkService().reload_data()
+        from app.services.perks import reload_service_data
+        reload_service_data(None)
     except Exception:
         pass
 
@@ -330,8 +330,8 @@ def apply_pending_updates() -> dict[str, Any]:
     if applied_files:
         _sync_all_postgres_sequences()
         try:
-            from app.services.perk_service import PerkService
-            PerkService().reload_data()
+            from app.services.perks import reload_service_data
+            reload_service_data(None)
         except Exception:
             pass
         # PerkService().reload_data() only refreshes this process. The catalog
@@ -394,8 +394,8 @@ def seed_from_static_json(force: bool = False) -> dict[str, Any]:
 
         _sync_all_postgres_sequences()
         try:
-            from app.services.perk_service import PerkService
-            PerkService().reload_data()
+            from app.services.perks import reload_service_data
+            reload_service_data(None)
         except Exception:
             pass
 

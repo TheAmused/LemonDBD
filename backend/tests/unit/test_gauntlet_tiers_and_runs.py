@@ -6,7 +6,7 @@ from app.services.gauntlet import CHECKPOINT_INTERVAL, get_owned_character_names
 from app.services.challenge_completions import record_challenge_completion
 from app.services.gauntlet_service import GauntletService
 from app.services.ownership_service import OwnershipService
-from app.services.user_service import UserService
+from app.services.user import UserService
 from tests.unit.gauntlet_support import (
     seed_killer,
     seed_survivor,

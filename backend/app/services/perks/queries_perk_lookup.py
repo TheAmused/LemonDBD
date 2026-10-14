@@ -14,7 +14,7 @@ from app.services.perks.utils import normalize_search_key, slugify
 
 
 def fetch_perk_suggestions(
-    service,
+    service: Any = None,
     query: str = "",
     category: str | None = None,
     limit: int = 10,
@@ -71,7 +71,7 @@ def fetch_perk_suggestions(
     except Exception:
         q_clean = query.strip().lower()
         res = []
-        for p in service._cache:
+        for p in getattr(service, "_cache", []):
             if category and category.lower() != "all" and p.get("category", "").lower() != category.lower():
                 continue
             if not q_clean or q_clean in p.get("name", "").lower() or q_clean in p.get("alternate_name", "").lower():
@@ -90,7 +90,7 @@ def fetch_perk_suggestions(
         return res
 
 
-def fetch_perk_by_identifier(service, identifier: str, lang: str | None = None) -> dict[str, Any] | None:
+def fetch_perk_by_identifier(service: Any = None, identifier: str = "", lang: str | None = None) -> dict[str, Any] | None:
     """Find a perk by canonical title or formatted slug."""
     target = identifier.lower().strip()
     target_slug = slugify(identifier)
@@ -117,7 +117,7 @@ def fetch_perk_by_identifier(service, identifier: str, lang: str | None = None) 
     except Exception:
         pass
 
-    for p in service._cache:
+    for p in getattr(service, "_cache", []):
         p_name = p.get("name", "").lower().strip()
         p_alt = p.get("alternate_name", "").lower().strip()
         if p_name == target or p_alt == target or slugify(p_name) == target_slug or slugify(p_alt) == target_slug:

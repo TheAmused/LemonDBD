@@ -2,7 +2,8 @@
 from flask import Blueprint, jsonify, make_response, request
 
 from app.core.limiter import limiter
-from app.routes.auth import ownership_service, session_response, user_service
+from app.core.security import generate_token
+from app.routes.auth import ownership_service, session_response
 from app.services.user import google_auth, two_factor
 
 auth_google_bp = Blueprint("auth_google_bp", __name__, url_prefix="/api/v1/auth/google")
@@ -49,7 +50,7 @@ def google_sign_in():
 
     return session_response(
         user,
-        user_service.generate_auth_token(user),
+        generate_token(user.id, user.role),
         "Account created" if created else "Login successful",
         status=201 if created else 200,
     )

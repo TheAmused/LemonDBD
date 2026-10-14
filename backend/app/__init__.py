@@ -165,51 +165,9 @@ def create_app(config_class: Type[Config] | None = None) -> Flask:
         except Exception as startup_err:
             logging.debug(f"Startup initialization notice: {startup_err}")
 
-    from app.routes.admin_control import admin_control_bp
-    from app.routes.auth import auth_bp
-    from app.routes.auth_google import auth_google_bp
-    from app.routes.auth_two_factor import auth_two_factor_bp
-    from app.routes.bug_reports import bug_reports_bp
-    from app.routes.chaos_streak import chaos_streak_bp
-    from app.routes.changelog import changelog_bp
-    from app.routes.gauntlet_streak import gauntlet_streak_bp
-    from app.routes.history_streak import history_streak_bp
-    from app.routes.avatars import avatars_bp
-    from app.routes.maps import maps_bp
-    from app.routes.privacy import privacy_bp
-    from app.routes.smash_or_pass import smash_or_pass_bp
-    from app.routes.smash_or_pass_preferences import smash_preferences_bp
-    from app.routes.challenge_completions import challenge_completions_bp
-    from app.routes.page_streak import page_streak_bp
-    from app.routes.perks import perks_bp
-    from app.routes.synergy import synergy_bp
-    from app.routes.tier_lists import tier_lists_bp
-    from app.routes.users import users_bp
-    from app.routes.minigames import minigames_bp
-    from app.routes.scoreboard import scoreboard_bp
+    from app.features import register_feature_blueprints
 
-    flask_app.register_blueprint(auth_bp)
-    flask_app.register_blueprint(auth_two_factor_bp)
-    flask_app.register_blueprint(auth_google_bp)
-    flask_app.register_blueprint(users_bp)
-    flask_app.register_blueprint(perks_bp)
-    flask_app.register_blueprint(synergy_bp)
-    flask_app.register_blueprint(maps_bp)
-    flask_app.register_blueprint(avatars_bp)
-    flask_app.register_blueprint(privacy_bp)
-    flask_app.register_blueprint(page_streak_bp)
-    flask_app.register_blueprint(challenge_completions_bp)
-    flask_app.register_blueprint(gauntlet_streak_bp)
-    flask_app.register_blueprint(chaos_streak_bp)
-    flask_app.register_blueprint(changelog_bp)
-    flask_app.register_blueprint(history_streak_bp)
-    flask_app.register_blueprint(smash_or_pass_bp)
-    flask_app.register_blueprint(smash_preferences_bp)
-    flask_app.register_blueprint(bug_reports_bp)
-    flask_app.register_blueprint(admin_control_bp)
-    flask_app.register_blueprint(tier_lists_bp)
-    flask_app.register_blueprint(minigames_bp)
-    flask_app.register_blueprint(scoreboard_bp)
+    register_feature_blueprints(flask_app)
 
     if not flask_app.config.get("TESTING") and flask_app.config.get("SCHEDULER_ENABLED", True):
         def _run_inactivity_job():

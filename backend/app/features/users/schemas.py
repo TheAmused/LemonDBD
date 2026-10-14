@@ -1,0 +1,36 @@
+# backend/app/features/users/schemas.py
+from app.schemas.user import (
+    BulkOwnershipUpdateDTO,
+    SingleOwnershipUpdateDTO,
+    UpdateFavoritePerksDTO,
+    UpdateMainCharactersDTO,
+    UpdateUserShowcaseDTO,
+    UserBase,
+    UserCharacterOwnershipBase,
+    UserCharacterOwnershipResponse,
+    UserCreate,
+    UserPerkOwnershipBase,
+    UserPerkOwnershipResponse,
+    UserProfileDTO,
+    UserResponse,
+    UserShowcaseResponse,
+    UserUpdate,
+)
+
+__all__ = [
+    "UserBase",
+    "UserCreate",
+    "UserUpdate",
+    "UserResponse",
+    "UserProfileDTO",
+    "UserShowcaseResponse",
+    "UpdateUserShowcaseDTO",
+    "UpdateFavoritePerksDTO",
+    "UpdateMainCharactersDTO",
+    "SingleOwnershipUpdateDTO",
+    "BulkOwnershipUpdateDTO",
+    "UserCharacterOwnershipBase",
+    "UserCharacterOwnershipResponse",
+    "UserPerkOwnershipBase",
+    "UserPerkOwnershipResponse",
+]

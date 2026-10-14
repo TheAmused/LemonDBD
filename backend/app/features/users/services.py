@@ -1,0 +1,42 @@
+# backend/app/features/users/services.py
+from app.services.ownership_service import OwnershipService
+from app.services.user import (
+    admin_modify_user,
+    admin_remove_user,
+    clear_user_avatar,
+    export_filename,
+    export_user_data,
+    fetch_admin_metrics,
+    fetch_user_by_id,
+    get_avatar_storage_directory,
+    get_or_create_user_showcase,
+    get_user_showcase,
+    list_all_users_paginated,
+    mark_onboarding_complete,
+    modify_user_profile,
+    process_and_save_avatar,
+    seed_default_admin_if_empty,
+    set_preferred_language,
+    update_user_showcase,
+)
+
+__all__ = [
+    "OwnershipService",
+    "fetch_user_by_id",
+    "modify_user_profile",
+    "get_avatar_storage_directory",
+    "process_and_save_avatar",
+    "clear_user_avatar",
+    "export_user_data",
+    "export_filename",
+    "get_user_showcase",
+    "get_or_create_user_showcase",
+    "update_user_showcase",
+    "mark_onboarding_complete",
+    "set_preferred_language",
+    "list_all_users_paginated",
+    "admin_modify_user",
+    "admin_remove_user",
+    "fetch_admin_metrics",
+    "seed_default_admin_if_empty",
+]

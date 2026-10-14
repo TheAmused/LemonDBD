@@ -1,0 +1,40 @@
+# backend/app/features/perks/services.py
+from app.services.perks import (
+    fetch_character_by_id,
+    fetch_character_by_name,
+    fetch_character_by_role_and_id,
+    fetch_character_by_role_and_name,
+    fetch_characters,
+    fetch_items_and_addons,
+    fetch_killers,
+    fetch_maps,
+    fetch_perk_by_id,
+    fetch_perk_by_name,
+    fetch_perk_categories,
+    fetch_perk_meta,
+    fetch_perk_rule,
+    fetch_perk_suggestions,
+    fetch_perks,
+    fetch_survivors,
+)
+from app.services.synergy_service import calculate_build_synergies
+
+__all__ = [
+    "fetch_perks",
+    "fetch_perk_by_id",
+    "fetch_perk_by_name",
+    "fetch_perk_suggestions",
+    "fetch_perk_categories",
+    "fetch_perk_meta",
+    "fetch_perk_rule",
+    "fetch_characters",
+    "fetch_character_by_id",
+    "fetch_character_by_name",
+    "fetch_character_by_role_and_id",
+    "fetch_character_by_role_and_name",
+    "fetch_killers",
+    "fetch_survivors",
+    "fetch_items_and_addons",
+    "fetch_maps",
+    "calculate_build_synergies",
+]

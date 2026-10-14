@@ -242,7 +242,7 @@ export default {
   reportError: "Error al enviar el reporte. Por favor, inténtalo de nuevo.",
   reportButton: "Reportar",
   reportButtonAria: "Reportar contenido",
-  reportNoManifest: "Este es un borrador local o una lista sin firmar y no se puede reportar al autor.",
+  reportNoManifest: "Este es un borrador no firmado sin una firma de creador verificada. Solo el contenido compartido o exportado con firma de autor se puede reportar a los moderadores.",
 
   dnd: {
     pickedUp: "Has cogido {name}.",

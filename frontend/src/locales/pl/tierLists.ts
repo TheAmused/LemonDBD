@@ -242,7 +242,7 @@ export default {
   reportError: "Nie udało się wysłać zgłoszenia. Spróbuj ponownie.",
   reportButton: "Zgłoś",
   reportButtonAria: "Zgłoś treść",
-  reportNoManifest: "To jest lokalny szkic lub niepodpisana lista, której nie można zgłosić do autora.",
+  reportNoManifest: "To jest niepodpisany szkic bez zweryfikowanego podpisu twórcy. Tylko udostępniona lub wyeksportowana zawartość z podpisem autora może zostać zgłoszona do administratorów.",
 
   dnd: {
     pickedUp: "Podniesiono: {name}.",

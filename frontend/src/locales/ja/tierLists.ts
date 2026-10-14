@@ -242,7 +242,7 @@ export default {
   reportError: "報告の送信に失敗しました。もう一度お試しください。",
   reportButton: "報告",
   reportButtonAria: "コンテンツを報告",
-  reportNoManifest: "これはローカルの下書きまたは未署名のリストであるため、作成者に報告することはできません。",
+  reportNoManifest: "これは検証済みの作成者署名がない未署名の下書きです。作成者署名がある共有またはエクスポートされたコンテンツのみ管理者に報告できます。",
 
   dnd: {
     pickedUp: "{name}を持ち上げました。",

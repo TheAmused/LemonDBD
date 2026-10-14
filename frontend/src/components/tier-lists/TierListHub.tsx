@@ -118,6 +118,7 @@ export function TierListHub({ locale }: TierListHubProps) {
       placements: doc.placements,
       createdAt: Date.now(),
       ...(doc.backgroundImage ? { backgroundImage: doc.backgroundImage } : {}),
+      ...(doc._manifest ? { _manifest: doc._manifest } : {}),
     });
     if (!result.ok) setSaveError(result);
     router.push(`/${locale}/tier-lists/custom/${id}`);

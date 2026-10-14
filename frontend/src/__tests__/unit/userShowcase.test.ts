@@ -290,6 +290,30 @@ describe('User Showcase: Hook & State Actions', () => {
     stored = JSON.parse(mockStorage.getItem('lemondbd_showcase_updater_test_user')!);
     assert.deepEqual(stored, DEFAULT_SHOWCASE_STATE);
   });
+
+  it('a new character name never keeps the id of the previous pick', () => {
+    let capturedHook!: ReturnType<typeof useUserShowcase>;
+
+    function TestComponent() {
+      capturedHook = useUserShowcase('character_id_test_user');
+      return React.createElement('div', null, capturedHook.showcase.playerTitle);
+    }
+
+    renderWithDictionary(React.createElement(TestComponent));
+    const stored = () => JSON.parse(mockStorage.getItem('lemondbd_showcase_character_id_test_user')!);
+
+    capturedHook.setSurvivorCharacter('William "Bill" Overbeck', 8);
+    assert.equal(stored().survivorMain.characterId, 8);
+
+    // Picked without an id (or through the partial setter): the old id would outrank the name on save.
+    capturedHook.setSurvivorCharacter('Meg Thomas');
+    assert.equal('characterId' in stored().survivorMain, false);
+
+    capturedHook.setKillerCharacter('The Huntress', 8);
+    capturedHook.setKillerMain({ characterName: 'The Trapper' });
+    assert.equal(stored().killerMain.characterName, 'The Trapper');
+    assert.equal('characterId' in stored().killerMain, false);
+  });
 });
 
 describe('User Showcase: Database Serialization & Deserialization', () => {
@@ -356,5 +380,33 @@ describe('User Showcase: Database Serialization & Deserialization', () => {
     assert.equal(parsed.killerMain.characterName, 'The Oni');
     assert.equal(parsed.killerMain.prestige, 85);
     assert.deepEqual(parsed.killerMain.perkIds, [50, 60, 70, 80]);
+  });
+
+  it('mapShowcaseStateToBackend sends character_id, so a translated name cannot unset the main', () => {
+    const payload = mapShowcaseStateToBackend({
+      ...DEFAULT_SHOWCASE_STATE,
+      // The characters list names this one `William "Bill" Overbeck`; the backend stores `Bill Overbeck`.
+      survivorMain: { characterName: 'William "Bill" Overbeck', characterId: 8, prestige: 1, perkIds: [null, null, null, null] },
+    });
+
+    const survivor = payload.survivor_main as Record<string, unknown>;
+    assert.equal(survivor.character_id, 8);
+    assert.equal('character_id' in (payload.killer_main as Record<string, unknown>), false);
+  });
+
+  it('mapBackendToShowcaseState keeps the character id the backend returns', () => {
+    const parsed = mapBackendToShowcaseState({
+      survivor_main: { character_id: 8, character_name: 'Bill Overbeck', prestige: 1, perk_ids: [] },
+      killer_main: { character_id: null, character_name: 'The Blight', prestige: 1, perk_ids: [] },
+    });
+
+    assert.equal(parsed.survivorMain.characterId, 8);
+    assert.equal('characterId' in parsed.killerMain, false);
+  });
+
+  it('mergeShowcaseState keeps a stored character id', () => {
+    const merged = mergeShowcaseState({ survivorMain: { characterName: 'Bill Overbeck', characterId: 8 } });
+    assert.equal(merged.survivorMain.characterId, 8);
+    assert.equal('characterId' in merged.killerMain, false);
   });
 });

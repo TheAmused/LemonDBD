@@ -3,25 +3,26 @@
 
 import React, { useState, useMemo, useEffect } from 'react';
 import { SearchInput } from '@/components/common/Field';
-import { Button } from '@/components/common/Button';
 import { PerkIcon } from '@/components/ui/PerkIcon';
-import { Search, Trash2, Sparkles, Check } from 'lucide-react';
+import { Sparkles, Check } from 'lucide-react';
 import type { RoleCategory, Perk } from '@/types/perks';
 import { getBackendBaseUrl, matchesPerkSearch } from '@/utils/perkUtils';
 import { fetchCached, fetchJson, unwrapList, type ListPayload } from '@/services/dataCache';
 import { Modal } from '@/components/common/Modal';
 import { Spinner } from '@/components/common/Spinner';
 import { EmptyState } from '@/components/common/EmptyState';
-import { formatMessage } from '@/utils/i18nFormat';
 import { useDictionary } from "@/context/DictionaryContext";
+
+/** The slots sit clockwise from the top (top, right, bottom, left); the build fills them the other way round. */
+const FILL_ORDER = [0, 3, 2, 1] as const;
 
 interface ShowcasePerkModalProps {
   isOpen: boolean;
   role: RoleCategory;
-  currentPerkId?: number | null;
-  slotIndex: number;
-  onSelect: (perkId: number) => void;
-  onClear: () => void;
+  /** The four slots of the main's build; null is an empty slot. */
+  perkIds: (number | null)[];
+  /** Applied straight away, so the build behind the panel updates with every pick. */
+  onSetPerk: (slotIndex: number, perkId: number | null) => void;
   onClose: () => void;
   locale?: string;
 }
@@ -29,20 +30,13 @@ interface ShowcasePerkModalProps {
 const PerkGridItem: React.FC<{
   perk: Perk;
   isSelected: boolean;
-  onSelect: (id: number) => void;
-  onClose: () => void;
-}> = ({ perk, isSelected, onSelect, onClose }) => {
-  const perkId = perk.id ?? 0;
-
+  onToggle: (perk: Perk) => void;
+}> = ({ perk, isSelected, onToggle }) => {
   return (
     <button
       type="button"
-      onClick={() => {
-        if (perkId) {
-          onSelect(perkId);
-          onClose();
-        }
-      }}
+      onClick={() => onToggle(perk)}
+      aria-pressed={isSelected}
       className={`relative flex flex-col items-center p-3 rounded-2xl transition-all cursor-pointer text-center group ${
         isSelected ? 'bg-accent-red/20' : 'bg-bg-surface hover:bg-bg-elevated'
       }`}
@@ -73,7 +67,7 @@ const PerkGridItem: React.FC<{
   );
 };
 
-export const ShowcasePerkModal: React.FC<ShowcasePerkModalProps> = ({ isOpen, role, currentPerkId, slotIndex, onSelect, onClear, onClose, locale = 'en' }) => {
+export const ShowcasePerkModal: React.FC<ShowcasePerkModalProps> = ({ isOpen, role, perkIds, onSetPerk, onClose, locale = 'en' }) => {
   const dict = useDictionary();
   const [search, setSearch] = useState('');
   const [perks, setPerks] = useState<Perk[]>([]);
@@ -105,48 +99,47 @@ export const ShowcasePerkModal: React.FC<ShowcasePerkModalProps> = ({ isOpen, ro
       });
   }, [isOpen, locale]);
 
-  const cleanQuery = search.trim();
-  const isSearchActive = cleanQuery.length >= 3;
+  // The role's perks are listed right away; the search only narrows them down.
+  const sortedPerks = useMemo(
+    () => perks.filter((p) => matchesPerkSearch(p, '', role)).sort((a, b) => a.name.localeCompare(b.name, locale)),
+    [perks, role, locale]
+  );
+  const filteredPerks = useMemo(
+    () => (search.trim() ? sortedPerks.filter((p) => matchesPerkSearch(p, search, role)) : sortedPerks),
+    [sortedPerks, search, role]
+  );
 
-  const filteredPerks = useMemo(() => {
-    if (!isSearchActive) return [];
-    return perks.filter((p) => matchesPerkSearch(p, cleanQuery, role));
-  }, [perks, role, cleanQuery, isSearchActive]);
+  // Picking fills the first free slot, picking a chosen perk again frees its slot; a full build ignores new picks.
+  const togglePerk = (perk: Perk) => {
+    if (!perk.id) return;
+    const slot = perkIds.indexOf(perk.id);
+    if (slot >= 0) {
+      onSetPerk(slot, null);
+      return;
+    }
+    const freeSlot = FILL_ORDER.find((s) => perkIds[s] === null);
+    if (freeSlot !== undefined) onSetPerk(freeSlot, perk.id);
+  };
 
   return (
     <Modal
       isOpen={isOpen}
       onClose={onClose}
       size="2xl"
-      title={`${dict.user.selectPerk} (${role})`}
-      icon={<Sparkles className="h-5 w-5 text-accent-red" />}
+      centerTitle
+      title={dict.user.selectPerk}
       className="max-h-[85vh] flex flex-col"
       bodyClassName="flex flex-col min-h-0 overflow-hidden"
       borderless
     >
-      {/* Search & Actions Bar */}
-      <div className="p-4 bg-bg-elevated/40 flex flex-col sm:flex-row items-center gap-3 shrink-0">
+      {/* Search Bar */}
+      <div className="p-4 bg-bg-elevated/40 shrink-0">
         <SearchInput
-          wrapperClassName="flex-1 w-full"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          placeholder={dict.user.searchPerks}
+          placeholder={dict.filters.searchPlaceholder}
           autoFocus
         />
-
-        {currentPerkId && (
-          <Button
-            variant="danger"
-            onClick={() => {
-              onClear();
-              onClose();
-            }}
-            leftIcon={<Trash2 className="h-3.5 w-3.5" />}
-            className="w-full sm:w-auto"
-          >
-            <span>{dict.user.clearPerk}</span>
-          </Button>
-        )}
       </div>
 
       {/* Perks Grid */}
@@ -158,17 +151,6 @@ export const ShowcasePerkModal: React.FC<ShowcasePerkModalProps> = ({ isOpen, ro
               {dict.user.loadingPerks}
             </p>
           </div>
-        ) : !isSearchActive ? (
-          <div className="flex flex-col items-center justify-center py-16 text-center space-y-3">
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-accent-red/10 border border-accent-red/25">
-              <Search className={`h-6 w-6 text-accent-red ${cleanQuery.length > 0 ? 'animate-pulse' : ''}`} />
-            </div>
-            <p className="text-xs sm:text-sm text-text-secondary">
-              {cleanQuery.length === 0
-                ? dict.user.searchPerksPrompt
-                : formatMessage((dict.user.searchPerksMinChars), { count: 3 - cleanQuery.length }, locale)}
-            </p>
-          </div>
         ) : filteredPerks.length === 0 ? (
           <EmptyState variant="inline" title={dict.user.noPerksFound} />
         ) : (
@@ -177,9 +159,8 @@ export const ShowcasePerkModal: React.FC<ShowcasePerkModalProps> = ({ isOpen, ro
               <PerkGridItem
                 key={perk.id ?? perk.name}
                 perk={perk}
-                isSelected={currentPerkId === perk.id}
-                onSelect={onSelect}
-                onClose={onClose}
+                isSelected={perk.id !== undefined && perkIds.includes(perk.id)}
+                onToggle={togglePerk}
               />
             ))}
           </div>

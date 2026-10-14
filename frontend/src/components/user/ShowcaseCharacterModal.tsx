@@ -4,21 +4,22 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { SearchInput } from '@/components/common/Field';
 import Image from 'next/image';
-import { UserCheck, Sparkles } from 'lucide-react';
 import type { RoleCategory, CharacterItem } from '@/types/perks';
 import { getBackendBaseUrl, getCharacterAvatarUrl, normalizeSearchText } from '@/utils/perkUtils';
 import { CATALOG_TTL_MS, catalogKey, fetchCached, fetchJson, unwrapList, type ListPayload } from '@/services/dataCache';
 import { Modal } from '@/components/common/Modal';
 import { Spinner } from '@/components/common/Spinner';
 import { EmptyState } from '@/components/common/EmptyState';
-import { isSurvivor } from '@/utils/characterUtils';
+import { cn } from '@/utils/cn';
 import { useDictionary } from "@/context/DictionaryContext";
 
 interface ShowcaseCharacterModalProps {
   isOpen: boolean;
   role: RoleCategory;
   currentCharacter: string;
-  onSelect: (characterName: string) => void;
+  /** Matched before the name, which the list may spell in another language. */
+  currentCharacterId?: number;
+  onSelect: (characterName: string, characterId?: number) => void;
   onClose: () => void;
   locale?: string;
 }
@@ -27,7 +28,7 @@ const CharacterGridItem: React.FC<{
   char: CharacterItem;
   role: RoleCategory;
   isSelected: boolean;
-  onSelect: (name: string) => void;
+  onSelect: (name: string, characterId?: number) => void;
   onClose: () => void;
 }> = ({ char, role, isSelected, onSelect, onClose }) => {
   const [imgError, setImgError] = useState(false);
@@ -52,22 +53,25 @@ const CharacterGridItem: React.FC<{
     <button
       type="button"
       onClick={() => {
-        onSelect(char.name);
+        onSelect(char.name, char.id);
         onClose();
       }}
-      className={`relative flex flex-col items-center p-3 rounded-2xl transition-all cursor-pointer text-center group ${
-        isSelected ? 'bg-accent-amber/15' : 'bg-bg-surface hover:bg-bg-elevated'
-      }`}
+      aria-pressed={isSelected}
+      className="group flex flex-col items-center gap-2 rounded-xl p-1 text-center cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red"
     >
-      {/* Character Avatar — the only border on this card */}
-      <div className="relative w-[84px] h-[84px] rounded-full overflow-hidden border-2 border-border-color group-hover:border-accent-amber/60 transition-colors bg-bg-elevated mb-2">
+      <div
+        className={cn(
+          'relative aspect-square w-full overflow-hidden rounded-xl border bg-bg-elevated transition-colors',
+          isSelected ? 'border-accent-red ring-2 ring-accent-red' : 'border-border-color group-hover:border-accent-red/60'
+        )}
+      >
         {activeSrc && !imgError ? (
           <Image
             src={activeSrc}
-            alt={char.name}
+            alt=""
             fill
-            sizes="84px"
-            className="object-cover"
+            sizes="(max-width: 640px) 33vw, 130px"
+            className="object-cover transition-transform duration-300 group-hover:scale-105"
             onError={() => {
               if (!useFallback && char.portrait_url && primaryAvatarSrc !== char.portrait_url) {
                 setUseFallback(true);
@@ -78,28 +82,24 @@ const CharacterGridItem: React.FC<{
             unoptimized
           />
         ) : (
-          <div className="w-full h-full flex flex-col items-center justify-center text-text-primary type-card-title">
+          <div className="flex h-full w-full items-center justify-center text-text-primary type-card-title">
             <span>{char.name.slice(0, 2).toUpperCase()}</span>
           </div>
         )}
       </div>
-
-      {/* Name */}
-      <span className="type-strong text-text-primary group-hover:text-accent-amber line-clamp-1">
+      <span
+        className={cn(
+          'w-full truncate text-mini font-semibold leading-tight transition-colors',
+          isSelected ? 'text-accent-red' : 'text-text-secondary group-hover:text-accent-red'
+        )}
+      >
         {char.name}
       </span>
-
-      {/* Selected Checkmark */}
-      {isSelected && (
-        <div className="absolute top-2 right-2 flex h-5 w-5 items-center justify-center rounded-full bg-accent-amber text-text-inverted">
-          <UserCheck className="h-3 w-3" />
-        </div>
-      )}
     </button>
   );
 };
 
-export const ShowcaseCharacterModal: React.FC<ShowcaseCharacterModalProps> = ({ isOpen, role, currentCharacter, onSelect, onClose, locale = 'en' }) => {
+export const ShowcaseCharacterModal: React.FC<ShowcaseCharacterModalProps> = ({ isOpen, role, currentCharacter, currentCharacterId, onSelect, onClose, locale = 'en' }) => {
   const dict = useDictionary();
   const [search, setSearch] = useState('');
   const [characters, setCharacters] = useState<CharacterItem[]>([]);
@@ -149,8 +149,8 @@ export const ShowcaseCharacterModal: React.FC<ShowcaseCharacterModalProps> = ({ 
       isOpen={isOpen}
       onClose={onClose}
       size="2xl"
-      title={`${dict.user.selectCharacter} (${role})`}
-      icon={<Sparkles className={`h-5 w-5 ${isSurvivor(role) ? 'text-accent-green' : 'text-accent-red'}`} />}
+      centerTitle
+      title={dict.user.selectCharacter}
       className="max-h-[85vh] flex flex-col"
       bodyClassName="flex flex-col min-h-0 overflow-hidden"
       borderless
@@ -170,7 +170,7 @@ export const ShowcaseCharacterModal: React.FC<ShowcaseCharacterModalProps> = ({ 
       <div className="flex-1 overflow-y-auto p-4 sm:p-6 min-h-0">
         {loading ? (
           <div className="flex flex-col items-center justify-center py-16 space-y-3">
-            <Spinner size="lg" tone="amber" />
+            <Spinner size="lg" tone="accent" />
             <p className="text-xs text-text-muted">
               {dict.user.loadingCharacters}
             </p>
@@ -178,13 +178,17 @@ export const ShowcaseCharacterModal: React.FC<ShowcaseCharacterModalProps> = ({ 
         ) : filteredCharacters.length === 0 ? (
           <EmptyState variant="inline" title={dict.user.noCharactersFound} />
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3">
             {filteredCharacters.map((char) => (
               <CharacterGridItem
                 key={char.name}
                 char={char}
                 role={role}
-                isSelected={char.name.toLowerCase() === currentCharacter.toLowerCase()}
+                isSelected={
+                  currentCharacterId !== undefined && char.id !== undefined
+                    ? char.id === currentCharacterId
+                    : char.name.toLowerCase() === currentCharacter.toLowerCase()
+                }
                 onSelect={onSelect}
                 onClose={onClose}
               />

@@ -64,7 +64,6 @@ describe('User Profile Theme Support', () => {
             id: 42,
             title: 'Perk typo in description',
             message: 'Incorrect calculation on Sprint Burst tier 3.',
-            category: 'Perk Bug',
             images: [],
             status: 'pending',
             created_at: '2026-02-15T12:00:00Z',
@@ -79,11 +78,6 @@ describe('User Profile Theme Support', () => {
     assert.ok(reportHtml.includes('bg-bg-surface') || reportHtml.includes('bg-white'), 'Report card must have themed bg');
     assert.ok(reportHtml.includes('text-text-secondary') || reportHtml.includes('text-slate-600'), 'Message must have light text');
     assert.ok(reportHtml.includes('text-text-secondary') || reportHtml.includes('dark:text-slate-300'), 'Message must have dark text');
-    assert.ok(
-      reportHtml.includes('bg-bg-elevated') ||
-      reportHtml.includes('bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300'),
-      'Category badge must support themed classes'
-    );
   });
 
   it('UserBugReportsList status badges provide WCAG AA contrast in light and dark mode', () => {
@@ -95,7 +89,6 @@ describe('User Profile Theme Support', () => {
               id: 1,
               title: `Report ${status}`,
               message: 'Testing status contrast',
-              category: 'UI',
               images: [],
               status,
               created_at: '2026-02-15T12:00:00Z',
@@ -107,12 +100,12 @@ describe('User Profile Theme Support', () => {
       );
       if (status === 'pending') {
         assert.ok(
-          html.includes('text-accent-red') || html.includes('text-rose-600 dark:text-rose-400'),
+          html.includes('text-accent-amber') || html.includes('text-amber-600 dark:text-amber-400'),
           'Pending badge must have contrast text'
         );
       } else if (status === 'in_progress') {
         assert.ok(
-          html.includes('text-accent-amber') || html.includes('text-amber-600 dark:text-amber-400'),
+          html.includes('text-accent-red') || html.includes('text-rose-600 dark:text-rose-400'),
           'In progress badge must have contrast text'
         );
       } else if (status === 'resolved') {

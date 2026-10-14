@@ -16,6 +16,8 @@ export default {
   reportedOn: "Reported on",
   attachments: "Attachments",
   devResponse: "Developer Response",
+  noDevResponseYet: "No response from the developers yet. Check back here later.",
+  newFeedback: "New feedback from the developers",
   saveChanges: "Save",
   newPassword: "New Password",
   confirmPassword: "Confirm New Password",

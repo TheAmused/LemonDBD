@@ -25,7 +25,6 @@ class TestBugReportResolutionWorkflow:
             json={
                 "title": "Nurse Blink Collision Desync on Crotus Prenn",
                 "message": "When blinking near the Asylum main building staircase, the killer clips into collision geometry.",
-                "category": "Gameplay",
                 "images": [],
             },
             headers=user_headers,
@@ -72,6 +71,12 @@ class TestBugReportResolutionWorkflow:
         )
         assert resolved_ticket["status"] == "resolved"
         assert "patch 2.4.1" in resolved_ticket.get("admin_notes", "")
+        assert resolved_ticket["feedback_unread"] is True
+        assert my_reports_res2.get_json()["unread_count"] >= 1
+
+        seen_res = client.post(f"/api/v1/bug-reports/{report_id}/seen", headers=user_headers)
+        assert seen_res.status_code == 200
+        assert seen_res.get_json()["report"]["feedback_unread"] is False
 
         del_res = admin_client.delete(f"/api/v1/admin/bug-reports/{report_id}")
         assert del_res.status_code == 200

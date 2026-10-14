@@ -73,8 +73,9 @@ export function useAdminBugReports({ onActionMessage }: { onActionMessage: (mess
     if (!token) return;
 
     const payload: Record<string, string> = {};
-    if (newStatus) payload.status = newStatus;
-    if (editingNotes[reportId] !== undefined) {
+    if (newStatus) {
+      payload.status = newStatus;
+    } else if (editingNotes[reportId] !== undefined) {
       payload.admin_notes = editingNotes[reportId];
     }
 

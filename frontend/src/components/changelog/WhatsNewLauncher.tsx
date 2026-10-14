@@ -20,6 +20,7 @@ import { tip } from '@/components/common/Tooltip';
 import { Modal } from '@/components/common/Modal';
 import { RichText } from '@/components/common/RichText';
 import { Spinner } from '@/components/common/Spinner';
+import { UnreadDot } from '@/components/common/UnreadDot';
 import { formatDate } from '@/utils/format';
 import { useDictionary } from "@/context/DictionaryContext";
 
@@ -277,12 +278,7 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ className = 
         className={`pointer-coarse:min-h-11 pointer-coarse:min-w-11 group relative flex h-9 w-9 items-center justify-center rounded-xl border border-border-color text-text-muted transition-all hover:border-accent-red/50 hover:text-accent-red hover:bg-accent-red/10 cursor-pointer ${className}`}
       >
         <Megaphone className="h-4 w-4" />
-        {hasUnread && (
-          <span className="absolute -right-0.5 -top-0.5 flex h-2.5 w-2.5">
-            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent-red opacity-75" />
-            <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-accent-red ring-2 ring-bg-surface" />
-          </span>
-        )}
+        {hasUnread && <UnreadDot className="absolute -right-0.5 -top-0.5" />}
       </button>
 
       <Modal

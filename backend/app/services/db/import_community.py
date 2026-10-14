@@ -210,7 +210,7 @@ def import_community(
 
     upsert_entity(
         data, target_keys, summary, "bug_reports", BugReport, "title",
-        update_fields=["reporter_name", "reporter_email", "category", "message", "images_json", "status", "admin_notes"],
+        update_fields=["reporter_name", "reporter_email", "message", "images_json", "status", "admin_notes", "feedback_unread"],
         defaults=lambda row: {
             "reporter_name": row.get("reporter_name", "Anonymous"),
             "message": row.get("message", ""),

@@ -5,6 +5,7 @@ import React from 'react';
 import { UserProfileSkeleton } from '@/components/user/UserProfileSkeleton';
 import { UserBugReportsSkeleton } from '@/components/user/UserBugReportsSkeleton';
 import { UserBugReportsList } from '@/components/user/UserBugReportsList';
+import { UserBugReportsDrawer } from '@/components/user/UserBugReportsDrawer';
 import type { UserBugReport } from '@/types/userProfile';
 import enDict from '@/locales/en';
 import deDict from '@/locales/de';
@@ -37,7 +38,6 @@ describe('User Page: UserBugReportsList status badges & pagination', () => {
   const baseReport: UserBugReport = {
     id: 1,
     title: 'Perk tooltip cut off',
-    category: 'UI',
     message: 'The tooltip clips on mobile.',
     images: [],
     status: 'pending',
@@ -113,6 +113,67 @@ describe('User Page: UserBugReportsList status badges & pagination', () => {
       })
     );
     assert.ok(withPagination.includes('nav'), 'Pagination nav element should render across multiple pages');
+  });
+
+  const renderList = (report: UserBugReport) =>
+    renderWithDictionary(
+      React.createElement(UserBugReportsList, {
+        loading: false,
+        onOpenReportModal: () => {},
+        reports: [report],
+      })
+    );
+
+  it('starts every report collapsed and does not show the ticket id', () => {
+    const html = renderList({ ...baseReport, id: 4242 });
+    assert.ok(html.includes('aria-expanded="false"'));
+    assert.ok(!html.includes('aria-expanded="true"'));
+    assert.ok(!html.includes('#4242'), 'The internal ticket id must not be shown');
+  });
+
+  it('tells the reader there is no developer response yet for pending and in progress reports', () => {
+    for (const status of ['pending', 'in_progress'] as const) {
+      const html = renderList({ ...baseReport, status });
+      assert.ok(html.includes('No response from the developers yet'), `Expected the empty reply note for ${status}`);
+    }
+  });
+
+  it('shows the developer reply instead of the empty note once there is one', () => {
+    const html = renderList({ ...baseReport, status: 'in_progress', admin_notes: 'Looking into it.' });
+    assert.ok(html.includes('Looking into it.'));
+    assert.ok(!html.includes('No response from the developers yet'));
+  });
+
+  it('does not show the empty reply note for a closed report without a reply', () => {
+    const html = renderList({ ...baseReport, status: 'rejected' });
+    assert.ok(!html.includes('No response from the developers yet'));
+  });
+
+  it('marks only reports with unseen feedback with the pulsing dot', () => {
+    const unread = renderList({ ...baseReport, status: 'resolved', feedback_unread: true });
+    assert.ok(unread.includes('animate-ping'));
+    assert.ok(unread.includes('New feedback from the developers'));
+
+    const seen = renderList({ ...baseReport, status: 'resolved', feedback_unread: false });
+    assert.ok(!seen.includes('animate-ping'));
+  });
+
+  it('shows the pulsing dot on the collapsed drawer header when there is unseen feedback', () => {
+    const html = renderWithDictionary(
+      React.createElement(UserBugReportsDrawer, {
+        reports: [],
+        loading: false,
+        onOpenReportModal: () => {},
+        total: 3,
+        unreadCount: 2,
+        page: 1,
+        perPage: 10,
+        totalPages: 1,
+        onPageChange: () => {},
+        onReportSeen: () => {},
+      })
+    );
+    assert.ok(html.includes('animate-ping'));
   });
 });
 

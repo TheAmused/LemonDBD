@@ -31,7 +31,6 @@ test("Live Frontend Workflow: Bug Report Submission, Triage & Resolution", async
     body: JSON.stringify({
       title: "Ormond Lake Mine Generator Spawn Obstructed",
       message: "A generator spawned inside the mine tunnel without clearance to repair from the south side.",
-      category: "Level Design",
       images: [],
     }),
   });

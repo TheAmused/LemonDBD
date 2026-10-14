@@ -45,7 +45,6 @@ export interface AdminBugReport {
   reporter_name: string;
   reporter_email?: string;
   title: string;
-  category: string;
   message: string;
   images: string[];
   status: 'pending' | 'in_progress' | 'resolved' | 'rejected';

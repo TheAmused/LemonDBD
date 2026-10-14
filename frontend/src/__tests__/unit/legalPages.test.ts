@@ -71,12 +71,12 @@ test('legal documents: placeholders are the known ones and are kept in every loc
   }
 });
 
-test('legal documents: the headings and TL;DR lines are declared non-binding, in every locale and on the page and the dialog', () => {
+test('legal documents: the headings and TL;DR lines are declared non-binding or a reading aid, in every locale and on the page and the dialog', () => {
   for (const id of docIds) {
     for (const [loc, dict] of Object.entries(locales)) assert.ok(docOf(dict, id).tldrNotice.length > 40, `${loc}.${id}.tldrNotice`);
   }
   assert.match(en.rules.tldrNotice, /not binding/i);
-  assert.match(en.terms.tldrNotice, /no legal effect/i);
+  assert.match(en.terms.tldrNotice, /only the full text below them is legally binding/i);
   assert.ok(read('components/legal/LegalDocPage.tsx').includes('<LegalNotice'), 'the page shows the notice');
   assert.ok(read('components/legal/LegalDocModal.tsx').includes('<LegalNotice'), 'the dialog shows the notice');
   assert.ok(read('components/legal/LegalDocPage.tsx').includes('text.translationNotice'), 'the page says which language version prevails');

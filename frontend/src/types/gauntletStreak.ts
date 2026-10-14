@@ -1,5 +1,6 @@
-// frontend/src/types/gauntletStreak.ts
-export type Role = 'survivor' | 'killer';
+import type { LowercaseRole } from './perks';
+
+export type Role = LowercaseRole;
 
 /** Mirrors the backend's GAME_MODES; each one keeps its own run per role. */
 export const GAUNTLET_GAME_MODES = ['original', 'lemon_solo', 'lemon_duo', 'lemon_squad', 'lemon_killer'] as const;

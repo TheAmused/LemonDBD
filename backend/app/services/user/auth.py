@@ -8,6 +8,7 @@ from sqlalchemy import func, or_, select
 from app.core.config import Config
 from app.core.db_retry import retry_on_transient_db_error
 from app.core.extensions import db
+from app.core.transaction import transaction
 from app.core.security import (
     decode_token,
     generate_token,
@@ -109,8 +110,8 @@ def create_user_account(
         verification_code_expires_at=verif_expires,
         verification_attempts=0,
     )
-    db.session.add(new_user)
-    db.session.commit()
+    with transaction():
+        db.session.add(new_user)
 
     if require_verification:
         logger.info(f"User '{new_user.login}' registered with role '{new_user.role}'.")
@@ -141,22 +142,20 @@ def verify_email_code(email: str, code: str) -> tuple[User | None, str | None]:
     if not expires_at or expires_at < datetime.now(timezone.utc):
         return None, "This verification code has expired. Please request a new one."
 
-    if user.verification_code != clean_code:
-        user.verification_attempts += 1
-        if user.verification_attempts >= MAX_VERIFICATION_ATTEMPTS:
-            user.verification_code = None
-            user.verification_code_expires_at = None
-            user.verification_attempts = 0
-            db.session.commit()
-            return None, "Too many incorrect attempts. Please request a new code."
-        db.session.commit()
-        return None, "Invalid or already used verification code."
+    with transaction():
+        if user.verification_code != clean_code:
+            user.verification_attempts += 1
+            if user.verification_attempts >= MAX_VERIFICATION_ATTEMPTS:
+                user.verification_code = None
+                user.verification_code_expires_at = None
+                user.verification_attempts = 0
+                return None, "Too many incorrect attempts. Please request a new code."
+            return None, "Invalid or already used verification code."
 
-    user.is_verified = True
-    user.verification_code = None
-    user.verification_code_expires_at = None
-    user.verification_attempts = 0
-    db.session.commit()
+        user.is_verified = True
+        user.verification_code = None
+        user.verification_code_expires_at = None
+        user.verification_attempts = 0
 
     logger.info(f"User '{user.login}' verified their email.")
     return user, None
@@ -184,10 +183,11 @@ def resend_verification_email(email: str) -> tuple[bool, str | None]:
             wait_seconds = int((RESEND_COOLDOWN - elapsed).total_seconds()) + 1
             return False, f"Please wait {wait_seconds}s before requesting another code."
 
-    user.verification_code = _generate_verification_code()
-    user.verification_code_expires_at = datetime.now(timezone.utc) + verification_lifetime()
-    user.verification_attempts = 0
-    db.session.commit()
+    with transaction():
+        user.verification_code = _generate_verification_code()
+        user.verification_code_expires_at = datetime.now(timezone.utc) + verification_lifetime()
+        user.verification_attempts = 0
+
     send_verification_email(user)
     return True, None
 
@@ -214,9 +214,10 @@ def request_password_reset(email: str) -> tuple[bool, str | None]:
             wait_seconds = int((RESEND_COOLDOWN - elapsed).total_seconds()) + 1
             return False, f"Please wait {wait_seconds}s before requesting another reset email."
 
-    user.reset_token = secrets.token_urlsafe(32)
-    user.reset_token_expires_at = datetime.now(timezone.utc) + reset_lifetime()
-    db.session.commit()
+    with transaction():
+        user.reset_token = secrets.token_urlsafe(32)
+        user.reset_token_expires_at = datetime.now(timezone.utc) + reset_lifetime()
+
     send_password_reset_email(user)
     return True, None
 
@@ -241,11 +242,11 @@ def reset_password_with_token(token: str, new_password: str) -> tuple[User | Non
     if not expires_at or expires_at < datetime.now(timezone.utc):
         return None, "This reset link has expired. Please request a new one."
 
-    user.password_hash = hash_password(new_password)
-    user.token_version = int(user.token_version or 0) + 1  # signs out every existing session
-    user.reset_token = None
-    user.reset_token_expires_at = None
-    db.session.commit()
+    with transaction():
+        user.password_hash = hash_password(new_password)
+        user.token_version = int(user.token_version or 0) + 1  # signs out every existing session
+        user.reset_token = None
+        user.reset_token_expires_at = None
 
     logger.info(f"User '{user.login}' reset their password.")
     return user, None
@@ -261,11 +262,11 @@ def auto_verify_if_disabled(user: User) -> None:
         require_verification = Config.REQUIRE_EMAIL_VERIFICATION
 
     if not require_verification and not user.is_verified:
-        user.is_verified = True
-        user.verification_code = None
-        user.verification_code_expires_at = None
-        user.verification_attempts = 0
-        db.session.commit()
+        with transaction():
+            user.is_verified = True
+            user.verification_code = None
+            user.verification_code_expires_at = None
+            user.verification_attempts = 0
         logger.info(
             f"User '{user.login}' auto-verified upon login (REQUIRE_EMAIL_VERIFICATION is disabled)."
         )

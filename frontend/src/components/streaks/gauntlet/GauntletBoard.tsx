@@ -7,7 +7,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import { DEFAULT_GAUNTLET_GAME_MODE, GauntletGameMode, PICK_CHARACTER_MODES, Role } from '@/types/gauntletStreak';
 import { useGauntletRun } from './useGauntletRun';
-import { useOwnedCharacters, OwnedCharacterItem } from './useOwnedCharacters';
+import { useOwnedCharacters, type OwnedCharacterItem } from '../useOwnedRoster';
 import { sortByReleaseNumber } from '@/utils/characterUtils';
 import { ChallengeErrorBanner, ChallengePanel, ChallengeVictoryCard } from '../ChallengePanel';
 import { ChallengeProgress } from '../ChallengeProgress';

@@ -42,6 +42,10 @@ export default {
   confirmDelete: "Möchtest du diese eigene Prüfung wirklich löschen?",
   cancel: "Abbrechen",
   playTrial: "Spielen",
+  authRequiredTitle: "Anmeldung erforderlich",
+  authRequiredDesc: "Du musst angemeldet sein, um eigene Prüfungen zu erstellen oder zu spielen.",
+  loginToManage: "Anmelden zur Verwaltung von Prüfungen",
+  loginToManageDesc: "Melde dich an, um Community-Prüfungen zu erstellen, zu importieren und zu spielen.",
   adminPublishSuccess: "Herausforderung erfolgreich als offiziell veröffentlicht!",
 
   // Runner

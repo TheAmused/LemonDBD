@@ -17,7 +17,7 @@ from app.services.chaos_service import ChaosService
 from app.services.gauntlet_service import GauntletService
 from app.services.history_service import HistoryService
 from app.services.ownership_service import OwnershipService
-from app.services.user_service import UserService
+from app.services.user import UserService
 from tests.unit.conftest import make_chapter
 
 KILLERS = ("The Trapper", "The Wraith")

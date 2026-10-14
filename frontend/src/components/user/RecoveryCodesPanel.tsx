@@ -9,6 +9,7 @@ import { Check, Copy, Download } from 'lucide-react';
 import { Button } from '@/components/common/Button';
 import { Checkbox } from '@/components/common/Checkbox';
 import { useDictionary } from '@/context/DictionaryContext';
+import { downloadFile } from '@/utils/download';
 
 interface RecoveryCodesPanelProps {
   codes: string[];
@@ -40,15 +41,7 @@ export const RecoveryCodesPanel: React.FC<RecoveryCodesPanelProps> = ({ codes, o
   };
 
   const download = () => {
-    const blob = new Blob([`${t.downloadFileHeader}\n\n${codes.join('\n')}\n`], { type: 'text/plain' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'lemondbd-recovery-codes.txt';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+    downloadFile(`${t.downloadFileHeader}\n\n${codes.join('\n')}\n`, 'lemondbd-recovery-codes.txt', 'text/plain');
   };
 
   return (

@@ -1,9 +1,10 @@
 # backend/app/services/page_streak/runs.py
 from collections.abc import Callable
 from sqlalchemy import delete, select
-from sqlalchemy.orm import joinedload
+from sqlalchemy.orm import selectinload
 
 from app.core.extensions import db
+from app.core.transaction import transaction
 from app.models import PageStreakPageLog, PageStreakRun, utcnow
 from app.schemas.page_streak import PageStreakHistoryEntry, PageStreakRunDict
 from app.services.challenge_completions import delete_completions, record_challenge_completion
@@ -45,7 +46,7 @@ def fetch_run(
     """Retrieve run state and sorted page logs for a given user and killer."""
     r = db.session.scalars(
         select(PageStreakRun)
-        .options(joinedload(PageStreakRun.page_logs))
+        .options(selectinload(PageStreakRun.page_logs))
         .where(PageStreakRun.user_id == user_id, PageStreakRun.killer == killer)
     ).first()
     if r is None:
@@ -93,8 +94,8 @@ def create_new_run(
         pages=pages,
         snapshot_at=utcnow(),
     )
-    db.session.add(run)
-    db.session.commit()
+    with transaction():
+        db.session.add(run)
     return fetch_run(user_id, killer, build_pages_fn)
 
 
@@ -136,39 +137,39 @@ def record_match_result(
 
     validate_match_submission(run, page, perks, result)
 
-    r = db.session.scalars(select(PageStreakRun).where(PageStreakRun.id == run["id"])).first()
-    if not r.pages:
-        r.pages = run["pages"]
-    log = PageStreakPageLog(
-        run_id=r.id,
-        attempt=r.attempt,
-        page_number=page,
-        perks=list(perks),
-        result=result,
-    )
-    add_match_log(r, log)
+    with transaction():
+        r = db.session.scalars(select(PageStreakRun).where(PageStreakRun.id == run["id"])).first()
+        if not r.pages:
+            r.pages = run["pages"]
+        log = PageStreakPageLog(
+            run_id=r.id,
+            attempt=r.attempt,
+            page_number=page,
+            perks=list(perks),
+            result=result,
+        )
+        add_match_log(r, log)
 
-    if result == "win":
-        r.best_page = max(r.best_page, page)
-        if page >= run["page_count"]:
-            r.status = "completed"
-            record_challenge_completion(
-                user_id=user_id,
-                mode="page_streak",
-                variant=killer,
-                attempts_taken=r.attempts + 1,
-                matches_played=r.playthrough_matches,
-                unlocked_characters_count=0,
-            )
-            r.finish_playthrough()
+        if result == "win":
+            r.best_page = max(r.best_page, page)
+            if page >= run["page_count"]:
+                r.status = "completed"
+                record_challenge_completion(
+                    user_id=user_id,
+                    mode="page_streak",
+                    variant=killer,
+                    attempts_taken=r.attempts + 1,
+                    matches_played=r.playthrough_matches,
+                    unlocked_characters_count=0,
+                )
+                r.finish_playthrough()
+            else:
+                r.current_page = page + 1
         else:
-            r.current_page = page + 1
-    else:
-        r.current_page = 1
-        r.start_new_attempt()
-        r.pages = []
+            r.current_page = 1
+            r.start_new_attempt()
+            r.pages = []
 
-    db.session.commit()
     return fetch_run(user_id, killer, build_pages_fn)
 
 
@@ -177,20 +178,19 @@ def apply_inactivity_loss(run_id: int) -> None:
     if not r or r.status == "completed":
         return
 
-    add_match_log(r, PageStreakPageLog(
-        run_id=r.id,
-        attempt=r.attempt,
-        page_number=r.current_page,
-        perks=[],
-        result="loss",
-        triggered_by="inactivity",
-    ))
+    with transaction():
+        add_match_log(r, PageStreakPageLog(
+            run_id=r.id,
+            attempt=r.attempt,
+            page_number=r.current_page,
+            perks=[],
+            result="loss",
+            triggered_by="inactivity",
+        ))
 
-    r.current_page = 1
-    r.start_new_attempt()
-    r.pages = []
-
-    db.session.commit()
+        r.current_page = 1
+        r.start_new_attempt()
+        r.pages = []
 
 
 def abandon_active_run(
@@ -206,13 +206,13 @@ def abandon_active_run(
     if not build_pages_fn(user_id):
         raise ValueError("No perks available — the pool is empty")
 
-    r = db.session.scalars(select(PageStreakRun).where(PageStreakRun.id == run["id"])).first()
-    r.abandon_attempt()
-    r.status = "in_progress"
-    r.current_page = 1
-    r.pages = []
-    r.snapshot_at = utcnow()
-    db.session.commit()
+    with transaction():
+        r = db.session.scalars(select(PageStreakRun).where(PageStreakRun.id == run["id"])).first()
+        r.abandon_attempt()
+        r.status = "in_progress"
+        r.current_page = 1
+        r.pages = []
+        r.snapshot_at = utcnow()
 
     return fetch_run(user_id, killer, build_pages_fn)
 
@@ -225,9 +225,9 @@ def reset_all_runs(user_id: int) -> None:
     "start completely over" action clears both -- the whole point is a clean
     slate across the entire roster.
     """
-    db.session.execute(delete(PageStreakRun).where(PageStreakRun.user_id == user_id))
-    delete_completions(user_id, "page_streak")
-    db.session.commit()
+    with transaction():
+        db.session.execute(delete(PageStreakRun).where(PageStreakRun.user_id == user_id))
+        delete_completions(user_id, "page_streak")
 
 
 def refresh_untouched_run(
@@ -239,7 +239,7 @@ def refresh_untouched_run(
     so unlocking killers or perks after it was created does not leave it on old pages."""
     r = db.session.scalars(
         select(PageStreakRun)
-        .options(joinedload(PageStreakRun.page_logs))
+        .options(selectinload(PageStreakRun.page_logs))
         .where(PageStreakRun.user_id == user_id, PageStreakRun.killer == killer)
     ).first()
     if r is None or r.status != "in_progress" or r.current_page != 1:
@@ -249,6 +249,7 @@ def refresh_untouched_run(
     pages = build_pages_fn(user_id)
     if not pages or pages == r.pages:
         return
-    r.pages = pages
-    r.snapshot_at = utcnow()
-    db.session.commit()
+    with transaction():
+        r.pages = pages
+        r.snapshot_at = utcnow()
+

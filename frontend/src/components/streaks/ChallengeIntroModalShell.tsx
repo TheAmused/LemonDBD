@@ -2,7 +2,6 @@
 'use client';
 
 import { Button } from '@/components/common/Button';
-import type { Dictionary } from '@/locales/types';
 
 import React from 'react';
 import { BookOpen, ChevronLeft } from 'lucide-react';

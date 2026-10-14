@@ -1,7 +1,7 @@
 'use client';
 // frontend/src/components/common/ExportModal.tsx
 
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Check, Copy, Download, Link2, Share2, TriangleAlert } from 'lucide-react';
 import { Modal } from '@/components/common/Modal';
 import { Button } from '@/components/common/Button';
@@ -9,6 +9,9 @@ import { Input, Textarea } from '@/components/common/Field';
 import { copyTextWithFallback } from '@/utils/clipboard';
 import { cn } from '@/utils/cn';
 import { formatMessage } from '@/utils/i18nFormat';
+import { useAuth } from '@/context/AuthContext';
+import { isRecord } from '@/utils/shareCodec';
+import { embedManifest, signExportPayload, stripManifest } from '@/utils/contentSigning';
 
 export type CopyState = 'idle' | 'copied' | 'failed';
 
@@ -54,19 +57,15 @@ export interface ExportModalProps<D> {
   plainHeader?: boolean;
   /** Called after a successful copy of the link or the JSON, or after the file download starts. */
   onExport?: (method: 'link' | 'json_copy' | 'file') => void;
+  /** Content type classification for cryptographic signing (e.g. 'tier_list', 'smash_roster'). */
+  contentType?: string;
 }
+
+import { downloadFile } from '@/utils/download';
 
 /** Triggers a browser download of `text` as `fileName`. */
 export function downloadTextFile(text: string, fileName: string, mime = 'application/json'): void {
-  const blob = new Blob([text], { type: mime });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = fileName;
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-  setTimeout(() => URL.revokeObjectURL(url), 1000);
+  downloadFile(text, fileName, mime);
 }
 
 /**
@@ -91,29 +90,86 @@ export function ExportModal<D>({
   actionsClassName,
   plainHeader,
   onExport,
+  contentType,
 }: ExportModalProps<D>) {
-  const json = useMemo(() => (doc ? serialize(doc) : ''), [doc, serialize]);
+  const { user, isLoading: authLoading } = useAuth();
+  const resolvedContentType =
+    contentType ||
+    (idPrefix === 'tier-list' ? 'tier_list' : idPrefix === 'smash-roster' ? 'smash_roster' : idPrefix.replace(/-/g, '_'));
+
+  const unsignedDoc = isRecord(doc) ? (stripManifest(doc) as unknown as D) : doc;
+  const [exportedDoc, setExportedDoc] = useState<D | null>(unsignedDoc);
+  const [exportedJson, setExportedJson] = useState<string>(() => (unsignedDoc ? serialize(unsignedDoc) : ''));
   const [shareUrl, setShareUrl] = useState<string>('');
   const [jsonCopy, setJsonCopy] = useState<CopyState>('idle');
   const [linkCopy, setLinkCopy] = useState<CopyState>('idle');
+  const [isSigning, setIsSigning] = useState<boolean>(Boolean(user || authLoading));
 
   useEffect(() => {
     setJsonCopy('idle');
     setLinkCopy('idle');
     setShareUrl('');
-    if (!doc) return;
+
+    const currentUnsignedDoc = isRecord(doc) ? (stripManifest(doc) as unknown as D) : doc;
+    setExportedDoc(currentUnsignedDoc);
+    setExportedJson(currentUnsignedDoc ? serialize(currentUnsignedDoc) : '');
+
+    if (!doc) {
+      return;
+    }
+
+    if (authLoading) {
+      setIsSigning(true);
+      return;
+    }
+
     let cancelled = false;
-    encodePayload(doc)
-      .then((payload) => {
-        if (!cancelled) setShareUrl(buildShareUrl(window.location.origin, locale, payload));
-      })
-      .catch(() => {
-        if (!cancelled) setShareUrl('');
-      });
+
+    async function prepareExport() {
+      let finalDoc = currentUnsignedDoc as D;
+      if (user && isRecord(doc)) {
+        setIsSigning(true);
+        try {
+          const manifest = await signExportPayload(
+            resolvedContentType,
+            currentUnsignedDoc as Record<string, unknown>
+          );
+          if (manifest && !cancelled) {
+            finalDoc = embedManifest(currentUnsignedDoc as Record<string, unknown>, manifest) as unknown as D;
+          }
+        } catch {
+          finalDoc = currentUnsignedDoc as D;
+        } finally {
+          if (!cancelled) {
+            setIsSigning(false);
+          }
+        }
+      } else {
+        setIsSigning(false);
+      }
+      if (cancelled) return;
+      setExportedDoc(finalDoc);
+      setExportedJson(serialize(finalDoc));
+
+      try {
+        const payload = await encodePayload(finalDoc);
+        if (!cancelled) {
+          setShareUrl(buildShareUrl(window.location.origin, locale, payload));
+        }
+      } catch {
+        if (!cancelled) {
+          setShareUrl('');
+        }
+      }
+    }
+
+    void prepareExport();
+
     return () => {
       cancelled = true;
     };
-  }, [doc, locale, encodePayload, buildShareUrl]);
+  }, [doc, locale, user, authLoading, resolvedContentType, serialize, encodePayload, buildShareUrl]);
+
 
   if (!doc) return null;
 
@@ -173,7 +229,7 @@ export function ExportModal<D>({
           <Textarea
             id={`${idPrefix}-json`}
             readOnly
-            value={json}
+            value={exportedJson}
             rows={10}
             onFocus={(e) => e.currentTarget.select()}
             className={cn(jsonFieldClassName ?? fieldClassName, ' leading-relaxed')}
@@ -181,8 +237,9 @@ export function ExportModal<D>({
           <div className={cn('flex flex-wrap gap-2', actionsClassName)}>
             <Button
               variant="secondary"
+              disabled={isSigning || authLoading || !exportedJson}
               onClick={() => {
-                downloadTextFile(json, fileName(doc));
+                downloadTextFile(exportedJson, fileName(exportedDoc || doc));
                 onExport?.('file');
               }}
               className={buttonClassName}
@@ -192,8 +249,9 @@ export function ExportModal<D>({
             </Button>
             <Button
               variant="secondary"
+              disabled={isSigning || authLoading || !exportedJson}
               onClick={async () => {
-                const ok = await copyTextWithFallback(json);
+                const ok = await copyTextWithFallback(exportedJson);
                 setJsonCopy(ok ? 'copied' : 'failed');
                 if (ok) onExport?.('json_copy');
               }}

@@ -1,3 +1,4 @@
+'use client';
 // frontend/src/components/characters/hub/useCharacterOwnership.ts
 import { useCallback, useEffect, useRef, useState } from 'react';
 import {

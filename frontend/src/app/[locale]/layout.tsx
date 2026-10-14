@@ -11,6 +11,7 @@ import { LocaleDictionaryProvider } from '@/context/LocaleDictionaryProvider';
 import { ImagePreloadProvider } from '@/components/common/ImagePreloadProvider';
 import { TooltipProvider } from '@/components/common/Tooltip';
 import { FormValidationProvider } from '@/components/common/FormValidation';
+import { ContentRevocationSync } from '@/components/common/ContentRevocationSync';
 import { AppBackground } from '@/components/layout/AppBackground';
 import { Playfair_Display } from 'next/font/google';
 import '@/app/globals.css';
@@ -86,6 +87,7 @@ export default async function RootLayout({
               </ImagePreloadProvider>
               <TooltipProvider />
               <FormValidationProvider />
+              <ContentRevocationSync />
             </LocaleDictionaryProvider>
           </AuthProvider>
         </ThemeProvider>

@@ -1,16 +1,19 @@
-'use client';
-// frontend/src/app/[locale]/tier-lists/page.tsx
-
-import React from 'react';
+import { pageMetadata } from '@/i18n/metadata';
 import { PageShell } from '@/components/layout/PageShell';
-import { TierListHub } from '@/components/tier-lists/TierListHub';
-import { useDictionary, useLocale } from '@/context/DictionaryContext';
+import { TierListHub } from '@/features/tier-lists';
+import type { Locale } from '@/i18n/config';
 
+export const generateMetadata = pageMetadata('/tier-lists', (d) => ({
+  title: d.tierLists.pageTitle,
+  description: d.tierLists.metaDescription,
+}));
 
-export default function TierListsPage() {
-  const dict = useDictionary();
-  const locale = useLocale();
-
+export default async function TierListsPage({
+  params,
+}: {
+  params: Promise<{ locale: Locale }>;
+}) {
+  const { locale } = await params;
 
   return (
     <PageShell

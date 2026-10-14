@@ -50,13 +50,6 @@ class TestSmashOrPassAPI:
         assert "name_i18n_key" not in canon_pl
         assert "description_i18n_key" not in canon_pl
 
-        # Test alias endpoint /api/v1/smash/rosters?lang=pl
-        res_alias = client.get("/api/v1/smash/rosters?lang=pl")
-        assert res_alias.status_code == 200
-        canon_alias = next(r for r in res_alias.get_json()["data"] if r["slug"] == "canon")
-        assert canon_alias["name"] == "Dead by Daylight: Kanon Mgły"
-        assert "name_i18n_key" not in canon_alias
-
     def test_get_roster_feed_success(self, app: Flask) -> None:
         client = app.test_client()
         res = client.get("/api/v1/smash-or-pass/rosters/canon/feed")

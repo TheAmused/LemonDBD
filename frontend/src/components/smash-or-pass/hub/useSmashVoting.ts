@@ -1,3 +1,4 @@
+'use client';
 // frontend/src/components/smash-or-pass/hub/useSmashVoting.ts
 import { useCallback, useEffect, useRef, useState, type Dispatch, type SetStateAction } from 'react';
 import { castVote as apiCastVote } from '@/services/smashApi';

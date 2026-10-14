@@ -6,7 +6,6 @@ import { Button } from '@/components/common/Button';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { Search, ImageOff, Compass, Maximize2, ArrowDownAZ, X } from 'lucide-react';
-import type { Dictionary } from '@/locales/types';
 import type { MapRealm } from '@/types/map';
 import { useMapExplorerData } from '@/hooks/useMapExplorerData';
 import { useResponsiveGridColumns } from '@/hooks/useResponsiveGridColumns';

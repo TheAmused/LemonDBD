@@ -5,16 +5,16 @@ from sqlalchemy import Boolean, DateTime, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.core.extensions import Base
 from app.core.json_provider import safe_json_loads, safe_json_dumps
-from app.models.base import utcnow
+from app.models.base import ColumnDictMixin, utcnow
 
 if TYPE_CHECKING:
     from app.models.user import User
 
 
-
-
-class BugReport(Base):
+class BugReport(Base, ColumnDictMixin):
     __tablename__ = "bug_reports"
+
+    _api_exclude = frozenset({"images_json"})
 
     id: Mapped[int] = mapped_column(primary_key=True)
     user_id: Mapped[int | None] = mapped_column(
@@ -46,17 +46,8 @@ class BugReport(Base):
         self.images_json = safe_json_dumps(value, default_val="[]")
 
     def to_dict(self) -> dict[str, Any]:
-        return {
-            "id": self.id,
-            "user_id": self.user_id,
-            "reporter_name": self.reporter_name,
-            "reporter_email": self.reporter_email or "",
-            "title": self.title,
-            "category": self.category,
-            "message": self.message,
-            "images": safe_json_loads(self.images_json, default=[]),
-            "status": self.status,
-            "admin_notes": self.admin_notes or "",
-            "created_at": self.created_at.isoformat() if self.created_at else None,
-            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
-        }
+        data = super().to_dict()
+        data["images"] = self.images
+        data["reporter_email"] = self.reporter_email or ""
+        data["admin_notes"] = self.admin_notes or ""
+        return data

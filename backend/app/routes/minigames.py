@@ -8,6 +8,7 @@ from datetime import date, datetime, timezone
 from typing import Any
 
 from flask import Blueprint, current_app, g, jsonify, request, send_from_directory
+from sqlalchemy import select
 from app.core.extensions import db
 from app.core.limiter import limiter
 from app.core.security import admin_required, get_current_user
@@ -17,20 +18,36 @@ from app.models.minigame import (
     MinigameRepeatableChallenge,
     MinigameUserStat,
 )
-from app.services.minigame_service import MinigameService
+from pydantic import ValidationError
+
+from app.services.minigames import (
+    create_repeatable,
+    evaluate_guess,
+    get_catalog,
+    get_or_create_daily,
+    record_minigame_round,
+    update_killer_chase_music,
+    upsert_daily_challenge,
+)
+from app.schemas.minigames import (
+    MinigameGuessSubmissionDTO,
+    MinigameOfficialCreateDTO,
+    MinigameScoreSubmissionDTO,
+)
 from app.utils.lang import extract_lang
+from app.utils.pagination import paginate_args
+from app.utils.responses import api_error
 
 logger = logging.getLogger(__name__)
 
 minigames_bp = Blueprint("minigames", __name__, url_prefix="/api/v1/minigames")
-minigame_service = MinigameService()
 
 
 @minigames_bp.route("/catalog", methods=["GET"])
 def get_minigames_catalog():
     """Retrieve full catalog of characters, perks, and realms for search autocomplete."""
     lang = extract_lang()
-    catalog = minigame_service.get_catalog(lang=lang)
+    catalog = get_catalog(lang=lang)
     return jsonify(catalog), 200
 
 
@@ -44,17 +61,17 @@ def get_daily_challenge():
         try:
             target_date = datetime.strptime(date_str, "%Y-%m-%d").date()
         except ValueError:
-            return jsonify({"error": "Invalid date format, expected YYYY-MM-DD"}), 400
+            return api_error("Invalid date format, expected YYYY-MM-DD", 400)
     else:
         target_date = datetime.now(timezone.utc).date()
 
     lang = extract_lang()
     try:
-        challenge = minigame_service.get_or_create_daily(game_mode=game_mode, target_date=target_date, lang=lang)
+        challenge = get_or_create_daily(game_mode=game_mode, target_date=target_date, lang=lang)
         return jsonify(challenge), 200
     except Exception as e:
         logger.error(f"Error fetching daily minigame: {e}")
-        return jsonify({"error": "Failed to load daily challenge"}), 500
+        return api_error("Failed to load daily challenge", 500)
 
 
 @minigames_bp.route("/repeatable", methods=["GET"])
@@ -64,28 +81,32 @@ def get_repeatable_challenge():
     session_id = request.headers.get("X-Session-ID") or secrets.token_hex(16)
 
     try:
-        challenge = minigame_service.create_repeatable(game_mode=game_mode, session_id=session_id)
+        challenge = create_repeatable(game_mode=game_mode, session_id=session_id)
         return jsonify(challenge), 200
     except Exception as e:
         logger.error(f"Error creating repeatable minigame: {e}")
-        return jsonify({"error": "Failed to create repeatable challenge"}), 500
+        return api_error("Failed to create repeatable challenge", 500)
 
 
 @minigames_bp.route("/guess", methods=["POST"])
 @limiter.limit("60 per minute")
 def submit_guess():
     """Evaluates a guess against an active challenge round."""
-    data = request.get_json(silent=True) or {}
-    challenge_id = data.get("challenge_id")
-    challenge_type = data.get("challenge_type", "daily")
-    round_index = data.get("round_index", 0)
-    guess_type = data.get("guess_type", "killer")
-    guess_id = data.get("guess_id")
-    attempt_number = data.get("attempt_number", 1)
-    custom_round = data.get("custom_round_config") or data.get("custom_round")
+    try:
+        dto = MinigameGuessSubmissionDTO.model_validate(request.get_json(silent=True) or {})
+    except ValidationError as err:
+        return api_error("Validation failed", 400, details=err.errors())
+
+    challenge_id = dto.challenge_id
+    challenge_type = dto.challenge_type
+    round_index = dto.round_index
+    guess_type = dto.guess_type
+    guess_id = dto.guess_id
+    attempt_number = dto.attempt_number
+    custom_round = dto.custom_round_config or dto.custom_round
 
     if guess_id is None:
-        return jsonify({"error": "Missing guess_id"}), 400
+        return api_error("Missing guess_id", 400)
 
     # Resolve round data from PostgreSQL or custom payload
     round_data = None
@@ -101,9 +122,9 @@ def submit_guess():
             round_data = rep.rounds[round_index]
 
     if not round_data:
-        return jsonify({"error": "Challenge or round not found"}), 404
+        return api_error("Challenge or round not found", 404)
 
-    result = minigame_service.evaluate_guess(
+    result = evaluate_guess(
         round_data=round_data,
         guess_type=guess_type,
         guess_id=guess_id,
@@ -117,56 +138,50 @@ def submit_guess():
 @admin_required
 def create_official_challenge():
     """Admin-only endpoint to author, publish, or seed official daily and featured trials."""
-    data = request.get_json(silent=True) or {}
-    challenge_date_str = data.get("challenge_date")
-    game_mode = data.get("game_mode", "daily_trial")
-    title = data.get("title", "").strip()
-    description = data.get("description", "").strip()
-    rounds = data.get("rounds", [])
+    try:
+        dto = MinigameOfficialCreateDTO.model_validate(request.get_json(silent=True) or {})
+    except ValidationError as err:
+        return api_error("Validation failed", 400, details=err.errors())
+
+    challenge_date_str = dto.challenge_date
+    game_mode = dto.game_mode
+    title = dto.title.strip()
+    description = dto.description.strip()
+    rounds = dto.rounds
 
     if not title or not rounds:
-        return jsonify({"error": "Title and rounds are required"}), 400
+        return api_error("Title and rounds are required", 400)
 
     if challenge_date_str:
         try:
             target_date = datetime.strptime(challenge_date_str, "%Y-%m-%d").date()
         except ValueError:
-            return jsonify({"error": "Invalid date format, expected YYYY-MM-DD"}), 400
+            return api_error("Invalid date format, expected YYYY-MM-DD", 400)
     else:
         target_date = datetime.now(timezone.utc).date()
 
-    # Upsert daily challenge for date and mode
-    existing = db.session.query(MinigameDailyChallenge).filter_by(
-        challenge_date=target_date, game_mode=game_mode
-    ).first()
-
-    if existing:
-        existing.title = title
-        existing.description = description
-        existing.rounds = rounds
-        existing.is_active = True
-        challenge = existing
-    else:
-        challenge = MinigameDailyChallenge(
-            challenge_date=target_date,
-            game_mode=game_mode,
-            title=title,
-            description=description,
-            rounds=rounds,
-            is_active=True,
-        )
-        db.session.add(challenge)
-
-    db.session.commit()
+    challenge = upsert_daily_challenge(
+        game_mode=game_mode,
+        title=title,
+        description=description,
+        rounds=rounds,
+        target_date=target_date,
+    )
     return jsonify(challenge.to_dict()), 201
+
 
 
 @minigames_bp.route("/official", methods=["GET"])
 def list_official_challenges():
     """Lists official daily challenges."""
-    challenges = db.session.query(MinigameDailyChallenge).filter_by(is_active=True).order_by(
-        MinigameDailyChallenge.challenge_date.desc()
-    ).limit(30).all()
+    page, per_page = paginate_args(default_per_page=30, max_per_page=100)
+    challenges = db.session.scalars(
+        select(MinigameDailyChallenge)
+        .where(MinigameDailyChallenge.is_active.is_(True))
+        .order_by(MinigameDailyChallenge.challenge_date.desc())
+        .offset((page - 1) * per_page)
+        .limit(per_page)
+    ).all()
     return jsonify([c.to_dict() for c in challenges]), 200
 
 
@@ -175,9 +190,11 @@ def get_user_stats():
     """Fetches user minigames streak and history stats."""
     user = get_current_user()
     if not user:
-        return jsonify({"error": "Authentication required"}), 401
+        return api_error("Authentication required", 401)
 
-    stats = db.session.query(MinigameUserStat).filter_by(user_id=user.id).all()
+    stats = db.session.scalars(
+        select(MinigameUserStat).where(MinigameUserStat.user_id == user.id)
+    ).all()
     stats_map = {s.game_mode: s.to_dict() for s in stats}
     return jsonify({"user_id": user.id, "stats": stats_map}), 200
 
@@ -187,45 +204,21 @@ def update_user_stats():
     """Updates user win/streak minigame stats in PostgreSQL."""
     user = get_current_user()
     if not user:
-        return jsonify({"error": "Authentication required"}), 401
+        return api_error("Authentication required", 401)
 
-    data = request.get_json(silent=True) or {}
-    game_mode = data.get("game_mode", "classic")
-    won = bool(data.get("won", False))
-    attempts_taken = data.get("attempts_taken")
-    today = datetime.now(timezone.utc).date()
+    try:
+        dto = MinigameScoreSubmissionDTO.model_validate(request.get_json(silent=True) or {})
+    except ValidationError as err:
+        return api_error("Validation failed", 400, details=err.errors())
 
-    stat = db.session.query(MinigameUserStat).filter_by(user_id=user.id, game_mode=game_mode).first()
-    if not stat:
-        stat = MinigameUserStat(
-            user_id=user.id,
-            game_mode=game_mode,
-            current_streak=0,
-            max_streak=0,
-            total_played=0,
-            total_won=0,
-            guess_distribution={},
-            last_played_date=today,
-        )
-        db.session.add(stat)
-
-    stat.total_played += 1
-    if won:
-        stat.total_won += 1
-        stat.current_streak += 1
-        if stat.current_streak > stat.max_streak:
-            stat.max_streak = stat.current_streak
-        if attempts_taken is not None:
-            dist = dict(stat.guess_distribution or {})
-            key = str(attempts_taken)
-            dist[key] = dist.get(key, 0) + 1
-            stat.guess_distribution = dist
-    else:
-        stat.current_streak = 0
-
-    stat.last_played_date = today
-    db.session.commit()
+    stat = record_minigame_round(
+        user_id=user.id,
+        game_mode=dto.game_mode,
+        won=dto.won,
+        attempts=dto.attempts_taken,
+    )
     return jsonify(stat.to_dict()), 200
+
 
 
 @minigames_bp.route("/audio/terror_radius/<int:killer_id>", methods=["GET"])
@@ -234,11 +227,11 @@ def stream_killer_terror_radius(killer_id: int):
     """Streams official Dead by Daylight Terror Radius / Chase music for a given killer, caching locally."""
     killer = db.session.get(Killer, killer_id)
     if not killer:
-        return jsonify({"error": "Killer not found"}), 404
+        return api_error("Killer not found", 404)
 
     mp3_url = killer.chase_music_url
     if not mp3_url:
-        return jsonify({"error": "Audio track not available for this killer"}), 404
+        return api_error("Audio track not available for this killer", 404)
 
     static_folder = current_app.static_folder or os.path.join(current_app.root_path, "static")
     cache_dir = os.path.join(static_folder, "audio", "cache")
@@ -262,11 +255,10 @@ def stream_killer_terror_radius(killer_id: int):
                     with open(local_path, "wb") as f:
                         f.write(data)
             # Save local path directly to Killer model
-            killer.chase_music_local_path = f"audio/cache/{mp3_filename}"
-            db.session.commit()
+            update_killer_chase_music(killer.id, f"audio/cache/{mp3_filename}")
         except Exception as e:
             logger.error(f"Failed to fetch audio for {killer.name} from wiki: {e}")
-            return jsonify({"error": f"Failed to retrieve audio: {str(e)}"}), 502
+            return api_error(f"Failed to retrieve audio: {str(e)}", 502)
 
     return send_from_directory(cache_dir, mp3_filename, mimetype="audio/mpeg", conditional=True)
 

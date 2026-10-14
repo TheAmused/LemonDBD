@@ -110,6 +110,31 @@ describe('tier list storage', () => {
     assert.equal(getTierListSnapshot().custom[id], undefined);
   });
 
+  it('saves and preserves cryptographic _manifest on custom lists', () => {
+    const id = createCustomListId();
+    const manifest = {
+      content_type: 'tier_list',
+      content_hash: 'a'.repeat(64),
+      author_id: 42,
+      author_login: 'malicious_user',
+      signature: 'b'.repeat(64),
+      created_at: '2026-10-14T10:00:00Z',
+    };
+    saveCustomList({
+      id,
+      title: 'Signed List',
+      description: 'Test description',
+      tiers: DEFAULT_TIERS.map((t) => ({ ...t })),
+      items: [{ id: 'a', name: 'A' }],
+      placements: {},
+      createdAt: 1,
+      _manifest: manifest,
+    });
+    const snapshot = getTierListSnapshot();
+    assert.deepEqual(snapshot.custom[id]._manifest, manifest);
+    deleteCustomList(id);
+  });
+
   it('migrates hand-edited storage defensively', () => {
     const state = migrateTierListState({
       rankings: { maps: { placements: { s: ['map:1', 7] }, tiers: 'nope' }, broken: 5 },

@@ -22,6 +22,7 @@ interface EmptyStateProps {
   subtitleClassName?: string;
   iconClassName?: string;
   action?: EmptyStateAction;
+  children?: React.ReactNode;
   className?: string;
 }
 
@@ -47,6 +48,7 @@ export function EmptyState({
   subtitleClassName = 'mt-1 text-xs text-text-muted max-w-sm mx-auto',
   iconClassName,
   action,
+  children,
   className,
 }: EmptyStateProps) {
   const compact = variant === 'compact' || variant === 'inline';
@@ -66,6 +68,7 @@ export function EmptyState({
           {action.label}
         </button>
       )}
+      {children}
     </section>
   );
 }

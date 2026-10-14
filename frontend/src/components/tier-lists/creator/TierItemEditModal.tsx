@@ -5,7 +5,6 @@ import React, { useEffect, useState } from 'react';
 import { Check, Image as ImageIcon, ImageOff } from 'lucide-react';
 import { Modal } from '@/components/common/Modal';
 import type { TierListDocumentItem } from '@/types/tierList';
-import type { Dictionary } from '@/locales/types';
 import { cn } from '@/utils/cn';
 import { sanitizeImageUrl } from '@/utils/tierLists/codec';
 import { TIER_LIST_LIMITS } from '@/utils/tierLists/constants';

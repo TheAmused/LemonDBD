@@ -10,7 +10,7 @@ from app.models.history import HistoryMatchLog, HistoryRun
 from app.models.page_streak import PageStreakPageLog, PageStreakRun
 from app.models.smash_or_pass import Entity, EntityStat, Roster, Vote
 from app.models.user import User
-from app.services.user_service import UserService
+from app.services.user import UserService
 
 
 @pytest.mark.live

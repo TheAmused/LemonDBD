@@ -1,6 +1,5 @@
 'use client';
 // frontend/src/components/smash-or-pass/FloatingLoreScattered.tsx
-import type { Dictionary } from '@/locales/types';
 
 import React from 'react';
 import { SmashSounds } from './SmashSoundEffects';

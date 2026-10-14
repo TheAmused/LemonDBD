@@ -3,7 +3,8 @@
 
 import React, { useState } from 'react';
 import dynamic from 'next/dynamic';
-import { ImageOff, Lock, HelpCircle } from 'lucide-react';
+import { PerkIcon } from '@/components/ui/PerkIcon';
+import { Lock, HelpCircle } from 'lucide-react';
 import { Perk, PerkDictionary } from '@/types/perks';
 import { getPerkIconUrl, getCharacterAvatarUrl } from '@/utils/perkUtils';
 import { DisabledBadge } from '@/components/DisabledBadge';
@@ -34,7 +35,6 @@ interface PerkCardProps {
 
 export const PerkCard: React.FC<PerkCardProps> = ({ perk, onSelect, coordinate, size = 'default', isBlind = false }) => {
   const dict = useDictionary();
-  const [imgError, setImgError] = useState(false);
   const [avatarError, setAvatarError] = useState(false);
   const [showDisabledModal, setShowDisabledModal] = useState(false);
 
@@ -118,24 +118,16 @@ export const PerkCard: React.FC<PerkCardProps> = ({ perk, onSelect, coordinate, 
             perk.is_disabled ? 'opacity-50 grayscale' : !isOwned ? 'opacity-40 grayscale' : ''
           }`}
         >
-          {!imgError && iconSrc ? (
-            <img
-              src={iconSrc}
-              alt={perk.name}
-              onError={() => setImgError(true)}
-              className={`h-full w-full object-contain filter drop-shadow-xl ${
-                size === 'tarot' || size === 'compact'
-                  ? 'group-hover:drop-shadow-[0_0_6px_var(--accent-red)]'
-                  : 'group-hover:drop-shadow-[0_0_8px_var(--accent-red)]'
-              } transition-all duration-200 pointer-events-none`}
-              loading="lazy"
-              decoding="async"
-            />
-          ) : (
-            <div className="flex h-3/4 w-3/4 rotate-45 items-center justify-center rounded-xl bg-bg-elevated border border-border-color">
-              <ImageOff className="-rotate-45 h-10 w-10 text-text-muted" />
-            </div>
-          )}
+          <PerkIcon
+            perk={perk}
+            src={iconSrc}
+            className="h-full w-full"
+            imageClassName={`h-full w-full object-contain filter drop-shadow-xl ${
+              size === 'tarot' || size === 'compact'
+                ? 'group-hover:drop-shadow-[0_0_6px_var(--accent-red)]'
+                : 'group-hover:drop-shadow-[0_0_8px_var(--accent-red)]'
+            } transition-all duration-200 pointer-events-none`}
+          />
 
           {avatarSrc && !avatarError && !isGeneral && (
             <div

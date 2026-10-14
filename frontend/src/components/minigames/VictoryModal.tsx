@@ -8,7 +8,6 @@ import confetti from 'canvas-confetti';
 import { Trophy, Share2, Check, RotateCcw, Home } from 'lucide-react';
 import Link from 'next/link';
 import type { ChallengeDefinition, GuessRecord } from '@/types/minigame';
-import type { Dictionary } from '@/locales/types';
 import { Modal } from '@/components/common/Modal';
 import { copyTextWithFallback } from '@/utils/clipboard';
 import { useDictionary } from "@/context/DictionaryContext";

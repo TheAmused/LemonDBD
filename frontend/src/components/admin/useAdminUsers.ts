@@ -1,3 +1,4 @@
+'use client';
 // frontend/src/components/admin/useAdminUsers.ts
 import { useCallback, useState } from 'react';
 import { getBackendBaseUrl, authHeaders, getAuthToken, getErrorMessage } from '@/utils/api';

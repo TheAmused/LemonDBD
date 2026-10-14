@@ -14,7 +14,6 @@ import {
   GripVertical,
 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
-import type { Dictionary } from '@/locales/types';
 import type { ChangelogPost, ChangelogPostDraft, ChangelogTag } from '@/types/changelog';
 import {
   createChangelogPost,

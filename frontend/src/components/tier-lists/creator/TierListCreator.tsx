@@ -5,6 +5,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { History, SearchX, X } from 'lucide-react';
 import { EmptyState } from '@/components/common/EmptyState';
+import { AuthRequiredState } from '@/components/common/AuthRequiredState';
 import { useAuth } from '@/context/AuthContext';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { useTierListStore } from '@/hooks/useTierListStore';
@@ -47,7 +48,7 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
   const t = dict.tierLists;
   const c = t.creator;
   const router = useRouter();
-  const { isAdmin, isLoading: authLoading, token } = useAuth();
+  const { isAdmin, isLoading: authLoading, token, isAuthenticated } = useAuth();
   const { state: storeState, hydrated: storeHydrated } = useTierListStore();
   const editingList = editId ? storeState.custom[editId] : undefined;
   const { template: officialTemplate, loading: officialLoading } = useTierListTemplate(officialSlug ?? null, locale);
@@ -186,6 +187,21 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
   const trimmedBackground = draft.backgroundImage.trim();
   const safeBackground = trimmedBackground ? sanitizeImageUrl(trimmedBackground) : null;
   const backgroundInvalid = Boolean(trimmedBackground) && !safeBackground;
+
+  if (authLoading) {
+    return <div className="min-h-[400px]" />;
+  }
+
+  if (!isAuthenticated) {
+    return (
+      <div className="relative z-10 flex flex-col gap-2">
+        <AuthRequiredState
+          title={t.authRequiredTitle}
+          subtitle={t.authRequiredDesc}
+        />
+      </div>
+    );
+  }
 
   // Editing a list the store doesn't have (deleted, or a stale/bad link), or a
   // non-admin attempting to edit an official list: nothing to prefill.

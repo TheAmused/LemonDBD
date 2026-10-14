@@ -17,7 +17,6 @@ import {
   Palette,
 } from 'lucide-react';
 import { cn } from '@/utils/cn';
-import type { Dictionary } from '@/locales/types';
 import type { ArchetypeRule, CustomRomanceArchetype } from '@/types/smashOrPass';
 import { LABEL } from './styles';
 import { Checkbox } from '@/components/common/Checkbox';

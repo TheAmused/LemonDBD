@@ -4,7 +4,7 @@ import pytest
 from app.models import Killer, Perk, Survivor
 from app.services.gauntlet_service import GauntletService
 from app.services.ownership_service import OwnershipService
-from app.services.user_service import UserService
+from app.services.user import UserService
 from tests.unit.conftest import make_chapter
 
 

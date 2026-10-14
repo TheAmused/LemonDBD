@@ -5,7 +5,6 @@ import React from 'react';
 import Link from 'next/link';
 import { ChevronRight, Crown, Info, Trash2 } from 'lucide-react';
 import type { StoredCustomList, TierListSummary } from '@/types/tierList';
-import type { Dictionary } from '@/locales/types';
 import { sanitizeImageUrl } from '@/utils/tierLists/codec';
 import { staticUrl } from '@/utils/api';
 
@@ -17,7 +16,7 @@ import { useDictionary } from "@/context/DictionaryContext";
 const CARD =
   'group relative flex h-full flex-col overflow-hidden rounded-3xl border border-border-color/80 bg-bg-surface p-5 shadow-sm transition-all hover:-translate-y-1 hover:border-accent-red/50 hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-amber';
 
-export const DEFAULT_OFFICIAL_COVERS: Record<string, string> = {
+const DEFAULT_OFFICIAL_COVERS: Record<string, string> = {
   'survivor-perks': '/static/tier-lists/banner_survivor_perks.webp',
   'survivor_perks': '/static/tier-lists/banner_survivor_perks.webp',
   'killer-perks': '/static/tier-lists/banner_killer_perks.webp',
@@ -30,12 +29,12 @@ export const DEFAULT_OFFICIAL_COVERS: Record<string, string> = {
 /** Thumbnails shown on a custom card before the `+N` overflow counter. */
 const SHOWCASE_MAX = 4;
 
-export const DEFAULT_CUSTOM_COVER = '/static/tier-lists/banner_custom_default.webp';
+const DEFAULT_CUSTOM_COVER = '/static/tier-lists/banner_custom_default.webp';
 
 function coverSrc(url: string): string | null {
   if (!url) return null;
   if (url.startsWith('/images/')) return url;
-  if (url.startsWith('/static/')) return staticUrl(url) ?? null;
+  if (url.startsWith('/static/')) return url;
   if (!/^[a-z]+:/i.test(url)) return staticUrl(url) ?? null;
   return sanitizeImageUrl(url);
 }
@@ -87,7 +86,7 @@ function DescriptionPeek({ text }: { text: string }) {
         onMouseEnter={() => setOpen(true)}
         onMouseLeave={() => setOpen(false)}
         onBlur={() => setOpen(false)}
-        className="absolute bottom-3 left-3 z-30 flex h-8 w-8 items-center justify-center rounded-lg border border-border-color/60 bg-bg-surface/85 text-text-muted shadow-xs backdrop-blur-md transition-colors cursor-pointer hover:text-text-primary"
+        className="hit-area absolute bottom-3 left-3 z-30 flex h-8 w-8 items-center justify-center rounded-lg border border-border-color/60 bg-bg-surface/85 text-text-muted shadow-xs backdrop-blur-md transition-colors cursor-pointer hover:text-text-primary"
       >
         <Info className="h-4 w-4" aria-hidden="true" />
       </button>
@@ -246,7 +245,7 @@ export function CustomTierListCard({ list, locale, onDelete, disabled }: CustomC
             }}
             {...tip(t.deleteList, undefined, 'action')}
             aria-label={`${t.deleteList} ${customTitle}`}
-            className="absolute top-3 right-3 z-10 flex h-8 w-8 items-center justify-center rounded-lg border border-border-color/60 bg-bg-surface/85 backdrop-blur-md text-text-muted shadow-xs transition-[opacity,color,background-color] cursor-pointer hover:bg-accent-red/20 hover:text-accent-red group-has-[[aria-expanded=true]]/banner:opacity-0"
+            className="hit-area absolute top-3 right-3 z-10 flex h-8 w-8 rounded-lg items-center justify-center border border-border-color/60 bg-bg-surface/85 backdrop-blur-md text-text-muted shadow-xs transition-[opacity,color,background-color] cursor-pointer hover:bg-accent-red/20 hover:text-accent-red group-has-[[aria-expanded=true]]/banner:opacity-0"
           >
             <Trash2 className="h-4 w-4" aria-hidden="true" />
           </button>

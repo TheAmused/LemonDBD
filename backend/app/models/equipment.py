@@ -13,6 +13,7 @@ from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, declared_attr, mapped_column, relationship
 
 from app.core.extensions import Base
+from app.models.base import ColumnDictMixin, TranslatableModelMixin
 
 if TYPE_CHECKING:
     from app.models.character import Killer
@@ -31,7 +32,7 @@ _RARITY_SQL = "('Common', 'Uncommon', 'Rare', 'Very Rare', 'Ultra Rare', 'Specia
 OFFERING_ROLES = ("Survivor", "Killer", "All")
 
 
-class ItemCategory(Base):
+class ItemCategory(Base, ColumnDictMixin):
     """A class of survivor item -- Flashlight, Med-Kit, Toolbox, Key, Map, ...
 
     This table is what makes `addons.associated_target` tractable. That column
@@ -55,16 +56,8 @@ class ItemCategory(Base):
     items: Mapped[list["Item"]] = relationship(back_populates="category")
     addons: Mapped[list["ItemAddon"]] = relationship(back_populates="item_category")
 
-    def to_dict(self) -> dict[str, Any]:
-        return {
-            "id": self.id,
-            "name": self.name,
-            "addon_target_label": self.addon_target_label,
-            "role": self.role,
-        }
 
-
-class Item(Base):
+class Item(Base, TranslatableModelMixin):
     """A survivor item. `category` is now a foreign key, `role` comes from it.
 
     `category_id` is NOT NULL: all 58 items resolve to one of the nine classes.
@@ -92,13 +85,8 @@ class Item(Base):
 
     def to_dict(self, lang: str | None = None) -> dict[str, Any]:
         canonical_name = self.name
-        name = canonical_name
-        description = self.description
-        if lang and self.translations and lang in self.translations:
-            trans = self.translations.get(lang) or {}
-            if isinstance(trans, dict):
-                name = trans.get("name") or name
-                description = trans.get("description") or description
+        name = self.localized(lang, "name", canonical_name)
+        description = self.localized(lang, "description", self.description)
 
         return {
             "id": self.id,
@@ -115,7 +103,7 @@ class Item(Base):
         }
 
 
-class _AddonMixin:
+class _AddonMixin(TranslatableModelMixin):
     """Everything a killer add-on and an item add-on genuinely have in common.
 
     A mixin, not a base table. `addons` was one table with two nullable foreign
@@ -151,13 +139,8 @@ class _AddonMixin:
 
     def _base_dict(self, lang: str | None = None) -> dict[str, Any]:
         canonical_name = self.name
-        name = canonical_name
-        description = self.description
-        if lang and self.translations and lang in self.translations:
-            trans = self.translations.get(lang) or {}
-            if isinstance(trans, dict):
-                name = trans.get("name") or name
-                description = trans.get("description") or description
+        name = self.localized(lang, "name", canonical_name)
+        description = self.localized(lang, "description", self.description)
 
         return {
             "id": self.id,
@@ -240,7 +223,7 @@ class ItemAddon(Base, _AddonMixin):
         return data
 
 
-class Offering(Base):
+class Offering(Base, TranslatableModelMixin):
     """A burnable offering.
 
     `category` used to be a stored copy of the wiki section an offering was
@@ -288,13 +271,8 @@ class Offering(Base):
 
     def to_dict(self, lang: str | None = None) -> dict[str, Any]:
         canonical_name = self.name
-        name = canonical_name
-        description = self.description
-        if lang and self.translations and lang in self.translations:
-            trans = self.translations.get(lang) or {}
-            if isinstance(trans, dict):
-                name = trans.get("name") or name
-                description = trans.get("description") or description
+        name = self.localized(lang, "name", canonical_name)
+        description = self.localized(lang, "description", self.description)
 
         return {
             "id": self.id,

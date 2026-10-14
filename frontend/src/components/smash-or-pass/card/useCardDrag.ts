@@ -1,3 +1,4 @@
+'use client';
 // frontend/src/components/smash-or-pass/card/useCardDrag.ts
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type React from 'react';

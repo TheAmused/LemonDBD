@@ -1,5 +1,5 @@
+'use client';
 // frontend/src/components/achievements/TrophyShelf.tsx
-import type { Dictionary } from '@/locales/types';
 
 import React from 'react';
 import { TrophySlot } from './TrophySlot';

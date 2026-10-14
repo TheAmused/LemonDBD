@@ -1,8 +1,8 @@
 # backend/tests/live/services/test_live_services_integration.py
 import pytest
 from app.services.smash_or_pass_service import SmashOrPassService
-from app.services.perk_service import PerkService
-from app.services.user_service import UserService
+from app.services.perks import PerkService
+from app.services.user import UserService
 
 
 @pytest.mark.live

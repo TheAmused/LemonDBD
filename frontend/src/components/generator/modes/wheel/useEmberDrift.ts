@@ -1,3 +1,4 @@
+'use client';
 // frontend/src/components/generator/modes/wheel/useEmberDrift.ts
 import { useCallback, useEffect, useRef } from 'react';
 

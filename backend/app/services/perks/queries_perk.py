@@ -22,6 +22,8 @@ from app.services.perks.utils import normalize_search_key
 
 logger = logging.getLogger(__name__)
 
+ALLOWED_SORT_FIELDS: set[str] = {"name", "character", "category"}
+
 
 def _is_postgres() -> bool:
     return db.engine.dialect.name in ("postgresql", "postgres")
@@ -97,7 +99,7 @@ def fetch_perks_fallback(
     lang: str | None = None,
 ) -> dict[str, Any]:
     """In-memory cache fallback filtering for perk queries."""
-    results = service._cache
+    results = getattr(service, "_cache", [])
     if category and category.lower() != "all":
         results = [p for p in results if p.get("category", "").lower() == category.lower()]
 
@@ -137,7 +139,8 @@ def fetch_perks_fallback(
         is_general_match = is_general_query(query_lower, lang)
         results = [p for p in results if perk_dict_matches_search(p, query_lower, norm_query, is_general_match, lang)]
 
-    valid_sort_field = sort_by.lower() if sort_by.lower() in service.ALLOWED_SORT_FIELDS else "name"
+    allowed_sorts = getattr(service, "ALLOWED_SORT_FIELDS", ALLOWED_SORT_FIELDS)
+    valid_sort_field = sort_by.lower() if sort_by.lower() in allowed_sorts else "name"
     reverse = (order.lower() == "desc")
     results = sorted(
         results,
@@ -181,7 +184,7 @@ def fetch_perks_fallback(
 
 
 def fetch_perks(
-    service,
+    service: Any = None,
     category: str | None = None,
     character: str | None = None,
     scope: str | None = None,
@@ -315,7 +318,8 @@ def fetch_perks(
             search_matched_count = len(matched_ids)
             stmt = stmt.where(Perk.id.in_(matched_ids))
 
-        valid_sort_field = sort_by.lower() if sort_by.lower() in service.ALLOWED_SORT_FIELDS else "name"
+        allowed_sorts = getattr(service, "ALLOWED_SORT_FIELDS", ALLOWED_SORT_FIELDS)
+        valid_sort_field = sort_by.lower() if sort_by.lower() in allowed_sorts else "name"
         if valid_sort_field == "character":
             # Whichever owner is joined; a general perk has neither and keeps
             # sorting under "General".

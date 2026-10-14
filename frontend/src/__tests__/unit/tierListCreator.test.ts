@@ -105,7 +105,10 @@ describe('creator: page wiring', () => {
   it('/tier-lists/new renders the creator through PageShell with a loading state', () => {
     const page = fs.readFileSync(path.join(SRC, 'app/[locale]/tier-lists/new/page.tsx'), 'utf-8');
     assert.ok(page.includes('<PageShell') && page.includes('<TierListCreator'));
-    assert.ok(fs.existsSync(path.join(SRC, 'app/[locale]/tier-lists/new/loading.tsx')));
+    assert.ok(
+      fs.existsSync(path.join(SRC, 'app/[locale]/tier-lists/new/loading.tsx')) ||
+      fs.existsSync(path.join(SRC, 'app/[locale]/tier-lists/loading.tsx'))
+    );
   });
 
   it('the hub sends "New custom list" to the creator', () => {

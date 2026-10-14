@@ -1,3 +1,4 @@
+'use client';
 // frontend/src/components/smash-or-pass/creator/useRosterDraft.ts
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { SMASH_ROSTER_LIMITS, TRANSLATABLE_LOCALES } from '@/utils/smashOrPass/constants';

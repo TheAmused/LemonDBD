@@ -9,7 +9,6 @@ import { ShowcasePerkModal } from './ShowcasePerkModal';
 import { usePersistentDrawer } from '@/hooks/usePersistentDrawer';
 import type { UserShowcaseState } from '@/types/userShowcase';
 import type { RoleCategory } from '@/types/perks';
-import type { Dictionary } from '@/locales/types';
 import { isSurvivor } from '@/utils/characterUtils';
 import { useDictionary } from "@/context/DictionaryContext";
 

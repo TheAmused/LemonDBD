@@ -3,6 +3,7 @@
 
 import React, { useState } from 'react';
 import { ImageOff } from 'lucide-react';
+import { PerkIcon } from '@/components/ui/PerkIcon';
 import { Perk, PerkDictionary } from '@/types/perks';
 import {
   getPerkIconUrl,
@@ -24,7 +25,6 @@ interface PerkModalProps {
 
 export const PerkModal: React.FC<PerkModalProps> = ({ perk, onClose }) => {
   const dict = useDictionary();
-  const [imgError, setImgError] = useState(false);
   const [avatarError, setAvatarError] = useState(false);
 
   if (!perk) return null;
@@ -45,16 +45,13 @@ export const PerkModal: React.FC<PerkModalProps> = ({ perk, onClose }) => {
   const header = (
     <div className="grid shrink-0 grid-cols-[auto_1fr_auto] items-center gap-3 px-4 pb-0 pt-12 min-[480px]:gap-4 min-[480px]:px-6 md:gap-6 md:px-8">
       <div className={`flex ${SLOT_SIZE} shrink-0 items-center justify-center`}>
-        {!imgError && iconSrc ? (
-          <img
-            src={iconSrc}
-            alt={perk.name}
-            onError={() => setImgError(true)}
-            className="h-full w-full scale-[1.3] object-contain drop-shadow-lg"
-          />
-        ) : (
-          <ImageOff className="h-8 w-8 text-text-muted" />
-        )}
+        <PerkIcon
+          perk={perk}
+          src={iconSrc}
+          className="h-full w-full"
+          imageClassName="h-full w-full scale-[1.3] object-contain drop-shadow-lg"
+          fallbackIcon={<ImageOff className="h-8 w-8 text-text-muted" />}
+        />
       </div>
 
       <div className="min-w-0 text-center">

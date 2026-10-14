@@ -1,6 +1,6 @@
 # backend/app/models/user.py
 from datetime import datetime
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, cast
 from sqlalchemy import (
     Boolean,
     CheckConstraint,
@@ -13,7 +13,7 @@ from sqlalchemy import (
 )
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.core.extensions import Base
-from app.models.base import utcnow
+from app.models.base import ColumnDictMixin, column_dict, utcnow
 
 if TYPE_CHECKING:
     from app.models.character import Killer, Survivor
@@ -22,8 +22,19 @@ if TYPE_CHECKING:
     from app.models.two_factor import UserRecoveryCode, UserTwoFactor
 
 
-class User(Base):
+class User(Base, ColumnDictMixin):
     __tablename__ = "users"
+
+    _api_exclude = frozenset({
+        "password_hash",
+        "verification_code",
+        "verification_code_expires_at",
+        "verification_attempts",
+        "reset_token",
+        "reset_token_expires_at",
+        "token_version",
+        "google_sub",
+    })
 
     id: Mapped[int] = mapped_column(primary_key=True)
     login: Mapped[str] = mapped_column(
@@ -130,28 +141,15 @@ class User(Base):
         return self.google_sub is not None
 
     def to_dict(self, include_sensitive: bool = False) -> dict[str, Any]:
-        data: dict[str, Any] = {
-            "id": self.id,
-            "login": self.login,
-            "username": self.username,
-            "email": self.email,
-            "has_password": self.has_password,
-            "google_linked": self.google_linked,
-            "role": self.role,
-            "avatar_url": self.avatar_url,
-            "is_active": self.is_active,
-            "is_verified": self.is_verified,
-            "onboarding_completed_at": self.onboarding_completed_at.isoformat() if self.onboarding_completed_at else None,
-            "preferred_language": self.preferred_language,
-            "created_at": self.created_at.isoformat() if self.created_at else None,
-            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
-        }
+        data = cast(dict[str, Any], column_dict(self, self._api_exclude))
+        data["has_password"] = self.has_password
+        data["google_linked"] = self.google_linked
         if include_sensitive:
             data["password_hash"] = self.password_hash
         return data
 
 
-class UserCharacterOwnership(Base):
+class UserCharacterOwnership(Base, ColumnDictMixin):
     """Which characters a user owns.
 
     `character_id` pointed at one `characters` table. With survivors and
@@ -198,22 +196,16 @@ class UserCharacterOwnership(Base):
         return self.survivor or self.killer
 
     def to_dict(self) -> dict[str, Any]:
+        data = super().to_dict()
         character = self.character
-        return {
-            "id": self.id,
-            "user_id": self.user_id,
-            # Scoped to the role: survivor 7 and killer 7 are different rows.
-            "character_id": character.id if character else None,
-            "character_role": character.role if character else None,
-            "survivor_id": self.survivor_id,
-            "killer_id": self.killer_id,
-            "character_name": character.name if character else None,
-            "is_owned": self.is_owned,
-            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
-        }
+        data["character_id"] = character.id if character else None
+        data["character_role"] = character.role if character else None
+        data["character_name"] = character.name if character else None
+        data.pop("created_at", None)
+        return data
 
 
-class UserPerkOwnership(Base):
+class UserPerkOwnership(Base, ColumnDictMixin):
     __tablename__ = "user_perk_ownerships"
     __table_args__ = (
         UniqueConstraint("user_id", "perk_id", name="uq_user_perk_ownership"),
@@ -238,15 +230,11 @@ class UserPerkOwnership(Base):
     perk: Mapped["Perk"] = relationship(lazy="joined")
 
     def to_dict(self) -> dict[str, Any]:
-        return {
-            "id": self.id,
-            "user_id": self.user_id,
-            "perk_id": self.perk_id,
-            "perk_name": self.perk.name if self.perk else None,
-            "perk_category": self.perk.role if self.perk else None,
-            "is_unlocked": self.is_unlocked,
-            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
-        }
+        data = super().to_dict()
+        data["perk_name"] = self.perk.name if self.perk else None
+        data["perk_category"] = self.perk.role if self.perk else None
+        data.pop("created_at", None)
+        return data
 
 
 #: Shown when a user has not picked a main yet. These were the column

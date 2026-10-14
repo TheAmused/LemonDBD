@@ -65,7 +65,7 @@ class TestTokenClaims:
         assert client.get(f"/api/v1/auth/me?token={token}").get_json()["authenticated"] is False
 
     def test_service_level_verification_applies_the_same_rules(self, app: Flask, db_session) -> None:
-        from app.services.user_service import UserService
+        from app.services.user import UserService
 
         user = _make_user()
         service = UserService()

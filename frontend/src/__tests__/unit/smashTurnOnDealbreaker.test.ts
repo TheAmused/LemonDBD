@@ -126,4 +126,44 @@ test('SmashOrPass: Simple Mode, Custom Labels, and Turn On / Dealbreaker Integra
     assert.ok(source.includes('availableGenders'), 'Hub must calculate availableGenders dynamically');
     assert.ok(source.includes('customArchetypes={activeRoster?.romance_archetypes}'), 'Hub must pass customArchetypes to RomancePersonaModal');
   });
+
+  await t.test('SmashRosterDocument and migrateSmashRosterState preserve valid _manifest', () => {
+    const mockManifest = {
+      content_type: 'smash_roster',
+      content_hash: 'a'.repeat(64),
+      author_id: 42,
+      author_login: 'dwight',
+      signature: 'b'.repeat(64),
+      created_at: '2026-10-14T12:00:00Z',
+    };
+
+    const rawDoc = {
+      format: SMASH_ROSTER_FORMAT,
+      version: 1,
+      name: 'Manifest Roster',
+      entities: [
+        { name: 'Entity A', role: 'Survivor', gender: 'female' },
+      ],
+      _manifest: mockManifest,
+    };
+
+    const result = validateSmashRosterDocument(rawDoc);
+    assert.strictEqual(result.ok, true);
+    if (!result.ok) return;
+    assert.deepEqual(result.doc._manifest, mockManifest);
+
+    const state = migrateSmashRosterState({
+      version: 1,
+      custom: {
+        'manifest-roster-1': {
+          ...result.doc,
+          id: 'manifest-roster-1',
+          createdAt: 1000,
+          updatedAt: 2000,
+        },
+      },
+    });
+
+    assert.deepEqual(state.custom['manifest-roster-1']._manifest, mockManifest);
+  });
 });

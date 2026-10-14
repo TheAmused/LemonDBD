@@ -3,6 +3,7 @@
 // App Router structure, server/client boundaries and bundle hygiene.
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
+import { ts } from 'ts-morph';
 import { codeModules, scanLines, isEntry, loadModules, staticReach } from '../helpers/sourceGraph';
 
 const mods = loadModules();
@@ -97,5 +98,84 @@ describe('structure: directives', () => {
       })
       .map((m) => m.file);
     assert.deepEqual(bad, [], `"use client" must come before every import:\n${bad.join('\n')}`);
+  });
+
+  it('modules that call client hooks or dynamic({ ssr: false }) declare "use client"', () => {
+    const CLIENT_HOOKS = new Set([
+      'useState',
+      'useEffect',
+      'useContext',
+      'useReducer',
+      'useCallback',
+      'useMemo',
+      'useRef',
+      'useImperativeHandle',
+      'useLayoutEffect',
+      'useInsertionEffect',
+      'useTransition',
+      'useDeferredValue',
+      'useId',
+      'useSyncExternalStore',
+      'useActionState',
+      'useOptimistic',
+      'useRouter',
+      'usePathname',
+      'useSearchParams',
+      'useParams',
+      'useSelectedLayoutSegment',
+      'useSelectedLayoutSegments',
+      'useDictionary',
+      'useTheme',
+      'useLocale',
+    ]);
+
+    const bad = codeModules()
+      .filter((m) => !m.isClient)
+      .filter((m) => {
+        let hasClientHook = false;
+        const visit = (n: ts.Node) => {
+          if (ts.isCallExpression(n)) {
+            const expr = n.expression;
+            if (ts.isIdentifier(expr) && CLIENT_HOOKS.has(expr.text)) {
+              hasClientHook = true;
+            } else if (ts.isPropertyAccessExpression(expr) && ts.isIdentifier(expr.name) && CLIENT_HOOKS.has(expr.name.text)) {
+              hasClientHook = true;
+            } else if (ts.isIdentifier(expr) && expr.text === 'dynamic') {
+              const arg = n.arguments[1];
+              if (arg && ts.isObjectLiteralExpression(arg)) {
+                for (const prop of arg.properties) {
+                  if (ts.isPropertyAssignment(prop) && ts.isIdentifier(prop.name) && prop.name.text === 'ssr' && prop.initializer.kind === ts.SyntaxKind.FalseKeyword) {
+                    hasClientHook = true;
+                  }
+                }
+              }
+            }
+          }
+          if (!hasClientHook) ts.forEachChild(n, visit);
+        };
+        visit(m.ast);
+        return hasClientHook;
+      })
+      .map((m) => m.file);
+
+    assert.deepEqual(bad, [], `Modules calling client hooks must have "use client":\n${bad.join('\n')}`);
+  });
+});
+
+describe('structure: feature slice architecture & public barrels', () => {
+  it('forbids deep imports matching @/features/*/*', () => {
+    const bad = scanLines(/from\s+['"]@\/features\/[^'"]+\/[^'"]+['"]/);
+    assert.deepEqual(bad, [], `Deep feature imports are forbidden (use public @/features/* barrels):\n${bad.join('\n')}`);
+  });
+
+  it('root layout app/[locale]/layout.tsx preserves bundle isolation and never imports feature barrels', () => {
+    const layout = mods.find((m) => m.file === 'app/[locale]/layout.tsx');
+    assert.ok(layout, 'app/[locale]/layout.tsx must exist');
+    const barrelImports = layout.staticImports.filter((f) => f.startsWith('features/'));
+    assert.deepEqual(
+      barrelImports,
+      [],
+      `app/[locale]/layout.tsx wraps every route and must not import feature barrels (import providers directly):\n${barrelImports.join('\n')}`
+    );
   });
 });

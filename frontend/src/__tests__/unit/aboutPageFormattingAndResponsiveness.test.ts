@@ -69,7 +69,10 @@ describe('Locale Dictionaries: Semantic Tag Consistency', () => {
 
 describe('About Page: Layout, Typography & LocalStorage', () => {
   const pagePath = path.resolve(__dirname, '../../app/[locale]/about/page.tsx');
-  const source = fs.readFileSync(pagePath, 'utf-8');
+  const clientPath = path.resolve(__dirname, '../../components/about/AboutClient.tsx');
+  const source =
+    fs.readFileSync(pagePath, 'utf-8') +
+    (fs.existsSync(clientPath) ? fs.readFileSync(clientPath, 'utf-8') : '');
   // The card itself (heading, accordion, animation) is shared with the Privacy Policy and Rules pages.
   const cardSource = fs.readFileSync(path.resolve(__dirname, '../../components/common/BlockCard.tsx'), 'utf-8');
 

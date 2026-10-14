@@ -7,7 +7,7 @@ import type { Dictionary } from '@/locales/types';
 import type { ChaosMutator } from '@/types/chaos';
 import { lookup, type ChaosMutatorCopy } from '@/utils/lookup';
 import { CHAOS_MUTATORS, getChaosMutatorsForRole } from '@/constants/chaosMutators';
-import { DbdButton, DbdButtonRole } from './generator/shared/DbdButton';
+import { DbdButton, DbdButtonRole } from '@/components/common/Button';
 import { getLocalizedMutator } from './generator/lib/chaosMutatorLocalization';
 
 import { tip } from '@/components/common/Tooltip';

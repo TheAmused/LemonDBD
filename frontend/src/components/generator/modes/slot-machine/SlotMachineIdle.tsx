@@ -3,7 +3,7 @@
 import React from 'react';
 import type { RoleCategory } from '@/types/perks';
 import { useDictionary } from '@/context/DictionaryContext';
-import { DbdButton } from '../../shared/DbdButton';
+import { DbdButton } from '@/components/common/Button';
 
 interface SlotMachineIdleProps {
   role: RoleCategory;

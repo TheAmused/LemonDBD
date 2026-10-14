@@ -1,5 +1,6 @@
 import { getErrorMessage } from '@/utils/api';
 import { downloadFile } from '@/utils/download';
+import { sanitizeManifest } from '@/utils/shareCodec';
 import type { ChallengeDefinition, RoundConfig, MinigameMode } from '@/types/minigame';
 
 const VALID_MODES: Set<MinigameMode> = new Set([
@@ -25,10 +26,12 @@ export function exportChallengeToJson(challenge: ChallengeDefinition): void {
     lemondbd_version: '1.0',
     type: 'minigame_challenge',
     exported_at: new Date().toISOString(),
+    ...(challenge._manifest ? { _manifest: challenge._manifest } : {}),
     challenge: {
       title: challenge.title,
       description: challenge.description || '',
       game_mode: challenge.game_mode || 'custom',
+      ...(challenge._manifest ? { _manifest: challenge._manifest } : {}),
       rounds: challenge.rounds.map((r, idx) => ({
         round_number: idx + 1,
         mode: r.mode,
@@ -62,6 +65,7 @@ interface RawChallenge {
   description?: unknown;
   game_mode?: unknown;
   rounds?: unknown;
+  _manifest?: unknown;
 }
 
 export function importChallengeFromJson(jsonString: string): ChallengeDefinition {
@@ -119,10 +123,15 @@ export function importChallengeFromJson(jsonString: string): ChallengeDefinition
     });
   }
 
+  const manifest = sanitizeManifest(
+    (rawChallenge as Record<string, unknown>)?._manifest ?? (parsed as Record<string, unknown>)?._manifest
+  );
+
   return {
     title,
     description,
     game_mode,
     rounds: validatedRounds,
+    ...(manifest ? { _manifest: manifest } : {}),
   };
 }

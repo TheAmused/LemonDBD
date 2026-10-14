@@ -34,6 +34,8 @@ interface RosterSelectModalProps {
   onDeleteRoster?: (id: string) => void;
   /** Opens the share-link/JSON export flow for a local roster. */
   onExportRoster?: (id: string) => void;
+  /** Opens the content report modal for a local roster. */
+  onReportRoster?: (id: string) => void;
   locale?: string;
 }
 
@@ -48,6 +50,7 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
       onEditRoster,
       onDeleteRoster,
       onExportRoster,
+      onReportRoster,
       locale = 'en',
     }) => {
   const dict = useDictionary();
@@ -261,6 +264,7 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
               onEditRoster={onEditRoster}
               onExportRoster={onExportRoster}
               onDeleteRoster={onDeleteRoster}
+              onReportRoster={onReportRoster}
             />
           )}
         </div>

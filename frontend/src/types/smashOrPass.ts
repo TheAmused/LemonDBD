@@ -1,4 +1,5 @@
 import type { RoleCategory } from './perks';
+import type { ContentManifest } from '@/utils/contentSigning';
 
 export type CharacterRole = RoleCategory | 'all';
 export type CharacterGender = 'female' | 'male' | 'monster_other' | 'all';
@@ -275,6 +276,7 @@ export interface SmashRosterDocument {
   custom_labels?: RosterCustomLabels;
   romance_archetypes?: CustomRomanceArchetype[];
   entities: SmashRosterDocumentEntity[];
+  _manifest?: ContentManifest | null;
 }
 
 // ---------------------------------------------------------------------------

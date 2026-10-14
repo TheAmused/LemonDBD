@@ -51,3 +51,23 @@ test('a link without a payload yields null', () => {
   assert.equal(readChallengeFragment(''), null);
   assert.equal(readChallengeFragment('#foo=bar'), null);
 });
+
+test('a challenge with _manifest survives share link roundtrip', async () => {
+  const mockManifest = {
+    content_type: 'minigame',
+    content_hash: 'e'.repeat(64),
+    author_id: 99,
+    author_login: 'huntress',
+    signature: 'f'.repeat(64),
+    created_at: '2026-10-14T12:00:00Z',
+  };
+
+  const challengeWithManifest: ChallengeDefinition = {
+    ...CHALLENGE,
+    _manifest: mockManifest,
+  };
+
+  const payload = await encodeChallengeShare(challengeWithManifest);
+  const back = await decodeChallengeShare(payload);
+  assert.deepEqual(back._manifest, mockManifest);
+});

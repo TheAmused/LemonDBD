@@ -10,6 +10,7 @@ import { useAuth } from '@/context/AuthContext';
 import { useDictionary } from '@/context/DictionaryContext';
 import { formatMessage } from '@/utils/i18nFormat';
 import { deleteCustomRoster } from '@/utils/smashOrPass/storage';
+import { ReportContentModal } from '@/components/common/ReportContentModal';
 import { RosterSelectModal, SmashRosterExportModal, SmashRosterImportModal } from './lazyParts';
 import type { useHubOverlays } from './useHubOverlays';
 import type { useSmashRosters } from './useSmashRosters';
@@ -38,6 +39,7 @@ export function RosterModals({ locale, overlays, rosters }: RosterModalsProps) {
   } = overlays;
   const { isAuthenticated } = useAuth();
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [reportingRosterId, setReportingRosterId] = useState<string | null>(null);
   const { allRosters, selectedRosterSlug, customRosterStore, rosterSwitchEffect, getRosterDisplayName, pickRoster, selectRoster } =
     rosters;
 
@@ -55,6 +57,11 @@ export function RosterModals({ locale, overlays, rosters }: RosterModalsProps) {
     const { id: _id, createdAt: _createdAt, updatedAt: _updatedAt, ...doc } = roster;
     return doc;
   })();
+
+  const reportingRoster = reportingRosterId ? customRosterStore.custom[reportingRosterId] : undefined;
+  const reportingDoc = reportingRoster
+    ? (({ id: _id, createdAt: _createdAt, updatedAt: _updatedAt, ...doc }) => doc)(reportingRoster)
+    : {};
 
   return (
     <>
@@ -95,6 +102,7 @@ export function RosterModals({ locale, overlays, rosters }: RosterModalsProps) {
         // Unlike Edit/Create (which navigate away), Export is just an overlay -- the picker stays
         // open underneath it, same as the delete confirmation, so closing it returns to the picker.
         onExportRoster={setExportingRosterId}
+        onReportRoster={setReportingRosterId}
         locale={locale}
       />
 
@@ -140,6 +148,15 @@ export function RosterModals({ locale, overlays, rosters }: RosterModalsProps) {
       {exportingRosterId && (
         <SmashRosterExportModal doc={exportingDoc} onClose={() => setExportingRosterId(null)} locale={locale} />
       )}
+
+      <ReportContentModal
+        isOpen={Boolean(reportingRosterId)}
+        onClose={() => setReportingRosterId(null)}
+        contentType="smash_roster"
+        manifest={reportingRoster?._manifest ?? null}
+        payload={reportingDoc as unknown as Record<string, unknown>}
+        contentTitle={reportingRoster?.name}
+      />
 
       {/* ROSTER SWITCH STARTING ANIMATION EFFECT */}
       {rosterSwitchEffect && (

@@ -159,7 +159,7 @@ export function CustomTierListView({ id, locale }: CustomTierListViewProps) {
         onClose={() => setReportModalOpen(false)}
         contentType="tier_list"
         manifest={list._manifest ?? null}
-        payload={buildExportDoc(list.tiers, list.placements)}
+        payload={buildExportDoc(list.tiers, list.placements) as unknown as Record<string, unknown>}
         contentTitle={list.title}
       />
     </>

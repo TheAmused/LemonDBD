@@ -26,6 +26,10 @@ export default {
   notFoundSubtitle: "It may have been retired, or the link is wrong.",
   customNotFoundTitle: "Custom list not found",
   customNotFoundSubtitle: "Custom lists live in this browser only. It may have been deleted, or created on another device.",
+  authRequiredTitle: "Log in required",
+  authRequiredDesc: "You must be logged in to create, edit, or view custom tier lists.",
+  loginToManage: "Log in to manage custom tier lists",
+  loginToManageDesc: "Log in to create, import, and save your custom tier lists.",
   untitled: "Untitled tier list",
   kinds: {
     survivor_perks: "Survivor perks",

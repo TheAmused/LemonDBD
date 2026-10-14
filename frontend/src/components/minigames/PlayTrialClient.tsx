@@ -16,16 +16,28 @@ import {
 import { getCustomChallenges } from '@/utils/minigames/storage';
 import { decodeChallengeShare, readChallengeFragment } from '@/utils/minigames/shareLink';
 import { DbdSpinner } from '@/components/common/DbdSpinner';
+import { AuthRequiredState } from '@/components/common/AuthRequiredState';
+import { useAuth } from '@/context/AuthContext';
 import { getErrorMessage } from '@/utils/api';
 
 function PlayTrialContent() {
   const dict = useDictionary();
   const locale = useLocale();
+  const { isAuthenticated, isLoading: authLoading } = useAuth();
   const searchParams = useSearchParams();
 
   const type = searchParams.get('type');
   const mode = searchParams.get('mode');
   const customId = searchParams.get('id');
+  const [hasChallengeFragment, setHasChallengeFragment] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined' && Boolean(readChallengeFragment(window.location.hash))) {
+      setHasChallengeFragment(true);
+    }
+  }, []);
+
+  const isCustomTrial = Boolean(customId || hasChallengeFragment);
 
   const [challenge, setChallenge] = useState<ChallengeDefinition | null>(null);
   const [catalog, setCatalog] = useState<MinigameCatalog | null>(null);
@@ -91,10 +103,17 @@ function PlayTrialContent() {
       activeCategory="minigames"
       mainClassName="relative flex flex-col items-center justify-center min-h-[70vh]"
     >
-      {loading ? (
+      {loading || (isCustomTrial && authLoading) ? (
         <div className="flex flex-col items-center justify-center p-12 gap-4">
           <DbdSpinner size="lg" />
           <p className="type-card-title text-text-muted">{dict.app.loading}</p>
+        </div>
+      ) : isCustomTrial && !isAuthenticated ? (
+        <div className="w-full max-w-lg mx-auto py-12 px-4">
+          <AuthRequiredState
+            title={dict.minigames.authRequiredTitle}
+            subtitle={dict.minigames.authRequiredDesc}
+          />
         </div>
       ) : error ? (
         <div className="p-8 rounded-2xl bg-accent-red/10 border border-accent-red/30 text-center max-w-md mx-auto my-12">

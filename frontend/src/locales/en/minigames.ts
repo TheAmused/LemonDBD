@@ -42,6 +42,10 @@ export default {
   confirmDelete: "Are you sure you want to delete this custom trial?",
   cancel: "Cancel",
   playTrial: "Play",
+  authRequiredTitle: "Log in required",
+  authRequiredDesc: "You must be logged in to create or play custom trials.",
+  loginToManage: "Log in to manage custom trials",
+  loginToManageDesc: "Log in to create, import, and play community trials.",
   adminPublishSuccess: "Challenge successfully published as official!",
 
   // Runner

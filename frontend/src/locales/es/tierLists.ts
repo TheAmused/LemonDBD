@@ -26,6 +26,10 @@ export default {
   notFoundSubtitle: "Puede que se haya retirado o que el enlace sea incorrecto.",
   customNotFoundTitle: "Lista personalizada no encontrada",
   customNotFoundSubtitle: "Las listas personalizadas solo existen en este navegador. Puede que se haya borrado o creado en otro dispositivo.",
+  authRequiredTitle: "Inicio de sesión requerido",
+  authRequiredDesc: "Debes iniciar sesión para crear, editar o ver listas de niveles personalizadas.",
+  loginToManage: "Inicia sesión para gestionar listas",
+  loginToManageDesc: "Inicia sesión para crear, importar y guardar tus listas de niveles personalizadas.",
   untitled: "Tier list sin título",
   kinds: {
     survivor_perks: "Habilidades de superviviente",

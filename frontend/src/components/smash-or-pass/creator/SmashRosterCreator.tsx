@@ -17,6 +17,7 @@
 import { useMemo, useState } from 'react';
 import { History, Plus, SearchX, X } from 'lucide-react';
 import { EmptyState } from '@/components/common/EmptyState';
+import { AuthRequiredState } from '@/components/common/AuthRequiredState';
 import { useAuth } from '@/context/AuthContext';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { useSmashRosterStore } from '@/hooks/useSmashRosterStore';
@@ -54,7 +55,7 @@ export function SmashRosterCreator({ locale, editId }: SmashRosterCreatorProps) 
   const dict = useDictionary();
   const t = dict.smashOrPass;
   const c = t.creator;
-  const { isAdmin, token, user } = useAuth();
+  const { isAdmin, token, user, isAuthenticated, isLoading: authLoading } = useAuth();
   const isUserAdmin = Boolean(isAdmin || user?.role === 'admin');
   const { state: storeState, hydrated: storeHydrated } = useSmashRosterStore();
   const { roles: taxonomyRoles, genders: taxonomyGenders, registerTerm } = useSmashTaxonomies();
@@ -128,6 +129,21 @@ export function SmashRosterCreator({ locale, editId }: SmashRosterCreatorProps) 
     entitiesMissing,
     coverInvalid,
   });
+
+  if (authLoading) {
+    return <div className="min-h-[400px]" />;
+  }
+
+  if (!isAuthenticated) {
+    return (
+      <div className={CREATOR_COLUMN}>
+        <AuthRequiredState
+          title={t.authRequiredTitle}
+          subtitle={t.authRequiredDesc}
+        />
+      </div>
+    );
+  }
 
   // Editing a roster the store doesn't have (deleted, or a stale link): send
   // back rather than silently falling through to "create a new roster".

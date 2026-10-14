@@ -1,15 +1,20 @@
 'use client';
 // frontend/src/components/smash-or-pass/hub/RosterModals.tsx
+import { useState } from 'react';
+import dynamic from 'next/dynamic';
 import { Heart, Trash2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/common/Button';
 import { Modal } from '@/components/common/Modal';
+import { useAuth } from '@/context/AuthContext';
 import { useDictionary } from '@/context/DictionaryContext';
 import { formatMessage } from '@/utils/i18nFormat';
 import { deleteCustomRoster } from '@/utils/smashOrPass/storage';
 import { RosterSelectModal, SmashRosterExportModal, SmashRosterImportModal } from './lazyParts';
 import type { useHubOverlays } from './useHubOverlays';
 import type { useSmashRosters } from './useSmashRosters';
+
+const AuthModal = dynamic(() => import('@/components/AuthModal').then((m) => m.AuthModal), { ssr: false });
 
 interface RosterModalsProps {
   locale: string;
@@ -31,6 +36,8 @@ export function RosterModals({ locale, overlays, rosters }: RosterModalsProps) {
     exportingRosterId,
     setExportingRosterId,
   } = overlays;
+  const { isAuthenticated } = useAuth();
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const { allRosters, selectedRosterSlug, customRosterStore, rosterSwitchEffect, getRosterDisplayName, pickRoster, selectRoster } =
     rosters;
 
@@ -58,14 +65,26 @@ export function RosterModals({ locale, overlays, rosters }: RosterModalsProps) {
         selectedRosterSlug={selectedRosterSlug}
         onSelectRoster={selectRoster}
         onCreateRoster={() => {
+          if (!isAuthenticated) {
+            setIsAuthModalOpen(true);
+            return;
+          }
           setIsRosterModalOpen(false);
           router.push(`/${locale}/smash-or-pass/create`);
         }}
         onImportRoster={() => {
+          if (!isAuthenticated) {
+            setIsAuthModalOpen(true);
+            return;
+          }
           setIsRosterModalOpen(false);
           setIsImportModalOpen(true);
         }}
         onEditRoster={(id) => {
+          if (!isAuthenticated) {
+            setIsAuthModalOpen(true);
+            return;
+          }
           setIsRosterModalOpen(false);
           router.push(`/${locale}/smash-or-pass/create?edit=${id}`);
         }}
@@ -133,6 +152,13 @@ export function RosterModals({ locale, overlays, rosters }: RosterModalsProps) {
             </span>
           </div>
         </div>
+      )}
+
+      {isAuthModalOpen && (
+        <AuthModal
+          isOpen={isAuthModalOpen}
+          onClose={() => setIsAuthModalOpen(false)}
+        />
       )}
     </>
   );

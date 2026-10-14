@@ -198,7 +198,7 @@ test('Mutator Application: No Exhaustion mutator reduces exhaustion perk drop ch
 
   let exhaustionCountWithoutMutator = 0;
   let exhaustionCountWithMutator = 0;
-  const iterations = 500;
+  const iterations = 2500;
 
   for (let i = 0; i < iterations; i++) {
     const picksDefault = pickRandomLoadout(mixedPool, null, 1);
@@ -235,7 +235,7 @@ test('Mutator Application: Blindness mutator reduces aura perk drop chance', () 
 
   let auraCountWithout = 0;
   let auraCountWith = 0;
-  const iterations = 500;
+  const iterations = 2500;
 
   for (let i = 0; i < iterations; i++) {
     const picksDefault = pickRandomLoadout(auraPool, null, 1);

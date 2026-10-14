@@ -1,3 +1,4 @@
+'use client';
 // frontend/src/components/onboarding/wizard/useOnboardingCompletion.ts
 import { useState } from 'react';
 import { ownershipKey } from '@/utils/characterUtils';

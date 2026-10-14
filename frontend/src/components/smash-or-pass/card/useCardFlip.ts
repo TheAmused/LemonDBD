@@ -1,3 +1,4 @@
+'use client';
 // frontend/src/components/smash-or-pass/card/useCardFlip.ts
 import { useCallback, useEffect, useState } from 'react';
 

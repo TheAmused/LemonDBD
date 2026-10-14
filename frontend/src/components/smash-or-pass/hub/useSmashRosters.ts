@@ -1,3 +1,4 @@
+'use client';
 // frontend/src/components/smash-or-pass/hub/useSmashRosters.ts
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSmashRosterStore } from '@/hooks/useSmashRosterStore';

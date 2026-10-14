@@ -1,3 +1,4 @@
+'use client';
 // frontend/src/components/maps/voice/useVoiceSession.ts
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { createDeduper, trackEvent } from '@/utils/analytics';

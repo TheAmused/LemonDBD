@@ -1,3 +1,4 @@
+'use client';
 // frontend/src/components/smash-or-pass/hub/useHubOverlays.ts
 import { useEffect, useState } from 'react';
 import type { EntityItem } from '@/types/smashOrPass';

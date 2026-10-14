@@ -1,3 +1,4 @@
+'use client';
 import React from 'react';
 import { Plus, X, Sparkles } from 'lucide-react';
 import { PerkIcon } from '@/components/ui/PerkIcon';

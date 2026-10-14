@@ -1,3 +1,4 @@
+'use client';
 // frontend/src/components/scraper-config/useLocalizedTargets.ts
 import { useMemo } from 'react';
 import { useDictionary } from '@/context/DictionaryContext';

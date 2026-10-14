@@ -1,3 +1,4 @@
+'use client';
 // frontend/src/components/smash-or-pass/creator/useRosterSubmit.ts
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';

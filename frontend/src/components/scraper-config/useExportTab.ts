@@ -1,3 +1,4 @@
+'use client';
 // frontend/src/components/scraper-config/useExportTab.ts
 import { useState } from 'react';
 import { useDictionary } from '@/context/DictionaryContext';

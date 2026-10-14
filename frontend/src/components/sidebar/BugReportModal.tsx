@@ -177,7 +177,6 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({ isOpen, onClose 
       onClose={onClose}
       variant="sheet"
       size={isSuccess ? 'sm' : 'xl'}
-      centerTitle
       title={isSuccess ? undefined : t.bugReportModalTitle || ''}
       ariaLabel={(isSuccess ? t.bugSuccessMessage : t.bugReportModalTitle) || 'Bug report'}
       closeButton={isSuccess ? 'floating' : 'header'}

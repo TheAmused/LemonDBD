@@ -272,7 +272,6 @@ export const VoiceEngineInfoModal: React.FC<VoiceEngineInfoModalProps> = ({
       variant="dialog"
       size="xl"
       layer="system"
-      icon={<Cpu className="h-5 w-5" aria-hidden="true" />}
       title={t.howItWorksTitle || ''}
       ariaLabel={t.howItWorksTitle || 'Voice engine info'}
       closeButtonAriaLabel={dict.modal.close}

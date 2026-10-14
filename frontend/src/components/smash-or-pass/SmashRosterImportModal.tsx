@@ -75,7 +75,6 @@ export function SmashRosterImportModal({ isOpen, onClose, sharePayload, onImport
       idPrefix="smash-roster"
       labels={{
         title: t.title,
-        subtitle: t.subtitle,
         sharedLinkDetected: t.sharedLinkDetected,
         pasteLabel: t.pasteLabel,
         uploadFile: t.uploadFile,

@@ -218,7 +218,6 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
       onClose={onClose}
       variant="dialog"
       size="md"
-      centerTitle
       title={
         notice?.type === 'verify-reminder' || notice?.type === 'register-success'
           ? dict.user.authVerifyEmailTitle

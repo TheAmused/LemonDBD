@@ -2,7 +2,7 @@
 'use client';
 
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { Crop, ZoomIn, ZoomOut, RotateCcw, Check, Upload, AlertCircle, Image as ImageIcon } from 'lucide-react';
+import { ZoomIn, ZoomOut, RotateCcw, Check, Upload, AlertCircle, Image as ImageIcon } from 'lucide-react';
 import { Modal } from '@/components/common/Modal';
 
 
@@ -282,10 +282,9 @@ export const CoverImageCropModal: React.FC<CoverImageCropModalProps> = ({ isOpen
       onClose={onClose}
       size="3xl"
       title={cm.title}
-      subtitle={cm.subtitle}
-      icon={<Crop className="h-5 w-5 text-accent-red" />}
     >
       <div className="space-y-4 p-4 sm:p-6 select-none">
+        <p className="text-center type-body text-text-secondary">{cm.subtitle}</p>
         {/* Interactive Crop Viewport (16:9 Aspect Ratio) */}
         <div className="relative rounded-3xl border-2 border-accent-red/40 bg-bg-primary overflow-hidden shadow-2xl">
           <div

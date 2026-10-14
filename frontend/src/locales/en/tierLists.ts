@@ -105,7 +105,6 @@ export default {
   itemNameRequired: "Give the item a name.",
 
   exportTitle: "Export tier list",
-  exportSubtitle: "Save it as JSON, or share a link that carries the whole list.",
   jsonLabel: "JSON",
   shareLinkLabel: "Share link",
   downloadJson: "Download .json",
@@ -117,7 +116,6 @@ export default {
   linkTooLong: "This link is {count} characters long. Some chat apps cut long links, so send the .json file instead.",
 
   importTitle: "Import tier list",
-  importSubtitle: "Paste JSON, upload a .json file, or open a share link.",
   pasteLabel: "JSON payload",
   pastePlaceholder: "{ \"title\": \"My list\", \"items\": [{ \"name\": \"...\", \"image\": \"https://...\" }] }",
   uploadFile: "Upload .json",
@@ -226,7 +224,6 @@ export default {
   },
 
   reportTitle: "Report content",
-  reportSubtitle: "Help us keep the community safe and respectful.",
   reportReasonLabel: "Reason for report",
   reportReasonHate: "Hate speech or symbols",
   reportReasonHarassment: "Harassment or bullying",

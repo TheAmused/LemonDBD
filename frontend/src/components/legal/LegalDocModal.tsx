@@ -33,8 +33,6 @@ export function LegalDocModal({ doc, onClose }: LegalDocModalProps) {
       size="3xl"
       layer="top"
       title={text.heading}
-      tone="danger"
-      centerTitle
       closeButtonAriaLabel={dict.modal.close}
       padded
     >

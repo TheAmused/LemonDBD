@@ -186,7 +186,6 @@ export default {
   remainingTab: "Verbleibend",
   streakLabel: "Streak:",
   middotSeparator: "·",
-  bulletSeparator: "•",
   tierLabel: "Stufe",
   noPerksThisTrial: "Keine Perks in dieser Prüfung.",
   goesInBare: "tritt ohne Perks an.",

@@ -4,13 +4,13 @@
 // THE single modal / dialog / sheet / drawer for the app. Every overlay should be
 // <Modal> with a `variant`; look & feel live in MODAL_CONFIG (like TOOLTIP_CONFIG),
 // not in the call sites.
-import { type ModalVariant, type ModalTone, type ModalSize, type ModalCloseButton, type ModalBackdrop, type ModalLayer, useIsCompact, MODAL_CONFIG, type VariantSpec, getFocusable, type ModalContextValue, type MotionKind, REDUCED, MOTION, ModalContext } from "./modalConfig";
+import { type ModalVariant, type ModalSize, type ModalCloseButton, type ModalBackdrop, type ModalLayer, useIsCompact, MODAL_CONFIG, type VariantSpec, getFocusable, type ModalContextValue, type MotionKind, REDUCED, MOTION, ModalContext } from "./modalConfig";
 
 //
 //   variant   dialog (default) centred panel
 //             sheet            bottom sheet on phones, centred dialog from `sm` up
 //             drawer-right / drawer-left   full-height side panel (full width on phones)
-//             confirm          small centred dialog (icon + title + actions)
+//             confirm          small centred dialog (title + actions)
 //             fullscreen       edge to edge
 //             lightbox         chrome-less, for images / 3D / video
 //
@@ -64,10 +64,6 @@ export interface ModalProps {
   /** Look & behaviour preset. Default 'dialog'. */
   variant?: ModalVariant;
   title?: React.ReactNode;
-  subtitle?: React.ReactNode;
-  icon?: React.ReactNode;
-  /** Colours the header icon (useful with `confirm`). */
-  tone?: ModalTone;
   badge?: React.ReactNode;
   headerLeft?: React.ReactNode;
   headerRight?: React.ReactNode;
@@ -75,7 +71,6 @@ export interface ModalProps {
   header?: React.ReactNode;
   footer?: React.ReactNode;
   size?: ModalSize;
-  centerTitle?: boolean;
   className?: string;
   bodyClassName?: string;
   headerClassName?: string;
@@ -123,16 +118,12 @@ export const Modal: React.FC<ModalProps> = ({
   children,
   variant = 'dialog',
   title,
-  subtitle,
-  icon,
-  tone = 'default',
   badge,
   headerLeft,
   headerRight,
   header,
   footer,
   size,
-  centerTitle,
   className = '',
   bodyClassName = '',
   headerClassName = '',
@@ -172,7 +163,6 @@ export const Modal: React.FC<ModalProps> = ({
   const spec: VariantSpec = MODAL_CONFIG.variants[variant] ?? MODAL_CONFIG.variants.dialog;
   const closeMode: ModalCloseButton = closeButton ?? (hideCloseButton ? 'none' : 'header');
   const showChrome = spec.chrome !== false;
-  const isCentered = centerTitle ?? spec.centerTitle ?? false;
 
   const requestClose = useCallback(() => {
     if (!busy) onClose();
@@ -281,7 +271,7 @@ export const Modal: React.FC<ModalProps> = ({
   const hasHeader =
     showChrome &&
     !header &&
-    Boolean(title || icon || subtitle || badge || headerRight || headerLeft || closeMode === 'header');
+    Boolean(title || badge || headerRight || headerLeft || closeMode === 'header');
 
   const handleDragEnd = (_: PointerEvent | MouseEvent | TouchEvent, info: PanInfo) => {
     const { swipeDistance, swipeVelocity } = MODAL_CONFIG;
@@ -394,60 +384,35 @@ export const Modal: React.FC<ModalProps> = ({
             {header}
 
             {hasHeader && (
+              // The title is always centred, with no icon: the side columns are equal while there is room, so it
+              // stays in the middle. A side only grows past that when a long title leaves no room (a back button,
+              // or two actions next to the close button), and then the title gives way a little instead of overlapping.
               <div
                 onPointerDown={startDrag}
                 className={cn(
-                  'relative flex shrink-0 items-center justify-between gap-2 bg-bg-elevated/40 p-4 sm:p-5',
+                  'relative grid shrink-0 grid-cols-[1fr_auto_1fr] items-center gap-2 bg-bg-elevated/40 p-4 sm:p-5',
                   !borderless && 'border-b border-border-color',
                   dragAxis && 'touch-none',
                   headerClassName
                 )}
               >
-                {isCentered && (
-                  <div className="flex w-10 shrink-0 items-center sm:w-11">{headerLeft || null}</div>
-                )}
+                <div className="flex min-w-11 items-center justify-self-start">{headerLeft}</div>
 
-                <div
-                  className={cn(
-                    'flex min-w-0 flex-1 items-center gap-3 sm:gap-4',
-                    isCentered && 'justify-center text-center'
-                  )}
-                >
-                  {!isCentered && headerLeft}
-                  {icon && (
-                    <span
-                      className={cn(
-                        'flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border shadow-xs sm:h-11 sm:w-11',
-                        MODAL_CONFIG.tones[tone]
-                      )}
-                    >
-                      {icon}
-                    </span>
-                  )}
-                  <div className={cn('min-w-0', isCentered ? 'text-center' : 'text-left')}>
-                    <div className={cn('flex flex-wrap items-center gap-2', isCentered && 'justify-center')}>
-                      {title && (
-                        <h2
-                          id={titleId}
-                          className="text-base font-black tracking-tight text-text-primary text-balance sm:text-xl md:text-2xl"
-                        >
-                          {title}
-                        </h2>
-                      )}
-                      {badge}
-                    </div>
-                    {subtitle && (
-                      <p className="mt-0.5 line-clamp-2 text-xs text-text-secondary">{subtitle}</p>
+                <div className="min-w-0 text-center">
+                  <div className="flex flex-wrap items-center justify-center gap-2">
+                    {title && (
+                      <h2
+                        id={titleId}
+                        className="text-base font-black tracking-tight text-text-primary text-balance sm:text-xl md:text-2xl"
+                      >
+                        {title}
+                      </h2>
                     )}
+                    {badge}
                   </div>
                 </div>
 
-                <div
-                  className={cn(
-                    'flex shrink-0 items-center justify-end gap-2',
-                    isCentered && 'w-10 sm:w-11'
-                  )}
-                >
+                <div className="flex min-w-11 items-center justify-end gap-2 justify-self-end">
                   {headerRight}
                   {closeMode === 'header' && closeBtn(false)}
                 </div>
@@ -486,4 +451,4 @@ export const Modal: React.FC<ModalProps> = ({
 };
 
 export { useModal } from "./modalConfig";
-export type { ModalVariant, ModalLayer, ModalBackdrop, ModalTone, ModalCloseButton } from "./modalConfig";
+export type { ModalVariant, ModalLayer, ModalBackdrop, ModalCloseButton } from "./modalConfig";

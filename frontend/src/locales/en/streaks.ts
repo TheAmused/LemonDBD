@@ -199,7 +199,6 @@ export default {
   remainingTab: "Remaining",
   streakLabel: "Streak:",
   middotSeparator: "·",
-  bulletSeparator: "•",
   tierLabel: "Tier",
   noPerksThisTrial: "No perks this trial.",
   goesInBare: "goes in bare.",

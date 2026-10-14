@@ -69,7 +69,6 @@ export function TierItemEditModal({ item, isOpen, onClose, onSave }: TierItemEdi
       onClose={onClose}
       size="md"
       title={c.editItem}
-      centerTitle
       bodyClassName="p-4 sm:p-6"
       footer={
         <div className="flex w-full items-center justify-center gap-3 pt-1">

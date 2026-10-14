@@ -1,7 +1,6 @@
 // frontend/src/locales/es/scoreboardCheck.ts
 const scoreboardCheck = {
   "title": "Comprobación OCR",
-  "subtitle": "Sube una captura del marcador final y comprueba lo que lee el OCR.",
   "close": "Cerrar",
   "privacyNote": "La imagen se analiza en memoria y se descarta. No se guarda nada.",
   "chooseImage": "Elige una captura",

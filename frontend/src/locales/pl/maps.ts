@@ -27,7 +27,6 @@ export default {
   sourceHens: "Hens333",
   detectedBrowser: "Wykryta Przeglądarka",
   activeRecognitionEngine: "Aktywny Silnik Rozpoznawania",
-  bulletSeparator: "•",
   percentSign: "%",
   sourceLabel: "Źródło:",
   openQuote: "„",

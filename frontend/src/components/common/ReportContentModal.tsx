@@ -2,7 +2,7 @@
 // frontend/src/components/common/ReportContentModal.tsx
 
 import React, { useState, useCallback } from 'react';
-import { AlertCircle, CheckCircle2, Flag, ShieldAlert } from 'lucide-react';
+import { AlertCircle, CheckCircle2, ShieldAlert } from 'lucide-react';
 import { Modal } from '@/components/common/Modal';
 import { Button } from '@/components/common/Button';
 import { useDictionary } from '@/context/DictionaryContext';
@@ -284,11 +284,10 @@ export function ReportContentModal({
       variant="dialog"
       size="md"
       title={t.reportTitle}
-      subtitle={contentTitle || t.reportSubtitle}
-      icon={<Flag className="h-5 w-5 text-accent-red" aria-hidden="true" />}
       padded
       ariaLabel={t.reportTitle}
     >
+      {contentTitle && <p className="mb-3 truncate text-center type-strong text-text-secondary">{contentTitle}</p>}
       <ReportContentModalBody
         manifest={manifest}
         contentType={contentType}

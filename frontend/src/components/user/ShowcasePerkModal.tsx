@@ -126,7 +126,6 @@ export const ShowcasePerkModal: React.FC<ShowcasePerkModalProps> = ({ isOpen, ro
       isOpen={isOpen}
       onClose={onClose}
       size="2xl"
-      centerTitle
       title={dict.user.selectPerk}
       className="max-h-[85vh] flex flex-col"
       bodyClassName="flex flex-col min-h-0 overflow-hidden"

@@ -2,7 +2,7 @@
 // frontend/src/components/common/ImportModal.tsx
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { CircleAlert, FileJson, Info, Upload } from 'lucide-react';
+import { CircleAlert, Info, Upload } from 'lucide-react';
 import { Modal } from '@/components/common/Modal';
 import { Button } from '@/components/common/Button';
 import { Textarea } from '@/components/common/Field';
@@ -119,7 +119,6 @@ export function ImportPreview({ text }: { text: string }) {
 
 export interface ImportModalLabels {
   title: string;
-  subtitle?: string;
   sharedLinkDetected: string;
   pasteLabel: string;
   uploadFile: string;
@@ -149,8 +148,6 @@ export interface ImportModalProps {
   cancelClassName?: string;
   importClassName?: string;
   footerClassName?: string;
-  /** Centered title with no header icon. */
-  plainHeader?: boolean;
   /** Status area (errors, preview, warnings) rendered under the textarea. */
   children?: React.ReactNode;
 }
@@ -172,7 +169,6 @@ export function ImportModal({
   buttonClassName,
   importClassName,
   footerClassName,
-  plainHeader,
   children,
 }: ImportModalProps) {
   const fileInput = useRef<HTMLInputElement>(null);
@@ -182,8 +178,6 @@ export function ImportModal({
       onClose={onClose}
       size="2xl"
       title={labels.title}
-      icon={plainHeader ? undefined : <FileJson className="h-5 w-5" aria-hidden="true" />}
-      centerTitle={plainHeader}
       bodyClassName="p-4 sm:p-6"
       footer={
         <div className={footerClassName ?? 'flex w-full flex-wrap items-center justify-center gap-2'}>

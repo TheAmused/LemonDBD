@@ -186,7 +186,6 @@ export default {
   remainingTab: "残り一覧",
   streakLabel: "ストリーク:",
   middotSeparator: "·",
-  bulletSeparator: "•",
   tierLabel: "ティア",
   noPerksThisTrial: "パークなし（ノーパーク）。",
   goesInBare: "パークなしで挑みます。",

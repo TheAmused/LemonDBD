@@ -11,7 +11,7 @@ import { cn } from '@/utils/cn';
 import { formatMessage } from '@/utils/i18nFormat';
 import { useAuth } from '@/context/AuthContext';
 import { isRecord } from '@/utils/shareCodec';
-import { embedManifest, signExportPayload } from '@/utils/contentSigning';
+import { embedManifest, signExportPayload, stripManifest } from '@/utils/contentSigning';
 
 export type CopyState = 'idle' | 'copied' | 'failed';
 
@@ -97,8 +97,9 @@ export function ExportModal<D>({
     contentType ||
     (idPrefix === 'tier-list' ? 'tier_list' : idPrefix === 'smash-roster' ? 'smash_roster' : idPrefix.replace(/-/g, '_'));
 
-  const [exportedDoc, setExportedDoc] = useState<D | null>(doc);
-  const [exportedJson, setExportedJson] = useState<string>(() => (doc ? serialize(doc) : ''));
+  const unsignedDoc = isRecord(doc) ? (stripManifest(doc) as unknown as D) : doc;
+  const [exportedDoc, setExportedDoc] = useState<D | null>(unsignedDoc);
+  const [exportedJson, setExportedJson] = useState<string>(() => (unsignedDoc ? serialize(unsignedDoc) : ''));
   const [shareUrl, setShareUrl] = useState<string>('');
   const [jsonCopy, setJsonCopy] = useState<CopyState>('idle');
   const [linkCopy, setLinkCopy] = useState<CopyState>('idle');
@@ -107,23 +108,26 @@ export function ExportModal<D>({
     setJsonCopy('idle');
     setLinkCopy('idle');
     setShareUrl('');
+
+    const currentUnsignedDoc = isRecord(doc) ? (stripManifest(doc) as unknown as D) : doc;
+    setExportedDoc(currentUnsignedDoc);
+    setExportedJson(currentUnsignedDoc ? serialize(currentUnsignedDoc) : '');
+
     if (!doc) {
-      setExportedDoc(null);
-      setExportedJson('');
       return;
     }
     let cancelled = false;
 
     async function prepareExport() {
-      let finalDoc = doc as D;
+      let finalDoc = currentUnsignedDoc as D;
       if (user && isRecord(doc)) {
         try {
           const manifest = await signExportPayload(resolvedContentType, doc as Record<string, unknown>);
           if (manifest && !cancelled) {
-            finalDoc = embedManifest(doc as Record<string, unknown>, manifest) as unknown as D;
+            finalDoc = embedManifest(currentUnsignedDoc as Record<string, unknown>, manifest) as unknown as D;
           }
         } catch {
-          // Gracefully continue with unsigned document if signing fails
+          finalDoc = currentUnsignedDoc as D;
         }
       }
       if (cancelled) return;

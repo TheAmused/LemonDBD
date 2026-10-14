@@ -9,7 +9,9 @@
  * sharing and reporting channels.
  */
 
-import { apiUrl } from '@/utils/api';
+import { apiUrl, authFetch } from '@/utils/api';
+
+export const HEX_64_PATTERN = /^[0-9a-fA-F]{64}$/;
 
 export interface ContentManifest {
   content_type: string;
@@ -30,14 +32,14 @@ export function isContentManifest(value: unknown): value is ContentManifest {
     typeof v.content_type === 'string' &&
     v.content_type.trim().length > 0 &&
     typeof v.content_hash === 'string' &&
-    v.content_hash.trim().length === 64 &&
+    HEX_64_PATTERN.test(v.content_hash.trim()) &&
     typeof v.author_id === 'number' &&
     Number.isInteger(v.author_id) &&
     v.author_id > 0 &&
     typeof v.author_login === 'string' &&
     v.author_login.trim().length > 0 &&
     typeof v.signature === 'string' &&
-    v.signature.trim().length === 64 &&
+    HEX_64_PATTERN.test(v.signature.trim()) &&
     typeof v.created_at === 'string' &&
     v.created_at.trim().length > 0
   );
@@ -77,12 +79,11 @@ export async function signExportPayload(
   }
   try {
     const cleanPayload = stripManifest(payload);
-    const res = await fetch(apiUrl('/api/v1/content/sign'), {
+    const res = await authFetch(apiUrl('/api/v1/content/sign'), {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      credentials: 'include',
       body: JSON.stringify({
         content_type: contentType.trim(),
         payload: cleanPayload,

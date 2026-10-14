@@ -7,7 +7,7 @@
  * Pure functions only -- no React, no storage.
  */
 
-import type { ContentManifest } from './contentSigning';
+import { HEX_64_PATTERN, type ContentManifest } from './contentSigning';
 
 /** Hash parameter a share link carries its payload in (`/tier-lists#import=...`). */
 export const SHARE_HASH_PARAM = 'import';
@@ -197,11 +197,11 @@ export function sanitizeManifest(raw: unknown): ContentManifest | null {
   if (
     !content_type ||
     !content_hash ||
-    content_hash.length !== 64 ||
+    !HEX_64_PATTERN.test(content_hash) ||
     !author_id ||
     !author_login ||
     !signature ||
-    signature.length !== 64 ||
+    !HEX_64_PATTERN.test(signature) ||
     !created_at
   ) {
     return null;

@@ -15,6 +15,7 @@ from app.schemas.smash_or_pass import SmashRosterAdminCreate
 from app.services.admin_control_service import log_admin_action
 from app.services.smash_or_pass_service import SmashOrPassService
 from app.utils.lang import extract_lang as _extract_lang
+from app.utils.responses import api_error
 
 logger = logging.getLogger(__name__)
 
@@ -57,7 +58,7 @@ def get_rosters():
         return jsonify({"data": rosters, "count": len(rosters)}), 200
     except Exception as e:
         logger.error(f"Error fetching smash-or-pass rosters: {e}")
-        return jsonify({"error": str(e)}), 500
+        return api_error(str(e), 500)
 
 
 @smash_or_pass_bp.route("/taxonomies", methods=["GET"])
@@ -68,7 +69,7 @@ def get_taxonomies():
         return jsonify({"data": data}), 200
     except Exception as e:
         logger.error(f"Error fetching smash taxonomies: {e}")
-        return jsonify({"error": str(e)}), 500
+        return api_error(str(e), 500)
 
 
 @smash_or_pass_bp.route("/taxonomies", methods=["POST"])
@@ -77,22 +78,22 @@ def register_taxonomy():
     """Register a custom role or gender in the database."""
     client_ip = get_client_ip()
     if not taxonomy_rate_limiter.is_allowed(client_ip):
-        return jsonify({"error": "Too many requests. Please try again later."}), 429
+        return api_error("Too many requests. Please try again later.", 429)
 
     body = request.get_json(silent=True) or {}
     term_type = (body.get("type") or "").strip().lower()
     name = (body.get("name") or "").strip()
     if term_type not in ("role", "gender"):
-        return jsonify({"error": "Type must be 'role' or 'gender'"}), 400
+        return api_error("Type must be 'role' or 'gender'", 400)
     if not name or len(name) > 64:
-        return jsonify({"error": "Name must be between 1 and 64 characters"}), 400
+        return api_error("Name must be between 1 and 64 characters", 400)
 
     try:
         term = smash_service.register_taxonomy(term_type, name)
         return jsonify({"data": term}), 201
     except Exception as e:
         logger.error(f"Error registering taxonomy: {e}")
-        return jsonify({"error": str(e)}), 500
+        return api_error(str(e), 500)
 
 
 @smash_or_pass_bp.route("/rosters", methods=["POST"])
@@ -107,7 +108,7 @@ def create_roster():
     try:
         payload = SmashRosterAdminCreate(**body)
     except ValidationError as err:
-        return jsonify({"error": "Invalid roster", "details": err.errors()}), 400
+        return api_error("Invalid roster", 400, details=err.errors())
 
     try:
         row = smash_service.create_roster(
@@ -129,7 +130,7 @@ def create_roster():
             ],
         )
     except ValueError as err:
-        return jsonify({"error": str(err)}), 400
+        return api_error(str(err), 400)
 
     log_admin_action(
         g.current_user.id,
@@ -180,12 +181,12 @@ def get_roster_feed(slug: str):
             lang=lang,
         )
         if feed_data is None:
-            return jsonify({"error": f"Roster '{slug}' not found"}), 404
+            return api_error(f"Roster '{slug}' not found", 404)
 
         return jsonify({"data": feed_data}), 200
     except Exception as e:
         logger.error(f"Error fetching feed for roster '{slug}': {e}")
-        return jsonify({"error": str(e)}), 500
+        return api_error(str(e), 500)
 
 
 @smash_or_pass_bp.route("/vote", methods=["POST"])
@@ -213,36 +214,16 @@ def cast_vote():
     client_key = f"{remote_ip}:{sub_key}"
 
     if not vote_rate_limiter.is_allowed(client_key):
-        return (
-            jsonify(
-                {
-                    "error": "Rate limit exceeded. Maximum 60 votes per minute allowed.",
-                    "status": 429,
-                }
-            ),
-            429,
-        )
+        return api_error("Rate limit exceeded. Maximum 60 votes per minute allowed.", 429)
 
     if not entity_id and not character_slug:
-        return (
-            jsonify(
-                {"error": "Fields 'entity_id' or 'character_slug' and 'vote_type' are required"}
-            ),
-            400,
-        )
+        return api_error("Fields 'entity_id' or 'character_slug' and 'vote_type' are required", 400)
 
     if not vote_type:
-        return jsonify({"error": "Field 'vote_type' is required"}), 400
+        return api_error("Field 'vote_type' is required", 400)
 
     if vote_type not in {"smash", "pass", "super_smash"}:
-        return (
-            jsonify(
-                {
-                    "error": f"Invalid vote_type '{vote_type}'. Must be one of ('smash', 'pass', 'super_smash')"
-                }
-            ),
-            400,
-        )
+        return api_error(f"Invalid vote_type '{vote_type}'. Must be one of ('smash', 'pass', 'super_smash')", 400)
 
     try:
         result = smash_service.cast_vote(
@@ -257,10 +238,10 @@ def cast_vote():
         )
         return jsonify({"data": result, "status": "success"}), 200
     except ValueError as val_err:
-        return jsonify({"error": str(val_err)}), 400
+        return api_error(str(val_err), 400)
     except Exception as e:
         logger.error(f"Error casting smash-or-pass vote: {e}")
-        return jsonify({"error": str(e)}), 500
+        return api_error(str(e), 500)
 
 
 @smash_or_pass_bp.route("/rosters/<slug>/leaderboard", methods=["GET"])
@@ -278,7 +259,7 @@ def get_roster_leaderboard(slug: str):
         # relationship for no reason.
         roster_id = db.session.scalar(select(Roster.id).where(Roster.slug == slug))
         if roster_id is None:
-            return jsonify({"error": f"Roster '{slug}' not found"}), 404
+            return api_error(f"Roster '{slug}' not found", 404)
 
         leaderboard = smash_service.get_leaderboard(
             roster_slug=slug,
@@ -300,7 +281,7 @@ def get_roster_leaderboard(slug: str):
         )
     except Exception as e:
         logger.error(f"Error fetching leaderboard for roster '{slug}': {e}")
-        return jsonify({"error": str(e)}), 500
+        return api_error(str(e), 500)
 
 
 @smash_or_pass_bp.route("/session/reset", methods=["POST"])
@@ -321,7 +302,7 @@ def reset_session():
     )
 
     if not session_id:
-        return jsonify({"error": "Field 'session_id' is required to reset session votes"}), 400
+        return api_error("Field 'session_id' is required to reset session votes", 400)
 
     try:
         result = smash_service.reset_session_votes(
@@ -330,7 +311,7 @@ def reset_session():
         return jsonify({"data": result, "status": "success"}), 200
     except Exception as e:
         logger.error(f"Error resetting session votes: {e}")
-        return jsonify({"error": str(e)}), 500
+        return api_error(str(e), 500)
 
 
 @smash_or_pass_bp.route("/sync-session", methods=["POST"])
@@ -351,13 +332,10 @@ def sync_session():
 
     current_user = get_current_user()
     if not current_user:
-        return (
-            jsonify({"error": "Authentication required to sync guest session votes to an account"}),
-            401,
-        )
+        return api_error("Authentication required to sync guest session votes to an account", 401)
 
     if not session_id:
-        return jsonify({"error": "Field 'session_id' is required"}), 400
+        return api_error("Field 'session_id' is required", 400)
 
     try:
         result = smash_service.sync_session_votes(
@@ -368,7 +346,7 @@ def sync_session():
         return jsonify({"data": result, "status": "success"}), 200
     except Exception as e:
         logger.error(f"Error syncing session votes: {e}")
-        return jsonify({"error": str(e)}), 500
+        return api_error(str(e), 500)
 
 
 
@@ -398,12 +376,12 @@ def reset_user_votes():
     current_user = get_current_user()
     if current_user:
         if requested_user_id and requested_user_id != current_user.id and current_user.role != "admin":
-            return jsonify({"error": "Forbidden: Cannot reset votes for another user"}), 403
+            return api_error("Forbidden: Cannot reset votes for another user", 403)
         target_user_id = requested_user_id if (current_user.role == "admin" and requested_user_id) else current_user.id
     else:
         if requested_user_id:
-            return jsonify({"error": "Authentication required to reset user votes"}), 401
-        return jsonify({"error": "Field 'user_id' is required to reset user votes"}), 400
+            return api_error("Authentication required to reset user votes", 401)
+        return api_error("Field 'user_id' is required to reset user votes", 400)
 
     try:
         result = smash_service.reset_user_votes(
@@ -415,7 +393,7 @@ def reset_user_votes():
         return jsonify({"data": result, "status": "success"}), 200
     except Exception as e:
         logger.error(f"Error resetting user smash-or-pass votes: {e}")
-        return jsonify({"error": str(e)}), 500
+        return api_error(str(e), 500)
 
 
 
@@ -428,7 +406,7 @@ def get_editions():
         return jsonify({"data": editions, "count": len(editions)}), 200
     except Exception as e:
         logger.error(f"Error fetching smash-or-pass editions: {e}")
-        return jsonify({"error": str(e)}), 500
+        return api_error(str(e), 500)
 
 
 @smash_or_pass_bp.route("/characters", methods=["GET"])
@@ -447,7 +425,7 @@ def get_characters():
         return jsonify({"count": len(data), "data": data, "edition": edition}), 200
     except Exception as e:
         logger.error(f"Error fetching smash-or-pass characters: {e}")
-        return jsonify({"error": str(e)}), 500
+        return api_error(str(e), 500)
 
 
 @smash_or_pass_bp.route("/user-votes", methods=["GET"])
@@ -465,7 +443,7 @@ def get_user_votes():
     current_user = get_current_user()
     if current_user:
         if requested_user_id and requested_user_id != current_user.id and current_user.role != "admin":
-            return jsonify({"error": "Forbidden: Cannot view votes for another user"}), 403
+            return api_error("Forbidden: Cannot view votes for another user", 403)
         target_user_id = requested_user_id if (current_user.role == "admin" and requested_user_id) else current_user.id
     else:
         target_user_id = requested_user_id
@@ -483,7 +461,7 @@ def get_user_votes():
         return jsonify({"data": votes, "count": len(votes), "edition": edition}), 200
     except Exception as e:
         logger.error(f"Error fetching user/session smash-or-pass votes: {e}")
-        return jsonify({"error": str(e)}), 500
+        return api_error(str(e), 500)
 
 
 from app.utils.network import is_private_host as _is_private_host
@@ -498,22 +476,22 @@ def proxy_image():
 
     client_ip = get_client_ip()
     if not proxy_rate_limiter.is_allowed(client_ip):
-        return jsonify({"error": "Too many requests. Please try again later."}), 429
+        return api_error("Too many requests. Please try again later.", 429)
 
     target_url = request.args.get("url")
     if not target_url:
-        return jsonify({"error": "Missing url parameter"}), 400
+        return api_error("Missing url parameter", 400)
 
     try:
         parsed = urlparse(target_url)
     except Exception:
-        return jsonify({"error": "Invalid URL"}), 400
+        return api_error("Invalid URL", 400)
 
     if parsed.scheme not in ("http", "https"):
-        return jsonify({"error": "Only http and https protocols supported"}), 400
+        return api_error("Only http and https protocols supported", 400)
 
     if not parsed.hostname or _is_private_host(parsed.hostname):
-        return jsonify({"error": "Host not allowed"}), 403
+        return api_error("Host not allowed", 403)
 
     MAX_BYTES = 5 * 1024 * 1024  # 5MB maximum to prevent memory exhaustion
 
@@ -534,21 +512,21 @@ def proxy_image():
             stream=True,
         )
         if resp.is_redirect or resp.status_code in (301, 302, 303, 307, 308):
-            return jsonify({"error": "Redirects are not allowed"}), 403
+            return api_error("Redirects are not allowed", 403)
 
         if not resp.ok:
-            return jsonify({"error": f"Upstream returned status {resp.status_code}"}), resp.status_code
+            return api_error(f"Upstream returned status {resp.status_code}", resp.status_code)
 
         content_length = resp.headers.get("content-length")
         if content_length and int(content_length) > MAX_BYTES:
-            return jsonify({"error": "Image exceeds maximum allowed size (5MB)"}), 413
+            return api_error("Image exceeds maximum allowed size (5MB)", 413)
 
         downloaded = bytearray()
         for chunk in resp.iter_content(chunk_size=65536):
             if chunk:
                 downloaded.extend(chunk)
                 if len(downloaded) > MAX_BYTES:
-                    return jsonify({"error": "Image exceeds maximum allowed size (5MB)"}), 413
+                    return api_error("Image exceeds maximum allowed size (5MB)", 413)
 
         content_type = resp.headers.get("content-type", "image/jpeg")
         if not content_type.startswith("image/"):
@@ -561,6 +539,6 @@ def proxy_image():
         return response
     except Exception as e:
         logger.error(f"Image proxy error: {e}")
-        return jsonify({"error": str(e)}), 502
+        return api_error(str(e), 502)
 
 

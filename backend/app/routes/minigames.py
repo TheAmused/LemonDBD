@@ -20,6 +20,7 @@ from app.models.minigame import (
 )
 from app.services.minigame_service import MinigameService
 from app.utils.lang import extract_lang
+from app.utils.responses import api_error
 
 logger = logging.getLogger(__name__)
 
@@ -45,7 +46,7 @@ def get_daily_challenge():
         try:
             target_date = datetime.strptime(date_str, "%Y-%m-%d").date()
         except ValueError:
-            return jsonify({"error": "Invalid date format, expected YYYY-MM-DD"}), 400
+            return api_error("Invalid date format, expected YYYY-MM-DD", 400)
     else:
         target_date = datetime.now(timezone.utc).date()
 
@@ -55,7 +56,7 @@ def get_daily_challenge():
         return jsonify(challenge), 200
     except Exception as e:
         logger.error(f"Error fetching daily minigame: {e}")
-        return jsonify({"error": "Failed to load daily challenge"}), 500
+        return api_error("Failed to load daily challenge", 500)
 
 
 @minigames_bp.route("/repeatable", methods=["GET"])
@@ -69,7 +70,7 @@ def get_repeatable_challenge():
         return jsonify(challenge), 200
     except Exception as e:
         logger.error(f"Error creating repeatable minigame: {e}")
-        return jsonify({"error": "Failed to create repeatable challenge"}), 500
+        return api_error("Failed to create repeatable challenge", 500)
 
 
 @minigames_bp.route("/guess", methods=["POST"])
@@ -86,7 +87,7 @@ def submit_guess():
     custom_round = data.get("custom_round_config") or data.get("custom_round")
 
     if guess_id is None:
-        return jsonify({"error": "Missing guess_id"}), 400
+        return api_error("Missing guess_id", 400)
 
     # Resolve round data from PostgreSQL or custom payload
     round_data = None
@@ -102,7 +103,7 @@ def submit_guess():
             round_data = rep.rounds[round_index]
 
     if not round_data:
-        return jsonify({"error": "Challenge or round not found"}), 404
+        return api_error("Challenge or round not found", 404)
 
     result = minigame_service.evaluate_guess(
         round_data=round_data,
@@ -126,13 +127,13 @@ def create_official_challenge():
     rounds = data.get("rounds", [])
 
     if not title or not rounds:
-        return jsonify({"error": "Title and rounds are required"}), 400
+        return api_error("Title and rounds are required", 400)
 
     if challenge_date_str:
         try:
             target_date = datetime.strptime(challenge_date_str, "%Y-%m-%d").date()
         except ValueError:
-            return jsonify({"error": "Invalid date format, expected YYYY-MM-DD"}), 400
+            return api_error("Invalid date format, expected YYYY-MM-DD", 400)
     else:
         target_date = datetime.now(timezone.utc).date()
 
@@ -182,7 +183,7 @@ def get_user_stats():
     """Fetches user minigames streak and history stats."""
     user = get_current_user()
     if not user:
-        return jsonify({"error": "Authentication required"}), 401
+        return api_error("Authentication required", 401)
 
     stats = db.session.scalars(
         select(MinigameUserStat).where(MinigameUserStat.user_id == user.id)
@@ -196,7 +197,7 @@ def update_user_stats():
     """Updates user win/streak minigame stats in PostgreSQL."""
     user = get_current_user()
     if not user:
-        return jsonify({"error": "Authentication required"}), 401
+        return api_error("Authentication required", 401)
 
     data = request.get_json(silent=True) or {}
     game_mode = data.get("game_mode", "classic")
@@ -248,11 +249,11 @@ def stream_killer_terror_radius(killer_id: int):
     """Streams official Dead by Daylight Terror Radius / Chase music for a given killer, caching locally."""
     killer = db.session.get(Killer, killer_id)
     if not killer:
-        return jsonify({"error": "Killer not found"}), 404
+        return api_error("Killer not found", 404)
 
     mp3_url = killer.chase_music_url
     if not mp3_url:
-        return jsonify({"error": "Audio track not available for this killer"}), 404
+        return api_error("Audio track not available for this killer", 404)
 
     static_folder = current_app.static_folder or os.path.join(current_app.root_path, "static")
     cache_dir = os.path.join(static_folder, "audio", "cache")
@@ -280,7 +281,7 @@ def stream_killer_terror_radius(killer_id: int):
             db.session.commit()
         except Exception as e:
             logger.error(f"Failed to fetch audio for {killer.name} from wiki: {e}")
-            return jsonify({"error": f"Failed to retrieve audio: {str(e)}"}), 502
+            return api_error(f"Failed to retrieve audio: {str(e)}", 502)
 
     return send_from_directory(cache_dir, mp3_filename, mimetype="audio/mpeg", conditional=True)
 

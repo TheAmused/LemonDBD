@@ -21,6 +21,7 @@ from app.services.ownership_service import OwnershipService
 from app.services.user import two_factor
 from app.services.user_service import UserService
 from app.utils.downloads import json_download_response
+from app.utils.responses import api_error
 
 logger = logging.getLogger(__name__)
 users_bp = Blueprint("users_bp", __name__, url_prefix="/api/v1")
@@ -35,7 +36,7 @@ def _self_or_admin_error(user_id: int, message: str = "Unauthorized.") -> tuple[
     (self or admin) can't drift between handlers."""
     curr = g.current_user
     if curr.id != user_id and curr.role != "admin":
-        return jsonify({"error": message, "status": 403}), 403
+        return api_error(message, 403)
     return None
 
 
@@ -60,7 +61,7 @@ def create_user_by_admin():
     try:
         validated_data = UserCreate.model_validate(payload)
     except ValidationError as err:
-        return jsonify({"error": "Validation failed", "details": err.errors(), "status": 400}), 400
+        return api_error("Validation failed", 400, details=err.errors())
 
     user, err = user_service.register_user(
         login=validated_data.login,
@@ -71,7 +72,7 @@ def create_user_by_admin():
         avatar_url=validated_data.avatar_url or "default_avatar",
     )
     if err:
-        return jsonify({"error": err, "status": 400}), 400
+        return api_error(err, 400)
 
     ownership_service.seed_default_ownership_for_new_user(user.id)
 
@@ -91,7 +92,7 @@ def get_user_detail(user_id: int):
 
     user = user_service.get_user_by_id(user_id)
     if not user:
-        return jsonify({"error": "User not found.", "status": 404}), 404
+        return api_error("User not found.", 404)
 
     summary = ownership_service.get_user_ownership_summary(user_id)
     return jsonify({
@@ -112,7 +113,7 @@ def export_user_data_by_admin(user_id: int):
     """
     data = user_service.export_user_data(user_id, requested_by="admin")
     if data is None:
-        return jsonify({"error": "User not found.", "status": 404}), 404
+        return api_error("User not found.", 404)
 
     log_admin_action(g.current_user.id, action="user_data_exported", target_type="user", target_id=user_id)
     return json_download_response(data, user_service.export_filename(user_id, "admin"))
@@ -127,7 +128,7 @@ def update_user_by_admin(user_id: int):
     try:
         validated_data = UserUpdate.model_validate(payload)
     except ValidationError as err:
-        return jsonify({"error": "Validation failed", "details": err.errors(), "status": 400}), 400
+        return api_error("Validation failed", 400, details=err.errors())
 
     user, err = user_service.admin_update_user(
         user_id=user_id,
@@ -135,7 +136,7 @@ def update_user_by_admin(user_id: int):
         is_active=validated_data.is_active,
     )
     if err:
-        return jsonify({"error": err, "status": 400}), 400
+        return api_error(err, 400)
 
     log_admin_action(
         g.current_user.id,
@@ -159,7 +160,7 @@ def reset_user_two_factor(user_id: int):
     """Switch 2FA off for a user who lost their device and recovery codes (audited, the user is emailed)."""
     target = user_service.get_user_by_id(user_id)
     if not target:
-        return jsonify({"error": "User not found.", "status": 404}), 404
+        return api_error("User not found.", 404)
 
     had_two_factor = two_factor.admin_reset(target)
     log_admin_action(
@@ -177,11 +178,11 @@ def reset_user_two_factor(user_id: int):
 def delete_user_by_admin(user_id: int):
     """Delete a user account and associated assets."""
     if g.current_user.id == user_id:
-        return jsonify({"error": "Cannot delete your own admin account.", "status": 400}), 400
+        return api_error("Cannot delete your own admin account.", 400)
 
     success = user_service.admin_delete_user(user_id)
     if not success:
-        return jsonify({"error": "User not found.", "status": 404}), 404
+        return api_error("User not found.", 404)
 
     log_admin_action(g.current_user.id, action="user_deleted", target_type="user", target_id=user_id)
 
@@ -222,7 +223,7 @@ def set_single_character_ownership(user_id: int):
     is_owned = bool(data.get("is_owned", True))
 
     if not character_id:
-        return jsonify({"error": "character_id is required.", "status": 400}), 400
+        return api_error("character_id is required.", 400)
     if not role:
         existing_owner = db.session.scalars(
             select(UserCharacterOwnership).where(
@@ -247,10 +248,7 @@ def set_single_character_ownership(user_id: int):
             elif s:
                 role = "survivor"
             else:
-                return jsonify({
-                    "error": "role is required and must be 'survivor' or 'killer'.",
-                    "status": 400,
-                }), 400
+                return api_error("role is required and must be 'survivor' or 'killer'.", 400)
 
     try:
         result = ownership_service.set_character_ownership(
@@ -258,7 +256,7 @@ def set_single_character_ownership(user_id: int):
         )
         return jsonify({"status": "success", "data": result}), 200
     except ValueError as ve:
-        return jsonify({"error": str(ve), "status": 404}), 404
+        return api_error(str(ve), 404)
 
 
 @users_bp.route("/users/<int:user_id>/characters/bulk", methods=["POST"])
@@ -272,10 +270,7 @@ def bulk_set_character_ownership(user_id: int):
     updates = data.get("updates", [])
 
     if not isinstance(updates, list):
-        return jsonify({
-            "error": "updates must be a list of {character_id, role, is_owned}.",
-            "status": 400,
-        }), 400
+        return api_error("updates must be a list of {character_id, role, is_owned}.", 400)
 
     result = ownership_service.bulk_set_character_ownership(user_id, updates)
     return jsonify({"status": "success", "data": result}), 200
@@ -290,7 +285,7 @@ def mark_user_onboarding_complete(user_id: int):
 
     user, err = user_service.mark_onboarding_complete(user_id)
     if err:
-        return jsonify({"error": err, "status": 404}), 404
+        return api_error(err, 404)
 
     return jsonify({
         "status": "success",
@@ -308,12 +303,12 @@ def set_user_preferred_language(user_id: int):
     data = request.get_json(silent=True) or {}
     language = data.get("language")
     if not isinstance(language, str) or not language:
-        return jsonify({"error": "language is required.", "status": 400}), 400
+        return api_error("language is required.", 400)
 
     user, err = user_service.set_preferred_language(user_id, language)
     if err:
         status = 404 if err == "User not found." else 400
-        return jsonify({"error": err, "status": status}), status
+        return api_error(err, status)
 
     return jsonify({
         "status": "success",
@@ -351,13 +346,13 @@ def set_single_perk_ownership(user_id: int):
     is_unlocked = bool(data.get("is_unlocked", True))
 
     if not perk_id:
-        return jsonify({"error": "perk_id is required.", "status": 400}), 400
+        return api_error("perk_id is required.", 400)
 
     try:
         result = ownership_service.set_perk_ownership(user_id, int(perk_id), is_unlocked)
         return jsonify({"status": "success", "data": result}), 200
     except ValueError as ve:
-        return jsonify({"error": str(ve), "status": 404}), 404
+        return api_error(str(ve), 404)
 
 
 @users_bp.route("/users/<int:user_id>/perks/bulk", methods=["POST"])
@@ -371,7 +366,7 @@ def bulk_set_perk_ownership(user_id: int):
     updates = data.get("updates", [])
 
     if not isinstance(updates, list):
-        return jsonify({"error": "updates must be a list of {perk_id, is_unlocked}.", "status": 400}), 400
+        return api_error("updates must be a list of {perk_id, is_unlocked}.", 400)
 
     result = ownership_service.bulk_set_perk_ownership(user_id, updates)
     return jsonify({"status": "success", "data": result}), 200
@@ -393,7 +388,7 @@ def get_user_showcase(user_id: int):
     """Retrieve custom player showcase data (title, devotion, mains, perks)."""
     user = user_service.get_user_by_id(user_id)
     if not user:
-        return jsonify({"error": "User not found.", "status": 404}), 404
+        return api_error("User not found.", 404)
 
     data = user_service.get_user_showcase(user_id)
     return jsonify({"status": "success", "data": data}), 200
@@ -408,11 +403,11 @@ def update_user_showcase(user_id: int):
 
     user = user_service.get_user_by_id(user_id)
     if not user:
-        return jsonify({"error": "User not found.", "status": 404}), 404
+        return api_error("User not found.", 404)
 
     payload = request.get_json(silent=True) or {}
     saved, err = user_service.update_user_showcase(user_id, payload)
     if err:
-        return jsonify({"error": err, "status": 400}), 400
+        return api_error(err, 400)
 
     return jsonify({"status": "success", "data": saved}), 200

@@ -105,7 +105,6 @@ export default {
   itemNameRequired: "Gib dem Eintrag einen Namen.",
 
   exportTitle: "Tierliste exportieren",
-  exportSubtitle: "Speichere sie als JSON oder teile einen Link, der die ganze Liste enthält.",
   jsonLabel: "JSON",
   shareLinkLabel: "Link zum Teilen",
   downloadJson: ".json herunterladen",
@@ -117,7 +116,6 @@ export default {
   linkTooLong: "Dieser Link ist {count} Zeichen lang. Manche Chat-Apps kürzen lange Links, schicke lieber die .json-Datei.",
 
   importTitle: "Tierliste importieren",
-  importSubtitle: "Füge JSON ein, lade eine .json-Datei hoch oder öffne einen geteilten Link.",
   pasteLabel: "JSON-Daten",
   pastePlaceholder: "{ \"title\": \"Meine Liste\", \"items\": [{ \"name\": \"...\", \"image\": \"https://...\" }] }",
   uploadFile: ".json hochladen",
@@ -226,7 +224,6 @@ export default {
   },
 
   reportTitle: "Inhalt melden",
-  reportSubtitle: "Hilf uns, die Community sicher und respektvoll zu halten.",
   reportReasonLabel: "Grund für die Meldung",
   reportReasonHate: "Hassrede oder Symbole",
   reportReasonHarassment: "Belästigung oder Mobbing",

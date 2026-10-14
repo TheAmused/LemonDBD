@@ -37,10 +37,10 @@ export const KillerPowerModal: React.FC<KillerPowerModalProps> = ({
       variant="dialog"
       size="xl"
       title={killerPower.name}
-      subtitle={`${character.name} ${t.bulletSeparator || '•'} ${t.killerPower || 'Killer Power'}`}
       closeButtonAriaLabel={t.close || 'Close'}
-      headerLeft={
-        <div className="w-14 h-14 shrink-0 rounded-2xl bg-bg-elevated border-2 border-accent-red/50 flex items-center justify-center p-1.5 shadow-lg">
+    >
+      <div className="flex justify-center px-6 pt-5">
+        <div className="w-20 h-20 shrink-0 rounded-2xl bg-bg-elevated border-2 border-accent-red/50 flex items-center justify-center p-2 shadow-lg">
           {killerPower.icon_url || killerPower.icon_local_path ? (
             <img
               src={getAssetUrl(backendBase, killerPower.icon_local_path, killerPower.icon_url)}
@@ -54,12 +54,11 @@ export const KillerPowerModal: React.FC<KillerPowerModalProps> = ({
               }}
             />
           ) : (
-            <Flame className="h-6 w-6 text-accent-red animate-pulse" />
+            <Flame className="h-8 w-8 text-accent-red animate-pulse" />
           )}
         </div>
-      }
-    >
-      <div className="px-6 py-3 bg-bg-elevated border-b border-border-color grid grid-cols-3 gap-2">
+      </div>
+      <div className="mt-5 px-6 py-3 bg-bg-elevated border-y border-border-color grid grid-cols-3 gap-2">
         <div className="p-2 rounded-xl bg-bg-surface border border-border-color text-center">
           <span className="block text-micro font-bold uppercase text-text-secondary">{t.movementSpeed || 'Speed'}</span>
           <span className="block type-strong text-text-primary truncate">{killerSpeed}</span>

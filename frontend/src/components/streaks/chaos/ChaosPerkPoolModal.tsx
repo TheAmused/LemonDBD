@@ -54,7 +54,6 @@ export const ChaosPerkPoolModal: React.FC<ChaosPerkPoolModalProps> = ({ isOpen, 
       variant="dialog"
       size="6xl"
       title={dict.streaks.perkPool}
-      centerTitle
       closeButtonAriaLabel={dict.modal.close}
     >
       <Tabs

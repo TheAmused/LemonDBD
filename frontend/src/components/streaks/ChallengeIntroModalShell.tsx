@@ -6,7 +6,6 @@ import { Button } from '@/components/common/Button';
 import React from 'react';
 import { BookOpen, ChevronLeft } from 'lucide-react';
 import { Modal } from '@/components/common/Modal';
-import { toneFromIconClass } from '@/components/streaks/RulesModalShell';
 import { AdeptBadgeIcon } from '@/components/icons/DbdIcons';
 import { HEADER_BUTTON_CLASSES } from './ChallengePanel';
 import { useDictionary } from "@/context/DictionaryContext";
@@ -36,9 +35,6 @@ export interface ChallengeIntroTile {
 export interface ChallengeIntroModalShellProps {
   isOpen: boolean;
   onClose: () => void;
-  /** Any icon component (lucide or a custom DbdIcons SVG). Omit to show a plain text title with no icon box. */
-  icon?: React.ElementType;
-  iconClassName?: string;
   title: string;
   /** Omit to skip the explanatory intro box entirely, e.g. when a player is
    *  just switching difficulty mid-run and already knows how the mode works. */
@@ -68,8 +64,6 @@ export interface ChallengeIntroModalShellProps {
 export const ChallengeIntroModalShell: React.FC<ChallengeIntroModalShellProps> = ({
       isOpen,
       onClose,
-      icon: Icon,
-      iconClassName,
       title,
       intro,
       detail,
@@ -96,10 +90,7 @@ export const ChallengeIntroModalShell: React.FC<ChallengeIntroModalShellProps> =
       variant="dialog"
       size="2xl"
       closeOnEscape={!escapeDisabled}
-      tone={toneFromIconClass(iconClassName)}
-      icon={Icon ? <Icon className="h-5 w-5" aria-hidden="true" /> : undefined}
       title={title}
-      centerTitle
       closeButtonAriaLabel={dict.modal.close}
       headerLeft={
         onBack ? (

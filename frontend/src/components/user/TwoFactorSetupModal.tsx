@@ -118,7 +118,7 @@ export const TwoFactorSetupModal: React.FC<TwoFactorSetupModalProps> = ({ isOpen
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={close} variant="dialog" size="md" centerTitle title={t.setupTitle} busy={busy || step === 'codes'} padded>
+    <Modal isOpen={isOpen} onClose={close} variant="dialog" size="md" title={t.setupTitle} busy={busy || step === 'codes'} padded>
       {error && (
         <p role="alert" className="mb-4 rounded-xl border border-accent-red/30 bg-accent-red/10 p-3 type-strong text-accent-red">
           {error}

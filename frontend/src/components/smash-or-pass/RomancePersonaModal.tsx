@@ -3,8 +3,7 @@
 
 import { isAbortError } from '@/utils/api';
 import React, { useMemo, useState } from 'react';
-import { Share2, Compass, ArrowRight, ArrowLeft } from 'lucide-react';
-import { PersonaSigilIcon } from '@/components/icons/DbdIcons';
+import { Compass, ArrowRight, ArrowLeft } from 'lucide-react';
 import type { CustomRomanceArchetype } from '@/types/smashOrPass';
 import { Modal } from '@/components/common/Modal';
 import {
@@ -164,14 +163,6 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({ isOpen
           ? rawSmash.shareArchetype
           : personaModalTitle
       }
-      icon={
-        isSharingView ? (
-          <Share2 className="h-6 w-6 text-accent-red" />
-        ) : (
-          <PersonaSigilIcon className="h-6 w-6 text-accent-red" />
-        )
-      }
-      centerTitle={!isSharingView}
       headerLeft={
         isSharingView ? (
           <Button

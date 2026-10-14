@@ -337,7 +337,6 @@ export default {
   },
   importModal: {
     title: 'Importuj Listę',
-    subtitle: 'Wklej JSON, prześlij plik lub otwórz udostępniony link.',
     cancel: 'Anuluj',
     importAction: 'Importuj',
     pasteLabel: 'Wklej JSON listy',
@@ -365,7 +364,6 @@ export default {
   },
   exportModal: {
     title: 'Eksportuj Listę',
-    subtitle: 'Skopiuj link do udostępnienia lub pobierz listę jako plik JSON.',
     close: 'Zamknij',
     shareLinkLabel: 'Link do udostępnienia',
     copyLink: 'Kopiuj Link',

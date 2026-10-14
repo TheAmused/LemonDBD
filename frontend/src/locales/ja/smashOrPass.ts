@@ -321,7 +321,6 @@ export default {
   },
   importModal: {
     title: 'リストをインポート',
-    subtitle: 'JSONを貼り付けるか、ファイルをアップロードするか、共有リンクを開いてください。',
     cancel: 'キャンセル',
     importAction: 'インポート',
     pasteLabel: 'リストのJSONを貼り付け',
@@ -349,7 +348,6 @@ export default {
   },
   exportModal: {
     title: 'リストをエクスポート',
-    subtitle: '共有可能なリンクをコピーするか、リストをJSONファイルとしてダウンロードしてください。',
     close: '閉じる',
     shareLinkLabel: '共有リンク',
     copyLink: 'リンクをコピー',

@@ -86,7 +86,6 @@ export const DeleteAccountSection: React.FC<{ iconOnly?: boolean }> = ({ iconOnl
         isOpen={open}
         onClose={close}
         variant="confirm"
-        tone="danger"
         title={t.deleteAccountConfirmTitle}
         busy={busy}
         padded

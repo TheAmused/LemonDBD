@@ -1,7 +1,6 @@
 // frontend/src/locales/ja/scoreboardCheck.ts
 const scoreboardCheck = {
   "title": "OCRチェック",
-  "subtitle": "試合終了時のスコアボードのスクリーンショットをアップロードして、OCRの読み取り結果を確認します。",
   "close": "閉じる",
   "privacyNote": "画像はメモリ上で解析され、破棄されます。何も保存されません。",
   "chooseImage": "スクリーンショットを選択",

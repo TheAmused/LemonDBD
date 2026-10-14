@@ -51,7 +51,6 @@ export function EffectsPreferenceModal({ isOpen, mandatory, values, onChange, on
       size="md"
       layer="top"
       title={text.title}
-      centerTitle
       closeButton={mandatory ? 'none' : 'header'}
       closeOnEscape={!mandatory}
       closeOnBackdropClick={!mandatory}

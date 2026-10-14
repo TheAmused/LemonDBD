@@ -5,7 +5,7 @@
 // reads. The image is analysed in memory on the server and never stored.
 
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { Check, CircleSlash, ImagePlus, ScanText, TriangleAlert, X } from 'lucide-react';
+import { Check, CircleSlash, ImagePlus, TriangleAlert, X } from 'lucide-react';
 import { Modal } from '@/components/common/Modal';
 import { Button } from '@/components/common/Button';
 import { Badge } from '@/components/common/Badge';
@@ -143,8 +143,6 @@ export const ScoreboardCheckModal: React.FC<ScoreboardCheckModalProps> = ({ isOp
       onClose={onClose}
       size="3xl"
       title={t.title}
-      subtitle={t.subtitle}
-      icon={<ScanText className="h-5 w-5" />}
       footer={footer}
       busy={busy}
     >

@@ -186,7 +186,6 @@ export default {
   remainingTab: "Pozostałe",
   streakLabel: "Seria:",
   middotSeparator: "·",
-  bulletSeparator: "•",
   tierLabel: "Poziom",
   noPerksThisTrial: "Brak perków w tej próbie.",
   goesInBare: "wchodzi bez perków.",

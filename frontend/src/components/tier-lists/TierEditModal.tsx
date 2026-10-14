@@ -88,7 +88,6 @@ export function TierEditModal({
       onClose={onClose}
       size="md"
       title={mode === 'add' ? t.addTier : t.editTier}
-      centerTitle
       bodyClassName="p-4 sm:p-6"
       footer={
         <div className="flex w-full flex-wrap items-center justify-center gap-3">

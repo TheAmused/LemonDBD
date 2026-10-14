@@ -29,17 +29,16 @@ export function TierItemPreviewModal({ item, onClose }: TierItemPreviewModalProp
       isOpen
       onClose={onClose}
       size="xl"
-      // `title`/`subtitle` take a ReactNode, so the accent colors below are
-      // just a styled span passed straight through -- no change to `Modal`
-      // itself. `title` no longer being a plain string means Modal's own
-      // `aria-label` fallback (`typeof title === 'string'`) won't fire, so
-      // the accessible name is set explicitly here instead.
+      // `title` takes a ReactNode, so the accent color below is just a styled
+      // span passed straight through -- no change to `Modal` itself. `title`
+      // no longer being a plain string means Modal's own `aria-label`
+      // fallback (`typeof title === 'string'`) won't fire, so the accessible
+      // name is set explicitly here instead.
       title={<span className="text-accent-red">{item.name}</span>}
-      subtitle={item.subtitle ? <span className="text-accent-amber">{item.subtitle}</span> : undefined}
       ariaLabel={item.name}
-      centerTitle
     >
       <div className="flex flex-col items-center gap-4 p-5 sm:p-6">
+        {item.subtitle && <p className="line-clamp-2 text-center type-strong text-accent-amber">{item.subtitle}</p>}
         {(item.fullImage ?? item.image) ? (
           // Sized by the image's own intrinsic ratio, not forced into a
           // fixed square -- a tall character portrait and a wide map photo

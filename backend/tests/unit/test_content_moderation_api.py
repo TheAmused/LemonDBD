@@ -377,3 +377,74 @@ def test_revocations_check_public_and_validations(
         json={"hashes": ["too_short"]},
     )
     assert res_invalid_item.status_code == 400
+
+    # Non-hex characters in hash (valid length 64, but invalid characters)
+    res_non_hex = client.post(
+        "/api/v1/content/revocations/check",
+        json={"hashes": ["z" * 64]},
+    )
+    assert res_non_hex.status_code == 400
+    assert "hexadecimal" in res_non_hex.get_json()["error"].lower()
+
+    # Exceeding batch size limit (>200 hashes)
+    res_large_batch = client.post(
+        "/api/v1/content/revocations/check",
+        json={"hashes": ["a" * 64] * 201},
+    )
+    assert res_large_batch.status_code == 400
+    assert "more than 200" in res_large_batch.get_json()["error"].lower()
+
+
+def test_create_report_payload_size_limit_exceeded(
+    client: FlaskClient, author_user: User, reporter_user: User, app
+) -> None:
+    # Build large payload > 500KB
+    large_payload = {"data": "x" * 500_001}
+    canon = canonicalize_payload(large_payload)
+    content_hash = compute_content_hash(canon)
+    signature = sign_content(author_user.id, content_hash, app.config["SECRET_KEY"])
+
+    headers = _auth_headers(reporter_user)
+    report_data = {
+        "content_type": "tier_list",
+        "content_hash": content_hash,
+        "author_id": author_user.id,
+        "author_login": author_user.login,
+        "signature": signature,
+        "payload": large_payload,
+        "reason": "spam",
+    }
+
+    res = client.post("/api/v1/content/reports", headers=headers, json=report_data)
+    assert res.status_code == 400
+    assert "exceeds maximum allowed size" in res.get_json().get("error", "")
+
+
+def test_create_report_derives_author_login_from_db(
+    client: FlaskClient, author_user: User, reporter_user: User, app, db_session: Session
+) -> None:
+    payload = {"title": "Legit Content"}
+    canon = canonicalize_payload(payload)
+    content_hash = compute_content_hash(canon)
+    signature = sign_content(author_user.id, content_hash, app.config["SECRET_KEY"])
+
+    headers = _auth_headers(reporter_user)
+    report_data = {
+        "content_type": "tier_list",
+        "content_hash": content_hash,
+        "author_id": author_user.id,
+        "author_login": "fake_spoofed_login",  # Spoofed login in request body
+        "signature": signature,
+        "payload": payload,
+        "reason": "spam",
+    }
+
+    res = client.post("/api/v1/content/reports", headers=headers, json=report_data)
+    assert res.status_code == 201
+    data = res.get_json()
+
+    report = db_session.get(ContentReport, data["report_id"])
+    assert report is not None
+    # Must be derived from author_user.login ("author_user"), not "fake_spoofed_login"
+    assert report.author_login == author_user.login
+

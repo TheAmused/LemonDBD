@@ -1,13 +1,14 @@
 // frontend/src/components/user/ShowcasePerkModal.tsx
 'use client';
 
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useCallback, useRef } from 'react';
 import { SearchInput } from '@/components/common/Field';
 import { PerkIcon } from '@/components/ui/PerkIcon';
 import { Sparkles, Check } from 'lucide-react';
 import type { RoleCategory, Perk } from '@/types/perks';
-import { getBackendBaseUrl, matchesPerkSearch } from '@/utils/perkUtils';
-import { fetchCached, fetchJson, unwrapList, type ListPayload } from '@/services/dataCache';
+import { matchesPerkSearch } from '@/utils/perkUtils';
+import { useCatalogPerks } from '@/hooks/useCatalogPerks';
+import { useProgressiveList } from '@/hooks/useProgressiveList';
 import { Modal } from '@/components/common/Modal';
 import { Spinner } from '@/components/common/Spinner';
 import { EmptyState } from '@/components/common/EmptyState';
@@ -27,11 +28,11 @@ interface ShowcasePerkModalProps {
   locale?: string;
 }
 
-const PerkGridItem: React.FC<{
+const PerkGridItem = React.memo<{
   perk: Perk;
   isSelected: boolean;
   onToggle: (perk: Perk) => void;
-}> = ({ perk, isSelected, onToggle }) => {
+}>(({ perk, isSelected, onToggle }) => {
   return (
     <button
       type="button"
@@ -65,39 +66,19 @@ const PerkGridItem: React.FC<{
       )}
     </button>
   );
-};
+});
+PerkGridItem.displayName = 'PerkGridItem';
 
 export const ShowcasePerkModal: React.FC<ShowcasePerkModalProps> = ({ isOpen, role, perkIds, onSetPerk, onClose, locale = 'en' }) => {
   const dict = useDictionary();
   const [search, setSearch] = useState('');
-  const [perks, setPerks] = useState<Perk[]>([]);
-  const [loading, setLoading] = useState(false);
+  const { perks, loading } = useCatalogPerks(locale, isOpen);
 
   useEffect(() => {
     if (isOpen) {
       setSearch('');
     }
   }, [isOpen]);
-
-  useEffect(() => {
-    if (!isOpen) return;
-
-    const backendBase = getBackendBaseUrl();
-    const url = `${backendBase}/api/v1/perks?limit=1000&lang=${locale}`;
-
-    setLoading(true);
-    fetchCached<ListPayload<Perk>>(url, () => fetchJson<ListPayload<Perk>>(url))
-      .then((data) => {
-        const list = unwrapList(data);
-        setPerks(list);
-      })
-      .catch((err) => {
-        console.error('Failed to load perks for showcase modal:', err);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }, [isOpen, locale]);
 
   // The role's perks are listed right away; the search only narrows them down.
   const sortedPerks = useMemo(
@@ -109,17 +90,26 @@ export const ShowcasePerkModal: React.FC<ShowcasePerkModalProps> = ({ isOpen, ro
     [sortedPerks, search, role]
   );
 
+  // The grid fills in as it is scrolled: a role has a couple hundred perks, each with an icon.
+  const { limit, rootRef, sentinelRef } = useProgressiveList(filteredPerks.length, `${role}|${search}`);
+  const visiblePerks = useMemo(() => filteredPerks.slice(0, limit), [filteredPerks, limit]);
+
+  // Read through a ref so togglePerk keeps one identity and a pick re-renders only the tiles whose selection changed.
+  const buildRef = useRef({ perkIds, onSetPerk });
+  buildRef.current = { perkIds, onSetPerk };
+
   // Picking fills the first free slot, picking a chosen perk again frees its slot; a full build ignores new picks.
-  const togglePerk = (perk: Perk) => {
+  const togglePerk = useCallback((perk: Perk) => {
     if (!perk.id) return;
-    const slot = perkIds.indexOf(perk.id);
+    const { perkIds: current, onSetPerk: setPerk } = buildRef.current;
+    const slot = current.indexOf(perk.id);
     if (slot >= 0) {
-      onSetPerk(slot, null);
+      setPerk(slot, null);
       return;
     }
-    const freeSlot = FILL_ORDER.find((s) => perkIds[s] === null);
-    if (freeSlot !== undefined) onSetPerk(freeSlot, perk.id);
-  };
+    const freeSlot = FILL_ORDER.find((s) => current[s] === null);
+    if (freeSlot !== undefined) setPerk(freeSlot, perk.id);
+  }, []);
 
   return (
     <Modal
@@ -142,7 +132,7 @@ export const ShowcasePerkModal: React.FC<ShowcasePerkModalProps> = ({ isOpen, ro
       </div>
 
       {/* Perks Grid */}
-      <div className="flex-1 overflow-y-auto p-4 sm:p-6 min-h-0">
+      <div ref={rootRef} className="flex-1 overflow-y-auto p-4 sm:p-6 min-h-0">
         {loading ? (
           <div className="flex flex-col items-center justify-center py-16 space-y-3">
             <Spinner size="lg" tone="accent" />
@@ -153,16 +143,19 @@ export const ShowcasePerkModal: React.FC<ShowcasePerkModalProps> = ({ isOpen, ro
         ) : filteredPerks.length === 0 ? (
           <EmptyState variant="inline" title={dict.user.noPerksFound} />
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-            {filteredPerks.map((perk) => (
-              <PerkGridItem
-                key={perk.id ?? perk.name}
-                perk={perk}
-                isSelected={perk.id !== undefined && perkIds.includes(perk.id)}
-                onToggle={togglePerk}
-              />
-            ))}
-          </div>
+          <>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+              {visiblePerks.map((perk) => (
+                <PerkGridItem
+                  key={perk.id ?? perk.name}
+                  perk={perk}
+                  isSelected={perk.id !== undefined && perkIds.includes(perk.id)}
+                  onToggle={togglePerk}
+                />
+              ))}
+            </div>
+            <div ref={sentinelRef} aria-hidden="true" className="h-px" />
+          </>
         )}
       </div>
     </Modal>

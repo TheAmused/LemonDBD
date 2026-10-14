@@ -441,3 +441,93 @@ def test_admin_resolve_invalid_action_rejected(
         json={"action": "unknown_action"},
     )
     assert res.status_code == 400
+
+
+def test_admin_resolve_already_resolved_report_conflict_409(
+    client: FlaskClient, admin_user: User, author_user: User, db_session: Session
+) -> None:
+    headers = _auth_headers(admin_user)
+    future = datetime.now(timezone.utc) + timedelta(days=7)
+
+    # 1. Test re-resolving a report that was resolved_banned
+    report_banned = ContentReport(
+        content_type="tier_list",
+        content_hash="i" * 64,
+        author_id=author_user.id,
+        author_login=author_user.login,
+        primary_reason="hate_speech",
+        status="resolved_banned",
+        expires_at=future,
+    )
+    # 2. Test re-resolving a report that was dismissed
+    report_dismissed = ContentReport(
+        content_type="tier_list",
+        content_hash="j" * 64,
+        author_id=author_user.id,
+        author_login=author_user.login,
+        primary_reason="spam",
+        status="dismissed",
+        expires_at=future,
+    )
+    db_session.add_all([report_banned, report_dismissed])
+    db_session.commit()
+
+    res_banned = client.post(
+        f"/api/v1/admin/content-reports/{report_banned.id}/resolve",
+        headers=headers,
+        json={"action": "ban"},
+    )
+    assert res_banned.status_code == 409
+    assert "already been resolved" in res_banned.get_json()["error"]
+
+    res_dismissed = client.post(
+        f"/api/v1/admin/content-reports/{report_dismissed.id}/resolve",
+        headers=headers,
+        json={"action": "dismiss"},
+    )
+    assert res_dismissed.status_code == 409
+    assert "already been resolved" in res_dismissed.get_json()["error"]
+
+
+def test_admin_resolve_ban_author_protects_admin_role(
+    client: FlaskClient, admin_user: User, db_session: Session
+) -> None:
+    headers = _auth_headers(admin_user)
+    future = datetime.now(timezone.utc) + timedelta(days=7)
+
+    # Create another admin user as the content author
+    another_admin = User(
+        login="another_admin",
+        username="Another Admin",
+        email="another_admin@example.com",
+        password_hash="pw_admin_2",
+        role="admin",
+        is_active=True,
+    )
+    db_session.add(another_admin)
+    db_session.commit()
+
+    report = ContentReport(
+        content_type="tier_list",
+        content_hash="k" * 64,
+        author_id=another_admin.id,
+        author_login=another_admin.login,
+        primary_reason="harassment",
+        status="pending",
+        evidence_payload='{"bad": "content"}',
+        expires_at=future,
+    )
+    db_session.add(report)
+    db_session.commit()
+
+    res = client.post(
+        f"/api/v1/admin/content-reports/{report.id}/resolve",
+        headers=headers,
+        json={"action": "ban", "ban_author": True},
+    )
+    assert res.status_code == 200
+
+    # Ensure admin account was NOT deactivated
+    db_session.refresh(another_admin)
+    assert another_admin.is_active is True
+

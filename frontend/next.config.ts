@@ -7,7 +7,7 @@ const IMAGE_CACHE_CONTROL = 'public, max-age=604800, stale-while-revalidate=8640
 const nextConfig: NextConfig = {
   output: 'standalone',
   images: {
-    unoptimized: true,
+    formats: ['image/avif', 'image/webp'],
   },
   experimental: {
     optimizePackageImports: [

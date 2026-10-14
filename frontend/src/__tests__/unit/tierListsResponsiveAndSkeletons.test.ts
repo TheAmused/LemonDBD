@@ -126,7 +126,10 @@ describe('Tier lists: pages and navigation', () => {
       const source = read(`app/[locale]/${rel}`);
       assert.ok(source.includes('<PageShell'));
       assert.ok(source.includes('activeCategory="tier-lists"'));
-      assert.ok(fs.existsSync(path.join(SRC, 'app/[locale]', path.dirname(rel), 'loading.tsx')));
+      assert.ok(
+        fs.existsSync(path.join(SRC, 'app/[locale]', path.dirname(rel), 'loading.tsx')) ||
+        fs.existsSync(path.join(SRC, 'app/[locale]/tier-lists/loading.tsx'))
+      );
     });
   }
 

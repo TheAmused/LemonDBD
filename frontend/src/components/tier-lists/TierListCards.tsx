@@ -34,7 +34,7 @@ const DEFAULT_CUSTOM_COVER = '/static/tier-lists/banner_custom_default.webp';
 function coverSrc(url: string): string | null {
   if (!url) return null;
   if (url.startsWith('/images/')) return url;
-  if (url.startsWith('/static/')) return staticUrl(url) ?? null;
+  if (url.startsWith('/static/')) return url;
   if (!/^[a-z]+:/i.test(url)) return staticUrl(url) ?? null;
   return sanitizeImageUrl(url);
 }
@@ -245,7 +245,7 @@ export function CustomTierListCard({ list, locale, onDelete, disabled }: CustomC
             }}
             {...tip(t.deleteList, undefined, 'action')}
             aria-label={`${t.deleteList} ${customTitle}`}
-            className="hit-area absolute top-3 right-3 z-10 flex h-8 w-8 items-center justify-center rounded-lg border border-border-color/60 bg-bg-surface/85 backdrop-blur-md text-text-muted shadow-xs transition-[opacity,color,background-color] cursor-pointer hover:bg-accent-red/20 hover:text-accent-red group-has-[[aria-expanded=true]]/banner:opacity-0"
+            className="hit-area absolute top-3 right-3 z-10 flex h-8 w-8 rounded-lg items-center justify-center border border-border-color/60 bg-bg-surface/85 backdrop-blur-md text-text-muted shadow-xs transition-[opacity,color,background-color] cursor-pointer hover:bg-accent-red/20 hover:text-accent-red group-has-[[aria-expanded=true]]/banner:opacity-0"
           >
             <Trash2 className="h-4 w-4" aria-hidden="true" />
           </button>

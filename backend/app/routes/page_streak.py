@@ -1,11 +1,24 @@
 # backend/app/routes/page_streak.py
-from flask import Blueprint, g, jsonify, request
+from flask import g, jsonify, request
 from app.core.security import login_required
 from app.core.service_registry import make_service_getter
+from app.core.streak_blueprint import make_streak_blueprint
 from app.services.page_streak_service import PageStreakService
+from app.utils.responses import api_error
 
-page_streak_bp = Blueprint("page_streak", __name__, url_prefix="/api/v1/page-streak")
 get_page_streak_service = make_service_getter("PAGE_STREAK_SERVICE", PageStreakService)
+
+page_streak_bp = make_streak_blueprint(
+    name="page_streak",
+    url_prefix="/api/v1/page-streak",
+    get_service=get_page_streak_service,
+    param_name="killer",
+    valid_values=None,
+    invalid_value_hint="required",
+    has_reveal=False,
+    get_run_method="get_run",
+    stats_requires_param=False,
+)
 
 
 @page_streak_bp.route("/roster", methods=["GET"])
@@ -30,33 +43,20 @@ def get_pool_summary():
     }), 200
 
 
-@page_streak_bp.route("/run", methods=["GET"])
-@login_required
-def get_run():
-    """Retrieve current active run status for a given killer."""
-    killer = request.args.get("killer", "").strip()
-    if not killer:
-        return jsonify({"error": "Query parameter 'killer' is required", "status": 400}), 400
-
-    service = get_page_streak_service()
-    run = service.get_run(g.current_user.id, killer)
-    return jsonify({"run": run}), 200
-
-
 @page_streak_bp.route("/run/start", methods=["POST"])
 @login_required
 def start_run():
     """Start a new Page Streak challenge run."""
     payload = request.get_json(silent=True) or {}
-    killer = payload.get("killer", "").strip()
+    killer = payload.get("killer", "").strip() if isinstance(payload.get("killer"), str) else ""
     if not killer:
-        return jsonify({"error": "Field 'killer' is required", "status": 400}), 400
+        return api_error("Field 'killer' is required", 400)
 
     service = get_page_streak_service()
     try:
         run = service.start_run(g.current_user.id, killer)
     except ValueError as err:
-        return jsonify({"error": str(err), "status": 400}), 400
+        return api_error(str(err), 400)
 
     return jsonify({"run": run}), 201
 
@@ -66,64 +66,24 @@ def start_run():
 def submit_result():
     """Record match outcome (win/loss) and update current streak state."""
     payload = request.get_json(silent=True) or {}
-    killer = payload.get("killer", "").strip()
+    killer = payload.get("killer", "").strip() if isinstance(payload.get("killer"), str) else ""
     page = payload.get("page")
     perks = payload.get("perks")
-    result = payload.get("result", "").strip().lower()
+    result = payload.get("result", "").strip().lower() if isinstance(payload.get("result"), str) else ""
 
     if not killer or not isinstance(page, int) or not isinstance(perks, list) or result not in ("win", "loss"):
-        return jsonify({
-            "error": "Fields 'killer', 'page' (int), 'perks' (list), and 'result' ('win' or 'loss') are required.",
-            "status": 400,
-        }), 400
+        return api_error(
+            "Fields 'killer', 'page' (int), 'perks' (list), and 'result' ('win' or 'loss') are required.",
+            400,
+        )
 
     service = get_page_streak_service()
     try:
         run = service.submit_result(g.current_user.id, killer, page, perks, result)
     except ValueError as err:
-        return jsonify({"error": str(err), "status": 400}), 400
+        return api_error(str(err), 400)
 
     return jsonify({"run": run}), 200
-
-
-@page_streak_bp.route("/stats", methods=["GET"])
-@login_required
-def get_stats():
-    """Aggregate match stats across every killer's Page Streak run."""
-    service = get_page_streak_service()
-    stats = service.get_stats(g.current_user.id)
-    return jsonify({"stats": stats}), 200
-
-
-@page_streak_bp.route("/run/abandon", methods=["POST"])
-@login_required
-def abandon_run():
-    """Abandon the run for a specific killer."""
-    payload = request.get_json(silent=True) or {}
-    killer = payload.get("killer", "").strip()
-    if not killer:
-        return jsonify({"error": "Field 'killer' is required", "status": 400}), 400
-
-    service = get_page_streak_service()
-    try:
-        run = service.abandon_run(g.current_user.id, killer)
-    except ValueError as err:
-        return jsonify({"error": str(err), "status": 400}), 400
-
-    return jsonify({"run": run}), 200
-
-
-@page_streak_bp.route("/completions", methods=["GET"])
-@login_required
-def get_completions():
-    """Retrieve this killer's completion history (past full clears)."""
-    killer = request.args.get("killer", "").strip()
-    if not killer:
-        return jsonify({"error": "Query parameter 'killer' is required", "status": 400}), 400
-
-    service = get_page_streak_service()
-    completions = service.get_completions(g.current_user.id, killer)
-    return jsonify({"completions": completions}), 200
 
 
 @page_streak_bp.route("/run/reset-all", methods=["POST"])
@@ -134,6 +94,7 @@ def reset_all_runs():
     try:
         service.reset_all(g.current_user.id)
     except ValueError as err:
-        return jsonify({"error": str(err), "status": 400}), 400
+        return api_error(str(err), 400)
 
     return jsonify({"success": True}), 200
+

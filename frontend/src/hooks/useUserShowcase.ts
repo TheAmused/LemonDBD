@@ -65,6 +65,7 @@ export function mergeShowcaseState(partial?: unknown): UserShowcaseState {
         p.survivorMain.characterName.trim() !== ''
           ? p.survivorMain.characterName
           : DEFAULT_SHOWCASE_STATE.survivorMain.characterName,
+      ...(typeof p.survivorMain?.characterId === 'number' ? { characterId: p.survivorMain.characterId } : {}),
       prestige:
         typeof p.survivorMain?.prestige === 'number' &&
         Number.isFinite(p.survivorMain.prestige)
@@ -81,6 +82,7 @@ export function mergeShowcaseState(partial?: unknown): UserShowcaseState {
         p.killerMain.characterName.trim() !== ''
           ? p.killerMain.characterName
           : DEFAULT_SHOWCASE_STATE.killerMain.characterName,
+      ...(typeof p.killerMain?.characterId === 'number' ? { characterId: p.killerMain.characterId } : {}),
       prestige:
         typeof p.killerMain?.prestige === 'number' &&
         Number.isFinite(p.killerMain.prestige)
@@ -119,6 +121,18 @@ export function saveStoredShowcase(
   }
 }
 
+/** A main with a new character. The old id is dropped: it belongs to the previous pick, not to this name. */
+function withCharacter(main: MainLoadout, name: string, characterId?: number): MainLoadout {
+  const { characterId: _previous, ...rest } = main;
+  return { ...rest, characterName: name, ...(characterId === undefined ? {} : { characterId }) };
+}
+
+/** A partial update of a main. A new name without an id drops the old id, which would otherwise outrank it on save. */
+function mergeMain(main: MainLoadout, update: Partial<MainLoadout>): MainLoadout {
+  const base = update.characterName !== undefined && update.characterId === undefined ? withCharacter(main, update.characterName) : main;
+  return { ...base, ...update, perkIds: update.perkIds ? [...update.perkIds] : main.perkIds };
+}
+
 export interface UseUserShowcaseReturn {
   showcase: UserShowcaseState;
   state: UserShowcaseState;
@@ -128,10 +142,10 @@ export interface UseUserShowcaseReturn {
   setPlayerTitle: (title: string) => void;
   setDevotionLevel: (level: number) => void;
   setGradeRank: (rank: string) => void;
-  setSurvivorCharacter: (name: string) => void;
+  setSurvivorCharacter: (name: string, characterId?: number) => void;
   setSurvivorPrestige: (prestige: number) => void;
   setSurvivorPerk: (slotIndex: number, perkId: number | null) => void;
-  setKillerCharacter: (name: string) => void;
+  setKillerCharacter: (name: string, characterId?: number) => void;
   setKillerPrestige: (prestige: number) => void;
   setKillerPerk: (slotIndex: number, perkId: number | null) => void;
   setSurvivorMain: (main: Partial<MainLoadout>) => void;
@@ -278,10 +292,10 @@ export function useUserShowcase(
   );
 
   const setSurvivorCharacter = useCallback(
-    (name: string) => {
+    (name: string, characterId?: number) => {
       updateState((prev) => ({
         ...prev,
-        survivorMain: { ...prev.survivorMain, characterName: name },
+        survivorMain: withCharacter(prev.survivorMain, name, characterId),
       }));
     },
     [updateState]
@@ -316,10 +330,10 @@ export function useUserShowcase(
   );
 
   const setKillerCharacter = useCallback(
-    (name: string) => {
+    (name: string, characterId?: number) => {
       updateState((prev) => ({
         ...prev,
-        killerMain: { ...prev.killerMain, characterName: name },
+        killerMain: withCharacter(prev.killerMain, name, characterId),
       }));
     },
     [updateState]
@@ -357,11 +371,7 @@ export function useUserShowcase(
     (main: Partial<MainLoadout>) => {
       updateState((prev) => ({
         ...prev,
-        survivorMain: {
-          ...prev.survivorMain,
-          ...main,
-          perkIds: main.perkIds ? [...main.perkIds] : prev.survivorMain.perkIds,
-        },
+        survivorMain: mergeMain(prev.survivorMain, main),
       }));
     },
     [updateState]
@@ -371,11 +381,7 @@ export function useUserShowcase(
     (main: Partial<MainLoadout>) => {
       updateState((prev) => ({
         ...prev,
-        killerMain: {
-          ...prev.killerMain,
-          ...main,
-          perkIds: main.perkIds ? [...main.perkIds] : prev.killerMain.perkIds,
-        },
+        killerMain: mergeMain(prev.killerMain, main),
       }));
     },
     [updateState]

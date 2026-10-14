@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { Sparkles } from 'lucide-react';
 import { PerkIcon } from '@/components/ui/PerkIcon';
 import { PerkDiamondSlot } from './PerkDiamondSlot';
+import { DiamondSlot } from '@/components/ui/DiamondSlot';
 import type { MainLoadout } from '@/types/userShowcase';
 import type { RoleCategory, Perk } from '@/types/perks';
 import { getCharacterAvatarUrl } from '@/utils/perkUtils';
@@ -120,7 +121,7 @@ export const MainCard: React.FC<MainCardProps> = ({
         >
           {/* Subtle diamond connector crosshairs */}
           <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
-            <div className="w-24 h-24 rotate-45 border border-border-color/25 rounded-2xl" />
+            <DiamondSlot size={96} className="border-border-color/25 rounded-2xl bg-transparent shadow-none" />
           </div>
 
           {/* Top Slot (Slot 0) */}

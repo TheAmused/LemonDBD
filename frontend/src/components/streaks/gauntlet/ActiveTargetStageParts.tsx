@@ -9,6 +9,7 @@ import { avatarUrlForCharacter, perkIconUrl, staticUrl } from '@/utils/staticUrl
 import { useCharacterDisplayName, usePerkDisplayName } from '@/context/DisplayNamesContext';
 import { KillerIcon } from '@/components/icons/DbdIcons';
 import { PerkIcon } from '@/components/ui/PerkIcon';
+import { DiamondSlot } from '@/components/ui/DiamondSlot';
 import { useDictionary } from '@/context/DictionaryContext';
 import { baseSlots } from '@/utils/perkSlots';
 
@@ -117,9 +118,9 @@ const SlotChip: React.FC<{
         {badge}
       </div>
     )}
-    <div className={`${slotIconBase(size)} ${iconClassName}`}>
-      <div className="-rotate-45 flex items-center justify-center">{children}</div>
-    </div>
+    <DiamondSlot size={size} className={iconClassName}>
+      {children}
+    </DiamondSlot>
     {caption && <span className={`${CAPTION_CLASS[size]} text-center text-xs font-bold leading-tight text-text-primary line-clamp-2`}>{caption}</span>}
   </div>
 );

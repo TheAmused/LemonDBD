@@ -3,15 +3,9 @@
 
 import React, { useState } from 'react';
 import { PerkIcon } from '@/components/ui/PerkIcon';
+import { DIAMOND_CLIP } from '@/components/ui/DiamondSlot';
 import { usePerkDisplayName } from '@/context/DisplayNamesContext';
 import { tip } from '@/components/common/Tooltip';
-
-/**
- * Clips the hit area so the overlapping squares of neighbouring rows never steal each other's clicks. It is the diamond grown
- * by half the gap between diamonds (7% of its width) and cut back to the square, so clicks on the thin side tips and in the
- * gaps still land on the nearest perk.
- */
-const DIAMOND_CLIP = 'polygon(43% 0, 57% 0, 100% 43%, 100% 57%, 57% 100%, 43% 100%, 0 57%, 0 43%)';
 
 interface PerkTileProps {
   name: string;

@@ -10,16 +10,15 @@ import { AltchaWidget } from '@/components/common/AltchaWidget';
 import {
   Upload,
   Image as ImageIcon,
-  CheckCircle2,
   AlertCircle,
   Trash2,
   UserCheck,
   Mail,
 } from 'lucide-react';
-import { FogReportIcon } from '@/components/icons/DbdIcons';
 import { Modal } from '@/components/common/Modal';
+import { SuccessState } from '@/components/common/SuccessState';
 import { Button } from '@/components/common/Button';
-import { Input, Select, Textarea } from '@/components/common/Field';
+import { Input, Textarea } from '@/components/common/Field';
 import { useDictionary } from "@/context/DictionaryContext";
 
 export interface BugReportModalProps {
@@ -33,33 +32,11 @@ interface BugReportResponse {
   error?: string;
 }
 
-const DEFAULT_BUG_CATEGORIES = [
-  'Perks & Teachable Data',
-  'Characters & Killer Powers',
-  'Map Explorer & Callouts',
-  'Perk Randomizer & Challenges',
-  'Draft Room & SWF Planner',
-  'UI, Design & Translations',
-  'Other Gameplay Glitch',
-] as const;
-
-type BugCategoryKey = typeof DEFAULT_BUG_CATEGORIES[number];
-
 export const BugReportModal: React.FC<BugReportModalProps> = ({ isOpen, onClose }) => {
   const dict = useDictionary();
   const { user, isAuthenticated } = useAuth();
 
   const t: Record<string, string> = dict.sidebar;
-
-  const bugCategories: Array<{ key: BugCategoryKey; label: string }> = [
-    { key: 'Perks & Teachable Data', label: t.bugCategoryPerks || '' },
-    { key: 'Characters & Killer Powers', label: t.bugCategoryCharacters || '' },
-    { key: 'Map Explorer & Callouts', label: t.bugCategoryMaps || '' },
-    { key: 'Perk Randomizer & Challenges', label: t.bugCategoryChallenges || '' },
-    { key: 'Draft Room & SWF Planner', label: t.bugCategoryDraftSwf || '' },
-    { key: 'UI, Design & Translations', label: t.bugCategoryUiTranslations || '' },
-    { key: 'Other Gameplay Glitch', label: t.bugCategoryOther || '' },
-  ];
 
   const {
     altchaPayload,
@@ -74,7 +51,6 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({ isOpen, onClose 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const [title, setTitle] = useState<string>('');
-  const [category, setCategory] = useState<string>(DEFAULT_BUG_CATEGORIES[0]);
   const [message, setMessage] = useState<string>('');
   const [guestEmail, setGuestEmail] = useState<string>('');
   const [images, setImages] = useState<string[]>([]);
@@ -86,7 +62,6 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({ isOpen, onClose 
     if (!isOpen) {
       const timer = setTimeout(() => {
         setTitle('');
-        setCategory(DEFAULT_BUG_CATEGORIES[0]);
         setMessage('');
         setGuestEmail('');
         setImages([]);
@@ -155,7 +130,6 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({ isOpen, onClose 
 
       const payload = {
         title: title.trim(),
-        category,
         message: message.trim(),
         reporter_name: user?.username || t.bugGuestPlayer || 'Guest',
         reporter_email: user?.email || guestEmail.trim(),
@@ -202,15 +176,16 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({ isOpen, onClose 
       isOpen={isOpen}
       onClose={onClose}
       variant="sheet"
-      size="xl"
-      icon={isSuccess ? undefined : <FogReportIcon className="h-6 w-6" />}
+      size={isSuccess ? 'sm' : 'xl'}
+      centerTitle
       title={isSuccess ? undefined : t.bugReportModalTitle || ''}
-      ariaLabel={t.bugReportModalTitle || 'Bug report'}
+      ariaLabel={(isSuccess ? t.bugSuccessMessage : t.bugReportModalTitle) || 'Bug report'}
+      closeButton={isSuccess ? 'floating' : 'header'}
       closeButtonAriaLabel={t.bugCloseButton || ''}
       busy={isSubmitting}
       padded
       bodyClassName="space-y-5"
-      footerClassName="justify-end"
+      footerClassName="justify-center"
       footer={
         isSuccess ? undefined : (
           <Button
@@ -219,7 +194,7 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({ isOpen, onClose 
             variant="primary"
             loading={isSubmitting}
             disabled={!isAuthenticated && !isAltchaVerified}
-            className="w-full sm:w-auto"
+            className="w-full sm:w-auto sm:min-w-40"
           >
             {isSubmitting ? <span>{t.bugSubmitting || ''}</span> : <span>{t.bugSubmitButton || ''}</span>}
           </Button>
@@ -227,16 +202,7 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({ isOpen, onClose 
       }
     >
       {isSuccess ? (
-    <div className="text-center py-8 space-y-5">
-      <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-accent-green/10 border border-accent-green/30 text-accent-green shadow-lg" aria-hidden="true">
-        <CheckCircle2 className="h-9 w-9 animate-bounce" />
-      </div>
-      <div className="space-y-1.5">
-        <h3 className="text-xl font-black tracking-wide text-text-primary">
-          {t.bugSuccessMessage || ''}
-        </h3>
-      </div>
-    </div>
+        <SuccessState title={t.bugSuccessMessage || ''} description={t.bugSuccessThanks || ''} />
       ) : (
         <>
     {errorMsg && (
@@ -283,37 +249,17 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({ isOpen, onClose 
         </div>
       )}
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-        <div className="sm:col-span-2">
-          <label className="block type-label-xs text-text-muted mb-1">
-            {t.bugTitleLabel || ''} <span className="text-accent-red">*</span>
-          </label>
-          <Input
-            type="text"
-            required
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            placeholder={t.bugTitlePlaceholder || ''}
-          />
-        </div>
-
-        <div>
-          <label className="block type-label-xs text-text-muted mb-1">
-            {t.bugCategoryLabel || ''}
-          </label>
-          <Select
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-            aria-label={t.bugCategoryLabel || ''}
-            className="[&>option]:bg-bg-surface"
-          >
-            {bugCategories.map((cat) => (
-              <option key={cat.key} value={cat.key}>
-                {cat.label}
-              </option>
-            ))}
-          </Select>
-        </div>
+      <div>
+        <label className="block type-label-xs text-text-muted mb-1">
+          {t.bugTitleLabel || ''} <span className="text-accent-red">*</span>
+        </label>
+        <Input
+          type="text"
+          required
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          placeholder={t.bugTitlePlaceholder || ''}
+        />
       </div>
 
       <div>

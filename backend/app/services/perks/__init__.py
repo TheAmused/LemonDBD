@@ -12,7 +12,7 @@ from app.services.perks.queries_equipment import (
     fetch_addons,
     fetch_items,
 )
-from app.services.perks.queries_map import (
+from app.services.maps.queries import (
     fetch_maps,
 )
 from app.services.perks.queries_perk import (
@@ -63,4 +63,6 @@ __all__ = [
     "fetch_items",
     "fetch_addons",
     "fetch_maps",
+    "PerkService",
 ]
+from app.services.perks.service import PerkService

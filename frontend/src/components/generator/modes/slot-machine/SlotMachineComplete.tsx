@@ -7,7 +7,7 @@ import type { ChaosMutator } from '@/types/chaos';
 import { useDictionary } from '@/context/DictionaryContext';
 import { getSlotInteraction } from '../../lib/blindnessCurse';
 import { PerkSlot } from '../../shared/PerkSlot';
-import { DbdButton } from '../../shared/DbdButton';
+import { DbdButton } from '@/components/common/Button';
 
 interface SlotMachineCompleteProps {
   role: RoleCategory;

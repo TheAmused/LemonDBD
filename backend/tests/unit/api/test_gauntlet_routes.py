@@ -3,7 +3,7 @@ import pytest
 from flask.testing import FlaskClient
 from sqlalchemy.orm import Session
 from app.models import Killer, Perk, Survivor
-from app.services.user_service import UserService
+from app.services.user import UserService
 from tests.unit.conftest import make_chapter
 
 

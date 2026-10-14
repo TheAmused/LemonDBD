@@ -1,7 +1,6 @@
 'use client';
 // frontend/src/components/sidebar/SidebarUserSection.tsx
 import type { UserProfile } from '@/context/AuthContext';
-import type { Dictionary } from '@/locales/types';
 
 import React from 'react';
 import { Button } from '@/components/common/Button';

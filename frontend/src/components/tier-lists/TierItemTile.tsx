@@ -3,6 +3,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { FitText } from '@/components/common/FitText';
+import { PerkIcon } from '@/components/ui/PerkIcon';
 import type { TierItem } from '@/types/tierList';
 import { cn } from '@/utils/cn';
 
@@ -56,10 +57,7 @@ export const TierItemTile = React.forwardRef<HTMLDivElement, TierItemTileProps>(
   { item, shape = 'square', showName = false, selected = false, overlay = false, ghost = false, size = 'md', className, ...rest },
   ref
 ) {
-  const [failed, setFailed] = useState<boolean>(false);
-  useEffect(() => setFailed(false), [item.image]);
-
-  const hasImage = Boolean(item.image) && !failed;
+  const hasImage = Boolean(item.image);
 
   return (
     <div
@@ -88,23 +86,19 @@ export const TierItemTile = React.forwardRef<HTMLDivElement, TierItemTileProps>(
             : cn('group-hover:border-accent-red/60', hasImage ? 'border-transparent' : 'border-border-color')
         )}
       >
-        {hasImage ? (
-          <img
-            src={item.image as string}
-            alt=""
-            draggable={false}
-            referrerPolicy="no-referrer"
-            onError={() => setFailed(true)}
-            className={cn(
-              'pointer-events-none h-full w-full',
-              shape === 'wide' ? 'object-cover' : 'object-contain p-0.5'
-            )}
-          />
-        ) : (
-          <span className="px-1 text-center type-card-title text-text-secondary" aria-hidden="true">
-            {initials(item.name)}
-          </span>
-        )}
+        <PerkIcon
+          src={item.image}
+          alt=""
+          imageClassName={cn(
+            'pointer-events-none h-full w-full',
+            shape === 'wide' ? 'object-cover' : 'object-contain p-0.5'
+          )}
+          fallbackIcon={
+            <span className="px-1 text-center type-card-title text-text-secondary" aria-hidden="true">
+              {initials(item.name)}
+            </span>
+          }
+        />
       </div>
       {showName && (
         <FitText

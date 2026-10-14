@@ -1,3 +1,4 @@
+'use client';
 // frontend/src/hooks/useResponsiveGridColumns.ts
 import { useEffect, useState } from 'react';
 

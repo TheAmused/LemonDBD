@@ -1,6 +1,5 @@
 'use client';
 // frontend/src/components/streaks/ChallengeCompletionHistoryDrawer.tsx
-import type { Dictionary } from '@/locales/types';
 
 import React from 'react';
 import { RotateCcw, Users, Swords } from 'lucide-react';

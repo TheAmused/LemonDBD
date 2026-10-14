@@ -46,7 +46,7 @@ from sqlalchemy import (
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.core.extensions import Base
-from app.models.base import utcnow
+from app.models.base import TranslatableModelMixin, utcnow
 from app.utils.lang import TRANSLATABLE_LOCALES  # noqa: F401  (re-exported)
 
 
@@ -104,7 +104,7 @@ def clean_media_display(value: Any) -> dict[str, Any] | None:
     return cleaned or None
 
 
-class Roster(Base):
+class Roster(Base, TranslatableModelMixin):
     __tablename__ = "rosters"
 
     id: Mapped[str] = mapped_column(
@@ -141,13 +141,12 @@ class Roster(Base):
             "name": self.name,
             "description": self.description,
         }
-        if lang and lang != "en" and isinstance(self.translations, dict):
-            override = self.translations.get(lang)
-            if isinstance(override, dict):
-                for key in ("name", "description"):
-                    val = override.get(key)
-                    if val:
-                        base[key] = val
+        if lang and lang != "en":
+            override = self.get_translation(lang)
+            for key in ("name", "description"):
+                val = override.get(key)
+                if val:
+                    base[key] = val
         return base
 
     def to_dict(self, lang: str | None = None) -> dict[str, Any]:
@@ -167,7 +166,7 @@ class Roster(Base):
         }
 
 
-class Entity(Base):
+class Entity(Base, TranslatableModelMixin):
     """One votable character. The profile fields are columns, not a blob."""
 
     __tablename__ = "entities"
@@ -251,13 +250,12 @@ class Entity(Base):
             "red_flags": list(self.red_flags or []),
             "green_flags": list(self.green_flags or []),
         }
-        if lang and lang != "en" and isinstance(self.translations, dict):
-            override = self.translations.get(lang)
-            if isinstance(override, dict):
-                for key in TRANSLATABLE_FIELDS:
-                    value = override.get(key)
-                    if value:
-                        base[key] = value
+        if lang and lang != "en":
+            override = self.get_translation(lang)
+            for key in TRANSLATABLE_FIELDS:
+                value = override.get(key)
+                if value:
+                    base[key] = value
         return base
 
     def metadata_dict(self, lang: str | None = None) -> dict[str, Any]:

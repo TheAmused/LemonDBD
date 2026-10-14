@@ -5,6 +5,7 @@ from sqlalchemy import func, or_, select
 
 from app.core.extensions import db
 from app.core.security import verify_password
+from app.core.transaction import transaction
 from app.models import (
     BugReport,
     Killer,
@@ -107,12 +108,12 @@ def admin_modify_user(
     if not user:
         return None, "User not found."
 
-    if role and role.lower() in ["admin", "user"]:
-        user.role = role.lower()
-    if is_active is not None:
-        user.is_active = is_active
+    with transaction():
+        if role and role.lower() in ["admin", "user"]:
+            user.role = role.lower()
+        if is_active is not None:
+            user.is_active = is_active
 
-    db.session.commit()
     return user, None
 
 
@@ -123,8 +124,8 @@ def admin_remove_user(user_id: int) -> bool:
         return False
     avatar_dir = get_avatar_storage_directory()
     remove_stale_avatar_file(user.avatar_url, avatar_dir)
-    db.session.delete(user)
-    db.session.commit()
+    with transaction():
+        db.session.delete(user)
     return True
 
 
@@ -162,14 +163,15 @@ def delete_own_account(
             raise two_factor.TwoFactorError("two_factor_required", 403)
         two_factor.verify_second_factor(user, two_factor_code)
 
-    for report in db.session.scalars(select(BugReport).where(BugReport.user_id == user.id)):
-        report.reporter_name = "Deleted user"
-        report.reporter_email = None
-
     avatar_dir = get_avatar_storage_directory()
     remove_stale_avatar_file(user.avatar_url, avatar_dir)
-    db.session.delete(user)
-    db.session.commit()
+
+    with transaction():
+        for report in db.session.scalars(select(BugReport).where(BugReport.user_id == user.id)):
+            report.reporter_name = "Deleted user"
+            report.reporter_email = None
+        db.session.delete(user)
+
     return True, None
 
 

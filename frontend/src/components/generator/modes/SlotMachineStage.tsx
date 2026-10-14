@@ -7,7 +7,7 @@ import { ChaosMutator } from '@/types/chaos';
 import { cn } from '@/utils/cn';
 import { formatMessage } from '@/utils/i18nFormat';
 import { useDictionary } from '@/context/DictionaryContext';
-import { DbdButton } from '../shared/DbdButton';
+import { DbdButton } from '@/components/common/Button';
 import { SlotMachineComplete } from './slot-machine/SlotMachineComplete';
 import { SlotMachineIdle } from './slot-machine/SlotMachineIdle';
 import { SlotReelColumnDesktop } from './slot-machine/SlotReelColumnDesktop';

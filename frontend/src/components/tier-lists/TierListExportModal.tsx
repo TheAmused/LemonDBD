@@ -4,7 +4,6 @@
 import React from 'react';
 import { ExportModal } from '@/components/common/ExportModal';
 import type { TierListDocument } from '@/types/tierList';
-import type { Dictionary } from '@/locales/types';
 import {
   buildShareUrl,
   encodeSharePayload,

@@ -108,10 +108,10 @@ class DatabaseExportImportService:
             db.session.commit()
 
             try:
-                from app.routes.perks import perk_service
-                perk_service.reload_data()
+                from app.services.perks import reload_service_data
+                reload_service_data(None)
             except Exception as reload_err:
-                logger.debug(f"PerkService reload_data notice during import: {reload_err}")
+                logger.debug(f"Perk data reload notice during import: {reload_err}")
 
             # After the commit, so nothing can repopulate the cache from the
             # pre-import state between the bump and the write landing.

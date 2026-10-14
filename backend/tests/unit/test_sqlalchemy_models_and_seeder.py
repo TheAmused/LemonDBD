@@ -133,4 +133,6 @@ class TestSQLAlchemyModelsAndSeeder:
                 os.environ["DATABASE_URL"] = orig_url
             else:
                 os.environ.pop("DATABASE_URL", None)
+            import app.core.config
+            reload(app.core.config)
 

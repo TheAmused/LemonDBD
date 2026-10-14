@@ -13,6 +13,7 @@
 import type { UserBugReport } from '@/types/userProfile';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 import { ApiError, authHeaders, getAuthToken, type ApiErrorBody } from '@/utils/api';
+import { downloadFile } from '@/utils/download';
 
 export { ApiError };
 
@@ -149,14 +150,8 @@ export async function downloadAccountData(userId?: number): Promise<void> {
   }
   // The server names the file; the fallback covers a cross-origin API that does not expose the header.
   const serverName = /filename="([^"]+)"/.exec(res.headers.get('Content-Disposition') ?? '')?.[1];
-  const url = URL.createObjectURL(await res.blob());
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = serverName ?? (userId === undefined ? 'lemondbd-my-data.json' : `lemondbd-user-${userId}-data.json`);
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
+  const filename = serverName ?? (userId === undefined ? 'lemondbd-my-data.json' : `lemondbd-user-${userId}-data.json`);
+  downloadFile(await res.blob(), filename, 'application/json');
 }
 
 /** Permanently deletes the signed-in account; the server re-checks the password. */

@@ -1,3 +1,4 @@
+'use client';
 // frontend/src/components/onboarding/wizard/useOnboardingLanguage.ts
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';

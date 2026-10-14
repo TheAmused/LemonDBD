@@ -2,6 +2,7 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert';
 import { isKiller, isSurvivor } from '@/utils/characterUtils';
+import { toRoleCategory, toLowercaseRole } from '@/types/perks';
 
 describe('isKiller / isSurvivor', () => {
   it('are case-insensitive and accept plurals', () => {
@@ -21,4 +22,14 @@ describe('isKiller / isSurvivor', () => {
       assert.strictEqual(isSurvivor(v), false);
     }
   });
+
+  it('toRoleCategory and toLowercaseRole normalize roles correctly', () => {
+    assert.strictEqual(toRoleCategory('killer'), 'Killer');
+    assert.strictEqual(toRoleCategory('KILLER'), 'Killer');
+    assert.strictEqual(toRoleCategory('survivor'), 'Survivor');
+    assert.strictEqual(toRoleCategory('SURVIVOR'), 'Survivor');
+    assert.strictEqual(toLowercaseRole('Killer'), 'killer');
+    assert.strictEqual(toLowercaseRole('Survivor'), 'survivor');
+  });
 });
+

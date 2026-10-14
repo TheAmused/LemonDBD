@@ -4,6 +4,7 @@ import type { Dictionary } from '@/locales/types';
 
 import React, { useEffect, useState } from 'react';
 import { Sparkles, Lock } from 'lucide-react';
+import { PerkIcon } from '@/components/ui/PerkIcon';
 import { Modal } from '@/components/common/Modal';
 import { Perk } from '@/types/gauntletStreak';
 import { perkIconUrl as perkIconFor } from '@/utils/staticUrl';
@@ -24,7 +25,6 @@ const LOCK_BREAK_DELAY_MS = 880;
 const LOCK_UNLOCKED_DELAY_MS = 1560;
 
 const PerkTile: React.FC<{ perk: Perk; index: number; phase: LockPhase }> = ({ perk, index, phase }) => {
-  const [failed, setFailed] = useState(false);
   const displayName = usePerkDisplayName()(perk.name);
   const src = perkIconFor(perk);
   const isUnlocked = phase === 'unlocked';
@@ -43,16 +43,13 @@ const PerkTile: React.FC<{ perk: Perk; index: number; phase: LockPhase }> = ({ p
         }`}
         style={delay}
       >
-        {src && !failed ? (
-          <img
-            src={src}
-            alt={displayName}
-            className="w-full h-full object-contain"
-            onError={() => setFailed(true)}
-          />
-        ) : (
-          <Sparkles className="w-5 h-5 text-text-muted" />
-        )}
+        <PerkIcon
+          perk={perk}
+          src={src}
+          alt={displayName}
+          imageClassName="w-full h-full object-contain"
+          fallbackIcon={<Sparkles className="w-5 h-5 text-text-muted" />}
+        />
       </div>
       <span className="type-strong-2xs text-text-secondary truncate w-full text-center">
         {displayName}

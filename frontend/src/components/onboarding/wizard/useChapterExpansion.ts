@@ -1,3 +1,4 @@
+'use client';
 // frontend/src/components/onboarding/wizard/useChapterExpansion.ts
 import { useEffect, useRef, useState } from 'react';
 import { useResponsiveGridColumns } from '@/hooks/useResponsiveGridColumns';

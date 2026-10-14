@@ -4,7 +4,6 @@
 import React, { useState } from 'react';
 import { Pencil, Trash2, X } from 'lucide-react';
 import type { TierListDocumentItem } from '@/types/tierList';
-import type { Dictionary } from '@/locales/types';
 import { TIER_LIST_LIMITS } from '@/utils/tierLists/constants';
 import { TOUCH_BTN } from '../styles';
 import { TierItemEditModal } from './TierItemEditModal';

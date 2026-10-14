@@ -1,6 +1,5 @@
 'use client';
 // frontend/src/components/streaks/chaos/ChaosModeModal.tsx
-import type { Dictionary } from '@/locales/types';
 
 import React from 'react';
 import { Difficulty } from '@/types/chaosStreak';

@@ -1,24 +1,8 @@
-// frontend/src/app/[locale]/minigames/page.tsx
-'use client';
+import { pageMetadata } from '@/i18n/metadata';
+import { MinigamesHubClient } from '@/features/minigames';
 
-import React from 'react';
-import { PageShell } from '@/components/layout/PageShell';
-import { MinigamesHub } from '@/components/minigames/MinigamesHub';
-import { useDictionary, useLocale } from '@/context/DictionaryContext';
-
+export const generateMetadata = pageMetadata('/minigames', (d) => ({ title: d.minigames.pageTitle }));
 
 export default function MinigamesPage() {
-  const dict = useDictionary();
-  const locale = useLocale();
-
-
-  return (
-    <PageShell
-      locale={locale}
-      activeCategory="minigames"
-      mainClassName="relative flex flex-col"
-    >
-      <MinigamesHub locale={locale} />
-    </PageShell>
-  );
+  return <MinigamesHubClient />;
 }

@@ -1,6 +1,5 @@
 'use client';
 // frontend/src/components/sidebar/SidebarBottomControls.tsx
-import type { Dictionary } from '@/locales/types';
 
 import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';

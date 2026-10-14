@@ -5,10 +5,11 @@ import path from 'node:path';
 import { en, es, pl, de, ja } from '../../locales';
 
 const locales = { en, es, pl, de, ja } as const;
-const pageSrc = fs.readFileSync(
-  path.resolve(__dirname, '../../app/[locale]/privacy-policy/page.tsx'),
-  'utf-8'
-);
+const pageSrc =
+  fs.readFileSync(path.resolve(__dirname, '../../app/[locale]/privacy-policy/page.tsx'), 'utf-8') +
+  (fs.existsSync(path.resolve(__dirname, '../../components/legal/PrivacyPolicyClient.tsx'))
+    ? fs.readFileSync(path.resolve(__dirname, '../../components/legal/PrivacyPolicyClient.tsx'), 'utf-8')
+    : '');
 
 test('privacy policy: every section key rendered by the page exists, with text, in all locales', () => {
   const order = /PRIVACY_SECTION_ORDER = \[([\s\S]*?)\] as const/.exec(pageSrc)?.[1] ?? '';
@@ -38,7 +39,11 @@ test('privacy policy: locales share the same list sizes as English', () => {
 });
 
 test('about page links a Privacy Policy pill to the localized /privacy-policy slug', () => {
-  const about = fs.readFileSync(path.resolve(__dirname, '../../app/[locale]/about/page.tsx'), 'utf-8');
+  const about =
+    fs.readFileSync(path.resolve(__dirname, '../../app/[locale]/about/page.tsx'), 'utf-8') +
+    (fs.existsSync(path.resolve(__dirname, '../../components/about/AboutClient.tsx'))
+      ? fs.readFileSync(path.resolve(__dirname, '../../components/about/AboutClient.tsx'), 'utf-8')
+      : '');
   assert.ok(about.includes('/privacy-policy`'), 'about links to the privacy-policy slug');
   assert.ok(about.includes('dict.privacy.heading'), 'pill label comes from the dictionary');
 });

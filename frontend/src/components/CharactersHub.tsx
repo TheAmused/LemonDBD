@@ -21,7 +21,7 @@ import { useCharacterOwnership } from '@/components/characters/hub/useCharacterO
 import { CharacterItem, PerkItem, AddonItem, EquipmentItem } from '@/components/character-detail/types';
 import { RoleCategory } from '@/types/perks';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
-import { useDictionary } from '@/context/DictionaryContext';
+import { useDictionary, useLocale } from '@/context/DictionaryContext';
 
 const AuthModal = dynamic(() => import('@/components/AuthModal').then((m) => m.AuthModal), { ssr: false });
 const DisabledReasonModal = dynamic(

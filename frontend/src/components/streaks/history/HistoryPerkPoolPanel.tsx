@@ -1,9 +1,9 @@
 'use client';
 // frontend/src/components/streaks/history/HistoryPerkPoolPanel.tsx
-import type { Dictionary } from '@/locales/types';
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { CheckCircle2, Lock, Search, Sparkles, X } from 'lucide-react';
+import { PerkIcon } from '@/components/ui/PerkIcon';
 import { Perk } from '@/types/gauntletStreak';
 import { perkIconUrl as perkIconFor } from '@/utils/staticUrl';
 import { usePerkDisplayName, usePerkLabel } from '@/context/DisplayNamesContext';
@@ -15,7 +15,6 @@ const UnlockedTile: React.FC<{ perk: Perk; displayName: string; justUnlocked: bo
   displayName,
   justUnlocked,
 }) => {
-  const [failed, setFailed] = useState(false);
   const src = perkIconFor(perk);
   return (
     <div
@@ -23,17 +22,13 @@ const UnlockedTile: React.FC<{ perk: Perk; displayName: string; justUnlocked: bo
         justUnlocked ? 'chaos-badge-pop' : ''
       }`}
     >
-      <div className="w-full aspect-square rounded-md overflow-hidden bg-bg-elevated flex items-center justify-center">
-        {src && !failed ? (
-          <img
-            src={src}
-            alt={displayName}
-            className="w-full h-full object-contain p-0.5 sm:p-1"
-            onError={() => setFailed(true)}
-          />
-        ) : (
-          <Sparkles className="w-6 h-6 text-text-muted" />
-        )}
+      <div className="w-full aspect-square rounded-md overflow-hidden bg-bg-elevated flex items-center justify-center p-0.5 sm:p-1">
+        <PerkIcon
+          perk={perk}
+          src={src}
+          alt={displayName}
+          fallbackIcon={<Sparkles className="w-6 h-6 text-text-muted" />}
+        />
       </div>
       <span className="text-mini font-medium text-center text-text-secondary leading-tight line-clamp-2">
         {displayName}
@@ -43,21 +38,16 @@ const UnlockedTile: React.FC<{ perk: Perk; displayName: string; justUnlocked: bo
 };
 
 const LockedTile: React.FC<{ perk: Perk; displayName: string }> = ({ perk, displayName }) => {
-  const [failed, setFailed] = useState(false);
   const src = perkIconFor(perk);
   return (
     <div className="relative flex flex-col items-center gap-1 p-1.5 sm:gap-1.5 sm:p-2 rounded-lg bg-bg-elevated border border-dashed border-2 border-border-color overflow-hidden">
-      <div className="w-full aspect-square rounded-md overflow-hidden bg-bg-elevated flex items-center justify-center grayscale opacity-40">
-        {src && !failed ? (
-          <img
-            src={src}
-            alt={displayName}
-            className="w-full h-full object-contain p-0.5 sm:p-1"
-            onError={() => setFailed(true)}
-          />
-        ) : (
-          <Sparkles className="w-6 h-6 text-text-muted" />
-        )}
+      <div className="w-full aspect-square rounded-md overflow-hidden bg-bg-elevated flex items-center justify-center grayscale opacity-40 p-0.5 sm:p-1">
+        <PerkIcon
+          perk={perk}
+          src={src}
+          alt={displayName}
+          fallbackIcon={<Sparkles className="w-6 h-6 text-text-muted" />}
+        />
       </div>
       <span className="text-mini font-medium text-center text-text-muted leading-tight line-clamp-2 opacity-60">
         {displayName}

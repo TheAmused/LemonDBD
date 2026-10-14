@@ -42,6 +42,10 @@ export default {
   confirmDelete: "Czy na pewno chcesz usunąć to własne wyzwanie?",
   cancel: "Anuluj",
   playTrial: "Graj",
+  authRequiredTitle: "Wymagane logowanie",
+  authRequiredDesc: "Musisz być zalogowany, aby tworzyć lub grać we własne wyzwania.",
+  loginToManage: "Zaloguj się, aby zarządzać wyzwaniami",
+  loginToManageDesc: "Zaloguj się, aby tworzyć, importować i grać w wyzwania społeczności.",
   adminPublishSuccess: "Wyzwanie zostało pomyślnie opublikowane jako oficjalne!",
 
   // Runner

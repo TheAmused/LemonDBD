@@ -19,6 +19,7 @@
  */
 
 import { getBackendBaseUrl } from '@/utils/api';
+import { apiClient } from '@/lib/api-client';
 
 interface CacheEntry<T> {
   data: T;
@@ -212,9 +213,5 @@ export function unwrapList<T>(payload: ListPayload<T> | null | undefined): T[] {
 }
 
 export async function fetchJson<T>(url: string, init?: RequestInit): Promise<T> {
-  const res = await fetch(url, init);
-  if (!res.ok) {
-    throw new Error(`Request failed (${res.status}): ${url}`);
-  }
-  return (await res.json()) as T;
+  return apiClient<T>(url, init);
 }

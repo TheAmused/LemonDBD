@@ -6,7 +6,6 @@ import { useDroppable } from '@dnd-kit/core';
 import { SortableContext, rectSortingStrategy } from '@dnd-kit/sortable';
 import { ArrowDownToLine, ChevronDown, Search, X } from 'lucide-react';
 import type { TierItem } from '@/types/tierList';
-import type { Dictionary } from '@/locales/types';
 import { cn } from '@/utils/cn';
 import { normalizeSearchText } from '@/utils/perkUtils';
 import { POOL_CONTAINER_ID } from '@/utils/tierLists/constants';
@@ -15,6 +14,7 @@ import type { TierTileShape } from './TierItemTile';
 import { containerDndId, itemDndId } from './dndIds';
 import { Input } from '@/components/common/Field';
 import { Badge } from '@/components/common/Badge';
+import { EmptyState } from '@/components/common/EmptyState';
 import { formatMessage } from '@/utils/i18nFormat';
 import { useDictionary } from "@/context/DictionaryContext";
 
@@ -206,9 +206,11 @@ export function TierPool({
             </SortableContext>
           </div>
           {visibleKeys.length === 0 && (
-            <p className="py-6 text-center type-strong text-text-muted">
-              {keys.length === 0 ? emptyLabel : t.poolNoMatches}
-            </p>
+            <EmptyState
+              variant="inline"
+              title={keys.length === 0 ? emptyLabel : t.poolNoMatches}
+              className="py-6 text-center"
+            />
           )}
         </div>
       </div>

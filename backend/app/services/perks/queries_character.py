@@ -28,13 +28,14 @@ def _role_models(category: str | None) -> list[type[Survivor] | type[Killer]]:
     return [m for m in (Survivor, Killer) if m.role.lower() == wanted]
 
 
-def fetch_characters(service, category: str | None = None, lang: str | None = None) -> list[dict[str, Any]]:
+def fetch_characters(service: Any = None, category: str | None = None, lang: str | None = None) -> list[dict[str, Any]]:
     """Retrieve character list ordered by canonical chapter release numbers."""
     cache_key = ("fetch_characters", category.lower() if category else "all", lang)
     cached = catalog_cache.get(cache_key)
     if cached is not None:
         return cached
 
+    chars_cache = getattr(service, "_characters_cache", [])
     try:
         models = _role_models(category)
         characters: list[Survivor | Killer] = []
@@ -63,7 +64,7 @@ def fetch_characters(service, category: str | None = None, lang: str | None = No
             logger.warning(
                 f"[characters-query-check] DB query returned 0 rows "
                 f"(category={category!r}); falling back to in-memory cache "
-                f"of size {len(service._characters_cache)}"
+                f"of size {len(chars_cache)}"
             )
         if characters:
             res = [c.to_dict(lang=lang) for c in characters]
@@ -73,10 +74,10 @@ def fetch_characters(service, category: str | None = None, lang: str | None = No
         logger.exception(
             f"[characters-query-check] Querying/serializing characters from "
             f"DB raised -- falling back to in-memory cache of size "
-            f"{len(service._characters_cache)}"
+            f"{len(chars_cache)}"
         )
 
-    return service._characters_cache
+    return chars_cache
 
 
 @retry_on_transient_db_error()
@@ -89,7 +90,7 @@ def _run_characters_query(stmt):
 
 
 def fetch_character_suggestions(
-    service,
+    service: Any = None,
     query: str = "",
     category: str | None = None,
     limit: int = 15,
@@ -140,7 +141,7 @@ def fetch_character_suggestions(
     except Exception:
         q_clean = query.strip().lower()
         res = []
-        for c in service._characters_cache:
+        for c in getattr(service, "_characters_cache", []):
             if category and category.lower() != "all" and (c.get("category") or c.get("role", "")).lower() != category.lower():
                 continue
             if not q_clean or q_clean in c.get("name", "").lower() or q_clean in c.get("real_name", "").lower():
@@ -158,7 +159,7 @@ def fetch_character_suggestions(
         return res
 
 
-def fetch_character_detail(service, character_name: str, lang: str | None = None) -> dict[str, Any] | None:
+def fetch_character_detail(service: Any = None, character_name: str = "", lang: str | None = None) -> dict[str, Any] | None:
     """Retrieve full character detail including specific addons, powers, and teachable perks."""
     target_clean = character_name.strip().lower()
     target_slug = slugify(character_name)

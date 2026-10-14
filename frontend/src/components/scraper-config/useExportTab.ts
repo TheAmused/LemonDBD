@@ -1,8 +1,10 @@
+'use client';
 // frontend/src/components/scraper-config/useExportTab.ts
 import { useState } from 'react';
 import { useDictionary } from '@/context/DictionaryContext';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 import { authHeaders, getAuthToken, getErrorMessage } from '@/utils/api';
+import { downloadFile } from '@/utils/download';
 import { ALL_TARGETS, type TargetItem } from './scraperTargets';
 
 /** Which tables to export, and the download of the resulting JSON snapshot. */
@@ -70,18 +72,10 @@ export function useExportTab() {
       }
 
       const data = await res.json();
-      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
       const now = new Date();
       const timestamp = now.toISOString().replace(/[:.]/g, '-').slice(0, 19);
 
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = `lemondbd_backup_${timestamp}.json`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      URL.revokeObjectURL(url);
+      downloadFile(JSON.stringify(data, null, 2), `lemondbd_backup_${timestamp}.json`, 'application/json');
 
       setExportSuccess(`Successfully exported ${exportTargets.length} categories.`);
     } catch (err: unknown) {

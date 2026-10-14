@@ -1,9 +1,9 @@
 'use client';
 // frontend/src/components/streaks/history/HistoryNextRowPreview.tsx
-import type { Dictionary } from '@/locales/types';
 
 import React, { useState } from 'react';
 import { ChevronDown } from 'lucide-react';
+import { PerkIcon } from '@/components/ui/PerkIcon';
 import { avatarUrlFor } from '../chaos/KillerPickerGrid';
 import { KillerIcon } from '@/components/icons/DbdIcons';
 
@@ -16,18 +16,18 @@ export interface HistoryNextRowPreviewProps {
 }
 
 const PreviewTile: React.FC<{ name: string }> = ({ name }) => {
-  const [failed, setFailed] = useState(false);
   const src = avatarUrlFor(name);
   return (
     <div
       className="flex flex-col items-center gap-1.5 rounded-lg border border-border-color bg-bg-surface p-1.5 grayscale opacity-50"
     >
       <div className="relative w-full aspect-square rounded-md overflow-hidden bg-bg-elevated flex items-center justify-center">
-        {!failed ? (
-          <img src={src} alt={name} className="w-full h-full object-cover" onError={() => setFailed(true)} />
-        ) : (
-          <KillerIcon className="w-6 h-6 text-text-muted" />
-        )}
+        <PerkIcon
+          src={src}
+          alt={name}
+          imageClassName="w-full h-full object-cover"
+          fallbackIcon={<KillerIcon className="w-6 h-6 text-text-muted" />}
+        />
       </div>
       <span className="text-mini font-medium text-center text-text-muted truncate w-full">
         {name}

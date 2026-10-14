@@ -7,6 +7,7 @@ import {
   QuillEditIcon,
   SealCheckIcon,
 } from '@/components/icons/DbdIcons';
+import { Flag } from 'lucide-react';
 import { Button } from '@/components/common/Button';
 import { useDictionary } from '@/context/DictionaryContext';
 import type { RosterItem } from '@/types/smashOrPass';
@@ -19,6 +20,7 @@ interface RosterPickerFooterProps {
   onEditRoster?: (id: string) => void;
   onExportRoster?: (id: string) => void;
   onDeleteRoster?: (id: string) => void;
+  onReportRoster?: (id: string) => void;
 }
 
 /** Under the carousel: choose the centred roster, or (for the viewer's own) edit, share, delete it. */
@@ -28,6 +30,7 @@ export function RosterPickerFooter({
   onEditRoster,
   onExportRoster,
   onDeleteRoster,
+  onReportRoster,
 }: RosterPickerFooterProps) {
   const dict = useDictionary();
 
@@ -64,7 +67,7 @@ export function RosterPickerFooter({
         </Button>
       )}
 
-      {activeRosterInCenter.is_local && (onEditRoster || onExportRoster || onDeleteRoster) && (
+      {activeRosterInCenter.is_local && (onEditRoster || onExportRoster || onDeleteRoster || onReportRoster) && (
         <>
           {onEditRoster && (
             <Button
@@ -84,6 +87,16 @@ export function RosterPickerFooter({
               className="h-11 w-11 sm:h-[52px] sm:w-[52px] rounded-2xl"
             >
               <LetterSendIcon className="h-5 w-5" aria-hidden="true" />
+            </Button>
+          )}
+          {onReportRoster && (
+            <Button
+              variant="secondary" size="lg" icon
+              onClick={() => onReportRoster(activeRosterInCenter.id)}
+              aria-label={dict.tierLists.reportButtonAria}
+              className="h-11 w-11 sm:h-[52px] sm:w-[52px] rounded-2xl"
+            >
+              <Flag className="h-5 w-5 text-accent-red" aria-hidden="true" />
             </Button>
           )}
           {onDeleteRoster && (

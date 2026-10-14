@@ -1,5 +1,7 @@
 // frontend/src/types/minigame.ts
 
+import type { ContentManifest } from '@/utils/contentSigning';
+
 export type MinigameMode =
   | 'classic'
   | 'classic_character'
@@ -59,6 +61,7 @@ export interface ChallengeDefinition {
   rounds: RoundConfig[];
   created_at?: string;
   updated_at?: string;
+  _manifest?: ContentManifest | null;
 }
 
 export type AttributeStatus = 'correct' | 'partial' | 'incorrect';

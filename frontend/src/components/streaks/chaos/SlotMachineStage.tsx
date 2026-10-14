@@ -1,12 +1,12 @@
 'use client';
 // frontend/src/components/streaks/chaos/SlotMachineStage.tsx
-import type { Dictionary } from '@/locales/types';
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { RefreshCw } from 'lucide-react';
 import { Perk } from '@/types/gauntletStreak';
 import { AddonRarity } from '@/types/chaosStreak';
 import { ADDON_RARITY_ICONS } from '@/constants/addonRarityIcons';
+import { PerkIcon } from '@/components/ui/PerkIcon';
 import { useSlotReels, ReelDirection, REEL_SPIN_MS } from './useSlotReels';
 import { perkIconUrl as perkIconFor } from '@/utils/staticUrl';
 import { usePerkDisplayName } from '@/context/DisplayNamesContext';
@@ -19,14 +19,16 @@ const REEL_DIRECTIONS: ReelDirection[] = ['up', 'down', 'down', 'up'];
 const STRIP_LENGTH = 16;
 
 const PerkImg: React.FC<{ perk: Perk | null; className: string }> = ({ perk, className }) => {
-  const [failed, setFailed] = useState(false);
   const displayName = usePerkDisplayName()(perk?.name || '');
   const src = perk ? perkIconFor(perk) : undefined;
-  if (!perk || !src || failed) {
-    return <span className="text-2xl font-black text-text-muted" aria-hidden="true">?</span>;
-  }
   return (
-    <img src={src} alt={displayName} className={className} draggable={false} onError={() => setFailed(true)} />
+    <PerkIcon
+      perk={perk}
+      src={src}
+      alt={displayName}
+      imageClassName={className}
+      fallbackIcon={<span className="text-2xl font-black text-text-muted" aria-hidden="true">?</span>}
+    />
   );
 };
 

@@ -17,6 +17,7 @@ from app.core.extensions import db
 from app.core.json_provider import safe_json_dumps
 from app.core.limiter import limiter, validate_honeypot
 from app.core.security import admin_required, get_current_user
+from app.core.transaction import transaction
 from app.models import BugReport
 from app.utils.api_i18n import error_response
 from app.utils.lang import extract_lang
@@ -191,8 +192,9 @@ def submit_bug_report():
     )
 
     try:
-        db.session.add(new_report)
-        db.session.commit()
+        with transaction():
+            db.session.add(new_report)
+
 
         report_dict = {
             "id": new_report.id,
@@ -340,13 +342,15 @@ def admin_update_bug_report(report_id: int):
         valid_statuses = ["pending", "in_progress", "resolved", "rejected"]
         if new_status.lower() not in valid_statuses:
             return jsonify({"error": f"Invalid status. Must be one of {valid_statuses}."}), 400
-        report.status = new_status.lower()
-
-    if admin_notes is not None:
-        report.admin_notes = admin_notes.strip()
 
     try:
-        db.session.commit()
+        with transaction():
+            if new_status:
+                report.status = new_status.lower()
+
+            if admin_notes is not None:
+                report.admin_notes = admin_notes.strip()
+
         log_admin_action(
             g.current_user.id,
             action="bug_report_updated",
@@ -359,7 +363,6 @@ def admin_update_bug_report(report_id: int):
             "report": BugReportResponse.model_validate(report).model_dump(),
         }), 200
     except Exception as e:
-        db.session.rollback()
         logger.error(f"Error updating bug report #{report_id}: {e}")
         return jsonify({"error": "Failed to update bug report."}), 500
 
@@ -373,11 +376,11 @@ def admin_delete_bug_report(report_id: int):
         return jsonify({"error": "Bug report not found."}), 404
 
     try:
-        db.session.delete(report)
-        db.session.commit()
+        with transaction():
+            db.session.delete(report)
         log_admin_action(g.current_user.id, action="bug_report_deleted", target_type="bug_report", target_id=report_id)
         return jsonify({"message": f"Bug report #{report_id} deleted."}), 200
     except Exception as e:
-        db.session.rollback()
         logger.error(f"Error deleting bug report #{report_id}: {e}")
         return jsonify({"error": "Failed to delete bug report."}), 500
+

@@ -2,7 +2,8 @@
 from flask import Blueprint, jsonify, make_response, request
 
 from app.core.limiter import limiter
-from app.routes.auth import ownership_service, session_response, user_service
+from app.core.security import generate_token
+from app.routes.auth import ownership_service, session_response
 from app.services.user import google_auth, two_factor
 
 auth_google_bp = Blueprint("auth_google_bp", __name__, url_prefix="/api/v1/auth/google")
@@ -18,14 +19,24 @@ def google_config():
     return resp
 
 
+from pydantic import ValidationError
+
+from app.schemas.auth import GoogleSignInDTO
+from app.utils.responses import api_error
+
+
 @auth_google_bp.route("", methods=["POST"])
 @limiter.limit("10 per minute")
 def google_sign_in():
-    credential = (request.get_json(silent=True) or {}).get("credential")
     try:
-        user, created = google_auth.sign_in(credential)
+        dto = GoogleSignInDTO.model_validate(request.get_json(silent=True) or {})
+    except ValidationError as err:
+        return api_error("Field 'credential' is required", 400, details=err.errors())
+
+    try:
+        user, created = google_auth.sign_in(dto.credential)
     except google_auth.GoogleAuthError as err:
-        return jsonify({"error": err.message, "status": err.status}), err.status
+        return api_error(err.message, err.status)
 
     if created:
         ownership_service.seed_default_ownership_for_new_user(user.id)
@@ -39,7 +50,8 @@ def google_sign_in():
 
     return session_response(
         user,
-        user_service.generate_auth_token(user),
+        generate_token(user.id, user.role),
         "Account created" if created else "Login successful",
         status=201 if created else 200,
     )
+

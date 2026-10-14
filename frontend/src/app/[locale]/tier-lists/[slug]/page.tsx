@@ -1,16 +1,19 @@
-'use client';
-// frontend/src/app/[locale]/tier-lists/[slug]/page.tsx
-
-import React, { use } from 'react';
+import { pageMetadata } from '@/i18n/metadata';
 import { PageShell } from '@/components/layout/PageShell';
-import { OfficialTierListView } from '@/components/tier-lists/OfficialTierListView';
-import { useDictionary, useLocale } from '@/context/DictionaryContext';
+import { OfficialTierListView } from '@/features/tier-lists';
+import type { Locale } from '@/i18n/config';
 
+export const generateMetadata = pageMetadata('/tier-lists', (d) => ({
+  title: d.tierLists.pageTitle,
+  description: d.tierLists.metaDescription,
+}));
 
-export default function OfficialTierListPage({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = use(params);
-  const dict = useDictionary();
-  const locale = useLocale();
+export default async function OfficialTierListPage({
+  params,
+}: {
+  params: Promise<{ locale: Locale; slug: string }>;
+}) {
+  const { locale, slug } = await params;
 
   return (
     <PageShell
@@ -19,7 +22,6 @@ export default function OfficialTierListPage({ params }: { params: Promise<{ slu
       padding="tight"
       mainClassName="relative flex flex-col"
     >
-      {/* Keyed by slug: moving between lists must not carry one list's selection or dialogs into the next. */}
       <OfficialTierListView key={slug} slug={decodeURIComponent(slug)} locale={locale} />
     </PageShell>
   );

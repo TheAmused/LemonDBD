@@ -4,7 +4,6 @@
 import { Button } from '@/components/common/Button';
 import React from 'react';
 import { Flame } from 'lucide-react';
-import type { Dictionary } from '@/locales/types';
 import type { PageStreakRun } from '@/types/pageStreak';
 import { FreezeBadge } from '../FreezeBadge';
 import { StreakStatTiles } from '../StreakStatTiles';

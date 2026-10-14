@@ -3,12 +3,12 @@ from datetime import datetime
 from sqlalchemy import Boolean, DateTime, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import Mapped, mapped_column
 from app.core.extensions import Base
-from app.models.base import utcnow
+from app.models.base import ColumnDictMixin, utcnow
 
 CHALLENGE_MODES = ("gauntlet", "chaos", "history", "page_streak")
 
 
-class ChallengeModeSetting(Base):
+class ChallengeModeSetting(Base, ColumnDictMixin):
     """One row per streak mode, letting an admin pause the whole mode
     site-wide (e.g. during a critical bug) without requiring a deployment."""
 
@@ -22,17 +22,8 @@ class ChallengeModeSetting(Base):
         DateTime(timezone=True), default=utcnow, onupdate=utcnow, nullable=False
     )
 
-    def to_dict(self) -> dict[str, str | int | bool | None]:
-        return {
-            "id": self.id,
-            "mode": self.mode,
-            "is_enabled": self.is_enabled,
-            "disabled_reason": self.disabled_reason,
-            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
-        }
 
-
-class SiteSetting(Base):
+class SiteSetting(Base, ColumnDictMixin):
     """Admin-editable site setting overriding the config/env default (one row per key)."""
 
     __tablename__ = "site_settings"
@@ -45,7 +36,7 @@ class SiteSetting(Base):
     )
 
 
-class AdminAuditLog(Base):
+class AdminAuditLog(Base, ColumnDictMixin):
     """Append-only record of administrative actions (who did what, when),
     e.g. disabling a character, toggling a challenge mode, changing a user's role."""
 
@@ -63,19 +54,8 @@ class AdminAuditLog(Base):
         DateTime(timezone=True), default=utcnow, index=True, nullable=False
     )
 
-    def to_dict(self) -> dict[str, str | int | None]:
-        return {
-            "id": self.id,
-            "admin_user_id": self.admin_user_id,
-            "action": self.action,
-            "target_type": self.target_type,
-            "target_id": self.target_id,
-            "details": self.details,
-            "created_at": self.created_at.isoformat() if self.created_at else None,
-        }
 
-
-class SeedUpdateLog(Base):
+class SeedUpdateLog(Base, ColumnDictMixin):
     """Tracks applied seed files and update patches by file path and content SHA256 hash."""
 
     __tablename__ = "seed_update_logs"
@@ -87,13 +67,4 @@ class SeedUpdateLog(Base):
     applied_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=utcnow, onupdate=utcnow, nullable=False
     )
-
-    def to_dict(self) -> dict[str, str | int | None]:
-        return {
-            "id": self.id,
-            "file_identifier": self.file_identifier,
-            "content_hash": self.content_hash,
-            "summary_json": self.summary_json,
-            "applied_at": self.applied_at.isoformat() if self.applied_at else None,
-        }
 

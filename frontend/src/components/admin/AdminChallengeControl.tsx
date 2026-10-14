@@ -3,7 +3,6 @@
 
 import React, { useCallback, useEffect, useState } from 'react';
 import { Input, Select, SearchInput } from '@/components/common/Field';
-import type { Dictionary } from '@/locales/types';
 import { CheckCircle2, Power, Sparkles, XCircle } from 'lucide-react';
 import {
   AdminCharacterRow,

@@ -1,28 +1,26 @@
-'use client';
-// frontend/src/app/[locale]/tier-lists/new/page.tsx
-
-import React, { Suspense } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { Suspense } from 'react';
+import { pageMetadata } from '@/i18n/metadata';
 import { PageShell } from '@/components/layout/PageShell';
-import { TierListCreator } from '@/components/tier-lists/creator/TierListCreator';
-import { useLocale } from '@/context/DictionaryContext';
+import { TierListCreator } from '@/features/tier-lists';
 import TierListsLoading from '../loading';
+import type { Locale } from '@/i18n/config';
 
-function NewTierListContent({ locale }: { locale: string }) {
-  // `?edit=<id>` -- reused by "Edit details" on a custom list's own page
-  // (`CustomTierListView.tsx`) instead of a title/description-only modal:
-  // the creator prefills from that list and saves back onto it in place.
-  // `TierListCreator` sets the document title itself (it knows whether it's
-  // creating or editing).
-  const searchParams = useSearchParams();
-  const editId = searchParams.get('edit') ?? undefined;
-  const officialSlug = searchParams.get('official') ?? undefined;
+export const generateMetadata = pageMetadata('/tier-lists', (d) => ({
+  title: d.tierLists.pageTitle,
+  description: d.tierLists.metaDescription,
+}));
 
-  return <TierListCreator locale={locale} editId={editId} officialSlug={officialSlug} />;
-}
-
-export default function NewTierListPage() {
-  const locale = useLocale();
+export default async function NewTierListPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ locale: Locale }>;
+  searchParams?: Promise<{ edit?: string; official?: string }>;
+}) {
+  const { locale } = await params;
+  const sp = searchParams ? await searchParams : undefined;
+  const editId = sp?.edit;
+  const officialSlug = sp?.official;
 
   return (
     <PageShell
@@ -32,7 +30,7 @@ export default function NewTierListPage() {
       mainClassName="relative flex flex-col"
     >
       <Suspense fallback={<TierListsLoading />}>
-        <NewTierListContent locale={locale} />
+        <TierListCreator locale={locale} editId={editId} officialSlug={officialSlug} />
       </Suspense>
     </PageShell>
   );

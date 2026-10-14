@@ -1,3 +1,4 @@
+'use client';
 // frontend/src/components/maps/voice/useStartListening.ts
 import { useCallback } from 'react';
 import type { Dispatch, RefObject, SetStateAction } from 'react';

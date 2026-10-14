@@ -1,5 +1,4 @@
 'use client';
-import type { Dictionary } from '@/locales/types';
 // frontend/src/components/user/UserProfileForm.tsx
 
 import React, { useState } from 'react';

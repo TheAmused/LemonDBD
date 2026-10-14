@@ -3,7 +3,6 @@
 
 import React, { useCallback, useEffect, useState } from 'react';
 import { Button } from '@/components/common/Button';
-import type { Dictionary } from '@/locales/types';
 import { ScrollText, ChevronLeft, ChevronRight } from 'lucide-react';
 import { AdminAuditLogEntry } from '@/types/admin';
 import { backendBase } from '@/utils/staticUrl';

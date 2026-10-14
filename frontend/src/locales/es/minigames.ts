@@ -42,6 +42,10 @@ export default {
   confirmDelete: "¿Seguro que deseas eliminar este desafío personalizado?",
   cancel: "Cancelar",
   playTrial: "Jugar",
+  authRequiredTitle: "Inicio de sesión requerido",
+  authRequiredDesc: "Debes iniciar sesión para crear o jugar pruebas personalizadas.",
+  loginToManage: "Inicia sesión para gestionar pruebas",
+  loginToManageDesc: "Inicia sesión para crear, importar y jugar pruebas comunitarias.",
   adminPublishSuccess: "¡Desafío publicado como oficial con éxito!",
 
   // Runner

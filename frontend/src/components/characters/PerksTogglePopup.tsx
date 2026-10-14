@@ -1,3 +1,4 @@
+'use client';
 // frontend/src/components/characters/PerksTogglePopup.tsx
 import React from 'react';
 import { Check, Lock } from 'lucide-react';

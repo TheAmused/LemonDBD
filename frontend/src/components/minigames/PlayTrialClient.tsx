@@ -16,6 +16,9 @@ import {
 import { getCustomChallenges } from '@/utils/minigames/storage';
 import { decodeChallengeShare, readChallengeFragment } from '@/utils/minigames/shareLink';
 import { DbdSpinner } from '@/components/common/DbdSpinner';
+import { Button } from '@/components/common/Button';
+import { ReportContentModal } from '@/components/common/ReportContentModal';
+import { Flag } from 'lucide-react';
 import { AuthRequiredState } from '@/components/common/AuthRequiredState';
 import { useAuth } from '@/context/AuthContext';
 import { getErrorMessage } from '@/utils/api';
@@ -43,6 +46,7 @@ function PlayTrialContent() {
   const [catalog, setCatalog] = useState<MinigameCatalog | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [reportModalOpen, setReportModalOpen] = useState(false);
 
   useEffect(() => {
     let isMounted = true;
@@ -121,11 +125,36 @@ function PlayTrialContent() {
           <p className="text-xs text-text-muted">{error}</p>
         </div>
       ) : challenge && catalog ? (
-        <ChallengeRunner
-          challenge={challenge}
-          catalog={catalog}
-          locale={locale}
-        />
+        <>
+          {isCustomTrial && (
+            <div className="w-full max-w-4xl flex justify-end px-4 mb-2">
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => setReportModalOpen(true)}
+                aria-label={dict.tierLists.reportButtonAria}
+              >
+                <Flag className="h-4 w-4 text-accent-red" aria-hidden="true" />
+                <span className="type-label-sm text-text-muted">{dict.tierLists.reportButtonAria}</span>
+              </Button>
+            </div>
+          )}
+          <ChallengeRunner
+            challenge={challenge}
+            catalog={catalog}
+            locale={locale}
+          />
+          {isCustomTrial && (
+            <ReportContentModal
+              isOpen={reportModalOpen}
+              onClose={() => setReportModalOpen(false)}
+              contentType="minigame"
+              manifest={challenge._manifest ?? null}
+              payload={challenge as unknown as Record<string, unknown>}
+              contentTitle={challenge.title}
+            />
+          )}
+        </>
       ) : null}
     </PageShell>
   );

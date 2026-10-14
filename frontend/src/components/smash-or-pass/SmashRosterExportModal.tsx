@@ -23,6 +23,7 @@ export function SmashRosterExportModal({ doc, onClose, locale }: SmashRosterExpo
   return (
     <ExportModal
       doc={doc}
+      contentType="smash_roster"
       onClose={onClose}
       locale={locale}
       idPrefix="smash-roster"

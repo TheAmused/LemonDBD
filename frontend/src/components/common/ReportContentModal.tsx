@@ -7,7 +7,8 @@ import { Modal } from '@/components/common/Modal';
 import { Button } from '@/components/common/Button';
 import { useDictionary } from '@/context/DictionaryContext';
 import { apiUrl, authFetch } from '@/utils/api';
-import type { ContentManifest } from '@/utils/contentSigning';
+import { stripManifest, type ContentManifest } from '@/utils/contentSigning';
+import { isRecord } from '@/utils/shareCodec';
 import { cn } from '@/utils/cn';
 
 export const REPORT_REASONS = [
@@ -25,7 +26,7 @@ export type ReportStatus = 'idle' | 'submitting' | 'success' | 'already_banned' 
 export interface SubmitReportParams {
   contentType: string;
   manifest: ContentManifest;
-  payload: Record<string, unknown>;
+  payload: Record<string, unknown> | object;
   reason: ReportReason;
   notes?: string;
 }
@@ -38,6 +39,7 @@ export interface SubmitReportResult {
 
 export async function submitContentReport(params: SubmitReportParams): Promise<SubmitReportResult> {
   const { contentType, manifest, payload, reason, notes } = params;
+  const cleanPayload = isRecord(payload) ? stripManifest(payload) : payload;
   try {
     const res = await authFetch(apiUrl('/api/v1/content/reports'), {
       method: 'POST',
@@ -50,7 +52,7 @@ export async function submitContentReport(params: SubmitReportParams): Promise<S
         author_id: manifest.author_id,
         author_login: manifest.author_login,
         signature: manifest.signature,
-        payload,
+        payload: cleanPayload,
         reason,
         ...(notes && notes.trim().length > 0 ? { notes: notes.trim() } : {}),
       }),
@@ -77,7 +79,7 @@ export async function submitContentReport(params: SubmitReportParams): Promise<S
 export interface ReportContentModalBodyProps {
   manifest: ContentManifest | null;
   contentType: string;
-  payload: Record<string, unknown>;
+  payload: Record<string, unknown> | object;
   contentTitle?: string;
   onClose: () => void;
   status?: ReportStatus;
@@ -259,8 +261,8 @@ export interface ReportContentModalProps {
   isOpen: boolean;
   onClose: () => void;
   contentType: string; // 'tier_list' | 'smash_roster' | 'minigame'
-  manifest: ContentManifest | null; // from list._manifest
-  payload: Record<string, unknown>; // canonical document payload
+  manifest: ContentManifest | null;
+  payload: Record<string, unknown> | object;
   contentTitle?: string;
 }
 

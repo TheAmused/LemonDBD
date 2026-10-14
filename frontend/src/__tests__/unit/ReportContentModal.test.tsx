@@ -175,6 +175,36 @@ describe('ReportContentModal: Submission API logic', () => {
     assert.equal(sentBody.notes, 'Contains offensive symbols');
   });
 
+  it('strips _manifest from payload before sending to backend to prevent HMAC hash mismatch', async () => {
+    let capturedInit: RequestInit | undefined;
+
+    globalThis.fetch = async (_input: RequestInfo | URL, init?: RequestInit) => {
+      capturedInit = init;
+      return {
+        ok: true,
+        status: 201,
+        json: async () => ({ status: 'pending', content_hash: MOCK_MANIFEST.content_hash }),
+      } as Response;
+    };
+
+    const payloadWithManifest = {
+      ...MOCK_PAYLOAD,
+      _manifest: MOCK_MANIFEST,
+    };
+
+    const res = await submitContentReport({
+      contentType: 'tier_list',
+      manifest: MOCK_MANIFEST,
+      payload: payloadWithManifest,
+      reason: 'hate_speech',
+    });
+
+    assert.equal(res.ok, true);
+    const sentBody = JSON.parse(String(capturedInit?.body));
+    assert.deepEqual(sentBody.payload, MOCK_PAYLOAD);
+    assert.equal('_manifest' in sentBody.payload, false);
+  });
+
   it('handles already_banned status from backend correctly', async () => {
     globalThis.fetch = async () =>
       ({

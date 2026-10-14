@@ -82,3 +82,6 @@ def test_extract_lang_referer_regex_built_from_locales(referer, expected):
     app = Flask(__name__)
     with app.test_request_context("/", headers={"Referer": referer}):
         assert lang.extract_lang() == expected
+        from flask import request
+        assert lang.extract_lang(request) == expected
+

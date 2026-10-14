@@ -21,6 +21,7 @@ from app.services.ownership_service import OwnershipService
 from app.services.user import two_factor
 from app.services.user_service import UserService
 from app.utils.downloads import json_download_response
+from app.utils.lang import extract_lang
 from app.utils.responses import api_error
 
 logger = logging.getLogger(__name__)
@@ -202,7 +203,7 @@ def get_user_characters(user_id: int):
     # or a same-origin request would silently translate `name` out from under
     # any run-state comparison keyed on the canonical English name.
     role = request.args.get("role")
-    characters = ownership_service.get_user_characters(user_id, role=role, lang=request.args.get("lang"))
+    characters = ownership_service.get_user_characters(user_id, role=role, lang=extract_lang(request))
     return jsonify({
         "user_id": user_id,
         "count": len(characters),
@@ -326,7 +327,7 @@ def get_user_perks(user_id: int):
     # Same opt-in-only rule as get_user_characters: perk `name` here is matched
     # against run-state build slots, so it must stay in the caller's control.
     category = request.args.get("category")
-    perks = ownership_service.get_user_perks(user_id, category=category, lang=request.args.get("lang"))
+    perks = ownership_service.get_user_perks(user_id, category=category, lang=extract_lang(request))
     return jsonify({
         "user_id": user_id,
         "count": len(perks),

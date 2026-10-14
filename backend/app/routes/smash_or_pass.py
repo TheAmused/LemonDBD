@@ -53,7 +53,7 @@ def get_rosters():
     # download query params: "true"/"1"/"yes" opt in). An explicit
     # ?include_nsfw=true is required to see them in this listing at all.
     include_nsfw = request.args.get("include_nsfw", "false").lower() in ("true", "1", "yes")
-    lang = request.args.get("lang") or _extract_lang() or "en"
+    lang = _extract_lang(request) or "en"
     try:
         rosters = smash_service.get_rosters(active_only=False, include_nsfw=include_nsfw, lang=lang)
         return jsonify({"data": rosters, "count": len(rosters)}), 200

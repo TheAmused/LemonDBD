@@ -5,6 +5,7 @@ from sqlalchemy import func, select
 from sqlalchemy.orm import joinedload
 
 from app.core.extensions import db
+from app.core.transaction import transaction
 from app.models import Perk, UserCharacterOwnership, UserPerkOwnership
 
 
@@ -89,17 +90,17 @@ def mutate_perk_ownership(user_id: int, perk_id: int, is_unlocked: bool) -> dict
         )
     ).first()
 
-    if not record:
-        record = UserPerkOwnership(
-            user_id=user_id,
-            perk_id=perk_id,
-            is_unlocked=is_unlocked,
-        )
-        db.session.add(record)
-    else:
-        record.is_unlocked = is_unlocked
+    with transaction():
+        if not record:
+            record = UserPerkOwnership(
+                user_id=user_id,
+                perk_id=perk_id,
+                is_unlocked=is_unlocked,
+            )
+            db.session.add(record)
+        else:
+            record.is_unlocked = is_unlocked
 
-    db.session.commit()
     return record.to_dict()
 
 
@@ -110,34 +111,34 @@ def bulk_mutate_perk_ownership(
 ) -> dict[str, Any]:
     """Bulk update multiple perk unlock entries in a single database transaction."""
     updated_count = 0
-    for item in updates:
-        pid = item.get("perk_id")
-        if not pid:
-            continue
-        is_unlocked = bool(item.get("is_unlocked", True))
-        perk = db.session.get(Perk, int(pid))
-        if not is_unlocked and perk and (perk.is_generic_counterpart or (perk.survivor_id is None and perk.killer_id is None)):
-            is_unlocked = True
+    with transaction():
+        for item in updates:
+            pid = item.get("perk_id")
+            if not pid:
+                continue
+            is_unlocked = bool(item.get("is_unlocked", True))
+            perk = db.session.get(Perk, int(pid))
+            if not is_unlocked and perk and (perk.is_generic_counterpart or (perk.survivor_id is None and perk.killer_id is None)):
+                is_unlocked = True
 
-        record = db.session.scalars(
-            select(UserPerkOwnership).where(
-                UserPerkOwnership.user_id == user_id,
-                UserPerkOwnership.perk_id == int(pid),
-            )
-        ).first()
+            record = db.session.scalars(
+                select(UserPerkOwnership).where(
+                    UserPerkOwnership.user_id == user_id,
+                    UserPerkOwnership.perk_id == int(pid),
+                )
+            ).first()
 
-        if not record:
-            record = UserPerkOwnership(
-                user_id=user_id,
-                perk_id=int(pid),
-                is_unlocked=is_unlocked,
-            )
-            db.session.add(record)
-        else:
-            record.is_unlocked = is_unlocked
-        updated_count += 1
+            if not record:
+                record = UserPerkOwnership(
+                    user_id=user_id,
+                    perk_id=int(pid),
+                    is_unlocked=is_unlocked,
+                )
+                db.session.add(record)
+            else:
+                record.is_unlocked = is_unlocked
+            updated_count += 1
 
-    db.session.commit()
     return {
         "user_id": user_id,
         "updated_count": updated_count,

@@ -29,7 +29,10 @@ from app.services.admin_control_service import (
     get_audit_logs,
     get_challenge_mode_settings,
     log_admin_action,
+    purge_database_tables,
     set_challenge_mode_enabled,
+    set_character_disabled,
+    set_perk_disabled,
 )
 from app.services.db.export_import import DatabaseExportImportService
 from app.services.user.admin import fetch_admin_metrics
@@ -112,34 +115,19 @@ def set_character_disabled(character_id: int):
     except ValidationError as err:
         return api_error("Field 'is_disabled' (bool) is required.", 400, details=err.errors())
 
-    role = (request.args.get("role") or dto.role or "").strip().rstrip("s").lower()
-    model = {"survivor": Survivor, "killer": Killer}.get(role)
-    if model is not None:
-        character = db.session.get(model, character_id)
-    else:
-        character = db.session.get(Killer, character_id) or db.session.get(Survivor, character_id)
-
-    if not character:
-        return api_error("Character not found.", 404)
-
-    is_disabled = dto.is_disabled
     try:
         reason = _clean_reason({"reason": dto.reason})
     except ValueError as e:
         return api_error(str(e), 400)
 
-    character.is_disabled = is_disabled
-    character.disabled_reason = reason if is_disabled else None
-    db.session.commit()
-
-    # `is_disabled`/`disabled_reason` are serialized into the cached character
-    # and perk catalog responses, so a kill switch that does not invalidate
-    # them keeps the disabled character on the site for a day.
-    bump_catalog_version()
+    role = (request.args.get("role") or dto.role or "").strip().rstrip("s").lower()
+    character, err = set_character_disabled(character_id, dto.is_disabled, reason, role)
+    if err:
+        return api_error(err, 404)
 
     log_admin_action(
         g.current_user.id,
-        action="character_disabled" if is_disabled else "character_enabled",
+        action="character_disabled" if dto.is_disabled else "character_enabled",
         target_type="character",
         target_id=character.id,
         details={"name": character.name, "reason": reason},
@@ -197,30 +185,23 @@ def list_perks_for_admin():
 @admin_required
 def set_perk_disabled(perk_id: int):
     """Enables/disables a single perk from being offered in new challenge pools/pages."""
-    perk = db.session.get(Perk, perk_id)
-    if not perk:
-        return api_error("Perk not found.", 404)
-
     try:
         dto = DisableItemDTO.model_validate(request.get_json(silent=True) or {})
     except ValidationError as err:
         return api_error("Field 'is_disabled' (bool) is required.", 400, details=err.errors())
 
-    is_disabled = dto.is_disabled
     try:
         reason = _clean_reason({"reason": dto.reason})
     except ValueError as e:
         return api_error(str(e), 400)
 
-    perk.is_disabled = is_disabled
-    perk.disabled_reason = reason if is_disabled else None
-    db.session.commit()
-
-    bump_catalog_version()
+    perk, err = set_perk_disabled(perk_id, dto.is_disabled, reason)
+    if err:
+        return api_error(err, 404)
 
     log_admin_action(
         g.current_user.id,
-        action="perk_disabled" if is_disabled else "perk_enabled",
+        action="perk_disabled" if dto.is_disabled else "perk_enabled",
         target_type="perk",
         target_id=perk.id,
         details={"name": perk.name, "reason": reason},
@@ -336,54 +317,7 @@ def purge_database_tables():
 
     targets: list[str] = dto.targets
     try:
-        # Order matters now that these are real foreign keys: add-ons
-        # reference both characters and item categories, perks reference
-        # characters, items reference item categories. Children first.
-        if "perks" in targets:
-            db.session.execute(delete(Perk))
-            purged.append("perks")
-
-        if "addons" in targets:
-            # One target, two tables: `addons` split into `killer_addons` (880
-            # rows) and `item_addons` (51). The purge target keeps its name
-            # because it is what the admin UI sends, and it still means every
-            # add-on in the game.
-            db.session.execute(delete(KillerAddon))
-            db.session.execute(delete(ItemAddon))
-            purged.append("addons")
-
-        if "characters" in targets:
-            # Only `killer_addons` references a killer, so only it has to be
-            # cleared ahead of the characters; the 51 item add-ons hang off
-            # `item_categories` and survive a character purge.
-            db.session.execute(delete(KillerAddon))
-            db.session.execute(delete(Survivor))
-            db.session.execute(delete(Killer))
-            purged.append("characters")
-
-        if "items" in targets:
-            db.session.execute(delete(Item))
-            purged.append("items")
-
-        if "maps" in targets:
-            # `map_tiles` and `map_objectives` used to be cleared here. Neither
-            # table exists: one was empty on all 58 maps and the other held
-            # five placeholder names copied onto every one of them.
-            db.session.execute(delete(MapRealm))
-            db.session.execute(delete(Realm))
-            purged.append("maps")
-
-        if "ownerships" in targets:
-            db.session.execute(delete(UserCharacterOwnership))
-            db.session.execute(delete(UserPerkOwnership))
-            purged.append("ownerships")
-
-        if "game_runs" in targets:
-            db.session.execute(delete(GauntletRun))
-            db.session.execute(delete(PageStreakRun))
-            purged.append("game_runs")
-
-        db.session.commit()
+        purged = purge_database_tables(targets)
         logger.info(f"Admin {g.current_user.login} purged tables: {purged}")
         return jsonify({
             "status": "success",
@@ -391,6 +325,7 @@ def purge_database_tables():
             "purged_tables": purged,
             "stats": fetch_admin_metrics(),
         }), 200
+
 
     except Exception as e:
         db.session.rollback()

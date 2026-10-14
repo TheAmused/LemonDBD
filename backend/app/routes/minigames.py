@@ -153,33 +153,15 @@ def create_official_challenge():
     else:
         target_date = datetime.now(timezone.utc).date()
 
-    # Upsert daily challenge for date and mode
-    existing = db.session.scalar(
-        select(MinigameDailyChallenge).where(
-            MinigameDailyChallenge.challenge_date == target_date,
-            MinigameDailyChallenge.game_mode == game_mode,
-        )
+    challenge = minigame_service.upsert_daily_challenge(
+        game_mode=game_mode,
+        title=title,
+        description=description,
+        rounds=rounds,
+        target_date=target_date,
     )
-
-    if existing:
-        existing.title = title
-        existing.description = description
-        existing.rounds = rounds
-        existing.is_active = True
-        challenge = existing
-    else:
-        challenge = MinigameDailyChallenge(
-            challenge_date=target_date,
-            game_mode=game_mode,
-            title=title,
-            description=description,
-            rounds=rounds,
-            is_active=True,
-        )
-        db.session.add(challenge)
-
-    db.session.commit()
     return jsonify(challenge.to_dict()), 201
+
 
 
 @minigames_bp.route("/official", methods=["GET"])
@@ -222,47 +204,14 @@ def update_user_stats():
     except ValidationError as err:
         return api_error("Validation failed", 400, details=err.errors())
 
-    game_mode = dto.game_mode
-    won = dto.won
-    attempts_taken = dto.attempts_taken
-    today = datetime.now(timezone.utc).date()
-
-    stat = db.session.scalar(
-        select(MinigameUserStat).where(
-            MinigameUserStat.user_id == user.id,
-            MinigameUserStat.game_mode == game_mode,
-        )
+    stat = minigame_service.record_minigame_round(
+        user_id=user.id,
+        game_mode=dto.game_mode,
+        won=dto.won,
+        attempts=dto.attempts_taken,
     )
-    if not stat:
-        stat = MinigameUserStat(
-            user_id=user.id,
-            game_mode=game_mode,
-            current_streak=0,
-            max_streak=0,
-            total_played=0,
-            total_won=0,
-            guess_distribution={},
-            last_played_date=today,
-        )
-        db.session.add(stat)
-
-    stat.total_played += 1
-    if won:
-        stat.total_won += 1
-        stat.current_streak += 1
-        if stat.current_streak > stat.max_streak:
-            stat.max_streak = stat.current_streak
-        if attempts_taken is not None:
-            dist = dict(stat.guess_distribution or {})
-            key = str(attempts_taken)
-            dist[key] = dist.get(key, 0) + 1
-            stat.guess_distribution = dist
-    else:
-        stat.current_streak = 0
-
-    stat.last_played_date = today
-    db.session.commit()
     return jsonify(stat.to_dict()), 200
+
 
 
 @minigames_bp.route("/audio/terror_radius/<int:killer_id>", methods=["GET"])
@@ -299,8 +248,7 @@ def stream_killer_terror_radius(killer_id: int):
                     with open(local_path, "wb") as f:
                         f.write(data)
             # Save local path directly to Killer model
-            killer.chase_music_local_path = f"audio/cache/{mp3_filename}"
-            db.session.commit()
+            minigame_service.update_killer_chase_music(killer.id, f"audio/cache/{mp3_filename}")
         except Exception as e:
             logger.error(f"Failed to fetch audio for {killer.name} from wiki: {e}")
             return api_error(f"Failed to retrieve audio: {str(e)}", 502)

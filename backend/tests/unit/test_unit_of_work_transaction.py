@@ -28,7 +28,6 @@ def test_transaction_commits_cleanly(app):
                 reporter_name="Tester",
                 reporter_email="uow_commit@example.com",
                 title="UoW Commit Bug",
-                category="general",
                 message="Testing commit boundary",
             )
             db.session.add(report)
@@ -69,7 +68,6 @@ def test_transaction_rolls_back_multi_table_on_exception(app):
                     reporter_name="Tester",
                     reporter_email="uow_fail@example.com",
                     title="UoW Failed Report",
-                    category="general",
                     message="This should not persist",
                 )
                 db.session.add(report)

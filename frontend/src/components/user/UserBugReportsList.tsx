@@ -1,7 +1,7 @@
 'use client';
 // frontend/src/components/user/UserBugReportsList.tsx
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Button } from '@/components/common/Button';
 import { Modal, useModal } from '@/components/common/Modal';
 import {
@@ -22,6 +22,7 @@ import { staticUrl } from '@/utils/api';
 import { FogReportIcon } from '@/components/icons/DbdIcons';
 import { OverseerEyeIcon } from '@/components/icons/DbdIcons';
 import { EmptyState } from '@/components/common/EmptyState';
+import { UnreadDot } from '@/components/common/UnreadDot';
 import { formatDate } from '@/utils/format';
 import { useDictionary } from "@/context/DictionaryContext";
 
@@ -36,6 +37,8 @@ interface UserBugReportsListProps {
   totalPages?: number;
   onPageChange?: (page: number) => void;
   hideHeading?: boolean;
+  /** Called when the reporter opens a report that carries unseen developer feedback. */
+  onReportSeen?: (id: number) => void;
 }
 
 export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
@@ -49,76 +52,30 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
       totalPages = 1,
       onPageChange,
       hideHeading = false,
+      onReportSeen,
     }) => {
   const dict = useDictionary();
   const t: Record<string, string> = propT || dict.user || {};
   const totalCount = total ?? reports.length;
 
-  // Individual droppable drawer states for each bug report
-  const [expandedReports, setExpandedReports] = useState<Record<number, boolean>>({});
+  // Reports the reader has opened; every report starts collapsed.
+  const [openReports, setOpenReports] = useState<Record<number, boolean>>({});
 
   // Image popup lightbox state
   const [previewImage, setPreviewImage] = useState<string | null>(null);
 
-  // Drag-to-scroll and touch-scroll state for PC & Mobile
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const isDraggingRef = useRef(false);
-  const startYRef = useRef(0);
-  const scrollTopRef = useRef(0);
-  const [isGrabbing, setIsGrabbing] = useState(false);
-  const hasDraggedRef = useRef(false);
-
-  const toggleReport = (id: number) => {
-    if (hasDraggedRef.current) return;
-    setExpandedReports((prev) => ({
-      ...prev,
-      [id]: prev[id] === undefined ? false : !prev[id],
-    }));
-  };
-
-  const isReportOpen = (id: number) => {
-    // Default: open so user can see it and hide/collapse individual ones
-    return expandedReports[id] !== false;
-  };
-
-  // Mouse drag-to-scroll handlers for PC
-  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
-    const target = e.target as HTMLElement;
-    if (target.closest('a') || target.closest('input')) {
-      return;
-    }
-    if (!scrollContainerRef.current) return;
-    isDraggingRef.current = true;
-    hasDraggedRef.current = false;
-    startYRef.current = e.clientY;
-    scrollTopRef.current = scrollContainerRef.current.scrollTop;
-    setIsGrabbing(true);
-  };
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!isDraggingRef.current || !scrollContainerRef.current) return;
-    const deltaY = e.clientY - startYRef.current;
-    if (Math.abs(deltaY) > 5) {
-      hasDraggedRef.current = true;
-      e.preventDefault();
-    }
-    scrollContainerRef.current.scrollTop = scrollTopRef.current - deltaY;
-  };
-
-  const handleMouseUp = () => {
-    isDraggingRef.current = false;
-    setIsGrabbing(false);
-    setTimeout(() => {
-      hasDraggedRef.current = false;
-    }, 60);
+  const toggleReport = (report: UserBugReport) => {
+    const willOpen = !openReports[report.id];
+    setOpenReports((prev) => ({ ...prev, [report.id]: willOpen }));
+    if (willOpen && report.feedback_unread) onReportSeen?.(report.id);
   };
 
   const getStatusBadge = (status: UserBugReport['status']) => {
     switch (status) {
       case 'in_progress':
         return (
-          <span className="inline-flex items-center gap-1.5 rounded-lg border border-accent-amber/30 bg-accent-amber/10 px-2.5 py-1 type-label-2xs text-accent-amber">
-            <Clock className="h-3 w-3 animate-spin" />
+          <span className="inline-flex items-center gap-1.5 rounded-lg border border-accent-red/30 bg-accent-red/10 px-2.5 py-1 type-label-2xs text-accent-red">
+            <Clock className="h-3 w-3" />
             <span>{t.statusInProgress || 'In Progress'}</span>
           </span>
         );
@@ -139,7 +96,7 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
       case 'pending':
       default:
         return (
-          <span className="inline-flex items-center gap-1.5 rounded-lg border border-accent-red/30 bg-accent-red/10 px-2.5 py-1 type-label-2xs text-accent-red">
+          <span className="inline-flex items-center gap-1.5 rounded-lg border border-accent-amber/30 bg-accent-amber/10 px-2.5 py-1 type-label-2xs text-accent-amber">
             <HelpCircle className="h-3 w-3" />
             <span>{t.statusPending || 'Pending'}</span>
           </span>
@@ -180,20 +137,13 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
           }
         />
       ) : (
-        /* Scrollable and Drag-to-Scroll container on PC & Mobile */
         <div
-          ref={scrollContainerRef}
-          onMouseDown={handleMouseDown}
-          onMouseMove={handleMouseMove}
-          onMouseUp={handleMouseUp}
-          onMouseLeave={handleMouseUp}
-          className={`grid grid-cols-1 gap-3 max-h-[380px] sm:max-h-[420px] 2xl:max-h-[460px] overflow-y-auto pr-1.5 custom-scrollbar touch-pan-y ${
-            isGrabbing ? 'cursor-grabbing select-none' : 'cursor-grab'
-          }`}
+          className="grid grid-cols-1 auto-rows-max gap-3 max-h-[380px] sm:max-h-[420px] 2xl:max-h-[460px] overflow-y-auto pr-1.5 custom-scrollbar"
           style={{ overscrollBehavior: 'contain' }}
         >
           {reports.map((report) => {
-            const isOpen = isReportOpen(report.id);
+            const isOpen = openReports[report.id] === true;
+            const awaitingReply = !report.admin_notes && (report.status === 'pending' || report.status === 'in_progress');
             return (
               <div
                 key={report.id}
@@ -202,30 +152,30 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
                 {/* Individual Droppable Drawer Header */}
                 <button
                   type="button"
-                  onClick={() => toggleReport(report.id)}
+                  onClick={() => toggleReport(report)}
                   aria-expanded={isOpen}
                   className="w-full p-3.5 sm:p-4 text-left flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 cursor-pointer select-none hover:bg-bg-elevated/40 transition-colors"
                 >
                   <div className="space-y-1 min-w-0 flex-1">
-                    <div className="flex items-center gap-2.5 flex-wrap">
-                      <span className="type-strong text-text-muted">#{report.id}</span>
-                      <h3 className="text-sm sm:text-base font-black text-text-primary truncate">
-                        {report.title}
-                      </h3>
-                    </div>
-                    <div className="flex flex-wrap items-center gap-2 sm:gap-3 type-caption text-text-secondary">
-                      <span className="rounded-lg bg-bg-elevated text-text-primary px-2 py-0.5 font-bold border border-border-color">
-                        {report.category}
-                      </span>
-                      <span>
-                        {t.reportedOn || 'Reported on'}{' '}
-                        {formatDate(report.created_at)}
-                      </span>
+                    <h3 className="text-sm sm:text-base font-black text-text-primary truncate">
+                      {report.title}
+                    </h3>
+                    <div className="type-caption text-text-secondary">
+                      {t.reportedOn || 'Reported on'}{' '}
+                      {formatDate(report.created_at)}
                     </div>
                   </div>
 
                   <div className="flex items-center justify-between sm:justify-end gap-3 shrink-0">
-                    {getStatusBadge(report.status)}
+                    <span className="relative inline-flex">
+                      {getStatusBadge(report.status)}
+                      {report.feedback_unread && (
+                        <UnreadDot
+                          className="absolute -right-1 -top-1"
+                          label={t.newFeedback || 'New feedback from the developers'}
+                        />
+                      )}
+                    </span>
                     <div className="p-1 rounded-lg bg-bg-elevated/80 text-accent-red">
                       <ChevronDown
                         className={`h-4 w-4 transition-transform duration-300 ease-in-out ${
@@ -263,7 +213,6 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
                                   key={i}
                                   type="button"
                                   onClick={(e) => {
-                                    if (hasDraggedRef.current) return;
                                     e.stopPropagation();
                                     setPreviewImage(src);
                                   }}
@@ -299,6 +248,14 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
                             {t.quoteClose || '"'}
                           </p>
                         </div>
+                      )}
+
+                      {/* Nothing from the developers yet */}
+                      {awaitingReply && (
+                        <p className="mt-2 flex items-center gap-2 rounded-xl border border-border-color bg-bg-elevated/60 p-3 type-caption text-text-muted">
+                          <Clock className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+                          <span>{t.noDevResponseYet || 'No response from the developers yet.'}</span>
+                        </p>
                       )}
                     </div>
                   </div>

@@ -32,6 +32,8 @@ async function parseJsonSafely<T extends object = object>(res: Response): Promis
 export interface MyBugReportsPage {
   reports: UserBugReport[];
   total: number;
+  /** Reports with unseen developer feedback across every page, not just the one returned. */
+  unreadCount: number;
   page: number;
   perPage: number;
   totalPages: number;
@@ -61,6 +63,7 @@ export async function fetchMyBugReports(
   const data = await parseJsonSafely<{
     reports: UserBugReport[];
     total: number;
+    unread_count: number;
     page: number;
     per_page: number;
     total_pages: number;
@@ -72,10 +75,27 @@ export async function fetchMyBugReports(
   return {
     reports: data.reports || [],
     total: data.total ?? (data.reports || []).length,
+    unreadCount: data.unread_count ?? 0,
     page: data.page ?? page,
     perPage: data.per_page ?? perPage,
     totalPages: data.total_pages ?? 1,
   };
+}
+
+export async function markBugReportSeen(reportId: number): Promise<void> {
+  const token = getAuthToken();
+  if (!token) {
+    throw new ApiError('Authentication token missing.', 401, 'authTokenMissing');
+  }
+
+  const res = await fetch(`${apiBase()}/api/v1/bug-reports/${reportId}/seen`, {
+    method: 'POST',
+    headers: authHeaders(token),
+  });
+  if (!res.ok) {
+    const data = await parseJsonSafely(res);
+    throw new ApiError(data.error || 'Failed to mark the bug report as seen.', res.status, data.error_code);
+  }
 }
 
 export interface UpdateProfilePayload {

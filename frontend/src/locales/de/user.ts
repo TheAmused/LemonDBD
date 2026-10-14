@@ -16,6 +16,8 @@ export default {
   reportedOn: "Gemeldet am",
   attachments: "Anhänge",
   devResponse: "Entwickler-Antwort",
+  noDevResponseYet: "Die Entwickler haben noch nicht geantwortet. Schau später wieder vorbei.",
+  newFeedback: "Neue Rückmeldung der Entwickler",
   saveChanges: "Speichern",
   newPassword: "Neues Passwort",
   confirmPassword: "Neues Passwort bestätigen",

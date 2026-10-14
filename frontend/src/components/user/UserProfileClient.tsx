@@ -14,7 +14,7 @@ import { UserProfileForm } from '@/components/user/UserProfileForm';
 import { UserBugReportsDrawer } from '@/components/user/UserBugReportsDrawer';
 import { UserProfileSkeleton } from '@/components/user/UserProfileSkeleton';
 import { UserBugReport, StatusFeedback } from '@/types/userProfile';
-import { fetchMyBugReports, uploadAvatar, ApiError } from '@/services/userProfileApi';
+import { fetchMyBugReports, markBugReportSeen, uploadAvatar, ApiError } from '@/services/userProfileApi';
 import { useUserShowcase } from '@/hooks/useUserShowcase';
 import { User } from 'lucide-react';
 import { useDictionary, useLocale } from '@/context/DictionaryContext';
@@ -46,6 +46,7 @@ export function UserProfileClient() {
   const [myReports, setMyReports] = useState<UserBugReport[]>([]);
   const [loadingReports, setLoadingReports] = useState(false);
   const [reportsTotal, setReportsTotal] = useState(0);
+  const [unreadReports, setUnreadReports] = useState(0);
   const [reportsPage, setReportsPage] = useState(1);
   const [reportsTotalPages, setReportsTotalPages] = useState(1);
   const REPORTS_PER_PAGE = 10;
@@ -58,6 +59,7 @@ export function UserProfileClient() {
       const result = await fetchMyBugReports(page, REPORTS_PER_PAGE, signal);
       setMyReports(result.reports);
       setReportsTotal(result.total);
+      setUnreadReports(result.unreadCount);
       setReportsPage(result.page);
       setReportsTotalPages(result.totalPages);
     } catch (err) {
@@ -81,6 +83,12 @@ export function UserProfileClient() {
     },
     [fetchMyReports]
   );
+
+  const handleReportSeen = useCallback((id: number) => {
+    setMyReports((prev) => prev.map((r) => (r.id === id ? { ...r, feedback_unread: false } : r)));
+    setUnreadReports((count) => Math.max(0, count - 1));
+    markBugReportSeen(id).catch((err) => console.error('Failed to mark bug report as seen:', err));
+  }, []);
 
   const handleAvatarFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -209,10 +217,12 @@ export function UserProfileClient() {
           loading={loadingReports}
           onOpenReportModal={() => setBugModalOpen(true)}
           total={reportsTotal}
+          unreadCount={unreadReports}
           page={reportsPage}
           perPage={REPORTS_PER_PAGE}
           totalPages={reportsTotalPages}
           onPageChange={handleReportsPageChange}
+          onReportSeen={handleReportSeen}
         />
       </div>
 

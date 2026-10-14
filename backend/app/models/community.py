@@ -1,7 +1,7 @@
 # backend/app/models/community.py
 from datetime import datetime
 from typing import TYPE_CHECKING, Any
-from sqlalchemy import Boolean, DateTime, ForeignKey, Integer, String, Text
+from sqlalchemy import Boolean, DateTime, ForeignKey, Integer, String, Text, false
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.core.extensions import Base
 from app.core.json_provider import safe_json_loads, safe_json_dumps
@@ -23,11 +23,12 @@ class BugReport(Base, ColumnDictMixin):
     reporter_name: Mapped[str] = mapped_column(String(100), nullable=False)
     reporter_email: Mapped[str | None] = mapped_column(String(150), nullable=True)
     title: Mapped[str] = mapped_column(String(200), nullable=False)
-    category: Mapped[str] = mapped_column(String(50), default="General", nullable=False)
     message: Mapped[str] = mapped_column(Text, nullable=False)
     images_json: Mapped[str] = mapped_column(Text, default="[]", nullable=False)
     status: Mapped[str] = mapped_column(String(30), default="pending", nullable=False)
     admin_notes: Mapped[str | None] = mapped_column(Text, nullable=True)
+    # True from the moment an admin writes or edits the reply until the reporter opens it.
+    feedback_unread: Mapped[bool] = mapped_column(Boolean, default=False, server_default=false(), nullable=False)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=utcnow, nullable=False
     )

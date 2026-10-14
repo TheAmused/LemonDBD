@@ -4,7 +4,7 @@ from typing import Any
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 from app.models.smash_or_pass import TRANSLATABLE_LOCALES, clean_media_display
-from app.schemas.common import clean_image_url
+from app.schemas.common import CleanImageUrl
 
 
 class EntityStatResponse(BaseModel):
@@ -164,7 +164,7 @@ class SmashEntityAdminCreate(BaseModel):
     real_name: str | None = Field(default=None, max_length=128)
     role: str = Field(default="Survivor", min_length=1, max_length=32)
     gender: str = Field(default="female", min_length=1, max_length=32)
-    media_url: str | None = None
+    media_url: CleanImageUrl = None
     media_display: dict[str, Any] | None = None
     watermark_left: str | None = Field(default=None, max_length=64)
     watermark_right: str | None = Field(default=None, max_length=64)
@@ -186,11 +186,6 @@ class SmashEntityAdminCreate(BaseModel):
     #: Admin translation authoring, keyed by locale. Absent field/locale = English.
     translations: dict[str, SmashEntityTranslationAdmin] = Field(default_factory=dict)
 
-    @field_validator("media_url")
-    @classmethod
-    def _clean_media(cls, value: str | None) -> str | None:
-        return clean_image_url(value)
-
     @field_validator("media_display", mode="before")
     @classmethod
     def _clean_display(cls, value: Any) -> dict[str, Any] | None:
@@ -205,18 +200,13 @@ class SmashEntityAdminCreate(BaseModel):
 class SmashRosterAdminCreate(BaseModel):
     name: str = Field(..., min_length=1, max_length=128)
     description: str = Field(default="", max_length=2000)
-    cover_image_url: str | None = None
+    cover_image_url: CleanImageUrl = None
     theme_color: str = Field(default="#ff0055", min_length=1, max_length=32)
     category: str = Field(default="DBD", min_length=1, max_length=64)
     is_nsfw: bool = False
     #: Admin translation authoring for the roster's own name/description.
     translations: dict[str, SmashRosterTranslationAdmin] = Field(default_factory=dict)
     entities: list[SmashEntityAdminCreate] = Field(..., min_length=1, max_length=200)
-
-    @field_validator("cover_image_url")
-    @classmethod
-    def _clean_cover(cls, value: str | None) -> str | None:
-        return clean_image_url(value)
 
     @field_validator("translations", mode="before")
     @classmethod

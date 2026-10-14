@@ -13,30 +13,20 @@ from __future__ import annotations
 
 from pydantic import BaseModel, Field, field_validator
 
-from app.schemas.common import clean_image_url as _clean_image_url
+from app.schemas.common import CleanImageUrl
 
 
 class TierListAdminTier(BaseModel):
     id: str = Field(..., min_length=1, max_length=40)
     label: str = Field(..., min_length=1, max_length=60)
     color: str = Field(..., min_length=1, max_length=20)
-    backgroundImage: str | None = None
-
-    @field_validator("backgroundImage")
-    @classmethod
-    def _clean_background(cls, value: str | None) -> str | None:
-        return _clean_image_url(value)
+    backgroundImage: CleanImageUrl = None
 
 
 class TierListAdminItem(BaseModel):
     id: str = Field(..., min_length=1, max_length=64)
     name: str = Field(..., min_length=1, max_length=120)
-    image_url: str | None = None
-
-    @field_validator("image_url")
-    @classmethod
-    def _clean_image(cls, value: str | None) -> str | None:
-        return _clean_image_url(value)
+    image_url: CleanImageUrl = None
 
 
 #: Longest seeded description/translation is 147 chars; rounded up to the next hundred.
@@ -47,28 +37,19 @@ TIER_LIST_DESCRIPTION_MAX = 200
 class TierListAdminCreate(BaseModel):
     title: str = Field(..., min_length=1, max_length=150)
     description: str = Field(default="", max_length=TIER_LIST_DESCRIPTION_MAX)
-    cover_image_url: str | None = None
+    cover_image_url: CleanImageUrl = None
     tiers: list[TierListAdminTier] = Field(..., min_length=1, max_length=20)
     items: list[TierListAdminItem] = Field(..., min_length=1, max_length=400)
-
-    @field_validator("cover_image_url")
-    @classmethod
-    def _clean_cover(cls, value: str | None) -> str | None:
-        return _clean_image_url(value)
 
 
 class TierListAdminUpdate(BaseModel):
     title: str | None = Field(default=None, min_length=1, max_length=150)
     description: str | None = Field(default=None, max_length=TIER_LIST_DESCRIPTION_MAX)
-    cover_image_url: str | None = None
+    cover_image_url: CleanImageUrl = None
     tiers: list[TierListAdminTier] | None = Field(default=None, min_length=1, max_length=20)
     items: list[TierListAdminItem] | None = Field(default=None, min_length=1, max_length=400)
     default_placements: dict[str, list[str]] | None = None
 
-    @field_validator("cover_image_url")
-    @classmethod
-    def _clean_cover(cls, value: str | None) -> str | None:
-        return _clean_image_url(value)
 
     @field_validator("default_placements")
     @classmethod

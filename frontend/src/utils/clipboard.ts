@@ -40,3 +40,5 @@ export async function copyTextWithFallback(text: string): Promise<boolean> {
 
   return false;
 }
+
+export const copyToClipboard = copyTextWithFallback;

@@ -89,7 +89,6 @@ export function TierListImportModal({ open, target, sharePayload, onClose, onImp
       idPrefix="tier-list"
       labels={{
         title: t.importTitle,
-        subtitle: t.importSubtitle,
         sharedLinkDetected: t.sharedLinkDetected,
         pasteLabel: t.pasteLabel,
         uploadFile: t.uploadFile,

@@ -42,7 +42,6 @@ export function TierListExportModal({ doc, onClose, locale }: TierListExportModa
       actionsClassName="items-center justify-center"
       labels={{
         title: t.exportTitle,
-        subtitle: t.exportSubtitle,
         shareLinkLabel: t.shareLinkLabel,
         preparingLink: t.preparingLink,
         copyLink: t.copyLink,

@@ -17,7 +17,6 @@ export type CopyState = 'idle' | 'copied' | 'failed';
 
 export interface ExportModalLabels {
   title: string;
-  subtitle?: string;
   shareLinkLabel: string;
   preparingLink: string;
   copyLink: string;

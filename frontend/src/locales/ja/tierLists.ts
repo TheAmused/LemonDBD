@@ -105,7 +105,6 @@ export default {
   itemNameRequired: "項目に名前を付けてください。",
 
   exportTitle: "ティアリストをエクスポート",
-  exportSubtitle: "JSONとして保存するか、リスト全体を含むリンクを共有できます。",
   jsonLabel: "JSON",
   shareLinkLabel: "共有リンク",
   downloadJson: ".jsonをダウンロード",
@@ -117,7 +116,6 @@ export default {
   linkTooLong: "このリンクは{count}文字あります。長いリンクが切れてしまうチャットアプリもあるため、.jsonファイルを送ってください。",
 
   importTitle: "ティアリストをインポート",
-  importSubtitle: "JSONを貼り付けるか、.jsonファイルをアップロード、または共有リンクを開いてください。",
   pasteLabel: "JSONデータ",
   pastePlaceholder: "{ \"title\": \"マイリスト\", \"items\": [{ \"name\": \"...\", \"image\": \"https://...\" }] }",
   uploadFile: ".jsonをアップロード",

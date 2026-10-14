@@ -321,7 +321,6 @@ export default {
   },
   importModal: {
     title: 'Liste importieren',
-    subtitle: 'JSON einfügen, Datei hochladen oder geteilten Link öffnen.',
     cancel: 'Abbrechen',
     importAction: 'Importieren',
     pasteLabel: 'Listen-JSON einfügen',
@@ -349,7 +348,6 @@ export default {
   },
   exportModal: {
     title: 'Liste exportieren',
-    subtitle: 'Kopiere einen teilbaren Link oder lade die Liste als JSON-Datei herunter.',
     close: 'Schließen',
     shareLinkLabel: 'Teilbarer Link',
     copyLink: 'Link kopieren',

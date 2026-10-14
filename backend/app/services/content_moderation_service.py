@@ -7,6 +7,7 @@ from typing import Any
 from sqlalchemy import select
 
 from app.core.extensions import db
+from app.core.transaction import transaction
 from app.models.content_moderation import ContentReport, ContentReportSubscriber, ContentRevocation
 from app.models.user import User
 from app.services.content_crypto import (
@@ -17,6 +18,8 @@ from app.services.content_crypto import (
 )
 
 logger = logging.getLogger(__name__)
+
+HEX_CHARACTERS = frozenset("0123456789abcdefABCDEF")
 
 
 def sign_user_content(
@@ -109,6 +112,10 @@ def report_content(
         logger.warning(f"Failed to canonicalize payload: {err}")
         return {"error": "Failed to canonicalize payload", "status": 400}, 400
 
+    # Enforce maximum evidence payload size (500KB)
+    if len(canonical_str) > 500_000:
+        return {"error": "Evidence payload exceeds maximum allowed size (500KB)", "status": 400}, 400
+
     if computed_hash != clean_hash:
         return {"error": "Payload hash mismatch", "status": 400}, 400
 
@@ -135,25 +142,25 @@ def report_content(
         )
     )
     if existing_report is not None:
-        existing_report.report_count += 1
+        with transaction():
+            existing_report.report_count += 1
 
-        # Check if reporter is already subscribed
-        existing_sub = db.session.scalar(
-            select(ContentReportSubscriber).where(
-                ContentReportSubscriber.report_id == existing_report.id,
-                ContentReportSubscriber.reporter_id == reporter.id,
+            # Check if reporter is already subscribed
+            existing_sub = db.session.scalar(
+                select(ContentReportSubscriber).where(
+                    ContentReportSubscriber.report_id == existing_report.id,
+                    ContentReportSubscriber.reporter_id == reporter.id,
+                )
             )
-        )
-        if existing_sub is None:
-            sub = ContentReportSubscriber(
-                report_id=existing_report.id,
-                reporter_id=reporter.id,
-                reason=reason.strip()[:64],
-                notes=notes.strip()[:500] if isinstance(notes, str) and notes.strip() else None,
-            )
-            db.session.add(sub)
+            if existing_sub is None:
+                sub = ContentReportSubscriber(
+                    report_id=existing_report.id,
+                    reporter_id=reporter.id,
+                    reason=reason.strip()[:64],
+                    notes=notes.strip()[:500] if isinstance(notes, str) and notes.strip() else None,
+                )
+                db.session.add(sub)
 
-        db.session.commit()
         return {
             "status": "queued",
             "message": "Report received and added to pending queue",
@@ -164,33 +171,34 @@ def report_content(
     # 5. Create new pending report
     expires_at = datetime.now(timezone.utc) + timedelta(days=14)
 
-    # Check author existence for foreign key safety
+    # Check author existence for foreign key safety and derive author login from DB
     author_exists = db.session.get(User, author_id)
     persisted_author_id = author_id if author_exists else None
+    persisted_author_login = author_exists.login if author_exists else author_login.strip()[:50]
 
-    report = ContentReport(
-        content_type=content_type.strip()[:32],
-        content_hash=clean_hash,
-        author_id=persisted_author_id,
-        author_login=author_login.strip()[:50],
-        first_reporter_id=reporter.id,
-        report_count=1,
-        primary_reason=reason.strip()[:64],
-        status="pending",
-        evidence_payload=canonical_str,
-        expires_at=expires_at,
-    )
-    db.session.add(report)
-    db.session.flush()
+    with transaction():
+        report = ContentReport(
+            content_type=content_type.strip()[:32],
+            content_hash=clean_hash,
+            author_id=persisted_author_id,
+            author_login=persisted_author_login,
+            first_reporter_id=reporter.id,
+            report_count=1,
+            primary_reason=reason.strip()[:64],
+            status="pending",
+            evidence_payload=canonical_str,
+            expires_at=expires_at,
+        )
+        db.session.add(report)
+        db.session.flush()
 
-    sub = ContentReportSubscriber(
-        report_id=report.id,
-        reporter_id=reporter.id,
-        reason=reason.strip()[:64],
-        notes=notes.strip()[:500] if isinstance(notes, str) and notes.strip() else None,
-    )
-    db.session.add(sub)
-    db.session.commit()
+        sub = ContentReportSubscriber(
+            report_id=report.id,
+            reporter_id=reporter.id,
+            reason=reason.strip()[:64],
+            notes=notes.strip()[:500] if isinstance(notes, str) and notes.strip() else None,
+        )
+        db.session.add(sub)
 
     return {
         "status": "pending",
@@ -204,19 +212,27 @@ def check_revocations(hashes: list[str]) -> list[str]:
     """Query list of content hashes to find which ones are revoked.
 
     Args:
-        hashes: List of 64-character SHA-256 content hashes.
+        hashes: List of 64-character SHA-256 content hashes (max 200).
 
     Returns:
         List of revoked hashes.
 
     Raises:
-        ValueError: If input is not a list or contains invalid hash strings.
+        ValueError: If input is not a list, exceeds 200 items, or contains invalid hex strings.
     """
     if not isinstance(hashes, list):
         raise ValueError("hashes must be a list")
 
-    if any(not isinstance(h, str) or len(h.strip()) != 64 for h in hashes):
-        raise ValueError("Each hash must be a 64-character string")
+    if len(hashes) > 200:
+        raise ValueError("Cannot check more than 200 hashes at once")
+
+    if any(
+        not isinstance(h, str)
+        or len(h.strip()) != 64
+        or not all(c in HEX_CHARACTERS for c in h.strip())
+        for h in hashes
+    ):
+        raise ValueError("Each hash must be a 64-character hexadecimal string")
 
     clean_hashes = [h.strip().lower() for h in hashes]
     if not clean_hashes:

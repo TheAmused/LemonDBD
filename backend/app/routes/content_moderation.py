@@ -3,6 +3,7 @@
 import logging
 from flask import Blueprint, current_app, g, jsonify, request
 
+from app.core.limiter import limiter
 from app.core.security import login_required
 from app.services.content_moderation_service import (
     check_revocations,
@@ -16,6 +17,7 @@ content_moderation_bp = Blueprint("content_moderation", __name__, url_prefix="/a
 
 
 @content_moderation_bp.post("/sign")
+@limiter.limit("30 per minute; 120 per hour")
 @login_required
 def sign_content():
     """Deterministically sign user content payload with HMAC-SHA256."""
@@ -40,10 +42,11 @@ def sign_content():
         return jsonify({"error": str(err), "status": 400}), 400
     except Exception as err:
         logger.error(f"Error signing content: {err}", exc_info=True)
-        return jsonify({"error": "Failed to sign content", "status": 400}), 400
+        return jsonify({"error": "Failed to sign content", "status": 500}), 500
 
 
 @content_moderation_bp.post("/reports")
+@limiter.limit("10 per minute; 60 per hour")
 @login_required
 def submit_report():
     """Submit a report against user-generated content."""
@@ -65,6 +68,7 @@ def submit_report():
 
 
 @content_moderation_bp.post("/revocations/check")
+@limiter.limit("60 per minute")
 def check_revocations_endpoint():
     """Public endpoint to check if content hashes have been revoked."""
     data = request.get_json(silent=True)
@@ -76,3 +80,6 @@ def check_revocations_endpoint():
         return jsonify({"revoked_hashes": revoked_hashes}), 200
     except ValueError as err:
         return jsonify({"error": str(err), "status": 400}), 400
+    except Exception as err:
+        logger.error(f"Error checking revocations: {err}", exc_info=True)
+        return jsonify({"error": "Failed to check revocations", "status": 500}), 500

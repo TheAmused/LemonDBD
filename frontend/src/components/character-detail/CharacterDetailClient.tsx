@@ -5,6 +5,7 @@ import React, { useEffect, useState, Suspense } from 'react';
 import Link from 'next/link';
 import { ChevronLeft, UserX } from 'lucide-react';
 import { PageShell } from '@/components/layout/PageShell';
+import { EmptyState } from '@/components/common/EmptyState';
 import { CharacterDetailSkeleton } from '@/components/character-detail/CharactersSkeleton';
 import {
   CharacterSubpageView,
@@ -71,18 +72,13 @@ export function CharacterDetailClient({ slug }: { slug: string }) {
         {loading ? (
           <CharacterDetailSkeleton />
         ) : notFound || !detailData ? (
-          <div className="min-h-[60vh] flex flex-col items-center justify-center space-y-5 text-center p-6">
-            <div className="flex h-16 w-16 items-center justify-center rounded-3xl bg-bg-elevated border border-border-color text-text-muted">
-              <UserX className="h-8 w-8" />
-            </div>
-            <div className="space-y-1 max-w-md">
-              <h2 className="type-page-title text-text-primary">
-                {t.notFoundTitle}
-              </h2>
-              <p className="type-body-fluid text-text-muted">
-                {t.notFoundDesc}
-              </p>
-            </div>
+          <EmptyState
+            variant="solid"
+            icon={UserX}
+            title={t.notFoundTitle}
+            subtitle={t.notFoundDesc}
+            className="min-h-[60vh] flex flex-col items-center justify-center space-y-5 text-center p-6"
+          >
             <Link
               href={`/${locale}/characters`}
               className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-accent-red hover:bg-accent-red-hover text-text-inverted type-strong transition-all shadow-xs active:scale-95 cursor-pointer"
@@ -90,7 +86,7 @@ export function CharacterDetailClient({ slug }: { slug: string }) {
               <ChevronLeft className="h-4 w-4" />
               <span>{t.backToCharacters}</span>
             </Link>
-          </div>
+          </EmptyState>
         ) : (
           <Suspense fallback={<CharacterDetailSkeleton />}>
             <CharacterSubpageView

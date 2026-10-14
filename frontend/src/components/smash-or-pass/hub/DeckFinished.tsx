@@ -1,8 +1,10 @@
 'use client';
 // frontend/src/components/smash-or-pass/hub/DeckFinished.tsx
+import React from 'react';
 import { Heart, RotateCcw } from 'lucide-react';
 import { Button } from '@/components/common/Button';
 import { Surface } from '@/components/common/Surface';
+import { EmptyState } from '@/components/common/EmptyState';
 import { useDictionary } from '@/context/DictionaryContext';
 
 interface DeckFinishedProps {
@@ -16,16 +18,16 @@ interface DeckFinishedProps {
 export function DeckFinished({ sessionSmashes, sessionPasses, onOpenPersona, onReset }: DeckFinishedProps) {
   const dict = useDictionary();
   return (
-    <div className="max-w-md w-full rounded-3xl border border-accent-red/30 bg-bg-surface p-8 text-center space-y-5 shadow-xl dark:shadow-2xl backdrop-blur-md pointer-events-auto">
-      <div className="flex h-16 w-16 mx-auto items-center justify-center rounded-2xl bg-accent-red/15 border border-accent-red/30 text-accent-red">
-        <Heart className="h-8 w-8 fill-accent-red animate-bounce" />
-      </div>
-
-      <div className="space-y-1">
-        <h3 className="text-xl font-black text-text-primary">{dict.smashOrPass.empty.title}</h3>
-        <p className="text-xs text-text-muted">{dict.smashOrPass.empty.subtitle}</p>
-      </div>
-
+    <EmptyState
+      variant="solid"
+      icon={Heart}
+      iconClassName="h-8 w-8 fill-accent-red animate-bounce mx-auto"
+      title={dict.smashOrPass.empty.title}
+      subtitle={dict.smashOrPass.empty.subtitle}
+      headingClassName="text-xl font-black text-text-primary"
+      subtitleClassName="text-xs text-text-muted"
+      className="max-w-md w-full rounded-3xl border border-accent-red/30 bg-bg-surface p-8 text-center space-y-5 shadow-xl dark:shadow-2xl backdrop-blur-md pointer-events-auto"
+    >
       {/* Session Stats Summary */}
       <div className="grid grid-cols-2 gap-3 py-2">
         <Surface tone="elevated" radius="2xl" padding="none" className="p-4">
@@ -48,6 +50,6 @@ export function DeckFinished({ sessionSmashes, sessionPasses, onOpenPersona, onR
           <span>{dict.smashOrPass.empty.resetAction}</span>
         </Button>
       </div>
-    </div>
+    </EmptyState>
   );
 }

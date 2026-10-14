@@ -7,7 +7,7 @@ export default {
   lastUpdated: "10 października 2026",
   translationNotice: "Jeśli przetłumaczone wersje tej strony różnią się od angielskiej, pierwszeństwo ma wersja angielska.",
   tldrLabel: "W skrócie",
-  tldrNotice: "Linie „W skrócie” i podsumowanie są wyłącznie pomocą w czytaniu. Nie stanowią części Regulaminu i nie mają skutków prawnych. Jeśli różnią się od pełnego tekstu pod nimi, obowiązuje pełny tekst.",
+  tldrNotice: "Linie „W skrócie” i podsumowanie są wyłącznie pomocą w czytaniu. Prawnie wiążący jest tylko pełny tekst pod nimi, a jeśli się różnią, obowiązuje pełny tekst.",
   summaryHeading: "Podsumowanie",
   summary: [
     "LemonDBD to darmowy, nieoficjalny projekt fanowski prowadzony przez LemonTeam.",

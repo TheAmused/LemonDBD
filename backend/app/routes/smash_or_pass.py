@@ -15,6 +15,7 @@ from app.schemas.smash_or_pass import SmashRosterAdminCreate
 from app.services.admin_control_service import log_admin_action
 from app.services.smash_or_pass_service import SmashOrPassService
 from app.utils.lang import extract_lang as _extract_lang
+from app.utils.pagination import paginate_args
 from app.utils.responses import api_error
 
 logger = logging.getLogger(__name__)
@@ -163,7 +164,7 @@ def get_roster_feed(slug: str):
     user_id = request.args.get("user_id", type=int)
     role = request.args.get("role")
     gender = request.args.get("gender")
-    limit = request.args.get("limit", default=250, type=int)
+    _, limit = paginate_args(default_per_page=250, max_per_page=500, per_page_arg="limit")
     lang = _extract_lang()
 
     current_user = get_current_user()
@@ -250,7 +251,7 @@ def get_roster_leaderboard(slug: str):
     sort_by = request.args.get("sort_by", "smash_rate")
     role = request.args.get("role")
     gender = request.args.get("gender")
-    limit = request.args.get("limit", default=100, type=int)
+    _, limit = paginate_args(default_per_page=100, max_per_page=250, per_page_arg="limit")
     lang = _extract_lang()
 
     try:

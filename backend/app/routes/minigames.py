@@ -20,6 +20,7 @@ from app.models.minigame import (
 )
 from app.services.minigame_service import MinigameService
 from app.utils.lang import extract_lang
+from app.utils.pagination import paginate_args
 from app.utils.responses import api_error
 
 logger = logging.getLogger(__name__)
@@ -169,11 +170,13 @@ def create_official_challenge():
 @minigames_bp.route("/official", methods=["GET"])
 def list_official_challenges():
     """Lists official daily challenges."""
+    page, per_page = paginate_args(default_per_page=30, max_per_page=100)
     challenges = db.session.scalars(
         select(MinigameDailyChallenge)
         .where(MinigameDailyChallenge.is_active.is_(True))
         .order_by(MinigameDailyChallenge.challenge_date.desc())
-        .limit(30)
+        .offset((page - 1) * per_page)
+        .limit(per_page)
     ).all()
     return jsonify([c.to_dict() for c in challenges]), 200
 

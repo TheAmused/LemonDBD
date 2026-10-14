@@ -27,7 +27,6 @@ class BugReport(Base, ColumnDictMixin):
     images_json: Mapped[str] = mapped_column(Text, default="[]", nullable=False)
     status: Mapped[str] = mapped_column(String(30), default="pending", nullable=False)
     admin_notes: Mapped[str | None] = mapped_column(Text, nullable=True)
-    # True from the moment an admin writes or edits the reply until the reporter opens it.
     feedback_unread: Mapped[bool] = mapped_column(Boolean, default=False, server_default=false(), nullable=False)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=utcnow, nullable=False

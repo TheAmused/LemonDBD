@@ -32,7 +32,6 @@ async function parseJsonSafely<T extends object = object>(res: Response): Promis
 export interface MyBugReportsPage {
   reports: UserBugReport[];
   total: number;
-  /** Reports with unseen developer feedback across every page, not just the one returned. */
   unreadCount: number;
   page: number;
   perPage: number;

@@ -63,11 +63,9 @@ function dispatchContentRevoked(purged: string[]): void {
   }
 }
 
-/**
- * Scans localStorage across tier lists, smash rosters, minigames, and legacy keys,
- * queries the revocation endpoint, removes revoked items from storage, and dispatches events.
- */
-export async function checkAndPurgeRevokedContent(): Promise<string[]> {
+let syncPromise: Promise<string[]> | null = null;
+
+async function doCheckAndPurge(): Promise<string[]> {
   try {
     const storage = getLocalStorage();
     if (!storage) return [];
@@ -177,17 +175,19 @@ export async function checkAndPurgeRevokedContent(): Promise<string[]> {
         const parsed = JSON.parse(tierRaw);
         if (parsed && typeof parsed.custom === 'object' && parsed.custom !== null) {
           let modified = false;
+          const purgedInTier: string[] = [];
           for (const [id, item] of Object.entries(parsed.custom)) {
             const hash = (item as { _manifest?: { content_hash?: unknown } })?._manifest?.content_hash;
             if (typeof hash === 'string' && revokedSet.has(hash)) {
               delete (parsed.custom as Record<string, unknown>)[id];
-              purgedSet.add(hash);
+              purgedInTier.push(hash);
               modified = true;
             }
           }
           if (modified) {
             storage.setItem('lemondbd_tier_lists', JSON.stringify(parsed));
             dispatchStorageEvent('lemondbd_tier_lists');
+            for (const h of purgedInTier) purgedSet.add(h);
           }
         }
       }
@@ -202,17 +202,19 @@ export async function checkAndPurgeRevokedContent(): Promise<string[]> {
         const parsed = JSON.parse(smashRaw);
         if (parsed && typeof parsed.custom === 'object' && parsed.custom !== null) {
           let modified = false;
+          const purgedInSmash: string[] = [];
           for (const [id, item] of Object.entries(parsed.custom)) {
             const hash = (item as { _manifest?: { content_hash?: unknown } })?._manifest?.content_hash;
             if (typeof hash === 'string' && revokedSet.has(hash)) {
               delete (parsed.custom as Record<string, unknown>)[id];
-              purgedSet.add(hash);
+              purgedInSmash.push(hash);
               modified = true;
             }
           }
           if (modified) {
             storage.setItem('lemondbd_smash_rosters', JSON.stringify(parsed));
             dispatchStorageEvent('lemondbd_smash_rosters');
+            for (const h of purgedInSmash) purgedSet.add(h);
           }
         }
       }
@@ -227,10 +229,14 @@ export async function checkAndPurgeRevokedContent(): Promise<string[]> {
         const parsed = JSON.parse(minigamesRaw);
         if (Array.isArray(parsed)) {
           let modified = false;
+          const purgedInMinigames: string[] = [];
+          const removedChallengeIds: Array<string | number> = [];
           const remaining = parsed.filter((item) => {
             const hash = (item as { _manifest?: { content_hash?: unknown } })?._manifest?.content_hash;
             if (typeof hash === 'string' && revokedSet.has(hash)) {
-              purgedSet.add(hash);
+              purgedInMinigames.push(hash);
+              const chId = (item as { id?: string | number })?.id;
+              if (chId !== undefined && chId !== null) removedChallengeIds.push(chId);
               modified = true;
               return false;
             }
@@ -238,6 +244,15 @@ export async function checkAndPurgeRevokedContent(): Promise<string[]> {
           });
           if (modified) {
             storage.setItem('lemondbd_custom_minigames', JSON.stringify(remaining));
+            dispatchStorageEvent('lemondbd_custom_minigames');
+            for (const id of removedChallengeIds) {
+              try {
+                storage.removeItem('lemondbd_minigame_progress_' + id);
+              } catch {
+                // ignore
+              }
+            }
+            for (const h of purgedInMinigames) purgedSet.add(h);
           }
         }
       }
@@ -257,6 +272,7 @@ export async function checkAndPurgeRevokedContent(): Promise<string[]> {
           const hash = item?.contentHash || item?._manifest?.content_hash;
           if (typeof hash === 'string' && revokedSet.has(hash)) {
             storage.removeItem(key);
+            dispatchStorageEvent(key);
             purgedSet.add(hash);
           }
         }
@@ -265,10 +281,7 @@ export async function checkAndPurgeRevokedContent(): Promise<string[]> {
       }
     }
 
-    const purged = serverRevoked.filter((h) => purgedSet.has(h));
-    for (const h of purgedSet) {
-      if (!purged.includes(h)) purged.push(h);
-    }
+    const purged = Array.from(purgedSet);
 
     if (purged.length > 0) {
       dispatchContentRevoked(purged);
@@ -278,6 +291,24 @@ export async function checkAndPurgeRevokedContent(): Promise<string[]> {
   } catch {
     return [];
   }
+}
+
+/**
+ * Scans localStorage across tier lists, smash rosters, minigames, and legacy keys,
+ * queries the revocation endpoint, removes revoked items from storage, and dispatches events.
+ * Deduplicates concurrent in-flight calls on mount.
+ */
+export async function checkAndPurgeRevokedContent(): Promise<string[]> {
+  if (typeof window === 'undefined') return [];
+  if (syncPromise) return syncPromise;
+  syncPromise = (async () => {
+    try {
+      return await doCheckAndPurge();
+    } finally {
+      syncPromise = null;
+    }
+  })();
+  return syncPromise;
 }
 
 /**

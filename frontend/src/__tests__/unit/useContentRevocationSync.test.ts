@@ -178,7 +178,7 @@ describe('useContentRevocationSync', () => {
     assert.ok(storageEvent, 'Storage event for lemondbd_smash_rosters must be dispatched');
   });
 
-  it('purges revoked challenge from lemondbd_custom_minigames', async () => {
+  it('purges revoked challenge from lemondbd_custom_minigames, clears progress, and dispatches storage event', async () => {
     const hashRevoked = 'e'.repeat(64);
     const hashKept = 'f'.repeat(64);
 
@@ -197,6 +197,8 @@ describe('useContentRevocationSync', () => {
         },
       ])
     );
+    mockStorage.setItem('lemondbd_minigame_progress_ch-bad', JSON.stringify({ completed: true }));
+    mockStorage.setItem('lemondbd_minigame_progress_ch-good', JSON.stringify({ completed: true }));
 
     globalThis.fetch = async () => ({
       ok: true,
@@ -213,9 +215,17 @@ describe('useContentRevocationSync', () => {
     const updated = JSON.parse(updatedRaw) as Array<{ id: string }>;
     assert.equal(updated.length, 1);
     assert.equal(updated[0].id, 'ch-good');
+
+    assert.equal(mockStorage.getItem('lemondbd_minigame_progress_ch-bad'), null, 'Orphaned progress must be removed');
+    assert.notEqual(mockStorage.getItem('lemondbd_minigame_progress_ch-good'), null, 'Kept progress must remain');
+
+    const storageEvent = dispatchedEvents.find(
+      (e) => e.type === 'storage' && e.key === 'lemondbd_custom_minigames'
+    );
+    assert.ok(storageEvent, 'Storage event for lemondbd_custom_minigames must be dispatched');
   });
 
-  it('purges revoked item from legacy prefix keys', async () => {
+  it('purges revoked item from legacy prefix keys and dispatches storage event for each key', async () => {
     const hashRevoked1 = '1'.repeat(64);
     const hashRevoked2 = '2'.repeat(64);
     const hashKept = '3'.repeat(64);
@@ -248,6 +258,16 @@ describe('useContentRevocationSync', () => {
     assert.equal(mockStorage.getItem('tier_lists:custom:legacy1'), null);
     assert.equal(mockStorage.getItem('smash:custom:legacy2'), null);
     assert.notEqual(mockStorage.getItem('minigames:custom:legacy3'), null);
+
+    const leg1Event = dispatchedEvents.find(
+      (e) => e.type === 'storage' && e.key === 'tier_lists:custom:legacy1'
+    );
+    assert.ok(leg1Event, 'Storage event for legacy1 must be dispatched');
+
+    const leg2Event = dispatchedEvents.find(
+      (e) => e.type === 'storage' && e.key === 'smash:custom:legacy2'
+    );
+    assert.ok(leg2Event, 'Storage event for legacy2 must be dispatched');
   });
 
   it('is a no-op when no content hashes exist in storage', async () => {
@@ -313,6 +333,47 @@ describe('useContentRevocationSync', () => {
 
     const res500 = await checkAndPurgeRevokedContent();
     assert.deepEqual(res500, []);
+  });
+
+  it('deduplicates concurrent in-flight calls on mount', async () => {
+    const hash = '7'.repeat(64);
+    mockStorage.setItem(
+      'minigames:custom:flight',
+      JSON.stringify({ contentHash: hash })
+    );
+
+    let fetchCount = 0;
+    globalThis.fetch = async () => {
+      fetchCount++;
+      await new Promise((resolve) => setTimeout(resolve, 20));
+      return {
+        ok: true,
+        status: 200,
+        json: async () => ({ revoked_hashes: [hash] }),
+      } as Response;
+    };
+
+    const [res1, res2] = await Promise.all([
+      checkAndPurgeRevokedContent(),
+      checkAndPurgeRevokedContent(),
+    ]);
+
+    assert.equal(fetchCount, 1, 'Concurrent calls must reuse the in-flight promise');
+    assert.deepEqual(res1, [hash]);
+    assert.deepEqual(res2, [hash]);
+  });
+
+  it('immediately returns empty array during SSR when window is undefined', async () => {
+    (globalThis as unknown as { window: unknown }).window = undefined;
+    let fetchCalled = false;
+    globalThis.fetch = async () => {
+      fetchCalled = true;
+      return { ok: true, json: async () => ({}) } as Response;
+    };
+
+    const result = await checkAndPurgeRevokedContent();
+    assert.deepEqual(result, []);
+    assert.equal(fetchCalled, false);
   });
 
   it('ContentRevocationSync component renders null and hook is callable', () => {

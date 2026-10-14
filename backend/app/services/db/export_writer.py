@@ -8,17 +8,90 @@ from typing import Any
 from sqlalchemy import select
 
 from app.core.extensions import db
+from app.models.base import column_dict
 from app.models.chaos import ChaosMatchLog, ChaosRun
 from app.models.gauntlet import GauntletMatchLog, GauntletRun
 from app.models.history import HistoryMatchLog, HistoryRun
 from app.models.map import MapRealm, Realm
 from app.models.page_streak import PageStreakPageLog, PageStreakRun
-from app.models.smash_or_pass import Roster
+from app.models.smash_or_pass import Entity, Roster
 from app.models.user import User, UserCharacterOwnership, UserPerkOwnership, UserShowcase
 from app.services.db.asset_bundling import read_asset_base64
 from app.services.db.export_registry import SIMPLE_EXPORT_TARGETS, TARGET_GROUPS
 from app.services.db.run_family_export import export_run_family
-from app.services.db.serializers import serialize_realm, serialize_roster, serialize_user_showcase
+
+
+def serialize_realm(rb: Realm) -> dict[str, Any]:
+    return column_dict(rb)
+
+
+def serialize_user_showcase(sc: UserShowcase) -> dict[str, Any]:
+    return {
+        "login": sc.user.login if sc.user else None,
+        "player_title": sc.player_title,
+        "devotion_level": sc.devotion_level,
+        "grade_rank": sc.grade_rank,
+        "survivor_main_id": sc.survivor_main_id,
+        "survivor_main_prestige": sc.survivor_main_prestige,
+        "survivor_perk_ids": sc.survivor_perk_ids,
+        "killer_main_id": sc.killer_main_id,
+        "killer_main_prestige": sc.killer_main_prestige,
+        "killer_perk_ids": sc.killer_perk_ids,
+    }
+
+
+def serialize_smash_entity(e: Entity, login_by_user_id: dict[int, str]) -> dict[str, Any]:
+    return {
+        "slug": e.slug,
+        "name": e.name,
+        "real_name": e.real_name,
+        "role": e.role,
+        "gender": e.gender,
+        "media_url": e.media_url,
+        "media_display": e.media_display,
+        "watermark_left": e.watermark_left,
+        "watermark_right": e.watermark_right,
+        "archetype": e.archetype,
+        "bio": e.bio,
+        "tagline": e.tagline,
+        "quote": e.quote,
+        "meme": e.meme,
+        "turn_on": e.turn_on,
+        "dealbreaker": e.dealbreaker,
+        "dating_vibe": e.dating_vibe,
+        "red_flags": list(e.red_flags or []),
+        "green_flags": list(e.green_flags or []),
+        "chapter": e.chapter,
+        "danger_level": e.danger_level,
+        "chaos_score": e.chaos_score,
+        "translations": e.translations or {},
+        "order_index": e.order_index,
+        "stat": e.stat.to_dict() if e.stat else None,
+        "votes": [
+            {
+                "login": login_by_user_id.get(v.user_id) if v.user_id else None,
+                "session_id": v.session_id,
+                "vote_type": v.vote_type,
+                "created_at": v.created_at.isoformat() if v.created_at else None,
+            }
+            for v in e.votes
+        ],
+    }
+
+
+def serialize_roster(r: Roster, login_by_user_id: dict[int, str]) -> dict[str, Any]:
+    return {
+        "slug": r.slug,
+        "name": r.name,
+        "description": r.description,
+        "translations": r.translations or {},
+        "cover_image_url": r.cover_image_url,
+        "theme_color": r.theme_color,
+        "category": r.category,
+        "is_nsfw": r.is_nsfw,
+        "is_active": r.is_active,
+        "entities": [serialize_smash_entity(e, login_by_user_id) for e in r.entities],
+    }
 
 
 def with_asset(row: dict[str, Any], path_field: str, static_dir: Path, include_assets: bool) -> None:

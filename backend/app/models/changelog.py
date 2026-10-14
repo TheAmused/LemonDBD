@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING, Any
 from sqlalchemy import DateTime, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.core.extensions import Base
-from app.models.base import utcnow
+from app.models.base import ColumnDictMixin, utcnow
 
 if TYPE_CHECKING:
     from app.models.user import User
@@ -16,7 +16,7 @@ if TYPE_CHECKING:
 CHANGELOG_TAGS = ("feature", "bugfix", "balance", "event", "announcement")
 
 
-class ChangelogPost(Base):
+class ChangelogPost(Base, ColumnDictMixin):
     __tablename__ = "changelog_posts"
 
     id: Mapped[int] = mapped_column(primary_key=True)
@@ -41,17 +41,3 @@ class ChangelogPost(Base):
     )
 
     author: Mapped["User | None"] = relationship()
-
-    def to_dict(self) -> dict[str, Any]:
-        return {
-            "id": self.id,
-            "title": self.title,
-            "content_html": self.content_html,
-            "tag": self.tag,
-            "position": self.position,
-            "is_published": self.is_published,
-            "author_id": self.author_id,
-            "author_name": self.author_name,
-            "created_at": self.created_at.isoformat() if self.created_at else None,
-            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
-        }

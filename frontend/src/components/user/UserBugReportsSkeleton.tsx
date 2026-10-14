@@ -1,6 +1,5 @@
 // frontend/src/components/user/UserBugReportsSkeleton.tsx
 'use client';
-import type { Dictionary } from '@/locales/types';
 import React from 'react';
 import { DbdSpinner } from '@/components/common/DbdSpinner';
 import { useDictionary } from "@/context/DictionaryContext";

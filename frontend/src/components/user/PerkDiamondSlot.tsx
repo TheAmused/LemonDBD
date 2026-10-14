@@ -1,12 +1,13 @@
-// frontend/src/components/user/PerkDiamondSlot.tsx
-import { useDictionary } from '@/context/DictionaryContext';
+'use client';
 import React from 'react';
 import { Plus, X } from 'lucide-react';
 import type { Perk } from '@/types/perks';
 import { getPerkIconUrl } from '@/utils/perkUtils';
+import { tip } from '@/components/common/Tooltip';
+import { useDictionary } from '@/context/DictionaryContext';
+import { DiamondSlot } from '@/components/ui/DiamondSlot';
 import { PerkTile } from '@/components/streaks/page-streak/PerkTile';
 
-import { tip } from '@/components/common/Tooltip';
 interface PerkDiamondSlotProps {
   slotIndex: number;
   perk?: Perk | null;
@@ -20,7 +21,8 @@ interface PerkDiamondSlotProps {
 /**
  * One of the four loadout slots, as wide as the diamond itself (`--perk-size`, set by the card).
  * Empty and filled slots share that box, so picking perks never moves the layout. A filled slot
- * is the bare perk icon, the PerkTile every other page uses; an empty one is a dashed diamond.
+ * is the bare perk icon, the PerkTile every other page uses; an empty one is a dashed DiamondSlot
+ * sized to fill the same footprint (a diamond's frame is 1/sqrt(2) of the width it covers).
  */
 export const PerkDiamondSlot: React.FC<PerkDiamondSlotProps> = ({
   perk,
@@ -40,15 +42,15 @@ export const PerkDiamondSlot: React.FC<PerkDiamondSlotProps> = ({
       {perk ? (
         <PerkTile name={perk.name} iconSrc={iconUrl ?? undefined} onToggle={() => onClick()} />
       ) : (
-        <button
-          type="button"
+        <DiamondSlot
+          dashed
           onClick={onClick}
-          className="absolute inset-[14.65%] flex rotate-45 items-center justify-center rounded-xl border-2 border-dashed border-border-color bg-bg-elevated/40 shadow-md transition-all cursor-pointer hover:scale-105 hover:border-accent-amber/60 hover:bg-accent-amber/5"
+          ariaLabel={emptyLabel}
+          className="absolute inset-[14.65%] h-auto w-auto sm:h-auto sm:w-auto"
           {...tip(emptyLabel, undefined, 'action')}
-          aria-label={emptyLabel}
         >
-          <Plus className="-rotate-45 h-5 w-5 text-text-muted transition-colors group-hover:text-accent-amber" />
-        </button>
+          <Plus className="h-5 w-5 text-text-muted transition-colors group-hover:text-accent-amber" />
+        </DiamondSlot>
       )}
 
       {/* Clear button on hover when perk is present, sitting on the diamond's upper right edge */}

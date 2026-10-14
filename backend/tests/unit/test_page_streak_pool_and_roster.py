@@ -3,9 +3,9 @@
 import pytest
 from sqlalchemy import select
 from app.models import Killer, Perk
-from app.services.user_service import UserService
+from app.services.user import UserService
 from app.services.ownership_service import OwnershipService
-from app.services.page_streak_service import PageStreakService
+from app.services.page_streak import PageStreakService
 from tests.unit.page_streak_support import (
     GENERAL_CHARACTER,
     FakePerkService,

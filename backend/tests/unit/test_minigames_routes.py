@@ -164,3 +164,11 @@ def test_get_daily_and_repeatable_with_mode(app, test_db):
     assert res_rep.status_code == 200
     data_rep = res_rep.get_json()
     assert data_rep["game_mode"] == "perk"
+
+
+def test_list_official_challenges_pagination_boundaries(app, test_db):
+    client = app.test_client()
+    res = client.get("/api/v1/minigames/official?page=-5&per_page=99999")
+    assert res.status_code == 200
+    assert isinstance(res.get_json(), list)
+

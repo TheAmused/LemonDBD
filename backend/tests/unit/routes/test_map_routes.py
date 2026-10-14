@@ -121,3 +121,17 @@ def test_get_maps_localization_header(client: FlaskClient, db_session: Session) 
 
     data = response.get_json()
     assert data["maps"][0]["name"] == "Das Spiel"
+
+
+@pytest.mark.unit
+def test_get_maps_pagination_boundaries(client: FlaskClient, db_session: Session) -> None:
+    """Test GET /api/v1/maps with boundary pagination query parameters."""
+    _seed_route_data(db_session)
+    # ?page=-1 and ?per_page=9999 should gracefully clamp
+    response = client.get("/api/v1/maps?page=-1&per_page=9999")
+    assert response.status_code == 200
+    data = response.get_json()
+    assert data["page"] == 1
+    assert data["per_page"] == 500  # clamped to max_per_page
+    assert len(data["maps"]) == 2
+

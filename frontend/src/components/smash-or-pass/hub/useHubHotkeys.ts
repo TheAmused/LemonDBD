@@ -1,3 +1,4 @@
+'use client';
 // frontend/src/components/smash-or-pass/hub/useHubHotkeys.ts
 import { useEffect } from 'react';
 import type { EntityItem } from '@/types/smashOrPass';

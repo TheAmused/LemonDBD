@@ -2,7 +2,6 @@
 // frontend/src/components/admin/AdminTabContentSkeleton.tsx
 
 import React from 'react';
-import type { Dictionary } from '@/locales/types';
 import { DbdSpinner } from '@/components/common/DbdSpinner';
 import { useDictionary } from "@/context/DictionaryContext";
 

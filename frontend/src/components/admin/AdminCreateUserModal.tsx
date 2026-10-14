@@ -2,7 +2,6 @@
 // frontend/src/components/admin/AdminCreateUserModal.tsx
 
 import React, { useState } from 'react';
-import type { Dictionary } from '@/locales/types';
 import { UserPlus } from 'lucide-react';
 import { Modal } from '@/components/common/Modal';
 import { Button } from '@/components/common/Button';

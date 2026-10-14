@@ -1,16 +1,19 @@
-'use client';
-// frontend/src/app/[locale]/tier-lists/custom/[id]/page.tsx
-
-import React, { use } from 'react';
+import { pageMetadata } from '@/i18n/metadata';
 import { PageShell } from '@/components/layout/PageShell';
-import { CustomTierListView } from '@/components/tier-lists/CustomTierListView';
-import { useDictionary, useLocale } from '@/context/DictionaryContext';
+import { CustomTierListView } from '@/features/tier-lists';
+import type { Locale } from '@/i18n/config';
 
+export const generateMetadata = pageMetadata('/tier-lists', (d) => ({
+  title: d.tierLists.pageTitle,
+  description: d.tierLists.metaDescription,
+}));
 
-export default function CustomTierListPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = use(params);
-  const dict = useDictionary();
-  const locale = useLocale();
+export default async function CustomTierListPage({
+  params,
+}: {
+  params: Promise<{ locale: Locale; id: string }>;
+}) {
+  const { locale, id } = await params;
 
   return (
     <PageShell

@@ -1,6 +1,5 @@
 'use client';
 // frontend/src/components/streaks/RoleTabs.tsx
-import type { Dictionary } from '@/locales/types';
 
 import React, { useEffect } from 'react';
 import Link from 'next/link';

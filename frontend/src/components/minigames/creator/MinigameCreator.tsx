@@ -24,11 +24,12 @@ import type {
   RoundConfig,
   MinigameCatalog,
 } from '@/types/minigame';
-import type { Dictionary } from '@/locales/types';
 import { useAuth } from '@/context/AuthContext';
+import { AuthRequiredState } from '@/components/common/AuthRequiredState';
 import { saveCustomChallenge } from '@/utils/minigames/storage';
 import { exportChallengeToJson } from '@/utils/minigames/jsonExportImport';
 import { buildChallengeShareUrl, encodeChallengeShare } from '@/utils/minigames/shareLink';
+import { signExportPayload } from '@/utils/contentSigning';
 import { publishOfficialChallenge } from '@/services/minigameApi';
 import { RoundEditorCard } from './RoundEditorCard';
 import { copyTextWithFallback } from '@/utils/clipboard';
@@ -45,7 +46,7 @@ export const MinigameCreator: React.FC<MinigameCreatorProps> = ({ catalog, local
   const t = dict.minigames;
   const c = t.creator;
   const router = useRouter();
-  const { user, isAdmin, token } = useAuth();
+  const { user, isAdmin, token, isAuthenticated, isLoading: authLoading } = useAuth();
 
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -160,11 +161,27 @@ export const MinigameCreator: React.FC<MinigameCreatorProps> = ({ catalog, local
     router.push(`/${locale}/minigames/play?id=${encodeURIComponent(String(saved.id))}`);
   };
 
-  const handleExportJson = () => {
+  const handleExportJson = async () => {
     const validated = validateChallenge();
     if (!validated) return;
 
-    exportChallengeToJson(validated);
+    let finalDoc = validated;
+    if (user) {
+      try {
+        const manifest = await signExportPayload('minigame', {
+          title: validated.title,
+          description: validated.description || '',
+          game_mode: validated.game_mode || 'custom',
+          rounds: validated.rounds,
+        });
+        if (manifest) {
+          finalDoc = { ...validated, _manifest: manifest };
+        }
+      } catch {
+        finalDoc = validated;
+      }
+    }
+    exportChallengeToJson(finalDoc);
   };
 
   const handleShareLink = async () => {
@@ -173,15 +190,30 @@ export const MinigameCreator: React.FC<MinigameCreatorProps> = ({ catalog, local
 
     setIsSharing(true);
     try {
+      let finalDoc = validated;
+      if (user) {
+        try {
+          const manifest = await signExportPayload('minigame', {
+            title: validated.title,
+            description: validated.description || '',
+            game_mode: validated.game_mode || 'custom',
+            rounds: validated.rounds,
+          });
+          if (manifest) {
+            finalDoc = { ...validated, _manifest: manifest };
+          }
+        } catch {
+          finalDoc = validated;
+        }
+      }
       const origin = typeof window !== 'undefined' ? window.location.origin : '';
-      const fullUrl = buildChallengeShareUrl(origin, await encodeChallengeShare(validated));
+      const fullUrl = buildChallengeShareUrl(origin, await encodeChallengeShare(finalDoc));
       if (!(await copyTextWithFallback(fullUrl))) throw new Error('Failed to copy share link.');
       setShareSuccess(true);
       setTimeout(() => setShareSuccess(false), 4000);
-
     } catch (err) {
-        setErrorMsg(getErrorMessage(err, 'Failed to generate share link.'));
-      } finally {
+      setErrorMsg(getErrorMessage(err, 'Failed to generate share link.'));
+    } finally {
       setIsSharing(false);
     }
   };
@@ -209,6 +241,21 @@ export const MinigameCreator: React.FC<MinigameCreatorProps> = ({ catalog, local
       setIsPublishingOfficial(false);
     }
   };
+
+  if (authLoading) {
+    return <div className="min-h-[400px]" />;
+  }
+
+  if (!isAuthenticated) {
+    return (
+      <div className="w-full max-w-4xl mx-auto px-4 py-8">
+        <AuthRequiredState
+          title={t.authRequiredTitle}
+          subtitle={t.authRequiredDesc}
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="w-full max-w-4xl mx-auto px-4 py-8 flex flex-col items-center">

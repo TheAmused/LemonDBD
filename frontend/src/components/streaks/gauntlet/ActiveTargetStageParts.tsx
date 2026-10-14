@@ -2,12 +2,14 @@
 
 import React, { useState, useEffect } from 'react';
 import type { GauntletPlayerLoadout, Perk, Role, TierInfo } from '@/types/gauntletStreak';
-import type { OwnedCharacterItem } from '@/components/streaks/gauntlet/useOwnedCharacters';
+import type { OwnedCharacterItem } from '@/components/streaks/useOwnedRoster';
 import { DrawPhase } from '@/components/streaks/gauntlet/useTargetDraw';
 import { User, Sparkles, Star, Lock, HelpCircle } from 'lucide-react';
 import { avatarUrlForCharacter, perkIconUrl, staticUrl } from '@/utils/staticUrl';
 import { useCharacterDisplayName, usePerkDisplayName } from '@/context/DisplayNamesContext';
 import { KillerIcon } from '@/components/icons/DbdIcons';
+import { PerkIcon } from '@/components/ui/PerkIcon';
+import { DiamondSlot } from '@/components/ui/DiamondSlot';
 import { useDictionary } from '@/context/DictionaryContext';
 import { baseSlots } from '@/utils/perkSlots';
 
@@ -54,24 +56,20 @@ export const RevealPortrait: React.FC<{ name?: string; role: Role; phase: DrawPh
 };
 
 const PerkArt: React.FC<{ perk: Perk; size: string }> = ({ perk, size }) => {
-  const [failed, setFailed] = useState<boolean>(false);
   const displayName = usePerkDisplayName()(perk.name);
   const src = perkIconFor(perk);
 
-  if (!src || failed) {
-    return (
-      <div className={`${size} flex items-center justify-center text-text-muted`}>
-        <Sparkles className="w-1/2 h-1/2" aria-hidden="true" />
-      </div>
-    );
-  }
-
   return (
-    <img
+    <PerkIcon
+      perk={perk}
       src={src}
       alt={displayName}
-      className={`${size} max-w-none object-contain`}
-      onError={() => setFailed(true)}
+      imageClassName={`${size} max-w-none object-contain`}
+      fallbackIcon={
+        <div className={`${size} flex items-center justify-center text-text-muted`}>
+          <Sparkles className="w-1/2 h-1/2" aria-hidden="true" />
+        </div>
+      }
     />
   );
 };
@@ -120,9 +118,9 @@ const SlotChip: React.FC<{
         {badge}
       </div>
     )}
-    <div className={`${slotIconBase(size)} ${iconClassName}`}>
-      <div className="-rotate-45 flex items-center justify-center">{children}</div>
-    </div>
+    <DiamondSlot size={size} className={iconClassName}>
+      {children}
+    </DiamondSlot>
     {caption && <span className={`${CAPTION_CLASS[size]} text-center text-xs font-bold leading-tight text-text-primary line-clamp-2`}>{caption}</span>}
   </div>
 );

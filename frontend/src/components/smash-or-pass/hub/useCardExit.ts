@@ -1,3 +1,4 @@
+'use client';
 // frontend/src/components/smash-or-pass/hub/useCardExit.ts
 import { useCallback, useRef, useState } from 'react';
 

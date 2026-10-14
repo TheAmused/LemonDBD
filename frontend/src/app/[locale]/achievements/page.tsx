@@ -1,23 +1,18 @@
-'use client';
 // frontend/src/app/[locale]/achievements/page.tsx
-import type { Dictionary } from '@/locales/types';
-
 import React from 'react';
-import { useParams } from 'next/navigation';
+import { pageMetadata } from '@/i18n/metadata';
 import { PageShell } from '@/components/layout/PageShell';
 import { AchievementsHub } from '@/components/achievements/AchievementsHub';
 import { Locale } from '@/i18n/config';
-import { useDictionary } from '@/context/DictionaryContext';
 
-export default function AchievementsPage() {
-  const params = useParams();
-  const locale = (params?.locale as Locale) || 'en';
-  const dict = useDictionary();
+export const generateMetadata = pageMetadata('/achievements', (d) => ({ title: d.app.achievementsPageTitle }));
 
+export default async function AchievementsPage({ params }: { params: Promise<{ locale: Locale }> }) {
+  const { locale } = await params;
 
   return (
     <PageShell locale={locale} padding="spacious">
-      {dict && <AchievementsHub />}
+      <AchievementsHub />
     </PageShell>
   );
 }

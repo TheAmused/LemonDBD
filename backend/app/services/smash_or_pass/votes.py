@@ -6,6 +6,7 @@ from typing import Any
 from sqlalchemy import and_, case, func, or_, select
 
 from app.core.extensions import db
+from app.core.transaction import transaction
 from app.models.base import utcnow
 from app.models.smash_or_pass import Entity, EntityStat, Roster, Vote
 from app.services.smash_or_pass.serialize import enrich_with_stat
@@ -143,34 +144,34 @@ class SmashVotesMixin:
                     .order_by(Vote.created_at.desc())
                 ).first()
 
-            if existing_vote:
-                existing_vote.vote_type = vote_type
-                if user_id is not None:
-                    existing_vote.user_id = user_id
-                if session_id is not None:
-                    existing_vote.session_id = session_id
-                existing_vote.created_at = utcnow()
-            else:
-                new_vote = Vote(
-                    entity_id=entity.id,
-                    session_id=session_id,
-                    user_id=user_id,
-                    vote_type=vote_type,
-                )
-                db.session.add(new_vote)
+            with transaction():
+                if existing_vote:
+                    existing_vote.vote_type = vote_type
+                    if user_id is not None:
+                        existing_vote.user_id = user_id
+                    if session_id is not None:
+                        existing_vote.session_id = session_id
+                    existing_vote.created_at = utcnow()
+                else:
+                    new_vote = Vote(
+                        entity_id=entity.id,
+                        session_id=session_id,
+                        user_id=user_id,
+                        vote_type=vote_type,
+                    )
+                    db.session.add(new_vote)
 
-            db.session.flush()
-            stat = self.recalculate_stat_for_entity(entity.id)
+                db.session.flush()
+                stat = self.recalculate_stat_for_entity(entity.id)
 
-            db.session.commit()
             db.session.refresh(entity)
             db.session.refresh(stat)
 
             return enrich_with_stat(entity, stat, target_slug, lang)
         except Exception as e:
-            db.session.rollback()
             logger.error(f"Error recording smash-or-pass vote: {e}")
             raise e
+
 
     def sync_session_votes(
         self,
@@ -198,44 +199,43 @@ class SmashVotesMixin:
             synced_votes = []
             affected_entity_ids = set()
 
-            for s_vote in session_votes:
-                # Same reasoning as cast_vote: more than one Vote row can already
-                # match (entity_id, user_id) since nothing enforces uniqueness, and
-                # bare `.scalar()` picks an arbitrary one with no ORDER BY. Ordering
-                # by `created_at desc` makes the sync target deterministic instead
-                # of implementation-defined.
-                existing_user_vote = db.session.scalars(
-                    select(Vote)
-                    .where(Vote.entity_id == s_vote.entity_id, Vote.user_id == user_id)
-                    .order_by(Vote.created_at.desc())
-                ).first()
+            with transaction():
+                for s_vote in session_votes:
+                    # Look up by primary key (entity_id, user_id) when matching: the
+                    # bare `.scalar()` picks an arbitrary one with no ORDER BY. Ordering
+                    # by `created_at desc` makes the sync target deterministic instead
+                    # of implementation-defined.
+                    existing_user_vote = db.session.scalars(
+                        select(Vote)
+                        .where(Vote.entity_id == s_vote.entity_id, Vote.user_id == user_id)
+                        .order_by(Vote.created_at.desc())
+                    ).first()
 
-                if existing_user_vote:
-                    db.session.delete(s_vote)
-                else:
-                    s_vote.user_id = user_id
-                    affected_entity_ids.add(s_vote.entity_id)
-                    synced_count += 1
-                    synced_votes.append({
-                        "entity_id": s_vote.entity_id,
-                        "vote_type": s_vote.vote_type,
-                    })
+                    if existing_user_vote:
+                        db.session.delete(s_vote)
+                    else:
+                        s_vote.user_id = user_id
+                        affected_entity_ids.add(s_vote.entity_id)
+                        synced_count += 1
+                        synced_votes.append({
+                            "entity_id": s_vote.entity_id,
+                            "vote_type": s_vote.vote_type,
+                        })
 
-            db.session.flush()
+                db.session.flush()
 
-            for eid in affected_entity_ids:
-                self.recalculate_stat_for_entity(eid)
+                for eid in affected_entity_ids:
+                    self.recalculate_stat_for_entity(eid)
 
-            db.session.commit()
             return {
                 "status": "success",
                 "synced_count": synced_count,
                 "synced_votes": synced_votes,
             }
         except Exception as e:
-            db.session.rollback()
             logger.error(f"Error syncing session votes to user {user_id}: {e}")
             raise e
+
 
     def reset_session_votes(
         self, session_id: str, roster_slug: str | None = None
@@ -253,18 +253,17 @@ class SmashVotesMixin:
             reset_count = len(votes)
             affected_entity_ids = {v.entity_id for v in votes}
 
-            for vote in votes:
-                db.session.delete(vote)
+            with transaction():
+                for vote in votes:
+                    db.session.delete(vote)
 
-            db.session.flush()
+                db.session.flush()
 
-            for eid in affected_entity_ids:
-                self.recalculate_stat_for_entity(eid)
+                for eid in affected_entity_ids:
+                    self.recalculate_stat_for_entity(eid)
 
-            db.session.commit()
             return {"status": "success", "reset_count": reset_count}
         except Exception as e:
-            db.session.rollback()
             logger.error(f"Error resetting session votes: {e}")
             raise e
 
@@ -293,20 +292,20 @@ class SmashVotesMixin:
             reset_count = len(votes)
             affected_entity_ids = {v.entity_id for v in votes}
 
-            for vote in votes:
-                db.session.delete(vote)
+            with transaction():
+                for vote in votes:
+                    db.session.delete(vote)
 
-            db.session.flush()
+                db.session.flush()
 
-            for eid in affected_entity_ids:
-                self.recalculate_stat_for_entity(eid)
+                for eid in affected_entity_ids:
+                    self.recalculate_stat_for_entity(eid)
 
-            db.session.commit()
             return {"status": "success", "reset_count": reset_count}
         except Exception as e:
-            db.session.rollback()
             logger.error(f"Error resetting user votes: {e}")
             raise e
+
 
     def get_user_votes(
         self,

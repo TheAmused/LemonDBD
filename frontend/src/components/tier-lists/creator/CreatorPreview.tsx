@@ -4,7 +4,6 @@
 import React, { useMemo } from 'react';
 import { Modal } from '@/components/common/Modal';
 import type { StoredCustomList, TierDefinition, TierListDocumentItem } from '@/types/tierList';
-import type { Dictionary } from '@/locales/types';
 import { documentItemsToItems } from '@/utils/tierLists/items';
 import { TierBadge } from '../TierBadge';
 import { CustomTierListCard } from '../TierListCards';

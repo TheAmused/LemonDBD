@@ -6,7 +6,10 @@ import { getErrorMessage } from "@/utils/api";
 
 import { Button } from '@/components/common/Button';
 import React, { useState, useEffect, useMemo, useRef } from 'react';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
+import { useAuth } from '@/context/AuthContext';
+import { AuthRequiredState } from '@/components/common/AuthRequiredState';
 import {
   Gamepad2,
   Calendar,
@@ -30,7 +33,6 @@ import {
   Eye,
   BookOpen,
 } from 'lucide-react';
-import type { Dictionary } from '@/locales/types';
 import type { ChallengeDefinition } from '@/types/minigame';
 import {
   getCustomChallenges,
@@ -41,6 +43,7 @@ import {
 } from '@/utils/minigames/storage';
 import { exportChallengeToJson, importChallengeFromJson } from '@/utils/minigames/jsonExportImport';
 import { buildChallengeShareUrl, encodeChallengeShare } from '@/utils/minigames/shareLink';
+import { signExportPayload } from '@/utils/contentSigning';
 
 import { tip } from '@/components/common/Tooltip';
 import { ConfirmModal } from '@/components/common/ConfirmModal';
@@ -49,6 +52,8 @@ import { copyTextWithFallback } from '@/utils/clipboard';
 import { useDictionary } from "@/context/DictionaryContext";
 import { formatMessage } from '@/utils/i18nFormat';
 
+const AuthModal = dynamic(() => import('@/components/AuthModal').then((m) => m.AuthModal), { ssr: false });
+
 interface MinigamesHubProps {
   locale: string;
 }
@@ -56,6 +61,8 @@ interface MinigamesHubProps {
 export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
   const dict = useDictionary();
   const t = dict.minigames;
+  const { isAuthenticated, user } = useAuth();
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [customTrials, setCustomTrials] = useState<ChallengeDefinition[]>([]);
   const [importError, setImportError] = useState<string | null>(null);
   const [streakData, setStreakData] = useState<DailyStreakData>({
@@ -87,16 +94,39 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
     setPendingDeleteId(null);
   };
 
-  const handleExport = (trial: ChallengeDefinition) => {
-    exportChallengeToJson(trial);
+  const ensureSignedTrial = async (trial: ChallengeDefinition): Promise<ChallengeDefinition> => {
+    if (trial._manifest || !user) return trial;
+    try {
+      const manifest = await signExportPayload('minigame', {
+        title: trial.title,
+        description: trial.description || '',
+        game_mode: trial.game_mode || 'custom',
+        rounds: trial.rounds,
+      });
+      if (manifest) {
+        const signed = { ...trial, _manifest: manifest };
+        saveCustomChallenge(signed);
+        setCustomTrials(getCustomChallenges());
+        return signed;
+      }
+    } catch {
+      // fallback to unsigned
+    }
+    return trial;
+  };
+
+  const handleExport = async (trial: ChallengeDefinition) => {
+    const signed = await ensureSignedTrial(trial);
+    exportChallengeToJson(signed);
   };
 
   const handleShare = async (trial: ChallengeDefinition) => {
     if (!trial.id) return;
     setShareLoadingId(trial.id);
     try {
+      const signed = await ensureSignedTrial(trial);
       const origin = typeof window !== 'undefined' ? window.location.origin : '';
-      const fullUrl = buildChallengeShareUrl(origin, await encodeChallengeShare(trial));
+      const fullUrl = buildChallengeShareUrl(origin, await encodeChallengeShare(signed));
       if (!(await copyTextWithFallback(fullUrl))) throw new Error('Copy failed');
       setCopiedId(trial.id);
       setTimeout(() => setCopiedId(null), 3000);
@@ -422,13 +452,25 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
             <Button
               variant="secondary"
               size="sm"
-              onClick={() => fileInputRef.current?.click()}
+              onClick={() => {
+                if (!isAuthenticated) {
+                  setIsAuthModalOpen(true);
+                  return;
+                }
+                fileInputRef.current?.click();
+              }}
             >
               <Upload className="w-3.5 h-3.5" />
               <span>{t.importJson}</span>
             </Button>
             <Link
               href={`/${locale}/minigames/creator`}
+              onClick={(e) => {
+                if (!isAuthenticated) {
+                  e.preventDefault();
+                  setIsAuthModalOpen(true);
+                }
+              }}
               className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-accent-red hover:bg-accent-red-hover text-text-inverted type-strong shadow-md transition-colors"
             >
               <Plus className="w-3.5 h-3.5" />
@@ -437,7 +479,13 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
           </div>
         </div>
 
-        {customTrials.length === 0 ? (
+        {!isAuthenticated ? (
+          <AuthRequiredState
+            variant="compact"
+            title={t.loginToManage}
+            subtitle={t.loginToManageDesc}
+          />
+        ) : customTrials.length === 0 ? (
           <EmptyState variant="compact" title={t.noCustomTrials} />
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -529,6 +577,13 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
         onConfirm={confirmDelete}
         onCancel={() => setPendingDeleteId(null)}
       />
+
+      {isAuthModalOpen && (
+        <AuthModal
+          isOpen={isAuthModalOpen}
+          onClose={() => setIsAuthModalOpen(false)}
+        />
+      )}
     </div>
   );
 };

@@ -3,7 +3,7 @@ from typing import Any
 
 from app.services.ownership_service import OwnershipService
 from app.services.page_streak.helpers import DEFAULT_PERKS_PER_PAGE
-from app.services.perk_service import PerkService
+from app.services.perks import PerkService
 
 
 def get_configured_perks_per_page() -> int:

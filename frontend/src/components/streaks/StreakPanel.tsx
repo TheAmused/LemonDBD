@@ -1,4 +1,4 @@
-import type { Dictionary } from '@/locales/types';
+'use client';
 // frontend/src/components/streaks/StreakPanel.tsx
 import React, { useState } from 'react';
 import dynamic from 'next/dynamic';

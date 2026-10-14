@@ -1,3 +1,4 @@
+'use client';
 // frontend/src/components/smash-or-pass/roster-select/useRosterCarousel.ts
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { RosterItem } from '@/types/smashOrPass';

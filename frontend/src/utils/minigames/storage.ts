@@ -29,6 +29,7 @@ export function saveCustomChallenge(challenge: ChallengeDefinition): ChallengeDe
     id,
     created_at: challenge.created_at || now,
     updated_at: now,
+    ...(challenge._manifest ? { _manifest: challenge._manifest } : {}),
   };
 
   if (!storage) return updated;

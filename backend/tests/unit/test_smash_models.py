@@ -8,7 +8,6 @@ from app.models.smash_or_pass import (
     Roster,
     Vote,
 )
-from app.services.db.raw_schema import init_raw_sqlite_schema
 
 
 @pytest.mark.unit
@@ -273,14 +272,10 @@ class TestSmashModels:
         assert db_session.get(EntityStat, stat_entity_id) is None
         assert db_session.get(Vote, vote_id) is None
 
-    def test_raw_sqlite_schema_init(self) -> None:
-        conn = sqlite3.connect(":memory:")
-        init_raw_sqlite_schema(conn)
+    def test_declarative_schema_models(self, db_session: Session) -> None:
+        from app.core.extensions import db
 
-        cursor = conn.cursor()
-        cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
-        tables = [row[0] for row in cursor.fetchall()]
-
+        tables = db.metadata.tables
         assert "rosters" in tables
         assert "entities" in tables
         assert "entity_stats" in tables
@@ -288,17 +283,13 @@ class TestSmashModels:
         assert "translations" not in tables
         assert "perk_rules" not in tables
 
-        cursor.execute("PRAGMA table_info(rosters);")
-        roster_cols = [row[1] for row in cursor.fetchall()]
+        roster_cols = [c.name for c in tables["rosters"].columns]
         assert "name" in roster_cols
         assert "description" in roster_cols
         assert "translations" in roster_cols
         assert "name_i18n_key" not in roster_cols
 
-        cursor.execute("PRAGMA table_info(entities);")
-        entity_cols = [row[1] for row in cursor.fetchall()]
+        entity_cols = [c.name for c in tables["entities"].columns]
         assert "real_name" in entity_cols
         assert "watermark_left" in entity_cols
         assert "watermark_right" in entity_cols
-
-        conn.close()

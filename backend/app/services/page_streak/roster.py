@@ -8,7 +8,7 @@ from app.models import Killer, PageStreakRun
 from app.services.challenge_completions import fetch_completed_variants
 from app.services.ownership.characters import get_owned_killers
 from app.services.ownership_service import OwnershipService
-from app.services.perk_service import PerkService
+from app.services.perks import PerkService
 
 # Synthetic variant name for the mode-wide "every owned killer cleared"
 # badge -- never stored, only ever synthesized by get_live_roster_badge into

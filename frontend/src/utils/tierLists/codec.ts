@@ -33,6 +33,7 @@ import {
   isRecord,
   readShareFragment as readShareFragmentFrom,
   sanitizeImageUrl as sanitizeImageUrlWith,
+  sanitizeManifest,
   uniqueId,
 } from '@/utils/shareCodec';
 import {
@@ -287,6 +288,7 @@ export function validateTierListDocument(input: unknown): TierListParseResult {
   // Official-list rankings (`template` set) never carry a background of
   // their own -- only a self-contained custom list can.
   const backgroundImage = template ? null : sanitizeImageUrl(input.backgroundImage);
+  const manifest = sanitizeManifest(input._manifest);
 
   const doc: TierListDocument = {
     format: TIER_LIST_FORMAT,
@@ -298,6 +300,7 @@ export function validateTierListDocument(input: unknown): TierListParseResult {
     ...(template ? {} : { items }),
     placements,
     ...(backgroundImage ? { backgroundImage } : {}),
+    ...(manifest ? { _manifest: manifest } : {}),
   };
 
   return {

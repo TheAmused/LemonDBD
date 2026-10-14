@@ -2,6 +2,9 @@
 // frontend/src/components/smash-or-pass/SmashOrPassHub.tsx
 import React, { Suspense, useCallback, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
+import { useDictionary } from '@/context/DictionaryContext';
+import { AuthRequiredState } from '@/components/common/AuthRequiredState';
+import { isLocalRosterSlug } from '@/utils/smashOrPass/localRoster';
 import { SmashSounds } from './SmashSoundEffects';
 import { CardArena } from './hub/CardArena';
 import { HowToPlayModal } from './hub/HowToPlayModal';
@@ -28,6 +31,7 @@ interface SmashOrPassHubProps {
 }
 
 export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ locale = 'en' }) => {
+  const dict = useDictionary();
   const { isAuthenticated } = useAuth();
 
   // Order matters: the votes' initial state reads the roster the rosters hook just restored.
@@ -193,30 +197,39 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ locale = 'en' })
             />
           </HubHeader>
 
-          <CardArena
-            activeRoster={activeRoster}
-            selectedRosterSlug={selectedRosterSlug}
-            nsfwAcknowledged={rosters.nsfwAcknowledged}
-            loading={deck.loading}
-            currentCharacter={deck.currentCharacter}
-            nextCharacter={deck.nextCharacter}
-            thirdCharacter={deck.thirdCharacter}
-            currentIndex={deck.currentIndex}
-            locale={locale}
-            dragPhysics={exit.dragPhysics}
-            isExiting={exit.isExiting}
-            exitVote={exit.exitVote}
-            exitOffset={exit.exitOffset}
-            effectsEnabled={effectsEnabled}
-            sessionSmashes={sessionSmashes}
-            sessionPasses={sessionPasses}
-            onAcknowledgeNsfw={rosters.handleAcknowledgeNsfw}
-            onVote={handleVote}
-            onDragUpdate={(x, y, isDragging) => exit.setDragPhysics({ x, y, isDragging })}
-            onExitComplete={handleExitComplete}
-            onOpenPersona={() => overlays.setIsPersonaOpen(true)}
-            onReset={() => setIsResetConfirmOpen(true)}
-          />
+          {isLocalRosterSlug(selectedRosterSlug) && !isAuthenticated ? (
+            <div className="w-full max-w-lg mx-auto py-12 px-4">
+              <AuthRequiredState
+                title={dict.smashOrPass.authRequiredTitle}
+                subtitle={dict.smashOrPass.authRequiredDesc}
+              />
+            </div>
+          ) : (
+            <CardArena
+              activeRoster={activeRoster}
+              selectedRosterSlug={selectedRosterSlug}
+              nsfwAcknowledged={rosters.nsfwAcknowledged}
+              loading={deck.loading}
+              currentCharacter={deck.currentCharacter}
+              nextCharacter={deck.nextCharacter}
+              thirdCharacter={deck.thirdCharacter}
+              currentIndex={deck.currentIndex}
+              locale={locale}
+              dragPhysics={exit.dragPhysics}
+              isExiting={exit.isExiting}
+              exitVote={exit.exitVote}
+              exitOffset={exit.exitOffset}
+              effectsEnabled={effectsEnabled}
+              sessionSmashes={sessionSmashes}
+              sessionPasses={sessionPasses}
+              onAcknowledgeNsfw={rosters.handleAcknowledgeNsfw}
+              onVote={handleVote}
+              onDragUpdate={(x, y, isDragging) => exit.setDragPhysics({ x, y, isDragging })}
+              onExitComplete={handleExitComplete}
+              onOpenPersona={() => overlays.setIsPersonaOpen(true)}
+              onReset={() => setIsResetConfirmOpen(true)}
+            />
+          )}
         </div>
       </div>
 

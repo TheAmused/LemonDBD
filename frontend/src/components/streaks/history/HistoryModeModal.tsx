@@ -1,6 +1,5 @@
 'use client';
 // frontend/src/components/streaks/history/HistoryModeModal.tsx
-import type { Dictionary } from '@/locales/types';
 
 import React from 'react';
 import { HistoryMode } from '@/types/historyStreak';

@@ -1,5 +1,6 @@
 # backend/app/utils/lang.py
 import re
+from typing import Any
 
 from flask import request
 
@@ -22,22 +23,24 @@ TRANSLATABLE_LOCALES: tuple[str, ...] = tuple(sorted(loc for loc in SUPPORTED_LO
 _REFERER_LANG_RE = re.compile(r"/(" + "|".join(SUPPORTED_LOCALES) + r")(?:/|$|\?)", re.IGNORECASE)
 
 
-def extract_lang() -> str | None:
+def extract_lang(req: Any = None) -> str | None:
     """Extract requested language from query parameter, Referer path, or Accept-Language header."""
-    lang = request.args.get("lang")
+    r = req if req is not None else request
+    lang = r.args.get("lang")
     if lang:
         return lang.strip().lower()
 
-    referer = request.headers.get("Referer", "")
+    referer = r.headers.get("Referer", "")
     if referer:
         m = _REFERER_LANG_RE.search(referer)
         if m:
             return m.group(1).lower()
 
-    accept_lang = request.headers.get("Accept-Language", "")
+    accept_lang = r.headers.get("Accept-Language", "")
     if accept_lang:
         primary = accept_lang.split(",")[0].split(";")[0].split("-")[0].strip().lower()
         if primary in SUPPORTED_LANGS:
             return primary
 
     return None
+

@@ -2,7 +2,7 @@
 'use client';
 
 import React from 'react';
-import { DbdButton } from '../shared/DbdButton';
+import { DbdButton } from '@/components/common/Button';
 import { Perk, RoleCategory, DrawnSlot } from '@/types/perks';
 import { ChaosMutator } from '@/types/chaos';
 import { getSlotInteraction } from '../lib/blindnessCurse';

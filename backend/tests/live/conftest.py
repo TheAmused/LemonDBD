@@ -77,14 +77,16 @@ def live_app(live_database_url: str) -> Flask:
     os.environ["TESTING"] = "True"
 
     from app import create_app
-    from app.core.config import Config
+    from app.core.config import TestingConfig
 
-    class LiveTestingConfig(Config):
+    class LiveTestingConfig(TestingConfig):
         TESTING = True
         DEBUG = False
         SQLALCHEMY_DATABASE_URI = live_database_url
         SECRET_KEY = "live-test-secret-key-32-chars-length!!"
         JWT_SECRET_KEY = "live-test-secret-key-32-chars-length!!"
+        ALTCHA_ENFORCED = False
+        RATELIMIT_ENABLED = False
 
     app = create_app(LiveTestingConfig)
     app.config["TESTING"] = True
@@ -103,7 +105,7 @@ def live_admin_token(live_app: Flask) -> str:
     """Ensure a verified admin account exists in PostgreSQL and return its JWT."""
     from app.core.extensions import db
     from app.models import User
-    from app.services.user_service import UserService
+    from app.services.user import UserService
 
     with live_app.app_context():
         user_service = UserService()
@@ -169,7 +171,7 @@ def auth_client_factory(
     """Factory fixture to register verified test users on the fly in PostgreSQL."""
     from app.core.extensions import db
     from app.models import User
-    from app.services.user_service import UserService
+    from app.services.user import UserService
 
     def _create_user_and_client(
         username: str = "testuser",

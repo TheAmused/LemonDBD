@@ -1,3 +1,4 @@
+'use client';
 // frontend/src/components/smash-or-pass/prefs/useSmashPrefs.ts
 import { useCallback, useEffect, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';

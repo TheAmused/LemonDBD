@@ -5,9 +5,9 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { Check } from 'lucide-react';
 import type { RosterEntry } from '@/types/pageStreak';
-import type { Dictionary } from '@/locales/types';
 import { staticUrl } from '@/utils/staticUrl';
 import { useCharacterDisplayName } from '@/context/DisplayNamesContext';
+import { PerkIcon } from '@/components/ui/PerkIcon';
 import { KillerIcon } from '@/components/icons/DbdIcons';
 import { useDictionary } from "@/context/DictionaryContext";
 
@@ -21,24 +21,19 @@ const KillerPortrait: React.FC<{ name: string; src?: string; done: boolean }> = 
   src,
   done,
 }) => {
-  const [imgError, setImgError] = useState<boolean>(false);
-
   return (
     <div className="flex aspect-square items-center justify-center overflow-hidden bg-bg-elevated">
-      {src && !imgError ? (
-        <img
-          src={src}
-          alt={name}
-          draggable={false}
-          onError={() => setImgError(true)}
-          className="h-full w-full object-cover"
-        />
-      ) : (
-        <KillerIcon
-          className={`h-7 w-7 ${done ? 'text-accent-green/80' : 'text-text-muted'}`}
-          aria-hidden="true"
-        />
-      )}
+      <PerkIcon
+        src={src}
+        alt={name}
+        imageClassName="h-full w-full object-cover"
+        fallbackIcon={
+          <KillerIcon
+            className={`h-7 w-7 ${done ? 'text-accent-green/80' : 'text-text-muted'}`}
+            aria-hidden="true"
+          />
+        }
+      />
     </div>
   );
 };

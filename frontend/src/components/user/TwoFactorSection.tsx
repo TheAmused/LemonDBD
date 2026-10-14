@@ -8,8 +8,8 @@ import { KeyRound, ShieldCheck } from 'lucide-react';
 import { Button } from '@/components/common/Button';
 import { TwoFactorConfirmModal, type TwoFactorAction } from '@/components/user/TwoFactorConfirmModal';
 import { TwoFactorSetupModal } from '@/components/user/TwoFactorSetupModal';
-import { useDictionary } from '@/context/DictionaryContext';
-import { useParams } from 'next/navigation';
+import { useDictionary, useLocale } from '@/context/DictionaryContext';
+import { } from 'next/navigation';
 import { localeMetaFor } from '@/i18n/config';
 import { fetchTwoFactorStatus, type TwoFactorStatus } from '@/services/twoFactorApi';
 import { formatMessage } from '@/utils/i18nFormat';
@@ -27,8 +27,8 @@ export const TwoFactorSection: React.FC<TwoFactorSectionProps> = ({
 }) => {
   const dict = useDictionary();
   const t = dict.twoFactor;
-  const params = useParams();
-  const locale = localeMetaFor(typeof params?.locale === 'string' ? params.locale : undefined).bcp47;
+  const activeLocale = useLocale();
+  const locale = localeMetaFor(activeLocale).bcp47;
   const [status, setStatus] = useState<TwoFactorStatus | null>(null);
   const [loadFailed, setLoadFailed] = useState(false);
   const [setupOpen, setSetupOpen] = useState(false);

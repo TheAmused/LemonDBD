@@ -39,6 +39,7 @@ import {
   isRecord,
   readShareFragment as readShareFragmentFrom,
   sanitizeImageUrl as sanitizeImageUrlWith,
+  sanitizeManifest,
   uniqueId,
 } from '@/utils/shareCodec';
 import { ENTITY_ID_PATTERN, SHARE_HASH_PARAM, SMASH_ROSTER_LIMITS } from './constants';
@@ -316,6 +317,7 @@ export function validateSmashRosterDocument(input: unknown): SmashRosterParseRes
   const custom_genders = sanitizeStringList(input.custom_genders);
   const custom_labels = sanitizeCustomLabels(input.custom_labels);
   const romance_archetypes = sanitizeRomanceArchetypes(input.romance_archetypes);
+  const manifest = sanitizeManifest(input._manifest);
 
   if (counter.truncated) warnings.set('truncated', counter.truncated);
 
@@ -334,6 +336,7 @@ export function validateSmashRosterDocument(input: unknown): SmashRosterParseRes
     ...(custom_labels ? { custom_labels } : {}),
     ...(romance_archetypes?.length ? { romance_archetypes } : {}),
     entities,
+    ...(manifest ? { _manifest: manifest } : {}),
   };
 
   return {
@@ -398,3 +401,6 @@ export function readShareFragment(hash: string): string | null {
 export function buildShareUrl(origin: string, locale: string, payload: string): string {
   return `${origin}/${locale}/smash-or-pass#${SHARE_HASH_PARAM}=${payload}`;
 }
+
+export { copyToClipboard, copyTextWithFallback } from '@/utils/clipboard';
+

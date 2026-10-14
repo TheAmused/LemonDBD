@@ -3,7 +3,6 @@
 
 import React, { useEffect, useState } from 'react';
 import { ImportModal, ImportPreview, Notice, useImportDraft } from '@/components/common/ImportModal';
-import type { Dictionary } from '@/locales/types';
 import {
   type SmashRosterErrorCode,
   type SmashRosterParseResult,

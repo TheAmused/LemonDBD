@@ -6,10 +6,10 @@ from sqlalchemy import Boolean, Date, DateTime, ForeignKey, Index, Integer, Stri
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.core.extensions import Base
-from app.models.base import JSON_DICT, JSON_LIST, utcnow
+from app.models.base import ColumnDictMixin, JSON_DICT, JSON_LIST, utcnow
 
 
-class MinigameDailyChallenge(Base):
+class MinigameDailyChallenge(Base, ColumnDictMixin):
     """An official daily challenge seeded or authored for a specific calendar date."""
 
     __tablename__ = "minigame_daily_challenges"
@@ -27,20 +27,8 @@ class MinigameDailyChallenge(Base):
     is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow, nullable=False)
 
-    def to_dict(self) -> dict[str, Any]:
-        return {
-            "id": self.id,
-            "challenge_date": self.challenge_date.isoformat() if self.challenge_date else None,
-            "game_mode": self.game_mode,
-            "title": self.title,
-            "description": self.description,
-            "rounds": self.rounds,
-            "is_active": self.is_active,
-            "created_at": self.created_at.isoformat() if self.created_at else None,
-        }
 
-
-class MinigameRepeatableChallenge(Base):
+class MinigameRepeatableChallenge(Base, ColumnDictMixin):
     """An ephemeral challenge session generated for infinite repeatable replay."""
 
     __tablename__ = "minigame_repeatable_challenges"
@@ -53,25 +41,16 @@ class MinigameRepeatableChallenge(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow, nullable=False)
     expires_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, index=True)
 
-    def to_dict(self) -> dict[str, Any]:
-        return {
-            "id": self.id,
-            "session_id": self.session_id,
-            "game_mode": self.game_mode,
-            "title": self.title,
-            "rounds": self.rounds,
-            "created_at": self.created_at.isoformat() if self.created_at else None,
-            "expires_at": self.expires_at.isoformat() if self.expires_at else None,
-        }
 
-
-class MinigameUserStat(Base):
+class MinigameUserStat(Base, ColumnDictMixin):
     """User progress and streaks for minigames and daily trials."""
 
     __tablename__ = "minigame_user_stats"
     __table_args__ = (
         UniqueConstraint("user_id", "game_mode", name="uq_minigame_user_mode_stat"),
     )
+
+    _api_exclude = frozenset({"id", "updated_at"})
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True)
@@ -83,15 +62,3 @@ class MinigameUserStat(Base):
     guess_distribution: Mapped[dict[str, int]] = mapped_column(JSON_DICT, default=dict, nullable=False)
     last_played_date: Mapped[date | None] = mapped_column(Date, nullable=True)
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow, onupdate=utcnow, nullable=False)
-
-    def to_dict(self) -> dict[str, Any]:
-        return {
-            "user_id": self.user_id,
-            "game_mode": self.game_mode,
-            "current_streak": self.current_streak,
-            "max_streak": self.max_streak,
-            "total_played": self.total_played,
-            "total_won": self.total_won,
-            "guess_distribution": self.guess_distribution or {},
-            "last_played_date": self.last_played_date.isoformat() if self.last_played_date else None,
-        }

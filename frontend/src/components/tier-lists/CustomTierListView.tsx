@@ -1,11 +1,13 @@
 'use client';
 // frontend/src/components/tier-lists/CustomTierListView.tsx
 
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { SearchX } from 'lucide-react';
 import { EmptyState } from '@/components/common/EmptyState';
-import type { Dictionary } from '@/locales/types';
+import { AuthRequiredState } from '@/components/common/AuthRequiredState';
+import { ReportContentModal } from '@/components/common/ReportContentModal';
+import { useAuth } from '@/context/AuthContext';
 import {
   TIER_LIST_FORMAT,
   TIER_LIST_FORMAT_VERSION,
@@ -33,7 +35,9 @@ export function CustomTierListView({ id, locale }: CustomTierListViewProps) {
   const t = dict.tierLists;
   const router = useRouter();
   const { state, hydrated } = useTierListStore();
+  const { isAuthenticated, isLoading: authLoading } = useAuth();
   const list = state.custom[id];
+  const [reportModalOpen, setReportModalOpen] = useState(false);
 
   useDocumentTitle(list ? `LemonDBD - ${list.title || t.untitled}` : t.pageTitle);
 
@@ -77,8 +81,9 @@ export function CustomTierListView({ id, locale }: CustomTierListViewProps) {
         items: doc.items ?? [],
         placements: doc.placements,
         backgroundImage: doc.backgroundImage ?? list?.backgroundImage,
+        _manifest: doc._manifest ?? list?._manifest ?? null,
       }),
-    [list?.title, list?.description, list?.backgroundImage, update]
+    [list?.title, list?.description, list?.backgroundImage, list?._manifest, update]
   );
 
   const buildExportDoc = useCallback(
@@ -92,8 +97,9 @@ export function CustomTierListView({ id, locale }: CustomTierListViewProps) {
       items: list?.items ?? [],
       placements,
       ...(list?.backgroundImage ? { backgroundImage: list.backgroundImage } : {}),
+      ...(list?._manifest ? { _manifest: list._manifest } : {}),
     }),
-    [list?.title, list?.description, list?.items, list?.backgroundImage]
+    [list?.title, list?.description, list?.items, list?.backgroundImage, list?._manifest]
   );
 
   const onDelete = useCallback(() => {
@@ -101,7 +107,18 @@ export function CustomTierListView({ id, locale }: CustomTierListViewProps) {
     router.push(`/${locale}/tier-lists`);
   }, [id, locale, router]);
 
-  if (!hydrated) return <TierListSkeleton />;
+  if (authLoading || !hydrated) return <TierListSkeleton />;
+
+  if (!isAuthenticated) {
+    return (
+      <div className="relative z-10 flex flex-col gap-2">
+        <AuthRequiredState
+          title={t.authRequiredTitle}
+          subtitle={t.authRequiredDesc}
+        />
+      </div>
+    );
+  }
 
   if (!list) {
     return (
@@ -112,28 +129,39 @@ export function CustomTierListView({ id, locale }: CustomTierListViewProps) {
   }
 
   return (
-    <TierListEditor
-      mode="custom"
-      preferenceKey="custom"
-      title={list.title}
-      description={list.description}
-      kindLabel={t.kinds.custom}
-      items={items}
-      tiers={list.tiers}
-      placements={list.placements}
-      shape="square"
-      defaultShowNames
-      resetMessage={t.resetMessage}
-      poolEmptyLabel={list.items.length === 0 ? t.poolEmptyCustom : t.poolEmpty}
-      onSave={onSave}
-      onReset={onReset}
-      buildExportDoc={buildExportDoc}
-      importTarget={{ kind: 'custom' }}
-      onImport={onImport}
-      onRemoveItem={onRemoveItem}
-      editHref={`/${locale}/tier-lists/new?edit=${id}`}
-      onDelete={onDelete}
-      locale={locale}
-    />
+    <>
+      <TierListEditor
+        mode="custom"
+        preferenceKey="custom"
+        title={list.title}
+        description={list.description}
+        kindLabel={t.kinds.custom}
+        items={items}
+        tiers={list.tiers}
+        placements={list.placements}
+        shape="square"
+        defaultShowNames
+        resetMessage={t.resetMessage}
+        poolEmptyLabel={list.items.length === 0 ? t.poolEmptyCustom : t.poolEmpty}
+        onSave={onSave}
+        onReset={onReset}
+        buildExportDoc={buildExportDoc}
+        importTarget={{ kind: 'custom' }}
+        onImport={onImport}
+        onRemoveItem={onRemoveItem}
+        editHref={`/${locale}/tier-lists/new?edit=${id}`}
+        onDelete={onDelete}
+        onReport={() => setReportModalOpen(true)}
+        locale={locale}
+      />
+      <ReportContentModal
+        isOpen={reportModalOpen}
+        onClose={() => setReportModalOpen(false)}
+        contentType="tier_list"
+        manifest={list._manifest ?? null}
+        payload={buildExportDoc(list.tiers, list.placements) as unknown as Record<string, unknown>}
+        contentTitle={list.title}
+      />
+    </>
   );
 }

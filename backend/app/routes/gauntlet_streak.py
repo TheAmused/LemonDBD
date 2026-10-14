@@ -6,6 +6,11 @@ from app.core.streak_blueprint import make_streak_blueprint, make_value_cleaner
 from app.services.gauntlet import GAME_MODES
 from app.services.gauntlet_service import GauntletService
 
+from pydantic import ValidationError
+
+from app.schemas.streak import GauntletBoostDTO, GauntletResultDTO, GauntletTargetDTO
+from app.utils.responses import api_error
+
 get_gauntlet_service = make_service_getter("GAUNTLET_SERVICE", GauntletService)
 _clean_role = make_value_cleaner(("survivor", "killer"))
 
@@ -24,15 +29,18 @@ gauntlet_streak_bp = make_streak_blueprint(
 @gauntlet_streak_bp.route("/result", methods=["POST"])
 @login_required
 def submit_result():
-    data = request.get_json(silent=True) or {}
-    role = _clean_role(data.get("role"))
-    run_id = data.get("run_id")
-    result = data.get("result")
-    use_shield = data.get("use_shield") is True
-    if not role:
-        return jsonify({"error": "Field 'role' must be 'survivor' or 'killer'"}), 400
-    if not run_id or result not in ("win", "loss"):
-        return jsonify({"error": "Fields 'run_id' and 'result' (win/loss) are required"}), 400
+    try:
+        dto = GauntletResultDTO.model_validate(request.get_json(silent=True) or {})
+    except ValidationError as err:
+        role_err = any(e["loc"] == ("role",) for e in err.errors())
+        if role_err:
+            return api_error("Field 'role' must be 'survivor' or 'killer'", 400, details=err.errors())
+        return api_error("Fields 'run_id' and 'result' (win/loss) are required", 400, details=err.errors())
+
+    role = _clean_role(dto.role)
+    run_id = dto.run_id
+    result = dto.result
+    use_shield = dto.use_shield
 
     service = get_gauntlet_service()
     try:
@@ -42,43 +50,42 @@ def submit_result():
         next_run = service.prepare_next_match(g.current_user.id, role, game_mode=updated_run["game_mode"])
     except ValueError as e:
         status = 404 if "not found" in str(e).lower() else 400
-        return jsonify({"error": str(e)}), status
+        return api_error(str(e), status)
     return jsonify({"run": next_run, "previous_run": updated_run}), 200
 
 
 @gauntlet_streak_bp.route("/target", methods=["POST"])
 @login_required
 def select_target():
-    data = request.get_json(silent=True) or {}
-    run_id = data.get("run_id")
-    character = data.get("character")
-    if not run_id or not isinstance(character, str) or not character:
-        return jsonify({"error": "Fields 'run_id' and 'character' are required"}), 400
+    try:
+        dto = GauntletTargetDTO.model_validate(request.get_json(silent=True) or {})
+    except ValidationError as err:
+        return api_error("Fields 'run_id' and 'character' are required", 400, details=err.errors())
 
     try:
-        run = get_gauntlet_service().select_target(g.current_user.id, run_id, character)
+        run = get_gauntlet_service().select_target(g.current_user.id, dto.run_id, dto.character)
     except ValueError as e:
         status = 404 if "not found" in str(e).lower() else 400
-        return jsonify({"error": str(e)}), status
+        return api_error(str(e), status)
     return jsonify({"run": run}), 200
 
 
 @gauntlet_streak_bp.route("/boost", methods=["POST"])
 @login_required
 def buy_boost():
-    data = request.get_json(silent=True) or {}
-    run_id = data.get("run_id")
-    boost = data.get("boost")
-    character = data.get("character")
-    if not run_id or boost not in ("reroll", "pick", "slot"):
-        return jsonify({"error": "Fields 'run_id' and 'boost' (reroll, pick or slot) are required"}), 400
-    if character is not None and not isinstance(character, str):
-        return jsonify({"error": "Field 'character' must be a string"}), 400
+    try:
+        dto = GauntletBoostDTO.model_validate(request.get_json(silent=True) or {})
+    except ValidationError as err:
+        char_err = any(e["loc"] == ("character",) for e in err.errors())
+        if char_err:
+            return api_error("Field 'character' must be a string", 400, details=err.errors())
+        return api_error("Fields 'run_id' and 'boost' (reroll, pick or slot) are required", 400, details=err.errors())
 
     try:
-        run = get_gauntlet_service().buy_boost(g.current_user.id, run_id, boost, character)
+        run = get_gauntlet_service().buy_boost(g.current_user.id, dto.run_id, dto.boost, dto.character)
     except ValueError as e:
         status = 404 if "not found" in str(e).lower() else 400
-        return jsonify({"error": str(e)}), status
+        return api_error(str(e), status)
     return jsonify({"run": run}), 200
+
 

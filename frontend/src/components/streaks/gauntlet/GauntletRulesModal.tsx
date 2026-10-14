@@ -4,7 +4,6 @@
 import React from 'react';
 import { Lock } from 'lucide-react';
 import { BOOST_ICONS } from './boostIcons';
-import type { Dictionary } from '@/locales/types';
 import type { GauntletGameMode, Role } from '@/types/gauntletStreak';
 import { RulesModalShell } from '../RulesModalShell';
 import {

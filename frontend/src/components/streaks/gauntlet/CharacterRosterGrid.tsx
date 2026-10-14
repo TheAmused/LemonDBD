@@ -1,10 +1,9 @@
 // frontend/src/components/streaks/gauntlet/CharacterRosterGrid.tsx
 'use client';
-import type { Dictionary } from '@/locales/types';
 
 import React, { useState } from 'react';
 import { Role } from '@/types/gauntletStreak';
-import { OwnedCharacterItem } from './useOwnedCharacters';
+import type { OwnedCharacterItem } from '../useOwnedRoster';
 import { Check, User, ShieldCheck } from 'lucide-react';
 import { avatarUrlForCharacter, staticUrl } from '@/utils/staticUrl';
 import { useCharacterDisplayName } from '@/context/DisplayNamesContext';

@@ -2,10 +2,9 @@
 // frontend/src/components/Sidebar.tsx
 
 import { Modal } from '@/components/common/Modal';
-import type { Dictionary } from '@/locales/types';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
-import { usePathname, useParams } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import {
   Menu,
   X,
@@ -30,7 +29,7 @@ import { PerkHexIcon, BloodwebIcon, RiftPortalIcon, RealmMapIcon, MaskIcon, Adep
 
 import { tip } from '@/components/common/Tooltip';
 import { Button } from '@/components/common/Button';
-import { useDictionary } from "@/context/DictionaryContext";
+import { useDictionary, useLocale } from "@/context/DictionaryContext";
 
 const AuthModal = dynamic(() => import('./AuthModal').then((m) => m.AuthModal), { ssr: false });
 const BugReportModal = dynamic(
@@ -62,18 +61,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
     }) => {
   const dict = useDictionary();
   const pathname = usePathname() || '';
-  const params = useParams();
-
-  const routeLocale = (params?.locale as string) || pathname.split('/')[1];
-  const currentLocale = (
-    i18n.locales.includes(propLocale as Locale)
-      ? propLocale
-      : i18n.locales.includes(routeLocale as Locale)
-      ? routeLocale
-      : i18n.defaultLocale
-  ) as string;
-
-  const { isCollapsed, toggleSidebar } = useSidebarState();
+  const activeLocale = useLocale();
+  const currentLocale = propLocale || activeLocale;
+const { isCollapsed, toggleSidebar } = useSidebarState();
   const { user, isAuthenticated, isAdmin, logout } = useAuth();
 
   const [mobileOpen, setMobileOpen] = useState(false);

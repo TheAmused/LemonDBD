@@ -1,3 +1,4 @@
+'use client';
 // frontend/src/components/character-detail/components/OfferingsSection.tsx
 import { Tabs } from '@/components/common/Tabs';
 import React, { useMemo } from 'react';

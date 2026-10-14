@@ -26,3 +26,26 @@ class AdminAuditLogResponse(BaseModel):
     created_at: datetime | None = None
 
     model_config = ConfigDict(from_attributes=True)
+
+
+from typing import Any
+
+
+class DisableItemDTO(BaseModel):
+    is_disabled: bool
+    role: str | None = None
+    reason: str | None = None
+
+
+class UpdateChallengeModeDTO(BaseModel):
+    is_enabled: bool
+    reason: str | None = None
+
+
+class UpdateSiteSettingsDTO(BaseModel):
+    settings: dict[str, Any] = Field(..., min_length=1)
+
+
+class PurgeDatabaseDTO(BaseModel):
+    targets: list[str] = Field(..., min_length=1)
+

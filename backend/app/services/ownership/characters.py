@@ -13,6 +13,7 @@ from sqlalchemy import select
 
 from app.core.db_retry import retry_on_transient_db_error
 from app.core.extensions import db
+from app.core.transaction import transaction
 from app.models import Killer, Perk, Survivor, UserCharacterOwnership, UserPerkOwnership
 
 #: Characters every account owns without buying anything, by primary key
@@ -172,12 +173,12 @@ def mutate_character_ownership(
     if not character:
         raise ValueError(f"No {key} with id {character_id}.")
 
-    record = _get_or_create(user_id, key, character_id, is_owned)
-    cascade_count = _apply_perk_cascade(
-        user_id, _teachable_perks(key, character_id), is_owned
-    )
+    with transaction():
+        record = _get_or_create(user_id, key, character_id, is_owned)
+        cascade_count = _apply_perk_cascade(
+            user_id, _teachable_perks(key, character_id), is_owned
+        )
 
-    db.session.commit()
     result = record.to_dict()
     result[
         "auto_unlocked_teachable_perks_count" if is_owned
@@ -202,29 +203,29 @@ def bulk_mutate_character_ownership(
     auto_locked = 0
     skipped: list[Any] = []
 
-    for item in updates:
-        character_id = item.get("character_id")
-        if not character_id:
-            continue
-        try:
-            key = normalize_role(item.get("role"))
-        except ValueError:
-            skipped.append(character_id)
-            continue
+    with transaction():
+        for item in updates:
+            character_id = item.get("character_id")
+            if not character_id:
+                continue
+            try:
+                key = normalize_role(item.get("role"))
+            except ValueError:
+                skipped.append(character_id)
+                continue
 
-        is_owned = bool(item.get("is_owned", True))
-        _get_or_create(user_id, key, int(character_id), is_owned)
-        updated_count += 1
+            is_owned = bool(item.get("is_owned", True))
+            _get_or_create(user_id, key, int(character_id), is_owned)
+            updated_count += 1
 
-        cascade = _apply_perk_cascade(
-            user_id, _teachable_perks(key, int(character_id)), is_owned
-        )
-        if is_owned:
-            auto_unlocked += cascade
-        else:
-            auto_locked += cascade
+            cascade = _apply_perk_cascade(
+                user_id, _teachable_perks(key, int(character_id)), is_owned
+            )
+            if is_owned:
+                auto_unlocked += cascade
+            else:
+                auto_locked += cascade
 
-    db.session.commit()
     result = {
         "user_id": user_id,
         "updated_count": updated_count,

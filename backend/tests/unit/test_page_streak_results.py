@@ -5,7 +5,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 from app.models import Perk, PageStreakPageLog
 from app.services.ownership_service import OwnershipService
-from app.services.page_streak_service import PageStreakService
+from app.services.page_streak import PageStreakService
 from app.services.page_streak.runs import apply_inactivity_loss
 from tests.unit.page_streak_support import (
     FakePerkService,

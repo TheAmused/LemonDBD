@@ -1,6 +1,5 @@
 'use client';
 // frontend/src/components/streaks/chaos/ChaosStatsDrawer.tsx
-import type { Dictionary } from '@/locales/types';
 
 import React from 'react';
 import { ChaosStats, ChaosMatchLog } from '@/types/chaosStreak';

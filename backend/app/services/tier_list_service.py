@@ -23,7 +23,7 @@ from app.core.extensions import db
 from app.core.redis_cache import bump_catalog_version
 from app.models.slug import slugify, unique_slug
 from app.models.tier_list import RESERVED_SLUGS, TierList
-from app.services.db.serializers import serialize_tier_list
+from app.services.db.export_registry import serialize_tier_list
 
 logger = logging.getLogger(__name__)
 

@@ -12,6 +12,7 @@ from typing import Any
 from sqlalchemy import inspect as sa_inspect, select
 
 from app.core.extensions import db
+from app.core.transaction import transaction
 from app.services.admin_control_service import assert_challenge_mode_enabled
 from app.services.challenge_completions import fetch_challenge_completions, record_challenge_completion
 from app.services.roster_milestone import get_full_roster_milestone
@@ -57,14 +58,13 @@ class StreakRunService:
     def _get_or_create_run(self, user_id: int, *variant: Any):
         run = self._find_run(user_id, *variant)
         if run:
-            self._refresh_if_untouched(run, user_id, *variant)
             return self._present(run)
 
         assert_challenge_mode_enabled(self.mode)
 
-        run = self._build_run(user_id, *variant)
-        db.session.add(run)
-        db.session.commit()
+        with transaction():
+            run = self._build_run(user_id, *variant)
+            db.session.add(run)
         return self._present(run)
 
     def _abandon_run(self, user_id: int, *variant: Any):
@@ -77,9 +77,9 @@ class StreakRunService:
         run = self._find_run(user_id, *variant)
         if not run:
             raise ValueError("Run not found")
-        run.abandon_attempt()
-        self._reset_to_fresh(run, user_id, *variant)
-        db.session.commit()
+        with transaction():
+            run.abandon_attempt()
+            self._reset_to_fresh(run, user_id, *variant)
         return self._present(run)
 
     def _reset_to_fresh(self, run, user_id: int, *variant: Any) -> None:
@@ -109,8 +109,9 @@ class StreakRunService:
         after it was created does not leave it stuck on the old pool."""
         if run.status != "in_progress" or not self._is_untouched(run) or not self._pool_is_stale(run):
             return
-        self._reset_to_fresh(run, user_id, *variant)
-        db.session.commit()
+        with transaction():
+            self._reset_to_fresh(run, user_id, *variant)
+
 
     # -- guards --------------------------------------------------------------
 

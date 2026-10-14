@@ -10,6 +10,8 @@
 
 import { apiUrl, ApiError, authHeaders, type ApiErrorBody } from '@/utils/api';
 
+export { ApiError };
+
 export interface RequestOptions extends RequestInit {
   timeoutMs?: number;
   token?: string | null;
@@ -111,3 +113,6 @@ export const api = {
     }),
   delete: <T>(url: string, opts?: RequestOptions) => apiClient<T>(url, { ...opts, method: 'DELETE' }),
 };
+
+export const apiFetchJson = apiClient;
+

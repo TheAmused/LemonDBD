@@ -6,7 +6,7 @@ import { i18n, type Locale } from '@/i18n/config';
 import { getDictionary } from '@/i18n/get-dictionary';
 import { resolveLocale, siteUrl } from '@/i18n/metadata';
 import { ThemeProvider } from '@/components/ThemeProvider';
-import { AuthProvider } from '@/context/AuthContext';
+import { AuthProvider } from '@/features/auth';
 import { LocaleDictionaryProvider } from '@/context/LocaleDictionaryProvider';
 import { ImagePreloadProvider } from '@/components/common/ImagePreloadProvider';
 import { TooltipProvider } from '@/components/common/Tooltip';

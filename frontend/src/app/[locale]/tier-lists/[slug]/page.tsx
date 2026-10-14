@@ -1,6 +1,6 @@
 import { pageMetadata } from '@/i18n/metadata';
 import { PageShell } from '@/components/layout/PageShell';
-import { OfficialTierListView } from '@/components/tier-lists/OfficialTierListView';
+import { OfficialTierListView } from '@/features/tier-lists';
 import type { Locale } from '@/i18n/config';
 
 export const generateMetadata = pageMetadata('/tier-lists', (d) => ({

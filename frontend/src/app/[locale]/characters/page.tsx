@@ -1,6 +1,5 @@
-// frontend/src/app/[locale]/characters/page.tsx
 import { pageMetadata } from '@/i18n/metadata';
-import { CharactersClient } from '@/components/character-detail/CharactersClient';
+import { CharactersClient } from '@/features/characters';
 
 export const generateMetadata = pageMetadata('/characters', (d) => ({ title: d.app.charactersPageTitle }));
 

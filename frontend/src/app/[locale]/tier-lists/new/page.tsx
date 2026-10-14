@@ -1,7 +1,7 @@
 import { Suspense } from 'react';
 import { pageMetadata } from '@/i18n/metadata';
 import { PageShell } from '@/components/layout/PageShell';
-import { TierListCreator } from '@/components/tier-lists/creator/TierListCreator';
+import { TierListCreator } from '@/features/tier-lists';
 import TierListsLoading from '../loading';
 import type { Locale } from '@/i18n/config';
 

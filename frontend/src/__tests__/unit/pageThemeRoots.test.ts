@@ -30,11 +30,24 @@ describe('Page Root Theme Wrapper Consistency', () => {
     it(`${relPath} renders its shell via <PageShell> with theme-token colors, not a raw hex background`, () => {
       const fullPath = path.resolve(__dirname, '../../app/[locale]', relPath);
       let content = fs.readFileSync(fullPath, 'utf-8');
-      const clientImport = content.match(/from\s+['"](@\/components\/[^'"]+)['"]/);
+      const clientImport = content.match(/from\s+['"](@\/(?:components|features)\/[^'"]+)['"]/);
       if (clientImport) {
-        const clientFile = path.resolve(__dirname, '../../', clientImport[1].replace('@/', '') + '.tsx');
-        if (fs.existsSync(clientFile)) {
-          content += '\n' + fs.readFileSync(clientFile, 'utf-8');
+        const spec = clientImport[1].replace('@/', '');
+        const candidates = [
+          path.resolve(__dirname, '../../', spec + '.tsx'),
+          path.resolve(__dirname, '../../', spec, 'index.ts'),
+        ];
+        for (const c of candidates) {
+          if (fs.existsSync(c)) {
+            const extra = fs.readFileSync(c, 'utf-8');
+            content += '\n' + extra;
+            for (const rem of extra.matchAll(/from\s+['"](@\/components\/[^'"]+)['"]/g)) {
+              const compFile = path.resolve(__dirname, '../../', rem[1].replace('@/', '') + '.tsx');
+              if (fs.existsSync(compFile)) {
+                content += '\n' + fs.readFileSync(compFile, 'utf-8');
+              }
+            }
+          }
         }
       }
       assert.ok(!content.includes('bg-[#070b12]'), `${relPath} still contains raw hardcoded bg-[#070b12]`);

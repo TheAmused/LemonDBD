@@ -99,3 +99,10 @@ describe('structure: directives', () => {
     assert.deepEqual(bad, [], `"use client" must come before every import:\n${bad.join('\n')}`);
   });
 });
+
+describe('structure: feature slice architecture & public barrels', () => {
+  it('forbids deep imports matching @/features/*/*', () => {
+    const bad = scanLines(/from\s+['"]@\/features\/[^'"]+\/[^'"]+['"]/);
+    assert.deepEqual(bad, [], `Deep feature imports are forbidden (use public @/features/* barrels):\n${bad.join('\n')}`);
+  });
+});

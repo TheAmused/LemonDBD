@@ -32,7 +32,6 @@ export function HowToPlayModal({ isOpen, onClose, onPass, onSmash, onStats, onRe
       onClose={onClose}
       variant="dialog"
       size="lg"
-      icon={<Gamepad2 className="h-5 w-5 text-accent-red" aria-hidden="true" />}
       title={text.title}
       closeButtonAriaLabel={dict.modal.close}
       bodyClassName="p-4 sm:p-5"

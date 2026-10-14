@@ -2,7 +2,7 @@
 // frontend/src/components/smash-or-pass/hub/RosterModals.tsx
 import { useState } from 'react';
 import dynamic from 'next/dynamic';
-import { Heart, Trash2 } from 'lucide-react';
+import { Heart } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/common/Button';
 import { Modal } from '@/components/common/Modal';
@@ -112,9 +112,7 @@ export function RosterModals({ locale, overlays, rosters }: RosterModalsProps) {
           isOpen
           onClose={() => setRosterPendingDelete(null)}
           variant="confirm"
-          tone="danger"
           layer="top"
-          icon={<Trash2 className="h-5 w-5" aria-hidden="true" />}
           title={dict.smashOrPass.picker.deleteConfirmTitle}
           closeButtonAriaLabel={dict.modal.close}
           bodyClassName="p-5 text-center"

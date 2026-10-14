@@ -79,7 +79,6 @@ export const PerksTogglePopup: React.FC<PerksTogglePopupProps> = ({
       layer="top"
       title={`${character.name} ${perksLabel ?? ''}`.trimEnd()}
       closeButtonAriaLabel={dict.modal.close}
-      centerTitle={false}
     >
       {dict.characterDetail.togglePerkOwnershipHelp && (
         <p className="px-5 pt-4 type-caption text-text-muted">

@@ -2,7 +2,6 @@
 // frontend/src/components/ScraperConfigModal.tsx
 
 import React, { useState } from 'react';
-import { Database } from 'lucide-react';
 import { Modal } from '@/components/common/Modal';
 import { ConfirmModal } from '@/components/common/ConfirmModal';
 import { useDictionary } from '@/context/DictionaryContext';
@@ -40,7 +39,6 @@ export function ScraperConfigModal({ isOpen, onClose, onPurgeSuccess, initialTab
         variant="dialog"
         size="2xl"
         busy={exportTab.isExporting || importTab.isImporting || purgeTab.isPurging}
-        icon={<Database className="h-5 w-5" />}
         title={dict.admin.dbBackupSnapshots}
         closeButtonAriaLabel={dict.admin.closeDbModal}
         padded

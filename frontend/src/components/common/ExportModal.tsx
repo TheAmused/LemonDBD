@@ -2,7 +2,7 @@
 // frontend/src/components/common/ExportModal.tsx
 
 import React, { useEffect, useState } from 'react';
-import { Check, Copy, Download, Link2, Share2, TriangleAlert } from 'lucide-react';
+import { Check, Copy, Download, Link2, TriangleAlert } from 'lucide-react';
 import { Modal } from '@/components/common/Modal';
 import { Button } from '@/components/common/Button';
 import { Input, Textarea } from '@/components/common/Field';
@@ -53,8 +53,6 @@ export interface ExportModalProps<D> {
   buttonClassName?: string;
   /** Layout of the JSON action row. */
   actionsClassName?: string;
-  /** Centered title with no header icon. */
-  plainHeader?: boolean;
   /** Called after a successful copy of the link or the JSON, or after the file download starts. */
   onExport?: (method: 'link' | 'json_copy' | 'file') => void;
   /** Content type classification for cryptographic signing (e.g. 'tier_list', 'smash_roster'). */
@@ -88,7 +86,6 @@ export function ExportModal<D>({
   jsonFieldClassName,
   buttonClassName,
   actionsClassName,
-  plainHeader,
   onExport,
   contentType,
 }: ExportModalProps<D>) {
@@ -182,8 +179,6 @@ export function ExportModal<D>({
       onClose={onClose}
       size="2xl"
       title={labels.title}
-      icon={plainHeader ? undefined : <Share2 className="h-5 w-5" aria-hidden="true" />}
-      centerTitle={plainHeader}
       bodyClassName="p-4 sm:p-6"
     >
       <div className="flex flex-col gap-6">

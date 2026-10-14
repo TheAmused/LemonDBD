@@ -42,8 +42,6 @@ export interface VariantSpec {
   chrome?: boolean;
   /** Dismiss by dragging (axis) - only while the layout is compact for `sheet`. */
   swipe?: 'y' | 'x-right' | 'x-left';
-  /** Title centred by default. */
-  centerTitle?: boolean;
 }
 
 export const MODAL_CONFIG = {
@@ -60,13 +58,6 @@ export const MODAL_CONFIG = {
     none: 'bg-transparent',
   },
   sizes: MODAL_SIZES,
-  tones: {
-    default: 'bg-accent-red/15 text-accent-red border-accent-red/30',
-    danger: 'bg-accent-red/15 text-accent-red border-accent-red/30',
-    success: 'bg-accent-green/15 text-accent-green border-accent-green/30',
-    warning: 'bg-accent-amber/15 text-accent-amber border-accent-amber/30',
-    info: 'bg-accent-cyan/15 text-accent-cyan border-accent-cyan/30',
-  },
   /** Drag distance (px) / velocity that counts as "swipe to close". */
   swipeDistance: 110,
   swipeVelocity: 520,
@@ -113,7 +104,6 @@ export const MODAL_CONFIG = {
       motion: 'scale',
       defaultSize: 'sm',
       chrome: true,
-      centerTitle: true,
     },
     fullscreen: {
       container: 'items-stretch justify-stretch p-0',
@@ -138,8 +128,6 @@ export type ModalVariant = keyof typeof MODAL_CONFIG.variants;
 export type ModalLayer = keyof typeof MODAL_CONFIG.zLayers;
 
 export type ModalBackdrop = keyof typeof MODAL_CONFIG.backdrops;
-
-export type ModalTone = keyof typeof MODAL_CONFIG.tones;
 
 export type ModalCloseButton = 'header' | 'floating' | 'none';
 

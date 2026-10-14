@@ -1,6 +1,5 @@
 'use client';
 // frontend/src/components/smash-or-pass/hub/HubModals.tsx
-import { AlertTriangle } from 'lucide-react';
 import { Button } from '@/components/common/Button';
 import { Modal } from '@/components/common/Modal';
 import { useDictionary } from '@/context/DictionaryContext';
@@ -87,8 +86,6 @@ export function HubModals({
         onClose={() => setIsResetConfirmOpen(false)}
         variant="confirm"
         layer="top"
-        tone="danger"
-        icon={<AlertTriangle className="h-5 w-5" />}
         title={dict.smashOrPass.modals.resetConfirmTitle}
         closeButton="none"
         footerClassName="flex-col-reverse sm:flex-row sm:justify-center gap-2.5"

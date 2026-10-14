@@ -50,8 +50,6 @@ export const AdminCreateUserModal: React.FC<AdminCreateUserModalProps> = ({ isOp
       onClose={onClose}
       variant="dialog"
       size="md"
-      tone="warning"
-      icon={<UserPlus className="h-5 w-5" aria-hidden="true" />}
       title={dict.admin.createUserTitle}
       closeButtonAriaLabel={dict.admin.closeSymbol}
       busy={isSubmitting}

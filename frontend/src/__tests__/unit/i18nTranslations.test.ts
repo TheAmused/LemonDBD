@@ -158,9 +158,6 @@ test('Character Detail combat, terror radius, codex and sort options i18n covera
   const localeDicts: Record<Locale, Dictionary> = { en, es, pl, de, ja };
   const expectedDetailKeys = [
     'combatAttributes',
-    'acousticRange',
-    'entityArchives',
-    'codex',
     'enteredTheFog',
     'currentBaseTerrorRadius',
     'lullaby',

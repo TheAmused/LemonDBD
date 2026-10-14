@@ -186,7 +186,6 @@ export default {
   remainingTab: "Restantes",
   streakLabel: "Racha:",
   middotSeparator: "·",
-  bulletSeparator: "•",
   tierLabel: "Nivel",
   noPerksThisTrial: "Sin habilidades en esta prueba.",
   goesInBare: "juega sin habilidades.",

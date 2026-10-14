@@ -2,7 +2,6 @@
 // frontend/src/components/DisabledReasonModal.tsx
 
 import React from 'react';
-import { AlertTriangle } from 'lucide-react';
 import { Modal } from '@/components/common/Modal';
 import { formatMessage } from '@/utils/i18nFormat';
 import { useDictionary } from "@/context/DictionaryContext";
@@ -27,8 +26,6 @@ export const DisabledReasonModal: React.FC<DisabledReasonModalProps> = ({ isOpen
       isOpen={isOpen}
       onClose={onClose}
       variant="confirm"
-      tone="warning"
-      icon={<AlertTriangle className="h-5 w-5" aria-hidden="true" />}
       title={t?.temporarilyDisabled}
       ariaLabel={label}
       closeButtonAriaLabel={t?.close}

@@ -1,7 +1,6 @@
 // frontend/src/locales/de/scoreboardCheck.ts
 const scoreboardCheck = {
   "title": "OCR-Prüfung",
-  "subtitle": "Lade einen Screenshot der Endabrechnung hoch und sieh, was die OCR liest.",
   "close": "Schließen",
   "privacyNote": "Das Bild wird im Arbeitsspeicher analysiert und verworfen. Nichts wird gespeichert.",
   "chooseImage": "Screenshot auswählen",

@@ -1,6 +1,5 @@
 // frontend/src/components/character-detail/modals/TerrorRadiusModal.tsx
 import React from 'react';
-import { Radio } from 'lucide-react';
 import { CharacterItem } from '../types';
 import { Modal } from '@/components/common/Modal';
 
@@ -31,9 +30,7 @@ export const TerrorRadiusModal: React.FC<TerrorRadiusModalProps> = ({
       onClose={onClose}
       variant="dialog"
       size="2xl"
-      icon={<Radio className="h-5 w-5 animate-pulse" />}
       title={t.terrorRadiusVisualizer || 'Terror Radius Visualizer'}
-      subtitle={`${character.name} ${t.bulletSeparator || '•'} ${t.acousticRange || 'Acoustic Range'}`}
       closeButtonAriaLabel={t.close || 'Close'}
       padded
       bodyClassName="space-y-6 text-sm text-text-secondary"

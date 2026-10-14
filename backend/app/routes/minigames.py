@@ -18,7 +18,14 @@ from app.models.minigame import (
     MinigameRepeatableChallenge,
     MinigameUserStat,
 )
+from pydantic import ValidationError
+
 from app.services.minigame_service import MinigameService
+from app.schemas.minigames import (
+    MinigameGuessSubmissionDTO,
+    MinigameOfficialCreateDTO,
+    MinigameScoreSubmissionDTO,
+)
 from app.utils.lang import extract_lang
 from app.utils.pagination import paginate_args
 from app.utils.responses import api_error
@@ -78,14 +85,18 @@ def get_repeatable_challenge():
 @limiter.limit("60 per minute")
 def submit_guess():
     """Evaluates a guess against an active challenge round."""
-    data = request.get_json(silent=True) or {}
-    challenge_id = data.get("challenge_id")
-    challenge_type = data.get("challenge_type", "daily")
-    round_index = data.get("round_index", 0)
-    guess_type = data.get("guess_type", "killer")
-    guess_id = data.get("guess_id")
-    attempt_number = data.get("attempt_number", 1)
-    custom_round = data.get("custom_round_config") or data.get("custom_round")
+    try:
+        dto = MinigameGuessSubmissionDTO.model_validate(request.get_json(silent=True) or {})
+    except ValidationError as err:
+        return api_error("Validation failed", 400, details=err.errors())
+
+    challenge_id = dto.challenge_id
+    challenge_type = dto.challenge_type
+    round_index = dto.round_index
+    guess_type = dto.guess_type
+    guess_id = dto.guess_id
+    attempt_number = dto.attempt_number
+    custom_round = dto.custom_round_config or dto.custom_round
 
     if guess_id is None:
         return api_error("Missing guess_id", 400)
@@ -120,12 +131,16 @@ def submit_guess():
 @admin_required
 def create_official_challenge():
     """Admin-only endpoint to author, publish, or seed official daily and featured trials."""
-    data = request.get_json(silent=True) or {}
-    challenge_date_str = data.get("challenge_date")
-    game_mode = data.get("game_mode", "daily_trial")
-    title = data.get("title", "").strip()
-    description = data.get("description", "").strip()
-    rounds = data.get("rounds", [])
+    try:
+        dto = MinigameOfficialCreateDTO.model_validate(request.get_json(silent=True) or {})
+    except ValidationError as err:
+        return api_error("Validation failed", 400, details=err.errors())
+
+    challenge_date_str = dto.challenge_date
+    game_mode = dto.game_mode
+    title = dto.title.strip()
+    description = dto.description.strip()
+    rounds = dto.rounds
 
     if not title or not rounds:
         return api_error("Title and rounds are required", 400)
@@ -202,10 +217,14 @@ def update_user_stats():
     if not user:
         return api_error("Authentication required", 401)
 
-    data = request.get_json(silent=True) or {}
-    game_mode = data.get("game_mode", "classic")
-    won = bool(data.get("won", False))
-    attempts_taken = data.get("attempts_taken")
+    try:
+        dto = MinigameScoreSubmissionDTO.model_validate(request.get_json(silent=True) or {})
+    except ValidationError as err:
+        return api_error("Validation failed", 400, details=err.errors())
+
+    game_mode = dto.game_mode
+    won = dto.won
+    attempts_taken = dto.attempts_taken
     today = datetime.now(timezone.utc).date()
 
     stat = db.session.scalar(

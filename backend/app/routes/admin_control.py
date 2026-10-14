@@ -33,6 +33,14 @@ from app.services.admin_control_service import (
 )
 from app.services.db.export_import import DatabaseExportImportService
 from app.services.user.admin import fetch_admin_metrics
+from pydantic import ValidationError
+from app.schemas.admin import (
+    DisableItemDTO,
+    PurgeDatabaseDTO,
+    UpdateChallengeModeDTO,
+    UpdateSiteSettingsDTO,
+)
+from app.utils.responses import api_error
 
 logger = logging.getLogger(__name__)
 
@@ -99,8 +107,12 @@ def set_character_disabled(character_id: int):
     characters, so disabling "character 7" no longer names one row. It is read
     from the query string or the body, whichever the caller uses.
     """
-    data = request.get_json(silent=True) or {}
-    role = (request.args.get("role") or data.get("role") or "").strip().rstrip("s").lower()
+    try:
+        dto = DisableItemDTO.model_validate(request.get_json(silent=True) or {})
+    except ValidationError as err:
+        return api_error("Field 'is_disabled' (bool) is required.", 400, details=err.errors())
+
+    role = (request.args.get("role") or dto.role or "").strip().rstrip("s").lower()
     model = {"survivor": Survivor, "killer": Killer}.get(role)
     if model is not None:
         character = db.session.get(model, character_id)
@@ -108,15 +120,13 @@ def set_character_disabled(character_id: int):
         character = db.session.get(Killer, character_id) or db.session.get(Survivor, character_id)
 
     if not character:
-        return jsonify({"error": "Character not found."}), 404
+        return api_error("Character not found.", 404)
 
-    is_disabled = data.get("is_disabled")
-    if not isinstance(is_disabled, bool):
-        return jsonify({"error": "Field 'is_disabled' (bool) is required."}), 400
+    is_disabled = dto.is_disabled
     try:
-        reason = _clean_reason(data)
+        reason = _clean_reason({"reason": dto.reason})
     except ValueError as e:
-        return jsonify({"error": str(e)}), 400
+        return api_error(str(e), 400)
 
     character.is_disabled = is_disabled
     character.disabled_reason = reason if is_disabled else None
@@ -189,20 +199,18 @@ def set_perk_disabled(perk_id: int):
     """Enables/disables a single perk from being offered in new challenge pools/pages."""
     perk = db.session.get(Perk, perk_id)
     if not perk:
-        return jsonify({"error": "Perk not found."}), 404
+        return api_error("Perk not found.", 404)
 
-    # This line was missing: `data` was read below without ever being assigned,
-    # so every call to this endpoint raised NameError and returned a 500. The
-    # sibling `set_character_disabled` has always had it.
-    data = request.get_json(silent=True) or {}
-
-    is_disabled = data.get("is_disabled")
-    if not isinstance(is_disabled, bool):
-        return jsonify({"error": "Field 'is_disabled' (bool) is required."}), 400
     try:
-        reason = _clean_reason(data)
+        dto = DisableItemDTO.model_validate(request.get_json(silent=True) or {})
+    except ValidationError as err:
+        return api_error("Field 'is_disabled' (bool) is required.", 400, details=err.errors())
+
+    is_disabled = dto.is_disabled
+    try:
+        reason = _clean_reason({"reason": dto.reason})
     except ValueError as e:
-        return jsonify({"error": str(e)}), 400
+        return api_error(str(e), 400)
 
     perk.is_disabled = is_disabled
     perk.disabled_reason = reason if is_disabled else None
@@ -239,16 +247,18 @@ def list_challenge_modes():
 @admin_required
 def update_challenge_mode(mode: str):
     if mode not in CHALLENGE_MODES:
-        return jsonify({"error": f"Unknown challenge mode '{mode}'."}), 400
+        return api_error(f"Unknown challenge mode '{mode}'.", 400)
 
-    data = request.get_json(silent=True) or {}
-    is_enabled = data.get("is_enabled")
-    if not isinstance(is_enabled, bool):
-        return jsonify({"error": "Field 'is_enabled' (bool) is required."}), 400
     try:
-        reason = _clean_reason(data)
+        dto = UpdateChallengeModeDTO.model_validate(request.get_json(silent=True) or {})
+    except ValidationError as err:
+        return api_error("Field 'is_enabled' (bool) is required.", 400, details=err.errors())
+
+    is_enabled = dto.is_enabled
+    try:
+        reason = _clean_reason({"reason": dto.reason})
     except ValueError as e:
-        return jsonify({"error": str(e)}), 400
+        return api_error(str(e), 400)
 
     updated = set_challenge_mode_enabled(mode, is_enabled, reason)
 
@@ -287,14 +297,16 @@ def list_site_settings():
 @admin_required
 def update_site_settings():
     """Body: ``{"settings": {key: value | null}}``; ``null`` restores the config default."""
-    data = request.get_json(silent=True) or {}
-    changes = data.get("settings")
-    if not isinstance(changes, dict) or not changes:
-        return jsonify({"error": "Field 'settings' (object) is required."}), 400
+    try:
+        dto = UpdateSiteSettingsDTO.model_validate(request.get_json(silent=True) or {})
+    except ValidationError as err:
+        return api_error("Field 'settings' (object) is required.", 400, details=err.errors())
+
+    changes = dto.settings
     try:
         applied = site_settings.update_settings(changes)
     except ValueError as err:
-        return jsonify({"error": str(err)}), 400
+        return api_error(str(err), 400)
 
     log_admin_action(
         g.current_user.id,
@@ -317,12 +329,12 @@ def get_admin_stats():
 @admin_required
 def purge_database_tables():
     """Purge specific database entity tables on demand."""
-    data = request.get_json(silent=True) or {}
-    targets: list[str] = data.get("targets", [])
-    if not isinstance(targets, list) or not targets:
-        return jsonify({"error": "No valid purge targets specified.", "status": 400}), 400
+    try:
+        dto = PurgeDatabaseDTO.model_validate(request.get_json(silent=True) or {})
+    except ValidationError as err:
+        return api_error("No valid purge targets specified.", 400, details=err.errors())
 
-    purged: list[str] = []
+    targets: list[str] = dto.targets
     try:
         # Order matters now that these are real foreign keys: add-ons
         # reference both characters and item categories, perks reference

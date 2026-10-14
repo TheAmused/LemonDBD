@@ -5,6 +5,7 @@ import React, { useState } from 'react';
 import { Check } from 'lucide-react';
 import { avatarUrlForCharacter } from '@/utils/staticUrl';
 import { useCharacterDisplayName } from '@/context/DisplayNamesContext';
+import { PerkIcon } from '@/components/ui/PerkIcon';
 import { KillerIcon } from '@/components/icons/DbdIcons';
 
 import { useDictionary } from "@/context/DictionaryContext";
@@ -19,7 +20,6 @@ const KillerTile: React.FC<{
   disabled?: boolean;
   onSelect: (name: string) => void;
 }> = ({ name, displayName, isCompleted, isSelected, disabled, onSelect }) => {
-  const [failed, setFailed] = useState(false);
   const src = avatarUrlFor(name);
 
   const cardBorder = isCompleted
@@ -44,17 +44,12 @@ const KillerTile: React.FC<{
         </div>
       )}
       <div className="relative w-full aspect-square overflow-hidden bg-bg-primary flex items-center justify-center">
-        {!failed ? (
-          <img
-            src={src}
-            alt={displayName}
-            draggable={false}
-            className={`w-full h-full object-cover ${isCompleted ? 'brightness-105' : ''}`}
-            onError={() => setFailed(true)}
-          />
-        ) : (
-          <KillerIcon className="w-6 h-6 text-text-muted" />
-        )}
+        <PerkIcon
+          src={src}
+          alt={displayName}
+          imageClassName={`w-full h-full object-cover ${isCompleted ? 'brightness-105' : ''}`}
+          fallbackIcon={<KillerIcon className="w-6 h-6 text-text-muted" />}
+        />
       </div>
       <span className="text-mini leading-tight font-medium text-center text-text-secondary line-clamp-2 min-h-[2.4em] w-full px-1.5 py-2">
         {displayName}

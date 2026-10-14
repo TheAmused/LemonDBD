@@ -21,6 +21,7 @@ from app.services.ownership_service import OwnershipService
 from app.services.user_service import UserService
 from app.utils.api_i18n import coded_error_response, error_response
 from app.utils.downloads import json_download_response
+from app.utils.responses import api_error
 
 logger = logging.getLogger(__name__)
 auth_bp = Blueprint("auth_bp", __name__, url_prefix="/api/v1/auth")
@@ -36,12 +37,12 @@ def register():
     payload = request.get_json(silent=True) or {}
 
     if not validate_honeypot(payload):
-        return jsonify({"error": "Spam detected.", "status": 400}), 400
+        return api_error("Spam detected.", 400)
 
     try:
         validated_data = UserCreate.model_validate(payload)
     except ValidationError as err:
-        return jsonify({"error": "Validation failed", "details": err.errors(), "status": 400}), 400
+        return api_error("Validation failed", 400, details=err.errors())
 
     user, err = user_service.register_user(
         login=validated_data.login,
@@ -51,7 +52,7 @@ def register():
         role=validated_data.role or "user",
     )
     if err:
-        return jsonify({"error": err, "status": 400}), 400
+        return api_error(err, 400)
 
     ownership_service.seed_default_ownership_for_new_user(user.id)
     token = user_service.generate_auth_token(user)
@@ -97,11 +98,11 @@ def login():
     password = data.get("password")
 
     if not login_or_email or not password:
-        return jsonify({"error": "Login/email and password are required.", "status": 400}), 400
+        return api_error("Login/email and password are required.", 400)
 
     user, token = user_service.authenticate(login_or_email.strip(), password.strip())
     if not user:
-        return jsonify({"error": "Invalid credentials", "status": 401}), 401
+        return api_error("Invalid credentials", 401)
 
     if two_factor.is_enabled(user.id):
         # Password accepted, but no session yet: the client must finish with POST /auth/login/two-factor.
@@ -135,11 +136,11 @@ def resend_verification():
     data = request.get_json(silent=True) or {}
     email = data.get("email")
     if not email:
-        return jsonify({"error": "Email is required.", "status": 400}), 400
+        return api_error("Email is required.", 400)
 
     ok, err = user_service.resend_verification(email)
     if not ok:
-        return jsonify({"error": err, "status": 429}), 429
+        return api_error(err, 429)
 
     return jsonify({
         "status": "success",
@@ -154,11 +155,11 @@ def forgot_password():
     data = request.get_json(silent=True) or {}
     email = data.get("email")
     if not email:
-        return jsonify({"error": "Email is required.", "status": 400}), 400
+        return api_error("Email is required.", 400)
 
     ok, err = user_service.request_password_reset(email)
     if not ok:
-        return jsonify({"error": err, "status": 429}), 429
+        return api_error(err, 429)
 
     return jsonify({
         "status": "success",
@@ -175,7 +176,7 @@ def reset_password():
 
     user, err = user_service.reset_password(token, new_password)
     if err:
-        return jsonify({"error": err, "status": 400}), 400
+        return api_error(err, 400)
 
     return jsonify({"status": "success", "message": "Password reset successfully."}), 200
 
@@ -238,7 +239,7 @@ def update_profile():
         return coded_error_response(err)
     if err:
         status = 403 if err == "Incorrect password." else 400
-        return jsonify({"error": err, "status": status}), status
+        return api_error(err, status)
 
     body: dict = {
         "status": "success",
@@ -265,7 +266,7 @@ def upload_avatar():
 
     updated_user, err = user_service.save_user_avatar(user.id, file)
     if err:
-        return jsonify({"error": err, "status": 400}), 400
+        return api_error(err, 400)
 
     return jsonify({
         "status": "success",
@@ -281,7 +282,7 @@ def delete_avatar():
     user = g.current_user
     updated_user, err = user_service.delete_user_avatar(user.id)
     if err:
-        return jsonify({"error": err, "status": 400}), 400
+        return api_error(err, 400)
 
     return jsonify({
         "status": "success",
@@ -299,7 +300,7 @@ def export_account_data():
     user_id = g.current_user.id
     data = user_service.export_user_data(user_id, requested_by="self")
     if data is None:
-        return jsonify({"error": "Account not found.", "status": 404}), 404
+        return api_error("Account not found.", 404)
     return json_download_response(data, user_service.export_filename(user_id, "self"))
 
 
@@ -320,7 +321,7 @@ def delete_account():
         return coded_error_response(err)
     if not ok:
         status = 403 if err == "Incorrect password." else 400
-        return jsonify({"error": err, "status": status}), status
+        return api_error(err, status)
     response = make_response(jsonify({"status": "success", "message": "Account deleted."}), 200)
     return clear_session_cookie(response)
 
@@ -344,7 +345,7 @@ def get_avatar_file(filename: str):
             break
 
     if not target_dir:
-        return jsonify({"error": f"Avatar image '{clean_filename}' not found on server."}), 404
+        return api_error(f"Avatar image '{clean_filename}' not found on server.", 404)
 
     mimetype = "image/webp" if clean_filename.lower().endswith(".webp") else None
     return send_from_directory(target_dir, clean_filename, mimetype=mimetype, max_age=86400 * 30)

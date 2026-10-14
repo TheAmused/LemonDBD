@@ -12,7 +12,7 @@ export default {
   summaryHeading: "Regulamin w pigułce",
   summary: [
     "LemonDBD to darmowy, nieoficjalny projekt fanowski prowadzony przez LemonTeam.",
-    "Aby mieć konto, musisz mieć co najmniej 13 lat i przestrzegać Zasad społeczności.",
+    "Aby mieć konto, musisz mieć co najmniej 18 lat i przestrzegać Zasad społeczności.",
     "Zachowujesz prawa do tego, co przesyłasz, i zezwalasz nam to przechowywać oraz wyświetlać, aby Serwis działał.",
     "Serwis udostępniamy w stanie, w jakim jest, a nasza odpowiedzialność jest ograniczona w zakresie dozwolonym przez prawo.",
     "Konto możesz usunąć w każdej chwili. Konta naruszające ten Regulamin możemy ograniczyć lub zamknąć.",
@@ -25,18 +25,18 @@ export default {
       paragraphs: [
         "<brand>LemonDBD</brand> to nieoficjalna strona fanowska o <i>Dead by Daylight</i> („Serwis”), prowadzona przez <brand>LemonTeam</brand> („my”). Prowadzimy też powiązany serwer Discord („Serwer”). Skontaktujesz się z nami pod adresem [{contactEmail}](mailto:{contactEmail}).",
         "Niniejszy Regulamin serwisu („Regulamin”) określa zasady dostępu do Serwisu i Serwera oraz korzystania z nich. Obowiązuje łącznie z naszymi [Zasadami społeczności]({rulesPath}), które są jego częścią, oraz z [Polityką prywatności]({privacyPath}), która wyjaśnia, jak przetwarzamy dane osobowe. W razie sprzeczności Regulamin ma pierwszeństwo przed Zasadami, z wyjątkiem przetwarzania danych osobowych, które reguluje wyłącznie Polityka prywatności.",
-        "Zakładając konto, dołączając do Serwera lub w inny sposób korzystając z Serwisu, akceptujesz ten Regulamin. Jeśli się z nim nie zgadzasz, nie korzystaj z Serwisu.",
+        "Zakładając konto, akceptujesz ten Regulamin. Jeśli się z nim nie zgadzasz, nie zakładaj konta.",
       ],
       items: [],
     },
     accounts: {
       heading: "Konta i warunki korzystania",
-      tldr: "Co najmniej 13 lat, prawdziwy e-mail, jedno konto i prywatne hasło.",
+      tldr: "Co najmniej 18 lat, prawdziwy e-mail, jedno konto i prywatne hasło.",
       paragraphs: [
         "Z większości Serwisu można korzystać bez konta. Konto jest potrzebne, aby zapisywać postępy i korzystać z funkcji spersonalizowanych. Aby założyć i utrzymywać konto, musisz:",
       ],
       items: [
-        "mieć co najmniej 13 lat, a jeśli prawo twojego kraju wymaga wyższego wieku do korzystania z usług online bez zgody rodzica lub opiekuna, być w tym wieku;",
+        "mieć co najmniej 18 lat;",
         "podać prawidłowy adres e-mail, do którego masz dostęp, ponieważ używamy go do weryfikacji i resetowania hasła;",
         "mieć jedno konto na osobę. Dodatkowe konta zakładane w celu obejścia ograniczenia lub zawyżenia statystyk są niedozwolone;",
         "wybrać nazwę użytkownika, która nie narusza praw innych osób, nie podszywa się pod nasz zespół i nie zawiera wulgaryzmów;",

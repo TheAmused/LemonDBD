@@ -12,7 +12,7 @@ export default {
   summaryHeading: "Die Bedingungen im Überblick",
   summary: [
     "LemonDBD ist ein kostenloses, inoffizielles Fanprojekt, betrieben von LemonTeam.",
-    "Für ein Konto musst du mindestens 13 Jahre alt sein und die Regeln einhalten.",
+    "Für ein Konto musst du mindestens 18 Jahre alt sein und die Regeln einhalten.",
     "Du behältst die Rechte an dem, was du hochlädst, und erlaubst uns, es zu speichern und anzuzeigen, damit die Seite funktioniert.",
     "Die Seite wird wie besehen bereitgestellt, und unsere Haftung ist im gesetzlich zulässigen Umfang beschränkt.",
     "Du kannst dein Konto jederzeit löschen. Konten, die gegen diese Bedingungen verstoßen, können wir einschränken oder schließen.",
@@ -25,18 +25,18 @@ export default {
       paragraphs: [
         "<brand>LemonDBD</brand> ist eine inoffizielle Fan-Website zu <i>Dead by Daylight</i> (die „Seite“), betrieben von <brand>LemonTeam</brand> („wir“, „uns“). Wir betreiben außerdem einen zugehörigen Discord-Server (den „Server“). Du erreichst uns unter [{contactEmail}](mailto:{contactEmail}).",
         "Diese Nutzungsbedingungen (die „Bedingungen“) regeln deinen Zugang zur Seite und zum Server sowie deren Nutzung. Sie gelten zusammen mit unseren [Regeln]({rulesPath}), die Teil der Bedingungen sind, und unserer [Datenschutzerklärung]({privacyPath}), die erklärt, wie wir personenbezogene Daten verarbeiten. Bei Widersprüchen gehen die Bedingungen den Regeln vor; die Verarbeitung personenbezogener Daten richtet sich jedoch allein nach der Datenschutzerklärung.",
-        "Indem du ein Konto erstellst, dem Server beitrittst oder die Seite anderweitig nutzt, stimmst du diesen Bedingungen zu. Wenn du nicht einverstanden bist, nutze die Seite bitte nicht.",
+        "Indem du ein Konto erstellst, stimmst du diesen Bedingungen zu. Wenn du nicht einverstanden bist, erstelle bitte kein Konto.",
       ],
       items: [],
     },
     accounts: {
       heading: "Konten und Voraussetzungen",
-      tldr: "Mindestens 13, eine echte E-Mail, ein Konto und ein geheimes Passwort.",
+      tldr: "Mindestens 18, eine echte E-Mail, ein Konto und ein geheimes Passwort.",
       paragraphs: [
         "Ein Großteil der Seite kann ohne Konto genutzt werden. Ein Konto wird benötigt, um Fortschritt zu speichern und personalisierte Funktionen zu nutzen. Um ein Konto zu erstellen und zu behalten, musst du:",
       ],
       items: [
-        "mindestens 13 Jahre alt sein, oder älter, falls das Recht deines Landes für die Nutzung von Online-Diensten ohne Einwilligung eines Elternteils oder Vormunds ein höheres Alter vorschreibt;",
+        "mindestens 18 Jahre alt sein;",
         "eine gültige E-Mail-Adresse angeben, auf die du Zugriff hast, da wir sie für die Verifizierung und das Zurücksetzen des Passworts verwenden;",
         "nur ein Konto pro Person führen. Zusätzliche Konten, die zur Umgehung einer Einschränkung oder zum Aufblähen von Statistiken angelegt werden, sind unzulässig;",
         "einen Benutzernamen wählen, der keine Rechte anderer verletzt, unser Team nicht imitiert und keine beleidigenden Ausdrücke enthält;",

@@ -1,4 +1,4 @@
-// frontend/src/utils/perkUtils.tsx
+// frontend/src/utils/perkUtils.ts
 import { Perk, RoleCategory } from '@/types/perks';
 
 import { getBackendBaseUrl, apiUrl } from './api';

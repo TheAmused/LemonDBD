@@ -39,7 +39,7 @@ export default {
         "mindestens 18 Jahre alt sein;",
         "eine gültige E-Mail-Adresse angeben, auf die du Zugriff hast, da wir sie für die Verifizierung und das Zurücksetzen des Passworts verwenden;",
         "nur ein Konto pro Person führen. Zusätzliche Konten, die zur Umgehung einer Einschränkung oder zum Aufblähen von Statistiken angelegt werden, sind unzulässig;",
-        "einen Benutzernamen wählen, der keine Rechte anderer verletzt, unser Team nicht imitiert und keine beleidigenden Ausdrücke enthält;",
+        "einen Benutzernamen wählen, der keine Rechte anderer verletzt, unser Team nicht imitiert und keine rechtswidrigen Inhalte enthält;",
         "dein Passwort vertraulich halten und uns unverzüglich informieren, wenn du unbefugten Zugriff vermutest. Du bist für Aktivitäten unter deinem Konto verantwortlich, es sei denn, sie beruhen auf unserem Verschulden.",
       ],
     },

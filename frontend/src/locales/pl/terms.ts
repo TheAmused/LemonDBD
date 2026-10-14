@@ -39,7 +39,7 @@ export default {
         "mieć co najmniej 18 lat;",
         "podać prawidłowy adres e-mail, do którego masz dostęp, ponieważ używamy go do weryfikacji i resetowania hasła;",
         "mieć jedno konto na osobę. Dodatkowe konta zakładane w celu obejścia ograniczenia lub zawyżenia statystyk są niedozwolone;",
-        "wybrać nazwę użytkownika, która nie narusza praw innych osób, nie podszywa się pod nasz zespół i nie zawiera wulgaryzmów;",
+        "wybrać nazwę użytkownika, która nie narusza praw innych osób, nie podszywa się pod nasz zespół i nie zawiera treści niezgodnych z prawem;",
         "zachować hasło w tajemnicy i niezwłocznie powiadomić nas o podejrzeniu nieuprawnionego dostępu. Odpowiadasz za działania na swoim koncie, chyba że wynikają one z naszej winy.",
       ],
     },

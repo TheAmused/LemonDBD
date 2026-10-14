@@ -39,7 +39,7 @@ export default {
         "tener al menos 18 años;",
         "facilitar una dirección de correo válida a la que tengas acceso, ya que la usamos para la verificación y el restablecimiento de contraseñas;",
         "tener una sola cuenta por persona. No se permiten cuentas adicionales creadas para eludir una restricción o inflar estadísticas;",
-        "elegir un nombre de usuario que no vulnere derechos de terceros, no suplante a nuestro equipo y no contenga lenguaje ofensivo;",
+        "elegir un nombre de usuario que no vulnere derechos de terceros, no suplante a nuestro equipo y no contenga contenido ilícito;",
         "mantener la contraseña en secreto y avisarnos sin demora si sospechas de un acceso no autorizado. Eres responsable de la actividad de tu cuenta, salvo que se deba a culpa nuestra.",
       ],
     },

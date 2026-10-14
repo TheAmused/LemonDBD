@@ -7,7 +7,7 @@ export default {
   lastUpdated: "10 de octubre de 2026",
   translationNotice: "Si las versiones traducidas de esta página difieren de la inglesa, prevalece la versión en inglés.",
   tldrLabel: "Resumen",
-  tldrNotice: "Las líneas de resumen y el compendio son solo una ayuda de lectura. No forman parte de los Términos y no tienen efectos jurídicos. Si difieren del texto completo que hay debajo, se aplica el texto completo.",
+  tldrNotice: "Las líneas de resumen y el compendio son solo una ayuda de lectura. Solo el texto completo que hay debajo es jurídicamente vinculante y, si difieren, se aplica el texto completo.",
   summaryHeading: "Resumen",
   summary: [
     "LemonDBD es un proyecto de fans gratuito y no oficial gestionado por LemonTeam.",

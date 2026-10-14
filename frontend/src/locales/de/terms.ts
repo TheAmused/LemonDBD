@@ -7,7 +7,7 @@ export default {
   lastUpdated: "10. Oktober 2026",
   translationNotice: "Falls die übersetzten Fassungen dieser Seite von der englischen abweichen, gilt die englische Fassung.",
   tldrLabel: "Kurz gesagt",
-  tldrNotice: "Die Kurz-gesagt-Zeilen und die Zusammenfassung sind nur eine Lesehilfe. Sie sind nicht Teil der Bedingungen und haben keine rechtliche Wirkung. Weichen sie vom vollständigen Text darunter ab, gilt der vollständige Text.",
+  tldrNotice: "Die Kurz-gesagt-Zeilen und die Zusammenfassung sind nur eine Lesehilfe. Rechtlich verbindlich ist nur der vollständige Text darunter, und wenn sie abweichen, gilt der vollständige Text.",
   summaryHeading: "Zusammenfassung",
   summary: [
     "LemonDBD ist ein kostenloses, inoffizielles Fanprojekt, betrieben von LemonTeam.",

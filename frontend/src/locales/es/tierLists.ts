@@ -226,7 +226,6 @@ export default {
   },
 
   reportTitle: "Reportar contenido",
-  reportSubtitle: "Ayúdanos a mantener una comunidad segura y respetuosa.",
   reportReasonLabel: "Motivo del reporte",
   reportReasonHate: "Discurso de odio o símbolos",
   reportReasonHarassment: "Acoso o intimidación",

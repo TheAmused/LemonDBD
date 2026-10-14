@@ -80,7 +80,6 @@ export const TwoFactorConfirmModal: React.FC<TwoFactorConfirmModalProps> = ({ ac
       onClose={close}
       variant="dialog"
       size="md"
-      centerTitle
       title={isDisable ? t.disableTitle : t.regenerateTitle}
       busy={busy || newCodes !== null}
       padded

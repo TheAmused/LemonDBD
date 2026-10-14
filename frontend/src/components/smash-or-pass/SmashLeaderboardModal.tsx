@@ -323,11 +323,12 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
       onClose={onClose}
       size="5xl"
       title={title}
-      subtitle={editionName || undefined}
-      centerTitle={true}
       className="h-[88vh] max-h-[850px] min-h-[480px]"
       bodyClassName="flex flex-col"
     >
+      {editionName && (
+        <p className="shrink-0 truncate bg-bg-elevated px-4 pt-3 text-center type-strong text-text-secondary">{editionName}</p>
+      )}
       {/* SINGLE HORIZONTAL FILTER & SEARCH TOOLBAR */}
       <div className="p-3.5 sm:p-4 bg-bg-elevated border-b border-border-color shrink-0">
         <div className="flex flex-wrap sm:flex-nowrap items-center gap-2">

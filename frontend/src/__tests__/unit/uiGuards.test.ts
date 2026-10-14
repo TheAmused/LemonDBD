@@ -39,6 +39,36 @@ describe('ui: shared primitives', () => {
     assert.deepEqual(bad, [], `Hand-rolled dialog:\n${bad.join('\n')}`);
   });
 
+  it('<Modal> headers are title-only: no icon/tone/centerTitle/subtitle, no custom header, no component or image inside the title or headerLeft', () => {
+    // PerkModal builds its own artwork header on purpose; everything else gets the one centred title.
+    const customHeaderAllowed = ['components/PerkModal.tsx'];
+    const descendants = (root: ts.Node): ts.Node[] => {
+      const out: ts.Node[] = [];
+      const go = (c: ts.Node) => {
+        out.push(c);
+        ts.forEachChild(c, go);
+      };
+      ts.forEachChild(root, go);
+      return out;
+    };
+    const bad = scanAst((n, m) => {
+      if (!(ts.isJsxOpeningElement(n) || ts.isJsxSelfClosingElement(n)) || n.tagName.getText() !== 'Modal') return false;
+      return n.attributes.properties.some((a) => {
+        if (!ts.isJsxAttribute(a)) return false;
+        const name = a.name.getText();
+        if (/^(icon|tone|centerTitle|subtitle)$/.test(name)) return true;
+        if (name === 'header') return !customHeaderAllowed.includes(m.file);
+        if (name !== 'title' && name !== 'headerLeft') return false;
+        // A title is text (a styled span is fine); headerLeft may hold a button but never a picture.
+        const forbidden = name === 'title' ? /^([A-Z]|img$|svg$)/ : /^(img|Image)$/;
+        return descendants(a).some(
+          (d) => (ts.isJsxSelfClosingElement(d) || ts.isJsxOpeningElement(d)) && forbidden.test(d.tagName.getText())
+        );
+      });
+    });
+    assert.deepEqual(bad, [], `Modal header with an icon, picture or custom header (move artwork into the body):\n${bad.join('\n')}`);
+  });
+
   it('no hand-rolled fixed full-screen overlays outside the shared Modal and spinner (pointer-events-none decoration layers are not overlays)', () => {
     const bad = scanLines(/^(?!.*pointer-events-none).*fixed inset-0[^"'`]*\bz-\d+/, (m) => /^components\/(common\/(Modal|DbdSpinner|ImagePreloadProvider)|layout\/)/.test(m.file));
     ratchet('handRolledOverlays', countBy(bad.map((b) => b.split(':')[0])), 'hand-rolled overlays');

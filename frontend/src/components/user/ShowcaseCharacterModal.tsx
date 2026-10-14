@@ -149,7 +149,6 @@ export const ShowcaseCharacterModal: React.FC<ShowcaseCharacterModalProps> = ({ 
       isOpen={isOpen}
       onClose={onClose}
       size="2xl"
-      centerTitle
       title={dict.user.selectCharacter}
       className="max-h-[85vh] flex flex-col"
       bodyClassName="flex flex-col min-h-0 overflow-hidden"

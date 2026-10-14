@@ -27,7 +27,6 @@ export default {
   sourceHens: "Hens333",
   detectedBrowser: "検出されたブラウザ",
   activeRecognitionEngine: "アクティブ認識エンジン",
-  bulletSeparator: "•",
   percentSign: "%",
   sourceLabel: "提供元:",
   openQuote: "「",

@@ -4,7 +4,7 @@
 
 import React from 'react';
 import type { LucideIcon } from 'lucide-react';
-import { Modal, type ModalTone } from '@/components/common/Modal';
+import { Modal } from '@/components/common/Modal';
 import { useDictionary } from "@/context/DictionaryContext";
 
 export interface RulesModalShellProps {
@@ -13,22 +13,6 @@ export interface RulesModalShellProps {
   title: string;
   children: React.ReactNode;
 }
-
-/**
- * Shared chrome for every streak mode's Rules modal (Gauntlet/Chaos/History/
- * Page Streak): the shared <Modal> with icon + title and a scrolling body.
- * Each mode only supplies its own body
- * content as children plus a couple of color classes, instead of
- * re-declaring this same header/footer/backdrop markup four times.
- */
-/** Maps the legacy icon-chip colour classes onto a Modal tone. */
-export const toneFromIconClass = (cls?: string): ModalTone => {
-  if (!cls) return 'default';
-  if (cls.includes('accent-green')) return 'success';
-  if (cls.includes('accent-amber')) return 'warning';
-  if (cls.includes('cyan') || cls.includes('blue')) return 'info';
-  return 'default';
-};
 
 export interface RulesModalNotice {
   icon: LucideIcon;
@@ -83,6 +67,13 @@ export const RulesModalListSection: React.FC<{
   </div>
 );
 
+/**
+ * Shared chrome for every streak mode's Rules modal (Gauntlet/Chaos/History/
+ * Page Streak): the shared <Modal> with a title and a scrolling body.
+ * Each mode only supplies its own body
+ * content as children plus a couple of color classes, instead of
+ * re-declaring this same header/footer/backdrop markup four times.
+ */
 export const RulesModalShell: React.FC<RulesModalShellProps> = ({ isOpen, onClose, title, children }) => {
   const dict = useDictionary();
   return (
@@ -93,7 +84,6 @@ export const RulesModalShell: React.FC<RulesModalShellProps> = ({ isOpen, onClos
       size="3xl"
       layer="top"
       title={<span className="capitalize">{title}</span>}
-      centerTitle
       closeButtonAriaLabel={dict.modal.close}
       bodyClassName="space-y-6 p-5 text-sm text-text-secondary sm:p-6"
     >

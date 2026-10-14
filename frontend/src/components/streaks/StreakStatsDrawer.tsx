@@ -63,7 +63,6 @@ export function StreakStatsDrawer<TLog extends StreakMatchLogBase>({ isOpen, onC
         onClose={onClose}
         variant="drawer-right"
         title={dict.streaks.stats}
-        centerTitle
         closeButtonAriaLabel={dict.modal.close}
         bodyClassName="space-y-6 p-5 sm:p-6"
       >
@@ -142,7 +141,6 @@ export function StreakStatsDrawer<TLog extends StreakMatchLogBase>({ isOpen, onC
         variant="dialog"
         size="2xl"
         title={dict.streaks.olderAttempts}
-        centerTitle
         closeButtonAriaLabel={dict.modal.close}
         bodyClassName="p-5"
       >

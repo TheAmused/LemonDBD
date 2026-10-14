@@ -4,7 +4,6 @@
 import React, { useEffect, useState } from 'react';
 import { Textarea } from '@/components/common/Field';
 import { Button } from '@/components/common/Button';
-import { Ban } from 'lucide-react';
 import { Modal } from '@/components/common/Modal';
 import { useDictionary } from "@/context/DictionaryContext";
 
@@ -31,10 +30,7 @@ export const AdminReasonModal: React.FC<AdminReasonModalProps> = ({ isOpen, titl
       onClose={onCancel}
       variant="dialog"
       size="md"
-      tone="danger"
-      icon={<Ban className="h-5 w-5" aria-hidden="true" />}
       title={title}
-      subtitle={subtitle}
       closeButtonAriaLabel={dict.admin.closeSymbol}
       padded
       bodyClassName="space-y-3"
@@ -50,6 +46,7 @@ export const AdminReasonModal: React.FC<AdminReasonModalProps> = ({ isOpen, titl
         </>
       }
     >
+      {subtitle && <p className="type-body text-text-secondary">{subtitle}</p>}
       <label className="block type-label-xs text-text-secondary">
         {dict.admin.reasonShownToPlayers}
       </label>

@@ -70,7 +70,6 @@ export const BuyCoffeeModal: React.FC<BuyCoffeeModalProps> = ({ isOpen, onClose 
       onClose={onClose}
       variant="dialog"
       size="lg"
-      icon={<CampfireMugIcon className="h-6 w-6" />}
       title={t.coffeeTitle || 'Support LemonDBD'}
       closeButtonAriaLabel={t.coffeeClose || 'Close'}
       padded

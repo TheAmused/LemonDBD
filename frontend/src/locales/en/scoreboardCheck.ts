@@ -1,7 +1,6 @@
 // frontend/src/locales/en/scoreboardCheck.ts
 const scoreboardCheck = {
   "title": "OCR check",
-  "subtitle": "Upload an end-of-match scoreboard screenshot and see what the OCR reads.",
   "close": "Close",
   "privacyNote": "The image is analysed in memory and discarded. Nothing is stored.",
   "chooseImage": "Choose a screenshot",

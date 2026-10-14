@@ -1,7 +1,6 @@
 // frontend/src/components/onboarding/SkipOnboardingModal.tsx
 'use client';
 import React from 'react';
-import { AlertTriangle } from 'lucide-react';
 import { Modal } from '@/components/common/Modal';
 import { Button } from '@/components/common/Button';
 import { useDictionary } from "@/context/DictionaryContext";
@@ -22,8 +21,6 @@ export const SkipOnboardingModal: React.FC<SkipOnboardingModalProps> = ({ isOpen
       onClose={onCancel}
       variant="confirm"
       size="md"
-      tone="warning"
-      icon={<AlertTriangle className="h-5 w-5 sm:h-6 sm:w-6" aria-hidden="true" />}
       title={t.skipModalTitle}
       closeButton="none"
       padded

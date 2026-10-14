@@ -1,6 +1,5 @@
 // frontend/src/components/character-detail/modals/LoreModal.tsx
 import React from 'react';
-import { BookOpen } from 'lucide-react';
 import { CharacterItem } from '../types';
 import { Modal } from '@/components/common/Modal';
 
@@ -27,9 +26,7 @@ export const LoreModal: React.FC<LoreModalProps> = ({
       onClose={onClose}
       variant="dialog"
       size="2xl"
-      icon={<BookOpen className="h-5 w-5" />}
       title={`${character.name} ${t.emDashSeparator || '—'} ${t.loreTitle || 'Lore & Bio'}`}
-      subtitle={`${t.entityArchives || "The Entity's Archives"} ${t.bulletSeparator || '•'} ${t.codex || 'Codex'} #${character.id || 1}`}
       closeButtonAriaLabel={t.close || 'Close'}
       padded
       bodyClassName="space-y-4 text-sm leading-relaxed text-text-secondary"

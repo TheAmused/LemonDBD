@@ -5,7 +5,7 @@ import { lookup } from '@/utils/lookup';
 import { Button } from '@/components/common/Button';
 import React, { useEffect, useState } from 'react';
 import confetti from 'canvas-confetti';
-import { Trophy, Share2, Check, RotateCcw, Home } from 'lucide-react';
+import { Share2, Check, RotateCcw, Home } from 'lucide-react';
 import Link from 'next/link';
 import type { ChallengeDefinition, GuessRecord } from '@/types/minigame';
 import { Modal } from '@/components/common/Modal';
@@ -77,14 +77,10 @@ export const VictoryModal: React.FC<VictoryModalProps> = ({ challenge, roundGues
       onClose={() => {}}
       variant="dialog"
       size="lg"
-      tone="warning"
-      centerTitle
       closeButton="none"
       closeOnEscape={false}
       closeOnBackdropClick={false}
-      icon={<Trophy className="h-5 w-5" aria-hidden="true" />}
       title={isCompleteVictory ? t.victoryTitle : t.defeatTitle}
-      subtitle={isCompleteVictory ? t.victorySubtitle : t.defeatSubtitle}
       bodyClassName="p-5 sm:p-6"
       footerClassName="p-4 sm:px-6"
       footer={

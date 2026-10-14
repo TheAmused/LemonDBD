@@ -1,6 +1,6 @@
 // frontend/src/components/character-detail/modals/EquipmentDetailModal.tsx
 import React from 'react';
-import { AddonItem, EquipmentItem, getAssetUrl, getRarityTileStyle, getLocalizedRarity } from '../types';
+import { AddonItem, EquipmentItem, getAssetUrl, getRarityTileStyle } from '../types';
 import { RichText } from '@/components/common/RichText';
 import { Modal } from '@/components/common/Modal';
 
@@ -27,11 +27,13 @@ export const EquipmentDetailModal: React.FC<EquipmentDetailModalProps> = ({
       variant="dialog"
       size="lg"
       title={item.name}
-      subtitle={item.rarity ? getLocalizedRarity(item.rarity, t) : undefined}
       closeButtonAriaLabel={t.close || 'Close'}
-      headerLeft={
+      padded
+      bodyClassName="space-y-4 text-sm leading-relaxed text-text-secondary"
+    >
+      <div className="flex justify-center">
         <div
-          className={`h-14 w-14 rounded-2xl border-2 p-1.5 flex items-center justify-center shrink-0 shadow-md overflow-hidden ${rarityTile.bg}`}
+          className={`h-20 w-20 rounded-2xl border-2 p-2 flex items-center justify-center shrink-0 shadow-md overflow-hidden ${rarityTile.bg}`}
           style={rarityTile.style}
         >
           <img
@@ -40,10 +42,7 @@ export const EquipmentDetailModal: React.FC<EquipmentDetailModalProps> = ({
             className="h-full w-full object-contain"
           />
         </div>
-      }
-      padded
-      bodyClassName="space-y-4 text-sm leading-relaxed text-text-secondary"
-    >
+      </div>
       {item.associated_target && (
         <div className="type-strong text-text-secondary">
           {t.compatibleTarget || 'Compatible Target:'} <span className="text-text-primary">{item.associated_target}</span>

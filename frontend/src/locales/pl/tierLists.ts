@@ -226,7 +226,6 @@ export default {
   },
 
   reportTitle: "Zgłoś treść",
-  reportSubtitle: "Pomóż nam utrzymać bezpieczną i kulturalną społeczność.",
   reportReasonLabel: "Powód zgłoszenia",
   reportReasonHate: "Mowa nienawiści lub zakazane symbole",
   reportReasonHarassment: "Nękanie lub zastraszanie",

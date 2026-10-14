@@ -152,8 +152,8 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({ isOpen
     </span>
   );
 
-  const headerAvatar = (
-    <div className="relative h-10 w-10 sm:h-11 sm:w-11 rounded-2xl overflow-hidden border border-accent-red/40 shrink-0 bg-bg-primary shadow-md">
+  const portrait = (
+    <div className="relative h-20 w-20 rounded-2xl overflow-hidden border border-accent-red/40 shrink-0 bg-bg-primary shadow-md">
       <img
         src={avatarSrc}
         alt={name}
@@ -171,14 +171,14 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({ isOpen
       onClose={onClose}
       size="xl"
       title={name}
-      icon={headerAvatar}
       badge={roleBadge}
-      centerTitle={true}
       className="h-[88vh] max-h-[850px] min-h-[480px]"
       bodyClassName="flex flex-col"
     >
       {/* Scrollable Dossier Content */}
       <div className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-4 custom-scrollbar">
+        <div className="flex justify-center">{portrait}</div>
+
         {/* 1. Consensus Tier Badge & Global Smash Rate Bar */}
         <div className={`p-4 rounded-2xl border ${tierInfo.bg} ${tierInfo.glow} flex items-center justify-between`}>
           <div className="flex items-center gap-2.5">

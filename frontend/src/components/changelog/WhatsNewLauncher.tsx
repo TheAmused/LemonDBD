@@ -2,17 +2,7 @@
 // frontend/src/components/changelog/WhatsNewLauncher.tsx
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import {
-  Megaphone,
-  Plus,
-  Pencil,
-  Trash2,
-  Sparkles,
-  Skull,
-  ChevronDown,
-  ChevronUp,
-  GripVertical,
-} from 'lucide-react';
+import { Megaphone, Plus, Pencil, Trash2, Skull, ChevronDown, ChevronUp, GripVertical } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import type { ChangelogPost, ChangelogPostDraft, ChangelogTag } from '@/types/changelog';
 import {
@@ -300,7 +290,6 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ className = 
         onClose={() => setIsOpen(false)}
         variant="dialog"
         size="2xl"
-        icon={<Sparkles className="h-4 w-4" />}
         title={t.modalTitle}
         closeButtonAriaLabel={t.close}
         headerRight={

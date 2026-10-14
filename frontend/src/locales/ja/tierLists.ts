@@ -226,7 +226,6 @@ export default {
   },
 
   reportTitle: "コンテンツを報告",
-  reportSubtitle: "コミュニティの安全と健全性を保つためご協力ください。",
   reportReasonLabel: "報告の理由",
   reportReasonHate: "ヘイトスピーチまたは差別的シンボル",
   reportReasonHarassment: "ハラスメントまたは嫌がらせ",

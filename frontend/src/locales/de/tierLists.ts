@@ -226,7 +226,6 @@ export default {
   },
 
   reportTitle: "Inhalt melden",
-  reportSubtitle: "Hilf uns, die Community sicher und respektvoll zu halten.",
   reportReasonLabel: "Grund für die Meldung",
   reportReasonHate: "Hassrede oder Symbole",
   reportReasonHarassment: "Belästigung oder Mobbing",

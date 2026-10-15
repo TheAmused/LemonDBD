@@ -2,7 +2,7 @@
 // frontend/src/components/admin/AdminHeader.tsx
 
 import React from 'react';
-import { Button } from '@/components/common/Button';
+import { Button, buttonClassName } from '@/components/common/Button';
 import { Database, RefreshCw, Download, Upload, LineChart, ScanText } from 'lucide-react';
 import { OverseerEyeIcon } from '@/components/icons/DbdIcons';
 
@@ -82,7 +82,7 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({ isLoading, onOpenDbMai
           target="_blank"
           rel="noopener noreferrer"
           {...tip(dict.admin.pgAdminTitle, undefined, 'action')} aria-label={dict.admin.pgAdminTitle}
-          className="flex items-center justify-center gap-2 rounded-control border border-border-color bg-bg-surface hover:bg-bg-elevated text-text-primary px-3.5 py-2 type-strong transition-all cursor-pointer shadow-xs flex-1 sm:flex-initial"
+          className={buttonClassName('secondary', 'sm', 'flex-1 sm:flex-initial')}
         >
           <Database className="h-3.5 w-3.5 text-text-secondary" />
           <span>{dict.admin.pgAdmin}</span>
@@ -103,7 +103,7 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({ isLoading, onOpenDbMai
             target="_blank"
             rel="noopener noreferrer"
             {...tip(dict.admin.analyticsTitle, undefined, 'action')} aria-label={dict.admin.analyticsTitle}
-            className="flex items-center justify-center gap-1.5 rounded-control border border-border-color bg-bg-surface hover:bg-bg-elevated text-text-primary px-3 py-2 type-strong transition-colors cursor-pointer shadow-xs"
+            className={buttonClassName('secondary', 'sm')}
           >
             <LineChart className="h-3.5 w-3.5 text-text-secondary" />
             <span className="hidden md:inline">{dict.admin.analytics}</span>

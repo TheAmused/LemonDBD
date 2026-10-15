@@ -25,6 +25,7 @@ import { Input, Select, Textarea } from '@/components/common/Field';
 import { useDictionary } from "@/context/DictionaryContext";
 import { ToggleChip } from '@/components/common/ToggleChip';
 import { Badge } from '@/components/common/Badge';
+import { EmptyState } from '@/components/common/EmptyState';
 
 const ICON_PRESETS: Array<{ name: string; icon: React.ComponentType<{ className?: string }> }> = [
   { name: 'sparkles', icon: Sparkles },
@@ -137,9 +138,7 @@ export function RomanceArchetypeBuilder({ archetypes, onChange, availableRoles, 
       </div>
 
       {archetypes.length === 0 ? (
-        <div className="p-4 rounded-card border border-dashed border-border-color text-center text-xs text-text-muted">
-          {ab.noArchetypes}
-        </div>
+        <EmptyState variant="compact" title={ab.noArchetypes} />
       ) : (
         <div className="space-y-3">
           {archetypes.map((arch, idx) => {

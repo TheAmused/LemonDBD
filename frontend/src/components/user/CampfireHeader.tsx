@@ -22,6 +22,7 @@ import { Spinner } from '@/components/common/Spinner';
 import { formatDate } from '@/utils/format';
 import { useDictionary } from "@/context/DictionaryContext";
 import { Badge } from '@/components/common/Badge';
+import { buttonClassName } from '@/components/common/Button';
 
 interface CampfireHeaderProps {
   user: {
@@ -151,7 +152,7 @@ export const CampfireHeader: React.FC<CampfireHeaderProps> = ({
               {user.role === 'admin' && (
                 <Link
                   href={`/${currentLocale}/admin`}
-                  className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-control border border-accent-red/30 bg-accent-red/10 type-strong-xs text-accent-red hover:bg-accent-red/20 transition-colors"
+                  className={buttonClassName('soft', 'xs')}
                 >
                   <OverseerEyeIcon className="h-3 w-3" />
                   <span>{dict.sidebar.adminPanel}</span>

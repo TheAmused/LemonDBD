@@ -2,7 +2,7 @@
 // frontend/src/components/streaks/history/HistoryPerkPoolPanel.tsx
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { CheckCircle2, Lock, Search, Sparkles, X } from 'lucide-react';
+import { CheckCircle2, Lock, Sparkles, X } from 'lucide-react';
 import { PerkIcon } from '@/components/ui/PerkIcon';
 import { Perk } from '@/types/gauntletStreak';
 import { perkIconUrl as perkIconFor } from '@/utils/staticUrl';
@@ -11,6 +11,7 @@ import { normalizeSearchText } from '@/utils/perkUtils';
 import { useDictionary } from "@/context/DictionaryContext";
 
 import { Button } from '@/components/common/Button';
+import { SearchInput } from '@/components/common/Field';
 const UnlockedTile: React.FC<{ perk: Perk; displayName: string; justUnlocked: boolean }> = ({
   perk,
   displayName,
@@ -110,14 +111,13 @@ export const HistoryPerkPoolPanel: React.FC<HistoryPerkPoolPanelProps> = ({ pool
           {dict.streaks.perkPool}
         </h3>
         <div className="relative w-full sm:w-64">
-          <Search className="absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-text-muted" aria-hidden="true" />
-          <input
-            type="search"
+          <SearchInput
+            fieldSize="sm"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder={dict.streaks.searchPerksPlaceholder}
             aria-label={dict.streaks.searchPerksPlaceholder}
-            className="w-full rounded-control border border-border-color bg-bg-elevated py-2 pl-9 pr-8 text-xs text-text-primary shadow-inner placeholder:text-text-muted focus:border-accent-red focus:outline-none [&::-webkit-search-cancel-button]:hidden"
+            className="pr-8"
           />
           {query && (
             <Button

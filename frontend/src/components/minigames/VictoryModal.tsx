@@ -2,7 +2,7 @@
 'use client';
 
 import { lookup } from '@/utils/lookup';
-import { Button } from '@/components/common/Button';
+import { Button, buttonClassName } from '@/components/common/Button';
 import React, { useEffect, useState } from 'react';
 import confetti from 'canvas-confetti';
 import { Share2, Check, RotateCcw, Home } from 'lucide-react';
@@ -117,7 +117,7 @@ export const VictoryModal: React.FC<VictoryModalProps> = ({ challenge, roundGues
 
             <Link
               href={`/${locale}/minigames`}
-              className="flex items-center justify-center gap-2 py-3 px-4 rounded-control bg-bg-elevated hover:bg-bg-surface border border-border-color text-text-primary type-card-title transition-all"
+              className={buttonClassName('secondary', 'md', 'w-full')}
             >
               <Home className="w-4 h-4" />
               <span>{t.backToMinigames}</span>

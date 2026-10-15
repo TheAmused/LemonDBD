@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { ChevronLeft, ArrowLeft, ArrowRight } from 'lucide-react';
 import { CharacterItem, getCharacterSlug } from '../types';
 import { buttonClassName } from '@/components/common/Button';
+import { tip } from '@/components/common/Tooltip';
 
 interface CharacterBreadcrumbsProps {
   currentLocale: string;
@@ -69,7 +70,7 @@ export const CharacterBreadcrumbs: React.FC<CharacterBreadcrumbsProps> = ({
           <Link
             href={`/${currentLocale}/characters/${getCharacterSlug(prevChar.name)}`}
             className={buttonClassName('secondary', 'sm')}
-            title={`${t.prevCharacter || 'Previous'}: ${prevChar.name}`}
+            {...tip(`${t.prevCharacter || 'Previous'}: ${prevChar.name}`, undefined, 'character')}
           >
             <ArrowLeft className="h-3.5 w-3.5" />
             <span className="hidden md:inline truncate max-w-[120px]">{prevChar.name}</span>
@@ -79,7 +80,7 @@ export const CharacterBreadcrumbs: React.FC<CharacterBreadcrumbsProps> = ({
           <Link
             href={`/${currentLocale}/characters/${getCharacterSlug(nextChar.name)}`}
             className={buttonClassName('secondary', 'sm')}
-            title={`${t.nextCharacter || 'Next'}: ${nextChar.name}`}
+            {...tip(`${t.nextCharacter || 'Next'}: ${nextChar.name}`, undefined, 'character')}
           >
             <span className="hidden md:inline truncate max-w-[120px]">{nextChar.name}</span>
             <ArrowRight className="h-3.5 w-3.5" />

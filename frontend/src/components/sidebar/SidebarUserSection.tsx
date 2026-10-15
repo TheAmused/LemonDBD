@@ -70,7 +70,7 @@ export const SidebarUserSection: React.FC<SidebarUserSectionProps> = ({
               {isAdmin && (
                 <Link
                   href={`/${currentLocale}/admin`}
-                  title={dict.sidebar.adminControlCenter}
+                  {...tip(dict.sidebar.adminControlCenter, undefined, 'action')}
                   aria-label={dict.sidebar.adminControlCenter}
                   onClick={onNavigateMobile}
                   className="p-1 rounded-control text-accent-red hover:bg-accent-red/10 transition-colors"

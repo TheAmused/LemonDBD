@@ -428,6 +428,29 @@ for (const sourceFile of project.getSourceFiles()) {
   }
 }
 
+// 6. Tooltips. One system (common/Tooltip.tsx, variants in TOOLTIP_CONFIG). A native `title` on a DOM
+// element is a second, unstyled tooltip that never shows on touch screens: use {...tip(text, desc, variant)}.
+// Component props called `title` (Modal, EmptyState, ...) are not tooltips and start with a capital letter.
+const NATIVE_TITLE_TAGS = new Set(["Link", "Image"]);
+for (const sourceFile of project.getSourceFiles()) {
+  const filePath = sourceFile.getFilePath();
+  const elements = [
+    ...sourceFile.getDescendantsOfKind(SyntaxKind.JsxOpeningElement),
+    ...sourceFile.getDescendantsOfKind(SyntaxKind.JsxSelfClosingElement),
+  ];
+  for (const el of elements) {
+    const tag = el.getTagNameNode().getText();
+    const isDom = /^[a-z]/.test(tag) || NATIVE_TITLE_TAGS.has(tag);
+    if (!isDom || tag === "title") continue;
+    if (el.getAttribute("title")) {
+      reportError(filePath, el.getStartLineNumber(), `<${tag}> uses a native title tooltip: use {...tip(text, undefined, 'action')} from common/Tooltip`);
+    }
+    if (el.getAttribute("data-tooltip")) {
+      reportError(filePath, el.getStartLineNumber(), `<${tag}> sets data-tooltip by hand: use {...tip(text, description, variant)}`);
+    }
+  }
+}
+
 if (hasErrors) {
   console.error(
     "\n🚫 Build blocked: move hardcoded/global styling into Tailwind classes or app/globals.css.\n"

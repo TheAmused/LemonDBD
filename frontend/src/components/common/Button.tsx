@@ -113,9 +113,7 @@ export interface ButtonProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonE
   rightIcon?: React.ReactNode;
   /** Square, icon-only button. Requires `aria-label`. */
   icon?: boolean;
-  /** Fully rounded ends instead of the standard control radius. */
   pill?: boolean;
-  /** Dashed border: an "add" slot. */
   dashed?: boolean;
   /** Shrink a plain-text label to fit a narrow button (default), or leave it alone. */
   fit?: boolean;

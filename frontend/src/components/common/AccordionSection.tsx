@@ -14,7 +14,6 @@ import { cn } from '@/utils/cn';
 
 export interface AccordionSectionProps {
   title: React.ReactNode;
-  /** DOM id of the heading, for `aria-labelledby` on the section. */
   titleId?: string;
   open: boolean;
   onToggle: () => void;
@@ -22,7 +21,6 @@ export interface AccordionSectionProps {
   toggleLabel?: string;
   /** Image path behind the header. Gives the header its taller, atmospheric look. */
   banner?: string;
-  /** Shown right after the title (a count Badge). */
   badge?: React.ReactNode;
   /** Shown inside the title line, e.g. an unread dot. */
   titleAddon?: React.ReactNode;
@@ -35,7 +33,6 @@ export interface AccordionSectionProps {
   stickyHeader?: boolean;
   as?: 'section' | 'div';
   className?: string;
-  /** Padding and spacing of the body. */
   bodyClassName?: string;
   children: React.ReactNode;
 }

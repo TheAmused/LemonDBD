@@ -19,7 +19,6 @@ export interface ThumbProps {
   size?: ThumbSize;
   /** cover crops to the frame (portraits); contain keeps the whole icon (perks). */
   fit?: 'cover' | 'contain';
-  /** Shown when there is no image. */
   fallback?: React.ReactNode;
   className?: string;
 }

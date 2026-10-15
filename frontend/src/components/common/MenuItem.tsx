@@ -27,7 +27,6 @@ export interface MenuItemProps extends Omit<React.ButtonHTMLAttributes<HTMLButto
   /** The current choice of a listbox. Sets `aria-selected` when the row has role="option". */
   selected?: boolean;
   tone?: MenuItemTone;
-  /** Square corners, for rows that sit edge to edge inside a clipped menu. */
   flush?: boolean;
 }
 

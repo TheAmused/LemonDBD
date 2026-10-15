@@ -30,7 +30,6 @@ export interface ToggleChipProps extends Omit<React.ButtonHTMLAttributes<HTMLBut
   pressed: boolean;
   size?: ToggleChipSize;
   tone?: ToggleChipTone;
-  /** Fully rounded ends instead of the standard control radius. */
   pill?: boolean;
   /** Square, icon-only toggle. Requires `aria-label`. */
   icon?: boolean;

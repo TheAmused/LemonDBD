@@ -8,7 +8,6 @@ import { cn } from '@/utils/cn';
 
 export interface DisclosureButtonProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'type' | 'aria-expanded'> {
   open: boolean;
-  /** Which side the chevron sits on. */
   chevron?: 'start' | 'end';
 }
 

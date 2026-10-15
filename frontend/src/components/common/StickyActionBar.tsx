@@ -9,7 +9,6 @@ import { cn } from '@/utils/cn';
 
 export interface StickyActionBarProps {
   children: React.ReactNode;
-  /** A message above the buttons (a save error). */
   error?: string | null;
   /** Start after the app sidebar (default). Screens without a sidebar, like onboarding, turn it off. */
   sidebarAware?: boolean;

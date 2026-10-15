@@ -13,6 +13,7 @@ import { CELEBRATION_CARD_CLASSES, CELEBRATION_LABEL_CLASSES, CelebrationBadge }
 import { formatMessage } from '@/utils/i18nFormat';
 import { useDictionary } from "@/context/DictionaryContext";
 
+import { Button } from '@/components/common/Button';
 /** "You unlocked 3 new perks", worded and declined for the locale. */
 function unlockedPerksMessage(dict: Dictionary, locale: string, count: number): string {
   return formatMessage(dict.streaks.unlockedPerks, { count }, locale);
@@ -128,12 +129,12 @@ export const HistoryPerkModal: React.FC<HistoryPerkModalProps> = ({ killerName, 
           </div>
         )}
 
-        <button
+        <Button
           onClick={onClose}
-          className="mt-6 w-full rounded-control bg-accent-amber py-3 type-card-title text-text-inverted transition-colors hover:bg-accent-amber-hover cursor-pointer"
+          variant="amber" size="md" className="mt-6 w-full"
         >
           {dict.streaks.continueButton}
-        </button>
+        </Button>
       </div>
     </Modal>
   );

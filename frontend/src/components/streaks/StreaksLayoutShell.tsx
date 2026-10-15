@@ -14,6 +14,7 @@ import { DisplayNamesProvider } from '@/context/DisplayNamesContext';
 import { useDictionary, useLocale } from '@/context/DictionaryContext';
 import { getBackendBaseUrl } from '@/utils/api';
 
+import { Button } from '@/components/common/Button';
 const AuthModal = dynamic(() => import('@/components/AuthModal').then((m) => m.AuthModal), { ssr: false });
 
 export function StreaksLayoutShell({ children }: { children: React.ReactNode }) {
@@ -75,16 +76,16 @@ export function StreaksLayoutShell({ children }: { children: React.ReactNode }) 
             <h2 className="mt-4 text-sm font-extrabold tracking-wide text-text-primary">
               {dict.streaks.verifyEmailToTrack}
             </h2>
-            <button
+            <Button
               onClick={() => {
 
                 setAuthModalIntent('verify');
                 setIsAuthModalOpen(true);
               }}
-              className="mt-4 rounded-control bg-accent-red px-5 py-2.5 type-strong text-text-inverted shadow-xs hover:bg-accent-red-hover transition-colors cursor-pointer"
+              variant="primary" size="md" className="mt-4"
             >
               {dict.streaks.verifyEmail}
-            </button>
+            </Button>
           </div>
         ) : (
 
@@ -98,16 +99,16 @@ export function StreaksLayoutShell({ children }: { children: React.ReactNode }) 
             <p className="mt-1.5 max-w-sm type-body text-text-muted">
               {dict.streaks.loginToTrackDesc}
             </p>
-            <button
+            <Button
               onClick={() => {
 
                 setAuthModalIntent('login');
                 setIsAuthModalOpen(true);
               }}
-              className="mt-5 rounded-control bg-accent-red px-5 py-2.5 type-strong text-text-inverted shadow-xs hover:bg-accent-red-hover transition-colors"
+              variant="primary" size="md" className="mt-5"
             >
               {dict.streaks.logIn}
-            </button>
+            </Button>
           </div>
         )}
 

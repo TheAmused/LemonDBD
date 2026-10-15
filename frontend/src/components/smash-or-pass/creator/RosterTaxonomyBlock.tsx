@@ -121,14 +121,14 @@ export const RosterTaxonomyBlock: React.FC<RosterTaxonomyBlockProps> = ({ roles,
             const isAdded = roles.some((r) => r.toLowerCase() === preset.toLowerCase());
             if (isAdded) return null;
             return (
-              <button
+              <Button
                 key={preset}
                 type="button"
                 onClick={() => handleAddRole(preset)}
-                className="type-micro px-2 py-0.5 rounded-control bg-bg-surface hover:bg-bg-elevated border border-border-color text-text-muted hover:text-text-primary transition-colors cursor-pointer"
+                variant="secondary" size="xs"
               >
                 + {preset}
-              </button>
+              </Button>
             );
           })}
         </div>
@@ -146,14 +146,14 @@ export const RosterTaxonomyBlock: React.FC<RosterTaxonomyBlockProps> = ({ roles,
                 className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-control bg-accent-red/10 border border-accent-red/30 text-accent-red text-xs font-bold tracking-wide"
               >
                 <span>{role}</span>
-                <button
+                <Button
                   type="button"
                   onClick={() => handleRemoveRole(role)}
-                  className="hover:text-text-primary transition-colors cursor-pointer p-0.5 rounded-full hover:bg-accent-red/20"
+                  variant="ghost" size="xs" icon pill
                   aria-label={tx.removeRoleAria}
                 >
                   <X className="h-3 w-3" />
-                </button>
+                </Button>
               </span>
             ))
           )}
@@ -210,14 +210,14 @@ export const RosterTaxonomyBlock: React.FC<RosterTaxonomyBlockProps> = ({ roles,
             const isAdded = genders.some((g) => g.toLowerCase() === preset.toLowerCase());
             if (isAdded) return null;
             return (
-              <button
+              <Button
                 key={preset}
                 type="button"
                 onClick={() => handleAddGender(preset)}
-                className="type-micro px-2 py-0.5 rounded-control bg-bg-surface hover:bg-bg-elevated border border-border-color text-text-muted hover:text-text-primary transition-colors cursor-pointer"
+                variant="secondary" size="xs"
               >
                 + {preset}
-              </button>
+              </Button>
             );
           })}
         </div>
@@ -235,14 +235,14 @@ export const RosterTaxonomyBlock: React.FC<RosterTaxonomyBlockProps> = ({ roles,
                 className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-control bg-accent-green/10 border border-accent-green/30 text-accent-green text-xs font-bold tracking-wide"
               >
                 <span>{gender}</span>
-                <button
+                <Button
                   type="button"
                   onClick={() => handleRemoveGender(gender)}
-                  className="hover:text-text-primary transition-colors cursor-pointer p-0.5 rounded-full hover:bg-accent-green/20"
+                  variant="ghost" size="xs" icon pill
                   aria-label={tx.removeGenderAria}
                 >
                   <X className="h-3 w-3" />
-                </button>
+                </Button>
               </span>
             ))
           )}

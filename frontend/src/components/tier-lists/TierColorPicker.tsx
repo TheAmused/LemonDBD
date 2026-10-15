@@ -9,6 +9,7 @@ import { HEX_COLOR_PATTERN } from '@/utils/tierLists/constants';
 import { themeColor } from '@/utils/themeColor';
 import { useDictionary } from '@/context/DictionaryContext';
 
+import { Button } from '@/components/common/Button';
 interface TierColorPickerProps {
   /** A color token (`s`, `a`...) or a `#rrggbb` hex. Only hex values are shown in the picker. */
   color: string;
@@ -119,14 +120,14 @@ export function TierColorPicker({ color, onChange, size = 'md' }: TierColorPicke
               className="min-h-[44px] min-w-0 flex-1 rounded-control border border-border-color bg-bg-primary px-3 text-center type-label uppercase text-text-primary focus:border-accent-red focus:outline-hidden"
             />
             {EyeDropper && (
-              <button
+              <Button
                 type="button"
                 onClick={() => void sampleScreen()}
                 aria-label={t.pickFromScreen}
-                className="flex h-11 w-11 shrink-0 items-center justify-center rounded-control border border-border-color bg-bg-surface text-text-secondary hover:text-accent-red cursor-pointer transition-colors"
+                variant="secondary" size="md" icon className="shrink-0"
               >
                 <Pipette className="h-4 w-4" aria-hidden="true" />
-              </button>
+              </Button>
             )}
           </div>
         </div>

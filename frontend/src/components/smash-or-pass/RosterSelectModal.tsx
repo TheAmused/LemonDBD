@@ -13,6 +13,7 @@ import { RosterCarouselCard } from './roster-select/RosterCarouselCard';
 import { RosterPickerFooter } from './roster-select/RosterPickerFooter';
 import { useRosterCarousel } from './roster-select/useRosterCarousel';
 
+import { Button } from '@/components/common/Button';
 interface RosterSelectModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -129,23 +130,23 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
           {(onCreateRoster || onImportRoster) && (
             <div className="flex flex-wrap items-center justify-center gap-2 pt-0.5">
               {onCreateRoster && (
-                <button
+                <Button
                   type="button"
                   onClick={onCreateRoster}
-                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 min-h-[36px] rounded-control bg-accent-red/10 border border-accent-red/40 text-accent-red type-label-sm hover:bg-accent-red/20 transition-colors cursor-pointer"
+                  variant="soft" size="sm"
                 >
                   {dict.smashOrPass.picker.createRoster}
-                </button>
+                </Button>
               )}
               {onImportRoster && (
-                <button
+                <Button
                   type="button"
                   onClick={onImportRoster}
-                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 min-h-[36px] rounded-control bg-bg-elevated border border-border-color text-text-secondary type-label-sm hover:text-text-primary hover:border-border-subtle transition-colors cursor-pointer"
+                  variant="secondary" size="sm"
                 >
                   <ImportScrollIcon className="h-4 w-4" aria-hidden="true" />
                   {dict.smashOrPass.picker.importRoster}
-                </button>
+                </Button>
               )}
             </div>
           )}

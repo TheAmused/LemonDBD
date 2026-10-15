@@ -283,13 +283,13 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
             <span>{dict.user.forgotSentNotice}</span>
           </div>
           {dict.modal.close && (
-            <button
+            <Button
               type="button"
               onClick={onClose}
-              className="block w-full rounded-control bg-accent-amber/20 py-1.5 type-label-xs text-accent-amber hover:bg-accent-amber/30 transition-colors cursor-pointer"
+              variant="amberSoft" size="sm" className="block w-full"
             >
               {dict.modal.close}
-            </button>
+            </Button>
           )}
         </div>
       )}
@@ -477,14 +477,14 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
             <Button variant="soft" size="xs" onClick={() => handleFillDemo('admin')} leftIcon={<ShieldAlert className="h-3 w-3" />}>
               <span>{dict.user.adminDemo}</span>
             </Button>
-            <button
+            <Button
               type="button"
               onClick={() => handleFillDemo('player')}
-              className="flex items-center justify-center gap-1.5 rounded-control border border-accent-amber/30 bg-accent-amber/10 px-2.5 py-1.5 type-strong-xs text-accent-amber hover:bg-accent-amber/20 transition-colors shadow-xs cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red"
+              variant="amberSoft" size="sm"
             >
               <Sparkles className="h-3 w-3 text-accent-amber" />
               <span>{dict.user.userDemo}</span>
-            </button>
+            </Button>
           </div>
         </div>
       )}

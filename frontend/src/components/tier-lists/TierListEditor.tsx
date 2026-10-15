@@ -439,14 +439,14 @@ export function TierListEditor(props: TierListEditorProps) {
         <div role="alert" className="flex items-start gap-3 rounded-card border border-accent-red/40 bg-accent-red/10 p-3 type-card-title text-accent-red">
           <TriangleAlert className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
           <span className="flex-1">{saveError === 'quota' ? t.saveFailedQuota : t.saveFailedUnavailable}</span>
-          <button
+          <Button
             type="button"
             onClick={() => setSaveError(null)}
             aria-label={t.dismiss}
-            className="pointer-coarse:min-h-11 pointer-coarse:min-w-11 flex h-8 w-8 shrink-0 items-center justify-center rounded-control hover:bg-accent-red/20 cursor-pointer"
+            variant="ghost" size="sm" icon className="shrink-0"
           >
             <X className="h-4 w-4" aria-hidden="true" />
-          </button>
+          </Button>
         </div>
       )}
 

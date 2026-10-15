@@ -54,14 +54,14 @@ export function ChapterToolbar({
             className="pl-8 pr-7"
           />
           {searchQuery && (
-            <button
+            <Button
               type="button"
               onClick={() => setSearchQuery('')}
               aria-label={dict.filters.clearSearch}
-              className="absolute right-2 top-1/2 -translate-y-1/2 text-text-muted hover:text-text-primary cursor-pointer"
+              variant="ghost" size="xs" icon className="absolute right-2 top-1/2 -translate-y-1/2"
             >
               <X className="h-3 w-3" />
-            </button>
+            </Button>
           )}
         </div>
 

@@ -10,6 +10,7 @@ import { usePerkDisplayName, usePerkLabel } from '@/context/DisplayNamesContext'
 import { normalizeSearchText } from '@/utils/perkUtils';
 import { useDictionary } from "@/context/DictionaryContext";
 
+import { Button } from '@/components/common/Button';
 const UnlockedTile: React.FC<{ perk: Perk; displayName: string; justUnlocked: boolean }> = ({
   perk,
   displayName,
@@ -119,14 +120,14 @@ export const HistoryPerkPoolPanel: React.FC<HistoryPerkPoolPanelProps> = ({ pool
             className="w-full rounded-control border border-border-color bg-bg-elevated py-2 pl-9 pr-8 text-xs text-text-primary shadow-inner placeholder:text-text-muted focus:border-accent-red focus:outline-none [&::-webkit-search-cancel-button]:hidden"
           />
           {query && (
-            <button
+            <Button
               type="button"
               onClick={() => setQuery('')}
               aria-label={dict.streaks.clearSearch}
-              className="absolute right-2 top-1/2 -translate-y-1/2 rounded-chip p-0.5 text-text-muted transition-colors hover:text-text-primary cursor-pointer"
+              variant="ghost" size="xs" icon className="absolute right-2 top-1/2 -translate-y-1/2"
             >
               <X className="h-3.5 w-3.5" aria-hidden="true" />
-            </button>
+            </Button>
           )}
         </div>
       </div>

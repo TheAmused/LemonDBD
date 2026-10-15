@@ -421,15 +421,15 @@ export const MinigameCreator: React.FC<MinigameCreatorProps> = ({ catalog, local
               />
             </div>
 
-            <button
+            <Button
               type="button"
               onClick={handlePublishOfficial}
               disabled={isPublishingOfficial}
-              className="w-full sm:w-auto flex items-center justify-center gap-2 py-2.5 px-5 rounded-control bg-accent-amber hover:bg-accent-amber-hover text-text-inverted type-label-sm shadow-lg shadow-accent-amber/20 transition-all disabled:opacity-50"
+              variant="amber" size="md" className="w-full sm:w-auto"
             >
               <Sparkles className="w-4 h-4" />
               <span>{isPublishingOfficial ? c.publishing : c.confirmPublish}</span>
-            </button>
+            </Button>
           </div>
         </div>
       )}

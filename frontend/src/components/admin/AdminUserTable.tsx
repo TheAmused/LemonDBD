@@ -172,34 +172,34 @@ export const AdminUserTable: React.FC<AdminUserTableProps> = ({
                 </div>
 
                 <div className="flex items-center gap-1.5">
-                  <button
+                  <Button
                     type="button"
                     onClick={() => onToggleRole(u)}
                     {...tip(u.role === 'admin' ? dict.admin.demote : dict.admin.promote, undefined, 'action')}
                     aria-label={u.role === 'admin' ? dict.admin.demote : dict.admin.promote}
-                    className="relative min-h-[44px] min-w-[44px] flex items-center justify-center rounded-control border border-border-color bg-bg-surface text-text-primary hover:border-accent-amber hover:text-accent-amber transition-colors shadow-xs cursor-pointer"
+                    variant="secondary" size="md" icon className="relative"
                   >
                     <OverseerEyeIcon className="h-4 w-4" />
-                  </button>
-                  <button
+                  </Button>
+                  <Button
                     type="button"
                     onClick={() => onToggleActive(u)}
                     {...tip(u.is_active ? dict.admin.disableAccount : dict.admin.enableAccount, undefined, 'action')}
                     aria-label={u.is_active ? dict.admin.disableAccount : dict.admin.enableAccount}
-                    className="relative min-h-[44px] min-w-[44px] flex items-center justify-center rounded-control border border-border-color bg-bg-surface text-text-primary hover:border-accent-red hover:text-accent-red transition-colors shadow-xs cursor-pointer"
+                    variant="secondary" size="md" icon className="relative"
                   >
                     <Lock className="h-4 w-4" />
-                  </button>
+                  </Button>
                   {u.two_factor_enabled && (
-                    <button
+                    <Button
                       type="button"
                       onClick={() => onResetTwoFactor(u)}
                       {...tip(dict.admin.resetTwoFactor, undefined, 'action')}
                       aria-label={dict.admin.resetTwoFactor}
-                      className="relative min-h-[44px] min-w-[44px] flex items-center justify-center rounded-control border border-border-color bg-bg-surface text-text-primary hover:border-accent-amber hover:text-accent-amber transition-colors shadow-xs cursor-pointer"
+                      variant="secondary" size="md" icon className="relative"
                     >
                       <ShieldOff className="h-4 w-4" />
-                    </button>
+                    </Button>
                   )}
                   <DownloadDataSection
                     userId={u.id}
@@ -208,15 +208,15 @@ export const AdminUserTable: React.FC<AdminUserTableProps> = ({
                     className="border border-border-color bg-bg-surface text-text-primary hover:border-accent-amber hover:bg-bg-surface hover:text-accent-amber shadow-xs relative h-auto w-auto min-h-[44px] min-w-[44px] [&>svg]:h-4 [&>svg]:w-4"
                   />
                   {u.id !== currentUserId && (
-                    <button
+                    <Button
                       type="button"
                       onClick={() => onDeleteUser(u)}
                       {...tip(dict.admin.deleteUserTitle, undefined, 'action')}
                       aria-label={dict.admin.deleteUserTitle}
-                      className="relative min-h-[44px] min-w-[44px] flex items-center justify-center rounded-control border border-accent-red/30 bg-accent-red/10 text-accent-red hover:bg-accent-red/20 transition-colors shadow-xs cursor-pointer"
+                      variant="danger" size="md" icon className="relative"
                     >
                       <Trash2 className="h-4 w-4" />
-                    </button>
+                    </Button>
                   )}
                 </div>
               </div>
@@ -306,36 +306,36 @@ export const AdminUserTable: React.FC<AdminUserTableProps> = ({
                   </td>
                   <td className="px-4 py-3 text-right">
                     <div className="flex items-center justify-end gap-1.5">
-                      <button
+                      <Button
                         type="button"
                         onClick={() => onToggleRole(u)}
                         {...tip(u.role === 'admin' ? dict.admin.demote : dict.admin.promote, undefined, 'action')}
                         aria-label={u.role === 'admin' ? dict.admin.demote : dict.admin.promote}
-                        className="relative rounded-control border border-border-color bg-bg-surface p-1.5 text-text-primary hover:border-accent-amber hover:text-accent-amber transition-colors shadow-xs cursor-pointer before:absolute before:-inset-2.5 before:content-['']"
+                        variant="secondary" size="sm" icon className="relative"
                       >
                         <OverseerEyeIcon className="h-3.5 w-3.5" />
-                      </button>
+                      </Button>
 
-                      <button
+                      <Button
                         type="button"
                         onClick={() => onToggleActive(u)}
                         {...tip(u.is_active ? dict.admin.disableAccount : dict.admin.enableAccount, undefined, 'action')}
                         aria-label={u.is_active ? dict.admin.disableAccount : dict.admin.enableAccount}
-                        className="relative rounded-control border border-border-color bg-bg-surface p-1.5 text-text-primary hover:border-accent-red hover:text-accent-red transition-colors shadow-xs cursor-pointer before:absolute before:-inset-2.5 before:content-['']"
+                        variant="secondary" size="sm" icon className="relative"
                       >
                         <Lock className="h-3.5 w-3.5" />
-                      </button>
+                      </Button>
 
                       {u.two_factor_enabled && (
-                        <button
+                        <Button
                           type="button"
                           onClick={() => onResetTwoFactor(u)}
                           {...tip(dict.admin.resetTwoFactor, undefined, 'action')}
                           aria-label={dict.admin.resetTwoFactor}
-                          className="relative rounded-control border border-border-color bg-bg-surface p-1.5 text-text-primary hover:border-accent-amber hover:text-accent-amber transition-colors shadow-xs cursor-pointer before:absolute before:-inset-2.5 before:content-['']"
+                          variant="secondary" size="sm" icon className="relative"
                         >
                           <ShieldOff className="h-3.5 w-3.5" />
-                        </button>
+                        </Button>
                       )}
 
                       <DownloadDataSection
@@ -346,15 +346,15 @@ export const AdminUserTable: React.FC<AdminUserTableProps> = ({
                       />
 
                       {u.id !== currentUserId && (
-                        <button
+                        <Button
                           type="button"
                           onClick={() => onDeleteUser(u)}
                           {...tip(dict.admin.deleteUserTitle, undefined, 'action')}
                           aria-label={dict.admin.deleteUserTitle}
-                          className="relative rounded-control border border-accent-red/30 bg-accent-red/10 p-1.5 text-accent-red hover:bg-accent-red/20 transition-colors shadow-xs cursor-pointer before:absolute before:-inset-2.5 before:content-['']"
+                          variant="danger" size="sm" icon className="relative"
                         >
                           <Trash2 className="h-3.5 w-3.5" />
-                        </button>
+                        </Button>
                       )}
                     </div>
                   </td>

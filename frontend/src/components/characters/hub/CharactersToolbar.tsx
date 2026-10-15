@@ -7,6 +7,7 @@ import { Input } from '@/components/common/Field';
 import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
 import type { RoleCategory } from '@/types/perks';
 
+import { Button } from '@/components/common/Button';
 interface CharactersToolbarProps {
   activeTab: RoleCategory;
   onTabChange: (tab: RoleCategory) => void;
@@ -115,14 +116,14 @@ export function CharactersToolbar({
           className="pl-10 pr-10 min-h-[44px] bg-bg-primary font-semibold shadow-inner"
         />
         {searchQuery && (
-          <button
+          <Button
             type="button"
             onClick={() => setSearchQuery('')}
             aria-label={dict.filters.clearSearch}
-            className="absolute right-1 top-1/2 -translate-y-1/2 flex min-h-[40px] min-w-[40px] items-center justify-center text-text-muted hover:text-text-primary cursor-pointer touch-manipulation"
+            variant="ghost" size="sm" icon className="absolute right-1 top-1/2 -translate-y-1/2"
           >
             <X className="h-4 w-4" />
-          </button>
+          </Button>
         )}
       </div>
     </section>

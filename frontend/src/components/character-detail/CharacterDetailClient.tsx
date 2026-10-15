@@ -18,6 +18,7 @@ import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { useCachedData } from '@/hooks/useCachedData';
 import { fetchJson } from '@/services/dataCache';
 import { getBackendBaseUrl } from '@/utils/api';
+import { buttonClassName } from '@/components/common/Button';
 
 export function CharacterDetailClient({ slug }: { slug: string }) {
   const locale = useLocale() as Locale;
@@ -81,7 +82,7 @@ export function CharacterDetailClient({ slug }: { slug: string }) {
           >
             <Link
               href={`/${locale}/characters`}
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-control bg-accent-red hover:bg-accent-red-hover text-text-inverted type-strong transition-all shadow-xs active:scale-95 cursor-pointer"
+              className={buttonClassName('primary', 'md')}
             >
               <ChevronLeft className="h-4 w-4" />
               <span>{t.backToCharacters}</span>

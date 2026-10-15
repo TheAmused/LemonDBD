@@ -14,6 +14,7 @@ import { useRosterCarousel } from './roster-select/useRosterCarousel';
 
 import { Button } from '@/components/common/Button';
 import { SegmentedControl } from '@/components/common/SegmentedControl';
+import { EmptyState } from '@/components/common/EmptyState';
 interface RosterSelectModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -191,18 +192,14 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
               />
             </div>
           ) : N === 0 ? (
-            <div className="relative z-10 flex flex-col items-center justify-center gap-3 p-8 rounded-card border border-dashed border-border-color bg-bg-elevated/40 text-center max-w-md mx-auto">
-              <CardStackIcon className="h-10 w-10 text-accent-red animate-pulse" aria-hidden="true" />
-              <h3 className="text-base font-bold text-text-primary uppercase tracking-wide">
-                {filter === 'custom'
-                  ? dict.smashOrPass.picker.noCustomRostersFound
-                  : dict.smashOrPass.picker.noRostersFound}
-              </h3>
-              <p className="text-xs text-text-muted">
-                {filter === 'custom'
-                  ? dict.smashOrPass.picker.noCustomRostersDesc
-                  : dict.smashOrPass.picker.noRostersMatchDesc}
-              </p>
+            <div className="relative z-10 mx-auto max-w-md">
+              <EmptyState
+                variant="compact"
+                icon={CardStackIcon}
+                iconClassName="mx-auto mb-2 h-10 w-10 text-accent-red animate-pulse"
+                title={filter === 'custom' ? dict.smashOrPass.picker.noCustomRostersFound : dict.smashOrPass.picker.noRostersFound}
+                subtitle={filter === 'custom' ? dict.smashOrPass.picker.noCustomRostersDesc : dict.smashOrPass.picker.noRostersMatchDesc}
+              />
             </div>
           ) : (
             <div

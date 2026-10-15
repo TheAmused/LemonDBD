@@ -280,19 +280,19 @@ export function SmashRosterCreator({ locale, editId }: SmashRosterCreatorProps) 
         >
           <div className="flex flex-col gap-6">
             {draft.entities.length === 0 ? (
-              <div className="flex flex-col items-center justify-center p-8 text-center rounded-card border border-dashed border-border-color bg-bg-elevated/20">
-                <p className="text-sm text-text-muted mb-3">
-                  {c.noEntitiesYet || 'No candidates yet. Add your first one above.'}
-                </p>
-                <Button
-                  variant="secondary" size="sm"
-                  onClick={addEntity}
-                  className="uppercase tracking-wider"
-                >
-                  <Plus className="h-4 w-4" aria-hidden="true" />
-                  <span>{c.addEntity || 'Add Candidate'}</span>
-                </Button>
-              </div>
+              <EmptyState
+                variant="compact"
+                title={c.noEntitiesYet || 'No candidates yet. Add your first one above.'}
+                action={{
+                  label: (
+                    <>
+                      <Plus className="h-4 w-4" aria-hidden="true" />
+                      <span>{c.addEntity || 'Add Candidate'}</span>
+                    </>
+                  ),
+                  onClick: addEntity,
+                }}
+              />
             ) : (
               <>
                 {/* Part 1: All Inputs for Currently Selected Candidate */}

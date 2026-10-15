@@ -14,7 +14,7 @@ Ograniczenia analizy: liczone są tylko klasy zapisane wprost w `className`. Kla
 | Ostylowane `<button>` | `Button` / `ToggleChip` / `SegmentedControl` | 63 (z 127) |
 | Natywne `title=` | `Tooltip` / `tip()` | 113 |
 | `span` jako chip lub pill | `Badge` / `InfoChip` | 17 (z 74) |
-| Linki wyglądające jak przyciski | `buttonClassName()` | 22 |
+| Linki wyglądające jak przyciski | `buttonClassName()` | 2 (z 22) |
 | Ramki `border-dashed` | `EmptyState` / `Surface tone="dashed"` | 13 |
 | `animate-pulse` ręcznie | `SkeletonBlock` | 9 |
 | `<input>` tekstowy | `Input` / `HexColorInput` | 8 |
@@ -581,166 +581,29 @@ Zostało 17: nakładki na obrazkach z `backdrop-blur` (`TierListCards`, `Persona
 
 - [ ] `onboarding/wizard/ChapterCharacterPanel.tsx` : 58 (rounded-chip)
 
-## 6. Linki wyglądające jak przyciski (22)
+## 6. Linki wyglądające jak przyciski (ZROBIONE, 20 z 22)
 
-Użyć `buttonClassName(variant, size)` lub `LinkPill`. `MinigamesHub` ma 11 powtórzonych kafli, do rozważenia jeden mały komponent.
+20 linków dostało `buttonClassName(variant, size, układ)` (admin, strona główna, strona błędu, `MinigamesHub`, `VictoryModal`, breadcrumbs, `CampfireHeader`). Zostały 2 świadomie: `streaks/RoleTabs` (zakładki ze stanem aktywnym) i link udostępniania w `PersonaShareView` (stan zależny od dostępności).
 
-**minigames** (12)
+## 7. Ramki dashed (ZROBIONE)
 
-- [ ] `minigames/MinigamesHub.tsx` : 252, 278, 302, 336, 356, 376, 396, 416, 436, 473, 525
-- [ ] `minigames/VictoryModal.tsx` : 118
+Puste stany przeszły na `EmptyState` (`RosterSelectModal`, `SmashRosterCreator`, `RomanceArchetypeBuilder`) i `AuthRequiredState` (ekran logowania w `StreaksLayoutShell`). Przy okazji przyciski wewnątrz `EmptyState` i `AuthRequiredState` są prawdziwymi `Button`. Pozostałe ramki dashed to sloty i strefy upuszczania (`PerkSlot`, `LootCrateStage`, `ItemSources`, `ImportTab`, `EntityEditor`, `HistoryPerkPoolPanel`, okrąg `TerrorRadiusModal`) oraz karty o stanie (`WhatsNewLauncher`), więc zostają. Ekran weryfikacji e-maila w `StreaksLayoutShell` zostaje własny (ikona w tytule i przycisk akcji z modalem).
 
-**character-detail** (3)
+## 8. Ręczne skeletony animate-pulse (PRZEJRZANE, brak zmian)
 
-- [ ] `character-detail/CharacterDetailClient.tsx` : 82
-- [ ] `character-detail/components/CharacterBreadcrumbs.tsx` : 68, 78
+Wszystkie 9 trafień to nie placeholdery, tylko pulsujące stany (wybrane pole, ikona w trakcie ładowania, kontener całej strony: `PageShellFallback`, `CardArena`, `CharacterRosterGrid`), więc `SkeletonBlock` nie pasuje.
 
-**admin** (2)
+## 9. Inputy tekstowe (ZROBIONE, 1 z 8)
 
-- [ ] `admin/AdminHeader.tsx` : 80, 101
+`HistoryPerkPoolPanel` używa `SearchInput`. Pozostałe są specjalne: komórki kodu OTP (`CodeInput`, `EmailVerificationForm`), edycja nazwy w kafelku (`EntityEditorParts`, `CreatorItems`), etykieta rzędu (`LadderEditor`), natywny wybór koloru (`RosterBasicsSection`) oraz wyszukiwarka w ciasnym pasku filtrów `PerkFilters` (pill i własne rozmiary responsywne, do osobnej decyzji).
 
-**landing** (1)
+## 10. Przełącznik role=switch (PRZEJRZANE, brak zmian)
 
-- [ ] `landing/HomePage.tsx` : 64
+`ChapterCard` już korzysta z `SwitchTrack` (część prezentacyjna `Switch`), bo cały wiersz jest klikalny.
 
-**layout** (1)
+## 11. Overlaye fixed inset-0 (PRZEJRZANE, brak zmian)
 
-- [ ] `layout/ErrorPage.tsx` : 67
-
-**streaks** (1)
-
-- [ ] `streaks/RoleTabs.tsx` : 64
-
-**user** (1)
-
-- [ ] `user/CampfireHeader.tsx` : 151
-
-**smash-or-pass** (1)
-
-- [ ] `smash-or-pass/persona/PersonaShareView.tsx` : 86
-
-
-## 7. Ramki dashed (13)
-
-Zamienić na `EmptyState` (puste stany) albo `Surface tone="dashed"` (strefy upuszczania, placeholdery).
-
-**smash-or-pass** (4)
-
-- [ ] `smash-or-pass/RosterSelectModal.tsx` : 208
-- [ ] `smash-or-pass/creator/EntityEditor.tsx` : 100
-- [ ] `smash-or-pass/creator/RomanceArchetypeBuilder.tsx` : 138
-- [ ] `smash-or-pass/creator/SmashRosterCreator.tsx` : 283
-
-**streaks** (3)
-
-- [ ] `streaks/StreaksLayoutShell.tsx` : 71, 91
-- [ ] `streaks/history/HistoryPerkPoolPanel.tsx` : 43
-
-**generator** (2)
-
-- [ ] `generator/modes/LootCrateStage.tsx` : 300
-- [ ] `generator/shared/PerkSlot.tsx` : 94
-
-**changelog** (1)
-
-- [ ] `changelog/WhatsNewLauncher.tsx` : 350
-
-**scraper-config** (1)
-
-- [ ] `scraper-config/ImportTab.tsx` : 45
-
-**character-detail** (1)
-
-- [ ] `character-detail/modals/TerrorRadiusModal.tsx` : 40
-
-**tier-lists** (1)
-
-- [ ] `tier-lists/creator/ItemSources.tsx` : 123
-
-
-## 8. Ręczne skeletony animate-pulse (9)
-
-Zamienić na `SkeletonBlock`. Dopasować kształt (radius) do docelowego elementu.
-
-**smash-or-pass** (3)
-
-- [ ] `smash-or-pass/hub/CardArena.tsx` : 68
-- [ ] `smash-or-pass/hub/RosterModals.tsx` : 158
-- [ ] `smash-or-pass/roster-select/RosterCarouselCard.tsx` : 173
-
-**character-detail** (2)
-
-- [ ] `character-detail/modals/TerrorRadiusModal.tsx` : 44, 54
-
-**layout** (1)
-
-- [ ] `layout/PageShellFallback.tsx` : 51
-
-**scraper-config** (1)
-
-- [ ] `scraper-config/ImportTab.tsx` : 66
-
-**minigames** (1)
-
-- [ ] `minigames/guessers/AudioGuesser.tsx` : 172
-
-**streaks** (1)
-
-- [ ] `streaks/gauntlet/CharacterRosterGrid.tsx` : 66
-
-
-## 9. Inputy tekstowe (8)
-
-Zamienić na `Input` (`fieldSize`). `RosterBasicsSection` to input koloru, rozważyć `HexColorInput`. `CodeInput` to specyficzne pole kodu, ocenić, czy `Input` wystarcza.
-
-**(root)** (2)
-
-- [ ] `EmailVerificationForm.tsx` : 108 ("text")
-- [ ] `PerkFilters.tsx` : 330 ("text")
-
-**smash-or-pass** (2)
-
-- [ ] `smash-or-pass/creator/EntityEditorParts.tsx` : 146 ("text")
-- [ ] `smash-or-pass/creator/RosterBasicsSection.tsx` : 131 ("color")
-
-**tier-lists** (2)
-
-- [ ] `tier-lists/creator/CreatorItems.tsx` : 100 ("text")
-- [ ] `tier-lists/creator/LadderEditor.tsx` : 205 ("text")
-
-**auth** (1)
-
-- [ ] `auth/CodeInput.tsx` : 74 ("text")
-
-**streaks** (1)
-
-- [ ] `streaks/history/HistoryPerkPoolPanel.tsx` : 113 ("search")
-
-
-## 10. Przełącznik role=switch (1)
-
-Zamienić na `Switch` (lub `SwitchTrack`, jeśli cała karta jest klikalna).
-
-**onboarding** (1)
-
-- [ ] `onboarding/wizard/ChapterCard.tsx` : 94
-
-
-## 11. Overlaye fixed inset-0 (5)
-
-Realne kandydaci do `Modal`: `smash-or-pass/hub/RosterModals.tsx` i do sprawdzenia `CalmVoteMark.tsx`. Pozostałe to tła i animacje pełnoekranowe (`layout/AppBackground.tsx`, `smash-or-pass/InteractiveDragBackground.tsx`, `smash-or-pass/SmashAnimations.tsx`), więc zostają.
-
-**smash-or-pass** (4)
-
-- [ ] `smash-or-pass/InteractiveDragBackground.tsx` : 440
-- [ ] `smash-or-pass/SmashAnimations.tsx` : 503
-- [ ] `smash-or-pass/hub/CalmVoteMark.tsx` : 32
-- [ ] `smash-or-pass/hub/RosterModals.tsx` : 157
-
-**layout** (1)
-
-- [ ] `layout/AppBackground.tsx` : 40
-
+`RosterModals` ma tylko pełnoekranową animację przełączenia rostera (nie modal, `pointer-events-none`). Pozostałe to tła i animacje.
 
 ## 12. Nadpisania radiusu w primitywach (42, ZROBIONE, pilnuje tego check:styles)
 

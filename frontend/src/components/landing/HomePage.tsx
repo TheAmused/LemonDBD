@@ -11,6 +11,7 @@ import { Sparkles, ArrowRight } from 'lucide-react';
 import { DbdSpinner } from '@/components/common/DbdSpinner';
 import { useImagePrefetch } from '@/components/common/ImagePreloadProvider';
 import { useDictionary, useLocale } from '@/context/DictionaryContext';
+import { buttonClassName } from '@/components/common/Button';
 
 function LandingContent() {
   const locale = useLocale();
@@ -63,7 +64,7 @@ function LandingContent() {
             <div className="mt-8">
               <Link
                 href={`/${locale}/perks`}
-                className="inline-flex items-center gap-2.5 rounded-control bg-accent-red hover:bg-accent-red-hover px-7 py-3.5 type-card-title text-text-inverted shadow-md hover:scale-105 active:scale-95 transition-all cursor-pointer"
+                className={buttonClassName('primary', 'lg')}
               >
                 <Sparkles className="h-4 w-4" />
                 <span>{dict.landing.enterButton}</span>

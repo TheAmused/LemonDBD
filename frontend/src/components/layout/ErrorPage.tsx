@@ -13,6 +13,7 @@ import { LemonIcon } from '@/components/LemonIcon';
 import { useDictionary, useLocale } from '@/context/DictionaryContext';
 import { useAuth } from '@/context/AuthContext';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
+import { buttonClassName } from '@/components/common/Button';
 
 export type ErrorPageVariant = 'not-found' | 'forbidden' | 'blocked';
 
@@ -66,7 +67,7 @@ export const ErrorPage: React.FC<ErrorPageProps> = ({ variant }) => {
         <div className="mt-8">
           <Link
             href={`/${locale}`}
-            className="inline-flex cursor-pointer items-center gap-2.5 rounded-control bg-accent-red px-7 py-3.5 type-card-title text-text-inverted shadow-md transition-all hover:scale-105 hover:bg-accent-red-hover active:scale-95"
+            className={buttonClassName('primary', 'lg')}
           >
             <Home className="h-4 w-4" aria-hidden="true" />
             <span>{copy.backHome}</span>

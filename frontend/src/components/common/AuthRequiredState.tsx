@@ -5,6 +5,7 @@ import React, { useState } from 'react';
 import dynamic from 'next/dynamic';
 import { Lock } from 'lucide-react';
 import { useDictionary } from '@/context/DictionaryContext';
+import { Button } from '@/components/common/Button';
 
 const AuthModal = dynamic(() => import('@/components/AuthModal').then((m) => m.AuthModal), { ssr: false });
 
@@ -49,13 +50,9 @@ export function AuthRequiredState({
       <p className="mt-1.5 max-w-sm type-body text-text-muted">
         {subtitle}
       </p>
-      <button
-        type="button"
-        onClick={() => setIsAuthModalOpen(true)}
-        className="mt-5 rounded-control bg-accent-red px-5 py-2.5 type-strong text-text-inverted shadow-xs hover:bg-accent-red-hover transition-colors cursor-pointer"
-      >
+      <Button variant="primary" size="md" onClick={() => setIsAuthModalOpen(true)} className="mt-5">
         {resolvedButtonLabel}
-      </button>
+      </Button>
 
       {isAuthModalOpen && (
         <AuthModal

@@ -4,7 +4,7 @@ import { getErrorMessage } from "@/utils/api";
 
 // frontend/src/components/minigames/MinigamesHub.tsx
 
-import { Button } from '@/components/common/Button';
+import { Button, buttonClassName } from '@/components/common/Button';
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
@@ -253,7 +253,7 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
           </div>
           <Link
             href={`/${locale}/minigames/play?type=daily&mode=fog_trial`}
-            className="mt-6 flex items-center justify-center gap-2 py-3 px-4 rounded-control bg-accent-red hover:bg-accent-red-hover text-text-inverted type-label-sm shadow-lg shadow-accent-red/20 transition-all active:scale-95"
+            className={buttonClassName('primary', 'md', 'mt-6 w-full')}
           >
             <Play className="w-4 h-4 fill-current" />
             <span>{t.playDaily}</span>
@@ -279,7 +279,7 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
           </div>
           <Link
             href={`/${locale}/minigames/idle`}
-            className="mt-6 flex items-center justify-center gap-2 py-3 px-4 rounded-control bg-accent-amber hover:bg-accent-amber-hover text-text-inverted type-label-sm shadow-lg shadow-accent-amber/20 transition-all active:scale-95"
+            className={buttonClassName('amber', 'md', 'mt-6 w-full')}
           >
             <Play className="w-4 h-4 fill-current" />
             <span>{t.playIdle}</span>
@@ -303,7 +303,7 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
           </div>
           <Link
             href={`/${locale}/minigames/creator`}
-            className="mt-6 flex items-center justify-center gap-2 py-3 px-4 rounded-control bg-accent-red hover:bg-accent-red-hover text-text-inverted type-label-sm shadow-lg shadow-accent-red/20 transition-all active:scale-95"
+            className={buttonClassName('primary', 'md', 'mt-6 w-full')}
           >
             <Plus className="w-4 h-4" />
             <span>{t.createChallenge}</span>
@@ -337,7 +337,7 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
             </div>
             <Link
               href={`/${locale}/minigames/play?type=repeatable&mode=realm`}
-              className="mt-5 flex items-center justify-center gap-2 py-2.5 px-4 rounded-control bg-accent-green hover:bg-accent-green-hover text-text-inverted type-label-sm shadow-md shadow-accent-green/20 transition-all active:scale-95"
+              className={buttonClassName('success', 'md', 'mt-5 w-full')}
             >
               <Play className="w-3.5 h-3.5 fill-current" />
               <span>{t.playRealmGuesser}</span>
@@ -357,7 +357,7 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
             </div>
             <Link
               href={`/${locale}/minigames/play?type=repeatable&mode=perk`}
-              className="mt-5 flex items-center justify-center gap-2 py-2.5 px-4 rounded-control bg-accent-amber hover:bg-accent-amber-hover text-text-inverted type-label-sm shadow-md shadow-accent-amber/20 transition-all active:scale-95"
+              className={buttonClassName('amber', 'md', 'mt-5 w-full')}
             >
               <Play className="w-3.5 h-3.5 fill-current" />
               <span>{t.playPerkGuesser}</span>
@@ -377,7 +377,7 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
             </div>
             <Link
               href={`/${locale}/minigames/play?type=repeatable&mode=power`}
-              className="mt-5 flex items-center justify-center gap-2 py-2.5 px-4 rounded-control bg-accent-red hover:bg-accent-red-hover text-text-inverted type-label-sm shadow-md shadow-accent-red/20 transition-all active:scale-95"
+              className={buttonClassName('primary', 'md', 'mt-5 w-full')}
             >
               <Play className="w-3.5 h-3.5 fill-current" />
               <span>{t.playPowerGuesser}</span>
@@ -397,7 +397,7 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
             </div>
             <Link
               href={`/${locale}/minigames/play?type=repeatable&mode=audio`}
-              className="mt-5 flex items-center justify-center gap-2 py-2.5 px-4 rounded-control bg-accent-red hover:bg-accent-red-hover text-text-inverted type-label-sm shadow-md shadow-accent-red/20 transition-all active:scale-95"
+              className={buttonClassName('primary', 'md', 'mt-5 w-full')}
             >
               <Play className="w-3.5 h-3.5 fill-current" />
               <span>{t.playAudioGuesser}</span>
@@ -417,7 +417,7 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
             </div>
             <Link
               href={`/${locale}/minigames/play?type=repeatable&mode=pixel`}
-              className="mt-5 flex items-center justify-center gap-2 py-2.5 px-4 rounded-control bg-accent-amber hover:bg-accent-amber-hover text-text-inverted type-label-sm shadow-md shadow-accent-amber/20 transition-all active:scale-95"
+              className={buttonClassName('amber', 'md', 'mt-5 w-full')}
             >
               <Play className="w-3.5 h-3.5 fill-current" />
               <span>{t.playPixelGuesser}</span>
@@ -437,7 +437,7 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
             </div>
             <Link
               href={`/${locale}/minigames/play?type=repeatable&mode=quote`}
-              className="mt-5 flex items-center justify-center gap-2 py-2.5 px-4 rounded-control bg-accent-green hover:bg-accent-green-hover text-text-inverted type-label-sm shadow-md shadow-accent-green/20 transition-all active:scale-95"
+              className={buttonClassName('success', 'md', 'mt-5 w-full')}
             >
               <Play className="w-3.5 h-3.5 fill-current" />
               <span>{t.playLoreGuesser}</span>
@@ -480,7 +480,7 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
                   setIsAuthModalOpen(true);
                 }
               }}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-control bg-accent-red hover:bg-accent-red-hover text-text-inverted type-strong shadow-md transition-colors"
+              className={buttonClassName('primary', 'sm')}
             >
               <Plus className="w-3.5 h-3.5" />
               <span>{t.createChallenge}</span>
@@ -526,7 +526,7 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
                   <div className="mt-5 pt-3 border-t border-border-color flex items-center justify-between gap-2">
                     <Link
                       href={`/${locale}/minigames/play?id=${encodeURIComponent(String(id))}`}
-                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-control bg-accent-green hover:bg-accent-green-hover text-text-inverted type-strong transition-colors"
+                      className={buttonClassName('success', 'sm')}
                     >
                       <Play className="w-3.5 h-3.5 fill-current" />
                       <span>{t.playTrial}</span>

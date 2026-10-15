@@ -145,7 +145,7 @@ export interface PopoverProps {
   animate?: boolean;
   /** Hover-card style: panel ignores the pointer. */
   passive?: boolean;
-  zIndex?: number;
+  zIndex?: number | string;
   id?: string;
   role?: string;
   ariaLabel?: string;

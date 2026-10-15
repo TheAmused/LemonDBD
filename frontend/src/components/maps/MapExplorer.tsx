@@ -27,6 +27,7 @@ import { EmptyState } from '@/components/common/EmptyState';
 import { useDictionary } from "@/context/DictionaryContext";
 import { trackEvent } from '@/utils/analytics';
 import { Surface } from '@/components/common/Surface';
+import { Badge } from '@/components/common/Badge';
 
 // Sentinel dropdown value for "no filter"; real attribute values never collide with it.
 // Also what "no filter" persists as in localStorage, since the filter fields
@@ -432,7 +433,7 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
                   aria-expanded={expanded}
                   aria-controls={`realm-panel-${realm}`}
                   aria-label={`${expanded ? dict.maps.collapseRealmAria : dict.maps.expandRealmAria}: ${realm}`}
-                  className={`group relative aspect-square w-full min-h-[48px] touch-manipulation overflow-hidden rounded-control border-2 text-left cursor-pointer transition-transform duration-200 hover:scale-[1.03] active:scale-95 focus:outline-none focus:ring-2 focus:ring-accent-red ${expanded ? 'border-accent-red' : 'border-border-color hover:border-accent-red/60'}`}
+                  className={`group relative aspect-square w-full min-h-12 touch-manipulation overflow-hidden rounded-control border-2 text-left cursor-pointer transition-transform duration-200 hover:scale-[1.03] active:scale-95 focus:outline-none focus:ring-2 focus:ring-accent-red ${expanded ? 'border-accent-red' : 'border-border-color hover:border-accent-red/60'}`}
                 >
                   {bannerSrc ? (
                     <img
@@ -451,9 +452,9 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
                   <h2 className="absolute top-2 left-2 right-2 text-center text-sm sm:text-base font-black text-text-inverted tracking-tight line-clamp-2">
                     {realm}
                   </h2>
-                  <span className="absolute bottom-2 right-2 rounded-full bg-bg-primary/70 px-2 py-0.5 text-xs text-text-inverted">
+                  <Badge tone="overlay" size="sm" plain className="absolute bottom-2 right-2 text-text-inverted">
                     {realmMaps.length}
-                  </span>
+                  </Badge>
                 </button>
 
                 {showPanel && (

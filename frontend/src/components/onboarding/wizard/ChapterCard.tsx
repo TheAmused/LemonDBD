@@ -99,7 +99,7 @@ export function ChapterCard({
         aria-label={chapterSwitchLabel}
         className="flex w-full items-center justify-between gap-1 sm:gap-2 border-t border-border-color px-1.5 py-1 sm:px-2.5 sm:py-2 text-left cursor-pointer hover:bg-bg-elevated transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent-red"
       >
-        <h3 className="flex-1 text-micro sm:text-xs font-bold sm:font-extrabold leading-tight line-clamp-2 min-h-[22px] sm:min-h-[32px] flex items-center text-text-primary break-words">
+        <h3 className="flex-1 text-micro sm:text-xs font-bold sm:font-extrabold leading-tight line-clamp-2 min-h-[22px] sm:min-h-8 flex items-center text-text-primary break-words">
           {chapterDisplayName}
         </h3>
         <SwitchTrack checked={chapterOwned} size="sm" />

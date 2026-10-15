@@ -4,6 +4,7 @@
 import React, { useRef, useState } from 'react';
 import { Check, ChevronDown } from 'lucide-react';
 import { Popover, popoverTriggerProps } from '@/components/common/Popover';
+import { MenuItem } from '@/components/common/MenuItem';
 
 export interface CategoryPickerOption {
   key: string;
@@ -102,25 +103,18 @@ export const CategoryPicker: React.FC<CategoryPickerProps> = ({
             const Icon = cat.icon;
             const isSelected = cat.key === selectedKey;
             return (
-              <button
+              <MenuItem selected={isSelected} tone={accent} flush
                 key={cat.key}
-                type="button"
                 role="option"
-                aria-selected={isSelected}
                 onClick={() => {
                   onSelect(cat.key);
                   setOpen(false);
                 }}
-                className={`flex w-full items-center gap-2.5 px-3.5 py-2.5 text-left text-xs font-bold transition-colors cursor-pointer ${
-                  isSelected
-                    ? `${accentClasses.bg} ${accentClasses.text}`
-                    : 'text-text-secondary hover:bg-bg-elevated hover:text-text-primary'
-                }`}
               >
                 <Icon className="h-4 w-4 shrink-0" aria-hidden="true" />
                 <span className="flex-1 min-w-0 truncate">{cat.label}</span>
                 {isSelected && <Check className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />}
-              </button>
+              </MenuItem>
             );
           })}
       </Popover>

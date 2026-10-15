@@ -61,7 +61,7 @@ export function CharactersToolbar({
           aria-pressed={ownershipMode}
           onClick={onToggleOwnershipMode}
           disabled={ownershipLoading || ownershipSaving}
-          className="min-h-[44px]"
+          className="min-h-11"
         >
           {ownershipMode ? <X className="h-3.5 w-3.5" /> : <Lock className="h-3.5 w-3.5" />}
           <span>
@@ -82,7 +82,7 @@ export function CharactersToolbar({
           aria-label={dict.filters.filterByCharacter}
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="pl-10 pr-10 min-h-[44px] bg-bg-primary font-semibold shadow-inner"
+          className="pl-10 pr-10 min-h-11 bg-bg-primary font-semibold shadow-inner"
         />
         {searchQuery && (
           <Button

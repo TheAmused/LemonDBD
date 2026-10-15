@@ -87,7 +87,7 @@ export const panelId = (idBase: string, value: string) => `${idBase}-panel-${val
 const SIZES: Record<TabsSize, string> = {
   sm: 'gap-1 px-2.5 py-1 type-strong-xs',
   md: 'gap-1.5 px-3 py-1.5 type-strong',
-  lg: 'min-h-[48px] gap-2 px-4 py-2.5 type-strong',
+  lg: 'min-h-12 gap-2 px-4 py-2.5 type-strong',
 };
 
 const ACTIVE_TINT: Record<TabAccent, string> = {

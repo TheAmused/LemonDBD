@@ -4,6 +4,7 @@
 import React, { useState, useRef, useCallback } from 'react';
 import { ChevronDown, Check } from 'lucide-react';
 import { Popover, popoverTriggerProps } from '@/components/common/Popover';
+import { MenuItem } from '@/components/common/MenuItem';
 
 export interface DropdownOption<T extends string = string> {
   value: T;
@@ -15,18 +16,16 @@ export interface DropdownOption<T extends string = string> {
 export type DropdownAccent = 'amber' | 'primary';
 
 // Full class strings so Tailwind can see them; `primary` is the site's red.
-const ACCENT_CLASSES: Record<DropdownAccent, { hover: string; open: string; chevron: string; selected: string }> = {
+const ACCENT_CLASSES: Record<DropdownAccent, { hover: string; open: string; chevron: string }> = {
   amber: {
     hover: 'hover:border-accent-amber/50',
     open: 'border-accent-amber bg-accent-amber/10 text-accent-amber',
-    chevron: 'text-accent-amber',
-    selected: 'bg-accent-amber',
+    chevron: 'text-accent-amber',
   },
   primary: {
     hover: 'hover:border-accent-red/50',
     open: 'border-accent-red bg-accent-red/10 text-accent-red',
-    chevron: 'text-accent-red',
-    selected: 'bg-accent-red',
+    chevron: 'text-accent-red',
   },
 };
 
@@ -141,17 +140,10 @@ export function CustomDropdown<T extends string = string>({
               : (options ?? []).map((opt) => {
                   const isSelected = opt.value === value;
                   return (
-                    <button
+                    <MenuItem selected={isSelected} tone={accent === 'amber' ? 'amber' : 'red'} className="justify-between"
                       key={opt.value}
-                      type="button"
                       role="option"
-                      aria-selected={isSelected}
                       onClick={() => handleSelect(opt.value)}
-                      className={`flex items-center justify-between w-full px-3 py-2 rounded-control text-xs font-bold transition-all text-left cursor-pointer ${
-                        isSelected
-                          ? `${accentClasses.selected} text-text-inverted font-black shadow-xs`
-                          : 'text-text-secondary hover:text-text-primary hover:bg-bg-elevated'
-                      }`}
                     >
                       <div className="flex items-center gap-2 min-w-0">
                         {opt.icon && <span className="shrink-0">{opt.icon}</span>}
@@ -163,7 +155,7 @@ export function CustomDropdown<T extends string = string>({
                         )}
                       </div>
                       {isSelected && <Check className="h-3.5 w-3.5 stroke-[3] ml-2 shrink-0" />}
-                    </button>
+                    </MenuItem>
                   );
                 })}
       </Popover>

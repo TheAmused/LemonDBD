@@ -24,6 +24,7 @@ import { formatMessage } from '@/utils/i18nFormat';
 import { useDictionary } from "@/context/DictionaryContext";
 import { Badge } from '@/components/common/Badge';
 import { Surface } from '@/components/common/Surface';
+import { AccordionSection } from '@/components/common/AccordionSection';
 
 const AuthModal = dynamic(() => import('@/components/AuthModal').then((m) => m.AuthModal), { ssr: false });
 
@@ -138,88 +139,48 @@ export function TierListHub({ locale }: TierListHubProps) {
       )}
 
       {/* Official Lists Collapsible Drawer */}
-      <Surface
-        aria-labelledby="tier-lists-official"
-        as="section" padding="none" className="backdrop-blur-xl shadow-md overflow-hidden transition-colors flex flex-col"
+      <AccordionSection
+        titleId="tier-lists-official"
+        title={t.officialSection}
+        open={isOfficialOpen}
+        onToggle={toggleOfficial}
+        banner="/images/banners/banner_loadouts.webp"
+        badge={lists.length > 0 && (<Badge tone="red" size="sm" plain>{lists.length}</Badge>)}
+        as="section"
+        bodyClassName="p-4 sm:p-6"
       >
-        <button
-          type="button"
-          onClick={toggleOfficial}
-          aria-expanded={isOfficialOpen}
-          className="relative w-full flex items-center justify-between py-4 px-5 sm:py-4.5 sm:px-7 2xl:py-5.5 2xl:px-9 min-h-[64px] sm:min-h-[72px] cursor-pointer group select-none overflow-hidden transition-colors text-left"
-        >
-          {/* Atmospheric DBD Banner Backdrop */}
-          <div
-            className="absolute inset-0 bg-cover bg-center opacity-15 dark:opacity-25 mix-blend-luminosity filter pointer-events-none group-hover:scale-105 transition-transform duration-700 ease-out"
-            style={{ backgroundImage: "url('/images/banners/banner_loadouts.webp')" }}
+        {loading && !error ? (
+          <TierListSkeleton className="min-h-[240px]" />
+        ) : error && lists.length === 0 ? (
+          <EmptyState
+            icon={TriangleAlert}
+            title={t.loadError}
+            subtitle={t.loadErrorSubtitle}
+            action={{
+              label: (
+                <>
+                  <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
+                  {t.retry}
+                </>
+              ),
+              onClick: () => void refresh(),
+            }}
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-bg-surface via-bg-surface/85 to-bg-surface pointer-events-none" />
-          <div className="absolute inset-x-0 bottom-0 h-px bg-border-color/60 pointer-events-none" />
-
-          <div className="relative z-10 w-8 hidden sm:block pointer-events-none" aria-hidden="true" />
-          <div className="relative z-10 flex-1 text-center min-w-0 px-2">
-            <div className="inline-flex items-center gap-2">
-              <h2 id="tier-lists-official" className="type-section-title text-text-primary group-hover:text-accent-red transition-colors">
-                {t.officialSection}
-              </h2>
-              {lists.length > 0 && (
-                <Badge tone="red" size="sm" plain>
-                  {lists.length}
-                </Badge>
-              )}
-            </div>
+        ) : lists.length === 0 ? (
+          <EmptyState icon={LayoutList} title={t.noOfficialLists} subtitle={t.noOfficialListsSubtitle} />
+        ) : (
+          <div className={GRID}>
+            {lists.map((list) => (
+              <OfficialTierListCard
+                key={list.slug}
+                list={list}
+                rankedCount={hydrated ? rankedCount(list.slug) : 0}
+                locale={locale}
+              />
+            ))}
           </div>
-          <div className="relative z-10 w-8 flex justify-end">
-            <ChevronDown
-              className={`h-4 w-4 sm:h-5 sm:w-5 2xl:h-6 2xl:w-6 text-accent-red transition-transform duration-300 ease-in-out ${
-                isOfficialOpen ? 'rotate-180' : 'rotate-0'
-              }`}
-            />
-          </div>
-        </button>
-
-        <div
-          className={`grid transition-[grid-template-rows,opacity] duration-300 ease-in-out ${
-            isOfficialOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
-          }`}
-        >
-          <div className="overflow-hidden">
-            <div className="p-4 sm:p-6 border-t border-border-color">
-              {loading && !error ? (
-                <TierListSkeleton className="min-h-[240px]" />
-              ) : error && lists.length === 0 ? (
-                <EmptyState
-                  icon={TriangleAlert}
-                  title={t.loadError}
-                  subtitle={t.loadErrorSubtitle}
-                  action={{
-                    label: (
-                      <>
-                        <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
-                        {t.retry}
-                      </>
-                    ),
-                    onClick: () => void refresh(),
-                  }}
-                />
-              ) : lists.length === 0 ? (
-                <EmptyState icon={LayoutList} title={t.noOfficialLists} subtitle={t.noOfficialListsSubtitle} />
-              ) : (
-                <div className={GRID}>
-                  {lists.map((list) => (
-                    <OfficialTierListCard
-                      key={list.slug}
-                      list={list}
-                      rankedCount={hydrated ? rankedCount(list.slug) : 0}
-                      locale={locale}
-                    />
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      </Surface>
+        )}
+      </AccordionSection>
 
       {/* My Custom Lists Collapsible Drawer. No `overflow-hidden` here (unlike
           the Official section) -- an `overflow` other than `visible` on an
@@ -244,7 +205,7 @@ export function TierListHub({ locale }: TierListHubProps) {
             `overflow-hidden` used to do automatically for whichever part
             happened to be the visual bottom. */}
         <div
-          className={`group sticky top-16 z-20 lg:top-0 w-full min-h-[64px] sm:min-h-[72px] overflow-hidden ${
+          className={`group sticky top-16 z-20 lg:top-0 w-full min-h-16 sm:min-h-18 overflow-hidden ${
             isCustomOpen ? 'rounded-t-card' : 'rounded-card'
           }`}
         >
@@ -277,7 +238,7 @@ export function TierListHub({ locale }: TierListHubProps) {
               this was split in two -- `pointer-events-auto` opts the
               actions group back in so it alone stays independently
               clickable. */}
-          <div className="relative z-10 flex flex-wrap items-center justify-between gap-3 py-4 px-5 sm:py-4.5 sm:px-7 2xl:py-5.5 2xl:px-9 min-h-[64px] sm:min-h-[72px] pointer-events-none">
+          <div className="relative z-10 flex flex-wrap items-center justify-between gap-3 py-4 px-5 sm:py-4.5 sm:px-7 2xl:py-5.5 2xl:px-9 min-h-16 sm:min-h-18 pointer-events-none">
             <div className="hidden lg:block lg:flex-1 lg:basis-0 pointer-events-none" aria-hidden="true" />
             <div className="flex-1 lg:flex-none text-center min-w-0 px-2">
               <div className="inline-flex items-center justify-center gap-2">

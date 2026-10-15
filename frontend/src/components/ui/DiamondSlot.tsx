@@ -67,8 +67,8 @@ export const DiamondSlot = React.forwardRef<HTMLElement, DiamondSlotProps>(funct
 
   const glowEffect = glow
     ? roleAccent === 'Survivor'
-      ? 'shadow-[0_0_15px_rgba(34,197,94,0.35)]'
-      : 'shadow-[0_0_15px_rgba(239,68,68,0.35)]'
+      ? 'shadow-glow-green-soft'
+      : 'shadow-glow-red-soft'
     : '';
 
   if (onClick) {

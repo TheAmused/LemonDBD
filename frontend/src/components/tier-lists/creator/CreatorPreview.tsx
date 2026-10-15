@@ -77,10 +77,10 @@ export function CreatorPreview({ title, description, tiers, items, backgroundIma
               label={tier.label}
               color={tier.color}
               backgroundImage={tier.backgroundImage}
-              className="flex min-h-[72px] sm:max-wide-2k:min-h-[84px] wide-2k:min-h-[112px] items-center justify-center p-2 text-center select-none"
+              className="flex min-h-18 sm:max-wide-2k:min-h-21 wide-2k:min-h-[112px] items-center justify-center p-2 text-center select-none"
               labelClassName="text-base sm:text-lg font-black leading-tight"
             />
-            <div className="bg-bg-primary/40 p-2 sm:p-2.5 flex flex-wrap items-center gap-2 min-h-[72px] sm:max-wide-2k:min-h-[84px] wide-2k:min-h-[112px]" />
+            <div className="bg-bg-primary/40 p-2 sm:p-2.5 flex flex-wrap items-center gap-2 min-h-18 sm:max-wide-2k:min-h-21 wide-2k:min-h-[112px]" />
           </Surface>
         ))}
       </div>
@@ -92,7 +92,7 @@ export function CreatorPreview({ title, description, tiers, items, backgroundIma
             {tiles.length}
           </Badge>
         </div>
-        <div className="w-full rounded-card border border-border-color bg-bg-primary/20 p-3 sm:p-4 min-h-[96px] flex flex-wrap gap-2 items-center justify-center">
+        <div className="w-full rounded-card border border-border-color bg-bg-primary/20 p-3 sm:p-4 min-h-24 flex flex-wrap gap-2 items-center justify-center">
           {tiles.length === 0 ? (
             <p className="text-xs text-text-muted italic px-2">{c.noItems}</p>
           ) : (

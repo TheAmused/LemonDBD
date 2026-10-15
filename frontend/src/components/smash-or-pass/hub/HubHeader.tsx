@@ -24,10 +24,11 @@ import { getBackendBaseUrl } from '@/utils/perkUtils';
 import { rosterCoverUrl } from '../roster-select/rosterDisplay';
 import { Badge } from '@/components/common/Badge';
 import { Surface } from '@/components/common/Surface';
+import { MenuItem } from '@/components/common/MenuItem';
 
 /** Square icon buttons: 44px to touch, a little smaller where a pointer is precise. */
 const DOCK_BUTTON =
-  'h-11 w-11 sm:h-9 sm:w-9 min-h-[44px] min-w-[44px] sm:min-h-[38px] sm:min-w-[38px] pointer-coarse:sm:min-h-11 pointer-coarse:sm:min-w-11';
+  'h-11 w-11 sm:h-9 sm:w-9 min-h-11 min-w-11 sm:min-h-[38px] sm:min-w-[38px] pointer-coarse:sm:min-h-11 pointer-coarse:sm:min-w-11';
 
 interface DockActionProps {
   title: string;
@@ -131,7 +132,7 @@ export function HubHeader({
           <button
             type="button"
             onClick={onOpenRosters}
-            className="flex items-center gap-2.5 px-3.5 py-2 min-h-[44px] min-w-0 max-w-full rounded-control bg-bg-surface border border-accent-red/50 hover:border-accent-red type-strong-fluid text-accent-red transition-all cursor-pointer group touch-manipulation"
+            className="flex items-center gap-2.5 px-3.5 py-2 min-h-11 min-w-0 max-w-full rounded-control bg-bg-surface border border-accent-red/50 hover:border-accent-red type-strong-fluid text-accent-red transition-all cursor-pointer group touch-manipulation"
           >
             <span className="relative flex h-6 w-6 items-center justify-center rounded-chip overflow-hidden border border-accent-red/60 shrink-0">
               <img
@@ -291,16 +292,14 @@ export function HubHeader({
                   { label: tooltips.resetAllVotes, Icon: AshUrnIcon, run: onReset },
                   { label: tooltips.howToPlay, Icon: LanternQuestionIcon, run: onOpenHowToPlay },
                 ].map(({ label, Icon, run }) => (
-                  <button
+                  <MenuItem
                     key={label}
-                    type="button"
                     role="menuitem"
                     onClick={fromMore(run)}
-                    className="flex w-full min-h-[44px] items-center gap-2.5 px-3 rounded-control type-strong text-text-secondary hover:text-text-primary hover:bg-bg-elevated transition-colors text-left cursor-pointer"
                   >
                     <Icon className="h-4 w-4 shrink-0" aria-hidden="true" />
                     <span>{label}</span>
-                  </button>
+                  </MenuItem>
                 ))}
               </Popover>
             </div>

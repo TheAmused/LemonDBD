@@ -48,9 +48,9 @@ export const MODAL_CONFIG = {
   /** Named z-index scale. A modal opened from another modal uses a higher layer. */
   zLayers: {
     base: 'z-50',
-    nested: 'z-[60]',
-    top: 'z-[70]',
-    system: 'z-[100]',
+    nested: 'z-modal',
+    top: 'z-modal-top',
+    system: 'z-system',
   },
   backdrops: {
     blur: 'bg-bg-primary/70 backdrop-blur-md',

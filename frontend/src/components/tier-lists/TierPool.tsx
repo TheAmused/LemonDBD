@@ -91,7 +91,7 @@ export function TierPool({
       <div
         data-pool-head=""
         onClick={() => onCollapsedChange(!collapsed)}
-        className="relative grid w-full cursor-pointer select-none grid-cols-[2.5rem_minmax(0,1fr)_2.5rem] items-center gap-x-3 gap-y-1.5 overflow-hidden px-3 py-1.5 sm:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] sm:px-4 sm:min-h-[48px] [@media(max-height:559px)]:py-1 [@media(max-height:559px)]:sm:min-h-0">
+        className="relative grid w-full cursor-pointer select-none grid-cols-[2.5rem_minmax(0,1fr)_2.5rem] items-center gap-x-3 gap-y-1.5 overflow-hidden px-3 py-1.5 sm:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] sm:px-4 sm:min-h-12 [@media(max-height:559px)]:py-1 [@media(max-height:559px)]:sm:min-h-0">
         {/* Atmospheric DBD Banner Backdrop */}
         <div
           className="absolute inset-0 bg-cover bg-center opacity-15 dark:opacity-25 mix-blend-luminosity filter pointer-events-none"
@@ -147,7 +147,7 @@ export function TierPool({
           type="button"
           aria-expanded={!collapsed}
           aria-label={collapsed ? t.showPool : t.hidePool}
-          className="relative z-10 col-start-3 row-start-1 justify-self-end flex min-h-[40px] min-w-[40px] items-center justify-center cursor-pointer select-none text-text-secondary hover:text-accent-red transition-colors"
+          className="relative z-10 col-start-3 row-start-1 justify-self-end flex min-h-10 min-w-10 items-center justify-center cursor-pointer select-none text-text-secondary hover:text-accent-red transition-colors"
         >
           <ChevronDown
             className={`h-4 w-4 sm:h-5 sm:w-5 text-accent-red transition-transform duration-300 ease-in-out ${
@@ -181,7 +181,7 @@ export function TierPool({
             ref={setNodeRef}
             onClick={canReceiveSelection ? () => onMoveSelectedHere(POOL_CONTAINER_ID) : undefined}
             className={cn(
-              'min-h-[84px] p-3 sm:p-4 transition-colors',
+              'min-h-21 p-3 sm:p-4 transition-colors',
               'group-data-[fit]/board:min-h-0! group-data-[fit]/board:p-(--tile-pad)!',
               'group-data-[fit-mode]/board:flex-1 group-data-[fit-mode]/board:overflow-y-auto group-data-[fit-mode]/board:overscroll-contain',
               isOver && 'bg-accent-red/10',

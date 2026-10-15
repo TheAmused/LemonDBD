@@ -259,7 +259,7 @@ function LinksSource({ onAdd }: { onAdd: (items: IncomingItem[]) => void; }) {
           disabled={!itemName.trim() && !imageUrl.trim()}
           onClick={handleAdd}
           leftIcon={<Plus className="h-4 w-4" aria-hidden="true" />}
-          className="min-h-[40px] px-6"
+          className="min-h-10 px-6"
         >
           {t.addItemTitle}
         </Button>
@@ -333,7 +333,7 @@ function CatalogSource({ onAdd, existingIds, locale }: {
               }}
               options={CATALOG_KINDS.map((k) => ({ value: k, label: t.kinds[k] }))}
               ariaLabel={c.catalogSource}
-              buttonClassName="min-h-[44px] justify-between"
+              buttonClassName="min-h-11 justify-between"
               minWidthClass="min-w-[200px]"
             />
           </div>
@@ -409,7 +409,7 @@ function CatalogSource({ onAdd, existingIds, locale }: {
       </div>
 
       <div className="flex justify-center w-full">
-        <Button variant="primary" disabled={selected.size === 0} onClick={add} leftIcon={<Plus className="h-4 w-4" aria-hidden="true" />} className="min-h-[40px] px-6">
+        <Button variant="primary" disabled={selected.size === 0} onClick={add} leftIcon={<Plus className="h-4 w-4" aria-hidden="true" />} className="min-h-10 px-6">
           {formatMessage(c.addSelected, { count: selected.size })}
         </Button>
       </div>

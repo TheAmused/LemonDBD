@@ -117,7 +117,7 @@ export function TierColorPicker({ color, onChange, size = 'md' }: TierColorPicke
               onChange={(hex) => pick(hex)}
               prefixed
               aria-label={t.customColor}
-              className="min-h-[44px] min-w-0 flex-1 rounded-control border border-border-color bg-bg-primary px-3 text-center type-label uppercase text-text-primary focus:border-accent-red focus:outline-hidden"
+              className="min-h-11 min-w-0 flex-1 rounded-control border border-border-color bg-bg-primary px-3 text-center type-label uppercase text-text-primary focus:border-accent-red focus:outline-hidden"
             />
             {EyeDropper && (
               <Button

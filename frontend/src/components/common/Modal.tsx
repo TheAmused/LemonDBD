@@ -88,7 +88,7 @@ export interface ModalProps {
   /** Blocks every way of closing and shows a progress bar (saving, deleting...). */
   busy?: boolean;
   backdrop?: ModalBackdrop;
-  /** Named z-index layer. Default 'nested' (z-[60]). */
+  /** Named z-index layer. Default 'nested' (z-modal). */
   layer?: ModalLayer;
   /** Raw z-index class; wins over `layer`. */
   zIndexClassName?: string;

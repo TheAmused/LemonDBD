@@ -15,6 +15,7 @@ import { useDictionary } from "@/context/DictionaryContext";
 
 import { Button } from '@/components/common/Button';
 import { Surface } from '@/components/common/Surface';
+import { MenuItem } from '@/components/common/MenuItem';
 // Keep in sync with the backend's own locale list -- SUPPORTED_LOCALES in
 // backend/app/utils/lang.py. No shared
 // source of truth across the Python/TypeScript boundary; a locale added to
@@ -224,26 +225,18 @@ export const SidebarBottomControls: React.FC<SidebarBottomControlsProps> = ({
               padding="none" className="absolute bottom-full right-0 z-50 mb-2 w-56 overflow-hidden shadow-lg"
             >
               {THEME_OPTIONS.map((opt) => (
-                <button
+                <MenuItem selected={isMounted && theme === opt.id} flush
                   key={opt.id}
-                  type="button"
                   role="option"
-                  aria-selected={isMounted && theme === opt.id}
                   onClick={() => {
                     setTheme(opt.id);
                     setIsThemeMenuOpen(false);
                   }}
                   {...tip(opt.label, undefined, 'action')} aria-label={opt.label}
-                  className={
-                    `flex w-full items-center gap-2.5 px-3 py-2 text-xs font-semibold transition-colors cursor-pointer ${FOCUS_RING} ` +
-                    (isMounted && theme === opt.id
-                      ? 'bg-accent-red/10 text-accent-red'
-                      : 'text-text-secondary hover:bg-bg-elevated')
-                  }
                 >
                   <span className="shrink-0">{opt.icon}</span>
                   <span className="whitespace-nowrap">{opt.label}</span>
-                </button>
+                </MenuItem>
               ))}
             </Surface>
           )}

@@ -254,7 +254,7 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
             <img
               src="/images/randomizer/crate.webp"
               alt=""
-              className="h-28 w-28 sm:h-36 sm:w-36 xl:h-48 xl:w-48 2xl:h-60 2xl:w-60 wide:h-72 wide:w-72 object-contain drop-shadow-2xl select-none pointer-events-none group-hover:drop-shadow-[0_0_24px_var(--color-accent-amber)] transition-all duration-300"
+              className="h-28 w-28 sm:h-36 sm:w-36 xl:h-48 xl:w-48 2xl:h-60 2xl:w-60 wide:h-72 wide:w-72 object-contain drop-shadow-2xl select-none pointer-events-none group-hover:drop-shadow-glow-amber-md transition-all duration-300"
               draggable={false}
             />
           </motion.button>
@@ -300,7 +300,7 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
                 ) : (
                   <div
                     key={`mob-tray-empty-${slotIdx}`}
-                    className="flex flex-col items-center justify-center w-[74px] h-[74px] xs:w-[84px] xs:h-[84px] rounded-card border-2 border-dashed border-border-color bg-bg-surface/90 text-text-muted"
+                    className="flex flex-col items-center justify-center w-[74px] h-[74px] xs:w-21 xs:h-21 rounded-card border-2 border-dashed border-border-color bg-bg-surface/90 text-text-muted"
                   >
                     <span className="type-strong opacity-40">#{slotIdx + 1}</span>
                   </div>
@@ -362,7 +362,7 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
               {scatterPool.map((item) => (
                 <motion.div
                   key={item.id}
-                  className="absolute -translate-x-1/2 -translate-y-1/2 group hover:drop-shadow-[0_0_16px_var(--color-accent-amber)] transition-[filter] duration-200"
+                  className="absolute -translate-x-1/2 -translate-y-1/2 group hover:drop-shadow-glow-amber-sm transition-[filter] duration-200"
                   style={scatterPointStyle(item)}
                   initial={reduceMotion ? false : { opacity: 0, x: item.fromX, y: item.fromY, rotate: item.rotate * 2.2, scale: 0.4 }}
                   animate={{ opacity: 1, x: 0, y: 0, rotate: item.rotate, scale: item.scale }}

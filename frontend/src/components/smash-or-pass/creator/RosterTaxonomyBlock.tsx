@@ -7,6 +7,7 @@ import { LABEL } from './styles';
 import { Button } from '@/components/common/Button';
 import { Input } from '@/components/common/Field';
 import { useDictionary } from "@/context/DictionaryContext";
+import { Badge } from '@/components/common/Badge';
 
 interface RosterTaxonomyBlockProps {
   roles: string[];
@@ -134,16 +135,16 @@ export const RosterTaxonomyBlock: React.FC<RosterTaxonomyBlockProps> = ({ roles,
         </div>
 
         {/* Active Roles Badge List */}
-        <div className="flex flex-wrap items-center justify-center gap-1.5 pt-2 border-t border-border-color/60 min-h-[36px]">
+        <div className="flex flex-wrap items-center justify-center gap-1.5 pt-2 border-t border-border-color/60 min-h-9">
           {roles.length === 0 ? (
             <span className="text-xs text-text-muted italic text-center w-full">
               {tx.noCustomRoles}
             </span>
           ) : (
             roles.map((role) => (
-              <span
+              <Badge
                 key={role}
-                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-control bg-accent-red/10 border border-accent-red/30 text-accent-red text-xs font-bold tracking-wide"
+                tone="red" size="md" plain square
               >
                 <span>{role}</span>
                 <Button
@@ -154,7 +155,7 @@ export const RosterTaxonomyBlock: React.FC<RosterTaxonomyBlockProps> = ({ roles,
                 >
                   <X className="h-3 w-3" />
                 </Button>
-              </span>
+              </Badge>
             ))
           )}
         </div>
@@ -223,16 +224,16 @@ export const RosterTaxonomyBlock: React.FC<RosterTaxonomyBlockProps> = ({ roles,
         </div>
 
         {/* Active Genders Badge List */}
-        <div className="flex flex-wrap items-center justify-center gap-1.5 pt-2 border-t border-border-color/60 min-h-[36px]">
+        <div className="flex flex-wrap items-center justify-center gap-1.5 pt-2 border-t border-border-color/60 min-h-9">
           {genders.length === 0 ? (
             <span className="text-xs text-text-muted italic text-center w-full">
               {tx.noCustomGenders}
             </span>
           ) : (
             genders.map((gender) => (
-              <span
+              <Badge
                 key={gender}
-                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-control bg-accent-green/10 border border-accent-green/30 text-accent-green text-xs font-bold tracking-wide"
+                tone="green" size="md" plain square
               >
                 <span>{gender}</span>
                 <Button
@@ -243,7 +244,7 @@ export const RosterTaxonomyBlock: React.FC<RosterTaxonomyBlockProps> = ({ roles,
                 >
                   <X className="h-3 w-3" />
                 </Button>
-              </span>
+              </Badge>
             ))
           )}
         </div>

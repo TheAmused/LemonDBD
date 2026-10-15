@@ -214,7 +214,7 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
               value: cat.key as SurvivorCategoryKey,
               icon: <Icon className="h-5 w-5 sm:h-6 sm:w-6" aria-hidden="true" />,
               label: (
-                <span className="mt-0.5 block max-w-[56px] truncate text-micro font-bold">{cat.label.split(' ')[0]}</span>
+                <span className="mt-0.5 block max-w-14 truncate text-micro font-bold">{cat.label.split(' ')[0]}</span>
               ),
               buttonProps: { ...tip(`${cat.label} - ${cat.desc}`, undefined, 'default'), 'aria-label': cat.label },
             };

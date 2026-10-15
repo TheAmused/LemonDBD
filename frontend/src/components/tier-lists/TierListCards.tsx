@@ -13,6 +13,8 @@ import { formatDate } from '@/utils/format';
 import { formatMessage } from '@/utils/i18nFormat';
 import { useDictionary } from "@/context/DictionaryContext";
 import { NsfwBadge } from '@/components/common/NsfwBadge';
+import { Badge } from '@/components/common/Badge';
+import { cn } from '@/utils/cn';
 
 const CARD =
   'group relative flex h-full flex-col overflow-hidden rounded-card border border-border-color/80 bg-bg-surface p-5 shadow-sm transition-all hover:-translate-y-1 hover:border-accent-red/50 hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-amber';
@@ -134,15 +136,11 @@ export function OfficialTierListCard({ list, rankedCount, locale }: OfficialCard
         {descClamped && list.description && <DescriptionPeek text={list.description} />}
         {rankedCount > 0 && (
           <div className="absolute top-3 left-3 z-10 transition-opacity group-has-[[aria-expanded=true]]/banner:opacity-0">
-            <span
-              className={`rounded-chip bg-bg-surface/85 backdrop-blur-md px-2 py-0.5 type-label-2xs border border-border-color/60 shadow-xs tabular-nums ${
-                fullyRanked ? 'text-accent-green' : 'text-text-muted'
-              }`}
-            >
+            <Badge tone="overlay" size="sm" className={cn('tabular-nums', fullyRanked ? 'text-accent-green' : 'text-text-muted')}>
               {formatMessage(t.rankedCount, {
                 count: list.item_count !== null ? `${rankedCount}/${list.item_count}` : rankedCount,
               })}
-            </span>
+            </Badge>
           </div>
         )}
         {list.is_nsfw && (
@@ -152,9 +150,9 @@ export function OfficialTierListCard({ list, rankedCount, locale }: OfficialCard
         )}
         {showKindBadge && (
           <div className="absolute top-3 right-3 z-10 transition-opacity group-has-[[aria-expanded=true]]/banner:opacity-0">
-            <span className="rounded-chip bg-bg-surface/85 backdrop-blur-md px-2 py-0.5 type-label-2xs text-text-muted border border-border-color/60 shadow-xs">
+            <Badge tone="overlay" size="sm">
               {kindName}
-            </span>
+            </Badge>
           </div>
         )}
       </div>
@@ -233,13 +231,9 @@ export function CustomTierListCard({ list, locale, onDelete, disabled }: CustomC
         />
         {descClamped && list.description && <DescriptionPeek text={list.description} />}
         <div className="absolute top-3 left-3 z-10 transition-opacity group-has-[[aria-expanded=true]]/banner:opacity-0">
-          <span
-            className={`rounded-chip bg-bg-surface/85 backdrop-blur-md px-2 py-0.5 type-label-2xs border border-border-color/60 shadow-xs tabular-nums ${
-              fullyRanked ? 'text-accent-green' : 'text-text-muted'
-            }`}
-          >
+          <Badge tone="overlay" size="sm" className={cn('tabular-nums', fullyRanked ? 'text-accent-green' : 'text-text-muted')}>
             {formatMessage(t.itemsCount, { count: `${ranked}/${total}` })}
-          </span>
+          </Badge>
         </div>
         {list.is_nsfw && (
           <div className="absolute top-3 left-1/2 z-10 -translate-x-1/2 transition-opacity group-has-[[aria-expanded=true]]/banner:opacity-0">

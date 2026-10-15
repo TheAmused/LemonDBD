@@ -5,7 +5,7 @@ import React from 'react';
 import { cn } from '@/utils/cn';
 import { FitText } from '@/components/common/FitText';
 
-export type BadgeTone = 'neutral' | 'red' | 'amber' | 'green' | 'blue' | 'purple';
+export type BadgeTone = 'neutral' | 'red' | 'amber' | 'green' | 'blue' | 'purple' | 'overlay' | 'onAccent';
 export type BadgeSize = 'xs' | 'sm' | 'md';
 
 const BADGE_TONES: Record<BadgeTone, string> = {
@@ -15,7 +15,14 @@ const BADGE_TONES: Record<BadgeTone, string> = {
   green: 'bg-accent-green/10 text-accent-green border-accent-green/30',
   blue: 'bg-accent-blue/10 text-accent-blue border-accent-blue/30',
   purple: 'bg-accent-purple/10 text-accent-purple border-accent-purple/30',
+  /** A frosted label laid over an image or a card banner. */
+  overlay: 'bg-bg-surface/85 text-text-secondary border-border-color/60 shadow-xs backdrop-blur-md',
+  /** A count inside a coloured button: takes the button's text colour. */
+  onAccent: 'bg-text-inverted/20 text-inherit border-transparent',
 };
+
+// Tones that read as a flat chip instead of a pill.
+const CHIP_TONES: readonly BadgeTone[] = ['neutral', 'overlay'];
 
 const BADGE_SIZES: Record<BadgeSize, string> = {
   xs: 'px-1.5 py-0.5 text-micro',
@@ -28,7 +35,7 @@ export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
   size?: BadgeSize;
   /** Uppercase mono label (default) or plain text. */
   plain?: boolean;
-  /** Pill (default) or squarer. A neutral badge is always the flat, squarer kind: it is never clickable. */
+  /** Pill (default) or squarer. Neutral and overlay badges are always the flat, squarer kind: they are never clickable. */
   square?: boolean;
   icon?: React.ReactNode;
 }
@@ -47,7 +54,7 @@ export const Badge: React.FC<BadgeProps> = ({
     className={cn(
       'inline-flex max-w-full shrink-0 items-center gap-1 border font-black tracking-wider whitespace-nowrap',
       !plain && ' uppercase',
-      square || tone === 'neutral' ? 'rounded-chip' : 'rounded-full',
+      square || CHIP_TONES.includes(tone) ? 'rounded-chip' : 'rounded-full',
       BADGE_TONES[tone],
       BADGE_SIZES[size],
       className

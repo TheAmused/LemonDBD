@@ -129,7 +129,7 @@ export function LadderEditor({ tiers, onChange, onPreset, activePreset }: Ladder
             label={activePreset ? undefined : '—'}
             icon={activePreset ? undefined : <ListOrdered className="h-4 w-4" aria-hidden="true" />}
             ariaLabel={c.presetsLabel}
-            buttonClassName="min-h-[40px]"
+            buttonClassName="min-h-10"
             minWidthClass="min-w-[220px]"
           />
         </div>
@@ -166,7 +166,7 @@ export function LadderEditor({ tiers, onChange, onPreset, activePreset }: Ladder
                 isDragging && 'z-20 relative border-accent-amber opacity-90'
               )}
             >
-              <div className="flex items-stretch min-h-[44px] sm:min-h-[48px]">
+              <div className="flex items-stretch min-h-11 sm:min-h-12">
                 {/* Drag Handle */}
                 <button
                   type="button"
@@ -268,7 +268,7 @@ export function LadderEditor({ tiers, onChange, onPreset, activePreset }: Ladder
           onClick={add}
           disabled={tiers.length >= TIER_LIST_LIMITS.maxTiers}
           leftIcon={<Plus className="h-4 w-4" aria-hidden="true" />}
-          className="min-h-[40px] px-6"
+          className="min-h-10 px-6"
         >
           {t.addTier}
         </Button>

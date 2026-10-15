@@ -203,7 +203,7 @@ export const AdminUserTable: React.FC<AdminUserTableProps> = ({
                     userId={u.id}
                     iconOnly
                     onError={onDownloadError}
-                    className="border border-border-color bg-bg-surface text-text-primary hover:border-accent-amber hover:bg-bg-surface hover:text-accent-amber shadow-xs relative h-auto w-auto min-h-[44px] min-w-[44px] [&>svg]:h-4 [&>svg]:w-4"
+                    className="border border-border-color bg-bg-surface text-text-primary hover:border-accent-amber hover:bg-bg-surface hover:text-accent-amber shadow-xs relative h-auto w-auto min-h-11 min-w-11 [&>svg]:h-4 [&>svg]:w-4"
                   />
                   {u.id !== currentUserId && (
                     <Button

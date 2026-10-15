@@ -141,7 +141,7 @@ export const TactileKeycaps: React.FC<TactileKeycapsProps> = ({ onPass, onSmash,
   return (
     <div className={`flex flex-col items-center justify-center gap-2 select-none ${className || ''}`}>
       {/* 3D Tactile Keycaps Container */}
-      <div className="flex items-center justify-center gap-2.5 sm:gap-3 p-2 rounded-2xl bg-bg-surface border border-border-color shadow-lg dark:shadow-2xl backdrop-blur-xl">
+      <div className="flex items-center justify-center gap-2.5 sm:gap-3 p-2 rounded-card bg-bg-surface border border-border-color shadow-lg dark:shadow-2xl backdrop-blur-xl">
         {keycaps.map((cap) => {
           const isActive = activeKey === cap.id;
           const isReset = cap.id === 'reset';
@@ -153,7 +153,7 @@ export const TactileKeycaps: React.FC<TactileKeycapsProps> = ({ onPass, onSmash,
               disabled={disabled}
               onClick={() => triggerAction(cap.id, cap.action)}
               {...tip(`${cap.label} (${cap.primaryKey} / ${cap.subKey})`, undefined, 'action')} aria-label={`${cap.label} (${cap.primaryKey} / ${cap.subKey})`}
-              className={`group relative flex flex-col items-center justify-center rounded-xl transition-all duration-150 cursor-pointer ${
+              className={`group relative flex flex-col items-center justify-center rounded-control transition-all duration-150 cursor-pointer ${
                 isReset ? 'w-14 sm:w-16 h-14 sm:h-16' : 'w-12 sm:w-14 h-14 sm:h-16'
               } ${
                 isActive

@@ -48,7 +48,7 @@ export const RecoveryCodesPanel: React.FC<RecoveryCodesPanelProps> = ({ codes, o
     <div className="flex flex-col gap-4 text-left">
       <h3 className="type-section-title text-text-primary">{t.codesTitle}</h3>
       <p className="type-body-lg text-text-muted">{t.codesIntro}</p>
-      <ul className="grid grid-cols-2 gap-2 rounded-xl border border-border-color bg-bg-primary p-3 text-sm tracking-wider text-text-primary shadow-inner">
+      <ul className="grid grid-cols-2 gap-2 rounded-card border border-border-color bg-bg-primary p-3 text-sm tracking-wider text-text-primary shadow-inner">
         {codes.map((code) => (
           <li key={code} className="text-center">
             <code>{code}</code>

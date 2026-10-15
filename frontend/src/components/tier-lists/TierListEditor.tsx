@@ -45,7 +45,7 @@ import { type ImportTarget, TierListImportModal } from './TierListImportModal';
 import { TierListScaleControl } from './TierListScaleControl';
 import type { TierTileShape } from './TierItemTile';
 import { TOUCH_BTN } from './styles';
-import { Button, BUTTON_BASE, BUTTON_SIZES, BUTTON_VARIANTS } from '@/components/common/Button';
+import { Button, BUTTON_BASE, BUTTON_RADIUS, BUTTON_SIZES, BUTTON_VARIANTS } from '@/components/common/Button';
 import { cn } from '@/utils/cn';
 import { Popover, popoverTriggerProps } from '@/components/common/Popover';
 import { tip } from '@/components/common/Tooltip';
@@ -86,9 +86,9 @@ export interface TierListEditorProps {
 }
 
 const MENU_ITEM =
-  'flex w-full min-h-[44px] items-center gap-2.5 rounded-xl px-3 py-2 text-left text-sm font-semibold text-text-primary hover:bg-bg-elevated cursor-pointer transition-colors';
+  'flex w-full min-h-[44px] items-center gap-2.5 rounded-control px-3 py-2 text-left text-sm font-semibold text-text-primary hover:bg-bg-elevated cursor-pointer transition-colors';
 
-const TOOLBAR_BTN = 'min-h-[36px] shrink-0 whitespace-nowrap rounded-lg px-2.5 text-xs cursor-pointer';
+const TOOLBAR_BTN = 'min-h-[36px] shrink-0 whitespace-nowrap px-2.5 text-xs cursor-pointer';
 
 type Dialog = 'reset' | 'export' | 'import' | 'delete' | null;
 
@@ -243,7 +243,7 @@ export function TierListEditor(props: TierListEditorProps) {
           onClick={() => setMenuOpen((o) => !o)}
           aria-label={t.toolbarAria}
           {...popoverTriggerProps(menuOpen, 'menu')}
-          className={cn(BUTTON_BASE, BUTTON_VARIANTS.secondary, BUTTON_SIZES.md, TOUCH_BTN, 'w-11 shrink-0 px-0')}
+          className={cn(BUTTON_BASE, BUTTON_VARIANTS.secondary, BUTTON_SIZES.md, BUTTON_RADIUS, TOUCH_BTN, 'w-11 shrink-0 px-0')}
         >
           <Ellipsis className="h-4 w-4" aria-hidden="true" />
         </button>
@@ -254,7 +254,7 @@ export function TierListEditor(props: TierListEditorProps) {
           align="end"
           role="menu"
           ariaLabel={t.toolbarAria}
-          className="min-w-[14rem] rounded-2xl border border-border-color bg-bg-surface p-1.5 shadow-xl"
+          className="min-w-[14rem] rounded-card border border-border-color bg-bg-surface p-1.5 shadow-xl"
         >
           <TierListScaleControl scale={scale} onScaleChange={setScale} variant="menu" />
           {canEditTiers && (
@@ -412,7 +412,7 @@ export function TierListEditor(props: TierListEditorProps) {
                 href={editHref}
                 aria-label={t.editDetails}
                 {...tip(t.editDetails, undefined, 'action')}
-                className={cn(BUTTON_BASE, BUTTON_VARIANTS.secondary, BUTTON_SIZES.sm, TOOLBAR_BTN)}
+                className={cn(BUTTON_BASE, BUTTON_VARIANTS.secondary, BUTTON_SIZES.sm, BUTTON_RADIUS, TOOLBAR_BTN)}
               >
                 <Pencil className="h-3.5 w-3.5" aria-hidden="true" />
                 <span className="hidden xl:inline [@media(max-height:559px)]:hidden!">{t.editDetails}</span>
@@ -436,14 +436,14 @@ export function TierListEditor(props: TierListEditorProps) {
       </header>
 
       {saveError && (
-        <div role="alert" className="flex items-start gap-3 rounded-2xl border border-accent-red/40 bg-accent-red/10 p-3 type-card-title text-accent-red">
+        <div role="alert" className="flex items-start gap-3 rounded-card border border-accent-red/40 bg-accent-red/10 p-3 type-card-title text-accent-red">
           <TriangleAlert className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
           <span className="flex-1">{saveError === 'quota' ? t.saveFailedQuota : t.saveFailedUnavailable}</span>
           <button
             type="button"
             onClick={() => setSaveError(null)}
             aria-label={t.dismiss}
-            className="pointer-coarse:min-h-11 pointer-coarse:min-w-11 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg hover:bg-accent-red/20 cursor-pointer"
+            className="pointer-coarse:min-h-11 pointer-coarse:min-w-11 flex h-8 w-8 shrink-0 items-center justify-center rounded-control hover:bg-accent-red/20 cursor-pointer"
           >
             <X className="h-4 w-4" aria-hidden="true" />
           </button>
@@ -461,7 +461,7 @@ export function TierListEditor(props: TierListEditorProps) {
           aria-live="polite"
           className="pointer-events-none fixed inset-x-0 bottom-4 z-40 flex justify-center px-4 lemon-modal-overlay-sidebar-aware"
         >
-          <div className="pointer-events-auto flex max-w-xl flex-wrap items-center justify-center gap-2 rounded-2xl border border-accent-amber/40 bg-bg-surface shadow-lg px-3 py-1.5 type-card-title text-accent-amber text-center">
+          <div className="pointer-events-auto flex max-w-xl flex-wrap items-center justify-center gap-2 rounded-card border border-accent-amber/40 bg-bg-surface shadow-lg px-3 py-1.5 type-card-title text-accent-amber text-center">
             <MousePointerClick className="h-4 w-4 shrink-0" aria-hidden="true" />
             <span className="min-w-0">{formatMessage(t.selectedHint, { name: selectedItem.name })}</span>
             {mode === 'custom' && onRemoveItem && (

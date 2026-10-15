@@ -57,14 +57,14 @@ export function ImportTab({ tab }: { tab: ReturnType<typeof useImportTab> }) {
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
-        className={`relative flex flex-col items-center justify-center p-6 rounded-2xl border-2 border-dashed transition-all cursor-pointer text-center group select-none ${
+        className={`relative flex flex-col items-center justify-center p-6 rounded-card border-2 border-dashed transition-all cursor-pointer text-center group select-none ${
           isDragging
             ? 'border-accent-green bg-accent-green/20 ring-4 ring-accent-green/30 scale-[1.01] shadow-xl'
             : 'border-border-color bg-bg-primary hover:border-accent-green hover:bg-bg-elevated/40'
         }`}
       >
         <div
-          className={`flex h-14 w-14 items-center justify-center rounded-2xl transition-all mb-2 ${
+          className={`flex h-14 w-14 items-center justify-center rounded-card transition-all mb-2 ${
             isDragging
               ? 'bg-accent-green/25 text-accent-green scale-125 ring-2 ring-accent-green/40 animate-pulse'
               : 'bg-accent-green/10 text-accent-green group-hover:scale-110'
@@ -90,7 +90,7 @@ export function ImportTab({ tab }: { tab: ReturnType<typeof useImportTab> }) {
                 size="xs"
                 variant="ghost"
                 onClick={handleClearFile}
-                className="rounded-full"
+                pill
                 {...tip(dict.admin.removeFile, undefined, 'action')}
                 aria-label={dict.admin.removeFile}
               >
@@ -122,7 +122,7 @@ export function ImportTab({ tab }: { tab: ReturnType<typeof useImportTab> }) {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
           <div
             onClick={() => setImportMode('merge')}
-            className={`flex items-start gap-2.5 p-3 rounded-xl border cursor-pointer transition-all ${
+            className={`flex items-start gap-2.5 p-3 rounded-card border cursor-pointer transition-all ${
               importMode === 'merge'
                 ? 'border-accent-green/50 bg-accent-green/10 text-accent-green'
                 : 'border-border-color bg-bg-primary'
@@ -137,7 +137,7 @@ export function ImportTab({ tab }: { tab: ReturnType<typeof useImportTab> }) {
 
           <div
             onClick={() => setImportMode('replace')}
-            className={`flex items-start gap-2.5 p-3 rounded-xl border cursor-pointer transition-all ${
+            className={`flex items-start gap-2.5 p-3 rounded-card border cursor-pointer transition-all ${
               importMode === 'replace'
                 ? 'border-accent-amber/50 bg-accent-amber/10 text-accent-amber'
                 : 'border-border-color bg-bg-primary'
@@ -153,13 +153,13 @@ export function ImportTab({ tab }: { tab: ReturnType<typeof useImportTab> }) {
       </div>
 
       {importSummary && (
-        <div className="rounded-xl border border-border-color bg-bg-primary p-3 max-h-36 overflow-y-auto space-y-1.5">
+        <div className="rounded-card border border-border-color bg-bg-primary p-3 max-h-36 overflow-y-auto space-y-1.5">
           <span className="type-label-xs text-text-muted">
             {dict.admin.importResultsBreakdown}
           </span>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5 text-xs">
             {Object.entries(importSummary).map(([key, counts]) => (
-              <div key={key} className="rounded-lg bg-bg-surface p-1.5 border border-border-color">
+              <div key={key} className="rounded-chip bg-bg-surface p-1.5 border border-border-color">
                 <p className="type-strong-2xs text-text-muted capitalize">{key}</p>
                 <p className="type-strong text-accent-green">
                   {dict.admin.createdCountPrefix}

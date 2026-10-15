@@ -145,11 +145,11 @@ export const RoundEditorCard: React.FC<RoundEditorCardProps> = ({ round, index, 
     targetVisual.image_url;
 
   return (
-    <div data-round-card className="w-full p-5 rounded-2xl bg-bg-surface border border-border-color shadow-lg flex flex-col gap-4">
+    <div data-round-card className="w-full p-5 rounded-card bg-bg-surface border border-border-color shadow-lg flex flex-col gap-4">
       {/* Top Header Row */}
       <div className="flex items-center justify-between gap-3 border-b border-border-color pb-3">
         <div className="flex items-center gap-2">
-          <div className="w-7 h-7 rounded-lg bg-accent-red/20 text-accent-red type-strong flex items-center justify-center border border-accent-red/30">
+          <div className="w-7 h-7 rounded-chip bg-accent-red/20 text-accent-red type-strong flex items-center justify-center border border-accent-red/30">
             #{index + 1}
           </div>
           <span className="type-card-title text-text-primary">
@@ -242,9 +242,9 @@ export const RoundEditorCard: React.FC<RoundEditorCardProps> = ({ round, index, 
         </label>
 
         {selectedTargetItem ? (
-          <div className="flex items-center justify-between p-3 rounded-xl bg-bg-surface border border-border-color">
+          <div className="flex items-center justify-between p-3 rounded-card bg-bg-surface border border-border-color">
             <div className="flex items-center gap-3">
-              <div className="relative w-10 h-10 rounded-lg overflow-hidden bg-bg-elevated border border-border-subtle flex-shrink-0 flex items-center justify-center">
+              <div className="relative w-10 h-10 rounded-chip overflow-hidden bg-bg-elevated border border-border-subtle flex-shrink-0 flex items-center justify-center">
                 {targetImgSrc ? (
                   <Image
                     src={targetImgSrc}

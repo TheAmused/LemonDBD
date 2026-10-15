@@ -35,7 +35,7 @@ export const RealmGuesser: React.FC<RealmGuesserProps> = ({ roundConfig, realms,
   return (
     <div className="w-full flex flex-col items-center my-6">
       {/* Visual Realm Cropped Frame */}
-      <div className="relative w-full max-w-xl h-64 sm:h-80 rounded-2xl overflow-hidden border-2 border-border-color shadow-2xl bg-bg-surface flex items-center justify-center">
+      <div className="relative w-full max-w-xl h-64 sm:h-80 rounded-card overflow-hidden border-2 border-border-color shadow-2xl bg-bg-surface flex items-center justify-center">
         <div
           className="relative w-full h-full transition-transform duration-700 ease-out origin-center"
           style={{
@@ -59,7 +59,7 @@ export const RealmGuesser: React.FC<RealmGuesserProps> = ({ roundConfig, realms,
 
         {isSolved && targetRealm && (
           <div className="absolute inset-0 bg-bg-primary/40 backdrop-blur-xs flex items-center justify-center">
-            <div className="px-6 py-2.5 rounded-xl bg-accent-green text-text-inverted font-bold text-lg shadow-xl border border-accent-green flex items-center gap-2">
+            <div className="px-6 py-2.5 rounded-card bg-accent-green text-text-inverted font-bold text-lg shadow-xl border border-accent-green flex items-center gap-2">
               <Check className="w-5 h-5" />
               <span>{targetRealm.name}</span>
             </div>
@@ -78,7 +78,7 @@ export const RealmGuesser: React.FC<RealmGuesserProps> = ({ roundConfig, realms,
             return (
               <div
                 key={`realm-g-${idx}`}
-                className={`flex items-center justify-between px-4 py-2.5 rounded-xl border font-semibold text-sm transition-all ${
+                className={`flex items-center justify-between px-4 py-2.5 rounded-card border font-semibold text-sm transition-all ${
                   isCorrect
                     ? 'bg-accent-green text-text-inverted border-accent-green shadow-md'
                     : 'bg-accent-red/20 text-accent-red border-accent-red/40'

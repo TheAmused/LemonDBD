@@ -43,7 +43,7 @@ export const DualMainsShowcase: React.FC<DualMainsShowcaseProps> = ({
   const [perkModalRole, setPerkModalRole] = useState<RoleCategory | null>(null);
 
   return (
-    <div className="rounded-3xl border border-border-color bg-bg-surface backdrop-blur-xl shadow-md overflow-hidden transition-colors">
+    <div className="rounded-card border border-border-color bg-bg-surface backdrop-blur-xl shadow-md overflow-hidden transition-colors">
       {/* Connected Header with Collapsible Drawer Toggle */}
       <button
         type="button"

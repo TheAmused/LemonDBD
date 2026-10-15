@@ -210,7 +210,7 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
   return (
     <div className="space-y-6">
       {/* Challenge mode kill switches */}
-      <div className="rounded-2xl border border-border-color bg-bg-surface p-5 shadow-sm backdrop-blur-sm transition-colors duration-200">
+      <div className="rounded-card border border-border-color bg-bg-surface p-5 shadow-sm backdrop-blur-sm transition-colors duration-200">
         <h3 className="flex items-center gap-2 type-label text-text-primary mb-4">
           <Power className="h-4 w-4 text-accent-red" />
           <span>{dict.admin.challengeModeKillSwitches}</span>
@@ -219,7 +219,7 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
           {modes.map((setting) => (
             <div
               key={setting.mode}
-              className={`rounded-xl border p-3.5 flex flex-col gap-2 transition-colors ${
+              className={`rounded-card border p-3.5 flex flex-col gap-2 transition-colors ${
                 setting.is_enabled
                   ? 'border-border-color bg-bg-primary'
                   : 'border-accent-red/30 bg-accent-red/10'
@@ -230,7 +230,7 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
                 <button
                   type="button"
                   onClick={() => requestModeToggle(setting.mode, !setting.is_enabled)}
-                  className={`text-tiny font-black uppercase px-2.5 py-1 rounded-lg border cursor-pointer transition-colors ${
+                  className={`text-tiny font-black uppercase px-2.5 py-1 rounded-control border cursor-pointer transition-colors ${
                     setting.is_enabled
                       ? 'border-accent-green/40 bg-accent-green/10 text-accent-green hover:bg-accent-green/20'
                       : 'border-accent-red/40 bg-accent-red/10 text-accent-red hover:bg-accent-red/20'
@@ -248,13 +248,13 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
       </div>
 
       {/* Killers & Perks availability */}
-      <div className="rounded-2xl border border-border-color bg-bg-surface p-5 shadow-sm backdrop-blur-sm transition-colors duration-200">
+      <div className="rounded-card border border-border-color bg-bg-surface p-5 shadow-sm backdrop-blur-sm transition-colors duration-200">
         <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
-          <div className="flex items-center gap-2 rounded-xl border border-border-color bg-bg-elevated p-1">
+          <div className="flex items-center gap-2 rounded-card border border-border-color bg-bg-elevated p-1">
             <button
               type="button"
               onClick={() => setSubTab('killers')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-black uppercase tracking-wider cursor-pointer transition-colors ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-control text-xs font-black uppercase tracking-wider cursor-pointer transition-colors ${
                 subTab === 'killers'
                   ? 'bg-accent-red/15 text-accent-red border border-accent-red/30'
                   : 'text-text-secondary hover:text-text-primary hover:bg-bg-surface'
@@ -266,7 +266,7 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
             <button
               type="button"
               onClick={() => setSubTab('perks')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-black uppercase tracking-wider cursor-pointer transition-colors ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-control text-xs font-black uppercase tracking-wider cursor-pointer transition-colors ${
                 subTab === 'perks'
                   ? 'bg-accent-red/15 text-accent-red border border-accent-red/30'
                   : 'text-text-secondary hover:text-text-primary hover:bg-bg-surface'
@@ -276,11 +276,11 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
               <span>{dict.admin.perks}</span>
             </button>
           </div>
-          <div className="flex items-center gap-2 rounded-xl border border-border-color bg-bg-elevated p-1">
+          <div className="flex items-center gap-2 rounded-card border border-border-color bg-bg-elevated p-1">
             <button
               type="button"
               onClick={() => setRoleFilter('Survivor')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-black uppercase tracking-wider cursor-pointer transition-colors ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-control text-xs font-black uppercase tracking-wider cursor-pointer transition-colors ${
                 roleFilter === 'Survivor'
                   ? 'bg-accent-green/15 text-accent-green border border-accent-green/30'
                   : 'text-text-secondary hover:text-text-primary hover:bg-bg-surface'
@@ -292,7 +292,7 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
             <button
               type="button"
               onClick={() => setRoleFilter('Killer')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-black uppercase tracking-wider cursor-pointer transition-colors ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-control text-xs font-black uppercase tracking-wider cursor-pointer transition-colors ${
                 roleFilter === 'Killer'
                   ? 'bg-accent-red/15 text-accent-red border border-accent-red/30'
                   : 'text-text-secondary hover:text-text-primary hover:bg-bg-surface'
@@ -323,7 +323,7 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
                     type="button"
                     onClick={() => requestCharacterToggle(c)}
                     {...tip(c.disabled_reason ? `${c.name} — ${c.disabled_reason}` : c.name, undefined, 'status')} aria-label={c.disabled_reason ? `${c.name} — ${c.disabled_reason}` : c.name}
-                    className={`relative aspect-square rounded-xl border cursor-pointer transition-all overflow-hidden ${
+                    className={`relative aspect-square rounded-control border cursor-pointer transition-all overflow-hidden ${
                       c.is_disabled
                         ? 'border-accent-red bg-accent-red/10 hover:bg-accent-red/20'
                         : 'border-border-color bg-bg-elevated hover:border-text-muted'
@@ -358,7 +358,7 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
                     type="button"
                     onClick={() => requestPerkToggle(p)}
                     {...tip(p.disabled_reason ? `${p.name} — ${p.disabled_reason}` : p.name, undefined, 'status')} aria-label={p.disabled_reason ? `${p.name} — ${p.disabled_reason}` : p.name}
-                    className={`relative aspect-square rounded-xl border cursor-pointer transition-all overflow-hidden ${
+                    className={`relative aspect-square rounded-control border cursor-pointer transition-all overflow-hidden ${
                       p.is_disabled
                         ? 'border-accent-red bg-accent-red/10 hover:bg-accent-red/20'
                         : 'border-border-color bg-bg-elevated hover:border-text-muted'

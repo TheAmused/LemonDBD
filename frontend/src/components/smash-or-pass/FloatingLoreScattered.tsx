@@ -121,7 +121,7 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({ ch
           style={{ animationDelay: '80ms' }}
           onMouseEnter={handleCardHover}
         >
-          <div className="relative pt-4 pb-3 px-3.5 @[1040px]/hub:pt-5 @[1040px]/hub:pb-3.5 @[1040px]/hub:px-4 rounded-2xl lore-ash-card lore-ash-crimson backdrop-blur-2xl transition-all duration-300 text-center">
+          <div className="relative pt-4 pb-3 px-3.5 @[1040px]/hub:pt-5 @[1040px]/hub:pb-3.5 @[1040px]/hub:px-4 rounded-card lore-ash-card lore-ash-crimson backdrop-blur-2xl transition-all duration-300 text-center">
             <div
               data-lore-label=""
               className="sr-only @[1040px]/hub:not-sr-only @[1040px]/hub:absolute @[1040px]/hub:top-0 @[1040px]/hub:-translate-y-1/2 @[1040px]/hub:left-1/2 @[1040px]/hub:-translate-x-1/2 @[1040px]/hub:inline-flex @[1040px]/hub:items-center @[1040px]/hub:justify-center px-2.5 bg-bg-surface z-10 text-accent-red"
@@ -148,7 +148,7 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({ ch
             style={{ animationDelay: '140ms' }}
             onMouseEnter={handleCardHover}
           >
-            <div className="relative pt-4 pb-3 px-3.5 @[1040px]/hub:pt-5 @[1040px]/hub:pb-3.5 @[1040px]/hub:px-4 rounded-2xl lore-ash-card lore-ash-emerald backdrop-blur-2xl transition-all duration-300 text-center">
+            <div className="relative pt-4 pb-3 px-3.5 @[1040px]/hub:pt-5 @[1040px]/hub:pb-3.5 @[1040px]/hub:px-4 rounded-card lore-ash-card lore-ash-emerald backdrop-blur-2xl transition-all duration-300 text-center">
               <div
                 data-lore-label=""
                 className="sr-only @[1040px]/hub:not-sr-only @[1040px]/hub:absolute @[1040px]/hub:top-0 @[1040px]/hub:-translate-y-1/2 @[1040px]/hub:left-1/2 @[1040px]/hub:-translate-x-1/2 @[1040px]/hub:inline-flex @[1040px]/hub:items-center @[1040px]/hub:justify-center px-2.5 bg-bg-surface z-10 text-accent-green"
@@ -177,7 +177,7 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({ ch
           style={{ animationDelay: '120ms' }}
           onMouseEnter={handleCardHover}
         >
-          <div className="relative pt-4 pb-3 px-3.5 @[1040px]/hub:pt-5 @[1040px]/hub:pb-3.5 @[1040px]/hub:px-4 rounded-2xl lore-ash-card lore-ash-amber backdrop-blur-2xl transition-all duration-300 text-center">
+          <div className="relative pt-4 pb-3 px-3.5 @[1040px]/hub:pt-5 @[1040px]/hub:pb-3.5 @[1040px]/hub:px-4 rounded-card lore-ash-card lore-ash-amber backdrop-blur-2xl transition-all duration-300 text-center">
             <div
               data-lore-label=""
               className="sr-only @[1040px]/hub:not-sr-only @[1040px]/hub:absolute @[1040px]/hub:top-0 @[1040px]/hub:-translate-y-1/2 @[1040px]/hub:left-1/2 @[1040px]/hub:-translate-x-1/2 @[1040px]/hub:inline-flex @[1040px]/hub:items-center @[1040px]/hub:justify-center px-2.5 bg-bg-surface z-10 text-accent-amber"
@@ -201,7 +201,7 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({ ch
             style={{ animationDelay: '160ms' }}
             onMouseEnter={handleCardHover}
           >
-            <div className="relative pt-4 pb-3 px-3.5 @[1040px]/hub:pt-5 @[1040px]/hub:pb-3.5 @[1040px]/hub:px-4 rounded-2xl lore-ash-card lore-ash-crimson backdrop-blur-2xl transition-all duration-300 text-center">
+            <div className="relative pt-4 pb-3 px-3.5 @[1040px]/hub:pt-5 @[1040px]/hub:pb-3.5 @[1040px]/hub:px-4 rounded-card lore-ash-card lore-ash-crimson backdrop-blur-2xl transition-all duration-300 text-center">
               <div
                 data-lore-label=""
                 className="sr-only @[1040px]/hub:not-sr-only @[1040px]/hub:absolute @[1040px]/hub:top-0 @[1040px]/hub:-translate-y-1/2 @[1040px]/hub:left-1/2 @[1040px]/hub:-translate-x-1/2 @[1040px]/hub:inline-flex @[1040px]/hub:items-center @[1040px]/hub:justify-center px-2.5 bg-bg-surface z-10 text-accent-red"

@@ -34,7 +34,7 @@ const KillerTile: React.FC<{
       onClick={() => onSelect(name)}
       disabled={disabled || isCompleted}
       aria-label={`${displayName}${isCompleted ? ' (Cleared)' : ''}`}
-      className={`relative flex select-none flex-col items-center overflow-hidden rounded-lg border transition-all cursor-pointer disabled:cursor-not-allowed ${
+      className={`relative flex select-none flex-col items-center overflow-hidden rounded-control border transition-all cursor-pointer disabled:cursor-not-allowed ${
         isCompleted ? '' : 'disabled:opacity-40'
       } ${cardBorder}`}
     >

@@ -56,7 +56,7 @@ export const VoiceEngineInfoBody: React.FC<Omit<VoiceEngineInfoModalProps, 'isOp
   return (
     <div className="space-y-6">
     {/* Current Browser Status Card */}
-    <div className="rounded-2xl border border-border-color bg-bg-elevated p-4 space-y-2">
+    <div className="rounded-card border border-border-color bg-bg-elevated p-4 space-y-2">
       <div className="flex items-center justify-between">
         <span className="type-label-xs text-text-muted flex items-center gap-1.5">
           <Laptop className="h-3.5 w-3.5 text-text-muted" aria-hidden="true" />
@@ -89,7 +89,7 @@ export const VoiceEngineInfoBody: React.FC<Omit<VoiceEngineInfoModalProps, 'isOp
         onClick={() => {
           if (hasNativeWebSpeech) onSelectEngine('web-speech');
         }}
-        className={`rounded-2xl border p-4 transition-all space-y-2.5 ${hasNativeWebSpeech ? 'cursor-pointer' : 'opacity-60 cursor-not-allowed'
+        className={`rounded-card border p-4 transition-all space-y-2.5 ${hasNativeWebSpeech ? 'cursor-pointer' : 'opacity-60 cursor-not-allowed'
           } ${currentEngine === 'web-speech'
             ? 'border-accent-red/50 bg-accent-red/5 ring-2 ring-accent-red/30'
             : 'border-border-color bg-bg-surface hover:border-border-subtle'
@@ -120,7 +120,7 @@ export const VoiceEngineInfoBody: React.FC<Omit<VoiceEngineInfoModalProps, 'isOp
       {/* Client-Side Fallback Model */}
       <div
         onClick={() => onSelectEngine('client-model')}
-        className={`rounded-2xl border p-4 transition-all space-y-2.5 cursor-pointer ${currentEngine === 'client-model'
+        className={`rounded-card border p-4 transition-all space-y-2.5 cursor-pointer ${currentEngine === 'client-model'
             ? 'border-accent-red/50 bg-accent-red/5 ring-2 ring-accent-red/30'
             : 'border-border-color bg-bg-surface hover:border-border-subtle'
           }`}
@@ -149,7 +149,7 @@ export const VoiceEngineInfoBody: React.FC<Omit<VoiceEngineInfoModalProps, 'isOp
     </div>
 
     {/* Local model accuracy: whisper-tiny ('fast') vs whisper-base ('accurate') */}
-    <div className="rounded-2xl border border-border-color bg-bg-elevated p-4 space-y-3">
+    <div className="rounded-card border border-border-color bg-bg-elevated p-4 space-y-3">
       <div className="flex items-center gap-1.5 type-label-xs text-text-muted">
         <Gauge className="h-3.5 w-3.5 text-text-muted" aria-hidden="true" />
         <span>{t.accuracyTitle || ''}</span>
@@ -174,7 +174,7 @@ export const VoiceEngineInfoBody: React.FC<Omit<VoiceEngineInfoModalProps, 'isOp
               aria-checked={isSelected}
               disabled={!onSelectModelQuality}
               onClick={() => onSelectModelQuality?.(quality)}
-              className={`rounded-2xl border p-3 text-left transition-all space-y-1.5 ${
+              className={`rounded-control border p-3 text-left transition-all space-y-1.5 ${
                 onSelectModelQuality ? 'cursor-pointer' : 'opacity-60 cursor-not-allowed'
               } ${
                 isSelected
@@ -205,7 +205,7 @@ export const VoiceEngineInfoBody: React.FC<Omit<VoiceEngineInfoModalProps, 'isOp
     </div>
 
     {/* Why Fallback Is Needed Box */}
-    <div className="rounded-2xl border border-accent-amber/30 bg-accent-amber/10 p-4 space-y-2">
+    <div className="rounded-card border border-accent-amber/30 bg-accent-amber/10 p-4 space-y-2">
       <div className="flex items-center gap-2 text-accent-amber type-strong">
         <Info className="h-4 w-4 shrink-0" aria-hidden="true" />
         <span>{t.whyNeededTitle || ''}</span>
@@ -216,7 +216,7 @@ export const VoiceEngineInfoBody: React.FC<Omit<VoiceEngineInfoModalProps, 'isOp
     </div>
 
     {/* Client Model Download Box */}
-    <div className="rounded-2xl border border-border-color bg-bg-elevated p-4 space-y-3">
+    <div className="rounded-card border border-border-color bg-bg-elevated p-4 space-y-3">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <DownloadCloud className="h-4 w-4 text-accent-red" aria-hidden="true" />

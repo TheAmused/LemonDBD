@@ -104,7 +104,7 @@ const CardImage: React.FC<{ type: TarotType; side: TarotSide }> = ({ type, side 
       aria-hidden="true"
       draggable={false}
       onError={() => setErrored(true)}
-      className="pointer-events-none absolute inset-0 h-full w-full rounded-2xl object-cover"
+      className="pointer-events-none absolute inset-0 h-full w-full rounded-card object-cover"
     />
   );
 };
@@ -199,7 +199,7 @@ export const TarotDeckStage: React.FC<TarotDeckStageProps> = ({
                     onClick={() => handleFlip(idx)}
                     disabled={card.flipped}
                     aria-label={typeNames[card.type] || DEFAULT_TYPE_NAMES[card.type]}
-                    className="group absolute inset-0 overflow-hidden rounded-2xl bg-gradient-to-br from-bg-elevated to-bg-primary cursor-pointer disabled:cursor-default border-2 border-transparent transition-all duration-300 hover:scale-[1.04] hover:border-accent-amber/70 hover:shadow-lg hover:shadow-accent-amber/40 active:scale-[0.97]"
+                    className="group absolute inset-0 overflow-hidden rounded-control bg-gradient-to-br from-bg-elevated to-bg-primary cursor-pointer disabled:cursor-default border-2 border-transparent transition-all duration-300 hover:scale-[1.04] hover:border-accent-amber/70 hover:shadow-lg hover:shadow-accent-amber/40 active:scale-[0.97]"
                     style={{ backfaceVisibility: 'hidden', pointerEvents: card.flipped ? 'none' : 'auto' }}
                   >
                     <CardImage type={card.type} side="back" />
@@ -209,7 +209,7 @@ export const TarotDeckStage: React.FC<TarotDeckStageProps> = ({
                       from it, see CardImage side="face"), revealing the perk
                       in its diamond window instead of turning into a bare icon. */}
                   <div
-                    className="absolute inset-0 flex flex-col items-center justify-between overflow-hidden rounded-2xl bg-bg-surface p-2 sm:p-2.5 xl:p-3 2xl:p-4 wide:p-5"
+                    className="absolute inset-0 flex flex-col items-center justify-between overflow-hidden rounded-card bg-bg-surface p-2 sm:p-2.5 xl:p-3 2xl:p-4 wide:p-5"
                     style={{
                       backfaceVisibility: 'hidden',
                       transform: 'rotateY(180deg)',

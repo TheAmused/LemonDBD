@@ -183,7 +183,7 @@ export function OfficialTierListView({ slug, locale }: OfficialTierListViewProps
       kindLabel={t.kinds[template.kind]}
       badges={
         template.has_default_placements ? (
-          <span className="inline-flex items-center gap-1 rounded-lg bg-accent-amber/15 px-2 py-0.5 type-label-xs text-accent-amber">
+          <span className="inline-flex items-center gap-1 rounded-chip bg-accent-amber/15 px-2 py-0.5 type-label-xs text-accent-amber">
             <Crown className="h-3.5 w-3.5" aria-hidden="true" />
             {t.officialRanking}
           </span>

@@ -18,7 +18,7 @@ interface ChallengePanelProps {
 /** One card holding a challenge's header strip and its main panel. No backdrop filter or
  * transform here: it would trap the fixed StreakActionBar rendered inside the card. */
 export const ChallengePanel: React.FC<ChallengePanelProps> = ({ header, progress, children }) => (
-  <section className="mb-6 w-full overflow-hidden rounded-2xl border border-border-color bg-bg-surface shadow-sm">
+  <section className="mb-6 w-full overflow-hidden rounded-card border border-border-color bg-bg-surface shadow-sm">
     <div className="border-b border-border-color bg-bg-elevated/40 px-3 py-3 sm:px-4">{header}</div>
     {progress && <div className="border-b border-border-color px-3 pt-3 pb-1 sm:px-6 sm:pt-5 sm:pb-4">{progress}</div>}
     <div className="p-3 sm:p-4">{children}</div>
@@ -62,7 +62,7 @@ export const ModeSelectButton: React.FC<ModeSelectButtonProps> = ({ label, tone,
       {onClick && <ChevronDown className="h-4 w-4 text-text-muted" aria-hidden="true" />}
     </>
   );
-  const shell = 'flex min-w-0 items-center justify-center gap-2 rounded-xl border border-border-color bg-bg-elevated h-11 px-3 shadow-sm';
+  const shell = 'flex min-w-0 items-center justify-center gap-2 rounded-control border border-border-color bg-bg-elevated h-11 px-3 shadow-sm';
 
   return onClick ? (
     <button
@@ -99,7 +99,7 @@ export const StatTile: React.FC<StatTileProps> = ({
   valueClassName = '',
 }) => (
   <div
-    className={`flex min-w-0 flex-1 items-center justify-center gap-2.5 rounded-xl sm:justify-start border border-border-color bg-bg-elevated h-11 px-2.5 text-text-secondary sm:flex-none lg:px-3 shadow-sm transition-colors duration-500 ${className}`}
+    className={`flex min-w-0 flex-1 items-center justify-center gap-2.5 rounded-card sm:justify-start border border-border-color bg-bg-elevated h-11 px-2.5 text-text-secondary sm:flex-none lg:px-3 shadow-sm transition-colors duration-500 ${className}`}
   >
     <span className={`flex transition-colors duration-500 ${iconClassName}`}>{icon}</span>
     <div className="flex flex-col">
@@ -123,7 +123,7 @@ interface HeaderButtonProps {
 
 /** Look shared by the challenge header buttons (and any other button that should match them). */
 export const HEADER_BUTTON_CLASSES =
-  'flex items-center rounded-xl border border-border-color bg-bg-elevated text-text-secondary shadow-sm transition-colors cursor-pointer hover:bg-bg-elevated/70 hover:text-text-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red';
+  'flex items-center rounded-control border border-border-color bg-bg-elevated text-text-secondary shadow-sm transition-colors cursor-pointer hover:bg-bg-elevated/70 hover:text-text-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red';
 
 /** Header action button shared by every challenge. */
 export const HeaderButton: React.FC<HeaderButtonProps> = ({ onClick, title, icon, label, danger = false, className = '' }) => (
@@ -223,7 +223,7 @@ export const StandardHeaderActions: React.FC<StandardHeaderActionsProps> = ({ on
       onClick={() => setOpen((v) => !v)}
       aria-expanded={open}
       aria-label={dict.streaks.moreActions}
-      className="relative col-span-full flex h-5 w-full cursor-pointer before:absolute before:-inset-y-3 before:inset-x-0 before:content-[''] items-center justify-center rounded-lg text-text-muted transition-colors hover:text-text-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red sm:hidden"
+      className="relative col-span-full flex h-5 w-full cursor-pointer before:absolute before:-inset-y-3 before:inset-x-0 before:content-[''] items-center justify-center rounded-control text-text-muted transition-colors hover:text-text-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red sm:hidden"
     >
       <ChevronDown className={`h-5 w-5 transition-transform duration-300 ${open ? 'rotate-180' : ''}`} aria-hidden="true" />
     </button>
@@ -234,7 +234,7 @@ export const StandardHeaderActions: React.FC<StandardHeaderActionsProps> = ({ on
 /** Error strip shown above a challenge board. */
 export const ChallengeErrorBanner: React.FC<{ message: string }> = ({ message }) => (
   <div
-    className="mb-6 flex items-center justify-between rounded-xl border border-accent-red/40 bg-accent-red/15 p-4 text-sm text-accent-red shadow-xs"
+    className="mb-6 flex items-center justify-between rounded-card border border-accent-red/40 bg-accent-red/15 p-4 text-sm text-accent-red shadow-xs"
     role="alert"
   >
     <span>{message}</span>
@@ -262,7 +262,7 @@ export const ChallengeVictoryCard: React.FC<ChallengeVictoryCardProps> = ({ titl
       type="button"
       onClick={onRestart}
       disabled={busy}
-      className="mt-6 inline-flex items-center justify-center gap-2 rounded-xl bg-accent-amber px-6 py-3 type-card-title text-text-inverted shadow-xs transition-colors hover:bg-accent-amber-hover disabled:opacity-50 cursor-pointer"
+      className="mt-6 inline-flex items-center justify-center gap-2 rounded-control bg-accent-amber px-6 py-3 type-card-title text-text-inverted shadow-xs transition-colors hover:bg-accent-amber-hover disabled:opacity-50 cursor-pointer"
     >
       {dict.streaks.startNewRun}
     </button>

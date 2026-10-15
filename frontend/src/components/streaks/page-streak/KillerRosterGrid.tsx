@@ -64,7 +64,7 @@ export const KillerRosterGrid: React.FC<KillerRosterGridProps> = ({ locale, rost
           <Link
             key={entry.killer}
             href={`/${locale}/streaks/killer/page-streak/${encodeURIComponent(entry.killer)}`}
-            className={`relative flex flex-col overflow-hidden rounded-xl border pb-3 transition-all shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-accent-red ${done
+            className={`relative flex flex-col overflow-hidden rounded-control border pb-3 transition-all shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-accent-red ${done
                 ? 'border-accent-green/40 bg-accent-green/[0.07] hover:border-accent-green/60 ps-complete-pulse'
                 : active
                   ? 'border-accent-amber/45 bg-accent-amber/[0.07] hover:border-accent-amber/70'

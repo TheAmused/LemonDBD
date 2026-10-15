@@ -52,7 +52,7 @@ export const QrCode: React.FC<QrCodeProps> = ({ value, label, className }) => {
       height={192}
       viewBox={`0 0 ${size} ${size}`}
       shapeRendering="crispEdges"
-      className={`rounded-lg ${className ?? ''}`}
+      className={`rounded-chip ${className ?? ''}`}
     >
       <rect width={size} height={size} fill="white" />
       <path d={path} fill="black" />

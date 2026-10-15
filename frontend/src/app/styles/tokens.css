@@ -91,11 +91,19 @@
   --font-sans: ui-sans-serif, system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
   --font-display: var(--font-playfair), Georgia, "Times New Roman", serif;
 
-  /* Corner radii. One scale for the whole site: cards and modals top out at 18px, controls sit
-   * at 15-16px, small chips stay at Tailwind's lg/md. No rounded-[Npx] in components. */
-  --radius-xl: 0.9375rem;
-  --radius-2xl: 1rem;
-  --radius-3xl: 1.125rem;
+  /* Corner radii: ONE scale of four roles, the same on every screen width. Tailwind's stock
+   * scale (rounded-lg, -xl, ...) is switched off, so these are the only radii that exist:
+   *   rounded-chip     6px   badges, tags, checkboxes, small inline boxes
+   *   rounded-control  12px  buttons, inputs, menu items, tabs, tooltips
+   *   rounded-card     16px  cards, panels, popovers, dropdown menus
+   *   rounded-modal    20px  modal and drawer panels
+   *   rounded-full           pills, avatars, switches   (rounded-none stays for square edges)
+   * No rounded-[Npx] in components; scripts/check-global-styles.ts enforces it. */
+  --radius-*: initial;
+  --radius-chip: 0.375rem;
+  --radius-control: 0.75rem;
+  --radius-card: 1rem;
+  --radius-modal: 1.25rem;
   --radius-full: 9999px;
 
   /* Type scale below Tailwind's text-xs, plus em-relative sizes for inline code. */

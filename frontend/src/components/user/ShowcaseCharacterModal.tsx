@@ -57,11 +57,11 @@ const CharacterGridItem: React.FC<{
         onClose();
       }}
       aria-pressed={isSelected}
-      className="group flex flex-col items-center gap-2 rounded-xl p-1 text-center cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red"
+      className="group flex flex-col items-center gap-2 rounded-control p-1 text-center cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red"
     >
       <div
         className={cn(
-          'relative aspect-square w-full overflow-hidden rounded-xl border bg-bg-elevated transition-colors',
+          'relative aspect-square w-full overflow-hidden rounded-card border bg-bg-elevated transition-colors',
           isSelected ? 'border-accent-red ring-2 ring-accent-red' : 'border-border-color group-hover:border-accent-red/60'
         )}
       >

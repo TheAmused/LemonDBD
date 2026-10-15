@@ -115,7 +115,7 @@ export function TierEditModal({
             label={trimmed || tier?.label || t.newTierLabel}
             color={color}
             backgroundImage={safeBg ?? undefined}
-            className="flex h-16 w-20 shrink-0 items-center justify-center rounded-xl text-2xl font-black p-2"
+            className="flex h-16 w-20 shrink-0 items-center justify-center rounded-control text-2xl font-black p-2"
             labelClassName="px-1 text-center text-lg leading-tight"
           />
           <label className="min-w-0 flex-1">
@@ -158,7 +158,7 @@ export function TierEditModal({
                   aria-label={formatMessage(t.colorSwatchAria, { name: token.toUpperCase() })}
                   aria-pressed={color === token}
                   className={cn(
-                    'flex h-11 w-11 items-center justify-center rounded-xl border-2 cursor-pointer transition-transform hover:scale-105',
+                    'flex h-11 w-11 items-center justify-center rounded-control border-2 cursor-pointer transition-transform hover:scale-105',
                     swatch.className,
                     color === token ? 'border-text-primary' : 'border-transparent'
                   )}

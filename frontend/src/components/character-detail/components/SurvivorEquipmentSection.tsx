@@ -170,7 +170,7 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
 
   return (
     <section
-      className="mt-8 rounded-3xl border border-border-color bg-bg-surface p-6 sm:p-8 shadow-sm dark:shadow-none backdrop-blur-md"
+      className="mt-8 rounded-card border border-border-color bg-bg-surface p-6 sm:p-8 shadow-sm dark:shadow-none backdrop-blur-md"
       aria-labelledby="survivor-equipment-heading"
     >
       {/* Same flat single-card shape as KillerEquipmentSection/OfferingsSection:
@@ -181,7 +181,7 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
         headerClassName="pb-4 mb-6 border-b border-border-color"
         header={
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-accent-green/10 text-accent-green border border-accent-green/20">
+            <div className="flex h-10 w-10 items-center justify-center rounded-card bg-accent-green/10 text-accent-green border border-accent-green/20">
               <Package className="h-5 w-5" />
             </div>
             <div>
@@ -204,8 +204,8 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
           panels={false}
           variant="pill"
           accent="green"
-          className="hidden sm:flex md:flex-col md:items-stretch md:overflow-x-visible justify-start gap-2 p-2 rounded-2xl bg-bg-elevated border border-border-color shrink-0"
-          tabClassName="relative h-12 w-14 sm:h-14 sm:w-16 flex-col gap-0 rounded-2xl p-1.5"
+          className="hidden sm:flex md:flex-col md:items-stretch md:overflow-x-visible justify-start gap-2 p-2 rounded-card bg-bg-elevated border border-border-color shrink-0"
+          tabClassName="relative h-12 w-14 sm:h-14 sm:w-16 flex-col gap-0 rounded-control p-1.5"
           tabs={categories.map((cat) => {
             const Icon = cat.icon;
             return {
@@ -219,7 +219,7 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
           })}
         />
 
-        <div className="flex-1 rounded-3xl bg-bg-surface border border-border-color shadow-sm dark:shadow-lg overflow-hidden grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-border-color">
+        <div className="flex-1 rounded-card bg-bg-surface border border-border-color shadow-sm dark:shadow-lg overflow-hidden grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-border-color">
           <div className="flex flex-col p-4">
             <div className="sm:hidden mb-3">
               <CategoryPicker
@@ -259,7 +259,7 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
                         }
                       }}
                       {...tip(item.name, undefined, 'item')}
-                      className={`relative group rounded-2xl border-2 p-1.5 flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-110 active:scale-95 focus:outline-none focus:ring-2 focus:ring-accent-green h-20 w-20 sm:h-24 sm:w-24 ${rarityStyle.bg}`}
+                      className={`relative group rounded-card border-2 p-1.5 flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-110 active:scale-95 focus:outline-none focus:ring-2 focus:ring-accent-green h-20 w-20 sm:h-24 sm:w-24 ${rarityStyle.bg}`}
                       style={rarityStyle.style}
                       aria-label={`${t.inspectItemPrefix || 'Inspect item:'} ${item.name}`}
                     >
@@ -294,7 +294,7 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
             </div>
 
             {selectedCategory === 'trial_exclusive' ? (
-              <div className="flex-1 flex flex-col justify-center p-4 rounded-2xl bg-accent-amber/10 border border-accent-amber/30 text-xs space-y-3">
+              <div className="flex-1 flex flex-col justify-center p-4 rounded-card bg-accent-amber/10 border border-accent-amber/30 text-xs space-y-3">
                 <div className="flex items-center gap-2 text-accent-amber type-card-title">
                   <ShieldAlert className="h-5 w-5 shrink-0" aria-hidden="true" />
                   <span>{t.inTrialArtifactsHeading || 'In-Trial Killer Counters & Artifacts'}</span>
@@ -330,7 +330,7 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
                         }
                       }}
                       {...tip(displayItem.name, undefined, 'item')}
-                      className={`relative group rounded-2xl border-2 p-1.5 flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-110 active:scale-95 focus:outline-none focus:ring-2 focus:ring-accent-amber h-20 w-20 sm:h-24 sm:w-24 ${rarityStyle.bg}`}
+                      className={`relative group rounded-card border-2 p-1.5 flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-110 active:scale-95 focus:outline-none focus:ring-2 focus:ring-accent-amber h-20 w-20 sm:h-24 sm:w-24 ${rarityStyle.bg}`}
                       style={rarityStyle.style}
                       aria-label={`${t.inspectAddonPrefix || 'Inspect addon:'} ${displayItem.name}`}
                     >

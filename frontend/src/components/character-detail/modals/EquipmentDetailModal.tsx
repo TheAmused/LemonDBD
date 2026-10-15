@@ -33,7 +33,7 @@ export const EquipmentDetailModal: React.FC<EquipmentDetailModalProps> = ({
     >
       <div className="flex justify-center">
         <div
-          className={`h-20 w-20 rounded-2xl border-2 p-2 flex items-center justify-center shrink-0 shadow-md overflow-hidden ${rarityTile.bg}`}
+          className={`h-20 w-20 rounded-card border-2 p-2 flex items-center justify-center shrink-0 shadow-md overflow-hidden ${rarityTile.bg}`}
           style={rarityTile.style}
         >
           <img

@@ -81,7 +81,7 @@ export function CharacterDetailClient({ slug }: { slug: string }) {
           >
             <Link
               href={`/${locale}/characters`}
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-accent-red hover:bg-accent-red-hover text-text-inverted type-strong transition-all shadow-xs active:scale-95 cursor-pointer"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-control bg-accent-red hover:bg-accent-red-hover text-text-inverted type-strong transition-all shadow-xs active:scale-95 cursor-pointer"
             >
               <ChevronLeft className="h-4 w-4" />
               <span>{t.backToCharacters}</span>

@@ -67,7 +67,7 @@ export const RoleTabs: React.FC<RoleTabsProps> = ({ locale }) => {
             role="radio"
             aria-checked={isActive}
             aria-current={isActive ? 'page' : undefined}
-            className={`flex items-center gap-1.5 sm:gap-2 whitespace-nowrap rounded-xl border px-3 sm:px-4 py-2 sm:py-2.5 text-mini sm:text-xs font-black shadow-sm transition-colors cursor-pointer ${
+            className={`flex items-center gap-1.5 sm:gap-2 whitespace-nowrap rounded-control border px-3 sm:px-4 py-2 sm:py-2.5 text-mini sm:text-xs font-black shadow-sm transition-colors cursor-pointer ${
               isActive
                 ? opt.activeClassName
                 : 'border-border-color bg-bg-elevated text-text-secondary hover:text-text-primary hover:border-text-secondary'

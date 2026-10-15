@@ -50,11 +50,11 @@ export function TierItemPreviewModal({ item, onClose }: TierItemPreviewModalProp
             <img
               src={(item.fullImage ?? item.image) as string}
               alt={item.name}
-              className="h-auto max-h-[65vh] w-auto max-w-full rounded-2xl border border-border-color bg-bg-elevated object-contain"
+              className="h-auto max-h-[65vh] w-auto max-w-full rounded-card border border-border-color bg-bg-elevated object-contain"
             />
           </div>
         ) : (
-          <div className="flex h-48 w-48 sm:h-64 sm:w-64 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-border-color bg-bg-elevated">
+          <div className="flex h-48 w-48 sm:h-64 sm:w-64 shrink-0 items-center justify-center overflow-hidden rounded-card border border-border-color bg-bg-elevated">
             <span className="text-4xl font-black text-text-muted" aria-hidden="true">
               {item.name.slice(0, 2).toUpperCase()}
             </span>

@@ -71,7 +71,7 @@ export function StreakAttemptGroups<TLog extends StreakMatchLogBase>({
               type="button"
               onClick={() => setToggled((current) => ({ ...current, [group.key]: !open }))}
               aria-expanded={open}
-              className="flex w-full items-center gap-2 rounded-lg px-1 py-1.5 text-left transition-colors hover:text-accent-red focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red motion-reduce:transition-none"
+              className="flex w-full items-center gap-2 rounded-control px-1 py-1.5 text-left transition-colors hover:text-accent-red focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red motion-reduce:transition-none"
             >
               <ChevronRight
                 className={`h-4 w-4 shrink-0 text-text-muted transition-transform duration-200 motion-reduce:transition-none ${open ? 'rotate-90' : ''}`}

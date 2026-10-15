@@ -252,7 +252,7 @@ export const CharacterAutocomplete: React.FC<CharacterAutocompleteProps> = ({
       {isOpen && filteredItems.length > 0 && (
         <ul
           role="listbox"
-          className="absolute left-0 right-0 mt-2 max-h-72 overflow-y-auto rounded-xl bg-bg-surface border border-border-color shadow-2xl divide-y divide-border-color/60 z-50 backdrop-blur-md"
+          className="absolute left-0 right-0 mt-2 max-h-72 overflow-y-auto rounded-card bg-bg-surface border border-border-color shadow-2xl divide-y divide-border-color/60 z-50 backdrop-blur-md"
         >
           {filteredItems.map((item, idx) => {
             const isHighlighted = idx === highlightedIndex;
@@ -275,7 +275,7 @@ export const CharacterAutocomplete: React.FC<CharacterAutocompleteProps> = ({
                   isHighlighted ? 'bg-accent-red/20 text-text-primary font-bold' : 'text-text-secondary hover:bg-bg-elevated'
                 }`}
               >
-                <div className="relative w-10 h-10 rounded-lg overflow-hidden bg-bg-elevated border border-border-color flex-shrink-0 flex items-center justify-center">
+                <div className="relative w-10 h-10 rounded-chip overflow-hidden bg-bg-elevated border border-border-color flex-shrink-0 flex items-center justify-center">
                   {imgSrc ? (
                     <Image
                       src={imgSrc}
@@ -299,7 +299,7 @@ export const CharacterAutocomplete: React.FC<CharacterAutocompleteProps> = ({
 
                 {item.role && (
                   <span
-                    className={`text-tiny font-bold uppercase tracking-wider px-2 py-0.5 rounded ${
+                    className={`text-tiny font-bold uppercase tracking-wider px-2 py-0.5 rounded-chip ${
                       isKiller(item.role)
                         ? 'bg-accent-red/20 text-accent-red border border-accent-red/40'
                         : isSurvivor(item.role)

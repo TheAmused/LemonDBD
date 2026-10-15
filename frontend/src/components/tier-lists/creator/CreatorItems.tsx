@@ -40,7 +40,7 @@ export function CreatorItems({ items, onRename, onUpdateItem, onRemove, onClear 
               size="sm"
               onClick={onClear}
               leftIcon={<Trash2 className="h-3.5 w-3.5 text-accent-red" aria-hidden="true" />}
-              className="min-h-[36px] shrink-0 whitespace-nowrap rounded-lg px-3 hover:border-accent-red/50 hover:text-accent-red"
+              className="min-h-[36px] shrink-0 whitespace-nowrap px-3 hover:border-accent-red/50 hover:text-accent-red"
             >
               {c.removeAll}
             </Button>
@@ -55,7 +55,7 @@ export function CreatorItems({ items, onRename, onUpdateItem, onRemove, onClear 
           {items.map((item) => (
             <li key={item.id} className="group/item relative flex flex-col items-center">
               {/* Crisp Square Tile Container */}
-              <div className="relative flex aspect-square w-full items-center justify-center overflow-hidden rounded-lg border border-border-color bg-bg-elevated transition-all duration-150 hover:border-accent-red/80 hover:shadow-md group-hover/item:border-accent-red/60 select-none">
+              <div className="relative flex aspect-square w-full items-center justify-center overflow-hidden rounded-chip border border-border-color bg-bg-elevated transition-all duration-150 hover:border-accent-red/80 hover:shadow-md group-hover/item:border-accent-red/60 select-none">
                 {/* Edge-to-edge tile image or dark initials placeholder */}
                 {item.image ? (
                   <img
@@ -79,7 +79,7 @@ export function CreatorItems({ items, onRename, onUpdateItem, onRemove, onClear 
                   aria-label={formatMessage(c.editItemAria, { name: item.name })}
                   className="absolute inset-0 z-0 flex items-center justify-center bg-bg-primary/50 opacity-0 group-hover/item:opacity-100 transition-opacity backdrop-blur-xs cursor-pointer"
                 >
-                  <span className="flex h-7 w-7 items-center justify-center rounded-md bg-bg-surface/90 text-accent-red shadow-sm border border-border-color/60">
+                  <span className="flex h-7 w-7 items-center justify-center rounded-chip bg-bg-surface/90 text-accent-red shadow-sm border border-border-color/60">
                     <Pencil className="h-3.5 w-3.5" aria-hidden="true" />
                   </span>
                   <span className="sr-only">{c.editItem}</span>
@@ -90,7 +90,7 @@ export function CreatorItems({ items, onRename, onUpdateItem, onRemove, onClear 
                   type="button"
                   onClick={() => onRemove(item.id)}
                   aria-label={formatMessage(c.removeItemAria, { name: item.name })}
-                  className="hit-area absolute top-1 right-1 z-10 flex h-5 w-5 items-center justify-center rounded-md bg-bg-surface/90 text-text-muted opacity-80 sm:opacity-0 group-hover/item:opacity-100 hover:!opacity-100 hover:bg-accent-red hover:text-text-inverted transition-all shadow-xs cursor-pointer border border-border-color/40"
+                  className="hit-area absolute top-1 right-1 z-10 flex h-5 w-5 items-center justify-center rounded-chip bg-bg-surface/90 text-text-muted opacity-80 sm:opacity-0 group-hover/item:opacity-100 hover:!opacity-100 hover:bg-accent-red hover:text-text-inverted transition-all shadow-xs cursor-pointer border border-border-color/40"
                 >
                   <X className="h-3 w-3" aria-hidden="true" />
                 </button>
@@ -102,7 +102,7 @@ export function CreatorItems({ items, onRename, onUpdateItem, onRemove, onClear 
                 maxLength={TIER_LIST_LIMITS.maxItemName}
                 onChange={(e) => onRename(item.id, e.target.value)}
                 aria-label={formatMessage(c.renameItemAria, { name: item.name })}
-                className="mt-1 h-6 w-full rounded-sm border border-transparent bg-transparent px-1 text-center type-strong text-text-secondary transition-colors hover:text-text-primary hover:bg-bg-elevated/40 focus:border-accent-red focus:bg-bg-surface focus:text-text-primary focus:outline-hidden truncate"
+                className="mt-1 h-6 w-full rounded-chip border border-transparent bg-transparent px-1 text-center type-strong text-text-secondary transition-colors hover:text-text-primary hover:bg-bg-elevated/40 focus:border-accent-red focus:bg-bg-surface focus:text-text-primary focus:outline-hidden truncate"
               />
             </li>
           ))}

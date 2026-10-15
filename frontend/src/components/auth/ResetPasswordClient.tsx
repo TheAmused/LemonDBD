@@ -54,10 +54,10 @@ function ResetPasswordContent() {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
-      <div className="w-full max-w-md rounded-2xl border border-border-color bg-bg-surface p-8 text-text-primary shadow-2xl">
+      <div className="w-full max-w-md rounded-card border border-border-color bg-bg-surface p-8 text-text-primary shadow-2xl">
         {!done && (
           <div className="flex flex-col items-center text-center mb-6">
-            <div className="relative mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-bg-elevated p-2.5 border border-border-color shadow-sm">
+            <div className="relative mb-3 flex h-14 w-14 items-center justify-center rounded-card bg-bg-elevated p-2.5 border border-border-color shadow-sm">
               <LemonIcon className="h-9 w-9" />
             </div>
             <h1 className="text-xl font-black tracking-wider">
@@ -84,7 +84,7 @@ function ResetPasswordContent() {
             {error && (
               <div
                 role="alert"
-                className="flex items-center gap-2.5 rounded-xl border border-accent-red/30 bg-accent-red/10 p-3 text-xs text-accent-red shadow-sm"
+                className="flex items-center gap-2.5 rounded-card border border-accent-red/30 bg-accent-red/10 p-3 text-xs text-accent-red shadow-sm"
               >
                 <AlertCircle className="h-4 w-4 shrink-0" />
                 <span>{error}</span>

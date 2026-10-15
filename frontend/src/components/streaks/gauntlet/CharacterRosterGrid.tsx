@@ -61,11 +61,11 @@ export const CharacterRosterGrid: React.FC<CharacterRosterGridProps> = ({
   const activeTargetText = dict.streaks.activeGauntletTarget;
 
   return (
-    <div className="w-full bg-bg-surface border border-border-color rounded-2xl p-3 sm:p-6 shadow-sm dark:shadow-xl backdrop-blur-md">
+    <div className="w-full bg-bg-surface border border-border-color rounded-card p-3 sm:p-6 shadow-sm dark:shadow-xl backdrop-blur-md">
       {loading ? (
         <div className="grid grid-cols-4 min-[460px]:grid-cols-5 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 xl:grid-cols-[repeat(13,minmax(0,1fr))] gap-4 animate-pulse">
           {Array.from({ length: 16 }).map((_, i) => (
-            <SkeletonBlock key={i} rounded="rounded-2xl" className="aspect-square" />
+            <SkeletonBlock key={i} rounded="rounded-card" className="aspect-square" />
           ))}
         </div>
       ) : characters.length === 0 ? (
@@ -98,7 +98,7 @@ export const CharacterRosterGrid: React.FC<CharacterRosterGridProps> = ({
             return (
               <div
                 key={char.name}
-                className={`relative group select-none overflow-hidden rounded-xl border flex flex-col items-center justify-between transition-all duration-200 ${cardBorder} ${
+                className={`relative group select-none overflow-hidden rounded-card border flex flex-col items-center justify-between transition-all duration-200 ${cardBorder} ${
                   selectable ? 'cursor-pointer hover:border-accent-green focus:outline-none focus:ring-2 focus:ring-accent-green' : ''
                 }`}
                 aria-label={`${displayName(char.name)}${statusSuffix}`}

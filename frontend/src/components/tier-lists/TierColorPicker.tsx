@@ -87,7 +87,7 @@ export function TierColorPicker({ color, onChange, size = 'md' }: TierColorPicke
         aria-pressed={isHex}
         className={cn(
           'flex items-center justify-center border-2 cursor-pointer transition-transform hover:scale-105',
-          small ? 'h-7 w-7 rounded-md pointer-coarse:min-h-11 pointer-coarse:min-w-11' : 'h-11 w-11 rounded-xl',
+          small ? 'h-7 w-7 rounded-chip pointer-coarse:min-h-11 pointer-coarse:min-w-11' : 'h-11 w-11 rounded-control',
           'bg-[conic-gradient(red,yellow,lime,aqua,blue,fuchsia,red)]',
           isHex || open ? 'border-text-primary' : 'border-transparent'
         )}
@@ -102,9 +102,9 @@ export function TierColorPicker({ color, onChange, size = 'md' }: TierColorPicke
       {open && (
         <div
           className={cn(
-            'flex basis-full flex-col items-center gap-3 rounded-2xl border border-border-color bg-bg-elevated/60 p-3',
+            'flex basis-full flex-col items-center gap-3 rounded-card border border-border-color bg-bg-elevated/60 p-3',
             '[&_.react-colorful]:h-44 [&_.react-colorful]:w-full [&_.react-colorful]:max-w-[16rem]',
-            '[&_.react-colorful__saturation]:rounded-xl [&_.react-colorful__saturation]:border-b-0',
+            '[&_.react-colorful__saturation]:rounded-card [&_.react-colorful__saturation]:border-b-0',
             '[&_.react-colorful__hue]:mt-3 [&_.react-colorful__hue]:h-4 [&_.react-colorful__hue]:rounded-full',
             '[&_.react-colorful__pointer]:h-5 [&_.react-colorful__pointer]:w-5'
           )}
@@ -116,14 +116,14 @@ export function TierColorPicker({ color, onChange, size = 'md' }: TierColorPicke
               onChange={(hex) => pick(hex)}
               prefixed
               aria-label={t.customColor}
-              className="min-h-[44px] min-w-0 flex-1 rounded-lg border border-border-color bg-bg-primary px-3 text-center type-label uppercase text-text-primary focus:border-accent-red focus:outline-hidden"
+              className="min-h-[44px] min-w-0 flex-1 rounded-control border border-border-color bg-bg-primary px-3 text-center type-label uppercase text-text-primary focus:border-accent-red focus:outline-hidden"
             />
             {EyeDropper && (
               <button
                 type="button"
                 onClick={() => void sampleScreen()}
                 aria-label={t.pickFromScreen}
-                className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border border-border-color bg-bg-surface text-text-secondary hover:text-accent-red cursor-pointer transition-colors"
+                className="flex h-11 w-11 shrink-0 items-center justify-center rounded-control border border-border-color bg-bg-surface text-text-secondary hover:text-accent-red cursor-pointer transition-colors"
               >
                 <Pipette className="h-4 w-4" aria-hidden="true" />
               </button>

@@ -360,10 +360,7 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
       data-tier-create=""
       onClick={submit}
       disabled={publishingNow}
-      className={cn(
-        'rounded-lg',
-        extra ?? 'min-h-[48px] 2xl:min-h-[54px] px-8 2xl:px-10 text-base 2xl:text-lg'
-      )}
+      className={cn(extra ?? 'min-h-[48px] 2xl:min-h-[54px] px-8 2xl:px-10 text-base 2xl:text-lg')}
     >
       {submitLabel}
     </Button>
@@ -380,7 +377,7 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
         <div
           role="status"
           aria-live="polite"
-          className="fixed top-5 right-5 z-50 flex max-w-md w-[calc(100vw-2.5rem)] sm:w-auto items-center gap-3 rounded-xl border border-accent-amber/40 bg-bg-surface/95 backdrop-blur-xl p-3 2xl:p-4 shadow-2xl text-xs sm:text-sm 2xl:text-base font-semibold text-text-primary animate-in fade-in slide-in-from-top-4 duration-300"
+          className="fixed top-5 right-5 z-50 flex max-w-md w-[calc(100vw-2.5rem)] sm:w-auto items-center gap-3 rounded-card border border-accent-amber/40 bg-bg-surface/95 backdrop-blur-xl p-3 2xl:p-4 shadow-2xl text-xs sm:text-sm 2xl:text-base font-semibold text-text-primary animate-in fade-in slide-in-from-top-4 duration-300"
         >
           <History className="h-4 w-4 2xl:h-5 2xl:w-5 text-accent-amber shrink-0" aria-hidden="true" />
           <span className="flex-1 text-accent-amber">{c.draftRestored}</span>
@@ -437,7 +434,7 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
                 {attempted && backgroundInvalid ? t.invalidImage : c.backgroundImageHint}
               </span>
               {safeBackground && (
-                <div className="mt-2 h-24 w-full max-w-sm mx-auto overflow-hidden rounded-lg border border-border-color bg-bg-elevated">
+                <div className="mt-2 h-24 w-full max-w-sm mx-auto overflow-hidden rounded-chip border border-border-color bg-bg-elevated">
                   <img src={safeBackground} alt="" referrerPolicy="no-referrer" className="h-full w-full object-cover" />
                 </div>
               )}

@@ -172,7 +172,7 @@ export const FullscreenMapEngineView: React.FC<FullscreenMapEngineProps> = ({ ma
           {activeMap && (
             <div className="min-w-0 flex-1 flex flex-wrap items-center justify-center sm:justify-start gap-1.5 text-xs">
               {activeMap.size_sq_tiles != null ? (
-                <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-bg-elevated border border-accent-red/40 text-text-secondary shadow-sm shrink-0">
+                <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-card bg-bg-elevated border border-accent-red/40 text-text-secondary shadow-sm shrink-0">
                   <Maximize2 className="w-3.5 h-3.5 text-accent-red shrink-0" />
                   <span className="text-text-muted">{dict.maps.surfaceArea}</span>
                   <span className="type-strong text-text-primary">{activeMap.size_sq_tiles}</span>
@@ -187,7 +187,7 @@ export const FullscreenMapEngineView: React.FC<FullscreenMapEngineProps> = ({ ma
 
               {activeMap.layout_type && (
                 <span
-                  className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl border font-semibold text-xs shrink-0 ${getLayoutBadge(
+                  className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-control border font-semibold text-xs shrink-0 ${getLayoutBadge(
                     activeMap.layout_type
                   )}`}
                 >
@@ -196,11 +196,11 @@ export const FullscreenMapEngineView: React.FC<FullscreenMapEngineProps> = ({ ma
                 </span>
               )}
 
-              <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl border text-xs font-semibold shrink-0 ${structureBadge(activeMap.is_shack)}`}>
+              <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-control border text-xs font-semibold shrink-0 ${structureBadge(activeMap.is_shack)}`}>
                 <Home className="w-3.5 h-3.5 shrink-0" />
                 {activeMap.is_shack ? (dict.maps.shackYes) : (dict.maps.shackNo)}
               </span>
-              <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl border text-xs font-semibold shrink-0 ${structureBadge(activeMap.is_main_building)}`}>
+              <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-control border text-xs font-semibold shrink-0 ${structureBadge(activeMap.is_main_building)}`}>
                 <Building2 className="w-3.5 h-3.5 shrink-0" />
                 {activeMap.is_main_building
                   ? (dict.maps.mainBuildingYes)
@@ -267,7 +267,7 @@ export const FullscreenMapEngineView: React.FC<FullscreenMapEngineProps> = ({ ma
         <div
           role="toolbar"
           aria-label={dict.maps.engineControlsAria}
-          className="pointer-events-auto shrink-0 flex items-center gap-2 bg-bg-elevated/90 border border-border-color p-2 rounded-2xl backdrop-blur-xl shadow-2xl"
+          className="pointer-events-auto shrink-0 flex items-center gap-2 bg-bg-elevated/90 border border-border-color p-2 rounded-card backdrop-blur-xl shadow-2xl"
         >
           <Button
             variant="ghost"

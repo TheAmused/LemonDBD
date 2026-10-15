@@ -69,7 +69,7 @@ export function CandidateFormInputs({
       <div className="relative flex items-center justify-between pb-3 border-b border-border-color/60">
         <div className="w-24 hidden sm:block pointer-events-none" aria-hidden="true" />
         <div className="flex-1 flex flex-wrap items-center justify-center gap-2 min-w-0 text-center">
-          <span className="type-strong px-2 py-0.5 rounded bg-accent-red/10 border border-accent-red/30 text-accent-red">
+          <span className="type-strong px-2 py-0.5 rounded-chip bg-accent-red/10 border border-accent-red/30 text-accent-red">
             #{displayIndex}
           </span>
           <h3 className="font-bold text-sm sm:text-base text-text-primary truncate">
@@ -97,7 +97,7 @@ export function CandidateFormInputs({
         <div className="flex flex-col sm:flex-row items-center sm:items-start justify-center gap-6 2xl:gap-8 max-w-3xl 2xl:max-wide-2k:max-w-4xl wide-2k:max-w-6xl mx-auto w-full">
           {/* Visual Portrait Box - prominent and large */}
           <div className="flex flex-col items-center gap-2 shrink-0">
-            <div className="relative w-48 sm:w-56 md:w-60 2xl:max-wide-2k:w-68 wide-2k:w-80 aspect-[3/4] rounded-2xl border-2 border-dashed border-border-color bg-bg-primary overflow-hidden flex items-center justify-center shadow-md">
+            <div className="relative w-48 sm:w-56 md:w-60 2xl:max-wide-2k:w-68 wide-2k:w-80 aspect-[3/4] rounded-card border-2 border-dashed border-border-color bg-bg-primary overflow-hidden flex items-center justify-center shadow-md">
               {safeMedia ? (
                 <img
                   src={safeMedia}
@@ -112,7 +112,7 @@ export function CandidateFormInputs({
                   <span className="type-micro text-text-muted/60">#{displayIndex}</span>
                 </div>
               )}
-              <span className="absolute top-2 left-2 type-strong-2xs px-2 py-0.5 rounded-md bg-bg-surface/90 text-accent-red border border-border-color/60 backdrop-blur-xs select-none">
+              <span className="absolute top-2 left-2 type-strong-2xs px-2 py-0.5 rounded-chip bg-bg-surface/90 text-accent-red border border-border-color/60 backdrop-blur-xs select-none">
                 #{displayIndex}
               </span>
             </div>
@@ -181,7 +181,7 @@ export function CandidateFormInputs({
                         type="button"
                         onClick={() => onChange({ role: r })}
                         className={cn(
-                          'px-1.5 py-0.5 rounded text-micro transition-colors cursor-pointer',
+                          'px-1.5 py-0.5 rounded-chip text-micro transition-colors cursor-pointer',
                           entity.role.toLowerCase() === r.toLowerCase()
                             ? 'bg-accent-red text-text-inverted font-bold'
                             : 'bg-bg-elevated hover:bg-bg-primary text-text-secondary hover:text-text-primary border border-border-color'
@@ -227,7 +227,7 @@ export function CandidateFormInputs({
                         type="button"
                         onClick={() => onChange({ gender: g })}
                         className={cn(
-                          'px-1.5 py-0.5 rounded text-micro transition-colors cursor-pointer',
+                          'px-1.5 py-0.5 rounded-chip text-micro transition-colors cursor-pointer',
                           entity.gender.toLowerCase() === g.toLowerCase()
                             ? 'bg-accent-amber text-text-inverted font-bold'
                             : 'bg-bg-elevated hover:bg-bg-primary text-text-secondary hover:text-text-primary border border-border-color'
@@ -333,7 +333,7 @@ export function CandidateFormInputs({
             <TextField label={c.entityWatermarkRightLabel} value={entity.watermark_right} max={SMASH_ROSTER_LIMITS.maxWatermark} onChange={(v) => onChange({ watermark_right: v })} />
 
             {showTranslations && (
-              <div className="sm:col-span-2 flex flex-col gap-2 rounded-xl border border-accent-amber/30 bg-accent-amber/5 p-3">
+              <div className="sm:col-span-2 flex flex-col gap-2 rounded-card border border-accent-amber/30 bg-accent-amber/5 p-3">
                 <span className={LABEL}>{c.translationsHeading}</span>
                 <Tabs
                   ariaLabel={c.translationsHeading}

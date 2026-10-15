@@ -147,7 +147,7 @@ export function Tabs<T extends string>({
 
   const listBase =
     variant === 'boxed'
-      ? 'gap-1.5 rounded-lg border border-border-color bg-bg-primary/50 p-1'
+      ? 'gap-1.5 rounded-control border border-border-color bg-bg-primary/50 p-1'
       : variant === 'underline'
         ? vertical
           ? 'gap-1 border-l border-border-color'
@@ -174,11 +174,11 @@ export function Tabs<T extends string>({
         const { className: extraClass, ...restButtonProps } = (tab.buttonProps ?? {}) as { className?: string };
         const variantClass =
           variant === 'underline'
-            ? cn('rounded-t-md border-b-2 -mb-px', isActive ? ACTIVE_UNDERLINE[tabAccent] : 'border-transparent text-text-primary hover:text-accent-red')
+            ? cn('rounded-t-chip border-b-2 -mb-px', isActive ? ACTIVE_UNDERLINE[tabAccent] : 'border-transparent text-text-primary hover:text-accent-red')
             : variant === 'boxed'
-              ? cn('rounded-md', isActive ? ACTIVE_SOLID[tabAccent] : 'text-text-primary hover:bg-bg-surface/80 hover:text-accent-red')
+              ? cn('rounded-chip', isActive ? ACTIVE_SOLID[tabAccent] : 'text-text-primary hover:bg-bg-surface/80 hover:text-accent-red')
               : cn(
-                  size === 'sm' ? 'rounded-lg' : 'rounded-xl',
+                  'rounded-control',
                   'border',
                   isActive
                     ? cn(ACTIVE_TINT[tabAccent], 'shadow-xs')

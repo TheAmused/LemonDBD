@@ -47,15 +47,15 @@ export function HubFilterDrawer({
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: -6, scale: 0.99 }}
           transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
-          className="absolute top-full left-0 right-0 mt-2 z-40 p-2.5 sm:p-3 rounded-2xl bg-bg-surface/95 border border-border-color backdrop-blur-2xl shadow-2xl"
+          className="absolute top-full left-0 right-0 mt-2 z-40 p-2.5 sm:p-3 rounded-card bg-bg-surface/95 border border-border-color backdrop-blur-2xl shadow-2xl"
         >
           <div className="flex flex-col md:flex-row items-center justify-between gap-2.5 sm:gap-3">
             {/* Role Segmented Switch */}
-            <div className="flex items-center gap-1 p-1 bg-bg-elevated border border-border-color rounded-2xl w-full md:w-auto shadow-inner type-strong overflow-x-auto">
+            <div className="flex items-center gap-1 p-1 bg-bg-elevated border border-border-color rounded-card w-full md:w-auto shadow-inner type-strong overflow-x-auto">
               <button
                 type="button"
                 onClick={() => onFilterChange('role', 'all')}
-                className={`flex-1 md:flex-none min-h-[44px] sm:min-h-[36px] flex items-center justify-center px-3.5 py-1.5 rounded-xl transition-all cursor-pointer touch-manipulation whitespace-nowrap ${
+                className={`flex-1 md:flex-none min-h-[44px] sm:min-h-[36px] flex items-center justify-center px-3.5 py-1.5 rounded-control transition-all cursor-pointer touch-manipulation whitespace-nowrap ${
                   roleFilter === 'all' ? 'bg-accent-red text-text-inverted' : 'text-text-muted hover:text-text-primary'
                 }`}
               >
@@ -70,7 +70,7 @@ export function HubFilterDrawer({
                     key={role}
                     type="button"
                     onClick={() => onFilterChange('role', role)}
-                    className={`flex-1 md:flex-none min-h-[44px] sm:min-h-[36px] flex items-center justify-center gap-1.5 px-3.5 py-1.5 rounded-xl transition-all cursor-pointer touch-manipulation whitespace-nowrap ${
+                    className={`flex-1 md:flex-none min-h-[44px] sm:min-h-[36px] flex items-center justify-center gap-1.5 px-3.5 py-1.5 rounded-control transition-all cursor-pointer touch-manipulation whitespace-nowrap ${
                       roleFilter === role
                         ? isSurvivor
                           ? 'bg-accent-green text-text-inverted font-black'
@@ -89,11 +89,11 @@ export function HubFilterDrawer({
             </div>
 
             {/* Gender Segmented Switch */}
-            <div className="flex items-center gap-1 p-1 bg-bg-elevated border border-border-color rounded-2xl w-full md:w-auto shadow-inner type-strong overflow-x-auto">
+            <div className="flex items-center gap-1 p-1 bg-bg-elevated border border-border-color rounded-card w-full md:w-auto shadow-inner type-strong overflow-x-auto">
               <button
                 type="button"
                 onClick={() => onFilterChange('gender', 'all')}
-                className={`min-h-[44px] sm:min-h-[36px] flex items-center justify-center px-3 py-1.5 rounded-xl transition-all shrink-0 cursor-pointer touch-manipulation whitespace-nowrap ${
+                className={`min-h-[44px] sm:min-h-[36px] flex items-center justify-center px-3 py-1.5 rounded-control transition-all shrink-0 cursor-pointer touch-manipulation whitespace-nowrap ${
                   genderFilter === 'all' ? 'bg-accent-red text-text-inverted' : 'text-text-muted hover:text-text-primary'
                 }`}
               >
@@ -115,7 +115,7 @@ export function HubFilterDrawer({
                     key={gender}
                     type="button"
                     onClick={() => onFilterChange('gender', gender)}
-                    className={`min-h-[44px] sm:min-h-[36px] flex items-center justify-center px-3 py-1.5 rounded-xl transition-all shrink-0 cursor-pointer touch-manipulation whitespace-nowrap ${
+                    className={`min-h-[44px] sm:min-h-[36px] flex items-center justify-center px-3 py-1.5 rounded-control transition-all shrink-0 cursor-pointer touch-manipulation whitespace-nowrap ${
                       genderFilter === gender
                         ? isFemale
                           ? 'bg-accent-red text-text-inverted'

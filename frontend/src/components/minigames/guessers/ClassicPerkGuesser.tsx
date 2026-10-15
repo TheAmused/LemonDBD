@@ -40,9 +40,9 @@ export const ClassicPerkGuesser: React.FC<ClassicPerkGuesserProps> = ({ guesses 
                 key={`perk-guess-${rowIdx}-${guess.id}`}
                 className="animate-in fade-in slide-in-from-top-3 duration-300 font-medium text-sm"
               >
-                <td className="p-2 rounded-xl bg-bg-surface border border-border-color text-left">
+                <td className="p-2 rounded-card bg-bg-surface border border-border-color text-left">
                   <div className="flex items-center gap-2.5">
-                    <div className="relative w-10 h-10 rounded-lg overflow-hidden bg-bg-elevated border border-border-subtle flex-shrink-0 flex items-center justify-center">
+                    <div className="relative w-10 h-10 rounded-chip overflow-hidden bg-bg-elevated border border-border-subtle flex-shrink-0 flex items-center justify-center">
                       {imgSrc ? (
                         <Image
                           src={imgSrc}
@@ -108,7 +108,7 @@ const PerkAttrCell: React.FC<{ evaluation?: AttributeEvaluation; value?: string 
     : 'bg-accent-red/20 text-accent-red border-accent-red/40 shadow-accent-red/10';
 
   return (
-    <td className={`p-2.5 rounded-xl border shadow-md font-semibold text-xs transition-all ${bgStyle}`}>
+    <td className={`p-2.5 rounded-card border shadow-md font-semibold text-xs transition-all ${bgStyle}`}>
       <div className="flex items-center justify-center gap-1">
         <span className={wrap ? 'max-w-[140px] break-words' : 'truncate max-w-[140px]'}>{value ?? '-'}</span>
         {isCorrect && <Check className="w-3.5 h-3.5 text-text-inverted flex-shrink-0" />}

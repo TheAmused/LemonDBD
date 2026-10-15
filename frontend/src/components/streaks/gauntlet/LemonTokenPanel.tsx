@@ -40,7 +40,7 @@ const BoostTile: React.FC<BoostTileProps> = ({ boost, label, price, disabled, on
       type="button"
       onClick={onClick}
       disabled={disabled}
-      className="flex min-w-0 flex-col items-center justify-center gap-1 rounded-lg border border-border-color bg-bg-surface px-2 py-2 text-center transition-colors sm:flex-row sm:gap-2 sm:px-3 sm:text-left enabled:cursor-pointer enabled:hover:border-accent-amber/60 enabled:hover:bg-bg-elevated disabled:cursor-not-allowed disabled:opacity-45"
+      className="flex min-w-0 flex-col items-center justify-center gap-1 rounded-control border border-border-color bg-bg-surface px-2 py-2 text-center transition-colors sm:flex-row sm:gap-2 sm:px-3 sm:text-left enabled:cursor-pointer enabled:hover:border-accent-amber/60 enabled:hover:bg-bg-elevated disabled:cursor-not-allowed disabled:opacity-45"
     >
       <Icon className="h-5 w-5 shrink-0 text-accent-amber" aria-hidden="true" />
       <span className="type-caption min-w-0 text-text-primary max-sm:text-xs max-sm:leading-tight">{label}</span>

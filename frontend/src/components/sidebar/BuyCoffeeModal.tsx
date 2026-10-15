@@ -75,7 +75,7 @@ export const BuyCoffeeModal: React.FC<BuyCoffeeModalProps> = ({ isOpen, onClose 
       padded
       bodyClassName="space-y-6"
     >
-    <div className="rounded-2xl border border-border-color bg-bg-elevated p-4 type-body text-text-secondary space-y-1">
+    <div className="rounded-card border border-border-color bg-bg-elevated p-4 type-body text-text-secondary space-y-1">
       <div className="flex items-center gap-1.5 font-bold text-accent-red mb-1">
         <Sparkles className="h-4 w-4" />
         <span>{t.coffeeFuelNotice || 'Entity Fuel Notice'}</span>
@@ -92,10 +92,10 @@ export const BuyCoffeeModal: React.FC<BuyCoffeeModalProps> = ({ isOpen, onClose 
             href={gateway.url}
             target="_blank"
             rel="noopener noreferrer"
-            className={`group flex items-center justify-between p-3.5 rounded-2xl border transition-all duration-200 cursor-pointer ${gateway.accentColor}`}
+            className={`group flex items-center justify-between p-3.5 rounded-control border transition-all duration-200 cursor-pointer ${gateway.accentColor}`}
           >
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-bg-elevated border border-border-color shadow-sm group-hover:scale-105 transition-transform">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-card bg-bg-elevated border border-border-color shadow-sm group-hover:scale-105 transition-transform">
                 <Icon className="h-5 w-5" />
               </div>
               <div>
@@ -110,7 +110,7 @@ export const BuyCoffeeModal: React.FC<BuyCoffeeModalProps> = ({ isOpen, onClose 
 
             <div className="flex items-center gap-2">
               <span
-                className={`hidden sm:inline-flex items-center gap-1 px-3 py-1.5 rounded-xl text-mini font-black uppercase tracking-wider shadow-md group-hover:scale-105 transition-all ${gateway.buttonBg}`}
+                className={`hidden sm:inline-flex items-center gap-1 px-3 py-1.5 rounded-control text-mini font-black uppercase tracking-wider shadow-md group-hover:scale-105 transition-all ${gateway.buttonBg}`}
               >
                 <span>{t.coffeeVisit || 'Visit'}</span>
                 <ExternalLink className="h-3 w-3" />

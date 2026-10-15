@@ -39,7 +39,7 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({ isLoading, onOpenDbMai
   return (
     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border-color pb-6 w-full">
       <div className="flex items-center gap-3.5">
-        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-accent-red/15 border border-accent-red/30 text-accent-red shadow-xs">
+        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-card bg-accent-red/15 border border-accent-red/30 text-accent-red shadow-xs">
           <OverseerEyeIcon className="h-6 w-6" />
         </div>
         <div>
@@ -82,7 +82,7 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({ isLoading, onOpenDbMai
           target="_blank"
           rel="noopener noreferrer"
           {...tip(dict.admin.pgAdminTitle, undefined, 'action')} aria-label={dict.admin.pgAdminTitle}
-          className="flex items-center justify-center gap-2 rounded-xl border border-border-color bg-bg-surface hover:bg-bg-elevated text-text-primary px-3.5 py-2 type-strong transition-all cursor-pointer shadow-xs flex-1 sm:flex-initial"
+          className="flex items-center justify-center gap-2 rounded-control border border-border-color bg-bg-surface hover:bg-bg-elevated text-text-primary px-3.5 py-2 type-strong transition-all cursor-pointer shadow-xs flex-1 sm:flex-initial"
         >
           <Database className="h-3.5 w-3.5 text-text-secondary" />
           <span>{dict.admin.pgAdmin}</span>
@@ -103,7 +103,7 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({ isLoading, onOpenDbMai
             target="_blank"
             rel="noopener noreferrer"
             {...tip(dict.admin.analyticsTitle, undefined, 'action')} aria-label={dict.admin.analyticsTitle}
-            className="flex items-center justify-center gap-1.5 rounded-xl border border-border-color bg-bg-surface hover:bg-bg-elevated text-text-primary px-3 py-2 type-strong transition-colors cursor-pointer shadow-xs"
+            className="flex items-center justify-center gap-1.5 rounded-control border border-border-color bg-bg-surface hover:bg-bg-elevated text-text-primary px-3 py-2 type-strong transition-colors cursor-pointer shadow-xs"
           >
             <LineChart className="h-3.5 w-3.5 text-text-secondary" />
             <span className="hidden md:inline">{dict.admin.analytics}</span>

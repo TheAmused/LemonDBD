@@ -126,7 +126,7 @@ export const StreakPanel: React.FC<StreakPanelProps> = ({
     </>
   );
 
-  const base = 'relative flex h-full min-h-[120px] touch-manipulation flex-col overflow-hidden rounded-2xl border border-border-color p-5 backdrop-blur-sm transition-all shadow-sm';
+  const base = 'relative flex h-full min-h-[120px] touch-manipulation flex-col overflow-hidden rounded-card border border-border-color p-5 backdrop-blur-sm transition-all shadow-sm';
 
   if (disabled) {
     return (

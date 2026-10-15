@@ -39,7 +39,7 @@ export const AltchaWidget: React.FC<AltchaWidgetProps> = ({
       {(showIndicator || error || isVerifying) && (
         <div
           role="status"
-          className="flex items-center gap-2 text-xs py-1.5 px-3 rounded-xl bg-bg-surface border border-border-color text-text-secondary shadow-xs"
+          className="flex items-center gap-2 text-xs py-1.5 px-3 rounded-card bg-bg-surface border border-border-color text-text-secondary shadow-xs"
         >
           {isVerifying ? (
             <>

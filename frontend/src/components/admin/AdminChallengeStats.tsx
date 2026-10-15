@@ -24,7 +24,7 @@ const VariantRow: React.FC<{
 }> = ({ label, breakdown }) => {
   const dict = useDictionary();
   return (
-  <div className="flex items-center justify-between text-xs px-3 py-2.5 rounded-lg bg-bg-primary border border-border-subtle">
+  <div className="flex items-center justify-between text-xs px-3 py-2.5 rounded-chip bg-bg-primary border border-border-subtle">
     <span className="font-bold text-text-primary">{label}</span>
     <span className="text-text-secondary">
       <span className="text-text-primary font-black">{breakdown.completed_runs}</span>{' '}
@@ -64,7 +64,7 @@ export const AdminChallengeStats: React.FC<AdminChallengeStatsProps> = ({ stats 
         return (
           <div
             key={key}
-            className={`rounded-2xl border ${border} bg-bg-surface p-5 shadow-sm backdrop-blur-sm transition-colors duration-200`}
+            className={`rounded-card border ${border} bg-bg-surface p-5 shadow-sm backdrop-blur-sm transition-colors duration-200`}
           >
             <div className="flex items-center justify-between mb-4">
               <h3 className="flex items-center gap-2 type-label text-text-primary">

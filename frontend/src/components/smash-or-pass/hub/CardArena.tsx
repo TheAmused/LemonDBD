@@ -66,7 +66,7 @@ export function CardArena({
         <NsfwGate onConfirm={onAcknowledgeNsfw} />
       ) : loading ? (
         <div className="relative flex flex-col items-center justify-center min-h-[var(--smash-card-h,43.75rem)] pointer-events-auto select-none animate-pulse">
-          <div className="relative smash-card-size rounded-3xl card-ash-border bg-bg-primary flex flex-col items-center justify-center p-6 space-y-4">
+          <div className="relative smash-card-size rounded-card card-ash-border bg-bg-primary flex flex-col items-center justify-center p-6 space-y-4">
             <Heart className="h-12 w-12 text-accent-red fill-accent-red/30 animate-pulse" />
             <span className="type-strong text-text-secondary text-center">
               {dict.smashOrPass.loadingRosterPrefix} {activeRoster.name || selectedRosterSlug} {dict.smashOrPass.loadingRosterSuffix}

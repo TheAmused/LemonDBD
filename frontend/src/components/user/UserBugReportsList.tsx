@@ -72,21 +72,21 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
     switch (status) {
       case 'in_progress':
         return (
-          <span className="inline-flex items-center gap-1.5 rounded-lg border border-accent-red/30 bg-accent-red/10 px-2.5 py-1 type-label-2xs text-accent-red">
+          <span className="inline-flex items-center gap-1.5 rounded-chip border border-accent-red/30 bg-accent-red/10 px-2.5 py-1 type-label-2xs text-accent-red">
             <Clock className="h-3 w-3" />
             <span>{t.statusInProgress || 'In Progress'}</span>
           </span>
         );
       case 'resolved':
         return (
-          <span className="inline-flex items-center gap-1.5 rounded-lg border border-accent-green/30 bg-accent-green/10 px-2.5 py-1 type-label-2xs text-accent-green">
+          <span className="inline-flex items-center gap-1.5 rounded-chip border border-accent-green/30 bg-accent-green/10 px-2.5 py-1 type-label-2xs text-accent-green">
             <CheckCircle className="h-3 w-3" />
             <span>{t.statusResolved || 'Resolved'}</span>
           </span>
         );
       case 'rejected':
         return (
-          <span className="inline-flex items-center gap-1.5 rounded-lg border border-border-color bg-bg-elevated px-2.5 py-1 type-label-2xs text-text-muted">
+          <span className="inline-flex items-center gap-1.5 rounded-chip border border-border-color bg-bg-elevated px-2.5 py-1 type-label-2xs text-text-muted">
             <XCircle className="h-3 w-3" />
             <span>{t.statusClosed || 'Closed'}</span>
           </span>
@@ -94,7 +94,7 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
       case 'pending':
       default:
         return (
-          <span className="inline-flex items-center gap-1.5 rounded-lg border border-accent-amber/30 bg-accent-amber/10 px-2.5 py-1 type-label-2xs text-accent-amber">
+          <span className="inline-flex items-center gap-1.5 rounded-chip border border-accent-amber/30 bg-accent-amber/10 px-2.5 py-1 type-label-2xs text-accent-amber">
             <HelpCircle className="h-3 w-3" />
             <span>{t.statusPending || 'Pending'}</span>
           </span>
@@ -145,7 +145,7 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
             return (
               <div
                 key={report.id}
-                className="rounded-2xl border border-border-color bg-bg-surface text-text-primary overflow-hidden shadow-xs transition-all hover:border-accent-red/40"
+                className="rounded-card border border-border-color bg-bg-surface text-text-primary overflow-hidden shadow-xs transition-all hover:border-accent-red/40"
               >
                 {/* Individual Droppable Drawer Header */}
                 <button
@@ -174,7 +174,7 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
                         />
                       )}
                     </span>
-                    <div className="p-1 rounded-lg bg-bg-elevated/80 text-accent-red">
+                    <div className="p-1 rounded-chip bg-bg-elevated/80 text-accent-red">
                       <ChevronDown
                         className={`h-4 w-4 transition-transform duration-300 ease-in-out ${
                           isOpen ? 'rotate-180' : 'rotate-0'
@@ -214,7 +214,7 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
                                     e.stopPropagation();
                                     setPreviewImage(src);
                                   }}
-                                  className="group relative h-16 w-16 sm:h-20 sm:w-20 rounded-xl border border-border-color bg-bg-elevated overflow-hidden shadow-xs hover:border-accent-red/60 hover:shadow-md transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-accent-red"
+                                  className="group relative h-16 w-16 sm:h-20 sm:w-20 rounded-control border border-border-color bg-bg-elevated overflow-hidden shadow-xs hover:border-accent-red/60 hover:shadow-md transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-accent-red"
                                   aria-label={`${t.attachments || 'Attachment'} ${i + 1}`}
                                 >
                                   <img
@@ -235,7 +235,7 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
 
                       {/* Developer Admin Response */}
                       {report.admin_notes && (
-                        <div className="mt-2 rounded-xl border border-accent-amber/30 bg-accent-amber/10 p-3 space-y-1">
+                        <div className="mt-2 rounded-card border border-accent-amber/30 bg-accent-amber/10 p-3 space-y-1">
                           <div className="flex items-center gap-2 text-accent-amber type-strong">
                             <OverseerEyeIcon className="h-3.5 w-3.5" />
                             <span>{t.devResponse || 'Developer Response'}</span>
@@ -249,7 +249,7 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
                       )}
 
                       {awaitingReply && (
-                        <p className="mt-2 flex items-center gap-2 rounded-xl border border-border-color bg-bg-elevated/60 p-3 type-caption text-text-muted">
+                        <p className="mt-2 flex items-center gap-2 rounded-card border border-border-color bg-bg-elevated/60 p-3 type-caption text-text-muted">
                           <Clock className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
                           <span>{t.noDevResponseYet || 'No response from the developers yet.'}</span>
                         </p>
@@ -287,12 +287,12 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
       >
         <div className="relative flex items-center justify-center">
           <PreviewCloseButton label={dict.modal.close} />
-          <div className="relative max-h-[82dvh] w-auto max-w-full overflow-hidden rounded-2xl border border-border-color/80 shadow-2xl bg-bg-primary/60 flex items-center justify-center">
+          <div className="relative max-h-[82dvh] w-auto max-w-full overflow-hidden rounded-card border border-border-color/80 shadow-2xl bg-bg-primary/60 flex items-center justify-center">
             {previewImage && (
               <img
                 src={previewImage}
                 alt={t.attachmentPreview || 'Bug Report Attachment Full Preview'}
-                className="max-h-[82dvh] max-w-full w-auto h-auto object-contain rounded-2xl"
+                className="max-h-[82dvh] max-w-full w-auto h-auto object-contain rounded-card"
               />
             )}
           </div>
@@ -308,7 +308,8 @@ const PreviewCloseButton: React.FC<{ label: string }> = ({ label }) => {
     <Button
       icon
       onClick={close}
-      className="absolute right-2 top-2 z-10 rounded-full shadow-lg"
+      pill
+      className="absolute right-2 top-2 z-10 shadow-lg"
       aria-label={label}
     >
       <X className="h-5 w-5" />

@@ -202,7 +202,7 @@ export const ChangelogEditorModal: React.FC<ChangelogEditorModalProps> = ({ open
       })}
     </div>
 
-    <div className="rounded-xl border border-border-color bg-bg-elevated/50 overflow-hidden">
+    <div className="rounded-card border border-border-color bg-bg-elevated/50 overflow-hidden">
       <div className="relative flex flex-wrap items-center gap-0.5 border-b border-border-color bg-bg-elevated/80 px-2 py-1.5">
         <ToolbarButton icon={Bold} onClick={() => exec('bold')} label="Bold" />
         <ToolbarButton icon={Italic} onClick={() => exec('italic')} label="Italic" />
@@ -219,7 +219,7 @@ export const ChangelogEditorModal: React.FC<ChangelogEditorModalProps> = ({ open
         <div className="relative">
           <ToolbarButton icon={Link2} onClick={handleLink} label="Link" active={linkOpen} />
           {linkOpen && (
-            <div className="absolute left-0 top-full z-10 mt-1 flex w-72 max-w-[80vw] items-center gap-1.5 rounded-xl border border-border-color bg-bg-elevated p-2 shadow-xl">
+            <div className="absolute left-0 top-full z-10 mt-1 flex w-72 max-w-[80vw] items-center gap-1.5 rounded-card border border-border-color bg-bg-elevated p-2 shadow-xl">
               <Input
                 autoFocus
                 fieldSize="sm"
@@ -292,7 +292,7 @@ export const ChangelogEditorModal: React.FC<ChangelogEditorModalProps> = ({ open
     </div>
 
     {error && (
-      <p role="alert" className="rounded-xl border border-accent-red/40 bg-accent-red/10 px-3 py-2 type-strong text-accent-red">
+      <p role="alert" className="rounded-card border border-accent-red/40 bg-accent-red/10 px-3 py-2 type-strong text-accent-red">
         {error}
       </p>
     )}
@@ -315,7 +315,7 @@ const ToolbarButton: React.FC<{
     {...tip(label, undefined, 'action')} aria-label={label}
     onMouseDown={(e) => e.preventDefault()}
     onClick={onClick}
-    className={`pointer-coarse:min-h-11 pointer-coarse:min-w-11 flex h-7 w-7 items-center justify-center rounded-lg text-text-muted transition-colors cursor-pointer hover:bg-bg-elevated hover:text-text-primary ${
+    className={`pointer-coarse:min-h-11 pointer-coarse:min-w-11 flex h-7 w-7 items-center justify-center rounded-control text-text-muted transition-colors cursor-pointer hover:bg-bg-elevated hover:text-text-primary ${
       active ? 'bg-bg-elevated text-accent-red' : ''
     }`}
   >
@@ -331,7 +331,7 @@ const SwatchPopover: React.FC<{
   onClear?: () => void;
   clearLabel?: string;
 }> = ({ swatches, onPick, onClear, clearLabel }) => (
-  <div className="absolute left-0 top-full z-10 mt-1 flex items-center gap-1.5 rounded-xl border border-border-color bg-bg-elevated p-2 shadow-xl">
+  <div className="absolute left-0 top-full z-10 mt-1 flex items-center gap-1.5 rounded-card border border-border-color bg-bg-elevated p-2 shadow-xl">
     {onClear && (
       <button
         type="button"

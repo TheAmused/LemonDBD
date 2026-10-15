@@ -12,9 +12,9 @@ const FIELD_BASE =
 const FIELD_ERROR = 'border-accent-red focus:ring-accent-red';
 // 16px on small screens stops iOS Safari from zooming into focused inputs.
 const FIELD_SIZES: Record<FieldSize, string> = {
-  sm: 'rounded-lg px-2.5 py-1.5 text-base sm:text-xs',
-  md: 'rounded-xl px-3 py-2.5 text-base sm:text-sm',
-  lg: 'rounded-xl px-4 py-3 text-base',
+  sm: 'rounded-control px-2.5 py-1.5 text-base sm:text-xs',
+  md: 'rounded-control px-3 py-2.5 text-base sm:text-sm',
+  lg: 'rounded-control px-4 py-3 text-base',
 };
 
 interface CommonFieldProps {

@@ -35,7 +35,7 @@ export const TerrorRadiusModal: React.FC<TerrorRadiusModalProps> = ({
       padded
       bodyClassName="space-y-6 text-sm text-text-secondary"
     >
-    <div className="relative flex flex-col items-center justify-center p-6 rounded-3xl bg-bg-primary border border-border-color overflow-hidden">
+    <div className="relative flex flex-col items-center justify-center p-6 rounded-card bg-bg-primary border border-border-color overflow-hidden">
       <div className="relative w-64 h-64 sm:w-72 sm:h-72 flex items-center justify-center">
         <div className="absolute inset-0 rounded-full border border-dashed border-border-subtle flex items-start justify-center pt-1">
           <span className="text-micro text-text-muted">{t.distance45m || '45m'} ({t.lullaby || 'Lullaby'})</span>
@@ -87,7 +87,7 @@ export const TerrorRadiusModal: React.FC<TerrorRadiusModalProps> = ({
         {t.heartbeatStages || 'Heartbeat Intensity Progression'}
       </h3>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-        <div className="p-3 rounded-xl bg-accent-red/10 border border-accent-red/40">
+        <div className="p-3 rounded-card bg-accent-red/10 border border-accent-red/40">
           <strong className="text-accent-red block mb-1">
             {t.immediateThreat || '0 - 8 Metres (Immediate Chase)'}
           </strong>
@@ -95,7 +95,7 @@ export const TerrorRadiusModal: React.FC<TerrorRadiusModalProps> = ({
             {t.immediateChaseDesc || 'Max heartbeat tempo, aggressive percussion, and direct visual red stain engagement.'}
           </p>
         </div>
-        <div className="p-3 rounded-xl bg-accent-red/5 border border-accent-red/25">
+        <div className="p-3 rounded-card bg-accent-red/5 border border-accent-red/25">
           <strong className="text-accent-red block mb-1">
             {t.dangerZone || '8 - 16 Metres (Danger Zone)'}
           </strong>
@@ -103,7 +103,7 @@ export const TerrorRadiusModal: React.FC<TerrorRadiusModalProps> = ({
             {t.dangerZoneDesc || 'Rapid heavy thumping heartbeat; killer is actively maneuvering around loops.'}
           </p>
         </div>
-        <div className="p-3 rounded-xl bg-accent-amber/10 border border-accent-amber/30">
+        <div className="p-3 rounded-card bg-accent-amber/10 border border-accent-amber/30">
           <strong className="text-accent-amber block mb-1">
             {t.approaching || '16 - 24 Metres (Approaching)'}
           </strong>
@@ -111,7 +111,7 @@ export const TerrorRadiusModal: React.FC<TerrorRadiusModalProps> = ({
             {t.approachingDesc || 'Rhythmic steady pulse indicating proximity to survivor objectives.'}
           </p>
         </div>
-        <div className="p-3 rounded-xl bg-bg-elevated border border-border-color">
+        <div className="p-3 rounded-card bg-bg-elevated border border-border-color">
           <strong className="text-text-primary block mb-1">
             {t.audibleRange || '24 - 32 Metres (Audible Range)'}
           </strong>

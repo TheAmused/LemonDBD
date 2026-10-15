@@ -67,7 +67,7 @@ export function StreakStatsDrawer<TLog extends StreakMatchLogBase>({ isOpen, onC
         bodyClassName="space-y-6 p-5 sm:p-6"
       >
         <div className="grid grid-cols-2 gap-4">
-          <div className="col-span-2 bg-bg-elevated border border-border-color rounded-xl p-5 flex items-center justify-between shadow-inner">
+          <div className="col-span-2 bg-bg-elevated border border-border-color rounded-card p-5 flex items-center justify-between shadow-inner">
             <div>
               <span className="type-label-sm text-text-secondary">
                 {dict.streaks.winRate}
@@ -81,7 +81,7 @@ export function StreakStatsDrawer<TLog extends StreakMatchLogBase>({ isOpen, onC
             </div>
           </div>
 
-          <div className="bg-bg-elevated border border-border-color rounded-xl p-4 shadow-sm">
+          <div className="bg-bg-elevated border border-border-color rounded-card p-4 shadow-sm">
             <div className="type-label-sm text-text-secondary">
               {dict.streaks.matches}
             </div>
@@ -89,7 +89,7 @@ export function StreakStatsDrawer<TLog extends StreakMatchLogBase>({ isOpen, onC
           </div>
 
           {attempts !== undefined && (
-            <div className="bg-bg-elevated border border-border-color rounded-xl p-4 shadow-sm">
+            <div className="bg-bg-elevated border border-border-color rounded-card p-4 shadow-sm">
               <div className="type-label-sm text-text-secondary">
                 {dict.streaks.attempts}
               </div>
@@ -97,14 +97,14 @@ export function StreakStatsDrawer<TLog extends StreakMatchLogBase>({ isOpen, onC
             </div>
           )}
 
-          <div className="bg-bg-elevated border border-border-color rounded-xl p-4 shadow-sm">
+          <div className="bg-bg-elevated border border-border-color rounded-card p-4 shadow-sm">
             <div className="type-label-sm text-accent-green">
               {dict.streaks.wins}
             </div>
             <div className="text-2xl font-black text-accent-green mt-1">{wins}</div>
           </div>
 
-          <div className="bg-bg-elevated border border-border-color rounded-xl p-4 shadow-sm">
+          <div className="bg-bg-elevated border border-border-color rounded-card p-4 shadow-sm">
             <div className="type-label-sm text-accent-red">
               {dict.streaks.losses}
             </div>
@@ -118,7 +118,7 @@ export function StreakStatsDrawer<TLog extends StreakMatchLogBase>({ isOpen, onC
           </h3>
 
           {recentLogs.length === 0 ? (
-            <div className="text-center py-8 text-text-muted text-xs bg-bg-elevated rounded-xl border border-border-color">
+            <div className="text-center py-8 text-text-muted text-xs bg-bg-elevated rounded-card border border-border-color">
               {dict.streaks.noMatchesLogged}
             </div>
           ) : (

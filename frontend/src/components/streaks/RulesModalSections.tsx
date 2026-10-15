@@ -37,7 +37,7 @@ export const RulesConceptCard: React.FC<{ title: React.ReactNode; text: React.Re
   text,
   tone,
 }) => (
-  <div className="bg-bg-elevated border border-border-color rounded-xl p-4 shadow-sm">
+  <div className="bg-bg-elevated border border-border-color rounded-card p-4 shadow-sm">
     <h3 className={`type-label mb-2 ${RULES_TONES[tone].conceptTitle}`}>{title}</h3>
     <p className="type-body-fluid text-text-secondary">{text}</p>
   </div>
@@ -85,9 +85,9 @@ export const RulesDifficultyRows: React.FC<{ rows: RulesDifficultyRow[]; alignTe
     {rows.map((row, i) => (
       <div
         key={i}
-        className="flex flex-col sm:flex-row sm:items-center justify-between p-3.5 bg-bg-elevated border border-border-color rounded-xl gap-2 shadow-sm"
+        className="flex flex-col sm:flex-row sm:items-center justify-between p-3.5 bg-bg-elevated border border-border-color rounded-card gap-2 shadow-sm"
       >
-        <span className={`px-2.5 py-1 rounded-lg text-xs font-bold border ${row.badgeClassName} whitespace-nowrap w-fit`}>
+        <span className={`px-2.5 py-1 rounded-chip text-xs font-bold border ${row.badgeClassName} whitespace-nowrap w-fit`}>
           {row.label}
         </span>
         <p className={`text-xs text-text-secondary${alignTextRight ? ' sm:text-right sm:max-w-xs' : ''}`}>{row.text}</p>

@@ -105,7 +105,7 @@ export const PerksTogglePopup: React.FC<PerksTogglePopupProps> = ({
                   onTogglePerk(perk.perk_id);
                 }
               }}
-              className={`flex flex-col items-center gap-1.5 rounded-xl p-1 text-center transition-transform ${
+              className={`flex flex-col items-center gap-1.5 rounded-control p-1 text-center transition-transform ${
                 isPermanentlyUnlocked
                   ? 'cursor-default opacity-90'
                   : 'cursor-pointer hover:scale-105 active:scale-95'

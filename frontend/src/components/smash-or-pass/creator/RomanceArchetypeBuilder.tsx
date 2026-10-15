@@ -110,7 +110,7 @@ export function RomanceArchetypeBuilder({ archetypes, onChange, availableRoles, 
   };
 
   return (
-    <div className={cn(embedded ? 'space-y-4' : 'rounded-3xl border border-border-color bg-bg-surface p-4 sm:p-6 space-y-4')}>
+    <div className={cn(embedded ? 'space-y-4' : 'rounded-card border border-border-color bg-bg-surface p-4 sm:p-6 space-y-4')}>
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           {!embedded && (
@@ -135,7 +135,7 @@ export function RomanceArchetypeBuilder({ archetypes, onChange, availableRoles, 
       </div>
 
       {archetypes.length === 0 ? (
-        <div className="p-4 rounded-2xl border border-dashed border-border-color text-center text-xs text-text-muted">
+        <div className="p-4 rounded-card border border-dashed border-border-color text-center text-xs text-text-muted">
           {ab.noArchetypes}
         </div>
       ) : (
@@ -146,7 +146,7 @@ export function RomanceArchetypeBuilder({ archetypes, onChange, availableRoles, 
             return (
               <div
                 key={arch.id}
-                className="rounded-2xl border border-border-color bg-bg-elevated/50 overflow-hidden transition-all"
+                className="rounded-card border border-border-color bg-bg-elevated/50 overflow-hidden transition-all"
               >
                 {/* Accordion Bar */}
                 <div
@@ -154,7 +154,7 @@ export function RomanceArchetypeBuilder({ archetypes, onChange, availableRoles, 
                   className="flex items-center justify-between p-3.5 sm:p-4 cursor-pointer hover:bg-bg-elevated/80 transition-colors"
                 >
                   <div className="flex items-center gap-3 min-w-0">
-                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-bg-primary border border-border-color overflow-hidden">
+                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-card bg-bg-primary border border-border-color overflow-hidden">
                       {arch.icon_url ? (
                         <img src={arch.icon_url} alt="" className="h-full w-full object-cover" />
                       ) : (
@@ -167,7 +167,7 @@ export function RomanceArchetypeBuilder({ archetypes, onChange, availableRoles, 
                           {arch.title || `${ab.titleLabel} #${idx + 1}`}
                         </span>
                         {arch.is_fallback && (
-                          <span className="type-label-2xs px-1.5 py-0.2 rounded bg-accent-amber/20 text-accent-amber border border-accent-amber/30">
+                          <span className="type-label-2xs px-1.5 py-0.2 rounded-chip bg-accent-amber/20 text-accent-amber border border-accent-amber/30">
                             {ab.fallbackBadge}
                           </span>
                         )}
@@ -231,7 +231,7 @@ export function RomanceArchetypeBuilder({ archetypes, onChange, availableRoles, 
                     </div>
 
                     {/* Icon & Custom URL Configuration */}
-                    <div className="rounded-2xl border border-border-color bg-bg-primary/40 p-3.5 space-y-3">
+                    <div className="rounded-card border border-border-color bg-bg-primary/40 p-3.5 space-y-3">
                       <span className={LABEL}>{ab.visualBadgeLabel}</span>
                       <div className="grid gap-3 sm:grid-cols-2">
                         {/* Preset Icon Choice */}
@@ -251,7 +251,7 @@ export function RomanceArchetypeBuilder({ archetypes, onChange, availableRoles, 
                                   aria-pressed={isSelected}
                                   onClick={() => updateArchetype(arch.id, { icon_name: p.name, icon_url: undefined })}
                                   className={cn(
-                                    'pointer-coarse:min-h-11 pointer-coarse:min-w-11 flex h-8 w-8 items-center justify-center rounded-xl border transition-all cursor-pointer',
+                                    'pointer-coarse:min-h-11 pointer-coarse:min-w-11 flex h-8 w-8 items-center justify-center rounded-control border transition-all cursor-pointer',
                                     isSelected
                                       ? 'border-accent-red bg-accent-red/20 text-accent-red'
                                       : 'border-border-color text-text-muted hover:text-text-primary'
@@ -294,7 +294,7 @@ export function RomanceArchetypeBuilder({ archetypes, onChange, availableRoles, 
                               type="button"
                               onClick={() => updateArchetype(arch.id, { badge_color: color.value })}
                               className={cn(
-                                'text-mini px-2.5 py-1 rounded-xl border transition-all cursor-pointer font-bold',
+                                'text-mini px-2.5 py-1 rounded-control border transition-all cursor-pointer font-bold',
                                 arch.badge_color === color.value
                                   ? 'border-accent-red bg-accent-red/20 text-text-primary'
                                   : 'border-border-color bg-bg-surface text-text-muted hover:text-text-primary'
@@ -332,7 +332,7 @@ export function RomanceArchetypeBuilder({ archetypes, onChange, availableRoles, 
                       {arch.rules.map((rule, rIdx) => (
                         <div
                           key={rIdx}
-                          className="flex flex-wrap items-center gap-2 p-2.5 rounded-xl border border-border-color bg-bg-primary/50 text-xs"
+                          className="flex flex-wrap items-center gap-2 p-2.5 rounded-card border border-border-color bg-bg-primary/50 text-xs"
                         >
                           <Select
                             fieldSize="sm"

@@ -286,7 +286,7 @@ export const CoverImageCropModal: React.FC<CoverImageCropModalProps> = ({ isOpen
       <div className="space-y-4 p-4 sm:p-6 select-none">
         <p className="text-center type-body text-text-secondary">{cm.subtitle}</p>
         {/* Interactive Crop Viewport (16:9 Aspect Ratio) */}
-        <div className="relative rounded-3xl border-2 border-accent-red/40 bg-bg-primary overflow-hidden shadow-2xl">
+        <div className="relative rounded-card border-2 border-accent-red/40 bg-bg-primary overflow-hidden shadow-2xl">
           <div
             ref={containerRef}
             onMouseDown={handleMouseDown}
@@ -350,14 +350,14 @@ export const CoverImageCropModal: React.FC<CoverImageCropModalProps> = ({ isOpen
             </div>
 
             {/* Hint overlay */}
-            <div className="absolute bottom-3 left-3 px-2.5 py-1 rounded-lg bg-bg-primary/80 backdrop-blur-md border border-border-subtle type-micro text-text-secondary pointer-events-none">
+            <div className="absolute bottom-3 left-3 px-2.5 py-1 rounded-chip bg-bg-primary/80 backdrop-blur-md border border-border-subtle type-micro text-text-secondary pointer-events-none">
               {cm.dragHint ? formatMessage(cm.dragHint, { zoom: Math.round(zoom * 100) }) : ''}
             </div>
           </div>
         </div>
 
         {/* Controls Bar: Zoom Slider & Quick Actions */}
-        <Surface tone="elevated" radius="2xl" padding="none" className="flex flex-col sm:flex-row items-center justify-between gap-4 p-3.5">
+        <Surface tone="elevated" padding="none" className="flex flex-col sm:flex-row items-center justify-between gap-4 p-3.5">
           <div className="flex items-center gap-2.5 w-full sm:w-auto">
             <Button
               variant="secondary" size="sm" icon
@@ -425,7 +425,7 @@ export const CoverImageCropModal: React.FC<CoverImageCropModalProps> = ({ isOpen
 
         {/* CORS Notice if canvas export fails on external domains */}
         {corsError && (
-          <div className="flex items-start gap-2.5 p-3.5 rounded-2xl bg-accent-amber/10 border border-accent-amber/30 text-accent-amber text-xs">
+          <div className="flex items-start gap-2.5 p-3.5 rounded-card bg-accent-amber/10 border border-accent-amber/30 text-accent-amber text-xs">
             <AlertCircle className="h-5 w-5 shrink-0 mt-0.5 text-accent-amber" />
             <div className="space-y-1.5">
               <p className="font-bold">{cm.corsTitle}</p>
@@ -437,7 +437,7 @@ export const CoverImageCropModal: React.FC<CoverImageCropModalProps> = ({ isOpen
                   <button
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
-                    className="px-3 py-1 rounded-lg bg-accent-amber text-text-inverted type-label-sm hover:opacity-90 transition-opacity cursor-pointer"
+                    className="px-3 py-1 rounded-control bg-accent-amber text-text-inverted type-label-sm hover:opacity-90 transition-opacity cursor-pointer"
                   >
                     {cm.uploadFile}
                   </button>

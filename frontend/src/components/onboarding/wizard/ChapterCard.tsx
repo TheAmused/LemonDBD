@@ -56,7 +56,7 @@ export function ChapterCard({
   const chapterPanelId = `chapter-panel-${slugifyChapterName(group.chapterName)}`;
 
   return (
-    <div className={`flex flex-col overflow-hidden rounded-xl sm:rounded-2xl border sm:border-2 bg-bg-surface ${isExpanded ? 'border-accent-red' : 'border-border-color'}`}>
+    <div className={`flex flex-col overflow-hidden rounded-card border sm:border-2 bg-bg-surface ${isExpanded ? 'border-accent-red' : 'border-border-color'}`}>
       <button
         type="button"
         onClick={() => toggleChapterExpanded(group.chapterName)}

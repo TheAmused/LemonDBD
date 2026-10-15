@@ -87,18 +87,18 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
       ariaLabel={selectRosterTitle}
       closeButtonAriaLabel={dict.modal.close}
       backdrop="blur"
-      className="h-[94dvh] max-h-[1100px] min-h-[580px] max-w-[1600px] border-2 border-accent-red/35 rounded-3xl"
+      className="h-[94dvh] max-h-[1100px] min-h-[580px] max-w-[1600px] border-2 border-accent-red/35 rounded-card"
       bodyClassName="flex flex-col overflow-hidden"
     >
       <div className="relative flex min-h-0 w-full flex-1 flex-col items-center justify-between overflow-hidden p-4 sm:p-6 md:p-8">
         {/* Top Left: Filter Toggle (Official vs Custom) */}
         <div className="absolute top-4 left-4 sm:top-6 sm:left-6 z-50">
-          <div className="inline-flex items-center gap-1 p-1 bg-bg-elevated/90 backdrop-blur-md rounded-2xl border border-border-color shadow-sm">
+          <div className="inline-flex items-center gap-1 p-1 bg-bg-elevated/90 backdrop-blur-md rounded-card border border-border-color shadow-sm">
             <button
               type="button"
               onClick={() => handleFilterChange('official')}
               className={cn(
-                'flex items-center gap-1.5 px-3 sm:px-3.5 py-1.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer touch-manipulation',
+                'flex items-center gap-1.5 px-3 sm:px-3.5 py-1.5 rounded-control text-xs font-bold uppercase tracking-wider transition-all cursor-pointer touch-manipulation',
                 filter === 'official'
                   ? 'bg-accent-red text-text-inverted shadow-xs'
                   : 'text-text-secondary hover:text-text-primary'
@@ -110,7 +110,7 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
               type="button"
               onClick={() => handleFilterChange('custom')}
               className={cn(
-                'flex items-center gap-1.5 px-3 sm:px-3.5 py-1.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer touch-manipulation',
+                'flex items-center gap-1.5 px-3 sm:px-3.5 py-1.5 rounded-control text-xs font-bold uppercase tracking-wider transition-all cursor-pointer touch-manipulation',
                 filter === 'custom'
                   ? 'bg-accent-red text-text-inverted shadow-xs'
                   : 'text-text-secondary hover:text-text-primary'
@@ -132,7 +132,7 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
                 <button
                   type="button"
                   onClick={onCreateRoster}
-                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 min-h-[36px] rounded-xl bg-accent-red/10 border border-accent-red/40 text-accent-red type-label-sm hover:bg-accent-red/20 transition-colors cursor-pointer"
+                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 min-h-[36px] rounded-control bg-accent-red/10 border border-accent-red/40 text-accent-red type-label-sm hover:bg-accent-red/20 transition-colors cursor-pointer"
                 >
                   {dict.smashOrPass.picker.createRoster}
                 </button>
@@ -141,7 +141,7 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
                 <button
                   type="button"
                   onClick={onImportRoster}
-                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 min-h-[36px] rounded-xl bg-bg-elevated border border-border-color text-text-secondary type-label-sm hover:text-text-primary hover:border-border-subtle transition-colors cursor-pointer"
+                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 min-h-[36px] rounded-control bg-bg-elevated border border-border-color text-text-secondary type-label-sm hover:text-text-primary hover:border-border-subtle transition-colors cursor-pointer"
                 >
                   <ImportScrollIcon className="h-4 w-4" aria-hidden="true" />
                   {dict.smashOrPass.picker.importRoster}
@@ -205,7 +205,7 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
               />
             </div>
           ) : N === 0 ? (
-            <div className="relative z-10 flex flex-col items-center justify-center gap-3 p-8 rounded-3xl border border-dashed border-border-color bg-bg-elevated/40 text-center max-w-md mx-auto">
+            <div className="relative z-10 flex flex-col items-center justify-center gap-3 p-8 rounded-card border border-dashed border-border-color bg-bg-elevated/40 text-center max-w-md mx-auto">
               <CardStackIcon className="h-10 w-10 text-accent-red animate-pulse" aria-hidden="true" />
               <h3 className="text-base font-bold text-text-primary uppercase tracking-wide">
                 {filter === 'custom'

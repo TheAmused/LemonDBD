@@ -139,7 +139,7 @@ function BlockCardView({ spec, className, expanded, onToggle, neighbour }: Block
     <section
       id={spec.id}
       className={cn(
-        'grid w-full scroll-mt-6 self-start overflow-hidden rounded-3xl border border-border-color bg-bg-surface shadow-md backdrop-blur-xl transition-colors',
+        'grid w-full scroll-mt-6 self-start overflow-hidden rounded-card border border-border-color bg-bg-surface shadow-md backdrop-blur-xl transition-colors',
         tone.hover,
         className
       )}

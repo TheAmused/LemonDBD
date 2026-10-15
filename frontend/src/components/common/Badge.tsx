@@ -28,7 +28,7 @@ export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
   size?: BadgeSize;
   /** Uppercase mono label (default) or plain text. */
   plain?: boolean;
-  /** Fully rounded (default) or squarer. A neutral badge is always the flat, squarer kind: it is never clickable. */
+  /** Pill (default) or squarer. A neutral badge is always the flat, squarer kind: it is never clickable. */
   square?: boolean;
   icon?: React.ReactNode;
 }
@@ -47,7 +47,7 @@ export const Badge: React.FC<BadgeProps> = ({
     className={cn(
       'inline-flex max-w-full shrink-0 items-center gap-1 border font-black tracking-wider whitespace-nowrap',
       !plain && ' uppercase',
-      square || tone === 'neutral' ? 'rounded-md' : 'rounded-full',
+      square || tone === 'neutral' ? 'rounded-chip' : 'rounded-full',
       BADGE_TONES[tone],
       BADGE_SIZES[size],
       className

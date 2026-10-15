@@ -10,7 +10,7 @@ export function InfoChip({ children, className, ...rest }: React.HTMLAttributes<
   return (
     <span
       className={cn(
-        'inline-flex items-center gap-1.5 rounded-md bg-bg-elevated/60 px-2.5 py-1.5 type-strong text-text-secondary cursor-default select-none',
+        'inline-flex items-center gap-1.5 rounded-chip bg-bg-elevated/60 px-2.5 py-1.5 type-strong text-text-secondary cursor-default select-none',
         className
       )}
       {...rest}

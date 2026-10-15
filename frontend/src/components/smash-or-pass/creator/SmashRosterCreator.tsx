@@ -197,7 +197,7 @@ export function SmashRosterCreator({ locale, editId }: SmashRosterCreatorProps) 
         <div
           role="status"
           aria-live="polite"
-          className="fixed top-5 right-5 z-50 flex max-w-md w-[calc(100vw-2.5rem)] sm:w-auto items-center gap-3 rounded-xl border border-accent-amber/40 bg-bg-surface/95 backdrop-blur-xl p-3 2xl:p-4 shadow-2xl text-xs sm:text-sm 2xl:text-base font-semibold text-text-primary animate-in fade-in slide-in-from-top-4 duration-300"
+          className="fixed top-5 right-5 z-50 flex max-w-md w-[calc(100vw-2.5rem)] sm:w-auto items-center gap-3 rounded-card border border-accent-amber/40 bg-bg-surface/95 backdrop-blur-xl p-3 2xl:p-4 shadow-2xl text-xs sm:text-sm 2xl:text-base font-semibold text-text-primary animate-in fade-in slide-in-from-top-4 duration-300"
         >
           <History className="h-4 w-4 2xl:h-5 2xl:w-5 text-accent-amber shrink-0" aria-hidden="true" />
           <span className="flex-1 text-accent-amber">{c.draftRestored || 'Your unfinished draft was restored.'}</span>
@@ -280,7 +280,7 @@ export function SmashRosterCreator({ locale, editId }: SmashRosterCreatorProps) 
         >
           <div className="flex flex-col gap-6">
             {draft.entities.length === 0 ? (
-              <div className="flex flex-col items-center justify-center p-8 text-center rounded-xl border border-dashed border-border-color bg-bg-elevated/20">
+              <div className="flex flex-col items-center justify-center p-8 text-center rounded-card border border-dashed border-border-color bg-bg-elevated/20">
                 <p className="text-sm text-text-muted mb-3">
                   {c.noEntitiesYet || 'No candidates yet. Add your first one above.'}
                 </p>

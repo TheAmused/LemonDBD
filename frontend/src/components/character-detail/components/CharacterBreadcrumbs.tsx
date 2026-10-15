@@ -67,7 +67,7 @@ export const CharacterBreadcrumbs: React.FC<CharacterBreadcrumbsProps> = ({
         {prevChar && (
           <Link
             href={`/${currentLocale}/characters/${getCharacterSlug(prevChar.name)}`}
-            className="flex items-center gap-1 px-3 py-1.5 rounded-xl border border-border-color bg-bg-surface hover:bg-bg-elevated text-text-secondary type-strong transition-all shadow-sm active:scale-95"
+            className="flex items-center gap-1 px-3 py-1.5 rounded-control border border-border-color bg-bg-surface hover:bg-bg-elevated text-text-secondary type-strong transition-all shadow-sm active:scale-95"
             title={`${t.prevCharacter || 'Previous'}: ${prevChar.name}`}
           >
             <ArrowLeft className="h-3.5 w-3.5" />
@@ -77,7 +77,7 @@ export const CharacterBreadcrumbs: React.FC<CharacterBreadcrumbsProps> = ({
         {nextChar && (
           <Link
             href={`/${currentLocale}/characters/${getCharacterSlug(nextChar.name)}`}
-            className="flex items-center gap-1 px-3 py-1.5 rounded-xl border border-border-color bg-bg-surface hover:bg-bg-elevated text-text-secondary type-strong transition-all shadow-sm active:scale-95"
+            className="flex items-center gap-1 px-3 py-1.5 rounded-control border border-border-color bg-bg-surface hover:bg-bg-elevated text-text-secondary type-strong transition-all shadow-sm active:scale-95"
             title={`${t.nextCharacter || 'Next'}: ${nextChar.name}`}
           >
             <span className="hidden md:inline truncate max-w-[120px]">{nextChar.name}</span>

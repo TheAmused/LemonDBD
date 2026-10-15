@@ -94,14 +94,14 @@ export function CandidateTiles({ entities, selectedKey, onSelect, onRename, onRe
               <div
                 onClick={() => onSelect(entity.key)}
                 className={cn(
-                  'relative flex aspect-square w-full items-center justify-center overflow-hidden rounded-lg border transition-all duration-150 cursor-pointer select-none',
+                  'relative flex aspect-square w-full items-center justify-center overflow-hidden rounded-chip border transition-all duration-150 cursor-pointer select-none',
                   isSelected
                     ? 'border-accent-red ring-2 ring-accent-red/80 bg-bg-surface shadow-md'
                     : 'border-border-color bg-bg-elevated hover:border-accent-red/60 hover:shadow-xs'
                 )}
               >
                 {/* Number badge on top-left of tile */}
-                <span className="absolute top-1 left-1 z-10 text-micro font-black px-1.5 py-0.5 rounded bg-bg-surface/90 text-text-secondary border border-border-color/60 backdrop-blur-xs">
+                <span className="absolute top-1 left-1 z-10 text-micro font-black px-1.5 py-0.5 rounded-chip bg-bg-surface/90 text-text-secondary border border-border-color/60 backdrop-blur-xs">
                   #{displayIndex}
                 </span>
 
@@ -123,7 +123,7 @@ export function CandidateTiles({ entities, selectedKey, onSelect, onRename, onRe
 
                 {/* Edit overlay icon on hover */}
                 <div className="absolute inset-0 z-0 flex items-center justify-center bg-bg-primary/50 opacity-0 group-hover/item:opacity-100 transition-opacity backdrop-blur-xs">
-                  <span className="flex h-7 w-7 items-center justify-center rounded-md bg-bg-surface/90 text-accent-red shadow-sm border border-border-color/60">
+                  <span className="flex h-7 w-7 items-center justify-center rounded-chip bg-bg-surface/90 text-accent-red shadow-sm border border-border-color/60">
                     <Pencil className="h-3.5 w-3.5" aria-hidden="true" />
                   </span>
                 </div>
@@ -136,7 +136,7 @@ export function CandidateTiles({ entities, selectedKey, onSelect, onRename, onRe
                     onRemove(entity.key);
                   }}
                   aria-label={formatMessage((c.removeCandidateAria), { name: entity.name || displayIndex })}
-                  className="hit-area absolute top-1 right-1 z-10 flex h-5 w-5 items-center justify-center rounded-md bg-bg-surface/90 text-text-muted opacity-80 sm:opacity-0 group-hover/item:opacity-100 hover:!opacity-100 hover:bg-accent-red hover:text-text-inverted transition-all shadow-xs cursor-pointer border border-border-color/40"
+                  className="hit-area absolute top-1 right-1 z-10 flex h-5 w-5 items-center justify-center rounded-chip bg-bg-surface/90 text-text-muted opacity-80 sm:opacity-0 group-hover/item:opacity-100 hover:!opacity-100 hover:bg-accent-red hover:text-text-inverted transition-all shadow-xs cursor-pointer border border-border-color/40"
                 >
                   <X className="h-3 w-3" aria-hidden="true" />
                 </button>
@@ -150,7 +150,7 @@ export function CandidateTiles({ entities, selectedKey, onSelect, onRename, onRe
                 onFocus={() => onSelect(entity.key)}
                 placeholder={c.unnamedCandidate}
                 aria-label={formatMessage((c.renameCandidateAria), { name: entity.name || displayIndex })}
-                className="mt-1 h-6 w-full rounded-sm border border-transparent bg-transparent px-1 text-center type-strong text-text-secondary transition-colors hover:text-text-primary hover:bg-bg-elevated/40 focus:border-accent-red focus:bg-bg-surface focus:text-text-primary focus:outline-hidden truncate"
+                className="mt-1 h-6 w-full rounded-chip border border-transparent bg-transparent px-1 text-center type-strong text-text-secondary transition-colors hover:text-text-primary hover:bg-bg-elevated/40 focus:border-accent-red focus:bg-bg-surface focus:text-text-primary focus:outline-hidden truncate"
               />
             </li>
           );
@@ -163,7 +163,7 @@ export function CandidateTiles({ entities, selectedKey, onSelect, onRename, onRe
               type="button"
               onClick={onAdd}
               data-testid="add-candidate-tile"
-              className="relative flex aspect-square w-full items-center justify-center rounded-lg border-2 border-dashed border-border-color hover:border-accent-red bg-bg-elevated/40 hover:bg-bg-elevated transition-all duration-150 text-text-muted hover:text-accent-red cursor-pointer group select-none"
+              className="relative flex aspect-square w-full items-center justify-center rounded-control border-2 border-dashed border-border-color hover:border-accent-red bg-bg-elevated/40 hover:bg-bg-elevated transition-all duration-150 text-text-muted hover:text-accent-red cursor-pointer group select-none"
             >
               <div className="flex flex-col items-center gap-1">
                 <Plus className="h-5 w-5 transition-transform group-hover:scale-110" />

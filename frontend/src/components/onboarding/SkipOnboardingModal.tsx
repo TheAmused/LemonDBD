@@ -34,7 +34,7 @@ export const SkipOnboardingModal: React.FC<SkipOnboardingModalProps> = ({ isOpen
           <button
             type="button"
             onClick={onConfirm}
-            className="w-full sm:flex-1 rounded-xl bg-accent-amber hover:bg-accent-amber-hover py-2.5 type-label-sm text-text-inverted transition-colors cursor-pointer"
+            className="w-full sm:flex-1 rounded-control bg-accent-amber hover:bg-accent-amber-hover py-2.5 type-label-sm text-text-inverted transition-colors cursor-pointer"
           >
             {t.skipModalConfirm}
           </button>

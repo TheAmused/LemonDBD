@@ -8,6 +8,7 @@ import { useDictionary } from '@/context/DictionaryContext';
 import type { EntityItem, RosterCustomLabels } from '@/types/smashOrPass';
 import type { localizedProfile } from '@/utils/entityProfile';
 import { SmashSounds } from '../SmashSoundEffects';
+import { Badge } from '@/components/common/Badge';
 
 interface CardBackFaceProps {
   character: EntityItem;
@@ -84,17 +85,13 @@ export function CardBackFace({
           </h3>
         </div>
 
-        <span
-          className={`text-micro font-black uppercase px-2 py-0.5 rounded-chip border shrink-0 ${
-            isSurvivor
-              ? 'bg-accent-green/15 text-accent-green border-accent-green/30'
-              : 'bg-accent-red/15 text-accent-red border-accent-red/30'
-          }`}
+        <Badge
+          tone={isSurvivor ? 'green' : 'red'} size="xs" square
         >
           {isSurvivor
             ? text.filters.survivors
             : text.filters.killers}
-        </span>
+        </Badge>
       </div>
 
       {/* Scrollable Back Content */}

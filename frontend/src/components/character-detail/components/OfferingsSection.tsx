@@ -26,6 +26,7 @@ import { usePersistentDrawer } from '@/hooks/usePersistentDrawer';
 import { tip } from '@/components/common/Tooltip';
 import { EmptyState } from '@/components/common/EmptyState';
 import { isKiller as isKillerRole } from '@/utils/characterUtils';
+import { Badge } from '@/components/common/Badge';
 const KILLER_OFFERING_KEYS = ['special', 'mori', 'bloodpoint', 'map', 'shroud', 'ward'] as const;
 const SURVIVOR_OFFERING_KEYS = ['special', 'bloodpoint', 'luck', 'map', 'shroud', 'blueprint', 'chest', 'ward'] as const;
 
@@ -314,15 +315,11 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
             <div>
               <h2 className="text-lg font-black tracking-tight text-text-primary flex items-center gap-2">
                 {t.offeringsTitle || 'Offerings & Sacrificial Rites'}
-                <span
-                  className={`text-xs px-2 py-0.5 rounded-full border ${
-                    isKiller
-                      ? 'bg-accent-red/10 text-accent-red border-accent-red/30'
-                      : 'bg-accent-green/10 text-accent-green border-accent-green/30'
-                  }`}
+                <Badge
+                  tone={isKiller ? 'red' : 'green'} size="sm" plain
                 >
                   {offerings.length}
-                </span>
+                </Badge>
               </h2>
             </div>
           </div>

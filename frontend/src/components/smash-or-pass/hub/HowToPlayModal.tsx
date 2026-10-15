@@ -11,6 +11,8 @@ import {
 import { Modal } from '@/components/common/Modal';
 import { useDictionary } from '@/context/DictionaryContext';
 import { TactileKeycaps } from './lazyParts';
+import { Badge } from '@/components/common/Badge';
+import { InfoChip } from '@/components/common/InfoChip';
 
 interface HowToPlayModalProps {
   isOpen: boolean;
@@ -54,14 +56,14 @@ export function HowToPlayModal({ isOpen, onClose, onPass, onSmash, onStats, onRe
             </div>
           </div>
           <div className="flex flex-wrap items-center gap-2 pt-0.5 type-caption">
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-chip bg-bg-elevated border border-border-color text-text-muted">
+            <InfoChip>
               <SnuffedCandleIcon className="h-3.5 w-3.5" aria-hidden="true" />
               <span>{text.passBadge}</span>
-            </span>
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-chip bg-accent-red/15 border border-accent-red/30 text-accent-red font-bold">
+            </InfoChip>
+            <Badge tone="red" size="md" plain square>
               <ThornHeartIcon className="h-3.5 w-3.5" aria-hidden="true" />
               <span>{text.smashBadge}</span>
-            </span>
+            </Badge>
           </div>
         </div>
 
@@ -77,14 +79,14 @@ export function HowToPlayModal({ isOpen, onClose, onPass, onSmash, onStats, onRe
             </div>
           </div>
           <div className="flex flex-wrap items-center gap-2 pt-0.5 type-caption">
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-chip bg-bg-elevated border border-border-color text-text-secondary">
+            <InfoChip>
               <TarotTurnIcon className="h-3.5 w-3.5 text-accent-red" aria-hidden="true" />
               <span>{text.flipCardBadge}</span>
-            </span>
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-chip bg-bg-elevated border border-border-color text-text-secondary">
+            </InfoChip>
+            <InfoChip>
               <PortraitLoupeIcon className="h-3.5 w-3.5 text-accent-amber" aria-hidden="true" />
               <span>{text.zoomArtBadge}</span>
-            </span>
+            </InfoChip>
           </div>
         </div>
 

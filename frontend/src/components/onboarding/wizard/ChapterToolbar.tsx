@@ -5,6 +5,7 @@ import { Check, Search, X } from 'lucide-react';
 import { Button } from '@/components/common/Button';
 import { Input } from '@/components/common/Field';
 import { useDictionary } from '@/context/DictionaryContext';
+import { InfoChip } from '@/components/common/InfoChip';
 
 interface ChapterToolbarProps {
   ownedChaptersCount: number;
@@ -37,9 +38,9 @@ export function ChapterToolbar({
         <span className="type-label-sm text-text-secondary">
           {t.chaptersTitle}
         </span>
-        <span className="rounded-full border border-border-color bg-bg-elevated px-2 py-0.5 type-strong-xs text-text-secondary">
+        <InfoChip>
           {ownedChaptersCount} / {chapterCount}
-        </span>
+        </InfoChip>
       </div>
 
       <div className="flex items-center gap-2 w-full sm:w-auto">

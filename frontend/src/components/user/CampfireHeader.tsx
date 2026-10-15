@@ -21,6 +21,7 @@ import { tip } from '@/components/common/Tooltip';
 import { Spinner } from '@/components/common/Spinner';
 import { formatDate } from '@/utils/format';
 import { useDictionary } from "@/context/DictionaryContext";
+import { Badge } from '@/components/common/Badge';
 
 interface CampfireHeaderProps {
   user: {
@@ -112,9 +113,9 @@ export const CampfireHeader: React.FC<CampfireHeaderProps> = ({
                 {user.username}
               </h1>
               {user.role === 'admin' && (
-                <span className="rounded-control px-2.5 py-0.5 type-label-sm border border-accent-red/40 bg-accent-red/15 text-accent-red shadow-xs">
+                <Badge tone="red" size="md" square>
                   {dict.user.roleAdmin}
-                </span>
+                </Badge>
               )}
             </div>
 

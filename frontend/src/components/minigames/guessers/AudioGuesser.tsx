@@ -11,6 +11,7 @@ import { staticUrl } from '@/utils/api';
 
 import { tip } from '@/components/common/Tooltip';
 import { useDictionary } from "@/context/DictionaryContext";
+import { InfoChip } from '@/components/common/InfoChip';
 
 interface AudioGuesserProps {
   roundConfig: RoundConfig;
@@ -235,19 +236,19 @@ export const AudioGuesser: React.FC<AudioGuesserProps> = ({ roundConfig, charact
         {(speedClue || terrorClue || heightClue) && (
           <div className="w-full flex flex-wrap items-center justify-center gap-2 pt-3 border-t border-border-color">
             {speedClue && (
-              <span className="px-3 py-1 rounded-chip bg-bg-elevated border border-border-subtle text-xs font-medium text-text-secondary">
+              <InfoChip>
                 {speedClue}
-              </span>
+              </InfoChip>
             )}
             {terrorClue && (
-              <span className="px-3 py-1 rounded-chip bg-bg-elevated border border-border-subtle text-xs font-medium text-text-secondary">
+              <InfoChip>
                 {terrorClue}
-              </span>
+              </InfoChip>
             )}
             {heightClue && (
-              <span className="px-3 py-1 rounded-chip bg-bg-elevated border border-border-subtle text-xs font-medium text-text-secondary">
+              <InfoChip>
                 {heightClue}
-              </span>
+              </InfoChip>
             )}
           </div>
         )}

@@ -8,6 +8,7 @@ import { getAvatarUrl } from '../types';
 import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
 
 import { tip } from '@/components/common/Tooltip';
+import { Badge } from '@/components/common/Badge';
 export interface CharacterHeroAvatarTranslations {
   view3DModel?: string;
   interactiveViewer?: string;
@@ -83,15 +84,12 @@ export const CharacterHeroAvatar: React.FC<CharacterHeroAvatarProps> = ({
         <div className="absolute inset-0 bg-gradient-to-t from-bg-primary/90 via-transparent to-transparent pointer-events-none" />
 
         <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between pointer-events-none">
-          <span
-            className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-black border backdrop-blur-md ${isSurvivor
-                ? 'bg-accent-green/20 text-accent-green border-accent-green/40 shadow-sm'
-                : 'bg-accent-red/20 text-accent-red border-accent-red/40 shadow-sm'
-              }`}
+          <Badge
+            tone={isSurvivor ? 'green' : 'red'} size="md" plain className="backdrop-blur-md"
           >
             {isSurvivor ? <SurvivorIcon className="h-3.5 w-3.5" /> : <KillerIcon className="h-3.5 w-3.5" />}
             {roleLabel}
-          </span>
+          </Badge>
 
           <span className="rounded-full bg-bg-elevated/80 border border-border-color px-2.5 py-0.5 type-strong-2xs text-text-secondary backdrop-blur-md">
             {character.is_licensed ? (t.dlcLicensed || '') : (t.dlcOriginal || '')}

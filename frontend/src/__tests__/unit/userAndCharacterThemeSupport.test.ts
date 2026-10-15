@@ -115,7 +115,7 @@ describe('User Profile Theme Support', () => {
         );
       } else if (status === 'rejected') {
         assert.ok(
-          html.includes('text-text-muted') || html.includes('text-slate-600 dark:text-slate-400'),
+          html.includes('text-text-muted') || html.includes('text-text-secondary'),
           'Closed badge must have contrast text'
         );
       }

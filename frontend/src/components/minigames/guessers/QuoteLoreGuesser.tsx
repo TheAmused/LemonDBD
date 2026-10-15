@@ -7,6 +7,7 @@ import { Quote, BookOpen, Check, X, Sparkles } from 'lucide-react';
 import type { GuessRecord, RoundConfig, CatalogCharacter, CatalogPerk } from '@/types/minigame';
 import { staticUrl } from '@/utils/api';
 import { useDictionary } from "@/context/DictionaryContext";
+import { InfoChip } from '@/components/common/InfoChip';
 
 interface QuoteLoreGuesserProps {
   roundConfig: RoundConfig;
@@ -69,19 +70,19 @@ export const QuoteLoreGuesser: React.FC<QuoteLoreGuesserProps> = ({ roundConfig,
         {(clue1 || clue2 || clue3) && (
           <div className="w-full flex flex-wrap items-center justify-center gap-2 pt-4 mt-4 border-t border-border-color">
             {clue1 && (
-              <span className="px-3 py-1 rounded-chip bg-bg-elevated border border-border-color text-xs font-medium text-text-secondary">
+              <InfoChip>
                 {clue1}
-              </span>
+              </InfoChip>
             )}
             {clue2 && (
-              <span className="px-3 py-1 rounded-chip bg-bg-elevated border border-border-color text-xs font-medium text-text-secondary">
+              <InfoChip>
                 {clue2}
-              </span>
+              </InfoChip>
             )}
             {clue3 && (
-              <span className="px-3 py-1 rounded-chip bg-bg-elevated border border-border-color text-xs font-medium text-text-secondary">
+              <InfoChip>
                 {clue3}
-              </span>
+              </InfoChip>
             )}
           </div>
         )}

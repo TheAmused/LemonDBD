@@ -15,6 +15,7 @@ import { backendBase } from '@/utils/staticUrl';
 import { authHeaders, getErrorMessage } from '@/utils/api';
 import { formatMessage } from '@/utils/i18nFormat';
 import { useDictionary } from "@/context/DictionaryContext";
+import { Badge } from '@/components/common/Badge';
 
 interface AdminSettingsPanelProps {
   onActionMessage: (msg: ActionMessage) => void;
@@ -163,13 +164,13 @@ export const AdminSettingsPanel: React.FC<AdminSettingsPanelProps> = ({ onAction
                             <label htmlFor={`cfg-${row.key}`} className="type-strong flex flex-wrap items-center gap-2 text-text-primary">
                               <span>{labelFor(row.key)}</span>
                               {changedRow ? (
-                                <span className="type-label-2xs rounded-chip border border-accent-red/30 bg-accent-red/10 px-1.5 py-0.5 text-accent-red">
+                                <Badge tone="red" size="xs" square>
                                   {t.configModified || 'Modified'}
-                                </span>
+                                </Badge>
                               ) : row.overridden ? (
-                                <span className="type-label-2xs rounded-chip border border-border-color bg-bg-elevated px-1.5 py-0.5 text-text-muted">
+                                <Badge tone="neutral" size="xs" square>
                                   {t.configCustom || 'Custom'}
-                                </span>
+                                </Badge>
                               ) : null}
                             </label>
                             <p className="mt-1 type-body text-text-muted">{descFor(row.key)}</p>

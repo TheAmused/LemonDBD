@@ -20,6 +20,7 @@ import { SuccessState } from '@/components/common/SuccessState';
 import { Button } from '@/components/common/Button';
 import { Input, Textarea } from '@/components/common/Field';
 import { useDictionary } from "@/context/DictionaryContext";
+import { Badge } from '@/components/common/Badge';
 
 export interface BugReportModalProps {
   isOpen: boolean;
@@ -227,10 +228,10 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({ isOpen, onClose 
               </p>
             </div>
           </div>
-          <span className="rounded-chip bg-accent-green/10 px-2 py-0.5 type-strong-2xs text-accent-green border border-accent-green/20 flex items-center gap-1">
+          <Badge tone="green" size="xs" plain square>
             <UserCheck className="h-3 w-3" aria-hidden="true" />
             {t.verified || ''}
-          </span>
+          </Badge>
         </div>
       ) : (
         <div>

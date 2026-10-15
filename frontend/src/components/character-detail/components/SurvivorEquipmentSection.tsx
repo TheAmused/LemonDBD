@@ -29,6 +29,7 @@ import { usePersistentDrawer } from '@/hooks/usePersistentDrawer';
 
 import { tip } from '@/components/common/Tooltip';
 import { EmptyState } from '@/components/common/EmptyState';
+import { Badge } from '@/components/common/Badge';
 interface SurvivorEquipmentSectionProps {
   items?: EquipmentItem[];
   addons?: (AddonItem | EquipmentItem)[];
@@ -187,9 +188,9 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
             <div>
               <h2 id="survivor-equipment-heading" className="text-lg font-black tracking-tight text-text-primary flex items-center gap-2">
                 {t.equipmentTitleSurvivor || 'Survival Items & Equipment'}
-                <span className="text-xs px-2 py-0.5 rounded-full bg-accent-green/10 text-accent-green border border-accent-green/30">
+                <Badge tone="green" size="sm" plain>
                   {items.length + addons.length}
-                </span>
+                </Badge>
               </h2>
             </div>
           </div>

@@ -24,6 +24,7 @@ import { Button } from '@/components/common/Button';
 import { Input, Select, Textarea } from '@/components/common/Field';
 import { useDictionary } from "@/context/DictionaryContext";
 import { ToggleChip } from '@/components/common/ToggleChip';
+import { Badge } from '@/components/common/Badge';
 
 const ICON_PRESETS: Array<{ name: string; icon: React.ComponentType<{ className?: string }> }> = [
   { name: 'sparkles', icon: Sparkles },
@@ -168,9 +169,9 @@ export function RomanceArchetypeBuilder({ archetypes, onChange, availableRoles, 
                           {arch.title || `${ab.titleLabel} #${idx + 1}`}
                         </span>
                         {arch.is_fallback && (
-                          <span className="type-label-2xs px-1.5 py-0.2 rounded-chip bg-accent-amber/20 text-accent-amber border border-accent-amber/30">
+                          <Badge tone="amber" size="xs" square>
                             {ab.fallbackBadge}
-                          </span>
+                          </Badge>
                         )}
                       </div>
                       <p className="type-caption text-text-muted truncate">{arch.subtitle}</p>

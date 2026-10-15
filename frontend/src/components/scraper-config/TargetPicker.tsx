@@ -7,6 +7,7 @@ import { useLocalizedTargets } from './useLocalizedTargets';
 import { ALL_TARGETS, TARGET_GROUPS_CONFIG, type TargetItem } from './scraperTargets';
 
 import { Button } from '@/components/common/Button';
+import { InfoChip } from '@/components/common/InfoChip';
 interface TargetPickerProps {
   heading: string;
   selected: string[];
@@ -61,9 +62,9 @@ export function TargetPicker({
                 <div className="flex items-center gap-2">
                   <GroupIcon className="h-3.5 w-3.5 text-accent-red" />
                   <span className="type-label-xs text-text-primary">{groupLabel}</span>
-                  <span className="rounded-chip bg-bg-surface px-1.5 py-0.5 type-strong-2xs text-text-secondary border border-border-color">
+                  <InfoChip>
                     {selectedInGroup.length}/{groupTargets.length}
-                  </span>
+                  </InfoChip>
                 </div>
                 <Button
                   type="button"

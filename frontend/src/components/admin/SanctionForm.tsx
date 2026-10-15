@@ -10,6 +10,7 @@ import { Input, Select, Textarea } from '@/components/common/Field';
 import { reasonLabel, ruleLabel } from '@/components/moderation/moderationLabels';
 import { useDictionary } from '@/context/DictionaryContext';
 import {
+  MAX_SANCTION_TEXT_LENGTH,
   MAX_SUSPENSION_DAYS,
   MIN_SUSPENSION_DAYS,
   RULE_REFS,
@@ -117,7 +118,7 @@ export function SanctionForm({ draft, onChange, kinds, showReason = true, showIn
           id={`${id}-facts`}
           fieldSize="sm"
           rows={3}
-          maxLength={2000}
+          maxLength={MAX_SANCTION_TEXT_LENGTH}
           value={draft.facts}
           onChange={(e) => onChange({ facts: e.target.value })}
           invalid={factsRequired && draft.facts.trim().length === 0}
@@ -132,7 +133,7 @@ export function SanctionForm({ draft, onChange, kinds, showReason = true, showIn
           id={`${id}-message`}
           fieldSize="sm"
           rows={2}
-          maxLength={2000}
+          maxLength={MAX_SANCTION_TEXT_LENGTH}
           value={draft.public_message}
           onChange={(e) => onChange({ public_message: e.target.value })}
           className="resize-none"
@@ -148,7 +149,7 @@ export function SanctionForm({ draft, onChange, kinds, showReason = true, showIn
               id={`${id}-internal`}
               fieldSize="sm"
               rows={2}
-              maxLength={2000}
+              maxLength={MAX_SANCTION_TEXT_LENGTH}
               value={draft.internal_notes}
               onChange={(e) => onChange({ internal_notes: e.target.value })}
               className="resize-none"
@@ -156,7 +157,7 @@ export function SanctionForm({ draft, onChange, kinds, showReason = true, showIn
             <p className={hint}>{t.formInternalHint}</p>
           </div>
           <Checkbox checked={draft.send_email} onChange={(send_email) => onChange({ send_email })}>
-            <span className="text-xs text-text-primary">{t.formSendEmail}</span>
+            <span className="type-body text-text-primary">{t.formSendEmail}</span>
           </Checkbox>
         </>
       )}

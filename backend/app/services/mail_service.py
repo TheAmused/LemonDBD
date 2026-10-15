@@ -16,6 +16,11 @@ from app.utils.durations import describe_duration
 logger = logging.getLogger(__name__)
 
 _ACCENT = "#d97706"
+# Mail clients ignore CSS variables, so the e-mail palette lives here, once, as literals.
+_INK = "#0f172a"
+_MUTED = "#64748b"
+_FAINT = "#94a3b8"
+_RULE = "#e2e8f0"
 _LOGO_CID = "lemondbd-logo"
 _LOGO_PATH = Path(__file__).resolve().parent.parent / "static" / "email" / "logo.png"
 
@@ -274,21 +279,21 @@ def _sanction_block_html(block: tuple[str, ...], first: bool) -> str:
     kind = block[0]
     if kind == "p":
         style = (
-            "margin:0 0 4px; font-size:14px; color:#0f172a;"
+            f"margin:0 0 4px; font-size:14px; color:{_INK};"
             if first
-            else "margin:0 0 12px; font-size:13px; color:#64748b; line-height:1.6;"
+            else f"margin:0 0 12px; font-size:13px; color:{_MUTED}; line-height:1.6;"
         )
         return f'<p style="{style}">{html.escape(block[1])}</p>'
     if kind == "field":
         return (
-            '<p style="margin:0 0 8px; font-size:13px; color:#0f172a; line-height:1.6;">'
+            f'<p style="margin:0 0 8px; font-size:13px; color:{_INK}; line-height:1.6;">'
             f"<strong>{html.escape(block[1])}:</strong> {html.escape(block[2])}</p>"
         )
     # "quote": the moderator's own words, kept as written
     return (
-        f'<p style="margin:12px 0 4px; font-size:12px; color:#94a3b8;">{html.escape(block[1])}</p>'
-        '<blockquote style="margin:0 0 12px; padding:6px 0 6px 12px; border-left:3px solid #e2e8f0; '
-        f'font-size:13px; color:#0f172a; line-height:1.6; white-space:pre-wrap;">{html.escape(block[2])}</blockquote>'
+        f'<p style="margin:12px 0 4px; font-size:12px; color:{_FAINT};">{html.escape(block[1])}</p>'
+        f'<blockquote style="margin:0 0 12px; padding:6px 0 6px 12px; border-left:3px solid {_RULE}; '
+        f'font-size:13px; color:{_INK}; line-height:1.6; white-space:pre-wrap;">{html.escape(block[2])}</blockquote>'
     )
 
 

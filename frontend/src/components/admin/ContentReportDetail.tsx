@@ -66,7 +66,7 @@ export function ContentReportDetail({ detail, resolving, onResolve }: ContentRep
         <h3 className="type-strong text-text-primary">#{detail.id}</h3>
         <Badge tone="neutral" size="sm">{contentTypeLabel(dict, detail.content_type)}</Badge>
         <Badge tone={contentStatusTone(detail.status)} size="sm">{contentStatusLabel(dict, detail.status)}</Badge>
-        <span className="text-xs text-text-secondary">
+        <span className="type-body text-text-secondary">
           {dict.admin.contentReportCountLabel} {detail.report_count}
         </span>
       </div>
@@ -99,16 +99,16 @@ export function ContentReportDetail({ detail, resolving, onResolve }: ContentRep
       </dl>
 
       {!detail.attributed && (
-        <p className="flex items-start gap-2 rounded-xl border border-accent-amber/30 bg-accent-amber/10 p-3 text-xs text-accent-amber">
+        <p className="flex items-start gap-2 rounded-xl border border-accent-amber/30 bg-accent-amber/10 p-3 type-body text-accent-amber">
           <ShieldAlert className="mt-0.5 h-4 w-4 shrink-0" />
           <span>{dict.admin.contentReportUnattributed}</span>
         </p>
       )}
       {detail.attributed && detail.author_active === false && (
-        <p className="text-xs text-text-secondary">{dict.admin.contentReportAuthorInactive}</p>
+        <p className="type-body text-text-secondary">{dict.admin.contentReportAuthorInactive}</p>
       )}
       {detail.attributed && detail.author_is_admin && (
-        <p className="text-xs text-text-secondary">{dict.admin.contentReportAuthorIsAdmin}</p>
+        <p className="type-body text-text-secondary">{dict.admin.contentReportAuthorIsAdmin}</p>
       )}
 
       <div className="space-y-1.5">
@@ -127,7 +127,7 @@ export function ContentReportDetail({ detail, resolving, onResolve }: ContentRep
           <p className="type-label-sm text-text-secondary">{dict.admin.contentReportReporterNotes}</p>
           <ul className="max-h-40 overflow-y-auto space-y-1.5 rounded-xl border border-border-subtle bg-bg-primary p-3">
             {reporterNotes.map((r, index) => (
-              <li key={index} className="text-xs text-text-primary break-words whitespace-pre-wrap">
+              <li key={index} className="type-body text-text-primary break-words whitespace-pre-wrap">
                 <span className="text-text-secondary">{contentReasonLabel(dict, r.reason)}: </span>
                 {r.notes}
               </li>
@@ -141,7 +141,7 @@ export function ContentReportDetail({ detail, resolving, onResolve }: ContentRep
         {detail.evidence_payload ? (
           <SandboxedContentPreview key={detail.id} evidence={detail.evidence_payload} />
         ) : (
-          <p className="text-xs text-text-muted">{dict.admin.contentReportEvidenceWiped}</p>
+          <p className="type-body text-text-muted">{dict.admin.contentReportEvidenceWiped}</p>
         )}
       </div>
 
@@ -201,7 +201,7 @@ export function ContentReportDetail({ detail, resolving, onResolve }: ContentRep
         detail.admin_notes && (
           <div className="space-y-1.5 border-t border-border-color pt-4">
             <p className="type-label-sm text-text-secondary">{dict.admin.contentReportNotesLabel}</p>
-            <p className="text-xs text-text-primary break-words whitespace-pre-wrap">{detail.admin_notes}</p>
+            <p className="type-body text-text-primary break-words whitespace-pre-wrap">{detail.admin_notes}</p>
           </div>
         )
       )}

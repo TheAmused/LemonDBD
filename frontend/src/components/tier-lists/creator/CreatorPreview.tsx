@@ -9,6 +9,7 @@ import { TierBadge } from '../TierBadge';
 import { CustomTierListCard } from '../TierListCards';
 import { TierItemTile } from '../TierItemTile';
 import { useDictionary } from "@/context/DictionaryContext";
+import { Badge } from '@/components/common/Badge';
 
 interface CreatorPreviewProps {
   title: string;
@@ -86,9 +87,9 @@ export function CreatorPreview({ title, description, tiers, items, backgroundIma
       <div className="flex flex-col items-center gap-2 w-full">
         <div className="flex items-center justify-center gap-2 px-1">
           <span className="type-label-sm text-text-muted">{t.unranked}</span>
-          <span className="rounded-full bg-accent-red/10 px-2 py-0.5 type-strong-xs text-accent-red border border-accent-red/25">
+          <Badge tone="red" size="sm" plain>
             {tiles.length}
-          </span>
+          </Badge>
         </div>
         <div className="w-full rounded-card border border-border-color bg-bg-primary/20 p-3 sm:p-4 min-h-[96px] flex flex-wrap gap-2 items-center justify-center">
           {tiles.length === 0 ? (

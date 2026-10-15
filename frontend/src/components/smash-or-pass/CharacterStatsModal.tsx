@@ -20,6 +20,7 @@ import { Surface } from '@/components/common/Surface';
 import { formatNumber } from '@/utils/format';
 import { isSurvivor as isSurvivorRole } from '@/utils/characterUtils';
 import { useDictionary } from "@/context/DictionaryContext";
+import { Badge } from '@/components/common/Badge';
 
 /** An entity, optionally carrying legacy vote-response fields. */
 type StatsCharacter = EntityItem & {
@@ -141,15 +142,11 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({ isOpen
   const percentSign = rawSmashDict.percentSign;
 
   const roleBadge = (
-    <span
-      className={`text-tiny font-black uppercase px-2 py-0.5 rounded-chip border ${
-        isSurvivor
-          ? 'bg-accent-green/15 text-accent-green border-accent-green/40'
-          : 'bg-accent-red/15 text-accent-red border-accent-red/40'
-      }`}
+    <Badge
+      tone={isSurvivor ? 'green' : 'red'} size="sm" square
     >
       {roleLabel}
-    </span>
+    </Badge>
   );
 
   const portrait = (

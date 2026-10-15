@@ -11,6 +11,7 @@ import { OverseerEyeIcon } from '@/components/icons/DbdIcons';
 
 import { tip } from '@/components/common/Tooltip';
 import { useDictionary } from "@/context/DictionaryContext";
+import { Badge } from '@/components/common/Badge';
 
 export interface SidebarUserSectionProps {
   currentLocale: string;
@@ -56,15 +57,11 @@ export const SidebarUserSection: React.FC<SidebarUserSectionProps> = ({
               <UserAvatar user={user} size="sm" />
               <div className="truncate">
                 <p className="type-strong text-text-primary truncate">{user.username}</p>
-                <span
-                  className={`inline-block rounded-chip px-1 text-micro font-black uppercase tracking-wider ${
-                    user.role === 'admin'
-                      ? 'bg-accent-red/20 text-accent-red border border-accent-red/30'
-                      : 'bg-bg-surface text-text-muted border border-border-color'
-                  }`}
+                <Badge
+                  tone={user.role === 'admin' ? 'red' : 'neutral'} size="xs" square className="inline-block"
                 >
                   {user.role}
-                </span>
+                </Badge>
               </div>
             </Link>
 

@@ -13,6 +13,7 @@ import { tip } from '@/components/common/Tooltip';
 import { CollapsibleDrawer } from './CollapsibleDrawer';
 import { toTitleCase } from '@/utils/textCase';
 import { usePersistentDrawer } from '@/hooks/usePersistentDrawer';
+import { Badge } from '@/components/common/Badge';
 
 interface KillerEquipmentSectionProps {
   addons?: (AddonItem | EquipmentItem)[];
@@ -72,9 +73,9 @@ export const KillerEquipmentSection: React.FC<KillerEquipmentSectionProps> = ({
             <div>
               <h3 className="text-lg font-black tracking-tight text-text-primary flex items-center gap-2">
                 {t.equipmentTitleKiller || 'Killer Power Add-ons & Equipment'}
-                <span className="text-xs px-2 py-0.5 rounded-full bg-accent-red/10 text-accent-red border border-accent-red/30">
+                <Badge tone="red" size="sm" plain>
                   {addons.length}
-                </span>
+                </Badge>
               </h3>
             </div>
           </div>

@@ -9,6 +9,7 @@ import { Modal } from '@/components/common/Modal';
 import { AdeptBadgeIcon } from '@/components/icons/DbdIcons';
 import { HEADER_BUTTON_CLASSES } from './ChallengePanel';
 import { useDictionary } from "@/context/DictionaryContext";
+import { Badge } from '@/components/common/Badge';
 
 export const NEUTRAL_TILE_ACCENT = 'border-border-color bg-bg-elevated hover:bg-bg-elevated/80 text-text-secondary';
 
@@ -182,19 +183,19 @@ export const ChallengeIntroModalShell: React.FC<ChallengeIntroModalShellProps> =
               }`}
             >
               {tile.completed && tile.completedFull ? (
-                <span className="absolute right-2 top-2 flex items-center gap-1 rounded-full border border-accent-red/50 bg-accent-red/15 px-1.5 py-0.5 text-accent-red shadow-sm">
+                <Badge tone="red" size="xs" plain className="absolute right-2 top-2">
                   <AdeptBadgeIcon className="h-3 w-3" />
                   {tile.completedFullCount != null && (
                     <span className="text-tiny font-black leading-none">{tile.completedFullCount}</span>
                   )}
-                </span>
+                </Badge>
               ) : tile.completed ? (
-                <span className="absolute right-2 top-2 flex items-center gap-1 rounded-full border border-accent-amber/40 bg-accent-amber/15 px-1.5 py-0.5 text-accent-amber shadow-sm">
+                <Badge tone="amber" size="xs" plain className="absolute right-2 top-2">
                   <AdeptBadgeIcon className="h-3 w-3" />
                   {tile.completedCount != null && (
                     <span className="text-tiny font-black leading-none">{tile.completedCount}</span>
                   )}
-                </span>
+                </Badge>
               ) : null}
               {content}
             </button>

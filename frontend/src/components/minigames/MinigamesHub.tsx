@@ -54,6 +54,8 @@ import { EmptyState } from '@/components/common/EmptyState';
 import { copyTextWithFallback } from '@/utils/clipboard';
 import { useDictionary } from "@/context/DictionaryContext";
 import { formatMessage } from '@/utils/i18nFormat';
+import { Badge } from '@/components/common/Badge';
+import { InfoChip } from '@/components/common/InfoChip';
 
 const AuthModal = dynamic(() => import('@/components/AuthModal').then((m) => m.AuthModal), { ssr: false });
 
@@ -205,9 +207,9 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
             {t.streak.best}: {streakData.maxStreak}
           </div>
           {isCompletedToday && (
-            <span className="type-strong px-2.5 py-0.5 rounded-full bg-accent-green/20 text-accent-green border border-accent-green/40">
+            <Badge tone="green" size="md" plain>
               {t.alreadyCompletedToday}
-            </span>
+            </Badge>
           )}
         </div>
       </div>
@@ -240,9 +242,9 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
               <div className="w-12 h-12 rounded-card bg-accent-red/10 border border-accent-red/30 flex items-center justify-center text-accent-red group-hover:scale-110 transition-transform">
                 <Calendar className="w-6 h-6" />
               </div>
-              <span className="type-label-2xs px-2.5 py-1 rounded-full bg-accent-red/20 text-accent-red border border-accent-red/30">
+              <Badge tone="red" size="sm">
                 {t.dailyTrial}
-              </span>
+              </Badge>
             </div>
             <h2 className="text-xl font-black text-text-primary mb-1.5">{t.dailyTrial}</h2>
             <p className="type-body text-text-secondary">
@@ -266,9 +268,9 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
               <div className="w-12 h-12 rounded-card bg-accent-amber/10 border border-accent-amber/30 flex items-center justify-center text-accent-amber group-hover:scale-110 transition-transform">
                 <Trophy className="w-6 h-6" />
               </div>
-              <span className="type-label-2xs px-2.5 py-1 rounded-full bg-accent-amber/20 text-accent-amber border border-accent-amber/30">
+              <Badge tone="amber" size="sm">
                 {t.dbdIdleClassic}
-              </span>
+              </Badge>
             </div>
             <h2 className="text-xl font-black text-text-primary mb-1.5">{t.dbdIdleClassic}</h2>
             <p className="type-body text-text-secondary">
@@ -292,9 +294,9 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
               <div className="w-12 h-12 rounded-card bg-accent-red/10 border border-accent-red/30 flex items-center justify-center text-accent-red group-hover:scale-110 transition-transform">
                 <Layers className="w-6 h-6" />
               </div>
-              <span className="type-label-2xs px-2.5 py-1 rounded-full bg-accent-red/20 text-accent-red border border-accent-red/30">
+              <Badge tone="red" size="sm">
                 {t.creatorBadge}
-              </span>
+              </Badge>
             </div>
             <h2 className="text-xl font-black text-text-primary mb-1.5">{t.creatorTitle}</h2>
             <p className="type-body text-text-secondary">{t.creatorSubtitle}</p>
@@ -509,9 +511,9 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
                   <div>
                     <div className="flex items-start justify-between gap-2">
                       <h3 className="font-bold text-text-primary text-base truncate">{trial.title}</h3>
-                      <span className="type-strong-2xs px-2 py-0.5 rounded-chip bg-bg-elevated text-text-muted border border-border-subtle flex-shrink-0">
+                      <InfoChip>
                         {formatMessage(t.roundsCount, { count: trial.rounds.length }, locale)}
-                      </span>
+                      </InfoChip>
                     </div>
                     {trial.is_nsfw && <NsfwBadge label={t.nsfw.badge} className="mt-1.5" />}
                     {trial.description && (

@@ -24,6 +24,8 @@ import type {
 } from '@/services/clientSpeechModel';
 import { formatMessage } from '@/utils/i18nFormat';
 import { useDictionary } from "@/context/DictionaryContext";
+import { Badge } from '@/components/common/Badge';
+import { InfoChip } from '@/components/common/InfoChip';
 
 export interface VoiceEngineInfoModalProps {
   isOpen: boolean;
@@ -62,9 +64,9 @@ export const VoiceEngineInfoBody: React.FC<Omit<VoiceEngineInfoModalProps, 'isOp
           <Laptop className="h-3.5 w-3.5 text-text-muted" aria-hidden="true" />
           {dict.maps.detectedBrowser}
         </span>
-        <span className="rounded-full bg-bg-surface px-2.5 py-0.5 type-strong text-text-primary">
+        <InfoChip>
           {browserName}
-        </span>
+        </InfoChip>
       </div>
 
       <div className="flex items-center justify-between pt-1">
@@ -72,13 +74,13 @@ export const VoiceEngineInfoBody: React.FC<Omit<VoiceEngineInfoModalProps, 'isOp
           <Sparkles className="h-3.5 w-3.5 text-text-muted" aria-hidden="true" />
           {dict.maps.activeRecognitionEngine}
         </span>
-        <span
-          className="rounded-full px-2.5 py-0.5 type-strong border bg-accent-red/10 text-accent-red border-accent-red/30"
+        <Badge
+          tone="red" size="md" plain
         >
           {currentEngine === 'web-speech'
             ? t.engineNativeBadge || ''
             : t.engineClientBadge || ''}
-        </span>
+        </Badge>
       </div>
     </div>
 

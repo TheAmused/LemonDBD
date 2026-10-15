@@ -14,6 +14,7 @@ import {
 import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
 
 import { Button } from '@/components/common/Button';
+import { Badge } from '@/components/common/Badge';
 interface CharacterCardProps {
   char: CharacterItem;
   locale: string;
@@ -65,12 +66,8 @@ export function CharacterCard({
       className="group relative flex flex-col overflow-hidden rounded-card border border-border-color bg-bg-surface hover:bg-bg-elevated hover:border-accent-red/50 shadow-xs hover:shadow-lg transition-all duration-300 cursor-pointer touch-manipulation aspect-[3/4] w-full"
     >
       <div className="absolute top-1.5 right-1.5 sm:top-2 sm:right-2 z-20">
-        <span
-          className={`inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 sm:px-2 text-micro sm:text-tiny font-bold border backdrop-blur-md ${
-            isSurvivor
-              ? 'bg-accent-green/10 text-accent-green border-accent-green/30'
-              : 'bg-accent-red/10 text-accent-red border-accent-red/30'
-          }`}
+        <Badge
+          tone={isSurvivor ? 'green' : 'red'} size="xs" plain className="backdrop-blur-md"
         >
           {isSurvivor ? <SurvivorIcon className="h-3 w-3" /> : <KillerIcon className="h-3 w-3" />}
           <span>
@@ -78,7 +75,7 @@ export function CharacterCard({
               ? dict.characterDetail.roleSurvivor
               : dict.characterDetail.roleKiller}
           </span>
-        </span>
+        </Badge>
       </div>
 
       {char.is_disabled && !ownershipMode && (

@@ -22,6 +22,7 @@ import { useDictionary } from '@/context/DictionaryContext';
 import type { RosterItem } from '@/types/smashOrPass';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 import { rosterCoverUrl } from '../roster-select/rosterDisplay';
+import { Badge } from '@/components/common/Badge';
 
 /** Square icon buttons: 44px to touch, a little smaller where a pointer is precise. */
 const DOCK_BUTTON =
@@ -144,9 +145,9 @@ export function HubHeader({
             <span className="truncate min-w-0 max-w-[16rem] text-text-primary group-hover:text-accent-red font-black tracking-wide">
               {rosterName}
             </span>
-            <span className="px-2 py-0.5 rounded-chip bg-accent-red/20 text-accent-red text-tiny sm:text-xs font-black shrink-0">
+            <Badge tone="red" size="sm" plain square>
               {rosterBadgeCount}
-            </span>
+            </Badge>
             <ChevronDown className="h-4 w-4 shrink-0 text-accent-red group-hover:translate-y-0.5 transition-transform" aria-hidden="true" />
           </button>
 

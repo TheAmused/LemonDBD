@@ -9,6 +9,7 @@ import { Search, ChevronDown, Sparkles } from 'lucide-react';
 import type { MinigameCatalog, TargetType, GuessedItem } from '@/types/minigame';
 import { staticUrl } from '@/utils/api';
 import { isKiller, isSurvivor } from '@/utils/characterUtils';
+import { Badge } from '@/components/common/Badge';
 
 export type AutocompleteItem = GuessedItem;
 
@@ -298,17 +299,11 @@ export const CharacterAutocomplete: React.FC<CharacterAutocompleteProps> = ({
                 </div>
 
                 {item.role && (
-                  <span
-                    className={`text-tiny font-bold uppercase tracking-wider px-2 py-0.5 rounded-chip ${
-                      isKiller(item.role)
-                        ? 'bg-accent-red/20 text-accent-red border border-accent-red/40'
-                        : isSurvivor(item.role)
-                        ? 'bg-accent-green/20 text-accent-green border border-accent-green/40'
-                        : 'bg-bg-elevated text-text-secondary border border-border-color'
-                    }`}
+                  <Badge
+                    tone={isKiller(item.role) ? 'red' : isSurvivor(item.role) ? 'green' : 'neutral'} size="sm" square
                   >
                     {item.role}
-                  </span>
+                  </Badge>
                 )}
               </li>
             );

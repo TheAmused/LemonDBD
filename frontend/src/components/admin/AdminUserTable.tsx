@@ -23,6 +23,7 @@ import { OverseerEyeIcon } from '@/components/icons/DbdIcons';
 import { tip } from '@/components/common/Tooltip';
 import { DownloadDataSection } from '@/components/user/DownloadDataSection';
 import { useDictionary } from "@/context/DictionaryContext";
+import { Badge } from '@/components/common/Badge';
 
 interface AdminUserTableProps {
   users: UserRow[];
@@ -121,24 +122,20 @@ export const AdminUserTable: React.FC<AdminUserTableProps> = ({
                     <div className="flex items-center gap-1.5">
                       <span className="font-bold text-text-primary truncate">{u.username}</span>
                       {u.id === currentUserId && (
-                        <span className="shrink-0 rounded-chip bg-accent-amber/15 border border-accent-amber/30 px-1.5 py-0.5 text-micro font-black uppercase tracking-wider text-accent-amber">
+                        <Badge tone="amber" size="xs" square>
                           {dict.admin.you}
-                        </span>
+                        </Badge>
                       )}
                     </div>
                     <span className="block type-caption text-text-muted truncate">{u.login} · {u.email}</span>
                   </div>
                 </div>
-                <span
-                  className={`shrink-0 inline-flex items-center gap-1 rounded-chip px-2 py-0.5 text-tiny font-black uppercase tracking-wider border ${
-                    u.role === 'admin'
-                      ? 'bg-accent-red/15 text-accent-red border-accent-red/30'
-                      : 'bg-bg-elevated text-text-secondary border-border-color'
-                  }`}
+                <Badge
+                  tone={u.role === 'admin' ? 'red' : 'neutral'} size="sm" square
                 >
                   {u.role === 'admin' && <OverseerEyeIcon className="h-2.5 w-2.5" />}
                   {u.role}
-                </span>
+                </Badge>
               </div>
 
               <div className="flex items-center justify-between type-caption text-text-secondary">
@@ -256,23 +253,19 @@ export const AdminUserTable: React.FC<AdminUserTableProps> = ({
                     <span className="truncate max-w-[120px]">{u.username}</span>
                     <span className="truncate max-w-[120px] type-caption font-normal text-text-muted">{u.login}</span>
                     {u.id === currentUserId && (
-                      <span className="rounded-chip bg-accent-amber/15 border border-accent-amber/30 px-1.5 py-0.5 text-micro font-black uppercase tracking-wider text-accent-amber">
+                      <Badge tone="amber" size="xs" square>
                         {dict.admin.you}
-                      </span>
+                      </Badge>
                     )}
                   </td>
                   <td className="px-4 py-3 text-text-secondary">{u.email}</td>
                   <td className="px-4 py-3">
-                    <span
-                      className={`inline-flex items-center gap-1 rounded-chip px-2 py-0.5 text-tiny font-black uppercase tracking-wider border ${
-                        u.role === 'admin'
-                          ? 'bg-accent-red/15 text-accent-red border-accent-red/30'
-                          : 'bg-bg-elevated text-text-secondary border-border-color'
-                      }`}
+                    <Badge
+                      tone={u.role === 'admin' ? 'red' : 'neutral'} size="sm" square
                     >
                       {u.role === 'admin' && <OverseerEyeIcon className="h-2.5 w-2.5" />}
                       {u.role}
-                    </span>
+                    </Badge>
                   </td>
                   <td className="px-4 py-3 text-text-primary">
                     {u.owned_characters_count ?? 0}

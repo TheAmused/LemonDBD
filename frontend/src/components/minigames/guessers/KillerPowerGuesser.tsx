@@ -5,6 +5,7 @@ import React, { useMemo } from 'react';
 import { Flame, Check, X } from 'lucide-react';
 import type { GuessRecord, RoundConfig, CatalogCharacter } from '@/types/minigame';
 import { useDictionary } from "@/context/DictionaryContext";
+import { InfoChip } from '@/components/common/InfoChip';
 
 interface KillerPowerGuesserProps {
   roundConfig: RoundConfig;
@@ -59,19 +60,19 @@ export const KillerPowerGuesser: React.FC<KillerPowerGuesserProps> = ({ roundCon
         {(speedHint || radiusHint || heightHint) && (
           <div className="w-full flex flex-wrap items-center justify-center gap-2 pt-3 border-t border-border-color">
             {speedHint && (
-              <span className="px-3 py-1 rounded-chip bg-bg-elevated border border-border-subtle text-xs font-medium text-text-secondary">
+              <InfoChip>
                 {speedHint}
-              </span>
+              </InfoChip>
             )}
             {radiusHint && (
-              <span className="px-3 py-1 rounded-chip bg-bg-elevated border border-border-subtle text-xs font-medium text-text-secondary">
+              <InfoChip>
                 {radiusHint}
-              </span>
+              </InfoChip>
             )}
             {heightHint && (
-              <span className="px-3 py-1 rounded-chip bg-bg-elevated border border-border-subtle text-xs font-medium text-text-secondary">
+              <InfoChip>
                 {heightHint}
-              </span>
+              </InfoChip>
             )}
           </div>
         )}

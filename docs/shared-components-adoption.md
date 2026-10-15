@@ -13,7 +13,7 @@ Ograniczenia analizy: liczone są tylko klasy zapisane wprost w `className`. Kla
 | Karty `div` z border, bg i rounded | `Surface` | 204 |
 | Ostylowane `<button>` | `Button` / `ToggleChip` / `SegmentedControl` | 63 (z 127) |
 | Natywne `title=` | `Tooltip` / `tip()` | 113 |
-| `span` jako chip lub pill | `Badge` / `InfoChip` | 74 |
+| `span` jako chip lub pill | `Badge` / `InfoChip` | 17 (z 74) |
 | Linki wyglądające jak przyciski | `buttonClassName()` | 22 |
 | Ramki `border-dashed` | `EmptyState` / `Surface tone="dashed"` | 13 |
 | `animate-pulse` ręcznie | `SkeletonBlock` | 9 |
@@ -541,92 +541,45 @@ Zwykle ikony i klikalne elementy kart. Każdy ocenić osobno.
 - [ ] `characters/hub/SavedChangesModal.tsx` : 24 (SuccessState)
 
 
-## 5. Chipy i pille (74)
+## 5. Chipy i pille (17 zostało z 74)
 
-Wzorzec: `span` z `rounded`, `px-*` i `bg-*`. Zamienić na `Badge` (kolorowy, klikalny lub nie) albo `InfoChip` (neutralny, informacyjny).
+Zrobione (2026-10-15): 57 `span` zamienionych na `Badge` (kolorowe etykiety, liczniki, statusy; ton `red`/`amber`/`green`/`neutral`, `square` dla kształtu chip, `plain` bez wersalików) lub `InfoChip` (neutralne podpowiedzi i liczniki: 9 podpowiedzi w minigrach, tagi w HowToPlay, liczniki w ChapterToolbar i TargetPicker).
 
-**minigames** (15)
+Przy okazji naprawiony błąd w `cn()` (`lib/cn.ts`): `tailwind-merge` nie znał własnych rozmiarów tekstu (`text-micro/tiny/mini/compact`) i uznawał je za kolor, więc kasował prawdziwy kolor tekstu (dotyczyło też `Badge` xs/sm i `Button` xs). Teraz zna je oraz role radiusu, a testy w `cn.test.ts` to pilnują. Skutek uboczny: w istniejących miejscach, gdzie kolor był po cichu gubiony, pojawi się kolor zamierzony w kodzie.
 
-- [ ] `minigames/CharacterAutocomplete.tsx` : 301 (rounded)
-- [ ] `minigames/MinigamesHub.tsx` : 208 (rounded-full), 243 (rounded-full), 269 (rounded-full), 295 (rounded-full), 512 (rounded)
-- [ ] `minigames/guessers/AudioGuesser.tsx` : 238 (rounded-lg), 243 (rounded-lg), 248 (rounded-lg)
-- [ ] `minigames/guessers/KillerPowerGuesser.tsx` : 62 (rounded-lg), 67 (rounded-lg), 72 (rounded-lg)
-- [ ] `minigames/guessers/QuoteLoreGuesser.tsx` : 72 (rounded-lg), 77 (rounded-lg), 82 (rounded-lg)
-
-**smash-or-pass** (14)
-
-- [ ] `smash-or-pass/CharacterStatsModal.tsx` : 144 (rounded-lg)
-- [ ] `smash-or-pass/card/CardBackFace.tsx` : 87 (rounded-lg)
-- [ ] `smash-or-pass/creator/EntityEditor.tsx` : 72 (rounded), 115 (rounded-md)
-- [ ] `smash-or-pass/creator/EntityEditorParts.tsx` : 104 (rounded)
-- [ ] `smash-or-pass/creator/RomanceArchetypeBuilder.tsx` : 170 (rounded)
-- [ ] `smash-or-pass/creator/RosterTaxonomyBlock.tsx` : 144 (rounded-xl), 233 (rounded-xl)
-- [ ] `smash-or-pass/hub/HowToPlayModal.tsx` : 57 (rounded-lg), 61 (rounded-lg), 80 (rounded-lg), 84 (rounded-lg)
-- [ ] `smash-or-pass/hub/HubHeader.tsx` : 147 (rounded-lg)
-- [ ] `smash-or-pass/persona/PersonaBreakdown.tsx` : 61 (rounded-lg)
-
-**tier-lists** (7)
-
-- [ ] `tier-lists/OfficialTierListView.tsx` : 186 (rounded-lg)
-- [ ] `tier-lists/TierListCards.tsx` : 137 (rounded-md), 155 (rounded-md), 236 (rounded-md)
-- [ ] `tier-lists/TierListHub.tsx` : 164 (rounded-full), 286 (rounded-full)
-- [ ] `tier-lists/creator/CreatorPreview.tsx` : 89 (rounded-full)
-
-**admin** (6)
-
-- [ ] `admin/AdminSettingsPanel.tsx` : 166 (rounded), 170 (rounded)
-- [ ] `admin/AdminUserTable.tsx` : 124 (rounded-md), 132 (rounded-lg), 259 (rounded-md), 266 (rounded-lg)
-
-**streaks** (6)
-
-- [ ] `streaks/ChallengeIntroModalShell.tsx` : 185 (rounded-full), 192 (rounded-full)
-- [ ] `streaks/StreakPanel.tsx` : 88 (rounded-full), 93 (rounded-full), 97 (rounded-full), 107 (rounded-full)
-
-**user** (6)
-
-- [ ] `user/CampfireHeader.tsx` : 115 (rounded-xl)
-- [ ] `user/TwoFactorSection.tsx` : 65 (rounded-full)
-- [ ] `user/UserBugReportsList.tsx` : 75 (rounded-lg), 82 (rounded-lg), 89 (rounded-lg), 97 (rounded-lg)
+Zostało 17: nakładki na obrazkach z `backdrop-blur` (`TierListCards`, `PersonaBreakdown`, `ChapterCharacterPanel`, `MapExplorer`, `PerkCard`), numery kafli w edytorach (`EntityEditor`, `EntityEditorParts`), liczniki wewnątrz kolorowych przycisków w `PerkFilters`, tagi z przyciskiem usuwania w `RosterTaxonomyBlock`, baner `AchievementsHub`, czipy z pozycją `CharacterHeroAvatar` oraz wszystkie, które wymagają osobnej decyzji. Do oceny:
 
 **(root)** (5)
 
-- [ ] `PerkCard.tsx` : 105 (rounded)
+- [ ] `PerkCard.tsx` : 105 (rounded-chip)
 - [ ] `PerkFilters.tsx` : 136 (rounded-full), 151 (rounded-full), 168 (rounded-full), 182 (rounded-full)
 
-**character-detail** (5)
+**smash-or-pass** (5)
 
-- [ ] `character-detail/components/CharacterHeroAvatar.tsx` : 86 (rounded-full), 96 (rounded-full)
-- [ ] `character-detail/components/KillerEquipmentSection.tsx` : 75 (rounded-full)
-- [ ] `character-detail/components/OfferingsSection.tsx` : 317 (rounded-full)
-- [ ] `character-detail/components/SurvivorEquipmentSection.tsx` : 190 (rounded-full)
+- [ ] `smash-or-pass/creator/EntityEditor.tsx` : 116 (rounded-chip)
+- [ ] `smash-or-pass/creator/EntityEditorParts.tsx` : 104 (rounded-chip)
+- [ ] `smash-or-pass/creator/RosterTaxonomyBlock.tsx` : 144 (rounded-control), 233 (rounded-control)
+- [ ] `smash-or-pass/persona/PersonaBreakdown.tsx` : 61 (rounded-chip)
 
-**maps** (3)
+**tier-lists** (3)
 
-- [ ] `maps/MapExplorer.tsx` : 453 (rounded-full)
-- [ ] `maps/VoiceEngineInfoModal.tsx` : 65 (rounded-full), 75 (rounded-full)
-
-**sidebar** (2)
-
-- [ ] `sidebar/BugReportModal.tsx` : 230 (rounded-md)
-- [ ] `sidebar/SidebarUserSection.tsx` : 59 (rounded)
-
-**onboarding** (2)
-
-- [ ] `onboarding/wizard/ChapterCharacterPanel.tsx` : 58 (rounded)
-- [ ] `onboarding/wizard/ChapterToolbar.tsx` : 40 (rounded-full)
+- [ ] `tier-lists/TierListCards.tsx` : 137 (rounded-chip), 155 (rounded-chip), 236 (rounded-chip)
 
 **achievements** (1)
 
-- [ ] `achievements/AchievementsHub.tsx` : 26 (rounded-2xl)
+- [ ] `achievements/AchievementsHub.tsx` : 26 (rounded-control)
 
-**scraper-config** (1)
+**maps** (1)
 
-- [ ] `scraper-config/TargetPicker.tsx` : 63 (rounded-md)
+- [ ] `maps/MapExplorer.tsx` : 453 (rounded-full)
 
-**characters** (1)
+**character-detail** (1)
 
-- [ ] `characters/hub/CharacterCard.tsx` : 67 (rounded-full)
+- [ ] `character-detail/components/CharacterHeroAvatar.tsx` : 94 (rounded-full)
 
+**onboarding** (1)
+
+- [ ] `onboarding/wizard/ChapterCharacterPanel.tsx` : 58 (rounded-chip)
 
 ## 6. Linki wyglądające jak przyciski (22)
 

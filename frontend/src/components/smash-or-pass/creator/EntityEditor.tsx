@@ -20,6 +20,7 @@ import { formatMessage } from '@/utils/i18nFormat';
 import { useDictionary } from "@/context/DictionaryContext";
 import { tip } from '@/components/common/Tooltip';
 import { GENDER_QUICK_PICKS, ROLE_QUICK_PICKS } from '@/utils/smashOrPass/constants';
+import { Badge } from '@/components/common/Badge';
 
 export interface CandidateFormInputsProps {
   entity: DraftEntity;
@@ -69,9 +70,9 @@ export function CandidateFormInputs({
       <div className="relative flex items-center justify-between pb-3 border-b border-border-color/60">
         <div className="w-24 hidden sm:block pointer-events-none" aria-hidden="true" />
         <div className="flex-1 flex flex-wrap items-center justify-center gap-2 min-w-0 text-center">
-          <span className="type-strong px-2 py-0.5 rounded-chip bg-accent-red/10 border border-accent-red/30 text-accent-red">
+          <Badge tone="red" size="sm" plain square>
             #{displayIndex}
-          </span>
+          </Badge>
           <h3 className="font-bold text-sm sm:text-base text-text-primary truncate">
             {c.editingCandidate}:{' '}
             <span className="text-accent-red">{entity.name.trim() || c.unnamedCandidate}</span>

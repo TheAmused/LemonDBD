@@ -22,6 +22,7 @@ import { HEADER_BTN } from './styles';
 import { Button } from '@/components/common/Button';
 import { formatMessage } from '@/utils/i18nFormat';
 import { useDictionary } from "@/context/DictionaryContext";
+import { Badge } from '@/components/common/Badge';
 
 const AuthModal = dynamic(() => import('@/components/AuthModal').then((m) => m.AuthModal), { ssr: false });
 
@@ -161,9 +162,9 @@ export function TierListHub({ locale }: TierListHubProps) {
                 {t.officialSection}
               </h2>
               {lists.length > 0 && (
-                <span className="rounded-full bg-accent-red/10 border border-accent-red/30 px-2.5 py-0.5 type-strong-xs text-accent-red">
+                <Badge tone="red" size="sm" plain>
                   {lists.length}
-                </span>
+                </Badge>
               )}
             </div>
           </div>
@@ -283,9 +284,9 @@ export function TierListHub({ locale }: TierListHubProps) {
                   {t.mySection}
                 </h2>
                 {hydrated && (
-                  <span className="rounded-full bg-accent-red/10 border border-accent-red/30 px-2.5 py-0.5 type-strong-xs text-accent-red">
+                  <Badge tone="red" size="sm" plain>
                     {customCount}
-                  </span>
+                  </Badge>
                 )}
               </div>
             </div>

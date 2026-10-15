@@ -25,6 +25,7 @@ import { EmptyState } from '@/components/common/EmptyState';
 import { UnreadDot } from '@/components/common/UnreadDot';
 import { formatDate } from '@/utils/format';
 import { useDictionary } from "@/context/DictionaryContext";
+import { Badge } from '@/components/common/Badge';
 
 interface UserBugReportsListProps {
   reports: UserBugReport[];
@@ -72,32 +73,32 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
     switch (status) {
       case 'in_progress':
         return (
-          <span className="inline-flex items-center gap-1.5 rounded-chip border border-accent-red/30 bg-accent-red/10 px-2.5 py-1 type-label-2xs text-accent-red">
+          <Badge tone="red" size="sm" square>
             <Clock className="h-3 w-3" />
             <span>{t.statusInProgress || 'In Progress'}</span>
-          </span>
+          </Badge>
         );
       case 'resolved':
         return (
-          <span className="inline-flex items-center gap-1.5 rounded-chip border border-accent-green/30 bg-accent-green/10 px-2.5 py-1 type-label-2xs text-accent-green">
+          <Badge tone="green" size="sm" square>
             <CheckCircle className="h-3 w-3" />
             <span>{t.statusResolved || 'Resolved'}</span>
-          </span>
+          </Badge>
         );
       case 'rejected':
         return (
-          <span className="inline-flex items-center gap-1.5 rounded-chip border border-border-color bg-bg-elevated px-2.5 py-1 type-label-2xs text-text-muted">
+          <Badge tone="neutral" size="sm" square>
             <XCircle className="h-3 w-3" />
             <span>{t.statusClosed || 'Closed'}</span>
-          </span>
+          </Badge>
         );
       case 'pending':
       default:
         return (
-          <span className="inline-flex items-center gap-1.5 rounded-chip border border-accent-amber/30 bg-accent-amber/10 px-2.5 py-1 type-label-2xs text-accent-amber">
+          <Badge tone="amber" size="sm" square>
             <HelpCircle className="h-3 w-3" />
             <span>{t.statusPending || 'Pending'}</span>
-          </span>
+          </Badge>
         );
     }
   };

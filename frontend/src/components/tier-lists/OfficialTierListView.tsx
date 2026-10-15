@@ -24,6 +24,7 @@ import { clearRanking, saveRanking } from '@/utils/tierLists/storage';
 import { TierListEditor } from './TierListEditor';
 import { TierListSkeleton } from './TierListSkeleton';
 import { useDictionary } from "@/context/DictionaryContext";
+import { Badge } from '@/components/common/Badge';
 
 interface OfficialTierListViewProps {
   slug: string;
@@ -183,10 +184,10 @@ export function OfficialTierListView({ slug, locale }: OfficialTierListViewProps
       kindLabel={t.kinds[template.kind]}
       badges={
         template.has_default_placements ? (
-          <span className="inline-flex items-center gap-1 rounded-chip bg-accent-amber/15 px-2 py-0.5 type-label-xs text-accent-amber">
+          <Badge tone="amber" size="sm" square>
             <Crown className="h-3.5 w-3.5" aria-hidden="true" />
             {t.officialRanking}
-          </span>
+          </Badge>
         ) : undefined
       }
       items={items}

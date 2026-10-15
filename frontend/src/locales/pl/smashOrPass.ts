@@ -333,7 +333,6 @@ export default {
     noRostersFound: 'Nie znaleziono zestawów',
     noCustomRostersDesc: 'Nie utworzono jeszcze żadnych własnych zestawów w tej przeglądarce.',
     noRostersMatchDesc: 'Żadne zestawy nie pasują do tego filtra.',
-    createFirstRoster: 'Utwórz swój pierwszy zestaw',
   },
   importModal: {
     title: 'Importuj Listę',

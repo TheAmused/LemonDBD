@@ -63,7 +63,7 @@ const toText = (r: TierListParseResult) => (r.ok ? serializeTierListDocument(r.d
 export function TierListImportModal({ open, target, sharePayload, onClose, onImport }: TierListImportModalProps) {
   const dict = useDictionary();
   const t = dict.tierLists;
-  const { text, result, fileError, changeText, readFile } = useImportDraft<TierListParseResult>({
+  const { text, result, fileError, changeText, readFile, revoked, unsigned, checkingRevocation } = useImportDraft<TierListParseResult>({
     isOpen: open,
     sharePayload,
     decodeShare: decodeSharePayload,
@@ -71,10 +71,11 @@ export function TierListImportModal({ open, target, sharePayload, onClose, onImp
     toText,
     tooLarge: TOO_LARGE,
     maxPayloadChars: TIER_LIST_LIMITS.maxPayloadChars,
+    revocationCheck: { contentType: 'tier_list', documentOf: (r) => (r.ok ? r.doc : null) },
   });
 
   const note = result?.ok ? contextFor(result.doc, target, t) : null;
-  const canImport = Boolean(result?.ok && note?.tone !== 'error');
+  const canImport = Boolean(result?.ok && note?.tone !== 'error' && !revoked && !unsigned && !checkingRevocation);
 
   const errorText = (code: TierListErrorCode) => t.errors[code];
 
@@ -113,7 +114,9 @@ export function TierListImportModal({ open, target, sharePayload, onClose, onImp
     >
       {fileError && <Notice tone="error" text={t.errors.readFile} />}
       {result && !result.ok && <Notice tone="error" text={errorText(result.error)} />}
-      {result?.ok && (
+      {revoked && <Notice tone="error" text={t.contentRevoked} />}
+      {unsigned && <Notice tone="error" text={t.unsignedContent} />}
+      {result?.ok && !revoked && !unsigned && (
         <>
           <ImportPreview text={preview} />
           {note && <Notice tone={note.tone} text={note.text} />}

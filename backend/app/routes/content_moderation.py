@@ -6,6 +6,7 @@ from flask import Blueprint, current_app, g, jsonify, request
 from app.core.limiter import limiter
 from app.core.security import login_required
 from app.services.content_moderation_service import (
+    check_document_revoked,
     check_revocations,
     report_content,
     sign_user_content,
@@ -83,3 +84,28 @@ def check_revocations_endpoint():
     except Exception as err:
         logger.error(f"Error checking revocations: {err}", exc_info=True)
         return jsonify({"error": "Failed to check revocations", "status": 500}), 500
+
+
+@content_moderation_bp.post("/revocations/check-document")
+@limiter.limit("30 per minute")
+def check_document_revocation_endpoint():
+    """Public endpoint: has this exact document been revoked, and does its stamp verify?
+
+    The server hashes the document itself. `manifest` (optional) is the author stamp that travelled
+    with it; `signed` in the answer tells the client whether that stamp is genuine for this exact
+    document, so unsigned or forged content can be refused at import time.
+    """
+    data = request.get_json(silent=True)
+    if not data or not isinstance(data, dict) or not isinstance(data.get("payload"), dict):
+        return jsonify({"error": "Invalid request body, 'payload' object required", "status": 400}), 400
+
+    try:
+        manifest = data.get("manifest")
+        return jsonify(
+            check_document_revoked(data["payload"], manifest, current_app.config.get("SECRET_KEY"))
+        ), 200
+    except ValueError as err:
+        return jsonify({"error": str(err), "status": 400}), 400
+    except Exception as err:
+        logger.error(f"Error checking document revocation: {err}", exc_info=True)
+        return jsonify({"error": "Failed to check document", "status": 500}), 500

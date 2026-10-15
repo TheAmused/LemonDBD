@@ -1,6 +1,6 @@
 # backend/app/models/content_moderation.py
 from datetime import datetime
-from sqlalchemy import DateTime, ForeignKey, Integer, String, Text, UniqueConstraint
+from sqlalchemy import DateTime, ForeignKey, Index, Integer, String, Text, UniqueConstraint, text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.extensions import Base
@@ -9,6 +9,17 @@ from app.models.base import ColumnDictMixin, utcnow
 
 class ContentReport(Base, ColumnDictMixin):
     __tablename__ = "content_reports"
+    __table_args__ = (
+        # At most one open report per document: concurrent first reports collapse onto one row.
+        Index(
+            "uq_content_reports_pending_hash",
+            "content_hash",
+            unique=True,
+            postgresql_where=text("status = 'pending'"),
+            sqlite_where=text("status = 'pending'"),
+        ),
+        Index("idx_content_reports_status_count", "status", "report_count"),
+    )
 
     _api_exclude = frozenset({"evidence_payload"})
 

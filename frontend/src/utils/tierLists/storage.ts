@@ -127,6 +127,7 @@ export function migrateTierListState(raw: unknown): TierListStoreState {
         createdAt: readNumber(value.createdAt, 0),
         updatedAt: readNumber(value.updatedAt, 0),
         ...(backgroundImage ? { backgroundImage } : {}),
+        ...(value.is_nsfw === true ? { is_nsfw: true } : {}),
         ...(manifest ? { _manifest: manifest } : {}),
       };
     }

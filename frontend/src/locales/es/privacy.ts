@@ -3,7 +3,7 @@ export default {
   pageTitle: "LemonDBD - Política de privacidad",
   heading: "Política de privacidad",
   lastUpdatedLabel: "Última actualización",
-  lastUpdated: "10 de octubre de 2026",
+  lastUpdated: "15 de octubre de 2026",
   intro:
     "Esta página explica qué datos personales recoge <brand>LemonDBD</brand>, para qué, quién los ve y qué puedes hacer tú. La hemos escrito de forma breve y sencilla a propósito.",
   translationNotice: "Si las versiones traducidas de esta página difieren de la inglesa, prevalece la versión en inglés.",
@@ -38,7 +38,7 @@ export default {
       items: [
         "<b>Datos de la cuenta:</b> nombre de usuario, correo electrónico, un hash de tu contraseña (nunca la contraseña en sí), avatar, idioma preferido y códigos temporales de verificación y de restablecimiento de contraseña.",
         "<b>Inicio de sesión en dos pasos (opcional):</b> solo si lo activas desde tu página de perfil. Guardamos la clave secreta de tu aplicación de autenticación (cifrada), códigos de recuperación de un solo uso con hash, el momento en que lo activaste, el último paso de código aceptado (para que un código no pueda reutilizarse) y un contador de códigos incorrectos recientes con la hora de un bloqueo temporal. Tu aplicación de autenticación genera los códigos en tu dispositivo; no hace falta número de teléfono.",
-        "<b>Lo que guardas:</b> personajes y beneficios que posees, tu vitrina de perfil, rachas, logros de desafíos, estadísticas de minijuegos y votos de Smash or Pass. Tus tier lists, rosters de Smash or Pass y minijuegos personalizados se quedan en tu navegador y no se envían a nuestros servidores. Los visitantes sin cuenta reciben un ID de sesión aleatorio para recordar sus votos de Smash or Pass.",
+        "<b>Lo que guardas:</b> personajes y beneficios que posees, tu vitrina de perfil, rachas, logros de desafíos, estadísticas de minijuegos y votos de Smash or Pass. Tus tier lists, rosters de Smash or Pass y minijuegos personalizados se quedan en tu navegador y no se almacenan en nuestros servidores, salvo lo descrito en la sección «Reportar contenido». Los visitantes sin cuenta reciben un ID de sesión aleatorio para recordar sus votos de Smash or Pass.",
         "<b>Informes de errores y mensajes:</b> el texto, las capturas y el correo que nos envías. Los invitados deben indicar un correo para que podamos responder.",
         "<b>Datos técnicos:</b> tu dirección IP, tipo de navegador y detalles de las solicitudes, usados para limitar el uso, prevenir abusos y corregir errores.",
         "<b>Comandos de voz (mapas):</b> si los activas, el audio del micrófono se usa para reconocer nombres de mapas. Cómo funciona se explica abajo, en la sección sobre almacenamiento y terceros.",
@@ -52,8 +52,21 @@ export default {
         "Crear y gestionar tu cuenta, conservar tus datos guardados y enviar correos de verificación y de restablecimiento de contraseña y, si lo activas, comprobar tu código de dos pasos al iniciar sesión (ejecución de nuestro servicio hacia ti).",
         "Responder a informes de errores y solicitudes (nuestro interés legítimo en dar soporte o tu solicitud).",
         "Mantener seguros el sitio y las cuentas, incluido limitar los códigos de dos pasos incorrectos, frenar el spam y los abusos y corregir errores (nuestro interés legítimo).",
+        "Revisar reportes de contenido y hacer cumplir nuestras Normas (nuestro interés legítimo en mantener el sitio seguro).",
         "Entender qué páginas se usan y mejorar el sitio mediante analítica respetuosa con la privacidad (nuestro interés legítimo).",
         "Si te pedimos tu consentimiento, puedes retirarlo en cualquier momento.",
+      ],
+    },
+    moderation: {
+      heading: "Reportar contenido",
+      paragraphs: [
+        "Las tier lists, los rosters y los minijuegos personalizados viven en tu navegador, no en nuestros servidores. Dos cosas nos involucran:",
+        "Cuando eliminas tu cuenta, tu nombre de usuario en estos registros se sustituye por «Deleted user» y las notas que escribiste como persona que reporta se borran. Estos registros forman parte de los datos que puedes descargar.",
+      ],
+      items: [
+        "<b>Compartir y exportar:</b> añadimos al enlace o archivo una marca de cuenta a prueba de manipulaciones (identifica tu cuenta), para que el contenido reportado pueda atribuirse a su autor. Para ello, nuestro servidor lee brevemente el contenido, pero no lo guarda.",
+        "<b>Reportes:</b> si reportas un contenido, recibimos tu cuenta, el motivo, tu nota opcional y una copia del contenido. Un miembro de <brand>LemonTeam</brand> la revisa y la copia se elimina tras la decisión, como máximo a los 14 días.",
+        "<b>Tras una decisión:</b> conservamos un registro breve (tipo de contenido, motivo, resultado, fechas, cuentas implicadas). Si se banea un contenido, un código unidireccional de él pasa a una lista de bloqueo para que no pueda volver a abrirse ni importarse; del código no se puede recuperar el contenido. Estos registros se conservan mientras los necesitemos para gestionar reclamaciones y evitar abusos repetidos. Al autor, si se conoce, le enviamos el motivo por correo; no indicamos quién reportó.",
       ],
     },
     analytics: {
@@ -77,8 +90,8 @@ export default {
       heading: "Quién ve tus datos",
       paragraphs: ["No vendemos tus datos personales ni los usamos para publicidad. Los compartimos solo cuando es necesario:"],
       items: [
-        "<b>Enlaces que compartes:</b> cuando compartes una tier list, un roster o un minijuego personalizado, va empaquetado en el propio enlace (la parte después de «#», que tu navegador nunca nos envía). No lo guardamos ni podemos verlo; solo pueden abrirlo quienes reciban el enlace.",
-        "<b>Proveedores de servicios:</b> nuestro proveedor de alojamiento y {mailProvider} (que entrega nuestros correos de verificación y de restablecimiento de contraseña) tratan datos en nuestro nombre, solo para mantener el sitio y enviarte los correos que solicitas, incluidos los avisos cuando cambia un ajuste de seguridad de tu cuenta. Los códigos de dos pasos los genera tu propia aplicación de autenticación y se comprueban en nuestro servidor; no usamos ningún servicio de terceros para ello y no se envía nada de ellos a Google, Microsoft, Apple ni a nadie más.",
+        "<b>Enlaces que compartes:</b> cuando compartes una tier list, un roster o un minijuego personalizado, va empaquetado en el propio enlace (la parte después de «#», que tu navegador nunca nos envía). No lo guardamos; solo pueden abrirlo quienes reciban el enlace. Se añade tu marca de cuenta (consulta «Reportar contenido»).",
+        "<b>Proveedores de servicios:</b> nuestro proveedor de alojamiento y {mailProvider} (que entrega nuestros correos de verificación y de restablecimiento de contraseña) tratan datos en nuestro nombre, solo para mantener el sitio y enviarte los correos que solicitas, incluidos los avisos cuando cambia un ajuste de seguridad de tu cuenta o cuando bloqueamos tu contenido. Los códigos de dos pasos los genera tu propia aplicación de autenticación y se comprueban en nuestro servidor; no usamos ningún servicio de terceros para ello y no se envía nada de ellos a Google, Microsoft, Apple ni a nadie más.",
         "<b>Discord:</b> cuando envías un informe de error, su contenido (incluidos tu correo y capturas) se reenvía a un canal privado de nuestro equipo.",
         "<b>Motivos legales:</b> si la ley lo exige o para proteger el sitio y a sus usuarios de abusos.",
       ],

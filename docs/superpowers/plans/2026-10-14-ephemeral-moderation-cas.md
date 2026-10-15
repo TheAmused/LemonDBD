@@ -31,7 +31,29 @@ graph TD
 **Tech Stack:**
 - Backend: Python 3.12+, Flask, SQLAlchemy 2.0 (Flask-SQLAlchemy), Flask-Migrate / Alembic, hashlib, hmac.
 - Frontend: Next.js 15 (App Router), TypeScript, Tailwind CSS, Lucide React, DictionaryContext (5 languages: `en`, `pl`, `de`, `es`, `ja`).
-- Testing: Pytest for backend unit/integration tests; Node/Vitest for frontend unit tests and structural guards (`npm run check`).
+- Testing: Pytest for backend unit/integration tests; `tsx --test` (`node:test`) for frontend unit tests and structural guards (`npm run check`, `npm run test:unit`). There is no Vitest in this repo.
+
+## Remediation Addendum (2026-10-15)
+
+> This plan was executed and then audited. The audit found the gaps below; all were fixed, and where the original task text below disagrees with this addendum, **the addendum wins**. The task bodies are kept as the historical record. The design spec carries the corrected behaviour.
+
+| # | Gap in the original plan / first implementation | Fix |
+| :-- | :-- | :-- |
+| 1 | Task 4 only built admin **endpoints**; no task built an admin screen, and Task 8 passed without one. An admin could not see reported content. | Admin **Reports** tab: queue, case view, sandboxed preview (images hidden until clicked), ban / dismiss with confirmation and notes, pending badge. |
+| 2 | Minigame reports always failed the hash check: the signed copy and the reported copy were different documents (ids, timestamps, default round fields). | One `signingPayload(contentType, doc)` normalizer used for signing, reporting and checking; proven by `contentRoundTrip.test.ts`. |
+| 3 | `report_count` went up on every report, including repeats from the same account. | Count moves only when a new subscriber row is inserted, in SQL; repeats return `already_reported: true`. |
+| 4 | The 14-day purge existed but nothing ran it. | Hourly scheduler job with an advisory lock, plus a start-up run. |
+| 5 | A ban was only enforced by the login-time localStorage sweep, so share links and JSON imports still worked. | `POST /content/revocations/check-document`; import dialogs and the minigame play page refuse revoked documents. |
+| 6 | Content without an author stamp could not be reported at all. | Reports are accepted unsigned; they are attributed only when a valid stamp matches the server-computed hash. A mismatched stamp is **not** a `400` (this plan's Task 3 `submit_report` text is superseded); it yields an unattributed report. |
+| 7 | Smaller: free-text `content_type` / `reason` / `status`; no protection against two reporters creating the same pending row; raw action names in the audit log; the ledger's deferred items (`allow_nan=False`, composite index). | Allow-lists (`400`); partial unique index `uq_content_reports_pending_hash` with savepoint + `IntegrityError` fallback; translated audit-log labels; `allow_nan=False`; index `idx_content_reports_status_count` (migration `0015`). |
+
+**Corrections to the text below:**
+- The backend is Flask (not FastAPI) and there is no Redis; nothing here uses a cache layer.
+- `localStorage` keys are `lemondbd_tier_lists`, `lemondbd_smash_rosters`, `lemondbd_custom_minigames` (Task 7's `tier_lists:custom:` / `smash:custom:` keys never existed), and the frontend tests live in `frontend/src/__tests__/unit/` and run with `tsx --test`, not Vitest.
+- Resolving an already-resolved or expired report returns `409`; an unknown status filter returns `400`.
+- Verification commands are `pytest` from `backend/` and, from `frontend/`, `npm run check` and `npm run test:unit`.
+
+---
 
 ## Global Constraints
 
@@ -374,6 +396,8 @@ git commit -m "feat(moderation): add deterministic canonicalization and HMAC con
 
 ### Task 3: Backend Content Signing, Reporting & Revocation Endpoints
 
+> **Superseded in part:** the `submit_report` below rejects unsigned or mismatched reports with `400` and counts repeat reporters. See the Remediation Addendum (items 3 and 6) and spec section 5.2 for the behaviour that shipped.
+
 **Files:**
 - Create: `backend/app/routes/content_moderation.py`
 - Create: `backend/app/services/content_moderation_service.py`
@@ -685,6 +709,8 @@ git commit -m "feat(moderation): add content sign, report, and revocation check 
 ---
 
 ### Task 4: Backend Admin Moderation & Zero-Retention Hard Wipe
+
+> **Incomplete as written:** this task is backend-only. The admin screen was added later (see the Remediation Addendum, item 1; spec section 6.2).
 
 **Files:**
 - Modify: `backend/app/routes/admin_control.py:380-406`
@@ -1088,6 +1114,8 @@ git commit -m "feat(moderation): add ReportContentModal with full i18n and custo
 
 ### Task 7: Frontend LocalStorage Revocation Sync Hook
 
+> **Superseded in part:** the storage keys and Vitest imports in the sample code below are wrong (see the Remediation Addendum). Import-time enforcement (item 5) was added on top of this hook.
+
 **Files:**
 - Create: `frontend/src/hooks/useContentRevocationSync.ts`
 - Modify: `frontend/src/components/common/AppShell.tsx` (or layout provider)
@@ -1225,7 +1253,7 @@ git commit -m "feat(moderation): implement client localStorage revocation sync h
 
 - [ ] **Step 1: Run all backend tests**
 
-Run: `.venv\Scripts\pytest backend/tests/unit -v`
+Run: `cd backend && pytest tests/unit -q`
 Expected: ALL PASS
 
 - [ ] **Step 2: Run frontend code quality guards**

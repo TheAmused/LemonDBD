@@ -12,7 +12,9 @@ import {
   type TierPlacements,
 } from '@/types/tierList';
 import { useAuth } from '@/context/AuthContext';
+import { NsfwContentGate } from '@/components/common/NsfwContentGate';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
+import { useNsfwGate } from '@/hooks/useNsfwGate';
 import { useTierListItems } from '@/hooks/useTierListItems';
 import { useTierListStore } from '@/hooks/useTierListStore';
 import { useTierListTemplate } from '@/hooks/useTierListTemplates';
@@ -39,6 +41,7 @@ export function OfficialTierListView({ slug, locale }: OfficialTierListViewProps
   const { items, loading: itemsLoading, error: itemsError, refresh: refreshItems } = useTierListItems(template, locale);
   const { state, hydrated } = useTierListStore();
   const [savingOfficial, setSavingOfficial] = useState<boolean>(false);
+  const nsfwGate = useNsfwGate('tier_list', slug, template?.is_nsfw === true);
 
   useDocumentTitle(template ? `LemonDBD - ${template.title}` : t.pageTitle);
 
@@ -152,6 +155,17 @@ export function OfficialTierListView({ slug, locale }: OfficialTierListViewProps
           }}
         />
       </div>
+    );
+  }
+
+  if (nsfwGate.gated) {
+    return (
+      <NsfwContentGate
+        title={t.nsfw.title}
+        description={t.nsfw.description}
+        confirmLabel={t.nsfw.confirm}
+        onConfirm={nsfwGate.confirm}
+      />
     );
   }
 

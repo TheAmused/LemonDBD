@@ -92,6 +92,7 @@ def create_tier_list(
     cover_image_url: str | None,
     tiers: list[dict[str, Any]],
     custom_items: list[dict[str, Any]],
+    is_nsfw: bool = False,
 ) -> TierList:
     """An admin-authored official list: `kind='custom'`, its own tiers and
     items (exactly what the creator already builds for a personal list), but
@@ -114,6 +115,7 @@ def create_tier_list(
         tiers=tiers,
         custom_items=custom_items,
         is_featured=False,
+        is_nsfw=bool(is_nsfw),
         is_active=True,
         sort_order=next_sort_order,
     )
@@ -142,6 +144,7 @@ def update_tier_list(
     tiers: list[dict[str, Any]] | None = _UNSET,
     custom_items: list[dict[str, Any]] | None = _UNSET,
     default_placements: dict[str, list[str]] | None = _UNSET,
+    is_nsfw: bool | None = _UNSET,
 ) -> TierList | None:
     """Updates an active official tier list in place and rewrites the seed file
     so future reseeds retain the admin's edits.
@@ -190,6 +193,8 @@ def update_tier_list(
 
     if default_placements is not _UNSET:
         row.default_placements = default_placements
+    if is_nsfw is not _UNSET and is_nsfw is not None:
+        row.is_nsfw = bool(is_nsfw)
 
     if row.default_placements:
         tier_ids = {str(t.get("id")) for t in (row.tiers or [])} or {"s", "a", "b", "c", "d", "f"}

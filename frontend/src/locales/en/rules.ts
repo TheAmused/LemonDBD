@@ -4,7 +4,7 @@ export default {
   heading: "Rules",
   tagline: "Short, fair and only slightly cursed. Read them once, then go loop a pallet.",
   lastUpdatedLabel: "Last updated",
-  lastUpdated: "October 10, 2026",
+  lastUpdated: "October 15, 2026",
   translationNotice: "If the translated versions of this page differ from the English one, the English version prevails.",
   numberLabel: "Rule {n}",
   tldrLabel: "TL;DR",
@@ -61,13 +61,13 @@ export default {
       tldr: "You own it. You are also the one answering for it.",
       paragraphs: [
         "<b>Stored on our servers:</b> your avatar and the screenshots you attach to bug reports. You keep ownership of them and give <brand>LemonDBD</brand> only the permission needed to store and display them for the operation of the Site, as described in the [Terms of Service]({termsPath}).",
-        "<b>Not stored by us:</b> the tier lists, Smash or Pass rosters and custom minigames you create are kept in your own browser, and we hold no copy of them. When you share one by link, its content is encoded in the link itself and does not reach our servers. You remain responsible for what they contain.",
+        "<b>Not stored by us:</b> the tier lists, Smash or Pass rosters and custom minigames you create are kept in your own browser, and we hold no copy of them. When you share one by link, its content is encoded in the link itself, together with your account mark. If someone reports it, we look at a copy and delete it after the decision. You remain responsible for what they contain.",
       ],
       items: [
         "Upload or share only content that you created or are entitled to use, and do not infringe the rights of others.",
         "Do not publish unlawful or harmful content, including malware, phishing, scam links or the personal data of others.",
-        "Mark adult-oriented rosters as NSFW where that option exists, and do not send them to people who have not asked for them.",
-        "Because we hold no copy of shared tier lists, rosters or minigames, we cannot withdraw or delete a link you have shared. Anyone who has the link can open it.",
+        "Mark adult-oriented tier lists, rosters and minigames as NSFW, and do not send them to people who have not asked for them.",
+        "We cannot withdraw a link or file you have shared, and anyone who has it can open it. What we can do is block the content: once it is banned, the Site refuses to open or import it.",
       ],
     },
     smashOrPass: {
@@ -101,6 +101,7 @@ export default {
       tldr: "Found a bug or a rule-breaker? Tell us.",
       paragraphs: [
         "Use the <b>Report Bug</b> button in the sidebar to report bugs, incorrect data or translation errors. To report a breach of these Rules, abuse or any private matter, write to [{contactEmail}](mailto:{contactEmail}), or contact a member of <brand>LemonTeam</brand> on the Server.",
+        "To report a tier list, Smash or Pass roster or custom minigame that someone shared with you, sign in and use its <b>Report content</b> button. A member of <brand>LemonTeam</brand> will review it.",
         "Reports should be truthful, specific and courteous. Knowingly false reports, spam, and the use of the report form to harass another person are themselves breaches of these Rules.",
       ],
       items: [],
@@ -114,6 +115,7 @@ export default {
       items: [
         "Threats, sexual content involving minors, unlawful content and attacks on the Site are dealt with without prior warning and may be reported to the competent authorities.",
         "On the Server the same measures take the form of a warning, a timeout, a kick or a ban.",
+        "Content that breaks these Rules can be banned: the Site then refuses to open or import it. We may also deactivate the account of the person who published it, and we email them the reason.",
         "Where we remove content or restrict an account, we will explain why where practicable. If you believe we made a mistake, you can contest the decision by writing to us, and we will review it. The procedure is set out in the [Terms of Service]({termsPath}).",
       ],
     },
@@ -122,8 +124,8 @@ export default {
     heading: "The hook stages",
     stages: [
       { title: "Stage 1: the nudge", text: "A message asking you to correct or stop the conduct." },
-      { title: "Stage 2: the clean-up", text: "We remove the content, reset progress gained unfairly or restrict features." },
-      { title: "Sacrifice", text: "Your account is suspended or deleted, and additional accounts or addresses may be blocked." },
+      { title: "Stage 2: the clean-up", text: "We remove or block the content, reset progress gained unfairly or restrict features." },
+      { title: "Sacrifice", text: "Your account is suspended, deactivated or deleted, and additional accounts or addresses may be blocked." },
     ],
   },
 };

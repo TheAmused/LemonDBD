@@ -317,7 +317,6 @@ export default {
     noRostersFound: 'Keine Dienstpläne gefunden',
     noCustomRostersDesc: 'Sie haben in diesem Browser noch keine eigenen Dienstpläne erstellt.',
     noRostersMatchDesc: 'Keine Dienstpläne entsprechen diesem Filter.',
-    createFirstRoster: 'Erstellen Sie Ihren ersten Dienstplan',
   },
   importModal: {
     title: 'Liste importieren',

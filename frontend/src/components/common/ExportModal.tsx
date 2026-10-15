@@ -10,8 +10,10 @@ import { copyTextWithFallback } from '@/utils/clipboard';
 import { cn } from '@/utils/cn';
 import { formatMessage } from '@/utils/i18nFormat';
 import { useAuth } from '@/context/AuthContext';
+import { useDictionary } from '@/context/DictionaryContext';
 import { isRecord } from '@/utils/shareCodec';
 import { embedManifest, signExportPayload, stripManifest } from '@/utils/contentSigning';
+import { signingPayload } from '@/utils/contentPayload';
 
 export type CopyState = 'idle' | 'copied' | 'failed';
 
@@ -89,17 +91,20 @@ export function ExportModal<D>({
   contentType,
 }: ExportModalProps<D>) {
   const { user, isLoading: authLoading } = useAuth();
+  const dict = useDictionary();
   const resolvedContentType =
     contentType ||
     (idPrefix === 'tier-list' ? 'tier_list' : idPrefix === 'smash-roster' ? 'smash_roster' : idPrefix.replace(/-/g, '_'));
 
-  const unsignedDoc = isRecord(doc) ? (stripManifest(doc) as unknown as D) : doc;
-  const [exportedDoc, setExportedDoc] = useState<D | null>(unsignedDoc);
-  const [exportedJson, setExportedJson] = useState<string>(() => (unsignedDoc ? serialize(unsignedDoc) : ''));
+  // Custom content only leaves the app signed with the author's account: nothing is shown until the
+  // server has signed it, and if signing fails there is no unsigned fallback.
+  const [exportedDoc, setExportedDoc] = useState<D | null>(null);
+  const [exportedJson, setExportedJson] = useState<string>('');
+  const [signFailed, setSignFailed] = useState<boolean>(false);
   const [shareUrl, setShareUrl] = useState<string>('');
   const [jsonCopy, setJsonCopy] = useState<CopyState>('idle');
   const [linkCopy, setLinkCopy] = useState<CopyState>('idle');
-  const [isSigning, setIsSigning] = useState<boolean>(Boolean(user || authLoading));
+  const [isSigning, setIsSigning] = useState<boolean>(true);
 
   useEffect(() => {
     setJsonCopy('idle');
@@ -107,8 +112,9 @@ export function ExportModal<D>({
     setShareUrl('');
 
     const currentUnsignedDoc = isRecord(doc) ? (stripManifest(doc) as unknown as D) : doc;
-    setExportedDoc(currentUnsignedDoc);
-    setExportedJson(currentUnsignedDoc ? serialize(currentUnsignedDoc) : '');
+    setExportedDoc(null);
+    setExportedJson('');
+    setSignFailed(false);
 
     if (!doc) {
       return;
@@ -122,28 +128,27 @@ export function ExportModal<D>({
     let cancelled = false;
 
     async function prepareExport() {
-      let finalDoc = currentUnsignedDoc as D;
+      let finalDoc: D | null = null;
       if (user && isRecord(doc)) {
         setIsSigning(true);
         try {
           const manifest = await signExportPayload(
             resolvedContentType,
-            currentUnsignedDoc as Record<string, unknown>
+            signingPayload(resolvedContentType, currentUnsignedDoc)
           );
-          if (manifest && !cancelled) {
+          if (manifest) {
             finalDoc = embedManifest(currentUnsignedDoc as Record<string, unknown>, manifest) as unknown as D;
           }
         } catch {
-          finalDoc = currentUnsignedDoc as D;
-        } finally {
-          if (!cancelled) {
-            setIsSigning(false);
-          }
+          finalDoc = null;
         }
-      } else {
-        setIsSigning(false);
       }
       if (cancelled) return;
+      setIsSigning(false);
+      if (!finalDoc) {
+        setSignFailed(true);
+        return;
+      }
       setExportedDoc(finalDoc);
       setExportedJson(serialize(finalDoc));
 
@@ -181,6 +186,12 @@ export function ExportModal<D>({
       bodyClassName="p-4 sm:p-6"
     >
       <div className="flex flex-col gap-6">
+        {signFailed && (
+          <p role="alert" className="flex items-start gap-2 rounded-xl border border-accent-red/40 bg-accent-red/10 p-3 type-strong text-accent-red">
+            <TriangleAlert className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
+            {dict.tierLists.signFailed}
+          </p>
+        )}
         <section className="flex flex-col gap-2">
           <label htmlFor={`${idPrefix}-share-link`} className={labelClassName}>
             {labels.shareLinkLabel}
@@ -189,7 +200,7 @@ export function ExportModal<D>({
             <Input
               id={`${idPrefix}-share-link`}
               readOnly
-              value={shareUrl || labels.preparingLink}
+              value={shareUrl || (signFailed ? '' : labels.preparingLink)}
               onFocus={(e) => e.currentTarget.select()}
               className={cn(fieldClassName, '')}
             />

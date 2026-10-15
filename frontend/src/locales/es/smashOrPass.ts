@@ -317,7 +317,6 @@ export default {
     noRostersFound: 'No se encontraron listas',
     noCustomRostersDesc: 'Aún no has creado ninguna lista personalizada en este navegador.',
     noRostersMatchDesc: 'Ninguna lista coincide con este filtro.',
-    createFirstRoster: 'Crea tu primera lista',
   },
   importModal: {
     title: 'Importar una Lista',

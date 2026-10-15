@@ -9,6 +9,8 @@ import { Modal } from '@/components/common/Modal';
 import { useAuth } from '@/context/AuthContext';
 import { useDictionary } from '@/context/DictionaryContext';
 import { formatMessage } from '@/utils/i18nFormat';
+import { signingPayload } from '@/utils/contentPayload';
+import { smashRosterExportDoc } from '@/utils/smashOrPass/exportDoc';
 import { deleteCustomRoster } from '@/utils/smashOrPass/storage';
 import { ReportContentModal } from '@/components/common/ReportContentModal';
 import { RosterSelectModal, SmashRosterExportModal, SmashRosterImportModal } from './lazyParts';
@@ -51,17 +53,11 @@ export function RosterModals({ locale, overlays, rosters }: RosterModalsProps) {
     setRosterPendingDelete(null);
   };
 
-  const exportingDoc = (() => {
-    const roster = exportingRosterId ? customRosterStore.custom[exportingRosterId] : undefined;
-    if (!roster) return null;
-    const { id: _id, createdAt: _createdAt, updatedAt: _updatedAt, ...doc } = roster;
-    return doc;
-  })();
+  const exportingRoster = exportingRosterId ? customRosterStore.custom[exportingRosterId] : undefined;
+  const exportingDoc = exportingRoster ? smashRosterExportDoc(exportingRoster) : null;
 
   const reportingRoster = reportingRosterId ? customRosterStore.custom[reportingRosterId] : undefined;
-  const reportingDoc = reportingRoster
-    ? (({ id: _id, createdAt: _createdAt, updatedAt: _updatedAt, ...doc }) => doc)(reportingRoster)
-    : {};
+  const reportingDoc = reportingRoster ? smashRosterExportDoc(reportingRoster) : {};
 
   return (
     <>
@@ -152,7 +148,7 @@ export function RosterModals({ locale, overlays, rosters }: RosterModalsProps) {
         onClose={() => setReportingRosterId(null)}
         contentType="smash_roster"
         manifest={reportingRoster?._manifest ?? null}
-        payload={reportingDoc as unknown as Record<string, unknown>}
+        payload={signingPayload('smash_roster', reportingDoc)}
         contentTitle={reportingRoster?.name}
       />
 

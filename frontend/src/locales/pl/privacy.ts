@@ -3,7 +3,7 @@ export default {
   pageTitle: "LemonDBD - Polityka prywatności",
   heading: "Polityka prywatności",
   lastUpdatedLabel: "Ostatnia aktualizacja",
-  lastUpdated: "10 października 2026",
+  lastUpdated: "15 października 2026",
   intro:
     "Ta strona wyjaśnia, jakie dane osobowe zbiera <brand>LemonDBD</brand>, po co, kto ma do nich dostęp i co możesz z nimi zrobić. Celowo napisaliśmy ją krótko i prostym językiem.",
   translationNotice: "Jeśli przetłumaczone wersje tej strony różnią się od angielskiej, pierwszeństwo ma wersja angielska.",
@@ -38,7 +38,7 @@ export default {
       items: [
         "<b>Dane konta:</b> nazwę użytkownika, adres e-mail, skrót (hash) hasła (nigdy samo hasło), awatar, preferowany język oraz krótkotrwałe kody weryfikacyjne i resetu hasła.",
         "<b>Logowanie dwuetapowe (opcjonalne):</b> tylko jeśli włączysz je na stronie profilu. Przechowujemy tajny klucz Twojej aplikacji uwierzytelniającej (zaszyfrowany), jednorazowe kody odzyskiwania w postaci skrótów (hash), moment włączenia, ostatni zaakceptowany krok kodu (aby kodu nie dało się użyć ponownie) oraz licznik ostatnich błędnych kodów z czasem tymczasowej blokady. Kody generuje aplikacja uwierzytelniająca na Twoim urządzeniu; numer telefonu nie jest potrzebny.",
-        "<b>To, co zapisujesz:</b> posiadane postacie i perki, prezentację profilu, serie, osiągnięcia w wyzwaniach, statystyki minigier i głosy w Smash or Pass. Twoje tier listy, rostery Smash or Pass i własne minigry zostają w Twojej przeglądarce i nie są wysyłane na nasze serwery. Osoby bez konta otrzymują losowy identyfikator sesji, aby zapamiętać ich głosy w Smash or Pass.",
+        "<b>To, co zapisujesz:</b> posiadane postacie i perki, prezentację profilu, serie, osiągnięcia w wyzwaniach, statystyki minigier i głosy w Smash or Pass. Twoje tier listy, rostery Smash or Pass i własne minigry zostają w Twojej przeglądarce i nie są przechowywane na naszych serwerach, z wyjątkiem opisanego w sekcji „Zgłaszanie treści”. Osoby bez konta otrzymują losowy identyfikator sesji, aby zapamiętać ich głosy w Smash or Pass.",
         "<b>Zgłoszenia błędów i wiadomości:</b> treść, zrzuty ekranu i adres e-mail, które nam wysyłasz. Goście muszą podać e-mail, abyśmy mogli odpowiedzieć.",
         "<b>Dane techniczne:</b> adres IP, typ przeglądarki i szczegóły żądań, używane do ograniczania liczby zapytań, zapobiegania nadużyciom i naprawiania błędów.",
         "<b>Komendy głosowe (mapy):</b> po ich włączeniu dźwięk z mikrofonu służy do rozpoznawania nazw map. Jak to działa, opisujemy w sekcji o pamięci przeglądarki i podmiotach trzecich poniżej.",
@@ -52,8 +52,21 @@ export default {
         "Aby założyć i prowadzić Twoje konto, przechowywać zapisane dane oraz wysyłać e-maile weryfikacyjne i do resetu hasła oraz, jeśli to włączysz, sprawdzać kod dwuetapowy przy logowaniu (wykonanie usługi na Twoją rzecz).",
         "Aby odpowiadać na zgłoszenia błędów i prośby (nasz uzasadniony interes we wspieraniu użytkowników lub Twoja prośba).",
         "Aby chronić stronę i konta, w tym ograniczać błędne kody dwuetapowe, powstrzymywać spam i nadużycia oraz naprawiać błędy (nasz uzasadniony interes).",
+        "Aby sprawdzać zgłoszenia treści i egzekwować nasze Zasady (nasz uzasadniony interes w utrzymaniu bezpieczeństwa strony).",
         "Aby dzięki analityce przyjaznej prywatności wiedzieć, z których podstron korzystacie, i ulepszać stronę (nasz uzasadniony interes).",
         "Jeśli prosimy o Twoją zgodę, możesz ją w każdej chwili cofnąć.",
+      ],
+    },
+    moderation: {
+      heading: "Zgłaszanie treści",
+      paragraphs: [
+        "Tier listy, rostery i własne minigry żyją w Twojej przeglądarce, a nie na naszych serwerach. Dotyczą nas dwie rzeczy:",
+        "Po usunięciu konta Twoja nazwa użytkownika jest w tych zapisach zastępowana oznaczeniem „Deleted user”, a notatki, które napisałeś(-aś) jako zgłaszający, są usuwane. Zapisy te wchodzą w skład danych, które możesz pobrać.",
+      ],
+      items: [
+        "<b>Udostępnianie i eksport:</b> do linku lub pliku dodajemy zabezpieczony przed podrobieniem znak konta (wskazuje Twoje konto), aby zgłoszoną treść można było przypisać autorowi. W tym celu nasz serwer na chwilę odczytuje treść, ale jej nie zapisuje.",
+        "<b>Zgłoszenia:</b> jeśli zgłaszasz treść, otrzymujemy Twoje konto, powód, opcjonalną notatkę i kopię treści. Członek <brand>LemonTeam</brand> ją sprawdza, a kopia jest usuwana po podjęciu decyzji, najpóźniej po 14 dniach.",
+        "<b>Po decyzji:</b> zachowujemy krótki zapis (rodzaj treści, powód, wynik, daty, zaangażowane konta). Jeśli treść zostanie zbanowana, jej jednokierunkowy kod trafia na listę blokad, aby nie dało się jej znów otworzyć ani zaimportować; z kodu nie da się odtworzyć treści. Zapisy te zachowujemy tak długo, jak są potrzebne do rozpatrywania reklamacji i zapobiegania powtarzającym się nadużyciom. Autor, jeśli jest znany, dostaje e-mailem powód; zgłaszającego nie wskazujemy.",
       ],
     },
     analytics: {
@@ -77,8 +90,8 @@ export default {
       heading: "Kto widzi Twoje dane",
       paragraphs: ["Nie sprzedajemy danych osobowych ani nie używamy ich do reklam. Udostępniamy je tylko w razie potrzeby:"],
       items: [
-        "<b>Linki, które udostępniasz:</b> gdy udostępniasz tier listę, roster lub własną minigrę, jest ona zapakowana w sam link (część po znaku „#”, której przeglądarka nigdy do nas nie wysyła). Nie zapisujemy jej i nie możemy jej zobaczyć; otworzyć ją mogą tylko osoby, które dostaną link.",
-        "<b>Dostawcy usług:</b> nasz dostawca hostingu oraz {mailProvider} (który dostarcza nasze e-maile weryfikacyjne i do resetu hasła) przetwarzają dane w naszym imieniu, wyłącznie by utrzymać stronę i wysłać e-maile, o które prosisz, w tym powiadomienia o zmianie ustawienia bezpieczeństwa konta. Kody dwuetapowe tworzy Twoja własna aplikacja uwierzytelniająca, a sprawdzamy je na naszym serwerze; nie korzystamy w tym celu z usług podmiotów trzecich i nic o nich nie trafia do Google, Microsoftu, Apple ani nikogo innego.",
+        "<b>Linki, które udostępniasz:</b> gdy udostępniasz tier listę, roster lub własną minigrę, jest ona zapakowana w sam link (część po znaku „#”, której przeglądarka nigdy do nas nie wysyła). Nie zapisujemy jej; otworzyć ją mogą tylko osoby, które dostaną link. Dodawany jest do niej Twój znak konta (zob. „Zgłaszanie treści”).",
+        "<b>Dostawcy usług:</b> nasz dostawca hostingu oraz {mailProvider} (który dostarcza nasze e-maile weryfikacyjne i do resetu hasła) przetwarzają dane w naszym imieniu, wyłącznie by utrzymać stronę i wysłać e-maile, o które prosisz, w tym powiadomienia o zmianie ustawienia bezpieczeństwa konta oraz o zablokowaniu Twojej treści. Kody dwuetapowe tworzy Twoja własna aplikacja uwierzytelniająca, a sprawdzamy je na naszym serwerze; nie korzystamy w tym celu z usług podmiotów trzecich i nic o nich nie trafia do Google, Microsoftu, Apple ani nikogo innego.",
         "<b>Discord:</b> gdy wysyłasz zgłoszenie błędu, jego treść (w tym adres e-mail i zrzuty ekranu) trafia na prywatny kanał naszego zespołu.",
         "<b>Powody prawne:</b> jeśli wymaga tego prawo lub aby chronić stronę i użytkowników przed nadużyciami.",
       ],

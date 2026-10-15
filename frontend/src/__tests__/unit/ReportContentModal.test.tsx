@@ -34,7 +34,7 @@ const MOCK_PAYLOAD = {
 const t = en.tierLists;
 
 describe('ReportContentModal: Rendering & States', () => {
-  it('renders unsigned / no-manifest explanation when manifest is null', () => {
+  it('shows the unsigned notice and still offers the full report form when manifest is null', () => {
     const html = renderWithDictionary(
       React.createElement(ReportContentModalBody, {
         manifest: null,
@@ -46,8 +46,8 @@ describe('ReportContentModal: Rendering & States', () => {
     );
 
     assert.ok(html.includes(t.reportNoManifest), 'should render unsigned notice when manifest is missing');
-    assert.ok(!html.includes('name="report_reason"'), 'should not render reason radios when unsigned');
-    assert.ok(!html.includes(t.reportSubmit), 'should not render submit button when unsigned');
+    assert.ok(html.includes('name="report_reason"'), 'unsigned content can still be reported');
+    assert.ok(html.includes(t.reportSubmit), 'unsigned content keeps the submit button');
   });
 
   it('renders all 5 reason options, notes textarea and submit button when manifest exists', () => {
@@ -173,6 +173,33 @@ describe('ReportContentModal: Submission API logic', () => {
     assert.deepEqual(sentBody.payload, MOCK_PAYLOAD);
     assert.equal(sentBody.reason, 'hate_speech');
     assert.equal(sentBody.notes, 'Contains offensive symbols');
+  });
+
+  it('reports unsigned content without any author stamp fields', async () => {
+    let sentBody: Record<string, unknown> = {};
+    globalThis.fetch = async (_input: RequestInfo | URL, init?: RequestInit) => {
+      sentBody = JSON.parse(String(init?.body));
+      return {
+        ok: true,
+        status: 201,
+        json: async () => ({ status: 'pending', attributed: false }),
+      } as Response;
+    };
+
+    const res = await submitContentReport({
+      contentType: 'smash_roster',
+      manifest: null,
+      payload: MOCK_PAYLOAD,
+      reason: 'explicit',
+    });
+
+    assert.equal(res.ok, true);
+    assert.equal(res.status, 'pending');
+    assert.equal(sentBody.content_type, 'smash_roster');
+    assert.deepEqual(sentBody.payload, MOCK_PAYLOAD);
+    for (const key of ['content_hash', 'author_id', 'author_login', 'signature']) {
+      assert.ok(!(key in sentBody), `${key} must not be sent for unsigned content`);
+    }
   });
 
   it('strips _manifest from payload before sending to backend to prevent HMAC hash mismatch', async () => {

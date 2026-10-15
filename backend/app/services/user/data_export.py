@@ -23,6 +23,9 @@ from app.models import (
     BugReport,
     ChallengeCompletionRecord,
     ChaosMatchLog,
+    ContentReport,
+    ContentReportSubscriber,
+    ContentRevocation,
     ChaosRun,
     GauntletMatchLog,
     GauntletRun,
@@ -98,6 +101,61 @@ def _two_factor_summary(user_id: int) -> dict[str, Any]:
     return {key: summary[key] for key in ("enabled", "enabled_at", "recovery_codes_remaining")}
 
 
+#: Columns of a moderation record that are about the content, not about other people. Reporters' identities
+#: and the stored evidence are never part of anyone's export.
+_REPORT_ABOUT_AUTHOR_COLUMNS = (
+    "id",
+    "content_type",
+    "content_hash",
+    "report_count",
+    "primary_reason",
+    "status",
+    "admin_notes",
+    "created_at",
+    "resolved_at",
+)
+
+
+def _moderation_export(user_id: int) -> dict[str, Any]:
+    """Reports this account filed, and moderation decisions about content stamped with this account."""
+    filed = db.session.execute(
+        select(ContentReportSubscriber, ContentReport)
+        .join(ContentReport, ContentReport.id == ContentReportSubscriber.report_id)
+        .where(ContentReportSubscriber.reporter_id == user_id)
+        .order_by(ContentReportSubscriber.created_at)
+    ).all()
+    about = db.session.scalars(
+        select(ContentReport).where(ContentReport.author_id == user_id).order_by(ContentReport.created_at)
+    ).all()
+    revoked = db.session.scalars(
+        select(ContentRevocation).where(ContentRevocation.author_id == user_id).order_by(ContentRevocation.created_at)
+    ).all()
+    return {
+        "reports_you_filed": [
+            {
+                "content_type": report.content_type,
+                "reason": sub.reason,
+                "notes": sub.notes,
+                "report_status": report.status,
+                "created_at": _plain(sub.created_at),
+            }
+            for sub, report in filed
+        ],
+        "reports_about_your_content": [
+            {col: _plain(getattr(report, col)) for col in _REPORT_ABOUT_AUTHOR_COLUMNS} for report in about
+        ],
+        "content_blocked": [
+            {
+                "content_type": rev.content_type,
+                "content_hash": rev.content_hash,
+                "reason": rev.reason,
+                "created_at": _plain(rev.created_at),
+            }
+            for rev in revoked
+        ],
+    }
+
+
 def export_user_data(user_id: int, requested_by: str = "self") -> dict[str, Any] | None:
     """Collect the account's own records; None when the user does not exist."""
     if requested_by not in EXPORT_REQUESTERS:
@@ -132,6 +190,7 @@ def export_user_data(user_id: int, requested_by: str = "self") -> dict[str, Any]
         "smash_or_pass_votes": _rows(Vote, Vote.user_id == user_id),
         "smash_or_pass_preferences": _rows(SmashUserPreference, SmashUserPreference.user_id == user_id),
         "bug_reports": _rows(BugReport, BugReport.user_id == user_id),
+        "content_moderation": _moderation_export(user_id),
         # Only whether it is on: the secret and the recovery codes never leave the database.
         "two_factor": _two_factor_summary(user_id),
     }

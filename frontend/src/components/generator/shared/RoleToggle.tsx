@@ -13,6 +13,7 @@ import { cn } from '@/utils/cn';
 import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
 import { isKiller as isKillerRole } from '@/utils/characterUtils';
 import { useDictionary } from "@/context/DictionaryContext";
+import { SegmentedControl } from '@/components/common/SegmentedControl';
 
 export interface RoleToggleProps {
   role: RoleCategory;
@@ -25,42 +26,15 @@ export const RoleToggle: React.FC<RoleToggleProps> = ({ role, onChange, classNam
   const isKiller = isKillerRole(role);
 
   return (
-    <div
-      role="group"
-      aria-label={dict.generator.selectRole}
-      className={cn(
-        'inline-flex items-center rounded-card border border-border-color bg-bg-elevated p-1 shadow-inner shrink-0',
-        className
-      )}
-    >
-      <button
-        type="button"
-        onClick={() => onChange('Survivor')}
-        aria-pressed={!isKiller}
-        className={cn(
-          'flex items-center gap-2 px-3.5 sm:px-4 py-2 min-h-[40px] sm:min-h-[44px] rounded-control text-xs sm:text-sm font-black transition-all duration-200 cursor-pointer select-none touch-manipulation',
-          !isKiller
-            ? 'bg-accent-green text-text-inverted shadow-xs font-black hover:brightness-110 active:scale-95'
-            : 'text-text-secondary hover:text-text-primary hover:bg-bg-surface/70 active:scale-95'
-        )}
-      >
-        <SurvivorIcon className="h-4 w-4 sm:h-5 w-5 shrink-0" />
-        <span>{dict.generator.survivor}</span>
-      </button>
-      <button
-        type="button"
-        onClick={() => onChange('Killer')}
-        aria-pressed={isKiller}
-        className={cn(
-          'flex items-center gap-2 px-3.5 sm:px-4 py-2 min-h-[40px] sm:min-h-[44px] rounded-control text-xs sm:text-sm font-black transition-all duration-200 cursor-pointer select-none touch-manipulation',
-          isKiller
-            ? 'bg-accent-red text-text-inverted shadow-xs font-black hover:brightness-110 active:scale-95'
-            : 'text-text-secondary hover:text-text-primary hover:bg-bg-surface/70 active:scale-95'
-        )}
-      >
-        <KillerIcon className="h-4 w-4 sm:h-5 w-5 shrink-0" />
-        <span>{dict.generator.killer}</span>
-      </button>
-    </div>
+    <SegmentedControl<'Survivor' | 'Killer'>
+      ariaLabel={dict.generator.selectRole}
+      value={isKiller ? 'Killer' : 'Survivor'}
+      onChange={onChange}
+      className={cn('shrink-0', className)}
+      options={[
+        { value: 'Survivor', label: dict.generator.survivor, icon: <SurvivorIcon className="h-4 w-4 shrink-0" />, activeClassName: 'bg-accent-green text-text-inverted' },
+        { value: 'Killer', label: dict.generator.killer, icon: <KillerIcon className="h-4 w-4 shrink-0" />, activeClassName: 'bg-accent-red text-text-inverted' },
+      ]}
+    />
   );
 };

@@ -3,6 +3,7 @@
 
 import React, { useCallback, useEffect, useState } from 'react';
 import { Input, Select, SearchInput } from '@/components/common/Field';
+import { SegmentedControl } from '@/components/common/SegmentedControl';
 import { CheckCircle2, Power, Sparkles, XCircle } from 'lucide-react';
 import {
   AdminCharacterRow,
@@ -250,58 +251,26 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
       {/* Killers & Perks availability */}
       <div className="rounded-card border border-border-color bg-bg-surface p-5 shadow-sm backdrop-blur-sm transition-colors duration-200">
         <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
-          <div className="flex items-center gap-2 rounded-card border border-border-color bg-bg-elevated p-1">
-            <button
-              type="button"
-              onClick={() => setSubTab('killers')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-control text-xs font-black uppercase tracking-wider cursor-pointer transition-colors ${
-                subTab === 'killers'
-                  ? 'bg-accent-red/15 text-accent-red border border-accent-red/30'
-                  : 'text-text-secondary hover:text-text-primary hover:bg-bg-surface'
-              }`}
-            >
-              <KillerIcon className="h-3.5 w-3.5" />
-              <span>{dict.admin.characters}</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => setSubTab('perks')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-control text-xs font-black uppercase tracking-wider cursor-pointer transition-colors ${
-                subTab === 'perks'
-                  ? 'bg-accent-red/15 text-accent-red border border-accent-red/30'
-                  : 'text-text-secondary hover:text-text-primary hover:bg-bg-surface'
-              }`}
-            >
-              <Sparkles className="h-3.5 w-3.5" />
-              <span>{dict.admin.perks}</span>
-            </button>
-          </div>
-          <div className="flex items-center gap-2 rounded-card border border-border-color bg-bg-elevated p-1">
-            <button
-              type="button"
-              onClick={() => setRoleFilter('Survivor')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-control text-xs font-black uppercase tracking-wider cursor-pointer transition-colors ${
-                roleFilter === 'Survivor'
-                  ? 'bg-accent-green/15 text-accent-green border border-accent-green/30'
-                  : 'text-text-secondary hover:text-text-primary hover:bg-bg-surface'
-              }`}
-            >
-              <SurvivorIcon className="h-3.5 w-3.5" />
-              <span>{dict.admin.roleSurvivor}</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => setRoleFilter('Killer')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-control text-xs font-black uppercase tracking-wider cursor-pointer transition-colors ${
-                roleFilter === 'Killer'
-                  ? 'bg-accent-red/15 text-accent-red border border-accent-red/30'
-                  : 'text-text-secondary hover:text-text-primary hover:bg-bg-surface'
-              }`}
-            >
-              <KillerIcon className="h-3.5 w-3.5" />
-              <span>{dict.admin.roleKiller}</span>
-            </button>
-          </div>
+          <SegmentedControl<'killers' | 'perks'>
+            ariaLabel={dict.admin.characters}
+            size="sm"
+            value={subTab}
+            onChange={setSubTab}
+            options={[
+              { value: 'killers', label: dict.admin.characters, icon: <KillerIcon className="h-3.5 w-3.5" />, activeClassName: 'bg-accent-red text-text-inverted' },
+              { value: 'perks', label: dict.admin.perks, icon: <Sparkles className="h-3.5 w-3.5" />, activeClassName: 'bg-accent-red text-text-inverted' },
+            ]}
+          />
+          <SegmentedControl<'Survivor' | 'Killer'>
+            ariaLabel={dict.admin.roleSurvivor}
+            size="sm"
+            value={roleFilter}
+            onChange={setRoleFilter}
+            options={[
+              { value: 'Survivor', label: dict.admin.roleSurvivor, icon: <SurvivorIcon className="h-3.5 w-3.5" />, activeClassName: 'bg-accent-green text-text-inverted' },
+              { value: 'Killer', label: dict.admin.roleKiller, icon: <KillerIcon className="h-3.5 w-3.5" />, activeClassName: 'bg-accent-red text-text-inverted' },
+            ]}
+          />
           <SearchInput
             fieldSize="sm"
             wrapperClassName="w-full sm:w-56"

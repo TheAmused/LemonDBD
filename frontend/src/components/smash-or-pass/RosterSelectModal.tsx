@@ -4,7 +4,6 @@
 import React from 'react';
 import { CardStackIcon, ImportScrollIcon, ThornChevronIcon } from '@/components/icons/DbdIcons';
 import type { RosterItem } from '@/types/smashOrPass';
-import { cn } from '@/utils/cn';
 import { Modal } from '@/components/common/Modal';
 import { AuthRequiredState } from '@/components/common/AuthRequiredState';
 import { useAuth } from '@/context/AuthContext';
@@ -14,6 +13,7 @@ import { RosterPickerFooter } from './roster-select/RosterPickerFooter';
 import { useRosterCarousel } from './roster-select/useRosterCarousel';
 
 import { Button } from '@/components/common/Button';
+import { SegmentedControl } from '@/components/common/SegmentedControl';
 interface RosterSelectModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -94,32 +94,17 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
       <div className="relative flex min-h-0 w-full flex-1 flex-col items-center justify-between overflow-hidden p-4 sm:p-6 md:p-8">
         {/* Top Left: Filter Toggle (Official vs Custom) */}
         <div className="absolute top-4 left-4 sm:top-6 sm:left-6 z-50">
-          <div className="inline-flex items-center gap-1 p-1 bg-bg-elevated/90 backdrop-blur-md rounded-card border border-border-color shadow-sm">
-            <button
-              type="button"
-              onClick={() => handleFilterChange('official')}
-              className={cn(
-                'flex items-center gap-1.5 px-3 sm:px-3.5 py-1.5 rounded-control text-xs font-bold uppercase tracking-wider transition-all cursor-pointer touch-manipulation',
-                filter === 'official'
-                  ? 'bg-accent-red text-text-inverted shadow-xs'
-                  : 'text-text-secondary hover:text-text-primary'
-              )}
-            >
-              <span>{dict.smashOrPass.picker.officialTab} ({officialRosters.length})</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => handleFilterChange('custom')}
-              className={cn(
-                'flex items-center gap-1.5 px-3 sm:px-3.5 py-1.5 rounded-control text-xs font-bold uppercase tracking-wider transition-all cursor-pointer touch-manipulation',
-                filter === 'custom'
-                  ? 'bg-accent-red text-text-inverted shadow-xs'
-                  : 'text-text-secondary hover:text-text-primary'
-              )}
-            >
-              <span>{dict.smashOrPass.picker.customTab} ({customRosters.length})</span>
-            </button>
-          </div>
+          <SegmentedControl<'official' | 'custom'>
+            ariaLabel={dict.smashOrPass.picker.officialTab}
+            size="sm"
+            value={filter}
+            onChange={handleFilterChange}
+            className="bg-bg-elevated/90 backdrop-blur-md"
+            options={[
+              { value: 'official', label: `${dict.smashOrPass.picker.officialTab} (${officialRosters.length})` },
+              { value: 'custom', label: `${dict.smashOrPass.picker.customTab} (${customRosters.length})` },
+            ]}
+          />
         </div>
 
         <div className="text-center pt-1 sm:pt-2 space-y-2.5">

@@ -21,6 +21,7 @@ import { Input } from '@/components/common/Field';
 import { CustomDropdown } from '@/components/common/CustomDropdown';
 import { formatMessage } from '@/utils/i18nFormat';
 import { useDictionary } from "@/context/DictionaryContext";
+import { ToggleChip } from '@/components/common/ToggleChip';
 
 export interface IncomingItem {
   name: string;
@@ -309,23 +310,15 @@ function CatalogSource({ onAdd, existingIds, locale }: {
       {/* Wide screens: every type as a pill. Phones: a dropdown next to the search box, to save rows. */}
       <div className="hidden sm:flex flex-wrap justify-center gap-2" role="group" aria-label={c.catalogSource}>
         {CATALOG_KINDS.map((k) => (
-          <button
+          <ToggleChip pressed={kind === k} size="md"
             key={k}
-            type="button"
             onClick={() => {
               setKind(k);
               setSelected(new Set());
             }}
-            aria-pressed={kind === k}
-            className={cn(
-              'min-h-[38px] rounded-control border px-3 text-xs sm:text-sm font-bold transition-colors cursor-pointer',
-              kind === k
-                ? 'border-accent-red bg-accent-red/10 text-accent-red'
-                : 'border-border-color bg-bg-surface text-text-secondary hover:bg-bg-elevated hover:text-text-primary'
-            )}
           >
             {t.kinds[k]}
-          </button>
+          </ToggleChip>
         ))}
       </div>
 

@@ -5,6 +5,7 @@ import { Button } from '@/components/common/Button';
 import { FlagIcon } from '@/components/sidebar/FlagIcon';
 import { LANGUAGES } from '@/components/sidebar/SidebarBottomControls';
 import { useDictionary } from '@/context/DictionaryContext';
+import { ToggleChip } from '@/components/common/ToggleChip';
 
 interface OnboardingLanguageViewProps {
   selectedLanguage: string;
@@ -30,20 +31,13 @@ export function OnboardingLanguageView({
         </p>
         <div className="grid grid-cols-1 gap-2">
           {LANGUAGES.map((lang) => (
-            <button
+            <ToggleChip pressed={selectedLanguage === lang.code} size="md" className="justify-start gap-3"
               key={lang.code}
-              type="button"
               onClick={() => onSelect(lang.code)}
-              aria-pressed={selectedLanguage === lang.code}
-              className={`flex items-center gap-3 rounded-control border px-4 py-2.5 text-sm font-bold transition-colors cursor-pointer ${
-                selectedLanguage === lang.code
-                  ? 'border-accent-red bg-accent-red/10 text-accent-red'
-                  : 'border-border-color text-text-secondary hover:border-accent-red/50'
-              }`}
             >
               <FlagIcon code={lang.code} className="h-4 w-[22px] rounded-chip shrink-0" />
               <span>{lang.label}</span>
-            </button>
+            </ToggleChip>
           ))}
         </div>
         <Button variant="primary" disabled={savingLanguage} onClick={onContinue} className="w-full">

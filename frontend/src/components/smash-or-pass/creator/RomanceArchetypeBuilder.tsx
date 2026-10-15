@@ -23,6 +23,7 @@ import { Checkbox } from '@/components/common/Checkbox';
 import { Button } from '@/components/common/Button';
 import { Input, Select, Textarea } from '@/components/common/Field';
 import { useDictionary } from "@/context/DictionaryContext";
+import { ToggleChip } from '@/components/common/ToggleChip';
 
 const ICON_PRESETS: Array<{ name: string; icon: React.ComponentType<{ className?: string }> }> = [
   { name: 'sparkles', icon: Sparkles },
@@ -244,21 +245,13 @@ export function RomanceArchetypeBuilder({ archetypes, onChange, availableRoles, 
                               const PIcon = p.icon;
                               const isSelected = arch.icon_name === p.name && !arch.icon_url;
                               return (
-                                <button
+                                <ToggleChip pressed={isSelected} size="sm" icon
                                   key={p.name}
-                                  type="button"
                                   aria-label={p.name}
-                                  aria-pressed={isSelected}
                                   onClick={() => updateArchetype(arch.id, { icon_name: p.name, icon_url: undefined })}
-                                  className={cn(
-                                    'pointer-coarse:min-h-11 pointer-coarse:min-w-11 flex h-8 w-8 items-center justify-center rounded-control border transition-all cursor-pointer',
-                                    isSelected
-                                      ? 'border-accent-red bg-accent-red/20 text-accent-red'
-                                      : 'border-border-color text-text-muted hover:text-text-primary'
-                                  )}
                                 >
                                   <PIcon className="h-4 w-4" />
-                                </button>
+                                </ToggleChip>
                               );
                             })}
                           </div>
@@ -289,19 +282,12 @@ export function RomanceArchetypeBuilder({ archetypes, onChange, availableRoles, 
                         </label>
                         <div className="flex flex-wrap gap-2">
                           {COLOR_PRESETS.map((color) => (
-                            <button
+                            <ToggleChip pressed={arch.badge_color === color.value} size="xs"
                               key={color.label}
-                              type="button"
                               onClick={() => updateArchetype(arch.id, { badge_color: color.value })}
-                              className={cn(
-                                'text-mini px-2.5 py-1 rounded-control border transition-all cursor-pointer font-bold',
-                                arch.badge_color === color.value
-                                  ? 'border-accent-red bg-accent-red/20 text-text-primary'
-                                  : 'border-border-color bg-bg-surface text-text-muted hover:text-text-primary'
-                              )}
                             >
                               {color.label}
-                            </button>
+                            </ToggleChip>
                           ))}
                         </div>
                       </div>

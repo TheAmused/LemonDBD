@@ -11,7 +11,7 @@ Ograniczenia analizy: liczone są tylko klasy zapisane wprost w `className`. Kla
 | Kategoria | Docelowy komponent | Pozycji |
 |---|---|---|
 | Karty `div` z border, bg i rounded | `Surface` | 204 |
-| Ostylowane `<button>` | `Button` / `IconButton` | 84 (z 127) |
+| Ostylowane `<button>` | `Button` / `ToggleChip` / `SegmentedControl` | 63 (z 127) |
 | Natywne `title=` | `Tooltip` / `tip()` | 113 |
 | `span` jako chip lub pill | `Badge` / `InfoChip` | 74 |
 | Linki wyglądające jak przyciski | `buttonClassName()` | 22 |
@@ -242,32 +242,30 @@ Wzorzec: `div`/`section`/`article`/`aside`/`li` z `border`, `bg-bg-surface` lub 
 - [ ] `characters/hub/CharacterCard.tsx` : 50 (rounded-2xl)
 
 
-## 2. Przyciski na Button (84 zostało z 127)
+## 2. Przyciski na Button (63 zostało z 127)
 
-Zrobione (2026-10-15): 53 przyciski zamienione na `Button` (warianty `primary`, `secondary`, `soft`, `ghost`, `danger`, `amber`, nowy `amberSoft`; `icon`, `pill`). Przyciski-ikony dostają teraz cel dotyku 44 px na telefonie z samego `Button` (`pointer-coarse`).
+Zrobione (2026-10-15): 53 przyciski akcji na `Button`, 10 linków tekstowych na warianty `link` i `linkMuted`. Przełączniki: grupy wyboru wykluczającego się (admin challenge, wybór oficjalne/własne, rola postaci, filtry smash, zakładki scrapera, rola generatora, strona streaka) przeszły na `SegmentedControl`, a pojedyncze przełączniki (kategoria katalogu, preset drabinki, język onboardingu, kolor i ikona archetypu, filtry changelogu, ikony paska generatora) na nowy `ToggleChip` (`common/ToggleChip.tsx`: tryb wyłączony z ramką, włączony z tintem; `pill`, `icon`, ton `red`/`amber`).
 
-Zostało 84. To głównie elementy, które nie są zwykłymi przyciskami akcji i wymagają osobnych decyzji:
+Zostało 63. To głównie elementy, które nie są zwykłymi przyciskami akcji:
 
-- przełączniki i zakładki (`aria-pressed`, `aria-selected`, `role=radio/switch`): kandydat na wspólny `ToggleChip` lub `SegmentedControl`/`Tabs` (około 30),
-- kafle z obrazkiem, karty klikalne, nagłówki akordeonów (`aria-expanded`),
-- przyciski gry z animacją (strzałki, akcje karty w Smash or Pass, klawisze `TactileKeycaps`, `VoiceMicButton`),
-- przyciski z dynamiczną klasą zależną od stanu (aktywny/nieaktywny).
+- kafle z obrazkiem, karty klikalne, nagłówki akordeonów (`aria-expanded`), karty wyboru (`aria-pressed` na dużych kartach: admin zgłoszenia, wybór silnika, wybór trybu challenge),
+- przyciski gry z animacją (strzałki i akcje karty w Smash or Pass, klawisze `TactileKeycaps`, `VoiceMicButton`),
+- przełączniki specjalne: lista kolorów w `TierColorPicker`, tagi changelogu z własnym motywem, mini-tagi `EntityEditor`, kontrolki `TierListScaleControl`, `ChapterToolbar` (role=checkbox),
+- przyciski z dynamiczną klasą zależną od stanu.
 
-Lista poniżej to wszystko, co nadal wygląda jak przycisk. Każdą pozycję ocenić: `Button`, nowy `ToggleChip`, albo zostaje.
+Lista poniżej to wszystko, co nadal wygląda jak przycisk. Każdą pozycję ocenić: `Button`, `ToggleChip`, `SegmentedControl`, albo zostaje.
 
-**smash-or-pass** (22)
+**smash-or-pass** (14)
 
 - [ ] `smash-or-pass/CharacterCard.tsx` : 254 (rounded-control), 270 (rounded-control), 288 (rounded-control), 304 (rounded-control)
-- [ ] `smash-or-pass/RosterSelectModal.tsx` : 98 (rounded-control), 110 (rounded-control), 172 (rounded-full), 185 (rounded-full)
+- [ ] `smash-or-pass/RosterSelectModal.tsx` : 157 (rounded-full), 170 (rounded-full)
 - [ ] `smash-or-pass/TactileKeycaps.tsx` : 150 (rounded-control)
 - [ ] `smash-or-pass/card/CardBackFace.tsx` : 65 (rounded-control)
 - [ ] `smash-or-pass/creator/EntityEditor.tsx` : 179 (rounded-chip), 225 (rounded-chip)
 - [ ] `smash-or-pass/creator/EntityEditorParts.tsx` : 132 (rounded-chip)
-- [ ] `smash-or-pass/creator/RomanceArchetypeBuilder.tsx` : 247 (rounded-control), 292 (rounded-control)
-- [ ] `smash-or-pass/hub/HubFilterDrawer.tsx` : 55 (rounded-control), 69 (rounded-control), 93 (rounded-control), 114 (rounded-control)
 - [ ] `smash-or-pass/hub/HubHeader.tsx` : 129 (rounded-control), 227 (rounded-control), 298 (rounded-control)
 
-**tier-lists** (15)
+**tier-lists** (13)
 
 - [ ] `tier-lists/TierColorPicker.tsx` : 83 (rounded-chip)
 - [ ] `tier-lists/TierEditModal.tsx` : 154 (rounded-control)
@@ -275,20 +273,19 @@ Lista poniżej to wszystko, co nadal wygląda jak przycisk. Każdą pozycję oce
 - [ ] `tier-lists/TierListScaleControl.tsx` : 69 (rounded-control), 120 (rounded-chip)
 - [ ] `tier-lists/TierRow.tsx` : 158 (rounded-control)
 - [ ] `tier-lists/creator/CreatorItems.tsx` : 89 (rounded-chip)
-- [ ] `tier-lists/creator/ItemSources.tsx` : 312 (rounded-control)
-- [ ] `tier-lists/creator/LadderEditor.tsx` : 137 (rounded-control), 178, 188, 215, 234 (rounded-chip)
+- [ ] `tier-lists/creator/LadderEditor.tsx` : 171, 181, 208, 227 (rounded-chip)
 - [ ] `tier-lists/creator/TierListCreatorParts.tsx` : 67
 
-**admin** (10)
+**admin** (6)
 
 - [ ] `admin/AdminBugReportsWorkbench.tsx` : 113 (rounded-control), 131 (rounded-control), 149 (rounded-control), 167 (rounded-control)
-- [ ] `admin/AdminChallengeControl.tsx` : 230 (rounded-control), 254 (rounded-control), 266 (rounded-control), 280 (rounded-control), 292 (rounded-control)
+- [ ] `admin/AdminChallengeControl.tsx` : 231 (rounded-control)
 - [ ] `admin/AdminContentReportsWorkbench.tsx` : 94 (rounded-control)
 
-**changelog** (6)
+**changelog** (5)
 
 - [ ] `changelog/ChangelogEditorModal.tsx` : 190 (rounded-full), 313 (rounded-control), 336 (rounded-full), 347 (rounded-full)
-- [ ] `changelog/WhatsNewLauncher.tsx` : 370 (rounded-control), 511 (rounded-full)
+- [ ] `changelog/WhatsNewLauncher.tsx` : 371 (rounded-control)
 
 **(root)** (4)
 
@@ -297,24 +294,11 @@ Lista poniżej to wszystko, co nadal wygląda jak przycisk. Każdą pozycję oce
 - [ ] `PerkFilters.tsx` : 365 (rounded-control)
 - [ ] `Sidebar.tsx` : 314 (rounded-r-control)
 
-**streaks** (4)
-
-- [ ] `streaks/ChallengeIntroModalShell.tsx` : 176 (rounded-control)
-- [ ] `streaks/ChallengePanel.tsx` : 131
-- [ ] `streaks/gauntlet/LemonTokenPanel.tsx` : 39 (rounded-control)
-- [ ] `streaks/page-streak/PageStreakRunView.tsx` : 173 (rounded-control)
-
 **user** (4)
 
 - [ ] `user/PerkDiamondSlot.tsx` : 58 (rounded-full)
 - [ ] `user/ShowcasePerkModal.tsx` : 37 (rounded-control)
 - [ ] `user/UserBugReportsList.tsx` : 151, 210 (rounded-control)
-
-**generator** (4)
-
-- [ ] `generator/modes/slot-machine/SlotReelRowMobile.tsx` : 189 (rounded-control)
-- [ ] `generator/shared/IconToggleButton.tsx` : 28 (rounded-control)
-- [ ] `generator/shared/RoleToggle.tsx` : 36 (rounded-control), 50 (rounded-control)
 
 **character-detail** (3)
 
@@ -327,11 +311,11 @@ Lista poniżej to wszystko, co nadal wygląda jak przycisk. Każdą pozycję oce
 - [ ] `maps/VoiceEngineInfoModal.tsx` : 170 (rounded-control)
 - [ ] `maps/voice/VoiceBannerHeader.tsx` : 149 (rounded-full)
 
-**onboarding** (3)
+**streaks** (3)
 
-- [ ] `onboarding/wizard/ChapterCharacterPanel.tsx` : 63
-- [ ] `onboarding/wizard/ChapterToolbar.tsx` : 69 (rounded-control)
-- [ ] `onboarding/wizard/OnboardingLanguageView.tsx` : 33 (rounded-control)
+- [ ] `streaks/ChallengeIntroModalShell.tsx` : 176 (rounded-control)
+- [ ] `streaks/ChallengePanel.tsx` : 131
+- [ ] `streaks/gauntlet/LemonTokenPanel.tsx` : 39 (rounded-control)
 
 **minigames** (2)
 
@@ -343,14 +327,22 @@ Lista poniżej to wszystko, co nadal wygląda jak przycisk. Każdą pozycję oce
 - [ ] `sidebar/BugReportModal.tsx` : 312 (rounded-control)
 - [ ] `sidebar/SidebarBottomControls.tsx` : 226
 
-**characters** (2)
+**onboarding** (2)
 
-- [ ] `characters/hub/CharactersToolbar.tsx` : 87 (rounded-control)
+- [ ] `onboarding/wizard/ChapterCharacterPanel.tsx` : 63
+- [ ] `onboarding/wizard/ChapterToolbar.tsx` : 69 (rounded-control)
+
+**characters** (1)
+
 - [ ] `characters/hub/VerificationNotice.tsx` : 24 (rounded-control)
 
-## 3. Niestylowane przyciski do oceny (zostało 42)
+**generator** (1)
 
-Zwykle ikony i klikalne elementy kart, linki tekstowe (`type-strong text-accent-amber hover:...`, około 20 prawie identycznych: wariant `link` i `linkMuted` w `Button` dodany, 10 zamienionych; zostają teksty wplecione w zdanie (np. `AuthModal` regulamin, `PageStreakRoster`, `VerificationNotice`) oraz czerwone linki (`AdminSettingsPanel`, `RomanceArchetypeBuilder`)). Każdy ocenić osobno.
+- [ ] `generator/modes/slot-machine/SlotReelRowMobile.tsx` : 189 (rounded-control)
+
+## 3. Niestylowane przyciski do oceny (zostało 61)
+
+Zwykle ikony i klikalne elementy kart. Każdy ocenić osobno.
 
 **tier-lists** (15)
 
@@ -359,7 +351,7 @@ Zwykle ikony i klikalne elementy kart, linki tekstowe (`type-strong text-accent-
 - [ ] `tier-lists/TierPool.tsx` : 146
 - [ ] `tier-lists/TierRow.tsx` : 81
 - [ ] `tier-lists/creator/CreatorItems.tsx` : 76
-- [ ] `tier-lists/creator/ItemSources.tsx` : 388
+- [ ] `tier-lists/creator/ItemSources.tsx` : 381
 
 **streaks** (11)
 
@@ -380,25 +372,6 @@ Zwykle ikony i klikalne elementy kart, linki tekstowe (`type-strong text-accent-
 - [ ] `user/UserBugReportsDrawer.tsx` : 41
 - [ ] `user/UserProfileForm.tsx` : 171, 297, 373, 402
 
-**(root)** (5)
-
-- [ ] `AuthModal.tsx` : 378, 401, 494
-- [ ] `EmailVerificationForm.tsx` : 135
-- [ ] `PerkCard.tsx` : 95
-
-**characters** (4)
-
-- [ ] `characters/PerksTogglePopup.tsx` : 98
-- [ ] `characters/hub/CharactersToolbar.tsx` : 58, 71
-- [ ] `characters/hub/VerificationNotice.tsx` : 31
-
-**minigames** (4)
-
-- [ ] `minigames/ChallengeRunner.tsx` : 559
-- [ ] `minigames/CharacterAutocomplete.tsx` : 237
-- [ ] `minigames/creator/MinigameCreator.tsx` : 340
-- [ ] `minigames/creator/RoundEditorCard.tsx` : 267
-
 **generator** (4)
 
 - [ ] `generator/modes/TarotDeckStage.tsx` : 197, 248
@@ -408,12 +381,12 @@ Zwykle ikony i klikalne elementy kart, linki tekstowe (`type-strong text-accent-
 **smash-or-pass** (4)
 
 - [ ] `smash-or-pass/creator/EntityEditorParts.tsx` : 162
-- [ ] `smash-or-pass/creator/RomanceArchetypeBuilder.tsx` : 322
+- [ ] `smash-or-pass/creator/RomanceArchetypeBuilder.tsx` : 308
 - [ ] `smash-or-pass/creator/SmashRosterCreatorParts.tsx` : 226, 245
 
 **admin** (3)
 
-- [ ] `admin/AdminChallengeControl.tsx` : 321, 356
+- [ ] `admin/AdminChallengeControl.tsx` : 290, 325
 - [ ] `admin/AdminSettingsPanel.tsx` : 203
 
 **maps** (3)
@@ -422,20 +395,25 @@ Zwykle ikony i klikalne elementy kart, linki tekstowe (`type-strong text-accent-
 - [ ] `maps/voice/VoiceBannerHeader.tsx` : 161
 - [ ] `maps/voice/VoiceMicButton.tsx` : 36
 
-**scraper-config** (3)
+**(root)** (2)
 
-- [ ] `scraper-config/ScraperConfigTabs.tsx` : 24
-- [ ] `scraper-config/TargetPicker.tsx` : 38, 67
+- [ ] `AuthModal.tsx` : 401
+- [ ] `PerkCard.tsx` : 95
 
-**sidebar** (3)
+**characters** (2)
+
+- [ ] `characters/PerksTogglePopup.tsx` : 98
+- [ ] `characters/hub/VerificationNotice.tsx` : 31
+
+**minigames** (2)
+
+- [ ] `minigames/CharacterAutocomplete.tsx` : 237
+- [ ] `minigames/creator/MinigameCreator.tsx` : 340
+
+**sidebar** (2)
 
 - [ ] `sidebar/BugReportModal.tsx` : 300
 - [ ] `sidebar/SidebarNavLink.tsx` : 68
-- [ ] `sidebar/SidebarUserSection.tsx` : 96
-
-**auth** (2)
-
-- [ ] `auth/TwoFactorChallengeForm.tsx` : 87, 95
 
 **character-detail** (2)
 
@@ -449,7 +427,7 @@ Zwykle ikony i klikalne elementy kart, linki tekstowe (`type-strong text-accent-
 
 **changelog** (1)
 
-- [ ] `changelog/WhatsNewLauncher.tsx` : 384
+- [ ] `changelog/WhatsNewLauncher.tsx` : 385
 
 **ui** (1)
 

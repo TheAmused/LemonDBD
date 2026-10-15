@@ -381,7 +381,7 @@ for (const sourceFile of project.getSourceFiles()) {
 const LEGACY_RADIUS = /^(?:[a-z0-9-]+:)*rounded(?:-(?:t|b|l|r|tl|tr|bl|br|s|e|ss|se|es|ee))?-(?:xs|sm|md|lg|xl|2xl|3xl|\[[^\]]*\])$/;
 const ANY_RADIUS = /^(?:[a-z0-9-]+:)*rounded(?:-(?:t|b|l|r|tl|tr|bl|br|s|e|ss|se|es|ee))?(?:-[\w[\]]+)?$/;
 // Shared primitives own their radius; callers may not override it through className.
-const RADIUS_OWNED_BY_PRIMITIVE = new Set(["Button", "IconButton", "Input", "Textarea", "Select", "Surface", "Badge", "InfoChip"]);
+const RADIUS_OWNED_BY_PRIMITIVE = new Set(["Button", "IconButton", "Input", "Textarea", "Select", "Surface", "Badge", "InfoChip", "ToggleChip"]);
 const STRING_NODE_KINDS = [
   SyntaxKind.StringLiteral,
   SyntaxKind.NoSubstitutionTemplateLiteral,

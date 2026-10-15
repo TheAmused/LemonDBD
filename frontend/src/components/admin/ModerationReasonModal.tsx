@@ -9,6 +9,7 @@ import { Button } from '@/components/common/Button';
 import { Textarea } from '@/components/common/Field';
 import { Modal } from '@/components/common/Modal';
 import { useDictionary } from '@/context/DictionaryContext';
+import { MAX_REVOKE_REASON_LENGTH } from '@/types/moderation';
 
 interface ModerationReasonModalProps {
   open: boolean;
@@ -63,7 +64,7 @@ export function ModerationReasonModal({ open, title, message, confirmLabel, busy
         value={reason}
         onChange={(e) => setReason(e.target.value)}
         rows={3}
-        maxLength={500}
+        maxLength={MAX_REVOKE_REASON_LENGTH}
         data-autofocus
         aria-label={dict.moderation.admin.reasonPlaceholder}
         placeholder={dict.moderation.admin.reasonPlaceholder}

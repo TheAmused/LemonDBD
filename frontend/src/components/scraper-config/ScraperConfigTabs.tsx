@@ -4,6 +4,7 @@ import React from 'react';
 import { Download, Trash2, Upload } from 'lucide-react';
 import { useDictionary } from '@/context/DictionaryContext';
 import type { ScraperTab } from './scraperTargets';
+import { SegmentedControl } from '@/components/common/SegmentedControl';
 
 interface ScraperConfigTabsProps {
   activeTab: ScraperTab;
@@ -19,22 +20,19 @@ export function ScraperConfigTabs({ activeTab, onChange }: ScraperConfigTabsProp
   ];
 
   return (
-    <div className="flex items-center gap-1 rounded-xl bg-bg-primary p-1 border border-border-color">
-      {tabs.map(({ id, Icon, iconClass, label }) => (
-        <button
-          key={id}
-          type="button"
-          onClick={() => onChange(id)}
-          className={`flex items-center justify-center gap-2 flex-1 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-            activeTab === id
-              ? 'bg-bg-surface text-text-primary shadow-xs border border-border-color'
-              : 'text-text-secondary hover:text-text-primary'
-          }`}
-        >
-          <Icon className={`h-3.5 w-3.5 ${iconClass}`} />
-          <span>{label}</span>
-        </button>
-      ))}
-    </div>
+    <SegmentedControl<ScraperTab>
+      ariaLabel={dict.admin.exportJson}
+      size="sm"
+      value={activeTab}
+      onChange={onChange}
+      className="w-full"
+      options={tabs.map(({ id, Icon, iconClass, label }) => ({
+        value: id,
+        label,
+        icon: <Icon className={`h-3.5 w-3.5 ${iconClass}`} />,
+        activeClassName: 'bg-bg-surface text-text-primary border border-border-color',
+        activeTextColor: 'text-text-primary',
+      }))}
+    />
   );
 }

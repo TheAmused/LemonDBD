@@ -4,6 +4,7 @@
 import React, { useState, useRef, useCallback } from 'react';
 import { ChevronDown, Check } from 'lucide-react';
 import { Popover, popoverTriggerProps } from '@/components/common/Popover';
+import { MenuItem } from '@/components/common/MenuItem';
 
 export interface DropdownOption<T extends string = string> {
   value: T;
@@ -15,18 +16,16 @@ export interface DropdownOption<T extends string = string> {
 export type DropdownAccent = 'amber' | 'primary';
 
 // Full class strings so Tailwind can see them; `primary` is the site's red.
-const ACCENT_CLASSES: Record<DropdownAccent, { hover: string; open: string; chevron: string; selected: string }> = {
+const ACCENT_CLASSES: Record<DropdownAccent, { hover: string; open: string; chevron: string }> = {
   amber: {
     hover: 'hover:border-accent-amber/50',
     open: 'border-accent-amber bg-accent-amber/10 text-accent-amber',
     chevron: 'text-accent-amber',
-    selected: 'bg-accent-amber',
   },
   primary: {
     hover: 'hover:border-accent-red/50',
     open: 'border-accent-red bg-accent-red/10 text-accent-red',
     chevron: 'text-accent-red',
-    selected: 'bg-accent-red',
   },
 };
 
@@ -110,7 +109,7 @@ export function CustomDropdown<T extends string = string>({
         onClick={handleToggle}
         {...popoverTriggerProps(isOpen, children ? 'true' : 'listbox')}
         aria-label={ariaLabel || (typeof triggerLabel === 'string' ? triggerLabel : undefined)}
-        className={`flex items-center gap-2 px-3 py-2 rounded-xl bg-bg-surface border border-border-color ${accentClasses.hover} hover:bg-bg-elevated text-xs font-bold text-text-primary transition-all cursor-pointer shadow-xs select-none ${
+        className={`flex items-center gap-2 px-3 py-2 rounded-control bg-bg-surface border border-border-color ${accentClasses.hover} hover:bg-bg-elevated text-xs font-bold text-text-primary transition-all cursor-pointer shadow-xs select-none ${
           isOpen ? `${accentClasses.open} shadow-xs` : ''
         } ${buttonClassName}`}
       >
@@ -134,24 +133,17 @@ export function CustomDropdown<T extends string = string>({
         maxHeight={typeof window !== 'undefined' ? window.innerHeight * 0.7 : undefined}
         role={children ? 'group' : 'listbox'}
         ariaLabel={children ? (ariaLabel || (typeof triggerLabel === 'string' ? triggerLabel : undefined)) : undefined}
-        className={`${minWidthClass} rounded-2xl bg-bg-surface border border-border-color p-1.5 shadow-xl backdrop-blur-2xl custom-scrollbar ${resolvedMenuClassName}`}
+        className={`${minWidthClass} rounded-card bg-bg-surface border border-border-color p-1.5 shadow-xl backdrop-blur-2xl custom-scrollbar ${resolvedMenuClassName}`}
       >
             {children
               ? children
               : (options ?? []).map((opt) => {
                   const isSelected = opt.value === value;
                   return (
-                    <button
+                    <MenuItem selected={isSelected} tone={accent === 'amber' ? 'amber' : 'red'} className="justify-between"
                       key={opt.value}
-                      type="button"
                       role="option"
-                      aria-selected={isSelected}
                       onClick={() => handleSelect(opt.value)}
-                      className={`flex items-center justify-between w-full px-3 py-2 rounded-xl text-xs font-bold transition-all text-left cursor-pointer ${
-                        isSelected
-                          ? `${accentClasses.selected} text-text-inverted font-black shadow-xs`
-                          : 'text-text-secondary hover:text-text-primary hover:bg-bg-elevated'
-                      }`}
                     >
                       <div className="flex items-center gap-2 min-w-0">
                         {opt.icon && <span className="shrink-0">{opt.icon}</span>}
@@ -163,7 +155,7 @@ export function CustomDropdown<T extends string = string>({
                         )}
                       </div>
                       {isSelected && <Check className="h-3.5 w-3.5 stroke-[3] ml-2 shrink-0" />}
-                    </button>
+                    </MenuItem>
                   );
                 })}
       </Popover>

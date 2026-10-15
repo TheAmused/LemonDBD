@@ -24,6 +24,10 @@ import type {
 } from '@/services/clientSpeechModel';
 import { formatMessage } from '@/utils/i18nFormat';
 import { useDictionary } from "@/context/DictionaryContext";
+import { Badge } from '@/components/common/Badge';
+import { InfoChip } from '@/components/common/InfoChip';
+import { Surface } from '@/components/common/Surface';
+import { SelectableCard } from '@/components/common/SelectableCard';
 
 export interface VoiceEngineInfoModalProps {
   isOpen: boolean;
@@ -56,15 +60,15 @@ export const VoiceEngineInfoBody: React.FC<Omit<VoiceEngineInfoModalProps, 'isOp
   return (
     <div className="space-y-6">
     {/* Current Browser Status Card */}
-    <div className="rounded-2xl border border-border-color bg-bg-elevated p-4 space-y-2">
+    <Surface tone="elevated" padding="none" className="p-4 space-y-2">
       <div className="flex items-center justify-between">
         <span className="type-label-xs text-text-muted flex items-center gap-1.5">
           <Laptop className="h-3.5 w-3.5 text-text-muted" aria-hidden="true" />
           {dict.maps.detectedBrowser}
         </span>
-        <span className="rounded-full bg-bg-surface px-2.5 py-0.5 type-strong text-text-primary">
+        <InfoChip>
           {browserName}
-        </span>
+        </InfoChip>
       </div>
 
       <div className="flex items-center justify-between pt-1">
@@ -72,28 +76,25 @@ export const VoiceEngineInfoBody: React.FC<Omit<VoiceEngineInfoModalProps, 'isOp
           <Sparkles className="h-3.5 w-3.5 text-text-muted" aria-hidden="true" />
           {dict.maps.activeRecognitionEngine}
         </span>
-        <span
-          className="rounded-full px-2.5 py-0.5 type-strong border bg-accent-red/10 text-accent-red border-accent-red/30"
+        <Badge
+          tone="red" size="md" plain
         >
           {currentEngine === 'web-speech'
             ? t.engineNativeBadge || ''
             : t.engineClientBadge || ''}
-        </span>
+        </Badge>
       </div>
-    </div>
+    </Surface>
 
     {/* Comparison: How It Works & Why It Is Needed */}
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
       {/* Native Web Speech Framework */}
-      <div
-        onClick={() => {
-          if (hasNativeWebSpeech) onSelectEngine('web-speech');
-        }}
-        className={`rounded-2xl border p-4 transition-all space-y-2.5 ${hasNativeWebSpeech ? 'cursor-pointer' : 'opacity-60 cursor-not-allowed'
-          } ${currentEngine === 'web-speech'
-            ? 'border-accent-red/50 bg-accent-red/5 ring-2 ring-accent-red/30'
-            : 'border-border-color bg-bg-surface hover:border-border-subtle'
-          }`}
+      <SelectableCard
+        role="radio"
+        selected={currentEngine === 'web-speech'}
+        disabled={!hasNativeWebSpeech}
+        onClick={() => onSelectEngine('web-speech')}
+        className="space-y-2.5 p-4"
       >
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -115,15 +116,14 @@ export const VoiceEngineInfoBody: React.FC<Omit<VoiceEngineInfoModalProps, 'isOp
           <span className="h-1.5 w-1.5 rounded-full bg-text-muted" aria-hidden="true" />
           <span>{dict.maps.chromeEdgeSafari}</span>
         </div>
-      </div>
+      </SelectableCard>
 
       {/* Client-Side Fallback Model */}
-      <div
+      <SelectableCard
+        role="radio"
+        selected={currentEngine === 'client-model'}
         onClick={() => onSelectEngine('client-model')}
-        className={`rounded-2xl border p-4 transition-all space-y-2.5 cursor-pointer ${currentEngine === 'client-model'
-            ? 'border-accent-red/50 bg-accent-red/5 ring-2 ring-accent-red/30'
-            : 'border-border-color bg-bg-surface hover:border-border-subtle'
-          }`}
+        className="space-y-2.5 p-4"
       >
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -145,11 +145,11 @@ export const VoiceEngineInfoBody: React.FC<Omit<VoiceEngineInfoModalProps, 'isOp
           <ShieldCheck className="h-3.5 w-3.5" aria-hidden="true" />
           <span>{dict.maps.universalPrivateInBrowser}</span>
         </div>
-      </div>
+      </SelectableCard>
     </div>
 
     {/* Local model accuracy: whisper-tiny ('fast') vs whisper-base ('accurate') */}
-    <div className="rounded-2xl border border-border-color bg-bg-elevated p-4 space-y-3">
+    <Surface tone="elevated" padding="none" className="p-4 space-y-3">
       <div className="flex items-center gap-1.5 type-label-xs text-text-muted">
         <Gauge className="h-3.5 w-3.5 text-text-muted" aria-hidden="true" />
         <span>{t.accuracyTitle || ''}</span>
@@ -167,20 +167,13 @@ export const VoiceEngineInfoBody: React.FC<Omit<VoiceEngineInfoModalProps, 'isOp
           const sizeMb = isSelected && modelDescriptor ? modelDescriptor.approxSizeMb : null;
 
           return (
-            <button
+            <SelectableCard
               key={quality}
-              type="button"
               role="radio"
-              aria-checked={isSelected}
+              selected={isSelected}
               disabled={!onSelectModelQuality}
               onClick={() => onSelectModelQuality?.(quality)}
-              className={`rounded-2xl border p-3 text-left transition-all space-y-1.5 ${
-                onSelectModelQuality ? 'cursor-pointer' : 'opacity-60 cursor-not-allowed'
-              } ${
-                isSelected
-                  ? 'border-accent-red/50 bg-accent-red/5 ring-2 ring-accent-red/30'
-                  : 'border-border-color bg-bg-surface hover:border-border-subtle'
-              }`}
+              className="space-y-1.5"
             >
               <div className="flex items-center justify-between gap-2">
                 <span className="type-label-sm text-text-primary">
@@ -198,14 +191,14 @@ export const VoiceEngineInfoBody: React.FC<Omit<VoiceEngineInfoModalProps, 'isOp
                   {formatMessage((t.modelSize || ''), { size: sizeMb })}
                 </p>
               )}
-            </button>
+            </SelectableCard>
           );
         })}
       </div>
-    </div>
+    </Surface>
 
     {/* Why Fallback Is Needed Box */}
-    <div className="rounded-2xl border border-accent-amber/30 bg-accent-amber/10 p-4 space-y-2">
+    <div className="rounded-card border border-accent-amber/30 bg-accent-amber/10 p-4 space-y-2">
       <div className="flex items-center gap-2 text-accent-amber type-strong">
         <Info className="h-4 w-4 shrink-0" aria-hidden="true" />
         <span>{t.whyNeededTitle || ''}</span>
@@ -216,7 +209,7 @@ export const VoiceEngineInfoBody: React.FC<Omit<VoiceEngineInfoModalProps, 'isOp
     </div>
 
     {/* Client Model Download Box */}
-    <div className="rounded-2xl border border-border-color bg-bg-elevated p-4 space-y-3">
+    <Surface tone="elevated" padding="none" className="p-4 space-y-3">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <DownloadCloud className="h-4 w-4 text-accent-red" aria-hidden="true" />
@@ -252,7 +245,7 @@ export const VoiceEngineInfoBody: React.FC<Omit<VoiceEngineInfoModalProps, 'isOp
           </Button>
         </div>
       )}
-    </div>
+    </Surface>
     </div>
   );
 };

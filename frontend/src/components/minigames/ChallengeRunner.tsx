@@ -518,7 +518,7 @@ export const ChallengeRunner: React.FC<ChallengeRunnerProps> = ({ challenge, cat
           ) : (
             <div className="w-full max-w-xl flex flex-col items-center gap-3 my-2">
               <div
-                className={`w-full py-3 px-4 rounded-xl text-center font-bold text-sm border shadow-lg ${
+                className={`w-full py-3 px-4 rounded-card text-center font-bold text-sm border shadow-lg ${
                   isRoundSolved
                     ? 'bg-accent-green/20 text-accent-green border-accent-green/40'
                     : 'bg-accent-red/20 text-accent-red border-accent-red/40'
@@ -556,13 +556,13 @@ export const ChallengeRunner: React.FC<ChallengeRunnerProps> = ({ challenge, cat
 
           {/* Give up button (when in progress) */}
           {!isRoundOver && (
-            <button
+            <Button
               type="button"
               onClick={handleGiveUp}
-              className="text-xs text-text-muted hover:text-text-primary underline py-1 transition-colors"
+              variant="linkMuted" size="sm"
             >
               {t.skipOrReveal}
-            </button>
+            </Button>
           )}
         </div>
       )}

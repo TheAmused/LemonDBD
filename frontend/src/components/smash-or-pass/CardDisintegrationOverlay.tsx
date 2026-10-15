@@ -349,7 +349,7 @@ export const CardDisintegrationOverlay: React.FC<CardDisintegrationOverlayProps>
 
   return (
     <div
-      className="pointer-events-none absolute inset-0 z-50 overflow-hidden rounded-3xl"
+      className="pointer-events-none absolute inset-0 z-50 overflow-hidden rounded-card"
       aria-hidden="true"
     >
       <canvas ref={canvasRef} className="absolute inset-0 h-full w-full" />

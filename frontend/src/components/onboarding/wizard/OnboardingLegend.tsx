@@ -16,7 +16,7 @@ interface LegendItemProps {
 function LegendItem({ legendCharacter, backendBase, label, isOwned, hasPartialPerks }: LegendItemProps) {
   return (
     <div className="flex flex-col items-center text-center gap-2 w-full max-w-[150px]">
-      <span className="relative flex aspect-[3/4] w-14 sm:w-16 md:w-20 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-border-color bg-bg-surface shadow-sm">
+      <span className="relative flex aspect-[3/4] w-14 sm:w-16 md:w-20 shrink-0 items-center justify-center overflow-hidden rounded-control border border-border-color bg-bg-surface shadow-sm">
         {legendCharacter && (
           <img
             src={resolveOnboardingAvatar(backendBase, legendCharacter)}

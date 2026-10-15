@@ -21,6 +21,8 @@ export interface SegmentedControlOption<T extends string> {
    * pages rather than plain in-place state.
    */
   href?: string;
+  /** Not selectable (e.g. a source that is not available yet). Pair with `tooltip` to say why. */
+  disabled?: boolean;
   /** Optional richer hover/focus tooltip (title defaults to `label` if omitted). */
   tooltip?: { title?: string; description: string };
 }
@@ -112,8 +114,8 @@ export function SegmentedControl<T extends string>({
       aria-label={ariaLabel}
       className={cn(
         isUnderline
-          ? 'grid grid-cols-5 w-full lg:flex lg:w-auto items-center gap-0.5 sm:gap-1.5 p-1 rounded-2xl bg-bg-surface/90 border border-border-color/60 shadow-xs backdrop-blur-md'
-          : 'relative inline-flex shrink-0 min-w-0 select-none items-stretch rounded-2xl border border-border-color bg-bg-elevated p-1 shadow-inner',
+          ? 'grid grid-cols-5 w-full lg:flex lg:w-auto items-center gap-0.5 sm:gap-1.5 p-1 rounded-card bg-bg-surface/90 border border-border-color/60 shadow-xs backdrop-blur-md'
+          : 'relative inline-flex shrink-0 min-w-0 select-none items-stretch rounded-card border border-border-color bg-bg-elevated p-1 shadow-inner',
         className
       )}
     >
@@ -122,7 +124,7 @@ export function SegmentedControl<T extends string>({
           aria-hidden="true"
           style={thumbRect ? { left: thumbRect.left, width: thumbRect.width } : undefined}
           className={cn(
-            'absolute inset-y-1 rounded-xl shadow-md transition-[left,width] duration-200 ease-out',
+            'absolute inset-y-1 rounded-control shadow-md transition-[left,width] duration-200 ease-out',
             !thumbRect && 'opacity-0',
             options[activeIndex]?.activeClassName || DEFAULT_THUMB
           )}
@@ -133,14 +135,14 @@ export function SegmentedControl<T extends string>({
         const activeTextClass = opt.activeTextColor || (isUnderline ? 'text-accent-red' : 'text-text-inverted');
         const optionClassName = isUnderline
           ? cn(
-              'relative flex items-center justify-center gap-1 sm:gap-1.5 2xl:gap-2.5 type-strong-wide-caps transition-all duration-200 cursor-pointer touch-manipulation min-h-[36px] sm:min-h-[42px] 2xl:min-h-[48px] select-none text-center pb-1.5 pt-1 px-0.5 sm:px-2 2xl:px-3.5 2xl:py-2 min-[1800px]:px-4.5 rounded-xl transition-colors',
+              'relative flex items-center justify-center gap-1 sm:gap-1.5 2xl:gap-2.5 type-strong-wide-caps transition-all duration-200 cursor-pointer touch-manipulation min-h-9 sm:min-h-[42px] 2xl:min-h-12 select-none text-center pb-1.5 pt-1 px-0.5 sm:px-2 2xl:px-3.5 2xl:py-2 min-[1800px]:px-4.5 rounded-control transition-colors',
               isActive ? 'text-accent-red' : 'text-text-primary hover:text-accent-red hover:bg-bg-elevated/60'
             )
           : cn(
-              'relative z-10 flex flex-1 cursor-pointer items-center justify-center gap-1 sm:gap-1.5 wide:gap-2 whitespace-nowrap rounded-xl px-2 sm:px-3 wide:px-4 wide-2k:px-5 transition-colors duration-200',
+              'relative z-10 flex flex-1 cursor-pointer items-center justify-center gap-1 sm:gap-1.5 wide:gap-2 whitespace-nowrap pointer-coarse:min-h-11 rounded-control px-2 sm:px-3 wide:px-4 wide-2k:px-5 transition-colors duration-200',
               padY,
               textSize,
-              isActive ? activeTextClass : 'text-text-primary hover:text-accent-red'
+              isActive ? activeTextClass : opt.disabled ? 'cursor-not-allowed text-text-muted opacity-60' : 'text-text-primary hover:text-accent-red'
             );
 
         const content = (
@@ -188,6 +190,7 @@ export function SegmentedControl<T extends string>({
               type="button"
               role="radio"
               aria-checked={isActive}
+              disabled={opt.disabled}
               onClick={() => onChange(opt.value)}
               className={optionClassName}
             >

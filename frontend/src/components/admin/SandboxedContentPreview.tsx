@@ -49,7 +49,7 @@ export function SandboxedContentPreview({ evidence }: { evidence: string }) {
           <p className="type-label-sm text-text-secondary mb-1.5">
             {formatMessage(dict.admin.contentReportTextCount, { count: String(preview.texts.length) })}
           </p>
-          <ul className="max-h-64 overflow-y-auto rounded-xl border border-border-subtle bg-bg-primary p-3 space-y-1.5">
+          <ul className="max-h-64 overflow-y-auto rounded-card border border-border-subtle bg-bg-primary p-3 space-y-1.5">
             {preview.texts.map((text, index) => (
               <li key={index} className="type-body text-text-primary break-words whitespace-pre-wrap">
                 {text}
@@ -79,7 +79,7 @@ export function SandboxedContentPreview({ evidence }: { evidence: string }) {
                   alt=""
                   loading="lazy"
                   referrerPolicy="no-referrer"
-                  className="aspect-square w-full rounded-lg border border-border-subtle bg-bg-primary object-cover"
+                  className="aspect-square w-full rounded-chip border border-border-subtle bg-bg-primary object-cover"
                 />
               ))}
             </div>
@@ -102,7 +102,7 @@ export function SandboxedContentPreview({ evidence }: { evidence: string }) {
           {showRaw ? dict.admin.contentReportHideRaw : dict.admin.contentReportShowRaw}
         </Button>
         {showRaw && (
-          <pre className="max-h-80 overflow-auto rounded-xl border border-border-subtle bg-bg-primary p-3 type-caption text-text-secondary whitespace-pre-wrap break-all">
+          <pre className="max-h-80 overflow-auto rounded-card border border-border-subtle bg-bg-primary p-3 type-caption text-text-secondary whitespace-pre-wrap break-all">
             {raw}
           </pre>
         )}

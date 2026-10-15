@@ -5,6 +5,8 @@ import React, { useMemo } from 'react';
 import { Flame, Check, X } from 'lucide-react';
 import type { GuessRecord, RoundConfig, CatalogCharacter } from '@/types/minigame';
 import { useDictionary } from "@/context/DictionaryContext";
+import { InfoChip } from '@/components/common/InfoChip';
+import { Surface } from '@/components/common/Surface';
 
 interface KillerPowerGuesserProps {
   roundConfig: RoundConfig;
@@ -39,9 +41,9 @@ export const KillerPowerGuesser: React.FC<KillerPowerGuesserProps> = ({ roundCon
   return (
     <div className="w-full flex flex-col items-center my-6">
       {/* Power Clue Card */}
-      <div className="w-full max-w-lg p-6 rounded-2xl bg-bg-surface border border-border-color shadow-2xl flex flex-col items-center gap-4 relative">
+      <Surface padding="none" className="w-full max-w-lg p-6 shadow-2xl flex flex-col items-center gap-4 relative">
         {/* Icon placeholder — no power icon shown (would reveal identity) */}
-        <div className="w-14 h-14 rounded-2xl bg-accent-red/10 border border-accent-red/30 flex items-center justify-center text-accent-red">
+        <div className="w-14 h-14 rounded-card bg-accent-red/10 border border-accent-red/30 flex items-center justify-center text-accent-red">
           <Flame className="w-7 h-7" />
         </div>
 
@@ -59,30 +61,30 @@ export const KillerPowerGuesser: React.FC<KillerPowerGuesserProps> = ({ roundCon
         {(speedHint || radiusHint || heightHint) && (
           <div className="w-full flex flex-wrap items-center justify-center gap-2 pt-3 border-t border-border-color">
             {speedHint && (
-              <span className="px-3 py-1 rounded-lg bg-bg-elevated border border-border-subtle text-xs font-medium text-text-secondary">
+              <InfoChip>
                 {speedHint}
-              </span>
+              </InfoChip>
             )}
             {radiusHint && (
-              <span className="px-3 py-1 rounded-lg bg-bg-elevated border border-border-subtle text-xs font-medium text-text-secondary">
+              <InfoChip>
                 {radiusHint}
-              </span>
+              </InfoChip>
             )}
             {heightHint && (
-              <span className="px-3 py-1 rounded-lg bg-bg-elevated border border-border-subtle text-xs font-medium text-text-secondary">
+              <InfoChip>
                 {heightHint}
-              </span>
+              </InfoChip>
             )}
           </div>
         )}
 
         {isSolved && targetKiller && (
-          <div className="mt-2 px-4 py-1.5 rounded-lg bg-accent-green text-text-inverted type-card-title flex items-center gap-2 shadow-md">
+          <div className="mt-2 px-4 py-1.5 rounded-chip bg-accent-green text-text-inverted type-card-title flex items-center gap-2 shadow-md">
             <Check className="w-4 h-4" />
             <span>{targetKiller.name} — {targetKiller.power_name}</span>
           </div>
         )}
-      </div>
+      </Surface>
 
       {/* Input & Action Controls Slot */}
       {children && <div className="w-full max-w-lg my-3">{children}</div>}
@@ -95,7 +97,7 @@ export const KillerPowerGuesser: React.FC<KillerPowerGuesserProps> = ({ roundCon
             return (
               <div
                 key={`power-g-${idx}`}
-                className={`flex items-center justify-between px-4 py-2.5 rounded-xl border font-semibold text-sm transition-all ${
+                className={`flex items-center justify-between px-4 py-2.5 rounded-card border font-semibold text-sm transition-all ${
                   isCorrect
                     ? 'bg-accent-green text-text-inverted border-accent-green shadow-md'
                     : 'bg-accent-red/20 text-accent-red border-accent-red/40'

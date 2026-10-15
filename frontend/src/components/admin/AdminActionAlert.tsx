@@ -13,7 +13,7 @@ export function AdminActionAlert({ message, onDismiss }: { message: ActionMessag
     <div
       role="alert"
       aria-live="polite"
-      className={`flex items-center justify-between rounded-xl border p-4 text-xs font-semibold shadow-xs ${
+      className={`flex items-center justify-between rounded-card border p-4 text-xs font-semibold shadow-xs ${
         message.type === 'success'
           ? 'border-accent-green/40 bg-accent-green/10 text-accent-green'
           : 'border-accent-red/40 bg-accent-red/10 text-accent-red'

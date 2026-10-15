@@ -25,6 +25,8 @@ import { tip } from '@/components/common/Tooltip';
 import { EmptyState } from '@/components/common/EmptyState';
 import { formatDate, formatDateTime } from '@/utils/format';
 import { useDictionary } from "@/context/DictionaryContext";
+import { Surface } from '@/components/common/Surface';
+import { SelectableCard } from '@/components/common/SelectableCard';
 
 interface StatusConfigItem {
   label: string;
@@ -110,83 +112,55 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
         role="group"
         aria-label={dict.admin.filterLabel}
       >
-        <button
-          type="button"
-          onClick={() => onStatusFilterChange('pending')}
-          aria-pressed={bugStatusFilter === 'pending'}
-          className={`rounded-2xl border p-4 transition-all cursor-pointer text-left focus:outline-none focus:ring-2 focus:ring-accent-red ${
-            bugStatusFilter === 'pending'
-              ? 'border-accent-red bg-accent-red/20 text-accent-red shadow-sm ring-1 ring-accent-red/30'
-              : 'border-accent-red/20 bg-accent-red/10 text-accent-red hover:border-accent-red/40'
-          }`}
-        >
+        <SelectableCard selected={bugStatusFilter === 'pending'} tone="red" tinted className="p-4"
+         
+          onClick={() => onStatusFilterChange('pending')}>
           <span className="type-label-sm flex items-center gap-1.5">
             <HelpCircle className="h-4 w-4" /> {dict.admin.statusPending}
           </span>
           <p className="type-page-title mt-1">
             {bugStats?.pending ?? 0}
           </p>
-        </button>
+        </SelectableCard>
 
-        <button
-          type="button"
-          onClick={() => onStatusFilterChange('in_progress')}
-          aria-pressed={bugStatusFilter === 'in_progress'}
-          className={`rounded-2xl border p-4 transition-all cursor-pointer text-left focus:outline-none focus:ring-2 focus:ring-accent-red ${
-            bugStatusFilter === 'in_progress'
-              ? 'border-accent-amber bg-accent-amber/20 text-accent-amber shadow-sm ring-1 ring-accent-amber/30'
-              : 'border-accent-amber/20 bg-accent-amber/10 text-accent-amber hover:border-accent-amber/40'
-          }`}
-        >
+        <SelectableCard selected={bugStatusFilter === 'in_progress'} tone="amber" tinted className="p-4"
+         
+          onClick={() => onStatusFilterChange('in_progress')}>
           <span className="type-label-sm flex items-center gap-1.5">
             <Clock className="h-4 w-4" /> {dict.admin.statusInProgress}
           </span>
           <p className="type-page-title mt-1">
             {bugStats?.in_progress ?? 0}
           </p>
-        </button>
+        </SelectableCard>
 
-        <button
-          type="button"
-          onClick={() => onStatusFilterChange('resolved')}
-          aria-pressed={bugStatusFilter === 'resolved'}
-          className={`rounded-2xl border p-4 transition-all cursor-pointer text-left focus:outline-none focus:ring-2 focus:ring-accent-green ${
-            bugStatusFilter === 'resolved'
-              ? 'border-accent-green bg-accent-green/20 text-accent-green shadow-sm ring-1 ring-accent-green/30'
-              : 'border-accent-green/20 bg-accent-green/10 text-accent-green hover:border-accent-green/40'
-          }`}
-        >
+        <SelectableCard selected={bugStatusFilter === 'resolved'} tone="green" tinted className="p-4"
+         
+          onClick={() => onStatusFilterChange('resolved')}>
           <span className="type-label-sm flex items-center gap-1.5">
             <CheckCircle className="h-4 w-4" /> {dict.admin.statusResolved}
           </span>
           <p className="type-page-title mt-1">
             {bugStats?.resolved ?? 0}
           </p>
-        </button>
+        </SelectableCard>
 
-        <button
-          type="button"
-          onClick={() => onStatusFilterChange('all')}
-          aria-pressed={bugStatusFilter === 'all'}
-          className={`rounded-2xl border p-4 transition-all cursor-pointer text-left focus:outline-none focus:ring-2 focus:ring-border-color ${
-            bugStatusFilter === 'all'
-              ? 'border-border-color bg-bg-elevated text-text-primary shadow-sm ring-1 ring-border-color'
-              : 'border-border-color bg-bg-surface text-text-secondary hover:border-border-subtle'
-          }`}
-        >
+        <SelectableCard selected={bugStatusFilter === 'all'} tone="neutral" tinted className="p-4"
+         
+          onClick={() => onStatusFilterChange('all')}>
           <span className="type-label-sm flex items-center gap-1.5">
             <FogReportIcon className="h-4 w-4" /> {dict.admin.totalTickets}
           </span>
           <p className="type-page-title text-text-primary mt-1">
             {bugStats?.total ?? 0}
           </p>
-        </button>
+        </SelectableCard>
       </div>
 
       {/* Master-Detail Split Workspace */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         {/* Left Pane: Ticket Feed */}
-        <div className="lg:col-span-5 flex flex-col rounded-3xl border border-border-color bg-bg-surface p-4 shadow-sm space-y-4">
+        <Surface padding="none" className="lg:col-span-5 flex flex-col p-4 shadow-sm space-y-4">
           <div className="flex flex-col gap-2.5 pb-3 border-b border-border-color">
             <SearchInput
               fieldSize="sm"
@@ -245,7 +219,7 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
                         onSelectBug(report.id);
                       }
                     }}
-                    className={`p-3.5 rounded-2xl border transition-all cursor-pointer text-left space-y-2 focus:outline-none focus:ring-2 focus:ring-accent-red ${
+                    className={`p-3.5 rounded-card border transition-all cursor-pointer text-left space-y-2 focus:outline-none focus:ring-2 focus:ring-accent-red ${
                       isSelected
                         ? 'border-accent-red bg-accent-red/10 shadow-sm ring-1 ring-accent-red/30'
                         : 'border-border-subtle bg-bg-primary hover:border-border-color'
@@ -259,7 +233,7 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
                         </span>
                       </div>
                       <span
-                        className={`text-tiny font-black uppercase tracking-wider px-2 py-0.5 rounded-md border ${cfg.badge}`}
+                        className={`text-tiny font-black uppercase tracking-wider px-2 py-0.5 rounded-chip border ${cfg.badge}`}
                       >
                         {statusLabel}
                       </span>
@@ -321,12 +295,12 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
               </div>
             </div>
           )}
-        </div>
+        </Surface>
 
         {/* Right Pane: Ticket Inspector */}
         <div className="lg:col-span-7 sticky top-6">
           {selectedBug ? (
-            <div className="rounded-3xl border border-border-color bg-bg-surface p-5 sm:p-6 shadow-sm space-y-6">
+            <Surface padding="none" className="p-5 sm:p-6 shadow-sm space-y-6">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-border-color">
                 <div>
                   <div className="flex items-center gap-2 mb-1">
@@ -353,7 +327,7 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
                     fieldSize="sm"
                     aria-label={dict.admin.updateStatus}
                     onChange={(e) => onUpdateBug(selectedBug.id, e.target.value)}
-                    className="w-auto rounded-xl font-black uppercase tracking-wider"
+                    className="w-auto font-black uppercase tracking-wider"
                   >
                     <option value="pending">{dict.admin.statusPending}</option>
                     <option value="in_progress">{dict.admin.statusInProgress}</option>
@@ -378,7 +352,7 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
                 <h4 className="type-label-xs text-text-secondary">
                   {dict.admin.description}
                 </h4>
-                <div className="rounded-2xl border border-border-color bg-bg-primary p-4 type-body text-text-primary whitespace-pre-wrap min-h-[100px]">
+                <div className="rounded-card border border-border-color bg-bg-primary p-4 type-body text-text-primary whitespace-pre-wrap min-h-[100px]">
                   {selectedBug.message}
                 </div>
               </div>
@@ -397,7 +371,7 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
                         target="_blank"
                         rel="noopener noreferrer"
                         aria-label={dict.admin.attachmentsLabel ? `${dict.admin.attachmentsLabel} ${i + 1}` : ''}
-                        className="group relative h-28 rounded-2xl border border-border-color overflow-hidden bg-bg-elevated shadow-xs transition-all hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-accent-red"
+                        className="group relative h-28 rounded-control border border-border-color overflow-hidden bg-bg-elevated shadow-xs transition-all hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-accent-red"
                       >
                         <img
                           src={imgUrl}
@@ -432,7 +406,7 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
                   </Button>
                 </div>
               </div>
-            </div>
+            </Surface>
           ) : (
             <EmptyState variant="compact" icon={Eye} title={dict.user.noReportsSubtitle} />
           )}

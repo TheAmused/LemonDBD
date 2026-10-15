@@ -47,7 +47,7 @@ export function SlotReelColumnDesktop({
           : undefined
       }
       className={cn(
-        'relative overflow-hidden rounded-lg border-2 shadow-inner transition-all duration-200',
+        'relative overflow-hidden rounded-chip border-2 shadow-inner transition-all duration-200',
         'bg-gradient-to-b from-bg-elevated/40 via-bg-surface to-bg-elevated/40',
         isClickable && 'cursor-pointer hover:scale-[1.03] active:scale-[0.98]',
         reel.locked
@@ -93,7 +93,7 @@ export function SlotReelColumnDesktop({
                   loading="lazy"
                 />
               ) : (
-                <div className="rounded-md bg-bg-elevated border border-border-color" style={{ height: cellPx * 0.62, width: cellPx * 0.62 }} />
+                <div className="rounded-chip bg-bg-elevated border border-border-color" style={{ height: cellPx * 0.62, width: cellPx * 0.62 }} />
               )}
               {coordLabel && (
                 <span

@@ -5,7 +5,6 @@ import { lookup } from '@/utils/lookup';
 import { Button } from '@/components/common/Button';
 import { Input, Select, Textarea } from '@/components/common/Field';
 import React, { useMemo } from 'react';
-import Image from 'next/image';
 import {
   GripVertical,
   ChevronUp,
@@ -27,6 +26,8 @@ import { staticUrl } from '@/utils/api';
 import { tip } from '@/components/common/Tooltip';
 import { formatMessage } from '@/utils/i18nFormat';
 import { useDictionary } from "@/context/DictionaryContext";
+import { Surface } from '@/components/common/Surface';
+import { Thumb } from '@/components/common/Thumb';
 
 const ALL_MODES: MinigameMode[] = [
   'classic_character',
@@ -145,11 +146,11 @@ export const RoundEditorCard: React.FC<RoundEditorCardProps> = ({ round, index, 
     targetVisual.image_url;
 
   return (
-    <div data-round-card className="w-full p-5 rounded-2xl bg-bg-surface border border-border-color shadow-lg flex flex-col gap-4">
+    <Surface data-round-card padding="none" className="w-full p-5 shadow-lg flex flex-col gap-4">
       {/* Top Header Row */}
       <div className="flex items-center justify-between gap-3 border-b border-border-color pb-3">
         <div className="flex items-center gap-2">
-          <div className="w-7 h-7 rounded-lg bg-accent-red/20 text-accent-red type-strong flex items-center justify-center border border-accent-red/30">
+          <div className="w-7 h-7 rounded-chip bg-accent-red/20 text-accent-red type-strong flex items-center justify-center border border-accent-red/30">
             #{index + 1}
           </div>
           <span className="type-card-title text-text-primary">
@@ -242,36 +243,23 @@ export const RoundEditorCard: React.FC<RoundEditorCardProps> = ({ round, index, 
         </label>
 
         {selectedTargetItem ? (
-          <div className="flex items-center justify-between p-3 rounded-xl bg-bg-surface border border-border-color">
+          <Surface padding="sm" className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="relative w-10 h-10 rounded-lg overflow-hidden bg-bg-elevated border border-border-subtle flex-shrink-0 flex items-center justify-center">
-                {targetImgSrc ? (
-                  <Image
-                    src={targetImgSrc}
-                    alt={selectedTargetItem.name}
-                    width={40}
-                    height={40}
-                    unoptimized
-                    className="object-cover w-full h-full"
-                  />
-                ) : (
-                  <Sparkles className="w-4 h-4 text-text-muted" />
-                )}
-              </div>
+              <Thumb src={targetImgSrc} alt={selectedTargetItem.name} fallback={<Sparkles className="h-4 w-4 text-text-muted" />} />
               <div>
                 <div className="type-card-title text-text-primary">{selectedTargetItem.name}</div>
                 <div className="text-xs text-text-muted capitalize">{targetType}</div>
               </div>
             </div>
 
-            <button
+            <Button
               type="button"
               onClick={() => onUpdate({ ...round, target_id: undefined })}
-              className="type-strong text-text-muted hover:text-text-primary underline px-2 py-1"
+              variant="linkMuted" size="sm"
             >
               {c.change}
-            </button>
-          </div>
+            </Button>
+          </Surface>
         ) : (
           <CharacterAutocomplete
             catalog={catalog}
@@ -342,6 +330,6 @@ export const RoundEditorCard: React.FC<RoundEditorCardProps> = ({ round, index, 
           />
         </div>
       )}
-    </div>
+    </Surface>
   );
 };

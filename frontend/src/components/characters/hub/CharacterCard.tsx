@@ -13,6 +13,9 @@ import {
 } from '@/components/character-detail/types';
 import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
 
+import { Button } from '@/components/common/Button';
+import { Badge } from '@/components/common/Badge';
+import { Surface } from '@/components/common/Surface';
 interface CharacterCardProps {
   char: CharacterItem;
   locale: string;
@@ -47,7 +50,7 @@ export function CharacterCard({
   const detailHref = `/${locale}/characters/${getCharacterSlug(char.name)}`;
 
   return (
-    <div
+    <Surface
       onMouseEnter={() => {
         if (!ownershipMode) router.prefetch(detailHref);
       }}
@@ -61,15 +64,11 @@ export function CharacterCard({
           router.push(detailHref);
         }
       }}
-      className="group relative flex flex-col overflow-hidden rounded-2xl border border-border-color bg-bg-surface hover:bg-bg-elevated hover:border-accent-red/50 shadow-xs hover:shadow-lg transition-all duration-300 cursor-pointer touch-manipulation aspect-[3/4] w-full"
+      padding="none" className="group relative flex flex-col overflow-hidden hover:bg-bg-elevated hover:border-accent-red/50 shadow-xs hover:shadow-lg transition-all duration-300 cursor-pointer touch-manipulation aspect-[3/4] w-full"
     >
       <div className="absolute top-1.5 right-1.5 sm:top-2 sm:right-2 z-20">
-        <span
-          className={`inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 sm:px-2 text-micro sm:text-tiny font-bold border backdrop-blur-md ${
-            isSurvivor
-              ? 'bg-accent-green/10 text-accent-green border-accent-green/30'
-              : 'bg-accent-red/10 text-accent-red border-accent-red/30'
-          }`}
+        <Badge
+          tone={isSurvivor ? 'green' : 'red'} size="xs" plain className="backdrop-blur-md"
         >
           {isSurvivor ? <SurvivorIcon className="h-3 w-3" /> : <KillerIcon className="h-3 w-3" />}
           <span>
@@ -77,7 +76,7 @@ export function CharacterCard({
               ? dict.characterDetail.roleSurvivor
               : dict.characterDetail.roleKiller}
           </span>
-        </span>
+        </Badge>
       </div>
 
       {char.is_disabled && !ownershipMode && (
@@ -126,22 +125,22 @@ export function CharacterCard({
       {/* Sticky bottom overlay with centered name and perks button above */}
       <div className="absolute inset-x-0 bottom-0 z-20 flex flex-col items-center justify-end px-2 pt-10 pb-2 sm:pb-2.5 bg-gradient-to-t from-bg-surface via-bg-surface/85 to-transparent pointer-events-none">
         {ownershipMode && !isOwned && (
-          <button
+          <Button
             type="button"
             onClick={(e) => {
               e.stopPropagation();
               onOpenPerks(char);
             }}
-            className="mb-1 sm:mb-1.5 inline-flex items-center justify-center gap-1 rounded-xl border border-accent-amber/50 bg-bg-surface/90 px-2.5 py-0.5 text-micro sm:text-tiny font-bold text-accent-amber hover:bg-accent-amber/20 hover:border-accent-amber transition-colors shadow-xs cursor-pointer pointer-events-auto select-none"
+            variant="amberSoft" size="xs" className="mb-1 sm:mb-1.5"
           >
             <span>{dict.filters.perks}</span>
             {perkStats.total > 0 && ` (${perkStats.unlocked}/${perkStats.total})`}
-          </button>
+          </Button>
         )}
         <h3 className="w-full text-center font-extrabold text-mini sm:text-xs md:text-sm text-text-primary group-hover:text-accent-red transition-colors truncate px-1 pointer-events-auto leading-tight">
           {char.name}
         </h3>
       </div>
-    </div>
+    </Surface>
   );
 }

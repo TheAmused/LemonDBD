@@ -17,7 +17,7 @@ interface Model3DModalProps {
 const Model3DContent: React.FC<{ src: string; closeLabel: string }> = ({ src, closeLabel }) => {
   const { close } = useModal();
   return (
-    <div className="relative mx-auto w-fit max-w-full rounded-3xl border-2 border-accent-red/60 bg-bg-surface/95 shadow-2xl p-4 sm:p-6 flex items-center justify-center">
+    <div className="relative mx-auto w-fit max-w-full rounded-card border-2 border-accent-red/60 bg-bg-surface/95 shadow-2xl p-4 sm:p-6 flex items-center justify-center">
       <Button
         icon
         variant="secondary"
@@ -31,7 +31,7 @@ const Model3DContent: React.FC<{ src: string; closeLabel: string }> = ({ src, cl
       <img
         src={src}
         alt=""
-        className="max-h-[72dvh] w-auto max-w-full object-contain rounded-2xl select-none"
+        className="max-h-[72dvh] w-auto max-w-full object-contain rounded-card select-none"
       />
     </div>
   );

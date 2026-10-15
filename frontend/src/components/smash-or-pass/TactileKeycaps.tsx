@@ -12,6 +12,7 @@ import { SmashSounds } from './SmashSoundEffects';
 
 import { tip } from '@/components/common/Tooltip';
 import { useDictionary } from "@/context/DictionaryContext";
+import { Surface } from '@/components/common/Surface';
 
 export interface TactileKeycapsProps {
   onPass: () => void;
@@ -81,8 +82,8 @@ export const TactileKeycaps: React.FC<TactileKeycapsProps> = ({ onPass, onSmash,
       colorTheme: {
         border: 'border-accent-amber/40',
         borderActive: 'border-accent-amber',
-        glow: 'hover:shadow-[0_0_20px_rgba(245,158,11,0.35)]',
-        glowActive: 'shadow-[0_0_30px_rgba(245,158,11,0.85)]',
+        glow: 'hover:shadow-glow-amber-soft',
+        glowActive: 'shadow-glow-amber-lg',
         text: 'text-accent-amber',
         bg: 'bg-accent-amber/10',
         bgActive: 'bg-accent-amber/20',
@@ -99,8 +100,8 @@ export const TactileKeycaps: React.FC<TactileKeycapsProps> = ({ onPass, onSmash,
       colorTheme: {
         border: 'border-accent-red/40',
         borderActive: 'border-accent-red',
-        glow: 'hover:shadow-[0_0_20px_rgba(220,38,38,0.4)]',
-        glowActive: 'shadow-[0_0_30px_rgba(220,38,38,0.85)]',
+        glow: 'hover:shadow-glow-red-soft',
+        glowActive: 'shadow-glow-red-lg',
         text: 'text-accent-red',
         bg: 'bg-accent-red/10',
         bgActive: 'bg-accent-red/20',
@@ -141,7 +142,7 @@ export const TactileKeycaps: React.FC<TactileKeycapsProps> = ({ onPass, onSmash,
   return (
     <div className={`flex flex-col items-center justify-center gap-2 select-none ${className || ''}`}>
       {/* 3D Tactile Keycaps Container */}
-      <div className="flex items-center justify-center gap-2.5 sm:gap-3 p-2 rounded-2xl bg-bg-surface border border-border-color shadow-lg dark:shadow-2xl backdrop-blur-xl">
+      <Surface padding="none" className="flex items-center justify-center gap-2.5 sm:gap-3 p-2 shadow-lg dark:shadow-2xl backdrop-blur-xl">
         {keycaps.map((cap) => {
           const isActive = activeKey === cap.id;
           const isReset = cap.id === 'reset';
@@ -153,7 +154,7 @@ export const TactileKeycaps: React.FC<TactileKeycapsProps> = ({ onPass, onSmash,
               disabled={disabled}
               onClick={() => triggerAction(cap.id, cap.action)}
               {...tip(`${cap.label} (${cap.primaryKey} / ${cap.subKey})`, undefined, 'action')} aria-label={`${cap.label} (${cap.primaryKey} / ${cap.subKey})`}
-              className={`group relative flex flex-col items-center justify-center rounded-xl transition-all duration-150 cursor-pointer ${
+              className={`group relative flex flex-col items-center justify-center rounded-control transition-all duration-150 cursor-pointer ${
                 isReset ? 'w-14 sm:w-16 h-14 sm:h-16' : 'w-12 sm:w-14 h-14 sm:h-16'
               } ${
                 isActive
@@ -177,7 +178,7 @@ export const TactileKeycaps: React.FC<TactileKeycapsProps> = ({ onPass, onSmash,
             </button>
           );
         })}
-      </div>
+      </Surface>
 
       {/* Instruction Subtitle */}
       <div className="flex items-center gap-1.5 text-mini font-medium text-text-muted pt-0.5">

@@ -60,8 +60,8 @@ const RadialDial: React.FC<DialProps> = ({
     <div
       className={`relative flex flex-col items-center justify-between border border-border-color bg-bg-surface backdrop-blur-md shadow-sm transition-all hover:border-accent-amber/40 group ${
         compact
-          ? 'aspect-square rounded-2xl p-2 sm:p-2.5 w-full min-w-0'
-          : 'aspect-square w-full sm:w-36 sm:h-36 xl:w-36 xl:h-36 2xl:w-44 2xl:h-44 rounded-2xl sm:rounded-3xl p-2.5 sm:p-3 lg:p-3.5 2xl:p-4'
+          ? 'aspect-square rounded-card p-2 sm:p-2.5 w-full min-w-0'
+          : 'aspect-square w-full sm:w-36 sm:h-36 xl:w-36 xl:h-36 2xl:w-44 2xl:h-44 rounded-card p-2.5 sm:p-3 lg:p-3.5 2xl:p-4'
       }`}
     >
       {/* Radial Gauge SVG */}
@@ -121,7 +121,7 @@ const RadialDial: React.FC<DialProps> = ({
 
       {/* Title & Icon below */}
       <div className="flex items-center gap-1 sm:gap-1.5 shrink-0 mt-auto max-w-full">
-        <div className={`rounded-lg ${compact ? 'p-0.5 sm:p-1' : 'p-0.5 sm:p-1 lg:p-1.5 2xl:p-2'} ${accentClass} shrink-0`}>
+        <div className={`rounded-chip ${compact ? 'p-0.5 sm:p-1' : 'p-0.5 sm:p-1 lg:p-1.5 2xl:p-2'} ${accentClass} shrink-0`}>
           {icon}
         </div>
         <span

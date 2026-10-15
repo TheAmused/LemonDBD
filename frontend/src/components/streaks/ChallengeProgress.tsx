@@ -119,7 +119,7 @@ export const ChallengeProgress: React.FC<ChallengeProgressProps> = ({ current, t
                 <div
                   className={`flex items-center justify-center rounded-full border transition-all duration-500 ${
                     reached
-                      ? 'border-accent-amber bg-accent-amber text-text-inverted shadow-[0_0_12px_var(--accent-amber)]'
+                      ? 'border-accent-amber bg-accent-amber text-text-inverted shadow-glow-amber-sm'
                       : 'border-border-color bg-bg-elevated text-text-muted'
                   }`}
                   style={{ width: nodeSize, height: nodeSize }}

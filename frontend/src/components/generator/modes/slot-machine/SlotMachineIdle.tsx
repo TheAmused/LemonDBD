@@ -4,6 +4,7 @@ import React from 'react';
 import type { RoleCategory } from '@/types/perks';
 import { useDictionary } from '@/context/DictionaryContext';
 import { DbdButton } from '@/components/common/Button';
+import { TileButton } from '@/components/common/TileButton';
 
 interface SlotMachineIdleProps {
   role: RoleCategory;
@@ -22,19 +23,18 @@ export function SlotMachineIdle({ role, disabled, onPull }: SlotMachineIdleProps
         {' '}
         {dict.generator.slotCursedFlavor}
       </p>
-      <button
-        type="button"
+      <TileButton
         onClick={onPull}
         disabled={disabled}
-        className="group cursor-pointer disabled:cursor-default transition-transform hover:scale-105 active:scale-95"
+        className="group"
       >
         <img
           src="/images/randomizer/lever.webp"
           alt=""
-          className="h-28 w-28 sm:h-36 sm:w-36 xl:h-48 xl:w-48 2xl:h-60 2xl:w-60 wide:h-72 wide:w-72 object-contain drop-shadow-2xl select-none pointer-events-none group-hover:drop-shadow-[0_0_24px_var(--color-accent-amber)] transition-all duration-300"
+          className="h-28 w-28 sm:h-36 sm:w-36 xl:h-48 xl:w-48 2xl:h-60 2xl:w-60 wide:h-72 wide:w-72 object-contain drop-shadow-2xl select-none pointer-events-none group-hover:drop-shadow-glow-amber-md transition-all duration-300"
           draggable={false}
         />
-      </button>
+      </TileButton>
       <DbdButton
         role={role}
         size="lg"

@@ -21,7 +21,7 @@ export const TrophyShelf: React.FC<TrophyShelfProps> = ({ shelf }) => {
   const allSuffix = t.allCharactersSuffix;
 
   return (
-    <div className="rounded-2xl border border-accent-amber/30 bg-gradient-to-b from-accent-amber/10 to-accent-amber/5 p-5 shadow-sm">
+    <div className="rounded-card border border-accent-amber/30 bg-gradient-to-b from-accent-amber/10 to-accent-amber/5 p-5 shadow-sm">
       <h2 className="mb-4 text-lg font-extrabold tracking-wide text-text-primary">
         {shelf.title}
       </h2>

@@ -8,6 +8,7 @@ import { Dictionary } from '@/locales/types';
 import { cn } from '@/utils/cn';
 import { PerkCard } from '@/components/PerkCard';
 import { useDictionary } from "@/context/DictionaryContext";
+import { Button } from '@/components/common/Button';
 
 export type PerkSlotSize = 'default' | 'large' | 'fill' | 'tarot' | 'compact' | 'wheelFlank';
 
@@ -18,7 +19,7 @@ const SLOT_SIZE_CLASSES: Record<PerkSlotSize, string> = {
   large: 'h-32 w-32 sm:h-40 sm:w-40 md:h-44 md:w-44 lg:h-44 lg:w-44 xl:h-52 xl:w-52 2xl:h-60 2xl:w-60 min-[1800px]:h-68 min-[1800px]:w-68 wide:h-76 wide:w-76 wide-2k:h-88 wide-2k:w-88 wide-4k:h-96 wide-4k:w-96',
   fill: 'h-[min(88cqh,88cqw)] w-[min(88cqh,88cqw)] max-h-48 max-w-48',
   tarot: 'h-24 w-24 sm:h-28 sm:w-28 md:h-32 md:w-32 lg:h-36 lg:w-36 xl:h-48 xl:w-48 2xl:h-56 2xl:w-56 wide:h-64 wide:w-64 wide-2k:h-72 wide-2k:w-72 wide-4k:h-80 wide-4k:w-80',
-  compact: 'h-[78px] w-[78px] xs:h-[84px] xs:w-[84px] sm:h-24 sm:w-24 md:h-26 md:w-26',
+  compact: 'h-[78px] w-[78px] xs:h-21 xs:w-21 sm:h-24 sm:w-24 md:h-26 md:w-26',
   // Same as 'default' through lg (tablet/phone already reads fine); shrinks
   // a step further from xl up so the wheel itself can claim the freed space
   // on wide monitors instead of the two loadout slots matching its growth.
@@ -71,19 +72,12 @@ export const PerkSlot: React.FC<PerkSlotProps> = ({
   if (isObscured) {
     return (
       <div className={cn('flex items-center justify-center w-full', SLOT_OUTER_PADDING[size])}>
-        <button
-          type="button"
-          onClick={onClick}
-          className={cn(
-            SLOT_SIZE_CLASSES[size],
-            'flex flex-col items-center justify-center gap-1.5 rounded-2xl border-2 border-dashed border-accent-red/50 bg-accent-red/10 text-accent-red cursor-pointer shadow-xs backdrop-blur-xs transition-all duration-200 hover:border-accent-red hover:bg-accent-red/20 hover:scale-105 active:scale-95 hover:shadow-md hover:shadow-accent-red/35'
-          )}
-        >
+        <Button variant="soft" dashed onClick={onClick} className={cn(SLOT_SIZE_CLASSES[size], 'flex-col gap-1.5 border-2 backdrop-blur-xs')}>
           <EyeOff className="h-10 w-10 animate-pulse" />
           <span className="type-label-xs text-center px-2">
             {dict.generator.clickToReveal}
           </span>
-        </button>
+        </Button>
       </div>
     );
   }
@@ -94,7 +88,7 @@ export const PerkSlot: React.FC<PerkSlotProps> = ({
         <div
           className={cn(
             SLOT_SIZE_CLASSES[size],
-            'flex flex-col items-center justify-center gap-1.5 rounded-2xl border-2 border-dashed border-border-color bg-bg-surface/90 text-text-muted transition-colors shadow-xs backdrop-blur-xs'
+            'flex flex-col items-center justify-center gap-1.5 rounded-card border-2 border-dashed border-border-color bg-bg-surface/90 text-text-muted transition-colors shadow-xs backdrop-blur-xs'
           )}
         >
           <ImageOff className="h-8 w-8 text-text-muted" />
@@ -109,7 +103,7 @@ export const PerkSlot: React.FC<PerkSlotProps> = ({
   const coordinate = page !== undefined && slot !== undefined ? { page, slot } : undefined;
 
   return (
-    <div className={cn('relative', isActive && 'rounded-2xl ring-2 ring-accent-red/60')}>
+    <div className={cn('relative', isActive && 'rounded-card ring-2 ring-accent-red/60')}>
       <PerkCard
         perk={perk}
         onSelect={() => onClick?.()}

@@ -142,7 +142,7 @@ export function renderHoldKeyHint(template: string | undefined, key: string): Re
     <span className="inline">
       <span className="whitespace-nowrap">
         {trimmedBefore && <span>{`${trimmedBefore}\u00A0`}</span>}
-        <kbd className="inline-flex items-center justify-center rounded border border-border-color bg-bg-elevated px-1.5 py-0.5 type-caption text-accent-amber shadow-xs align-middle">
+        <kbd className="inline-flex items-center justify-center rounded-chip border border-border-color bg-bg-elevated px-1.5 py-0.5 type-caption text-accent-amber shadow-xs align-middle">
           {key}
         </kbd>
         {trailingPunct && <span>{trailingPunct}</span>}

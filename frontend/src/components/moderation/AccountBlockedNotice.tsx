@@ -35,7 +35,7 @@ export function AccountBlockedNotice({ blocked, onClose }: AccountBlockedNoticeP
 
   return (
     <div role="alert" className="space-y-4">
-      <div className="flex items-start gap-3 rounded-xl border border-accent-red/30 bg-accent-red/10 p-3.5">
+      <div className="flex items-start gap-3 rounded-card border border-accent-red/30 bg-accent-red/10 p-3.5">
         <Icon className="mt-0.5 h-5 w-5 shrink-0 text-accent-red" />
         <p className="type-body text-text-primary">{body}</p>
       </div>
@@ -50,7 +50,7 @@ export function AccountBlockedNotice({ blocked, onClose }: AccountBlockedNoticeP
       {blocked.public_message && (
         <div className="space-y-1">
           <p className="type-label-sm text-text-secondary">{t.messageLabel}</p>
-          <p className="whitespace-pre-wrap break-words rounded-xl border border-border-subtle bg-bg-primary p-3 type-body text-text-primary">
+          <p className="whitespace-pre-wrap break-words rounded-card border border-border-subtle bg-bg-primary p-3 type-body text-text-primary">
             {blocked.public_message}
           </p>
         </div>

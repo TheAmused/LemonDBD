@@ -13,6 +13,7 @@ import { RankFirstIcon, RankPlacedIcon } from '@/components/icons/DbdIcons';
 import { formatNumber } from '@/utils/format';
 import { isSurvivor as isSurvivorRole } from '@/utils/characterUtils';
 import { formatMessage } from '@/utils/i18nFormat';
+import { Surface } from '@/components/common/Surface';
 
 export interface TierConfig {
   name: string;
@@ -121,7 +122,7 @@ export const CandidateRow = React.memo<CandidateRowProps>(({
         }
       }}
       aria-label={candidateAriaLabel}
-      className={`group relative flex flex-col sm:flex-row items-stretch sm:items-center justify-between p-3.5 sm:p-4 rounded-3xl border transition-all duration-150 cursor-pointer select-none hover:-translate-y-0.5 hover:shadow-xl active:translate-y-0 active:scale-[0.99] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red gap-3.5 sm:gap-4 ${
+      className={`group relative flex flex-col sm:flex-row items-stretch sm:items-center justify-between p-3.5 sm:p-4 rounded-card border transition-all duration-150 cursor-pointer select-none hover:-translate-y-0.5 hover:shadow-xl active:translate-y-0 active:scale-[0.99] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red gap-3.5 sm:gap-4 ${
         hasUserSmashed
           ? 'bg-accent-red/10 border-accent-red/50 hover:border-accent-red'
           : 'bg-bg-surface border-border-color hover:border-border-subtle hover:bg-bg-elevated hover:shadow-lg'
@@ -131,7 +132,7 @@ export const CandidateRow = React.memo<CandidateRowProps>(({
       <div className="flex items-center gap-3.5 sm:gap-4 min-w-0 flex-1">
         {/* Special Luxury Rank Medals for #1, #2, #3 */}
         <div
-          className={`flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-2xl font-black text-xs sm:text-sm shrink-0 transition-transform group-hover:scale-105 ${
+          className={`flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-card font-black text-xs sm:text-sm shrink-0 transition-transform group-hover:scale-105 ${
             isTop3
               ? index === 0
                 ? 'medal-gold'
@@ -153,7 +154,7 @@ export const CandidateRow = React.memo<CandidateRowProps>(({
         </div>
 
         {/* Avatar Portrait */}
-        <div className="relative h-13 w-13 sm:h-14 sm:w-14 rounded-2xl overflow-hidden bg-bg-elevated border border-border-color shrink-0 shadow-inner group-hover:border-accent-red/50 transition-colors">
+        <Surface tone="elevated" padding="none" className="relative h-13 w-13 sm:h-14 sm:w-14 overflow-hidden shrink-0 shadow-inner group-hover:border-accent-red/50 transition-colors">
           <img
             src={avatarSrc}
             alt=""
@@ -177,7 +178,7 @@ export const CandidateRow = React.memo<CandidateRowProps>(({
               <Heart className="h-2.5 w-2.5 fill-text-inverted text-text-inverted" />
             </div>
           )}
-        </div>
+        </Surface>
 
         {/* Details: Name + Icon-Only Badges */}
         <div className="min-w-0 text-left flex-1">
@@ -190,7 +191,7 @@ export const CandidateRow = React.memo<CandidateRowProps>(({
             <span
               {...tip(isSurvivor ? survivorsLabel : killersLabel, undefined, 'action')}
               aria-label={isSurvivor ? survivorsLabel : killersLabel}
-              className={`flex h-6 w-6 items-center justify-center rounded-lg border shrink-0 transition-transform hover:scale-110 ${
+              className={`flex h-6 w-6 items-center justify-center rounded-chip border shrink-0 transition-transform hover:scale-110 ${
                 isSurvivor
                   ? 'bg-accent-green/15 border-accent-green/40 text-accent-green'
                   : 'bg-accent-red/15 border-accent-red/40 text-accent-red'
@@ -204,7 +205,7 @@ export const CandidateRow = React.memo<CandidateRowProps>(({
               <span
                 {...tip(`${tier.name} (${tier.range})`, undefined, 'status')}
                 aria-label={`${tier.name} (${tier.range})`}
-                className={`flex h-6 w-6 items-center justify-center rounded-lg border shrink-0 transition-transform hover:scale-110 ${tier.style}`}
+                className={`flex h-6 w-6 items-center justify-center rounded-chip border shrink-0 transition-transform hover:scale-110 ${tier.style}`}
               >
                 {tier.icon}
               </span>
@@ -212,7 +213,7 @@ export const CandidateRow = React.memo<CandidateRowProps>(({
               <span
                 {...tip(`${unratedLabel} - ${noVotesDesc}`, undefined, 'status')}
                 aria-label={`${unratedLabel} - ${noVotesDesc}`}
-                className="flex h-6 w-6 items-center justify-center rounded-lg border border-border-color bg-bg-elevated text-text-muted type-strong shadow-inner shrink-0 transition-transform hover:scale-110"
+                className="flex h-6 w-6 items-center justify-center rounded-chip border border-border-color bg-bg-elevated text-text-muted type-strong shadow-inner shrink-0 transition-transform hover:scale-110"
               >
                 ?
               </span>

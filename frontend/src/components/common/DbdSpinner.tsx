@@ -173,7 +173,7 @@ export const DbdSpinner: React.FC<DbdSpinnerProps> = ({
     page:
       'w-full min-h-[60vh] flex-1 flex flex-col items-center justify-center p-6 dbd-fog-overlay',
     card:
-      'w-full min-h-[260px] flex flex-col items-center justify-center p-6 rounded-3xl bg-bg-surface border border-border-color shadow-2xl',
+      'w-full min-h-[260px] flex flex-col items-center justify-center p-6 rounded-card bg-bg-surface border border-border-color shadow-2xl',
     inline:
       'w-full py-10 flex flex-col items-center justify-center',
     compact:

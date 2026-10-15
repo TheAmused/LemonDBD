@@ -71,7 +71,7 @@ export const CheckpointCelebrationModal: React.FC<CheckpointCelebrationModalProp
       ariaLabel={dict.streaks.checkpointSecured}
     >
       <div
-        className="ck-card-in relative w-full overflow-hidden rounded-3xl border border-accent-amber/60 bg-gradient-to-b from-accent-amber/20 via-bg-surface to-bg-primary flex min-h-[26rem] flex-col items-center justify-center px-8 py-14 text-center cursor-default"
+        className="ck-card-in relative w-full overflow-hidden rounded-card border border-accent-amber/60 bg-gradient-to-b from-accent-amber/20 via-bg-surface to-bg-primary flex min-h-[26rem] flex-col items-center justify-center px-8 py-14 text-center cursor-default"
       >
         <div className="relative mx-auto h-24 w-24" aria-hidden="true">
           <div
@@ -98,7 +98,7 @@ export const CheckpointCelebrationModal: React.FC<CheckpointCelebrationModalProp
               }
             />
           ))}
-          <div className="ck-trophy-pop relative flex h-24 w-24 items-center justify-center rounded-full border-2 border-accent-amber bg-gradient-to-br from-accent-amber to-accent-amber-hover text-text-inverted shadow-[0_0_34px_var(--accent-amber)]">
+          <div className="ck-trophy-pop relative flex h-24 w-24 items-center justify-center rounded-full border-2 border-accent-amber bg-gradient-to-br from-accent-amber to-accent-amber-hover text-text-inverted shadow-glow-amber-lg">
             <Trophy className="h-12 w-12" />
           </div>
         </div>

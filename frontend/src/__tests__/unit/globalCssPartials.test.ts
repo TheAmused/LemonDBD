@@ -3,6 +3,7 @@ import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
+import os from 'node:os';
 import { globalCssPartials, readGlobalCss } from '../../../scripts/lib/globalCss';
 
 const appDir = path.resolve(__dirname, '../../app');
@@ -31,7 +32,7 @@ describe('globals.css partials', () => {
   });
 
   it('inlines the import forms CSS allows, not just a bare quoted path', () => {
-    const dir = fs.mkdtempSync(path.join(process.env.TMPDIR ?? '/tmp', 'globalcss-'));
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'globalcss-'));
     try {
       fs.writeFileSync(path.join(dir, 'a.css'), '.a { color: red; }\n');
       fs.writeFileSync(path.join(dir, 'b.css'), '.b { color: blue; }\n');
@@ -48,7 +49,7 @@ describe('globals.css partials', () => {
   });
 
   it('fails loudly when a relative @import cannot be inlined', () => {
-    const dir = fs.mkdtempSync(path.join(process.env.TMPDIR ?? '/tmp', 'globalcss-'));
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'globalcss-'));
     try {
       fs.writeFileSync(path.join(dir, 'entry.css'), '@import "./a.css";\n@media print { @import "./b.css"; }\n');
       fs.writeFileSync(path.join(dir, 'a.css'), '.a {}\n');

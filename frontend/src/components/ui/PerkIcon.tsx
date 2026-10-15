@@ -25,7 +25,7 @@ export const PerkIcon: React.FC<PerkIconProps> = ({
   className = 'h-full w-full',
   imageClassName = 'h-full w-full object-contain pointer-events-none',
   fallbackIcon,
-  fallbackClassName = 'flex h-3/4 w-3/4 rotate-45 items-center justify-center rounded-xl bg-bg-elevated border border-border-color',
+  fallbackClassName = 'flex h-3/4 w-3/4 rotate-45 items-center justify-center rounded-card bg-bg-elevated border border-border-color',
   loading = 'lazy',
 }) => {
   const [failed, setFailed] = useState(false);

@@ -22,7 +22,7 @@ export const TOOLTIP_CONFIG = {
   gap: 9,
   arrowSize: 10,
   arrowEdgeInset: 16,
-  zIndex: 99999,
+  zIndex: 'var(--layer-tooltip)',
   defaultMaxWidth: '17rem',
   attr: {
     title: 'data-tooltip',
@@ -213,7 +213,7 @@ export const TooltipBubble: React.FC<TooltipBubbleProps> = ({
     >
       <div
         className={cn(
-          'relative flex min-h-0 flex-1 flex-col overflow-hidden rounded-lg border border-border-color bg-bg-surface px-3.5 py-2.5 shadow-lg backdrop-blur-sm',
+          'relative flex min-h-0 flex-1 flex-col overflow-hidden rounded-chip border border-border-color bg-bg-surface px-3.5 py-2.5 shadow-lg backdrop-blur-sm',
           look.content,
           contentClassName
         )}

@@ -11,6 +11,8 @@ import { OverseerEyeIcon } from '@/components/icons/DbdIcons';
 
 import { tip } from '@/components/common/Tooltip';
 import { useDictionary } from "@/context/DictionaryContext";
+import { Badge } from '@/components/common/Badge';
+import { Surface } from '@/components/common/Surface';
 
 export interface SidebarUserSectionProps {
   currentLocale: string;
@@ -46,7 +48,7 @@ export const SidebarUserSection: React.FC<SidebarUserSectionProps> = ({
           <span>{dict.sidebar.signIn}</span>
         </Button>
       ) : (
-        <div className="rounded-xl border border-border-color bg-bg-elevated p-2.5 space-y-2">
+        <Surface tone="elevated" padding="none" className="p-2.5 space-y-2">
           <div className="flex items-center justify-between">
             <Link
               href={`/${currentLocale}/user`}
@@ -56,15 +58,11 @@ export const SidebarUserSection: React.FC<SidebarUserSectionProps> = ({
               <UserAvatar user={user} size="sm" />
               <div className="truncate">
                 <p className="type-strong text-text-primary truncate">{user.username}</p>
-                <span
-                  className={`inline-block rounded px-1 text-micro font-black uppercase tracking-wider ${
-                    user.role === 'admin'
-                      ? 'bg-accent-red/20 text-accent-red border border-accent-red/30'
-                      : 'bg-bg-surface text-text-muted border border-border-color'
-                  }`}
+                <Badge
+                  tone={user.role === 'admin' ? 'red' : 'neutral'} size="xs" square className="inline-block"
                 >
                   {user.role}
-                </span>
+                </Badge>
               </div>
             </Link>
 
@@ -72,36 +70,36 @@ export const SidebarUserSection: React.FC<SidebarUserSectionProps> = ({
               {isAdmin && (
                 <Link
                   href={`/${currentLocale}/admin`}
-                  title={dict.sidebar.adminControlCenter}
+                  {...tip(dict.sidebar.adminControlCenter, undefined, 'action')}
                   aria-label={dict.sidebar.adminControlCenter}
                   onClick={onNavigateMobile}
-                  className="p-1 rounded-lg text-accent-red hover:bg-accent-red/10 transition-colors"
+                  className="p-1 rounded-control text-accent-red hover:bg-accent-red/10 transition-colors"
                 >
                   <OverseerEyeIcon className="h-4 w-4" />
                 </Link>
               )}
-              <button
+              <Button
                 type="button"
                 onClick={onLogout}
                 {...tip(dict.sidebar.signOut, undefined, 'action')}
                 aria-label={dict.sidebar.signOut}
-                className="p-1 rounded-lg text-text-muted hover:text-accent-red hover:bg-accent-red/10 transition-colors cursor-pointer"
+                variant="ghost" size="xs" icon
               >
                 <LogOut className="h-3.5 w-3.5" />
-              </button>
+              </Button>
             </div>
           </div>
 
           {user.is_verified === false && (
-            <button
+            <Button
               type="button"
               onClick={onOpenVerifyModal}
-              className="w-full text-left type-micro text-accent-amber hover:underline cursor-pointer"
+              variant="link" size="xs" className="w-full justify-start"
             >
               {dict.sidebar.emailNotVerified}
-            </button>
+            </Button>
           )}
-        </div>
+        </Surface>
       )}
     </div>
   );

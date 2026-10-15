@@ -18,6 +18,7 @@ import { EmptyState } from '@/components/common/EmptyState';
 import { formatMessage } from '@/utils/i18nFormat';
 import { useDictionary } from "@/context/DictionaryContext";
 
+import { Button } from '@/components/common/Button';
 interface TierPoolProps {
   keys: string[];
   itemsByKey: ReadonlyMap<string, TierItem>;
@@ -81,7 +82,7 @@ export function TierPool({
       data-tier-pool=""
       aria-label={t.unranked}
       className={cn(
-        'w-full flex flex-col overflow-hidden border border-border-color bg-bg-surface shadow-xs rounded-3xl transition-all',
+        'w-full flex flex-col overflow-hidden border border-border-color bg-bg-surface shadow-xs rounded-card transition-all',
         'shrink-0 bg-bg-surface/95 shadow-sm',
         'group-data-[fit]/board:min-h-(--pool-min-total) group-data-[fit-mode]/board:max-h-(--pool-max-total)'
       )}
@@ -90,7 +91,7 @@ export function TierPool({
       <div
         data-pool-head=""
         onClick={() => onCollapsedChange(!collapsed)}
-        className="relative grid w-full cursor-pointer select-none grid-cols-[2.5rem_minmax(0,1fr)_2.5rem] items-center gap-x-3 gap-y-1.5 overflow-hidden px-3 py-1.5 sm:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] sm:px-4 sm:min-h-[48px] [@media(max-height:559px)]:py-1 [@media(max-height:559px)]:sm:min-h-0">
+        className="relative grid w-full cursor-pointer select-none grid-cols-[2.5rem_minmax(0,1fr)_2.5rem] items-center gap-x-3 gap-y-1.5 overflow-hidden px-3 py-1.5 sm:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] sm:px-4 sm:min-h-12 [@media(max-height:559px)]:py-1 [@media(max-height:559px)]:sm:min-h-0">
         {/* Atmospheric DBD Banner Backdrop */}
         <div
           className="absolute inset-0 bg-cover bg-center opacity-15 dark:opacity-25 mix-blend-luminosity filter pointer-events-none"
@@ -118,17 +119,17 @@ export function TierPool({
             }}
             placeholder={t.searchPool}
             aria-label={t.searchPoolAria}
-            className="h-8.5 rounded-xl bg-bg-primary pl-9 pr-8 text-xs sm:text-sm"
+            className="h-8.5 bg-bg-primary pl-9 pr-8 text-xs sm:text-sm"
           />
           {query && (
-            <button
+            <Button
               type="button"
               onClick={() => setQuery('')}
               aria-label={t.clearSearch}
-              className="hit-area absolute right-2 top-1/2 flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-md text-text-muted hover:text-text-primary cursor-pointer"
+              variant="ghost" size="xs" icon className="absolute right-2 top-1/2 -translate-y-1/2"
             >
               <X className="h-3.5 w-3.5" aria-hidden="true" />
-            </button>
+            </Button>
           )}
         </div>
 
@@ -146,7 +147,7 @@ export function TierPool({
           type="button"
           aria-expanded={!collapsed}
           aria-label={collapsed ? t.showPool : t.hidePool}
-          className="relative z-10 col-start-3 row-start-1 justify-self-end flex min-h-[40px] min-w-[40px] items-center justify-center cursor-pointer select-none text-text-secondary hover:text-accent-red transition-colors"
+          className="relative z-10 col-start-3 row-start-1 justify-self-end flex min-h-10 min-w-10 items-center justify-center cursor-pointer select-none text-text-secondary hover:text-accent-red transition-colors"
         >
           <ChevronDown
             className={`h-4 w-4 sm:h-5 sm:w-5 text-accent-red transition-transform duration-300 ease-in-out ${
@@ -165,14 +166,14 @@ export function TierPool({
         <div className="min-h-0 overflow-hidden flex flex-col">
           {canReceiveSelection && (
             <div className="flex items-center justify-center border-t border-b border-border-color px-3 sm:px-4 py-2 bg-bg-surface/50">
-              <button
+              <Button
                 type="button"
                 onClick={() => onMoveSelectedHere(POOL_CONTAINER_ID)}
-                className="inline-flex h-8.5 shrink-0 items-center gap-1.5 rounded-xl border border-dashed border-accent-amber/60 bg-accent-amber/10 px-3 type-strong text-accent-amber hover:bg-accent-amber/20 cursor-pointer transition-colors"
+                variant="amberSoft" size="sm" dashed className="shrink-0"
               >
                 <ArrowDownToLine className="h-3.5 w-3.5" aria-hidden="true" />
                 {t.moveHere}
-              </button>
+              </Button>
             </div>
           )}
 
@@ -180,7 +181,7 @@ export function TierPool({
             ref={setNodeRef}
             onClick={canReceiveSelection ? () => onMoveSelectedHere(POOL_CONTAINER_ID) : undefined}
             className={cn(
-              'min-h-[84px] p-3 sm:p-4 transition-colors',
+              'min-h-21 p-3 sm:p-4 transition-colors',
               'group-data-[fit]/board:min-h-0! group-data-[fit]/board:p-(--tile-pad)!',
               'group-data-[fit-mode]/board:flex-1 group-data-[fit-mode]/board:overflow-y-auto group-data-[fit-mode]/board:overscroll-contain',
               isOver && 'bg-accent-red/10',

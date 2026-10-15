@@ -6,6 +6,7 @@ import { Clock } from 'lucide-react';
 import type { StreakMatchLogBase } from './StreakStatsDrawer';
 import { formatDate } from '@/utils/format';
 import { useLocale, useDictionary } from '@/context/DictionaryContext';
+import { Surface } from '@/components/common/Surface';
 
 export interface StreakMatchRowProps<TLog extends StreakMatchLogBase> {
   log: TLog;
@@ -19,7 +20,7 @@ export function StreakMatchRow<TLog extends StreakMatchLogBase>({ log, renderLab
   const locale = useLocale();
   const isWin = log.result === 'win';
   return (
-    <div className="flex items-center justify-between px-4 py-3.5 rounded-xl bg-bg-elevated border border-border-color hover:border-border-subtle transition-colors shadow-sm">
+    <Surface tone="elevated" padding="none" className="flex items-center justify-between px-4 py-3.5 hover:border-border-subtle transition-colors shadow-sm">
       <div className="pl-1">
         {log.triggered_by === 'inactivity' ? (
           <div className="flex items-center gap-1 type-card-title text-text-secondary">
@@ -48,6 +49,6 @@ export function StreakMatchRow<TLog extends StreakMatchLogBase>({ log, renderLab
           </div>
         )}
       </div>
-    </div>
+    </Surface>
   );
 }

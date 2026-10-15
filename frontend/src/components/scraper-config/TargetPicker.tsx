@@ -6,6 +6,8 @@ import { useDictionary } from '@/context/DictionaryContext';
 import { useLocalizedTargets } from './useLocalizedTargets';
 import { ALL_TARGETS, TARGET_GROUPS_CONFIG, type TargetItem } from './scraperTargets';
 
+import { Button } from '@/components/common/Button';
+import { InfoChip } from '@/components/common/InfoChip';
 interface TargetPickerProps {
   heading: string;
   selected: string[];
@@ -35,15 +37,15 @@ export function TargetPicker({
     <>
       <div className="flex items-center justify-between pb-1 border-b border-border-color">
         <span className="type-label-xs text-text-secondary">{heading}</span>
-        <button
+        <Button
           type="button"
           onClick={onToggleAll}
-          className="type-strong text-accent-amber hover:underline cursor-pointer"
+          variant="link" size="sm"
         >
           {selected.length === ALL_TARGETS.length
             ? dict.admin.deselectAll
             : dict.admin.selectAll}
-        </button>
+        </Button>
       </div>
 
       <div className="space-y-3 max-h-64 overflow-y-auto pr-1">
@@ -55,22 +57,22 @@ export function TargetPicker({
           const groupLabel = dict.admin?.[group.labelKey] || group.fallbackLabel;
 
           return (
-            <div key={group.key} className="rounded-xl border border-border-color bg-bg-primary/40 p-3 space-y-2">
+            <div key={group.key} className="rounded-card border border-border-color bg-bg-primary/40 p-3 space-y-2">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <GroupIcon className="h-3.5 w-3.5 text-accent-red" />
                   <span className="type-label-xs text-text-primary">{groupLabel}</span>
-                  <span className="rounded-md bg-bg-surface px-1.5 py-0.5 type-strong-2xs text-text-secondary border border-border-color">
+                  <InfoChip>
                     {selectedInGroup.length}/{groupTargets.length}
-                  </span>
+                  </InfoChip>
                 </div>
-                <button
+                <Button
                   type="button"
                   onClick={() => onToggleGroup(group.key)}
-                  className="type-strong-xs text-accent-amber hover:underline cursor-pointer"
+                  variant="link" size="xs"
                 >
                   {allGroupSelected ? dict.admin.deselectAll : dict.admin.selectAll}
-                </button>
+                </Button>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -80,7 +82,7 @@ export function TargetPicker({
                     <div
                       key={target.id}
                       onClick={() => onToggleTarget(target.id)}
-                      className={`flex items-start gap-2.5 p-2.5 rounded-xl border cursor-pointer transition-all ${
+                      className={`flex items-start gap-2.5 p-2.5 rounded-card border cursor-pointer transition-all ${
                         isSelected
                           ? 'border-accent-red/50 bg-accent-red/10 text-accent-red'
                           : 'border-border-color bg-bg-surface hover:border-border-subtle'

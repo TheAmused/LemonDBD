@@ -9,6 +9,8 @@ import { TierBadge } from '../TierBadge';
 import { CustomTierListCard } from '../TierListCards';
 import { TierItemTile } from '../TierItemTile';
 import { useDictionary } from "@/context/DictionaryContext";
+import { Badge } from '@/components/common/Badge';
+import { Surface } from '@/components/common/Surface';
 
 interface CreatorPreviewProps {
   title: string;
@@ -67,30 +69,30 @@ export function CreatorPreview({ title, description, tiers, items, backgroundIma
 
       <div className="flex flex-col gap-2 w-full">
         {tiers.map((tier) => (
-          <div
+          <Surface
             key={tier.id}
-            className="grid grid-cols-[4.75rem_minmax(0,1fr)] sm:max-wide-2k:grid-cols-[6.5rem_minmax(0,1fr)] wide-2k:grid-cols-[9rem_minmax(0,1fr)] overflow-hidden rounded-2xl border border-border-color bg-bg-surface shadow-xs"
+            padding="none" className="grid grid-cols-[4.75rem_minmax(0,1fr)] sm:max-wide-2k:grid-cols-[6.5rem_minmax(0,1fr)] wide-2k:grid-cols-[9rem_minmax(0,1fr)] overflow-hidden shadow-xs"
           >
             <TierBadge
               label={tier.label}
               color={tier.color}
               backgroundImage={tier.backgroundImage}
-              className="flex min-h-[72px] sm:max-wide-2k:min-h-[84px] wide-2k:min-h-[112px] items-center justify-center p-2 text-center select-none"
+              className="flex min-h-18 sm:max-wide-2k:min-h-21 wide-2k:min-h-[112px] items-center justify-center p-2 text-center select-none"
               labelClassName="text-base sm:text-lg font-black leading-tight"
             />
-            <div className="bg-bg-primary/40 p-2 sm:p-2.5 flex flex-wrap items-center gap-2 min-h-[72px] sm:max-wide-2k:min-h-[84px] wide-2k:min-h-[112px]" />
-          </div>
+            <div className="bg-bg-primary/40 p-2 sm:p-2.5 flex flex-wrap items-center gap-2 min-h-18 sm:max-wide-2k:min-h-21 wide-2k:min-h-[112px]" />
+          </Surface>
         ))}
       </div>
 
       <div className="flex flex-col items-center gap-2 w-full">
         <div className="flex items-center justify-center gap-2 px-1">
           <span className="type-label-sm text-text-muted">{t.unranked}</span>
-          <span className="rounded-full bg-accent-red/10 px-2 py-0.5 type-strong-xs text-accent-red border border-accent-red/25">
+          <Badge tone="red" size="sm" plain>
             {tiles.length}
-          </span>
+          </Badge>
         </div>
-        <div className="w-full rounded-2xl border border-border-color bg-bg-primary/20 p-3 sm:p-4 min-h-[96px] flex flex-wrap gap-2 items-center justify-center">
+        <div className="w-full rounded-card border border-border-color bg-bg-primary/20 p-3 sm:p-4 min-h-24 flex flex-wrap gap-2 items-center justify-center">
           {tiles.length === 0 ? (
             <p className="text-xs text-text-muted italic px-2">{c.noItems}</p>
           ) : (

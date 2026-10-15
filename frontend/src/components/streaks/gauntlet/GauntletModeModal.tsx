@@ -4,7 +4,7 @@ import type { Dictionary } from '@/locales/types';
 
 import React, { useEffect, useState } from 'react';
 import { Swords, Sparkles, User, Users, UsersRound } from 'lucide-react';
-import { ChallengeIntroTile, NEUTRAL_TILE_ACCENT } from '../ChallengeIntroModalShell';
+import { ChallengeIntroTile } from '../ChallengeIntroModalShell';
 import { ChallengeModeModal, type ModeInfo } from '../ChallengeModeModal';
 import { GauntletRulesModal } from './GauntletRulesModal';
 import { GAUNTLET_GAME_MODES, GauntletGameMode } from '@/types/gauntletStreak';
@@ -35,7 +35,6 @@ function lemonRootTile(role: 'killer' | 'survivor', dict: Dictionary): Challenge
     description: role === 'killer' ? dict.streaks.gauntletLemonDesc : dict.streaks.gauntletLemonPlayersDesc,
     icon: Sparkles,
     image: '/images/streaks/modes/gauntlet-lemon.webp',
-    accentClassName: NEUTRAL_TILE_ACCENT,
   };
 }
 
@@ -47,7 +46,6 @@ function lemonPlayerTiles(dict: Dictionary): ChallengeIntroTile[] {
       description: dict.streaks.lemonSoloDesc,
       icon: User,
       image: '/images/streaks/modes/gauntlet-1-player.webp',
-      accentClassName: NEUTRAL_TILE_ACCENT,
     },
     {
       value: 'lemon_duo',
@@ -55,7 +53,6 @@ function lemonPlayerTiles(dict: Dictionary): ChallengeIntroTile[] {
       description: dict.streaks.lemonDuoDesc,
       icon: Users,
       image: '/images/streaks/modes/gauntlet-2-players.webp',
-      accentClassName: NEUTRAL_TILE_ACCENT,
     },
     {
       value: 'lemon_squad',
@@ -63,7 +60,6 @@ function lemonPlayerTiles(dict: Dictionary): ChallengeIntroTile[] {
       description: dict.streaks.lemonSquadDesc,
       icon: UsersRound,
       image: '/images/streaks/modes/gauntlet-4-players.webp',
-      accentClassName: NEUTRAL_TILE_ACCENT,
     },
   ];
 }
@@ -129,7 +125,6 @@ export const GauntletModeModal: React.FC<GauntletModeModalProps> = ({
         dict.streaks.gauntletOriginalDesc,
       icon: Swords,
       image: '/images/streaks/modes/gauntlet-original.webp',
-      accentClassName: NEUTRAL_TILE_ACCENT,
       completed: originalCompleted,
       completedCount: originalCompletedCount,
       completedFull: originalCompletedFull,

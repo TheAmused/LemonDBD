@@ -9,6 +9,7 @@ import { PerksTogglePopup } from '@/components/characters/PerksTogglePopup';
 import { SkipOnboardingModal } from '@/components/onboarding/SkipOnboardingModal';
 import { Spinner } from '@/components/common/Spinner';
 import { Button } from '@/components/common/Button';
+import { ActionBarButton, StickyActionBar } from '@/components/common/StickyActionBar';
 import {
   type OnboardingCharacter,
   type OnboardingPerk,
@@ -26,6 +27,7 @@ import { useChapterExpansion } from './wizard/useChapterExpansion';
 import { useOnboardingCompletion } from './wizard/useOnboardingCompletion';
 import { useOnboardingLanguage } from './wizard/useOnboardingLanguage';
 import { useOnboardingRoster } from './wizard/useOnboardingRoster';
+import { Surface } from '@/components/common/Surface';
 
 export type { ChapterBanner } from './wizard/useOnboardingRoster';
 
@@ -94,17 +96,17 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
     <div className="min-h-screen p-2.5 sm:p-5 lg:p-6 pb-32 sm:pb-36 lg:pb-36">
       <div className="mx-auto w-full max-w-[96rem] 2xl:max-w-[110rem] 3xl:max-w-[124rem]">
         {/* Unified Card Container */}
-        <div className="rounded-2xl border border-border-color bg-bg-surface p-3 sm:p-5 lg:p-6 shadow-2xl space-y-3.5 sm:space-y-4">
+        <Surface padding="none" className="p-3 sm:p-5 lg:p-6 shadow-2xl space-y-3.5 sm:space-y-4">
           {/* Header Section */}
           <header className="relative flex flex-col items-center text-center space-y-1.5 sm:space-y-2">
             <div className="sm:absolute sm:right-0 sm:top-0 hidden sm:block">
-              <button
+              <Button
                 type="button"
                 onClick={() => setIsSkipModalOpen(true)}
-                className="shrink-0 rounded-xl border border-accent-amber/50 bg-accent-amber/10 px-4 py-2 sm:px-5 sm:py-2.5 lg:px-6 lg:py-3 text-xs sm:text-sm lg:text-base font-bold text-accent-amber hover:bg-accent-amber/20 hover:border-accent-amber transition-all cursor-pointer shadow-xs"
+                variant="amberSoft" size="md" className="shrink-0"
               >
                 {t.skipButton}
-              </button>
+              </Button>
             </div>
             <h1 className="text-lg sm:text-xl md:text-2xl font-black tracking-tight text-text-primary px-2">
               {t.heading}
@@ -113,13 +115,13 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
               {t.subheading}
             </p>
             <div className="sm:hidden pt-0.5">
-              <button
+              <Button
                 type="button"
                 onClick={() => setIsSkipModalOpen(true)}
-                className="shrink-0 rounded-xl border border-accent-amber/50 bg-accent-amber/10 px-3 py-1 type-strong text-accent-amber hover:bg-accent-amber/20 transition-colors cursor-pointer"
+                variant="amberSoft" size="sm" className="shrink-0"
               >
                 {t.skipButton}
-              </button>
+              </Button>
             </div>
           </header>
 
@@ -211,17 +213,15 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
           </section>
 
           <div className="h-4" />
-        </div>
+        </Surface>
       </div>
 
       {/* Sticky full-screen bottom continue banner so Continue stays reachable while scrolling */}
-      <div className="fixed bottom-0 inset-x-0 z-30 w-full border-t border-border-color bg-bg-surface/95 backdrop-blur-md shadow-2xl">
-        <div className="mx-auto flex w-full max-w-7xl justify-center px-4 py-3 sm:py-4">
-          <Button variant="primary" disabled={saving} onClick={handleContinue} className="w-full max-w-sm sm:max-w-md">
-            {saving ? t.savingLabel : t.continueButton}
-          </Button>
-        </div>
-      </div>
+      <StickyActionBar sidebarAware={false}>
+        <ActionBarButton variant="red" wide disabled={saving} onClick={handleContinue}>
+          {saving ? t.savingLabel : t.continueButton}
+        </ActionBarButton>
+      </StickyActionBar>
 
       <PerksTogglePopup
         character={perksPopupCharacter}

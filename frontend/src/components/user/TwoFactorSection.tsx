@@ -13,6 +13,7 @@ import { } from 'next/navigation';
 import { localeMetaFor } from '@/i18n/config';
 import { fetchTwoFactorStatus, type TwoFactorStatus } from '@/services/twoFactorApi';
 import { formatMessage } from '@/utils/i18nFormat';
+import { Badge } from '@/components/common/Badge';
 
 interface TwoFactorSectionProps {
   refreshTrigger?: number;
@@ -62,13 +63,11 @@ export const TwoFactorSection: React.FC<TwoFactorSectionProps> = ({
           </div>
         </div>
         {status?.available ? (
-          <span
-            className={`rounded-full px-2.5 py-1 type-label-2xs ${
-              status.enabled ? 'bg-accent-green/15 text-accent-green' : 'bg-bg-primary text-text-muted'
-            }`}
+          <Badge
+            tone={status.enabled ? 'green' : 'neutral'} size="sm"
           >
             {status.enabled ? t.statusOn : t.statusOff}
-          </span>
+          </Badge>
         ) : null}
       </div>
 

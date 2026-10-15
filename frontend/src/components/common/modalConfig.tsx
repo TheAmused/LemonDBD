@@ -48,9 +48,9 @@ export const MODAL_CONFIG = {
   /** Named z-index scale. A modal opened from another modal uses a higher layer. */
   zLayers: {
     base: 'z-50',
-    nested: 'z-[60]',
-    top: 'z-[70]',
-    system: 'z-[100]',
+    nested: 'z-modal',
+    top: 'z-modal-top',
+    system: 'z-system',
   },
   backdrops: {
     blur: 'bg-bg-primary/70 backdrop-blur-md',
@@ -66,7 +66,7 @@ export const MODAL_CONFIG = {
   variants: {
     dialog: {
       container: 'items-center justify-center p-2.5 sm:p-4 md:p-6',
-      panel: 'rounded-3xl max-h-[92dvh] sm:max-h-[90dvh]',
+      panel: 'rounded-modal max-h-[92dvh] sm:max-h-[90dvh]',
       motion: 'scale',
       defaultSize: '3xl',
       chrome: true,
@@ -74,7 +74,7 @@ export const MODAL_CONFIG = {
     sheet: {
       container: 'items-end justify-center p-0 sm:items-center sm:p-4 md:p-6',
       panel:
-        'rounded-t-3xl rounded-b-none sm:rounded-3xl max-h-[92dvh] sm:max-h-[90dvh] pb-[env(safe-area-inset-bottom)] sm:pb-0',
+        'rounded-t-modal rounded-b-none sm:rounded-modal max-h-[92dvh] sm:max-h-[90dvh] pb-[env(safe-area-inset-bottom)] sm:pb-0',
       motion: 'sheet',
       defaultSize: '3xl',
       chrome: true,
@@ -100,7 +100,7 @@ export const MODAL_CONFIG = {
     },
     confirm: {
       container: 'items-center justify-center p-2.5 sm:p-4',
-      panel: 'rounded-3xl max-h-[92dvh]',
+      panel: 'rounded-modal max-h-[92dvh]',
       motion: 'scale',
       defaultSize: 'sm',
       chrome: true,
@@ -115,7 +115,7 @@ export const MODAL_CONFIG = {
     },
     lightbox: {
       container: 'items-center justify-center p-2.5 sm:p-6',
-      panel: 'rounded-2xl max-h-[94dvh] bg-transparent shadow-none border-0',
+      panel: 'rounded-card max-h-[94dvh] bg-transparent shadow-none border-0',
       motion: 'scale',
       defaultSize: '4xl',
       chrome: false,

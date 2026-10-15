@@ -9,6 +9,7 @@ import { RosterEntry } from '@/types/pageStreak';
 import { useAuth } from '@/context/AuthContext';
 import { useDictionary } from '@/context/DictionaryContext';
 
+import { Button } from '@/components/common/Button';
 interface PageStreakBoardProps {
   locale: string;
 }
@@ -57,14 +58,14 @@ export const PageStreakBoard: React.FC<PageStreakBoardProps> = ({ locale }) => {
   return (
     <div>
       <div className="mb-6 flex justify-end">
-        <button
+        <Button
           type="button"
           onClick={() => setConfirmingResetAll(true)}
-          className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-bg-elevated hover:bg-accent-red/10 text-text-secondary hover:text-accent-red border border-border-color type-strong transition-colors shadow-sm cursor-pointer"
+          variant="secondary" size="sm"
         >
           <RotateCcw className="w-3.5 h-3.5" />
           {dict.streaks.resetAllRuns}
-        </button>
+        </Button>
       </div>
 
       <ConfirmModal

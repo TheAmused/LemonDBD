@@ -20,6 +20,8 @@ import { SuccessState } from '@/components/common/SuccessState';
 import { Button } from '@/components/common/Button';
 import { Input, Textarea } from '@/components/common/Field';
 import { useDictionary } from "@/context/DictionaryContext";
+import { Badge } from '@/components/common/Badge';
+import { Surface } from '@/components/common/Surface';
 
 export interface BugReportModalProps {
   isOpen: boolean;
@@ -205,7 +207,7 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({ isOpen, onClose 
       ) : (
         <>
     {errorMsg && (
-      <div className="flex items-center gap-2.5 rounded-xl border border-accent-red/40 bg-accent-red/10 p-3 text-xs text-accent-red shadow-sm" role="alert">
+      <div className="flex items-center gap-2.5 rounded-card border border-accent-red/40 bg-accent-red/10 p-3 text-xs text-accent-red shadow-sm" role="alert">
         <AlertCircle className="h-4 w-4 shrink-0 text-accent-red" aria-hidden="true" />
         <span>{errorMsg}</span>
       </div>
@@ -213,9 +215,9 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({ isOpen, onClose 
 
     <form id="bug-report-form" onSubmit={handleSubmit} className="space-y-4">
       {isAuthenticated && user ? (
-        <div className="flex items-center justify-between rounded-xl border border-border-color bg-bg-elevated/60 p-3 text-xs">
+        <Surface tone="elevated" padding="sm" className="flex items-center justify-between bg-bg-elevated/60 text-xs">
           <div className="flex items-center gap-2.5 text-text-secondary">
-            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-bg-elevated border border-border-color text-text-secondary" aria-hidden="true">
+            <div className="flex h-7 w-7 items-center justify-center rounded-chip bg-bg-elevated border border-border-color text-text-secondary" aria-hidden="true">
               <LemonIcon className="h-4 w-4" />
             </div>
             <div>
@@ -227,11 +229,11 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({ isOpen, onClose 
               </p>
             </div>
           </div>
-          <span className="rounded-md bg-accent-green/10 px-2 py-0.5 type-strong-2xs text-accent-green border border-accent-green/20 flex items-center gap-1">
+          <Badge tone="green" size="xs" plain square>
             <UserCheck className="h-3 w-3" aria-hidden="true" />
             {t.verified || ''}
-          </span>
-        </div>
+          </Badge>
+        </Surface>
       ) : (
         <div>
           <label className="block type-label-xs text-text-muted mb-1 flex items-center gap-1.5">
@@ -288,9 +290,9 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({ isOpen, onClose 
 
         <div className="flex flex-wrap items-center gap-3">
           {images.map((imgSrc, idx) => (
-            <div
+            <Surface
               key={idx}
-              className="relative h-16 w-16 rounded-xl border border-border-color bg-bg-elevated overflow-hidden shadow-sm group"
+              tone="elevated" padding="none" className="relative h-16 w-16 overflow-hidden shadow-sm group"
             >
               <img
                 src={imgSrc}
@@ -305,18 +307,18 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({ isOpen, onClose 
               >
                 <Trash2 className="h-4 w-4" aria-hidden="true" />
               </button>
-            </div>
+            </Surface>
           ))}
 
           {images.length < 3 && (
-            <button
+            <Button
               type="button"
               onClick={() => fileInputRef.current?.click()}
-              className="flex h-16 w-28 flex-col items-center justify-center rounded-xl border border-dashed border-border-color bg-bg-elevated/50 hover:bg-accent-red/10 hover:border-accent-red/50 text-text-muted hover:text-accent-red transition-all cursor-pointer type-micro"
+              variant="secondary" size="sm" dashed className="h-16 w-28 flex-col gap-0.5"
             >
               <Upload className="h-4 w-4 mb-0.5" aria-hidden="true" />
               <span>{t.bugUploadImage || ''}</span>
-            </button>
+            </Button>
           )}
 
           <input

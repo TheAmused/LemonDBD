@@ -49,7 +49,7 @@ const JP: React.FC<{ className?: string }> = ({ className }) => (
 
 const FLAGS: Record<string, React.FC<{ className?: string }>> = { en: GB, pl: PL, es: ES, de: DE, ja: JP };
 
-export const FlagIcon: React.FC<FlagIconProps> = ({ code, className = 'h-3.5 w-5 rounded-sm' }) => {
+export const FlagIcon: React.FC<FlagIconProps> = ({ code, className = 'h-3.5 w-5 rounded-chip' }) => {
   const Flag = FLAGS[code] ?? GB;
   return <Flag className={className} />;
 };

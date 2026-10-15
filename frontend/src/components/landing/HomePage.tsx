@@ -11,6 +11,7 @@ import { Sparkles, ArrowRight } from 'lucide-react';
 import { DbdSpinner } from '@/components/common/DbdSpinner';
 import { useImagePrefetch } from '@/components/common/ImagePreloadProvider';
 import { useDictionary, useLocale } from '@/context/DictionaryContext';
+import { buttonClassName } from '@/components/common/Button';
 
 function LandingContent() {
   const locale = useLocale();
@@ -34,7 +35,7 @@ function LandingContent() {
     >
         <div className="relative flex flex-col items-center text-center w-full max-w-xl mx-auto z-10 py-8 sm:py-12">
           {/* Big Animated Lemon Icon */}
-          <div className="relative mb-8 flex h-36 w-36 sm:h-44 sm:w-44 items-center justify-center rounded-3xl bg-bg-elevated border-2 border-accent-red/40 p-6 shadow-md hover:scale-105 transition-transform duration-300 group">
+          <div className="relative mb-8 flex h-36 w-36 sm:h-44 sm:w-44 items-center justify-center rounded-card bg-bg-elevated border-2 border-accent-red/40 p-6 shadow-md hover:scale-105 transition-transform duration-300 group">
             <LemonIcon className="h-full w-full dbd-lemon-glow group-hover:rotate-6 transition-transform duration-300 animate-pulse" />
           </div>
 
@@ -63,7 +64,7 @@ function LandingContent() {
             <div className="mt-8">
               <Link
                 href={`/${locale}/perks`}
-                className="inline-flex items-center gap-2.5 rounded-2xl bg-accent-red hover:bg-accent-red-hover px-7 py-3.5 type-card-title text-text-inverted shadow-md hover:scale-105 active:scale-95 transition-all cursor-pointer"
+                className={buttonClassName('primary', 'lg')}
               >
                 <Sparkles className="h-4 w-4" />
                 <span>{dict.landing.enterButton}</span>

@@ -115,7 +115,7 @@ export const GoogleSignInButton: React.FC<GoogleSignInButtonProps> = ({ clientId
   }, [clientId]);
 
   return (
-    <div className="group relative mx-auto h-10 w-full max-w-[400px] overflow-hidden rounded-xl">
+    <div className="group relative mx-auto h-10 w-full max-w-[400px] overflow-hidden rounded-card">
       <div
         aria-hidden="true"
         className={buttonClassName(

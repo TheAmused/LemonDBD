@@ -15,6 +15,7 @@ import { useJackpotCelebration } from '../shared/useJackpotCelebration';
 import { playReelThud, playCardFlip } from '@/utils/perkAudio';
 import { formatMessage } from '@/utils/i18nFormat';
 import { useDictionary } from "@/context/DictionaryContext";
+import { Surface } from '@/components/common/Surface';
 
 export interface LootCrateStageProps {
   role: RoleCategory;
@@ -253,7 +254,7 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
             <img
               src="/images/randomizer/crate.webp"
               alt=""
-              className="h-28 w-28 sm:h-36 sm:w-36 xl:h-48 xl:w-48 2xl:h-60 2xl:w-60 wide:h-72 wide:w-72 object-contain drop-shadow-2xl select-none pointer-events-none group-hover:drop-shadow-[0_0_24px_var(--color-accent-amber)] transition-all duration-300"
+              className="h-28 w-28 sm:h-36 sm:w-36 xl:h-48 xl:w-48 2xl:h-60 2xl:w-60 wide:h-72 wide:w-72 object-contain drop-shadow-2xl select-none pointer-events-none group-hover:drop-shadow-glow-amber-md transition-all duration-300"
               draggable={false}
             />
           </motion.button>
@@ -284,12 +285,12 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
           {/* Mobile & Tablet (< md): Centered balanced offerings and 4-slot loadout tray */}
           <div className="flex flex-col items-center justify-center flex-1 w-full my-auto gap-3.5 md:hidden">
             {/* 4-Slot Loadout Progress Tray */}
-            <div className="flex items-center justify-center gap-2 sm:gap-2.5 py-1.5 px-3 rounded-2xl bg-bg-surface/90 border border-border-color shadow-xs backdrop-blur-sm">
+            <Surface padding="none" className="flex items-center justify-center gap-2 sm:gap-2.5 py-1.5 px-3 bg-bg-surface/90 shadow-xs backdrop-blur-sm">
               {[0, 1, 2, 3].map((slotIdx) => {
                 const locked = lockedItems[slotIdx];
                 return locked ? (
                   <div key={`mob-tray-locked-${locked.id}`} className="relative">
-                    <div className="rounded-xl ring-2 ring-accent-amber/60">
+                    <div className="rounded-card ring-2 ring-accent-amber/60">
                       <PerkSlot perk={locked.perk} role={role} page={locked.page} slot={locked.slot} size="compact" />
                     </div>
                     <div className="absolute -top-1.5 -right-1.5 z-30 flex h-5 w-5 items-center justify-center rounded-full bg-accent-amber text-text-inverted shadow-xs">
@@ -299,13 +300,13 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
                 ) : (
                   <div
                     key={`mob-tray-empty-${slotIdx}`}
-                    className="flex flex-col items-center justify-center w-[74px] h-[74px] xs:w-[84px] xs:h-[84px] rounded-2xl border-2 border-dashed border-border-color bg-bg-surface/90 text-text-muted"
+                    className="flex flex-col items-center justify-center w-[74px] h-[74px] xs:w-21 xs:h-21 rounded-card border-2 border-dashed border-border-color bg-bg-surface/90 text-text-muted"
                   >
                     <span className="type-strong opacity-40">#{slotIdx + 1}</span>
                   </div>
                 );
               })}
-            </div>
+            </Surface>
 
             {/* Scattered Offerings: Symmetrically Centered Flex Wrap */}
             <div className="flex flex-wrap items-center justify-center gap-2.5 xs:gap-3 sm:gap-4 w-full max-w-sm sm:max-w-md mx-auto py-1">
@@ -347,7 +348,7 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
                 transition={reduceMotion ? { duration: 0.15 } : { type: 'spring', stiffness: 260, damping: 18 }}
               >
                 <div className="relative">
-                  <div className="rounded-xl ring-2 ring-accent-amber/60">
+                  <div className="rounded-card ring-2 ring-accent-amber/60">
                     <PerkSlot perk={item.perk} role={role} page={item.page} slot={item.slot} />
                   </div>
                   <div className="absolute -top-2 -right-2 z-30 flex h-6 w-6 items-center justify-center rounded-full bg-accent-amber text-text-inverted shadow-xs">
@@ -361,7 +362,7 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
               {scatterPool.map((item) => (
                 <motion.div
                   key={item.id}
-                  className="absolute -translate-x-1/2 -translate-y-1/2 group hover:drop-shadow-[0_0_16px_var(--color-accent-amber)] transition-[filter] duration-200"
+                  className="absolute -translate-x-1/2 -translate-y-1/2 group hover:drop-shadow-glow-amber-sm transition-[filter] duration-200"
                   style={scatterPointStyle(item)}
                   initial={reduceMotion ? false : { opacity: 0, x: item.fromX, y: item.fromY, rotate: item.rotate * 2.2, scale: 0.4 }}
                   animate={{ opacity: 1, x: 0, y: 0, rotate: item.rotate, scale: item.scale }}

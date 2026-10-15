@@ -22,16 +22,19 @@ import { useDictionary } from '@/context/DictionaryContext';
 import type { RosterItem } from '@/types/smashOrPass';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 import { rosterCoverUrl } from '../roster-select/rosterDisplay';
+import { Badge } from '@/components/common/Badge';
+import { Surface } from '@/components/common/Surface';
+import { MenuItem } from '@/components/common/MenuItem';
 
 /** Square icon buttons: 44px to touch, a little smaller where a pointer is precise. */
 const DOCK_BUTTON =
-  'h-11 w-11 sm:h-9 sm:w-9 min-h-[44px] min-w-[44px] sm:min-h-[38px] sm:min-w-[38px] pointer-coarse:sm:min-h-11 pointer-coarse:sm:min-w-11';
+  'h-11 w-11 sm:h-9 sm:w-9 min-h-11 min-w-11 sm:min-h-[38px] sm:min-w-[38px] pointer-coarse:sm:min-h-11 pointer-coarse:sm:min-w-11';
 
 interface DockActionProps {
   title: string;
   description: string;
   ariaLabel: string;
-  variant: 'soft' | 'secondary';
+  variant: 'soft' | 'secondary' | 'amberSoft';
   onClick: () => void;
   className?: string;
   children: ReactNode;
@@ -117,7 +120,7 @@ export function HubHeader({
   return (
     <header
       data-hub-header=""
-      className={`relative ${isFilterDrawerOpen ? 'z-40' : 'z-30'} mx-auto w-full max-w-6xl rounded-3xl bg-bg-surface border border-border-color backdrop-blur-2xl p-2.5 @[560px]/hub:p-4 @[1016px]/hub:p-5 transition-all`}
+      className={`relative ${isFilterDrawerOpen ? 'z-40' : 'z-30'} mx-auto w-full max-w-6xl rounded-card bg-bg-surface border border-border-color backdrop-blur-2xl p-2.5 @[560px]/hub:p-4 @[1016px]/hub:p-5 transition-all`}
     >
       {/* Below 1016px of hub width: roster on row 1, stats + actions on row 2 (phones: three rows).
           From 1016px: one row, stats | roster | actions. */}
@@ -126,12 +129,12 @@ export function HubHeader({
         <div className="flex items-center justify-center gap-2.5 w-full @[1016px]/hub:w-auto order-1 @[1016px]/hub:order-2 min-w-0">
           <ThornHeartIcon className="hidden @[400px]/hub:block h-5 w-5 text-accent-red animate-pulse shrink-0" aria-hidden="true" />
 
-          <button
+          <Button
             type="button"
             onClick={onOpenRosters}
-            className="flex items-center gap-2.5 px-3.5 py-2 min-h-[44px] min-w-0 max-w-full rounded-2xl bg-bg-surface border border-accent-red/50 hover:border-accent-red type-strong-fluid text-accent-red transition-all cursor-pointer group touch-manipulation"
+            variant="soft" size="md" className="min-w-0 max-w-full gap-2.5"
           >
-            <span className="relative flex h-6 w-6 items-center justify-center rounded-lg overflow-hidden border border-accent-red/60 shrink-0">
+            <span className="relative flex h-6 w-6 items-center justify-center rounded-chip overflow-hidden border border-accent-red/60 shrink-0">
               <img
                 src={rosterCoverUrl(activeRoster)}
                 alt=""
@@ -144,11 +147,11 @@ export function HubHeader({
             <span className="truncate min-w-0 max-w-[16rem] text-text-primary group-hover:text-accent-red font-black tracking-wide">
               {rosterName}
             </span>
-            <span className="px-2 py-0.5 rounded-lg bg-accent-red/20 text-accent-red text-tiny sm:text-xs font-black shrink-0">
+            <Badge tone="red" size="sm" plain square>
               {rosterBadgeCount}
-            </span>
+            </Badge>
             <ChevronDown className="h-4 w-4 shrink-0 text-accent-red group-hover:translate-y-0.5 transition-transform" aria-hidden="true" />
-          </button>
+          </Button>
 
           <ThornHeartIcon className="hidden @[400px]/hub:block h-5 w-5 text-accent-red animate-pulse shrink-0" aria-hidden="true" />
         </div>
@@ -157,7 +160,7 @@ export function HubHeader({
         <div className="flex flex-col @[560px]/hub:flex-row items-center justify-between gap-2 @[560px]/hub:gap-3 w-full order-2 @[1016px]/hub:order-none @[1016px]/hub:contents">
           {/* Live session telemetry capsule */}
           <div className="flex items-center justify-center order-2 @[560px]/hub:order-1 shrink-0">
-            <div className="flex items-center gap-2 px-3 py-1.5 rounded-2xl bg-bg-elevated border border-border-color text-xs shadow-inner">
+            <Surface tone="elevated" padding="none" className="flex items-center gap-2 px-3 py-1.5 text-xs shadow-inner">
               <span className="flex items-center gap-1.5 text-text-secondary font-bold">
                 <CardStackIcon className="h-4 w-4 text-text-secondary" aria-hidden="true" />
                 <span className="type-card-title text-text-primary">{remainingInDeck}</span>
@@ -178,7 +181,7 @@ export function HubHeader({
                 {sessionSmashRate}
                 {dict.smashOrPass.percentSign}
               </span>
-            </div>
+            </Surface>
           </div>
 
           {/* Action cluster (>=44px touch targets on touch screens) */}
@@ -218,21 +221,15 @@ export function HubHeader({
             </DockAction>
 
             {/* Hall of Fame leaderboard */}
-            <Tooltip
-              variant="action"
+            <DockAction
               title={dict.smashOrPass.modals.leaderboardTitle}
               description={tooltips.leaderboardDesc}
-              placement="bottom"
+              ariaLabel={tooltips.leaderboard}
+              variant="amberSoft"
+              onClick={onOpenLeaderboard}
             >
-              <button
-                type="button"
-                onClick={onOpenLeaderboard}
-                aria-label={tooltips.leaderboard}
-                className="flex min-h-[44px] min-w-[44px] sm:min-h-[38px] sm:min-w-[38px] pointer-coarse:sm:min-h-11 pointer-coarse:sm:min-w-11 h-11 w-11 sm:h-9 sm:w-9 items-center justify-center rounded-xl bg-accent-amber/10 border border-accent-amber/30 hover:border-accent-amber/60 text-accent-amber transition-all shadow-md cursor-pointer hover:scale-105 active:scale-95 touch-manipulation"
-              >
-                <HeartCrownIcon className="h-5 w-5 text-accent-amber" aria-hidden="true" />
-              </button>
-            </Tooltip>
+              <HeartCrownIcon className="h-5 w-5 text-accent-amber" aria-hidden="true" />
+            </DockAction>
 
             <DockAction
               title={tooltips.shuffle}
@@ -288,23 +285,21 @@ export function HubHeader({
                 align="end"
                 role="menu"
                 ariaLabel={tooltips.moreActions}
-                className="rounded-2xl bg-bg-surface border border-border-color p-1.5 shadow-xl backdrop-blur-2xl"
+                className="rounded-card bg-bg-surface border border-border-color p-1.5 shadow-xl backdrop-blur-2xl"
               >
                 {[
                   { label: tooltips.shuffle, Icon: CardShuffleIcon, run: onShuffle },
                   { label: tooltips.resetAllVotes, Icon: AshUrnIcon, run: onReset },
                   { label: tooltips.howToPlay, Icon: LanternQuestionIcon, run: onOpenHowToPlay },
                 ].map(({ label, Icon, run }) => (
-                  <button
+                  <MenuItem
                     key={label}
-                    type="button"
                     role="menuitem"
                     onClick={fromMore(run)}
-                    className="flex w-full min-h-[44px] items-center gap-2.5 px-3 rounded-xl type-strong text-text-secondary hover:text-text-primary hover:bg-bg-elevated transition-colors text-left cursor-pointer"
                   >
                     <Icon className="h-4 w-4 shrink-0" aria-hidden="true" />
                     <span>{label}</span>
-                  </button>
+                  </MenuItem>
                 ))}
               </Popover>
             </div>

@@ -15,7 +15,7 @@
  * single-locale, matching the agreed plan's explicit non-goal.
  */
 import { useMemo, useState } from 'react';
-import { History, Plus, SearchX, X } from 'lucide-react';
+import { History, Plus, SearchX } from 'lucide-react';
 import { EmptyState } from '@/components/common/EmptyState';
 import { AuthRequiredState } from '@/components/common/AuthRequiredState';
 import { useAuth } from '@/context/AuthContext';
@@ -36,6 +36,7 @@ import { useDictionary } from "@/context/DictionaryContext";
 import { GENDER_QUICK_PICKS, ROLE_QUICK_PICKS } from '@/utils/smashOrPass/constants';
 import { useRosterDraft } from './useRosterDraft';
 import { useRosterSubmit } from './useRosterSubmit';
+import { Toast } from '@/components/common/Toast';
 
 /**
  * One column width for every block of the creator (basics, taxonomy, candidates, archetypes,
@@ -176,7 +177,7 @@ export function SmashRosterCreator({ locale, editId }: SmashRosterCreatorProps) 
       onClick={submit}
       loading={publishingNow}
       data-roster-create=""
-      className="min-h-[48px] 2xl:min-h-[54px] px-8 2xl:px-10 2xl:text-lg"
+      className="min-h-12 2xl:min-h-[54px] px-8 2xl:px-10 2xl:text-lg"
     >
       {submitLabel}
     </Button>
@@ -194,28 +195,17 @@ export function SmashRosterCreator({ locale, editId }: SmashRosterCreatorProps) 
     <div className="relative z-10 flex flex-col gap-6 2xl:gap-8 max-w-7xl 2xl:max-wide-2k:max-w-[1800px] wide-2k:max-w-[2400px] mx-auto w-full px-4 sm:px-6">
       <h1 className="sr-only">{editId ? (c.editTitle || 'Edit Roster') : (c.title || 'Create a Roster')}</h1>
       {restored && (
-        <div
-          role="status"
-          aria-live="polite"
-          className="fixed top-5 right-5 z-50 flex max-w-md w-[calc(100vw-2.5rem)] sm:w-auto items-center gap-3 rounded-xl border border-accent-amber/40 bg-bg-surface/95 backdrop-blur-xl p-3 2xl:p-4 shadow-2xl text-xs sm:text-sm 2xl:text-base font-semibold text-text-primary animate-in fade-in slide-in-from-top-4 duration-300"
-        >
-          <History className="h-4 w-4 2xl:h-5 2xl:w-5 text-accent-amber shrink-0" aria-hidden="true" />
-          <span className="flex-1 text-accent-amber">{c.draftRestored || 'Your unfinished draft was restored.'}</span>
-          <Button
-            variant="secondary" size="xs"
-            onClick={startOver}
-            className="whitespace-nowrap"
-          >
-            {c.startOver || 'Start over'}
-          </Button>
-          <Button
-            variant="ghost" size="sm" icon
-            onClick={() => setRestored(false)}
-            aria-label={c.closeToast || 'Dismiss'}
-          >
-            <X className="h-4 w-4" aria-hidden="true" />
-          </Button>
-        </div>
+        <Toast
+          icon={<History className="h-4 w-4 2xl:h-5 2xl:w-5" aria-hidden="true" />}
+          message={c.draftRestored || 'Your unfinished draft was restored.'}
+          actions={
+            <Button variant="secondary" size="xs" onClick={startOver} className="whitespace-nowrap">
+              {c.startOver || 'Start over'}
+            </Button>
+          }
+          onDismiss={() => setRestored(false)}
+          dismissLabel={c.closeToast || 'Dismiss'}
+        />
       )}
 
       {/* BLOCK 1: THE BASICS */}
@@ -280,19 +270,19 @@ export function SmashRosterCreator({ locale, editId }: SmashRosterCreatorProps) 
         >
           <div className="flex flex-col gap-6">
             {draft.entities.length === 0 ? (
-              <div className="flex flex-col items-center justify-center p-8 text-center rounded-xl border border-dashed border-border-color bg-bg-elevated/20">
-                <p className="text-sm text-text-muted mb-3">
-                  {c.noEntitiesYet || 'No candidates yet. Add your first one above.'}
-                </p>
-                <Button
-                  variant="secondary" size="sm"
-                  onClick={addEntity}
-                  className="uppercase tracking-wider"
-                >
-                  <Plus className="h-4 w-4" aria-hidden="true" />
-                  <span>{c.addEntity || 'Add Candidate'}</span>
-                </Button>
-              </div>
+              <EmptyState
+                variant="compact"
+                title={c.noEntitiesYet || 'No candidates yet. Add your first one above.'}
+                action={{
+                  label: (
+                    <>
+                      <Plus className="h-4 w-4" aria-hidden="true" />
+                      <span>{c.addEntity || 'Add Candidate'}</span>
+                    </>
+                  ),
+                  onClick: addEntity,
+                }}
+              />
             ) : (
               <>
                 {/* Part 1: All Inputs for Currently Selected Candidate */}

@@ -88,7 +88,7 @@ export const CodeInput: React.FC<CodeInputProps> = ({ value, onChange, disabled,
           onChange={(e) => handleChange(index, e.target.value)}
           onKeyDown={(e) => handleKeyDown(index, e)}
           aria-label={formatMessage(dict.user.digitAriaLabel, { n: index + 1 })}
-          className={`h-11 w-9 rounded-lg border bg-bg-primary text-center text-base text-text-primary shadow-inner transition-colors focus:outline-none focus:ring-1 disabled:opacity-60 ${
+          className={`h-11 w-9 rounded-control border bg-bg-primary text-center text-base text-text-primary shadow-inner transition-colors focus:outline-none focus:ring-1 disabled:opacity-60 ${
             invalid
               ? 'border-accent-red focus:border-accent-red focus:ring-accent-red'
               : 'border-border-color focus:border-accent-red focus:ring-accent-red'

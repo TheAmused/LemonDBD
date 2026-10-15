@@ -3,6 +3,8 @@
 
 import React, { useCallback, useEffect, useState } from 'react';
 import { Input, Select, SearchInput } from '@/components/common/Field';
+import { Button } from '@/components/common/Button';
+import { SegmentedControl } from '@/components/common/SegmentedControl';
 import { CheckCircle2, Power, Sparkles, XCircle } from 'lucide-react';
 import {
   AdminCharacterRow,
@@ -19,6 +21,8 @@ import { tip } from '@/components/common/Tooltip';
 import { authHeaders, getAuthToken, getErrorMessage } from '@/utils/api';
 import { formatMessage } from '@/utils/i18nFormat';
 import { useDictionary } from "@/context/DictionaryContext";
+import { Surface } from '@/components/common/Surface';
+import { TileButton } from '@/components/common/TileButton';
 
 interface AdminChallengeControlProps {
   onActionMessage: (msg: ActionMessage) => void;
@@ -210,7 +214,7 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
   return (
     <div className="space-y-6">
       {/* Challenge mode kill switches */}
-      <div className="rounded-2xl border border-border-color bg-bg-surface p-5 shadow-sm backdrop-blur-sm transition-colors duration-200">
+      <Surface padding="none" className="p-5 shadow-sm backdrop-blur-sm transition-colors duration-200">
         <h3 className="flex items-center gap-2 type-label text-text-primary mb-4">
           <Power className="h-4 w-4 text-accent-red" />
           <span>{dict.admin.challengeModeKillSwitches}</span>
@@ -219,7 +223,7 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
           {modes.map((setting) => (
             <div
               key={setting.mode}
-              className={`rounded-xl border p-3.5 flex flex-col gap-2 transition-colors ${
+              className={`rounded-card border p-3.5 flex flex-col gap-2 transition-colors ${
                 setting.is_enabled
                   ? 'border-border-color bg-bg-primary'
                   : 'border-accent-red/30 bg-accent-red/10'
@@ -227,17 +231,14 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
             >
               <div className="flex items-center justify-between">
                 <span className="type-strong text-text-primary">{MODE_LABELS[setting.mode]}</span>
-                <button
-                  type="button"
+                <Button
+                  variant={setting.is_enabled ? 'greenSoft' : 'soft'}
+                  size="xs"
                   onClick={() => requestModeToggle(setting.mode, !setting.is_enabled)}
-                  className={`text-tiny font-black uppercase px-2.5 py-1 rounded-lg border cursor-pointer transition-colors ${
-                    setting.is_enabled
-                      ? 'border-accent-green/40 bg-accent-green/10 text-accent-green hover:bg-accent-green/20'
-                      : 'border-accent-red/40 bg-accent-red/10 text-accent-red hover:bg-accent-red/20'
-                  }`}
+                  className="uppercase"
                 >
                   {setting.is_enabled ? dict.admin.enabledLabel : dict.admin.disabledLabel}
-                </button>
+                </Button>
               </div>
               {setting.disabled_reason && (
                 <p className="text-tiny text-accent-red font-medium leading-snug">{setting.disabled_reason}</p>
@@ -245,63 +246,31 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
             </div>
           ))}
         </div>
-      </div>
+      </Surface>
 
       {/* Killers & Perks availability */}
-      <div className="rounded-2xl border border-border-color bg-bg-surface p-5 shadow-sm backdrop-blur-sm transition-colors duration-200">
+      <Surface padding="none" className="p-5 shadow-sm backdrop-blur-sm transition-colors duration-200">
         <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
-          <div className="flex items-center gap-2 rounded-xl border border-border-color bg-bg-elevated p-1">
-            <button
-              type="button"
-              onClick={() => setSubTab('killers')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-black uppercase tracking-wider cursor-pointer transition-colors ${
-                subTab === 'killers'
-                  ? 'bg-accent-red/15 text-accent-red border border-accent-red/30'
-                  : 'text-text-secondary hover:text-text-primary hover:bg-bg-surface'
-              }`}
-            >
-              <KillerIcon className="h-3.5 w-3.5" />
-              <span>{dict.admin.characters}</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => setSubTab('perks')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-black uppercase tracking-wider cursor-pointer transition-colors ${
-                subTab === 'perks'
-                  ? 'bg-accent-red/15 text-accent-red border border-accent-red/30'
-                  : 'text-text-secondary hover:text-text-primary hover:bg-bg-surface'
-              }`}
-            >
-              <Sparkles className="h-3.5 w-3.5" />
-              <span>{dict.admin.perks}</span>
-            </button>
-          </div>
-          <div className="flex items-center gap-2 rounded-xl border border-border-color bg-bg-elevated p-1">
-            <button
-              type="button"
-              onClick={() => setRoleFilter('Survivor')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-black uppercase tracking-wider cursor-pointer transition-colors ${
-                roleFilter === 'Survivor'
-                  ? 'bg-accent-green/15 text-accent-green border border-accent-green/30'
-                  : 'text-text-secondary hover:text-text-primary hover:bg-bg-surface'
-              }`}
-            >
-              <SurvivorIcon className="h-3.5 w-3.5" />
-              <span>{dict.admin.roleSurvivor}</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => setRoleFilter('Killer')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-black uppercase tracking-wider cursor-pointer transition-colors ${
-                roleFilter === 'Killer'
-                  ? 'bg-accent-red/15 text-accent-red border border-accent-red/30'
-                  : 'text-text-secondary hover:text-text-primary hover:bg-bg-surface'
-              }`}
-            >
-              <KillerIcon className="h-3.5 w-3.5" />
-              <span>{dict.admin.roleKiller}</span>
-            </button>
-          </div>
+          <SegmentedControl<'killers' | 'perks'>
+            ariaLabel={dict.admin.characters}
+            size="sm"
+            value={subTab}
+            onChange={setSubTab}
+            options={[
+              { value: 'killers', label: dict.admin.characters, icon: <KillerIcon className="h-3.5 w-3.5" />, activeClassName: 'bg-accent-red text-text-inverted' },
+              { value: 'perks', label: dict.admin.perks, icon: <Sparkles className="h-3.5 w-3.5" />, activeClassName: 'bg-accent-red text-text-inverted' },
+            ]}
+          />
+          <SegmentedControl<'Survivor' | 'Killer'>
+            ariaLabel={dict.admin.roleSurvivor}
+            size="sm"
+            value={roleFilter}
+            onChange={setRoleFilter}
+            options={[
+              { value: 'Survivor', label: dict.admin.roleSurvivor, icon: <SurvivorIcon className="h-3.5 w-3.5" />, activeClassName: 'bg-accent-green text-text-inverted' },
+              { value: 'Killer', label: dict.admin.roleKiller, icon: <KillerIcon className="h-3.5 w-3.5" />, activeClassName: 'bg-accent-red text-text-inverted' },
+            ]}
+          />
           <SearchInput
             fieldSize="sm"
             wrapperClassName="w-full sm:w-56"
@@ -318,12 +287,11 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
             {subTab === 'killers' ? (
               <div className="grid grid-cols-4 sm:grid-cols-5 lg:grid-cols-7 xl:grid-cols-9 gap-3 max-h-[480px] overflow-y-auto pr-1">
                 {characters.map((c) => (
-                  <button
+                  <TileButton press={false}
                     key={c.id}
-                    type="button"
                     onClick={() => requestCharacterToggle(c)}
                     {...tip(c.disabled_reason ? `${c.name} — ${c.disabled_reason}` : c.name, undefined, 'status')} aria-label={c.disabled_reason ? `${c.name} — ${c.disabled_reason}` : c.name}
-                    className={`relative aspect-square rounded-xl border cursor-pointer transition-all overflow-hidden ${
+                    className={`relative aspect-square rounded-control border transition-all overflow-hidden ${
                       c.is_disabled
                         ? 'border-accent-red bg-accent-red/10 hover:bg-accent-red/20'
                         : 'border-border-color bg-bg-elevated hover:border-text-muted'
@@ -347,18 +315,17 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
                     >
                       {c.is_disabled ? <XCircle className="h-3.5 w-3.5" /> : <CheckCircle2 className="h-3.5 w-3.5" />}
                     </span>
-                  </button>
+                  </TileButton>
                 ))}
               </div>
             ) : (
               <div className="grid grid-cols-4 sm:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10 gap-3 max-h-[480px] overflow-y-auto pr-1">
                 {perks.map((p) => (
-                  <button
+                  <TileButton press={false}
                     key={p.id}
-                    type="button"
                     onClick={() => requestPerkToggle(p)}
                     {...tip(p.disabled_reason ? `${p.name} — ${p.disabled_reason}` : p.name, undefined, 'status')} aria-label={p.disabled_reason ? `${p.name} — ${p.disabled_reason}` : p.name}
-                    className={`relative aspect-square rounded-xl border cursor-pointer transition-all overflow-hidden ${
+                    className={`relative aspect-square rounded-control border transition-all overflow-hidden ${
                       p.is_disabled
                         ? 'border-accent-red bg-accent-red/10 hover:bg-accent-red/20'
                         : 'border-border-color bg-bg-elevated hover:border-text-muted'
@@ -382,13 +349,13 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
                     >
                       {p.is_disabled ? <XCircle className="h-3.5 w-3.5" /> : <CheckCircle2 className="h-3.5 w-3.5" />}
                     </span>
-                  </button>
+                  </TileButton>
                 ))}
               </div>
             )}
           </div>
         )}
-      </div>
+      </Surface>
 
       <AdminReasonModal
         isOpen={pendingAction !== null}

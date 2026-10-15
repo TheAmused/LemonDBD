@@ -1,8 +1,7 @@
 'use client';
 // frontend/src/components/characters/hub/OwnershipSaveBar.tsx
-import React from 'react';
 import { useDictionary } from '@/context/DictionaryContext';
-import { Button } from '@/components/common/Button';
+import { ActionBarButton, StickyActionBar } from '@/components/common/StickyActionBar';
 
 interface OwnershipSaveBarProps {
   ownershipSaveError: string | null;
@@ -10,27 +9,15 @@ interface OwnershipSaveBarProps {
   onSave: () => void;
 }
 
-/** Sticky bottom bar with Accept while editing ownership (leaving without saving is the toolbar's "Exit selection"). */
+/** Bottom bar with Accept while editing ownership (leaving without saving is the toolbar's "Exit selection"). */
 export function OwnershipSaveBar({ ownershipSaveError, ownershipSaving, onSave }: OwnershipSaveBarProps) {
   const dict = useDictionary();
 
   return (
-    <div
-      className="fixed left-[var(--sidebar-width,0rem)] right-0 bottom-0 z-30 border-t border-border-color bg-bg-surface/95 shadow-2xl backdrop-blur-md transition-[left] duration-300"
-    >
-      {ownershipSaveError && (
-        <p
-          role="alert"
-          className="px-5 sm:px-7 lg:px-9 pt-2 text-center type-strong-xs text-accent-red"
-        >
-          {ownershipSaveError}
-        </p>
-      )}
-      <div className="flex items-center justify-center gap-3 px-5 sm:px-7 lg:px-9 py-2.5">
-        <Button variant="success" size="sm" onClick={onSave} disabled={ownershipSaving} className="px-6">
-          {ownershipSaving ? dict.characterDetail.saving : dict.characterDetail.accept}
-        </Button>
-      </div>
-    </div>
+    <StickyActionBar error={ownershipSaveError}>
+      <ActionBarButton variant="red" onClick={onSave} disabled={ownershipSaving}>
+        {ownershipSaving ? dict.characterDetail.saving : dict.streaks.accept}
+      </ActionBarButton>
+    </StickyActionBar>
   );
 }

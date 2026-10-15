@@ -2,15 +2,14 @@
 'use client';
 
 import { Button } from '@/components/common/Button';
+import { SelectableCard } from '@/components/common/SelectableCard';
 
 import React from 'react';
 import { BookOpen, ChevronLeft } from 'lucide-react';
 import { Modal } from '@/components/common/Modal';
 import { AdeptBadgeIcon } from '@/components/icons/DbdIcons';
-import { HEADER_BUTTON_CLASSES } from './ChallengePanel';
 import { useDictionary } from "@/context/DictionaryContext";
-
-export const NEUTRAL_TILE_ACCENT = 'border-border-color bg-bg-elevated hover:bg-bg-elevated/80 text-text-secondary';
+import { Badge } from '@/components/common/Badge';
 
 export interface ChallengeIntroTile {
   value: string;
@@ -19,7 +18,6 @@ export interface ChallengeIntroTile {
   /** Any icon component (lucide or a custom DbdIcons SVG). */
   icon: React.ElementType;
   image?: string;
-  accentClassName: string;
   disabled?: boolean;
   disabledBadge?: string;
   /** This tier has already been fully cleared -- shows a small trophy badge. */
@@ -122,14 +120,9 @@ export const ChallengeIntroModalShell: React.FC<ChallengeIntroModalShellProps> =
             </p>
           )}
           {onOpenRules && (
-            <button
-              type="button"
-              onClick={onOpenRules}
-              className={`${HEADER_BUTTON_CLASSES} gap-1.5 px-3 py-2 text-xs font-bold`}
-            >
-              <BookOpen className="h-4 w-4" aria-hidden="true" />
+            <Button variant="secondary" size="sm" onClick={onOpenRules} leftIcon={<BookOpen className="h-4 w-4" aria-hidden="true" />}>
               {rulesLabel}
-            </button>
+            </Button>
           )}
         </div>
       )}
@@ -150,7 +143,7 @@ export const ChallengeIntroModalShell: React.FC<ChallengeIntroModalShellProps> =
                 <img
                   src={tile.image}
                   alt=""
-                  className="w-full max-w-[5.5rem] sm:max-w-[7rem] aspect-square rounded-xl object-cover shadow-sm"
+                  className="w-full max-w-[5.5rem] sm:max-w-[7rem] aspect-square rounded-card object-cover shadow-sm"
                 />
               ) : (
                 <TileIcon className={`w-6 h-6 ${tile.disabled ? 'text-text-muted' : ''}`} />
@@ -161,43 +154,31 @@ export const ChallengeIntroModalShell: React.FC<ChallengeIntroModalShellProps> =
             </>
           );
 
-          if (tile.disabled) {
-            return (
-              <div
-                key={tile.value}
-                className="flex flex-col items-center gap-2 rounded-2xl border border-border-color bg-bg-elevated/50 p-3 sm:p-4 text-center opacity-70"
-              >
-                {content}
-              </div>
-            );
-          }
-
           return (
-            <button
+            <SelectableCard
               key={tile.value}
+              selected={isPending}
+              disabled={tile.disabled}
               onClick={() => onPickTile(tile.value)}
-              aria-pressed={isPending}
-              className={`group relative flex flex-col items-center gap-2 rounded-2xl border p-3 sm:p-4 text-center transition-colors cursor-pointer ${tile.accentClassName} ${
-                isPending ? 'ring-2 ring-accent-red ring-offset-2 ring-offset-bg-surface' : ''
-              }`}
+              className="group relative flex flex-col items-center gap-2 p-3 text-center sm:p-4"
             >
               {tile.completed && tile.completedFull ? (
-                <span className="absolute right-2 top-2 flex items-center gap-1 rounded-full border border-accent-red/50 bg-accent-red/15 px-1.5 py-0.5 text-accent-red shadow-sm">
+                <Badge tone="red" size="xs" plain className="absolute right-2 top-2">
                   <AdeptBadgeIcon className="h-3 w-3" />
                   {tile.completedFullCount != null && (
                     <span className="text-tiny font-black leading-none">{tile.completedFullCount}</span>
                   )}
-                </span>
+                </Badge>
               ) : tile.completed ? (
-                <span className="absolute right-2 top-2 flex items-center gap-1 rounded-full border border-accent-amber/40 bg-accent-amber/15 px-1.5 py-0.5 text-accent-amber shadow-sm">
+                <Badge tone="amber" size="xs" plain className="absolute right-2 top-2">
                   <AdeptBadgeIcon className="h-3 w-3" />
                   {tile.completedCount != null && (
                     <span className="text-tiny font-black leading-none">{tile.completedCount}</span>
                   )}
-                </span>
+                </Badge>
               ) : null}
               {content}
-            </button>
+            </SelectableCard>
           );
         })}
       </div>

@@ -3,7 +3,6 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import {
-  Search,
   SlidersHorizontal,
   X,
   ArrowUpAZ,
@@ -25,6 +24,10 @@ import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
 import { Checkbox } from '@/components/common/Checkbox';
 import { Button } from '@/components/common/Button';
 import { useDictionary } from "@/context/DictionaryContext";
+import { Surface } from '@/components/common/Surface';
+import { SearchInput } from '@/components/common/Field';
+import { Badge } from '@/components/common/Badge';
+import { MenuItem } from '@/components/common/MenuItem';
 
 export function computeHasActiveFilters(state: {
   search: string;
@@ -133,9 +136,9 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
         <span className="inline-flex items-center gap-1.5">
           {dict.filters.survivor && <span>{dict.filters.survivor}</span>}
           {typeof survivorCount === 'number' && (
-            <span className="rounded-full bg-text-inverted/20 px-1 py-0.5 text-micro sm:px-1.5 sm:text-tiny wide:px-2 wide:text-xs font-black leading-none">
+            <Badge tone="onAccent" size="xs" plain className="px-1 sm:px-1.5 wide:px-2 sm:text-tiny wide:text-xs leading-none">
               {survivorCount}
-            </span>
+            </Badge>
           )}
         </span>
       ),
@@ -148,9 +151,9 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
         <span className="inline-flex items-center gap-1.5">
           {dict.filters.killer && <span>{dict.filters.killer}</span>}
           {typeof killerCount === 'number' && (
-            <span className="rounded-full bg-text-inverted/20 px-1 py-0.5 text-micro sm:px-1.5 sm:text-tiny wide:px-2 wide:text-xs font-black leading-none">
+            <Badge tone="onAccent" size="xs" plain className="px-1 sm:px-1.5 wide:px-2 sm:text-tiny wide:text-xs leading-none">
               {killerCount}
-            </span>
+            </Badge>
           )}
         </span>
       ),
@@ -165,9 +168,9 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
         <span className="inline-flex items-center gap-1.5">
           {dict.filters.allPerks && <span>{dict.filters.allPerks}</span>}
           {typeof allCount === 'number' && (
-            <span className="rounded-full bg-text-inverted/20 px-1 py-0.5 text-micro sm:px-1.5 sm:text-tiny wide:px-2 wide:text-xs font-black leading-none">
+            <Badge tone="onAccent" size="xs" plain className="px-1 sm:px-1.5 wide:px-2 sm:text-tiny wide:text-xs leading-none">
               {allCount}
-            </span>
+            </Badge>
           )}
         </span>
       ),
@@ -179,9 +182,9 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
         <span className="inline-flex items-center gap-1.5">
           {dict.filters.ownedOnly && <span>{dict.filters.ownedOnly}</span>}
           {typeof ownedCount === 'number' && (
-            <span className="rounded-full bg-text-inverted/20 px-1 py-0.5 text-micro sm:px-1.5 sm:text-tiny wide:px-2 wide:text-xs font-black leading-none">
+            <Badge tone="onAccent" size="xs" plain className="px-1 sm:px-1.5 wide:px-2 sm:text-tiny wide:text-xs leading-none">
               {ownedCount}
-            </span>
+            </Badge>
           )}
         </span>
       ),
@@ -225,7 +228,7 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
       checked={scope === 'general'}
       onChange={(checked) => setScope(checked ? 'general' : 'all')}
       ariaLabel={dict.filters.generalOnly}
-      className="w-full shrink-0 gap-1.5 whitespace-nowrap rounded-2xl border border-border-color bg-bg-elevated/60 px-3 py-2 text-mini font-extrabold text-text-secondary shadow-inner sm:w-auto sm:gap-2 sm:px-3.5 sm:text-xs lg:py-2.5 wide:gap-2.5 wide:px-5 wide:py-3 wide:text-sm"
+      className="w-full shrink-0 gap-1.5 whitespace-nowrap rounded-control border border-border-color bg-bg-elevated/60 px-3 py-2 text-mini font-extrabold text-text-secondary shadow-inner sm:w-auto sm:gap-2 sm:px-3.5 sm:text-xs lg:py-2.5 wide:gap-2.5 wide:px-5 wide:py-3 wide:text-sm"
       boxClassName="h-3.5 w-3.5 wide:h-4 wide:w-4"
     >
       {dict.filters.generalOnly && <span>{dict.filters.generalOnly}</span>}
@@ -233,9 +236,9 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
   );
 
   return (
-    <section
+    <Surface
       aria-label={dict.filters.filtersTitle}
-      className="relative z-30 flex w-full flex-col gap-2 rounded-2xl border border-border-color bg-bg-surface/90 p-2 shadow-xs sm:flex-row sm:flex-wrap sm:items-center sm:gap-3 sm:rounded-3xl sm:p-4 wide:gap-4 wide:p-6 wide-2k:p-7 backdrop-blur-xl transition-colors"
+      as="section" padding="none" className="relative z-30 flex w-full flex-col gap-2 bg-bg-surface/90 p-2 shadow-xs sm:flex-row sm:flex-wrap sm:items-center sm:gap-3 sm:p-4 wide:gap-4 wide:p-6 wide-2k:p-7 backdrop-blur-xl transition-colors"
     >
       {/* Below sm (640px) there simply isn't room to show five controls
           plus search without either hiding some behind a scrollbar or
@@ -251,7 +254,7 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
           ariaLabel={dict.filters.filtersTitle}
           label={dict.filters.filtersTitle}
           icon={<SlidersHorizontal className="h-3.5 w-3.5" />}
-          buttonClassName="w-full justify-between rounded-2xl border-border-color bg-bg-surface px-3 py-2.5 text-xs"
+          buttonClassName="w-full justify-between border-border-color bg-bg-surface px-3 py-2.5 text-xs"
           menuClassName="w-full"
           minWidthClass=""
         >
@@ -326,9 +329,9 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
       </div>
 
       <div ref={searchDropdownRef} className="relative z-40 w-full sm:ml-auto sm:w-64 xl:w-40 2xl:w-48 wide:w-64 wide-2k:w-72">
-        <Search className="absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-text-muted sm:left-3.5 sm:h-4 sm:w-4 wide:h-5 wide:w-5" />
-        <input
-          type="text"
+        <SearchInput
+          pill
+          fieldSize="sm"
           value={search}
           onFocus={() => setIsPerkSuggestionsOpen(true)}
           onChange={(e) => {
@@ -337,7 +340,7 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
           }}
           placeholder={dict.filters.searchPlaceholder}
           aria-label={dict.filters.searchPlaceholder}
-          className="w-full rounded-full border border-border-color bg-bg-elevated/60 py-2 pl-9 pr-8 text-mini sm:py-2.5 sm:pl-10 sm:pr-9 sm:text-xs lg:py-3 lg:text-sm wide:py-3.5 font-medium text-text-primary placeholder:text-text-muted focus:border-accent-red focus:bg-bg-surface focus:outline-none focus:ring-2 focus:ring-accent-red/20 transition-all"
+          className="bg-bg-elevated/60 pr-8 font-medium sm:py-2.5 sm:pr-9 lg:py-3 lg:text-sm wide:py-3.5"
         />
         {search && (
           <Button
@@ -349,28 +352,26 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
               setIsPerkSuggestionsOpen(false);
             }}
             aria-label={dict.filters.clearSearch}
-            className="absolute right-2.5 top-1/2 -translate-y-1/2 rounded-full"
+            pill
+            className="absolute right-2.5 top-1/2 -translate-y-1/2"
           >
             <X className="h-3 w-3" />
           </Button>
         )}
 
         {isPerkSuggestionsOpen && perkSuggestions.length > 0 && (
-          <div
+          <Surface
             role="listbox"
-            className="absolute top-full left-0 right-0 mt-2 max-h-60 overflow-y-auto rounded-2xl border border-border-color bg-bg-surface shadow-2xl z-50 p-1.5 flex flex-col gap-1"
+            padding="none" className="absolute top-full left-0 right-0 mt-2 max-h-60 overflow-y-auto shadow-2xl z-50 p-1.5 flex flex-col gap-1"
           >
             {perkSuggestions.map((item, idx) => (
-              <button
+              <MenuItem className="justify-between"
                 key={`${item.name}-${idx}`}
-                type="button"
                 role="option"
-                aria-selected={false}
                 onClick={() => {
                   setSearch(item.name);
                   setIsPerkSuggestionsOpen(false);
                 }}
-                className="flex items-center justify-between p-2 rounded-xl hover:bg-bg-elevated cursor-pointer transition-colors text-left w-full"
               >
                 <div className="flex items-center gap-2.5 min-w-0">
                   <div className="flex flex-col min-w-0">
@@ -388,11 +389,11 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
                 <span className="type-strong-2xs text-text-muted shrink-0">
                   {item.character || dict.modal.generalPerk}
                 </span>
-              </button>
+              </MenuItem>
             ))}
-          </div>
+          </Surface>
         )}
       </div>
-    </section>
+    </Surface>
   );
 };

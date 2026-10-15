@@ -113,7 +113,7 @@ describe('Admin Page: AdminUserTable responsive card/table split', () => {
 
   it('mobile card action buttons declare an explicit >= 44px touch target', () => {
     const html = render();
-    assert.ok(html.includes('min-h-[44px] min-w-[44px]'));
+    assert.ok(html.includes('min-h-11 min-w-11'));
   });
 });
 

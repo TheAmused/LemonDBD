@@ -7,6 +7,7 @@ import { LABEL } from './styles';
 import { Button } from '@/components/common/Button';
 import { Input } from '@/components/common/Field';
 import { useDictionary } from "@/context/DictionaryContext";
+import { Badge } from '@/components/common/Badge';
 
 interface RosterTaxonomyBlockProps {
   roles: string[];
@@ -121,40 +122,40 @@ export const RosterTaxonomyBlock: React.FC<RosterTaxonomyBlockProps> = ({ roles,
             const isAdded = roles.some((r) => r.toLowerCase() === preset.toLowerCase());
             if (isAdded) return null;
             return (
-              <button
+              <Button
                 key={preset}
                 type="button"
                 onClick={() => handleAddRole(preset)}
-                className="type-micro px-2 py-0.5 rounded-lg bg-bg-surface hover:bg-bg-elevated border border-border-color text-text-muted hover:text-text-primary transition-colors cursor-pointer"
+                variant="secondary" size="xs"
               >
                 + {preset}
-              </button>
+              </Button>
             );
           })}
         </div>
 
         {/* Active Roles Badge List */}
-        <div className="flex flex-wrap items-center justify-center gap-1.5 pt-2 border-t border-border-color/60 min-h-[36px]">
+        <div className="flex flex-wrap items-center justify-center gap-1.5 pt-2 border-t border-border-color/60 min-h-9">
           {roles.length === 0 ? (
             <span className="text-xs text-text-muted italic text-center w-full">
               {tx.noCustomRoles}
             </span>
           ) : (
             roles.map((role) => (
-              <span
+              <Badge
                 key={role}
-                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-accent-red/10 border border-accent-red/30 text-accent-red text-xs font-bold tracking-wide"
+                tone="red" size="md" plain square
               >
                 <span>{role}</span>
-                <button
+                <Button
                   type="button"
                   onClick={() => handleRemoveRole(role)}
-                  className="hover:text-text-primary transition-colors cursor-pointer p-0.5 rounded-full hover:bg-accent-red/20"
+                  variant="ghost" size="xs" icon pill
                   aria-label={tx.removeRoleAria}
                 >
                   <X className="h-3 w-3" />
-                </button>
-              </span>
+                </Button>
+              </Badge>
             ))
           )}
         </div>
@@ -210,40 +211,40 @@ export const RosterTaxonomyBlock: React.FC<RosterTaxonomyBlockProps> = ({ roles,
             const isAdded = genders.some((g) => g.toLowerCase() === preset.toLowerCase());
             if (isAdded) return null;
             return (
-              <button
+              <Button
                 key={preset}
                 type="button"
                 onClick={() => handleAddGender(preset)}
-                className="type-micro px-2 py-0.5 rounded-lg bg-bg-surface hover:bg-bg-elevated border border-border-color text-text-muted hover:text-text-primary transition-colors cursor-pointer"
+                variant="secondary" size="xs"
               >
                 + {preset}
-              </button>
+              </Button>
             );
           })}
         </div>
 
         {/* Active Genders Badge List */}
-        <div className="flex flex-wrap items-center justify-center gap-1.5 pt-2 border-t border-border-color/60 min-h-[36px]">
+        <div className="flex flex-wrap items-center justify-center gap-1.5 pt-2 border-t border-border-color/60 min-h-9">
           {genders.length === 0 ? (
             <span className="text-xs text-text-muted italic text-center w-full">
               {tx.noCustomGenders}
             </span>
           ) : (
             genders.map((gender) => (
-              <span
+              <Badge
                 key={gender}
-                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-accent-green/10 border border-accent-green/30 text-accent-green text-xs font-bold tracking-wide"
+                tone="green" size="md" plain square
               >
                 <span>{gender}</span>
-                <button
+                <Button
                   type="button"
                   onClick={() => handleRemoveGender(gender)}
-                  className="hover:text-text-primary transition-colors cursor-pointer p-0.5 rounded-full hover:bg-accent-green/20"
+                  variant="ghost" size="xs" icon pill
                   aria-label={tx.removeGenderAria}
                 >
                   <X className="h-3 w-3" />
-                </button>
-              </span>
+                </Button>
+              </Badge>
             ))
           )}
         </div>

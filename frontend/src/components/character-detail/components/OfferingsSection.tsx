@@ -26,6 +26,8 @@ import { usePersistentDrawer } from '@/hooks/usePersistentDrawer';
 import { tip } from '@/components/common/Tooltip';
 import { EmptyState } from '@/components/common/EmptyState';
 import { isKiller as isKillerRole } from '@/utils/characterUtils';
+import { Badge } from '@/components/common/Badge';
+import { Surface } from '@/components/common/Surface';
 const KILLER_OFFERING_KEYS = ['special', 'mori', 'bloodpoint', 'map', 'shroud', 'ward'] as const;
 const SURVIVOR_OFFERING_KEYS = ['special', 'bloodpoint', 'luck', 'map', 'shroud', 'blueprint', 'chest', 'ward'] as const;
 
@@ -288,8 +290,8 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
   if (!offerings || offerings.length === 0) return null;
 
   return (
-    <section
-      className="mt-8 rounded-3xl border border-border-color bg-bg-surface p-6 sm:p-8 shadow-sm dark:shadow-none backdrop-blur-md"
+    <Surface
+      as="section" padding="lg" className="mt-8 shadow-sm dark:shadow-none backdrop-blur-md"
       aria-labelledby="offerings-heading"
     >
       {/* Same flat single-card shape as KillerEquipmentSection: one bordered
@@ -303,7 +305,7 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
         header={
           <div className="flex items-center gap-3">
             <div
-              className={`flex h-10 w-10 items-center justify-center rounded-xl border ${
+              className={`flex h-10 w-10 items-center justify-center rounded-card border ${
                 isKiller
                   ? 'bg-accent-red/10 text-accent-red border-accent-red/20'
                   : 'bg-accent-green/10 text-accent-green border-accent-green/20'
@@ -314,15 +316,11 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
             <div>
               <h2 className="text-lg font-black tracking-tight text-text-primary flex items-center gap-2">
                 {t.offeringsTitle || 'Offerings & Sacrificial Rites'}
-                <span
-                  className={`text-xs px-2 py-0.5 rounded-full border ${
-                    isKiller
-                      ? 'bg-accent-red/10 text-accent-red border-accent-red/30'
-                      : 'bg-accent-green/10 text-accent-green border-accent-green/30'
-                  }`}
+                <Badge
+                  tone={isKiller ? 'red' : 'green'} size="sm" plain
                 >
                   {offerings.length}
-                </span>
+                </Badge>
               </h2>
             </div>
           </div>
@@ -386,7 +384,7 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
                     }
                   }}
                   {...tip(offering.name, undefined, 'item')}
-                  className={`relative group rounded-2xl border-2 p-2 flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-110 active:scale-95 focus:outline-none focus:ring-2 focus:ring-accent-red h-20 w-20 sm:h-24 sm:w-24 ${rarityStyle.bg}`}
+                  className={`relative group rounded-card border-2 p-2 flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-110 active:scale-95 focus:outline-none focus:ring-2 focus:ring-accent-red h-20 w-20 sm:h-24 sm:w-24 ${rarityStyle.bg}`}
                   style={rarityStyle.style}
                   aria-label={`${t.inspectOfferingPrefix || 'Inspect offering:'} ${offering.name}`}
                 >
@@ -404,7 +402,7 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
           </div>
         )}
       </CollapsibleDrawer>
-    </section>
+    </Surface>
   );
 };
 

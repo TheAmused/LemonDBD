@@ -94,7 +94,7 @@ export const SurvivorDetailView: React.FC<CharacterViewBaseProps> = ({ currentLo
                 variant="secondary"
                 onClick={() => setIsLoreModalOpen(true)}
                 leftIcon={<BookOpen className="h-4 w-4" aria-hidden="true" />}
-                className="rounded-2xl"
+                className=""
               >
                 <span>{t.viewLore || ''}</span>
               </Button>

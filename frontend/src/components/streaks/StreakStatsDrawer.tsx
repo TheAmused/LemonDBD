@@ -7,6 +7,7 @@ import { Button } from '@/components/common/Button';
 import { Modal } from '@/components/common/Modal';
 import { StreakAttemptGroups, groupByAttempt, type StreakMatchLogBase } from './StreakAttemptGroups';
 import { useDictionary } from "@/context/DictionaryContext";
+import { Surface } from '@/components/common/Surface';
 
 /** Attempts listed in the drawer itself; older ones open in a dialog. */
 const VISIBLE_ATTEMPTS = 10;
@@ -67,7 +68,7 @@ export function StreakStatsDrawer<TLog extends StreakMatchLogBase>({ isOpen, onC
         bodyClassName="space-y-6 p-5 sm:p-6"
       >
         <div className="grid grid-cols-2 gap-4">
-          <div className="col-span-2 bg-bg-elevated border border-border-color rounded-xl p-5 flex items-center justify-between shadow-inner">
+          <Surface tone="elevated" padding="none" className="col-span-2 p-5 flex items-center justify-between shadow-inner">
             <div>
               <span className="type-label-sm text-text-secondary">
                 {dict.streaks.winRate}
@@ -79,37 +80,37 @@ export function StreakStatsDrawer<TLog extends StreakMatchLogBase>({ isOpen, onC
             <div className="relative w-16 h-16 flex items-center justify-center rounded-full bg-bg-elevated border-4 border-accent-red font-bold text-lg shadow-sm">
               <Percent className="w-8 h-8 opacity-80" />
             </div>
-          </div>
+          </Surface>
 
-          <div className="bg-bg-elevated border border-border-color rounded-xl p-4 shadow-sm">
+          <Surface tone="elevated" padding="none" className="p-4 shadow-sm">
             <div className="type-label-sm text-text-secondary">
               {dict.streaks.matches}
             </div>
             <div className="text-2xl font-black text-text-primary mt-1">{totalMatches}</div>
-          </div>
+          </Surface>
 
           {attempts !== undefined && (
-            <div className="bg-bg-elevated border border-border-color rounded-xl p-4 shadow-sm">
+            <Surface tone="elevated" padding="none" className="p-4 shadow-sm">
               <div className="type-label-sm text-text-secondary">
                 {dict.streaks.attempts}
               </div>
               <div className="text-2xl font-black text-text-primary mt-1">{attempts}</div>
-            </div>
+            </Surface>
           )}
 
-          <div className="bg-bg-elevated border border-border-color rounded-xl p-4 shadow-sm">
+          <Surface tone="elevated" padding="none" className="p-4 shadow-sm">
             <div className="type-label-sm text-accent-green">
               {dict.streaks.wins}
             </div>
             <div className="text-2xl font-black text-accent-green mt-1">{wins}</div>
-          </div>
+          </Surface>
 
-          <div className="bg-bg-elevated border border-border-color rounded-xl p-4 shadow-sm">
+          <Surface tone="elevated" padding="none" className="p-4 shadow-sm">
             <div className="type-label-sm text-accent-red">
               {dict.streaks.losses}
             </div>
             <div className="text-2xl font-black text-accent-red mt-1">{losses}</div>
-          </div>
+          </Surface>
         </div>
 
         <div>
@@ -118,9 +119,9 @@ export function StreakStatsDrawer<TLog extends StreakMatchLogBase>({ isOpen, onC
           </h3>
 
           {recentLogs.length === 0 ? (
-            <div className="text-center py-8 text-text-muted text-xs bg-bg-elevated rounded-xl border border-border-color">
+            <Surface tone="elevated" padding="none" className="text-center py-8 text-text-muted text-xs">
               {dict.streaks.noMatchesLogged}
-            </div>
+            </Surface>
           ) : (
             <>
               <p className="mb-3 text-xs text-text-muted">{dict.streaks.matchHistoryLimitNote}</p>

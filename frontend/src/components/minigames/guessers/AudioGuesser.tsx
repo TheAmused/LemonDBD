@@ -11,6 +11,8 @@ import { staticUrl } from '@/utils/api';
 
 import { tip } from '@/components/common/Tooltip';
 import { useDictionary } from "@/context/DictionaryContext";
+import { InfoChip } from '@/components/common/InfoChip';
+import { Surface } from '@/components/common/Surface';
 
 interface AudioGuesserProps {
   roundConfig: RoundConfig;
@@ -159,7 +161,7 @@ export const AudioGuesser: React.FC<AudioGuesserProps> = ({ roundConfig, charact
       )}
 
       {/* Audio Player Clue Card */}
-      <div className="w-full max-w-lg p-6 rounded-2xl bg-bg-surface border border-border-color shadow-2xl flex flex-col items-center gap-4 relative overflow-hidden">
+      <Surface padding="none" className="w-full max-w-lg p-6 shadow-2xl flex flex-col items-center gap-4 relative overflow-hidden">
         {/* Header Badge */}
         <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-accent-red/10 border border-accent-red/30 text-accent-red type-label-sm">
           <Disc3 className={`w-3.5 h-3.5 ${isPlaying ? 'animate-spin' : ''}`} />
@@ -235,26 +237,26 @@ export const AudioGuesser: React.FC<AudioGuesserProps> = ({ roundConfig, charact
         {(speedClue || terrorClue || heightClue) && (
           <div className="w-full flex flex-wrap items-center justify-center gap-2 pt-3 border-t border-border-color">
             {speedClue && (
-              <span className="px-3 py-1 rounded-lg bg-bg-elevated border border-border-subtle text-xs font-medium text-text-secondary">
+              <InfoChip>
                 {speedClue}
-              </span>
+              </InfoChip>
             )}
             {terrorClue && (
-              <span className="px-3 py-1 rounded-lg bg-bg-elevated border border-border-subtle text-xs font-medium text-text-secondary">
+              <InfoChip>
                 {terrorClue}
-              </span>
+              </InfoChip>
             )}
             {heightClue && (
-              <span className="px-3 py-1 rounded-lg bg-bg-elevated border border-border-subtle text-xs font-medium text-text-secondary">
+              <InfoChip>
                 {heightClue}
-              </span>
+              </InfoChip>
             )}
           </div>
         )}
 
         {/* Solved Victory Reveal */}
         {isSolved && targetChar && (
-          <div className="mt-2 px-4 py-2 rounded-xl bg-accent-green text-text-inverted type-card-title flex items-center gap-3 shadow-lg">
+          <div className="mt-2 px-4 py-2 rounded-card bg-accent-green text-text-inverted type-card-title flex items-center gap-3 shadow-lg">
             {avatarUrl && (
               <div className="relative w-8 h-8 rounded-full overflow-hidden border border-border-color">
                 <Image src={avatarUrl} alt={targetChar.name} fill className="object-cover" />
@@ -264,7 +266,7 @@ export const AudioGuesser: React.FC<AudioGuesserProps> = ({ roundConfig, charact
             <span>{targetChar.name}</span>
           </div>
         )}
-      </div>
+      </Surface>
 
       {/* Input & Action Controls Slot */}
       {children && <div className="w-full max-w-lg my-3">{children}</div>}
@@ -277,7 +279,7 @@ export const AudioGuesser: React.FC<AudioGuesserProps> = ({ roundConfig, charact
             return (
               <div
                 key={`audio-g-${idx}`}
-                className={`flex items-center justify-between px-4 py-2.5 rounded-xl border font-semibold text-sm transition-all ${
+                className={`flex items-center justify-between px-4 py-2.5 rounded-card border font-semibold text-sm transition-all ${
                   isCorrect
                     ? 'bg-accent-green text-text-inverted border-accent-green shadow-md'
                     : 'bg-accent-red/20 text-accent-red border-accent-red/40'

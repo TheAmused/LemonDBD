@@ -88,7 +88,7 @@ export interface ModalProps {
   /** Blocks every way of closing and shows a progress bar (saving, deleting...). */
   busy?: boolean;
   backdrop?: ModalBackdrop;
-  /** Named z-index layer. Default 'nested' (z-[60]). */
+  /** Named z-index layer. Default 'nested' (z-modal). */
   layer?: ModalLayer;
   /** Raw z-index class; wins over `layer`. */
   zIndexClassName?: string;
@@ -292,7 +292,7 @@ export const Modal: React.FC<ModalProps> = ({
       disabled={busy}
       aria-label={closeButtonAriaLabel}
       className={cn(
-        'hit-area flex items-center justify-center rounded-xl text-text-muted hover:text-text-primary hover:bg-bg-elevated transition-colors cursor-pointer shrink-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red disabled:opacity-40 disabled:cursor-not-allowed',
+        'hit-area flex items-center justify-center rounded-control text-text-muted hover:text-text-primary hover:bg-bg-elevated transition-colors cursor-pointer shrink-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red disabled:opacity-40 disabled:cursor-not-allowed',
         floating ? 'absolute right-3 top-3 z-20 h-9 w-9 bg-bg-surface/60 backdrop-blur-sm' : 'h-9 w-9 sm:h-10 sm:w-10'
       )}
     >

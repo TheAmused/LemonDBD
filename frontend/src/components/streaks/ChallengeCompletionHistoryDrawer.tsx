@@ -7,6 +7,7 @@ import { Modal } from '@/components/common/Modal';
 import type { ChallengeCompletion } from '@/types/challengeCompletion';
 import { formatDate } from '@/utils/format';
 import { useLocale, useDictionary } from '@/context/DictionaryContext';
+import { Surface } from '@/components/common/Surface';
 
 export interface ChallengeCompletionHistoryDrawerProps {
   isOpen: boolean;
@@ -37,15 +38,15 @@ export const ChallengeCompletionHistoryDrawer: React.FC<ChallengeCompletionHisto
       bodyClassName="p-5 sm:p-6"
     >
       {completions.length === 0 ? (
-        <div className="text-center py-8 text-text-muted text-xs bg-bg-elevated rounded-xl border border-border-color">
+        <Surface tone="elevated" padding="none" className="text-center py-8 text-text-muted text-xs">
           {dict.streaks.noCompletionsLogged}
-        </div>
+        </Surface>
       ) : (
         <div className="space-y-2.5">
           {completions.map((entry) => (
-            <div
+            <Surface
               key={entry.id}
-              className="flex items-center justify-between p-3.5 rounded-xl bg-bg-elevated border border-border-color shadow-sm"
+              tone="elevated" padding="none" className="flex items-center justify-between p-3.5 shadow-sm"
             >
               <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5">
                 <div className="flex items-center gap-1.5 type-strong text-text-secondary">
@@ -68,7 +69,7 @@ export const ChallengeCompletionHistoryDrawer: React.FC<ChallengeCompletionHisto
                   {formatDate(entry.completed_at, locale)}
                 </div>
               )}
-            </div>
+            </Surface>
           ))}
         </div>
       )}

@@ -9,6 +9,7 @@ import { AdeptBadgeIcon } from '@/components/icons/DbdIcons';
 
 import { useDictionary } from "@/context/DictionaryContext";
 import { formatMessage } from '@/utils/i18nFormat';
+import { Badge } from '@/components/common/Badge';
 
 const PANEL_HOVER_CLASSES = 'hover:border-accent-red/50 focus:ring-accent-red';
 
@@ -85,34 +86,34 @@ export const StreakPanel: React.FC<StreakPanelProps> = ({
       )}
 
       {disabled ? (
-        <span className="absolute right-3 top-3 z-10 flex items-center gap-1 rounded-full border border-accent-amber/40 bg-accent-amber/15 px-2.5 py-1 type-label-2xs text-accent-amber">
+        <Badge tone="amber" size="sm" className="absolute right-3 top-3 z-10">
           <AlertTriangle className="h-3 w-3" />
           {dict.streaks.disabled}
-        </span>
+        </Badge>
       ) : comingSoon ? (
-        <span className="absolute right-3 top-3 z-10 rounded-full border border-border-color bg-bg-elevated px-2.5 py-1 type-label-2xs text-text-muted">
+        <Badge tone="neutral" size="sm" className="absolute right-3 top-3 z-10">
           {dict.streaks.comingSoon}
-        </span>
+        </Badge>
       ) : completed && completedFull ? (
-        <span
-          className="absolute right-3 top-3 z-10 flex items-center gap-1 rounded-full border border-accent-red/50 bg-accent-red/15 px-2 py-1 text-accent-red shadow-sm"
+        <Badge
+          tone="red" size="sm" plain className="absolute right-3 top-3 z-10"
           aria-label={dict.streaks.completedFullRoster}
         >
           <AdeptBadgeIcon className="h-3.5 w-3.5" />
           {completedFullCount != null && (
             <span className="text-xs font-black leading-none">{completedFullCount}</span>
           )}
-        </span>
+        </Badge>
       ) : completed ? (
-        <span
-          className="absolute right-3 top-3 z-10 flex items-center gap-1 rounded-full border border-accent-amber/40 bg-accent-amber/15 px-2 py-1 text-accent-amber shadow-sm"
+        <Badge
+          tone="amber" size="sm" plain className="absolute right-3 top-3 z-10"
           aria-label={dict.streaks.completed}
         >
           <AdeptBadgeIcon className="h-3.5 w-3.5" />
           {completedCount != null && (
             <span className="text-xs font-black leading-none">{completedCount}</span>
           )}
-        </span>
+        </Badge>
       ) : null}
 
       <div className="relative flex flex-1 flex-col justify-center pr-24 sm:pr-28">
@@ -126,7 +127,7 @@ export const StreakPanel: React.FC<StreakPanelProps> = ({
     </>
   );
 
-  const base = 'relative flex h-full min-h-[120px] touch-manipulation flex-col overflow-hidden rounded-2xl border border-border-color p-5 backdrop-blur-sm transition-all shadow-sm';
+  const base = 'relative flex h-full min-h-[120px] touch-manipulation flex-col overflow-hidden rounded-card border border-border-color p-5 backdrop-blur-sm transition-all shadow-sm';
 
   if (disabled) {
     return (

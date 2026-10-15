@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
 import { useDictionary } from '@/context/DictionaryContext';
 import { isKiller as isKillerRole, isSurvivor as isSurvivorRole } from '@/utils/characterUtils';
+import { SegmentedControl } from '@/components/common/SegmentedControl';
 
 interface HubFilterDrawerProps {
   isOpen: boolean;
@@ -47,93 +48,53 @@ export function HubFilterDrawer({
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: -6, scale: 0.99 }}
           transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
-          className="absolute top-full left-0 right-0 mt-2 z-40 p-2.5 sm:p-3 rounded-2xl bg-bg-surface/95 border border-border-color backdrop-blur-2xl shadow-2xl"
+          className="absolute top-full left-0 right-0 mt-2 z-40 p-2.5 sm:p-3 rounded-card bg-bg-surface/95 border border-border-color backdrop-blur-2xl shadow-2xl"
         >
           <div className="flex flex-col md:flex-row items-center justify-between gap-2.5 sm:gap-3">
             {/* Role Segmented Switch */}
-            <div className="flex items-center gap-1 p-1 bg-bg-elevated border border-border-color rounded-2xl w-full md:w-auto shadow-inner type-strong overflow-x-auto">
-              <button
-                type="button"
-                onClick={() => onFilterChange('role', 'all')}
-                className={`flex-1 md:flex-none min-h-[44px] sm:min-h-[36px] flex items-center justify-center px-3.5 py-1.5 rounded-xl transition-all cursor-pointer touch-manipulation whitespace-nowrap ${
-                  roleFilter === 'all' ? 'bg-accent-red text-text-inverted' : 'text-text-muted hover:text-text-primary'
-                }`}
-              >
-                {filters.allRoles}
-              </button>
-              {availableRoles.map((role) => {
-                const isSurvivor = isSurvivorRole(role);
-                const isKiller = isKillerRole(role);
-                const label = isSurvivor ? filters.survivors : isKiller ? filters.killers : role;
-                return (
-                  <button
-                    key={role}
-                    type="button"
-                    onClick={() => onFilterChange('role', role)}
-                    className={`flex-1 md:flex-none min-h-[44px] sm:min-h-[36px] flex items-center justify-center gap-1.5 px-3.5 py-1.5 rounded-xl transition-all cursor-pointer touch-manipulation whitespace-nowrap ${
-                      roleFilter === role
-                        ? isSurvivor
-                          ? 'bg-accent-green text-text-inverted font-black'
-                          : 'bg-accent-red text-text-inverted'
-                        : isSurvivor
-                          ? 'text-text-muted hover:text-accent-green'
-                          : 'text-text-muted hover:text-accent-red'
-                    }`}
-                  >
-                    {isSurvivor && <SurvivorIcon className="h-3.5 w-3.5" />}
-                    {isKiller && <KillerIcon className="h-3.5 w-3.5" />}
-                    {label}
-                  </button>
-                );
-              })}
-            </div>
+            <SegmentedControl<string>
+              ariaLabel={filters.allRoles}
+              size="sm"
+              value={roleFilter}
+              onChange={(role) => onFilterChange('role', role)}
+              className="w-full md:w-auto"
+              options={[
+                { value: 'all', label: filters.allRoles },
+                ...availableRoles.map((role) => {
+                  const isSurvivor = isSurvivorRole(role);
+                  const isKiller = isKillerRole(role);
+                  return {
+                    value: role,
+                    label: isSurvivor ? filters.survivors : isKiller ? filters.killers : role,
+                    icon: isSurvivor ? <SurvivorIcon className="h-3.5 w-3.5" /> : isKiller ? <KillerIcon className="h-3.5 w-3.5" /> : undefined,
+                    activeClassName: isSurvivor ? 'bg-accent-green text-text-inverted' : 'bg-accent-red text-text-inverted',
+                  };
+                }),
+              ]}
+            />
 
             {/* Gender Segmented Switch */}
-            <div className="flex items-center gap-1 p-1 bg-bg-elevated border border-border-color rounded-2xl w-full md:w-auto shadow-inner type-strong overflow-x-auto">
-              <button
-                type="button"
-                onClick={() => onFilterChange('gender', 'all')}
-                className={`min-h-[44px] sm:min-h-[36px] flex items-center justify-center px-3 py-1.5 rounded-xl transition-all shrink-0 cursor-pointer touch-manipulation whitespace-nowrap ${
-                  genderFilter === 'all' ? 'bg-accent-red text-text-inverted' : 'text-text-muted hover:text-text-primary'
-                }`}
-              >
-                {filters.allGenders}
-              </button>
-              {availableGenders.map((gender) => {
-                const isFemale = gender === 'female';
-                const isMale = gender === 'male';
-                const isMonster = gender === 'monster_other';
-                const label = isFemale
-                  ? filters.femaleOnly
-                  : isMale
-                    ? filters.maleOnly
-                    : isMonster
-                      ? filters.monsters
-                      : gender;
-                return (
-                  <button
-                    key={gender}
-                    type="button"
-                    onClick={() => onFilterChange('gender', gender)}
-                    className={`min-h-[44px] sm:min-h-[36px] flex items-center justify-center px-3 py-1.5 rounded-xl transition-all shrink-0 cursor-pointer touch-manipulation whitespace-nowrap ${
-                      genderFilter === gender
-                        ? isFemale
-                          ? 'bg-accent-red text-text-inverted'
-                          : isMale
-                            ? 'bg-accent-green text-text-inverted'
-                            : 'bg-border-subtle text-text-primary'
-                        : isFemale
-                          ? 'text-text-muted hover:text-accent-red'
-                          : isMale
-                            ? 'text-text-muted hover:text-accent-green'
-                            : 'text-text-muted hover:text-text-primary'
-                    }`}
-                  >
-                    {label}
-                  </button>
-                );
-              })}
-            </div>
+            <SegmentedControl<string>
+              ariaLabel={filters.allGenders}
+              size="sm"
+              value={genderFilter}
+              onChange={(gender) => onFilterChange('gender', gender)}
+              className="w-full md:w-auto"
+              options={[
+                { value: 'all', label: filters.allGenders },
+                ...availableGenders.map((gender) => {
+                  const isFemale = gender === 'female';
+                  const isMale = gender === 'male';
+                  const isMonster = gender === 'monster_other';
+                  return {
+                    value: gender,
+                    label: isFemale ? filters.femaleOnly : isMale ? filters.maleOnly : isMonster ? filters.monsters : gender,
+                    activeClassName: isFemale ? 'bg-accent-red text-text-inverted' : isMale ? 'bg-accent-green text-text-inverted' : 'bg-border-subtle text-text-primary',
+                    activeTextColor: isFemale || isMale ? undefined : 'text-text-primary',
+                  };
+                }),
+              ]}
+            />
           </div>
         </motion.div>
       )}

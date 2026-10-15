@@ -2,11 +2,11 @@
 'use client';
 
 import React from 'react';
-import Image from 'next/image';
 import { Check, X } from 'lucide-react';
 import type { AttributeEvaluation, GuessRecord } from '@/types/minigame';
 import { staticUrl } from '@/utils/api';
 import { useDictionary } from "@/context/DictionaryContext";
+import { Thumb } from '@/components/common/Thumb';
 
 interface ClassicPerkGuesserProps {
   guesses: GuessRecord[];
@@ -40,22 +40,9 @@ export const ClassicPerkGuesser: React.FC<ClassicPerkGuesserProps> = ({ guesses 
                 key={`perk-guess-${rowIdx}-${guess.id}`}
                 className="animate-in fade-in slide-in-from-top-3 duration-300 font-medium text-sm"
               >
-                <td className="p-2 rounded-xl bg-bg-surface border border-border-color text-left">
+                <td className="p-2 rounded-card bg-bg-surface border border-border-color text-left">
                   <div className="flex items-center gap-2.5">
-                    <div className="relative w-10 h-10 rounded-lg overflow-hidden bg-bg-elevated border border-border-subtle flex-shrink-0 flex items-center justify-center">
-                      {imgSrc ? (
-                        <Image
-                          src={imgSrc}
-                          alt={guess.name}
-                          width={40}
-                          height={40}
-                          unoptimized
-                          className="object-contain w-full h-full p-0.5"
-                        />
-                      ) : (
-                        <span className="text-xs text-text-muted">?</span>
-                      )}
-                    </div>
+                    <Thumb src={imgSrc} alt={guess.name} fit="contain" fallback={<span className="text-xs text-text-muted">?</span>} />
                     <span className="truncate text-text-primary font-semibold text-xs leading-snug">
                       {guess.name}
                     </span>
@@ -108,7 +95,7 @@ const PerkAttrCell: React.FC<{ evaluation?: AttributeEvaluation; value?: string 
     : 'bg-accent-red/20 text-accent-red border-accent-red/40 shadow-accent-red/10';
 
   return (
-    <td className={`p-2.5 rounded-xl border shadow-md font-semibold text-xs transition-all ${bgStyle}`}>
+    <td className={`p-2.5 rounded-card border shadow-md font-semibold text-xs transition-all ${bgStyle}`}>
       <div className="flex items-center justify-center gap-1">
         <span className={wrap ? 'max-w-[140px] break-words' : 'truncate max-w-[140px]'}>{value ?? '-'}</span>
         {isCorrect && <Check className="w-3.5 h-3.5 text-text-inverted flex-shrink-0" />}

@@ -51,7 +51,7 @@ export function WarningDialog() {
         </Button>
       }
     >
-      <div className="flex items-start gap-3 rounded-xl border border-accent-amber/30 bg-accent-amber/10 p-3.5">
+      <div className="flex items-start gap-3 rounded-card border border-accent-amber/30 bg-accent-amber/10 p-3.5">
         <TriangleAlert className="mt-0.5 h-5 w-5 shrink-0 text-accent-amber" />
         <p className="type-body text-text-primary">{t.intro}</p>
       </div>

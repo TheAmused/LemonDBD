@@ -124,9 +124,9 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({ ch
           <div className="relative pt-4 pb-3 px-3.5 @[1040px]/hub:pt-5 @[1040px]/hub:pb-3.5 @[1040px]/hub:px-4 rounded-card lore-ash-card lore-ash-crimson backdrop-blur-2xl transition-all duration-300 text-center">
             <div
               data-lore-label=""
-              className="sr-only @[1040px]/hub:not-sr-only @[1040px]/hub:absolute @[1040px]/hub:top-0 @[1040px]/hub:-translate-y-1/2 @[1040px]/hub:left-1/2 @[1040px]/hub:-translate-x-1/2 @[1040px]/hub:inline-flex @[1040px]/hub:items-center @[1040px]/hub:justify-center px-2.5 bg-bg-surface z-10 text-accent-red"
+              className="sr-only @[1040px]/hub:not-sr-only @[1040px]/hub:absolute @[1040px]/hub:top-0 @[1040px]/hub:-translate-y-1/2 @[1040px]/hub:left-1/2 @[1040px]/hub:-translate-x-1/2 @[1040px]/hub:inline-flex @[1040px]/hub:items-center @[1040px]/hub:justify-center px-2.5 bg-bg-surface z-10 w-max max-w-[calc(100%-1.5rem)] text-accent-red"
             >
-              <span className="type-label-2xs">
+              <span className="type-label-2xs truncate whitespace-nowrap">
                 {datingArchetypeLabel}
               </span>
             </div>
@@ -151,9 +151,9 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({ ch
             <div className="relative pt-4 pb-3 px-3.5 @[1040px]/hub:pt-5 @[1040px]/hub:pb-3.5 @[1040px]/hub:px-4 rounded-card lore-ash-card lore-ash-emerald backdrop-blur-2xl transition-all duration-300 text-center">
               <div
                 data-lore-label=""
-                className="sr-only @[1040px]/hub:not-sr-only @[1040px]/hub:absolute @[1040px]/hub:top-0 @[1040px]/hub:-translate-y-1/2 @[1040px]/hub:left-1/2 @[1040px]/hub:-translate-x-1/2 @[1040px]/hub:inline-flex @[1040px]/hub:items-center @[1040px]/hub:justify-center px-2.5 bg-bg-surface z-10 text-accent-green"
+                className="sr-only @[1040px]/hub:not-sr-only @[1040px]/hub:absolute @[1040px]/hub:top-0 @[1040px]/hub:-translate-y-1/2 @[1040px]/hub:left-1/2 @[1040px]/hub:-translate-x-1/2 @[1040px]/hub:inline-flex @[1040px]/hub:items-center @[1040px]/hub:justify-center px-2.5 bg-bg-surface z-10 w-max max-w-[calc(100%-1.5rem)] text-accent-green"
               >
-                <span className="type-label-2xs">
+                <span className="type-label-2xs truncate whitespace-nowrap">
                   {turnOnLabel}
                 </span>
               </div>
@@ -180,13 +180,13 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({ ch
           <div className="relative pt-4 pb-3 px-3.5 @[1040px]/hub:pt-5 @[1040px]/hub:pb-3.5 @[1040px]/hub:px-4 rounded-card lore-ash-card lore-ash-amber backdrop-blur-2xl transition-all duration-300 text-center">
             <div
               data-lore-label=""
-              className="sr-only @[1040px]/hub:not-sr-only @[1040px]/hub:absolute @[1040px]/hub:top-0 @[1040px]/hub:-translate-y-1/2 @[1040px]/hub:left-1/2 @[1040px]/hub:-translate-x-1/2 @[1040px]/hub:inline-flex @[1040px]/hub:items-center @[1040px]/hub:justify-center px-2.5 bg-bg-surface z-10 text-accent-amber"
+              className="sr-only @[1040px]/hub:not-sr-only @[1040px]/hub:absolute @[1040px]/hub:top-0 @[1040px]/hub:-translate-y-1/2 @[1040px]/hub:left-1/2 @[1040px]/hub:-translate-x-1/2 @[1040px]/hub:inline-flex @[1040px]/hub:items-center @[1040px]/hub:justify-center px-2.5 bg-bg-surface z-10 w-max max-w-[calc(100%-1.5rem)] text-accent-amber"
             >
-              <span className="type-label-2xs">
+              <span className="type-label-2xs truncate whitespace-nowrap">
                 {signatureQuoteLabel}
               </span>
             </div>
-            <p className="type-body text-text-secondary italic group-hover:text-text-primary transition-colors">
+            <p className="type-body text-text-secondary italic line-clamp-5 break-words group-hover:text-text-primary transition-colors">
               {charQuote}
             </p>
           </div>
@@ -204,9 +204,9 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({ ch
             <div className="relative pt-4 pb-3 px-3.5 @[1040px]/hub:pt-5 @[1040px]/hub:pb-3.5 @[1040px]/hub:px-4 rounded-card lore-ash-card lore-ash-crimson backdrop-blur-2xl transition-all duration-300 text-center">
               <div
                 data-lore-label=""
-                className="sr-only @[1040px]/hub:not-sr-only @[1040px]/hub:absolute @[1040px]/hub:top-0 @[1040px]/hub:-translate-y-1/2 @[1040px]/hub:left-1/2 @[1040px]/hub:-translate-x-1/2 @[1040px]/hub:inline-flex @[1040px]/hub:items-center @[1040px]/hub:justify-center px-2.5 bg-bg-surface z-10 text-accent-red"
+                className="sr-only @[1040px]/hub:not-sr-only @[1040px]/hub:absolute @[1040px]/hub:top-0 @[1040px]/hub:-translate-y-1/2 @[1040px]/hub:left-1/2 @[1040px]/hub:-translate-x-1/2 @[1040px]/hub:inline-flex @[1040px]/hub:items-center @[1040px]/hub:justify-center px-2.5 bg-bg-surface z-10 w-max max-w-[calc(100%-1.5rem)] text-accent-red"
               >
-                <span className="type-label-2xs">
+                <span className="type-label-2xs truncate whitespace-nowrap">
                   {dealbreakerLabel}
                 </span>
               </div>

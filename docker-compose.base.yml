@@ -79,6 +79,9 @@ services:
       # Optional two-factor sign-in: replace with a fresh Fernet key in .env.prod for production.
       - TWO_FACTOR_ENCRYPTION_KEY=${TWO_FACTOR_ENCRYPTION_KEY:-TZbfxN8fCG2Pccx-bBsj2fxcyN4dwABgUsIutMVLx4Y=}
       - TWO_FACTOR_ISSUER=${TWO_FACTOR_ISSUER:-LemonDBD}
+      # Ban-evasion e-mail list (off by default; see .env.example before enabling).
+      - BAN_LIST_ENABLED=${BAN_LIST_ENABLED:-false}
+      - BAN_LIST_PEPPERS=${BAN_LIST_PEPPERS:-}
       - DATABASE_URL=${DATABASE_URL:-postgresql+psycopg://postgres:postgres@db:5432/dbd_db}
       - DB_POOL_SIZE=${DB_POOL_SIZE:-10}
       - DB_MAX_OVERFLOW=${DB_MAX_OVERFLOW:-5}

@@ -7,6 +7,7 @@ import jwt
 from flask import current_app, g, jsonify, request
 from sqlalchemy import select
 from werkzeug.security import check_password_hash, generate_password_hash
+from app.core.account_state import is_blocked
 from app.core.extensions import db
 from app.models.user import User
 
@@ -275,7 +276,7 @@ def get_current_user() -> User | None:
     try:
         user_id = int(payload["sub"])
         user = db.session.get(User, user_id)
-        if user and user.is_active and token_matches_user(payload, user):
+        if user and not is_blocked(user) and token_matches_user(payload, user):
             return user
     except Exception as err:
         logger.warning(f"Error fetching user from decoded token: {err}")

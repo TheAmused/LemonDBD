@@ -6,7 +6,7 @@
 // default; "Use default" removes the override.
 
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { Hourglass, KeyRound, ShieldCheck, type LucideIcon } from 'lucide-react';
+import { Hourglass, KeyRound, Scale, ShieldCheck, type LucideIcon } from 'lucide-react';
 import type { ActionMessage, AdminSiteSetting } from '@/types/admin';
 import { Button } from '@/components/common/Button';
 import { Input } from '@/components/common/Field';
@@ -21,11 +21,12 @@ interface AdminSettingsPanelProps {
   onActionMessage: (msg: ActionMessage) => void;
 }
 
-const GROUP_ORDER: AdminSiteSetting['group'][] = ['privacy', 'tokens', 'retention'];
+const GROUP_ORDER: AdminSiteSetting['group'][] = ['privacy', 'tokens', 'retention', 'moderation'];
 const GROUP_ICON: Partial<Record<AdminSiteSetting['group'], LucideIcon>> = {
   privacy: ShieldCheck,
   tokens: KeyRound,
   retention: Hourglass,
+  moderation: Scale,
 };
 
 /** The unit a setting is measured in, from its key suffix (`..._hours`), or null (e.g. an email). */

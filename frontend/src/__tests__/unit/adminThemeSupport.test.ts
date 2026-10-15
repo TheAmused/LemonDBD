@@ -94,7 +94,7 @@ describe('Admin Theme Support', () => {
         onPageChange: () => {},
         onOpenCreateUser: () => {},
         onToggleRole: () => {},
-        onToggleActive: () => {},
+        onOpenModeration: () => {},
         onDeleteUser: () => {},
         onResetTwoFactor: () => {},
       })

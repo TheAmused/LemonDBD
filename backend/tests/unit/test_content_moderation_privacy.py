@@ -81,7 +81,10 @@ def test_notice_says_when_the_account_was_deactivated(client, app, db_session) -
     with mail.record_messages() as outbox:
         _report_and_ban(client, app, author, reporter, admin, ban_author=True)
     assert len(outbox) == 1
-    assert "account has also been deactivated" in outbox[0].body
+    # The account decision and the blocked content go out as one statement of reasons.
+    assert "permanently banned" in outbox[0].body
+    assert "tier list" in outbox[0].body
+    assert "private admin note" not in outbox[0].body
 
 
 def test_dismissing_a_report_sends_no_notice(client, app, db_session) -> None:

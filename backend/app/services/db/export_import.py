@@ -24,7 +24,7 @@ from app.services.db.asset_bundling import get_static_dir
 from app.services.db.export_registry import SIMPLE_DELETE_TARGETS, SUPPORTED_EXPORT_TARGETS, TARGET_GROUPS
 from app.services.db.export_writer import build_export
 from app.services.db.import_accounts import (
-    build_account_lookups, import_ownerships, import_user_showcases, import_users,
+    build_account_lookups, import_banned_email_hashes, import_ownerships, import_user_showcases, import_users,
 )
 from app.services.db.import_community import import_community
 from app.services.db.import_content import import_content
@@ -103,6 +103,7 @@ class DatabaseExportImportService:
             lookups = build_account_lookups()
             import_ownerships(data, target_keys, summary, lookups)
             import_user_showcases(data, target_keys, summary, lookups)
+            import_banned_email_hashes(data, target_keys, summary)
             import_community(data, target_keys, summary, lookups.user_map)
 
             db.session.commit()

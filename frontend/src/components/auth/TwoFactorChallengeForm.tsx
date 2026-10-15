@@ -12,14 +12,17 @@ import { Button } from '@/components/common/Button';
 import { Input } from '@/components/common/Field';
 import { CODE_LENGTH, CodeInput } from '@/components/auth/CodeInput';
 import { twoFactorErrorMessage } from '@/utils/twoFactorErrors';
+import type { BlockedInfo } from '@/types/moderation';
 
 interface TwoFactorChallengeFormProps {
   twoFactorToken: string;
   onSuccess: (user?: UserProfile) => void;
+  /** The second factor was right but the account is banned or suspended: show why. */
+  onBlocked?: (blocked: BlockedInfo) => void;
   onBack: () => void;
 }
 
-export const TwoFactorChallengeForm: React.FC<TwoFactorChallengeFormProps> = ({ twoFactorToken, onSuccess, onBack }) => {
+export const TwoFactorChallengeForm: React.FC<TwoFactorChallengeFormProps> = ({ twoFactorToken, onSuccess, onBlocked, onBack }) => {
   const t = useDictionary().twoFactor;
   const { completeTwoFactorLogin } = useAuth();
   const [useRecovery, setUseRecovery] = useState(false);
@@ -41,6 +44,10 @@ export const TwoFactorChallengeForm: React.FC<TwoFactorChallengeFormProps> = ({ 
     setBusy(false);
     if (res.success) {
       onSuccess(res.user);
+      return;
+    }
+    if (res.blocked && onBlocked) {
+      onBlocked(res.blocked);
       return;
     }
     setExpired(res.errorCode === 'two_factor_challenge_invalid');

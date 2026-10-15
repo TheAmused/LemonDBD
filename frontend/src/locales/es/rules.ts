@@ -14,7 +14,7 @@ export default {
     "Juega limpio: nada de trampas en desafíos, trofeos o votaciones.",
     "Comparte solo lo que puedes compartir, y que sea legal y sin rarezas.",
     "Ve con cuidado con los servidores: sin inundaciones, sin bots y sin buscar agujeros.",
-    "Si incumples las normas, podemos eliminar tu contenido o tu cuenta.",
+    "Si incumples las normas, podemos advertirte, bloquear tu contenido, suspenderte o banearte.",
     "Todo esto se aplica también en nuestro servidor de Discord.",
   ],
   sections: {
@@ -113,18 +113,21 @@ export default {
       ],
       items: [
         "Las amenazas, el contenido sexual que involucre a menores, el contenido ilícito y los ataques al Sitio se tratan sin aviso previo y pueden comunicarse a las autoridades competentes.",
+        "En el Sitio, una <b>advertencia</b> es un aviso formal que permanece en tu cuenta durante un tiempo limitado. No te restringe y se te muestra la próxima vez que inicies sesión. Una <b>suspensión</b> cierra tu sesión y bloquea el acceso durante un número de días determinado. Un <b>baneo</b> es permanente.",
+        "Por regla general, los incumplimientos repetidos se castigan cada vez más: primero advertencias, luego una suspensión y después un baneo. Las advertencias caducadas ya no cuentan. Los incumplimientos graves pueden saltarse cualquiera de estos pasos.",
         "En el Servidor, las mismas medidas se traducen en un aviso, un aislamiento temporal, una expulsión o un baneo.",
-        "El contenido que incumpla estas Normas puede ser baneado: el Sitio se niega entonces a abrirlo o importarlo. También podemos desactivar la cuenta de quien lo publicó y le enviamos el motivo por correo.",
-        "Cuando eliminemos contenido o restrinjamos una cuenta, explicaremos el motivo siempre que sea posible. Si crees que nos hemos equivocado, puedes impugnar la decisión escribiéndonos y la revisaremos. El procedimiento figura en los [Términos del servicio]({termsPath}).",
+        "El contenido que incumpla estas Normas puede ser baneado: el Sitio se niega entonces a abrirlo o importarlo. También podemos advertir, suspender o banear la cuenta de quien lo publicó y le enviamos el motivo por correo.",
+        "Crear otra cuenta, o volver a registrarse con la dirección de una cuenta baneada, para eludir una suspensión o un baneo es en sí un incumplimiento. La cuenta nueva puede ser baneada y el Sitio puede negarse a registrar una dirección que perteneció a una cuenta baneada de forma permanente.",
+        "Cuando eliminemos contenido o restrinjamos una cuenta, explicaremos el motivo siempre que sea posible. Si crees que nos hemos equivocado, puedes impugnar la decisión escribiéndonos y la revisaremos; una suspensión o un baneo erróneos se levantan. El procedimiento figura en los [Términos del servicio]({termsPath}).",
       ],
     },
   },
   hookStages: {
     heading: "Las fases del gancho",
     stages: [
-      { title: "Fase 1: el aviso", text: "Un mensaje pidiéndote que corrijas o dejes de hacer algo." },
+      { title: "Fase 1: el aviso", text: "Un mensaje pidiéndote que corrijas o dejes de hacer algo, o una advertencia formal." },
       { title: "Fase 2: la limpieza", text: "Eliminamos o bloqueamos el contenido, reiniciamos el progreso obtenido de forma injusta o limitamos funciones." },
-      { title: "Sacrificio", text: "Tu cuenta se suspende, se desactiva o se elimina y se pueden bloquear cuentas o direcciones adicionales." },
+      { title: "Sacrificio", text: "Tu cuenta se suspende o se banea y se pueden bloquear cuentas o direcciones adicionales." },
     ],
   },
 };

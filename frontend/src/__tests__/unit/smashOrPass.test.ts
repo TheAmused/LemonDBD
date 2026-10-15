@@ -260,7 +260,21 @@ test('SmashOrPass: Dual-Identity Watermarks & Clamping Helper', async (t) => {
     assert.match(src, /<FitText[\s\S]*?maxLines=\{[2-4]\}/);
     assert.match(src, /wrapFirst/);
     assert.match(src, /text-center/);
-    assert.doesNotMatch(src, /whitespace-nowrap/);
+    // Only the big watermarks (everything above the flanking wings) may never be forced onto one line.
+    const watermarks = src.slice(0, src.indexOf('LEFT FLANKING DOSSIER WING'));
+    assert.ok(watermarks.length > 0, 'watermark section must come before the flanking wings');
+    assert.doesNotMatch(watermarks, /whitespace-nowrap/);
+  });
+
+  await t.test('keeps every lore label on one line and truncated inside its card', async () => {
+    const { readFileSync } = await import('node:fs');
+    const src = readFileSync(new URL('../../components/smash-or-pass/FloatingLoreScattered.tsx', import.meta.url), 'utf8');
+    const labels = src.match(/data-lore-label=""[\s\S]*?<\/span>/g) ?? [];
+    assert.equal(labels.length, 4, 'one label per lore card');
+    for (const label of labels) {
+      assert.match(label, /max-w-\[calc\(100%-1\.5rem\)\]/, 'label must not outgrow its card');
+      assert.match(label, /<span className="[^"]*\btruncate\b[^"]*\bwhitespace-nowrap\b/, 'label text must truncate on one line');
+    }
   });
 
   await t.test('uses explicit watermark_left and watermark_right when provided', () => {

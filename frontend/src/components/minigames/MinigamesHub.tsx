@@ -6,7 +6,9 @@ import { Button, buttonClassName } from '@/components/common/Button';
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
+import { useSignInThen } from '@/hooks/useSignInThen';
 import { AuthRequiredState } from '@/components/common/AuthRequiredState';
 import {
   Gamepad2,
@@ -66,7 +68,8 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
   const dict = useDictionary();
   const t = dict.minigames;
   const { isAuthenticated, user } = useAuth();
-  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const router = useRouter();
+  const signIn = useSignInThen();
   const [customTrials, setCustomTrials] = useState<ChallengeDefinition[]>([]);
   const [importError, setImportError] = useState<string | null>(null);
   const [streakData, setStreakData] = useState<DailyStreakData>({
@@ -462,7 +465,7 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
               size="sm"
               onClick={() => {
                 if (!isAuthenticated) {
-                  setIsAuthModalOpen(true);
+                  signIn.run(() => {}); // sign in only: a file picker cannot open without a fresh click
                   return;
                 }
                 fileInputRef.current?.click();
@@ -476,7 +479,7 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
               onClick={(e) => {
                 if (!isAuthenticated) {
                   e.preventDefault();
-                  setIsAuthModalOpen(true);
+                  signIn.run(() => router.push(`/${locale}/minigames/creator`));
                 }
               }}
               className={buttonClassName('primary', 'sm')}
@@ -587,12 +590,7 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
         onCancel={() => setPendingDeleteId(null)}
       />
 
-      {isAuthModalOpen && (
-        <AuthModal
-          isOpen={isAuthModalOpen}
-          onClose={() => setIsAuthModalOpen(false)}
-        />
-      )}
+      {signIn.isAuthModalOpen && <AuthModal isOpen onClose={signIn.closeAuthModal} />}
     </div>
   );
 };

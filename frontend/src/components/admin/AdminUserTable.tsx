@@ -7,10 +7,8 @@ import { Button } from '@/components/common/Button';
 import {
   Users,
   UserPlus,
-  Lock,
+  Gavel,
   Trash2,
-  CheckCircle,
-  XCircle,
   ChevronLeft,
   ChevronRight,
   ShieldCheck,
@@ -18,6 +16,7 @@ import {
 } from 'lucide-react';
 import { UserRow } from '@/types/admin';
 import { UserAvatar } from '@/components/UserAvatar';
+import { UserStandingBadge } from '@/components/admin/UserStandingBadge';
 import { OverseerEyeIcon } from '@/components/icons/DbdIcons';
 
 import { tip } from '@/components/common/Tooltip';
@@ -39,7 +38,8 @@ interface AdminUserTableProps {
   onPageChange: (page: number) => void;
   onOpenCreateUser: () => void;
   onToggleRole: (user: UserRow) => void;
-  onToggleActive: (user: UserRow) => void;
+  /** Opens the Moderation drawer: warnings, suspensions and bans of that account. */
+  onOpenModeration: (user: UserRow) => void;
   onDeleteUser: (user: UserRow) => void;
   /** Asks to switch off a user's two-factor sign-in (they lost their device and recovery codes). */
   onResetTwoFactor: (user: UserRow) => void;
@@ -60,12 +60,14 @@ export const AdminUserTable: React.FC<AdminUserTableProps> = ({
       onPageChange,
       onOpenCreateUser,
       onToggleRole,
-      onToggleActive,
+      onOpenModeration,
       onDeleteUser,
       onResetTwoFactor,
       onDownloadError,
     }) => {
   const dict = useDictionary();
+  // Administrators and your own account cannot be moderated here (the server refuses both too).
+  const canModerate = (u: UserRow) => u.role !== 'admin' && u.id !== currentUserId;
   return (
     <Surface padding="none" className="p-4 sm:p-6 backdrop-blur-xl shadow-xs space-y-6 w-full transition-colors duration-200">
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-border-color">
@@ -147,17 +149,7 @@ export const AdminUserTable: React.FC<AdminUserTableProps> = ({
 
               <div className="flex items-center justify-between pt-1 border-t border-border-color">
                 <div className="flex items-center gap-3">
-                  {u.is_active ? (
-                    <span className="inline-flex items-center gap-1 type-strong-xs text-accent-green">
-                      <CheckCircle className="h-3.5 w-3.5" />
-                      <span>{dict.stats.active}</span>
-                    </span>
-                  ) : (
-                    <span className="inline-flex items-center gap-1 type-strong-xs text-accent-red">
-                      <XCircle className="h-3.5 w-3.5" />
-                      <span>{dict.sidebar.disabled}</span>
-                    </span>
-                  )}
+                  <UserStandingBadge user={u} />
                   {u.two_factor_enabled && (
                   <span
                     {...tip(dict.admin.twoFactorOn, undefined, 'action')}
@@ -179,15 +171,17 @@ export const AdminUserTable: React.FC<AdminUserTableProps> = ({
                   >
                     <OverseerEyeIcon className="h-4 w-4" />
                   </Button>
-                  <Button
-                    type="button"
-                    onClick={() => onToggleActive(u)}
-                    {...tip(u.is_active ? dict.admin.disableAccount : dict.admin.enableAccount, undefined, 'action')}
-                    aria-label={u.is_active ? dict.admin.disableAccount : dict.admin.enableAccount}
-                    variant="secondary" size="md" icon className="relative"
-                  >
-                    <Lock className="h-4 w-4" />
-                  </Button>
+                  {canModerate(u) && (
+                    <Button
+                      type="button"
+                      onClick={() => onOpenModeration(u)}
+                      {...tip(dict.moderation.admin.openButton, undefined, 'action')}
+                      aria-label={dict.moderation.admin.openButton}
+                      variant="secondary" size="md" icon className="relative"
+                    >
+                      <Gavel className="h-4 w-4" />
+                    </Button>
+                  )}
                   {u.two_factor_enabled && (
                     <Button
                       type="button"
@@ -276,17 +270,7 @@ export const AdminUserTable: React.FC<AdminUserTableProps> = ({
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-3">
-                      {u.is_active ? (
-                        <span className="inline-flex items-center gap-1 type-strong-xs text-accent-green">
-                          <CheckCircle className="h-3.5 w-3.5" />
-                          <span>{dict.stats.active}</span>
-                        </span>
-                      ) : (
-                        <span className="inline-flex items-center gap-1 type-strong-xs text-accent-red">
-                          <XCircle className="h-3.5 w-3.5" />
-                          <span>{dict.sidebar.disabled}</span>
-                        </span>
-                      )}
+                      <UserStandingBadge user={u} />
                       {u.two_factor_enabled && (
                         <span
                           {...tip(dict.admin.twoFactorOn, undefined, 'action')}
@@ -310,15 +294,17 @@ export const AdminUserTable: React.FC<AdminUserTableProps> = ({
                         <OverseerEyeIcon className="h-3.5 w-3.5" />
                       </Button>
 
-                      <Button
-                        type="button"
-                        onClick={() => onToggleActive(u)}
-                        {...tip(u.is_active ? dict.admin.disableAccount : dict.admin.enableAccount, undefined, 'action')}
-                        aria-label={u.is_active ? dict.admin.disableAccount : dict.admin.enableAccount}
-                        variant="secondary" size="sm" icon className="relative"
-                      >
-                        <Lock className="h-3.5 w-3.5" />
-                      </Button>
+                      {canModerate(u) && (
+                        <Button
+                          type="button"
+                          onClick={() => onOpenModeration(u)}
+                          {...tip(dict.moderation.admin.openButton, undefined, 'action')}
+                          aria-label={dict.moderation.admin.openButton}
+                          variant="secondary" size="sm" icon className="relative"
+                        >
+                          <Gavel className="h-3.5 w-3.5" />
+                        </Button>
+                      )}
 
                       {u.two_factor_enabled && (
                         <Button

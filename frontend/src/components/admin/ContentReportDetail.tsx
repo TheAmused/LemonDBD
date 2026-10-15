@@ -4,35 +4,59 @@ import React, { useState } from 'react';
 import { Ban, CheckCircle, ShieldAlert, UserX } from 'lucide-react';
 import { Button } from '@/components/common/Button';
 import { Badge } from '@/components/common/Badge';
-import { Checkbox } from '@/components/common/Checkbox';
-import { Textarea } from '@/components/common/Field';
+import { Select, Textarea } from '@/components/common/Field';
 import { ConfirmModal } from '@/components/common/ConfirmModal';
 import { SandboxedContentPreview } from '@/components/admin/SandboxedContentPreview';
+import { SanctionForm } from '@/components/admin/SanctionForm';
 import { contentReasonLabel, contentStatusLabel, contentStatusTone, contentTypeLabel } from '@/components/admin/contentReportLabels';
 import { useDictionary } from '@/context/DictionaryContext';
 import { formatDateTime } from '@/utils/format';
+import { formatMessage } from '@/utils/i18nFormat';
+import {
+  EMPTY_SANCTION_DRAFT,
+  authorDecisionFromDraft,
+  isSanctionDraftValid,
+  type AuthorDecision,
+  type SanctionDraft,
+  type SanctionKind,
+} from '@/types/moderation';
 import type { AdminContentReportDetail, ContentReportAction } from '@/types/admin';
 
 interface ContentReportDetailProps {
   detail: AdminContentReportDetail;
   resolving: boolean;
-  onResolve: (action: ContentReportAction, banAuthor: boolean, notes: string) => Promise<boolean>;
+  onResolve: (action: ContentReportAction, author: AuthorDecision | null, notes: string) => Promise<boolean>;
 }
 
 /** One report in full: who flagged what and why, the reported content, and the ban/dismiss decision. */
 export function ContentReportDetail({ detail, resolving, onResolve }: ContentReportDetailProps) {
   const dict = useDictionary();
   const [notes, setNotes] = useState<string>(detail.admin_notes ?? '');
-  const [banAuthor, setBanAuthor] = useState<boolean>(false);
+  // What happens to the author's account: nothing, or one of the three decisions (with its form).
+  const [authorKind, setAuthorKind] = useState<SanctionKind | 'none'>('none');
+  const [authorDraft, setAuthorDraft] = useState<SanctionDraft>(EMPTY_SANCTION_DRAFT);
   const [confirmBan, setConfirmBan] = useState<boolean>(false);
 
+  const moderation = dict.moderation.admin;
+  const authorConsequence =
+    authorKind === 'warning'
+      ? formatMessage(moderation.confirmWarning, { username: detail.author_login })
+      : authorKind === 'suspension'
+        ? formatMessage(moderation.confirmSuspension, { username: detail.author_login, days: authorDraft.duration_days })
+        : authorKind === 'ban'
+          ? formatMessage(moderation.confirmBan, { username: detail.author_login })
+          : '';
+
   const isPending = detail.status === 'pending';
-  const canBanAuthor = detail.attributed && detail.author_active !== false && !detail.author_is_admin;
+  const canActOnAuthor = detail.attributed && detail.author_active !== false && !detail.author_is_admin;
+  const authorDecision: AuthorDecision | null =
+    canActOnAuthor && authorKind !== 'none' ? authorDecisionFromDraft({ ...authorDraft, kind: authorKind }) : null;
+  const authorValid = authorKind === 'none' || !canActOnAuthor || isSanctionDraftValid({ ...authorDraft, kind: authorKind });
   const reasons = Object.entries(detail.reason_breakdown).sort((a, b) => b[1] - a[1]);
   const reporterNotes = detail.reports.filter((r) => r.notes);
 
   const runBan = async () => {
-    await onResolve('ban', banAuthor && canBanAuthor, notes);
+    await onResolve('ban', authorDecision, notes);
     setConfirmBan(false);
   };
 
@@ -42,7 +66,7 @@ export function ContentReportDetail({ detail, resolving, onResolve }: ContentRep
         <h3 className="type-strong text-text-primary">#{detail.id}</h3>
         <Badge tone="neutral" size="sm">{contentTypeLabel(dict, detail.content_type)}</Badge>
         <Badge tone={contentStatusTone(detail.status)} size="sm">{contentStatusLabel(dict, detail.status)}</Badge>
-        <span className="text-xs text-text-secondary">
+        <span className="type-body text-text-secondary">
           {dict.admin.contentReportCountLabel} {detail.report_count}
         </span>
       </div>
@@ -75,16 +99,16 @@ export function ContentReportDetail({ detail, resolving, onResolve }: ContentRep
       </dl>
 
       {!detail.attributed && (
-        <p className="flex items-start gap-2 rounded-card border border-accent-amber/30 bg-accent-amber/10 p-3 text-xs text-accent-amber">
+        <p className="flex items-start gap-2 rounded-card border border-accent-amber/30 bg-accent-amber/10 p-3 type-body text-accent-amber">
           <ShieldAlert className="mt-0.5 h-4 w-4 shrink-0" />
           <span>{dict.admin.contentReportUnattributed}</span>
         </p>
       )}
       {detail.attributed && detail.author_active === false && (
-        <p className="text-xs text-text-secondary">{dict.admin.contentReportAuthorInactive}</p>
+        <p className="type-body text-text-secondary">{dict.admin.contentReportAuthorInactive}</p>
       )}
       {detail.attributed && detail.author_is_admin && (
-        <p className="text-xs text-text-secondary">{dict.admin.contentReportAuthorIsAdmin}</p>
+        <p className="type-body text-text-secondary">{dict.admin.contentReportAuthorIsAdmin}</p>
       )}
 
       <div className="space-y-1.5">
@@ -103,7 +127,7 @@ export function ContentReportDetail({ detail, resolving, onResolve }: ContentRep
           <p className="type-label-sm text-text-secondary">{dict.admin.contentReportReporterNotes}</p>
           <ul className="max-h-40 overflow-y-auto space-y-1.5 rounded-card border border-border-subtle bg-bg-primary p-3">
             {reporterNotes.map((r, index) => (
-              <li key={index} className="text-xs text-text-primary break-words whitespace-pre-wrap">
+              <li key={index} className="type-body text-text-primary break-words whitespace-pre-wrap">
                 <span className="text-text-secondary">{contentReasonLabel(dict, r.reason)}: </span>
                 {r.notes}
               </li>
@@ -117,7 +141,7 @@ export function ContentReportDetail({ detail, resolving, onResolve }: ContentRep
         {detail.evidence_payload ? (
           <SandboxedContentPreview key={detail.id} evidence={detail.evidence_payload} />
         ) : (
-          <p className="text-xs text-text-muted">{dict.admin.contentReportEvidenceWiped}</p>
+          <p className="type-body text-text-muted">{dict.admin.contentReportEvidenceWiped}</p>
         )}
       </div>
 
@@ -132,17 +156,42 @@ export function ContentReportDetail({ detail, resolving, onResolve }: ContentRep
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
           />
-          {canBanAuthor && (
-            <Checkbox checked={banAuthor} onChange={setBanAuthor}>
-              <span className="text-xs text-text-primary">{dict.admin.contentReportBanAuthor}</span>
-            </Checkbox>
+          {canActOnAuthor && (
+            <div className="space-y-3 rounded-card border border-border-color bg-bg-primary p-3">
+              <div>
+                <label htmlFor={`author-action-${detail.id}`} className="block type-label-xs text-text-secondary mb-1">
+                  {moderation.authorActionLabel}
+                </label>
+                <Select
+                  id={`author-action-${detail.id}`}
+                  fieldSize="sm"
+                  value={authorKind}
+                  onChange={(e) => setAuthorKind(e.target.value as SanctionKind | 'none')}
+                >
+                  <option value="none">{moderation.authorActionNone}</option>
+                  <option value="warning">{moderation.authorActionWarning}</option>
+                  <option value="suspension">{moderation.authorActionSuspension}</option>
+                  <option value="ban">{moderation.authorActionBan}</option>
+                </Select>
+                <p className="mt-1 type-micro text-text-muted">{moderation.authorActionHint}</p>
+              </div>
+              {authorKind !== 'none' && (
+                <SanctionForm
+                  draft={{ ...authorDraft, kind: authorKind }}
+                  kinds={[authorKind]}
+                  showReason={false}
+                  showInternal={false}
+                  onChange={(patch) => setAuthorDraft((d) => ({ ...d, ...patch }))}
+                />
+              )}
+            </div>
           )}
           <div className="flex flex-wrap gap-2">
-            <Button variant="danger" size="sm" disabled={resolving} onClick={() => setConfirmBan(true)}>
-              {banAuthor && canBanAuthor ? <UserX className="h-4 w-4" /> : <Ban className="h-4 w-4" />}
+            <Button variant="danger" size="sm" disabled={resolving || !authorValid} onClick={() => setConfirmBan(true)}>
+              {authorDecision ? <UserX className="h-4 w-4" /> : <Ban className="h-4 w-4" />}
               {dict.admin.contentReportBanAction}
             </Button>
-            <Button size="sm" disabled={resolving} onClick={() => onResolve('dismiss', false, notes)}>
+            <Button size="sm" disabled={resolving} onClick={() => onResolve('dismiss', null, notes)}>
               <CheckCircle className="h-4 w-4" />
               {dict.admin.contentReportDismissAction}
             </Button>
@@ -152,7 +201,7 @@ export function ContentReportDetail({ detail, resolving, onResolve }: ContentRep
         detail.admin_notes && (
           <div className="space-y-1.5 border-t border-border-color pt-4">
             <p className="type-label-sm text-text-secondary">{dict.admin.contentReportNotesLabel}</p>
-            <p className="text-xs text-text-primary break-words whitespace-pre-wrap">{detail.admin_notes}</p>
+            <p className="type-body text-text-primary break-words whitespace-pre-wrap">{detail.admin_notes}</p>
           </div>
         )
       )}
@@ -160,11 +209,7 @@ export function ContentReportDetail({ detail, resolving, onResolve }: ContentRep
       <ConfirmModal
         open={confirmBan}
         title={dict.admin.contentReportBanTitle}
-        message={
-          banAuthor && canBanAuthor
-            ? `${dict.admin.contentReportBanMessage} ${dict.admin.contentReportBanAuthorWarning}`
-            : dict.admin.contentReportBanMessage
-        }
+        message={authorDecision ? `${dict.admin.contentReportBanMessage} ${authorConsequence}` : dict.admin.contentReportBanMessage}
         confirmLabel={dict.admin.contentReportBanAction}
         busy={resolving}
         onConfirm={runBan}

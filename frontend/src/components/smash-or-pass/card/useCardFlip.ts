@@ -5,7 +5,7 @@ import { useCallback, useEffect, useState } from 'react';
 /** Half of the turn: the card goes edge-on, swaps faces, and comes back. */
 const FLIP_HALF_MS = 190;
 
-type Turn = 'settled' | 'out' | 'far';
+type Turn = 'settled' | 'out' | 'far' | 'back';
 
 /** Which face is up, and the two-halves turn between them. A new character starts face up. */
 export function useCardFlip(slug: string | undefined, id: string | number | undefined) {
@@ -31,8 +31,14 @@ export function useCardFlip(slug: string | undefined, id: string | number | unde
     }
     if (turn === 'far') {
       // Next frame, so the jump to the far edge paints before the return is animated.
-      const raf = requestAnimationFrame(() => setTurn('settled'));
+      const raf = requestAnimationFrame(() => setTurn('back'));
       return () => cancelAnimationFrame(raf);
+    }
+    if (turn === 'back') {
+      // The return half is still animating: stay "turned" until it lands, or the cards queued
+      // behind flash through the narrowing, edge-on card on the way back to face up.
+      const timer = setTimeout(() => setTurn('settled'), FLIP_HALF_MS);
+      return () => clearTimeout(timer);
     }
   }, [turn]);
 

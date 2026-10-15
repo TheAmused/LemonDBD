@@ -4,6 +4,7 @@ import { useCallback, useRef, useState } from 'react';
 import { getBackendBaseUrl, authHeaders, getAuthToken, getErrorMessage } from '@/utils/api';
 import { useDictionary } from '@/context/DictionaryContext';
 import { formatMessage } from '@/utils/i18nFormat';
+import type { AuthorDecision } from '@/types/moderation';
 import type {
   ActionMessage,
   AdminContentReportDetail,
@@ -105,7 +106,7 @@ export function useAdminContentReports({ onActionMessage }: { onActionMessage: (
     }
   }, [API_BASE]);
 
-  const resolve = useCallback(async (reportId: number, action: ContentReportAction, banAuthor: boolean, notes: string) => {
+  const resolve = useCallback(async (reportId: number, action: ContentReportAction, author: AuthorDecision | null, notes: string) => {
     const token = getAuthToken();
     if (!token || resolving) return false;
     setResolving(true);
@@ -113,7 +114,11 @@ export function useAdminContentReports({ onActionMessage }: { onActionMessage: (
       const res = await fetch(`${API_BASE}/api/v1/admin/content-reports/${reportId}/resolve`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', ...authHeaders(token) },
-        body: JSON.stringify({ action, ban_author: action === 'ban' && banAuthor, admin_notes: notes.trim() || undefined }),
+        body: JSON.stringify({
+          action,
+          ...(action === 'ban' && author ? author : {}),
+          admin_notes: notes.trim() || undefined,
+        }),
       });
       if (!res.ok) {
         onActionMessage({ type: 'error', text: await responseError(res, dict.admin.contentReportResolveFailed) });

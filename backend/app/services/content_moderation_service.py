@@ -4,7 +4,8 @@ import logging
 from datetime import datetime, timezone, timedelta
 from typing import Any
 
-from sqlalchemy import func, select
+from sqlalchemy import func, select, update
+from sqlalchemy.exc import IntegrityError
 
 from app.core.extensions import db
 from app.core.json_provider import safe_json_dumps
@@ -12,6 +13,8 @@ from app.core.transaction import transaction
 from app.models.admin import AdminAuditLog
 from app.models.content_moderation import ContentReport, ContentReportSubscriber, ContentRevocation
 from app.models.user import User
+from app.services.mail_service import send_content_moderation_notice_email
+from app.services.site_settings import contact_email
 from app.services.content_crypto import (
     canonicalize_payload,
     compute_content_hash,
@@ -22,6 +25,36 @@ from app.services.content_crypto import (
 logger = logging.getLogger(__name__)
 
 HEX_CHARACTERS = frozenset("0123456789abcdefABCDEF")
+
+CONTENT_TYPES = frozenset({"tier_list", "smash_roster", "minigame"})
+REPORT_REASONS = frozenset({"hate_speech", "harassment", "explicit", "illegal", "spam", "other"})
+REPORT_STATUSES = frozenset({"pending", "resolved_banned", "dismissed", "expired"})
+MAX_EVIDENCE_CHARS = 500_000
+EVIDENCE_TTL_DAYS = 14
+UNATTRIBUTED_LOGIN = ""
+
+
+def _is_hex64(value: Any) -> bool:
+    return isinstance(value, str) and len(value.strip()) == 64 and all(c in HEX_CHARACTERS for c in value.strip())
+
+
+def _clean_notes(notes: Any) -> str | None:
+    return notes.strip()[:500] if isinstance(notes, str) and notes.strip() else None
+
+
+def _canonical_document(payload: Any) -> tuple[str, str]:
+    """Return (canonical_json, sha256) for a document, raising ValueError when it cannot be hashed."""
+    if not isinstance(payload, dict):
+        raise ValueError("payload must be a dictionary")
+    try:
+        canonical_str = canonicalize_payload(payload)
+        if len(canonical_str) > MAX_EVIDENCE_CHARS:
+            raise ValueError("Evidence payload exceeds maximum allowed size (500KB)")
+        return canonical_str, compute_content_hash(canonical_str)
+    except (TypeError, ValueError, RecursionError) as err:
+        if "maximum allowed size" in str(err):
+            raise
+        raise ValueError("Failed to canonicalize payload") from err
 
 
 def sign_user_content(
@@ -61,6 +94,84 @@ def sign_user_content(
     }
 
 
+def _parse_manifest(data: dict[str, Any]) -> tuple[dict[str, Any] | None, bool]:
+    """Read the optional author stamp from a report body.
+
+    Returns (manifest, malformed). A body with none of the stamp fields is an unsigned
+    report (manifest None). A stamp with some fields missing or badly formed is malformed.
+    """
+    content_hash = data.get("content_hash")
+    author_id = data.get("author_id")
+    signature = data.get("signature")
+    if all(v in (None, "") for v in (content_hash, author_id, signature)):
+        return None, False
+    if (
+        not _is_hex64(content_hash)
+        or not isinstance(author_id, int)
+        or isinstance(author_id, bool)
+        or author_id <= 0
+        or not _is_hex64(signature)
+    ):
+        return None, True
+    author_login = data.get("author_login")
+    return {
+        "content_hash": content_hash.strip().lower(),
+        "author_id": author_id,
+        "signature": signature.strip(),
+        "author_login": author_login.strip()[:50] if isinstance(author_login, str) else UNATTRIBUTED_LOGIN,
+    }, False
+
+
+def _join_pending_report(report: ContentReport, reporter: User, reason: str, notes: str | None) -> bool:
+    """Record `reporter` against a pending report. Returns False when they already reported it.
+
+    The count only moves when a new reporter row is inserted, and it moves in SQL so concurrent
+    reporters cannot lose an increment.
+    """
+    try:
+        with db.session.begin_nested():
+            db.session.add(
+                ContentReportSubscriber(
+                    report_id=report.id,
+                    reporter_id=reporter.id,
+                    reason=reason,
+                    notes=notes,
+                )
+            )
+            db.session.flush()
+    except IntegrityError:
+        return False
+    db.session.execute(
+        update(ContentReport)
+        .where(ContentReport.id == report.id)
+        .values(report_count=ContentReport.report_count + 1)
+    )
+    db.session.commit()
+    db.session.refresh(report)
+    return True
+
+
+def _queued_response(report: ContentReport, joined: bool) -> tuple[dict[str, Any], int]:
+    return {
+        "status": "queued",
+        "message": "Report received and added to pending queue"
+        if joined
+        else "You have already reported this content",
+        "already_reported": not joined,
+        "report_count": report.report_count,
+        "content_hash": report.content_hash,
+    }, 200
+
+
+def _find_pending_report(content_hash: str) -> ContentReport | None:
+    return db.session.scalar(
+        select(ContentReport).where(
+            ContentReport.content_hash == content_hash,
+            ContentReport.status == "pending",
+        )
+    )
+
+
 def report_content(
     reporter: User,
     data: dict[str, Any],
@@ -68,145 +179,104 @@ def report_content(
 ) -> tuple[dict[str, Any], int]:
     """Validate and process a content report submission.
 
-    Args:
-        reporter: Authenticated User submitting the report.
-        data: Dict containing report submission data.
-        secret_key: Server secret key for signature verification.
+    The server hashes the submitted document itself. If the report carries a valid author stamp
+    for that exact hash the report is attributed to the stamped author. A report without a stamp,
+    or whose stamp belongs to a different document (the content was edited after signing or the
+    stamp was copied from elsewhere), is still accepted but stays unattributed, so unsigned
+    content can be reviewed and revoked and nobody can be framed by a copied stamp.
 
     Returns:
         Tuple of (response_dict, http_status_code).
     """
     content_type = data.get("content_type")
-    content_hash = data.get("content_hash")
-    author_id = data.get("author_id")
-    author_login = data.get("author_login")
-    signature = data.get("signature")
     payload = data.get("payload")
     reason = data.get("reason")
-    notes = data.get("notes")
+    notes = _clean_notes(data.get("notes"))
 
-    # Basic field validation
-    if (
-        not isinstance(content_type, str)
-        or not content_type.strip()
-        or not isinstance(content_hash, str)
-        or len(content_hash.strip()) != 64
-        or not isinstance(author_id, int)
-        or isinstance(author_id, bool)
-        or author_id <= 0
-        or not isinstance(author_login, str)
-        or not author_login.strip()
-        or not isinstance(signature, str)
-        or len(signature.strip()) != 64
-        or not isinstance(payload, dict)
-        or not isinstance(reason, str)
-        or not reason.strip()
-    ):
+    if not isinstance(content_type, str) or content_type.strip() not in CONTENT_TYPES:
+        return {"error": "Unsupported content_type", "status": 400}, 400
+    if not isinstance(reason, str) or reason.strip() not in REPORT_REASONS:
+        return {"error": "Unsupported report reason", "status": 400}, 400
+    if not isinstance(payload, dict):
         return {"error": "Missing or invalid fields", "status": 400}, 400
 
-    clean_hash = content_hash.strip().lower()
-
-    # 1. Canonicalize payload and verify hash match
     try:
-        canonical_str = canonicalize_payload(payload)
-        computed_hash = compute_content_hash(canonical_str)
-    except Exception as err:
-        logger.warning(f"Failed to canonicalize payload: {err}")
-        return {"error": "Failed to canonicalize payload", "status": 400}, 400
+        canonical_str, computed_hash = _canonical_document(payload)
+    except ValueError as err:
+        logger.warning(f"Rejected report payload: {err}")
+        return {"error": str(err), "status": 400}, 400
 
-    # Enforce maximum evidence payload size (500KB)
-    if len(canonical_str) > 500_000:
-        return {"error": "Evidence payload exceeds maximum allowed size (500KB)", "status": 400}, 400
+    manifest, malformed = _parse_manifest(data)
+    if malformed:
+        return {"error": "Missing or invalid fields", "status": 400}, 400
 
-    if computed_hash != clean_hash:
-        return {"error": "Payload hash mismatch", "status": 400}, 400
+    content_type = content_type.strip()
+    reason = reason.strip()
+    persisted_author_id: int | None = None
+    persisted_author_login = UNATTRIBUTED_LOGIN
+    attributed = False
 
-    # 2. Verify HMAC signature
-    if not verify_content_signature(author_id, clean_hash, signature, secret_key):
-        return {"error": "Invalid content signature", "status": 400}, 400
+    if manifest is not None and manifest["content_hash"] == computed_hash:
+        if not verify_content_signature(manifest["author_id"], computed_hash, manifest["signature"], secret_key):
+            return {"error": "Invalid content signature", "status": 400}, 400
+        attributed = True
+        author = db.session.get(User, manifest["author_id"])
+        persisted_author_id = author.id if author else None
+        persisted_author_login = author.login if author else manifest["author_login"]
 
-    # 3. Check if already revoked
     revocation = db.session.scalar(
-        select(ContentRevocation).where(ContentRevocation.content_hash == clean_hash)
+        select(ContentRevocation.id).where(ContentRevocation.content_hash == computed_hash)
     )
     if revocation is not None:
         return {
             "status": "already_banned",
             "message": "Content is already revoked and blocked site-wide",
-            "content_hash": clean_hash,
+            "content_hash": computed_hash,
         }, 200
 
-    # 4. Check if pending report exists
-    existing_report = db.session.scalar(
-        select(ContentReport).where(
-            ContentReport.content_hash == clean_hash,
-            ContentReport.status == "pending",
-        )
-    )
+    existing_report = _find_pending_report(computed_hash)
     if existing_report is not None:
-        with transaction():
-            existing_report.report_count += 1
+        return _queued_response(existing_report, _join_pending_report(existing_report, reporter, reason, notes))
 
-            # Check if reporter is already subscribed
-            existing_sub = db.session.scalar(
-                select(ContentReportSubscriber).where(
-                    ContentReportSubscriber.report_id == existing_report.id,
-                    ContentReportSubscriber.reporter_id == reporter.id,
+    try:
+        with db.session.begin_nested():
+            report = ContentReport(
+                content_type=content_type,
+                content_hash=computed_hash,
+                author_id=persisted_author_id,
+                author_login=persisted_author_login,
+                first_reporter_id=reporter.id,
+                report_count=1,
+                primary_reason=reason,
+                status="pending",
+                evidence_payload=canonical_str,
+                expires_at=datetime.now(timezone.utc) + timedelta(days=EVIDENCE_TTL_DAYS),
+            )
+            db.session.add(report)
+            db.session.flush()
+            db.session.add(
+                ContentReportSubscriber(
+                    report_id=report.id,
+                    reporter_id=reporter.id,
+                    reason=reason,
+                    notes=notes,
                 )
             )
-            if existing_sub is None:
-                sub = ContentReportSubscriber(
-                    report_id=existing_report.id,
-                    reporter_id=reporter.id,
-                    reason=reason.strip()[:64],
-                    notes=notes.strip()[:500] if isinstance(notes, str) and notes.strip() else None,
-                )
-                db.session.add(sub)
+            db.session.flush()
+    except IntegrityError:
+        # Another reporter opened the pending report for this hash first: join theirs instead.
+        raced_report = _find_pending_report(computed_hash)
+        if raced_report is None:
+            raise
+        return _queued_response(raced_report, _join_pending_report(raced_report, reporter, reason, notes))
 
-        return {
-            "status": "queued",
-            "message": "Report received and added to pending queue",
-            "report_count": existing_report.report_count,
-            "content_hash": clean_hash,
-        }, 200
-
-    # 5. Create new pending report
-    expires_at = datetime.now(timezone.utc) + timedelta(days=14)
-
-    # Check author existence for foreign key safety and derive author login from DB
-    author_exists = db.session.get(User, author_id)
-    persisted_author_id = author_id if author_exists else None
-    persisted_author_login = author_exists.login if author_exists else author_login.strip()[:50]
-
-    with transaction():
-        report = ContentReport(
-            content_type=content_type.strip()[:32],
-            content_hash=clean_hash,
-            author_id=persisted_author_id,
-            author_login=persisted_author_login,
-            first_reporter_id=reporter.id,
-            report_count=1,
-            primary_reason=reason.strip()[:64],
-            status="pending",
-            evidence_payload=canonical_str,
-            expires_at=expires_at,
-        )
-        db.session.add(report)
-        db.session.flush()
-
-        sub = ContentReportSubscriber(
-            report_id=report.id,
-            reporter_id=reporter.id,
-            reason=reason.strip()[:64],
-            notes=notes.strip()[:500] if isinstance(notes, str) and notes.strip() else None,
-        )
-        db.session.add(sub)
-
+    db.session.commit()
     return {
         "status": "pending",
         "message": "Report created successfully",
         "report_id": report.id,
-        "content_hash": clean_hash,
+        "content_hash": computed_hash,
+        "attributed": attributed,
     }, 201
 
 
@@ -249,21 +319,68 @@ def check_revocations(hashes: list[str]) -> list[str]:
     return list(revoked)
 
 
+def _has_valid_author_stamp(manifest: Any, content_hash: str, secret_key: str | None) -> bool:
+    """True when `manifest` is a genuine stamp for exactly this document from an existing account."""
+    if not isinstance(manifest, dict) or not secret_key:
+        return False
+    stamp, malformed = _parse_manifest(manifest)
+    if stamp is None or malformed or stamp["content_hash"] != content_hash:
+        return False
+    if not verify_content_signature(stamp["author_id"], content_hash, stamp["signature"], secret_key):
+        return False
+    return db.session.get(User, stamp["author_id"]) is not None
+
+
+def check_document_revoked(
+    payload: Any,
+    manifest: Any = None,
+    secret_key: str | None = None,
+) -> dict[str, Any]:
+    """Tell whether a document has been revoked, and whether it carries a genuine author stamp.
+
+    The server hashes the document itself, so a ban cannot be dodged by stripping the stamp.
+    `signed` is the server-side enforcement that custom content comes from an account: it is only
+    true when `manifest` is a valid HMAC stamp for this exact document from an existing user. The
+    client refuses to import or open shared content when it is false.
+
+    Raises:
+        ValueError: If the payload is not a hashable JSON object or is too large.
+    """
+    _, content_hash = _canonical_document(payload)
+    revoked = db.session.scalar(
+        select(ContentRevocation.id).where(ContentRevocation.content_hash == content_hash)
+    )
+    return {
+        "revoked": revoked is not None,
+        "content_hash": content_hash,
+        "signed": _has_valid_author_stamp(manifest, content_hash, secret_key),
+    }
+
+
 def get_admin_reports(
     status: str | None = "pending",
     page: int = 1,
     per_page: int = 20,
 ) -> dict[str, Any]:
-    """Retrieve paginated content reports ordered by report count descending."""
+    """Retrieve paginated content reports ordered by report count descending.
+
+    Raises:
+        ValueError: If `status` is not a known report status (or "all").
+    """
     base_stmt = select(ContentReport)
     count_stmt = select(func.count(ContentReport.id))
 
-    if status and status.strip().lower() != "all":
-        clean_status = status.strip()
+    clean_status = (status or "pending").strip().lower()
+    if clean_status != "all":
+        if clean_status not in REPORT_STATUSES:
+            raise ValueError(f"Unknown report status '{clean_status}'")
         base_stmt = base_stmt.where(ContentReport.status == clean_status)
         count_stmt = count_stmt.where(ContentReport.status == clean_status)
 
     total = db.session.scalar(count_stmt) or 0
+    pending_total = db.session.scalar(
+        select(func.count(ContentReport.id)).where(ContentReport.status == "pending")
+    ) or 0
 
     stmt = (
         base_stmt.order_by(
@@ -275,24 +392,52 @@ def get_admin_reports(
     )
 
     reports = db.session.scalars(stmt).all()
-    items = [r.to_dict() for r in reports]
+    items = [{**r.to_dict(), "has_evidence": r.evidence_payload is not None} for r in reports]
 
     return {
         "items": items,
         "total": total,
+        "pending_total": pending_total,
         "page": page,
         "per_page": per_page,
     }
 
 
 def get_report_preview(report_id: int) -> dict[str, Any] | None:
-    """Retrieve full preview of a report including evidence payload."""
+    """Retrieve full preview of a report: evidence, every reporter's reason/notes, author state.
+
+    Reporter identities are deliberately left out; the admin judges the content, not who flagged it.
+    """
     report = db.session.get(ContentReport, report_id)
     if report is None:
         return None
+
+    subscribers = db.session.scalars(
+        select(ContentReportSubscriber)
+        .where(ContentReportSubscriber.report_id == report.id)
+        .order_by(ContentReportSubscriber.created_at.asc(), ContentReportSubscriber.id.asc())
+    ).all()
+    breakdown: dict[str, int] = {}
+    for sub in subscribers:
+        breakdown[sub.reason] = breakdown.get(sub.reason, 0) + 1
+
+    author = db.session.get(User, report.author_id) if report.author_id is not None else None
+
     return {
         **report.to_dict(),
         "evidence_payload": report.evidence_payload,
+        "reports": [
+            {
+                "reason": sub.reason,
+                "notes": sub.notes,
+                "created_at": sub.created_at.isoformat() if sub.created_at else None,
+            }
+            for sub in subscribers
+        ],
+        "reason_breakdown": breakdown,
+        "attributed": report.author_id is not None,
+        "author_active": author.is_active if author is not None else None,
+        "author_is_admin": author.role == "admin" if author is not None else False,
     }
 
 
@@ -314,7 +459,12 @@ def resolve_report(
         if report is None:
             return {"error": "Content report not found", "status": 404}, 404
 
-        if report.status in ("resolved_banned", "dismissed"):
+        if report.status == "expired":
+            return {
+                "error": f"Content report #{report_id} expired and its evidence was wiped; it can no longer be resolved",
+                "status": 409,
+            }, 409
+        if report.status != "pending":
             return {
                 "error": f"Content report #{report_id} has already been resolved as '{report.status}'",
                 "status": 409,
@@ -375,6 +525,18 @@ def resolve_report(
         report.resolved_by_id = admin.id
         report.resolved_at = datetime.now(timezone.utc)
         report.admin_notes = clean_notes
+
+        notice = None
+        if action == "ban" and report.author_id is not None:
+            notice = (report.author_id, report.content_type, report.primary_reason)
+
+    if notice is not None:
+        # Statement of reasons for the author. Sent after the decision is committed and never raises.
+        author = db.session.get(User, notice[0])
+        if author is not None and author.email:
+            send_content_moderation_notice_email(
+                author, notice[1], notice[2], account_deactivated=not author.is_active, contact_email=contact_email()
+            )
 
     return {
         "message": f"Report successfully resolved with action '{action}'",

@@ -118,3 +118,41 @@ export interface AdminSiteSetting {
   min: number | null;
   max: number | null;
 }
+
+export type ContentReportStatus = 'pending' | 'resolved_banned' | 'dismissed' | 'expired';
+export type ContentReportAction = 'ban' | 'dismiss';
+
+/** One deduplicated report on a piece of user-made content (one row per content hash). */
+export interface AdminContentReport {
+  id: number;
+  content_type: string;
+  content_hash: string;
+  author_id: number | null;
+  author_login: string;
+  report_count: number;
+  primary_reason: string;
+  status: ContentReportStatus;
+  admin_notes: string | null;
+  resolved_at: string | null;
+  expires_at: string;
+  created_at: string;
+  has_evidence: boolean;
+}
+
+export interface AdminContentReportList {
+  items: AdminContentReport[];
+  total: number;
+  pending_total: number;
+  page: number;
+  per_page: number;
+}
+
+export interface AdminContentReportDetail extends AdminContentReport {
+  /** The reported document as canonical JSON. Null once resolved or expired (zero retention). */
+  evidence_payload: string | null;
+  reports: { reason: string; notes: string | null; created_at: string | null }[];
+  reason_breakdown: Record<string, number>;
+  attributed: boolean;
+  author_active: boolean | null;
+  author_is_admin: boolean;
+}

@@ -175,9 +175,10 @@ def test_create_report_unauthenticated_rejected(client: FlaskClient) -> None:
     assert res.status_code == 401
 
 
-def test_create_report_payload_mismatch_rejected(
-    client: FlaskClient, author_user: User, reporter_user: User, app
+def test_create_report_payload_mismatch_is_unattributed(
+    client: FlaskClient, author_user: User, reporter_user: User, app, db_session: Session
 ) -> None:
+    """A stamp copied onto different content must never pin the report on the stamp's author."""
     payload = {"title": "Legit Content"}
     canon = canonicalize_payload(payload)
     content_hash = compute_content_hash(canon)
@@ -197,8 +198,16 @@ def test_create_report_payload_mismatch_rejected(
     }
 
     res = client.post("/api/v1/content/reports", headers=headers, json=report_data)
-    assert res.status_code == 400
-    assert "mismatch" in res.get_json().get("error", "").lower()
+    assert res.status_code == 201
+    body = res.get_json()
+    assert body["attributed"] is False
+    # The server hashes what it was actually sent, not what the stamp claims.
+    assert body["content_hash"] == compute_content_hash(canonicalize_payload(tampered_payload))
+    assert body["content_hash"] != content_hash
+
+    report = db_session.get(ContentReport, body["report_id"])
+    assert report.author_id is None
+    assert report.author_login == ""
 
 
 def test_create_report_invalid_signature_rejected(
@@ -275,17 +284,19 @@ def test_create_report_deduplication_bumps_count_and_adds_subscriber(
     assert data2["report_count"] == 2
     assert data2["content_hash"] == content_hash
 
-    # Third report from original reporter: bumps count, avoids duplicate subscriber crash
+    # Third report from the original reporter must NOT inflate the priority count
     res3 = client.post("/api/v1/content/reports", headers=headers1, json=report_data1)
     assert res3.status_code == 200
     data3 = res3.get_json()
     assert data3["status"] == "queued"
-    assert data3["report_count"] == 3
+    assert data3["already_reported"] is True
+    assert data3["report_count"] == 2
 
     # Check database state
+    db_session.expire_all()
     report = db_session.query(ContentReport).filter_by(content_hash=content_hash).first()
     assert report is not None
-    assert report.report_count == 3
+    assert report.report_count == 2
     # Only 2 distinct subscribers should exist (reporter_user and second_reporter_user)
     assert len(report.subscribers) == 2
 

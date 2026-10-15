@@ -31,6 +31,7 @@ export function exportChallengeToJson(challenge: ChallengeDefinition): void {
       title: challenge.title,
       description: challenge.description || '',
       game_mode: challenge.game_mode || 'custom',
+      ...(challenge.is_nsfw ? { is_nsfw: true } : {}),
       ...(challenge._manifest ? { _manifest: challenge._manifest } : {}),
       rounds: challenge.rounds.map((r, idx) => ({
         round_number: idx + 1,
@@ -65,6 +66,7 @@ interface RawChallenge {
   description?: unknown;
   game_mode?: unknown;
   rounds?: unknown;
+  is_nsfw?: unknown;
   _manifest?: unknown;
 }
 
@@ -132,6 +134,7 @@ export function importChallengeFromJson(jsonString: string): ChallengeDefinition
     description,
     game_mode,
     rounds: validatedRounds,
+    ...(rawChallenge.is_nsfw === true ? { is_nsfw: true } : {}),
     ...(manifest ? { _manifest: manifest } : {}),
   };
 }

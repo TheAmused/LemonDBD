@@ -4,7 +4,7 @@ export default {
   heading: "Regeln",
   tagline: "Kurz, fair und nur ein bisschen verflucht. Einmal lesen, dann ab zum Paletten-Looping.",
   lastUpdatedLabel: "Zuletzt aktualisiert",
-  lastUpdated: "10. Oktober 2026",
+  lastUpdated: "15. Oktober 2026",
   translationNotice: "Falls die übersetzten Fassungen dieser Seite von der englischen abweichen, gilt die englische Fassung.",
   numberLabel: "Regel {n}",
   tldrLabel: "Kurz gesagt",
@@ -61,13 +61,13 @@ export default {
       tldr: "Es gehört dir. Du stehst aber auch dafür gerade.",
       paragraphs: [
         "<b>Auf unseren Servern gespeichert:</b> dein Avatar und die Screenshots, die du Fehlerberichten anhängst. Du behältst die Rechte daran und räumst <brand>LemonDBD</brand> nur die Erlaubnis ein, die zum Speichern und Anzeigen für den Betrieb der Seite nötig ist, wie in den [Nutzungsbedingungen]({termsPath}) beschrieben.",
-        "<b>Nicht von uns gespeichert:</b> die Tier-Listen, Smash-or-Pass-Rosters und eigenen Minispiele, die du erstellst, liegen in deinem eigenen Browser, und wir haben keine Kopie davon. Wenn du eines per Link teilst, ist sein Inhalt im Link selbst kodiert und gelangt nicht auf unsere Server. Für den Inhalt bleibst du verantwortlich.",
+        "<b>Nicht von uns gespeichert:</b> die Tier-Listen, Smash-or-Pass-Rosters und eigenen Minispiele, die du erstellst, liegen in deinem eigenen Browser, und wir haben keine Kopie davon. Wenn du eines per Link teilst, ist sein Inhalt im Link selbst kodiert, zusammen mit deiner Konto-Markierung. Meldet jemand es, sehen wir uns eine Kopie an und löschen sie nach der Entscheidung. Für den Inhalt bleibst du verantwortlich.",
       ],
       items: [
         "Lade nur Inhalte hoch oder teile sie, die du selbst erstellt hast oder nutzen darfst, und verletze keine Rechte anderer.",
         "Veröffentliche keine rechtswidrigen oder schädlichen Inhalte, darunter Malware, Phishing, Betrugslinks oder personenbezogene Daten anderer.",
-        "Kennzeichne Rosters für Erwachsene als NSFW, wo diese Option besteht, und schicke sie nicht an Personen, die sie nicht angefragt haben.",
-        "Da wir keine Kopie geteilter Tier-Listen, Rosters oder Minispiele haben, können wir einen von dir geteilten Link weder zurückrufen noch löschen. Jeder, der den Link hat, kann ihn öffnen.",
+        "Kennzeichne Tierlisten, Rosters und Minispiele für Erwachsene als NSFW und schicke sie nicht an Personen, die sie nicht angefragt haben.",
+        "Wir können einen Link oder eine Datei, die du geteilt hast, nicht zurückrufen, und jeder, der sie hat, kann sie öffnen. Wir können aber den Inhalt sperren: Ist er gebannt, weigert sich die Seite, ihn zu öffnen oder zu importieren.",
       ],
     },
     smashOrPass: {
@@ -101,6 +101,7 @@ export default {
       tldr: "Einen Fehler oder einen Regelbrecher entdeckt? Sag es uns.",
       paragraphs: [
         "Nutze die Schaltfläche <b>Fehler melden</b> in der Seitenleiste, um Fehler, falsche Daten oder Übersetzungsfehler zu melden. Um einen Verstoß gegen diese Regeln, Missbrauch oder eine private Angelegenheit zu melden, schreibe an [{contactEmail}](mailto:{contactEmail}) oder kontaktiere ein Mitglied von <brand>LemonTeam</brand> auf dem Server.",
+        "Um eine Tier-Liste, ein Smash-or-Pass-Roster oder ein eigenes Minispiel zu melden, das dir jemand geschickt hat, melde dich an und nutze die Schaltfläche <b>Inhalt melden</b>. Ein Mitglied von <brand>LemonTeam</brand> prüft es.",
         "Meldungen sollten wahrheitsgemäß, konkret und höflich sein. Wissentlich falsche Meldungen, Spam und die Nutzung des Meldeformulars zur Belästigung anderer sind selbst Verstöße gegen diese Regeln.",
       ],
       items: [],
@@ -114,6 +115,7 @@ export default {
       items: [
         "Drohungen, sexuelle Inhalte mit Minderjährigen, rechtswidrige Inhalte und Angriffe auf die Seite werden ohne vorherige Warnung behandelt und können den zuständigen Behörden gemeldet werden.",
         "Auf dem Server nehmen dieselben Maßnahmen die Form einer Verwarnung, eines Timeouts, eines Kicks oder eines Banns an.",
+        "Inhalte, die gegen diese Regeln verstoßen, können gebannt werden: Die Seite weigert sich dann, sie zu öffnen oder zu importieren. Wir können außerdem das Konto der Person deaktivieren, die sie veröffentlicht hat, und schicken ihr den Grund per E-Mail.",
         "Wenn wir Inhalte entfernen oder ein Konto einschränken, nennen wir nach Möglichkeit den Grund. Hältst du das für einen Fehler, kannst du die Entscheidung anfechten, indem du uns schreibst; wir prüfen sie erneut. Das Verfahren steht in den [Nutzungsbedingungen]({termsPath}).",
       ],
     },
@@ -122,8 +124,8 @@ export default {
     heading: "Die Haken-Stufen",
     stages: [
       { title: "Stufe 1: der Hinweis", text: "Eine Nachricht mit der Bitte, das Verhalten zu korrigieren oder zu unterlassen." },
-      { title: "Stufe 2: das Aufräumen", text: "Wir entfernen Inhalte, setzen unfair erworbenen Fortschritt zurück oder schränken Funktionen ein." },
-      { title: "Opferung", text: "Dein Konto wird gesperrt oder gelöscht, und weitere Konten oder Adressen können blockiert werden." },
+      { title: "Stufe 2: das Aufräumen", text: "Wir entfernen oder sperren Inhalte, setzen unfair erworbenen Fortschritt zurück oder schränken Funktionen ein." },
+      { title: "Opferung", text: "Dein Konto wird gesperrt, deaktiviert oder gelöscht, und weitere Konten oder Adressen können blockiert werden." },
     ],
   },
 };

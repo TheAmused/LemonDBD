@@ -39,6 +39,8 @@ export interface TierListSummary {
   description: string;
   cover_image_url: string;
   is_featured: boolean;
+  /** Adult-oriented list: the card is badged and the list opens behind a confirmation. */
+  is_nsfw?: boolean;
   sort_order: number;
   /** Null when the list ranks a whole catalog -- only the live catalog knows how big that is. */
   item_count: number | null;
@@ -115,6 +117,8 @@ export interface TierListDocument {
   placements: TierPlacements;
   /** Custom lists only: an https:/data: image shown behind the list's card and page. */
   backgroundImage?: string;
+  /** Custom lists only: marked by the author as containing mature content. Part of what gets signed. */
+  is_nsfw?: boolean;
   _manifest?: ContentManifest | null;
 }
 
@@ -140,6 +144,8 @@ export interface StoredCustomList {
   updatedAt: number;
   /** An https:/data: image shown behind this list's card and its own page. Unset means none. */
   backgroundImage?: string;
+  /** Marked by the author as containing mature content. */
+  is_nsfw?: boolean;
   _manifest?: ContentManifest | null;
 }
 

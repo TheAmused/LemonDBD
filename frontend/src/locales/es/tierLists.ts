@@ -239,7 +239,18 @@ export default {
   reportError: "Error al enviar el reporte. Por favor, inténtalo de nuevo.",
   reportButton: "Reportar",
   reportButtonAria: "Reportar contenido",
-  reportNoManifest: "Este es un borrador no firmado sin una firma de creador verificada. Solo el contenido compartido o exportado con firma de autor se puede reportar a los moderadores.",
+  contentRevoked: "Este contenido fue eliminado por los moderadores por infringir las normas de la comunidad, por lo que ya no se puede importar ni jugar.",
+  signFailed: "No se pudo añadir tu marca de cuenta para compartir. Inicia sesión de nuevo e inténtalo otra vez.",
+  unsignedContent: "Este contenido no tiene una marca de cuenta válida, así que no se puede importar ni jugar. Pide a su autor que lo vuelva a compartir desde su cuenta.",
+  nsfw: {
+    label: "Contiene contenido NSFW",
+    hint: "Marca esta tier list como contenido para adultos o sensible.",
+    badge: "NSFW",
+    title: "Contiene Contenido NSFW",
+    description: "Esta tier list está marcada como contenido NSFW/para adultos. Confirma que quieres verla.",
+    confirm: "Clic para Ver",
+  },
+  reportNoManifest: "Esta copia no tiene una marca de cuenta válida, así que los moderadores no podrán atribuirla a una cuenta. Aun así puedes reportarla y revisarán el propio contenido.",
 
   dnd: {
     pickedUp: "Has cogido {name}.",

@@ -44,6 +44,7 @@ export interface OfficialTierListUpdatePayload {
   tiers?: TierDefinition[];
   items?: Array<{ id: string; name: string; image_url?: string }>;
   default_placements?: TierPlacements | null;
+  is_nsfw?: boolean;
 }
 
 export async function updateOfficialTierList(
@@ -74,6 +75,7 @@ export interface OfficialTierListCreatePayload {
   cover_image_url?: string | null;
   tiers: TierDefinition[];
   items: Array<{ id: string; name: string; image_url?: string }>;
+  is_nsfw?: boolean;
 }
 
 export async function createOfficialTierList(

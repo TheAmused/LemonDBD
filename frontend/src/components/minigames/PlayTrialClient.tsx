@@ -7,17 +7,21 @@ import { PageShell } from '@/components/layout/PageShell';
 import { ChallengeRunner } from '@/components/minigames/ChallengeRunner';
 import { useDictionary, useLocale } from '@/context/DictionaryContext';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
+import { useNsfwGate } from '@/hooks/useNsfwGate';
+import { NsfwContentGate } from '@/components/common/NsfwContentGate';
 import type { ChallengeDefinition, MinigameCatalog } from '@/types/minigame';
 import {
   fetchMinigameCatalog,
   fetchDailyChallenge,
   fetchRepeatableChallenge,
 } from '@/services/minigameApi';
-import { getCustomChallenges } from '@/utils/minigames/storage';
+import { deleteCustomChallenge, getCustomChallenges } from '@/utils/minigames/storage';
+import { checkDocument } from '@/utils/contentRevocation';
 import { decodeChallengeShare, readChallengeFragment } from '@/utils/minigames/shareLink';
 import { DbdSpinner } from '@/components/common/DbdSpinner';
 import { Button } from '@/components/common/Button';
 import { ReportContentModal } from '@/components/common/ReportContentModal';
+import { signingPayload } from '@/utils/contentPayload';
 import { Flag } from 'lucide-react';
 import { AuthRequiredState } from '@/components/common/AuthRequiredState';
 import { useAuth } from '@/context/AuthContext';
@@ -78,6 +82,16 @@ function PlayTrialContent() {
           loadedChallenge = await fetchDailyChallenge('fog_trial');
         }
 
+        if (loadedChallenge && (sharedPayload || customId)) {
+          const check = await checkDocument('minigame', loadedChallenge);
+          if (check.revoked) {
+            if (customId) deleteCustomChallenge(customId);
+            throw new Error(dict.tierLists.contentRevoked);
+          }
+          // A shared link must come from an account; a trial the user built themselves is not shared yet.
+          if (sharedPayload && check.signed === false) throw new Error(dict.tierLists.unsignedContent);
+        }
+
         if (isMounted) {
           setChallenge(loadedChallenge);
         }
@@ -98,6 +112,12 @@ function PlayTrialContent() {
       isMounted = false;
     };
   }, [type, mode, customId, locale]);
+
+  const nsfwGate = useNsfwGate(
+    'minigame',
+    String(challenge?.id ?? customId ?? 'shared'),
+    challenge?.is_nsfw === true
+  );
 
   useDocumentTitle(challenge ? `${challenge.title} - LemonDBD` : dict.minigames.pageTitle);
 
@@ -124,6 +144,13 @@ function PlayTrialContent() {
           <h2 className="text-lg font-bold text-accent-red mb-2">{dict.app.notice}</h2>
           <p className="text-xs text-text-muted">{error}</p>
         </div>
+      ) : challenge && catalog && nsfwGate.gated ? (
+        <NsfwContentGate
+          title={dict.minigames.nsfw.title}
+          description={dict.minigames.nsfw.description}
+          confirmLabel={dict.minigames.nsfw.confirm}
+          onConfirm={nsfwGate.confirm}
+        />
       ) : challenge && catalog ? (
         <>
           {isCustomTrial && (
@@ -150,7 +177,7 @@ function PlayTrialContent() {
               onClose={() => setReportModalOpen(false)}
               contentType="minigame"
               manifest={challenge._manifest ?? null}
-              payload={challenge as unknown as Record<string, unknown>}
+              payload={signingPayload('minigame', challenge)}
               contentTitle={challenge.title}
             />
           )}

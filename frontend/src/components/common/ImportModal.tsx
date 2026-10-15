@@ -6,6 +6,7 @@ import { CircleAlert, Info, Upload } from 'lucide-react';
 import { Modal } from '@/components/common/Modal';
 import { Button } from '@/components/common/Button';
 import { Textarea } from '@/components/common/Field';
+import { checkDocument } from '@/utils/contentRevocation';
 
 type ParseResultLike = { ok: boolean };
 
@@ -20,6 +21,8 @@ export interface ImportDraftOptions<R extends ParseResultLike> {
   /** Result reported when an uploaded file exceeds `maxPayloadChars`. */
   tooLarge: R;
   maxPayloadChars: number;
+  /** When set, a parsed document is checked against the moderation ban list before it can be imported. */
+  revocationCheck?: { contentType: string; documentOf: (result: R) => unknown };
 }
 
 /**
@@ -34,8 +37,10 @@ export function useImportDraft<R extends ParseResultLike>({
   toText,
   tooLarge,
   maxPayloadChars,
+  revocationCheck,
 }: ImportDraftOptions<R>) {
   const [text, setText] = useState<string>('');
+  const [revocation, setRevocation] = useState<{ text: string; revoked: boolean; unsigned: boolean } | null>(null);
   const [linkResult, setLinkResult] = useState<R | null>(null);
   const [fileError, setFileError] = useState<boolean>(false);
 
@@ -62,6 +67,35 @@ export function useImportDraft<R extends ParseResultLike>({
     return parse(text);
   }, [text, linkResult, parse]);
 
+  const checkType = revocationCheck?.contentType;
+  const documentOfRef = useRef(revocationCheck?.documentOf);
+  useEffect(() => {
+    documentOfRef.current = revocationCheck?.documentOf;
+  });
+  useEffect(() => {
+    const documentOf = documentOfRef.current;
+    if (!checkType || !documentOf || !result?.ok) {
+      setRevocation(null);
+      return;
+    }
+    let cancelled = false;
+    setRevocation(null);
+    checkDocument(checkType, documentOf(result)).then(({ revoked, signed }) => {
+      // Only a definite "not signed" blocks: an unreachable server must not make importing unusable.
+      if (!cancelled) setRevocation({ text, revoked, unsigned: signed === false });
+    });
+    return () => {
+      cancelled = true;
+    };
+    // `result` is derived from `text`; keying on both keeps a stale answer from applying to new text.
+  }, [result, text, checkType]);
+
+  /** True while the ban-list answer for the current text is still on its way. */
+  const checkingRevocation = Boolean(checkType && result?.ok && revocation?.text !== text);
+  const revoked = Boolean(checkType && result?.ok && revocation?.text === text && revocation.revoked);
+  /** True when the server found no genuine creator signature: custom content must come from an account. */
+  const unsigned = Boolean(checkType && result?.ok && revocation?.text === text && !revocation.revoked && revocation.unsigned);
+
   /** Typing/pasting replaces any decoded link result. */
   const changeText = useCallback((value: string) => {
     setLinkResult(null);
@@ -87,7 +121,7 @@ export function useImportDraft<R extends ParseResultLike>({
     [maxPayloadChars, tooLarge]
   );
 
-  return { text, result, fileError, changeText, readFile };
+  return { text, result, fileError, changeText, readFile, revoked, unsigned, checkingRevocation };
 }
 
 export type NoticeTone = 'info' | 'warning' | 'error';

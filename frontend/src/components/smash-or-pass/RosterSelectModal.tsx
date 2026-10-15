@@ -6,7 +6,6 @@ import { CardStackIcon, ImportScrollIcon, ThornChevronIcon } from '@/components/
 import type { RosterItem } from '@/types/smashOrPass';
 import { cn } from '@/utils/cn';
 import { Modal } from '@/components/common/Modal';
-import { Button } from '@/components/common/Button';
 import { AuthRequiredState } from '@/components/common/AuthRequiredState';
 import { useAuth } from '@/context/AuthContext';
 import { useDictionary } from "@/context/DictionaryContext";
@@ -218,17 +217,6 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
                   ? dict.smashOrPass.picker.noCustomRostersDesc
                   : dict.smashOrPass.picker.noRostersMatchDesc}
               </p>
-              {onCreateRoster && filter === 'custom' && (
-                <Button
-                  variant="primary" size="sm"
-                  onClick={() => {
-                    onClose();
-                    onCreateRoster();
-                  }}
-                >
-                  <span>{dict.smashOrPass.picker.createFirstRoster}</span>
-                </Button>
-              )}
             </div>
           ) : (
             <div

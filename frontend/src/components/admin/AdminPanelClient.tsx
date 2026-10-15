@@ -16,6 +16,7 @@ import { AdminActionAlert } from '@/components/admin/AdminActionAlert';
 import { AdminSectionTabs } from '@/components/admin/AdminSectionTabs';
 import { ADMIN_TAB_STORAGE_KEY, isAdminTab, type AdminTab } from '@/components/admin/adminTabs';
 import { useAdminBugReports } from '@/components/admin/useAdminBugReports';
+import { useAdminContentReports } from '@/components/admin/useAdminContentReports';
 import { useAdminUsers } from '@/components/admin/useAdminUsers';
 import { Locale } from '@/i18n/config';
 import type { ActionMessage } from '@/types/admin';
@@ -24,6 +25,10 @@ import { formatMessage } from '@/utils/i18nFormat';
 
 const AdminBugReportsWorkbench = dynamic(
   () => import('@/components/admin/AdminBugReportsWorkbench').then((m) => m.AdminBugReportsWorkbench),
+  { ssr: false, loading: () => <AdminTabContentSkeleton /> }
+);
+const AdminContentReportsWorkbench = dynamic(
+  () => import('@/components/admin/AdminContentReportsWorkbench').then((m) => m.AdminContentReportsWorkbench),
   { ssr: false, loading: () => <AdminTabContentSkeleton /> }
 );
 const AdminChallengeControl = dynamic(
@@ -88,15 +93,30 @@ export function AdminPanelClient() {
     handleUpdateBugReport, handleDeleteBugReport, confirmDeleteBugReport,
   } = useAdminBugReports({ onActionMessage: setActionMessage });
 
+  const contentReports = useAdminContentReports({ onActionMessage: setActionMessage });
+  const { fetchReports, fetchDetail, refreshPendingCount } = contentReports;
+  const { selectedId: selectedReportId } = contentReports;
+
   useEffect(() => {
     if (isAuthenticated && isAdmin) {
       if (activeTab === 'users' || activeTab === 'challenge_stats') {
         fetchAdminData();
       } else if (activeTab === 'bugs') {
         fetchBugReports();
+      } else if (activeTab === 'reports') {
+        fetchReports();
       }
     }
-  }, [isAuthenticated, isAdmin, activeTab, fetchAdminData, fetchBugReports]);
+  }, [isAuthenticated, isAdmin, activeTab, fetchAdminData, fetchBugReports, fetchReports]);
+
+  // The tab's pending badge has to be right before the Reports tab is ever opened.
+  useEffect(() => {
+    if (isAuthenticated && isAdmin) refreshPendingCount();
+  }, [isAuthenticated, isAdmin, refreshPendingCount]);
+
+  useEffect(() => {
+    if (isAuthenticated && isAdmin && activeTab === 'reports') fetchDetail(selectedReportId);
+  }, [isAuthenticated, isAdmin, activeTab, selectedReportId, fetchDetail]);
 
   if (!dict || isLoading) {
     return <AdminPanelSkeleton />;
@@ -114,13 +134,15 @@ export function AdminPanelClient() {
     >
       <div className="max-w-7xl mx-auto space-y-6 sm:space-y-8">
         <AdminHeader
-          isLoading={loadingData || loadingBugs}
+          isLoading={loadingData || loadingBugs || contentReports.loading}
           onOpenDbMaintenance={(tab) => {
             if (tab) setModalTab(tab);
             setIsConfigOpen(true);
           }}
           onOpenOcrCheck={() => setIsOcrCheckOpen(true)}
-          onRefreshData={() => (activeTab === 'users' ? fetchAdminData() : fetchBugReports())}
+          onRefreshData={() =>
+            activeTab === 'users' ? fetchAdminData() : activeTab === 'reports' ? fetchReports() : fetchBugReports()
+          }
         />
 
         {actionMessage && (
@@ -133,6 +155,7 @@ export function AdminPanelClient() {
           onChange={setActiveTab}
           totalUsers={totalUsers}
           pendingBugs={bugStats?.pending ?? 0}
+          pendingReports={contentReports.pendingTotal}
         />
 
         {activeTab === 'users' ? (
@@ -170,6 +193,32 @@ export function AdminPanelClient() {
         ) : activeTab === 'challenge_stats' ? (
           <Suspense fallback={<AdminTabContentSkeleton />}>
             <AdminChallengeStats stats={stats} />
+          </Suspense>
+        ) : activeTab === 'reports' ? (
+          <Suspense fallback={<AdminTabContentSkeleton />}>
+            <AdminContentReportsWorkbench
+              list={contentReports.list}
+              statusFilter={contentReports.statusFilter}
+              page={contentReports.page}
+              perPage={contentReports.perPage}
+              loading={contentReports.loading}
+              selectedId={contentReports.selectedId}
+              detail={contentReports.detail}
+              loadingDetail={contentReports.loadingDetail}
+              resolving={contentReports.resolving}
+              onStatusFilterChange={(val) => {
+                contentReports.setStatusFilter(val);
+                contentReports.setPage(1);
+              }}
+              onPageChange={contentReports.setPage}
+              onSelect={contentReports.setSelectedId}
+              onResolve={async (id, action, banAuthor, notes) => {
+                const ok = await contentReports.resolve(id, action, banAuthor, notes);
+                if (ok) fetchDetail(id);
+                return ok;
+              }}
+              onPurgeExpired={contentReports.purgeExpired}
+            />
           </Suspense>
         ) : activeTab === 'settings' ? (
           <Suspense fallback={<AdminTabContentSkeleton />}>

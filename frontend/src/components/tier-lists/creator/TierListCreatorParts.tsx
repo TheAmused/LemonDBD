@@ -24,6 +24,8 @@ export interface Draft {
   preset: LadderPresetId | null;
   /** An https:/data: image shown behind the list's card and page. Empty means none. */
   backgroundImage: string;
+  /** Marked as containing mature content. */
+  is_nsfw: boolean;
 }
 
 export function readDraft(): Draft | null {
@@ -43,6 +45,7 @@ export function readDraft(): Draft | null {
       items: checked.items,
       preset: (parsed.preset as LadderPresetId | null) ?? null,
       backgroundImage: typeof parsed.backgroundImage === 'string' ? parsed.backgroundImage : '',
+      is_nsfw: parsed.is_nsfw === true,
     };
   } catch {
     return null;

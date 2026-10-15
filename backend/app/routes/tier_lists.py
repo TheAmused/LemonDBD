@@ -58,6 +58,7 @@ def create_tier_list():
             cover_image_url=payload.cover_image_url,
             tiers=[t.model_dump(exclude_none=True) for t in payload.tiers],
             custom_items=[i.model_dump(exclude_none=True) for i in payload.items],
+            is_nsfw=payload.is_nsfw,
         )
     except ValueError as err:
         return jsonify({"error": str(err)}), 400
@@ -98,6 +99,8 @@ def update_tier_list(slug: str):
         kwargs["custom_items"] = [i.model_dump(exclude_none=True) for i in payload.items]
     if "default_placements" in fields_set:
         kwargs["default_placements"] = payload.default_placements
+    if "is_nsfw" in fields_set and payload.is_nsfw is not None:
+        kwargs["is_nsfw"] = payload.is_nsfw
 
     try:
         row = tier_list_service.update_tier_list(slug, **kwargs)

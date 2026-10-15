@@ -317,7 +317,6 @@ export default {
     noRostersFound: 'No Rosters Found',
     noCustomRostersDesc: "You haven't created any custom rosters yet in this browser.",
     noRostersMatchDesc: 'No rosters match this filter.',
-    createFirstRoster: 'Create Your First Roster',
   },
   importModal: {
     title: 'Import a Roster',

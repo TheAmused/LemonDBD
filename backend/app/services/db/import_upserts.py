@@ -185,6 +185,7 @@ def import_tier_lists(
 _TIER_LIST_DEFAULTS: dict[str, Any] = {
     "description": "",
     "is_featured": False,
+    "is_nsfw": False,
     "is_active": True,
     "sort_order": 0,
 }

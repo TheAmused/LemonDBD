@@ -23,12 +23,14 @@ import {
   estimateStoredBytes,
 } from '@/utils/tierLists/creator';
 import { createCustomListId, saveCustomList } from '@/utils/tierLists/storage';
+import { acknowledgeNsfwContent } from '@/utils/nsfwAck';
 import { LABEL, TOUCH_FIELD } from '../styles';
 import { CreatorItems } from './CreatorItems';
 import { CreatorPreviewModal } from './CreatorPreview';
 import { type IncomingItem, ItemSources } from './ItemSources';
 import { LadderEditor } from './LadderEditor';
 import { Checkbox } from '@/components/common/Checkbox';
+import { NsfwSwitch } from '@/components/common/NsfwSwitch';
 import { Button } from '@/components/common/Button';
 import { Input } from '@/components/common/Field';
 import { type Draft, readDraft, DRAFT_KEY, Section, STORAGE_WARN_BYTES, formatBytes, Feedback } from "./TierListCreatorParts";
@@ -62,6 +64,7 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
       items: [],
       preset: 'classic',
       backgroundImage: '',
+      is_nsfw: false,
     }),
     [translateFeeling]
   );
@@ -140,6 +143,7 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
       items: editingList.items,
       preset: null,
       backgroundImage: editingList.backgroundImage ?? '',
+      is_nsfw: editingList.is_nsfw === true,
     });
   }, [editId, storeHydrated, editingList]);
 
@@ -161,6 +165,7 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
       })),
       preset: null,
       backgroundImage: officialTemplate.cover_image_url ?? '',
+      is_nsfw: officialTemplate.is_nsfw === true,
     });
   }, [officialSlug, officialTemplate]);
 
@@ -226,6 +231,7 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
       tiers: draft.tiers.map((tier) => ({ ...tier, label: tier.label.trim() || tier.id })),
       items: draft.items.map((i) => ({ ...i, name: i.name.trim() || i.id })),
       ...(safeBackground ? { backgroundImage: safeBackground } : {}),
+      ...(draft.is_nsfw ? { is_nsfw: true } : {}),
     };
 
     if (officialSlug && isAdmin) {
@@ -249,6 +255,7 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
               name: i.name,
               ...(i.image ? { image_url: i.image } : {}),
             })),
+            is_nsfw: draft.is_nsfw,
           },
           locale,
           token
@@ -280,6 +287,8 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
         setSaveError(result.reason);
         return;
       }
+      // The author knows what is in their own list: no confirmation screen right after saving it.
+      if (draft.is_nsfw) acknowledgeNsfwContent('tier_list', editId);
       router.push(`/${locale}/tier-lists/custom/${editId}`);
       return;
     }
@@ -304,6 +313,7 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
               name: i.name,
               ...(i.image ? { image_url: i.image } : {}),
             })),
+            is_nsfw: draft.is_nsfw,
           },
           locale,
           token
@@ -332,6 +342,7 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
     } catch {
       // ignore
     }
+    if (draft.is_nsfw) acknowledgeNsfwContent('tier_list', id);
     router.push(`/${locale}/tier-lists/custom/${id}`);
   };
 
@@ -431,6 +442,14 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
                 </div>
               )}
             </label>
+            <div className="md:col-span-2 flex justify-center">
+              <NsfwSwitch
+                checked={draft.is_nsfw}
+                onChange={(checked) => patch({ is_nsfw: checked })}
+                label={t.nsfw.label}
+                hint={t.nsfw.hint}
+              />
+            </div>
             {isAdmin && !isEditing && (
               <Checkbox checked={official} onChange={setOfficial} className="md:col-span-2 justify-center gap-2.5">
                 <span className="text-center">
@@ -519,6 +538,7 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
         tiers={draft.tiers}
         items={draft.items}
         backgroundImage={safeBackground}
+        isNsfw={draft.is_nsfw}
         locale={locale}
       />
     </div>

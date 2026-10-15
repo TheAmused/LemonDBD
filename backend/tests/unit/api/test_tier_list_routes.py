@@ -356,6 +356,53 @@ class TestTierListAdminCreate:
         assert res.status_code == 201
         assert res.get_json()["data"]["tiers"][0]["backgroundImage"] == "https://example.com/s.png"
 
+    def test_nsfw_flag_defaults_to_false_and_can_be_set_on_create_and_update(
+        self, client: FlaskClient, db_session: Session, admin_headers: dict[str, str]
+    ) -> None:
+        plain = client.post("/api/v1/tier-lists", json=self._payload(), headers=admin_headers)
+        assert plain.status_code == 201
+        assert plain.get_json()["data"]["is_nsfw"] is False
+
+        flagged = client.post(
+            "/api/v1/tier-lists", json=self._payload(title="Spicy Picks", is_nsfw=True), headers=admin_headers
+        )
+        assert flagged.status_code == 201
+        slug = flagged.get_json()["data"]["slug"]
+        assert flagged.get_json()["data"]["is_nsfw"] is True
+
+        hub = {row["slug"]: row for row in client.get("/api/v1/tier-lists").get_json()["data"]}
+        assert hub[slug]["is_nsfw"] is True
+        assert hub["best-chase-music"]["is_nsfw"] is False
+
+        cleared = client.put(f"/api/v1/tier-lists/{slug}", json={"is_nsfw": False}, headers=admin_headers)
+        assert cleared.status_code == 200 and cleared.get_json()["data"]["is_nsfw"] is False
+
+        untouched = client.put(f"/api/v1/tier-lists/{slug}", json={"title": "Renamed"}, headers=admin_headers)
+        assert untouched.get_json()["data"]["is_nsfw"] is False
+
+    def test_nsfw_flag_survives_the_seed_rewrite_and_export_import(
+        self, client: FlaskClient, db_session: Session, admin_headers: dict[str, str]
+    ) -> None:
+        res = client.post("/api/v1/tier-lists", json=self._payload(is_nsfw=True), headers=admin_headers)
+        slug = res.get_json()["data"]["slug"]
+
+        written = json.loads(self.seed_path.read_text(encoding="utf-8"))
+        assert [row.get("is_nsfw") for row in written["tier_lists"]] == [True]
+
+        exported = DatabaseExportImportService.export_database(targets=["tier_lists"])
+        db_session.query(TierList).delete()
+        db_session.commit()
+        DatabaseExportImportService.import_database(exported, mode="merge")
+        restored = db_session.scalar(select(TierList).where(TierList.slug == slug))
+        assert restored is not None and restored.is_nsfw is True
+
+    def test_unflagged_rows_stay_out_of_the_seed_file(
+        self, client: FlaskClient, admin_headers: dict[str, str]
+    ) -> None:
+        client.post("/api/v1/tier-lists", json=self._payload(), headers=admin_headers)
+        written = json.loads(self.seed_path.read_text(encoding="utf-8"))
+        assert all("is_nsfw" not in row for row in written["tier_lists"])
+
     def test_update_requires_admin(
         self, client: FlaskClient, db_session: Session, user_headers: dict[str, str]
     ) -> None:

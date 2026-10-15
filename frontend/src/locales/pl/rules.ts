@@ -6,7 +6,6 @@ export default {
   lastUpdatedLabel: "Ostatnia aktualizacja",
   lastUpdated: "10 października 2026",
   translationNotice: "Jeśli przetłumaczone wersje tej strony różnią się od angielskiej, pierwszeństwo ma wersja angielska.",
-  numberLabel: "Zasada {n}",
   tldrLabel: "W skrócie",
   tldrNotice: "Tytuły, linie „W skrócie” i podsumowanie to przyjazne skróty. Ze względów prawnych nie mają mocy wiążącej i nie zastępują tekstu pod nimi. Jeśli się z nim różnią, obowiązuje pełny tekst.",
   summaryHeading: "Zasady w pigułce",

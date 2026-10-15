@@ -6,7 +6,6 @@ export default {
   lastUpdatedLabel: "最終更新日",
   lastUpdated: "2026年10月10日",
   translationNotice: "このページの翻訳版が英語版と異なる場合は、英語版が優先されます。",
-  numberLabel: "ルール {n}",
   tldrLabel: "要点",
   tldrNotice: "見出し、「要点」の行、およびまとめは、わかりやすさのための目安です。法的な理由により、拘束力はなく、その下の本文に代わるものでもありません。本文と異なる場合は、本文が優先されます。",
   summaryHeading: "ルールのあらまし",

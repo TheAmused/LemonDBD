@@ -65,19 +65,18 @@ test('legal documents: placeholders are the known ones and are kept in every loc
       const text = allText(doc).join('\n');
       for (const [, name] of text.matchAll(/\{(\w+)\}/g)) assert.ok(known.has(name), `${loc}.${id}: unknown placeholder {${name}}`);
       for (const name of known) assert.equal(countOf(text, `{${name}}`), countOf(base, `{${name}}`), `${loc}.${id}: {${name}} count`);
-      assert.ok(doc.numberLabel.includes('{n}'), `${loc}.${id}.numberLabel has {n}`);
       const contact = doc.sections[LEGAL_DOCS[id].contactSection].paragraphs.join(' ');
       assert.ok(contact.includes('{contactEmail}'), `${loc}.${id}: the contact section quotes {contactEmail}`);
     }
   }
 });
 
-test('legal documents: the headings and TL;DR lines are declared non-binding, in every locale and on the page and the dialog', () => {
+test('legal documents: the headings and TL;DR lines are declared non-binding or a reading aid, in every locale and on the page and the dialog', () => {
   for (const id of docIds) {
     for (const [loc, dict] of Object.entries(locales)) assert.ok(docOf(dict, id).tldrNotice.length > 40, `${loc}.${id}.tldrNotice`);
   }
   assert.match(en.rules.tldrNotice, /not binding/i);
-  assert.match(en.terms.tldrNotice, /no legal effect/i);
+  assert.match(en.terms.tldrNotice, /only the full text below them is legally binding/i);
   assert.ok(read('components/legal/LegalDocPage.tsx').includes('<LegalNotice'), 'the page shows the notice');
   assert.ok(read('components/legal/LegalDocModal.tsx').includes('<LegalNotice'), 'the dialog shows the notice');
   assert.ok(read('components/legal/LegalDocPage.tsx').includes('text.translationNotice'), 'the page says which language version prevails');
@@ -153,7 +152,7 @@ test('Checkbox: `invalid` gives the box the site error ring and aria-invalid', (
   assert.match(checkbox, /invalid && 'ring-2 ring-accent-red'/);
 });
 
-test('legal documents: cards carry no icons (only the "Rule N" / "Section N" eyebrow) and titles are centred', () => {
+test('legal documents: cards carry no icons and titles are centred', () => {
   const sections = read('components/legal/LegalSections.tsx');
   const page = read('components/legal/LegalDocPage.tsx');
   assert.ok(!sections.includes('lucide-react'), 'LegalSections draws no icons');
@@ -212,7 +211,7 @@ test('Terms: the claims they make about the site are backed by the code', () => 
   // Self-service account deletion exists, as the Terms and the Privacy Policy say.
   assert.match(en.terms.sections.termination.paragraphs[0], /delete your account yourself/);
   assert.match(en.privacy.sections.rights.paragraphs.join(' '), /delete your account yourself/);
-  // Registration enforces a minimum age of 13 in the documents, not in a field: the number must agree everywhere.
-  assert.match(en.terms.sections.accounts.items[0], /13/);
-  assert.match(en.privacy.sections.children.paragraphs.join(' '), /under 13/);
+  // Registration enforces a minimum age of 18 in the documents, not in a field: the number must agree everywhere.
+  assert.match(en.terms.sections.accounts.items[0], /18/);
+  assert.match(en.privacy.sections.children.paragraphs.join(' '), /under 18/);
 });

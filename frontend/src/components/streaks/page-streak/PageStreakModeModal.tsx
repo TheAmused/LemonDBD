@@ -4,7 +4,7 @@
 
 import React from 'react';
 import { BookOpen } from 'lucide-react';
-import { NEUTRAL_TILE_ACCENT, type ChallengeIntroTile } from '../ChallengeIntroModalShell';
+import { type ChallengeIntroTile } from '../ChallengeIntroModalShell';
 import { ChallengeModeModal } from '../ChallengeModeModal';
 import { PageStreakRulesModal } from './PageStreakRulesModal';
 import { useDictionary } from "@/context/DictionaryContext";
@@ -22,8 +22,7 @@ export const PageStreakModeModal: React.FC<PageStreakModeModalProps> = ({ isOpen
       value: 'normal',
       label: dict.streaks.normal,
       icon: BookOpen,
-      image: '/images/streaks/page-streak.webp',
-      accentClassName: NEUTRAL_TILE_ACCENT,
+      image: '/images/streaks/page-streak.webp',
     },
   ];
 

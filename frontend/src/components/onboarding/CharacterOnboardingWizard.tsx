@@ -9,6 +9,7 @@ import { PerksTogglePopup } from '@/components/characters/PerksTogglePopup';
 import { SkipOnboardingModal } from '@/components/onboarding/SkipOnboardingModal';
 import { Spinner } from '@/components/common/Spinner';
 import { Button } from '@/components/common/Button';
+import { ActionBarButton, StickyActionBar } from '@/components/common/StickyActionBar';
 import {
   type OnboardingCharacter,
   type OnboardingPerk,
@@ -216,13 +217,11 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
       </div>
 
       {/* Sticky full-screen bottom continue banner so Continue stays reachable while scrolling */}
-      <div className="fixed bottom-0 inset-x-0 z-30 w-full border-t border-border-color bg-bg-surface/95 backdrop-blur-md shadow-2xl">
-        <div className="mx-auto flex w-full max-w-7xl justify-center px-4 py-3 sm:py-4">
-          <Button variant="primary" disabled={saving} onClick={handleContinue} className="w-full max-w-sm sm:max-w-md">
-            {saving ? t.savingLabel : t.continueButton}
-          </Button>
-        </div>
-      </div>
+      <StickyActionBar sidebarAware={false}>
+        <ActionBarButton variant="red" wide disabled={saving} onClick={handleContinue}>
+          {saving ? t.savingLabel : t.continueButton}
+        </ActionBarButton>
+      </StickyActionBar>
 
       <PerksTogglePopup
         character={perksPopupCharacter}

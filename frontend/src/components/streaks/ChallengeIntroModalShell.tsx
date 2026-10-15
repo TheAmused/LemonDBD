@@ -2,17 +2,14 @@
 'use client';
 
 import { Button } from '@/components/common/Button';
+import { SelectableCard } from '@/components/common/SelectableCard';
 
 import React from 'react';
 import { BookOpen, ChevronLeft } from 'lucide-react';
 import { Modal } from '@/components/common/Modal';
 import { AdeptBadgeIcon } from '@/components/icons/DbdIcons';
-import { HEADER_BUTTON_CLASSES } from './ChallengePanel';
 import { useDictionary } from "@/context/DictionaryContext";
 import { Badge } from '@/components/common/Badge';
-import { Surface } from '@/components/common/Surface';
-
-export const NEUTRAL_TILE_ACCENT = 'border-border-color bg-bg-elevated hover:bg-bg-elevated/80 text-text-secondary';
 
 export interface ChallengeIntroTile {
   value: string;
@@ -21,7 +18,6 @@ export interface ChallengeIntroTile {
   /** Any icon component (lucide or a custom DbdIcons SVG). */
   icon: React.ElementType;
   image?: string;
-  accentClassName: string;
   disabled?: boolean;
   disabledBadge?: string;
   /** This tier has already been fully cleared -- shows a small trophy badge. */
@@ -124,14 +120,9 @@ export const ChallengeIntroModalShell: React.FC<ChallengeIntroModalShellProps> =
             </p>
           )}
           {onOpenRules && (
-            <button
-              type="button"
-              onClick={onOpenRules}
-              className={`${HEADER_BUTTON_CLASSES} gap-1.5 px-3 py-2 text-xs font-bold`}
-            >
-              <BookOpen className="h-4 w-4" aria-hidden="true" />
+            <Button variant="secondary" size="sm" onClick={onOpenRules} leftIcon={<BookOpen className="h-4 w-4" aria-hidden="true" />}>
               {rulesLabel}
-            </button>
+            </Button>
           )}
         </div>
       )}
@@ -163,25 +154,13 @@ export const ChallengeIntroModalShell: React.FC<ChallengeIntroModalShellProps> =
             </>
           );
 
-          if (tile.disabled) {
-            return (
-              <Surface
-                key={tile.value}
-                tone="elevated" padding="none" className="flex flex-col items-center gap-2 bg-bg-elevated/50 p-3 sm:p-4 text-center opacity-70"
-              >
-                {content}
-              </Surface>
-            );
-          }
-
           return (
-            <button
+            <SelectableCard
               key={tile.value}
+              selected={isPending}
+              disabled={tile.disabled}
               onClick={() => onPickTile(tile.value)}
-              aria-pressed={isPending}
-              className={`group relative flex flex-col items-center gap-2 rounded-control border p-3 sm:p-4 text-center transition-colors cursor-pointer ${tile.accentClassName} ${
-                isPending ? 'ring-2 ring-accent-red ring-offset-2 ring-offset-bg-surface' : ''
-              }`}
+              className="group relative flex flex-col items-center gap-2 p-3 text-center sm:p-4"
             >
               {tile.completed && tile.completedFull ? (
                 <Badge tone="red" size="xs" plain className="absolute right-2 top-2">
@@ -199,7 +178,7 @@ export const ChallengeIntroModalShell: React.FC<ChallengeIntroModalShellProps> =
                 </Badge>
               ) : null}
               {content}
-            </button>
+            </SelectableCard>
           );
         })}
       </div>

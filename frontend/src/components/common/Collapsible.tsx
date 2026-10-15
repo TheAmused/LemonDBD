@@ -18,9 +18,15 @@ export interface CollapsibleProps {
    * section. While closed or animating the box still clips.
    */
   overflowWhenOpen?: boolean;
+  /**
+   * Fold only on screens narrower than `sm`; from `sm` up the wrapper dissolves (`display: contents`) so
+   * the children join the parent's layout and are always shown. Closed content is hidden with
+   * `visibility`, not `inert`, because `inert` cannot be limited to a width.
+   */
+  onlyBelow?: 'sm';
 }
 
-export function Collapsible({ open, children, className, contentClassName, overflowWhenOpen = false }: CollapsibleProps) {
+export function Collapsible({ open, children, className, contentClassName, overflowWhenOpen = false, onlyBelow }: CollapsibleProps) {
   // True once fully open AND the opening transition has finished.
   const [settled, setSettled] = useState(open);
   useEffect(() => {
@@ -29,17 +35,25 @@ export function Collapsible({ open, children, className, contentClassName, overf
 
   return (
     <div
-      inert={!open}
+      inert={onlyBelow ? undefined : !open}
       onTransitionEnd={(e) => {
         if (overflowWhenOpen && e.propertyName === 'grid-template-rows' && open) setSettled(true);
       }}
       className={cn(
-        'grid transition-[grid-template-rows,opacity] duration-300 ease-in-out motion-reduce:transition-none',
-        open ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0',
+        onlyBelow
+          ? 'sm:contents max-sm:grid max-sm:transition-[grid-template-rows,opacity,margin,visibility] max-sm:duration-300 max-sm:ease-in-out motion-reduce:transition-none'
+          : 'grid transition-[grid-template-rows,opacity] duration-300 ease-in-out motion-reduce:transition-none',
+        onlyBelow
+          ? open
+            ? 'max-sm:grid-rows-[1fr] max-sm:opacity-100'
+            : 'max-sm:invisible max-sm:-mt-2 max-sm:grid-rows-[0fr] max-sm:opacity-0'
+          : open
+            ? 'grid-rows-[1fr] opacity-100'
+            : 'grid-rows-[0fr] opacity-0',
         className
       )}
     >
-      <div className={overflowWhenOpen && settled ? 'overflow-visible' : 'overflow-hidden'}>
+      <div className={cn(overflowWhenOpen && settled ? 'overflow-visible' : 'overflow-hidden', onlyBelow && 'min-h-0 sm:contents')}>
         <div className={contentClassName}>{children}</div>
       </div>
     </div>

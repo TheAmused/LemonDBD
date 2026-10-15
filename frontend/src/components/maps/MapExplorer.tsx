@@ -28,6 +28,7 @@ import { useDictionary } from "@/context/DictionaryContext";
 import { trackEvent } from '@/utils/analytics';
 import { Surface } from '@/components/common/Surface';
 import { Badge } from '@/components/common/Badge';
+import { TileButton } from '@/components/common/TileButton';
 
 // Sentinel dropdown value for "no filter"; real attribute values never collide with it.
 // Also what "no filter" persists as in localStorage, since the filter fields
@@ -427,13 +428,12 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
 
             return (
               <React.Fragment key={realm}>
-                <button
-                  type="button"
+                <TileButton
                   onClick={() => toggleRealm(realm)}
                   aria-expanded={expanded}
                   aria-controls={`realm-panel-${realm}`}
                   aria-label={`${expanded ? dict.maps.collapseRealmAria : dict.maps.expandRealmAria}: ${realm}`}
-                  className={`group relative aspect-square w-full min-h-12 touch-manipulation overflow-hidden rounded-control border-2 text-left cursor-pointer transition-transform duration-200 hover:scale-[1.03] active:scale-95 focus:outline-none focus:ring-2 focus:ring-accent-red ${expanded ? 'border-accent-red' : 'border-border-color hover:border-accent-red/60'}`}
+                  className={`group relative aspect-square w-full min-h-12 touch-manipulation overflow-hidden rounded-control border-2 text-left duration-200 ${expanded ? 'border-accent-red' : 'border-border-color hover:border-accent-red/60'}`}
                 >
                   {bannerSrc ? (
                     <img
@@ -455,7 +455,7 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
                   <Badge tone="overlay" size="sm" plain className="absolute bottom-2 right-2 text-text-inverted">
                     {realmMaps.length}
                   </Badge>
-                </button>
+                </TileButton>
 
                 {showPanel && (
                   <div

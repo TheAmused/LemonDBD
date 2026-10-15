@@ -28,6 +28,7 @@ import { useDictionary } from "@/context/DictionaryContext";
 import { Badge } from '@/components/common/Badge';
 import { Surface } from '@/components/common/Surface';
 import { Collapsible } from '@/components/common/Collapsible';
+import { TileButton } from '@/components/common/TileButton';
 
 interface UserBugReportsListProps {
   reports: UserBugReport[];
@@ -207,14 +208,13 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
                         {report.images.map((imgUrl, i) => {
                           const src = staticUrl(imgUrl) || imgUrl;
                           return (
-                            <button
+                            <TileButton press={false}
                               key={i}
-                              type="button"
                               onClick={(e) => {
                                 e.stopPropagation();
                                 setPreviewImage(src);
                               }}
-                              className="group relative h-16 w-16 sm:h-20 sm:w-20 rounded-control border border-border-color bg-bg-elevated overflow-hidden shadow-xs hover:border-accent-red/60 hover:shadow-md transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-accent-red"
+                              className="group relative h-16 w-16 sm:h-20 sm:w-20 rounded-control border border-border-color bg-bg-elevated overflow-hidden shadow-xs hover:border-accent-red/60 hover:shadow-md transition-all"
                               aria-label={`${t.attachments || 'Attachment'} ${i + 1}`}
                             >
                               <img
@@ -226,7 +226,7 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
                               <div className="absolute inset-0 bg-bg-primary/60 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
                                 <Maximize2 className="h-4 w-4 text-text-inverted" />
                               </div>
-                            </button>
+                            </TileButton>
                           );
                         })}
                       </div>

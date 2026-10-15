@@ -27,6 +27,7 @@ import { tip } from '@/components/common/Tooltip';
 import { Button } from '@/components/common/Button';
 import { InfoChip } from '@/components/common/InfoChip';
 import { useDictionary } from "@/context/DictionaryContext";
+import { TileButton } from '@/components/common/TileButton';
 
 const LoreModal = dynamic(() => import('./modals/LoreModal').then((m) => m.LoreModal), { ssr: false });
 const Model3DModal = dynamic(() => import('./modals/Model3DModal').then((m) => m.Model3DModal), { ssr: false });
@@ -110,10 +111,9 @@ export const KillerDetailView: React.FC<CharacterViewBaseProps> = ({ currentLoca
           <header className="flex flex-col items-center text-center gap-4 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:text-left">
             <div className="flex items-center gap-4 sm:gap-5">
               {killerPower && (
-                <button
-                  type="button"
+                <TileButton
                   onClick={() => setIsPowerModalOpen(true)}
-                  className="group relative h-20 w-20 sm:h-24 sm:w-24 shrink-0 rounded-control bg-bg-elevated border-2 border-accent-red/60 hover:border-accent-red p-2.5 flex items-center justify-center shadow-xl hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red"
+                  className="group relative h-20 w-20 sm:h-24 sm:w-24 shrink-0 rounded-control bg-bg-elevated border-2 border-accent-red/60 hover:border-accent-red p-2.5 flex items-center justify-center shadow-xl transition-all duration-300"
                   {...tip(powerTitle, undefined, 'item')}
                   aria-label={powerAriaLabel}
                 >
@@ -136,7 +136,7 @@ export const KillerDetailView: React.FC<CharacterViewBaseProps> = ({ currentLoca
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent-red opacity-75" />
                     <span className="relative inline-flex rounded-full h-4 w-4 bg-accent-red border-2 border-bg-primary" />
                   </span>
-                </button>
+                </TileButton>
               )}
 
               <div>

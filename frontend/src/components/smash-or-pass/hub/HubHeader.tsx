@@ -129,10 +129,10 @@ export function HubHeader({
         <div className="flex items-center justify-center gap-2.5 w-full @[1016px]/hub:w-auto order-1 @[1016px]/hub:order-2 min-w-0">
           <ThornHeartIcon className="hidden @[400px]/hub:block h-5 w-5 text-accent-red animate-pulse shrink-0" aria-hidden="true" />
 
-          <button
+          <Button
             type="button"
             onClick={onOpenRosters}
-            className="flex items-center gap-2.5 px-3.5 py-2 min-h-11 min-w-0 max-w-full rounded-control bg-bg-surface border border-accent-red/50 hover:border-accent-red type-strong-fluid text-accent-red transition-all cursor-pointer group touch-manipulation"
+            variant="soft" size="md" className="min-w-0 max-w-full gap-2.5"
           >
             <span className="relative flex h-6 w-6 items-center justify-center rounded-chip overflow-hidden border border-accent-red/60 shrink-0">
               <img
@@ -151,7 +151,7 @@ export function HubHeader({
               {rosterBadgeCount}
             </Badge>
             <ChevronDown className="h-4 w-4 shrink-0 text-accent-red group-hover:translate-y-0.5 transition-transform" aria-hidden="true" />
-          </button>
+          </Button>
 
           <ThornHeartIcon className="hidden @[400px]/hub:block h-5 w-5 text-accent-red animate-pulse shrink-0" aria-hidden="true" />
         </div>

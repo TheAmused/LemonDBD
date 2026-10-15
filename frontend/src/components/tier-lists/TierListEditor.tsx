@@ -45,8 +45,8 @@ import { type ImportTarget, TierListImportModal } from './TierListImportModal';
 import { TierListScaleControl } from './TierListScaleControl';
 import type { TierTileShape } from './TierItemTile';
 import { TOUCH_BTN } from './styles';
-import { Button, BUTTON_BASE, BUTTON_RADIUS, BUTTON_SIZES, BUTTON_VARIANTS } from '@/components/common/Button';
-import { cn } from '@/utils/cn';
+import { Button, buttonClassName } from '@/components/common/Button';
+import { MenuItem, menuItemClassName } from '@/components/common/MenuItem';
 import { Popover, popoverTriggerProps } from '@/components/common/Popover';
 import { tip } from '@/components/common/Tooltip';
 import { formatMessage } from '@/utils/i18nFormat';
@@ -85,9 +85,6 @@ export interface TierListEditorProps {
   onReport?: () => void;
   locale: string;
 }
-
-const MENU_ITEM =
-  'flex w-full min-h-11 items-center gap-2.5 rounded-control px-3 py-2 text-left text-sm font-semibold text-text-primary hover:bg-bg-elevated cursor-pointer transition-colors';
 
 const TOOLBAR_BTN = 'min-h-9 shrink-0 whitespace-nowrap px-2.5 text-xs cursor-pointer';
 
@@ -238,16 +235,17 @@ export function TierListEditor(props: TierListEditorProps) {
             {pageTitle}
           </h1>
         </div>
-        <button
+        <Button
           ref={menuRef}
-          type="button"
+          variant="secondary"
+          icon
           onClick={() => setMenuOpen((o) => !o)}
           aria-label={t.toolbarAria}
           {...popoverTriggerProps(menuOpen, 'menu')}
-          className={cn(BUTTON_BASE, BUTTON_VARIANTS.secondary, BUTTON_SIZES.md, BUTTON_RADIUS, TOUCH_BTN, 'w-11 shrink-0 px-0')}
+          className="h-11 w-11"
         >
           <Ellipsis className="h-4 w-4" aria-hidden="true" />
-        </button>
+        </Button>
         <Popover
           open={menuOpen}
           anchorRef={menuRef}
@@ -259,11 +257,8 @@ export function TierListEditor(props: TierListEditorProps) {
         >
           <TierListScaleControl scale={scale} onScaleChange={setScale} variant="menu" />
           {canEditTiers && (
-            <button
-              type="button"
-              role="menuitem"
+            <MenuItem role="menuitem"
               disabled={tiers.length >= TIER_LIST_LIMITS.maxTiers}
-              className={cn(MENU_ITEM, 'disabled:opacity-40 disabled:cursor-not-allowed')}
               onClick={() => {
                 setMenuOpen(false);
                 setAddingTier(true);
@@ -271,14 +266,11 @@ export function TierListEditor(props: TierListEditorProps) {
             >
               <Plus className="h-4 w-4" aria-hidden="true" />
               {t.addTier}
-            </button>
+            </MenuItem>
           )}
           {onSaveOfficial && (
-            <button
-              type="button"
-              role="menuitem"
+            <MenuItem role="menuitem"
               disabled={savingOfficial}
-              className={cn(MENU_ITEM, 'disabled:opacity-40 disabled:cursor-not-allowed')}
               onClick={() => {
                 setMenuOpen(false);
                 handleSaveOfficialClick();
@@ -286,43 +278,43 @@ export function TierListEditor(props: TierListEditorProps) {
             >
               <Save className="h-4 w-4" aria-hidden="true" />
               {savingOfficial ? t.creator.publishing : t.save}
-            </button>
+            </MenuItem>
           )}
           {!finePointer && (
-            <button type="button" role="menuitem" className={MENU_ITEM} onClick={() => { setMenuOpen(false); setShowNamesPref(showNames ? 'off' : 'on'); }}>
+            <MenuItem role="menuitem" onClick={() => { setMenuOpen(false); setShowNamesPref(showNames ? 'off' : 'on'); }}>
               {showNames ? <EyeOff className="h-4 w-4" aria-hidden="true" /> : <Eye className="h-4 w-4" aria-hidden="true" />}
               {showNames ? t.hideNames : t.showNames}
-            </button>
+            </MenuItem>
           )}
-          <button type="button" role="menuitem" className={MENU_ITEM} onClick={() => { setMenuOpen(false); setDialog('import'); }}>
+          <MenuItem role="menuitem" onClick={() => { setMenuOpen(false); setDialog('import'); }}>
             <Upload className="h-4 w-4" aria-hidden="true" />
             {t.import}
-          </button>
-          <button type="button" role="menuitem" className={MENU_ITEM} onClick={() => { setMenuOpen(false); setDialog('export'); }}>
+          </MenuItem>
+          <MenuItem role="menuitem" onClick={() => { setMenuOpen(false); setDialog('export'); }}>
             <Share2 className="h-4 w-4" aria-hidden="true" />
             {t.export}
-          </button>
-          <button type="button" role="menuitem" className={MENU_ITEM} onClick={() => { setMenuOpen(false); setDialog('reset'); }}>
+          </MenuItem>
+          <MenuItem role="menuitem" onClick={() => { setMenuOpen(false); setDialog('reset'); }}>
             <RotateCcw className="h-4 w-4" aria-hidden="true" />
             {t.reset}
-          </button>
+          </MenuItem>
           {editHref && (
-            <Link href={editHref} role="menuitem" className={MENU_ITEM} onClick={() => setMenuOpen(false)}>
+            <Link href={editHref} role="menuitem" className={menuItemClassName()} onClick={() => setMenuOpen(false)}>
               <Pencil className="h-4 w-4" aria-hidden="true" />
               {t.editDetails}
             </Link>
           )}
           {mode === 'custom' && onDelete && (
-            <button type="button" role="menuitem" className={cn(MENU_ITEM, 'text-accent-red')} onClick={() => { setMenuOpen(false); setDialog('delete'); }}>
+            <MenuItem role="menuitem" className="text-accent-red" onClick={() => { setMenuOpen(false); setDialog('delete'); }}>
               <Trash2 className="h-4 w-4" aria-hidden="true" />
               {t.deleteList}
-            </button>
+            </MenuItem>
           )}
           {onReport && (
-            <button type="button" role="menuitem" className={MENU_ITEM} onClick={() => { setMenuOpen(false); onReport(); }}>
+            <MenuItem role="menuitem" onClick={() => { setMenuOpen(false); onReport(); }}>
               <Flag className="h-4 w-4" aria-hidden="true" />
               {t.reportButton}
-            </button>
+            </MenuItem>
           )}
         </Popover>
       </div>
@@ -413,7 +405,7 @@ export function TierListEditor(props: TierListEditorProps) {
                 href={editHref}
                 aria-label={t.editDetails}
                 {...tip(t.editDetails, undefined, 'action')}
-                className={cn(BUTTON_BASE, BUTTON_VARIANTS.secondary, BUTTON_SIZES.sm, BUTTON_RADIUS, TOOLBAR_BTN)}
+                className={buttonClassName('secondary', 'sm', TOOLBAR_BTN)}
               >
                 <Pencil className="h-3.5 w-3.5" aria-hidden="true" />
                 <span className="hidden xl:inline [@media(max-height:559px)]:hidden!">{t.editDetails}</span>

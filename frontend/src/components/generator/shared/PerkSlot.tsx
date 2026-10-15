@@ -8,6 +8,7 @@ import { Dictionary } from '@/locales/types';
 import { cn } from '@/utils/cn';
 import { PerkCard } from '@/components/PerkCard';
 import { useDictionary } from "@/context/DictionaryContext";
+import { Button } from '@/components/common/Button';
 
 export type PerkSlotSize = 'default' | 'large' | 'fill' | 'tarot' | 'compact' | 'wheelFlank';
 
@@ -71,19 +72,12 @@ export const PerkSlot: React.FC<PerkSlotProps> = ({
   if (isObscured) {
     return (
       <div className={cn('flex items-center justify-center w-full', SLOT_OUTER_PADDING[size])}>
-        <button
-          type="button"
-          onClick={onClick}
-          className={cn(
-            SLOT_SIZE_CLASSES[size],
-            'flex flex-col items-center justify-center gap-1.5 rounded-control border-2 border-dashed border-accent-red/50 bg-accent-red/10 text-accent-red cursor-pointer shadow-xs backdrop-blur-xs transition-all duration-200 hover:border-accent-red hover:bg-accent-red/20 hover:scale-105 active:scale-95 hover:shadow-md hover:shadow-accent-red/35'
-          )}
-        >
+        <Button variant="soft" dashed onClick={onClick} className={cn(SLOT_SIZE_CLASSES[size], 'flex-col gap-1.5 border-2 backdrop-blur-xs')}>
           <EyeOff className="h-10 w-10 animate-pulse" />
           <span className="type-label-xs text-center px-2">
             {dict.generator.clickToReveal}
           </span>
-        </button>
+        </Button>
       </div>
     );
   }

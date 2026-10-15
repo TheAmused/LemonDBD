@@ -21,13 +21,14 @@ export type ButtonVariant =
   | 'link' //    amber text link, no box (hover underline)
   | 'linkMuted' // quiet text link, for secondary "back" and "change" actions
   | 'linkDanger' // red text link, for "reset" and "remove" actions
+  | 'ghostDanger' // no box, red text, red tint on hover (clear, remove)
   | 'onAccent' // on a coloured banner: a translucent white tint that keeps the banner's text colour
   | 'overlay' //  frosted square-ish control laid over a thumbnail (remove, edit); turns red on hover
   | 'cta'; //     loud DBD randomizer CTA
 
 export type ButtonSize = 'xs' | 'sm' | 'md' | 'lg';
 
-export const BUTTON_VARIANTS: Record<ButtonVariant, string> = {
+const BUTTON_VARIANTS: Record<ButtonVariant, string> = {
   primary: 'bg-accent-red text-text-inverted shadow-sm hover:bg-accent-red-hover',
   secondary: 'border border-border-color bg-bg-surface text-text-secondary hover:bg-bg-elevated hover:text-text-primary',
   soft: 'border border-accent-red/40 bg-accent-red/15 text-accent-red hover:bg-accent-red/25',
@@ -39,12 +40,13 @@ export const BUTTON_VARIANTS: Record<ButtonVariant, string> = {
   link: 'text-accent-amber underline-offset-2 hover:underline',
   linkMuted: 'text-text-muted underline-offset-2 hover:text-text-primary hover:underline',
   linkDanger: 'text-accent-red underline-offset-2 hover:underline',
+  ghostDanger: 'text-accent-red hover:bg-accent-red/10',
   onAccent: 'bg-text-inverted/20 text-inherit hover:bg-text-inverted/30',
   overlay: 'border border-border-color/60 bg-bg-surface/90 text-text-muted shadow-xs backdrop-blur-sm hover:bg-accent-red hover:text-text-inverted',
   cta: 'bg-accent-red text-text-inverted font-black uppercase tracking-wider shadow-xs hover:bg-accent-red-hover hover:scale-[1.02] hover:shadow-md hover:shadow-accent-red/40 active:scale-[0.97]',
 };
 
-export const BUTTON_SIZES: Record<ButtonSize, string> = {
+const BUTTON_SIZES: Record<ButtonSize, string> = {
   xs: 'gap-1 px-2.5 py-1 text-mini',
   sm: 'gap-1.5 px-3 py-1.5 text-xs',
   md: 'gap-2 px-4 py-2.5 text-sm',
@@ -83,11 +85,11 @@ const ROLE_RING: Record<DbdButtonRole, string> = {
   Killer: 'focus-visible:ring-accent-red',
 };
 
-export const BUTTON_BASE =
+const BUTTON_BASE =
   'inline-flex max-w-full shrink-0 items-center justify-center font-bold transition-colors cursor-pointer select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red disabled:cursor-not-allowed disabled:opacity-50';
 
 /** The one corner radius of a Button. Callers never set their own: `pill` is the only alternative. */
-export const BUTTON_RADIUS = 'rounded-control';
+const BUTTON_RADIUS = 'rounded-control';
 const BUTTON_RADIUS_PILL = 'rounded-full';
 
 /** The class list of a Button, for the rare spot that needs a link (<a>/<Link>) that looks like one. */

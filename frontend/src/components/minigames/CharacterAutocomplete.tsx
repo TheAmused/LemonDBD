@@ -11,6 +11,7 @@ import { isKiller, isSurvivor } from '@/utils/characterUtils';
 import { Badge } from '@/components/common/Badge';
 import { Thumb } from '@/components/common/Thumb';
 
+import { Button } from '@/components/common/Button';
 export type AutocompleteItem = GuessedItem;
 
 interface CharacterAutocompleteProps {
@@ -235,11 +236,11 @@ export const CharacterAutocomplete: React.FC<CharacterAutocompleteProps> = ({
           autoFocus={autoFocus}
           className="bg-bg-surface pl-11 pr-10 shadow-lg"
         />
-        <button
+        <Button
           type="button"
           tabIndex={-1}
           onClick={() => setIsOpen((prev) => !prev)}
-          className="absolute right-3 text-text-muted hover:text-text-primary"
+          variant="ghost" size="xs" icon className="absolute right-2 top-1/2 -translate-y-1/2"
           aria-expanded={isOpen}
           aria-haspopup="listbox"
           aria-label={dict.minigames.toggleSuggestions}
@@ -247,7 +248,7 @@ export const CharacterAutocomplete: React.FC<CharacterAutocompleteProps> = ({
           <ChevronDown
             className={`w-4 h-4 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
           />
-        </button>
+        </Button>
       </div>
 
       {isOpen && filteredItems.length > 0 && (

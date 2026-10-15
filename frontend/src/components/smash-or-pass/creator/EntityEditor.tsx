@@ -21,6 +21,7 @@ import { useDictionary } from "@/context/DictionaryContext";
 import { tip } from '@/components/common/Tooltip';
 import { GENDER_QUICK_PICKS, ROLE_QUICK_PICKS } from '@/utils/smashOrPass/constants';
 import { Badge } from '@/components/common/Badge';
+import { ToggleChip } from '@/components/common/ToggleChip';
 
 export interface CandidateFormInputsProps {
   entity: DraftEntity;
@@ -177,19 +178,12 @@ export function CandidateFormInputs({
                   <div className="flex flex-wrap items-center gap-1 pt-0.5">
                     <span className="text-micro text-text-muted mr-0.5">{c.quick}</span>
                     {availableRoles.slice(0, 4).map((r) => (
-                      <button
+                      <ToggleChip pressed={entity.role.toLowerCase() === r.toLowerCase()} size="xs" tone="red"
                         key={r}
-                        type="button"
                         onClick={() => onChange({ role: r })}
-                        className={cn(
-                          'px-1.5 py-0.5 rounded-chip text-micro transition-colors cursor-pointer',
-                          entity.role.toLowerCase() === r.toLowerCase()
-                            ? 'bg-accent-red text-text-inverted font-bold'
-                            : 'bg-bg-elevated hover:bg-bg-primary text-text-secondary hover:text-text-primary border border-border-color'
-                        )}
                       >
                         {r}
-                      </button>
+                      </ToggleChip>
                     ))}
                   </div>
                 )}
@@ -223,19 +217,12 @@ export function CandidateFormInputs({
                   <div className="flex flex-wrap items-center gap-1 pt-0.5">
                     <span className="text-micro text-text-muted mr-0.5">{c.quick}</span>
                     {availableGenders.slice(0, 4).map((g) => (
-                      <button
+                      <ToggleChip pressed={entity.gender.toLowerCase() === g.toLowerCase()} size="xs" tone="amber"
                         key={g}
-                        type="button"
                         onClick={() => onChange({ gender: g })}
-                        className={cn(
-                          'px-1.5 py-0.5 rounded-chip text-micro transition-colors cursor-pointer',
-                          entity.gender.toLowerCase() === g.toLowerCase()
-                            ? 'bg-accent-amber text-text-inverted font-bold'
-                            : 'bg-bg-elevated hover:bg-bg-primary text-text-secondary hover:text-text-primary border border-border-color'
-                        )}
                       >
                         {g}
-                      </button>
+                      </ToggleChip>
                     ))}
                   </div>
                 )}

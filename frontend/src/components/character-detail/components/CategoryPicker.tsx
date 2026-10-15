@@ -5,6 +5,8 @@ import React, { useRef, useState } from 'react';
 import { Check, ChevronDown } from 'lucide-react';
 import { Popover, popoverTriggerProps } from '@/components/common/Popover';
 import { MenuItem } from '@/components/common/MenuItem';
+import { Button } from '@/components/common/Button';
+import { cn } from '@/utils/cn';
 
 export interface CategoryPickerOption {
   key: string;
@@ -69,14 +71,13 @@ export const CategoryPicker: React.FC<CategoryPickerProps> = ({
 
   return (
     <div ref={rootRef} className={`relative ${className}`}>
-      <button
-        type="button"
+      <Button
+        variant="secondary"
+        size="sm"
         {...popoverTriggerProps(open, 'listbox')}
         aria-label={ariaLabel}
         onClick={() => setOpen((o) => !o)}
-        className={`flex w-full items-center justify-between gap-2 px-3.5 py-2.5 rounded-control border bg-bg-elevated text-xs font-bold transition-colors cursor-pointer ${
-          open ? `${accentClasses.border} ${accentClasses.text}` : 'border-border-color text-text-primary'
-        }`}
+        className={cn('w-full justify-between', open && `${accentClasses.border} ${accentClasses.text}`)}
       >
         <span className="flex items-center gap-2 min-w-0">
           <SelectedIcon className={`h-4 w-4 shrink-0 ${accentClasses.text}`} aria-hidden="true" />
@@ -84,7 +85,7 @@ export const CategoryPicker: React.FC<CategoryPickerProps> = ({
           {countLabel && <span className="text-text-muted shrink-0">{countLabel}</span>}
         </span>
         <ChevronDown className={`h-4 w-4 shrink-0 transition-transform duration-200 ${open ? 'rotate-180' : ''}`} aria-hidden="true" />
-      </button>
+      </Button>
 
       <Popover
         open={open}

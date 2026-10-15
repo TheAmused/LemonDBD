@@ -263,14 +263,14 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
                 fieldSize="sm"
                 className="pr-9"
               />
-              <button
+              <Button
                 type="button"
                 tabIndex={-1}
                 onClick={() => setShowCurrentPassword((prev) => !prev)}
-                className="absolute inset-y-0 right-0 flex items-center pr-2.5 text-text-muted hover:text-text-primary cursor-pointer"
+                variant="ghost" size="xs" icon className="absolute right-1.5 top-1/2 -translate-y-1/2"
               >
                 {showCurrentPassword ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
-              </button>
+              </Button>
             </div>
           </div>
           )}
@@ -339,14 +339,14 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
                     fieldSize="sm"
                     className="pr-9"
                   />
-                  <button
+                  <Button
                     type="button"
                     tabIndex={-1}
                     onClick={() => setShowNewPassword((prev) => !prev)}
-                    className="absolute inset-y-0 right-0 flex items-center pr-2.5 text-text-muted hover:text-text-primary cursor-pointer"
+                    variant="ghost" size="xs" icon className="absolute right-1.5 top-1/2 -translate-y-1/2"
                   >
                     {showNewPassword ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
-                  </button>
+                  </Button>
                 </div>
               </div>
 
@@ -368,14 +368,14 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
                         : ''
                     }`}
                   />
-                  <button
+                  <Button
                     type="button"
                     tabIndex={-1}
                     onClick={() => setShowConfirmPassword((prev) => !prev)}
-                    className="absolute inset-y-0 right-0 flex items-center pr-2.5 text-text-muted hover:text-text-primary cursor-pointer"
+                    variant="ghost" size="xs" icon className="absolute right-1.5 top-1/2 -translate-y-1/2"
                   >
                     {showConfirmPassword ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
-                  </button>
+                  </Button>
                 </div>
               </div>
             </div>

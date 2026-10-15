@@ -220,14 +220,14 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
         >
           <AlertCircle className="h-4 w-4 shrink-0" />
           <span className="min-w-0 flex-1">{importError}</span>
-          <button
+          <Button
             type="button"
             onClick={() => setImportError(null)}
             aria-label={dict.modal.close}
-            className="shrink-0 cursor-pointer rounded-chip px-2 py-0.5 hover:bg-accent-red/20 transition-colors"
+            variant="ghostDanger" size="xs" icon className="shrink-0"
           >
             <X className="h-3.5 w-3.5" />
-          </button>
+          </Button>
         </div>
       )}
 

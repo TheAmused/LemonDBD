@@ -2,13 +2,13 @@
 // frontend/src/components/streaks/history/HistoryNextRowPreview.tsx
 
 import React, { useState } from 'react';
-import { ChevronDown } from 'lucide-react';
 import { PerkIcon } from '@/components/ui/PerkIcon';
 import { avatarUrlFor } from '../chaos/KillerPickerGrid';
 import { KillerIcon } from '@/components/icons/DbdIcons';
 
 import { useDictionary } from "@/context/DictionaryContext";
 import { Collapsible } from '@/components/common/Collapsible';
+import { DisclosureButton } from '@/components/common/DisclosureButton';
 
 export interface HistoryNextRowPreviewProps {
   killers: string[];
@@ -47,18 +47,12 @@ export const HistoryNextRowPreview: React.FC<HistoryNextRowPreviewProps> = ({ ki
 
   return (
     <div className="mt-4">
-      <button
-        onClick={() => setExpanded((v) => !v)}
-        className="flex w-full items-center justify-center gap-1.5 text-left cursor-pointer"
-      >
+      <DisclosureButton open={expanded} onClick={() => setExpanded((v) => !v)} className="w-full justify-center gap-1.5">
         <span className="type-label-sm text-text-muted">
           {dict.streaks.nextRowPreviewLabel}{' '}
           {dict.streaks.middotSeparator} {dict.streaks.rowLabel} {currentRowIndex + 2}
         </span>
-        <ChevronDown
-          className={`h-4 w-4 text-text-muted transition-transform ${expanded ? 'rotate-180' : ''}`}
-        />
-      </button>
+      </DisclosureButton>
 
       <Collapsible
         open={expanded}

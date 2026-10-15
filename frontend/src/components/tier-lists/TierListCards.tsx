@@ -16,6 +16,7 @@ import { NsfwBadge } from '@/components/common/NsfwBadge';
 import { Badge } from '@/components/common/Badge';
 import { cn } from '@/utils/cn';
 
+import { Button } from '@/components/common/Button';
 const CARD =
   'group relative flex h-full flex-col overflow-hidden rounded-card border border-border-color/80 bg-bg-surface p-5 shadow-sm transition-all hover:-translate-y-1 hover:border-accent-red/50 hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-amber';
 
@@ -77,7 +78,7 @@ function DescriptionPeek({ text }: { text: string }) {
       >
         <p className="type-caption text-text-primary line-clamp-6 break-words text-left">{text}</p>
       </div>
-      <button
+      <Button
         type="button"
         aria-expanded={open}
         aria-label={text}
@@ -89,10 +90,10 @@ function DescriptionPeek({ text }: { text: string }) {
         onMouseEnter={() => setOpen(true)}
         onMouseLeave={() => setOpen(false)}
         onBlur={() => setOpen(false)}
-        className="hit-area absolute bottom-3 left-3 z-30 flex h-8 w-8 items-center justify-center rounded-control border border-border-color/60 bg-bg-surface/85 text-text-muted shadow-xs backdrop-blur-md transition-colors cursor-pointer hover:text-text-primary"
+        variant="overlay" size="sm" icon className="absolute bottom-3 left-3 z-30"
       >
         <Info className="h-4 w-4" aria-hidden="true" />
-      </button>
+      </Button>
     </>
   );
 }
@@ -241,7 +242,7 @@ export function CustomTierListCard({ list, locale, onDelete, disabled }: CustomC
           </div>
         )}
         {onDelete && (
-          <button
+          <Button
             type="button"
             onClick={(e) => {
               e.preventDefault();
@@ -250,10 +251,10 @@ export function CustomTierListCard({ list, locale, onDelete, disabled }: CustomC
             }}
             {...tip(t.deleteList, undefined, 'action')}
             aria-label={`${t.deleteList} ${customTitle}`}
-            className="hit-area absolute top-3 right-3 z-10 flex h-8 w-8 rounded-control items-center justify-center border border-border-color/60 bg-bg-surface/85 backdrop-blur-md text-text-muted shadow-xs transition-[opacity,color,background-color] cursor-pointer hover:bg-accent-red/20 hover:text-accent-red group-has-[[aria-expanded=true]]/banner:opacity-0"
+            variant="overlay" size="sm" icon className="absolute top-3 right-3 z-10 transition-[opacity,color,background-color] hover:bg-accent-red/20 hover:text-accent-red group-has-[[aria-expanded=true]]/banner:opacity-0"
           >
             <Trash2 className="h-4 w-4" aria-hidden="true" />
-          </button>
+          </Button>
         )}
       </div>
 

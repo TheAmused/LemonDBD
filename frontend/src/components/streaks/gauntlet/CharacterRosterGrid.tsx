@@ -11,6 +11,7 @@ import { KillerIcon } from '@/components/icons/DbdIcons';
 
 import { SkeletonBlock } from '@/components/common/Skeleton';
 import { useDictionary } from "@/context/DictionaryContext";
+import { Surface } from '@/components/common/Surface';
 
 export interface CharacterRosterGridProps {
   role: Role;
@@ -61,7 +62,7 @@ export const CharacterRosterGrid: React.FC<CharacterRosterGridProps> = ({
   const activeTargetText = dict.streaks.activeGauntletTarget;
 
   return (
-    <div className="w-full bg-bg-surface border border-border-color rounded-card p-3 sm:p-6 shadow-sm dark:shadow-xl backdrop-blur-md">
+    <Surface padding="none" className="w-full p-3 sm:p-6 shadow-sm dark:shadow-xl backdrop-blur-md">
       {loading ? (
         <div className="grid grid-cols-4 min-[460px]:grid-cols-5 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 xl:grid-cols-[repeat(13,minmax(0,1fr))] gap-4 animate-pulse">
           {Array.from({ length: 16 }).map((_, i) => (
@@ -152,7 +153,7 @@ export const CharacterRosterGrid: React.FC<CharacterRosterGridProps> = ({
           })}
         </div>
       )}
-    </div>
+    </Surface>
   );
 };
 

@@ -23,6 +23,7 @@ import {
 } from '../RulesModalSections';
 import { formatMessage } from '@/utils/i18nFormat';
 import { useDictionary } from "@/context/DictionaryContext";
+import { Surface } from '@/components/common/Surface';
 
 export interface GauntletRulesModalProps {
   isOpen: boolean;
@@ -281,9 +282,9 @@ export const GauntletRulesModal: React.FC<GauntletRulesModalProps> = ({ isOpen, 
                   : `${tier.perkLimit} ${tier.perkLimit > 1 ? (rawStreaks.perksAllowedPlural || '') : (rawStreaks.perksAllowedSingular || '')}`.trim();
 
             return (
-              <div
+              <Surface
                 key={tier.level}
-                className="flex flex-col sm:flex-row sm:items-center justify-between p-3.5 bg-bg-elevated border border-border-color rounded-card gap-3 shadow-sm"
+                tone="elevated" padding="none" className="flex flex-col sm:flex-row sm:items-center justify-between p-3.5 gap-3 shadow-sm"
               >
                 <div className="flex items-center gap-3">
                   <span className={`px-2.5 py-1 rounded-chip text-xs font-bold border ${tier.badgeColor} whitespace-nowrap`}>
@@ -300,7 +301,7 @@ export const GauntletRulesModal: React.FC<GauntletRulesModalProps> = ({ isOpen, 
                     <span>{perkLimitText}</span>
                   </div>
                 </div>
-              </div>
+              </Surface>
             );
           })}
         </div>

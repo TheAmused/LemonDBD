@@ -257,16 +257,16 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({ isOpen
         {(profile.turn_on || dealbreaker) && (
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
             {profile.turn_on && (
-              <div className="bg-bg-elevated border border-border-color p-2.5 rounded-card space-y-0.5">
+              <Surface tone="elevated" padding="none" className="p-2.5 space-y-0.5">
                 <span className="type-label-2xs text-accent-red block">{turnOnLabel}</span>
                 <p className="text-text-secondary text-mini leading-tight">{profile.turn_on}</p>
-              </div>
+              </Surface>
             )}
             {dealbreaker && (
-              <div className="bg-bg-elevated border border-border-color p-2.5 rounded-card space-y-0.5">
+              <Surface tone="elevated" padding="none" className="p-2.5 space-y-0.5">
                 <span className="type-label-2xs text-accent-amber block">{dealbreakerLabel}</span>
                 <p className="text-text-secondary text-mini leading-tight">{dealbreaker}</p>
-              </div>
+              </Surface>
             )}
           </div>
         )}

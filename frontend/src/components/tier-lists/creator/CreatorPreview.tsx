@@ -10,6 +10,7 @@ import { CustomTierListCard } from '../TierListCards';
 import { TierItemTile } from '../TierItemTile';
 import { useDictionary } from "@/context/DictionaryContext";
 import { Badge } from '@/components/common/Badge';
+import { Surface } from '@/components/common/Surface';
 
 interface CreatorPreviewProps {
   title: string;
@@ -68,9 +69,9 @@ export function CreatorPreview({ title, description, tiers, items, backgroundIma
 
       <div className="flex flex-col gap-2 w-full">
         {tiers.map((tier) => (
-          <div
+          <Surface
             key={tier.id}
-            className="grid grid-cols-[4.75rem_minmax(0,1fr)] sm:max-wide-2k:grid-cols-[6.5rem_minmax(0,1fr)] wide-2k:grid-cols-[9rem_minmax(0,1fr)] overflow-hidden rounded-card border border-border-color bg-bg-surface shadow-xs"
+            padding="none" className="grid grid-cols-[4.75rem_minmax(0,1fr)] sm:max-wide-2k:grid-cols-[6.5rem_minmax(0,1fr)] wide-2k:grid-cols-[9rem_minmax(0,1fr)] overflow-hidden shadow-xs"
           >
             <TierBadge
               label={tier.label}
@@ -80,7 +81,7 @@ export function CreatorPreview({ title, description, tiers, items, backgroundIma
               labelClassName="text-base sm:text-lg font-black leading-tight"
             />
             <div className="bg-bg-primary/40 p-2 sm:p-2.5 flex flex-wrap items-center gap-2 min-h-[72px] sm:max-wide-2k:min-h-[84px] wide-2k:min-h-[112px]" />
-          </div>
+          </Surface>
         ))}
       </div>
 

@@ -27,6 +27,7 @@ import { tip } from '@/components/common/Tooltip';
 import { EmptyState } from '@/components/common/EmptyState';
 import { isKiller as isKillerRole } from '@/utils/characterUtils';
 import { Badge } from '@/components/common/Badge';
+import { Surface } from '@/components/common/Surface';
 const KILLER_OFFERING_KEYS = ['special', 'mori', 'bloodpoint', 'map', 'shroud', 'ward'] as const;
 const SURVIVOR_OFFERING_KEYS = ['special', 'bloodpoint', 'luck', 'map', 'shroud', 'blueprint', 'chest', 'ward'] as const;
 
@@ -289,8 +290,8 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
   if (!offerings || offerings.length === 0) return null;
 
   return (
-    <section
-      className="mt-8 rounded-card border border-border-color bg-bg-surface p-6 sm:p-8 shadow-sm dark:shadow-none backdrop-blur-md"
+    <Surface
+      as="section" padding="lg" className="mt-8 shadow-sm dark:shadow-none backdrop-blur-md"
       aria-labelledby="offerings-heading"
     >
       {/* Same flat single-card shape as KillerEquipmentSection: one bordered
@@ -401,7 +402,7 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
           </div>
         )}
       </CollapsibleDrawer>
-    </section>
+    </Surface>
   );
 };
 

@@ -6,6 +6,7 @@ import { Flame, Check, X } from 'lucide-react';
 import type { GuessRecord, RoundConfig, CatalogCharacter } from '@/types/minigame';
 import { useDictionary } from "@/context/DictionaryContext";
 import { InfoChip } from '@/components/common/InfoChip';
+import { Surface } from '@/components/common/Surface';
 
 interface KillerPowerGuesserProps {
   roundConfig: RoundConfig;
@@ -40,7 +41,7 @@ export const KillerPowerGuesser: React.FC<KillerPowerGuesserProps> = ({ roundCon
   return (
     <div className="w-full flex flex-col items-center my-6">
       {/* Power Clue Card */}
-      <div className="w-full max-w-lg p-6 rounded-card bg-bg-surface border border-border-color shadow-2xl flex flex-col items-center gap-4 relative">
+      <Surface padding="none" className="w-full max-w-lg p-6 shadow-2xl flex flex-col items-center gap-4 relative">
         {/* Icon placeholder — no power icon shown (would reveal identity) */}
         <div className="w-14 h-14 rounded-card bg-accent-red/10 border border-accent-red/30 flex items-center justify-center text-accent-red">
           <Flame className="w-7 h-7" />
@@ -83,7 +84,7 @@ export const KillerPowerGuesser: React.FC<KillerPowerGuesserProps> = ({ roundCon
             <span>{targetKiller.name} — {targetKiller.power_name}</span>
           </div>
         )}
-      </div>
+      </Surface>
 
       {/* Input & Action Controls Slot */}
       {children && <div className="w-full max-w-lg my-3">{children}</div>}

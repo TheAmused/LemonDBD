@@ -10,6 +10,7 @@ import { CheckCircle2, Lock, AlertCircle } from 'lucide-react';
 import { LemonIcon } from '@/components/LemonIcon';
 import { useAuth } from '@/context/AuthContext';
 import { useDictionary, useLocale } from '@/context/DictionaryContext';
+import { Surface } from '@/components/common/Surface';
 
 function ResetPasswordContent() {
   const searchParams = useSearchParams();
@@ -54,12 +55,12 @@ function ResetPasswordContent() {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
-      <div className="w-full max-w-md rounded-card border border-border-color bg-bg-surface p-8 text-text-primary shadow-2xl">
+      <Surface padding="none" className="w-full max-w-md p-8 text-text-primary shadow-2xl">
         {!done && (
           <div className="flex flex-col items-center text-center mb-6">
-            <div className="relative mb-3 flex h-14 w-14 items-center justify-center rounded-card bg-bg-elevated p-2.5 border border-border-color shadow-sm">
+            <Surface tone="elevated" padding="none" className="relative mb-3 flex h-14 w-14 items-center justify-center p-2.5 shadow-sm">
               <LemonIcon className="h-9 w-9" />
-            </div>
+            </Surface>
             <h1 className="text-xl font-black tracking-wider">
               {dict.user.setNewPassword}
             </h1>
@@ -128,7 +129,7 @@ function ResetPasswordContent() {
             </Button>
           </form>
         )}
-      </div>
+      </Surface>
     </div>
   );
 }

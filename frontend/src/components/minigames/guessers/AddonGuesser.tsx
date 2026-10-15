@@ -5,6 +5,7 @@ import React from 'react';
 import { Package, Check, X } from 'lucide-react';
 import type { GuessRecord, RoundConfig, CatalogCharacter } from '@/types/minigame';
 import { useDictionary } from "@/context/DictionaryContext";
+import { Surface } from '@/components/common/Surface';
 
 interface AddonGuesserProps {
   roundConfig: RoundConfig;
@@ -23,7 +24,7 @@ export const AddonGuesser: React.FC<AddonGuesserProps> = ({ roundConfig, killers
   return (
     <div className="w-full flex flex-col items-center my-6">
       {/* Add-on Display Card */}
-      <div className="w-full max-w-lg p-6 rounded-card bg-bg-surface border border-border-color shadow-2xl flex flex-col items-center text-center relative overflow-hidden">
+      <Surface padding="none" className="w-full max-w-lg p-6 shadow-2xl flex flex-col items-center text-center relative overflow-hidden">
         <div className="w-14 h-14 rounded-card bg-accent-amber/10 border border-accent-amber/30 flex items-center justify-center text-accent-amber mb-3">
           <Package className="w-7 h-7" />
         </div>
@@ -48,7 +49,7 @@ export const AddonGuesser: React.FC<AddonGuesserProps> = ({ roundConfig, killers
             <span>{t.solved}</span>
           </div>
         )}
-      </div>
+      </Surface>
 
       {/* Interactive Input Slot */}
       {children && <div className="w-full max-w-xl my-4">{children}</div>}

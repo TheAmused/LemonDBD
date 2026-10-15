@@ -14,6 +14,7 @@ import { CollapsibleDrawer } from './CollapsibleDrawer';
 import { toTitleCase } from '@/utils/textCase';
 import { usePersistentDrawer } from '@/hooks/usePersistentDrawer';
 import { Badge } from '@/components/common/Badge';
+import { Surface } from '@/components/common/Surface';
 
 interface KillerEquipmentSectionProps {
   addons?: (AddonItem | EquipmentItem)[];
@@ -41,7 +42,7 @@ export const KillerEquipmentSection: React.FC<KillerEquipmentSectionProps> = ({
 
   if (!addons || addons.length === 0) {
     return (
-      <section className="mt-8 rounded-card border border-border-color bg-bg-surface p-6 sm:p-8 shadow-sm dark:shadow-none backdrop-blur-md">
+      <Surface as="section" padding="lg" className="mt-8 shadow-sm dark:shadow-none backdrop-blur-md">
         <div className="flex items-center gap-3 border-b border-border-color pb-4 mb-6">
           <div className="flex h-10 w-10 items-center justify-center rounded-card bg-accent-red/10 text-accent-red border border-accent-red/20">
             <Flame className="h-5 w-5" />
@@ -55,12 +56,12 @@ export const KillerEquipmentSection: React.FC<KillerEquipmentSectionProps> = ({
         <div className="py-8 text-center text-xs text-text-muted">
           {t.noEquipment || 'No unique add-ons found for this character in database.'}
         </div>
-      </section>
+      </Surface>
     );
   }
 
   return (
-    <section className="mt-8 rounded-card border border-border-color bg-bg-surface p-6 sm:p-8 shadow-sm dark:shadow-none backdrop-blur-md">
+    <Surface as="section" padding="lg" className="mt-8 shadow-sm dark:shadow-none backdrop-blur-md">
       <CollapsibleDrawer
         open={isDrawerOpen}
         onOpenChange={setDrawerOpen}
@@ -108,7 +109,7 @@ export const KillerEquipmentSection: React.FC<KillerEquipmentSectionProps> = ({
           })}
         </div>
       </CollapsibleDrawer>
-    </section>
+    </Surface>
   );
 };
 

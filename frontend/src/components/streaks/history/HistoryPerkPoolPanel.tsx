@@ -12,6 +12,7 @@ import { useDictionary } from "@/context/DictionaryContext";
 
 import { Button } from '@/components/common/Button';
 import { SearchInput } from '@/components/common/Field';
+import { Surface } from '@/components/common/Surface';
 const UnlockedTile: React.FC<{ perk: Perk; displayName: string; justUnlocked: boolean }> = ({
   perk,
   displayName,
@@ -105,7 +106,7 @@ export const HistoryPerkPoolPanel: React.FC<HistoryPerkPoolPanelProps> = ({ pool
   }, [unlockedPerkNames]);
 
   return (
-    <div className="mt-10 rounded-card border border-border-color bg-bg-surface backdrop-blur-sm p-3 sm:p-5 shadow-sm">
+    <Surface padding="none" className="mt-10 backdrop-blur-sm p-3 sm:p-5 shadow-sm">
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
         <h3 className="type-label text-text-secondary">
           {dict.streaks.perkPool}
@@ -168,6 +169,6 @@ export const HistoryPerkPoolPanel: React.FC<HistoryPerkPoolPanelProps> = ({ pool
           ))}
         </div>
       )}
-    </div>
+    </Surface>
   );
 };

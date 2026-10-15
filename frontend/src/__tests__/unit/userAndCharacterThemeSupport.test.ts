@@ -205,7 +205,7 @@ describe('User Profile Theme Support', () => {
     const clientPath = path.resolve(__dirname, '../../components/user/UserProfileClient.tsx');
     const source = fs.readFileSync(userPagePath, 'utf-8') + (fs.existsSync(clientPath) ? fs.readFileSync(clientPath, 'utf-8') : '');
     assert.ok(
-      (source.includes('border-border-color') && source.includes('bg-bg-surface')) ||
+      (source.includes('border-border-color') && source.includes('bg-bg-surface')) || source.includes('<Surface') ||
       source.includes('border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950/90 text-slate-900 dark:text-slate-100'),
       'Unauthenticated card must support light and dark theme'
     );

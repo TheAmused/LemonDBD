@@ -26,6 +26,7 @@ import { useChapterExpansion } from './wizard/useChapterExpansion';
 import { useOnboardingCompletion } from './wizard/useOnboardingCompletion';
 import { useOnboardingLanguage } from './wizard/useOnboardingLanguage';
 import { useOnboardingRoster } from './wizard/useOnboardingRoster';
+import { Surface } from '@/components/common/Surface';
 
 export type { ChapterBanner } from './wizard/useOnboardingRoster';
 
@@ -94,7 +95,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
     <div className="min-h-screen p-2.5 sm:p-5 lg:p-6 pb-32 sm:pb-36 lg:pb-36">
       <div className="mx-auto w-full max-w-[96rem] 2xl:max-w-[110rem] 3xl:max-w-[124rem]">
         {/* Unified Card Container */}
-        <div className="rounded-card border border-border-color bg-bg-surface p-3 sm:p-5 lg:p-6 shadow-2xl space-y-3.5 sm:space-y-4">
+        <Surface padding="none" className="p-3 sm:p-5 lg:p-6 shadow-2xl space-y-3.5 sm:space-y-4">
           {/* Header Section */}
           <header className="relative flex flex-col items-center text-center space-y-1.5 sm:space-y-2">
             <div className="sm:absolute sm:right-0 sm:top-0 hidden sm:block">
@@ -211,7 +212,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
           </section>
 
           <div className="h-4" />
-        </div>
+        </Surface>
       </div>
 
       {/* Sticky full-screen bottom continue banner so Continue stays reachable while scrolling */}

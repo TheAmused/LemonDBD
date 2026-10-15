@@ -14,6 +14,7 @@ import { FitText } from '@/components/common/FitText';
 import { useDictionary } from "@/context/DictionaryContext";
 
 import { Button } from '@/components/common/Button';
+import { Surface } from '@/components/common/Surface';
 // Keep in sync with the backend's own locale list -- SUPPORTED_LOCALES in
 // backend/app/utils/lang.py. No shared
 // source of truth across the Python/TypeScript boundary; a locale added to
@@ -162,9 +163,9 @@ export const SidebarBottomControls: React.FC<SidebarBottomControlsProps> = ({
           </Button>
 
           {isLangMenuOpen && (
-            <div
+            <Surface
               role="listbox"
-              className="absolute bottom-full left-0 z-50 mb-2 w-44 overflow-hidden rounded-card border border-border-color bg-bg-surface shadow-lg"
+              padding="none" className="absolute bottom-full left-0 z-50 mb-2 w-44 overflow-hidden shadow-lg"
             >
               {LANGUAGES.map((lang) => (
                 <Link
@@ -191,7 +192,7 @@ export const SidebarBottomControls: React.FC<SidebarBottomControlsProps> = ({
                   <span>{lang.label}</span>
                 </Link>
               ))}
-            </div>
+            </Surface>
           )}
         </div>
 
@@ -217,10 +218,10 @@ export const SidebarBottomControls: React.FC<SidebarBottomControlsProps> = ({
           </Button>
 
           {isThemeMenuOpen && (
-            <div
+            <Surface
               role="listbox"
               aria-label={dict.sidebar.toggleTheme}
-              className="absolute bottom-full right-0 z-50 mb-2 w-56 overflow-hidden rounded-card border border-border-color bg-bg-surface shadow-lg"
+              padding="none" className="absolute bottom-full right-0 z-50 mb-2 w-56 overflow-hidden shadow-lg"
             >
               {THEME_OPTIONS.map((opt) => (
                 <button
@@ -244,7 +245,7 @@ export const SidebarBottomControls: React.FC<SidebarBottomControlsProps> = ({
                   <span className="whitespace-nowrap">{opt.label}</span>
                 </button>
               ))}
-            </div>
+            </Surface>
           )}
         </div>
       </div>

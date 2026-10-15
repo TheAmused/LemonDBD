@@ -13,6 +13,7 @@ import { RankFirstIcon, RankPlacedIcon } from '@/components/icons/DbdIcons';
 import { formatNumber } from '@/utils/format';
 import { isSurvivor as isSurvivorRole } from '@/utils/characterUtils';
 import { formatMessage } from '@/utils/i18nFormat';
+import { Surface } from '@/components/common/Surface';
 
 export interface TierConfig {
   name: string;
@@ -153,7 +154,7 @@ export const CandidateRow = React.memo<CandidateRowProps>(({
         </div>
 
         {/* Avatar Portrait */}
-        <div className="relative h-13 w-13 sm:h-14 sm:w-14 rounded-card overflow-hidden bg-bg-elevated border border-border-color shrink-0 shadow-inner group-hover:border-accent-red/50 transition-colors">
+        <Surface tone="elevated" padding="none" className="relative h-13 w-13 sm:h-14 sm:w-14 overflow-hidden shrink-0 shadow-inner group-hover:border-accent-red/50 transition-colors">
           <img
             src={avatarSrc}
             alt=""
@@ -177,7 +178,7 @@ export const CandidateRow = React.memo<CandidateRowProps>(({
               <Heart className="h-2.5 w-2.5 fill-text-inverted text-text-inverted" />
             </div>
           )}
-        </div>
+        </Surface>
 
         {/* Details: Name + Icon-Only Badges */}
         <div className="min-w-0 text-left flex-1">

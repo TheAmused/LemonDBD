@@ -130,7 +130,7 @@ export function CardBackFace({
 
         {/* Green & Red Flags (Prominent and unique to the card back) */}
         {(greenFlags.length > 0 || redFlags.length > 0) && (
-          <div className="p-2.5 rounded-card bg-bg-elevated border border-border-color space-y-2">
+          <Surface tone="elevated" padding="none" className="p-2.5 space-y-2">
             {greenFlags.length > 0 && (
               <div className="space-y-1">
                 <span className="type-label-2xs text-accent-green block">{text.greenFlags}</span>
@@ -151,7 +151,7 @@ export function CardBackFace({
                 </ul>
               </div>
             )}
-          </div>
+          </Surface>
         )}
 
         {/* Bio / Lore & Personality */}

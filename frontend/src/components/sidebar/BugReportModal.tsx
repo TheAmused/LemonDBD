@@ -21,6 +21,7 @@ import { Button } from '@/components/common/Button';
 import { Input, Textarea } from '@/components/common/Field';
 import { useDictionary } from "@/context/DictionaryContext";
 import { Badge } from '@/components/common/Badge';
+import { Surface } from '@/components/common/Surface';
 
 export interface BugReportModalProps {
   isOpen: boolean;
@@ -289,9 +290,9 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({ isOpen, onClose 
 
         <div className="flex flex-wrap items-center gap-3">
           {images.map((imgSrc, idx) => (
-            <div
+            <Surface
               key={idx}
-              className="relative h-16 w-16 rounded-card border border-border-color bg-bg-elevated overflow-hidden shadow-sm group"
+              tone="elevated" padding="none" className="relative h-16 w-16 overflow-hidden shadow-sm group"
             >
               <img
                 src={imgSrc}
@@ -306,7 +307,7 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({ isOpen, onClose 
               >
                 <Trash2 className="h-4 w-4" aria-hidden="true" />
               </button>
-            </div>
+            </Surface>
           ))}
 
           {images.length < 3 && (

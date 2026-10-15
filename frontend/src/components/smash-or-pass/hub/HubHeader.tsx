@@ -23,6 +23,7 @@ import type { RosterItem } from '@/types/smashOrPass';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 import { rosterCoverUrl } from '../roster-select/rosterDisplay';
 import { Badge } from '@/components/common/Badge';
+import { Surface } from '@/components/common/Surface';
 
 /** Square icon buttons: 44px to touch, a little smaller where a pointer is precise. */
 const DOCK_BUTTON =
@@ -158,7 +159,7 @@ export function HubHeader({
         <div className="flex flex-col @[560px]/hub:flex-row items-center justify-between gap-2 @[560px]/hub:gap-3 w-full order-2 @[1016px]/hub:order-none @[1016px]/hub:contents">
           {/* Live session telemetry capsule */}
           <div className="flex items-center justify-center order-2 @[560px]/hub:order-1 shrink-0">
-            <div className="flex items-center gap-2 px-3 py-1.5 rounded-card bg-bg-elevated border border-border-color text-xs shadow-inner">
+            <Surface tone="elevated" padding="none" className="flex items-center gap-2 px-3 py-1.5 text-xs shadow-inner">
               <span className="flex items-center gap-1.5 text-text-secondary font-bold">
                 <CardStackIcon className="h-4 w-4 text-text-secondary" aria-hidden="true" />
                 <span className="type-card-title text-text-primary">{remainingInDeck}</span>
@@ -179,7 +180,7 @@ export function HubHeader({
                 {sessionSmashRate}
                 {dict.smashOrPass.percentSign}
               </span>
-            </div>
+            </Surface>
           </div>
 
           {/* Action cluster (>=44px touch targets on touch screens) */}

@@ -7,6 +7,7 @@ import { cn } from '@/utils/cn';
 import { type LadderPresetId } from '@/utils/tierLists/creator';
 import { migrateTierListState } from '@/utils/tierLists/storage';
 import { useDictionary } from '@/context/DictionaryContext';
+import { Surface } from '@/components/common/Surface';
 
 /** Unfinished work survives a reload or an accidental back-navigation. Only
  * used for a brand-new list -- editing an existing one (see `editId` below)
@@ -63,7 +64,7 @@ export function Section({ title, defaultOpen = true, children }: { title: string
   const [isOpen, setIsOpen] = useState(defaultOpen);
 
   return (
-    <section className="rounded-card border border-border-color bg-bg-surface shadow-xs overflow-hidden transition-colors flex flex-col">
+    <Surface as="section" padding="none" className="shadow-xs overflow-hidden transition-colors flex flex-col">
       <button
         type="button"
         onClick={() => setIsOpen((prev) => !prev)}
@@ -97,7 +98,7 @@ export function Section({ title, defaultOpen = true, children }: { title: string
           </div>
         </div>
       </div>
-    </section>
+    </Surface>
   );
 }
 

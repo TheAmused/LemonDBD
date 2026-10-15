@@ -13,6 +13,7 @@ import { useDictionary } from '@/context/DictionaryContext';
 import { TactileKeycaps } from './lazyParts';
 import { Badge } from '@/components/common/Badge';
 import { InfoChip } from '@/components/common/InfoChip';
+import { Surface } from '@/components/common/Surface';
 
 interface HowToPlayModalProps {
   isOpen: boolean;
@@ -45,7 +46,7 @@ export function HowToPlayModal({ isOpen, onClose, onPass, onSmash, onStats, onRe
         </span>
 
         {/* 1. Swipe & Drag Mechanics */}
-        <div className="p-3.5 sm:p-4 rounded-card bg-bg-surface border border-border-color space-y-2.5 shadow-xs">
+        <Surface padding="none" className="p-3.5 sm:p-4 space-y-2.5 shadow-xs">
           <div className="flex items-center gap-3">
             <div className="flex h-9 w-9 items-center justify-center rounded-card bg-accent-red/10 border border-accent-red/30 text-accent-red shrink-0">
               <ThornHeartIcon className="h-5 w-5" aria-hidden="true" />
@@ -65,10 +66,10 @@ export function HowToPlayModal({ isOpen, onClose, onPass, onSmash, onStats, onRe
               <span>{text.smashBadge}</span>
             </Badge>
           </div>
-        </div>
+        </Surface>
 
         {/* 2. On-Card Action Controls */}
-        <div className="p-3.5 sm:p-4 rounded-card bg-bg-surface border border-border-color space-y-2.5 shadow-xs">
+        <Surface padding="none" className="p-3.5 sm:p-4 space-y-2.5 shadow-xs">
           <div className="flex items-center gap-3">
             <div className="flex h-9 w-9 items-center justify-center rounded-card bg-accent-amber/10 border border-accent-amber/30 text-accent-amber shrink-0">
               <TarotTurnIcon className="h-5 w-5" aria-hidden="true" />
@@ -88,24 +89,24 @@ export function HowToPlayModal({ isOpen, onClose, onPass, onSmash, onStats, onRe
               <span>{text.zoomArtBadge}</span>
             </InfoChip>
           </div>
-        </div>
+        </Surface>
 
         {/* 3. Tactile Keyboard Controls */}
-        <div className="p-3.5 sm:p-4 rounded-card bg-bg-surface border border-border-color space-y-2.5 shadow-xs">
+        <Surface padding="none" className="p-3.5 sm:p-4 space-y-2.5 shadow-xs">
           <div className="flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-card bg-bg-elevated border border-border-color text-text-primary shrink-0">
+            <Surface tone="elevated" padding="none" className="flex h-9 w-9 items-center justify-center text-text-primary shrink-0">
               <Gamepad2 className="h-5 w-5" aria-hidden="true" />
-            </div>
+            </Surface>
             <div className="min-w-0">
               <span className="type-strong text-text-primary block">{text.keycapsTitle}</span>
               <p className="type-body text-text-muted pt-0.5">{text.keycapsDesc}</p>
             </div>
           </div>
           <TactileKeycaps onPass={onPass} onSmash={onSmash} onStats={onStats} onReset={onReset} className="my-1" />
-        </div>
+        </Surface>
 
         {/* 4. Trial Atmosphere & Lore */}
-        <div className="p-3.5 sm:p-4 rounded-card bg-bg-surface border border-border-color flex items-center gap-3 shadow-xs">
+        <Surface padding="none" className="p-3.5 sm:p-4 flex items-center gap-3 shadow-xs">
           <div className="flex h-9 w-9 items-center justify-center rounded-card bg-accent-purple/10 border border-accent-purple/30 text-accent-purple shrink-0">
             <ThunderPulseIcon className="h-5 w-5" aria-hidden="true" />
           </div>
@@ -113,7 +114,7 @@ export function HowToPlayModal({ isOpen, onClose, onPass, onSmash, onStats, onRe
             <span className="type-strong text-text-primary block">{text.atmosphereTitle}</span>
             <p className="type-body text-text-muted pt-0.5">{text.atmosphereDesc}</p>
           </div>
-        </div>
+        </Surface>
       </div>
     </Modal>
   );

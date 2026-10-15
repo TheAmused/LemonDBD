@@ -8,6 +8,7 @@ import { useDictionary } from "@/context/DictionaryContext";
 import { useChallengeAnimations } from './useChallengeAnimations';
 
 import { Button } from '@/components/common/Button';
+import { Surface } from '@/components/common/Surface';
 interface ChallengePanelProps {
   /** Stats and actions strip, rendered as the top section of the card. */
   header: React.ReactNode;
@@ -19,11 +20,11 @@ interface ChallengePanelProps {
 /** One card holding a challenge's header strip and its main panel. No backdrop filter or
  * transform here: it would trap the fixed StreakActionBar rendered inside the card. */
 export const ChallengePanel: React.FC<ChallengePanelProps> = ({ header, progress, children }) => (
-  <section className="mb-6 w-full overflow-hidden rounded-card border border-border-color bg-bg-surface shadow-sm">
+  <Surface as="section" padding="none" className="mb-6 w-full overflow-hidden shadow-sm">
     <div className="border-b border-border-color bg-bg-elevated/40 px-3 py-3 sm:px-4">{header}</div>
     {progress && <div className="border-b border-border-color px-3 pt-3 pb-1 sm:px-6 sm:pt-5 sm:pb-4">{progress}</div>}
     <div className="p-3 sm:p-4">{children}</div>
-  </section>
+  </Surface>
 );
 
 interface ChallengeHeaderLayoutProps {

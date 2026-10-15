@@ -23,6 +23,7 @@ import { formatDate } from '@/utils/format';
 import { useDictionary } from "@/context/DictionaryContext";
 import { Badge } from '@/components/common/Badge';
 import { buttonClassName } from '@/components/common/Button';
+import { Surface } from '@/components/common/Surface';
 
 interface CampfireHeaderProps {
   user: {
@@ -60,7 +61,7 @@ export const CampfireHeader: React.FC<CampfireHeaderProps> = ({
     }) => {
   const dict = useDictionary();
   return (
-    <div className="relative overflow-hidden rounded-card border border-border-color bg-bg-surface p-6 sm:p-7 2xl:p-9 backdrop-blur-xl shadow-md text-text-primary">
+    <Surface padding="none" className="relative overflow-hidden p-6 sm:p-7 2xl:p-9 backdrop-blur-xl shadow-md text-text-primary">
       <div className="relative z-10 grid grid-cols-1 xl:grid-cols-12 gap-6 sm:gap-8 items-center">
         {/* Left Column: Avatar & Player Identity (5 cols on xl+) */}
         <div className="xl:col-span-5 2xl:col-span-5 flex flex-col sm:flex-row items-center gap-5 sm:gap-7 text-center sm:text-left min-w-0 w-full justify-center xl:justify-start">
@@ -172,6 +173,6 @@ export const CampfireHeader: React.FC<CampfireHeaderProps> = ({
           />
         </div>
       </div>
-    </div>
+    </Surface>
   );
 };

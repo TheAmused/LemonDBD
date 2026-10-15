@@ -4,6 +4,7 @@ import { BookOpen, Flame } from 'lucide-react';
 import { KillerPowerInfo, CharacterItem, getAssetUrl } from '../types';
 import { RichText } from '@/components/common/RichText';
 import { Modal } from '@/components/common/Modal';
+import { Surface } from '@/components/common/Surface';
 
 interface KillerPowerModalProps {
   isOpen: boolean;
@@ -59,18 +60,18 @@ export const KillerPowerModal: React.FC<KillerPowerModalProps> = ({
         </div>
       </div>
       <div className="mt-5 px-6 py-3 bg-bg-elevated border-y border-border-color grid grid-cols-3 gap-2">
-        <div className="p-2 rounded-card bg-bg-surface border border-border-color text-center">
+        <Surface padding="none" className="p-2 text-center">
           <span className="block text-micro font-bold uppercase text-text-secondary">{t.movementSpeed || 'Speed'}</span>
           <span className="block type-strong text-text-primary truncate">{killerSpeed}</span>
-        </div>
-        <div className="p-2 rounded-card bg-bg-surface border border-border-color text-center">
+        </Surface>
+        <Surface padding="none" className="p-2 text-center">
           <span className="block text-micro font-bold uppercase text-text-secondary">{t.terrorRadius || 'Terror Radius'}</span>
           <span className="block type-strong text-accent-red truncate">{killerTerrorRadius}</span>
-        </div>
-        <div className="p-2 rounded-card bg-bg-surface border border-border-color text-center">
+        </Surface>
+        <Surface padding="none" className="p-2 text-center">
           <span className="block text-micro font-bold uppercase text-text-secondary">{t.height || 'Height'}</span>
           <span className="block type-strong text-text-primary truncate">{killerHeight}</span>
-        </div>
+        </Surface>
       </div>
 
       <div className="p-4 sm:p-6 space-y-4 type-body-lg text-text-secondary">

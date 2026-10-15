@@ -26,6 +26,7 @@ import { formatMessage } from '@/utils/i18nFormat';
 import { useDictionary } from "@/context/DictionaryContext";
 import { Badge } from '@/components/common/Badge';
 import { InfoChip } from '@/components/common/InfoChip';
+import { Surface } from '@/components/common/Surface';
 
 export interface VoiceEngineInfoModalProps {
   isOpen: boolean;
@@ -58,7 +59,7 @@ export const VoiceEngineInfoBody: React.FC<Omit<VoiceEngineInfoModalProps, 'isOp
   return (
     <div className="space-y-6">
     {/* Current Browser Status Card */}
-    <div className="rounded-card border border-border-color bg-bg-elevated p-4 space-y-2">
+    <Surface tone="elevated" padding="none" className="p-4 space-y-2">
       <div className="flex items-center justify-between">
         <span className="type-label-xs text-text-muted flex items-center gap-1.5">
           <Laptop className="h-3.5 w-3.5 text-text-muted" aria-hidden="true" />
@@ -82,7 +83,7 @@ export const VoiceEngineInfoBody: React.FC<Omit<VoiceEngineInfoModalProps, 'isOp
             : t.engineClientBadge || ''}
         </Badge>
       </div>
-    </div>
+    </Surface>
 
     {/* Comparison: How It Works & Why It Is Needed */}
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
@@ -151,7 +152,7 @@ export const VoiceEngineInfoBody: React.FC<Omit<VoiceEngineInfoModalProps, 'isOp
     </div>
 
     {/* Local model accuracy: whisper-tiny ('fast') vs whisper-base ('accurate') */}
-    <div className="rounded-card border border-border-color bg-bg-elevated p-4 space-y-3">
+    <Surface tone="elevated" padding="none" className="p-4 space-y-3">
       <div className="flex items-center gap-1.5 type-label-xs text-text-muted">
         <Gauge className="h-3.5 w-3.5 text-text-muted" aria-hidden="true" />
         <span>{t.accuracyTitle || ''}</span>
@@ -204,7 +205,7 @@ export const VoiceEngineInfoBody: React.FC<Omit<VoiceEngineInfoModalProps, 'isOp
           );
         })}
       </div>
-    </div>
+    </Surface>
 
     {/* Why Fallback Is Needed Box */}
     <div className="rounded-card border border-accent-amber/30 bg-accent-amber/10 p-4 space-y-2">
@@ -218,7 +219,7 @@ export const VoiceEngineInfoBody: React.FC<Omit<VoiceEngineInfoModalProps, 'isOp
     </div>
 
     {/* Client Model Download Box */}
-    <div className="rounded-card border border-border-color bg-bg-elevated p-4 space-y-3">
+    <Surface tone="elevated" padding="none" className="p-4 space-y-3">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <DownloadCloud className="h-4 w-4 text-accent-red" aria-hidden="true" />
@@ -254,7 +255,7 @@ export const VoiceEngineInfoBody: React.FC<Omit<VoiceEngineInfoModalProps, 'isOp
           </Button>
         </div>
       )}
-    </div>
+    </Surface>
     </div>
   );
 };

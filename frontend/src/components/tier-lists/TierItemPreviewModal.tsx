@@ -5,6 +5,7 @@ import React from 'react';
 import { Modal } from '@/components/common/Modal';
 import { PerkDescription } from '@/components/PerkDescription';
 import type { TierItem } from '@/types/tierList';
+import { Surface } from '@/components/common/Surface';
 
 interface TierItemPreviewModalProps {
   /** The tile that was double-clicked/double-tapped, or null to stay closed. */
@@ -54,11 +55,11 @@ export function TierItemPreviewModal({ item, onClose }: TierItemPreviewModalProp
             />
           </div>
         ) : (
-          <div className="flex h-48 w-48 sm:h-64 sm:w-64 shrink-0 items-center justify-center overflow-hidden rounded-card border border-border-color bg-bg-elevated">
+          <Surface tone="elevated" padding="none" className="flex h-48 w-48 sm:h-64 sm:w-64 shrink-0 items-center justify-center overflow-hidden">
             <span className="text-4xl font-black text-text-muted" aria-hidden="true">
               {item.name.slice(0, 2).toUpperCase()}
             </span>
-          </div>
+          </Surface>
         )}
         {item.description && (
           <PerkDescription description={item.description} />

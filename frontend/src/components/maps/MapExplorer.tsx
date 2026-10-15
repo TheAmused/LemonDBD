@@ -26,6 +26,7 @@ import { MapCard } from './MapCard';
 import { EmptyState } from '@/components/common/EmptyState';
 import { useDictionary } from "@/context/DictionaryContext";
 import { trackEvent } from '@/utils/analytics';
+import { Surface } from '@/components/common/Surface';
 
 // Sentinel dropdown value for "no filter"; real attribute values never collide with it.
 // Also what "no filter" persists as in localStorage, since the filter fields
@@ -289,9 +290,9 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
 
   return (
     <div className="w-full space-y-6" data-testid="map-explorer-root">
-      <section
+      <Surface
         aria-label={dict.maps.pageTitle}
-        className="relative flex w-full flex-col overflow-hidden rounded-card border border-border-color bg-bg-surface px-4 pt-3.5 pb-4 sm:px-6 sm:pt-4 sm:pb-5 md:min-h-[14rem] shadow-sm transition-all duration-300"
+        as="section" padding="none" className="relative flex w-full flex-col overflow-hidden px-4 pt-3.5 pb-4 sm:px-6 sm:pt-4 sm:pb-5 md:min-h-[14rem] shadow-sm transition-all duration-300"
       >
         <div className="relative z-10 grid grid-cols-[minmax(0,1fr)] flex-1">
           <div
@@ -399,7 +400,7 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
             </div>
           )}
         </div>
-      </section>
+      </Surface>
 
       {loading && (
         <div className="py-16 text-center text-xs text-text-muted">

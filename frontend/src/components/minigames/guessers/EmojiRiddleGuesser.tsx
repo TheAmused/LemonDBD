@@ -5,6 +5,7 @@ import React from 'react';
 import { HelpCircle, Check, X } from 'lucide-react';
 import type { GuessRecord, RoundConfig, CatalogCharacter, CatalogPerk } from '@/types/minigame';
 import { useDictionary } from "@/context/DictionaryContext";
+import { Surface } from '@/components/common/Surface';
 
 interface EmojiRiddleGuesserProps {
   roundConfig: RoundConfig;
@@ -24,7 +25,7 @@ export const EmojiRiddleGuesser: React.FC<EmojiRiddleGuesserProps> = ({ roundCon
   return (
     <div className="w-full flex flex-col items-center my-6">
       {/* Emoji Riddle Display Card */}
-      <div className="w-full max-w-md p-8 rounded-card bg-bg-surface border border-border-color shadow-2xl flex flex-col items-center text-center relative overflow-hidden">
+      <Surface padding="none" className="w-full max-w-md p-8 shadow-2xl flex flex-col items-center text-center relative overflow-hidden">
         <div className="type-label-sm text-text-muted mb-3">
           {t.modes.emoji_riddle}
         </div>
@@ -44,7 +45,7 @@ export const EmojiRiddleGuesser: React.FC<EmojiRiddleGuesserProps> = ({ roundCon
             <span>{t.attributeValues.correct}</span>
           </div>
         )}
-      </div>
+      </Surface>
 
       {/* Interactive Input Slot */}
       {children && <div className="w-full max-w-xl my-4">{children}</div>}

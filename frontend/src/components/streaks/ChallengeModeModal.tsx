@@ -94,8 +94,10 @@ export const ChallengeModeModal: React.FC<ChallengeModeModalProps> = ({
     }) => {
   const dict = useDictionary();
   const [isRulesOpen, setIsRulesOpen] = useState(false);
-  // A lone tile has nothing to compare against, so it starts highlighted.
-  const defaultPending = selectedValue ?? (tiles.length === 1 ? tiles[0].value : undefined);
+  // The active mode starts highlighted if this screen offers it, else the leftmost selectable tile.
+  const defaultPending = tiles.some((tile) => tile.value === selectedValue)
+    ? selectedValue
+    : tiles.find((tile) => !tile.disabled)?.value;
   const [pending, setPending] = useState(defaultPending);
   useEffect(() => {
     if (isOpen) setPending(defaultPending);

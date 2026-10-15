@@ -58,6 +58,21 @@ Oznaczenia: M telefon, T tablet, D desktop.
 - [ ] Modale: dolny arkusz na telefonie (rogi tylko u góry), pełny ekran na telefonie bez zaokrągleń, okno nad oknem.
 - [ ] Onboarding: przyciski, wybór języka (`ToggleChip`), karty.
 
+## 2b. Druga seria zmian (mniej wyjątków)
+
+- [ ] **Toast "szkic przywrócony"** w kreatorze rosterów i tier list: ten sam wygląd i miejsce (prawy górny róg), przycisk "zacznij od nowa" i zamknięcie. M: szerokość toastu na wąskim ekranie.
+- [ ] **Kafle z ikoną** (`IconTile`): wymóg logowania, brama NSFW, raport (sukces i błąd), logo w sidebarze i onboardingu, ekran rankingu Smash or Pass, ikony sekcji wyposażenia. Wszystkie mają teraz jedną ramkę i tint (wcześniej różne siły tła); sprawdź kolor zielony w raporcie (wcześniej nieistniejący kolor).
+- [ ] **Małe przyciski na miniaturach** (usuń kandydata, usuń element tier listy, ostrzeżenie o wyłączeniu, wyczyść slot perka): teraz okrągłe `Button overlay` 24 px (wcześniej kwadratowe 20 px). M: dotyk (niewidzialna strefa 44 px).
+- [ ] **Przyciski "dodaj" z przerywaną ramką**: dodaj rundę, dodaj kandydata, dodaj tier, przenieś tutaj, wgraj obraz w zgłoszeniu błędu.
+- [ ] **Miniatury** w podpowiedziach i podglądach (autouzupełnianie postaci, kreator rund, guessery): jedna ramka i rozmiar.
+- [ ] **Sekcja "Moje listy"** w hubie tier list: teraz `AccordionSection` z przyklejonym nagłówkiem. M: czy nagłówek zawija się z przyciskami (Importuj, Nowa lista), nie zasłania go górny pasek, i czy przykleja się przy przewijaniu.
+- [ ] **Zwijanie** (wszystkie sekcje, rozwijane wpisy w zgłoszeniach, grupy prób, podgląd następnego rzędu, szuflady postaci): jedna animacja; zamknięte treści nie są już dostępne klawiaturą. Sprawdź menu otwierające się poza szufladą w postaci (wybór kategorii).
+- [ ] **Karty wyboru** (`SelectableCard`): filtry statusów i lista raportów w adminie, wybór silnika głosu i jakości modelu, wybór perków we własnym zestawie. Zaznaczenie wygląda wszędzie tak samo (obwódka akcentu, tint, ring). Silniki głosu są teraz przyciskami, a nie klikalnymi divami.
+- [ ] **Próbniki koloru** w tier listach (`ColorSwatch`): zaznaczenie, kółko własnego koloru z ikoną i tęczą.
+- [ ] **Przełączniki**: "dopasuj" w skali tier listy (teraz `Button`), "zaznacz wszystko" w onboardingu (teraz `ToggleChip` z ikoną).
+- [ ] **Linki w zdaniu** (`InlineLink`): regulamin i zasady w rejestracji, "spróbuj ponownie" w streakach, "odrzuć" w banerze weryfikacji.
+- [ ] **Baner "wkrótce"** w osiągnięciach: teraz `Badge` w rozmiarze lg.
+
 ## 3. Rzeczy świadomie bez zmian (nie szukaj błędu)
 
 Przyciski gry w Smash or Pass, klawisze i mikrofon, koło losowania, kafle i miniatury, nagłówki akordeonów poza `AccordionSection`, karty wyboru. Pełna lista wyjątków jest w `docs/shared-components-adoption.md` (sekcje 1 do 3), a limit nowych ręcznych przycisków w `scripts/raw-buttons-baseline.json`.

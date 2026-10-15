@@ -20,6 +20,15 @@ Cel: jedna zmiana w jednym miejscu przesuwa wygląd całej strony. Poniżej źr�
 | Etykieta, licznik, status | `common/Badge.tsx` (tony, w tym `overlay` i `onAccent`) i `common/InfoChip.tsx` | `<Badge tone size>`, `<InfoChip>` |
 | Pola formularza | `common/Field.tsx` (`pill` dla wyszukiwarek) | `<Input>`, `<Textarea>`, `<Select>`, `<SearchInput>` |
 | Okna | `common/Modal.tsx`, `common/modalConfig.tsx` | `<Modal variant layer>` |
+| Powiadomienie w rogu (toast) | `common/Toast.tsx` | `<Toast icon message actions onDismiss>` |
+| Kafel z ikoną (nad tytułem, w nagłówku sekcji) | `common/IconTile.tsx` | `<IconTile tone size>` |
+| Miniatura obrazka w wierszu listy | `common/Thumb.tsx` | `<Thumb src alt size fit fallback>` |
+| Zwijane ciało (animacja, `inert` gdy zamknięte) | `common/Collapsible.tsx` | `<Collapsible open>`; sekcja z nagłówkiem to `AccordionSection` |
+| Karta, którą się wybiera | `common/SelectableCard.tsx` | `<SelectableCard selected tone tinted>` |
+| Próbnik koloru | `common/ColorSwatch.tsx` | `<ColorSwatch selected size mark>` |
+| Link w zdaniu | `common/InlineLink.tsx` | `<InlineLink tone>` |
+| Mała kontrolka na miniaturze (usuń, edytuj) | `common/Button.tsx` wariant `overlay` | `<Button variant="overlay" size="xs" icon pill>` |
+| Przycisk "dodaj" z przerywaną ramką | `common/Button.tsx` prop `dashed` | `<Button dashed>` |
 | Tooltip | `common/Tooltip.tsx` (`TOOLTIP_CONFIG.variants`) | `{...tip(tekst, opis, wariant)}` |
 | Łączenie klas | `lib/cn.ts` (zna własne rozmiary tekstu i role promieni) | `cn(...)` |
 

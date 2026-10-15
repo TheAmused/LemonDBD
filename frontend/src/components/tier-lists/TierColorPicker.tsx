@@ -2,6 +2,7 @@
 // frontend/src/components/tier-lists/TierColorPicker.tsx
 
 import React, { useEffect, useRef, useState } from 'react';
+import { ColorSwatch } from '@/components/common/ColorSwatch';
 import { HexColorInput, HexColorPicker } from 'react-colorful';
 import { Check, Pipette } from 'lucide-react';
 import { cn } from '@/utils/cn';
@@ -80,25 +81,23 @@ export function TierColorPicker({ color, onChange, size = 'md' }: TierColorPicke
   return (
     <>
       {/* Same square swatch as the preset colors. Always the rainbow, so it reads the same whether or not a custom color is set; a check marks it when one is. */}
-      <button
-        type="button"
+      <ColorSwatch
+        selected={isHex || open}
+        size={small ? 'sm' : 'md'}
         onClick={() => setOpen((o) => !o)}
         aria-expanded={open}
         aria-label={t.customColor}
-        aria-pressed={isHex}
-        className={cn(
-          'flex items-center justify-center border-2 cursor-pointer transition-transform hover:scale-105',
-          small ? 'h-7 w-7 rounded-chip pointer-coarse:min-h-11 pointer-coarse:min-w-11' : 'h-11 w-11 rounded-control',
-          'bg-[conic-gradient(red,yellow,lime,aqua,blue,fuchsia,red)]',
-          isHex || open ? 'border-text-primary' : 'border-transparent'
-        )}
-      >
-        {isHex && (
-          <span className="flex items-center justify-center rounded-full bg-bg-primary/85 p-0.5 text-text-primary" aria-hidden="true">
-            <Check className={small ? 'h-3 w-3' : 'h-3.5 w-3.5'} />
-          </span>
-        )}
-      </button>
+        className="bg-[conic-gradient(red,yellow,lime,aqua,blue,fuchsia,red)]"
+        mark={
+          isHex ? (
+            <span className="flex items-center justify-center rounded-full bg-bg-primary/85 p-0.5 text-text-primary" aria-hidden="true">
+              <Check className={small ? 'h-3 w-3' : 'h-3.5 w-3.5'} />
+            </span>
+          ) : (
+            <></>
+          )
+        }
+      />
 
       {open && (
         <div

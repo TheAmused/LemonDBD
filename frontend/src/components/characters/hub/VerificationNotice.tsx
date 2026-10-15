@@ -3,6 +3,7 @@
 import React from 'react';
 import { MailWarning } from 'lucide-react';
 import { useDictionary } from '@/context/DictionaryContext';
+import { InlineLink } from '@/components/common/InlineLink';
 
 interface VerificationNoticeProps {
   onVerify: () => void;
@@ -28,13 +29,9 @@ export function VerificationNotice({ onVerify, onDismiss }: VerificationNoticePr
         >
           {dict.streaks.verifyEmail}
         </button>
-        <button
-          type="button"
-          onClick={onDismiss}
-          className="type-strong-xs underline cursor-pointer"
-        >
+        <InlineLink tone="current" onClick={onDismiss} className="type-strong-xs">
           {dict.characterDetail.dismiss}
-        </button>
+        </InlineLink>
       </div>
     </div>
   );

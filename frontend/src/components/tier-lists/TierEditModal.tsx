@@ -16,6 +16,7 @@ import { Button } from '@/components/common/Button';
 import { Input } from '@/components/common/Field';
 import { formatMessage } from '@/utils/i18nFormat';
 import { useDictionary } from "@/context/DictionaryContext";
+import { ColorSwatch } from '@/components/common/ColorSwatch';
 
 interface TierEditModalProps {
   mode?: 'edit' | 'add';
@@ -151,20 +152,12 @@ export function TierEditModal({
             {TIER_COLOR_TOKENS.map((token) => {
               const swatch = tierColorProps(token);
               return (
-                <button
+                <ColorSwatch selected={color === token} className={swatch.className}
                   key={token}
-                  type="button"
+                 
                   onClick={() => setColor(token)}
-                  aria-label={formatMessage(t.colorSwatchAria, { name: token.toUpperCase() })}
-                  aria-pressed={color === token}
-                  className={cn(
-                    'flex h-11 w-11 items-center justify-center rounded-control border-2 cursor-pointer transition-transform hover:scale-105',
-                    swatch.className,
-                    color === token ? 'border-text-primary' : 'border-transparent'
-                  )}
-                >
-                  {color === token && <Check className="h-4 w-4" aria-hidden="true" />}
-                </button>
+                  aria-label={formatMessage(t.colorSwatchAria, { name: token.toUpperCase() })}>
+                </ColorSwatch>
               );
             })}
             <TierColorPicker color={color} onChange={setColor} />

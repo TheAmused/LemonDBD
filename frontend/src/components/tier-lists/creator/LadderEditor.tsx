@@ -2,7 +2,7 @@
 // frontend/src/components/tier-lists/creator/LadderEditor.tsx
 
 import React, { useEffect, useRef, useState } from 'react';
-import { Check, GripVertical, ListOrdered, Plus, X } from 'lucide-react';
+import { GripVertical, ListOrdered, Plus, X } from 'lucide-react';
 import type { TierDefinition } from '@/types/tierList';
 import { cn } from '@/utils/cn';
 import { TIER_COLOR_TOKENS, TIER_LIST_LIMITS } from '@/utils/tierLists/constants';
@@ -17,6 +17,7 @@ import { CustomDropdown } from '@/components/common/CustomDropdown';
 import { formatMessage } from '@/utils/i18nFormat';
 import { useDictionary } from "@/context/DictionaryContext";
 import { ToggleChip } from '@/components/common/ToggleChip';
+import { ColorSwatch } from '@/components/common/ColorSwatch';
 
 function PresetSwatch({ colors }: { colors: readonly string[] }) {
   return (
@@ -224,20 +225,12 @@ export function LadderEditor({ tiers, onChange, onPreset, activePreset }: Ladder
                     const swatch = tierColorProps(token);
                     const active = tier.color === token;
                     return (
-                      <button
+                      <ColorSwatch selected={active} size="sm" className={swatch.className}
                         key={token}
-                        type="button"
+                       
                         onClick={() => update(tier.id, { color: token })}
-                        aria-label={formatMessage(t.colorSwatchAria, { name: token.toUpperCase() })}
-                        aria-pressed={active}
-                        className={cn(
-                          'pointer-coarse:min-h-11 pointer-coarse:min-w-11 flex h-7 w-7 items-center justify-center rounded-chip border-2 cursor-pointer transition-transform hover:scale-105',
-                          swatch.className,
-                          active ? 'border-text-primary' : 'border-transparent'
-                        )}
-                      >
-                        {active && <Check className="h-3.5 w-3.5" aria-hidden="true" />}
-                      </button>
+                        aria-label={formatMessage(t.colorSwatchAria, { name: token.toUpperCase() })}>
+                      </ColorSwatch>
                     );
                   })}
                   <TierColorPicker size="sm" color={tier.color} onChange={(hex) => update(tier.id, { color: hex })} />

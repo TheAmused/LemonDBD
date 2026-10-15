@@ -2,11 +2,11 @@
 'use client';
 
 import React from 'react';
-import Image from 'next/image';
 import { Check, X } from 'lucide-react';
 import type { AttributeEvaluation, GuessRecord } from '@/types/minigame';
 import { staticUrl } from '@/utils/api';
 import { useDictionary } from "@/context/DictionaryContext";
+import { Thumb } from '@/components/common/Thumb';
 
 interface ClassicPerkGuesserProps {
   guesses: GuessRecord[];
@@ -42,20 +42,7 @@ export const ClassicPerkGuesser: React.FC<ClassicPerkGuesserProps> = ({ guesses 
               >
                 <td className="p-2 rounded-card bg-bg-surface border border-border-color text-left">
                   <div className="flex items-center gap-2.5">
-                    <div className="relative w-10 h-10 rounded-chip overflow-hidden bg-bg-elevated border border-border-subtle flex-shrink-0 flex items-center justify-center">
-                      {imgSrc ? (
-                        <Image
-                          src={imgSrc}
-                          alt={guess.name}
-                          width={40}
-                          height={40}
-                          unoptimized
-                          className="object-contain w-full h-full p-0.5"
-                        />
-                      ) : (
-                        <span className="text-xs text-text-muted">?</span>
-                      )}
-                    </div>
+                    <Thumb src={imgSrc} alt={guess.name} fit="contain" fallback={<span className="text-xs text-text-muted">?</span>} />
                     <span className="truncate text-text-primary font-semibold text-xs leading-snug">
                       {guess.name}
                     </span>

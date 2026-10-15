@@ -15,6 +15,7 @@ import { containerDndId, itemDndId, tierDndId } from './dndIds';
 import { formatMessage } from '@/utils/i18nFormat';
 import { useDictionary } from "@/context/DictionaryContext";
 
+import { Button } from '@/components/common/Button';
 interface TierRowProps {
   tier: TierDefinition;
   keys: string[];
@@ -155,17 +156,17 @@ export const TierRow = React.memo(function TierRow({
         )}
 
         {canReceiveSelection && (
-          <button
+          <Button
             type="button"
             onClick={(e) => {
               e.stopPropagation();
               onMoveSelectedHere(tier.id);
             }}
-            className="inline-flex min-h-11 group-data-[fit]/board:min-h-0 group-data-[fit]/board:py-0.5 items-center gap-1.5 self-center rounded-control border border-dashed border-accent-amber/60 bg-accent-amber/10 px-3 type-strong text-accent-amber cursor-pointer"
+            variant="amberSoft" size="sm" dashed className="min-h-11 group-data-[fit]/board:min-h-0 group-data-[fit]/board:py-0.5 self-center"
           >
             <ArrowDownToLine className="h-3.5 w-3.5" aria-hidden="true" />
             {t.moveHere}
-          </button>
+          </Button>
         )}
       </div>
     </section>

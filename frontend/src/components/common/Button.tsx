@@ -21,6 +21,7 @@ export type ButtonVariant =
   | 'link' //    amber text link, no box (hover underline)
   | 'linkMuted' // quiet text link, for secondary "back" and "change" actions
   | 'linkDanger' // red text link, for "reset" and "remove" actions
+  | 'overlay' //  frosted square-ish control laid over a thumbnail (remove, edit); turns red on hover
   | 'cta'; //     loud DBD randomizer CTA
 
 export type ButtonSize = 'xs' | 'sm' | 'md' | 'lg';
@@ -37,6 +38,7 @@ export const BUTTON_VARIANTS: Record<ButtonVariant, string> = {
   link: 'text-accent-amber underline-offset-2 hover:underline',
   linkMuted: 'text-text-muted underline-offset-2 hover:text-text-primary hover:underline',
   linkDanger: 'text-accent-red underline-offset-2 hover:underline',
+  overlay: 'border border-border-color/60 bg-bg-surface/90 text-text-muted shadow-xs backdrop-blur-sm hover:bg-accent-red hover:text-text-inverted',
   cta: 'bg-accent-red text-text-inverted font-black uppercase tracking-wider shadow-xs hover:bg-accent-red-hover hover:scale-[1.02] hover:shadow-md hover:shadow-accent-red/40 active:scale-[0.97]',
 };
 
@@ -71,6 +73,9 @@ const ICON_BUTTON_SIZES: Record<ButtonSize, string> = {
   lg: 'h-12 w-12',
 };
 
+// An overlay control sits on a thumbnail: it keeps its small look and grows only an invisible hit area on touch screens.
+const OVERLAY_TOUCH = 'hit-area pointer-coarse:min-h-0 pointer-coarse:min-w-0';
+
 const ROLE_RING: Record<DbdButtonRole, string> = {
   Survivor: 'focus-visible:ring-accent-green',
   Killer: 'focus-visible:ring-accent-red',
@@ -104,6 +109,8 @@ export interface ButtonProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonE
   icon?: boolean;
   /** Fully rounded ends instead of the standard control radius. */
   pill?: boolean;
+  /** Dashed border: an "add" slot. */
+  dashed?: boolean;
   /** Shrink a plain-text label to fit a narrow button (default), or leave it alone. */
   fit?: boolean;
   children?: React.ReactNode;
@@ -120,6 +127,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
     icon = false,
     fit = true,
     pill = false,
+    dashed = false,
     className,
     disabled,
     type = 'button',
@@ -149,6 +157,8 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
         BUTTON_VARIANTS[variant],
         sizeClasses,
         pill ? BUTTON_RADIUS_PILL : BUTTON_RADIUS,
+        dashed && 'border-dashed',
+        variant === 'overlay' && OVERLAY_TOUCH,
         ringClass,
         className
       )}

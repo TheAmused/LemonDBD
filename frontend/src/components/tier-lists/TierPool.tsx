@@ -169,7 +169,7 @@ export function TierPool({
               <Button
                 type="button"
                 onClick={() => onMoveSelectedHere(POOL_CONTAINER_ID)}
-                variant="amberSoft" size="sm" className="shrink-0 border-dashed"
+                variant="amberSoft" size="sm" dashed className="shrink-0"
               >
                 <ArrowDownToLine className="h-3.5 w-3.5" aria-hidden="true" />
                 {t.moveHere}

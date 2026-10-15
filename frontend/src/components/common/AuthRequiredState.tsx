@@ -6,6 +6,7 @@ import dynamic from 'next/dynamic';
 import { Lock } from 'lucide-react';
 import { useDictionary } from '@/context/DictionaryContext';
 import { Button } from '@/components/common/Button';
+import { IconTile } from '@/components/common/IconTile';
 
 const AuthModal = dynamic(() => import('@/components/AuthModal').then((m) => m.AuthModal), { ssr: false });
 
@@ -41,9 +42,9 @@ export function AuthRequiredState({
 
   return (
     <div className={className || VARIANT_WRAPPER_CLASSNAME[variant]}>
-      <div className="flex h-12 w-12 items-center justify-center rounded-card border border-accent-red/20 bg-accent-red/10">
+      <IconTile tone="red" size="md">
         <Lock className="h-5 w-5 text-accent-red" />
-      </div>
+      </IconTile>
       <h2 className="mt-4 text-sm font-extrabold tracking-wide text-text-primary">
         {title}
       </h2>

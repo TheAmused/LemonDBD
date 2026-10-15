@@ -4,12 +4,12 @@
 import { Input } from '@/components/common/Field';
 import { useDictionary } from '@/context/DictionaryContext';
 import React, { useState, useMemo, useRef, useEffect, useCallback } from 'react';
-import Image from 'next/image';
 import { Search, ChevronDown, Sparkles } from 'lucide-react';
 import type { MinigameCatalog, TargetType, GuessedItem } from '@/types/minigame';
 import { staticUrl } from '@/utils/api';
 import { isKiller, isSurvivor } from '@/utils/characterUtils';
 import { Badge } from '@/components/common/Badge';
+import { Thumb } from '@/components/common/Thumb';
 
 export type AutocompleteItem = GuessedItem;
 
@@ -276,20 +276,7 @@ export const CharacterAutocomplete: React.FC<CharacterAutocompleteProps> = ({
                   isHighlighted ? 'bg-accent-red/20 text-text-primary font-bold' : 'text-text-secondary hover:bg-bg-elevated'
                 }`}
               >
-                <div className="relative w-10 h-10 rounded-chip overflow-hidden bg-bg-elevated border border-border-color flex-shrink-0 flex items-center justify-center">
-                  {imgSrc ? (
-                    <Image
-                      src={imgSrc}
-                      alt={item.name}
-                      width={40}
-                      height={40}
-                      unoptimized
-                      className="object-cover w-full h-full"
-                    />
-                  ) : (
-                    <Sparkles className="w-5 h-5 text-text-muted" />
-                  )}
-                </div>
+                <Thumb src={imgSrc} alt={item.name} fallback={<Sparkles className="h-5 w-5 text-text-muted" />} />
 
                 <div className="flex-1 min-w-0">
                   <div className="type-card-title truncate text-text-primary">{item.name}</div>

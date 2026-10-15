@@ -25,6 +25,7 @@ import { Button } from '@/components/common/Button';
 import { Input } from '@/components/common/Field';
 import { CandidateRow, type TierConfig } from "./SmashLeaderboardParts";
 import { useDictionary } from "@/context/DictionaryContext";
+import { IconTile } from '@/components/common/IconTile';
 
 export interface SmashLeaderboardModalProps {
   isOpen: boolean;
@@ -431,9 +432,9 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
       >
         {totalCommunityVotes === 0 && !searchQuery.trim() ? (
           <div className="flex flex-col items-center justify-center py-16 text-center space-y-3.5">
-            <div className="flex h-16 w-16 items-center justify-center rounded-card bg-accent-red/15 border border-accent-red/30 text-accent-red" aria-hidden="true">
+            <IconTile tone="red" size="lg" aria-hidden="true">
               <ThornHeartIcon className="h-8 w-8 text-accent-red animate-pulse" />
-            </div>
+            </IconTile>
             <div className="space-y-1.5 max-w-md">
               <h3 className="text-lg font-black text-text-primary">{noVotesTitle}</h3>
               <p className="text-xs sm:text-sm text-text-muted">

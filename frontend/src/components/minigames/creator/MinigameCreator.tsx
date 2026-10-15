@@ -338,14 +338,14 @@ export const MinigameCreator: React.FC<MinigameCreatorProps> = ({ catalog, local
           />
         ))}
 
-        <button
+        <Button
           type="button"
           onClick={handleAddRound}
-          className="w-full py-3.5 rounded-control border-2 border-dashed border-border-color hover:border-accent-red/60 text-text-secondary hover:text-text-primary type-card-title flex items-center justify-center gap-2 transition-all group"
+          variant="secondary" size="md" dashed className="group w-full py-3.5"
         >
           <Plus className="w-4 h-4 group-hover:scale-125 transition-transform text-accent-red" />
           <span>{c.addRound}</span>
-        </button>
+        </Button>
       </div>
 
       {/* Action Buttons Row */}

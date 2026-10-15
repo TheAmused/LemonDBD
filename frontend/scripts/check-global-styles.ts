@@ -1,4 +1,5 @@
 // frontend/scripts/check-global-styles.ts
+import fs from "node:fs";
 import { readGlobalCss } from "./lib/globalCss";
 import { Project, SyntaxKind, Node } from "ts-morph";
 
@@ -447,6 +448,53 @@ for (const sourceFile of project.getSourceFiles()) {
     }
     if (el.getAttribute("data-tooltip")) {
       reportError(filePath, el.getStartLineNumber(), `<${tag}> sets data-tooltip by hand: use {...tip(text, description, variant)}`);
+    }
+  }
+}
+
+// 7. Raw <button> that looks like a button. Actions use Button / ToggleChip / SegmentedControl / MenuItem /
+// AccordionSection, so a change to one style reaches every button. The buttons that are deliberately
+// custom (tiles, game controls, drag handles, ...) are counted per file in raw-buttons-baseline.json:
+// a file may keep its count or lower it, never raise it. `--update-baseline` rewrites the file.
+const BASELINE_PATH = "scripts/raw-buttons-baseline.json";
+const updateBaseline = process.argv.includes("--update-baseline");
+const rawButtonCounts: Record<string, number> = {};
+for (const sourceFile of project.getSourceFiles()) {
+  const filePath = sourceFile.getFilePath();
+  const rel = filePath.replace(/\\/g, "/").replace(/^.*\/frontend\//, "");
+  if (rel.includes("/common/")) continue;
+  for (const el of sourceFile.getDescendantsOfKind(SyntaxKind.JsxOpeningElement)) {
+    if (el.getTagNameNode().getText() !== "button") continue;
+    const attr = el.getAttribute("className");
+    if (!attr || !Node.isJsxAttribute(attr)) continue;
+    const init = attr.getInitializer();
+    if (!init) continue;
+    let text = Node.isStringLiteral(init) ? init.getLiteralText() : "";
+    for (const kind of STRING_NODE_KINDS) {
+      for (const n of init.getDescendantsOfKind(kind)) {
+        text += " " + (Node.isStringLiteral(n) || Node.isNoSubstitutionTemplateLiteral(n) ? n.getLiteralText() : n.getText().replace(/^[`}]|\$\{$|`$/g, ""));
+      }
+    }
+    const toks = text.split(/\s+/).filter(Boolean);
+    const surface = toks.some((t) => /^(bg-|border$|border-(?!t$|b$|l$|r$|transparent))/.test(t));
+    const sized = toks.some((t) => /^(px-|py-|p-|h-\d|w-\d)/.test(t));
+    if (surface && sized) rawButtonCounts[rel] = (rawButtonCounts[rel] ?? 0) + 1;
+  }
+}
+if (updateBaseline) {
+  fs.writeFileSync(BASELINE_PATH, JSON.stringify(rawButtonCounts, Object.keys(rawButtonCounts).sort(), 2) + "\n");
+  console.log(`Wrote ${BASELINE_PATH} (${Object.keys(rawButtonCounts).length} files)`);
+} else {
+  let baseline: Record<string, number> = {};
+  try {
+    baseline = JSON.parse(fs.readFileSync(BASELINE_PATH, "utf8"));
+  } catch {
+    console.warn(`[check-global-styles] ${BASELINE_PATH} missing: run with --update-baseline`);
+  }
+  for (const [rel, count] of Object.entries(rawButtonCounts)) {
+    const allowed = baseline[rel] ?? 0;
+    if (count > allowed) {
+      reportError(rel, 1, `${count} raw <button> styled like a button (allowed ${allowed}): use Button, ToggleChip, SegmentedControl, MenuItem or AccordionSection`);
     }
   }
 }

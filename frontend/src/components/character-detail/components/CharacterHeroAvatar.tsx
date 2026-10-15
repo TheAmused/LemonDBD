@@ -91,9 +91,9 @@ export const CharacterHeroAvatar: React.FC<CharacterHeroAvatarProps> = ({
             {roleLabel}
           </Badge>
 
-          <span className="rounded-full bg-bg-elevated/80 border border-border-color px-2.5 py-0.5 type-strong-2xs text-text-secondary backdrop-blur-md">
+          <Badge tone="overlay" size="sm" plain className="backdrop-blur-md">
             {character.is_licensed ? (t.dlcLicensed || '') : (t.dlcOriginal || '')}
-          </span>
+          </Badge>
         </div>
       </div>
     </div>

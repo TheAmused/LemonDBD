@@ -306,14 +306,14 @@ export function RomanceArchetypeBuilder({ archetypes, onChange, availableRoles, 
                     <div className="space-y-2.5">
                       <div className="flex items-center justify-between">
                         <span className={LABEL}>{ab.rulesTitle}</span>
-                        <button
+                        <Button
                           type="button"
                           onClick={() => addRule(arch.id)}
-                          className="type-strong text-accent-red hover:underline flex items-center gap-1 cursor-pointer"
+                          variant="linkDanger" size="sm"
                         >
                           <Plus className="h-3 w-3" />
                           <span>{ab.addCondition}</span>
-                        </button>
+                        </Button>
                       </div>
 
                       {arch.rules.map((rule, rIdx) => (

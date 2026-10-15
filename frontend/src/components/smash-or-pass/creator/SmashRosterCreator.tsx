@@ -177,7 +177,7 @@ export function SmashRosterCreator({ locale, editId }: SmashRosterCreatorProps) 
       onClick={submit}
       loading={publishingNow}
       data-roster-create=""
-      className="min-h-[48px] 2xl:min-h-[54px] px-8 2xl:px-10 2xl:text-lg"
+      className="min-h-12 2xl:min-h-[54px] px-8 2xl:px-10 2xl:text-lg"
     >
       {submitLabel}
     </Button>

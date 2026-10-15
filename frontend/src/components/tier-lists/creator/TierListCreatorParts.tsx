@@ -1,13 +1,12 @@
 'use client';
 
 import React, { useState } from 'react';
-import { ChevronDown, TriangleAlert } from 'lucide-react';
+import { TriangleAlert } from 'lucide-react';
 import type { TierDefinition, TierListDocumentItem } from '@/types/tierList';
-import { cn } from '@/utils/cn';
 import { type LadderPresetId } from '@/utils/tierLists/creator';
 import { migrateTierListState } from '@/utils/tierLists/storage';
 import { useDictionary } from '@/context/DictionaryContext';
-import { Surface } from '@/components/common/Surface';
+import { AccordionSection } from '@/components/common/AccordionSection';
 
 /** Unfinished work survives a reload or an accidental back-navigation. Only
  * used for a brand-new list -- editing an existing one (see `editId` below)
@@ -64,41 +63,14 @@ export function Section({ title, defaultOpen = true, children }: { title: string
   const [isOpen, setIsOpen] = useState(defaultOpen);
 
   return (
-    <Surface as="section" padding="none" className="shadow-xs overflow-hidden transition-colors flex flex-col">
-      <button
-        type="button"
-        onClick={() => setIsOpen((prev) => !prev)}
-        aria-expanded={isOpen}
-        className="relative w-full flex items-center justify-between px-4 sm:px-6 py-3.5 sm:py-4 bg-bg-surface hover:bg-bg-elevated/40 transition-colors cursor-pointer select-none text-left"
-      >
-        <div className="w-8 shrink-0 pointer-events-none" aria-hidden="true" />
-        <div className="flex-1 text-center min-w-0 px-2">
-          <h2 className="type-section-title text-text-primary group-hover:text-accent-red transition-colors">
-            {title}
-          </h2>
-        </div>
-        <div className="w-8 flex justify-end">
-          <ChevronDown
-            className={cn(
-              'h-4 w-4 sm:h-5 sm:w-5 text-accent-red transition-transform duration-300 ease-in-out',
-              isOpen ? 'rotate-180' : 'rotate-0'
-            )}
-          />
-        </div>
-      </button>
-
-      <div
-        className={`grid transition-[grid-template-rows,opacity] duration-300 ease-in-out ${
-          isOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
-        }`}
-      >
-        <div className="overflow-hidden">
-          <div className="p-4 sm:p-6 2xl:p-7 border-t border-border-color">
-            {children}
-          </div>
-        </div>
-      </div>
-    </Surface>
+    <AccordionSection
+      title={title}
+      open={isOpen}
+      onToggle={() => setIsOpen((prev) => !prev)}
+      as="section"
+    >
+      {children}
+    </AccordionSection>
   );
 }
 

@@ -12,6 +12,7 @@ import { getBackendBaseUrl } from '@/utils/perkUtils';
 import { sanitizeImageUrl } from '@/utils/smashOrPass/codec';
 import type { RomancePersonaResult } from '@/utils/smashPersona';
 import { PersonaIcon } from './PersonaIcon';
+import { Badge } from '@/components/common/Badge';
 
 interface PersonaBreakdownProps {
   persona: RomancePersonaResult;
@@ -58,9 +59,9 @@ export function PersonaBreakdown({ persona, isSharedView, copied, onShare, onClo
       >
         {isSharedView && (
           <div className="mb-2.5">
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-chip bg-bg-primary/80 border border-border-color text-micro font-bold tracking-wider text-text-primary backdrop-blur-md shadow-xs">
+            <Badge tone="overlay" size="xs" plain className="backdrop-blur-md text-text-primary">
               {text.sharedBadge}
-            </span>
+            </Badge>
           </div>
         )}
 

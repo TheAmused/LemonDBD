@@ -113,9 +113,9 @@ export function CandidateFormInputs({
                   <span className="type-micro text-text-muted/60">#{displayIndex}</span>
                 </div>
               )}
-              <span className="absolute top-2 left-2 type-strong-2xs px-2 py-0.5 rounded-chip bg-bg-surface/90 text-accent-red border border-border-color/60 backdrop-blur-xs select-none">
+              <Badge tone="overlay" size="sm" plain className="absolute top-2 left-2 text-accent-red">
                 #{displayIndex}
-              </span>
+              </Badge>
             </div>
           </div>
 

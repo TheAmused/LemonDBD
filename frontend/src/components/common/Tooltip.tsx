@@ -22,7 +22,7 @@ export const TOOLTIP_CONFIG = {
   gap: 9,
   arrowSize: 10,
   arrowEdgeInset: 16,
-  zIndex: 99999,
+  zIndex: 'var(--layer-tooltip)',
   defaultMaxWidth: '17rem',
   attr: {
     title: 'data-tooltip',

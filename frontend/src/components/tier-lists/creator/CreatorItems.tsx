@@ -40,7 +40,7 @@ export function CreatorItems({ items, onRename, onUpdateItem, onRemove, onClear 
               size="sm"
               onClick={onClear}
               leftIcon={<Trash2 className="h-3.5 w-3.5 text-accent-red" aria-hidden="true" />}
-              className="min-h-[36px] shrink-0 whitespace-nowrap px-3 hover:border-accent-red/50 hover:text-accent-red"
+              className="min-h-9 shrink-0 whitespace-nowrap px-3 hover:border-accent-red/50 hover:text-accent-red"
             >
               {c.removeAll}
             </Button>

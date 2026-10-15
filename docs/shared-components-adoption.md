@@ -629,45 +629,35 @@ Stan po przeglądzie (2026-10-15): jeden renderer (`common/Tooltip.tsx`), trzy w
 - [ ] Ikony bez tooltipa: `HeaderButton` i `ModeSelectButton` w `ChallengePanel` (reguły, statystyki, wygrane, porzuć bieg, animacje, pula perków) mają tylko `aria-label`, bez tooltipa na desktopie. Do decyzji, czy dodać `tip(title, undefined, 'action')`.
 - [ ] Dotyk: `Tooltip` nie pokazuje się na telefonie (`Tooltip.tsx:352`). Informacje, które mają być dostępne na mobile, nie mogą zależeć wyłącznie od tooltipa.
 
-## 17. Decyzje do podjęcia
+## 17. Decyzje (rozstrzygnięte 2026-10-15) i ich wykonanie
 
-Stan na 2026-10-15: wszystkie zmiany, które nie wymagały decyzji, są zrobione i opisane powyżej. Poniżej wszystko, co czeka na Twoje rozstrzygnięcie, razem z moją rekomendacją. Część pozycji padła wcześniej w rozmowie i mogła zginąć.
+Gdzie zmienić styl, żeby zmienił się wszędzie: `docs/style-sources.md`. Lista do obejrzenia wzrokiem: `docs/visual-check-list.md`.
 
-### A. Nowe wspólne komponenty (dla wyjątków z sekcji 1 do 3)
-
-- [ ] **`MenuItem`** (wiersze menu i opcji: `CategoryPicker`, `SidebarBottomControls`, `HubHeader`, `PerkFilters`, około 6). Rekomendacja: tak, mały i bezpieczny.
-- [ ] **`AccordionHeader`** (nagłówki rozwijanych sekcji: `TierListHub`, `UserProfileForm`, `DualMainsShowcase`, `UserBugReportsList`, `TierListCreatorParts`, `CollapsibleDrawer`). Rekomendacja: tak.
-- [ ] **`SelectableCard`** (duże karty wyboru: admin zgłoszenia i raporty, `ChallengeIntroModalShell`, `VoiceEngineInfoModal`, `ShowcaseCharacterModal`, `ShowcasePerkModal`, `KillerPickerGrid`, około 8). Rekomendacja: na razie nie, są zbyt różne.
-- [ ] **`Badge` w wersji nakładkowej** (`overlay`: tło z rozmyciem, 17 chipów na obrazkach i kartach: `TierListCards`, `PersonaBreakdown`, `ChapterCharacterPanel`, `MapExplorer`, `PerkCard`, `CharacterHeroAvatar`). Rekomendacja: tak.
-- [ ] **Czerwone linki tekstowe** (`linkDanger`: „użyj domyślnej” w `AdminSettingsPanel`, „dodaj warunek” w `RomanceArchetypeBuilder`; trzeci, regulamin w `AuthModal`, jest wplecony w zdanie). Rekomendacja: tak, jeden wariant.
-- [ ] **Przyciski gry w Smash or Pass** (4 akcje karty w `CharacterCard`, strzałki w `RosterSelectModal`, klawisze `TactileKeycaps`, `VoiceMicButton`): zostawić własne, czy przerobić na `Button icon` w rozmiarze `lg` z `pill`. Rekomendacja: zostawić, bo to rdzeń interakcji z animacją.
-- [ ] **Wyszukiwarka `PerkFilters`** (kształt pill, własne rozmiary responsywne w ciasnym pasku): dodać `pill` do `Input`/`SearchInput` i przejść na nie, czy zostawić. Rekomendacja: dodać `pill`, ale przejście sprawdzić na szerokościach 1440 do 1800 px.
-- [ ] **Przełącznik źródła głosu w `VoiceBannerHeader`** (jedna opcja aktywna i jedna zablokowana): dodać obsługę `disabled` do `SegmentedControl`. Rekomendacja: tak.
-- [ ] **`IconToggleButton`** (cienka nakładka na `ToggleChip`, 6 użyć w `Toolbar`): zostawić czy wstawić `ToggleChip` bezpośrednio. Rekomendacja: zostawić.
+### A. Komponenty
+- [x] `MenuItem` (`common/MenuItem.tsx`): `CategoryPicker`, `SidebarBottomControls`, `HubHeader`, sugestie w `PerkFilters` i opcje w `CustomDropdown`. Zaznaczona opcja ma teraz zawsze tint akcentu (wcześniej `CustomDropdown` miał pełne tło).
+- [x] Nagłówki akordeonów: `AccordionSection` (`common/AccordionSection.tsx`, nagłówek z banerem i licznikiem, przycisk akcji w nagłówku, animowane ciało). Użyte w `TierListHub` (oficjalne), `UserProfileForm`, `DualMainsShowcase`, `UserBugReportsDrawer` i sekcjach kreatorów tier list i rosterów. Sekcja "moje listy" w `TierListHub` zostaje własna, bo jej nagłówek jest przyklejony (sticky) i ma dwa przyciski akcji.
+- [ ] `SelectableCard`: nie robimy (decyzja).
+- [x] `Badge` w tonach `overlay` (frosted label na obrazku) i `onAccent` (licznik w kolorowym przycisku). Baner "coming soon" w `AchievementsHub` zostaje.
+- [x] `Button` wariant `linkDanger` (`AdminSettingsPanel`, `RomanceArchetypeBuilder`). Link do regulaminu w zdaniu w `AuthModal` zostaje.
+- [x] Przyciski gry w Smash or Pass: zostają własne (decyzja).
+- [x] `pill` w `Input`/`Textarea`/`Select`/`SearchInput`; wyszukiwarka w `PerkFilters` używa `SearchInput pill fieldSize="sm"`. Do sprawdzenia na 1440 do 1800 px.
+- [x] `SegmentedControl` z opcją `disabled`; przełącznik źródła w `VoiceBannerHeader`.
+- [x] `IconToggleButton` zostaje jako nakładka na `ToggleChip`.
 
 ### B. Tooltipy
+- [x] Bez zmian. Ręczny przegląd wariantów będzie osobno. Otwarte pozycje z sekcji 16 (ikony w `ChallengePanel` bez tooltipa, dotyk) zostają do tego przeglądu.
 
-- [ ] **Ikony bez tooltipa na desktopie** (`HeaderButton`, `ModeSelectButton` w `ChallengePanel`: reguły, statystyki, wygrane, porzuć bieg, animacje, pula perków; mają tylko `aria-label`). Rekomendacja: dodać `tip(title, undefined, 'action')`.
-- [ ] **Tooltipy na dotyku** (`Tooltip.tsx:352` świadomie ich nie pokazuje). Opcje: bez zmian, wciśnięcie i przytrzymanie, albo tap. Rekomendacja: bez zmian, a ważne informacje mają być widocznym tekstem.
-- [ ] **Ręczny przegląd 7 wariantów** (zaplanowany przez Ciebie, nic nie zmieniałem).
+### C. Tokeny
+- [x] Warstwy: `--layer-*` i `z-modal`, `z-modal-top`, `z-system` w `tokens.css`; `modalConfig`, `Confetti`, `Popover` i `Tooltip` korzystają z tokenów. Lokalne `z-[5]` w `CardStack` zostaje (kolejność wewnątrz komponentu).
+- [x] Poświaty: `shadow-glow-{amber,red,green,muted}-{sm,md,lg}` i `-soft`; zastąpiły 24 ręczne `shadow-[0_0_Npx_...]` (zostały 3 specyficzne cienie krawędzi w `SmashAnimations` i `TactileKeycaps`). Rozmiary ujednolicone do 12, 20 i 32 px, więc część poświat może być minimalnie słabsza lub silniejsza.
+- [x] Rozmiary: 96 wartości `min-h-[Npx]`, `w-[Npx]` itd. (wielokrotności 4 px do 96 px) przepisane na skalę Tailwinda (`min-h-[44px]` to `min-h-11`), bez zmiany wartości. Reszta arbitralnych rozmiarów zostaje.
+- [x] Polityka celu dotyku: bez zmian (44 px tylko dla ikon, w `Button`, `ToggleChip`, `SegmentedControl` i `MenuItem`).
 
-### C. Tokeny stylów (sekcja 14)
-
-- [ ] **Skala warstw `z-index`** (8 wartości arbitralnych: modale 60, 70, 100, `Confetti` 60, `CardStack` 5, drawer 1 i 2). Rekomendacja: tokeny `z-dropdown`, `z-overlay`, `z-modal`, `z-toast` w `tokens.css`.
-- [ ] **Poświaty `shadow-[0_0_Npx_...]`** (27 użyć w animacjach gry, część z surowymi `rgba(...)`). Rekomendacja: 3 tokeny poświaty (amber, red, green) i zamiana `rgba` na tokeny kolorów.
-- [ ] **Wartości arbitralne rozmiarów** (`min-h-[` 180 użyć, `w-[` 69, `h-[` 48). Rekomendacja: zostawić, poza powtarzalnym minimum dotyku 44 i 48 px (token `min-h-touch`).
-- [ ] **Polityka celu dotyku:** `Button` ma 44 px tylko dla ikon. Przyciski tekstowe w rozmiarach xs i sm mają około 28 do 32 px. Dodanie 44 px wszystkim powiększyłoby paski narzędzi na telefonie. Rekomendacja: zostawić.
-
-### D. Wygląd po zmianach, który musisz ocenić
-
-- [ ] **Wartości radiusu** (chip 6, control 12, card 16, modal 20 px): zostają, czy korygujemy któryś poziom po obejrzeniu strony.
-- [ ] **Skutki naprawy `cn()`** (`text-micro/tiny/mini` nie kasują już koloru): w miejscach, gdzie kolor był po cichu gubiony, pojawił się kolor zamierzony w kodzie. Wymaga przejrzenia `Button` xs i drobnych etykiet.
-- [ ] **Zmiany świadome:** CTA losowania zaokrąglone, plakietki neutralne zawsze jako chip, aktywne opcje w adminie jako pełne tło, `ToggleChip` z tintem w wyborze języka, filtry Smash or Pass jako `SegmentedControl`.
-- [ ] **Kontrola mobilna i tabletowa** po zmianach (checklista w sekcji 15). Ja nie oceniam wyglądu, mogę uruchomić Playwright na Twoją prośbę.
+### D. Lista do obejrzenia wzrokiem
+- [x] Spisana w `docs/visual-check-list.md`.
 
 ### E. Proces
-
-- [ ] **Guard na ostylowane `<button>`** w `check:styles` (po decyzjach z sekcji A, z listą wyjątków per plik). Rekomendacja: włączyć na końcu.
-- [ ] **Push brancha** `refactor/adopt-shared-components` (bez PR, zgodnie z zasadą, że PR otwierasz sam). Rekomendacja: wypchnąć po Twoim przeglądzie.
-- [ ] **Test `globals.css partials`** pada na Windowsie przez `mkdtemp('/tmp')` (niezwiązane z tą pracą). Drobna poprawka przez `os.tmpdir()`. Rekomendacja: tak, osobnym commitem.
-- [ ] **Nieużywane importy** w plikach (około 217 ostrzeżeń `noUnusedLocals`, w większości sprzed tej pracy): sprzątać, czy zostawić. Rekomendacja: zostawić, projekt tego nie wymusza.
+- [x] Guard na surowe `<button>` ostylowane jak przycisk: limit na plik w `frontend/scripts/raw-buttons-baseline.json` (50 przycisków w 36 plikach, można tylko zmniejszać).
+- [ ] Push brancha: po Twoim przeglądzie (bez PR).
+- [x] Test `globalCssPartials` przez `os.tmpdir()`.
+- [x] Nieużywane importy: bez sprzątania (poza tymi, które powstały przy tej pracy).

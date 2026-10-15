@@ -84,7 +84,7 @@ export const TierRow = React.memo(function TierRow({
           {...listeners}
           onClick={() => (canReceiveSelection ? onMoveSelectedHere(tier.id) : onEdit(tier.id))}
           aria-label={formatMessage(t.editTierAria, { label: tier.label })}
-          className="group relative min-h-[56px] min-[480px]:min-h-[72px] sm:max-wide-2k:min-h-[84px] wide-2k:min-h-[112px] group-data-[fit]/board:min-h-0! overflow-hidden text-center cursor-grab active:cursor-grabbing touch-none transition-[filter] hover:brightness-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent-amber"
+          className="group relative min-h-14 min-[480px]:min-h-18 sm:max-wide-2k:min-h-21 wide-2k:min-h-[112px] group-data-[fit]/board:min-h-0! overflow-hidden text-center cursor-grab active:cursor-grabbing touch-none transition-[filter] hover:brightness-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent-amber"
         >
           <TierBadge
             label={tier.label}
@@ -106,7 +106,7 @@ export const TierRow = React.memo(function TierRow({
         <div
           onClick={canReceiveSelection ? () => onMoveSelectedHere(tier.id) : undefined}
           className={cn(
-            'relative min-h-[56px] min-[480px]:min-h-[72px] sm:max-wide-2k:min-h-[84px] wide-2k:min-h-[112px] group-data-[fit]/board:min-h-0! overflow-hidden text-center select-none',
+            'relative min-h-14 min-[480px]:min-h-18 sm:max-wide-2k:min-h-21 wide-2k:min-h-[112px] group-data-[fit]/board:min-h-0! overflow-hidden text-center select-none',
             canReceiveSelection && 'cursor-pointer hover:brightness-95'
           )}
         >
@@ -124,7 +124,7 @@ export const TierRow = React.memo(function TierRow({
         ref={setNodeRef}
         onClick={canReceiveSelection ? () => onMoveSelectedHere(tier.id) : undefined}
         className={cn(
-          'relative flex min-h-[56px] min-[480px]:min-h-[72px] sm:max-wide-2k:min-h-[84px] wide-2k:min-h-[112px] flex-wrap content-start items-start justify-start gap-1 min-[480px]:gap-1.5 sm:gap-2 p-1.5 min-[480px]:p-2 transition-colors',
+          'relative flex min-h-14 min-[480px]:min-h-18 sm:max-wide-2k:min-h-21 wide-2k:min-h-[112px] flex-wrap content-start items-start justify-start gap-1 min-[480px]:gap-1.5 sm:gap-2 p-1.5 min-[480px]:p-2 transition-colors',
           'group-data-[fit]/board:min-h-(--row-min)! group-data-[fit]/board:gap-(--tile-gap)! group-data-[fit]/board:p-(--tile-pad)!',
           keys.length === 0 && 'content-center items-center justify-center',
           isOver && 'bg-accent-red/10',
@@ -161,7 +161,7 @@ export const TierRow = React.memo(function TierRow({
               e.stopPropagation();
               onMoveSelectedHere(tier.id);
             }}
-            className="inline-flex min-h-[44px] group-data-[fit]/board:min-h-0 group-data-[fit]/board:py-0.5 items-center gap-1.5 self-center rounded-control border border-dashed border-accent-amber/60 bg-accent-amber/10 px-3 type-strong text-accent-amber cursor-pointer"
+            className="inline-flex min-h-11 group-data-[fit]/board:min-h-0 group-data-[fit]/board:py-0.5 items-center gap-1.5 self-center rounded-control border border-dashed border-accent-amber/60 bg-accent-amber/10 px-3 type-strong text-accent-amber cursor-pointer"
           >
             <ArrowDownToLine className="h-3.5 w-3.5" aria-hidden="true" />
             {t.moveHere}

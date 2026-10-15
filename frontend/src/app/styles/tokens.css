@@ -10,6 +10,24 @@
 /* ---------------------------------------------------------------------------
  * Design Tokens & Theme Mapping
  * --------------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------------
+ * Stacking layers above the page. One list, so "what sits on top of what" is decided here and not by
+ * a number typed into a component. Local ordering inside a component (z-0 to z-40) stays plain Tailwind.
+ *   modal        a dialog                 popover   menus and pickers, above every dialog
+ *   modal-top    a dialog opened from one  tooltip   always on top
+ *   system       blocking system dialogs
+ * --------------------------------------------------------------------------- */
+:root {
+  --layer-modal: 60;
+  --layer-modal-top: 70;
+  --layer-system: 100;
+  --layer-popover: 120;
+  --layer-tooltip: 99999;
+}
+@utility z-modal { z-index: var(--layer-modal); }
+@utility z-modal-top { z-index: var(--layer-modal-top); }
+@utility z-system { z-index: var(--layer-system); }
+
 @theme {
   /* Dynamic Theme Variables */
   --color-bg-primary: var(--bg-primary);
@@ -105,6 +123,42 @@
   --radius-card: 1rem;
   --radius-modal: 1.25rem;
   --radius-full: 9999px;
+
+  /* Glows: the one set of coloured halos (game effects, highlights). Sizes sm 12px, md 20px, lg 32px;
+   * soft is md at 35% strength. Use shadow-glow-<colour>-<size> (box) or drop-shadow-glow-<colour>-<size> (icons);
+   * no shadow-[0_0_Npx_...] in components. */
+  --shadow-glow-amber-sm: 0 0 12px var(--accent-amber);
+  --shadow-glow-amber-md: 0 0 20px var(--accent-amber);
+  --shadow-glow-amber-lg: 0 0 32px var(--accent-amber);
+  --shadow-glow-amber-soft: 0 0 20px color-mix(in oklab, var(--accent-amber) 35%, transparent);
+  --shadow-glow-red-sm: 0 0 12px var(--accent-red);
+  --shadow-glow-red-md: 0 0 20px var(--accent-red);
+  --shadow-glow-red-lg: 0 0 32px var(--accent-red);
+  --shadow-glow-red-soft: 0 0 20px color-mix(in oklab, var(--accent-red) 35%, transparent);
+  --shadow-glow-green-sm: 0 0 12px var(--accent-green);
+  --shadow-glow-green-md: 0 0 20px var(--accent-green);
+  --shadow-glow-green-lg: 0 0 32px var(--accent-green);
+  --shadow-glow-green-soft: 0 0 20px color-mix(in oklab, var(--accent-green) 35%, transparent);
+  --shadow-glow-muted-sm: 0 0 12px var(--text-muted);
+  --shadow-glow-muted-md: 0 0 20px var(--text-muted);
+  --shadow-glow-muted-lg: 0 0 32px var(--text-muted);
+
+  /* The same halos for drop-shadow-glow-<colour>-<size>: they follow the shape of an icon or image. */
+  --drop-shadow-glow-amber-sm: 0 0 12px var(--accent-amber);
+  --drop-shadow-glow-amber-md: 0 0 20px var(--accent-amber);
+  --drop-shadow-glow-amber-lg: 0 0 32px var(--accent-amber);
+  --drop-shadow-glow-amber-soft: 0 0 20px color-mix(in oklab, var(--accent-amber) 35%, transparent);
+  --drop-shadow-glow-red-sm: 0 0 12px var(--accent-red);
+  --drop-shadow-glow-red-md: 0 0 20px var(--accent-red);
+  --drop-shadow-glow-red-lg: 0 0 32px var(--accent-red);
+  --drop-shadow-glow-red-soft: 0 0 20px color-mix(in oklab, var(--accent-red) 35%, transparent);
+  --drop-shadow-glow-green-sm: 0 0 12px var(--accent-green);
+  --drop-shadow-glow-green-md: 0 0 20px var(--accent-green);
+  --drop-shadow-glow-green-lg: 0 0 32px var(--accent-green);
+  --drop-shadow-glow-green-soft: 0 0 20px color-mix(in oklab, var(--accent-green) 35%, transparent);
+  --drop-shadow-glow-muted-sm: 0 0 12px var(--text-muted);
+  --drop-shadow-glow-muted-md: 0 0 20px var(--text-muted);
+  --drop-shadow-glow-muted-lg: 0 0 32px var(--text-muted);
 
   /* Type scale below Tailwind's text-xs, plus em-relative sizes for inline code. */
   --text-micro: 0.5625rem;

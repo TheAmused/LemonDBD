@@ -201,14 +201,14 @@ export const AdminSettingsPanel: React.FC<AdminSettingsPanelProps> = ({ onAction
                                 {formatMessage((t.configDefaultValue || 'Default: {value}'), { value: String(row.default) || '—' })}
                               </span>
                               {row.overridden ? (
-                                <button
+                                <Button
                                   type="button"
                                   disabled={saving}
                                   onClick={() => send({ [row.key]: null })}
-                                  className="cursor-pointer font-bold text-accent-red hover:underline disabled:opacity-50"
+                                  variant="linkDanger" size="sm"
                                 >
                                   {t.configResetDefault || 'Use default'}
-                                </button>
+                                </Button>
                               ) : null}
                             </div>
                           </div>

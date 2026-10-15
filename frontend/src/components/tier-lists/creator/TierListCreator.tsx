@@ -361,7 +361,7 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
       data-tier-create=""
       onClick={submit}
       disabled={publishingNow}
-      className={cn(extra ?? 'min-h-[48px] 2xl:min-h-[54px] px-8 2xl:px-10 text-base 2xl:text-lg')}
+      className={cn(extra ?? 'min-h-12 2xl:min-h-[54px] px-8 2xl:px-10 text-base 2xl:text-lg')}
     >
       {submitLabel}
     </Button>
@@ -382,7 +382,7 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
         >
           <History className="h-4 w-4 2xl:h-5 2xl:w-5 text-accent-amber shrink-0" aria-hidden="true" />
           <span className="flex-1 text-accent-amber">{c.draftRestored}</span>
-          <Button variant="secondary" size="sm" onClick={startOver} className="min-h-[32px] whitespace-nowrap">
+          <Button variant="secondary" size="sm" onClick={startOver} className="min-h-8 whitespace-nowrap">
             {c.startOver}
           </Button>
           <Button icon size="sm" variant="ghost" onClick={() => setRestored(false)} aria-label={c.closeToast}>
@@ -516,11 +516,11 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
         <Button
           variant="secondary"
           onClick={() => setPreviewOpen(true)}
-          className="min-h-[44px] 2xl:min-h-[50px] px-6 2xl:px-8 uppercase tracking-wider"
+          className="min-h-11 2xl:min-h-[50px] px-6 2xl:px-8 uppercase tracking-wider"
         >
           {c.previewHeading}
         </Button>
-        {submitButton('min-h-[44px] 2xl:min-h-[50px] px-6 2xl:px-8 text-sm 2xl:text-base font-bold uppercase tracking-wider')}
+        {submitButton('min-h-11 2xl:min-h-[50px] px-6 2xl:px-8 text-sm 2xl:text-base font-bold uppercase tracking-wider')}
       </div>
 
       {/* Feedback Alerts */}

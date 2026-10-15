@@ -34,9 +34,9 @@ export function SmashRosterExportModal({ doc, onClose, locale }: SmashRosterExpo
       buildShareUrl={buildShareUrl}
       shareLinkWarnChars={SMASH_ROSTER_LIMITS.shareLinkWarnChars}
       labelClassName={LABEL}
-      fieldClassName="sm:text-xs min-h-[44px]"
+      fieldClassName="sm:text-xs min-h-11"
       jsonFieldClassName="sm:text-xs"
-      buttonClassName="min-h-[44px]"
+      buttonClassName="min-h-11"
       labels={{
         title: t.title,
         shareLinkLabel: t.shareLinkLabel,

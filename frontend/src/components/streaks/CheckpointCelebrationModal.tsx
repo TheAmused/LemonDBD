@@ -98,7 +98,7 @@ export const CheckpointCelebrationModal: React.FC<CheckpointCelebrationModalProp
               }
             />
           ))}
-          <div className="ck-trophy-pop relative flex h-24 w-24 items-center justify-center rounded-full border-2 border-accent-amber bg-gradient-to-br from-accent-amber to-accent-amber-hover text-text-inverted shadow-[0_0_34px_var(--accent-amber)]">
+          <div className="ck-trophy-pop relative flex h-24 w-24 items-center justify-center rounded-full border-2 border-accent-amber bg-gradient-to-br from-accent-amber to-accent-amber-hover text-text-inverted shadow-glow-amber-lg">
             <Trophy className="h-12 w-12" />
           </div>
         </div>

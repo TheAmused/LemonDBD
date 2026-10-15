@@ -348,7 +348,7 @@ const SlotLever: React.FC<{ down: boolean; disabled: boolean; animate: boolean; 
     >
       <div
         ref={panelRef}
-        className="relative h-20 w-14 sm:h-24 sm:w-[72px] md:h-28 lg:h-32 rounded-card border border-border-color"
+        className="relative h-20 w-14 sm:h-24 sm:w-18 md:h-28 lg:h-32 rounded-card border border-border-color"
        
       >
         <div

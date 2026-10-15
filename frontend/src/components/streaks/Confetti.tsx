@@ -112,7 +112,7 @@ export const Confetti: React.FC<ConfettiProps> = ({ active }) => {
       aria-hidden="true"
       // Above every modal's z-50 backdrop-blur layer, so a celebration behind
       // an open modal doesn't get blurred into invisibility.
-      className="pointer-events-none fixed inset-0 z-[60] h-full w-full"
+      className="pointer-events-none fixed inset-0 z-modal h-full w-full"
     />
   );
 };

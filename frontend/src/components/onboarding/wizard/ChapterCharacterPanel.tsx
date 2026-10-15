@@ -5,6 +5,7 @@ import { CharacterOwnershipOverlay } from '@/components/characters/CharacterOwne
 import { useDictionary } from '@/context/DictionaryContext';
 import { type ChapterGroup, type OnboardingCharacter, resolveOnboardingAvatar } from '../CharacterOnboardingWizardParts';
 import { Surface } from '@/components/common/Surface';
+import { Badge } from '@/components/common/Badge';
 
 interface ChapterCharacterPanelProps {
   group: ChapterGroup;
@@ -56,9 +57,9 @@ export function ChapterCharacterPanel({
                 lockedTitle={dict.modal.unownedPerk}
                 ownedTitle={dict.filters.ownedOnly}
               />
-              <span className="absolute bottom-1 left-1 right-1 truncate rounded-chip bg-bg-primary/80 px-1.5 py-0.5 type-strong-2xs text-text-inverted text-center">
+              <Badge tone="overlay" size="xs" plain className="absolute bottom-1 left-1 right-1 truncate text-text-inverted text-center">
                 {c.name}
-              </span>
+              </Badge>
             </button>
             {!isOwned && perkStats.total > 0 && (
               <button

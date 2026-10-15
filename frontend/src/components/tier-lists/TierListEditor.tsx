@@ -87,9 +87,9 @@ export interface TierListEditorProps {
 }
 
 const MENU_ITEM =
-  'flex w-full min-h-[44px] items-center gap-2.5 rounded-control px-3 py-2 text-left text-sm font-semibold text-text-primary hover:bg-bg-elevated cursor-pointer transition-colors';
+  'flex w-full min-h-11 items-center gap-2.5 rounded-control px-3 py-2 text-left text-sm font-semibold text-text-primary hover:bg-bg-elevated cursor-pointer transition-colors';
 
-const TOOLBAR_BTN = 'min-h-[36px] shrink-0 whitespace-nowrap px-2.5 text-xs cursor-pointer';
+const TOOLBAR_BTN = 'min-h-9 shrink-0 whitespace-nowrap px-2.5 text-xs cursor-pointer';
 
 type Dialog = 'reset' | 'export' | 'import' | 'delete' | null;
 

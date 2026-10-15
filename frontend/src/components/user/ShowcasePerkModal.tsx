@@ -43,7 +43,7 @@ const PerkGridItem = React.memo<{
       }`}
     >
       {/* Perk Icon — just the icon, no shape/background/border behind it */}
-      <div className="relative w-[84px] h-[84px] flex items-center justify-center mb-2 group-hover:scale-105 transition-transform pointer-events-none">
+      <div className="relative w-21 h-21 flex items-center justify-center mb-2 group-hover:scale-105 transition-transform pointer-events-none">
         <PerkIcon
           perk={perk}
           size={84}

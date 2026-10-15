@@ -74,7 +74,7 @@ export function RosterPickerFooter({
               variant="secondary" size="lg" icon
               onClick={() => onEditRoster(activeRosterInCenter.id)}
               aria-label={dict.smashOrPass.picker.editRoster}
-              className="h-11 w-11 sm:h-[52px] sm:w-[52px]"
+              className="h-11 w-11 sm:h-13 sm:w-13"
             >
               <QuillEditIcon className="h-5 w-5" aria-hidden="true" />
             </Button>
@@ -84,7 +84,7 @@ export function RosterPickerFooter({
               variant="secondary" size="lg" icon
               onClick={() => onExportRoster(activeRosterInCenter.id)}
               aria-label={dict.smashOrPass.picker.exportRoster}
-              className="h-11 w-11 sm:h-[52px] sm:w-[52px]"
+              className="h-11 w-11 sm:h-13 sm:w-13"
             >
               <LetterSendIcon className="h-5 w-5" aria-hidden="true" />
             </Button>
@@ -94,7 +94,7 @@ export function RosterPickerFooter({
               variant="secondary" size="lg" icon
               onClick={() => onReportRoster(activeRosterInCenter.id)}
               aria-label={dict.tierLists.reportButtonAria}
-              className="h-11 w-11 sm:h-[52px] sm:w-[52px]"
+              className="h-11 w-11 sm:h-13 sm:w-13"
             >
               <Flag className="h-5 w-5 text-accent-red" aria-hidden="true" />
             </Button>
@@ -104,7 +104,7 @@ export function RosterPickerFooter({
               variant="secondary" size="lg" icon
               onClick={() => onDeleteRoster(activeRosterInCenter.id)}
               aria-label={dict.smashOrPass.picker.deleteRoster}
-              className="h-11 w-11 sm:h-[52px] sm:w-[52px]"
+              className="h-11 w-11 sm:h-13 sm:w-13"
             >
               <AshUrnIcon className="h-5 w-5" aria-hidden="true" />
             </Button>

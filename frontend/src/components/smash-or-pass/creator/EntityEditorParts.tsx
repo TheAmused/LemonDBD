@@ -8,6 +8,7 @@ import { SMASH_ROSTER_LIMITS, TRANSLATABLE_FIELDS } from '@/utils/smashOrPass/co
 import { Input, Textarea } from '@/components/common/Field';
 import { formatMessage } from '@/utils/i18nFormat';
 import { useDictionary } from '@/context/DictionaryContext';
+import { Badge } from '@/components/common/Badge';
 
 export interface DraftEntity {
   /** Stable client-only key -- never sent anywhere, just for React lists and
@@ -101,9 +102,9 @@ export function CandidateTiles({ entities, selectedKey, onSelect, onRename, onRe
                 )}
               >
                 {/* Number badge on top-left of tile */}
-                <span className="absolute top-1 left-1 z-10 text-micro font-black px-1.5 py-0.5 rounded-chip bg-bg-surface/90 text-text-secondary border border-border-color/60 backdrop-blur-xs">
+                <Badge tone="overlay" size="xs" className="absolute top-1 left-1 z-10">
                   #{displayIndex}
-                </span>
+                </Badge>
 
                 {/* Edge-to-edge tile image or dark initials placeholder */}
                 {safeMedia ? (

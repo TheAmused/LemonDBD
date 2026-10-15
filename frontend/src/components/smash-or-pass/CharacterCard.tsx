@@ -262,7 +262,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
                 }}
                 {...tip(rawSmashDict.flipToDatingProfile, undefined, 'action')}
                 aria-label={rawSmashDict.flipToDatingProfile}
-                className="flex min-h-[48px] min-w-[48px] h-12 w-12 sm:h-12 sm:w-12 items-center justify-center rounded-control bg-bg-primary/85 border border-accent-red/40 text-accent-red hover:text-text-inverted hover:border-accent-red hover:scale-110 active:scale-95 transition-all shadow-2xl backdrop-blur-md cursor-pointer touch-manipulation"
+                className="flex min-h-12 min-w-12 h-12 w-12 sm:h-12 sm:w-12 items-center justify-center rounded-control bg-bg-primary/85 border border-accent-red/40 text-accent-red hover:text-text-inverted hover:border-accent-red hover:scale-110 active:scale-95 transition-all shadow-2xl backdrop-blur-md cursor-pointer touch-manipulation"
               >
                 <TarotTurnIcon className="h-5 w-5" aria-hidden="true" />
               </button>
@@ -278,7 +278,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
                 }}
                 {...tip(rawSmashDict.zoomFullPortrait, undefined, 'action')}
                 aria-label={rawSmashDict.zoomFullPortrait}
-                className="flex min-h-[48px] min-w-[48px] h-12 w-12 sm:h-12 sm:w-12 items-center justify-center rounded-control bg-bg-primary/85 border border-border-color text-text-secondary hover:text-text-inverted hover:border-accent-red hover:scale-110 active:scale-95 transition-all shadow-2xl backdrop-blur-md cursor-pointer touch-manipulation"
+                className="flex min-h-12 min-w-12 h-12 w-12 sm:h-12 sm:w-12 items-center justify-center rounded-control bg-bg-primary/85 border border-border-color text-text-secondary hover:text-text-inverted hover:border-accent-red hover:scale-110 active:scale-95 transition-all shadow-2xl backdrop-blur-md cursor-pointer touch-manipulation"
               >
                 <PortraitLoupeIcon className="h-5 w-5" aria-hidden="true" />
               </button>
@@ -296,7 +296,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
                 }}
                 {...tip(rawSmashDict.pass, undefined, 'action')}
                 aria-label={rawSmashDict.pass}
-                className="flex min-h-[48px] min-w-[48px] h-13 w-13 sm:h-14 sm:w-14 items-center justify-center rounded-control bg-bg-primary/90 border-2 border-border-color text-text-muted hover:text-text-primary hover:border-border-subtle hover:scale-110 active:scale-95 transition-all shadow-2xl backdrop-blur-md cursor-pointer touch-manipulation"
+                className="flex min-h-12 min-w-12 h-13 w-13 sm:h-14 sm:w-14 items-center justify-center rounded-control bg-bg-primary/90 border-2 border-border-color text-text-muted hover:text-text-primary hover:border-border-subtle hover:scale-110 active:scale-95 transition-all shadow-2xl backdrop-blur-md cursor-pointer touch-manipulation"
               >
                 <SnuffedCandleIcon className="h-6 w-6 sm:h-7 sm:w-7" aria-hidden="true" />
               </button>
@@ -312,7 +312,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
                 }}
                 {...tip(rawSmashDict.smash, undefined, 'action')}
                 aria-label={rawSmashDict.smash}
-                className="flex min-h-[48px] min-w-[48px] h-13 w-13 sm:h-14 sm:w-14 items-center justify-center rounded-control bg-accent-red hover:bg-accent-red-hover text-text-inverted hover:scale-110 active:scale-95 transition-all cursor-pointer touch-manipulation"
+                className="flex min-h-12 min-w-12 h-13 w-13 sm:h-14 sm:w-14 items-center justify-center rounded-control bg-accent-red hover:bg-accent-red-hover text-text-inverted hover:scale-110 active:scale-95 transition-all cursor-pointer touch-manipulation"
               >
                 <ThornHeartIcon className="h-6 w-6 sm:h-7 sm:w-7" aria-hidden="true" />
               </button>

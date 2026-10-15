@@ -85,7 +85,7 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({ ch
             minScale={0.5}
             maxLines={4}
             wrapFirst
-            className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl leading-flat font-black uppercase tracking-wider text-text-primary group-hover:text-accent-red group-hover:drop-shadow-[0_0_20px_color-mix(in_oklab,var(--accent-red)_35%,transparent)] transition-all duration-500 group-hover:scale-105 transform"
+            className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl leading-flat font-black uppercase tracking-wider text-text-primary group-hover:text-accent-red group-hover:drop-shadow-glow-red-soft transition-all duration-500 group-hover:scale-105 transform"
           >
             {leftWatermark}
           </FitText>
@@ -102,7 +102,7 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({ ch
             minScale={0.5}
             maxLines={4}
             wrapFirst
-            className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl leading-flat font-black uppercase tracking-wider text-text-primary group-hover:text-accent-red group-hover:drop-shadow-[0_0_20px_color-mix(in_oklab,var(--accent-red)_35%,transparent)] transition-all duration-500 group-hover:scale-105 transform"
+            className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl leading-flat font-black uppercase tracking-wider text-text-primary group-hover:text-accent-red group-hover:drop-shadow-glow-red-soft transition-all duration-500 group-hover:scale-105 transform"
           >
             {rightWatermark}
           </FitText>

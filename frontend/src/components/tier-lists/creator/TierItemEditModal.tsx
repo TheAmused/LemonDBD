@@ -124,7 +124,7 @@ export function TierItemEditModal({ item, isOpen, onClose, onSave }: TierItemEdi
                 if (error === t.invalidImage) setError(null);
               }}
               leftIcon={<ImageOff className="h-3.5 w-3.5" aria-hidden="true" />}
-              className="mt-2.5 min-h-[32px]"
+              className="mt-2.5 min-h-8"
             >
               {c.removeImage}
             </Button>

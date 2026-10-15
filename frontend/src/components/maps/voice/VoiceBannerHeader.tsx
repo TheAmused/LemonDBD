@@ -11,6 +11,7 @@ import type { VoiceStatusConfigEntry } from './voiceStatusConfig';
 import type { VoiceCommandBannerProps } from './voiceTypes';
 
 import { Button } from '@/components/common/Button';
+import { SegmentedControl } from '@/components/common/SegmentedControl';
 interface VoiceBannerHeaderProps {
   activeEngine: VoiceEngineType;
   modelProgress: ModelProgressInfo;
@@ -138,36 +139,26 @@ export function VoiceBannerHeader({
 
       {/* Desktop Right: Source switcher */}
       <div className="hidden md:flex flex-wrap items-center justify-end gap-2 order-3 flex-1">
-        <div
-          role="group"
-          aria-label={dict.maps.providerAria}
-          className="flex items-center gap-1.5 rounded-full border border-border-color bg-bg-elevated p-1"
-        >
-          <span className="px-1.5 type-label-xs text-text-muted">
-            {dict.maps.sourceLabel}
-          </span>
-          <button
-            type="button"
-            onClick={() => onSourceChange('hens333')}
-            aria-pressed={currentSource === 'hens333'}
-            className={`rounded-full px-3 py-1 text-compact font-extrabold transition-all cursor-pointer ${currentSource === 'hens333'
-                ? 'bg-accent-red text-text-inverted shadow-sm font-black'
-                : 'text-text-secondary hover:bg-bg-surface hover:text-text-primary'
-              }`}
-          >
-            {dict.maps.sourceHensClock}
-          </button>
-
-          <button
-            type="button"
-            disabled
-            {...tip(dict.maps.lemonDbdSourceLocked, undefined, 'action')} aria-label={dict.maps.lemonDbdSourceLocked}
-            aria-disabled="true"
-            className="flex items-center gap-1.5 rounded-full px-3 py-1 text-compact font-extrabold text-text-muted cursor-not-allowed"
-          >
-            <Lock className="h-3 w-3" aria-hidden="true" />
-            {dict.maps.sourceLemonDbd}
-          </button>
+        <div className="flex items-center gap-2">
+          <span className="type-label-xs text-text-muted">{dict.maps.sourceLabel}</span>
+          <SegmentedControl<'hens333' | 'lemondbd'>
+            ariaLabel={dict.maps.providerAria}
+            size="sm"
+            value={currentSource === 'hens333' ? 'hens333' : 'lemondbd'}
+            onChange={(source) => {
+              if (source === 'hens333') onSourceChange('hens333');
+            }}
+            options={[
+              { value: 'hens333', label: dict.maps.sourceHensClock },
+              {
+                value: 'lemondbd',
+                label: dict.maps.sourceLemonDbd,
+                icon: <Lock className="h-3 w-3" aria-hidden="true" />,
+                disabled: true,
+                tooltip: { title: dict.maps.sourceLemonDbd, description: dict.maps.lemonDbdSourceLocked },
+              },
+            ]}
+          />
         </div>
       </div>
     </div>

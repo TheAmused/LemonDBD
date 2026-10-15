@@ -45,6 +45,61 @@ export function isContentManifest(value: unknown): value is ContentManifest {
   );
 }
 
+/** The three kinds of user-made content the moderation system understands. */
+export type ModeratedContentType = 'tier_list' | 'smash_roster' | 'minigame';
+
+/** Minigame fields that are hashed. Mirrors the importer's normalisation so every copy hashes alike. */
+const MINIGAME_TITLE_MAX = 100;
+
+interface SignableRound {
+  round_number?: unknown;
+  mode?: unknown;
+  target_id?: unknown;
+  target_type?: unknown;
+  custom_data?: unknown;
+  max_attempts?: unknown;
+}
+
+interface SignableMinigame {
+  title?: unknown;
+  description?: unknown;
+  game_mode?: unknown;
+  rounds?: unknown;
+  is_nsfw?: unknown;
+}
+
+/**
+ * The document that is signed when a minigame is exported and hashed when it is reported.
+ *
+ * A saved or imported minigame carries storage and import extras (`id`, timestamps, default
+ * `custom_data`, renumbered rounds) that the author's copy does not have; hashing the raw object
+ * would give every copy a different hash and no report could ever match its signature. Signing and
+ * reporting both go through this function, so any copy of the same trial yields the same payload.
+ */
+export function minigameSigningPayload(challenge: SignableMinigame): Record<string, unknown> {
+  const rawRounds = Array.isArray(challenge.rounds) ? (challenge.rounds as SignableRound[]) : [];
+  const rounds = rawRounds.map((round, index) => {
+    const r = round && typeof round === 'object' ? round : {};
+    return {
+      round_number: index + 1,
+      mode: r.mode,
+      ...(typeof r.target_id === 'number' ? { target_id: r.target_id } : {}),
+      ...(typeof r.target_type === 'string' ? { target_type: r.target_type } : {}),
+      custom_data: r.custom_data && typeof r.custom_data === 'object' ? r.custom_data : {},
+      max_attempts: typeof r.max_attempts === 'number' && r.max_attempts > 0 ? r.max_attempts : 6,
+    };
+  });
+  const title = typeof challenge.title === 'string' ? challenge.title.trim().slice(0, MINIGAME_TITLE_MAX) : '';
+  return {
+    title,
+    description: typeof challenge.description === 'string' ? challenge.description.trim() : '',
+    game_mode: typeof challenge.game_mode === 'string' && challenge.game_mode ? challenge.game_mode : 'custom',
+    rounds,
+    // Only a flagged trial carries the key, so every trial signed before the flag existed hashes as before.
+    ...(challenge.is_nsfw === true ? { is_nsfw: true } : {}),
+  };
+}
+
 /** Strips any existing `_manifest` property from a document before hash computation or signing. */
 export function stripManifest<T extends Record<string, unknown>>(payload: T): Omit<T, '_manifest'> {
   const { _manifest, ...rest } = payload;

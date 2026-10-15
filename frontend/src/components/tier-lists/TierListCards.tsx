@@ -12,6 +12,7 @@ import { tip } from '@/components/common/Tooltip';
 import { formatDate } from '@/utils/format';
 import { formatMessage } from '@/utils/i18nFormat';
 import { useDictionary } from "@/context/DictionaryContext";
+import { NsfwBadge } from '@/components/common/NsfwBadge';
 
 const CARD =
   'group relative flex h-full flex-col overflow-hidden rounded-3xl border border-border-color/80 bg-bg-surface p-5 shadow-sm transition-all hover:-translate-y-1 hover:border-accent-red/50 hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-amber';
@@ -144,6 +145,11 @@ export function OfficialTierListCard({ list, rankedCount, locale }: OfficialCard
             </span>
           </div>
         )}
+        {list.is_nsfw && (
+          <div className="absolute top-3 left-1/2 z-10 -translate-x-1/2 transition-opacity group-has-[[aria-expanded=true]]/banner:opacity-0">
+            <NsfwBadge label={t.nsfw.badge} />
+          </div>
+        )}
         {showKindBadge && (
           <div className="absolute top-3 right-3 z-10 transition-opacity group-has-[[aria-expanded=true]]/banner:opacity-0">
             <span className="rounded-md bg-bg-surface/85 backdrop-blur-md px-2 py-0.5 type-label-2xs text-text-muted border border-border-color/60 shadow-xs">
@@ -235,6 +241,11 @@ export function CustomTierListCard({ list, locale, onDelete, disabled }: CustomC
             {formatMessage(t.itemsCount, { count: `${ranked}/${total}` })}
           </span>
         </div>
+        {list.is_nsfw && (
+          <div className="absolute top-3 left-1/2 z-10 -translate-x-1/2 transition-opacity group-has-[[aria-expanded=true]]/banner:opacity-0">
+            <NsfwBadge label={t.nsfw.badge} />
+          </div>
+        )}
         {onDelete && (
           <button
             type="button"

@@ -59,6 +59,8 @@ export interface ChallengeDefinition {
   challenge_date?: string;
   is_official?: boolean;
   rounds: RoundConfig[];
+  /** Marked by the author as containing mature content. Part of what gets signed. */
+  is_nsfw?: boolean;
   created_at?: string;
   updated_at?: string;
   _manifest?: ContentManifest | null;

@@ -417,7 +417,10 @@ def list_content_reports():
     """List content reports with pagination and status filter."""
     status = request.args.get("status", "pending")
     page, per_page = paginate_args(default_per_page=20)
-    result = get_admin_reports(status=status, page=page, per_page=per_page)
+    try:
+        result = get_admin_reports(status=status, page=page, per_page=per_page)
+    except ValueError as err:
+        return api_error(str(err), 400)
     return jsonify(result), 200
 
 

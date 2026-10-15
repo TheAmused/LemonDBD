@@ -4,7 +4,7 @@ export default {
   heading: "Zasady społeczności",
   tagline: "Krótkie, uczciwe i tylko odrobinę przeklęte. Przeczytaj raz i wracaj kręcić morderców wokół palet.",
   lastUpdatedLabel: "Ostatnia aktualizacja",
-  lastUpdated: "10 października 2026",
+  lastUpdated: "15 października 2026",
   translationNotice: "Jeśli przetłumaczone wersje tej strony różnią się od angielskiej, pierwszeństwo ma wersja angielska.",
   tldrLabel: "W skrócie",
   tldrNotice: "Tytuły, linie „W skrócie” i podsumowanie to przyjazne skróty. Ze względów prawnych nie mają mocy wiążącej i nie zastępują tekstu pod nimi. Jeśli się z nim różnią, obowiązuje pełny tekst.",
@@ -60,13 +60,13 @@ export default {
       tldr: "Są twoje. I to ty za nie odpowiadasz.",
       paragraphs: [
         "<b>Przechowywane na naszych serwerach:</b> twój awatar oraz zrzuty ekranu dołączane do zgłoszeń błędów. Zachowujesz do nich prawa i udzielasz <brand>LemonDBD</brand> wyłącznie zgody potrzebnej do ich przechowywania i wyświetlania w celu działania Serwisu, zgodnie z [Regulaminem serwisu]({termsPath}).",
-        "<b>Nieprzechowywane przez nas:</b> tworzone przez ciebie tier listy, składy Smash or Pass i własne minigry są zapisane w twojej przeglądarce, a my nie mamy ich kopii. Gdy udostępniasz je linkiem, ich zawartość jest zakodowana w samym linku i nie trafia na nasze serwery. Nadal odpowiadasz za to, co zawierają.",
+        "<b>Nieprzechowywane przez nas:</b> tworzone przez ciebie tier listy, składy Smash or Pass i własne minigry są zapisane w twojej przeglądarce, a my nie mamy ich kopii. Gdy udostępniasz je linkiem, ich zawartość jest zakodowana w samym linku, razem z twoim znakiem konta. Jeśli ktoś je zgłosi, oglądamy kopię i usuwamy ją po podjęciu decyzji. Nadal odpowiadasz za to, co zawierają.",
       ],
       items: [
         "Przesyłaj i udostępniaj wyłącznie treści, które stworzyłeś(-aś) lub do których masz prawo, i nie naruszaj praw innych osób.",
         "Nie publikuj treści niezgodnych z prawem lub szkodliwych, w tym złośliwego oprogramowania, phishingu, linków do oszustw ani danych osobowych innych osób.",
-        "Oznaczaj składy dla dorosłych jako NSFW, jeśli taka opcja istnieje, i nie wysyłaj ich osobom, które o nie nie prosiły.",
-        "Ponieważ nie mamy kopii udostępnionych tier list, składów i minigier, nie możemy wycofać ani usunąć udostępnionego przez ciebie linku. Każdy, kto go ma, może go otworzyć.",
+        "Oznaczaj tier listy, składy i próby dla dorosłych jako NSFW i nie wysyłaj ich osobom, które o nie nie prosiły.",
+        "Nie możemy wycofać linku ani pliku, który udostępniłeś(-aś), a każdy, kto go ma, może go otworzyć. Możemy natomiast zablokować treść: po banie Serwis odmawia jej otwarcia i importu.",
       ],
     },
     smashOrPass: {
@@ -100,6 +100,7 @@ export default {
       tldr: "Widzisz błąd albo kogoś, kto łamie zasady? Powiedz nam.",
       paragraphs: [
         "Przyciskiem <b>Zgłoś błąd</b> na pasku bocznym zgłaszaj błędy, nieprawidłowe dane lub pomyłki w tłumaczeniach. Aby zgłosić naruszenie tych Zasad, nadużycie lub sprawę prywatną, napisz na [{contactEmail}](mailto:{contactEmail}) albo skontaktuj się z członkiem <brand>LemonTeam</brand> na Serwerze.",
+        "Aby zgłosić tier listę, skład Smash or Pass lub własną minigrę, którą ktoś ci udostępnił, zaloguj się i użyj przycisku <b>Zgłoś treść</b>. Członek <brand>LemonTeam</brand> ją sprawdzi.",
         "Zgłoszenia powinny być prawdziwe, konkretne i uprzejme. Świadome fałszywe zgłoszenia, spam oraz wykorzystywanie formularza zgłoszeń do nękania innej osoby same są naruszeniem tych Zasad.",
       ],
       items: [],
@@ -113,6 +114,7 @@ export default {
       items: [
         "Groźby, treści seksualne z udziałem małoletnich, treści niezgodne z prawem i ataki na Serwis są rozpatrywane bez wcześniejszego ostrzeżenia i mogą zostać zgłoszone właściwym organom.",
         "Na Serwerze te same środki przybierają postać ostrzeżenia, wyciszenia, wyrzucenia lub bana.",
+        "Treści naruszające te Zasady mogą zostać zbanowane: Serwis odmawia wtedy ich otwarcia i importu. Możemy też dezaktywować konto osoby, która je opublikowała, i wysyłamy jej powód e-mailem.",
         "Gdy usuwamy treści lub ograniczamy konto, w miarę możliwości wyjaśniamy dlaczego. Jeśli uważasz, że popełniliśmy błąd, możesz zakwestionować decyzję, pisząc do nas, a my ją ponownie rozpatrzymy. Procedura jest opisana w [Regulaminie serwisu]({termsPath}).",
       ],
     },
@@ -121,8 +123,8 @@ export default {
     heading: "Etapy haka",
     stages: [
       { title: "Etap 1: upomnienie", text: "Wiadomość z prośbą o poprawienie lub zaprzestanie danego zachowania." },
-      { title: "Etap 2: porządki", text: "Usuwamy treści, zerujemy niesłusznie zdobyte postępy lub ograniczamy funkcje." },
-      { title: "Ofiara", text: "Twoje konto zostaje zawieszone lub usunięte, a dodatkowe konta lub adresy mogą zostać zablokowane." },
+      { title: "Etap 2: porządki", text: "Usuwamy lub blokujemy treści, zerujemy niesłusznie zdobyte postępy lub ograniczamy funkcje." },
+      { title: "Ofiara", text: "Twoje konto zostaje zawieszone, zdezaktywowane lub usunięte, a dodatkowe konta lub adresy mogą zostać zablokowane." },
     ],
   },
 };

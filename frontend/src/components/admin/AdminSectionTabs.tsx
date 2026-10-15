@@ -1,7 +1,7 @@
 'use client';
 // frontend/src/components/admin/AdminSectionTabs.tsx
 import React from 'react';
-import { BarChart3, ScrollText, Settings2, ShieldAlert, Users } from 'lucide-react';
+import { BarChart3, Flag, ScrollText, Settings2, ShieldAlert, Users } from 'lucide-react';
 import { Tabs } from '@/components/common/Tabs';
 import { useDictionary } from '@/context/DictionaryContext';
 import { FogReportIcon } from '@/components/icons/DbdIcons';
@@ -12,10 +12,11 @@ interface AdminSectionTabsProps {
   onChange: (tab: AdminTab) => void;
   totalUsers: number;
   pendingBugs: number;
+  pendingReports: number;
 }
 
 /** The admin panel's section switcher. */
-export function AdminSectionTabs({ activeTab, onChange, totalUsers, pendingBugs }: AdminSectionTabsProps) {
+export function AdminSectionTabs({ activeTab, onChange, totalUsers, pendingBugs, pendingReports }: AdminSectionTabsProps) {
   const dict = useDictionary();
 
   return (
@@ -40,6 +41,12 @@ export function AdminSectionTabs({ activeTab, onChange, totalUsers, pendingBugs 
           value: 'bugs',
           icon: <FogReportIcon className="h-4 w-4" />,
           label: `${dict.admin.bugReportsLabel} (${pendingBugs} ${dict.admin.pending})`,
+        },
+        {
+          value: 'reports',
+          icon: <Flag className="h-4 w-4" />,
+          label: dict.admin.contentReportsLabel,
+          count: pendingReports,
         },
         { value: 'challenges', icon: <ShieldAlert className="h-4 w-4" />, label: dict.admin.killSwitches },
         { value: 'challenge_stats', icon: <BarChart3 className="h-4 w-4" />, label: dict.admin.challengeStats },

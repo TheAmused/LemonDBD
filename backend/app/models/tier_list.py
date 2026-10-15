@@ -19,7 +19,7 @@ import re
 from datetime import datetime
 from typing import Any
 
-from sqlalchemy import Boolean, CheckConstraint, DateTime, Integer, String, Text
+from sqlalchemy import Boolean, CheckConstraint, DateTime, Integer, String, Text, false
 from sqlalchemy.orm import Mapped, mapped_column, validates
 
 from app.core.extensions import Base
@@ -63,6 +63,7 @@ TIER_LIST_FIELDS = (
     "default_placements",
     "translations",
     "is_featured",
+    "is_nsfw",
     "is_active",
     "sort_order",
 )
@@ -108,6 +109,8 @@ class TierList(Base, TranslatableModelMixin):
     translations: Mapped[dict[str, Any] | None] = mapped_column(JSON_DICT, nullable=True)
 
     is_featured: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+    #: Adult-oriented list: the hub card carries an NSFW badge and the list opens behind a confirmation.
+    is_nsfw: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False, server_default=false())
     is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False, index=True)
     sort_order: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
 
@@ -232,6 +235,7 @@ class TierList(Base, TranslatableModelMixin):
             "description": trans.get("description") or self.description or "",
             "cover_image_url": self.cover_image_url or "",
             "is_featured": bool(self.is_featured),
+            "is_nsfw": bool(self.is_nsfw),
             "sort_order": self.sort_order,
             "item_count": self.item_count(),
             "tier_count": len(self.tiers) if self.tiers is not None else None,

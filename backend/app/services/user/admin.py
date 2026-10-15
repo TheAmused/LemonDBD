@@ -1,13 +1,15 @@
 # backend/app/services/user/admin.py
 import logging
 from typing import Any
-from sqlalchemy import func, or_, select
+from sqlalchemy import func, or_, select, update
 
 from app.core.extensions import db
 from app.core.security import verify_password
 from app.core.transaction import transaction
 from app.models import (
     BugReport,
+    ContentReport,
+    ContentReportSubscriber,
     Killer,
     Survivor,
     Perk,
@@ -117,6 +119,21 @@ def admin_modify_user(
     return user, None
 
 
+def _anonymise_moderation_records(user_id: int) -> None:
+    """Moderation records outlive the account (the ban list must keep working), but not its username.
+
+    The foreign keys already null the user id on delete; this also clears the copy of the username
+    that reports keep for the admin queue, and erases the free-text notes the user wrote as a reporter
+    (the report category stays, so a pending report is still understood).
+    """
+    db.session.execute(
+        update(ContentReport).where(ContentReport.author_id == user_id).values(author_login="Deleted user")
+    )
+    db.session.execute(
+        update(ContentReportSubscriber).where(ContentReportSubscriber.reporter_id == user_id).values(notes=None)
+    )
+
+
 def admin_remove_user(user_id: int) -> bool:
     """Administrative deletion of user account and stored media."""
     user = db.session.get(User, user_id)
@@ -125,6 +142,7 @@ def admin_remove_user(user_id: int) -> bool:
     avatar_dir = get_avatar_storage_directory()
     remove_stale_avatar_file(user.avatar_url, avatar_dir)
     with transaction():
+        _anonymise_moderation_records(user.id)
         db.session.delete(user)
     return True
 
@@ -170,6 +188,7 @@ def delete_own_account(
         for report in db.session.scalars(select(BugReport).where(BugReport.user_id == user.id)):
             report.reporter_name = "Deleted user"
             report.reporter_email = None
+        _anonymise_moderation_records(user.id)
         db.session.delete(user)
 
     return True, None

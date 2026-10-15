@@ -9,6 +9,7 @@ import { useDictionary } from '@/context/DictionaryContext';
 import { apiUrl, authFetch } from '@/utils/api';
 import { stripManifest, type ContentManifest } from '@/utils/contentSigning';
 import { isRecord } from '@/utils/shareCodec';
+import { checkAndPurgeRevokedContent } from '@/hooks/useContentRevocationSync';
 import { cn } from '@/utils/cn';
 
 export const REPORT_REASONS = [
@@ -25,7 +26,8 @@ export type ReportStatus = 'idle' | 'submitting' | 'success' | 'already_banned' 
 
 export interface SubmitReportParams {
   contentType: string;
-  manifest: ContentManifest;
+  /** The creator's signature, when the copy being reported has one. Unsigned content is reportable too. */
+  manifest?: ContentManifest | null;
   payload: Record<string, unknown> | object;
   reason: ReportReason;
   notes?: string;
@@ -48,10 +50,14 @@ export async function submitContentReport(params: SubmitReportParams): Promise<S
       },
       body: JSON.stringify({
         content_type: contentType,
-        content_hash: manifest.content_hash,
-        author_id: manifest.author_id,
-        author_login: manifest.author_login,
-        signature: manifest.signature,
+        ...(manifest
+          ? {
+              content_hash: manifest.content_hash,
+              author_id: manifest.author_id,
+              author_login: manifest.author_login,
+              signature: manifest.signature,
+            }
+          : {}),
         payload: cleanPayload,
         reason,
         ...(notes && notes.trim().length > 0 ? { notes: notes.trim() } : {}),
@@ -111,7 +117,7 @@ export function ReportContentModalBody({
   const handleSubmit = useCallback(
     async (e: React.FormEvent) => {
       e.preventDefault();
-      if (!manifest || status === 'submitting') return;
+      if (status === 'submitting') return;
       setStatus('submitting');
 
       const result = await submitContentReport({
@@ -126,28 +132,13 @@ export function ReportContentModalBody({
         setStatus('error');
       } else if (result.status === 'already_banned') {
         setStatus('already_banned');
+        void checkAndPurgeRevokedContent();
       } else {
         setStatus('success');
       }
     },
     [manifest, contentType, payload, reason, notes, status]
   );
-
-  if (!manifest) {
-    return (
-      <div className="flex flex-col gap-4 py-2">
-        <div className="flex items-start gap-3 rounded-2xl border border-border-color bg-bg-elevated/40 p-4">
-          <ShieldAlert className="h-5 w-5 shrink-0 text-accent-amber mt-0.5" aria-hidden="true" />
-          <p className="type-body-lg text-text-secondary">{t.reportNoManifest}</p>
-        </div>
-        <div className="flex justify-end pt-2">
-          <Button variant="secondary" onClick={onClose}>
-            {t.cancel}
-          </Button>
-        </div>
-      </div>
-    );
-  }
 
   if (status === 'success') {
     return (
@@ -183,6 +174,13 @@ export function ReportContentModalBody({
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4 py-1">
+      {!manifest && (
+        <div className="flex items-start gap-3 rounded-xl border border-border-color bg-bg-elevated/40 p-3 text-xs text-text-secondary">
+          <ShieldAlert className="h-4 w-4 shrink-0 text-accent-amber mt-0.5" aria-hidden="true" />
+          <span>{t.reportNoManifest}</span>
+        </div>
+      )}
+
       {status === 'error' && (
         <div
           role="alert"

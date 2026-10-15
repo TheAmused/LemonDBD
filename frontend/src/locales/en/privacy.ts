@@ -3,7 +3,7 @@ export default {
   pageTitle: "LemonDBD - Privacy Policy",
   heading: "Privacy Policy",
   lastUpdatedLabel: "Last updated",
-  lastUpdated: "October 10, 2026",
+  lastUpdated: "October 15, 2026",
   intro:
     "This page explains what personal data <brand>LemonDBD</brand> collects, why, who sees it and what you can do about it. We kept it short and plain on purpose.",
   translationNotice: "If the translated versions of this page differ from the English one, the English version prevails.",
@@ -38,7 +38,7 @@ export default {
       items: [
         "<b>Account data:</b> username, email address, a hash of your password (never the password itself), avatar, preferred language, and short-lived verification and password-reset codes.",
         "<b>Two-factor sign-in (optional):</b> only if you turn it on from your profile page. We store the secret key behind your authenticator app (encrypted), hashed one-time recovery codes, when you turned it on, the last code step we accepted (so a code cannot be reused) and a counter of recent wrong codes with a temporary lock time. Your authenticator app generates the codes on your device; no phone number is needed.",
-        "<b>What you save:</b> character and perk ownership, your profile showcase, streak runs, challenge achievements, minigame stats and Smash or Pass votes. Your tier lists, Smash or Pass rosters and custom minigames stay in your own browser and are not sent to our servers. Visitors without an account get a random session ID so their Smash or Pass votes can be remembered.",
+        "<b>What you save:</b> character and perk ownership, your profile showcase, streak runs, challenge achievements, minigame stats and Smash or Pass votes. Your tier lists, Smash or Pass rosters and custom minigames stay in your own browser and are not stored on our servers, except as described under “Reporting content”. Visitors without an account get a random session ID so their Smash or Pass votes can be remembered.",
         "<b>Bug reports and messages:</b> the text, screenshots and email address you send us. Guests must give an email address so we can answer.",
         "<b>Technical data:</b> your IP address, browser type and request details, used for rate limiting, abuse prevention and fixing errors.",
         "<b>Voice commands (maps):</b> if you turn them on, your microphone audio is used to recognize map names. See the section on storage and third parties below for how this works.",
@@ -52,8 +52,21 @@ export default {
         "To create and run your account, keep your saved data and send verification and password-reset emails, and, if you turn it on, to check your two-factor code when you sign in (performance of our service to you).",
         "To answer bug reports and requests (our legitimate interest in supporting users, or your request).",
         "To keep the site and accounts secure, including limiting wrong two-factor codes, stop spam and abuse and fix errors (our legitimate interest).",
+        "To review reports of content and enforce our Rules (our legitimate interest in keeping the site safe).",
         "To understand which pages are used and to improve the site through privacy-friendly analytics (our legitimate interest).",
         "If we ask for your consent, you can take it back at any time.",
+      ],
+    },
+    moderation: {
+      heading: "Reporting content",
+      paragraphs: [
+        "Tier lists, rosters and custom minigames live in your browser, not on our servers. Two things involve us:",
+        "When you delete your account, your username in these records is replaced by “Deleted user” and the notes you wrote as a reporter are erased. These records are part of the data you can download.",
+      ],
+      items: [
+        "<b>Sharing and exporting:</b> we add a tamper-proof account mark to the link or file (it identifies your account and cannot be forged), so that reported content can be traced to its author. To do this our server briefly reads the content, but does not keep it.",
+        "<b>Reports:</b> if you report content, we receive your account, the reason, your optional note and a copy of the content. A member of <brand>LemonTeam</brand> reviews it, and the copy is deleted once a decision is made, or after 14 days at the latest.",
+        "<b>After a decision:</b> we keep a short record (type of content, reason, outcome, dates, the accounts involved). If content is banned, a one-way code of it goes on a block list so it cannot be opened or imported again; the code cannot be turned back into the content. These records stay as long as we need them to handle complaints and prevent repeat abuse. The author, if known, gets the reason by email; we do not name the reporter.",
       ],
     },
     analytics: {
@@ -77,8 +90,8 @@ export default {
       heading: "Who sees your data",
       paragraphs: ["We do not sell your personal data or use it for advertising. We share it only as needed:"],
       items: [
-        "<b>Links you share:</b> when you share a tier list, roster or custom minigame, it is packed into the link itself (the part after the “#”, which your browser never sends to us). We do not store it and cannot see it; only people who receive the link can open it.",
-        "<b>Service providers:</b> our hosting provider and {mailProvider} (which delivers our verification and password-reset emails) handle data on our behalf, only to run the site and send you the emails you request, including notices when a security setting on your account changes. Two-factor codes are produced by your own authenticator app and checked on our server; we do not use a third-party service for them, and nothing about them is sent to Google, Microsoft, Apple or anyone else.",
+        "<b>Links you share:</b> when you share a tier list, roster or custom minigame, it is packed into the link itself (the part after the “#”, which your browser never sends to us). We do not store it; only people who receive the link can open it. Your account mark is added to it (see “Reporting content”).",
+        "<b>Service providers:</b> our hosting provider and {mailProvider} (which delivers our verification and password-reset emails) handle data on our behalf, only to run the site and send you the emails you request, including notices when a security setting on your account changes or when we block your content. Two-factor codes are produced by your own authenticator app and checked on our server; we do not use a third-party service for them, and nothing about them is sent to Google, Microsoft, Apple or anyone else.",
         "<b>Discord:</b> when you submit a bug report, its content (including your email address and screenshots) is forwarded to a private channel used by our team.",
         "<b>Legal reasons:</b> if the law requires it or to protect the site and its users from abuse.",
       ],

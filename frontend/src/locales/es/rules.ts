@@ -4,7 +4,7 @@ export default {
   heading: "Normas",
   tagline: "Cortas, justas y solo un poco malditas. Léelas una vez y vuelve a marear a un asesino con un palet.",
   lastUpdatedLabel: "Última actualización",
-  lastUpdated: "10 de octubre de 2026",
+  lastUpdated: "15 de octubre de 2026",
   translationNotice: "Si las versiones traducidas de esta página difieren de la inglesa, prevalece la versión en inglés.",
   tldrLabel: "Resumen",
   tldrNotice: "Los títulos, las líneas de resumen y el compendio son atajos amistosos. Por motivos legales no son vinculantes y no sustituyen al texto que hay debajo. Si difieren de él, se aplica el texto completo.",
@@ -60,13 +60,13 @@ export default {
       tldr: "Es tuyo. Y también eres quien responde por ello.",
       paragraphs: [
         "<b>Almacenado en nuestros servidores:</b> tu avatar y las capturas que adjuntas a los informes de errores. Conservas su propiedad y concedes a <brand>LemonDBD</brand> solo el permiso necesario para almacenarlos y mostrarlos para el funcionamiento del Sitio, según se describe en los [Términos del servicio]({termsPath}).",
-        "<b>No almacenado por nosotros:</b> las listas de niveles, las plantillas de Smash or Pass y los minijuegos personalizados que creas se guardan en tu propio navegador y no tenemos copia de ellos. Cuando compartes uno mediante un enlace, su contenido va codificado en el propio enlace y no llega a nuestros servidores. Sigues siendo responsable de lo que contienen.",
+        "<b>No almacenado por nosotros:</b> las listas de niveles, las plantillas de Smash or Pass y los minijuegos personalizados que creas se guardan en tu propio navegador y no tenemos copia de ellos. Cuando compartes uno mediante un enlace, su contenido va codificado en el propio enlace, junto con tu marca de cuenta. Si alguien lo reporta, vemos una copia y la eliminamos tras la decisión. Sigues siendo responsable de lo que contienen.",
       ],
       items: [
         "Sube o comparte solo contenido que hayas creado o que tengas derecho a usar, y no infrinjas los derechos de terceros.",
         "No publiques contenido ilícito o dañino, incluidos malware, phishing, enlaces fraudulentos o datos personales de otras personas.",
-        "Marca como NSFW las plantillas para adultos cuando exista esa opción, y no las envíes a quien no las haya pedido.",
-        "Como no tenemos copia de las listas de niveles, plantillas o minijuegos compartidos, no podemos retirar ni eliminar un enlace que hayas compartido. Cualquiera que lo tenga puede abrirlo.",
+        "Marca como NSFW las tier lists, plantillas y minijuegos para adultos, y no los envíes a quien no los haya pedido.",
+        "No podemos retirar un enlace o archivo que hayas compartido, y cualquiera que lo tenga puede abrirlo. Lo que sí podemos es bloquear el contenido: una vez baneado, el Sitio se niega a abrirlo o importarlo.",
       ],
     },
     smashOrPass: {
@@ -100,6 +100,7 @@ export default {
       tldr: "¿Has encontrado un error o a alguien que incumple las normas? Avísanos.",
       paragraphs: [
         "Usa el botón <b>Reportar Error</b> de la barra lateral para comunicar errores, datos incorrectos o fallos de traducción. Para denunciar un incumplimiento de estas Normas, un abuso o un asunto privado, escribe a [{contactEmail}](mailto:{contactEmail}) o contacta con un miembro de <brand>LemonTeam</brand> en el Servidor.",
+        "Para reportar una lista de niveles, una plantilla de Smash or Pass o un minijuego personalizado que alguien te haya compartido, inicia sesión y usa su botón <b>Reportar contenido</b>. Un miembro de <brand>LemonTeam</brand> lo revisará.",
         "Los informes deben ser veraces, concretos y respetuosos. Los informes falsos a sabiendas, el spam y el uso del formulario para acosar a otra persona constituyen en sí mismos un incumplimiento de estas Normas.",
       ],
       items: [],
@@ -113,6 +114,7 @@ export default {
       items: [
         "Las amenazas, el contenido sexual que involucre a menores, el contenido ilícito y los ataques al Sitio se tratan sin aviso previo y pueden comunicarse a las autoridades competentes.",
         "En el Servidor, las mismas medidas se traducen en un aviso, un aislamiento temporal, una expulsión o un baneo.",
+        "El contenido que incumpla estas Normas puede ser baneado: el Sitio se niega entonces a abrirlo o importarlo. También podemos desactivar la cuenta de quien lo publicó y le enviamos el motivo por correo.",
         "Cuando eliminemos contenido o restrinjamos una cuenta, explicaremos el motivo siempre que sea posible. Si crees que nos hemos equivocado, puedes impugnar la decisión escribiéndonos y la revisaremos. El procedimiento figura en los [Términos del servicio]({termsPath}).",
       ],
     },
@@ -121,8 +123,8 @@ export default {
     heading: "Las fases del gancho",
     stages: [
       { title: "Fase 1: el aviso", text: "Un mensaje pidiéndote que corrijas o dejes de hacer algo." },
-      { title: "Fase 2: la limpieza", text: "Eliminamos el contenido, reiniciamos el progreso obtenido de forma injusta o limitamos funciones." },
-      { title: "Sacrificio", text: "Tu cuenta se suspende o se elimina y se pueden bloquear cuentas o direcciones adicionales." },
+      { title: "Fase 2: la limpieza", text: "Eliminamos o bloqueamos el contenido, reiniciamos el progreso obtenido de forma injusta o limitamos funciones." },
+      { title: "Sacrificio", text: "Tu cuenta se suspende, se desactiva o se elimina y se pueden bloquear cuentas o direcciones adicionales." },
     ],
   },
 };

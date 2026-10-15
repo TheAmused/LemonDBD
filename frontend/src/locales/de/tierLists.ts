@@ -239,7 +239,18 @@ export default {
   reportError: "Meldung konnte nicht gesendet werden. Bitte versuche es erneut.",
   reportButton: "Melden",
   reportButtonAria: "Inhalt melden",
-  reportNoManifest: "Dies ist ein nicht signierter Entwurf ohne verifizierte Ersteller-Signatur. Nur geteilte oder exportierte Inhalte mit Autoren-Signatur können an die Moderatoren gemeldet werden.",
+  contentRevoked: "Dieser Inhalt wurde von den Moderatoren wegen Verstoßes gegen die Community-Richtlinien entfernt und kann nicht mehr importiert oder gespielt werden.",
+  signFailed: "Die Konto-Markierung konnte fürs Teilen nicht hinzugefügt werden. Melde dich erneut an und versuche es noch einmal.",
+  unsignedContent: "Dieser Inhalt hat keine gültige Konto-Markierung und kann deshalb nicht importiert oder gespielt werden. Bitte den Urheber, ihn erneut von seinem Konto aus zu teilen.",
+  nsfw: {
+    label: "Enthält NSFW-Inhalte",
+    hint: "Markiere diese Tierliste als Inhalt mit nicht jugendfreiem oder sensiblem Material.",
+    badge: "NSFW",
+    title: "Enthält NSFW-Inhalte",
+    description: "Diese Tierliste ist als NSFW/nicht jugendfrei markiert. Bestätige, dass du sie sehen möchtest.",
+    confirm: "Klicken zum Anzeigen",
+  },
+  reportNoManifest: "Diese Kopie hat keine gültige Konto-Markierung, daher können Moderatoren sie keinem Konto zuordnen. Du kannst sie trotzdem melden, und sie prüfen den Inhalt selbst.",
 
   dnd: {
     pickedUp: "{name} aufgenommen.",

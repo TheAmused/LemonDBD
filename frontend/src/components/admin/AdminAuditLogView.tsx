@@ -18,7 +18,28 @@ const ACTION_COLORS: Record<string, string> = {
   perk_enabled: 'text-accent-green',
   challenge_mode_enabled: 'text-accent-green',
   user_deleted: 'text-accent-red',
+  content_ban: 'text-accent-red',
+  content_dismiss: 'text-accent-green',
 };
+
+/** Readable names for the actions the backend records; an action not listed here is shown as stored. */
+const ACTION_LABEL_KEYS = {
+  bug_report_deleted: 'auditActionBugReportDeleted',
+  bug_report_updated: 'auditActionBugReportUpdated',
+  challenge_mode_disabled: 'auditActionChallengeModeDisabled',
+  challenge_mode_enabled: 'auditActionChallengeModeEnabled',
+  character_disabled: 'auditActionCharacterDisabled',
+  character_enabled: 'auditActionCharacterEnabled',
+  content_ban: 'auditActionContentBan',
+  content_dismiss: 'auditActionContentDismiss',
+  perk_disabled: 'auditActionPerkDisabled',
+  perk_enabled: 'auditActionPerkEnabled',
+  site_settings_updated: 'auditActionSiteSettingsUpdated',
+  user_data_exported: 'auditActionUserDataExported',
+  user_deleted: 'auditActionUserDeleted',
+  user_two_factor_reset: 'auditActionUserTwoFactorReset',
+  user_updated: 'auditActionUserUpdated',
+} as const;
 
 export const AdminAuditLogView: React.FC<{ }> = () => {
   const dict = useDictionary();
@@ -54,12 +75,17 @@ export const AdminAuditLogView: React.FC<{ }> = () => {
 
   const totalPages = Math.max(1, Math.ceil(total / perPage));
 
+  const actionLabel = (action: string): string => {
+    const key = ACTION_LABEL_KEYS[action as keyof typeof ACTION_LABEL_KEYS];
+    return key ? dict.admin[key] : action;
+  };
+
   const describeDetails = (log: AdminAuditLogEntry): string | null => {
     if (!log.details) return null;
     try {
       const parsed = JSON.parse(log.details);
-      const reason = parsed.reason;
-      return reason ? `"${reason}"` : null;
+      const note = typeof parsed.reason === 'string' && parsed.reason ? parsed.reason : parsed.admin_notes;
+      return typeof note === 'string' && note ? `"${note}"` : null;
     } catch {
       return null;
     }
@@ -107,7 +133,7 @@ export const AdminAuditLogView: React.FC<{ }> = () => {
                     {log.admin_username || `#${log.admin_user_id ?? '?'}`}
                   </td>
                   <td className={`py-3 pr-3 whitespace-nowrap font-semibold ${ACTION_COLORS[log.action] || 'text-text-secondary'}`}>
-                    {log.action}
+                    {actionLabel(log.action)}
                   </td>
                   <td className="py-3 pr-3 text-text-secondary whitespace-nowrap">
                     {log.target_type ? `${log.target_type}#${log.target_id}` : '-'}

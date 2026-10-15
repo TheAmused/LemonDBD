@@ -289,6 +289,8 @@ export function validateTierListDocument(input: unknown): TierListParseResult {
   // their own -- only a self-contained custom list can.
   const backgroundImage = template ? null : sanitizeImageUrl(input.backgroundImage);
   const manifest = sanitizeManifest(input._manifest);
+  // Like the background, only a self-contained custom list can be flagged.
+  const is_nsfw = !template && input.is_nsfw === true;
 
   const doc: TierListDocument = {
     format: TIER_LIST_FORMAT,
@@ -300,6 +302,7 @@ export function validateTierListDocument(input: unknown): TierListParseResult {
     ...(template ? {} : { items }),
     placements,
     ...(backgroundImage ? { backgroundImage } : {}),
+    ...(is_nsfw ? { is_nsfw } : {}),
     ...(manifest ? { _manifest: manifest } : {}),
   };
 

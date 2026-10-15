@@ -9,6 +9,7 @@ import { backendBase } from '@/utils/staticUrl';
 import { authHeaders, getAuthToken } from '@/utils/api';
 import { formatDateTime } from '@/utils/format';
 import { useDictionary } from "@/context/DictionaryContext";
+import { Surface } from '@/components/common/Surface';
 
 const ACTION_COLORS: Record<string, string> = {
   character_disabled: 'text-accent-red',
@@ -92,7 +93,7 @@ export const AdminAuditLogView: React.FC<{ }> = () => {
   };
 
   return (
-    <div className="rounded-card border border-border-color bg-bg-surface p-4 sm:p-6 shadow-sm backdrop-blur-sm transition-colors duration-200">
+    <Surface padding="none" className="p-4 sm:p-6 shadow-sm backdrop-blur-sm transition-colors duration-200">
       <div className="flex items-center justify-between mb-4">
         <h3 className="flex items-center gap-2 type-label text-text-primary">
           <ScrollText className="h-4 w-4 text-text-secondary" />
@@ -176,7 +177,7 @@ export const AdminAuditLogView: React.FC<{ }> = () => {
           </Button>
         </div>
       )}
-    </div>
+    </Surface>
   );
 };
 

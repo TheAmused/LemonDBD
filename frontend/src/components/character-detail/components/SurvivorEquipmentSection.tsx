@@ -30,6 +30,7 @@ import { usePersistentDrawer } from '@/hooks/usePersistentDrawer';
 import { tip } from '@/components/common/Tooltip';
 import { EmptyState } from '@/components/common/EmptyState';
 import { Badge } from '@/components/common/Badge';
+import { Surface } from '@/components/common/Surface';
 interface SurvivorEquipmentSectionProps {
   items?: EquipmentItem[];
   addons?: (AddonItem | EquipmentItem)[];
@@ -170,8 +171,8 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
   }, [items, addons, selectedCategory]);
 
   return (
-    <section
-      className="mt-8 rounded-card border border-border-color bg-bg-surface p-6 sm:p-8 shadow-sm dark:shadow-none backdrop-blur-md"
+    <Surface
+      as="section" padding="lg" className="mt-8 shadow-sm dark:shadow-none backdrop-blur-md"
       aria-labelledby="survivor-equipment-heading"
     >
       {/* Same flat single-card shape as KillerEquipmentSection/OfferingsSection:
@@ -220,7 +221,7 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
           })}
         />
 
-        <div className="flex-1 rounded-card bg-bg-surface border border-border-color shadow-sm dark:shadow-lg overflow-hidden grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-border-color">
+        <Surface padding="none" className="flex-1 shadow-sm dark:shadow-lg overflow-hidden grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-border-color">
           <div className="flex flex-col p-4">
             <div className="sm:hidden mb-3">
               <CategoryPicker
@@ -349,11 +350,11 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
               </div>
             )}
           </div>
-        </div>
+        </Surface>
       </div>
       </div>
       </CollapsibleDrawer>
-    </section>
+    </Surface>
   );
 };
 

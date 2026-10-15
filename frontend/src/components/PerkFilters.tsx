@@ -25,6 +25,7 @@ import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
 import { Checkbox } from '@/components/common/Checkbox';
 import { Button } from '@/components/common/Button';
 import { useDictionary } from "@/context/DictionaryContext";
+import { Surface } from '@/components/common/Surface';
 
 export function computeHasActiveFilters(state: {
   search: string;
@@ -357,9 +358,9 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
         )}
 
         {isPerkSuggestionsOpen && perkSuggestions.length > 0 && (
-          <div
+          <Surface
             role="listbox"
-            className="absolute top-full left-0 right-0 mt-2 max-h-60 overflow-y-auto rounded-card border border-border-color bg-bg-surface shadow-2xl z-50 p-1.5 flex flex-col gap-1"
+            padding="none" className="absolute top-full left-0 right-0 mt-2 max-h-60 overflow-y-auto shadow-2xl z-50 p-1.5 flex flex-col gap-1"
           >
             {perkSuggestions.map((item, idx) => (
               <button
@@ -391,7 +392,7 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
                 </span>
               </button>
             ))}
-          </div>
+          </Surface>
         )}
       </div>
     </section>

@@ -15,6 +15,7 @@ import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
 
 import { Button } from '@/components/common/Button';
 import { Badge } from '@/components/common/Badge';
+import { Surface } from '@/components/common/Surface';
 interface CharacterCardProps {
   char: CharacterItem;
   locale: string;
@@ -49,7 +50,7 @@ export function CharacterCard({
   const detailHref = `/${locale}/characters/${getCharacterSlug(char.name)}`;
 
   return (
-    <div
+    <Surface
       onMouseEnter={() => {
         if (!ownershipMode) router.prefetch(detailHref);
       }}
@@ -63,7 +64,7 @@ export function CharacterCard({
           router.push(detailHref);
         }
       }}
-      className="group relative flex flex-col overflow-hidden rounded-card border border-border-color bg-bg-surface hover:bg-bg-elevated hover:border-accent-red/50 shadow-xs hover:shadow-lg transition-all duration-300 cursor-pointer touch-manipulation aspect-[3/4] w-full"
+      padding="none" className="group relative flex flex-col overflow-hidden hover:bg-bg-elevated hover:border-accent-red/50 shadow-xs hover:shadow-lg transition-all duration-300 cursor-pointer touch-manipulation aspect-[3/4] w-full"
     >
       <div className="absolute top-1.5 right-1.5 sm:top-2 sm:right-2 z-20">
         <Badge
@@ -140,6 +141,6 @@ export function CharacterCard({
           {char.name}
         </h3>
       </div>
-    </div>
+    </Surface>
   );
 }

@@ -12,6 +12,7 @@ import { SmashSounds } from './SmashSoundEffects';
 
 import { tip } from '@/components/common/Tooltip';
 import { useDictionary } from "@/context/DictionaryContext";
+import { Surface } from '@/components/common/Surface';
 
 export interface TactileKeycapsProps {
   onPass: () => void;
@@ -141,7 +142,7 @@ export const TactileKeycaps: React.FC<TactileKeycapsProps> = ({ onPass, onSmash,
   return (
     <div className={`flex flex-col items-center justify-center gap-2 select-none ${className || ''}`}>
       {/* 3D Tactile Keycaps Container */}
-      <div className="flex items-center justify-center gap-2.5 sm:gap-3 p-2 rounded-card bg-bg-surface border border-border-color shadow-lg dark:shadow-2xl backdrop-blur-xl">
+      <Surface padding="none" className="flex items-center justify-center gap-2.5 sm:gap-3 p-2 shadow-lg dark:shadow-2xl backdrop-blur-xl">
         {keycaps.map((cap) => {
           const isActive = activeKey === cap.id;
           const isReset = cap.id === 'reset';
@@ -177,7 +178,7 @@ export const TactileKeycaps: React.FC<TactileKeycapsProps> = ({ onPass, onSmash,
             </button>
           );
         })}
-      </div>
+      </Surface>
 
       {/* Instruction Subtitle */}
       <div className="flex items-center gap-1.5 text-mini font-medium text-text-muted pt-0.5">

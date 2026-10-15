@@ -12,6 +12,7 @@ import type { RosterItem } from '@/types/smashOrPass';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 import { SmashSounds } from '../SmashSoundEffects';
 import { rosterCoverUrl, rosterDisplayName } from './rosterDisplay';
+import { Surface } from '@/components/common/Surface';
 
 interface RosterCarouselCardProps {
   roster: RosterItem;
@@ -161,10 +162,10 @@ export function RosterCarouselCard({
       )}
 
       {!isRosterEnabled && !isCurrentlyActive && (
-        <div className="absolute top-4 right-4 sm:top-5 sm:right-5 flex items-center gap-1.5 px-3 py-1.5 rounded-card bg-bg-elevated border border-border-color text-text-secondary type-strong shadow-lg pointer-events-none">
+        <Surface tone="elevated" padding="none" className="absolute top-4 right-4 sm:top-5 sm:right-5 flex items-center gap-1.5 px-3 py-1.5 text-text-secondary type-strong shadow-lg pointer-events-none">
           <PadlockHeartIcon className="h-4 w-4 text-text-muted" aria-hidden="true" />
           <span>{dict.smashOrPass.comingSoon}</span>
-        </div>
+        </Surface>
       )}
 
       {isCenter && (

@@ -20,6 +20,7 @@ import { tip } from '@/components/common/Tooltip';
 import { authHeaders, getAuthToken, getErrorMessage } from '@/utils/api';
 import { formatMessage } from '@/utils/i18nFormat';
 import { useDictionary } from "@/context/DictionaryContext";
+import { Surface } from '@/components/common/Surface';
 
 interface AdminChallengeControlProps {
   onActionMessage: (msg: ActionMessage) => void;
@@ -211,7 +212,7 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
   return (
     <div className="space-y-6">
       {/* Challenge mode kill switches */}
-      <div className="rounded-card border border-border-color bg-bg-surface p-5 shadow-sm backdrop-blur-sm transition-colors duration-200">
+      <Surface padding="none" className="p-5 shadow-sm backdrop-blur-sm transition-colors duration-200">
         <h3 className="flex items-center gap-2 type-label text-text-primary mb-4">
           <Power className="h-4 w-4 text-accent-red" />
           <span>{dict.admin.challengeModeKillSwitches}</span>
@@ -246,10 +247,10 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
             </div>
           ))}
         </div>
-      </div>
+      </Surface>
 
       {/* Killers & Perks availability */}
-      <div className="rounded-card border border-border-color bg-bg-surface p-5 shadow-sm backdrop-blur-sm transition-colors duration-200">
+      <Surface padding="none" className="p-5 shadow-sm backdrop-blur-sm transition-colors duration-200">
         <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
           <SegmentedControl<'killers' | 'perks'>
             ariaLabel={dict.admin.characters}
@@ -357,7 +358,7 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
             )}
           </div>
         )}
-      </div>
+      </Surface>
 
       <AdminReasonModal
         isOpen={pendingAction !== null}

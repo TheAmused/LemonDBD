@@ -10,6 +10,7 @@ import type { CustomRomanceArchetype, RosterCustomLabels, SmashRosterDocumentEnt
 import { DraftEntity, emptyDraftEntity, type EntityTranslationDraft } from '@/components/smash-or-pass/creator/EntityEditor';
 import { Badge } from '@/components/common/Badge';
 import { useDictionary } from '@/context/DictionaryContext';
+import { Surface } from '@/components/common/Surface';
 
 export function newKey(): string {
   if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') return crypto.randomUUID();
@@ -217,7 +218,7 @@ export function Section({ title, badge, defaultOpen = true, headerAction, toggle
   const [isOpen, setIsOpen] = useState(defaultOpen);
 
   return (
-    <section className="rounded-card border border-border-color bg-bg-surface shadow-xs overflow-hidden transition-colors flex flex-col">
+    <Surface as="section" padding="none" className="shadow-xs overflow-hidden transition-colors flex flex-col">
       <div className="relative w-full flex items-center justify-between px-4 sm:px-6 py-3 sm:py-3.5 bg-bg-surface hover:bg-bg-elevated/40 transition-colors">
         {/* Left spacer to balance right side controls on wider screens */}
         <div className="w-24 sm:w-32 hidden sm:block pointer-events-none" aria-hidden="true" />
@@ -269,7 +270,7 @@ export function Section({ title, badge, defaultOpen = true, headerAction, toggle
           </div>
         </div>
       </div>
-    </section>
+    </Surface>
   );
 }
 

@@ -4,6 +4,7 @@ import type { Dictionary } from '@/locales/types';
 import React from 'react';
 import { Clock, Snowflake } from 'lucide-react';
 import { RulesModalListSection, RulesModalNotices, type RuleListEntry } from './RulesModalShell';
+import { Surface } from '@/components/common/Surface';
 
 /** The `dict.streaks` copy bag, loosened so keys can be looked up dynamically. */
 export type StreakCopy = Record<string, string | undefined>;
@@ -37,10 +38,10 @@ export const RulesConceptCard: React.FC<{ title: React.ReactNode; text: React.Re
   text,
   tone,
 }) => (
-  <div className="bg-bg-elevated border border-border-color rounded-card p-4 shadow-sm">
+  <Surface tone="elevated" padding="none" className="p-4 shadow-sm">
     <h3 className={`type-label mb-2 ${RULES_TONES[tone].conceptTitle}`}>{title}</h3>
     <p className="type-body-fluid text-text-secondary">{text}</p>
-  </div>
+  </Surface>
 );
 
 /** "How it works" bullet list; `hint` renders as an italic aside underneath. */
@@ -83,15 +84,15 @@ export const RulesDifficultyRows: React.FC<{ rows: RulesDifficultyRow[]; alignTe
 }) => (
   <div className="grid grid-cols-1 gap-2.5">
     {rows.map((row, i) => (
-      <div
+      <Surface
         key={i}
-        className="flex flex-col sm:flex-row sm:items-center justify-between p-3.5 bg-bg-elevated border border-border-color rounded-card gap-2 shadow-sm"
+        tone="elevated" padding="none" className="flex flex-col sm:flex-row sm:items-center justify-between p-3.5 gap-2 shadow-sm"
       >
         <span className={`px-2.5 py-1 rounded-chip text-xs font-bold border ${row.badgeClassName} whitespace-nowrap w-fit`}>
           {row.label}
         </span>
         <p className={`text-xs text-text-secondary${alignTextRight ? ' sm:text-right sm:max-w-xs' : ''}`}>{row.text}</p>
-      </div>
+      </Surface>
     ))}
   </div>
 );

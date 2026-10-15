@@ -25,6 +25,7 @@ import { tip } from '@/components/common/Tooltip';
 import { EmptyState } from '@/components/common/EmptyState';
 import { formatDate, formatDateTime } from '@/utils/format';
 import { useDictionary } from "@/context/DictionaryContext";
+import { Surface } from '@/components/common/Surface';
 
 interface StatusConfigItem {
   label: string;
@@ -186,7 +187,7 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
       {/* Master-Detail Split Workspace */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         {/* Left Pane: Ticket Feed */}
-        <div className="lg:col-span-5 flex flex-col rounded-card border border-border-color bg-bg-surface p-4 shadow-sm space-y-4">
+        <Surface padding="none" className="lg:col-span-5 flex flex-col p-4 shadow-sm space-y-4">
           <div className="flex flex-col gap-2.5 pb-3 border-b border-border-color">
             <SearchInput
               fieldSize="sm"
@@ -321,12 +322,12 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
               </div>
             </div>
           )}
-        </div>
+        </Surface>
 
         {/* Right Pane: Ticket Inspector */}
         <div className="lg:col-span-7 sticky top-6">
           {selectedBug ? (
-            <div className="rounded-card border border-border-color bg-bg-surface p-5 sm:p-6 shadow-sm space-y-6">
+            <Surface padding="none" className="p-5 sm:p-6 shadow-sm space-y-6">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-border-color">
                 <div>
                   <div className="flex items-center gap-2 mb-1">
@@ -432,7 +433,7 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
                   </Button>
                 </div>
               </div>
-            </div>
+            </Surface>
           ) : (
             <EmptyState variant="compact" icon={Eye} title={dict.user.noReportsSubtitle} />
           )}

@@ -6,6 +6,7 @@ import { ArrowRight } from 'lucide-react';
 import { useDictionary } from '@/context/DictionaryContext';
 
 import { Button } from '@/components/common/Button';
+import { Surface } from '@/components/common/Surface';
 interface VoiceVariantPillsProps {
   variants: string[];
   onSelect: (variant: string) => void;
@@ -16,7 +17,7 @@ export function VoiceVariantPills({ variants, onSelect }: VoiceVariantPillsProps
   const dict = useDictionary();
 
   return (
-    <div className="relative z-10 mt-2.5 rounded-card border border-border-color bg-bg-elevated p-2.5 backdrop-blur-sm flex flex-wrap items-center gap-2">
+    <Surface tone="elevated" padding="none" className="relative z-10 mt-2.5 p-2.5 backdrop-blur-sm flex flex-wrap items-center gap-2">
       <div className="flex items-center gap-1.5 type-strong text-text-secondary">
         <span>{dict.maps.variants}</span>
       </div>
@@ -34,6 +35,6 @@ export function VoiceVariantPills({ variants, onSelect }: VoiceVariantPillsProps
           </Button>
         ))}
       </div>
-    </div>
+    </Surface>
   );
 }

@@ -11,6 +11,7 @@ import type { UserShowcaseState } from '@/types/userShowcase';
 import type { RoleCategory } from '@/types/perks';
 import { isSurvivor } from '@/utils/characterUtils';
 import { useDictionary } from "@/context/DictionaryContext";
+import { Surface } from '@/components/common/Surface';
 
 interface DualMainsShowcaseProps {
   showcase: UserShowcaseState;
@@ -43,7 +44,7 @@ export const DualMainsShowcase: React.FC<DualMainsShowcaseProps> = ({
   const [perkModalRole, setPerkModalRole] = useState<RoleCategory | null>(null);
 
   return (
-    <div className="rounded-card border border-border-color bg-bg-surface backdrop-blur-xl shadow-md overflow-hidden transition-colors">
+    <Surface padding="none" className="backdrop-blur-xl shadow-md overflow-hidden transition-colors">
       {/* Connected Header with Collapsible Drawer Toggle */}
       <button
         type="button"
@@ -149,6 +150,6 @@ export const DualMainsShowcase: React.FC<DualMainsShowcaseProps> = ({
           locale={locale}
         />
       )}
-    </div>
+    </Surface>
   );
 };

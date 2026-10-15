@@ -10,7 +10,7 @@ Ograniczenia analizy: liczone są tylko klasy zapisane wprost w `className`. Kla
 
 | Kategoria | Docelowy komponent | Pozycji |
 |---|---|---|
-| Karty `div` z border, bg i rounded | `Surface` | 204 |
+| Karty `div` z border, bg i rounded | `Surface` | 86 (z 204) |
 | Ostylowane `<button>` | `Button` / `ToggleChip` / `SegmentedControl` | 63 (z 127) |
 | Natywne `title=` | `Tooltip` / `tip()` | 113 |
 | `span` jako chip lub pill | `Badge` / `InfoChip` | 17 (z 74) |
@@ -56,191 +56,130 @@ Problem: `xl`, `2xl` i `3xl` różnią się o 1 do 2 px, a w kodzie jest ich pon
 - [ ] Przejść listy poniżej obszarami, po jednym commicie na obszar.
 - [~] Guard w `check:styles`: radius gotowy (stara skala, wartości arbitralne, nadpisania w `Button`/`Input`/`Select`/`Surface`/`Badge`/`InfoChip`). Reszta (ostylowany `<button>`, `title=`) po zakończeniu zamian. Było: surowe `rounded-*` na `button`, `input` i kartach poza primitywami, ostylowany `<button>`, `title=` poza `Tooltip`, `rounded-[..]`.
 
-## 1. Karty na Surface (204)
+## 1. Karty na Surface (zostało 86 z 204)
 
-Wzorzec: `div`/`section`/`article`/`aside`/`li` z `border`, `bg-bg-surface` lub `bg-bg-elevated` i `rounded-lg/xl/2xl/3xl`. Zamienić na `<Surface tone radius padding>`. Karty z wariantem gradientu lub efektem mogą zostać, ale bez własnego radiusu.
+Zrobione (2026-10-15): 108 prostych kart (`border` + `border-border-color` + `bg-bg-surface` lub `bg-bg-elevated` + `rounded-card`, klasa statyczna) zamienione na `<Surface>`. Padding `p-4 sm:p-5`, `p-6 sm:p-8` i `p-3` mapują się na warianty `md`/`lg`/`sm`, inne zostają w `className` przy `padding="none"`. Klasy układu, cieni i efektów zostają bez zmian, więc wygląd i zachowanie na telefonie nie powinny się zmienić.
 
-**streaks** (37)
+Zostało 86: karty z kolorową ramką (np. `border-accent-red/30`), przerywaną lub grubszą ramką, z dynamiczną klasą (stan aktywny/wybrany), z `ref`, o mniejszym promieniu (`rounded-control`, `rounded-chip`), albo klikalne kafle. Do oceny, czy to `Surface` z innym tonem (np. kolorowy akcent), czy zostaje:
 
-- [ ] `streaks/ChallengeCompletionHistoryDrawer.tsx` : 40 (rounded-xl), 46 (rounded-xl)
-- [ ] `streaks/ChallengeIntroModalShell.tsx` : 166 (rounded-2xl)
-- [ ] `streaks/ChallengePanel.tsx` : 21 (rounded-2xl), 101 (rounded-xl)
-- [ ] `streaks/FreezeBadge.tsx` : 19 (rounded-xl)
-- [ ] `streaks/RulesModalSections.tsx` : 40 (rounded-xl), 86 (rounded-xl)
-- [ ] `streaks/RulesModalShell.tsx` : 56 (rounded-xl)
-- [ ] `streaks/StreakMatchRow.tsx` : 22 (rounded-xl)
-- [ ] `streaks/StreakStatsDrawer.tsx` : 70 (rounded-xl), 84 (rounded-xl), 92 (rounded-xl), 100 (rounded-xl), 107 (rounded-xl), 121 (rounded-xl)
-- [ ] `streaks/StreaksLayoutShell.tsx` : 71 (rounded-2xl), 91 (rounded-2xl)
-- [ ] `streaks/chaos/ChaosBoard.tsx` : 203 (rounded-2xl), 247 (rounded-2xl)
-- [ ] `streaks/chaos/ChaosPerkPoolModal.tsx` : 16 (rounded-lg)
-- [ ] `streaks/gauntlet/ActiveTargetStage.tsx` : 212 (rounded-xl), 242 (rounded-xl)
-- [ ] `streaks/gauntlet/ActiveTargetStageParts.tsx` : 273 (rounded-xl)
-- [ ] `streaks/gauntlet/CharacterRosterGrid.tsx` : 64 (rounded-2xl)
-- [ ] `streaks/gauntlet/GauntletRulesModal.tsx` : 284 (rounded-xl)
-- [ ] `streaks/gauntlet/ShieldPromptModal.tsx` : 34 (rounded-3xl)
-- [ ] `streaks/gauntlet/TokenRollModal.tsx` : 49 (rounded-3xl)
-- [ ] `streaks/gauntlet/TokenRoulette.tsx` : 77 (rounded-2xl)
-- [ ] `streaks/history/HistoryNextRowPreview.tsx` : 21 (rounded-lg)
-- [ ] `streaks/history/HistoryPerkModal.tsx` : 36 (rounded-lg)
-- [ ] `streaks/history/HistoryPerkPoolPanel.tsx` : 20 (rounded-lg), 43 (rounded-lg), 106 (rounded-2xl)
-- [ ] `streaks/history/HistoryRowClearedBanner.tsx` : 25 (rounded-xl)
-- [ ] `streaks/page-streak/BuildPanel.tsx` : 45 (rounded-2xl)
-- [ ] `streaks/page-streak/PageStreakRunView.tsx` : 169 (rounded-2xl)
+**streaks** (19)
 
-**smash-or-pass** (36)
+- [ ] `streaks/ChallengeIntroModalShell.tsx` : 167
+- [ ] `streaks/ChallengePanel.tsx` : 103
+- [ ] `streaks/FreezeBadge.tsx` : 19
+- [ ] `streaks/StreaksLayoutShell.tsx` : 73
+- [ ] `streaks/chaos/ChaosBoard.tsx` : 204, 248
+- [ ] `streaks/chaos/ChaosPerkPoolModal.tsx` : 16
+- [ ] `streaks/gauntlet/ActiveTargetStage.tsx` : 212, 242
+- [ ] `streaks/gauntlet/ActiveTargetStageParts.tsx` : 273
+- [ ] `streaks/gauntlet/ShieldPromptModal.tsx` : 34
+- [ ] `streaks/gauntlet/TokenRollModal.tsx` : 49
+- [ ] `streaks/gauntlet/TokenRoulette.tsx` : 77
+- [ ] `streaks/history/HistoryNextRowPreview.tsx` : 21
+- [ ] `streaks/history/HistoryPerkModal.tsx` : 37
+- [ ] `streaks/history/HistoryPerkPoolPanel.tsx` : 23, 46
+- [ ] `streaks/history/HistoryRowClearedBanner.tsx` : 25
+- [ ] `streaks/page-streak/BuildPanel.tsx` : 45
 
-- [ ] `smash-or-pass/CharacterCard.tsx` : 189 (rounded-3xl)
-- [ ] `smash-or-pass/CharacterStatsModal.tsx` : 263 (rounded-2xl), 269 (rounded-2xl)
-- [ ] `smash-or-pass/RomancePersonaModal.tsx` : 183 (rounded-3xl), 184 (rounded-3xl)
-- [ ] `smash-or-pass/RosterSelectModal.tsx` : 96 (rounded-2xl), 208 (rounded-3xl)
-- [ ] `smash-or-pass/SmashLeaderboardParts.tsx` : 101 (rounded-3xl), 133 (rounded-2xl), 156 (rounded-2xl)
-- [ ] `smash-or-pass/TactileKeycaps.tsx` : 144 (rounded-2xl)
-- [ ] `smash-or-pass/card/CardBackFace.tsx` : 108 (rounded-2xl), 136 (rounded-2xl), 187 (rounded-2xl)
-- [ ] `smash-or-pass/creator/EntityEditorParts.tsx` : 94 (rounded-lg)
-- [ ] `smash-or-pass/creator/RomanceArchetypeBuilder.tsx` : 113 (rounded-3xl), 147 (rounded-2xl)
-- [ ] `smash-or-pass/creator/RosterBasicsSection.tsx` : 110 (rounded-xl)
-- [ ] `smash-or-pass/creator/SmashRosterCreator.tsx` : 197 (rounded-xl), 283 (rounded-xl)
-- [ ] `smash-or-pass/creator/SmashRosterCreatorParts.tsx` : 220 (rounded-xl)
-- [ ] `smash-or-pass/hub/HowToPlayModal.tsx` : 46 (rounded-xl), 69 (rounded-xl), 92 (rounded-xl), 94 (rounded-xl), 106 (rounded-xl)
-- [ ] `smash-or-pass/hub/HubFilterDrawer.tsx` : 54 (rounded-2xl), 92 (rounded-2xl)
-- [ ] `smash-or-pass/hub/HubHeader.tsx` : 160 (rounded-2xl)
-- [ ] `smash-or-pass/persona/PersonaBreakdown.tsx` : 82 (rounded-xl), 89 (rounded-xl), 100 (rounded-xl), 107 (rounded-xl), 116 (rounded-xl), 133 (rounded-xl)
-- [ ] `smash-or-pass/roster-select/RosterCarouselCard.tsx` : 164 (rounded-2xl)
+**smash-or-pass** (16)
 
-**minigames** (29)
+- [ ] `smash-or-pass/CharacterCard.tsx` : 190
+- [ ] `smash-or-pass/SmashLeaderboardParts.tsx` : 102, 134
+- [ ] `smash-or-pass/card/CardBackFace.tsx` : 105, 184
+- [ ] `smash-or-pass/creator/EntityEditorParts.tsx` : 94
+- [ ] `smash-or-pass/creator/RomanceArchetypeBuilder.tsx` : 116, 148
+- [ ] `smash-or-pass/creator/RosterBasicsSection.tsx` : 110
+- [ ] `smash-or-pass/creator/SmashRosterCreator.tsx` : 197
+- [ ] `smash-or-pass/persona/PersonaBreakdown.tsx` : 82, 89, 100, 107, 116, 133
 
-- [ ] `minigames/CharacterAutocomplete.tsx` : 253 (rounded-xl), 278 (rounded-lg)
-- [ ] `minigames/MinigamesHub.tsx` : 196 (rounded-2xl), 236 (rounded-3xl), 262 (rounded-3xl), 288 (rounded-3xl), 326 (rounded-2xl), 346 (rounded-2xl), 366 (rounded-2xl), 386 (rounded-2xl), 406 (rounded-2xl), 426 (rounded-2xl), 505 (rounded-2xl)
-- [ ] `minigames/VictoryModal.tsx` : 129 (rounded-2xl)
-- [ ] `minigames/creator/MinigameCreator.tsx` : 285 (rounded-3xl), 401 (rounded-3xl)
-- [ ] `minigames/creator/RoundEditorCard.tsx` : 148 (rounded-2xl), 245 (rounded-xl), 247 (rounded-lg)
-- [ ] `minigames/guessers/AddonGuesser.tsx` : 26 (rounded-2xl)
-- [ ] `minigames/guessers/AudioGuesser.tsx` : 162 (rounded-2xl)
-- [ ] `minigames/guessers/ClassicCharacterGuesser.tsx` : 56 (rounded-lg)
-- [ ] `minigames/guessers/ClassicPerkGuesser.tsx` : 45 (rounded-lg)
-- [ ] `minigames/guessers/EmojiRiddleGuesser.tsx` : 27 (rounded-2xl)
-- [ ] `minigames/guessers/KillerPowerGuesser.tsx` : 42 (rounded-2xl)
-- [ ] `minigames/guessers/PerkIconGuesser.tsx` : 37 (rounded-2xl)
-- [ ] `minigames/guessers/PixelAvatarGuesser.tsx` : 46 (rounded-2xl)
-- [ ] `minigames/guessers/QuoteLoreGuesser.tsx` : 56 (rounded-2xl)
-- [ ] `minigames/guessers/RealmGuesser.tsx` : 38 (rounded-2xl)
+**tier-lists** (11)
 
-**admin** (17)
+- [ ] `tier-lists/TierColorPicker.tsx` : 104
+- [ ] `tier-lists/TierItemTile.tsx` : 78
+- [ ] `tier-lists/TierListEditor.tsx` : 464
+- [ ] `tier-lists/TierListScaleControl.tsx` : 89
+- [ ] `tier-lists/TierPool.tsx` : 81
+- [ ] `tier-lists/TierRow.tsx` : 71
+- [ ] `tier-lists/creator/CreatorItems.tsx` : 58
+- [ ] `tier-lists/creator/LadderEditor.tsx` : 156
+- [ ] `tier-lists/creator/TierItemEditModal.tsx` : 96
+- [ ] `tier-lists/creator/TierListCreator.tsx` : 377, 437
 
-- [ ] `admin/AdminAuditLogView.tsx` : 95 (rounded-2xl)
-- [ ] `admin/AdminBugReportsWorkbench.tsx` : 189 (rounded-3xl), 329 (rounded-3xl)
-- [ ] `admin/AdminChallengeControl.tsx` : 213 (rounded-2xl), 251 (rounded-2xl), 253 (rounded-xl), 279 (rounded-xl)
-- [ ] `admin/AdminChallengeStats.tsx` : 65 (rounded-2xl)
-- [ ] `admin/AdminContentReportsWorkbench.tsx` : 60 (rounded-3xl), 144 (rounded-3xl)
-- [ ] `admin/AdminStatsGrid.tsx` : 18 (rounded-2xl), 28 (rounded-2xl), 38 (rounded-2xl), 48 (rounded-2xl), 58 (rounded-2xl)
-- [ ] `admin/AdminTabContentSkeleton.tsx` : 17 (rounded-3xl)
-- [ ] `admin/AdminUserTable.tsx` : 68 (rounded-3xl)
+**minigames** (10)
 
-**tier-lists** (16)
+- [ ] `minigames/CharacterAutocomplete.tsx` : 254, 279
+- [ ] `minigames/VictoryModal.tsx` : 129
+- [ ] `minigames/creator/MinigameCreator.tsx` : 402
+- [ ] `minigames/creator/RoundEditorCard.tsx` : 248
+- [ ] `minigames/guessers/ClassicCharacterGuesser.tsx` : 56
+- [ ] `minigames/guessers/ClassicPerkGuesser.tsx` : 45
+- [ ] `minigames/guessers/PerkIconGuesser.tsx` : 37
+- [ ] `minigames/guessers/PixelAvatarGuesser.tsx` : 46
+- [ ] `minigames/guessers/RealmGuesser.tsx` : 38
 
-- [ ] `tier-lists/TierColorPicker.tsx` : 103 (rounded-2xl)
-- [ ] `tier-lists/TierItemPreviewModal.tsx` : 57 (rounded-2xl)
-- [ ] `tier-lists/TierItemTile.tsx` : 78 (rounded-xl)
-- [ ] `tier-lists/TierListEditor.tsx` : 464 (rounded-2xl)
-- [ ] `tier-lists/TierListHub.tsx` : 139 (rounded-3xl), 229 (rounded-3xl)
-- [ ] `tier-lists/TierListScaleControl.tsx` : 88 (rounded-lg)
-- [ ] `tier-lists/TierPool.tsx` : 80 (rounded-3xl)
-- [ ] `tier-lists/TierRow.tsx` : 71 (rounded-2xl)
-- [ ] `tier-lists/creator/CreatorItems.tsx` : 58 (rounded-lg)
-- [ ] `tier-lists/creator/CreatorPreview.tsx` : 70 (rounded-2xl)
-- [ ] `tier-lists/creator/LadderEditor.tsx` : 163 (rounded-lg)
-- [ ] `tier-lists/creator/TierItemEditModal.tsx` : 96 (rounded-xl)
-- [ ] `tier-lists/creator/TierListCreator.tsx` : 380 (rounded-xl), 440 (rounded-lg)
-- [ ] `tier-lists/creator/TierListCreatorParts.tsx` : 66 (rounded-xl)
+**maps** (6)
 
-**character-detail** (13)
+- [ ] `maps/FullscreenMapEngine.tsx` : 175, 267
+- [ ] `maps/MapExplorer.tsx` : 466
+- [ ] `maps/VoiceCommandBanner.tsx` : 56
+- [ ] `maps/VoiceEngineInfoModal.tsx` : 91, 124
 
-- [ ] `character-detail/components/CharacterHeroAvatar.tsx` : 43 (rounded-3xl)
-- [ ] `character-detail/components/KillerCombatStats.tsx` : 21 (rounded-2xl)
-- [ ] `character-detail/components/KillerEquipmentSection.tsx` : 43 (rounded-3xl), 62 (rounded-3xl)
-- [ ] `character-detail/components/OfferingsSection.tsx` : 291 (rounded-3xl)
-- [ ] `character-detail/components/SurvivorEquipmentSection.tsx` : 172 (rounded-3xl), 222 (rounded-3xl)
-- [ ] `character-detail/modals/KillerPowerModal.tsx` : 43 (rounded-2xl), 62 (rounded-xl), 66 (rounded-xl), 70 (rounded-xl)
-- [ ] `character-detail/modals/Model3DModal.tsx` : 20 (rounded-3xl)
-- [ ] `character-detail/modals/TerrorRadiusModal.tsx` : 114 (rounded-xl)
+**user** (4)
 
-**maps** (11)
+- [ ] `user/CampfireHeader.tsx` : 77
+- [ ] `user/MainCard.tsx` : 76
+- [ ] `user/ShowcaseCharacterModal.tsx` : 62
+- [ ] `user/VaultMasteryDials.tsx` : 60
 
-- [ ] `maps/FullscreenMapEngine.tsx` : 175 (rounded-xl), 267 (rounded-2xl)
-- [ ] `maps/MapExplorer.tsx` : 292 (rounded-3xl), 465 (rounded-2xl)
-- [ ] `maps/VoiceCommandBanner.tsx` : 56 (rounded-3xl)
-- [ ] `maps/VoiceEngineInfoModal.tsx` : 59 (rounded-2xl), 88 (rounded-2xl), 121 (rounded-2xl), 152 (rounded-2xl), 219 (rounded-2xl)
-- [ ] `maps/voice/VoiceVariantPills.tsx` : 18 (rounded-2xl)
+**generator** (4)
 
-**user** (10)
-
-- [ ] `user/CampfireHeader.tsx` : 61 (rounded-3xl), 74 (rounded-2xl)
-- [ ] `user/DualMainsShowcase.tsx` : 46 (rounded-3xl)
-- [ ] `user/MainCard.tsx` : 76 (rounded-2xl)
-- [ ] `user/ShowcaseCharacterModal.tsx` : 62 (rounded-xl)
-- [ ] `user/UserBugReportsDrawer.tsx` : 31 (rounded-3xl)
-- [ ] `user/UserBugReportsList.tsx` : 146 (rounded-2xl)
-- [ ] `user/UserProfileClient.tsx` : 131 (rounded-3xl)
-- [ ] `user/UserProfileForm.tsx` : 169 (rounded-3xl)
-- [ ] `user/VaultMasteryDials.tsx` : 60 (rounded-2xl)
-
-**sidebar** (8)
-
-- [ ] `sidebar/BugReportModal.tsx` : 216 (rounded-xl), 218 (rounded-lg), 291 (rounded-xl)
-- [ ] `sidebar/BuyCoffeeModal.tsx` : 78 (rounded-2xl), 98 (rounded-xl)
-- [ ] `sidebar/SidebarBottomControls.tsx` : 164 (rounded-xl), 219 (rounded-xl)
-- [ ] `sidebar/SidebarUserSection.tsx` : 49 (rounded-xl)
-
-**onboarding** (7)
-
-- [ ] `onboarding/CharacterOnboardingWizard.tsx` : 97 (rounded-2xl)
-- [ ] `onboarding/wizard/ChapterCard.tsx` : 59 (rounded-xl)
-- [ ] `onboarding/wizard/ChapterCharacterPanel.tsx` : 30 (rounded-2xl), 36 (rounded-xl)
-- [ ] `onboarding/wizard/OnboardingAuthRequired.tsx` : 18 (rounded-3xl)
-- [ ] `onboarding/wizard/OnboardingIntroView.tsx` : 12 (rounded-2xl)
-- [ ] `onboarding/wizard/OnboardingLanguageView.tsx` : 26 (rounded-2xl)
-
-**generator** (5)
-
-- [ ] `generator/modes/LootCrateStage.tsx` : 287 (rounded-2xl), 300 (rounded-2xl)
-- [ ] `generator/modes/slot-machine/SlotReelRowMobile.tsx` : 131 (rounded-xl)
-- [ ] `generator/shared/PerkSlot.tsx` : 94 (rounded-2xl)
-- [ ] `generator/shared/RoleToggle.tsx` : 28 (rounded-xl)
-
-**changelog** (4)
-
-- [ ] `changelog/ChangelogEditorModal.tsx` : 205 (rounded-xl), 222 (rounded-xl), 334 (rounded-xl)
-- [ ] `changelog/WhatsNewLauncher.tsx` : 350 (rounded-2xl)
+- [ ] `generator/modes/LootCrateStage.tsx` : 287, 300
+- [ ] `generator/modes/slot-machine/SlotReelRowMobile.tsx` : 131
+- [ ] `generator/shared/PerkSlot.tsx` : 94
 
 **scraper-config** (3)
 
-- [ ] `scraper-config/ImportTab.tsx` : 45 (rounded-2xl), 162 (rounded-lg)
-- [ ] `scraper-config/TargetPicker.tsx` : 80 (rounded-xl)
+- [ ] `scraper-config/ImportTab.tsx` : 45, 162
+- [ ] `scraper-config/TargetPicker.tsx` : 82
 
-**(root)** (2)
+**character-detail** (3)
 
-- [ ] `PerkFilters.tsx` : 236 (rounded-2xl), 359 (rounded-2xl)
+- [ ] `character-detail/components/CharacterHeroAvatar.tsx` : 44
+- [ ] `character-detail/modals/KillerPowerModal.tsx` : 44
+- [ ] `character-detail/modals/Model3DModal.tsx` : 20
 
-**auth** (2)
+**changelog** (2)
 
-- [ ] `auth/ResetPasswordClient.tsx` : 57 (rounded-2xl), 60 (rounded-2xl)
+- [ ] `changelog/ChangelogEditorModal.tsx` : 206
+- [ ] `changelog/WhatsNewLauncher.tsx` : 352
+
+**sidebar** (2)
+
+- [ ] `sidebar/BugReportModal.tsx` : 218, 220
+
+**(root)** (1)
+
+- [ ] `PerkFilters.tsx` : 237
 
 **achievements** (1)
 
-- [ ] `achievements/TrophySlot.tsx` : 25 (rounded-xl)
+- [ ] `achievements/TrophySlot.tsx` : 25
+
+**admin** (1)
+
+- [ ] `admin/AdminChallengeStats.tsx` : 65
 
 **landing** (1)
 
-- [ ] `landing/HomePage.tsx` : 37 (rounded-3xl)
+- [ ] `landing/HomePage.tsx` : 38
 
 **layout** (1)
 
-- [ ] `layout/ErrorPage.tsx` : 55 (rounded-3xl)
+- [ ] `layout/ErrorPage.tsx` : 56
 
-**characters** (1)
+**onboarding** (1)
 
-- [ ] `characters/hub/CharacterCard.tsx` : 50 (rounded-2xl)
-
+- [ ] `onboarding/wizard/ChapterCard.tsx` : 59
 
 ## 2. Przyciski na Button (63 zostało z 127)
 

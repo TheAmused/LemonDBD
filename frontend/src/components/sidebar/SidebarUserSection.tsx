@@ -12,6 +12,7 @@ import { OverseerEyeIcon } from '@/components/icons/DbdIcons';
 import { tip } from '@/components/common/Tooltip';
 import { useDictionary } from "@/context/DictionaryContext";
 import { Badge } from '@/components/common/Badge';
+import { Surface } from '@/components/common/Surface';
 
 export interface SidebarUserSectionProps {
   currentLocale: string;
@@ -47,7 +48,7 @@ export const SidebarUserSection: React.FC<SidebarUserSectionProps> = ({
           <span>{dict.sidebar.signIn}</span>
         </Button>
       ) : (
-        <div className="rounded-card border border-border-color bg-bg-elevated p-2.5 space-y-2">
+        <Surface tone="elevated" padding="none" className="p-2.5 space-y-2">
           <div className="flex items-center justify-between">
             <Link
               href={`/${currentLocale}/user`}
@@ -98,7 +99,7 @@ export const SidebarUserSection: React.FC<SidebarUserSectionProps> = ({
               {dict.sidebar.emailNotVerified}
             </Button>
           )}
-        </div>
+        </Surface>
       )}
     </div>
   );

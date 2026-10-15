@@ -24,6 +24,7 @@ import { tip } from '@/components/common/Tooltip';
 import { DownloadDataSection } from '@/components/user/DownloadDataSection';
 import { useDictionary } from "@/context/DictionaryContext";
 import { Badge } from '@/components/common/Badge';
+import { Surface } from '@/components/common/Surface';
 
 interface AdminUserTableProps {
   users: UserRow[];
@@ -66,7 +67,7 @@ export const AdminUserTable: React.FC<AdminUserTableProps> = ({
     }) => {
   const dict = useDictionary();
   return (
-    <div className="rounded-card border border-border-color bg-bg-surface p-4 sm:p-6 backdrop-blur-xl shadow-xs space-y-6 w-full transition-colors duration-200">
+    <Surface padding="none" className="p-4 sm:p-6 backdrop-blur-xl shadow-xs space-y-6 w-full transition-colors duration-200">
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-border-color">
         <div className="flex items-center gap-3">
           <Users className="h-5 w-5 text-accent-amber" />
@@ -383,7 +384,7 @@ export const AdminUserTable: React.FC<AdminUserTableProps> = ({
           </div>
         </div>
       )}
-    </div>
+    </Surface>
   );
 };
 

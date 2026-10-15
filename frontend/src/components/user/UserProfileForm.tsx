@@ -15,6 +15,7 @@ import { useDictionary } from "@/context/DictionaryContext";
 import { useAuth } from '@/context/AuthContext';
 import { twoFactorErrorMessage } from '@/utils/twoFactorErrors';
 import { TwoFactorSection } from '@/components/user/TwoFactorSection';
+import { Surface } from '@/components/common/Surface';
 
 interface UserProfileFormProps {
   login: string;
@@ -166,7 +167,7 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
   };
 
   return (
-    <div className="rounded-card border border-border-color bg-bg-surface backdrop-blur-xl shadow-md overflow-hidden transition-colors flex flex-col">
+    <Surface padding="none" className="backdrop-blur-xl shadow-md overflow-hidden transition-colors flex flex-col">
       {/* Header Button with DBD Banner */}
       <button
         type="button"
@@ -435,6 +436,6 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
           </div>
         </div>
       </div>
-    </div>
+    </Surface>
   );
 };

@@ -14,6 +14,7 @@ import type {
   AdminContentReportList,
   ContentReportAction,
 } from '@/types/admin';
+import { Surface } from '@/components/common/Surface';
 
 interface AdminContentReportsWorkbenchProps {
   list: AdminContentReportList | null;
@@ -57,7 +58,7 @@ export function AdminContentReportsWorkbench({
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start w-full">
-      <div className="lg:col-span-5 flex flex-col rounded-card border border-border-color bg-bg-surface p-4 shadow-sm space-y-4">
+      <Surface padding="none" className="lg:col-span-5 flex flex-col p-4 shadow-sm space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-border-color">
           <label htmlFor="content-report-status-filter" className="flex items-center gap-1 type-strong-xs text-text-secondary">
             <Filter className="h-3 w-3" />
@@ -139,9 +140,9 @@ export function AdminContentReportsWorkbench({
             </Button>
           </div>
         )}
-      </div>
+      </Surface>
 
-      <div className="lg:col-span-7 rounded-card border border-border-color bg-bg-surface p-4 sm:p-6 shadow-sm">
+      <Surface padding="none" className="lg:col-span-7 p-4 sm:p-6 shadow-sm">
         {selectedId === null ? (
           <p className="py-12 text-center text-xs text-text-muted">{dict.admin.contentReportsSelectPrompt}</p>
         ) : loadingDetail && !current ? (
@@ -156,7 +157,7 @@ export function AdminContentReportsWorkbench({
         ) : (
           <p className="py-12 text-center text-xs text-text-muted">{dict.admin.contentReportsLoadFailed}</p>
         )}
-      </div>
+      </Surface>
     </div>
   );
 }

@@ -26,6 +26,7 @@ import { UnreadDot } from '@/components/common/UnreadDot';
 import { formatDate } from '@/utils/format';
 import { useDictionary } from "@/context/DictionaryContext";
 import { Badge } from '@/components/common/Badge';
+import { Surface } from '@/components/common/Surface';
 
 interface UserBugReportsListProps {
   reports: UserBugReport[];
@@ -144,9 +145,9 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
             const isOpen = openReports[report.id] === true;
             const awaitingReply = !report.admin_notes && (report.status === 'pending' || report.status === 'in_progress');
             return (
-              <div
+              <Surface
                 key={report.id}
-                className="rounded-card border border-border-color bg-bg-surface text-text-primary overflow-hidden shadow-xs transition-all hover:border-accent-red/40"
+                padding="none" className="text-text-primary overflow-hidden shadow-xs transition-all hover:border-accent-red/40"
               >
                 {/* Individual Droppable Drawer Header */}
                 <button
@@ -258,7 +259,7 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
                     </div>
                   </div>
                 </div>
-              </div>
+              </Surface>
             );
           })}
         </div>

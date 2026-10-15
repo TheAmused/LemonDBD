@@ -6,6 +6,7 @@ import React from 'react';
 import type { LucideIcon } from 'lucide-react';
 import { Modal } from '@/components/common/Modal';
 import { useDictionary } from "@/context/DictionaryContext";
+import { Surface } from '@/components/common/Surface';
 
 export interface RulesModalShellProps {
   isOpen: boolean;
@@ -53,7 +54,7 @@ export const RulesModalListSection: React.FC<{
   intro?: string;
   items: RuleListEntry[];
 }> = ({ title, intro, items }) => (
-  <div className="bg-bg-elevated border border-border-color rounded-card p-4 space-y-3 shadow-sm">
+  <Surface tone="elevated" padding="none" className="p-4 space-y-3 shadow-sm">
     <h3 className="type-label text-text-primary">{title}</h3>
     {intro && <p className="text-xs text-text-secondary">{intro}</p>}
     <ul className="space-y-2 type-body-fluid text-text-secondary">
@@ -64,7 +65,7 @@ export const RulesModalListSection: React.FC<{
         </li>
       ))}
     </ul>
-  </div>
+  </Surface>
 );
 
 /**

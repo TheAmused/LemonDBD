@@ -38,6 +38,7 @@ import { RoundEditorCard } from './RoundEditorCard';
 import { copyTextWithFallback } from '@/utils/clipboard';
 import { formatMessage } from '@/utils/i18nFormat';
 import { useDictionary } from "@/context/DictionaryContext";
+import { Surface } from '@/components/common/Surface';
 
 interface MinigameCreatorProps {
   catalog: MinigameCatalog;
@@ -282,7 +283,7 @@ export const MinigameCreator: React.FC<MinigameCreatorProps> = ({ catalog, local
       )}
 
       {/* Challenge Title & Description Form */}
-      <div className="w-full max-w-2xl p-6 rounded-card bg-bg-surface border border-border-color shadow-xl mb-6 space-y-4">
+      <Surface padding="none" className="w-full max-w-2xl p-6 shadow-xl mb-6 space-y-4">
         <div>
           <label className="block type-strong text-text-secondary mb-1.5">
             {c.challengeTitleLabel} *
@@ -312,7 +313,7 @@ export const MinigameCreator: React.FC<MinigameCreatorProps> = ({ catalog, local
         <div className="flex justify-center pt-1">
           <NsfwSwitch checked={isNsfw} onChange={setIsNsfw} label={t.nsfw.label} hint={t.nsfw.hint} />
         </div>
-      </div>
+      </Surface>
 
       {/* Challenge Rounds Section */}
       <div className="w-full max-w-2xl mb-8 space-y-4">

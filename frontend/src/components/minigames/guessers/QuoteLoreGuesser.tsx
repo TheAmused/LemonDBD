@@ -8,6 +8,7 @@ import type { GuessRecord, RoundConfig, CatalogCharacter, CatalogPerk } from '@/
 import { staticUrl } from '@/utils/api';
 import { useDictionary } from "@/context/DictionaryContext";
 import { InfoChip } from '@/components/common/InfoChip';
+import { Surface } from '@/components/common/Surface';
 
 interface QuoteLoreGuesserProps {
   roundConfig: RoundConfig;
@@ -54,7 +55,7 @@ export const QuoteLoreGuesser: React.FC<QuoteLoreGuesserProps> = ({ roundConfig,
   return (
     <div className="w-full flex flex-col items-center my-6">
       {/* Quote / Lore Clue Card */}
-      <div className="w-full max-w-xl p-8 rounded-card bg-bg-surface border border-border-color shadow-2xl flex flex-col items-center text-center relative overflow-hidden">
+      <Surface padding="none" className="w-full max-w-xl p-8 shadow-2xl flex flex-col items-center text-center relative overflow-hidden">
         {/* Atmospheric Quote Icon Header */}
         <div className="flex items-center gap-2 mb-4 px-3 py-1 rounded-full bg-accent-red/10 border border-accent-red/30 text-accent-red type-label-sm">
           {isPerkQuote ? <Quote className="w-3.5 h-3.5" /> : <BookOpen className="w-3.5 h-3.5" />}
@@ -99,7 +100,7 @@ export const QuoteLoreGuesser: React.FC<QuoteLoreGuesserProps> = ({ roundConfig,
             <span>{dict.minigames.attributeValues.correct}: {targetName}</span>
           </div>
         )}
-      </div>
+      </Surface>
 
       {/* Input & Action Controls Slot */}
       {children && <div className="w-full max-w-xl my-3">{children}</div>}

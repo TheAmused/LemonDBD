@@ -2,6 +2,7 @@
 import React from 'react';
 import { CharacterItem } from '../types';
 import { Modal } from '@/components/common/Modal';
+import { Surface } from '@/components/common/Surface';
 
 interface TerrorRadiusModalProps {
   isOpen: boolean;
@@ -111,14 +112,14 @@ export const TerrorRadiusModal: React.FC<TerrorRadiusModalProps> = ({
             {t.approachingDesc || 'Rhythmic steady pulse indicating proximity to survivor objectives.'}
           </p>
         </div>
-        <div className="p-3 rounded-card bg-bg-elevated border border-border-color">
+        <Surface tone="elevated" padding="sm">
           <strong className="text-text-primary block mb-1">
             {t.audibleRange || '24 - 32 Metres (Audible Range)'}
           </strong>
           <p className="text-text-secondary type-caption">
             {t.audibleRangeDesc || 'Initial faint audio cues signaling presence within the trial quadrant.'}
           </p>
-        </div>
+        </Surface>
       </div>
     </div>
 

@@ -12,6 +12,7 @@ import { staticUrl } from '@/utils/api';
 import { tip } from '@/components/common/Tooltip';
 import { useDictionary } from "@/context/DictionaryContext";
 import { InfoChip } from '@/components/common/InfoChip';
+import { Surface } from '@/components/common/Surface';
 
 interface AudioGuesserProps {
   roundConfig: RoundConfig;
@@ -160,7 +161,7 @@ export const AudioGuesser: React.FC<AudioGuesserProps> = ({ roundConfig, charact
       )}
 
       {/* Audio Player Clue Card */}
-      <div className="w-full max-w-lg p-6 rounded-card bg-bg-surface border border-border-color shadow-2xl flex flex-col items-center gap-4 relative overflow-hidden">
+      <Surface padding="none" className="w-full max-w-lg p-6 shadow-2xl flex flex-col items-center gap-4 relative overflow-hidden">
         {/* Header Badge */}
         <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-accent-red/10 border border-accent-red/30 text-accent-red type-label-sm">
           <Disc3 className={`w-3.5 h-3.5 ${isPlaying ? 'animate-spin' : ''}`} />
@@ -265,7 +266,7 @@ export const AudioGuesser: React.FC<AudioGuesserProps> = ({ roundConfig, charact
             <span>{targetChar.name}</span>
           </div>
         )}
-      </div>
+      </Surface>
 
       {/* Input & Action Controls Slot */}
       {children && <div className="w-full max-w-lg my-3">{children}</div>}

@@ -23,6 +23,7 @@ import { Button } from '@/components/common/Button';
 import { formatMessage } from '@/utils/i18nFormat';
 import { useDictionary } from "@/context/DictionaryContext";
 import { Badge } from '@/components/common/Badge';
+import { Surface } from '@/components/common/Surface';
 
 const AuthModal = dynamic(() => import('@/components/AuthModal').then((m) => m.AuthModal), { ssr: false });
 
@@ -137,9 +138,9 @@ export function TierListHub({ locale }: TierListHubProps) {
       )}
 
       {/* Official Lists Collapsible Drawer */}
-      <section
+      <Surface
         aria-labelledby="tier-lists-official"
-        className="rounded-card border border-border-color bg-bg-surface backdrop-blur-xl shadow-md overflow-hidden transition-colors flex flex-col"
+        as="section" padding="none" className="backdrop-blur-xl shadow-md overflow-hidden transition-colors flex flex-col"
       >
         <button
           type="button"
@@ -218,7 +219,7 @@ export function TierListHub({ locale }: TierListHubProps) {
             </div>
           </div>
         </div>
-      </section>
+      </Surface>
 
       {/* My Custom Lists Collapsible Drawer. No `overflow-hidden` here (unlike
           the Official section) -- an `overflow` other than `visible` on an
@@ -227,9 +228,9 @@ export function TierListHub({ locale }: TierListHubProps) {
           that would silently stop the header below from sticking at all.
           The header clips its own banner to the card's rounded top corners
           instead (see its own `overflow-hidden`). */}
-      <section
+      <Surface
         aria-labelledby="tier-lists-custom"
-        className="rounded-card border border-border-color bg-bg-surface backdrop-blur-xl shadow-md transition-colors flex flex-col"
+        as="section" padding="none" className="backdrop-blur-xl shadow-md transition-colors flex flex-col"
       >
         {/* `sticky` (not the plain `relative` the Official section's header
             uses): Import/New-list are the two actions someone actually
@@ -346,7 +347,7 @@ export function TierListHub({ locale }: TierListHubProps) {
             </div>
           </div>
         </div>
-      </section>
+      </Surface>
 
       <ConfirmModal
         open={Boolean(listToDelete)}

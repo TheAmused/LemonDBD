@@ -32,6 +32,7 @@ import { Checkbox } from '@/components/common/Checkbox';
 import { Button } from '@/components/common/Button';
 import { Input } from '@/components/common/Field';
 import { useDictionary } from "@/context/DictionaryContext";
+import { Surface } from '@/components/common/Surface';
 
 export interface ChangelogEditorModalProps {
   open: boolean;
@@ -219,7 +220,7 @@ export const ChangelogEditorModal: React.FC<ChangelogEditorModalProps> = ({ open
         <div className="relative">
           <ToolbarButton icon={Link2} onClick={handleLink} label="Link" active={linkOpen} />
           {linkOpen && (
-            <div className="absolute left-0 top-full z-10 mt-1 flex w-72 max-w-[80vw] items-center gap-1.5 rounded-card border border-border-color bg-bg-elevated p-2 shadow-xl">
+            <Surface tone="elevated" padding="none" className="absolute left-0 top-full z-10 mt-1 flex w-72 max-w-[80vw] items-center gap-1.5 p-2 shadow-xl">
               <Input
                 autoFocus
                 fieldSize="sm"
@@ -241,7 +242,7 @@ export const ChangelogEditorModal: React.FC<ChangelogEditorModalProps> = ({ open
               <Button variant="primary" size="sm" onClick={applyLink} disabled={!linkUrl.trim()}>
                 {t.linkApply}
               </Button>
-            </div>
+            </Surface>
           )}
         </div>
         <ToolbarDivider />
@@ -331,7 +332,7 @@ const SwatchPopover: React.FC<{
   onClear?: () => void;
   clearLabel?: string;
 }> = ({ swatches, onPick, onClear, clearLabel }) => (
-  <div className="absolute left-0 top-full z-10 mt-1 flex items-center gap-1.5 rounded-card border border-border-color bg-bg-elevated p-2 shadow-xl">
+  <Surface tone="elevated" padding="none" className="absolute left-0 top-full z-10 mt-1 flex items-center gap-1.5 p-2 shadow-xl">
     {onClear && (
       <button
         type="button"
@@ -354,5 +355,5 @@ const SwatchPopover: React.FC<{
         style={{ backgroundColor: c.value }}
       />
     ))}
-  </div>
+  </Surface>
 );

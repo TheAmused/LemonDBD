@@ -8,6 +8,8 @@ import { useDictionary } from "@/context/DictionaryContext";
 import { useChallengeAnimations } from './useChallengeAnimations';
 
 import { Button } from '@/components/common/Button';
+import { Collapsible } from '@/components/common/Collapsible';
+import { cn } from '@/utils/cn';
 import { Surface } from '@/components/common/Surface';
 interface ChallengePanelProps {
   /** Stats and actions strip, rendered as the top section of the card. */
@@ -60,25 +62,19 @@ export const ModeSelectButton: React.FC<ModeSelectButtonProps> = ({ label, tone,
   const content = (
     <>
       <span className={`h-2.5 w-2.5 rounded-full ${MODE_DOT_TONES[tone]}`} aria-hidden="true" />
-      <span className="type-label-sm max-w-[9rem] truncate text-text-primary ">{label}</span>
+      <span className="type-label-sm max-w-[9rem] truncate text-text-primary">{label}</span>
       {onClick && <ChevronDown className="h-4 w-4 text-text-muted" aria-hidden="true" />}
     </>
   );
-  const shell = 'flex min-w-0 items-center justify-center gap-2 rounded-control border border-border-color bg-bg-elevated h-11 px-3 shadow-sm';
 
   return onClick ? (
-    <button
-      type="button"
-      onClick={onClick}
-      aria-label={`${title}: ${label}`}
-      className={`${shell} cursor-pointer transition-colors hover:bg-bg-elevated/70 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red`}
-    >
+    <Button variant="secondary" onClick={onClick} aria-label={`${title}: ${label}`} className="h-11 min-w-0 gap-2 px-3">
       {content}
-    </button>
+    </Button>
   ) : (
-    <div className={shell}>
+    <Surface tone="elevated" radius="control" padding="none" className="flex h-11 min-w-0 items-center justify-center gap-2 px-3 shadow-sm">
       {content}
-    </div>
+    </Surface>
   );
 };
 
@@ -100,8 +96,11 @@ export const StatTile: React.FC<StatTileProps> = ({
   iconClassName = '',
   valueClassName = '',
 }) => (
-  <div
-    className={`flex min-w-0 flex-1 items-center justify-center gap-2.5 rounded-card sm:justify-start border border-border-color bg-bg-elevated h-11 px-2.5 text-text-secondary sm:flex-none lg:px-3 shadow-sm transition-colors duration-500 ${className}`}
+  <Surface
+    tone="elevated"
+    radius="control"
+    padding="none"
+    className={`flex h-11 min-w-0 flex-1 items-center justify-center gap-2.5 px-2.5 text-text-secondary shadow-sm transition-colors duration-500 sm:flex-none sm:justify-start lg:px-3 ${className}`}
   >
     <span className={`flex transition-colors duration-500 ${iconClassName}`}>{icon}</span>
     <div className="flex flex-col">
@@ -110,7 +109,7 @@ export const StatTile: React.FC<StatTileProps> = ({
         {value}
       </span>
     </div>
-  </div>
+  </Surface>
 );
 
 interface HeaderButtonProps {
@@ -123,23 +122,25 @@ interface HeaderButtonProps {
   className?: string;
 }
 
-/** Look shared by the challenge header buttons (and any other button that should match them). */
-export const HEADER_BUTTON_CLASSES =
-  'flex items-center rounded-control border border-border-color bg-bg-elevated text-text-secondary shadow-sm transition-colors cursor-pointer hover:bg-bg-elevated/70 hover:text-text-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red';
-
-/** Header action button shared by every challenge. */
+/**
+ * Header action button shared by every challenge: a secondary Button as tall as the stat tiles beside
+ * it. Icon-only buttons share the row (flex-1 on phones) and become squares from sm up.
+ */
 export const HeaderButton: React.FC<HeaderButtonProps> = ({ onClick, title, icon, label, danger = false, className = '' }) => (
-  <button
-    type="button"
+  <Button
+    variant="secondary"
     onClick={onClick}
     aria-label={title}
-    className={`${HEADER_BUTTON_CLASSES} ${className} ${danger ? 'hover:bg-accent-red/10 hover:text-accent-red' : ''} ${
-      label ? 'h-11 justify-center gap-1.5 px-3 text-xs font-bold' : "relative h-11 justify-center px-2 before:absolute before:-inset-0.5 before:content-[''] sm:w-10 sm:px-0 lg:w-11"
-    }`}
+    className={cn(
+      'h-11 justify-center',
+      label ? 'gap-1.5 px-3' : 'px-2 sm:w-10 sm:px-0 lg:w-11',
+      danger && 'hover:bg-accent-red/10 hover:text-accent-red',
+      className
+    )}
   >
     {icon}
     {label && <span>{label}</span>}
-  </button>
+  </Button>
 );
 
 /** Clapperboard button that turns the draw animations on or off; struck through while they are off. */
@@ -189,12 +190,7 @@ export const StandardHeaderActions: React.FC<StandardHeaderActionsProps> = ({ on
   return (
   <>
     <div className="flex min-w-0 shrink-0 sm:contents">{modeSelect}</div>
-    <div
-      className={`max-sm:col-span-full max-sm:grid basis-full transition-[grid-template-rows,opacity,margin,visibility] duration-300 ease-in-out sm:contents ${
-        open ? 'max-sm:grid-rows-[1fr] max-sm:opacity-100' : 'max-sm:invisible max-sm:-mt-2 max-sm:grid-rows-[0fr] max-sm:opacity-0'
-      }`}
-    >
-    <div className={`min-h-0 overflow-hidden ${ACTION_GROUP_CLASSES}`}>
+    <Collapsible open={open} onlyBelow="sm" className="max-sm:col-span-full basis-full" contentClassName={ACTION_GROUP_CLASSES}>
     {extra}
     {hasDrawAnimations && <DrawAnimationButton />}
     <HeaderButton
@@ -218,17 +214,17 @@ export const StandardHeaderActions: React.FC<StandardHeaderActionsProps> = ({ on
       title={dict.streaks.abandonRun}
       icon={<RotateCcw className="h-5 w-5" aria-hidden="true" />}
     />
-    </div>
-    </div>
-    <button
-      type="button"
+    </Collapsible>
+    <Button
+      variant="ghost"
+      size="xs"
       onClick={() => setOpen((v) => !v)}
       aria-expanded={open}
       aria-label={dict.streaks.moreActions}
-      className="relative col-span-full flex h-5 w-full cursor-pointer before:absolute before:-inset-y-3 before:inset-x-0 before:content-[''] items-center justify-center rounded-control text-text-muted transition-colors hover:text-text-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red sm:hidden"
+      className="relative col-span-full h-5 w-full p-0 before:absolute before:-inset-y-3 before:inset-x-0 before:content-[''] sm:hidden"
     >
       <ChevronDown className={`h-5 w-5 transition-transform duration-300 ${open ? 'rotate-180' : ''}`} aria-hidden="true" />
-    </button>
+    </Button>
   </>
 );
 };

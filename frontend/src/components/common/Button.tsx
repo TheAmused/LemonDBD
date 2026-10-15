@@ -21,6 +21,7 @@ export type ButtonVariant =
   | 'link' //    amber text link, no box (hover underline)
   | 'linkMuted' // quiet text link, for secondary "back" and "change" actions
   | 'linkDanger' // red text link, for "reset" and "remove" actions
+  | 'onAccent' // on a coloured banner: a translucent white tint that keeps the banner's text colour
   | 'overlay' //  frosted square-ish control laid over a thumbnail (remove, edit); turns red on hover
   | 'cta'; //     loud DBD randomizer CTA
 
@@ -38,6 +39,7 @@ export const BUTTON_VARIANTS: Record<ButtonVariant, string> = {
   link: 'text-accent-amber underline-offset-2 hover:underline',
   linkMuted: 'text-text-muted underline-offset-2 hover:text-text-primary hover:underline',
   linkDanger: 'text-accent-red underline-offset-2 hover:underline',
+  onAccent: 'bg-text-inverted/20 text-inherit hover:bg-text-inverted/30',
   overlay: 'border border-border-color/60 bg-bg-surface/90 text-text-muted shadow-xs backdrop-blur-sm hover:bg-accent-red hover:text-text-inverted',
   cta: 'bg-accent-red text-text-inverted font-black uppercase tracking-wider shadow-xs hover:bg-accent-red-hover hover:scale-[1.02] hover:shadow-md hover:shadow-accent-red/40 active:scale-[0.97]',
 };

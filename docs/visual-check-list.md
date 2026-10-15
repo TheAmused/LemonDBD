@@ -73,6 +73,14 @@ Oznaczenia: M telefon, T tablet, D desktop.
 - [ ] **Linki w zdaniu** (`InlineLink`): regulamin i zasady w rejestracji, "spróbuj ponownie" w streakach, "odrzuć" w banerze weryfikacji.
 - [ ] **Baner "wkrótce"** w osiągnięciach: teraz `Badge` w rozmiarze lg.
 
+## 2c. Trzecia seria (wyzwania i pasek akcji)
+
+- [ ] **Nagłówek wyzwań** (Chaos, Gauntlet, Historia, Page streak): kafle statystyk, przycisk trybu/trudności i ikony akcji (zasady, statystyki, wygrane, porzuć, animacje, pula perków) to teraz `Surface` i `Button` o tej samej wysokości 44 px i promieniu 12 px (kafle statystyk miały wcześniej 16 px). M: czy ikony akcji nadal dzielą rząd po równo; T: czy rząd się zawija jak wcześniej.
+- [ ] **Zwijany pasek akcji na telefonie** (strzałka pod nagłówkiem): animacja i ukrywanie bez zmian, teraz przez wspólny `Collapsible`. D i T: przyciski zawsze widoczne. Sprawdź, że na szerokości tuż nad 640 px przyciski nie znikają.
+- [ ] **Okno wyboru trybu** (Gauntlet, poziom trudności, tryb historii): kafle to `SelectableCard`; zaznaczony kafel ma czerwoną obwódkę, tint i ring zamiast białego pierścienia z odstępem. Przycisk "Zasady" w oknie jest zwykłym `Button`.
+- [ ] **Baner weryfikacji e-maila** w postaciach: przycisk "Zweryfikuj" to `Button onAccent`, link "odrzuć" to `InlineLink`.
+- [ ] **Pasek "Zaakceptuj" w trybie wyboru odblokowanych postaci** (Postacie): teraz ten sam pasek i przycisk (zielony, 44 px, szerokość do 180 px) co w streakach; wcześniej przycisk był mniejszy (sm). Pasek w onboardingu (Kontynuuj) korzysta z tego samego komponentu, ale zostaje szeroki i na całą szerokość ekranu (bez sidebaru).
+
 ## 3. Rzeczy świadomie bez zmian (nie szukaj błędu)
 
 Przyciski gry w Smash or Pass, klawisze i mikrofon, koło losowania, kafle i miniatury, nagłówki akordeonów poza `AccordionSection`, karty wyboru. Pełna lista wyjątków jest w `docs/shared-components-adoption.md` (sekcje 1 do 3), a limit nowych ręcznych przycisków w `scripts/raw-buttons-baseline.json`.

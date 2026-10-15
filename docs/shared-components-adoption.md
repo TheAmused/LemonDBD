@@ -639,3 +639,13 @@ Wykonane na Twoje polecenie "mniej wyjątkowych elementów". Nowe lub rozszerzon
 - [x] `Badge` rozmiar `lg`: baner "wkrótce" w osiągnięciach.
 
 Jeszcze zostają jako wyjątki (do dalszych decyzji): przyciski gry w Smash or Pass, uchwyty przeciągania, pola OTP i wybór koloru, kafle perków i postaci z obrazkiem, kafle trybu w `ChallengeIntroModalShell`, przycisk "zweryfikuj" na kolorowym banerze (`VerificationNotice`), nagłówki akordeonów w `ChallengePanel` i `TierPool`.
+
+## 19. Wyzwania i pasek akcji (2026-10-15, trzecia seria)
+
+- [x] `HeaderButton`, `ModeSelectButton` i przycisk "Zasady" w oknie startowym wyzwań na `Button` (usunięty osobny styl `HEADER_BUTTON_CLASSES`).
+- [x] Kafle trybu w `ChallengeIntroModalShell` na `SelectableCard`; usunięte pole `accentClassName` i stała `NEUTRAL_TILE_ACCENT` (wszystkie 7 użyć było tą samą wartością).
+- [x] `StatTile` na `Surface` z nową opcją `radius="control"` (mały kafel w rzędzie z przyciskami ma ten sam promień co one).
+- [x] Zwijany pasek akcji na telefonie przez `Collapsible onlyBelow="sm"` (od `sm` wrapper znika, przyciski są zawsze widoczne). Przy okazji strzałka "więcej akcji" jest `Button`.
+- [x] Przycisk "Zweryfikuj" na kolorowym banerze: `Button` wariant `onAccent`.
+- [x] Paski akcji przyklejone do dołu (streaki, wybór odblokowanych postaci, onboarding) to jeden komponent `StickyActionBar` z `ActionBarButton`. "Zaakceptuj" w postaciach ma rozmiar i szerokość jak przyciski w streakach.
+- Zostaje własny: baner weryfikacji e-maila (środkowy toast na pełnym kolorze), bo to solidny amber, a nie `Toast`.

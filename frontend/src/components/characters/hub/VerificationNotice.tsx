@@ -4,6 +4,7 @@ import React from 'react';
 import { MailWarning } from 'lucide-react';
 import { useDictionary } from '@/context/DictionaryContext';
 import { InlineLink } from '@/components/common/InlineLink';
+import { Button } from '@/components/common/Button';
 
 interface VerificationNoticeProps {
   onVerify: () => void;
@@ -22,13 +23,9 @@ export function VerificationNotice({ onVerify, onDismiss }: VerificationNoticePr
       >
         <MailWarning className="h-4 w-4 shrink-0" />
         <span>{dict.user.verifyEmailRequired}</span>
-        <button
-          type="button"
-          onClick={onVerify}
-          className="rounded-control bg-text-inverted/20 px-3 py-1 type-label-xs hover:bg-text-inverted/30 transition-colors cursor-pointer"
-        >
+        <Button variant="onAccent" size="xs" onClick={onVerify}>
           {dict.streaks.verifyEmail}
-        </button>
+        </Button>
         <InlineLink tone="current" onClick={onDismiss} className="type-strong-xs">
           {dict.characterDetail.dismiss}
         </InlineLink>

@@ -4,7 +4,7 @@ import type { Dictionary } from '@/locales/types';
 
 import React, { useEffect, useState } from 'react';
 import { Swords, Sparkles, User, Users, UsersRound } from 'lucide-react';
-import { ChallengeIntroTile, NEUTRAL_TILE_ACCENT } from '../ChallengeIntroModalShell';
+import { ChallengeIntroTile } from '../ChallengeIntroModalShell';
 import { ChallengeModeModal, type ModeInfo } from '../ChallengeModeModal';
 import { GauntletRulesModal } from './GauntletRulesModal';
 import { GAUNTLET_GAME_MODES, GauntletGameMode } from '@/types/gauntletStreak';
@@ -34,8 +34,7 @@ function lemonRootTile(role: 'killer' | 'survivor', dict: Dictionary): Challenge
     label: role === 'killer' ? dict.streaks.lemonMode : dict.streaks.lemonVersion,
     description: role === 'killer' ? dict.streaks.gauntletLemonDesc : dict.streaks.gauntletLemonPlayersDesc,
     icon: Sparkles,
-    image: '/images/streaks/modes/gauntlet-lemon.webp',
-    accentClassName: NEUTRAL_TILE_ACCENT,
+    image: '/images/streaks/modes/gauntlet-lemon.webp',
   };
 }
 
@@ -46,24 +45,21 @@ function lemonPlayerTiles(dict: Dictionary): ChallengeIntroTile[] {
       label: dict.streaks.lemonSolo,
       description: dict.streaks.lemonSoloDesc,
       icon: User,
-      image: '/images/streaks/modes/gauntlet-1-player.webp',
-      accentClassName: NEUTRAL_TILE_ACCENT,
+      image: '/images/streaks/modes/gauntlet-1-player.webp',
     },
     {
       value: 'lemon_duo',
       label: dict.streaks.lemonDuo,
       description: dict.streaks.lemonDuoDesc,
       icon: Users,
-      image: '/images/streaks/modes/gauntlet-2-players.webp',
-      accentClassName: NEUTRAL_TILE_ACCENT,
+      image: '/images/streaks/modes/gauntlet-2-players.webp',
     },
     {
       value: 'lemon_squad',
       label: dict.streaks.lemonSquad,
       description: dict.streaks.lemonSquadDesc,
       icon: UsersRound,
-      image: '/images/streaks/modes/gauntlet-4-players.webp',
-      accentClassName: NEUTRAL_TILE_ACCENT,
+      image: '/images/streaks/modes/gauntlet-4-players.webp',
     },
   ];
 }
@@ -128,8 +124,7 @@ export const GauntletModeModal: React.FC<GauntletModeModalProps> = ({
       description:
         dict.streaks.gauntletOriginalDesc,
       icon: Swords,
-      image: '/images/streaks/modes/gauntlet-original.webp',
-      accentClassName: NEUTRAL_TILE_ACCENT,
+      image: '/images/streaks/modes/gauntlet-original.webp',
       completed: originalCompleted,
       completedCount: originalCompletedCount,
       completedFull: originalCompletedFull,

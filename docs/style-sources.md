@@ -15,7 +15,7 @@ Cel: jedna zmiana w jednym miejscu przesuwa wygląd całej strony. Poniżej źr�
 | Zakładki z panelami | `common/Tabs.tsx` | `<Tabs>` |
 | Wiersz menu lub listy | `common/MenuItem.tsx` | `<MenuItem selected tone flush>` |
 | Sekcja zwijana z nagłówkiem | `common/AccordionSection.tsx` | `<AccordionSection title open onToggle banner>` |
-| Karta, panel | `common/Surface.tsx` | `<Surface tone padding>` |
+| Karta, panel | `common/Surface.tsx` (`radius="control"` dla małych kafli w rzędzie z przyciskami) | `<Surface tone padding>` |
 | Pusty stan, wymóg logowania | `common/EmptyState.tsx`, `common/AuthRequiredState.tsx` | |
 | Etykieta, licznik, status | `common/Badge.tsx` (tony, w tym `overlay` i `onAccent`) i `common/InfoChip.tsx` | `<Badge tone size>`, `<InfoChip>` |
 | Pola formularza | `common/Field.tsx` (`pill` dla wyszukiwarek) | `<Input>`, `<Textarea>`, `<Select>`, `<SearchInput>` |
@@ -29,6 +29,7 @@ Cel: jedna zmiana w jednym miejscu przesuwa wygląd całej strony. Poniżej źr�
 | Link w zdaniu | `common/InlineLink.tsx` | `<InlineLink tone>` |
 | Mała kontrolka na miniaturze (usuń, edytuj) | `common/Button.tsx` wariant `overlay` | `<Button variant="overlay" size="xs" icon pill>` |
 | Przycisk "dodaj" z przerywaną ramką | `common/Button.tsx` prop `dashed` | `<Button dashed>` |
+| Pasek akcji przyklejony do dołu (Zaakceptuj, Kontynuuj) | `common/StickyActionBar.tsx` | `<StickyActionBar><ActionBarButton variant="green|red|gray">` |
 | Tooltip | `common/Tooltip.tsx` (`TOOLTIP_CONFIG.variants`) | `{...tip(tekst, opis, wariant)}` |
 | Łączenie klas | `lib/cn.ts` (zna własne rozmiary tekstu i role promieni) | `cn(...)` |
 

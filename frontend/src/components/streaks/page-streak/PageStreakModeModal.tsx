@@ -22,7 +22,7 @@ export const PageStreakModeModal: React.FC<PageStreakModeModalProps> = ({ isOpen
       value: 'normal',
       label: dict.streaks.normal,
       icon: BookOpen,
-      image: '/images/streaks/page-streak.webp',
+      image: '/images/streaks/page-streak.webp',
     },
   ];
 

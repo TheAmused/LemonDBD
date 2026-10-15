@@ -156,7 +156,7 @@ export function TierEditModal({
                   key={token}
                  
                   onClick={() => setColor(token)}
-                  aria-label={formatMessage(t.colorSwatchAria, { name: token.toUpperCase() })}>
+                  aria-label={formatMessage(t.colorSwatchAria, { name: token.toUpperCase() })}>
                 </ColorSwatch>
               );
             })}

@@ -20,12 +20,12 @@ const ACCENT_CLASSES: Record<DropdownAccent, { hover: string; open: string; chev
   amber: {
     hover: 'hover:border-accent-amber/50',
     open: 'border-accent-amber bg-accent-amber/10 text-accent-amber',
-    chevron: 'text-accent-amber',
+    chevron: 'text-accent-amber',
   },
   primary: {
     hover: 'hover:border-accent-red/50',
     open: 'border-accent-red bg-accent-red/10 text-accent-red',
-    chevron: 'text-accent-red',
+    chevron: 'text-accent-red',
   },
 };
 

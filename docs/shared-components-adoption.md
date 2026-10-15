@@ -12,7 +12,7 @@ Ograniczenia analizy: liczone są tylko klasy zapisane wprost w `className`. Kla
 |---|---|---|
 | Karty `div` z border, bg i rounded | `Surface` | 61 wyjątków (z 204) |
 | Ostylowane `<button>` | `Button` / `ToggleChip` / `SegmentedControl` | 61 wyjątków (z 127) |
-| Natywne `title=` | `Tooltip` / `tip()` | 113 |
+| Natywne `title=` na elemencie DOM | `Tooltip` / `tip()` | 0 (było 3) |
 | `span` jako chip lub pill | `Badge` / `InfoChip` | 17 (z 74) |
 | Linki wyglądające jak przyciski | `buttonClassName()` | 2 (z 22) |
 | Ramki `border-dashed` | `EmptyState` / `Surface tone="dashed"` | 13 |
@@ -366,113 +366,11 @@ Przyciski bez własnej ramki i tła: ikony na kartach, nakładki "kliknij cało�
 
 - [ ] `ui/DiamondSlot.tsx` : 76
 
-## 4. Natywne title= (113)
+## 4. Natywne title= (ZROBIONE)
 
-`title=` daje natywny tooltip bez stylu i bez obsługi dotyku. Zamienić na `Tooltip` / `tip()`. W nawiasie tag, na którym stoi atrybut.
+Pierwotna liczba 113 była zawyżona: liczyła też prop `title` komponentów (`Modal`, `EmptyState`, `StreakPanel`...), który nie jest tooltipem. Natywny `title` na elemencie DOM były tylko 3 i wszystkie przeszły na `tip()`: link do panelu admina w `SidebarUserSection` (`action`) oraz poprzednia/następna postać w `CharacterBreadcrumbs` (`character`).
 
-**streaks** (39)
-
-- [ ] `streaks/AbandonConfirmModal.tsx` : 19 (ConfirmModal)
-- [ ] `streaks/ChallengeModeModal.tsx` : 113 (ChallengeIntroModalShell)
-- [ ] `streaks/ChallengePanel.tsx` : 148 (HeaderButton), 198 (HeaderButton), 203 (HeaderButton), 208 (HeaderButton), 213 (HeaderButton)
-- [ ] `streaks/PageStreakBoard.tsx` : 70 (ConfirmModal)
-- [ ] `streaks/RulesModalSections.tsx` : 183 (RulesModalListSection), 188 (RulesModalListSection)
-- [ ] `streaks/StreakPanelGrid.tsx` : 118 (StreakPanel), 134 (StreakPanel), 148 (StreakPanel), 166 (StreakPanel), 191 (StreakPanel), 216 (StreakPanel), 238 (StreakPanel)
-- [ ] `streaks/chaos/ChaosBoard.tsx` : 188 (ChallengeVictoryCard)
-- [ ] `streaks/chaos/ChaosHeader.tsx` : 70 (ModeSelectButton), 78 (HeaderButton)
-- [ ] `streaks/chaos/ChaosRulesModal.tsx` : 28 (RulesModalShell), 46 (RulesSection), 33 (RulesHowItWorks)
-- [ ] `streaks/gauntlet/GauntletBoard.tsx` : 202 (ChallengeVictoryCard), 292 (ShieldPromptModal)
-- [ ] `streaks/gauntlet/GauntletHeader.tsx` : 62 (ModeSelectButton)
-- [ ] `streaks/gauntlet/GauntletModeModal.tsx` : 144 (ChallengeModeModal)
-- [ ] `streaks/gauntlet/GauntletRulesModal.tsx` : 254 (RulesModalShell), 265 (RulesSection), 260 (RulesConceptCard), 263 (RulesHowItWorks)
-- [ ] `streaks/history/HistoryBoard.tsx` : 145 (ChallengeVictoryCard)
-- [ ] `streaks/history/HistoryHeader.tsx` : 67 (ModeSelectButton)
-- [ ] `streaks/history/HistoryRulesModal.tsx` : 28 (RulesModalShell), 46 (RulesSection), 33 (RulesHowItWorks)
-- [ ] `streaks/page-streak/PageStreakRulesModal.tsx` : 25 (RulesModalShell), 30 (RulesHowItWorks)
-- [ ] `streaks/page-streak/PageStreakRunView.tsx` : 123 (ChallengeVictoryCard)
-
-**tier-lists** (24)
-
-- [ ] `tier-lists/CustomTierListView.tsx` : 110 (AuthRequiredState), 121 (EmptyState), 128 (NsfwContentGate), 139 (TierListEditor)
-- [ ] `tier-lists/OfficialTierListView.tsx` : 118 (EmptyState), 143 (EmptyState), 163 (NsfwContentGate), 178 (TierListEditor)
-- [ ] `tier-lists/TierListEditor.tsx` : 524 (ConfirmModal), 540 (ConfirmModal)
-- [ ] `tier-lists/TierListHub.tsx` : 189 (EmptyState), 204 (EmptyState), 323 (AuthRequiredState), 329 (EmptyState), 350 (ConfirmModal)
-- [ ] `tier-lists/TierPool.tsx` : 209 (EmptyState)
-- [ ] `tier-lists/creator/CreatorItems.tsx` : 52 (EmptyState)
-- [ ] `tier-lists/creator/CreatorPreview.tsx` : 131 (CreatorPreview)
-- [ ] `tier-lists/creator/TierListCreator.tsx` : 398 (Section), 467 (Section), 479 (Section), 203 (AuthRequiredState), 220 (EmptyState), 533 (CreatorPreviewModal)
-
-**smash-or-pass** (15)
-
-- [ ] `smash-or-pass/RosterSelectModal.tsx` : 201 (AuthRequiredState)
-- [ ] `smash-or-pass/SmashOrPassHub.tsx` : 202 (AuthRequiredState)
-- [ ] `smash-or-pass/creator/RosterBasicsSection.tsx` : 49 (Section)
-- [ ] `smash-or-pass/creator/SmashRosterCreator.tsx` : 248 (Section), 265 (Section), 340 (Section), 140 (AuthRequiredState), 153 (EmptyState)
-- [ ] `smash-or-pass/hub/DeckFinished.tsx` : 21 (EmptyState)
-- [ ] `smash-or-pass/hub/HubHeader.tsx` : 186 (DockAction), 200 (DockAction), 210 (DockAction), 237 (DockAction), 248 (DockAction), 259 (DockAction)
-
-**admin** (6)
-
-- [ ] `admin/AdminBugReportsWorkbench.tsx` : 437 (EmptyState)
-- [ ] `admin/AdminChallengeControl.tsx` : 393 (AdminReasonModal)
-- [ ] `admin/AdminPanelClient.tsx` : 282 (ConfirmModal), 299 (ConfirmModal), 309 (ConfirmModal)
-- [ ] `admin/ContentReportDetail.tsx` : 160 (ConfirmModal)
-
-**minigames** (6)
-
-- [ ] `minigames/MinigamesHub.tsx` : 490 (AuthRequiredState), 496 (EmptyState), 579 (ConfirmModal)
-- [ ] `minigames/PlayTrialClient.tsx` : 137 (AuthRequiredState), 148 (NsfwContentGate)
-- [ ] `minigames/creator/MinigameCreator.tsx` : 251 (AuthRequiredState)
-
-**user** (6)
-
-- [ ] `user/ShowcaseCharacterModal.tsx` : 178 (EmptyState)
-- [ ] `user/ShowcasePerkModal.tsx` : 144 (EmptyState)
-- [ ] `user/UserBugReportsList.tsx` : 127 (EmptyState)
-- [ ] `user/VaultMasteryDials.tsx` : 172 (RadialDial), 184 (RadialDial), 196 (RadialDial)
-
-**character-detail** (5)
-
-- [ ] `character-detail/CharacterDetailClient.tsx` : 75 (EmptyState)
-- [ ] `character-detail/components/CharacterBreadcrumbs.tsx` : 68 (Link), 78 (Link)
-- [ ] `character-detail/components/OfferingsSection.tsx` : 369 (EmptyState)
-- [ ] `character-detail/components/SurvivorEquipmentSection.tsx` : 242 (EmptyState)
-
-**(root)** (3)
-
-- [ ] `CharactersHub.tsx` : 134 (EmptyState)
-- [ ] `ScraperConfigModal.tsx` : 59 (ConfirmModal), 69 (ConfirmModal)
-
-**legal** (2)
-
-- [ ] `legal/LegalSections.tsx` : 131 (BlockTitle)
-- [ ] `legal/PrivacyPolicyClient.tsx` : 100 (BlockCard)
-
-**sidebar** (2)
-
-- [ ] `sidebar/BugReportModal.tsx` : 204 (SuccessState)
-- [ ] `sidebar/SidebarUserSection.tsx` : 73 (Link)
-
-**changelog** (1)
-
-- [ ] `changelog/WhatsNewLauncher.tsx` : 490 (ConfirmModal)
-
-**generator** (1)
-
-- [ ] `generator/GeneratorPage.tsx` : 416 (ConfirmModal)
-
-**maps** (1)
-
-- [ ] `maps/MapExplorer.tsx` : 411 (EmptyState)
-
-**perks** (1)
-
-- [ ] `perks/PerksClient.tsx` : 310 (EmptyState)
-
-**characters** (1)
-
-- [ ] `characters/hub/SavedChangesModal.tsx` : 24 (SuccessState)
-
+`check:styles` blokuje teraz natywny `title` i ręczne `data-tooltip` na elementach DOM (małe litery, `Link`, `Image`).
 
 ## 5. Chipy i pille (17 zostało z 74)
 
@@ -720,14 +618,13 @@ Sprawdzić szerokości około 360 i 390 px oraz tablet około 768 px w obszarach
 - [ ] sidebar i modale (dolny arkusz, pełny ekran)
 - [ ] pola formularza: brak powiększania strony po fokusie na iOS
 
-## 16. Tooltipy: tylko warianty z TOOLTIP_CONFIG
+## 16. Tooltipy: tylko warianty z TOOLTIP_CONFIG (PRZEJRZANE)
 
-Stan: jeden renderer (`common/Tooltip.tsx`, `TooltipBubble`), trzy wejścia (`<Tooltip>`, `{...tip(title, desc, variant)}`, `<TooltipBubble>`), siedem wariantów w `TOOLTIP_CONFIG.variants`: `default`, `item`, `action`, `character`, `status`, `error`, `rarity`. Użycia `tip()`: `action` 80, `status` 12, `item` 9, `default` 3, `rarity` 1. `error` obsługuje `FormValidation`. Warianty zostają bez scalania, ich ręczny przegląd jest osobnym zadaniem.
+Stan po przeglądzie (2026-10-15): jeden renderer (`common/Tooltip.tsx`), trzy wejścia (`<Tooltip>`, `{...tip()}`, `<TooltipBubble>`), siedem wariantów w `TOOLTIP_CONFIG.variants`: `default`, `item`, `action`, `character`, `status`, `error`, `rarity`. Warianty zostają bez scalania (ręczny przegląd jest osobnym zadaniem).
 
-Wymóg tego zadania: każdy tooltip należy do jednego z wariantów, bez duplikatów i bez własnych dymków.
-
-- [ ] 113 natywnych `title=` (sekcja 4) przypisać do wariantu (zwykle `action`, `status`, `item`).
-- [ ] Przejrzeć ręcznie robione dymki na hover: `characters/hub/CharacterCard.tsx`, `minigames/CharacterAutocomplete.tsx`, `smash-or-pass/FloatingLoreScattered.tsx`, `smash-or-pass/SmashLeaderboardParts.tsx`, `streaks/StreakPanel.tsx`, `tier-lists/TierListCards.tsx` (`onMouseEnter` / `onPointerEnter`). Dla każdego: czy to tooltip (wtedy `TooltipBubble` z wariantem), czy inna funkcja (podgląd, menu).
-- [ ] Trzy wywołania `tip()` z wariantem wyliczanym warunkowo (`maps/voice/VoiceBannerHeader.tsx` x2, `PerkModal.tsx:74`): sprawdzić, czy każda gałąź daje poprawny wariant.
-- [ ] Sprawdzić, że `character` i `error` mają realne użycia (dziś nie ma ich wśród literałów `tip()`).
+- [x] Każdy tooltip w aplikacji należy do wariantu: typ `TooltipVariant` wymusza wartość z konfiguracji w `tip()`, `<Tooltip>` i `<TooltipBubble>`. Wszystkie 7 wariantów ma realne użycie: `action` (80+), `status`, `item`, `default` (3), `rarity` (`ChaosStatsDrawer`), `character` (`PerkModal`, breadcrumbs postaci), `error` (`FormValidation`).
+- [x] Brak duplikatów: dodatkowych systemów tooltipów nie ma. `onMouseEnter` w `CharacterCard`, `CharacterAutocomplete`, `FloatingLoreScattered`, `SmashLeaderboardParts` i `StreakPanel` to prefetch, podświetlenie i efekty, a nie dymki. `DescriptionPeek` w `TierListCards` to nakładka z opisem działająca też na dotyk (tap), więc zostaje osobna.
+- [x] Wywołania `tip()` z wariantem warunkowym (`VoiceBannerHeader`, `PerkModal`) mają poprawne gałęzie (`action`, `character`).
+- [x] Guard w `check:styles` blokuje natywny `title` i ręczne `data-tooltip`.
+- [ ] Ikony bez tooltipa: `HeaderButton` i `ModeSelectButton` w `ChallengePanel` (reguły, statystyki, wygrane, porzuć bieg, animacje, pula perków) mają tylko `aria-label`, bez tooltipa na desktopie. Do decyzji, czy dodać `tip(title, undefined, 'action')`.
 - [ ] Dotyk: `Tooltip` nie pokazuje się na telefonie (`Tooltip.tsx:352`). Informacje, które mają być dostępne na mobile, nie mogą zależeć wyłącznie od tooltipa.

@@ -30,6 +30,7 @@ import { AdeptBadgeIcon } from '@/components/icons/DbdIcons';
 import { StreakActionBar, StreakActionButton } from '../StreakActionBar';
 import { tip } from '@/components/common/Tooltip';
 
+import { Button } from '@/components/common/Button';
 const ChaosStatsDrawer = dynamic(
   () => import('./ChaosStatsDrawer').then((m) => m.ChaosStatsDrawer),
   { ssr: false }
@@ -245,16 +246,16 @@ export const ChaosBoard: React.FC = () => {
 
         {!isCompleted && isAdmin && (
           <div className="mt-6 rounded-card border border-border-color/80 bg-bg-surface/90 backdrop-blur-sm px-4 py-4 shadow-sm">
-            <button
+            <Button
               type="button"
               onClick={handleDevSkipToWin}
               disabled={busy || !killers.length}
               {...tip(dict.streaks.devSkipWinTitle, undefined, 'action')} aria-label={dict.streaks.devSkipWinTitle}
-              className="inline-flex items-center gap-2 type-strong text-accent-amber border border-accent-amber/30 bg-accent-amber/10 hover:bg-accent-amber/20 disabled:opacity-50 transition-colors cursor-pointer rounded-control px-2.5 py-1"
+              variant="amberSoft" size="sm"
             >
               <AdeptBadgeIcon className="h-3.5 w-3.5" aria-hidden="true" />
               <span>{dict.streaks.devSkipWinLabel}</span>
-            </button>
+            </Button>
           </div>
         )}
 

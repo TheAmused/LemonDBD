@@ -24,6 +24,7 @@ import { UnreadDot } from '@/components/common/UnreadDot';
 import { formatDate } from '@/utils/format';
 import { useDictionary } from "@/context/DictionaryContext";
 
+import { Button } from '@/components/common/Button';
 const ChangelogEditorModal = dynamic(
   () => import('./ChangelogEditorModal').then((m) => m.ChangelogEditorModal),
   { ssr: false }
@@ -270,16 +271,16 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ className = 
 
   return (
     <>
-      <button
+      <Button variant="secondary" size="md" icon
         type="button"
         onClick={handleOpen}
         {...tip(t.triggerTitle, undefined, 'action')}
         aria-label={t.triggerTitle}
-        className={`pointer-coarse:min-h-11 pointer-coarse:min-w-11 group relative flex h-9 w-9 items-center justify-center rounded-control border border-border-color text-text-muted transition-all hover:border-accent-red/50 hover:text-accent-red hover:bg-accent-red/10 cursor-pointer ${className}`}
+        className={className}
       >
         <Megaphone className="h-4 w-4" />
         {hasUnread && <UnreadDot className="absolute -right-0.5 -top-0.5" />}
-      </button>
+      </Button>
 
       <Modal
         isOpen={mounted && isOpen}
@@ -290,17 +291,17 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ className = 
         closeButtonAriaLabel={t.close}
         headerRight={
           isAdmin ? (
-            <button
+            <Button
               type="button"
               onClick={() => {
                 setEditingPost(null);
                 setEditorOpen(true);
               }}
               {...tip(t.newEntry, undefined, 'action')} aria-label={t.newEntry}
-              className="pointer-coarse:min-h-11 pointer-coarse:min-w-11 flex h-9 w-9 items-center justify-center rounded-control border border-border-subtle text-text-secondary hover:border-accent-red/50 hover:text-accent-red cursor-pointer"
+              variant="secondary" size="md" icon
             >
               <Plus className="h-4 w-4" />
-            </button>
+            </Button>
           ) : undefined
         }
       >
@@ -528,14 +529,14 @@ const IconButton: React.FC<{
   disabled?: boolean;
   hoverClass?: string;
 }> = ({ icon: Icon, label, onClick, disabled, hoverClass = 'hover:text-text-secondary' }) => (
-  <button
+  <Button variant="ghost" size="sm" icon
     type="button"
     {...tip(label, undefined, 'action')}
     aria-label={label}
     disabled={disabled}
     onClick={onClick}
-    className={`pointer-coarse:min-h-11 pointer-coarse:min-w-11 flex h-7 w-7 items-center justify-center rounded-chip text-text-muted transition-colors cursor-pointer hover:bg-bg-elevated disabled:opacity-30 disabled:cursor-not-allowed ${hoverClass}`}
+    className={hoverClass}
   >
     <Icon className="h-3.5 w-3.5" />
-  </button>
+  </Button>
 );

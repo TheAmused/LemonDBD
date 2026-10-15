@@ -80,15 +80,15 @@ export const SidebarUserSection: React.FC<SidebarUserSectionProps> = ({
                   <OverseerEyeIcon className="h-4 w-4" />
                 </Link>
               )}
-              <button
+              <Button
                 type="button"
                 onClick={onLogout}
                 {...tip(dict.sidebar.signOut, undefined, 'action')}
                 aria-label={dict.sidebar.signOut}
-                className="p-1 rounded-control text-text-muted hover:text-accent-red hover:bg-accent-red/10 transition-colors cursor-pointer"
+                variant="ghost" size="xs" icon
               >
                 <LogOut className="h-3.5 w-3.5" />
-              </button>
+              </Button>
             </div>
           </div>
 

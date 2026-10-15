@@ -11,7 +11,7 @@ Ograniczenia analizy: liczone są tylko klasy zapisane wprost w `className`. Kla
 | Kategoria | Docelowy komponent | Pozycji |
 |---|---|---|
 | Karty `div` z border, bg i rounded | `Surface` | 204 |
-| Ostylowane `<button>` | `Button` / `IconButton` | 127 |
+| Ostylowane `<button>` | `Button` / `IconButton` | 84 (z 127) |
 | Natywne `title=` | `Tooltip` / `tip()` | 113 |
 | `span` jako chip lub pill | `Badge` / `InfoChip` | 74 |
 | Linki wyglądające jak przyciski | `buttonClassName()` | 22 |
@@ -242,150 +242,136 @@ Wzorzec: `div`/`section`/`article`/`aside`/`li` z `border`, `bg-bg-surface` lub 
 - [ ] `characters/hub/CharacterCard.tsx` : 50 (rounded-2xl)
 
 
-## 2. Przyciski na Button (127)
+## 2. Przyciski na Button (84 zostało z 127)
 
-Wzorzec: `<button>` z bg lub border plus padding lub rozmiar. Zamienić na `<Button variant size>` albo `<Button icon>`. W nawiasie dotychczasowy radius.
+Zrobione (2026-10-15): 53 przyciski zamienione na `Button` (warianty `primary`, `secondary`, `soft`, `ghost`, `danger`, `amber`, nowy `amberSoft`; `icon`, `pill`). Przyciski-ikony dostają teraz cel dotyku 44 px na telefonie z samego `Button` (`pointer-coarse`).
 
-**smash-or-pass** (29)
+Zostało 84. To głównie elementy, które nie są zwykłymi przyciskami akcji i wymagają osobnych decyzji:
 
-- [ ] `smash-or-pass/CharacterCard.tsx` : 253 (rounded-2xl), 269 (rounded-2xl), 287 (rounded-2xl), 303 (rounded-2xl)
-- [ ] `smash-or-pass/RosterSelectModal.tsx` : 97 (rounded-xl), 109 (rounded-xl), 132 (rounded-xl), 141 (rounded-xl), 171 (rounded-full), 184 (rounded-full)
-- [ ] `smash-or-pass/TactileKeycaps.tsx` : 150 (rounded-xl)
-- [ ] `smash-or-pass/card/CardBackFace.tsx` : 65 (rounded-2xl)
-- [ ] `smash-or-pass/creator/CoverImageCropModal.tsx` : 437 (rounded-lg)
-- [ ] `smash-or-pass/creator/EntityEditor.tsx` : 179 (rounded), 225 (rounded)
-- [ ] `smash-or-pass/creator/EntityEditorParts.tsx` : 132 (rounded-md)
-- [ ] `smash-or-pass/creator/RomanceArchetypeBuilder.tsx` : 247 (rounded-xl), 292 (rounded-xl)
-- [ ] `smash-or-pass/creator/RosterTaxonomyBlock.tsx` : 124 (rounded-lg), 149 (rounded-full), 213 (rounded-lg), 238 (rounded-full)
-- [ ] `smash-or-pass/hub/HubFilterDrawer.tsx` : 55 (rounded-xl), 69 (rounded-xl), 93 (rounded-xl), 114 (rounded-xl)
-- [ ] `smash-or-pass/hub/HubHeader.tsx` : 129 (rounded-2xl), 227 (rounded-xl), 298 (rounded-xl)
+- przełączniki i zakładki (`aria-pressed`, `aria-selected`, `role=radio/switch`): kandydat na wspólny `ToggleChip` lub `SegmentedControl`/`Tabs` (około 30),
+- kafle z obrazkiem, karty klikalne, nagłówki akordeonów (`aria-expanded`),
+- przyciski gry z animacją (strzałki, akcje karty w Smash or Pass, klawisze `TactileKeycaps`, `VoiceMicButton`),
+- przyciski z dynamiczną klasą zależną od stanu (aktywny/nieaktywny).
 
-**tier-lists** (24)
+Lista poniżej to wszystko, co nadal wygląda jak przycisk. Każdą pozycję ocenić: `Button`, nowy `ToggleChip`, albo zostaje.
 
-- [ ] `tier-lists/TierColorPicker.tsx` : 82 (rounded-md), 122 (rounded-lg)
-- [ ] `tier-lists/TierEditModal.tsx` : 154 (rounded-xl)
-- [ ] `tier-lists/TierListCards.tsx` : 78 (rounded-lg), 250 (rounded-lg)
-- [ ] `tier-lists/TierListEditor.tsx` : 442 (rounded-lg)
-- [ ] `tier-lists/TierListScaleControl.tsx` : 42 (rounded-lg), 51 (rounded-lg), 59 (rounded-lg), 68 (rounded-lg), 89 (rounded-md), 99 (rounded-md), 108 (rounded-md), 119 (rounded-md)
-- [ ] `tier-lists/TierPool.tsx` : 168 (rounded-xl)
-- [ ] `tier-lists/TierRow.tsx` : 158 (rounded-xl)
-- [ ] `tier-lists/creator/CreatorItems.tsx` : 89 (rounded-md)
-- [ ] `tier-lists/creator/ItemSources.tsx` : 312 (rounded-lg)
-- [ ] `tier-lists/creator/LadderEditor.tsx` : 137 (rounded-lg), 178, 188, 215, 234 (rounded-md)
+**smash-or-pass** (22)
+
+- [ ] `smash-or-pass/CharacterCard.tsx` : 254 (rounded-control), 270 (rounded-control), 288 (rounded-control), 304 (rounded-control)
+- [ ] `smash-or-pass/RosterSelectModal.tsx` : 98 (rounded-control), 110 (rounded-control), 172 (rounded-full), 185 (rounded-full)
+- [ ] `smash-or-pass/TactileKeycaps.tsx` : 150 (rounded-control)
+- [ ] `smash-or-pass/card/CardBackFace.tsx` : 65 (rounded-control)
+- [ ] `smash-or-pass/creator/EntityEditor.tsx` : 179 (rounded-chip), 225 (rounded-chip)
+- [ ] `smash-or-pass/creator/EntityEditorParts.tsx` : 132 (rounded-chip)
+- [ ] `smash-or-pass/creator/RomanceArchetypeBuilder.tsx` : 247 (rounded-control), 292 (rounded-control)
+- [ ] `smash-or-pass/hub/HubFilterDrawer.tsx` : 55 (rounded-control), 69 (rounded-control), 93 (rounded-control), 114 (rounded-control)
+- [ ] `smash-or-pass/hub/HubHeader.tsx` : 129 (rounded-control), 227 (rounded-control), 298 (rounded-control)
+
+**tier-lists** (15)
+
+- [ ] `tier-lists/TierColorPicker.tsx` : 83 (rounded-chip)
+- [ ] `tier-lists/TierEditModal.tsx` : 154 (rounded-control)
+- [ ] `tier-lists/TierListCards.tsx` : 78 (rounded-control), 250 (rounded-control)
+- [ ] `tier-lists/TierListScaleControl.tsx` : 69 (rounded-control), 120 (rounded-chip)
+- [ ] `tier-lists/TierRow.tsx` : 158 (rounded-control)
+- [ ] `tier-lists/creator/CreatorItems.tsx` : 89 (rounded-chip)
+- [ ] `tier-lists/creator/ItemSources.tsx` : 312 (rounded-control)
+- [ ] `tier-lists/creator/LadderEditor.tsx` : 137 (rounded-control), 178, 188, 215, 234 (rounded-chip)
 - [ ] `tier-lists/creator/TierListCreatorParts.tsx` : 67
 
-**admin** (14)
+**admin** (10)
 
-- [ ] `admin/AdminBugReportsWorkbench.tsx` : 113 (rounded-2xl), 131 (rounded-2xl), 149 (rounded-2xl), 167 (rounded-2xl)
-- [ ] `admin/AdminChallengeControl.tsx` : 230 (rounded-lg), 254 (rounded-lg), 266 (rounded-lg), 280 (rounded-lg), 292 (rounded-lg)
-- [ ] `admin/AdminContentReportsWorkbench.tsx` : 94 (rounded-2xl)
-- [ ] `admin/AdminUserTable.tsx` : 309 (rounded-lg), 319 (rounded-lg), 330 (rounded-lg), 349 (rounded-lg)
+- [ ] `admin/AdminBugReportsWorkbench.tsx` : 113 (rounded-control), 131 (rounded-control), 149 (rounded-control), 167 (rounded-control)
+- [ ] `admin/AdminChallengeControl.tsx` : 230 (rounded-control), 254 (rounded-control), 266 (rounded-control), 280 (rounded-control), 292 (rounded-control)
+- [ ] `admin/AdminContentReportsWorkbench.tsx` : 94 (rounded-control)
 
-**changelog** (9)
+**changelog** (6)
 
-- [ ] `changelog/ChangelogEditorModal.tsx` : 190 (rounded-full), 313 (rounded-lg), 336 (rounded-full), 347 (rounded-full)
-- [ ] `changelog/WhatsNewLauncher.tsx` : 273 (rounded-xl), 293 (rounded-xl), 369 (rounded-lg), 510 (rounded-full), 531 (rounded-md)
+- [ ] `changelog/ChangelogEditorModal.tsx` : 190 (rounded-full), 313 (rounded-control), 336 (rounded-full), 347 (rounded-full)
+- [ ] `changelog/WhatsNewLauncher.tsx` : 370 (rounded-control), 511 (rounded-full)
 
-**streaks** (9)
+**(root)** (4)
 
-- [ ] `streaks/ChallengeIntroModalShell.tsx` : 176 (rounded-2xl)
-- [ ] `streaks/ChallengePanel.tsx` : 130, 261 (rounded-xl)
-- [ ] `streaks/PageStreakBoard.tsx` : 60 (rounded-xl)
-- [ ] `streaks/StreaksLayoutShell.tsx` : 78 (rounded-xl), 101 (rounded-xl)
-- [ ] `streaks/chaos/ChaosBoard.tsx` : 248 (rounded-lg)
-- [ ] `streaks/gauntlet/LemonTokenPanel.tsx` : 39 (rounded-lg)
-- [ ] `streaks/page-streak/PageStreakRunView.tsx` : 173 (rounded-xl)
-
-**maps** (8)
-
-- [ ] `maps/MapCard.tsx` : 20 (rounded-2xl)
-- [ ] `maps/VoiceEngineInfoModal.tsx` : 170 (rounded-2xl)
-- [ ] `maps/voice/VoiceBannerHeader.tsx` : 44 (rounded-full), 66 (rounded-xl), 90 (rounded-full), 112 (rounded-full), 148 (rounded-full)
-- [ ] `maps/voice/VoiceVariantPills.tsx` : 25 (rounded-xl)
-
-**sidebar** (7)
-
-- [ ] `sidebar/BugReportModal.tsx` : 312 (rounded-xl)
-- [ ] `sidebar/SidebarBottomControls.tsx` : 150 (rounded-xl), 200 (rounded-xl), 225, 253 (rounded-xl), 263 (rounded-xl)
-- [ ] `sidebar/SidebarUserSection.tsx` : 83 (rounded-lg)
-
-**(root)** (5)
-
-- [ ] `AuthModal.tsx` : 480 (rounded-lg)
-- [ ] `ChaosWheelModal.tsx` : 321 (rounded-lg)
+- [ ] `ChaosWheelModal.tsx` : 321 (rounded-control)
 - [ ] `DisabledBadge.tsx` : 20 (rounded-full)
-- [ ] `PerkFilters.tsx` : 364 (rounded-xl)
-- [ ] `Sidebar.tsx` : 314 (rounded-r-2xl)
+- [ ] `PerkFilters.tsx` : 365 (rounded-control)
+- [ ] `Sidebar.tsx` : 314 (rounded-r-control)
 
-**onboarding** (5)
+**streaks** (4)
 
-- [ ] `onboarding/CharacterOnboardingWizard.tsx` : 101 (rounded-xl), 116 (rounded-xl)
-- [ ] `onboarding/wizard/ChapterCharacterPanel.tsx` : 63
-- [ ] `onboarding/wizard/ChapterToolbar.tsx` : 69 (rounded-lg)
-- [ ] `onboarding/wizard/OnboardingLanguageView.tsx` : 33 (rounded-xl)
+- [ ] `streaks/ChallengeIntroModalShell.tsx` : 176 (rounded-control)
+- [ ] `streaks/ChallengePanel.tsx` : 131
+- [ ] `streaks/gauntlet/LemonTokenPanel.tsx` : 39 (rounded-control)
+- [ ] `streaks/page-streak/PageStreakRunView.tsx` : 173 (rounded-control)
 
 **user** (4)
 
 - [ ] `user/PerkDiamondSlot.tsx` : 58 (rounded-full)
-- [ ] `user/ShowcasePerkModal.tsx` : 37 (rounded-2xl)
-- [ ] `user/UserBugReportsList.tsx` : 151, 210 (rounded-xl)
+- [ ] `user/ShowcasePerkModal.tsx` : 37 (rounded-control)
+- [ ] `user/UserBugReportsList.tsx` : 151, 210 (rounded-control)
 
 **generator** (4)
 
-- [ ] `generator/modes/slot-machine/SlotReelRowMobile.tsx` : 189 (rounded-xl)
-- [ ] `generator/shared/IconToggleButton.tsx` : 28 (rounded-xl)
-- [ ] `generator/shared/RoleToggle.tsx` : 36 (rounded-lg), 50 (rounded-lg)
+- [ ] `generator/modes/slot-machine/SlotReelRowMobile.tsx` : 189 (rounded-control)
+- [ ] `generator/shared/IconToggleButton.tsx` : 28 (rounded-control)
+- [ ] `generator/shared/RoleToggle.tsx` : 36 (rounded-control), 50 (rounded-control)
 
 **character-detail** (3)
 
-- [ ] `character-detail/KillerDetailView.tsx` : 113 (rounded-2xl)
-- [ ] `character-detail/components/CategoryPicker.tsx` : 71 (rounded-2xl), 105
+- [ ] `character-detail/KillerDetailView.tsx` : 113 (rounded-control)
+- [ ] `character-detail/components/CategoryPicker.tsx` : 71 (rounded-control), 105
 
-**minigames** (3)
+**maps** (3)
+
+- [ ] `maps/MapCard.tsx` : 20 (rounded-control)
+- [ ] `maps/VoiceEngineInfoModal.tsx` : 170 (rounded-control)
+- [ ] `maps/voice/VoiceBannerHeader.tsx` : 149 (rounded-full)
+
+**onboarding** (3)
+
+- [ ] `onboarding/wizard/ChapterCharacterPanel.tsx` : 63
+- [ ] `onboarding/wizard/ChapterToolbar.tsx` : 69 (rounded-control)
+- [ ] `onboarding/wizard/OnboardingLanguageView.tsx` : 33 (rounded-control)
+
+**minigames** (2)
 
 - [ ] `minigames/ChallengeRunner.tsx` : 446 (rounded-full)
-- [ ] `minigames/MinigamesHub.tsx` : 222 (rounded-md)
-- [ ] `minigames/creator/MinigameCreator.tsx` : 424 (rounded-xl)
+- [ ] `minigames/MinigamesHub.tsx` : 222 (rounded-chip)
 
-**characters** (3)
+**sidebar** (2)
 
-- [ ] `characters/hub/CharacterCard.tsx` : 129 (rounded-xl)
-- [ ] `characters/hub/CharactersToolbar.tsx` : 86 (rounded-2xl)
-- [ ] `characters/hub/VerificationNotice.tsx` : 24 (rounded-lg)
+- [ ] `sidebar/BugReportModal.tsx` : 312 (rounded-control)
+- [ ] `sidebar/SidebarBottomControls.tsx` : 226
 
+**characters** (2)
 
-## 3. Niestylowane przyciski do oceny (85)
+- [ ] `characters/hub/CharactersToolbar.tsx` : 87 (rounded-control)
+- [ ] `characters/hub/VerificationNotice.tsx` : 24 (rounded-control)
 
-Zwykle ikony i klikalne elementy kart. Każdy ocenić osobno: `Button variant="ghost"`, `IconButton`, albo zostaje jako element interaktywny bez wyglądu przycisku. Wśród nich mogą być ręcznie robione przełączniki (do sprawdzenia pod kątem `SegmentedControl`/`Tabs`).
+## 3. Niestylowane przyciski do oceny (zostało 52)
 
-**tier-lists** (16)
+Zwykle ikony i klikalne elementy kart, linki tekstowe (`type-strong text-accent-amber hover:...`, około 20 prawie identycznych: kandydat na wariant `link` w `Button`). Każdy ocenić osobno.
+
+**tier-lists** (15)
 
 - [ ] `tier-lists/TierListEditor.tsx` : 240, 261, 276, 291, 296, 300, 304, 315, 321
 - [ ] `tier-lists/TierListHub.tsx` : 143, 256
-- [ ] `tier-lists/TierPool.tsx` : 124, 145
+- [ ] `tier-lists/TierPool.tsx` : 146
 - [ ] `tier-lists/TierRow.tsx` : 81
 - [ ] `tier-lists/creator/CreatorItems.tsx` : 76
 - [ ] `tier-lists/creator/ItemSources.tsx` : 388
 
-**streaks** (13)
+**streaks** (11)
 
 - [ ] `streaks/ChallengeIntroModalShell.tsx` : 125
-- [ ] `streaks/ChallengePanel.tsx` : 68, 221
+- [ ] `streaks/ChallengePanel.tsx` : 69, 222
 - [ ] `streaks/StreakAttemptGroups.tsx` : 70
 - [ ] `streaks/StreakPanel.tsx` : 134, 158
 - [ ] `streaks/chaos/KillerPickerGrid.tsx` : 32
 - [ ] `streaks/chaos/SlotMachineStage.tsx` : 342
 - [ ] `streaks/history/HistoryNextRowPreview.tsx` : 49
-- [ ] `streaks/history/HistoryPerkModal.tsx` : 131
-- [ ] `streaks/history/HistoryPerkPoolPanel.tsx` : 122
 - [ ] `streaks/page-streak/PageStreakRoster.tsx` : 24
 - [ ] `streaks/page-streak/PerkTile.tsx` : 64
-
-**admin** (7)
-
-- [ ] `admin/AdminChallengeControl.tsx` : 321, 356
-- [ ] `admin/AdminSettingsPanel.tsx` : 203
-- [ ] `admin/AdminUserTable.tsx` : 175, 184, 194, 211
 
 **user** (7)
 
@@ -394,16 +380,16 @@ Zwykle ikony i klikalne elementy kart. Każdy ocenić osobno: `Button variant="g
 - [ ] `user/UserBugReportsDrawer.tsx` : 41
 - [ ] `user/UserProfileForm.tsx` : 171, 297, 373, 402
 
-**(root)** (6)
+**(root)** (5)
 
-- [ ] `AuthModal.tsx` : 286, 378, 401, 494
+- [ ] `AuthModal.tsx` : 378, 401, 494
 - [ ] `EmailVerificationForm.tsx` : 135
 - [ ] `PerkCard.tsx` : 95
 
-**characters** (5)
+**characters** (4)
 
 - [ ] `characters/PerksTogglePopup.tsx` : 98
-- [ ] `characters/hub/CharactersToolbar.tsx` : 57, 70, 118
+- [ ] `characters/hub/CharactersToolbar.tsx` : 58, 71
 - [ ] `characters/hub/VerificationNotice.tsx` : 31
 
 **minigames** (4)
@@ -412,13 +398,6 @@ Zwykle ikony i klikalne elementy kart. Każdy ocenić osobno: `Button variant="g
 - [ ] `minigames/CharacterAutocomplete.tsx` : 237
 - [ ] `minigames/creator/MinigameCreator.tsx` : 340
 - [ ] `minigames/creator/RoundEditorCard.tsx` : 267
-
-**onboarding** (4)
-
-- [ ] `onboarding/SkipOnboardingModal.tsx` : 34
-- [ ] `onboarding/wizard/ChapterCard.tsx` : 60
-- [ ] `onboarding/wizard/ChapterCharacterPanel.tsx` : 40
-- [ ] `onboarding/wizard/ChapterToolbar.tsx` : 57
 
 **generator** (4)
 
@@ -432,10 +411,15 @@ Zwykle ikony i klikalne elementy kart. Każdy ocenić osobno: `Button variant="g
 - [ ] `smash-or-pass/creator/RomanceArchetypeBuilder.tsx` : 322
 - [ ] `smash-or-pass/creator/SmashRosterCreatorParts.tsx` : 226, 245
 
+**admin** (3)
+
+- [ ] `admin/AdminChallengeControl.tsx` : 321, 356
+- [ ] `admin/AdminSettingsPanel.tsx` : 203
+
 **maps** (3)
 
 - [ ] `maps/MapExplorer.tsx` : 428
-- [ ] `maps/voice/VoiceBannerHeader.tsx` : 160
+- [ ] `maps/voice/VoiceBannerHeader.tsx` : 161
 - [ ] `maps/voice/VoiceMicButton.tsx` : 36
 
 **scraper-config** (3)
@@ -458,14 +442,18 @@ Zwykle ikony i klikalne elementy kart. Każdy ocenić osobno: `Button variant="g
 - [ ] `character-detail/components/CharacterPerksSection.tsx` : 41
 - [ ] `character-detail/components/CollapsibleDrawer.tsx` : 63
 
+**onboarding** (2)
+
+- [ ] `onboarding/wizard/ChapterCard.tsx` : 60
+- [ ] `onboarding/wizard/ChapterCharacterPanel.tsx` : 40
+
 **changelog** (1)
 
-- [ ] `changelog/WhatsNewLauncher.tsx` : 383
+- [ ] `changelog/WhatsNewLauncher.tsx` : 384
 
 **ui** (1)
 
 - [ ] `ui/DiamondSlot.tsx` : 76
-
 
 ## 4. Natywne title= (113)
 
@@ -823,7 +811,7 @@ Realne kandydaci do `Modal`: `smash-or-pass/hub/RosterModals.tsx` i do sprawdzen
 - [ ] `layout/AppBackground.tsx` : 40
 
 
-## 12. Nadpisania radiusu w primitywach (42)
+## 12. Nadpisania radiusu w primitywach (42, ZROBIONE, pilnuje tego check:styles)
 
 Radius ustawiony przez `className` na `Button`, `Input`, `Select`, `Checkbox`, `Popover`. Po wprowadzeniu tokenów usunąć lub zastąpić wariantem komponentu. Największe skupiska: `RosterPickerFooter` (6x `2xl`), `PersonaBreakdown` (3x), `DeckFinished` (2x), tier listy (`lg` na `md`).
 
@@ -884,7 +872,7 @@ Radius ustawiony przez `className` na `Button`, `Input`, `Select`, `Checkbox`, `
 - [ ] `admin/AdminBugReportsWorkbench.tsx` : 351 (rounded-xl)
 
 
-## 13. Radius poza skalą (27)
+## 13. Radius poza skalą (27, ZROBIONE, pilnuje tego check:styles)
 
 Gołe `rounded`, `rounded-sm`, `rounded-xs` i `rounded-[3px]`. Przypisać do tokenu `chip` lub usunąć. Ikony flag (`FlagIcon`) i checkboxy: zdecydować osobno.
 

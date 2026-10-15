@@ -7,6 +7,7 @@ import { CELEBRATION_CARD_CLASSES, CELEBRATION_LABEL_CLASSES, CelebrationBadge }
 import { useDictionary } from "@/context/DictionaryContext";
 import { useChallengeAnimations } from './useChallengeAnimations';
 
+import { Button } from '@/components/common/Button';
 interface ChallengePanelProps {
   /** Stats and actions strip, rendered as the top section of the card. */
   header: React.ReactNode;
@@ -258,14 +259,14 @@ export const ChallengeVictoryCard: React.FC<ChallengeVictoryCardProps> = ({ titl
     <p className={`mt-6 ${CELEBRATION_LABEL_CLASSES}`}>{dict.streaks.victoryCongrats}</p>
     <h2 className="mt-2 text-2xl font-black tracking-tight text-text-primary">{title}</h2>
     {subtitle && <p className="mt-1 type-card-title text-text-secondary">{subtitle}</p>}
-    <button
+    <Button
       type="button"
       onClick={onRestart}
       disabled={busy}
-      className="mt-6 inline-flex items-center justify-center gap-2 rounded-control bg-accent-amber px-6 py-3 type-card-title text-text-inverted shadow-xs transition-colors hover:bg-accent-amber-hover disabled:opacity-50 cursor-pointer"
+      variant="amber" size="lg" className="mt-6"
     >
       {dict.streaks.startNewRun}
-    </button>
+    </Button>
   </div>
 );
 };

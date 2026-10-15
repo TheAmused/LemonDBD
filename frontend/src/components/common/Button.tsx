@@ -17,6 +17,7 @@ export type ButtonVariant =
   | 'danger' //    destructive, outlined red
   | 'success' //   solid green
   | 'amber' //    solid amber, for amber-themed surfaces
+  | 'amberSoft' // tinted amber (amber/10), the amber twin of `soft`
   | 'cta'; //     loud DBD randomizer CTA
 
 export type ButtonSize = 'xs' | 'sm' | 'md' | 'lg';
@@ -29,6 +30,7 @@ export const BUTTON_VARIANTS: Record<ButtonVariant, string> = {
   danger: 'border border-accent-red/40 bg-accent-red/10 text-accent-red hover:bg-accent-red hover:text-text-inverted',
   success: 'bg-accent-green text-text-inverted shadow-sm hover:brightness-110',
   amber: 'bg-accent-amber text-text-inverted shadow-sm hover:bg-accent-amber-hover',
+  amberSoft: 'border border-accent-amber/40 bg-accent-amber/10 text-accent-amber hover:bg-accent-amber/20',
   cta: 'bg-accent-red text-text-inverted font-black uppercase tracking-wider shadow-xs hover:bg-accent-red-hover hover:scale-[1.02] hover:shadow-md hover:shadow-accent-red/40 active:scale-[0.97]',
 };
 
@@ -45,10 +47,11 @@ const CTA_SIZES: Record<'sm' | 'md' | 'lg', string> = {
   sm: 'gap-1.5 px-4 py-2.5 text-mini sm:gap-2 sm:px-6 sm:py-3 sm:text-xs xl:px-7 xl:py-3 xl:text-sm',
 };
 
+// pointer-coarse: icon-only buttons grow to the 44px touch minimum on phones and tablets.
 const ICON_BUTTON_SIZES: Record<ButtonSize, string> = {
-  xs: 'h-6 w-6',
-  sm: 'h-8 w-8',
-  md: 'h-10 w-10',
+  xs: 'h-6 w-6 pointer-coarse:min-h-11 pointer-coarse:min-w-11',
+  sm: 'h-8 w-8 pointer-coarse:min-h-11 pointer-coarse:min-w-11',
+  md: 'h-10 w-10 pointer-coarse:min-h-11 pointer-coarse:min-w-11',
   lg: 'h-12 w-12',
 };
 
@@ -66,7 +69,7 @@ const BUTTON_RADIUS_PILL = 'rounded-full';
 
 /** The class list of a Button, for the rare spot that needs a link (<a>/<Link>) that looks like one. */
 export function buttonClassName(variant: ButtonVariant = 'secondary', size: ButtonSize = 'md', className?: string): string {
-  return cn(BUTTON_BASE, BUTTON_VARIANTS[variant], BUTTON_SIZES[size], variant !== 'cta' && BUTTON_RADIUS, className);
+  return cn(BUTTON_BASE, BUTTON_VARIANTS[variant], BUTTON_SIZES[size], BUTTON_RADIUS, className);
 }
 
 export interface ButtonProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'children'> {
@@ -126,7 +129,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
         BUTTON_BASE,
         BUTTON_VARIANTS[variant],
         sizeClasses,
-        variant !== 'cta' && (pill ? BUTTON_RADIUS_PILL : BUTTON_RADIUS),
+        pill ? BUTTON_RADIUS_PILL : BUTTON_RADIUS,
         ringClass,
         className
       )}

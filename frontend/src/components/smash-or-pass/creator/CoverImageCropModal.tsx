@@ -434,13 +434,13 @@ export const CoverImageCropModal: React.FC<CoverImageCropModalProps> = ({ isOpen
               </p>
               <div className="flex items-center gap-2 pt-1">
                 {isAdmin && (
-                  <button
+                  <Button
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
-                    className="px-3 py-1 rounded-control bg-accent-amber text-text-inverted type-label-sm hover:opacity-90 transition-opacity cursor-pointer"
+                    variant="amber" size="sm"
                   >
                     {cm.uploadFile}
-                  </button>
+                  </Button>
                 )}
                 <Button
                   variant="secondary" size="xs"

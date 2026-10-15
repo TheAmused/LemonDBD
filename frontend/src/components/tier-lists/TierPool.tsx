@@ -18,6 +18,7 @@ import { EmptyState } from '@/components/common/EmptyState';
 import { formatMessage } from '@/utils/i18nFormat';
 import { useDictionary } from "@/context/DictionaryContext";
 
+import { Button } from '@/components/common/Button';
 interface TierPoolProps {
   keys: string[];
   itemsByKey: ReadonlyMap<string, TierItem>;
@@ -121,14 +122,14 @@ export function TierPool({
             className="h-8.5 bg-bg-primary pl-9 pr-8 text-xs sm:text-sm"
           />
           {query && (
-            <button
+            <Button
               type="button"
               onClick={() => setQuery('')}
               aria-label={t.clearSearch}
-              className="hit-area absolute right-2 top-1/2 flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-chip text-text-muted hover:text-text-primary cursor-pointer"
+              variant="ghost" size="xs" icon className="absolute right-2 top-1/2 -translate-y-1/2"
             >
               <X className="h-3.5 w-3.5" aria-hidden="true" />
-            </button>
+            </Button>
           )}
         </div>
 
@@ -165,14 +166,14 @@ export function TierPool({
         <div className="min-h-0 overflow-hidden flex flex-col">
           {canReceiveSelection && (
             <div className="flex items-center justify-center border-t border-b border-border-color px-3 sm:px-4 py-2 bg-bg-surface/50">
-              <button
+              <Button
                 type="button"
                 onClick={() => onMoveSelectedHere(POOL_CONTAINER_ID)}
-                className="inline-flex h-8.5 shrink-0 items-center gap-1.5 rounded-control border border-dashed border-accent-amber/60 bg-accent-amber/10 px-3 type-strong text-accent-amber hover:bg-accent-amber/20 cursor-pointer transition-colors"
+                variant="amberSoft" size="sm" className="shrink-0 border-dashed"
               >
                 <ArrowDownToLine className="h-3.5 w-3.5" aria-hidden="true" />
                 {t.moveHere}
-              </button>
+              </Button>
             </div>
           )}
 

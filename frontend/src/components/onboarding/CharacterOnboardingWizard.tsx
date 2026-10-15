@@ -98,13 +98,13 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
           {/* Header Section */}
           <header className="relative flex flex-col items-center text-center space-y-1.5 sm:space-y-2">
             <div className="sm:absolute sm:right-0 sm:top-0 hidden sm:block">
-              <button
+              <Button
                 type="button"
                 onClick={() => setIsSkipModalOpen(true)}
-                className="shrink-0 rounded-control border border-accent-amber/50 bg-accent-amber/10 px-4 py-2 sm:px-5 sm:py-2.5 lg:px-6 lg:py-3 text-xs sm:text-sm lg:text-base font-bold text-accent-amber hover:bg-accent-amber/20 hover:border-accent-amber transition-all cursor-pointer shadow-xs"
+                variant="amberSoft" size="md" className="shrink-0"
               >
                 {t.skipButton}
-              </button>
+              </Button>
             </div>
             <h1 className="text-lg sm:text-xl md:text-2xl font-black tracking-tight text-text-primary px-2">
               {t.heading}
@@ -113,13 +113,13 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
               {t.subheading}
             </p>
             <div className="sm:hidden pt-0.5">
-              <button
+              <Button
                 type="button"
                 onClick={() => setIsSkipModalOpen(true)}
-                className="shrink-0 rounded-control border border-accent-amber/50 bg-accent-amber/10 px-3 py-1 type-strong text-accent-amber hover:bg-accent-amber/20 transition-colors cursor-pointer"
+                variant="amberSoft" size="sm" className="shrink-0"
               >
                 {t.skipButton}
-              </button>
+              </Button>
             </div>
           </header>
 

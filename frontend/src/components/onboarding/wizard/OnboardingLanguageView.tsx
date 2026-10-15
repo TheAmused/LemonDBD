@@ -23,7 +23,7 @@ export function OnboardingLanguageView({
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
-      <div className="w-full max-w-md rounded-2xl border border-border-color bg-bg-surface p-8 text-center space-y-4 shadow-2xl">
+      <div className="w-full max-w-md rounded-card border border-border-color bg-bg-surface p-8 text-center space-y-4 shadow-2xl">
         <h1 className="text-xl font-black">{t.languageStepTitle}</h1>
         <p className="text-sm text-text-secondary">
           {t.languageStepBody}
@@ -35,13 +35,13 @@ export function OnboardingLanguageView({
               type="button"
               onClick={() => onSelect(lang.code)}
               aria-pressed={selectedLanguage === lang.code}
-              className={`flex items-center gap-3 rounded-xl border px-4 py-2.5 text-sm font-bold transition-colors cursor-pointer ${
+              className={`flex items-center gap-3 rounded-control border px-4 py-2.5 text-sm font-bold transition-colors cursor-pointer ${
                 selectedLanguage === lang.code
                   ? 'border-accent-red bg-accent-red/10 text-accent-red'
                   : 'border-border-color text-text-secondary hover:border-accent-red/50'
               }`}
             >
-              <FlagIcon code={lang.code} className="h-4 w-[22px] rounded-sm shrink-0" />
+              <FlagIcon code={lang.code} className="h-4 w-[22px] rounded-chip shrink-0" />
               <span>{lang.label}</span>
             </button>
           ))}

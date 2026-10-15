@@ -27,7 +27,7 @@ export function ChapterCharacterPanel({
   const t = dict.onboarding;
 
   return (
-    <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10 2xl:grid-cols-12 gap-3 rounded-2xl border border-border-color bg-bg-surface p-3">
+    <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10 2xl:grid-cols-12 gap-3 rounded-card border border-border-color bg-bg-surface p-3">
       {group.characters.map((c) => {
         const isOwned = isCharacterOwned(c);
         const perkStats = getCharacterPerkStats(c.id, c.category);
@@ -35,7 +35,7 @@ export function ChapterCharacterPanel({
         return (
           <div
             key={c.id}
-            className="group relative flex flex-col overflow-hidden rounded-xl border border-border-color bg-bg-surface"
+            className="group relative flex flex-col overflow-hidden rounded-card border border-border-color bg-bg-surface"
           >
             <button
               type="button"
@@ -55,7 +55,7 @@ export function ChapterCharacterPanel({
                 lockedTitle={dict.modal.unownedPerk}
                 ownedTitle={dict.filters.ownedOnly}
               />
-              <span className="absolute bottom-1 left-1 right-1 truncate rounded bg-bg-primary/80 px-1.5 py-0.5 type-strong-2xs text-text-inverted text-center">
+              <span className="absolute bottom-1 left-1 right-1 truncate rounded-chip bg-bg-primary/80 px-1.5 py-0.5 type-strong-2xs text-text-inverted text-center">
                 {c.name}
               </span>
             </button>

@@ -180,8 +180,8 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({ isOpen
       <div className="p-4 sm:p-6 space-y-5">
         {!hasVotes ? (
           /* Sleek, Non-Repetitive Empty State (Untapped Soul) */
-          <div className="flex flex-col items-center justify-center text-center p-6 sm:p-8 rounded-3xl bg-bg-elevated border border-border-color space-y-4 shadow-inner">
-            <div className="flex h-16 w-16 items-center justify-center rounded-3xl bg-bg-surface border border-border-color text-accent-red">
+          <div className="flex flex-col items-center justify-center text-center p-6 sm:p-8 rounded-card bg-bg-elevated border border-border-color space-y-4 shadow-inner">
+            <div className="flex h-16 w-16 items-center justify-center rounded-card bg-bg-surface border border-border-color text-accent-red">
               <Compass className="h-8 w-8 text-accent-red" />
             </div>
 
@@ -200,7 +200,7 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({ isOpen
             <Button
               variant="primary" size="md"
               onClick={onClose}
-              className="mt-2 rounded-2xl"
+              className="mt-2"
             >
               <span>{rawSmash.startVoting}</span>
               <ArrowRight className="h-4 w-4" />

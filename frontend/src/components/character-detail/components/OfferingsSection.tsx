@@ -289,7 +289,7 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
 
   return (
     <section
-      className="mt-8 rounded-3xl border border-border-color bg-bg-surface p-6 sm:p-8 shadow-sm dark:shadow-none backdrop-blur-md"
+      className="mt-8 rounded-card border border-border-color bg-bg-surface p-6 sm:p-8 shadow-sm dark:shadow-none backdrop-blur-md"
       aria-labelledby="offerings-heading"
     >
       {/* Same flat single-card shape as KillerEquipmentSection: one bordered
@@ -303,7 +303,7 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
         header={
           <div className="flex items-center gap-3">
             <div
-              className={`flex h-10 w-10 items-center justify-center rounded-xl border ${
+              className={`flex h-10 w-10 items-center justify-center rounded-card border ${
                 isKiller
                   ? 'bg-accent-red/10 text-accent-red border-accent-red/20'
                   : 'bg-accent-green/10 text-accent-green border-accent-green/20'
@@ -386,7 +386,7 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
                     }
                   }}
                   {...tip(offering.name, undefined, 'item')}
-                  className={`relative group rounded-2xl border-2 p-2 flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-110 active:scale-95 focus:outline-none focus:ring-2 focus:ring-accent-red h-20 w-20 sm:h-24 sm:w-24 ${rarityStyle.bg}`}
+                  className={`relative group rounded-card border-2 p-2 flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-110 active:scale-95 focus:outline-none focus:ring-2 focus:ring-accent-red h-20 w-20 sm:h-24 sm:w-24 ${rarityStyle.bg}`}
                   style={rarityStyle.style}
                   aria-label={`${t.inspectOfferingPrefix || 'Inspect offering:'} ${offering.name}`}
                 >

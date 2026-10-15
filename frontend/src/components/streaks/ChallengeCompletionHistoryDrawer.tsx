@@ -37,7 +37,7 @@ export const ChallengeCompletionHistoryDrawer: React.FC<ChallengeCompletionHisto
       bodyClassName="p-5 sm:p-6"
     >
       {completions.length === 0 ? (
-        <div className="text-center py-8 text-text-muted text-xs bg-bg-elevated rounded-xl border border-border-color">
+        <div className="text-center py-8 text-text-muted text-xs bg-bg-elevated rounded-card border border-border-color">
           {dict.streaks.noCompletionsLogged}
         </div>
       ) : (
@@ -45,7 +45,7 @@ export const ChallengeCompletionHistoryDrawer: React.FC<ChallengeCompletionHisto
           {completions.map((entry) => (
             <div
               key={entry.id}
-              className="flex items-center justify-between p-3.5 rounded-xl bg-bg-elevated border border-border-color shadow-sm"
+              className="flex items-center justify-between p-3.5 rounded-card bg-bg-elevated border border-border-color shadow-sm"
             >
               <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5">
                 <div className="flex items-center gap-1.5 type-strong text-text-secondary">

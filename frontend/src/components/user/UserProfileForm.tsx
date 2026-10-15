@@ -166,7 +166,7 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
   };
 
   return (
-    <div className="rounded-3xl border border-border-color bg-bg-surface backdrop-blur-xl shadow-md overflow-hidden transition-colors flex flex-col">
+    <div className="rounded-card border border-border-color bg-bg-surface backdrop-blur-xl shadow-md overflow-hidden transition-colors flex flex-col">
       {/* Header Button with DBD Banner */}
       <button
         type="button"
@@ -208,7 +208,7 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
             {/* Status Feedback Banner */}
             {statusMessage && (
               <div
-                className={`max-w-2xl mx-auto flex items-center gap-2.5 rounded-2xl border p-3 text-xs shadow-sm ${
+                className={`max-w-2xl mx-auto flex items-center gap-2.5 rounded-card border p-3 text-xs shadow-sm ${
                   statusMessage.type === 'success'
                     ? 'border-accent-green/30 bg-accent-green/10 text-accent-green'
                     : 'border-accent-red/30 bg-accent-red/10 text-accent-red'

@@ -23,8 +23,8 @@ export const AddonGuesser: React.FC<AddonGuesserProps> = ({ roundConfig, killers
   return (
     <div className="w-full flex flex-col items-center my-6">
       {/* Add-on Display Card */}
-      <div className="w-full max-w-lg p-6 rounded-2xl bg-bg-surface border border-border-color shadow-2xl flex flex-col items-center text-center relative overflow-hidden">
-        <div className="w-14 h-14 rounded-2xl bg-accent-amber/10 border border-accent-amber/30 flex items-center justify-center text-accent-amber mb-3">
+      <div className="w-full max-w-lg p-6 rounded-card bg-bg-surface border border-border-color shadow-2xl flex flex-col items-center text-center relative overflow-hidden">
+        <div className="w-14 h-14 rounded-card bg-accent-amber/10 border border-accent-amber/30 flex items-center justify-center text-accent-amber mb-3">
           <Package className="w-7 h-7" />
         </div>
 
@@ -32,7 +32,7 @@ export const AddonGuesser: React.FC<AddonGuesserProps> = ({ roundConfig, killers
           {t.addonModifier}
         </div>
 
-        <p className="text-sm text-text-primary leading-relaxed font-medium bg-bg-elevated p-4 rounded-xl border border-border-subtle">
+        <p className="text-sm text-text-primary leading-relaxed font-medium bg-bg-elevated p-4 rounded-card border border-border-subtle">
           {description}
         </p>
 
@@ -43,7 +43,7 @@ export const AddonGuesser: React.FC<AddonGuesserProps> = ({ roundConfig, killers
         )}
 
         {isSolved && (
-          <div className="mt-6 px-4 py-1.5 rounded-lg bg-accent-green text-text-inverted type-card-title flex items-center gap-2 shadow-md">
+          <div className="mt-6 px-4 py-1.5 rounded-chip bg-accent-green text-text-inverted type-card-title flex items-center gap-2 shadow-md">
             <Check className="w-4 h-4" />
             <span>{t.solved}</span>
           </div>
@@ -61,7 +61,7 @@ export const AddonGuesser: React.FC<AddonGuesserProps> = ({ roundConfig, killers
             return (
               <div
                 key={`addon-g-${idx}`}
-                className={`flex items-center justify-between px-4 py-2.5 rounded-xl border font-semibold text-sm transition-all ${
+                className={`flex items-center justify-between px-4 py-2.5 rounded-card border font-semibold text-sm transition-all ${
                   isCorrect
                     ? 'bg-accent-green text-text-inverted border-accent-green shadow-md'
                     : 'bg-accent-red/20 text-accent-red border-accent-red/40'

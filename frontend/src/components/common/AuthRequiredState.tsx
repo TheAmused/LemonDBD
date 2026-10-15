@@ -20,11 +20,11 @@ interface AuthRequiredStateProps {
 
 const VARIANT_WRAPPER_CLASSNAME: Record<AuthRequiredVariant, string> = {
   compact:
-    'rounded-2xl border border-dashed border-border-color bg-bg-surface/40 p-6 sm:p-8 text-center flex flex-col items-center justify-center',
+    'rounded-card border border-dashed border-border-color bg-bg-surface/40 p-6 sm:p-8 text-center flex flex-col items-center justify-center',
   solid:
-    'mt-4 sm:mt-6 mb-auto rounded-3xl bg-bg-surface p-8 sm:p-12 text-center backdrop-blur-sm shadow-sm w-full border border-border-color flex flex-col items-center justify-center',
+    'mt-4 sm:mt-6 mb-auto rounded-card bg-bg-surface p-8 sm:p-12 text-center backdrop-blur-sm shadow-sm w-full border border-border-color flex flex-col items-center justify-center',
   dashed:
-    'flex flex-col items-center justify-center rounded-2xl border border-dashed border-border-color bg-bg-surface/60 px-6 py-16 sm:py-20 text-center my-6',
+    'flex flex-col items-center justify-center rounded-card border border-dashed border-border-color bg-bg-surface/60 px-6 py-16 sm:py-20 text-center my-6',
 };
 
 export function AuthRequiredState({
@@ -40,7 +40,7 @@ export function AuthRequiredState({
 
   return (
     <div className={className || VARIANT_WRAPPER_CLASSNAME[variant]}>
-      <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-accent-red/20 bg-accent-red/10">
+      <div className="flex h-12 w-12 items-center justify-center rounded-card border border-accent-red/20 bg-accent-red/10">
         <Lock className="h-5 w-5 text-accent-red" />
       </div>
       <h2 className="mt-4 text-sm font-extrabold tracking-wide text-text-primary">
@@ -52,7 +52,7 @@ export function AuthRequiredState({
       <button
         type="button"
         onClick={() => setIsAuthModalOpen(true)}
-        className="mt-5 rounded-xl bg-accent-red px-5 py-2.5 type-strong text-text-inverted shadow-xs hover:bg-accent-red-hover transition-colors cursor-pointer"
+        className="mt-5 rounded-control bg-accent-red px-5 py-2.5 type-strong text-text-inverted shadow-xs hover:bg-accent-red-hover transition-colors cursor-pointer"
       >
         {resolvedButtonLabel}
       </button>

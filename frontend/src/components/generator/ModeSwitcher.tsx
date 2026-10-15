@@ -64,7 +64,7 @@ export const ModeSwitcher: React.FC<ModeSwitcherProps> = ({ mode, onChange }) =>
           ariaLabel={dict.generator.modeSwitcherAriaLabel}
           accent="primary"
           className="w-full sm:w-auto"
-          buttonClassName="w-full sm:w-auto justify-between min-h-[44px] px-4 py-2 type-card-title rounded-xl border border-border-color bg-bg-surface hover:bg-bg-elevated text-text-primary"
+          buttonClassName="w-full sm:w-auto justify-between min-h-[44px] px-4 py-2 type-card-title border border-border-color bg-bg-surface hover:bg-bg-elevated text-text-primary"
           menuClassName="w-full sm:w-auto min-w-[220px]"
         />
       </div>

@@ -71,7 +71,7 @@ export function ChapterToolbar({
             role="checkbox"
             aria-checked={isAllOwned}
             onClick={onToggleAll}
-            className={`group relative flex items-center gap-2 rounded-lg border px-2.5 sm:px-3 py-1.5 transition-all select-none cursor-pointer ${
+            className={`group relative flex items-center gap-2 rounded-control border px-2.5 sm:px-3 py-1.5 transition-all select-none cursor-pointer ${
               isAllOwned
                 ? 'border-accent-red/80 bg-accent-red/15 text-accent-red'
                 : 'border-border-color bg-bg-surface text-text-secondary hover:border-accent-red/60 hover:text-text-primary'
@@ -79,7 +79,7 @@ export function ChapterToolbar({
           >
             <span
               aria-hidden="true"
-              className={`relative flex h-4 w-4 sm:h-4.5 sm:w-4.5 shrink-0 items-center justify-center rounded-[3px] border transition-all duration-150 ${
+              className={`relative flex h-4 w-4 sm:h-4.5 sm:w-4.5 shrink-0 items-center justify-center rounded-chip border transition-all duration-150 ${
                 isAllOwned
                   ? 'border-accent-red bg-accent-red text-text-inverted'
                   : 'border-border-color/80 bg-bg-elevated/80 group-hover:border-accent-red/80'

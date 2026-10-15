@@ -68,7 +68,7 @@ export function VoiceBannerHeader({
           onClick={() => setSoundEnabled((prev) => !prev)}
           {...tip(soundEnabled ? dict.voice.muteSound : dict.voice.enableSound, undefined, 'action')}
           aria-label={soundEnabled ? dict.voice.muteSound : dict.voice.enableSound}
-          className="pointer-coarse:min-h-11 pointer-coarse:min-w-11 flex h-9 w-9 items-center justify-center rounded-xl border border-border-color bg-bg-elevated text-text-secondary transition hover:border-border-subtle hover:text-text-primary cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-accent-red"
+          className="pointer-coarse:min-h-11 pointer-coarse:min-w-11 flex h-9 w-9 items-center justify-center rounded-control border border-border-color bg-bg-elevated text-text-secondary transition hover:border-border-subtle hover:text-text-primary cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-accent-red"
         >
           {soundEnabled ? (
             <Volume2 className="h-4 w-4" aria-hidden="true" />

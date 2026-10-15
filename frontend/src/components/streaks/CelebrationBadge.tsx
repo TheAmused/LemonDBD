@@ -3,7 +3,7 @@ import { Trophy } from 'lucide-react';
 
 /** Card chrome shared by every win screen: the checkpoint modal's amber gradient, without the motion. */
 export const CELEBRATION_CARD_CLASSES =
-  'rounded-3xl border border-accent-amber/60 bg-gradient-to-b from-accent-amber/20 via-bg-surface to-bg-primary text-center';
+  'rounded-card border border-accent-amber/60 bg-gradient-to-b from-accent-amber/20 via-bg-surface to-bg-primary text-center';
 
 /** Static amber trophy medallion that tops a win screen. */
 export const CelebrationBadge: React.FC = () => (

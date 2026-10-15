@@ -81,7 +81,7 @@ export function TierPool({
       data-tier-pool=""
       aria-label={t.unranked}
       className={cn(
-        'w-full flex flex-col overflow-hidden border border-border-color bg-bg-surface shadow-xs rounded-3xl transition-all',
+        'w-full flex flex-col overflow-hidden border border-border-color bg-bg-surface shadow-xs rounded-card transition-all',
         'shrink-0 bg-bg-surface/95 shadow-sm',
         'group-data-[fit]/board:min-h-(--pool-min-total) group-data-[fit-mode]/board:max-h-(--pool-max-total)'
       )}
@@ -118,14 +118,14 @@ export function TierPool({
             }}
             placeholder={t.searchPool}
             aria-label={t.searchPoolAria}
-            className="h-8.5 rounded-xl bg-bg-primary pl-9 pr-8 text-xs sm:text-sm"
+            className="h-8.5 bg-bg-primary pl-9 pr-8 text-xs sm:text-sm"
           />
           {query && (
             <button
               type="button"
               onClick={() => setQuery('')}
               aria-label={t.clearSearch}
-              className="hit-area absolute right-2 top-1/2 flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-md text-text-muted hover:text-text-primary cursor-pointer"
+              className="hit-area absolute right-2 top-1/2 flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-chip text-text-muted hover:text-text-primary cursor-pointer"
             >
               <X className="h-3.5 w-3.5" aria-hidden="true" />
             </button>
@@ -168,7 +168,7 @@ export function TierPool({
               <button
                 type="button"
                 onClick={() => onMoveSelectedHere(POOL_CONTAINER_ID)}
-                className="inline-flex h-8.5 shrink-0 items-center gap-1.5 rounded-xl border border-dashed border-accent-amber/60 bg-accent-amber/10 px-3 type-strong text-accent-amber hover:bg-accent-amber/20 cursor-pointer transition-colors"
+                className="inline-flex h-8.5 shrink-0 items-center gap-1.5 rounded-control border border-dashed border-accent-amber/60 bg-accent-amber/10 px-3 type-strong text-accent-amber hover:bg-accent-amber/20 cursor-pointer transition-colors"
               >
                 <ArrowDownToLine className="h-3.5 w-3.5" aria-hidden="true" />
                 {t.moveHere}

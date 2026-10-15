@@ -44,11 +44,11 @@ export function CharactersToolbar({
       <div
         role="group"
         aria-label={dict.filters.category}
-        className="order-2 sm:order-1 relative flex items-center w-full sm:w-72 h-11 p-1 bg-bg-primary border border-border-color rounded-2xl shadow-inner select-none transition-colors"
+        className="order-2 sm:order-1 relative flex items-center w-full sm:w-72 h-11 p-1 bg-bg-primary border border-border-color rounded-card shadow-inner select-none transition-colors"
       >
         <span
           aria-hidden="true"
-          className={`absolute top-1 bottom-1 left-1 w-[calc(50%-4px)] rounded-xl shadow-md transition-transform duration-300 ease-out ${
+          className={`absolute top-1 bottom-1 left-1 w-[calc(50%-4px)] rounded-control shadow-md transition-transform duration-300 ease-out ${
             activeTab === 'Survivor'
               ? 'translate-x-0 bg-accent-green'
               : 'translate-x-[calc(100%+8px)] bg-accent-red'
@@ -58,7 +58,7 @@ export function CharactersToolbar({
           type="button"
           onClick={() => onTabChange('Survivor')}
           aria-pressed={activeTab === 'Survivor'}
-          className={`relative z-10 flex-1 flex items-center justify-center gap-1.5 h-full min-h-[40px] rounded-xl text-xs font-bold transition-colors cursor-pointer touch-manipulation ${
+          className={`relative z-10 flex-1 flex items-center justify-center gap-1.5 h-full min-h-[40px] rounded-control text-xs font-bold transition-colors cursor-pointer touch-manipulation ${
             activeTab === 'Survivor'
               ? 'text-text-inverted'
               : 'text-text-secondary hover:text-accent-green'
@@ -71,7 +71,7 @@ export function CharactersToolbar({
           type="button"
           onClick={() => onTabChange('Killer')}
           aria-pressed={activeTab === 'Killer'}
-          className={`relative z-10 flex-1 flex items-center justify-center gap-1.5 h-full min-h-[40px] rounded-xl text-xs font-bold transition-colors cursor-pointer touch-manipulation ${
+          className={`relative z-10 flex-1 flex items-center justify-center gap-1.5 h-full min-h-[40px] rounded-control text-xs font-bold transition-colors cursor-pointer touch-manipulation ${
             activeTab === 'Killer'
               ? 'text-text-inverted'
               : 'text-text-secondary hover:text-accent-red'
@@ -87,7 +87,7 @@ export function CharactersToolbar({
           type="button"
           onClick={onToggleOwnershipMode}
           disabled={ownershipLoading || ownershipSaving}
-          className={`flex items-center justify-center gap-1.5 px-4 py-2.5 min-h-[44px] rounded-2xl text-xs font-bold transition-all cursor-pointer disabled:opacity-60 disabled:cursor-wait touch-manipulation shadow-xs ${
+          className={`flex items-center justify-center gap-1.5 px-4 py-2.5 min-h-[44px] rounded-control text-xs font-bold transition-all cursor-pointer disabled:opacity-60 disabled:cursor-wait touch-manipulation shadow-xs ${
             ownershipMode
               ? 'bg-accent-amber text-text-inverted border border-accent-amber shadow-accent-amber/20'
               : 'border border-border-color bg-bg-surface text-text-primary hover:border-accent-amber/50 hover:text-accent-amber'
@@ -112,7 +112,7 @@ export function CharactersToolbar({
           aria-label={dict.filters.filterByCharacter}
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="pl-10 pr-10 min-h-[44px] rounded-2xl bg-bg-primary font-semibold shadow-inner"
+          className="pl-10 pr-10 min-h-[44px] bg-bg-primary font-semibold shadow-inner"
         />
         {searchQuery && (
           <button

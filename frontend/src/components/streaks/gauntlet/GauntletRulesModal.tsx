@@ -283,10 +283,10 @@ export const GauntletRulesModal: React.FC<GauntletRulesModalProps> = ({ isOpen, 
             return (
               <div
                 key={tier.level}
-                className="flex flex-col sm:flex-row sm:items-center justify-between p-3.5 bg-bg-elevated border border-border-color rounded-xl gap-3 shadow-sm"
+                className="flex flex-col sm:flex-row sm:items-center justify-between p-3.5 bg-bg-elevated border border-border-color rounded-card gap-3 shadow-sm"
               >
                 <div className="flex items-center gap-3">
-                  <span className={`px-2.5 py-1 rounded-lg text-xs font-bold border ${tier.badgeColor} whitespace-nowrap`}>
+                  <span className={`px-2.5 py-1 rounded-chip text-xs font-bold border ${tier.badgeColor} whitespace-nowrap`}>
                     {rawStreaks.tierLabel || ''} {tier.level}{tierName ? `: ${tierName}` : ''}
                   </span>
                   <span className="text-xs font-medium text-text-muted">

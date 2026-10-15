@@ -65,7 +65,7 @@ export const AdminUserTable: React.FC<AdminUserTableProps> = ({
     }) => {
   const dict = useDictionary();
   return (
-    <div className="rounded-3xl border border-border-color bg-bg-surface p-4 sm:p-6 backdrop-blur-xl shadow-xs space-y-6 w-full transition-colors duration-200">
+    <div className="rounded-card border border-border-color bg-bg-surface p-4 sm:p-6 backdrop-blur-xl shadow-xs space-y-6 w-full transition-colors duration-200">
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-border-color">
         <div className="flex items-center gap-3">
           <Users className="h-5 w-5 text-accent-amber" />
@@ -108,12 +108,12 @@ export const AdminUserTable: React.FC<AdminUserTableProps> = ({
       {/* Mobile view */}
       <div className="sm:hidden space-y-3 w-full">
         {users.length === 0 ? (
-          <div className="rounded-2xl border border-border-color bg-bg-primary py-8 text-center text-xs text-text-muted">
+          <div className="rounded-card border border-border-color bg-bg-primary py-8 text-center text-xs text-text-muted">
             {loading ? dict.admin.loading : dict.admin.noUsers}
           </div>
         ) : (
           users.map((u) => (
-            <div key={u.id} className="rounded-2xl border border-border-color bg-bg-primary p-4 space-y-3">
+            <div key={u.id} className="rounded-card border border-border-color bg-bg-primary p-4 space-y-3">
               <div className="flex items-center justify-between gap-2">
                 <div className="flex items-center gap-2 min-w-0">
                   <UserAvatar user={u} size="xs" />
@@ -121,7 +121,7 @@ export const AdminUserTable: React.FC<AdminUserTableProps> = ({
                     <div className="flex items-center gap-1.5">
                       <span className="font-bold text-text-primary truncate">{u.username}</span>
                       {u.id === currentUserId && (
-                        <span className="shrink-0 rounded-md bg-accent-amber/15 border border-accent-amber/30 px-1.5 py-0.5 text-micro font-black uppercase tracking-wider text-accent-amber">
+                        <span className="shrink-0 rounded-chip bg-accent-amber/15 border border-accent-amber/30 px-1.5 py-0.5 text-micro font-black uppercase tracking-wider text-accent-amber">
                           {dict.admin.you}
                         </span>
                       )}
@@ -130,7 +130,7 @@ export const AdminUserTable: React.FC<AdminUserTableProps> = ({
                   </div>
                 </div>
                 <span
-                  className={`shrink-0 inline-flex items-center gap-1 rounded-lg px-2 py-0.5 text-tiny font-black uppercase tracking-wider border ${
+                  className={`shrink-0 inline-flex items-center gap-1 rounded-chip px-2 py-0.5 text-tiny font-black uppercase tracking-wider border ${
                     u.role === 'admin'
                       ? 'bg-accent-red/15 text-accent-red border-accent-red/30'
                       : 'bg-bg-elevated text-text-secondary border-border-color'
@@ -177,7 +177,7 @@ export const AdminUserTable: React.FC<AdminUserTableProps> = ({
                     onClick={() => onToggleRole(u)}
                     {...tip(u.role === 'admin' ? dict.admin.demote : dict.admin.promote, undefined, 'action')}
                     aria-label={u.role === 'admin' ? dict.admin.demote : dict.admin.promote}
-                    className="relative min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg border border-border-color bg-bg-surface text-text-primary hover:border-accent-amber hover:text-accent-amber transition-colors shadow-xs cursor-pointer"
+                    className="relative min-h-[44px] min-w-[44px] flex items-center justify-center rounded-control border border-border-color bg-bg-surface text-text-primary hover:border-accent-amber hover:text-accent-amber transition-colors shadow-xs cursor-pointer"
                   >
                     <OverseerEyeIcon className="h-4 w-4" />
                   </button>
@@ -186,7 +186,7 @@ export const AdminUserTable: React.FC<AdminUserTableProps> = ({
                     onClick={() => onToggleActive(u)}
                     {...tip(u.is_active ? dict.admin.disableAccount : dict.admin.enableAccount, undefined, 'action')}
                     aria-label={u.is_active ? dict.admin.disableAccount : dict.admin.enableAccount}
-                    className="relative min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg border border-border-color bg-bg-surface text-text-primary hover:border-accent-red hover:text-accent-red transition-colors shadow-xs cursor-pointer"
+                    className="relative min-h-[44px] min-w-[44px] flex items-center justify-center rounded-control border border-border-color bg-bg-surface text-text-primary hover:border-accent-red hover:text-accent-red transition-colors shadow-xs cursor-pointer"
                   >
                     <Lock className="h-4 w-4" />
                   </button>
@@ -196,7 +196,7 @@ export const AdminUserTable: React.FC<AdminUserTableProps> = ({
                       onClick={() => onResetTwoFactor(u)}
                       {...tip(dict.admin.resetTwoFactor, undefined, 'action')}
                       aria-label={dict.admin.resetTwoFactor}
-                      className="relative min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg border border-border-color bg-bg-surface text-text-primary hover:border-accent-amber hover:text-accent-amber transition-colors shadow-xs cursor-pointer"
+                      className="relative min-h-[44px] min-w-[44px] flex items-center justify-center rounded-control border border-border-color bg-bg-surface text-text-primary hover:border-accent-amber hover:text-accent-amber transition-colors shadow-xs cursor-pointer"
                     >
                       <ShieldOff className="h-4 w-4" />
                     </button>
@@ -213,7 +213,7 @@ export const AdminUserTable: React.FC<AdminUserTableProps> = ({
                       onClick={() => onDeleteUser(u)}
                       {...tip(dict.admin.deleteUserTitle, undefined, 'action')}
                       aria-label={dict.admin.deleteUserTitle}
-                      className="relative min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg border border-accent-red/30 bg-accent-red/10 text-accent-red hover:bg-accent-red/20 transition-colors shadow-xs cursor-pointer"
+                      className="relative min-h-[44px] min-w-[44px] flex items-center justify-center rounded-control border border-accent-red/30 bg-accent-red/10 text-accent-red hover:bg-accent-red/20 transition-colors shadow-xs cursor-pointer"
                     >
                       <Trash2 className="h-4 w-4" />
                     </button>
@@ -256,7 +256,7 @@ export const AdminUserTable: React.FC<AdminUserTableProps> = ({
                     <span className="truncate max-w-[120px]">{u.username}</span>
                     <span className="truncate max-w-[120px] type-caption font-normal text-text-muted">{u.login}</span>
                     {u.id === currentUserId && (
-                      <span className="rounded-md bg-accent-amber/15 border border-accent-amber/30 px-1.5 py-0.5 text-micro font-black uppercase tracking-wider text-accent-amber">
+                      <span className="rounded-chip bg-accent-amber/15 border border-accent-amber/30 px-1.5 py-0.5 text-micro font-black uppercase tracking-wider text-accent-amber">
                         {dict.admin.you}
                       </span>
                     )}
@@ -264,7 +264,7 @@ export const AdminUserTable: React.FC<AdminUserTableProps> = ({
                   <td className="px-4 py-3 text-text-secondary">{u.email}</td>
                   <td className="px-4 py-3">
                     <span
-                      className={`inline-flex items-center gap-1 rounded-lg px-2 py-0.5 text-tiny font-black uppercase tracking-wider border ${
+                      className={`inline-flex items-center gap-1 rounded-chip px-2 py-0.5 text-tiny font-black uppercase tracking-wider border ${
                         u.role === 'admin'
                           ? 'bg-accent-red/15 text-accent-red border-accent-red/30'
                           : 'bg-bg-elevated text-text-secondary border-border-color'
@@ -311,7 +311,7 @@ export const AdminUserTable: React.FC<AdminUserTableProps> = ({
                         onClick={() => onToggleRole(u)}
                         {...tip(u.role === 'admin' ? dict.admin.demote : dict.admin.promote, undefined, 'action')}
                         aria-label={u.role === 'admin' ? dict.admin.demote : dict.admin.promote}
-                        className="relative rounded-lg border border-border-color bg-bg-surface p-1.5 text-text-primary hover:border-accent-amber hover:text-accent-amber transition-colors shadow-xs cursor-pointer before:absolute before:-inset-2.5 before:content-['']"
+                        className="relative rounded-control border border-border-color bg-bg-surface p-1.5 text-text-primary hover:border-accent-amber hover:text-accent-amber transition-colors shadow-xs cursor-pointer before:absolute before:-inset-2.5 before:content-['']"
                       >
                         <OverseerEyeIcon className="h-3.5 w-3.5" />
                       </button>
@@ -321,7 +321,7 @@ export const AdminUserTable: React.FC<AdminUserTableProps> = ({
                         onClick={() => onToggleActive(u)}
                         {...tip(u.is_active ? dict.admin.disableAccount : dict.admin.enableAccount, undefined, 'action')}
                         aria-label={u.is_active ? dict.admin.disableAccount : dict.admin.enableAccount}
-                        className="relative rounded-lg border border-border-color bg-bg-surface p-1.5 text-text-primary hover:border-accent-red hover:text-accent-red transition-colors shadow-xs cursor-pointer before:absolute before:-inset-2.5 before:content-['']"
+                        className="relative rounded-control border border-border-color bg-bg-surface p-1.5 text-text-primary hover:border-accent-red hover:text-accent-red transition-colors shadow-xs cursor-pointer before:absolute before:-inset-2.5 before:content-['']"
                       >
                         <Lock className="h-3.5 w-3.5" />
                       </button>
@@ -332,7 +332,7 @@ export const AdminUserTable: React.FC<AdminUserTableProps> = ({
                           onClick={() => onResetTwoFactor(u)}
                           {...tip(dict.admin.resetTwoFactor, undefined, 'action')}
                           aria-label={dict.admin.resetTwoFactor}
-                          className="relative rounded-lg border border-border-color bg-bg-surface p-1.5 text-text-primary hover:border-accent-amber hover:text-accent-amber transition-colors shadow-xs cursor-pointer before:absolute before:-inset-2.5 before:content-['']"
+                          className="relative rounded-control border border-border-color bg-bg-surface p-1.5 text-text-primary hover:border-accent-amber hover:text-accent-amber transition-colors shadow-xs cursor-pointer before:absolute before:-inset-2.5 before:content-['']"
                         >
                           <ShieldOff className="h-3.5 w-3.5" />
                         </button>
@@ -351,7 +351,7 @@ export const AdminUserTable: React.FC<AdminUserTableProps> = ({
                           onClick={() => onDeleteUser(u)}
                           {...tip(dict.admin.deleteUserTitle, undefined, 'action')}
                           aria-label={dict.admin.deleteUserTitle}
-                          className="relative rounded-lg border border-accent-red/30 bg-accent-red/10 p-1.5 text-accent-red hover:bg-accent-red/20 transition-colors shadow-xs cursor-pointer before:absolute before:-inset-2.5 before:content-['']"
+                          className="relative rounded-control border border-accent-red/30 bg-accent-red/10 p-1.5 text-accent-red hover:bg-accent-red/20 transition-colors shadow-xs cursor-pointer before:absolute before:-inset-2.5 before:content-['']"
                         >
                           <Trash2 className="h-3.5 w-3.5" />
                         </button>

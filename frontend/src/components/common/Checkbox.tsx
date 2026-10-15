@@ -49,7 +49,7 @@ export const Checkbox: React.FC<CheckboxProps> = ({
       aria-describedby={ariaDescribedBy}
       aria-label={children ? undefined : ariaLabel}
       onChange={(e) => onChange(e.target.checked)}
-      className={cn('h-4 w-4 shrink-0 cursor-[inherit] rounded border-border-color accent-accent-red aria-invalid:ring-2 aria-invalid:ring-accent-red', invalid && 'ring-2 ring-accent-red', boxClassName)}
+      className={cn('h-4 w-4 shrink-0 cursor-[inherit] rounded-chip border-border-color accent-accent-red aria-invalid:ring-2 aria-invalid:ring-accent-red', invalid && 'ring-2 ring-accent-red', boxClassName)}
     />
     {children}
   </label>

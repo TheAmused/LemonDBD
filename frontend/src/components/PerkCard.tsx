@@ -99,13 +99,13 @@ export const PerkCard: React.FC<PerkCardProps> = ({ perk, onSelect, coordinate, 
         aria-label={ariaLabel}
         className={`relative flex cursor-pointer items-center justify-center transition-transform duration-200 ${
           size === 'tarot' || size === 'compact' ? 'group-hover:scale-102 active:scale-95' : 'group-hover:scale-105 active:scale-95'
-        } touch-manipulation focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red rounded-2xl ${GRID_SIZE_CLASSES[size]}`}
+        } touch-manipulation focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red rounded-control ${GRID_SIZE_CLASSES[size]}`}
       >
         {coordinateLabel && (
           <span
             className={`absolute z-10 font-black pointer-events-none ${
               size === 'tarot' || size === 'compact'
-                ? 'top-0 left-0 text-micro sm:text-micro md:text-tiny xl:text-xs 2xl:text-sm text-accent-amber bg-bg-primary/80 px-1 py-0.5 rounded shadow-xs'
+                ? 'top-0 left-0 text-micro sm:text-micro md:text-tiny xl:text-xs 2xl:text-sm text-accent-amber bg-bg-primary/80 px-1 py-0.5 rounded-chip shadow-xs'
                 : 'top-1 left-1 text-tiny text-accent-amber'
             }`}
           >

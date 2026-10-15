@@ -15,8 +15,8 @@ export function OnboardingAuthRequired({ locale }: { locale: string }) {
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center p-6 text-center">
-      <div className="w-full max-w-md space-y-4 rounded-3xl border border-border-color bg-bg-surface p-8 shadow-xl">
-        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl border border-accent-red/30 bg-accent-red/15">
+      <div className="w-full max-w-md space-y-4 rounded-card border border-border-color bg-bg-surface p-8 shadow-xl">
+        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-card border border-accent-red/30 bg-accent-red/15">
           <LemonIcon className="h-10 w-10 text-accent-red" />
         </div>
         <h1 className="text-xl font-black tracking-wider text-text-primary">

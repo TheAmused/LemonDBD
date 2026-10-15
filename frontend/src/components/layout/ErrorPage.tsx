@@ -52,7 +52,7 @@ export const ErrorPage: React.FC<ErrorPageProps> = ({ variant }) => {
       mainClassName="flex items-center justify-center min-h-[calc(100vh-4rem)] lg:min-h-screen"
     >
       <div className="relative z-10 mx-auto flex w-full max-w-xl flex-col items-center py-8 text-center sm:py-12">
-        <div className="group relative mb-8 flex h-36 w-36 items-center justify-center rounded-3xl border-2 border-accent-red/40 bg-bg-elevated p-6 shadow-md transition-transform duration-300 hover:scale-105 sm:h-44 sm:w-44">
+        <div className="group relative mb-8 flex h-36 w-36 items-center justify-center rounded-card border-2 border-accent-red/40 bg-bg-elevated p-6 shadow-md transition-transform duration-300 hover:scale-105 sm:h-44 sm:w-44">
           <LemonIcon className="dbd-lemon-glow h-full w-full transition-transform duration-300 group-hover:rotate-6" />
         </div>
 
@@ -66,7 +66,7 @@ export const ErrorPage: React.FC<ErrorPageProps> = ({ variant }) => {
         <div className="mt-8">
           <Link
             href={`/${locale}`}
-            className="inline-flex cursor-pointer items-center gap-2.5 rounded-2xl bg-accent-red px-7 py-3.5 type-card-title text-text-inverted shadow-md transition-all hover:scale-105 hover:bg-accent-red-hover active:scale-95"
+            className="inline-flex cursor-pointer items-center gap-2.5 rounded-control bg-accent-red px-7 py-3.5 type-card-title text-text-inverted shadow-md transition-all hover:scale-105 hover:bg-accent-red-hover active:scale-95"
           >
             <Home className="h-4 w-4" aria-hidden="true" />
             <span>{copy.backHome}</span>

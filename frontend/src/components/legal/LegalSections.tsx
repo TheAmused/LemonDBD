@@ -33,7 +33,7 @@ function HookStages({ heading, stages }: { heading: string; stages: readonly { t
         {stages.map((stage, i) => {
           const style = STAGE_STYLES[Math.min(i, STAGE_STYLES.length - 1)];
           return (
-            <li key={stage.title} className={cn('flex flex-col gap-1.5 rounded-2xl border p-3 text-center', style.box)}>
+            <li key={stage.title} className={cn('flex flex-col gap-1.5 rounded-card border p-3 text-center', style.box)}>
               <span className="flex gap-1" aria-hidden="true">
                 {STAGE_STYLES.map((_, bar) => (
                   <span key={bar} className={cn('h-1.5 flex-1 rounded-full', bar <= i ? style.bar : 'bg-border-color')} />
@@ -98,7 +98,7 @@ export function LegalSections({ doc, variant }: LegalSectionsProps) {
       centered: true,
       children: (
         <>
-          <p className={cn('rounded-2xl border border-dashed px-3.5 py-2.5 text-center italic text-text-secondary', t.bubble)}>
+          <p className={cn('rounded-card border border-dashed px-3.5 py-2.5 text-center italic text-text-secondary', t.bubble)}>
             <span className={cn('mr-2 not-italic type-label-2xs', t.text)}>{text.tldrLabel}</span>
             <RichText text={fill(section.tldr)} />
           </p>

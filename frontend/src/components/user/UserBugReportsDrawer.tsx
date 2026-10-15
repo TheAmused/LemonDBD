@@ -28,7 +28,7 @@ export const UserBugReportsDrawer: React.FC<UserBugReportsDrawerProps> = ({ repo
   const [isExpanded, toggleExpanded] = usePersistentDrawer('lemondbd_drawer_bugs', false);
 
   return (
-    <div className="rounded-3xl border border-border-color bg-bg-surface backdrop-blur-xl shadow-md overflow-hidden transition-colors flex flex-col">
+    <div className="rounded-card border border-border-color bg-bg-surface backdrop-blur-xl shadow-md overflow-hidden transition-colors flex flex-col">
       {/* Connected Header with Collapsible Drawer Toggle */}
       <div className="relative w-full grid grid-cols-[1fr_auto_1fr] items-center gap-2 py-4 px-5 sm:py-4.5 sm:px-7 2xl:py-5.5 2xl:px-9 group select-none overflow-hidden transition-colors text-left">
         {/* Atmospheric DBD Banner Backdrop */}

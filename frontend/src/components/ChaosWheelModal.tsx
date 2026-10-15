@@ -305,7 +305,7 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({ isOpen, role, 
     {shownMutator && locShown && (
       <div
         aria-live="polite"
-        className={`mt-3 sm:mt-4 xl:mt-5 rounded-2xl border p-3 sm:p-4 bg-bg-primary ${shownMutator.borderColor || 'border-border-color'}`}
+        className={`mt-3 sm:mt-4 xl:mt-5 rounded-card border p-3 sm:p-4 bg-bg-primary ${shownMutator.borderColor || 'border-border-color'}`}
       >
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-2.5 min-w-0">
@@ -322,12 +322,12 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({ isOpen, role, 
               type="button"
               onClick={handleClearCurse}
               {...tip(dict.generator.clearMutatorTooltip, undefined, 'action')} aria-label={dict.generator.clearMutatorTooltip}
-              className="flex items-center gap-1 type-strong-fluid text-accent-red hover:text-accent-red-hover px-2 py-1 rounded-lg hover:bg-accent-red/10 transition-colors cursor-pointer"
+              className="flex items-center gap-1 type-strong-fluid text-accent-red hover:text-accent-red-hover px-2 py-1 rounded-control hover:bg-accent-red/10 transition-colors cursor-pointer"
             >
               <Trash2 className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
               <span className="hidden xs:inline">{dict.generator.clearMutator}</span>
             </button>
-            <div className="flex items-center gap-1 text-accent-green type-strong-fluid bg-accent-green/10 px-2.5 py-1 rounded-lg border border-accent-green/30">
+            <div className="flex items-center gap-1 text-accent-green type-strong-fluid bg-accent-green/10 px-2.5 py-1 rounded-chip border border-accent-green/30">
               <Check className="h-3.5 w-3.5 sm:h-4 sm:w-4" aria-hidden="true" />
               <span>{dict.smashOrPass.active}</span>
             </div>

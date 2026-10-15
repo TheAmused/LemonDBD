@@ -117,7 +117,7 @@ export const VictoryModal: React.FC<VictoryModalProps> = ({ challenge, roundGues
 
             <Link
               href={`/${locale}/minigames`}
-              className="flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-bg-elevated hover:bg-bg-surface border border-border-color text-text-primary type-card-title transition-all"
+              className="flex items-center justify-center gap-2 py-3 px-4 rounded-control bg-bg-elevated hover:bg-bg-surface border border-border-color text-text-primary type-card-title transition-all"
             >
               <Home className="w-4 h-4" />
               <span>{t.backToMinigames}</span>
@@ -126,7 +126,7 @@ export const VictoryModal: React.FC<VictoryModalProps> = ({ challenge, roundGues
       }
     >
       {/* Round Performance Breakdown */}
-      <div className="w-full p-4 rounded-2xl bg-bg-elevated/70 border border-border-subtle space-y-2.5">
+      <div className="w-full p-4 rounded-card bg-bg-elevated/70 border border-border-subtle space-y-2.5">
         {challenge.rounds.map((round, idx) => {
           const guesses = roundGuesses[idx] || [];
           const isWon = roundStatus[idx] === 'won';
@@ -146,7 +146,7 @@ export const VictoryModal: React.FC<VictoryModalProps> = ({ challenge, roundGues
                   {guesses.map((g, gi) => (
                     <span
                       key={gi}
-                      className={`inline-block w-2.5 h-2.5 rounded-sm ${
+                      className={`inline-block w-2.5 h-2.5 rounded-chip ${
                         g.evaluation.is_correct ? 'bg-accent-green' : 'bg-accent-red'
                       }`}
                     />

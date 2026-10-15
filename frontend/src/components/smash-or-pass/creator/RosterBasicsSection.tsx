@@ -109,7 +109,7 @@ export function RosterBasicsSection({
           {safeCover && (
             <div
               onClick={() => onOpenCrop()}
-              className="mt-3 relative group overflow-hidden rounded-xl border border-border-color bg-bg-elevated aspect-video max-w-md 2xl:max-w-lg wide:max-w-xl mx-auto shadow-xs cursor-pointer"
+              className="mt-3 relative group overflow-hidden rounded-card border border-border-color bg-bg-elevated aspect-video max-w-md 2xl:max-w-lg wide:max-w-xl mx-auto shadow-xs cursor-pointer"
               {...tip(c.cropCoverTitle, undefined, 'action')}
             >
               <img
@@ -132,7 +132,7 @@ export function RosterBasicsSection({
             type="color"
             value={draft.theme_color || '#ff0055'}
             onChange={(e) => patch({ theme_color: e.target.value })}
-            className="h-10 w-full max-w-xs cursor-pointer rounded-xl border border-border-color bg-bg-primary shadow-xs"
+            className="h-10 w-full max-w-xs cursor-pointer rounded-control border border-border-color bg-bg-primary shadow-xs"
           />
         </div>
 

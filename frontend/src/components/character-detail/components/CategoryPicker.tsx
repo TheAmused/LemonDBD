@@ -73,7 +73,7 @@ export const CategoryPicker: React.FC<CategoryPickerProps> = ({
         {...popoverTriggerProps(open, 'listbox')}
         aria-label={ariaLabel}
         onClick={() => setOpen((o) => !o)}
-        className={`flex w-full items-center justify-between gap-2 px-3.5 py-2.5 rounded-2xl border bg-bg-elevated text-xs font-bold transition-colors cursor-pointer ${
+        className={`flex w-full items-center justify-between gap-2 px-3.5 py-2.5 rounded-control border bg-bg-elevated text-xs font-bold transition-colors cursor-pointer ${
           open ? `${accentClasses.border} ${accentClasses.text}` : 'border-border-color text-text-primary'
         }`}
       >
@@ -96,7 +96,7 @@ export const CategoryPicker: React.FC<CategoryPickerProps> = ({
         role="listbox"
         ariaLabel={ariaLabel}
         animate={false}
-        className="rounded-2xl border border-border-color bg-bg-surface shadow-xl"
+        className="rounded-card border border-border-color bg-bg-surface shadow-xl"
       >
           {categories.map((cat) => {
             const Icon = cat.icon;

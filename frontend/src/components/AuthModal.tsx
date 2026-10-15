@@ -238,7 +238,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
       {error && (
         <div
           role="alert"
-          className="mb-4 flex items-center gap-2.5 rounded-xl border border-accent-red/30 bg-accent-red/10 p-3 type-strong text-accent-red animate-in fade-in duration-150 shadow-xs"
+          className="mb-4 flex items-center gap-2.5 rounded-card border border-accent-red/30 bg-accent-red/10 p-3 type-strong text-accent-red animate-in fade-in duration-150 shadow-xs"
         >
           <AlertCircle className="h-4 w-4 shrink-0 text-accent-red" />
           <span>{error}</span>
@@ -276,7 +276,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
       {notice && notice.type === 'forgot-sent' && (
         <div
           role="status"
-          className="mb-4 space-y-3 rounded-xl border border-accent-amber/30 bg-accent-amber/10 p-3.5 text-xs text-accent-amber animate-in fade-in duration-150 shadow-xs"
+          className="mb-4 space-y-3 rounded-card border border-accent-amber/30 bg-accent-amber/10 p-3.5 text-xs text-accent-amber animate-in fade-in duration-150 shadow-xs"
         >
           <div className="flex items-start gap-2.5">
             <MailWarning className="h-4 w-4 shrink-0 mt-0.5" />
@@ -286,7 +286,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
             <button
               type="button"
               onClick={onClose}
-              className="block w-full rounded-lg bg-accent-amber/20 py-1.5 type-label-xs text-accent-amber hover:bg-accent-amber/30 transition-colors cursor-pointer"
+              className="block w-full rounded-control bg-accent-amber/20 py-1.5 type-label-xs text-accent-amber hover:bg-accent-amber/30 transition-colors cursor-pointer"
             >
               {dict.modal.close}
             </button>
@@ -480,7 +480,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
             <button
               type="button"
               onClick={() => handleFillDemo('player')}
-              className="flex items-center justify-center gap-1.5 rounded-lg border border-accent-amber/30 bg-accent-amber/10 px-2.5 py-1.5 type-strong-xs text-accent-amber hover:bg-accent-amber/20 transition-colors shadow-xs cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red"
+              className="flex items-center justify-center gap-1.5 rounded-control border border-accent-amber/30 bg-accent-amber/10 px-2.5 py-1.5 type-strong-xs text-accent-amber hover:bg-accent-amber/20 transition-colors shadow-xs cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red"
             >
               <Sparkles className="h-3 w-3 text-accent-amber" />
               <span>{dict.user.userDemo}</span>

@@ -193,7 +193,7 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
 
 
         {/* Daily Streak Banner */}
-        <div className="mt-6 inline-flex items-center gap-4 px-5 py-2.5 rounded-2xl bg-bg-surface border border-border-color shadow-xl backdrop-blur-md">
+        <div className="mt-6 inline-flex items-center gap-4 px-5 py-2.5 rounded-card bg-bg-surface border border-border-color shadow-xl backdrop-blur-md">
           <div className="flex items-center gap-2 text-accent-amber font-extrabold text-sm sm:text-base">
             <Flame className="w-5 h-5 fill-current animate-pulse" />
             <span>
@@ -215,7 +215,7 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
       {importError && (
         <div
           role="alert"
-          className="w-full mb-6 flex items-center gap-2.5 rounded-xl border border-accent-red/30 bg-accent-red/10 p-3 type-strong text-accent-red animate-in fade-in duration-150 shadow-xs"
+          className="w-full mb-6 flex items-center gap-2.5 rounded-card border border-accent-red/30 bg-accent-red/10 p-3 type-strong text-accent-red animate-in fade-in duration-150 shadow-xs"
         >
           <AlertCircle className="h-4 w-4 shrink-0" />
           <span className="min-w-0 flex-1">{importError}</span>
@@ -223,7 +223,7 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
             type="button"
             onClick={() => setImportError(null)}
             aria-label={dict.modal.close}
-            className="shrink-0 cursor-pointer rounded-md px-2 py-0.5 hover:bg-accent-red/20 transition-colors"
+            className="shrink-0 cursor-pointer rounded-chip px-2 py-0.5 hover:bg-accent-red/20 transition-colors"
           >
             <X className="h-3.5 w-3.5" />
           </button>
@@ -233,11 +233,11 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
       {/* Flagship Game Mode Cards Grid */}
       <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-5 mb-10">
         {/* Daily Fog Gauntlet */}
-        <div className="p-6 rounded-3xl bg-bg-surface border border-border-color shadow-xl flex flex-col justify-between hover:border-accent-red/60 transition-all group relative overflow-hidden">
+        <div className="p-6 rounded-card bg-bg-surface border border-border-color shadow-xl flex flex-col justify-between hover:border-accent-red/60 transition-all group relative overflow-hidden">
           <div className="absolute top-0 right-0 w-32 h-32 bg-accent-red/5 rounded-full blur-2xl pointer-events-none" />
           <div>
             <div className="flex items-center justify-between mb-4">
-              <div className="w-12 h-12 rounded-2xl bg-accent-red/10 border border-accent-red/30 flex items-center justify-center text-accent-red group-hover:scale-110 transition-transform">
+              <div className="w-12 h-12 rounded-card bg-accent-red/10 border border-accent-red/30 flex items-center justify-center text-accent-red group-hover:scale-110 transition-transform">
                 <Calendar className="w-6 h-6" />
               </div>
               <span className="type-label-2xs px-2.5 py-1 rounded-full bg-accent-red/20 text-accent-red border border-accent-red/30">
@@ -251,7 +251,7 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
           </div>
           <Link
             href={`/${locale}/minigames/play?type=daily&mode=fog_trial`}
-            className="mt-6 flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-accent-red hover:bg-accent-red-hover text-text-inverted type-label-sm shadow-lg shadow-accent-red/20 transition-all active:scale-95"
+            className="mt-6 flex items-center justify-center gap-2 py-3 px-4 rounded-control bg-accent-red hover:bg-accent-red-hover text-text-inverted type-label-sm shadow-lg shadow-accent-red/20 transition-all active:scale-95"
           >
             <Play className="w-4 h-4 fill-current" />
             <span>{t.playDaily}</span>
@@ -259,11 +259,11 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
         </div>
 
         {/* Classic DBD Idle */}
-        <div className="p-6 rounded-3xl bg-bg-surface border border-border-color shadow-xl flex flex-col justify-between hover:border-accent-amber/60 transition-all group relative overflow-hidden">
+        <div className="p-6 rounded-card bg-bg-surface border border-border-color shadow-xl flex flex-col justify-between hover:border-accent-amber/60 transition-all group relative overflow-hidden">
           <div className="absolute top-0 right-0 w-32 h-32 bg-accent-amber/5 rounded-full blur-2xl pointer-events-none" />
           <div>
             <div className="flex items-center justify-between mb-4">
-              <div className="w-12 h-12 rounded-2xl bg-accent-amber/10 border border-accent-amber/30 flex items-center justify-center text-accent-amber group-hover:scale-110 transition-transform">
+              <div className="w-12 h-12 rounded-card bg-accent-amber/10 border border-accent-amber/30 flex items-center justify-center text-accent-amber group-hover:scale-110 transition-transform">
                 <Trophy className="w-6 h-6" />
               </div>
               <span className="type-label-2xs px-2.5 py-1 rounded-full bg-accent-amber/20 text-accent-amber border border-accent-amber/30">
@@ -277,7 +277,7 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
           </div>
           <Link
             href={`/${locale}/minigames/idle`}
-            className="mt-6 flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-accent-amber hover:bg-accent-amber-hover text-text-inverted type-label-sm shadow-lg shadow-accent-amber/20 transition-all active:scale-95"
+            className="mt-6 flex items-center justify-center gap-2 py-3 px-4 rounded-control bg-accent-amber hover:bg-accent-amber-hover text-text-inverted type-label-sm shadow-lg shadow-accent-amber/20 transition-all active:scale-95"
           >
             <Play className="w-4 h-4 fill-current" />
             <span>{t.playIdle}</span>
@@ -285,11 +285,11 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
         </div>
 
         {/* Challenge Creator */}
-        <div className="p-6 rounded-3xl bg-bg-surface border border-border-color shadow-xl flex flex-col justify-between hover:border-accent-red/60 transition-all group relative overflow-hidden">
+        <div className="p-6 rounded-card bg-bg-surface border border-border-color shadow-xl flex flex-col justify-between hover:border-accent-red/60 transition-all group relative overflow-hidden">
           <div className="absolute top-0 right-0 w-32 h-32 bg-accent-red/5 rounded-full blur-2xl pointer-events-none" />
           <div>
             <div className="flex items-center justify-between mb-4">
-              <div className="w-12 h-12 rounded-2xl bg-accent-red/10 border border-accent-red/30 flex items-center justify-center text-accent-red group-hover:scale-110 transition-transform">
+              <div className="w-12 h-12 rounded-card bg-accent-red/10 border border-accent-red/30 flex items-center justify-center text-accent-red group-hover:scale-110 transition-transform">
                 <Layers className="w-6 h-6" />
               </div>
               <span className="type-label-2xs px-2.5 py-1 rounded-full bg-accent-red/20 text-accent-red border border-accent-red/30">
@@ -301,7 +301,7 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
           </div>
           <Link
             href={`/${locale}/minigames/creator`}
-            className="mt-6 flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-accent-red hover:bg-accent-red-hover text-text-inverted type-label-sm shadow-lg shadow-accent-red/20 transition-all active:scale-95"
+            className="mt-6 flex items-center justify-center gap-2 py-3 px-4 rounded-control bg-accent-red hover:bg-accent-red-hover text-text-inverted type-label-sm shadow-lg shadow-accent-red/20 transition-all active:scale-95"
           >
             <Plus className="w-4 h-4" />
             <span>{t.createChallenge}</span>
@@ -323,9 +323,9 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {/* Realm Guesser */}
-          <div className="p-5 rounded-2xl bg-bg-surface border border-border-color shadow-lg flex flex-col justify-between hover:border-accent-green/60 transition-all group">
+          <div className="p-5 rounded-card bg-bg-surface border border-border-color shadow-lg flex flex-col justify-between hover:border-accent-green/60 transition-all group">
             <div>
-              <div className="w-10 h-10 rounded-xl bg-accent-green/10 border border-accent-green/30 flex items-center justify-center text-accent-green mb-3 group-hover:scale-105 transition-transform">
+              <div className="w-10 h-10 rounded-card bg-accent-green/10 border border-accent-green/30 flex items-center justify-center text-accent-green mb-3 group-hover:scale-105 transition-transform">
                 <MapPin className="w-5 h-5" />
               </div>
               <h3 className="text-base font-bold text-text-primary mb-1">{t.modes.realm_guesser}</h3>
@@ -335,7 +335,7 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
             </div>
             <Link
               href={`/${locale}/minigames/play?type=repeatable&mode=realm`}
-              className="mt-5 flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-accent-green hover:bg-accent-green-hover text-text-inverted type-label-sm shadow-md shadow-accent-green/20 transition-all active:scale-95"
+              className="mt-5 flex items-center justify-center gap-2 py-2.5 px-4 rounded-control bg-accent-green hover:bg-accent-green-hover text-text-inverted type-label-sm shadow-md shadow-accent-green/20 transition-all active:scale-95"
             >
               <Play className="w-3.5 h-3.5 fill-current" />
               <span>{t.playRealmGuesser}</span>
@@ -343,9 +343,9 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
           </div>
 
           {/* Perk Decryption */}
-          <div className="p-5 rounded-2xl bg-bg-surface border border-border-color shadow-lg flex flex-col justify-between hover:border-accent-amber/60 transition-all group">
+          <div className="p-5 rounded-card bg-bg-surface border border-border-color shadow-lg flex flex-col justify-between hover:border-accent-amber/60 transition-all group">
             <div>
-              <div className="w-10 h-10 rounded-xl bg-accent-amber/10 border border-accent-amber/30 flex items-center justify-center text-accent-amber mb-3 group-hover:scale-105 transition-transform">
+              <div className="w-10 h-10 rounded-card bg-accent-amber/10 border border-accent-amber/30 flex items-center justify-center text-accent-amber mb-3 group-hover:scale-105 transition-transform">
                 <Sparkles className="w-5 h-5" />
               </div>
               <h3 className="text-base font-bold text-text-primary mb-1">{t.modes.perk_icon}</h3>
@@ -355,7 +355,7 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
             </div>
             <Link
               href={`/${locale}/minigames/play?type=repeatable&mode=perk`}
-              className="mt-5 flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-accent-amber hover:bg-accent-amber-hover text-text-inverted type-label-sm shadow-md shadow-accent-amber/20 transition-all active:scale-95"
+              className="mt-5 flex items-center justify-center gap-2 py-2.5 px-4 rounded-control bg-accent-amber hover:bg-accent-amber-hover text-text-inverted type-label-sm shadow-md shadow-accent-amber/20 transition-all active:scale-95"
             >
               <Play className="w-3.5 h-3.5 fill-current" />
               <span>{t.playPerkGuesser}</span>
@@ -363,9 +363,9 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
           </div>
 
           {/* Killer Power Guesser */}
-          <div className="p-5 rounded-2xl bg-bg-surface border border-border-color shadow-lg flex flex-col justify-between hover:border-accent-red/60 transition-all group">
+          <div className="p-5 rounded-card bg-bg-surface border border-border-color shadow-lg flex flex-col justify-between hover:border-accent-red/60 transition-all group">
             <div>
-              <div className="w-10 h-10 rounded-xl bg-accent-red/10 border border-accent-red/30 flex items-center justify-center text-accent-red mb-3 group-hover:scale-105 transition-transform">
+              <div className="w-10 h-10 rounded-card bg-accent-red/10 border border-accent-red/30 flex items-center justify-center text-accent-red mb-3 group-hover:scale-105 transition-transform">
                 <Zap className="w-5 h-5" />
               </div>
               <h3 className="text-base font-bold text-text-primary mb-1">{t.modes.killer_power}</h3>
@@ -375,7 +375,7 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
             </div>
             <Link
               href={`/${locale}/minigames/play?type=repeatable&mode=power`}
-              className="mt-5 flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-accent-red hover:bg-accent-red-hover text-text-inverted type-label-sm shadow-md shadow-accent-red/20 transition-all active:scale-95"
+              className="mt-5 flex items-center justify-center gap-2 py-2.5 px-4 rounded-control bg-accent-red hover:bg-accent-red-hover text-text-inverted type-label-sm shadow-md shadow-accent-red/20 transition-all active:scale-95"
             >
               <Play className="w-3.5 h-3.5 fill-current" />
               <span>{t.playPowerGuesser}</span>
@@ -383,9 +383,9 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
           </div>
 
           {/* Terror Radius Audio */}
-          <div className="p-5 rounded-2xl bg-bg-surface border border-border-color shadow-lg flex flex-col justify-between hover:border-accent-red/60 transition-all group">
+          <div className="p-5 rounded-card bg-bg-surface border border-border-color shadow-lg flex flex-col justify-between hover:border-accent-red/60 transition-all group">
             <div>
-              <div className="w-10 h-10 rounded-xl bg-accent-red/10 border border-accent-red/30 flex items-center justify-center text-accent-red mb-3 group-hover:scale-105 transition-transform">
+              <div className="w-10 h-10 rounded-card bg-accent-red/10 border border-accent-red/30 flex items-center justify-center text-accent-red mb-3 group-hover:scale-105 transition-transform">
                 <Volume2 className="w-5 h-5" />
               </div>
               <h3 className="text-base font-bold text-text-primary mb-1">{t.modes.terror_radius}</h3>
@@ -395,7 +395,7 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
             </div>
             <Link
               href={`/${locale}/minigames/play?type=repeatable&mode=audio`}
-              className="mt-5 flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-accent-red hover:bg-accent-red-hover text-text-inverted type-label-sm shadow-md shadow-accent-red/20 transition-all active:scale-95"
+              className="mt-5 flex items-center justify-center gap-2 py-2.5 px-4 rounded-control bg-accent-red hover:bg-accent-red-hover text-text-inverted type-label-sm shadow-md shadow-accent-red/20 transition-all active:scale-95"
             >
               <Play className="w-3.5 h-3.5 fill-current" />
               <span>{t.playAudioGuesser}</span>
@@ -403,9 +403,9 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
           </div>
 
           {/* Pixel Avatar Guesser */}
-          <div className="p-5 rounded-2xl bg-bg-surface border border-border-color shadow-lg flex flex-col justify-between hover:border-accent-amber/60 transition-all group">
+          <div className="p-5 rounded-card bg-bg-surface border border-border-color shadow-lg flex flex-col justify-between hover:border-accent-amber/60 transition-all group">
             <div>
-              <div className="w-10 h-10 rounded-xl bg-accent-amber/10 border border-accent-amber/30 flex items-center justify-center text-accent-amber mb-3 group-hover:scale-105 transition-transform">
+              <div className="w-10 h-10 rounded-card bg-accent-amber/10 border border-accent-amber/30 flex items-center justify-center text-accent-amber mb-3 group-hover:scale-105 transition-transform">
                 <Eye className="w-5 h-5" />
               </div>
               <h3 className="text-base font-bold text-text-primary mb-1">{t.modes.pixel_avatar}</h3>
@@ -415,7 +415,7 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
             </div>
             <Link
               href={`/${locale}/minigames/play?type=repeatable&mode=pixel`}
-              className="mt-5 flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-accent-amber hover:bg-accent-amber-hover text-text-inverted type-label-sm shadow-md shadow-accent-amber/20 transition-all active:scale-95"
+              className="mt-5 flex items-center justify-center gap-2 py-2.5 px-4 rounded-control bg-accent-amber hover:bg-accent-amber-hover text-text-inverted type-label-sm shadow-md shadow-accent-amber/20 transition-all active:scale-95"
             >
               <Play className="w-3.5 h-3.5 fill-current" />
               <span>{t.playPixelGuesser}</span>
@@ -423,9 +423,9 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
           </div>
 
           {/* Quote & Lore Riddle */}
-          <div className="p-5 rounded-2xl bg-bg-surface border border-border-color shadow-lg flex flex-col justify-between hover:border-accent-green/60 transition-all group">
+          <div className="p-5 rounded-card bg-bg-surface border border-border-color shadow-lg flex flex-col justify-between hover:border-accent-green/60 transition-all group">
             <div>
-              <div className="w-10 h-10 rounded-xl bg-accent-green/10 border border-accent-green/30 flex items-center justify-center text-accent-green mb-3 group-hover:scale-105 transition-transform">
+              <div className="w-10 h-10 rounded-card bg-accent-green/10 border border-accent-green/30 flex items-center justify-center text-accent-green mb-3 group-hover:scale-105 transition-transform">
                 <BookOpen className="w-5 h-5" />
               </div>
               <h3 className="text-base font-bold text-text-primary mb-1">{t.modes.quote_lore}</h3>
@@ -435,7 +435,7 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
             </div>
             <Link
               href={`/${locale}/minigames/play?type=repeatable&mode=quote`}
-              className="mt-5 flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-accent-green hover:bg-accent-green-hover text-text-inverted type-label-sm shadow-md shadow-accent-green/20 transition-all active:scale-95"
+              className="mt-5 flex items-center justify-center gap-2 py-2.5 px-4 rounded-control bg-accent-green hover:bg-accent-green-hover text-text-inverted type-label-sm shadow-md shadow-accent-green/20 transition-all active:scale-95"
             >
               <Play className="w-3.5 h-3.5 fill-current" />
               <span>{t.playLoreGuesser}</span>
@@ -478,7 +478,7 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
                   setIsAuthModalOpen(true);
                 }
               }}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-accent-red hover:bg-accent-red-hover text-text-inverted type-strong shadow-md transition-colors"
+              className="flex items-center gap-1.5 px-3 py-2 rounded-control bg-accent-red hover:bg-accent-red-hover text-text-inverted type-strong shadow-md transition-colors"
             >
               <Plus className="w-3.5 h-3.5" />
               <span>{t.createChallenge}</span>
@@ -504,12 +504,12 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
               return (
                 <div
                   key={String(id)}
-                  className="p-5 rounded-2xl bg-bg-surface border border-border-color shadow-lg flex flex-col justify-between hover:border-border-color transition-all"
+                  className="p-5 rounded-card bg-bg-surface border border-border-color shadow-lg flex flex-col justify-between hover:border-border-color transition-all"
                 >
                   <div>
                     <div className="flex items-start justify-between gap-2">
                       <h3 className="font-bold text-text-primary text-base truncate">{trial.title}</h3>
-                      <span className="type-strong-2xs px-2 py-0.5 rounded bg-bg-elevated text-text-muted border border-border-subtle flex-shrink-0">
+                      <span className="type-strong-2xs px-2 py-0.5 rounded-chip bg-bg-elevated text-text-muted border border-border-subtle flex-shrink-0">
                         {formatMessage(t.roundsCount, { count: trial.rounds.length }, locale)}
                       </span>
                     </div>
@@ -524,7 +524,7 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
                   <div className="mt-5 pt-3 border-t border-border-color flex items-center justify-between gap-2">
                     <Link
                       href={`/${locale}/minigames/play?id=${encodeURIComponent(String(id))}`}
-                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-accent-green hover:bg-accent-green-hover text-text-inverted type-strong transition-colors"
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-control bg-accent-green hover:bg-accent-green-hover text-text-inverted type-strong transition-colors"
                     >
                       <Play className="w-3.5 h-3.5 fill-current" />
                       <span>{t.playTrial}</span>

@@ -409,7 +409,7 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
               variant={viewMode === 'grouped' ? 'soft' : 'secondary'} size="sm" icon
               onClick={() => setViewMode(viewMode === 'flat' ? 'grouped' : 'flat')}
               aria-label={viewMode === 'flat' ? groupByTierLabel : rankedListLabel}
-              className="h-8 w-8 sm:h-9 sm:w-9 rounded-xl"
+              className="h-8 w-8 sm:h-9 sm:w-9"
             >
               <Layers className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
             </Button>
@@ -431,7 +431,7 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
       >
         {totalCommunityVotes === 0 && !searchQuery.trim() ? (
           <div className="flex flex-col items-center justify-center py-16 text-center space-y-3.5">
-            <div className="flex h-16 w-16 items-center justify-center rounded-3xl bg-accent-red/15 border border-accent-red/30 text-accent-red" aria-hidden="true">
+            <div className="flex h-16 w-16 items-center justify-center rounded-card bg-accent-red/15 border border-accent-red/30 text-accent-red" aria-hidden="true">
               <ThornHeartIcon className="h-8 w-8 text-accent-red animate-pulse" />
             </div>
             <div className="space-y-1.5 max-w-md">
@@ -453,7 +453,7 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
 
             return (
               <div key={tKey} className="space-y-2.5">
-                <div className={`flex items-center justify-between px-4 py-2 rounded-2xl border ${meta.style}`}>
+                <div className={`flex items-center justify-between px-4 py-2 rounded-card border ${meta.style}`}>
                   <div className="flex items-center gap-2">
                     {meta.icon}
                     <span className="font-black text-xs sm:text-sm uppercase tracking-wider">{meta.name}</span>

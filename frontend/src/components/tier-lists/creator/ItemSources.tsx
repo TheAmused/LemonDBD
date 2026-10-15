@@ -78,7 +78,7 @@ export function ItemSources({ onAdd, existingIds, locale }: ItemSourcesProps) {
           onChange={setTab}
           panels={false}
           variant="boxed"
-          tabClassName="min-h-[38px] gap-2 rounded-md px-3.5"
+          tabClassName="min-h-[38px] gap-2 rounded-chip px-3.5"
           tabs={options}
         />
       </div>
@@ -132,11 +132,11 @@ function UploadSource({ onAdd }: { onAdd: (items: IncomingItem[]) => void; }) {
           void handleFiles(e.dataTransfer.files);
         }}
         className={cn(
-          'flex flex-col items-center justify-center gap-3 rounded-xl border-2 border-dashed p-6 sm:p-8 text-center transition-colors',
+          'flex flex-col items-center justify-center gap-3 rounded-card border-2 border-dashed p-6 sm:p-8 text-center transition-colors',
           dragging ? 'border-accent-red bg-accent-red/5' : 'border-border-color bg-bg-primary/20'
         )}
       >
-        <span className="flex h-12 w-12 items-center justify-center rounded-lg border border-border-color bg-bg-surface text-text-muted">
+        <span className="flex h-12 w-12 items-center justify-center rounded-chip border border-border-color bg-bg-surface text-text-muted">
           <ImagePlus className="h-6 w-6" aria-hidden="true" />
         </span>
         <div>
@@ -258,7 +258,7 @@ function LinksSource({ onAdd }: { onAdd: (items: IncomingItem[]) => void; }) {
           disabled={!itemName.trim() && !imageUrl.trim()}
           onClick={handleAdd}
           leftIcon={<Plus className="h-4 w-4" aria-hidden="true" />}
-          className="min-h-[40px] rounded-lg px-6"
+          className="min-h-[40px] px-6"
         >
           {t.addItemTitle}
         </Button>
@@ -318,7 +318,7 @@ function CatalogSource({ onAdd, existingIds, locale }: {
             }}
             aria-pressed={kind === k}
             className={cn(
-              'min-h-[38px] rounded-lg border px-3 text-xs sm:text-sm font-bold transition-colors cursor-pointer',
+              'min-h-[38px] rounded-control border px-3 text-xs sm:text-sm font-bold transition-colors cursor-pointer',
               kind === k
                 ? 'border-accent-red bg-accent-red/10 text-accent-red'
                 : 'border-border-color bg-bg-surface text-text-secondary hover:bg-bg-elevated hover:text-text-primary'
@@ -373,7 +373,7 @@ function CatalogSource({ onAdd, existingIds, locale }: {
         </div>
       </div>
 
-      <div className="max-h-[480px] sm:max-h-[540px] overflow-y-auto overscroll-contain rounded-lg border border-border-color bg-bg-primary/40 p-2">
+      <div className="max-h-[480px] sm:max-h-[540px] overflow-y-auto overscroll-contain rounded-chip border border-border-color bg-bg-primary/40 p-2">
         {loading ? (
           <p className="flex items-center justify-center gap-2 py-10 type-card-title text-text-muted">
             <Spinner size="sm" tone="current" />
@@ -392,7 +392,7 @@ function CatalogSource({ onAdd, existingIds, locale }: {
                   onClick={() => toggle(item.key)}
                   aria-pressed={isSelected}
                   aria-label={item.name}
-                  className="relative flex flex-col items-center justify-start self-start rounded-lg cursor-pointer disabled:cursor-not-allowed disabled:opacity-40"
+                  className="relative flex flex-col items-center justify-start self-start rounded-control cursor-pointer disabled:cursor-not-allowed disabled:opacity-40"
                 >
                   <TierItemTile
                     item={item}
@@ -416,7 +416,7 @@ function CatalogSource({ onAdd, existingIds, locale }: {
       </div>
 
       <div className="flex justify-center w-full">
-        <Button variant="primary" disabled={selected.size === 0} onClick={add} leftIcon={<Plus className="h-4 w-4" aria-hidden="true" />} className="min-h-[40px] rounded-lg px-6">
+        <Button variant="primary" disabled={selected.size === 0} onClick={add} leftIcon={<Plus className="h-4 w-4" aria-hidden="true" />} className="min-h-[40px] px-6">
           {formatMessage(c.addSelected, { count: selected.size })}
         </Button>
       </div>

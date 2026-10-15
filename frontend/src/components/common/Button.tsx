@@ -33,10 +33,10 @@ export const BUTTON_VARIANTS: Record<ButtonVariant, string> = {
 };
 
 export const BUTTON_SIZES: Record<ButtonSize, string> = {
-  xs: 'gap-1 rounded-lg px-2.5 py-1 text-mini',
-  sm: 'gap-1.5 rounded-lg px-3 py-1.5 text-xs',
-  md: 'gap-2 rounded-xl px-4 py-2.5 text-sm',
-  lg: 'gap-2 rounded-xl px-6 py-3 text-base',
+  xs: 'gap-1 px-2.5 py-1 text-mini',
+  sm: 'gap-1.5 px-3 py-1.5 text-xs',
+  md: 'gap-2 px-4 py-2.5 text-sm',
+  lg: 'gap-2 px-6 py-3 text-base',
 };
 
 const CTA_SIZES: Record<'sm' | 'md' | 'lg', string> = {
@@ -46,10 +46,10 @@ const CTA_SIZES: Record<'sm' | 'md' | 'lg', string> = {
 };
 
 const ICON_BUTTON_SIZES: Record<ButtonSize, string> = {
-  xs: 'h-6 w-6 rounded-lg',
-  sm: 'h-8 w-8 rounded-lg',
-  md: 'h-10 w-10 rounded-xl',
-  lg: 'h-12 w-12 rounded-xl',
+  xs: 'h-6 w-6',
+  sm: 'h-8 w-8',
+  md: 'h-10 w-10',
+  lg: 'h-12 w-12',
 };
 
 const ROLE_RING: Record<DbdButtonRole, string> = {
@@ -60,9 +60,13 @@ const ROLE_RING: Record<DbdButtonRole, string> = {
 export const BUTTON_BASE =
   'inline-flex max-w-full shrink-0 items-center justify-center font-bold transition-colors cursor-pointer select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red disabled:cursor-not-allowed disabled:opacity-50';
 
+/** The one corner radius of a Button. Callers never set their own: `pill` is the only alternative. */
+export const BUTTON_RADIUS = 'rounded-control';
+const BUTTON_RADIUS_PILL = 'rounded-full';
+
 /** The class list of a Button, for the rare spot that needs a link (<a>/<Link>) that looks like one. */
 export function buttonClassName(variant: ButtonVariant = 'secondary', size: ButtonSize = 'md', className?: string): string {
-  return cn(BUTTON_BASE, BUTTON_VARIANTS[variant], BUTTON_SIZES[size], className);
+  return cn(BUTTON_BASE, BUTTON_VARIANTS[variant], BUTTON_SIZES[size], variant !== 'cta' && BUTTON_RADIUS, className);
 }
 
 export interface ButtonProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'children'> {
@@ -78,6 +82,8 @@ export interface ButtonProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonE
   rightIcon?: React.ReactNode;
   /** Square, icon-only button. Requires `aria-label`. */
   icon?: boolean;
+  /** Fully rounded ends instead of the standard control radius. */
+  pill?: boolean;
   /** Shrink a plain-text label to fit a narrow button (default), or leave it alone. */
   fit?: boolean;
   children?: React.ReactNode;
@@ -93,6 +99,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
     rightIcon,
     icon = false,
     fit = true,
+    pill = false,
     className,
     disabled,
     type = 'button',
@@ -119,6 +126,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
         BUTTON_BASE,
         BUTTON_VARIANTS[variant],
         sizeClasses,
+        variant !== 'cta' && (pill ? BUTTON_RADIUS_PILL : BUTTON_RADIUS),
         ringClass,
         className
       )}

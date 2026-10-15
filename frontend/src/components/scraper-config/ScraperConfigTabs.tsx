@@ -19,13 +19,13 @@ export function ScraperConfigTabs({ activeTab, onChange }: ScraperConfigTabsProp
   ];
 
   return (
-    <div className="flex items-center gap-1 rounded-xl bg-bg-primary p-1 border border-border-color">
+    <div className="flex items-center gap-1 rounded-card bg-bg-primary p-1 border border-border-color">
       {tabs.map(({ id, Icon, iconClass, label }) => (
         <button
           key={id}
           type="button"
           onClick={() => onChange(id)}
-          className={`flex items-center justify-center gap-2 flex-1 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+          className={`flex items-center justify-center gap-2 flex-1 py-2 rounded-control text-xs font-bold transition-all cursor-pointer ${
             activeTab === id
               ? 'bg-bg-surface text-text-primary shadow-xs border border-border-color'
               : 'text-text-secondary hover:text-text-primary'

@@ -46,7 +46,7 @@ export const SidebarUserSection: React.FC<SidebarUserSectionProps> = ({
           <span>{dict.sidebar.signIn}</span>
         </Button>
       ) : (
-        <div className="rounded-xl border border-border-color bg-bg-elevated p-2.5 space-y-2">
+        <div className="rounded-card border border-border-color bg-bg-elevated p-2.5 space-y-2">
           <div className="flex items-center justify-between">
             <Link
               href={`/${currentLocale}/user`}
@@ -57,7 +57,7 @@ export const SidebarUserSection: React.FC<SidebarUserSectionProps> = ({
               <div className="truncate">
                 <p className="type-strong text-text-primary truncate">{user.username}</p>
                 <span
-                  className={`inline-block rounded px-1 text-micro font-black uppercase tracking-wider ${
+                  className={`inline-block rounded-chip px-1 text-micro font-black uppercase tracking-wider ${
                     user.role === 'admin'
                       ? 'bg-accent-red/20 text-accent-red border border-accent-red/30'
                       : 'bg-bg-surface text-text-muted border border-border-color'
@@ -75,7 +75,7 @@ export const SidebarUserSection: React.FC<SidebarUserSectionProps> = ({
                   title={dict.sidebar.adminControlCenter}
                   aria-label={dict.sidebar.adminControlCenter}
                   onClick={onNavigateMobile}
-                  className="p-1 rounded-lg text-accent-red hover:bg-accent-red/10 transition-colors"
+                  className="p-1 rounded-control text-accent-red hover:bg-accent-red/10 transition-colors"
                 >
                   <OverseerEyeIcon className="h-4 w-4" />
                 </Link>
@@ -85,7 +85,7 @@ export const SidebarUserSection: React.FC<SidebarUserSectionProps> = ({
                 onClick={onLogout}
                 {...tip(dict.sidebar.signOut, undefined, 'action')}
                 aria-label={dict.sidebar.signOut}
-                className="p-1 rounded-lg text-text-muted hover:text-accent-red hover:bg-accent-red/10 transition-colors cursor-pointer"
+                className="p-1 rounded-control text-text-muted hover:text-accent-red hover:bg-accent-red/10 transition-colors cursor-pointer"
               >
                 <LogOut className="h-3.5 w-3.5" />
               </button>

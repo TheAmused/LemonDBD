@@ -110,7 +110,7 @@ export function CustomDropdown<T extends string = string>({
         onClick={handleToggle}
         {...popoverTriggerProps(isOpen, children ? 'true' : 'listbox')}
         aria-label={ariaLabel || (typeof triggerLabel === 'string' ? triggerLabel : undefined)}
-        className={`flex items-center gap-2 px-3 py-2 rounded-xl bg-bg-surface border border-border-color ${accentClasses.hover} hover:bg-bg-elevated text-xs font-bold text-text-primary transition-all cursor-pointer shadow-xs select-none ${
+        className={`flex items-center gap-2 px-3 py-2 rounded-control bg-bg-surface border border-border-color ${accentClasses.hover} hover:bg-bg-elevated text-xs font-bold text-text-primary transition-all cursor-pointer shadow-xs select-none ${
           isOpen ? `${accentClasses.open} shadow-xs` : ''
         } ${buttonClassName}`}
       >
@@ -134,7 +134,7 @@ export function CustomDropdown<T extends string = string>({
         maxHeight={typeof window !== 'undefined' ? window.innerHeight * 0.7 : undefined}
         role={children ? 'group' : 'listbox'}
         ariaLabel={children ? (ariaLabel || (typeof triggerLabel === 'string' ? triggerLabel : undefined)) : undefined}
-        className={`${minWidthClass} rounded-2xl bg-bg-surface border border-border-color p-1.5 shadow-xl backdrop-blur-2xl custom-scrollbar ${resolvedMenuClassName}`}
+        className={`${minWidthClass} rounded-card bg-bg-surface border border-border-color p-1.5 shadow-xl backdrop-blur-2xl custom-scrollbar ${resolvedMenuClassName}`}
       >
             {children
               ? children
@@ -147,7 +147,7 @@ export function CustomDropdown<T extends string = string>({
                       role="option"
                       aria-selected={isSelected}
                       onClick={() => handleSelect(opt.value)}
-                      className={`flex items-center justify-between w-full px-3 py-2 rounded-xl text-xs font-bold transition-all text-left cursor-pointer ${
+                      className={`flex items-center justify-between w-full px-3 py-2 rounded-control text-xs font-bold transition-all text-left cursor-pointer ${
                         isSelected
                           ? `${accentClasses.selected} text-text-inverted font-black shadow-xs`
                           : 'text-text-secondary hover:text-text-primary hover:bg-bg-elevated'

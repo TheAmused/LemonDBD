@@ -35,7 +35,7 @@ export function PersonaShareView({
     <div className="space-y-4">
       {/* Identity Preview Card */}
       <div
-        className={`relative overflow-hidden rounded-2xl p-4 bg-gradient-to-br ${persona.badgeColor} border-2 ${persona.borderColor} text-text-inverted shadow-lg`}
+        className={`relative overflow-hidden rounded-card p-4 bg-gradient-to-br ${persona.badgeColor} border-2 ${persona.borderColor} text-text-inverted shadow-lg`}
         style={{
           backgroundImage: persona.badgeImageUrl ? `url(${persona.badgeImageUrl})` : undefined,
           backgroundSize: 'cover',
@@ -56,7 +56,7 @@ export function PersonaShareView({
               </p>
             )}
           </div>
-          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-bg-primary/40 border border-border-color backdrop-blur-md shrink-0">
+          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-card bg-bg-primary/40 border border-border-color backdrop-blur-md shrink-0">
             <Heart className="h-3.5 w-3.5 fill-accent-red text-accent-red" />
             <span className="type-strong text-text-inverted">
               {persona.smashRate}%
@@ -89,7 +89,7 @@ export function PersonaShareView({
               onClick={item.onClick}
               target={item.url.startsWith('http') ? '_blank' : undefined}
               rel={item.url.startsWith('http') ? 'noopener noreferrer' : undefined}
-              className={`flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl bg-bg-elevated border border-border-color transition-all duration-150 cursor-pointer font-bold ${item.color}`}
+              className={`flex items-center justify-center gap-2 py-2.5 px-3 rounded-control bg-bg-elevated border border-border-color transition-all duration-150 cursor-pointer font-bold ${item.color}`}
             >
               {item.icon}
               <span className="truncate">{item.name}</span>
@@ -99,7 +99,7 @@ export function PersonaShareView({
 
         {/* Status / Feedback Banner (for Telegram, Discord, etc.) */}
         {feedbackNotice && (
-          <div className="flex items-center gap-2 p-2.5 rounded-xl bg-accent-red/10 border border-accent-red/30 text-accent-red text-xs animate-fadeIn">
+          <div className="flex items-center gap-2 p-2.5 rounded-card bg-accent-red/10 border border-accent-red/30 text-accent-red text-xs animate-fadeIn">
             <Check className="h-4 w-4 shrink-0 stroke-[3]" />
             <span className="leading-snug">{feedbackNotice}</span>
           </div>
@@ -135,7 +135,7 @@ export function PersonaShareView({
         <Button
           variant="secondary" size="md"
           onClick={onBack}
-          className="w-full rounded-2xl"
+          className="w-full"
         >
           <ArrowLeft className="h-4 w-4 text-accent-red" />
           <span>{text.sharing.backToBreakdown}</span>

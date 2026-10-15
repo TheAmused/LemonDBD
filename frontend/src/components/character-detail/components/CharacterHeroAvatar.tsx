@@ -50,7 +50,7 @@ export const CharacterHeroAvatar: React.FC<CharacterHeroAvatarProps> = ({
             onOpenModelModal();
           }
         }}
-        className="group relative w-full max-w-[280px] sm:max-w-[320px] aspect-[3/4] rounded-3xl overflow-hidden border-2 border-border-color bg-bg-elevated shadow-lg dark:shadow-2xl cursor-pointer hover:border-accent-red/60 focus:outline-none focus:ring-2 focus:ring-accent-red transition-all duration-300 flex items-center justify-center"
+        className="group relative w-full max-w-[280px] sm:max-w-[320px] aspect-[3/4] rounded-card overflow-hidden border-2 border-border-color bg-bg-elevated shadow-lg dark:shadow-2xl cursor-pointer hover:border-accent-red/60 focus:outline-none focus:ring-2 focus:ring-accent-red transition-all duration-300 flex items-center justify-center"
         {...tip(t.view3DModel || '', undefined, 'action')}
         aria-label={heroAriaLabel}
       >
@@ -72,7 +72,7 @@ export const CharacterHeroAvatar: React.FC<CharacterHeroAvatarProps> = ({
         )}
 
         <div className="absolute inset-0 bg-bg-primary/70 opacity-0 group-hover:opacity-100 backdrop-blur-sm flex flex-col items-center justify-center p-4 text-center transition-opacity duration-200">
-          <div className="h-12 w-12 rounded-2xl bg-accent-red/20 border border-accent-red/40 flex items-center justify-center text-accent-red mb-2 shadow-lg group-hover:scale-110 transition-transform">
+          <div className="h-12 w-12 rounded-card bg-accent-red/20 border border-accent-red/40 flex items-center justify-center text-accent-red mb-2 shadow-lg group-hover:scale-110 transition-transform">
             <ZoomIn className="h-6 w-6" />
           </div>
           <span className="type-label-sm text-text-inverted">

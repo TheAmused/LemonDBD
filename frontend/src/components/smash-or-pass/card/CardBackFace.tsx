@@ -58,7 +58,7 @@ export function CardBackFace({
         SmashSounds.playFlipSound();
         onFlip();
       }}
-      className="!absolute inset-0 h-full w-full rounded-3xl overflow-hidden card-ash-border bg-bg-primary p-4 sm:p-5 flex flex-col justify-between text-text-primary cursor-pointer select-none"
+      className="!absolute inset-0 h-full w-full rounded-card overflow-hidden card-ash-border bg-bg-primary p-4 sm:p-5 flex flex-col justify-between text-text-primary cursor-pointer select-none"
     >
       {/* Top Bar with accessible Flip Back button and Title */}
       <div className="relative z-30 flex items-center justify-between pb-2 border-b border-border-color shrink-0 pointer-events-auto">
@@ -73,7 +73,7 @@ export function CardBackFace({
           }}
           {...tip(text.flipBack, undefined, 'action')}
           aria-label={text.flipBack}
-          className="pointer-coarse:min-h-11 pointer-coarse:min-w-11 flex min-h-[40px] min-w-[40px] h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-2xl bg-bg-elevated border border-accent-red/40 text-accent-red hover:text-text-inverted hover:border-accent-red hover:scale-110 active:scale-95 transition-all shadow-lg cursor-pointer touch-manipulation"
+          className="pointer-coarse:min-h-11 pointer-coarse:min-w-11 flex min-h-[40px] min-w-[40px] h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-control bg-bg-elevated border border-accent-red/40 text-accent-red hover:text-text-inverted hover:border-accent-red hover:scale-110 active:scale-95 transition-all shadow-lg cursor-pointer touch-manipulation"
         >
           <TarotTurnIcon className="h-5 w-5" aria-hidden="true" />
         </button>
@@ -85,7 +85,7 @@ export function CardBackFace({
         </div>
 
         <span
-          className={`text-micro font-black uppercase px-2 py-0.5 rounded-lg border shrink-0 ${
+          className={`text-micro font-black uppercase px-2 py-0.5 rounded-chip border shrink-0 ${
             isSurvivor
               ? 'bg-accent-green/15 text-accent-green border-accent-green/30'
               : 'bg-accent-red/15 text-accent-red border-accent-red/30'
@@ -105,7 +105,7 @@ export function CardBackFace({
       >
         {/* Mobile-only fallback (<880px): show Turn On & Dealbreaker only when floating lore fragments are hidden */}
         <div className="@[880px]/hub:hidden space-y-2">
-          <div className="p-2.5 rounded-2xl bg-bg-elevated border border-accent-red/30 space-y-0.5">
+          <div className="p-2.5 rounded-card bg-bg-elevated border border-accent-red/30 space-y-0.5">
             <span className="type-label-2xs text-accent-red block">
               {customLabels?.dating_vibe || text.loreLabels.datingArchetype}
             </span>
@@ -113,7 +113,7 @@ export function CardBackFace({
           </div>
 
           {profile.turn_on && (
-            <div className="p-2.5 rounded-2xl bg-accent-green/10 border border-accent-green/40 space-y-0.5">
+            <div className="p-2.5 rounded-card bg-accent-green/10 border border-accent-green/40 space-y-0.5">
               <span className="type-label-2xs text-accent-green block">
                 {customLabels?.turn_on || text.loreLabels.turn_on}
               </span>
@@ -122,7 +122,7 @@ export function CardBackFace({
           )}
 
           {profile.dealbreaker && (
-            <div className="p-2.5 rounded-2xl bg-accent-red/10 border border-accent-red/40 space-y-0.5">
+            <div className="p-2.5 rounded-card bg-accent-red/10 border border-accent-red/40 space-y-0.5">
               <span className="type-label-2xs text-accent-red block">
                 {customLabels?.dealbreaker || text.loreLabels.dealbreaker}
               </span>
@@ -133,7 +133,7 @@ export function CardBackFace({
 
         {/* Green & Red Flags (Prominent and unique to the card back) */}
         {(greenFlags.length > 0 || redFlags.length > 0) && (
-          <div className="p-2.5 rounded-2xl bg-bg-elevated border border-border-color space-y-2">
+          <div className="p-2.5 rounded-card bg-bg-elevated border border-border-color space-y-2">
             {greenFlags.length > 0 && (
               <div className="space-y-1">
                 <span className="type-label-2xs text-accent-green block">{text.greenFlags}</span>
@@ -159,7 +159,7 @@ export function CardBackFace({
 
         {/* Bio / Lore & Personality */}
         {showBio && (
-          <Surface tone="elevated" radius="2xl" padding="none" className="p-2.5 space-y-1">
+          <Surface tone="elevated" padding="none" className="p-2.5 space-y-1">
             <span className="type-label-2xs text-text-muted">{text.loreAndPersonality}</span>
             <p className="type-body text-text-secondary leading-snug">{charBio}</p>
           </Surface>
@@ -167,7 +167,7 @@ export function CardBackFace({
 
         {/* Trial Rumor / Meme */}
         {showMeme && (
-          <Surface tone="elevated" radius="2xl" padding="none" className="p-2.5 space-y-0.5">
+          <Surface tone="elevated" padding="none" className="p-2.5 space-y-0.5">
             <span className="type-label-2xs text-text-secondary block">{customLabels?.meme || text.trialRumor}</span>
             <p className="text-mini text-text-secondary italic leading-snug">{charMeme}</p>
           </Surface>
@@ -176,7 +176,7 @@ export function CardBackFace({
         {/* Mobile-only details (quote/tagline when fragments are hidden) */}
         {(Boolean(charTagline) || Boolean(charQuote)) && (
           <details className="@[880px]/hub:hidden group space-y-2.5">
-            <summary className="flex min-h-9 pointer-coarse:min-h-11 cursor-pointer list-none items-center justify-center rounded-2xl border border-border-color type-label-xs text-text-secondary transition-colors hover:text-text-primary [&::-webkit-details-marker]:hidden">
+            <summary className="flex min-h-9 pointer-coarse:min-h-11 cursor-pointer list-none items-center justify-center rounded-control border border-border-color type-label-xs text-text-secondary transition-colors hover:text-text-primary [&::-webkit-details-marker]:hidden">
               <span className="group-open:hidden">{text.showMore}</span>
               <span className="hidden group-open:inline">{text.showLess}</span>
             </summary>
@@ -184,7 +184,7 @@ export function CardBackFace({
             {charTagline && <p className="px-1 text-mini text-text-secondary italic leading-snug">{charTagline}</p>}
 
             {charQuote && (
-              <div className="p-2.5 rounded-2xl bg-bg-elevated border border-accent-amber/30 space-y-0.5">
+              <div className="p-2.5 rounded-card bg-bg-elevated border border-accent-amber/30 space-y-0.5">
                 <span className="type-label-2xs text-accent-amber block">
                   {customLabels?.quote || text.loreLabels.signatureQuote}
                 </span>

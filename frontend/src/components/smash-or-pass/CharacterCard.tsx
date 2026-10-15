@@ -29,7 +29,8 @@ const ZoomCloseButton: React.FC<{ label: string }> = ({ label }) => {
       variant="secondary" size="md" icon
       onClick={close}
       aria-label={label}
-      className="absolute right-2 top-2 z-10 rounded-full shadow-lg"
+      pill
+      className="absolute right-2 top-2 z-10 shadow-lg"
     >
       <X className="h-5 w-5" aria-hidden="true" />
     </Button>
@@ -179,7 +180,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
               transform: `scale(${0.75 + Math.min(0.35, Math.max(0, dragOffset.x) / 180)}) rotate(-12deg)`,
               pointerEvents: 'none',
             }}
-            className="absolute top-6 left-6 z-40 border-4 border-accent-red bg-accent-red/20 p-3 sm:p-4 rounded-3xl backdrop-blur-md transition-all duration-75"
+            className="absolute top-6 left-6 z-40 border-4 border-accent-red bg-accent-red/20 p-3 sm:p-4 rounded-card backdrop-blur-md transition-all duration-75"
           >
             <ThornHeartIcon className="h-8 w-8 sm:h-10 sm:w-10 text-accent-red animate-pulse" aria-hidden="true" />
           </div>
@@ -192,7 +193,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
               transform: `scale(${0.75 + Math.min(0.35, Math.max(0, -dragOffset.x) / 180)}) rotate(12deg)`,
               pointerEvents: 'none',
             }}
-            className="absolute top-6 right-6 z-40 border-4 border-border-subtle bg-bg-elevated/90 p-3 sm:p-4 rounded-3xl backdrop-blur-md transition-all duration-75"
+            className="absolute top-6 right-6 z-40 border-4 border-border-subtle bg-bg-elevated/90 p-3 sm:p-4 rounded-card backdrop-blur-md transition-all duration-75"
           >
             <SnuffedCandleIcon className="h-8 w-8 sm:h-10 sm:w-10 text-text-secondary" aria-hidden="true" />
           </div>
@@ -216,7 +217,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
                   ? `0 0 ${35 + swipeProgress * 35}px rgba(113, 113, 122, ${0.4 + swipeProgress * 0.5})`
                   : '0 0 35px rgba(0, 0, 0, 0.85)',
             }}
-            className={`!absolute inset-0 h-full w-full rounded-3xl overflow-hidden card-ash-border transition-colors duration-150 flex flex-col justify-between ${isSmashDrag
+            className={`!absolute inset-0 h-full w-full rounded-card overflow-hidden card-ash-border transition-colors duration-150 flex flex-col justify-between ${isSmashDrag
                 ? '!border-accent-red bg-accent-red/10'
                 : isPassDrag
                   ? '!border-border-subtle bg-bg-primary'
@@ -261,7 +262,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
                 }}
                 {...tip(rawSmashDict.flipToDatingProfile, undefined, 'action')}
                 aria-label={rawSmashDict.flipToDatingProfile}
-                className="flex min-h-[48px] min-w-[48px] h-12 w-12 sm:h-12 sm:w-12 items-center justify-center rounded-2xl bg-bg-primary/85 border border-accent-red/40 text-accent-red hover:text-text-inverted hover:border-accent-red hover:scale-110 active:scale-95 transition-all shadow-2xl backdrop-blur-md cursor-pointer touch-manipulation"
+                className="flex min-h-[48px] min-w-[48px] h-12 w-12 sm:h-12 sm:w-12 items-center justify-center rounded-control bg-bg-primary/85 border border-accent-red/40 text-accent-red hover:text-text-inverted hover:border-accent-red hover:scale-110 active:scale-95 transition-all shadow-2xl backdrop-blur-md cursor-pointer touch-manipulation"
               >
                 <TarotTurnIcon className="h-5 w-5" aria-hidden="true" />
               </button>
@@ -277,7 +278,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
                 }}
                 {...tip(rawSmashDict.zoomFullPortrait, undefined, 'action')}
                 aria-label={rawSmashDict.zoomFullPortrait}
-                className="flex min-h-[48px] min-w-[48px] h-12 w-12 sm:h-12 sm:w-12 items-center justify-center rounded-2xl bg-bg-primary/85 border border-border-color text-text-secondary hover:text-text-inverted hover:border-accent-red hover:scale-110 active:scale-95 transition-all shadow-2xl backdrop-blur-md cursor-pointer touch-manipulation"
+                className="flex min-h-[48px] min-w-[48px] h-12 w-12 sm:h-12 sm:w-12 items-center justify-center rounded-control bg-bg-primary/85 border border-border-color text-text-secondary hover:text-text-inverted hover:border-accent-red hover:scale-110 active:scale-95 transition-all shadow-2xl backdrop-blur-md cursor-pointer touch-manipulation"
               >
                 <PortraitLoupeIcon className="h-5 w-5" aria-hidden="true" />
               </button>
@@ -295,7 +296,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
                 }}
                 {...tip(rawSmashDict.pass, undefined, 'action')}
                 aria-label={rawSmashDict.pass}
-                className="flex min-h-[48px] min-w-[48px] h-13 w-13 sm:h-14 sm:w-14 items-center justify-center rounded-2xl bg-bg-primary/90 border-2 border-border-color text-text-muted hover:text-text-primary hover:border-border-subtle hover:scale-110 active:scale-95 transition-all shadow-2xl backdrop-blur-md cursor-pointer touch-manipulation"
+                className="flex min-h-[48px] min-w-[48px] h-13 w-13 sm:h-14 sm:w-14 items-center justify-center rounded-control bg-bg-primary/90 border-2 border-border-color text-text-muted hover:text-text-primary hover:border-border-subtle hover:scale-110 active:scale-95 transition-all shadow-2xl backdrop-blur-md cursor-pointer touch-manipulation"
               >
                 <SnuffedCandleIcon className="h-6 w-6 sm:h-7 sm:w-7" aria-hidden="true" />
               </button>
@@ -311,7 +312,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
                 }}
                 {...tip(rawSmashDict.smash, undefined, 'action')}
                 aria-label={rawSmashDict.smash}
-                className="flex min-h-[48px] min-w-[48px] h-13 w-13 sm:h-14 sm:w-14 items-center justify-center rounded-2xl bg-accent-red hover:bg-accent-red-hover text-text-inverted hover:scale-110 active:scale-95 transition-all cursor-pointer touch-manipulation"
+                className="flex min-h-[48px] min-w-[48px] h-13 w-13 sm:h-14 sm:w-14 items-center justify-center rounded-control bg-accent-red hover:bg-accent-red-hover text-text-inverted hover:scale-110 active:scale-95 transition-all cursor-pointer touch-manipulation"
               >
                 <ThornHeartIcon className="h-6 w-6 sm:h-7 sm:w-7" aria-hidden="true" />
               </button>
@@ -349,14 +350,14 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
         bodyClassName="flex justify-center overflow-visible"
       >
         <ZoomCloseButton label={dict.modal.close} />
-        <div className="relative overflow-hidden rounded-3xl card-ash-border bg-bg-primary">
+        <div className="relative overflow-hidden rounded-card card-ash-border bg-bg-primary">
           <CardAvatarImage
             src={avatarSrc}
             name={character.name}
             slug={character.slug}
             isSurvivor={isSurvivor}
             backendBase={backendBase}
-            className="max-h-[80vh] w-auto object-contain rounded-3xl"
+            className="max-h-[80vh] w-auto object-contain rounded-card"
           />
           <div className="absolute bottom-0 inset-x-0 p-4 bg-gradient-to-t from-bg-primary via-bg-primary/80 to-transparent text-center">
             <h3 className="text-lg font-black text-text-primary">{character.name}</h3>

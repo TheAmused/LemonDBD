@@ -73,7 +73,7 @@ export const TierRow = React.memo(function TierRow({
       style={style}
       aria-label={formatMessage(t.tierAria, { label: tier.label })}
       className={cn(
-        'grid grid-cols-[3.5rem_minmax(0,1fr)] min-[480px]:grid-cols-[4.75rem_minmax(0,1fr)] sm:max-wide-2k:grid-cols-[6.5rem_minmax(0,1fr)] wide-2k:grid-cols-[9rem_minmax(0,1fr)] overflow-hidden rounded-2xl border border-border-color bg-bg-surface shadow-xs group-data-[fit]/board:grid-cols-[var(--badge-w)_minmax(0,1fr)]!',
+        'grid grid-cols-[3.5rem_minmax(0,1fr)] min-[480px]:grid-cols-[4.75rem_minmax(0,1fr)] sm:max-wide-2k:grid-cols-[6.5rem_minmax(0,1fr)] wide-2k:grid-cols-[9rem_minmax(0,1fr)] overflow-hidden rounded-card border border-border-color bg-bg-surface shadow-xs group-data-[fit]/board:grid-cols-[var(--badge-w)_minmax(0,1fr)]!',
         isDragging && 'z-20 relative border-accent-amber opacity-90'
       )}
     >
@@ -161,7 +161,7 @@ export const TierRow = React.memo(function TierRow({
               e.stopPropagation();
               onMoveSelectedHere(tier.id);
             }}
-            className="inline-flex min-h-[44px] group-data-[fit]/board:min-h-0 group-data-[fit]/board:py-0.5 items-center gap-1.5 self-center rounded-xl border border-dashed border-accent-amber/60 bg-accent-amber/10 px-3 type-strong text-accent-amber cursor-pointer"
+            className="inline-flex min-h-[44px] group-data-[fit]/board:min-h-0 group-data-[fit]/board:py-0.5 items-center gap-1.5 self-center rounded-control border border-dashed border-accent-amber/60 bg-accent-amber/10 px-3 type-strong text-accent-amber cursor-pointer"
           >
             <ArrowDownToLine className="h-3.5 w-3.5" aria-hidden="true" />
             {t.moveHere}

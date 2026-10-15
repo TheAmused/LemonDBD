@@ -76,7 +76,7 @@ export const PerkSlot: React.FC<PerkSlotProps> = ({
           onClick={onClick}
           className={cn(
             SLOT_SIZE_CLASSES[size],
-            'flex flex-col items-center justify-center gap-1.5 rounded-2xl border-2 border-dashed border-accent-red/50 bg-accent-red/10 text-accent-red cursor-pointer shadow-xs backdrop-blur-xs transition-all duration-200 hover:border-accent-red hover:bg-accent-red/20 hover:scale-105 active:scale-95 hover:shadow-md hover:shadow-accent-red/35'
+            'flex flex-col items-center justify-center gap-1.5 rounded-control border-2 border-dashed border-accent-red/50 bg-accent-red/10 text-accent-red cursor-pointer shadow-xs backdrop-blur-xs transition-all duration-200 hover:border-accent-red hover:bg-accent-red/20 hover:scale-105 active:scale-95 hover:shadow-md hover:shadow-accent-red/35'
           )}
         >
           <EyeOff className="h-10 w-10 animate-pulse" />
@@ -94,7 +94,7 @@ export const PerkSlot: React.FC<PerkSlotProps> = ({
         <div
           className={cn(
             SLOT_SIZE_CLASSES[size],
-            'flex flex-col items-center justify-center gap-1.5 rounded-2xl border-2 border-dashed border-border-color bg-bg-surface/90 text-text-muted transition-colors shadow-xs backdrop-blur-xs'
+            'flex flex-col items-center justify-center gap-1.5 rounded-card border-2 border-dashed border-border-color bg-bg-surface/90 text-text-muted transition-colors shadow-xs backdrop-blur-xs'
           )}
         >
           <ImageOff className="h-8 w-8 text-text-muted" />
@@ -109,7 +109,7 @@ export const PerkSlot: React.FC<PerkSlotProps> = ({
   const coordinate = page !== undefined && slot !== undefined ? { page, slot } : undefined;
 
   return (
-    <div className={cn('relative', isActive && 'rounded-2xl ring-2 ring-accent-red/60')}>
+    <div className={cn('relative', isActive && 'rounded-card ring-2 ring-accent-red/60')}>
       <PerkCard
         perk={perk}
         onSelect={() => onClick?.()}

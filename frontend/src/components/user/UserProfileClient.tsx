@@ -128,8 +128,8 @@ export function UserProfileClient() {
   if (!isAuthenticated || !user) {
     return (
       <div className="min-h-screen text-text-primary flex flex-col items-center justify-center p-6 text-center dbd-fog-overlay transition-colors duration-300">
-        <div className="max-w-md w-full rounded-3xl border border-border-color bg-bg-surface text-text-primary p-8 backdrop-blur-xl shadow-xl space-y-4">
-          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-accent-amber/15 border border-accent-amber/30">
+        <div className="max-w-md w-full rounded-card border border-border-color bg-bg-surface text-text-primary p-8 backdrop-blur-xl shadow-xl space-y-4">
+          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-card bg-accent-amber/15 border border-accent-amber/30">
             <LemonIcon className="h-10 w-10 text-accent-amber" />
           </div>
           <h1 className="text-xl sm:text-2xl font-black tracking-wider text-text-primary">

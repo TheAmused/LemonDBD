@@ -10,7 +10,6 @@ import { cn } from '@/utils/cn';
 
 export type SurfaceTone = 'flat' | 'elevated' | 'inset' | 'dashed';
 export type SurfacePadding = 'none' | 'sm' | 'md' | 'lg';
-export type SurfaceRadius = 'lg' | 'xl' | '2xl' | '3xl';
 
 const SURFACE_TONES: Record<SurfaceTone, string> = {
   flat: 'border border-border-color bg-bg-surface',
@@ -24,30 +23,22 @@ const SURFACE_PADDING: Record<SurfacePadding, string> = {
   md: 'p-4 sm:p-5',
   lg: 'p-6 sm:p-8',
 };
-const SURFACE_RADIUS: Record<SurfaceRadius, string> = {
-  lg: 'rounded-lg',
-  xl: 'rounded-xl',
-  '2xl': 'rounded-2xl',
-  '3xl': 'rounded-3xl',
-};
 
 export interface SurfaceProps extends React.HTMLAttributes<HTMLElement> {
   tone?: SurfaceTone;
   padding?: SurfacePadding;
-  radius?: SurfaceRadius;
   as?: 'div' | 'section' | 'article' | 'aside' | 'li';
 }
 
 export const Surface: React.FC<SurfaceProps> = ({
   tone = 'flat',
   padding = 'md',
-  radius = '2xl',
   as: Tag = 'div',
   className,
   children,
   ...rest
 }) => (
-  <Tag className={cn(SURFACE_TONES[tone], SURFACE_PADDING[padding], SURFACE_RADIUS[radius], className)} {...rest}>
+  <Tag className={cn(SURFACE_TONES[tone], SURFACE_PADDING[padding], 'rounded-card', className)} {...rest}>
     {children}
   </Tag>
 );

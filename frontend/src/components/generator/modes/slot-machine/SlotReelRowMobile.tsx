@@ -47,7 +47,7 @@ export function SlotReelRowMobile({
           : undefined
       }
       className={cn(
-        'relative overflow-hidden rounded-xl border-2 shadow-inner transition-colors duration-200 shrink-0',
+        'relative overflow-hidden rounded-card border-2 shadow-inner transition-colors duration-200 shrink-0',
         'bg-gradient-to-r from-bg-elevated/40 via-bg-surface to-bg-elevated/40',
         isClickable && 'cursor-pointer',
         reel.locked
@@ -95,7 +95,7 @@ export function SlotReelRowMobile({
                 />
               ) : (
                 <div
-                  className="rounded-md bg-bg-elevated border border-border-color"
+                  className="rounded-chip bg-bg-elevated border border-border-color"
                   style={{ height: cellPx * 0.65, width: cellPx * 0.65 }}
                 />
               )}
@@ -130,7 +130,7 @@ export function SlotReelRowMobile({
   return (
     <div
       className={cn(
-        'flex items-center justify-between gap-2 p-1.5 rounded-xl border transition-all duration-200 w-full',
+        'flex items-center justify-between gap-2 p-1.5 rounded-card border transition-all duration-200 w-full',
         reel.locked
           ? 'bg-accent-amber/10 border-accent-amber/60 shadow-xs'
           : isStaged
@@ -190,7 +190,7 @@ export function SlotReelRowMobile({
             type="button"
             onClick={() => toggleStage(reel.id)}
             className={cn(
-              'pointer-coarse:min-h-11 pointer-coarse:min-w-11 h-10 w-10 rounded-xl flex items-center justify-center font-black transition-all duration-200 cursor-pointer touch-manipulation border shadow-xs',
+              'pointer-coarse:min-h-11 pointer-coarse:min-w-11 h-10 w-10 rounded-control flex items-center justify-center font-black transition-all duration-200 cursor-pointer touch-manipulation border shadow-xs',
               isStaged
                 ? 'bg-accent-green text-text-inverted border-accent-green hover:bg-accent-green/90 hover:scale-110 active:scale-95 hover:shadow-md hover:shadow-accent-green/40'
                 : 'bg-bg-elevated text-text-secondary border-border-color hover:text-text-primary hover:border-accent-amber hover:bg-bg-elevated/90 hover:scale-110 active:scale-95 hover:shadow-md hover:shadow-accent-amber/35'
@@ -200,7 +200,7 @@ export function SlotReelRowMobile({
             {isStaged ? <Check className="h-5 w-5" /> : <Plus className="h-5 w-5" />}
           </button>
         ) : reel.locked ? (
-          <div className="h-10 w-10 rounded-xl bg-accent-amber/20 border border-accent-amber/40 flex items-center justify-center text-accent-amber">
+          <div className="h-10 w-10 rounded-card bg-accent-amber/20 border border-accent-amber/40 flex items-center justify-center text-accent-amber">
             <Lock className="h-5 w-5" />
           </div>
         ) : (

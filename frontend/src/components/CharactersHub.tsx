@@ -134,7 +134,7 @@ export const CharactersHub: React.FC = () => {
         <EmptyState
           variant="dashed"
           icon={User}
-          className="my-8 sm:my-12 rounded-3xl border border-dashed border-border-color p-8 sm:p-12 text-center bg-bg-surface backdrop-blur-sm shadow-sm"
+          className="my-8 sm:my-12 rounded-card border border-dashed border-border-color p-8 sm:p-12 text-center bg-bg-surface backdrop-blur-sm shadow-sm"
           iconClassName="mx-auto h-12 w-12 text-text-muted mb-3"
           headingClassName="text-lg font-bold text-text-primary"
           subtitleClassName="mt-1 text-xs text-text-secondary max-w-sm mx-auto"

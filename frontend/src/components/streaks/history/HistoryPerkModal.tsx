@@ -34,11 +34,11 @@ const PerkTile: React.FC<{ perk: Perk; index: number; phase: LockPhase }> = ({ p
 
   return (
     <div
-      className="relative flex flex-col items-center gap-1.5 p-2 rounded-lg border border-border-color bg-bg-elevated overflow-hidden"
+      className="relative flex flex-col items-center gap-1.5 p-2 rounded-chip border border-border-color bg-bg-elevated overflow-hidden"
       style={delay}
     >
       <div
-        className={`w-full aspect-square rounded-md overflow-hidden bg-bg-elevated flex items-center justify-center transition-all duration-500 ${
+        className={`w-full aspect-square rounded-chip overflow-hidden bg-bg-elevated flex items-center justify-center transition-all duration-500 ${
           isRevealed ? '' : 'grayscale opacity-40'
         }`}
         style={delay}
@@ -130,7 +130,7 @@ export const HistoryPerkModal: React.FC<HistoryPerkModalProps> = ({ killerName, 
 
         <button
           onClick={onClose}
-          className="mt-6 w-full rounded-xl bg-accent-amber py-3 type-card-title text-text-inverted transition-colors hover:bg-accent-amber-hover cursor-pointer"
+          className="mt-6 w-full rounded-control bg-accent-amber py-3 type-card-title text-text-inverted transition-colors hover:bg-accent-amber-hover cursor-pointer"
         >
           {dict.streaks.continueButton}
         </button>

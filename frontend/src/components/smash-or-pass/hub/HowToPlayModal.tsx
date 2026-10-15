@@ -43,9 +43,9 @@ export function HowToPlayModal({ isOpen, onClose, onPass, onSmash, onStats, onRe
         </span>
 
         {/* 1. Swipe & Drag Mechanics */}
-        <div className="p-3.5 sm:p-4 rounded-xl bg-bg-surface border border-border-color space-y-2.5 shadow-xs">
+        <div className="p-3.5 sm:p-4 rounded-card bg-bg-surface border border-border-color space-y-2.5 shadow-xs">
           <div className="flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-accent-red/10 border border-accent-red/30 text-accent-red shrink-0">
+            <div className="flex h-9 w-9 items-center justify-center rounded-card bg-accent-red/10 border border-accent-red/30 text-accent-red shrink-0">
               <ThornHeartIcon className="h-5 w-5" aria-hidden="true" />
             </div>
             <div className="min-w-0">
@@ -54,11 +54,11 @@ export function HowToPlayModal({ isOpen, onClose, onPass, onSmash, onStats, onRe
             </div>
           </div>
           <div className="flex flex-wrap items-center gap-2 pt-0.5 type-caption">
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-bg-elevated border border-border-color text-text-muted">
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-chip bg-bg-elevated border border-border-color text-text-muted">
               <SnuffedCandleIcon className="h-3.5 w-3.5" aria-hidden="true" />
               <span>{text.passBadge}</span>
             </span>
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-accent-red/15 border border-accent-red/30 text-accent-red font-bold">
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-chip bg-accent-red/15 border border-accent-red/30 text-accent-red font-bold">
               <ThornHeartIcon className="h-3.5 w-3.5" aria-hidden="true" />
               <span>{text.smashBadge}</span>
             </span>
@@ -66,9 +66,9 @@ export function HowToPlayModal({ isOpen, onClose, onPass, onSmash, onStats, onRe
         </div>
 
         {/* 2. On-Card Action Controls */}
-        <div className="p-3.5 sm:p-4 rounded-xl bg-bg-surface border border-border-color space-y-2.5 shadow-xs">
+        <div className="p-3.5 sm:p-4 rounded-card bg-bg-surface border border-border-color space-y-2.5 shadow-xs">
           <div className="flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-accent-amber/10 border border-accent-amber/30 text-accent-amber shrink-0">
+            <div className="flex h-9 w-9 items-center justify-center rounded-card bg-accent-amber/10 border border-accent-amber/30 text-accent-amber shrink-0">
               <TarotTurnIcon className="h-5 w-5" aria-hidden="true" />
             </div>
             <div className="min-w-0">
@@ -77,11 +77,11 @@ export function HowToPlayModal({ isOpen, onClose, onPass, onSmash, onStats, onRe
             </div>
           </div>
           <div className="flex flex-wrap items-center gap-2 pt-0.5 type-caption">
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-bg-elevated border border-border-color text-text-secondary">
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-chip bg-bg-elevated border border-border-color text-text-secondary">
               <TarotTurnIcon className="h-3.5 w-3.5 text-accent-red" aria-hidden="true" />
               <span>{text.flipCardBadge}</span>
             </span>
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-bg-elevated border border-border-color text-text-secondary">
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-chip bg-bg-elevated border border-border-color text-text-secondary">
               <PortraitLoupeIcon className="h-3.5 w-3.5 text-accent-amber" aria-hidden="true" />
               <span>{text.zoomArtBadge}</span>
             </span>
@@ -89,9 +89,9 @@ export function HowToPlayModal({ isOpen, onClose, onPass, onSmash, onStats, onRe
         </div>
 
         {/* 3. Tactile Keyboard Controls */}
-        <div className="p-3.5 sm:p-4 rounded-xl bg-bg-surface border border-border-color space-y-2.5 shadow-xs">
+        <div className="p-3.5 sm:p-4 rounded-card bg-bg-surface border border-border-color space-y-2.5 shadow-xs">
           <div className="flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-bg-elevated border border-border-color text-text-primary shrink-0">
+            <div className="flex h-9 w-9 items-center justify-center rounded-card bg-bg-elevated border border-border-color text-text-primary shrink-0">
               <Gamepad2 className="h-5 w-5" aria-hidden="true" />
             </div>
             <div className="min-w-0">
@@ -103,8 +103,8 @@ export function HowToPlayModal({ isOpen, onClose, onPass, onSmash, onStats, onRe
         </div>
 
         {/* 4. Trial Atmosphere & Lore */}
-        <div className="p-3.5 sm:p-4 rounded-xl bg-bg-surface border border-border-color flex items-center gap-3 shadow-xs">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-accent-purple/10 border border-accent-purple/30 text-accent-purple shrink-0">
+        <div className="p-3.5 sm:p-4 rounded-card bg-bg-surface border border-border-color flex items-center gap-3 shadow-xs">
+          <div className="flex h-9 w-9 items-center justify-center rounded-card bg-accent-purple/10 border border-accent-purple/30 text-accent-purple shrink-0">
             <ThunderPulseIcon className="h-5 w-5" aria-hidden="true" />
           </div>
           <div className="min-w-0">

@@ -57,7 +57,7 @@ describe('Campfire Dossier: CampfireHeader', () => {
       })
     );
 
-    assert.ok(html.includes('rounded-2xl') || html.includes('rounded-3xl'), 'Must use square-ish rounded borders');
+    assert.ok(html.includes('rounded-card'), 'Must use square-ish rounded borders');
     assert.ok(html.includes('sm:h-36 sm:w-36') || html.includes('xl:h-44 xl:w-44'), 'Must size avatar to 3xl block height');
   });
 });
@@ -95,7 +95,7 @@ describe('Campfire Dossier: VaultMasteryDials', () => {
 
     assert.ok(html.includes('aspect-square'), 'Must render square-ish cards');
     assert.ok(html.includes('sm:w-36 sm:h-36') || html.includes('xl:w-44 xl:h-44'), 'Must match block height with responsive sizing');
-    assert.ok(html.includes('rounded-3xl') || html.includes('rounded-2xl'), 'Must use square-ish rounded corners');
+    assert.ok(html.includes('rounded-card'), 'Must use square-ish rounded corners');
     assert.ok(html.includes('justify-center'), 'Must center Vault Mastery title');
   });
 });

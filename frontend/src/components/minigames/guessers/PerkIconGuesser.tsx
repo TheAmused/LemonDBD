@@ -34,7 +34,7 @@ export const PerkIconGuesser: React.FC<PerkIconGuesserProps> = ({ roundConfig, p
   return (
     <div className="w-full flex flex-col items-center my-6">
       {/* Distorted Perk Icon Frame */}
-      <div className="relative w-44 h-44 sm:w-52 sm:h-52 rounded-2xl overflow-hidden border-2 border-border-color shadow-2xl bg-bg-surface flex items-center justify-center">
+      <div className="relative w-44 h-44 sm:w-52 sm:h-52 rounded-card overflow-hidden border-2 border-border-color shadow-2xl bg-bg-surface flex items-center justify-center">
         {imageUrl ? (
           <div
             className="relative w-32 h-32 sm:w-40 sm:h-40 transition-all duration-500 ease-out"
@@ -62,7 +62,7 @@ export const PerkIconGuesser: React.FC<PerkIconGuesserProps> = ({ roundConfig, p
 
         {isSolved && targetPerk && (
           <div className="absolute inset-0 bg-bg-primary/40 backdrop-blur-xs flex items-center justify-center">
-            <div className="px-4 py-2 rounded-xl bg-accent-green text-text-inverted font-bold text-base shadow-xl border border-accent-green/60 flex items-center gap-2">
+            <div className="px-4 py-2 rounded-card bg-accent-green text-text-inverted font-bold text-base shadow-xl border border-accent-green/60 flex items-center gap-2">
               <Check className="w-4 h-4" />
               <span>{targetPerk.name}</span>
             </div>
@@ -81,7 +81,7 @@ export const PerkIconGuesser: React.FC<PerkIconGuesserProps> = ({ roundConfig, p
             return (
               <div
                 key={`perk-icon-g-${idx}`}
-                className={`flex items-center justify-between px-4 py-2.5 rounded-xl border font-semibold text-sm transition-all ${
+                className={`flex items-center justify-between px-4 py-2.5 rounded-card border font-semibold text-sm transition-all ${
                   isCorrect
                     ? 'bg-accent-green text-text-inverted border-accent-green shadow-md'
                     : 'bg-accent-red/20 text-accent-red border-accent-red/40'

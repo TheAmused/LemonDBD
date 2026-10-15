@@ -38,7 +38,7 @@ const PerkGridItem = React.memo<{
       type="button"
       onClick={() => onToggle(perk)}
       aria-pressed={isSelected}
-      className={`relative flex flex-col items-center p-3 rounded-2xl transition-all cursor-pointer text-center group ${
+      className={`relative flex flex-col items-center p-3 rounded-control transition-all cursor-pointer text-center group ${
         isSelected ? 'bg-accent-red/20' : 'bg-bg-surface hover:bg-bg-elevated'
       }`}
     >

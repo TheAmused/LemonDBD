@@ -40,7 +40,7 @@ export const KillerPowerModal: React.FC<KillerPowerModalProps> = ({
       closeButtonAriaLabel={t.close || 'Close'}
     >
       <div className="flex justify-center px-6 pt-5">
-        <div className="w-20 h-20 shrink-0 rounded-2xl bg-bg-elevated border-2 border-accent-red/50 flex items-center justify-center p-2 shadow-lg">
+        <div className="w-20 h-20 shrink-0 rounded-card bg-bg-elevated border-2 border-accent-red/50 flex items-center justify-center p-2 shadow-lg">
           {killerPower.icon_url || killerPower.icon_local_path ? (
             <img
               src={getAssetUrl(backendBase, killerPower.icon_local_path, killerPower.icon_url)}
@@ -59,15 +59,15 @@ export const KillerPowerModal: React.FC<KillerPowerModalProps> = ({
         </div>
       </div>
       <div className="mt-5 px-6 py-3 bg-bg-elevated border-y border-border-color grid grid-cols-3 gap-2">
-        <div className="p-2 rounded-xl bg-bg-surface border border-border-color text-center">
+        <div className="p-2 rounded-card bg-bg-surface border border-border-color text-center">
           <span className="block text-micro font-bold uppercase text-text-secondary">{t.movementSpeed || 'Speed'}</span>
           <span className="block type-strong text-text-primary truncate">{killerSpeed}</span>
         </div>
-        <div className="p-2 rounded-xl bg-bg-surface border border-border-color text-center">
+        <div className="p-2 rounded-card bg-bg-surface border border-border-color text-center">
           <span className="block text-micro font-bold uppercase text-text-secondary">{t.terrorRadius || 'Terror Radius'}</span>
           <span className="block type-strong text-accent-red truncate">{killerTerrorRadius}</span>
         </div>
-        <div className="p-2 rounded-xl bg-bg-surface border border-border-color text-center">
+        <div className="p-2 rounded-card bg-bg-surface border border-border-color text-center">
           <span className="block text-micro font-bold uppercase text-text-secondary">{t.height || 'Height'}</span>
           <span className="block type-strong text-text-primary truncate">{killerHeight}</span>
         </div>

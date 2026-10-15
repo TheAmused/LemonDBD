@@ -102,7 +102,7 @@ export const TwoFactorConfirmModal: React.FC<TwoFactorConfirmModalProps> = ({ ac
         >
           <p className="type-body-lg text-text-secondary">{isDisable ? t.disableIntro : t.regenerateIntro}</p>
           {error && (
-            <p role="alert" className="rounded-xl border border-accent-red/30 bg-accent-red/10 p-3 type-strong text-accent-red">
+            <p role="alert" className="rounded-card border border-accent-red/30 bg-accent-red/10 p-3 type-strong text-accent-red">
               {error}
             </p>
           )}

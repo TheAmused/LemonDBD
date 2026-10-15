@@ -57,7 +57,7 @@ export function AdminContentReportsWorkbench({
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start w-full">
-      <div className="lg:col-span-5 flex flex-col rounded-3xl border border-border-color bg-bg-surface p-4 shadow-sm space-y-4">
+      <div className="lg:col-span-5 flex flex-col rounded-card border border-border-color bg-bg-surface p-4 shadow-sm space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-border-color">
           <label htmlFor="content-report-status-filter" className="flex items-center gap-1 type-strong-xs text-text-secondary">
             <Filter className="h-3 w-3" />
@@ -96,7 +96,7 @@ export function AdminContentReportsWorkbench({
                   type="button"
                   onClick={() => onSelect(report.id)}
                   aria-pressed={isSelected}
-                  className={`w-full p-3.5 rounded-2xl border transition-all cursor-pointer text-left space-y-2 focus:outline-none focus:ring-2 focus:ring-accent-red ${
+                  className={`w-full p-3.5 rounded-control border transition-all cursor-pointer text-left space-y-2 focus:outline-none focus:ring-2 focus:ring-accent-red ${
                     isSelected
                       ? 'border-accent-red bg-accent-red/10 shadow-sm ring-1 ring-accent-red/30'
                       : 'border-border-subtle bg-bg-primary hover:border-border-color'
@@ -141,7 +141,7 @@ export function AdminContentReportsWorkbench({
         )}
       </div>
 
-      <div className="lg:col-span-7 rounded-3xl border border-border-color bg-bg-surface p-4 sm:p-6 shadow-sm">
+      <div className="lg:col-span-7 rounded-card border border-border-color bg-bg-surface p-4 sm:p-6 shadow-sm">
         {selectedId === null ? (
           <p className="py-12 text-center text-xs text-text-muted">{dict.admin.contentReportsSelectPrompt}</p>
         ) : loadingDetail && !current ? (

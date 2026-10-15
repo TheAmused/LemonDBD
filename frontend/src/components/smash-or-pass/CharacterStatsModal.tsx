@@ -142,7 +142,7 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({ isOpen
 
   const roleBadge = (
     <span
-      className={`text-tiny font-black uppercase px-2 py-0.5 rounded-lg border ${
+      className={`text-tiny font-black uppercase px-2 py-0.5 rounded-chip border ${
         isSurvivor
           ? 'bg-accent-green/15 text-accent-green border-accent-green/40'
           : 'bg-accent-red/15 text-accent-red border-accent-red/40'
@@ -153,7 +153,7 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({ isOpen
   );
 
   const portrait = (
-    <div className="relative h-20 w-20 rounded-2xl overflow-hidden border border-accent-red/40 shrink-0 bg-bg-primary shadow-md">
+    <div className="relative h-20 w-20 rounded-card overflow-hidden border border-accent-red/40 shrink-0 bg-bg-primary shadow-md">
       <img
         src={avatarSrc}
         alt={name}
@@ -180,9 +180,9 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({ isOpen
         <div className="flex justify-center">{portrait}</div>
 
         {/* 1. Consensus Tier Badge & Global Smash Rate Bar */}
-        <div className={`p-4 rounded-2xl border ${tierInfo.bg} ${tierInfo.glow} flex items-center justify-between`}>
+        <div className={`p-4 rounded-card border ${tierInfo.bg} ${tierInfo.glow} flex items-center justify-between`}>
           <div className="flex items-center gap-2.5">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-bg-primary/40 border border-border-color">
+            <div className="flex h-9 w-9 items-center justify-center rounded-card bg-bg-primary/40 border border-border-color">
               {tierInfo.icon}
             </div>
             <div>
@@ -204,7 +204,7 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({ isOpen
         </div>
 
         {/* 2. Vote Breakdown Progress Bar */}
-        <Surface tone="elevated" radius="2xl" padding="none" className="space-y-1.5 p-3.5">
+        <Surface tone="elevated" padding="none" className="space-y-1.5 p-3.5">
           <div className="flex justify-between type-strong">
             <span className="flex items-center gap-1 text-accent-red">
               <Heart className="h-3.5 w-3.5 fill-accent-red" /> {formatNumber(smashCount)} {smashesLabel} ({smashPct}{percentSign})
@@ -231,7 +231,7 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({ isOpen
 
         {/* 3. Lore Quote */}
         {quote && (
-          <Surface tone="elevated" radius="2xl" padding="none" className="p-3.5 space-y-1">
+          <Surface tone="elevated" padding="none" className="p-3.5 space-y-1">
             <div className="flex items-center gap-1 text-accent-amber type-label-2xs">
               <Quote className="h-3.5 w-3.5" />
               <span>{loreQuoteLabel}</span>
@@ -248,7 +248,7 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({ isOpen
             <span className="type-label-2xs text-text-muted">
               {loreProfileLabel}
             </span>
-            <p className="type-body text-text-secondary bg-bg-elevated p-3 rounded-2xl border border-border-color">
+            <p className="type-body text-text-secondary bg-bg-elevated p-3 rounded-card border border-border-color">
               {bio}
             </p>
           </div>
@@ -260,13 +260,13 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({ isOpen
         {(profile.turn_on || dealbreaker) && (
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
             {profile.turn_on && (
-              <div className="bg-bg-elevated border border-border-color p-2.5 rounded-2xl space-y-0.5">
+              <div className="bg-bg-elevated border border-border-color p-2.5 rounded-card space-y-0.5">
                 <span className="type-label-2xs text-accent-red block">{turnOnLabel}</span>
                 <p className="text-text-secondary text-mini leading-tight">{profile.turn_on}</p>
               </div>
             )}
             {dealbreaker && (
-              <div className="bg-bg-elevated border border-border-color p-2.5 rounded-2xl space-y-0.5">
+              <div className="bg-bg-elevated border border-border-color p-2.5 rounded-card space-y-0.5">
                 <span className="type-label-2xs text-accent-amber block">{dealbreakerLabel}</span>
                 <p className="text-text-secondary text-mini leading-tight">{dealbreaker}</p>
               </div>

@@ -65,7 +65,7 @@ export const TierItemTile = React.forwardRef<HTMLDivElement, TierItemTileProps>(
       {...tip(item.name, undefined, 'item')}
       aria-label={item.name}
       className={cn(
-        'group relative flex shrink-0 select-none flex-col items-center gap-1 rounded-xl outline-none',
+        'group relative flex shrink-0 select-none flex-col items-center gap-1 rounded-card outline-none',
         'touch-pan-y [-webkit-touch-callout:none] focus-visible:ring-2 focus-visible:ring-accent-amber',
         size === 'sm' ? 'w-11' : cn(SHAPE_CLASSES[shape], 'group-data-[fit]/board:w-(--tile-w)!'),
         ghost && 'opacity-30',
@@ -77,7 +77,7 @@ export const TierItemTile = React.forwardRef<HTMLDivElement, TierItemTileProps>(
     >
       <div
         className={cn(
-          'relative flex w-full items-center justify-center overflow-hidden rounded-xl border transition-[border-color] duration-150',
+          'relative flex w-full items-center justify-center overflow-hidden rounded-card border transition-[border-color] duration-150',
           size === 'sm' ? 'h-11' : cn(IMAGE_CLASSES[shape], 'group-data-[fit]/board:h-(--tile)!'),
           // A bare icon sits straight on the board; the plate and border only come back for selection, hover and the placeholder.
           hasImage ? 'bg-transparent' : 'bg-bg-elevated',

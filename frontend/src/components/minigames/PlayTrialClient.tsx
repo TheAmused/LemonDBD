@@ -140,7 +140,7 @@ function PlayTrialContent() {
           />
         </div>
       ) : error ? (
-        <div className="p-8 rounded-2xl bg-accent-red/10 border border-accent-red/30 text-center max-w-md mx-auto my-12">
+        <div className="p-8 rounded-card bg-accent-red/10 border border-accent-red/30 text-center max-w-md mx-auto my-12">
           <h2 className="text-lg font-bold text-accent-red mb-2">{dict.app.notice}</h2>
           <p className="text-xs text-text-muted">{error}</p>
         </div>

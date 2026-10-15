@@ -227,10 +227,10 @@ const { isCollapsed, toggleSidebar } = useSidebarState();
           <Link
             href={`/${currentLocale}`}
             onClick={() => setMobileOpen(false)}
-            className="flex items-center gap-3 group focus:outline-none focus:ring-2 focus:ring-accent-red rounded-xl"
+            className="flex items-center gap-3 group focus:outline-none focus:ring-2 focus:ring-accent-red rounded-control"
             aria-label={dict.sidebar.homeAria}
           >
-            <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-accent-red/15 border border-accent-red/30 text-text-primary shadow-xs group-hover:scale-105 transition-transform p-1.5">
+            <div className="relative flex h-10 w-10 items-center justify-center rounded-card bg-accent-red/15 border border-accent-red/30 text-text-primary shadow-xs group-hover:scale-105 transition-transform p-1.5">
               <LemonIcon className="h-7 w-7" />
             </div>
             <div>
@@ -318,7 +318,7 @@ const { isCollapsed, toggleSidebar } = useSidebarState();
           {...tip(dict.sidebar.toggleSidebar, undefined, 'action')}
           aria-label={dict.sidebar.toggleSidebar}
           aria-expanded={!isCollapsed}
-          className="hit-area hidden lg:flex absolute top-1/2 -right-6 -translate-y-1/2 h-16 w-6 items-center justify-center rounded-r-2xl border border-l-0 border-border-color bg-bg-sidebar text-text-primary shadow-md hover:bg-bg-sidebar-hover hover:w-7 hover:text-accent-red active:scale-95 transition-all duration-200 cursor-pointer z-50 group"
+          className="hit-area hidden lg:flex absolute top-1/2 -right-6 -translate-y-1/2 h-16 w-6 items-center justify-center rounded-r-control border border-l-0 border-border-color bg-bg-sidebar text-text-primary shadow-md hover:bg-bg-sidebar-hover hover:w-7 hover:text-accent-red active:scale-95 transition-all duration-200 cursor-pointer z-50 group"
         >
           <ChevronRight
             aria-hidden="true"
@@ -337,7 +337,7 @@ const { isCollapsed, toggleSidebar } = useSidebarState();
           className="flex items-center gap-2.5"
           aria-label={dict.sidebar.homeAria}
         >
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent-red/15 border border-accent-red/30 text-text-primary p-1">
+          <div className="flex h-9 w-9 items-center justify-center rounded-chip bg-accent-red/15 border border-accent-red/30 text-text-primary p-1">
             <LemonIcon className="h-6 w-6" />
           </div>
           <span className="font-extrabold text-sm tracking-wider text-text-primary">
@@ -378,7 +378,8 @@ const { isCollapsed, toggleSidebar } = useSidebarState();
           onClick={() => setMobileOpen(false)}
           data-testid="mobile-drawer-close"
           aria-label={dict.sidebar.closeDrawer}
-          className="absolute right-3 top-3 z-20 rounded-full"
+          pill
+          className="absolute right-3 top-3 z-20"
         >
           <X className="h-5 w-5" />
         </Button>

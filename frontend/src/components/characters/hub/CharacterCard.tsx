@@ -61,7 +61,7 @@ export function CharacterCard({
           router.push(detailHref);
         }
       }}
-      className="group relative flex flex-col overflow-hidden rounded-2xl border border-border-color bg-bg-surface hover:bg-bg-elevated hover:border-accent-red/50 shadow-xs hover:shadow-lg transition-all duration-300 cursor-pointer touch-manipulation aspect-[3/4] w-full"
+      className="group relative flex flex-col overflow-hidden rounded-card border border-border-color bg-bg-surface hover:bg-bg-elevated hover:border-accent-red/50 shadow-xs hover:shadow-lg transition-all duration-300 cursor-pointer touch-manipulation aspect-[3/4] w-full"
     >
       <div className="absolute top-1.5 right-1.5 sm:top-2 sm:right-2 z-20">
         <span
@@ -132,7 +132,7 @@ export function CharacterCard({
               e.stopPropagation();
               onOpenPerks(char);
             }}
-            className="mb-1 sm:mb-1.5 inline-flex items-center justify-center gap-1 rounded-xl border border-accent-amber/50 bg-bg-surface/90 px-2.5 py-0.5 text-micro sm:text-tiny font-bold text-accent-amber hover:bg-accent-amber/20 hover:border-accent-amber transition-colors shadow-xs cursor-pointer pointer-events-auto select-none"
+            className="mb-1 sm:mb-1.5 inline-flex items-center justify-center gap-1 rounded-control border border-accent-amber/50 bg-bg-surface/90 px-2.5 py-0.5 text-micro sm:text-tiny font-bold text-accent-amber hover:bg-accent-amber/20 hover:border-accent-amber transition-colors shadow-xs cursor-pointer pointer-events-auto select-none"
           >
             <span>{dict.filters.perks}</span>
             {perkStats.total > 0 && ` (${perkStats.unlocked}/${perkStats.total})`}

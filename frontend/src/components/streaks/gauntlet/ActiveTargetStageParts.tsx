@@ -37,7 +37,7 @@ export const RevealPortrait: React.FC<{ name?: string; role: Role; phase: DrawPh
   if (!src || failed) {
     return (
       <div
-        className={`w-full h-full bg-bg-elevated rounded-xl flex items-center justify-center text-text-muted ${motion}`}
+        className={`w-full h-full bg-bg-elevated rounded-card flex items-center justify-center text-text-muted ${motion}`}
       >
         {role === 'survivor' ? <User className="w-8 h-8" aria-hidden="true" /> : <KillerIcon className="w-8 h-8" aria-hidden="true" />}
       </div>
@@ -49,7 +49,7 @@ export const RevealPortrait: React.FC<{ name?: string; role: Role; phase: DrawPh
       src={src}
       alt=""
       aria-hidden="true"
-      className={`w-full h-full max-w-none object-cover rounded-xl ${motion}`}
+      className={`w-full h-full max-w-none object-cover rounded-card ${motion}`}
       onError={() => setFailed(true)}
     />
   );
@@ -89,7 +89,7 @@ const CAPTION_CLASS: Record<SlotSize, string> = {
 };
 
 const slotIconBase = (size: SlotSize) =>
-  `${SLOT_ICON_BASE[size]} shrink-0 rounded-md rotate-45 flex items-center justify-center border relative`;
+  `${SLOT_ICON_BASE[size]} shrink-0 rounded-chip rotate-45 flex items-center justify-center border relative`;
 
 const BADGE_TEXT_SIZE: Record<SlotSize, string> = {
   large: 'text-micro',
@@ -113,7 +113,7 @@ const SlotChip: React.FC<{
   <div className="relative inline-flex shrink-0 flex-col items-center">
     {badge && (
       <div
-        className={`absolute -top-2.5 left-1/2 hidden -translate-x-1/2 z-10 sm:block ${BADGE_BG[badgeColor]} text-text-primary ${BADGE_TEXT_SIZE[size]} font-black uppercase tracking-wide px-1.5 py-0.5 rounded shadow-sm whitespace-nowrap`}
+        className={`absolute -top-2.5 left-1/2 hidden -translate-x-1/2 z-10 sm:block ${BADGE_BG[badgeColor]} text-text-primary ${BADGE_TEXT_SIZE[size]} font-black uppercase tracking-wide px-1.5 py-0.5 rounded-chip shadow-sm whitespace-nowrap`}
       >
         {badge}
       </div>
@@ -271,7 +271,7 @@ export const CompactPlayerBuild: React.FC<CompactPlayerBuildProps> = ({ index, p
 
   const avatarBox = (sizeClass: string, iconClass: string) => (
     <div
-      className={`${sizeClass} shrink-0 rounded-xl bg-bg-elevated border-2 border-border-color flex items-center justify-center overflow-hidden`}
+      className={`${sizeClass} shrink-0 rounded-card bg-bg-elevated border-2 border-border-color flex items-center justify-center overflow-hidden`}
     >
       {avatarSrc && !avatarError ? (
         <img

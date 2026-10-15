@@ -51,9 +51,9 @@ export const ClassicCharacterGuesser: React.FC<ClassicCharacterGuesserProps> = (
                 className="animate-in fade-in slide-in-from-top-3 duration-300 font-medium text-sm"
               >
                 {/* Character Name & Avatar */}
-                <td className="p-2 rounded-xl bg-bg-surface border border-border-color text-left">
+                <td className="p-2 rounded-card bg-bg-surface border border-border-color text-left">
                   <div className="flex items-center gap-2.5">
-                    <div className="relative w-11 h-11 rounded-lg overflow-hidden bg-bg-elevated border border-border-subtle flex-shrink-0">
+                    <div className="relative w-11 h-11 rounded-chip overflow-hidden bg-bg-elevated border border-border-subtle flex-shrink-0">
                       {imgSrc ? (
                         <Image
                           src={imgSrc}
@@ -144,7 +144,7 @@ const AttributeCell: React.FC<AttributeCellProps> = ({ evaluation, value }) => {
 
   return (
     <td
-      className={`p-2.5 rounded-xl border shadow-md font-semibold text-xs transition-all relative ${bgStyle}`}
+      className={`p-2.5 rounded-card border shadow-md font-semibold text-xs transition-all relative ${bgStyle}`}
     >
       <div className="flex items-center justify-center gap-1">
         <span className="truncate max-w-[120px]">{value ?? '-'}</span>

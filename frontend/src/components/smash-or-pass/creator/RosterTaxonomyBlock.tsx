@@ -125,7 +125,7 @@ export const RosterTaxonomyBlock: React.FC<RosterTaxonomyBlockProps> = ({ roles,
                 key={preset}
                 type="button"
                 onClick={() => handleAddRole(preset)}
-                className="type-micro px-2 py-0.5 rounded-lg bg-bg-surface hover:bg-bg-elevated border border-border-color text-text-muted hover:text-text-primary transition-colors cursor-pointer"
+                className="type-micro px-2 py-0.5 rounded-control bg-bg-surface hover:bg-bg-elevated border border-border-color text-text-muted hover:text-text-primary transition-colors cursor-pointer"
               >
                 + {preset}
               </button>
@@ -143,7 +143,7 @@ export const RosterTaxonomyBlock: React.FC<RosterTaxonomyBlockProps> = ({ roles,
             roles.map((role) => (
               <span
                 key={role}
-                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-accent-red/10 border border-accent-red/30 text-accent-red text-xs font-bold tracking-wide"
+                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-control bg-accent-red/10 border border-accent-red/30 text-accent-red text-xs font-bold tracking-wide"
               >
                 <span>{role}</span>
                 <button
@@ -214,7 +214,7 @@ export const RosterTaxonomyBlock: React.FC<RosterTaxonomyBlockProps> = ({ roles,
                 key={preset}
                 type="button"
                 onClick={() => handleAddGender(preset)}
-                className="type-micro px-2 py-0.5 rounded-lg bg-bg-surface hover:bg-bg-elevated border border-border-color text-text-muted hover:text-text-primary transition-colors cursor-pointer"
+                className="type-micro px-2 py-0.5 rounded-control bg-bg-surface hover:bg-bg-elevated border border-border-color text-text-muted hover:text-text-primary transition-colors cursor-pointer"
               >
                 + {preset}
               </button>
@@ -232,7 +232,7 @@ export const RosterTaxonomyBlock: React.FC<RosterTaxonomyBlockProps> = ({ roles,
             genders.map((gender) => (
               <span
                 key={gender}
-                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-accent-green/10 border border-accent-green/30 text-accent-green text-xs font-bold tracking-wide"
+                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-control bg-accent-green/10 border border-accent-green/30 text-accent-green text-xs font-bold tracking-wide"
               >
                 <span>{gender}</span>
                 <button

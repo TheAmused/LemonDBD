@@ -94,14 +94,14 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
     <div className="min-h-screen p-2.5 sm:p-5 lg:p-6 pb-32 sm:pb-36 lg:pb-36">
       <div className="mx-auto w-full max-w-[96rem] 2xl:max-w-[110rem] 3xl:max-w-[124rem]">
         {/* Unified Card Container */}
-        <div className="rounded-2xl border border-border-color bg-bg-surface p-3 sm:p-5 lg:p-6 shadow-2xl space-y-3.5 sm:space-y-4">
+        <div className="rounded-card border border-border-color bg-bg-surface p-3 sm:p-5 lg:p-6 shadow-2xl space-y-3.5 sm:space-y-4">
           {/* Header Section */}
           <header className="relative flex flex-col items-center text-center space-y-1.5 sm:space-y-2">
             <div className="sm:absolute sm:right-0 sm:top-0 hidden sm:block">
               <button
                 type="button"
                 onClick={() => setIsSkipModalOpen(true)}
-                className="shrink-0 rounded-xl border border-accent-amber/50 bg-accent-amber/10 px-4 py-2 sm:px-5 sm:py-2.5 lg:px-6 lg:py-3 text-xs sm:text-sm lg:text-base font-bold text-accent-amber hover:bg-accent-amber/20 hover:border-accent-amber transition-all cursor-pointer shadow-xs"
+                className="shrink-0 rounded-control border border-accent-amber/50 bg-accent-amber/10 px-4 py-2 sm:px-5 sm:py-2.5 lg:px-6 lg:py-3 text-xs sm:text-sm lg:text-base font-bold text-accent-amber hover:bg-accent-amber/20 hover:border-accent-amber transition-all cursor-pointer shadow-xs"
               >
                 {t.skipButton}
               </button>
@@ -116,7 +116,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
               <button
                 type="button"
                 onClick={() => setIsSkipModalOpen(true)}
-                className="shrink-0 rounded-xl border border-accent-amber/50 bg-accent-amber/10 px-3 py-1 type-strong text-accent-amber hover:bg-accent-amber/20 transition-colors cursor-pointer"
+                className="shrink-0 rounded-control border border-accent-amber/50 bg-accent-amber/10 px-3 py-1 type-strong text-accent-amber hover:bg-accent-amber/20 transition-colors cursor-pointer"
               >
                 {t.skipButton}
               </button>

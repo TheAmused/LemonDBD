@@ -284,12 +284,12 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
           {/* Mobile & Tablet (< md): Centered balanced offerings and 4-slot loadout tray */}
           <div className="flex flex-col items-center justify-center flex-1 w-full my-auto gap-3.5 md:hidden">
             {/* 4-Slot Loadout Progress Tray */}
-            <div className="flex items-center justify-center gap-2 sm:gap-2.5 py-1.5 px-3 rounded-2xl bg-bg-surface/90 border border-border-color shadow-xs backdrop-blur-sm">
+            <div className="flex items-center justify-center gap-2 sm:gap-2.5 py-1.5 px-3 rounded-card bg-bg-surface/90 border border-border-color shadow-xs backdrop-blur-sm">
               {[0, 1, 2, 3].map((slotIdx) => {
                 const locked = lockedItems[slotIdx];
                 return locked ? (
                   <div key={`mob-tray-locked-${locked.id}`} className="relative">
-                    <div className="rounded-xl ring-2 ring-accent-amber/60">
+                    <div className="rounded-card ring-2 ring-accent-amber/60">
                       <PerkSlot perk={locked.perk} role={role} page={locked.page} slot={locked.slot} size="compact" />
                     </div>
                     <div className="absolute -top-1.5 -right-1.5 z-30 flex h-5 w-5 items-center justify-center rounded-full bg-accent-amber text-text-inverted shadow-xs">
@@ -299,7 +299,7 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
                 ) : (
                   <div
                     key={`mob-tray-empty-${slotIdx}`}
-                    className="flex flex-col items-center justify-center w-[74px] h-[74px] xs:w-[84px] xs:h-[84px] rounded-2xl border-2 border-dashed border-border-color bg-bg-surface/90 text-text-muted"
+                    className="flex flex-col items-center justify-center w-[74px] h-[74px] xs:w-[84px] xs:h-[84px] rounded-card border-2 border-dashed border-border-color bg-bg-surface/90 text-text-muted"
                   >
                     <span className="type-strong opacity-40">#{slotIdx + 1}</span>
                   </div>
@@ -347,7 +347,7 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
                 transition={reduceMotion ? { duration: 0.15 } : { type: 'spring', stiffness: 260, damping: 18 }}
               >
                 <div className="relative">
-                  <div className="rounded-xl ring-2 ring-accent-amber/60">
+                  <div className="rounded-card ring-2 ring-accent-amber/60">
                     <PerkSlot perk={item.perk} role={role} page={item.page} slot={item.slot} />
                   </div>
                   <div className="absolute -top-2 -right-2 z-30 flex h-6 w-6 items-center justify-center rounded-full bg-accent-amber text-text-inverted shadow-xs">

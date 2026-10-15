@@ -63,7 +63,7 @@ export function Section({ title, defaultOpen = true, children }: { title: string
   const [isOpen, setIsOpen] = useState(defaultOpen);
 
   return (
-    <section className="rounded-xl border border-border-color bg-bg-surface shadow-xs overflow-hidden transition-colors flex flex-col">
+    <section className="rounded-card border border-border-color bg-bg-surface shadow-xs overflow-hidden transition-colors flex flex-col">
       <button
         type="button"
         onClick={() => setIsOpen((prev) => !prev)}
@@ -115,7 +115,7 @@ export function Feedback({ errors, saveError, publishError }: {
   ];
   if (messages.length === 0) return null;
   return (
-    <div role="alert" className="flex flex-col items-center justify-center gap-1.5 rounded-lg border border-accent-red/40 bg-accent-red/10 p-3 type-card-title text-accent-red text-center">
+    <div role="alert" className="flex flex-col items-center justify-center gap-1.5 rounded-chip border border-accent-red/40 bg-accent-red/10 p-3 type-card-title text-accent-red text-center">
       {messages.map((m) => (
         <p key={m} className="flex items-center justify-center gap-2">
           <TriangleAlert className="h-4 w-4 shrink-0" aria-hidden="true" />

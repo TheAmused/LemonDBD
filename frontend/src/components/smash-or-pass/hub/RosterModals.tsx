@@ -115,10 +115,10 @@ export function RosterModals({ locale, overlays, rosters }: RosterModalsProps) {
           footerClassName="p-4"
           footer={
             <div className="flex w-full flex-col-reverse gap-2.5 sm:flex-row">
-              <Button variant="secondary" size="md" onClick={() => setRosterPendingDelete(null)} className="flex-1 rounded-xl">
+              <Button variant="secondary" size="md" onClick={() => setRosterPendingDelete(null)} className="flex-1">
                 {dict.smashOrPass.modals.cancel}
               </Button>
-              <Button variant="primary" size="md" onClick={confirmDelete} className="flex-1 rounded-xl">
+              <Button variant="primary" size="md" onClick={confirmDelete} className="flex-1">
                 {dict.smashOrPass.picker.deleteConfirmAction}
               </Button>
             </div>
@@ -156,7 +156,7 @@ export function RosterModals({ locale, overlays, rosters }: RosterModalsProps) {
       {rosterSwitchEffect && (
         <div className="fixed inset-0 z-50 pointer-events-none flex items-center justify-center animate-in fade-in duration-300">
           <div className="absolute inset-0 bg-accent-red/15 backdrop-blur-sm animate-pulse" />
-          <div className="relative flex flex-col items-center gap-2 p-6 rounded-3xl bg-bg-primary/90 border-2 border-accent-red text-center animate-in zoom-in-75 duration-300">
+          <div className="relative flex flex-col items-center gap-2 p-6 rounded-card bg-bg-primary/90 border-2 border-accent-red text-center animate-in zoom-in-75 duration-300">
             <Heart className="h-14 w-14 text-accent-red fill-accent-red animate-bounce" />
             <span className="text-xl font-black tracking-widest text-text-primary uppercase">
               {getRosterDisplayName({ slug: rosterSwitchEffect })}

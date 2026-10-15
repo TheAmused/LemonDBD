@@ -154,7 +154,7 @@ export const SidebarBottomControls: React.FC<SidebarBottomControlsProps> = ({
             aria-haspopup="listbox"
             aria-expanded={isLangMenuOpen}
             aria-disabled={isSwitchingLang}
-            className={`pointer-coarse:min-h-11 pointer-coarse:min-w-11 flex h-8 w-full items-center justify-center gap-1.5 rounded-xl border border-border-color bg-bg-elevated/50 text-xs font-semibold text-text-secondary hover:bg-bg-elevated transition-colors cursor-pointer ${FOCUS_RING} ${isSwitchingLang ? 'pointer-events-none opacity-60' : ''}`}
+            className={`pointer-coarse:min-h-11 pointer-coarse:min-w-11 flex h-8 w-full items-center justify-center gap-1.5 rounded-control border border-border-color bg-bg-elevated/50 text-xs font-semibold text-text-secondary hover:bg-bg-elevated transition-colors cursor-pointer ${FOCUS_RING} ${isSwitchingLang ? 'pointer-events-none opacity-60' : ''}`}
           >
             <FlagIcon code={currentLanguage.code} />
             <span className="uppercase">{currentLanguage.code}</span>
@@ -163,7 +163,7 @@ export const SidebarBottomControls: React.FC<SidebarBottomControlsProps> = ({
           {isLangMenuOpen && (
             <div
               role="listbox"
-              className="absolute bottom-full left-0 z-50 mb-2 w-44 overflow-hidden rounded-xl border border-border-color bg-bg-surface shadow-lg"
+              className="absolute bottom-full left-0 z-50 mb-2 w-44 overflow-hidden rounded-card border border-border-color bg-bg-surface shadow-lg"
             >
               {LANGUAGES.map((lang) => (
                 <Link
@@ -186,7 +186,7 @@ export const SidebarBottomControls: React.FC<SidebarBottomControlsProps> = ({
                       : 'text-text-secondary hover:bg-bg-elevated')
                   }
                 >
-                  <FlagIcon code={lang.code} className="h-4 w-[22px] rounded-sm shrink-0" />
+                  <FlagIcon code={lang.code} className="h-4 w-[22px] rounded-chip shrink-0" />
                   <span>{lang.label}</span>
                 </Link>
               ))}
@@ -203,7 +203,7 @@ export const SidebarBottomControls: React.FC<SidebarBottomControlsProps> = ({
             aria-label={dict.sidebar.toggleTheme}
             aria-haspopup="listbox"
             aria-expanded={isThemeMenuOpen}
-            className={`pointer-coarse:min-h-11 pointer-coarse:min-w-11 flex h-8 w-full min-w-0 items-center justify-center gap-1.5 rounded-xl border border-border-color bg-bg-elevated/50 px-2 text-xs font-semibold text-text-secondary hover:bg-bg-elevated transition-colors cursor-pointer ${FOCUS_RING}`}
+            className={`pointer-coarse:min-h-11 pointer-coarse:min-w-11 flex h-8 w-full min-w-0 items-center justify-center gap-1.5 rounded-control border border-border-color bg-bg-elevated/50 px-2 text-xs font-semibold text-text-secondary hover:bg-bg-elevated transition-colors cursor-pointer ${FOCUS_RING}`}
           >
             {/* The stored theme is only known after mount; the server always
                 renders the "system" icon, so the client must too until then
@@ -219,7 +219,7 @@ export const SidebarBottomControls: React.FC<SidebarBottomControlsProps> = ({
             <div
               role="listbox"
               aria-label={dict.sidebar.toggleTheme}
-              className="absolute bottom-full right-0 z-50 mb-2 w-56 overflow-hidden rounded-xl border border-border-color bg-bg-surface shadow-lg"
+              className="absolute bottom-full right-0 z-50 mb-2 w-56 overflow-hidden rounded-card border border-border-color bg-bg-surface shadow-lg"
             >
               {THEME_OPTIONS.map((opt) => (
                 <button
@@ -254,7 +254,7 @@ export const SidebarBottomControls: React.FC<SidebarBottomControlsProps> = ({
           type="button"
           onClick={onOpenBugModal}
           aria-label={dict.sidebar.reportBug}
-          className={`flex min-h-8 items-center justify-center gap-1.5 rounded-xl border border-border-color bg-bg-elevated/50 px-2 py-1.5 text-mini font-semibold text-text-secondary hover:bg-bg-elevated transition-colors cursor-pointer ${FOCUS_RING}`}
+          className={`flex min-h-8 items-center justify-center gap-1.5 rounded-control border border-border-color bg-bg-elevated/50 px-2 py-1.5 text-mini font-semibold text-text-secondary hover:bg-bg-elevated transition-colors cursor-pointer ${FOCUS_RING}`}
         >
           <FogReportIcon className="h-3.5 w-3.5 shrink-0 text-accent-red" />
           <FitText minScale={0.6} maxLines={2} className="min-w-0 text-center">{dict.sidebar.reportBug}</FitText>
@@ -264,7 +264,7 @@ export const SidebarBottomControls: React.FC<SidebarBottomControlsProps> = ({
           type="button"
           onClick={onOpenCoffeeModal}
           aria-label={dict.sidebar.buyCoffee}
-          className={`flex min-h-8 items-center justify-center gap-1.5 rounded-xl border border-border-color bg-bg-elevated/50 px-2 py-1.5 text-mini font-semibold text-text-secondary hover:bg-bg-elevated transition-colors cursor-pointer ${FOCUS_RING}`}
+          className={`flex min-h-8 items-center justify-center gap-1.5 rounded-control border border-border-color bg-bg-elevated/50 px-2 py-1.5 text-mini font-semibold text-text-secondary hover:bg-bg-elevated transition-colors cursor-pointer ${FOCUS_RING}`}
         >
           <CampfireMugIcon className="h-3.5 w-3.5 shrink-0 text-accent-amber" />
           <FitText minScale={0.6} maxLines={2} className="min-w-0 text-center">{dict.sidebar.buyCoffee}</FitText>

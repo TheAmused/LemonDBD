@@ -58,7 +58,7 @@ export const CampfireHeader: React.FC<CampfireHeaderProps> = ({
     }) => {
   const dict = useDictionary();
   return (
-    <div className="relative overflow-hidden rounded-3xl border border-border-color bg-bg-surface p-6 sm:p-7 2xl:p-9 backdrop-blur-xl shadow-md text-text-primary">
+    <div className="relative overflow-hidden rounded-card border border-border-color bg-bg-surface p-6 sm:p-7 2xl:p-9 backdrop-blur-xl shadow-md text-text-primary">
       <div className="relative z-10 grid grid-cols-1 xl:grid-cols-12 gap-6 sm:gap-8 items-center">
         {/* Left Column: Avatar & Player Identity (5 cols on xl+) */}
         <div className="xl:col-span-5 2xl:col-span-5 flex flex-col sm:flex-row items-center gap-5 sm:gap-7 text-center sm:text-left min-w-0 w-full justify-center xl:justify-start">
@@ -71,7 +71,7 @@ export const CampfireHeader: React.FC<CampfireHeaderProps> = ({
               {...tip(dict.user.changeAvatar, undefined, 'action')}
               aria-label={dict.user.changeAvatar}
             >
-              <div className="relative rounded-2xl sm:rounded-3xl p-0.5 border-2 border-accent-red/60 bg-bg-surface shadow-md">
+              <div className="relative rounded-card p-0.5 border-2 border-accent-red/60 bg-bg-surface shadow-md">
                 <UserAvatar
                   user={user}
                   previewUrl={previewUrl}
@@ -80,14 +80,14 @@ export const CampfireHeader: React.FC<CampfireHeaderProps> = ({
                   showAdminBadge={true}
                   borderClassName="border-0"
                 />
-                <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-bg-primary/80 text-text-inverted opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl sm:rounded-3xl">
+                <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-bg-primary/80 text-text-inverted opacity-0 group-hover:opacity-100 transition-opacity rounded-card">
                   <Camera className="h-5 w-5 sm:h-6 sm:w-6 mb-1 text-accent-red" />
                   <span className="text-micro sm:text-tiny font-bold uppercase tracking-wider">
                     {dict.user.changeAvatar}
                   </span>
                 </div>
                 {isUploadingAvatar && (
-                  <div className="absolute inset-0 z-20 flex items-center justify-center rounded-2xl sm:rounded-3xl bg-bg-primary/70 backdrop-blur-xs">
+                  <div className="absolute inset-0 z-20 flex items-center justify-center rounded-card bg-bg-primary/70 backdrop-blur-xs">
                     <Spinner size="lg" tone="accent" className="h-7 w-7" />
                   </div>
                 )}
@@ -112,7 +112,7 @@ export const CampfireHeader: React.FC<CampfireHeaderProps> = ({
                 {user.username}
               </h1>
               {user.role === 'admin' && (
-                <span className="rounded-xl px-2.5 py-0.5 type-label-sm border border-accent-red/40 bg-accent-red/15 text-accent-red shadow-xs">
+                <span className="rounded-control px-2.5 py-0.5 type-label-sm border border-accent-red/40 bg-accent-red/15 text-accent-red shadow-xs">
                   {dict.user.roleAdmin}
                 </span>
               )}
@@ -150,7 +150,7 @@ export const CampfireHeader: React.FC<CampfireHeaderProps> = ({
               {user.role === 'admin' && (
                 <Link
                   href={`/${currentLocale}/admin`}
-                  className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-lg border border-accent-red/30 bg-accent-red/10 type-strong-xs text-accent-red hover:bg-accent-red/20 transition-colors"
+                  className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-control border border-accent-red/30 bg-accent-red/10 type-strong-xs text-accent-red hover:bg-accent-red/20 transition-colors"
                 >
                   <OverseerEyeIcon className="h-3 w-3" />
                   <span>{dict.sidebar.adminPanel}</span>

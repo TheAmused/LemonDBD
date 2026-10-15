@@ -31,7 +31,7 @@ export const ShieldPromptModal: React.FC<ShieldPromptModalProps> = ({
   onCancel,
 }) => (
   <Modal isOpen={open} onClose={onCancel} variant="lightbox" size="sm" closeButton="none" ariaLabel={title}>
-    <div className="ck-card-in relative flex w-full cursor-default flex-col items-center justify-center gap-4 overflow-hidden rounded-3xl border border-accent-red/60 bg-bg-surface px-8 py-10 text-center">
+    <div className="ck-card-in relative flex w-full cursor-default flex-col items-center justify-center gap-4 overflow-hidden rounded-card border border-accent-red/60 bg-bg-surface px-8 py-10 text-center">
       <Shield className="h-12 w-12 text-accent-red" aria-hidden="true" />
       <h2 className="type-card-title text-balance text-text-primary">{title}</h2>
       <p className="type-label-sm tracking-spaced-md text-accent-red">{message}</p>

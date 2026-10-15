@@ -19,7 +19,7 @@ export const PageStreakRoster: React.FC<PageStreakRosterProps> = ({ locale, rost
   return (
     <div>
       {error && (
-        <div className="mb-4 flex items-center justify-between gap-3 rounded-xl border border-accent-red/30 bg-accent-red/[0.07] px-4 py-3 text-xs text-accent-red">
+        <div className="mb-4 flex items-center justify-between gap-3 rounded-card border border-accent-red/30 bg-accent-red/[0.07] px-4 py-3 text-xs text-accent-red">
           <span>{error}</span>
           <button onClick={onRetry} className="font-bold underline cursor-pointer">
             {dict.streaks.retry}

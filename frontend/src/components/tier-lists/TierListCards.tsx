@@ -15,7 +15,7 @@ import { useDictionary } from "@/context/DictionaryContext";
 import { NsfwBadge } from '@/components/common/NsfwBadge';
 
 const CARD =
-  'group relative flex h-full flex-col overflow-hidden rounded-3xl border border-border-color/80 bg-bg-surface p-5 shadow-sm transition-all hover:-translate-y-1 hover:border-accent-red/50 hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-amber';
+  'group relative flex h-full flex-col overflow-hidden rounded-card border border-border-color/80 bg-bg-surface p-5 shadow-sm transition-all hover:-translate-y-1 hover:border-accent-red/50 hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-amber';
 
 const DEFAULT_OFFICIAL_COVERS: Record<string, string> = {
   'survivor-perks': '/static/tier-lists/banner_survivor_perks.webp',
@@ -87,7 +87,7 @@ function DescriptionPeek({ text }: { text: string }) {
         onMouseEnter={() => setOpen(true)}
         onMouseLeave={() => setOpen(false)}
         onBlur={() => setOpen(false)}
-        className="hit-area absolute bottom-3 left-3 z-30 flex h-8 w-8 items-center justify-center rounded-lg border border-border-color/60 bg-bg-surface/85 text-text-muted shadow-xs backdrop-blur-md transition-colors cursor-pointer hover:text-text-primary"
+        className="hit-area absolute bottom-3 left-3 z-30 flex h-8 w-8 items-center justify-center rounded-control border border-border-color/60 bg-bg-surface/85 text-text-muted shadow-xs backdrop-blur-md transition-colors cursor-pointer hover:text-text-primary"
       >
         <Info className="h-4 w-4" aria-hidden="true" />
       </button>
@@ -135,7 +135,7 @@ export function OfficialTierListCard({ list, rankedCount, locale }: OfficialCard
         {rankedCount > 0 && (
           <div className="absolute top-3 left-3 z-10 transition-opacity group-has-[[aria-expanded=true]]/banner:opacity-0">
             <span
-              className={`rounded-md bg-bg-surface/85 backdrop-blur-md px-2 py-0.5 type-label-2xs border border-border-color/60 shadow-xs tabular-nums ${
+              className={`rounded-chip bg-bg-surface/85 backdrop-blur-md px-2 py-0.5 type-label-2xs border border-border-color/60 shadow-xs tabular-nums ${
                 fullyRanked ? 'text-accent-green' : 'text-text-muted'
               }`}
             >
@@ -152,7 +152,7 @@ export function OfficialTierListCard({ list, rankedCount, locale }: OfficialCard
         )}
         {showKindBadge && (
           <div className="absolute top-3 right-3 z-10 transition-opacity group-has-[[aria-expanded=true]]/banner:opacity-0">
-            <span className="rounded-md bg-bg-surface/85 backdrop-blur-md px-2 py-0.5 type-label-2xs text-text-muted border border-border-color/60 shadow-xs">
+            <span className="rounded-chip bg-bg-surface/85 backdrop-blur-md px-2 py-0.5 type-label-2xs text-text-muted border border-border-color/60 shadow-xs">
               {kindName}
             </span>
           </div>
@@ -234,7 +234,7 @@ export function CustomTierListCard({ list, locale, onDelete, disabled }: CustomC
         {descClamped && list.description && <DescriptionPeek text={list.description} />}
         <div className="absolute top-3 left-3 z-10 transition-opacity group-has-[[aria-expanded=true]]/banner:opacity-0">
           <span
-            className={`rounded-md bg-bg-surface/85 backdrop-blur-md px-2 py-0.5 type-label-2xs border border-border-color/60 shadow-xs tabular-nums ${
+            className={`rounded-chip bg-bg-surface/85 backdrop-blur-md px-2 py-0.5 type-label-2xs border border-border-color/60 shadow-xs tabular-nums ${
               fullyRanked ? 'text-accent-green' : 'text-text-muted'
             }`}
           >
@@ -256,7 +256,7 @@ export function CustomTierListCard({ list, locale, onDelete, disabled }: CustomC
             }}
             {...tip(t.deleteList, undefined, 'action')}
             aria-label={`${t.deleteList} ${customTitle}`}
-            className="hit-area absolute top-3 right-3 z-10 flex h-8 w-8 rounded-lg items-center justify-center border border-border-color/60 bg-bg-surface/85 backdrop-blur-md text-text-muted shadow-xs transition-[opacity,color,background-color] cursor-pointer hover:bg-accent-red/20 hover:text-accent-red group-has-[[aria-expanded=true]]/banner:opacity-0"
+            className="hit-area absolute top-3 right-3 z-10 flex h-8 w-8 rounded-control items-center justify-center border border-border-color/60 bg-bg-surface/85 backdrop-blur-md text-text-muted shadow-xs transition-[opacity,color,background-color] cursor-pointer hover:bg-accent-red/20 hover:text-accent-red group-has-[[aria-expanded=true]]/banner:opacity-0"
           >
             <Trash2 className="h-4 w-4" aria-hidden="true" />
           </button>
@@ -289,20 +289,20 @@ export function CustomTierListCard({ list, locale, onDelete, disabled }: CustomC
                     alt=""
                     loading="lazy"
                     referrerPolicy="no-referrer"
-                    className="h-10 w-10 shrink-0 rounded-lg border border-border-color bg-bg-elevated object-cover shadow-xs"
+                    className="h-10 w-10 shrink-0 rounded-chip border border-border-color bg-bg-elevated object-cover shadow-xs"
                   />
                 ) : (
                   <span
                     key={item.id}
                     aria-hidden="true"
-                    className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-border-color bg-bg-elevated type-strong-xs text-text-muted shadow-xs"
+                    className="flex h-10 w-10 shrink-0 items-center justify-center rounded-chip border border-border-color bg-bg-elevated type-strong-xs text-text-muted shadow-xs"
                   >
                     {Array.from(item.name.trim())[0]?.toUpperCase() ?? '?'}
                   </span>
                 )
               )}
               {overflow > 0 && (
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-dashed border-border-color bg-bg-surface/80 type-strong-xs text-text-muted shadow-xs tabular-nums">
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-chip border border-dashed border-border-color bg-bg-surface/80 type-strong-xs text-text-muted shadow-xs tabular-nums">
                   +{overflow}
                 </span>
               )}

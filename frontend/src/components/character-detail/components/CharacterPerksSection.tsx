@@ -51,7 +51,7 @@ export const CharacterPerksSection: React.FC<CharacterPerksSectionProps> = ({
                   icon_local_path: perk.icon_local_path || '',
                 })
               }
-              className="flex w-full max-w-44 flex-col items-center gap-2 rounded-2xl p-1 hover:scale-105 active:scale-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red transition-all duration-300 cursor-pointer"
+              className="flex w-full max-w-44 flex-col items-center gap-2 rounded-control p-1 hover:scale-105 active:scale-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red transition-all duration-300 cursor-pointer"
               aria-label={`${perk.name} - ${t.clickToInspect || 'Click to inspect perk'}`}
             >
               <img

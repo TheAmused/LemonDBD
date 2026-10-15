@@ -69,7 +69,7 @@ export function CreatorPreview({ title, description, tiers, items, backgroundIma
         {tiers.map((tier) => (
           <div
             key={tier.id}
-            className="grid grid-cols-[4.75rem_minmax(0,1fr)] sm:max-wide-2k:grid-cols-[6.5rem_minmax(0,1fr)] wide-2k:grid-cols-[9rem_minmax(0,1fr)] overflow-hidden rounded-2xl border border-border-color bg-bg-surface shadow-xs"
+            className="grid grid-cols-[4.75rem_minmax(0,1fr)] sm:max-wide-2k:grid-cols-[6.5rem_minmax(0,1fr)] wide-2k:grid-cols-[9rem_minmax(0,1fr)] overflow-hidden rounded-card border border-border-color bg-bg-surface shadow-xs"
           >
             <TierBadge
               label={tier.label}
@@ -90,7 +90,7 @@ export function CreatorPreview({ title, description, tiers, items, backgroundIma
             {tiles.length}
           </span>
         </div>
-        <div className="w-full rounded-2xl border border-border-color bg-bg-primary/20 p-3 sm:p-4 min-h-[96px] flex flex-wrap gap-2 items-center justify-center">
+        <div className="w-full rounded-card border border-border-color bg-bg-primary/20 p-3 sm:p-4 min-h-[96px] flex flex-wrap gap-2 items-center justify-center">
           {tiles.length === 0 ? (
             <p className="text-xs text-text-muted italic px-2">{c.noItems}</p>
           ) : (

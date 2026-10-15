@@ -53,7 +53,7 @@ export const QuoteLoreGuesser: React.FC<QuoteLoreGuesserProps> = ({ roundConfig,
   return (
     <div className="w-full flex flex-col items-center my-6">
       {/* Quote / Lore Clue Card */}
-      <div className="w-full max-w-xl p-8 rounded-2xl bg-bg-surface border border-border-color shadow-2xl flex flex-col items-center text-center relative overflow-hidden">
+      <div className="w-full max-w-xl p-8 rounded-card bg-bg-surface border border-border-color shadow-2xl flex flex-col items-center text-center relative overflow-hidden">
         {/* Atmospheric Quote Icon Header */}
         <div className="flex items-center gap-2 mb-4 px-3 py-1 rounded-full bg-accent-red/10 border border-accent-red/30 text-accent-red type-label-sm">
           {isPerkQuote ? <Quote className="w-3.5 h-3.5" /> : <BookOpen className="w-3.5 h-3.5" />}
@@ -69,17 +69,17 @@ export const QuoteLoreGuesser: React.FC<QuoteLoreGuesserProps> = ({ roundConfig,
         {(clue1 || clue2 || clue3) && (
           <div className="w-full flex flex-wrap items-center justify-center gap-2 pt-4 mt-4 border-t border-border-color">
             {clue1 && (
-              <span className="px-3 py-1 rounded-lg bg-bg-elevated border border-border-color text-xs font-medium text-text-secondary">
+              <span className="px-3 py-1 rounded-chip bg-bg-elevated border border-border-color text-xs font-medium text-text-secondary">
                 {clue1}
               </span>
             )}
             {clue2 && (
-              <span className="px-3 py-1 rounded-lg bg-bg-elevated border border-border-color text-xs font-medium text-text-secondary">
+              <span className="px-3 py-1 rounded-chip bg-bg-elevated border border-border-color text-xs font-medium text-text-secondary">
                 {clue2}
               </span>
             )}
             {clue3 && (
-              <span className="px-3 py-1 rounded-lg bg-bg-elevated border border-border-color text-xs font-medium text-text-secondary">
+              <span className="px-3 py-1 rounded-chip bg-bg-elevated border border-border-color text-xs font-medium text-text-secondary">
                 {clue3}
               </span>
             )}
@@ -88,7 +88,7 @@ export const QuoteLoreGuesser: React.FC<QuoteLoreGuesserProps> = ({ roundConfig,
 
         {/* Solved Victory State */}
         {isSolved && (targetChar || targetPerk) && (
-          <div className="mt-6 px-4 py-2 rounded-xl bg-accent-green text-text-inverted type-card-title flex items-center gap-3 shadow-lg">
+          <div className="mt-6 px-4 py-2 rounded-card bg-accent-green text-text-inverted type-card-title flex items-center gap-3 shadow-lg">
             {solvedImg && (
               <div className="relative w-8 h-8 rounded-full overflow-hidden border border-border-subtle">
                 <Image src={solvedImg} alt={targetName} fill className="object-cover" />
@@ -111,7 +111,7 @@ export const QuoteLoreGuesser: React.FC<QuoteLoreGuesserProps> = ({ roundConfig,
             return (
               <div
                 key={`quote-g-${idx}`}
-                className={`flex items-center justify-between px-4 py-2.5 rounded-xl border font-semibold text-sm transition-all ${
+                className={`flex items-center justify-between px-4 py-2.5 rounded-card border font-semibold text-sm transition-all ${
                   isCorrect
                     ? 'bg-accent-green text-text-inverted border-accent-green shadow-md'
                     : 'bg-accent-red/20 text-accent-red border-accent-red/40'

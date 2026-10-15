@@ -19,7 +19,7 @@ import { useDictionary } from "@/context/DictionaryContext";
 
 function PresetSwatch({ colors }: { colors: readonly string[] }) {
   return (
-    <span className="flex overflow-hidden rounded-xs" aria-hidden="true">
+    <span className="flex overflow-hidden rounded-chip" aria-hidden="true">
       {colors.map((color, i) => (
         <span key={i} className={cn('h-3.5 w-2', tierColorProps(color).className)} />
       ))}
@@ -140,7 +140,7 @@ export function LadderEditor({ tiers, onChange, onPreset, activePreset }: Ladder
               onClick={() => onPreset(preset.id)}
               aria-pressed={activePreset === preset.id}
               className={cn(
-                'inline-flex min-h-[38px] items-center gap-2 rounded-lg border px-3 text-xs sm:text-sm font-bold transition-colors cursor-pointer',
+                'inline-flex min-h-[38px] items-center gap-2 rounded-control border px-3 text-xs sm:text-sm font-bold transition-colors cursor-pointer',
                 activePreset === preset.id
                   ? 'border-accent-red bg-accent-red/10 text-accent-red'
                   : 'border-border-color bg-bg-surface text-text-primary hover:bg-bg-elevated'
@@ -169,7 +169,7 @@ export function LadderEditor({ tiers, onChange, onPreset, activePreset }: Ladder
                 moveById(draggingId, tier.id);
               }}
               className={cn(
-                'rounded-lg border border-border-color bg-bg-surface shadow-xs overflow-hidden transition-colors',
+                'rounded-chip border border-border-color bg-bg-surface shadow-xs overflow-hidden transition-colors',
                 isDragging && 'z-20 relative border-accent-amber opacity-90'
               )}
             >
@@ -238,7 +238,7 @@ export function LadderEditor({ tiers, onChange, onPreset, activePreset }: Ladder
                         aria-label={formatMessage(t.colorSwatchAria, { name: token.toUpperCase() })}
                         aria-pressed={active}
                         className={cn(
-                          'pointer-coarse:min-h-11 pointer-coarse:min-w-11 flex h-7 w-7 items-center justify-center rounded-md border-2 cursor-pointer transition-transform hover:scale-105',
+                          'pointer-coarse:min-h-11 pointer-coarse:min-w-11 flex h-7 w-7 items-center justify-center rounded-chip border-2 cursor-pointer transition-transform hover:scale-105',
                           swatch.className,
                           active ? 'border-text-primary' : 'border-transparent'
                         )}
@@ -256,7 +256,7 @@ export function LadderEditor({ tiers, onChange, onPreset, activePreset }: Ladder
                       placeholder={t.tierBackgroundImagePlaceholder}
                       inputMode="url"
                       invalid={bgInvalid}
-                      className="min-h-[38px] rounded-lg bg-bg-primary"
+                      className="min-h-[38px] bg-bg-primary"
                     />
                     <span className={cn('text-xs', bgInvalid ? 'font-semibold text-accent-red' : 'text-text-muted')}>
                       {bgInvalid ? t.invalidImage : t.tierBackgroundImageHint}
@@ -275,7 +275,7 @@ export function LadderEditor({ tiers, onChange, onPreset, activePreset }: Ladder
           onClick={add}
           disabled={tiers.length >= TIER_LIST_LIMITS.maxTiers}
           leftIcon={<Plus className="h-4 w-4" aria-hidden="true" />}
-          className="min-h-[40px] rounded-lg px-6"
+          className="min-h-[40px] px-6"
         >
           {t.addTier}
         </Button>

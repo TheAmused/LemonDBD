@@ -375,6 +375,59 @@ for (const sourceFile of project.getSourceFiles()) {
   }
 }
 
+// 5. Corner radius. Only the role tokens from tokens.css exist (rounded-chip / -control / -card /
+// -modal / -full / -none). Tailwind's stock scale is switched off there, so a leftover rounded-xl
+// would silently render square; arbitrary values (rounded-[Npx]) bypass the scale entirely.
+const LEGACY_RADIUS = /^(?:[a-z0-9-]+:)*rounded(?:-(?:t|b|l|r|tl|tr|bl|br|s|e|ss|se|es|ee))?-(?:xs|sm|md|lg|xl|2xl|3xl|\[[^\]]*\])$/;
+const ANY_RADIUS = /^(?:[a-z0-9-]+:)*rounded(?:-(?:t|b|l|r|tl|tr|bl|br|s|e|ss|se|es|ee))?(?:-[\w[\]]+)?$/;
+// Shared primitives own their radius; callers may not override it through className.
+const RADIUS_OWNED_BY_PRIMITIVE = new Set(["Button", "IconButton", "Input", "Textarea", "Select", "Surface", "Badge", "InfoChip"]);
+const STRING_NODE_KINDS = [
+  SyntaxKind.StringLiteral,
+  SyntaxKind.NoSubstitutionTemplateLiteral,
+  SyntaxKind.TemplateHead,
+  SyntaxKind.TemplateMiddle,
+  SyntaxKind.TemplateTail,
+];
+
+for (const sourceFile of project.getSourceFiles()) {
+  const filePath = sourceFile.getFilePath();
+
+  for (const kind of STRING_NODE_KINDS) {
+    for (const node of sourceFile.getDescendantsOfKind(kind)) {
+      const text = node.getText();
+      if (!text.includes("rounded")) continue;
+      for (const token of text.replace(/^[`'"}]|[`'"]$|\$\{$/g, "").split(/\s+/)) {
+        if (LEGACY_RADIUS.test(token)) {
+          reportError(filePath, node.getStartLineNumber(), `Radius "${token}" is not a role token: use rounded-chip, rounded-control, rounded-card, rounded-modal or rounded-full`);
+        }
+      }
+    }
+  }
+
+  const openings = [
+    ...sourceFile.getDescendantsOfKind(SyntaxKind.JsxOpeningElement),
+    ...sourceFile.getDescendantsOfKind(SyntaxKind.JsxSelfClosingElement),
+  ];
+  for (const el of openings) {
+    const tag = el.getTagNameNode().getText();
+    if (!RADIUS_OWNED_BY_PRIMITIVE.has(tag)) continue;
+    const attr = el.getAttribute("className");
+    if (!attr || !Node.isJsxAttribute(attr)) continue;
+    const initializer = attr.getInitializer();
+    if (!initializer) continue;
+    for (const kind of STRING_NODE_KINDS) {
+      for (const node of [...initializer.getDescendantsOfKind(kind), ...(initializer.getKind() === kind ? [initializer] : [])]) {
+        for (const token of node.getText().replace(/^[`'"}]|[`'"]$|\$\{$/g, "").split(/\s+/)) {
+          if (ANY_RADIUS.test(token) && token.includes("rounded")) {
+            reportError(filePath, node.getStartLineNumber(), `<${tag}> owns its corner radius: drop "${token}" from className`);
+          }
+        }
+      }
+    }
+  }
+}
+
 if (hasErrors) {
   console.error(
     "\n🚫 Build blocked: move hardcoded/global styling into Tailwind classes or app/globals.css.\n"

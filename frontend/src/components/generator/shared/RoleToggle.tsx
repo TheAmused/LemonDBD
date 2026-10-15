@@ -29,7 +29,7 @@ export const RoleToggle: React.FC<RoleToggleProps> = ({ role, onChange, classNam
       role="group"
       aria-label={dict.generator.selectRole}
       className={cn(
-        'inline-flex items-center rounded-xl border border-border-color bg-bg-elevated p-1 shadow-inner shrink-0',
+        'inline-flex items-center rounded-card border border-border-color bg-bg-elevated p-1 shadow-inner shrink-0',
         className
       )}
     >
@@ -38,7 +38,7 @@ export const RoleToggle: React.FC<RoleToggleProps> = ({ role, onChange, classNam
         onClick={() => onChange('Survivor')}
         aria-pressed={!isKiller}
         className={cn(
-          'flex items-center gap-2 px-3.5 sm:px-4 py-2 min-h-[40px] sm:min-h-[44px] rounded-lg text-xs sm:text-sm font-black transition-all duration-200 cursor-pointer select-none touch-manipulation',
+          'flex items-center gap-2 px-3.5 sm:px-4 py-2 min-h-[40px] sm:min-h-[44px] rounded-control text-xs sm:text-sm font-black transition-all duration-200 cursor-pointer select-none touch-manipulation',
           !isKiller
             ? 'bg-accent-green text-text-inverted shadow-xs font-black hover:brightness-110 active:scale-95'
             : 'text-text-secondary hover:text-text-primary hover:bg-bg-surface/70 active:scale-95'
@@ -52,7 +52,7 @@ export const RoleToggle: React.FC<RoleToggleProps> = ({ role, onChange, classNam
         onClick={() => onChange('Killer')}
         aria-pressed={isKiller}
         className={cn(
-          'flex items-center gap-2 px-3.5 sm:px-4 py-2 min-h-[40px] sm:min-h-[44px] rounded-lg text-xs sm:text-sm font-black transition-all duration-200 cursor-pointer select-none touch-manipulation',
+          'flex items-center gap-2 px-3.5 sm:px-4 py-2 min-h-[40px] sm:min-h-[44px] rounded-control text-xs sm:text-sm font-black transition-all duration-200 cursor-pointer select-none touch-manipulation',
           isKiller
             ? 'bg-accent-red text-text-inverted shadow-xs font-black hover:brightness-110 active:scale-95'
             : 'text-text-secondary hover:text-text-primary hover:bg-bg-surface/70 active:scale-95'

@@ -68,8 +68,8 @@ export function StreaksLayoutShell({ children }: { children: React.ReactNode }) 
         ) : isAuthenticated && user?.is_verified ? (
           <DisplayNamesProvider locale={locale}>{children}</DisplayNamesProvider>
         ) : isAuthenticated ? (
-          <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-border-color bg-bg-surface/60 px-6 py-20 text-center">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-accent-amber/20 bg-accent-amber/10">
+          <div className="flex flex-col items-center justify-center rounded-card border border-dashed border-border-color bg-bg-surface/60 px-6 py-20 text-center">
+            <div className="flex h-12 w-12 items-center justify-center rounded-card border border-accent-amber/20 bg-accent-amber/10">
               <MailWarning className="h-5 w-5 text-accent-amber" />
             </div>
             <h2 className="mt-4 text-sm font-extrabold tracking-wide text-text-primary">
@@ -81,15 +81,15 @@ export function StreaksLayoutShell({ children }: { children: React.ReactNode }) 
                 setAuthModalIntent('verify');
                 setIsAuthModalOpen(true);
               }}
-              className="mt-4 rounded-xl bg-accent-red px-5 py-2.5 type-strong text-text-inverted shadow-xs hover:bg-accent-red-hover transition-colors cursor-pointer"
+              className="mt-4 rounded-control bg-accent-red px-5 py-2.5 type-strong text-text-inverted shadow-xs hover:bg-accent-red-hover transition-colors cursor-pointer"
             >
               {dict.streaks.verifyEmail}
             </button>
           </div>
         ) : (
 
-          <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-border-color bg-bg-surface/60 px-6 py-20 text-center">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-accent-red/20 bg-accent-red/10">
+          <div className="flex flex-col items-center justify-center rounded-card border border-dashed border-border-color bg-bg-surface/60 px-6 py-20 text-center">
+            <div className="flex h-12 w-12 items-center justify-center rounded-card border border-accent-red/20 bg-accent-red/10">
               <Lock className="h-5 w-5 text-accent-red" />
             </div>
             <h2 className="mt-4 text-sm font-extrabold tracking-wide text-text-primary">
@@ -104,7 +104,7 @@ export function StreaksLayoutShell({ children }: { children: React.ReactNode }) 
                 setAuthModalIntent('login');
                 setIsAuthModalOpen(true);
               }}
-              className="mt-5 rounded-xl bg-accent-red px-5 py-2.5 type-strong text-text-inverted shadow-xs hover:bg-accent-red-hover transition-colors"
+              className="mt-5 rounded-control bg-accent-red px-5 py-2.5 type-strong text-text-inverted shadow-xs hover:bg-accent-red-hover transition-colors"
             >
               {dict.streaks.logIn}
             </button>

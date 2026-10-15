@@ -21,10 +21,8 @@ export interface ToastProps {
   tone?: ToastTone;
   /** right: top right corner (default). center: centred over the content area, clear of the sidebar. */
   align?: 'right' | 'center';
-  /** Leading icon; it takes the tone colour. */
   icon?: React.ReactNode;
   message: React.ReactNode;
-  /** Buttons after the message (e.g. "Start over"). */
   actions?: React.ReactNode;
   onDismiss?: () => void;
   dismissLabel?: string;

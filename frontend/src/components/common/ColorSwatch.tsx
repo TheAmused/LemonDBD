@@ -15,7 +15,6 @@ const SIZES: Record<ColorSwatchSize, string> = {
 export interface ColorSwatchProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'type' | 'aria-pressed'> {
   selected: boolean;
   size?: ColorSwatchSize;
-  /** Replaces the default check mark shown when selected. */
   mark?: React.ReactNode;
 }
 

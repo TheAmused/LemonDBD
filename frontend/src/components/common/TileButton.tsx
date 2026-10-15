@@ -6,7 +6,6 @@ import React from 'react';
 import { cn } from '@/utils/cn';
 
 export interface TileButtonProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'type'> {
-  /** Grow on hover and shrink when pressed (default). */
   press?: boolean;
 }
 

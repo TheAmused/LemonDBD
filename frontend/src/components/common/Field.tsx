@@ -24,7 +24,6 @@ const FIELD_RADIUS_PILL = 'rounded-full';
 interface CommonFieldProps {
   fieldSize?: FieldSize;
   invalid?: boolean;
-  /** Fully rounded ends instead of the standard control radius. */
   pill?: boolean;
 }
 

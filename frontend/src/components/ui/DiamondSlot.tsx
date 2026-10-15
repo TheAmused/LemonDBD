@@ -4,6 +4,7 @@
 
 import React from 'react';
 import { cn } from '@/utils/cn';
+import { TileButton } from '@/components/common/TileButton';
 
 export type DiamondSlotSize = 'sm' | 'md' | 'lg' | 'compact' | 'small' | 'large';
 
@@ -73,14 +74,13 @@ export const DiamondSlot = React.forwardRef<HTMLElement, DiamondSlotProps>(funct
 
   if (onClick) {
     return (
-      <button
+      <TileButton
         ref={ref as React.Ref<HTMLButtonElement>}
-        type="button"
         onClick={onClick}
         aria-label={ariaLabel}
         style={style}
         className={cn(
-          'relative flex shrink-0 items-center justify-center rotate-45 rounded-control border-2 transition-all shadow-md cursor-pointer hover:scale-105',
+          'relative flex shrink-0 items-center justify-center rotate-45 rounded-control border-2 transition-all shadow-md',
           sizeClass,
           roleBorder,
           glowEffect,
@@ -96,7 +96,7 @@ export const DiamondSlot = React.forwardRef<HTMLElement, DiamondSlotProps>(funct
         >
           {children}
         </div>
-      </button>
+      </TileButton>
     );
   }
 

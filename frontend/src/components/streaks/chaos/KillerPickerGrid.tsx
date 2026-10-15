@@ -9,6 +9,7 @@ import { PerkIcon } from '@/components/ui/PerkIcon';
 import { KillerIcon } from '@/components/icons/DbdIcons';
 
 import { useDictionary } from "@/context/DictionaryContext";
+import { TileButton } from '@/components/common/TileButton';
 
 export const avatarUrlFor = (name: string) => avatarUrlForCharacter(name, 'killers');
 
@@ -29,12 +30,11 @@ const KillerTile: React.FC<{
     : 'border-border-color bg-bg-surface hover:border-accent-red/60';
 
   return (
-    <button
-      type="button"
+    <TileButton press={false}
       onClick={() => onSelect(name)}
       disabled={disabled || isCompleted}
       aria-label={`${displayName}${isCompleted ? ' (Cleared)' : ''}`}
-      className={`relative flex select-none flex-col items-center overflow-hidden rounded-control border transition-all cursor-pointer disabled:cursor-not-allowed ${
+      className={`relative flex select-none flex-col items-center overflow-hidden rounded-control border transition-all ${
         isCompleted ? '' : 'disabled:opacity-40'
       } ${cardBorder}`}
     >
@@ -54,7 +54,7 @@ const KillerTile: React.FC<{
       <span className="text-mini leading-tight font-medium text-center text-text-secondary line-clamp-2 min-h-[2.4em] w-full px-1.5 py-2">
         {displayName}
       </span>
-    </button>
+    </TileButton>
   );
 };
 

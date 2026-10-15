@@ -14,6 +14,7 @@ import { Button } from '@/components/common/Button';
 import { Spinner } from '@/components/common/Spinner';
 import { useDictionary } from "@/context/DictionaryContext";
 import { useChallengeAnimations } from '../useChallengeAnimations';
+import { TileButton } from '@/components/common/TileButton';
 
 const REEL_DIRECTIONS: ReelDirection[] = ['up', 'down', 'down', 'up'];
 const STRIP_LENGTH = 16;
@@ -339,12 +340,11 @@ const SlotLever: React.FC<{ down: boolean; disabled: boolean; animate: boolean; 
   }, [render]);
 
   return (
-    <button
-      type="button"
+    <TileButton press={false}
       onClick={onPull}
       disabled={disabled}
       aria-label={label}
-      className="relative shrink-0 cursor-pointer disabled:cursor-default"
+      className="relative shrink-0"
     >
       <div
         ref={panelRef}
@@ -360,6 +360,6 @@ const SlotLever: React.FC<{ down: boolean; disabled: boolean; animate: boolean; 
         />
         <div ref={ballRef} className="lever-ball absolute rounded-full" />
       </div>
-    </button>
+    </TileButton>
   );
 };

@@ -12,6 +12,7 @@ import { DisabledBadge } from '@/components/DisabledBadge';
 import { tip } from '@/components/common/Tooltip';
 import { useDictionary } from "@/context/DictionaryContext";
 import { Badge } from '@/components/common/Badge';
+import { TileButton } from '@/components/common/TileButton';
 
 const DisabledReasonModal = dynamic(
   () => import('@/components/DisabledReasonModal').then((m) => m.DisabledReasonModal),
@@ -93,14 +94,13 @@ export const PerkCard: React.FC<PerkCardProps> = ({ perk, onSelect, coordinate, 
             : 'relative group flex items-center justify-center p-2 sm:p-3 w-full'
       }
     >
-      <button
-        type="button"
+      <TileButton
         onClick={() => onSelect(perk)}
         {...tip(perk.name, undefined, 'item')}
         aria-label={ariaLabel}
-        className={`relative flex cursor-pointer items-center justify-center transition-transform duration-200 ${
-          size === 'tarot' || size === 'compact' ? 'group-hover:scale-102 active:scale-95' : 'group-hover:scale-105 active:scale-95'
-        } touch-manipulation focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red rounded-control ${GRID_SIZE_CLASSES[size]}`}
+        className={`relative flex items-center justify-center duration-200 ${
+          size === 'tarot' || size === 'compact' ? 'group-hover:scale-102' : 'group-hover:scale-105'
+        } touch-manipulation rounded-control ${GRID_SIZE_CLASSES[size]}`}
       >
         {coordinateLabel && (
           <Badge
@@ -171,7 +171,7 @@ export const PerkCard: React.FC<PerkCardProps> = ({ perk, onSelect, coordinate, 
             </div>
           )
         )}
-      </button>
+      </TileButton>
 
       <DisabledReasonModal
         isOpen={showDisabledModal}

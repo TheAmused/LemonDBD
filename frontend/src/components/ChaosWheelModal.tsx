@@ -15,6 +15,7 @@ import { Modal } from '@/components/common/Modal';
 import { canvasEmojiFont, canvasFont } from '@/utils/canvasFont';
 import { useDictionary } from "@/context/DictionaryContext";
 
+import { Button } from '@/components/common/Button';
 export { CHAOS_MUTATORS };
 export type { ChaosMutator };
 
@@ -318,15 +319,15 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({ isOpen, role, 
             </div>
           </div>
           <div className="flex items-center gap-2 shrink-0">
-            <button
+            <Button
               type="button"
               onClick={handleClearCurse}
               {...tip(dict.generator.clearMutatorTooltip, undefined, 'action')} aria-label={dict.generator.clearMutatorTooltip}
-              className="flex items-center gap-1 type-strong-fluid text-accent-red hover:text-accent-red-hover px-2 py-1 rounded-control hover:bg-accent-red/10 transition-colors cursor-pointer"
+              variant="ghostDanger" size="sm"
             >
               <Trash2 className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
               <span className="hidden xs:inline">{dict.generator.clearMutator}</span>
-            </button>
+            </Button>
             <div className="flex items-center gap-1 text-accent-green type-strong-fluid bg-accent-green/10 px-2.5 py-1 rounded-chip border border-accent-green/30">
               <Check className="h-3.5 w-3.5 sm:h-4 sm:w-4" aria-hidden="true" />
               <span>{dict.smashOrPass.active}</span>

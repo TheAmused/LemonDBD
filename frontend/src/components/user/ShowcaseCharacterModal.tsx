@@ -12,6 +12,7 @@ import { Spinner } from '@/components/common/Spinner';
 import { EmptyState } from '@/components/common/EmptyState';
 import { cn } from '@/utils/cn';
 import { useDictionary } from "@/context/DictionaryContext";
+import { TileButton } from '@/components/common/TileButton';
 
 interface ShowcaseCharacterModalProps {
   isOpen: boolean;
@@ -50,14 +51,13 @@ const CharacterGridItem: React.FC<{
     : primaryAvatarSrc || char.portrait_url || null;
 
   return (
-    <button
-      type="button"
+    <TileButton press={false}
       onClick={() => {
         onSelect(char.name, char.id);
         onClose();
       }}
       aria-pressed={isSelected}
-      className="group flex flex-col items-center gap-2 rounded-control p-1 text-center cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red"
+      className="group flex flex-col items-center gap-2 rounded-control p-1 text-center"
     >
       <div
         className={cn(
@@ -95,7 +95,7 @@ const CharacterGridItem: React.FC<{
       >
         {char.name}
       </span>
-    </button>
+    </TileButton>
   );
 };
 

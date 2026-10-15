@@ -2,8 +2,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import { ChevronDown } from 'lucide-react';
 import { Collapsible } from '@/components/common/Collapsible';
+import { DisclosureButton } from '@/components/common/DisclosureButton';
 
 interface CollapsibleDrawerProps {
   header: React.ReactNode;
@@ -48,20 +48,9 @@ export const CollapsibleDrawer: React.FC<CollapsibleDrawerProps> = ({
 
   return (
     <>
-      <button
-        type="button"
-        onClick={toggle}
-        aria-expanded={open}
-        className={`w-full flex items-center justify-center gap-3 text-left cursor-pointer group ${headerClassName}`}
-      >
+      <DisclosureButton open={open} onClick={toggle} className={`w-full justify-center gap-3 ${headerClassName}`}>
         {header}
-        <ChevronDown
-          className={`h-4 w-4 shrink-0 text-text-muted group-hover:text-text-primary transition-transform duration-300 ${
-            open ? 'rotate-180' : ''
-          }`}
-          aria-hidden="true"
-        />
-      </button>
+      </DisclosureButton>
       <Collapsible open={open} overflowWhenOpen contentClassName={`min-h-0 ${bodyClassName}`}>
         {children}
       </Collapsible>

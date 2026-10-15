@@ -21,6 +21,7 @@ import { authHeaders, getAuthToken, getErrorMessage } from '@/utils/api';
 import { formatMessage } from '@/utils/i18nFormat';
 import { useDictionary } from "@/context/DictionaryContext";
 import { Surface } from '@/components/common/Surface';
+import { TileButton } from '@/components/common/TileButton';
 
 interface AdminChallengeControlProps {
   onActionMessage: (msg: ActionMessage) => void;
@@ -288,12 +289,11 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
             {subTab === 'killers' ? (
               <div className="grid grid-cols-4 sm:grid-cols-5 lg:grid-cols-7 xl:grid-cols-9 gap-3 max-h-[480px] overflow-y-auto pr-1">
                 {characters.map((c) => (
-                  <button
+                  <TileButton press={false}
                     key={c.id}
-                    type="button"
                     onClick={() => requestCharacterToggle(c)}
                     {...tip(c.disabled_reason ? `${c.name} — ${c.disabled_reason}` : c.name, undefined, 'status')} aria-label={c.disabled_reason ? `${c.name} — ${c.disabled_reason}` : c.name}
-                    className={`relative aspect-square rounded-control border cursor-pointer transition-all overflow-hidden ${
+                    className={`relative aspect-square rounded-control border transition-all overflow-hidden ${
                       c.is_disabled
                         ? 'border-accent-red bg-accent-red/10 hover:bg-accent-red/20'
                         : 'border-border-color bg-bg-elevated hover:border-text-muted'
@@ -317,18 +317,17 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
                     >
                       {c.is_disabled ? <XCircle className="h-3.5 w-3.5" /> : <CheckCircle2 className="h-3.5 w-3.5" />}
                     </span>
-                  </button>
+                  </TileButton>
                 ))}
               </div>
             ) : (
               <div className="grid grid-cols-4 sm:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10 gap-3 max-h-[480px] overflow-y-auto pr-1">
                 {perks.map((p) => (
-                  <button
+                  <TileButton press={false}
                     key={p.id}
-                    type="button"
                     onClick={() => requestPerkToggle(p)}
                     {...tip(p.disabled_reason ? `${p.name} — ${p.disabled_reason}` : p.name, undefined, 'status')} aria-label={p.disabled_reason ? `${p.name} — ${p.disabled_reason}` : p.name}
-                    className={`relative aspect-square rounded-control border cursor-pointer transition-all overflow-hidden ${
+                    className={`relative aspect-square rounded-control border transition-all overflow-hidden ${
                       p.is_disabled
                         ? 'border-accent-red bg-accent-red/10 hover:bg-accent-red/20'
                         : 'border-border-color bg-bg-elevated hover:border-text-muted'
@@ -352,7 +351,7 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
                     >
                       {p.is_disabled ? <XCircle className="h-3.5 w-3.5" /> : <CheckCircle2 className="h-3.5 w-3.5" />}
                     </span>
-                  </button>
+                  </TileButton>
                 ))}
               </div>
             )}

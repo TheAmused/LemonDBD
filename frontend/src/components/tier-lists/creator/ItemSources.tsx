@@ -22,6 +22,7 @@ import { CustomDropdown } from '@/components/common/CustomDropdown';
 import { formatMessage } from '@/utils/i18nFormat';
 import { useDictionary } from "@/context/DictionaryContext";
 import { ToggleChip } from '@/components/common/ToggleChip';
+import { TileButton } from '@/components/common/TileButton';
 
 export interface IncomingItem {
   name: string;
@@ -378,14 +379,13 @@ function CatalogSource({ onAdd, existingIds, locale }: {
               const added = existingIds.has(item.key);
               const isSelected = selected.has(item.key);
               return (
-                <button
+                <TileButton press={false}
                   key={item.key}
-                  type="button"
                   disabled={added}
                   onClick={() => toggle(item.key)}
                   aria-pressed={isSelected}
                   aria-label={item.name}
-                  className="relative flex flex-col items-center justify-start self-start rounded-control cursor-pointer disabled:cursor-not-allowed disabled:opacity-40"
+                  className="relative flex flex-col items-center justify-start self-start rounded-control disabled:opacity-40"
                 >
                   <TierItemTile
                     item={item}
@@ -401,7 +401,7 @@ function CatalogSource({ onAdd, existingIds, locale }: {
                     </span>
                   )}
                   {added && <span className="sr-only">{c.alreadyAdded}</span>}
-                </button>
+                </TileButton>
               );
             })}
           </div>

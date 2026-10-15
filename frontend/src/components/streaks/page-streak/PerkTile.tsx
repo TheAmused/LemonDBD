@@ -6,6 +6,7 @@ import { PerkIcon } from '@/components/ui/PerkIcon';
 import { DIAMOND_CLIP } from '@/components/ui/DiamondSlot';
 import { usePerkDisplayName } from '@/context/DisplayNamesContext';
 import { tip } from '@/components/common/Tooltip';
+import { TileButton } from '@/components/common/TileButton';
 
 interface PerkTileProps {
   name: string;
@@ -61,16 +62,15 @@ export const PerkTile: React.FC<PerkTileProps> = ({
   }
 
   return (
-    <button
-      type="button"
+    <TileButton press={false}
       onClick={() => onToggle(name)}
       aria-pressed={selected}
       aria-label={label}
       {...tip(label, undefined, 'item')}
-      className={`${shell} pointer-events-auto cursor-pointer focus:outline-none focus-visible:brightness-150`}
+      className={`${shell} pointer-events-auto focus-visible:brightness-150`}
       style={{ clipPath: DIAMOND_CLIP }}
     >
       {content}
-    </button>
+    </TileButton>
   );
 };

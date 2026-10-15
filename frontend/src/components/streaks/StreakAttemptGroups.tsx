@@ -2,11 +2,11 @@
 // frontend/src/components/streaks/StreakAttemptGroups.tsx
 
 import React, { useState } from 'react';
-import { ChevronRight } from 'lucide-react';
 import { tip } from '@/components/common/Tooltip';
 import { StreakMatchRow } from './StreakMatchRow';
 import { useDictionary } from '@/context/DictionaryContext';
 import { Collapsible } from '@/components/common/Collapsible';
+import { DisclosureButton } from '@/components/common/DisclosureButton';
 
 export interface StreakMatchLogBase {
   id: number;
@@ -68,16 +68,12 @@ export function StreakAttemptGroups<TLog extends StreakMatchLogBase>({
         const open = toggled[group.key] ?? group.key === openByDefault;
         return (
           <section key={group.key}>
-            <button
-              type="button"
+            <DisclosureButton
+              open={open}
+              chevron="start"
               onClick={() => setToggled((current) => ({ ...current, [group.key]: !open }))}
-              aria-expanded={open}
-              className="flex w-full items-center gap-2 rounded-control px-1 py-1.5 text-left transition-colors hover:text-accent-red focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red motion-reduce:transition-none"
+              className="w-full px-1 py-1.5 hover:text-accent-red"
             >
-              <ChevronRight
-                className={`h-4 w-4 shrink-0 text-text-muted transition-transform duration-200 motion-reduce:transition-none ${open ? 'rotate-90' : ''}`}
-                aria-hidden="true"
-              />
               <span className="type-label-sm flex-1 text-text-secondary">
                 {dict.streaks.attemptLabel} {group.attempt}
                 {renderGroupLabel && <> {dict.streaks.middotSeparator} {renderGroupLabel(group.logs[0])}</>}
@@ -85,7 +81,7 @@ export function StreakAttemptGroups<TLog extends StreakMatchLogBase>({
               <span className="type-strong text-accent-green" {...tip(dict.streaks.wins, undefined, 'status')}>{group.wins}</span>
               <span className="text-xs text-text-muted" aria-hidden="true">/</span>
               <span className="type-strong text-accent-red" {...tip(dict.streaks.losses, undefined, 'status')}>{group.losses}</span>
-            </button>
+            </DisclosureButton>
             {/* grid-template-rows animates 0fr -> 1fr, which height:auto cannot do */}
             <Collapsible
               open={open}

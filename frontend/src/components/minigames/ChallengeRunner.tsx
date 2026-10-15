@@ -556,13 +556,13 @@ export const ChallengeRunner: React.FC<ChallengeRunnerProps> = ({ challenge, cat
 
           {/* Give up button (when in progress) */}
           {!isRoundOver && (
-            <button
+            <Button
               type="button"
               onClick={handleGiveUp}
-              className="text-xs text-text-muted hover:text-text-primary underline py-1 transition-colors"
+              variant="linkMuted" size="sm"
             >
               {t.skipOrReveal}
-            </button>
+            </Button>
           )}
         </div>
       )}

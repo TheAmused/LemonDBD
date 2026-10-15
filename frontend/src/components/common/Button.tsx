@@ -18,6 +18,8 @@ export type ButtonVariant =
   | 'success' //   solid green
   | 'amber' //    solid amber, for amber-themed surfaces
   | 'amberSoft' // tinted amber (amber/10), the amber twin of `soft`
+  | 'link' //    amber text link, no box (hover underline)
+  | 'linkMuted' // quiet text link, for secondary "back" and "change" actions
   | 'cta'; //     loud DBD randomizer CTA
 
 export type ButtonSize = 'xs' | 'sm' | 'md' | 'lg';
@@ -31,6 +33,8 @@ export const BUTTON_VARIANTS: Record<ButtonVariant, string> = {
   success: 'bg-accent-green text-text-inverted shadow-sm hover:brightness-110',
   amber: 'bg-accent-amber text-text-inverted shadow-sm hover:bg-accent-amber-hover',
   amberSoft: 'border border-accent-amber/40 bg-accent-amber/10 text-accent-amber hover:bg-accent-amber/20',
+  link: 'text-accent-amber underline-offset-2 hover:underline',
+  linkMuted: 'text-text-muted underline-offset-2 hover:text-text-primary hover:underline',
   cta: 'bg-accent-red text-text-inverted font-black uppercase tracking-wider shadow-xs hover:bg-accent-red-hover hover:scale-[1.02] hover:shadow-md hover:shadow-accent-red/40 active:scale-[0.97]',
 };
 
@@ -39,6 +43,14 @@ export const BUTTON_SIZES: Record<ButtonSize, string> = {
   sm: 'gap-1.5 px-3 py-1.5 text-xs',
   md: 'gap-2 px-4 py-2.5 text-sm',
   lg: 'gap-2 px-6 py-3 text-base',
+};
+
+// Links carry no box: size only sets the text size.
+const LINK_SIZES: Record<ButtonSize, string> = {
+  xs: 'gap-1 text-mini',
+  sm: 'gap-1 text-xs',
+  md: 'gap-1.5 text-sm',
+  lg: 'gap-1.5 text-base',
 };
 
 const CTA_SIZES: Record<'sm' | 'md' | 'lg', string> = {
@@ -69,7 +81,8 @@ const BUTTON_RADIUS_PILL = 'rounded-full';
 
 /** The class list of a Button, for the rare spot that needs a link (<a>/<Link>) that looks like one. */
 export function buttonClassName(variant: ButtonVariant = 'secondary', size: ButtonSize = 'md', className?: string): string {
-  return cn(BUTTON_BASE, BUTTON_VARIANTS[variant], BUTTON_SIZES[size], BUTTON_RADIUS, className);
+  const sizes = variant === 'link' || variant === 'linkMuted' ? LINK_SIZES[size] : BUTTON_SIZES[size];
+  return cn(BUTTON_BASE, BUTTON_VARIANTS[variant], sizes, BUTTON_RADIUS, className);
 }
 
 export interface ButtonProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'children'> {
@@ -116,6 +129,8 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
     ? ICON_BUTTON_SIZES[size]
     : variant === 'cta'
     ? CTA_SIZES[size === 'xs' ? 'sm' : size]
+    : variant === 'link' || variant === 'linkMuted'
+    ? LINK_SIZES[size]
     : BUTTON_SIZES[size];
   const ringClass = roleAccent ? ROLE_RING[roleAccent] : undefined;
 

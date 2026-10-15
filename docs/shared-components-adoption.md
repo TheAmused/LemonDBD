@@ -348,9 +348,9 @@ Lista poniżej to wszystko, co nadal wygląda jak przycisk. Każdą pozycję oce
 - [ ] `characters/hub/CharactersToolbar.tsx` : 87 (rounded-control)
 - [ ] `characters/hub/VerificationNotice.tsx` : 24 (rounded-control)
 
-## 3. Niestylowane przyciski do oceny (zostało 52)
+## 3. Niestylowane przyciski do oceny (zostało 42)
 
-Zwykle ikony i klikalne elementy kart, linki tekstowe (`type-strong text-accent-amber hover:...`, około 20 prawie identycznych: kandydat na wariant `link` w `Button`). Każdy ocenić osobno.
+Zwykle ikony i klikalne elementy kart, linki tekstowe (`type-strong text-accent-amber hover:...`, około 20 prawie identycznych: wariant `link` i `linkMuted` w `Button` dodany, 10 zamienionych; zostają teksty wplecione w zdanie (np. `AuthModal` regulamin, `PageStreakRoster`, `VerificationNotice`) oraz czerwone linki (`AdminSettingsPanel`, `RomanceArchetypeBuilder`)). Każdy ocenić osobno.
 
 **tier-lists** (15)
 

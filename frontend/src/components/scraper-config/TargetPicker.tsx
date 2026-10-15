@@ -6,6 +6,7 @@ import { useDictionary } from '@/context/DictionaryContext';
 import { useLocalizedTargets } from './useLocalizedTargets';
 import { ALL_TARGETS, TARGET_GROUPS_CONFIG, type TargetItem } from './scraperTargets';
 
+import { Button } from '@/components/common/Button';
 interface TargetPickerProps {
   heading: string;
   selected: string[];
@@ -35,15 +36,15 @@ export function TargetPicker({
     <>
       <div className="flex items-center justify-between pb-1 border-b border-border-color">
         <span className="type-label-xs text-text-secondary">{heading}</span>
-        <button
+        <Button
           type="button"
           onClick={onToggleAll}
-          className="type-strong text-accent-amber hover:underline cursor-pointer"
+          variant="link" size="sm"
         >
           {selected.length === ALL_TARGETS.length
             ? dict.admin.deselectAll
             : dict.admin.selectAll}
-        </button>
+        </Button>
       </div>
 
       <div className="space-y-3 max-h-64 overflow-y-auto pr-1">
@@ -64,13 +65,13 @@ export function TargetPicker({
                     {selectedInGroup.length}/{groupTargets.length}
                   </span>
                 </div>
-                <button
+                <Button
                   type="button"
                   onClick={() => onToggleGroup(group.key)}
-                  className="type-strong-xs text-accent-amber hover:underline cursor-pointer"
+                  variant="link" size="xs"
                 >
                   {allGroupSelected ? dict.admin.deselectAll : dict.admin.selectAll}
-                </button>
+                </Button>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">

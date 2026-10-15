@@ -84,21 +84,21 @@ export const TwoFactorChallengeForm: React.FC<TwoFactorChallengeFormProps> = ({ 
         {t.challengeSubmit}
       </Button>
       <div className="flex w-full flex-col items-center gap-2">
-        <button
+        <Button
           type="button"
           onClick={switchMethod}
           aria-label={useRecovery ? t.useAppCode : t.useRecoveryCode}
-          className="type-strong text-accent-amber hover:opacity-80 cursor-pointer"
+          variant="link" size="sm"
         >
           {useRecovery ? t.useAppCode : t.useRecoveryCode}
-        </button>
-        <button
+        </Button>
+        <Button
           type="button"
           onClick={onBack}
-          className="type-caption text-text-muted hover:text-accent-amber transition-colors cursor-pointer"
+          variant="linkMuted" size="xs"
         >
           {t.backToSignIn}
-        </button>
+        </Button>
       </div>
     </form>
   );

@@ -93,13 +93,13 @@ export const SidebarUserSection: React.FC<SidebarUserSectionProps> = ({
           </div>
 
           {user.is_verified === false && (
-            <button
+            <Button
               type="button"
               onClick={onOpenVerifyModal}
-              className="w-full text-left type-micro text-accent-amber hover:underline cursor-pointer"
+              variant="link" size="xs" className="w-full justify-start"
             >
               {dict.sidebar.emailNotVerified}
-            </button>
+            </Button>
           )}
         </div>
       )}

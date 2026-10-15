@@ -6,7 +6,7 @@ import { Heart } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/common/Button';
 import { Modal } from '@/components/common/Modal';
-import { useAuth } from '@/context/AuthContext';
+import { useSignInThen } from '@/hooks/useSignInThen';
 import { useDictionary } from '@/context/DictionaryContext';
 import { formatMessage } from '@/utils/i18nFormat';
 import { signingPayload } from '@/utils/contentPayload';
@@ -18,6 +18,10 @@ import type { useHubOverlays } from './useHubOverlays';
 import type { useSmashRosters } from './useSmashRosters';
 
 const AuthModal = dynamic(() => import('@/components/AuthModal').then((m) => m.AuthModal), { ssr: false });
+
+/** The roster editor: blank for a new roster, or the one with this id. */
+const editorPath = (locale: string, editId?: string) =>
+  `/${locale}/smash-or-pass/create${editId ? `?edit=${editId}` : ''}`;
 
 interface RosterModalsProps {
   locale: string;
@@ -39,11 +43,20 @@ export function RosterModals({ locale, overlays, rosters }: RosterModalsProps) {
     exportingRosterId,
     setExportingRosterId,
   } = overlays;
-  const { isAuthenticated } = useAuth();
-  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  // Signing in from the picker carries on with what was asked: the editor, the import window...
+  const signIn = useSignInThen();
   const [reportingRosterId, setReportingRosterId] = useState<string | null>(null);
   const { allRosters, selectedRosterSlug, customRosterStore, rosterSwitchEffect, getRosterDisplayName, pickRoster, selectRoster } =
     rosters;
+
+  const openEditor = (editId?: string) => {
+    setIsRosterModalOpen(false);
+    router.push(editorPath(locale, editId));
+  };
+  const openImport = () => {
+    setIsRosterModalOpen(false);
+    setIsImportModalOpen(true);
+  };
 
   const confirmDelete = () => {
     if (!rosterPendingDelete) return;
@@ -67,30 +80,9 @@ export function RosterModals({ locale, overlays, rosters }: RosterModalsProps) {
         rosters={allRosters}
         selectedRosterSlug={selectedRosterSlug}
         onSelectRoster={selectRoster}
-        onCreateRoster={() => {
-          if (!isAuthenticated) {
-            setIsAuthModalOpen(true);
-            return;
-          }
-          setIsRosterModalOpen(false);
-          router.push(`/${locale}/smash-or-pass/create`);
-        }}
-        onImportRoster={() => {
-          if (!isAuthenticated) {
-            setIsAuthModalOpen(true);
-            return;
-          }
-          setIsRosterModalOpen(false);
-          setIsImportModalOpen(true);
-        }}
-        onEditRoster={(id) => {
-          if (!isAuthenticated) {
-            setIsAuthModalOpen(true);
-            return;
-          }
-          setIsRosterModalOpen(false);
-          router.push(`/${locale}/smash-or-pass/create?edit=${id}`);
-        }}
+        onCreateRoster={() => signIn.run(() => openEditor())}
+        onImportRoster={() => signIn.run(openImport)}
+        onEditRoster={(id) => signIn.run(() => openEditor(id))}
         onDeleteRoster={(id) => {
           const roster = customRosterStore.custom[id];
           setRosterPendingDelete({ id, name: roster?.name || 'Untitled Roster' });
@@ -165,12 +157,7 @@ export function RosterModals({ locale, overlays, rosters }: RosterModalsProps) {
         </div>
       )}
 
-      {isAuthModalOpen && (
-        <AuthModal
-          isOpen={isAuthModalOpen}
-          onClose={() => setIsAuthModalOpen(false)}
-        />
-      )}
+      {signIn.isAuthModalOpen && <AuthModal isOpen onClose={signIn.closeAuthModal} />}
     </>
   );
 }

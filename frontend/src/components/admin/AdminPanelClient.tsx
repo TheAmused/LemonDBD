@@ -19,7 +19,7 @@ import { useAdminBugReports } from '@/components/admin/useAdminBugReports';
 import { useAdminContentReports } from '@/components/admin/useAdminContentReports';
 import { useAdminUsers } from '@/components/admin/useAdminUsers';
 import { Locale } from '@/i18n/config';
-import type { ActionMessage } from '@/types/admin';
+import type { ActionMessage, UserRow } from '@/types/admin';
 import { useDictionary, useLocale } from '@/context/DictionaryContext';
 import { formatMessage } from '@/utils/i18nFormat';
 
@@ -46,6 +46,10 @@ const AdminAuditLogView = dynamic(
 const AdminSettingsPanel = dynamic(
   () => import('@/components/admin/AdminSettingsPanel').then((m) => m.AdminSettingsPanel),
   { ssr: false, loading: () => <AdminTabContentSkeleton /> }
+);
+const AdminModerationDrawer = dynamic(
+  () => import('@/components/admin/AdminModerationDrawer').then((m) => m.AdminModerationDrawer),
+  { ssr: false }
 );
 const AdminCreateUserModal = dynamic(
   () => import('@/components/admin/AdminCreateUserModal').then((m) => m.AdminCreateUserModal),
@@ -76,12 +80,13 @@ export function AdminPanelClient() {
   const [isOcrCheckOpen, setIsOcrCheckOpen] = useState<boolean>(false);
   const [modalTab, setModalTab] = useState<'export' | 'import' | 'purge'>('export');
   const [isCreateUserOpen, setIsCreateUserOpen] = useState<boolean>(false);
+  const [moderationUser, setModerationUser] = useState<UserRow | null>(null);
 
   const {
     stats, users, search, setSearch, roleFilter, setRoleFilter, page, setPage, totalUsers, loadingData,
     fetchAdminData, userPendingDeletion, setUserPendingDeletion, isDeletingUser,
     userPendingTwoFactorReset, setUserPendingTwoFactorReset, isResettingTwoFactor, confirmTwoFactorReset,
-    handleToggleRole, handleToggleActive, handleDeleteUser, confirmDeleteUser, handleCreateUser,
+    handleToggleRole, handleDeleteUser, confirmDeleteUser, handleCreateUser,
   } = useAdminUsers({
     onActionMessage: setActionMessage,
     onUserCreated: () => setIsCreateUserOpen(false),
@@ -180,7 +185,7 @@ export function AdminPanelClient() {
               onPageChange={setPage}
               onOpenCreateUser={() => setIsCreateUserOpen(true)}
               onToggleRole={handleToggleRole}
-              onToggleActive={handleToggleActive}
+              onOpenModeration={setModerationUser}
               onDeleteUser={handleDeleteUser}
               onResetTwoFactor={setUserPendingTwoFactorReset}
               onDownloadError={(text) => setActionMessage({ type: 'error', text })}
@@ -212,8 +217,8 @@ export function AdminPanelClient() {
               }}
               onPageChange={contentReports.setPage}
               onSelect={contentReports.setSelectedId}
-              onResolve={async (id, action, banAuthor, notes) => {
-                const ok = await contentReports.resolve(id, action, banAuthor, notes);
+              onResolve={async (id, action, author, notes) => {
+                const ok = await contentReports.resolve(id, action, author, notes);
                 if (ok) fetchDetail(id);
                 return ok;
               }}
@@ -264,6 +269,13 @@ export function AdminPanelClient() {
         isOpen={isCreateUserOpen}
         onClose={() => setIsCreateUserOpen(false)}
         onSubmit={handleCreateUser}
+      />
+
+      <AdminModerationDrawer
+        user={moderationUser}
+        onClose={() => setModerationUser(null)}
+        onChanged={fetchAdminData}
+        onActionMessage={setActionMessage}
       />
 
       <ScoreboardCheckModal isOpen={isOcrCheckOpen} onClose={() => setIsOcrCheckOpen(false)} />

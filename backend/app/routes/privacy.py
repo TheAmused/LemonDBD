@@ -19,6 +19,8 @@ def get_privacy_info():
         reset_lifetime=site_settings.reset_lifetime(),
         session_lifetime=site_settings.session_lifetime(),
         streak_prune_days=site_settings.streak_prune_days(),
+        warning_lifetime_days=site_settings.warning_lifetime_days(),
+        ban_list_retention_days=site_settings.ban_list_retention_days(),
     )
     response = jsonify(info)
     response.headers["Cache-Control"] = "public, max-age=300"

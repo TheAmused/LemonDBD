@@ -102,35 +102,6 @@ export function useAdminUsers({ onActionMessage, onUserCreated }: AdminUsersInpu
     }
   };
 
-  const handleToggleActive = async (targetUser: UserRow) => {
-    const token = getAuthToken();
-    if (!token) return;
-
-    const newActive = !targetUser.is_active;
-    try {
-      const res = await fetch(`${API_BASE}/api/v1/users/${targetUser.id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          ...authHeaders(token),
-        },
-        body: JSON.stringify({ is_active: newActive }),
-      });
-      if (res.ok) {
-        onActionMessage({
-          type: 'success',
-          text: newActive
-            ? formatMessage(dict.admin.statusUpdatedActive, { username: targetUser.username }) || `${targetUser.username} is active.`
-            : formatMessage(dict.admin.statusUpdatedSuspended, { username: targetUser.username }) || `${targetUser.username} is suspended.`,
-        });
-        await fetchAdminData();
-      }
-    } catch (err: unknown) {
-      const msg = getErrorMessage(err, dict.admin.networkError);
-      onActionMessage({ type: 'error', text: msg });
-    }
-  };
-
   const handleDeleteUser = (targetUser: UserRow) => {
     setUserPendingDeletion(targetUser);
   };
@@ -248,7 +219,6 @@ export function useAdminUsers({ onActionMessage, onUserCreated }: AdminUsersInpu
     isResettingTwoFactor,
     confirmTwoFactorReset,
     handleToggleRole,
-    handleToggleActive,
     handleDeleteUser,
     confirmDeleteUser,
     handleCreateUser,

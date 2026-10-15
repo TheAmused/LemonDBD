@@ -36,8 +36,9 @@ def create_app(config_class: Type[Config] | None = None) -> Flask:
 
     for problem in weak_secret_warnings(flask_app.config):
         logging.getLogger(__name__).warning(
-            "SECURITY: %s. Anyone can forge login sessions with it; set a long random value "
-            "(for example `python -c \"import secrets; print(secrets.token_urlsafe(48))\"`).",
+            "SECURITY: %s. Set a long random value "
+            "(for example `python -c \"import secrets; print(secrets.token_urlsafe(48))\"`; "
+            "BAN_LIST_PEPPERS takes `v1:` + `secrets.token_hex(32)`).",
             problem,
         )
 
@@ -210,6 +211,26 @@ def create_app(config_class: Type[Config] | None = None) -> Flask:
 
             _run_locked(8882028, _job)
 
+        def _run_sanction_mail_job():
+            def _job():
+                from app.services.sanction_outbox import retry_pending_notifications
+
+                sent = retry_pending_notifications()
+                if sent:
+                    logging.info("Sent %d queued moderation email(s)", sent)
+
+            _run_locked(8882029, _job)
+
+        def _run_ban_list_purge_job():
+            def _job():
+                from app.services.ban_list import purge_expired
+
+                purged = purge_expired()
+                if purged:
+                    logging.info("Removed %d expired entr(ies) from the ban-evasion list", purged)
+
+            _run_locked(8882030, _job)
+
         scheduler = BackgroundScheduler(daemon=True)
         scheduler.add_job(
             _run_inactivity_job,
@@ -233,6 +254,24 @@ def create_app(config_class: Type[Config] | None = None) -> Flask:
             trigger="date",
             run_date=datetime.now(timezone.utc) + timedelta(seconds=60),
             id="purge_expired_content_evidence_boot",
+            replace_existing=True,
+        )
+        # Moderation emails owed but not yet delivered (SMTP down, process restarted mid-send) and the
+        # "your suspension has ended" notices; every few minutes, claim-based so it never double-sends.
+        scheduler.add_job(
+            _run_sanction_mail_job,
+            trigger="interval",
+            minutes=3,
+            id="retry_sanction_notifications",
+            replace_existing=True,
+        )
+        # Ban-evasion list entries past their retention (daily; the list is off by default and empty).
+        scheduler.add_job(
+            _run_ban_list_purge_job,
+            trigger="cron",
+            hour=3,
+            minute=20,
+            id="purge_expired_ban_list_entries",
             replace_existing=True,
         )
         scheduler.start()

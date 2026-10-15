@@ -25,6 +25,11 @@ _FALLBACK_DEFAULTS: dict[str, str | int] = {
     "reset_token_minutes": 60,
     "session_hours": 24,
     "streak_prune_days": 90,
+    "warning_lifetime_days": 90,
+    "ban_list_retention_days": 1095,
+    "warnings_before_suspension": 3,
+    "suspension_first_days": 7,
+    "suspension_second_days": 30,
 }
 
 
@@ -74,6 +79,25 @@ def session_lifetime() -> timedelta:
 
 def streak_prune_days() -> int:
     return int(get_setting("streak_prune_days"))
+
+
+def warning_lifetime_days() -> int:
+    """How long a warning counts as active (after that it stays on record but no longer escalates)."""
+    return int(get_setting("warning_lifetime_days"))
+
+
+def ban_list_retention_days() -> int:
+    """How long the hash of a permanently banned e-mail stays on the ban-evasion list."""
+    return int(get_setting("ban_list_retention_days"))
+
+
+def escalation_thresholds() -> dict[str, int]:
+    """The numbers behind the escalation suggestion."""
+    return {
+        "warnings_before_suspension": int(get_setting("warnings_before_suspension")),
+        "first_suspension_days": int(get_setting("suspension_first_days")),
+        "second_suspension_days": int(get_setting("suspension_second_days")),
+    }
 
 
 def contact_email() -> str:

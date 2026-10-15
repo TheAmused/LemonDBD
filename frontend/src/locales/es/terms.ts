@@ -15,7 +15,7 @@ export default {
     "Conservas la propiedad de lo que subes y nos permites almacenarlo y mostrarlo para que el Sitio funcione.",
     "Todo lo que compartes o exportas lleva tu marca de cuenta y puede ser reportado y bloqueado.",
     "El Sitio se ofrece tal cual y nuestra responsabilidad está limitada en la medida que permite la ley.",
-    "Puedes eliminar tu cuenta en cualquier momento. Podemos restringir o cerrar las cuentas que incumplan estos Términos.",
+    "Puedes eliminar tu cuenta en cualquier momento. Podemos advertir, suspender o cerrar las cuentas que incumplan estos Términos, y te explicamos el motivo.",
     "Tus derechos legales como consumidor no se ven afectados.",
   ],
   sections: {
@@ -38,7 +38,7 @@ export default {
       items: [
         "tener al menos 18 años;",
         "facilitar una dirección de correo válida a la que tengas acceso, ya que la usamos para la verificación y el restablecimiento de contraseñas;",
-        "tener una sola cuenta por persona. No se permiten cuentas adicionales creadas para eludir una restricción o inflar estadísticas;",
+        "tener una sola cuenta por persona. No se permiten cuentas adicionales creadas para eludir una suspensión o un baneo, o para inflar estadísticas;",
         "elegir un nombre de usuario que no vulnere derechos de terceros, no suplante a nuestro equipo y no contenga contenido ilícito;",
         "mantener la contraseña en secreto y avisarnos sin demora si sospechas de un acceso no autorizado. Eres responsable de la actividad de tu cuenta, salvo que se deba a culpa nuestra.",
       ],
@@ -94,8 +94,10 @@ export default {
       tldr: "Puedes irte cuando quieras. Podemos restringir o cerrar cuentas que incumplan las normas.",
       paragraphs: [
         "<b>Por tu parte:</b> puedes dejar de usar el Sitio en cualquier momento y eliminar tu cuenta tú mismo desde tu página de perfil. Lo que se elimina y lo que se conserva se describe en nuestra [Política de privacidad]({privacyPath}).",
-        "<b>Por nuestra parte:</b> si incumples estos Términos o las Normas, si la ley lo exige o si tu uso pone en riesgo el Sitio u otros usuarios, podemos advertirte, eliminar o bloquear contenido, restringir funciones, suspender, desactivar o eliminar tu cuenta o expulsarte del Servidor. Elegiremos una medida proporcionada al incumplimiento.",
-        "Cuando adoptemos una medida así, te lo notificaremos y daremos el motivo siempre que sea posible, salvo que la ley o una investigación en curso lo impidan o el asunto sea urgente. Si bloqueamos tu contenido, enviaremos el motivo al correo de tu cuenta, sin indicar quién lo reportó. Si crees que la decisión es errónea, puedes presentar una reclamación en [{contactEmail}](mailto:{contactEmail}). La revisaremos y responderemos, normalmente en un plazo de 14 días, y corregiremos la decisión si fue un error.",
+        "<b>Por nuestra parte:</b> si incumples estos Términos o las Normas, si la ley lo exige o si tu uso pone en riesgo el Sitio u otros usuarios, podemos eliminar o bloquear contenido, restringir funciones, advertirte, suspender tu cuenta durante un tiempo determinado, banearla de forma permanente, eliminarla o expulsarte del Servidor. Elegiremos una medida proporcionada al incumplimiento. Los incumplimientos repetidos se tratan normalmente con más rigor que el primero, y los graves pueden saltarse pasos.",
+        "<b>Advertencias, suspensiones y baneos:</b> una advertencia no restringe tu cuenta. Se te muestra la próxima vez que inicies sesión, cuenta para una medida más estricta si la conducta continúa y caduca pasado un tiempo. Una suspensión cierra tu sesión e impide iniciarla hasta que termina. Un baneo es permanente. Cada una de estas decisiones la toma una persona, que deja constancia de lo ocurrido y de la norma a la que se refiere. Eliminar la cuenta no levanta un baneo.",
+        "Cuando adoptemos una medida así, te enviaremos el motivo al correo de tu cuenta (qué ocurrió, qué norma afecta y, en una suspensión, cuándo termina), salvo que la ley o una investigación en curso lo impidan o el asunto sea urgente. El motivo y, en una suspensión, la fecha de fin también los verás si intentas iniciar sesión en una cuenta suspendida o baneada. Si bloqueamos tu contenido, te lo comunicaremos del mismo modo, sin indicar quién lo reportó. Si crees que una decisión es errónea, puedes presentar una reclamación en [{contactEmail}](mailto:{contactEmail}). La revisaremos y responderemos, normalmente en un plazo de 14 días, y corregiremos o levantaremos la decisión si fue un error. El levantamiento de una suspensión o de un baneo se confirma por correo.",
+        "<b>Direcciones baneadas:</b> para evitar que alguien se vuelva a registrar sin más tras un baneo permanente, conservamos una forma codificada (un hash con clave secreta) del correo de la cuenta baneada, no el correo en sí. No se puede crear una cuenta nueva con una dirección que coincida, y podemos rechazarla con un mensaje neutro. La entrada se elimina si se levanta el baneo y, en cualquier caso, se borra automáticamente pasado un tiempo limitado. Los detalles están en nuestra [Política de privacidad]({privacyPath}).",
         "Las disposiciones que por su naturaleza deban seguir vigentes tras la terminación, como las relativas a licencias, responsabilidad y ley aplicable, siguen en vigor.",
       ],
       items: [],

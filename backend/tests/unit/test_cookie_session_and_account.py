@@ -165,6 +165,8 @@ class TestAdminSettings:
             "resetSeconds",
             "sessionSeconds",
             "streakPruneSeconds",
+            "warningSeconds",
+            "banListSeconds",
         }
 
 

@@ -41,6 +41,7 @@ from app.models.minigame import (
     MinigameRepeatableChallenge,
     MinigameUserStat,
 )
+from app.models.sanction import BannedEmailHash, SanctionNotification, UserSanction
 from app.models.two_factor import UserRecoveryCode, UserTwoFactor
 from app.models.user import (
     User,
@@ -51,6 +52,9 @@ from app.models.user import (
 
 __all__ = [
     "utcnow",
+    "UserSanction",
+    "BannedEmailHash",
+    "SanctionNotification",
     "Chapter",
     "ChaosRun",
     "ChaosMatchLog",

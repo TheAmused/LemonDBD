@@ -12,6 +12,8 @@ const info: PrivacyInfo = {
   resetSeconds: 3600,
   sessionSeconds: 24 * 3600,
   streakPruneSeconds: 90 * 86400,
+  warningSeconds: 90 * 86400,
+  banListSeconds: 1095 * 86400,
 };
 
 test('formatWindow picks the largest exact unit and localizes it', () => {
@@ -25,12 +27,12 @@ test('formatWindow picks the largest exact unit and localizes it', () => {
 });
 
 test('fillPrivacyPlaceholders fills known keys, shows … while loading, keeps unknown braces', () => {
-  const text = '{contactEmail} / {mailProvider} / {verificationWindow} / {resetWindow} / {sessionWindow} / {streakPrune} / {other}';
+  const text = '{contactEmail} / {mailProvider} / {verificationWindow} / {resetWindow} / {sessionWindow} / {streakPrune} / {warningWindow} / {banListWindow} / {other}';
   assert.equal(
     fillPrivacyPlaceholders(text, info, 'en'),
-    'team@example.com / Google Gmail / 1 day / 1 hour / 1 day / 90 days / {other}'
+    'team@example.com / Google Gmail / 1 day / 1 hour / 1 day / 90 days / 90 days / 1,095 days / {other}'
   );
-  assert.ok(fillPrivacyPlaceholders(text, null, 'en').startsWith('… / … / … / … / … / … /'));
+  assert.ok(fillPrivacyPlaceholders(text, null, 'en').startsWith('… / … / … / … / … / … / … / … /'));
 });
 
 test('every locale uses the same placeholders in the policy (nothing hardcoded per language)', () => {
@@ -38,12 +40,14 @@ test('every locale uses the same placeholders in the policy (nothing hardcoded p
     [...new Set(JSON.stringify(dict.privacy).match(/\{\w+\}/g) ?? [])].sort();
   const expected = collect(en);
   assert.deepEqual(expected, [
+    '{banListWindow}',
     '{contactEmail}',
     '{mailProvider}',
     '{resetWindow}',
     '{sessionWindow}',
     '{streakPrune}',
     '{verificationWindow}',
+    '{warningWindow}',
   ]);
   for (const [loc, dict] of Object.entries({ es, pl, de, ja })) {
     assert.deepEqual(collect(dict as unknown as typeof en), expected, `${loc} placeholders`);

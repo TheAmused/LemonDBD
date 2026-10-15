@@ -9,8 +9,10 @@ from flask import current_app
 from sqlalchemy import func, select
 from sqlalchemy.exc import IntegrityError
 
+from app.core.account_state import AccountBlockedError, is_blocked
 from app.core.extensions import db
 from app.models import User
+from app.services import ban_list
 
 logger = logging.getLogger(__name__)
 
@@ -139,13 +141,23 @@ def sign_in(credential: str | None) -> tuple[User, bool]:
     for _ in range(_CREATE_ATTEMPTS):
         user = _find(identity)
         if user:
-            if not user.is_active:
-                raise GoogleAuthError("This account is disabled.", 403)
+            if is_blocked(user):
+                from app.services.user import two_factor
+
+                # With 2FA on, the block is reported after the second factor (complete_login), and
+                # the Google identity is not linked to a blocked account in the meantime.
+                if not two_factor.is_enabled(user.id):
+                    raise AccountBlockedError(user)
+                return user, False
             if user.google_sub is None:
                 _link(user, identity)
             elif user.google_sub != identity.sub:
                 raise GoogleAuthError("This email is linked to a different Google account.", 409)
             return user, False
+
+        refusal = ban_list.registration_refusal(identity.email)
+        if refusal:
+            raise GoogleAuthError(refusal, 403)
 
         new_user = User(
             login=unique_login(),

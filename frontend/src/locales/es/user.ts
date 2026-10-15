@@ -112,7 +112,7 @@ export default {
   noPerksFound: "No se encontraron habilidades coincidentes.",
   dualMainsTitle: "Equipamientos Distintivos",
   downloadDataTitle: "Descargar mis datos",
-  downloadDataDesc: "Obtén una copia de todo lo que guardamos sobre tu cuenta (perfil, colección, vitrina, rachas, estadísticas, votos e informes de errores) en un archivo JSON.",
+  downloadDataDesc: "Obtén una copia de todo lo que guardamos sobre tu cuenta (perfil, colección, vitrina, rachas, estadísticas, votos, informes de errores y registros de moderación) en un archivo JSON.",
   downloadDataButton: "Descargar mis datos",
   downloadDataFailed: "No se pudieron preparar tus datos. Inténtalo de nuevo.",
   deleteAccountTitle: "Eliminar cuenta",

@@ -131,7 +131,7 @@ export function CharacterCard({
               e.stopPropagation();
               onOpenPerks(char);
             }}
-            variant="amberSoft" size="xs" className="mb-1 sm:mb-1.5"
+            variant="amberSoft" size="xs" className="mb-1 sm:mb-1.5 pointer-events-auto"
           >
             <span>{dict.filters.perks}</span>
             {perkStats.total > 0 && ` (${perkStats.unlocked}/${perkStats.total})`}

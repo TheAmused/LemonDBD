@@ -34,6 +34,11 @@ export const MIN_SUSPENSION_DAYS = 1;
 export const MAX_SUSPENSION_DAYS = 365;
 const DEFAULT_SUSPENSION_DAYS = 7;
 
+/** Longest free text of a decision (facts, public message, internal notes); the server's `TEXT_LIMIT`. */
+export const MAX_SANCTION_TEXT_LENGTH = 2000;
+/** Longest reason an admin gives for taking a decision back (revoke / restore). */
+export const MAX_REVOKE_REASON_LENGTH = 500;
+
 /** A warning as its owner sees it (no internal notes, no moderator, no report). */
 export interface UserWarning {
   id: number;

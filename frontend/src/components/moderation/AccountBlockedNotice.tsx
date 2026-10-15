@@ -34,7 +34,7 @@ export function AccountBlockedNotice({ blocked, onClose }: AccountBlockedNoticeP
     : t.appealNoContact;
 
   return (
-    <div role="alert" className="space-y-4 animate-in fade-in duration-150">
+    <div role="alert" className="space-y-4">
       <div className="flex items-start gap-3 rounded-xl border border-accent-red/30 bg-accent-red/10 p-3.5">
         <Icon className="mt-0.5 h-5 w-5 shrink-0 text-accent-red" />
         <p className="type-body text-text-primary">{body}</p>

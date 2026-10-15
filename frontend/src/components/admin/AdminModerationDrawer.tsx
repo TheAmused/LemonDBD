@@ -95,7 +95,7 @@ export function AdminModerationDrawer({ user, onClose, onChanged, onActionMessag
       >
         {loading && !data && (
           <div className="flex justify-center py-10">
-            <Spinner tone="accent" className="h-8 w-8" />
+            <Spinner tone="accent" size="lg" />
           </div>
         )}
 

@@ -37,6 +37,7 @@ from app.models import (
     User,
     UserCharacterOwnership,
     UserPerkOwnership,
+    UserSanction,
     SmashUserPreference,
     UserShowcase,
     Vote,
@@ -156,6 +157,17 @@ def _moderation_export(user_id: int) -> dict[str, Any]:
     }
 
 
+def _sanctions_export(user_id: int) -> list[dict[str, Any]]:
+    """Warnings, suspensions and bans as the account holder sees them: no internal notes, no admin."""
+    rows = db.session.scalars(
+        select(UserSanction).where(UserSanction.user_id == user_id).order_by(UserSanction.issued_at, UserSanction.id)
+    )
+    return [
+        {**{key: _plain(value) for key, value in row.to_user_dict().items()}, "acknowledged_at": _plain(row.acknowledged_at)}
+        for row in rows
+    ]
+
+
 def export_user_data(user_id: int, requested_by: str = "self") -> dict[str, Any] | None:
     """Collect the account's own records; None when the user does not exist."""
     if requested_by not in EXPORT_REQUESTERS:
@@ -191,6 +203,7 @@ def export_user_data(user_id: int, requested_by: str = "self") -> dict[str, Any]
         "smash_or_pass_preferences": _rows(SmashUserPreference, SmashUserPreference.user_id == user_id),
         "bug_reports": _rows(BugReport, BugReport.user_id == user_id),
         "content_moderation": _moderation_export(user_id),
+        "sanctions": _sanctions_export(user_id),
         # Only whether it is on: the secret and the recovery codes never leave the database.
         "two_factor": _two_factor_summary(user_id),
     }

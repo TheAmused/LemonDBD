@@ -24,6 +24,13 @@ if TYPE_CHECKING:
 
 class User(Base, ColumnDictMixin):
     __tablename__ = "users"
+    __table_args__ = (
+        # A permanent ban and a running suspension are mutually exclusive copies of the sanctions
+        # (see services/moderation_actions.recompute_user_state).
+        CheckConstraint(
+            "is_active OR suspended_until IS NULL", name="ck_users_ban_excludes_suspension"
+        ),
+    )
 
     _api_exclude = frozenset({
         "password_hash",
@@ -54,6 +61,11 @@ class User(Base, ColumnDictMixin):
     )
     is_active: Mapped[bool] = mapped_column(
         Boolean, default=True, nullable=False
+    )
+    # End of the longest active suspension (None: not suspended). Past values are stale, not live:
+    # read it through app.core.account_state, never directly.
+    suspended_until: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True), nullable=True
     )
     is_verified: Mapped[bool] = mapped_column(
         Boolean, default=False, nullable=False

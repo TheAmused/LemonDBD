@@ -9,6 +9,7 @@ from flask_mail import Message
 
 from app.core.extensions import mail
 from app.models import User
+from app.services.sanction_email_texts import SanctionEmailContent
 from app.services.site_settings import reset_lifetime, verification_lifetime
 from app.utils.durations import describe_duration
 
@@ -47,8 +48,13 @@ def _greeting_name(user: User) -> str:
     return safe_username
 
 
-def _email_shell(preheader: str, body_html: str) -> str:
-    """Wrap templated content in a shared header/footer shell."""
+def _email_shell(preheader: str, body_html: str, footer: str | None = None) -> str:
+    """Wrap templated content in a shared header/footer shell (`footer`: plain text, escaped here)."""
+    footer_html = (
+        html.escape(footer)
+        if footer
+        else "Sent by LemonDBD &middot; if you didn't request this, you can safely ignore this email."
+    )
     return f"""\
 <!DOCTYPE html>
 <html>
@@ -80,7 +86,7 @@ def _email_shell(preheader: str, body_html: str) -> str:
             <tr>
               <td style="padding:20px 4px 0;">
                 <p style="margin:0; font-size:11px; color:#94a3b8;">
-                  Sent by LemonDBD &middot; if you didn't request this, you can safely ignore this email.
+                  {footer_html}
                 </p>
               </td>
             </tr>
@@ -262,6 +268,50 @@ def send_content_moderation_notice_email(
         mail.send(message)
     except Exception as err:
         logger.warning(f"Failed to send moderation notice to '{user.email}': {err}")
+
+
+def _sanction_block_html(block: tuple[str, ...], first: bool) -> str:
+    kind = block[0]
+    if kind == "p":
+        style = (
+            "margin:0 0 4px; font-size:14px; color:#0f172a;"
+            if first
+            else "margin:0 0 12px; font-size:13px; color:#64748b; line-height:1.6;"
+        )
+        return f'<p style="{style}">{html.escape(block[1])}</p>'
+    if kind == "field":
+        return (
+            '<p style="margin:0 0 8px; font-size:13px; color:#0f172a; line-height:1.6;">'
+            f"<strong>{html.escape(block[1])}:</strong> {html.escape(block[2])}</p>"
+        )
+    # "quote": the moderator's own words, kept as written
+    return (
+        f'<p style="margin:12px 0 4px; font-size:12px; color:#94a3b8;">{html.escape(block[1])}</p>'
+        '<blockquote style="margin:0 0 12px; padding:6px 0 6px 12px; border-left:3px solid #e2e8f0; '
+        f'font-size:13px; color:#0f172a; line-height:1.6; white-space:pre-wrap;">{html.escape(block[2])}</blockquote>'
+    )
+
+
+def send_sanction_email(user: User, content: SanctionEmailContent) -> None:
+    """Send a prepared moderation email (see sanction_email_texts.build_sanction_email).
+
+    Unlike the other senders this one RAISES when the message cannot be sent: the caller is the
+    sanction outbox, which records the failure and retries.
+    """
+    body_html = "".join(_sanction_block_html(block, index == 0) for index, block in enumerate(content.blocks))
+    plain = "\n\n".join(
+        block[1] if block[0] == "p" else f"{block[1]}: {block[2]}" if block[0] == "field" else f"{block[1]}:\n{block[2]}"
+        for block in content.blocks
+    )
+    message = Message(
+        subject=f"LemonDBD: {content.subject}",
+        recipients=[user.email],
+        body=f"{plain}\n\n--\n{content.footer}",
+        html=_email_shell(html.escape(content.preheader), body_html, footer=content.footer),
+        charset=_BASE64_CHARSET,
+    )
+    _attach_logo(message)
+    mail.send(message)
 
 
 def send_security_notice_email(user: User, event: str) -> None:

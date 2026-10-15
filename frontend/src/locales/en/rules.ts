@@ -14,7 +14,7 @@ export default {
     "Play fair: no cheating on challenges, trophies or votes.",
     "Share only what you are allowed to share, and keep it legal and non-creepy.",
     "Go easy on the servers: no floods, no bots, no poking holes.",
-    "Break the rules and we can remove your content or your account.",
+    "Break the rules and we can warn you, block your content, suspend you or ban you.",
     "All of this applies on our Discord server too.",
   ],
   sections: {
@@ -113,18 +113,21 @@ export default {
       ],
       items: [
         "Threats, sexual content involving minors, unlawful content and attacks on the Site are dealt with without prior warning and may be reported to the competent authorities.",
+        "On the Site, a <b>warning</b> is a formal notice that stays on your account for a limited time. It does not restrict you, and it is shown to you when you next sign in. A <b>suspension</b> signs you out and blocks sign-in for a set number of days. A <b>ban</b> is permanent.",
+        "As a rule, repeated breaches escalate: warnings first, then a suspension, then a ban. Warnings that have expired no longer count. Serious breaches can skip any of these steps.",
         "On the Server the same measures take the form of a warning, a timeout, a kick or a ban.",
-        "Content that breaks these Rules can be banned: the Site then refuses to open or import it. We may also deactivate the account of the person who published it, and we email them the reason.",
-        "Where we remove content or restrict an account, we will explain why where practicable. If you believe we made a mistake, you can contest the decision by writing to us, and we will review it. The procedure is set out in the [Terms of Service]({termsPath}).",
+        "Content that breaks these Rules can be banned: the Site then refuses to open or import it. We may also warn, suspend or ban the account of the person who published it, and we email them the reason.",
+        "Creating another account, or registering again with the address of a banned account, to get round a suspension or a ban is itself a breach. The new account can be banned, and the Site may refuse to register an address that belonged to a permanently banned account.",
+        "Where we remove content or restrict an account, we will explain why where practicable. If you believe we made a mistake, you can contest the decision by writing to us, and we will review it; a suspension or ban that turns out to be wrong is lifted. The procedure is set out in the [Terms of Service]({termsPath}).",
       ],
     },
   },
   hookStages: {
     heading: "The hook stages",
     stages: [
-      { title: "Stage 1: the nudge", text: "A message asking you to correct or stop the conduct." },
+      { title: "Stage 1: the nudge", text: "A message asking you to correct or stop the conduct, or a formal warning." },
       { title: "Stage 2: the clean-up", text: "We remove or block the content, reset progress gained unfairly or restrict features." },
-      { title: "Sacrifice", text: "Your account is suspended, deactivated or deleted, and additional accounts or addresses may be blocked." },
+      { title: "Sacrifice", text: "Your account is suspended or banned, and additional accounts or addresses may be blocked." },
     ],
   },
 };

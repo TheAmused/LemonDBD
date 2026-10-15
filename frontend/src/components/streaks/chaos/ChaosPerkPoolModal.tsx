@@ -13,16 +13,17 @@ import { useDictionary } from "@/context/DictionaryContext";
 
 const PerkTile: React.FC<{ perk: Perk; displayName: string }> = ({ perk, displayName }) => {
   return (
-    <div className="flex flex-col items-center gap-1.5 p-2 rounded-chip bg-bg-elevated border border-border-color">
-      <div className="w-full aspect-square rounded-chip overflow-hidden bg-bg-primary flex items-center justify-center p-1.5">
+    <div className="flex flex-col items-center overflow-hidden rounded-control border border-border-color bg-bg-surface">
+      <div className="relative w-full aspect-square overflow-hidden bg-bg-primary flex items-center justify-center">
         <PerkIcon
           perk={perk}
           src={perkIconFor(perk)}
           alt={displayName}
+          imageClassName="w-full h-full object-cover"
           fallbackIcon={<Sparkles className="w-6 h-6 text-text-muted" aria-hidden="true" />}
         />
       </div>
-      <span className="text-mini font-medium text-center text-text-secondary leading-tight line-clamp-2">
+      <span className="text-mini leading-tight font-medium text-center text-text-secondary line-clamp-2 min-h-[2.4em] w-full px-1.5 py-2">
         {displayName}
       </span>
     </div>

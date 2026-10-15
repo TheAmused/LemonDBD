@@ -79,7 +79,7 @@ Oznaczenia: M telefon, T tablet, D desktop.
 - [ ] **Zwijany pasek akcji na telefonie** (strzałka pod nagłówkiem): animacja i ukrywanie bez zmian, teraz przez wspólny `Collapsible`. D i T: przyciski zawsze widoczne. Sprawdź, że na szerokości tuż nad 640 px przyciski nie znikają.
 - [ ] **Okno wyboru trybu** (Gauntlet, poziom trudności, tryb historii): kafle to `SelectableCard`; zaznaczony kafel ma czerwoną obwódkę, tint i ring zamiast białego pierścienia z odstępem. Przycisk "Zasady" w oknie jest zwykłym `Button`.
 - [ ] **Baner weryfikacji e-maila** w postaciach: przycisk "Zweryfikuj" to `Button onAccent`, link "odrzuć" to `InlineLink`.
-- [ ] **Pasek "Zaakceptuj" w trybie wyboru odblokowanych postaci** (Postacie): teraz ten sam pasek i przycisk (zielony, 44 px, szerokość do 180 px) co w streakach; wcześniej przycisk był mniejszy (sm). Pasek w onboardingu (Kontynuuj) korzysta z tego samego komponentu, ale zostaje szeroki i na całą szerokość ekranu (bez sidebaru).
+- [ ] **Pasek "Zaakceptuj" w trybie wyboru odblokowanych postaci** (Postacie): teraz ten sam pasek i przycisk (czerwony jak główny przycisk w wyzwaniach, 44 px, szerokość do 180 px, tekst wielkimi literami) co w streakach; wcześniej przycisk był mniejszy (sm). Pasek w onboardingu (Kontynuuj) korzysta z tego samego komponentu, ale zostaje szeroki i na całą szerokość ekranu (bez sidebaru); wszystkie przyciski takich pasków mają teraz etykiety wielkimi literami.
 
 ## 3. Rzeczy świadomie bez zmian (nie szukaj błędu)
 

@@ -132,16 +132,16 @@ export const EmailVerificationForm: React.FC<EmailVerificationFormProps> = ({ em
         {verifying ? t.verifying : t.verifyEmailAction}
       </Button>
       {(t.resendCodeIn) && (
-        <button
+        <Button
           type="button"
           onClick={handleResend}
           disabled={cooldown > 0}
-          className="type-strong text-accent-amber hover:opacity-80 disabled:opacity-60 cursor-pointer"
+          variant="link" size="sm"
         >
           {cooldown > 0
             ? formatMessage(t.resendCodeIn, { seconds: cooldown })
             : t.resendCode}
-        </button>
+        </Button>
       )}
     </form>
   );

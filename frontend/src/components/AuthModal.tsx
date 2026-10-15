@@ -375,13 +375,13 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
 
           {mode === 'login' && dict.user.forgotPasswordLink && (
             <div className="text-right -mt-1.5">
-              <button
+              <Button
                 type="button"
                 onClick={() => switchMode('forgot')}
-                className="type-caption text-text-muted hover:text-accent-amber transition-colors cursor-pointer"
+                variant="linkMuted" size="xs"
               >
                 {dict.user.forgotPasswordLink}
-              </button>
+              </Button>
             </div>
           )}
 
@@ -491,10 +491,10 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
 
       {showAuthBody && (
         <div className="mt-4 text-center">
-          <button
+          <Button
             type="button"
             onClick={() => switchMode(mode === 'register' ? 'login' : mode === 'forgot' ? 'login' : 'register')}
-            className="text-xs text-text-muted hover:text-accent-amber transition-colors cursor-pointer"
+            variant="linkMuted" size="sm"
           >
             {mode === 'forgot' ? (
               <span className="font-bold text-accent-amber">
@@ -515,7 +515,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
                 </span>
               </>
             )}
-          </button>
+          </Button>
         </div>
       )}
 

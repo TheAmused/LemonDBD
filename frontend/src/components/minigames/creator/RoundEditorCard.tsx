@@ -264,13 +264,13 @@ export const RoundEditorCard: React.FC<RoundEditorCardProps> = ({ round, index, 
               </div>
             </div>
 
-            <button
+            <Button
               type="button"
               onClick={() => onUpdate({ ...round, target_id: undefined })}
-              className="type-strong text-text-muted hover:text-text-primary underline px-2 py-1"
+              variant="linkMuted" size="sm"
             >
               {c.change}
-            </button>
+            </Button>
           </div>
         ) : (
           <CharacterAutocomplete

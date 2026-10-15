@@ -193,7 +193,8 @@ describe('User Profile Theme Support', () => {
   });
 
   it('CharactersHub toast container respects --sidebar-width and centers relative to content area', () => {
-    const source = readCharactersHubSource();
+    // The notice is a centred <Toast>; the shared Toast holds the sidebar-aware container.
+    const source = readCharactersHubSource() + fs.readFileSync(path.resolve(__dirname, '../../components/common/Toast.tsx'), 'utf-8');
     assert.ok(
       source.includes('left-[var(--sidebar-width,0rem)] right-0'),
       'CharactersHub toast container must span left-[var(--sidebar-width,0rem)] right-0 to center relative to content area'

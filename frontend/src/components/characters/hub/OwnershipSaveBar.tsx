@@ -16,7 +16,7 @@ export function OwnershipSaveBar({ ownershipSaveError, ownershipSaving, onSave }
   return (
     <StickyActionBar error={ownershipSaveError}>
       <ActionBarButton variant="red" onClick={onSave} disabled={ownershipSaving}>
-        {ownershipSaving ? dict.characterDetail.saving : dict.characterDetail.accept}
+        {ownershipSaving ? dict.characterDetail.saving : dict.streaks.accept}
       </ActionBarButton>
     </StickyActionBar>
   );

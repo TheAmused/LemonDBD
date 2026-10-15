@@ -3,6 +3,7 @@
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Megaphone, Plus, Pencil, Trash2, Skull, ChevronDown, ChevronUp, GripVertical } from 'lucide-react';
+import { cn } from '@/utils/cn';
 import { useAuth } from '@/context/AuthContext';
 import type { ChangelogPost, ChangelogPostDraft, ChangelogTag } from '@/types/changelog';
 import {
@@ -368,18 +369,18 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ className = 
             >
               <div className="flex items-start gap-2 p-4">
                 {canReorder && (
-                  <button
-                    type="button"
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    icon
                     {...tip(t.dragToReorder, undefined, 'action')}
                     aria-label={t.dragToReorder}
                     onPointerDown={(e) => beginDrag(e, post.id)}
                     style={{ touchAction: 'none' }}
-                    className={`pointer-coarse:min-h-11 pointer-coarse:min-w-11 mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-control text-text-muted hover:bg-bg-elevated hover:text-text-secondary cursor-grab active:cursor-grabbing ${
-                      isDragging ? 'text-accent-amber' : ''
-                    }`}
+                    className={cn('mt-0.5 cursor-grab active:cursor-grabbing', isDragging && 'text-accent-amber')}
                   >
                     <GripVertical className="h-4 w-4" />
-                  </button>
+                  </Button>
                 )}
 
                 <button

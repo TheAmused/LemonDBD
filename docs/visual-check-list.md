@@ -81,6 +81,18 @@ Oznaczenia: M telefon, T tablet, D desktop.
 - [ ] **Baner weryfikacji e-maila** w postaciach: przycisk "Zweryfikuj" to `Button onAccent`, link "odrzuć" to `InlineLink`.
 - [ ] **Pasek "Zaakceptuj" w trybie wyboru odblokowanych postaci** (Postacie): teraz ten sam pasek i przycisk (czerwony jak główny przycisk w wyzwaniach, 44 px, szerokość do 180 px, tekst wielkimi literami) co w streakach; wcześniej przycisk był mniejszy (sm). Pasek w onboardingu (Kontynuuj) korzysta z tego samego komponentu, ale zostaje szeroki i na całą szerokość ekranu (bez sidebaru); wszystkie przyciski takich pasków mają teraz etykiety wielkimi literami.
 
+## 2d. Czwarta seria (reszta wyjątków)
+
+- [ ] **Kafle-przyciski** (perki, postacie, mapy, sloty, zdjęcia, ikony generatora): wspólne zachowanie (kursor, fokus klawiaturą, powiększenie przy najechaniu i wciśnięciu). Kafle, które wcześniej się nie powiększały, nadal się nie powiększają. Sprawdź fokus klawiaturą (Tab) na kaflach map i perków.
+- [ ] **Akcje karty Smash or Pass** (obróć, przybliż, pomiń, smash) i **strzałki wyboru rostera**: teraz `Button`. Rozmiar i skala zachowane; sprawdź kolory (obróć i strzałki: czerwony tint, przybliż: półprzezroczysty, smash: pełny czerwony) oraz czy przeciąganie karty nadal nie uruchamia się od dotyku przycisku.
+- [ ] **Menu edytora tier list** (trzy kropki): wiersze to `MenuItem`, przycisk menu to `Button` 44 px; menu zawiera te same pozycje co wcześniej.
+- [ ] **Baner weryfikacji e-maila** w postaciach: `Toast` na środku, pełny amber, przyciski "Zweryfikuj" i "Odrzuć".
+- [ ] **Pola kodu weryfikacyjnego e-maila**: teraz ten sam komponent co kod z aplikacji (wklejanie całego kodu, Backspace, strzałki).
+- [ ] **Hasło**: oko pokaż/ukryj w profilu (3 pola) i strzałka w autouzupełnianiu to `Button`.
+- [ ] **Szybkie chipy** ról i płci w edytorze kandydata: `ToggleChip`.
+- [ ] **Przełącznik trybu w adminie** (włączony/wyłączony) jako `Button`.
+- [ ] **Zwijane grupy** (próby w historii, podgląd następnego rzędu, szuflady postaci): strzałka obraca się tak samo.
+
 ## 3. Rzeczy świadomie bez zmian (nie szukaj błędu)
 
 Przyciski gry w Smash or Pass, klawisze i mikrofon, koło losowania, kafle i miniatury, nagłówki akordeonów poza `AccordionSection`, karty wyboru. Pełna lista wyjątków jest w `docs/shared-components-adoption.md` (sekcje 1 do 3), a limit nowych ręcznych przycisków w `scripts/raw-buttons-baseline.json`.

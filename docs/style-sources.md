@@ -24,6 +24,8 @@ Cel: jedna zmiana w jednym miejscu przesuwa wygląd całej strony. Poniżej źr�
 | Kafel z ikoną (nad tytułem, w nagłówku sekcji) | `common/IconTile.tsx` | `<IconTile tone size>` |
 | Miniatura obrazka w wierszu listy | `common/Thumb.tsx` | `<Thumb src alt size fit fallback>` |
 | Zwijane ciało (animacja, `inert` gdy zamknięte) | `common/Collapsible.tsx` | `<Collapsible open>`; sekcja z nagłówkiem to `AccordionSection` |
+| Przycisk-kafel (obrazek, karta, slot): kursor, fokus, powiększenie | `common/TileButton.tsx` | `<TileButton press>` (wygląd kafla zostaje w `className`) |
+| Przycisk otwierający zwinięty blok | `common/DisclosureButton.tsx` | `<DisclosureButton open chevron>` |
 | Karta, którą się wybiera | `common/SelectableCard.tsx` | `<SelectableCard selected tone tinted>` |
 | Próbnik koloru | `common/ColorSwatch.tsx` | `<ColorSwatch selected size mark>` |
 | Link w zdaniu | `common/InlineLink.tsx` | `<InlineLink tone>` |

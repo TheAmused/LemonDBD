@@ -3,6 +3,7 @@
 
 import React, { useCallback, useEffect, useState } from 'react';
 import { Input, Select, SearchInput } from '@/components/common/Field';
+import { Button } from '@/components/common/Button';
 import { SegmentedControl } from '@/components/common/SegmentedControl';
 import { CheckCircle2, Power, Sparkles, XCircle } from 'lucide-react';
 import {
@@ -230,17 +231,14 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
             >
               <div className="flex items-center justify-between">
                 <span className="type-strong text-text-primary">{MODE_LABELS[setting.mode]}</span>
-                <button
-                  type="button"
+                <Button
+                  variant={setting.is_enabled ? 'greenSoft' : 'soft'}
+                  size="xs"
                   onClick={() => requestModeToggle(setting.mode, !setting.is_enabled)}
-                  className={`text-tiny font-black uppercase px-2.5 py-1 rounded-control border cursor-pointer transition-colors ${
-                    setting.is_enabled
-                      ? 'border-accent-green/40 bg-accent-green/10 text-accent-green hover:bg-accent-green/20'
-                      : 'border-accent-red/40 bg-accent-red/10 text-accent-red hover:bg-accent-red/20'
-                  }`}
+                  className="uppercase"
                 >
                   {setting.is_enabled ? dict.admin.enabledLabel : dict.admin.disabledLabel}
-                </button>
+                </Button>
               </div>
               {setting.disabled_reason && (
                 <p className="text-tiny text-accent-red font-medium leading-snug">{setting.disabled_reason}</p>

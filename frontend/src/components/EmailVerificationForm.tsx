@@ -1,10 +1,11 @@
 'use client';
 // frontend/src/components/EmailVerificationForm.tsx
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import type { UserProfile } from '@/context/AuthContext';
 import { Button } from '@/components/common/Button';
+import { CODE_LENGTH, CodeInput } from '@/components/auth/CodeInput';
 import { formatMessage } from '@/utils/i18nFormat';
 import { useDictionary } from "@/context/DictionaryContext";
 
@@ -13,60 +14,22 @@ interface EmailVerificationFormProps {
   onVerified?: (user?: UserProfile) => void;
 }
 
-const CODE_LENGTH = 6;
 const RESEND_COOLDOWN_SECONDS = 60;
 
 export const EmailVerificationForm: React.FC<EmailVerificationFormProps> = ({ email, onVerified }) => {
   const dict = useDictionary();
   const t = dict.user;
   const { verifyEmail, resendVerification, refreshUser } = useAuth();
-  const [digits, setDigits] = useState<string[]>(Array(CODE_LENGTH).fill(''));
+  const [code, setCode] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [verifying, setVerifying] = useState(false);
   const [cooldown, setCooldown] = useState(0);
-  const inputsRef = useRef<(HTMLInputElement | null)[]>([]);
-
-  const code = digits.join('');
 
   useEffect(() => {
     if (cooldown <= 0) return;
     const id = setInterval(() => setCooldown((c) => Math.max(0, c - 1)), 1000);
     return () => clearInterval(id);
   }, [cooldown]);
-
-  const setDigitAt = (index: number, value: string) => {
-    setDigits((prev) => {
-      const next = [...prev];
-      next[index] = value;
-      return next;
-    });
-  };
-
-  const handleChange = (index: number, value: string) => {
-    const digit = value.replace(/\D/g, '').slice(-1);
-    setDigitAt(index, digit);
-    if (digit && index < CODE_LENGTH - 1) {
-      inputsRef.current[index + 1]?.focus();
-    }
-  };
-
-  const handleKeyDown = (index: number, e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Backspace' && !digits[index] && index > 0) {
-      inputsRef.current[index - 1]?.focus();
-    }
-  };
-
-  const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
-    e.preventDefault();
-    const pasted = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, CODE_LENGTH);
-    if (!pasted) return;
-    const next = Array(CODE_LENGTH).fill('');
-    pasted.split('').forEach((d, i) => {
-      next[i] = d;
-    });
-    setDigits(next);
-    inputsRef.current[Math.min(pasted.length, CODE_LENGTH - 1)]?.focus();
-  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -103,26 +66,7 @@ export const EmailVerificationForm: React.FC<EmailVerificationFormProps> = ({ em
           {error}
         </p>
       )}
-      <div className="flex w-full items-center justify-center gap-1.5" onPaste={handlePaste}>
-        {digits.map((digit, index) => (
-          <input
-            key={index}
-            ref={(el) => {
-              inputsRef.current[index] = el;
-            }}
-            type="text"
-            inputMode="numeric"
-            autoComplete="one-time-code"
-            autoFocus={index === 0}
-            maxLength={1}
-            value={digit}
-            onChange={(e) => handleChange(index, e.target.value)}
-            onKeyDown={(e) => handleKeyDown(index, e)}
-            aria-label={formatMessage(t.digitAriaLabel, { n: index + 1 })}
-            className="h-11 w-9 rounded-control border border-border-color bg-bg-primary text-center text-base text-text-primary focus:border-accent-red focus:outline-none focus:ring-1 focus:ring-accent-red shadow-inner transition-colors"
-          />
-        ))}
-      </div>
+      <CodeInput value={code} onChange={setCode} autoFocus />
       <Button
         type="submit"
         variant="primary"

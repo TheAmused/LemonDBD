@@ -21,6 +21,7 @@ export type ButtonVariant =
   | 'link' //    amber text link, no box (hover underline)
   | 'linkMuted' // quiet text link, for secondary "back" and "change" actions
   | 'linkDanger' // red text link, for "reset" and "remove" actions
+  | 'greenSoft' // tinted green (green/10), the green twin of `soft`
   | 'ghostDanger' // no box, red text, red tint on hover (clear, remove)
   | 'onAccent' // on a coloured banner: a translucent white tint that keeps the banner's text colour
   | 'overlay' //  frosted square-ish control laid over a thumbnail (remove, edit); turns red on hover
@@ -40,6 +41,7 @@ const BUTTON_VARIANTS: Record<ButtonVariant, string> = {
   link: 'text-accent-amber underline-offset-2 hover:underline',
   linkMuted: 'text-text-muted underline-offset-2 hover:text-text-primary hover:underline',
   linkDanger: 'text-accent-red underline-offset-2 hover:underline',
+  greenSoft: 'border border-accent-green/40 bg-accent-green/10 text-accent-green hover:bg-accent-green/20',
   ghostDanger: 'text-accent-red hover:bg-accent-red/10',
   onAccent: 'bg-text-inverted/20 text-inherit hover:bg-text-inverted/30',
   overlay: 'border border-border-color/60 bg-bg-surface/90 text-text-muted shadow-xs backdrop-blur-sm hover:bg-accent-red hover:text-text-inverted',

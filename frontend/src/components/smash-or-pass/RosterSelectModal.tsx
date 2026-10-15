@@ -155,7 +155,7 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
         >
           {N > 0 && (
             <>
-              <button
+              <Button
                 type="button"
                 aria-label={dict.pagination.previous}
                 onPointerDown={(e) => e.stopPropagation()}
@@ -163,12 +163,12 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
                 onMouseDown={(e) => e.stopPropagation()}
                 onTouchStart={(e) => e.stopPropagation()}
                 onClick={stepPrev}
-                className="absolute left-2 sm:left-4 md:left-8 z-50 flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-full bg-bg-surface border border-accent-red/40 text-accent-red hover:bg-accent-red hover:text-text-inverted hover:border-accent-red hover:scale-110 active:scale-95 transition-all cursor-pointer pointer-events-auto select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red"
+                variant="soft" size="lg" icon pill className="absolute left-2 z-50 sm:left-4 sm:h-14 sm:w-14 md:left-8 hover:scale-110 active:scale-95"
               >
                 <ThornChevronIcon className="h-6 w-6 sm:h-7 sm:w-7 rotate-180" aria-hidden="true" />
-              </button>
+              </Button>
 
-              <button
+              <Button
                 type="button"
                 aria-label={dict.pagination.next}
                 onPointerDown={(e) => e.stopPropagation()}
@@ -176,10 +176,10 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
                 onMouseDown={(e) => e.stopPropagation()}
                 onTouchStart={(e) => e.stopPropagation()}
                 onClick={stepNext}
-                className="absolute right-2 sm:right-4 md:right-8 z-50 flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-full bg-bg-surface border border-accent-red/40 text-accent-red hover:bg-accent-red hover:text-text-inverted hover:border-accent-red hover:scale-110 active:scale-95 transition-all cursor-pointer pointer-events-auto select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red"
+                variant="soft" size="lg" icon pill className="absolute right-2 z-50 sm:right-4 sm:h-14 sm:w-14 md:right-8 hover:scale-110 active:scale-95"
               >
                 <ThornChevronIcon className="h-6 w-6 sm:h-7 sm:w-7" aria-hidden="true" />
-              </button>
+              </Button>
             </>
           )}
 

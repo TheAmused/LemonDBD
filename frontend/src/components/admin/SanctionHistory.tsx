@@ -65,7 +65,7 @@ export function SanctionHistory({ sanctions, busy, onRevoke }: SanctionHistoryPr
               .map(([label, value]) => (
                 <div key={label}>
                   <p className="type-label-xs text-text-secondary">{label}</p>
-                  <p className="whitespace-pre-wrap break-words text-xs text-text-primary">{value}</p>
+                  <p className="whitespace-pre-wrap break-words type-body text-text-primary">{value}</p>
                 </div>
               ))}
 

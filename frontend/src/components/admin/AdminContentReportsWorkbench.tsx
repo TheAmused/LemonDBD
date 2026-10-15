@@ -83,11 +83,11 @@ export function AdminContentReportsWorkbench({
           </Button>
         </div>
 
-        <div className="space-y-2 max-h-[600px] overflow-y-auto pr-1">
+        <div className="space-y-2 max-h-150 overflow-y-auto pr-1">
           {loading && !list ? (
-            <div className="py-12 text-center text-xs text-text-muted">{dict.admin.contentReportsLoading}</div>
+            <div className="py-12 text-center type-body text-text-muted">{dict.admin.contentReportsLoading}</div>
           ) : items.length === 0 ? (
-            <div className="py-12 text-center text-xs text-text-muted">{dict.admin.contentReportsEmpty}</div>
+            <div className="py-12 text-center type-body text-text-muted">{dict.admin.contentReportsEmpty}</div>
           ) : (
             items.map((report) => {
               const isSelected = selectedId === report.id;
@@ -144,9 +144,9 @@ export function AdminContentReportsWorkbench({
 
       <div className="lg:col-span-7 rounded-3xl border border-border-color bg-bg-surface p-4 sm:p-6 shadow-sm">
         {selectedId === null ? (
-          <p className="py-12 text-center text-xs text-text-muted">{dict.admin.contentReportsSelectPrompt}</p>
+          <p className="py-12 text-center type-body text-text-muted">{dict.admin.contentReportsSelectPrompt}</p>
         ) : loadingDetail && !current ? (
-          <p className="py-12 text-center text-xs text-text-muted">{dict.admin.contentReportsLoading}</p>
+          <p className="py-12 text-center type-body text-text-muted">{dict.admin.contentReportsLoading}</p>
         ) : current ? (
           <ContentReportDetail
             key={current.id}
@@ -155,7 +155,7 @@ export function AdminContentReportsWorkbench({
             onResolve={(action, author, notes) => onResolve(current.id, action, author, notes)}
           />
         ) : (
-          <p className="py-12 text-center text-xs text-text-muted">{dict.admin.contentReportsLoadFailed}</p>
+          <p className="py-12 text-center type-body text-text-muted">{dict.admin.contentReportsLoadFailed}</p>
         )}
       </div>
     </div>

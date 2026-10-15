@@ -23,6 +23,12 @@ SETTING_SPECS: tuple[SettingSpec, ...] = (
     SettingSpec("reset_token_minutes", "int", "tokens", minimum=5, maximum=1440),
     SettingSpec("session_hours", "int", "tokens", minimum=1, maximum=720),
     SettingSpec("streak_prune_days", "int", "retention", minimum=7, maximum=3650),
+    SettingSpec("warning_lifetime_days", "int", "retention", minimum=1, maximum=3650),
+    SettingSpec("ban_list_retention_days", "int", "retention", minimum=30, maximum=3650),
+    # Thresholds behind the escalation suggestion (a person still decides every sanction).
+    SettingSpec("warnings_before_suspension", "int", "moderation", minimum=1, maximum=20),
+    SettingSpec("suspension_first_days", "int", "moderation", minimum=1, maximum=365),
+    SettingSpec("suspension_second_days", "int", "moderation", minimum=1, maximum=365),
 )
 
 SPEC_BY_KEY: dict[str, SettingSpec] = {s.key: s for s in SETTING_SPECS}

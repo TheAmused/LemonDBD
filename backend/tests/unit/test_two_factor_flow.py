@@ -274,7 +274,10 @@ class TestLoginChallenge:
         challenge = _challenge(client, user)
         user.is_active = False
         db.session.commit()
-        assert _finish(client, challenge, _next_code(secret)).status_code == 401
+        # Fully authenticated (password and second factor), so the account is told why it is blocked.
+        res = _finish(client, challenge, _next_code(secret))
+        assert res.status_code == 403
+        assert res.get_json()["code"] == "account_banned"
 
     def test_switching_off_between_steps_invalidates_the_challenge(self, client: FlaskClient, db_session) -> None:
         user = _make_user()

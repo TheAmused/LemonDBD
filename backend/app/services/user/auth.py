@@ -5,6 +5,7 @@ from datetime import datetime, timedelta, timezone
 from flask import current_app
 from sqlalchemy import func, or_, select
 
+from app.core.account_state import AccountBlockedError, is_blocked
 from app.core.config import Config
 from app.core.db_retry import retry_on_transient_db_error
 from app.core.extensions import db
@@ -17,6 +18,7 @@ from app.core.security import (
     verify_password,
 )
 from app.models import User
+from app.services import ban_list
 from app.services.mail_service import send_password_reset_email, send_verification_email
 from app.services.site_settings import reset_lifetime, verification_lifetime
 
@@ -66,6 +68,12 @@ def create_user_account(
     if not password or len(password) < 6:
         return None, "Password must be at least 6 characters long."
 
+    # Ban-evasion list (off unless BAN_LIST_ENABLED): same wording for every refused address, and
+    # checked before the duplicate checks so it never reveals whether an account exists.
+    refusal = ban_list.registration_refusal(clean_email)
+    if refusal:
+        return None, refusal
+
     existing_login = db.session.scalars(
         select(User).where(func.lower(User.login) == clean_login.lower())
     ).first()
@@ -73,7 +81,7 @@ def create_user_account(
         return None, "Login is already taken."
 
     existing_email = db.session.scalars(
-        select(User).where(User.email.ilike(clean_email))
+        select(User).where(func.lower(User.email) == clean_email)
     ).first()
     if existing_email:
         return None, "Email address is already registered."
@@ -131,7 +139,7 @@ def verify_email_code(email: str, code: str) -> tuple[User | None, str | None]:
         return None, "Email and verification code are required."
 
     user = db.session.scalars(
-        select(User).where(User.email.ilike(clean_email))
+        select(User).where(func.lower(User.email) == clean_email)
     ).first()
     if not user or not user.verification_code:
         return None, "Invalid or already used verification code."
@@ -168,7 +176,7 @@ def resend_verification_email(email: str) -> tuple[bool, str | None]:
         return True, None
 
     user = db.session.scalars(
-        select(User).where(User.email.ilike(clean_email))
+        select(User).where(func.lower(User.email) == clean_email)
     ).first()
     if not user or user.is_verified:
         return True, None
@@ -199,7 +207,7 @@ def request_password_reset(email: str) -> tuple[bool, str | None]:
         return True, None
 
     user = db.session.scalars(
-        select(User).where(User.email.ilike(clean_email))
+        select(User).where(func.lower(User.email) == clean_email)
     ).first()
     if not user:
         return True, None
@@ -291,14 +299,19 @@ def authenticate_user_credentials(
         )
     ).first()
 
-    if not user or not user.is_active:
+    if not user:
         return None, None
 
     if verify_password(password, user.password_hash):
         from app.services.user import two_factor
 
         if two_factor.is_enabled(user.id):
+            # A banned or suspended account is reported after the second factor (complete_login).
             return user, None
+
+        if is_blocked(user):
+            # Only someone who knows the password learns why; a wrong password stays a plain 401.
+            raise AccountBlockedError(user)
 
         auto_verify_if_disabled(user)
         token = generate_token(user.id, user.role)
@@ -315,7 +328,7 @@ def retrieve_user_from_jwt(token: str) -> User | None:
     try:
         user_id = int(payload["sub"])
         user = db.session.get(User, user_id)
-        if user and user.is_active and token_matches_user(payload, user):
+        if user and not is_blocked(user) and token_matches_user(payload, user):
             return user
     except (ValueError, TypeError):
         return None

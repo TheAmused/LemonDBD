@@ -4,35 +4,59 @@ import React, { useState } from 'react';
 import { Ban, CheckCircle, ShieldAlert, UserX } from 'lucide-react';
 import { Button } from '@/components/common/Button';
 import { Badge } from '@/components/common/Badge';
-import { Checkbox } from '@/components/common/Checkbox';
-import { Textarea } from '@/components/common/Field';
+import { Select, Textarea } from '@/components/common/Field';
 import { ConfirmModal } from '@/components/common/ConfirmModal';
 import { SandboxedContentPreview } from '@/components/admin/SandboxedContentPreview';
+import { SanctionForm } from '@/components/admin/SanctionForm';
 import { contentReasonLabel, contentStatusLabel, contentStatusTone, contentTypeLabel } from '@/components/admin/contentReportLabels';
 import { useDictionary } from '@/context/DictionaryContext';
 import { formatDateTime } from '@/utils/format';
+import { formatMessage } from '@/utils/i18nFormat';
+import {
+  EMPTY_SANCTION_DRAFT,
+  authorDecisionFromDraft,
+  isSanctionDraftValid,
+  type AuthorDecision,
+  type SanctionDraft,
+  type SanctionKind,
+} from '@/types/moderation';
 import type { AdminContentReportDetail, ContentReportAction } from '@/types/admin';
 
 interface ContentReportDetailProps {
   detail: AdminContentReportDetail;
   resolving: boolean;
-  onResolve: (action: ContentReportAction, banAuthor: boolean, notes: string) => Promise<boolean>;
+  onResolve: (action: ContentReportAction, author: AuthorDecision | null, notes: string) => Promise<boolean>;
 }
 
 /** One report in full: who flagged what and why, the reported content, and the ban/dismiss decision. */
 export function ContentReportDetail({ detail, resolving, onResolve }: ContentReportDetailProps) {
   const dict = useDictionary();
   const [notes, setNotes] = useState<string>(detail.admin_notes ?? '');
-  const [banAuthor, setBanAuthor] = useState<boolean>(false);
+  // What happens to the author's account: nothing, or one of the three decisions (with its form).
+  const [authorKind, setAuthorKind] = useState<SanctionKind | 'none'>('none');
+  const [authorDraft, setAuthorDraft] = useState<SanctionDraft>(EMPTY_SANCTION_DRAFT);
   const [confirmBan, setConfirmBan] = useState<boolean>(false);
 
+  const moderation = dict.moderation.admin;
+  const authorConsequence =
+    authorKind === 'warning'
+      ? formatMessage(moderation.confirmWarning, { username: detail.author_login })
+      : authorKind === 'suspension'
+        ? formatMessage(moderation.confirmSuspension, { username: detail.author_login, days: authorDraft.duration_days })
+        : authorKind === 'ban'
+          ? formatMessage(moderation.confirmBan, { username: detail.author_login })
+          : '';
+
   const isPending = detail.status === 'pending';
-  const canBanAuthor = detail.attributed && detail.author_active !== false && !detail.author_is_admin;
+  const canActOnAuthor = detail.attributed && detail.author_active !== false && !detail.author_is_admin;
+  const authorDecision: AuthorDecision | null =
+    canActOnAuthor && authorKind !== 'none' ? authorDecisionFromDraft({ ...authorDraft, kind: authorKind }) : null;
+  const authorValid = authorKind === 'none' || !canActOnAuthor || isSanctionDraftValid({ ...authorDraft, kind: authorKind });
   const reasons = Object.entries(detail.reason_breakdown).sort((a, b) => b[1] - a[1]);
   const reporterNotes = detail.reports.filter((r) => r.notes);
 
   const runBan = async () => {
-    await onResolve('ban', banAuthor && canBanAuthor, notes);
+    await onResolve('ban', authorDecision, notes);
     setConfirmBan(false);
   };
 
@@ -132,17 +156,42 @@ export function ContentReportDetail({ detail, resolving, onResolve }: ContentRep
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
           />
-          {canBanAuthor && (
-            <Checkbox checked={banAuthor} onChange={setBanAuthor}>
-              <span className="text-xs text-text-primary">{dict.admin.contentReportBanAuthor}</span>
-            </Checkbox>
+          {canActOnAuthor && (
+            <div className="space-y-3 rounded-xl border border-border-color bg-bg-primary p-3">
+              <div>
+                <label htmlFor={`author-action-${detail.id}`} className="block type-label-xs text-text-secondary mb-1">
+                  {moderation.authorActionLabel}
+                </label>
+                <Select
+                  id={`author-action-${detail.id}`}
+                  fieldSize="sm"
+                  value={authorKind}
+                  onChange={(e) => setAuthorKind(e.target.value as SanctionKind | 'none')}
+                >
+                  <option value="none">{moderation.authorActionNone}</option>
+                  <option value="warning">{moderation.authorActionWarning}</option>
+                  <option value="suspension">{moderation.authorActionSuspension}</option>
+                  <option value="ban">{moderation.authorActionBan}</option>
+                </Select>
+                <p className="mt-1 type-micro text-text-muted">{moderation.authorActionHint}</p>
+              </div>
+              {authorKind !== 'none' && (
+                <SanctionForm
+                  draft={{ ...authorDraft, kind: authorKind }}
+                  kinds={[authorKind]}
+                  showReason={false}
+                  showInternal={false}
+                  onChange={(patch) => setAuthorDraft((d) => ({ ...d, ...patch }))}
+                />
+              )}
+            </div>
           )}
           <div className="flex flex-wrap gap-2">
-            <Button variant="danger" size="sm" disabled={resolving} onClick={() => setConfirmBan(true)}>
-              {banAuthor && canBanAuthor ? <UserX className="h-4 w-4" /> : <Ban className="h-4 w-4" />}
+            <Button variant="danger" size="sm" disabled={resolving || !authorValid} onClick={() => setConfirmBan(true)}>
+              {authorDecision ? <UserX className="h-4 w-4" /> : <Ban className="h-4 w-4" />}
               {dict.admin.contentReportBanAction}
             </Button>
-            <Button size="sm" disabled={resolving} onClick={() => onResolve('dismiss', false, notes)}>
+            <Button size="sm" disabled={resolving} onClick={() => onResolve('dismiss', null, notes)}>
               <CheckCircle className="h-4 w-4" />
               {dict.admin.contentReportDismissAction}
             </Button>
@@ -160,11 +209,7 @@ export function ContentReportDetail({ detail, resolving, onResolve }: ContentRep
       <ConfirmModal
         open={confirmBan}
         title={dict.admin.contentReportBanTitle}
-        message={
-          banAuthor && canBanAuthor
-            ? `${dict.admin.contentReportBanMessage} ${dict.admin.contentReportBanAuthorWarning}`
-            : dict.admin.contentReportBanMessage
-        }
+        message={authorDecision ? `${dict.admin.contentReportBanMessage} ${authorConsequence}` : dict.admin.contentReportBanMessage}
         confirmLabel={dict.admin.contentReportBanAction}
         busy={resolving}
         onConfirm={runBan}

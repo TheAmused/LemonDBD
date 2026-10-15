@@ -24,6 +24,7 @@ from app.models import (
     UserPerkOwnership,
 )
 from app.models.admin import CHALLENGE_MODES
+from app.models.user import User
 from app.services import site_settings
 from app.services.admin_control_service import (
     get_audit_logs,
@@ -41,6 +42,14 @@ from app.services.content_moderation_service import (
     resolve_report,
 )
 from app.services.db.export_import import DatabaseExportImportService
+from app.services.moderation_actions import (
+    ModerationError,
+    apply_sanction,
+    list_user_sanctions,
+    moderation_summary,
+    restore_account,
+    revoke_sanction,
+)
 from app.services.user.admin import fetch_admin_metrics
 from pydantic import ValidationError
 from app.schemas.admin import (
@@ -450,6 +459,9 @@ def resolve_content_report_endpoint(report_id: int):
     admin_notes = body.get("admin_notes")
     if admin_notes is not None and not isinstance(admin_notes, str):
         return api_error("admin_notes must be a string", 400)
+    author_action = body.get("author_action")
+    if author_action is not None and not isinstance(author_action, str):
+        return api_error("author_action must be a string", 400)
 
     resp, status_code = resolve_report(
         admin=g.current_user,
@@ -457,8 +469,67 @@ def resolve_content_report_endpoint(report_id: int):
         action=action,
         ban_author=ban_author,
         admin_notes=admin_notes,
+        author_action=author_action,
+        duration_days=body.get("duration_days"),
+        public_message=body.get("public_message"),
+        facts=body.get("facts"),
+        rule_ref=body.get("rule_ref"),
     )
     return jsonify(resp), status_code
+
+
+@admin_control_bp.route("/users/<int:user_id>/sanctions", methods=["GET"])
+@admin_required
+def list_sanctions_for_user(user_id: int):
+    """A user's warnings, suspensions and bans (newest first) with a summary of where they stand."""
+    if db.session.get(User, user_id) is None:
+        return api_error("User not found", 404)
+    return jsonify({"sanctions": list_user_sanctions(user_id), "summary": moderation_summary(user_id)}), 200
+
+
+@admin_control_bp.route("/users/<int:user_id>/sanctions", methods=["POST"])
+@admin_required
+def issue_sanction_for_user(user_id: int):
+    """Warn, suspend (duration_days) or ban a user; the reasons are emailed to them."""
+    body = request.get_json(silent=True)
+    if not isinstance(body, dict):
+        return api_error("Invalid JSON body", 400)
+    try:
+        sanction = apply_sanction(g.current_user, user_id, body)
+    except ModerationError as err:
+        return api_error(err.message, err.status)
+    return jsonify({"status": "success", "sanction": sanction.to_dict()}), 201
+
+
+@admin_control_bp.route("/sanctions/<int:sanction_id>/revoke", methods=["POST"])
+@admin_required
+def revoke_user_sanction(sanction_id: int):
+    """Take a sanction back (a reason is required); a lifted suspension or ban is emailed."""
+    body = request.get_json(silent=True)
+    if not isinstance(body, dict):
+        return api_error("Invalid JSON body", 400)
+    try:
+        sanction = revoke_sanction(g.current_user, sanction_id, body.get("reason"))
+    except ModerationError as err:
+        return api_error(err.message, err.status)
+    return jsonify({"status": "success", "sanction": sanction.to_dict()}), 200
+
+
+@admin_control_bp.route("/users/<int:user_id>/restore", methods=["POST"])
+@admin_required
+def restore_user_account(user_id: int):
+    """Lift every running suspension and ban of a user."""
+    body = request.get_json(silent=True)
+    if not isinstance(body, dict):
+        return api_error("Invalid JSON body", 400)
+    reason = body.get("reason")
+    if not isinstance(reason, str) or not reason.strip():
+        return api_error("reason is required", 400)
+    try:
+        lifted = restore_account(g.current_user, user_id, reason.strip())
+    except ModerationError as err:
+        return api_error(err.message, err.status)
+    return jsonify({"status": "success", "lifted": lifted}), 200
 
 
 @admin_control_bp.route("/content-reports/purge-expired", methods=["POST"])

@@ -4,7 +4,7 @@ import logging
 from datetime import datetime, timezone, timedelta
 from typing import Any
 
-from sqlalchemy import func, select, update
+from sqlalchemy import select, update
 from sqlalchemy.exc import IntegrityError
 
 from app.core.extensions import db
@@ -13,7 +13,10 @@ from app.core.transaction import transaction
 from app.models.admin import AdminAuditLog
 from app.models.content_moderation import ContentReport, ContentReportSubscriber, ContentRevocation
 from app.models.user import User
+from app.services.content_report_queries import REPORT_STATUSES, get_admin_reports, get_report_preview  # noqa: F401
 from app.services.mail_service import send_content_moderation_notice_email
+from app.services.moderation_actions import ModerationError, create_sanction
+from app.services.sanction_outbox import dispatch_notifications, queued_notification_ids
 from app.services.site_settings import contact_email
 from app.services.content_crypto import (
     canonicalize_payload,
@@ -28,7 +31,6 @@ HEX_CHARACTERS = frozenset("0123456789abcdefABCDEF")
 
 CONTENT_TYPES = frozenset({"tier_list", "smash_roster", "minigame"})
 REPORT_REASONS = frozenset({"hate_speech", "harassment", "explicit", "illegal", "spam", "other"})
-REPORT_STATUSES = frozenset({"pending", "resolved_banned", "dismissed", "expired"})
 MAX_EVIDENCE_CHARS = 500_000
 EVIDENCE_TTL_DAYS = 14
 UNATTRIBUTED_LOGIN = ""
@@ -357,88 +359,7 @@ def check_document_revoked(
     }
 
 
-def get_admin_reports(
-    status: str | None = "pending",
-    page: int = 1,
-    per_page: int = 20,
-) -> dict[str, Any]:
-    """Retrieve paginated content reports ordered by report count descending.
-
-    Raises:
-        ValueError: If `status` is not a known report status (or "all").
-    """
-    base_stmt = select(ContentReport)
-    count_stmt = select(func.count(ContentReport.id))
-
-    clean_status = (status or "pending").strip().lower()
-    if clean_status != "all":
-        if clean_status not in REPORT_STATUSES:
-            raise ValueError(f"Unknown report status '{clean_status}'")
-        base_stmt = base_stmt.where(ContentReport.status == clean_status)
-        count_stmt = count_stmt.where(ContentReport.status == clean_status)
-
-    total = db.session.scalar(count_stmt) or 0
-    pending_total = db.session.scalar(
-        select(func.count(ContentReport.id)).where(ContentReport.status == "pending")
-    ) or 0
-
-    stmt = (
-        base_stmt.order_by(
-            ContentReport.report_count.desc(),
-            ContentReport.created_at.desc(),
-        )
-        .offset((page - 1) * per_page)
-        .limit(per_page)
-    )
-
-    reports = db.session.scalars(stmt).all()
-    items = [{**r.to_dict(), "has_evidence": r.evidence_payload is not None} for r in reports]
-
-    return {
-        "items": items,
-        "total": total,
-        "pending_total": pending_total,
-        "page": page,
-        "per_page": per_page,
-    }
-
-
-def get_report_preview(report_id: int) -> dict[str, Any] | None:
-    """Retrieve full preview of a report: evidence, every reporter's reason/notes, author state.
-
-    Reporter identities are deliberately left out; the admin judges the content, not who flagged it.
-    """
-    report = db.session.get(ContentReport, report_id)
-    if report is None:
-        return None
-
-    subscribers = db.session.scalars(
-        select(ContentReportSubscriber)
-        .where(ContentReportSubscriber.report_id == report.id)
-        .order_by(ContentReportSubscriber.created_at.asc(), ContentReportSubscriber.id.asc())
-    ).all()
-    breakdown: dict[str, int] = {}
-    for sub in subscribers:
-        breakdown[sub.reason] = breakdown.get(sub.reason, 0) + 1
-
-    author = db.session.get(User, report.author_id) if report.author_id is not None else None
-
-    return {
-        **report.to_dict(),
-        "evidence_payload": report.evidence_payload,
-        "reports": [
-            {
-                "reason": sub.reason,
-                "notes": sub.notes,
-                "created_at": sub.created_at.isoformat() if sub.created_at else None,
-            }
-            for sub in subscribers
-        ],
-        "reason_breakdown": breakdown,
-        "attributed": report.author_id is not None,
-        "author_active": author.is_active if author is not None else None,
-        "author_is_admin": author.role == "admin" if author is not None else False,
-    }
+AUTHOR_ACTIONS = {"warn": "warning", "suspend": "suspension", "ban": "ban"}
 
 
 def resolve_report(
@@ -447,13 +368,50 @@ def resolve_report(
     action: str,
     ban_author: bool = False,
     admin_notes: str | None = None,
+    author_action: str | None = None,
+    duration_days: int | None = None,
+    public_message: str | None = None,
+    facts: str | None = None,
+    rule_ref: str | None = None,
 ) -> tuple[dict[str, Any], int]:
-    """Resolve a content report with ban or dismiss action and zero-retention hard wipe."""
+    """Resolve a content report with ban or dismiss action and zero-retention hard wipe.
+
+    `author_action` ("none", "warn", "suspend", "ban") is what happens to the author's account when the
+    content is banned; the old `ban_author` flag means "ban" and is used only when it is not given.
+    """
     if action not in ("ban", "dismiss"):
         return {"error": "Action must be 'ban' or 'dismiss'", "status": 400}, 400
+    if author_action is None:
+        author_action = "ban" if ban_author else "none"
+    if author_action not in ("none", *AUTHOR_ACTIONS):
+        return {"error": "author_action must be 'none', 'warn', 'suspend' or 'ban'", "status": 400}, 400
 
     clean_notes = admin_notes.strip() if isinstance(admin_notes, str) and admin_notes.strip() else None
+    sanction_ids: list[int] = []
 
+    try:
+        return _resolve_report(
+            admin, report_id, action, author_action, clean_notes, sanction_ids,
+            duration_days=duration_days, public_message=public_message, facts=facts, rule_ref=rule_ref,
+        )
+    except ModerationError as err:
+        return {"error": err.message, "status": err.status}, err.status
+
+
+def _resolve_report(
+    admin: User,
+    report_id: int,
+    action: str,
+    author_action: str,
+    clean_notes: str | None,
+    sanction_ids: list[int],
+    *,
+    duration_days: int | None,
+    public_message: str | None,
+    facts: str | None,
+    rule_ref: str | None,
+) -> tuple[dict[str, Any], int]:
+    ban_author = author_action != "none"
     with transaction():
         report = db.session.get(ContentReport, report_id)
         if report is None:
@@ -487,7 +445,21 @@ def resolve_report(
             if ban_author and report.author_id is not None:
                 author = db.session.get(User, report.author_id)
                 if author is not None and author.role != "admin":
-                    author.is_active = False
+                    sanction = create_sanction(
+                        AUTHOR_ACTIONS[author_action],
+                        admin,
+                        author,
+                        reason_code=report.primary_reason,
+                        public_message=public_message,
+                        facts=facts
+                        or f"A {report.content_type.replace('_', ' ')} created with your account was blocked after a review of a report.",
+                        rule_ref=rule_ref,
+                        internal_notes=clean_notes,
+                        duration_days=duration_days,
+                        source="content_report",
+                        report_id=report.id,
+                    )
+                    sanction_ids.append(sanction.id)
 
             report.status = "resolved_banned"
 
@@ -501,6 +473,7 @@ def resolve_report(
                         "report_id": report.id,
                         "admin_notes": clean_notes,
                         "ban_author": ban_author,
+                        "author_action": author_action,
                     }),
                 )
             )
@@ -527,9 +500,13 @@ def resolve_report(
         report.admin_notes = clean_notes
 
         notice = None
-        if action == "ban" and report.author_id is not None:
+        # An account decision sends its own (merged) email through the outbox; without one the
+        # author still gets the plain statement about the blocked content.
+        if action == "ban" and report.author_id is not None and not sanction_ids:
             notice = (report.author_id, report.content_type, report.primary_reason)
 
+    if sanction_ids:
+        dispatch_notifications(queued_notification_ids(sanction_ids))
     if notice is not None:
         # Statement of reasons for the author. Sent after the decision is committed and never raises.
         author = db.session.get(User, notice[0])

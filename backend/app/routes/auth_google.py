@@ -1,9 +1,11 @@
 # backend/app/routes/auth_google.py
 from flask import Blueprint, jsonify, make_response, request
 
+from app.core.account_state import AccountBlockedError
 from app.core.limiter import limiter
 from app.core.security import generate_token
 from app.routes.auth import ownership_service, session_response
+from app.services.moderation_actions import blocked_response
 from app.services.user import google_auth, two_factor
 
 auth_google_bp = Blueprint("auth_google_bp", __name__, url_prefix="/api/v1/auth/google")
@@ -37,6 +39,8 @@ def google_sign_in():
         user, created = google_auth.sign_in(dto.credential)
     except google_auth.GoogleAuthError as err:
         return api_error(err.message, err.status)
+    except AccountBlockedError as blocked:
+        return blocked_response(blocked.user)
 
     if created:
         ownership_service.seed_default_ownership_for_new_user(user.id)

@@ -22,6 +22,7 @@ from app.models.history import HistoryRun
 from app.models.map import MapSource
 from app.models.page_streak import PageStreakRun
 from app.models.perk import Perk
+from app.models.sanction import BannedEmailHash
 from app.models.tier_list import TIER_LIST_FIELDS, TierList
 from app.models.user import User, UserShowcase
 
@@ -116,6 +117,18 @@ def serialize_admin_audit_log(log: AdminAuditLog) -> dict[str, Any]:
     }
 
 
+def serialize_banned_email_hash(row: BannedEmailHash) -> dict[str, Any]:
+    """One ban-evasion list entry. The pepper is never part of this: only the keyed hash, the
+    version of the pepper that made it, and the entry's own dates travel in a file."""
+    return {
+        "email_hmac": row.email_hmac,
+        "key_version": row.key_version,
+        "reason_code": row.reason_code,
+        "created_at": row.created_at.isoformat() if row.created_at else None,
+        "expires_at": row.expires_at.isoformat() if row.expires_at else None,
+    }
+
+
 def serialize_changelog_post(post: ChangelogPost) -> dict[str, Any]:
     return {
         "title": post.title,
@@ -158,6 +171,7 @@ TARGET_GROUPS: dict[str, list[str]] = {
         "users",
         "ownerships",
         "user_showcases",
+        "banned_email_hashes",
     ],
     "community": [
         "bug_reports",
@@ -198,6 +212,7 @@ SIMPLE_EXPORT_TARGETS: list[tuple[str, type, Callable[[Any], dict[str, Any]], li
     ("bug_reports", BugReport, lambda r: r.to_dict(), []),
     ("challenge_mode_settings", ChallengeModeSetting, lambda cms: cms.to_dict(), []),
     ("admin_audit_logs", AdminAuditLog, serialize_admin_audit_log, []),
+    ("banned_email_hashes", BannedEmailHash, serialize_banned_email_hash, []),
     ("changelog_posts", ChangelogPost, serialize_changelog_post, []),
     ("tier_lists", TierList, serialize_tier_list, []),
 ]
@@ -218,6 +233,7 @@ SIMPLE_DELETE_TARGETS: list[tuple[str, type]] = [
     ("chapters", Chapter),
     ("challenge_mode_settings", ChallengeModeSetting),
     ("user_showcases", UserShowcase),
+    ("banned_email_hashes", BannedEmailHash),
     ("admin_audit_logs", AdminAuditLog),
     ("changelog_posts", ChangelogPost),
     ("gauntlet_runs", GauntletRun),

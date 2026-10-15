@@ -1,6 +1,8 @@
 # backend/app/services/db/import_accounts.py
 """Import of users and the per-user rows that hang off them (ownership, showcases)."""
 from dataclasses import dataclass
+import logging
+import re
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -10,9 +12,15 @@ from sqlalchemy import select
 from app.core.extensions import db
 from app.models.character import Killer, Survivor
 from app.models.perk import Perk
+from app.models.sanction import BannedEmailHash
 from app.models.user import User, UserCharacterOwnership, UserPerkOwnership, UserShowcase
 from app.services.db._common import parse_datetime
+from app.services import ban_list
 from app.services.db.asset_bundling import write_asset_base64
+
+logger = logging.getLogger(__name__)
+
+_HMAC_HEX = re.compile(r"^[0-9a-f]{64}$")
 
 
 @dataclass(frozen=True)
@@ -208,3 +216,73 @@ def import_user_showcases(
                     setattr(existing_showcase, column, found[1])
         db.session.flush()
         summary["user_showcases"] = {"created": sc_created, "updated": sc_updated}
+
+
+def import_banned_email_hashes(
+    data: dict[str, Any],
+    target_keys: set[str],
+    summary: dict[str, dict[str, int]],
+) -> None:
+    """Restore ban-evasion list entries.
+
+    Entries come back without a ban behind them (`sanction_id` NULL): the sanctions are not part of an
+    export, so only the entry's own expiry can remove it. One entry per hash: a hash that is already
+    listed keeps its row and only has its expiry extended. Rows that are malformed or already expired
+    are skipped. `unverifiable` counts imported rows made with a pepper version that is not configured
+    here: they are kept (the pepper may be added later) but cannot match anyone until then.
+    """
+    if "banned_email_hashes" not in target_keys or "banned_email_hashes" not in data:
+        return
+    now = datetime.now(timezone.utc)
+    known = ban_list.configured_versions()
+    by_hash: dict[str, BannedEmailHash] = {
+        row.email_hmac: row for row in db.session.scalars(select(BannedEmailHash))
+    }
+    created = updated = skipped = unverifiable = 0
+    for row in data["banned_email_hashes"]:
+        value = str(row.get("email_hmac") or "").strip().lower()
+        version, reason = row.get("key_version"), str(row.get("reason_code") or "").strip()[:32]
+        expires_at = parse_datetime(row.get("expires_at"))
+        if (
+            not _HMAC_HEX.match(value)
+            or isinstance(version, bool) or not isinstance(version, int) or not 0 < version < 32768
+            or not reason
+            or expires_at is None
+        ):
+            skipped += 1
+            continue
+        if expires_at.tzinfo is None:
+            expires_at = expires_at.replace(tzinfo=timezone.utc)
+        if expires_at <= now:
+            skipped += 1
+            continue
+        if version not in known:
+            unverifiable += 1
+        existing = by_hash.get(value)
+        if existing is not None:
+            current = existing.expires_at
+            if current.tzinfo is None:
+                current = current.replace(tzinfo=timezone.utc)
+            if expires_at > current:
+                existing.expires_at = expires_at
+                updated += 1
+            continue
+        entry = BannedEmailHash(
+            email_hmac=value,
+            key_version=version,
+            sanction_id=None,
+            reason_code=reason,
+            created_at=parse_datetime(row.get("created_at")) or now,
+            expires_at=expires_at,
+        )
+        db.session.add(entry)
+        by_hash[value] = entry
+        created += 1
+    db.session.flush()
+    if unverifiable:
+        logger.warning(
+            "Imported %d ban-list entries made with a pepper version that is not configured here", unverifiable
+        )
+    summary["banned_email_hashes"] = {
+        "created": created, "updated": updated, "skipped": skipped, "unverifiable": unverifiable,
+    }

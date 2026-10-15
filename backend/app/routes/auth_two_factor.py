@@ -3,6 +3,7 @@
 from flask import Blueprint, g, jsonify, make_response, request
 from pydantic import ValidationError
 
+from app.core.account_state import AccountBlockedError
 from app.core.limiter import limiter
 from app.core.security import SESSION_COOKIE_NAME, generate_token, login_required, set_session_cookie
 from app.routes.auth import session_response
@@ -13,6 +14,7 @@ from app.schemas.auth import (
     TwoFactorRecoveryCodesDTO,
     TwoFactorSetupDTO,
 )
+from app.services.moderation_actions import blocked_response
 from app.services.user import two_factor
 from app.utils.api_i18n import coded_error_response
 from app.utils.responses import api_error
@@ -48,6 +50,8 @@ def login_two_factor():
         user, method = two_factor.complete_login(dto.two_factor_token, dto.code)
     except two_factor.TwoFactorError as err:
         return coded_error_response(err)
+    except AccountBlockedError as blocked:
+        return blocked_response(blocked.user)
     return session_response(
         user,
         generate_token(user.id, user.role),

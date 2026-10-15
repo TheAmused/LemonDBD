@@ -15,7 +15,7 @@ export default {
     "You keep ownership of what you upload and allow us to store and display it so that the Site works.",
     "Whatever you share or export carries your account mark, and it can be reported and blocked.",
     "The Site is provided as it is, and our liability is limited as far as the law allows.",
-    "You can delete your account at any time. We may restrict or close accounts that breach these Terms.",
+    "You can delete your account at any time. We may warn, suspend or close accounts that breach these Terms, and we tell you why.",
     "Your statutory rights as a consumer are not affected.",
   ],
   sections: {
@@ -38,7 +38,7 @@ export default {
       items: [
         "be at least 18 years old;",
         "provide a valid email address that you can access, because we use it for verification and password resets;",
-        "keep one account per person. Additional accounts created to evade a restriction or to inflate statistics are not permitted;",
+        "keep one account per person. Additional accounts created to evade a suspension or a ban, or to inflate statistics, are not permitted;",
         "choose a username that does not infringe the rights of others, imitate our team or contain unlawful content;",
         "keep your password confidential and tell us promptly if you suspect unauthorised access. You are responsible for activity under your account, unless it results from our fault.",
       ],
@@ -94,8 +94,10 @@ export default {
       tldr: "You can leave at any time. We may restrict or close accounts that break the rules.",
       paragraphs: [
         "<b>By you:</b> you may stop using the Site at any time and can delete your account yourself from your profile page. What is removed and what is kept is described in our [Privacy Policy]({privacyPath}).",
-        "<b>By us:</b> if you breach these Terms or the Rules, if the law requires it, or if your use puts the Site or other users at risk, we may warn you, remove or block content, restrict features, suspend, deactivate or delete your account, or remove you from the Server. We will choose a measure that is proportionate to the breach.",
-        "Where we take such a measure, we will notify you and give the reason where practicable, unless the law or an ongoing investigation prevents it or the matter is urgent. If we block your content, we email the reason to the address on your account, without naming who reported it. If you believe the decision is wrong, you can complain at [{contactEmail}](mailto:{contactEmail}). We will review the complaint and reply, normally within 14 days, and correct the decision if it was a mistake.",
+        "<b>By us:</b> if you breach these Terms or the Rules, if the law requires it, or if your use puts the Site or other users at risk, we may remove or block content, restrict features, give you a warning, suspend your account for a set time, ban it permanently, delete it, or remove you from the Server. We choose a measure that is proportionate to the breach. Repeated breaches are normally handled more strictly than a first one, and serious breaches can skip steps.",
+        "<b>Warnings, suspensions and bans:</b> a warning does not restrict your account. It is shown to you the next time you sign in, counts towards a stricter measure if the conduct continues, and expires after a while. A suspension signs you out and stops you from signing in until it ends. A ban is permanent. A person decides each of these and records what happened and which rule it relates to. Deleting an account does not lift a ban.",
+        "Where we take such a measure, we will email you the reason at the address on your account (what happened, the rule concerned and, for a suspension, when it ends), unless the law or an ongoing investigation prevents it or the matter is urgent. If you try to sign in while suspended or banned, you also see the reason and, for a suspension, the end date. If we block your content, we tell you in the same way, without naming who reported it. If you believe a decision is wrong, you can complain at [{contactEmail}](mailto:{contactEmail}). We will review the complaint and reply, normally within 14 days, and correct or lift the decision if it was a mistake. Lifting a suspension or a ban is confirmed by email.",
+        "<b>Banned addresses:</b> to stop someone from simply registering again after a permanent ban, we keep a coded form (a hash made with a secret key) of the banned account's email address, not the address itself. A new account cannot be created with an address that matches it, and we may refuse it with a neutral message. The entry is removed if the ban is lifted and is deleted automatically after a limited time. Details are in our [Privacy Policy]({privacyPath}).",
         "Provisions that by their nature are meant to continue after termination, such as those on licences, liability and governing law, remain in effect.",
       ],
       items: [],

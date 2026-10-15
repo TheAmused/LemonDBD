@@ -16,6 +16,7 @@ import { Input } from '@/components/common/Field';
 import { CustomDropdown } from '@/components/common/CustomDropdown';
 import { formatMessage } from '@/utils/i18nFormat';
 import { useDictionary } from "@/context/DictionaryContext";
+import { ToggleChip } from '@/components/common/ToggleChip';
 
 function PresetSwatch({ colors }: { colors: readonly string[] }) {
   return (
@@ -134,21 +135,13 @@ export function LadderEditor({ tiers, onChange, onPreset, activePreset }: Ladder
         </div>
         <div className="hidden sm:flex flex-wrap justify-center gap-2">
           {LADDER_PRESETS.map((preset) => (
-            <button
+            <ToggleChip pressed={activePreset === preset.id} size="md"
               key={preset.id}
-              type="button"
               onClick={() => onPreset(preset.id)}
-              aria-pressed={activePreset === preset.id}
-              className={cn(
-                'inline-flex min-h-[38px] items-center gap-2 rounded-control border px-3 text-xs sm:text-sm font-bold transition-colors cursor-pointer',
-                activePreset === preset.id
-                  ? 'border-accent-red bg-accent-red/10 text-accent-red'
-                  : 'border-border-color bg-bg-surface text-text-primary hover:bg-bg-elevated'
-              )}
             >
               <PresetSwatch colors={preset.colors} />
               {c.presets[preset.id]}
-            </button>
+            </ToggleChip>
           ))}
         </div>
       </div>

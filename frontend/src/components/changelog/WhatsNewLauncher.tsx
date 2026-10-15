@@ -25,6 +25,7 @@ import { formatDate } from '@/utils/format';
 import { useDictionary } from "@/context/DictionaryContext";
 
 import { Button } from '@/components/common/Button';
+import { ToggleChip } from '@/components/common/ToggleChip';
 const ChangelogEditorModal = dynamic(
   () => import('./ChangelogEditorModal').then((m) => m.ChangelogEditorModal),
   { ssr: false }
@@ -508,18 +509,12 @@ const FilterChip: React.FC<{ active: boolean; onClick: () => void; label: string
   label,
   dotClass,
 }) => (
-  <button
-    type="button"
+  <ToggleChip pressed={active} size="sm" pill
     onClick={onClick}
-    className={`flex items-center gap-1.5 rounded-full border px-3 py-1 text-mini font-bold transition-all cursor-pointer ${
-      active
-        ? 'border-accent-red/50 bg-accent-red/10 text-accent-red'
-        : 'border-border-color text-text-muted hover:text-text-secondary'
-    }`}
   >
     {dotClass && <span className={`h-1.5 w-1.5 rounded-full ${dotClass}`} />}
     {label}
-  </button>
+  </ToggleChip>
 );
 
 const IconButton: React.FC<{

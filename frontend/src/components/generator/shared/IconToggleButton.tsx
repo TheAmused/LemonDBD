@@ -2,7 +2,7 @@
 'use client';
 
 import React from 'react';
-import { cn } from '@/utils/cn';
+import { ToggleChip } from '@/components/common/ToggleChip';
 
 interface IconToggleButtonProps {
   icon: React.ReactNode;
@@ -13,9 +13,8 @@ interface IconToggleButtonProps {
   className?: string;
 }
 
-// One shared look for every toolbar icon (accent-red when active/hovered),
-// matching every other toggle/active-state control on the site instead of
-// each icon carrying its own neon-glow color.
+// A toolbar icon with an optional count badge: a ToggleChip, so it matches every other
+// toggle on the site (accent-red tint when active).
 export const IconToggleButton: React.FC<IconToggleButtonProps> = ({
   icon,
   label,
@@ -23,23 +22,15 @@ export const IconToggleButton: React.FC<IconToggleButtonProps> = ({
   badge,
   onClick,
   className,
-}) => {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      aria-label={label}
-      aria-pressed={isActive}
-      className={cn(
-        'flex items-center justify-center gap-1.5 rounded-control px-2.5 py-2 min-h-[42px] min-w-[42px] sm:min-h-[44px] sm:min-w-[44px] touch-manipulation transition-all duration-200 cursor-pointer bg-bg-surface border border-border-color shadow-xs hover:scale-105 active:scale-95',
-        isActive
-          ? 'text-accent-red bg-accent-red/10 border-accent-red/40 hover:bg-accent-red/15 hover:border-accent-red/60 hover:shadow-xs hover:shadow-accent-red/30'
-          : 'text-text-secondary hover:text-text-primary hover:bg-bg-elevated hover:border-border-color/80',
-        className
-      )}
-    >
-      {icon}
-      {badge !== undefined && <span className="type-strong">{badge}</span>}
-    </button>
-  );
-};
+}) => (
+  <ToggleChip
+    pressed={isActive}
+    size="md"
+    onClick={onClick}
+    aria-label={label}
+    className={className ? `min-w-[42px] px-2.5 sm:min-w-[44px] ${className}` : 'min-w-[42px] px-2.5 sm:min-w-[44px]'}
+  >
+    {icon}
+    {badge !== undefined && <span className="type-strong">{badge}</span>}
+  </ToggleChip>
+);

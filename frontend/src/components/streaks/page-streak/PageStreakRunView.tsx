@@ -16,6 +16,7 @@ import { useCelebrateOnRise, useCelebration } from '../useCelebration';
 import { staticUrl } from '@/utils/staticUrl';
 import { useDictionary } from '@/context/DictionaryContext';
 import { useCharacterDisplayName } from '@/context/DisplayNamesContext';
+import { SegmentedControl } from '@/components/common/SegmentedControl';
 
 interface BuildState {
   /** The page and attempt this build was made for. */
@@ -165,27 +166,17 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ killer }) 
               <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_25rem]">
                 <div>
                   {nextPagePerks.length > 0 && (
-                    <div role="group" aria-label={dict.streaks.pageLabel} className="mb-3 flex justify-center">
-                      <div className="inline-flex rounded-card border border-border-color bg-bg-elevated/40 p-0.5">
-                        {[run.current_page, run.current_page + 1].map((page, index) => {
-                          const active = (index === 1) === viewingNext;
-                          return (
-                            <button
-                              key={page}
-                              type="button"
-                              aria-pressed={active}
-                              onClick={() => setPreviewPageKey(index === 1 ? pageKey : '')}
-                              className={`rounded-control px-4 py-1 text-tiny uppercase tracking-widest transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red motion-reduce:transition-none ${
-                                active
-                                  ? 'bg-bg-surface text-text-primary shadow-sm'
-                                  : 'text-text-muted hover:text-accent-red'
-                              }`}
-                            >
-                              {dict.streaks.pageLabel} {page}
-                            </button>
-                          );
-                        })}
-                      </div>
+                    <div className="mb-3 flex justify-center">
+                      <SegmentedControl<'current' | 'next'>
+                        ariaLabel={dict.streaks.pageLabel}
+                        size="sm"
+                        value={viewingNext ? 'next' : 'current'}
+                        onChange={(which) => setPreviewPageKey(which === 'next' ? pageKey : '')}
+                        options={[
+                          { value: 'current', label: `${dict.streaks.pageLabel} ${run.current_page}`, activeClassName: 'bg-bg-surface text-text-primary', activeTextColor: 'text-text-primary' },
+                          { value: 'next', label: `${dict.streaks.pageLabel} ${run.current_page + 1}`, activeClassName: 'bg-bg-surface text-text-primary', activeTextColor: 'text-text-primary' },
+                        ]}
+                      />
                     </div>
                   )}
                   {viewingNext ? (

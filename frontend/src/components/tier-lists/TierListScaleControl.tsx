@@ -66,21 +66,16 @@ export function TierListScaleControl({
         >
           <Plus className="h-4 w-4" aria-hidden="true" />
         </Button>
-        <button
-          type="button"
-          onClick={() => onScaleChange(scale === 'fit' ? 100 : 'fit')}
-          aria-pressed={scale === 'fit'}
-          aria-label={t.scaleFitHint}
-          className={cn(
-            'pointer-coarse:min-h-11 inline-flex h-8 items-center gap-1 rounded-control px-2.5 type-label-xs cursor-pointer transition-colors',
-            scale === 'fit'
-              ? 'bg-accent-amber/20 text-accent-amber'
-              : 'text-text-secondary hover:bg-bg-surface hover:text-text-primary'
-          )}
-        >
-          <Maximize2 className="h-3.5 w-3.5" aria-hidden="true" />
-          <span>{t.scaleFit}</span>
-        </button>
+        <Button
+        variant={scale === 'fit' ? 'amberSoft' : 'ghost'}
+        size="sm"
+        onClick={() => onScaleChange(scale === 'fit' ? 100 : 'fit')}
+        aria-pressed={scale === 'fit'}
+        aria-label={t.scaleFitHint}
+      >
+        <Maximize2 className="h-3.5 w-3.5" aria-hidden="true" />
+        <span>{t.scaleFit}</span>
+      </Button>
       </div>
     );
   }
@@ -117,22 +112,17 @@ export function TierListScaleControl({
         <Plus className="h-3.5 w-3.5" aria-hidden="true" />
       </Button>
       <div className="mx-0.5 h-4 w-px bg-border-color" aria-hidden="true" />
-      <button
-        type="button"
+      <Button
+        variant={scale === 'fit' ? 'amberSoft' : 'ghost'}
+        size="xs"
         onClick={() => onScaleChange(scale === 'fit' ? 100 : 'fit')}
         aria-pressed={scale === 'fit'}
         aria-label={t.scaleFitHint}
         {...tip(t.scaleFitHint, undefined, 'action')}
-        className={cn(
-          'pointer-coarse:min-h-11 inline-flex h-7 items-center gap-1 rounded-chip px-2 type-label-xs cursor-pointer transition-colors',
-          scale === 'fit'
-            ? 'bg-accent-amber/20 text-accent-amber'
-            : 'text-text-secondary hover:bg-bg-elevated hover:text-text-primary'
-        )}
       >
         <Maximize2 className="h-3 w-3" aria-hidden="true" />
         <span>{t.scaleFit}</span>
-      </button>
+      </Button>
     </div>
   );
 }

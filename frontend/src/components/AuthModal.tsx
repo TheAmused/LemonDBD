@@ -29,6 +29,7 @@ import { LegalDocModal } from '@/components/legal/LegalDocModal';
 import type { LegalDocId } from '@/components/legal/legalDocs';
 import { useDictionary } from "@/context/DictionaryContext";
 import { trackEvent } from '@/utils/analytics';
+import { InlineLink } from '@/components/common/InlineLink';
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -398,17 +399,15 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
                 <span className="type-body text-text-secondary">
                   {legalLabelParts.map((part, i) =>
                     part === '{terms}' || part === '{rules}' ? (
-                      <button
+                      <InlineLink
                         key={i}
-                        type="button"
                         onClick={() => {
                           trackEvent('legal_preview_open', { doc: part === '{terms}' ? 'terms' : 'rules' });
                           setLegalDoc(part === '{terms}' ? 'terms' : 'rules');
                         }}
-                        className="cursor-pointer font-bold text-accent-red underline underline-offset-2 hover:opacity-80"
                       >
                         {part === '{terms}' ? dict.user.acceptTermsLink : dict.user.acceptRulesLink}
-                      </button>
+                      </InlineLink>
                     ) : (
                       <React.Fragment key={i}>{part}</React.Fragment>
                     )

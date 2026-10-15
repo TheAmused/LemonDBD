@@ -6,7 +6,7 @@ import { cn } from '@/utils/cn';
 import { FitText } from '@/components/common/FitText';
 
 export type BadgeTone = 'neutral' | 'red' | 'amber' | 'green' | 'blue' | 'purple' | 'overlay' | 'onAccent';
-export type BadgeSize = 'xs' | 'sm' | 'md';
+export type BadgeSize = 'xs' | 'sm' | 'md' | 'lg';
 
 const BADGE_TONES: Record<BadgeTone, string> = {
   neutral: 'bg-bg-elevated/70 text-text-secondary border-transparent',
@@ -28,6 +28,7 @@ const BADGE_SIZES: Record<BadgeSize, string> = {
   xs: 'px-1.5 py-0.5 text-micro',
   sm: 'px-2 py-0.5 text-tiny',
   md: 'px-2.5 py-1 text-xs',
+  lg: 'px-6 py-3 text-2xl',
 };
 
 export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {

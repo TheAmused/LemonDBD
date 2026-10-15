@@ -26,6 +26,7 @@ import { EmptyState } from '@/components/common/EmptyState';
 import { formatDate, formatDateTime } from '@/utils/format';
 import { useDictionary } from "@/context/DictionaryContext";
 import { Surface } from '@/components/common/Surface';
+import { SelectableCard } from '@/components/common/SelectableCard';
 
 interface StatusConfigItem {
   label: string;
@@ -111,77 +112,49 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
         role="group"
         aria-label={dict.admin.filterLabel}
       >
-        <button
-          type="button"
-          onClick={() => onStatusFilterChange('pending')}
-          aria-pressed={bugStatusFilter === 'pending'}
-          className={`rounded-control border p-4 transition-all cursor-pointer text-left focus:outline-none focus:ring-2 focus:ring-accent-red ${
-            bugStatusFilter === 'pending'
-              ? 'border-accent-red bg-accent-red/20 text-accent-red shadow-sm ring-1 ring-accent-red/30'
-              : 'border-accent-red/20 bg-accent-red/10 text-accent-red hover:border-accent-red/40'
-          }`}
-        >
+        <SelectableCard selected={bugStatusFilter === 'pending'} tone="red" tinted className="p-4"
+         
+          onClick={() => onStatusFilterChange('pending')}>
           <span className="type-label-sm flex items-center gap-1.5">
             <HelpCircle className="h-4 w-4" /> {dict.admin.statusPending}
           </span>
           <p className="type-page-title mt-1">
             {bugStats?.pending ?? 0}
           </p>
-        </button>
+        </SelectableCard>
 
-        <button
-          type="button"
-          onClick={() => onStatusFilterChange('in_progress')}
-          aria-pressed={bugStatusFilter === 'in_progress'}
-          className={`rounded-control border p-4 transition-all cursor-pointer text-left focus:outline-none focus:ring-2 focus:ring-accent-red ${
-            bugStatusFilter === 'in_progress'
-              ? 'border-accent-amber bg-accent-amber/20 text-accent-amber shadow-sm ring-1 ring-accent-amber/30'
-              : 'border-accent-amber/20 bg-accent-amber/10 text-accent-amber hover:border-accent-amber/40'
-          }`}
-        >
+        <SelectableCard selected={bugStatusFilter === 'in_progress'} tone="amber" tinted className="p-4"
+         
+          onClick={() => onStatusFilterChange('in_progress')}>
           <span className="type-label-sm flex items-center gap-1.5">
             <Clock className="h-4 w-4" /> {dict.admin.statusInProgress}
           </span>
           <p className="type-page-title mt-1">
             {bugStats?.in_progress ?? 0}
           </p>
-        </button>
+        </SelectableCard>
 
-        <button
-          type="button"
-          onClick={() => onStatusFilterChange('resolved')}
-          aria-pressed={bugStatusFilter === 'resolved'}
-          className={`rounded-control border p-4 transition-all cursor-pointer text-left focus:outline-none focus:ring-2 focus:ring-accent-green ${
-            bugStatusFilter === 'resolved'
-              ? 'border-accent-green bg-accent-green/20 text-accent-green shadow-sm ring-1 ring-accent-green/30'
-              : 'border-accent-green/20 bg-accent-green/10 text-accent-green hover:border-accent-green/40'
-          }`}
-        >
+        <SelectableCard selected={bugStatusFilter === 'resolved'} tone="green" tinted className="p-4"
+         
+          onClick={() => onStatusFilterChange('resolved')}>
           <span className="type-label-sm flex items-center gap-1.5">
             <CheckCircle className="h-4 w-4" /> {dict.admin.statusResolved}
           </span>
           <p className="type-page-title mt-1">
             {bugStats?.resolved ?? 0}
           </p>
-        </button>
+        </SelectableCard>
 
-        <button
-          type="button"
-          onClick={() => onStatusFilterChange('all')}
-          aria-pressed={bugStatusFilter === 'all'}
-          className={`rounded-control border p-4 transition-all cursor-pointer text-left focus:outline-none focus:ring-2 focus:ring-border-color ${
-            bugStatusFilter === 'all'
-              ? 'border-border-color bg-bg-elevated text-text-primary shadow-sm ring-1 ring-border-color'
-              : 'border-border-color bg-bg-surface text-text-secondary hover:border-border-subtle'
-          }`}
-        >
+        <SelectableCard selected={bugStatusFilter === 'all'} tone="neutral" tinted className="p-4"
+         
+          onClick={() => onStatusFilterChange('all')}>
           <span className="type-label-sm flex items-center gap-1.5">
             <FogReportIcon className="h-4 w-4" /> {dict.admin.totalTickets}
           </span>
           <p className="type-page-title text-text-primary mt-1">
             {bugStats?.total ?? 0}
           </p>
-        </button>
+        </SelectableCard>
       </div>
 
       {/* Master-Detail Split Workspace */}

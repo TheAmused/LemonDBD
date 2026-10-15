@@ -15,6 +15,7 @@ import type {
   ContentReportAction,
 } from '@/types/admin';
 import { Surface } from '@/components/common/Surface';
+import { SelectableCard } from '@/components/common/SelectableCard';
 
 interface AdminContentReportsWorkbenchProps {
   list: AdminContentReportList | null;
@@ -92,17 +93,10 @@ export function AdminContentReportsWorkbench({
             items.map((report) => {
               const isSelected = selectedId === report.id;
               return (
-                <button
+                <SelectableCard selected={isSelected} className="w-full space-y-2"
                   key={report.id}
-                  type="button"
-                  onClick={() => onSelect(report.id)}
-                  aria-pressed={isSelected}
-                  className={`w-full p-3.5 rounded-control border transition-all cursor-pointer text-left space-y-2 focus:outline-none focus:ring-2 focus:ring-accent-red ${
-                    isSelected
-                      ? 'border-accent-red bg-accent-red/10 shadow-sm ring-1 ring-accent-red/30'
-                      : 'border-border-subtle bg-bg-primary hover:border-border-color'
-                  }`}
-                >
+                 
+                  onClick={() => onSelect(report.id)}>
                   <div className="flex items-center justify-between gap-2">
                     <span className="flex items-center gap-1.5 type-strong text-text-primary">
                       <Flag className="h-3.5 w-3.5 text-accent-red" />#{report.id}
@@ -121,7 +115,7 @@ export function AdminContentReportsWorkbench({
                     </span>
                   </div>
                   <p className="type-caption text-text-muted">{formatDate(report.created_at)}</p>
-                </button>
+                </SelectableCard>
               );
             })
           )}

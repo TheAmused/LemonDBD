@@ -34,7 +34,7 @@ function lemonRootTile(role: 'killer' | 'survivor', dict: Dictionary): Challenge
     label: role === 'killer' ? dict.streaks.lemonMode : dict.streaks.lemonVersion,
     description: role === 'killer' ? dict.streaks.gauntletLemonDesc : dict.streaks.gauntletLemonPlayersDesc,
     icon: Sparkles,
-    image: '/images/streaks/modes/gauntlet-lemon.webp',
+    image: '/images/streaks/modes/gauntlet-lemon.webp',
   };
 }
 
@@ -45,21 +45,21 @@ function lemonPlayerTiles(dict: Dictionary): ChallengeIntroTile[] {
       label: dict.streaks.lemonSolo,
       description: dict.streaks.lemonSoloDesc,
       icon: User,
-      image: '/images/streaks/modes/gauntlet-1-player.webp',
+      image: '/images/streaks/modes/gauntlet-1-player.webp',
     },
     {
       value: 'lemon_duo',
       label: dict.streaks.lemonDuo,
       description: dict.streaks.lemonDuoDesc,
       icon: Users,
-      image: '/images/streaks/modes/gauntlet-2-players.webp',
+      image: '/images/streaks/modes/gauntlet-2-players.webp',
     },
     {
       value: 'lemon_squad',
       label: dict.streaks.lemonSquad,
       description: dict.streaks.lemonSquadDesc,
       icon: UsersRound,
-      image: '/images/streaks/modes/gauntlet-4-players.webp',
+      image: '/images/streaks/modes/gauntlet-4-players.webp',
     },
   ];
 }
@@ -124,7 +124,7 @@ export const GauntletModeModal: React.FC<GauntletModeModalProps> = ({
       description:
         dict.streaks.gauntletOriginalDesc,
       icon: Swords,
-      image: '/images/streaks/modes/gauntlet-original.webp',
+      image: '/images/streaks/modes/gauntlet-original.webp',
       completed: originalCompleted,
       completedCount: originalCompletedCount,
       completedFull: originalCompletedFull,

@@ -21,6 +21,11 @@ const ACTION_COLORS: Record<string, string> = {
   user_deleted: 'text-accent-red',
   content_ban: 'text-accent-red',
   content_dismiss: 'text-accent-green',
+  user_warned: 'text-accent-amber',
+  user_suspended: 'text-accent-red',
+  user_banned: 'text-accent-red',
+  sanction_revoked: 'text-accent-green',
+  account_restored: 'text-accent-green',
 };
 
 /** Readable names for the actions the backend records; an action not listed here is shown as stored. */
@@ -37,6 +42,11 @@ const ACTION_LABEL_KEYS = {
   perk_enabled: 'auditActionPerkEnabled',
   site_settings_updated: 'auditActionSiteSettingsUpdated',
   user_data_exported: 'auditActionUserDataExported',
+  user_warned: 'auditActionUserWarned',
+  user_suspended: 'auditActionUserSuspended',
+  user_banned: 'auditActionUserBanned',
+  sanction_revoked: 'auditActionSanctionRevoked',
+  account_restored: 'auditActionAccountRestored',
   user_deleted: 'auditActionUserDeleted',
   user_two_factor_reset: 'auditActionUserTwoFactorReset',
   user_updated: 'auditActionUserUpdated',

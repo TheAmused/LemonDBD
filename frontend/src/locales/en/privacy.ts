@@ -38,7 +38,8 @@ export default {
       items: [
         "<b>Account data:</b> username, email address, a hash of your password (never the password itself), avatar, preferred language, and short-lived verification and password-reset codes.",
         "<b>Two-factor sign-in (optional):</b> only if you turn it on from your profile page. We store the secret key behind your authenticator app (encrypted), hashed one-time recovery codes, when you turned it on, the last code step we accepted (so a code cannot be reused) and a counter of recent wrong codes with a temporary lock time. Your authenticator app generates the codes on your device; no phone number is needed.",
-        "<b>What you save:</b> character and perk ownership, your profile showcase, streak runs, challenge achievements, minigame stats and Smash or Pass votes. Your tier lists, Smash or Pass rosters and custom minigames stay in your own browser and are not stored on our servers, except as described under “Reporting content”. Visitors without an account get a random session ID so their Smash or Pass votes can be remembered.",
+        "<b>What you save:</b> character and perk ownership, your profile showcase, streak runs, challenge achievements, minigame stats and Smash or Pass votes. Your tier lists, Smash or Pass rosters and custom minigames stay in your own browser and are not stored on our servers, except as described under “Reports, warnings and bans”. Visitors without an account get a random session ID so their Smash or Pass votes can be remembered.",
+        "<b>Moderation records:</b> warnings, suspensions and bans on your account (type, reason, a description of what happened, dates, the moderator who decided, whether you have seen a warning, and any message sent to you), internal notes that only our moderators can read, and the emails we sent you about them. If your account is banned permanently, a coded form of its email address is also kept (see “Reports, warnings and bans”).",
         "<b>Bug reports and messages:</b> the text, screenshots and email address you send us. Guests must give an email address so we can answer.",
         "<b>Technical data:</b> your IP address, browser type and request details, used for rate limiting, abuse prevention and fixing errors.",
         "<b>Voice commands (maps):</b> if you turn them on, your microphone audio is used to recognize map names. See the section on storage and third parties below for how this works.",
@@ -52,21 +53,24 @@ export default {
         "To create and run your account, keep your saved data and send verification and password-reset emails, and, if you turn it on, to check your two-factor code when you sign in (performance of our service to you).",
         "To answer bug reports and requests (our legitimate interest in supporting users, or your request).",
         "To keep the site and accounts secure, including limiting wrong two-factor codes, stop spam and abuse and fix errors (our legitimate interest).",
-        "To review reports of content and enforce our Rules (our legitimate interest in keeping the site safe).",
+        "To review reports of content, to decide on and carry out warnings, suspensions and bans, and to email you the reasons (our legitimate interest in keeping the site safe).",
+        "To keep a banned person from registering again, using the coded email list described under “Reports, warnings and bans” (our legitimate interest in protecting the community from repeat abuse; you can object, see “Your rights”).",
         "To understand which pages are used and to improve the site through privacy-friendly analytics (our legitimate interest).",
         "If we ask for your consent, you can take it back at any time.",
       ],
     },
     moderation: {
-      heading: "Reporting content",
+      heading: "Reports, warnings and bans",
       paragraphs: [
-        "Tier lists, rosters and custom minigames live in your browser, not on our servers. Two things involve us:",
-        "When you delete your account, your username in these records is replaced by “Deleted user” and the notes you wrote as a reporter are erased. These records are part of the data you can download.",
+        "Tier lists, rosters and custom minigames live in your browser, not on our servers. Content and account decisions involve us in these ways:",
+        "When you delete your account, your username in report records is replaced by “Deleted user”, the notes you wrote as a reporter are erased, and the warnings, suspensions and bans recorded against your account are deleted with it; only the coded email entry of a permanently banned account remains, until it expires. The decisions as you see them are part of the data you can download. To see the internal notes moderators may have added, write to us.",
       ],
       items: [
         "<b>Sharing and exporting:</b> we add a tamper-proof account mark to the link or file (it identifies your account and cannot be forged), so that reported content can be traced to its author. To do this our server briefly reads the content, but does not keep it.",
         "<b>Reports:</b> if you report content, we receive your account, the reason, your optional note and a copy of the content. A member of <brand>LemonTeam</brand> reviews it, and the copy is deleted once a decision is made, or after 14 days at the latest.",
         "<b>After a decision:</b> we keep a short record (type of content, reason, outcome, dates, the accounts involved). If content is banned, a one-way code of it goes on a block list so it cannot be opened or imported again; the code cannot be turned back into the content. These records stay as long as we need them to handle complaints and prevent repeat abuse. The author, if known, gets the reason by email; we do not name the reporter.",
+        "<b>Warnings, suspensions and bans:</b> a moderator can warn, suspend or ban an account, after a content report or on their own. We record the type, the reason, a description of what happened, the dates and who decided, and keep the record while the account exists. A warning counts towards stricter measures for {warningWindow} and then expires, but it stays on the record. We email you the reason, tell you again when a restriction is lifted or ends, and show it when you sign in.",
+        "<b>Banned email list:</b> when an account is banned permanently, we store a keyed hash (HMAC-SHA256) of its email address, not the address itself, together with the reason code, the date and an expiry date. The key is kept outside the database. The address is first reduced to a common form, so that, for example, dots and “+tags” in a Gmail address do not matter. The list is checked only when someone creates a new account: a matching address is refused. It is not used for signing in or for anything else. The entry is removed if the ban is lifted, and in any case once {banListWindow} have passed, even if the account was deleted. Because anyone holding our key could test an address against it, we treat the hash as personal data. We use it to protect the community from repeat abuse; you can object by writing to us.",
       ],
     },
     analytics: {
@@ -90,8 +94,8 @@ export default {
       heading: "Who sees your data",
       paragraphs: ["We do not sell your personal data or use it for advertising. We share it only as needed:"],
       items: [
-        "<b>Links you share:</b> when you share a tier list, roster or custom minigame, it is packed into the link itself (the part after the “#”, which your browser never sends to us). We do not store it; only people who receive the link can open it. Your account mark is added to it (see “Reporting content”).",
-        "<b>Service providers:</b> our hosting provider and {mailProvider} (which delivers our verification and password-reset emails) handle data on our behalf, only to run the site and send you the emails you request, including notices when a security setting on your account changes or when we block your content. Two-factor codes are produced by your own authenticator app and checked on our server; we do not use a third-party service for them, and nothing about them is sent to Google, Microsoft, Apple or anyone else.",
+        "<b>Links you share:</b> when you share a tier list, roster or custom minigame, it is packed into the link itself (the part after the “#”, which your browser never sends to us). We do not store it; only people who receive the link can open it. Your account mark is added to it (see “Reports, warnings and bans”).",
+        "<b>Service providers:</b> our hosting provider and {mailProvider} (which delivers our verification and password-reset emails) handle data on our behalf, only to run the site and send you the emails you request, including notices when a security setting on your account changes or when we warn, suspend or ban your account or block your content. Two-factor codes are produced by your own authenticator app and checked on our server; we do not use a third-party service for them, and nothing about them is sent to Google, Microsoft, Apple or anyone else.",
         "<b>Discord:</b> when you submit a bug report, its content (including your email address and screenshots) is forwarded to a private channel used by our team.",
         "<b>Legal reasons:</b> if the law requires it or to protect the site and its users from abuse.",
       ],
@@ -106,8 +110,8 @@ export default {
     retention: {
       heading: "How long we keep it",
       paragraphs: [
-        "Account data and what you save are kept while your account exists. Verification codes expire after {verificationWindow}, password-reset links after {resetWindow} and login sessions after {sessionWindow}. Streak runs that stay inactive for {streakPrune} are ended automatically. Bug reports are kept for as long as they are needed to resolve the issue and for our records. Server logs are kept only briefly. A two-factor sign-in step expires after 5 minutes, and a temporary lock after repeated wrong codes lasts 15 minutes.",
-        "You can delete your account yourself from your profile page, or ask us to do it. Your account data, character and perk ownership, showcase, streak runs, minigame stats, challenge achievements uploaded avatar and any two-factor setup and recovery codes are then removed. Turning two-factor sign-in off removes them as well. Smash or Pass votes stay as anonymous entries that are no longer tied to you. Your bug reports are kept for our records, but your email address is removed from them. Copies already sent to our private Discord channel may remain.",
+        "Account data and what you save are kept while your account exists. Verification codes expire after {verificationWindow}, password-reset links after {resetWindow} and login sessions after {sessionWindow}. Streak runs that stay inactive for {streakPrune} are ended automatically. Bug reports are kept for as long as they are needed to resolve the issue and for our records. Server logs are kept only briefly. A two-factor sign-in step expires after 5 minutes, and a temporary lock after repeated wrong codes lasts 15 minutes. Warnings count towards escalation for {warningWindow} and then expire. The coded email entry of a permanently banned account is kept for {banListWindow}, or until the ban is lifted if that comes first.",
+        "You can delete your account yourself from your profile page, or ask us to do it. Your account data, character and perk ownership, showcase, streak runs, minigame stats, challenge achievements uploaded avatar and any two-factor setup and recovery codes are then removed. Turning two-factor sign-in off removes them as well. Smash or Pass votes stay as anonymous entries that are no longer tied to you. Your bug reports are kept for our records, but your email address is removed from them. Copies already sent to our private Discord channel may remain. Warnings, suspensions and bans recorded against the account are deleted with it. Only the coded email entry of a permanently banned account stays, until it expires.",
       ],
       items: [],
     },

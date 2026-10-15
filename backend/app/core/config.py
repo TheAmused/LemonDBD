@@ -77,7 +77,59 @@ def weak_secret_warnings(config: Mapping[str, Any]) -> list[str]:
         part.strip() in KNOWN_PLACEHOLDER_SECRETS for part in two_factor_key.split(",")
     ):
         warnings.append("TWO_FACTOR_ENCRYPTION_KEY is a publicly known placeholder value")
+    if config.get("BAN_LIST_ENABLED"):
+        warnings.extend(ban_list_pepper_problems(str(config.get("BAN_LIST_PEPPERS") or "")))
     return warnings
+
+
+BAN_LIST_PEPPER_MIN_BYTES = 32
+
+
+def parse_ban_list_peppers(raw: str) -> tuple[list[tuple[int, bytes]], list[str]]:
+    """Parse `v2:<hex>,v1:<hex>` (newest first) into [(version, key bytes)] plus the problems found.
+
+    A usable entry is `v<number>:<hex>` with at least 32 random bytes. Anything else is reported and
+    skipped, never guessed at. Pure (no app imports) so config validation and the service share it.
+    """
+    peppers: list[tuple[int, bytes]] = []
+    problems: list[str] = []
+    seen: set[int] = set()
+    for part in (raw or "").split(","):
+        entry = part.strip()
+        if not entry:
+            continue
+        label, sep, value = entry.partition(":")
+        label = label.strip().lower()
+        if not sep or not label.startswith("v") or not label[1:].isdigit() or int(label[1:]) > 32000:
+            problems.append("an entry is not of the form v<number>:<hex>")
+            continue
+        version = int(label[1:])
+        try:
+            key = bytes.fromhex(value.strip())
+        except ValueError:
+            problems.append(f"the entry for {label} is not hexadecimal")
+            continue
+        if len(key) < BAN_LIST_PEPPER_MIN_BYTES:
+            problems.append(f"the entry for {label} is shorter than {BAN_LIST_PEPPER_MIN_BYTES} bytes")
+            continue
+        if len(set(key)) < 8:
+            problems.append(f"the entry for {label} is not random")
+            continue
+        if version in seen:
+            problems.append(f"{label} appears twice")
+            continue
+        seen.add(version)
+        peppers.append((version, key))
+    return peppers, problems
+
+
+def ban_list_pepper_problems(raw: str) -> list[str]:
+    """Reasons the ban-evasion list cannot work with this BAN_LIST_PEPPERS value."""
+    peppers, problems = parse_ban_list_peppers(raw)
+    found = [f"BAN_LIST_PEPPERS: {problem}" for problem in problems]
+    if not peppers and not found:
+        found.append("BAN_LIST_PEPPERS is empty, so the ban-evasion e-mail list is switched off")
+    return found
 
 
 class Config:
@@ -102,6 +154,14 @@ class Config:
     TWO_FACTOR_ENCRYPTION_KEY: str = (
         os.getenv("TWO_FACTOR_ENCRYPTION_KEY") or "TZbfxN8fCG2Pccx-bBsj2fxcyN4dwABgUsIutMVLx4Y="
     )
+    # Ban-evasion e-mail list: a permanent ban stores a keyed hash (HMAC-SHA256) of the account's
+    # canonical e-mail, and sign-up refuses a matching address. Off until the Privacy Policy that
+    # describes it is live; while off nothing is hashed, stored or checked. The key is separate from
+    # SECRET_KEY on purpose (rotating or leaking one must not touch the other) and is never logged.
+    # Format "v2:<hex>,v1:<hex>": newest first, at least 32 random bytes each. Generate one with
+    #   python -c "import secrets; print('v1:' + secrets.token_hex(32))"
+    BAN_LIST_ENABLED: bool = os.getenv("BAN_LIST_ENABLED", "false").lower() in ("true", "1", "yes")
+    BAN_LIST_PEPPERS: str = os.getenv("BAN_LIST_PEPPERS", "")
     # Name shown in the authenticator app next to the account.
     TWO_FACTOR_ISSUER: str = os.getenv("TWO_FACTOR_ISSUER", "LemonDBD")
 
@@ -141,6 +201,9 @@ class Config:
     MAIL_USERNAME: str = os.getenv("MAIL_USERNAME", "")
     MAIL_PASSWORD: str = os.getenv("MAIL_PASSWORD", "")
     MAIL_DEFAULT_SENDER: str = os.getenv("MAIL_DEFAULT_SENDER") or MAIL_USERNAME
+    # Moderation emails: try to send right after the decision commits, in a background thread (the
+    # scheduler job retries whatever failed). Off in tests, where delivery is inline and deterministic.
+    SANCTION_EMAIL_ASYNC: bool = os.getenv("SANCTION_EMAIL_ASYNC", "true").lower() in ("true", "1", "yes")
     # Public address shown on the Privacy Policy page; falls back to the mail account.
     PRIVACY_CONTACT_EMAIL: str = os.getenv("PRIVACY_CONTACT_EMAIL") or MAIL_USERNAME
     REQUIRE_EMAIL_VERIFICATION: bool = os.getenv(
@@ -156,9 +219,13 @@ class TestingConfig(Config):
     TESTING: bool = True
     # A throwaway key that exists only for the test suite.
     TWO_FACTOR_ENCRYPTION_KEY: str = "TZbfxN8fCG2Pccx-bBsj2fxcyN4dwABgUsIutMVLx4Y="
+    # Throwaway peppers that exist only for the test suite (v2 is the newest, v1 the retired one).
+    BAN_LIST_ENABLED: bool = True
+    BAN_LIST_PEPPERS: str = "v2:" + "a1b2c3d4e5f60718" * 4 + ",v1:" + "0f1e2d3c4b5a6978" * 4
     DEBUG: bool = False
     SQLALCHEMY_DATABASE_URI: str = "sqlite:///:memory:"
     SQLALCHEMY_ENGINE_OPTIONS: dict[str, Any] = {}
     RATELIMIT_ENABLED: bool = False
     ALTCHA_ENFORCED: bool = False
     SCHEDULER_ENABLED: bool = False
+    SANCTION_EMAIL_ASYNC: bool = False

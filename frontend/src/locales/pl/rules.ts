@@ -14,7 +14,7 @@ export default {
     "Graj fair: żadnego oszukiwania w wyzwaniach, trofeach i głosowaniach.",
     "Udostępniaj tylko to, co wolno ci udostępniać, i niech to będzie legalne oraz bez dziwactw.",
     "Oszczędzaj serwery: bez zalewania ich żądaniami, bez botów i bez szukania dziur.",
-    "Złamanie zasad może skutkować usunięciem twoich treści lub konta.",
+    "Złamanie zasad może skutkować ostrzeżeniem, zablokowaniem twoich treści, zawieszeniem lub banem.",
     "To wszystko obowiązuje także na naszym serwerze Discord.",
   ],
   sections: {
@@ -113,18 +113,21 @@ export default {
       ],
       items: [
         "Groźby, treści seksualne z udziałem małoletnich, treści niezgodne z prawem i ataki na Serwis są rozpatrywane bez wcześniejszego ostrzeżenia i mogą zostać zgłoszone właściwym organom.",
+        "Na Serwisie <b>ostrzeżenie</b> to formalne zawiadomienie, które zostaje na koncie przez ograniczony czas. Nie ogranicza ono konta, a pokazujemy je przy następnym logowaniu. <b>Zawieszenie</b> wylogowuje cię i blokuje logowanie na określoną liczbę dni. <b>Ban</b> jest trwały.",
+        "Zasadniczo powtarzające się naruszenia nasilają skutki: najpierw ostrzeżenia, potem zawieszenie, potem ban. Ostrzeżenia, które wygasły, nie są już liczone. Poważne naruszenia mogą pominąć każdy z tych kroków.",
         "Na Serwerze te same środki przybierają postać ostrzeżenia, wyciszenia, wyrzucenia lub bana.",
-        "Treści naruszające te Zasady mogą zostać zbanowane: Serwis odmawia wtedy ich otwarcia i importu. Możemy też dezaktywować konto osoby, która je opublikowała, i wysyłamy jej powód e-mailem.",
-        "Gdy usuwamy treści lub ograniczamy konto, w miarę możliwości wyjaśniamy dlaczego. Jeśli uważasz, że popełniliśmy błąd, możesz zakwestionować decyzję, pisząc do nas, a my ją ponownie rozpatrzymy. Procedura jest opisana w [Regulaminie serwisu]({termsPath}).",
+        "Treści naruszające te Zasady mogą zostać zbanowane: Serwis odmawia wtedy ich otwarcia i importu. Możemy też ostrzec, zawiesić lub zbanować konto osoby, która je opublikowała, i wysyłamy jej powód e-mailem.",
+        "Zakładanie kolejnego konta albo ponowna rejestracja na adres zbanowanego konta w celu obejścia zawieszenia lub bana jest samo w sobie naruszeniem. Nowe konto może zostać zbanowane, a Serwis może odmówić rejestracji adresu, który należał do konta zbanowanego na stałe.",
+        "Gdy usuwamy treści lub ograniczamy konto, w miarę możliwości wyjaśniamy dlaczego. Jeśli uważasz, że popełniliśmy błąd, możesz zakwestionować decyzję, pisząc do nas, a my ją ponownie rozpatrzymy; błędne zawieszenie lub ban zostaną uchylone. Procedura jest opisana w [Regulaminie serwisu]({termsPath}).",
       ],
     },
   },
   hookStages: {
     heading: "Etapy haka",
     stages: [
-      { title: "Etap 1: upomnienie", text: "Wiadomość z prośbą o poprawienie lub zaprzestanie danego zachowania." },
+      { title: "Etap 1: upomnienie", text: "Wiadomość z prośbą o poprawienie lub zaprzestanie danego zachowania albo formalne ostrzeżenie." },
       { title: "Etap 2: porządki", text: "Usuwamy lub blokujemy treści, zerujemy niesłusznie zdobyte postępy lub ograniczamy funkcje." },
-      { title: "Ofiara", text: "Twoje konto zostaje zawieszone, zdezaktywowane lub usunięte, a dodatkowe konta lub adresy mogą zostać zablokowane." },
+      { title: "Ofiara", text: "Twoje konto zostaje zawieszone lub zbanowane, a dodatkowe konta lub adresy mogą zostać zablokowane." },
     ],
   },
 };

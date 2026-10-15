@@ -30,6 +30,8 @@ import type { LegalDocId } from '@/components/legal/legalDocs';
 import { useDictionary } from "@/context/DictionaryContext";
 import { trackEvent } from '@/utils/analytics';
 import { InlineLink } from '@/components/common/InlineLink';
+import { AccountBlockedNotice } from '@/components/moderation/AccountBlockedNotice';
+import type { BlockedInfo } from '@/types/moderation';
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -43,7 +45,8 @@ type Notice =
   | { type: 'verify-reminder'; email: string }
   | { type: 'register-success'; email: string }
   | { type: 'forgot-sent' }
-  | { type: 'two-factor'; token: string };
+  | { type: 'two-factor'; token: string }
+  | { type: 'blocked'; blocked: BlockedInfo };
 
 export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode = 'login', verifyEmailFor }) => {
   const dict = useDictionary();
@@ -131,6 +134,9 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
         if (res.twoFactorToken) {
           setPassword('');
           setNotice({ type: 'two-factor', token: res.twoFactorToken });
+        } else if (res.blocked) {
+          setPassword('');
+          setNotice({ type: 'blocked', blocked: res.blocked });
         } else if (res.success) {
           finishSignIn(res.user);
         } else {
@@ -182,6 +188,8 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
       const res = await loginWithGoogle(credential);
       if (res.twoFactorToken) {
         setNotice({ type: 'two-factor', token: res.twoFactorToken });
+      } else if (res.blocked) {
+        setNotice({ type: 'blocked', blocked: res.blocked });
       } else if (res.success) {
         onClose();
         if (res.user && !res.user.onboarding_completed_at) {
@@ -224,6 +232,10 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
           ? dict.user.authVerifyEmailTitle
           : notice?.type === 'two-factor'
             ? dict.twoFactor.challengeTitle
+          : notice?.type === 'blocked'
+            ? notice.blocked.code === 'account_banned'
+              ? dict.moderation.blocked.bannedTitle
+              : dict.moderation.blocked.suspendedTitle
           : notice?.type === 'forgot-sent'
             ? dict.user.resetPassword
             : mode === 'login'
@@ -266,12 +278,17 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
           <TwoFactorChallengeForm
             twoFactorToken={notice.token}
             onSuccess={finishSignIn}
+            onBlocked={(blocked) => setNotice({ type: 'blocked', blocked })}
             onBack={() => {
               setNotice(null);
               setPassword('');
             }}
           />
         </div>
+      )}
+
+      {notice && notice.type === 'blocked' && (
+        <AccountBlockedNotice blocked={notice.blocked} onClose={onClose} />
       )}
 
       {notice && notice.type === 'forgot-sent' && (

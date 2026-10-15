@@ -3,6 +3,7 @@ import logging
 from typing import Any
 from sqlalchemy import func, or_, select, update
 
+from app.core.account_state import block_kind
 from app.core.extensions import db
 from app.core.security import verify_password
 from app.core.transaction import transaction
@@ -17,6 +18,7 @@ from app.models import (
     UserCharacterOwnership,
     UserPerkOwnership,
 )
+from app.services.moderation_actions import ModerationError, ban, restore_account
 from app.services.streak_stats import fetch_challenge_completion_counts
 from app.services.user import google_auth
 from app.services.user.two_factor import enabled_user_ids
@@ -104,19 +106,36 @@ def admin_modify_user(
     user_id: int,
     role: str | None = None,
     is_active: bool | None = None,
+    acting_admin: User | None = None,
 ) -> tuple[User | None, str | None]:
-    """Administrative update for role assignment and active account status."""
+    """Administrative update for role assignment and the account's active status.
+
+    `is_active` is the old enable/disable switch; it now goes through the sanctions so that the
+    decision is recorded and the user is told: False bans the account, True lifts every running
+    suspension and ban. Warnings, suspensions and reasons have their own endpoints.
+    """
     user = db.session.get(User, user_id)
     if not user:
         return None, "User not found."
 
-    with transaction():
-        if role and role.lower() in ["admin", "user"]:
+    if role and role.lower() in ["admin", "user"]:
+        with transaction():
             user.role = role.lower()
-        if is_active is not None:
-            user.is_active = is_active
 
-    return user, None
+    try:
+        if is_active is False and block_kind(user) != "banned":
+            ban(
+                acting_admin,
+                user_id,
+                reason_code="other",
+                facts="The account was disabled by an administrator.",
+            )
+        elif is_active is True and block_kind(user) is not None:
+            restore_account(acting_admin, user_id, "Re-enabled by an administrator.")
+    except ModerationError as err:
+        return None, err.message
+
+    return db.session.get(User, user_id), None
 
 
 def _anonymise_moderation_records(user_id: int) -> None:

@@ -16,14 +16,14 @@ export function NsfwContentGate({ title, description, confirmLabel, onConfirm }:
   return (
     <div
       data-testid="nsfw-content-gate"
-      className="relative z-10 flex min-h-[420px] w-full items-center justify-center px-4 py-10"
+      className="relative z-10 flex min-h-105 w-full items-center justify-center px-4 py-10"
     >
       <div className="flex w-full max-w-md flex-col items-center gap-4 rounded-card border-2 border-accent-red/60 bg-bg-primary p-6 text-center sm:p-8">
         <IconTile tone="red" size="lg">
           <CautionVeilIcon className="h-7 w-7 sm:h-8 sm:w-8" aria-hidden="true" />
         </IconTile>
         <h2 className="text-base font-black text-text-primary sm:text-lg">{title}</h2>
-        <p className="text-xs text-text-muted sm:text-sm">{description}</p>
+        <p className="type-body-fluid text-text-muted">{description}</p>
         <Button
           variant="primary"
           size="md"

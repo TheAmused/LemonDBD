@@ -23,6 +23,7 @@ from sqlalchemy import delete, func, select, update
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from app.core import totp
+from app.core.account_state import AccountBlockedError, is_blocked
 from app.core.extensions import db
 from app.core.security import decode_token, generate_token, verify_password
 from app.core.two_factor_crypto import (
@@ -339,7 +340,7 @@ def complete_login(challenge: str | None, code: str | None) -> tuple[User, str]:
         version = int(payload.get("ver", 0))
     except (KeyError, TypeError, ValueError):
         raise TwoFactorError("two_factor_challenge_invalid", 401)
-    if user is None or not user.is_active or version != int(user.token_version or 0):
+    if user is None or version != int(user.token_version or 0):
         raise TwoFactorError("two_factor_challenge_invalid", 401)
     try:
         method = verify_second_factor(user, code)
@@ -347,5 +348,8 @@ def complete_login(challenge: str | None, code: str | None) -> tuple[User, str]:
         if err.code == "two_factor_not_enabled":
             raise TwoFactorError("two_factor_challenge_invalid", 401)
         raise
+    if is_blocked(user):
+        # Fully authenticated (password and second factor): now it is safe to say why.
+        raise AccountBlockedError(user)
     auto_verify_if_disabled(user)
     return user, method

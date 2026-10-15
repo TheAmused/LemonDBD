@@ -9,6 +9,7 @@ import { EmptyState } from '@/components/common/EmptyState';
 import { ConfirmModal } from '@/components/common/ConfirmModal';
 import { AuthRequiredState } from '@/components/common/AuthRequiredState';
 import { useAuth } from '@/context/AuthContext';
+import { useSignInThen } from '@/hooks/useSignInThen';
 import type { TierListDocument } from '@/types/tierList';
 import { usePersistentDrawer } from '@/hooks/usePersistentDrawer';
 import { useTierListStore } from '@/hooks/useTierListStore';
@@ -40,6 +41,7 @@ export function TierListHub({ locale }: TierListHubProps) {
   const router = useRouter();
   const { isAuthenticated } = useAuth();
   const [isAuthModalOpen, setIsAuthModalOpen] = useState<boolean>(false);
+  const signIn = useSignInThen();
   const { lists, loading, error, refresh } = useTierListSummaries(locale);
   const { state, hydrated } = useTierListStore();
   const [importOpen, setImportOpen] = useState<boolean>(false);
@@ -85,21 +87,9 @@ export function TierListHub({ locale }: TierListHubProps) {
   );
 
   // The creator page builds the list (title, ladder, items) before anything is saved.
-  const createBlank = () => {
-    if (!isAuthenticated) {
-      setIsAuthModalOpen(true);
-      return;
-    }
-    router.push(`/${locale}/tier-lists/new`);
-  };
+  const createBlank = () => signIn.run(() => router.push(`/${locale}/tier-lists/new`));
 
-  const handleOpenImport = () => {
-    if (!isAuthenticated) {
-      setIsAuthModalOpen(true);
-      return;
-    }
-    setImportOpen(true);
-  };
+  const handleOpenImport = () => signIn.run(() => setImportOpen(true));
 
   const handleImport = (doc: TierListDocument) => {
     setImportOpen(false);
@@ -248,10 +238,13 @@ export function TierListHub({ locale }: TierListHubProps) {
         onImport={handleImport}
       />
 
-      {isAuthModalOpen && (
+      {(isAuthModalOpen || signIn.isAuthModalOpen) && (
         <AuthModal
-          isOpen={isAuthModalOpen}
-          onClose={() => setIsAuthModalOpen(false)}
+          isOpen
+          onClose={() => {
+            setIsAuthModalOpen(false);
+            signIn.closeAuthModal();
+          }}
         />
       )}
     </div>

@@ -112,7 +112,7 @@ export default {
   noPerksFound: "該当するパークが見つかりません。",
   dualMainsTitle: "シグネチャー構成",
   downloadDataTitle: "自分のデータをダウンロード",
-  downloadDataDesc: "アカウントに保存している情報(プロフィール、所持情報、ショーケース、連勝記録、統計、投票、バグ報告)のコピーをJSONファイルで取得します。",
+  downloadDataDesc: "アカウントに保存している情報(プロフィール、所持情報、ショーケース、連勝記録、統計、投票、バグ報告、モデレーションの記録)のコピーをJSONファイルで取得します。",
   downloadDataButton: "自分のデータをダウンロード",
   downloadDataFailed: "データを準備できませんでした。もう一度お試しください。",
   deleteAccountTitle: "アカウントを削除",

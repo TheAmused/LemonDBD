@@ -65,6 +65,8 @@ class TestPrivacyInfo:
             reset_lifetime=timedelta(minutes=60),
             session_lifetime=timedelta(hours=24),
             streak_prune_days=90,
+            warning_lifetime_days=90,
+            ban_list_retention_days=1095,
         )
         assert info == {
             "contactEmail": "team@example.com",
@@ -73,6 +75,8 @@ class TestPrivacyInfo:
             "resetSeconds": 3600,
             "sessionSeconds": 86400,
             "streakPruneSeconds": 90 * 86400,
+            "warningSeconds": 90 * 86400,
+            "banListSeconds": 1095 * 86400,
         }
 
 

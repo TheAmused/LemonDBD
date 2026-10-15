@@ -33,6 +33,8 @@ export interface UserRow {
   role: string;
   avatar_url?: string;
   is_active: boolean;
+  /** End of the longest running suspension; a past value is stale (see accountStanding). */
+  suspended_until?: string | null;
   created_at: string;
   owned_characters_count: number;
   unlocked_perks_count: number;
@@ -111,7 +113,7 @@ export interface AdminAuditLogEntry {
 export interface AdminSiteSetting {
   key: string;
   kind: 'int' | 'email';
-  group: 'privacy' | 'tokens' | 'retention';
+  group: 'privacy' | 'tokens' | 'retention' | 'moderation';
   value: string | number;
   default: string | number;
   overridden: boolean;

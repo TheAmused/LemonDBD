@@ -14,7 +14,7 @@ export default {
     "Spiel fair: kein Schummeln bei Herausforderungen, Trophäen oder Abstimmungen.",
     "Teile nur, was du teilen darfst, und halte es legal und unauffällig.",
     "Schone die Server: keine Flut an Anfragen, keine Bots, kein Suchen nach Schlupflöchern.",
-    "Wer die Regeln bricht, muss mit der Entfernung von Inhalten oder des Kontos rechnen.",
+    "Wer die Regeln bricht, muss mit einer Verwarnung, gesperrten Inhalten, einer Sperre oder einem Bann rechnen.",
     "Das alles gilt auch auf unserem Discord-Server.",
   ],
   sections: {
@@ -113,18 +113,21 @@ export default {
       ],
       items: [
         "Drohungen, sexuelle Inhalte mit Minderjährigen, rechtswidrige Inhalte und Angriffe auf die Seite werden ohne vorherige Warnung behandelt und können den zuständigen Behörden gemeldet werden.",
+        "Auf der Seite ist eine <b>Verwarnung</b> eine förmliche Mitteilung, die für begrenzte Zeit an deinem Konto bleibt. Sie schränkt dich nicht ein und wird dir bei der nächsten Anmeldung angezeigt. Eine <b>Sperre</b> meldet dich ab und blockiert die Anmeldung für eine bestimmte Zahl von Tagen. Ein <b>Bann</b> ist dauerhaft.",
+        "In der Regel steigern sich die Folgen bei wiederholten Verstößen: zuerst Verwarnungen, dann eine Sperre, dann ein Bann. Abgelaufene Verwarnungen zählen nicht mehr. Bei schweren Verstößen können wir jeden dieser Schritte überspringen.",
         "Auf dem Server nehmen dieselben Maßnahmen die Form einer Verwarnung, eines Timeouts, eines Kicks oder eines Banns an.",
-        "Inhalte, die gegen diese Regeln verstoßen, können gebannt werden: Die Seite weigert sich dann, sie zu öffnen oder zu importieren. Wir können außerdem das Konto der Person deaktivieren, die sie veröffentlicht hat, und schicken ihr den Grund per E-Mail.",
-        "Wenn wir Inhalte entfernen oder ein Konto einschränken, nennen wir nach Möglichkeit den Grund. Hältst du das für einen Fehler, kannst du die Entscheidung anfechten, indem du uns schreibst; wir prüfen sie erneut. Das Verfahren steht in den [Nutzungsbedingungen]({termsPath}).",
+        "Inhalte, die gegen diese Regeln verstoßen, können gebannt werden: Die Seite weigert sich dann, sie zu öffnen oder zu importieren. Wir können außerdem das Konto der Person, die sie veröffentlicht hat, verwarnen, sperren oder bannen und schicken ihr den Grund per E-Mail.",
+        "Ein weiteres Konto anzulegen oder sich mit der Adresse eines gebannten Kontos erneut zu registrieren, um eine Sperre oder einen Bann zu umgehen, ist selbst ein Verstoß. Das neue Konto kann gebannt werden, und die Seite kann die Registrierung einer Adresse verweigern, die zu einem dauerhaft gebannten Konto gehörte.",
+        "Wenn wir Inhalte entfernen oder ein Konto einschränken, nennen wir nach Möglichkeit den Grund. Hältst du das für einen Fehler, kannst du die Entscheidung anfechten, indem du uns schreibst; wir prüfen sie erneut, und eine zu Unrecht verhängte Sperre oder ein zu Unrecht verhängter Bann wird aufgehoben. Das Verfahren steht in den [Nutzungsbedingungen]({termsPath}).",
       ],
     },
   },
   hookStages: {
     heading: "Die Haken-Stufen",
     stages: [
-      { title: "Stufe 1: der Hinweis", text: "Eine Nachricht mit der Bitte, das Verhalten zu korrigieren oder zu unterlassen." },
+      { title: "Stufe 1: der Hinweis", text: "Eine Nachricht mit der Bitte, das Verhalten zu korrigieren oder zu unterlassen, oder eine förmliche Verwarnung." },
       { title: "Stufe 2: das Aufräumen", text: "Wir entfernen oder sperren Inhalte, setzen unfair erworbenen Fortschritt zurück oder schränken Funktionen ein." },
-      { title: "Opferung", text: "Dein Konto wird gesperrt, deaktiviert oder gelöscht, und weitere Konten oder Adressen können blockiert werden." },
+      { title: "Opferung", text: "Dein Konto wird gesperrt oder gebannt, und weitere Konten oder Adressen können blockiert werden." },
     ],
   },
 };

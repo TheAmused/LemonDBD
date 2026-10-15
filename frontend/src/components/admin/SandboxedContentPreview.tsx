@@ -27,7 +27,7 @@ export function SandboxedContentPreview({ evidence }: { evidence: string }) {
   }, [evidence]);
 
   if (!preview) {
-    return <p className="text-xs text-text-muted">{dict.admin.contentReportUnreadable}</p>;
+    return <p className="type-body text-text-muted">{dict.admin.contentReportUnreadable}</p>;
   }
 
   const loadable = preview.images
@@ -40,7 +40,7 @@ export function SandboxedContentPreview({ evidence }: { evidence: string }) {
       {(preview.title || preview.description) && (
         <div className="space-y-1">
           {preview.title && <h4 className="type-strong text-text-primary break-words">{preview.title}</h4>}
-          {preview.description && <p className="text-xs text-text-secondary break-words whitespace-pre-wrap">{preview.description}</p>}
+          {preview.description && <p className="type-body text-text-secondary break-words whitespace-pre-wrap">{preview.description}</p>}
         </div>
       )}
 
@@ -51,7 +51,7 @@ export function SandboxedContentPreview({ evidence }: { evidence: string }) {
           </p>
           <ul className="max-h-64 overflow-y-auto rounded-card border border-border-subtle bg-bg-primary p-3 space-y-1.5">
             {preview.texts.map((text, index) => (
-              <li key={index} className="text-xs text-text-primary break-words whitespace-pre-wrap">
+              <li key={index} className="type-body text-text-primary break-words whitespace-pre-wrap">
                 {text}
               </li>
             ))}
@@ -84,17 +84,17 @@ export function SandboxedContentPreview({ evidence }: { evidence: string }) {
               ))}
             </div>
           ) : (
-            <p className="text-xs text-text-muted">{dict.admin.contentReportImagesHidden}</p>
+            <p className="type-body text-text-muted">{dict.admin.contentReportImagesHidden}</p>
           )}
           {showImages && blocked > 0 && (
-            <p className="text-xs text-text-muted">
+            <p className="type-body text-text-muted">
               {formatMessage(dict.admin.contentReportImagesBlocked, { count: String(blocked) })}
             </p>
           )}
         </div>
       )}
 
-      {preview.truncated && <p className="text-xs text-accent-amber">{dict.admin.contentReportTruncated}</p>}
+      {preview.truncated && <p className="type-body text-accent-amber">{dict.admin.contentReportTruncated}</p>}
 
       <div className="space-y-2">
         <Button size="xs" onClick={() => setShowRaw((v) => !v)} aria-expanded={showRaw}>

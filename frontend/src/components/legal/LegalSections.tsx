@@ -5,7 +5,7 @@
 // registration form render this component, so wording, order and numbering live in one place per
 // document: `dict.<doc>` plus the entry in LEGAL_DOCS. Only the frame differs: `page` draws
 // collapsible cards (side by side in pairs, one colour per row), `modal` draws a compact list.
-// The only decoration is the "Rule N" / "Section N" eyebrow and the card colour: no icons.
+// The only decoration is the card colour: no icons.
 import React from 'react';
 import { BLOCK_TONES, BlockCard, BlockCardPair, BlockTitle, type BlockCardProps } from '@/components/common/BlockCard';
 import { ContactLinks } from '@/components/common/ContactLinks';
@@ -14,7 +14,6 @@ import { LEGAL_DOCS, fillLegalPaths, legalDocText, legalSectionTone, type LegalD
 import { useDictionary, useLocale } from '@/context/DictionaryContext';
 import { usePrivacyInfo } from '@/hooks/usePrivacyInfo';
 import { cn } from '@/utils/cn';
-import { formatMessage } from '@/utils/i18nFormat';
 import { fillPrivacyPlaceholders } from '@/utils/privacyPlaceholders';
 
 /** The three hook stages of the Rules' enforcement block, mildest first. */
@@ -95,7 +94,6 @@ export function LegalSections({ doc, variant }: LegalSectionsProps) {
       id,
       storageKey: `lemondbd_drawer_${doc}_open_${id}`,
       title: section.heading,
-      eyebrow: formatMessage(text.numberLabel, { n: index + 1 }, locale),
       tone,
       centered: true,
       children: (
@@ -130,7 +128,7 @@ export function LegalSections({ doc, variant }: LegalSectionsProps) {
       <>
         {[summaryItem, ...sectionItems].map((item) => (
           <section key={item.id} className="flex flex-col gap-2 border-t border-border-color pt-4 type-body-lg first:border-t-0 first:pt-0">
-            <BlockTitle title={item.title} eyebrow={item.eyebrow} tone={item.tone} as="h3" centered />
+            <BlockTitle title={item.title} tone={item.tone} as="h3" centered />
             {item.children}
           </section>
         ))}

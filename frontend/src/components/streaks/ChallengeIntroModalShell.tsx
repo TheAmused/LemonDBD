@@ -10,6 +10,7 @@ import { AdeptBadgeIcon } from '@/components/icons/DbdIcons';
 import { HEADER_BUTTON_CLASSES } from './ChallengePanel';
 import { useDictionary } from "@/context/DictionaryContext";
 import { Badge } from '@/components/common/Badge';
+import { Surface } from '@/components/common/Surface';
 
 export const NEUTRAL_TILE_ACCENT = 'border-border-color bg-bg-elevated hover:bg-bg-elevated/80 text-text-secondary';
 
@@ -164,12 +165,12 @@ export const ChallengeIntroModalShell: React.FC<ChallengeIntroModalShellProps> =
 
           if (tile.disabled) {
             return (
-              <div
+              <Surface
                 key={tile.value}
-                className="flex flex-col items-center gap-2 rounded-card border border-border-color bg-bg-elevated/50 p-3 sm:p-4 text-center opacity-70"
+                tone="elevated" padding="none" className="flex flex-col items-center gap-2 bg-bg-elevated/50 p-3 sm:p-4 text-center opacity-70"
               >
                 {content}
-              </div>
+              </Surface>
             );
           }
 

@@ -36,6 +36,7 @@ import { useDictionary } from "@/context/DictionaryContext";
 import { GENDER_QUICK_PICKS, ROLE_QUICK_PICKS } from '@/utils/smashOrPass/constants';
 import { useRosterDraft } from './useRosterDraft';
 import { useRosterSubmit } from './useRosterSubmit';
+import { Surface } from '@/components/common/Surface';
 
 /**
  * One column width for every block of the creator (basics, taxonomy, candidates, archetypes,
@@ -194,10 +195,10 @@ export function SmashRosterCreator({ locale, editId }: SmashRosterCreatorProps) 
     <div className="relative z-10 flex flex-col gap-6 2xl:gap-8 max-w-7xl 2xl:max-wide-2k:max-w-[1800px] wide-2k:max-w-[2400px] mx-auto w-full px-4 sm:px-6">
       <h1 className="sr-only">{editId ? (c.editTitle || 'Edit Roster') : (c.title || 'Create a Roster')}</h1>
       {restored && (
-        <div
+        <Surface
           role="status"
           aria-live="polite"
-          className="fixed top-5 right-5 z-50 flex max-w-md w-[calc(100vw-2.5rem)] sm:w-auto items-center gap-3 rounded-card border border-accent-amber/40 bg-bg-surface/95 backdrop-blur-xl p-3 2xl:p-4 shadow-2xl text-xs sm:text-sm 2xl:text-base font-semibold text-text-primary animate-in fade-in slide-in-from-top-4 duration-300"
+          padding="none" className="fixed top-5 right-5 z-50 flex max-w-md w-[calc(100vw-2.5rem)] sm:w-auto items-center gap-3 border-accent-amber/40 bg-bg-surface/95 backdrop-blur-xl p-3 2xl:p-4 shadow-2xl text-xs sm:text-sm 2xl:text-base font-semibold text-text-primary animate-in fade-in slide-in-from-top-4 duration-300"
         >
           <History className="h-4 w-4 2xl:h-5 2xl:w-5 text-accent-amber shrink-0" aria-hidden="true" />
           <span className="flex-1 text-accent-amber">{c.draftRestored || 'Your unfinished draft was restored.'}</span>
@@ -215,7 +216,7 @@ export function SmashRosterCreator({ locale, editId }: SmashRosterCreatorProps) 
           >
             <X className="h-4 w-4" aria-hidden="true" />
           </Button>
-        </div>
+        </Surface>
       )}
 
       {/* BLOCK 1: THE BASICS */}

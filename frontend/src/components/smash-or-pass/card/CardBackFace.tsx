@@ -63,7 +63,7 @@ export function CardBackFace({
     >
       {/* Top Bar with accessible Flip Back button and Title */}
       <div className="relative z-30 flex items-center justify-between pb-2 border-b border-border-color shrink-0 pointer-events-auto">
-        <button
+        <Button
           type="button"
           onMouseDown={(e) => e.stopPropagation()}
           onTouchStart={(e) => e.stopPropagation()}
@@ -74,10 +74,10 @@ export function CardBackFace({
           }}
           {...tip(text.flipBack, undefined, 'action')}
           aria-label={text.flipBack}
-          className="pointer-coarse:min-h-11 pointer-coarse:min-w-11 flex min-h-[40px] min-w-[40px] h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-control bg-bg-elevated border border-accent-red/40 text-accent-red hover:text-text-inverted hover:border-accent-red hover:scale-110 active:scale-95 transition-all shadow-lg cursor-pointer touch-manipulation"
+          variant="soft" size="md" icon
         >
           <TarotTurnIcon className="h-5 w-5" aria-hidden="true" />
-        </button>
+        </Button>
 
         <div className="flex items-center gap-1.5 px-2 min-w-0">
           <h3 className="text-xs sm:text-sm font-black uppercase tracking-wider text-text-primary truncate max-w-[150px] sm:max-w-[180px]">
@@ -102,12 +102,12 @@ export function CardBackFace({
       >
         {/* Mobile-only fallback (<880px): show Turn On & Dealbreaker only when floating lore fragments are hidden */}
         <div className="@[880px]/hub:hidden space-y-2">
-          <div className="p-2.5 rounded-card bg-bg-elevated border border-accent-red/30 space-y-0.5">
+          <Surface tone="elevated" padding="none" className="p-2.5 border-accent-red/30 space-y-0.5">
             <span className="type-label-2xs text-accent-red block">
               {customLabels?.dating_vibe || text.loreLabels.datingArchetype}
             </span>
             <p className="type-strong text-text-primary leading-snug">{charTitle}</p>
-          </div>
+          </Surface>
 
           {profile.turn_on && (
             <div className="p-2.5 rounded-card bg-accent-green/10 border border-accent-green/40 space-y-0.5">
@@ -181,12 +181,12 @@ export function CardBackFace({
             {charTagline && <p className="px-1 text-mini text-text-secondary italic leading-snug">{charTagline}</p>}
 
             {charQuote && (
-              <div className="p-2.5 rounded-card bg-bg-elevated border border-accent-amber/30 space-y-0.5">
+              <Surface tone="elevated" padding="none" className="p-2.5 border-accent-amber/30 space-y-0.5">
                 <span className="type-label-2xs text-accent-amber block">
                   {customLabels?.quote || text.loreLabels.signatureQuote}
                 </span>
                 <p className="text-mini text-text-secondary italic leading-relaxed">{charQuote}</p>
-              </div>
+              </Surface>
             )}
           </details>
         )}

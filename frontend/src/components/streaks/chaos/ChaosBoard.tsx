@@ -31,6 +31,7 @@ import { StreakActionBar, StreakActionButton } from '../StreakActionBar';
 import { tip } from '@/components/common/Tooltip';
 
 import { Button } from '@/components/common/Button';
+import { Surface } from '@/components/common/Surface';
 const ChaosStatsDrawer = dynamic(
   () => import('./ChaosStatsDrawer').then((m) => m.ChaosStatsDrawer),
   { ssr: false }
@@ -201,7 +202,7 @@ export const ChaosBoard: React.FC = () => {
 
         {!isCompleted && (
           <>
-            <div className="rounded-card border border-border-color bg-bg-surface/90 backdrop-blur-sm p-5 shadow-sm">
+            <Surface padding="none" className="bg-bg-surface/90 backdrop-blur-sm p-5 shadow-sm">
               <h3 className="type-label text-text-secondary mb-3">
                 {dict.streaks.pickYourKiller}
               </h3>
@@ -219,7 +220,7 @@ export const ChaosBoard: React.FC = () => {
                   loading={loadingKillers}
                 />
               </div>
-            </div>
+            </Surface>
 
             <StreakActionBar>
               {!acceptedKillerId ? (
@@ -245,7 +246,7 @@ export const ChaosBoard: React.FC = () => {
         )}
 
         {!isCompleted && isAdmin && (
-          <div className="mt-6 rounded-card border border-border-color/80 bg-bg-surface/90 backdrop-blur-sm px-4 py-4 shadow-sm">
+          <Surface padding="none" className="mt-6 border-border-color/80 bg-bg-surface/90 backdrop-blur-sm px-4 py-4 shadow-sm">
             <Button
               type="button"
               onClick={handleDevSkipToWin}
@@ -256,7 +257,7 @@ export const ChaosBoard: React.FC = () => {
               <AdeptBadgeIcon className="h-3.5 w-3.5" aria-hidden="true" />
               <span>{dict.streaks.devSkipWinLabel}</span>
             </Button>
-          </div>
+          </Surface>
         )}
 
         <AbandonConfirmModal

@@ -15,6 +15,7 @@ import { useJackpotCelebration } from '../shared/useJackpotCelebration';
 import { playReelThud, playCardFlip } from '@/utils/perkAudio';
 import { formatMessage } from '@/utils/i18nFormat';
 import { useDictionary } from "@/context/DictionaryContext";
+import { Surface } from '@/components/common/Surface';
 
 export interface LootCrateStageProps {
   role: RoleCategory;
@@ -284,7 +285,7 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
           {/* Mobile & Tablet (< md): Centered balanced offerings and 4-slot loadout tray */}
           <div className="flex flex-col items-center justify-center flex-1 w-full my-auto gap-3.5 md:hidden">
             {/* 4-Slot Loadout Progress Tray */}
-            <div className="flex items-center justify-center gap-2 sm:gap-2.5 py-1.5 px-3 rounded-card bg-bg-surface/90 border border-border-color shadow-xs backdrop-blur-sm">
+            <Surface padding="none" className="flex items-center justify-center gap-2 sm:gap-2.5 py-1.5 px-3 bg-bg-surface/90 shadow-xs backdrop-blur-sm">
               {[0, 1, 2, 3].map((slotIdx) => {
                 const locked = lockedItems[slotIdx];
                 return locked ? (
@@ -305,7 +306,7 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
                   </div>
                 );
               })}
-            </div>
+            </Surface>
 
             {/* Scattered Offerings: Symmetrically Centered Flex Wrap */}
             <div className="flex flex-wrap items-center justify-center gap-2.5 xs:gap-3 sm:gap-4 w-full max-w-sm sm:max-w-md mx-auto py-1">

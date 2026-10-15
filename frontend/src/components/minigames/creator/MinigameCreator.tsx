@@ -399,7 +399,7 @@ export const MinigameCreator: React.FC<MinigameCreatorProps> = ({ catalog, local
 
       {/* Admin Official Publishing Section */}
       {isAdmin && (
-        <div className="w-full max-w-2xl p-6 rounded-card bg-bg-surface border border-accent-amber/40 shadow-2xl relative">
+        <Surface padding="none" className="w-full max-w-2xl p-6 border-accent-amber/40 shadow-2xl relative">
           <div className="flex items-center gap-2 text-accent-amber type-card-title mb-2">
             <ShieldCheck className="w-5 h-5" />
             <span>{c.publishOfficialModalTitle}</span>
@@ -432,7 +432,7 @@ export const MinigameCreator: React.FC<MinigameCreatorProps> = ({ catalog, local
               <span>{isPublishingOfficial ? c.publishing : c.confirmPublish}</span>
             </Button>
           </div>
-        </div>
+        </Surface>
       )}
     </div>
   );

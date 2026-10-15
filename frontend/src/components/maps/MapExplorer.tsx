@@ -463,7 +463,7 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
                     style={{ gridColumn: '1 / -1', gridTemplateRows: isOpen ? '1fr' : '0fr' }}
                   >
                     <div className="overflow-hidden">
-                      <div className="space-y-4 rounded-card border border-border-color bg-bg-surface/50 p-3">
+                      <Surface padding="sm" className="space-y-4 bg-bg-surface/50">
                         {(panelGroups ?? []).map((group) => (
                           <div key={group.realm} className="space-y-2">
                             {(panelGroups?.length ?? 0) > 1 && (
@@ -486,7 +486,7 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
                             </div>
                           </div>
                         ))}
-                      </div>
+                      </Surface>
                     </div>
                   </div>
                 )}

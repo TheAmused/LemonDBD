@@ -1,13 +1,14 @@
 'use client';
 // frontend/src/components/common/AccordionSection.tsx
 // A bordered section whose header folds the body away: centered title, accent chevron, an optional
-// banner image behind the header and an optional action beside the chevron. The caller owns the open
+// banner image behind the header and optional actions beside the chevron. The caller owns the open
 // state (useState, usePersistentDrawer), so remembering it stays the caller's decision.
 //
-// The toggle is a button laid over the whole header, so an action (a real button) can sit in the
-// header without nesting one button inside another.
+// The toggle is a button laid over the whole header, so actions (real buttons) can sit in the header
+// without nesting one button inside another.
 import React, { useId } from 'react';
 import { ChevronDown } from 'lucide-react';
+import { Collapsible } from '@/components/common/Collapsible';
 import { Surface } from '@/components/common/Surface';
 import { cn } from '@/utils/cn';
 
@@ -25,8 +26,13 @@ export interface AccordionSectionProps {
   badge?: React.ReactNode;
   /** Shown inside the title line, e.g. an unread dot. */
   titleAddon?: React.ReactNode;
-  /** A control in the header, left of the chevron (it stays clickable on its own). */
+  /** Controls in the header, left of the chevron (they stay clickable on their own). */
   headerAction?: React.ReactNode;
+  /**
+   * The header stays pinned while the section scrolls (it clears the mobile top bar on phones).
+   * The section then cannot clip (`overflow-hidden` would stop `sticky`), so the header rounds itself.
+   */
+  stickyHeader?: boolean;
   as?: 'section' | 'div';
   className?: string;
   /** Padding and spacing of the body. */
@@ -47,6 +53,7 @@ export function AccordionSection({
   badge,
   titleAddon,
   headerAction,
+  stickyHeader = false,
   as,
   className,
   bodyClassName = 'p-4 sm:p-6 2xl:p-7',
@@ -59,9 +66,20 @@ export function AccordionSection({
       as={as}
       aria-labelledby={headingId}
       padding="none"
-      className={cn('flex flex-col overflow-hidden transition-colors', banner ? 'backdrop-blur-xl shadow-md' : 'shadow-xs', className)}
+      className={cn(
+        'flex flex-col transition-colors',
+        !stickyHeader && 'overflow-hidden',
+        banner ? 'backdrop-blur-xl shadow-md' : 'shadow-xs',
+        className
+      )}
     >
-      <div className={cn('group relative grid w-full select-none grid-cols-[1fr_auto_1fr] items-center gap-2 overflow-hidden', banner ? HEADER_TALL : HEADER_COMPACT)}>
+      <div
+        className={cn(
+          'group relative flex w-full select-none flex-wrap items-center justify-between gap-3 overflow-hidden',
+          banner ? HEADER_TALL : HEADER_COMPACT,
+          stickyHeader && ['sticky top-16 z-20 lg:top-0', open ? 'rounded-t-card' : 'rounded-card']
+        )}
+      >
         {banner && (
           <>
             <div
@@ -81,20 +99,23 @@ export function AccordionSection({
           aria-label={toggleLabel}
           className="absolute inset-0 z-0 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent-red"
         />
-        <div aria-hidden="true" />
-        <div className="pointer-events-none relative z-10 flex min-w-0 items-center justify-center gap-2 px-2 text-center">
-          <h2 id={headingId} className="relative inline-block type-section-title text-text-primary transition-colors group-hover:text-accent-red">
-            {title}
-            {titleAddon}
-          </h2>
-          {badge}
+        {/* Left spacer: balances the right side so the title stays centered. */}
+        <div aria-hidden="true" className="pointer-events-none relative z-10 hidden w-8 sm:block lg:w-auto lg:flex-1 lg:basis-0" />
+        <div className="pointer-events-none relative z-10 min-w-0 flex-1 px-2 text-center lg:flex-none">
+          <div className="inline-flex items-center justify-center gap-2">
+            <h2 id={headingId} className="relative inline-block type-section-title text-text-primary transition-colors group-hover:text-accent-red">
+              {title}
+              {titleAddon}
+            </h2>
+            {badge}
+          </div>
         </div>
-        <div className="pointer-events-none relative z-10 flex shrink-0 items-center justify-end gap-3">
+        <div className="pointer-events-none relative z-10 flex shrink-0 items-center justify-end gap-3 lg:flex-1 lg:basis-0">
           {headerAction && <div className="pointer-events-auto">{headerAction}</div>}
           <ChevronDown
             aria-hidden="true"
             className={cn(
-              'h-4 w-4 text-accent-red transition-transform duration-300 ease-in-out sm:h-5 sm:w-5',
+              'h-4 w-4 shrink-0 text-accent-red transition-transform duration-300 ease-in-out sm:h-5 sm:w-5',
               banner && '2xl:h-6 2xl:w-6',
               open ? 'rotate-180' : 'rotate-0'
             )}
@@ -102,16 +123,9 @@ export function AccordionSection({
         </div>
       </div>
 
-      <div
-        className={cn(
-          'grid transition-[grid-template-rows,opacity] duration-300 ease-in-out',
-          open ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
-        )}
-      >
-        <div className="overflow-hidden">
-          <div className={cn('border-t border-border-color', bodyClassName)}>{children}</div>
-        </div>
-      </div>
+      <Collapsible open={open} contentClassName={cn('border-t border-border-color', bodyClassName)}>
+        {children}
+      </Collapsible>
     </Surface>
   );
 }

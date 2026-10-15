@@ -10,6 +10,7 @@ import { formatMessage } from '@/utils/i18nFormat';
 import { useDictionary } from '@/context/DictionaryContext';
 import { Badge } from '@/components/common/Badge';
 
+import { Button } from '@/components/common/Button';
 export interface DraftEntity {
   /** Stable client-only key -- never sent anywhere, just for React lists and
    * keying this entity's translation overrides. */
@@ -130,17 +131,17 @@ export function CandidateTiles({ entities, selectedKey, onSelect, onRename, onRe
                 </div>
 
                 {/* Top-right delete button */}
-                <button
+                <Button
                   type="button"
                   onClick={(e) => {
                     e.stopPropagation();
                     onRemove(entity.key);
                   }}
                   aria-label={formatMessage((c.removeCandidateAria), { name: entity.name || displayIndex })}
-                  className="hit-area absolute top-1 right-1 z-10 flex h-5 w-5 items-center justify-center rounded-chip bg-bg-surface/90 text-text-muted opacity-80 sm:opacity-0 group-hover/item:opacity-100 hover:!opacity-100 hover:bg-accent-red hover:text-text-inverted transition-all shadow-xs cursor-pointer border border-border-color/40"
+                  variant="overlay" size="xs" icon pill className="absolute top-1 right-1 z-10 opacity-80 sm:opacity-0 group-hover/item:opacity-100 hover:opacity-100"
                 >
                   <X className="h-3 w-3" aria-hidden="true" />
-                </button>
+                </Button>
               </div>
 
               {/* Seamless Typography Caption / Inline Input */}
@@ -160,17 +161,17 @@ export function CandidateTiles({ entities, selectedKey, onSelect, onRename, onRe
         {/* Trailing '+ Add' tile if under limit */}
         {canAdd && (
           <li className="flex flex-col items-center">
-            <button
+            <Button
               type="button"
               onClick={onAdd}
               data-testid="add-candidate-tile"
-              className="relative flex aspect-square w-full items-center justify-center rounded-control border-2 border-dashed border-border-color hover:border-accent-red bg-bg-elevated/40 hover:bg-bg-elevated transition-all duration-150 text-text-muted hover:text-accent-red cursor-pointer group select-none"
+              variant="secondary" size="md" dashed className="group aspect-square h-auto w-full flex-col"
             >
               <div className="flex flex-col items-center gap-1">
                 <Plus className="h-5 w-5 transition-transform group-hover:scale-110" />
                 <span className="type-label-2xs">{c.add}</span>
               </div>
-            </button>
+            </Button>
             <span className="mt-1 h-6 type-micro text-text-muted flex items-center select-none">
               {c.addCandidateTile}
             </span>

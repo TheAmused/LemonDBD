@@ -16,6 +16,7 @@ import { getBackendBaseUrl } from '@/utils/api';
 
 import { Button } from '@/components/common/Button';
 import { AuthRequiredState } from '@/components/common/AuthRequiredState';
+import { IconTile } from '@/components/common/IconTile';
 const AuthModal = dynamic(() => import('@/components/AuthModal').then((m) => m.AuthModal), { ssr: false });
 
 export function StreaksLayoutShell({ children }: { children: React.ReactNode }) {
@@ -71,9 +72,9 @@ export function StreaksLayoutShell({ children }: { children: React.ReactNode }) 
           <DisplayNamesProvider locale={locale}>{children}</DisplayNamesProvider>
         ) : isAuthenticated ? (
           <div className="flex flex-col items-center justify-center rounded-card border border-dashed border-border-color bg-bg-surface/60 px-6 py-20 text-center">
-            <div className="flex h-12 w-12 items-center justify-center rounded-card border border-accent-amber/20 bg-accent-amber/10">
+            <IconTile tone="amber" size="md">
               <MailWarning className="h-5 w-5 text-accent-amber" />
-            </div>
+            </IconTile>
             <h2 className="mt-4 text-sm font-extrabold tracking-wide text-text-primary">
               {dict.streaks.verifyEmailToTrack}
             </h2>

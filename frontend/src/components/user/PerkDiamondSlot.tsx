@@ -8,6 +8,7 @@ import { useDictionary } from '@/context/DictionaryContext';
 import { DiamondSlot } from '@/components/ui/DiamondSlot';
 import { PerkTile } from '@/components/streaks/page-streak/PerkTile';
 
+import { Button } from '@/components/common/Button';
 interface PerkDiamondSlotProps {
   slotIndex: number;
   perk?: Perk | null;
@@ -55,17 +56,17 @@ export const PerkDiamondSlot: React.FC<PerkDiamondSlotProps> = ({
 
       {/* Clear button on hover when perk is present, sitting on the diamond's upper right edge */}
       {perk && onClear && (
-        <button
+        <Button
           type="button"
           onClick={(e) => {
             e.stopPropagation();
             onClear(e);
           }}
           {...tip(clearLabel, undefined, 'action')} aria-label={clearLabel}
-          className="hit-area absolute left-[75%] top-[25%] z-20 flex h-5 w-5 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-accent-red text-text-inverted shadow-md opacity-0 group-hover:opacity-100 focus-visible:opacity-100 hover:opacity-90 transition-all cursor-pointer"
+          variant="primary" size="xs" icon pill className="hit-area absolute left-[75%] top-[25%] z-20 -translate-x-1/2 -translate-y-1/2 pointer-coarse:min-h-0 pointer-coarse:min-w-0 opacity-0 group-hover:opacity-100 focus-visible:opacity-100"
         >
           <X className="h-3 w-3" />
-        </button>
+        </Button>
       )}
     </div>
   );

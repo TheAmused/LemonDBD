@@ -15,6 +15,7 @@ import { toTitleCase } from '@/utils/textCase';
 import { usePersistentDrawer } from '@/hooks/usePersistentDrawer';
 import { Badge } from '@/components/common/Badge';
 import { Surface } from '@/components/common/Surface';
+import { IconTile } from '@/components/common/IconTile';
 
 interface KillerEquipmentSectionProps {
   addons?: (AddonItem | EquipmentItem)[];
@@ -44,9 +45,9 @@ export const KillerEquipmentSection: React.FC<KillerEquipmentSectionProps> = ({
     return (
       <Surface as="section" padding="lg" className="mt-8 shadow-sm dark:shadow-none backdrop-blur-md">
         <div className="flex items-center gap-3 border-b border-border-color pb-4 mb-6">
-          <div className="flex h-10 w-10 items-center justify-center rounded-card bg-accent-red/10 text-accent-red border border-accent-red/20">
+          <IconTile tone="red" size="sm">
             <Flame className="h-5 w-5" />
-          </div>
+          </IconTile>
           <div>
             <h3 className="text-lg font-black tracking-tight text-text-primary flex items-center gap-2">
               {t.equipmentTitleKiller || 'Killer Power Add-ons & Equipment'}
@@ -68,9 +69,9 @@ export const KillerEquipmentSection: React.FC<KillerEquipmentSectionProps> = ({
         headerClassName="pb-4 mb-6 border-b border-border-color"
         header={
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-card bg-accent-red/10 text-accent-red border border-accent-red/20">
+            <IconTile tone="red" size="sm">
               <Flame className="h-5 w-5" />
-            </div>
+            </IconTile>
             <div>
               <h3 className="text-lg font-black tracking-tight text-text-primary flex items-center gap-2">
                 {t.equipmentTitleKiller || 'Killer Power Add-ons & Equipment'}

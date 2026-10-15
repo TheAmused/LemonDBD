@@ -30,6 +30,7 @@ import { PerkHexIcon, BloodwebIcon, RiftPortalIcon, RealmMapIcon, MaskIcon, Adep
 import { tip } from '@/components/common/Tooltip';
 import { Button } from '@/components/common/Button';
 import { useDictionary, useLocale } from "@/context/DictionaryContext";
+import { IconTile } from '@/components/common/IconTile';
 
 const AuthModal = dynamic(() => import('./AuthModal').then((m) => m.AuthModal), { ssr: false });
 const BugReportModal = dynamic(
@@ -230,9 +231,9 @@ const { isCollapsed, toggleSidebar } = useSidebarState();
             className="flex items-center gap-3 group focus:outline-none focus:ring-2 focus:ring-accent-red rounded-control"
             aria-label={dict.sidebar.homeAria}
           >
-            <div className="relative flex h-10 w-10 items-center justify-center rounded-card bg-accent-red/15 border border-accent-red/30 text-text-primary shadow-xs group-hover:scale-105 transition-transform p-1.5">
+            <IconTile tone="red" size="sm" className="relative p-1.5 text-text-primary shadow-xs group-hover:scale-105 transition-transform">
               <LemonIcon className="h-7 w-7" />
-            </div>
+            </IconTile>
             <div>
               <span className="font-black text-base tracking-wider text-text-primary">
                 {dict.app.title}

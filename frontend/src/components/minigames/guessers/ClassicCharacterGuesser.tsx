@@ -2,11 +2,11 @@
 'use client';
 
 import React from 'react';
-import Image from 'next/image';
 import { ArrowUp, ArrowDown, Check, X } from 'lucide-react';
 import type { AttributeEvaluation, GuessRecord, NumericAttributeResult } from '@/types/minigame';
 import { staticUrl } from '@/utils/api';
 import { useDictionary } from "@/context/DictionaryContext";
+import { Thumb } from '@/components/common/Thumb';
 
 interface ClassicCharacterGuesserProps {
   guesses: GuessRecord[];
@@ -53,22 +53,7 @@ export const ClassicCharacterGuesser: React.FC<ClassicCharacterGuesserProps> = (
                 {/* Character Name & Avatar */}
                 <td className="p-2 rounded-card bg-bg-surface border border-border-color text-left">
                   <div className="flex items-center gap-2.5">
-                    <div className="relative w-11 h-11 rounded-chip overflow-hidden bg-bg-elevated border border-border-subtle flex-shrink-0">
-                      {imgSrc ? (
-                        <Image
-                          src={imgSrc}
-                          alt={guess.name}
-                          width={44}
-                          height={44}
-                          unoptimized
-                          className="object-cover w-full h-full"
-                        />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center text-xs text-text-muted">
-                          ?
-                        </div>
-                      )}
-                    </div>
+                    <Thumb src={imgSrc} alt={guess.name} size="lg" fallback={<span className="text-xs text-text-muted">?</span>} />
                     <span className="truncate text-text-primary font-semibold text-xs leading-snug">
                       {guess.name}
                     </span>

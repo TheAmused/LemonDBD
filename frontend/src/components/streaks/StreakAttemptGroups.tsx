@@ -6,6 +6,7 @@ import { ChevronRight } from 'lucide-react';
 import { tip } from '@/components/common/Tooltip';
 import { StreakMatchRow } from './StreakMatchRow';
 import { useDictionary } from '@/context/DictionaryContext';
+import { Collapsible } from '@/components/common/Collapsible';
 
 export interface StreakMatchLogBase {
   id: number;
@@ -86,20 +87,14 @@ export function StreakAttemptGroups<TLog extends StreakMatchLogBase>({
               <span className="type-strong text-accent-red" {...tip(dict.streaks.losses, undefined, 'status')}>{group.losses}</span>
             </button>
             {/* grid-template-rows animates 0fr -> 1fr, which height:auto cannot do */}
-            <div
-              inert={!open}
-              className={`grid transition-[grid-template-rows,opacity] duration-300 ease-out motion-reduce:transition-none ${
-                open ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
-              }`}
+            <Collapsible
+              open={open}
+              contentClassName="space-y-2.5 pt-2"
             >
-              <div className="overflow-hidden">
-                <div className="space-y-2.5 pt-2">
-                  {group.logs.map((log) => (
-                    <StreakMatchRow key={log.id} log={log} renderLabel={renderLabel} renderMeta={renderMeta} />
-                  ))}
-                </div>
-              </div>
-            </div>
+              {group.logs.map((log) => (
+                <StreakMatchRow key={log.id} log={log} renderLabel={renderLabel} renderMeta={renderMeta} />
+              ))}
+            </Collapsible>
           </section>
         );
       })}

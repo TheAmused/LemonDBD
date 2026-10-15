@@ -8,6 +8,7 @@ import { avatarUrlFor } from '../chaos/KillerPickerGrid';
 import { KillerIcon } from '@/components/icons/DbdIcons';
 
 import { useDictionary } from "@/context/DictionaryContext";
+import { Collapsible } from '@/components/common/Collapsible';
 
 export interface HistoryNextRowPreviewProps {
   killers: string[];
@@ -59,21 +60,16 @@ export const HistoryNextRowPreview: React.FC<HistoryNextRowPreviewProps> = ({ ki
         />
       </button>
 
-      <div
-        className={`grid transition-[grid-template-rows,opacity] duration-300 ease-in-out ${
-          expanded ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
-        }`}
+      <Collapsible
+        open={expanded}
+        contentClassName="mt-4 flex flex-wrap justify-center gap-2"
       >
-        <div className="overflow-hidden">
-          <div className="mt-4 flex flex-wrap justify-center gap-2">
-            {nextRow.map((name) => (
-              <div key={name} className="w-[calc((100%-1rem)/3)] sm:w-[calc((100%-2rem)/5)] sm:max-w-36">
-                <PreviewTile name={name} />
-              </div>
-            ))}
+        {nextRow.map((name) => (
+          <div key={name} className="w-[calc((100%-1rem)/3)] sm:w-[calc((100%-2rem)/5)] sm:max-w-36">
+            <PreviewTile name={name} />
           </div>
-        </div>
-      </div>
+        ))}
+      </Collapsible>
     </div>
   );
 };

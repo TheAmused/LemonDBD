@@ -31,6 +31,7 @@ import { tip } from '@/components/common/Tooltip';
 import { EmptyState } from '@/components/common/EmptyState';
 import { Badge } from '@/components/common/Badge';
 import { Surface } from '@/components/common/Surface';
+import { IconTile } from '@/components/common/IconTile';
 interface SurvivorEquipmentSectionProps {
   items?: EquipmentItem[];
   addons?: (AddonItem | EquipmentItem)[];
@@ -183,9 +184,9 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
         headerClassName="pb-4 mb-6 border-b border-border-color"
         header={
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-card bg-accent-green/10 text-accent-green border border-accent-green/20">
+            <IconTile tone="green" size="sm">
               <Package className="h-5 w-5" />
-            </div>
+            </IconTile>
             <div>
               <h2 id="survivor-equipment-heading" className="text-lg font-black tracking-tight text-text-primary flex items-center gap-2">
                 {t.equipmentTitleSurvivor || 'Survival Items & Equipment'}

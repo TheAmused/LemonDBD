@@ -311,14 +311,14 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({ isOpen, onClose 
           ))}
 
           {images.length < 3 && (
-            <button
+            <Button
               type="button"
               onClick={() => fileInputRef.current?.click()}
-              className="flex h-16 w-28 flex-col items-center justify-center rounded-control border border-dashed border-border-color bg-bg-elevated/50 hover:bg-accent-red/10 hover:border-accent-red/50 text-text-muted hover:text-accent-red transition-all cursor-pointer type-micro"
+              variant="secondary" size="sm" dashed className="h-16 w-28 flex-col gap-0.5"
             >
               <Upload className="h-4 w-4 mb-0.5" aria-hidden="true" />
               <span>{t.bugUploadImage || ''}</span>
-            </button>
+            </Button>
           )}
 
           <input

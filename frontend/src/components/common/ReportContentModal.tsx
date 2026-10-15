@@ -11,6 +11,7 @@ import { stripManifest, type ContentManifest } from '@/utils/contentSigning';
 import { isRecord } from '@/utils/shareCodec';
 import { checkAndPurgeRevokedContent } from '@/hooks/useContentRevocationSync';
 import { cn } from '@/utils/cn';
+import { IconTile } from '@/components/common/IconTile';
 
 export const REPORT_REASONS = [
   'hate_speech',
@@ -143,9 +144,9 @@ export function ReportContentModalBody({
   if (status === 'success') {
     return (
       <div className="flex flex-col items-center gap-4 py-4 text-center">
-        <div className="flex h-12 w-12 items-center justify-center rounded-card bg-accent-emerald/15 text-accent-emerald">
+        <IconTile tone="green" size="md">
           <CheckCircle2 className="h-6 w-6" aria-hidden="true" />
-        </div>
+        </IconTile>
         <div className="flex flex-col gap-1 max-w-sm">
           <p className="type-body-lg text-text-secondary">{t.reportSuccess}</p>
         </div>
@@ -159,9 +160,9 @@ export function ReportContentModalBody({
   if (status === 'already_banned') {
     return (
       <div className="flex flex-col items-center gap-4 py-4 text-center">
-        <div className="flex h-12 w-12 items-center justify-center rounded-card bg-accent-amber/15 text-accent-amber">
+        <IconTile tone="amber" size="md">
           <AlertCircle className="h-6 w-6" aria-hidden="true" />
-        </div>
+        </IconTile>
         <div className="flex flex-col gap-1 max-w-sm">
           <p className="type-body-lg text-text-secondary">{t.reportAlreadyBanned}</p>
         </div>

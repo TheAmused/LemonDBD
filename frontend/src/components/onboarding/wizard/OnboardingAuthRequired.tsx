@@ -8,6 +8,7 @@ import { Button } from '@/components/common/Button';
 import { useDictionary } from '@/context/DictionaryContext';
 import { AuthModal } from '../CharacterOnboardingWizardParts';
 import { Surface } from '@/components/common/Surface';
+import { IconTile } from '@/components/common/IconTile';
 
 /** Shown when auth resolved with no session: the roster can't load without one. */
 export function OnboardingAuthRequired({ locale }: { locale: string }) {
@@ -17,9 +18,9 @@ export function OnboardingAuthRequired({ locale }: { locale: string }) {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center p-6 text-center">
       <Surface padding="none" className="w-full max-w-md space-y-4 p-8 shadow-xl">
-        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-card border border-accent-red/30 bg-accent-red/15">
+        <IconTile tone="red" size="lg" className="mx-auto">
           <LemonIcon className="h-10 w-10 text-accent-red" />
-        </div>
+        </IconTile>
         <h1 className="text-xl font-black tracking-wider text-text-primary">
           {dict.user.authRequiredTitle}
         </h1>

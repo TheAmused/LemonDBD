@@ -20,6 +20,7 @@ import { User } from 'lucide-react';
 import { useDictionary, useLocale } from '@/context/DictionaryContext';
 import { trackEvent } from '@/utils/analytics';
 import { Surface } from '@/components/common/Surface';
+import { IconTile } from '@/components/common/IconTile';
 
 const AuthModal = dynamic(() => import('@/components/AuthModal').then((m) => m.AuthModal), {
   ssr: false,
@@ -130,9 +131,9 @@ export function UserProfileClient() {
     return (
       <div className="min-h-screen text-text-primary flex flex-col items-center justify-center p-6 text-center dbd-fog-overlay transition-colors duration-300">
         <Surface padding="none" className="max-w-md w-full text-text-primary p-8 backdrop-blur-xl shadow-xl space-y-4">
-          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-card bg-accent-amber/15 border border-accent-amber/30">
+          <IconTile tone="amber" size="lg" className="mx-auto">
             <LemonIcon className="h-10 w-10 text-accent-amber" />
-          </div>
+          </IconTile>
           <h1 className="text-xl sm:text-2xl font-black tracking-wider text-text-primary">
             {dict.user.authRequiredTitle}
           </h1>

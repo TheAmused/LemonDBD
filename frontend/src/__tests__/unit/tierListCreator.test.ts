@@ -140,7 +140,7 @@ describe('creator: page wiring', () => {
     const creator = fs.readFileSync(path.join(SRC, 'components/tier-lists/creator/TierListCreator.tsx'), 'utf-8');
     assert.ok(!creator.includes('border-b border-border-color pb-4'), 'must not have a horizontal border under the header');
     const toast = fs.readFileSync(path.join(SRC, 'components/common/Toast.tsx'), 'utf-8');
-    assert.ok(creator.includes('<Toast') && toast.includes('fixed top-5 right-5 z-50'), 'restored draft must render as fixed top-right toast');
+    assert.ok(creator.includes('<Toast') && toast.includes('fixed top-5 right-5'), 'restored draft must render as fixed top-right toast');
     assert.equal(creator.split('setPreviewOpen(true)').length - 1, 1, 'exactly one Preview button');
     assert.equal(creator.split('submitButton(').length - 1, 1, 'the save button is rendered once');
     const items = creator.indexOf('c.stepItems');

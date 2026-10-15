@@ -13,6 +13,7 @@
 // About cards snap open.)
 import React from 'react';
 import { ChevronDown } from 'lucide-react';
+import { Collapsible } from '@/components/common/Collapsible';
 import { usePersistentDrawer } from '@/hooks/usePersistentDrawer';
 import { cn } from '@/utils/cn';
 
@@ -108,18 +109,9 @@ function CardFace({ spec, expanded, onToggle, ghost = false }: { spec: BlockCard
           )}
         />
       </button>
-      <div
-        className={cn(
-          'grid transition-[grid-template-rows,opacity] duration-300 ease-in-out',
-          expanded ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
-        )}
-      >
-        <div className="overflow-hidden">
-          <div className={cn('flex flex-col gap-2 border-t border-border-color p-4 sm:p-6', spec.bodyClassName ?? DEFAULT_BODY)}>
-            {spec.children}
-          </div>
-        </div>
-      </div>
+      <Collapsible open={expanded} contentClassName={cn('flex flex-col gap-2 border-t border-border-color p-4 sm:p-6', spec.bodyClassName ?? DEFAULT_BODY)}>
+        {spec.children}
+      </Collapsible>
     </>
   );
 }

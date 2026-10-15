@@ -5,6 +5,7 @@ import { MailWarning } from 'lucide-react';
 import { useDictionary } from '@/context/DictionaryContext';
 import { InlineLink } from '@/components/common/InlineLink';
 import { Button } from '@/components/common/Button';
+import { Toast } from '@/components/common/Toast';
 
 interface VerificationNoticeProps {
   onVerify: () => void;
@@ -16,20 +17,21 @@ export function VerificationNotice({ onVerify, onDismiss }: VerificationNoticePr
   const dict = useDictionary();
 
   return (
-    <div className="fixed top-6 left-[var(--sidebar-width,0rem)] right-0 z-50 flex justify-center pointer-events-none transition-[left] duration-300 px-4">
-      <div
-        role="status"
-        className="pointer-events-auto flex items-center gap-3 rounded-card bg-accent-amber px-5 py-3 type-strong text-text-inverted shadow-2xl ring-2 ring-accent-amber/50 animate-in fade-in slide-in-from-top-4 duration-300"
-      >
-        <MailWarning className="h-4 w-4 shrink-0" />
-        <span>{dict.user.verifyEmailRequired}</span>
-        <Button variant="onAccent" size="xs" onClick={onVerify}>
-          {dict.streaks.verifyEmail}
-        </Button>
-        <InlineLink tone="current" onClick={onDismiss} className="type-strong-xs">
-          {dict.characterDetail.dismiss}
-        </InlineLink>
-      </div>
-    </div>
+    <Toast
+      tone="amberSolid"
+      align="center"
+      icon={<MailWarning className="h-4 w-4" />}
+      message={dict.user.verifyEmailRequired}
+      actions={
+        <>
+          <Button variant="onAccent" size="xs" onClick={onVerify}>
+            {dict.streaks.verifyEmail}
+          </Button>
+          <InlineLink tone="current" onClick={onDismiss} className="type-strong-xs">
+            {dict.characterDetail.dismiss}
+          </InlineLink>
+        </>
+      }
+    />
   );
 }

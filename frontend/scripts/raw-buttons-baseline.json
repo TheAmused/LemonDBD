@@ -1,21 +1,11 @@
 {
   "src/components/Sidebar.tsx": 1,
-  "src/components/admin/AdminChallengeControl.tsx": 1,
   "src/components/changelog/ChangelogEditorModal.tsx": 3,
-  "src/components/character-detail/KillerDetailView.tsx": 1,
-  "src/components/character-detail/components/CategoryPicker.tsx": 1,
   "src/components/generator/modes/slot-machine/SlotReelRowMobile.tsx": 1,
-  "src/components/maps/MapCard.tsx": 1,
   "src/components/minigames/ChallengeRunner.tsx": 1,
   "src/components/onboarding/wizard/ChapterCard.tsx": 1,
   "src/components/onboarding/wizard/ChapterCharacterPanel.tsx": 1,
-  "src/components/smash-or-pass/CharacterCard.tsx": 4,
-  "src/components/smash-or-pass/RosterSelectModal.tsx": 2,
   "src/components/smash-or-pass/TactileKeycaps.tsx": 1,
-  "src/components/smash-or-pass/creator/EntityEditor.tsx": 2,
-  "src/components/smash-or-pass/hub/HubHeader.tsx": 1,
   "src/components/streaks/gauntlet/LemonTokenPanel.tsx": 1,
-  "src/components/tier-lists/TierListCards.tsx": 2,
-  "src/components/tier-lists/creator/LadderEditor.tsx": 2,
-  "src/components/user/UserBugReportsList.tsx": 1
+  "src/components/tier-lists/creator/LadderEditor.tsx": 2
 }

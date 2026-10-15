@@ -37,6 +37,8 @@ def build_privacy_info(
     reset_lifetime: timedelta,
     session_lifetime: timedelta,
     streak_prune_days: int,
+    warning_lifetime_days: int,
+    ban_list_retention_days: int,
 ) -> dict[str, str | int]:
     return {
         "contactEmail": (contact_email or "").strip(),
@@ -45,4 +47,6 @@ def build_privacy_info(
         "resetSeconds": int(reset_lifetime.total_seconds()),
         "sessionSeconds": int(session_lifetime.total_seconds()),
         "streakPruneSeconds": int(timedelta(days=streak_prune_days).total_seconds()),
+        "warningSeconds": int(timedelta(days=warning_lifetime_days).total_seconds()),
+        "banListSeconds": int(timedelta(days=ban_list_retention_days).total_seconds()),
     }

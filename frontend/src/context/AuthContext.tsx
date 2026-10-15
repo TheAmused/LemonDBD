@@ -20,6 +20,15 @@ export interface UserProfile {
   preferred_language?: string | null;
 }
 
+type SignInResult = {
+  success: boolean;
+  error?: string;
+  user?: UserProfile;
+  twoFactorToken?: string;
+  /** Set when the account is banned or suspended: the sign-in must show why instead of an error. */
+  blocked?: BlockedInfo;
+};
+
 export interface OwnershipSummary {
   survivors: {
     owned: number;
@@ -45,10 +54,13 @@ interface AuthContextType {
   isAdmin: boolean;
   isLoading: boolean;
   ownership: OwnershipSummary | null;
+  /** Warnings the account holder has not acknowledged yet (the app shows them one by one). */
+  warnings: UserWarning[];
+  acknowledgeWarning: (sanctionId: number) => Promise<void>;
   /** `twoFactorToken` is set instead of `success` when the account needs a second step (see completeTwoFactorLogin). */
-  login: (loginOrEmail: string, password: string, extra?: Record<string, unknown>) => Promise<{ success: boolean; error?: string; user?: UserProfile; twoFactorToken?: string }>;
-  loginWithGoogle: (credential: string) => Promise<{ success: boolean; error?: string; user?: UserProfile; twoFactorToken?: string }>;
-  completeTwoFactorLogin: (twoFactorToken: string, code: string) => Promise<{ success: boolean; error?: string; errorCode?: string; user?: UserProfile }>;
+  login: (loginOrEmail: string, password: string, extra?: Record<string, unknown>) => Promise<SignInResult>;
+  loginWithGoogle: (credential: string) => Promise<SignInResult>;
+  completeTwoFactorLogin: (twoFactorToken: string, code: string) => Promise<SignInResult & { errorCode?: string }>;
   register: (login: string, username: string, email: string, password: string, extra?: Record<string, unknown>) => Promise<{ success: boolean; error?: string; user?: UserProfile }>;
   logout: () => void;
   resendVerification: (email: string) => Promise<{ success: boolean; error?: string }>;
@@ -68,6 +80,9 @@ import { getBackendBaseUrl } from '@/utils/perkUtils';
 import type { CharacterOwnershipUpdate } from '@/utils/characterUtils';
 import { SESSION_MARKER, authHeaders, setSessionFlag, getErrorMessage, isAbortError } from '@/utils/api';
 import { trackEvent } from '@/utils/analytics';
+import { blockedFromResponse, warningsFromResponse } from '@/utils/moderationResponse';
+import { acknowledgeWarning as acknowledgeWarningRequest } from '@/services/moderationApi';
+import type { BlockedInfo, UserWarning } from '@/types/moderation';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -77,6 +92,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [user, setUser] = useState<UserProfile | null>(null);
   const [token, setToken] = useState<string | null>(null);
   const [ownership, setOwnership] = useState<OwnershipSummary | null>(null);
+  const [warnings, setWarnings] = useState<UserWarning[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const fetchCurrentUser = useCallback(async () => {
@@ -88,6 +104,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           setToken(SESSION_MARKER);
           setSessionFlag(true);
           setUser(data.user);
+          setWarnings(warningsFromResponse(data));
           if (data.ownership) {
             setOwnership(data.ownership);
           }
@@ -97,6 +114,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       // No (or an expired) session cookie
       setUser(null);
       setToken(null);
+      setWarnings([]);
       setSessionFlag(false);
     } catch (err) {
       console.error('Failed to fetch auth state:', err);
@@ -120,7 +138,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       });
       const data = await res.json();
       if (!res.ok) {
-        return { success: false, error: data.error || 'Login failed' };
+        const blocked = blockedFromResponse(res.status, data);
+        return blocked ? { success: false, blocked } : { success: false, error: data.error || 'Login failed' };
       }
       if (data.status === 'two_factor_required' && data.two_factor_token) {
         // Password accepted but there is no session yet: the caller asks for the authenticator code.
@@ -129,6 +148,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setToken(SESSION_MARKER);
       setSessionFlag(true);
       setUser(data.user);
+      setWarnings(warningsFromResponse(data));
       if (data.ownership) setOwnership(data.ownership);
       trackEvent('login', { method: 'password' });
       return { success: true, user: data.user as UserProfile };
@@ -147,7 +167,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       });
       const data = await res.json();
       if (!res.ok) {
-        return { success: false, error: data.error as string | undefined };
+        const blocked = blockedFromResponse(res.status, data);
+        return blocked ? { success: false, blocked } : { success: false, error: data.error as string | undefined };
       }
       if (data.status === 'two_factor_required' && data.two_factor_token) {
         return { success: false, twoFactorToken: data.two_factor_token as string };
@@ -155,6 +176,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setToken(SESSION_MARKER);
       setSessionFlag(true);
       setUser(data.user);
+      setWarnings(warningsFromResponse(data));
       if (data.ownership) setOwnership(data.ownership);
       // The API has no "new account" flag; a user without a finished onboarding is the one
       // the app sends to /welcome, so that is what counts as a signup.
@@ -176,11 +198,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       });
       const data = await res.json();
       if (!res.ok) {
+        const blocked = blockedFromResponse(res.status, data);
+        if (blocked) return { success: false, blocked };
         return { success: false, error: data.error as string | undefined, errorCode: data.error_code as string | undefined };
       }
       setToken(SESSION_MARKER);
       setSessionFlag(true);
       setUser(data.user);
+      setWarnings(warningsFromResponse(data));
       if (data.ownership) setOwnership(data.ownership);
       trackEvent('login', { method: 'two_factor' });
       return { success: true, user: data.user as UserProfile };
@@ -287,6 +312,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setUser(null);
     setToken(null);
     setOwnership(null);
+    setWarnings([]);
     if (typeof window !== 'undefined') {
       setSessionFlag(false);
       const path = window.location.pathname;
@@ -303,6 +329,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const refreshUser = async () => {
     await fetchCurrentUser();
+  };
+
+  const acknowledgeWarning = async (sanctionId: number) => {
+    // Gone from the screen at once; if the request fails the warning simply shows again next visit.
+    setWarnings((current) => current.filter((w) => w.id !== sanctionId));
+    try {
+      await acknowledgeWarningRequest(sanctionId);
+    } catch (err) {
+      console.error('Failed to acknowledge the warning:', err);
+    }
   };
 
   const updateCharacterOwnership = async (characterId: number, isOwned: boolean): Promise<boolean> => {
@@ -452,6 +488,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     forgotPassword,
     resetPassword,
     refreshUser,
+    acknowledgeWarning,
     updateCharacterOwnership,
     bulkUpdateCharacterOwnership,
     updatePerkOwnership,
@@ -470,6 +507,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     forgotPassword,
     resetPassword,
     refreshUser,
+    acknowledgeWarning,
     updateCharacterOwnership,
     bulkUpdateCharacterOwnership,
     updatePerkOwnership,
@@ -495,6 +533,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       resetPassword: (token: string, newPassword: string, extra?: Record<string, unknown>) =>
         handlersRef.current.resetPassword(token, newPassword, extra),
       refreshUser: () => handlersRef.current.refreshUser(),
+      acknowledgeWarning: (sanctionId: number) => handlersRef.current.acknowledgeWarning(sanctionId),
       updateCharacterOwnership: (characterId: number, isOwned: boolean) =>
         handlersRef.current.updateCharacterOwnership(characterId, isOwned),
       bulkUpdateCharacterOwnership: (updates: CharacterOwnershipUpdate[]) =>
@@ -517,9 +556,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       isAdmin: user?.role === 'admin',
       isLoading,
       ownership,
+      warnings,
       ...actions,
     }),
-    [user, token, isLoading, ownership, actions]
+    [user, token, isLoading, ownership, warnings, actions]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

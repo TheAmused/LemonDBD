@@ -15,7 +15,7 @@ export default {
     "Du behältst die Rechte an dem, was du hochlädst, und erlaubst uns, es zu speichern und anzuzeigen, damit die Seite funktioniert.",
     "Alles, was du teilst oder exportierst, trägt deine Konto-Markierung und kann gemeldet und gesperrt werden.",
     "Die Seite wird wie besehen bereitgestellt, und unsere Haftung ist im gesetzlich zulässigen Umfang beschränkt.",
-    "Du kannst dein Konto jederzeit löschen. Konten, die gegen diese Bedingungen verstoßen, können wir einschränken oder schließen.",
+    "Du kannst dein Konto jederzeit löschen. Konten, die gegen diese Bedingungen verstoßen, können wir verwarnen, sperren oder schließen, und wir nennen dir den Grund.",
     "Deine gesetzlichen Verbraucherrechte bleiben unberührt.",
   ],
   sections: {
@@ -38,7 +38,7 @@ export default {
       items: [
         "mindestens 18 Jahre alt sein;",
         "eine gültige E-Mail-Adresse angeben, auf die du Zugriff hast, da wir sie für die Verifizierung und das Zurücksetzen des Passworts verwenden;",
-        "nur ein Konto pro Person führen. Zusätzliche Konten, die zur Umgehung einer Einschränkung oder zum Aufblähen von Statistiken angelegt werden, sind unzulässig;",
+        "nur ein Konto pro Person führen. Zusätzliche Konten, die zur Umgehung einer Sperre oder eines Banns oder zum Aufblähen von Statistiken angelegt werden, sind unzulässig;",
         "einen Benutzernamen wählen, der keine Rechte anderer verletzt, unser Team nicht imitiert und keine rechtswidrigen Inhalte enthält;",
         "dein Passwort vertraulich halten und uns unverzüglich informieren, wenn du unbefugten Zugriff vermutest. Du bist für Aktivitäten unter deinem Konto verantwortlich, es sei denn, sie beruhen auf unserem Verschulden.",
       ],
@@ -94,8 +94,10 @@ export default {
       tldr: "Du kannst jederzeit gehen. Wir können Konten, die gegen die Regeln verstoßen, einschränken oder schließen.",
       paragraphs: [
         "<b>Durch dich:</b> du kannst die Seite jederzeit nicht mehr nutzen und dein Konto auf deiner Profilseite selbst löschen. Was entfernt und was behalten wird, beschreibt unsere [Datenschutzerklärung]({privacyPath}).",
-        "<b>Durch uns:</b> wenn du gegen diese Bedingungen oder die Regeln verstößt, das Gesetz es verlangt oder deine Nutzung die Seite oder andere Nutzer gefährdet, können wir dich verwarnen, Inhalte entfernen oder sperren, Funktionen einschränken, dein Konto sperren, deaktivieren oder löschen oder dich vom Server entfernen. Wir wählen eine dem Verstoß angemessene Maßnahme.",
-        "Ergreifen wir eine solche Maßnahme, benachrichtigen wir dich und nennen den Grund, soweit möglich, es sei denn, das Gesetz oder laufende Ermittlungen stehen dem entgegen oder die Sache ist dringend. Sperren wir deinen Inhalt, schicken wir den Grund an die E-Mail-Adresse deines Kontos, ohne zu nennen, wer gemeldet hat. Hältst du die Entscheidung für falsch, kannst du dich unter [{contactEmail}](mailto:{contactEmail}) beschweren. Wir prüfen die Beschwerde und antworten in der Regel innerhalb von 14 Tagen und korrigieren die Entscheidung, falls sie ein Fehler war.",
+        "<b>Durch uns:</b> wenn du gegen diese Bedingungen oder die Regeln verstößt, das Gesetz es verlangt oder deine Nutzung die Seite oder andere Nutzer gefährdet, können wir Inhalte entfernen oder sperren, Funktionen einschränken, dich verwarnen, dein Konto befristet sperren, dauerhaft bannen oder löschen oder dich vom Server entfernen. Wir wählen eine dem Verstoß angemessene Maßnahme. Wiederholte Verstöße behandeln wir in der Regel strenger als einen ersten, und bei schweren Verstößen können Stufen übersprungen werden.",
+        "<b>Verwarnungen, Sperren und Banns:</b> Eine Verwarnung schränkt dein Konto nicht ein. Sie wird dir bei der nächsten Anmeldung angezeigt, zählt bei fortgesetztem Verhalten für eine strengere Maßnahme und läuft nach einiger Zeit ab. Eine Sperre meldet dich ab und verhindert die Anmeldung, bis sie endet. Ein Bann ist dauerhaft. Jede dieser Entscheidungen trifft ein Mensch, der festhält, was geschehen ist und welche Regel betroffen ist. Das Löschen eines Kontos hebt einen Bann nicht auf.",
+        "Ergreifen wir eine solche Maßnahme, schicken wir dir den Grund an die E-Mail-Adresse deines Kontos (was geschehen ist, welche Regel betroffen ist und bei einer Sperre, wann sie endet), es sei denn, das Gesetz oder laufende Ermittlungen stehen dem entgegen oder die Sache ist dringend. Den Grund und bei einer Sperre das Ende siehst du auch, wenn du dich bei einem gesperrten oder gebannten Konto anmelden willst. Sperren wir deinen Inhalt, informieren wir dich auf dieselbe Weise, ohne zu nennen, wer gemeldet hat. Hältst du eine Entscheidung für falsch, kannst du dich unter [{contactEmail}](mailto:{contactEmail}) beschweren. Wir prüfen die Beschwerde und antworten in der Regel innerhalb von 14 Tagen und korrigieren oder heben die Entscheidung auf, falls sie ein Fehler war. Die Aufhebung einer Sperre oder eines Banns bestätigen wir per E-Mail.",
+        "<b>Gebannte Adressen:</b> Damit sich niemand nach einem dauerhaften Bann einfach neu registriert, speichern wir eine codierte Form (einen Hash mit geheimem Schlüssel) der E-Mail-Adresse des gebannten Kontos, nicht die Adresse selbst. Mit einer passenden Adresse kann kein neues Konto angelegt werden; die Ablehnung kann mit einer neutralen Meldung erfolgen. Der Eintrag wird entfernt, wenn der Bann aufgehoben wird, und in jedem Fall nach begrenzter Zeit automatisch gelöscht. Einzelheiten stehen in unserer [Datenschutzerklärung]({privacyPath}).",
         "Bestimmungen, die ihrer Natur nach über die Beendigung hinaus gelten sollen, etwa zu Lizenzen, Haftung und anwendbarem Recht, bleiben bestehen.",
       ],
       items: [],

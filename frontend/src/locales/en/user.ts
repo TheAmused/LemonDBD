@@ -112,7 +112,7 @@ export default {
   noPerksFound: "No matching perks found.",
   dualMainsTitle: "Signature Loadouts",
   downloadDataTitle: "Download my data",
-  downloadDataDesc: "Get a copy of everything we store about your account (profile, ownership, showcase, streaks, stats, votes and bug reports) as a JSON file.",
+  downloadDataDesc: "Get a copy of everything we store about your account (profile, ownership, showcase, streaks, stats, votes, bug reports and moderation records) as a JSON file.",
   downloadDataButton: "Download my data",
   downloadDataFailed: "Could not prepare your data. Try again.",
   deleteAccountTitle: "Delete account",

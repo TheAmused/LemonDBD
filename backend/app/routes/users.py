@@ -146,6 +146,7 @@ def update_user_by_admin(user_id: int):
         user_id=user_id,
         role=validated_data.role,
         is_active=validated_data.is_active,
+        acting_admin=g.current_user,
     )
     if err:
         return api_error(err, 400)

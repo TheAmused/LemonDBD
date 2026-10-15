@@ -28,6 +28,7 @@ import terms from './terms';
 import errorPages from './errorPages';
 import scoreboardCheck from './scoreboardCheck';
 import validation from './validation';
+import moderation from './moderation';
 import type { Dictionary } from '../types';
 
 const de = {
@@ -60,6 +61,7 @@ const de = {
   errorPages,
   scoreboardCheck,
   validation,
+  moderation,
 } satisfies Dictionary;
 
 export default de;

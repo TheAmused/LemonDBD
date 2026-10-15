@@ -1,6 +1,6 @@
 # backend/app/services/user/profile.py
 from typing import Any
-from sqlalchemy import select
+from sqlalchemy import func, select
 
 from app.core.extensions import db
 from app.core.security import hash_password, verify_password
@@ -72,7 +72,7 @@ def modify_user_profile(
 
     if changing_email:
         existing = db.session.scalars(
-            select(User).where(User.email.ilike(clean_email), User.id != user_id)
+            select(User).where(func.lower(User.email) == clean_email, User.id != user_id)
         ).first()
         if existing:
             return None, "Email address is already in use."

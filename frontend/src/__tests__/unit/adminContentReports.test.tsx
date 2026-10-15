@@ -130,21 +130,23 @@ describe('ContentReportDetail', () => {
     assert.ok(html.includes(en.admin.contentReasonHate));
     assert.ok(html.includes('&lt;b&gt;insults&lt;/b&gt;'), 'reporter notes are free text and must be escaped');
     assert.ok(html.includes('the_author'));
-    assert.ok(/Also deactivate the author(&#x27;|')s account/.test(html), 'the author deactivation checkbox is offered');
+    for (const option of [en.moderation.admin.authorActionWarning, en.moderation.admin.authorActionSuspension, en.moderation.admin.authorActionBan]) {
+      assert.ok(html.includes(option), option);
+    }
   });
 
-  it('explains an unattributed report and offers no author deactivation', () => {
+  it('explains an unattributed report and offers no author decision', () => {
     const detail = { ...baseDetail, attributed: false, author_id: null, author_login: '', author_active: null };
     const html = renderWithDictionary(React.createElement(ContentReportDetail, { detail, resolving: false, onResolve: noop }));
     assert.ok(html.includes(en.admin.contentReportUnattributed));
-    assert.ok(!/Also deactivate the author/.test(html));
+    assert.ok(!html.includes(en.moderation.admin.authorActionWarning));
   });
 
-  it('never offers to deactivate an admin author', () => {
+  it('never offers a decision about an admin author', () => {
     const detail = { ...baseDetail, author_is_admin: true };
     const html = renderWithDictionary(React.createElement(ContentReportDetail, { detail, resolving: false, onResolve: noop }));
     assert.ok(html.includes(en.admin.contentReportAuthorIsAdmin));
-    assert.ok(!/Also deactivate the author/.test(html));
+    assert.ok(!html.includes(en.moderation.admin.authorActionWarning));
   });
 
   it('shows a resolved report as read-only with the wiped-evidence note', () => {

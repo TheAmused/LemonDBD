@@ -15,7 +15,7 @@ export default {
     "Zachowujesz prawa do tego, co przesyłasz, i zezwalasz nam to przechowywać oraz wyświetlać, aby Serwis działał.",
     "Wszystko, co udostępnisz lub wyeksportujesz, ma twój znak konta i może zostać zgłoszone oraz zablokowane.",
     "Serwis udostępniamy w stanie, w jakim jest, a nasza odpowiedzialność jest ograniczona w zakresie dozwolonym przez prawo.",
-    "Konto możesz usunąć w każdej chwili. Konta naruszające ten Regulamin możemy ograniczyć lub zamknąć.",
+    "Konto możesz usunąć w każdej chwili. Konta naruszające ten Regulamin możemy ostrzec, zawiesić lub zamknąć, a o powodzie cię poinformujemy.",
     "Twoje ustawowe prawa konsumenta pozostają nienaruszone.",
   ],
   sections: {
@@ -38,7 +38,7 @@ export default {
       items: [
         "mieć co najmniej 18 lat;",
         "podać prawidłowy adres e-mail, do którego masz dostęp, ponieważ używamy go do weryfikacji i resetowania hasła;",
-        "mieć jedno konto na osobę. Dodatkowe konta zakładane w celu obejścia ograniczenia lub zawyżenia statystyk są niedozwolone;",
+        "mieć jedno konto na osobę. Dodatkowe konta zakładane w celu obejścia zawieszenia lub bana albo zawyżenia statystyk są niedozwolone;",
         "wybrać nazwę użytkownika, która nie narusza praw innych osób, nie podszywa się pod nasz zespół i nie zawiera treści niezgodnych z prawem;",
         "zachować hasło w tajemnicy i niezwłocznie powiadomić nas o podejrzeniu nieuprawnionego dostępu. Odpowiadasz za działania na swoim koncie, chyba że wynikają one z naszej winy.",
       ],
@@ -94,8 +94,10 @@ export default {
       tldr: "Możesz odejść w każdej chwili. Konta łamiące zasady możemy ograniczyć lub zamknąć.",
       paragraphs: [
         "<b>Przez ciebie:</b> możesz przestać korzystać z Serwisu w każdej chwili i samodzielnie usunąć konto na stronie profilu. Co zostaje usunięte, a co zachowane, opisuje nasza [Polityka prywatności]({privacyPath}).",
-        "<b>Przez nas:</b> jeśli naruszysz ten Regulamin lub Zasady, jeśli wymaga tego prawo albo jeśli twoje korzystanie zagraża Serwisowi lub innym użytkownikom, możemy cię ostrzec, usunąć lub zablokować treści, ograniczyć funkcje, zawiesić, dezaktywować lub usunąć konto albo usunąć cię z Serwera. Wybierzemy środek współmierny do naruszenia.",
-        "Gdy stosujemy taki środek, w miarę możliwości powiadamiamy cię i podajemy powód, chyba że uniemożliwia to prawo lub toczące się postępowanie albo sprawa jest pilna. Jeśli zablokujemy twoją treść, wyślemy powód na adres e-mail przypisany do konta, bez wskazywania, kto ją zgłosił. Jeśli uważasz, że decyzja jest błędna, możesz złożyć reklamację na [{contactEmail}](mailto:{contactEmail}). Rozpatrzymy ją i odpowiemy, co do zasady w ciągu 14 dni, a jeśli popełniliśmy błąd, poprawimy decyzję.",
+        "<b>Przez nas:</b> jeśli naruszysz ten Regulamin lub Zasady, jeśli wymaga tego prawo albo jeśli twoje korzystanie zagraża Serwisowi lub innym użytkownikom, możemy usunąć lub zablokować treści, ograniczyć funkcje, udzielić ci ostrzeżenia, zawiesić konto na określony czas, zbanować je na stałe, usunąć je albo usunąć cię z Serwera. Wybierzemy środek współmierny do naruszenia. Powtarzające się naruszenia traktujemy zwykle surowiej niż pierwsze, a poważne naruszenia mogą pominąć kolejne stopnie.",
+        "<b>Ostrzeżenia, zawieszenia i bany:</b> ostrzeżenie nie ogranicza konta. Pokazujemy je przy następnym logowaniu, liczy się ono do surowszego środka, jeśli zachowanie się powtarza, i po pewnym czasie wygasa. Zawieszenie wylogowuje cię i uniemożliwia logowanie do czasu jego zakończenia. Ban jest trwały. Każdą z tych decyzji podejmuje człowiek, który zapisuje, co się stało i której zasady dotyczy. Usunięcie konta nie znosi bana.",
+        "Gdy stosujemy taki środek, wyślemy ci powód na adres e-mail przypisany do konta (co się stało, której zasady dotyczy i, w przypadku zawieszenia, kiedy się kończy), chyba że uniemożliwia to prawo lub toczące się postępowanie albo sprawa jest pilna. Powód i datę zakończenia zawieszenia zobaczysz też, próbując zalogować się na zawieszone lub zbanowane konto. Jeśli zablokujemy twoją treść, powiadomimy cię w ten sam sposób, bez wskazywania, kto ją zgłosił. Jeśli uważasz, że decyzja jest błędna, możesz złożyć reklamację na [{contactEmail}](mailto:{contactEmail}). Rozpatrzymy ją i odpowiemy, co do zasady w ciągu 14 dni, a jeśli popełniliśmy błąd, poprawimy lub uchylimy decyzję. Zniesienie zawieszenia lub bana potwierdzamy e-mailem.",
+        "<b>Zbanowane adresy:</b> aby nikt nie mógł po stałym banie po prostu zarejestrować się ponownie, przechowujemy zakodowaną postać (skrót kryptograficzny z tajnym kluczem) adresu e-mail zbanowanego konta, a nie sam adres. Nie da się założyć nowego konta z pasującym adresem, a odmowę możemy uzasadnić neutralnym komunikatem. Wpis jest usuwany, jeśli ban zostanie zniesiony, a w każdym razie po ograniczonym czasie jest kasowany automatycznie. Szczegóły są w naszej [Polityce prywatności]({privacyPath}).",
         "Postanowienia, które ze swej natury mają obowiązywać po zakończeniu, takie jak dotyczące licencji, odpowiedzialności i prawa właściwego, pozostają w mocy.",
       ],
       items: [],

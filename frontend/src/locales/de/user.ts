@@ -112,7 +112,7 @@ export default {
   noPerksFound: "Keine passenden Perks gefunden.",
   dualMainsTitle: "Signatur-Builds",
   downloadDataTitle: "Meine Daten herunterladen",
-  downloadDataDesc: "Erhalte eine Kopie von allem, was wir zu deinem Konto speichern (Profil, Besitz, Showcase, Serien, Statistiken, Stimmen und Fehlermeldungen), als JSON-Datei.",
+  downloadDataDesc: "Erhalte eine Kopie von allem, was wir zu deinem Konto speichern (Profil, Besitz, Showcase, Serien, Statistiken, Stimmen, Fehlermeldungen und Moderationseinträge), als JSON-Datei.",
   downloadDataButton: "Meine Daten herunterladen",
   downloadDataFailed: "Deine Daten konnten nicht vorbereitet werden. Versuche es erneut.",
   deleteAccountTitle: "Konto löschen",

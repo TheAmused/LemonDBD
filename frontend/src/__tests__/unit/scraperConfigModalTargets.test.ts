@@ -22,6 +22,7 @@ describe('ScraperConfigModal export/import targets', () => {
     'draft_sessions',
     'challenge_mode_settings',
     'admin_audit_logs',
+    'banned_email_hashes',
     'gauntlet_runs',
     'chaos_runs',
     'history_runs',
@@ -47,10 +48,10 @@ describe('ScraperConfigModal export/import targets', () => {
     }
   });
 
-  it('ALL_TARGETS covers all 24 supported database targets', () => {
+  it('ALL_TARGETS covers all 25 supported database targets', () => {
     const targetsContent = fs.readFileSync(path.join(featureDir, 'scraperTargets.ts'), 'utf-8');
     const idMatches = targetsContent.match(/id:\s*'[a-z_]+'/g) || [];
-    assert.equal(idMatches.length, 24, 'ALL_TARGETS should contain exactly 24 target entries');
+    assert.equal(idMatches.length, 25, 'ALL_TARGETS should contain exactly 25 target entries');
   });
 
   it('TARGET_GROUPS_CONFIG organizes targets into content, users, community, and settings', () => {

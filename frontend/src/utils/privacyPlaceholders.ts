@@ -11,6 +11,8 @@ export interface PrivacyInfo {
   resetSeconds: number;
   sessionSeconds: number;
   streakPruneSeconds: number;
+  warningSeconds: number;
+  banListSeconds: number;
 }
 
 const DAY = 86_400;
@@ -38,7 +40,7 @@ export function formatWindow(seconds: number, locale: string): string {
 }
 
 /** Replaces `{contactEmail}`, `{mailProvider}`, `{verificationWindow}`, `{resetWindow}`,
- *  `{sessionWindow}` and `{streakPrune}`; unknown values (still loading) become "…". */
+ *  `{sessionWindow}`, `{streakPrune}`, `{warningWindow}` and `{banListWindow}`; unknown values (still loading) become "…". */
 export function fillPrivacyPlaceholders(text: string, info: PrivacyInfo | null, locale: string): string {
   const values: Record<string, string> = {
     contactEmail: info?.contactEmail || '…',
@@ -47,6 +49,8 @@ export function fillPrivacyPlaceholders(text: string, info: PrivacyInfo | null, 
     resetWindow: info ? formatWindow(info.resetSeconds, locale) : '…',
     sessionWindow: info ? formatWindow(info.sessionSeconds, locale) : '…',
     streakPrune: info ? formatWindow(info.streakPruneSeconds, locale) : '…',
+    warningWindow: info ? formatWindow(info.warningSeconds, locale) : '…',
+    banListWindow: info ? formatWindow(info.banListSeconds, locale) : '…',
   };
   return text.replace(/\{(\w+)\}/g, (match, key: string) => (key in values ? values[key] : match));
 }

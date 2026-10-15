@@ -112,7 +112,7 @@ export default {
   noPerksFound: "Nie znaleziono pasujących perków.",
   dualMainsTitle: "Główne Zestawy",
   downloadDataTitle: "Pobierz moje dane",
-  downloadDataDesc: "Pobierz kopię wszystkiego, co przechowujemy o Twoim koncie (profil, posiadane postacie i perki, gablota, serie, statystyki, głosy i zgłoszenia błędów) jako plik JSON.",
+  downloadDataDesc: "Pobierz kopię wszystkiego, co przechowujemy o Twoim koncie (profil, posiadane postacie i perki, gablota, serie, statystyki, głosy, zgłoszenia błędów i zapisy moderacji) jako plik JSON.",
   downloadDataButton: "Pobierz moje dane",
   downloadDataFailed: "Nie udało się przygotować danych. Spróbuj ponownie.",
   deleteAccountTitle: "Usuń konto",

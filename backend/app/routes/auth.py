@@ -4,6 +4,7 @@ import os
 from flask import Blueprint, current_app, g, jsonify, make_response, request, send_from_directory
 from pydantic import ValidationError
 
+from app.core.account_state import AccountBlockedError
 from app.core.config import demo_accounts_enabled
 from app.core.altcha_guard import require_altcha
 from app.core.limiter import limiter, validate_honeypot
@@ -34,6 +35,7 @@ from app.services.user import (
     verify_email_code,
 )
 from app.services.user.profile import auto_verify_user
+from app.services.moderation_actions import acknowledge_warning, blocked_response, pending_warnings
 from app.services.ownership_service import OwnershipService
 from app.utils.api_i18n import coded_error_response, error_response
 from app.utils.downloads import json_download_response
@@ -93,6 +95,7 @@ def session_response(user, token: str, message: str, status: int = 200, extra: d
         "token_type": "Bearer",
         "user": UserResponse.model_validate(user).model_dump(),
         "ownership": ownership_service.get_user_ownership_summary(user.id),
+        "moderation": {"warnings": pending_warnings(user.id)},
         **(extra or {}),
     }), status)
     return set_session_cookie(response, token)
@@ -115,7 +118,10 @@ def login():
     if not login_or_email or not password:
         return api_error("Login/email and password are required.", 400)
 
-    user, token = authenticate_user_credentials(login_or_email.strip(), password.strip())
+    try:
+        user, token = authenticate_user_credentials(login_or_email.strip(), password.strip())
+    except AccountBlockedError as blocked:
+        return blocked_response(blocked.user)
     if not user:
         return api_error("Invalid credentials", 401)
 
@@ -220,9 +226,20 @@ def get_current_user_profile():
         "authenticated": True,
         "user": UserResponse.model_validate(user).model_dump(),
         "ownership": summary,
+        "moderation": {"warnings": pending_warnings(user.id)},
     }))
     resp.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
     return widen_legacy_session_cookie(resp), 200
+
+
+@auth_bp.route("/sanctions/<int:sanction_id>/acknowledge", methods=["POST"])
+@limiter.limit("30 per minute")
+@login_required
+def acknowledge_sanction(sanction_id: int):
+    """The signed-in account holder confirms they have read one of their warnings."""
+    if not acknowledge_warning(g.current_user, sanction_id):
+        return api_error("Warning not found", 404)
+    return jsonify({"status": "success"}), 200
 
 
 @auth_bp.route("/profile", methods=["PUT"])
@@ -387,6 +404,8 @@ def get_demo_accounts():
                 "role": "admin" if account["role"] == "admin" else "player",
                 "login": account["login"],
                 "password": account["password"],
+                # "warned" / "suspended" / "banned" for the moderation-state accounts, else "active".
+                "state": account.get("state", "active"),
             }
             for account in DEMO_ACCOUNTS
         ]

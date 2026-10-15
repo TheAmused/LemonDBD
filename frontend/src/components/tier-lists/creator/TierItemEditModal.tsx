@@ -93,7 +93,7 @@ export function TierItemEditModal({ item, isOpen, onClose, onSave }: TierItemEdi
       >
         {/* Centered Live Preview Showcase */}
         <div className="flex flex-col items-center justify-center text-center">
-          <div className="relative h-20 w-20 sm:h-24 sm:w-24 overflow-hidden rounded-xl border-2 border-border-color bg-bg-elevated shadow-md flex items-center justify-center transition-all">
+          <div className="relative h-20 w-20 sm:h-24 sm:w-24 overflow-hidden rounded-card border-2 border-border-color bg-bg-elevated shadow-md flex items-center justify-center transition-all">
             {safeImage ? (
               <img
                 src={safeImage}
@@ -124,7 +124,7 @@ export function TierItemEditModal({ item, isOpen, onClose, onSave }: TierItemEdi
                 if (error === t.invalidImage) setError(null);
               }}
               leftIcon={<ImageOff className="h-3.5 w-3.5" aria-hidden="true" />}
-              className="mt-2.5 min-h-[32px]"
+              className="mt-2.5 min-h-8"
             >
               {c.removeImage}
             </Button>

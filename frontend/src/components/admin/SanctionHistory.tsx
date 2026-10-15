@@ -44,7 +44,7 @@ export function SanctionHistory({ sanctions, busy, onRevoke }: SanctionHistoryPr
           [t.internalLabel, s.internal_notes],
         ];
         return (
-          <li key={s.id} className="space-y-2 rounded-2xl border border-border-color bg-bg-primary p-3.5">
+          <li key={s.id} className="space-y-2 rounded-card border border-border-color bg-bg-primary p-3.5">
             <div className="flex flex-wrap items-center gap-1.5">
               <Badge tone={KIND_TONE[s.kind]} size="sm">{kindLabel[s.kind]}</Badge>
               <Badge tone={s.active ? 'green' : 'neutral'} size="sm">{status}</Badge>

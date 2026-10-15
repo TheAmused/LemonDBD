@@ -41,7 +41,7 @@ export const ChallengeModeGate: React.FC<ChallengeModeGateProps> = ({ mode, chil
 
   if (status === 'disabled') {
     return (
-      <div className="flex flex-col items-center justify-center gap-4 rounded-3xl border border-accent-amber/30 bg-accent-amber/10 p-12 text-center">
+      <div className="flex flex-col items-center justify-center gap-4 rounded-card border border-accent-amber/30 bg-accent-amber/10 p-12 text-center">
         <AlertTriangle className="h-12 w-12 text-accent-amber" />
         <h1 className="text-lg font-extrabold text-text-primary">
           {dict.streaks.temporarilyDisabled}

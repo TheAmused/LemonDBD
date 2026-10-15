@@ -11,6 +11,7 @@ import { CampfireMugIcon } from '@/components/icons/DbdIcons';
 import { AuricCellIcon } from '@/components/icons/DbdIcons';
 import { Modal } from '@/components/common/Modal';
 import { useDictionary } from "@/context/DictionaryContext";
+import { Surface } from '@/components/common/Surface';
 
 export interface BuyCoffeeModalProps {
   isOpen: boolean;
@@ -75,13 +76,13 @@ export const BuyCoffeeModal: React.FC<BuyCoffeeModalProps> = ({ isOpen, onClose 
       padded
       bodyClassName="space-y-6"
     >
-    <div className="rounded-2xl border border-border-color bg-bg-elevated p-4 type-body text-text-secondary space-y-1">
+    <Surface tone="elevated" padding="none" className="p-4 type-body text-text-secondary space-y-1">
       <div className="flex items-center gap-1.5 font-bold text-accent-red mb-1">
         <Sparkles className="h-4 w-4" />
         <span>{t.coffeeFuelNotice || 'Entity Fuel Notice'}</span>
       </div>
       <p>{donationMessage}</p>
-    </div>
+    </Surface>
 
     <div className="space-y-3">
       {supportGateways.map((gateway) => {
@@ -92,12 +93,12 @@ export const BuyCoffeeModal: React.FC<BuyCoffeeModalProps> = ({ isOpen, onClose 
             href={gateway.url}
             target="_blank"
             rel="noopener noreferrer"
-            className={`group flex items-center justify-between p-3.5 rounded-2xl border transition-all duration-200 cursor-pointer ${gateway.accentColor}`}
+            className={`group flex items-center justify-between p-3.5 rounded-control border transition-all duration-200 cursor-pointer ${gateway.accentColor}`}
           >
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-bg-elevated border border-border-color shadow-sm group-hover:scale-105 transition-transform">
+              <Surface tone="elevated" padding="none" className="flex h-10 w-10 shrink-0 items-center justify-center shadow-sm group-hover:scale-105 transition-transform">
                 <Icon className="h-5 w-5" />
-              </div>
+              </Surface>
               <div>
                 <h3 className="text-xs font-black tracking-wide text-text-primary">
                   {gateway.name}
@@ -110,7 +111,7 @@ export const BuyCoffeeModal: React.FC<BuyCoffeeModalProps> = ({ isOpen, onClose 
 
             <div className="flex items-center gap-2">
               <span
-                className={`hidden sm:inline-flex items-center gap-1 px-3 py-1.5 rounded-xl text-mini font-black uppercase tracking-wider shadow-md group-hover:scale-105 transition-all ${gateway.buttonBg}`}
+                className={`hidden sm:inline-flex items-center gap-1 px-3 py-1.5 rounded-control text-mini font-black uppercase tracking-wider shadow-md group-hover:scale-105 transition-all ${gateway.buttonBg}`}
               >
                 <span>{t.coffeeVisit || 'Visit'}</span>
                 <ExternalLink className="h-3 w-3" />

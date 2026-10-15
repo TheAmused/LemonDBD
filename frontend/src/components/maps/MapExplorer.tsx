@@ -26,6 +26,9 @@ import { MapCard } from './MapCard';
 import { EmptyState } from '@/components/common/EmptyState';
 import { useDictionary } from "@/context/DictionaryContext";
 import { trackEvent } from '@/utils/analytics';
+import { Surface } from '@/components/common/Surface';
+import { Badge } from '@/components/common/Badge';
+import { TileButton } from '@/components/common/TileButton';
 
 // Sentinel dropdown value for "no filter"; real attribute values never collide with it.
 // Also what "no filter" persists as in localStorage, since the filter fields
@@ -289,9 +292,9 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
 
   return (
     <div className="w-full space-y-6" data-testid="map-explorer-root">
-      <section
+      <Surface
         aria-label={dict.maps.pageTitle}
-        className="relative flex w-full flex-col overflow-hidden rounded-3xl border border-border-color bg-bg-surface px-4 pt-3.5 pb-4 sm:px-6 sm:pt-4 sm:pb-5 md:min-h-[14rem] shadow-sm transition-all duration-300"
+        as="section" padding="none" className="relative flex w-full flex-col overflow-hidden px-4 pt-3.5 pb-4 sm:px-6 sm:pt-4 sm:pb-5 md:min-h-[14rem] shadow-sm transition-all duration-300"
       >
         <div className="relative z-10 grid grid-cols-[minmax(0,1fr)] flex-1">
           <div
@@ -317,7 +320,7 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
                   placeholder={dict.maps.searchPlaceholder}
                   aria-label={dict.maps.searchAria}
                   tabIndex={hideSearch ? -1 : undefined}
-                  className="rounded-2xl bg-bg-surface"
+                  className="rounded-control bg-bg-surface"
                 />
 
               {/* `inert` keeps the hidden filter row out of the tab order while the voice slot is shown. */}
@@ -399,7 +402,7 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
             </div>
           )}
         </div>
-      </section>
+      </Surface>
 
       {loading && (
         <div className="py-16 text-center text-xs text-text-muted">
@@ -425,13 +428,12 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
 
             return (
               <React.Fragment key={realm}>
-                <button
-                  type="button"
+                <TileButton
                   onClick={() => toggleRealm(realm)}
                   aria-expanded={expanded}
                   aria-controls={`realm-panel-${realm}`}
                   aria-label={`${expanded ? dict.maps.collapseRealmAria : dict.maps.expandRealmAria}: ${realm}`}
-                  className={`group relative aspect-square w-full min-h-[48px] touch-manipulation overflow-hidden rounded-2xl border-2 text-left cursor-pointer transition-transform duration-200 hover:scale-[1.03] active:scale-95 focus:outline-none focus:ring-2 focus:ring-accent-red ${expanded ? 'border-accent-red' : 'border-border-color hover:border-accent-red/60'}`}
+                  className={`group relative aspect-square w-full min-h-12 touch-manipulation overflow-hidden rounded-control border-2 text-left duration-200 ${expanded ? 'border-accent-red' : 'border-border-color hover:border-accent-red/60'}`}
                 >
                   {bannerSrc ? (
                     <img
@@ -450,10 +452,10 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
                   <h2 className="absolute top-2 left-2 right-2 text-center text-sm sm:text-base font-black text-text-inverted tracking-tight line-clamp-2">
                     {realm}
                   </h2>
-                  <span className="absolute bottom-2 right-2 rounded-full bg-bg-primary/70 px-2 py-0.5 text-xs text-text-inverted">
+                  <Badge tone="overlay" size="sm" plain className="absolute bottom-2 right-2 text-text-inverted">
                     {realmMaps.length}
-                  </span>
-                </button>
+                  </Badge>
+                </TileButton>
 
                 {showPanel && (
                   <div
@@ -462,7 +464,7 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
                     style={{ gridColumn: '1 / -1', gridTemplateRows: isOpen ? '1fr' : '0fr' }}
                   >
                     <div className="overflow-hidden">
-                      <div className="space-y-4 rounded-2xl border border-border-color bg-bg-surface/50 p-3">
+                      <Surface padding="sm" className="space-y-4 bg-bg-surface/50">
                         {(panelGroups ?? []).map((group) => (
                           <div key={group.realm} className="space-y-2">
                             {(panelGroups?.length ?? 0) > 1 && (
@@ -485,7 +487,7 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
                             </div>
                           </div>
                         ))}
-                      </div>
+                      </Surface>
                     </div>
                   </div>
                 )}

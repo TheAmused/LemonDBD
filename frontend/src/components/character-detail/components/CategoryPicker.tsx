@@ -4,6 +4,9 @@
 import React, { useRef, useState } from 'react';
 import { Check, ChevronDown } from 'lucide-react';
 import { Popover, popoverTriggerProps } from '@/components/common/Popover';
+import { MenuItem } from '@/components/common/MenuItem';
+import { Button } from '@/components/common/Button';
+import { cn } from '@/utils/cn';
 
 export interface CategoryPickerOption {
   key: string;
@@ -68,14 +71,13 @@ export const CategoryPicker: React.FC<CategoryPickerProps> = ({
 
   return (
     <div ref={rootRef} className={`relative ${className}`}>
-      <button
-        type="button"
+      <Button
+        variant="secondary"
+        size="sm"
         {...popoverTriggerProps(open, 'listbox')}
         aria-label={ariaLabel}
         onClick={() => setOpen((o) => !o)}
-        className={`flex w-full items-center justify-between gap-2 px-3.5 py-2.5 rounded-2xl border bg-bg-elevated text-xs font-bold transition-colors cursor-pointer ${
-          open ? `${accentClasses.border} ${accentClasses.text}` : 'border-border-color text-text-primary'
-        }`}
+        className={cn('w-full justify-between', open && `${accentClasses.border} ${accentClasses.text}`)}
       >
         <span className="flex items-center gap-2 min-w-0">
           <SelectedIcon className={`h-4 w-4 shrink-0 ${accentClasses.text}`} aria-hidden="true" />
@@ -83,7 +85,7 @@ export const CategoryPicker: React.FC<CategoryPickerProps> = ({
           {countLabel && <span className="text-text-muted shrink-0">{countLabel}</span>}
         </span>
         <ChevronDown className={`h-4 w-4 shrink-0 transition-transform duration-200 ${open ? 'rotate-180' : ''}`} aria-hidden="true" />
-      </button>
+      </Button>
 
       <Popover
         open={open}
@@ -96,31 +98,24 @@ export const CategoryPicker: React.FC<CategoryPickerProps> = ({
         role="listbox"
         ariaLabel={ariaLabel}
         animate={false}
-        className="rounded-2xl border border-border-color bg-bg-surface shadow-xl"
+        className="rounded-card border border-border-color bg-bg-surface shadow-xl"
       >
           {categories.map((cat) => {
             const Icon = cat.icon;
             const isSelected = cat.key === selectedKey;
             return (
-              <button
+              <MenuItem selected={isSelected} tone={accent} flush
                 key={cat.key}
-                type="button"
                 role="option"
-                aria-selected={isSelected}
                 onClick={() => {
                   onSelect(cat.key);
                   setOpen(false);
                 }}
-                className={`flex w-full items-center gap-2.5 px-3.5 py-2.5 text-left text-xs font-bold transition-colors cursor-pointer ${
-                  isSelected
-                    ? `${accentClasses.bg} ${accentClasses.text}`
-                    : 'text-text-secondary hover:bg-bg-elevated hover:text-text-primary'
-                }`}
               >
                 <Icon className="h-4 w-4 shrink-0" aria-hidden="true" />
                 <span className="flex-1 min-w-0 truncate">{cat.label}</span>
                 {isSelected && <Check className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />}
-              </button>
+              </MenuItem>
             );
           })}
       </Popover>

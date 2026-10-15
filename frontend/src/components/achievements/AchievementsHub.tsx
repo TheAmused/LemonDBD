@@ -5,6 +5,7 @@ import React, { useMemo } from 'react';
 import { TrophyShelf } from './TrophyShelf';
 import { getTrophyShelves } from './shelves';
 import { useDictionary } from "@/context/DictionaryContext";
+import { Badge } from '@/components/common/Badge';
 
 interface AchievementsHubProps {
 }
@@ -23,9 +24,9 @@ export const AchievementsHub: React.FC<AchievementsHubProps> = () => {
       </div>
 
       <div className="fixed left-[var(--sidebar-width,0rem)] inset-y-0 right-0 z-40 flex items-center justify-center pointer-events-none transition-[left] duration-300">
-        <span className="pointer-events-auto rounded-2xl border border-accent-amber/40 bg-accent-amber/10 px-6 py-3 text-2xl font-black tracking-wide text-accent-amber shadow-lg">
+        <Badge tone="amber" size="lg" plain square className="pointer-events-auto shadow-lg">
           {t.comingSoon}
-        </span>
+        </Badge>
       </div>
     </div>
   );

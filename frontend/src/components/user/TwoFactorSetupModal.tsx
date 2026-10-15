@@ -120,7 +120,7 @@ export const TwoFactorSetupModal: React.FC<TwoFactorSetupModalProps> = ({ isOpen
   return (
     <Modal isOpen={isOpen} onClose={close} variant="dialog" size="md" title={t.setupTitle} busy={busy || step === 'codes'} padded>
       {error && (
-        <p role="alert" className="mb-4 rounded-xl border border-accent-red/30 bg-accent-red/10 p-3 type-strong text-accent-red">
+        <p role="alert" className="mb-4 rounded-card border border-accent-red/30 bg-accent-red/10 p-3 type-strong text-accent-red">
           {error}
         </p>
       )}
@@ -168,7 +168,7 @@ export const TwoFactorSetupModal: React.FC<TwoFactorSetupModalProps> = ({ isOpen
           <div className="flex w-full flex-col items-center gap-1.5">
             <span className="type-caption text-text-muted">{t.manualEntry}</span>
             <div className="flex items-center gap-2">
-              <code className="break-all rounded-lg bg-bg-primary px-2.5 py-1.5 text-xs tracking-widest text-text-primary shadow-inner select-all">
+              <code className="break-all rounded-chip bg-bg-primary px-2.5 py-1.5 text-xs tracking-widest text-text-primary shadow-inner select-all">
                 {setup.secret.match(/.{1,4}/g)?.join(' ')}
               </code>
               <Button type="button" variant="secondary" size="sm" onClick={copyKey} leftIcon={keyCopied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}>

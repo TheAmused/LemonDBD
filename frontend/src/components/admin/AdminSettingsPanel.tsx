@@ -15,6 +15,7 @@ import { backendBase } from '@/utils/staticUrl';
 import { authHeaders, getErrorMessage } from '@/utils/api';
 import { formatMessage } from '@/utils/i18nFormat';
 import { useDictionary } from "@/context/DictionaryContext";
+import { Badge } from '@/components/common/Badge';
 
 interface AdminSettingsPanelProps {
   onActionMessage: (msg: ActionMessage) => void;
@@ -111,9 +112,9 @@ export const AdminSettingsPanel: React.FC<AdminSettingsPanelProps> = ({ onAction
   const dirty = (row: AdminSiteSetting) => (drafts[row.key] ?? '').trim() !== String(row.value);
 
   return (
-    <Surface padding="none" radius="3xl" className="shadow-md backdrop-blur-xl">
+    <Surface padding="none" className="shadow-md backdrop-blur-xl">
       {/* Banner header, same treatment as the profile's drawers */}
-      <div className="relative overflow-hidden rounded-t-3xl px-5 py-4 text-center sm:px-7 sm:py-4.5">
+      <div className="relative overflow-hidden rounded-t-card px-5 py-4 text-center sm:px-7 sm:py-4.5">
         <div
           className="pointer-events-none absolute inset-0 bg-cover bg-center opacity-20 mix-blend-luminosity dark:opacity-30"
           style={{ backgroundImage: "url('/images/banners/banner_loadouts.webp')" }}
@@ -140,7 +141,7 @@ export const AdminSettingsPanel: React.FC<AdminSettingsPanelProps> = ({ onAction
               return (
                 <section key={group} className="grid gap-4 p-4 sm:p-6 lg:grid-cols-[minmax(0,15rem)_minmax(0,1fr)] lg:gap-8">
                   <div className="flex items-start gap-3">
-                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-accent-red/30 bg-accent-red/15 text-accent-red">
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-control border border-accent-red/30 bg-accent-red/15 text-accent-red">
                       {GroupIcon ? <GroupIcon className="h-4 w-4" aria-hidden="true" /> : null}
                     </span>
                     <div className="min-w-0">
@@ -149,7 +150,7 @@ export const AdminSettingsPanel: React.FC<AdminSettingsPanelProps> = ({ onAction
                     </div>
                   </div>
 
-                  <div className="min-w-0 divide-y divide-border-color rounded-2xl border border-border-color bg-bg-primary/60">
+                  <div className="min-w-0 divide-y divide-border-color rounded-card border border-border-color bg-bg-primary/60">
                     {rows.map((row) => {
                       const unit = unitOf(row.key);
                       const changedRow = dirty(row);
@@ -164,13 +165,13 @@ export const AdminSettingsPanel: React.FC<AdminSettingsPanelProps> = ({ onAction
                             <label htmlFor={`cfg-${row.key}`} className="type-strong flex flex-wrap items-center gap-2 text-text-primary">
                               <span>{labelFor(row.key)}</span>
                               {changedRow ? (
-                                <span className="type-label-2xs rounded border border-accent-red/30 bg-accent-red/10 px-1.5 py-0.5 text-accent-red">
+                                <Badge tone="red" size="xs" square>
                                   {t.configModified || 'Modified'}
-                                </span>
+                                </Badge>
                               ) : row.overridden ? (
-                                <span className="type-label-2xs rounded border border-border-color bg-bg-elevated px-1.5 py-0.5 text-text-muted">
+                                <Badge tone="neutral" size="xs" square>
                                   {t.configCustom || 'Custom'}
-                                </span>
+                                </Badge>
                               ) : null}
                             </label>
                             <p className="mt-1 type-body text-text-muted">{descFor(row.key)}</p>
@@ -201,14 +202,14 @@ export const AdminSettingsPanel: React.FC<AdminSettingsPanelProps> = ({ onAction
                                 {formatMessage((t.configDefaultValue || 'Default: {value}'), { value: String(row.default) || '—' })}
                               </span>
                               {row.overridden ? (
-                                <button
+                                <Button
                                   type="button"
                                   disabled={saving}
                                   onClick={() => send({ [row.key]: null })}
-                                  className="cursor-pointer font-bold text-accent-red hover:underline disabled:opacity-50"
+                                  variant="linkDanger" size="sm"
                                 >
                                   {t.configResetDefault || 'Use default'}
-                                </button>
+                                </Button>
                               ) : null}
                             </div>
                           </div>
@@ -222,7 +223,7 @@ export const AdminSettingsPanel: React.FC<AdminSettingsPanelProps> = ({ onAction
           </div>
 
           {/* Save bar: stays in view while the form scrolls */}
-          <div className="sticky bottom-0 z-10 flex flex-wrap items-center justify-between gap-3 rounded-b-3xl border-t border-border-color bg-bg-surface/95 px-4 py-3 backdrop-blur-md sm:px-6">
+          <div className="sticky bottom-0 z-10 flex flex-wrap items-center justify-between gap-3 rounded-b-card border-t border-border-color bg-bg-surface/95 px-4 py-3 backdrop-blur-md sm:px-6">
             <p
               role="status"
               className={`type-strong ${changed.length > 0 ? 'text-accent-red' : 'text-text-muted'}`}

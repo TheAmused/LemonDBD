@@ -1,6 +1,6 @@
 // frontend/src/components/common/Skeleton.tsx
 // Tiny loading-placeholder primitives. Page skeletons keep their own layout
-// and compose these instead of repeating `animate-pulse rounded bg-bg-elevated`.
+// and compose these instead of repeating `animate-pulse rounded-chip bg-bg-elevated`.
 import React from 'react';
 import { cn } from '@/utils/cn';
 
@@ -11,6 +11,6 @@ export interface SkeletonProps {
 }
 
 /** A rectangular block. Size it with className (e.g. `h-24 w-full`). */
-export const SkeletonBlock: React.FC<SkeletonProps & { rounded?: string }> = ({ className, rounded = 'rounded-xl' }) => (
+export const SkeletonBlock: React.FC<SkeletonProps & { rounded?: string }> = ({ className, rounded = 'rounded-control' }) => (
   <div aria-hidden="true" className={cn(BASE, rounded, className)} />
 );

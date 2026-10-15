@@ -15,13 +15,13 @@ export type TierTileShape = 'square' | 'wide';
 // `lg:` rule would override `wide-2k:` on the same property.
 const SHAPE_CLASSES: Record<TierTileShape, string> = {
   // >= 56px on the smallest screens: comfortably above the 44px touch minimum.
-  square: 'w-12 min-[480px]:w-14 sm:max-lg:w-16 lg:max-wide-2k:w-[72px] wide-2k:w-24',
-  wide: 'w-[76px] min-[480px]:w-[88px] sm:max-lg:w-24 lg:max-wide-2k:w-28 wide-2k:w-36',
+  square: 'w-12 min-[480px]:w-14 sm:max-lg:w-16 lg:max-wide-2k:w-18 wide-2k:w-24',
+  wide: 'w-19 min-[480px]:w-22 sm:max-lg:w-24 lg:max-wide-2k:w-28 wide-2k:w-36',
 };
 
 const IMAGE_CLASSES: Record<TierTileShape, string> = {
-  square: 'h-12 min-[480px]:h-14 sm:max-lg:h-16 lg:max-wide-2k:h-[72px] wide-2k:h-24',
-  wide: 'h-12 min-[480px]:h-14 sm:max-lg:h-16 lg:max-wide-2k:h-[72px] wide-2k:h-24',
+  square: 'h-12 min-[480px]:h-14 sm:max-lg:h-16 lg:max-wide-2k:h-18 wide-2k:h-24',
+  wide: 'h-12 min-[480px]:h-14 sm:max-lg:h-16 lg:max-wide-2k:h-18 wide-2k:h-24',
 };
 
 /** `William "Bill" Overbeck` -> `WB`: first letter of the first two words that have one. */
@@ -65,7 +65,7 @@ export const TierItemTile = React.forwardRef<HTMLDivElement, TierItemTileProps>(
       {...tip(item.name, undefined, 'item')}
       aria-label={item.name}
       className={cn(
-        'group relative flex shrink-0 select-none flex-col items-center gap-1 rounded-xl outline-none',
+        'group relative flex shrink-0 select-none flex-col items-center gap-1 rounded-card outline-none',
         'touch-pan-y [-webkit-touch-callout:none] focus-visible:ring-2 focus-visible:ring-accent-amber',
         size === 'sm' ? 'w-11' : cn(SHAPE_CLASSES[shape], 'group-data-[fit]/board:w-(--tile-w)!'),
         ghost && 'opacity-30',
@@ -77,7 +77,7 @@ export const TierItemTile = React.forwardRef<HTMLDivElement, TierItemTileProps>(
     >
       <div
         className={cn(
-          'relative flex w-full items-center justify-center overflow-hidden rounded-xl border transition-[border-color] duration-150',
+          'relative flex w-full items-center justify-center overflow-hidden rounded-card border transition-[border-color] duration-150',
           size === 'sm' ? 'h-11' : cn(IMAGE_CLASSES[shape], 'group-data-[fit]/board:h-(--tile)!'),
           // A bare icon sits straight on the board; the plate and border only come back for selection, hover and the placeholder.
           hasImage ? 'bg-transparent' : 'bg-bg-elevated',

@@ -2,6 +2,7 @@
 // frontend/src/components/common/EmptyState.tsx
 
 import React from 'react';
+import { Button } from '@/components/common/Button';
 type EmptyStateIcon = React.ComponentType<{ className?: string; 'aria-hidden'?: boolean | 'true' | 'false' }>;
 
 export type EmptyStateVariant = 'solid' | 'dashed' | 'compact' | 'inline';
@@ -28,16 +29,13 @@ interface EmptyStateProps {
 
 const VARIANT_WRAPPER_CLASSNAME: Record<EmptyStateVariant, string> = {
   compact:
-    'rounded-2xl border border-dashed border-border-color bg-bg-surface/40 p-6 sm:p-8 text-center',
+    'rounded-card border border-dashed border-border-color bg-bg-surface/40 p-6 sm:p-8 text-center',
   inline: 'py-12 text-center',
   solid:
-    'mt-4 sm:mt-6 mb-auto rounded-3xl bg-bg-surface p-8 sm:p-12 text-center backdrop-blur-sm shadow-sm w-full border border-border-color',
+    'mt-4 sm:mt-6 mb-auto rounded-card bg-bg-surface p-8 sm:p-12 text-center backdrop-blur-sm shadow-sm w-full border border-border-color',
   dashed:
-    'my-8 sm:my-12 rounded-3xl border border-dashed border-border-color bg-bg-surface/40 p-8 sm:p-12 text-center backdrop-blur-sm shadow-sm',
+    'my-8 sm:my-12 rounded-card border border-dashed border-border-color bg-bg-surface/40 p-8 sm:p-12 text-center backdrop-blur-sm shadow-sm',
 };
-
-const DEFAULT_ACTION_CLASSNAME =
-  'mt-4 inline-flex items-center gap-2 rounded-xl bg-accent-red/20 px-4 py-2 text-xs font-bold text-accent-red hover:bg-accent-red/30 transition-colors cursor-pointer shadow-sm border border-accent-red/40';
 
 export function EmptyState({
   icon: Icon,
@@ -60,13 +58,9 @@ export function EmptyState({
       <h3 className={headingClassName ?? (compact ? 'text-sm font-bold text-text-primary' : 'text-lg font-extrabold text-text-primary')}>{title}</h3>
       {subtitle && <p className={subtitleClassName}>{subtitle}</p>}
       {action && (
-        <button
-          type="button"
-          onClick={action.onClick}
-          className={action.className || DEFAULT_ACTION_CLASSNAME}
-        >
+        <Button variant="soft" size="sm" onClick={action.onClick} className={action.className ?? 'mt-4'}>
           {action.label}
-        </button>
+        </Button>
       )}
       {children}
     </section>

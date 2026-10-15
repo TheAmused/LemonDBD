@@ -2,7 +2,7 @@
 // frontend/src/components/tier-lists/creator/LadderEditor.tsx
 
 import React, { useEffect, useRef, useState } from 'react';
-import { Check, GripVertical, ListOrdered, Plus, X } from 'lucide-react';
+import { GripVertical, ListOrdered, Plus, X } from 'lucide-react';
 import type { TierDefinition } from '@/types/tierList';
 import { cn } from '@/utils/cn';
 import { TIER_COLOR_TOKENS, TIER_LIST_LIMITS } from '@/utils/tierLists/constants';
@@ -16,10 +16,12 @@ import { Input } from '@/components/common/Field';
 import { CustomDropdown } from '@/components/common/CustomDropdown';
 import { formatMessage } from '@/utils/i18nFormat';
 import { useDictionary } from "@/context/DictionaryContext";
+import { ToggleChip } from '@/components/common/ToggleChip';
+import { ColorSwatch } from '@/components/common/ColorSwatch';
 
 function PresetSwatch({ colors }: { colors: readonly string[] }) {
   return (
-    <span className="flex overflow-hidden rounded-xs" aria-hidden="true">
+    <span className="flex overflow-hidden rounded-chip" aria-hidden="true">
       {colors.map((color, i) => (
         <span key={i} className={cn('h-3.5 w-2', tierColorProps(color).className)} />
       ))}
@@ -128,27 +130,19 @@ export function LadderEditor({ tiers, onChange, onPreset, activePreset }: Ladder
             label={activePreset ? undefined : '—'}
             icon={activePreset ? undefined : <ListOrdered className="h-4 w-4" aria-hidden="true" />}
             ariaLabel={c.presetsLabel}
-            buttonClassName="min-h-[40px]"
+            buttonClassName="min-h-10"
             minWidthClass="min-w-[220px]"
           />
         </div>
         <div className="hidden sm:flex flex-wrap justify-center gap-2">
           {LADDER_PRESETS.map((preset) => (
-            <button
+            <ToggleChip pressed={activePreset === preset.id} size="md"
               key={preset.id}
-              type="button"
               onClick={() => onPreset(preset.id)}
-              aria-pressed={activePreset === preset.id}
-              className={cn(
-                'inline-flex min-h-[38px] items-center gap-2 rounded-lg border px-3 text-xs sm:text-sm font-bold transition-colors cursor-pointer',
-                activePreset === preset.id
-                  ? 'border-accent-red bg-accent-red/10 text-accent-red'
-                  : 'border-border-color bg-bg-surface text-text-primary hover:bg-bg-elevated'
-              )}
             >
               <PresetSwatch colors={preset.colors} />
               {c.presets[preset.id]}
-            </button>
+            </ToggleChip>
           ))}
         </div>
       </div>
@@ -169,11 +163,11 @@ export function LadderEditor({ tiers, onChange, onPreset, activePreset }: Ladder
                 moveById(draggingId, tier.id);
               }}
               className={cn(
-                'rounded-lg border border-border-color bg-bg-surface shadow-xs overflow-hidden transition-colors',
+                'rounded-chip border border-border-color bg-bg-surface shadow-xs overflow-hidden transition-colors',
                 isDragging && 'z-20 relative border-accent-amber opacity-90'
               )}
             >
-              <div className="flex items-stretch min-h-[44px] sm:min-h-[48px]">
+              <div className="flex items-stretch min-h-11 sm:min-h-12">
                 {/* Drag Handle */}
                 <button
                   type="button"
@@ -231,20 +225,12 @@ export function LadderEditor({ tiers, onChange, onPreset, activePreset }: Ladder
                     const swatch = tierColorProps(token);
                     const active = tier.color === token;
                     return (
-                      <button
+                      <ColorSwatch selected={active} size="sm" className={swatch.className}
                         key={token}
-                        type="button"
+                       
                         onClick={() => update(tier.id, { color: token })}
-                        aria-label={formatMessage(t.colorSwatchAria, { name: token.toUpperCase() })}
-                        aria-pressed={active}
-                        className={cn(
-                          'pointer-coarse:min-h-11 pointer-coarse:min-w-11 flex h-7 w-7 items-center justify-center rounded-md border-2 cursor-pointer transition-transform hover:scale-105',
-                          swatch.className,
-                          active ? 'border-text-primary' : 'border-transparent'
-                        )}
-                      >
-                        {active && <Check className="h-3.5 w-3.5" aria-hidden="true" />}
-                      </button>
+                        aria-label={formatMessage(t.colorSwatchAria, { name: token.toUpperCase() })}>
+                      </ColorSwatch>
                     );
                   })}
                   <TierColorPicker size="sm" color={tier.color} onChange={(hex) => update(tier.id, { color: hex })} />
@@ -256,7 +242,7 @@ export function LadderEditor({ tiers, onChange, onPreset, activePreset }: Ladder
                       placeholder={t.tierBackgroundImagePlaceholder}
                       inputMode="url"
                       invalid={bgInvalid}
-                      className="min-h-[38px] rounded-lg bg-bg-primary"
+                      className="min-h-[38px] bg-bg-primary"
                     />
                     <span className={cn('text-xs', bgInvalid ? 'font-semibold text-accent-red' : 'text-text-muted')}>
                       {bgInvalid ? t.invalidImage : t.tierBackgroundImageHint}
@@ -275,7 +261,7 @@ export function LadderEditor({ tiers, onChange, onPreset, activePreset }: Ladder
           onClick={add}
           disabled={tiers.length >= TIER_LIST_LIMITS.maxTiers}
           leftIcon={<Plus className="h-4 w-4" aria-hidden="true" />}
-          className="min-h-[40px] rounded-lg px-6"
+          className="min-h-10 px-6"
         >
           {t.addTier}
         </Button>

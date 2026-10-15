@@ -58,7 +58,7 @@ export function EffectsPreferenceModal({ isOpen, mandatory, values, onChange, on
       testId="smash-effects-preferences"
       footerClassName="justify-center"
       footer={
-        <Button variant="primary" size="md" data-autofocus onClick={onClose} className="w-full sm:w-auto sm:min-w-40 rounded-xl">
+        <Button variant="primary" size="md" data-autofocus onClick={onClose} className="w-full sm:w-auto sm:min-w-40">
           {text.continue}
         </Button>
       }

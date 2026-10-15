@@ -252,7 +252,7 @@ describe('Tier lists: OfficialTierListCard', () => {
 });
 
 describe('Tier lists: CustomTierListCard', () => {
-  it('renders a squareish delete button (h-8 w-8 rounded-lg) and item showcase with overflow badge', () => {
+  it('renders a squareish delete button (h-8 w-8 rounded-control) and item showcase with overflow badge', () => {
     const customList = {
       id: 'test-custom',
       title: 'My Custom Tier List',
@@ -279,8 +279,8 @@ describe('Tier lists: CustomTierListCard', () => {
         onDelete: () => {},
       })
     );
-    assert.ok(html.includes('h-8 w-8 rounded-lg'), 'Delete button must be squareish (rounded-lg)');
-    assert.ok(!html.includes('p-1.5 rounded-xl'), 'Must not use circular rounded-xl on delete button');
+    assert.ok(html.includes('h-8 w-8 rounded-control'), 'Delete button must be squareish (rounded-control)');
+    assert.ok(!html.includes('p-1.5 rounded-full'), 'Must not use circular rounded-full on delete button');
     assert.ok(html.includes('+1'), 'Must render +1 overflow badge for 5th item');
     assert.ok(html.includes('Items: 2/5'), 'Must render Items X/Y chip');
     assert.ok(!html.includes('Custom<'), 'Must not render redundant CUSTOM label');

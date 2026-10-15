@@ -148,7 +148,7 @@ export const ScoreboardCheckModal: React.FC<ScoreboardCheckModalProps> = ({ isOp
     >
       <div className="space-y-5">
         {error && (
-          <div role="alert" className="flex items-start gap-2 rounded-xl border border-accent-red/30 bg-accent-red/10 p-3 text-accent-red">
+          <div role="alert" className="flex items-start gap-2 rounded-card border border-accent-red/30 bg-accent-red/10 p-3 text-accent-red">
             <TriangleAlert className="mt-0.5 h-4 w-4 shrink-0" />
             <p className="type-body">{error}</p>
           </div>
@@ -167,7 +167,7 @@ export const ScoreboardCheckModal: React.FC<ScoreboardCheckModalProps> = ({ isOp
               }}
             />
             {previewUrl ? (
-              <div className="relative overflow-hidden rounded-xl border border-border-color bg-bg-elevated">
+              <div className="relative overflow-hidden rounded-card border border-border-color bg-bg-elevated">
                 <img src={previewUrl} alt={t.previewAlt} className="mx-auto max-h-72 w-auto object-contain" />
                 <Button
                   size="sm"
@@ -188,7 +188,7 @@ export const ScoreboardCheckModal: React.FC<ScoreboardCheckModalProps> = ({ isOp
                   e.preventDefault();
                   pick(e.dataTransfer.files?.[0]);
                 }}
-                className="flex w-full cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-border-color bg-bg-elevated px-4 py-10 text-text-secondary transition-colors hover:border-accent-red/50"
+                className="flex w-full cursor-pointer flex-col items-center justify-center gap-2 rounded-control border-2 border-dashed border-border-color bg-bg-elevated px-4 py-10 text-text-secondary transition-colors hover:border-accent-red/50"
               >
                 <ImagePlus className="h-7 w-7" />
                 <span className="type-strong text-text-primary">{t.chooseImage}</span>
@@ -250,7 +250,7 @@ export const ScoreboardCheckModal: React.FC<ScoreboardCheckModalProps> = ({ isOp
                     [t.unknown, report.summary.unknown],
                   ] as Array<[string, React.ReactNode]>
                 ).map(([label, value]) => (
-                  <div key={label} className="rounded-xl border border-border-color bg-bg-elevated p-3">
+                  <div key={label} className="rounded-card border border-border-color bg-bg-elevated p-3">
                     <p className="type-body text-text-muted">{label}</p>
                     <p className="type-strong text-text-primary">{value}</p>
                   </div>
@@ -265,7 +265,7 @@ export const ScoreboardCheckModal: React.FC<ScoreboardCheckModalProps> = ({ isOp
             )}
 
             {report.rows && report.rows.length > 0 && (
-              <div className="overflow-x-auto rounded-xl border border-border-color">
+              <div className="overflow-x-auto rounded-card border border-border-color">
                 <table className="w-full text-left">
                   <thead className="bg-bg-elevated type-body text-text-muted">
                     <tr>

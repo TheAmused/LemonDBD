@@ -4,12 +4,14 @@
 import { Input } from '@/components/common/Field';
 import { useDictionary } from '@/context/DictionaryContext';
 import React, { useState, useMemo, useRef, useEffect, useCallback } from 'react';
-import Image from 'next/image';
 import { Search, ChevronDown, Sparkles } from 'lucide-react';
 import type { MinigameCatalog, TargetType, GuessedItem } from '@/types/minigame';
 import { staticUrl } from '@/utils/api';
 import { isKiller, isSurvivor } from '@/utils/characterUtils';
+import { Badge } from '@/components/common/Badge';
+import { Thumb } from '@/components/common/Thumb';
 
+import { Button } from '@/components/common/Button';
 export type AutocompleteItem = GuessedItem;
 
 interface CharacterAutocompleteProps {
@@ -234,11 +236,11 @@ export const CharacterAutocomplete: React.FC<CharacterAutocompleteProps> = ({
           autoFocus={autoFocus}
           className="bg-bg-surface pl-11 pr-10 shadow-lg"
         />
-        <button
+        <Button
           type="button"
           tabIndex={-1}
           onClick={() => setIsOpen((prev) => !prev)}
-          className="absolute right-3 text-text-muted hover:text-text-primary"
+          variant="ghost" size="xs" icon className="absolute right-2 top-1/2 -translate-y-1/2"
           aria-expanded={isOpen}
           aria-haspopup="listbox"
           aria-label={dict.minigames.toggleSuggestions}
@@ -246,13 +248,13 @@ export const CharacterAutocomplete: React.FC<CharacterAutocompleteProps> = ({
           <ChevronDown
             className={`w-4 h-4 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
           />
-        </button>
+        </Button>
       </div>
 
       {isOpen && filteredItems.length > 0 && (
         <ul
           role="listbox"
-          className="absolute left-0 right-0 mt-2 max-h-72 overflow-y-auto rounded-xl bg-bg-surface border border-border-color shadow-2xl divide-y divide-border-color/60 z-50 backdrop-blur-md"
+          className="absolute left-0 right-0 mt-2 max-h-72 overflow-y-auto rounded-card bg-bg-surface border border-border-color shadow-2xl divide-y divide-border-color/60 z-50 backdrop-blur-md"
         >
           {filteredItems.map((item, idx) => {
             const isHighlighted = idx === highlightedIndex;
@@ -275,20 +277,7 @@ export const CharacterAutocomplete: React.FC<CharacterAutocompleteProps> = ({
                   isHighlighted ? 'bg-accent-red/20 text-text-primary font-bold' : 'text-text-secondary hover:bg-bg-elevated'
                 }`}
               >
-                <div className="relative w-10 h-10 rounded-lg overflow-hidden bg-bg-elevated border border-border-color flex-shrink-0 flex items-center justify-center">
-                  {imgSrc ? (
-                    <Image
-                      src={imgSrc}
-                      alt={item.name}
-                      width={40}
-                      height={40}
-                      unoptimized
-                      className="object-cover w-full h-full"
-                    />
-                  ) : (
-                    <Sparkles className="w-5 h-5 text-text-muted" />
-                  )}
-                </div>
+                <Thumb src={imgSrc} alt={item.name} fallback={<Sparkles className="h-5 w-5 text-text-muted" />} />
 
                 <div className="flex-1 min-w-0">
                   <div className="type-card-title truncate text-text-primary">{item.name}</div>
@@ -298,17 +287,11 @@ export const CharacterAutocomplete: React.FC<CharacterAutocompleteProps> = ({
                 </div>
 
                 {item.role && (
-                  <span
-                    className={`text-tiny font-bold uppercase tracking-wider px-2 py-0.5 rounded ${
-                      isKiller(item.role)
-                        ? 'bg-accent-red/20 text-accent-red border border-accent-red/40'
-                        : isSurvivor(item.role)
-                        ? 'bg-accent-green/20 text-accent-green border border-accent-green/40'
-                        : 'bg-bg-elevated text-text-secondary border border-border-color'
-                    }`}
+                  <Badge
+                    tone={isKiller(item.role) ? 'red' : isSurvivor(item.role) ? 'green' : 'neutral'} size="sm" square
                   >
                     {item.role}
-                  </span>
+                  </Badge>
                 )}
               </li>
             );

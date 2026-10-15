@@ -13,6 +13,7 @@ import { PerkSlot } from '../shared/PerkSlot';
 import { useJackpotCelebration } from '../shared/useJackpotCelebration';
 import { playCardFlip } from '@/utils/perkAudio';
 import { useDictionary } from "@/context/DictionaryContext";
+import { TileButton } from '@/components/common/TileButton';
 
 export interface TarotDeckStageProps {
   role: RoleCategory;
@@ -104,7 +105,7 @@ const CardImage: React.FC<{ type: TarotType; side: TarotSide }> = ({ type, side 
       aria-hidden="true"
       draggable={false}
       onError={() => setErrored(true)}
-      className="pointer-events-none absolute inset-0 h-full w-full rounded-2xl object-cover"
+      className="pointer-events-none absolute inset-0 h-full w-full rounded-card object-cover"
     />
   );
 };
@@ -199,7 +200,7 @@ export const TarotDeckStage: React.FC<TarotDeckStageProps> = ({
                     onClick={() => handleFlip(idx)}
                     disabled={card.flipped}
                     aria-label={typeNames[card.type] || DEFAULT_TYPE_NAMES[card.type]}
-                    className="group absolute inset-0 overflow-hidden rounded-2xl bg-gradient-to-br from-bg-elevated to-bg-primary cursor-pointer disabled:cursor-default border-2 border-transparent transition-all duration-300 hover:scale-[1.04] hover:border-accent-amber/70 hover:shadow-lg hover:shadow-accent-amber/40 active:scale-[0.97]"
+                    className="group absolute inset-0 overflow-hidden rounded-control bg-gradient-to-br from-bg-elevated to-bg-primary cursor-pointer disabled:cursor-default border-2 border-transparent transition-all duration-300 hover:scale-[1.04] hover:border-accent-amber/70 hover:shadow-lg hover:shadow-accent-amber/40 active:scale-[0.97]"
                     style={{ backfaceVisibility: 'hidden', pointerEvents: card.flipped ? 'none' : 'auto' }}
                   >
                     <CardImage type={card.type} side="back" />
@@ -209,7 +210,7 @@ export const TarotDeckStage: React.FC<TarotDeckStageProps> = ({
                       from it, see CardImage side="face"), revealing the perk
                       in its diamond window instead of turning into a bare icon. */}
                   <div
-                    className="absolute inset-0 flex flex-col items-center justify-between overflow-hidden rounded-2xl bg-bg-surface p-2 sm:p-2.5 xl:p-3 2xl:p-4 wide:p-5"
+                    className="absolute inset-0 flex flex-col items-center justify-between overflow-hidden rounded-card bg-bg-surface p-2 sm:p-2.5 xl:p-3 2xl:p-4 wide:p-5"
                     style={{
                       backfaceVisibility: 'hidden',
                       transform: 'rotateY(180deg)',
@@ -245,19 +246,18 @@ export const TarotDeckStage: React.FC<TarotDeckStageProps> = ({
           })}
         </div>
       ) : (
-        <button
-          type="button"
+        <TileButton
           onClick={handleShuffle}
           disabled={activePlayablePerks.length === 0}
-          className="group cursor-pointer disabled:cursor-default transition-transform hover:scale-105 active:scale-95"
+          className="group"
         >
           <img
             src="/images/randomizer/tarot.webp"
             alt=""
-            className="h-28 w-28 sm:h-36 sm:w-36 xl:h-48 xl:w-48 2xl:h-60 2xl:w-60 wide:h-72 wide:w-72 object-contain drop-shadow-2xl select-none pointer-events-none group-hover:drop-shadow-[0_0_24px_var(--color-accent-amber)] transition-all duration-300"
+            className="h-28 w-28 sm:h-36 sm:w-36 xl:h-48 xl:w-48 2xl:h-60 2xl:w-60 wide:h-72 wide:w-72 object-contain drop-shadow-2xl select-none pointer-events-none group-hover:drop-shadow-glow-amber-md transition-all duration-300"
             draggable={false}
           />
-        </button>
+        </TileButton>
       )}
 
       <DbdButton

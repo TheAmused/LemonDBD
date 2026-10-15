@@ -49,7 +49,7 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
             type="button"
             onClick={onCancel}
             disabled={busy}
-            className="min-w-0 flex-1 rounded-xl px-3 border border-border-color bg-bg-surface py-3 type-card-title text-text-secondary transition-colors hover:bg-bg-elevated hover:text-text-primary disabled:opacity-50 cursor-pointer shadow-xs"
+            className="min-w-0 flex-1 rounded-control px-3 border border-border-color bg-bg-surface py-3 type-card-title text-text-secondary transition-colors hover:bg-bg-elevated hover:text-text-primary disabled:opacity-50 cursor-pointer shadow-xs"
           >
             {cancelLabel}
           </button>
@@ -59,7 +59,7 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
           data-autofocus
           onClick={onConfirm}
           disabled={busy}
-          className="min-w-0 flex-1 px-3 inline-flex items-center justify-center gap-2 rounded-xl bg-accent-red py-3 type-card-title text-text-inverted shadow-md shadow-accent-red/20 transition-all hover:bg-accent-red-hover disabled:opacity-50 cursor-pointer"
+          className="min-w-0 flex-1 px-3 inline-flex items-center justify-center gap-2 rounded-control bg-accent-red py-3 type-card-title text-text-inverted shadow-md shadow-accent-red/20 transition-all hover:bg-accent-red-hover disabled:opacity-50 cursor-pointer"
         >
           {!busy && confirmIcon}
           <span>{busy ? busyLabel : confirmLabel}</span>

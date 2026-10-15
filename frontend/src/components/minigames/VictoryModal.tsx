@@ -2,7 +2,7 @@
 'use client';
 
 import { lookup } from '@/utils/lookup';
-import { Button } from '@/components/common/Button';
+import { Button, buttonClassName } from '@/components/common/Button';
 import React, { useEffect, useState } from 'react';
 import confetti from 'canvas-confetti';
 import { Share2, Check, RotateCcw, Home } from 'lucide-react';
@@ -12,6 +12,7 @@ import { Modal } from '@/components/common/Modal';
 import { copyTextWithFallback } from '@/utils/clipboard';
 import { useDictionary } from "@/context/DictionaryContext";
 import { formatMessage } from '@/utils/i18nFormat';
+import { Surface } from '@/components/common/Surface';
 
 interface VictoryModalProps {
   challenge: ChallengeDefinition;
@@ -117,7 +118,7 @@ export const VictoryModal: React.FC<VictoryModalProps> = ({ challenge, roundGues
 
             <Link
               href={`/${locale}/minigames`}
-              className="flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-bg-elevated hover:bg-bg-surface border border-border-color text-text-primary type-card-title transition-all"
+              className={buttonClassName('secondary', 'md', 'w-full')}
             >
               <Home className="w-4 h-4" />
               <span>{t.backToMinigames}</span>
@@ -126,7 +127,7 @@ export const VictoryModal: React.FC<VictoryModalProps> = ({ challenge, roundGues
       }
     >
       {/* Round Performance Breakdown */}
-      <div className="w-full p-4 rounded-2xl bg-bg-elevated/70 border border-border-subtle space-y-2.5">
+      <Surface tone="elevated" padding="none" className="w-full p-4 bg-bg-elevated/70 border-border-subtle space-y-2.5">
         {challenge.rounds.map((round, idx) => {
           const guesses = roundGuesses[idx] || [];
           const isWon = roundStatus[idx] === 'won';
@@ -146,7 +147,7 @@ export const VictoryModal: React.FC<VictoryModalProps> = ({ challenge, roundGues
                   {guesses.map((g, gi) => (
                     <span
                       key={gi}
-                      className={`inline-block w-2.5 h-2.5 rounded-sm ${
+                      className={`inline-block w-2.5 h-2.5 rounded-chip ${
                         g.evaluation.is_correct ? 'bg-accent-green' : 'bg-accent-red'
                       }`}
                     />
@@ -159,7 +160,7 @@ export const VictoryModal: React.FC<VictoryModalProps> = ({ challenge, roundGues
             </div>
           );
         })}
-      </div>
+      </Surface>
     </Modal>
   );
 };

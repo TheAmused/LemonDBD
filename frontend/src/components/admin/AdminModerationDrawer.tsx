@@ -130,14 +130,14 @@ export function AdminModerationDrawer({ user, onClose, onChanged, onActionMessag
                 [t.statSuspensions, String(summary.total_suspensions)],
                 [t.statBlockedContent, String(summary.content_blocked)],
               ].map(([label, value]) => (
-                <div key={label} className="rounded-xl border border-border-color bg-bg-primary p-2.5">
+                <div key={label} className="rounded-card border border-border-color bg-bg-primary p-2.5">
                   <dt className="type-label-2xs text-text-secondary">{label}</dt>
                   <dd className="type-strong text-text-primary">{value}</dd>
                 </div>
               ))}
             </dl>
             {suggestion && (
-              <div className="space-y-2 rounded-xl border border-border-color bg-bg-primary p-3">
+              <div className="space-y-2 rounded-card border border-border-color bg-bg-primary p-3">
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <div className="min-w-0">
                     <p className="type-label-2xs text-text-secondary">{t.suggestionTitle}</p>

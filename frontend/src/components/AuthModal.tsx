@@ -29,6 +29,7 @@ import { LegalDocModal } from '@/components/legal/LegalDocModal';
 import type { LegalDocId } from '@/components/legal/legalDocs';
 import { useDictionary } from "@/context/DictionaryContext";
 import { trackEvent } from '@/utils/analytics';
+import { InlineLink } from '@/components/common/InlineLink';
 import { AccountBlockedNotice } from '@/components/moderation/AccountBlockedNotice';
 import type { BlockedInfo } from '@/types/moderation';
 
@@ -250,7 +251,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
       {error && (
         <div
           role="alert"
-          className="mb-4 flex items-center gap-2.5 rounded-xl border border-accent-red/30 bg-accent-red/10 p-3 type-strong text-accent-red animate-in fade-in duration-150 shadow-xs"
+          className="mb-4 flex items-center gap-2.5 rounded-card border border-accent-red/30 bg-accent-red/10 p-3 type-strong text-accent-red animate-in fade-in duration-150 shadow-xs"
         >
           <AlertCircle className="h-4 w-4 shrink-0 text-accent-red" />
           <span>{error}</span>
@@ -293,20 +294,20 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
       {notice && notice.type === 'forgot-sent' && (
         <div
           role="status"
-          className="mb-4 space-y-3 rounded-xl border border-accent-amber/30 bg-accent-amber/10 p-3.5 text-xs text-accent-amber animate-in fade-in duration-150 shadow-xs"
+          className="mb-4 space-y-3 rounded-card border border-accent-amber/30 bg-accent-amber/10 p-3.5 text-xs text-accent-amber animate-in fade-in duration-150 shadow-xs"
         >
           <div className="flex items-start gap-2.5">
             <MailWarning className="h-4 w-4 shrink-0 mt-0.5" />
             <span>{dict.user.forgotSentNotice}</span>
           </div>
           {dict.modal.close && (
-            <button
+            <Button
               type="button"
               onClick={onClose}
-              className="block w-full rounded-lg bg-accent-amber/20 py-1.5 type-label-xs text-accent-amber hover:bg-accent-amber/30 transition-colors cursor-pointer"
+              variant="amberSoft" size="sm" className="block w-full"
             >
               {dict.modal.close}
-            </button>
+            </Button>
           )}
         </div>
       )}
@@ -392,13 +393,13 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
 
           {mode === 'login' && dict.user.forgotPasswordLink && (
             <div className="text-right -mt-1.5">
-              <button
+              <Button
                 type="button"
                 onClick={() => switchMode('forgot')}
-                className="type-caption text-text-muted hover:text-accent-amber transition-colors cursor-pointer"
+                variant="linkMuted" size="xs"
               >
                 {dict.user.forgotPasswordLink}
-              </button>
+              </Button>
             </div>
           )}
 
@@ -415,17 +416,15 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
                 <span className="type-body text-text-secondary">
                   {legalLabelParts.map((part, i) =>
                     part === '{terms}' || part === '{rules}' ? (
-                      <button
+                      <InlineLink
                         key={i}
-                        type="button"
                         onClick={() => {
                           trackEvent('legal_preview_open', { doc: part === '{terms}' ? 'terms' : 'rules' });
                           setLegalDoc(part === '{terms}' ? 'terms' : 'rules');
                         }}
-                        className="cursor-pointer font-bold text-accent-red underline underline-offset-2 hover:opacity-80"
                       >
                         {part === '{terms}' ? dict.user.acceptTermsLink : dict.user.acceptRulesLink}
-                      </button>
+                      </InlineLink>
                     ) : (
                       <React.Fragment key={i}>{part}</React.Fragment>
                     )
@@ -494,24 +493,24 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
             <Button variant="soft" size="xs" onClick={() => handleFillDemo('admin')} leftIcon={<ShieldAlert className="h-3 w-3" />}>
               <span>{dict.user.adminDemo}</span>
             </Button>
-            <button
+            <Button
               type="button"
               onClick={() => handleFillDemo('player')}
-              className="flex items-center justify-center gap-1.5 rounded-lg border border-accent-amber/30 bg-accent-amber/10 px-2.5 py-1.5 type-strong-xs text-accent-amber hover:bg-accent-amber/20 transition-colors shadow-xs cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red"
+              variant="amberSoft" size="sm"
             >
               <Sparkles className="h-3 w-3 text-accent-amber" />
               <span>{dict.user.userDemo}</span>
-            </button>
+            </Button>
           </div>
         </div>
       )}
 
       {showAuthBody && (
         <div className="mt-4 text-center">
-          <button
+          <Button
             type="button"
             onClick={() => switchMode(mode === 'register' ? 'login' : mode === 'forgot' ? 'login' : 'register')}
-            className="text-xs text-text-muted hover:text-accent-amber transition-colors cursor-pointer"
+            variant="linkMuted" size="sm"
           >
             {mode === 'forgot' ? (
               <span className="font-bold text-accent-amber">
@@ -532,7 +531,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
                 </span>
               </>
             )}
-          </button>
+          </Button>
         </div>
       )}
 

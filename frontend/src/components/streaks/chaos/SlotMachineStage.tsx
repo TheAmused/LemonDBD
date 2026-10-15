@@ -14,6 +14,7 @@ import { Button } from '@/components/common/Button';
 import { Spinner } from '@/components/common/Spinner';
 import { useDictionary } from "@/context/DictionaryContext";
 import { useChallengeAnimations } from '../useChallengeAnimations';
+import { TileButton } from '@/components/common/TileButton';
 
 const REEL_DIRECTIONS: ReelDirection[] = ['up', 'down', 'down', 'up'];
 const STRIP_LENGTH = 16;
@@ -94,7 +95,7 @@ const ReelStrip: React.FC<{
   return (
     <div
       ref={windowRef}
-      className={`relative aspect-square w-full min-w-0 sm:aspect-auto sm:h-24 sm:w-24 sm:shrink-0 md:h-28 md:w-28 lg:h-32 lg:w-32 overflow-hidden rounded-xl border-2 transition-shadow ${
+      className={`relative aspect-square w-full min-w-0 sm:aspect-auto sm:h-24 sm:w-24 sm:shrink-0 md:h-28 md:w-28 lg:h-32 lg:w-32 overflow-hidden rounded-card border-2 transition-shadow ${
         !spinning && finalPerk
           ? 'border-accent-red'
           : 'border-accent-red/30'
@@ -131,11 +132,11 @@ const ReelStrip: React.FC<{
 const RarityBadge: React.FC<{ rarity: AddonRarity; visible: boolean }> = ({ rarity, visible }) => {
   if (!visible) return <div className="h-9 w-28 sm:h-10" />;
   return (
-    <span className="chaos-badge-pop inline-flex items-center gap-1.5 rounded-lg border border-accent-red/30 bg-bg-surface/80 pl-1 pr-2.5 py-1 type-card-title text-text-primary sm:gap-2 sm:pr-3">
+    <span className="chaos-badge-pop inline-flex items-center gap-1.5 rounded-chip border border-accent-red/30 bg-bg-surface/80 pl-1 pr-2.5 py-1 type-card-title text-text-primary sm:gap-2 sm:pr-3">
       <img
         src={ADDON_RARITY_ICONS[rarity]}
         alt=""
-        className="h-7 w-7 rounded object-cover border border-border-color sm:h-9 sm:w-9"
+        className="h-7 w-7 rounded-chip object-cover border border-border-color sm:h-9 sm:w-9"
       />
       {rarity}
     </span>
@@ -195,7 +196,7 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({ perks, addon
   };
 
   return (
-    <div className="relative w-full overflow-hidden rounded-xl p-3 pb-8 sm:p-8">
+    <div className="relative w-full overflow-hidden rounded-card p-3 pb-8 sm:p-8">
       <div className="relative z-10">
         <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6">
           <div className="grid w-full grid-cols-4 items-end gap-2 sm:flex sm:w-auto">
@@ -339,16 +340,15 @@ const SlotLever: React.FC<{ down: boolean; disabled: boolean; animate: boolean; 
   }, [render]);
 
   return (
-    <button
-      type="button"
+    <TileButton press={false}
       onClick={onPull}
       disabled={disabled}
       aria-label={label}
-      className="relative shrink-0 cursor-pointer disabled:cursor-default"
+      className="relative shrink-0"
     >
       <div
         ref={panelRef}
-        className="relative h-20 w-14 sm:h-24 sm:w-[72px] md:h-28 lg:h-32 rounded-2xl border border-border-color"
+        className="relative h-20 w-14 sm:h-24 sm:w-18 md:h-28 lg:h-32 rounded-card border border-border-color"
        
       >
         <div
@@ -360,6 +360,6 @@ const SlotLever: React.FC<{ down: boolean; disabled: boolean; animate: boolean; 
         />
         <div ref={ballRef} className="lever-ball absolute rounded-full" />
       </div>
-    </button>
+    </TileButton>
   );
 };

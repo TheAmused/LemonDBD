@@ -12,6 +12,7 @@ import type { RosterItem } from '@/types/smashOrPass';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 import { SmashSounds } from '../SmashSoundEffects';
 import { rosterCoverUrl, rosterDisplayName } from './rosterDisplay';
+import { Surface } from '@/components/common/Surface';
 
 interface RosterCarouselCardProps {
   roster: RosterItem;
@@ -85,7 +86,7 @@ export function RosterCarouselCard({
           if (isRosterEnabled) onCommit();
         }
       }}
-      className={`absolute w-[var(--card-w)] h-[var(--card-h)] rounded-3xl overflow-hidden cursor-pointer ${isCenter
+      className={`absolute w-[var(--card-w)] h-[var(--card-h)] rounded-card overflow-hidden cursor-pointer ${isCenter
         ? isRosterEnabled
           ? 'border-2 sm:border-[3px] border-accent-red'
           : 'border-2 border-border-color'
@@ -125,7 +126,7 @@ export function RosterCarouselCard({
 
       {isRosterEnabled && (
         <div
-          className="absolute top-4 left-4 sm:top-5 sm:left-5 flex items-center gap-1.5 px-3 py-1.5 rounded-2xl bg-bg-primary/80 backdrop-blur-md border border-border-color text-text-inverted type-strong-fluid shadow-md pointer-events-none"
+          className="absolute top-4 left-4 sm:top-5 sm:left-5 flex items-center gap-1.5 px-3 py-1.5 rounded-card bg-bg-primary/80 backdrop-blur-md border border-border-color text-text-inverted type-strong-fluid shadow-md pointer-events-none"
         >
           <CardStackIcon className="h-4 w-4 text-accent-red" aria-hidden="true" />
           <span>{count}</span>
@@ -135,7 +136,7 @@ export function RosterCarouselCard({
       {r.is_nsfw && (
         <div
           data-testid="roster-nsfw-badge"
-          className="absolute top-4 left-1/2 -translate-x-1/2 sm:top-5 flex items-center gap-1 px-2.5 py-1 rounded-2xl bg-accent-red text-text-inverted text-tiny sm:text-xs font-black uppercase tracking-wide shadow-md pointer-events-none"
+          className="absolute top-4 left-1/2 -translate-x-1/2 sm:top-5 flex items-center gap-1 px-2.5 py-1 rounded-card bg-accent-red text-text-inverted text-tiny sm:text-xs font-black uppercase tracking-wide shadow-md pointer-events-none"
         >
           <CautionVeilIcon className="h-3.5 w-3.5" aria-hidden="true" />
           <span>{dict.smashOrPass.nsfw.badge}</span>
@@ -145,7 +146,7 @@ export function RosterCarouselCard({
       {r.is_local && (
         <div
           data-testid="roster-local-badge"
-          className="absolute bottom-[5.5rem] left-1/2 -translate-x-1/2 sm:bottom-24 flex items-center gap-1 px-2.5 py-1 rounded-2xl bg-bg-primary/85 backdrop-blur-md border border-accent-amber/40 text-accent-amber text-tiny sm:text-xs font-black uppercase tracking-wide shadow-md pointer-events-none"
+          className="absolute bottom-[5.5rem] left-1/2 -translate-x-1/2 sm:bottom-24 flex items-center gap-1 px-2.5 py-1 rounded-card bg-bg-primary/85 backdrop-blur-md border border-accent-amber/40 text-accent-amber text-tiny sm:text-xs font-black uppercase tracking-wide shadow-md pointer-events-none"
         >
           <span>{dict.smashOrPass.picker.yours}</span>
         </div>
@@ -153,7 +154,7 @@ export function RosterCarouselCard({
 
       {isCurrentlyActive && (
         <div
-          className="absolute top-4 right-4 sm:top-5 sm:right-5 flex items-center gap-1 px-3 py-1.5 rounded-2xl bg-accent-red text-text-inverted type-strong pointer-events-none"
+          className="absolute top-4 right-4 sm:top-5 sm:right-5 flex items-center gap-1 px-3 py-1.5 rounded-card bg-accent-red text-text-inverted type-strong pointer-events-none"
         >
           <SealCheckIcon className="h-4 w-4" aria-hidden="true" />
           <span>{dict.smashOrPass.active}</span>
@@ -161,10 +162,10 @@ export function RosterCarouselCard({
       )}
 
       {!isRosterEnabled && !isCurrentlyActive && (
-        <div className="absolute top-4 right-4 sm:top-5 sm:right-5 flex items-center gap-1.5 px-3 py-1.5 rounded-2xl bg-bg-elevated border border-border-color text-text-secondary type-strong shadow-lg pointer-events-none">
+        <Surface tone="elevated" padding="none" className="absolute top-4 right-4 sm:top-5 sm:right-5 flex items-center gap-1.5 px-3 py-1.5 text-text-secondary type-strong shadow-lg pointer-events-none">
           <PadlockHeartIcon className="h-4 w-4 text-text-muted" aria-hidden="true" />
           <span>{dict.smashOrPass.comingSoon}</span>
-        </div>
+        </Surface>
       )}
 
       {isCenter && (
@@ -195,7 +196,7 @@ export function RosterCarouselCard({
 
       {isCenter && (
         <div
-          className={`absolute inset-0 rounded-3xl border-2 pointer-events-none ${isRosterEnabled ? 'border-accent-red/50' : 'border-border-color'
+          className={`absolute inset-0 rounded-card border-2 pointer-events-none ${isRosterEnabled ? 'border-accent-red/50' : 'border-border-color'
             }`}
           aria-hidden="true"
         />

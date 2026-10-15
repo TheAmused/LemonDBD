@@ -1,6 +1,7 @@
 // frontend/src/components/character-detail/components/KillerCombatStats.tsx
 import React from 'react';
 import { Activity, Gauge, Radio, ArrowUpDown, Eye } from 'lucide-react';
+import { Surface } from '@/components/common/Surface';
 
 interface KillerCombatStatsProps {
   killerSpeed: string;
@@ -18,7 +19,7 @@ export const KillerCombatStats: React.FC<KillerCombatStatsProps> = ({
   t,
 }) => {
   return (
-    <div className="p-4 rounded-2xl bg-bg-surface border border-border-color shadow-sm space-y-2 w-full backdrop-blur-sm">
+    <Surface padding="none" className="p-4 shadow-sm space-y-2 w-full backdrop-blur-sm">
       <div className="flex flex-col gap-0.5 sm:flex-row sm:items-center sm:justify-between type-label-xs text-text-secondary">
         <span className="flex items-center gap-1.5 text-accent-red">
           <Activity className="h-3.5 w-3.5" />
@@ -28,8 +29,8 @@ export const KillerCombatStats: React.FC<KillerCombatStatsProps> = ({
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         {/* Movement Speed */}
-        <div className="flex items-center gap-3 p-2.5 rounded-xl bg-bg-elevated/60 cursor-default">
-          <div className="h-9 w-9 rounded-xl bg-bg-surface flex items-center justify-center text-text-secondary shrink-0">
+        <div className="flex items-center gap-3 p-2.5 rounded-card bg-bg-elevated/60 cursor-default">
+          <div className="h-9 w-9 rounded-card bg-bg-surface flex items-center justify-center text-text-secondary shrink-0">
             <Gauge className="h-4 w-4" />
           </div>
           <div>
@@ -43,8 +44,8 @@ export const KillerCombatStats: React.FC<KillerCombatStatsProps> = ({
         </div>
 
         {/* Terror Radius (Visualizer disabled for now) */}
-        <div className="flex items-center gap-3 p-2.5 rounded-xl bg-bg-elevated/60 cursor-default">
-          <div className="h-9 w-9 rounded-xl bg-bg-surface flex items-center justify-center text-text-secondary shrink-0">
+        <div className="flex items-center gap-3 p-2.5 rounded-card bg-bg-elevated/60 cursor-default">
+          <div className="h-9 w-9 rounded-card bg-bg-surface flex items-center justify-center text-text-secondary shrink-0">
             <Radio className="h-4 w-4" />
           </div>
           <div>
@@ -58,8 +59,8 @@ export const KillerCombatStats: React.FC<KillerCombatStatsProps> = ({
         </div>
 
         {/* Height */}
-        <div className="flex items-center gap-3 p-2.5 rounded-xl bg-bg-elevated/60 cursor-default">
-          <div className="h-9 w-9 rounded-xl bg-bg-surface flex items-center justify-center text-text-secondary shrink-0">
+        <div className="flex items-center gap-3 p-2.5 rounded-card bg-bg-elevated/60 cursor-default">
+          <div className="h-9 w-9 rounded-card bg-bg-surface flex items-center justify-center text-text-secondary shrink-0">
             <ArrowUpDown className="h-4 w-4" />
           </div>
           <div>
@@ -72,7 +73,7 @@ export const KillerCombatStats: React.FC<KillerCombatStatsProps> = ({
           </div>
         </div>
       </div>
-    </div>
+    </Surface>
   );
 };
 

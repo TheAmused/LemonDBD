@@ -6,6 +6,7 @@ import { Modal } from '@/components/common/Modal';
 import { getAssetUrl } from '@/components/character-detail/types';
 import { ownsPerk } from '@/utils/characterUtils';
 import { useDictionary } from "@/context/DictionaryContext";
+import { TileButton } from '@/components/common/TileButton';
 
 export interface PerksTogglePopupPerk {
   perk_id: number;
@@ -95,9 +96,8 @@ export const PerksTogglePopup: React.FC<PerksTogglePopupProps> = ({
           );
           const isUnlocked = isPermanentlyUnlocked || isPerkUnlocked(perk.perk_id);
           return (
-            <button
+            <TileButton
               key={perk.perk_id}
-              type="button"
               disabled={isPermanentlyUnlocked}
               aria-disabled={isPermanentlyUnlocked}
               onClick={() => {
@@ -105,10 +105,10 @@ export const PerksTogglePopup: React.FC<PerksTogglePopupProps> = ({
                   onTogglePerk(perk.perk_id);
                 }
               }}
-              className={`flex flex-col items-center gap-1.5 rounded-xl p-1 text-center transition-transform ${
+              className={`flex flex-col items-center gap-1.5 rounded-control p-1 text-center ${
                 isPermanentlyUnlocked
                   ? 'cursor-default opacity-90'
-                  : 'cursor-pointer hover:scale-105 active:scale-95'
+                  : ''
               }`}
             >
               <div className="relative h-20 w-20 sm:h-24 sm:w-24">
@@ -130,7 +130,7 @@ export const PerksTogglePopup: React.FC<PerksTogglePopupProps> = ({
               <span className="line-clamp-2 text-mini font-semibold leading-tight text-text-primary">
                 {perk.name}
               </span>
-            </button>
+            </TileButton>
           );
         })}
       </div>

@@ -31,13 +31,13 @@ export const SkipOnboardingModal: React.FC<SkipOnboardingModalProps> = ({ isOpen
           <Button variant="secondary" onClick={onCancel} data-autofocus className="w-full sm:flex-1">
             {t.skipModalCancel}
           </Button>
-          <button
+          <Button
             type="button"
             onClick={onConfirm}
-            className="w-full sm:flex-1 rounded-xl bg-accent-amber hover:bg-accent-amber-hover py-2.5 type-label-sm text-text-inverted transition-colors cursor-pointer"
+            variant="amber" size="md" className="w-full sm:flex-1"
           >
             {t.skipModalConfirm}
-          </button>
+          </Button>
         </>
       }
     >

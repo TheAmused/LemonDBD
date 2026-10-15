@@ -6,6 +6,7 @@ import React from 'react';
 import type { LucideIcon } from 'lucide-react';
 import { Modal } from '@/components/common/Modal';
 import { useDictionary } from "@/context/DictionaryContext";
+import { Surface } from '@/components/common/Surface';
 
 export interface RulesModalShellProps {
   isOpen: boolean;
@@ -31,7 +32,7 @@ export const RulesModalNotices: React.FC<{ notices: RulesModalNotice[]; accentCl
     {notices.map(({ icon: Icon, text }, i) => (
       <div
         key={i}
-        className={`flex items-start gap-2.5 rounded-xl border px-3.5 py-2.5 text-xs leading-relaxed ${accentClassName}`}
+        className={`flex items-start gap-2.5 rounded-card border px-3.5 py-2.5 text-xs leading-relaxed ${accentClassName}`}
       >
         <Icon className="w-4 h-4 mt-0.5 flex-shrink-0" aria-hidden="true" />
         <span>{text}</span>
@@ -53,7 +54,7 @@ export const RulesModalListSection: React.FC<{
   intro?: string;
   items: RuleListEntry[];
 }> = ({ title, intro, items }) => (
-  <div className="bg-bg-elevated border border-border-color rounded-xl p-4 space-y-3 shadow-sm">
+  <Surface tone="elevated" padding="none" className="p-4 space-y-3 shadow-sm">
     <h3 className="type-label text-text-primary">{title}</h3>
     {intro && <p className="text-xs text-text-secondary">{intro}</p>}
     <ul className="space-y-2 type-body-fluid text-text-secondary">
@@ -64,7 +65,7 @@ export const RulesModalListSection: React.FC<{
         </li>
       ))}
     </ul>
-  </div>
+  </Surface>
 );
 
 /**

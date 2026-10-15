@@ -30,6 +30,8 @@ import { AdeptBadgeIcon } from '@/components/icons/DbdIcons';
 import { StreakActionBar, StreakActionButton } from '../StreakActionBar';
 import { tip } from '@/components/common/Tooltip';
 
+import { Button } from '@/components/common/Button';
+import { Surface } from '@/components/common/Surface';
 const ChaosStatsDrawer = dynamic(
   () => import('./ChaosStatsDrawer').then((m) => m.ChaosStatsDrawer),
   { ssr: false }
@@ -200,7 +202,7 @@ export const ChaosBoard: React.FC = () => {
 
         {!isCompleted && (
           <>
-            <div className="rounded-2xl border border-border-color bg-bg-surface/90 backdrop-blur-sm p-5 shadow-sm">
+            <Surface padding="none" className="bg-bg-surface/90 backdrop-blur-sm p-5 shadow-sm">
               <h3 className="type-label text-text-secondary mb-3">
                 {dict.streaks.pickYourKiller}
               </h3>
@@ -218,7 +220,7 @@ export const ChaosBoard: React.FC = () => {
                   loading={loadingKillers}
                 />
               </div>
-            </div>
+            </Surface>
 
             <StreakActionBar>
               {!acceptedKillerId ? (
@@ -244,18 +246,18 @@ export const ChaosBoard: React.FC = () => {
         )}
 
         {!isCompleted && isAdmin && (
-          <div className="mt-6 rounded-2xl border border-border-color/80 bg-bg-surface/90 backdrop-blur-sm px-4 py-4 shadow-sm">
-            <button
+          <Surface padding="none" className="mt-6 border-border-color/80 bg-bg-surface/90 backdrop-blur-sm px-4 py-4 shadow-sm">
+            <Button
               type="button"
               onClick={handleDevSkipToWin}
               disabled={busy || !killers.length}
               {...tip(dict.streaks.devSkipWinTitle, undefined, 'action')} aria-label={dict.streaks.devSkipWinTitle}
-              className="inline-flex items-center gap-2 type-strong text-accent-amber border border-accent-amber/30 bg-accent-amber/10 hover:bg-accent-amber/20 disabled:opacity-50 transition-colors cursor-pointer rounded-lg px-2.5 py-1"
+              variant="amberSoft" size="sm"
             >
               <AdeptBadgeIcon className="h-3.5 w-3.5" aria-hidden="true" />
               <span>{dict.streaks.devSkipWinLabel}</span>
-            </button>
-          </div>
+            </Button>
+          </Surface>
         )}
 
         <AbandonConfirmModal

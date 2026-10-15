@@ -13,6 +13,7 @@ import { Modal } from '@/components/common/Modal';
 import { Spinner } from '@/components/common/Spinner';
 import { EmptyState } from '@/components/common/EmptyState';
 import { useDictionary } from "@/context/DictionaryContext";
+import { SelectableCard } from '@/components/common/SelectableCard';
 
 /** The slots sit clockwise from the top (top, right, bottom, left); the build fills them the other way round. */
 const FILL_ORDER = [0, 3, 2, 1] as const;
@@ -34,16 +35,11 @@ const PerkGridItem = React.memo<{
   onToggle: (perk: Perk) => void;
 }>(({ perk, isSelected, onToggle }) => {
   return (
-    <button
-      type="button"
-      onClick={() => onToggle(perk)}
-      aria-pressed={isSelected}
-      className={`relative flex flex-col items-center p-3 rounded-2xl transition-all cursor-pointer text-center group ${
-        isSelected ? 'bg-accent-red/20' : 'bg-bg-surface hover:bg-bg-elevated'
-      }`}
-    >
+    <SelectableCard selected={isSelected} className="group relative flex flex-col items-center p-3 text-center"
+     
+      onClick={() => onToggle(perk)}>
       {/* Perk Icon — just the icon, no shape/background/border behind it */}
-      <div className="relative w-[84px] h-[84px] flex items-center justify-center mb-2 group-hover:scale-105 transition-transform pointer-events-none">
+      <div className="relative w-21 h-21 flex items-center justify-center mb-2 group-hover:scale-105 transition-transform pointer-events-none">
         <PerkIcon
           perk={perk}
           size={84}
@@ -64,7 +60,7 @@ const PerkGridItem = React.memo<{
           <Check className="h-2.5 w-2.5 stroke-[3]" />
         </div>
       )}
-    </button>
+    </SelectableCard>
   );
 });
 PerkGridItem.displayName = 'PerkGridItem';

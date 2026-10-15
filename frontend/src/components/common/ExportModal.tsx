@@ -187,7 +187,7 @@ export function ExportModal<D>({
     >
       <div className="flex flex-col gap-6">
         {signFailed && (
-          <p role="alert" className="flex items-start gap-2 rounded-xl border border-accent-red/40 bg-accent-red/10 p-3 type-strong text-accent-red">
+          <p role="alert" className="flex items-start gap-2 rounded-card border border-accent-red/40 bg-accent-red/10 p-3 type-strong text-accent-red">
             <TriangleAlert className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
             {dict.tierLists.signFailed}
           </p>
@@ -220,7 +220,7 @@ export function ExportModal<D>({
             </Button>
           </div>
           {shareUrl.length > shareLinkWarnChars && (
-            <p className="flex items-start gap-2 rounded-xl border border-accent-amber/40 bg-accent-amber/10 p-3 type-strong text-accent-amber">
+            <p className="flex items-start gap-2 rounded-card border border-accent-amber/40 bg-accent-amber/10 p-3 type-strong text-accent-amber">
               <TriangleAlert className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
               {formatMessage(labels.linkTooLong, { count: shareUrl.length.toLocaleString(locale) })}
             </p>

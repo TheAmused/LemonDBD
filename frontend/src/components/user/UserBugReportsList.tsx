@@ -25,6 +25,10 @@ import { EmptyState } from '@/components/common/EmptyState';
 import { UnreadDot } from '@/components/common/UnreadDot';
 import { formatDate } from '@/utils/format';
 import { useDictionary } from "@/context/DictionaryContext";
+import { Badge } from '@/components/common/Badge';
+import { Surface } from '@/components/common/Surface';
+import { Collapsible } from '@/components/common/Collapsible';
+import { TileButton } from '@/components/common/TileButton';
 
 interface UserBugReportsListProps {
   reports: UserBugReport[];
@@ -72,32 +76,32 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
     switch (status) {
       case 'in_progress':
         return (
-          <span className="inline-flex items-center gap-1.5 rounded-lg border border-accent-red/30 bg-accent-red/10 px-2.5 py-1 type-label-2xs text-accent-red">
+          <Badge tone="red" size="sm" square>
             <Clock className="h-3 w-3" />
             <span>{t.statusInProgress || 'In Progress'}</span>
-          </span>
+          </Badge>
         );
       case 'resolved':
         return (
-          <span className="inline-flex items-center gap-1.5 rounded-lg border border-accent-green/30 bg-accent-green/10 px-2.5 py-1 type-label-2xs text-accent-green">
+          <Badge tone="green" size="sm" square>
             <CheckCircle className="h-3 w-3" />
             <span>{t.statusResolved || 'Resolved'}</span>
-          </span>
+          </Badge>
         );
       case 'rejected':
         return (
-          <span className="inline-flex items-center gap-1.5 rounded-lg border border-border-color bg-bg-elevated px-2.5 py-1 type-label-2xs text-text-muted">
+          <Badge tone="neutral" size="sm" square>
             <XCircle className="h-3 w-3" />
             <span>{t.statusClosed || 'Closed'}</span>
-          </span>
+          </Badge>
         );
       case 'pending':
       default:
         return (
-          <span className="inline-flex items-center gap-1.5 rounded-lg border border-accent-amber/30 bg-accent-amber/10 px-2.5 py-1 type-label-2xs text-accent-amber">
+          <Badge tone="amber" size="sm" square>
             <HelpCircle className="h-3 w-3" />
             <span>{t.statusPending || 'Pending'}</span>
-          </span>
+          </Badge>
         );
     }
   };
@@ -143,9 +147,9 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
             const isOpen = openReports[report.id] === true;
             const awaitingReply = !report.admin_notes && (report.status === 'pending' || report.status === 'in_progress');
             return (
-              <div
+              <Surface
                 key={report.id}
-                className="rounded-2xl border border-border-color bg-bg-surface text-text-primary overflow-hidden shadow-xs transition-all hover:border-accent-red/40"
+                padding="none" className="text-text-primary overflow-hidden shadow-xs transition-all hover:border-accent-red/40"
               >
                 {/* Individual Droppable Drawer Header */}
                 <button
@@ -174,7 +178,7 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
                         />
                       )}
                     </span>
-                    <div className="p-1 rounded-lg bg-bg-elevated/80 text-accent-red">
+                    <div className="p-1 rounded-chip bg-bg-elevated/80 text-accent-red">
                       <ChevronDown
                         className={`h-4 w-4 transition-transform duration-300 ease-in-out ${
                           isOpen ? 'rotate-180' : 'rotate-0'
@@ -185,79 +189,73 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
                 </button>
 
                 {/* Individual Droppable Content Body */}
-                <div
-                  className={`grid transition-[grid-template-rows,opacity] duration-300 ease-in-out ${
-                    isOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
-                  }`}
+                <Collapsible
+                  open={isOpen}
+                  contentClassName="p-3.5 sm:p-4 pt-0 border-t border-border-color/60 space-y-3"
                 >
-                  <div className="overflow-hidden">
-                    <div className="p-3.5 sm:p-4 pt-0 border-t border-border-color/60 space-y-3">
-                      <p className="type-body text-text-secondary whitespace-pre-wrap pt-2">
-                        {report.message}
-                      </p>
+                  <p className="type-body text-text-secondary whitespace-pre-wrap pt-2">
+                    {report.message}
+                  </p>
 
-                      {/* Attachments with click to open popup modal */}
-                      {report.images && report.images.length > 0 && (
-                        <div className="space-y-1.5 pt-1">
-                          <span className="type-label-2xs text-text-muted flex items-center gap-1">
-                            <ImageIcon className="h-3 w-3 text-accent-red" />
-                            {t.attachments || 'Attachments'} ({report.images.length})
-                          </span>
-                          <div className="flex flex-wrap items-center gap-2.5 pt-0.5">
-                            {report.images.map((imgUrl, i) => {
-                              const src = staticUrl(imgUrl) || imgUrl;
-                              return (
-                                <button
-                                  key={i}
-                                  type="button"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    setPreviewImage(src);
-                                  }}
-                                  className="group relative h-16 w-16 sm:h-20 sm:w-20 rounded-xl border border-border-color bg-bg-elevated overflow-hidden shadow-xs hover:border-accent-red/60 hover:shadow-md transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-accent-red"
-                                  aria-label={`${t.attachments || 'Attachment'} ${i + 1}`}
-                                >
-                                  <img
-                                    src={src}
-                                    alt={`${t.attachments || 'Attachment'} ${i + 1}`}
-                                    draggable={false}
-                                    className="h-full w-full object-cover group-hover:scale-110 transition-transform duration-300"
-                                  />
-                                  <div className="absolute inset-0 bg-bg-primary/60 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
-                                    <Maximize2 className="h-4 w-4 text-text-inverted" />
-                                  </div>
-                                </button>
-                              );
-                            })}
-                          </div>
-                        </div>
-                      )}
-
-                      {/* Developer Admin Response */}
-                      {report.admin_notes && (
-                        <div className="mt-2 rounded-xl border border-accent-amber/30 bg-accent-amber/10 p-3 space-y-1">
-                          <div className="flex items-center gap-2 text-accent-amber type-strong">
-                            <OverseerEyeIcon className="h-3.5 w-3.5" />
-                            <span>{t.devResponse || 'Developer Response'}</span>
-                          </div>
-                          <p className="text-xs text-text-secondary italic">
-                            {t.quoteOpen || '"'}
-                            {report.admin_notes}
-                            {t.quoteClose || '"'}
-                          </p>
-                        </div>
-                      )}
-
-                      {awaitingReply && (
-                        <p className="mt-2 flex items-center gap-2 rounded-xl border border-border-color bg-bg-elevated/60 p-3 type-caption text-text-muted">
-                          <Clock className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
-                          <span>{t.noDevResponseYet || 'No response from the developers yet.'}</span>
-                        </p>
-                      )}
+                  {/* Attachments with click to open popup modal */}
+                  {report.images && report.images.length > 0 && (
+                    <div className="space-y-1.5 pt-1">
+                      <span className="type-label-2xs text-text-muted flex items-center gap-1">
+                        <ImageIcon className="h-3 w-3 text-accent-red" />
+                        {t.attachments || 'Attachments'} ({report.images.length})
+                      </span>
+                      <div className="flex flex-wrap items-center gap-2.5 pt-0.5">
+                        {report.images.map((imgUrl, i) => {
+                          const src = staticUrl(imgUrl) || imgUrl;
+                          return (
+                            <TileButton press={false}
+                              key={i}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setPreviewImage(src);
+                              }}
+                              className="group relative h-16 w-16 sm:h-20 sm:w-20 rounded-control border border-border-color bg-bg-elevated overflow-hidden shadow-xs hover:border-accent-red/60 hover:shadow-md transition-all"
+                              aria-label={`${t.attachments || 'Attachment'} ${i + 1}`}
+                            >
+                              <img
+                                src={src}
+                                alt={`${t.attachments || 'Attachment'} ${i + 1}`}
+                                draggable={false}
+                                className="h-full w-full object-cover group-hover:scale-110 transition-transform duration-300"
+                              />
+                              <div className="absolute inset-0 bg-bg-primary/60 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
+                                <Maximize2 className="h-4 w-4 text-text-inverted" />
+                              </div>
+                            </TileButton>
+                          );
+                        })}
+                      </div>
                     </div>
-                  </div>
-                </div>
-              </div>
+                  )}
+
+                  {/* Developer Admin Response */}
+                  {report.admin_notes && (
+                    <div className="mt-2 rounded-card border border-accent-amber/30 bg-accent-amber/10 p-3 space-y-1">
+                      <div className="flex items-center gap-2 text-accent-amber type-strong">
+                        <OverseerEyeIcon className="h-3.5 w-3.5" />
+                        <span>{t.devResponse || 'Developer Response'}</span>
+                      </div>
+                      <p className="text-xs text-text-secondary italic">
+                        {t.quoteOpen || '"'}
+                        {report.admin_notes}
+                        {t.quoteClose || '"'}
+                      </p>
+                    </div>
+                  )}
+
+                  {awaitingReply && (
+                    <p className="mt-2 flex items-center gap-2 rounded-card border border-border-color bg-bg-elevated/60 p-3 type-caption text-text-muted">
+                      <Clock className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+                      <span>{t.noDevResponseYet || 'No response from the developers yet.'}</span>
+                    </p>
+                  )}
+                </Collapsible>
+              </Surface>
             );
           })}
         </div>
@@ -287,12 +285,12 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
       >
         <div className="relative flex items-center justify-center">
           <PreviewCloseButton label={dict.modal.close} />
-          <div className="relative max-h-[82dvh] w-auto max-w-full overflow-hidden rounded-2xl border border-border-color/80 shadow-2xl bg-bg-primary/60 flex items-center justify-center">
+          <div className="relative max-h-[82dvh] w-auto max-w-full overflow-hidden rounded-card border border-border-color/80 shadow-2xl bg-bg-primary/60 flex items-center justify-center">
             {previewImage && (
               <img
                 src={previewImage}
                 alt={t.attachmentPreview || 'Bug Report Attachment Full Preview'}
-                className="max-h-[82dvh] max-w-full w-auto h-auto object-contain rounded-2xl"
+                className="max-h-[82dvh] max-w-full w-auto h-auto object-contain rounded-card"
               />
             )}
           </div>
@@ -308,7 +306,8 @@ const PreviewCloseButton: React.FC<{ label: string }> = ({ label }) => {
     <Button
       icon
       onClick={close}
-      className="absolute right-2 top-2 z-10 rounded-full shadow-lg"
+      pill
+      className="absolute right-2 top-2 z-10 shadow-lg"
       aria-label={label}
     >
       <X className="h-5 w-5" />

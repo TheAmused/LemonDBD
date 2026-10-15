@@ -2,6 +2,7 @@
 // frontend/src/components/tier-lists/TierColorPicker.tsx
 
 import React, { useEffect, useRef, useState } from 'react';
+import { ColorSwatch } from '@/components/common/ColorSwatch';
 import { HexColorInput, HexColorPicker } from 'react-colorful';
 import { Check, Pipette } from 'lucide-react';
 import { cn } from '@/utils/cn';
@@ -9,6 +10,7 @@ import { HEX_COLOR_PATTERN } from '@/utils/tierLists/constants';
 import { themeColor } from '@/utils/themeColor';
 import { useDictionary } from '@/context/DictionaryContext';
 
+import { Button } from '@/components/common/Button';
 interface TierColorPickerProps {
   /** A color token (`s`, `a`...) or a `#rrggbb` hex. Only hex values are shown in the picker. */
   color: string;
@@ -79,32 +81,30 @@ export function TierColorPicker({ color, onChange, size = 'md' }: TierColorPicke
   return (
     <>
       {/* Same square swatch as the preset colors. Always the rainbow, so it reads the same whether or not a custom color is set; a check marks it when one is. */}
-      <button
-        type="button"
+      <ColorSwatch
+        selected={isHex || open}
+        size={small ? 'sm' : 'md'}
         onClick={() => setOpen((o) => !o)}
         aria-expanded={open}
         aria-label={t.customColor}
-        aria-pressed={isHex}
-        className={cn(
-          'flex items-center justify-center border-2 cursor-pointer transition-transform hover:scale-105',
-          small ? 'h-7 w-7 rounded-md pointer-coarse:min-h-11 pointer-coarse:min-w-11' : 'h-11 w-11 rounded-xl',
-          'bg-[conic-gradient(red,yellow,lime,aqua,blue,fuchsia,red)]',
-          isHex || open ? 'border-text-primary' : 'border-transparent'
-        )}
-      >
-        {isHex && (
-          <span className="flex items-center justify-center rounded-full bg-bg-primary/85 p-0.5 text-text-primary" aria-hidden="true">
-            <Check className={small ? 'h-3 w-3' : 'h-3.5 w-3.5'} />
-          </span>
-        )}
-      </button>
+        className="bg-[conic-gradient(red,yellow,lime,aqua,blue,fuchsia,red)]"
+        mark={
+          isHex ? (
+            <span className="flex items-center justify-center rounded-full bg-bg-primary/85 p-0.5 text-text-primary" aria-hidden="true">
+              <Check className={small ? 'h-3 w-3' : 'h-3.5 w-3.5'} />
+            </span>
+          ) : (
+            <></>
+          )
+        }
+      />
 
       {open && (
         <div
           className={cn(
-            'flex basis-full flex-col items-center gap-3 rounded-2xl border border-border-color bg-bg-elevated/60 p-3',
+            'flex basis-full flex-col items-center gap-3 rounded-card border border-border-color bg-bg-elevated/60 p-3',
             '[&_.react-colorful]:h-44 [&_.react-colorful]:w-full [&_.react-colorful]:max-w-[16rem]',
-            '[&_.react-colorful__saturation]:rounded-xl [&_.react-colorful__saturation]:border-b-0',
+            '[&_.react-colorful__saturation]:rounded-card [&_.react-colorful__saturation]:border-b-0',
             '[&_.react-colorful__hue]:mt-3 [&_.react-colorful__hue]:h-4 [&_.react-colorful__hue]:rounded-full',
             '[&_.react-colorful__pointer]:h-5 [&_.react-colorful__pointer]:w-5'
           )}
@@ -116,17 +116,17 @@ export function TierColorPicker({ color, onChange, size = 'md' }: TierColorPicke
               onChange={(hex) => pick(hex)}
               prefixed
               aria-label={t.customColor}
-              className="min-h-[44px] min-w-0 flex-1 rounded-lg border border-border-color bg-bg-primary px-3 text-center type-label uppercase text-text-primary focus:border-accent-red focus:outline-hidden"
+              className="min-h-11 min-w-0 flex-1 rounded-control border border-border-color bg-bg-primary px-3 text-center type-label uppercase text-text-primary focus:border-accent-red focus:outline-hidden"
             />
             {EyeDropper && (
-              <button
+              <Button
                 type="button"
                 onClick={() => void sampleScreen()}
                 aria-label={t.pickFromScreen}
-                className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border border-border-color bg-bg-surface text-text-secondary hover:text-accent-red cursor-pointer transition-colors"
+                variant="secondary" size="md" icon className="shrink-0"
               >
                 <Pipette className="h-4 w-4" aria-hidden="true" />
-              </button>
+              </Button>
             )}
           </div>
         </div>

@@ -4,6 +4,8 @@ import React from 'react';
 import { CharacterOwnershipOverlay } from '@/components/characters/CharacterOwnershipOverlay';
 import { useDictionary } from '@/context/DictionaryContext';
 import { type ChapterGroup, type OnboardingCharacter, resolveOnboardingAvatar } from '../CharacterOnboardingWizardParts';
+import { Surface } from '@/components/common/Surface';
+import { Badge } from '@/components/common/Badge';
 
 interface ChapterCharacterPanelProps {
   group: ChapterGroup;
@@ -27,15 +29,15 @@ export function ChapterCharacterPanel({
   const t = dict.onboarding;
 
   return (
-    <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10 2xl:grid-cols-12 gap-3 rounded-2xl border border-border-color bg-bg-surface p-3">
+    <Surface padding="sm" className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10 2xl:grid-cols-12 gap-3">
       {group.characters.map((c) => {
         const isOwned = isCharacterOwned(c);
         const perkStats = getCharacterPerkStats(c.id, c.category);
         const hasPartialPerks = !isOwned && perkStats.unlocked > 0;
         return (
-          <div
+          <Surface
             key={c.id}
-            className="group relative flex flex-col overflow-hidden rounded-xl border border-border-color bg-bg-surface"
+            padding="none" className="group relative flex flex-col overflow-hidden"
           >
             <button
               type="button"
@@ -55,9 +57,9 @@ export function ChapterCharacterPanel({
                 lockedTitle={dict.modal.unownedPerk}
                 ownedTitle={dict.filters.ownedOnly}
               />
-              <span className="absolute bottom-1 left-1 right-1 truncate rounded bg-bg-primary/80 px-1.5 py-0.5 type-strong-2xs text-text-inverted text-center">
+              <Badge tone="overlay" size="xs" plain className="absolute bottom-1 left-1 right-1 truncate text-text-inverted text-center">
                 {c.name}
-              </span>
+              </Badge>
             </button>
             {!isOwned && perkStats.total > 0 && (
               <button
@@ -68,9 +70,9 @@ export function ChapterCharacterPanel({
                 {t.perksButton} ({perkStats.unlocked}/{perkStats.total})
               </button>
             )}
-          </div>
+          </Surface>
         );
       })}
-    </div>
+    </Surface>
   );
 }

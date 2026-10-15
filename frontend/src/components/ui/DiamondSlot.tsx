@@ -4,6 +4,7 @@
 
 import React from 'react';
 import { cn } from '@/utils/cn';
+import { TileButton } from '@/components/common/TileButton';
 
 export type DiamondSlotSize = 'sm' | 'md' | 'lg' | 'compact' | 'small' | 'large';
 
@@ -67,20 +68,19 @@ export const DiamondSlot = React.forwardRef<HTMLElement, DiamondSlotProps>(funct
 
   const glowEffect = glow
     ? roleAccent === 'Survivor'
-      ? 'shadow-[0_0_15px_rgba(34,197,94,0.35)]'
-      : 'shadow-[0_0_15px_rgba(239,68,68,0.35)]'
+      ? 'shadow-glow-green-soft'
+      : 'shadow-glow-red-soft'
     : '';
 
   if (onClick) {
     return (
-      <button
+      <TileButton
         ref={ref as React.Ref<HTMLButtonElement>}
-        type="button"
         onClick={onClick}
         aria-label={ariaLabel}
         style={style}
         className={cn(
-          'relative flex shrink-0 items-center justify-center rotate-45 rounded-xl border-2 transition-all shadow-md cursor-pointer hover:scale-105',
+          'relative flex shrink-0 items-center justify-center rotate-45 rounded-control border-2 transition-all shadow-md',
           sizeClass,
           roleBorder,
           glowEffect,
@@ -96,7 +96,7 @@ export const DiamondSlot = React.forwardRef<HTMLElement, DiamondSlotProps>(funct
         >
           {children}
         </div>
-      </button>
+      </TileButton>
     );
   }
 
@@ -106,7 +106,7 @@ export const DiamondSlot = React.forwardRef<HTMLElement, DiamondSlotProps>(funct
       aria-label={ariaLabel}
       style={style}
       className={cn(
-        'relative flex shrink-0 items-center justify-center rotate-45 rounded-xl border-2 transition-all shadow-md',
+        'relative flex shrink-0 items-center justify-center rotate-45 rounded-card border-2 transition-all shadow-md',
         sizeClass,
         roleBorder,
         glowEffect,

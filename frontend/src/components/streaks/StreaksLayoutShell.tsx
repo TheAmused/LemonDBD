@@ -4,7 +4,7 @@
 import React, { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { usePathname } from 'next/navigation';
-import { Lock, MailWarning } from 'lucide-react';
+import { MailWarning } from 'lucide-react';
 import { Sidebar } from '@/components/Sidebar';
 import { RoleTabs } from '@/components/streaks/RoleTabs';
 import { StreaksHubSkeleton } from '@/components/streaks/StreaksSkeleton';
@@ -14,6 +14,9 @@ import { DisplayNamesProvider } from '@/context/DisplayNamesContext';
 import { useDictionary, useLocale } from '@/context/DictionaryContext';
 import { getBackendBaseUrl } from '@/utils/api';
 
+import { Button } from '@/components/common/Button';
+import { AuthRequiredState } from '@/components/common/AuthRequiredState';
+import { IconTile } from '@/components/common/IconTile';
 const AuthModal = dynamic(() => import('@/components/AuthModal').then((m) => m.AuthModal), { ssr: false });
 
 export function StreaksLayoutShell({ children }: { children: React.ReactNode }) {
@@ -68,47 +71,31 @@ export function StreaksLayoutShell({ children }: { children: React.ReactNode }) 
         ) : isAuthenticated && user?.is_verified ? (
           <DisplayNamesProvider locale={locale}>{children}</DisplayNamesProvider>
         ) : isAuthenticated ? (
-          <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-border-color bg-bg-surface/60 px-6 py-20 text-center">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-accent-amber/20 bg-accent-amber/10">
+          <div className="flex flex-col items-center justify-center rounded-card border border-dashed border-border-color bg-bg-surface/60 px-6 py-20 text-center">
+            <IconTile tone="amber" size="md">
               <MailWarning className="h-5 w-5 text-accent-amber" />
-            </div>
+            </IconTile>
             <h2 className="mt-4 text-sm font-extrabold tracking-wide text-text-primary">
               {dict.streaks.verifyEmailToTrack}
             </h2>
-            <button
+            <Button
               onClick={() => {
 
                 setAuthModalIntent('verify');
                 setIsAuthModalOpen(true);
               }}
-              className="mt-4 rounded-xl bg-accent-red px-5 py-2.5 type-strong text-text-inverted shadow-xs hover:bg-accent-red-hover transition-colors cursor-pointer"
+              variant="primary" size="md" className="mt-4"
             >
               {dict.streaks.verifyEmail}
-            </button>
+            </Button>
           </div>
         ) : (
 
-          <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-border-color bg-bg-surface/60 px-6 py-20 text-center">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-accent-red/20 bg-accent-red/10">
-              <Lock className="h-5 w-5 text-accent-red" />
-            </div>
-            <h2 className="mt-4 text-sm font-extrabold tracking-wide text-text-primary">
-              {dict.streaks.loginToTrack}
-            </h2>
-            <p className="mt-1.5 max-w-sm type-body text-text-muted">
-              {dict.streaks.loginToTrackDesc}
-            </p>
-            <button
-              onClick={() => {
-
-                setAuthModalIntent('login');
-                setIsAuthModalOpen(true);
-              }}
-              className="mt-5 rounded-xl bg-accent-red px-5 py-2.5 type-strong text-text-inverted shadow-xs hover:bg-accent-red-hover transition-colors"
-            >
-              {dict.streaks.logIn}
-            </button>
-          </div>
+          <AuthRequiredState
+            title={dict.streaks.loginToTrack}
+            subtitle={dict.streaks.loginToTrackDesc}
+            buttonLabel={dict.streaks.logIn}
+          />
         )}
 
 

@@ -15,6 +15,8 @@ import type {
   AdminContentReportList,
   ContentReportAction,
 } from '@/types/admin';
+import { Surface } from '@/components/common/Surface';
+import { SelectableCard } from '@/components/common/SelectableCard';
 
 interface AdminContentReportsWorkbenchProps {
   list: AdminContentReportList | null;
@@ -58,7 +60,7 @@ export function AdminContentReportsWorkbench({
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start w-full">
-      <div className="lg:col-span-5 flex flex-col rounded-3xl border border-border-color bg-bg-surface p-4 shadow-sm space-y-4">
+      <Surface padding="none" className="lg:col-span-5 flex flex-col p-4 shadow-sm space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-border-color">
           <label htmlFor="content-report-status-filter" className="flex items-center gap-1 type-strong-xs text-text-secondary">
             <Filter className="h-3 w-3" />
@@ -92,17 +94,10 @@ export function AdminContentReportsWorkbench({
             items.map((report) => {
               const isSelected = selectedId === report.id;
               return (
-                <button
+                <SelectableCard selected={isSelected} className="w-full space-y-2"
                   key={report.id}
-                  type="button"
-                  onClick={() => onSelect(report.id)}
-                  aria-pressed={isSelected}
-                  className={`w-full p-3.5 rounded-2xl border transition-all cursor-pointer text-left space-y-2 focus:outline-none focus:ring-2 focus:ring-accent-red ${
-                    isSelected
-                      ? 'border-accent-red bg-accent-red/10 shadow-sm ring-1 ring-accent-red/30'
-                      : 'border-border-subtle bg-bg-primary hover:border-border-color'
-                  }`}
-                >
+                 
+                  onClick={() => onSelect(report.id)}>
                   <div className="flex items-center justify-between gap-2">
                     <span className="flex items-center gap-1.5 type-strong text-text-primary">
                       <Flag className="h-3.5 w-3.5 text-accent-red" />#{report.id}
@@ -121,7 +116,7 @@ export function AdminContentReportsWorkbench({
                     </span>
                   </div>
                   <p className="type-caption text-text-muted">{formatDate(report.created_at)}</p>
-                </button>
+                </SelectableCard>
               );
             })
           )}
@@ -140,9 +135,9 @@ export function AdminContentReportsWorkbench({
             </Button>
           </div>
         )}
-      </div>
+      </Surface>
 
-      <div className="lg:col-span-7 rounded-3xl border border-border-color bg-bg-surface p-4 sm:p-6 shadow-sm">
+      <Surface padding="none" className="lg:col-span-7 p-4 sm:p-6 shadow-sm">
         {selectedId === null ? (
           <p className="py-12 text-center type-body text-text-muted">{dict.admin.contentReportsSelectPrompt}</p>
         ) : loadingDetail && !current ? (
@@ -157,7 +152,7 @@ export function AdminContentReportsWorkbench({
         ) : (
           <p className="py-12 text-center type-body text-text-muted">{dict.admin.contentReportsLoadFailed}</p>
         )}
-      </div>
+      </Surface>
     </div>
   );
 }

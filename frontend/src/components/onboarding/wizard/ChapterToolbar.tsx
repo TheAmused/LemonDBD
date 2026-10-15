@@ -5,6 +5,8 @@ import { Check, Search, X } from 'lucide-react';
 import { Button } from '@/components/common/Button';
 import { Input } from '@/components/common/Field';
 import { useDictionary } from '@/context/DictionaryContext';
+import { InfoChip } from '@/components/common/InfoChip';
+import { ToggleChip } from '@/components/common/ToggleChip';
 
 interface ChapterToolbarProps {
   ownedChaptersCount: number;
@@ -37,9 +39,9 @@ export function ChapterToolbar({
         <span className="type-label-sm text-text-secondary">
           {t.chaptersTitle}
         </span>
-        <span className="rounded-full border border-border-color bg-bg-elevated px-2 py-0.5 type-strong-xs text-text-secondary">
+        <InfoChip>
           {ownedChaptersCount} / {chapterCount}
-        </span>
+        </InfoChip>
       </div>
 
       <div className="flex items-center gap-2 w-full sm:w-auto">
@@ -54,43 +56,22 @@ export function ChapterToolbar({
             className="pl-8 pr-7"
           />
           {searchQuery && (
-            <button
+            <Button
               type="button"
               onClick={() => setSearchQuery('')}
               aria-label={dict.filters.clearSearch}
-              className="absolute right-2 top-1/2 -translate-y-1/2 text-text-muted hover:text-text-primary cursor-pointer"
+              variant="ghost" size="xs" icon className="absolute right-2 top-1/2 -translate-y-1/2"
             >
               <X className="h-3 w-3" />
-            </button>
+            </Button>
           )}
         </div>
 
         <div className="flex items-center gap-1.5 shrink-0">
-          <button
-            type="button"
-            role="checkbox"
-            aria-checked={isAllOwned}
-            onClick={onToggleAll}
-            className={`group relative flex items-center gap-2 rounded-lg border px-2.5 sm:px-3 py-1.5 transition-all select-none cursor-pointer ${
-              isAllOwned
-                ? 'border-accent-red/80 bg-accent-red/15 text-accent-red'
-                : 'border-border-color bg-bg-surface text-text-secondary hover:border-accent-red/60 hover:text-text-primary'
-            }`}
-          >
-            <span
-              aria-hidden="true"
-              className={`relative flex h-4 w-4 sm:h-4.5 sm:w-4.5 shrink-0 items-center justify-center rounded-[3px] border transition-all duration-150 ${
-                isAllOwned
-                  ? 'border-accent-red bg-accent-red text-text-inverted'
-                  : 'border-border-color/80 bg-bg-elevated/80 group-hover:border-accent-red/80'
-              }`}
-            >
-              {isAllOwned && <Check className="h-3 w-3 sm:h-3.5 sm:w-3.5 stroke-[3]" />}
-            </span>
-            <span className="text-xs font-bold tracking-tight">
-              {t.selectAllButton}
-            </span>
-          </button>
+          <ToggleChip pressed={isAllOwned} size="sm" onClick={onToggleAll}>
+            {isAllOwned && <Check className="h-3.5 w-3.5 stroke-[3]" aria-hidden="true" />}
+            <span>{t.selectAllButton}</span>
+          </ToggleChip>
 
           <Button variant="secondary" size="sm" disabled={!hasAnySelection} onClick={onDeselectAll}>
             {t.deselectAllButton}

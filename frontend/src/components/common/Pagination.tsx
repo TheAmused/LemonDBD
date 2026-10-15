@@ -87,7 +87,7 @@ export const Pagination: React.FC<PaginationProps> = ({ page, totalPages, totalR
           aria-label={dict.pagination.perPage}
           value={limit}
           onChange={(e) => onLimitChange(Number(e.target.value))}
-          className="rounded-lg border border-border-color bg-bg-surface px-1.5 py-1 text-mini font-semibold text-text-primary focus:outline-none focus:ring-1 focus:ring-accent-red cursor-pointer [&>option]:bg-bg-surface [&>option]:text-text-primary sm:px-2 sm:text-xs lg:px-3 lg:py-1.5 lg:text-sm wide:text-base"
+          className="rounded-control border border-border-color bg-bg-surface px-1.5 py-1 text-mini font-semibold text-text-primary focus:outline-none focus:ring-1 focus:ring-accent-red cursor-pointer [&>option]:bg-bg-surface [&>option]:text-text-primary sm:px-2 sm:text-xs lg:px-3 lg:py-1.5 lg:text-sm wide:text-base"
         >
           <option value={15}>15</option>
           <option value={30}>30</option>
@@ -101,7 +101,7 @@ export const Pagination: React.FC<PaginationProps> = ({ page, totalPages, totalR
             onClick={() => onPageChange(1)}
             disabled={page <= 1}
             aria-label={dict.pagination.firstPage}
-            className="pointer-coarse:min-h-11 pointer-coarse:min-w-11 flex h-7 w-7 items-center justify-center rounded-lg border border-border-color bg-bg-surface text-text-secondary hover:bg-bg-elevated disabled:opacity-40 transition-colors cursor-pointer disabled:cursor-not-allowed sm:h-8 sm:w-8 lg:h-9 lg:w-9 xl:h-10 xl:w-10 wide:h-11 wide:w-11"
+            className="pointer-coarse:min-h-11 pointer-coarse:min-w-11 flex h-7 w-7 items-center justify-center rounded-control border border-border-color bg-bg-surface text-text-secondary hover:bg-bg-elevated disabled:opacity-40 transition-colors cursor-pointer disabled:cursor-not-allowed sm:h-8 sm:w-8 lg:h-9 lg:w-9 xl:h-10 xl:w-10 wide:h-11 wide:w-11"
           >
             <ChevronsLeft className="h-3.5 w-3.5 sm:h-4 sm:w-4 lg:h-5 lg:w-5 xl:h-6 xl:w-6" />
           </button>
@@ -110,7 +110,7 @@ export const Pagination: React.FC<PaginationProps> = ({ page, totalPages, totalR
             onClick={() => onPageChange(page - 1)}
             disabled={page <= 1}
             aria-label={dict.pagination.previous}
-            className="pointer-coarse:min-h-11 pointer-coarse:min-w-11 flex h-7 w-7 items-center justify-center rounded-lg border border-border-color bg-bg-surface text-text-secondary hover:bg-bg-elevated disabled:opacity-40 transition-colors cursor-pointer disabled:cursor-not-allowed sm:h-8 sm:w-8 lg:h-9 lg:w-9 xl:h-10 xl:w-10 wide:h-11 wide:w-11"
+            className="pointer-coarse:min-h-11 pointer-coarse:min-w-11 flex h-7 w-7 items-center justify-center rounded-control border border-border-color bg-bg-surface text-text-secondary hover:bg-bg-elevated disabled:opacity-40 transition-colors cursor-pointer disabled:cursor-not-allowed sm:h-8 sm:w-8 lg:h-9 lg:w-9 xl:h-10 xl:w-10 wide:h-11 wide:w-11"
           >
             <ChevronLeft className="h-3.5 w-3.5 sm:h-4 sm:w-4 lg:h-5 lg:w-5 xl:h-6 xl:w-6" />
           </button>
@@ -128,7 +128,7 @@ export const Pagination: React.FC<PaginationProps> = ({ page, totalPages, totalR
               onBlur={commitPageInput}
               onKeyDown={handlePageInputKeyDown}
               aria-label={dict.pagination.goTo}
-              className="w-7 [appearance:textfield] rounded-md border border-border-color bg-bg-surface px-1 py-0.5 text-center text-mini font-bold text-text-primary focus:outline-none focus:ring-1 focus:ring-accent-red [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none sm:w-9 sm:text-xs lg:w-11 lg:py-1 lg:text-sm wide:w-12"
+              className="w-7 [appearance:textfield] rounded-chip border border-border-color bg-bg-surface px-1 py-0.5 text-center text-mini font-bold text-text-primary focus:outline-none focus:ring-1 focus:ring-accent-red [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none sm:w-9 sm:text-xs lg:w-11 lg:py-1 lg:text-sm wide:w-12"
             />
             <span aria-hidden="true" className="text-text-muted">/</span>
             <span aria-hidden="true">{safeTotalPages}</span>
@@ -139,7 +139,7 @@ export const Pagination: React.FC<PaginationProps> = ({ page, totalPages, totalR
             onClick={() => onPageChange(page + 1)}
             disabled={page >= safeTotalPages}
             aria-label={dict.pagination.next}
-            className="pointer-coarse:min-h-11 pointer-coarse:min-w-11 flex h-7 w-7 items-center justify-center rounded-lg border border-border-color bg-bg-surface text-text-secondary hover:bg-bg-elevated disabled:opacity-40 transition-colors cursor-pointer disabled:cursor-not-allowed sm:h-8 sm:w-8 lg:h-9 lg:w-9 xl:h-10 xl:w-10 wide:h-11 wide:w-11"
+            className="pointer-coarse:min-h-11 pointer-coarse:min-w-11 flex h-7 w-7 items-center justify-center rounded-control border border-border-color bg-bg-surface text-text-secondary hover:bg-bg-elevated disabled:opacity-40 transition-colors cursor-pointer disabled:cursor-not-allowed sm:h-8 sm:w-8 lg:h-9 lg:w-9 xl:h-10 xl:w-10 wide:h-11 wide:w-11"
           >
             <ChevronRight className="h-3.5 w-3.5 sm:h-4 sm:w-4 lg:h-5 lg:w-5 xl:h-6 xl:w-6" />
           </button>
@@ -148,7 +148,7 @@ export const Pagination: React.FC<PaginationProps> = ({ page, totalPages, totalR
             onClick={() => onPageChange(safeTotalPages)}
             disabled={page >= safeTotalPages}
             aria-label={dict.pagination.lastPage}
-            className="pointer-coarse:min-h-11 pointer-coarse:min-w-11 flex h-7 w-7 items-center justify-center rounded-lg border border-border-color bg-bg-surface text-text-secondary hover:bg-bg-elevated disabled:opacity-40 transition-colors cursor-pointer disabled:cursor-not-allowed sm:h-8 sm:w-8 lg:h-9 lg:w-9 xl:h-10 xl:w-10 wide:h-11 wide:w-11"
+            className="pointer-coarse:min-h-11 pointer-coarse:min-w-11 flex h-7 w-7 items-center justify-center rounded-control border border-border-color bg-bg-surface text-text-secondary hover:bg-bg-elevated disabled:opacity-40 transition-colors cursor-pointer disabled:cursor-not-allowed sm:h-8 sm:w-8 lg:h-9 lg:w-9 xl:h-10 xl:w-10 wide:h-11 wide:w-11"
           >
             <ChevronsRight className="h-3.5 w-3.5 sm:h-4 sm:w-4 lg:h-5 lg:w-5 xl:h-6 xl:w-6" />
           </button>

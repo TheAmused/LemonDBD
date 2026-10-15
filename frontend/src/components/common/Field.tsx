@@ -12,26 +12,31 @@ const FIELD_BASE =
 const FIELD_ERROR = 'border-accent-red focus:ring-accent-red';
 // 16px on small screens stops iOS Safari from zooming into focused inputs.
 const FIELD_SIZES: Record<FieldSize, string> = {
-  sm: 'rounded-lg px-2.5 py-1.5 text-base sm:text-xs',
-  md: 'rounded-xl px-3 py-2.5 text-base sm:text-sm',
-  lg: 'rounded-xl px-4 py-3 text-base',
+  sm: 'px-2.5 py-1.5 text-base sm:text-xs',
+  md: 'px-3 py-2.5 text-base sm:text-sm',
+  lg: 'px-4 py-3 text-base',
 };
+
+/** The one corner radius of a field. `pill` is the only alternative (search boxes in tight toolbars). */
+const FIELD_RADIUS = 'rounded-control';
+const FIELD_RADIUS_PILL = 'rounded-full';
 
 interface CommonFieldProps {
   fieldSize?: FieldSize;
   invalid?: boolean;
+  pill?: boolean;
 }
 
 export type InputProps = Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'> & CommonFieldProps;
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(function Input(
-  { fieldSize = 'md', invalid, className, ...rest },
+  { fieldSize = 'md', invalid, pill = false, className, ...rest },
   ref
 ) {
   return (
     <input
       ref={ref}
       aria-invalid={invalid || undefined}
-      className={cn(FIELD_BASE, FIELD_SIZES[fieldSize], invalid && FIELD_ERROR, className)}
+      className={cn(FIELD_BASE, FIELD_SIZES[fieldSize], pill ? FIELD_RADIUS_PILL : FIELD_RADIUS, invalid && FIELD_ERROR, className)}
       {...rest}
     />
   );
@@ -39,14 +44,14 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(function Inp
 
 export type TextareaProps = React.TextareaHTMLAttributes<HTMLTextAreaElement> & CommonFieldProps;
 export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(function Textarea(
-  { fieldSize = 'md', invalid, className, ...rest },
+  { fieldSize = 'md', invalid, pill = false, className, ...rest },
   ref
 ) {
   return (
     <textarea
       ref={ref}
       aria-invalid={invalid || undefined}
-      className={cn(FIELD_BASE, FIELD_SIZES[fieldSize], 'resize-y', invalid && FIELD_ERROR, className)}
+      className={cn(FIELD_BASE, FIELD_SIZES[fieldSize], pill ? FIELD_RADIUS_PILL : FIELD_RADIUS, 'resize-y', invalid && FIELD_ERROR, className)}
       {...rest}
     />
   );
@@ -55,14 +60,14 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(fun
 export type SelectProps = Omit<React.SelectHTMLAttributes<HTMLSelectElement>, 'size'> & CommonFieldProps;
 /** Native select for short, simple lists. Use CustomDropdown for rich options. */
 export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(function Select(
-  { fieldSize = 'md', invalid, className, children, ...rest },
+  { fieldSize = 'md', invalid, pill = false, className, children, ...rest },
   ref
 ) {
   return (
     <select
       ref={ref}
       aria-invalid={invalid || undefined}
-      className={cn(FIELD_BASE, FIELD_SIZES[fieldSize], 'cursor-pointer', invalid && FIELD_ERROR, className)}
+      className={cn(FIELD_BASE, FIELD_SIZES[fieldSize], pill ? FIELD_RADIUS_PILL : FIELD_RADIUS, 'cursor-pointer', invalid && FIELD_ERROR, className)}
       {...rest}
     >
       {children}

@@ -10,6 +10,24 @@
 /* ---------------------------------------------------------------------------
  * Design Tokens & Theme Mapping
  * --------------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------------
+ * Stacking layers above the page. One list, so "what sits on top of what" is decided here and not by
+ * a number typed into a component. Local ordering inside a component (z-0 to z-40) stays plain Tailwind.
+ *   modal        a dialog                 popover   menus and pickers, above every dialog
+ *   modal-top    a dialog opened from one  tooltip   always on top
+ *   system       blocking system dialogs
+ * --------------------------------------------------------------------------- */
+:root {
+  --layer-modal: 60;
+  --layer-modal-top: 70;
+  --layer-system: 100;
+  --layer-popover: 120;
+  --layer-tooltip: 99999;
+}
+@utility z-modal { z-index: var(--layer-modal); }
+@utility z-modal-top { z-index: var(--layer-modal-top); }
+@utility z-system { z-index: var(--layer-system); }
+
 @theme {
   /* Dynamic Theme Variables */
   --color-bg-primary: var(--bg-primary);
@@ -91,12 +109,56 @@
   --font-sans: ui-sans-serif, system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
   --font-display: var(--font-playfair), Georgia, "Times New Roman", serif;
 
-  /* Corner radii. One scale for the whole site: cards and modals top out at 18px, controls sit
-   * at 15-16px, small chips stay at Tailwind's lg/md. No rounded-[Npx] in components. */
-  --radius-xl: 0.9375rem;
-  --radius-2xl: 1rem;
-  --radius-3xl: 1.125rem;
+  /* Corner radii: ONE scale of four roles, the same on every screen width. Tailwind's stock
+   * scale (rounded-lg, -xl, ...) is switched off, so these are the only radii that exist:
+   *   rounded-chip     6px   badges, tags, checkboxes, small inline boxes
+   *   rounded-control  12px  buttons, inputs, menu items, tabs, tooltips
+   *   rounded-card     16px  cards, panels, popovers, dropdown menus
+   *   rounded-modal    20px  modal and drawer panels
+   *   rounded-full           pills, avatars, switches   (rounded-none stays for square edges)
+   * No rounded-[Npx] in components; scripts/check-global-styles.ts enforces it. */
+  --radius-*: initial;
+  --radius-chip: 0.375rem;
+  --radius-control: 0.75rem;
+  --radius-card: 1rem;
+  --radius-modal: 1.25rem;
   --radius-full: 9999px;
+
+  /* Glows: the one set of coloured halos (game effects, highlights). Sizes sm 12px, md 20px, lg 32px;
+   * soft is md at 35% strength. Use shadow-glow-<colour>-<size> (box) or drop-shadow-glow-<colour>-<size> (icons);
+   * no shadow-[0_0_Npx_...] in components. */
+  --shadow-glow-amber-sm: 0 0 12px var(--accent-amber);
+  --shadow-glow-amber-md: 0 0 20px var(--accent-amber);
+  --shadow-glow-amber-lg: 0 0 32px var(--accent-amber);
+  --shadow-glow-amber-soft: 0 0 20px color-mix(in oklab, var(--accent-amber) 35%, transparent);
+  --shadow-glow-red-sm: 0 0 12px var(--accent-red);
+  --shadow-glow-red-md: 0 0 20px var(--accent-red);
+  --shadow-glow-red-lg: 0 0 32px var(--accent-red);
+  --shadow-glow-red-soft: 0 0 20px color-mix(in oklab, var(--accent-red) 35%, transparent);
+  --shadow-glow-green-sm: 0 0 12px var(--accent-green);
+  --shadow-glow-green-md: 0 0 20px var(--accent-green);
+  --shadow-glow-green-lg: 0 0 32px var(--accent-green);
+  --shadow-glow-green-soft: 0 0 20px color-mix(in oklab, var(--accent-green) 35%, transparent);
+  --shadow-glow-muted-sm: 0 0 12px var(--text-muted);
+  --shadow-glow-muted-md: 0 0 20px var(--text-muted);
+  --shadow-glow-muted-lg: 0 0 32px var(--text-muted);
+
+  /* The same halos for drop-shadow-glow-<colour>-<size>: they follow the shape of an icon or image. */
+  --drop-shadow-glow-amber-sm: 0 0 12px var(--accent-amber);
+  --drop-shadow-glow-amber-md: 0 0 20px var(--accent-amber);
+  --drop-shadow-glow-amber-lg: 0 0 32px var(--accent-amber);
+  --drop-shadow-glow-amber-soft: 0 0 20px color-mix(in oklab, var(--accent-amber) 35%, transparent);
+  --drop-shadow-glow-red-sm: 0 0 12px var(--accent-red);
+  --drop-shadow-glow-red-md: 0 0 20px var(--accent-red);
+  --drop-shadow-glow-red-lg: 0 0 32px var(--accent-red);
+  --drop-shadow-glow-red-soft: 0 0 20px color-mix(in oklab, var(--accent-red) 35%, transparent);
+  --drop-shadow-glow-green-sm: 0 0 12px var(--accent-green);
+  --drop-shadow-glow-green-md: 0 0 20px var(--accent-green);
+  --drop-shadow-glow-green-lg: 0 0 32px var(--accent-green);
+  --drop-shadow-glow-green-soft: 0 0 20px color-mix(in oklab, var(--accent-green) 35%, transparent);
+  --drop-shadow-glow-muted-sm: 0 0 12px var(--text-muted);
+  --drop-shadow-glow-muted-md: 0 0 20px var(--text-muted);
+  --drop-shadow-glow-muted-lg: 0 0 32px var(--text-muted);
 
   /* Type scale below Tailwind's text-xs, plus em-relative sizes for inline code. */
   --text-micro: 0.5625rem;

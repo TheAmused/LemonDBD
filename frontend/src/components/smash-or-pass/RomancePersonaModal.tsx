@@ -23,6 +23,7 @@ import { PersonaBreakdown } from './persona/PersonaBreakdown';
 import { PersonaShareView } from './persona/PersonaShareView';
 import { buildSocialLinks } from './persona/socialLinks';
 import { trackEvent } from '@/utils/analytics';
+import { Surface } from '@/components/common/Surface';
 
 interface PersonaArchetypeEntry {
   title?: string;
@@ -180,10 +181,10 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({ isOpen
       <div className="p-4 sm:p-6 space-y-5">
         {!hasVotes ? (
           /* Sleek, Non-Repetitive Empty State (Untapped Soul) */
-          <div className="flex flex-col items-center justify-center text-center p-6 sm:p-8 rounded-3xl bg-bg-elevated border border-border-color space-y-4 shadow-inner">
-            <div className="flex h-16 w-16 items-center justify-center rounded-3xl bg-bg-surface border border-border-color text-accent-red">
+          <Surface tone="elevated" padding="lg" className="flex flex-col items-center justify-center text-center space-y-4 shadow-inner">
+            <Surface padding="none" className="flex h-16 w-16 items-center justify-center text-accent-red">
               <Compass className="h-8 w-8 text-accent-red" />
-            </div>
+            </Surface>
 
             <div className="space-y-1.5 max-w-sm">
               <h3 className="type-page-title text-text-primary">
@@ -200,12 +201,12 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({ isOpen
             <Button
               variant="primary" size="md"
               onClick={onClose}
-              className="mt-2 rounded-2xl"
+              className="mt-2"
             >
               <span>{rawSmash.startVoting}</span>
               <ArrowRight className="h-4 w-4" />
             </Button>
-          </div>
+          </Surface>
         ) : isSharingView ? (
           <PersonaShareView
             persona={persona}

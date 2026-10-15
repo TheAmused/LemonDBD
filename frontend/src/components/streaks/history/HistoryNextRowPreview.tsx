@@ -2,12 +2,13 @@
 // frontend/src/components/streaks/history/HistoryNextRowPreview.tsx
 
 import React, { useState } from 'react';
-import { ChevronDown } from 'lucide-react';
 import { PerkIcon } from '@/components/ui/PerkIcon';
 import { avatarUrlFor } from '../chaos/KillerPickerGrid';
 import { KillerIcon } from '@/components/icons/DbdIcons';
 
 import { useDictionary } from "@/context/DictionaryContext";
+import { Collapsible } from '@/components/common/Collapsible';
+import { DisclosureButton } from '@/components/common/DisclosureButton';
 
 export interface HistoryNextRowPreviewProps {
   killers: string[];
@@ -19,9 +20,9 @@ const PreviewTile: React.FC<{ name: string }> = ({ name }) => {
   const src = avatarUrlFor(name);
   return (
     <div
-      className="flex flex-col items-center gap-1.5 rounded-lg border border-border-color bg-bg-surface p-1.5 grayscale opacity-50"
+      className="flex flex-col items-center gap-1.5 rounded-chip border border-border-color bg-bg-surface p-1.5 grayscale opacity-50"
     >
-      <div className="relative w-full aspect-square rounded-md overflow-hidden bg-bg-elevated flex items-center justify-center">
+      <div className="relative w-full aspect-square rounded-chip overflow-hidden bg-bg-elevated flex items-center justify-center">
         <PerkIcon
           src={src}
           alt={name}
@@ -46,34 +47,23 @@ export const HistoryNextRowPreview: React.FC<HistoryNextRowPreviewProps> = ({ ki
 
   return (
     <div className="mt-4">
-      <button
-        onClick={() => setExpanded((v) => !v)}
-        className="flex w-full items-center justify-center gap-1.5 text-left cursor-pointer"
-      >
+      <DisclosureButton open={expanded} onClick={() => setExpanded((v) => !v)} className="w-full justify-center gap-1.5">
         <span className="type-label-sm text-text-muted">
           {dict.streaks.nextRowPreviewLabel}{' '}
           {dict.streaks.middotSeparator} {dict.streaks.rowLabel} {currentRowIndex + 2}
         </span>
-        <ChevronDown
-          className={`h-4 w-4 text-text-muted transition-transform ${expanded ? 'rotate-180' : ''}`}
-        />
-      </button>
+      </DisclosureButton>
 
-      <div
-        className={`grid transition-[grid-template-rows,opacity] duration-300 ease-in-out ${
-          expanded ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
-        }`}
+      <Collapsible
+        open={expanded}
+        contentClassName="mt-4 flex flex-wrap justify-center gap-2"
       >
-        <div className="overflow-hidden">
-          <div className="mt-4 flex flex-wrap justify-center gap-2">
-            {nextRow.map((name) => (
-              <div key={name} className="w-[calc((100%-1rem)/3)] sm:w-[calc((100%-2rem)/5)] sm:max-w-36">
-                <PreviewTile name={name} />
-              </div>
-            ))}
+        {nextRow.map((name) => (
+          <div key={name} className="w-[calc((100%-1rem)/3)] sm:w-[calc((100%-2rem)/5)] sm:max-w-36">
+            <PreviewTile name={name} />
           </div>
-        </div>
-      </div>
+        ))}
+      </Collapsible>
     </div>
   );
 };

@@ -26,7 +26,7 @@ export function RosterTranslationsPanel({
   const c = dict.smashOrPass.creator;
 
   return (
-    <div className="mt-4 flex flex-col gap-2 rounded-xl border border-accent-amber/30 bg-accent-amber/5 p-3">
+    <div className="mt-4 flex flex-col gap-2 rounded-card border border-accent-amber/30 bg-accent-amber/5 p-3">
       <span className={LABEL}>{c.translationsHeading || 'Translations'}</span>
       <p className="text-xs text-text-muted -mt-1">
         {c.translationsHint || 'Optional overrides shown to players using these languages. Anything left blank falls back to the default text above.'}

@@ -11,6 +11,7 @@ import { stripManifest, type ContentManifest } from '@/utils/contentSigning';
 import { isRecord } from '@/utils/shareCodec';
 import { checkAndPurgeRevokedContent } from '@/hooks/useContentRevocationSync';
 import { cn } from '@/utils/cn';
+import { IconTile } from '@/components/common/IconTile';
 
 export const REPORT_REASONS = [
   'hate_speech',
@@ -143,9 +144,9 @@ export function ReportContentModalBody({
   if (status === 'success') {
     return (
       <div className="flex flex-col items-center gap-4 py-4 text-center">
-        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-accent-emerald/15 text-accent-emerald">
+        <IconTile tone="green" size="md">
           <CheckCircle2 className="h-6 w-6" aria-hidden="true" />
-        </div>
+        </IconTile>
         <div className="flex flex-col gap-1 max-w-sm">
           <p className="type-body-lg text-text-secondary">{t.reportSuccess}</p>
         </div>
@@ -159,9 +160,9 @@ export function ReportContentModalBody({
   if (status === 'already_banned') {
     return (
       <div className="flex flex-col items-center gap-4 py-4 text-center">
-        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-accent-amber/15 text-accent-amber">
+        <IconTile tone="amber" size="md">
           <AlertCircle className="h-6 w-6" aria-hidden="true" />
-        </div>
+        </IconTile>
         <div className="flex flex-col gap-1 max-w-sm">
           <p className="type-body-lg text-text-secondary">{t.reportAlreadyBanned}</p>
         </div>
@@ -175,7 +176,7 @@ export function ReportContentModalBody({
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4 py-1">
       {!manifest && (
-        <div className="flex items-start gap-3 rounded-xl border border-border-color bg-bg-elevated/40 p-3 text-xs text-text-secondary">
+        <div className="flex items-start gap-3 rounded-card border border-border-color bg-bg-elevated/40 p-3 text-xs text-text-secondary">
           <ShieldAlert className="h-4 w-4 shrink-0 text-accent-amber mt-0.5" aria-hidden="true" />
           <span>{t.reportNoManifest}</span>
         </div>
@@ -184,7 +185,7 @@ export function ReportContentModalBody({
       {status === 'error' && (
         <div
           role="alert"
-          className="flex items-start gap-3 rounded-xl border border-accent-red/30 bg-accent-red/10 p-3 text-xs text-accent-red"
+          className="flex items-start gap-3 rounded-card border border-accent-red/30 bg-accent-red/10 p-3 text-xs text-accent-red"
         >
           <AlertCircle className="h-4 w-4 shrink-0 mt-0.5" aria-hidden="true" />
           <span>{t.reportError}</span>
@@ -202,7 +203,7 @@ export function ReportContentModalBody({
               <label
                 key={r}
                 className={cn(
-                  'flex items-center gap-3 rounded-xl border p-3 text-sm cursor-pointer transition-colors',
+                  'flex items-center gap-3 rounded-control border p-3 text-sm cursor-pointer transition-colors',
                   isSelected
                     ? 'border-accent-red bg-accent-red/10 text-text-primary font-medium'
                     : 'border-border-color bg-bg-surface hover:bg-bg-elevated text-text-secondary'
@@ -234,7 +235,7 @@ export function ReportContentModalBody({
           placeholder={t.reportNotesPlaceholder}
           rows={3}
           maxLength={500}
-          className="w-full resize-none rounded-xl border border-border-color bg-bg-surface p-3 text-sm text-text-primary placeholder:text-text-muted focus:border-accent-red focus:outline-none transition-colors"
+          className="w-full resize-none rounded-control border border-border-color bg-bg-surface p-3 text-sm text-text-primary placeholder:text-text-muted focus:border-accent-red focus:outline-none transition-colors"
         />
       </div>
 

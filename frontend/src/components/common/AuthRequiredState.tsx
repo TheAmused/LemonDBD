@@ -5,6 +5,8 @@ import React, { useState } from 'react';
 import dynamic from 'next/dynamic';
 import { Lock } from 'lucide-react';
 import { useDictionary } from '@/context/DictionaryContext';
+import { Button } from '@/components/common/Button';
+import { IconTile } from '@/components/common/IconTile';
 
 const AuthModal = dynamic(() => import('@/components/AuthModal').then((m) => m.AuthModal), { ssr: false });
 
@@ -20,11 +22,11 @@ interface AuthRequiredStateProps {
 
 const VARIANT_WRAPPER_CLASSNAME: Record<AuthRequiredVariant, string> = {
   compact:
-    'rounded-2xl border border-dashed border-border-color bg-bg-surface/40 p-6 sm:p-8 text-center flex flex-col items-center justify-center',
+    'rounded-card border border-dashed border-border-color bg-bg-surface/40 p-6 sm:p-8 text-center flex flex-col items-center justify-center',
   solid:
-    'mt-4 sm:mt-6 mb-auto rounded-3xl bg-bg-surface p-8 sm:p-12 text-center backdrop-blur-sm shadow-sm w-full border border-border-color flex flex-col items-center justify-center',
+    'mt-4 sm:mt-6 mb-auto rounded-card bg-bg-surface p-8 sm:p-12 text-center backdrop-blur-sm shadow-sm w-full border border-border-color flex flex-col items-center justify-center',
   dashed:
-    'flex flex-col items-center justify-center rounded-2xl border border-dashed border-border-color bg-bg-surface/60 px-6 py-16 sm:py-20 text-center my-6',
+    'flex flex-col items-center justify-center rounded-card border border-dashed border-border-color bg-bg-surface/60 px-6 py-16 sm:py-20 text-center my-6',
 };
 
 export function AuthRequiredState({
@@ -40,22 +42,18 @@ export function AuthRequiredState({
 
   return (
     <div className={className || VARIANT_WRAPPER_CLASSNAME[variant]}>
-      <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-accent-red/20 bg-accent-red/10">
+      <IconTile tone="red" size="md">
         <Lock className="h-5 w-5 text-accent-red" />
-      </div>
+      </IconTile>
       <h2 className="mt-4 text-sm font-extrabold tracking-wide text-text-primary">
         {title}
       </h2>
       <p className="mt-1.5 max-w-sm type-body text-text-muted">
         {subtitle}
       </p>
-      <button
-        type="button"
-        onClick={() => setIsAuthModalOpen(true)}
-        className="mt-5 rounded-xl bg-accent-red px-5 py-2.5 type-strong text-text-inverted shadow-xs hover:bg-accent-red-hover transition-colors cursor-pointer"
-      >
+      <Button variant="primary" size="md" onClick={() => setIsAuthModalOpen(true)} className="mt-5">
         {resolvedButtonLabel}
-      </button>
+      </Button>
 
       {isAuthModalOpen && (
         <AuthModal

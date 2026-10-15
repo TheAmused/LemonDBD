@@ -1,4 +1,5 @@
 // frontend/scripts/check-global-styles.ts
+import fs from "node:fs";
 import { readGlobalCss } from "./lib/globalCss";
 import { Project, SyntaxKind, Node } from "ts-morph";
 
@@ -371,6 +372,129 @@ for (const sourceFile of project.getSourceFiles()) {
           );
         }
       }
+    }
+  }
+}
+
+// 5. Corner radius. Only the role tokens from tokens.css exist (rounded-chip / -control / -card /
+// -modal / -full / -none). Tailwind's stock scale is switched off there, so a leftover rounded-xl
+// would silently render square; arbitrary values (rounded-[Npx]) bypass the scale entirely.
+const LEGACY_RADIUS = /^(?:[a-z0-9-]+:)*rounded(?:-(?:t|b|l|r|tl|tr|bl|br|s|e|ss|se|es|ee))?-(?:xs|sm|md|lg|xl|2xl|3xl|\[[^\]]*\])$/;
+const ANY_RADIUS = /^(?:[a-z0-9-]+:)*rounded(?:-(?:t|b|l|r|tl|tr|bl|br|s|e|ss|se|es|ee))?(?:-[\w[\]]+)?$/;
+// Shared primitives own their radius; callers may not override it through className.
+const RADIUS_OWNED_BY_PRIMITIVE = new Set(["Button", "IconButton", "Input", "Textarea", "Select", "Surface", "Badge", "InfoChip", "ToggleChip"]);
+const STRING_NODE_KINDS = [
+  SyntaxKind.StringLiteral,
+  SyntaxKind.NoSubstitutionTemplateLiteral,
+  SyntaxKind.TemplateHead,
+  SyntaxKind.TemplateMiddle,
+  SyntaxKind.TemplateTail,
+];
+
+for (const sourceFile of project.getSourceFiles()) {
+  const filePath = sourceFile.getFilePath();
+
+  for (const kind of STRING_NODE_KINDS) {
+    for (const node of sourceFile.getDescendantsOfKind(kind)) {
+      const text = node.getText();
+      if (!text.includes("rounded")) continue;
+      for (const token of text.replace(/^[`'"}]|[`'"]$|\$\{$/g, "").split(/\s+/)) {
+        if (LEGACY_RADIUS.test(token)) {
+          reportError(filePath, node.getStartLineNumber(), `Radius "${token}" is not a role token: use rounded-chip, rounded-control, rounded-card, rounded-modal or rounded-full`);
+        }
+      }
+    }
+  }
+
+  const openings = [
+    ...sourceFile.getDescendantsOfKind(SyntaxKind.JsxOpeningElement),
+    ...sourceFile.getDescendantsOfKind(SyntaxKind.JsxSelfClosingElement),
+  ];
+  for (const el of openings) {
+    const tag = el.getTagNameNode().getText();
+    if (!RADIUS_OWNED_BY_PRIMITIVE.has(tag)) continue;
+    const attr = el.getAttribute("className");
+    if (!attr || !Node.isJsxAttribute(attr)) continue;
+    const initializer = attr.getInitializer();
+    if (!initializer) continue;
+    for (const kind of STRING_NODE_KINDS) {
+      for (const node of [...initializer.getDescendantsOfKind(kind), ...(initializer.getKind() === kind ? [initializer] : [])]) {
+        for (const token of node.getText().replace(/^[`'"}]|[`'"]$|\$\{$/g, "").split(/\s+/)) {
+          if (ANY_RADIUS.test(token) && token.includes("rounded")) {
+            reportError(filePath, node.getStartLineNumber(), `<${tag}> owns its corner radius: drop "${token}" from className`);
+          }
+        }
+      }
+    }
+  }
+}
+
+// 6. Tooltips. One system (common/Tooltip.tsx, variants in TOOLTIP_CONFIG). A native `title` on a DOM
+// element is a second, unstyled tooltip that never shows on touch screens: use {...tip(text, desc, variant)}.
+// Component props called `title` (Modal, EmptyState, ...) are not tooltips and start with a capital letter.
+const NATIVE_TITLE_TAGS = new Set(["Link", "Image"]);
+for (const sourceFile of project.getSourceFiles()) {
+  const filePath = sourceFile.getFilePath();
+  const elements = [
+    ...sourceFile.getDescendantsOfKind(SyntaxKind.JsxOpeningElement),
+    ...sourceFile.getDescendantsOfKind(SyntaxKind.JsxSelfClosingElement),
+  ];
+  for (const el of elements) {
+    const tag = el.getTagNameNode().getText();
+    const isDom = /^[a-z]/.test(tag) || NATIVE_TITLE_TAGS.has(tag);
+    if (!isDom || tag === "title") continue;
+    if (el.getAttribute("title")) {
+      reportError(filePath, el.getStartLineNumber(), `<${tag}> uses a native title tooltip: use {...tip(text, undefined, 'action')} from common/Tooltip`);
+    }
+    if (el.getAttribute("data-tooltip")) {
+      reportError(filePath, el.getStartLineNumber(), `<${tag}> sets data-tooltip by hand: use {...tip(text, description, variant)}`);
+    }
+  }
+}
+
+// 7. Raw <button> that looks like a button. Actions use Button / ToggleChip / SegmentedControl / MenuItem /
+// AccordionSection, so a change to one style reaches every button. The buttons that are deliberately
+// custom (tiles, game controls, drag handles, ...) are counted per file in raw-buttons-baseline.json:
+// a file may keep its count or lower it, never raise it. `--update-baseline` rewrites the file.
+const BASELINE_PATH = "scripts/raw-buttons-baseline.json";
+const updateBaseline = process.argv.includes("--update-baseline");
+const rawButtonCounts: Record<string, number> = {};
+for (const sourceFile of project.getSourceFiles()) {
+  const filePath = sourceFile.getFilePath();
+  const rel = filePath.replace(/\\/g, "/").replace(/^.*\/frontend\//, "");
+  if (rel.includes("/common/")) continue;
+  for (const el of sourceFile.getDescendantsOfKind(SyntaxKind.JsxOpeningElement)) {
+    if (el.getTagNameNode().getText() !== "button") continue;
+    const attr = el.getAttribute("className");
+    if (!attr || !Node.isJsxAttribute(attr)) continue;
+    const init = attr.getInitializer();
+    if (!init) continue;
+    let text = Node.isStringLiteral(init) ? init.getLiteralText() : "";
+    for (const kind of STRING_NODE_KINDS) {
+      for (const n of init.getDescendantsOfKind(kind)) {
+        text += " " + (Node.isStringLiteral(n) || Node.isNoSubstitutionTemplateLiteral(n) ? n.getLiteralText() : n.getText().replace(/^[`}]|\$\{$|`$/g, ""));
+      }
+    }
+    const toks = text.split(/\s+/).filter(Boolean);
+    const surface = toks.some((t) => /^(bg-|border$|border-(?!t$|b$|l$|r$|transparent))/.test(t));
+    const sized = toks.some((t) => /^(px-|py-|p-|h-\d|w-\d)/.test(t));
+    if (surface && sized) rawButtonCounts[rel] = (rawButtonCounts[rel] ?? 0) + 1;
+  }
+}
+if (updateBaseline) {
+  fs.writeFileSync(BASELINE_PATH, JSON.stringify(rawButtonCounts, Object.keys(rawButtonCounts).sort(), 2) + "\n");
+  console.log(`Wrote ${BASELINE_PATH} (${Object.keys(rawButtonCounts).length} files)`);
+} else {
+  let baseline: Record<string, number> = {};
+  try {
+    baseline = JSON.parse(fs.readFileSync(BASELINE_PATH, "utf8"));
+  } catch {
+    console.warn(`[check-global-styles] ${BASELINE_PATH} missing: run with --update-baseline`);
+  }
+  for (const [rel, count] of Object.entries(rawButtonCounts)) {
+    const allowed = baseline[rel] ?? 0;
+    if (count > allowed) {
+      reportError(rel, 1, `${count} raw <button> styled like a button (allowed ${allowed}): use Button, ToggleChip, SegmentedControl, MenuItem or AccordionSection`);
     }
   }
 }

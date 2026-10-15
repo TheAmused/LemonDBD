@@ -253,8 +253,8 @@ describe('Randomizer: Viewport Padding & Layout Structure', () => {
     const stageFrameContent = fs.readFileSync(stageFramePath, 'utf-8');
 
     assert.ok(
-      !stageFrameContent.includes('rounded-3xl'),
-      'StageFrame should not have rounded-3xl corners on background'
+      !stageFrameContent.includes('rounded-card'),
+      'StageFrame should not have rounded-card corners on background'
     );
   });
 });

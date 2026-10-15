@@ -4,7 +4,6 @@
 import React, { useEffect, useState } from 'react';
 import {
   ChallengeIntroModalShell,
-  NEUTRAL_TILE_ACCENT,
   type ChallengeIntroTile,
 } from './ChallengeIntroModalShell';
 import { cascadeCompletedTiers, tierCompletionCount } from '@/utils/challengeTierCompletion';
@@ -33,7 +32,6 @@ export function buildCompletionTiles(
   const completedFullTiers = cascadeCompletedTiers(order, Object.keys(completedFullCounts));
   return defs.map((def) => ({
     ...def,
-    accentClassName: NEUTRAL_TILE_ACCENT,
     completed: completedTiers.has(def.value),
     completedCount: tierCompletionCount(order, completedCounts, def.value),
     completedFull: completedFullTiers.has(def.value),

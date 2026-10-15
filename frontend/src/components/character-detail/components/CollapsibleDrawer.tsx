@@ -1,8 +1,9 @@
 // frontend/src/components/character-detail/components/CollapsibleDrawer.tsx
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { ChevronDown } from 'lucide-react';
+import React, { useState } from 'react';
+import { Collapsible } from '@/components/common/Collapsible';
+import { DisclosureButton } from '@/components/common/DisclosureButton';
 
 interface CollapsibleDrawerProps {
   header: React.ReactNode;
@@ -20,9 +21,8 @@ interface CollapsibleDrawerProps {
  * Used for the large item/add-on grids so they can be tucked away instead of
  * always forcing a long scroll, especially on small screens.
  *
- * Animated via the CSS grid-template-rows 0fr/1fr trick instead of
- * mounting/unmounting the body, since the body's height is dynamic
- * (image grids) and can't be pre-computed for a max-height transition.
+ * The body folds through the shared <Collapsible>. It lets content spill out once fully open
+ * (`overflowWhenOpen`), so a CategoryPicker dropdown opening upward is not clipped.
  */
 export const CollapsibleDrawer: React.FC<CollapsibleDrawerProps> = ({
   header,
@@ -37,18 +37,6 @@ export const CollapsibleDrawer: React.FC<CollapsibleDrawerProps> = ({
   const isControlled = controlledOpen !== undefined;
   const open = isControlled ? controlledOpen : uncontrolledOpen;
 
-  // Only true once fully open AND the opening transition has finished.
-  // `overflow-hidden` has to stay on while closed/animating so the content
-  // doesn't spill out of a shorter-than-content row, but it also clips any
-  // descendant that deliberately renders outside this box — e.g. a
-  // CategoryPicker dropdown opening upward. Lifting it once settled lets
-  // that escape correctly without breaking the collapse animation itself.
-  const [settled, setSettled] = useState(open);
-
-  useEffect(() => {
-    if (!open) setSettled(false);
-  }, [open]);
-
   const toggle = () => {
     const next = !open;
     if (isControlled) {
@@ -60,37 +48,12 @@ export const CollapsibleDrawer: React.FC<CollapsibleDrawerProps> = ({
 
   return (
     <>
-      <button
-        type="button"
-        onClick={toggle}
-        aria-expanded={open}
-        className={`w-full flex items-center justify-center gap-3 text-left cursor-pointer group ${headerClassName}`}
-      >
+      <DisclosureButton open={open} onClick={toggle} className={`w-full justify-center gap-3 ${headerClassName}`}>
         {header}
-        <ChevronDown
-          className={`h-4 w-4 shrink-0 text-text-muted group-hover:text-text-primary transition-transform duration-300 ${
-            open ? 'rotate-180' : ''
-          }`}
-          aria-hidden="true"
-        />
-      </button>
-      <div
-        onTransitionEnd={(e) => {
-          if (e.propertyName === 'grid-template-rows' && open) setSettled(true);
-        }}
-        className={`grid transition-[grid-template-rows] duration-300 ease-in-out ${
-          open ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'
-        }`}
-      >
-        <div className={settled ? 'overflow-visible' : 'overflow-hidden'}>
-          <div
-            aria-hidden={!open}
-            className={`min-h-0 transition-opacity duration-300 ${open ? 'opacity-100 delay-100' : 'opacity-0'} ${bodyClassName}`}
-          >
-            {children}
-          </div>
-        </div>
-      </div>
+      </DisclosureButton>
+      <Collapsible open={open} overflowWhenOpen contentClassName={`min-h-0 ${bodyClassName}`}>
+        {children}
+      </Collapsible>
     </>
   );
 };

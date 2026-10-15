@@ -115,7 +115,7 @@ describe('User Profile Theme Support', () => {
         );
       } else if (status === 'rejected') {
         assert.ok(
-          html.includes('text-text-muted') || html.includes('text-slate-600 dark:text-slate-400'),
+          html.includes('text-text-muted') || html.includes('text-text-secondary'),
           'Closed badge must have contrast text'
         );
       }
@@ -193,7 +193,8 @@ describe('User Profile Theme Support', () => {
   });
 
   it('CharactersHub toast container respects --sidebar-width and centers relative to content area', () => {
-    const source = readCharactersHubSource();
+    // The notice is a centred <Toast>; the shared Toast holds the sidebar-aware container.
+    const source = readCharactersHubSource() + fs.readFileSync(path.resolve(__dirname, '../../components/common/Toast.tsx'), 'utf-8');
     assert.ok(
       source.includes('left-[var(--sidebar-width,0rem)] right-0'),
       'CharactersHub toast container must span left-[var(--sidebar-width,0rem)] right-0 to center relative to content area'
@@ -205,7 +206,7 @@ describe('User Profile Theme Support', () => {
     const clientPath = path.resolve(__dirname, '../../components/user/UserProfileClient.tsx');
     const source = fs.readFileSync(userPagePath, 'utf-8') + (fs.existsSync(clientPath) ? fs.readFileSync(clientPath, 'utf-8') : '');
     assert.ok(
-      (source.includes('border-border-color') && source.includes('bg-bg-surface')) ||
+      (source.includes('border-border-color') && source.includes('bg-bg-surface')) || source.includes('<Surface') ||
       source.includes('border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950/90 text-slate-900 dark:text-slate-100'),
       'Unauthenticated card must support light and dark theme'
     );

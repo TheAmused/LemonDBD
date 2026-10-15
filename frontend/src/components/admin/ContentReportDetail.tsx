@@ -99,7 +99,7 @@ export function ContentReportDetail({ detail, resolving, onResolve }: ContentRep
       </dl>
 
       {!detail.attributed && (
-        <p className="flex items-start gap-2 rounded-xl border border-accent-amber/30 bg-accent-amber/10 p-3 type-body text-accent-amber">
+        <p className="flex items-start gap-2 rounded-card border border-accent-amber/30 bg-accent-amber/10 p-3 type-body text-accent-amber">
           <ShieldAlert className="mt-0.5 h-4 w-4 shrink-0" />
           <span>{dict.admin.contentReportUnattributed}</span>
         </p>
@@ -125,7 +125,7 @@ export function ContentReportDetail({ detail, resolving, onResolve }: ContentRep
       {reporterNotes.length > 0 && (
         <div className="space-y-1.5">
           <p className="type-label-sm text-text-secondary">{dict.admin.contentReportReporterNotes}</p>
-          <ul className="max-h-40 overflow-y-auto space-y-1.5 rounded-xl border border-border-subtle bg-bg-primary p-3">
+          <ul className="max-h-40 overflow-y-auto space-y-1.5 rounded-card border border-border-subtle bg-bg-primary p-3">
             {reporterNotes.map((r, index) => (
               <li key={index} className="type-body text-text-primary break-words whitespace-pre-wrap">
                 <span className="text-text-secondary">{contentReasonLabel(dict, r.reason)}: </span>
@@ -157,7 +157,7 @@ export function ContentReportDetail({ detail, resolving, onResolve }: ContentRep
             onChange={(e) => setNotes(e.target.value)}
           />
           {canActOnAuthor && (
-            <div className="space-y-3 rounded-xl border border-border-color bg-bg-primary p-3">
+            <div className="space-y-3 rounded-card border border-border-color bg-bg-primary p-3">
               <div>
                 <label htmlFor={`author-action-${detail.id}`} className="block type-label-xs text-text-secondary mb-1">
                   {moderation.authorActionLabel}

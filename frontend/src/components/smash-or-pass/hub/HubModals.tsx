@@ -96,11 +96,11 @@ export function HubModals({
               size="md"
               data-autofocus
               onClick={() => setIsResetConfirmOpen(false)}
-              className="w-full sm:flex-1 rounded-xl"
+              className="w-full sm:flex-1"
             >
               {dict.smashOrPass.modals.cancel}
             </Button>
-            <Button variant="primary" size="md" onClick={onResetAllVotes} className="w-full sm:flex-1 rounded-xl">
+            <Button variant="primary" size="md" onClick={onResetAllVotes} className="w-full sm:flex-1">
               {dict.smashOrPass.modals.confirm}
             </Button>
           </>

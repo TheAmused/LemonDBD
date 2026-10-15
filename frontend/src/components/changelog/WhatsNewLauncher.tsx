@@ -3,6 +3,7 @@
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Megaphone, Plus, Pencil, Trash2, Skull, ChevronDown, ChevronUp, GripVertical } from 'lucide-react';
+import { cn } from '@/utils/cn';
 import { useAuth } from '@/context/AuthContext';
 import type { ChangelogPost, ChangelogPostDraft, ChangelogTag } from '@/types/changelog';
 import {
@@ -24,6 +25,8 @@ import { UnreadDot } from '@/components/common/UnreadDot';
 import { formatDate } from '@/utils/format';
 import { useDictionary } from "@/context/DictionaryContext";
 
+import { Button } from '@/components/common/Button';
+import { ToggleChip } from '@/components/common/ToggleChip';
 const ChangelogEditorModal = dynamic(
   () => import('./ChangelogEditorModal').then((m) => m.ChangelogEditorModal),
   { ssr: false }
@@ -270,16 +273,16 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ className = 
 
   return (
     <>
-      <button
+      <Button variant="secondary" size="md" icon
         type="button"
         onClick={handleOpen}
         {...tip(t.triggerTitle, undefined, 'action')}
         aria-label={t.triggerTitle}
-        className={`pointer-coarse:min-h-11 pointer-coarse:min-w-11 group relative flex h-9 w-9 items-center justify-center rounded-xl border border-border-color text-text-muted transition-all hover:border-accent-red/50 hover:text-accent-red hover:bg-accent-red/10 cursor-pointer ${className}`}
+        className={className}
       >
         <Megaphone className="h-4 w-4" />
         {hasUnread && <UnreadDot className="absolute -right-0.5 -top-0.5" />}
-      </button>
+      </Button>
 
       <Modal
         isOpen={mounted && isOpen}
@@ -290,17 +293,17 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ className = 
         closeButtonAriaLabel={t.close}
         headerRight={
           isAdmin ? (
-            <button
+            <Button
               type="button"
               onClick={() => {
                 setEditingPost(null);
                 setEditorOpen(true);
               }}
               {...tip(t.newEntry, undefined, 'action')} aria-label={t.newEntry}
-              className="pointer-coarse:min-h-11 pointer-coarse:min-w-11 flex h-9 w-9 items-center justify-center rounded-xl border border-border-subtle text-text-secondary hover:border-accent-red/50 hover:text-accent-red cursor-pointer"
+              variant="secondary" size="md" icon
             >
               <Plus className="h-4 w-4" />
-            </button>
+            </Button>
           ) : undefined
         }
       >
@@ -356,7 +359,7 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ className = 
               onPointerMove={handlePointerMove}
               onPointerUp={endDrag}
               onPointerCancel={endDrag}
-              className={`rounded-2xl border transition-all ${
+              className={`rounded-card border transition-all ${
                 isDragging
                   ? 'border-accent-amber/60 bg-bg-elevated/80 shadow-lg scale-[1.01] z-10 relative'
                   : post.is_published
@@ -366,18 +369,18 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ className = 
             >
               <div className="flex items-start gap-2 p-4">
                 {canReorder && (
-                  <button
-                    type="button"
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    icon
                     {...tip(t.dragToReorder, undefined, 'action')}
                     aria-label={t.dragToReorder}
                     onPointerDown={(e) => beginDrag(e, post.id)}
                     style={{ touchAction: 'none' }}
-                    className={`pointer-coarse:min-h-11 pointer-coarse:min-w-11 mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-text-muted hover:bg-bg-elevated hover:text-text-secondary cursor-grab active:cursor-grabbing ${
-                      isDragging ? 'text-accent-amber' : ''
-                    }`}
+                    className={cn('mt-0.5 cursor-grab active:cursor-grabbing', isDragging && 'text-accent-amber')}
                   >
                     <GripVertical className="h-4 w-4" />
-                  </button>
+                  </Button>
                 )}
 
                 <button
@@ -507,18 +510,12 @@ const FilterChip: React.FC<{ active: boolean; onClick: () => void; label: string
   label,
   dotClass,
 }) => (
-  <button
-    type="button"
+  <ToggleChip pressed={active} size="sm" pill
     onClick={onClick}
-    className={`flex items-center gap-1.5 rounded-full border px-3 py-1 text-mini font-bold transition-all cursor-pointer ${
-      active
-        ? 'border-accent-red/50 bg-accent-red/10 text-accent-red'
-        : 'border-border-color text-text-muted hover:text-text-secondary'
-    }`}
   >
     {dotClass && <span className={`h-1.5 w-1.5 rounded-full ${dotClass}`} />}
     {label}
-  </button>
+  </ToggleChip>
 );
 
 const IconButton: React.FC<{
@@ -528,14 +525,14 @@ const IconButton: React.FC<{
   disabled?: boolean;
   hoverClass?: string;
 }> = ({ icon: Icon, label, onClick, disabled, hoverClass = 'hover:text-text-secondary' }) => (
-  <button
+  <Button variant="ghost" size="sm" icon
     type="button"
     {...tip(label, undefined, 'action')}
     aria-label={label}
     disabled={disabled}
     onClick={onClick}
-    className={`pointer-coarse:min-h-11 pointer-coarse:min-w-11 flex h-7 w-7 items-center justify-center rounded-md text-text-muted transition-colors cursor-pointer hover:bg-bg-elevated disabled:opacity-30 disabled:cursor-not-allowed ${hoverClass}`}
+    className={hoverClass}
   >
     <Icon className="h-3.5 w-3.5" />
-  </button>
+  </Button>
 );

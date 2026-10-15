@@ -4,7 +4,6 @@
 import React from 'react';
 import { CardStackIcon, ImportScrollIcon, ThornChevronIcon } from '@/components/icons/DbdIcons';
 import type { RosterItem } from '@/types/smashOrPass';
-import { cn } from '@/utils/cn';
 import { Modal } from '@/components/common/Modal';
 import { AuthRequiredState } from '@/components/common/AuthRequiredState';
 import { useAuth } from '@/context/AuthContext';
@@ -13,6 +12,9 @@ import { RosterCarouselCard } from './roster-select/RosterCarouselCard';
 import { RosterPickerFooter } from './roster-select/RosterPickerFooter';
 import { useRosterCarousel } from './roster-select/useRosterCarousel';
 
+import { Button } from '@/components/common/Button';
+import { SegmentedControl } from '@/components/common/SegmentedControl';
+import { EmptyState } from '@/components/common/EmptyState';
 interface RosterSelectModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -87,38 +89,23 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
       ariaLabel={selectRosterTitle}
       closeButtonAriaLabel={dict.modal.close}
       backdrop="blur"
-      className="h-[94dvh] max-h-[1100px] min-h-[580px] max-w-[1600px] border-2 border-accent-red/35 rounded-3xl"
+      className="h-[94dvh] max-h-[1100px] min-h-[580px] max-w-[1600px] border-2 border-accent-red/35 rounded-card"
       bodyClassName="flex flex-col overflow-hidden"
     >
       <div className="relative flex min-h-0 w-full flex-1 flex-col items-center justify-between overflow-hidden p-4 sm:p-6 md:p-8">
         {/* Top Left: Filter Toggle (Official vs Custom) */}
         <div className="absolute top-4 left-4 sm:top-6 sm:left-6 z-50">
-          <div className="inline-flex items-center gap-1 p-1 bg-bg-elevated/90 backdrop-blur-md rounded-2xl border border-border-color shadow-sm">
-            <button
-              type="button"
-              onClick={() => handleFilterChange('official')}
-              className={cn(
-                'flex items-center gap-1.5 px-3 sm:px-3.5 py-1.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer touch-manipulation',
-                filter === 'official'
-                  ? 'bg-accent-red text-text-inverted shadow-xs'
-                  : 'text-text-secondary hover:text-text-primary'
-              )}
-            >
-              <span>{dict.smashOrPass.picker.officialTab} ({officialRosters.length})</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => handleFilterChange('custom')}
-              className={cn(
-                'flex items-center gap-1.5 px-3 sm:px-3.5 py-1.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer touch-manipulation',
-                filter === 'custom'
-                  ? 'bg-accent-red text-text-inverted shadow-xs'
-                  : 'text-text-secondary hover:text-text-primary'
-              )}
-            >
-              <span>{dict.smashOrPass.picker.customTab} ({customRosters.length})</span>
-            </button>
-          </div>
+          <SegmentedControl<'official' | 'custom'>
+            ariaLabel={dict.smashOrPass.picker.officialTab}
+            size="sm"
+            value={filter}
+            onChange={handleFilterChange}
+            className="bg-bg-elevated/90 backdrop-blur-md"
+            options={[
+              { value: 'official', label: `${dict.smashOrPass.picker.officialTab} (${officialRosters.length})` },
+              { value: 'custom', label: `${dict.smashOrPass.picker.customTab} (${customRosters.length})` },
+            ]}
+          />
         </div>
 
         <div className="text-center pt-1 sm:pt-2 space-y-2.5">
@@ -129,23 +116,23 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
           {(onCreateRoster || onImportRoster) && (
             <div className="flex flex-wrap items-center justify-center gap-2 pt-0.5">
               {onCreateRoster && (
-                <button
+                <Button
                   type="button"
                   onClick={onCreateRoster}
-                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 min-h-[36px] rounded-xl bg-accent-red/10 border border-accent-red/40 text-accent-red type-label-sm hover:bg-accent-red/20 transition-colors cursor-pointer"
+                  variant="soft" size="sm"
                 >
                   {dict.smashOrPass.picker.createRoster}
-                </button>
+                </Button>
               )}
               {onImportRoster && (
-                <button
+                <Button
                   type="button"
                   onClick={onImportRoster}
-                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 min-h-[36px] rounded-xl bg-bg-elevated border border-border-color text-text-secondary type-label-sm hover:text-text-primary hover:border-border-subtle transition-colors cursor-pointer"
+                  variant="secondary" size="sm"
                 >
                   <ImportScrollIcon className="h-4 w-4" aria-hidden="true" />
                   {dict.smashOrPass.picker.importRoster}
-                </button>
+                </Button>
               )}
             </div>
           )}
@@ -168,7 +155,7 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
         >
           {N > 0 && (
             <>
-              <button
+              <Button
                 type="button"
                 aria-label={dict.pagination.previous}
                 onPointerDown={(e) => e.stopPropagation()}
@@ -176,12 +163,12 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
                 onMouseDown={(e) => e.stopPropagation()}
                 onTouchStart={(e) => e.stopPropagation()}
                 onClick={stepPrev}
-                className="absolute left-2 sm:left-4 md:left-8 z-50 flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-full bg-bg-surface border border-accent-red/40 text-accent-red hover:bg-accent-red hover:text-text-inverted hover:border-accent-red hover:scale-110 active:scale-95 transition-all cursor-pointer pointer-events-auto select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red"
+                variant="soft" size="lg" icon pill className="absolute left-2 z-50 sm:left-4 sm:h-14 sm:w-14 md:left-8 hover:scale-110 active:scale-95"
               >
                 <ThornChevronIcon className="h-6 w-6 sm:h-7 sm:w-7 rotate-180" aria-hidden="true" />
-              </button>
+              </Button>
 
-              <button
+              <Button
                 type="button"
                 aria-label={dict.pagination.next}
                 onPointerDown={(e) => e.stopPropagation()}
@@ -189,10 +176,10 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
                 onMouseDown={(e) => e.stopPropagation()}
                 onTouchStart={(e) => e.stopPropagation()}
                 onClick={stepNext}
-                className="absolute right-2 sm:right-4 md:right-8 z-50 flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-full bg-bg-surface border border-accent-red/40 text-accent-red hover:bg-accent-red hover:text-text-inverted hover:border-accent-red hover:scale-110 active:scale-95 transition-all cursor-pointer pointer-events-auto select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red"
+                variant="soft" size="lg" icon pill className="absolute right-2 z-50 sm:right-4 sm:h-14 sm:w-14 md:right-8 hover:scale-110 active:scale-95"
               >
                 <ThornChevronIcon className="h-6 w-6 sm:h-7 sm:w-7" aria-hidden="true" />
-              </button>
+              </Button>
             </>
           )}
 
@@ -205,18 +192,14 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
               />
             </div>
           ) : N === 0 ? (
-            <div className="relative z-10 flex flex-col items-center justify-center gap-3 p-8 rounded-3xl border border-dashed border-border-color bg-bg-elevated/40 text-center max-w-md mx-auto">
-              <CardStackIcon className="h-10 w-10 text-accent-red animate-pulse" aria-hidden="true" />
-              <h3 className="text-base font-bold text-text-primary uppercase tracking-wide">
-                {filter === 'custom'
-                  ? dict.smashOrPass.picker.noCustomRostersFound
-                  : dict.smashOrPass.picker.noRostersFound}
-              </h3>
-              <p className="text-xs text-text-muted">
-                {filter === 'custom'
-                  ? dict.smashOrPass.picker.noCustomRostersDesc
-                  : dict.smashOrPass.picker.noRostersMatchDesc}
-              </p>
+            <div className="relative z-10 mx-auto max-w-md">
+              <EmptyState
+                variant="compact"
+                icon={CardStackIcon}
+                iconClassName="mx-auto mb-2 h-10 w-10 text-accent-red animate-pulse"
+                title={filter === 'custom' ? dict.smashOrPass.picker.noCustomRostersFound : dict.smashOrPass.picker.noRostersFound}
+                subtitle={filter === 'custom' ? dict.smashOrPass.picker.noCustomRostersDesc : dict.smashOrPass.picker.noRostersMatchDesc}
+              />
             </div>
           ) : (
             <div

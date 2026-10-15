@@ -1,15 +1,15 @@
 'use client';
 
 import React, { useState } from 'react';
-import { ChevronDown, TriangleAlert } from 'lucide-react';
+import { TriangleAlert } from 'lucide-react';
 import type { Dictionary } from '@/locales/types';
-import { cn } from '@/utils/cn';
 import { type SmashRosterErrorCode } from '@/utils/smashOrPass/codec';
 import { SMASH_ROSTER_LIMITS, TRANSLATABLE_LOCALES } from '@/utils/smashOrPass/constants';
 import type { CustomRomanceArchetype, RosterCustomLabels, SmashRosterDocumentEntity } from '@/types/smashOrPass';
 import { DraftEntity, emptyDraftEntity, type EntityTranslationDraft } from '@/components/smash-or-pass/creator/EntityEditor';
 import { Badge } from '@/components/common/Badge';
 import { useDictionary } from '@/context/DictionaryContext';
+import { AccordionSection } from '@/components/common/AccordionSection';
 
 export function newKey(): string {
   if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') return crypto.randomUUID();
@@ -217,59 +217,17 @@ export function Section({ title, badge, defaultOpen = true, headerAction, toggle
   const [isOpen, setIsOpen] = useState(defaultOpen);
 
   return (
-    <section className="rounded-xl border border-border-color bg-bg-surface shadow-xs overflow-hidden transition-colors flex flex-col">
-      <div className="relative w-full flex items-center justify-between px-4 sm:px-6 py-3 sm:py-3.5 bg-bg-surface hover:bg-bg-elevated/40 transition-colors">
-        {/* Left spacer to balance right side controls on wider screens */}
-        <div className="w-24 sm:w-32 hidden sm:block pointer-events-none" aria-hidden="true" />
-
-        {/* Center toggle clickable area */}
-        <button
-          type="button"
-          onClick={() => setIsOpen((prev) => !prev)}
-          aria-expanded={isOpen}
-          className="flex-1 flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 min-w-0 px-1 sm:px-2 cursor-pointer select-none text-center"
-        >
-          <h2 className="type-section-title text-text-primary hover:text-accent-red transition-colors">
-            {title}
-          </h2>
-          {badge !== undefined && (
-            <Badge size="sm" plain className="">
-              {badge}
-            </Badge>
-          )}
-        </button>
-
-        {/* Right side controls: headerAction sticky beside chevron */}
-        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-          {headerAction}
-          <button
-            type="button"
-            onClick={() => setIsOpen((prev) => !prev)}
-            aria-label={toggleAria || title}
-            className="flex items-center justify-center p-1 text-accent-red hover:text-accent-red-hover transition-colors cursor-pointer"
-          >
-            <ChevronDown
-              className={cn(
-                'h-4 w-4 sm:h-5 sm:w-5 transition-transform duration-300 ease-in-out',
-                isOpen ? 'rotate-180' : 'rotate-0'
-              )}
-            />
-          </button>
-        </div>
-      </div>
-
-      <div
-        className={`grid transition-[grid-template-rows,opacity] duration-300 ease-in-out ${
-          isOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
-        }`}
-      >
-        <div className="overflow-hidden">
-          <div className="p-4 sm:p-6 2xl:p-7 border-t border-border-color">
-            {children}
-          </div>
-        </div>
-      </div>
-    </section>
+    <AccordionSection
+      title={title}
+      open={isOpen}
+      onToggle={() => setIsOpen((prev) => !prev)}
+      toggleLabel={toggleAria}
+      badge={badge !== undefined ? <Badge size="sm" plain>{badge}</Badge> : null}
+      headerAction={headerAction}
+      as="section"
+    >
+      {children}
+    </AccordionSection>
   );
 }
 
@@ -285,7 +243,7 @@ export function Feedback({ errors, saveError, submitError, publishError }: {
   const messages = [...errors, ...(saveErrorText ? [saveErrorText] : []), ...(submitError ? [submitError] : []), ...(publishError ? [publishError] : [])];
   if (messages.length === 0) return null;
   return (
-    <div role="alert" className="flex flex-col items-center justify-center gap-1.5 rounded-lg border border-accent-red/40 bg-accent-red/10 p-3 type-card-title text-accent-red text-center">
+    <div role="alert" className="flex flex-col items-center justify-center gap-1.5 rounded-chip border border-accent-red/40 bg-accent-red/10 p-3 type-card-title text-accent-red text-center">
       {messages.map((m) => (
         <p key={m} className="flex items-center justify-center gap-2">
           <TriangleAlert className="h-4 w-4 shrink-0" aria-hidden="true" />

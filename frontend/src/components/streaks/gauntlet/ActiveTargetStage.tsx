@@ -138,7 +138,7 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
 
   if (!run || !run.current_loadout) {
     return (
-      <div className="w-full rounded-xl p-6 text-center">
+      <div className="w-full rounded-card p-6 text-center">
         <Spinner size="md" tone="accent" className="mx-auto mb-2" />
         <p className="text-text-muted text-sm">
           {dict.streaks.loadingStreak}
@@ -150,7 +150,7 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
   if (pickCharacter && !run.target_revealed) {
     return (
       <>
-        <div className="w-full flex items-center justify-center rounded-xl px-4 min-h-[12.25rem]">
+        <div className="w-full flex items-center justify-center rounded-card px-4 min-h-[12.25rem]">
           <h2 className="text-sm sm:text-base font-black text-text-primary">
             {dict.streaks.soloPickTitle}
           </h2>
@@ -197,7 +197,7 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
 
     if (!drawing) {
       return (
-        <div className="w-full flex items-center justify-center rounded-xl p-2 min-h-[12.25rem]">
+        <div className="w-full flex items-center justify-center rounded-card p-2 min-h-[12.25rem]">
           {startButton}
         </div>
       );
@@ -207,10 +207,10 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
       const reel = reels[0];
       const displayPhase = reel.phase === 'idle' ? 'landed' : reel.phase;
       return (
-        <div className="w-full flex items-center justify-center gap-3 rounded-xl p-2 min-h-[12.25rem]">
+        <div className="w-full flex items-center justify-center gap-3 rounded-card p-2 min-h-[12.25rem]">
           <div className="flex flex-col items-center gap-3">
             <div
-              className={`w-24 h-24 sm:w-28 sm:h-28 rounded-xl p-1 bg-bg-elevated border-2 border-border-color flex items-center justify-center overflow-hidden ${
+              className={`w-24 h-24 sm:w-28 sm:h-28 rounded-card p-1 bg-bg-elevated border-2 border-border-color flex items-center justify-center overflow-hidden ${
                 displayPhase === 'landed' ? 'gn-land-glow' : ''
               }`}
             >
@@ -231,7 +231,7 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
     }
 
     return (
-      <div className="w-full flex flex-wrap items-center gap-4 rounded-xl p-2 min-h-[12.25rem]">
+      <div className="w-full flex flex-wrap items-center gap-4 rounded-card p-2 min-h-[12.25rem]">
         <div className="flex-1 flex items-center justify-center gap-4 flex-wrap">
           <div className="flex items-center gap-6 sm:gap-24">
             {reels.map((reel, idx) => {
@@ -241,7 +241,7 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
               return (
                 <div
                   key={idx}
-                  className={`w-28 h-28 sm:w-32 sm:h-32 rounded-xl p-1 bg-bg-elevated border-2 border-border-color flex items-center justify-center overflow-hidden ${
+                  className={`w-28 h-28 sm:w-32 sm:h-32 rounded-card p-1 bg-bg-elevated border-2 border-border-color flex items-center justify-center overflow-hidden ${
                     displayPhase === 'landed' ? 'gn-land-glow' : ''
                   }`}
                 >
@@ -295,7 +295,7 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
 
   return (
     <>
-      <div className="w-full rounded-xl p-2 min-h-[12.25rem]">
+      <div className="w-full rounded-card p-2 min-h-[12.25rem]">
         <div className={isTeam ? 'grid grid-cols-1 xl:grid-cols-2 gap-3 divide-y xl:divide-y-0 xl:divide-x divide-border-color' : ''}>
           {players.map((player, index) => (
             <CompactPlayerBuild

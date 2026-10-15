@@ -9,6 +9,7 @@ import { useDictionary, useLocale } from '@/context/DictionaryContext';
 import { formatMessage } from '@/utils/i18nFormat';
 import { TokenRoulette } from './TokenRoulette';
 import type { TokenRollPlay } from './useGauntletRun';
+import { Surface } from '@/components/common/Surface';
 
 interface TokenRollModalProps {
   /** The win's token roll to play; null keeps the modal closed. */
@@ -46,7 +47,7 @@ export const TokenRollModal: React.FC<TokenRollModalProps> = ({ tokenRoll, cap, 
       closeButton="none"
       ariaLabel={dict.streaks.tokensLabel}
     >
-      <div className="ck-card-in relative flex min-h-[22rem] w-full cursor-default flex-col items-center justify-center gap-4 overflow-hidden rounded-card border border-accent-amber/60 bg-bg-surface px-8 py-12 text-center">
+      <Surface padding="none" className="ck-card-in relative flex min-h-[22rem] w-full cursor-default flex-col items-center justify-center gap-4 overflow-hidden border-accent-amber/60 px-8 py-12 text-center">
         <Coins className="h-12 w-12 text-accent-amber" aria-hidden="true" />
         <p className="type-label-sm tracking-spaced-md text-accent-amber">
           {full ? dict.streaks.tokenFullTitle : dict.streaks.tokenRollTitle}
@@ -67,7 +68,7 @@ export const TokenRollModal: React.FC<TokenRollModalProps> = ({ tokenRoll, cap, 
         <Button variant="amber" size="md" onClick={onClose} disabled={!landed && !full}>
           {dict.streaks.continueButton}
         </Button>
-      </div>
+      </Surface>
     </Modal>
   );
 };

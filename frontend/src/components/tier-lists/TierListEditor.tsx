@@ -50,6 +50,7 @@ import { cn } from '@/utils/cn';
 import { Popover, popoverTriggerProps } from '@/components/common/Popover';
 import { tip } from '@/components/common/Tooltip';
 import { formatMessage } from '@/utils/i18nFormat';
+import { Surface } from '@/components/common/Surface';
 
 export interface TierListEditorProps {
   mode: 'official' | 'custom';
@@ -461,7 +462,7 @@ export function TierListEditor(props: TierListEditorProps) {
           aria-live="polite"
           className="pointer-events-none fixed inset-x-0 bottom-4 z-40 flex justify-center px-4 lemon-modal-overlay-sidebar-aware"
         >
-          <div className="pointer-events-auto flex max-w-xl flex-wrap items-center justify-center gap-2 rounded-card border border-accent-amber/40 bg-bg-surface shadow-lg px-3 py-1.5 type-card-title text-accent-amber text-center">
+          <Surface padding="none" className="pointer-events-auto flex max-w-xl flex-wrap items-center justify-center gap-2 border-accent-amber/40 shadow-lg px-3 py-1.5 type-card-title text-accent-amber text-center">
             <MousePointerClick className="h-4 w-4 shrink-0" aria-hidden="true" />
             <span className="min-w-0">{formatMessage(t.selectedHint, { name: selectedItem.name })}</span>
             {mode === 'custom' && onRemoveItem && (
@@ -480,7 +481,7 @@ export function TierListEditor(props: TierListEditorProps) {
             <Button variant="secondary" onClick={() => setSelectedKey(null)} className={TOUCH_BTN}>
               {t.cancelSelection}
             </Button>
-          </div>
+          </Surface>
         </div>
       )}
 

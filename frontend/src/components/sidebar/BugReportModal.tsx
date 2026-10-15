@@ -215,7 +215,7 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({ isOpen, onClose 
 
     <form id="bug-report-form" onSubmit={handleSubmit} className="space-y-4">
       {isAuthenticated && user ? (
-        <div className="flex items-center justify-between rounded-card border border-border-color bg-bg-elevated/60 p-3 text-xs">
+        <Surface tone="elevated" padding="sm" className="flex items-center justify-between bg-bg-elevated/60 text-xs">
           <div className="flex items-center gap-2.5 text-text-secondary">
             <div className="flex h-7 w-7 items-center justify-center rounded-chip bg-bg-elevated border border-border-color text-text-secondary" aria-hidden="true">
               <LemonIcon className="h-4 w-4" />
@@ -233,7 +233,7 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({ isOpen, onClose 
             <UserCheck className="h-3 w-3" aria-hidden="true" />
             {t.verified || ''}
           </Badge>
-        </div>
+        </Surface>
       ) : (
         <div>
           <label className="block type-label-xs text-text-muted mb-1 flex items-center gap-1.5">

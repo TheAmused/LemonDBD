@@ -5,6 +5,7 @@ import React from 'react';
 import { Shield } from 'lucide-react';
 import { Button } from '@/components/common/Button';
 import { Modal } from '@/components/common/Modal';
+import { Surface } from '@/components/common/Surface';
 
 interface ShieldPromptModalProps {
   open: boolean;
@@ -31,7 +32,7 @@ export const ShieldPromptModal: React.FC<ShieldPromptModalProps> = ({
   onCancel,
 }) => (
   <Modal isOpen={open} onClose={onCancel} variant="lightbox" size="sm" closeButton="none" ariaLabel={title}>
-    <div className="ck-card-in relative flex w-full cursor-default flex-col items-center justify-center gap-4 overflow-hidden rounded-card border border-accent-red/60 bg-bg-surface px-8 py-10 text-center">
+    <Surface padding="none" className="ck-card-in relative flex w-full cursor-default flex-col items-center justify-center gap-4 overflow-hidden border-accent-red/60 px-8 py-10 text-center">
       <Shield className="h-12 w-12 text-accent-red" aria-hidden="true" />
       <h2 className="type-card-title text-balance text-text-primary">{title}</h2>
       <p className="type-label-sm tracking-spaced-md text-accent-red">{message}</p>
@@ -43,6 +44,6 @@ export const ShieldPromptModal: React.FC<ShieldPromptModalProps> = ({
           {confirmLabel}
         </Button>
       </div>
-    </div>
+    </Surface>
   </Modal>
 );

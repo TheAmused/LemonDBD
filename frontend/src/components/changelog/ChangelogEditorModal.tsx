@@ -203,7 +203,7 @@ export const ChangelogEditorModal: React.FC<ChangelogEditorModalProps> = ({ open
       })}
     </div>
 
-    <div className="rounded-card border border-border-color bg-bg-elevated/50 overflow-hidden">
+    <Surface tone="elevated" padding="none" className="bg-bg-elevated/50 overflow-hidden">
       <div className="relative flex flex-wrap items-center gap-0.5 border-b border-border-color bg-bg-elevated/80 px-2 py-1.5">
         <ToolbarButton icon={Bold} onClick={() => exec('bold')} label="Bold" />
         <ToolbarButton icon={Italic} onClick={() => exec('italic')} label="Italic" />
@@ -290,7 +290,7 @@ export const ChangelogEditorModal: React.FC<ChangelogEditorModalProps> = ({ open
           t.bodyPlaceholder
         }
       />
-    </div>
+    </Surface>
 
     {error && (
       <p role="alert" className="rounded-card border border-accent-red/40 bg-accent-red/10 px-3 py-2 type-strong text-accent-red">

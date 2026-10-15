@@ -33,7 +33,7 @@ interface DockActionProps {
   title: string;
   description: string;
   ariaLabel: string;
-  variant: 'soft' | 'secondary';
+  variant: 'soft' | 'secondary' | 'amberSoft';
   onClick: () => void;
   className?: string;
   children: ReactNode;
@@ -220,21 +220,15 @@ export function HubHeader({
             </DockAction>
 
             {/* Hall of Fame leaderboard */}
-            <Tooltip
-              variant="action"
+            <DockAction
               title={dict.smashOrPass.modals.leaderboardTitle}
               description={tooltips.leaderboardDesc}
-              placement="bottom"
+              ariaLabel={tooltips.leaderboard}
+              variant="amberSoft"
+              onClick={onOpenLeaderboard}
             >
-              <button
-                type="button"
-                onClick={onOpenLeaderboard}
-                aria-label={tooltips.leaderboard}
-                className="flex min-h-[44px] min-w-[44px] sm:min-h-[38px] sm:min-w-[38px] pointer-coarse:sm:min-h-11 pointer-coarse:sm:min-w-11 h-11 w-11 sm:h-9 sm:w-9 items-center justify-center rounded-control bg-accent-amber/10 border border-accent-amber/30 hover:border-accent-amber/60 text-accent-amber transition-all shadow-md cursor-pointer hover:scale-105 active:scale-95 touch-manipulation"
-              >
-                <HeartCrownIcon className="h-5 w-5 text-accent-amber" aria-hidden="true" />
-              </button>
-            </Tooltip>
+              <HeartCrownIcon className="h-5 w-5 text-accent-amber" aria-hidden="true" />
+            </DockAction>
 
             <DockAction
               title={tooltips.shuffle}

@@ -26,6 +26,7 @@ import { useDictionary } from "@/context/DictionaryContext";
 import { ToggleChip } from '@/components/common/ToggleChip';
 import { Badge } from '@/components/common/Badge';
 import { EmptyState } from '@/components/common/EmptyState';
+import { Surface } from '@/components/common/Surface';
 
 const ICON_PRESETS: Array<{ name: string; icon: React.ComponentType<{ className?: string }> }> = [
   { name: 'sparkles', icon: Sparkles },
@@ -145,9 +146,9 @@ export function RomanceArchetypeBuilder({ archetypes, onChange, availableRoles, 
             const isExpanded = expandedId === arch.id;
 
             return (
-              <div
+              <Surface
                 key={arch.id}
-                className="rounded-card border border-border-color bg-bg-elevated/50 overflow-hidden transition-all"
+                tone="elevated" padding="none" className="bg-bg-elevated/50 overflow-hidden transition-all"
               >
                 {/* Accordion Bar */}
                 <div
@@ -408,7 +409,7 @@ export function RomanceArchetypeBuilder({ archetypes, onChange, availableRoles, 
                     </div>
                   </div>
                 )}
-              </div>
+              </Surface>
             );
           })}
         </div>

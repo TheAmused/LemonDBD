@@ -234,9 +234,9 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
   );
 
   return (
-    <section
+    <Surface
       aria-label={dict.filters.filtersTitle}
-      className="relative z-30 flex w-full flex-col gap-2 rounded-card border border-border-color bg-bg-surface/90 p-2 shadow-xs sm:flex-row sm:flex-wrap sm:items-center sm:gap-3 sm:p-4 wide:gap-4 wide:p-6 wide-2k:p-7 backdrop-blur-xl transition-colors"
+      as="section" padding="none" className="relative z-30 flex w-full flex-col gap-2 bg-bg-surface/90 p-2 shadow-xs sm:flex-row sm:flex-wrap sm:items-center sm:gap-3 sm:p-4 wide:gap-4 wide:p-6 wide-2k:p-7 backdrop-blur-xl transition-colors"
     >
       {/* Below sm (640px) there simply isn't room to show five controls
           plus search without either hiding some behind a scrollbar or
@@ -395,6 +395,6 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
           </Surface>
         )}
       </div>
-    </section>
+    </Surface>
   );
 };

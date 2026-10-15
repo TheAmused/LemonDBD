@@ -12,6 +12,7 @@ import { Modal } from '@/components/common/Modal';
 import { copyTextWithFallback } from '@/utils/clipboard';
 import { useDictionary } from "@/context/DictionaryContext";
 import { formatMessage } from '@/utils/i18nFormat';
+import { Surface } from '@/components/common/Surface';
 
 interface VictoryModalProps {
   challenge: ChallengeDefinition;
@@ -126,7 +127,7 @@ export const VictoryModal: React.FC<VictoryModalProps> = ({ challenge, roundGues
       }
     >
       {/* Round Performance Breakdown */}
-      <div className="w-full p-4 rounded-card bg-bg-elevated/70 border border-border-subtle space-y-2.5">
+      <Surface tone="elevated" padding="none" className="w-full p-4 bg-bg-elevated/70 border-border-subtle space-y-2.5">
         {challenge.rounds.map((round, idx) => {
           const guesses = roundGuesses[idx] || [];
           const isWon = roundStatus[idx] === 'won';
@@ -159,7 +160,7 @@ export const VictoryModal: React.FC<VictoryModalProps> = ({ challenge, roundGues
             </div>
           );
         })}
-      </div>
+      </Surface>
     </Modal>
   );
 };

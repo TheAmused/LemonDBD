@@ -86,34 +86,34 @@ export function PersonaBreakdown({ persona, isSharedView, copied, onShare, onClo
       </div>
 
       {/* Dating Psychology Card */}
-      <div className="p-4 rounded-card bg-bg-surface border-l-2 border-l-accent-red border border-border-color/60 space-y-1.5 shadow-xs">
+      <Surface padding="none" className="p-4 border-l-2 border-l-accent-red border-border-color/60 space-y-1.5 shadow-xs">
         <span className="type-label-2xs text-accent-red flex items-center gap-1.5 font-bold uppercase tracking-wider">
           {text.datingPsychology}
         </span>
         <p className="text-text-secondary type-body-fluid">
           {persona.description}
         </p>
-      </div>
+      </Surface>
 
       {/* Telemetry Matrix */}
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 text-xs">
-        <div className="p-3.5 rounded-card bg-bg-surface border border-border-color/60 flex flex-col justify-between gap-1 shadow-xs">
+        <Surface padding="none" className="p-3.5 border-border-color/60 flex flex-col justify-between gap-1 shadow-xs">
           <span className="text-text-muted type-caption">{text.totalEvaluated}</span>
           <span className="text-lg font-black text-text-primary">
             {persona.totalVotes} <span className="text-xs font-normal text-text-muted">{text.candidates}</span>
           </span>
-        </div>
+        </Surface>
 
-        <div className="p-3.5 rounded-card bg-bg-surface border border-border-color/60 flex flex-col justify-between gap-1 shadow-xs">
+        <Surface padding="none" className="p-3.5 border-border-color/60 flex flex-col justify-between gap-1 shadow-xs">
           <span className="text-text-muted type-caption">{text.statsDetail.smashRate}</span>
           <span className="text-lg font-black text-accent-red flex items-center gap-1">
             <Heart className="h-4 w-4 fill-accent-red" />
             {persona.smashRate}{text.percentSign}
           </span>
-        </div>
+        </Surface>
 
         {persona.favoriteChar && (
-          <div className="col-span-2 sm:col-span-1 p-3.5 rounded-card bg-bg-surface border border-border-color/60 flex items-center gap-3 shadow-xs">
+          <Surface padding="none" className="col-span-2 sm:col-span-1 p-3.5 border-border-color/60 flex items-center gap-3 shadow-xs">
             {favoriteCharAvatar && (
               <div className="h-10 w-10 rounded-chip overflow-hidden bg-bg-primary border border-accent-red/40 shrink-0">
                 <img src={favoriteCharAvatar} alt="" className="h-full w-full object-cover" />
@@ -125,12 +125,12 @@ export function PersonaBreakdown({ persona, isSharedView, copied, onShare, onClo
                 {persona.favoriteChar.name}
               </span>
             </div>
-          </div>
+          </Surface>
         )}
       </div>
 
       {/* Role Affinity Scale (Survivor vs Killer) */}
-      <div className="p-4 rounded-card bg-bg-surface border border-border-color/60 space-y-2.5 shadow-xs">
+      <Surface padding="none" className="p-4 border-border-color/60 space-y-2.5 shadow-xs">
         <div className="flex items-center justify-between pb-1 border-b border-border-color/40">
           <span className="type-label-xs text-text-secondary flex items-center gap-1.5">
             <Compass className="h-3.5 w-3.5 text-accent-red" />
@@ -184,7 +184,7 @@ export function PersonaBreakdown({ persona, isSharedView, copied, onShare, onClo
             </>
           )}
         </div>
-      </div>
+      </Surface>
 
       {/* Bottom Actions */}
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-2">

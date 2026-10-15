@@ -30,7 +30,10 @@ import { saveCustomChallenge } from '@/utils/minigames/storage';
 import { exportChallengeToJson } from '@/utils/minigames/jsonExportImport';
 import { buildChallengeShareUrl, encodeChallengeShare } from '@/utils/minigames/shareLink';
 import { signExportPayload } from '@/utils/contentSigning';
+import { signingPayload } from '@/utils/contentPayload';
 import { publishOfficialChallenge } from '@/services/minigameApi';
+import { NsfwSwitch } from '@/components/common/NsfwSwitch';
+import { acknowledgeNsfwContent } from '@/utils/nsfwAck';
 import { RoundEditorCard } from './RoundEditorCard';
 import { copyTextWithFallback } from '@/utils/clipboard';
 import { formatMessage } from '@/utils/i18nFormat';
@@ -50,6 +53,7 @@ export const MinigameCreator: React.FC<MinigameCreatorProps> = ({ catalog, local
 
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
+  const [isNsfw, setIsNsfw] = useState(false);
   const [rounds, setRounds] = useState<RoundConfig[]>([
     {
       round_number: 1,
@@ -141,6 +145,7 @@ export const MinigameCreator: React.FC<MinigameCreatorProps> = ({ catalog, local
       description: description.trim(),
       game_mode: 'custom',
       rounds,
+      ...(isNsfw ? { is_nsfw: true } : {}),
     };
   };
 
@@ -149,6 +154,7 @@ export const MinigameCreator: React.FC<MinigameCreatorProps> = ({ catalog, local
     if (!validated) return;
 
     const saved = saveCustomChallenge(validated);
+    if (saved.is_nsfw) acknowledgeNsfwContent('minigame', String(saved.id));
     setSuccessMsg('Challenge saved to My Trials in your browser!');
     setTimeout(() => setSuccessMsg(null), 4000);
   };
@@ -158,6 +164,8 @@ export const MinigameCreator: React.FC<MinigameCreatorProps> = ({ catalog, local
     if (!validated) return;
 
     const saved = saveCustomChallenge(validated);
+    // The author knows what is in their own trial: no confirmation screen right after saving it.
+    if (saved.is_nsfw) acknowledgeNsfwContent('minigame', String(saved.id));
     router.push(`/${locale}/minigames/play?id=${encodeURIComponent(String(saved.id))}`);
   };
 
@@ -165,23 +173,20 @@ export const MinigameCreator: React.FC<MinigameCreatorProps> = ({ catalog, local
     const validated = validateChallenge();
     if (!validated) return;
 
-    let finalDoc = validated;
+    // Custom trials only leave the app signed with the author's account.
+    let manifest = null;
     if (user) {
       try {
-        const manifest = await signExportPayload('minigame', {
-          title: validated.title,
-          description: validated.description || '',
-          game_mode: validated.game_mode || 'custom',
-          rounds: validated.rounds,
-        });
-        if (manifest) {
-          finalDoc = { ...validated, _manifest: manifest };
-        }
+        manifest = await signExportPayload('minigame', signingPayload('minigame', validated));
       } catch {
-        finalDoc = validated;
+        manifest = null;
       }
     }
-    exportChallengeToJson(finalDoc);
+    if (!manifest) {
+      setErrorMsg(dict.tierLists.signFailed);
+      return;
+    }
+    exportChallengeToJson({ ...validated, _manifest: manifest });
   };
 
   const handleShareLink = async () => {
@@ -190,22 +195,16 @@ export const MinigameCreator: React.FC<MinigameCreatorProps> = ({ catalog, local
 
     setIsSharing(true);
     try {
-      let finalDoc = validated;
+      let manifest = null;
       if (user) {
         try {
-          const manifest = await signExportPayload('minigame', {
-            title: validated.title,
-            description: validated.description || '',
-            game_mode: validated.game_mode || 'custom',
-            rounds: validated.rounds,
-          });
-          if (manifest) {
-            finalDoc = { ...validated, _manifest: manifest };
-          }
+          manifest = await signExportPayload('minigame', signingPayload('minigame', validated));
         } catch {
-          finalDoc = validated;
+          manifest = null;
         }
       }
+      if (!manifest) throw new Error(dict.tierLists.signFailed);
+      const finalDoc = { ...validated, _manifest: manifest };
       const origin = typeof window !== 'undefined' ? window.location.origin : '';
       const fullUrl = buildChallengeShareUrl(origin, await encodeChallengeShare(finalDoc));
       if (!(await copyTextWithFallback(fullUrl))) throw new Error('Failed to copy share link.');
@@ -308,6 +307,10 @@ export const MinigameCreator: React.FC<MinigameCreatorProps> = ({ catalog, local
             onChange={(e) => setDescription(e.target.value)}
             placeholder={c.descriptionPlaceholder}
           />
+        </div>
+
+        <div className="flex justify-center pt-1">
+          <NsfwSwitch checked={isNsfw} onChange={setIsNsfw} label={t.nsfw.label} hint={t.nsfw.hint} />
         </div>
       </div>
 

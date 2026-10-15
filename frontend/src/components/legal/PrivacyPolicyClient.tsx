@@ -13,6 +13,7 @@ export const PRIVACY_SECTION_ORDER = [
   'aiContent',
   'dataWeCollect',
   'howWeUse',
+  'moderation',
   'analytics',
   'storage',
   'sharing',

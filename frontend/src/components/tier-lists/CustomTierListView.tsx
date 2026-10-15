@@ -9,15 +9,17 @@ import { AuthRequiredState } from '@/components/common/AuthRequiredState';
 import { ReportContentModal } from '@/components/common/ReportContentModal';
 import { useAuth } from '@/context/AuthContext';
 import {
-  TIER_LIST_FORMAT,
-  TIER_LIST_FORMAT_VERSION,
   type StoredCustomList,
   type TierDefinition,
   type TierListDocument,
   type TierPlacements,
 } from '@/types/tierList';
+import { NsfwContentGate } from '@/components/common/NsfwContentGate';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
+import { useNsfwGate } from '@/hooks/useNsfwGate';
 import { useTierListStore } from '@/hooks/useTierListStore';
+import { signingPayload } from '@/utils/contentPayload';
+import { buildCustomTierListDoc } from '@/utils/tierLists/customDoc';
 import { documentItemsToItems } from '@/utils/tierLists/items';
 import { deleteCustomList, saveCustomList, type SaveResult } from '@/utils/tierLists/storage';
 import { TierListEditor } from './TierListEditor';
@@ -38,6 +40,7 @@ export function CustomTierListView({ id, locale }: CustomTierListViewProps) {
   const { isAuthenticated, isLoading: authLoading } = useAuth();
   const list = state.custom[id];
   const [reportModalOpen, setReportModalOpen] = useState(false);
+  const nsfwGate = useNsfwGate('tier_list', id, list?.is_nsfw === true);
 
   useDocumentTitle(list ? `LemonDBD - ${list.title || t.untitled}` : t.pageTitle);
 
@@ -81,25 +84,17 @@ export function CustomTierListView({ id, locale }: CustomTierListViewProps) {
         items: doc.items ?? [],
         placements: doc.placements,
         backgroundImage: doc.backgroundImage ?? list?.backgroundImage,
+        // An import never turns the flag off: the list keeps it if either side had it.
+        is_nsfw: doc.is_nsfw === true || list?.is_nsfw === true ? true : undefined,
         _manifest: doc._manifest ?? list?._manifest ?? null,
       }),
-    [list?.title, list?.description, list?.backgroundImage, list?._manifest, update]
+    [list?.title, list?.description, list?.backgroundImage, list?.is_nsfw, list?._manifest, update]
   );
 
   const buildExportDoc = useCallback(
-    (tiers: TierDefinition[], placements: TierPlacements): TierListDocument => ({
-      format: TIER_LIST_FORMAT,
-      version: TIER_LIST_FORMAT_VERSION,
-      title: list?.title ?? '',
-      ...(list?.description ? { description: list.description } : {}),
-      template: null,
-      tiers,
-      items: list?.items ?? [],
-      placements,
-      ...(list?.backgroundImage ? { backgroundImage: list.backgroundImage } : {}),
-      ...(list?._manifest ? { _manifest: list._manifest } : {}),
-    }),
-    [list?.title, list?.description, list?.items, list?.backgroundImage, list?._manifest]
+    (tiers: TierDefinition[], placements: TierPlacements): TierListDocument =>
+      buildCustomTierListDoc(list, tiers, placements),
+    [list]
   );
 
   const onDelete = useCallback(() => {
@@ -125,6 +120,17 @@ export function CustomTierListView({ id, locale }: CustomTierListViewProps) {
       <div className="relative z-10 flex flex-col gap-2">
         <EmptyState icon={SearchX} title={t.customNotFoundTitle} subtitle={t.customNotFoundSubtitle} />
       </div>
+    );
+  }
+
+  if (nsfwGate.gated) {
+    return (
+      <NsfwContentGate
+        title={t.nsfw.title}
+        description={t.nsfw.description}
+        confirmLabel={t.nsfw.confirm}
+        onConfirm={nsfwGate.confirm}
+      />
     );
   }
 
@@ -159,7 +165,7 @@ export function CustomTierListView({ id, locale }: CustomTierListViewProps) {
         onClose={() => setReportModalOpen(false)}
         contentType="tier_list"
         manifest={list._manifest ?? null}
-        payload={buildExportDoc(list.tiers, list.placements) as unknown as Record<string, unknown>}
+        payload={signingPayload('tier_list', buildExportDoc(list.tiers, list.placements))}
         contentTitle={list.title}
       />
     </>

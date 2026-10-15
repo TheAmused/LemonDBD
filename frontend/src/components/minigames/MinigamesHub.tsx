@@ -44,8 +44,11 @@ import {
 import { exportChallengeToJson, importChallengeFromJson } from '@/utils/minigames/jsonExportImport';
 import { buildChallengeShareUrl, encodeChallengeShare } from '@/utils/minigames/shareLink';
 import { signExportPayload } from '@/utils/contentSigning';
+import { signingPayload } from '@/utils/contentPayload';
+import { checkDocument } from '@/utils/contentRevocation';
 
 import { tip } from '@/components/common/Tooltip';
+import { NsfwBadge } from '@/components/common/NsfwBadge';
 import { ConfirmModal } from '@/components/common/ConfirmModal';
 import { EmptyState } from '@/components/common/EmptyState';
 import { copyTextWithFallback } from '@/utils/clipboard';
@@ -95,29 +98,23 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
   };
 
   const ensureSignedTrial = async (trial: ChallengeDefinition): Promise<ChallengeDefinition> => {
-    if (trial._manifest || !user) return trial;
-    try {
-      const manifest = await signExportPayload('minigame', {
-        title: trial.title,
-        description: trial.description || '',
-        game_mode: trial.game_mode || 'custom',
-        rounds: trial.rounds,
-      });
-      if (manifest) {
-        const signed = { ...trial, _manifest: manifest };
-        saveCustomChallenge(signed);
-        setCustomTrials(getCustomChallenges());
-        return signed;
-      }
-    } catch {
-      // fallback to unsigned
-    }
-    return trial;
+    if (trial._manifest) return trial;
+    // No unsigned fallback: a trial only leaves the app signed with the author's account.
+    if (!user) throw new Error(dict.tierLists.signFailed);
+    const manifest = await signExportPayload('minigame', signingPayload('minigame', trial));
+    if (!manifest) throw new Error(dict.tierLists.signFailed);
+    const signed = { ...trial, _manifest: manifest };
+    saveCustomChallenge(signed);
+    setCustomTrials(getCustomChallenges());
+    return signed;
   };
 
   const handleExport = async (trial: ChallengeDefinition) => {
-    const signed = await ensureSignedTrial(trial);
-    exportChallengeToJson(signed);
+    try {
+      exportChallengeToJson(await ensureSignedTrial(trial));
+    } catch (err) {
+      setImportError(getErrorMessage(err, dict.tierLists.signFailed));
+    }
   };
 
   const handleShare = async (trial: ChallengeDefinition) => {
@@ -132,6 +129,7 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
       setTimeout(() => setCopiedId(null), 3000);
     } catch (err) {
       console.error('Failed to create share link:', err);
+      setImportError(getErrorMessage(err, dict.tierLists.signFailed));
     } finally {
       setShareLoadingId(null);
     }
@@ -144,11 +142,20 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
 
     setImportError(null);
     const reader = new FileReader();
-    reader.onload = (event) => {
+    reader.onload = async (event) => {
       try {
         const content = event.target?.result as string;
         const imported = importChallengeFromJson(content);
-        const saved = saveCustomChallenge(imported);
+        const check = await checkDocument('minigame', imported);
+        if (check.revoked) {
+          setImportError(dict.tierLists.contentRevoked);
+          return;
+        }
+        if (check.signed === false) {
+          setImportError(dict.tierLists.unsignedContent);
+          return;
+        }
+        saveCustomChallenge(imported);
         setCustomTrials(getCustomChallenges());
       } catch (err) {
         setImportError(getErrorMessage(err, 'Failed to import trial.'));
@@ -506,6 +513,7 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
                         {formatMessage(t.roundsCount, { count: trial.rounds.length }, locale)}
                       </span>
                     </div>
+                    {trial.is_nsfw && <NsfwBadge label={t.nsfw.badge} className="mt-1.5" />}
                     {trial.description && (
                       <p className="text-xs text-text-secondary mt-1 line-clamp-2">
                         {trial.description}

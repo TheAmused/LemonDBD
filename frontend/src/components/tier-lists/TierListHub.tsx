@@ -18,7 +18,7 @@ import { createCustomListId, deleteCustomList, saveCustomList, saveRanking, type
 import { CustomTierListCard, OfficialTierListCard } from './TierListCards';
 import { TierListImportModal } from './TierListImportModal';
 import { TierListSkeleton } from './TierListSkeleton';
-import { TOUCH_BTN } from './styles';
+import { HEADER_BTN } from './styles';
 import { Button } from '@/components/common/Button';
 import { formatMessage } from '@/utils/i18nFormat';
 import { useDictionary } from "@/context/DictionaryContext";
@@ -118,6 +118,7 @@ export function TierListHub({ locale }: TierListHubProps) {
       placements: doc.placements,
       createdAt: Date.now(),
       ...(doc.backgroundImage ? { backgroundImage: doc.backgroundImage } : {}),
+      ...(doc.is_nsfw ? { is_nsfw: true } : {}),
       ...(doc._manifest ? { _manifest: doc._manifest } : {}),
     });
     if (!result.ok) setSaveError(result);
@@ -275,8 +276,8 @@ export function TierListHub({ locale }: TierListHubProps) {
               actions group back in so it alone stays independently
               clickable. */}
           <div className="relative z-10 flex flex-wrap items-center justify-between gap-3 py-4 px-5 sm:py-4.5 sm:px-7 2xl:py-5.5 2xl:px-9 min-h-[64px] sm:min-h-[72px] pointer-events-none">
-            <div className="hidden lg:flex w-56 shrink-0 pointer-events-none" aria-hidden="true" />
-            <div className="flex-1 text-center min-w-0 px-2">
+            <div className="hidden lg:block lg:flex-1 lg:basis-0 pointer-events-none" aria-hidden="true" />
+            <div className="flex-1 lg:flex-none text-center min-w-0 px-2">
               <div className="inline-flex items-center justify-center gap-2">
                 <h2 id="tier-lists-custom" className="type-section-title text-text-primary group-hover:text-accent-red transition-colors">
                   {t.mySection}
@@ -289,15 +290,18 @@ export function TierListHub({ locale }: TierListHubProps) {
               </div>
             </div>
 
-            <div className="pointer-events-none flex shrink-0 items-center justify-end gap-2 lg:w-56">
-              <Button variant="secondary" onClick={handleOpenImport} className={`pointer-events-auto ${TOUCH_BTN}`}>
-                <FileJson className="h-4 w-4" aria-hidden="true" />
-                <span className="hidden sm:inline">{t.importJson}</span>
-              </Button>
-              <Button variant="primary" onClick={createBlank} className={`pointer-events-auto ${TOUCH_BTN}`}>
-                <Plus className="h-4 w-4" aria-hidden="true" />
-                <span className="hidden sm:inline">{t.newCustomList}</span>
-              </Button>
+            <div className="pointer-events-none flex shrink-0 items-center justify-end gap-2 lg:flex-1 lg:basis-0">
+              {/* Same height and corner radius, one line each; the width follows the label, in every language. */}
+              <div className="flex items-center gap-2">
+                <Button variant="secondary" onClick={handleOpenImport} className={`pointer-events-auto ${HEADER_BTN}`}>
+                  <FileJson className="h-4 w-4 shrink-0" aria-hidden="true" />
+                  <span className="hidden sm:inline">{t.importJson}</span>
+                </Button>
+                <Button variant="primary" onClick={createBlank} className={`pointer-events-auto ${HEADER_BTN}`}>
+                  <Plus className="h-4 w-4 shrink-0" aria-hidden="true" />
+                  <span className="hidden sm:inline">{t.newCustomList}</span>
+                </Button>
+              </div>
               <ChevronDown
                 className={`h-4 w-4 sm:h-5 sm:w-5 2xl:h-6 2xl:w-6 text-accent-red transition-transform duration-300 ease-in-out shrink-0 ${
                   isCustomOpen ? 'rotate-180' : 'rotate-0'
@@ -325,15 +329,6 @@ export function TierListHub({ locale }: TierListHubProps) {
                 <EmptyState
                   title={t.noCustomLists}
                   subtitle={t.noCustomListsSubtitle}
-                  action={{
-                    label: (
-                      <>
-                        <Plus className="h-3.5 w-3.5" aria-hidden="true" />
-                        {t.newCustomList}
-                      </>
-                    ),
-                    onClick: createBlank,
-                  }}
                 />
               ) : (
                 <div className={GRID}>

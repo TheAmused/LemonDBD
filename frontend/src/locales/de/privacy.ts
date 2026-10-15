@@ -3,7 +3,7 @@ export default {
   pageTitle: "LemonDBD - Datenschutzerklärung",
   heading: "Datenschutzerklärung",
   lastUpdatedLabel: "Zuletzt aktualisiert",
-  lastUpdated: "10. Oktober 2026",
+  lastUpdated: "15. Oktober 2026",
   intro:
     "Diese Seite erklärt, welche personenbezogenen Daten <brand>LemonDBD</brand> erhebt, warum, wer sie sieht und was du damit tun kannst. Wir haben sie bewusst kurz und verständlich gehalten.",
   translationNotice: "Falls die übersetzten Fassungen dieser Seite von der englischen abweichen, gilt die englische Fassung.",
@@ -38,7 +38,7 @@ export default {
       items: [
         "<b>Kontodaten:</b> Benutzername, E-Mail-Adresse, einen Hash deines Passworts (nie das Passwort selbst), Avatar, bevorzugte Sprache sowie kurzlebige Bestätigungs- und Passwort-Zurücksetzen-Codes.",
         "<b>Zwei-Faktor-Anmeldung (optional):</b> nur, wenn du sie auf deiner Profilseite einschaltest. Wir speichern den geheimen Schlüssel deiner Authenticator-App (verschlüsselt), gehashte Einmal-Wiederherstellungscodes, den Zeitpunkt der Aktivierung, den zuletzt akzeptierten Code-Schritt (damit ein Code nicht erneut verwendet werden kann) sowie einen Zähler für kürzliche falsche Codes mit der Zeit einer vorübergehenden Sperre. Die Codes erzeugt deine Authenticator-App auf deinem Gerät; eine Telefonnummer ist nicht nötig.",
-        "<b>Was du speicherst:</b> Charakter- und Perk-Besitz, dein Profil-Showcase, Streak-Läufe, Challenge-Erfolge, Minispiel-Statistiken und Smash-or-Pass-Stimmen. Deine Tier Lists, Smash-or-Pass-Roster und eigenen Minispiele bleiben in deinem Browser und werden nicht an unsere Server gesendet. Besucher ohne Konto erhalten eine zufällige Sitzungs-ID, damit ihre Smash-or-Pass-Stimmen gemerkt werden können.",
+        "<b>Was du speicherst:</b> Charakter- und Perk-Besitz, dein Profil-Showcase, Streak-Läufe, Challenge-Erfolge, Minispiel-Statistiken und Smash-or-Pass-Stimmen. Deine Tier Lists, Smash-or-Pass-Roster und eigenen Minispiele bleiben in deinem Browser und werden nicht auf unseren Servern gespeichert, außer wie im Abschnitt „Inhalte melden“ beschrieben. Besucher ohne Konto erhalten eine zufällige Sitzungs-ID, damit ihre Smash-or-Pass-Stimmen gemerkt werden können.",
         "<b>Fehlermeldungen und Nachrichten:</b> Text, Screenshots und E-Mail-Adresse, die du uns schickst. Gäste müssen eine E-Mail-Adresse angeben, damit wir antworten können.",
         "<b>Technische Daten:</b> deine IP-Adresse, Browsertyp und Anfragedetails, genutzt für Ratenbegrenzung, Missbrauchsschutz und Fehlerbehebung.",
         "<b>Sprachbefehle (Karten):</b> Wenn du sie einschaltest, wird dein Mikrofonton zur Erkennung von Kartennamen verwendet. Wie das funktioniert, steht unten im Abschnitt zu Speicher und Dritten.",
@@ -52,8 +52,21 @@ export default {
         "Um dein Konto zu erstellen und zu betreiben, deine gespeicherten Daten zu verwalten und Bestätigungs- und Passwort-Zurücksetzen-E-Mails zu senden und, wenn du sie einschaltest, bei der Anmeldung deinen Zwei-Faktor-Code zu prüfen (Erfüllung unseres Dienstes dir gegenüber).",
         "Um Fehlermeldungen und Anfragen zu beantworten (unser berechtigtes Interesse an Nutzerunterstützung oder deine Anfrage).",
         "Um die Seite und Konten zu sichern, einschließlich der Begrenzung falscher Zwei-Faktor-Codes, Spam und Missbrauch zu verhindern und Fehler zu beheben (unser berechtigtes Interesse).",
+        "Um Meldungen zu Inhalten zu prüfen und unsere Regeln durchzusetzen (unser berechtigtes Interesse an einer sicheren Seite).",
         "Um mithilfe datenschutzfreundlicher Analyse zu verstehen, welche Seiten genutzt werden, und die Seite zu verbessern (unser berechtigtes Interesse).",
         "Wenn wir dich um deine Einwilligung bitten, kannst du sie jederzeit zurücknehmen.",
+      ],
+    },
+    moderation: {
+      heading: "Inhalte melden",
+      paragraphs: [
+        "Tier Lists, Roster und eigene Minispiele liegen in deinem Browser, nicht auf unseren Servern. Zwei Dinge betreffen uns:",
+        "Löschst du dein Konto, wird dein Benutzername in diesen Einträgen durch „Deleted user“ ersetzt, und Notizen, die du als Meldender geschrieben hast, werden gelöscht. Diese Einträge gehören zu den Daten, die du herunterladen kannst.",
+      ],
+      items: [
+        "<b>Teilen und Exportieren:</b> Wir fügen dem Link oder der Datei eine fälschungssichere Konto-Markierung hinzu (sie weist auf dein Konto), damit gemeldete Inhalte ihrem Urheber zugeordnet werden können. Dafür liest unser Server den Inhalt kurz, speichert ihn aber nicht.",
+        "<b>Meldungen:</b> Wenn du einen Inhalt meldest, erhalten wir dein Konto, den Grund, deine optionale Notiz und eine Kopie des Inhalts. Ein Mitglied von <brand>LemonTeam</brand> prüft sie, und die Kopie wird nach der Entscheidung gelöscht, spätestens nach 14 Tagen.",
+        "<b>Nach einer Entscheidung:</b> Wir behalten einen kurzen Eintrag (Art des Inhalts, Grund, Ergebnis, Daten, beteiligte Konten). Wird ein Inhalt gebannt, kommt ein Einwegcode davon auf eine Sperrliste, damit er nicht erneut geöffnet oder importiert werden kann; aus dem Code lässt sich der Inhalt nicht wiederherstellen. Diese Einträge bleiben so lange, wie wir sie für Beschwerden und gegen wiederholten Missbrauch brauchen. Der Urheber, falls bekannt, erhält den Grund per E-Mail; wer gemeldet hat, nennen wir nicht.",
       ],
     },
     analytics: {
@@ -77,8 +90,8 @@ export default {
       heading: "Wer deine Daten sieht",
       paragraphs: ["Wir verkaufen deine personenbezogenen Daten nicht und nutzen sie nicht für Werbung. Wir teilen sie nur, soweit nötig:"],
       items: [
-        "<b>Links, die du teilst:</b> Wenn du eine Tier List, ein Roster oder ein eigenes Minispiel teilst, steckt der Inhalt im Link selbst (dem Teil nach dem „#“, den dein Browser nie an uns sendet). Wir speichern ihn nicht und können ihn nicht sehen; nur wer den Link erhält, kann ihn öffnen.",
-        "<b>Dienstleister:</b> Unser Hosting-Anbieter und {mailProvider} (der unsere Bestätigungs- und Passwort-Zurücksetzen-E-Mails zustellt) verarbeiten Daten in unserem Auftrag, nur um die Seite zu betreiben und die von dir angeforderten E-Mails zu senden, einschließlich Hinweisen, wenn sich eine Sicherheitseinstellung deines Kontos ändert. Zwei-Faktor-Codes erzeugt deine eigene Authenticator-App und wir prüfen sie auf unserem Server; wir nutzen dafür keinen Drittdienst und nichts darüber wird an Google, Microsoft, Apple oder andere gesendet.",
+        "<b>Links, die du teilst:</b> Wenn du eine Tier List, ein Roster oder ein eigenes Minispiel teilst, steckt der Inhalt im Link selbst (dem Teil nach dem „#“, den dein Browser nie an uns sendet). Wir speichern ihn nicht; nur wer den Link erhält, kann ihn öffnen. Deine Konto-Markierung wird hinzugefügt (siehe „Inhalte melden“).",
+        "<b>Dienstleister:</b> Unser Hosting-Anbieter und {mailProvider} (der unsere Bestätigungs- und Passwort-Zurücksetzen-E-Mails zustellt) verarbeiten Daten in unserem Auftrag, nur um die Seite zu betreiben und die von dir angeforderten E-Mails zu senden, einschließlich Hinweisen, wenn sich eine Sicherheitseinstellung deines Kontos ändert oder wenn wir deine Inhalte sperren. Zwei-Faktor-Codes erzeugt deine eigene Authenticator-App und wir prüfen sie auf unserem Server; wir nutzen dafür keinen Drittdienst und nichts darüber wird an Google, Microsoft, Apple oder andere gesendet.",
         "<b>Discord:</b> Wenn du eine Fehlermeldung einreichst, wird ihr Inhalt (einschließlich E-Mail-Adresse und Screenshots) an einen privaten Kanal unseres Teams weitergeleitet.",
         "<b>Rechtliche Gründe:</b> wenn das Gesetz es verlangt oder um die Seite und ihre Nutzer vor Missbrauch zu schützen.",
       ],

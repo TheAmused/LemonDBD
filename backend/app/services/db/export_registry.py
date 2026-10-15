@@ -26,6 +26,7 @@ from app.models.tier_list import TIER_LIST_FIELDS, TierList
 from app.models.user import User, UserShowcase
 
 _TIER_LIST_OPTIONAL = {
+    "is_nsfw",
     "cover_image_url",
     "tiers",
     "item_ids",

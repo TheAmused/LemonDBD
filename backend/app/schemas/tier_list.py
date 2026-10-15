@@ -40,6 +40,7 @@ class TierListAdminCreate(BaseModel):
     cover_image_url: CleanImageUrl = None
     tiers: list[TierListAdminTier] = Field(..., min_length=1, max_length=20)
     items: list[TierListAdminItem] = Field(..., min_length=1, max_length=400)
+    is_nsfw: bool = False
 
 
 class TierListAdminUpdate(BaseModel):
@@ -49,6 +50,7 @@ class TierListAdminUpdate(BaseModel):
     tiers: list[TierListAdminTier] | None = Field(default=None, min_length=1, max_length=20)
     items: list[TierListAdminItem] | None = Field(default=None, min_length=1, max_length=400)
     default_placements: dict[str, list[str]] | None = None
+    is_nsfw: bool | None = None
 
 
     @field_validator("default_placements")

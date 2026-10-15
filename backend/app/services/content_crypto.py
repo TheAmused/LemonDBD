@@ -19,10 +19,11 @@ def canonicalize_payload(payload: dict[str, Any]) -> str:
 
     Raises:
         TypeError: If payload is not a dict.
+        ValueError: If payload contains NaN or Infinity.
     """
     if not isinstance(payload, dict):
         raise TypeError(f"payload must be a dict, got {type(payload).__name__}")
-    return json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
+    return json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=False, allow_nan=False)
 
 
 def compute_content_hash(canonical_str: str) -> str:

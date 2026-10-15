@@ -317,7 +317,6 @@ export default {
     noRostersFound: '名簿が見つかりません',
     noCustomRostersDesc: 'このブラウザではまだカスタム名簿が作成されていません。',
     noRostersMatchDesc: 'このフィルターに一致する名簿はありません。',
-    createFirstRoster: '最初の名簿を作成',
   },
   importModal: {
     title: 'リストをインポート',

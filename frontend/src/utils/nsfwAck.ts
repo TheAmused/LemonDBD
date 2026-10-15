@@ -35,3 +35,38 @@ export function acknowledgeNsfwRoster(rosterSlug: string): void {
     // mode for a content gate, not a broken one.
   }
 }
+
+// ---------------------------------------------------------------------------
+// Tier lists and minigames: the same confirmation, keyed by what is being opened.
+// ---------------------------------------------------------------------------
+
+/** Kinds of content (besides smash or pass rosters) that can be flagged NSFW. */
+export type NsfwContentScope = 'tier_list' | 'minigame';
+
+const CONTENT_STORAGE_PREFIX = 'dbd_nsfw_ack_';
+
+function contentKey(scope: NsfwContentScope, id: string): string {
+  return `${CONTENT_STORAGE_PREFIX}${scope}_${id}`;
+}
+
+/** Has the viewer already confirmed they want to open this tier list or minigame? */
+export function hasAcknowledgedNsfwContent(scope: NsfwContentScope, id: string): boolean {
+  const storage = getLocalStorage();
+  if (!storage || !id) return false;
+  try {
+    return storage.getItem(contentKey(scope, id)) === 'true';
+  } catch {
+    return false;
+  }
+}
+
+/** Record the confirmation. A storage failure only means the viewer is asked again next time. */
+export function acknowledgeNsfwContent(scope: NsfwContentScope, id: string): void {
+  const storage = getLocalStorage();
+  if (!storage || !id) return;
+  try {
+    storage.setItem(contentKey(scope, id), 'true');
+  } catch {
+    // Private browsing or a full quota: re-prompting is the safe failure for a content gate.
+  }
+}

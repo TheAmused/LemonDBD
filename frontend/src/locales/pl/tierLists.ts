@@ -239,7 +239,18 @@ export default {
   reportError: "Nie udało się wysłać zgłoszenia. Spróbuj ponownie.",
   reportButton: "Zgłoś",
   reportButtonAria: "Zgłoś treść",
-  reportNoManifest: "To jest niepodpisany szkic bez zweryfikowanego podpisu twórcy. Tylko udostępniona lub wyeksportowana zawartość z podpisem autora może zostać zgłoszona do administratorów.",
+  contentRevoked: "Ta treść została usunięta przez moderatorów za naruszenie zasad społeczności, więc nie można jej już importować ani uruchamiać.",
+  signFailed: "Nie udało się dodać znaku konta do udostępnienia. Zaloguj się ponownie i spróbuj jeszcze raz.",
+  unsignedContent: "Ta treść nie ma prawidłowego znaku konta, więc nie można jej importować ani uruchamiać. Poproś autora o ponowne udostępnienie jej z jego konta.",
+  nsfw: {
+    label: "Zawiera treści NSFW",
+    hint: "Oznacz tę tier listę jako zawierającą treści dla dorosłych lub drażliwe.",
+    badge: "NSFW",
+    title: "Zawiera treści NSFW",
+    description: "Ta tier lista jest oznaczona jako treść NSFW/dla dorosłych. Potwierdź, że chcesz ją zobaczyć.",
+    confirm: "Kliknij, aby wyświetlić",
+  },
+  reportNoManifest: "Ta kopia nie ma prawidłowego znaku konta, więc moderatorzy nie będą mogli przypisać jej do konta. Nadal możesz ją zgłosić, a moderatorzy sprawdzą samą treść.",
 
   dnd: {
     pickedUp: "Podniesiono: {name}.",

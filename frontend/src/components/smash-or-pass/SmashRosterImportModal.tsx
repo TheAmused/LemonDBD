@@ -35,7 +35,7 @@ export function SmashRosterImportModal({ isOpen, onClose, sharePayload, onImport
   const locale = useLocale();
   const t = dict.smashOrPass.importModal || {};
   const [saveError, setSaveError] = useState<'quota' | 'unavailable' | null>(null);
-  const { text, result, fileError, changeText, readFile } = useImportDraft<SmashRosterParseResult>({
+  const { text, result, fileError, changeText, readFile, revoked, unsigned, checkingRevocation } = useImportDraft<SmashRosterParseResult>({
     isOpen,
     sharePayload,
     decodeShare: decodeSharePayload,
@@ -43,13 +43,14 @@ export function SmashRosterImportModal({ isOpen, onClose, sharePayload, onImport
     toText,
     tooLarge: TOO_LARGE,
     maxPayloadChars: SMASH_ROSTER_LIMITS.maxPayloadChars,
+    revocationCheck: { contentType: 'smash_roster', documentOf: (r) => (r.ok ? r.doc : null) },
   });
 
   useEffect(() => {
     if (isOpen) setSaveError(null);
   }, [isOpen, sharePayload]);
 
-  const canImport = Boolean(result?.ok);
+  const canImport = Boolean(result?.ok && !revoked && !unsigned && !checkingRevocation);
   const errorText = (code: SmashRosterErrorCode) => t.errors?.[code] || code;
 
   const preview = result?.ok
@@ -94,13 +95,15 @@ export function SmashRosterImportModal({ isOpen, onClose, sharePayload, onImport
     >
       {fileError && <Notice tone="error" text={t.readFileError} />}
       {result && !result.ok && <Notice tone="error" text={errorText(result.error)} />}
+      {revoked && <Notice tone="error" text={dict.tierLists.contentRevoked} />}
+      {unsigned && <Notice tone="error" text={dict.tierLists.unsignedContent} />}
       {saveError && (
         <Notice
           tone="error"
           text={saveError === 'quota' ? (t.saveFailedQuota) : (t.saveFailedUnavailable)}
         />
       )}
-      {result?.ok && (
+      {result?.ok && !revoked && !unsigned && (
         <>
           <ImportPreview text={preview} />
           {result.warnings.map((w) => (

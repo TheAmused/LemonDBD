@@ -17,10 +17,11 @@ interface CreatorPreviewProps {
   items: TierListDocumentItem[];
   /** Sanitized, or null when unset/invalid -- already validated by the caller. */
   backgroundImage?: string | null;
+  isNsfw?: boolean;
   locale: string;
 }
 
-export function CreatorPreview({ title, description, tiers, items, backgroundImage, locale }: CreatorPreviewProps) {
+export function CreatorPreview({ title, description, tiers, items, backgroundImage, isNsfw, locale }: CreatorPreviewProps) {
   const dict = useDictionary();
   const t = dict.tierLists;
   const c = t.creator;
@@ -43,9 +44,10 @@ export function CreatorPreview({ title, description, tiers, items, backgroundIma
         createdAt: now,
         updatedAt: now,
         ...(backgroundImage ? { backgroundImage } : {}),
+        ...(isNsfw ? { is_nsfw: true } : {}),
       };
     },
-    [title, description, tiers, items, backgroundImage]
+    [title, description, tiers, items, backgroundImage, isNsfw]
   );
 
   return (
@@ -110,10 +112,11 @@ interface CreatorPreviewModalProps {
   tiers: TierDefinition[];
   items: TierListDocumentItem[];
   backgroundImage?: string | null;
+  isNsfw?: boolean;
   locale: string;
 }
 
-export function CreatorPreviewModal({ isOpen, onClose, title, description, tiers, items, backgroundImage, locale }: CreatorPreviewModalProps) {
+export function CreatorPreviewModal({ isOpen, onClose, title, description, tiers, items, backgroundImage, isNsfw, locale }: CreatorPreviewModalProps) {
   const dict = useDictionary();
   return (
     <Modal
@@ -131,6 +134,7 @@ export function CreatorPreviewModal({ isOpen, onClose, title, description, tiers
         tiers={tiers}
         items={items}
         backgroundImage={backgroundImage}
+        isNsfw={isNsfw}
         locale={locale}
       />
     </Modal>

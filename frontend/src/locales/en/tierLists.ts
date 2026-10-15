@@ -239,7 +239,18 @@ export default {
   reportError: "Failed to submit report. Please try again.",
   reportButton: "Report",
   reportButtonAria: "Report content",
-  reportNoManifest: "This is an unsigned draft without a verified creator signature. Only shared or exported content with an author signature can be reported to administrators.",
+  contentRevoked: "This content was removed by moderators for violating the community guidelines, so it can no longer be imported or played.",
+  signFailed: "Couldn't add your account mark for sharing. Sign in again and retry.",
+  unsignedContent: "This content has no valid account mark, so it can't be imported or played. Ask its author to share it again from their account.",
+  nsfw: {
+    label: "Contains NSFW content",
+    hint: "Mark this list as containing mature or sensitive material.",
+    badge: "NSFW",
+    title: "Contains NSFW Content",
+    description: "This tier list is flagged as containing mature/NSFW content. Confirm you want to view it.",
+    confirm: "Click to View",
+  },
+  reportNoManifest: "This copy has no valid account mark, so moderators will not be able to trace it to an account. You can still report it and they will review the content itself.",
 
   dnd: {
     pickedUp: "Picked up {name}.",

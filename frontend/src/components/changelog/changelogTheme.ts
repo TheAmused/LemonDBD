@@ -1,41 +1,7 @@
 // frontend/src/components/changelog/changelogTheme.ts
-import type { ChangelogTag } from '@/types/changelog';
+import type { ChangelogSection } from '@/types/changelog';
 
-export interface ChangelogTagTheme {
-  label: string;
-  badgeClass: string;
-  dotClass: string;
-}
-
-export const CHANGELOG_TAG_THEME: Record<ChangelogTag, ChangelogTagTheme> = {
-  feature: {
-    label: 'New',
-    badgeClass: 'bg-accent-amber/15 text-accent-amber border-accent-amber/30',
-    dotClass: 'bg-accent-amber',
-  },
-  bugfix: {
-    label: 'Fixed',
-    badgeClass: 'bg-accent-green/15 text-accent-green border-accent-green/30',
-    dotClass: 'bg-accent-green',
-  },
-  balance: {
-    label: 'Balance',
-    badgeClass: 'bg-accent-rose/15 text-accent-rose border-accent-rose/30',
-    dotClass: 'bg-accent-rose',
-  },
-  event: {
-    label: 'Event',
-    badgeClass: 'bg-accent-purple/15 text-accent-purple border-accent-purple/30',
-    dotClass: 'bg-accent-purple',
-  },
-  announcement: {
-    label: 'Announcement',
-    badgeClass: 'bg-accent-blue/15 text-accent-blue border-accent-blue/30',
-    dotClass: 'bg-accent-blue',
-  },
-};
-
-export const CHANGELOG_TAGS: ChangelogTag[] = ['feature', 'bugfix', 'balance', 'event', 'announcement'];
+export const CHANGELOG_SECTIONS: ChangelogSection[] = ['new', 'qol', 'balance', 'bugfix', 'knownIssues', 'announcement'];
 
 // Swatches offered by the rich-text color picker in the admin editor.
 export const CHANGELOG_TEXT_COLORS: { name: string; value: string }[] = [

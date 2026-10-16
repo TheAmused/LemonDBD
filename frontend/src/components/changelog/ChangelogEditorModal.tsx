@@ -16,19 +16,18 @@ import {
   AlignCenter,
   AlignRight,
   AlignJustify,
-  Trash2,
+  Plus,
 } from 'lucide-react';
-import type { ChangelogPost, ChangelogPostDraft, ChangelogTag } from '@/types/changelog';
+import type { ChangelogPost, ChangelogPostDraft, ChangelogSection } from '@/types/changelog';
 import {
   CHANGELOG_HIGHLIGHT_COLORS,
-  CHANGELOG_TAG_THEME,
-  CHANGELOG_TAGS,
+  CHANGELOG_SECTIONS,
   CHANGELOG_TEXT_COLORS,
 } from './changelogTheme';
 
 import { tip } from '@/components/common/Tooltip';
 import { Modal } from '@/components/common/Modal';
-import { Checkbox } from '@/components/common/Checkbox';
+import { Switch } from '@/components/common/Switch';
 import { Button } from '@/components/common/Button';
 import { Input } from '@/components/common/Field';
 import { useDictionary } from "@/context/DictionaryContext";
@@ -38,17 +37,15 @@ export interface ChangelogEditorModalProps {
   open: boolean;
   post: ChangelogPost | null;
   saving?: boolean;
-  /** Failure message from the last save/delete attempt. */
+  /** Failure message from the last save attempt. */
   error?: string | null;
   onClose: () => void;
   onSave: (draft: ChangelogPostDraft) => void;
-  onDelete?: () => void;
 }
 
 const EMPTY_DRAFT: ChangelogPostDraft = {
   title: '',
   content_html: '',
-  tag: 'feature',
   is_published: true,
 };
 
@@ -59,7 +56,7 @@ const EMPTY_DRAFT: ChangelogPostDraft = {
  * color/highlight/alignment/lists), and avoids pulling in a full rich-text
  * library for a handful of formatting actions used by admins only.
  */
-export const ChangelogEditorModal: React.FC<ChangelogEditorModalProps> = ({ open, post, saving = false, error = null, onClose, onSave, onDelete }) => {
+export const ChangelogEditorModal: React.FC<ChangelogEditorModalProps> = ({ open, post, saving = false, error = null, onClose, onSave }) => {
   const dict = useDictionary();
   const t = dict.changelog;
   const editorRef = useRef<HTMLDivElement | null>(null);
@@ -70,7 +67,6 @@ export const ChangelogEditorModal: React.FC<ChangelogEditorModalProps> = ({ open
     setEditorEl(el);
   }, []);
   const [title, setTitle] = useState('');
-  const [tag, setTag] = useState<ChangelogTag>('feature');
   const [isPublished, setIsPublished] = useState(true);
   const [openPicker, setOpenPicker] = useState<'color' | 'highlight' | null>(null);
   const [linkOpen, setLinkOpen] = useState(false);
@@ -81,10 +77,9 @@ export const ChangelogEditorModal: React.FC<ChangelogEditorModalProps> = ({ open
   useEffect(() => {
     if (!open) return;
     const draft = post
-      ? { title: post.title, content_html: post.content_html, tag: post.tag, is_published: post.is_published }
+      ? { title: post.title, content_html: post.content_html, is_published: post.is_published }
       : EMPTY_DRAFT;
     setTitle(draft.title);
-    setTag(draft.tag);
     setIsPublished(draft.is_published);
     if (editorEl) editorEl.innerHTML = draft.content_html;
   }, [open, post, editorEl]);
@@ -137,26 +132,46 @@ export const ChangelogEditorModal: React.FC<ChangelogEditorModalProps> = ({ open
   const handleSave = () => {
     const html = editorRef.current?.innerHTML?.trim() || '';
     if (!title.trim() || !html) return;
-    onSave({ title: title.trim(), content_html: html, tag, is_published: isPublished });
+    onSave({ title: title.trim(), content_html: html, is_published: isPublished });
+  };
+
+  // Adds a ready-made section (heading plus an empty bullet list) at the end of the text and puts the caret in
+  // its first bullet, so every update lists its changes the same way.
+  const insertSection = (section: ChangelogSection) => {
+    const editor = editorRef.current;
+    if (!editor) return;
+    const heading = document.createElement('h3');
+    heading.textContent = t.sections[section];
+    const list = document.createElement('ul');
+    const item = document.createElement('li');
+    item.appendChild(document.createElement('br'));
+    list.appendChild(item);
+    editor.append(heading, list);
+    editor.focus();
+    const range = document.createRange();
+    range.setStart(item, 0);
+    range.collapse(true);
+    const selection = window.getSelection();
+    selection?.removeAllRanges();
+    selection?.addRange(range);
+    editor.scrollTop = editor.scrollHeight;
   };
 
   const footer = (
     <>
-    {post && onDelete ? (
-      <Button variant="danger" size="sm" onClick={onDelete} leftIcon={<Trash2 className="h-3.5 w-3.5" />}>
-        {t.delete}
+      <div className="flex items-center gap-2.5 type-strong text-text-muted">
+        <Switch checked={isPublished} onChange={setIsPublished} ariaLabel={t.publishedLabel} />
+        <span>{isPublished ? t.publishedLabel : t.draftBadge}</span>
+      </div>
+      <Button
+        variant="primary"
+        onClick={handleSave}
+        loading={saving}
+        disabled={!title.trim()}
+        className="w-full sm:w-auto sm:min-w-40"
+      >
+        {t.save}
       </Button>
-    ) : (
-      <span />
-    )}
-    <div className="flex items-center gap-2">
-      <Button variant="secondary" size="sm" onClick={onClose}>
-        {t.cancel}
-      </Button>
-      <Button variant="primary" size="sm" onClick={handleSave} loading={saving} disabled={!title.trim()}>
-        {post ? (t.saveChanges) : (t.publishEntry)}
-      </Button>
-    </div>
     </>
   );
 
@@ -168,7 +183,7 @@ export const ChangelogEditorModal: React.FC<ChangelogEditorModalProps> = ({ open
       size="2xl"
       layer="top"
       busy={saving}
-      title={post ? (t.editTitle) : (t.newTitle)}
+      title={post ? t.editTitle : t.newTitle}
       closeButtonAriaLabel={dict.modal.close}
       footer={footer}
       footerClassName="gap-3 sm:py-4 text-sm"
@@ -183,24 +198,20 @@ export const ChangelogEditorModal: React.FC<ChangelogEditorModalProps> = ({ open
       className="px-4 font-bold"
     />
 
-    <div className="flex flex-wrap gap-2">
-      {CHANGELOG_TAGS.map((tg) => {
-        const theme = CHANGELOG_TAG_THEME[tg];
-        const active = tag === tg;
-        return (
-          <button
-            key={tg}
-            type="button"
-            onClick={() => setTag(tg)}
-            className={`flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-bold transition-all cursor-pointer ${
-              active ? theme.badgeClass : 'border-border-color text-text-muted hover:text-text-secondary'
-            }`}
-          >
-            <span className={`h-1.5 w-1.5 rounded-full ${theme.dotClass}`} />
-            {theme.label}
-          </button>
-        );
-      })}
+    <div className="flex flex-wrap items-center gap-2">
+      <span className="type-label-2xs text-text-muted">{t.addSection}</span>
+      {CHANGELOG_SECTIONS.map((section) => (
+        <Button
+          key={section}
+          size="xs"
+          variant="secondary"
+          pill
+          leftIcon={<Plus className="h-3 w-3" />}
+          onClick={() => insertSection(section)}
+        >
+          {t.sections[section]}
+        </Button>
+      ))}
     </div>
 
     <Surface tone="elevated" padding="none" className="bg-bg-elevated/50 overflow-hidden">
@@ -285,7 +296,7 @@ export const ChangelogEditorModal: React.FC<ChangelogEditorModalProps> = ({ open
         ref={setEditor}
         contentEditable
         suppressContentEditableWarning
-        className="dbd-changelog-body min-h-[180px] max-h-[40vh] overflow-y-auto px-4 py-3 text-sm text-text-secondary leading-relaxed outline-none [&_h3]:text-base [&_h3]:font-black [&_h3]:text-accent-red [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_a]:text-accent-red [&_a]:underline"
+        className="min-h-[180px] max-h-[40vh] overflow-y-auto px-4 py-3 text-sm text-text-secondary leading-relaxed outline-none [&_h3]:text-base [&_h3]:font-black [&_h3]:text-accent-red [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_a]:text-accent-red [&_a]:underline"
         data-placeholder={
           t.bodyPlaceholder
         }
@@ -297,10 +308,6 @@ export const ChangelogEditorModal: React.FC<ChangelogEditorModalProps> = ({ open
         {error}
       </p>
     )}
-
-    <Checkbox checked={isPublished} onChange={setIsPublished} className="type-strong text-text-muted">
-      {t.publishedLabel}
-    </Checkbox>
     </Modal>
   );
 };

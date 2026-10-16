@@ -1,15 +1,12 @@
 # backend/app/routes/changelog.py
-import logging
 from flask import Blueprint, g, jsonify, request
 from pydantic import ValidationError
 
 from app.core.security import admin_required
 from app.schemas.changelog import ChangelogPostCreate, ChangelogPostUpdate
-from app.services import changelog_service
+from app.services import changelog_discord, changelog_service
 from app.services.admin_control_service import log_admin_action
 from app.utils.pagination import paginate_args
-
-logger = logging.getLogger(__name__)
 
 changelog_bp = Blueprint("changelog", __name__, url_prefix="/api/v1/changelog")
 
@@ -45,7 +42,7 @@ def create_changelog_post():
     post = changelog_service.create_post(g.current_user, payload.model_dump())
     log_admin_action(
         g.current_user.id, "changelog.create", target_type="changelog_post", target_id=post.id,
-        details={"title": post.title, "tag": post.tag},
+        details={"title": post.title},
     )
     return jsonify({"status": "success", "data": post.to_dict()}), 201
 
@@ -68,6 +65,29 @@ def update_changelog_post(post_id: int):
         g.current_user.id, "changelog.update", target_type="changelog_post", target_id=post.id,
     )
     return jsonify({"status": "success", "data": post.to_dict()}), 200
+
+
+@changelog_bp.route("/<int:post_id>/announce", methods=["POST"])
+@admin_required
+def announce_changelog_post(post_id: int):
+    """Posts a published entry to the team's Discord channel, once. The Discord outcome ("sent", "failed",
+    "not_configured") comes back in `discord`; only "sent" marks the entry as announced, so a failure can
+    be retried."""
+    post = changelog_service.get_post(post_id)
+    if not post:
+        return jsonify({"error": "Changelog post not found"}), 404
+    if not post.is_published:
+        return jsonify({"error": "Only a published entry can be announced"}), 400
+    if post.discord_announced_at is not None:
+        return jsonify({"error": "This entry was already announced on Discord"}), 409
+
+    result = changelog_discord.announce_post(post)
+    if result == "sent":
+        changelog_service.mark_announced(post)
+        log_admin_action(
+            g.current_user.id, "changelog.announce", target_type="changelog_post", target_id=post.id,
+        )
+    return jsonify({"status": "success", "data": post.to_dict(), "discord": result}), 200
 
 
 @changelog_bp.route("/reorder", methods=["POST"])

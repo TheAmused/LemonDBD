@@ -25,6 +25,7 @@ import { SidebarUserSection } from './sidebar/SidebarUserSection';
 import { SidebarBottomControls } from './sidebar/SidebarBottomControls';
 import { i18n, type Locale } from '@/i18n/config';
 import { WhatsNewLauncher } from '@/components/changelog/WhatsNewLauncher';
+import { useChangelogFeed } from '@/components/changelog/useChangelogFeed';
 import { PerkHexIcon, BloodwebIcon, RiftPortalIcon, RealmMapIcon, MaskIcon, AdeptBadgeIcon } from '@/components/icons/DbdIcons';
 
 import { tip } from '@/components/common/Tooltip';
@@ -66,6 +67,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const currentLocale = propLocale || activeLocale;
 const { isCollapsed, toggleSidebar } = useSidebarState();
   const { user, isAuthenticated, isAdmin, logout } = useAuth();
+  // One fetch for both launchers (desktop sidebar and mobile header).
+  const changelogFeed = useChangelogFeed();
 
   const [mobileOpen, setMobileOpen] = useState(false);
   const [authModalOpen, setAuthModalOpen] = useState(false);
@@ -242,7 +245,7 @@ const { isCollapsed, toggleSidebar } = useSidebarState();
           </Link>
 
           <div className="hidden lg:block">
-            <WhatsNewLauncher />
+            <WhatsNewLauncher feed={changelogFeed} />
           </div>
         </div>
 
@@ -347,7 +350,7 @@ const { isCollapsed, toggleSidebar } = useSidebarState();
         </Link>
 
         <div className="flex items-center gap-2">
-          <WhatsNewLauncher />
+          <WhatsNewLauncher feed={changelogFeed} />
           <Button
             icon
             variant="secondary"

@@ -31,7 +31,6 @@ class TestChangelogAdminCrudWorkflow:
             json={
                 "title": "The Entity Stirs — Balance Update",
                 "content_html": '<p>New <b>killer</b> perk rework. <script>alert(1)</script></p>',
-                "tag": "balance",
                 "is_published": False,
             },
         )

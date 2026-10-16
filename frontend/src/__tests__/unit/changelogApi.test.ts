@@ -8,6 +8,7 @@ import {
   updateChangelogPost,
   deleteChangelogPost,
   reorderChangelogPosts,
+  announceChangelogPost,
 } from '@/services/changelogApi';
 import type { ChangelogPostDraft } from '@/types/changelog';
 
@@ -57,7 +58,6 @@ test('changelogApi: public + admin CRUD requests', async (t) => {
     const draft: ChangelogPostDraft = {
       title: 'New Patch',
       content_html: '<p>hi</p>',
-      tag: 'feature',
       is_published: true,
     };
     let capturedInit: any;
@@ -145,5 +145,27 @@ test('changelogApi: public + admin CRUD requests', async (t) => {
       () => fetchChangelogPosts(),
       (err: Error) => err.message === 'Request failed with status 500'
     );
+  });
+
+  await t.test('announceChangelogPost POSTs to /:id/announce with the auth header and returns the Discord result', async () => {
+    let capturedUrl = '';
+    let capturedInit: any;
+    globalThis.fetch = async (url: any, init?: any) => {
+      capturedUrl = String(url);
+      capturedInit = init;
+      return { ok: true, json: async () => ({ status: 'success', data: {}, discord: 'sent' }) } as Response;
+    };
+
+    const result = await announceChangelogPost('tok-123', 9);
+    assert.ok(capturedUrl.endsWith('/api/v1/changelog/9/announce'));
+    assert.strictEqual(capturedInit.method, 'POST');
+    assert.strictEqual(capturedInit.headers.Authorization, 'Bearer tok-123');
+    assert.strictEqual(result.discord, 'sent');
+  });
+
+  await t.test('announceChangelogPost throws the server error (already announced, draft)', async () => {
+    globalThis.fetch = async () =>
+      ({ ok: false, status: 409, json: async () => ({ error: 'This entry was already announced on Discord' }) }) as Response;
+    await assert.rejects(() => announceChangelogPost('tok', 9), /already announced/);
   });
 });

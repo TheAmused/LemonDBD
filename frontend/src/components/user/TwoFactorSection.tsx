@@ -1,19 +1,18 @@
 'use client';
 // frontend/src/components/user/TwoFactorSection.tsx
 //
-// Profile-page card for the optional authenticator-app sign-in. Off by default for everyone.
+// Profile-page card with the switch for the authenticator-app sign-in. Off by default for everyone.
 
 import React, { useCallback, useEffect, useState } from 'react';
-import { KeyRound, ShieldCheck } from 'lucide-react';
+import { ShieldCheck } from 'lucide-react';
 import { Button } from '@/components/common/Button';
 import { TwoFactorConfirmModal, type TwoFactorAction } from '@/components/user/TwoFactorConfirmModal';
 import { TwoFactorSetupModal } from '@/components/user/TwoFactorSetupModal';
 import { useDictionary, useLocale } from '@/context/DictionaryContext';
-import { } from 'next/navigation';
 import { localeMetaFor } from '@/i18n/config';
 import { fetchTwoFactorStatus, type TwoFactorStatus } from '@/services/twoFactorApi';
 import { formatMessage } from '@/utils/i18nFormat';
-import { Badge } from '@/components/common/Badge';
+import { Switch } from '@/components/common/Switch';
 
 interface TwoFactorSectionProps {
   refreshTrigger?: number;
@@ -54,24 +53,22 @@ export const TwoFactorSection: React.FC<TwoFactorSectionProps> = ({
 
   return (
     <section className="mx-auto flex w-full max-w-2xl flex-col gap-3 border-t border-border-color pt-4 text-left">
-      <div className="flex items-start justify-between gap-3">
-        <div className="flex items-start gap-2">
-          <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-accent-amber" />
-          <div>
-            <h3 className="type-label-sm text-text-primary">{t.sectionTitle}</h3>
-            <p className="type-caption mt-0.5 text-text-secondary">{t.sectionSubtitle}</p>
-          </div>
+      <div className="flex items-center justify-between gap-3">
+        <div className="flex items-center gap-2">
+          <ShieldCheck className="h-4 w-4 shrink-0 text-accent-amber" />
+          <h3 className="type-label-sm text-text-primary">{t.sectionTitle}</h3>
         </div>
         {status?.available ? (
-          <Badge
-            tone={status.enabled ? 'green' : 'neutral'} size="sm"
-          >
-            {status.enabled ? t.statusOn : t.statusOff}
-          </Badge>
+          <Switch
+            checked={status.enabled || setupOpen}
+            onChange={(on) => (on ? setSetupOpen(true) : setAction('disable'))}
+            ariaLabel={t.sectionTitle}
+            disabled={needsPassword && !status.enabled}
+          />
         ) : null}
       </div>
 
-      <p className="type-caption text-text-muted">{t.optionalNote}</p>
+      <p className="type-caption text-text-muted">{t.description}</p>
 
       {loadFailed ? (
         <p role="alert" className="type-strong text-accent-red">
@@ -81,19 +78,8 @@ export const TwoFactorSection: React.FC<TwoFactorSectionProps> = ({
 
       {status && !status.available ? <p className="type-strong text-text-muted">{t.unavailable}</p> : null}
 
-      {status?.available && !status.enabled ? (
-        <div>
-          <Button
-            variant="primary"
-            size="sm"
-            disabled={needsPassword}
-            onClick={() => setSetupOpen(true)}
-            leftIcon={<KeyRound className="h-3.5 w-3.5" />}
-          >
-            <span>{t.enableButton}</span>
-          </Button>
-          {needsPassword ? <p className="type-caption mt-2 text-text-muted">{t.needsPasswordHint}</p> : null}
-        </div>
+      {status?.available && !status.enabled && needsPassword ? (
+        <p className="type-caption text-text-muted">{t.needsPasswordHint}</p>
       ) : null}
 
       {status?.available && status.enabled ? (
@@ -102,12 +88,9 @@ export const TwoFactorSection: React.FC<TwoFactorSectionProps> = ({
             {enabledOn ? <li>{formatMessage(t.enabledSince, { date: enabledOn })}</li> : null}
             <li>{formatMessage(t.recoveryRemaining, { count: status.recovery_codes_remaining })}</li>
           </ul>
-          <div className="flex flex-wrap gap-2">
+          <div>
             <Button variant="secondary" size="sm" onClick={() => setAction('regenerate')}>
               <span>{t.regenerateButton}</span>
-            </Button>
-            <Button variant="danger" size="sm" onClick={() => setAction('disable')}>
-              <span>{t.disableButton}</span>
             </Button>
           </div>
         </>
@@ -117,6 +100,7 @@ export const TwoFactorSection: React.FC<TwoFactorSectionProps> = ({
         isOpen={setupOpen}
         onClose={() => setSetupOpen(false)}
         onEnabled={() => {
+          setStatus((prev) => (prev ? { ...prev, enabled: true } : prev));
           setSetupOpen(false);
           load();
           onStatusChange?.();

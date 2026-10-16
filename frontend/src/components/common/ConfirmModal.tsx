@@ -3,6 +3,7 @@
 
 import React from 'react';
 import { Modal } from '@/components/common/Modal';
+import type { ModalCloseButton, ModalSize } from '@/components/common/modalConfig';
 
 export interface ConfirmModalProps {
   open: boolean;
@@ -13,6 +14,11 @@ export interface ConfirmModalProps {
   cancelLabel?: React.ReactNode;
   busyLabel?: React.ReactNode;
   busy?: boolean;
+  /** Dialog width; the default is narrow, fine for a short title and one line of text. */
+  size?: ModalSize;
+  /** Show an X in the header (use it instead of a cancel button). */
+  closeButton?: ModalCloseButton;
+  closeButtonAriaLabel?: string;
   onConfirm: () => void;
   onCancel: () => void;
 }
@@ -26,6 +32,9 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
   cancelLabel,
   busyLabel,
   busy = false,
+  size = 'xs',
+  closeButton = 'none',
+  closeButtonAriaLabel,
   onConfirm,
   onCancel,
 }) => (
@@ -33,11 +42,12 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
     isOpen={open}
     onClose={onCancel}
     variant="confirm"
-    size="xs"
+    size={size}
     layer="top"
     title={title}
     ariaLabel="Confirm"
-    closeButton="none"
+    closeButton={closeButton}
+    closeButtonAriaLabel={closeButtonAriaLabel}
     busy={busy}
     padded
     bodyClassName="text-center"

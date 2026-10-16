@@ -1,6 +1,11 @@
 // frontend/src/services/changelogApi.ts
 import { getBackendBaseUrl } from '@/utils/perkUtils';
-import type { ChangelogListResponse, ChangelogPost, ChangelogPostDraft } from '@/types/changelog';
+import type {
+  ChangelogAnnounceResponse,
+  ChangelogListResponse,
+  ChangelogPostDraft,
+  ChangelogSaveResponse,
+} from '@/types/changelog';
 import { authHeaders } from '@/utils/api';
 
 const API_BASE = () => `${getBackendBaseUrl()}/api/v1/changelog`;
@@ -33,7 +38,7 @@ export async function fetchChangelogPostsAdmin(
 export async function createChangelogPost(
   token: string,
   draft: ChangelogPostDraft
-): Promise<{ status: string; data: ChangelogPost }> {
+): Promise<ChangelogSaveResponse> {
   const res = await fetch(`${API_BASE()}`, {
     method: 'POST',
     headers: authHeaders(token, { json: true }),
@@ -46,7 +51,7 @@ export async function updateChangelogPost(
   token: string,
   id: number,
   draft: Partial<ChangelogPostDraft>
-): Promise<{ status: string; data: ChangelogPost }> {
+): Promise<ChangelogSaveResponse> {
   const res = await fetch(`${API_BASE()}/${id}`, {
     method: 'PATCH',
     headers: authHeaders(token, { json: true }),
@@ -58,6 +63,14 @@ export async function updateChangelogPost(
 export async function deleteChangelogPost(token: string, id: number): Promise<{ status: string }> {
   const res = await fetch(`${API_BASE()}/${id}`, {
     method: 'DELETE',
+    headers: authHeaders(token),
+  });
+  return parseOrThrow(res);
+}
+
+export async function announceChangelogPost(token: string, id: number): Promise<ChangelogAnnounceResponse> {
+  const res = await fetch(`${API_BASE()}/${id}/announce`, {
+    method: 'POST',
     headers: authHeaders(token),
   });
   return parseOrThrow(res);

@@ -23,13 +23,12 @@ class TestChangelogService:
         db_session.commit()
         return user
 
-    def test_create_post_sanitizes_html_and_defaults_tag(self, admin: User) -> None:
+    def test_create_post_sanitizes_html_and_trims_title(self, admin: User) -> None:
         post = changelog_service.create_post(
             admin,
             {
                 "title": "  Patch Notes  ",
                 "content_html": '<p onclick="steal()">Hello <script>bad()</script>world</p>',
-                "tag": "not-a-real-tag",
                 "is_published": True,
             },
         )
@@ -37,7 +36,6 @@ class TestChangelogService:
         assert "onclick" not in post.content_html
         assert "bad()" not in post.content_html
         assert "Hello" in post.content_html and "world" in post.content_html
-        assert post.tag == "feature"  # invalid tag falls back to default
         assert post.author_id == admin.id
         assert post.author_name == admin.username
 
@@ -101,12 +99,12 @@ class TestChangelogService:
 
     def test_update_post_only_touches_provided_fields(self, admin: User) -> None:
         post = changelog_service.create_post(
-            admin, {"title": "Original", "content_html": "<p>orig</p>", "tag": "feature"}
+            admin, {"title": "Original", "content_html": "<p>orig</p>"}
         )
         updated = changelog_service.update_post(post, {"title": "Renamed"})
         assert updated.title == "Renamed"
         assert "orig" in updated.content_html  # untouched
-        assert updated.tag == "feature"  # untouched
+        assert updated.is_published is True  # untouched
 
     def test_update_post_sanitizes_new_content_html(self, admin: User) -> None:
         post = changelog_service.create_post(
@@ -118,14 +116,32 @@ class TestChangelogService:
         assert "evil()" not in updated.content_html
         assert "new" in updated.content_html
 
-    def test_update_post_rejects_invalid_tag_silently(self, admin: User) -> None:
-        post = changelog_service.create_post(
-            admin, {"title": "Original", "content_html": "<p>orig</p>", "tag": "balance"}
+    def test_published_post_gets_published_at_and_a_draft_does_not(self, admin: User) -> None:
+        live = changelog_service.create_post(admin, {"title": "Live", "content_html": "<p>x</p>"})
+        draft = changelog_service.create_post(
+            admin, {"title": "Draft", "content_html": "<p>x</p>", "is_published": False}
         )
-        updated = changelog_service.update_post(post, {"tag": "not-real"})
-        # An invalid tag on update is ignored, not defaulted -- the existing
-        # tag is left as-is (unlike create, which defaults to "feature").
-        assert updated.tag == "balance"
+        assert live.published_at is not None
+        assert draft.published_at is None
+
+    def test_publishing_a_draft_stamps_published_at_once(self, admin: User) -> None:
+        draft = changelog_service.create_post(
+            admin, {"title": "Draft", "content_html": "<p>x</p>", "is_published": False}
+        )
+        published = changelog_service.update_post(draft, {"is_published": True})
+        stamp = published.published_at
+        assert stamp is not None
+
+        # Unpublishing and publishing again keeps the date readers already saw.
+        changelog_service.update_post(published, {"is_published": False})
+        again = changelog_service.update_post(published, {"is_published": True})
+        assert again.published_at == stamp
+
+    def test_post_dict_hides_the_author(self, admin: User) -> None:
+        post = changelog_service.create_post(admin, {"title": "Anon", "content_html": "<p>x</p>"})
+        data = post.to_dict()
+        assert "author_name" not in data and "author_id" not in data
+        assert data["title"] == "Anon"
 
     def test_delete_post_removes_it_from_the_database(self, admin: User) -> None:
         post = changelog_service.create_post(
@@ -148,6 +164,28 @@ class TestChangelogService:
         result = changelog_service.list_posts(include_unpublished=True)
         ids_in_order = [row["id"] for row in result["data"]]
         assert ids_in_order == [p1.id, p2.id, p3.id]
+
+    def test_reorder_posts_of_a_loaded_prefix_keeps_the_rest_below(self, admin: User) -> None:
+        p1 = changelog_service.create_post(admin, {"title": "P1", "content_html": "<p>1</p>"})
+        p2 = changelog_service.create_post(admin, {"title": "P2", "content_html": "<p>2</p>"})
+        p3 = changelog_service.create_post(admin, {"title": "P3", "content_html": "<p>3</p>"})
+        # Feed order is p3, p2, p1. Swap the first two while p1 was never loaded.
+        changelog_service.reorder_posts([p2.id, p3.id])
+
+        result = changelog_service.list_posts(include_unpublished=True)
+        assert [row["id"] for row in result["data"]] == [p2.id, p3.id, p1.id]
+
+    def test_reorder_posts_with_tied_positions_still_applies_the_order(self, admin: User) -> None:
+        p1 = changelog_service.create_post(admin, {"title": "P1", "content_html": "<p>1</p>"})
+        p2 = changelog_service.create_post(admin, {"title": "P2", "content_html": "<p>2</p>"})
+        p1.position = 0
+        p2.position = 0
+        db.session.commit()
+
+        changelog_service.reorder_posts([p1.id, p2.id])
+
+        result = changelog_service.list_posts(include_unpublished=True)
+        assert [row["id"] for row in result["data"]] == [p1.id, p2.id]
 
     def test_reorder_posts_ignores_unknown_ids(self, admin: User) -> None:
         p1 = changelog_service.create_post(admin, {"title": "P1", "content_html": "<p>1</p>"})

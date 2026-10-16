@@ -476,19 +476,15 @@ class TestOtherSchemaAuditFixes:
     """Small gaps between to_dict() and the existing schemas, found while
     auditing for the character/killer split -- fixed alongside it."""
 
-    def test_changelog_response_carries_position_and_author_id(self) -> None:
-        # ChangelogPost.to_dict() emits both; the schema was missing them.
+    def test_changelog_response_carries_position(self) -> None:
+        # ChangelogPost.to_dict() emits the position and hides the author (the feed is written by the team).
         resp = ChangelogPostResponse.model_validate(
             {
                 "id": 1,
                 "title": "Patch Notes",
                 "content_html": "<p>...</p>",
-                "tag": "feature",
                 "position": 3,
                 "is_published": True,
-                "author_id": 2,
-                "author_name": "The Entity",
             }
         )
         assert resp.position == 3
-        assert resp.author_id == 2

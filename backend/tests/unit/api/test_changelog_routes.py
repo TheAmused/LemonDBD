@@ -6,6 +6,7 @@ from flask.testing import FlaskClient
 from app.core.extensions import db
 from app.core.security import generate_token
 from app.models import User
+from app.services import changelog_discord
 
 
 @pytest.mark.unit
@@ -114,7 +115,6 @@ class TestChangelogRoutes:
             json={
                 "title": "The Entity Stirs",
                 "content_html": '<p>New killer! <script>alert(1)</script></p>',
-                "tag": "feature",
                 "is_published": True,
             },
             headers=admin_headers,
@@ -124,6 +124,92 @@ class TestChangelogRoutes:
         assert data["title"] == "The Entity Stirs"
         assert "alert(1)" not in data["content_html"]
         assert data["position"] == 0
+        assert "author_name" not in data
+
+    def _publish(self, client: FlaskClient, headers: dict[str, str], published: bool = True) -> int:
+        res = client.post(
+            "/api/v1/changelog",
+            json={"title": "Big patch", "content_html": "<h3>New</h3><ul><li>Thing</li></ul>", "is_published": published},
+            headers=headers,
+        )
+        return res.get_json()["data"]["id"]
+
+    def test_announce_requires_admin(
+        self, client: FlaskClient, admin_headers: dict[str, str], user_headers: dict[str, str]
+    ) -> None:
+        post_id = self._publish(client, admin_headers)
+        assert client.post(f"/api/v1/changelog/{post_id}/announce", headers=user_headers).status_code == 403
+
+    def test_announce_unknown_post_is_404(self, client: FlaskClient, admin_headers: dict[str, str]) -> None:
+        assert client.post("/api/v1/changelog/999999/announce", headers=admin_headers).status_code == 404
+
+    def test_announce_reports_not_configured_without_a_webhook(
+        self, client: FlaskClient, admin_headers: dict[str, str]
+    ) -> None:
+        post_id = self._publish(client, admin_headers)
+        res = client.post(f"/api/v1/changelog/{post_id}/announce", headers=admin_headers)
+        assert res.status_code == 200
+        body = res.get_json()
+        assert body["discord"] == "not_configured"
+        assert body["data"]["discord_announced_at"] is None
+
+    def test_announce_posts_an_embed_and_only_once(
+        self, app: Flask, client: FlaskClient, admin_headers: dict[str, str], monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        app.config["DISCORD_CHANGELOG_WEBHOOK_URL"] = "https://discord.test/api/webhooks/1/x"
+        sent: list[dict] = []
+
+        class _Resp:
+            status_code = 204
+
+        def fake_post(url: str, **kwargs):
+            sent.append({"url": url, **kwargs})
+            return _Resp()
+
+        monkeypatch.setattr(changelog_discord.requests, "post", fake_post)
+        post_id = self._publish(client, admin_headers)
+
+        res = client.post(f"/api/v1/changelog/{post_id}/announce", headers=admin_headers)
+        body = res.get_json()
+        assert body["discord"] == "sent"
+        assert body["data"]["discord_announced_at"] is not None
+        embed = sent[0]["json"]["embeds"][0]
+        assert embed["title"] == "Big patch"
+        assert "**New**" in embed["description"] and "\u2022 Thing" in embed["description"]
+
+        again = client.post(f"/api/v1/changelog/{post_id}/announce", headers=admin_headers)
+        assert again.status_code == 409
+        assert len(sent) == 1
+
+    def test_failed_announcement_is_reported_and_can_be_retried(
+        self, app: Flask, client: FlaskClient, admin_headers: dict[str, str], monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        app.config["DISCORD_CHANGELOG_WEBHOOK_URL"] = "https://discord.test/api/webhooks/1/x"
+
+        def boom(*args, **kwargs):
+            raise RuntimeError("network down")
+
+        monkeypatch.setattr(changelog_discord.requests, "post", boom)
+        post_id = self._publish(client, admin_headers)
+        res = client.post(f"/api/v1/changelog/{post_id}/announce", headers=admin_headers)
+        assert res.status_code == 200
+        assert res.get_json()["discord"] == "failed"
+        assert res.get_json()["data"]["discord_announced_at"] is None
+
+        class _Resp:
+            status_code = 204
+
+        monkeypatch.setattr(changelog_discord.requests, "post", lambda *a, **k: _Resp())
+        retry = client.post(f"/api/v1/changelog/{post_id}/announce", headers=admin_headers)
+        assert retry.get_json()["discord"] == "sent"
+
+    def test_a_draft_cannot_be_announced(
+        self, app: Flask, client: FlaskClient, admin_headers: dict[str, str]
+    ) -> None:
+        app.config["DISCORD_CHANGELOG_WEBHOOK_URL"] = "https://discord.test/api/webhooks/1/x"
+        post_id = self._publish(client, admin_headers, published=False)
+        res = client.post(f"/api/v1/changelog/{post_id}/announce", headers=admin_headers)
+        assert res.status_code == 400
 
     def test_create_rejects_title_too_short(
         self, client: FlaskClient, admin_headers: dict[str, str]

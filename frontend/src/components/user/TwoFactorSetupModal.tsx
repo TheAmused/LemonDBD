@@ -144,14 +144,9 @@ export const TwoFactorSetupModal: React.FC<TwoFactorSetupModalProps> = ({ isOpen
             invalid={!!error}
             autoFocus
           />
-          <div className="flex flex-col-reverse gap-2 sm:flex-row">
-            <Button type="button" variant="secondary" onClick={close} disabled={busy} className="flex-1">
-              <span>{t.cancelButton}</span>
-            </Button>
-            <Button type="submit" variant="primary" loading={busy} disabled={!password} className="flex-1">
-              <span>{t.continueButton}</span>
-            </Button>
-          </div>
+          <Button type="submit" variant="primary" loading={busy} spinnerOnly disabled={!password} className="w-full">
+            <span>{t.continueButton}</span>
+          </Button>
         </form>
       )}
 
@@ -180,7 +175,7 @@ export const TwoFactorSetupModal: React.FC<TwoFactorSetupModalProps> = ({ isOpen
             <span className="type-label-xs text-text-secondary">{t.codeLabel}</span>
             <CodeInput value={code} onChange={setCode} disabled={busy} invalid={!!error} autoFocus />
           </div>
-          <Button type="submit" variant="primary" loading={busy} disabled={code.length !== CODE_LENGTH} className="w-full">
+          <Button type="submit" variant="primary" loading={busy} spinnerOnly disabled={code.length !== CODE_LENGTH} className="w-full">
             <span>{t.confirmButton}</span>
           </Button>
         </form>

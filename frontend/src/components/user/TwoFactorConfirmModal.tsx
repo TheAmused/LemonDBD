@@ -124,20 +124,16 @@ export const TwoFactorConfirmModal: React.FC<TwoFactorConfirmModalProps> = ({ ac
             value={code}
             onChange={(e) => setCode(e.target.value)}
           />
-          <div className="flex flex-col-reverse gap-2 sm:flex-row">
-            <Button type="button" variant="secondary" onClick={close} disabled={busy} className="flex-1">
-              <span>{t.cancelButton}</span>
-            </Button>
-            <Button
-              type="submit"
-              variant={isDisable ? 'danger' : 'primary'}
-              loading={busy}
-              disabled={!password || !code.trim()}
-              className="flex-1"
-            >
-              <span>{isDisable ? t.disableButton : t.regenerateConfirm}</span>
-            </Button>
-          </div>
+          <Button
+            type="submit"
+            variant="primary"
+            loading={busy}
+            spinnerOnly
+            disabled={!password || !code.trim()}
+            className="w-full"
+          >
+            <span>{isDisable ? t.disableButton : t.regenerateConfirm}</span>
+          </Button>
         </form>
       )}
     </Modal>

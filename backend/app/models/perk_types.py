@@ -19,9 +19,9 @@ through the same schema, and `Perk.perk_types` re-runs the shape rules on
 every assignment -- so a malformed list cannot reach the database from any of
 those directions.
 
-This lives next to the models (not in `app.schemas`) for the same reason
-`CHANGELOG_TAGS` does: the models need the vocabulary, and importing the
-schemas package from a model module would be circular.
+This lives next to the models (not in `app.schemas`): the models need the
+vocabulary, and importing the schemas package from a model module would be
+circular.
 """
 from typing import Annotated, Literal, get_args
 

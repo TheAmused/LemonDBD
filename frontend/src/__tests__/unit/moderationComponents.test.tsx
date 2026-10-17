@@ -16,14 +16,13 @@ import { en, pl } from '@/locales';
 const noop = () => {};
 
 describe('AccountBlockedNotice', () => {
-  it('tells a suspended person until when, why, and how to appeal, escaping the moderator text', () => {
+  it('tells a suspended person until when, why, and how to appeal', () => {
     const html = renderWithDictionary(
       React.createElement(AccountBlockedNotice, {
         blocked: {
           code: 'account_suspended',
           until: '2030-05-01T10:00:00Z',
           reason_code: 'spam',
-          public_message: '<b>Calm</b> down',
           appeal_contact: 'help@lemondbd.test',
         },
         onClose: noop,
@@ -31,8 +30,6 @@ describe('AccountBlockedNotice', () => {
     );
     assert.ok(html.includes('2030'), 'the end date is shown');
     assert.ok(html.includes(en.moderation.reasons.spam));
-    assert.ok(html.includes('&lt;b&gt;Calm&lt;/b&gt; down'));
-    assert.ok(!html.includes('<b>Calm</b>'));
     assert.ok(html.includes('help@lemondbd.test'));
     assert.ok(!html.includes('{'), 'no placeholder is left unfilled');
   });
@@ -40,19 +37,31 @@ describe('AccountBlockedNotice', () => {
   it('says a ban is permanent and falls back to the generic appeal sentence without a contact', () => {
     const html = renderWithDictionary(
       React.createElement(AccountBlockedNotice, {
-        blocked: { code: 'account_banned', until: null, reason_code: null, public_message: null, appeal_contact: null },
+        blocked: { code: 'account_banned', until: null, reason_code: null, appeal_contact: null },
         onClose: noop,
       })
     );
     assert.ok(html.includes(en.moderation.blocked.bannedBody));
     assert.ok(html.includes(en.moderation.blocked.appealNoContact));
-    assert.ok(!html.includes(en.moderation.blocked.messageLabel));
+    assert.ok(html.includes(en.moderation.blocked.close));
+  });
+
+  it('leaves out the close button in the admin preview', () => {
+    const html = renderWithDictionary(
+      React.createElement(AccountBlockedNotice, {
+        blocked: { code: 'account_banned', until: null, reason_code: 'spam', appeal_contact: null },
+        onClose: noop,
+        showClose: false,
+      })
+    );
+    assert.ok(html.includes(en.moderation.blocked.bannedBody));
+    assert.ok(!html.includes(en.moderation.blocked.close));
   });
 
   it('speaks the visitor\'s language', () => {
     const html = renderWithDictionary(
       React.createElement(AccountBlockedNotice, {
-        blocked: { code: 'account_banned', until: null, reason_code: 'harassment', public_message: null, appeal_contact: null },
+        blocked: { code: 'account_banned', until: null, reason_code: 'harassment', appeal_contact: null },
         onClose: noop,
       }),
       { dict: pl as never, locale: 'pl' }
@@ -84,7 +93,8 @@ describe('SanctionForm', () => {
   it('lists every reason and rule, and hides what the report case fixes elsewhere', () => {
     const full = render({});
     assert.ok(full.includes(en.moderation.reasons.ban_evasion));
-    assert.ok(full.includes(en.rules.sections.fairPlay.heading.replace("'", '&#x27;')));
+    assert.ok(full.includes(`Section 3: ${en.rules.sections.fairPlay.heading}`.replace("'", '&#x27;')));
+    assert.ok(!full.includes(en.moderation.admin.previewTitle), 'no preview without a target');
     assert.ok(full.includes(en.moderation.admin.formInternal));
     assert.ok(full.includes(en.moderation.admin.formSendEmail));
     const forReport = render({}, { showReason: false, showInternal: false });
@@ -101,7 +111,6 @@ const sanction = (patch: Partial<AdminSanction>): AdminSanction => ({
   reason_code: 'spam',
   rule_ref: 'fairPlay',
   facts: 'Posted spam links.',
-  public_message: null,
   internal_notes: 'internal-detail',
   source: 'manual',
   report_id: null,

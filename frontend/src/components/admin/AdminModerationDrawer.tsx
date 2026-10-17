@@ -163,7 +163,7 @@ export function AdminModerationDrawer({ user, onClose, onChanged, onActionMessag
         {user && (
           <section className="space-y-3">
             <h3 className="type-label-sm text-text-secondary">{t.formTitle}</h3>
-            <SanctionForm draft={draft} kinds={SANCTION_KINDS} onChange={(patch) => setDraft((d) => ({ ...d, ...patch }))} />
+            <SanctionForm draft={draft} kinds={SANCTION_KINDS} previewTarget={{ userId: user.id }} onChange={(patch) => setDraft((d) => ({ ...d, ...patch }))} />
             <Button
               variant={draft.kind === 'warning' ? 'primary' : 'danger'}
               size="sm"

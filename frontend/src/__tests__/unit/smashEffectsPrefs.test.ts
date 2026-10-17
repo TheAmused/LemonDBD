@@ -53,11 +53,12 @@ test('SmashOrPass: effects and music choice', async (t) => {
     }
   });
 
-  await t.test('the hub shows the warning in the global Modal and keeps it open until a choice is made', () => {
+  await t.test('the hub shows the warning in the global Modal and can be dismissed by clicking outside, which saves what the switches show', () => {
     const modal = read('prefs/EffectsPreferenceModal.tsx');
     assert.match(modal, /from '@\/components\/common\/Modal'/);
-    assert.match(modal, /closeOnEscape=\{!mandatory\}/);
-    assert.match(modal, /closeOnBackdropClick=\{!mandatory\}/);
+    assert.match(modal, /closeOnEscape\s/);
+    assert.match(modal, /closeOnBackdropClick\s/);
+    assert.doesNotMatch(modal, /closeOnBackdropClick=\{!mandatory\}/);
     const hub = read('SmashOrPassHub.tsx');
     assert.match(hub, /mandatory=\{prefs\.prefs === null\}/);
     assert.match(hub, /useHubOverlays\(prefs\.isOpen\)/);

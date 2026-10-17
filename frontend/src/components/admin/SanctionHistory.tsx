@@ -40,7 +40,6 @@ export function SanctionHistory({ sanctions, busy, onRevoke }: SanctionHistoryPr
         const status = s.active ? t.statusActive : revoked ? t.statusRevoked : t.statusExpired;
         const details: [string, string | null][] = [
           [t.factsLabel, s.facts],
-          [t.messageLabel, s.public_message],
           [t.internalLabel, s.internal_notes],
         ];
         return (

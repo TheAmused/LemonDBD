@@ -7,6 +7,7 @@
 import React, { useId } from 'react';
 import { Checkbox } from '@/components/common/Checkbox';
 import { Input, Select, Textarea } from '@/components/common/Field';
+import { SanctionPreviewPanel } from '@/components/admin/SanctionPreviewPanel';
 import { reasonLabel, ruleLabel } from '@/components/moderation/moderationLabels';
 import { useDictionary } from '@/context/DictionaryContext';
 import {
@@ -17,6 +18,7 @@ import {
   SANCTION_REASONS,
   type SanctionDraft,
   type SanctionKind,
+  type SanctionTarget,
 } from '@/types/moderation';
 
 interface SanctionFormProps {
@@ -28,9 +30,11 @@ interface SanctionFormProps {
   showReason?: boolean;
   /** Internal notes and the "email the user" switch belong to the drawer, not to a report. */
   showInternal?: boolean;
+  /** Whom the decision is about; when given, a preview of what they will be told closes the form. */
+  previewTarget?: SanctionTarget;
 }
 
-export function SanctionForm({ draft, onChange, kinds, showReason = true, showInternal = true }: SanctionFormProps) {
+export function SanctionForm({ draft, onChange, kinds, showReason = true, showInternal = true, previewTarget }: SanctionFormProps) {
   const dict = useDictionary();
   const t = dict.moderation.admin;
   const id = useId();
@@ -127,20 +131,6 @@ export function SanctionForm({ draft, onChange, kinds, showReason = true, showIn
         <p className={hint}>{factsRequired ? t.formFactsRequired : t.formFactsOptional}</p>
       </div>
 
-      <div>
-        <label htmlFor={`${id}-message`} className={label}>{t.formPublicMessage}</label>
-        <Textarea
-          id={`${id}-message`}
-          fieldSize="sm"
-          rows={2}
-          maxLength={MAX_SANCTION_TEXT_LENGTH}
-          value={draft.public_message}
-          onChange={(e) => onChange({ public_message: e.target.value })}
-          className="resize-none"
-        />
-        <p className={hint}>{t.formPublicHint}</p>
-      </div>
-
       {showInternal && (
         <>
           <div>
@@ -161,6 +151,8 @@ export function SanctionForm({ draft, onChange, kinds, showReason = true, showIn
           </Checkbox>
         </>
       )}
+
+      {previewTarget && <SanctionPreviewPanel draft={draft} target={previewTarget} />}
     </div>
   );
 }

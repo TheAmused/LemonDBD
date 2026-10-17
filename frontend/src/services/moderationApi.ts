@@ -6,9 +6,12 @@
 
 import { apiRequest } from '@/utils/api';
 import {
+  sanctionPreviewBody,
   sanctionRequestBody,
   type AdminSanction,
   type SanctionDraft,
+  type SanctionPreview,
+  type SanctionTarget,
   type UserSanctions,
 } from '@/types/moderation';
 
@@ -18,6 +21,10 @@ export async function issueSanction(userId: number, draft: SanctionDraft): Promi
   const data = await apiRequest<{ sanction: AdminSanction }>(`/admin/users/${userId}/sanctions`, 'POST', sanctionRequestBody(draft));
   return data.sanction;
 }
+
+/** What the decision would tell its account holder (the email, in their language); nothing is saved. */
+export const previewSanction = (draft: SanctionDraft, target: SanctionTarget) =>
+  apiRequest<SanctionPreview>('/admin/sanctions/preview', 'POST', sanctionPreviewBody(draft, target));
 
 export const revokeSanction = (sanctionId: number, reason: string) =>
   apiRequest<object>(`/admin/sanctions/${sanctionId}/revoke`, 'POST', { reason });

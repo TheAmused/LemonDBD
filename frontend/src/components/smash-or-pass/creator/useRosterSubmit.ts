@@ -6,7 +6,7 @@ import { useDictionary } from '@/context/DictionaryContext';
 import { apiUrl, authHeaders } from '@/utils/api';
 import { validateSmashRosterDocument } from '@/utils/smashOrPass/codec';
 import { createCustomRosterId, saveCustomRoster } from '@/utils/smashOrPass/storage';
-import { DEFAULT_ROSTER_THEME_COLOR } from '@/utils/smashOrPass/constants';
+import { defaultRosterThemeColor } from '@/utils/smashOrPass/constants';
 import type { StoredCustomRoster } from '@/types/smashOrPass';
 import {
   type Draft,
@@ -103,7 +103,7 @@ export function useRosterSubmit({
             name: result.doc.name,
             description: result.doc.description || '',
             ...(result.doc.cover_image_url ? { cover_image_url: result.doc.cover_image_url } : {}),
-            theme_color: result.doc.theme_color || DEFAULT_ROSTER_THEME_COLOR,
+            theme_color: result.doc.theme_color || defaultRosterThemeColor(),
             category: result.doc.category || 'DBD',
             is_nsfw: result.doc.is_nsfw || false,
             translations: buildAdminRosterTranslations(rosterTranslations),

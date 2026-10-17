@@ -19,6 +19,7 @@ import { useDictionary } from "@/context/DictionaryContext";
 import { ToggleChip } from '@/components/common/ToggleChip';
 import { ColorSwatch } from '@/components/common/ColorSwatch';
 import { useDragReorder } from '@/hooks/useDragReorder';
+import { TileButton } from "@/components/common/TileButton";
 
 function PresetSwatch({ colors }: { colors: readonly string[] }) {
   return (
@@ -131,22 +132,20 @@ export function LadderEditor({ tiers, onChange, onPreset, activePreset }: Ladder
             >
               <div className="flex items-stretch min-h-11 sm:min-h-12">
                 {/* Drag Handle */}
-                <button
-                  type="button"
+                <TileButton
                   {...drag.handleProps(tier.id)}
                   aria-label={formatMessage(t.tierAria, { label: tier.label })}
-                  className="pointer-coarse:min-h-11 pointer-coarse:min-w-11 flex w-9 sm:w-10 shrink-0 items-center justify-center border-r border-border-color/80 text-text-muted hover:text-text-primary hover:bg-bg-elevated cursor-grab active:cursor-grabbing touch-none select-none transition-colors"
+                  className="pointer-coarse:min-h-11 pointer-coarse:min-w-11 flex w-9 sm:w-10 shrink-0 items-center justify-center border-r border-border-color/80 text-text-muted hover:text-text-primary hover:bg-bg-elevated cursor-grab active:cursor-grabbing touch-none select-none transition-colors" press={false}
                 >
                   <GripVertical className="h-4 w-4" aria-hidden="true" />
-                </button>
+                </TileButton>
 
                 {/* Tier Color & Label Badge Button */}
-                <button
-                  type="button"
+                <TileButton
                   onClick={() => setPaletteFor(open ? null : tier.id)}
                   aria-expanded={open}
                   aria-label={formatMessage(c.tierColorAria, { label: tier.label })}
-                  className="relative w-16 sm:w-20 shrink-0 flex items-center justify-center cursor-pointer border-r border-border-color/80 transition-opacity hover:opacity-90"
+                  className="relative w-16 sm:w-20 shrink-0 flex items-center justify-center cursor-pointer border-r border-border-color/80 transition-opacity hover:opacity-90" press={false}
                 >
                   <TierBadge
                     label={tier.label || '?'}
@@ -155,7 +154,7 @@ export function LadderEditor({ tiers, onChange, onPreset, activePreset }: Ladder
                     className="absolute inset-0 flex items-center justify-center text-sm sm:text-base font-black p-1"
                     labelClassName="px-0.5 leading-tight"
                   />
-                </button>
+                </TileButton>
 
                 {/* Integrated Name Input */}
                 <input

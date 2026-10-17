@@ -50,13 +50,13 @@ Cel: jedna zmiana w jednym miejscu przesuwa wygląd całej strony. Poniżej źr�
 - stara skala promieni (`rounded-xl`...) i `rounded-[..]`,
 - nadpisywanie promienia w `Button`, `Input`, `Textarea`, `Select`, `Surface`, `Badge`, `InfoChip`, `ToggleChip`,
 - natywny `title` i ręczne `data-tooltip` na elementach DOM,
-- nowy surowy `<button>` ostylowany jak przycisk (limit na plik w `scripts/raw-buttons-baseline.json`, można tylko zmniejszać; `npx tsx scripts/check-global-styles.ts --update-baseline` po świadomej zmianie),
+- nowy surowy `<button>` ostylowany jak przycisk (kafle, uchwyty i klawisze gry używają `TileButton`),
 - kolory spoza tokenów i style inline z literałami,
-- (`duplicationGuards.test.ts`, część `npm run check`) ten sam ciąg klas (45+ znaków) w trzech miejscach, literały `#hex` i `rgb()` w kodzie i arkuszach (tylko malejący baseline) oraz lokalny komponent o nazwie komponentu z `common`.
+- (`duplicationGuards.test.ts`, część `npm run check`) ten sam ciąg klas (45+ znaków) w trzech miejscach, literały `#hex` i `rgb()` w kodzie i arkuszach (kolory grafik i canvasu czytaj z `--palette-*` przez `paletteColor()`) oraz lokalny komponent o nazwie komponentu z `common`.
 
 ## Jak zmienić wygląd wszystkich elementów danego rodzaju
 
 1. Znajdź wiersz w tabeli i zmień wartość w komponencie lub tokenie.
 2. Nie dopisuj nadpisań w miejscu użycia. Jeśli potrzebny jest nowy wariant, dodaj go do komponentu.
 3. Uruchom `npm run check` i `npm run test:unit`.
-4. Gdy guard duplikatów zgłosi trzecią kopię klas, wyciągnij komponent (`common` albo folder funkcji) albo wspólną stałą. Nie zmieniaj kolejności klas i nie podnoś baseline.
+4. Gdy guard duplikatów zgłosi trzecią kopię klas, wyciągnij komponent (`common` albo folder funkcji) albo wspólną stałą. Nie zmieniaj kolejności klas.

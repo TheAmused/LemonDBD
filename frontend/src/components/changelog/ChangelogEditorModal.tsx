@@ -1,14 +1,14 @@
 'use client';
 // frontend/src/components/changelog/ChangelogEditorModal.tsx
 
-import React, { useEffect, useId, useRef, useState } from 'react';
+import React, { useEffect, useId, useMemo, useRef, useState } from 'react';
 import { Plus } from 'lucide-react';
 import type { ChangelogPost, ChangelogPostDraft } from '@/types/changelog';
 import {
   CHANGELOG_BODY_CLASS,
-  CHANGELOG_HIGHLIGHT_COLORS,
   CHANGELOG_SECTIONS,
-  CHANGELOG_TEXT_COLORS,
+  changelogHighlightColors,
+  changelogTextColors,
 } from './changelogTheme';
 
 import { Alert } from '@/components/common/Alert';
@@ -40,6 +40,8 @@ export const ChangelogEditorModal: React.FC<ChangelogEditorModalProps> = ({ open
   const t = dict.changelog;
   const titleId = useId();
   const bodyLabelId = useId();
+  const textColors = useMemo(() => changelogTextColors(), []);
+  const highlightColors = useMemo(() => changelogHighlightColors(), []);
   const editorRef = useRef<RichTextEditorHandle>(null);
   const [title, setTitle] = useState('');
   const [html, setHtml] = useState('');
@@ -131,8 +133,8 @@ export const ChangelogEditorModal: React.FC<ChangelogEditorModalProps> = ({ open
           initialHtml={initialHtml}
           onChange={setHtml}
           labels={t.editor}
-          textColors={CHANGELOG_TEXT_COLORS}
-          highlightColors={CHANGELOG_HIGHLIGHT_COLORS}
+          textColors={textColors}
+          highlightColors={highlightColors}
           labelledBy={bodyLabelId}
           required
           className={CHANGELOG_BODY_CLASS}

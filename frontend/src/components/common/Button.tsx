@@ -49,9 +49,9 @@ const BUTTON_VARIANTS: Record<ButtonVariant, string> = {
 };
 
 const BUTTON_SIZES: Record<ButtonSize, string> = {
-  xs: 'gap-1 px-2.5 py-1 text-mini',
-  sm: 'gap-1.5 px-3 py-1.5 text-xs',
-  md: 'gap-2 px-4 py-2.5 text-sm',
+  xs: 'gap-1 px-2.5 py-1 text-mini pointer-coarse:min-h-11',
+  sm: 'gap-1.5 px-3 py-1.5 text-xs pointer-coarse:min-h-11',
+  md: 'gap-2 px-4 py-2.5 text-sm pointer-coarse:min-h-11',
   lg: 'gap-2 px-6 py-3 text-base',
 };
 

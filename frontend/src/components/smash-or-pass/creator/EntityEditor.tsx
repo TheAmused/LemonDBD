@@ -144,7 +144,7 @@ export function CandidateFormInputs({
                 fieldSize="md" invalid={mediaInvalid}
                 value={entity.media_url}
                 onChange={(e) => onChange({ media_url: e.target.value })}
-                placeholder="https://images.example.com/character.png"
+                placeholder={c.coverImagePlaceholder}
                 inputMode="url"
               />
             </label>

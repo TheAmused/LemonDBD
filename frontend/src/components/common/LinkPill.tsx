@@ -11,7 +11,7 @@ import { ArrowRight, ExternalLink } from 'lucide-react';
 import { cn } from '@/utils/cn';
 
 const PILL_CLASS =
-  'inline-flex max-w-full items-center gap-2 rounded-full border-2 border-border-color bg-bg-surface px-4 py-2 type-card-title text-text-primary shadow-sm transition-all cursor-pointer select-none hover:-translate-y-0.5 hover:border-accent-red/60 hover:bg-bg-elevated hover:shadow-md active:translate-y-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red';
+  'inline-flex max-w-full items-center gap-2 rounded-full border-2 border-border-color bg-bg-surface px-4 py-2 type-card-title text-text-primary shadow-sm transition-all cursor-pointer select-none pointer-coarse:min-h-11 hover:-translate-y-0.5 hover:border-accent-red/60 hover:bg-bg-elevated hover:shadow-md active:translate-y-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red';
 
 interface PillBase {
   /** Leading icon (the brand / topic mark). */

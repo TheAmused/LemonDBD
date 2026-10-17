@@ -456,9 +456,6 @@ for (const sourceFile of project.getSourceFiles()) {
 // name in app/styles/tokens.css (--container-*, --breakpoint-*, `@utility max-h-list`, `icon-sm`, ...), never
 // from a number typed into a bracket: `min-w-[12rem]`, `max-h-[36rem]`, `text-[0.62rem]`, `min-[400px]:`.
 // A value that reads a variable (`w-[var(--sidebar-width)]`) is fine: the number lives in a token file.
-// Files that still have some are counted in scripts/arbitrary-sizes-baseline.json: a file may keep its
-// count or lower it, never raise it, and a file not listed there may have none.
-const ARBITRARY_SIZE_BASELINE_PATH = "scripts/arbitrary-sizes-baseline.json";
 // A number with a unit inside the bracket (a computed size such as calc(100vw-2.5rem) has one too).
 const SIZE_VALUE = /\d(?:px|rem|em|vh|vw|svh|dvh|lvh|svw|dvw|ch|pt|%)/;
 // Utilities whose value is a size. (Colors are rule 4, radii rule 5, glows and shadows live in tokens.)
@@ -497,11 +494,8 @@ for (const sourceFile of project.getSourceFiles()) {
 }
 
 // 8. Raw <button> that looks like a button. Actions use Button / ToggleChip / SegmentedControl / MenuItem /
-// AccordionSection, so a change to one style reaches every button. The buttons that are deliberately
-// custom (tiles, game controls, drag handles, ...) are counted per file in raw-buttons-baseline.json:
-// a file may keep its count or lower it, never raise it. `--update-baseline` rewrites the file.
-const BASELINE_PATH = "scripts/raw-buttons-baseline.json";
-const updateBaseline = process.argv.includes("--update-baseline");
+// AccordionSection, so a change to one style reaches every button. Tiles, game controls and drag handles
+// use TileButton, which carries the cursor, focus ring and press feedback they share.
 const rawButtonCounts: Record<string, number> = {};
 for (const sourceFile of project.getSourceFiles()) {
   const filePath = sourceFile.getFilePath();
@@ -525,45 +519,13 @@ for (const sourceFile of project.getSourceFiles()) {
     if (surface && sized) rawButtonCounts[rel] = (rawButtonCounts[rel] ?? 0) + 1;
   }
 }
-if (updateBaseline) {
-  fs.writeFileSync(BASELINE_PATH, JSON.stringify(rawButtonCounts, Object.keys(rawButtonCounts).sort(), 2) + "\n");
-  console.log(`Wrote ${BASELINE_PATH} (${Object.keys(rawButtonCounts).length} files)`);
-  const sizeCounts: Record<string, number> = {};
-  for (const [rel, hits] of Object.entries(arbitrarySizeHits)) sizeCounts[rel] = hits.length;
-  fs.writeFileSync(ARBITRARY_SIZE_BASELINE_PATH, JSON.stringify(sizeCounts, Object.keys(sizeCounts).sort(), 2) + "\n");
-  console.log(`Wrote ${ARBITRARY_SIZE_BASELINE_PATH} (${Object.keys(sizeCounts).length} files)`);
-} else {
-  let baseline: Record<string, number> = {};
-  try {
-    baseline = JSON.parse(fs.readFileSync(BASELINE_PATH, "utf8"));
-  } catch {
-    console.warn(`[check-global-styles] ${BASELINE_PATH} missing: run with --update-baseline`);
-  }
-  for (const [rel, count] of Object.entries(rawButtonCounts)) {
-    const allowed = baseline[rel] ?? 0;
-    if (count > allowed) {
-      reportError(rel, 1, `${count} raw <button> styled like a button (allowed ${allowed}): use Button, ToggleChip, SegmentedControl, MenuItem or AccordionSection`);
-    }
-  }
+for (const [rel, count] of Object.entries(rawButtonCounts)) {
+  reportError(rel, 1, `${count} raw <button> styled like a button: use Button, ToggleChip, SegmentedControl, MenuItem, AccordionSection or TileButton`);
 }
 
-if (!updateBaseline) {
-  let sizeBaseline: Record<string, number> = {};
-  try {
-    sizeBaseline = JSON.parse(fs.readFileSync(ARBITRARY_SIZE_BASELINE_PATH, "utf8"));
-  } catch {
-    console.warn(`[check-global-styles] ${ARBITRARY_SIZE_BASELINE_PATH} missing: run with --update-baseline`);
-  }
-  for (const [rel, hits] of Object.entries(arbitrarySizeHits)) {
-    const allowed = sizeBaseline[rel] ?? 0;
-    if (hits.length <= allowed) continue;
-    for (const { token, line } of hits) {
-      reportError(
-        rel,
-        line,
-        `Arbitrary size "${token}" (${hits.length} in this file, allowed ${allowed}): use the Tailwind scale or add a named size in app/styles/tokens.css`
-      );
-    }
+for (const [rel, hits] of Object.entries(arbitrarySizeHits)) {
+  for (const { token, line } of hits) {
+    reportError(rel, line, `Arbitrary size "${token}": use the Tailwind scale or add a named size in app/styles/tokens.css`);
   }
 }
 

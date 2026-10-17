@@ -482,6 +482,7 @@ export default {
     removeGenderAria: '削除',
   },
   archetypeBuilder: {
+    iconUrlPlaceholder: 'https://... または data:image',
     titlePlaceholder: '例: 邪神の信奉者',
     subtitlePlaceholder: '例: 危険で超自然的な力に惹かれる者',
     descriptionPlaceholder: 'プレイヤーがこのアーキタイプを解放した際に表示される詳細な設定・解説文...',

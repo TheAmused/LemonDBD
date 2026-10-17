@@ -96,6 +96,7 @@ export function CardStack({
       {thirdCharacter && (
         <div
           key={`queue-3-${thirdCharacter.id || thirdCharacter.slug}`}
+          inert
           className="smash-queued absolute inset-0 z-[5] flex items-center justify-center pointer-events-none anim-card-queue-enter"
           style={thirdCardStyle(dragPhysics, isExiting, exitMs)}
         >
@@ -114,6 +115,7 @@ export function CardStack({
       {nextCharacter && (
         <div
           key={`queue-2-${nextCharacter.id || nextCharacter.slug}`}
+          inert
           className="smash-queued absolute inset-0 z-10 flex items-center justify-center pointer-events-none"
           style={nextCardStyle(dragPhysics, isExiting, exitMs)}
         >

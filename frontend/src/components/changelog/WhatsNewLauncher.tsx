@@ -102,7 +102,7 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ feed, classN
         // The server keeps the entry's Discord message in line by itself: it rewrites a message that is behind
         // and deletes the message of an entry that is now a draft.
         if (res.discord === 'failed') setActionError(draft.is_published ? t.discordUpdateFailed : t.discordRemoveFailed);
-        else if (res.discord) reportDiscord(res.discord, draft.title, res.discord === 'removed' ? t.discordRemoved : t.discordUpdated);
+        else if (res.discord && res.discord !== 'removed') reportDiscord(res.discord, draft.title, t.discordUpdated);
       } else {
         await createChangelogPost(token, draft);
       }
@@ -135,7 +135,7 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ feed, classN
     }
   };
 
-  const discordErrors: Record<Exclude<ChangelogDiscordResult, 'sent' | 'removed'>, string> = {
+  const discordErrors: Record<Exclude<ChangelogDiscordResult, 'sent'>, string> = {
     failed: t.discordFailed,
     not_configured: t.discordNotConfigured,
     missing: t.discordMissing,
@@ -143,7 +143,7 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ feed, classN
 
   /** Tells the admin how a Discord call went: the confirmation window, or the reason it did not work. */
   const reportDiscord = (result: ChangelogDiscordResult, postTitle: string, successTitle: string) => {
-    if (result === 'sent' || result === 'removed') {
+    if (result === 'sent') {
       setActionError(null);
       setDiscordNotice({ title: successTitle, postTitle });
     } else {
@@ -348,7 +348,7 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ feed, classN
           size="md"
           title={t.draftConfirmTitle}
           message={<p>{t.draftConfirmMessage}</p>}
-          confirmLabel={t.draftConfirmSave}
+          confirmLabel={t.save}
           closeButton="header"
           closeButtonAriaLabel={t.cancel}
           onConfirm={() => {

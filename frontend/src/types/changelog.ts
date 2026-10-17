@@ -36,17 +36,17 @@ export interface ChangelogPostDraft {
   is_published: boolean;
 }
 
-/**
- * "missing": the Discord message was deleted there, so the entry can be announced again.
- * "removed": the message was deleted because the entry went back to a draft.
- */
-export type ChangelogDiscordResult = 'sent' | 'failed' | 'not_configured' | 'missing' | 'removed';
+/** "missing": the Discord message was deleted there, so the entry can be announced again. */
+export type ChangelogDiscordResult = 'sent' | 'failed' | 'not_configured' | 'missing';
 
 export interface ChangelogSaveResponse {
   status: string;
   data: ChangelogPost;
-  /** After an edit: how rewriting the entry's Discord message went. Null when there was nothing to update. */
-  discord?: ChangelogDiscordResult | null;
+  /**
+   * After an edit: how keeping the entry's Discord message in line went. "removed": the entry went back to a
+   * draft and its message was deleted. Null when there was nothing to do.
+   */
+  discord?: ChangelogDiscordResult | 'removed' | null;
 }
 
 export interface ChangelogAnnounceResponse extends ChangelogSaveResponse {

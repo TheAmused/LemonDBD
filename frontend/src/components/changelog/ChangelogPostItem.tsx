@@ -64,7 +64,7 @@ export const ChangelogPostItem: React.FC<ChangelogPostItemProps> = ({
       ref={rowRef}
       className={cn('py-4 transition-colors', dragging && 'relative z-10 rounded-card bg-bg-elevated px-2 shadow-lg')}
     >
-      <div className="flex items-start gap-2">
+      <div className="flex items-center gap-2">
         {canReorder && (
           <Button
             variant="ghost"

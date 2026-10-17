@@ -538,6 +538,7 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ feed, classN
       {pendingDeleteId != null && (
         <ConfirmModal
           open={pendingDeleteId != null}
+          size="md"
           title={t.deleteConfirmTitle}
           message={t.deleteConfirmMessage}
           confirmLabel={t.delete}

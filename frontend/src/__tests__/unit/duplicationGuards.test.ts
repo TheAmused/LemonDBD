@@ -61,22 +61,32 @@ describe('duplication: pasted class lists', () => {
 });
 
 describe('duplication: colours typed instead of tokens', () => {
-  const COLOUR = /#[0-9a-fA-F]{6,8}\b|#[0-9a-fA-F]{3}\b|\brgba?\(|\bhsla?\(/;
+  // In code a string is a colour when it holds a 6 or 8 digit hex or a functional notation, or when it is nothing
+  // but a short hex (so copy such as 'Rank #100' is not one). In a stylesheet a short #fff counts as well.
+  const CODE_COLOUR = /#[0-9a-fA-F]{6}(?:[0-9a-fA-F]{2})?\b|\brgba?\(|\bhsla?\(|^#[0-9a-fA-F]{3,4}$/;
+  const CSS_COLOUR = /#[0-9a-fA-F]{3,8}\b|\brgba?\(|\bhsla?\(/;
 
   it('string colour literals (#hex, rgb(), hsl()) in code only shrink; use a --color-* token or a theme class', () => {
     // Canvas drawing, user-pickable palettes and SVG artwork legitimately need raw values and sit in the baseline.
-    const bad = scanAst((n) => isStringNode(n) && COLOUR.test(n.text));
+    const bad = scanAst((n) => isStringNode(n) && CODE_COLOUR.test(n.text));
     ratchet('colourLiterals', countBy(bad.map((b) => b.split(':')[0])), 'colour literals in code');
   });
 
   it('colour literals in stylesheets outside tokens.css and base.css (the theme definitions) only shrink', () => {
-    const dir = path.join(SRC, 'app/styles');
     const counts: Record<string, number> = {};
-    for (const name of fs.readdirSync(dir).filter((f) => f.endsWith('.css') && !/^(tokens|base)\.css$/.test(f))) {
-      const lines = fs.readFileSync(path.join(dir, name), 'utf8').split(/\r?\n/);
-      const n = lines.filter((l) => COLOUR.test(l.replace(/\/\*.*?\*\//g, ''))).length;
-      if (n) counts[`app/styles/${name}`] = n;
-    }
+    const walk = (dir: string) => {
+      for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
+        const full = path.join(dir, e.name);
+        if (e.isDirectory()) {
+          if (e.name !== 'node_modules' && e.name !== '__tests__') walk(full);
+        } else if (e.name.endsWith('.css') && !/^(tokens|base)\.css$/.test(e.name)) {
+          const text = fs.readFileSync(full, 'utf8').replace(/\/\*[\s\S]*?\*\//g, '');
+          const n = text.split(/\r?\n/).filter((l) => CSS_COLOUR.test(l)).length;
+          if (n) counts[path.relative(SRC, full).split(path.sep).join('/')] = n;
+        }
+      }
+    };
+    walk(SRC);
     ratchet('cssColourLiterals', counts, 'colour literals in stylesheets');
   });
 });

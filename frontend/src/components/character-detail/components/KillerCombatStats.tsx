@@ -1,7 +1,6 @@
 // frontend/src/components/character-detail/components/KillerCombatStats.tsx
 import React from 'react';
 import { Activity, Gauge, Radio, ArrowUpDown, Eye } from 'lucide-react';
-import { IconTile } from '@/components/common/IconTile';
 import { Surface } from '@/components/common/Surface';
 
 interface KillerCombatStatsProps {
@@ -15,9 +14,9 @@ interface KillerCombatStatsProps {
 /** One stat of the threat scale: an icon tile, its label and the value. */
 const StatRow: React.FC<{ icon: React.ComponentType<{ className?: string }>; label: string; value: string }> = ({ icon: Icon, label, value }) => (
   <div className="flex cursor-default items-center gap-3 rounded-card bg-bg-elevated/60 p-2.5">
-    <IconTile size="xs" tone="neutral" className="bg-bg-surface">
+    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-card bg-bg-surface text-text-secondary">
       <Icon className="h-4 w-4" />
-    </IconTile>
+    </div>
     <div>
       <span className="block text-tiny text-text-secondary uppercase">{label}</span>
       <span className="block type-strong-fluid text-text-primary">{value}</span>

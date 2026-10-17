@@ -130,7 +130,7 @@ export const WheelStage: React.FC<WheelStageProps> = ({
               // without re-deriving width from the new aspect ratio, flattening the
               // circle into an oval. Deriving both axes from one shared min()
               // makes them structurally identical, so they can never diverge.
-              className={`w-[min(62vw,36dvh)] h-[min(62vw,36dvh)] min-w-[200px] min-h-[200px] sm:w-[min(285px,38dvh)] sm:h-[min(285px,38dvh)] md:w-[min(320px,38dvh)] md:h-[min(320px,38dvh)] lg:w-[min(350px,38dvh)] lg:h-[min(350px,38dvh)] xl:w-[min(480px,46dvh)] xl:h-[min(480px,46dvh)] 2xl:w-[min(600px,52dvh)] 2xl:h-[min(600px,52dvh)] wide:w-[min(720px,58dvh)]! wide:h-[min(720px,58dvh)]! wide-2k:w-[min(900px,60dvh)]! wide-2k:h-[min(900px,60dvh)]! wide-4k:w-[min(1100px,62dvh)]! wide-4k:h-[min(1100px,62dvh)]! transition-all duration-300 ease-out transform select-none ${
+              className={`w-wheel h-wheel min-w-50 min-h-50 sm:w-wheel-sm sm:h-wheel-sm md:w-wheel-md md:h-wheel-md lg:w-wheel-lg lg:h-wheel-lg xl:w-wheel-xl xl:h-wheel-xl 2xl:w-wheel-2xl 2xl:h-wheel-2xl wide:w-wheel-wide! wide:h-wheel-wide! wide-2k:w-wheel-2k! wide-2k:h-wheel-2k! wide-4k:w-wheel-4k! wide-4k:h-wheel-4k! transition-all duration-300 ease-out transform select-none ${
                 !isSpinning && sortedPerks.length > 0
                   ? 'cursor-pointer hover:scale-[1.02] active:scale-[0.98] hover:drop-shadow-glow-amber-md'
                   : ''

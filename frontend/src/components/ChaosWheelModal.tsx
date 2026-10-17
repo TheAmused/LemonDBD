@@ -286,7 +286,7 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({ isOpen, role, 
         width={800}
         height={800}
         aria-label={dict.generator.chaosWheelTitle}
-        className="w-[260px] h-[260px] xs:w-[290px] xs:h-[290px] sm:w-[330px] sm:h-[330px] md:w-[370px] md:h-[370px] lg:w-[370px] lg:h-[370px] xl:w-[min(480px,calc(100vh-480px))] xl:h-[min(480px,calc(100vh-480px))] 2xl:w-[min(540px,calc(100vh-480px))] 2xl:h-[min(540px,calc(100vh-480px))] max-w-full aspect-square transition-all duration-300"
+        className="w-chaos-wheel h-chaos-wheel sm:w-chaos-wheel-sm sm:h-chaos-wheel-sm md:w-chaos-wheel-md md:h-chaos-wheel-md xl:w-chaos-wheel-xl xl:h-chaos-wheel-xl 2xl:w-chaos-wheel-2xl 2xl:h-chaos-wheel-2xl max-w-full aspect-square transition-all duration-300"
       />
 
       <DbdButton

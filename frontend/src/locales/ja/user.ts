@@ -138,4 +138,5 @@ export default {
   loginLabel: "ログインID",
   loginOrEmailLabel: "ログインIDまたはメール",
   loadingProfileSub: "プレイヤーの所持品とパーク習熟度を取得中",
+  registrationClosedNotice: "現在、新規アカウントの作成を一時停止しています。しばらくしてからもう一度お試しください。",
 } as const;

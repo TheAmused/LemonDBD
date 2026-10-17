@@ -8,8 +8,13 @@ import { EmptyState } from '@/components/common/EmptyState';
 import { CustomDropdown } from '@/components/common/CustomDropdown';
 import { Pagination } from '@/components/common/Pagination';
 import { Surface } from '@/components/common/Surface';
+import { Table, TableBody, TableHead, TableRow, Td, Th } from '@/components/common/Table';
 import { tip } from '@/components/common/Tooltip';
+import { ADMIN_STORAGE, oneOf } from '@/components/admin/adminStorage';
+import { DENSE_PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/pagination';
 import { useDictionary, useLocale } from '@/context/DictionaryContext';
+import { usePersistentNumber } from '@/hooks/usePersistentNumber';
+import { usePersistentString } from '@/hooks/usePersistentString';
 import { listAuditLogs } from '@/services/adminApi';
 import { getErrorMessage } from '@/utils/api';
 import { cn } from '@/utils/cn';
@@ -92,8 +97,6 @@ const actionTone = (action: string): string =>
         ? 'text-accent-amber'
         : 'text-text-primary';
 
-const PAGE_SIZE = 30;
-
 export function AdminAuditSection({ refreshKey, notify }: { refreshKey: number; notify: (message: ActionMessage) => void }) {
   const dict = useDictionary();
   const locale = useLocale();
@@ -101,8 +104,8 @@ export function AdminAuditSection({ refreshKey, notify }: { refreshKey: number; 
   const [logs, setLogs] = useState<AdminAuditLogEntry[]>([]);
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
-  const [perPage, setPerPage] = useState(PAGE_SIZE);
-  const [category, setCategory] = useState<Category>('all');
+  const [perPage, setPerPage] = usePersistentNumber<number>(ADMIN_STORAGE.auditPerPage, DENSE_PAGE_SIZE, PAGE_SIZE_OPTIONS);
+  const [category, setCategory] = usePersistentString<Category>(ADMIN_STORAGE.auditCategory, 'all', oneOf(Object.keys(CATEGORIES) as Category[]));
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -169,43 +172,41 @@ export function AdminAuditSection({ refreshKey, notify }: { refreshKey: number; 
       {logs.length === 0 ? (
         <EmptyState variant="inline" icon={ScrollText} title={loading ? t.loadingAuditLog : t.noAuditLogs} />
       ) : (
-        <div className={cn('overflow-x-auto transition-opacity', loading && 'opacity-60')} aria-busy={loading}>
-          <table className="w-full text-left text-xs">
-            <thead className="border-b border-border-color bg-bg-elevated/60 type-label-2xs text-text-secondary">
-              <tr>
-                <th scope="col" className="px-4 py-2.5">{t.thWhen}</th>
-                <th scope="col" className="px-4 py-2.5">{t.thAction}</th>
-                <th scope="col" className="hidden px-4 py-2.5 sm:table-cell">{t.thTarget}</th>
-                <th scope="col" className="hidden px-4 py-2.5 md:table-cell">{t.thDetails}</th>
-                <th scope="col" className="px-4 py-2.5">{t.thAdmin}</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-border-subtle text-text-primary">
-              {logs.map((log) => {
-                const detail = detailOf(log);
-                return (
-                  <tr key={log.id} className="align-top transition-colors hover:bg-bg-elevated/40">
-                    <td className="whitespace-nowrap px-4 py-2.5 text-text-secondary">{formatDateTime(log.created_at, locale, { dateStyle: 'medium', timeStyle: 'short' })}</td>
-                    <td className="px-4 py-2.5">
-                      <span className={cn('font-semibold', actionTone(log.action))}>{actionLabel(log.action)}</span>
-                      <span className="block text-text-muted sm:hidden">{targetLabel(log)}</span>
-                    </td>
-                    <td className="hidden whitespace-nowrap px-4 py-2.5 text-text-secondary sm:table-cell">{targetLabel(log)}</td>
-                    <td className="hidden max-w-[22rem] truncate px-4 py-2.5 text-text-secondary md:table-cell" {...(detail ? tip(detail, undefined, 'status') : {})}>
-                      {detail || '–'}
-                    </td>
-                    <td className="whitespace-nowrap px-4 py-2.5 font-semibold">{log.admin_username || `#${log.admin_user_id ?? '?'}`}</td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
+        <Table wrapperClassName={cn('transition-opacity', loading && 'opacity-60')} wrapperProps={{ 'aria-busy': loading }}>
+          <TableHead>
+            <tr>
+              <Th>{t.thWhen}</Th>
+              <Th>{t.thAction}</Th>
+              <Th className="hidden sm:table-cell">{t.thTarget}</Th>
+              <Th className="hidden md:table-cell">{t.thDetails}</Th>
+              <Th>{t.thAdmin}</Th>
+            </tr>
+          </TableHead>
+          <TableBody>
+            {logs.map((log) => {
+              const detail = detailOf(log);
+              return (
+                <TableRow key={log.id} className="align-top">
+                  <Td className="whitespace-nowrap text-text-secondary">{formatDateTime(log.created_at, locale, { dateStyle: 'medium', timeStyle: 'short' })}</Td>
+                  <Td>
+                    <span className={cn('type-strong', actionTone(log.action))}>{actionLabel(log.action)}</span>
+                    <span className="block text-text-muted sm:hidden">{targetLabel(log)}</span>
+                  </Td>
+                  <Td className="hidden whitespace-nowrap text-text-secondary sm:table-cell">{targetLabel(log)}</Td>
+                  <Td className="hidden max-w-cell-lg truncate text-text-secondary md:table-cell" {...(detail ? tip(detail, undefined, 'status') : {})}>
+                    {detail || '–'}
+                  </Td>
+                  <Td className="whitespace-nowrap type-strong">{log.admin_username || `#${log.admin_user_id ?? '?'}`}</Td>
+                </TableRow>
+              );
+            })}
+          </TableBody>
+        </Table>
       )}
 
       {total > 0 && (
         <Pagination
-          className="mt-0 border-t border-border-color px-3 py-2.5 sm:mt-0 sm:px-4 sm:pt-2.5 lg:pt-2.5 wide:pt-2.5"
+          variant="embedded"
           page={page}
           totalPages={Math.ceil(total / perPage)}
           totalResults={total}

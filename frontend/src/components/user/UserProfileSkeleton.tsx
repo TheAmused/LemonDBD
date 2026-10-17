@@ -21,7 +21,7 @@ export const UserProfileSkeleton: React.FC<UserProfileSkeletonProps> = ({ classN
     >
       <div aria-hidden="true" className="lemon-shell-aside hidden lg:fixed lg:inset-y-0 lg:left-0 lg:z-40 lg:block lg:w-64 border-r border-border-color bg-bg-surface" />
 
-      <main className="flex-1 w-full min-h-[500px] flex items-center justify-center p-6 lg:p-8">
+      <main className="flex-1 w-full min-h-skeleton-page flex items-center justify-center p-6 lg:p-8">
         <DbdSpinner
           size="responsive"
           layout="inline"

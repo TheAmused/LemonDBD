@@ -121,7 +121,7 @@ export function OfficialTierListCard({ list, rankedCount, locale }: OfficialCard
 
   return (
     <Link href={`/${locale}/tier-lists/${list.slug}`} className={CARD}>
-      <div className="group/banner relative -mx-5 -mt-5 mb-2 h-32 w-[calc(100%+2.5rem)] max-w-none overflow-hidden bg-bg-elevated">
+      <div className="group/banner relative -mx-5 -mt-5 mb-2 h-32 w-bleed max-w-none overflow-hidden bg-bg-elevated">
         {effectiveCover && (
           <img
             src={effectiveCover}
@@ -217,7 +217,7 @@ export function CustomTierListCard({ list, locale, onDelete, disabled }: CustomC
 
   const inner = (
     <>
-      <div className="group/banner relative -mx-5 -mt-5 mb-2 h-32 w-[calc(100%+2.5rem)] max-w-none overflow-hidden bg-bg-elevated">
+      <div className="group/banner relative -mx-5 -mt-5 mb-2 h-32 w-bleed max-w-none overflow-hidden bg-bg-elevated">
         {effectiveBackground && (
           <img
             src={effectiveBackground}

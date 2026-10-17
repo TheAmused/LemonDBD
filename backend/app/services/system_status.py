@@ -15,7 +15,7 @@ from sqlalchemy import text
 
 from app.core import redis_cache
 from app.core.extensions import db
-from app.services import discord_webhook, scoreboard_ocr
+from app.services import discord_webhook, scoreboard_ocr, site_settings
 from app.services.maintenance_jobs import SCHEDULER_STALE_AFTER, last_scheduled_run
 from app.utils.privacy_info import mail_provider_name
 
@@ -59,7 +59,7 @@ def system_checks() -> list[dict[str, Any]]:
         _switch("discord", discord_webhook.webhook_url() is not None),
         _switch("ocr", scoreboard_ocr.engine_available()),
         _scheduler(),
-        _switch("email_verification", bool(cfg.get("REQUIRE_EMAIL_VERIFICATION", True))),
-        _switch("altcha", bool(cfg.get("ALTCHA_ENFORCED", True))),
+        _switch("email_verification", site_settings.email_verification_required()),
+        _switch("altcha", site_settings.altcha_enforced()),
         _switch("ban_list", bool(cfg.get("BAN_LIST_ENABLED", False))),
     ]

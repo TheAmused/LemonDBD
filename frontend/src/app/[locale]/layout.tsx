@@ -14,6 +14,8 @@ import { FormValidationProvider } from '@/components/common/FormValidation';
 import { ContentRevocationSync } from '@/components/common/ContentRevocationSync';
 import { WarningModal } from '@/components/moderation/WarningModal';
 import { AppBackground } from '@/components/layout/AppBackground';
+import { SiteBanner } from '@/components/layout/SiteBanner';
+import { SiteConfigProvider } from '@/context/SiteConfigContext';
 import { Playfair_Display } from 'next/font/google';
 import '@/app/globals.css';
 
@@ -81,16 +83,19 @@ export default async function RootLayout({
           disableTransitionOnChange
         >
           <AuthProvider>
-            <LocaleDictionaryProvider locale={locale}>
-              <ImagePreloadProvider>
-                <AppBackground />
-                {children}
-              </ImagePreloadProvider>
-              <TooltipProvider />
-              <FormValidationProvider />
-              <ContentRevocationSync />
-              <WarningModal />
-            </LocaleDictionaryProvider>
+            <SiteConfigProvider>
+              <LocaleDictionaryProvider locale={locale}>
+                <ImagePreloadProvider>
+                  <AppBackground />
+                  <SiteBanner />
+                  {children}
+                </ImagePreloadProvider>
+                <TooltipProvider />
+                <FormValidationProvider />
+                <ContentRevocationSync />
+                <WarningModal />
+              </LocaleDictionaryProvider>
+            </SiteConfigProvider>
           </AuthProvider>
         </ThemeProvider>
       </body>

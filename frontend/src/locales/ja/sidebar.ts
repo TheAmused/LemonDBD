@@ -63,5 +63,6 @@ export default {
   themeLightLemonShort: 'レモン',
   themeDarkShort: 'ダーク',
   themeSystemShort: 'システム',
+  coffeeNoLinks: "現在、サポート用のリンクはご利用いただけません。",
 } as const;
 

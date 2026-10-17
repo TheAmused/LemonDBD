@@ -63,5 +63,6 @@ export default {
   themeLightLemonShort: 'Lemon',
   themeDarkShort: 'Dark',
   themeSystemShort: 'System',
+  coffeeNoLinks: "Support links are not available right now.",
 } as const;
 

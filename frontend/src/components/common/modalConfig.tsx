@@ -19,9 +19,9 @@ const MODAL_SIZES = {
   '4xl': 'w-full max-w-4xl',
   '5xl': 'w-full max-w-5xl',
   '6xl': 'w-full max-w-6xl',
-  full: 'w-full max-w-[96vw]',
+  full: 'w-full max-w-viewport-lg',
   /** Shrink to content. */
-  auto: 'w-fit min-w-[min(18rem,100%)] max-w-full',
+  auto: 'w-fit min-w-modal-auto max-w-full',
 } as const;
 
 export type ModalSize = keyof typeof MODAL_SIZES;
@@ -66,7 +66,7 @@ export const MODAL_CONFIG = {
   variants: {
     dialog: {
       container: 'items-center justify-center p-2.5 sm:p-4 md:p-6',
-      panel: 'rounded-modal max-h-[92dvh] sm:max-h-[90dvh]',
+      panel: 'rounded-modal max-h-modal-mobile sm:max-h-modal',
       motion: 'scale',
       defaultSize: '3xl',
       chrome: true,
@@ -74,7 +74,7 @@ export const MODAL_CONFIG = {
     sheet: {
       container: 'items-end justify-center p-0 sm:items-center sm:p-4 md:p-6',
       panel:
-        'rounded-t-modal rounded-b-none sm:rounded-modal max-h-[92dvh] sm:max-h-[90dvh] pb-[env(safe-area-inset-bottom)] sm:pb-0',
+        'rounded-t-modal rounded-b-none sm:rounded-modal max-h-modal-mobile sm:max-h-modal pb-[env(safe-area-inset-bottom)] sm:pb-0',
       motion: 'sheet',
       defaultSize: '3xl',
       chrome: true,
@@ -100,7 +100,7 @@ export const MODAL_CONFIG = {
     },
     confirm: {
       container: 'items-center justify-center p-2.5 sm:p-4',
-      panel: 'rounded-modal max-h-[92dvh]',
+      panel: 'rounded-modal max-h-modal-mobile',
       motion: 'scale',
       defaultSize: 'sm',
       chrome: true,
@@ -115,7 +115,7 @@ export const MODAL_CONFIG = {
     },
     lightbox: {
       container: 'items-center justify-center p-2.5 sm:p-6',
-      panel: 'rounded-card max-h-[94dvh] bg-transparent shadow-none border-0',
+      panel: 'rounded-card max-h-modal-tall bg-transparent shadow-none border-0',
       motion: 'scale',
       defaultSize: '4xl',
       chrome: false,

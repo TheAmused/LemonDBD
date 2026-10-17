@@ -80,7 +80,7 @@ export function ItemSources({ onAdd, existingIds, locale }: ItemSourcesProps) {
           onChange={setTab}
           panels={false}
           variant="boxed"
-          tabClassName="min-h-[38px] gap-2 rounded-chip px-3.5"
+          tabClassName="min-h-hit-sm gap-2 rounded-chip px-3.5"
           tabs={options}
         />
       </div>
@@ -335,7 +335,7 @@ function CatalogSource({ onAdd, existingIds, locale }: {
               options={CATALOG_KINDS.map((k) => ({ value: k, label: t.kinds[k] }))}
               ariaLabel={c.catalogSource}
               buttonClassName="min-h-11 justify-between"
-              minWidthClass="min-w-[200px]"
+              minWidthClass="min-w-50"
             />
           </div>
           <div className="relative min-w-0 flex-1">
@@ -357,17 +357,17 @@ function CatalogSource({ onAdd, existingIds, locale }: {
             onClick={() =>
               setSelected((prev) => new Set([...prev, ...visible.filter((i) => !existingIds.has(i.key)).map((i) => i.key)]))
             }
-            className="min-h-[38px]"
+            className="min-h-hit-sm"
           >
             {c.selectAll}
           </Button>
-          <Button variant="secondary" size="sm" disabled={selected.size === 0} onClick={() => setSelected(new Set())} className="min-h-[38px]">
+          <Button variant="secondary" size="sm" disabled={selected.size === 0} onClick={() => setSelected(new Set())} className="min-h-hit-sm">
             {c.clearSelection}
           </Button>
         </div>
       </div>
 
-      <div className="max-h-[480px] sm:max-h-[540px] overflow-y-auto overscroll-contain rounded-chip border border-border-color bg-bg-primary/40 p-2">
+      <div className="max-h-120 sm:max-h-135 overflow-y-auto overscroll-contain rounded-chip border border-border-color bg-bg-primary/40 p-2">
         {loading ? (
           <p className="flex items-center justify-center gap-2 py-10 type-card-title text-text-muted">
             <Spinner size="sm" tone="current" />

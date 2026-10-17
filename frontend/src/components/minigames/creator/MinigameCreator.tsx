@@ -243,7 +243,7 @@ export const MinigameCreator: React.FC<MinigameCreatorProps> = ({ catalog, local
   };
 
   if (authLoading) {
-    return <div className="min-h-[400px]" />;
+    return <div className="min-h-100" />;
   }
 
   if (!isAuthenticated) {

@@ -5,13 +5,15 @@ import React from 'react';
 import { Search } from 'lucide-react';
 import { cn } from '@/utils/cn';
 
-export type FieldSize = 'sm' | 'md' | 'lg';
+export type FieldSize = 'xs' | 'sm' | 'md' | 'lg';
 
 const FIELD_BASE =
   'w-full border border-border-color bg-bg-elevated text-text-primary placeholder:text-text-muted transition-colors focus:outline-none focus:border-accent-red focus:ring-1 focus:ring-accent-red/50 aria-invalid:border-accent-red aria-invalid:focus:ring-accent-red disabled:cursor-not-allowed disabled:opacity-50';
 const FIELD_ERROR = 'border-accent-red focus:ring-accent-red';
 // 16px on small screens stops iOS Safari from zooming into focused inputs.
 const FIELD_SIZES: Record<FieldSize, string> = {
+  // Controls that sit inside a toolbar or a pager, next to icon buttons. Compact on purpose (no 16px iOS rule).
+  xs: 'px-1.5 py-1 text-mini sm:px-2 sm:text-xs lg:px-3 lg:py-1.5 lg:text-sm wide:text-base',
   sm: 'px-2.5 py-1.5 text-base sm:text-xs',
   md: 'px-3 py-2.5 text-base sm:text-sm',
   lg: 'px-4 py-3 text-base',
@@ -67,7 +69,7 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(function 
     <select
       ref={ref}
       aria-invalid={invalid || undefined}
-      className={cn(FIELD_BASE, FIELD_SIZES[fieldSize], pill ? FIELD_RADIUS_PILL : FIELD_RADIUS, 'cursor-pointer', invalid && FIELD_ERROR, className)}
+      className={cn(FIELD_BASE, FIELD_SIZES[fieldSize], pill ? FIELD_RADIUS_PILL : FIELD_RADIUS, 'cursor-pointer [&>option]:bg-bg-surface [&>option]:text-text-primary', invalid && FIELD_ERROR, className)}
       {...rest}
     >
       {children}
@@ -91,8 +93,16 @@ export const SearchInput = React.forwardRef<HTMLInputElement, SearchInputProps>(
   );
 });
 
+/** The small caps label above a field. Put it on a <label> yourself, or use FormField. */
+const FIELD_LABEL = 'block type-label-xs text-text-secondary';
+export const FieldLabel: React.FC<React.LabelHTMLAttributes<HTMLElement> & { as?: 'label' | 'span' }> = ({ as: Tag = 'label', className, children, ...rest }) => (
+  <Tag className={cn(FIELD_LABEL, 'mb-1', className)} {...rest}>
+    {children}
+  </Tag>
+);
+
 /** Label + control + hint/error row. */
-const FieldLabel: React.FC<{
+export const FormField: React.FC<{
   label: React.ReactNode;
   htmlFor?: string;
   hint?: React.ReactNode;
@@ -100,17 +110,15 @@ const FieldLabel: React.FC<{
   className?: string;
   children: React.ReactNode;
 }> = ({ label, htmlFor, hint, error, className, children }) => (
-  <div className={cn('space-y-1.5', className)}>
-    <label htmlFor={htmlFor} className="block type-strong text-text-secondary">
-      {label}
-    </label>
+  <div className={className}>
+    <FieldLabel htmlFor={htmlFor}>{label}</FieldLabel>
     {children}
     {error ? (
-      <p role="alert" className="text-xs font-medium text-accent-red">
+      <p role="alert" className="mt-1 type-caption font-medium text-accent-red">
         {error}
       </p>
     ) : (
-      hint && <p className="text-xs text-text-muted">{hint}</p>
+      hint && <p className="mt-1 type-caption text-text-muted">{hint}</p>
     )}
   </div>
 );

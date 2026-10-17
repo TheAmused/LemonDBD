@@ -31,7 +31,7 @@ const Model3DContent: React.FC<{ src: string; closeLabel: string }> = ({ src, cl
       <img
         src={src}
         alt=""
-        className="max-h-[72dvh] w-auto max-w-full object-contain rounded-card select-none"
+        className="max-h-dvh-72 w-auto max-w-full object-contain rounded-card select-none"
       />
     </div>
   );

@@ -111,7 +111,7 @@ describe('CustomDropdown backward compatibility + new children mode', () => {
 });
 
 describe('Pagination count text on very small screens', () => {
-  it('the "X-Y / Z" count is sr-only below 400px but still present for screen readers', () => {
+  it('the "X-Y / Z" count is sr-only below the phone breakpoint but still present for screen readers', () => {
     const html = renderWithDictionary(
       React.createElement(Pagination, {
         page: 1,
@@ -122,7 +122,7 @@ describe('Pagination count text on very small screens', () => {
         onLimitChange: () => {},
       })
     );
-    assert.match(html, /class="sr-only min-\[400px\]:not-sr-only/, 'the count text must be sr-only by default and restored at 400px+');
+    assert.match(html, /class="sr-only phone:not-sr-only/, 'the count text must be sr-only by default and restored from the phone breakpoint up');
     assert.match(html, />1</);
     assert.match(html, />176</);
   });

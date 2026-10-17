@@ -218,7 +218,7 @@ export function TierListEditor(props: TierListEditorProps) {
   );
   const showKindBadge = Boolean(kindLabel && !isDuplicateKind);
   const hasExtendedToolbar = mode === 'custom' || canEditTiers || Boolean(onSaveOfficial);
-  const secondaryLabelClass = hasExtendedToolbar ? 'sr-only' : 'hidden xl:inline [@media(max-height:559px)]:hidden!';
+  const secondaryLabelClass = hasExtendedToolbar ? 'sr-only' : 'hidden xl:inline short:hidden!';
 
   return (
     <div className="relative z-10 flex flex-col gap-3 sm:gap-3.5 w-full">
@@ -253,7 +253,7 @@ export function TierListEditor(props: TierListEditorProps) {
           align="end"
           role="menu"
           ariaLabel={t.toolbarAria}
-          className="min-w-[14rem] rounded-card border border-border-color bg-bg-surface p-1.5 shadow-xl"
+          className="min-w-56 rounded-card border border-border-color bg-bg-surface p-1.5 shadow-xl"
         >
           <TierListScaleControl scale={scale} onScaleChange={setScale} variant="menu" />
           {canEditTiers && (
@@ -328,7 +328,7 @@ export function TierListEditor(props: TierListEditorProps) {
 
           <div className="min-w-0 flex flex-col items-center justify-center text-center px-2">
             {showKindBadge && (
-              <span className="type-label-xs text-text-muted mb-0.5 [@media(max-height:559px)]:hidden">
+              <span className="type-label-xs text-text-muted mb-0.5 short:hidden">
                 {kindLabel}
               </span>
             )}
@@ -349,7 +349,7 @@ export function TierListEditor(props: TierListEditorProps) {
                 className={TOOLBAR_BTN}
               >
                 <Plus className="h-3.5 w-3.5" aria-hidden="true" />
-                <span className="hidden lg:inline [@media(max-height:559px)]:hidden!">{t.addTier}</span>
+                <span className="hidden lg:inline short:hidden!">{t.addTier}</span>
               </Button>
             )}
             {onSaveOfficial && (
@@ -363,7 +363,7 @@ export function TierListEditor(props: TierListEditorProps) {
                 className={TOOLBAR_BTN}
               >
                 <Save className="h-3.5 w-3.5" aria-hidden="true" />
-                <span className="hidden lg:inline [@media(max-height:559px)]:hidden!">
+                <span className="hidden lg:inline short:hidden!">
                   {savingOfficial ? t.creator.publishing : t.save}
                 </span>
               </Button>
@@ -408,7 +408,7 @@ export function TierListEditor(props: TierListEditorProps) {
                 className={buttonClassName('secondary', 'sm', TOOLBAR_BTN)}
               >
                 <Pencil className="h-3.5 w-3.5" aria-hidden="true" />
-                <span className="hidden xl:inline [@media(max-height:559px)]:hidden!">{t.editDetails}</span>
+                <span className="hidden xl:inline short:hidden!">{t.editDetails}</span>
               </Link>
             )}
             {mode === 'custom' && onDelete && (

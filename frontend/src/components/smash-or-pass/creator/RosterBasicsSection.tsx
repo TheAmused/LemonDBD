@@ -57,7 +57,7 @@ export function RosterBasicsSection({
             onChange={(e) => patch({ name: e.target.value })}
             placeholder={c.namePlaceholder || 'e.g. Chapter 34 Cast'}
             
-            className="2xl:min-h-[50px] 2xl:text-base"
+            className="2xl:min-h-hit-xl 2xl:text-base"
           />
         </label>
         <label>
@@ -68,7 +68,7 @@ export function RosterBasicsSection({
             maxLength={64}
             onChange={(e) => patch({ category: e.target.value })}
             placeholder={c.categoryPlaceholder || 'e.g. Custom'}
-            className="2xl:min-h-[50px] 2xl:text-base"
+            className="2xl:min-h-hit-xl 2xl:text-base"
           />
         </label>
         <label className="md:col-span-2">
@@ -93,7 +93,7 @@ export function RosterBasicsSection({
               placeholder={c.coverImagePlaceholder || 'https://...'}
               inputMode="url"
               
-              className="2xl:min-h-[50px] 2xl:text-base"
+              className="2xl:min-h-hit-xl 2xl:text-base"
             />
             <Button
               variant="secondary" size="md"

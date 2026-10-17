@@ -126,17 +126,39 @@ export interface AdminAuditLogPage {
   total: number;
 }
 
-export type SiteSettingGroup = 'privacy' | 'access' | 'tokens' | 'retention' | 'moderation' | 'bug_reports';
+export type SiteSettingGroup =
+  | 'notices'
+  | 'access'
+  | 'links'
+  | 'limits'
+  | 'tokens'
+  | 'integrations'
+  | 'moderation'
+  | 'bug_reports'
+  | 'retention'
+  | 'privacy';
+
+export type SiteSettingKind = 'int' | 'email' | 'bool' | 'url' | 'text' | 'choice' | 'datetime' | 'secret';
+
+export type SiteSettingValue = string | number | boolean;
 
 export interface AdminSiteSetting {
   key: string;
-  kind: 'int' | 'email' | 'bool';
+  kind: SiteSettingKind;
   group: SiteSettingGroup;
-  value: string | number | boolean;
-  default: string | number | boolean;
+  /** Null for a secret: the server never sends one back. */
+  value: SiteSettingValue | null;
+  default: SiteSettingValue | null;
   overridden: boolean;
   min: number | null;
   max: number | null;
+  max_length: number;
+  choices: string[];
+  allow_empty: boolean;
+  /** For a switch: the value that lowers a protection and needs a confirmation with a reason. */
+  risky_when: boolean | null;
+  /** Secrets only: the deployment itself provides a value (used while the admin has set none). */
+  env_set?: boolean;
 }
 
 export type ContentReportStatus = 'pending' | 'resolved_banned' | 'dismissed' | 'expired';

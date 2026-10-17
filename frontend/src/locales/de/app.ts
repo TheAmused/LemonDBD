@@ -17,4 +17,5 @@ export default {
   loading: "Laden...",
   notice: "Hinweis",
   loadingPerksSub: 'Überlebenden- und Killer-Perks werden synchronisiert',
+  siteBannerDismiss: "Hinweis schließen",
 } as const;

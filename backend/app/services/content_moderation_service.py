@@ -17,7 +17,7 @@ from app.services.content_report_queries import REPORT_STATUSES, get_admin_repor
 from app.services.mail_service import send_content_moderation_notice_email
 from app.services.moderation_actions import ModerationError, create_sanction, default_report_facts
 from app.services.sanction_outbox import dispatch_notifications, queued_notification_ids
-from app.services.site_settings import contact_email
+from app.services.site_settings import contact_email, content_evidence_days
 from app.services.content_crypto import (
     canonicalize_payload,
     compute_content_hash,
@@ -32,8 +32,12 @@ HEX_CHARACTERS = frozenset("0123456789abcdefABCDEF")
 CONTENT_TYPES = frozenset({"tier_list", "smash_roster", "minigame"})
 REPORT_REASONS = frozenset({"hate_speech", "harassment", "explicit", "illegal", "spam", "other"})
 MAX_EVIDENCE_CHARS = 500_000
-EVIDENCE_TTL_DAYS = 14
+EVIDENCE_TTL_DAYS = 14  # the Privacy Policy's promise: the admin setting can shorten it, never lengthen it
 UNATTRIBUTED_LOGIN = ""
+
+
+def evidence_days() -> int:
+    return min(EVIDENCE_TTL_DAYS, content_evidence_days())
 
 
 def _is_hex64(value: Any) -> bool:
@@ -252,7 +256,7 @@ def report_content(
                 primary_reason=reason,
                 status="pending",
                 evidence_payload=canonical_str,
-                expires_at=datetime.now(timezone.utc) + timedelta(days=EVIDENCE_TTL_DAYS),
+                expires_at=datetime.now(timezone.utc) + timedelta(days=evidence_days()),
             )
             db.session.add(report)
             db.session.flush()

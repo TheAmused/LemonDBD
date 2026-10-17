@@ -137,6 +137,8 @@ def credential_belongs_to(user: User, credential: str | None) -> bool:
 
 
 def sign_in(credential: str | None) -> tuple[User, bool]:
+    if not site_settings.google_sign_in_enabled():
+        raise GoogleAuthError("Google sign-in is switched off at the moment.", 503)
     identity = verify_id_token(credential)
 
     for _ in range(_CREATE_ATTEMPTS):

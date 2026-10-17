@@ -30,7 +30,7 @@ class SiteSetting(Base, ColumnDictMixin):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     key: Mapped[str] = mapped_column(String(64), unique=True, index=True, nullable=False)
-    value: Mapped[str] = mapped_column(String(255), nullable=False)
+    value: Mapped[str] = mapped_column(String(1024), nullable=False)
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=utcnow, onupdate=utcnow, nullable=False
     )

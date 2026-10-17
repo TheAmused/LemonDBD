@@ -71,16 +71,16 @@ export function CreatorPreview({ title, description, tiers, items, backgroundIma
         {tiers.map((tier) => (
           <Surface
             key={tier.id}
-            padding="none" className="grid grid-cols-[4.75rem_minmax(0,1fr)] sm:max-wide-2k:grid-cols-[6.5rem_minmax(0,1fr)] wide-2k:grid-cols-[9rem_minmax(0,1fr)] overflow-hidden shadow-xs"
+            padding="none" className="grid grid-cols-tier-label-sm sm:max-wide-2k:grid-cols-tier-label-md wide-2k:grid-cols-tier-label-lg overflow-hidden shadow-xs"
           >
             <TierBadge
               label={tier.label}
               color={tier.color}
               backgroundImage={tier.backgroundImage}
-              className="flex min-h-18 sm:max-wide-2k:min-h-21 wide-2k:min-h-[112px] items-center justify-center p-2 text-center select-none"
+              className="flex min-h-18 sm:max-wide-2k:min-h-21 wide-2k:min-h-28 items-center justify-center p-2 text-center select-none"
               labelClassName="text-base sm:text-lg font-black leading-tight"
             />
-            <div className="bg-bg-primary/40 p-2 sm:p-2.5 flex flex-wrap items-center gap-2 min-h-18 sm:max-wide-2k:min-h-21 wide-2k:min-h-[112px]" />
+            <div className="bg-bg-primary/40 p-2 sm:p-2.5 flex flex-wrap items-center gap-2 min-h-18 sm:max-wide-2k:min-h-21 wide-2k:min-h-28" />
           </Surface>
         ))}
       </div>

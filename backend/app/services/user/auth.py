@@ -1,12 +1,10 @@
 # backend/app/services/user/auth.py
 import logging
 import secrets
-from datetime import datetime, timedelta, timezone
-from flask import current_app
+from datetime import datetime, timezone
 from sqlalchemy import func, or_, select
 
 from app.core.account_state import AccountBlockedError, is_blocked
-from app.core.config import Config
 from app.core.db_retry import retry_on_transient_db_error
 from app.core.extensions import db
 from app.core.transaction import transaction
@@ -20,13 +18,18 @@ from app.core.security import (
 from app.models import User
 from app.services import ban_list
 from app.services.mail_service import send_password_reset_email, send_verification_email
-from app.services.site_settings import reset_lifetime, verification_lifetime
+from app.services.site_settings import (
+    email_verification_required,
+    password_min_length,
+    resend_cooldown,
+    reset_lifetime,
+    verification_lifetime,
+    verification_max_attempts,
+)
 
 logger = logging.getLogger(__name__)
 
 # Lifetimes are admin-editable: see app.services.site_settings (read at use time).
-RESEND_COOLDOWN = timedelta(seconds=60)
-MAX_VERIFICATION_ATTEMPTS = 5
 
 
 def _generate_verification_code() -> str:
@@ -65,8 +68,9 @@ def create_user_account(
         return None, "Username must be at least 3 characters long."
     if not clean_email or "@" not in clean_email:
         return None, "A valid email address is required."
-    if not password or len(password) < 6:
-        return None, "Password must be at least 6 characters long."
+    min_length = password_min_length()
+    if not password or len(password) < min_length:
+        return None, f"Password must be at least {min_length} characters long."
 
     # Ban-evasion list (off unless BAN_LIST_ENABLED): same wording for every refused address, and
     # checked before the duplicate checks so it never reveals whether an account exists.
@@ -89,12 +93,7 @@ def create_user_account(
     role_clean = role.lower() if role in ["admin", "user"] else "user"
     pw_hash = hash_password(password)
 
-    require_verification = True
-    try:
-        if current_app:
-            require_verification = current_app.config.get("REQUIRE_EMAIL_VERIFICATION", True)
-    except RuntimeError:
-        require_verification = Config.REQUIRE_EMAIL_VERIFICATION
+    require_verification = email_verification_required()
 
     if require_verification:
         is_verified = False
@@ -153,7 +152,7 @@ def verify_email_code(email: str, code: str) -> tuple[User | None, str | None]:
     with transaction():
         if user.verification_code != clean_code:
             user.verification_attempts += 1
-            if user.verification_attempts >= MAX_VERIFICATION_ATTEMPTS:
+            if user.verification_attempts >= verification_max_attempts():
                 user.verification_code = None
                 user.verification_code_expires_at = None
                 user.verification_attempts = 0
@@ -187,8 +186,9 @@ def resend_verification_email(email: str) -> tuple[bool, str | None]:
             expires_at = expires_at.replace(tzinfo=timezone.utc)
         last_sent_at = expires_at - verification_lifetime()
         elapsed = datetime.now(timezone.utc) - last_sent_at
-        if elapsed < RESEND_COOLDOWN:
-            wait_seconds = int((RESEND_COOLDOWN - elapsed).total_seconds()) + 1
+        cooldown = resend_cooldown()
+        if elapsed < cooldown:
+            wait_seconds = int((cooldown - elapsed).total_seconds()) + 1
             return False, f"Please wait {wait_seconds}s before requesting another code."
 
     with transaction():
@@ -218,8 +218,9 @@ def request_password_reset(email: str) -> tuple[bool, str | None]:
             expires_at = expires_at.replace(tzinfo=timezone.utc)
         last_sent_at = expires_at - reset_lifetime()
         elapsed = datetime.now(timezone.utc) - last_sent_at
-        if elapsed < RESEND_COOLDOWN:
-            wait_seconds = int((RESEND_COOLDOWN - elapsed).total_seconds()) + 1
+        cooldown = resend_cooldown()
+        if elapsed < cooldown:
+            wait_seconds = int((cooldown - elapsed).total_seconds()) + 1
             return False, f"Please wait {wait_seconds}s before requesting another reset email."
 
     with transaction():
@@ -235,8 +236,9 @@ def reset_password_with_token(token: str, new_password: str) -> tuple[User | Non
     clean_token = (token or "").strip()
     if not clean_token:
         return None, "Reset token is required."
-    if not new_password or len(new_password) < 6:
-        return None, "Password must be at least 6 characters long."
+    min_length = password_min_length()
+    if not new_password or len(new_password) < min_length:
+        return None, f"Password must be at least {min_length} characters long."
 
     user = db.session.scalars(
         select(User).where(User.reset_token == clean_token)
@@ -262,12 +264,7 @@ def reset_password_with_token(token: str, new_password: str) -> tuple[User | Non
 
 def auto_verify_if_disabled(user: User) -> None:
     """When REQUIRE_EMAIL_VERIFICATION is off, mark an unverified user as verified once sign-in completes."""
-    require_verification = True
-    try:
-        if current_app:
-            require_verification = current_app.config.get("REQUIRE_EMAIL_VERIFICATION", True)
-    except RuntimeError:
-        require_verification = Config.REQUIRE_EMAIL_VERIFICATION
+    require_verification = email_verification_required()
 
     if not require_verification and not user.is_verified:
         with transaction():

@@ -150,7 +150,7 @@ export function ReportContentModalBody({
         <div className="flex flex-col gap-1 max-w-sm">
           <p className="type-body-lg text-text-secondary">{t.reportSuccess}</p>
         </div>
-        <Button variant="primary" onClick={onClose} className="mt-2 min-w-[6rem]">
+        <Button variant="primary" onClick={onClose} className="mt-2 min-w-24">
           {t.dismiss}
         </Button>
       </div>
@@ -166,7 +166,7 @@ export function ReportContentModalBody({
         <div className="flex flex-col gap-1 max-w-sm">
           <p className="type-body-lg text-text-secondary">{t.reportAlreadyBanned}</p>
         </div>
-        <Button variant="primary" onClick={onClose} className="mt-2 min-w-[6rem]">
+        <Button variant="primary" onClick={onClose} className="mt-2 min-w-24">
           {t.dismiss}
         </Button>
       </div>

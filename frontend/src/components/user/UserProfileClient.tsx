@@ -169,7 +169,7 @@ export function UserProfileClient() {
       activeCategory="user"
       mainClassName="overflow-y-auto relative"
     >
-      <div className="relative z-10 max-w-5xl xl:max-w-6xl 2xl:max-w-[1700px] 3xl:max-w-[2000px] w-full mx-auto space-y-6 sm:space-y-8 2xl:space-y-10 py-4 sm:py-6 lg:py-8 2xl:py-10">
+      <div className="relative z-10 max-w-5xl xl:max-w-6xl 2xl:max-w-profile 3xl:max-w-profile-xl w-full mx-auto space-y-6 sm:space-y-8 2xl:space-y-10 py-4 sm:py-6 lg:py-8 2xl:py-10">
         <input
           type="file"
           ref={fileInputRef}

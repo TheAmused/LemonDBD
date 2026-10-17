@@ -7,6 +7,7 @@ from curl_cffi import requests
 from flask import current_app
 
 from app.models import ChangelogPost
+from app.services.site_settings import get_secret
 from app.utils.discord_markdown import html_to_discord
 
 logger = logging.getLogger(__name__)
@@ -18,7 +19,7 @@ _EMBED_COLOR = 14423100  # the site's accent red
 
 def announce_post(post: ChangelogPost) -> AnnounceResult:
     """Sends `post` as an embed. Never raises: a Discord outage comes back as "failed" and the caller shows it to the admin."""
-    webhook = (current_app.config.get("DISCORD_CHANGELOG_WEBHOOK_URL") or "").strip()
+    webhook = get_secret("discord_changelog_webhook_url")
     if not webhook:
         return "not_configured"
 

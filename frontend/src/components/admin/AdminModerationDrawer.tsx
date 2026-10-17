@@ -12,7 +12,9 @@ import { Button } from '@/components/common/Button';
 import { ConfirmModal } from '@/components/common/ConfirmModal';
 import { Modal } from '@/components/common/Modal';
 import { Spinner } from '@/components/common/Spinner';
+import { Surface } from '@/components/common/Surface';
 import { Switch } from '@/components/common/Switch';
+import { ADMIN_STORAGE } from '@/components/admin/adminStorage';
 import { ModerationProfileCard } from '@/components/admin/ModerationProfileCard';
 import { ModerationReasonModal } from '@/components/admin/ModerationReasonModal';
 import { SanctionForm } from '@/components/admin/SanctionForm';
@@ -53,7 +55,7 @@ export function AdminModerationDrawer({ user, onClose, onChanged, onActionMessag
   const [revoking, setRevoking] = useState<AdminSanction | null>(null);
   const [restoring, setRestoring] = useState(false);
   // Each section folds away like the profile page's drawers, and is remembered.
-  const [isHistoryOpen, toggleHistory] = usePersistentDrawer('lemondbd_moderation_history_open', false);
+  const [isHistoryOpen, toggleHistory] = usePersistentDrawer(ADMIN_STORAGE.moderationHistoryOpen, false);
 
   useEffect(() => {
     setDraft(EMPTY_SANCTION_DRAFT);
@@ -118,7 +120,7 @@ export function AdminModerationDrawer({ user, onClose, onChanged, onActionMessag
           <>
             <hr className="border-border-color" />
 
-            <div className="space-y-3 rounded-card border border-border-color bg-bg-primary p-3">
+            <Surface tone="well" padding="sm" className="space-y-3">
               {suggestion && (
                 <>
                   <div className="flex flex-wrap items-center justify-between gap-3">
@@ -149,7 +151,7 @@ export function AdminModerationDrawer({ user, onClose, onChanged, onActionMessag
                   ariaLabel={t.formSendEmail}
                 />
               </div>
-            </div>
+            </Surface>
 
             <SanctionForm
               draft={draft}

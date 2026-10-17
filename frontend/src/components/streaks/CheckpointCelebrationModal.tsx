@@ -71,12 +71,12 @@ export const CheckpointCelebrationModal: React.FC<CheckpointCelebrationModalProp
       ariaLabel={dict.streaks.checkpointSecured}
     >
       <div
-        className="ck-card-in relative w-full overflow-hidden rounded-card border border-accent-amber/60 bg-gradient-to-b from-accent-amber/20 via-bg-surface to-bg-primary flex min-h-[26rem] flex-col items-center justify-center px-8 py-14 text-center cursor-default"
+        className="ck-card-in relative w-full overflow-hidden rounded-card border border-accent-amber/60 bg-gradient-to-b from-accent-amber/20 via-bg-surface to-bg-primary flex min-h-104 flex-col items-center justify-center px-8 py-14 text-center cursor-default"
       >
         <div className="relative mx-auto h-24 w-24" aria-hidden="true">
           <div
             aria-hidden="true"
-            className="ck-rays pointer-events-none absolute left-1/2 top-1/2 h-[380px] w-[380px] -translate-x-1/2 -translate-y-1/2 opacity-40"
+            className="ck-rays pointer-events-none absolute left-1/2 top-1/2 h-95 w-95 -translate-x-1/2 -translate-y-1/2 opacity-40"
           />
 
           <span className="ck-ring absolute inset-0 rounded-full border-2 border-accent-amber" />

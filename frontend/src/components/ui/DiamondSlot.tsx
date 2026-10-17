@@ -31,8 +31,8 @@ const SIZE_CLASSES: Record<string, string> = {
   small: 'w-11 h-11 xl:w-16 xl:h-16',
   compact: 'w-10 h-10 xl:w-12 xl:h-12',
   md: 'w-14 h-14 sm:w-16 sm:h-16',
-  lg: 'w-11 h-11 sm:w-14 sm:h-14 xl:w-[4.5rem] xl:h-[4.5rem]',
-  large: 'w-11 h-11 sm:w-14 sm:h-14 xl:w-[4.5rem] xl:h-[4.5rem]',
+  lg: 'w-11 h-11 sm:w-14 sm:h-14 xl:w-18 xl:h-18',
+  large: 'w-11 h-11 sm:w-14 sm:h-14 xl:w-18 xl:h-18',
 };
 
 export const DiamondSlot = React.forwardRef<HTMLElement, DiamondSlotProps>(function DiamondSlot(

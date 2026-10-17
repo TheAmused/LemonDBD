@@ -4,11 +4,12 @@
 // One bug report in full: who sent it and when, what they wrote and attached, its status, and the
 // reply the reporter reads on their profile.
 import React, { useState } from 'react';
-import { ExternalLink, Send, Trash2, UserSearch } from 'lucide-react';
+import { Send, Trash2, UserSearch } from 'lucide-react';
 import { Badge } from '@/components/common/Badge';
 import { Button } from '@/components/common/Button';
 import { ConfirmModal } from '@/components/common/ConfirmModal';
-import { Textarea } from '@/components/common/Field';
+import { FieldLabel, Textarea } from '@/components/common/Field';
+import { ImageLinkTile } from '@/components/common/ImageLinkTile';
 import { CustomDropdown } from '@/components/common/CustomDropdown';
 import { tip } from '@/components/common/Tooltip';
 import { BUG_STATUSES, bugStatusLabel } from '@/components/admin/reportLabels';
@@ -59,7 +60,7 @@ export function BugReportDetail({ report, onStatusChange, onReply, onDelete, onS
             aria-label={t.showInUsers}
             {...tip(t.showInUsers, undefined, 'action')}
           >
-            <UserSearch className="h-3.5 w-3.5" aria-hidden="true" />
+            <UserSearch className="icon-sm" aria-hidden="true" />
           </Button>
         ) : (
           <Badge tone="neutral" size="xs">{t.guestReporter}</Badge>
@@ -98,7 +99,7 @@ export function BugReportDetail({ report, onStatusChange, onReply, onDelete, onS
             aria-label={t.deleteBugReportTitle}
             {...tip(t.deleteBugReportTitle, undefined, 'action')}
           >
-            <Trash2 className="h-4 w-4" aria-hidden="true" />
+            <Trash2 className="icon-md" aria-hidden="true" />
           </Button>
         </div>
       </header>
@@ -122,19 +123,11 @@ export function BugReportDetail({ report, onStatusChange, onReply, onDelete, onS
           <h4 className="type-label-xs text-text-secondary">{formatMessage(t.attachmentsCount, { count: report.images.length })}</h4>
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
             {report.images.map((src, i) => {
+              const url = staticUrl(src);
+              if (!url) return null;
               const label = formatMessage(t.attachmentLabel, { index: i + 1 });
               return (
-                <a
-                  key={src}
-                  href={staticUrl(src)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={label}
-                  className="group relative block h-28 overflow-hidden rounded-control border border-border-color bg-bg-elevated focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red"
-                >
-                  <img src={staticUrl(src)} alt={label} className="h-full w-full object-cover transition-opacity group-hover:opacity-80" />
-                  <ExternalLink className="absolute right-2 top-2 h-4 w-4 text-text-inverted opacity-0 drop-shadow transition-opacity group-hover:opacity-100" aria-hidden="true" />
-                </a>
+                <ImageLinkTile key={src} href={url} src={url} label={label} />
               );
             })}
           </div>
@@ -142,9 +135,7 @@ export function BugReportDetail({ report, onStatusChange, onReply, onDelete, onS
       )}
 
       <section className="space-y-2 p-4 sm:p-5">
-        <label htmlFor={`bug-reply-${report.id}`} className="block type-label-xs text-text-secondary">
-          {t.devFeedbackLabel}
-        </label>
+        <FieldLabel htmlFor={`bug-reply-${report.id}`}>{t.devFeedbackLabel}</FieldLabel>
         <Textarea
           id={`bug-reply-${report.id}`}
           rows={4}
@@ -159,7 +150,7 @@ export function BugReportDetail({ report, onStatusChange, onReply, onDelete, onS
             size="sm"
             loading={busy}
             disabled={unchanged}
-            leftIcon={<Send className="h-3.5 w-3.5" aria-hidden="true" />}
+            leftIcon={<Send className="icon-sm" aria-hidden="true" />}
             onClick={() => run(() => onReply(notes.trim()))}
           >
             {t.devFeedbackSubmit}

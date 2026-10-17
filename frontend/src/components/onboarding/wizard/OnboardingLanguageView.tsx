@@ -36,7 +36,7 @@ export function OnboardingLanguageView({
               key={lang.code}
               onClick={() => onSelect(lang.code)}
             >
-              <FlagIcon code={lang.code} className="h-4 w-[22px] rounded-chip shrink-0" />
+              <FlagIcon code={lang.code} className="h-4 w-5.5 rounded-chip shrink-0" />
               <span>{lang.label}</span>
             </ToggleChip>
           ))}

@@ -3,8 +3,10 @@
 //
 // The content-report queue: the filtered, paged list, the selected report's evidence, and its decision.
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { QUEUE_PAGE_SIZE } from '@/components/admin/AdminQueue';
+import { ADMIN_STORAGE, CONTENT_REPORT_FILTERS, oneOf } from '@/components/admin/adminStorage';
+import { DEFAULT_PAGE_SIZE } from '@/constants/pagination';
 import { useDictionary } from '@/context/DictionaryContext';
+import { usePersistentString } from '@/hooks/usePersistentString';
 import { fetchContentReport, listContentReports, resolveContentReport } from '@/services/adminApi';
 import { getErrorMessage } from '@/utils/api';
 import type { AuthorDecision } from '@/types/moderation';
@@ -30,7 +32,7 @@ export function useAdminContentReports({ enabled, refreshKey, notify, onChanged 
   const [stats, setStats] = useState<QueueStats<ContentReportStatus> | null>(null);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
-  const [status, setStatusState] = useState<ContentReportStatus | 'all'>('pending');
+  const [status, setStatusState] = usePersistentString<ContentReportStatus | 'all'>(ADMIN_STORAGE.contentStatus, 'pending', oneOf(CONTENT_REPORT_FILTERS));
   const [page, setPage] = useState(1);
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [detail, setDetail] = useState<AdminContentReportDetail | null>(null);
@@ -44,7 +46,7 @@ export function useAdminContentReports({ enabled, refreshKey, notify, onChanged 
     if (!enabled) return;
     let cancelled = false;
     setLoading(true);
-    listContentReports({ page, per_page: QUEUE_PAGE_SIZE, status })
+    listContentReports({ page, per_page: DEFAULT_PAGE_SIZE, status })
       .then((data) => {
         if (cancelled) return;
         const list = data.items ?? [];

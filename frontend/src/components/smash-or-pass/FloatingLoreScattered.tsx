@@ -78,7 +78,7 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({ ch
         {/* Left Side: Watermark Left */}
         <div
           key={`watermark-left-${character.slug}`}
-          className="pointer-events-auto anim-watermark-dissolve absolute top-[44%] -translate-y-1/2 right-[50%] mr-32 sm:mr-40 md:mr-52 lg:mr-64 w-[max(5rem,calc(50%-8rem-1rem))] sm:w-[max(5rem,calc(50%-10rem-1rem))] md:w-[max(5rem,calc(50%-13rem-1rem))] lg:w-[max(14rem,calc(50%-16rem-1rem))] text-center opacity-[0.07] dark:opacity-[0.04] hover:opacity-25 transition-all duration-500 cursor-default group"
+          className="pointer-events-auto anim-watermark-dissolve absolute top-lore -translate-y-1/2 right-1/2 mr-32 sm:mr-40 md:mr-52 lg:mr-64 w-lore-rail sm:w-lore-rail-sm md:w-lore-rail-md lg:w-lore-rail-lg text-center opacity-[0.07] dark:opacity-[0.04] hover:opacity-25 transition-all duration-500 cursor-default group"
           onMouseEnter={handleCardHover}
         >
           <FitText
@@ -94,7 +94,7 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({ ch
         {/* Right Side: Watermark Right */}
         <div
           key={`watermark-right-${character.slug}`}
-          className="pointer-events-auto anim-watermark-dissolve absolute top-[44%] -translate-y-1/2 left-[50%] ml-32 sm:ml-40 md:ml-52 lg:ml-64 w-[max(5rem,calc(50%-8rem-1rem))] sm:w-[max(5rem,calc(50%-10rem-1rem))] md:w-[max(5rem,calc(50%-13rem-1rem))] lg:w-[max(14rem,calc(50%-16rem-1rem))] text-center opacity-[0.07] dark:opacity-[0.04] hover:opacity-25 transition-all duration-500 cursor-default group"
+          className="pointer-events-auto anim-watermark-dissolve absolute top-lore -translate-y-1/2 left-1/2 ml-32 sm:ml-40 md:ml-52 lg:ml-64 w-lore-rail sm:w-lore-rail-sm md:w-lore-rail-md lg:w-lore-rail-lg text-center opacity-[0.07] dark:opacity-[0.04] hover:opacity-25 transition-all duration-500 cursor-default group"
           style={{ animationDelay: '100ms' }}
           onMouseEnter={handleCardHover}
         >
@@ -110,21 +110,21 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({ ch
       </div>
 
       {/* 2. LEFT FLANKING DOSSIER WING */}
-      <div className="pointer-events-none absolute left-2 sm:left-4 @[1040px]/hub:left-6 top-[calc(var(--smash-header)+1rem)] bottom-12 hidden @[880px]/hub:flex flex-col justify-between w-[clamp(11rem,calc((100cqw-var(--smash-card-w,26.25rem))/2-2.5rem),18.75rem)] space-y-4 p-2 pt-3">
+      <div className="pointer-events-none absolute left-2 sm:left-4 @hub-2xl/hub:left-6 top-below-smash-header bottom-12 hidden @hub-lg/hub:flex flex-col justify-between w-lore-column space-y-4 p-2 pt-3">
         {/* Left Item 1: Trial Classification - Hidden for now */}
 
         {/* Left Item 2: Dating Archetype (Tilt Right +2deg & Crimson Flare) */}
         <div
           key={`title-${character.slug}`}
           data-lore-card=""
-          className="pointer-events-auto anim-lore-dissolve transition-all duration-300 hover:scale-[1.02] @[1040px]/hub:hover:scale-105 @[1040px]/hub:hover:rotate-2 cursor-pointer group"
+          className="pointer-events-auto anim-lore-dissolve transition-all duration-300 hover:scale-[1.02] @hub-2xl/hub:hover:scale-105 @hub-2xl/hub:hover:rotate-2 cursor-pointer group"
           style={{ animationDelay: '80ms' }}
           onMouseEnter={handleCardHover}
         >
-          <div className="relative pt-4 pb-3 px-3.5 @[1040px]/hub:pt-5 @[1040px]/hub:pb-3.5 @[1040px]/hub:px-4 rounded-card lore-ash-card lore-ash-crimson backdrop-blur-2xl transition-all duration-300 text-center">
+          <div className="relative pt-4 pb-3 px-3.5 @hub-2xl/hub:pt-5 @hub-2xl/hub:pb-3.5 @hub-2xl/hub:px-4 rounded-card lore-ash-card lore-ash-crimson backdrop-blur-2xl transition-all duration-300 text-center">
             <div
               data-lore-label=""
-              className="sr-only @[1040px]/hub:not-sr-only @[1040px]/hub:absolute @[1040px]/hub:top-0 @[1040px]/hub:-translate-y-1/2 @[1040px]/hub:left-1/2 @[1040px]/hub:-translate-x-1/2 @[1040px]/hub:inline-flex @[1040px]/hub:items-center @[1040px]/hub:justify-center px-2.5 bg-bg-surface z-10 w-max max-w-[calc(100%-1.5rem)] text-accent-red"
+              className="sr-only @hub-2xl/hub:not-sr-only @hub-2xl/hub:absolute @hub-2xl/hub:top-0 @hub-2xl/hub:-translate-y-1/2 @hub-2xl/hub:left-1/2 @hub-2xl/hub:-translate-x-1/2 @hub-2xl/hub:inline-flex @hub-2xl/hub:items-center @hub-2xl/hub:justify-center px-2.5 bg-bg-surface z-10 w-max max-w-gutter text-accent-red"
             >
               <span className="type-label-2xs truncate whitespace-nowrap">
                 {datingArchetypeLabel}
@@ -144,14 +144,14 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({ ch
           <div
             key={`turn-on-${character.slug}`}
             data-lore-card=""
-            className="pointer-events-auto anim-lore-dissolve transition-all duration-300 hover:scale-[1.02] @[1040px]/hub:hover:scale-105 @[1040px]/hub:hover:-rotate-1 cursor-pointer group"
+            className="pointer-events-auto anim-lore-dissolve transition-all duration-300 hover:scale-[1.02] @hub-2xl/hub:hover:scale-105 @hub-2xl/hub:hover:-rotate-1 cursor-pointer group"
             style={{ animationDelay: '140ms' }}
             onMouseEnter={handleCardHover}
           >
-            <div className="relative pt-4 pb-3 px-3.5 @[1040px]/hub:pt-5 @[1040px]/hub:pb-3.5 @[1040px]/hub:px-4 rounded-card lore-ash-card lore-ash-emerald backdrop-blur-2xl transition-all duration-300 text-center">
+            <div className="relative pt-4 pb-3 px-3.5 @hub-2xl/hub:pt-5 @hub-2xl/hub:pb-3.5 @hub-2xl/hub:px-4 rounded-card lore-ash-card lore-ash-emerald backdrop-blur-2xl transition-all duration-300 text-center">
               <div
                 data-lore-label=""
-                className="sr-only @[1040px]/hub:not-sr-only @[1040px]/hub:absolute @[1040px]/hub:top-0 @[1040px]/hub:-translate-y-1/2 @[1040px]/hub:left-1/2 @[1040px]/hub:-translate-x-1/2 @[1040px]/hub:inline-flex @[1040px]/hub:items-center @[1040px]/hub:justify-center px-2.5 bg-bg-surface z-10 w-max max-w-[calc(100%-1.5rem)] text-accent-green"
+                className="sr-only @hub-2xl/hub:not-sr-only @hub-2xl/hub:absolute @hub-2xl/hub:top-0 @hub-2xl/hub:-translate-y-1/2 @hub-2xl/hub:left-1/2 @hub-2xl/hub:-translate-x-1/2 @hub-2xl/hub:inline-flex @hub-2xl/hub:items-center @hub-2xl/hub:justify-center px-2.5 bg-bg-surface z-10 w-max max-w-gutter text-accent-green"
               >
                 <span className="type-label-2xs truncate whitespace-nowrap">
                   {turnOnLabel}
@@ -166,21 +166,21 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({ ch
       </div>
 
       {/* 3. RIGHT FLANKING DOSSIER WING */}
-      <div className="pointer-events-none absolute right-2 sm:right-4 @[1040px]/hub:right-6 top-[calc(var(--smash-header)+1rem)] bottom-12 hidden @[880px]/hub:flex flex-col justify-between w-[clamp(11rem,calc((100cqw-var(--smash-card-w,26.25rem))/2-2.5rem),18.75rem)] space-y-4 p-2 pt-3">
+      <div className="pointer-events-none absolute right-2 sm:right-4 @hub-2xl/hub:right-6 top-below-smash-header bottom-12 hidden @hub-lg/hub:flex flex-col justify-between w-lore-column space-y-4 p-2 pt-3">
         {/* Right Item 1: Identity Profile - Hidden for now */}
 
         {/* Right Item 2: Signature Quote (Tilt Left -1deg & Gold Halo) */}
         <div
           key={`quote-${character.slug}`}
           data-lore-card=""
-          className="pointer-events-auto anim-lore-dissolve transition-all duration-300 hover:scale-[1.02] @[1040px]/hub:hover:scale-105 @[1040px]/hub:hover:-rotate-1 cursor-pointer group"
+          className="pointer-events-auto anim-lore-dissolve transition-all duration-300 hover:scale-[1.02] @hub-2xl/hub:hover:scale-105 @hub-2xl/hub:hover:-rotate-1 cursor-pointer group"
           style={{ animationDelay: '120ms' }}
           onMouseEnter={handleCardHover}
         >
-          <div className="relative pt-4 pb-3 px-3.5 @[1040px]/hub:pt-5 @[1040px]/hub:pb-3.5 @[1040px]/hub:px-4 rounded-card lore-ash-card lore-ash-amber backdrop-blur-2xl transition-all duration-300 text-center">
+          <div className="relative pt-4 pb-3 px-3.5 @hub-2xl/hub:pt-5 @hub-2xl/hub:pb-3.5 @hub-2xl/hub:px-4 rounded-card lore-ash-card lore-ash-amber backdrop-blur-2xl transition-all duration-300 text-center">
             <div
               data-lore-label=""
-              className="sr-only @[1040px]/hub:not-sr-only @[1040px]/hub:absolute @[1040px]/hub:top-0 @[1040px]/hub:-translate-y-1/2 @[1040px]/hub:left-1/2 @[1040px]/hub:-translate-x-1/2 @[1040px]/hub:inline-flex @[1040px]/hub:items-center @[1040px]/hub:justify-center px-2.5 bg-bg-surface z-10 w-max max-w-[calc(100%-1.5rem)] text-accent-amber"
+              className="sr-only @hub-2xl/hub:not-sr-only @hub-2xl/hub:absolute @hub-2xl/hub:top-0 @hub-2xl/hub:-translate-y-1/2 @hub-2xl/hub:left-1/2 @hub-2xl/hub:-translate-x-1/2 @hub-2xl/hub:inline-flex @hub-2xl/hub:items-center @hub-2xl/hub:justify-center px-2.5 bg-bg-surface z-10 w-max max-w-gutter text-accent-amber"
             >
               <span className="type-label-2xs truncate whitespace-nowrap">
                 {signatureQuoteLabel}
@@ -197,14 +197,14 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({ ch
           <div
             key={`dealbreaker-${character.slug}`}
             data-lore-card=""
-            className="pointer-events-auto anim-lore-dissolve transition-all duration-300 hover:scale-[1.02] @[1040px]/hub:hover:scale-105 @[1040px]/hub:hover:rotate-1 cursor-pointer group"
+            className="pointer-events-auto anim-lore-dissolve transition-all duration-300 hover:scale-[1.02] @hub-2xl/hub:hover:scale-105 @hub-2xl/hub:hover:rotate-1 cursor-pointer group"
             style={{ animationDelay: '160ms' }}
             onMouseEnter={handleCardHover}
           >
-            <div className="relative pt-4 pb-3 px-3.5 @[1040px]/hub:pt-5 @[1040px]/hub:pb-3.5 @[1040px]/hub:px-4 rounded-card lore-ash-card lore-ash-crimson backdrop-blur-2xl transition-all duration-300 text-center">
+            <div className="relative pt-4 pb-3 px-3.5 @hub-2xl/hub:pt-5 @hub-2xl/hub:pb-3.5 @hub-2xl/hub:px-4 rounded-card lore-ash-card lore-ash-crimson backdrop-blur-2xl transition-all duration-300 text-center">
               <div
                 data-lore-label=""
-                className="sr-only @[1040px]/hub:not-sr-only @[1040px]/hub:absolute @[1040px]/hub:top-0 @[1040px]/hub:-translate-y-1/2 @[1040px]/hub:left-1/2 @[1040px]/hub:-translate-x-1/2 @[1040px]/hub:inline-flex @[1040px]/hub:items-center @[1040px]/hub:justify-center px-2.5 bg-bg-surface z-10 w-max max-w-[calc(100%-1.5rem)] text-accent-red"
+                className="sr-only @hub-2xl/hub:not-sr-only @hub-2xl/hub:absolute @hub-2xl/hub:top-0 @hub-2xl/hub:-translate-y-1/2 @hub-2xl/hub:left-1/2 @hub-2xl/hub:-translate-x-1/2 @hub-2xl/hub:inline-flex @hub-2xl/hub:items-center @hub-2xl/hub:justify-center px-2.5 bg-bg-surface z-10 w-max max-w-gutter text-accent-red"
               >
                 <span className="type-label-2xs truncate whitespace-nowrap">
                   {dealbreakerLabel}

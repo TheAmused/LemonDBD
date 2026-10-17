@@ -9,6 +9,7 @@
 import React from 'react';
 import { Button } from '@/components/common/Button';
 import { Spinner } from '@/components/common/Spinner';
+import { Surface } from '@/components/common/Surface';
 import { tip } from '@/components/common/Tooltip';
 import { UserAvatar } from '@/components/UserAvatar';
 import { useDictionary, useLocale } from '@/context/DictionaryContext';
@@ -60,7 +61,7 @@ export function ModerationProfileCard({ user, summary, busy, onRestore }: Modera
     : [];
 
   return (
-    <div className="rounded-card border border-border-color bg-bg-primary">
+    <Surface tone="well" padding="none">
       <div className="flex items-stretch">
         <div className="flex w-40 shrink-0 flex-col items-center justify-center gap-3 px-3 py-6 text-center sm:w-48">
           <div className="rounded-card" {...(standing ? tip(standing, undefined, 'status') : {})}>
@@ -99,6 +100,6 @@ export function ModerationProfileCard({ user, summary, busy, onRestore }: Modera
           )}
         </div>
       </div>
-    </div>
+    </Surface>
   );
 }

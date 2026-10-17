@@ -73,7 +73,7 @@ def send_diagnostic_discord():
     """Post a test notification to the bug-report Discord webhook."""
     url = discord_webhook.webhook_url()
     if not url:
-        return api_error("No Discord webhook is configured (DISCORD_WEBHOOK_URL).", 409)
+        return api_error("No Discord webhook is configured (set one in Settings > Integrations).", 409)
     try:
         status = discord_webhook.post_embed(discord_webhook.diagnostic_embed(g.current_user.login), url)
     except Exception as err:

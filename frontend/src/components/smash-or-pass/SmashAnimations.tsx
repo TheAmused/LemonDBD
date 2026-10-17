@@ -503,7 +503,7 @@ export const SmashAnimations: React.FC<SmashAnimationsProps> = ({ triggerType, t
     <div
       className={`pointer-events-none fixed inset-0 z-50 overflow-hidden transition-all duration-300 ${
         chromaticShift
-          ? 'backdrop-blur-[1px] filter drop-shadow-[-3px_0_0_var(--accent-red)] drop-shadow-[3px_0_0_var(--text-muted)]'
+          ? 'backdrop-blur-hairline filter drop-shadow-[-3px_0_0_var(--accent-red)] drop-shadow-[3px_0_0_var(--text-muted)]'
           : ''
       }`}
       aria-hidden="true"

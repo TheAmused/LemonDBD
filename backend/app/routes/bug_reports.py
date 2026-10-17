@@ -11,6 +11,7 @@ from app.core.altcha_guard import altcha_rejection
 from app.core.extensions import db
 from app.core.json_provider import safe_json_dumps
 from app.core.limiter import limiter, validate_honeypot
+from app.core.rate_limits import per_minute
 from app.core.security import admin_required, get_current_user
 from app.core.transaction import transaction
 from app.models import BugReport, User
@@ -58,7 +59,7 @@ def _save_base64_image(b64_data: str, base_dir: Path) -> str | None:
 
 
 @bug_reports_bp.route("/bug-reports", methods=["POST"])
-@limiter.limit("15 per minute")
+@limiter.limit(per_minute("rate_bug_report_per_minute"))
 def submit_bug_report():
     """Submits a new bug report from authenticated users or guest players."""
     data = request.get_json(silent=True) or {}

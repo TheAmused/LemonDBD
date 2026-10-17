@@ -138,4 +138,5 @@ export default {
   loginLabel: "Nombre de acceso",
   loginOrEmailLabel: "Nombre de acceso o correo",
   loadingProfileSub: "Recuperando el inventario del jugador y la maestría de ventajas",
+  registrationClosedNotice: "Las cuentas nuevas están en pausa por ahora. Inténtalo de nuevo más tarde.",
 } as const;

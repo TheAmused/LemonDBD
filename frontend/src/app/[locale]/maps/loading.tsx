@@ -7,7 +7,7 @@ export default function MapsLoading() {
   return (
     <PageShellFallback
       customPadding="p-6 lg:p-7"
-      mainClassName="min-h-[500px] flex items-center justify-center"
+      mainClassName="min-h-skeleton-page flex items-center justify-center"
       skeleton={
         <DbdSpinner
           size="responsive"

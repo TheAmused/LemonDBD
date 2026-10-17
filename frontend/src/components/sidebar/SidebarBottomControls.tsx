@@ -189,7 +189,7 @@ export const SidebarBottomControls: React.FC<SidebarBottomControlsProps> = ({
                       : 'text-text-secondary hover:bg-bg-elevated')
                   }
                 >
-                  <FlagIcon code={lang.code} className="h-4 w-[22px] rounded-chip shrink-0" />
+                  <FlagIcon code={lang.code} className="h-4 w-5.5 rounded-chip shrink-0" />
                   <span>{lang.label}</span>
                 </Link>
               ))}

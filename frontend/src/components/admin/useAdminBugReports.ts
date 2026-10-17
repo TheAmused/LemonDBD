@@ -3,14 +3,15 @@
 //
 // The bug-report queue: the filtered, paged list, the selected ticket, and its status / reply / delete.
 import { useCallback, useEffect, useState } from 'react';
-import { QUEUE_PAGE_SIZE } from '@/components/admin/AdminQueue';
+import { ADMIN_STORAGE, BUG_REPORT_FILTERS, oneOf } from '@/components/admin/adminStorage';
+import { DEFAULT_PAGE_SIZE } from '@/constants/pagination';
+import { SEARCH_DEBOUNCE_MS } from '@/constants/timing';
 import { useDictionary } from '@/context/DictionaryContext';
+import { usePersistentString } from '@/hooks/usePersistentString';
 import { deleteBugReport, listBugReports, updateBugReport } from '@/services/adminApi';
 import { getErrorMessage } from '@/utils/api';
 import { formatMessage } from '@/utils/i18nFormat';
 import type { ActionMessage, AdminBugReport, BugReportStatus, QueueStats } from '@/types/admin';
-
-const SEARCH_DEBOUNCE_MS = 300;
 
 interface BugQueueInput {
   enabled: boolean;
@@ -25,7 +26,7 @@ export function useAdminBugReports({ enabled, refreshKey, notify, onChanged }: B
   const [stats, setStats] = useState<QueueStats<BugReportStatus> | null>(null);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
-  const [status, setStatusState] = useState<BugReportStatus | 'all'>('pending');
+  const [status, setStatusState] = usePersistentString<BugReportStatus | 'all'>(ADMIN_STORAGE.bugsStatus, 'pending', oneOf(BUG_REPORT_FILTERS));
   const [search, setSearchState] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
   const [page, setPage] = useState(1);
@@ -41,7 +42,7 @@ export function useAdminBugReports({ enabled, refreshKey, notify, onChanged }: B
     if (!enabled) return;
     let cancelled = false;
     setLoading(true);
-    listBugReports({ page, per_page: QUEUE_PAGE_SIZE, status: status === 'all' ? undefined : status, search: debouncedSearch })
+    listBugReports({ page, per_page: DEFAULT_PAGE_SIZE, status: status === 'all' ? undefined : status, search: debouncedSearch })
       .then((data) => {
         if (cancelled) return;
         const list = data.reports ?? [];

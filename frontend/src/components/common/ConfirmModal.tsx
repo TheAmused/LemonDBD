@@ -14,6 +14,8 @@ export interface ConfirmModalProps {
   cancelLabel?: React.ReactNode;
   busyLabel?: React.ReactNode;
   busy?: boolean;
+  /** Keeps the confirm button off until the dialog's own fields are filled in. */
+  confirmDisabled?: boolean;
   /** Dialog width; the default is narrow, fine for a short title and one line of text. */
   size?: ModalSize;
   /** Show an X in the header (use it instead of a cancel button). */
@@ -32,6 +34,7 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
   cancelLabel,
   busyLabel,
   busy = false,
+  confirmDisabled = false,
   size = 'xs',
   closeButton = 'none',
   closeButtonAriaLabel,
@@ -68,7 +71,7 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
           type="button"
           data-autofocus
           onClick={onConfirm}
-          disabled={busy}
+          disabled={busy || confirmDisabled}
           className="min-w-0 flex-1 px-3 inline-flex items-center justify-center gap-2 rounded-control bg-accent-red py-3 type-card-title text-text-inverted shadow-md shadow-accent-red/20 transition-all hover:bg-accent-red-hover disabled:opacity-50 cursor-pointer"
         >
           {!busy && confirmIcon}

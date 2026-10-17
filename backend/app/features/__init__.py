@@ -24,6 +24,7 @@ def register_feature_blueprints(app: "Flask") -> None:
     from app.features.tier_lists import tier_lists_bp
     from app.features.users import avatars_bp, privacy_bp, users_bp
     from app.routes.content_moderation import content_moderation_bp
+    from app.routes.site_config import site_config_bp
 
     blueprints = [
         # Auth & Users
@@ -55,6 +56,7 @@ def register_feature_blueprints(app: "Flask") -> None:
         admin_tools_bp,
         changelog_bp,
         content_moderation_bp,
+        site_config_bp,
     ]
 
     for bp in blueprints:

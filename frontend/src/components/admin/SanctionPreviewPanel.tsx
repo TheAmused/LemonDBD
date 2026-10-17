@@ -8,9 +8,13 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { AccordionSection } from '@/components/common/AccordionSection';
 import { SegmentedControl } from '@/components/common/SegmentedControl';
+import { Surface } from '@/components/common/Surface';
 import { AccountBlockedNotice } from '@/components/moderation/AccountBlockedNotice';
 import { WarningNoticeBody } from '@/components/moderation/WarningDialog';
+import { PREVIEW_DEBOUNCE_MS } from '@/constants/timing';
 import { useDictionary, useLocale } from '@/context/DictionaryContext';
+import { ADMIN_STORAGE, oneOf } from '@/components/admin/adminStorage';
+import { usePersistentString } from '@/hooks/usePersistentString';
 import { usePersistentDrawer } from '@/hooks/usePersistentDrawer';
 import { previewSanction } from '@/services/moderationApi';
 import {
@@ -23,7 +27,8 @@ import {
 import { formatDate } from '@/utils/format';
 import { formatMessage } from '@/utils/i18nFormat';
 
-type PreviewTab = 'app' | 'email';
+const PREVIEW_TABS = ['app', 'email'] as const;
+type PreviewTab = (typeof PREVIEW_TABS)[number];
 type PreviewState = { status: 'idle' | 'loading' | 'ready' | 'error'; data: SanctionPreview | null };
 
 interface SanctionPreviewPanelProps {
@@ -32,21 +37,20 @@ interface SanctionPreviewPanelProps {
 }
 
 const noop = () => {};
-const PREVIEW_DELAY_MS = 400;
-const PREVIEW_DRAWER_KEY = 'lemondbd_moderation_preview_open';
 
 function EmailPreview({ preview }: { preview: SanctionPreview }) {
-  const t = useDictionary().moderation.admin;
+  const dict = useDictionary();
+  const t = dict.moderation.admin;
   const { email } = preview;
   return (
     <div className="space-y-3">
       <div className="space-y-0.5 type-caption text-text-muted">
         <p>
           <span className="type-label-xs text-text-secondary">{t.previewSubject}: </span>
-          LemonDBD: {email.subject}
+          {dict.app.title}: {email.subject}
         </p>
       </div>
-      <div className="space-y-2.5 rounded-card border border-border-subtle bg-bg-secondary p-3.5">
+      <Surface tone="well" padding="sm" className="space-y-2.5">
         {email.blocks.map((block, index) => {
           if (block[0] === 'p') return <p key={index} className="type-body text-text-primary">{block[1]}</p>;
           if (block[0] === 'field') {
@@ -66,7 +70,7 @@ function EmailPreview({ preview }: { preview: SanctionPreview }) {
           );
         })}
         <p className="border-t border-border-subtle pt-2 type-micro text-text-muted">{email.footer}</p>
-      </div>
+      </Surface>
     </div>
   );
 }
@@ -75,10 +79,10 @@ export function SanctionPreviewPanel({ draft, target }: SanctionPreviewPanelProp
   const dict = useDictionary();
   const locale = useLocale();
   const t = dict.moderation.admin;
-  const [tab, setTab] = useState<PreviewTab>('app');
+  const [tab, setTab] = usePersistentString<PreviewTab>(ADMIN_STORAGE.moderationPreviewTab, 'app', oneOf(PREVIEW_TABS));
   const [state, setState] = useState<PreviewState>({ status: 'idle', data: null });
   // Folded away by default and remembered; a folded preview asks the server for nothing.
-  const [isOpen, toggleOpen] = usePersistentDrawer(PREVIEW_DRAWER_KEY, false);
+  const [isOpen, toggleOpen] = usePersistentDrawer(ADMIN_STORAGE.moderationPreviewOpen, false);
 
   const valid = isSanctionDraftValid(draft);
   // Only what the preview depends on: typing in the internal notes must not ask the server again.
@@ -101,7 +105,7 @@ export function SanctionPreviewPanel({ draft, target }: SanctionPreviewPanelProp
           if (!stale) setState({ status: 'error', data: null });
         }
       );
-    }, PREVIEW_DELAY_MS);
+    }, PREVIEW_DEBOUNCE_MS);
     return () => {
       stale = true;
       clearTimeout(timer);
@@ -135,7 +139,7 @@ export function SanctionPreviewPanel({ draft, target }: SanctionPreviewPanelProp
   } else if (draft.kind === 'warning') {
     content = (
       <div className="space-y-4">
-        <div className="space-y-4 rounded-card border border-border-subtle bg-bg-secondary p-3.5">
+        <Surface tone="well" padding="sm" className="space-y-4">
           <h4 className="type-strong text-text-primary">{dict.moderation.warning.title}</h4>
           <WarningNoticeBody warning={{ reason_code: data.reason_code, rule_ref: draft.rule_ref || null, facts: data.facts }} />
           {data.until && (
@@ -143,13 +147,13 @@ export function SanctionPreviewPanel({ draft, target }: SanctionPreviewPanelProp
               {formatMessage(dict.moderation.warning.expires, { date: formatDate(data.until, locale, { dateStyle: 'long' }) })}
             </p>
           )}
-        </div>
+        </Surface>
       </div>
     );
   } else {
     content = (
       <div className="space-y-4">
-        <div className="rounded-card border border-border-subtle bg-bg-secondary p-3.5">
+        <Surface tone="well" padding="sm">
           <AccountBlockedNotice
             showClose={false}
             onClose={noop}
@@ -160,7 +164,7 @@ export function SanctionPreviewPanel({ draft, target }: SanctionPreviewPanelProp
               appeal_contact: data.appeal_contact,
             }}
           />
-        </div>
+        </Surface>
       </div>
     );
   }

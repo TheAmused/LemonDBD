@@ -6,6 +6,8 @@
  * --------------------------------------------------------------------------- */
 @custom-variant dark (&:where(.dark, .dark *));
 @custom-variant lemon (&:where(.light-lemon, .light-lemon *));
+/* A short viewport (landscape phone): `short:hidden` drops secondary chrome. Use it, never `[@media(max-height:559px)]:`. */
+@custom-variant short (@media (max-height: 559px));
 
 /* ---------------------------------------------------------------------------
  * Design Tokens & Theme Mapping
@@ -175,6 +177,98 @@
   --leading-flat: 0.95;
   --font-mono: Consolas, "Cascadia Code", "Segoe UI Mono", Menlo, Monaco, "Liberation Mono", ui-monospace, monospace;
 
+
+  /* Named widths. min-w-<name> / max-w-<name> / w-<name> read these (Tailwind's container scale), so no
+   * component types min-w-[12rem]. scripts/check-global-styles.ts rejects arbitrary sizes.
+   *   menu        a dropdown / popover panel
+   *   field-sm    a narrow search or filter box     field   a search / filter box     field-lg  a wide field
+   *   cell        a table cell that truncates       cell-lg  a wider one */
+  --container-menu: 13rem;
+  --container-field-sm: 10rem;
+  --container-field: 12rem;
+  --container-field-lg: 17rem;
+  --container-cell: 18rem;
+  --container-cell-lg: 22rem;
+
+  /* Widths of the Smash hub container, for `@hub-md/hub:` (never `@[640px]/hub:`). Keep in step with the
+   * `@container hub (min-width: ...)` rules in smash-or-pass.css.
+   *   hub-xs 400px   hub-sm 560px   hub-md 640px   hub-lg 880px   hub-xl 1016px   hub-2xl 1040px */
+  --container-hub-xs: 25rem;
+  --container-hub-sm: 35rem;
+  --container-hub-md: 40rem;
+  --container-hub-lg: 55rem;
+  --container-hub-xl: 63.5rem;
+  --container-hub-2xl: 65rem;
+
+  /* Page and workspace widths. max-w-<name> reads these.
+   *   page / page-lg / page-xl   the onboarding wizard and legal pages at 2xl and 3xl
+   *   workspace / workspace-xl   the creators (roster, tier list) on 2K and 4K screens
+   *   profile / profile-xl       the user profile at 2xl and 3xl      roster-modal  the roster picker
+   *   viewport-sm/md/lg          a share of the screen width (80vw / 88vw / 96vw)
+   *   modal-auto                 a shrink-to-content dialog never narrower than a readable column
+   *   toast                      a toast on a phone: the screen minus its gutters
+   *   gutter / bleed             100% minus / plus the page gutter    third-gap / fifth-gap  3 or 5 per row */
+  --container-page: 96rem;
+  --container-page-lg: 110rem;
+  --container-page-xl: 124rem;
+  --container-workspace: 1800px;
+  --container-workspace-xl: 2400px;
+  --container-profile: 1700px;
+  --container-profile-xl: 2000px;
+  --container-roster-modal: 1600px;
+  --container-viewport-sm: 80vw;
+  --container-viewport-md: 88vw;
+  --container-viewport-lg: 96vw;
+  --container-modal-auto: min(18rem, 100%);
+  --container-toast: calc(100vw - 2.5rem);
+  --container-gutter: calc(100% - 1.5rem);
+  --container-bleed: calc(100% + 2.5rem);
+  --container-third-gap: calc((100% - 1rem) / 3);
+  --container-fifth-gap: calc((100% - 2rem) / 5);
+  /* The floating lore rails beside the Smash card: narrower as the screen narrows. */
+  --container-lore-rail: max(5rem, calc(50% - 8rem - 1rem));
+  --container-lore-rail-sm: max(5rem, calc(50% - 10rem - 1rem));
+  --container-lore-rail-md: max(5rem, calc(50% - 13rem - 1rem));
+  --container-lore-rail-lg: max(14rem, calc(50% - 16rem - 1rem));
+  --container-lore-column: clamp(11rem, calc((100cqw - var(--smash-card-w, 26.25rem)) / 2 - 2.5rem), 18.75rem);
+
+  /* Smallest comfortable hit area of a control (w/h/min-w/min-h), by how dense the screen lets it be.
+   *   hit-sm 38px   hit 42px   hit-md 44px   hit-lg 48px   hit-xl 50px   hit-2xl 54px */
+  --spacing-hit-sm: 2.375rem;
+  --spacing-hit: 2.625rem;
+  --spacing-hit-md: 2.75rem;
+  --spacing-hit-lg: 3rem;
+  --spacing-hit-xl: 3.125rem;
+  --spacing-hit-2xl: 3.375rem;
+
+  /* Square sizes of the two spinning wheels: `w-wheel h-wheel sm:w-wheel-sm ...`. */
+  --spacing-wheel: min(62vw, 36dvh);
+  --spacing-wheel-sm: min(285px, 38dvh);
+  --spacing-wheel-md: min(320px, 38dvh);
+  --spacing-wheel-lg: min(350px, 38dvh);
+  --spacing-wheel-xl: min(480px, 46dvh);
+  --spacing-wheel-2xl: min(600px, 52dvh);
+  --spacing-wheel-wide: min(720px, 58dvh);
+  --spacing-wheel-2k: min(900px, 60dvh);
+  --spacing-wheel-4k: min(1100px, 62dvh);
+  --spacing-chaos-wheel: 260px;
+  --spacing-chaos-wheel-sm: 330px;
+  --spacing-chaos-wheel-md: 370px;
+  --spacing-chaos-wheel-xl: min(480px, calc(100vh - 480px));
+  --spacing-chaos-wheel-2xl: min(540px, calc(100vh - 480px));
+
+  /* The thin bar under the active segment of a SegmentedControl: h-indicator. */
+  --spacing-indicator: 2.5px;
+
+  /* A hairline blur: backdrop-blur-hairline. */
+  --blur-hairline: 1px;
+
+  /* The one extra small-screen step between the base layout and `sm`. Use `phone:`, never `min-[400px]:`. */
+  --breakpoint-phone: 25rem;
+  /* Two more steps between `phone` and `sm`. Use `phone-md:` / `phone-lg:`, never `min-[460px]:` / `min-[480px]:`. */
+  --breakpoint-phone-md: 28.75rem;
+  --breakpoint-phone-lg: 30rem;
+
   /* Named ultra-wide breakpoints (registered in the theme scale, not as
    * arbitrary min-[Npx] variants) so Tailwind sorts their generated media
    * queries correctly against the built-in sm/md/lg/xl/2xl ones instead of
@@ -183,4 +277,72 @@
   --breakpoint-wide: 1800px;
   --breakpoint-wide-2k: 2400px;
   --breakpoint-wide-4k: 3400px;
+}
+
+
+/* ---------------------------------------------------------------------------
+ * Sizes that have no theme namespace: named so a component never types the number.
+ * --------------------------------------------------------------------------- */
+/* Icon boxes. Put the size on the icon: <Icon className="icon-sm" />. */
+@utility icon-2xs { width: 0.625rem; height: 0.625rem; }
+@utility icon-xs { width: 0.75rem; height: 0.75rem; }
+@utility icon-sm { width: 0.875rem; height: 0.875rem; }
+@utility icon-md { width: 1rem; height: 1rem; }
+@utility icon-lg { width: 1.5rem; height: 1.5rem; }
+
+/* Heights of scrolling lists and of skeletons that stand in for a loaded section. */
+@utility max-h-list { max-height: 36rem; }
+@utility max-h-roster { max-height: 34rem; }
+@utility min-h-skeleton-tab { min-height: 22.5rem; }
+@utility min-h-skeleton-page { min-height: 31.25rem; }
+
+/* Two-column layouts with one fixed column. */
+@utility grid-cols-field-suffix { grid-template-columns: minmax(0, 1fr) 7.5rem; }
+@utility grid-cols-label-wide { grid-template-columns: minmax(0, 15rem) minmax(0, 1fr); }
+@utility grid-cols-label-control { grid-template-columns: minmax(0, 1fr) minmax(0, 14rem); }
+
+/* Heights tied to the screen: whole-viewport pages, dialogs and panels. */
+@utility min-h-screen-nav { min-height: calc(100vh - 4rem); }
+@utility min-h-screen-smash { min-height: calc(100dvh - 5rem); }
+@utility min-h-vh-60 { min-height: 60vh; }
+@utility min-h-vh-70 { min-height: 70vh; }
+@utility max-h-vh-40 { max-height: 40vh; }
+@utility max-h-vh-65 { max-height: 65vh; }
+@utility max-h-vh-80 { max-height: 80vh; }
+@utility max-h-vh-85 { max-height: 85vh; }
+@utility max-h-dvh-72 { max-height: 72dvh; }
+@utility max-h-dvh-82 { max-height: 82dvh; }
+@utility max-h-modal-mobile { max-height: 92dvh; }
+@utility max-h-modal { max-height: 90dvh; }
+@utility max-h-modal-tall { max-height: 94dvh; }
+@utility h-modal-tall { height: 94dvh; }
+@utility h-modal-panel { height: 88vh; }
+/* Two lines of text, for a label that may wrap and must not make its row jump. */
+@utility min-h-two-lines { min-height: 2.4em; }
+
+/* Where the Smash lore sits around the card. */
+@utility top-lore { top: 44%; }
+@utility top-below-smash-header { top: calc(var(--smash-header) + 1rem); }
+@utility inset-diamond-inner { inset: 14.65%; }
+
+/* Auto-fill grids of tiles, wider tiles on wider screens: xs, sm, md, lg, xl. */
+@utility grid-cols-tiles-xs { grid-template-columns: repeat(auto-fill, minmax(5.5rem, 1fr)); }
+@utility grid-cols-tiles-sm { grid-template-columns: repeat(auto-fill, minmax(6.5rem, 1fr)); }
+@utility grid-cols-tiles-md { grid-template-columns: repeat(auto-fill, minmax(7.5rem, 1fr)); }
+@utility grid-cols-tiles-lg { grid-template-columns: repeat(auto-fill, minmax(8.5rem, 1fr)); }
+@utility grid-cols-tiles-xl { grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr)); }
+@utility grid-cols-fit-perk { grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr)); }
+/* A tier row: the label column grows with the screen. */
+@utility grid-cols-tier-label-xs { grid-template-columns: 3.5rem minmax(0, 1fr); }
+@utility grid-cols-tier-label-sm { grid-template-columns: 4.75rem minmax(0, 1fr); }
+@utility grid-cols-tier-label-md { grid-template-columns: 6.5rem minmax(0, 1fr); }
+@utility grid-cols-tier-label-lg { grid-template-columns: 9rem minmax(0, 1fr); }
+@utility grid-cols-pool-bar { grid-template-columns: 2.5rem minmax(0, 1fr) 2.5rem; }
+@utility grid-cols-main-aside { grid-template-columns: minmax(0, 1fr) 25rem; }
+
+/* A number input without the browser's spin buttons. */
+@utility no-spinner {
+  appearance: textfield;
+  &::-webkit-inner-spin-button,
+  &::-webkit-outer-spin-button { appearance: none; }
 }

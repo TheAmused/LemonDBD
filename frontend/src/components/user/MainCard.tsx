@@ -106,7 +106,7 @@ export const MainCard: React.FC<MainCardProps> = ({
             </div>
           </div>
 
-          <h3 className="max-w-[180px] line-clamp-2 break-words text-base sm:text-lg font-black leading-tight text-text-primary tracking-wide">
+          <h3 className="max-w-45 line-clamp-2 break-words text-base sm:text-lg font-black leading-tight text-text-primary tracking-wide">
             {loadout.characterName}
           </h3>
         </div>

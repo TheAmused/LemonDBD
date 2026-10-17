@@ -34,7 +34,7 @@ import {
   updateTier,
 } from '@/utils/tierLists/board';
 import { TIER_COLOR_TOKENS, TIER_LIST_LIMITS } from '@/utils/tierLists/constants';
-import { BOARD_SCALE_STEPS, isBoardScale, type BoardScale, type BoardScaleStep } from '@/utils/tierLists/fit';
+import { isBoardScale, type BoardScale, type BoardScaleStep } from '@/utils/tierLists/fit';
 import type { SaveResult } from '@/utils/tierLists/storage';
 import { TierEditModal } from './TierEditModal';
 import { TierListBoard } from './TierListBoard';

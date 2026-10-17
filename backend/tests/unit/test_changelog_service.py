@@ -1,6 +1,5 @@
 # backend/tests/unit/test_changelog_service.py
 import pytest
-from flask.testing import FlaskClient
 
 from app.core.extensions import db
 from app.models import User

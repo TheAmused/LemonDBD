@@ -1,7 +1,7 @@
 'use client';
 // frontend/src/components/tier-lists/TierListHub.tsx
 
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 import { Alert } from '@/components/common/Alert';
@@ -22,7 +22,6 @@ import { TierListImportModal } from './TierListImportModal';
 import { TierListSkeleton } from './TierListSkeleton';
 import { HEADER_BTN } from './styles';
 import { Button } from '@/components/common/Button';
-import { formatMessage } from '@/utils/i18nFormat';
 import { useDictionary } from "@/context/DictionaryContext";
 import { Badge } from '@/components/common/Badge';
 import { AccordionSection } from '@/components/common/AccordionSection';

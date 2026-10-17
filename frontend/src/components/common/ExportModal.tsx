@@ -1,7 +1,7 @@
 'use client';
 // frontend/src/components/common/ExportModal.tsx
 
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Check, Copy, Download, Link2, TriangleAlert } from 'lucide-react';
 import { Modal } from '@/components/common/Modal';
 import { Button } from '@/components/common/Button';

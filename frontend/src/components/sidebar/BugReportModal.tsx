@@ -35,6 +35,13 @@ interface BugReportResponse {
   error?: string;
 }
 
+/** Dictionary keys for the "what a good report contains" guide under the description field. */
+const BUG_GUIDE_ITEMS = [
+  { label: 'bugGuideHappenedLabel', text: 'bugGuideHappenedText' },
+  { label: 'bugGuideStepsLabel', text: 'bugGuideStepsText' },
+  { label: 'bugGuideExpectedLabel', text: 'bugGuideExpectedText' },
+] as const;
+
 export const BugReportModal: React.FC<BugReportModalProps> = ({ isOpen, onClose }) => {
   const dict = useDictionary();
   const { user, isAuthenticated } = useAuth();
@@ -264,11 +271,19 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({ isOpen, onClose 
         <Textarea
           id="bug-report-message"
           required
-          rows={4}
+          rows={5}
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           placeholder={t.bugDescriptionPlaceholder || ''}
         />
+        <div className="mt-1.5 space-y-0.5 type-caption text-text-muted">
+          <p>{t.bugGuideTitle || ''}:</p>
+          {BUG_GUIDE_ITEMS.map(({ label, text }, idx) => (
+            <p key={label}>
+              {idx + 1}. {t[label] || ''}: {t[text] || ''}
+            </p>
+          ))}
+        </div>
       </FormField>
 
       <div>

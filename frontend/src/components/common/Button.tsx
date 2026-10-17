@@ -107,6 +107,8 @@ export interface ButtonProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonE
   roleAccent?: DbdButtonRole;
   /** Shows a spinner, disables the button and sets aria-busy. */
   loading?: boolean;
+  /** While `loading`, show only the spinner (centred, the label keeps the button's width) instead of spinner plus label. */
+  spinnerOnly?: boolean;
   /** Icon before the label. */
   leftIcon?: React.ReactNode;
   /** Icon after the label. */
@@ -126,6 +128,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
     size = 'md',
     roleAccent,
     loading = false,
+    spinnerOnly = false,
     leftIcon,
     rightIcon,
     icon = false,
@@ -149,6 +152,14 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
     ? LINK_SIZES[size]
     : BUTTON_SIZES[size];
   const ringClass = roleAccent ? ROLE_RING[roleAccent] : undefined;
+  const spinnerReplacesLabel = loading && spinnerOnly;
+  const spinner = <Spinner size={size === 'lg' ? 'sm' : 'xs'} tone={spinnerTone} />;
+  const label =
+    fit && !icon && (typeof children === 'string' || typeof children === 'number') ? (
+      <FitText minScale={0.7} maxLines={2}>{children}</FitText>
+    ) : (
+      children
+    );
 
   return (
     <button
@@ -163,18 +174,28 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
         pill ? BUTTON_RADIUS_PILL : BUTTON_RADIUS,
         dashed && 'border-dashed',
         variant === 'overlay' && OVERLAY_TOUCH,
+        spinnerReplacesLabel && 'relative',
         ringClass,
         className
       )}
       {...rest}
     >
-      {loading ? <Spinner size={size === 'lg' ? 'sm' : 'xs'} tone={spinnerTone} /> : leftIcon}
-      {fit && !icon && (typeof children === 'string' || typeof children === 'number') ? (
-        <FitText minScale={0.7} maxLines={2}>{children}</FitText>
+      {spinnerReplacesLabel ? (
+        <>
+          <span className="inline-flex items-center gap-[inherit] opacity-0">
+            {leftIcon}
+            {label}
+            {rightIcon}
+          </span>
+          <span className="absolute inset-0 flex items-center justify-center">{spinner}</span>
+        </>
       ) : (
-        children
+        <>
+          {loading ? spinner : leftIcon}
+          {label}
+          {!loading && rightIcon}
+        </>
       )}
-      {!loading && rightIcon}
     </button>
   );
 });

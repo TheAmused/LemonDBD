@@ -87,7 +87,7 @@ export const TwoFactorChallengeForm: React.FC<TwoFactorChallengeFormProps> = ({ 
       ) : (
         <CodeInput value={appCode} onChange={setAppCode} disabled={busy} invalid={!!error} autoFocus />
       )}
-      <Button type="submit" variant="primary" disabled={!ready || busy || expired} loading={busy} className="w-full">
+      <Button type="submit" variant="primary" disabled={!ready || busy || expired} loading={busy} spinnerOnly className="w-full">
         {t.challengeSubmit}
       </Button>
       <div className="flex w-full flex-col items-center gap-2">

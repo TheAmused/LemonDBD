@@ -2,19 +2,20 @@
 // frontend/src/components/changelog/WhatsNewLauncher.tsx
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Megaphone, Plus, Pencil, Trash2, Skull, ChevronDown, ChevronUp, GripVertical } from 'lucide-react';
+import { Megaphone, Plus, Pencil, Trash2, Send, Skull, ChevronDown, ChevronUp, GripVertical } from 'lucide-react';
 import { cn } from '@/utils/cn';
 import { useAuth } from '@/context/AuthContext';
-import type { ChangelogPost, ChangelogPostDraft, ChangelogTag } from '@/types/changelog';
+import type { ChangelogPost, ChangelogPostDraft } from '@/types/changelog';
 import {
+  announceChangelogPost,
   createChangelogPost,
   deleteChangelogPost,
-  fetchChangelogPosts,
-  fetchChangelogPostsAdmin,
   reorderChangelogPosts,
   updateChangelogPost,
 } from '@/services/changelogApi';
-import { CHANGELOG_TAG_THEME } from './changelogTheme';
+import { htmlToPlainText } from './changelogText';
+import { postDate } from './changelogReadState';
+import type { ChangelogFeed } from './useChangelogFeed';
 import dynamic from 'next/dynamic';
 
 import { tip } from '@/components/common/Tooltip';
@@ -26,7 +27,6 @@ import { formatDate } from '@/utils/format';
 import { useDictionary } from "@/context/DictionaryContext";
 
 import { Button } from '@/components/common/Button';
-import { ToggleChip } from '@/components/common/ToggleChip';
 const ChangelogEditorModal = dynamic(
   () => import('./ChangelogEditorModal').then((m) => m.ChangelogEditorModal),
   { ssr: false }
@@ -36,85 +36,55 @@ const ConfirmModal = dynamic(
   { ssr: false }
 );
 
-const LAST_SEEN_KEY = 'lemondbd_changelog_last_seen';
 const TOUCH_HOLD_MS = 220;
+/** For admins the newest entries start expanded; the rest, and everything for readers, shows a two-line preview. */
+const OPEN_BY_DEFAULT = 2;
 
 const formatPostDate = (iso: string | null) =>
   formatDate(iso, undefined, { month: 'short', day: 'numeric', year: 'numeric' });
 
 export interface WhatsNewLauncherProps {
+  /** The shared feed from `useChangelogFeed`, so every launcher on the page uses one fetch. */
+  feed: ChangelogFeed;
   /** Extra classes for the icon-only trigger button (sizing/positioning). */
   className?: string;
 }
 
 /**
  * Self-contained "What's New?" widget: an icon-only trigger button plus the
- * centered changelog modal it opens. Entries collapse into an accordion so
- * a long feed stays scannable, and admins can reorder entries either by
- * grabbing a handle (mouse-drag on desktop, press-and-hold-then-drag via the
- * Pointer Events API on touch) or with keyboard/tap-friendly up/down buttons.
+ * centered changelog modal it opens. The newest entries open by default and
+ * the rest collapse to a short preview, so a long feed stays scannable.
+ * Admins reorder entries by grabbing a handle (mouse-drag on desktop,
+ * press-and-hold-then-drag via the Pointer Events API on touch).
  */
-export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ className = '' }) => {
+export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ feed, className = '' }) => {
   const dict = useDictionary();
   const t = dict.changelog;
   const { token, isAdmin } = useAuth();
+  const { posts, setPosts, loading, loadingMore, hasMore, hasUnread, isUnread, markRead, reload, loadMore } = feed;
   const [isOpen, setIsOpen] = useState(false);
-  const [posts, setPosts] = useState<ChangelogPost[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [hasUnread, setHasUnread] = useState(false);
-  const [activeFilter, setActiveFilter] = useState<ChangelogTag | 'all'>('all');
   const [expandedIds, setExpandedIds] = useState<Set<number>>(new Set());
   const [editingPost, setEditingPost] = useState<ChangelogPost | null>(null);
   const [editorOpen, setEditorOpen] = useState(false);
   const [saving, setSaving] = useState(false);
   const [editorError, setEditorError] = useState<string | null>(null);
+  const [actionError, setActionError] = useState<string | null>(null);
   const [pendingDeleteId, setPendingDeleteId] = useState<number | null>(null);
+  const [pendingAnnounce, setPendingAnnounce] = useState<ChangelogPost | null>(null);
+  const [announcing, setAnnouncing] = useState(false);
   const [draggingId, setDraggingId] = useState<number | null>(null);
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
 
-  const rowRefs = useRef<Map<number, HTMLDivElement>>(new Map());
+  const rowRefs = useRef<Map<number, HTMLElement>>(new Map());
   const dragRef = useRef<{ id: number; active: boolean; holdTimer: ReturnType<typeof setTimeout> | null } | null>(
     null
   );
-
-  const loadPosts = useCallback(async () => {
-    setLoading(true);
-    try {
-      const res =
-        isAdmin && token ? await fetchChangelogPostsAdmin(token) : await fetchChangelogPosts();
-      setPosts(res.data);
-
-      const latest = res.data[0]?.created_at;
-      if (latest && typeof window !== 'undefined') {
-        try {
-          const lastSeen = window.localStorage.getItem(LAST_SEEN_KEY);
-          setHasUnread(!lastSeen || new Date(latest) > new Date(lastSeen));
-        } catch {
-          setHasUnread(false);
-        }
-      }
-    } catch {
-      setPosts([]);
-    } finally {
-      setLoading(false);
-    }
-  }, [isAdmin, token]);
-
-  useEffect(() => {
-    loadPosts();
-  }, [loadPosts]);
+  const seededRef = useRef(false);
 
   const handleOpen = () => {
     setIsOpen(true);
-    if (posts[0]?.created_at && typeof window !== 'undefined') {
-      try {
-        window.localStorage.setItem(LAST_SEEN_KEY, posts[0].created_at);
-      } catch {
-        /* ignore persistence failures (private browsing, etc.) */
-      }
-    }
-    setHasUnread(false);
+    setActionError(null);
   };
 
   const handleSave = async (draft: ChangelogPostDraft) => {
@@ -129,7 +99,7 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ className = 
       }
       setEditorOpen(false);
       setEditingPost(null);
-      await loadPosts();
+      await reload();
     } catch (err) {
       setEditorError(err instanceof Error ? err.message : t.saveError);
     } finally {
@@ -139,50 +109,58 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ className = 
 
   const handleDelete = async () => {
     if (!token || pendingDeleteId == null) return;
+    const id = pendingDeleteId;
+    setPendingDeleteId(null);
     try {
-      await deleteChangelogPost(token, pendingDeleteId);
-      setPendingDeleteId(null);
-      setEditorOpen(false);
-      setEditingPost(null);
-      await loadPosts();
+      await deleteChangelogPost(token, id);
+      await reload();
     } catch (err) {
-      setPendingDeleteId(null);
-      setEditorError(err instanceof Error ? err.message : t.deleteError);
+      setActionError(err instanceof Error ? err.message : t.deleteError);
     }
   };
 
-  const toggleExpanded = (id: number) => {
+  const handleAnnounce = async () => {
+    if (!token || !pendingAnnounce) return;
+    setAnnouncing(true);
+    try {
+      const res = await announceChangelogPost(token, pendingAnnounce.id);
+      if (res.discord === 'failed') setActionError(t.discordFailed);
+      else if (res.discord === 'not_configured') setActionError(t.discordNotConfigured);
+      else setActionError(null);
+      await reload();
+    } catch (err) {
+      setActionError(err instanceof Error ? err.message : t.discordFailed);
+    } finally {
+      setAnnouncing(false);
+      setPendingAnnounce(null);
+    }
+  };
+
+  const toggleExpanded = (post: ChangelogPost) => {
+    markRead(post);
     setExpandedIds((prev) => {
       const next = new Set(prev);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
+      if (next.has(post.id)) next.delete(post.id);
+      else next.add(post.id);
       return next;
     });
   };
 
-  const visiblePosts = useMemo(() => {
-    const base = isAdmin ? posts : posts.filter((p) => p.is_published);
-    return activeFilter === 'all' ? base : base.filter((p) => p.tag === activeFilter);
-  }, [posts, isAdmin, activeFilter]);
+  const listedPosts = useMemo(() => (isAdmin ? posts : posts.filter((p) => p.is_published)), [posts, isAdmin]);
 
-  // The first entry opens by default so the drawer never looks empty; every
-  // other entry stays collapsed until the reader taps it.
+  // Seed once per open, so collapsing an entry never pops other entries open (or shuffles them while an admin
+  // is dragging). Readers get every entry collapsed: opening one is what marks it as read.
   useEffect(() => {
-    if (isOpen && visiblePosts.length > 0 && expandedIds.size === 0) {
-      setExpandedIds(new Set([visiblePosts[0].id]));
+    if (!isOpen) {
+      seededRef.current = false;
+      return;
     }
-  }, [isOpen, visiblePosts]);
+    if (seededRef.current || listedPosts.length === 0) return;
+    seededRef.current = true;
+    setExpandedIds(new Set(listedPosts.slice(0, isAdmin ? OPEN_BY_DEFAULT : 0).map((p) => p.id)));
+  }, [isOpen, listedPosts, isAdmin]);
 
-  const availableTags = useMemo(() => {
-    const set = new Set<ChangelogTag>();
-    (isAdmin ? posts : posts.filter((p) => p.is_published)).forEach((p) => set.add(p.tag));
-    return Array.from(set);
-  }, [posts, isAdmin]);
-
-  // Reordering rewrites a global `position` column, so it only makes sense
-  // against the unfiltered admin feed -- otherwise "move up" would be
-  // ambiguous relative to hidden rows.
-  const canReorder = isAdmin && !!token && activeFilter === 'all';
+  const canReorder = isAdmin && !!token;
 
   const persistOrder = useCallback(
     async (ordered: ChangelogPost[]) => {
@@ -196,19 +174,6 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ className = 
     },
     [token]
   );
-
-  const movePost = (id: number, direction: -1 | 1) => {
-    setPosts((prev) => {
-      const idx = prev.findIndex((p) => p.id === id);
-      const nextIdx = idx + direction;
-      if (idx === -1 || nextIdx < 0 || nextIdx >= prev.length) return prev;
-      const next = [...prev];
-      const [moved] = next.splice(idx, 1);
-      next.splice(nextIdx, 0, moved);
-      void persistOrder(next);
-      return next;
-    });
-  };
 
   const beginDrag = (e: React.PointerEvent, id: number) => {
     if (!canReorder) return;
@@ -278,7 +243,7 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ className = 
         onClick={handleOpen}
         {...tip(t.triggerTitle, undefined, 'action')}
         aria-label={t.triggerTitle}
-        className={className}
+        className={cn('relative', className)}
       >
         <Megaphone className="h-4 w-4" />
         {hasUnread && <UnreadDot className="absolute -right-0.5 -top-0.5" />}
@@ -289,6 +254,7 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ className = 
         onClose={() => setIsOpen(false)}
         variant="dialog"
         size="2xl"
+        fullscreenOnMobile
         title={t.modalTitle}
         closeButtonAriaLabel={t.close}
         headerRight={
@@ -307,229 +273,232 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ className = 
           ) : undefined
         }
       >
-      {availableTags.length > 1 && (
-        <div className="sticky top-0 z-10 flex flex-wrap gap-1.5 border-b border-border-color bg-bg-surface px-6 py-3">
-          <FilterChip
-            active={activeFilter === 'all'}
-            onClick={() => setActiveFilter('all')}
-            label={t.filterAll}
-          />
-          {availableTags.map((tag) => {
-            const theme = CHANGELOG_TAG_THEME[tag];
-            return (
-              <FilterChip
-                key={tag}
-                active={activeFilter === tag}
-                onClick={() => setActiveFilter(tag)}
-                label={theme.label}
-                dotClass={theme.dotClass}
-              />
-            );
-          })}
-        </div>
-      )}
-        <div className="relative px-6 py-5 space-y-3">
-        {loading && (
-          <div className="flex items-center justify-center py-16 text-text-muted">
-            <Spinner size="md" />
-          </div>
-        )}
-
-        {!loading && visiblePosts.length === 0 && (
-          <div className="flex flex-col items-center gap-2 py-16 text-center">
-            <Skull className="h-6 w-6 text-text-muted" />
-            <p className="text-xs font-medium text-text-muted">
-              {t.emptyState}
+        <div className="relative px-4 sm:px-6">
+          {actionError && (
+            <p role="alert" className="mt-4 rounded-card border border-accent-red/40 bg-accent-red/10 px-3 py-2 type-strong text-accent-red">
+              {actionError}
             </p>
-          </div>
-        )}
+          )}
 
-        {visiblePosts.map((post, idx) => {
-          const theme = CHANGELOG_TAG_THEME[post.tag] || CHANGELOG_TAG_THEME.feature;
-          const isExpanded = expandedIds.has(post.id);
-          const isDragging = draggingId === post.id;
-
-          return (
-            <div
-              key={post.id}
-              ref={(el) => {
-                if (el) rowRefs.current.set(post.id, el);
-                else rowRefs.current.delete(post.id);
-              }}
-              onPointerMove={handlePointerMove}
-              onPointerUp={endDrag}
-              onPointerCancel={endDrag}
-              className={`rounded-card border transition-all ${
-                isDragging
-                  ? 'border-accent-amber/60 bg-bg-elevated/80 shadow-lg scale-[1.01] z-10 relative'
-                  : post.is_published
-                    ? 'border-border-color bg-bg-elevated/50'
-                    : 'border-dashed border-border-subtle bg-bg-elevated/20'
-              }`}
-            >
-              <div className="flex items-start gap-2 p-4">
-                {canReorder && (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    icon
-                    {...tip(t.dragToReorder, undefined, 'action')}
-                    aria-label={t.dragToReorder}
-                    onPointerDown={(e) => beginDrag(e, post.id)}
-                    style={{ touchAction: 'none' }}
-                    className={cn('mt-0.5 cursor-grab active:cursor-grabbing', isDragging && 'text-accent-amber')}
-                  >
-                    <GripVertical className="h-4 w-4" />
-                  </Button>
-                )}
-
-                <button
-                  type="button"
-                  onClick={() => toggleExpanded(post.id)}
-                  aria-expanded={isExpanded}
-                  className="flex flex-1 items-start justify-between gap-3 text-left cursor-pointer"
-                >
-                  <div className="min-w-0 flex-1">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <span
-                        className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-tiny font-black uppercase tracking-wide ${theme.badgeClass}`}
-                      >
-                        {theme.label}
-                      </span>
-                      {!post.is_published && (
-                        <span className="type-label-2xs text-text-muted">
-                          {t.draftBadge}
-                        </span>
-                      )}
-                      <span className="type-label-2xs text-text-muted">
-                        {formatPostDate(post.created_at)}
-                      </span>
-                    </div>
-                    <h3 className="mt-1.5 truncate type-card-title text-text-primary">{post.title}</h3>
-                  </div>
-                  <span className="mt-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-text-muted">
-                    {isExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-                  </span>
-                </button>
-              </div>
-
-              <div
-                className="grid transition-[grid-template-rows] duration-300 ease-out"
-                style={{ gridTemplateRows: isExpanded ? '1fr' : '0fr' }}
-              >
-                <div className="overflow-hidden">
-                  <div className="px-4 pb-4 pl-[2.75rem]">
-                    <RichText
-                      text={post.content_html}
-                      block
-                      className="dbd-changelog-body text-xs leading-relaxed text-text-muted [&_h3]:text-sm [&_h3]:font-black [&_h3]:text-accent-red [&_ul]:list-disc [&_ul]:pl-4 [&_ol]:list-decimal [&_ol]:pl-4 [&_a]:text-accent-red [&_a]:underline"
-                    />
-                    <div className="mt-2.5 flex items-center justify-between gap-2">
-                      <span className="type-label-2xs text-text-muted">
-                        {t.byAuthor} {post.author_name}
-                      </span>
-                      {isAdmin && (
-                        <div className="flex items-center gap-1">
-                          {canReorder && (
-                            <>
-                              <IconButton
-                                icon={ChevronUp}
-                                label={t.moveUp}
-                                disabled={idx === 0}
-                                onClick={() => movePost(post.id, -1)}
-                              />
-                              <IconButton
-                                icon={ChevronDown}
-                                label={t.moveDown}
-                                disabled={idx === visiblePosts.length - 1}
-                                onClick={() => movePost(post.id, 1)}
-                              />
-                            </>
-                          )}
-                          <IconButton
-                            icon={Pencil}
-                            label={t.edit}
-                            hoverClass="hover:text-accent-red"
-                            onClick={() => {
-                              setEditingPost(post);
-                              setEditorOpen(true);
-                            }}
-                          />
-                          <IconButton
-                            icon={Trash2}
-                            label={t.delete}
-                            hoverClass="hover:text-accent-red"
-                            onClick={() => setPendingDeleteId(post.id)}
-                          />
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </div>
+          {loading && (
+            <div className="flex items-center justify-center py-16 text-text-muted">
+              <Spinner size="md" />
             </div>
-          );
-        })}
-      </div>
+          )}
+
+          {!loading && listedPosts.length === 0 && (
+            <div className="flex flex-col items-center gap-2 py-16 text-center">
+              <Skull className="h-6 w-6 text-text-muted" />
+              <p className="text-xs font-medium text-text-muted">
+                {t.emptyState}
+              </p>
+            </div>
+          )}
+
+          <div className="divide-y divide-border-color">
+            {listedPosts.map((post) => {
+              const isExpanded = expandedIds.has(post.id);
+              const isDragging = draggingId === post.id;
+              const preview = isExpanded ? '' : htmlToPlainText(post.content_html);
+
+              return (
+                <article
+                  key={post.id}
+                  ref={(el) => {
+                    if (el) rowRefs.current.set(post.id, el);
+                    else rowRefs.current.delete(post.id);
+                  }}
+                  onPointerMove={handlePointerMove}
+                  onPointerUp={endDrag}
+                  onPointerCancel={endDrag}
+                  className={cn(
+                    'py-4 transition-colors',
+                    isDragging && 'relative z-10 rounded-card bg-bg-elevated px-2 shadow-lg'
+                  )}
+                >
+                  <div className="flex items-start gap-2">
+                    {canReorder && (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        icon
+                        {...tip(t.dragToReorder, undefined, 'action')}
+                        aria-label={t.dragToReorder}
+                        onPointerDown={(e) => beginDrag(e, post.id)}
+                        style={{ touchAction: 'none' }}
+                        className={cn('cursor-grab active:cursor-grabbing', isDragging && 'text-accent-amber')}
+                      >
+                        <GripVertical className="h-4 w-4" />
+                      </Button>
+                    )}
+
+                    <button
+                      type="button"
+                      onClick={() => toggleExpanded(post)}
+                      aria-expanded={isExpanded}
+                      className="flex min-w-0 flex-1 items-start justify-between gap-3 text-left cursor-pointer"
+                    >
+                      <div className="min-w-0 flex-1">
+                        <div className="flex flex-wrap items-center gap-1.5">
+                          {isAdmin && (
+                            <span
+                              className={cn(
+                                'inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-tiny font-black uppercase tracking-wide',
+                                post.is_published
+                                  ? 'border-accent-green/40 bg-accent-green/10 text-accent-green'
+                                  : 'border-accent-amber/40 bg-accent-amber/10 text-accent-amber'
+                              )}
+                            >
+                              <span className={cn('h-1.5 w-1.5 rounded-full', post.is_published ? 'bg-accent-green' : 'bg-accent-amber')} />
+                              {post.is_published ? t.publishedLabel : t.draftBadge}
+                            </span>
+                          )}
+                          <span className="type-label-2xs text-text-muted">
+                            {formatPostDate(postDate(post))}
+                          </span>
+                          {isAdmin && post.discord_announced_at && (
+                            <span className="inline-flex items-center gap-1 type-label-2xs text-text-muted">
+                              <Send className="h-3 w-3" aria-hidden="true" />
+                              {t.discordSent}
+                            </span>
+                          )}
+                        </div>
+                        <div className="mt-1.5 flex items-center gap-2">
+                          <h3 className={cn('type-card-title min-w-0 text-text-primary', !isExpanded && 'truncate')}>
+                            {post.title}
+                          </h3>
+                          {isUnread(post) && (
+                            <span className="inline-flex shrink-0 items-center rounded-full bg-accent-red px-2 py-0.5 text-tiny font-black uppercase tracking-wide text-text-inverted">
+                              {t.newBadge}
+                            </span>
+                          )}
+                        </div>
+                        {preview && <p className="mt-1 line-clamp-2 text-xs text-text-muted">{preview}</p>}
+                      </div>
+                      <span className="mt-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-text-muted">
+                        {isExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                      </span>
+                    </button>
+
+                    {isAdmin && (
+                      <div className="flex shrink-0 items-center gap-0.5">
+                        {post.is_published && !post.discord_announced_at && (
+                          <IconButton
+                            icon={Send}
+                            label={t.announceDiscord}
+                            hoverClass="hover:text-accent-red"
+                            onClick={() => setPendingAnnounce(post)}
+                          />
+                        )}
+                        <IconButton
+                          icon={Pencil}
+                          label={t.edit}
+                          hoverClass="hover:text-accent-red"
+                          onClick={() => {
+                            setEditingPost(post);
+                            setEditorOpen(true);
+                          }}
+                        />
+                        <IconButton
+                          icon={Trash2}
+                          label={t.delete}
+                          hoverClass="hover:text-accent-red"
+                          onClick={() => setPendingDeleteId(post.id)}
+                        />
+                      </div>
+                    )}
+                  </div>
+
+                  <div
+                    className="grid transition-[grid-template-rows] duration-300 ease-out"
+                    style={{ gridTemplateRows: isExpanded ? '1fr' : '0fr' }}
+                  >
+                    <div className="overflow-hidden">
+                      {/* pl-10 = the drag handle (h-8 w-8) plus its gap, so the text lines up with the title */}
+                      <div className={cn('pt-3', canReorder && 'pl-10')}>
+                        <RichText
+                          text={post.content_html}
+                          block
+                          className="text-sm leading-relaxed text-text-secondary [&_h3]:text-base [&_h3]:font-black [&_h3]:text-accent-red [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_a]:text-accent-red [&_a]:underline"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+
+          {hasMore && (
+            <div className="flex justify-center py-5">
+              <Button variant="secondary" size="md" loading={loadingMore} onClick={() => void loadMore()}>
+                {t.loadMore}
+              </Button>
+            </div>
+          )}
+        </div>
       </Modal>
 
       {editorOpen && (
-      <ChangelogEditorModal
-        open={editorOpen}
-        post={editingPost}
-        saving={saving}
-        error={editorError}
-        onClose={() => {
-          setEditorError(null);
-          setEditorOpen(false);
-          setEditingPost(null);
-        }}
-        onSave={handleSave}
-        onDelete={editingPost ? () => setPendingDeleteId(editingPost.id) : undefined}
-      />
+        <ChangelogEditorModal
+          open={editorOpen}
+          post={editingPost}
+          saving={saving}
+          error={editorError}
+          onClose={() => {
+            setEditorError(null);
+            setEditorOpen(false);
+            setEditingPost(null);
+          }}
+          onSave={handleSave}
+        />
+      )}
+
+      {pendingAnnounce && (
+        <ConfirmModal
+          open
+          size="md"
+          title={t.discordConfirmTitle}
+          message={
+            <>
+              <p>{t.discordConfirmMessage}</p>
+              <p className="mt-3 font-bold text-text-primary">{pendingAnnounce.title}</p>
+            </>
+          }
+          confirmLabel={t.discordConfirmSend}
+          closeButton="header"
+          closeButtonAriaLabel={t.cancel}
+          busy={announcing}
+          busyLabel={t.discordConfirmSend}
+          onConfirm={handleAnnounce}
+          onCancel={() => setPendingAnnounce(null)}
+        />
       )}
 
       {pendingDeleteId != null && (
-      <ConfirmModal
-        open={pendingDeleteId != null}
-        title={t.deleteConfirmTitle}
-        message={t.deleteConfirmMessage}
-        confirmLabel={t.delete}
-        onConfirm={handleDelete}
-        onCancel={() => setPendingDeleteId(null)}
-      />
+        <ConfirmModal
+          open={pendingDeleteId != null}
+          title={t.deleteConfirmTitle}
+          message={t.deleteConfirmMessage}
+          confirmLabel={t.delete}
+          onConfirm={handleDelete}
+          onCancel={() => setPendingDeleteId(null)}
+        />
       )}
-
     </>
   );
 };
-
-const FilterChip: React.FC<{ active: boolean; onClick: () => void; label: string; dotClass?: string }> = ({
-  active,
-  onClick,
-  label,
-  dotClass,
-}) => (
-  <ToggleChip pressed={active} size="sm" pill
-    onClick={onClick}
-  >
-    {dotClass && <span className={`h-1.5 w-1.5 rounded-full ${dotClass}`} />}
-    {label}
-  </ToggleChip>
-);
 
 const IconButton: React.FC<{
   icon: React.ComponentType<{ className?: string }>;
   label: string;
   onClick: () => void;
-  disabled?: boolean;
   hoverClass?: string;
-}> = ({ icon: Icon, label, onClick, disabled, hoverClass = 'hover:text-text-secondary' }) => (
+}> = ({ icon: Icon, label, onClick, hoverClass = 'hover:text-text-secondary' }) => (
   <Button variant="ghost" size="sm" icon
     type="button"
     {...tip(label, undefined, 'action')}
     aria-label={label}
-    disabled={disabled}
     onClick={onClick}
     className={hoverClass}
   >

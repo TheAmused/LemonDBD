@@ -8,6 +8,7 @@ export interface SwitchProps {
   ariaLabel: string;
   className?: string;
   size?: SwitchSize;
+  disabled?: boolean;
 }
 
 export type SwitchSize = 'sm' | 'md';
@@ -53,15 +54,16 @@ export const SwitchTrack: React.FC<{ checked: boolean; size?: SwitchSize; classN
   </span>
 );
 
-export const Switch: React.FC<SwitchProps> = ({ checked, onChange, ariaLabel, className = '', size = 'md' }) => {
+export const Switch: React.FC<SwitchProps> = ({ checked, onChange, ariaLabel, className = '', size = 'md', disabled = false }) => {
   return (
     <button
       type="button"
       role="switch"
       aria-checked={checked}
       aria-label={ariaLabel}
+      disabled={disabled}
       onClick={() => onChange(!checked)}
-      className={`inline-flex shrink-0 cursor-pointer rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red ${className}`}
+      className={`inline-flex shrink-0 cursor-pointer rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red disabled:cursor-not-allowed disabled:opacity-50 ${className}`}
     >
       <SwitchTrack checked={checked} size={size} />
     </button>

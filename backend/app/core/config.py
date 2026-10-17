@@ -165,6 +165,9 @@ class Config:
     # Name shown in the authenticator app next to the account.
     TWO_FACTOR_ISSUER: str = os.getenv("TWO_FACTOR_ISSUER", "LemonDBD")
 
+    # Webhook of the channel where published "What's New" entries are announced (an empty value turns it off).
+    DISCORD_CHANGELOG_WEBHOOK_URL: str = os.getenv("DISCORD_CHANGELOG_WEBHOOK_URL", "")
+
     # Rate Limiting Configuration
     RATELIMIT_ENABLED: bool = os.getenv("RATELIMIT_ENABLED", "true").lower() in ("true", "1", "yes")
     RATELIMIT_STORAGE_URI: str = os.getenv("RATELIMIT_STORAGE_URI", "memory://")

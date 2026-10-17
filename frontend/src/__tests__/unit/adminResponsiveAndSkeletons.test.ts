@@ -33,8 +33,9 @@ describe('Admin Page: user directory', () => {
   });
 
   it('puts the counts on the filter options only, once each', () => {
-    const html = renderUsers();
-    for (const n of ['80', '79', '77']) assert.equal((html.match(new RegExp(`\\(${n}\\)`, 'g')) || []).length, 1, n);
+    // A closed dropdown renders just its selected option, so select the ones whose counts are checked.
+    const html = renderUsers({ role: 'user', standing: 'active' });
+    for (const n of ['79', '77']) assert.equal((html.match(new RegExp(`\\(${n}\\)`, 'g')) || []).length, 1, n);
   });
 
   it('offers moderation only for players other than yourself, the rest in the row menu', () => {

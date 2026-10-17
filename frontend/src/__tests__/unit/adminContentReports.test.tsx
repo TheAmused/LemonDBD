@@ -68,6 +68,8 @@ const baseDetail: AdminContentReportDetail = {
 };
 
 const noop = async () => true;
+// As it appears in rendered HTML: the label has an apostrophe, which React escapes.
+const AUTHOR_ACTION_LABEL = en.moderation.admin.authorActionLabel.replace(/'/g, '&#x27;');
 const showUser = () => {};
 
 describe('contentPreview', () => {
@@ -138,23 +140,23 @@ describe('ContentReportDetail', () => {
     assert.ok(html.includes(en.admin.contentReasonHate));
     assert.ok(html.includes('&lt;b&gt;insults&lt;/b&gt;'), 'reporter notes are free text and must be escaped');
     assert.ok(html.includes('the_author'));
-    for (const option of [en.moderation.admin.authorActionWarning, en.moderation.admin.authorActionSuspension, en.moderation.admin.authorActionBan]) {
-      assert.ok(html.includes(option), option);
-    }
+    // The author decision is a dropdown: closed, it shows its label and the selected "nothing" option.
+    assert.ok(html.includes(AUTHOR_ACTION_LABEL));
+    assert.ok(html.includes(en.moderation.admin.authorActionNone));
   });
 
   it('explains an unattributed report and offers no author decision', () => {
     const detail = { ...baseDetail, attributed: false, author_id: null, author_login: '', author_active: null };
     const html = renderWithDictionary(React.createElement(ContentReportDetail, { detail, resolving: false, onResolve: noop, onShowUser: showUser }));
     assert.ok(html.includes(en.admin.contentReportUnattributed));
-    assert.ok(!html.includes(en.moderation.admin.authorActionWarning));
+    assert.ok(!html.includes(AUTHOR_ACTION_LABEL));
   });
 
   it('never offers a decision about an admin author', () => {
     const detail = { ...baseDetail, author_is_admin: true };
     const html = renderWithDictionary(React.createElement(ContentReportDetail, { detail, resolving: false, onResolve: noop, onShowUser: showUser }));
     assert.ok(html.includes(en.admin.contentReportAuthorIsAdmin));
-    assert.ok(!html.includes(en.moderation.admin.authorActionWarning));
+    assert.ok(!html.includes(AUTHOR_ACTION_LABEL));
   });
 
   it('shows a resolved report as read-only with the wiped-evidence note', () => {

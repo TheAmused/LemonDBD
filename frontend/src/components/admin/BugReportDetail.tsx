@@ -8,8 +8,8 @@ import { ExternalLink, Send, Trash2, UserSearch } from 'lucide-react';
 import { Badge } from '@/components/common/Badge';
 import { Button } from '@/components/common/Button';
 import { ConfirmModal } from '@/components/common/ConfirmModal';
-import { Select, Textarea } from '@/components/common/Field';
-import { Surface } from '@/components/common/Surface';
+import { Textarea } from '@/components/common/Field';
+import { CustomDropdown } from '@/components/common/CustomDropdown';
 import { tip } from '@/components/common/Tooltip';
 import { BUG_STATUSES, bugStatusLabel } from '@/components/admin/reportLabels';
 import { useDictionary, useLocale } from '@/context/DictionaryContext';
@@ -72,27 +72,24 @@ export function BugReportDetail({ report, onStatusChange, onReply, onDelete, onS
   ];
 
   return (
-    <Surface as="article" padding="none" className="divide-y divide-border-color">
+    <article className="divide-y divide-border-color">
       <header className="flex flex-wrap items-start justify-between gap-3 p-4 sm:p-5">
         <div className="min-w-0 flex-1">
           <p className="type-caption text-text-muted">#{report.id}</p>
           <h3 className="mt-0.5 break-words type-card-title text-text-primary">{report.title}</h3>
         </div>
         <div className="flex items-center gap-2">
-          <Select
-            fieldSize="sm"
-            className="w-auto"
-            aria-label={t.updateStatus}
+          <CustomDropdown<BugReportStatus>
+            ariaLabel={t.updateStatus}
+            accent="primary"
+            buttonClassName="py-2"
+            align="right"
             value={report.status}
-            disabled={busy}
-            onChange={(e) => run(() => onStatusChange(e.target.value as BugReportStatus))}
-          >
-            {BUG_STATUSES.map((s) => (
-              <option key={s} value={s}>
-                {bugStatusLabel(dict, s)}
-              </option>
-            ))}
-          </Select>
+            onChange={(status) => {
+              if (!busy) run(() => onStatusChange(status));
+            }}
+            options={BUG_STATUSES.map((s) => ({ value: s, label: bugStatusLabel(dict, s) }))}
+          />
           <Button
             variant="danger"
             size="sm"
@@ -186,6 +183,6 @@ export function BugReportDetail({ report, onStatusChange, onReply, onDelete, onS
         }
         onCancel={() => setConfirmDelete(false)}
       />
-    </Surface>
+    </article>
   );
 }

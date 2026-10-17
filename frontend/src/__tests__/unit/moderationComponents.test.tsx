@@ -9,8 +9,9 @@ import { renderWithDictionary } from '../helpers/renderWithDictionary';
 import { AccountBlockedNotice } from '@/components/moderation/AccountBlockedNotice';
 import { SanctionForm } from '@/components/admin/SanctionForm';
 import { SanctionHistory } from '@/components/admin/SanctionHistory';
+import { ModerationProfileCard } from '@/components/admin/ModerationProfileCard';
 import { UserStandingBadge } from '@/components/admin/UserStandingBadge';
-import { EMPTY_SANCTION_DRAFT, SANCTION_KINDS, type AdminSanction } from '@/types/moderation';
+import { EMPTY_SANCTION_DRAFT, SANCTION_KINDS, type AdminSanction, type ModerationSummary } from '@/types/moderation';
 import { en, pl } from '@/locales';
 
 const noop = () => {};
@@ -90,17 +91,56 @@ describe('SanctionForm', () => {
     assert.ok(render({ kind: 'warning' }).includes(en.moderation.admin.formFactsOptional));
   });
 
-  it('lists every reason and rule, and hides what the report case fixes elsewhere', () => {
+  it('shows the chosen reason and rule in their dropdowns, the rule as "Section N: heading"', () => {
+    const none = render({});
+    assert.ok(none.includes(en.moderation.reasons.other));
+    assert.ok(none.includes(en.moderation.admin.formRuleNone));
+    const cited = render({ rule_ref: 'fairPlay' });
+    assert.ok(cited.includes(`Section 2: ${en.rules.sections.fairPlay.heading}`.replace("'", '&#x27;')));
+  });
+
+  it('hides what the report case fixes elsewhere, and keeps the notes with the drawer only', () => {
     const full = render({});
-    assert.ok(full.includes(en.moderation.reasons.ban_evasion));
-    assert.ok(full.includes(`Section 3: ${en.rules.sections.fairPlay.heading}`.replace("'", '&#x27;')));
-    assert.ok(!full.includes(en.moderation.admin.previewTitle), 'no preview without a target');
     assert.ok(full.includes(en.moderation.admin.formInternal));
-    assert.ok(full.includes(en.moderation.admin.formSendEmail));
+    assert.ok(!full.includes(en.moderation.admin.previewTitle), 'no preview without a target');
+    assert.ok(!full.includes(en.moderation.admin.formSendEmail), 'the email switch belongs to the drawer, next to the suggestion');
     const forReport = render({}, { showReason: false, showInternal: false });
     assert.ok(!forReport.includes(en.moderation.admin.formReason));
     assert.ok(!forReport.includes(en.moderation.admin.formInternal));
-    assert.ok(!forReport.includes(en.moderation.admin.formSendEmail));
+  });
+});
+
+describe('ModerationProfileCard', () => {
+  const user = { id: 4, login: 'ada', username: 'Ada', email: 'a@x.test', role: 'user', is_active: true, created_at: '2026-01-01T00:00:00Z', owned_characters_count: 0, unlocked_perks_count: 0 };
+  const summary = (patch: Partial<ModerationSummary>): ModerationSummary => ({
+    active_warnings: 0,
+    total_warnings: 0,
+    total_suspensions: 0,
+    banned: false,
+    suggestion: null,
+    suspended_until: null,
+    content_blocked: 0,
+    ...patch,
+  });
+  const render = (patch: Partial<ModerationSummary> | null) =>
+    renderWithDictionary(
+      React.createElement(ModerationProfileCard, { user, summary: patch === null ? null : summary(patch), busy: false, onRestore: noop })
+    );
+
+  it('rings the avatar green, yellow, orange or red by where the account stands', () => {
+    assert.ok(render({}).includes('border-accent-green'));
+    assert.ok(render({ active_warnings: 1, total_warnings: 1 }).includes('border-accent-amber'));
+    assert.ok(render({ suspended_until: '2999-01-01T00:00:00Z' }).includes('border-accent-orange'));
+    assert.ok(render({ banned: true }).includes('border-accent-red'));
+    assert.ok(!render(null).includes('border-accent-green'), 'neutral until the summary has loaded');
+  });
+
+  it('names the standing for screen readers, shows the numbers, and offers Restore only when blocked', () => {
+    const warned = render({ active_warnings: 2, total_warnings: 5, total_suspensions: 1, content_blocked: 3 });
+    assert.ok(warned.includes(en.moderation.admin.standingWarned));
+    assert.ok(warned.includes('2 / 5') && warned.includes('Ada') && warned.includes('@ada'));
+    assert.ok(!warned.includes(en.moderation.admin.restoreButton));
+    assert.ok(render({ banned: true }).includes(en.moderation.admin.restoreButton));
   });
 });
 

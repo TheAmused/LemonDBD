@@ -216,7 +216,7 @@ def test_preview_shows_the_email_in_the_users_language_and_saves_nothing(admin, 
     assert preview["language"] == "pl" and preview["facts"] == FACTS and preview["until"]
     email = preview["email"]
     flat = " ".join(" ".join(block[1:]) for block in email["blocks"])
-    assert email["subject"] and FACTS in flat and "Sekcja 2: " in flat
+    assert email["subject"] and FACTS in flat and "Sekcja 1: " in flat
     assert db_session.scalar(select(UserSanction)) is None and db_session.scalar(select(SanctionNotification)) is None
     assert outbox == []
 

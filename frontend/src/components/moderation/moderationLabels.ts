@@ -13,7 +13,7 @@ export function reasonLabel(dict: ModerationDict, code: string | null | undefine
   return reasons[code] ?? code;
 }
 
-/** The cited Rules section as "Section 2: Don't be the Entity" ("" when no rule is cited). */
+/** The cited Rules section as "Section 1: Don't be the Entity" ("" when no rule is cited). */
 export function ruleLabel(dict: ModerationDict, ref: string | null | undefined): string {
   if (!ref) return '';
   const sections = dict.rules.sections as Record<string, { heading?: string } | undefined>;

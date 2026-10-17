@@ -327,6 +327,7 @@ export default {
   confirmDeleteUser: "{username} und alles, was zu diesem Konto gehört, löschen? Das kann nicht rückgängig gemacht werden.",
   filterByStatus: "Nach Status filtern",
   queueSelectPrompt: "Wähle eine Meldung, um sie hier zu sehen.",
+  queueCaseTitle: "Meldung",
   guestReporter: "Gast",
   showInUsers: "In Benutzer anzeigen",
   submittedAt: "Gesendet",

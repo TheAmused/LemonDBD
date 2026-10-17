@@ -7,6 +7,7 @@ export default {
   lastUpdated: "October 15, 2026",
   translationNotice: "If the translated versions of this page differ from the English one, the English version prevails.",
   tldrLabel: "TL;DR",
+  sectionEyebrow: "Section {number}",
   tldrNotice: "The titles, the TL;DR lines and the summary are friendly shortcuts. For legal reasons they are not binding and do not replace the text below them. If they differ from it, the full text applies.",
   summaryHeading: "Rules in a nutshell",
   summary: [

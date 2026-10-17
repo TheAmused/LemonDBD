@@ -11,6 +11,7 @@ import {
   authorDecisionFromDraft,
   draftFromSuggestion,
   isSanctionDraftValid,
+  moderationState,
   sanctionPreviewBody,
   sanctionRequestBody,
   type ModerationSuggestion,
@@ -157,11 +158,14 @@ test('the suggestion texts exist in every language with the placeholders they ar
 });
 
 test('a cited rule is named by its section number on the Rules page', () => {
-  // The numbers are the sections' places in the page's order; the backend keeps the same table.
-  for (const ref of RULE_REFS) {
-    assert.equal(RULE_SECTION_NUMBERS[ref], LEGAL_DOCS.rules.order.indexOf(ref) + 1, ref);
+  // The Rules page opens with the unnumbered `scope`; the rest follow in RULE_REFS order, numbered from 1.
+  // The backend keeps the same table (app/core/rule_sections.py).
+  assert.deepEqual(LEGAL_DOCS.rules.order.filter((id) => id !== 'scope'), [...RULE_REFS]);
+  RULE_REFS.forEach((ref, index) => assert.equal(RULE_SECTION_NUMBERS[ref], index + 1, ref));
+  assert.equal(ruleLabel(en, 'respect'), `Section 1: ${en.rules.sections.respect.heading}`);
+  for (const [name, loc] of Object.entries({ en, es, pl, de, ja })) {
+    assert.ok(loc.rules.sectionEyebrow.includes('{number}'), `${name}: rules page label`);
   }
-  assert.equal(ruleLabel(en, 'respect'), `Section 2: ${en.rules.sections.respect.heading}`);
   assert.equal(ruleLabel(en, null), '');
   assert.equal(ruleLabel(en, 'madeUp'), 'madeUp', 'an unknown rule prints as itself');
   for (const [name, loc] of Object.entries({ en, es, pl, de, ja })) {
@@ -183,4 +187,14 @@ test('the preview request is the form plus whom it is about, without the interna
   assert.equal(forReport.report_id, 9);
   assert.equal(forReport.user_id, undefined);
   assert.equal(forReport.duration_days, undefined);
+});
+
+test('an account is banned, suspended, warned or in good standing, in that order of precedence', () => {
+  const now = Date.parse('2026-10-17T12:00:00Z');
+  const base = { banned: false, suspended_until: null, active_warnings: 0 };
+  assert.equal(moderationState(base, now), 'good');
+  assert.equal(moderationState({ ...base, active_warnings: 1 }, now), 'warned');
+  assert.equal(moderationState({ ...base, active_warnings: 1, suspended_until: '2026-10-20T00:00:00Z' }, now), 'suspended');
+  assert.equal(moderationState({ ...base, active_warnings: 1, suspended_until: '2026-10-01T00:00:00Z' }, now), 'warned', 'a lapsed suspension no longer counts');
+  assert.equal(moderationState({ banned: true, suspended_until: '2026-10-20T00:00:00Z', active_warnings: 3 }, now), 'banned');
 });

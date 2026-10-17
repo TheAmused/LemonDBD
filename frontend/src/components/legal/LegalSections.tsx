@@ -12,6 +12,8 @@ import { ContactLinks } from '@/components/common/ContactLinks';
 import { RichText } from '@/components/common/RichText';
 import { LEGAL_DOCS, fillLegalPaths, legalDocText, legalSectionTone, type LegalDocId, type LegalDocText } from '@/components/legal/legalDocs';
 import { useDictionary, useLocale } from '@/context/DictionaryContext';
+import { RULE_SECTION_NUMBERS, type RuleRef } from '@/types/moderation';
+import { formatMessage } from '@/utils/i18nFormat';
 import { usePrivacyInfo } from '@/hooks/usePrivacyInfo';
 import { cn } from '@/utils/cn';
 import { fillPrivacyPlaceholders } from '@/utils/privacyPlaceholders';
@@ -90,8 +92,11 @@ export function LegalSections({ doc, variant }: LegalSectionsProps) {
     const section = text.sections[id];
     const tone = legalSectionTone(index);
     const t = BLOCK_TONES[tone];
+    // The sections a decision can cite carry the number it names ("Section 1"); the opening one has none.
+    const number = text.sectionEyebrow ? RULE_SECTION_NUMBERS[id as RuleRef] : undefined;
     return {
       id,
+      eyebrow: number ? formatMessage(text.sectionEyebrow, { number }) : undefined,
       storageKey: `lemondbd_drawer_${doc}_open_${id}`,
       title: section.heading,
       tone,
@@ -128,7 +133,7 @@ export function LegalSections({ doc, variant }: LegalSectionsProps) {
       <>
         {[summaryItem, ...sectionItems].map((item) => (
           <section key={item.id} className="flex flex-col gap-2 border-t border-border-color pt-4 type-body-lg first:border-t-0 first:pt-0">
-            <BlockTitle title={item.title} tone={item.tone} as="h3" centered />
+            <BlockTitle title={item.title} eyebrow={item.eyebrow} tone={item.tone} as="h3" centered />
             {item.children}
           </section>
         ))}

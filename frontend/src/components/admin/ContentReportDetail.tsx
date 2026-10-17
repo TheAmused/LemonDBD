@@ -4,8 +4,8 @@ import React, { useState } from 'react';
 import { Ban, CheckCircle, ShieldAlert, UserSearch, UserX } from 'lucide-react';
 import { Button } from '@/components/common/Button';
 import { Badge } from '@/components/common/Badge';
-import { Select, Textarea } from '@/components/common/Field';
-import { Surface } from '@/components/common/Surface';
+import { Textarea } from '@/components/common/Field';
+import { CustomDropdown } from '@/components/common/CustomDropdown';
 import { tip } from '@/components/common/Tooltip';
 import { ConfirmModal } from '@/components/common/ConfirmModal';
 import { SandboxedContentPreview } from '@/components/admin/SandboxedContentPreview';
@@ -65,7 +65,7 @@ export function ContentReportDetail({ detail, resolving, onResolve, onShowUser }
   };
 
   return (
-    <Surface as="article" className="space-y-5">
+    <article className="space-y-5 p-4 sm:p-5">
       <div className="flex flex-wrap items-center gap-2">
         <h3 className="type-strong text-text-primary">#{detail.id}</h3>
         <Badge tone="neutral" size="sm">{contentTypeLabel(dict, detail.content_type)}</Badge>
@@ -175,20 +175,24 @@ export function ContentReportDetail({ detail, resolving, onResolve, onShowUser }
           {canActOnAuthor && (
             <div className="space-y-3 rounded-card border border-border-color bg-bg-primary p-3">
               <div>
-                <label htmlFor={`author-action-${detail.id}`} className="block type-label-xs text-text-secondary mb-1">
+                <span className="block type-label-xs text-text-secondary mb-1">
                   {moderation.authorActionLabel}
-                </label>
-                <Select
-                  id={`author-action-${detail.id}`}
-                  fieldSize="sm"
+                </span>
+                <CustomDropdown<SanctionKind | 'none'>
+                  ariaLabel={moderation.authorActionLabel}
+                  accent="primary"
+                  className="w-full"
+                  buttonClassName="w-full justify-between py-2.5"
+                  menuClassName="w-full"
                   value={authorKind}
-                  onChange={(e) => setAuthorKind(e.target.value as SanctionKind | 'none')}
-                >
-                  <option value="none">{moderation.authorActionNone}</option>
-                  <option value="warning">{moderation.authorActionWarning}</option>
-                  <option value="suspension">{moderation.authorActionSuspension}</option>
-                  <option value="ban">{moderation.authorActionBan}</option>
-                </Select>
+                  onChange={setAuthorKind}
+                  options={[
+                    { value: 'none', label: moderation.authorActionNone },
+                    { value: 'warning', label: moderation.authorActionWarning },
+                    { value: 'suspension', label: moderation.authorActionSuspension },
+                    { value: 'ban', label: moderation.authorActionBan },
+                  ]}
+                />
                 <p className="mt-1 type-micro text-text-muted">{moderation.authorActionHint}</p>
               </div>
               {authorKind !== 'none' && (
@@ -233,6 +237,6 @@ export function ContentReportDetail({ detail, resolving, onResolve, onShowUser }
         onConfirm={runBan}
         onCancel={() => setConfirmBan(false)}
       />
-    </Surface>
+    </article>
   );
 }

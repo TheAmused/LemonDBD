@@ -9,7 +9,8 @@ import { Save, UserPlus } from 'lucide-react';
 import { Modal } from '@/components/common/Modal';
 import { Button } from '@/components/common/Button';
 import { Checkbox } from '@/components/common/Checkbox';
-import { Input, Select } from '@/components/common/Field';
+import { CustomDropdown } from '@/components/common/CustomDropdown';
+import { Input } from '@/components/common/Field';
 import { useDictionary } from '@/context/DictionaryContext';
 import { formatMessage } from '@/utils/i18nFormat';
 import type { NewUser, UserPatch, UserRow } from '@/types/admin';
@@ -148,10 +149,21 @@ export function AdminUserFormModal({ target, currentUserId, onClose, onCreate, o
 
         <label className="block space-y-1">
           <span className="block type-label-xs text-text-secondary">{t.rolePrivilege}</span>
-          <Select value={form.role} onChange={field('role')} disabled={ownAccount}>
-            <option value="user">{t.roleStandard}</option>
-            <option value="admin">{t.roleAdministrator}</option>
-          </Select>
+          <div className={ownAccount ? 'pointer-events-none opacity-60' : undefined} aria-disabled={ownAccount}>
+          <CustomDropdown<NewUser['role']>
+            ariaLabel={t.rolePrivilege}
+            accent="primary"
+            className="w-full"
+            buttonClassName="w-full justify-between py-2.5"
+            menuClassName="w-full"
+            value={form.role}
+            onChange={(role) => !ownAccount && setForm((f) => ({ ...f, role }))}
+            options={[
+              { value: 'user', label: t.roleStandard },
+              { value: 'admin', label: t.roleAdministrator },
+            ]}
+          />
+          </div>
           {ownAccount && <span className="block type-caption text-text-muted">{t.ownRoleLocked}</span>}
         </label>
 

@@ -30,16 +30,10 @@ export const RULE_REFS = [
 ] as const;
 export type RuleRef = (typeof RULE_REFS)[number];
 
-/** Where each section sits on the Rules page, which opens with `scope` (section 1); a decision cites "Section 2: ...". */
-export const RULE_SECTION_NUMBERS: Readonly<Record<RuleRef, number>> = {
-  respect: 2,
-  fairPlay: 3,
-  yourContent: 4,
-  smashOrPass: 5,
-  serverCare: 6,
-  reporting: 7,
-  enforcement: 8,
-};
+/** The number a decision cites ("Section 1: ..."): the section's place among the citable ones, in Rules page order. */
+export const RULE_SECTION_NUMBERS = Object.fromEntries(RULE_REFS.map((ref, index) => [ref, index + 1])) as Readonly<
+  Record<RuleRef, number>
+>;
 
 export const MIN_SUSPENSION_DAYS = 1;
 export const MAX_SUSPENSION_DAYS = 365;
@@ -142,6 +136,19 @@ export interface ModerationSummary {
   suggestion: ModerationSuggestion | null;
   suspended_until: string | null;
   content_blocked: number;
+}
+
+/** Where an account stands for the moderation drawer: the avatar's ring colour. */
+export type ModerationState = 'good' | 'warned' | 'suspended' | 'banned';
+
+/** Banned beats suspended beats warned (an active warning); otherwise in good standing. */
+export function moderationState(
+  summary: Pick<ModerationSummary, 'banned' | 'suspended_until' | 'active_warnings'>,
+  now: number = Date.now()
+): ModerationState {
+  if (summary.banned) return 'banned';
+  if (summary.suspended_until && new Date(summary.suspended_until).getTime() > now) return 'suspended';
+  return summary.active_warnings > 0 ? 'warned' : 'good';
 }
 
 export interface UserSanctions {

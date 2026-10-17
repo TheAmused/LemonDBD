@@ -327,6 +327,7 @@ export default {
   confirmDeleteUser: "Delete {username} and everything their account owns? This cannot be undone.",
   filterByStatus: "Filter by status",
   queueSelectPrompt: "Select a report to see it here.",
+  queueCaseTitle: "Case",
   guestReporter: "Guest",
   showInUsers: "Show in Users",
   submittedAt: "Submitted",

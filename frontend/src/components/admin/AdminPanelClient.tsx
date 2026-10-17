@@ -15,7 +15,14 @@ import { AdminSectionTabs, ADMIN_TABS_ID } from '@/components/admin/AdminSection
 import { AdminTabContentSkeleton } from '@/components/admin/AdminTabContentSkeleton';
 import { AdminToast } from '@/components/admin/AdminToast';
 import { AdminUsersSection } from '@/components/admin/AdminUsersSection';
-import { ADMIN_TAB_STORAGE_KEY, isAdminTab, type AdminTab } from '@/components/admin/adminTabs';
+import {
+  ADMIN_TAB_STORAGE_KEY,
+  REPORT_QUEUE_STORAGE_KEY,
+  isAdminTab,
+  isReportQueue,
+  type AdminTab,
+  type ReportQueue,
+} from '@/components/admin/adminTabs';
 import { useAdminOverview } from '@/components/admin/useAdminOverview';
 import { useAdminUsers } from '@/components/admin/useAdminUsers';
 import { useAuth } from '@/context/AuthContext';
@@ -41,6 +48,7 @@ export function AdminPanelClient() {
   const ready = isAuthenticated && isAdmin;
 
   const [tab, setTab] = usePersistentString<AdminTab>(ADMIN_TAB_STORAGE_KEY, 'users', isAdminTab);
+  const [queue, setQueue] = usePersistentString<ReportQueue>(REPORT_QUEUE_STORAGE_KEY, 'bugs', isReportQueue);
   const [message, setMessage] = useState<ActionMessage | null>(null);
   const [refreshKey, setRefreshKey] = useState(0);
   const [userForm, setUserForm] = useState<UserRow | 'new' | null>(null);
@@ -70,12 +78,20 @@ export function AdminPanelClient() {
   return (
     <PageShell locale={locale} activeCategory="admin" mainId="main-admin-content" mainClassName="overflow-y-auto">
       <div className="mx-auto w-full max-w-7xl space-y-5">
-        <AdminHeader onRefresh={refreshAll} />
-        <AdminSectionTabs
-          activeTab={tab}
-          onChange={setTab}
-          reportsWaiting={!!pending && pending.bug_reports + pending.content_reports > 0}
-        />
+        <div className="flex items-end gap-3">
+          <AdminSectionTabs
+            className="min-w-0 flex-1"
+            activeTab={tab}
+            onChange={setTab}
+            reportsWaiting={!!pending && pending.bug_reports + pending.content_reports > 0}
+            queue={queue}
+            onQueueChange={setQueue}
+            pending={pending}
+          />
+          <div className="shrink-0 pb-1.5">
+            <AdminHeader onRefresh={refreshAll} />
+          </div>
+        </div>
 
         <TabPanel value={tab} activeValue={tab} idBase={ADMIN_TABS_ID}>
           {tab === 'users' && (
@@ -90,7 +106,7 @@ export function AdminPanelClient() {
             />
           )}
           {tab === 'reports' && (
-            <AdminReportsSection pending={pending} refreshKey={refreshKey} notify={notify} onChanged={refreshOverview} onShowUser={showUser} />
+            <AdminReportsSection queue={queue} refreshKey={refreshKey} notify={notify} onChanged={refreshOverview} onShowUser={showUser} />
           )}
           {tab === 'availability' && <AdminAvailabilitySection refreshKey={refreshKey} notify={notify} />}
           {tab === 'audit' && <AdminAuditSection refreshKey={refreshKey} notify={notify} />}

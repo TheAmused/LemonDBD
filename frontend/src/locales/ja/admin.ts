@@ -327,6 +327,7 @@ export default {
   confirmDeleteUser: "{username} とそのアカウントのすべてのデータを削除しますか？元に戻せません。",
   filterByStatus: "状態で絞り込む",
   queueSelectPrompt: "報告を選ぶとここに表示されます。",
+  queueCaseTitle: "案件",
   guestReporter: "ゲスト",
   showInUsers: "ユーザーで表示",
   submittedAt: "送信日時",

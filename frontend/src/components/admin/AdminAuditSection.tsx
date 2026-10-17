@@ -5,7 +5,7 @@
 import React, { useEffect, useState } from 'react';
 import { ScrollText } from 'lucide-react';
 import { EmptyState } from '@/components/common/EmptyState';
-import { Select } from '@/components/common/Field';
+import { CustomDropdown } from '@/components/common/CustomDropdown';
 import { Pagination } from '@/components/common/Pagination';
 import { Surface } from '@/components/common/Surface';
 import { tip } from '@/components/common/Tooltip';
@@ -153,22 +153,17 @@ export function AdminAuditSection({ refreshKey, notify }: { refreshKey: number; 
   return (
     <Surface padding="none" className="overflow-hidden">
       <div className="flex flex-wrap items-center gap-2.5 border-b border-border-color p-3 sm:p-4">
-        <Select
-          fieldSize="sm"
-          className="w-auto"
-          aria-label={t.auditFilterLabel}
+        <CustomDropdown<Category>
+          ariaLabel={t.auditFilterLabel}
+          accent="primary"
+          buttonClassName="py-2"
           value={category}
-          onChange={(e) => {
-            setCategory(e.target.value as Category);
+          onChange={(c) => {
+            setCategory(c);
             setPage(1);
           }}
-        >
-          {(Object.keys(CATEGORIES) as Category[]).map((c) => (
-            <option key={c} value={c}>
-              {t[CATEGORY_LABEL_KEYS[c]]}
-            </option>
-          ))}
-        </Select>
+          options={(Object.keys(CATEGORIES) as Category[]).map((c) => ({ value: c, label: t[CATEGORY_LABEL_KEYS[c]] }))}
+        />
       </div>
 
       {logs.length === 0 ? (

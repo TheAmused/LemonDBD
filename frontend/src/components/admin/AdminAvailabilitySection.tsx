@@ -8,7 +8,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Ban, Sparkles } from 'lucide-react';
 import { SearchInput } from '@/components/common/Field';
 import { SegmentedControl } from '@/components/common/SegmentedControl';
-import { Surface } from '@/components/common/Surface';
+import { AccordionSection } from '@/components/common/AccordionSection';
 import { Switch } from '@/components/common/Switch';
 import { TileButton } from '@/components/common/TileButton';
 import { ToggleChip } from '@/components/common/ToggleChip';
@@ -17,6 +17,7 @@ import { tip } from '@/components/common/Tooltip';
 import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
 import { AdminReasonModal } from '@/components/admin/AdminReasonModal';
 import { useDictionary } from '@/context/DictionaryContext';
+import { usePersistentDrawer } from '@/hooks/usePersistentDrawer';
 import {
   listCharacters,
   listChallengeModes,
@@ -57,6 +58,8 @@ export function AdminAvailabilitySection({ refreshKey, notify }: AdminAvailabili
   const [loading, setLoading] = useState(true);
   const [pending, setPending] = useState<Pending | null>(null);
   const [reloadKey, setReloadKey] = useState(0);
+  const [isModesOpen, toggleModes] = usePersistentDrawer('lemondbd_admin_availability_modes_open', true);
+  const [isRosterOpen, toggleRoster] = usePersistentDrawer('lemondbd_admin_availability_roster_open', true);
 
   const modeLabel: Record<ChallengeMode, string> = {
     gauntlet: dict.streaks.gauntlet,
@@ -137,12 +140,9 @@ export function AdminAvailabilitySection({ refreshKey, notify }: AdminAvailabili
 
   return (
     <div className="space-y-5">
-      <Surface padding="none" as="section" aria-labelledby="admin-modes-title">
-        <header className="border-b border-border-color p-4 sm:px-5">
-          <h2 id="admin-modes-title" className="type-label text-text-primary">{t.challengeModesTitle}</h2>
-          <p className="mt-0.5 type-body text-text-muted">{t.challengeModesSubtitle}</p>
-        </header>
-        <ul className="grid grid-cols-1 gap-px overflow-hidden rounded-b-card bg-border-subtle sm:grid-cols-2">
+      <AccordionSection as="section" title={t.challengeModesTitle} open={isModesOpen} onToggle={toggleModes} bodyClassName="p-0">
+        <p className="border-b border-border-color p-4 text-center type-body text-text-muted sm:px-5">{t.challengeModesSubtitle}</p>
+        <ul className="grid grid-cols-1 items-stretch gap-px overflow-hidden rounded-b-card bg-border-subtle sm:grid-cols-2">
           {modes.map((setting) => (
             <li key={setting.mode} className="flex items-center justify-between gap-4 bg-bg-surface p-4 sm:px-5">
               <div className="min-w-0">
@@ -155,14 +155,11 @@ export function AdminAvailabilitySection({ refreshKey, notify }: AdminAvailabili
             </li>
           ))}
         </ul>
-      </Surface>
+      </AccordionSection>
 
-      <Surface padding="none" as="section" aria-labelledby="admin-roster-title">
-        <header className="space-y-3 border-b border-border-color p-4 sm:px-5">
-          <div>
-            <h2 id="admin-roster-title" className="type-label text-text-primary">{t.rosterTitle}</h2>
-            <p className="mt-0.5 type-body text-text-muted">{t.rosterSubtitle}</p>
-          </div>
+      <AccordionSection as="section" title={t.rosterTitle} open={isRosterOpen} onToggle={toggleRoster} bodyClassName="p-0">
+        <div className="space-y-3 border-b border-border-color p-4 sm:px-5">
+          <p className="text-center type-body text-text-muted">{t.rosterSubtitle}</p>
           <div className="flex flex-wrap items-center gap-2">
             <SegmentedControl<Kind>
               ariaLabel={t.rosterTitle}
@@ -197,7 +194,7 @@ export function AdminAvailabilitySection({ refreshKey, notify }: AdminAvailabili
               aria-label={t.searchGenericPlaceholder}
             />
           </div>
-        </header>
+        </div>
 
         <div className={cn('p-4 transition-opacity sm:px-5', loading && 'opacity-60')} aria-busy={loading}>
           {shown.length === 0 ? (
@@ -253,7 +250,7 @@ export function AdminAvailabilitySection({ refreshKey, notify }: AdminAvailabili
             </ul>
           )}
         </div>
-      </Surface>
+      </AccordionSection>
 
       <AdminReasonModal
         isOpen={pending !== null}

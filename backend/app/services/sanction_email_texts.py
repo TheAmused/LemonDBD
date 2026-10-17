@@ -356,7 +356,10 @@ def build_sanction_email(
     if content_type and content_type in t["content_names"]:
         blocks.append(("p", t["content_blocked"].format(content=t["content_names"][content_type])))
     blocks.append(("p", t["appeal"].format(contact=contact) if contact else t["appeal_no_contact"]))
-    blocks.append(("p", t["redress"]))
+    # Out-of-court and judicial redress is owed for a restriction (account suspension or termination, removed
+    # content); a plain warning restricts nothing, so it carries the internal complaint route only.
+    if kind != "warning" or (content_type and content_type in t["content_names"]):
+        blocks.append(("p", t["redress"]))
     return SanctionEmailContent(
         subject=t["subject"][kind], preheader=t["subject"][kind], footer=footer, blocks=blocks
     )

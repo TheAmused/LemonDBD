@@ -5,12 +5,14 @@
 // and restore, and the tests that prove a feature works end to end (OCR, email, Discord).
 import React, { useCallback, useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
-import { Database, Download, ExternalLink, Mail, MessageSquare, Play, RefreshCw, ScanText, Trash2, Upload } from 'lucide-react';
+import { Database, Download, ExternalLink, LineChart, Mail, MessageSquare, Play, RefreshCw, ScanText, Trash2, Upload } from 'lucide-react';
 import { Badge, type BadgeTone } from '@/components/common/Badge';
 import { Button, buttonClassName } from '@/components/common/Button';
-import { Surface } from '@/components/common/Surface';
-import { pgAdminUrl } from '@/components/admin/adminLinks';
+import { AccordionSection } from '@/components/common/AccordionSection';
+import { analyticsUrl, pgAdminUrl } from '@/components/admin/adminLinks';
 import { useDictionary, useLocale } from '@/context/DictionaryContext';
+import { usePersistentDrawer } from '@/hooks/usePersistentDrawer';
+import { cn } from '@/utils/cn';
 import {
   fetchSystemChecks,
   listMaintenanceJobs,
@@ -57,19 +59,36 @@ interface ToolsProps {
   onDataChanged: () => void;
 }
 
-/** One titled card; its rows are separated by rules. */
-function ToolCard({ title, subtitle, children, action }: { title: string; subtitle: string; children: React.ReactNode; action?: React.ReactNode }) {
+/** One drawer; its rows are separated by rules. Open or closed is remembered per card. */
+function ToolCard({
+  id,
+  title,
+  subtitle,
+  children,
+  action,
+  className,
+}: {
+  id: string;
+  title: string;
+  subtitle?: string;
+  children: React.ReactNode;
+  action?: React.ReactNode;
+  className?: string;
+}) {
+  const [open, toggle] = usePersistentDrawer(`lemondbd_admin_tool_${id}`, true);
   return (
-    <Surface as="section" padding="none" className="flex flex-col">
-      <header className="flex items-start justify-between gap-3 border-b border-border-color p-4 sm:px-5">
-        <div className="min-w-0">
-          <h2 className="type-label text-text-primary">{title}</h2>
-          <p className="mt-0.5 type-body text-text-muted">{subtitle}</p>
-        </div>
-        {action}
-      </header>
+    <AccordionSection
+      as="section"
+      title={title}
+      open={open}
+      onToggle={toggle}
+      headerAction={action}
+      className={cn('h-full', className)}
+      bodyClassName="p-0"
+    >
+      {subtitle && <p className="border-b border-border-color p-4 text-center type-body text-text-muted sm:px-5">{subtitle}</p>}
       <ul className="divide-y divide-border-subtle">{children}</ul>
-    </Surface>
+    </AccordionSection>
   );
 }
 
@@ -138,8 +157,9 @@ export function AdminToolsSection({ refreshKey, notify, onDataChanged }: ToolsPr
       : formatMessage(last.last_trigger === 'schedule' ? t.lastRunScheduled : t.lastRunManual, { date: when(last.last_run_at) });
 
   return (
-    <div className="grid grid-cols-1 items-start gap-5 xl:grid-cols-2">
+    <div className="grid grid-cols-1 items-stretch gap-5 xl:grid-cols-2">
       <ToolCard
+        id="system"
         title={t.systemTitle}
         subtitle={t.systemSubtitle}
         action={
@@ -163,7 +183,7 @@ export function AdminToolsSection({ refreshKey, notify, onDataChanged }: ToolsPr
         })}
       </ToolCard>
 
-      <ToolCard title={t.maintenanceTitle} subtitle={t.maintenanceSubtitle}>
+      <ToolCard id="maintenance" title={t.maintenanceTitle} subtitle={t.maintenanceSubtitle}>
         {jobs.map(({ key, last_run }) => {
           const keys = JOB_KEYS[key as keyof typeof JOB_KEYS];
           const name = keys ? label(keys[0]) : key;
@@ -190,6 +210,7 @@ export function AdminToolsSection({ refreshKey, notify, onDataChanged }: ToolsPr
       </ToolCard>
 
       <ToolCard
+        id="database"
         title={t.databaseTitle}
         subtitle={t.databaseSubtitle}
         action={
@@ -217,7 +238,7 @@ export function AdminToolsSection({ refreshKey, notify, onDataChanged }: ToolsPr
         </ToolRow>
       </ToolCard>
 
-      <ToolCard title={t.testingTitle} subtitle={t.testingSubtitle}>
+      <ToolCard id="testing" title={t.testingTitle} subtitle={t.testingSubtitle}>
         <ToolRow title={t.ocrCheck} description={t.ocrCheckDesc}>
           <Button size="sm" leftIcon={<ScanText className="h-3.5 w-3.5" aria-hidden="true" />} onClick={() => setOcrOpen(true)}>
             {t.openTest}
@@ -249,6 +270,16 @@ export function AdminToolsSection({ refreshKey, notify, onDataChanged }: ToolsPr
           >
             {t.sendTest}
           </Button>
+        </ToolRow>
+      </ToolCard>
+
+      <ToolCard id="analytics" title={t.analytics} className="xl:col-span-2">
+        <ToolRow title={t.analytics} description={t.analyticsTitle}>
+          <a href={analyticsUrl()} target="_blank" rel="noopener noreferrer" className={buttonClassName('secondary', 'sm')}>
+            <LineChart className="h-3.5 w-3.5" aria-hidden="true" />
+            {t.analytics}
+            <ExternalLink className="h-3 w-3" aria-hidden="true" />
+          </a>
         </ToolRow>
       </ToolCard>
 

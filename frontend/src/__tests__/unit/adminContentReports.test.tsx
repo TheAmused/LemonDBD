@@ -175,6 +175,8 @@ describe('ContentReportDetail', () => {
 
 describe('AdminQueue', () => {
   const props = {
+    title: 'Content reports',
+    drawerKey: 'content',
     ariaLabel: 'Filter by status',
     statuses: CONTENT_STATUSES,
     status: 'pending' as const,
@@ -228,6 +230,7 @@ describe('Reports tab', () => {
     assert.ok(render(true).includes(`aria-label="${en.admin.needsAttention}"`));
     assert.ok(!render(false).includes(en.admin.needsAttention));
     assert.ok(!/\(\d+\)/.test(render(true)), 'the tabs carry no numbers');
+    assert.ok(render(false).includes('aria-haspopup="menu"'), 'Reports opens a menu of the two queues');
   });
 
   it('labels every status, type and reason the backend can store, and falls back to the raw value', () => {

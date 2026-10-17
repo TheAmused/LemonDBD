@@ -23,12 +23,11 @@ def announce_post(post: ChangelogPost) -> AnnounceResult:
         return "not_configured"
 
     published = post.published_at or post.created_at
+    # The patch title is a `#` heading inside the description, not the embed title: an embed title is no bigger
+    # than the text below it, and one with a `url` turns into a link to the site.
     embed = {
-        "title": post.title[:256],
-        "description": html_to_discord(post.content_html),
-        "url": current_app.config.get("FRONTEND_URL"),
+        "description": f"# {post.title[:200]}\n\n{html_to_discord(post.content_html)}".strip(),
         "color": _EMBED_COLOR,
-        "footer": {"text": "LemonDBD"},
         "timestamp": published.isoformat() if published else None,
     }
     try:

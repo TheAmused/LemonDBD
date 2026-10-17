@@ -14,15 +14,21 @@ class _Converter(HTMLParser):
         self.out: list[str] = []
         self._hrefs: list[str | None] = []
 
+    def _line_break(self) -> None:
+        """Starts a new line unless one is already open, so lines written one under another stay tight."""
+        if self.out and not self.out[-1].endswith("\n"):
+            self.out.append("\n")
+
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
         if tag in _MARKS:
             self.out.append(_MARKS[tag])
         elif tag in _HEADINGS:
-            self.out.append("\n\n**")
+            self.out.append("\n\n### ")
         elif tag in _BLOCKS:
-            self.out.append("\n")
+            self._line_break()
         elif tag == "li":
-            self.out.append("\n• ")
+            self._line_break()
+            self.out.append("- ")
         elif tag == "br":
             self.out.append("\n")
         elif tag == "a":
@@ -34,9 +40,9 @@ class _Converter(HTMLParser):
         if tag in _MARKS:
             self.out.append(_MARKS[tag])
         elif tag in _HEADINGS:
-            self.out.append("**\n")
-        elif tag in _BLOCKS:
             self.out.append("\n")
+        elif tag in _BLOCKS:
+            self._line_break()
         elif tag == "a" and self._hrefs:
             href = self._hrefs.pop()
             self.out.append(f"]({href})" if href else "]")
@@ -46,7 +52,7 @@ class _Converter(HTMLParser):
 
 
 def html_to_discord(html: str, limit: int = 3500) -> str:
-    """Headings become bold lines, list items bullets, links `[text](url)`; the rest keeps its text.
+    """Headings become `###` titles, list items `- ` bullets, links `[text](url)`; the rest keeps its text.
     The result is cut at `limit` characters (an embed description allows 4096)."""
     parser = _Converter()
     parser.feed(html or "")

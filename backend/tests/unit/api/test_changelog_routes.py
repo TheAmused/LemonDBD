@@ -174,8 +174,9 @@ class TestChangelogRoutes:
         assert body["discord"] == "sent"
         assert body["data"]["discord_announced_at"] is not None
         embed = sent[0]["json"]["embeds"][0]
-        assert embed["title"] == "Big patch"
-        assert "**New**" in embed["description"] and "\u2022 Thing" in embed["description"]
+        assert "title" not in embed and "url" not in embed and "footer" not in embed
+        assert embed["description"].startswith("# Big patch\n\n")
+        assert "### New" in embed["description"] and "- Thing" in embed["description"]
 
         again = client.post(f"/api/v1/changelog/{post_id}/announce", headers=admin_headers)
         assert again.status_code == 409

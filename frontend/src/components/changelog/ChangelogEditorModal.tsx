@@ -1,7 +1,7 @@
 'use client';
 // frontend/src/components/changelog/ChangelogEditorModal.tsx
 
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useId, useRef, useState } from 'react';
 import {
   Bold,
   Italic,
@@ -60,6 +60,8 @@ const EMPTY_DRAFT: ChangelogPostDraft = {
 export const ChangelogEditorModal: React.FC<ChangelogEditorModalProps> = ({ open, post, saving = false, error = null, onClose, onSave }) => {
   const dict = useDictionary();
   const t = dict.changelog;
+  const titleId = useId();
+  const bodyLabelId = useId();
   const editorRef = useRef<HTMLDivElement | null>(null);
   // Modal mounts its content one render after `open` flips, so the draft is applied once the editor exists.
   const [editorEl, setEditorEl] = useState<HTMLDivElement | null>(null);
@@ -191,13 +193,19 @@ export const ChangelogEditorModal: React.FC<ChangelogEditorModalProps> = ({ open
       padded
       bodyClassName="space-y-4"
     >
-    <Input
-      data-autofocus
-      value={title}
-      onChange={(e) => setTitle(e.target.value)}
-      placeholder={t.titlePlaceholder}
-      className="px-4 font-bold"
-    />
+    <div>
+      <label htmlFor={titleId} className="mb-1 block type-label-xs text-text-muted">
+        {t.titleLabel} <span className="text-accent-red">*</span>
+      </label>
+      <Input
+        id={titleId}
+        data-autofocus
+        required
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+        className="px-4 font-bold"
+      />
+    </div>
 
     <div className="flex flex-wrap items-center gap-2">
       <span className="type-label-2xs text-text-muted">{t.addSection}</span>
@@ -215,6 +223,10 @@ export const ChangelogEditorModal: React.FC<ChangelogEditorModalProps> = ({ open
       ))}
     </div>
 
+    <div>
+    <span id={bodyLabelId} className="mb-1 block type-label-xs text-text-muted">
+      {t.bodyLabel} <span className="text-accent-red">*</span>
+    </span>
     <Surface tone="elevated" padding="none" className="bg-bg-elevated/50 overflow-hidden">
       <div className="relative flex flex-wrap items-center gap-0.5 border-b border-border-color bg-bg-elevated/80 px-2 py-1.5">
         <ToolbarButton icon={Bold} onClick={() => exec('bold')} label="Bold" />
@@ -297,12 +309,14 @@ export const ChangelogEditorModal: React.FC<ChangelogEditorModalProps> = ({ open
         ref={setEditor}
         contentEditable
         suppressContentEditableWarning
+        role="textbox"
+        aria-multiline="true"
+        aria-required="true"
+        aria-labelledby={bodyLabelId}
         className={`min-h-[180px] max-h-[40vh] overflow-y-auto px-4 py-3 outline-none ${CHANGELOG_BODY_CLASS}`}
-        data-placeholder={
-          t.bodyPlaceholder
-        }
       />
     </Surface>
+    </div>
 
     {error && (
       <p role="alert" className="rounded-card border border-accent-red/40 bg-accent-red/10 px-3 py-2 type-strong text-accent-red">

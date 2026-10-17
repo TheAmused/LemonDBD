@@ -75,12 +75,6 @@
   outline: 2px solid rgba(217, 119, 6, 0.3);
 }
 
-[data-placeholder]:empty:before {
-  content: attr(data-placeholder);
-  color: var(--text-muted);
-  pointer-events: none;
-}
-
 /* ---------------------------------------------------------------------------
  * Smash or Pass: Lore Ash & Charred Cinder Card Borders
  * --------------------------------------------------------------------------- */

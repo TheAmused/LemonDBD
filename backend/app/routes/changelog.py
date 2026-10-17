@@ -63,12 +63,25 @@ def _push_to_discord(post: ChangelogPost, auto: bool) -> changelog_discord.Annou
     return result
 
 
+def _remove_from_discord(post: ChangelogPost) -> changelog_discord.AnnounceResult:
+    """Deletes the entry's Discord message and forgets it, so the entry can be announced afresh if it goes live
+    again. A failed delete keeps the message id: saving the draft again retries it."""
+    result = changelog_discord.delete_announcement(post)
+    if result == "removed":
+        changelog_service.clear_announcement(post)
+        log_admin_action(
+            g.current_user.id, "changelog.announce_remove", target_type="changelog_post", target_id=post.id,
+        )
+    return result
+
+
 @changelog_bp.route("/<int:post_id>", methods=["PATCH", "PUT"])
 @admin_required
 def update_changelog_post(post_id: int):
-    """Saves an edit. If the entry is live and its Discord message is now behind, the message is rewritten right
-    away; `discord` carries that outcome ("sent", "failed", ...) or null when there was nothing to update. A
-    failed rewrite leaves the entry marked as behind, so the editor can retry it."""
+    """Saves an edit and keeps the entry's Discord message in line with it. Live and behind: the message is
+    rewritten. A draft that still has a message (it was just taken down, or an earlier delete failed): the
+    message is deleted. `discord` carries that outcome ("sent", "removed", "failed", ...) or null when there was
+    nothing to do. A failed call leaves the entry as it was, so saving again retries it."""
     post = changelog_service.get_post(post_id)
     if not post:
         return jsonify({"error": "Changelog post not found"}), 404
@@ -83,7 +96,11 @@ def update_changelog_post(post_id: int):
     log_admin_action(
         g.current_user.id, "changelog.update", target_type="changelog_post", target_id=post.id,
     )
-    discord = _push_to_discord(post, auto=True) if post.is_published and post.discord_message_is_behind else None
+    discord = None
+    if post.is_published and post.discord_message_is_behind:
+        discord = _push_to_discord(post, auto=True)
+    elif not post.is_published and post.discord_message_id:
+        discord = _remove_from_discord(post)
     return jsonify({"status": "success", "data": post.to_dict(), "discord": discord}), 200
 
 

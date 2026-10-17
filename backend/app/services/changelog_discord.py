@@ -1,6 +1,6 @@
 # backend/app/services/changelog_discord.py
-"""Posts a published "What's New" entry to the team's Discord channel through a webhook, and updates that message
-when the entry is edited."""
+"""Posts a published "What's New" entry to the team's Discord channel through a webhook, updates that message
+when the entry is edited and deletes it when the entry is taken down."""
 import logging
 from typing import Literal, NamedTuple
 
@@ -13,7 +13,8 @@ from app.utils.discord_markdown import html_to_discord
 logger = logging.getLogger(__name__)
 
 # "missing": the message was deleted on Discord, so there is nothing left to update.
-AnnounceResult = Literal["sent", "failed", "not_configured", "missing"]
+# "removed": the message is gone from Discord (deleted now, or it was already).
+AnnounceResult = Literal["sent", "failed", "not_configured", "missing", "removed"]
 
 
 class Announcement(NamedTuple):
@@ -95,3 +96,24 @@ def update_announcement(post: ChangelogPost) -> AnnounceResult:
         logger.error("[changelog] Discord answered HTTP %s updating post #%s", resp.status_code, post.id)
         return "failed"
     return "sent"
+
+
+def delete_announcement(post: ChangelogPost) -> AnnounceResult:
+    """Deletes the Discord message of `post`. "removed" also covers a message that was already deleted by hand."""
+    webhook = _webhook()
+    if not webhook:
+        return "not_configured"
+
+    try:
+        resp = requests.delete(
+            f"{webhook}/messages/{post.discord_message_id}",
+            impersonate="chrome120",
+            timeout=8,
+        )
+    except Exception:
+        logger.exception("[changelog] Discord message delete failed for post #%s", post.id)
+        return "failed"
+    if resp.status_code >= 300 and resp.status_code != 404:
+        logger.error("[changelog] Discord answered HTTP %s deleting post #%s", resp.status_code, post.id)
+        return "failed"
+    return "removed"

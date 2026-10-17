@@ -79,6 +79,8 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ feed, classN
   const [actionError, setActionError] = useState<string | null>(null);
   const [pendingDeleteId, setPendingDeleteId] = useState<number | null>(null);
   const [pendingDiscord, setPendingDiscord] = useState<PendingDiscord | null>(null);
+  /** A save that would take a live entry off Discord, waiting for the admin's confirmation. */
+  const [pendingDraft, setPendingDraft] = useState<ChangelogPostDraft | null>(null);
   const [announcing, setAnnouncing] = useState(false);
   /** The confirmation shown after Discord took the message: what happened and which entry. */
   const [discordNotice, setDiscordNotice] = useState<{ title: string; postTitle: string } | null>(null);
@@ -97,9 +99,10 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ feed, classN
     try {
       if (editingPost) {
         const res = await updateChangelogPost(token, editingPost.id, draft);
-        // The server rewrites the entry's Discord message by itself when there is one that is now behind.
-        if (res.discord === 'failed') setActionError(t.discordUpdateFailed);
-        else if (res.discord) reportDiscord(res.discord, draft.title, t.discordUpdated);
+        // The server keeps the entry's Discord message in line by itself: it rewrites a message that is behind
+        // and deletes the message of an entry that is now a draft.
+        if (res.discord === 'failed') setActionError(draft.is_published ? t.discordUpdateFailed : t.discordRemoveFailed);
+        else if (res.discord) reportDiscord(res.discord, draft.title, res.discord === 'removed' ? t.discordRemoved : t.discordUpdated);
       } else {
         await createChangelogPost(token, draft);
       }
@@ -111,6 +114,13 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ feed, classN
     } finally {
       setSaving(false);
     }
+  };
+
+  // Taking an entry off Discord cannot be undone, so it is confirmed first (only when it has a message there).
+  const requestSave = (draft: ChangelogPostDraft) => {
+    const takesDownDiscordMessage = !!editingPost?.is_published && !draft.is_published && !!editingPost.discord_synced_at;
+    if (takesDownDiscordMessage) setPendingDraft(draft);
+    else void handleSave(draft);
   };
 
   const handleDelete = async () => {
@@ -125,7 +135,7 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ feed, classN
     }
   };
 
-  const discordErrors: Record<Exclude<ChangelogDiscordResult, 'sent'>, string> = {
+  const discordErrors: Record<Exclude<ChangelogDiscordResult, 'sent' | 'removed'>, string> = {
     failed: t.discordFailed,
     not_configured: t.discordNotConfigured,
     missing: t.discordMissing,
@@ -133,7 +143,7 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ feed, classN
 
   /** Tells the admin how a Discord call went: the confirmation window, or the reason it did not work. */
   const reportDiscord = (result: ChangelogDiscordResult, postTitle: string, successTitle: string) => {
-    if (result === 'sent') {
+    if (result === 'sent' || result === 'removed') {
       setActionError(null);
       setDiscordNotice({ title: successTitle, postTitle });
     } else {
@@ -307,7 +317,7 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ feed, classN
             setEditorOpen(false);
             setEditingPost(null);
           }}
-          onSave={handleSave}
+          onSave={requestSave}
         />
       )}
 
@@ -329,6 +339,24 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ feed, classN
           busyLabel={pendingDiscord.kind === 'announce' ? t.discordConfirmSend : t.discordUpdateConfirmSend}
           onConfirm={() => runDiscordAction(pendingDiscord)}
           onCancel={() => setPendingDiscord(null)}
+        />
+      )}
+
+      {pendingDraft && (
+        <ConfirmModal
+          open
+          size="md"
+          title={t.draftConfirmTitle}
+          message={<p>{t.draftConfirmMessage}</p>}
+          confirmLabel={t.draftConfirmSave}
+          closeButton="header"
+          closeButtonAriaLabel={t.cancel}
+          onConfirm={() => {
+            const draft = pendingDraft;
+            setPendingDraft(null);
+            void handleSave(draft);
+          }}
+          onCancel={() => setPendingDraft(null)}
         />
       )}
 

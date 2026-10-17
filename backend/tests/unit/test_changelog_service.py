@@ -154,6 +154,12 @@ class TestChangelogService:
         changed = changelog_service.update_post(draft, {"content_html": "<p>y</p>", "is_published": True})
         assert changed.edited_at is None
 
+    def test_editing_after_it_has_been_live_counts_even_while_it_is_a_draft_again(self, admin: User) -> None:
+        post = changelog_service.create_post(admin, {"title": "Live", "content_html": "<p>x</p>"})
+        changelog_service.update_post(post, {"is_published": False})
+        edited = changelog_service.update_post(post, {"content_html": "<p>fixed</p>"})
+        assert edited.edited_at is not None
+
     def test_post_dict_hides_the_author(self, admin: User) -> None:
         post = changelog_service.create_post(admin, {"title": "Anon", "content_html": "<p>x</p>"})
         data = post.to_dict()

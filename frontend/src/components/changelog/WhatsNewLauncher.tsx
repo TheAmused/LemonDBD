@@ -96,7 +96,10 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ feed, classN
     setEditorError(null);
     try {
       if (editingPost) {
-        await updateChangelogPost(token, editingPost.id, draft);
+        const res = await updateChangelogPost(token, editingPost.id, draft);
+        // The server rewrites the entry's Discord message by itself when there is one that is now behind.
+        if (res.discord === 'failed') setActionError(t.discordUpdateFailed);
+        else if (res.discord) reportDiscord(res.discord, draft.title, t.discordUpdated);
       } else {
         await createChangelogPost(token, draft);
       }
@@ -128,6 +131,16 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ feed, classN
     missing: t.discordMissing,
   };
 
+  /** Tells the admin how a Discord call went: the confirmation window, or the reason it did not work. */
+  const reportDiscord = (result: ChangelogDiscordResult, postTitle: string, successTitle: string) => {
+    if (result === 'sent') {
+      setActionError(null);
+      setDiscordNotice({ title: successTitle, postTitle });
+    } else {
+      setActionError(discordErrors[result]);
+    }
+  };
+
   /** Sends the entry to Discord (first time) or rewrites its message, then tells the admin how it went. */
   const runDiscordAction = async ({ post, kind }: PendingDiscord) => {
     if (!token) return;
@@ -136,12 +149,7 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ feed, classN
     setAnnouncing(true);
     try {
       const res = await call(token, post.id);
-      if (res.discord === 'sent') {
-        setActionError(null);
-        setDiscordNotice({ title: kind === 'announce' ? t.discordSuccess : t.discordUpdated, postTitle: post.title });
-      } else {
-        setActionError(discordErrors[res.discord]);
-      }
+      reportDiscord(res.discord, post.title, kind === 'announce' ? t.discordSuccess : t.discordUpdated);
       await reload();
     } catch (err) {
       setActionError(err instanceof Error ? err.message : t.discordFailed);

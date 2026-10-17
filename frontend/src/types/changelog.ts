@@ -42,6 +42,8 @@ export type ChangelogDiscordResult = 'sent' | 'failed' | 'not_configured' | 'mis
 export interface ChangelogSaveResponse {
   status: string;
   data: ChangelogPost;
+  /** After an edit: how rewriting the entry's Discord message went. Null when there was nothing to update. */
+  discord?: ChangelogDiscordResult | null;
 }
 
 export interface ChangelogAnnounceResponse extends ChangelogSaveResponse {

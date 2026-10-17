@@ -70,14 +70,16 @@ def create_post(admin_user: User, payload: dict[str, Any]) -> ChangelogPost:
 
 
 def update_post(post: ChangelogPost, payload: dict[str, Any]) -> ChangelogPost:
-    was_live = post.is_published
+    # An entry that has ever been live counts, even if it is a draft again right now: readers (and the Discord
+    # message) saw the earlier text, so a change to it is an edit once it goes back up.
+    was_live = post.published_at is not None
     title = post.title
     content_html = post.content_html
     if payload.get("title") is not None:
         post.title = payload["title"].strip()
     if payload.get("content_html") is not None:
         post.content_html = sanitize_changelog_html(payload["content_html"])
-    # Only a change to something readers could already see counts as an edit.
+    # Only a change to something readers could already have seen counts as an edit.
     if was_live and (post.title != title or post.content_html != content_html):
         post.edited_at = utcnow()
     if payload.get("is_published") is not None:

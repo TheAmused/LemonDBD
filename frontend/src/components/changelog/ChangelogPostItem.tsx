@@ -2,7 +2,7 @@
 // frontend/src/components/changelog/ChangelogPostItem.tsx
 
 import React from 'react';
-import { GripVertical, Pencil, RefreshCw, Send, Trash2 } from 'lucide-react';
+import { GripVertical, Pencil, RefreshCw, Trash2 } from 'lucide-react';
 import { cn } from '@/utils/cn';
 import type { ChangelogPost } from '@/types/changelog';
 import type { DragReorder } from '@/hooks/useDragReorder';
@@ -12,6 +12,7 @@ import { Collapsible } from '@/components/common/Collapsible';
 import { DisclosureButton } from '@/components/common/DisclosureButton';
 import { RichText } from '@/components/common/RichText';
 import { tip } from '@/components/common/Tooltip';
+import { DiscordIcon } from '@/components/icons/DbdIcons';
 import { useDictionary } from '@/context/DictionaryContext';
 import { formatDate } from '@/utils/format';
 import { htmlToPlainText } from './changelogText';
@@ -87,7 +88,7 @@ export const ChangelogPostItem: React.FC<ChangelogPostItemProps> = ({
               <span className="type-label-2xs text-text-muted">{formatPostDate(postDate(post))}</span>
               {post.edited_at && <span className="text-micro italic text-text-muted/70">{t.edited}</span>}
               {isAdmin && post.discord_announced_at && (
-                <Badge tone="neutral" icon={<Send className="h-3 w-3" aria-hidden="true" />}>
+                <Badge tone="neutral" icon={<DiscordIcon className="h-3 w-3" />}>
                   {t.discordSent}
                 </Badge>
               )}
@@ -103,7 +104,7 @@ export const ChangelogPostItem: React.FC<ChangelogPostItemProps> = ({
         {isAdmin && (
           <div className="flex shrink-0 items-center gap-0.5">
             {post.is_published && !post.discord_announced_at && (
-              <IconButton icon={Send} label={t.announceDiscord} onClick={onAnnounce} />
+              <IconButton icon={DiscordIcon} label={t.announceDiscord} onClick={onAnnounce} />
             )}
             {post.is_published && isBehindOnDiscord(post) && (
               <IconButton icon={RefreshCw} label={t.discordUpdate} onClick={onUpdateDiscord} />

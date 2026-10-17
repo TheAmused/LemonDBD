@@ -28,6 +28,7 @@ export default {
   discordUpdateConfirmSend: 'Update',
   discordUpdated: 'Discord message updated',
   discordMissing: 'The Discord message was deleted. You can announce this entry again.',
+  discordUpdateFailed: 'Saved, but the Discord message could not be updated. You can retry with the update button.',
   cancel: 'Cancel',
   newBadge: 'New',
   loadMore: 'Load more',

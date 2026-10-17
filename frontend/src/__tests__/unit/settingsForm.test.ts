@@ -18,11 +18,11 @@ import {
   payloadValue,
   unitOf,
 } from '@/components/admin/settingsForm';
-import en from '@/locales/en';
-import de from '@/locales/de';
-import es from '@/locales/es';
-import ja from '@/locales/ja';
-import pl from '@/locales/pl';
+import en from '@/locales/en/adminSettings';
+import de from '@/locales/de/adminSettings';
+import es from '@/locales/es/adminSettings';
+import ja from '@/locales/ja/adminSettings';
+import pl from '@/locales/pl/adminSettings';
 import type { AdminSiteSetting } from '@/types/admin';
 
 const row = (overrides: Partial<AdminSiteSetting>): AdminSiteSetting => ({
@@ -166,7 +166,7 @@ describe('the tab covers every backend setting', { skip: spec === null ? 'backen
 
   for (const [locale, dict] of Object.entries(dictionaries)) {
     it(`${locale}: every setting and group has its label and description`, () => {
-      const admin = dict.admin as unknown as Record<string, string | undefined>;
+      const admin = dict as Record<string, string | undefined>;
       const missing: string[] = [];
       for (const { key, group } of settings) {
         for (const name of [`config_${key}`, `config_${key}_desc`, `configGroup_${group}`, `configGroupDesc_${group}`]) {
@@ -182,9 +182,21 @@ describe('the tab covers every backend setting', { skip: spec === null ? 'backen
     assert.deepEqual(unplaced, []);
   });
 
+  it('every language has exactly the same keys and placeholders', () => {
+    const placeholders = (text: string) => (text.match(/\{\w+\}/g) ?? []).sort().join(',');
+    const reference = en as Record<string, string>;
+    for (const [locale, dict] of Object.entries(dictionaries)) {
+      const own = dict as Record<string, string>;
+      assert.deepEqual(Object.keys(own).sort(), Object.keys(reference).sort(), `${locale}: keys differ from en`);
+      for (const key of Object.keys(reference)) {
+        assert.equal(placeholders(own[key]), placeholders(reference[key]), `${locale}.${key}: placeholders differ`);
+      }
+    }
+  });
+
   it('choice labels exist for every banner level', () => {
     for (const dict of Object.values(dictionaries)) {
-      const admin = dict.admin as unknown as Record<string, string | undefined>;
+      const admin = dict as Record<string, string | undefined>;
       for (const level of ['info', 'warning', 'critical']) assert.ok(admin[`configChoice_${level}`], level);
     }
   });

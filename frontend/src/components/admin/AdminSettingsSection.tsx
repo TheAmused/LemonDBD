@@ -30,7 +30,10 @@ import {
   unitOf,
   type DraftProblem,
 } from '@/components/admin/settingsForm';
+import { AdminTabContentSkeleton } from '@/components/admin/AdminTabContentSkeleton';
 import { useDictionary } from '@/context/DictionaryContext';
+import { useAdminSettingsDict } from '@/hooks/useAdminSettingsDict';
+import type { AdminSettingsDict } from '@/locales/adminSettings';
 import { listSettings, saveSettings } from '@/services/adminApi';
 import { getErrorMessage } from '@/utils/api';
 import { cn } from '@/utils/cn';
@@ -57,11 +60,16 @@ const BANNER_LEVEL_VALUES: readonly BannerLevel[] = ['info', 'warning', 'critica
 
 const asBannerLevel = (value: string): BannerLevel => BANNER_LEVEL_VALUES.find((level) => level === value) ?? 'info';
 
+/** Loads the tab's own dictionary (admins only, see locales/adminSettings.ts), then shows the panel. */
 export function AdminSettingsSection({ notify }: { notify: (message: ActionMessage) => void }) {
+  const t = useAdminSettingsDict();
+  return t ? <SettingsPanel notify={notify} t={t} /> : <AdminTabContentSkeleton />;
+}
+
+function SettingsPanel({ notify, t }: { notify: (message: ActionMessage) => void; t: AdminSettingsDict }) {
   const dict = useDictionary();
-  const t = dict.admin;
   // Per-setting labels are looked up by key (config_<key>, config_<key>_desc, configGroup_<group>...).
-  const text = (key: string) => (t as unknown as Record<string, string | undefined>)[key] ?? '';
+  const text = (key: string) => (t as Record<string, string | undefined>)[key] ?? '';
   const [settings, setSettings] = useState<AdminSiteSetting[]>([]);
   const [drafts, setDrafts] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
@@ -114,7 +122,7 @@ export function AdminSettingsSection({ notify }: { notify: (message: ActionMessa
     return '';
   };
 
-  if (loading) return <EmptyState variant="inline" title={t.loading} />;
+  if (loading) return <EmptyState variant="inline" title={dict.admin.loading} />;
 
   const renderControl = (row: AdminSiteSetting, problem: DraftProblem) => {
     const draft = draftFor(row);

@@ -3,7 +3,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { Heart, Flame, Skull, Zap } from 'lucide-react';
-import { themeColor } from '@/utils/themeColor';
+import { themeColor, paletteColor } from '@/utils/themeColor';
 import { useDictionary } from "@/context/DictionaryContext";
 
 /** Stretches a layer over its parent and centres what is in it. */
@@ -148,9 +148,9 @@ export const SmashAnimations: React.FC<SmashAnimationsProps> = ({ triggerType, t
 
     // Theme Palettes
     // Neon Crimson: #dc2626, Deep Velvet Purple: #27272a, Cyber Mint: #71717a, Eldritch Gold: #fbbf24
-    const crimsonPalette = [themeColor('--accent-red'), '#ff2a7a', '#e11d48', '#fb7185', themeColor('--bg-elevated'), themeColor('--text-inverted')];
-    const goldPalette = [themeColor('--accent-amber'), '#f59e0b', themeColor('--accent-amber'), themeColor('--accent-red'), themeColor('--text-muted'), themeColor('--text-inverted')];
-    const passPalette = [themeColor('--text-muted'), '#52525b', '#3f3f46', themeColor('--bg-elevated'), '#a1a1aa', '#09090b'];
+    const crimsonPalette = [themeColor('--accent-red'), paletteColor('hot-pink'), paletteColor('rose-600'), paletteColor('rose-400'), themeColor('--bg-elevated'), themeColor('--text-inverted')];
+    const goldPalette = [themeColor('--accent-amber'), paletteColor('amber-500'), themeColor('--accent-amber'), themeColor('--accent-red'), themeColor('--text-muted'), themeColor('--text-inverted')];
+    const passPalette = [themeColor('--text-muted'), paletteColor('zinc-600'), paletteColor('zinc-700'), themeColor('--bg-elevated'), paletteColor('zinc-400'), paletteColor('zinc-950')];
 
     // 1. Initialize Shockwaves
     if (triggerType === 'super_smash') {
@@ -369,7 +369,7 @@ export const SmashAnimations: React.FC<SmashAnimationsProps> = ({ triggerType, t
       context.fill();
 
       // Eye sockets
-      context.fillStyle = '#09090b';
+      context.fillStyle = paletteColor('zinc-950');
       context.beginPath();
       context.arc(-4, -2, 2.5, 0, Math.PI * 2);
       context.arc(4, -2, 2.5, 0, Math.PI * 2);

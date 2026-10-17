@@ -3,6 +3,7 @@
 
 import React, { useEffect, useRef } from 'react';
 import { useTheme } from 'next-themes';
+import { paletteColor } from '@/utils/themeColor';
 
 interface Particle {
   x: number;
@@ -47,10 +48,10 @@ export const CampfireParticles: React.FC<CampfireParticlesProps> = ({ className 
     // Light-lemon: Golden lemon pollen / sparks (amber yellows, lemon golds)
     // Light: Subtle warm ashes / soft embers (caramel, gentle amber) with lower opacity
     const colors = isDark
-      ? ['#f97316', '#fb923c', '#ef4444', '#f59e0b', '#dc2626', '#fbbf24']
+      ? [paletteColor('orange-500'), paletteColor('orange-400'), paletteColor('red-500'), paletteColor('amber-500'), paletteColor('red-600'), paletteColor('amber-400')]
       : isLemon
-      ? ['#eab308', '#facc15', '#d97706', '#f59e0b', '#ca8a04', '#fef08a']
-      : ['#d97706', '#ea580c', '#f59e0b', '#b45309', '#78716c'];
+      ? [paletteColor('yellow-500'), paletteColor('yellow-400'), paletteColor('amber-600'), paletteColor('amber-500'), paletteColor('yellow-600'), paletteColor('yellow-200')]
+      : [paletteColor('amber-600'), paletteColor('orange-600'), paletteColor('amber-500'), paletteColor('amber-700'), paletteColor('stone-500')];
 
     const baseOpacityMult = isDark ? 0.85 : isLemon ? 0.7 : 0.55;
     const particleCount = typeof window !== 'undefined'

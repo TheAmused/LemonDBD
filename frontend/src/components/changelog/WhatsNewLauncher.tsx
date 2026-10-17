@@ -38,8 +38,6 @@ const ConfirmModal = dynamic(
 );
 
 const TOUCH_HOLD_MS = 220;
-/** For admins the newest entries start expanded; the rest, and everything for readers, shows a two-line preview. */
-const OPEN_BY_DEFAULT = 2;
 
 const formatPostDate = (iso: string | null) =>
   formatDate(iso, undefined, { month: 'short', day: 'numeric', year: 'numeric' });
@@ -53,8 +51,8 @@ export interface WhatsNewLauncherProps {
 
 /**
  * Self-contained "What's New?" widget: an icon-only trigger button plus the
- * centered changelog modal it opens. The newest entries open by default and
- * the rest collapse to a short preview, so a long feed stays scannable.
+ * centered changelog modal it opens. Every entry starts collapsed to a short
+ * preview, so a long feed stays scannable.
  * Admins reorder entries by grabbing a handle (mouse-drag on desktop,
  * press-and-hold-then-drag via the Pointer Events API on touch).
  */
@@ -81,7 +79,6 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ feed, classN
   const dragRef = useRef<{ id: number; active: boolean; holdTimer: ReturnType<typeof setTimeout> | null } | null>(
     null
   );
-  const seededRef = useRef(false);
 
   const handleOpen = () => {
     setIsOpen(true);
@@ -149,17 +146,10 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ feed, classN
 
   const listedPosts = useMemo(() => (isAdmin ? posts : posts.filter((p) => p.is_published)), [posts, isAdmin]);
 
-  // Seed once per open, so collapsing an entry never pops other entries open (or shuffles them while an admin
-  // is dragging). Readers get every entry collapsed: opening one is what marks it as read.
+  // Every entry starts collapsed on each open (readers: opening one is what marks it as read).
   useEffect(() => {
-    if (!isOpen) {
-      seededRef.current = false;
-      return;
-    }
-    if (seededRef.current || listedPosts.length === 0) return;
-    seededRef.current = true;
-    setExpandedIds(new Set(listedPosts.slice(0, isAdmin ? OPEN_BY_DEFAULT : 0).map((p) => p.id)));
-  }, [isOpen, listedPosts, isAdmin]);
+    if (!isOpen) setExpandedIds(new Set());
+  }, [isOpen]);
 
   const canReorder = isAdmin && !!token;
 

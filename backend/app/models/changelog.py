@@ -14,7 +14,7 @@ class ChangelogPost(Base, ColumnDictMixin):
     __tablename__ = "changelog_posts"
 
     # The feed is written by the team, so the author is never shown. Kept in the table for audit.
-    _api_exclude = frozenset({"author_id", "author_name"})
+    _api_exclude = frozenset({"author_id", "author_name", "discord_message_id"})
 
     id: Mapped[int] = mapped_column(primary_key=True)
     title: Mapped[str] = mapped_column(String(200), nullable=False)
@@ -35,10 +35,28 @@ class ChangelogPost(Base, ColumnDictMixin):
     # When the post first went live: the date readers see and what "new since your last visit" compares
     # against. None while it is still a draft; kept if it is unpublished and published again.
     published_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    # When the title or text of an entry that was already live last changed (readers see an "Edited" note).
+    # Edits made while it was still a draft do not count.
+    edited_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     # Set once the entry was posted to Discord; an entry is announced only once.
     discord_announced_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    # The Discord message holding the entry, so a later edit can update it in place. Never sent to the browser.
+    discord_message_id: Mapped[str | None] = mapped_column(String(32), nullable=True)
+    # When that message last matched the entry. Only set while the message id is known, so "edited_at is
+    # newer than this" means the Discord message can be updated and is behind.
+    discord_synced_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=utcnow, onupdate=utcnow, nullable=False
     )
 
     author: Mapped["User | None"] = relationship()
+
+    @property
+    def discord_message_is_behind(self) -> bool:
+        """The entry was edited after its Discord message was last written, and that message can be updated."""
+        return bool(
+            self.discord_message_id
+            and self.edited_at
+            and self.discord_synced_at
+            and self.edited_at > self.discord_synced_at
+        )

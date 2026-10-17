@@ -1,6 +1,5 @@
 # backend/tests/unit/test_changelog_service.py
 import pytest
-from flask.testing import FlaskClient
 
 from app.core.extensions import db
 from app.models import User
@@ -136,6 +135,29 @@ class TestChangelogService:
         changelog_service.update_post(published, {"is_published": False})
         again = changelog_service.update_post(published, {"is_published": True})
         assert again.published_at == stamp
+
+    def test_editing_a_live_post_stamps_edited_at(self, admin: User) -> None:
+        post = changelog_service.create_post(admin, {"title": "Live", "content_html": "<p>x</p>"})
+        assert post.edited_at is None
+        edited = changelog_service.update_post(post, {"content_html": "<p>fixed</p>"})
+        assert edited.edited_at is not None
+
+    def test_saving_without_changes_or_editing_a_draft_is_not_an_edit(self, admin: User) -> None:
+        post = changelog_service.create_post(admin, {"title": "Live", "content_html": "<p>x</p>"})
+        same = changelog_service.update_post(post, {"title": "Live", "content_html": "<p>x</p>"})
+        assert same.edited_at is None
+
+        draft = changelog_service.create_post(
+            admin, {"title": "Draft", "content_html": "<p>x</p>", "is_published": False}
+        )
+        changed = changelog_service.update_post(draft, {"content_html": "<p>y</p>", "is_published": True})
+        assert changed.edited_at is None
+
+    def test_editing_after_it_has_been_live_counts_even_while_it_is_a_draft_again(self, admin: User) -> None:
+        post = changelog_service.create_post(admin, {"title": "Live", "content_html": "<p>x</p>"})
+        changelog_service.update_post(post, {"is_published": False})
+        edited = changelog_service.update_post(post, {"content_html": "<p>fixed</p>"})
+        assert edited.edited_at is not None
 
     def test_post_dict_hides_the_author(self, admin: User) -> None:
         post = changelog_service.create_post(admin, {"title": "Anon", "content_html": "<p>x</p>"})

@@ -1,7 +1,7 @@
 'use client';
 // frontend/src/components/tier-lists/creator/LadderEditor.tsx
 
-import React, { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { GripVertical, ListOrdered, Plus, X } from 'lucide-react';
 import type { TierDefinition } from '@/types/tierList';
 import { cn } from '@/utils/cn';
@@ -18,6 +18,7 @@ import { formatMessage } from '@/utils/i18nFormat';
 import { useDictionary } from "@/context/DictionaryContext";
 import { ToggleChip } from '@/components/common/ToggleChip';
 import { ColorSwatch } from '@/components/common/ColorSwatch';
+import { useDragReorder } from '@/hooks/useDragReorder';
 
 function PresetSwatch({ colors }: { colors: readonly string[] }) {
   return (
@@ -43,16 +44,8 @@ export function LadderEditor({ tiers, onChange, onPreset, activePreset }: Ladder
   const c = t.creator;
   const [paletteFor, setPaletteFor] = useState<string | null>(null);
   const [bgDrafts, setBgDrafts] = useState<Record<string, string>>({});
-  const [draggingId, setDraggingId] = useState<string | null>(null);
   const tiersRef = useRef(tiers);
   tiersRef.current = tiers;
-  const dragCleanupRef = useRef<(() => void) | null>(null);
-
-  useEffect(() => {
-    return () => {
-      dragCleanupRef.current?.();
-    };
-  }, []);
 
   const update = (id: string, patch: Partial<TierDefinition>) =>
     onChange(tiers.map((tier) => (tier.id === id ? { ...tier, ...patch } : tier)));
@@ -81,33 +74,7 @@ export function LadderEditor({ tiers, onChange, onPreset, activePreset }: Ladder
     onChange(next);
   };
 
-  const startPointerDrag = (tierId: string, e: React.PointerEvent<HTMLButtonElement>) => {
-    if (e.button !== 0 && e.pointerType === 'mouse') return;
-    e.preventDefault();
-    dragCleanupRef.current?.();
-    setDraggingId(tierId);
-
-    const onMove = (ev: PointerEvent) => {
-      const target = document.elementFromPoint(ev.clientX, ev.clientY)?.closest<HTMLElement>('li[data-ladder-tier-id]');
-      const overId = target?.dataset.ladderTierId;
-      if (overId && overId !== tierId) {
-        moveById(tierId, overId);
-      }
-    };
-
-    const onUp = () => {
-      setDraggingId(null);
-      window.removeEventListener('pointermove', onMove);
-      window.removeEventListener('pointerup', onUp);
-      window.removeEventListener('pointercancel', onUp);
-      dragCleanupRef.current = null;
-    };
-
-    dragCleanupRef.current = onUp;
-    window.addEventListener('pointermove', onMove);
-    window.addEventListener('pointerup', onUp);
-    window.addEventListener('pointercancel', onUp);
-  };
+  const drag = useDragReorder<string>({ onMove: moveById });
 
   const add = () => {
     if (tiers.length >= TIER_LIST_LIMITS.maxTiers) return;
@@ -152,16 +119,11 @@ export function LadderEditor({ tiers, onChange, onPreset, activePreset }: Ladder
           const open = paletteFor === tier.id;
           const bgDraft = bgDrafts[tier.id] ?? tier.backgroundImage ?? '';
           const bgInvalid = Boolean(bgDraft.trim()) && !sanitizeImageUrl(bgDraft.trim());
-          const isDragging = draggingId === tier.id;
+          const isDragging = drag.draggingId === tier.id;
           return (
             <li
               key={tier.id}
-              data-ladder-tier-id={tier.id}
-              onDragOver={(e) => {
-                if (!draggingId || draggingId === tier.id) return;
-                e.preventDefault();
-                moveById(draggingId, tier.id);
-              }}
+              ref={drag.rowRef(tier.id)}
               className={cn(
                 'rounded-chip border border-border-color bg-bg-surface shadow-xs overflow-hidden transition-colors',
                 isDragging && 'z-20 relative border-accent-amber opacity-90'
@@ -171,7 +133,7 @@ export function LadderEditor({ tiers, onChange, onPreset, activePreset }: Ladder
                 {/* Drag Handle */}
                 <button
                   type="button"
-                  onPointerDown={(e) => startPointerDrag(tier.id, e)}
+                  {...drag.handleProps(tier.id)}
                   aria-label={formatMessage(t.tierAria, { label: tier.label })}
                   className="pointer-coarse:min-h-11 pointer-coarse:min-w-11 flex w-9 sm:w-10 shrink-0 items-center justify-center border-r border-border-color/80 text-text-muted hover:text-text-primary hover:bg-bg-elevated cursor-grab active:cursor-grabbing touch-none select-none transition-colors"
                 >

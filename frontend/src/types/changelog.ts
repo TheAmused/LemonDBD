@@ -12,8 +12,12 @@ export interface ChangelogPost {
   created_at: string | null;
   /** When the entry went live: the date readers see. Null while it is a draft. */
   published_at: string | null;
+  /** When the title or text of the live entry last changed; readers see an "Edited" note. */
+  edited_at: string | null;
   /** Set once the entry was posted to Discord; an entry is announced only once. */
   discord_announced_at: string | null;
+  /** When the Discord message last matched the entry. Null if it cannot be updated (no message id kept). */
+  discord_synced_at: string | null;
   updated_at: string | null;
 }
 
@@ -32,11 +36,17 @@ export interface ChangelogPostDraft {
   is_published: boolean;
 }
 
-export type ChangelogDiscordResult = 'sent' | 'failed' | 'not_configured';
+/** "missing": the Discord message was deleted there, so the entry can be announced again. */
+export type ChangelogDiscordResult = 'sent' | 'failed' | 'not_configured' | 'missing';
 
 export interface ChangelogSaveResponse {
   status: string;
   data: ChangelogPost;
+  /**
+   * After an edit: how keeping the entry's Discord message in line went. "removed": the entry went back to a
+   * draft and its message was deleted. Null when there was nothing to do.
+   */
+  discord?: ChangelogDiscordResult | 'removed' | null;
 }
 
 export interface ChangelogAnnounceResponse extends ChangelogSaveResponse {

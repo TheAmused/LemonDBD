@@ -101,17 +101,25 @@ export const FieldLabel: React.FC<React.LabelHTMLAttributes<HTMLElement> & { as?
   </Tag>
 );
 
-/** Label + control + hint/error row. */
+/** Label + control + hint/error row. `required` adds the red asterisk. */
 export const FormField: React.FC<{
   label: React.ReactNode;
   htmlFor?: string;
+  /** Id of the label itself, for `aria-labelledby` on a control a `<label>` cannot point at. */
+  labelId?: string;
+  required?: boolean;
+  icon?: React.ReactNode;
   hint?: React.ReactNode;
   error?: React.ReactNode;
   className?: string;
   children: React.ReactNode;
-}> = ({ label, htmlFor, hint, error, className, children }) => (
+}> = ({ label, htmlFor, labelId, required = false, icon, hint, error, className, children }) => (
   <div className={className}>
-    <FieldLabel htmlFor={htmlFor}>{label}</FieldLabel>
+    <FieldLabel id={labelId} htmlFor={htmlFor} className={cn(icon && 'flex items-center gap-1.5')}>
+      {icon}
+      {label}
+      {required && <span className="text-accent-red"> *</span>}
+    </FieldLabel>
     {children}
     {error ? (
       <p role="alert" className="mt-1 type-caption font-medium text-accent-red">

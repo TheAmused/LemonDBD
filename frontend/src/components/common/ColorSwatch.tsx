@@ -13,7 +13,8 @@ const SIZES: Record<ColorSwatchSize, string> = {
 };
 
 export interface ColorSwatchProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'type' | 'aria-pressed'> {
-  selected: boolean;
+  /** The current choice. Leave it out for a swatch that applies a colour once (no pressed state to announce). */
+  selected?: boolean;
   size?: ColorSwatchSize;
   mark?: React.ReactNode;
 }

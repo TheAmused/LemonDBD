@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import type { ChangelogPost, ChangelogPostDraft, ChangelogSection } from '@/types/changelog';
 import {
+  CHANGELOG_BODY_CLASS,
   CHANGELOG_HIGHLIGHT_COLORS,
   CHANGELOG_SECTIONS,
   CHANGELOG_TEXT_COLORS,
@@ -296,7 +297,7 @@ export const ChangelogEditorModal: React.FC<ChangelogEditorModalProps> = ({ open
         ref={setEditor}
         contentEditable
         suppressContentEditableWarning
-        className="min-h-[180px] max-h-[40vh] overflow-y-auto px-4 py-3 text-sm text-text-secondary leading-relaxed outline-none [&_h3]:text-base [&_h3]:font-black [&_h3]:text-accent-red [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_a]:text-accent-red [&_a]:underline"
+        className={`min-h-[180px] max-h-[40vh] overflow-y-auto px-4 py-3 outline-none ${CHANGELOG_BODY_CLASS}`}
         data-placeholder={
           t.bodyPlaceholder
         }

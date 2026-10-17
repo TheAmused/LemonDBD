@@ -58,3 +58,9 @@ test('RichText: "## " renders a section heading, not a bold paragraph', () => {
   assert.match(out, /<p class="[^"]*uppercase[^"]*">SPECIAL TRAP: BEAR TRAP<\/p>/);
   assert.doesNotMatch(out, /##/);
 });
+
+test('RichText: an editor empty line becomes a gap, consecutive lines stay tight', () => {
+  const out = html('<div>one</div><div><br></div><div>two</div><div>three</div>', { block: true });
+  assert.strictEqual((out.match(/aria-hidden="true"/g) || []).length, 1);
+  assert.strictEqual((out.match(/<p/g) || []).length, 3);
+});

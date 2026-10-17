@@ -3,6 +3,17 @@ import type { ChangelogSection } from '@/types/changelog';
 
 export const CHANGELOG_SECTIONS: ChangelogSection[] = ['new', 'qol', 'balance', 'bugfix', 'knownIssues', 'announcement'];
 
+/**
+ * How an entry's body looks, for both the reader's modal and the admin's editor so the preview matches. Lines
+ * written one under another stay tight; only a section title or a deliberate empty line opens a gap.
+ */
+export const CHANGELOG_BODY_CLASS = [
+  'text-sm leading-relaxed text-text-secondary',
+  '[&_h3]:mb-1.5 [&_h3]:mt-5 [&_h3]:text-sm [&_h3]:font-bold [&_h3]:tracking-wide [&_h3]:text-accent-red-text [&_h3:first-child]:mt-0',
+  '[&_ul]:list-disc [&_ul]:space-y-1 [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:space-y-1 [&_ol]:pl-5',
+  '[&_a]:text-accent-red-text [&_a]:underline',
+].join(' ');
+
 // Swatches offered by the rich-text color picker in the admin editor.
 export const CHANGELOG_TEXT_COLORS: { name: string; value: string }[] = [
   { name: 'Bone', value: '#e2e8f0' },

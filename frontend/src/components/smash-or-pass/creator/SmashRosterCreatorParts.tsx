@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { TriangleAlert } from 'lucide-react';
 import type { Dictionary } from '@/locales/types';
 import { type SmashRosterErrorCode } from '@/utils/smashOrPass/codec';
-import { SMASH_ROSTER_LIMITS, TRANSLATABLE_LOCALES } from '@/utils/smashOrPass/constants';
+import { DEFAULT_ROSTER_THEME_COLOR, SMASH_ROSTER_LIMITS, TRANSLATABLE_LOCALES } from '@/utils/smashOrPass/constants';
 import type { CustomRomanceArchetype, RosterCustomLabels, SmashRosterDocumentEntity } from '@/types/smashOrPass';
 import { DraftEntity, emptyDraftEntity, type EntityTranslationDraft } from '@/components/smash-or-pass/creator/EntityEditor';
 import { Badge } from '@/components/common/Badge';
@@ -36,7 +36,7 @@ export function freshDraft(): Draft {
     name: '',
     description: '',
     cover_image_url: '',
-    theme_color: '#ff0055',
+    theme_color: DEFAULT_ROSTER_THEME_COLOR,
     category: '',
     is_nsfw: false,
     roster_mode: 'simple',
@@ -182,7 +182,7 @@ export function readDraft(): StoredDraft | null {
       name: typeof parsed.name === 'string' ? parsed.name : '',
       description: typeof parsed.description === 'string' ? parsed.description : '',
       cover_image_url: typeof parsed.cover_image_url === 'string' ? parsed.cover_image_url : '',
-      theme_color: typeof parsed.theme_color === 'string' && parsed.theme_color ? parsed.theme_color : '#ff0055',
+      theme_color: typeof parsed.theme_color === 'string' && parsed.theme_color ? parsed.theme_color : DEFAULT_ROSTER_THEME_COLOR,
       category: typeof parsed.category === 'string' ? parsed.category : '',
       is_nsfw: Boolean(parsed.is_nsfw),
       roster_mode: parsed.roster_mode === 'full' ? 'full' : 'simple',

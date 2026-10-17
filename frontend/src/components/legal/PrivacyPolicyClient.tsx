@@ -56,7 +56,7 @@ export function PrivacyPolicyClient() {
       );
     }
     const section = privacy.sections[id as (typeof PRIVACY_SECTION_ORDER)[number]];
-    const P = 'text-text-muted text-justify [text-justify:inter-word] hyphens-auto';
+    const P = 'type-prose text-text-muted';
     const lead = section.items.length > 0 ? section.paragraphs.slice(0, 1) : section.paragraphs;
     const closing = section.items.length > 0 ? section.paragraphs.slice(1) : [];
     return (

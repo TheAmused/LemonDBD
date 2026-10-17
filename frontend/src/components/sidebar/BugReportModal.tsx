@@ -19,6 +19,7 @@ import { SuccessState } from '@/components/common/SuccessState';
 import { Button } from '@/components/common/Button';
 import { FormField, Input, Textarea } from '@/components/common/Field';
 import { Alert } from '@/components/common/Alert';
+import { IconLabel } from '@/components/common/IconLabel';
 import { useDictionary } from "@/context/DictionaryContext";
 import { Badge } from '@/components/common/Badge';
 import { Surface } from '@/components/common/Surface';
@@ -272,10 +273,7 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({ isOpen, onClose 
 
       <div>
         <div className="flex items-center justify-between mb-1.5">
-          <label className="type-label-xs text-text-muted flex items-center gap-1.5">
-            <ImageIcon className="h-3.5 w-3.5 text-text-muted" aria-hidden="true" />
-            {t.bugScreenshotsLabel || ''}
-          </label>
+          <IconLabel as="label" icon={ImageIcon} variant="heading">{t.bugScreenshotsLabel || ''}</IconLabel>
           <span className="type-micro text-text-muted">
             {images.length}/3
           </span>

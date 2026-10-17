@@ -34,6 +34,16 @@ Cel: jedna zmiana w jednym miejscu przesuwa wygląd całej strony. Poniżej źr�
 | Pasek akcji przyklejony do dołu (Zaakceptuj, Kontynuuj) | `common/StickyActionBar.tsx` | `<StickyActionBar><ActionBarButton variant="green|red|gray">` |
 | Tooltip | `common/Tooltip.tsx` (`TOOLTIP_CONFIG.variants`) | `{...tip(tekst, opis, wariant)}` |
 | Łączenie klas | `lib/cn.ts` (zna własne rozmiary tekstu i role promieni) | `cn(...)` |
+| Pole z ikoną w środku (hasło, szukaj) | `common/Field.tsx` (`IconInput`, `SearchInput`) | `<IconInput icon={Lock} type="password">`, `<SearchInput>` |
+| Błąd w treści strony (tytuł i powód) | `common/Alert.tsx` (`ErrorNotice`) | `<ErrorNotice title>{error}</ErrorNotice>` |
+| Ładowanie treści strony (spinner i tekst) | `common/LoadingState.tsx` | `<LoadingState label>` |
+| Ikona i tekst w jednej linii (fakt, nagłówek grupy) | `common/IconLabel.tsx` | `<IconLabel icon variant>` (`fact` lub `heading`) |
+| Nagłówek sekcji na stronie szczegółów | `common/SectionHeading.tsx` | `<SectionHeading as>` (`h2` lub `h3`) |
+| Rząd przycisków lub odznak, który się zawija | `common/WrapRow.tsx` | `<WrapRow>` |
+| Ekran z jedną kartą na środku (reset hasła, onboarding) | `layout/CenteredScreen.tsx` | `<CenteredScreen className>` |
+| Justowany tekst prawny i opisowy | `type-roles.css` (`type-prose`) | `type-prose text-text-muted` |
+| Ekran spoczynkowy trybu generatora (tekst, dźwignia, skrzynia) | `generator/shared/StageIdle.tsx` | `<StageIdleColumn>`, `<StagePrompt>`, `<StageProp>` |
+| Nakładka z odpowiedzią po rozwiązaniu rundy | `minigames/guessers/SolvedOverlay.tsx` | `<SolvedOverlay answer large>` |
 
 ## Co blokuje `check:styles`
 
@@ -41,10 +51,12 @@ Cel: jedna zmiana w jednym miejscu przesuwa wygląd całej strony. Poniżej źr�
 - nadpisywanie promienia w `Button`, `Input`, `Textarea`, `Select`, `Surface`, `Badge`, `InfoChip`, `ToggleChip`,
 - natywny `title` i ręczne `data-tooltip` na elementach DOM,
 - nowy surowy `<button>` ostylowany jak przycisk (limit na plik w `scripts/raw-buttons-baseline.json`, można tylko zmniejszać; `npx tsx scripts/check-global-styles.ts --update-baseline` po świadomej zmianie),
-- kolory spoza tokenów i style inline z literałami.
+- kolory spoza tokenów i style inline z literałami,
+- (`duplicationGuards.test.ts`, część `npm run check`) ten sam ciąg klas (45+ znaków) w trzech miejscach, literały `#hex` i `rgb()` w kodzie i arkuszach (tylko malejący baseline) oraz lokalny komponent o nazwie komponentu z `common`.
 
 ## Jak zmienić wygląd wszystkich elementów danego rodzaju
 
 1. Znajdź wiersz w tabeli i zmień wartość w komponencie lub tokenie.
 2. Nie dopisuj nadpisań w miejscu użycia. Jeśli potrzebny jest nowy wariant, dodaj go do komponentu.
-3. Uruchom `npm run check:styles` i `npm run test:unit`.
+3. Uruchom `npm run check` i `npm run test:unit`.
+4. Gdy guard duplikatów zgłosi trzecią kopię klas, wyciągnij komponent (`common` albo folder funkcji) albo wspólną stałą. Nie zmieniaj kolejności klas i nie podnoś baseline.

@@ -7,6 +7,7 @@ import { useDictionary } from '@/context/DictionaryContext';
 
 import { Button } from '@/components/common/Button';
 import { Surface } from '@/components/common/Surface';
+import { IconLabel } from '@/components/common/IconLabel';
 interface VoiceVariantPillsProps {
   variants: string[];
   onSelect: (variant: string) => void;
@@ -18,9 +19,7 @@ export function VoiceVariantPills({ variants, onSelect }: VoiceVariantPillsProps
 
   return (
     <Surface tone="elevated" padding="none" className="relative z-10 mt-2.5 p-2.5 backdrop-blur-sm flex flex-wrap items-center gap-2">
-      <div className="flex items-center gap-1.5 type-strong text-text-secondary">
-        <span>{dict.maps.variants}</span>
-      </div>
+      <IconLabel>{dict.maps.variants}</IconLabel>
 
       <div className="flex flex-wrap gap-1.5">
         {variants.map((variant) => (

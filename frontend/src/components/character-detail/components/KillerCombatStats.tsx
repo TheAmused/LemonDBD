@@ -11,6 +11,19 @@ interface KillerCombatStatsProps {
   t: Record<string, string>;
 }
 
+/** One stat of the threat scale: an icon tile, its label and the value. */
+const StatRow: React.FC<{ icon: React.ComponentType<{ className?: string }>; label: string; value: string }> = ({ icon: Icon, label, value }) => (
+  <div className="flex cursor-default items-center gap-3 rounded-card bg-bg-elevated/60 p-2.5">
+    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-card bg-bg-surface text-text-secondary">
+      <Icon className="h-4 w-4" />
+    </div>
+    <div>
+      <span className="block text-tiny text-text-secondary uppercase">{label}</span>
+      <span className="block type-strong-fluid text-text-primary">{value}</span>
+    </div>
+  </div>
+);
+
 export const KillerCombatStats: React.FC<KillerCombatStatsProps> = ({
   killerSpeed,
   killerTerrorRadius,
@@ -29,49 +42,13 @@ export const KillerCombatStats: React.FC<KillerCombatStatsProps> = ({
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         {/* Movement Speed */}
-        <div className="flex items-center gap-3 p-2.5 rounded-card bg-bg-elevated/60 cursor-default">
-          <div className="h-9 w-9 rounded-card bg-bg-surface flex items-center justify-center text-text-secondary shrink-0">
-            <Gauge className="h-4 w-4" />
-          </div>
-          <div>
-            <span className="block text-tiny text-text-secondary uppercase">
-              {t.movementSpeed || 'Movement Speed'}
-            </span>
-            <span className="block type-strong-fluid text-text-primary">
-              {killerSpeed}
-            </span>
-          </div>
-        </div>
+        <StatRow icon={Gauge} label={t.movementSpeed || 'Movement Speed'} value={killerSpeed} />
 
         {/* Terror Radius (Visualizer disabled for now) */}
-        <div className="flex items-center gap-3 p-2.5 rounded-card bg-bg-elevated/60 cursor-default">
-          <div className="h-9 w-9 rounded-card bg-bg-surface flex items-center justify-center text-text-secondary shrink-0">
-            <Radio className="h-4 w-4" />
-          </div>
-          <div>
-            <span className="block text-tiny text-text-secondary uppercase">
-              {t.terrorRadius || 'Terror Radius'}
-            </span>
-            <span className="block type-strong-fluid text-text-primary">
-              {killerTerrorRadius}
-            </span>
-          </div>
-        </div>
+        <StatRow icon={Radio} label={t.terrorRadius || 'Terror Radius'} value={killerTerrorRadius} />
 
         {/* Height */}
-        <div className="flex items-center gap-3 p-2.5 rounded-card bg-bg-elevated/60 cursor-default">
-          <div className="h-9 w-9 rounded-card bg-bg-surface flex items-center justify-center text-text-secondary shrink-0">
-            <ArrowUpDown className="h-4 w-4" />
-          </div>
-          <div>
-            <span className="block text-tiny text-text-secondary uppercase">
-              {t.height || 'Height'}
-            </span>
-            <span className="block type-strong-fluid text-text-primary">
-              {killerHeight}
-            </span>
-          </div>
-        </div>
+        <StatRow icon={ArrowUpDown} label={t.height || 'Height'} value={killerHeight} />
       </div>
     </Surface>
   );

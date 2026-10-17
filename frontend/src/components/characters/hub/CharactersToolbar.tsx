@@ -3,7 +3,7 @@
 import React from 'react';
 import { Lock, Search, X } from 'lucide-react';
 import { useDictionary } from '@/context/DictionaryContext';
-import { Input } from '@/components/common/Field';
+import { IconInput } from '@/components/common/Field';
 import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
 import type { RoleCategory } from '@/types/perks';
 
@@ -75,8 +75,8 @@ export function CharactersToolbar({
       </div>
 
       <div className="order-3 relative w-full sm:w-72">
-        <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-text-muted" />
-        <Input
+        <IconInput
+          icon={Search}
           type="text"
           placeholder={dict.filters.filterByCharacter}
           aria-label={dict.filters.filterByCharacter}

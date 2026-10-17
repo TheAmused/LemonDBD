@@ -11,6 +11,7 @@ import { pickRandomLoadout, buildDrawnSlots, pickPerkTarotType, TarotType } from
 import { getSlotInteraction } from '../lib/blindnessCurse';
 import { PerkSlot } from '../shared/PerkSlot';
 import { useJackpotCelebration } from '../shared/useJackpotCelebration';
+import { StageIdleColumn, StagePrompt, StageProp } from '../shared/StageIdle';
 import { playCardFlip } from '@/utils/perkAudio';
 import { useDictionary } from "@/context/DictionaryContext";
 import { TileButton } from '@/components/common/TileButton';
@@ -163,10 +164,10 @@ export const TarotDeckStage: React.FC<TarotDeckStageProps> = ({
   };
 
   return (
-    <div className="flex flex-col items-center justify-center gap-3 sm:gap-6 xl:gap-8 2xl:gap-10 py-2 sm:py-6 wide:py-8">
-      <p className="max-w-lg xl:max-w-2xl 2xl:max-w-3xl wide:max-w-4xl text-center text-xs sm:text-base xl:text-lg wide:text-xl font-semibold text-text-secondary">
+    <StageIdleColumn>
+      <StagePrompt>
         {dict.generator.tarotTapToFlip}
-      </p>
+      </StagePrompt>
 
       {cards ? (
         <div ref={resultsRef} className="grid grid-cols-2 gap-2 sm:gap-3 md:gap-4 lg:grid-cols-4 max-w-full justify-items-center lg:gap-4 xl:gap-6 2xl:gap-8 wide:gap-10 wide-2k:gap-12 wide-4k:gap-16">
@@ -251,12 +252,7 @@ export const TarotDeckStage: React.FC<TarotDeckStageProps> = ({
           disabled={activePlayablePerks.length === 0}
           className="group"
         >
-          <img
-            src="/images/randomizer/tarot.webp"
-            alt=""
-            className="h-28 w-28 sm:h-36 sm:w-36 xl:h-48 xl:w-48 2xl:h-60 2xl:w-60 wide:h-72 wide:w-72 object-contain drop-shadow-2xl select-none pointer-events-none group-hover:drop-shadow-glow-amber-md transition-all duration-300"
-            draggable={false}
-          />
+          <StageProp src="/images/randomizer/tarot.webp" />
         </TileButton>
       )}
 
@@ -268,7 +264,7 @@ export const TarotDeckStage: React.FC<TarotDeckStageProps> = ({
       >
         {dict.generator.tarotShuffleButton}
       </DbdButton>
-    </div>
+    </StageIdleColumn>
   );
 };
 

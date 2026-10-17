@@ -1,5 +1,6 @@
 // frontend/src/components/common/Alert.tsx
-// The one inline error box. Errors under a single input belong to FormField in Field.tsx.
+// The one inline error box (Alert) and the error panel that stands in for a page body (ErrorNotice).
+// Errors under a single input belong to FormField in Field.tsx.
 import React from 'react';
 import { TriangleAlert, X } from 'lucide-react';
 import { Button } from '@/components/common/Button';
@@ -29,6 +30,25 @@ export function Alert({ children, onDismiss, dismissLabel, className }: AlertPro
           <X className="h-4 w-4" aria-hidden="true" />
         </Button>
       )}
+    </div>
+  );
+}
+
+export interface ErrorNoticeProps {
+  title: React.ReactNode;
+  children: React.ReactNode;
+  className?: string;
+}
+
+/** The centred error panel that replaces a page body whose data failed to load (title plus the reason). */
+export function ErrorNotice({ title, children, className }: ErrorNoticeProps) {
+  return (
+    <div
+      role="alert"
+      className={cn('mx-auto my-12 max-w-md rounded-card border border-accent-red/30 bg-accent-red/10 p-8 text-center', className)}
+    >
+      <h2 className="mb-2 text-lg font-bold text-accent-red">{title}</h2>
+      <p className="text-xs text-text-muted">{children}</p>
     </div>
   );
 }

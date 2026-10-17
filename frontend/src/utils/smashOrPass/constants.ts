@@ -70,3 +70,6 @@ export const TRANSLATABLE_FIELDS = [
 
 // Shared with the other portable-JSON codec; re-exported so callers keep one import site.
 export { DATA_IMAGE_PATTERN, SHARE_HASH_PARAM } from '@/utils/shareCodec';
+
+/** Accent a custom roster gets until its author picks one. */
+export const DEFAULT_ROSTER_THEME_COLOR = '#ff0055';

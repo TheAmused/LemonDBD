@@ -373,10 +373,10 @@ def test_purge_expired_evidence(
     db_session.add_all([r_expired, r_valid, r_resolved])
     db_session.commit()
 
-    res = client.post("/api/v1/admin/content-reports/purge-expired", headers=headers)
+    res = client.post("/api/v1/admin/maintenance/content_evidence", headers=headers)
     assert res.status_code == 200
     data = res.get_json()
-    assert data["purged_count"] == 1
+    assert data["key"] == "content_evidence" and data["affected"] == 1
 
     db_session.refresh(r_expired)
     assert r_expired.status == "expired"
@@ -399,7 +399,7 @@ def test_admin_content_reports_forbidden_for_non_admin_and_unauthenticated(
         ("GET", "/api/v1/admin/content-reports", {}),
         ("GET", "/api/v1/admin/content-reports/1/preview", {}),
         ("POST", "/api/v1/admin/content-reports/1/resolve", {"action": "dismiss"}),
-        ("POST", "/api/v1/admin/content-reports/purge-expired", {}),
+        ("POST", "/api/v1/admin/maintenance/content_evidence", {}),
     ]
 
     for method, url, body in endpoints:

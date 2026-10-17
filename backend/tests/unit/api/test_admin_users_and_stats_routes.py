@@ -10,7 +10,9 @@ from sqlalchemy import event
 
 from app.core.extensions import db
 from app.core.security import generate_token
-from app.models import Killer, User, UserCharacterOwnership, UserPerkOwnership, Perk
+from datetime import datetime, timedelta, timezone
+
+from app.models import BugReport, Killer, User, UserCharacterOwnership, UserPerkOwnership, Perk
 from tests.unit.conftest import make_chapter
 
 
@@ -94,6 +96,25 @@ class TestAdminUserDirectoryRoute:
         data = res.get_json()
         assert all(u["role"] == "admin" for u in data["users"])
 
+    def test_standing_filter(self, client: FlaskClient, db_session, admin_headers: dict[str, str]) -> None:
+        now = datetime.now(timezone.utc)
+        db_session.add_all([
+            User(login="st_banned", username="st_banned", email="st_b@example.com", password_hash="h", is_active=False),
+            User(login="st_susp", username="st_susp", email="st_s@example.com", password_hash="h", suspended_until=now + timedelta(days=1)),
+            User(login="st_lapsed", username="st_lapsed", email="st_l@example.com", password_hash="h", suspended_until=now - timedelta(days=1)),
+        ])
+        db_session.commit()
+
+        def logins(standing: str) -> set[str]:
+            res = client.get(f"/api/v1/users?standing={standing}&per_page=100", headers=admin_headers)
+            return {u["login"] for u in res.get_json()["users"]}
+
+        assert logins("banned") == {"st_banned"}
+        assert logins("suspended") == {"st_susp"}
+        assert {"st_lapsed", "dir_admin"} <= logins("active")
+        assert not {"st_banned", "st_susp"} & logins("active")
+        assert len(logins("bogus")) == 4  # an unknown standing does not filter
+
     def test_pagination_respects_page_and_per_page(
         self, client: FlaskClient, db_session, admin_headers: dict[str, str]
     ) -> None:
@@ -167,5 +188,22 @@ class TestAdminStatsRoute:
         res = client.get("/api/v1/admin/stats", headers=admin_headers)
         assert res.status_code == 200
         data = res.get_json()
-        for key in ("total_users", "active_users", "admin_count", "total_characters", "total_perks"):
-            assert key in data
+        assert data["users"] == {"total": 1, "admins": 1, "players": 0, "active": 1, "suspended": 0, "banned": 0}
+        assert data["pending"] == {"bug_reports": 0, "content_reports": 0}
+
+    def test_counts_standing_and_pending_queues(
+        self, client: FlaskClient, db_session, admin_headers: dict[str, str]
+    ) -> None:
+        now = datetime.now(timezone.utc)
+        db_session.add_all([
+            User(login="banned_one", username="banned_one", email="b1@example.com", password_hash="h", is_active=False),
+            User(login="suspended_one", username="suspended_one", email="s1@example.com", password_hash="h", suspended_until=now + timedelta(days=2)),
+            User(login="lapsed_one", username="lapsed_one", email="l1@example.com", password_hash="h", suspended_until=now - timedelta(days=2)),
+            BugReport(reporter_name="x", title="t", message="m", status="pending"),
+            BugReport(reporter_name="x", title="t", message="m", status="resolved"),
+        ])
+        db_session.commit()
+
+        data = client.get("/api/v1/admin/stats", headers=admin_headers).get_json()
+        assert data["users"] == {"total": 4, "admins": 1, "players": 3, "active": 2, "suspended": 1, "banned": 1}
+        assert data["pending"]["bug_reports"] == 1

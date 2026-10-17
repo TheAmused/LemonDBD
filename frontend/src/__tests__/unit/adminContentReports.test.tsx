@@ -1,6 +1,6 @@
 // frontend/src/__tests__/unit/adminContentReports.test.tsx
 //
-// The admin side of content moderation: the evidence preview, the report workbench and the tab.
+// The admin side of content moderation: the evidence preview, the case view, the shared queue and the tab.
 // Before this existed an admin had no screen at all for reported tier lists, rosters or minigames.
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
@@ -9,10 +9,17 @@ import { renderWithDictionary } from '../helpers/renderWithDictionary';
 import { buildEvidencePreview, isSafePreviewImage, parseEvidence } from '@/utils/contentPreview';
 import { ContentReportDetail } from '@/components/admin/ContentReportDetail';
 import { SandboxedContentPreview } from '@/components/admin/SandboxedContentPreview';
-import { AdminContentReportsWorkbench } from '@/components/admin/AdminContentReportsWorkbench';
+import { AdminQueue } from '@/components/admin/AdminQueue';
 import { AdminSectionTabs } from '@/components/admin/AdminSectionTabs';
 import { isAdminTab } from '@/components/admin/adminTabs';
-import { contentReasonLabel, contentStatusLabel, contentTypeLabel } from '@/components/admin/contentReportLabels';
+import {
+  BUG_STATUSES,
+  CONTENT_STATUSES,
+  bugStatusLabel,
+  contentReasonLabel,
+  contentStatusLabel,
+  contentTypeLabel,
+} from '@/components/admin/reportLabels';
 import en from '@/locales/en';
 import type { AdminContentReport, AdminContentReportDetail } from '@/types/admin';
 
@@ -61,6 +68,7 @@ const baseDetail: AdminContentReportDetail = {
 };
 
 const noop = async () => true;
+const showUser = () => {};
 
 describe('contentPreview', () => {
   it('lists the readable text of a document and leaves ids and placements out', () => {
@@ -123,7 +131,7 @@ describe('SandboxedContentPreview', () => {
 describe('ContentReportDetail', () => {
   it('offers ban and dismiss for a pending report, with the reasons and reporter notes', () => {
     const html = renderWithDictionary(
-      React.createElement(ContentReportDetail, { detail: baseDetail, resolving: false, onResolve: noop })
+      React.createElement(ContentReportDetail, { detail: baseDetail, resolving: false, onResolve: noop, onShowUser: showUser })
     );
     assert.ok(html.includes(en.admin.contentReportBanAction));
     assert.ok(html.includes(en.admin.contentReportDismissAction));
@@ -137,14 +145,14 @@ describe('ContentReportDetail', () => {
 
   it('explains an unattributed report and offers no author decision', () => {
     const detail = { ...baseDetail, attributed: false, author_id: null, author_login: '', author_active: null };
-    const html = renderWithDictionary(React.createElement(ContentReportDetail, { detail, resolving: false, onResolve: noop }));
+    const html = renderWithDictionary(React.createElement(ContentReportDetail, { detail, resolving: false, onResolve: noop, onShowUser: showUser }));
     assert.ok(html.includes(en.admin.contentReportUnattributed));
     assert.ok(!html.includes(en.moderation.admin.authorActionWarning));
   });
 
   it('never offers a decision about an admin author', () => {
     const detail = { ...baseDetail, author_is_admin: true };
-    const html = renderWithDictionary(React.createElement(ContentReportDetail, { detail, resolving: false, onResolve: noop }));
+    const html = renderWithDictionary(React.createElement(ContentReportDetail, { detail, resolving: false, onResolve: noop, onShowUser: showUser }));
     assert.ok(html.includes(en.admin.contentReportAuthorIsAdmin));
     assert.ok(!html.includes(en.moderation.admin.authorActionWarning));
   });
@@ -158,74 +166,68 @@ describe('ContentReportDetail', () => {
       admin_notes: 'Slur in the title',
       resolved_at: '2026-10-16T10:00:00Z',
     };
-    const html = renderWithDictionary(React.createElement(ContentReportDetail, { detail, resolving: false, onResolve: noop }));
+    const html = renderWithDictionary(React.createElement(ContentReportDetail, { detail, resolving: false, onResolve: noop, onShowUser: showUser }));
     assert.ok(html.includes(en.admin.contentReportEvidenceWiped));
     assert.ok(html.includes('Slur in the title'));
     assert.ok(!html.includes(en.admin.contentReportDismissAction));
   });
 });
 
-describe('AdminContentReportsWorkbench', () => {
+describe('AdminQueue', () => {
   const props = {
-    list: { items: [baseReport], total: 1, pending_total: 1, page: 1, per_page: 20 },
-    statusFilter: 'pending',
+    ariaLabel: 'Filter by status',
+    statuses: CONTENT_STATUSES,
+    status: 'pending' as const,
+    onStatusChange: () => {},
+    statusLabel: (status: string) => contentStatusLabel({ admin: en.admin }, status),
+    stats: { pending: 1, resolved_banned: 2, dismissed: 0, expired: 0, total: 3 },
+    items: [baseReport],
+    total: 1,
     page: 1,
-    perPage: 20,
+    onPageChange: () => {},
     loading: false,
     selectedId: 4,
-    detail: baseDetail,
-    loadingDetail: false,
-    resolving: false,
-    onStatusFilterChange: () => {},
-    onPageChange: () => {},
     onSelect: () => {},
-    onResolve: noop,
-    onPurgeExpired: () => {},
+    renderItem: (report: AdminContentReport) => contentTypeLabel({ admin: en.admin }, report.content_type),
+    emptyText: en.admin.contentReportsEmpty,
+    detail: React.createElement('p', null, 'the case'),
   };
 
-  it('lists the queue and shows the selected case beside it', () => {
-    const html = renderWithDictionary(React.createElement(AdminContentReportsWorkbench, props));
+  it('lists the queue, puts each count on its status chip and shows the case beside it', () => {
+    const html = renderWithDictionary(React.createElement(AdminQueue<string, AdminContentReport>, props));
     assert.ok(html.includes(en.admin.contentTypeTierList));
-    assert.ok(html.includes(en.admin.contentReportBanAction));
-    assert.ok(html.includes(en.admin.contentReportsPurgeExpired));
+    assert.ok(html.includes(`${en.admin.contentStatusBanned} (2)`));
+    assert.ok(html.includes(`${en.admin.statusAll} (3)`));
+    assert.ok(html.includes('the case'));
   });
 
   it('shows the empty state and the select prompt when nothing is queued', () => {
     const html = renderWithDictionary(
-      React.createElement(AdminContentReportsWorkbench, {
-        ...props,
-        list: { items: [], total: 0, pending_total: 0, page: 1, per_page: 20 },
-        selectedId: null,
-        detail: null,
-      })
+      React.createElement(AdminQueue<string, AdminContentReport>, { ...props, items: [], total: 0, selectedId: null, detail: null })
     );
     assert.ok(html.includes(en.admin.contentReportsEmpty));
-    assert.ok(html.includes(en.admin.contentReportsSelectPrompt));
+    assert.ok(html.includes(en.admin.queueSelectPrompt));
   });
 
-  it('does not show a previously loaded case for a different selection', () => {
-    const html = renderWithDictionary(
-      React.createElement(AdminContentReportsWorkbench, { ...props, selectedId: 99, loadingDetail: true })
+  it('only shows a search box when the queue has one', () => {
+    const without = renderWithDictionary(React.createElement(AdminQueue<string, AdminContentReport>, props));
+    assert.ok(!without.includes('type="search"'));
+    const withSearch = renderWithDictionary(
+      React.createElement(AdminQueue<string, AdminContentReport>, { ...props, search: { value: '', onChange: () => {}, placeholder: 'Find' } })
     );
-    assert.ok(!html.includes(en.admin.contentReportDismissAction));
-    assert.ok(html.includes(en.admin.contentReportsLoading));
+    assert.ok(withSearch.includes('type="search"'));
   });
 });
 
 describe('Reports tab', () => {
-  it('is a known admin tab and shows the pending count', () => {
+  it('is a known admin tab and marks waiting reports with a dot, not a second count', () => {
     assert.equal(isAdminTab('reports'), true);
-    const html = renderWithDictionary(
-      React.createElement(AdminSectionTabs, {
-        activeTab: 'reports',
-        onChange: () => {},
-        totalUsers: 5,
-        pendingBugs: 0,
-        pendingReports: 7,
-      })
-    );
-    assert.ok(html.includes(en.admin.contentReportsLabel));
-    assert.ok(html.includes(`${en.admin.contentReportsLabel} (7)`) || html.includes('(7)'));
+    assert.equal(isAdminTab('bugs'), false, 'bug reports moved into the Reports tab');
+    const render = (reportsWaiting: boolean) =>
+      renderWithDictionary(React.createElement(AdminSectionTabs, { activeTab: 'reports', onChange: () => {}, reportsWaiting }));
+    assert.ok(render(true).includes(`aria-label="${en.admin.needsAttention}"`));
+    assert.ok(!render(false).includes(en.admin.needsAttention));
+    assert.ok(!/\(\d+\)/.test(render(true)), 'the tabs carry no numbers');
   });
 
   it('labels every status, type and reason the backend can store, and falls back to the raw value', () => {
@@ -238,5 +240,6 @@ describe('Reports tab', () => {
       assert.notEqual(contentReasonLabel(dict, reason), reason);
     }
     assert.equal(contentReasonLabel(dict, 'something_new'), 'something_new');
+    for (const status of BUG_STATUSES) assert.notEqual(bugStatusLabel(dict, status), status);
   });
 });

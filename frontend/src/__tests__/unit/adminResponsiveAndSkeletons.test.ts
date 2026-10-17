@@ -4,11 +4,9 @@ import assert from 'node:assert/strict';
 import React from 'react';
 import { AdminPanelSkeleton } from '@/components/admin/AdminPanelSkeleton';
 import { AdminTabContentSkeleton } from '@/components/admin/AdminTabContentSkeleton';
-import { AdminStatsGrid } from '@/components/admin/AdminStatsGrid';
-import { AdminUserTable } from '@/components/admin/AdminUserTable';
-import type { UserRow } from '@/types/admin';
-import enDict from '@/locales/en';
+import en from '@/locales/en';
 import { renderWithDictionary } from '../helpers/renderWithDictionary';
+import { renderUsers } from '../helpers/adminFixtures';
 
 describe('Admin Page: Skeletons & DBD Framer Motion Spinner Integrity', () => {
   it('AdminPanelSkeleton renders with role="status", aria-busy="true", and DBD Skill Check Spinner', () => {
@@ -26,100 +24,38 @@ describe('Admin Page: Skeletons & DBD Framer Motion Spinner Integrity', () => {
   });
 });
 
-describe('Admin Page: AdminStatsGrid null-safety', () => {
-  it('renders placeholder dashes instead of crashing when stats is null (pre-fetch state)', () => {
-    const html = renderWithDictionary(React.createElement(AdminStatsGrid, { stats: null }));
-    assert.ok(html.includes('Total Users'));
-    assert.ok(html.includes('>-<'), 'Missing metrics should render a safe "-" placeholder, not throw');
+describe('Admin Page: user directory', () => {
+  it('renders a phone card list (sm:hidden) alongside the table (hidden sm:block)', () => {
+    const html = renderUsers();
+    assert.ok(html.includes('sm:hidden'), 'card list must be present and hidden only at sm+');
+    assert.ok(html.includes('hidden overflow-x-auto sm:block'), 'table must be hidden below sm and revealed at sm+');
+    assert.equal((html.match(/>lemon_admin</g) || []).length, 2, 'each account appears once per layout');
   });
 
-  it('renders real numbers once stats resolve', () => {
-    const html = renderWithDictionary(
-      React.createElement(AdminStatsGrid, {
-        stats: {
-          total_users: 42,
-          active_users: 40,
-          admin_count: 2,
-          total_characters: 98,
-          survivors_count: 54,
-          killers_count: 44,
-          total_perks: 321,
-          challenge_completions: {} as any,
-        },
-      })
-    );
-    assert.ok(html.includes('42'));
-  });
-});
-
-describe('Admin Page: AdminUserTable responsive card/table split', () => {
-  const sampleUsers: UserRow[] = [
-    {
-      id: 1,
-      login: 'sign_in_42',
-      username: 'lemon_admin',
-      email: 'lemon@example.com',
-      role: 'admin',
-      is_active: true,
-      created_at: new Date('2026-01-01').toISOString(),
-      owned_characters_count: 12,
-      unlocked_perks_count: 34,
-    },
-  ];
-
-  const noop = () => {};
-
-  function render(users: UserRow[] = sampleUsers) {
-    return renderWithDictionary(
-      React.createElement(AdminUserTable, {
-        users,
-        totalUsers: users.length,
-        page: 1,
-        search: '',
-        roleFilter: 'all',
-        loading: false,
-        currentUserId: 999,
-        onSearchChange: noop,
-        onRoleFilterChange: noop,
-        onPageChange: noop,
-        onOpenCreateUser: noop,
-        onToggleRole: noop,
-        onOpenModeration: noop,
-        onDeleteUser: noop,
-        onResetTwoFactor: noop,
-      })
-    );
-  }
-
-  it('renders a mobile card list (sm:hidden) alongside a desktop table (hidden sm:block) -- never a bare horizontally-scrolling table', () => {
-    const html = render();
-    assert.ok(html.includes('sm:hidden'), 'Mobile card list must be present and hidden only at sm+');
-    assert.ok(html.includes('hidden sm:block'), 'Desktop table must be hidden below sm and revealed at sm+');
+  it('puts the counts on the filter options only, once each', () => {
+    const html = renderUsers();
+    for (const n of ['80', '79', '77']) assert.equal((html.match(new RegExp(`\\(${n}\\)`, 'g')) || []).length, 1, n);
   });
 
-  it('renders the same user data in both the mobile card and the desktop table', () => {
-    const html = render();
-    const occurrences = (html.match(/lemon_admin/g) || []).length;
-    assert.equal(occurrences, 2, 'Username should appear once in the mobile card and once in the desktop table row');
+  it('offers moderation only for players other than yourself, the rest in the row menu', () => {
+    const html = renderUsers({}, 1);
+    assert.equal(html.split(`aria-label="${en.moderation.admin.openButton}"`).length - 1, 2, 'one moderation button per layout, for the player only');
+    assert.ok(html.includes('aria-haspopup="menu"'));
+    assert.ok(html.includes(en.admin.you));
   });
 
-  it('desktop table action buttons expand their tap target via a pseudo-element without changing visual size', () => {
-    const html = render();
-    // React SSR HTML-escapes the quotes inside the Tailwind arbitrary-value
-    // class (content-['']) as &#x27; -- assert on the unescaped parts.
-    assert.ok(html.includes('before:absolute before:-inset-2.5'));
-    assert.ok(html.includes("before:content-["));
+  it('marks unverified e-mail and two-factor accounts', () => {
+    const html = renderUsers();
+    assert.ok(html.includes(en.admin.unverifiedBadge));
+    assert.ok(html.includes(en.admin.twoFactorBadge));
   });
 
-  it('mobile card action buttons declare an explicit >= 44px touch target', () => {
-    const html = render();
-    assert.ok(html.includes('min-h-11 min-w-11'));
+  it('says it is loading, or that nothing matches, instead of an empty table', () => {
+    assert.ok(renderUsers({ users: [], total: 0, loading: true }).includes(en.admin.loading));
+    assert.ok(renderUsers({ users: [], total: 0 }).includes(en.admin.noUsers));
   });
-});
 
-describe('Admin Page: Responsive Touch Target Contracts', () => {
-  it('the five admin subtab buttons enforce an explicit >= 48px touch target', () => {
-    const minTabHeightPx = 48;
-    assert.ok(minTabHeightPx >= 48, 'Users/Bugs/Kill Switches/Challenge Stats/Audit Log tabs declare min-h-[48px]');
+  it('icon-only row actions keep a 44px touch target on coarse pointers', () => {
+    assert.ok(renderUsers().includes('pointer-coarse:min-h-11'));
   });
 });

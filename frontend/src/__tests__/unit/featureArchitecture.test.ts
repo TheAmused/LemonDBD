@@ -77,8 +77,7 @@ describe('Feature Architecture: Public Barrels & Bounded Domains', () => {
   it('admin feature exports expected public API', () => {
     assert.equal(typeof admin.AdminPanelClient, 'function');
     assert.equal(typeof admin.AdminHeader, 'function');
-    assert.equal(typeof admin.AdminStatsGrid, 'function');
-    assert.equal(typeof admin.AdminUserTable, 'function');
+    assert.equal(typeof admin.AdminUsersSection, 'function');
   });
 });
 

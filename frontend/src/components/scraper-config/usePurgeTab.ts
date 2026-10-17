@@ -40,7 +40,7 @@ export function usePurgeTab(onPurgeSuccess?: () => void) {
 
   const handleExecutePurge = () => {
     if (purgeTargets.length === 0) {
-      setPurgeError('Please select at least one table target to purge.');
+      setPurgeError(dict.admin.selectAtLeastOneTarget);
       return;
     }
 
@@ -74,13 +74,13 @@ export function usePurgeTab(onPurgeSuccess?: () => void) {
 
       const data = await res.json();
       if (res.ok) {
-        setPurgeSuccess(data.message || 'Purged successfully.');
+        setPurgeSuccess(dict.admin.purgeDone);
         setPurgeTargets([]);
         if (onPurgeSuccess) {
           await onPurgeSuccess();
         }
       } else {
-        setPurgeError(data.error || 'Purge failed.');
+        setPurgeError(data.error || dict.admin.purgeFailed);
       }
     } catch (err: unknown) {
       const message = getErrorMessage(err, dict.admin.networkError);

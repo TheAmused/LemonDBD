@@ -89,7 +89,7 @@ export function AdminModerationDrawer({ user, onClose, onChanged, onActionMessag
         variant="drawer-right"
         size="lg"
         title={formatMessage(t.drawerTitle, { username })}
-        closeButtonAriaLabel={dict.admin.closeSymbol}
+        closeButtonAriaLabel={dict.admin.close}
         padded
         bodyClassName="space-y-6"
       >

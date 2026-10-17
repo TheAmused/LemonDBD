@@ -15,6 +15,7 @@ import {
 } from '@/services/changelogApi';
 import { htmlToPlainText } from './changelogText';
 import { postDate } from './changelogReadState';
+import { CHANGELOG_BODY_CLASS } from './changelogTheme';
 import type { ChangelogFeed } from './useChangelogFeed';
 import dynamic from 'next/dynamic';
 
@@ -419,7 +420,7 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ feed, classN
                         <RichText
                           text={post.content_html}
                           block
-                          className="text-sm leading-relaxed text-text-secondary [&_h3]:text-base [&_h3]:font-black [&_h3]:text-accent-red [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_a]:text-accent-red [&_a]:underline"
+                          className={CHANGELOG_BODY_CLASS}
                         />
                       </div>
                     </div>

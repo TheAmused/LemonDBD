@@ -74,6 +74,8 @@ interface RichVariant {
   noticeLabel: string;
   /** "# " section heading (block mode). */
   heading: string;
+  /** The gap an author leaves with an empty line (`<div><br></div>`) between two paragraphs. */
+  blank: string;
 }
 
 const NONE = '';
@@ -92,6 +94,7 @@ const RICH_VARIANTS: Readonly<Record<'ui' | 'game', RichVariant>> = {
     quote: () => 'border-l-2 border-border-color pl-3 italic text-text-secondary',
     notice: 'rounded-card border border-accent-amber/30 bg-accent-amber/10 p-3 text-accent-amber',
     heading: 'mt-3 first:mt-0 font-bold text-text-primary',
+    blank: 'h-lh',
     noticeLabel: 'mr-2 rounded-chip bg-accent-amber/25 px-2 py-0.5 text-tiny font-bold uppercase tracking-wider',
   },
   game: {
@@ -111,6 +114,7 @@ const RICH_VARIANTS: Readonly<Record<'ui' | 'game', RichVariant>> = {
       ),
     notice: 'p-3 my-2 text-left text-left rounded-card bg-accent-amber/10 border border-accent-amber/30 text-xs font-semibold text-accent-amber flex items-start gap-2.5 shadow-sm',
     heading: 'mt-4 first:mt-0 mb-1 text-left text-mini font-black uppercase tracking-spaced-sm text-accent-amber',
+    blank: 'h-2',
     noticeLabel: 'shrink-0 font-bold uppercase tracking-wider text-tiny bg-accent-amber/25 px-2 py-0.5 rounded-chip text-accent-amber',
   },
 };
@@ -390,6 +394,14 @@ function renderParagraph(el: ElNode, ctx: Ctx, key: string): React.ReactNode {
  * Block layout (block mode): paragraphs, markdown bullets / quotes / headings
  * ------------------------------------------------------------------ */
 
+/** An unstyled `<div><br></div>`: what an editor leaves behind for a deliberately empty line. */
+const isBlankLine = (el: ElNode) =>
+  (el.tag === 'div' || el.tag === 'p') &&
+  !el.attrs.style &&
+  !el.attrs.class &&
+  el.kids.some((k) => isEl(k) && k.tag === 'br') &&
+  el.kids.every((k) => (isEl(k) ? k.tag === 'br' : !k.text.trim()));
+
 function renderBlocks(nodes: Node[], ctx: Ctx, key: string): React.ReactNode[] {
   const out: React.ReactNode[] = [];
   let run: Node[][] = [[]]; // paragraphs of inline nodes
@@ -453,7 +465,8 @@ function renderBlocks(nodes: Node[], ctx: Ctx, key: string): React.ReactNode[] {
     if (BLOCK_TAGS.has(n.tag)) {
       flushRun();
       const k = `${key}-e${out.length}`;
-      if (n.tag === 'div' && !n.attrs.style && !n.attrs.class) out.push(...renderBlocks(n.kids, ctx, k));
+      if (isBlankLine(n)) out.push(<div key={k} aria-hidden="true" className={ctx.v.blank} />);
+      else if (n.tag === 'div' && !n.attrs.style && !n.attrs.class) out.push(...renderBlocks(n.kids, ctx, k));
       else out.push(renderEl(n, ctx, k));
       return;
     }

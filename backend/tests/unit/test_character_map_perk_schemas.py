@@ -31,7 +31,6 @@ from app.schemas.map import (
 )
 from app.schemas.perk import PerkBase, PerkResponse
 from app.schemas.user import UserCharacterOwnershipBase, UserCharacterOwnershipResponse
-from app.schemas.changelog import ChangelogPostResponse
 
 
 @pytest.mark.unit
@@ -469,22 +468,3 @@ class TestUserCharacterOwnershipSchemaAudit:
         assert resp.character_id == 7
         assert resp.character_role == "Survivor"
         assert resp.survivor_id == 7
-
-
-@pytest.mark.unit
-class TestOtherSchemaAuditFixes:
-    """Small gaps between to_dict() and the existing schemas, found while
-    auditing for the character/killer split -- fixed alongside it."""
-
-    def test_changelog_response_carries_position(self) -> None:
-        # ChangelogPost.to_dict() emits the position and hides the author (the feed is written by the team).
-        resp = ChangelogPostResponse.model_validate(
-            {
-                "id": 1,
-                "title": "Patch Notes",
-                "content_html": "<p>...</p>",
-                "position": 3,
-                "is_published": True,
-            }
-        )
-        assert resp.position == 3

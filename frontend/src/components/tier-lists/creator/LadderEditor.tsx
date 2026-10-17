@@ -1,7 +1,7 @@
 'use client';
 // frontend/src/components/tier-lists/creator/LadderEditor.tsx
 
-import React, { useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { GripVertical, ListOrdered, Plus, X } from 'lucide-react';
 import type { TierDefinition } from '@/types/tierList';
 import { cn } from '@/utils/cn';

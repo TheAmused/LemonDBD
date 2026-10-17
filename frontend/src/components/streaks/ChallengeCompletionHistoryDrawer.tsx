@@ -8,6 +8,7 @@ import type { ChallengeCompletion } from '@/types/challengeCompletion';
 import { formatDate } from '@/utils/format';
 import { useLocale, useDictionary } from '@/context/DictionaryContext';
 import { Surface } from '@/components/common/Surface';
+import { IconLabel } from '@/components/common/IconLabel';
 
 export interface ChallengeCompletionHistoryDrawerProps {
   isOpen: boolean;
@@ -49,19 +50,10 @@ export const ChallengeCompletionHistoryDrawer: React.FC<ChallengeCompletionHisto
               tone="elevated" padding="none" className="flex items-center justify-between p-3.5 shadow-sm"
             >
               <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5">
-                <div className="flex items-center gap-1.5 type-strong text-text-secondary">
-                  <Swords className="w-3.5 h-3.5 text-text-muted" />
-                  {entry.matches_played} {dict.streaks.matches}
-                </div>
-                <div className="flex items-center gap-1.5 type-strong text-text-secondary">
-                  <RotateCcw className="w-3.5 h-3.5 text-text-muted" />
-                  {entry.attempts_taken} {dict.streaks.attempts}
-                </div>
+                <IconLabel icon={Swords}>{entry.matches_played} {dict.streaks.matches}</IconLabel>
+                <IconLabel icon={RotateCcw}>{entry.attempts_taken} {dict.streaks.attempts}</IconLabel>
                 {subjectLabel && (
-                  <div className="flex items-center gap-1.5 type-strong text-text-secondary">
-                    <Users className="w-3.5 h-3.5 text-text-muted" />
-                    {entry.unlocked_characters_count} {subjectLabel}
-                  </div>
+                  <IconLabel icon={Users}>{entry.unlocked_characters_count} {subjectLabel}</IconLabel>
                 )}
               </div>
               {entry.completed_at && (

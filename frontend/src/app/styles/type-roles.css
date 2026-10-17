@@ -42,3 +42,5 @@
 @utility type-body-lg { @apply text-sm leading-relaxed; }
 @utility type-caption { @apply text-mini; }
 @utility type-micro { @apply text-tiny; }
+/* Running legal and about copy: justified and hyphenated. Colour stays a separate token class. */
+@utility type-prose { text-align: justify; text-justify: inter-word; hyphens: auto; }

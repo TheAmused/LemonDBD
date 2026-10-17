@@ -31,7 +31,6 @@ export interface ArchetypeVisualConfig {
   archKey: string;
   badgeColor: string;
   borderColor: string;
-  glowColor: string;
   iconName: 'compass' | 'skull' | 'flame' | 'shield' | 'heart' | 'zap' | 'sparkles';
 }
 
@@ -42,7 +41,6 @@ export interface RomancePersonaResult {
   description: string;
   badgeColor: string;
   borderColor: string;
-  glowColor: string;
   iconName: ArchetypeVisualConfig['iconName'] | string;
   iconUrl?: string;
   badgeImageUrl?: string;
@@ -69,49 +67,42 @@ const ARCHETYPE_VISUALS: Record<string, ArchetypeVisualConfig> = {
     archKey: 'untappedSoul',
     badgeColor: 'from-bg-elevated via-bg-surface to-bg-primary',
     borderColor: 'border-border-color',
-    glowColor: 'rgba(0, 0, 0, 0)',
     iconName: 'compass',
   },
   eldritchDevotee: {
     archKey: 'eldritchDevotee',
     badgeColor: 'from-accent-red via-accent-red-hover to-bg-primary',
     borderColor: 'border-accent-red/60',
-    glowColor: 'rgba(220, 38, 38, 0.3)',
     iconName: 'skull',
   },
   redStainAddict: {
     archKey: 'redStainAddict',
     badgeColor: 'from-accent-red via-accent-red-hover to-bg-primary',
     borderColor: 'border-accent-red/60',
-    glowColor: 'rgba(220, 38, 38, 0.35)',
     iconName: 'flame',
   },
   campfireSoulmate: {
     archKey: 'campfireSoulmate',
     badgeColor: 'from-accent-green via-accent-green-hover to-bg-primary',
     borderColor: 'border-accent-green/60',
-    glowColor: 'rgba(22, 163, 74, 0.35)',
     iconName: 'shield',
   },
   entitysParamour: {
     archKey: 'entitysParamour',
     badgeColor: 'from-accent-red via-accent-red-hover to-bg-primary',
     borderColor: 'border-accent-red/60',
-    glowColor: 'rgba(220, 38, 38, 0.35)',
     iconName: 'heart',
   },
   coldHeartedPragmatist: {
     archKey: 'coldHeartedPragmatist',
     badgeColor: 'from-bg-surface via-bg-elevated to-bg-primary',
     borderColor: 'border-border-color',
-    glowColor: 'rgba(0, 0, 0, 0)',
     iconName: 'zap',
   },
   fogRomantic: {
     archKey: 'fogRomantic',
     badgeColor: 'from-accent-red via-accent-red-hover to-bg-primary',
     borderColor: 'border-accent-red/60',
-    glowColor: 'rgba(220, 38, 38, 0.35)',
     iconName: 'sparkles',
   },
 };
@@ -140,7 +131,6 @@ export function calculateRomancePersona(
         description: fallbackArch.description,
         badgeColor: fallbackArch.badge_color || 'from-bg-elevated via-bg-surface to-bg-primary',
         borderColor: 'border-border-color',
-        glowColor: 'rgba(0, 0, 0, 0)',
         iconName: fallbackArch.icon_name || 'compass',
         iconUrl: fallbackArch.icon_url,
         badgeImageUrl: fallbackArch.badge_image_url,
@@ -248,7 +238,6 @@ export function calculateRomancePersona(
       description: chosenArch.description,
       badgeColor: chosenArch.badge_color || 'from-accent-purple to-accent-indigo-deep',
       borderColor: 'border-accent-red/60',
-      glowColor: 'rgba(220, 38, 38, 0.35)',
       iconName: chosenArch.icon_name || 'sparkles',
       iconUrl: chosenArch.icon_url,
       badgeImageUrl: chosenArch.badge_image_url,
@@ -274,7 +263,6 @@ export function calculateRomancePersona(
         'Evaluate candidates to unlock your psychological profile, dating analysis, and affinity balance.',
       badgeColor: visual.badgeColor,
       borderColor: visual.borderColor,
-      glowColor: visual.glowColor,
       iconName: visual.iconName,
       killerAffinity: 0,
       survivorAffinity: 0,
@@ -363,7 +351,6 @@ export function calculateRomancePersona(
       'You believe that even within the infinite trials of the Entity, a true spark of romance can always be found.',
     badgeColor: visual.badgeColor,
     borderColor: visual.borderColor,
-    glowColor: visual.glowColor,
     iconName: visual.iconName,
     killerAffinity,
     survivorAffinity,
@@ -398,7 +385,6 @@ export function reconstructSharedPersona(
       'You believe that even within the infinite trials of the Entity, a true spark of romance can always be found.',
     badgeColor: visual.badgeColor,
     borderColor: visual.borderColor,
-    glowColor: visual.glowColor,
     iconName: visual.iconName,
     killerAffinity: payload.ka,
     survivorAffinity: payload.s,

@@ -6,6 +6,9 @@ import { Heart, Flame, Skull, Zap } from 'lucide-react';
 import { themeColor } from '@/utils/themeColor';
 import { useDictionary } from "@/context/DictionaryContext";
 
+/** Stretches a layer over its parent and centres what is in it. */
+const FILL_CENTER = 'absolute inset-0 flex items-center justify-center';
+
 interface Particle {
   x: number;
   y: number;
@@ -513,7 +516,7 @@ export const SmashAnimations: React.FC<SmashAnimationsProps> = ({ triggerType, t
       {/* Screen Vignette Overlay: SMASH */}
       {activeOverlay === 'smash' && (
         <div className="absolute inset-0 bg-radial from-accent-red/20 via-bg-elevated/10 to-transparent animate-out fade-out duration-400">
-          <div className="absolute inset-0 flex items-center justify-center">
+          <div className={FILL_CENTER}>
             <div className="flex flex-col items-center gap-2 animate-in zoom-in-75 fade-in duration-200">
               <div className="relative flex items-center justify-center">
                 <Heart className="h-16 w-16 sm:h-20 sm:w-20 text-accent-red fill-accent-red drop-shadow-glow-red-lg animate-pulse" />
@@ -530,7 +533,7 @@ export const SmashAnimations: React.FC<SmashAnimationsProps> = ({ triggerType, t
       {/* Screen Vignette Overlay: SUPER SMASH */}
       {activeOverlay === 'super_smash' && (
         <div className="absolute inset-0 bg-radial from-accent-amber/25 via-accent-red/15 to-bg-primary/30 animate-out fade-out duration-450">
-          <div className="absolute inset-0 flex items-center justify-center">
+          <div className={FILL_CENTER}>
             <div className="flex flex-col items-center gap-2 animate-in zoom-in-75 fade-in duration-200">
               <div className="relative flex items-center justify-center">
                 <Flame className="h-20 w-20 sm:h-24 sm:w-24 text-accent-amber fill-accent-amber drop-shadow-glow-amber-lg animate-bounce" />
@@ -547,7 +550,7 @@ export const SmashAnimations: React.FC<SmashAnimationsProps> = ({ triggerType, t
       {/* Screen Vignette Overlay: PASS */}
       {activeOverlay === 'pass' && (
         <div className="absolute inset-0 bg-radial from-text-muted/15 via-bg-primary/40 to-transparent animate-out fade-out duration-350">
-          <div className="absolute inset-0 flex items-center justify-center">
+          <div className={FILL_CENTER}>
             <div className="flex flex-col items-center gap-2 animate-in zoom-in-75 fade-in duration-150 opacity-90">
               <Skull className="h-16 w-16 sm:h-20 sm:w-20 text-text-muted drop-shadow-glow-muted-md" />
               <span className="text-lg sm:text-xl font-black uppercase tracking-widest text-text-muted drop-shadow">

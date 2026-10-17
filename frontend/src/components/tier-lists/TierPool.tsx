@@ -4,7 +4,7 @@
 import React, { useMemo, useState } from 'react';
 import { useDroppable } from '@dnd-kit/core';
 import { SortableContext, rectSortingStrategy } from '@dnd-kit/sortable';
-import { ArrowDownToLine, ChevronDown, Search, X } from 'lucide-react';
+import { ArrowDownToLine, ChevronDown, X } from 'lucide-react';
 import type { TierItem } from '@/types/tierList';
 import { cn } from '@/utils/cn';
 import { normalizeSearchText } from '@/utils/perkUtils';
@@ -12,7 +12,7 @@ import { POOL_CONTAINER_ID } from '@/utils/tierLists/constants';
 import { SortableTierItem } from './SortableTierItem';
 import type { TierTileShape } from './TierItemTile';
 import { containerDndId, itemDndId } from './dndIds';
-import { Input } from '@/components/common/Field';
+import { SearchInput } from '@/components/common/Field';
 import { Badge } from '@/components/common/Badge';
 import { EmptyState } from '@/components/common/EmptyState';
 import { formatMessage } from '@/utils/i18nFormat';
@@ -108,9 +108,7 @@ export function TierPool({
             keys.length === 0 && !query && 'hidden'
           )}
         >
-          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-text-muted" aria-hidden="true" />
-          <Input
-            type="search"
+          <SearchInput
             fieldSize="sm"
             value={query}
             onChange={(e) => {
@@ -119,7 +117,7 @@ export function TierPool({
             }}
             placeholder={t.searchPool}
             aria-label={t.searchPoolAria}
-            className="h-8.5 bg-bg-primary pl-9 pr-8 text-xs sm:text-sm"
+            className="h-8.5 bg-bg-primary pr-8 text-xs sm:text-sm"
           />
           {query && (
             <Button

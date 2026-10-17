@@ -7,6 +7,7 @@ import { Eye, Check, X, ShieldAlert } from 'lucide-react';
 import type { GuessRecord, RoundConfig, CatalogPerk } from '@/types/minigame';
 import { staticUrl } from '@/utils/api';
 import { useDictionary } from "@/context/DictionaryContext";
+import { SolvedOverlay } from './SolvedOverlay';
 
 interface PerkIconGuesserProps {
   roundConfig: RoundConfig;
@@ -60,14 +61,7 @@ export const PerkIconGuesser: React.FC<PerkIconGuesserProps> = ({ roundConfig, p
           <span>{Math.round(zoom * 100)}%</span>
         </div>
 
-        {isSolved && targetPerk && (
-          <div className="absolute inset-0 bg-bg-primary/40 backdrop-blur-xs flex items-center justify-center">
-            <div className="px-4 py-2 rounded-card bg-accent-green text-text-inverted font-bold text-base shadow-xl border border-accent-green/60 flex items-center gap-2">
-              <Check className="w-4 h-4" />
-              <span>{targetPerk.name}</span>
-            </div>
-          </div>
-        )}
+        {isSolved && targetPerk && <SolvedOverlay answer={targetPerk.name} />}
       </div>
 
       {/* Input & Action Controls Slot */}

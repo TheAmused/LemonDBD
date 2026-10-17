@@ -12,6 +12,7 @@ import { pickRandomLoadout, buildDrawnSlots } from '../lib/perkPicker';
 import { getSlotInteraction } from '../lib/blindnessCurse';
 import { PerkSlot } from '../shared/PerkSlot';
 import { useJackpotCelebration } from '../shared/useJackpotCelebration';
+import { StagePrompt, StageProp } from '../shared/StageIdle';
 import { playReelThud, playCardFlip } from '@/utils/perkAudio';
 import { formatMessage } from '@/utils/i18nFormat';
 import { useDictionary } from "@/context/DictionaryContext";
@@ -234,9 +235,9 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
     <div className="flex h-full w-full flex-col items-center justify-center gap-3 sm:gap-6 xl:gap-8 2xl:gap-10 py-2 sm:py-6 wide:py-8">
       {(phase === 'closed' || phase === 'shaking') && (
         <>
-          <p className="max-w-lg xl:max-w-2xl 2xl:max-w-3xl wide:max-w-4xl text-center text-xs sm:text-base xl:text-lg wide:text-xl font-semibold text-text-secondary">
+          <StagePrompt>
             {dict.generator.cratePrompt}
-          </p>
+          </StagePrompt>
           <motion.button
             type="button"
             onClick={handleOpen}
@@ -251,12 +252,7 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
             whileTap={!reduceMotion && phase === 'closed' ? { scale: 0.95 } : undefined}
             className="group cursor-pointer disabled:cursor-default"
           >
-            <img
-              src="/images/randomizer/crate.webp"
-              alt=""
-              className="h-28 w-28 sm:h-36 sm:w-36 xl:h-48 xl:w-48 2xl:h-60 2xl:w-60 wide:h-72 wide:w-72 object-contain drop-shadow-2xl select-none pointer-events-none group-hover:drop-shadow-glow-amber-md transition-all duration-300"
-              draggable={false}
-            />
+            <StageProp src="/images/randomizer/crate.webp" />
           </motion.button>
           {phase === 'closed' && (
             <DbdButton
@@ -278,9 +274,9 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
 
       {phase === 'scattering' && (
         <>
-          <p aria-live="polite" className="max-w-lg xl:max-w-2xl 2xl:max-w-3xl wide:max-w-4xl text-center text-xs sm:text-base xl:text-lg wide:text-xl font-semibold text-text-secondary">
+          <StagePrompt live>
             {scatterPrompt}
-          </p>
+          </StagePrompt>
 
           {/* Mobile & Tablet (< md): Centered balanced offerings and 4-slot loadout tray */}
           <div className="flex flex-col items-center justify-center flex-1 w-full my-auto gap-3.5 md:hidden">

@@ -7,9 +7,12 @@ import { Input, Textarea } from '@/components/common/Field';
 import { Switch } from '@/components/common/Switch';
 import { Tooltip, tip } from '@/components/common/Tooltip';
 import { useDictionary } from '@/context/DictionaryContext';
-import { SMASH_ROSTER_LIMITS } from '@/utils/smashOrPass/constants';
+import { DEFAULT_ROSTER_THEME_COLOR, SMASH_ROSTER_LIMITS } from '@/utils/smashOrPass/constants';
 import { type Draft, Section } from './SmashRosterCreatorParts';
 import { LABEL } from './styles';
+
+/** A checkbox row whose whole line is the click target. */
+const CHECK_ROW = 'flex items-center gap-2.5 cursor-pointer group select-none';
 
 interface RosterBasicsSectionProps {
   draft: Draft;
@@ -130,7 +133,7 @@ export function RosterBasicsSection({
           <span className={LABEL}>{c.themeColorLabel || 'Theme color'}</span>
           <input
             type="color"
-            value={draft.theme_color || '#ff0055'}
+            value={draft.theme_color || DEFAULT_ROSTER_THEME_COLOR}
             onChange={(e) => patch({ theme_color: e.target.value })}
             className="h-10 w-full max-w-xs cursor-pointer rounded-control border border-border-color bg-bg-primary shadow-xs"
           />
@@ -145,7 +148,7 @@ export function RosterBasicsSection({
           >
             <div
               onClick={() => patch({ roster_mode: draft.roster_mode === 'simple' ? 'full' : 'simple' })}
-              className="flex items-center gap-2.5 cursor-pointer group select-none"
+              className={CHECK_ROW}
             >
               <Switch
                 checked={draft.roster_mode === 'simple'}
@@ -165,7 +168,7 @@ export function RosterBasicsSection({
           >
             <div
               onClick={() => patch({ is_nsfw: !draft.is_nsfw })}
-              className="flex items-center gap-2.5 cursor-pointer group select-none"
+              className={CHECK_ROW}
             >
               <Switch
                 checked={draft.is_nsfw}
@@ -186,7 +189,7 @@ export function RosterBasicsSection({
             >
               <div
                 onClick={() => onOfficialChange(!official)}
-                className="flex items-center gap-2.5 cursor-pointer group select-none"
+                className={CHECK_ROW}
               >
                 <Switch
                   checked={official}

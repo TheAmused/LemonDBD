@@ -25,7 +25,7 @@ const STAGE_STYLES: readonly { box: string; bar: string }[] = [
   { box: 'border-accent-red/40 bg-accent-red/10', bar: 'bg-accent-red' },
 ];
 
-const PARAGRAPH = 'text-text-muted text-justify [text-justify:inter-word] hyphens-auto';
+const PARAGRAPH = 'type-prose text-text-muted';
 
 function HookStages({ heading, stages }: { heading: string; stages: readonly { title: string; text: string }[] }) {
   return (

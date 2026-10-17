@@ -38,6 +38,9 @@ import { formatMessage } from '@/utils/i18nFormat';
 import { useDictionary } from "@/context/DictionaryContext";
 import { Toast } from '@/components/common/Toast';
 
+/** The creator's column: as wide as the workspace allows. */
+const WORKSPACE_COLUMN = 'w-full max-w-4xl 2xl:max-wide-2k:max-w-6xl wide-2k:max-w-workspace mx-auto';
+
 interface TierListCreatorProps {
   locale: string;
   /** A custom list id to edit in place, instead of building a new one. */
@@ -389,7 +392,7 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
       )}
 
       {/* THE BASICS BLOCK */}
-      <div className="w-full max-w-4xl 2xl:max-wide-2k:max-w-6xl wide-2k:max-w-workspace mx-auto">
+      <div className={WORKSPACE_COLUMN}>
         <Section title={c.stepBasics}>
           <div className="grid gap-4 2xl:gap-6 md:grid-cols-2">
             <label className="md:col-span-1">
@@ -458,7 +461,7 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
       </div>
 
       {/* TIERS BLOCK */}
-      <div className="w-full max-w-4xl 2xl:max-wide-2k:max-w-6xl wide-2k:max-w-workspace mx-auto">
+      <div className={WORKSPACE_COLUMN}>
         <Section title={c.stepTiers}>
           <LadderEditor
             tiers={draft.tiers}
@@ -470,7 +473,7 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
       </div>
 
       {/* ITEMS BLOCK */}
-      <div className="w-full max-w-4xl 2xl:max-wide-2k:max-w-6xl wide-2k:max-w-workspace mx-auto">
+      <div className={WORKSPACE_COLUMN}>
         <Section title={c.stepItems}>
           <div className="flex flex-col gap-6 2xl:gap-8">
             <ItemSources onAdd={addItems} existingIds={existingIds} locale={locale} />
@@ -521,7 +524,7 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
       </div>
 
       {/* Feedback Alerts */}
-      <div className="w-full max-w-4xl 2xl:max-wide-2k:max-w-6xl wide-2k:max-w-workspace mx-auto flex flex-col gap-4">
+      <div className={`${WORKSPACE_COLUMN} flex flex-col gap-4`}>
         <Feedback errors={errors as string[]} saveError={saveError} publishError={publishError} />
       </div>
 

@@ -3,7 +3,7 @@
 
 import { Tabs } from '@/components/common/Tabs';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Check, ClipboardPaste, Gamepad2, ImagePlus, Plus, Search, Upload } from 'lucide-react';
+import { Check, ClipboardPaste, Gamepad2, ImagePlus, Plus, Upload } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { useTierListItems } from '@/hooks/useTierListItems';
 import type { TierListKind } from '@/types/tierList';
@@ -17,7 +17,7 @@ import { TierItemTile } from '../TierItemTile';
 import { LABEL, TOUCH_BTN, TOUCH_FIELD } from '../styles';
 import { Spinner } from '@/components/common/Spinner';
 import { Button } from '@/components/common/Button';
-import { Input } from '@/components/common/Field';
+import { Input, SearchInput } from '@/components/common/Field';
 import { CustomDropdown } from '@/components/common/CustomDropdown';
 import { formatMessage } from '@/utils/i18nFormat';
 import { useDictionary } from "@/context/DictionaryContext";
@@ -338,17 +338,14 @@ function CatalogSource({ onAdd, existingIds, locale }: {
               minWidthClass="min-w-50"
             />
           </div>
-          <div className="relative min-w-0 flex-1">
-            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-text-muted" aria-hidden="true" />
-            <Input
-              type="search"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder={c.catalogSearch}
-              aria-label={c.catalogSearchAria}
-              className={`${TOUCH_FIELD} pl-9`}
-            />
-          </div>
+          <SearchInput
+            wrapperClassName="min-w-0 flex-1"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder={c.catalogSearch}
+            aria-label={c.catalogSearchAria}
+            className={TOUCH_FIELD}
+          />
         </div>
         <div className="flex justify-center gap-2">
           <Button

@@ -7,6 +7,7 @@ from sqlalchemy import delete, select
 
 from app.core.extensions import db
 from app.models.admin import AdminAuditLog, ChallengeModeSetting
+from app.models.base import utcnow
 from app.models.changelog import ChangelogPost
 from app.models.chaos import ChaosMatchLog, ChaosRun
 from app.models.community import BugReport
@@ -85,12 +86,13 @@ def _import_changelog_posts(
         for row in data["changelog_posts"]:
             author_login = row.get("author_login") or row.get("author_username")
             author_id = user_map.get(author_login) if author_login else None
+            is_published = row.get("is_published", True)
             db.session.add(ChangelogPost(
                 title=row.get("title", "Untitled"),
                 content_html=row.get("content_html", ""),
-                tag=row.get("tag", "feature"),
                 position=row.get("position", 0),
-                is_published=row.get("is_published", True),
+                is_published=is_published,
+                published_at=parse_datetime(row.get("published_at")) or (utcnow() if is_published else None),
                 author_id=author_id,
                 author_name=row.get("author_name", "The Entity"),
             ))

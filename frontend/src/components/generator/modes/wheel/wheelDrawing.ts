@@ -4,6 +4,7 @@ import type { ChaosMutator } from '@/types/chaos';
 import { isSurvivor } from '@/utils/characterUtils';
 import { canvasFont } from '@/utils/canvasFont';
 import { isPerkBlockedByMutator } from '../../lib/perkPicker';
+import { paletteColor } from '@/utils/themeColor';
 
 export function drawThornedRim(ctx: CanvasRenderingContext2D, centerX: number, centerY: number, radius: number): void {
   const spikeCount = 28;
@@ -41,12 +42,12 @@ export function drawThornedRim(ctx: CanvasRenderingContext2D, centerX: number, c
   ctx.closePath();
 
   const rimGrad = ctx.createRadialGradient(centerX, centerY, radius - 10, centerX, centerY, radius + spikeHeight);
-  rimGrad.addColorStop(0, '#961f1f');
-  rimGrad.addColorStop(1, '#1a0303');
+  rimGrad.addColorStop(0, paletteColor('blood-600'));
+  rimGrad.addColorStop(1, paletteColor('blood-970'));
   ctx.fillStyle = rimGrad;
   ctx.fill('evenodd');
   ctx.lineWidth = 2;
-  ctx.strokeStyle = '#5c1414';
+  ctx.strokeStyle = paletteColor('blood-800');
   ctx.stroke();
   ctx.restore();
 };
@@ -92,17 +93,17 @@ export function drawWheel(ctx: CanvasRenderingContext2D, size: number, state: Wh
 
       const grad = ctx.createRadialGradient(centerX, centerY, 30, centerX, centerY, radius);
       if (i % 2 === 0) {
-        grad.addColorStop(0, '#4a0d0d');
-        grad.addColorStop(1, '#1c0404');
+        grad.addColorStop(0, paletteColor('blood-850'));
+        grad.addColorStop(1, paletteColor('blood-950'));
       } else {
-        grad.addColorStop(0, '#5c1414');
-        grad.addColorStop(1, '#1a0505');
+        grad.addColorStop(0, paletteColor('blood-800'));
+        grad.addColorStop(1, paletteColor('blood-960'));
       }
 
       ctx.fillStyle = grad;
       ctx.fill();
       ctx.lineWidth = 4;
-      ctx.strokeStyle = '#a3232f';
+      ctx.strokeStyle = paletteColor('blood-500');
       ctx.stroke();
 
       const midAngle = angle + sliceAngle / 2;
@@ -113,14 +114,14 @@ export function drawWheel(ctx: CanvasRenderingContext2D, size: number, state: Wh
       ctx.save();
       ctx.beginPath();
       ctx.arc(bx, by, 28, 0, Math.PI * 2);
-      ctx.fillStyle = '#0f172a';
+      ctx.fillStyle = paletteColor('slate-900');
       ctx.fill();
       ctx.lineWidth = 3.5;
-      ctx.strokeStyle = '#f59e0b';
+      ctx.strokeStyle = paletteColor('amber-500');
       ctx.stroke();
 
       ctx.font = canvasFont('900', 18);
-      ctx.fillStyle = '#f59e0b';
+      ctx.fillStyle = paletteColor('amber-500');
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       ctx.fillText(`P${i + 1}`, bx, by + 1);
@@ -129,13 +130,13 @@ export function drawWheel(ctx: CanvasRenderingContext2D, size: number, state: Wh
 
     ctx.beginPath();
     ctx.arc(centerX, centerY, 58, 0, 2 * Math.PI);
-    ctx.fillStyle = '#0f172a';
+    ctx.fillStyle = paletteColor('slate-900');
     ctx.fill();
     ctx.lineWidth = 5;
-    ctx.strokeStyle = '#f59e0b';
+    ctx.strokeStyle = paletteColor('amber-500');
     ctx.stroke();
 
-    ctx.fillStyle = '#f59e0b';
+    ctx.fillStyle = paletteColor('amber-500');
     ctx.font = canvasFont('900', 16);
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
@@ -144,7 +145,7 @@ export function drawWheel(ctx: CanvasRenderingContext2D, size: number, state: Wh
     ctx.beginPath();
     ctx.arc(centerX, centerY, radius - 4, 0, 2 * Math.PI);
     ctx.lineWidth = 3;
-    ctx.strokeStyle = '#dc2626';
+    ctx.strokeStyle = paletteColor('red-600');
     ctx.stroke();
     drawThornedRim(ctx, centerX, centerY, radius);
   } else {
@@ -168,20 +169,20 @@ export function drawWheel(ctx: CanvasRenderingContext2D, size: number, state: Wh
 
       const grad = ctx.createRadialGradient(centerX, centerY, 30, centerX, centerY, radius);
       if (isBlocked) {
-        grad.addColorStop(0, '#1f1924');
-        grad.addColorStop(1, '#0f0a12');
+        grad.addColorStop(0, paletteColor('void-700'));
+        grad.addColorStop(1, paletteColor('void-900'));
       } else if (isSurvivor(role)) {
-        grad.addColorStop(0, i % 2 === 0 ? '#064e3b' : '#022c22');
-        grad.addColorStop(1, i % 2 === 0 ? '#022c22' : '#0f172a');
+        grad.addColorStop(0, i % 2 === 0 ? paletteColor('emerald-900') : paletteColor('emerald-950'));
+        grad.addColorStop(1, i % 2 === 0 ? paletteColor('emerald-950') : paletteColor('slate-900'));
       } else {
-        grad.addColorStop(0, i % 2 === 0 ? '#881337' : '#4c0519');
-        grad.addColorStop(1, i % 2 === 0 ? '#4c0519' : '#0f172a');
+        grad.addColorStop(0, i % 2 === 0 ? paletteColor('rose-900') : paletteColor('rose-950'));
+        grad.addColorStop(1, i % 2 === 0 ? paletteColor('rose-950') : paletteColor('slate-900'));
       }
 
       ctx.fillStyle = grad;
       ctx.fill();
       ctx.lineWidth = 4;
-      ctx.strokeStyle = isBlocked ? '#e11d48' : isSurvivor(role) ? '#15803d' : '#991b1b';
+      ctx.strokeStyle = isBlocked ? paletteColor('rose-600') : isSurvivor(role) ? paletteColor('green-700') : paletteColor('red-800');
       ctx.stroke();
 
       ctx.save();
@@ -204,15 +205,15 @@ export function drawWheel(ctx: CanvasRenderingContext2D, size: number, state: Wh
         ctx.save();
         ctx.translate(0, iconRadiusPos);
         ctx.rotate(Math.PI / 4);
-        ctx.fillStyle = isBlocked ? '#4c0519' : isSurvivor(role) ? '#15803d' : '#7f1d1d';
+        ctx.fillStyle = isBlocked ? paletteColor('rose-950') : isSurvivor(role) ? paletteColor('green-700') : paletteColor('red-900');
         ctx.fillRect(-24, -24, 48, 48);
-        ctx.strokeStyle = '#f59e0b';
+        ctx.strokeStyle = paletteColor('amber-500');
         ctx.lineWidth = 2.5;
         ctx.strokeRect(-24, -24, 48, 48);
         ctx.restore();
 
         ctx.font = canvasFont('900', 16);
-        ctx.fillStyle = '#ffffff';
+        ctx.fillStyle = paletteColor('white');
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillText((perk?.name || 'P').charAt(0).toUpperCase(), 0, iconRadiusPos);
@@ -220,7 +221,7 @@ export function drawWheel(ctx: CanvasRenderingContext2D, size: number, state: Wh
 
       if (isBlocked) {
         ctx.font = canvasFont('bold', 24);
-        ctx.fillStyle = '#b91c1c';
+        ctx.fillStyle = paletteColor('red-700');
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillText('🚫', 0, iconRadiusPos);
@@ -231,13 +232,13 @@ export function drawWheel(ctx: CanvasRenderingContext2D, size: number, state: Wh
 
     ctx.beginPath();
     ctx.arc(centerX, centerY, 62, 0, 2 * Math.PI);
-    ctx.fillStyle = '#0f172a';
+    ctx.fillStyle = paletteColor('slate-900');
     ctx.fill();
     ctx.lineWidth = 5;
-    ctx.strokeStyle = isSurvivor(role) ? '#16a34a' : '#b91c1c';
+    ctx.strokeStyle = isSurvivor(role) ? paletteColor('green-600') : paletteColor('red-700');
     ctx.stroke();
 
-    ctx.fillStyle = isSurvivor(role) ? '#22c55e' : '#dc2626';
+    ctx.fillStyle = isSurvivor(role) ? paletteColor('green-500') : paletteColor('red-600');
     ctx.font = canvasFont('900', 16);
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
@@ -246,7 +247,7 @@ export function drawWheel(ctx: CanvasRenderingContext2D, size: number, state: Wh
     ctx.beginPath();
     ctx.arc(centerX, centerY, radius - 4, 0, 2 * Math.PI);
     ctx.lineWidth = 3;
-    ctx.strokeStyle = '#dc2626';
+    ctx.strokeStyle = paletteColor('red-600');
     ctx.stroke();
     drawThornedRim(ctx, centerX, centerY, radius);
   }
@@ -257,9 +258,9 @@ export function drawWheel(ctx: CanvasRenderingContext2D, size: number, state: Wh
   ctx.lineTo(centerX + 18, 2);
   ctx.lineTo(centerX, 40);
   ctx.closePath();
-  ctx.fillStyle = '#b91c1c';
+  ctx.fillStyle = paletteColor('red-700');
   ctx.fill();
   ctx.lineWidth = 2;
-  ctx.strokeStyle = '#1a0303';
+  ctx.strokeStyle = paletteColor('blood-970');
   ctx.stroke();
 }

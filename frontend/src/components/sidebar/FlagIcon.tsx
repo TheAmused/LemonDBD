@@ -10,40 +10,40 @@ export interface FlagIconProps {
 
 const GB: React.FC<{ className?: string }> = ({ className }) => (
   <svg viewBox="0 0 20 15" className={className} aria-hidden="true">
-    <rect width="20" height="15" fill="#00247d" />
-    <path d="M0 0L20 15M20 0L0 15" stroke="#fff" strokeWidth="3" />
-    <path d="M0 0L20 15M20 0L0 15" stroke="#cf142b" strokeWidth="1" />
-    <path d="M10 0V15M0 7.5H20" stroke="#fff" strokeWidth="5" />
-    <path d="M10 0V15M0 7.5H20" stroke="#cf142b" strokeWidth="3" />
+    <rect width="20" height="15" className="fill-flag-gb-blue" />
+    <path d="M0 0L20 15M20 0L0 15" className="stroke-flag-white" strokeWidth="3" />
+    <path d="M0 0L20 15M20 0L0 15" className="stroke-flag-gb-red" strokeWidth="1" />
+    <path d="M10 0V15M0 7.5H20" className="stroke-flag-white" strokeWidth="5" />
+    <path d="M10 0V15M0 7.5H20" className="stroke-flag-gb-red" strokeWidth="3" />
   </svg>
 );
 
 const PL: React.FC<{ className?: string }> = ({ className }) => (
   <svg viewBox="0 0 20 15" className={className} aria-hidden="true">
-    <rect width="20" height="7.5" y="0" fill="#fff" />
-    <rect width="20" height="7.5" y="7.5" fill="#dc143c" />
+    <rect width="20" height="7.5" y="0" className="fill-flag-white" />
+    <rect width="20" height="7.5" y="7.5" className="fill-flag-pl-red" />
   </svg>
 );
 
 const ES: React.FC<{ className?: string }> = ({ className }) => (
   <svg viewBox="0 0 20 15" className={className} aria-hidden="true">
-    <rect width="20" height="15" fill="#aa151b" />
-    <rect width="20" height="7.5" y="3.75" fill="#f1bf00" />
+    <rect width="20" height="15" className="fill-flag-es-red" />
+    <rect width="20" height="7.5" y="3.75" className="fill-flag-es-yellow" />
   </svg>
 );
 
 const DE: React.FC<{ className?: string }> = ({ className }) => (
   <svg viewBox="0 0 20 15" className={className} aria-hidden="true">
-    <rect width="20" height="5" y="0" fill="#000" />
-    <rect width="20" height="5" y="5" fill="#dd0000" />
-    <rect width="20" height="5" y="10" fill="#ffce00" />
+    <rect width="20" height="5" y="0" className="fill-flag-black" />
+    <rect width="20" height="5" y="5" className="fill-flag-de-red" />
+    <rect width="20" height="5" y="10" className="fill-flag-de-gold" />
   </svg>
 );
 
 const JP: React.FC<{ className?: string }> = ({ className }) => (
   <svg viewBox="0 0 20 15" className={className} aria-hidden="true">
-    <rect width="20" height="15" fill="#fff" />
-    <circle cx="10" cy="7.5" r="4.2" fill="#bc002d" />
+    <rect width="20" height="15" className="fill-flag-white" />
+    <circle cx="10" cy="7.5" r="4.2" className="fill-flag-jp-red" />
   </svg>
 );
 

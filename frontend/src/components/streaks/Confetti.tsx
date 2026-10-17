@@ -3,6 +3,7 @@
 'use client';
 
 import React, { useEffect, useRef } from 'react';
+import { paletteColor } from '@/utils/themeColor';
 
 interface ConfettiProps {
   active: boolean;
@@ -19,7 +20,7 @@ interface Piece {
   color: string;
 }
 
-const COLORS = ['#b91c1c', '#dc2626', '#16a34a', '#22c55e', '#f59e0b', '#e4e4e7'];
+const COLOR_NAMES = ['red-700', 'red-600', 'green-600', 'green-500', 'amber-500', 'zinc-200'];
 const PIECE_COUNT = 140;
 const DURATION_MS = 3800;
 const FADE_MS = 900;
@@ -54,6 +55,7 @@ export const Confetti: React.FC<ConfettiProps> = ({ active }) => {
     resize();
     window.addEventListener('resize', resize);
 
+    const colors = COLOR_NAMES.map(paletteColor);
     const pieces: Piece[] = Array.from({ length: PIECE_COUNT }, () => ({
       x: Math.random() * canvas.width,
       y: -20 - Math.random() * canvas.height * 0.6,
@@ -62,7 +64,7 @@ export const Confetti: React.FC<ConfettiProps> = ({ active }) => {
       size: 5 + Math.random() * 6,
       rotation: Math.random() * Math.PI * 2,
       spin: (Math.random() - 0.5) * 0.2,
-      color: COLORS[Math.floor(Math.random() * COLORS.length)],
+      color: colors[Math.floor(Math.random() * colors.length)],
     }));
 
     const draw = (now: number) => {

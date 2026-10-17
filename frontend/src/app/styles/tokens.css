@@ -30,6 +30,84 @@
 @utility z-modal-top { z-index: var(--layer-modal-top); }
 @utility z-system { z-index: var(--layer-system); }
 
+/* ---------------------------------------------------------------------------
+ * Fixed art palette. Canvas effects (wheels, confetti, embers, card bursts) cannot use Tailwind classes
+ * and look the same in every theme, so their colours live here, not in the code. Read them with
+ * paletteColor('red-600') from utils/themeColor.ts; use the --accent-* theme colours for anything that
+ * should follow the theme. Names follow the Tailwind scale; blood-*, void-* and hot-pink are the
+ * wheel's own shades.
+ * --------------------------------------------------------------------------- */
+:root {
+  --palette-white: #ffffff;
+  --palette-amber-200: #fde68a;
+  --palette-amber-400: #fbbf24;
+  --palette-amber-500: #f59e0b;
+  --palette-amber-600: #d97706;
+  --palette-amber-700: #b45309;
+  --palette-blood-500: #a3232f;
+  --palette-blood-600: #961f1f;
+  --palette-blood-800: #5c1414;
+  --palette-blood-850: #4a0d0d;
+  --palette-blood-950: #1c0404;
+  --palette-blood-960: #1a0505;
+  --palette-blood-970: #1a0303;
+  --palette-blood-black: #170202;
+  --palette-blue-500: #3b82f6;
+  --palette-cyan-500: #06b6d4;
+  --palette-emerald-400: #34d399;
+  --palette-emerald-500: #10b981;
+  --palette-emerald-900: #064e3b;
+  --palette-emerald-950: #022c22;
+  --palette-gray-950: #030712;
+  --palette-green-500: #22c55e;
+  --palette-green-600: #16a34a;
+  --palette-green-700: #15803d;
+  --palette-hot-pink: #ff2a7a;
+  --palette-neon-abyss: #051b2c;
+  --palette-neon-mint: #00ffcc;
+  --palette-neon-pink: #ff007f;
+  --palette-night-900: #0b0f19;
+  --palette-orange-50: #fff7ed;
+  --palette-orange-400: #fb923c;
+  --palette-orange-500: #f97316;
+  --palette-orange-600: #ea580c;
+  --palette-red-200: #fecaca;
+  --palette-red-300: #fca5a5;
+  --palette-red-400: #f87171;
+  --palette-red-500: #ef4444;
+  --palette-red-600: #dc2626;
+  --palette-red-700: #b91c1c;
+  --palette-red-800: #991b1b;
+  --palette-red-900: #7f1d1d;
+  --palette-rose-400: #fb7185;
+  --palette-rose-500: #f43f5e;
+  --palette-rose-600: #e11d48;
+  --palette-rose-900: #881337;
+  --palette-rose-950: #4c0519;
+  --palette-sky-400: #38bdf8;
+  --palette-slate-50: #f8fafc;
+  --palette-slate-700: #334155;
+  --palette-slate-800: #1e293b;
+  --palette-slate-900: #0f172a;
+  --palette-stone-500: #78716c;
+  --palette-violet-400: #a78bfa;
+  --palette-violet-500: #8b5cf6;
+  --palette-void-700: #1f1924;
+  --palette-void-900: #0f0a12;
+  --palette-void-black: #0a0a0c;
+  --palette-yellow-200: #fef08a;
+  --palette-yellow-300: #fde047;
+  --palette-yellow-400: #facc15;
+  --palette-yellow-500: #eab308;
+  --palette-yellow-600: #ca8a04;
+  --palette-zinc-400: #a1a1aa;
+  --palette-zinc-500: #71717a;
+  --palette-zinc-600: #52525b;
+  --palette-zinc-700: #3f3f46;
+  --palette-zinc-800: #27272a;
+  --palette-zinc-950: #09090b;
+}
+
 @theme {
   /* Dynamic Theme Variables */
   --color-bg-primary: var(--bg-primary);
@@ -64,6 +142,22 @@
   --color-brand-whatsapp: #25d366;
   --color-brand-telegram: #229ed9;
   --color-brand-discord: #5865f2;
+
+  /* Logo and flag artwork: fixed by the brand or the country, the same in every theme. */
+  --color-brand-google-red: #ea4335;
+  --color-brand-google-blue: #4285f4;
+  --color-brand-google-yellow: #fbbc05;
+  --color-brand-google-green: #34a853;
+  --color-flag-white: #ffffff;
+  --color-flag-black: #000000;
+  --color-flag-gb-blue: #00247d;
+  --color-flag-gb-red: #cf142b;
+  --color-flag-pl-red: #dc143c;
+  --color-flag-es-red: #aa151b;
+  --color-flag-es-yellow: #f1bf00;
+  --color-flag-de-red: #dd0000;
+  --color-flag-de-gold: #ffce00;
+  --color-flag-jp-red: #bc002d;
 
   /* Dusty tan lettering of the tarot card art (same in every theme: the cards are always dark). */
   --color-tarot-ink: #b39e82;

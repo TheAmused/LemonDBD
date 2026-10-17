@@ -13,6 +13,7 @@ import { copyTextWithFallback } from '@/utils/clipboard';
 import { useDictionary } from "@/context/DictionaryContext";
 import { formatMessage } from '@/utils/i18nFormat';
 import { Surface } from '@/components/common/Surface';
+import { paletteColor } from '@/utils/themeColor';
 
 interface VictoryModalProps {
   challenge: ChallengeDefinition;
@@ -39,7 +40,7 @@ export const VictoryModal: React.FC<VictoryModalProps> = ({ challenge, roundGues
         particleCount: 80,
         spread: 70,
         origin: { y: 0.6 },
-        colors: ['#ef4444', '#f59e0b', '#10b981', '#3b82f6', '#8b5cf6'],
+        colors: [paletteColor('red-500'), paletteColor('amber-500'), paletteColor('emerald-500'), paletteColor('blue-500'), paletteColor('violet-500')],
       });
     } catch {}
   }, [isCompleteVictory]);

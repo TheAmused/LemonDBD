@@ -1,6 +1,7 @@
 'use client';
 // frontend/src/components/generator/modes/wheel/useEmberDrift.ts
 import { useCallback, useEffect, useRef } from 'react';
+import { paletteColor } from '@/utils/themeColor';
 
 interface Particle {
   x: number;
@@ -38,7 +39,7 @@ export function useEmberDrift() {
       vy: -Math.random() * 1.2 - 0.3,
       size: Math.random() * 3 + 1,
       alpha: Math.random() * 0.4 + 0.2,
-      color: Math.random() > 0.5 ? '#f97316' : '#dc2626',
+      color: Math.random() > 0.5 ? paletteColor('orange-500') : paletteColor('red-600'),
     });
 
     const embers: Particle[] = Array.from({ length: 40 }, spawnEmber);

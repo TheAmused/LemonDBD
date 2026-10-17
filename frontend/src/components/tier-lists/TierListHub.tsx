@@ -4,6 +4,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
+import { Alert } from '@/components/common/Alert';
 import { FileJson, LayoutList, Plus, RotateCcw, TriangleAlert } from 'lucide-react';
 import { EmptyState } from '@/components/common/EmptyState';
 import { ConfirmModal } from '@/components/common/ConfirmModal';
@@ -121,10 +122,7 @@ export function TierListHub({ locale }: TierListHubProps) {
     <div className="relative z-10 flex flex-col gap-8">
       <h1 className="sr-only">{t.pageTitle}</h1>
       {saveError && !saveError.ok && (
-        <p role="alert" className="flex items-start gap-2 rounded-card border border-accent-red/40 bg-accent-red/10 p-3 type-card-title text-accent-red">
-          <TriangleAlert className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
-          {saveError.reason === 'quota' ? t.saveFailedQuota : t.saveFailedUnavailable}
-        </p>
+        <Alert>{saveError.reason === 'quota' ? t.saveFailedQuota : t.saveFailedUnavailable}</Alert>
       )}
 
       {/* Official Lists Collapsible Drawer */}

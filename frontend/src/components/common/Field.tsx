@@ -91,18 +91,36 @@ export const SearchInput = React.forwardRef<HTMLInputElement, SearchInputProps>(
   );
 });
 
-/** Label + control + hint/error row. */
-const FieldLabel: React.FC<{
+/**
+ * Label + control + hint/error row. `strong` is the plain label above a field; `caps` is the small uppercase
+ * one used in forms such as the bug report. `required` adds the red asterisk.
+ */
+export const FieldLabel: React.FC<{
   label: React.ReactNode;
   htmlFor?: string;
+  /** Id of the label itself, for `aria-labelledby` on a control a `<label>` cannot point at. */
+  labelId?: string;
+  required?: boolean;
+  variant?: 'strong' | 'caps';
+  icon?: React.ReactNode;
   hint?: React.ReactNode;
   error?: React.ReactNode;
   className?: string;
   children: React.ReactNode;
-}> = ({ label, htmlFor, hint, error, className, children }) => (
+}> = ({ label, htmlFor, labelId, required = false, variant = 'strong', icon, hint, error, className, children }) => (
   <div className={cn('space-y-1.5', className)}>
-    <label htmlFor={htmlFor} className="block type-strong text-text-secondary">
+    <label
+      id={labelId}
+      htmlFor={htmlFor}
+      className={cn(
+        'block',
+        variant === 'caps' ? 'type-label-xs text-text-muted' : 'type-strong text-text-secondary',
+        icon && 'flex items-center gap-1.5'
+      )}
+    >
+      {icon}
       {label}
+      {required && <span className="text-accent-red"> *</span>}
     </label>
     {children}
     {error ? (

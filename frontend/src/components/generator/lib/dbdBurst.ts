@@ -1,5 +1,6 @@
 // frontend/src/components/generator/lib/dbdBurst.ts
 import { RoleCategory } from '@/types/perks';
+import { paletteColor } from '@/utils/themeColor';
 
 interface BurstParticle {
   x: number;
@@ -13,10 +14,11 @@ interface BurstParticle {
   vr: number;
 }
 
-const ROLE_PALETTES: Record<RoleCategory, string[]> = {
-  Survivor: ['#16a34a', '#22c55e', '#f59e0b', '#dc2626'],
-  Killer: ['#b91c1c', '#dc2626', '#f59e0b', '#7f1d1d'],
-};
+// Read when a burst starts: the palette variables do not exist before the page is in the DOM.
+const rolePalette = (role: RoleCategory): string[] =>
+  role === 'Killer'
+    ? [paletteColor('red-700'), paletteColor('red-600'), paletteColor('amber-500'), paletteColor('red-900')]
+    : [paletteColor('green-600'), paletteColor('green-500'), paletteColor('amber-500'), paletteColor('red-600')];
 
 let sharedCanvas: HTMLCanvasElement | null = null;
 let activeFrame: number | null = null;
@@ -56,7 +58,7 @@ export function triggerDbdBurst(originEl: HTMLElement | null, role: RoleCategory
   const originX = rect ? rect.left + rect.width / 2 : window.innerWidth / 2;
   const originY = rect ? rect.top + rect.height / 2 : window.innerHeight / 2;
 
-  const palette = ROLE_PALETTES[role] || ROLE_PALETTES.Survivor;
+  const palette = rolePalette(role);
   const particles: BurstParticle[] = Array.from({ length: 70 }, () => {
     const angle = Math.random() * Math.PI * 2;
     const speed = Math.random() * 8 + 3;

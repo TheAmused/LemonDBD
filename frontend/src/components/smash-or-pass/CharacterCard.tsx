@@ -21,6 +21,7 @@ import { Modal, useModal } from '@/components/common/Modal';
 import { Button } from '@/components/common/Button';
 import { isSurvivor as isSurvivorRole } from '@/utils/characterUtils';
 import { useDictionary } from "@/context/DictionaryContext";
+import { withAlpha } from '@/utils/themeColor';
 
 const ZoomCloseButton: React.FC<{ label: string }> = ({ label }) => {
   const { close } = useModal();
@@ -212,10 +213,10 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
               pointerEvents: isFlipped ? 'none' : 'auto',
               visibility: isFlipped ? 'hidden' : 'visible',
               boxShadow: isSmashDrag
-                ? `0 0 ${35 + swipeProgress * 35}px rgba(220, 38, 38, ${0.4 + swipeProgress * 0.5})`
+                ? `0 0 ${35 + swipeProgress * 35}px ${withAlpha('var(--accent-red)', 0.4 + swipeProgress * 0.5)}`
                 : isPassDrag
-                  ? `0 0 ${35 + swipeProgress * 35}px rgba(113, 113, 122, ${0.4 + swipeProgress * 0.5})`
-                  : '0 0 35px rgba(0, 0, 0, 0.85)',
+                  ? `0 0 ${35 + swipeProgress * 35}px ${withAlpha('var(--palette-zinc-500)', 0.4 + swipeProgress * 0.5)}`
+                  : `0 0 35px ${withAlpha('var(--color-scrim)', 0.85)}`,
             }}
             className={`!absolute inset-0 h-full w-full rounded-card overflow-hidden card-ash-border transition-colors duration-150 flex flex-col justify-between ${isSmashDrag
                 ? '!border-accent-red bg-accent-red/10'
@@ -227,7 +228,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
             <div
               className="pointer-events-none absolute inset-0 z-20 opacity-25 mix-blend-overlay transition-opacity"
               style={{
-                background: `radial-gradient(circle at ${tilt.glossX}% ${tilt.glossY}%, rgba(255,255,255,0.7) 0%, transparent 60%)`,
+                background: `radial-gradient(circle at ${tilt.glossX}% ${tilt.glossY}%, ${withAlpha('var(--palette-white)', 0.7)} 0%, transparent 60%)`,
               }}
               aria-hidden="true"
             />

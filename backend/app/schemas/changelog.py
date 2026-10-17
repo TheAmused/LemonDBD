@@ -25,7 +25,9 @@ class ChangelogPostResponse(BaseModel):
     is_published: bool
     created_at: datetime | None = None
     published_at: datetime | None = None
+    edited_at: datetime | None = None
     discord_announced_at: datetime | None = None
+    discord_synced_at: datetime | None = None
     updated_at: datetime | None = None
 
     model_config = ConfigDict(from_attributes=True)

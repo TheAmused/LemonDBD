@@ -136,6 +136,7 @@ def serialize_changelog_post(post: ChangelogPost) -> dict[str, Any]:
         "position": post.position,
         "is_published": post.is_published,
         "published_at": post.published_at.isoformat() if post.published_at else None,
+        "edited_at": post.edited_at.isoformat() if post.edited_at else None,
         "author_login": post.author.login if post.author else None,
         "author_name": post.author_name,
         "created_at": post.created_at.isoformat() if post.created_at else None,

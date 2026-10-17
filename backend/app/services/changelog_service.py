@@ -70,10 +70,16 @@ def create_post(admin_user: User, payload: dict[str, Any]) -> ChangelogPost:
 
 
 def update_post(post: ChangelogPost, payload: dict[str, Any]) -> ChangelogPost:
+    was_live = post.is_published
+    title = post.title
+    content_html = post.content_html
     if payload.get("title") is not None:
         post.title = payload["title"].strip()
     if payload.get("content_html") is not None:
         post.content_html = sanitize_changelog_html(payload["content_html"])
+    # Only a change to something readers could already see counts as an edit.
+    if was_live and (post.title != title or post.content_html != content_html):
+        post.edited_at = utcnow()
     if payload.get("is_published") is not None:
         post.is_published = payload["is_published"]
         if post.is_published and post.published_at is None:
@@ -83,8 +89,28 @@ def update_post(post: ChangelogPost, payload: dict[str, Any]) -> ChangelogPost:
     return post
 
 
-def mark_announced(post: ChangelogPost) -> ChangelogPost:
-    post.discord_announced_at = utcnow()
+def mark_announced(post: ChangelogPost, message_id: str | None) -> ChangelogPost:
+    """Records the first Discord post. Without a message id (Discord did not hand one back) the message
+    cannot be updated later, so it is not marked as in sync either."""
+    now = utcnow()
+    post.discord_announced_at = now
+    post.discord_message_id = message_id
+    post.discord_synced_at = now if message_id else None
+    db.session.commit()
+    return post
+
+
+def mark_discord_synced(post: ChangelogPost) -> ChangelogPost:
+    post.discord_synced_at = utcnow()
+    db.session.commit()
+    return post
+
+
+def clear_announcement(post: ChangelogPost) -> ChangelogPost:
+    """Forgets the Discord message (it was deleted there), so the entry can be announced again."""
+    post.discord_announced_at = None
+    post.discord_message_id = None
+    post.discord_synced_at = None
     db.session.commit()
     return post
 

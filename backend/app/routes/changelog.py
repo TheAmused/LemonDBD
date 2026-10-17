@@ -81,12 +81,37 @@ def announce_changelog_post(post_id: int):
     if post.discord_announced_at is not None:
         return jsonify({"error": "This entry was already announced on Discord"}), 409
 
-    result = changelog_discord.announce_post(post)
-    if result == "sent":
-        changelog_service.mark_announced(post)
+    announcement = changelog_discord.announce_post(post)
+    if announcement.result == "sent":
+        changelog_service.mark_announced(post, announcement.message_id)
         log_admin_action(
             g.current_user.id, "changelog.announce", target_type="changelog_post", target_id=post.id,
         )
+    return jsonify({"status": "success", "data": post.to_dict(), "discord": announcement.result}), 200
+
+
+@changelog_bp.route("/<int:post_id>/announce", methods=["PUT"])
+@admin_required
+def update_changelog_announcement(post_id: int):
+    """Rewrites the entry's Discord message after the entry was edited. Only possible for a message this
+    site posted itself (its id was kept). If the message was deleted on Discord ("missing") the entry goes
+    back to "not announced", so it can be sent again."""
+    post = changelog_service.get_post(post_id)
+    if not post:
+        return jsonify({"error": "Changelog post not found"}), 404
+    if not post.is_published:
+        return jsonify({"error": "Only a published entry can be announced"}), 400
+    if post.discord_message_id is None:
+        return jsonify({"error": "This entry has no Discord message to update"}), 409
+
+    result = changelog_discord.update_announcement(post)
+    if result == "sent":
+        changelog_service.mark_discord_synced(post)
+        log_admin_action(
+            g.current_user.id, "changelog.announce_update", target_type="changelog_post", target_id=post.id,
+        )
+    elif result == "missing":
+        changelog_service.clear_announcement(post)
     return jsonify({"status": "success", "data": post.to_dict(), "discord": result}), 200
 
 

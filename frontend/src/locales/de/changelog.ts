@@ -28,6 +28,7 @@ export default {
   discordUpdateConfirmSend: 'Aktualisieren',
   discordUpdated: 'Discord-Nachricht aktualisiert',
   discordMissing: 'Die Discord-Nachricht wurde gelöscht. Du kannst diesen Eintrag erneut ankündigen.',
+  discordUpdateFailed: 'Gespeichert, aber die Discord-Nachricht konnte nicht aktualisiert werden. Du kannst es mit dem Aktualisieren-Button erneut versuchen.',
   cancel: 'Abbrechen',
   newBadge: 'Neu',
   loadMore: 'Mehr laden',

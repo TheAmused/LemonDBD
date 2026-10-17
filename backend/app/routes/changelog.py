@@ -3,6 +3,7 @@ from flask import Blueprint, g, jsonify, request
 from pydantic import ValidationError
 
 from app.core.security import admin_required
+from app.models import ChangelogPost
 from app.schemas.changelog import ChangelogPostCreate, ChangelogPostUpdate
 from app.services import changelog_discord, changelog_service
 from app.services.admin_control_service import log_admin_action
@@ -47,9 +48,27 @@ def create_changelog_post():
     return jsonify({"status": "success", "data": post.to_dict()}), 201
 
 
+def _push_to_discord(post: ChangelogPost, auto: bool) -> changelog_discord.AnnounceResult:
+    """Rewrites the entry's Discord message and records how it went: in sync again on "sent"; forgotten if
+    Discord says it was deleted ("missing"), so the entry can be announced again."""
+    result = changelog_discord.update_announcement(post)
+    if result == "sent":
+        changelog_service.mark_discord_synced(post)
+        log_admin_action(
+            g.current_user.id, "changelog.announce_update", target_type="changelog_post", target_id=post.id,
+            details={"auto": auto},
+        )
+    elif result == "missing":
+        changelog_service.clear_announcement(post)
+    return result
+
+
 @changelog_bp.route("/<int:post_id>", methods=["PATCH", "PUT"])
 @admin_required
 def update_changelog_post(post_id: int):
+    """Saves an edit. If the entry is live and its Discord message is now behind, the message is rewritten right
+    away; `discord` carries that outcome ("sent", "failed", ...) or null when there was nothing to update. A
+    failed rewrite leaves the entry marked as behind, so the editor can retry it."""
     post = changelog_service.get_post(post_id)
     if not post:
         return jsonify({"error": "Changelog post not found"}), 404
@@ -64,7 +83,8 @@ def update_changelog_post(post_id: int):
     log_admin_action(
         g.current_user.id, "changelog.update", target_type="changelog_post", target_id=post.id,
     )
-    return jsonify({"status": "success", "data": post.to_dict()}), 200
+    discord = _push_to_discord(post, auto=True) if post.is_published and post.discord_message_is_behind else None
+    return jsonify({"status": "success", "data": post.to_dict(), "discord": discord}), 200
 
 
 @changelog_bp.route("/<int:post_id>/announce", methods=["POST"])
@@ -93,9 +113,9 @@ def announce_changelog_post(post_id: int):
 @changelog_bp.route("/<int:post_id>/announce", methods=["PUT"])
 @admin_required
 def update_changelog_announcement(post_id: int):
-    """Rewrites the entry's Discord message after the entry was edited. Only possible for a message this
-    site posted itself (its id was kept). If the message was deleted on Discord ("missing") the entry goes
-    back to "not announced", so it can be sent again."""
+    """Rewrites the entry's Discord message by hand (the fallback when the automatic rewrite after an edit
+    failed). Only possible for a message this site posted itself (its id was kept). If the message was
+    deleted on Discord ("missing") the entry goes back to "not announced", so it can be sent again."""
     post = changelog_service.get_post(post_id)
     if not post:
         return jsonify({"error": "Changelog post not found"}), 404
@@ -104,14 +124,7 @@ def update_changelog_announcement(post_id: int):
     if post.discord_message_id is None:
         return jsonify({"error": "This entry has no Discord message to update"}), 409
 
-    result = changelog_discord.update_announcement(post)
-    if result == "sent":
-        changelog_service.mark_discord_synced(post)
-        log_admin_action(
-            g.current_user.id, "changelog.announce_update", target_type="changelog_post", target_id=post.id,
-        )
-    elif result == "missing":
-        changelog_service.clear_announcement(post)
+    result = _push_to_discord(post, auto=False)
     return jsonify({"status": "success", "data": post.to_dict(), "discord": result}), 200
 
 

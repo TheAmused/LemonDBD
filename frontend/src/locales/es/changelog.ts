@@ -28,6 +28,7 @@ export default {
   discordUpdateConfirmSend: 'Actualizar',
   discordUpdated: 'Mensaje de Discord actualizado',
   discordMissing: 'El mensaje de Discord fue eliminado. Puedes volver a anunciar esta entrada.',
+  discordUpdateFailed: 'Guardado, pero no se pudo actualizar el mensaje de Discord. Puedes reintentarlo con el botón de actualizar.',
   cancel: 'Cancelar',
   newBadge: 'Nuevo',
   loadMore: 'Cargar más',

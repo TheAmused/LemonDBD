@@ -28,6 +28,7 @@ export default {
   discordUpdateConfirmSend: '更新',
   discordUpdated: 'Discordのメッセージを更新しました',
   discordMissing: 'Discordのメッセージは削除されました。このエントリを再度告知できます。',
+  discordUpdateFailed: '保存しましたが、Discordのメッセージを更新できませんでした。更新ボタンで再試行できます。',
   cancel: 'キャンセル',
   newBadge: '新着',
   loadMore: 'もっと見る',

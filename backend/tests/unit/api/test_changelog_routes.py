@@ -222,52 +222,79 @@ class TestChangelogRoutes:
 
     # -- edits: the "Edited" note and the Discord message update ------------
 
+    class _Ok:
+        status_code = 200
+
+        def json(self) -> dict[str, str]:
+            return {"id": "555"}
+
     def _announce_with_message_id(
         self, app: Flask, client: FlaskClient, headers: dict[str, str], monkeypatch: pytest.MonkeyPatch
     ) -> int:
         app.config["DISCORD_CHANGELOG_WEBHOOK_URL"] = "https://discord.test/api/webhooks/1/x"
-
-        class _Resp:
-            status_code = 200
-
-            def json(self) -> dict[str, str]:
-                return {"id": "555"}
-
-        monkeypatch.setattr(changelog_discord.requests, "post", lambda *a, **k: _Resp())
+        monkeypatch.setattr(changelog_discord.requests, "post", lambda *a, **k: self._Ok())
         post_id = self._publish(client, headers)
         client.post(f"/api/v1/changelog/{post_id}/announce", headers=headers)
         return post_id
 
-    def test_editing_a_live_entry_marks_it_edited_and_behind_on_discord(
-        self, app: Flask, client: FlaskClient, admin_headers: dict[str, str], monkeypatch: pytest.MonkeyPatch
-    ) -> None:
-        post_id = self._announce_with_message_id(app, client, admin_headers, monkeypatch)
-        res = client.patch(f"/api/v1/changelog/{post_id}", json={"title": "Big patch v2"}, headers=admin_headers)
-        data = res.get_json()["data"]
-        assert data["edited_at"] is not None
-        assert data["edited_at"] > data["discord_synced_at"]
-
-    def test_update_announcement_patches_the_message_and_catches_up(
-        self, app: Flask, client: FlaskClient, admin_headers: dict[str, str], monkeypatch: pytest.MonkeyPatch
-    ) -> None:
-        post_id = self._announce_with_message_id(app, client, admin_headers, monkeypatch)
-        client.patch(f"/api/v1/changelog/{post_id}", json={"title": "Big patch v2"}, headers=admin_headers)
-        patched: list[dict] = []
+    def _fake_patch(self, monkeypatch: pytest.MonkeyPatch, status_code: int = 200) -> list[dict]:
+        calls: list[dict] = []
 
         class _Resp:
-            status_code = 200
+            pass
+
+        _Resp.status_code = status_code
 
         def fake_patch(url: str, **kwargs):
-            patched.append({"url": url, **kwargs})
+            calls.append({"url": url, **kwargs})
             return _Resp()
 
         monkeypatch.setattr(changelog_discord.requests, "patch", fake_patch)
-        res = client.put(f"/api/v1/changelog/{post_id}/announce", headers=admin_headers)
+        return calls
+
+    def test_editing_a_live_entry_rewrites_its_discord_message_by_itself(
+        self, app: Flask, client: FlaskClient, admin_headers: dict[str, str], monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        post_id = self._announce_with_message_id(app, client, admin_headers, monkeypatch)
+        patched = self._fake_patch(monkeypatch)
+
+        res = client.patch(f"/api/v1/changelog/{post_id}", json={"title": "Big patch v2"}, headers=admin_headers)
         body = res.get_json()
         assert body["discord"] == "sent"
+        assert body["data"]["edited_at"] is not None
         assert body["data"]["discord_synced_at"] > body["data"]["edited_at"]
         assert patched[0]["url"] == "https://discord.test/api/webhooks/1/x/messages/555"
         assert patched[0]["json"]["embeds"][0]["description"].startswith("# Big patch v2")
+
+    def test_an_unannounced_entry_is_edited_without_touching_discord(
+        self, app: Flask, client: FlaskClient, admin_headers: dict[str, str], monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        app.config["DISCORD_CHANGELOG_WEBHOOK_URL"] = "https://discord.test/api/webhooks/1/x"
+        patched = self._fake_patch(monkeypatch)
+        post_id = self._publish(client, admin_headers)
+        res = client.patch(f"/api/v1/changelog/{post_id}", json={"title": "Big patch v2"}, headers=admin_headers)
+        assert res.get_json()["discord"] is None
+        assert patched == []
+
+    def test_a_failed_automatic_rewrite_leaves_the_entry_behind_and_can_be_retried(
+        self, app: Flask, client: FlaskClient, admin_headers: dict[str, str], monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        post_id = self._announce_with_message_id(app, client, admin_headers, monkeypatch)
+
+        def boom(*args, **kwargs):
+            raise RuntimeError("network down")
+
+        monkeypatch.setattr(changelog_discord.requests, "patch", boom)
+        res = client.patch(f"/api/v1/changelog/{post_id}", json={"title": "Big patch v2"}, headers=admin_headers)
+        body = res.get_json()
+        assert res.status_code == 200
+        assert body["discord"] == "failed"
+        assert body["data"]["edited_at"] > body["data"]["discord_synced_at"]
+
+        self._fake_patch(monkeypatch)
+        retry = client.put(f"/api/v1/changelog/{post_id}/announce", headers=admin_headers)
+        assert retry.get_json()["discord"] == "sent"
+        assert retry.get_json()["data"]["discord_synced_at"] > body["data"]["edited_at"]
 
     def test_update_announcement_needs_a_known_discord_message(
         self, app: Flask, client: FlaskClient, admin_headers: dict[str, str]
@@ -285,16 +312,44 @@ class TestChangelogRoutes:
         self, app: Flask, client: FlaskClient, admin_headers: dict[str, str], monkeypatch: pytest.MonkeyPatch
     ) -> None:
         post_id = self._announce_with_message_id(app, client, admin_headers, monkeypatch)
-
-        class _Gone:
-            status_code = 404
-
-        monkeypatch.setattr(changelog_discord.requests, "patch", lambda *a, **k: _Gone())
+        self._fake_patch(monkeypatch, status_code=404)
         res = client.put(f"/api/v1/changelog/{post_id}/announce", headers=admin_headers)
         body = res.get_json()
         assert body["discord"] == "missing"
         assert body["data"]["discord_announced_at"] is None
         assert body["data"]["discord_synced_at"] is None
+
+    # -- back to draft ----------------------------------------------------
+
+    def test_a_live_entry_saved_as_a_draft_leaves_readers_but_keeps_its_discord_message(
+        self, app: Flask, client: FlaskClient, admin_headers: dict[str, str], monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        post_id = self._announce_with_message_id(app, client, admin_headers, monkeypatch)
+        patched = self._fake_patch(monkeypatch)
+        assert len(client.get("/api/v1/changelog").get_json()["data"]) == 1
+
+        res = client.patch(f"/api/v1/changelog/{post_id}", json={"is_published": False}, headers=admin_headers)
+        body = res.get_json()
+        assert body["discord"] is None and patched == []  # the Discord message is left as it was
+        assert body["data"]["discord_announced_at"] is not None
+        assert client.get("/api/v1/changelog").get_json()["data"] == []  # gone for readers
+        admin_feed = client.get("/api/v1/changelog/admin", headers=admin_headers).get_json()["data"]
+        assert [p["id"] for p in admin_feed] == [post_id]  # still there for the admin
+
+    def test_editing_while_a_draft_is_pushed_to_discord_when_it_goes_live_again(
+        self, app: Flask, client: FlaskClient, admin_headers: dict[str, str], monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        post_id = self._announce_with_message_id(app, client, admin_headers, monkeypatch)
+        patched = self._fake_patch(monkeypatch)
+        client.patch(f"/api/v1/changelog/{post_id}", json={"is_published": False}, headers=admin_headers)
+
+        drafted = client.patch(f"/api/v1/changelog/{post_id}", json={"title": "Big patch v2"}, headers=admin_headers)
+        assert drafted.get_json()["discord"] is None and patched == []  # a draft is never pushed
+        assert drafted.get_json()["data"]["edited_at"] is not None  # but the change counts as an edit
+
+        live = client.patch(f"/api/v1/changelog/{post_id}", json={"is_published": True}, headers=admin_headers)
+        assert live.get_json()["discord"] == "sent"
+        assert patched[0]["json"]["embeds"][0]["description"].startswith("# Big patch v2")
 
     def test_create_rejects_title_too_short(
         self, client: FlaskClient, admin_headers: dict[str, str]

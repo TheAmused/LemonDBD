@@ -50,3 +50,13 @@ class ChangelogPost(Base, ColumnDictMixin):
     )
 
     author: Mapped["User | None"] = relationship()
+
+    @property
+    def discord_message_is_behind(self) -> bool:
+        """The entry was edited after its Discord message was last written, and that message can be updated."""
+        return bool(
+            self.discord_message_id
+            and self.edited_at
+            and self.discord_synced_at
+            and self.edited_at > self.discord_synced_at
+        )

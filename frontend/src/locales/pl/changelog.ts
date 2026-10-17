@@ -28,6 +28,7 @@ export default {
   discordUpdateConfirmSend: 'Zaktualizuj',
   discordUpdated: 'Zaktualizowano wiadomość na Discordzie',
   discordMissing: 'Wiadomość na Discordzie została usunięta. Możesz ogłosić ten wpis ponownie.',
+  discordUpdateFailed: 'Zapisano, ale nie udało się zaktualizować wiadomości na Discordzie. Możesz spróbować ponownie przyciskiem aktualizacji.',
   cancel: 'Anuluj',
   newBadge: 'Nowe',
   loadMore: 'Załaduj więcej',

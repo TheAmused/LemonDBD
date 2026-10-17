@@ -19,6 +19,12 @@ export function paletteColor(name: string): string {
   return value;
 }
 
+/** `#rrggbb` as `rgba(r,g,b,alpha)`, for colours that are saved as text (rich-text highlights). */
+export function hexToRgba(hex: string, alpha: number): string {
+  const n = parseInt(hex.slice(1), 16);
+  return `rgba(${(n >> 16) & 255},${(n >> 8) & 255},${n & 255},${alpha})`;
+}
+
 /** `color` at `alpha` (0 to 1), for canvas fills and gradient stops. */
 export function withAlpha(color: string, alpha: number): string {
   const percent = Math.round(Math.min(1, Math.max(0, alpha)) * 1000) / 10;

@@ -5,7 +5,7 @@ import { useSmashRosterStore } from '@/hooks/useSmashRosterStore';
 import { fetchRosters } from '@/services/smashApi';
 import type { RosterItem } from '@/types/smashOrPass';
 import { acknowledgeNsfwRoster, hasAcknowledgedNsfwRoster } from '@/utils/nsfwAck';
-import { DEFAULT_ROSTER_THEME_COLOR } from '@/utils/smashOrPass/constants';
+import { defaultRosterThemeColor } from '@/utils/smashOrPass/constants';
 import {
   customRosterToRosterItem,
   isLocalRosterSlug,
@@ -14,16 +14,16 @@ import {
 import { initialRosterSlug, rememberRoster } from './voteStorage';
 
 /** What stands in while the roster list is still loading, or the remembered slug no longer exists. */
-const CANON_PLACEHOLDER: RosterItem = {
+const canonPlaceholder = (): RosterItem => ({
   id: 'canon',
   slug: 'canon',
   name: 'Dead by Daylight: Fog Canon',
   description: 'Official 98 Characters',
-  theme_color: DEFAULT_ROSTER_THEME_COLOR,
+  theme_color: defaultRosterThemeColor(),
   category: 'DBD Canon',
   is_nsfw: false,
   is_active: true,
-};
+});
 
 /**
  * The rosters on offer and which one is being played: the official ones the database serves
@@ -49,7 +49,7 @@ export function useSmashRosters(locale: string) {
   }, [rosters, customRosterStore]);
 
   const activeRoster: RosterItem = useMemo(
-    () => allRosters.find((r) => r.slug === selectedRosterSlug) || CANON_PLACEHOLDER,
+    () => allRosters.find((r) => r.slug === selectedRosterSlug) || canonPlaceholder(),
     [allRosters, selectedRosterSlug]
   );
 

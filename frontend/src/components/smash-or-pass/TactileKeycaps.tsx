@@ -13,6 +13,7 @@ import { SmashSounds } from './SmashSoundEffects';
 import { tip } from '@/components/common/Tooltip';
 import { useDictionary } from "@/context/DictionaryContext";
 import { Surface } from '@/components/common/Surface';
+import { TileButton } from "@/components/common/TileButton";
 
 export interface TactileKeycapsProps {
   onPass: () => void;
@@ -148,9 +149,8 @@ export const TactileKeycaps: React.FC<TactileKeycapsProps> = ({ onPass, onSmash,
           const isReset = cap.id === 'reset';
 
           return (
-            <button
+            <TileButton
               key={cap.id}
-              type="button"
               disabled={disabled}
               onClick={() => triggerAction(cap.id, cap.action)}
               {...tip(`${cap.label} (${cap.primaryKey} / ${cap.subKey})`, undefined, 'action')} aria-label={`${cap.label} (${cap.primaryKey} / ${cap.subKey})`}
@@ -160,7 +160,7 @@ export const TactileKeycaps: React.FC<TactileKeycapsProps> = ({ onPass, onSmash,
                 isActive
                   ? `translate-y-1 ${cap.colorTheme.bgActive} ${cap.colorTheme.borderActive} ${cap.colorTheme.glowActive} border-2`
                   : `translate-y-0 ${cap.colorTheme.bg} ${cap.colorTheme.border} ${cap.colorTheme.glow} border bg-bg-surface shadow-[0_4px_0_0_var(--border-color)]`
-              } ${disabled ? 'opacity-40 cursor-not-allowed pointer-events-none' : 'active:translate-y-1'}`}
+              } ${disabled ? 'opacity-40 cursor-not-allowed pointer-events-none' : 'active:translate-y-1'}`} press={false}
             >
               {/* Primary Key / Icon */}
               <div className={`flex items-center justify-center font-black text-sm sm:text-base ${cap.colorTheme.text}`}>
@@ -175,7 +175,7 @@ export const TactileKeycaps: React.FC<TactileKeycapsProps> = ({ onPass, onSmash,
               }`}>
                 {cap.subKey}
               </span>
-            </button>
+            </TileButton>
           );
         })}
       </Surface>

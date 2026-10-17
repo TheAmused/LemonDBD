@@ -13,6 +13,7 @@ import {
   slugifyChapterName,
 } from '../CharacterOnboardingWizardParts';
 import type { ChapterBanner } from './useOnboardingRoster';
+import { TileButton } from "@/components/common/TileButton";
 
 interface ChapterCardProps {
   group: ChapterGroup;
@@ -91,19 +92,18 @@ export function ChapterCard({
       {/* The whole footer toggles ownership, not just the small
           switch -- Switch renders its own <button>, so it can't
           be nested here; SwitchTrack is its presentational half. */}
-      <button
-        type="button"
+      <TileButton
         onClick={() => toggleChapter(group, !chapterOwned)}
         role="switch"
         aria-checked={chapterOwned}
         aria-label={chapterSwitchLabel}
-        className="flex w-full items-center justify-between gap-1 sm:gap-2 border-t border-border-color px-1.5 py-1 sm:px-2.5 sm:py-2 text-left cursor-pointer hover:bg-bg-elevated transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent-red"
+        className="flex w-full items-center justify-between gap-1 sm:gap-2 border-t border-border-color px-1.5 py-1 sm:px-2.5 sm:py-2 text-left cursor-pointer hover:bg-bg-elevated transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent-red" press={false}
       >
         <h3 className="flex-1 text-micro sm:text-xs font-bold sm:font-extrabold leading-tight line-clamp-2 min-h-5.5 sm:min-h-8 flex items-center text-text-primary break-words">
           {chapterDisplayName}
         </h3>
         <SwitchTrack checked={chapterOwned} size="sm" />
-      </button>
+      </TileButton>
     </div>
   );
 }

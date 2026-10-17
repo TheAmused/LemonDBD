@@ -268,7 +268,7 @@ export function RomanceArchetypeBuilder({ archetypes, onChange, availableRoles, 
                               fieldSize="md"
                               value={arch.icon_url || ''}
                               onChange={(e) => updateArchetype(arch.id, { icon_url: e.target.value })}
-                              placeholder="https://... or data:image"
+                              placeholder={ab.iconUrlPlaceholder}
                               className="pl-8 sm:text-xs"
                             />
                             <LinkIcon className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-text-muted" />

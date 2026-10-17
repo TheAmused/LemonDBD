@@ -482,6 +482,7 @@ export default {
     removeGenderAria: 'Remove',
   },
   archetypeBuilder: {
+    iconUrlPlaceholder: 'https://... or data:image',
     titlePlaceholder: 'e.g. The Eldritch Devotee',
     subtitlePlaceholder: 'e.g. Drawn to dangerous, unearthly power',
     descriptionPlaceholder: 'Detailed narrative summary displayed when a player unlocks this archetype...',

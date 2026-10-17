@@ -45,6 +45,7 @@ import { AddonGuesser } from './guessers/AddonGuesser';
 import { VictoryModal } from './VictoryModal';
 import { formatMessage } from '@/utils/i18nFormat';
 import { useDictionary } from "@/context/DictionaryContext";
+import { TileButton } from "@/components/common/TileButton";
 
 interface ChallengeRunnerProps {
   challenge: ChallengeDefinition;
@@ -443,9 +444,8 @@ export const ChallengeRunner: React.FC<ChallengeRunnerProps> = ({ challenge, cat
           const isLost = rStat === 'lost';
 
           return (
-            <button
+            <TileButton
               key={`round-pill-${idx}`}
-              type="button"
               onClick={() => {
                 // Allow revisiting any round that is completed or active
                 if (idx <= currentRoundIndex || rStat) {
@@ -460,7 +460,7 @@ export const ChallengeRunner: React.FC<ChallengeRunnerProps> = ({ challenge, cat
                   : isLost
                   ? 'bg-accent-red/20 text-accent-red border-accent-red/40 hover:bg-accent-red/30'
                   : 'bg-bg-surface text-text-secondary border-border-color hover:text-text-primary'
-              }`}
+              }`} press={false}
             >
               {isWon ? (
                 <CheckCircle2 className="w-3.5 h-3.5 text-accent-green" />
@@ -472,7 +472,7 @@ export const ChallengeRunner: React.FC<ChallengeRunnerProps> = ({ challenge, cat
               <span className="truncate max-w-25">
                 {lookup<string>(t.modes, r.mode) || r.mode}
               </span>
-            </button>
+            </TileButton>
           );
         })}
       </div>

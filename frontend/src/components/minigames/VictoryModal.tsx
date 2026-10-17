@@ -4,7 +4,6 @@
 import { lookup } from '@/utils/lookup';
 import { Button, buttonClassName } from '@/components/common/Button';
 import React, { useEffect, useState } from 'react';
-import confetti from 'canvas-confetti';
 import { Share2, Check, RotateCcw, Home } from 'lucide-react';
 import Link from 'next/link';
 import type { ChallengeDefinition, GuessRecord } from '@/types/minigame';
@@ -35,14 +34,17 @@ export const VictoryModal: React.FC<VictoryModalProps> = ({ challenge, roundGues
   useEffect(() => {
     // Launch celebratory confetti burst only on victory
     if (!isCompleteVictory) return;
-    try {
-      confetti({
-        particleCount: 80,
-        spread: 70,
-        origin: { y: 0.6 },
-        colors: [paletteColor('red-500'), paletteColor('amber-500'), paletteColor('emerald-500'), paletteColor('blue-500'), paletteColor('violet-500')],
-      });
-    } catch {}
+    // Loaded on the win only: the library is the heaviest part of this screen and most rounds never reach it.
+    import('canvas-confetti')
+      .then(({ default: confetti }) =>
+        confetti({
+          particleCount: 80,
+          spread: 70,
+          origin: { y: 0.6 },
+          colors: [paletteColor('red-500'), paletteColor('amber-500'), paletteColor('emerald-500'), paletteColor('blue-500'), paletteColor('violet-500')],
+        })
+      )
+      .catch(() => undefined);
   }, [isCompleteVictory]);
 
   // Generate shareable emoji grid string

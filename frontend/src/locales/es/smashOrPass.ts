@@ -482,6 +482,7 @@ export default {
     removeGenderAria: 'Eliminar',
   },
   archetypeBuilder: {
+    iconUrlPlaceholder: 'https://... o data:image',
     titlePlaceholder: 'ej. El Devoto Sobrenatural',
     subtitlePlaceholder: 'ej. Atraído por un poder peligroso e inhumano',
     descriptionPlaceholder: 'Resumen narrativo detallado mostrado cuando un jugador desbloquea este arquetipo...',

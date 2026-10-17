@@ -151,7 +151,7 @@ export function UserProfileClient() {
             </Button>
             <Link
               href={`/${currentLocale}`}
-              className="text-xs text-text-muted hover:text-accent-amber transition-colors py-1"
+              className="text-xs text-text-muted hover:text-accent-amber transition-colors py-1 pointer-coarse:inline-flex pointer-coarse:min-h-11 pointer-coarse:items-center"
             >
               {dict.user.returnToHome}
             </Link>

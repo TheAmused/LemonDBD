@@ -1,5 +1,7 @@
 // frontend/src/utils/smashOrPass/constants.ts
 
+import { paletteColor } from '@/utils/themeColor';
+
 /**
  * Hard caps on anything that arrives from a pasted JSON payload or a share
  * link. Generous for real use, small enough that a hostile payload cannot
@@ -71,5 +73,5 @@ export const TRANSLATABLE_FIELDS = [
 // Shared with the other portable-JSON codec; re-exported so callers keep one import site.
 export { DATA_IMAGE_PATTERN, SHARE_HASH_PARAM } from '@/utils/shareCodec';
 
-/** Accent a custom roster gets until its author picks one. */
-export const DEFAULT_ROSTER_THEME_COLOR = '#ff0055';
+/** Accent a custom roster gets until its author picks one. Read from the palette when asked: the roster stores it as hex. */
+export const defaultRosterThemeColor = (): string => paletteColor('neon-crimson');

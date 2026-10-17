@@ -38,7 +38,7 @@ export function OnboardingAuthRequired({ locale }: { locale: string }) {
           </Button>
           <Link
             href={`/${locale}`}
-            className="py-1 text-xs text-text-muted transition-colors hover:text-accent-red"
+            className="py-1 text-xs text-text-muted transition-colors hover:text-accent-red pointer-coarse:inline-flex pointer-coarse:min-h-11 pointer-coarse:items-center"
           >
             {dict.user.returnToHome}
           </Link>

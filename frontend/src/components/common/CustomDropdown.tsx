@@ -110,7 +110,7 @@ export function CustomDropdown<T extends string = string>({
         onClick={handleToggle}
         {...popoverTriggerProps(isOpen, children ? 'true' : 'listbox')}
         aria-label={ariaLabel || (typeof triggerLabel === 'string' ? triggerLabel : undefined)}
-        className={`flex items-center gap-2 px-3 py-2 rounded-control bg-bg-surface border border-border-color ${accentClasses.hover} hover:bg-bg-elevated text-xs font-bold text-text-primary transition-all cursor-pointer shadow-xs select-none ${
+        className={`flex items-center gap-2 px-3 py-2 pointer-coarse:min-h-11 rounded-control bg-bg-surface border border-border-color ${accentClasses.hover} hover:bg-bg-elevated text-xs font-bold text-text-primary transition-all cursor-pointer shadow-xs select-none ${
           isOpen ? `${accentClasses.open} shadow-xs` : ''
         } ${buttonClassName}`}
       >

@@ -7,7 +7,7 @@ import { HexColorInput, HexColorPicker } from 'react-colorful';
 import { Check, Pipette } from 'lucide-react';
 import { cn } from '@/utils/cn';
 import { HEX_COLOR_PATTERN } from '@/utils/tierLists/constants';
-import { themeColor } from '@/utils/themeColor';
+import { paletteColor, themeColor } from '@/utils/themeColor';
 import { useDictionary } from '@/context/DictionaryContext';
 
 import { Button } from '@/components/common/Button';
@@ -37,7 +37,7 @@ export function TierColorPicker({ color, onChange, size = 'md' }: TierColorPicke
   const t = useDictionary().tierLists;
   const isHex = HEX_COLOR_PATTERN.test(color);
   const [open, setOpen] = useState<boolean>(false);
-  const [draft, setDraft] = useState<string>(isHex ? color : themeColor('--text-muted') || '#808080');
+  const [draft, setDraft] = useState<string>(isHex ? color : themeColor('--text-muted') || paletteColor('zinc-500'));
   const timer = useRef<number | undefined>(undefined);
   const lastEmitted = useRef<string>(color);
   const onChangeRef = useRef(onChange);

@@ -10,24 +10,17 @@
 //     large text). Text below 1.5:1 is invisible, which is always a failure.
 //
 // Pages come from src/app/[locale]/**/page.tsx (dynamic segments skipped), so a new page is
-// covered the moment it exists. Existing problems are held in scripts/rendered-baseline.json and
-// can only shrink; a new page starts at zero. Refresh after fixing:  UPDATE_RENDERED_BASELINE=1
+// covered the moment it exists. Every finding fails the run; there is no baseline.
 import fs from 'node:fs';
 import path from 'node:path';
 import { chromium, type Page } from 'playwright';
 
 const BASE = (process.env.CHECK_BASE_URL ?? 'http://localhost').replace(/\/$/, '');
 const LOCALE = process.env.CHECK_LOCALE ?? 'en';
-const BASELINE = path.resolve(__dirname, 'rendered-baseline.json');
 const APP = path.resolve(__dirname, '../src/app/[locale]');
 const THEMES = ['light', 'light-lemon', 'dark'] as const;
 const MIN_TARGET = 44;
 const INVISIBLE_RATIO = 1.5;
-
-interface Baseline {
-  touch: Record<string, number>;
-  contrast: Record<string, number>;
-}
 
 function routes(dir = APP, segs: string[] = [], out: string[] = []): string[] {
   for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
@@ -189,7 +182,8 @@ async function main() {
     console.error(`Could not start Chromium (${e.message.split('\n')[0]}).\nInstall it once with: npx playwright install chromium`);
     process.exit(1);
   });
-  const pages = routes();
+  const only = process.env.CHECK_ROUTES?.split(',').map((r) => r.trim()).filter(Boolean);
+  const pages = routes().filter((r) => !only || only.includes(r));
   const touch: Record<string, number> = {};
   const contrast: Record<string, number> = {};
   const invisible: string[] = [];
@@ -201,23 +195,27 @@ async function main() {
   await phone.addInitScript(() => localStorage.setItem('theme', 'dark'));
   const phonePage = await phone.newPage();
   for (const route of pages) {
+    if (process.env.CHECK_VERBOSE) console.error('touch', route);
     await load(phonePage, `${BASE}/${LOCALE}${route === '/' ? '' : route}`);
     const hits = await phonePage.evaluate(measureTouch, MIN_TARGET);
     for (const h of hits) {
       const key = `${route}|${h.tag}|${h.label}`;
       touch[key] = (touch[key] ?? 0) + 1;
       details.push(`touch  ${route}  <${h.tag}> "${h.label}" is ${h.w}x${h.h}`);
+      if (process.env.CHECK_VERBOSE) console.error(details[details.length - 1]);
     }
   }
   await phone.close();
 
   // 2. themes: desktop viewport, every theme
   for (const theme of THEMES) {
+    if (process.env.CHECK_ONLY === 'touch') break;
     const ctx = await browser.newContext({ viewport: { width: 1280, height: 800 } });
     await ctx.addInitScript('window.__name = (f) => f;');
     await ctx.addInitScript((t) => localStorage.setItem('theme', t), theme);
     const page = await ctx.newPage();
     for (const route of pages) {
+      if (process.env.CHECK_VERBOSE) console.error(theme, route);
       await load(page, `${BASE}/${LOCALE}${route === '/' ? '' : route}`);
       const applied = await page.evaluate(() => document.documentElement.className);
       if (!applied.split(/\s+/).includes(theme)) {
@@ -235,25 +233,16 @@ async function main() {
   }
   await browser.close();
 
-  if (process.env.UPDATE_RENDERED_BASELINE) {
-    const sort = (o: Record<string, number>) => Object.fromEntries(Object.entries(o).sort(([a], [b]) => a.localeCompare(b)).filter(([, v]) => v > 0));
-    fs.writeFileSync(BASELINE, JSON.stringify({ touch: sort(touch), contrast: sort(contrast) }, null, 2) + '\n');
-    console.log(`Baseline written: ${Object.keys(touch).length} touch entries, ${Object.values(contrast).reduce((a, b) => a + b, 0)} contrast findings.`);
-    return;
-  }
-
-  const base: Baseline = fs.existsSync(BASELINE) ? JSON.parse(fs.readFileSync(BASELINE, 'utf8')) : { touch: {}, contrast: {} };
   const failures: string[] = [...invisible];
-  for (const [k, n] of Object.entries(touch)) if (n > (base.touch[k] ?? 0)) failures.push(`touch target below ${MIN_TARGET}px: ${k.replace(/\|/g, '  ')} (x${n}, allowed ${base.touch[k] ?? 0})`);
-  for (const [k, n] of Object.entries(contrast)) if (n > (base.contrast[k] ?? 0)) failures.push(`contrast: ${k.replace('|', '  ')} has ${n} low-contrast text runs (allowed ${base.contrast[k] ?? 0})`);
+  for (const [k, n] of Object.entries(touch)) failures.push(`touch target below ${MIN_TARGET}px: ${k.replace(/|/g, "  ")} (x${n})`);
+  for (const [k, n] of Object.entries(contrast)) if (n > 0) failures.push(`contrast: ${k.replace("|", "  ")} has ${n} low-contrast text runs`);
 
   if (process.env.CHECK_VERBOSE) console.log(details.join('\n'));
   if (failures.length) {
     console.error(`\n❌ Rendered check failed:\n${[...new Set(failures)].map((f) => '  - ' + f).join('\n')}\n(run with CHECK_VERBOSE=1 for every element)`);
     process.exit(1);
   }
-  const fixed = Object.keys(base.touch).filter((k) => (touch[k] ?? 0) < base.touch[k]).length + Object.keys(base.contrast).filter((k) => (contrast[k] ?? 0) < base.contrast[k]).length;
-  console.log(`✅ Rendered check OK: ${pages.length} pages x ${THEMES.length} themes, touch targets and contrast within baseline.${fixed ? `\n   ${fixed} baseline entries improved; lock it in with UPDATE_RENDERED_BASELINE=1.` : ''}`);
+  console.log(`✅ Rendered check OK: ${pages.length} pages x ${THEMES.length} themes, every touch target and text run passes.`);
 }
 
 void main();

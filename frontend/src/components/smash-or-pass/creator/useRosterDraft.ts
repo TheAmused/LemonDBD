@@ -1,7 +1,7 @@
 'use client';
 // frontend/src/components/smash-or-pass/creator/useRosterDraft.ts
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { DEFAULT_ROSTER_THEME_COLOR, SMASH_ROSTER_LIMITS, TRANSLATABLE_LOCALES } from '@/utils/smashOrPass/constants';
+import { defaultRosterThemeColor, SMASH_ROSTER_LIMITS, TRANSLATABLE_LOCALES } from '@/utils/smashOrPass/constants';
 import type { StoredCustomRoster } from '@/types/smashOrPass';
 import { DraftEntity, emptyDraftEntity } from './EntityEditor';
 import {
@@ -131,7 +131,7 @@ export function useRosterDraft({ editId, editingRoster, storeHydrated }: UseRost
       name: editingRoster.name,
       description: editingRoster.description || '',
       cover_image_url: editingRoster.cover_image_url || '',
-      theme_color: editingRoster.theme_color || DEFAULT_ROSTER_THEME_COLOR,
+      theme_color: editingRoster.theme_color || defaultRosterThemeColor(),
       category: editingRoster.category || '',
       is_nsfw: editingRoster.is_nsfw || false,
       roster_mode: editingRoster.roster_mode || 'simple',

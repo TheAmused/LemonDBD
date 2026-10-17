@@ -6,6 +6,7 @@ import { useDictionary } from '@/context/DictionaryContext';
 import { type ChapterGroup, type OnboardingCharacter, resolveOnboardingAvatar } from '../CharacterOnboardingWizardParts';
 import { Surface } from '@/components/common/Surface';
 import { Badge } from '@/components/common/Badge';
+import { TileButton } from "@/components/common/TileButton";
 
 interface ChapterCharacterPanelProps {
   group: ChapterGroup;
@@ -62,13 +63,12 @@ export function ChapterCharacterPanel({
               </Badge>
             </button>
             {!isOwned && perkStats.total > 0 && (
-              <button
-                type="button"
+              <TileButton
                 onClick={() => onOpenPerks(c)}
-                className="w-full border-t border-border-color bg-accent-amber/10 px-1.5 py-1 type-strong-2xs text-accent-amber hover:bg-accent-amber/20 transition-colors cursor-pointer"
+                className="w-full border-t border-border-color bg-accent-amber/10 px-1.5 py-1 type-strong-2xs text-accent-amber hover:bg-accent-amber/20 transition-colors cursor-pointer" press={false}
               >
                 {t.perksButton} ({perkStats.unlocked}/{perkStats.total})
-              </button>
+              </TileButton>
             )}
           </Surface>
         );

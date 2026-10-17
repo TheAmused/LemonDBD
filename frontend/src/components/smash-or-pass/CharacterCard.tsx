@@ -216,7 +216,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
                 ? `0 0 ${35 + swipeProgress * 35}px ${withAlpha('var(--accent-red)', 0.4 + swipeProgress * 0.5)}`
                 : isPassDrag
                   ? `0 0 ${35 + swipeProgress * 35}px ${withAlpha('var(--palette-zinc-500)', 0.4 + swipeProgress * 0.5)}`
-                  : `0 0 35px ${withAlpha('var(--color-scrim)', 0.85)}`,
+                  : `0 0 35px ${withAlpha('var(--palette-black)', 0.85)}`,
             }}
             className={`!absolute inset-0 h-full w-full rounded-card overflow-hidden card-ash-border transition-colors duration-150 flex flex-col justify-between ${isSmashDrag
                 ? '!border-accent-red bg-accent-red/10'

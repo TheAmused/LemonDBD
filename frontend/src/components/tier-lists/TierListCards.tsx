@@ -3,7 +3,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { ChevronRight, Crown, Info, Trash2 } from 'lucide-react';
+import { ChevronRight, Info, Trash2 } from 'lucide-react';
 import type { StoredCustomList, TierListSummary } from '@/types/tierList';
 import { sanitizeImageUrl } from '@/utils/tierLists/codec';
 import { staticUrl } from '@/utils/api';
@@ -172,12 +172,6 @@ export function OfficialTierListCard({ list, rankedCount, locale }: OfficialCard
       <div className="mt-auto flex flex-wrap items-center justify-center sm:justify-start gap-2 pt-2 type-strong">
         {list.item_count !== null && (
           <span className="text-text-muted">{formatMessage(t.itemsCount, { count: list.item_count })}</span>
-        )}
-        {list.has_default_placements && (
-          <span className="inline-flex items-center gap-1 text-accent-amber">
-            <Crown className="h-3.5 w-3.5" aria-hidden="true" />
-            {t.officialRanking}
-          </span>
         )}
         <span className="sm:ml-auto inline-flex items-center gap-0.5 text-accent-red">
           {rankedCount > 0 ? t.continueRanking : t.startRanking}

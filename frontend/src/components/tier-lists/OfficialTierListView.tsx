@@ -2,7 +2,7 @@
 // frontend/src/components/tier-lists/OfficialTierListView.tsx
 
 import React, { useCallback, useMemo, useState } from 'react';
-import { Crown, RotateCcw, SearchX, TriangleAlert } from 'lucide-react';
+import { RotateCcw, SearchX, TriangleAlert } from 'lucide-react';
 import { EmptyState } from '@/components/common/EmptyState';
 import {
   TIER_LIST_FORMAT,
@@ -24,7 +24,6 @@ import { clearRanking, saveRanking } from '@/utils/tierLists/storage';
 import { TierListEditor } from './TierListEditor';
 import { TierListSkeleton } from './TierListSkeleton';
 import { useDictionary } from "@/context/DictionaryContext";
-import { Badge } from '@/components/common/Badge';
 
 interface OfficialTierListViewProps {
   slug: string;
@@ -182,14 +181,6 @@ export function OfficialTierListView({ slug, locale }: OfficialTierListViewProps
       title={template.title}
       description={template.description}
       kindLabel={t.kinds[template.kind]}
-      badges={
-        template.has_default_placements ? (
-          <Badge tone="amber" size="sm" square>
-            <Crown className="h-3.5 w-3.5" aria-hidden="true" />
-            {t.officialRanking}
-          </Badge>
-        ) : undefined
-      }
       items={items}
       tiers={tiers}
       placements={placements}

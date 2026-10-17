@@ -246,9 +246,9 @@ function LinksSource({ onAdd }: { onAdd: (items: IncomingItem[]) => void; }) {
             placeholder={t.itemImagePlaceholder}
             className={TOUCH_FIELD}
           />
+          <span className="text-xs text-text-muted">{t.itemImageHint}</span>
         </label>
       </div>
-      <p className="text-xs text-text-muted text-center">{t.itemImageHint}</p>
       {error && (
         <p role="alert" className="type-strong text-accent-red text-center">
           {error}

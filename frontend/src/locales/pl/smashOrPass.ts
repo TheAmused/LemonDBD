@@ -392,7 +392,6 @@ export default {
     categoryLabel: 'Kategoria',
     categoryPlaceholder: 'np. Niestandardowa',
     nsfwLabel: 'Zawiera treści NSFW',
-    officialHint: 'Widoczna dla wszystkich w centrum zamiast tylko w tej przeglądarce.',
     addEntity: 'Dodaj Kandydata',
     removeEntity: 'Usuń',
     entityNameLabel: 'Nazwa',

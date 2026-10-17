@@ -13,6 +13,10 @@ export const postDate = (post: ChangelogPost): string | null => post.published_a
 
 const isNewer = (iso: string, than: string) => new Date(iso) > new Date(than);
 
+/** The entry was edited after its Discord message was last written, and that message can still be updated. */
+export const isBehindOnDiscord = (post: ChangelogPost): boolean =>
+  !!post.edited_at && !!post.discord_synced_at && isNewer(post.edited_at, post.discord_synced_at);
+
 export function isUnreadPost(post: ChangelogPost, state: ChangelogReadState | null | undefined): boolean {
   const date = postDate(post);
   return !!state && post.is_published && !!date && isNewer(date, state.baseline) && !state.read.includes(post.id);

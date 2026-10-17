@@ -2,19 +2,25 @@
 // frontend/src/components/changelog/WhatsNewLauncher.tsx
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Megaphone, Plus, Pencil, Trash2, Send, Skull, ChevronDown, ChevronUp, GripVertical } from 'lucide-react';
+import { Megaphone, Plus, Pencil, Trash2, Send, RefreshCw, Skull, ChevronDown, ChevronUp, GripVertical } from 'lucide-react';
 import { cn } from '@/utils/cn';
 import { useAuth } from '@/context/AuthContext';
-import type { ChangelogPost, ChangelogPostDraft } from '@/types/changelog';
+import type {
+  ChangelogAnnounceResponse,
+  ChangelogDiscordResult,
+  ChangelogPost,
+  ChangelogPostDraft,
+} from '@/types/changelog';
 import {
   announceChangelogPost,
   createChangelogPost,
   deleteChangelogPost,
   reorderChangelogPosts,
+  updateChangelogAnnouncement,
   updateChangelogPost,
 } from '@/services/changelogApi';
 import { htmlToPlainText } from './changelogText';
-import { postDate } from './changelogReadState';
+import { isBehindOnDiscord, postDate } from './changelogReadState';
 import { CHANGELOG_BODY_CLASS } from './changelogTheme';
 import type { ChangelogFeed } from './useChangelogFeed';
 import dynamic from 'next/dynamic';
@@ -71,8 +77,10 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ feed, classN
   const [actionError, setActionError] = useState<string | null>(null);
   const [pendingDeleteId, setPendingDeleteId] = useState<number | null>(null);
   const [pendingAnnounce, setPendingAnnounce] = useState<ChangelogPost | null>(null);
+  const [pendingDiscordUpdate, setPendingDiscordUpdate] = useState<ChangelogPost | null>(null);
   const [announcing, setAnnouncing] = useState(false);
-  const [announcedPost, setAnnouncedPost] = useState<ChangelogPost | null>(null);
+  /** The confirmation shown after Discord took the message: what happened and which entry. */
+  const [discordNotice, setDiscordNotice] = useState<{ title: string; postTitle: string } | null>(null);
   const [draggingId, setDraggingId] = useState<number | null>(null);
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
@@ -119,16 +127,27 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ feed, classN
     }
   };
 
-  const handleAnnounce = async () => {
-    if (!token || !pendingAnnounce) return;
+  const discordErrors: Record<Exclude<ChangelogDiscordResult, 'sent'>, string> = {
+    failed: t.discordFailed,
+    not_configured: t.discordNotConfigured,
+    missing: t.discordMissing,
+  };
+
+  /** Sends `post` to Discord (first time) or rewrites its message, then tells the admin how it went. */
+  const runDiscordAction = async (
+    post: ChangelogPost,
+    call: (token: string, id: number) => Promise<ChangelogAnnounceResponse>,
+    successTitle: string
+  ) => {
+    if (!token) return;
     setAnnouncing(true);
     try {
-      const res = await announceChangelogPost(token, pendingAnnounce.id);
-      if (res.discord === 'failed') setActionError(t.discordFailed);
-      else if (res.discord === 'not_configured') setActionError(t.discordNotConfigured);
-      else {
+      const res = await call(token, post.id);
+      if (res.discord === 'sent') {
         setActionError(null);
-        setAnnouncedPost(pendingAnnounce);
+        setDiscordNotice({ title: successTitle, postTitle: post.title });
+      } else {
+        setActionError(discordErrors[res.discord]);
       }
       await reload();
     } catch (err) {
@@ -136,6 +155,7 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ feed, classN
     } finally {
       setAnnouncing(false);
       setPendingAnnounce(null);
+      setPendingDiscordUpdate(null);
     }
   };
 
@@ -352,6 +372,11 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ feed, classN
                           <span className="type-label-2xs text-text-muted">
                             {formatPostDate(postDate(post))}
                           </span>
+                          {post.edited_at && (
+                            <span className="type-label-2xs text-text-muted">
+                              {t.edited} {formatPostDate(post.edited_at)}
+                            </span>
+                          )}
                           {isAdmin && post.discord_announced_at && (
                             <span className="inline-flex items-center gap-1 type-label-2xs text-text-muted">
                               <Send className="h-3 w-3" aria-hidden="true" />
@@ -384,6 +409,14 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ feed, classN
                             label={t.announceDiscord}
                             hoverClass="hover:text-accent-red"
                             onClick={() => setPendingAnnounce(post)}
+                          />
+                        )}
+                        {post.is_published && isBehindOnDiscord(post) && (
+                          <IconButton
+                            icon={RefreshCw}
+                            label={t.discordUpdate}
+                            hoverClass="hover:text-accent-red"
+                            onClick={() => setPendingDiscordUpdate(post)}
                           />
                         )}
                         <IconButton
@@ -466,23 +499,44 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ feed, classN
           closeButtonAriaLabel={t.cancel}
           busy={announcing}
           busyLabel={t.discordConfirmSend}
-          onConfirm={handleAnnounce}
+          onConfirm={() => runDiscordAction(pendingAnnounce, announceChangelogPost, t.discordSuccess)}
           onCancel={() => setPendingAnnounce(null)}
         />
       )}
 
+      {pendingDiscordUpdate && (
+        <ConfirmModal
+          open
+          size="md"
+          title={t.discordUpdateConfirmTitle}
+          message={
+            <>
+              <p>{t.discordUpdateConfirmMessage}</p>
+              <p className="mt-3 font-bold text-text-primary">{pendingDiscordUpdate.title}</p>
+            </>
+          }
+          confirmLabel={t.discordUpdateConfirmSend}
+          closeButton="header"
+          closeButtonAriaLabel={t.cancel}
+          busy={announcing}
+          busyLabel={t.discordUpdateConfirmSend}
+          onConfirm={() => runDiscordAction(pendingDiscordUpdate, updateChangelogAnnouncement, t.discordUpdated)}
+          onCancel={() => setPendingDiscordUpdate(null)}
+        />
+      )}
+
       <Modal
-        isOpen={announcedPost !== null}
-        onClose={() => setAnnouncedPost(null)}
+        isOpen={discordNotice !== null}
+        onClose={() => setDiscordNotice(null)}
         variant="dialog"
         size="sm"
         layer="top"
         closeButton="floating"
         closeButtonAriaLabel={t.close}
-        ariaLabel={t.discordSuccess}
+        ariaLabel={discordNotice?.title}
         padded
       >
-        <SuccessState title={t.discordSuccess} description={announcedPost?.title} />
+        <SuccessState title={discordNotice?.title} description={discordNotice?.postTitle} />
       </Modal>
 
       {pendingDeleteId != null && (

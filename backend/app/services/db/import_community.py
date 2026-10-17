@@ -93,6 +93,7 @@ def _import_changelog_posts(
                 position=row.get("position", 0),
                 is_published=is_published,
                 published_at=parse_datetime(row.get("published_at")) or (utcnow() if is_published else None),
+                edited_at=parse_datetime(row.get("edited_at")),
                 author_id=author_id,
                 author_name=row.get("author_name", "The Entity"),
             ))

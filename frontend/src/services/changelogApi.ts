@@ -76,6 +76,15 @@ export async function announceChangelogPost(token: string, id: number): Promise<
   return parseOrThrow(res);
 }
 
+/** Rewrites the entry's Discord message with its current title and text. */
+export async function updateChangelogAnnouncement(token: string, id: number): Promise<ChangelogAnnounceResponse> {
+  const res = await fetch(`${API_BASE()}/${id}/announce`, {
+    method: 'PUT',
+    headers: authHeaders(token),
+  });
+  return parseOrThrow(res);
+}
+
 export async function reorderChangelogPosts(
   token: string,
   orderedIds: number[]

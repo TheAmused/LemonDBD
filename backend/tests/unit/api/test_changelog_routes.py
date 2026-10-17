@@ -144,8 +144,10 @@ class TestChangelogRoutes:
         assert client.post("/api/v1/changelog/999999/announce", headers=admin_headers).status_code == 404
 
     def test_announce_reports_not_configured_without_a_webhook(
-        self, client: FlaskClient, admin_headers: dict[str, str]
+        self, app: Flask, client: FlaskClient, admin_headers: dict[str, str]
     ) -> None:
+        # The app reads the real webhook from the environment; clear it so this can never post to Discord.
+        app.config["DISCORD_CHANGELOG_WEBHOOK_URL"] = ""
         post_id = self._publish(client, admin_headers)
         res = client.post(f"/api/v1/changelog/{post_id}/announce", headers=admin_headers)
         assert res.status_code == 200
@@ -160,7 +162,10 @@ class TestChangelogRoutes:
         sent: list[dict] = []
 
         class _Resp:
-            status_code = 204
+            status_code = 200
+
+            def json(self) -> dict[str, str]:
+                return {"id": "555"}
 
         def fake_post(url: str, **kwargs):
             sent.append({"url": url, **kwargs})
@@ -173,6 +178,9 @@ class TestChangelogRoutes:
         body = res.get_json()
         assert body["discord"] == "sent"
         assert body["data"]["discord_announced_at"] is not None
+        assert body["data"]["discord_synced_at"] is not None
+        assert "discord_message_id" not in body["data"]
+        assert sent[0]["params"] == {"wait": "true"}
         embed = sent[0]["json"]["embeds"][0]
         assert "title" not in embed and "url" not in embed and "footer" not in embed
         assert embed["description"].startswith("# Big patch\n\n")
@@ -211,6 +219,82 @@ class TestChangelogRoutes:
         post_id = self._publish(client, admin_headers, published=False)
         res = client.post(f"/api/v1/changelog/{post_id}/announce", headers=admin_headers)
         assert res.status_code == 400
+
+    # -- edits: the "Edited" note and the Discord message update ------------
+
+    def _announce_with_message_id(
+        self, app: Flask, client: FlaskClient, headers: dict[str, str], monkeypatch: pytest.MonkeyPatch
+    ) -> int:
+        app.config["DISCORD_CHANGELOG_WEBHOOK_URL"] = "https://discord.test/api/webhooks/1/x"
+
+        class _Resp:
+            status_code = 200
+
+            def json(self) -> dict[str, str]:
+                return {"id": "555"}
+
+        monkeypatch.setattr(changelog_discord.requests, "post", lambda *a, **k: _Resp())
+        post_id = self._publish(client, headers)
+        client.post(f"/api/v1/changelog/{post_id}/announce", headers=headers)
+        return post_id
+
+    def test_editing_a_live_entry_marks_it_edited_and_behind_on_discord(
+        self, app: Flask, client: FlaskClient, admin_headers: dict[str, str], monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        post_id = self._announce_with_message_id(app, client, admin_headers, monkeypatch)
+        res = client.patch(f"/api/v1/changelog/{post_id}", json={"title": "Big patch v2"}, headers=admin_headers)
+        data = res.get_json()["data"]
+        assert data["edited_at"] is not None
+        assert data["edited_at"] > data["discord_synced_at"]
+
+    def test_update_announcement_patches_the_message_and_catches_up(
+        self, app: Flask, client: FlaskClient, admin_headers: dict[str, str], monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        post_id = self._announce_with_message_id(app, client, admin_headers, monkeypatch)
+        client.patch(f"/api/v1/changelog/{post_id}", json={"title": "Big patch v2"}, headers=admin_headers)
+        patched: list[dict] = []
+
+        class _Resp:
+            status_code = 200
+
+        def fake_patch(url: str, **kwargs):
+            patched.append({"url": url, **kwargs})
+            return _Resp()
+
+        monkeypatch.setattr(changelog_discord.requests, "patch", fake_patch)
+        res = client.put(f"/api/v1/changelog/{post_id}/announce", headers=admin_headers)
+        body = res.get_json()
+        assert body["discord"] == "sent"
+        assert body["data"]["discord_synced_at"] > body["data"]["edited_at"]
+        assert patched[0]["url"] == "https://discord.test/api/webhooks/1/x/messages/555"
+        assert patched[0]["json"]["embeds"][0]["description"].startswith("# Big patch v2")
+
+    def test_update_announcement_needs_a_known_discord_message(
+        self, app: Flask, client: FlaskClient, admin_headers: dict[str, str]
+    ) -> None:
+        post_id = self._publish(client, admin_headers)
+        assert client.put(f"/api/v1/changelog/{post_id}/announce", headers=admin_headers).status_code == 409
+
+    def test_update_announcement_requires_admin(
+        self, app: Flask, client: FlaskClient, admin_headers: dict[str, str], user_headers: dict[str, str]
+    ) -> None:
+        post_id = self._publish(client, admin_headers)
+        assert client.put(f"/api/v1/changelog/{post_id}/announce", headers=user_headers).status_code == 403
+
+    def test_a_message_deleted_on_discord_lets_the_entry_be_announced_again(
+        self, app: Flask, client: FlaskClient, admin_headers: dict[str, str], monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        post_id = self._announce_with_message_id(app, client, admin_headers, monkeypatch)
+
+        class _Gone:
+            status_code = 404
+
+        monkeypatch.setattr(changelog_discord.requests, "patch", lambda *a, **k: _Gone())
+        res = client.put(f"/api/v1/changelog/{post_id}/announce", headers=admin_headers)
+        body = res.get_json()
+        assert body["discord"] == "missing"
+        assert body["data"]["discord_announced_at"] is None
+        assert body["data"]["discord_synced_at"] is None
 
     def test_create_rejects_title_too_short(
         self, client: FlaskClient, admin_headers: dict[str, str]

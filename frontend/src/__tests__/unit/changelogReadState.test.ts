@@ -1,7 +1,7 @@
 // frontend/src/__tests__/unit/changelogReadState.test.ts
 import test from 'node:test';
 import assert from 'node:assert';
-import { isUnreadPost, parseReadIds, type ChangelogReadState } from '@/components/changelog/changelogReadState';
+import { isBehindOnDiscord, isUnreadPost, parseReadIds, type ChangelogReadState } from '@/components/changelog/changelogReadState';
 import type { ChangelogPost } from '@/types/changelog';
 
 const post = (id: number, date: string, overrides: Partial<ChangelogPost> = {}): ChangelogPost => ({
@@ -13,7 +13,9 @@ const post = (id: number, date: string, overrides: Partial<ChangelogPost> = {}):
   created_at: date,
   updated_at: date,
   published_at: date,
+  edited_at: null,
   discord_announced_at: null,
+  discord_synced_at: null,
   ...overrides,
 });
 
@@ -53,5 +55,15 @@ test('changelog read state', async (t) => {
     assert.deepStrictEqual(parseReadIds('not json'), []);
     assert.deepStrictEqual(parseReadIds('{"baseline":1}'), []);
     assert.deepStrictEqual(parseReadIds('{"baseline":"2026-01-01","read":[1,"x",2]}'), [1, 2]);
+  });
+
+  await t.test('an entry is behind on Discord only when edited after the message was last written', () => {
+    const synced = '2026-02-01T00:00:00Z';
+    const base = post(1, '2026-01-01T00:00:00Z', { discord_announced_at: synced, discord_synced_at: synced });
+    assert.ok(!isBehindOnDiscord(base));
+    assert.ok(isBehindOnDiscord({ ...base, edited_at: '2026-02-02T00:00:00Z' }));
+    assert.ok(!isBehindOnDiscord({ ...base, edited_at: '2026-01-15T00:00:00Z' }));
+    // Announced before message ids were kept: nothing to update.
+    assert.ok(!isBehindOnDiscord({ ...base, discord_synced_at: null, edited_at: '2026-02-02T00:00:00Z' }));
   });
 });

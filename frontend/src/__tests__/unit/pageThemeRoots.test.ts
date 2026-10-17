@@ -128,6 +128,18 @@ describe('Page Root Theme Wrapper Consistency', () => {
       );
     });
   }
+
+  // A fallback that already sits inside a real shell (the streaks layout's
+  // Sidebar + <main>, or a page's own <PageShell>) must not render another
+  // shell: PageShellFallback would nest a fake sidebar placeholder in the page.
+  const insideShellFallbacks = ['streaks/loading.tsx', 'tier-lists/new/page.tsx'];
+
+  for (const relPath of insideShellFallbacks) {
+    it(`${relPath} does not nest a second shell via PageShellFallback`, () => {
+      const content = fs.readFileSync(path.resolve(__dirname, '../../app/[locale]', relPath), 'utf-8');
+      assert.ok(!/<PageShellFallback|TierListsLoading/.test(content), `${relPath} would nest a fake sidebar inside the real shell`);
+    });
+  }
 });
 
 describe('Page background: one source of truth', () => {

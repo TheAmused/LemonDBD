@@ -25,10 +25,8 @@ const formatPostDate = (iso: string | null) =>
 export interface ChangelogPostItemProps {
   post: ChangelogPost;
   expanded: boolean;
-  /** Not opened by this reader yet: shows the "New" marker. */
   unread: boolean;
   isAdmin: boolean;
-  /** Admin with a session: the drag handle is shown. */
   canReorder: boolean;
   dragging: boolean;
   rowRef: (el: HTMLElement | null) => void;
@@ -40,7 +38,6 @@ export interface ChangelogPostItemProps {
   onDelete: () => void;
 }
 
-/** One entry of the "What's New?" feed: a collapsed header (date, title, preview) that opens to the full text, plus the admin's controls. */
 export const ChangelogPostItem: React.FC<ChangelogPostItemProps> = ({
   post,
   expanded,

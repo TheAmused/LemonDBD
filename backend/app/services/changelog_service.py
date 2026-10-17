@@ -79,7 +79,6 @@ def update_post(post: ChangelogPost, payload: dict[str, Any]) -> ChangelogPost:
         post.title = payload["title"].strip()
     if payload.get("content_html") is not None:
         post.content_html = sanitize_changelog_html(payload["content_html"])
-    # Only a change to something readers could already have seen counts as an edit.
     if was_live and (post.title != title or post.content_html != content_html):
         post.edited_at = utcnow()
     if payload.get("is_published") is not None:

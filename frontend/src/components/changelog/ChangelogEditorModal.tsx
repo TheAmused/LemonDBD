@@ -3,7 +3,7 @@
 
 import React, { useEffect, useId, useRef, useState } from 'react';
 import { Plus } from 'lucide-react';
-import type { ChangelogPost, ChangelogPostDraft, ChangelogSection } from '@/types/changelog';
+import type { ChangelogPost, ChangelogPostDraft } from '@/types/changelog';
 import {
   CHANGELOG_BODY_CLASS,
   CHANGELOG_HIGHLIGHT_COLORS,
@@ -35,7 +35,6 @@ const EMPTY_DRAFT: ChangelogPostDraft = {
   is_published: true,
 };
 
-/** The admin's form for one "What's New?" entry: title, formatted text (RichTextEditor) and a published switch. */
 export const ChangelogEditorModal: React.FC<ChangelogEditorModalProps> = ({ open, post, saving = false, error = null, onClose, onSave }) => {
   const dict = useDictionary();
   const t = dict.changelog;
@@ -112,7 +111,7 @@ export const ChangelogEditorModal: React.FC<ChangelogEditorModalProps> = ({ open
 
       <div className="flex flex-wrap items-center gap-2">
         <span className="type-label-2xs text-text-muted">{t.addSection}</span>
-        {CHANGELOG_SECTIONS.map((section: ChangelogSection) => (
+        {CHANGELOG_SECTIONS.map((section) => (
           <Button
             key={section}
             size="xs"

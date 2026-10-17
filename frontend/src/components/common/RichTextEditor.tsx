@@ -1,17 +1,12 @@
 'use client';
 // frontend/src/components/common/RichTextEditor.tsx
 //
-// THE rich-text editor: a dependency-free WYSIWYG surface (a toolbar over a contentEditable) that writes the
-// HTML subset <RichText> renders. It uses document.execCommand, deprecated but still supported everywhere for
-// this exact job (bold, colour, highlight, alignment, lists, links), and spares a full editor library for
-// the few places where admins write formatted text. The HTML it produces is NOT safe by itself: the server
-// sanitises it before storing (see sanitize_changelog_html).
+// THE rich-text editor: a toolbar over a contentEditable that writes the HTML subset <RichText> renders.
+// It uses document.execCommand (deprecated, but supported everywhere) instead of an editor library. Its HTML is
+// NOT safe by itself: the server sanitises it before storing (see sanitize_changelog_html).
 //
-//   <RichTextEditor initialHtml={post.content_html} onChange={setHtml} labels={t.editor}
-//     textColors={...} highlightColors={...} />
-//
-// `initialHtml` is applied when the editor mounts and whenever it changes; keep it the saved value, not the
-// live one (the live HTML comes back through `onChange`).
+// `initialHtml` is applied on mount and whenever it changes, so pass the saved value; the live HTML comes back
+// through `onChange`.
 
 import React, { useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import {
@@ -62,7 +57,7 @@ export interface RichTextEditorSwatch {
 }
 
 export interface RichTextEditorHandle {
-  /** Adds `heading` with an empty bullet list under it at the end, and puts the caret in the first bullet. */
+  /** Appends `heading` plus an empty bullet list and puts the caret in the first bullet. */
   appendSection: (heading: string) => void;
 }
 
@@ -72,7 +67,6 @@ export interface RichTextEditorProps {
   labels: RichTextEditorLabels;
   textColors: readonly RichTextEditorSwatch[];
   highlightColors: readonly RichTextEditorSwatch[];
-  /** Id of the element that names the editor (a <label> or heading), for screen readers. */
   labelledBy?: string;
   required?: boolean;
   /** Classes of the writing area: how the text looks (the reader's view should use the same). */

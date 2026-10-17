@@ -1,9 +1,9 @@
 'use client';
 // frontend/src/hooks/useDragReorder.ts
 //
-// THE drag-to-reorder behaviour for vertical lists: grab a handle, drag over the other rows, drop. Mouse,
-// touch and pen go through Pointer Events. The hook only decides WHICH row the grabbed one should swap
-// with; the caller moves the item in its own state (`onMove`) and saves it on `onDrop`.
+// THE drag-to-reorder behaviour for vertical lists, over Pointer Events (mouse, touch, pen). The hook only
+// decides which row the grabbed one should swap with; the caller moves the item in its own state (`onMove`)
+// and saves on `onDrop`.
 //
 //   const drag = useDragReorder<number>({ onMove: moveById, onDrop: save });
 //   <li ref={drag.rowRef(id)}> <button {...drag.handleProps(id)} /> </li>
@@ -12,7 +12,6 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import type { CSSProperties, PointerEvent as ReactPointerEvent } from 'react';
 
 export interface UseDragReorderOptions<Id extends string | number> {
-  /** Off for readers: the handle then does nothing. Default true. */
   enabled?: boolean;
   /** Called while dragging each time the grabbed row should take the place of another one. */
   onMove: (fromId: Id, toId: Id) => void;
@@ -24,9 +23,7 @@ export interface UseDragReorderOptions<Id extends string | number> {
 
 export interface DragReorder<Id extends string | number> {
   draggingId: Id | null;
-  /** Ref callback for a row: `ref={drag.rowRef(id)}`. */
   rowRef: (id: Id) => (el: HTMLElement | null) => void;
-  /** Spread onto the drag handle of the row `id`. */
   handleProps: (id: Id) => { onPointerDown: (e: ReactPointerEvent) => void; style: CSSProperties };
 }
 

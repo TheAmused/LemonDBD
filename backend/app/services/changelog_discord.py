@@ -66,6 +66,8 @@ def announce_post(post: ChangelogPost) -> Announcement:
         return Announcement("failed")
     try:
         message_id = str(resp.json()["id"])
+        if not (message_id.isascii() and message_id.isdigit() and len(message_id) <= 32):
+            raise ValueError(message_id)
     except Exception:
         logger.warning("[changelog] Discord sent post #%s but returned no message id; it cannot be edited later", post.id)
         message_id = None
@@ -73,7 +75,6 @@ def announce_post(post: ChangelogPost) -> Announcement:
 
 
 def update_announcement(post: ChangelogPost) -> AnnounceResult:
-    """Rewrites the Discord message of an already announced `post` with its current title and text."""
     webhook = _webhook()
     if not webhook:
         return "not_configured"

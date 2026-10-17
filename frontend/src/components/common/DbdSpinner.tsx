@@ -89,70 +89,73 @@ export const DbdSpinner: React.FC<DbdSpinnerProps> = ({
     ariaLabel ||
     dict.app.loading;
 
+  const tone = (name: string) => `var(--palette-${name})`;
+  const mix = (name: string, percent: number) => `color-mix(in srgb, ${tone(name)} ${percent}%, transparent)`;
+
   const basePalettes: Record<DbdSpinnerAccent, DbdSpinnerCustomColors> = {
     crimson: {
-      greatZone: '#ef4444',
-      needle: '#f43f5e',
-      glow: 'rgba(239, 68, 68, 0.75)',
-      ring: 'rgba(244, 63, 94, 0.35)',
+      greatZone: tone('red-500'),
+      needle: tone('rose-500'),
+      glow: mix('red-500', 75),
+      ring: mix('rose-500', 35),
       text: 'text-accent-rose',
-      baseTrack: '#1e293b',
+      baseTrack: tone('slate-800'),
     },
     amber: {
-      greatZone: '#f59e0b',
-      needle: '#fbbf24',
-      glow: 'rgba(245, 158, 11, 0.75)',
-      ring: 'rgba(251, 191, 36, 0.35)',
+      greatZone: tone('amber-500'),
+      needle: tone('amber-400'),
+      glow: mix('amber-500', 75),
+      ring: mix('amber-400', 35),
       text: 'text-accent-amber',
-      baseTrack: '#1e293b',
+      baseTrack: tone('slate-800'),
     },
     emerald: {
-      greatZone: '#10b981',
-      needle: '#34d399',
-      glow: 'rgba(16, 185, 129, 0.75)',
-      ring: 'rgba(52, 211, 153, 0.35)',
+      greatZone: tone('emerald-500'),
+      needle: tone('emerald-400'),
+      glow: mix('emerald-500', 75),
+      ring: mix('emerald-400', 35),
       text: 'text-accent-green',
-      baseTrack: '#1e293b',
+      baseTrack: tone('slate-800'),
     },
     cyan: {
-      greatZone: '#06b6d4',
-      needle: '#38bdf8',
-      glow: 'rgba(6, 182, 212, 0.75)',
-      ring: 'rgba(56, 189, 248, 0.35)',
+      greatZone: tone('cyan-500'),
+      needle: tone('sky-400'),
+      glow: mix('cyan-500', 75),
+      ring: mix('sky-400', 35),
       text: 'text-accent-cyan',
-      baseTrack: '#1e293b',
+      baseTrack: tone('slate-800'),
     },
     violet: {
-      greatZone: '#8b5cf6',
-      needle: '#a78bfa',
-      glow: 'rgba(139, 92, 246, 0.75)',
-      ring: 'rgba(167, 139, 250, 0.35)',
+      greatZone: tone('violet-500'),
+      needle: tone('violet-400'),
+      glow: mix('violet-500', 75),
+      ring: mix('violet-400', 35),
       text: 'text-accent-purple',
-      baseTrack: '#1e293b',
+      baseTrack: tone('slate-800'),
     },
     blood: {
-      greatZone: '#dc2626',
-      needle: '#991b1b',
-      glow: 'rgba(220, 38, 38, 0.90)',
-      ring: 'rgba(153, 27, 27, 0.40)',
+      greatZone: tone('red-600'),
+      needle: tone('red-800'),
+      glow: mix('red-600', 90),
+      ring: mix('red-800', 40),
       text: 'text-accent-red',
-      baseTrack: '#170202',
+      baseTrack: tone('blood-black'),
     },
     gold: {
-      greatZone: '#f59e0b',
-      needle: '#fde047',
-      glow: 'rgba(245, 158, 11, 0.85)',
-      ring: 'rgba(253, 224, 71, 0.40)',
+      greatZone: tone('amber-500'),
+      needle: tone('yellow-300'),
+      glow: mix('amber-500', 85),
+      ring: mix('yellow-300', 40),
       text: 'text-accent-amber',
-      baseTrack: '#1e293b',
+      baseTrack: tone('slate-800'),
     },
     neon: {
-      greatZone: '#00ffcc',
-      needle: '#ff007f',
-      glow: 'rgba(0, 255, 204, 0.85)',
-      ring: 'rgba(255, 0, 127, 0.40)',
+      greatZone: tone('neon-mint'),
+      needle: tone('neon-pink'),
+      glow: mix('neon-mint', 85),
+      ring: mix('neon-pink', 40),
       text: 'text-accent-cyan',
-      baseTrack: '#051b2c',
+      baseTrack: tone('neon-abyss'),
     },
   };
 
@@ -221,15 +224,15 @@ export const DbdSpinner: React.FC<DbdSpinnerProps> = ({
             </filter>
 
             <linearGradient id={`needleGrad-${uniqueId}`} x1="0" y1="1" x2="0" y2="0">
-              <stop offset="0%" stopColor="#ffffff" stopOpacity="0.5" />
+              <stop offset="0%" stopColor={tone('white')} stopOpacity="0.5" />
               <stop offset="70%" stopColor={colorMap.needle} stopOpacity="0.95" />
-              <stop offset="100%" stopColor="#ffffff" stopOpacity="1" />
+              <stop offset="100%" stopColor={tone('white')} stopOpacity="1" />
             </linearGradient>
 
             <radialGradient id={`hubGrad-${uniqueId}`} cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stopColor="#1e293b" />
-              <stop offset="70%" stopColor="#0b0f19" />
-              <stop offset="100%" stopColor="#030712" />
+              <stop offset="0%" stopColor={tone('slate-800')} />
+              <stop offset="70%" stopColor={tone('night-900')} />
+              <stop offset="100%" stopColor={tone('gray-950')} />
             </radialGradient>
           </defs>
 
@@ -303,7 +306,7 @@ export const DbdSpinner: React.FC<DbdSpinnerProps> = ({
             cy="80"
             r="38"
             fill={`url(#hubGrad-${uniqueId})`}
-            stroke="#334155"
+            stroke={tone('slate-700')}
             strokeWidth="2.5"
             className="shadow-2xl"
           />

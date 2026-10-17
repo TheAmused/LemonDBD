@@ -2,7 +2,7 @@
 'use client';
 
 import React, { useEffect, useRef } from 'react';
-import { themeColor } from '@/utils/themeColor';
+import { themeColor, paletteColor, withAlpha } from '@/utils/themeColor';
 
 interface InteractiveDragBackgroundProps {
   dragX?: number; // < 0 is Pass (left), > 0 is Smash (right)
@@ -100,7 +100,7 @@ export const InteractiveDragBackground: React.FC<InteractiveDragBackgroundProps>
         speedX: (Math.random() - 0.5) * 0.3,
         alpha: Math.random() * 0.4 + 0.1,
         baseAlpha: Math.random() * 0.4 + 0.1,
-        color: Math.random() > 0.5 ? themeColor('--accent-red') : '#f59e0b',
+        color: Math.random() > 0.5 ? themeColor('--accent-red') : paletteColor('amber-500'),
         type: 'ember',
         rotation: 0,
         rotationSpeed: 0,
@@ -109,7 +109,7 @@ export const InteractiveDragBackground: React.FC<InteractiveDragBackgroundProps>
 
     // Dynamic Smash Hearts Pool (Falling / Floating)
     const smashHearts: Particle[] = [];
-    const pinkPalette = [themeColor('--accent-red'), '#ef4444', '#f87171', '#b91c1c', '#fca5a5', '#e11d48'];
+    const pinkPalette = [themeColor('--accent-red'), paletteColor('red-500'), paletteColor('red-400'), paletteColor('red-700'), paletteColor('red-300'), paletteColor('rose-600')];
     for (let i = 0; i < 40; i++) {
       smashHearts.push({
         x: Math.random() * width,
@@ -128,7 +128,7 @@ export const InteractiveDragBackground: React.FC<InteractiveDragBackgroundProps>
 
     // Dynamic Sad Ash / Broken Heart Rain Pool
     const sadParticles: Particle[] = [];
-    const sadPalette = [themeColor('--text-muted'), '#52525b', '#3f3f46', themeColor('--bg-elevated'), '#a1a1aa', themeColor('--bg-primary')];
+    const sadPalette = [themeColor('--text-muted'), paletteColor('zinc-600'), paletteColor('zinc-700'), themeColor('--bg-elevated'), paletteColor('zinc-400'), themeColor('--bg-primary')];
     for (let i = 0; i < 35; i++) {
       sadParticles.push({
         x: Math.random() * width,
@@ -293,7 +293,7 @@ export const InteractiveDragBackground: React.FC<InteractiveDragBackgroundProps>
               speedY: Math.sin(angle) * spd - 3,
               alpha: 1,
               baseAlpha: 1,
-              color: Math.random() > 0.3 ? themeColor('--accent-amber') : '#f59e0b',
+              color: Math.random() > 0.3 ? themeColor('--accent-amber') : paletteColor('amber-500'),
               type: 'heart',
               rotation: Math.random() * Math.PI,
               rotationSpeed: (Math.random() - 0.5) * 0.15,
@@ -314,9 +314,9 @@ export const InteractiveDragBackground: React.FC<InteractiveDragBackgroundProps>
           height * 0.5,
           Math.max(width, height) * 0.6
         );
-        grad.addColorStop(0, `rgba(220, 38, 38, ${curState.smashIntensity * 0.18})`);
-        grad.addColorStop(0.5, `rgba(185, 28, 28, ${curState.smashIntensity * 0.08})`);
-        grad.addColorStop(1, 'rgba(0,0,0,0)');
+        grad.addColorStop(0, withAlpha(paletteColor('red-600'), curState.smashIntensity * 0.18));
+        grad.addColorStop(0.5, withAlpha(paletteColor('red-700'), curState.smashIntensity * 0.08));
+        grad.addColorStop(1, 'transparent');
         ctx.fillStyle = grad;
         ctx.fillRect(0, 0, width, height);
       } else if (curState.passIntensity > 0.01) {
@@ -328,9 +328,9 @@ export const InteractiveDragBackground: React.FC<InteractiveDragBackgroundProps>
           height * 0.5,
           Math.max(width, height) * 0.6
         );
-        grad.addColorStop(0, `rgba(9, 9, 11, ${curState.passIntensity * 0.3})`);
-        grad.addColorStop(0.5, `rgba(39, 39, 42, ${curState.passIntensity * 0.15})`);
-        grad.addColorStop(1, 'rgba(0,0,0,0)');
+        grad.addColorStop(0, withAlpha(paletteColor('zinc-950'), curState.passIntensity * 0.3));
+        grad.addColorStop(0.5, withAlpha(paletteColor('zinc-800'), curState.passIntensity * 0.15));
+        grad.addColorStop(1, 'transparent');
         ctx.fillStyle = grad;
         ctx.fillRect(0, 0, width, height);
       }
@@ -399,7 +399,7 @@ export const InteractiveDragBackground: React.FC<InteractiveDragBackgroundProps>
           ctx.rotate(p.rotation);
           ctx.globalAlpha = alpha;
           ctx.fillStyle = themeColor('--bg-primary');
-          ctx.strokeStyle = '#52525b';
+          ctx.strokeStyle = paletteColor('zinc-600');
           ctx.lineWidth = 1.5;
           ctx.beginPath();
           ctx.moveTo(-p.size / 2, -p.size / 2);

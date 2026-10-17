@@ -16,6 +16,7 @@ import { canvasEmojiFont, canvasFont } from '@/utils/canvasFont';
 import { useDictionary } from "@/context/DictionaryContext";
 
 import { Button } from '@/components/common/Button';
+import { paletteColor } from '@/utils/themeColor';
 export { CHAOS_MUTATORS };
 export type { ChaosMutator };
 
@@ -116,18 +117,18 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({ isOpen, role, 
 
       const grad = ctx.createRadialGradient(center, center, hubRadius, center, center, radius);
       if (m.type === 'curse') {
-        grad.addColorStop(0, i % 2 === 0 ? '#4a0d0d' : '#5c1414');
-        grad.addColorStop(1, i % 2 === 0 ? '#1c0404' : '#1a0505');
+        grad.addColorStop(0, i % 2 === 0 ? paletteColor('blood-850') : paletteColor('blood-800'));
+        grad.addColorStop(1, i % 2 === 0 ? paletteColor('blood-950') : paletteColor('blood-960'));
       } else {
-        grad.addColorStop(0, '#064e3b');
-        grad.addColorStop(1, '#022c22');
+        grad.addColorStop(0, paletteColor('emerald-900'));
+        grad.addColorStop(1, paletteColor('emerald-950'));
       }
 
       ctx.fillStyle = grad;
       ctx.fill();
 
       ctx.lineWidth = 2.5 * scale;
-      ctx.strokeStyle = m.type === 'curse' ? '#b91c1c' : '#16a34a';
+      ctx.strokeStyle = m.type === 'curse' ? paletteColor('red-700') : paletteColor('green-600');
       ctx.stroke();
 
       const midAngle = startAngle + sliceAngle / 2;
@@ -148,7 +149,7 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({ isOpen, role, 
 
       // Draw label lines - Always faces the user upright (no rotation)
       ctx.font = canvasFont('bold', textFontSize);
-      ctx.fillStyle = '#f8fafc';
+      ctx.fillStyle = paletteColor('slate-50');
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       ctx.fillText(line1, cx, cy + 4 * scale);
@@ -162,24 +163,24 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({ isOpen, role, 
     ctx.beginPath();
     ctx.arc(center, center, radius, 0, 2 * Math.PI);
     ctx.lineWidth = 3 * scale;
-    ctx.strokeStyle = '#dc2626';
+    ctx.strokeStyle = paletteColor('red-600');
     ctx.stroke();
 
     // Center hub
     ctx.beginPath();
     ctx.arc(center, center, hubRadius, 0, 2 * Math.PI);
-    ctx.fillStyle = '#0a0a0c';
+    ctx.fillStyle = paletteColor('void-black');
     ctx.fill();
     ctx.lineWidth = 3.5 * scale;
-    ctx.strokeStyle = '#dc2626';
+    ctx.strokeStyle = paletteColor('red-600');
     ctx.stroke();
 
-    ctx.fillStyle = '#f59e0b';
+    ctx.fillStyle = paletteColor('amber-500');
     ctx.font = canvasFont('900', Math.round(13 * scale));
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillText('CHAOS', center, center - 7 * scale);
-    ctx.fillStyle = '#a1a1aa';
+    ctx.fillStyle = paletteColor('zinc-400');
     ctx.font = canvasFont('800', Math.round(10 * scale));
     ctx.fillText('WHEEL', center, center + 9 * scale);
 
@@ -189,10 +190,10 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({ isOpen, role, 
     ctx.lineTo(center + 18 * scale, 6 * scale);
     ctx.lineTo(center, 40 * scale);
     ctx.closePath();
-    ctx.fillStyle = '#b91c1c';
+    ctx.fillStyle = paletteColor('red-700');
     ctx.fill();
     ctx.lineWidth = 2.5 * scale;
-    ctx.strokeStyle = '#ffffff';
+    ctx.strokeStyle = paletteColor('white');
     ctx.stroke();
   }, [mutators, dict]);
 

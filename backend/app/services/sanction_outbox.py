@@ -109,7 +109,6 @@ def _build_content(notification: SanctionNotification, sanction: UserSanction, u
         reason_code=sanction.reason_code,
         rule_ref=sanction.rule_ref,
         facts=sanction.facts,
-        public_message=sanction.public_message,
         issued_at=sanction.issued_at,
         until=sanction.expires_at if sanction.kind == "suspension" else None,
         from_report=sanction.source == "content_report",

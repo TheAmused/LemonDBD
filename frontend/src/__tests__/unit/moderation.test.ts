@@ -11,12 +11,15 @@ import {
   authorDecisionFromDraft,
   draftFromSuggestion,
   isSanctionDraftValid,
+  sanctionPreviewBody,
   sanctionRequestBody,
   type ModerationSuggestion,
   type SanctionDraft,
 } from '@/types/moderation';
 import { en, es, pl, de, ja } from '@/locales';
-import { SANCTION_REASONS, RULE_REFS } from '@/types/moderation';
+import { SANCTION_REASONS, RULE_REFS, RULE_SECTION_NUMBERS } from '@/types/moderation';
+import { LEGAL_DOCS } from '@/components/legal/legalDocs';
+import { ruleLabel } from '@/components/moderation/moderationLabels';
 
 const draft = (patch: Partial<SanctionDraft>): SanctionDraft => ({ ...EMPTY_SANCTION_DRAFT, ...patch });
 
@@ -25,21 +28,18 @@ test('a 403 with an account_* code is a block; other failures are not', () => {
     code: 'account_suspended',
     until: '2026-12-01T08:30:00+00:00',
     reason_code: 'spam',
-    public_message: 'Calm down.',
     appeal_contact: 'help@lemondbd.test',
   };
   assert.deepEqual(blockedFromResponse(403, body), {
     code: 'account_suspended',
     until: '2026-12-01T08:30:00+00:00',
     reason_code: 'spam',
-    public_message: 'Calm down.',
     appeal_contact: 'help@lemondbd.test',
   });
   assert.deepEqual(blockedFromResponse(403, { code: 'account_banned', until: null }), {
     code: 'account_banned',
     until: null,
     reason_code: null,
-    public_message: null,
     appeal_contact: null,
   });
   assert.equal(blockedFromResponse(401, body), undefined);
@@ -75,14 +75,13 @@ test('a suspension needs a whole number of days from 1 to 365', () => {
 });
 
 test('the request leaves out empty fields and the duration of anything but a suspension', () => {
-  const warning = sanctionRequestBody(draft({ kind: 'warning', reason_code: 'spam', facts: '  ', public_message: ' Be nice ' }));
+  const warning = sanctionRequestBody(draft({ kind: 'warning', reason_code: 'spam', facts: '  ' }));
   assert.deepEqual(warning, {
     kind: 'warning',
     reason_code: 'spam',
     rule_ref: undefined,
     duration_days: undefined,
     facts: undefined,
-    public_message: 'Be nice',
     internal_notes: undefined,
     send_email: true,
   });
@@ -101,7 +100,6 @@ test('a report resolution sends the backend names for the author decision', () =
     author_action: 'suspend',
     duration_days: 3,
     facts: 'f',
-    public_message: undefined,
     rule_ref: undefined,
   });
   const ban = authorDecisionFromDraft(draft({ kind: 'ban', duration_days: 9 }));
@@ -130,7 +128,7 @@ test('every reason and every rule the backend accepts has a name in every langua
 
 test('using the suggestion sets the kind and length but keeps what the admin already typed', () => {
   const basis = { active_warnings: 3, warnings_before_suspension: 3, suspensions: 0 };
-  const typed = draft({ facts: 'Posted slurs', public_message: 'Please stop', duration_days: 5 });
+  const typed = draft({ facts: 'Posted slurs', duration_days: 5 });
 
   const suspension: ModerationSuggestion = { kind: 'suspension', duration_days: 30, basis };
   assert.deepEqual(draftFromSuggestion(typed, suspension), {
@@ -156,4 +154,33 @@ test('the suggestion texts exist in every language with the placeholders they ar
       assert.ok(t.suggestionBasis.includes(placeholder), `${name}: suggestionBasis ${placeholder}`);
     }
   }
+});
+
+test('a cited rule is named by its section number on the Rules page', () => {
+  // The numbers are the sections' places in the page's order; the backend keeps the same table.
+  for (const ref of RULE_REFS) {
+    assert.equal(RULE_SECTION_NUMBERS[ref], LEGAL_DOCS.rules.order.indexOf(ref) + 1, ref);
+  }
+  assert.equal(ruleLabel(en, 'respect'), `Section 2: ${en.rules.sections.respect.heading}`);
+  assert.equal(ruleLabel(en, null), '');
+  assert.equal(ruleLabel(en, 'madeUp'), 'madeUp', 'an unknown rule prints as itself');
+  for (const [name, loc] of Object.entries({ en, es, pl, de, ja })) {
+    assert.ok(loc.moderation.ruleSection.includes('{number}') && loc.moderation.ruleSection.includes('{name}'), name);
+  }
+});
+
+test('the preview request is the form plus whom it is about, without the internal fields', () => {
+  const typed = draft({ kind: 'suspension', reason_code: 'spam', rule_ref: 'serverCare', facts: ' Link spam ', duration_days: 7, internal_notes: 'secret', send_email: false });
+  assert.deepEqual(sanctionPreviewBody(typed, { userId: 5 }), {
+    user_id: 5,
+    kind: 'suspension',
+    reason_code: 'spam',
+    rule_ref: 'serverCare',
+    duration_days: 7,
+    facts: 'Link spam',
+  });
+  const forReport = sanctionPreviewBody(draft({ kind: 'warning' }), { reportId: 9 });
+  assert.equal(forReport.report_id, 9);
+  assert.equal(forReport.user_id, undefined);
+  assert.equal(forReport.duration_days, undefined);
 });

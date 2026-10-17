@@ -197,6 +197,7 @@ export function ContentReportDetail({ detail, resolving, onResolve, onShowUser }
                   kinds={[authorKind]}
                   showReason={false}
                   showInternal={false}
+                  previewTarget={{ reportId: detail.id }}
                   onChange={(patch) => setAuthorDraft((d) => ({ ...d, ...patch }))}
                 />
               )}

@@ -17,9 +17,11 @@ import type { BlockedInfo } from '@/types/moderation';
 interface AccountBlockedNoticeProps {
   blocked: BlockedInfo;
   onClose: () => void;
+  /** False in the admin's preview of this notice: there is nothing to close. */
+  showClose?: boolean;
 }
 
-export function AccountBlockedNotice({ blocked, onClose }: AccountBlockedNoticeProps) {
+export function AccountBlockedNotice({ blocked, onClose, showClose = true }: AccountBlockedNoticeProps) {
   const dict = useDictionary();
   const locale = useLocale();
   const t = dict.moderation.blocked;
@@ -34,7 +36,7 @@ export function AccountBlockedNotice({ blocked, onClose }: AccountBlockedNoticeP
     : t.appealNoContact;
 
   return (
-    <div role="alert" className="space-y-4">
+    <div role={showClose ? 'alert' : undefined} className="space-y-4">
       <div className="flex items-start gap-3 rounded-card border border-accent-red/30 bg-accent-red/10 p-3.5">
         <Icon className="mt-0.5 h-5 w-5 shrink-0 text-accent-red" />
         <p className="type-body text-text-primary">{body}</p>
@@ -47,20 +49,13 @@ export function AccountBlockedNotice({ blocked, onClose }: AccountBlockedNoticeP
         </p>
       )}
 
-      {blocked.public_message && (
-        <div className="space-y-1">
-          <p className="type-label-sm text-text-secondary">{t.messageLabel}</p>
-          <p className="whitespace-pre-wrap break-words rounded-card border border-border-subtle bg-bg-primary p-3 type-body text-text-primary">
-            {blocked.public_message}
-          </p>
-        </div>
-      )}
-
       <p className="type-body text-text-secondary">{appeal}</p>
 
-      <Button variant="primary" className="w-full" onClick={onClose}>
-        {t.close}
-      </Button>
+      {showClose && (
+        <Button variant="primary" className="w-full" onClick={onClose}>
+          {t.close}
+        </Button>
+      )}
     </div>
   );
 }

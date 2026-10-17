@@ -46,6 +46,7 @@ from app.services.moderation_actions import (
     apply_sanction,
     list_user_sanctions,
     moderation_summary,
+    preview_sanction,
     restore_account,
     revoke_sanction,
 )
@@ -473,7 +474,6 @@ def resolve_content_report_endpoint(report_id: int):
         admin_notes=admin_notes,
         author_action=author_action,
         duration_days=body.get("duration_days"),
-        public_message=body.get("public_message"),
         facts=body.get("facts"),
         rule_ref=body.get("rule_ref"),
     )
@@ -501,6 +501,19 @@ def issue_sanction_for_user(user_id: int):
     except ModerationError as err:
         return api_error(err.message, err.status)
     return jsonify({"status": "success", "sanction": sanction.to_dict()}), 201
+
+
+@admin_control_bp.route("/sanctions/preview", methods=["POST"])
+@admin_required
+def preview_sanction_message():
+    """What a decision would tell the account holder (the email, in their language), saving nothing."""
+    body = request.get_json(silent=True)
+    if not isinstance(body, dict):
+        return api_error("Invalid JSON body", 400)
+    try:
+        return jsonify(preview_sanction(body)), 200
+    except ModerationError as err:
+        return api_error(err.message, err.status)
 
 
 @admin_control_bp.route("/sanctions/<int:sanction_id>/revoke", methods=["POST"])

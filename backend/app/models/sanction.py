@@ -57,7 +57,6 @@ class UserSanction(Base, ColumnDictMixin):
         "reason_code",
         "rule_ref",
         "facts",
-        "public_message",
         "issued_at",
         "expires_at",
         "revoked_at",
@@ -73,8 +72,6 @@ class UserSanction(Base, ColumnDictMixin):
     # What happened, in the moderator's words (required for suspensions and bans; the evidence itself
     # is wiped by design, so the decision must be explainable without it).
     facts: Mapped[str | None] = mapped_column(Text, nullable=True)
-    # Shown to the account holder as written, in the moderator's language.
-    public_message: Mapped[str | None] = mapped_column(Text, nullable=True)
     # Admin eyes only; never sent, never exported.
     internal_notes: Mapped[str | None] = mapped_column(Text, nullable=True)
     source: Mapped[str] = mapped_column(String(24), default="manual", nullable=False)

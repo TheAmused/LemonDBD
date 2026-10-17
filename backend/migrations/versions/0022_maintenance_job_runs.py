@@ -1,8 +1,8 @@
-# backend/migrations/versions/0019_maintenance_job_runs.py
+# backend/migrations/versions/0022_maintenance_job_runs.py
 """maintenance_job_runs: when each housekeeping job last ran
 
-Revision ID: 0019_maintenance_job_runs
-Revises: 0018_banned_email_hashes
+Revision ID: 0022_maintenance_job_runs
+Revises: 0021_changelog_discord_announced
 Create Date: 2026-10-16
 
 One row per job (streak inactivity, evidence purge, moderation emails, ban list, catalog cache),
@@ -12,8 +12,8 @@ has the table (create_all() made it), so the step only runs when it is missing.
 import sqlalchemy as sa
 from alembic import op
 
-revision = "0019_maintenance_job_runs"
-down_revision = "0018_banned_email_hashes"
+revision = "0022_maintenance_job_runs"
+down_revision = "0021_changelog_discord_announced"
 branch_labels = None
 depends_on = None
 

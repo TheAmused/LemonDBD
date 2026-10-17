@@ -12,15 +12,15 @@ from sqlalchemy import select
 
 from app.core.extensions import db
 from app.core.limiter import limiter
+from app.core.rate_limits import per_minute
 from app.core.security import login_required
 from app.models import Killer, Survivor
-from app.services import scoreboard_ocr
+from app.services import scoreboard_ocr, site_settings
 from app.services.scoreboard_ocr import ScoreboardError
 
 logger = logging.getLogger(__name__)
 scoreboard_bp = Blueprint("scoreboard_bp", __name__, url_prefix="/api/v1/scoreboard")
 
-MAX_UPLOAD_BYTES = 8 * 1024 * 1024
 _ROLES = {"survivor": "Survivor", "killer": "Killer"}
 
 
@@ -39,25 +39,27 @@ def _character_names() -> list[str]:
 @scoreboard_bp.route("/status", methods=["GET"])
 def status():
     """Public: whether the OCR engine is installed on this server."""
-    return _no_store({"available": scoreboard_ocr.engine_available(), "max_bytes": MAX_UPLOAD_BYTES, "note": scoreboard_ocr.ACCEPTED_INPUT_NOTE}, 200)
+    available = scoreboard_ocr.engine_available() and site_settings.scoreboard_ocr_enabled()
+    return _no_store({"available": available, "max_bytes": site_settings.scoreboard_upload_max_bytes(), "note": scoreboard_ocr.ACCEPTED_INPUT_NOTE}, 200)
 
 
 @scoreboard_bp.route("/analyze", methods=["POST"])
 @login_required
-@limiter.limit("6 per minute")
+@limiter.limit(per_minute("rate_scoreboard_per_minute"))
 def analyze():
-    if not scoreboard_ocr.engine_available():
+    if not scoreboard_ocr.engine_available() or not site_settings.scoreboard_ocr_enabled():
         return _no_store({"error": "Screenshot check is not available on this server.", "code": "engine_unavailable", "status": 503}, 503)
 
-    if request.content_length and request.content_length > MAX_UPLOAD_BYTES + 64 * 1024:
+    max_bytes = site_settings.scoreboard_upload_max_bytes()
+    if request.content_length and request.content_length > max_bytes + 64 * 1024:
         return _no_store({"error": "Image is too large.", "code": "too_large", "status": 413}, 413)
 
     upload = request.files.get("image")
     if upload is None:
         return _no_store({"error": "Send the screenshot as the 'image' form field.", "code": "missing_image", "status": 400}, 400)
 
-    data = upload.stream.read(MAX_UPLOAD_BYTES + 1)
-    if len(data) > MAX_UPLOAD_BYTES:
+    data = upload.stream.read(max_bytes + 1)
+    if len(data) > max_bytes:
         return _no_store({"error": "Image is too large.", "code": "too_large", "status": 413}, 413)
 
     role = _ROLES.get((request.form.get("expected_role") or "").strip().lower())

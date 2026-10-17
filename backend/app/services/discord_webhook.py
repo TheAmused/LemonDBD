@@ -1,18 +1,18 @@
 # backend/app/services/discord_webhook.py
 """Discord notifications for new bug reports (and the admin "send a test notification" check).
 
-The webhook URL comes from the environment or the app config. Whether new reports are announced
-at all is the admin setting `bug_report_discord`; the test notification ignores it, so an admin can
-check the webhook before switching announcements on.
+The webhook URL is an admin setting (stored encrypted), falling back to the environment or the app
+config. Whether new reports are announced at all is the admin setting `bug_report_discord`; the test
+notification ignores it, so an admin can check the webhook before switching announcements on.
 """
 import logging
-import os
 import threading
 from datetime import datetime, timezone
 from typing import Any
 
 from curl_cffi import requests
-from flask import current_app
+
+from app.services.site_settings import get_secret
 
 logger = logging.getLogger(__name__)
 
@@ -26,15 +26,8 @@ _TIMEOUT_SECONDS = 15
 
 
 def webhook_url() -> str | None:
-    """The configured webhook (environment first, then app config), or None."""
-    env_url = os.getenv("DISCORD_WEBHOOK_URL")
-    if env_url and env_url.strip():
-        return env_url.strip()
-    try:
-        config_url = current_app.config.get("DISCORD_WEBHOOK_URL")
-    except RuntimeError:
-        return None
-    return config_url.strip() if isinstance(config_url, str) and config_url.strip() else None
+    """The webhook the admin set in Settings > Integrations, else the deployment's (environment, then app config), or None."""
+    return get_secret("discord_webhook_url") or None
 
 
 def bug_report_embed(report: dict[str, Any]) -> dict[str, Any]:

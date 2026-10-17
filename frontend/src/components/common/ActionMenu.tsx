@@ -52,7 +52,7 @@ export function ActionMenu({ label, items, size = 'sm', className }: ActionMenuP
         align="end"
         role="menu"
         ariaLabel={label}
-        className="min-w-[13rem] rounded-card border border-border-color bg-bg-surface p-1.5 shadow-xl"
+        className="min-w-menu rounded-card border border-border-color bg-bg-surface p-1.5 shadow-xl"
       >
         {items.map((item) => (
           <MenuItem

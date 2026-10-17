@@ -24,7 +24,7 @@ export const CharactersGridSkeleton: React.FC<CharactersSkeletonProps> = ({ clas
       role="status"
       aria-label={loadingLabel}
       aria-busy="true"
-      className={`flex min-h-[460px] w-full flex-1 flex-col items-center justify-center p-6 select-none ${className}`}
+      className={`flex min-h-115 w-full flex-1 flex-col items-center justify-center p-6 select-none ${className}`}
     >
       <DbdSpinner
         size="responsive"
@@ -50,7 +50,7 @@ export const CharacterDetailSkeleton: React.FC<CharactersSkeletonProps> = ({ cla
       role="status"
       aria-label={loadingLabel}
       aria-busy="true"
-      className={`flex min-h-[520px] w-full flex-1 flex-col items-center justify-center p-8 select-none ${className}`}
+      className={`flex min-h-130 w-full flex-1 flex-col items-center justify-center p-8 select-none ${className}`}
     >
       <DbdSpinner
         size="responsive"

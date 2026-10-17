@@ -138,7 +138,7 @@ export const VictoryModal: React.FC<VictoryModalProps> = ({ challenge, roundGues
             >
               <div className="flex items-center gap-2">
                 <span className="text-text-muted">#{idx + 1}</span>
-                <span className="truncate max-w-[160px]">
+                <span className="truncate max-w-40">
                   {lookup<string>(t.modes, round.mode) || round.mode}
                 </span>
               </div>

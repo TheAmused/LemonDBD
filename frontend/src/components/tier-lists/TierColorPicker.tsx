@@ -103,14 +103,14 @@ export function TierColorPicker({ color, onChange, size = 'md' }: TierColorPicke
         <div
           className={cn(
             'flex basis-full flex-col items-center gap-3 rounded-card border border-border-color bg-bg-elevated/60 p-3',
-            '[&_.react-colorful]:h-44 [&_.react-colorful]:w-full [&_.react-colorful]:max-w-[16rem]',
+            '[&_.react-colorful]:h-44 [&_.react-colorful]:w-full [&_.react-colorful]:max-w-64',
             '[&_.react-colorful__saturation]:rounded-card [&_.react-colorful__saturation]:border-b-0',
             '[&_.react-colorful__hue]:mt-3 [&_.react-colorful__hue]:h-4 [&_.react-colorful__hue]:rounded-full',
             '[&_.react-colorful__pointer]:h-5 [&_.react-colorful__pointer]:w-5'
           )}
         >
           <HexColorPicker color={draft} onChange={(hex) => pick(hex)} />
-          <div className="flex w-full max-w-[16rem] items-center gap-2">
+          <div className="flex w-full max-w-64 items-center gap-2">
             <HexColorInput
               color={draft}
               onChange={(hex) => pick(hex)}

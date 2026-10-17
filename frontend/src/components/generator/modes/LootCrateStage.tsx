@@ -300,7 +300,7 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
                 ) : (
                   <div
                     key={`mob-tray-empty-${slotIdx}`}
-                    className="flex flex-col items-center justify-center w-[74px] h-[74px] xs:w-21 xs:h-21 rounded-card border-2 border-dashed border-border-color bg-bg-surface/90 text-text-muted"
+                    className="flex flex-col items-center justify-center w-18.5 h-18.5 xs:w-21 xs:h-21 rounded-card border-2 border-dashed border-border-color bg-bg-surface/90 text-text-muted"
                   >
                     <span className="type-strong opacity-40">#{slotIdx + 1}</span>
                   </div>
@@ -337,7 +337,7 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
           </div>
 
           {/* Desktop (>= md): Cinematic absolute scatter field */}
-          <div className="relative h-full min-h-[320px] w-full flex-1 hidden md:block">
+          <div className="relative h-full min-h-80 w-full flex-1 hidden md:block">
             {lockedItems.map((item) => (
               <motion.div
                 key={`locked-${item.id}`}

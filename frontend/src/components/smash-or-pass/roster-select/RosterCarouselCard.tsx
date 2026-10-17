@@ -88,7 +88,7 @@ export function RosterCarouselCard({
       }}
       className={`absolute w-[var(--card-w)] h-[var(--card-h)] rounded-card overflow-hidden cursor-pointer ${isCenter
         ? isRosterEnabled
-          ? 'border-2 sm:border-[3px] border-accent-red'
+          ? 'border-2 sm:border-3 border-accent-red'
           : 'border-2 border-border-color'
         : 'border border-accent-red/20'
         }`}
@@ -146,7 +146,7 @@ export function RosterCarouselCard({
       {r.is_local && (
         <div
           data-testid="roster-local-badge"
-          className="absolute bottom-[5.5rem] left-1/2 -translate-x-1/2 sm:bottom-24 flex items-center gap-1 px-2.5 py-1 rounded-card bg-bg-primary/85 backdrop-blur-md border border-accent-amber/40 text-accent-amber text-tiny sm:text-xs font-black uppercase tracking-wide shadow-md pointer-events-none"
+          className="absolute bottom-22 left-1/2 -translate-x-1/2 sm:bottom-24 flex items-center gap-1 px-2.5 py-1 rounded-card bg-bg-primary/85 backdrop-blur-md border border-accent-amber/40 text-accent-amber text-tiny sm:text-xs font-black uppercase tracking-wide shadow-md pointer-events-none"
         >
           <span>{dict.smashOrPass.picker.yours}</span>
         </div>

@@ -352,11 +352,11 @@ const SlotLever: React.FC<{ down: boolean; disabled: boolean; animate: boolean; 
        
       >
         <div
-          className="absolute left-1/2 top-1/2 h-[40%] w-[22px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-bg-primary"
+          className="absolute left-1/2 top-1/2 h-2/5 w-5.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-bg-primary"
         />
         <div ref={rodRef} className="lever-rod absolute left-1/2" />
         <div
-          className="absolute left-1/2 top-1/2 h-[26px] w-[26px] -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-border-color bg-bg-elevated"
+          className="absolute left-1/2 top-1/2 h-6.5 w-6.5 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-border-color bg-bg-elevated"
         />
         <div ref={ballRef} className="lever-ball absolute rounded-full" />
       </div>

@@ -28,7 +28,7 @@ describe('Admin Page: user directory', () => {
   it('renders a phone card list (sm:hidden) alongside the table (hidden sm:block)', () => {
     const html = renderUsers();
     assert.ok(html.includes('sm:hidden'), 'card list must be present and hidden only at sm+');
-    assert.ok(html.includes('hidden overflow-x-auto sm:block'), 'table must be hidden below sm and revealed at sm+');
+    assert.ok(html.includes('overflow-x-auto hidden sm:block'), 'table must be hidden below sm and revealed at sm+');
     assert.equal((html.match(/>lemon_admin</g) || []).length, 2, 'each account appears once per layout');
   });
 

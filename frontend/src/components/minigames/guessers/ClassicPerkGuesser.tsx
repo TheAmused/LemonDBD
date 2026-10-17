@@ -19,7 +19,7 @@ export const ClassicPerkGuesser: React.FC<ClassicPerkGuesserProps> = ({ guesses 
 
   return (
     <div className="w-full overflow-x-auto pb-4 my-6">
-      <table className="w-full min-w-[600px] border-separate border-spacing-2 text-center select-none">
+      <table className="w-full min-w-150 border-separate border-spacing-2 text-center select-none">
         <thead>
           <tr className="type-label-sm text-text-muted">
             <th className="p-2 w-32 text-left">{dict.filters.perks}</th>
@@ -97,7 +97,7 @@ const PerkAttrCell: React.FC<{ evaluation?: AttributeEvaluation; value?: string 
   return (
     <td className={`p-2.5 rounded-card border shadow-md font-semibold text-xs transition-all ${bgStyle}`}>
       <div className="flex items-center justify-center gap-1">
-        <span className={wrap ? 'max-w-[140px] break-words' : 'truncate max-w-[140px]'}>{value ?? '-'}</span>
+        <span className={wrap ? 'max-w-35 break-words' : 'truncate max-w-35'}>{value ?? '-'}</span>
         {isCorrect && <Check className="w-3.5 h-3.5 text-text-inverted flex-shrink-0" />}
       </div>
     </td>

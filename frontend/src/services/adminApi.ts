@@ -71,8 +71,16 @@ export const listAuditLogs = (query: { page: number; per_page: number; target_ty
 
 /* Settings */
 export const listSettings = () => apiRequest<{ settings: AdminSiteSetting[] }>('/admin/settings');
-export const saveSettings = (changes: Record<string, string | number | boolean | null>) =>
-  apiRequest<{ settings: AdminSiteSetting[] }>('/admin/settings', 'PUT', { settings: changes });
+export interface SaveSettingsOptions {
+  /** Required, with a reason, for a change that lowers a protection. */
+  confirmRisky?: boolean;
+  reason?: string;
+}
+export const saveSettings = (changes: Record<string, string | number | boolean | null>, options: SaveSettingsOptions = {}) =>
+  apiRequest<{ settings: AdminSiteSetting[] }>('/admin/settings', 'PUT', {
+    settings: changes,
+    ...(options.confirmRisky ? { confirm_risky: true, reason: options.reason ?? '' } : {}),
+  });
 
 /* Tools */
 export const fetchSystemChecks = () => apiRequest<{ checks: SystemCheck[] }>('/admin/system');

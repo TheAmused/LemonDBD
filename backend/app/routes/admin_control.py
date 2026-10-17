@@ -303,16 +303,16 @@ def update_site_settings():
 
     changes = dto.settings
     try:
-        applied = site_settings.update_settings(changes)
+        applied = site_settings.update_settings(changes, confirm_risky=dto.confirm_risky, reason=dto.reason)
+    except site_settings.RiskyChangeError as err:
+        return jsonify({"error": str(err), "error_code": "confirmation_required", "status": 400}), 400
     except ValueError as err:
         return api_error(str(err), 400)
 
-    log_admin_action(
-        g.current_user.id,
-        action="site_settings_updated",
-        target_type="site_settings",
-        details={"changes": {k: ("<default>" if changes[k] is None else applied[k]) for k in applied}},
-    )
+    details: dict[str, Any] = {"changes": {k: ("<default>" if changes[k] is None else applied[k]) for k in applied}}
+    if dto.reason.strip():
+        details["reason"] = dto.reason.strip()
+    log_admin_action(g.current_user.id, action="site_settings_updated", target_type="site_settings", details=details)
     return jsonify({"message": "Settings saved.", "settings": site_settings.list_settings()}), 200
 
 

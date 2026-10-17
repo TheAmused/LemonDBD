@@ -47,7 +47,7 @@ export interface ActionBarButtonProps {
 /** Labels are upper-cased here, so every bar reads the same whatever case the dictionary uses. */
 export function ActionBarButton({ variant, onClick, disabled, wide = false, children }: ActionBarButtonProps) {
   return (
-    <Button variant={BUTTON_VARIANT[variant]} size="md" onClick={onClick} disabled={disabled} className={cn('uppercase', wide ? 'w-full max-w-sm sm:max-w-md' : 'max-w-[180px] flex-1')}>
+    <Button variant={BUTTON_VARIANT[variant]} size="md" onClick={onClick} disabled={disabled} className={cn('uppercase', wide ? 'w-full max-w-sm sm:max-w-md' : 'max-w-45 flex-1')}>
       {children}
     </Button>
   );

@@ -3,7 +3,9 @@
 import React, { useMemo, useState } from 'react';
 import { EyeOff, Eye, FileJson } from 'lucide-react';
 import { Button } from '@/components/common/Button';
+import { surfaceClassName } from '@/components/common/Surface';
 import { useDictionary } from '@/context/DictionaryContext';
+import { cn } from '@/utils/cn';
 import { formatMessage } from '@/utils/i18nFormat';
 import { backendBase } from '@/utils/staticUrl';
 import { buildEvidencePreview, isSafePreviewImage, parseEvidence } from '@/utils/contentPreview';
@@ -49,7 +51,7 @@ export function SandboxedContentPreview({ evidence }: { evidence: string }) {
           <p className="type-label-sm text-text-secondary mb-1.5">
             {formatMessage(dict.admin.contentReportTextCount, { count: String(preview.texts.length) })}
           </p>
-          <ul className="max-h-64 overflow-y-auto rounded-card border border-border-subtle bg-bg-primary p-3 space-y-1.5">
+          <ul className={cn(surfaceClassName('well', 'sm'), 'max-h-64 overflow-y-auto space-y-1.5')}>
             {preview.texts.map((text, index) => (
               <li key={index} className="type-body text-text-primary break-words whitespace-pre-wrap">
                 {text}
@@ -66,7 +68,7 @@ export function SandboxedContentPreview({ evidence }: { evidence: string }) {
               {formatMessage(dict.admin.contentReportImageCount, { count: String(preview.images.length) })}
             </p>
             <Button size="xs" onClick={() => setShowImages((v) => !v)} aria-pressed={showImages}>
-              {showImages ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
+              {showImages ? <EyeOff className="icon-sm" /> : <Eye className="icon-sm" />}
               {showImages ? dict.admin.contentReportHideImages : dict.admin.contentReportShowImages}
             </Button>
           </div>
@@ -79,7 +81,7 @@ export function SandboxedContentPreview({ evidence }: { evidence: string }) {
                   alt=""
                   loading="lazy"
                   referrerPolicy="no-referrer"
-                  className="aspect-square w-full rounded-chip border border-border-subtle bg-bg-primary object-cover"
+                  className={cn(surfaceClassName('well', 'none', 'chip'), 'aspect-square w-full object-cover')}
                 />
               ))}
             </div>
@@ -98,11 +100,11 @@ export function SandboxedContentPreview({ evidence }: { evidence: string }) {
 
       <div className="space-y-2">
         <Button size="xs" onClick={() => setShowRaw((v) => !v)} aria-expanded={showRaw}>
-          <FileJson className="h-3.5 w-3.5" />
+          <FileJson className="icon-sm" />
           {showRaw ? dict.admin.contentReportHideRaw : dict.admin.contentReportShowRaw}
         </Button>
         {showRaw && (
-          <pre className="max-h-80 overflow-auto rounded-card border border-border-subtle bg-bg-primary p-3 type-caption text-text-secondary whitespace-pre-wrap break-all">
+          <pre className={cn(surfaceClassName('well', 'sm'), 'max-h-80 overflow-auto type-caption text-text-secondary whitespace-pre-wrap break-all')}>
             {raw}
           </pre>
         )}

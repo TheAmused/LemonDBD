@@ -357,7 +357,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
             slug={character.slug}
             isSurvivor={isSurvivor}
             backendBase={backendBase}
-            className="max-h-[80vh] w-auto object-contain rounded-card"
+            className="max-h-vh-80 w-auto object-contain rounded-card"
           />
           <div className="absolute bottom-0 inset-x-0 p-4 bg-gradient-to-t from-bg-primary via-bg-primary/80 to-transparent text-center">
             <h3 className="text-lg font-black text-text-primary">{character.name}</h3>

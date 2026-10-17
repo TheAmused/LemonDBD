@@ -6,6 +6,8 @@ import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-r
 import { PerkDictionary } from '@/types/perks';
 import { useDictionary } from "@/context/DictionaryContext";
 import { cn } from '@/utils/cn';
+import { Input, Select } from '@/components/common/Field';
+import { PAGE_SIZE_OPTIONS } from '@/constants/pagination';
 
 interface PaginationProps {
   page: number;
@@ -15,11 +17,22 @@ interface PaginationProps {
   onPageChange: (newPage: number) => void;
   /** Omit for a fixed page size: the per-page picker is not shown. */
   onLimitChange?: (newLimit: number) => void;
-  /** Spacing override (the default suits a page footer, not a panel). */
+  /** page: a footer below the page content (default). embedded: the last row of a panel, ruled off from the list above. */
+  variant?: 'page' | 'embedded';
   className?: string;
 }
 
-export const Pagination: React.FC<PaginationProps> = ({ page, totalPages, totalResults, limit, onPageChange, onLimitChange, className }) => {
+const NAV_VARIANTS = {
+  page: 'mt-4 pt-2 sm:mt-8 sm:pt-4 lg:pt-5 wide:pt-6',
+  embedded: 'border-t border-border-color px-3 py-2.5 sm:px-4',
+} as const;
+
+// One look for the four arrow buttons.
+const PAGE_BUTTON =
+  'pointer-coarse:min-h-11 pointer-coarse:min-w-11 flex h-7 w-7 items-center justify-center rounded-control border border-border-color bg-bg-surface text-text-secondary hover:bg-bg-elevated disabled:opacity-40 transition-colors cursor-pointer disabled:cursor-not-allowed sm:h-8 sm:w-8 lg:h-9 lg:w-9 xl:h-10 xl:w-10 wide:h-11 wide:w-11';
+const PAGE_ICON = 'h-3.5 w-3.5 sm:h-4 sm:w-4 lg:h-5 lg:w-5 xl:h-6 xl:w-6';
+
+export const Pagination: React.FC<PaginationProps> = ({ page, totalPages, totalResults, limit, onPageChange, onLimitChange, variant = 'page', className }) => {
   const dict = useDictionary();
   const startIdx = totalResults === 0 ? 0 : (page - 1) * limit + 1;
   const endIdx = Math.min(page * limit, totalResults);
@@ -67,7 +80,8 @@ export const Pagination: React.FC<PaginationProps> = ({ page, totalPages, totalR
     <nav
       aria-label={dict.pagination.navAriaLabel}
       className={cn(
-        'mt-4 flex flex-wrap items-center justify-center gap-x-3 gap-y-2 pt-2 w-full sm:mt-8 sm:justify-between sm:gap-x-4 sm:pt-4 lg:gap-x-5 lg:pt-5 wide:pt-6',
+        'flex w-full flex-wrap items-center justify-center gap-x-3 gap-y-2 sm:justify-between sm:gap-x-4 lg:gap-x-5',
+        NAV_VARIANTS[variant],
         className
       )}
     >
@@ -77,7 +91,7 @@ export const Pagination: React.FC<PaginationProps> = ({ page, totalPages, totalR
           in the accessibility tree either way -- nothing is lost for
           screen reader users, only sighted users on very small screens). */}
       <div
-        className="sr-only min-[400px]:not-sr-only min-[400px]:text-mini min-[400px]:font-medium min-[400px]:text-text-muted sm:text-xs lg:text-sm wide:text-base"
+        className="sr-only phone:not-sr-only phone:text-mini phone:font-medium phone:text-text-muted sm:text-xs lg:text-sm wide:text-base"
         aria-live="polite"
         aria-label={showingAriaLabel || undefined}
       >
@@ -90,18 +104,18 @@ export const Pagination: React.FC<PaginationProps> = ({ page, totalPages, totalR
 
       <div className="flex flex-wrap items-center gap-2 lg:gap-3">
         {onLimitChange && (
-          <select
+          <Select
             id="limit-select"
             aria-label={dict.pagination.perPage}
+            fieldSize="xs"
             value={limit}
             onChange={(e) => onLimitChange(Number(e.target.value))}
-            className="rounded-control border border-border-color bg-bg-surface px-1.5 py-1 text-mini font-semibold text-text-primary focus:outline-none focus:ring-1 focus:ring-accent-red cursor-pointer [&>option]:bg-bg-surface [&>option]:text-text-primary sm:px-2 sm:text-xs lg:px-3 lg:py-1.5 lg:text-sm wide:text-base"
+            className="w-auto font-semibold"
           >
-            <option value={15}>15</option>
-            <option value={30}>30</option>
-            <option value={45}>45</option>
-            <option value={60}>60</option>
-          </select>
+            {PAGE_SIZE_OPTIONS.map((size) => (
+              <option key={size} value={size}>{size}</option>
+            ))}
+          </Select>
         )}
 
         <div className="flex items-center gap-1 lg:gap-1.5">
@@ -110,22 +124,22 @@ export const Pagination: React.FC<PaginationProps> = ({ page, totalPages, totalR
             onClick={() => onPageChange(1)}
             disabled={page <= 1}
             aria-label={dict.pagination.firstPage}
-            className="pointer-coarse:min-h-11 pointer-coarse:min-w-11 flex h-7 w-7 items-center justify-center rounded-control border border-border-color bg-bg-surface text-text-secondary hover:bg-bg-elevated disabled:opacity-40 transition-colors cursor-pointer disabled:cursor-not-allowed sm:h-8 sm:w-8 lg:h-9 lg:w-9 xl:h-10 xl:w-10 wide:h-11 wide:w-11"
+            className={PAGE_BUTTON}
           >
-            <ChevronsLeft className="h-3.5 w-3.5 sm:h-4 sm:w-4 lg:h-5 lg:w-5 xl:h-6 xl:w-6" />
+            <ChevronsLeft className={PAGE_ICON} />
           </button>
           <button
             type="button"
             onClick={() => onPageChange(page - 1)}
             disabled={page <= 1}
             aria-label={dict.pagination.previous}
-            className="pointer-coarse:min-h-11 pointer-coarse:min-w-11 flex h-7 w-7 items-center justify-center rounded-control border border-border-color bg-bg-surface text-text-secondary hover:bg-bg-elevated disabled:opacity-40 transition-colors cursor-pointer disabled:cursor-not-allowed sm:h-8 sm:w-8 lg:h-9 lg:w-9 xl:h-10 xl:w-10 wide:h-11 wide:w-11"
+            className={PAGE_BUTTON}
           >
-            <ChevronLeft className="h-3.5 w-3.5 sm:h-4 sm:w-4 lg:h-5 lg:w-5 xl:h-6 xl:w-6" />
+            <ChevronLeft className={PAGE_ICON} />
           </button>
 
           <span className="flex items-center gap-0.5 px-0.5 text-mini font-bold text-text-primary sm:gap-1 sm:text-xs lg:gap-1.5 lg:text-sm wide:text-base">
-            <input
+            <Input
               id="current-page-input"
               type="number"
               inputMode="numeric"
@@ -137,7 +151,8 @@ export const Pagination: React.FC<PaginationProps> = ({ page, totalPages, totalR
               onBlur={commitPageInput}
               onKeyDown={handlePageInputKeyDown}
               aria-label={dict.pagination.goTo}
-              className="w-7 [appearance:textfield] rounded-chip border border-border-color bg-bg-surface px-1 py-0.5 text-center text-mini font-bold text-text-primary focus:outline-none focus:ring-1 focus:ring-accent-red [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none sm:w-9 sm:text-xs lg:w-11 lg:py-1 lg:text-sm wide:w-12"
+              fieldSize="xs"
+              className="no-spinner w-7 px-1 text-center font-bold sm:w-9 sm:px-1 lg:w-11 lg:px-1 wide:w-12"
             />
             <span aria-hidden="true" className="text-text-muted">/</span>
             <span aria-hidden="true">{safeTotalPages}</span>
@@ -148,18 +163,18 @@ export const Pagination: React.FC<PaginationProps> = ({ page, totalPages, totalR
             onClick={() => onPageChange(page + 1)}
             disabled={page >= safeTotalPages}
             aria-label={dict.pagination.next}
-            className="pointer-coarse:min-h-11 pointer-coarse:min-w-11 flex h-7 w-7 items-center justify-center rounded-control border border-border-color bg-bg-surface text-text-secondary hover:bg-bg-elevated disabled:opacity-40 transition-colors cursor-pointer disabled:cursor-not-allowed sm:h-8 sm:w-8 lg:h-9 lg:w-9 xl:h-10 xl:w-10 wide:h-11 wide:w-11"
+            className={PAGE_BUTTON}
           >
-            <ChevronRight className="h-3.5 w-3.5 sm:h-4 sm:w-4 lg:h-5 lg:w-5 xl:h-6 xl:w-6" />
+            <ChevronRight className={PAGE_ICON} />
           </button>
           <button
             type="button"
             onClick={() => onPageChange(safeTotalPages)}
             disabled={page >= safeTotalPages}
             aria-label={dict.pagination.lastPage}
-            className="pointer-coarse:min-h-11 pointer-coarse:min-w-11 flex h-7 w-7 items-center justify-center rounded-control border border-border-color bg-bg-surface text-text-secondary hover:bg-bg-elevated disabled:opacity-40 transition-colors cursor-pointer disabled:cursor-not-allowed sm:h-8 sm:w-8 lg:h-9 lg:w-9 xl:h-10 xl:w-10 wide:h-11 wide:w-11"
+            className={PAGE_BUTTON}
           >
-            <ChevronsRight className="h-3.5 w-3.5 sm:h-4 sm:w-4 lg:h-5 lg:w-5 xl:h-6 xl:w-6" />
+            <ChevronsRight className={PAGE_ICON} />
           </button>
         </div>
       </div>

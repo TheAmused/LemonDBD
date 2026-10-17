@@ -94,7 +94,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
 
   return (
     <div className="min-h-screen p-2.5 sm:p-5 lg:p-6 pb-32 sm:pb-36 lg:pb-36">
-      <div className="mx-auto w-full max-w-[96rem] 2xl:max-w-[110rem] 3xl:max-w-[124rem]">
+      <div className="mx-auto w-full max-w-page 2xl:max-w-page-lg 3xl:max-w-page-xl">
         {/* Unified Card Container */}
         <Surface padding="none" className="p-3 sm:p-5 lg:p-6 shadow-2xl space-y-3.5 sm:space-y-4">
           {/* Header Section */}

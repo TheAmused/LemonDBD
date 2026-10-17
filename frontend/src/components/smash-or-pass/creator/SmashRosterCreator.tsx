@@ -42,7 +42,7 @@ import { Toast } from '@/components/common/Toast';
  * One column width for every block of the creator (basics, taxonomy, candidates, archetypes,
  * feedback AND the Create button), so the button is centred under exactly the column it submits.
  */
-const CREATOR_COLUMN = 'w-full min-w-0 mx-auto max-w-4xl 2xl:max-wide-2k:max-w-6xl wide-2k:max-w-[1800px]';
+const CREATOR_COLUMN = 'w-full min-w-0 mx-auto max-w-4xl 2xl:max-wide-2k:max-w-6xl wide-2k:max-w-workspace';
 
 interface SmashRosterCreatorProps {
   locale: string;
@@ -132,7 +132,7 @@ export function SmashRosterCreator({ locale, editId }: SmashRosterCreatorProps) 
   });
 
   if (authLoading) {
-    return <div className="min-h-[400px]" />;
+    return <div className="min-h-100" />;
   }
 
   if (!isAuthenticated) {
@@ -177,7 +177,7 @@ export function SmashRosterCreator({ locale, editId }: SmashRosterCreatorProps) 
       onClick={submit}
       loading={publishingNow}
       data-roster-create=""
-      className="min-h-12 2xl:min-h-[54px] px-8 2xl:px-10 2xl:text-lg"
+      className="min-h-12 2xl:min-h-hit-2xl px-8 2xl:px-10 2xl:text-lg"
     >
       {submitLabel}
     </Button>
@@ -192,7 +192,7 @@ export function SmashRosterCreator({ locale, editId }: SmashRosterCreatorProps) 
     : [];
 
   return (
-    <div className="relative z-10 flex flex-col gap-6 2xl:gap-8 max-w-7xl 2xl:max-wide-2k:max-w-[1800px] wide-2k:max-w-[2400px] mx-auto w-full px-4 sm:px-6">
+    <div className="relative z-10 flex flex-col gap-6 2xl:gap-8 max-w-7xl 2xl:max-wide-2k:max-w-workspace wide-2k:max-w-workspace-xl mx-auto w-full px-4 sm:px-6">
       <h1 className="sr-only">{editId ? (c.editTitle || 'Edit Roster') : (c.title || 'Create a Roster')}</h1>
       {restored && (
         <Toast

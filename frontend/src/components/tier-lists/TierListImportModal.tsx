@@ -108,8 +108,8 @@ export function TierListImportModal({ open, target, sharePayload, onClose, onImp
       labelClassName={LABEL}
       fieldClassName={`${TOUCH_FIELD} py-2 text-xs leading-relaxed`}
       buttonClassName={TOUCH_BTN}
-      cancelClassName={`${TOUCH_BTN} min-h-[42px] px-5`}
-      importClassName={`${TOUCH_BTN} min-h-[42px] px-6`}
+      cancelClassName={`${TOUCH_BTN} min-h-hit px-5`}
+      importClassName={`${TOUCH_BTN} min-h-hit px-6`}
       footerClassName="flex w-full flex-wrap items-center justify-center gap-3"
     >
       {fileError && <Notice tone="error" text={t.errors.readFile} />}

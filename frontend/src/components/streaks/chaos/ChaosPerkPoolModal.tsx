@@ -23,7 +23,7 @@ const PerkTile: React.FC<{ perk: Perk; displayName: string }> = ({ perk, display
           fallbackIcon={<Sparkles className="w-6 h-6 text-text-muted" aria-hidden="true" />}
         />
       </div>
-      <span className="text-mini leading-tight font-medium text-center text-text-secondary line-clamp-2 min-h-[2.4em] w-full px-1.5 py-2">
+      <span className="text-mini leading-tight font-medium text-center text-text-secondary line-clamp-2 min-h-two-lines w-full px-1.5 py-2">
         {displayName}
       </span>
     </div>

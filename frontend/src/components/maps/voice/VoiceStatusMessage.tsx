@@ -44,7 +44,7 @@ export function VoiceStatusMessage({
           <div className="flex flex-col text-center items-center w-full max-w-full px-2">
             <div className="flex items-center justify-center gap-2 max-w-full">
               <span className="h-2 w-2 rounded-full bg-accent-red animate-ping shrink-0" aria-hidden="true" />
-              <span className="type-strong-fluid text-text-primary truncate max-w-[280px] sm:max-w-xl">
+              <span className="type-strong-fluid text-text-primary truncate max-w-70 sm:max-w-xl">
                 {liveTranscript
                   ? `“${liveTranscript}”`
                   : audioLevel > 8
@@ -52,7 +52,7 @@ export function VoiceStatusMessage({
                     : rawVoiceDict.speakMapPrompt || ''}
               </span>
             </div>
-            <span className="type-micro text-text-muted truncate max-w-[280px] sm:max-w-xl">
+            <span className="type-micro text-text-muted truncate max-w-70 sm:max-w-xl">
               {activeEngine === 'client-model'
                 ? rawVoiceDict.localModelListeningDesc || ''
                 : rawVoiceDict.webSpeechListeningDesc || ''}
@@ -64,13 +64,13 @@ export function VoiceStatusMessage({
           <div className="flex flex-col text-center items-center w-full max-w-full px-2">
             <div className="flex items-center justify-center gap-2 max-w-full">
               <Spinner size="xs" tone="amber" />
-              <span className="type-strong-fluid text-accent-amber truncate max-w-[280px] sm:max-w-xl">
+              <span className="type-strong-fluid text-accent-amber truncate max-w-70 sm:max-w-xl">
                 {liveTranscript
                   ? `${rawVoiceDict.transcribingPrefix || ''} “${liveTranscript}”`
                   : rawVoiceDict.transcribingVoice || ''}
               </span>
             </div>
-            <span className="type-micro text-accent-amber/80 truncate max-w-[280px] sm:max-w-xl">
+            <span className="type-micro text-accent-amber/80 truncate max-w-70 sm:max-w-xl">
               {rawVoiceDict.localWasmInference || ''}
             </span>
           </div>
@@ -80,7 +80,7 @@ export function VoiceStatusMessage({
           <div className="flex flex-col text-center items-center w-full max-w-full px-2">
             <div className="flex items-center justify-center gap-1.5 max-w-full">
               <CheckCircle2 className="h-3.5 w-3.5 text-accent-green shrink-0" aria-hidden="true" />
-              <span className="type-strong-fluid text-accent-green truncate max-w-[280px] sm:max-w-xl">
+              <span className="type-strong-fluid text-accent-green truncate max-w-70 sm:max-w-xl">
                 {matchedResult.matchedMapName
                   ? `${rawVoiceDict.matchedPrefix || ''} ${matchedResult.matchedMapName}`
                   : matchedResult.action === 'switch_source'
@@ -89,7 +89,7 @@ export function VoiceStatusMessage({
               </span>
             </div>
             {liveTranscript && (
-              <span className="type-micro text-accent-green/90 truncate max-w-[280px] sm:max-w-xl">
+              <span className="type-micro text-accent-green/90 truncate max-w-70 sm:max-w-xl">
                 {dict.maps.heardLabel} {dict.maps.openQuote}{liveTranscript}{dict.maps.closeQuote} {matchPercentText}
               </span>
             )}
@@ -100,13 +100,13 @@ export function VoiceStatusMessage({
           <div className="flex flex-col text-center items-center w-full max-w-full px-2">
             <div className="flex items-center justify-center gap-1.5 type-strong text-accent-amber max-w-full">
               <AlertCircle className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
-              <span className="truncate max-w-[280px] sm:max-w-xl">
+              <span className="truncate max-w-70 sm:max-w-xl">
                 {liveTranscript
                   ? `${dict.maps.heardLabel} “${liveTranscript}” (${rawVoiceDict.noDbdMatch || ''})`
                   : rawVoiceDict.noSpeechDetected || ''}
               </span>
             </div>
-            <span className="type-micro text-text-muted truncate max-w-[280px] sm:max-w-xl">
+            <span className="type-micro text-text-muted truncate max-w-70 sm:max-w-xl">
               {rawVoiceDict.trySayingPrompt || ''}
             </span>
           </div>
@@ -116,9 +116,9 @@ export function VoiceStatusMessage({
           <div className="flex flex-col text-center items-center w-full max-w-full px-2">
             <div className="flex items-center justify-center gap-1.5 type-strong text-accent-red max-w-full">
               <AlertCircle className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
-              <span className="truncate max-w-[280px] sm:max-w-xl">{errorMessage || rawVoiceDict.micBlocked || ''}</span>
+              <span className="truncate max-w-70 sm:max-w-xl">{errorMessage || rawVoiceDict.micBlocked || ''}</span>
             </div>
-            <span className="type-micro text-accent-red/80 truncate max-w-[280px] sm:max-w-xl">
+            <span className="type-micro text-accent-red/80 truncate max-w-70 sm:max-w-xl">
               {rawVoiceDict.checkPermissionsHint || ''}
             </span>
           </div>

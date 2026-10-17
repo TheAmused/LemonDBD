@@ -231,7 +231,7 @@ export const ChangelogEditorModal: React.FC<ChangelogEditorModalProps> = ({ open
         <div className="relative">
           <ToolbarButton icon={Link2} onClick={handleLink} label="Link" active={linkOpen} />
           {linkOpen && (
-            <Surface tone="elevated" padding="none" className="absolute left-0 top-full z-10 mt-1 flex w-72 max-w-[80vw] items-center gap-1.5 p-2 shadow-xl">
+            <Surface tone="elevated" padding="none" className="absolute left-0 top-full z-10 mt-1 flex w-72 max-w-viewport-sm items-center gap-1.5 p-2 shadow-xl">
               <Input
                 autoFocus
                 fieldSize="sm"
@@ -296,7 +296,7 @@ export const ChangelogEditorModal: React.FC<ChangelogEditorModalProps> = ({ open
         ref={setEditor}
         contentEditable
         suppressContentEditableWarning
-        className="min-h-[180px] max-h-[40vh] overflow-y-auto px-4 py-3 text-sm text-text-secondary leading-relaxed outline-none [&_h3]:text-base [&_h3]:font-black [&_h3]:text-accent-red [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_a]:text-accent-red [&_a]:underline"
+        className="min-h-45 max-h-vh-40 overflow-y-auto px-4 py-3 text-sm text-text-secondary leading-relaxed outline-none [&_h3]:text-base [&_h3]:font-black [&_h3]:text-accent-red [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_a]:text-accent-red [&_a]:underline"
         data-placeholder={
           t.bodyPlaceholder
         }

@@ -64,7 +64,7 @@ export const CharacterRosterGrid: React.FC<CharacterRosterGridProps> = ({
   return (
     <Surface padding="none" className="w-full p-3 sm:p-6 shadow-sm dark:shadow-xl backdrop-blur-md">
       {loading ? (
-        <div className="grid grid-cols-4 min-[460px]:grid-cols-5 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 xl:grid-cols-[repeat(13,minmax(0,1fr))] gap-4 animate-pulse">
+        <div className="grid grid-cols-4 phone-md:grid-cols-5 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 xl:grid-cols-[repeat(13,minmax(0,1fr))] gap-4 animate-pulse">
           {Array.from({ length: 16 }).map((_, i) => (
             <SkeletonBlock key={i} rounded="rounded-card" className="aspect-square" />
           ))}
@@ -74,7 +74,7 @@ export const CharacterRosterGrid: React.FC<CharacterRosterGridProps> = ({
           {dict.streaks.noOwnedCharacters}
         </div>
       ) : (
-        <div className="grid grid-cols-4 min-[460px]:grid-cols-5 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 xl:grid-cols-[repeat(13,minmax(0,1fr))] gap-3 sm:gap-4">
+        <div className="grid grid-cols-4 phone-md:grid-cols-5 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 xl:grid-cols-[repeat(13,minmax(0,1fr))] gap-3 sm:gap-4">
           {characters.map((char) => {
             const completed = isCompleted(char.name);
             const active = isActiveTarget(char.name);
@@ -145,7 +145,7 @@ export const CharacterRosterGrid: React.FC<CharacterRosterGridProps> = ({
                   )}
                 </div>
 
-                <span className="text-mini leading-tight font-semibold text-center text-text-secondary line-clamp-2 min-h-[2.4em] w-full px-1.5 py-2 group-hover:text-accent-red transition-colors">
+                <span className="text-mini leading-tight font-semibold text-center text-text-secondary line-clamp-2 min-h-two-lines w-full px-1.5 py-2 group-hover:text-accent-red transition-colors">
                   {displayName(char.name)}
                 </span>
               </div>

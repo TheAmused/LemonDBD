@@ -12,12 +12,12 @@ import { SearchInput } from '@/components/common/Field';
 import { Pagination } from '@/components/common/Pagination';
 import { SelectableCard } from '@/components/common/SelectableCard';
 import { Tabs } from '@/components/common/Tabs';
+import { DEFAULT_PAGE_SIZE } from '@/constants/pagination';
 import { useDictionary } from '@/context/DictionaryContext';
+import { adminQueueDrawerKey } from '@/components/admin/adminStorage';
 import { usePersistentDrawer } from '@/hooks/usePersistentDrawer';
 import { cn } from '@/utils/cn';
 import type { QueueStats } from '@/types/admin';
-
-export const QUEUE_PAGE_SIZE = 15;
 
 export interface AdminQueueProps<S extends string, T extends { id: number }> {
   ariaLabel: string;
@@ -65,8 +65,8 @@ export function AdminQueue<S extends string, T extends { id: number }>({
   detail,
 }: AdminQueueProps<S, T>) {
   const t = useDictionary().admin;
-  const [isListOpen, toggleList] = usePersistentDrawer(`lemondbd_admin_${drawerKey}_list_open`, true);
-  const [isCaseOpen, toggleCase] = usePersistentDrawer(`lemondbd_admin_${drawerKey}_case_open`, true);
+  const [isListOpen, toggleList] = usePersistentDrawer(adminQueueDrawerKey(drawerKey, 'list'), true);
+  const [isCaseOpen, toggleCase] = usePersistentDrawer(adminQueueDrawerKey(drawerKey, 'case'), true);
   const detailRef = useRef<HTMLDivElement>(null);
 
   const select = (id: number) => {
@@ -106,7 +106,7 @@ export function AdminQueue<S extends string, T extends { id: number }>({
           )}
         </div>
 
-        <div className={cn('max-h-[36rem] space-y-2 overflow-y-auto p-3 transition-opacity', loading && items.length > 0 && 'opacity-60')} aria-busy={loading}>
+        <div className={cn('max-h-list space-y-2 overflow-y-auto p-3 transition-opacity', loading && items.length > 0 && 'opacity-60')} aria-busy={loading}>
           {items.length === 0 ? (
             <EmptyState variant="inline" icon={Inbox} title={loading ? t.loading : emptyText} />
           ) : (
@@ -118,13 +118,13 @@ export function AdminQueue<S extends string, T extends { id: number }>({
           )}
         </div>
 
-        {total > QUEUE_PAGE_SIZE && (
+        {total > DEFAULT_PAGE_SIZE && (
           <Pagination
-            className="mt-0 border-t border-border-color px-3 py-2 sm:mt-0 sm:pt-2 lg:pt-2 wide:pt-2"
+            variant="embedded"
             page={page}
-            totalPages={Math.ceil(total / QUEUE_PAGE_SIZE)}
+            totalPages={Math.ceil(total / DEFAULT_PAGE_SIZE)}
             totalResults={total}
-            limit={QUEUE_PAGE_SIZE}
+            limit={DEFAULT_PAGE_SIZE}
             onPageChange={onPageChange}
           />
         )}

@@ -294,7 +294,7 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
     <div className="w-full space-y-6" data-testid="map-explorer-root">
       <Surface
         aria-label={dict.maps.pageTitle}
-        as="section" padding="none" className="relative flex w-full flex-col overflow-hidden px-4 pt-3.5 pb-4 sm:px-6 sm:pt-4 sm:pb-5 md:min-h-[14rem] shadow-sm transition-all duration-300"
+        as="section" padding="none" className="relative flex w-full flex-col overflow-hidden px-4 pt-3.5 pb-4 sm:px-6 sm:pt-4 sm:pb-5 md:min-h-56 shadow-sm transition-all duration-300"
       >
         <div className="relative z-10 grid grid-cols-[minmax(0,1fr)] flex-1">
           <div
@@ -350,7 +350,7 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
                 options={sizeOptions}
                 icon={<Maximize2 className="h-3.5 w-3.5" />}
                 ariaLabel={mapsDict.surfaceArea}
-                minWidthClass="min-w-[220px]"
+                minWidthClass="min-w-55"
                 label={
                   filters.size == null ? (
                     <>

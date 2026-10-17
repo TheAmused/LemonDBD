@@ -15,13 +15,13 @@ export type TierTileShape = 'square' | 'wide';
 // `lg:` rule would override `wide-2k:` on the same property.
 const SHAPE_CLASSES: Record<TierTileShape, string> = {
   // >= 56px on the smallest screens: comfortably above the 44px touch minimum.
-  square: 'w-12 min-[480px]:w-14 sm:max-lg:w-16 lg:max-wide-2k:w-18 wide-2k:w-24',
-  wide: 'w-19 min-[480px]:w-22 sm:max-lg:w-24 lg:max-wide-2k:w-28 wide-2k:w-36',
+  square: 'w-12 phone-lg:w-14 sm:max-lg:w-16 lg:max-wide-2k:w-18 wide-2k:w-24',
+  wide: 'w-19 phone-lg:w-22 sm:max-lg:w-24 lg:max-wide-2k:w-28 wide-2k:w-36',
 };
 
 const IMAGE_CLASSES: Record<TierTileShape, string> = {
-  square: 'h-12 min-[480px]:h-14 sm:max-lg:h-16 lg:max-wide-2k:h-18 wide-2k:h-24',
-  wide: 'h-12 min-[480px]:h-14 sm:max-lg:h-16 lg:max-wide-2k:h-18 wide-2k:h-24',
+  square: 'h-12 phone-lg:h-14 sm:max-lg:h-16 lg:max-wide-2k:h-18 wide-2k:h-24',
+  wide: 'h-12 phone-lg:h-14 sm:max-lg:h-16 lg:max-wide-2k:h-18 wide-2k:h-24',
 };
 
 /** `William "Bill" Overbeck` -> `WB`: first letter of the first two words that have one. */

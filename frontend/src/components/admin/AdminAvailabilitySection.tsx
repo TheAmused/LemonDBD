@@ -16,7 +16,11 @@ import { EmptyState } from '@/components/common/EmptyState';
 import { tip } from '@/components/common/Tooltip';
 import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
 import { AdminReasonModal } from '@/components/admin/AdminReasonModal';
+import { SEARCH_DEBOUNCE_MS } from '@/constants/timing';
 import { useDictionary } from '@/context/DictionaryContext';
+import { ADMIN_STORAGE, oneOf } from '@/components/admin/adminStorage';
+import { usePersistentBoolean } from '@/hooks/usePersistentBoolean';
+import { usePersistentString } from '@/hooks/usePersistentString';
 import { usePersistentDrawer } from '@/hooks/usePersistentDrawer';
 import {
   listCharacters,
@@ -31,14 +35,14 @@ import { cn } from '@/utils/cn';
 import { formatMessage } from '@/utils/i18nFormat';
 import type { ActionMessage, AdminCharacterRow, AdminPerkRow, ChallengeMode, ChallengeModeSetting } from '@/types/admin';
 
-type Kind = 'characters' | 'perks';
-type Role = 'Survivor' | 'Killer';
+const KINDS = ['characters', 'perks'] as const;
+const ROLES = ['Survivor', 'Killer'] as const;
+type Kind = (typeof KINDS)[number];
+type Role = (typeof ROLES)[number];
 type Pending =
   | { kind: 'mode'; mode: ChallengeMode }
   | { kind: 'character'; item: AdminCharacterRow }
   | { kind: 'perk'; item: AdminPerkRow };
-
-const SEARCH_DEBOUNCE_MS = 300;
 
 interface AdminAvailabilitySectionProps {
   refreshKey: number;
@@ -49,17 +53,17 @@ export function AdminAvailabilitySection({ refreshKey, notify }: AdminAvailabili
   const dict = useDictionary();
   const t = dict.admin;
   const [modes, setModes] = useState<ChallengeModeSetting[]>([]);
-  const [kind, setKind] = useState<Kind>('characters');
-  const [role, setRole] = useState<Role>('Survivor');
+  const [kind, setKind] = usePersistentString<Kind>(ADMIN_STORAGE.availabilityKind, 'characters', oneOf(KINDS));
+  const [role, setRole] = usePersistentString<Role>(ADMIN_STORAGE.availabilityRole, 'Survivor', oneOf(ROLES));
   const [search, setSearch] = useState('');
-  const [disabledOnly, setDisabledOnly] = useState(false);
+  const [disabledOnly, setDisabledOnly] = usePersistentBoolean(ADMIN_STORAGE.availabilityDisabledOnly, false);
   const [characters, setCharacters] = useState<AdminCharacterRow[]>([]);
   const [perks, setPerks] = useState<AdminPerkRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [pending, setPending] = useState<Pending | null>(null);
   const [reloadKey, setReloadKey] = useState(0);
-  const [isModesOpen, toggleModes] = usePersistentDrawer('lemondbd_admin_availability_modes_open', true);
-  const [isRosterOpen, toggleRoster] = usePersistentDrawer('lemondbd_admin_availability_roster_open', true);
+  const [isModesOpen, toggleModes] = usePersistentDrawer(ADMIN_STORAGE.availabilityModesOpen, true);
+  const [isRosterOpen, toggleRoster] = usePersistentDrawer(ADMIN_STORAGE.availabilityRosterOpen, true);
 
   const modeLabel: Record<ChallengeMode, string> = {
     gauntlet: dict.streaks.gauntlet,
@@ -167,8 +171,8 @@ export function AdminAvailabilitySection({ refreshKey, notify }: AdminAvailabili
               value={kind}
               onChange={setKind}
               options={[
-                { value: 'characters', label: t.characters, icon: <KillerIcon className="h-3.5 w-3.5" /> },
-                { value: 'perks', label: t.perks, icon: <Sparkles className="h-3.5 w-3.5" /> },
+                { value: 'characters', label: t.characters, icon: <KillerIcon className="icon-sm" /> },
+                { value: 'perks', label: t.perks, icon: <Sparkles className="icon-sm" /> },
               ]}
             />
             <SegmentedControl<Role>
@@ -177,17 +181,17 @@ export function AdminAvailabilitySection({ refreshKey, notify }: AdminAvailabili
               value={role}
               onChange={setRole}
               options={[
-                { value: 'Survivor', label: t.roleSurvivor, icon: <SurvivorIcon className="h-3.5 w-3.5" />, activeClassName: 'bg-accent-green text-text-inverted' },
-                { value: 'Killer', label: t.roleKiller, icon: <KillerIcon className="h-3.5 w-3.5" /> },
+                { value: 'Survivor', label: t.roleSurvivor, icon: <SurvivorIcon className="icon-sm" />, activeClassName: 'bg-accent-green text-text-inverted' },
+                { value: 'Killer', label: t.roleKiller, icon: <KillerIcon className="icon-sm" /> },
               ]}
             />
             <ToggleChip size="sm" pressed={disabledOnly} onClick={() => setDisabledOnly((v) => !v)}>
-              <Ban className="h-3.5 w-3.5" aria-hidden="true" />
+              <Ban className="icon-sm" aria-hidden="true" />
               {formatMessage(t.disabledOnly, { count: disabledCount })}
             </ToggleChip>
             <SearchInput
               fieldSize="sm"
-              wrapperClassName="min-w-[10rem] flex-1 sm:max-w-xs sm:ml-auto"
+              wrapperClassName="min-w-field-sm flex-1 sm:max-w-xs sm:ml-auto"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder={t.searchGenericPlaceholder}
@@ -200,7 +204,7 @@ export function AdminAvailabilitySection({ refreshKey, notify }: AdminAvailabili
           {shown.length === 0 ? (
             <EmptyState variant="inline" title={loading ? t.loading : t.rosterEmpty} />
           ) : (
-            <ul className="grid max-h-[34rem] grid-cols-3 gap-3 overflow-y-auto pr-1 sm:grid-cols-5 lg:grid-cols-7 xl:grid-cols-8">
+            <ul className="grid max-h-roster grid-cols-3 gap-3 overflow-y-auto pr-1 sm:grid-cols-5 lg:grid-cols-7 xl:grid-cols-8">
               {shown.map((item) => {
                 const isCharacter = 'role' in item;
                 const image = isCharacter ? (item as AdminCharacterRow).avatar_local_path : (item as AdminPerkRow).icon_local_path;

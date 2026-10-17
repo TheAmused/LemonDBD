@@ -24,9 +24,9 @@ export function LegalPageLayout({ locale, heading, lastUpdated, children }: Lega
     <PageShell
       locale={locale}
       padding="spacious"
-      mainClassName="flex flex-col items-center min-h-[calc(100vh-4rem)] lg:min-h-screen overflow-y-auto relative"
+      mainClassName="flex flex-col items-center min-h-screen-nav lg:min-h-screen overflow-y-auto relative"
     >
-      <div className="relative z-10 mx-auto flex w-full max-w-[110rem] flex-col gap-6 py-6 sm:gap-8 sm:py-10">
+      <div className="relative z-10 mx-auto flex w-full max-w-page-lg flex-col gap-6 py-6 sm:gap-8 sm:py-10">
         <header className="grid grid-cols-2 items-center gap-x-4 gap-y-3 sm:grid-cols-[1fr_auto_1fr]">
           <span aria-hidden="true" className="hidden sm:block" />
           <h1 className="col-span-2 row-start-2 text-center text-2xl font-black tracking-tight text-text-primary sm:col-span-1 sm:col-start-2 sm:row-start-1 sm:text-3xl md:text-4xl">

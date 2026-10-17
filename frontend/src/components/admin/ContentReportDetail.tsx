@@ -4,7 +4,8 @@ import React, { useState } from 'react';
 import { Ban, CheckCircle, ShieldAlert, UserSearch, UserX } from 'lucide-react';
 import { Button } from '@/components/common/Button';
 import { Badge } from '@/components/common/Badge';
-import { Textarea } from '@/components/common/Field';
+import { FieldLabel, Textarea } from '@/components/common/Field';
+import { Surface, surfaceClassName } from '@/components/common/Surface';
 import { CustomDropdown } from '@/components/common/CustomDropdown';
 import { tip } from '@/components/common/Tooltip';
 import { ConfirmModal } from '@/components/common/ConfirmModal';
@@ -12,6 +13,7 @@ import { SandboxedContentPreview } from '@/components/admin/SandboxedContentPrev
 import { SanctionForm } from '@/components/admin/SanctionForm';
 import { contentReasonLabel, contentStatusLabel, contentStatusTone, contentTypeLabel } from '@/components/admin/reportLabels';
 import { useDictionary } from '@/context/DictionaryContext';
+import { cn } from '@/utils/cn';
 import { formatDateTime } from '@/utils/format';
 import { formatMessage } from '@/utils/i18nFormat';
 import {
@@ -89,7 +91,7 @@ export function ContentReportDetail({ detail, resolving, onResolve, onShowUser }
                 aria-label={dict.admin.showInUsers}
                 {...tip(dict.admin.showInUsers, undefined, 'action')}
               >
-                <UserSearch className="h-3.5 w-3.5" aria-hidden="true" />
+                <UserSearch className="icon-sm" aria-hidden="true" />
               </Button>
             )}
           </dd>
@@ -116,7 +118,7 @@ export function ContentReportDetail({ detail, resolving, onResolve, onShowUser }
 
       {!detail.attributed && (
         <p className="flex items-start gap-2 rounded-card border border-accent-amber/30 bg-accent-amber/10 p-3 type-body text-accent-amber">
-          <ShieldAlert className="mt-0.5 h-4 w-4 shrink-0" />
+          <ShieldAlert className="mt-0.5 icon-md shrink-0" />
           <span>{dict.admin.contentReportUnattributed}</span>
         </p>
       )}
@@ -141,7 +143,7 @@ export function ContentReportDetail({ detail, resolving, onResolve, onShowUser }
       {reporterNotes.length > 0 && (
         <div className="space-y-1.5">
           <p className="type-label-sm text-text-secondary">{dict.admin.contentReportReporterNotes}</p>
-          <ul className="max-h-40 overflow-y-auto space-y-1.5 rounded-card border border-border-subtle bg-bg-primary p-3">
+          <ul className={cn(surfaceClassName('well', 'sm'), 'max-h-40 overflow-y-auto space-y-1.5')}>
             {reporterNotes.map((r, index) => (
               <li key={index} className="type-body text-text-primary break-words whitespace-pre-wrap">
                 <span className="text-text-secondary">{contentReasonLabel(dict, r.reason)}: </span>
@@ -173,11 +175,9 @@ export function ContentReportDetail({ detail, resolving, onResolve, onShowUser }
             onChange={(e) => setNotes(e.target.value)}
           />
           {canActOnAuthor && (
-            <div className="space-y-3 rounded-card border border-border-color bg-bg-primary p-3">
+            <Surface tone="well" padding="sm" className="space-y-3">
               <div>
-                <span className="block type-label-xs text-text-secondary mb-1">
-                  {moderation.authorActionLabel}
-                </span>
+                <FieldLabel as="span">{moderation.authorActionLabel}</FieldLabel>
                 <CustomDropdown<SanctionKind | 'none'>
                   ariaLabel={moderation.authorActionLabel}
                   accent="primary"
@@ -205,15 +205,15 @@ export function ContentReportDetail({ detail, resolving, onResolve, onShowUser }
                   onChange={(patch) => setAuthorDraft((d) => ({ ...d, ...patch }))}
                 />
               )}
-            </div>
+            </Surface>
           )}
           <div className="flex flex-wrap gap-2">
             <Button variant="danger" size="sm" disabled={resolving || !authorValid} onClick={() => setConfirmBan(true)}>
-              {authorDecision ? <UserX className="h-4 w-4" /> : <Ban className="h-4 w-4" />}
+              {authorDecision ? <UserX className="icon-md" /> : <Ban className="icon-md" />}
               {dict.admin.contentReportBanAction}
             </Button>
             <Button size="sm" disabled={resolving} onClick={() => onResolve('dismiss', null, notes)}>
-              <CheckCircle className="h-4 w-4" />
+              <CheckCircle className="icon-md" />
               {dict.admin.contentReportDismissAction}
             </Button>
           </div>

@@ -3,8 +3,10 @@ from flask import Blueprint, jsonify, make_response, request
 
 from app.core.account_state import AccountBlockedError
 from app.core.limiter import limiter
+from app.core.rate_limits import per_minute
 from app.core.security import generate_token
 from app.routes.auth import ownership_service, session_response
+from app.services import site_settings
 from app.services.moderation_actions import blocked_response
 from app.services.user import google_auth, two_factor
 
@@ -14,7 +16,7 @@ auth_google_bp = Blueprint("auth_google_bp", __name__, url_prefix="/api/v1/auth/
 @auth_google_bp.route("/config", methods=["GET"])
 def google_config():
     resp = make_response(jsonify({
-        "enabled": google_auth.is_configured(),
+        "enabled": site_settings.google_sign_in_available(),
         "client_id": google_auth.client_id(),
     }), 200)
     resp.headers["Cache-Control"] = "no-store, no-cache, must-revalidate"
@@ -28,7 +30,7 @@ from app.utils.responses import api_error
 
 
 @auth_google_bp.route("", methods=["POST"])
-@limiter.limit("10 per minute")
+@limiter.limit(per_minute("rate_auth_per_minute"))
 def google_sign_in():
     try:
         dto = GoogleSignInDTO.model_validate(request.get_json(silent=True) or {})

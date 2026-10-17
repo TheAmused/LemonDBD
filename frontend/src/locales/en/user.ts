@@ -138,4 +138,5 @@ export default {
   loginLabel: "Login",
   loginOrEmailLabel: "Login or Email",
   loadingProfileSub: "Retrieving player inventory and perk mastery",
+  registrationClosedNotice: "New accounts are paused at the moment. Please try again later.",
 } as const;

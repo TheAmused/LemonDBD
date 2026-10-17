@@ -16,7 +16,7 @@ import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
 import { useDictionary } from "@/context/DictionaryContext";
 
 /** Perk icon and owner avatar share this size. */
-const SLOT_SIZE = 'h-14 w-14 min-[480px]:h-20 min-[480px]:w-20 md:h-24 md:w-24';
+const SLOT_SIZE = 'h-14 w-14 phone-lg:h-20 phone-lg:w-20 md:h-24 md:w-24';
 
 interface PerkModalProps {
   perk: Perk | null;
@@ -43,7 +43,7 @@ export const PerkModal: React.FC<PerkModalProps> = ({ perk, onClose }) => {
 
   /* Perk icon | title | owner avatar. Both sides share one size so the title stays centred. */
   const header = (
-    <div className="grid shrink-0 grid-cols-[auto_1fr_auto] items-center gap-3 px-4 pb-0 pt-12 min-[480px]:gap-4 min-[480px]:px-6 md:gap-6 md:px-8">
+    <div className="grid shrink-0 grid-cols-[auto_1fr_auto] items-center gap-3 px-4 pb-0 pt-12 phone-lg:gap-4 phone-lg:px-6 md:gap-6 md:px-8">
       <div className={`flex ${SLOT_SIZE} shrink-0 items-center justify-center`}>
         <PerkIcon
           perk={perk}
@@ -57,7 +57,7 @@ export const PerkModal: React.FC<PerkModalProps> = ({ perk, onClose }) => {
       <div className="min-w-0 text-center">
         <h2
           id="perk-modal-title"
-          className="text-xl min-[480px]:text-2xl md:text-3xl font-black text-text-primary tracking-tight leading-tight text-balance [overflow-wrap:anywhere]"
+          className="text-xl phone-lg:text-2xl md:text-3xl font-black text-text-primary tracking-tight leading-tight text-balance [overflow-wrap:anywhere]"
         >
           {perk.name}
         </h2>
@@ -105,7 +105,7 @@ export const PerkModal: React.FC<PerkModalProps> = ({ perk, onClose }) => {
       ariaDescribedBy="perk-modal-description"
       header={header}
     >
-      <div className="mx-4 mt-5 border-t border-border-color pb-5 pt-4 min-[480px]:mx-6 min-[480px]:mt-6 min-[480px]:pb-6 min-[480px]:pt-5 md:mx-8 md:pb-8">
+      <div className="mx-4 mt-5 border-t border-border-color pb-5 pt-4 phone-lg:mx-6 phone-lg:mt-6 phone-lg:pb-6 phone-lg:pt-5 md:mx-8 md:pb-8">
         <div id="perk-modal-description">
           <PerkDescription description={perk.description} variant="modal" />
         </div>

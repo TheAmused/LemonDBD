@@ -35,8 +35,10 @@ _used_lock = threading.Lock()
 
 
 def altcha_enforced() -> bool:
-    """On unless ALTCHA_ENFORCED=false (the test config turns it off)."""
-    return bool(current_app.config.get("ALTCHA_ENFORCED", True))
+    """On unless switched off: the admin setting `altcha_enforced`, which starts from ALTCHA_ENFORCED (the test config turns it off)."""
+    from app.services.site_settings import altcha_enforced as setting
+
+    return setting()
 
 
 def _claim(signature: str, expires: float) -> bool:

@@ -17,4 +17,5 @@ export default {
   loading: "Cargando...",
   notice: "Aviso",
   loadingPerksSub: 'Sincronizando las ventajas de supervivientes y asesinos',
+  siteBannerDismiss: "Cerrar el aviso",
 } as const;

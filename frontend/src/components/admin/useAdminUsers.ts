@@ -4,14 +4,17 @@
 // The user directory: the filtered, paged list and every account action an admin takes from it.
 // `notify` receives the outcome; `onChanged` runs after anything that changes the panel's counts.
 import { useCallback, useEffect, useState } from 'react';
+import { ADMIN_STORAGE, USER_ROLE_FILTERS, USER_STANDING_FILTERS, oneOf } from '@/components/admin/adminStorage';
+import { DEFAULT_PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/pagination';
+import { SEARCH_DEBOUNCE_MS } from '@/constants/timing';
 import { useDictionary } from '@/context/DictionaryContext';
+import { usePersistentNumber } from '@/hooks/usePersistentNumber';
+import { usePersistentString } from '@/hooks/usePersistentString';
 import { createUser, deleteUser, listUsers, resetTwoFactor, updateUser } from '@/services/adminApi';
 import { getErrorMessage } from '@/utils/api';
 import { formatMessage } from '@/utils/i18nFormat';
 import type { ActionMessage, NewUser, UserPatch, UserRoleFilter, UserRow, UserStandingFilter } from '@/types/admin';
 
-const SEARCH_DEBOUNCE_MS = 300;
-const USER_PAGE_SIZE = 15;
 
 interface AdminUsersInput {
   enabled: boolean;
@@ -27,10 +30,11 @@ export function useAdminUsers({ enabled, refreshKey, notify, onChanged }: AdminU
   const [loading, setLoading] = useState(true);
   const [search, setSearchState] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
-  const [role, setRoleState] = useState<UserRoleFilter>('all');
-  const [standing, setStandingState] = useState<UserStandingFilter>('all');
+  // The filters and the page size are remembered; the search text and the page number are not.
+  const [role, setRoleState] = usePersistentString<UserRoleFilter>(ADMIN_STORAGE.usersRole, 'all', oneOf(USER_ROLE_FILTERS));
+  const [standing, setStandingState] = usePersistentString<UserStandingFilter>(ADMIN_STORAGE.usersStanding, 'all', oneOf(USER_STANDING_FILTERS));
   const [page, setPage] = useState(1);
-  const [perPage, setPerPageState] = useState(USER_PAGE_SIZE);
+  const [perPage, setPerPageState] = usePersistentNumber<number>(ADMIN_STORAGE.usersPerPage, DEFAULT_PAGE_SIZE, PAGE_SIZE_OPTIONS);
   const [reloadKey, setReloadKey] = useState(0);
 
   useEffect(() => {

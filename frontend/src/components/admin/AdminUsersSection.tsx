@@ -14,6 +14,7 @@ import { CustomDropdown } from '@/components/common/CustomDropdown';
 import { SearchInput } from '@/components/common/Field';
 import { Pagination } from '@/components/common/Pagination';
 import { Surface } from '@/components/common/Surface';
+import { Table, TableBody, TableHead, TableRow, Td, Th } from '@/components/common/Table';
 import { tip } from '@/components/common/Tooltip';
 import { OverseerEyeIcon } from '@/components/icons/DbdIcons';
 import { UserAvatar } from '@/components/UserAvatar';
@@ -61,14 +62,14 @@ export function AdminUsersSection({ directory, counts, currentUserId, notify, on
   };
 
   const menuItems = (u: UserRow): ActionMenuItem[] => [
-    { key: 'edit', label: t.editUser, icon: <Pencil className="h-4 w-4" aria-hidden="true" />, onSelect: () => onEdit(u) },
+    { key: 'edit', label: t.editUser, icon: <Pencil className="icon-md" aria-hidden="true" />, onSelect: () => onEdit(u) },
     ...(u.two_factor_enabled
-      ? [{ key: '2fa', label: t.resetTwoFactor, icon: <ShieldOff className="h-4 w-4" aria-hidden="true" />, onSelect: () => setPending({ kind: 'resetTwoFactor', user: u }) }]
+      ? [{ key: '2fa', label: t.resetTwoFactor, icon: <ShieldOff className="icon-md" aria-hidden="true" />, onSelect: () => setPending({ kind: 'resetTwoFactor', user: u }) }]
       : []),
-    { key: 'download', label: t.downloadUserData, icon: <Download className="h-4 w-4" aria-hidden="true" />, onSelect: () => void download(u) },
+    { key: 'download', label: t.downloadUserData, icon: <Download className="icon-md" aria-hidden="true" />, onSelect: () => void download(u) },
     ...(isSelf(u)
       ? []
-      : [{ key: 'delete', label: t.deleteUser, icon: <Trash2 className="h-4 w-4" aria-hidden="true" />, onSelect: () => setPending({ kind: 'delete', user: u }), danger: true }]),
+      : [{ key: 'delete', label: t.deleteUser, icon: <Trash2 className="icon-md" aria-hidden="true" />, onSelect: () => setPending({ kind: 'delete', user: u }), danger: true }]),
   ];
 
   const actions = (u: UserRow) => (
@@ -81,7 +82,7 @@ export function AdminUsersSection({ directory, counts, currentUserId, notify, on
           aria-label={dict.moderation.admin.openButton}
           {...tip(dict.moderation.admin.openButton, undefined, 'action')}
         >
-          <Gavel className="h-4 w-4" aria-hidden="true" />
+          <Gavel className="icon-md" aria-hidden="true" />
         </Button>
       )}
       <ActionMenu label={formatMessage(t.userActions, { username: u.username })} items={menuItems(u)} />
@@ -106,21 +107,20 @@ export function AdminUsersSection({ directory, counts, currentUserId, notify, on
     <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
       <UserStandingBadge user={u} />
       {u.two_factor_enabled && (
-        <span {...tip(t.twoFactorOn, undefined, 'status')} className="inline-flex items-center gap-1 type-strong-xs text-accent-green">
-          <ShieldCheck className="h-3.5 w-3.5" aria-hidden="true" />
+        <Badge tone="green" size="sm" plain icon={<ShieldCheck className="icon-sm" aria-hidden="true" />} {...tip(t.twoFactorOn, undefined, 'status')}>
           {t.twoFactorBadge}
-        </span>
+        </Badge>
       )}
       {u.is_verified === false && (
-        <span {...tip(t.unverifiedTip, undefined, 'status')} className="type-strong-xs text-accent-amber">
+        <Badge tone="amber" size="sm" plain {...tip(t.unverifiedTip, undefined, 'status')}>
           {t.unverifiedBadge}
-        </span>
+        </Badge>
       )}
     </div>
   );
 
   const role = (u: UserRow) => (
-    <Badge tone={u.role === 'admin' ? 'red' : 'neutral'} size="sm" square icon={u.role === 'admin' ? <OverseerEyeIcon className="h-2.5 w-2.5" /> : undefined}>
+    <Badge tone={u.role === 'admin' ? 'red' : 'neutral'} size="sm" square icon={u.role === 'admin' ? <OverseerEyeIcon className="icon-2xs" /> : undefined}>
       {u.role === 'admin' ? t.roleAdmin : t.rolePlayer}
     </Badge>
   );
@@ -142,7 +142,7 @@ export function AdminUsersSection({ directory, counts, currentUserId, notify, on
       <div className="flex flex-wrap items-center gap-2.5 border-b border-border-color p-3 sm:p-4">
         <SearchInput
           fieldSize="sm"
-          wrapperClassName="min-w-[12rem] flex-1"
+          wrapperClassName="min-w-field flex-1"
           value={directory.search}
           onChange={(e) => directory.setSearch(e.target.value)}
           placeholder={t.searchUserPlaceholder}
@@ -173,7 +173,7 @@ export function AdminUsersSection({ directory, counts, currentUserId, notify, on
             { value: 'banned', label: formatMessage(t.standingFilterBanned, count(counts?.banned)) },
           ]}
         />
-        <Button variant="primary" size="sm" onClick={onCreate} leftIcon={<UserPlus className="h-3.5 w-3.5" aria-hidden="true" />}>
+        <Button variant="primary" size="sm" onClick={onCreate} leftIcon={<UserPlus className="icon-sm" aria-hidden="true" />}>
           {t.createUser}
         </Button>
       </div>
@@ -199,42 +199,40 @@ export function AdminUsersSection({ directory, counts, currentUserId, notify, on
           </ul>
 
           {/* Wider screens: the table */}
-          <div className="hidden overflow-x-auto sm:block">
-            <table className="w-full text-left text-xs text-text-primary">
-              <thead className="border-b border-border-color bg-bg-elevated/60 type-label-2xs text-text-secondary">
-                <tr>
-                  <th scope="col" className="px-4 py-2.5">{t.thUser}</th>
-                  <th scope="col" className="px-4 py-2.5">{t.thRole}</th>
-                  <th scope="col" className="px-4 py-2.5">{t.thStanding}</th>
-                  <th scope="col" className="hidden px-4 py-2.5 text-right lg:table-cell">{t.thCharacters}</th>
-                  <th scope="col" className="hidden px-4 py-2.5 text-right lg:table-cell">{t.thPerks}</th>
-                  <th scope="col" className="hidden px-4 py-2.5 xl:table-cell">{t.thJoined}</th>
-                  <th scope="col" className="px-4 py-2.5 text-right">
-                    <span className="sr-only">{t.thActions}</span>
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-border-subtle">
-                {users.map((u) => (
-                  <tr key={u.id} className="transition-colors hover:bg-bg-elevated/40">
-                    <td className="max-w-[18rem] px-4 py-2.5">{identity(u)}</td>
-                    <td className="px-4 py-2.5">{role(u)}</td>
-                    <td className="px-4 py-2.5">{status(u)}</td>
-                    <td className="hidden px-4 py-2.5 text-right tabular-nums lg:table-cell">{u.owned_characters_count ?? 0}</td>
-                    <td className="hidden px-4 py-2.5 text-right tabular-nums lg:table-cell">{u.unlocked_perks_count ?? 0}</td>
-                    <td className="hidden whitespace-nowrap px-4 py-2.5 text-text-secondary xl:table-cell">{formatDate(u.created_at, locale)}</td>
-                    <td className="px-4 py-2.5">{actions(u)}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <Table wrapperClassName="hidden sm:block">
+            <TableHead>
+              <tr>
+                <Th>{t.thUser}</Th>
+                <Th>{t.thRole}</Th>
+                <Th>{t.thStanding}</Th>
+                <Th className="hidden text-right lg:table-cell">{t.thCharacters}</Th>
+                <Th className="hidden text-right lg:table-cell">{t.thPerks}</Th>
+                <Th className="hidden xl:table-cell">{t.thJoined}</Th>
+                <Th className="text-right">
+                  <span className="sr-only">{t.thActions}</span>
+                </Th>
+              </tr>
+            </TableHead>
+            <TableBody>
+              {users.map((u) => (
+                <TableRow key={u.id}>
+                  <Td className="max-w-cell">{identity(u)}</Td>
+                  <Td>{role(u)}</Td>
+                  <Td>{status(u)}</Td>
+                  <Td className="hidden text-right tabular-nums lg:table-cell">{u.owned_characters_count ?? 0}</Td>
+                  <Td className="hidden text-right tabular-nums lg:table-cell">{u.unlocked_perks_count ?? 0}</Td>
+                  <Td className="hidden whitespace-nowrap text-text-secondary xl:table-cell">{formatDate(u.created_at, locale)}</Td>
+                  <Td>{actions(u)}</Td>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
         </div>
       )}
 
       {total > 0 && (
         <Pagination
-          className="mt-0 border-t border-border-color px-3 py-2.5 sm:mt-0 sm:px-4 sm:pt-2.5 lg:pt-2.5 wide:pt-2.5"
+          variant="embedded"
           page={page}
           totalPages={Math.ceil(total / perPage)}
           totalResults={total}

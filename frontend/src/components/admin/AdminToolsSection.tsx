@@ -11,6 +11,7 @@ import { Button, buttonClassName } from '@/components/common/Button';
 import { AccordionSection } from '@/components/common/AccordionSection';
 import { analyticsUrl, pgAdminUrl } from '@/components/admin/adminLinks';
 import { useDictionary, useLocale } from '@/context/DictionaryContext';
+import { adminToolDrawerKey } from '@/components/admin/adminStorage';
 import { usePersistentDrawer } from '@/hooks/usePersistentDrawer';
 import { cn } from '@/utils/cn';
 import {
@@ -75,7 +76,7 @@ function ToolCard({
   action?: React.ReactNode;
   className?: string;
 }) {
-  const [open, toggle] = usePersistentDrawer(`lemondbd_admin_tool_${id}`, true);
+  const [open, toggle] = usePersistentDrawer(adminToolDrawerKey(id), true);
   return (
     <AccordionSection
       as="section"
@@ -164,7 +165,7 @@ export function AdminToolsSection({ refreshKey, notify, onDataChanged }: ToolsPr
         subtitle={t.systemSubtitle}
         action={
           <Button size="sm" icon onClick={() => void loadChecks()} aria-label={t.systemRecheck} loading={checking}>
-            <RefreshCw className="h-4 w-4" aria-hidden="true" />
+            <RefreshCw className="icon-md" aria-hidden="true" />
           </Button>
         }
       >
@@ -193,7 +194,7 @@ export function AdminToolsSection({ refreshKey, notify, onDataChanged }: ToolsPr
                 size="sm"
                 loading={running === key}
                 disabled={running !== null}
-                leftIcon={<Play className="h-3.5 w-3.5" aria-hidden="true" />}
+                leftIcon={<Play className="icon-sm" aria-hidden="true" />}
                 onClick={() =>
                   run(key, async () => {
                     const result = await runMaintenanceJob(key);
@@ -215,24 +216,24 @@ export function AdminToolsSection({ refreshKey, notify, onDataChanged }: ToolsPr
         subtitle={t.databaseSubtitle}
         action={
           <a href={pgAdminUrl()} target="_blank" rel="noopener noreferrer" className={buttonClassName('secondary', 'sm')}>
-            <Database className="h-3.5 w-3.5" aria-hidden="true" />
+            <Database className="icon-sm" aria-hidden="true" />
             {t.pgAdmin}
-            <ExternalLink className="h-3 w-3" aria-hidden="true" />
+            <ExternalLink className="icon-xs" aria-hidden="true" />
           </a>
         }
       >
         <ToolRow title={t.exportJson} description={t.exportBackupDesc}>
-          <Button size="sm" leftIcon={<Download className="h-3.5 w-3.5" aria-hidden="true" />} onClick={() => setBackupTab('export')}>
+          <Button size="sm" leftIcon={<Download className="icon-sm" aria-hidden="true" />} onClick={() => setBackupTab('export')}>
             {t.export}
           </Button>
         </ToolRow>
         <ToolRow title={t.importJson} description={t.importBackupDesc}>
-          <Button size="sm" leftIcon={<Upload className="h-3.5 w-3.5" aria-hidden="true" />} onClick={() => setBackupTab('import')}>
+          <Button size="sm" leftIcon={<Upload className="icon-sm" aria-hidden="true" />} onClick={() => setBackupTab('import')}>
             {t.import}
           </Button>
         </ToolRow>
         <ToolRow title={t.purgeReset} description={t.purgeDesc}>
-          <Button size="sm" variant="danger" leftIcon={<Trash2 className="h-3.5 w-3.5" aria-hidden="true" />} onClick={() => setBackupTab('purge')}>
+          <Button size="sm" variant="danger" leftIcon={<Trash2 className="icon-sm" aria-hidden="true" />} onClick={() => setBackupTab('purge')}>
             {t.purge}
           </Button>
         </ToolRow>
@@ -240,7 +241,7 @@ export function AdminToolsSection({ refreshKey, notify, onDataChanged }: ToolsPr
 
       <ToolCard id="testing" title={t.testingTitle} subtitle={t.testingSubtitle}>
         <ToolRow title={t.ocrCheck} description={t.ocrCheckDesc}>
-          <Button size="sm" leftIcon={<ScanText className="h-3.5 w-3.5" aria-hidden="true" />} onClick={() => setOcrOpen(true)}>
+          <Button size="sm" leftIcon={<ScanText className="icon-sm" aria-hidden="true" />} onClick={() => setOcrOpen(true)}>
             {t.openTest}
           </Button>
         </ToolRow>
@@ -249,7 +250,7 @@ export function AdminToolsSection({ refreshKey, notify, onDataChanged }: ToolsPr
             size="sm"
             loading={running === 'email'}
             disabled={running !== null}
-            leftIcon={<Mail className="h-3.5 w-3.5" aria-hidden="true" />}
+            leftIcon={<Mail className="icon-sm" aria-hidden="true" />}
             onClick={() => run('email', async () => formatMessage(t.testEmailSent, { email: (await sendTestEmail()).sent_to }))}
           >
             {t.sendTest}
@@ -260,7 +261,7 @@ export function AdminToolsSection({ refreshKey, notify, onDataChanged }: ToolsPr
             size="sm"
             loading={running === 'discord'}
             disabled={running !== null}
-            leftIcon={<MessageSquare className="h-3.5 w-3.5" aria-hidden="true" />}
+            leftIcon={<MessageSquare className="icon-sm" aria-hidden="true" />}
             onClick={() =>
               run('discord', async () => {
                 await sendTestDiscord();
@@ -276,9 +277,9 @@ export function AdminToolsSection({ refreshKey, notify, onDataChanged }: ToolsPr
       <ToolCard id="analytics" title={t.analytics} className="xl:col-span-2">
         <ToolRow title={t.analytics} description={t.analyticsTitle}>
           <a href={analyticsUrl()} target="_blank" rel="noopener noreferrer" className={buttonClassName('secondary', 'sm')}>
-            <LineChart className="h-3.5 w-3.5" aria-hidden="true" />
+            <LineChart className="icon-sm" aria-hidden="true" />
             {t.analytics}
-            <ExternalLink className="h-3 w-3" aria-hidden="true" />
+            <ExternalLink className="icon-xs" aria-hidden="true" />
           </a>
         </ToolRow>
       </ToolCard>

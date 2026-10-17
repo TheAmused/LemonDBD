@@ -91,7 +91,7 @@ export function TierPool({
       <div
         data-pool-head=""
         onClick={() => onCollapsedChange(!collapsed)}
-        className="relative grid w-full cursor-pointer select-none grid-cols-[2.5rem_minmax(0,1fr)_2.5rem] items-center gap-x-3 gap-y-1.5 overflow-hidden px-3 py-1.5 sm:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] sm:px-4 sm:min-h-12 [@media(max-height:559px)]:py-1 [@media(max-height:559px)]:sm:min-h-0">
+        className="relative grid w-full cursor-pointer select-none grid-cols-pool-bar items-center gap-x-3 gap-y-1.5 overflow-hidden px-3 py-1.5 sm:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] sm:px-4 sm:min-h-12 short:py-1 short:sm:min-h-0">
         {/* Atmospheric DBD Banner Backdrop */}
         <div
           className="absolute inset-0 bg-cover bg-center opacity-15 dark:opacity-25 mix-blend-luminosity filter pointer-events-none"
@@ -188,7 +188,7 @@ export function TierPool({
               canReceiveSelection && 'cursor-pointer hover:bg-accent-amber/5'
             )}
           >
-          <div className="flex flex-wrap content-start justify-start gap-1 min-[480px]:gap-1.5 sm:gap-2 group-data-[fit]/board:gap-(--tile-gap)!">
+          <div className="flex flex-wrap content-start justify-start gap-1 phone-lg:gap-1.5 sm:gap-2 group-data-[fit]/board:gap-(--tile-gap)!">
             <SortableContext items={visibleKeys.map(itemDndId)} strategy={rectSortingStrategy}>
               {visibleKeys.map((key) => {
                 const item = itemsByKey.get(key);

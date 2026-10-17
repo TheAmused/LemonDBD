@@ -99,7 +99,7 @@ export const CampfireHeader: React.FC<CampfireHeaderProps> = ({
 
             {avatarFeedback && (
               <p
-                className={`text-mini font-semibold text-center max-w-[140px] leading-tight ${
+                className={`text-mini font-semibold text-center max-w-35 leading-tight ${
                   avatarFeedback.type === 'success' ? 'text-accent-green' : 'text-accent-red'
                 }`}
               >

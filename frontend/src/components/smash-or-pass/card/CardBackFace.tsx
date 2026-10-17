@@ -80,7 +80,7 @@ export function CardBackFace({
         </Button>
 
         <div className="flex items-center gap-1.5 px-2 min-w-0">
-          <h3 className="text-xs sm:text-sm font-black uppercase tracking-wider text-text-primary truncate max-w-[150px] sm:max-w-[180px]">
+          <h3 className="text-xs sm:text-sm font-black uppercase tracking-wider text-text-primary truncate max-w-37.5 sm:max-w-45">
             {character.name}
           </h3>
         </div>
@@ -101,7 +101,7 @@ export function CardBackFace({
         onClick={(e) => e.stopPropagation()}
       >
         {/* Mobile-only fallback (<880px): show Turn On & Dealbreaker only when floating lore fragments are hidden */}
-        <div className="@[880px]/hub:hidden space-y-2">
+        <div className="@hub-lg/hub:hidden space-y-2">
           <Surface tone="elevated" padding="none" className="p-2.5 border-accent-red/30 space-y-0.5">
             <span className="type-label-2xs text-accent-red block">
               {customLabels?.dating_vibe || text.loreLabels.datingArchetype}
@@ -172,7 +172,7 @@ export function CardBackFace({
 
         {/* Mobile-only details (quote/tagline when fragments are hidden) */}
         {(Boolean(charTagline) || Boolean(charQuote)) && (
-          <details className="@[880px]/hub:hidden group space-y-2.5">
+          <details className="@hub-lg/hub:hidden group space-y-2.5">
             <summary className="flex min-h-9 pointer-coarse:min-h-11 cursor-pointer list-none items-center justify-center rounded-control border border-border-color type-label-xs text-text-secondary transition-colors hover:text-text-primary [&::-webkit-details-marker]:hidden">
               <span className="group-open:hidden">{text.showMore}</span>
               <span className="hidden group-open:inline">{text.showLess}</span>

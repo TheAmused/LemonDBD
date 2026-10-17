@@ -19,7 +19,7 @@ export function TierListSkeleton({ label, className = '' }: TierListSkeletonProp
       role="status"
       aria-label={text}
       aria-busy="true"
-      className={`flex min-h-[460px] w-full select-none flex-col items-center justify-center p-6 ${className}`}
+      className={`flex min-h-115 w-full select-none flex-col items-center justify-center p-6 ${className}`}
     >
       <DbdSpinner size="responsive" layout="inline" accent="blood" needleSpeed={1.6} label={text} />
     </div>

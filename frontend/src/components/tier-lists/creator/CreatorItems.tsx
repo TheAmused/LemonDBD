@@ -51,7 +51,7 @@ export function CreatorItems({ items, onRename, onUpdateItem, onRemove, onClear 
       {items.length === 0 ? (
         <EmptyState variant="compact" title={c.noItems} />
       ) : (
-        <ul className="grid grid-cols-[repeat(auto-fill,minmax(5.5rem,1fr))] sm:grid-cols-[repeat(auto-fill,minmax(6.5rem,1fr))] md:grid-cols-[repeat(auto-fill,minmax(7.5rem,1fr))] wide:grid-cols-[repeat(auto-fill,minmax(8.5rem,1fr))] wide-2k:grid-cols-[repeat(auto-fill,minmax(9.5rem,1fr))] gap-2 sm:gap-2.5 justify-center">
+        <ul className="grid grid-cols-tiles-xs sm:grid-cols-tiles-sm md:grid-cols-tiles-md wide:grid-cols-tiles-lg wide-2k:grid-cols-tiles-xl gap-2 sm:gap-2.5 justify-center">
           {items.map((item) => (
             <li key={item.id} className="group/item relative flex flex-col items-center">
               {/* Crisp Square Tile Container */}

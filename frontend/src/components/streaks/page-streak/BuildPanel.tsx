@@ -50,7 +50,7 @@ export const BuildPanel: React.FC<BuildPanelProps> = ({ selected, size, iconByPe
             fallbackIcon={<KillerIcon className="h-8 w-8 text-text-muted" aria-hidden="true" />}
           />
         </div>
-        <h3 className="max-w-[8rem] truncate text-sm font-black tracking-wide text-text-primary">{killerName}</h3>
+        <h3 className="max-w-32 truncate text-sm font-black tracking-wide text-text-primary">{killerName}</h3>
       </div>
 
       <MotionConfig reducedMotion="user">

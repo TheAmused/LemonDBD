@@ -15,9 +15,8 @@ import { AdminSectionTabs, ADMIN_TABS_ID } from '@/components/admin/AdminSection
 import { AdminTabContentSkeleton } from '@/components/admin/AdminTabContentSkeleton';
 import { AdminToast } from '@/components/admin/AdminToast';
 import { AdminUsersSection } from '@/components/admin/AdminUsersSection';
+import { ADMIN_STORAGE } from '@/components/admin/adminStorage';
 import {
-  ADMIN_TAB_STORAGE_KEY,
-  REPORT_QUEUE_STORAGE_KEY,
   isAdminTab,
   isReportQueue,
   type AdminTab,
@@ -47,8 +46,8 @@ export function AdminPanelClient() {
   const { user, isAdmin, isAuthenticated, isLoading } = useAuth();
   const ready = isAuthenticated && isAdmin;
 
-  const [tab, setTab] = usePersistentString<AdminTab>(ADMIN_TAB_STORAGE_KEY, 'users', isAdminTab);
-  const [queue, setQueue] = usePersistentString<ReportQueue>(REPORT_QUEUE_STORAGE_KEY, 'bugs', isReportQueue);
+  const [tab, setTab] = usePersistentString<AdminTab>(ADMIN_STORAGE.tab, 'users', isAdminTab);
+  const [queue, setQueue] = usePersistentString<ReportQueue>(ADMIN_STORAGE.reportQueue, 'bugs', isReportQueue);
   const [message, setMessage] = useState<ActionMessage | null>(null);
   const [refreshKey, setRefreshKey] = useState(0);
   const [userForm, setUserForm] = useState<UserRow | 'new' | null>(null);

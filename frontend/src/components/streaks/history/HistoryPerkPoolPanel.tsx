@@ -142,7 +142,7 @@ export const HistoryPerkPoolPanel: React.FC<HistoryPerkPoolPanelProps> = ({ pool
           {normalizedQuery ? noMatchText : dict.streaks.noPerksUnlockedYet}
         </p>
       ) : (
-        <div className="mb-5 grid grid-cols-4 min-[460px]:grid-cols-5 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 xl:grid-cols-[repeat(15,minmax(0,1fr))] gap-2">
+        <div className="mb-5 grid grid-cols-4 phone-md:grid-cols-5 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 xl:grid-cols-[repeat(15,minmax(0,1fr))] gap-2">
           {unlocked.map((perk) => (
             <UnlockedTile
               key={perk.id ?? perk.name}
@@ -163,7 +163,7 @@ export const HistoryPerkPoolPanel: React.FC<HistoryPerkPoolPanelProps> = ({ pool
           {normalizedQuery ? noMatchText : dict.streaks.everyPerkUnlocked}
         </p>
       ) : (
-        <div className="grid grid-cols-4 min-[460px]:grid-cols-5 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 xl:grid-cols-[repeat(15,minmax(0,1fr))] gap-2">
+        <div className="grid grid-cols-4 phone-md:grid-cols-5 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 xl:grid-cols-[repeat(15,minmax(0,1fr))] gap-2">
           {locked.map((perk) => (
             <LockedTile key={perk.id ?? perk.name} perk={perk} displayName={localName(perk)} />
           ))}

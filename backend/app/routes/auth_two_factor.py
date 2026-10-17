@@ -5,6 +5,7 @@ from pydantic import ValidationError
 
 from app.core.account_state import AccountBlockedError
 from app.core.limiter import limiter
+from app.core.rate_limits import per_minute
 from app.core.security import SESSION_COOKIE_NAME, generate_token, login_required, set_session_cookie
 from app.routes.auth import session_response
 from app.schemas.auth import (
@@ -38,7 +39,7 @@ def _with_fresh_session(payload: dict):
 
 
 @auth_two_factor_bp.route("/login/two-factor", methods=["POST"])
-@limiter.limit("10 per minute")
+@limiter.limit(per_minute("rate_two_factor_per_minute"))
 def login_two_factor():
     """Second step of a sign-in: the challenge from POST /auth/login plus a code."""
     try:
@@ -70,7 +71,7 @@ def two_factor_status():
 
 
 @auth_two_factor_bp.route("/two-factor/setup", methods=["POST"])
-@limiter.limit("10 per minute")
+@limiter.limit(per_minute("rate_two_factor_per_minute"))
 @login_required
 def two_factor_setup():
     try:
@@ -86,7 +87,7 @@ def two_factor_setup():
 
 
 @auth_two_factor_bp.route("/two-factor/enable", methods=["POST"])
-@limiter.limit("10 per minute")
+@limiter.limit(per_minute("rate_two_factor_per_minute"))
 @login_required
 def two_factor_enable():
     try:
@@ -102,7 +103,7 @@ def two_factor_enable():
 
 
 @auth_two_factor_bp.route("/two-factor/disable", methods=["POST"])
-@limiter.limit("10 per minute")
+@limiter.limit(per_minute("rate_two_factor_per_minute"))
 @login_required
 def two_factor_disable():
     try:
@@ -118,7 +119,7 @@ def two_factor_disable():
 
 
 @auth_two_factor_bp.route("/two-factor/recovery-codes", methods=["POST"])
-@limiter.limit("10 per minute")
+@limiter.limit(per_minute("rate_two_factor_per_minute"))
 @login_required
 def two_factor_recovery_codes():
     try:

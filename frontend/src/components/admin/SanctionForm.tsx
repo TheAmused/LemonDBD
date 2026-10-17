@@ -7,7 +7,7 @@
 
 import React, { useId } from 'react';
 import { CustomDropdown, type DropdownOption } from '@/components/common/CustomDropdown';
-import { Input, Textarea } from '@/components/common/Field';
+import { FieldLabel, Input, Textarea } from '@/components/common/Field';
 import { SanctionPreviewPanel } from '@/components/admin/SanctionPreviewPanel';
 import { reasonLabel, ruleLabel } from '@/components/moderation/moderationLabels';
 import { useDictionary } from '@/context/DictionaryContext';
@@ -57,7 +57,6 @@ export function SanctionForm({
     ban: t.kindBan,
   };
   const factsRequired = draft.kind !== 'warning';
-  const label = 'block type-label-xs text-text-secondary mb-1';
   const hint = 'mt-1 type-micro text-text-muted';
   const trigger = 'w-full justify-between py-2.5';
   const kindOptions: DropdownOption<SanctionKind>[] = kinds.map((kind) => ({ value: kind, label: kindLabel[kind] }));
@@ -73,7 +72,7 @@ export function SanctionForm({
 
   const durationField = (
     <div>
-      <label htmlFor={`${id}-days`} className={label}>{t.formDuration}</label>
+      <FieldLabel htmlFor={`${id}-days`}>{t.formDuration}</FieldLabel>
       <div className="relative">
         <Input
           id={`${id}-days`}
@@ -98,9 +97,9 @@ export function SanctionForm({
   return (
     <div className="space-y-4">
       {kinds.length > 1 ? (
-        <div className={cn('grid gap-3', isSuspension ? 'grid-cols-[minmax(0,1fr)_7.5rem]' : 'grid-cols-1')}>
+        <div className={cn('grid gap-3', isSuspension ? 'grid-cols-field-suffix' : 'grid-cols-1')}>
           <div className="min-w-0">
-            <span className={label}>{t.formKind}</span>
+            <FieldLabel as="span">{t.formKind}</FieldLabel>
             <CustomDropdown<SanctionKind>
               value={draft.kind}
               options={kindOptions}
@@ -123,7 +122,7 @@ export function SanctionForm({
       <div className={cn('grid gap-3', showReason ? 'grid-cols-2' : 'grid-cols-1')}>
         {showReason && (
           <div className="min-w-0">
-            <span className={label}>{t.formReason}</span>
+            <FieldLabel as="span">{t.formReason}</FieldLabel>
             <CustomDropdown<SanctionDraft['reason_code']>
               value={draft.reason_code}
               options={reasonOptions}
@@ -137,7 +136,7 @@ export function SanctionForm({
           </div>
         )}
         <div className="min-w-0">
-          <span className={label}>{t.formRule}</span>
+          <FieldLabel as="span">{t.formRule}</FieldLabel>
           <CustomDropdown<RuleRef | ''>
             value={draft.rule_ref}
             options={ruleOptions}
@@ -147,14 +146,14 @@ export function SanctionForm({
             className="w-full"
             buttonClassName={trigger}
             menuClassName="w-full"
-            minWidthClass="min-w-[17rem]"
+            minWidthClass="min-w-field-lg"
             align={showReason ? 'right' : 'left'}
           />
         </div>
       </div>
 
       <div>
-        <label htmlFor={`${id}-facts`} className={label}>{t.formFacts}</label>
+        <FieldLabel htmlFor={`${id}-facts`}>{t.formFacts}</FieldLabel>
         <Textarea
           id={`${id}-facts`}
           fieldSize="sm"
@@ -170,7 +169,7 @@ export function SanctionForm({
 
       {showInternal && (
         <div>
-          <label htmlFor={`${id}-internal`} className={label}>{t.formInternal}</label>
+          <FieldLabel htmlFor={`${id}-internal`}>{t.formInternal}</FieldLabel>
           <Textarea
             id={`${id}-internal`}
             fieldSize="sm"

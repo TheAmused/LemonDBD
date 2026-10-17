@@ -368,7 +368,7 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ feed, classN
                             {post.title}
                           </h3>
                           {isUnread(post) && (
-                            <span className="inline-flex shrink-0 items-center rounded-full bg-accent-red px-2 py-0.5 text-tiny font-black uppercase tracking-wide text-text-inverted">
+                            <span className="inline-flex shrink-0 items-center rounded-full bg-accent-red px-2 py-0.5 type-label-2xs text-text-inverted">
                               {t.newBadge}
                             </span>
                           )}

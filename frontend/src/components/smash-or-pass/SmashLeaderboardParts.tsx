@@ -263,7 +263,7 @@ export const CandidateRow = React.memo<CandidateRowProps>(({
         </div>
 
         {/* Smashes / Passes Numeric Counts */}
-        <div className="text-right text-xs shrink-0 min-w-[65px]">
+        <div className="text-right text-xs shrink-0 min-w-16.25">
           <div className="flex items-center gap-1.5 justify-end text-accent-red font-black">
             <Heart className="h-3.5 w-3.5 fill-accent-red" />
             <span>{smashCount}</span>

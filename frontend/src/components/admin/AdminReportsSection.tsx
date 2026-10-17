@@ -83,7 +83,7 @@ export function AdminReportsSection({ queue, refreshKey, notify, onChanged, onSh
                 <span className="flex shrink-0 items-center gap-2">
                   {report.images.length > 0 && (
                     <span className="inline-flex items-center gap-0.5">
-                      <ImageIcon className="h-3 w-3" aria-hidden="true" />
+                      <ImageIcon className="icon-xs" aria-hidden="true" />
                       {report.images.length}
                     </span>
                   )}

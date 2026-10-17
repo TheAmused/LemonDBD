@@ -22,7 +22,7 @@ export const ClassicCharacterGuesser: React.FC<ClassicCharacterGuesserProps> = (
 
   return (
     <div className="w-full overflow-x-auto pb-4 my-6">
-      <table className="w-full min-w-[700px] border-separate border-spacing-2 text-center select-none">
+      <table className="w-full min-w-175 border-separate border-spacing-2 text-center select-none">
         <thead>
           <tr className="type-label-sm text-text-muted">
             <th className="p-2 w-28 text-left">{t.attributes.character}</th>
@@ -132,7 +132,7 @@ const AttributeCell: React.FC<AttributeCellProps> = ({ evaluation, value }) => {
       className={`p-2.5 rounded-card border shadow-md font-semibold text-xs transition-all relative ${bgStyle}`}
     >
       <div className="flex items-center justify-center gap-1">
-        <span className="truncate max-w-[120px]">{value ?? '-'}</span>
+        <span className="truncate max-w-30">{value ?? '-'}</span>
         {direction === 'higher' && (
           <ArrowUp className="w-3.5 h-3.5 text-text-inverted flex-shrink-0 animate-bounce" />
         )}

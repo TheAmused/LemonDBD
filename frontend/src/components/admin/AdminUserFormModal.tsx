@@ -4,18 +4,19 @@
 // One form for both account dialogs: "Create user" (login, name, email, password, role) and
 // "Edit user" (display name, role, e-mail verified). The login and e-mail of an existing account are
 // shown but not editable here.
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useId, useState } from 'react';
 import { Save, UserPlus } from 'lucide-react';
 import { Modal } from '@/components/common/Modal';
 import { Button } from '@/components/common/Button';
 import { Checkbox } from '@/components/common/Checkbox';
 import { CustomDropdown } from '@/components/common/CustomDropdown';
-import { Input } from '@/components/common/Field';
+import { FieldLabel, FormField, Input } from '@/components/common/Field';
+import { Surface } from '@/components/common/Surface';
 import { useDictionary } from '@/context/DictionaryContext';
+import { useSiteConfig } from '@/context/SiteConfigContext';
 import { formatMessage } from '@/utils/i18nFormat';
 import type { NewUser, UserPatch, UserRow } from '@/types/admin';
 
-const MIN_PASSWORD = 6;
 const FORM_ID = 'admin-user-form';
 
 interface AdminUserFormModalProps {
@@ -33,6 +34,9 @@ const EMPTY: NewUser = { login: '', username: '', email: '', password: '', role:
 export function AdminUserFormModal({ target, currentUserId, onClose, onCreate, onUpdate }: AdminUserFormModalProps) {
   const dict = useDictionary();
   const t = dict.admin;
+  // The minimum is an admin setting (Settings > Limits); the server enforces the same number.
+  const minPasswordLength = useSiteConfig().limits.passwordMinLength;
+  const ids = useId();
   const editing = target !== null && target !== 'new' ? target : null;
   const [form, setForm] = useState<NewUser>(EMPTY);
   const [verified, setVerified] = useState(false);
@@ -94,7 +98,7 @@ export function AdminUserFormModal({ target, currentUserId, onClose, onCreate, o
             variant="primary"
             size="sm"
             loading={busy}
-            leftIcon={editing ? <Save className="h-3.5 w-3.5" /> : <UserPlus className="h-3.5 w-3.5" />}
+            leftIcon={editing ? <Save className="icon-sm" /> : <UserPlus className="icon-sm" />}
             className="w-full sm:w-auto"
           >
             {editing ? t.saveUser : t.createAccount}
@@ -104,68 +108,67 @@ export function AdminUserFormModal({ target, currentUserId, onClose, onCreate, o
     >
       <form id={FORM_ID} onSubmit={submit} className="space-y-4">
         {editing ? (
-          <dl className="grid grid-cols-1 gap-3 rounded-card bg-bg-primary/60 p-3 sm:grid-cols-2">
-            <div className="min-w-0">
-              <dt className="type-label-xs text-text-secondary">{t.thLogin}</dt>
-              <dd className="truncate type-strong text-text-primary">{editing.login}</dd>
-            </div>
-            <div className="min-w-0">
-              <dt className="type-label-xs text-text-secondary">{t.thEmail}</dt>
-              <dd className="truncate type-strong text-text-primary">{editing.email}</dd>
-            </div>
-          </dl>
+          <Surface as="aside" tone="inset" padding="sm">
+            <dl className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+              <div className="min-w-0">
+                <dt className="type-label-xs text-text-secondary">{t.thLogin}</dt>
+                <dd className="truncate type-strong text-text-primary">{editing.login}</dd>
+              </div>
+              <div className="min-w-0">
+                <dt className="type-label-xs text-text-secondary">{t.thEmail}</dt>
+                <dd className="truncate type-strong text-text-primary">{editing.email}</dd>
+              </div>
+            </dl>
+          </Surface>
         ) : (
-          <label className="block space-y-1">
-            <span className="block type-label-xs text-text-secondary">{t.thLogin}</span>
-            <Input data-autofocus required minLength={3} value={form.login} onChange={field('login')} placeholder={t.createUserLoginPlaceholder} />
-          </label>
+          <FormField label={t.thLogin} htmlFor={`${ids}-login`}>
+            <Input id={`${ids}-login`} data-autofocus required minLength={3} value={form.login} onChange={field('login')} placeholder={t.createUserLoginPlaceholder} />
+          </FormField>
         )}
 
-        <label className="block space-y-1">
-          <span className="block type-label-xs text-text-secondary">{t.thUsername}</span>
-          <Input required minLength={3} maxLength={50} value={form.username} onChange={field('username')} placeholder={t.createUserUsernamePlaceholder} />
-        </label>
+        <FormField label={t.thUsername} htmlFor={`${ids}-username`}>
+          <Input id={`${ids}-username`} required minLength={3} maxLength={50} value={form.username} onChange={field('username')} placeholder={t.createUserUsernamePlaceholder} />
+        </FormField>
 
         {!editing && (
           <>
-            <label className="block space-y-1">
-              <span className="block type-label-xs text-text-secondary">{t.thEmail}</span>
-              <Input type="email" required value={form.email} onChange={field('email')} placeholder={t.createUserEmailPlaceholder} />
-            </label>
-            <label className="block space-y-1">
-              <span className="block type-label-xs text-text-secondary">{t.thPassword}</span>
+            <FormField label={t.thEmail} htmlFor={`${ids}-email`}>
+              <Input id={`${ids}-email`} type="email" required value={form.email} onChange={field('email')} placeholder={t.createUserEmailPlaceholder} />
+            </FormField>
+            <FormField label={t.thPassword} htmlFor={`${ids}-password`}>
               <Input
+                id={`${ids}-password`}
                 type="password"
                 required
-                minLength={MIN_PASSWORD}
+                minLength={minPasswordLength}
                 autoComplete="new-password"
                 value={form.password}
                 onChange={field('password')}
-                placeholder={formatMessage(t.createUserPasswordPlaceholder, { min: MIN_PASSWORD })}
+                placeholder={formatMessage(t.createUserPasswordPlaceholder, { min: minPasswordLength })}
               />
-            </label>
+            </FormField>
           </>
         )}
 
-        <label className="block space-y-1">
-          <span className="block type-label-xs text-text-secondary">{t.rolePrivilege}</span>
+        <div>
+          <FieldLabel as="span">{t.rolePrivilege}</FieldLabel>
           <div className={ownAccount ? 'pointer-events-none opacity-60' : undefined} aria-disabled={ownAccount}>
-          <CustomDropdown<NewUser['role']>
-            ariaLabel={t.rolePrivilege}
-            accent="primary"
-            className="w-full"
-            buttonClassName="w-full justify-between py-2.5"
-            menuClassName="w-full"
-            value={form.role}
-            onChange={(role) => !ownAccount && setForm((f) => ({ ...f, role }))}
-            options={[
-              { value: 'user', label: t.roleStandard },
-              { value: 'admin', label: t.roleAdministrator },
-            ]}
-          />
+            <CustomDropdown<NewUser['role']>
+              ariaLabel={t.rolePrivilege}
+              accent="primary"
+              className="w-full"
+              buttonClassName="w-full justify-between py-2.5"
+              menuClassName="w-full"
+              value={form.role}
+              onChange={(role) => !ownAccount && setForm((f) => ({ ...f, role }))}
+              options={[
+                { value: 'user', label: t.roleStandard },
+                { value: 'admin', label: t.roleAdministrator },
+              ]}
+            />
           </div>
           {ownAccount && <span className="block type-caption text-text-muted">{t.ownRoleLocked}</span>}
-        </label>
+        </div>
 
         {editing && (
           <Checkbox checked={verified} onChange={setVerified}>

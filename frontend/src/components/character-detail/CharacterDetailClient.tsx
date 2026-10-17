@@ -78,7 +78,7 @@ export function CharacterDetailClient({ slug }: { slug: string }) {
             icon={UserX}
             title={t.notFoundTitle}
             subtitle={t.notFoundDesc}
-            className="min-h-[60vh] flex flex-col items-center justify-center space-y-5 text-center p-6"
+            className="min-h-vh-60 flex flex-col items-center justify-center space-y-5 text-center p-6"
           >
             <Link
               href={`/${locale}/characters`}

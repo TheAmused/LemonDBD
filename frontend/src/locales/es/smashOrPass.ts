@@ -376,7 +376,6 @@ export default {
     categoryLabel: 'Categoría',
     categoryPlaceholder: 'ej. Personalizada',
     nsfwLabel: 'Contiene contenido NSFW',
-    officialHint: 'Visible para todos en el centro en lugar de solo en este navegador.',
     addEntity: 'Añadir Candidato',
     removeEntity: 'Quitar',
     entityNameLabel: 'Nombre',

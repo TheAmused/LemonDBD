@@ -30,7 +30,7 @@ import { CreatorPreviewModal } from './CreatorPreview';
 import { type IncomingItem, ItemSources } from './ItemSources';
 import { LadderEditor } from './LadderEditor';
 import { Checkbox } from '@/components/common/Checkbox';
-import { NsfwSwitch } from '@/components/common/NsfwSwitch';
+import { Tooltip } from '@/components/common/Tooltip';
 import { Button } from '@/components/common/Button';
 import { Input } from '@/components/common/Field';
 import { type Draft, readDraft, DRAFT_KEY, Section, STORAGE_WARN_BYTES, formatBytes, Feedback } from "./TierListCreatorParts";
@@ -396,12 +396,14 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
         <Section title={c.stepBasics}>
           <div className="grid gap-4 2xl:gap-6 md:grid-cols-2">
             <label className="md:col-span-1">
-              <span className={LABEL}>{c.titleLabel}</span>
+              <span className={LABEL}>
+                {c.titleLabel}
+                <span className="text-accent-red"> *</span>
+              </span>
               <Input
                 value={draft.title}
                 maxLength={TIER_LIST_LIMITS.maxTitle}
                 onChange={(e) => patch({ title: e.target.value })}
-                placeholder={c.titlePlaceholder}
                 invalid={attempted && titleMissing}
                 className={cn(TOUCH_FIELD, '2xl:min-h-hit-xl 2xl:text-base')}
               />
@@ -412,7 +414,6 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
                 value={draft.description}
                 maxLength={TIER_LIST_LIMITS.maxDescription}
                 onChange={(e) => patch({ description: e.target.value })}
-                placeholder={c.descriptionPlaceholder}
                 className={cn(TOUCH_FIELD, '2xl:min-h-hit-xl 2xl:text-base')}
               />
             </label>
@@ -440,22 +441,18 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
                 </div>
               )}
             </label>
-            <div className="md:col-span-2 flex justify-center">
-              <NsfwSwitch
-                checked={draft.is_nsfw}
-                onChange={(checked) => patch({ is_nsfw: checked })}
-                label={t.nsfw.label}
-                hint={t.nsfw.hint}
-              />
+            <div className="md:col-span-2 flex flex-col items-start gap-3">
+              <Tooltip variant="action" title={t.nsfw.label} description={t.nsfw.hint}>
+                <Checkbox checked={draft.is_nsfw} onChange={(checked) => patch({ is_nsfw: checked })} className="gap-2.5">
+                  <span className={cn(LABEL, 'mb-0 inline')}>{t.nsfw.label}</span>
+                </Checkbox>
+              </Tooltip>
+              {isAdmin && !isEditing && (
+                <Checkbox checked={official} onChange={setOfficial} className="gap-2.5">
+                  <span className={cn(LABEL, 'mb-0 inline')}>{c.official}</span>
+                </Checkbox>
+              )}
             </div>
-            {isAdmin && !isEditing && (
-              <Checkbox checked={official} onChange={setOfficial} className="md:col-span-2 justify-center gap-2.5">
-                <span className="text-center">
-                  <span className={cn(LABEL, 'inline')}>{c.official}</span>
-                  <span className="ml-2 text-xs 2xl:text-sm text-text-muted">{c.officialHint}</span>
-                </span>
-              </Checkbox>
-            )}
           </div>
         </Section>
       </div>

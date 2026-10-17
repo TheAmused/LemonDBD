@@ -376,7 +376,6 @@ export default {
     categoryLabel: 'Kategorie',
     categoryPlaceholder: 'z.B. Benutzerdefiniert',
     nsfwLabel: 'Enthält NSFW-Inhalte',
-    officialHint: 'Für alle im Hub sichtbar, statt nur in diesem Browser.',
     addEntity: 'Kandidat hinzufügen',
     removeEntity: 'Entfernen',
     entityNameLabel: 'Name',

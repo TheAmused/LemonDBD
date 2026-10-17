@@ -376,7 +376,6 @@ export default {
     categoryLabel: 'Category',
     categoryPlaceholder: 'e.g. Custom',
     nsfwLabel: 'Contains NSFW content',
-    officialHint: 'Visible to everyone on the hub instead of only in this browser.',
     addEntity: 'Add Candidate',
     removeEntity: 'Remove',
     entityNameLabel: 'Name',

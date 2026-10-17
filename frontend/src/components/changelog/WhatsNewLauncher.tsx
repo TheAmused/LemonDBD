@@ -372,11 +372,7 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ feed, classN
                           <span className="type-label-2xs text-text-muted">
                             {formatPostDate(postDate(post))}
                           </span>
-                          {post.edited_at && (
-                            <span className="type-label-2xs text-text-muted">
-                              {t.edited} {formatPostDate(post.edited_at)}
-                            </span>
-                          )}
+                          {post.edited_at && <span className="text-micro italic text-text-muted/70">{t.edited}</span>}
                           {isAdmin && post.discord_announced_at && (
                             <span className="inline-flex items-center gap-1 type-label-2xs text-text-muted">
                               <Send className="h-3 w-3" aria-hidden="true" />

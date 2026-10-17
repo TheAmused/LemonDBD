@@ -11,7 +11,6 @@ export type BadgeSize = 'xs' | 'sm' | 'md' | 'lg';
 const BADGE_TONES: Record<BadgeTone, string> = {
   neutral: 'bg-bg-elevated/70 text-text-secondary border-transparent',
   red: 'bg-accent-red/10 text-accent-red border-accent-red/30',
-  /** A loud "New" marker: full red fill, white text. */
   redSolid: 'bg-accent-red text-text-inverted border-transparent',
   amber: 'bg-accent-amber/10 text-accent-amber border-accent-amber/30',
   green: 'bg-accent-green/10 text-accent-green border-accent-green/30',

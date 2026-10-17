@@ -1,6 +1,5 @@
 // frontend/src/components/common/Alert.tsx
-// The one inline error box ("could not save", "could not send"): red tint, warning icon, optional dismiss.
-// Field-level errors under an input belong to FieldLabel in Field.tsx instead.
+// The one inline error box. Errors under a single input belong to FieldLabel in Field.tsx.
 import React from 'react';
 import { TriangleAlert, X } from 'lucide-react';
 import { Button } from '@/components/common/Button';

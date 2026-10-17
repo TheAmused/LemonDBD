@@ -45,7 +45,6 @@ const ConfirmModal = dynamic(
 
 const TOUCH_HOLD_MS = 220;
 
-/** A Discord action waiting for the admin's confirmation: first post, or rewrite of the existing message. */
 interface PendingDiscord {
   post: ChangelogPost;
   kind: 'announce' | 'update';
@@ -79,10 +78,8 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ feed, classN
   const [actionError, setActionError] = useState<string | null>(null);
   const [pendingDeleteId, setPendingDeleteId] = useState<number | null>(null);
   const [pendingDiscord, setPendingDiscord] = useState<PendingDiscord | null>(null);
-  /** A save that would take a live entry off Discord, waiting for the admin's confirmation. */
   const [pendingDraft, setPendingDraft] = useState<ChangelogPostDraft | null>(null);
   const [announcing, setAnnouncing] = useState(false);
-  /** The confirmation shown after Discord took the message: what happened and which entry. */
   const [discordNotice, setDiscordNotice] = useState<{ title: string; postTitle: string } | null>(null);
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
@@ -99,8 +96,7 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ feed, classN
     try {
       if (editingPost) {
         const res = await updateChangelogPost(token, editingPost.id, draft);
-        // The server keeps the entry's Discord message in line by itself: it rewrites a message that is behind
-        // and deletes the message of an entry that is now a draft.
+        // The server keeps the Discord message in line itself: rewrites it when behind, deletes it for a draft.
         if (res.discord === 'failed') setActionError(draft.is_published ? t.discordUpdateFailed : t.discordRemoveFailed);
         else if (res.discord && res.discord !== 'removed') reportDiscord(res.discord, draft.title, t.discordUpdated);
       } else {
@@ -141,7 +137,6 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ feed, classN
     missing: t.discordMissing,
   };
 
-  /** Tells the admin how a Discord call went: the confirmation window, or the reason it did not work. */
   const reportDiscord = (result: ChangelogDiscordResult, postTitle: string, successTitle: string) => {
     if (result === 'sent') {
       setActionError(null);
@@ -151,7 +146,6 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ feed, classN
     }
   };
 
-  /** Sends the entry to Discord (first time) or rewrites its message, then tells the admin how it went. */
   const runDiscordAction = async ({ post, kind }: PendingDiscord) => {
     if (!token) return;
     const call: (token: string, id: number) => Promise<ChangelogAnnounceResponse> =

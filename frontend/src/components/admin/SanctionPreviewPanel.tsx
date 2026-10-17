@@ -5,7 +5,7 @@
 // in the app and the email they get. The email comes from the server (the same text builder that sends
 // it, in the account holder's language); nothing is saved.
 
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useEffectEvent, useMemo, useState } from 'react';
 import { AccordionSection } from '@/components/common/AccordionSection';
 import { SegmentedControl } from '@/components/common/SegmentedControl';
 import { Surface } from '@/components/common/Surface';
@@ -88,6 +88,9 @@ export function SanctionPreviewPanel({ draft, target }: SanctionPreviewPanelProp
   // Only what the preview depends on: typing in the internal notes must not ask the server again.
   const requestKey = useMemo(() => JSON.stringify(sanctionPreviewBody(draft, target)), [draft, target]);
 
+  // Reads the latest draft and target without making every keystroke in them re-run the effect below.
+  const requestPreview = useEffectEvent(() => previewSanction(draft, target));
+
   useEffect(() => {
     if (!isOpen) return;
     if (!valid) {
@@ -97,7 +100,7 @@ export function SanctionPreviewPanel({ draft, target }: SanctionPreviewPanelProp
     let stale = false;
     setState((previous) => ({ status: 'loading', data: previous.data }));
     const timer = setTimeout(() => {
-      previewSanction(draft, target).then(
+      requestPreview().then(
         (data) => {
           if (!stale) setState({ status: 'ready', data });
         },
@@ -110,8 +113,6 @@ export function SanctionPreviewPanel({ draft, target }: SanctionPreviewPanelProp
       stale = true;
       clearTimeout(timer);
     };
-    // `requestKey` stands for draft and target.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen, valid, requestKey]);
 
   const { data } = state;

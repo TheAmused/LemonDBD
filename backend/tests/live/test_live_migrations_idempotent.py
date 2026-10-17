@@ -43,7 +43,8 @@ def test_changelog_posts_schema_matches_the_current_model(live_app: Flask) -> No
         columns = {c["name"] for c in inspector.get_columns("changelog_posts")}
         expected = {
             "id", "title", "content_html", "position", "is_published",
-            "author_id", "author_name", "created_at", "published_at", "discord_announced_at", "updated_at",
+            "author_id", "author_name", "created_at", "published_at", "edited_at",
+            "discord_announced_at", "discord_message_id", "discord_synced_at", "updated_at",
         }
         missing = expected - columns
         assert not missing, f"changelog_posts is missing columns: {missing}"

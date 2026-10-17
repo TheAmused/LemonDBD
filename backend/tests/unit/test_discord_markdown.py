@@ -8,7 +8,15 @@ from app.utils.discord_markdown import html_to_discord
 class TestHtmlToDiscord:
     def test_heading_becomes_a_bold_line_and_items_become_bullets(self) -> None:
         text = html_to_discord("<h3>Bug-fix</h3><ul><li>One</li><li>Two</li></ul>")
-        assert text == "**Bug-fix**\n\n\u2022 One\n\u2022 Two"
+        assert text == "### Bug-fix\n- One\n- Two"
+
+    def test_lines_stay_tight_and_an_empty_line_is_one_gap(self) -> None:
+        text = html_to_discord("<div>one</div><div><br></div><div>two</div><div>three</div>")
+        assert text == "one\n\ntwo\nthree"
+
+    def test_sections_are_separated_by_a_blank_line(self) -> None:
+        text = html_to_discord("test<h3>New</h3><ul><li>A</li></ul><h3>QoL</h3><ul><li>B</li></ul>")
+        assert text == "test\n\n### New\n- A\n\n### QoL\n- B"
 
     def test_inline_marks_and_links(self) -> None:
         text = html_to_discord('<p><b>Bold</b> <i>it</i> <a href="https://x.dev/a">site</a></p>')

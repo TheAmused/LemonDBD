@@ -1,53 +1,13 @@
 # backend/tests/unit/api/test_changelog_routes.py
 import pytest
-from flask import Flask
 from flask.testing import FlaskClient
 
-from app.core.extensions import db
-from app.core.security import generate_token
-from app.models import User
-from app.services import changelog_discord
+from tests.unit.api.changelog_support import ChangelogRouteFixtures
 
 
 @pytest.mark.unit
-class TestChangelogRoutes:
+class TestChangelogRoutes(ChangelogRouteFixtures):
     """Tests for the /api/v1/changelog admin CRUD + public feed routes."""
-
-    @pytest.fixture
-    def admin_user(self, db_session) -> User:
-        user = User(
-            login="route_admin", username="route_admin",
-            email="route_admin@example.com",
-            password_hash="hashed",
-            role="admin",
-        )
-        db_session.add(user)
-        db_session.commit()
-        return user
-
-    @pytest.fixture
-    def plain_user(self, db_session) -> User:
-        user = User(
-            login="route_user", username="route_user",
-            email="route_user@example.com",
-            password_hash="hashed",
-            role="user",
-        )
-        db_session.add(user)
-        db_session.commit()
-        return user
-
-    @pytest.fixture
-    def admin_headers(self, app: Flask, admin_user: User) -> dict[str, str]:
-        with app.app_context():
-            token = generate_token(admin_user.id, role="admin")
-        return {"Authorization": f"Bearer {token}"}
-
-    @pytest.fixture
-    def user_headers(self, app: Flask, plain_user: User) -> dict[str, str]:
-        with app.app_context():
-            token = generate_token(plain_user.id, role="user")
-        return {"Authorization": f"Bearer {token}"}
 
     # -- public feed --------------------------------------------------
 
@@ -125,91 +85,6 @@ class TestChangelogRoutes:
         assert "alert(1)" not in data["content_html"]
         assert data["position"] == 0
         assert "author_name" not in data
-
-    def _publish(self, client: FlaskClient, headers: dict[str, str], published: bool = True) -> int:
-        res = client.post(
-            "/api/v1/changelog",
-            json={"title": "Big patch", "content_html": "<h3>New</h3><ul><li>Thing</li></ul>", "is_published": published},
-            headers=headers,
-        )
-        return res.get_json()["data"]["id"]
-
-    def test_announce_requires_admin(
-        self, client: FlaskClient, admin_headers: dict[str, str], user_headers: dict[str, str]
-    ) -> None:
-        post_id = self._publish(client, admin_headers)
-        assert client.post(f"/api/v1/changelog/{post_id}/announce", headers=user_headers).status_code == 403
-
-    def test_announce_unknown_post_is_404(self, client: FlaskClient, admin_headers: dict[str, str]) -> None:
-        assert client.post("/api/v1/changelog/999999/announce", headers=admin_headers).status_code == 404
-
-    def test_announce_reports_not_configured_without_a_webhook(
-        self, client: FlaskClient, admin_headers: dict[str, str]
-    ) -> None:
-        post_id = self._publish(client, admin_headers)
-        res = client.post(f"/api/v1/changelog/{post_id}/announce", headers=admin_headers)
-        assert res.status_code == 200
-        body = res.get_json()
-        assert body["discord"] == "not_configured"
-        assert body["data"]["discord_announced_at"] is None
-
-    def test_announce_posts_an_embed_and_only_once(
-        self, app: Flask, client: FlaskClient, admin_headers: dict[str, str], monkeypatch: pytest.MonkeyPatch
-    ) -> None:
-        app.config["DISCORD_CHANGELOG_WEBHOOK_URL"] = "https://discord.test/api/webhooks/1/x"
-        sent: list[dict] = []
-
-        class _Resp:
-            status_code = 204
-
-        def fake_post(url: str, **kwargs):
-            sent.append({"url": url, **kwargs})
-            return _Resp()
-
-        monkeypatch.setattr(changelog_discord.requests, "post", fake_post)
-        post_id = self._publish(client, admin_headers)
-
-        res = client.post(f"/api/v1/changelog/{post_id}/announce", headers=admin_headers)
-        body = res.get_json()
-        assert body["discord"] == "sent"
-        assert body["data"]["discord_announced_at"] is not None
-        embed = sent[0]["json"]["embeds"][0]
-        assert embed["title"] == "Big patch"
-        assert "**New**" in embed["description"] and "\u2022 Thing" in embed["description"]
-
-        again = client.post(f"/api/v1/changelog/{post_id}/announce", headers=admin_headers)
-        assert again.status_code == 409
-        assert len(sent) == 1
-
-    def test_failed_announcement_is_reported_and_can_be_retried(
-        self, app: Flask, client: FlaskClient, admin_headers: dict[str, str], monkeypatch: pytest.MonkeyPatch
-    ) -> None:
-        app.config["DISCORD_CHANGELOG_WEBHOOK_URL"] = "https://discord.test/api/webhooks/1/x"
-
-        def boom(*args, **kwargs):
-            raise RuntimeError("network down")
-
-        monkeypatch.setattr(changelog_discord.requests, "post", boom)
-        post_id = self._publish(client, admin_headers)
-        res = client.post(f"/api/v1/changelog/{post_id}/announce", headers=admin_headers)
-        assert res.status_code == 200
-        assert res.get_json()["discord"] == "failed"
-        assert res.get_json()["data"]["discord_announced_at"] is None
-
-        class _Resp:
-            status_code = 204
-
-        monkeypatch.setattr(changelog_discord.requests, "post", lambda *a, **k: _Resp())
-        retry = client.post(f"/api/v1/changelog/{post_id}/announce", headers=admin_headers)
-        assert retry.get_json()["discord"] == "sent"
-
-    def test_a_draft_cannot_be_announced(
-        self, app: Flask, client: FlaskClient, admin_headers: dict[str, str]
-    ) -> None:
-        app.config["DISCORD_CHANGELOG_WEBHOOK_URL"] = "https://discord.test/api/webhooks/1/x"
-        post_id = self._publish(client, admin_headers, published=False)
-        res = client.post(f"/api/v1/changelog/{post_id}/announce", headers=admin_headers)
-        assert res.status_code == 400
 
     def test_create_rejects_title_too_short(
         self, client: FlaskClient, admin_headers: dict[str, str]

@@ -1,9 +1,10 @@
 'use client';
 // frontend/src/components/tier-lists/TierListHub.tsx
 
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
+import { Alert } from '@/components/common/Alert';
 import { FileJson, LayoutList, Plus, RotateCcw, TriangleAlert } from 'lucide-react';
 import { EmptyState } from '@/components/common/EmptyState';
 import { ConfirmModal } from '@/components/common/ConfirmModal';
@@ -21,7 +22,6 @@ import { TierListImportModal } from './TierListImportModal';
 import { TierListSkeleton } from './TierListSkeleton';
 import { HEADER_BTN } from './styles';
 import { Button } from '@/components/common/Button';
-import { formatMessage } from '@/utils/i18nFormat';
 import { useDictionary } from "@/context/DictionaryContext";
 import { Badge } from '@/components/common/Badge';
 import { AccordionSection } from '@/components/common/AccordionSection';
@@ -121,10 +121,7 @@ export function TierListHub({ locale }: TierListHubProps) {
     <div className="relative z-10 flex flex-col gap-8">
       <h1 className="sr-only">{t.pageTitle}</h1>
       {saveError && !saveError.ok && (
-        <p role="alert" className="flex items-start gap-2 rounded-card border border-accent-red/40 bg-accent-red/10 p-3 type-card-title text-accent-red">
-          <TriangleAlert className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
-          {saveError.reason === 'quota' ? t.saveFailedQuota : t.saveFailedUnavailable}
-        </p>
+        <Alert>{saveError.reason === 'quota' ? t.saveFailedQuota : t.saveFailedUnavailable}</Alert>
       )}
 
       {/* Official Lists Collapsible Drawer */}

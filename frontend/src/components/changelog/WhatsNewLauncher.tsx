@@ -23,6 +23,7 @@ import { tip } from '@/components/common/Tooltip';
 import { Modal } from '@/components/common/Modal';
 import { RichText } from '@/components/common/RichText';
 import { Spinner } from '@/components/common/Spinner';
+import { SuccessState } from '@/components/common/SuccessState';
 import { UnreadDot } from '@/components/common/UnreadDot';
 import { formatDate } from '@/utils/format';
 import { useDictionary } from "@/context/DictionaryContext";
@@ -71,6 +72,7 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ feed, classN
   const [pendingDeleteId, setPendingDeleteId] = useState<number | null>(null);
   const [pendingAnnounce, setPendingAnnounce] = useState<ChangelogPost | null>(null);
   const [announcing, setAnnouncing] = useState(false);
+  const [announcedPost, setAnnouncedPost] = useState<ChangelogPost | null>(null);
   const [draggingId, setDraggingId] = useState<number | null>(null);
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
@@ -124,7 +126,10 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ feed, classN
       const res = await announceChangelogPost(token, pendingAnnounce.id);
       if (res.discord === 'failed') setActionError(t.discordFailed);
       else if (res.discord === 'not_configured') setActionError(t.discordNotConfigured);
-      else setActionError(null);
+      else {
+        setActionError(null);
+        setAnnouncedPost(pendingAnnounce);
+      }
       await reload();
     } catch (err) {
       setActionError(err instanceof Error ? err.message : t.discordFailed);
@@ -465,6 +470,20 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ feed, classN
           onCancel={() => setPendingAnnounce(null)}
         />
       )}
+
+      <Modal
+        isOpen={announcedPost !== null}
+        onClose={() => setAnnouncedPost(null)}
+        variant="dialog"
+        size="sm"
+        layer="top"
+        closeButton="floating"
+        closeButtonAriaLabel={t.close}
+        ariaLabel={t.discordSuccess}
+        padded
+      >
+        <SuccessState title={t.discordSuccess} description={announcedPost?.title} />
+      </Modal>
 
       {pendingDeleteId != null && (
         <ConfirmModal

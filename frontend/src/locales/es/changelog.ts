@@ -20,6 +20,7 @@ export default {
   discordConfirmMessage: '¿Seguro que quieres enviar esto al servidor de Discord?',
   discordConfirmSend: 'Enviar',
   discordSent: 'En Discord',
+  discordSuccess: 'Enviado a Discord',
   cancel: 'Cancelar',
   newBadge: 'Nuevo',
   loadMore: 'Cargar más',

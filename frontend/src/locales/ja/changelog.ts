@@ -20,6 +20,7 @@ export default {
   discordConfirmMessage: '本当にこれをDiscordサーバーに送信しますか？',
   discordConfirmSend: '送信',
   discordSent: 'Discord告知済み',
+  discordSuccess: 'Discordに送信しました',
   cancel: 'キャンセル',
   newBadge: '新着',
   loadMore: 'もっと見る',

@@ -482,6 +482,7 @@ export default {
     removeGenderAria: 'Entfernen',
   },
   archetypeBuilder: {
+    iconUrlPlaceholder: 'https://... oder data:image',
     titlePlaceholder: 'z. B. Der Eldritch-Ergebene',
     subtitlePlaceholder: 'z. B. Angezogen von gefährlicher, übernatürlicher Macht',
     descriptionPlaceholder: 'Detaillierte narrative Zusammenfassung, die angezeigt wird, wenn dieser Archetyp freigeschaltet wird...',

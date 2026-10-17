@@ -1,7 +1,6 @@
 // frontend/src/__tests__/unit/codeQualityGuards.test.ts
 //
-// Code-quality guards over production code. Anything the codebase doesn't satisfy yet is held
-// by a ratchet (baselines/*.json): it may only shrink, never grow.
+// Code-quality guards over production code. Every rule has to hold everywhere; there is no baseline.
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import { ts } from 'ts-morph';
@@ -15,7 +14,7 @@ import {
   usedExports,
   loadModules,
 } from '../helpers/sourceGraph';
-import { ratchet, countBy } from '../helpers/ratchet';
+import { expectNone, countBy } from '../helpers/found';
 
 const perFile = (hits: string[]) => countBy(hits.map((h) => h.split(':')[0]));
 
@@ -25,13 +24,13 @@ describe('code quality: type and lint escape hatches', () => {
     assert.deepEqual(bad, [], `Type-check suppressions:\n${bad.join('\n')}`);
   });
 
-  it('eslint-disable directives only shrink', () => {
-    ratchet('eslintDisable', perFile(scanLines(/eslint-disable/)), 'eslint-disable directives');
+  it('no eslint-disable directives', () => {
+    expectNone(perFile(scanLines(/eslint-disable/)), 'eslint-disable directives');
   });
 
-  it('`any` only shrinks (annotations, assertions, generics)', () => {
+  it('no `any` (annotations, assertions, generics)', () => {
     const bad = scanAst((n) => n.kind === ts.SyntaxKind.AnyKeyword);
-    ratchet('anyUsage', perFile(bad), "uses of `any`");
+    expectNone(perFile(bad), "uses of `any`");
   });
 });
 
@@ -41,8 +40,8 @@ describe('code quality: noise in production code', () => {
     assert.deepEqual(bad, [], `console.log in production code:\n${bad.join('\n')}`);
   });
 
-  it('console.debug only shrinks', () => {
-    ratchet('consoleDebug', perFile(scanLines(/console\.debug\(/)), 'console.debug calls');
+  it('no console.debug', () => {
+    expectNone(perFile(scanLines(/console\.debug\(/)), 'console.debug calls');
   });
 
   it('no TODO / FIXME / HACK / XXX markers', () => {
@@ -59,11 +58,10 @@ describe('code quality: noise in production code', () => {
 
 describe('code quality: size', () => {
   const MAX_LINES = 600;
-  it(`no module may grow past ${MAX_LINES} lines; existing giants only shrink`, () => {
+  it(`no module is longer than ${MAX_LINES} lines`, () => {
     const big: Record<string, number> = {};
-    for (const m of codeModules()) if (m.lines.length > MAX_LINES) big[m.file] = Math.ceil(m.lines.length / 50) * 50;
-    // Rounded up to 50 so ordinary edits don't churn the baseline, but real growth does.
-    ratchet('fileSize', big, `modules over ${MAX_LINES} lines (or grown)`);
+    for (const m of codeModules()) if (m.lines.length > MAX_LINES) big[m.file] = m.lines.length;
+    expectNone(big, `modules over ${MAX_LINES} lines`);
   });
 });
 
@@ -98,6 +96,6 @@ describe('code quality: dead code and structure', () => {
       if (u?.has('*')) continue;
       for (const e of exportsOf(m)) if (!u?.has(e.name)) unused.push(`${m.file}#${e.name}`);
     }
-    ratchet('unusedExports', countBy(unused), 'unused exports');
+    expectNone(countBy(unused), 'unused exports');
   });
 });

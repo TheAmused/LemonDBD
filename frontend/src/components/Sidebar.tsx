@@ -32,6 +32,7 @@ import { tip } from '@/components/common/Tooltip';
 import { Button } from '@/components/common/Button';
 import { useDictionary, useLocale } from "@/context/DictionaryContext";
 import { IconTile } from '@/components/common/IconTile';
+import { TileButton } from "@/components/common/TileButton";
 
 const AuthModal = dynamic(() => import('./AuthModal').then((m) => m.AuthModal), { ssr: false });
 const BugReportModal = dynamic(
@@ -315,14 +316,13 @@ const { isCollapsed, toggleSidebar } = useSidebarState();
           </div>
         </div>
 
-        <button
-          type="button"
+        <TileButton
           onClick={toggleSidebar}
           data-testid="sidebar-toggle-button"
           {...tip(dict.sidebar.toggleSidebar, undefined, 'action')}
           aria-label={dict.sidebar.toggleSidebar}
           aria-expanded={!isCollapsed}
-          className="hit-area hidden lg:flex absolute top-1/2 -right-6 -translate-y-1/2 h-16 w-6 items-center justify-center rounded-r-control border border-l-0 border-border-color bg-bg-sidebar text-text-primary shadow-md hover:bg-bg-sidebar-hover hover:w-7 hover:text-accent-red active:scale-95 transition-all duration-200 cursor-pointer z-50 group"
+          className="hit-area hidden lg:flex absolute top-1/2 -right-6 -translate-y-1/2 h-16 w-6 items-center justify-center rounded-r-control border border-l-0 border-border-color bg-bg-sidebar text-text-primary shadow-md hover:bg-bg-sidebar-hover hover:w-7 hover:text-accent-red active:scale-95 transition-all duration-200 cursor-pointer z-50 group" press={false}
         >
           <ChevronRight
             aria-hidden="true"
@@ -332,13 +332,13 @@ const { isCollapsed, toggleSidebar } = useSidebarState();
             aria-hidden="true"
             className="lemon-sidebar-icon-expanded h-5 w-5 text-accent-red group-hover:scale-110 transition-transform"
           />
-        </button>
+        </TileButton>
       </aside>
 
       <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-border-color bg-bg-sidebar px-4 lg:hidden">
         <Link
           href={`/${currentLocale}`}
-          className="flex items-center gap-2.5"
+          className="flex min-h-11 items-center gap-2.5"
           aria-label={dict.sidebar.homeAria}
         >
           <div className="flex h-9 w-9 items-center justify-center rounded-chip bg-accent-red/15 border border-accent-red/30 text-text-primary p-1">

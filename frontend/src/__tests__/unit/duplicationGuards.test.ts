@@ -2,8 +2,7 @@
 //
 // Copy-paste guards. The style checks (npm run check:styles) catch a wrong value; these catch the same
 // thing written out again instead of shared: a class list pasted into several files, a colour typed where a
-// token exists, a local component that re-implements one from components/common. Colour debt that is left
-// is held by a ratchet (baselines/*.json): it may only shrink. Fix by extracting a component (components/common/, or a
+// token exists, a local component that re-implements one from components/common. Fix by extracting a component (components/common/, or a
 // feature folder when only one feature needs it) and see docs/style-sources.md for where each look lives.
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
@@ -11,7 +10,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { ts } from 'ts-morph';
 import { SRC, codeModules, exportsOf, scanAst } from '../helpers/sourceGraph';
-import { ratchet, countBy } from '../helpers/ratchet';
+import { expectNone, countBy } from '../helpers/found';
 
 const isStringNode = (n: ts.Node): n is ts.StringLiteral | ts.NoSubstitutionTemplateLiteral =>
   ts.isStringLiteral(n) || ts.isNoSubstitutionTemplateLiteral(n);
@@ -66,13 +65,13 @@ describe('duplication: colours typed instead of tokens', () => {
   const CODE_COLOUR = /#[0-9a-fA-F]{6}(?:[0-9a-fA-F]{2})?\b|\brgba?\(|\bhsla?\(|^#[0-9a-fA-F]{3,4}$/;
   const CSS_COLOUR = /#[0-9a-fA-F]{3,8}\b|\brgba?\(|\bhsla?\(/;
 
-  it('string colour literals (#hex, rgb(), hsl()) in code only shrink; use a --color-* token or a theme class', () => {
-    // Canvas drawing, user-pickable palettes and SVG artwork legitimately need raw values and sit in the baseline.
+  it('string colour literals (#hex, rgb(), hsl()) in code: use a --color-* token, a theme class or a --palette-* colour', () => {
+    // Canvas drawing, palettes saved into content and logo artwork read their colours from tokens.css too.
     const bad = scanAst((n) => isStringNode(n) && CODE_COLOUR.test(n.text));
-    ratchet('colourLiterals', countBy(bad.map((b) => b.split(':')[0])), 'colour literals in code');
+    expectNone(countBy(bad.map((b) => b.split(':')[0])), 'colour literals in code');
   });
 
-  it('colour literals in stylesheets outside tokens.css and base.css (the theme definitions) only shrink', () => {
+  it('colour literals in stylesheets outside tokens.css and base.css (the theme definitions)', () => {
     const counts: Record<string, number> = {};
     const walk = (dir: string) => {
       for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
@@ -87,7 +86,7 @@ describe('duplication: colours typed instead of tokens', () => {
       }
     };
     walk(SRC);
-    ratchet('cssColourLiterals', counts, 'colour literals in stylesheets');
+    expectNone(counts, 'colour literals in stylesheets');
   });
 });
 

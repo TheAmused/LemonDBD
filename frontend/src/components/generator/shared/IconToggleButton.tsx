@@ -28,7 +28,7 @@ export const IconToggleButton: React.FC<IconToggleButtonProps> = ({
     size="md"
     onClick={onClick}
     aria-label={label}
-    className={className ? `min-w-hit px-2.5 sm:min-w-11 ${className}` : 'min-w-hit px-2.5 sm:min-w-11'}
+    className={className ? `min-w-hit px-2.5 sm:min-w-11 pointer-coarse:min-w-11 ${className}` : 'min-w-hit px-2.5 sm:min-w-11 pointer-coarse:min-w-11'}
   >
     {icon}
     {badge !== undefined && <span className="type-strong">{badge}</span>}

@@ -19,6 +19,8 @@ def get_admin_reports(
 ) -> dict[str, Any]:
     """Retrieve paginated content reports ordered by report count descending.
 
+    `stats` counts every report per status (and in total) whatever the filter, for the queue's filter chips.
+
     Raises:
         ValueError: If `status` is not a known report status (or "all").
     """
@@ -33,9 +35,13 @@ def get_admin_reports(
         count_stmt = count_stmt.where(ContentReport.status == clean_status)
 
     total = db.session.scalar(count_stmt) or 0
-    pending_total = db.session.scalar(
-        select(func.count(ContentReport.id)).where(ContentReport.status == "pending")
-    ) or 0
+    by_status = dict(
+        db.session.execute(
+            select(ContentReport.status, func.count(ContentReport.id)).group_by(ContentReport.status)
+        ).all()
+    )
+    stats = {status: by_status.get(status, 0) for status in sorted(REPORT_STATUSES)}
+    stats["total"] = sum(stats.values())
 
     stmt = (
         base_stmt.order_by(
@@ -52,7 +58,7 @@ def get_admin_reports(
     return {
         "items": items,
         "total": total,
-        "pending_total": pending_total,
+        "stats": stats,
         "page": page,
         "per_page": per_page,
     }

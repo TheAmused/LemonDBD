@@ -19,8 +19,11 @@ from app.utils.site_settings_spec import SETTING_SPECS, SPEC_BY_KEY, validate_se
 
 logger = logging.getLogger(__name__)
 
-_FALLBACK_DEFAULTS: dict[str, str | int] = {
+_FALLBACK_DEFAULTS: dict[str, str | int | bool] = {
     "contact_email": "",
+    "registration_open": True,
+    "guest_bug_reports": True,
+    "bug_report_discord": True,
     "verification_code_hours": 24,
     "reset_token_minutes": 60,
     "session_hours": 24,
@@ -33,7 +36,7 @@ _FALLBACK_DEFAULTS: dict[str, str | int] = {
 }
 
 
-def default_value(key: str) -> str | int:
+def default_value(key: str) -> str | int | bool:
     """The config/env value an unset setting falls back to."""
     cfg = current_app.config if has_app_context() else {}
     if key == "contact_email":
@@ -51,7 +54,7 @@ def _overrides() -> dict[str, str]:
     return {row.key: row.value for row in db.session.scalars(select(SiteSetting)).all()}
 
 
-def get_setting(key: str) -> str | int:
+def get_setting(key: str) -> str | int | bool:
     """Effective value of one setting (override, else default); never raises."""
     spec = SPEC_BY_KEY[key]
     try:
@@ -104,6 +107,21 @@ def contact_email() -> str:
     return str(get_setting("contact_email"))
 
 
+def registration_open() -> bool:
+    """Whether visitors may create accounts (register form and first Google sign-in). Admins always can."""
+    return bool(get_setting("registration_open"))
+
+
+def guest_bug_reports_allowed() -> bool:
+    """Whether signed-out visitors may send bug reports."""
+    return bool(get_setting("guest_bug_reports"))
+
+
+def bug_report_discord_enabled() -> bool:
+    """Whether a new bug report is announced on the Discord webhook (when one is configured)."""
+    return bool(get_setting("bug_report_discord"))
+
+
 def list_settings() -> list[dict[str, Any]]:
     """Every setting with its effective value, default, bounds and whether it is overridden."""
     overrides = _overrides()
@@ -129,12 +147,19 @@ def list_settings() -> list[dict[str, Any]]:
     return rows
 
 
+def _stored(value: str | int | bool) -> str:
+    """The text kept in the database (booleans as "true"/"false")."""
+    if isinstance(value, bool):
+        return "true" if value else "false"
+    return str(value)
+
+
 def update_settings(changes: dict[str, Any]) -> dict[str, Any]:
     """Apply ``{key: value}`` changes (``None`` clears the override). Returns ``{key: new_value}``.
 
     Raises ValueError (before touching the database) when any entry is invalid.
     """
-    cleaned: dict[str, str | int | None] = {}
+    cleaned: dict[str, str | int | bool | None] = {}
     for key, raw in changes.items():
         if key not in SPEC_BY_KEY:
             raise ValueError(f"Unknown setting '{key}'.")
@@ -148,8 +173,8 @@ def update_settings(changes: dict[str, Any]) -> dict[str, Any]:
                 if row is not None:
                     db.session.delete(row)
             elif row is not None:
-                row.value = str(value)
+                row.value = _stored(value)
             else:
-                db.session.add(SiteSetting(key=key, value=str(value)))
+                db.session.add(SiteSetting(key=key, value=_stored(value)))
     return {key: (default_value(key) if value is None else value) for key, value in cleaned.items()}
 

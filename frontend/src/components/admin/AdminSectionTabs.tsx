@@ -1,57 +1,51 @@
 'use client';
 // frontend/src/components/admin/AdminSectionTabs.tsx
+//
+// The admin panel's sections. A dot on "Reports" means something is waiting for a decision; the
+// numbers themselves live on the queue's filters, not here.
 import React from 'react';
-import { BarChart3, Flag, ScrollText, Settings2, ShieldAlert, Users } from 'lucide-react';
+import { Power, ScrollText, Settings2, Users, Wrench } from 'lucide-react';
 import { Tabs } from '@/components/common/Tabs';
-import { useDictionary } from '@/context/DictionaryContext';
+import { UnreadDot } from '@/components/common/UnreadDot';
 import { FogReportIcon } from '@/components/icons/DbdIcons';
+import { useDictionary } from '@/context/DictionaryContext';
 import type { AdminTab } from './adminTabs';
+
+export const ADMIN_TABS_ID = 'admin-sections';
 
 interface AdminSectionTabsProps {
   activeTab: AdminTab;
   onChange: (tab: AdminTab) => void;
-  totalUsers: number;
-  pendingBugs: number;
-  pendingReports: number;
+  reportsWaiting: boolean;
 }
 
-/** The admin panel's section switcher. */
-export function AdminSectionTabs({ activeTab, onChange, totalUsers, pendingBugs, pendingReports }: AdminSectionTabsProps) {
-  const dict = useDictionary();
+export function AdminSectionTabs({ activeTab, onChange, reportsWaiting }: AdminSectionTabsProps) {
+  const t = useDictionary().admin;
 
   return (
-    <Tabs
-      ariaLabel={dict.admin.adminSections}
+    <Tabs<AdminTab>
+      ariaLabel={t.adminSections}
+      idBase={ADMIN_TABS_ID}
       value={activeTab}
       onChange={onChange}
-      panels={false}
-      variant="pill"
+      variant="underline"
       size="lg"
-      wrap
-      className="border-b border-border-color pb-2"
-      tabClassName="flex-1 sm:flex-initial"
       tabs={[
-        {
-          value: 'users',
-          icon: <Users className="h-4 w-4" />,
-          label: dict.admin.userDirectoryLabel,
-          count: totalUsers,
-        },
-        {
-          value: 'bugs',
-          icon: <FogReportIcon className="h-4 w-4" />,
-          label: `${dict.admin.bugReportsLabel} (${pendingBugs} ${dict.admin.pending})`,
-        },
+        { value: 'users', icon: <Users className="h-4 w-4" aria-hidden="true" />, label: t.sectionUsers },
         {
           value: 'reports',
-          icon: <Flag className="h-4 w-4" />,
-          label: dict.admin.contentReportsLabel,
-          count: pendingReports,
+          icon: <FogReportIcon className="h-4 w-4" aria-hidden="true" />,
+          label: (
+            <span className="inline-flex items-center gap-2">
+              {t.sectionReports}
+              {reportsWaiting && <UnreadDot className="relative" label={t.needsAttention} />}
+            </span>
+          ),
         },
-        { value: 'challenges', icon: <ShieldAlert className="h-4 w-4" />, label: dict.admin.killSwitches },
-        { value: 'challenge_stats', icon: <BarChart3 className="h-4 w-4" />, label: dict.admin.challengeStats },
-        { value: 'audit', icon: <ScrollText className="h-4 w-4" />, label: dict.admin.auditLog },
-        { value: 'settings', icon: <Settings2 className="h-4 w-4" />, label: dict.admin.configTab },
+        { value: 'availability', icon: <Power className="h-4 w-4" aria-hidden="true" />, label: t.sectionAvailability },
+        { value: 'audit', icon: <ScrollText className="h-4 w-4" aria-hidden="true" />, label: t.auditLog },
+        { value: 'settings', icon: <Settings2 className="h-4 w-4" aria-hidden="true" />, label: t.sectionSettings },
+        { value: 'tools', icon: <Wrench className="h-4 w-4" aria-hidden="true" />, label: t.sectionTools },
       ]}
     />
   );

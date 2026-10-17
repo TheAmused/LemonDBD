@@ -1,7 +1,6 @@
 # backend/app/__init__.py
 import logging
 import os
-from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Type
 from apscheduler.schedulers.background import BackgroundScheduler
@@ -172,108 +171,10 @@ def create_app(config_class: Type[Config] | None = None) -> Flask:
     register_feature_blueprints(flask_app)
 
     if not flask_app.config.get("TESTING") and flask_app.config.get("SCHEDULER_ENABLED", True):
-        def _run_locked(lock_id: int, job) -> None:
-            """Run `job` inside an app context, once across workers (Postgres advisory lock)."""
-            with flask_app.app_context():
-                is_pg = False
-                try:
-                    is_pg = db.engine.dialect.name in ("postgresql", "postgres")
-                except Exception:
-                    pass
-
-                if is_pg:
-                    with db.engine.connect() as conn:
-                        acquired = conn.execute(text("SELECT pg_try_advisory_lock(:id);"), {"id": lock_id}).scalar()
-                        if acquired:
-                            try:
-                                job()
-                            finally:
-                                conn.execute(text("SELECT pg_advisory_unlock(:id);"), {"id": lock_id})
-                else:
-                    job()
-
-        def _run_inactivity_job():
-            def _job():
-                from app.services.site_settings import streak_prune_days
-                from app.services.streak_cleanup_service import apply_inactivity_losses
-
-                apply_inactivity_losses(streak_prune_days())
-
-            _run_locked(8882027, _job)
-
-        def _run_evidence_purge_job():
-            def _job():
-                from app.services.content_moderation_service import purge_expired_evidence
-
-                purged = purge_expired_evidence()
-                if purged:
-                    logging.info("Wiped evidence of %d unreviewed content report(s) past the 14-day limit", purged)
-
-            _run_locked(8882028, _job)
-
-        def _run_sanction_mail_job():
-            def _job():
-                from app.services.sanction_outbox import retry_pending_notifications
-
-                sent = retry_pending_notifications()
-                if sent:
-                    logging.info("Sent %d queued moderation email(s)", sent)
-
-            _run_locked(8882029, _job)
-
-        def _run_ban_list_purge_job():
-            def _job():
-                from app.services.ban_list import purge_expired
-
-                purged = purge_expired()
-                if purged:
-                    logging.info("Removed %d expired entr(ies) from the ban-evasion list", purged)
-
-            _run_locked(8882030, _job)
+        from app.services.maintenance_jobs import register_jobs
 
         scheduler = BackgroundScheduler(daemon=True)
-        scheduler.add_job(
-            _run_inactivity_job,
-            trigger="cron",
-            hour=3,
-            minute=0,
-            id="apply_inactivity_streak_losses",
-            replace_existing=True,
-        )
-        # Zero-retention guarantee: unreviewed reported content never outlives its 14-day window.
-        # Hourly, plus once shortly after boot so a restart never leaves expired evidence waiting.
-        scheduler.add_job(
-            _run_evidence_purge_job,
-            trigger="cron",
-            minute=17,
-            id="purge_expired_content_evidence",
-            replace_existing=True,
-        )
-        scheduler.add_job(
-            _run_evidence_purge_job,
-            trigger="date",
-            run_date=datetime.now(timezone.utc) + timedelta(seconds=60),
-            id="purge_expired_content_evidence_boot",
-            replace_existing=True,
-        )
-        # Moderation emails owed but not yet delivered (SMTP down, process restarted mid-send) and the
-        # "your suspension has ended" notices; every few minutes, claim-based so it never double-sends.
-        scheduler.add_job(
-            _run_sanction_mail_job,
-            trigger="interval",
-            minutes=3,
-            id="retry_sanction_notifications",
-            replace_existing=True,
-        )
-        # Ban-evasion list entries past their retention (daily; the list is off by default and empty).
-        scheduler.add_job(
-            _run_ban_list_purge_job,
-            trigger="cron",
-            hour=3,
-            minute=20,
-            id="purge_expired_ban_list_entries",
-            replace_existing=True,
-        )
+        register_jobs(scheduler, flask_app)
         scheduler.start()
 
     return flask_app

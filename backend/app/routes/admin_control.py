@@ -38,7 +38,6 @@ from app.services.admin_control_service import (
 from app.services.content_moderation_service import (
     get_admin_reports,
     get_report_preview,
-    purge_expired_evidence,
     resolve_report,
 )
 from app.services.db.export_import import DatabaseExportImportService
@@ -185,7 +184,7 @@ def list_perks_for_admin():
             {
                 "id": p.id,
                 "name": p.name,
-                "category": p.category,
+                "category": p.role,
                 "character": p.character.name if p.character else "General",
                 "icon_local_path": p.icon_local_path,
                 "is_disabled": p.is_disabled,
@@ -279,8 +278,11 @@ def update_challenge_mode(mode: str):
 @admin_control_bp.route("/audit-logs", methods=["GET"])
 @admin_required
 def list_audit_logs():
+    """`?target_type=user,bug_report` keeps only actions about those kinds of target."""
     page, per_page = paginate_args(default_per_page=25)
-    return jsonify(get_audit_logs(page=page, per_page=per_page)), 200
+    raw = request.args.get("target_type", "")
+    target_types = [part.strip() for part in raw.split(",") if part.strip()][:20]
+    return jsonify(get_audit_logs(page=page, per_page=per_page, target_types=target_types or None)), 200
 
 
 @admin_control_bp.route("/settings", methods=["GET"])
@@ -530,12 +532,3 @@ def restore_user_account(user_id: int):
     except ModerationError as err:
         return api_error(err.message, err.status)
     return jsonify({"status": "success", "lifted": lifted}), 200
-
-
-@admin_control_bp.route("/content-reports/purge-expired", methods=["POST"])
-@admin_required
-def purge_expired_content_reports():
-    """Purge expired evidence payloads for pending reports past their expiry date."""
-    purged_count = purge_expired_evidence()
-    return jsonify({"purged_count": purged_count}), 200
-

@@ -4,7 +4,8 @@
 import React, { useState } from 'react';
 import { Modal } from '@/components/common/Modal';
 import { ConfirmModal } from '@/components/common/ConfirmModal';
-import { useDictionary } from '@/context/DictionaryContext';
+import { useDictionary, useLocale } from '@/context/DictionaryContext';
+import { formatMessage } from '@/utils/i18nFormat';
 import { ExportTab } from './scraper-config/ExportTab';
 import { ImportTab } from './scraper-config/ImportTab';
 import { PurgeTab } from './scraper-config/PurgeTab';
@@ -23,6 +24,7 @@ interface ScraperConfigModalProps {
 
 export function ScraperConfigModal({ isOpen, onClose, onPurgeSuccess, initialTab = 'export' }: ScraperConfigModalProps) {
   const dict = useDictionary();
+  const locale = useLocale();
   const [activeTab, setActiveTab] = useState<ScraperTab>(initialTab);
   // Every tab's state lives here, not in the tab components: switching tabs unmounts them.
   const exportTab = useExportTab();
@@ -59,8 +61,9 @@ export function ScraperConfigModal({ isOpen, onClose, onPurgeSuccess, initialTab
       <ConfirmModal
         open={importTab.showReplaceConfirm}
         title={dict.admin.wipeReplace}
-        message="Existing data in target tables will be wiped and replaced with the backup. Are you sure?"
+        message={dict.admin.wipeReplaceConfirm}
         confirmLabel={dict.admin.wipeReplace}
+        cancelLabel={dict.admin.cancel}
         busy={importTab.isImporting}
         onConfirm={importTab.runImport}
         onCancel={() => importTab.setShowReplaceConfirm(false)}
@@ -69,8 +72,9 @@ export function ScraperConfigModal({ isOpen, onClose, onPurgeSuccess, initialTab
       <ConfirmModal
         open={purgeTab.showPurgeConfirm}
         title={dict.admin.purgeReset}
-        message={`Are you sure you want to PURGE ${purgeTab.purgeTargets.length} table category(ies)? This action is permanent.`}
+        message={formatMessage(dict.admin.purgeConfirm, { count: purgeTab.purgeTargets.length }, locale)}
         confirmLabel={dict.admin.purgeReset}
+        cancelLabel={dict.admin.cancel}
         busy={purgeTab.isPurging}
         onConfirm={purgeTab.runPurge}
         onCancel={() => purgeTab.setShowPurgeConfirm(false)}

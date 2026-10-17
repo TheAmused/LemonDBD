@@ -341,3 +341,21 @@ def send_security_notice_email(user: User, event: str) -> None:
         mail.send(message)
     except Exception as err:
         logger.warning(f"Failed to send security notice '{event}' to '{user.email}': {err}")
+
+
+def send_test_email(user: User) -> None:
+    """Admin diagnostic: one plain message to the admin's own address. Raises when sending fails."""
+    text = "This is a test message from the LemonDBD admin panel. If you can read it, email delivery works."
+    body_html = f"""\
+<p style="margin:0 0 4px; font-size:14px; color:#0f172a;">Hi {_greeting_name(user)},</p>
+<p style="margin:0; font-size:13px; color:#64748b; line-height:1.6;">{html.escape(text)}</p>
+"""
+    message = Message(
+        subject="LemonDBD: test email",
+        recipients=[user.email],
+        body=f"Hi {user.username},\n\n{text}",
+        html=_email_shell("LemonDBD test email", body_html, footer="Sent from the LemonDBD admin panel."),
+        charset=_BASE64_CHARSET,
+    )
+    _attach_logo(message)
+    mail.send(message)

@@ -1,14 +1,16 @@
 'use client';
 // frontend/src/components/admin/ContentReportDetail.tsx
 import React, { useState } from 'react';
-import { Ban, CheckCircle, ShieldAlert, UserX } from 'lucide-react';
+import { Ban, CheckCircle, ShieldAlert, UserSearch, UserX } from 'lucide-react';
 import { Button } from '@/components/common/Button';
 import { Badge } from '@/components/common/Badge';
 import { Select, Textarea } from '@/components/common/Field';
+import { Surface } from '@/components/common/Surface';
+import { tip } from '@/components/common/Tooltip';
 import { ConfirmModal } from '@/components/common/ConfirmModal';
 import { SandboxedContentPreview } from '@/components/admin/SandboxedContentPreview';
 import { SanctionForm } from '@/components/admin/SanctionForm';
-import { contentReasonLabel, contentStatusLabel, contentStatusTone, contentTypeLabel } from '@/components/admin/contentReportLabels';
+import { contentReasonLabel, contentStatusLabel, contentStatusTone, contentTypeLabel } from '@/components/admin/reportLabels';
 import { useDictionary } from '@/context/DictionaryContext';
 import { formatDateTime } from '@/utils/format';
 import { formatMessage } from '@/utils/i18nFormat';
@@ -26,10 +28,12 @@ interface ContentReportDetailProps {
   detail: AdminContentReportDetail;
   resolving: boolean;
   onResolve: (action: ContentReportAction, author: AuthorDecision | null, notes: string) => Promise<boolean>;
+  /** Opens the author's account in the user directory. */
+  onShowUser: (query: string) => void;
 }
 
 /** One report in full: who flagged what and why, the reported content, and the ban/dismiss decision. */
-export function ContentReportDetail({ detail, resolving, onResolve }: ContentReportDetailProps) {
+export function ContentReportDetail({ detail, resolving, onResolve, onShowUser }: ContentReportDetailProps) {
   const dict = useDictionary();
   const [notes, setNotes] = useState<string>(detail.admin_notes ?? '');
   // What happens to the author's account: nothing, or one of the three decisions (with its form).
@@ -61,7 +65,7 @@ export function ContentReportDetail({ detail, resolving, onResolve }: ContentRep
   };
 
   return (
-    <div className="space-y-5">
+    <Surface as="article" className="space-y-5">
       <div className="flex flex-wrap items-center gap-2">
         <h3 className="type-strong text-text-primary">#{detail.id}</h3>
         <Badge tone="neutral" size="sm">{contentTypeLabel(dict, detail.content_type)}</Badge>
@@ -74,8 +78,20 @@ export function ContentReportDetail({ detail, resolving, onResolve }: ContentRep
       <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 text-xs">
         <div>
           <dt className="type-label-sm text-text-secondary">{dict.admin.contentReportAuthor}</dt>
-          <dd className="text-text-primary break-all">
+          <dd className="flex items-center gap-1.5 text-text-primary break-all">
             {detail.attributed ? detail.author_login : dict.admin.contentReportUnattributedShort}
+            {detail.attributed && (
+              <Button
+                variant="ghost"
+                size="xs"
+                icon
+                onClick={() => onShowUser(detail.author_login)}
+                aria-label={dict.admin.showInUsers}
+                {...tip(dict.admin.showInUsers, undefined, 'action')}
+              >
+                <UserSearch className="h-3.5 w-3.5" aria-hidden="true" />
+              </Button>
+            )}
           </dd>
         </div>
         <div>
@@ -211,10 +227,11 @@ export function ContentReportDetail({ detail, resolving, onResolve }: ContentRep
         title={dict.admin.contentReportBanTitle}
         message={authorDecision ? `${dict.admin.contentReportBanMessage} ${authorConsequence}` : dict.admin.contentReportBanMessage}
         confirmLabel={dict.admin.contentReportBanAction}
+        cancelLabel={dict.admin.cancel}
         busy={resolving}
         onConfirm={runBan}
         onCancel={() => setConfirmBan(false)}
       />
-    </div>
+    </Surface>
   );
 }

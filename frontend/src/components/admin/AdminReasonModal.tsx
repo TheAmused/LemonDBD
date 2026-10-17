@@ -31,7 +31,7 @@ export const AdminReasonModal: React.FC<AdminReasonModalProps> = ({ isOpen, titl
       variant="dialog"
       size="md"
       title={title}
-      closeButtonAriaLabel={dict.admin.closeSymbol}
+      closeButtonAriaLabel={dict.admin.close}
       padded
       bodyClassName="space-y-3"
       footerClassName="justify-end flex-col-reverse sm:flex-row"

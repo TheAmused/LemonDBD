@@ -17,6 +17,7 @@ from app.core.security import (
     widen_legacy_session_cookie,
 )
 from app.schemas.user import UserCreate, UserResponse
+from app.services import site_settings
 from app.services.altcha_service import AltchaService
 from app.services.user import (
     authenticate_user_credentials,
@@ -55,6 +56,9 @@ def register():
 
     if not validate_honeypot(payload):
         return api_error("Spam detected.", 400)
+
+    if not site_settings.registration_open():
+        return error_response("registration_closed", 403)
 
     try:
         validated_data = UserCreate.model_validate(payload)

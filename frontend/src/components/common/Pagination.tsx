@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react';
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react';
 import { PerkDictionary } from '@/types/perks';
 import { useDictionary } from "@/context/DictionaryContext";
+import { cn } from '@/utils/cn';
 
 interface PaginationProps {
   page: number;
@@ -12,10 +13,13 @@ interface PaginationProps {
   totalResults: number;
   limit: number;
   onPageChange: (newPage: number) => void;
-  onLimitChange: (newLimit: number) => void;
+  /** Omit for a fixed page size: the per-page picker is not shown. */
+  onLimitChange?: (newLimit: number) => void;
+  /** Spacing override (the default suits a page footer, not a panel). */
+  className?: string;
 }
 
-export const Pagination: React.FC<PaginationProps> = ({ page, totalPages, totalResults, limit, onPageChange, onLimitChange }) => {
+export const Pagination: React.FC<PaginationProps> = ({ page, totalPages, totalResults, limit, onPageChange, onLimitChange, className }) => {
   const dict = useDictionary();
   const startIdx = totalResults === 0 ? 0 : (page - 1) * limit + 1;
   const endIdx = Math.min(page * limit, totalResults);
@@ -62,7 +66,10 @@ export const Pagination: React.FC<PaginationProps> = ({ page, totalPages, totalR
   return (
     <nav
       aria-label={dict.pagination.navAriaLabel}
-      className="mt-4 flex flex-wrap items-center justify-center gap-x-3 gap-y-2 pt-2 w-full sm:mt-8 sm:justify-between sm:gap-x-4 sm:pt-4 lg:gap-x-5 lg:pt-5 wide:pt-6"
+      className={cn(
+        'mt-4 flex flex-wrap items-center justify-center gap-x-3 gap-y-2 pt-2 w-full sm:mt-8 sm:justify-between sm:gap-x-4 sm:pt-4 lg:gap-x-5 lg:pt-5 wide:pt-6',
+        className
+      )}
     >
       {/* Numbers only -- no "Showing"/"of"/"results" spelled out. Below
           400px there isn't room for this next to the page controls without
@@ -82,18 +89,20 @@ export const Pagination: React.FC<PaginationProps> = ({ page, totalPages, totalR
       </div>
 
       <div className="flex flex-wrap items-center gap-2 lg:gap-3">
-        <select
-          id="limit-select"
-          aria-label={dict.pagination.perPage}
-          value={limit}
-          onChange={(e) => onLimitChange(Number(e.target.value))}
-          className="rounded-control border border-border-color bg-bg-surface px-1.5 py-1 text-mini font-semibold text-text-primary focus:outline-none focus:ring-1 focus:ring-accent-red cursor-pointer [&>option]:bg-bg-surface [&>option]:text-text-primary sm:px-2 sm:text-xs lg:px-3 lg:py-1.5 lg:text-sm wide:text-base"
-        >
-          <option value={15}>15</option>
-          <option value={30}>30</option>
-          <option value={45}>45</option>
-          <option value={60}>60</option>
-        </select>
+        {onLimitChange && (
+          <select
+            id="limit-select"
+            aria-label={dict.pagination.perPage}
+            value={limit}
+            onChange={(e) => onLimitChange(Number(e.target.value))}
+            className="rounded-control border border-border-color bg-bg-surface px-1.5 py-1 text-mini font-semibold text-text-primary focus:outline-none focus:ring-1 focus:ring-accent-red cursor-pointer [&>option]:bg-bg-surface [&>option]:text-text-primary sm:px-2 sm:text-xs lg:px-3 lg:py-1.5 lg:text-sm wide:text-base"
+          >
+            <option value={15}>15</option>
+            <option value={30}>30</option>
+            <option value={45}>45</option>
+            <option value={60}>60</option>
+          </select>
+        )}
 
         <div className="flex items-center gap-1 lg:gap-1.5">
           <button

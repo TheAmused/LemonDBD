@@ -37,7 +37,7 @@ export function ModerationReasonModal({ open, title, message, confirmLabel, busy
       size="md"
       layer="top"
       title={title}
-      closeButtonAriaLabel={dict.admin.closeSymbol}
+      closeButtonAriaLabel={dict.admin.close}
       busy={busy}
       padded
       bodyClassName="space-y-3"

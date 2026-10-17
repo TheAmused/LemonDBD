@@ -1,29 +1,23 @@
 // frontend/src/types/admin.ts
-export interface ChallengeCompletionCounts {
-  completed_runs: number;
-  unique_users: number;
-}
 
-export interface ChallengeCompletionBreakdown {
-  total: ChallengeCompletionCounts;
-  by_variant: Record<string, ChallengeCompletionCounts>;
-}
-
-export interface AdminStats {
-  total_users: number;
-  active_users: number;
-  admin_count: number;
-  total_characters: number;
-  survivors_count: number;
-  killers_count: number;
-  total_perks: number;
-  challenge_completions: {
-    gauntlet: ChallengeCompletionBreakdown;
-    chaos: ChallengeCompletionBreakdown;
-    history: ChallengeCompletionBreakdown;
-    page_streak: ChallengeCompletionBreakdown;
+/** GET /admin/stats: the counts behind the admin panel's filters and its "needs attention" markers. */
+export interface AdminOverview {
+  users: {
+    total: number;
+    admins: number;
+    players: number;
+    active: number;
+    suspended: number;
+    banned: number;
+  };
+  pending: {
+    bug_reports: number;
+    content_reports: number;
   };
 }
+
+export type UserRoleFilter = 'all' | 'admin' | 'user';
+export type UserStandingFilter = 'all' | 'active' | 'suspended' | 'banned';
 
 export interface UserRow {
   id: number;
@@ -33,6 +27,7 @@ export interface UserRow {
   role: string;
   avatar_url?: string;
   is_active: boolean;
+  is_verified?: boolean;
   /** End of the longest running suspension; a past value is stale (see accountStanding). */
   suspended_until?: string | null;
   created_at: string;
@@ -41,26 +36,44 @@ export interface UserRow {
   two_factor_enabled?: boolean;
 }
 
+/** What an admin may change on an account (PUT /users/<id>). */
+export interface UserPatch {
+  username?: string;
+  role?: 'user' | 'admin';
+  is_verified?: boolean;
+}
+
+export interface NewUser {
+  login: string;
+  username: string;
+  email: string;
+  password: string;
+  role: 'user' | 'admin';
+}
+
+export type BugReportStatus = 'pending' | 'in_progress' | 'resolved' | 'rejected';
+
 export interface AdminBugReport {
   id: number;
-  user_id?: number;
+  user_id?: number | null;
   reporter_name: string;
   reporter_email?: string;
   title: string;
   message: string;
   images: string[];
-  status: 'pending' | 'in_progress' | 'resolved' | 'rejected';
+  status: BugReportStatus;
   admin_notes?: string;
   created_at: string;
   updated_at?: string;
 }
 
-export interface BugReportStats {
+/** Reports per status plus `total`, whatever filter the list is showing (the queue's filter chips). */
+export type QueueStats<S extends string> = Record<S | 'total', number>;
+
+export interface AdminBugReportList {
+  reports: AdminBugReport[];
+  stats: QueueStats<BugReportStatus>;
   total: number;
-  pending: number;
-  in_progress: number;
-  resolved: number;
-  rejected: number;
 }
 
 export interface ActionMessage {
@@ -71,9 +84,8 @@ export interface ActionMessage {
 export interface AdminCharacterRow {
   id: number;
   name: string;
-  role: string;
+  role: 'Survivor' | 'Killer';
   avatar_local_path?: string | null;
-  avatar_portrait_path?: string | null;
   is_disabled: boolean;
   disabled_reason?: string | null;
 }
@@ -109,13 +121,19 @@ export interface AdminAuditLogEntry {
   created_at: string;
 }
 
+export interface AdminAuditLogPage {
+  logs: AdminAuditLogEntry[];
+  total: number;
+}
+
+export type SiteSettingGroup = 'privacy' | 'access' | 'tokens' | 'retention' | 'moderation' | 'bug_reports';
 
 export interface AdminSiteSetting {
   key: string;
-  kind: 'int' | 'email';
-  group: 'privacy' | 'tokens' | 'retention' | 'moderation';
-  value: string | number;
-  default: string | number;
+  kind: 'int' | 'email' | 'bool';
+  group: SiteSettingGroup;
+  value: string | number | boolean;
+  default: string | number | boolean;
   overridden: boolean;
   min: number | null;
   max: number | null;
@@ -144,7 +162,7 @@ export interface AdminContentReport {
 export interface AdminContentReportList {
   items: AdminContentReport[];
   total: number;
-  pending_total: number;
+  stats: QueueStats<ContentReportStatus>;
   page: number;
   per_page: number;
 }
@@ -157,4 +175,27 @@ export interface AdminContentReportDetail extends AdminContentReport {
   attributed: boolean;
   author_active: boolean | null;
   author_is_admin: boolean;
+}
+
+export type SystemCheckState = 'ok' | 'warn' | 'off' | 'error';
+
+/** One line of GET /admin/system. `detail` is a technical identifier (engine, provider), never prose. */
+export interface SystemCheck {
+  key: string;
+  state: SystemCheckState;
+  detail: string | null;
+  latency_ms?: number;
+  /** The scheduler's heartbeat: its most recent recorded run. */
+  last_run_at?: string;
+}
+
+export interface MaintenanceRun {
+  last_run_at: string | null;
+  last_affected: number;
+  last_trigger: 'schedule' | 'admin';
+}
+
+export interface MaintenanceJob {
+  key: string;
+  last_run: MaintenanceRun | null;
 }

@@ -8,7 +8,7 @@ if TYPE_CHECKING:
 
 def register_feature_blueprints(app: "Flask") -> None:
     """Register all vertical slice blueprints with the Flask application."""
-    from app.features.admin import admin_control_bp, bug_reports_bp, changelog_bp
+    from app.features.admin import admin_control_bp, admin_tools_bp, bug_reports_bp, changelog_bp
     from app.features.auth import auth_bp, auth_google_bp, auth_two_factor_bp
     from app.features.maps import maps_bp
     from app.features.minigames import minigames_bp, scoreboard_bp
@@ -52,6 +52,7 @@ def register_feature_blueprints(app: "Flask") -> None:
         # Governance & System
         bug_reports_bp,
         admin_control_bp,
+        admin_tools_bp,
         changelog_bp,
         content_moderation_bp,
     ]

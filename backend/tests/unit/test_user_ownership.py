@@ -341,9 +341,8 @@ class TestUserAndOwnership:
         stats_res = client.get("/api/v1/admin/stats", headers=admin_headers)
         assert stats_res.status_code == 200
         stats = stats_res.get_json()
-        assert "total_users" in stats
-        assert "survivors_count" in stats
-        assert "killers_count" in stats
+        assert stats["users"]["total"] >= 2
+        assert set(stats["pending"]) == {"bug_reports", "content_reports"}
 
         list_res = client.get("/api/v1/users", headers=admin_headers)
         assert list_res.status_code == 200

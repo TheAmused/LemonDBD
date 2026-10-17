@@ -5,12 +5,14 @@ from dataclasses import dataclass
 from typing import Any
 
 _EMAIL_RE = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
+_TRUE = frozenset({"true", "1", "yes", "on"})
+_FALSE = frozenset({"false", "0", "no", "off"})
 
 
 @dataclass(frozen=True)
 class SettingSpec:
     key: str
-    kind: str  # "int" | "email"
+    kind: str  # "int" | "email" | "bool"
     group: str
     minimum: int | None = None
     maximum: int | None = None
@@ -19,6 +21,10 @@ class SettingSpec:
 
 SETTING_SPECS: tuple[SettingSpec, ...] = (
     SettingSpec("contact_email", "email", "privacy"),
+    # Switches an admin flips during a spam wave or an outage, without a deploy.
+    SettingSpec("registration_open", "bool", "access"),
+    SettingSpec("guest_bug_reports", "bool", "bug_reports"),
+    SettingSpec("bug_report_discord", "bool", "bug_reports"),
     SettingSpec("verification_code_hours", "int", "tokens", minimum=1, maximum=168),
     SettingSpec("reset_token_minutes", "int", "tokens", minimum=5, maximum=1440),
     SettingSpec("session_hours", "int", "tokens", minimum=1, maximum=720),
@@ -34,11 +40,21 @@ SETTING_SPECS: tuple[SettingSpec, ...] = (
 SPEC_BY_KEY: dict[str, SettingSpec] = {s.key: s for s in SETTING_SPECS}
 
 
-def validate_setting(key: str, raw: Any) -> str | int:
+def validate_setting(key: str, raw: Any) -> str | int | bool:
     """Return the cleaned value or raise ValueError with a human-readable message."""
     spec = SPEC_BY_KEY.get(key)
     if spec is None:
         raise ValueError(f"Unknown setting '{key}'.")
+
+    if spec.kind == "bool":
+        if isinstance(raw, bool):
+            return raw
+        text = str(raw).strip().lower() if isinstance(raw, (str, int)) else ""
+        if text in _TRUE:
+            return True
+        if text in _FALSE:
+            return False
+        raise ValueError(f"'{key}' must be true or false.")
 
     if spec.kind == "email":
         value = str(raw or "").strip()

@@ -1,8 +1,7 @@
 import { Suspense } from 'react';
 import { pageMetadata } from '@/i18n/metadata';
 import { PageShell } from '@/components/layout/PageShell';
-import { TierListCreator } from '@/features/tier-lists';
-import TierListsLoading from '../loading';
+import { TierListCreator, TierListSkeleton } from '@/features/tier-lists';
 import type { Locale } from '@/i18n/config';
 
 export const generateMetadata = pageMetadata('/tier-lists', (d) => ({
@@ -29,7 +28,7 @@ export default async function NewTierListPage({
       padding="tight"
       mainClassName="relative flex flex-col"
     >
-      <Suspense fallback={<TierListsLoading />}>
+      <Suspense fallback={<TierListSkeleton />}>
         <TierListCreator locale={locale} editId={editId} officialSlug={officialSlug} />
       </Suspense>
     </PageShell>

@@ -10,7 +10,8 @@ import { Button } from '@/components/common/Button';
 import { ActionMenu, type ActionMenuItem } from '@/components/common/ActionMenu';
 import { ConfirmModal } from '@/components/common/ConfirmModal';
 import { EmptyState } from '@/components/common/EmptyState';
-import { SearchInput, Select } from '@/components/common/Field';
+import { CustomDropdown } from '@/components/common/CustomDropdown';
+import { SearchInput } from '@/components/common/Field';
 import { Pagination } from '@/components/common/Pagination';
 import { Surface } from '@/components/common/Surface';
 import { tip } from '@/components/common/Tooltip';
@@ -147,29 +148,31 @@ export function AdminUsersSection({ directory, counts, currentUserId, notify, on
           placeholder={t.searchUserPlaceholder}
           aria-label={t.searchUserPlaceholder}
         />
-        <Select
-          fieldSize="sm"
-          className="w-auto"
-          aria-label={t.thRole}
+        <CustomDropdown<UserRoleFilter>
+          ariaLabel={t.thRole}
+          accent="primary"
           value={directory.role}
-          onChange={(e) => directory.setRole(e.target.value as UserRoleFilter)}
-        >
-          <option value="all">{formatMessage(t.roleFilterAll, count(counts?.total))}</option>
-          <option value="admin">{formatMessage(t.roleFilterAdmins, count(counts?.admins))}</option>
-          <option value="user">{formatMessage(t.roleFilterPlayers, count(counts?.players))}</option>
-        </Select>
-        <Select
-          fieldSize="sm"
-          className="w-auto"
-          aria-label={t.thStanding}
+          onChange={directory.setRole}
+          buttonClassName="py-2"
+          options={[
+            { value: 'all', label: formatMessage(t.roleFilterAll, count(counts?.total)) },
+            { value: 'admin', label: formatMessage(t.roleFilterAdmins, count(counts?.admins)) },
+            { value: 'user', label: formatMessage(t.roleFilterPlayers, count(counts?.players)) },
+          ]}
+        />
+        <CustomDropdown<UserStandingFilter>
+          ariaLabel={t.thStanding}
+          accent="primary"
           value={directory.standing}
-          onChange={(e) => directory.setStanding(e.target.value as UserStandingFilter)}
-        >
-          <option value="all">{t.standingFilterAll}</option>
-          <option value="active">{formatMessage(t.standingFilterActive, count(counts?.active))}</option>
-          <option value="suspended">{formatMessage(t.standingFilterSuspended, count(counts?.suspended))}</option>
-          <option value="banned">{formatMessage(t.standingFilterBanned, count(counts?.banned))}</option>
-        </Select>
+          onChange={directory.setStanding}
+          buttonClassName="py-2"
+          options={[
+            { value: 'all', label: t.standingFilterAll },
+            { value: 'active', label: formatMessage(t.standingFilterActive, count(counts?.active)) },
+            { value: 'suspended', label: formatMessage(t.standingFilterSuspended, count(counts?.suspended)) },
+            { value: 'banned', label: formatMessage(t.standingFilterBanned, count(counts?.banned)) },
+          ]}
+        />
         <Button variant="primary" size="sm" onClick={onCreate} leftIcon={<UserPlus className="h-3.5 w-3.5" aria-hidden="true" />}>
           {t.createUser}
         </Button>

@@ -7,6 +7,7 @@ export default {
   lastUpdated: "15 października 2026",
   translationNotice: "Jeśli przetłumaczone wersje tej strony różnią się od angielskiej, pierwszeństwo ma wersja angielska.",
   tldrLabel: "W skrócie",
+  sectionEyebrow: "Sekcja {number}",
   tldrNotice: "Tytuły, linie „W skrócie” i podsumowanie to przyjazne skróty. Ze względów prawnych nie mają mocy wiążącej i nie zastępują tekstu pod nimi. Jeśli się z nim różnią, obowiązuje pełny tekst.",
   summaryHeading: "Zasady w pigułce",
   summary: [

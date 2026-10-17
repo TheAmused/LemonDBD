@@ -1,21 +1,25 @@
 'use client';
 // frontend/src/components/admin/AdminModerationDrawer.tsx
 //
-// Everything an admin can do about one account's conduct: where it stands, its history of warnings,
-// suspensions and bans, and a form for the next decision. Every decision is confirmed first.
+// Everything an admin can do about one account's conduct, in foldable sections under the profile card:
+// the next decision (with a preview of what the user will be told) and the history of warnings,
+// suspensions and bans. Every decision is confirmed first.
 
 import React, { useEffect, useState } from 'react';
+import { AccordionSection } from '@/components/common/AccordionSection';
 import { Badge } from '@/components/common/Badge';
 import { Button } from '@/components/common/Button';
 import { ConfirmModal } from '@/components/common/ConfirmModal';
 import { Modal } from '@/components/common/Modal';
 import { Spinner } from '@/components/common/Spinner';
+import { Switch } from '@/components/common/Switch';
+import { ModerationProfileCard } from '@/components/admin/ModerationProfileCard';
 import { ModerationReasonModal } from '@/components/admin/ModerationReasonModal';
 import { SanctionForm } from '@/components/admin/SanctionForm';
 import { SanctionHistory } from '@/components/admin/SanctionHistory';
 import { useUserModeration } from '@/components/admin/useUserModeration';
-import { useDictionary, useLocale } from '@/context/DictionaryContext';
-import { formatDateTime } from '@/utils/format';
+import { useDictionary } from '@/context/DictionaryContext';
+import { usePersistentDrawer } from '@/hooks/usePersistentDrawer';
 import { formatMessage } from '@/utils/i18nFormat';
 import {
   EMPTY_SANCTION_DRAFT,
@@ -37,7 +41,6 @@ interface AdminModerationDrawerProps {
 
 export function AdminModerationDrawer({ user, onClose, onChanged, onActionMessage }: AdminModerationDrawerProps) {
   const dict = useDictionary();
-  const locale = useLocale();
   const t = dict.moderation.admin;
   const { data, loading, loadFailed, saving, reload, issue, revoke, restore } = useUserModeration({
     userId: user?.id ?? null,
@@ -49,6 +52,8 @@ export function AdminModerationDrawer({ user, onClose, onChanged, onActionMessag
   const [confirmingDraft, setConfirmingDraft] = useState(false);
   const [revoking, setRevoking] = useState<AdminSanction | null>(null);
   const [restoring, setRestoring] = useState(false);
+  // Each section folds away like the profile page's drawers, and is remembered.
+  const [isHistoryOpen, toggleHistory] = usePersistentDrawer('lemondbd_moderation_history_open', false);
 
   useEffect(() => {
     setDraft(EMPTY_SANCTION_DRAFT);
@@ -56,7 +61,6 @@ export function AdminModerationDrawer({ user, onClose, onChanged, onActionMessag
 
   const summary = data?.summary;
   const suggestion = summary?.suggestion ?? null;
-  const blocked = !!summary && (summary.banned || summary.suspended_until !== null);
   const username = user?.username ?? '';
 
   const confirmMessage =
@@ -88,98 +92,94 @@ export function AdminModerationDrawer({ user, onClose, onChanged, onActionMessag
         onClose={onClose}
         variant="drawer-right"
         size="lg"
-        title={formatMessage(t.drawerTitle, { username })}
+        title={t.drawerTitle}
         closeButtonAriaLabel={dict.admin.close}
         padded
-        bodyClassName="space-y-6"
+        bodyClassName="space-y-5"
       >
+        {user && (
+          <ModerationProfileCard user={user} summary={summary ?? null} busy={saving} onRestore={() => setRestoring(true)} />
+        )}
+
         {loading && !data && (
-          <div className="flex justify-center py-10">
+          <div className="flex justify-center py-6">
             <Spinner tone="accent" size="lg" />
           </div>
         )}
 
         {loadFailed && (
-          <div className="space-y-3">
+          <div className="flex flex-col items-center gap-3 text-center">
             <p role="alert" className="type-body text-accent-red">{t.loadFailed}</p>
             <Button size="sm" onClick={reload}>{dict.admin.refresh}</Button>
           </div>
         )}
 
-        {summary && (
-          <section className="space-y-3">
-            <div className="flex flex-wrap items-center gap-2">
-              {summary.banned ? (
-                <Badge tone="red" size="md">{t.standingBanned}</Badge>
-              ) : summary.suspended_until ? (
-                <Badge tone="red" size="md">
-                  {formatMessage(t.standingSuspended, { date: formatDateTime(summary.suspended_until, locale) })}
-                </Badge>
-              ) : (
-                <Badge tone="green" size="md">{t.standingActive}</Badge>
-              )}
-              {blocked && (
-                <Button size="sm" disabled={saving} onClick={() => setRestoring(true)}>
-                  {t.restoreButton}
-                </Button>
-              )}
-            </div>
-            <dl className="grid grid-cols-3 gap-2">
-              {[
-                [t.statWarnings, `${summary.active_warnings} / ${summary.total_warnings}`],
-                [t.statSuspensions, String(summary.total_suspensions)],
-                [t.statBlockedContent, String(summary.content_blocked)],
-              ].map(([label, value]) => (
-                <div key={label} className="rounded-card border border-border-color bg-bg-primary p-2.5">
-                  <dt className="type-label-2xs text-text-secondary">{label}</dt>
-                  <dd className="type-strong text-text-primary">{value}</dd>
-                </div>
-              ))}
-            </dl>
-            {suggestion && (
-              <div className="space-y-2 rounded-card border border-border-color bg-bg-primary p-3">
-                <div className="flex flex-wrap items-center justify-between gap-2">
-                  <div className="min-w-0">
-                    <p className="type-label-2xs text-text-secondary">{t.suggestionTitle}</p>
-                    <p className="type-strong text-text-primary">{suggestionLabel}</p>
-                  </div>
-                  <Button size="sm" onClick={() => setDraft((d) => draftFromSuggestion(d, suggestion))}>
-                    {t.suggestionApply}
-                  </Button>
-                </div>
-                <p className="type-body text-text-muted">
-                  {formatMessage(t.suggestionBasis, {
-                    active: suggestion.basis.active_warnings,
-                    needed: suggestion.basis.warnings_before_suspension,
-                    suspensions: suggestion.basis.suspensions,
-                  })}
-                </p>
-                <p className="type-body text-text-muted">{t.suggestionHint}</p>
-              </div>
-            )}
-          </section>
-        )}
-
         {user && (
-          <section className="space-y-3">
-            <h3 className="type-label-sm text-text-secondary">{t.formTitle}</h3>
-            <SanctionForm draft={draft} kinds={SANCTION_KINDS} previewTarget={{ userId: user.id }} onChange={(patch) => setDraft((d) => ({ ...d, ...patch }))} />
+          <>
+            <hr className="border-border-color" />
+
+            <div className="space-y-3 rounded-card border border-border-color bg-bg-primary p-3">
+              {suggestion && (
+                <>
+                  <div className="flex flex-wrap items-center justify-between gap-3">
+                    <div className="min-w-0">
+                      <p className="type-label-xs text-text-secondary">
+                        {t.suggestionTitle}: <span className="text-text-primary">{suggestionLabel}</span>
+                      </p>
+                      <p className="mt-0.5 type-caption text-text-muted">
+                        {formatMessage(t.suggestionBasis, {
+                          active: suggestion.basis.active_warnings,
+                          needed: suggestion.basis.warnings_before_suspension,
+                          suspensions: suggestion.basis.suspensions,
+                        })}
+                      </p>
+                    </div>
+                    <Button size="sm" onClick={() => setDraft((d) => draftFromSuggestion(d, suggestion))}>
+                      {t.suggestionApply}
+                    </Button>
+                  </div>
+                  <hr className="border-border-color" />
+                </>
+              )}
+              <div className="flex items-center justify-between gap-3">
+                <span className="type-body text-text-primary">{t.formSendEmail}</span>
+                <Switch
+                  checked={draft.send_email}
+                  onChange={(send_email) => setDraft((d) => ({ ...d, send_email }))}
+                  ariaLabel={t.formSendEmail}
+                />
+              </div>
+            </div>
+
+            <SanctionForm
+              draft={draft}
+              kinds={SANCTION_KINDS}
+              previewTarget={{ userId: user.id }}
+              onChange={(patch) => setDraft((d) => ({ ...d, ...patch }))}
+            />
+
             <Button
               variant={draft.kind === 'warning' ? 'primary' : 'danger'}
-              size="sm"
+              className="w-full"
               disabled={saving || !isSanctionDraftValid(draft)}
               onClick={() => setConfirmingDraft(true)}
             >
               {submitLabel}
             </Button>
-          </section>
+          </>
         )}
 
         {data && (
-          <section className="space-y-3">
-            <h3 className="type-label-sm text-text-secondary">{t.historyTitle}</h3>
+          <AccordionSection
+            as="div"
+            title={t.historyTitle}
+            badge={<Badge tone="neutral" size="sm">{data.sanctions.length}</Badge>}
+            open={isHistoryOpen}
+            onToggle={toggleHistory}
+            bodyClassName="p-4"
+          >
             <SanctionHistory sanctions={data.sanctions} busy={saving} onRevoke={setRevoking} />
-          </section>
+          </AccordionSection>
         )}
       </Modal>
 

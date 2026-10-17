@@ -327,6 +327,7 @@ export default {
   confirmDeleteUser: "Usunąć {username} i wszystko, co należy do tego konta? Tej operacji nie można cofnąć.",
   filterByStatus: "Filtruj według statusu",
   queueSelectPrompt: "Wybierz zgłoszenie, aby je tu zobaczyć.",
+  queueCaseTitle: "Zgłoszenie",
   guestReporter: "Gość",
   showInUsers: "Pokaż w Użytkownikach",
   submittedAt: "Wysłano",

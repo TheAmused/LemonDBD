@@ -5,12 +5,9 @@
 // (about something a user made). Both are triage queues with the same layout; a dot marks a queue
 // with pending reports.
 import React from 'react';
-import { Flag, Image as ImageIcon } from 'lucide-react';
+import { Image as ImageIcon } from 'lucide-react';
 import { Badge } from '@/components/common/Badge';
 import { EmptyState } from '@/components/common/EmptyState';
-import { SegmentedControl } from '@/components/common/SegmentedControl';
-import { UnreadDot } from '@/components/common/UnreadDot';
-import { FogReportIcon } from '@/components/icons/DbdIcons';
 import { AdminQueue } from '@/components/admin/AdminQueue';
 import { BugReportDetail } from '@/components/admin/BugReportDetail';
 import { ContentReportDetail } from '@/components/admin/ContentReportDetail';
@@ -28,58 +25,36 @@ import {
 import { useAdminBugReports } from '@/components/admin/useAdminBugReports';
 import { useAdminContentReports } from '@/components/admin/useAdminContentReports';
 import { useDictionary, useLocale } from '@/context/DictionaryContext';
-import { usePersistentString } from '@/hooks/usePersistentString';
 import { formatDate } from '@/utils/format';
 import { formatMessage } from '@/utils/i18nFormat';
-import type { ActionMessage, AdminOverview } from '@/types/admin';
-
-type Queue = 'bugs' | 'content';
-/** A neutral thumb, so the red "waiting" dot stays visible on the selected queue. */
-const QUEUE_THUMB = 'bg-bg-elevated text-text-primary border border-accent-red/50';
-const isQueue = (value: string): value is Queue => value === 'bugs' || value === 'content';
+import type { ActionMessage } from '@/types/admin';
+import type { ReportQueue } from '@/components/admin/adminTabs';
 
 interface AdminReportsSectionProps {
-  pending: AdminOverview['pending'] | null;
+  /** Which queue the Reports menu in the navigation has open. */
+  queue: ReportQueue;
   refreshKey: number;
   notify: (message: ActionMessage) => void;
   onChanged: () => void;
   onShowUser: (query: string) => void;
 }
 
-export function AdminReportsSection({ pending, refreshKey, notify, onChanged, onShowUser }: AdminReportsSectionProps) {
+export function AdminReportsSection({ queue, refreshKey, notify, onChanged, onShowUser }: AdminReportsSectionProps) {
   const dict = useDictionary();
   const locale = useLocale();
   const t = dict.admin;
-  const [queue, setQueue] = usePersistentString<Queue>('lemondbd_admin_queue', 'bugs', isQueue);
   const bugs = useAdminBugReports({ enabled: queue === 'bugs', refreshKey, notify, onChanged });
   const content = useAdminContentReports({ enabled: queue === 'content', refreshKey, notify, onChanged });
   const selectedBug = bugs.selected;
   const caseDetail = content.detail;
 
-  const queueLabel = (label: string, waiting: number | undefined) => (
-    <span className="inline-flex items-center gap-2">
-      {label}
-      {!!waiting && <UnreadDot className="relative" label={t.needsAttention} />}
-    </span>
-  );
-
   return (
     <div className="space-y-4">
-      <SegmentedControl<Queue>
-        ariaLabel={t.sectionReports}
-        size="sm"
-        value={queue}
-        onChange={setQueue}
-        className="w-full sm:w-auto"
-        options={[
-          { value: 'bugs', label: queueLabel(t.bugReportsLabel, pending?.bug_reports), icon: <FogReportIcon className="h-3.5 w-3.5" />, activeClassName: QUEUE_THUMB, activeTextColor: 'text-text-primary' },
-          { value: 'content', label: queueLabel(t.contentReportsLabel, pending?.content_reports), icon: <Flag className="h-3.5 w-3.5" />, activeClassName: QUEUE_THUMB, activeTextColor: 'text-text-primary' },
-        ]}
-      />
-
       {queue === 'bugs' ? (
         <AdminQueue
           ariaLabel={t.filterByStatus}
+          title={t.bugReportsLabel}
+          drawerKey="bugs"
           statuses={BUG_STATUSES}
           status={bugs.status}
           onStatusChange={bugs.setStatus}
@@ -133,6 +108,8 @@ export function AdminReportsSection({ pending, refreshKey, notify, onChanged, on
       ) : (
         <AdminQueue
           ariaLabel={t.filterByStatus}
+          title={t.contentReportsLabel}
+          drawerKey="content"
           statuses={CONTENT_STATUSES}
           status={content.status}
           onStatusChange={content.setStatus}

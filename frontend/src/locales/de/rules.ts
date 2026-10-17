@@ -7,6 +7,7 @@ export default {
   lastUpdated: "15. Oktober 2026",
   translationNotice: "Falls die übersetzten Fassungen dieser Seite von der englischen abweichen, gilt die englische Fassung.",
   tldrLabel: "Kurz gesagt",
+  sectionEyebrow: "Abschnitt {number}",
   tldrNotice: "Die Titel, die Kurz-gesagt-Zeilen und die Zusammenfassung sind freundliche Abkürzungen. Aus rechtlichen Gründen sind sie nicht verbindlich und ersetzen nicht den Text darunter. Weichen sie davon ab, gilt der vollständige Text.",
   summaryHeading: "Die Regeln in Kürze",
   summary: [

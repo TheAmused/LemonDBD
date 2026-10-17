@@ -327,6 +327,7 @@ export default {
   confirmDeleteUser: "¿Eliminar a {username} y todo lo que pertenece a su cuenta? No se puede deshacer.",
   filterByStatus: "Filtrar por estado",
   queueSelectPrompt: "Selecciona un reporte para verlo aquí.",
+  queueCaseTitle: "Caso",
   guestReporter: "Invitado",
   showInUsers: "Mostrar en Usuarios",
   submittedAt: "Enviado",

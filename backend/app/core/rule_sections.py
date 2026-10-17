@@ -1,16 +1,17 @@
 # backend/app/core/rule_sections.py
-"""Where each citable section sits on the Rules page (pure: no Flask, no database).
+"""Which section of the Rules page a decision cites (pure: no Flask, no database).
 
-The page opens with `scope` (section 1), which no decision cites. Mirrors `RULES_ORDER` in
-`frontend/src/components/legal/legalDocs.ts`; a decision names its section as "Section 2: ...".
+Only the sections a person can break are numbered, in page order: "Section 1: ...". The opening
+section (`scope`, "The trial grounds") says who the Rules apply to and has no number. Mirrors
+`RULE_REFS` in `frontend/src/types/moderation.ts`, which the Rules page uses for its "Section N" labels.
 """
 
 RULE_SECTION_NUMBERS: dict[str, int] = {
-    "respect": 2,
-    "fairPlay": 3,
-    "yourContent": 4,
-    "smashOrPass": 5,
-    "serverCare": 6,
-    "reporting": 7,
-    "enforcement": 8,
+    "respect": 1,
+    "fairPlay": 2,
+    "yourContent": 3,
+    "smashOrPass": 4,
+    "serverCare": 5,
+    "reporting": 6,
+    "enforcement": 7,
 }

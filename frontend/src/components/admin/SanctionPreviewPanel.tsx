@@ -6,10 +6,12 @@
 // it, in the account holder's language); nothing is saved.
 
 import React, { useEffect, useMemo, useState } from 'react';
+import { AccordionSection } from '@/components/common/AccordionSection';
 import { SegmentedControl } from '@/components/common/SegmentedControl';
 import { AccountBlockedNotice } from '@/components/moderation/AccountBlockedNotice';
 import { WarningNoticeBody } from '@/components/moderation/WarningDialog';
 import { useDictionary, useLocale } from '@/context/DictionaryContext';
+import { usePersistentDrawer } from '@/hooks/usePersistentDrawer';
 import { previewSanction } from '@/services/moderationApi';
 import {
   isSanctionDraftValid,
@@ -31,16 +33,9 @@ interface SanctionPreviewPanelProps {
 
 const noop = () => {};
 const PREVIEW_DELAY_MS = 400;
+const PREVIEW_DRAWER_KEY = 'lemondbd_moderation_preview_open';
 
-function languageName(code: string, locale: string): string {
-  try {
-    return new Intl.DisplayNames([locale], { type: 'language' }).of(code) ?? code;
-  } catch {
-    return code;
-  }
-}
-
-function EmailPreview({ preview, locale }: { preview: SanctionPreview; locale: string }) {
+function EmailPreview({ preview }: { preview: SanctionPreview }) {
   const t = useDictionary().moderation.admin;
   const { email } = preview;
   return (
@@ -50,7 +45,6 @@ function EmailPreview({ preview, locale }: { preview: SanctionPreview; locale: s
           <span className="type-label-xs text-text-secondary">{t.previewSubject}: </span>
           LemonDBD: {email.subject}
         </p>
-        <p>{formatMessage(t.previewLanguage, { language: languageName(preview.language, locale) })}</p>
       </div>
       <div className="space-y-2.5 rounded-card border border-border-subtle bg-bg-secondary p-3.5">
         {email.blocks.map((block, index) => {
@@ -83,12 +77,15 @@ export function SanctionPreviewPanel({ draft, target }: SanctionPreviewPanelProp
   const t = dict.moderation.admin;
   const [tab, setTab] = useState<PreviewTab>('app');
   const [state, setState] = useState<PreviewState>({ status: 'idle', data: null });
+  // Folded away by default and remembered; a folded preview asks the server for nothing.
+  const [isOpen, toggleOpen] = usePersistentDrawer(PREVIEW_DRAWER_KEY, false);
 
   const valid = isSanctionDraftValid(draft);
   // Only what the preview depends on: typing in the internal notes must not ask the server again.
   const requestKey = useMemo(() => JSON.stringify(sanctionPreviewBody(draft, target)), [draft, target]);
 
   useEffect(() => {
+    if (!isOpen) return;
     if (!valid) {
       setState({ status: 'idle', data: null });
       return;
@@ -111,7 +108,7 @@ export function SanctionPreviewPanel({ draft, target }: SanctionPreviewPanelProp
     };
     // `requestKey` stands for draft and target.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [valid, requestKey]);
+  }, [isOpen, valid, requestKey]);
 
   const { data } = state;
   const options = [
@@ -121,21 +118,23 @@ export function SanctionPreviewPanel({ draft, target }: SanctionPreviewPanelProp
 
   let content: React.ReactNode;
   if (!valid) {
-    content = <p className="type-caption text-text-muted">{t.previewIncomplete}</p>;
+    content = <p className="text-center type-caption text-text-muted">{t.previewIncomplete}</p>;
   } else if (state.status === 'error') {
-    content = <p className="type-caption text-accent-red">{t.previewFailed}</p>;
+    content = <p className="text-center type-caption text-accent-red">{t.previewFailed}</p>;
   } else if (!data) {
-    content = <p className="type-caption text-text-muted">{t.previewLoading}</p>;
+    content = <p className="text-center type-caption text-text-muted">{t.previewLoading}</p>;
   } else if (tab === 'email') {
-    content = draft.send_email ? (
-      <EmailPreview preview={data} locale={locale} />
-    ) : (
-      <p className="type-caption text-text-muted">{t.previewNoEmail}</p>
+    content = (
+      <div className="space-y-3">
+        {!draft.send_email && <p className="text-center type-caption text-text-muted">{t.previewNoEmail}</p>}
+        <div className={draft.send_email ? undefined : 'opacity-50'}>
+          <EmailPreview preview={data} />
+        </div>
+      </div>
     );
   } else if (draft.kind === 'warning') {
     content = (
       <div className="space-y-4">
-        <p className="type-caption text-text-muted">{t.previewWarningIntro}</p>
         <div className="space-y-4 rounded-card border border-border-subtle bg-bg-secondary p-3.5">
           <h4 className="type-strong text-text-primary">{dict.moderation.warning.title}</h4>
           <WarningNoticeBody warning={{ reason_code: data.reason_code, rule_ref: draft.rule_ref || null, facts: data.facts }} />
@@ -145,13 +144,11 @@ export function SanctionPreviewPanel({ draft, target }: SanctionPreviewPanelProp
             </p>
           )}
         </div>
-        <p className="type-micro text-text-muted">{t.previewAppNote}</p>
       </div>
     );
   } else {
     content = (
       <div className="space-y-4">
-        <p className="type-caption text-text-muted">{t.previewBlockedIntro}</p>
         <div className="rounded-card border border-border-subtle bg-bg-secondary p-3.5">
           <AccountBlockedNotice
             showClose={false}
@@ -164,19 +161,18 @@ export function SanctionPreviewPanel({ draft, target }: SanctionPreviewPanelProp
             }}
           />
         </div>
-        <p className="type-micro text-text-muted">{t.previewAppNote}</p>
       </div>
     );
   }
 
   return (
-    <section aria-label={t.previewTitle} aria-busy={state.status === 'loading'} className="space-y-3 border-t border-border-color pt-4">
-      <div>
-        <h4 className="type-label-sm text-text-secondary">{t.previewTitle}</h4>
-        <p className="type-micro text-text-muted">{t.previewHint}</p>
+    <AccordionSection as="div" title={t.previewTitle} open={isOpen} onToggle={toggleOpen} bodyClassName="space-y-4 p-4">
+      <div className="flex justify-center">
+        <SegmentedControl value={tab} options={options} onChange={setTab} ariaLabel={t.previewTitle} size="sm" />
       </div>
-      <SegmentedControl value={tab} options={options} onChange={setTab} ariaLabel={t.previewTitle} size="sm" />
-      <div className={state.status === 'loading' && data ? 'opacity-60 transition-opacity' : 'transition-opacity'}>{content}</div>
-    </section>
+      <div aria-busy={state.status === 'loading'} className={state.status === 'loading' && data ? 'opacity-60 transition-opacity' : 'transition-opacity'}>
+        {content}
+      </div>
+    </AccordionSection>
   );
 }

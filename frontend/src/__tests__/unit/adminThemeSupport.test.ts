@@ -23,10 +23,9 @@ function assertThemed(html: string, label: string) {
 }
 
 describe('Admin Theme Support', () => {
-  it('the header uses themed text and offers analytics and refresh', () => {
+  it('the refresh button is themed and the page title is for screen readers only', () => {
     const html = renderWithDictionary(React.createElement(AdminHeader, { onRefresh: noop }));
-    assert.ok(html.includes('text-text-primary'));
-    assert.ok(html.includes(en.admin.analytics));
+    assert.ok(html.includes(en.sidebar.adminControlCenter));
     assert.ok(html.includes(en.admin.refresh));
     assert.ok(!RAW_COLOUR.test(html));
   });

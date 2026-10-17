@@ -27,6 +27,7 @@ import { useDictionary } from "@/context/DictionaryContext";
 import { Badge } from '@/components/common/Badge';
 import { InfoChip } from '@/components/common/InfoChip';
 import { Surface } from '@/components/common/Surface';
+import { IconLabel } from '@/components/common/IconLabel';
 import { SelectableCard } from '@/components/common/SelectableCard';
 
 export interface VoiceEngineInfoModalProps {
@@ -62,20 +63,14 @@ export const VoiceEngineInfoBody: React.FC<Omit<VoiceEngineInfoModalProps, 'isOp
     {/* Current Browser Status Card */}
     <Surface tone="elevated" padding="none" className="p-4 space-y-2">
       <div className="flex items-center justify-between">
-        <span className="type-label-xs text-text-muted flex items-center gap-1.5">
-          <Laptop className="h-3.5 w-3.5 text-text-muted" aria-hidden="true" />
-          {dict.maps.detectedBrowser}
-        </span>
+        <IconLabel as="span" icon={Laptop} variant="heading">{dict.maps.detectedBrowser}</IconLabel>
         <InfoChip>
           {browserName}
         </InfoChip>
       </div>
 
       <div className="flex items-center justify-between pt-1">
-        <span className="type-label-xs text-text-muted flex items-center gap-1.5">
-          <Sparkles className="h-3.5 w-3.5 text-text-muted" aria-hidden="true" />
-          {dict.maps.activeRecognitionEngine}
-        </span>
+        <IconLabel as="span" icon={Sparkles} variant="heading">{dict.maps.activeRecognitionEngine}</IconLabel>
         <Badge
           tone="red" size="md" plain
         >
@@ -150,10 +145,7 @@ export const VoiceEngineInfoBody: React.FC<Omit<VoiceEngineInfoModalProps, 'isOp
 
     {/* Local model accuracy: whisper-tiny ('fast') vs whisper-base ('accurate') */}
     <Surface tone="elevated" padding="none" className="p-4 space-y-3">
-      <div className="flex items-center gap-1.5 type-label-xs text-text-muted">
-        <Gauge className="h-3.5 w-3.5 text-text-muted" aria-hidden="true" />
-        <span>{t.accuracyTitle || ''}</span>
-      </div>
+      <IconLabel icon={Gauge} variant="heading">{t.accuracyTitle || ''}</IconLabel>
 
       <div
         className="grid grid-cols-1 sm:grid-cols-2 gap-2.5"

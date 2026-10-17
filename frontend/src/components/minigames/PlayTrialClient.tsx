@@ -18,7 +18,9 @@ import {
 import { deleteCustomChallenge, getCustomChallenges } from '@/utils/minigames/storage';
 import { checkDocument } from '@/utils/contentRevocation';
 import { decodeChallengeShare, readChallengeFragment } from '@/utils/minigames/shareLink';
+import { ErrorNotice } from '@/components/common/Alert';
 import { DbdSpinner } from '@/components/common/DbdSpinner';
+import { LoadingState } from '@/components/common/LoadingState';
 import { Button } from '@/components/common/Button';
 import { ReportContentModal } from '@/components/common/ReportContentModal';
 import { signingPayload } from '@/utils/contentPayload';
@@ -128,10 +130,7 @@ function PlayTrialContent() {
       mainClassName="relative flex flex-col items-center justify-center min-h-vh-70"
     >
       {loading || (isCustomTrial && authLoading) ? (
-        <div className="flex flex-col items-center justify-center p-12 gap-4">
-          <DbdSpinner size="lg" />
-          <p className="type-card-title text-text-muted">{dict.app.loading}</p>
-        </div>
+        <LoadingState label={dict.app.loading} />
       ) : isCustomTrial && !isAuthenticated ? (
         <div className="w-full max-w-lg mx-auto py-12 px-4">
           <AuthRequiredState
@@ -140,10 +139,7 @@ function PlayTrialContent() {
           />
         </div>
       ) : error ? (
-        <div className="p-8 rounded-card bg-accent-red/10 border border-accent-red/30 text-center max-w-md mx-auto my-12">
-          <h2 className="text-lg font-bold text-accent-red mb-2">{dict.app.notice}</h2>
-          <p className="text-xs text-text-muted">{error}</p>
-        </div>
+        <ErrorNotice title={dict.app.notice}>{error}</ErrorNotice>
       ) : challenge && catalog && nsfwGate.gated ? (
         <NsfwContentGate
           title={dict.minigames.nsfw.title}

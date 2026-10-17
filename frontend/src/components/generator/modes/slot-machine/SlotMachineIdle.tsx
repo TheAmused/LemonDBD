@@ -5,6 +5,7 @@ import type { RoleCategory } from '@/types/perks';
 import { useDictionary } from '@/context/DictionaryContext';
 import { DbdButton } from '@/components/common/Button';
 import { TileButton } from '@/components/common/TileButton';
+import { StageIdleColumn, StagePrompt, StageProp } from '../../shared/StageIdle';
 
 interface SlotMachineIdleProps {
   role: RoleCategory;
@@ -17,23 +18,18 @@ export function SlotMachineIdle({ role, disabled, onPull }: SlotMachineIdleProps
   const dict = useDictionary();
 
   return (
-    <div className="flex flex-col items-center justify-center gap-3 sm:gap-6 xl:gap-8 2xl:gap-10 py-2 sm:py-6 wide:py-8">
-      <p className="max-w-lg xl:max-w-2xl 2xl:max-w-3xl wide:max-w-4xl text-center text-xs sm:text-base xl:text-lg wide:text-xl font-semibold text-text-secondary leading-relaxed">
+    <StageIdleColumn>
+      <StagePrompt className="leading-relaxed">
         {dict.generator.slotMachinePrompt}
         {' '}
         {dict.generator.slotCursedFlavor}
-      </p>
+      </StagePrompt>
       <TileButton
         onClick={onPull}
         disabled={disabled}
         className="group"
       >
-        <img
-          src="/images/randomizer/lever.webp"
-          alt=""
-          className="h-28 w-28 sm:h-36 sm:w-36 xl:h-48 xl:w-48 2xl:h-60 2xl:w-60 wide:h-72 wide:w-72 object-contain drop-shadow-2xl select-none pointer-events-none group-hover:drop-shadow-glow-amber-md transition-all duration-300"
-          draggable={false}
-        />
+        <StageProp src="/images/randomizer/lever.webp" />
       </TileButton>
       <DbdButton
         role={role}
@@ -43,6 +39,6 @@ export function SlotMachineIdle({ role, disabled, onPull }: SlotMachineIdleProps
       >
         {dict.generator.slotMachineSpinButton}
       </DbdButton>
-    </div>
+    </StageIdleColumn>
   );
 }

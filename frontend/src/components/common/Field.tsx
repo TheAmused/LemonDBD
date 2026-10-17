@@ -77,20 +77,27 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(function 
   );
 });
 
-export interface SearchInputProps extends Omit<InputProps, 'type'> {
-  /** Class for the wrapper (width / margin). */
+export interface IconInputProps extends InputProps {
+  icon: React.ComponentType<{ className?: string; 'aria-hidden'?: boolean | 'true' | 'false' }>;
+  /** Class for the wrapper (width / margin / order). */
   wrapperClassName?: string;
 }
-export const SearchInput = React.forwardRef<HTMLInputElement, SearchInputProps>(function SearchInput(
-  { wrapperClassName, className, fieldSize = 'md', ...rest },
+/** An input with an icon inside its left edge (search, password, e-mail). Anything on its right edge stays the caller's. */
+export const IconInput = React.forwardRef<HTMLInputElement, IconInputProps>(function IconInput(
+  { icon: Icon, wrapperClassName, className, fieldSize = 'md', ...rest },
   ref
 ) {
   return (
     <div className={cn('relative', wrapperClassName)}>
-      <Search aria-hidden="true" className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-text-muted" />
-      <Input ref={ref} type="search" fieldSize={fieldSize} className={cn('pl-9', className)} {...rest} />
+      <Icon aria-hidden="true" className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-text-muted" />
+      <Input ref={ref} fieldSize={fieldSize} className={cn('pl-9', className)} {...rest} />
     </div>
   );
+});
+
+export type SearchInputProps = Omit<IconInputProps, 'icon' | 'type'>;
+export const SearchInput = React.forwardRef<HTMLInputElement, SearchInputProps>(function SearchInput(props, ref) {
+  return <IconInput ref={ref} icon={Search} type="search" {...props} />;
 });
 
 /** The small caps label above a field. Put it on a <label> yourself, or use FormField. */

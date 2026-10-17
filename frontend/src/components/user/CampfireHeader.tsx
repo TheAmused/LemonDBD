@@ -24,6 +24,7 @@ import { useDictionary } from "@/context/DictionaryContext";
 import { Badge } from '@/components/common/Badge';
 import { buttonClassName } from '@/components/common/Button';
 import { Surface } from '@/components/common/Surface';
+import { WrapRow } from '@/components/common/WrapRow';
 
 interface CampfireHeaderProps {
   user: {
@@ -110,7 +111,7 @@ export const CampfireHeader: React.FC<CampfireHeaderProps> = ({
 
           {/* Name, Role, Title & Account Metadata */}
           <div className="space-y-2.5 min-w-0">
-            <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2.5">
+            <WrapRow>
               <h1 className="text-2xl sm:text-3xl font-black tracking-wide text-text-primary truncate">
                 {user.username}
               </h1>
@@ -119,7 +120,7 @@ export const CampfireHeader: React.FC<CampfireHeaderProps> = ({
                   {dict.user.roleAdmin}
                 </Badge>
               )}
-            </div>
+            </WrapRow>
 
             {/* Selectable Player Title Plaque via CustomDropdown */}
             <div className="flex items-center justify-center sm:justify-start">

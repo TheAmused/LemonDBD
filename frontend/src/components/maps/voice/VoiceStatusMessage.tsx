@@ -11,6 +11,9 @@ import { formatMessage } from '@/utils/i18nFormat';
 import { renderHoldKeyHint } from '@/components/maps/VoiceCommandBannerParts';
 import type { VoiceStatusState } from './voiceTypes';
 
+/** One status line block: centred, never wider than the banner. */
+const STATUS_COLUMN = 'flex flex-col text-center items-center w-full max-w-full px-2';
+
 interface VoiceStatusMessageProps {
   voiceStatus: VoiceStatusState;
   liveTranscript: string;
@@ -41,7 +44,7 @@ export function VoiceStatusMessage({
   return (
     <div className="flex flex-col items-center w-full max-w-xl md:max-w-2xl lg:max-w-3xl px-2" aria-live="polite">
         {voiceStatus === 'listening' && (
-          <div className="flex flex-col text-center items-center w-full max-w-full px-2">
+          <div className={STATUS_COLUMN}>
             <div className="flex items-center justify-center gap-2 max-w-full">
               <span className="h-2 w-2 rounded-full bg-accent-red animate-ping shrink-0" aria-hidden="true" />
               <span className="type-strong-fluid text-text-primary truncate max-w-70 sm:max-w-xl">
@@ -61,7 +64,7 @@ export function VoiceStatusMessage({
         )}
 
         {voiceStatus === 'processing' && (
-          <div className="flex flex-col text-center items-center w-full max-w-full px-2">
+          <div className={STATUS_COLUMN}>
             <div className="flex items-center justify-center gap-2 max-w-full">
               <Spinner size="xs" tone="amber" />
               <span className="type-strong-fluid text-accent-amber truncate max-w-70 sm:max-w-xl">
@@ -77,7 +80,7 @@ export function VoiceStatusMessage({
         )}
 
         {voiceStatus === 'matched' && matchedResult && (
-          <div className="flex flex-col text-center items-center w-full max-w-full px-2">
+          <div className={STATUS_COLUMN}>
             <div className="flex items-center justify-center gap-1.5 max-w-full">
               <CheckCircle2 className="h-3.5 w-3.5 text-accent-green shrink-0" aria-hidden="true" />
               <span className="type-strong-fluid text-accent-green truncate max-w-70 sm:max-w-xl">
@@ -97,7 +100,7 @@ export function VoiceStatusMessage({
         )}
 
         {voiceStatus === 'nomatch' && (
-          <div className="flex flex-col text-center items-center w-full max-w-full px-2">
+          <div className={STATUS_COLUMN}>
             <div className="flex items-center justify-center gap-1.5 type-strong text-accent-amber max-w-full">
               <AlertCircle className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
               <span className="truncate max-w-70 sm:max-w-xl">
@@ -113,7 +116,7 @@ export function VoiceStatusMessage({
         )}
 
         {voiceStatus === 'error' && (
-          <div className="flex flex-col text-center items-center w-full max-w-full px-2">
+          <div className={STATUS_COLUMN}>
             <div className="flex items-center justify-center gap-1.5 type-strong text-accent-red max-w-full">
               <AlertCircle className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
               <span className="truncate max-w-70 sm:max-w-xl">{errorMessage || rawVoiceDict.micBlocked || ''}</span>

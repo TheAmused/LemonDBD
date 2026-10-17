@@ -28,6 +28,7 @@ import { Button } from '@/components/common/Button';
 import { InfoChip } from '@/components/common/InfoChip';
 import { useDictionary } from "@/context/DictionaryContext";
 import { TileButton } from '@/components/common/TileButton';
+import { WrapRow } from '@/components/common/WrapRow';
 
 const LoreModal = dynamic(() => import('./modals/LoreModal').then((m) => m.LoreModal), { ssr: false });
 const Model3DModal = dynamic(() => import('./modals/Model3DModal').then((m) => m.Model3DModal), { ssr: false });
@@ -152,7 +153,7 @@ export const KillerDetailView: React.FC<CharacterViewBaseProps> = ({ currentLoca
               </div>
             </div>
 
-            <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2.5">
+            <WrapRow>
               <Button
                 variant="secondary"
                 onClick={() => setIsLoreModalOpen(true)}
@@ -180,7 +181,7 @@ export const KillerDetailView: React.FC<CharacterViewBaseProps> = ({ currentLoca
                   ? t.licensedFranchise || t.dlcLicensed || ''
                   : t.originalChapter || t.dlcOriginal || ''}
               </InfoChip>
-            </div>
+            </WrapRow>
           </header>
 
           {/* Combat Stats Mini-Bar */}

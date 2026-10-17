@@ -1,0 +1,21 @@
+{
+  "components/auth/GoogleSignInButton.tsx": 4,
+  "components/changelog/changelogTheme.ts": 11,
+  "components/ChaosWheelModal.tsx": 16,
+  "components/common/CampfireParticles.tsx": 17,
+  "components/common/DbdSpinner.tsx": 46,
+  "components/generator/lib/dbdBurst.ts": 8,
+  "components/generator/modes/wheel/useEmberDrift.ts": 2,
+  "components/generator/modes/wheel/wheelDrawing.ts": 42,
+  "components/minigames/VictoryModal.tsx": 5,
+  "components/sidebar/FlagIcon.tsx": 14,
+  "components/smash-or-pass/CardDisintegrationOverlay.tsx": 26,
+  "components/smash-or-pass/CharacterCard.tsx": 1,
+  "components/smash-or-pass/creator/CoverImageCropModal.tsx": 2,
+  "components/smash-or-pass/hub/useSmashRosters.ts": 1,
+  "components/smash-or-pass/InteractiveDragBackground.tsx": 13,
+  "components/smash-or-pass/SmashAnimations.tsx": 9,
+  "components/streaks/Confetti.tsx": 6,
+  "components/tier-lists/TierColorPicker.tsx": 1,
+  "utils/smashOrPass/constants.ts": 1
+}

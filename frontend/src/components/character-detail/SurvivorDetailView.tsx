@@ -20,6 +20,7 @@ import { Perk, PerkDictionary } from '@/types/perks';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 import { Button } from '@/components/common/Button';
 import { InfoChip } from '@/components/common/InfoChip';
+import { WrapRow } from '@/components/common/WrapRow';
 import { useDictionary } from "@/context/DictionaryContext";
 
 const LoreModal = dynamic(() => import('./modals/LoreModal').then((m) => m.LoreModal), { ssr: false });
@@ -89,7 +90,7 @@ export const SurvivorDetailView: React.FC<CharacterViewBaseProps> = ({ currentLo
               )}
             </div>
 
-            <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2.5">
+            <WrapRow>
               <Button
                 variant="secondary"
                 onClick={() => setIsLoreModalOpen(true)}
@@ -117,7 +118,7 @@ export const SurvivorDetailView: React.FC<CharacterViewBaseProps> = ({ currentLo
                   ? t.licensedFranchise || t.dlcLicensed || ''
                   : t.originalChapter || t.dlcOriginal || ''}
               </InfoChip>
-            </div>
+            </WrapRow>
           </header>
 
           <CharacterPerksSection

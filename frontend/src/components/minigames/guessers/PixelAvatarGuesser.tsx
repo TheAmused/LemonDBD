@@ -7,6 +7,7 @@ import { Sparkles, Check, X, ShieldAlert } from 'lucide-react';
 import type { GuessRecord, RoundConfig, CatalogCharacter } from '@/types/minigame';
 import { staticUrl } from '@/utils/api';
 import { useDictionary } from "@/context/DictionaryContext";
+import { SolvedOverlay } from './SolvedOverlay';
 
 interface PixelAvatarGuesserProps {
   roundConfig: RoundConfig;
@@ -69,14 +70,7 @@ export const PixelAvatarGuesser: React.FC<PixelAvatarGuesserProps> = ({ roundCon
           <span>{blurAmount.toFixed(1)}</span>
         </div>
 
-        {isSolved && targetChar && (
-          <div className="absolute inset-0 bg-bg-primary/40 backdrop-blur-xs flex items-center justify-center">
-            <div className="px-4 py-2 rounded-card bg-accent-green text-text-inverted font-bold text-base shadow-xl border border-accent-green/60 flex items-center gap-2">
-              <Check className="w-4 h-4" />
-              <span>{targetChar.name}</span>
-            </div>
-          </div>
-        )}
+        {isSolved && targetChar && <SolvedOverlay answer={targetChar.name} />}
       </div>
 
       {/* Input & Action Controls Slot */}

@@ -16,6 +16,7 @@ import { usePersistentDrawer } from '@/hooks/usePersistentDrawer';
 import { Badge } from '@/components/common/Badge';
 import { Surface } from '@/components/common/Surface';
 import { IconTile } from '@/components/common/IconTile';
+import { SectionHeading } from '@/components/common/SectionHeading';
 
 interface KillerEquipmentSectionProps {
   addons?: (AddonItem | EquipmentItem)[];
@@ -49,9 +50,9 @@ export const KillerEquipmentSection: React.FC<KillerEquipmentSectionProps> = ({
             <Flame className="h-5 w-5" />
           </IconTile>
           <div>
-            <h3 className="text-lg font-black tracking-tight text-text-primary flex items-center gap-2">
+            <SectionHeading as="h3">
               {t.equipmentTitleKiller || 'Killer Power Add-ons & Equipment'}
-            </h3>
+            </SectionHeading>
           </div>
         </div>
         <div className="py-8 text-center text-xs text-text-muted">
@@ -73,12 +74,12 @@ export const KillerEquipmentSection: React.FC<KillerEquipmentSectionProps> = ({
               <Flame className="h-5 w-5" />
             </IconTile>
             <div>
-              <h3 className="text-lg font-black tracking-tight text-text-primary flex items-center gap-2">
+              <SectionHeading as="h3">
                 {t.equipmentTitleKiller || 'Killer Power Add-ons & Equipment'}
                 <Badge tone="red" size="sm" plain>
                   {addons.length}
                 </Badge>
-              </h3>
+              </SectionHeading>
             </div>
           </div>
         }

@@ -3,22 +3,20 @@
 import React from 'react';
 import { Button } from '@/components/common/Button';
 import { useDictionary } from '@/context/DictionaryContext';
-import { Surface } from '@/components/common/Surface';
+import { CenteredScreen } from '@/components/layout/CenteredScreen';
 
 export function OnboardingIntroView({ onContinue }: { onContinue: () => void }) {
   const t = useDictionary().onboarding;
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
-      <Surface padding="none" className="w-full max-w-md p-8 text-center space-y-4 shadow-2xl">
-        <h1 className="text-xl font-black">{t.introTitle}</h1>
-        <p className="text-sm text-text-secondary">
-          {t.introBody}
-        </p>
-        <Button variant="primary" onClick={onContinue} className="w-full">
-          {t.introContinueButton}
-        </Button>
-      </Surface>
-    </div>
+    <CenteredScreen className="text-center space-y-4">
+      <h1 className="text-xl font-black">{t.introTitle}</h1>
+      <p className="text-sm text-text-secondary">
+        {t.introBody}
+      </p>
+      <Button variant="primary" onClick={onContinue} className="w-full">
+        {t.introContinueButton}
+      </Button>
+    </CenteredScreen>
   );
 }

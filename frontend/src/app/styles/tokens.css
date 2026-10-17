@@ -38,12 +38,17 @@
  * wheel's own shades.
  * --------------------------------------------------------------------------- */
 :root {
+  --palette-purple-500: #a855f7;
   --palette-white: #ffffff;
+  --palette-black: #000000;
+  --palette-amber-100: #fef3c7;
   --palette-amber-200: #fde68a;
+  --palette-amber-300: #fcd34d;
   --palette-amber-400: #fbbf24;
   --palette-amber-500: #f59e0b;
   --palette-amber-600: #d97706;
   --palette-amber-700: #b45309;
+  --palette-amber-900: #78350f;
   --palette-blood-500: #a3232f;
   --palette-blood-600: #961f1f;
   --palette-blood-800: #5c1414;
@@ -58,15 +63,20 @@
   --palette-emerald-500: #10b981;
   --palette-emerald-900: #064e3b;
   --palette-emerald-950: #022c22;
+  --palette-gold-300: #ffd166;
   --palette-gray-950: #030712;
   --palette-green-500: #22c55e;
   --palette-green-600: #16a34a;
   --palette-green-700: #15803d;
   --palette-hot-pink: #ff2a7a;
   --palette-neon-abyss: #051b2c;
+  --palette-neon-crimson: #ff0055;
   --palette-neon-mint: #00ffcc;
   --palette-neon-pink: #ff007f;
   --palette-night-900: #0b0f19;
+  --palette-night-925: #070b12;
+  --palette-night-950: #05070c;
+  --palette-night-975: #020306;
   --palette-orange-50: #fff7ed;
   --palette-orange-400: #fb923c;
   --palette-orange-500: #f97316;
@@ -86,6 +96,9 @@
   --palette-rose-950: #4c0519;
   --palette-sky-400: #38bdf8;
   --palette-slate-50: #f8fafc;
+  --palette-slate-200: #e2e8f0;
+  --palette-slate-300: #cbd5e1;
+  --palette-slate-400: #94a3b8;
   --palette-slate-700: #334155;
   --palette-slate-800: #1e293b;
   --palette-slate-900: #0f172a;
@@ -105,6 +118,7 @@
   --palette-zinc-600: #52525b;
   --palette-zinc-700: #3f3f46;
   --palette-zinc-800: #27272a;
+  --palette-zinc-900: #18181b;
   --palette-zinc-950: #09090b;
 }
 

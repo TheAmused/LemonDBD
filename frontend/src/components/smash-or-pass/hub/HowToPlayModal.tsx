@@ -40,7 +40,7 @@ export function HowToPlayModal({ isOpen, onClose, onPass, onSmash, onStats, onRe
       bodyClassName="p-4 sm:p-5"
     >
       <div className="space-y-3 text-xs text-text-secondary">
-        {/* Dictionary icon key retention for i18n hygiene ratchet */}
+        {/* Dictionary icon key retention for i18n hygiene */}
         <span className="sr-only" aria-hidden="true">
           {text.swipeIcon} {text.iconsIcon} {text.keycapsIcon} {text.atmosphereIcon}
         </span>

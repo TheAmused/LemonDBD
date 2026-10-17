@@ -7,6 +7,7 @@ import { Tooltip } from '@/components/common/Tooltip';
 import { cn } from '@/utils/cn';
 import { getPerkIconUrl } from '@/utils/perkUtils';
 import type { MachinePhase, Reel } from './slotMachineTypes';
+import { TileButton } from "@/components/common/TileButton";
 
 export interface SlotReelProps {
   reel: Reel;
@@ -186,8 +187,7 @@ export function SlotReelRowMobile({
       {/* Action / Lock Target Button */}
       <div className="shrink-0 flex items-center justify-center w-11 sm:w-12">
         {isClickable ? (
-          <button
-            type="button"
+          <TileButton
             onClick={() => toggleStage(reel.id)}
             className={cn(
               'pointer-coarse:min-h-11 pointer-coarse:min-w-11 h-10 w-10 rounded-control flex items-center justify-center font-black transition-all duration-200 cursor-pointer touch-manipulation border shadow-xs',
@@ -195,10 +195,10 @@ export function SlotReelRowMobile({
                 ? 'bg-accent-green text-text-inverted border-accent-green hover:bg-accent-green/90 hover:scale-110 active:scale-95 hover:shadow-md hover:shadow-accent-green/40'
                 : 'bg-bg-elevated text-text-secondary border-border-color hover:text-text-primary hover:border-accent-amber hover:bg-bg-elevated/90 hover:scale-110 active:scale-95 hover:shadow-md hover:shadow-accent-amber/35'
             )}
-            aria-label={`#${reel.id + 1}`}
+            aria-label={`#${reel.id + 1}`} press={false}
           >
             {isStaged ? <Check className="h-5 w-5" /> : <Plus className="h-5 w-5" />}
-          </button>
+          </TileButton>
         ) : reel.locked ? (
           <div className="h-10 w-10 rounded-card bg-accent-amber/20 border border-accent-amber/40 flex items-center justify-center text-accent-amber">
             <Lock className="h-5 w-5" />

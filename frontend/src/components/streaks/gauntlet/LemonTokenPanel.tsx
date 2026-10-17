@@ -7,6 +7,7 @@ import { useDictionary } from '@/context/DictionaryContext';
 import { canAddSlot } from '@/utils/perkSlots';
 import { BOOST_ICONS } from './boostIcons';
 import type { BoostConfig, BuyableBoost, TierInfo } from '@/types/gauntletStreak';
+import { TileButton } from "@/components/common/TileButton";
 
 interface LemonTokenPanelProps {
   boosts: BoostConfig;
@@ -36,16 +37,15 @@ interface BoostTileProps {
 const BoostTile: React.FC<BoostTileProps> = ({ boost, label, price, disabled, onClick }) => {
   const Icon = BOOST_ICONS[boost];
   return (
-    <button
-      type="button"
+    <TileButton
       onClick={onClick}
       disabled={disabled}
-      className="flex min-w-0 flex-col items-center justify-center gap-1 rounded-control border border-border-color bg-bg-surface px-2 py-2 text-center transition-colors sm:flex-row sm:gap-2 sm:px-3 sm:text-left enabled:cursor-pointer enabled:hover:border-accent-amber/60 enabled:hover:bg-bg-elevated disabled:cursor-not-allowed disabled:opacity-45"
+      className="flex min-w-0 flex-col items-center justify-center gap-1 rounded-control border border-border-color bg-bg-surface px-2 py-2 text-center transition-colors sm:flex-row sm:gap-2 sm:px-3 sm:text-left enabled:cursor-pointer enabled:hover:border-accent-amber/60 enabled:hover:bg-bg-elevated disabled:cursor-not-allowed disabled:opacity-45" press={false}
     >
       <Icon className="h-5 w-5 shrink-0 text-accent-amber" aria-hidden="true" />
       <span className="type-caption min-w-0 text-text-primary max-sm:text-xs max-sm:leading-tight">{label}</span>
       <span className="type-label-sm text-accent-amber">{price}</span>
-    </button>
+    </TileButton>
   );
 };
 

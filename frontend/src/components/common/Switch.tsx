@@ -63,7 +63,7 @@ export const Switch: React.FC<SwitchProps> = ({ checked, onChange, ariaLabel, cl
       aria-label={ariaLabel}
       disabled={disabled}
       onClick={() => onChange(!checked)}
-      className={`inline-flex shrink-0 cursor-pointer rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red disabled:cursor-not-allowed disabled:opacity-50 ${className}`}
+      className={`hit-area inline-flex shrink-0 cursor-pointer rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red disabled:cursor-not-allowed disabled:opacity-50 ${className}`}
     >
       <SwitchTrack checked={checked} size={size} />
     </button>

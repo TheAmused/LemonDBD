@@ -8,7 +8,7 @@ import assert from 'node:assert/strict';
 import { ts } from 'ts-morph';
 import en from '@/locales/en';
 import { codeModules, scanAst, scanLines, loadModules } from '../helpers/sourceGraph';
-import { ratchet, countBy } from '../helpers/ratchet';
+import { expectNone, countBy } from '../helpers/found';
 
 function leafKeys(o: unknown, out = new Set<string>()): Set<string> {
   if (o && typeof o === 'object' && !Array.isArray(o)) for (const [k, v] of Object.entries(o)) {
@@ -19,12 +19,12 @@ function leafKeys(o: unknown, out = new Set<string>()): Set<string> {
 }
 
 describe('i18n hygiene: dictionary keys', () => {
-  it('no new dictionary key that nothing in the code references (dead keys only shrink)', () => {
+  it('no new dictionary key that nothing in the code references (dead keys)', () => {
     const corpus = codeModules().map((m) => m.text).join('\n');
     // Key families the code resolves at runtime (AdminSettingsPanel config_*, ScraperConfigModal target*Label/Desc).
     const DYNAMIC_KEY_FAMILIES = /^(config_|configGroup|configUnit_|configChoice_|target[A-Z].*(Label|Desc)$)/;
     const dead = [...leafKeys(en)].filter((k) => !DYNAMIC_KEY_FAMILIES.test(k) && !new RegExp(`\\b${k}\\b`).test(corpus));
-    ratchet('deadDictionaryKeys', countBy(dead), 'dictionary keys no code references');
+    expectNone(countBy(dead), 'dictionary keys no code references');
   });
 });
 

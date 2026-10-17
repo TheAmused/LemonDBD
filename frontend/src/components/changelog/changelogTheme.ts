@@ -1,5 +1,6 @@
 // frontend/src/components/changelog/changelogTheme.ts
 import type { ChangelogSection } from '@/types/changelog';
+import { hexToRgba, paletteColor } from '@/utils/themeColor';
 
 export const CHANGELOG_SECTIONS: ChangelogSection[] = ['new', 'qol', 'balance', 'bugfix', 'knownIssues', 'announcement'];
 
@@ -14,21 +15,38 @@ export const CHANGELOG_BODY_CLASS = [
   '[&_a]:text-accent-red-text [&_a]:underline',
 ].join(' ');
 
-// Swatches offered by the rich-text color picker in the admin editor.
-export const CHANGELOG_TEXT_COLORS: { name: string; value: string }[] = [
-  { name: 'Bone', value: '#e2e8f0' },
-  { name: 'Blood', value: '#dc2626' },
-  { name: 'Amber', value: '#f59e0b' },
-  { name: 'Hex', value: '#a855f7' },
-  { name: 'Hope', value: '#10b981' },
-  { name: 'Fog', value: '#38bdf8' },
+export interface ChangelogSwatch {
+  name: string;
+  value: string;
+}
+
+// The swatch colours are saved into the entry's HTML as hex and rgba text, so they are read from the palette
+// (tokens.css) when the editor opens and written out as plain values. `resolve` is the palette lookup.
+type PaletteLookup = (name: string) => string;
+
+const TEXT_SWATCHES: [name: string, palette: string][] = [
+  ['Bone', 'slate-200'],
+  ['Blood', 'red-600'],
+  ['Amber', 'amber-500'],
+  ['Hex', 'purple-500'],
+  ['Hope', 'emerald-500'],
+  ['Fog', 'sky-400'],
 ];
 
-// Swatches offered by the rich-text highlight (background) picker.
-export const CHANGELOG_HIGHLIGHT_COLORS: { name: string; value: string }[] = [
-  { name: 'Blood', value: 'rgba(220,38,38,0.35)' },
-  { name: 'Amber', value: 'rgba(245,158,11,0.35)' },
-  { name: 'Hex', value: 'rgba(168,85,247,0.35)' },
-  { name: 'Hope', value: 'rgba(16,185,129,0.35)' },
-  { name: 'Fog', value: 'rgba(56,189,248,0.3)' },
+const HIGHLIGHT_SWATCHES: [name: string, palette: string, alpha: number][] = [
+  ['Blood', 'red-600', 0.35],
+  ['Amber', 'amber-500', 0.35],
+  ['Hex', 'purple-500', 0.35],
+  ['Hope', 'emerald-500', 0.35],
+  ['Fog', 'sky-400', 0.3],
 ];
+
+/** Swatches offered by the rich-text color picker in the admin editor. */
+export function changelogTextColors(resolve: PaletteLookup = paletteColor): ChangelogSwatch[] {
+  return TEXT_SWATCHES.map(([name, palette]) => ({ name, value: resolve(palette) }));
+}
+
+/** Swatches offered by the rich-text highlight (background) picker. */
+export function changelogHighlightColors(resolve: PaletteLookup = paletteColor): ChangelogSwatch[] {
+  return HIGHLIGHT_SWATCHES.map(([name, palette, alpha]) => ({ name, value: hexToRgba(resolve(palette), alpha) }));
+}

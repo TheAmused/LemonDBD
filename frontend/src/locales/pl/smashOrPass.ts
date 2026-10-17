@@ -498,6 +498,7 @@ export default {
     removeGenderAria: 'Usuń',
   },
   archetypeBuilder: {
+    iconUrlPlaceholder: 'https://... lub data:image',
     titlePlaceholder: 'np. Wyznawca Przedwiecznych',
     subtitlePlaceholder: 'np. Pociągany przez niebezpieczną, nieziemską moc',
     descriptionPlaceholder: 'Szczegółowe podsumowanie narracyjne wyświetlane po odblokowaniu tego archetypu...',

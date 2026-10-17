@@ -13,8 +13,8 @@ const FIELD_ERROR = 'border-accent-red focus:ring-accent-red';
 // 16px on small screens stops iOS Safari from zooming into focused inputs.
 const FIELD_SIZES: Record<FieldSize, string> = {
   // Controls that sit inside a toolbar or a pager, next to icon buttons. Compact on purpose (no 16px iOS rule).
-  xs: 'px-1.5 py-1 text-mini sm:px-2 sm:text-xs lg:px-3 lg:py-1.5 lg:text-sm wide:text-base',
-  sm: 'px-2.5 py-1.5 text-base sm:text-xs',
+  xs: 'px-1.5 py-1 text-mini sm:px-2 sm:text-xs lg:px-3 lg:py-1.5 lg:text-sm wide:text-base pointer-coarse:min-h-11 pointer-coarse:min-w-11',
+  sm: 'px-2.5 py-1.5 text-base sm:text-xs pointer-coarse:min-h-11',
   md: 'px-3 py-2.5 text-base sm:text-sm',
   lg: 'px-4 py-3 text-base',
 };

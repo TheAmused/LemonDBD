@@ -12,7 +12,7 @@
  * `isLocalRosterSlug` tells the two apart everywhere else in the app.
  */
 import type { EntityItem, EntityMetadata, RosterItem, SmashRosterDocumentEntity, StoredCustomRoster } from '@/types/smashOrPass';
-import { DEFAULT_ROSTER_THEME_COLOR } from '@/utils/smashOrPass/constants';
+import { defaultRosterThemeColor } from '@/utils/smashOrPass/constants';
 
 const LOCAL_ROSTER_PREFIX = 'local:';
 
@@ -35,7 +35,7 @@ export function customRosterToRosterItem(roster: StoredCustomRoster): RosterItem
     name: roster.name || 'Untitled Roster',
     description: roster.description || '',
     cover_image_url: roster.cover_image_url ?? null,
-    theme_color: roster.theme_color || DEFAULT_ROSTER_THEME_COLOR,
+    theme_color: roster.theme_color || defaultRosterThemeColor(),
     category: roster.category || 'Custom',
     is_nsfw: roster.is_nsfw ?? false,
     is_active: true,

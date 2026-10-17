@@ -6,7 +6,7 @@ import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import { ts } from 'ts-morph';
 import { scanAst, scanLines } from '../helpers/sourceGraph';
-import { ratchet, countBy } from '../helpers/ratchet';
+import { expectNone, countBy } from '../helpers/found';
 
 const attrNames = (el: ts.JsxOpeningLikeElement) => el.attributes.properties.map((a) => (ts.isJsxAttribute(a) ? a.name.getText() : '...'));
 
@@ -29,7 +29,7 @@ describe('ui: accessible names', () => {
       const init = n.initializer;
       return !!init && ts.isStringLiteral(init) && /[A-Za-z]{3}/.test(init.text);
     });
-    ratchet('literalA11yAttributes', countBy(bad.map((b) => b.split(':')[0])), 'hardcoded accessibility strings');
+    expectNone(countBy(bad.map((b) => b.split(':')[0])), 'hardcoded accessibility strings');
   });
 });
 
@@ -71,7 +71,7 @@ describe('ui: shared primitives', () => {
 
   it('no hand-rolled fixed full-screen overlays outside the shared Modal and spinner (pointer-events-none decoration layers are not overlays)', () => {
     const bad = scanLines(/^(?!.*pointer-events-none).*fixed inset-0[^"'`]*\bz-\d+/, (m) => /^components\/(common\/(Modal|DbdSpinner|ImagePreloadProvider)|layout\/)/.test(m.file));
-    ratchet('handRolledOverlays', countBy(bad.map((b) => b.split(':')[0])), 'hand-rolled overlays');
+    expectNone(countBy(bad.map((b) => b.split(':')[0])), 'hand-rolled overlays');
   });
 
   it('tooltips use the shared Tooltip (tip()/<Tooltip>), not the native title attribute on elements', () => {
@@ -88,7 +88,7 @@ describe('ui: theming', () => {
 });
 
 describe('ui: touch targets', () => {
-  it('buttons smaller than 44px (h/w/size 1-10 in Tailwind) only shrink in number unless they extend their hit area', () => {
+  it('buttons smaller than 44px (h/w/size 1-10 in Tailwind) unless they extend their hit area', () => {
     // 44px = Tailwind 11. A small visual button is fine when a min-h/min-w or hit-area utility enlarges it.
     const bad = scanAst((n) => {
       if (!ts.isJsxOpeningElement(n) || n.tagName.getText() !== 'button') return false;
@@ -97,6 +97,6 @@ describe('ui: touch targets', () => {
       if (!/(^|[\s"'`{:])(h|w|size)-([1-9]|10)(\s|["'`}])/.test(text)) return false;
       return !/min-[hw]-\[?(4[4-9]|[5-9]\d)|min-[hw]-1[1-9]|hit-area|before:-inset|after:-inset|touch-target/.test(text);
     });
-    ratchet('smallTouchTargets', countBy(bad.map((b) => b.split(':')[0])), 'sub-44px buttons');
+    expectNone(countBy(bad.map((b) => b.split(':')[0])), 'sub-44px buttons');
   });
 });

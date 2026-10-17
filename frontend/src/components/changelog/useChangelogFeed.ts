@@ -6,12 +6,7 @@ import type { Dispatch, SetStateAction } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { fetchChangelogPosts, fetchChangelogPostsAdmin } from '@/services/changelogApi';
 import type { ChangelogPost } from '@/types/changelog';
-import {
-  firstVisitBaseline,
-  isUnreadPost,
-  parseReadState,
-  type ChangelogReadState,
-} from './changelogReadState';
+import { isUnreadPost, parseReadIds, type ChangelogReadState } from './changelogReadState';
 
 const READ_STATE_KEY = 'lemondbd_changelog_read';
 const PUBLIC_PAGE_SIZE = 20;
@@ -36,17 +31,17 @@ export interface ChangelogFeed {
 // Per account, so one person's reading never hides updates from the next one on the same browser.
 const storageKeyFor = (userId: number | undefined) => `${READ_STATE_KEY}:${userId ?? 'guest'}`;
 
-const readStored = (key: string): ChangelogReadState | null | undefined => {
+const readStored = (key: string): number[] | undefined => {
   try {
-    return parseReadState(window.localStorage.getItem(key));
+    return parseReadIds(window.localStorage.getItem(key));
   } catch {
     return undefined; // private browsing etc.: no unread tracking at all
   }
 };
 
-const writeStored = (key: string, state: ChangelogReadState) => {
+const writeStored = (key: string, read: number[]) => {
   try {
-    window.localStorage.setItem(key, JSON.stringify(state));
+    window.localStorage.setItem(key, JSON.stringify({ read }));
   } catch {
     /* ignore persistence failures */
   }
@@ -55,8 +50,8 @@ const writeStored = (key: string, state: ChangelogReadState) => {
 /**
  * The "What's New" feed, loaded once and shared by every launcher on the page
  * (the sidebar renders one for desktop and one for the mobile header). Unread
- * tracking looks only at published entries and is switched off for admins, who
- * write the entries themselves.
+ * tracking looks only at published entries from after the account was created,
+ * and is switched off for admins, who write the entries themselves.
  */
 export function useChangelogFeed(): ChangelogFeed {
   const { token, isAdmin, user, isLoading: authLoading } = useAuth();
@@ -66,14 +61,20 @@ export function useChangelogFeed(): ChangelogFeed {
   const [loadingMore, setLoadingMore] = useState(false);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(false);
-  // undefined: not read yet or storage unavailable; null: nothing stored for this account yet.
-  const [readState, setReadState] = useState<ChangelogReadState | null | undefined>(undefined);
+  // undefined: not read yet or storage unavailable.
+  const [readIds, setReadIds] = useState<number[] | undefined>(undefined);
 
   // Until the session is known the account is unknown too, so nothing is tracked yet: reading the guest's
   // history on a page refresh would flash a dot that belongs to nobody.
   useEffect(() => {
-    setReadState(authLoading ? undefined : readStored(storageKey));
+    setReadIds(authLoading ? undefined : readStored(storageKey));
   }, [authLoading, storageKey]);
+
+  // Entries older than the account are history, not news: "new" starts at sign-up.
+  const readState = useMemo<ChangelogReadState | undefined>(
+    () => (readIds && user?.created_at ? { baseline: user.created_at, read: readIds } : undefined),
+    [readIds, user?.created_at]
+  );
 
   const fetchPage = useCallback(
     (pageNumber: number) =>
@@ -119,14 +120,6 @@ export function useChangelogFeed(): ChangelogFeed {
     }
   }, [fetchPage, page]);
 
-  // First visit of this account: remember where "new" starts, so the history is not all flagged.
-  useEffect(() => {
-    if (isAdmin || readState !== null || !posts.some((p) => p.is_published)) return;
-    const state = { baseline: firstVisitBaseline(posts), read: [] };
-    writeStored(storageKey, state);
-    setReadState(state);
-  }, [isAdmin, readState, posts, storageKey]);
-
   const isUnread = useCallback(
     (post: ChangelogPost) => !isAdmin && isUnreadPost(post, readState),
     [isAdmin, readState]
@@ -137,9 +130,9 @@ export function useChangelogFeed(): ChangelogFeed {
   const markRead = useCallback(
     (post: ChangelogPost) => {
       if (!readState || !isUnread(post)) return;
-      const next = { ...readState, read: [...readState.read, post.id] };
+      const next = [...readState.read, post.id];
       writeStored(storageKey, next);
-      setReadState(next);
+      setReadIds(next);
     },
     [readState, isUnread, storageKey]
   );

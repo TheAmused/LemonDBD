@@ -13,6 +13,7 @@ import { tip } from '@/components/common/Tooltip';
 import { ADMIN_STORAGE, oneOf } from '@/components/admin/adminStorage';
 import { DENSE_PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/pagination';
 import { useDictionary, useLocale } from '@/context/DictionaryContext';
+import { useAdminSettingsDict } from '@/hooks/useAdminSettingsDict';
 import { usePersistentNumber } from '@/hooks/usePersistentNumber';
 import { usePersistentString } from '@/hooks/usePersistentString';
 import { listAuditLogs } from '@/services/adminApi';
@@ -101,6 +102,7 @@ export function AdminAuditSection({ refreshKey, notify }: { refreshKey: number; 
   const dict = useDictionary();
   const locale = useLocale();
   const t = dict.admin;
+  const settingNames = useAdminSettingsDict();
   const [logs, setLogs] = useState<AdminAuditLogEntry[]>([]);
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
@@ -143,8 +145,8 @@ export function AdminAuditSection({ refreshKey, notify }: { refreshKey: number; 
       if (typeof text === 'string') return text;
       if (d.changes && typeof d.changes === 'object') {
         // Setting keys read as their Settings label (config_<key>), so the line is not code.
-        const labels = t as unknown as Record<string, string | undefined>;
-        return Object.keys(d.changes).map((key) => labels[`config_${key}`] ?? key).join(', ');
+        const labels = settingNames as Record<string, string | undefined> | null;
+        return Object.keys(d.changes).map((key) => labels?.[`config_${key}`] ?? key).join(', ');
       }
       if (typeof d.status === 'string') return d.status;
       return '';

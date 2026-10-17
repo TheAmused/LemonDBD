@@ -55,7 +55,7 @@ function parseBranches(body: string): Map<string, string> {
   return branches;
 }
 
-function formatNumber(n: number, locale: string): string {
+function formatPluralCount(n: number, locale: string): string {
   return Number.isInteger(n) ? n.toLocaleString(locale) : String(n);
 }
 
@@ -87,7 +87,7 @@ export function formatMessage(
       const branches = parseBranches(plural[2]);
       const chosen =
         branches.get(`=${n}`) ?? branches.get(pluralCategory(locale, Number.isFinite(n) ? n : 0)) ?? branches.get('other') ?? '';
-      out += formatMessage(chosen.replace(/#/g, formatNumber(Number.isFinite(n) ? n : 0, locale)), values, locale);
+      out += formatMessage(chosen.replace(/#/g, formatPluralCount(Number.isFinite(n) ? n : 0, locale)), values, locale);
     } else if (/^[a-zA-Z_][\w]*$/.test(inner) && inner in values && values[inner] != null) {
       out += String(values[inner]);
     } else {

@@ -7,7 +7,8 @@ import { MinigameCreator } from '@/components/minigames/creator/MinigameCreator'
 import { useDictionary, useLocale } from '@/context/DictionaryContext';
 import type { MinigameCatalog } from '@/types/minigame';
 import { fetchMinigameCatalog } from '@/services/minigameApi';
-import { DbdSpinner } from '@/components/common/DbdSpinner';
+import { ErrorNotice } from '@/components/common/Alert';
+import { LoadingState } from '@/components/common/LoadingState';
 import { getErrorMessage } from '@/utils/api';
 
 export function MinigameCreatorClient() {
@@ -53,15 +54,9 @@ export function MinigameCreatorClient() {
       mainClassName="relative flex flex-col items-center justify-center min-h-vh-70"
     >
       {loading ? (
-        <div className="flex flex-col items-center justify-center p-12 gap-4">
-          <DbdSpinner size="lg" />
-          <p className="type-card-title text-text-muted">{dict.app.loading}</p>
-        </div>
+        <LoadingState label={dict.app.loading} />
       ) : error ? (
-        <div className="p-8 rounded-card bg-accent-red/10 border border-accent-red/30 text-center max-w-md mx-auto my-12">
-          <h2 className="text-lg font-bold text-accent-red mb-2">{dict.app.notice}</h2>
-          <p className="text-xs text-text-muted">{error}</p>
-        </div>
+        <ErrorNotice title={dict.app.notice}>{error}</ErrorNotice>
       ) : catalog ? (
         <MinigameCreator catalog={catalog} locale={locale} />
       ) : null}

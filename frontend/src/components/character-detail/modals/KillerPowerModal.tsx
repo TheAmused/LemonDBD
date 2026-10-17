@@ -18,6 +18,14 @@ interface KillerPowerModalProps {
   t: Record<string, string>;
 }
 
+/** One of the three numbers under the power description. */
+const MiniStat: React.FC<{ label: string; value: string; valueClass: string }> = ({ label, value, valueClass }) => (
+  <Surface padding="none" className="p-2 text-center">
+    <span className="block type-label-2xs text-text-secondary">{label}</span>
+    <span className={`block type-strong ${valueClass} truncate`}>{value}</span>
+  </Surface>
+);
+
 export const KillerPowerModal: React.FC<KillerPowerModalProps> = ({
   isOpen,
   onClose,
@@ -60,18 +68,9 @@ export const KillerPowerModal: React.FC<KillerPowerModalProps> = ({
         </div>
       </div>
       <div className="mt-5 px-6 py-3 bg-bg-elevated border-y border-border-color grid grid-cols-3 gap-2">
-        <Surface padding="none" className="p-2 text-center">
-          <span className="block text-micro font-bold uppercase text-text-secondary">{t.movementSpeed || 'Speed'}</span>
-          <span className="block type-strong text-text-primary truncate">{killerSpeed}</span>
-        </Surface>
-        <Surface padding="none" className="p-2 text-center">
-          <span className="block text-micro font-bold uppercase text-text-secondary">{t.terrorRadius || 'Terror Radius'}</span>
-          <span className="block type-strong text-accent-red truncate">{killerTerrorRadius}</span>
-        </Surface>
-        <Surface padding="none" className="p-2 text-center">
-          <span className="block text-micro font-bold uppercase text-text-secondary">{t.height || 'Height'}</span>
-          <span className="block type-strong text-text-primary truncate">{killerHeight}</span>
-        </Surface>
+        <MiniStat label={t.movementSpeed || 'Speed'} value={killerSpeed} valueClass="text-text-primary" />
+        <MiniStat label={t.terrorRadius || 'Terror Radius'} value={killerTerrorRadius} valueClass="text-accent-red" />
+        <MiniStat label={t.height || 'Height'} value={killerHeight} valueClass="text-text-primary" />
       </div>
 
       <div className="p-4 sm:p-6 space-y-4 type-body-lg text-text-secondary">

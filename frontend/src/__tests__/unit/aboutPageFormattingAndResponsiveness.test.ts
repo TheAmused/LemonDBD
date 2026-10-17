@@ -99,14 +99,11 @@ describe('About Page: Layout, Typography & LocalStorage', () => {
   });
 
   it('justifies paragraph text in cards with hyphens-auto for mobile and desktop readability', () => {
-    assert.ok(
-      source.includes('text-justify'),
-      'Paragraph text must be justified'
-    );
-    assert.ok(
-      source.includes('hyphens-auto'),
-      'Paragraph text must enable hyphens-auto to avoid word gaps on narrow screens'
-    );
+    const roles = fs.readFileSync(path.join(__dirname, '../../app/styles/type-roles.css'), 'utf-8');
+    const prose = roles.match(/@utility type-prose \{([^}]*)\}/)?.[1] ?? '';
+    assert.ok(source.includes('type-prose'), 'Paragraph text must use the type-prose role');
+    assert.match(prose, /text-align:\s*justify/, 'type-prose must justify the text');
+    assert.match(prose, /hyphens:\s*auto/, 'type-prose must enable hyphens to avoid word gaps on narrow screens');
   });
 
   it('implements responsive 2:2:1 grid layout with aligned row heights and spanning credits', () => {

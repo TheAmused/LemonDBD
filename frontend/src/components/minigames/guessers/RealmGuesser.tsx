@@ -7,6 +7,7 @@ import { MapPin, Eye, Check, X } from 'lucide-react';
 import type { GuessRecord, RoundConfig, CatalogRealm } from '@/types/minigame';
 import { staticUrl } from '@/utils/api';
 import { useDictionary } from "@/context/DictionaryContext";
+import { SolvedOverlay } from './SolvedOverlay';
 
 interface RealmGuesserProps {
   roundConfig: RoundConfig;
@@ -57,14 +58,7 @@ export const RealmGuesser: React.FC<RealmGuesserProps> = ({ roundConfig, realms,
           <span>{zoomLevel}%</span>
         </div>
 
-        {isSolved && targetRealm && (
-          <div className="absolute inset-0 bg-bg-primary/40 backdrop-blur-xs flex items-center justify-center">
-            <div className="px-6 py-2.5 rounded-card bg-accent-green text-text-inverted font-bold text-lg shadow-xl border border-accent-green flex items-center gap-2">
-              <Check className="w-5 h-5" />
-              <span>{targetRealm.name}</span>
-            </div>
-          </div>
-        )}
+        {isSolved && targetRealm && <SolvedOverlay answer={targetRealm.name} large />}
       </div>
 
       {/* Input & Action Controls Slot */}

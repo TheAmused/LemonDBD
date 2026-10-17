@@ -29,6 +29,11 @@ import { SearchInput } from '@/components/common/Field';
 import { Badge } from '@/components/common/Badge';
 import { MenuItem } from '@/components/common/MenuItem';
 
+/** The icon beside a filter label: grows with the screen. */
+const FILTER_ICON = 'h-3 w-3 sm:h-3.5 sm:w-3.5 wide:h-4 wide:w-4 wide-2k:h-5 wide-2k:w-5';
+/** The count inside a coloured filter button. */
+const COUNT_BADGE = 'px-1 sm:px-1.5 wide:px-2 sm:text-tiny wide:text-xs leading-none';
+
 export function computeHasActiveFilters(state: {
   search: string;
   scope: ScopeFilter;
@@ -130,13 +135,13 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
   const roleOptions: readonly [SegmentedControlOption<RoleCategory>, SegmentedControlOption<RoleCategory>] = [
     {
       value: 'Survivor',
-      icon: <SurvivorIcon className="h-3 w-3 sm:h-3.5 sm:w-3.5 wide:h-4 wide:w-4 wide-2k:h-5 wide-2k:w-5" />,
+      icon: <SurvivorIcon className={FILTER_ICON} />,
       activeClassName: 'bg-accent-green text-text-inverted',
       label: (
         <span className="inline-flex items-center gap-1.5">
           {dict.filters.survivor && <span>{dict.filters.survivor}</span>}
           {typeof survivorCount === 'number' && (
-            <Badge tone="onAccent" size="xs" plain className="px-1 sm:px-1.5 wide:px-2 sm:text-tiny wide:text-xs leading-none">
+            <Badge tone="onAccent" size="xs" plain className={COUNT_BADGE}>
               {survivorCount}
             </Badge>
           )}
@@ -145,13 +150,13 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
     },
     {
       value: 'Killer',
-      icon: <KillerIcon className="h-3 w-3 sm:h-3.5 sm:w-3.5 wide:h-4 wide:w-4 wide-2k:h-5 wide-2k:w-5" />,
+      icon: <KillerIcon className={FILTER_ICON} />,
       activeClassName: 'bg-accent-red text-text-inverted',
       label: (
         <span className="inline-flex items-center gap-1.5">
           {dict.filters.killer && <span>{dict.filters.killer}</span>}
           {typeof killerCount === 'number' && (
-            <Badge tone="onAccent" size="xs" plain className="px-1 sm:px-1.5 wide:px-2 sm:text-tiny wide:text-xs leading-none">
+            <Badge tone="onAccent" size="xs" plain className={COUNT_BADGE}>
               {killerCount}
             </Badge>
           )}
@@ -168,7 +173,7 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
         <span className="inline-flex items-center gap-1.5">
           {dict.filters.allPerks && <span>{dict.filters.allPerks}</span>}
           {typeof allCount === 'number' && (
-            <Badge tone="onAccent" size="xs" plain className="px-1 sm:px-1.5 wide:px-2 sm:text-tiny wide:text-xs leading-none">
+            <Badge tone="onAccent" size="xs" plain className={COUNT_BADGE}>
               {allCount}
             </Badge>
           )}
@@ -182,7 +187,7 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
         <span className="inline-flex items-center gap-1.5">
           {dict.filters.ownedOnly && <span>{dict.filters.ownedOnly}</span>}
           {typeof ownedCount === 'number' && (
-            <Badge tone="onAccent" size="xs" plain className="px-1 sm:px-1.5 wide:px-2 sm:text-tiny wide:text-xs leading-none">
+            <Badge tone="onAccent" size="xs" plain className={COUNT_BADGE}>
               {ownedCount}
             </Badge>
           )}
@@ -207,13 +212,13 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
   const sortOrderOptions: readonly [SegmentedControlOption<SortOrder>, SegmentedControlOption<SortOrder>] = [
     {
       value: 'asc',
-      icon: <ArrowUpAZ className="h-3 w-3 sm:h-3.5 sm:w-3.5 wide:h-4 wide:w-4 wide-2k:h-5 wide-2k:w-5" />,
+      icon: <ArrowUpAZ className={FILTER_ICON} />,
       label: dict.filters.orderAsc,
       activeClassName: 'bg-accent-red text-text-inverted',
     },
     {
       value: 'desc',
-      icon: <ArrowDownZA className="h-3 w-3 sm:h-3.5 sm:w-3.5 wide:h-4 wide:w-4 wide-2k:h-5 wide-2k:w-5" />,
+      icon: <ArrowDownZA className={FILTER_ICON} />,
       label: dict.filters.orderDesc,
       activeClassName: 'bg-accent-red text-text-inverted',
     },

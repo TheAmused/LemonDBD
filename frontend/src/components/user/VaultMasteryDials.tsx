@@ -34,7 +34,7 @@ interface DialProps {
   count: number;
   total: number;
   percentage: number;
-  colorHex: string;
+  strokeClass: string;
   accentClass: string;
   icon: React.ReactNode;
   compact?: boolean;
@@ -45,7 +45,7 @@ const RadialDial: React.FC<DialProps> = ({
   count,
   total,
   percentage,
-  colorHex,
+  strokeClass,
   accentClass,
   icon,
   compact = false,
@@ -88,13 +88,12 @@ const RadialDial: React.FC<DialProps> = ({
             cx={center}
             cy={center}
             r={radius}
-            stroke={colorHex}
             strokeWidth={compact ? '6' : '7'}
             strokeDasharray={circumference}
             strokeDashoffset={strokeDashoffset}
             strokeLinecap="round"
             fill="transparent"
-            className="transition-all duration-1000 ease-out"
+            className={`transition-all duration-1000 ease-out ${strokeClass}`}
           />
         </svg>
 
@@ -174,7 +173,7 @@ export const VaultMasteryDials: React.FC<VaultMasteryDialsProps> = ({ ownership,
           count={survOwned}
           total={survTotal}
           percentage={survPercent}
-          colorHex="#16a34a"
+          strokeClass="stroke-accent-green"
           accentClass="bg-accent-green/15 text-accent-green"
           icon={<SurvivorIcon className={compact ? 'h-3 w-3' : 'h-3.5 w-3.5'} />}
           compact={compact}
@@ -186,7 +185,7 @@ export const VaultMasteryDials: React.FC<VaultMasteryDialsProps> = ({ ownership,
           count={killerOwned}
           total={killerTotal}
           percentage={killerPercent}
-          colorHex="#b91c1c"
+          strokeClass="stroke-accent-red"
           accentClass="bg-accent-red/15 text-accent-red"
           icon={<KillerIcon className={compact ? 'h-3 w-3' : 'h-3.5 w-3.5'} />}
           compact={compact}
@@ -198,7 +197,7 @@ export const VaultMasteryDials: React.FC<VaultMasteryDialsProps> = ({ ownership,
           count={perkUnlocked}
           total={perkTotal}
           percentage={perkPercent}
-          colorHex="#f59e0b"
+          strokeClass="stroke-accent-amber"
           accentClass="bg-accent-amber/15 text-accent-amber"
           icon={<Sparkles className={compact ? 'h-3 w-3' : 'h-3.5 w-3.5'} />}
           compact={compact}

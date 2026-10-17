@@ -59,7 +59,7 @@ export function AboutClient() {
             id: 'who',
             heading: about.who.heading,
             children: about.who.paragraphs.map((text, i) => (
-              <p key={i} className="text-text-muted text-justify [text-justify:inter-word] hyphens-auto">
+              <p key={i} className="type-prose text-text-muted">
                 <RichText text={text} />
               </p>
             )),
@@ -68,7 +68,7 @@ export function AboutClient() {
             id: 'why',
             heading: about.why.heading,
             children: about.why.paragraphs.map((text, i) => (
-              <p key={i} className="text-text-muted text-justify [text-justify:inter-word] hyphens-auto">
+              <p key={i} className="type-prose text-text-muted">
                 <RichText text={text} />
               </p>
             )),
@@ -80,7 +80,7 @@ export function AboutClient() {
             id: 'community',
             heading: about.community.heading,
             children: about.community.paragraphs.map((text, i) => (
-              <p key={i} className="text-text-muted text-justify [text-justify:inter-word] hyphens-auto">
+              <p key={i} className="type-prose text-text-muted">
                 <RichText text={text} />
               </p>
             )),
@@ -89,7 +89,7 @@ export function AboutClient() {
             id: 'features',
             heading: about.features.heading,
             children: about.features.paragraphs.map((text, i) => (
-              <p key={i} className="text-text-muted text-justify [text-justify:inter-word] hyphens-auto">
+              <p key={i} className="type-prose text-text-muted">
                 <RichText text={text} />
               </p>
             )),
@@ -102,7 +102,7 @@ export function AboutClient() {
             heading: about.credits.heading,
             children: (
               <>
-                <p className="text-text-muted text-justify [text-justify:inter-word] hyphens-auto">
+                <p className="type-prose text-text-muted">
                   <RichText text={about.credits.text} />
                 </p>
                 <ul className="flex flex-wrap items-center justify-start gap-x-4 gap-y-1 text-text-primary pt-1">
@@ -118,7 +118,7 @@ export function AboutClient() {
             heading: about.contact.heading,
             children: (
               <>
-                <p className="text-text-muted text-justify [text-justify:inter-word] hyphens-auto">{about.contact.text}</p>
+                <p className="type-prose text-text-muted">{about.contact.text}</p>
                 <ContactLinks email={contactEmail} />
               </>
             ),

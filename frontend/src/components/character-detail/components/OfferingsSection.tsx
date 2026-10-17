@@ -25,6 +25,7 @@ import { usePersistentDrawer } from '@/hooks/usePersistentDrawer';
 
 import { tip } from '@/components/common/Tooltip';
 import { EmptyState } from '@/components/common/EmptyState';
+import { SectionHeading } from '@/components/common/SectionHeading';
 import { isKiller as isKillerRole } from '@/utils/characterUtils';
 import { Badge } from '@/components/common/Badge';
 import { Surface } from '@/components/common/Surface';
@@ -314,14 +315,14 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
               <Gift className="h-5 w-5" />
             </div>
             <div>
-              <h2 className="text-lg font-black tracking-tight text-text-primary flex items-center gap-2">
+              <SectionHeading>
                 {t.offeringsTitle || 'Offerings & Sacrificial Rites'}
                 <Badge
                   tone={isKiller ? 'red' : 'green'} size="sm" plain
                 >
                   {offerings.length}
                 </Badge>
-              </h2>
+              </SectionHeading>
             </div>
           </div>
         }

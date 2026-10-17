@@ -12,6 +12,7 @@ from app.core.limiter import get_client_ip
 from app.core.security import admin_required, get_current_user, login_required
 from app.models.smash_or_pass import Roster
 from app.schemas.smash_or_pass import SmashRosterAdminCreate
+from app.services import site_settings
 from app.services.admin_control_service import log_admin_action
 from app.services.smash_or_pass_service import SmashOrPassService
 from app.utils.lang import extract_lang as _extract_lang
@@ -494,7 +495,8 @@ def proxy_image():
     if not parsed.hostname or _is_private_host(parsed.hostname):
         return api_error("Host not allowed", 403)
 
-    MAX_BYTES = 5 * 1024 * 1024  # 5MB maximum to prevent memory exhaustion
+    MAX_BYTES = site_settings.smash_image_max_bytes()  # at most 5MB (admin setting) to prevent memory exhaustion
+    max_mb = MAX_BYTES // (1024 * 1024)
 
     try:
         resp = requests.get(
@@ -520,14 +522,14 @@ def proxy_image():
 
         content_length = resp.headers.get("content-length")
         if content_length and int(content_length) > MAX_BYTES:
-            return api_error("Image exceeds maximum allowed size (5MB)", 413)
+            return api_error(f"Image exceeds maximum allowed size ({max_mb}MB)", 413)
 
         downloaded = bytearray()
         for chunk in resp.iter_content(chunk_size=65536):
             if chunk:
                 downloaded.extend(chunk)
                 if len(downloaded) > MAX_BYTES:
-                    return api_error("Image exceeds maximum allowed size (5MB)", 413)
+                    return api_error(f"Image exceeds maximum allowed size ({max_mb}MB)", 413)
 
         content_type = resp.headers.get("content-type", "image/jpeg")
         if not content_type.startswith("image/"):

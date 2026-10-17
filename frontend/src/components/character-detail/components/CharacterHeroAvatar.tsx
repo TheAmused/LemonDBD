@@ -51,7 +51,7 @@ export const CharacterHeroAvatar: React.FC<CharacterHeroAvatarProps> = ({
             onOpenModelModal();
           }
         }}
-        className="group relative w-full max-w-[280px] sm:max-w-[320px] aspect-[3/4] rounded-card overflow-hidden border-2 border-border-color bg-bg-elevated shadow-lg dark:shadow-2xl cursor-pointer hover:border-accent-red/60 focus:outline-none focus:ring-2 focus:ring-accent-red transition-all duration-300 flex items-center justify-center"
+        className="group relative w-full max-w-70 sm:max-w-80 aspect-[3/4] rounded-card overflow-hidden border-2 border-border-color bg-bg-elevated shadow-lg dark:shadow-2xl cursor-pointer hover:border-accent-red/60 focus:outline-none focus:ring-2 focus:ring-accent-red transition-all duration-300 flex items-center justify-center"
         {...tip(t.view3DModel || '', undefined, 'action')}
         aria-label={heroAriaLabel}
       >

@@ -29,7 +29,7 @@ export const CharacterPerksSection: React.FC<CharacterPerksSectionProps> = ({
   if (perks.length === 0) return null;
 
   return (
-    <div className="mt-auto grid w-full grid-cols-[repeat(auto-fit,minmax(8rem,1fr))] gap-4 pt-2 sm:gap-6">
+    <div className="mt-auto grid w-full grid-cols-fit-perk gap-4 pt-2 sm:gap-6">
       {perks.map((perk, idx) => {
         const iconSrc = getAssetUrl(backendBase, perk.icon_local_path, perk.icon_url);
 

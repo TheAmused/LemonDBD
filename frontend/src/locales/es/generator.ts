@@ -4,7 +4,6 @@ export default {
   subtitle: "Genera habilidades aleatorias basadas en las coordenadas del inventario del juego [Página/Casilla].",
   modeInstant: "Tirada Instantánea",
   modeWheel: "Ruleta de la Fortuna",
-  configTitle: "Ajustes de Inventario y Ruleta",
   totalPages: "Páginas Totales",
   perksPerPage: "Habilidades por Página",
   lastPagePerks: "Habilidades en Última Página",

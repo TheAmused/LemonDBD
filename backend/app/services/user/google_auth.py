@@ -12,7 +12,8 @@ from sqlalchemy.exc import IntegrityError
 from app.core.account_state import AccountBlockedError, is_blocked
 from app.core.extensions import db
 from app.models import User
-from app.services import ban_list
+from app.services import ban_list, site_settings
+from app.utils.api_i18n import localized_message
 
 logger = logging.getLogger(__name__)
 
@@ -136,6 +137,8 @@ def credential_belongs_to(user: User, credential: str | None) -> bool:
 
 
 def sign_in(credential: str | None) -> tuple[User, bool]:
+    if not site_settings.google_sign_in_enabled():
+        raise GoogleAuthError("Google sign-in is switched off at the moment.", 503)
     identity = verify_id_token(credential)
 
     for _ in range(_CREATE_ATTEMPTS):
@@ -154,6 +157,9 @@ def sign_in(credential: str | None) -> tuple[User, bool]:
             elif user.google_sub != identity.sub:
                 raise GoogleAuthError("This email is linked to a different Google account.", 409)
             return user, False
+
+        if not site_settings.registration_open():
+            raise GoogleAuthError(localized_message("registration_closed"), 403)
 
         refusal = ban_list.registration_refusal(identity.email)
         if refusal:

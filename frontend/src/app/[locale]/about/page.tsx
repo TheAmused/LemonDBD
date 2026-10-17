@@ -14,7 +14,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
     <PageShell
       locale={locale}
       padding="spacious"
-      mainClassName="flex flex-col items-center justify-center min-h-[calc(100vh-4rem)] lg:min-h-screen overflow-y-auto relative"
+      mainClassName="flex flex-col items-center justify-center min-h-screen-nav lg:min-h-screen overflow-y-auto relative"
     >
       <AboutClient />
     </PageShell>

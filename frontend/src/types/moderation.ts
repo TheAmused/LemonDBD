@@ -30,11 +30,16 @@ export const RULE_REFS = [
 ] as const;
 export type RuleRef = (typeof RULE_REFS)[number];
 
+/** The number a decision cites ("Section 1: ..."): the section's place among the citable ones, in Rules page order. */
+export const RULE_SECTION_NUMBERS = Object.fromEntries(RULE_REFS.map((ref, index) => [ref, index + 1])) as Readonly<
+  Record<RuleRef, number>
+>;
+
 export const MIN_SUSPENSION_DAYS = 1;
 export const MAX_SUSPENSION_DAYS = 365;
 const DEFAULT_SUSPENSION_DAYS = 7;
 
-/** Longest free text of a decision (facts, public message, internal notes); the server's `TEXT_LIMIT`. */
+/** Longest free text of a decision (facts, internal notes); the server's `TEXT_LIMIT`. */
 export const MAX_SANCTION_TEXT_LENGTH = 2000;
 /** Longest reason an admin gives for taking a decision back (revoke / restore). */
 export const MAX_REVOKE_REASON_LENGTH = 500;
@@ -46,7 +51,6 @@ export interface UserWarning {
   reason_code: string;
   rule_ref: string | null;
   facts: string | null;
-  public_message: string | null;
   issued_at: string;
   expires_at: string | null;
   revoked_at: string | null;
@@ -57,7 +61,6 @@ export interface BlockedInfo {
   code: 'account_banned' | 'account_suspended';
   until: string | null;
   reason_code: string | null;
-  public_message: string | null;
   appeal_contact: string | null;
 }
 
@@ -68,7 +71,6 @@ export interface AdminSanction {
   reason_code: string;
   rule_ref: string | null;
   facts: string | null;
-  public_message: string | null;
   internal_notes: string | null;
   source: 'manual' | 'content_report';
   report_id: number | null;
@@ -81,6 +83,41 @@ export interface AdminSanction {
   active: boolean;
   issued_by_login: string | null;
   revoked_by_login: string | null;
+}
+
+/** What a decision would tell the account holder (POST /admin/sanctions/preview); nothing is saved. */
+export interface SanctionPreview {
+  /** The account holder's language: the email is written in it. */
+  language: string;
+  reason_code: string;
+  /** The facts as they would be stored (a report's decision gets a standard line when none is typed). */
+  facts: string | null;
+  appeal_contact: string | null;
+  /** When a warning expires or a suspension ends. */
+  until: string | null;
+  email: {
+    subject: string;
+    preheader: string;
+    footer: string;
+    /** ["p", text] a paragraph; ["field", label, value]; ["quote", label, value] the moderator's own words. */
+    blocks: (['p', string] | ['field' | 'quote', string, string])[];
+  };
+}
+
+/** Whom a decision is about: an account, or the author of a reported item (the report supplies the reason). */
+export type SanctionTarget = { userId: number } | { reportId: number };
+
+/** The request body of a preview: the form plus its target. */
+export function sanctionPreviewBody(draft: SanctionDraft, target: SanctionTarget): Record<string, unknown> {
+  const text = (value: string) => value.trim() || undefined;
+  return {
+    ...('userId' in target ? { user_id: target.userId } : { report_id: target.reportId }),
+    kind: draft.kind,
+    reason_code: draft.reason_code,
+    rule_ref: draft.rule_ref || undefined,
+    duration_days: draft.kind === 'suspension' ? draft.duration_days : undefined,
+    facts: text(draft.facts),
+  };
 }
 
 /** What the escalation ladder would do next (backend: services/escalation.py). Only a suggestion. */
@@ -101,6 +138,19 @@ export interface ModerationSummary {
   content_blocked: number;
 }
 
+/** Where an account stands for the moderation drawer: the avatar's ring colour. */
+export type ModerationState = 'good' | 'warned' | 'suspended' | 'banned';
+
+/** Banned beats suspended beats warned (an active warning); otherwise in good standing. */
+export function moderationState(
+  summary: Pick<ModerationSummary, 'banned' | 'suspended_until' | 'active_warnings'>,
+  now: number = Date.now()
+): ModerationState {
+  if (summary.banned) return 'banned';
+  if (summary.suspended_until && new Date(summary.suspended_until).getTime() > now) return 'suspended';
+  return summary.active_warnings > 0 ? 'warned' : 'good';
+}
+
 export interface UserSanctions {
   sanctions: AdminSanction[];
   summary: ModerationSummary;
@@ -113,7 +163,6 @@ export interface SanctionDraft {
   rule_ref: RuleRef | '';
   duration_days: number;
   facts: string;
-  public_message: string;
   internal_notes: string;
   send_email: boolean;
 }
@@ -124,7 +173,6 @@ export const EMPTY_SANCTION_DRAFT: SanctionDraft = {
   rule_ref: '',
   duration_days: DEFAULT_SUSPENSION_DAYS,
   facts: '',
-  public_message: '',
   internal_notes: '',
   send_email: true,
 };
@@ -156,7 +204,6 @@ export function sanctionRequestBody(draft: SanctionDraft): Record<string, unknow
     rule_ref: draft.rule_ref || undefined,
     duration_days: draft.kind === 'suspension' ? draft.duration_days : undefined,
     facts: text(draft.facts),
-    public_message: text(draft.public_message),
     internal_notes: text(draft.internal_notes),
     send_email: draft.send_email,
   };
@@ -182,7 +229,6 @@ export interface AuthorDecision {
   author_action: AuthorAction;
   duration_days?: number;
   facts?: string;
-  public_message?: string;
   rule_ref?: string;
 }
 
@@ -193,7 +239,6 @@ export function authorDecisionFromDraft(draft: SanctionDraft): AuthorDecision {
     author_action: AUTHOR_ACTIONS[draft.kind],
     duration_days: draft.kind === 'suspension' ? draft.duration_days : undefined,
     facts: text(draft.facts),
-    public_message: text(draft.public_message),
     rule_ref: draft.rule_ref || undefined,
   };
 }

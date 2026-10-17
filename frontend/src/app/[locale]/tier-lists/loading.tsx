@@ -6,7 +6,7 @@ import { PageShellFallback } from '@/components/layout/PageShellFallback';
 export default function TierListsLoading() {
   return (
     <PageShellFallback
-      mainClassName="min-h-[500px] flex items-center justify-center"
+      mainClassName="min-h-skeleton-page flex items-center justify-center"
       skeleton={
         <DbdSpinner
           size="responsive"

@@ -1,226 +1,125 @@
 'use client';
 // frontend/src/components/admin/useAdminUsers.ts
-import { useCallback, useState } from 'react';
-import { getBackendBaseUrl, authHeaders, getAuthToken, getErrorMessage } from '@/utils/api';
+//
+// The user directory: the filtered, paged list and every account action an admin takes from it.
+// `notify` receives the outcome; `onChanged` runs after anything that changes the panel's counts.
+import { useCallback, useEffect, useState } from 'react';
+import { ADMIN_STORAGE, USER_ROLE_FILTERS, USER_STANDING_FILTERS, oneOf } from '@/components/admin/adminStorage';
+import { DEFAULT_PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/pagination';
+import { SEARCH_DEBOUNCE_MS } from '@/constants/timing';
 import { useDictionary } from '@/context/DictionaryContext';
+import { usePersistentNumber } from '@/hooks/usePersistentNumber';
+import { usePersistentString } from '@/hooks/usePersistentString';
+import { createUser, deleteUser, listUsers, resetTwoFactor, updateUser } from '@/services/adminApi';
+import { getErrorMessage } from '@/utils/api';
 import { formatMessage } from '@/utils/i18nFormat';
-import type { ActionMessage, AdminStats, UserRow } from '@/types/admin';
+import type { ActionMessage, NewUser, UserPatch, UserRoleFilter, UserRow, UserStandingFilter } from '@/types/admin';
+
 
 interface AdminUsersInput {
-  onActionMessage: (message: ActionMessage | null) => void;
-  onUserCreated: () => void;
+  enabled: boolean;
+  refreshKey: number;
+  notify: (message: ActionMessage) => void;
+  onChanged: () => void;
 }
 
-/** The admin user directory: stats, paged/filtered list, and the actions on a user. */
-export function useAdminUsers({ onActionMessage, onUserCreated }: AdminUsersInput) {
-  const dict = useDictionary();
-  const API_BASE = getBackendBaseUrl();
-  const [stats, setStats] = useState<AdminStats | null>(null);
+export function useAdminUsers({ enabled, refreshKey, notify, onChanged }: AdminUsersInput) {
+  const t = useDictionary().admin;
   const [users, setUsers] = useState<UserRow[]>([]);
-  const [search, setSearch] = useState<string>('');
-  const [roleFilter, setRoleFilter] = useState<string>('all');
-  const [page, setPage] = useState<number>(1);
-  const [totalUsers, setTotalUsers] = useState<number>(0);
-  const [loadingData, setLoadingData] = useState<boolean>(true);
-  const [userPendingDeletion, setUserPendingDeletion] = useState<UserRow | null>(null);
-  const [isDeletingUser, setIsDeletingUser] = useState<boolean>(false);
-  const [userPendingTwoFactorReset, setUserPendingTwoFactorReset] = useState<UserRow | null>(null);
-  const [isResettingTwoFactor, setIsResettingTwoFactor] = useState<boolean>(false);
+  const [total, setTotal] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [search, setSearchState] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState('');
+  // The filters and the page size are remembered; the search text and the page number are not.
+  const [role, setRoleState] = usePersistentString<UserRoleFilter>(ADMIN_STORAGE.usersRole, 'all', oneOf(USER_ROLE_FILTERS));
+  const [standing, setStandingState] = usePersistentString<UserStandingFilter>(ADMIN_STORAGE.usersStanding, 'all', oneOf(USER_STANDING_FILTERS));
+  const [page, setPage] = useState(1);
+  const [perPage, setPerPageState] = usePersistentNumber<number>(ADMIN_STORAGE.usersPerPage, DEFAULT_PAGE_SIZE, PAGE_SIZE_OPTIONS);
+  const [reloadKey, setReloadKey] = useState(0);
 
-  const fetchAdminData = useCallback(async () => {
-    const token = getAuthToken();
-    if (!token) return;
+  useEffect(() => {
+    const timer = window.setTimeout(() => setDebouncedSearch(search.trim()), SEARCH_DEBOUNCE_MS);
+    return () => window.clearTimeout(timer);
+  }, [search]);
 
-    setLoadingData(true);
-    try {
-      const timestamp = Date.now();
-      const statsRes = await fetch(`${API_BASE}/api/v1/admin/stats?_t=${timestamp}`, {
-        headers: {
-          ...authHeaders(token),
-          'Cache-Control': 'no-cache, no-store, must-revalidate',
-        },
-        cache: 'no-store',
+  useEffect(() => {
+    if (!enabled) return;
+    let cancelled = false;
+    setLoading(true);
+    listUsers({
+      page,
+      per_page: perPage,
+      search: debouncedSearch,
+      role: role === 'all' ? undefined : role,
+      standing: standing === 'all' ? undefined : standing,
+    })
+      .then((data) => {
+        if (cancelled) return;
+        setUsers(data.users ?? []);
+        setTotal(data.total ?? 0);
+      })
+      .catch((err: unknown) => {
+        if (!cancelled) notify({ type: 'error', text: getErrorMessage(err, t.networkError) });
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
       });
-      if (statsRes.ok) {
-        const sData: AdminStats = await statsRes.json();
-        setStats(sData);
-      }
+    return () => {
+      cancelled = true;
+    };
+  }, [enabled, page, perPage, debouncedSearch, role, standing, refreshKey, reloadKey, notify, t.networkError]);
 
-      const query = new URLSearchParams({
-        page: page.toString(),
-        per_page: '15',
-        _t: timestamp.toString(),
-      });
-      if (search.trim()) query.set('search', search.trim());
-      if (roleFilter !== 'all') query.set('role', roleFilter);
-
-      const usersRes = await fetch(`${API_BASE}/api/v1/users?${query.toString()}`, {
-        headers: {
-          ...authHeaders(token),
-          'Cache-Control': 'no-cache, no-store, must-revalidate',
-        },
-        cache: 'no-store',
-      });
-      if (usersRes.ok) {
-        const uData: { users: UserRow[]; total: number } = await usersRes.json();
-        setUsers(uData.users || []);
-        setTotalUsers(uData.total || 0);
-      }
-    } catch (err: unknown) {
-      console.error('Failed to load admin data:', err);
-    } finally {
-      setLoadingData(false);
-    }
-  }, [API_BASE, page, roleFilter, search]);
-
-  const handleToggleRole = async (targetUser: UserRow) => {
-    const token = getAuthToken();
-    if (!token) return;
-
-    const newRole = targetUser.role === 'admin' ? 'user' : 'admin';
-    try {
-      const res = await fetch(`${API_BASE}/api/v1/users/${targetUser.id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          ...authHeaders(token),
-        },
-        body: JSON.stringify({ role: newRole }),
-      });
-      if (res.ok) {
-        onActionMessage({
-          type: 'success',
-          text: dict.admin.roleUpdated
-            ? formatMessage(dict.admin.roleUpdated, { username: targetUser.username, role: newRole.toUpperCase() })
-            : `${targetUser.username} role updated to ${newRole.toUpperCase()}.`,
-        });
-        await fetchAdminData();
-      }
-    } catch (err: unknown) {
-      const msg = getErrorMessage(err, dict.admin.networkError);
-      onActionMessage({ type: 'error', text: msg });
-    }
+  /** Every filter change starts again at page 1. */
+  const filterSetter = <V,>(set: (value: V) => void) => (value: V) => {
+    set(value);
+    setPage(1);
   };
 
-  const handleDeleteUser = (targetUser: UserRow) => {
-    setUserPendingDeletion(targetUser);
-  };
-
-  const confirmDeleteUser = async () => {
-    const targetUser = userPendingDeletion;
-    if (!targetUser || isDeletingUser) return;
-    const token = getAuthToken();
-    if (!token) return;
-
-    setIsDeletingUser(true);
-    try {
-      const res = await fetch(`${API_BASE}/api/v1/users/${targetUser.id}`, {
-        method: 'DELETE',
-        headers: authHeaders(token),
-      });
-      if (res.ok) {
-        onActionMessage({
-          type: 'success',
-          text: formatMessage(dict.admin.userDeletedSuccess, { username: targetUser.username }) || `${targetUser.username} deleted.`,
-        });
-        await fetchAdminData();
+  /** Runs an account action, reports it, then reloads the list and the panel's counts. */
+  const act = useCallback(
+    async (action: () => Promise<unknown>, success: string): Promise<boolean> => {
+      try {
+        await action();
+        notify({ type: 'success', text: success });
+        setReloadKey((k) => k + 1);
+        onChanged();
+        return true;
+      } catch (err: unknown) {
+        notify({ type: 'error', text: getErrorMessage(err, t.networkError) });
+        return false;
       }
-    } catch (err: unknown) {
-      const msg = getErrorMessage(err, dict.admin.networkError);
-      onActionMessage({ type: 'error', text: msg });
-    } finally {
-      setIsDeletingUser(false);
-      setUserPendingDeletion(null);
-    }
-  };
-
-  const confirmTwoFactorReset = async () => {
-    const targetUser = userPendingTwoFactorReset;
-    if (!targetUser || isResettingTwoFactor) return;
-
-    setIsResettingTwoFactor(true);
-    try {
-      const res = await fetch(`${API_BASE}/api/v1/users/${targetUser.id}/two-factor/reset`, {
-        method: 'POST',
-        credentials: 'include',
-        headers: authHeaders(getAuthToken()),
-      });
-      onActionMessage(
-        res.ok
-          ? { type: 'success', text: formatMessage(dict.admin.twoFactorResetDone, { username: targetUser.username }) }
-          : { type: 'error', text: dict.admin.twoFactorResetFailed }
-      );
-      if (res.ok) await fetchAdminData();
-    } catch (err: unknown) {
-      onActionMessage({ type: 'error', text: getErrorMessage(err, dict.admin.networkError) });
-    } finally {
-      setIsResettingTwoFactor(false);
-      setUserPendingTwoFactorReset(null);
-    }
-  };
-
-  const handleCreateUser = async (userData: {
-    login: string;
-    username: string;
-    email: string;
-    password: string;
-    role: 'user' | 'admin';
-  }) => {
-    const token = getAuthToken();
-    if (!token) return;
-
-    try {
-      const res = await fetch(`${API_BASE}/api/v1/users`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          ...authHeaders(token),
-        },
-        body: JSON.stringify(userData),
-      });
-
-      if (res.ok) {
-        onActionMessage({
-          type: 'success',
-          text: formatMessage(dict.admin.userCreatedSuccess, { username: userData.username }) || `${userData.username} created successfully.`,
-        });
-        onUserCreated();
-        await fetchAdminData();
-      } else {
-        const errorData: { error?: string } = await res.json().catch(() => ({}));
-        onActionMessage({
-          type: 'error',
-          text: errorData.error || dict.admin.userCreateFailed,
-        });
-      }
-    } catch (err: unknown) {
-      const msg = getErrorMessage(err, dict.admin.networkError);
-      onActionMessage({ type: 'error', text: msg });
-    }
-  };
+    },
+    [notify, onChanged, t.networkError]
+  );
 
   return {
-    stats,
     users,
-    search,
-    setSearch,
-    roleFilter,
-    setRoleFilter,
+    total,
+    loading,
     page,
     setPage,
-    totalUsers,
-    loadingData,
-    fetchAdminData,
-    userPendingDeletion,
-    setUserPendingDeletion,
-    isDeletingUser,
-    userPendingTwoFactorReset,
-    setUserPendingTwoFactorReset,
-    isResettingTwoFactor,
-    confirmTwoFactorReset,
-    handleToggleRole,
-    handleDeleteUser,
-    confirmDeleteUser,
-    handleCreateUser,
+    perPage,
+    setPerPage: filterSetter(setPerPageState),
+    search,
+    setSearch: filterSetter(setSearchState),
+    role,
+    setRole: filterSetter(setRoleState),
+    standing,
+    setStanding: filterSetter(setStandingState),
+    /** Shows one account: its login, email or name in the search box and every other filter cleared. */
+    showOnly: (query: string) => {
+      setRoleState('all');
+      setStandingState('all');
+      setSearchState(query);
+      setDebouncedSearch(query);
+      setPage(1);
+    },
+    reload: () => setReloadKey((k) => k + 1),
+    create: (user: NewUser) => act(() => createUser(user), formatMessage(t.userCreatedSuccess, { username: user.username })),
+    update: (user: UserRow, patch: UserPatch) => act(() => updateUser(user.id, patch), formatMessage(t.userUpdatedSuccess, { username: patch.username ?? user.username })),
+    remove: (user: UserRow) => act(() => deleteUser(user.id), formatMessage(t.userDeletedSuccess, { username: user.username })),
+    resetTwoFactor: (user: UserRow) => act(() => resetTwoFactor(user.id), formatMessage(t.twoFactorResetDone, { username: user.username })),
   };
 }
+
+export type AdminUsersDirectory = ReturnType<typeof useAdminUsers>;

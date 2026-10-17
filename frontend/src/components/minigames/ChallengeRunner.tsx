@@ -469,7 +469,7 @@ export const ChallengeRunner: React.FC<ChallengeRunnerProps> = ({ challenge, cat
               ) : (
                 <span>R{idx + 1}</span>
               )}
-              <span className="truncate max-w-[100px]">
+              <span className="truncate max-w-25">
                 {lookup<string>(t.modes, r.mode) || r.mode}
               </span>
             </button>

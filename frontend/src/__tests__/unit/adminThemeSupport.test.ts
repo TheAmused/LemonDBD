@@ -1,249 +1,75 @@
 // frontend/src/__tests__/unit/adminThemeSupport.test.ts
+//
+// Every admin surface paints with the theme tokens (light, dark and lemon themes), never raw colours.
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import React from 'react';
 import { renderWithDictionary } from '../helpers/renderWithDictionary';
+import { renderUsers } from '../helpers/adminFixtures';
 import { AdminHeader } from '@/components/admin/AdminHeader';
-import { AdminStatsGrid } from '@/components/admin/AdminStatsGrid';
-import { AdminUserTable } from '@/components/admin/AdminUserTable';
-import { AdminAuditLogView } from '@/components/admin/AdminAuditLogView';
-import { AdminBugReportsWorkbench } from '@/components/admin/AdminBugReportsWorkbench';
-import { AdminChallengeControl } from '@/components/admin/AdminChallengeControl';
-import { AdminChallengeStats } from '@/components/admin/AdminChallengeStats';
+import { AdminAuditSection } from '@/components/admin/AdminAuditSection';
+import { AdminAvailabilitySection } from '@/components/admin/AdminAvailabilitySection';
+import { BugReportDetail } from '@/components/admin/BugReportDetail';
+import en from '@/locales/en';
+
+const RAW_COLOUR = /\b(?:bg|text|border)-(?:slate|gray|zinc|neutral|white|black)\b/;
+const noop = () => {};
+const asyncOk = async () => true;
+
+function assertThemed(html: string, label: string) {
+  assert.ok(html.includes('border-border-color'), `${label}: themed border`);
+  assert.ok(html.includes('text-text-primary'), `${label}: themed text`);
+  assert.ok(!RAW_COLOUR.test(html), `${label}: no raw palette colours`);
+}
 
 describe('Admin Theme Support', () => {
-  it('AdminHeader title supports light mode and dark mode text', () => {
-    const html = renderWithDictionary(
-      React.createElement(AdminHeader, {
-        isSyncing: false,
-        syncStatus: 'idle',
-        isLoading: false,
-        onOpenDbMaintenance: () => {},
-        onTriggerSync: () => {},
-        onRefreshData: () => {},
-        onOpenOcrCheck: () => {},
-      })
-    );
-    assert.ok(
-      html.includes('text-text-primary') || (html.includes('dark:text-slate-100') && html.includes('text-slate-900')),
-      'Title must support light/dark theme text'
-    );
-    assert.ok(
-      html.includes('border-border-color') || (html.includes('border-slate-200') && html.includes('dark:border-slate-800')),
-      'Divider must support themed border'
-    );
+  it('the refresh button is themed and the page title is for screen readers only', () => {
+    const html = renderWithDictionary(React.createElement(AdminHeader, { onRefresh: noop }));
+    assert.ok(html.includes(en.sidebar.adminControlCenter));
+    assert.ok(html.includes(en.admin.refresh));
+    assert.ok(!RAW_COLOUR.test(html));
   });
 
-  it('AdminStatsGrid cards use light-compatible border and background', () => {
+  it('the user directory', () => {
+    const html = renderUsers();
+    assertThemed(html, 'users');
+    assert.ok(html.includes('bg-bg-surface'));
+    assert.ok(html.includes('bg-bg-elevated'), 'table head');
+  });
+
+  it('the audit log', () => {
+    const html = renderWithDictionary(React.createElement(AdminAuditSection, { refreshKey: 0, notify: noop }));
+    assert.ok(html.includes('bg-bg-surface') && html.includes('border-border-color'));
+    assert.ok(html.includes(en.admin.loadingAuditLog));
+  });
+
+  it('availability', () => {
+    const html = renderWithDictionary(React.createElement(AdminAvailabilitySection, { refreshKey: 0, notify: noop }));
+    assertThemed(html, 'availability');
+    assert.ok(html.includes(en.admin.challengeModesTitle));
+  });
+
+  it('a bug report, with its status picker and reply box', () => {
     const html = renderWithDictionary(
-      React.createElement(AdminStatsGrid, {
-        stats: {
-          total_users: 10,
-          active_users: 8,
-          admin_count: 2,
-          total_characters: 98,
-          survivors_count: 50,
-          killers_count: 48,
-          total_perks: 321,
-          challenge_completions: {
-            gauntlet: { total: { completed_runs: 0, unique_users: 0 }, by_variant: {} },
-            chaos: { total: { completed_runs: 0, unique_users: 0 }, by_variant: {} },
-            history: { total: { completed_runs: 0, unique_users: 0 }, by_variant: {} },
-            page_streak: { total: { completed_runs: 0, unique_users: 0 }, by_variant: {} },
-          },
+      React.createElement(BugReportDetail, {
+        report: {
+          id: 1,
+          title: 'Test bug',
+          message: 'A test report',
+          status: 'pending',
+          reporter_name: 'tester',
+          reporter_email: 'tester@test.com',
+          images: [],
+          created_at: new Date().toISOString(),
         },
+        onStatusChange: asyncOk,
+        onReply: asyncOk,
+        onDelete: asyncOk,
+        onShowUser: noop,
       })
     );
-    assert.ok(
-      html.includes('border-border-color') || html.includes('border-slate-200'),
-      'Stats cards must support themed border'
-    );
-    assert.ok(
-      html.includes('border-border-color') || html.includes('dark:border-slate-800'),
-      'Stats cards must support dark border'
-    );
-    assert.ok(
-      html.includes('text-text-primary') || (html.includes('text-slate-900') && html.includes('dark:text-slate-100')),
-      'Value numbers must support themed text'
-    );
-  });
-
-  it('AdminUserTable outer card and search input support light and dark theme contrast', () => {
-    const html = renderWithDictionary(
-      React.createElement(AdminUserTable, {
-        users: [
-          {
-            id: 1,
-            login: 'admin',
-            username: 'admin',
-            email: 'admin@test.com',
-            role: 'admin',
-            is_active: true,
-            created_at: '2026-01-01T00:00:00Z',
-            owned_characters_count: 5,
-            unlocked_perks_count: 20,
-          },
-        ],
-        totalUsers: 1,
-        page: 1,
-        search: '',
-        roleFilter: 'all',
-        loading: false,
-        onSearchChange: () => {},
-        onRoleFilterChange: () => {},
-        onPageChange: () => {},
-        onOpenCreateUser: () => {},
-        onToggleRole: () => {},
-        onOpenModeration: () => {},
-        onDeleteUser: () => {},
-        onResetTwoFactor: () => {},
-      })
-    );
-    assert.ok(
-      html.includes('border-border-color') || html.includes('border-slate-200'),
-      'Outer card or table must support themed border'
-    );
-    assert.ok(
-      html.includes('border-border-color') || html.includes('dark:border-slate-800'),
-      'Outer card or table must support dark border'
-    );
-    assert.ok(
-      html.includes('bg-bg-elevated') || html.includes('bg-slate-50'),
-      'Search input or rows must have light background'
-    );
-    assert.ok(
-      html.includes('bg-bg-elevated') || html.includes('dark:bg-slate-950/80'),
-      'Search input must have dark background'
-    );
-    assert.ok(
-      html.includes('bg-bg-elevated') || html.includes('bg-slate-100/80'),
-      'Thead must have light background'
-    );
-    assert.ok(
-      html.includes('bg-bg-elevated') || html.includes('dark:bg-slate-950/50'),
-      'Thead must have dark background'
-    );
-  });
-
-  it('AdminAuditLogView container card and headers support light and dark mode', () => {
-    const html = renderWithDictionary(
-      React.createElement(AdminAuditLogView, {})
-    );
-    assert.ok(
-      html.includes('border-border-color') || html.includes('border-slate-200'),
-      'Container card must support themed border'
-    );
-    assert.ok(
-      html.includes('border-border-color') || html.includes('dark:border-slate-800'),
-      'Container card must support dark border'
-    );
-    assert.ok(
-      html.includes('bg-bg-surface') || html.includes('bg-white'),
-      'Container card must support themed background'
-    );
-    assert.ok(
-      html.includes('bg-bg-surface') || html.includes('dark:bg-slate-900/60'),
-      'Container card must support dark background'
-    );
-  });
-
-  it('AdminBugReportsWorkbench supports light and dark theme classes', () => {
-    const html = renderWithDictionary(
-      React.createElement(AdminBugReportsWorkbench, {
-        bugReports: [
-          {
-            id: 1,
-            title: 'Test bug',
-            message: 'A test report',
-            status: 'pending',
-            reporter_name: 'tester',
-            reporter_email: 'tester@test.com',
-            images: [],
-            created_at: new Date().toISOString(),
-          },
-        ],
-        bugStats: { pending: 1, in_progress: 0, resolved: 0, rejected: 0, total: 1 },
-        totalBugReports: 1,
-        bugPage: 1,
-        bugSearch: '',
-        bugStatusFilter: 'all',
-        selectedBugId: 1,
-        editingNotes: {},
-        loading: false,
-        onSearchChange: () => {},
-        onStatusFilterChange: () => {},
-        onPageChange: () => {},
-        onSelectBug: () => {},
-        onNoteChange: () => {},
-        onUpdateBug: () => {},
-        onDeleteBug: () => {},
-      })
-    );
-    assert.ok(
-      html.includes('border-border-color') || html.includes('border-slate-200'),
-      'Workbench cards must support themed border'
-    );
-    assert.ok(
-      html.includes('border-border-color') || html.includes('dark:border-slate-800'),
-      'Workbench cards must support dark border'
-    );
-    assert.ok(
-      html.includes('bg-bg-surface') || html.includes('bg-white'),
-      'Ticket inspector card must support themed background'
-    );
-  });
-
-  it('AdminChallengeControl container supports light and dark modes', () => {
-    const html = renderWithDictionary(
-      React.createElement(AdminChallengeControl, {
-        onActionMessage: () => {},
-      })
-    );
-    assert.ok(
-      html.includes('border-border-color') || html.includes('border-slate-200'),
-      'Challenge control cards must support themed border'
-    );
-    assert.ok(
-      html.includes('border-border-color') || html.includes('dark:border-slate-800'),
-      'Challenge control cards must support dark border'
-    );
-    assert.ok(
-      html.includes('bg-bg-surface') || html.includes('bg-white'),
-      'Challenge control cards must support themed background'
-    );
-  });
-
-  it('AdminChallengeStats cards support light and dark theme contrast', () => {
-    const html = renderWithDictionary(
-      React.createElement(AdminChallengeStats, {
-        stats: {
-          total_users: 10,
-          active_users: 8,
-          admin_count: 2,
-          total_characters: 98,
-          survivors_count: 50,
-          killers_count: 48,
-          total_perks: 321,
-          challenge_completions: {
-            gauntlet: { total: { completed_runs: 5, unique_users: 3 }, by_variant: {} },
-            chaos: { total: { completed_runs: 2, unique_users: 2 }, by_variant: {} },
-            history: { total: { completed_runs: 1, unique_users: 1 }, by_variant: {} },
-            page_streak: { total: { completed_runs: 0, unique_users: 0 }, by_variant: {} },
-          },
-        },
-      })
-    );
-    assert.ok(
-      html.includes('bg-bg-surface') || html.includes('bg-white'),
-      'Challenge stats cards must support themed background'
-    );
-    assert.ok(
-      html.includes('bg-bg-surface') || html.includes('dark:bg-slate-900/60'),
-      'Challenge stats cards must support dark background'
-    );
-    assert.ok(
-      html.includes('text-text-primary') || html.includes('text-slate-900'),
-      'Card title must support themed text'
-    );
+    assertThemed(html, 'bug report');
+    assert.ok(html.includes(en.admin.guestReporter), 'a report without an account says it came from a guest');
+    assert.ok(html.includes(en.admin.devFeedbackLabel));
   });
 });

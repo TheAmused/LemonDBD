@@ -6,6 +6,7 @@ import { useAuth } from '@/context/AuthContext';
 import { useRouter, usePathname } from 'next/navigation';
 import { useAltcha } from '@/hooks/useAltcha';
 import { useDemoAccounts, type DemoAccount } from '@/hooks/useDemoAccounts';
+import { useSiteConfig } from '@/context/SiteConfigContext';
 import { useGoogleClientId } from '@/hooks/useGoogleConfig';
 import { GoogleSignInButton } from '@/components/auth/GoogleSignInButton';
 import { AltchaWidget } from '@/components/common/AltchaWidget';
@@ -24,7 +25,7 @@ import { TwoFactorChallengeForm } from '@/components/auth/TwoFactorChallengeForm
 import { Modal } from '@/components/common/Modal';
 import { Button } from '@/components/common/Button';
 import { Checkbox } from '@/components/common/Checkbox';
-import { Input } from '@/components/common/Field';
+import { FieldLabel, Input } from '@/components/common/Field';
 import { LegalDocModal } from '@/components/legal/LegalDocModal';
 import type { LegalDocId } from '@/components/legal/legalDocs';
 import { useDictionary } from "@/context/DictionaryContext";
@@ -51,6 +52,7 @@ type Notice =
 export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode = 'login', verifyEmailFor }) => {
   const dict = useDictionary();
   const { login, loginWithGoogle, register, forgotPassword } = useAuth();
+  const { features, limits } = useSiteConfig();
   const router = useRouter();
   const pathname = usePathname();
   const {
@@ -327,9 +329,9 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
 
           {mode !== 'forgot' && (
             <div>
-              <label className="block type-label-xs text-text-secondary mb-1">
+              <FieldLabel>
                 {mode === 'register' ? dict.user.loginLabel : dict.user.loginOrEmailLabel}
-              </label>
+              </FieldLabel>
               <Input
                 type="text"
                 required
@@ -342,9 +344,9 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
 
           {mode === 'register' && (
             <div>
-              <label className="block type-label-xs text-text-secondary mb-1">
+              <FieldLabel>
                 {dict.user.usernameLabel}
-              </label>
+              </FieldLabel>
               <Input
                 type="text"
                 required
@@ -360,9 +362,9 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
           {(mode === 'register' || mode === 'forgot') && (
             <div>
               {(dict.user.emailLabel) && (
-                <label className="block type-label-xs text-text-secondary mb-1">
+                <FieldLabel>
                   {dict.user.emailLabel}
-                </label>
+                </FieldLabel>
               )}
               <Input
                 type="email"
@@ -377,13 +379,14 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
           {mode !== 'forgot' && (
             <div>
               {(dict.user.passwordLabel) && (
-                <label className="block type-label-xs text-text-secondary mb-1">
+                <FieldLabel>
                   {dict.user.passwordLabel}
-                </label>
+                </FieldLabel>
               )}
               <Input
                 type="password"
                 required
+                minLength={mode === 'register' ? limits.passwordMinLength : undefined}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="bg-bg-primary px-3.5 shadow-inner"
@@ -447,7 +450,19 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
             honeypotProps={honeypotProps}
           />
 
-          <Button type="submit" variant="primary" loading={loading} disabled={!isAltchaVerified} className="w-full mt-2 min-h-10">
+          {mode === 'register' && !features.registrationOpen ? (
+            <p role="status" className="type-body font-medium text-accent-amber">
+              {dict.user.registrationClosedNotice}
+            </p>
+          ) : null}
+
+          <Button
+            type="submit"
+            variant="primary"
+            loading={loading}
+            disabled={!isAltchaVerified || (mode === 'register' && !features.registrationOpen)}
+            className="w-full mt-2 min-h-10"
+          >
             {loading ? null : mode === 'login' ? (
               <>
                 <LogIn className="h-4 w-4" />

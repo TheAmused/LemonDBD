@@ -134,6 +134,14 @@ services:
       - DB_POOL_SIZE=2
       - DB_MAX_OVERFLOW=1
       - SCHEDULER_ENABLED=true
+      # The moderation-email job runs here, so this process needs the same mail settings as the backend.
+      - MAIL_SERVER=${MAIL_SERVER:-smtp.gmail.com}
+      - MAIL_PORT=${MAIL_PORT:-587}
+      - MAIL_USE_TLS=${MAIL_USE_TLS:-true}
+      - MAIL_USERNAME=${MAIL_USERNAME:-}
+      - MAIL_PASSWORD=${MAIL_PASSWORD:-}
+      - MAIL_DEFAULT_SENDER=${MAIL_DEFAULT_SENDER:-}
+      - FRONTEND_URL=${FRONTEND_URL:-https://localhost}
     depends_on:
       db:
         condition: service_healthy

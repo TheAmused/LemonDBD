@@ -1,0 +1,11 @@
+// frontend/src/constants/pagination.ts
+// Page sizes. The picker in common/Pagination offers exactly PAGE_SIZE_OPTIONS, so a list's default
+// must be one of them (a size missing from the picker would show as a blank select).
+
+export const PAGE_SIZE_OPTIONS = [15, 30, 45, 60] as const;
+
+/** The size a list starts with. */
+export const DEFAULT_PAGE_SIZE = PAGE_SIZE_OPTIONS[0];
+
+/** Dense, one-line rows (audit log) start with a bigger page. */
+export const DENSE_PAGE_SIZE = PAGE_SIZE_OPTIONS[1];

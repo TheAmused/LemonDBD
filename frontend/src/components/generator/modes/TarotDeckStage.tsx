@@ -183,7 +183,7 @@ export const TarotDeckStage: React.FC<TarotDeckStageProps> = ({
             return (
               <div key={idx} style={{ perspective: '1200px' }}>
                 <motion.div
-                  className="relative h-44 w-32 xs:h-48 xs:w-36 sm:h-52 sm:w-36 md:h-60 md:w-40 lg:h-68 lg:w-48 xl:h-88 xl:w-60 2xl:h-[440px] 2xl:w-72 wide:h-[510px] wide:w-[336px] wide-2k:h-[580px] wide-2k:w-[384px] wide-4k:h-[680px] wide-4k:w-[440px]"
+                  className="relative h-44 w-32 xs:h-48 xs:w-36 sm:h-52 sm:w-36 md:h-60 md:w-40 lg:h-68 lg:w-48 xl:h-88 xl:w-60 2xl:h-110 2xl:w-72 wide:h-127.5 wide:w-84 wide-2k:h-145 wide-2k:w-96 wide-4k:h-170 wide-4k:w-110"
                   style={{ transformStyle: 'preserve-3d' }}
                   animate={{
                     rotateY: card.flipped ? 180 : 0,

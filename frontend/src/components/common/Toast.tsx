@@ -1,7 +1,8 @@
+'use client';
 // frontend/src/components/common/Toast.tsx
 // A notice pinned to the top right corner ("draft restored", "saved"). One look and one position, so
 // every toast in the app appears in the same place. The caller decides when it is shown.
-import React from 'react';
+import React, { useEffect } from 'react';
 import { X } from 'lucide-react';
 import { Button } from '@/components/common/Button';
 import { Surface } from '@/components/common/Surface';
@@ -25,18 +26,25 @@ export interface ToastProps {
   message: React.ReactNode;
   actions?: React.ReactNode;
   onDismiss?: () => void;
+  /** Calls onDismiss after this long (see TOAST_DURATION_MS). Omit for a toast that stays until dismissed. */
+  autoDismissMs?: number;
   dismissLabel?: string;
 }
 
-export function Toast({ tone = 'amber', align = 'right', icon, message, actions, onDismiss, dismissLabel }: ToastProps) {
+export function Toast({ tone = 'amber', align = 'right', icon, message, actions, onDismiss, autoDismissMs, dismissLabel }: ToastProps) {
   const t = TONES[tone];
+  useEffect(() => {
+    if (!autoDismissMs || !onDismiss) return;
+    const timer = window.setTimeout(onDismiss, autoDismissMs);
+    return () => window.clearTimeout(timer);
+  }, [autoDismissMs, onDismiss, message]);
   const toast = (
     <Surface
       role="status"
       aria-live="polite"
       padding="none"
       className={cn(
-        'z-50 flex w-[calc(100vw-2.5rem)] max-w-md items-center gap-3 bg-bg-surface/95 p-3 text-xs font-semibold text-text-primary shadow-2xl backdrop-blur-xl animate-in fade-in slide-in-from-top-4 duration-300 sm:w-auto sm:text-sm 2xl:p-4 2xl:text-base',
+        'z-50 flex w-toast max-w-md items-center gap-3 bg-bg-surface/95 p-3 text-xs font-semibold text-text-primary shadow-2xl backdrop-blur-xl animate-in fade-in slide-in-from-top-4 duration-300 sm:w-auto sm:text-sm 2xl:p-4 2xl:text-base',
         align === 'right' ? 'fixed top-5 right-5' : 'pointer-events-auto w-auto',
         t.border
       )}

@@ -129,6 +129,20 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "es": "Este paso de inicio de sesión caducó. Inicia sesión de nuevo.",
         "ja": "このログイン手順は期限切れです。もう一度ログインしてください。",
     },
+    "registration_closed": {
+        "en": "Creating new accounts is paused right now. Please try again later.",
+        "pl": "Zakładanie nowych kont jest obecnie wstrzymane. Spróbuj ponownie później.",
+        "de": "Neue Konten können gerade nicht erstellt werden. Bitte versuche es später erneut.",
+        "es": "La creación de cuentas nuevas está en pausa. Inténtalo de nuevo más tarde.",
+        "ja": "現在、新しいアカウントの作成を停止しています。しばらくしてからもう一度お試しください。",
+    },
+    "guest_bug_reports_closed": {
+        "en": "Sign in to send a bug report.",
+        "pl": "Zaloguj się, aby wysłać zgłoszenie błędu.",
+        "de": "Melde dich an, um einen Fehlerbericht zu senden.",
+        "es": "Inicia sesión para enviar un informe de error.",
+        "ja": "バグ報告を送信するにはログインしてください。",
+    },
 }
 
 

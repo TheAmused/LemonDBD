@@ -10,6 +10,7 @@ from dataclasses import dataclass, field
 from datetime import datetime
 
 from app.core.account_state import as_utc
+from app.core.rule_sections import RULE_SECTION_NUMBERS
 
 DEFAULT_LANGUAGE = "en"
 
@@ -35,9 +36,8 @@ _TEXTS: dict[str, dict] = {
         },
         "reason_label": "Reason",
         "rule_label": "Rule",
-        "rules_word": "Rules",
+        "rule_format": "Section {number}: {name}",
         "facts_label": "What happened (written in the moderator's language)",
-        "note_label": "Message from the moderation team (written in the moderator's language)",
         "human_review": "This decision was made by a member of the LemonDBD team after human review. No automated decision-making was used.",
         "report_note": "It followed a report from another user.",
         "content_blocked": "The content concerned ({content}) was also blocked: it can no longer be imported or opened on LemonDBD, and the copy saved in your browser is removed the next time you visit.",
@@ -89,9 +89,8 @@ _TEXTS: dict[str, dict] = {
         },
         "reason_label": "Powód",
         "rule_label": "Zasada",
-        "rules_word": "Zasady",
+        "rule_format": "Sekcja {number}: {name}",
         "facts_label": "Co się wydarzyło (w języku moderatora)",
-        "note_label": "Wiadomość od zespołu moderacji (w języku moderatora)",
         "human_review": "Decyzję podjął członek zespołu LemonDBD po weryfikacji przez człowieka. Nie zastosowano zautomatyzowanego podejmowania decyzji.",
         "report_note": "Poprzedziło ją zgłoszenie innego użytkownika.",
         "content_blocked": "Zablokowano również objętą sprawą treść ({content}): nie można jej już zaimportować ani otworzyć w LemonDBD, a kopia zapisana w Twojej przeglądarce zostanie usunięta przy następnej wizycie.",
@@ -143,9 +142,8 @@ _TEXTS: dict[str, dict] = {
         },
         "reason_label": "Grund",
         "rule_label": "Regel",
-        "rules_word": "Regeln",
+        "rule_format": "Abschnitt {number}: {name}",
         "facts_label": "Was passiert ist (in der Sprache des Moderators)",
-        "note_label": "Nachricht des Moderationsteams (in der Sprache des Moderators)",
         "human_review": "Diese Entscheidung hat ein Mitglied des LemonDBD-Teams nach menschlicher Prüfung getroffen. Es wurde keine automatisierte Entscheidungsfindung eingesetzt.",
         "report_note": "Ihr ging eine Meldung eines anderen Nutzers voraus.",
         "content_blocked": "Der betroffene Inhalt ({content}) wurde ebenfalls gesperrt: Er kann auf LemonDBD nicht mehr importiert oder geöffnet werden, und die in deinem Browser gespeicherte Kopie wird bei deinem nächsten Besuch entfernt.",
@@ -197,9 +195,8 @@ _TEXTS: dict[str, dict] = {
         },
         "reason_label": "Motivo",
         "rule_label": "Regla",
-        "rules_word": "Reglas",
+        "rule_format": "Sección {number}: {name}",
         "facts_label": "Qué ocurrió (en el idioma del moderador)",
-        "note_label": "Mensaje del equipo de moderación (en el idioma del moderador)",
         "human_review": "Esta decisión la tomó un miembro del equipo de LemonDBD tras una revisión humana. No se utilizó ninguna toma de decisiones automatizada.",
         "report_note": "Fue precedida por una denuncia de otro usuario.",
         "content_blocked": "El contenido afectado ({content}) también fue bloqueado: ya no se puede importar ni abrir en LemonDBD, y la copia guardada en tu navegador se eliminará la próxima vez que lo visites.",
@@ -251,9 +248,8 @@ _TEXTS: dict[str, dict] = {
         },
         "reason_label": "理由",
         "rule_label": "ルール",
-        "rules_word": "ルール",
+        "rule_format": "第{number}節：{name}",
         "facts_label": "経緯（モデレーターの言語で記載）",
-        "note_label": "モデレーションチームからのメッセージ（モデレーターの言語で記載）",
         "human_review": "この決定は、LemonDBDチームのメンバーが人による確認を経て行いました。自動化された意思決定は使用していません。",
         "report_note": "他のユーザーからの報告を受けて行われました。",
         "content_blocked": "対象のコンテンツ（{content}）もブロックされました。LemonDBDでインポートまたは開くことはできなくなり、ブラウザに保存されたコピーは次回の訪問時に削除されます。",
@@ -317,7 +313,6 @@ def build_sanction_email(
     reason_code: str,
     rule_ref: str | None = None,
     facts: str | None = None,
-    public_message: str | None = None,
     issued_at: datetime | None = None,
     until: datetime | None = None,
     from_report: bool = False,
@@ -351,19 +346,20 @@ def build_sanction_email(
     reason_name = t["reasons"].get(reason_code, t["reasons"]["other"])
     blocks.append(("field", t["reason_label"], reason_name))
     if rule_ref and rule_ref in t["rules"]:
-        rule_text = f'{t["rules_word"]}: {t["rules"][rule_ref]}'
+        rule_text = t["rule_format"].format(number=RULE_SECTION_NUMBERS[rule_ref], name=t["rules"][rule_ref])
         if rules_url:
             rule_text += f" ({rules_url})"
         blocks.append(("field", t["rule_label"], rule_text))
     if facts:
         blocks.append(("quote", t["facts_label"], facts))
-    if public_message:
-        blocks.append(("quote", t["note_label"], public_message))
     blocks.append(("p", t["human_review"] + (" " + t["report_note"] if from_report else "")))
     if content_type and content_type in t["content_names"]:
         blocks.append(("p", t["content_blocked"].format(content=t["content_names"][content_type])))
     blocks.append(("p", t["appeal"].format(contact=contact) if contact else t["appeal_no_contact"]))
-    blocks.append(("p", t["redress"]))
+    # Out-of-court and judicial redress is owed for a restriction (account suspension or termination, removed
+    # content); a plain warning restricts nothing, so it carries the internal complaint route only.
+    if kind != "warning" or (content_type and content_type in t["content_names"]):
+        blocks.append(("p", t["redress"]))
     return SanctionEmailContent(
         subject=t["subject"][kind], preheader=t["subject"][kind], footer=footer, blocks=blocks
     )

@@ -324,7 +324,7 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
       onClose={onClose}
       size="5xl"
       title={title}
-      className="h-[88vh] max-h-[850px] min-h-[480px]"
+      className="h-modal-panel max-h-212.5 min-h-120"
       bodyClassName="flex flex-col"
     >
       {editionName && (
@@ -334,7 +334,7 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
       <div className="p-3.5 sm:p-4 bg-bg-elevated border-b border-border-color shrink-0">
         <div className="flex flex-wrap sm:flex-nowrap items-center gap-2">
           {/* 1. Search Bar */}
-          <div className="relative flex-1 min-w-[140px]">
+          <div className="relative flex-1 min-w-35">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-text-muted" aria-hidden="true" />
             <Input
               fieldSize="sm"
@@ -363,7 +363,7 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
             options={roleOptions}
             icon={<Users className="h-3.5 w-3.5" />}
             ariaLabel={allRolesLabel}
-            minWidthClass="min-w-[150px]"
+            minWidthClass="min-w-37.5"
           />
 
           {/* 3. Custom Gender Dropdown */}
@@ -373,7 +373,7 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
             options={genderOptions}
             icon={<User className="h-3.5 w-3.5" />}
             ariaLabel={allGendersLabel}
-            minWidthClass="min-w-[170px]"
+            minWidthClass="min-w-42.5"
           />
 
           {/* 4. Custom Tier Dropdown */}
@@ -382,7 +382,7 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
             onChange={setTierFilter}
             options={tierOptions}
             ariaLabel={allTiersLabel}
-            minWidthClass="min-w-[190px]"
+            minWidthClass="min-w-47.5"
           />
 
           {/* 5. Custom Sort Dropdown */}
@@ -392,7 +392,7 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
             options={sortOptions}
             icon={<ArrowUpDown className="h-3.5 w-3.5" />}
             ariaLabel={sortSmashRateLabel}
-            minWidthClass="min-w-[160px]"
+            minWidthClass="min-w-40"
             align="right"
           />
 

@@ -74,7 +74,7 @@ export const TierRow = React.memo(function TierRow({
       style={style}
       aria-label={formatMessage(t.tierAria, { label: tier.label })}
       className={cn(
-        'grid grid-cols-[3.5rem_minmax(0,1fr)] min-[480px]:grid-cols-[4.75rem_minmax(0,1fr)] sm:max-wide-2k:grid-cols-[6.5rem_minmax(0,1fr)] wide-2k:grid-cols-[9rem_minmax(0,1fr)] overflow-hidden rounded-card border border-border-color bg-bg-surface shadow-xs group-data-[fit]/board:grid-cols-[var(--badge-w)_minmax(0,1fr)]!',
+        'grid grid-cols-tier-label-xs phone-lg:grid-cols-tier-label-sm sm:max-wide-2k:grid-cols-tier-label-md wide-2k:grid-cols-tier-label-lg overflow-hidden rounded-card border border-border-color bg-bg-surface shadow-xs group-data-[fit]/board:grid-cols-[var(--badge-w)_minmax(0,1fr)]!',
         isDragging && 'z-20 relative border-accent-amber opacity-90'
       )}
     >
@@ -85,7 +85,7 @@ export const TierRow = React.memo(function TierRow({
           {...listeners}
           onClick={() => (canReceiveSelection ? onMoveSelectedHere(tier.id) : onEdit(tier.id))}
           aria-label={formatMessage(t.editTierAria, { label: tier.label })}
-          className="group relative min-h-14 min-[480px]:min-h-18 sm:max-wide-2k:min-h-21 wide-2k:min-h-[112px] group-data-[fit]/board:min-h-0! overflow-hidden text-center cursor-grab active:cursor-grabbing touch-none transition-[filter] hover:brightness-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent-amber"
+          className="group relative min-h-14 phone-lg:min-h-18 sm:max-wide-2k:min-h-21 wide-2k:min-h-28 group-data-[fit]/board:min-h-0! overflow-hidden text-center cursor-grab active:cursor-grabbing touch-none transition-[filter] hover:brightness-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent-amber"
         >
           <TierBadge
             label={tier.label}
@@ -107,7 +107,7 @@ export const TierRow = React.memo(function TierRow({
         <div
           onClick={canReceiveSelection ? () => onMoveSelectedHere(tier.id) : undefined}
           className={cn(
-            'relative min-h-14 min-[480px]:min-h-18 sm:max-wide-2k:min-h-21 wide-2k:min-h-[112px] group-data-[fit]/board:min-h-0! overflow-hidden text-center select-none',
+            'relative min-h-14 phone-lg:min-h-18 sm:max-wide-2k:min-h-21 wide-2k:min-h-28 group-data-[fit]/board:min-h-0! overflow-hidden text-center select-none',
             canReceiveSelection && 'cursor-pointer hover:brightness-95'
           )}
         >
@@ -125,7 +125,7 @@ export const TierRow = React.memo(function TierRow({
         ref={setNodeRef}
         onClick={canReceiveSelection ? () => onMoveSelectedHere(tier.id) : undefined}
         className={cn(
-          'relative flex min-h-14 min-[480px]:min-h-18 sm:max-wide-2k:min-h-21 wide-2k:min-h-[112px] flex-wrap content-start items-start justify-start gap-1 min-[480px]:gap-1.5 sm:gap-2 p-1.5 min-[480px]:p-2 transition-colors',
+          'relative flex min-h-14 phone-lg:min-h-18 sm:max-wide-2k:min-h-21 wide-2k:min-h-28 flex-wrap content-start items-start justify-start gap-1 phone-lg:gap-1.5 sm:gap-2 p-1.5 phone-lg:p-2 transition-colors',
           'group-data-[fit]/board:min-h-(--row-min)! group-data-[fit]/board:gap-(--tile-gap)! group-data-[fit]/board:p-(--tile-pad)!',
           keys.length === 0 && 'content-center items-center justify-center',
           isOver && 'bg-accent-red/10',

@@ -24,12 +24,12 @@ class UserCreate(BaseModel):
 
 
 class UserUpdate(BaseModel):
+    """What an admin may change on someone else's account (PUT /users/<id>)."""
+
     username: str | None = Field(None, min_length=3, max_length=50)
-    email: EmailStr | None = None
     role: str | None = None
-    avatar_url: str | None = None
     is_active: bool | None = None
-    password: str | None = Field(None, min_length=6)
+    is_verified: bool | None = None
 
 
 class UserResponse(UserBase):

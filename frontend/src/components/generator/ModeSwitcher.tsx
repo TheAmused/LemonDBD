@@ -65,7 +65,7 @@ export const ModeSwitcher: React.FC<ModeSwitcherProps> = ({ mode, onChange }) =>
           accent="primary"
           className="w-full sm:w-auto"
           buttonClassName="w-full sm:w-auto justify-between min-h-11 px-4 py-2 type-card-title border border-border-color bg-bg-surface hover:bg-bg-elevated text-text-primary"
-          menuClassName="w-full sm:w-auto min-w-[220px]"
+          menuClassName="w-full sm:w-auto min-w-55"
         />
       </div>
 

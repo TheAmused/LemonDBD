@@ -77,7 +77,7 @@ export function TierItemEditModal({ item, isOpen, onClose, onSave }: TierItemEdi
             disabled={nameInvalid || urlInvalid}
             onClick={handleSave}
             leftIcon={<Check className="h-4 w-4" aria-hidden="true" />}
-            className={cn(TOUCH_BTN, 'min-h-[42px] px-6')}
+            className={cn(TOUCH_BTN, 'min-h-hit px-6')}
           >
             {t.save}
           </Button>

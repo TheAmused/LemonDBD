@@ -41,7 +41,7 @@ export const StageFrame: React.FC<StageFrameProps> = ({ children, className, top
         </div>
       )}
 
-      <div className="relative z-10 flex flex-1 min-h-[320px] flex-col items-center justify-center sm:min-h-[440px] lg:min-h-[520px]">
+      <div className="relative z-10 flex flex-1 min-h-80 flex-col items-center justify-center sm:min-h-110 lg:min-h-130">
         {children}
       </div>
     </div>

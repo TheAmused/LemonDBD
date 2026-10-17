@@ -97,7 +97,7 @@ export function TierEditModal({
             disabled={!trimmed || bgInvalid}
             onClick={handleSubmit}
             leftIcon={mode === 'add' ? <Plus className="h-4 w-4" aria-hidden="true" /> : <Check className="h-4 w-4" aria-hidden="true" />}
-            className={cn(TOUCH_BTN, 'min-h-[42px] px-6')}
+            className={cn(TOUCH_BTN, 'min-h-hit px-6')}
           >
             {mode === 'add' ? t.addTier : t.save}
           </Button>

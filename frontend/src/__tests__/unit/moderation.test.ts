@@ -11,12 +11,16 @@ import {
   authorDecisionFromDraft,
   draftFromSuggestion,
   isSanctionDraftValid,
+  moderationState,
+  sanctionPreviewBody,
   sanctionRequestBody,
   type ModerationSuggestion,
   type SanctionDraft,
 } from '@/types/moderation';
 import { en, es, pl, de, ja } from '@/locales';
-import { SANCTION_REASONS, RULE_REFS } from '@/types/moderation';
+import { SANCTION_REASONS, RULE_REFS, RULE_SECTION_NUMBERS } from '@/types/moderation';
+import { LEGAL_DOCS } from '@/components/legal/legalDocs';
+import { ruleLabel } from '@/components/moderation/moderationLabels';
 
 const draft = (patch: Partial<SanctionDraft>): SanctionDraft => ({ ...EMPTY_SANCTION_DRAFT, ...patch });
 
@@ -25,21 +29,18 @@ test('a 403 with an account_* code is a block; other failures are not', () => {
     code: 'account_suspended',
     until: '2026-12-01T08:30:00+00:00',
     reason_code: 'spam',
-    public_message: 'Calm down.',
     appeal_contact: 'help@lemondbd.test',
   };
   assert.deepEqual(blockedFromResponse(403, body), {
     code: 'account_suspended',
     until: '2026-12-01T08:30:00+00:00',
     reason_code: 'spam',
-    public_message: 'Calm down.',
     appeal_contact: 'help@lemondbd.test',
   });
   assert.deepEqual(blockedFromResponse(403, { code: 'account_banned', until: null }), {
     code: 'account_banned',
     until: null,
     reason_code: null,
-    public_message: null,
     appeal_contact: null,
   });
   assert.equal(blockedFromResponse(401, body), undefined);
@@ -75,14 +76,13 @@ test('a suspension needs a whole number of days from 1 to 365', () => {
 });
 
 test('the request leaves out empty fields and the duration of anything but a suspension', () => {
-  const warning = sanctionRequestBody(draft({ kind: 'warning', reason_code: 'spam', facts: '  ', public_message: ' Be nice ' }));
+  const warning = sanctionRequestBody(draft({ kind: 'warning', reason_code: 'spam', facts: '  ' }));
   assert.deepEqual(warning, {
     kind: 'warning',
     reason_code: 'spam',
     rule_ref: undefined,
     duration_days: undefined,
     facts: undefined,
-    public_message: 'Be nice',
     internal_notes: undefined,
     send_email: true,
   });
@@ -101,7 +101,6 @@ test('a report resolution sends the backend names for the author decision', () =
     author_action: 'suspend',
     duration_days: 3,
     facts: 'f',
-    public_message: undefined,
     rule_ref: undefined,
   });
   const ban = authorDecisionFromDraft(draft({ kind: 'ban', duration_days: 9 }));
@@ -130,7 +129,7 @@ test('every reason and every rule the backend accepts has a name in every langua
 
 test('using the suggestion sets the kind and length but keeps what the admin already typed', () => {
   const basis = { active_warnings: 3, warnings_before_suspension: 3, suspensions: 0 };
-  const typed = draft({ facts: 'Posted slurs', public_message: 'Please stop', duration_days: 5 });
+  const typed = draft({ facts: 'Posted slurs', duration_days: 5 });
 
   const suspension: ModerationSuggestion = { kind: 'suspension', duration_days: 30, basis };
   assert.deepEqual(draftFromSuggestion(typed, suspension), {
@@ -156,4 +155,46 @@ test('the suggestion texts exist in every language with the placeholders they ar
       assert.ok(t.suggestionBasis.includes(placeholder), `${name}: suggestionBasis ${placeholder}`);
     }
   }
+});
+
+test('a cited rule is named by its section number on the Rules page', () => {
+  // The Rules page opens with the unnumbered `scope`; the rest follow in RULE_REFS order, numbered from 1.
+  // The backend keeps the same table (app/core/rule_sections.py).
+  assert.deepEqual(LEGAL_DOCS.rules.order.filter((id) => id !== 'scope'), [...RULE_REFS]);
+  RULE_REFS.forEach((ref, index) => assert.equal(RULE_SECTION_NUMBERS[ref], index + 1, ref));
+  assert.equal(ruleLabel(en, 'respect'), `Section 1: ${en.rules.sections.respect.heading}`);
+  for (const [name, loc] of Object.entries({ en, es, pl, de, ja })) {
+    assert.ok(loc.rules.sectionEyebrow.includes('{number}'), `${name}: rules page label`);
+  }
+  assert.equal(ruleLabel(en, null), '');
+  assert.equal(ruleLabel(en, 'madeUp'), 'madeUp', 'an unknown rule prints as itself');
+  for (const [name, loc] of Object.entries({ en, es, pl, de, ja })) {
+    assert.ok(loc.moderation.ruleSection.includes('{number}') && loc.moderation.ruleSection.includes('{name}'), name);
+  }
+});
+
+test('the preview request is the form plus whom it is about, without the internal fields', () => {
+  const typed = draft({ kind: 'suspension', reason_code: 'spam', rule_ref: 'serverCare', facts: ' Link spam ', duration_days: 7, internal_notes: 'secret', send_email: false });
+  assert.deepEqual(sanctionPreviewBody(typed, { userId: 5 }), {
+    user_id: 5,
+    kind: 'suspension',
+    reason_code: 'spam',
+    rule_ref: 'serverCare',
+    duration_days: 7,
+    facts: 'Link spam',
+  });
+  const forReport = sanctionPreviewBody(draft({ kind: 'warning' }), { reportId: 9 });
+  assert.equal(forReport.report_id, 9);
+  assert.equal(forReport.user_id, undefined);
+  assert.equal(forReport.duration_days, undefined);
+});
+
+test('an account is banned, suspended, warned or in good standing, in that order of precedence', () => {
+  const now = Date.parse('2026-10-17T12:00:00Z');
+  const base = { banned: false, suspended_until: null, active_warnings: 0 };
+  assert.equal(moderationState(base, now), 'good');
+  assert.equal(moderationState({ ...base, active_warnings: 1 }, now), 'warned');
+  assert.equal(moderationState({ ...base, active_warnings: 1, suspended_until: '2026-10-20T00:00:00Z' }, now), 'suspended');
+  assert.equal(moderationState({ ...base, active_warnings: 1, suspended_until: '2026-10-01T00:00:00Z' }, now), 'warned', 'a lapsed suspension no longer counts');
+  assert.equal(moderationState({ banned: true, suspended_until: '2026-10-20T00:00:00Z', active_warnings: 3 }, now), 'banned');
 });

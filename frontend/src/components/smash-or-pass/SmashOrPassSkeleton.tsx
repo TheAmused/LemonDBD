@@ -23,7 +23,7 @@ export const SmashHubSkeleton: React.FC<SmashOrPassSkeletonProps> = ({ className
       role="status"
       aria-label={loadingLabel}
       aria-busy="true"
-      className={`relative min-h-[calc(100dvh-5rem)] flex flex-col items-center justify-center p-6 select-none ${className}`}
+      className={`relative min-h-screen-smash flex flex-col items-center justify-center p-6 select-none ${className}`}
     >
       <DbdSpinner
         size="responsive"

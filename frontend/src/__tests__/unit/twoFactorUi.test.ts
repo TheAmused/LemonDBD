@@ -187,8 +187,8 @@ describe('two-factor wiring', () => {
   });
 
   it('the admin table shows the 2FA state and offers a reset', () => {
-    const table = src('components/admin/AdminUserTable.tsx');
+    const table = src('components/admin/AdminUsersSection.tsx');
     assert.match(table, /u\.two_factor_enabled/);
-    assert.match(table, /onResetTwoFactor\(u\)/);
+    assert.match(table, /kind: 'resetTwoFactor', user: u/);
   });
 });

@@ -4,7 +4,9 @@ import logging
 from flask import Blueprint, current_app, g, jsonify, request
 
 from app.core.limiter import limiter
+from app.core.rate_limits import per_minute
 from app.core.security import login_required
+from app.services import site_settings
 from app.services.content_moderation_service import (
     check_document_revoked,
     check_revocations,
@@ -47,10 +49,12 @@ def sign_content():
 
 
 @content_moderation_bp.post("/reports")
-@limiter.limit("10 per minute; 60 per hour")
+@limiter.limit(per_minute("rate_content_report_per_minute", also="60 per hour"))
 @login_required
 def submit_report():
     """Submit a report against user-generated content."""
+    if not site_settings.content_reports_open():
+        return jsonify({"error": "Reports are paused at the moment.", "error_code": "reports_closed", "status": 503}), 503
     user = g.current_user
     data = request.get_json(silent=True)
     if not data or not isinstance(data, dict):

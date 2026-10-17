@@ -2,6 +2,7 @@
 import logging
 from typing import Any
 from sqlalchemy import delete, desc, func, select
+from sqlalchemy.exc import IntegrityError
 
 from app.core.extensions import db
 from app.core.json_provider import safe_json_dumps
@@ -50,11 +51,14 @@ def log_admin_action(
         logger.error(f"Failed to write admin audit log for action '{action}': {err}")
 
 
-def get_audit_logs(page: int = 1, per_page: int = 25) -> dict[str, Any]:
-    total = db.session.scalar(select(func.count(AdminAuditLog.id))) or 0
+def get_audit_logs(page: int = 1, per_page: int = 25, target_types: list[str] | None = None) -> dict[str, Any]:
+    """Newest first; `target_types` narrows the log to what the actions were about (users, perks...)."""
+    stmt = select(AdminAuditLog)
+    if target_types:
+        stmt = stmt.where(AdminAuditLog.target_type.in_(target_types))
+    total = db.session.scalar(select(func.count()).select_from(stmt.subquery())) or 0
     rows = db.session.scalars(
-        select(AdminAuditLog)
-        .order_by(desc(AdminAuditLog.created_at))
+        stmt.order_by(desc(AdminAuditLog.created_at), desc(AdminAuditLog.id))
         .offset((page - 1) * per_page)
         .limit(per_page)
     ).all()
@@ -80,18 +84,25 @@ def get_audit_logs(page: int = 1, per_page: int = 25) -> dict[str, Any]:
 
 
 def get_challenge_mode_settings() -> list[dict[str, Any]]:
-    """Returns all 4 modes' settings, lazily creating default rows if missing."""
-    existing = {
-        row.mode: row
-        for row in db.session.scalars(select(ChallengeModeSetting)).all()
-    }
+    """Returns all 4 modes' settings, lazily creating default rows if missing.
+
+    Two first requests can race to create the same rows: the loser's insert hits the unique `mode`
+    and it simply reads what the winner wrote.
+    """
+
+    def _rows() -> dict[str, ChallengeModeSetting]:
+        return {row.mode: row for row in db.session.scalars(select(ChallengeModeSetting)).all()}
+
+    existing = _rows()
     missing = [m for m in CHALLENGE_MODES if m not in existing]
     if missing:
-        with transaction():
-            for mode in missing:
-                row = ChallengeModeSetting(mode=mode, is_enabled=True)
-                db.session.add(row)
-                existing[mode] = row
+        try:
+            with transaction():
+                for mode in missing:
+                    db.session.add(ChallengeModeSetting(mode=mode, is_enabled=True))
+        except IntegrityError:
+            db.session.rollback()
+        existing = _rows()
 
     return [existing[mode].to_dict() for mode in CHALLENGE_MODES]
 

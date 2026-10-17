@@ -4,7 +4,6 @@ export default {
   subtitle: "ゲーム内のインベントリ座標［ページ / スロット］に基づいてランダムにパークを抽選します。",
   modeInstant: "即時抽選",
   modeWheel: "ルーレットモード",
-  configTitle: "インベントリ＆ルーレット設定",
   totalPages: "総ページ数",
   perksPerPage: "1ページのパーク数",
   lastPagePerks: "最終ページのパーク数",

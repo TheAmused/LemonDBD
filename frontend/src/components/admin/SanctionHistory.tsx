@@ -6,6 +6,7 @@
 import React from 'react';
 import { Badge, type BadgeTone } from '@/components/common/Badge';
 import { Button } from '@/components/common/Button';
+import { Surface } from '@/components/common/Surface';
 import { reasonLabel, ruleLabel } from '@/components/moderation/moderationLabels';
 import { useDictionary, useLocale } from '@/context/DictionaryContext';
 import { formatDateTime } from '@/utils/format';
@@ -40,11 +41,10 @@ export function SanctionHistory({ sanctions, busy, onRevoke }: SanctionHistoryPr
         const status = s.active ? t.statusActive : revoked ? t.statusRevoked : t.statusExpired;
         const details: [string, string | null][] = [
           [t.factsLabel, s.facts],
-          [t.messageLabel, s.public_message],
           [t.internalLabel, s.internal_notes],
         ];
         return (
-          <li key={s.id} className="space-y-2 rounded-card border border-border-color bg-bg-primary p-3.5">
+          <Surface as="li" key={s.id} tone="well" padding="sm" className="space-y-2">
             <div className="flex flex-wrap items-center gap-1.5">
               <Badge tone={KIND_TONE[s.kind]} size="sm">{kindLabel[s.kind]}</Badge>
               <Badge tone={s.active ? 'green' : 'neutral'} size="sm">{status}</Badge>
@@ -88,7 +88,7 @@ export function SanctionHistory({ sanctions, busy, onRevoke }: SanctionHistoryPr
                 </Button>
               </div>
             )}
-          </li>
+          </Surface>
         );
       })}
     </ul>

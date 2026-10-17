@@ -211,14 +211,14 @@ def test_document_revocation_check_rejects_oversized_document(client: FlaskClien
 # --- admin queue + preview ---------------------------------------------------------------------
 
 
-def test_admin_list_reports_pending_total_and_has_evidence(
+def test_admin_list_reports_status_counts_and_has_evidence(
     client: FlaskClient, admin, author, reporters, app
 ) -> None:
     client.post("/api/v1/content/reports", headers=_headers(reporters[0]), json=_signed_body(author, app, {"t": 1}))
     res = client.get("/api/v1/admin/content-reports?status=all", headers=_headers(admin))
     assert res.status_code == 200
     data = res.get_json()
-    assert data["pending_total"] == 1
+    assert data["stats"] == {"dismissed": 0, "expired": 0, "pending": 1, "resolved_banned": 0, "total": 1}
     assert data["items"][0]["has_evidence"] is True
     assert "evidence_payload" not in data["items"][0]
 

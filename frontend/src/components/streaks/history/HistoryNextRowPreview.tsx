@@ -59,7 +59,7 @@ export const HistoryNextRowPreview: React.FC<HistoryNextRowPreviewProps> = ({ ki
         contentClassName="mt-4 flex flex-wrap justify-center gap-2"
       >
         {nextRow.map((name) => (
-          <div key={name} className="w-[calc((100%-1rem)/3)] sm:w-[calc((100%-2rem)/5)] sm:max-w-36">
+          <div key={name} className="w-third-gap sm:w-fifth-gap sm:max-w-36">
             <PreviewTile name={name} />
           </div>
         ))}

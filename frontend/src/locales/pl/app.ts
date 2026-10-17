@@ -17,4 +17,5 @@ export default {
   loading: "Wczytywanie...",
   notice: "Powiadomienie",
   loadingPerksSub: 'Synchronizowanie perków ocalałych i zabójców',
+  siteBannerDismiss: "Zamknij komunikat",
 } as const;

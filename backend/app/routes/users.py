@@ -54,12 +54,13 @@ def _self_or_admin_error(user_id: int, message: str = "Unauthorized.") -> tuple[
 @users_bp.route("/users", methods=["GET"])
 @admin_required
 def list_users():
-    """List all registered users with optional search filtering and pagination."""
+    """List registered users, filtered by search text, role and standing (active/suspended/banned), paginated."""
     search = request.args.get("search")
     role = request.args.get("role")
+    standing = request.args.get("standing")
     page, per_page = paginate_args(default_per_page=20)
 
-    result = list_all_users_paginated(search=search, role=role, page=page, per_page=per_page)
+    result = list_all_users_paginated(search=search, role=role, page=page, per_page=per_page, standing=standing)
     return jsonify(result), 200
 
 
@@ -133,7 +134,7 @@ def export_user_data_by_admin(user_id: int):
 @users_bp.route("/users/<int:user_id>", methods=["PUT"])
 @admin_required
 def update_user_by_admin(user_id: int):
-    """Update role or active status for a specific user."""
+    """Update a user's role, display name, e-mail verification or active status."""
     payload = request.get_json(silent=True) or {}
 
     try:
@@ -146,6 +147,8 @@ def update_user_by_admin(user_id: int):
         role=validated_data.role,
         is_active=validated_data.is_active,
         acting_admin=g.current_user,
+        username=validated_data.username,
+        is_verified=validated_data.is_verified,
     )
     if err:
         return api_error(err, 400)
@@ -155,7 +158,7 @@ def update_user_by_admin(user_id: int):
         action="user_updated",
         target_type="user",
         target_id=user_id,
-        details={"role": validated_data.role, "is_active": validated_data.is_active},
+        details=validated_data.model_dump(exclude_none=True),
     )
 
     return jsonify({

@@ -4,7 +4,6 @@ export default {
   subtitle: "Würfle zufällige Talente basierend auf In-Game-Inventar-Koordinaten [Seite/Slot].",
   modeInstant: "Sofort-Wurf",
   modeWheel: "Glücksrad",
-  configTitle: "Inventar- & Glücksrad-Einstellungen",
   totalPages: "Seiten gesamt",
   perksPerPage: "Talente pro Seite",
   lastPagePerks: "Talente auf letzter Seite",

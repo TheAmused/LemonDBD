@@ -1,13 +1,13 @@
 // frontend/src/hooks/useMapExplorerData.ts
 'use client';
 
+import { SEARCH_DEBOUNCE_MS } from '@/constants/timing';
 import { useState, useEffect, useMemo, useRef } from 'react';
 import { MapRealm, Realm } from '@/types/map';
 import { fetchMaps, fetchRealms, mapsCacheKey, realmsCacheKey } from '@/services/mapApi';
 import { readCache } from '@/services/dataCache';
 
 const SEARCH_MIN_CHARS = 3;
-const SEARCH_DEBOUNCE_MS = 300;
 
 export interface UseMapExplorerDataOptions {
   initialMapName?: string;

@@ -135,7 +135,7 @@ export function SegmentedControl<T extends string>({
         const activeTextClass = opt.activeTextColor || (isUnderline ? 'text-accent-red' : 'text-text-inverted');
         const optionClassName = isUnderline
           ? cn(
-              'relative flex items-center justify-center gap-1 sm:gap-1.5 2xl:gap-2.5 type-strong-wide-caps transition-all duration-200 cursor-pointer touch-manipulation min-h-9 sm:min-h-[42px] 2xl:min-h-12 select-none text-center pb-1.5 pt-1 px-0.5 sm:px-2 2xl:px-3.5 2xl:py-2 min-[1800px]:px-4.5 rounded-control transition-colors',
+              'relative flex items-center justify-center gap-1 sm:gap-1.5 2xl:gap-2.5 type-strong-wide-caps transition-all duration-200 cursor-pointer touch-manipulation min-h-9 sm:min-h-hit 2xl:min-h-12 select-none text-center pb-1.5 pt-1 px-0.5 sm:px-2 2xl:px-3.5 2xl:py-2 wide:px-4.5 rounded-control transition-colors',
               isActive ? 'text-accent-red' : 'text-text-primary hover:text-accent-red hover:bg-bg-elevated/60'
             )
           : cn(
@@ -156,7 +156,7 @@ export function SegmentedControl<T extends string>({
               <span
                 aria-hidden="true"
                 className={cn(
-                  'absolute inset-x-0 bottom-0 h-[2.5px] rounded-full bg-accent-red transition-opacity duration-200',
+                  'absolute inset-x-0 bottom-0 h-indicator rounded-full bg-accent-red transition-opacity duration-200',
                   isActive ? 'opacity-100' : 'opacity-0'
                 )}
               />

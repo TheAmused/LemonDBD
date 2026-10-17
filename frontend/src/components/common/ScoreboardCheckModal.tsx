@@ -11,9 +11,11 @@ import { Button } from '@/components/common/Button';
 import { Badge } from '@/components/common/Badge';
 import { Input, Select } from '@/components/common/Field';
 import { useDictionary } from '@/context/DictionaryContext';
+import { useSiteConfig } from '@/context/SiteConfigContext';
 import { ApiError } from '@/utils/api';
 import { cn } from '@/utils/cn';
 import { analyzeScoreboard, type ScoreboardReport } from '@/services/scoreboardApi';
+import { Table, TableBody, TableHead, TableRow, Td, Th } from '@/components/common/Table';
 
 interface ScoreboardCheckModalProps {
   isOpen: boolean;
@@ -22,10 +24,10 @@ interface ScoreboardCheckModalProps {
 
 type RoleChoice = '' | 'survivor' | 'killer';
 
-const MAX_BYTES = 8 * 1024 * 1024;
-
 export const ScoreboardCheckModal: React.FC<ScoreboardCheckModalProps> = ({ isOpen, onClose }) => {
   const t = useDictionary().scoreboardCheck;
+  // The upload limit is an admin setting, served with the public configuration.
+  const maxBytes = useSiteConfig().limits.scoreboardUploadMaxBytes;
   const inputRef = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -67,7 +69,7 @@ export const ScoreboardCheckModal: React.FC<ScoreboardCheckModalProps> = ({ isOp
     if (!f) return;
     setReport(null);
     if (!f.type.startsWith('image/')) return setError(t.notImage);
-    if (f.size > MAX_BYTES) return setError(t.tooLarge);
+    if (f.size > maxBytes) return setError(t.tooLarge);
     setError(null);
     setFile(f);
   };
@@ -265,30 +267,26 @@ export const ScoreboardCheckModal: React.FC<ScoreboardCheckModalProps> = ({ isOp
             )}
 
             {report.rows && report.rows.length > 0 && (
-              <div className="overflow-x-auto rounded-card border border-border-color">
-                <table className="w-full text-left">
-                  <thead className="bg-bg-elevated type-body text-text-muted">
-                    <tr>
-                      {[t.colRole, t.colCharacter, t.colPlayer, t.colBloodpoints, t.colStatus].map((h) => (
-                        <th key={h} className="px-3 py-2 font-semibold">
-                          {h}
-                        </th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {report.rows.map((r, i) => (
-                      <tr key={i} className="border-t border-border-color type-body text-text-primary">
-                        <td className="px-3 py-2">{r.role === 'killer' ? t.roleKiller : t.roleSurvivor}</td>
-                        <td className="px-3 py-2">{r.character ?? '—'}</td>
-                        <td className="px-3 py-2">{r.player_name ?? '—'}</td>
-                        <td className="px-3 py-2">{r.bloodpoints ?? '—'}</td>
-                        <td className="px-3 py-2">{t.status[r.status]}</td>
-                      </tr>
+              <Table framed density="sm">
+                <TableHead>
+                  <tr>
+                    {[t.colRole, t.colCharacter, t.colPlayer, t.colBloodpoints, t.colStatus].map((h) => (
+                      <Th key={h}>{h}</Th>
                     ))}
-                  </tbody>
-                </table>
-              </div>
+                  </tr>
+                </TableHead>
+                <TableBody>
+                  {report.rows.map((r, i) => (
+                    <TableRow key={i}>
+                      <Td>{r.role === 'killer' ? t.roleKiller : t.roleSurvivor}</Td>
+                      <Td>{r.character ?? '—'}</Td>
+                      <Td>{r.player_name ?? '—'}</Td>
+                      <Td>{r.bloodpoints ?? '—'}</Td>
+                      <Td>{t.status[r.status]}</Td>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
             )}
 
             {checkRows.length > 0 && (

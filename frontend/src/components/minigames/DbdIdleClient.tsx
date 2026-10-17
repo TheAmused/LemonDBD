@@ -55,7 +55,7 @@ export function DbdIdleClient() {
     <PageShell
       locale={locale}
       activeCategory="minigames"
-      mainClassName="relative flex flex-col items-center justify-center min-h-[70vh]"
+      mainClassName="relative flex flex-col items-center justify-center min-h-vh-70"
     >
       {loading ? (
         <div className="flex flex-col items-center justify-center p-12 gap-4">

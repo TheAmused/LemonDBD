@@ -1,161 +1,109 @@
 'use client';
 // frontend/src/components/admin/useAdminBugReports.ts
-import { useCallback, useState } from 'react';
-import { getBackendBaseUrl, authHeaders, getAuthToken, getErrorMessage } from '@/utils/api';
+//
+// The bug-report queue: the filtered, paged list, the selected ticket, and its status / reply / delete.
+import { useCallback, useEffect, useState } from 'react';
+import { ADMIN_STORAGE, BUG_REPORT_FILTERS, oneOf } from '@/components/admin/adminStorage';
+import { DEFAULT_PAGE_SIZE } from '@/constants/pagination';
+import { SEARCH_DEBOUNCE_MS } from '@/constants/timing';
 import { useDictionary } from '@/context/DictionaryContext';
+import { usePersistentString } from '@/hooks/usePersistentString';
+import { deleteBugReport, listBugReports, updateBugReport } from '@/services/adminApi';
+import { getErrorMessage } from '@/utils/api';
 import { formatMessage } from '@/utils/i18nFormat';
-import type { ActionMessage, AdminBugReport, BugReportStats } from '@/types/admin';
+import type { ActionMessage, AdminBugReport, BugReportStatus, QueueStats } from '@/types/admin';
 
-/** The admin bug-report workbench: paged/filtered list, selection, notes and status/delete actions. */
-export function useAdminBugReports({ onActionMessage }: { onActionMessage: (message: ActionMessage | null) => void }) {
-  const dict = useDictionary();
-  const API_BASE = getBackendBaseUrl();
-  const [bugReports, setBugReports] = useState<AdminBugReport[]>([]);
-  const [bugStats, setBugStats] = useState<BugReportStats | null>(null);
-  const [bugSearch, setBugSearch] = useState<string>('');
-  const [bugStatusFilter, setBugStatusFilter] = useState<string>('all');
-  const [bugPage, setBugPage] = useState<number>(1);
-  const [totalBugReports, setTotalBugReports] = useState<number>(0);
-  const [loadingBugs, setLoadingBugs] = useState<boolean>(false);
-  const [selectedBugId, setSelectedBugId] = useState<number | null>(null);
-  const [editingNotes, setEditingNotes] = useState<Record<number, string>>({});
-  const [bugReportPendingDeletion, setBugReportPendingDeletion] = useState<number | null>(null);
-  const [isDeletingBugReport, setIsDeletingBugReport] = useState<boolean>(false);
+interface BugQueueInput {
+  enabled: boolean;
+  refreshKey: number;
+  notify: (message: ActionMessage) => void;
+  onChanged: () => void;
+}
 
-  const fetchBugReports = useCallback(async () => {
-    const token = getAuthToken();
-    if (!token) return;
+export function useAdminBugReports({ enabled, refreshKey, notify, onChanged }: BugQueueInput) {
+  const t = useDictionary().admin;
+  const [reports, setReports] = useState<AdminBugReport[]>([]);
+  const [stats, setStats] = useState<QueueStats<BugReportStatus> | null>(null);
+  const [total, setTotal] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [status, setStatusState] = usePersistentString<BugReportStatus | 'all'>(ADMIN_STORAGE.bugsStatus, 'pending', oneOf(BUG_REPORT_FILTERS));
+  const [search, setSearchState] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState('');
+  const [page, setPage] = useState(1);
+  const [selectedId, setSelectedId] = useState<number | null>(null);
+  const [reloadKey, setReloadKey] = useState(0);
 
-    setLoadingBugs(true);
-    try {
-      const query = new URLSearchParams({
-        page: bugPage.toString(),
-        per_page: '20',
+  useEffect(() => {
+    const timer = window.setTimeout(() => setDebouncedSearch(search.trim()), SEARCH_DEBOUNCE_MS);
+    return () => window.clearTimeout(timer);
+  }, [search]);
+
+  useEffect(() => {
+    if (!enabled) return;
+    let cancelled = false;
+    setLoading(true);
+    listBugReports({ page, per_page: DEFAULT_PAGE_SIZE, status: status === 'all' ? undefined : status, search: debouncedSearch })
+      .then((data) => {
+        if (cancelled) return;
+        const list = data.reports ?? [];
+        setReports(list);
+        setStats(data.stats ?? null);
+        setTotal(data.total ?? 0);
+        setSelectedId((prev) => (list.some((r) => r.id === prev) ? prev : (list[0]?.id ?? null)));
+      })
+      .catch((err: unknown) => {
+        if (!cancelled) notify({ type: 'error', text: getErrorMessage(err, t.networkError) });
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
       });
-      if (bugSearch.trim()) query.set('search', bugSearch.trim());
-      if (bugStatusFilter !== 'all') query.set('status', bugStatusFilter);
+    return () => {
+      cancelled = true;
+    };
+  }, [enabled, page, status, debouncedSearch, refreshKey, reloadKey, notify, t.networkError]);
 
-      const res = await fetch(`${API_BASE}/api/v1/admin/bug-reports?${query.toString()}`, {
-        headers: {
-          ...authHeaders(token),
-          'Cache-Control': 'no-cache',
-        },
-      });
-
-      if (res.ok) {
-        const data: { reports: AdminBugReport[]; stats: BugReportStats; total: number } = await res.json();
-        const reportsList = data.reports || [];
-        setBugReports(reportsList);
-        setBugStats(data.stats || null);
-        setTotalBugReports(data.total || 0);
-
-        const initialNotes: Record<number, string> = {};
-        reportsList.forEach((r) => {
-          initialNotes[r.id] = r.admin_notes || '';
-        });
-        setEditingNotes(initialNotes);
-
-        if (reportsList.length > 0) {
-          setSelectedBugId((prev) => (reportsList.some((r) => r.id === prev) ? prev : reportsList[0].id));
-        } else {
-          setSelectedBugId(null);
-        }
+  const act = useCallback(
+    async (action: () => Promise<unknown>, success: string): Promise<boolean> => {
+      try {
+        await action();
+        notify({ type: 'success', text: success });
+        setReloadKey((k) => k + 1);
+        onChanged();
+        return true;
+      } catch (err: unknown) {
+        notify({ type: 'error', text: getErrorMessage(err, t.networkError) });
+        return false;
       }
-    } catch (err: unknown) {
-      console.error('Failed to load bug reports:', err);
-    } finally {
-      setLoadingBugs(false);
-    }
-  }, [API_BASE, bugPage, bugSearch, bugStatusFilter]);
-
-  const handleUpdateBugReport = async (reportId: number, newStatus?: string) => {
-    const token = getAuthToken();
-    if (!token) return;
-
-    const payload: Record<string, string> = {};
-    if (newStatus) {
-      payload.status = newStatus;
-    } else if (editingNotes[reportId] !== undefined) {
-      payload.admin_notes = editingNotes[reportId];
-    }
-
-    try {
-      const res = await fetch(`${API_BASE}/api/v1/admin/bug-reports/${reportId}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          ...authHeaders(token),
-        },
-        body: JSON.stringify(payload),
-      });
-
-      if (res.ok) {
-        onActionMessage({
-          type: 'success',
-          text: formatMessage(dict.admin.ticketUpdatedSuccess, { id: reportId.toString() }) || `Report #${reportId} updated.`,
-        });
-        await fetchBugReports();
-      }
-    } catch (err: unknown) {
-      const msg = getErrorMessage(err, dict.admin.networkError);
-      onActionMessage({ type: 'error', text: msg });
-    }
-  };
-
-  const handleDeleteBugReport = (reportId: number) => {
-    setBugReportPendingDeletion(reportId);
-  };
-
-  const confirmDeleteBugReport = async () => {
-    const reportId = bugReportPendingDeletion;
-    if (reportId === null || isDeletingBugReport) return;
-    const token = getAuthToken();
-    if (!token) return;
-
-    setIsDeletingBugReport(true);
-    try {
-      const res = await fetch(`${API_BASE}/api/v1/admin/bug-reports/${reportId}`, {
-        method: 'DELETE',
-        headers: authHeaders(token),
-      });
-
-      if (res.ok) {
-        onActionMessage({
-          type: 'success',
-          text: formatMessage(dict.admin.ticketDeleteSuccess, { id: reportId.toString() }) || `Report #${reportId} deleted.`,
-        });
-        await fetchBugReports();
-      }
-    } catch (err: unknown) {
-      const msg = getErrorMessage(err, dict.admin.ticketDeleteFailed);
-      onActionMessage({ type: 'error', text: msg });
-    } finally {
-      setIsDeletingBugReport(false);
-      setBugReportPendingDeletion(null);
-    }
-  };
+    },
+    [notify, onChanged, t.networkError]
+  );
 
   return {
-    bugReports,
-    bugStats,
-    bugSearch,
-    setBugSearch,
-    bugStatusFilter,
-    setBugStatusFilter,
-    bugPage,
-    setBugPage,
-    totalBugReports,
-    loadingBugs,
-    selectedBugId,
-    setSelectedBugId,
-    editingNotes,
-    setEditingNotes,
-    fetchBugReports,
-    bugReportPendingDeletion,
-    setBugReportPendingDeletion,
-    isDeletingBugReport,
-    handleUpdateBugReport,
-    handleDeleteBugReport,
-    confirmDeleteBugReport,
+    reports,
+    stats,
+    total,
+    loading,
+    status,
+    setStatus: (value: BugReportStatus | 'all') => {
+      setStatusState(value);
+      setPage(1);
+    },
+    search,
+    setSearch: (value: string) => {
+      setSearchState(value);
+      setPage(1);
+    },
+    page,
+    setPage,
+    selectedId,
+    setSelectedId,
+    selected: reports.find((r) => r.id === selectedId) ?? null,
+    changeStatus: (id: number, next: BugReportStatus) =>
+      act(() => updateBugReport(id, { status: next }), formatMessage(t.ticketUpdatedSuccess, { id })),
+    reply: (id: number, notes: string) =>
+      act(() => updateBugReport(id, { admin_notes: notes }), formatMessage(t.ticketReplySaved, { id })),
+    remove: (id: number) => act(() => deleteBugReport(id), formatMessage(t.ticketDeleteSuccess, { id })),
   };
 }
+
+export type AdminBugQueue = ReturnType<typeof useAdminBugReports>;

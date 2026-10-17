@@ -1,14 +1,9 @@
 # backend/app/routes/bug_reports.py
 import base64
 import logging
-import os
-import threading
 import uuid
-from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any
 
-from curl_cffi import requests
 from flask import Blueprint, current_app, g, jsonify, request
 from sqlalchemy import ColumnElement, case, desc, func, or_, select
 
@@ -16,6 +11,7 @@ from app.core.altcha_guard import altcha_rejection
 from app.core.extensions import db
 from app.core.json_provider import safe_json_dumps
 from app.core.limiter import limiter, validate_honeypot
+from app.core.rate_limits import per_minute
 from app.core.security import admin_required, get_current_user
 from app.core.transaction import transaction
 from app.models import BugReport, User
@@ -23,27 +19,12 @@ from app.utils.api_i18n import error_response
 from app.utils.lang import extract_lang
 from app.utils.pagination import paginate_args
 from app.schemas.community import BugReportResponse
+from app.services import discord_webhook, site_settings
 from app.services.admin_control_service import log_admin_action
 
 logger = logging.getLogger(__name__)
 
 bug_reports_bp = Blueprint("bug_reports", __name__, url_prefix="/api/v1")
-
-
-def _get_discord_webhook_url() -> str | None:
-    """Retrieves Discord webhook URL from environment variables or app config."""
-    env_url = os.getenv("DISCORD_WEBHOOK_URL")
-    if env_url and env_url.strip():
-        return env_url.strip()
-
-    try:
-        config_url = current_app.config.get("DISCORD_WEBHOOK_URL")
-        if config_url and config_url.strip():
-            return config_url.strip()
-    except Exception:
-        pass
-
-    return None
 
 
 def _save_base64_image(b64_data: str, base_dir: Path) -> str | None:
@@ -77,64 +58,8 @@ def _save_base64_image(b64_data: str, base_dir: Path) -> str | None:
         return None
 
 
-def _dispatch_discord_webhook(report_dict: dict[str, Any], webhook_url: str | None = None) -> None:
-    """Dispatches an embed notification to Discord asynchronously."""
-    target_webhook = webhook_url or _get_discord_webhook_url()
-    if not target_webhook:
-        logger.warning("[Discord Webhook] DISCORD_WEBHOOK_URL not configured. Skipping notification.")
-        return
-
-    def _send():
-        report_id = report_dict.get("id", 0)
-        try:
-            status_colors = {
-                "pending": 14423100,
-                "in_progress": 16097035,
-                "resolved": 1096065,
-                "rejected": 6583371,
-            }
-
-            color = status_colors.get(report_dict.get("status", "pending"), 14423100)
-            images = report_dict.get("images", [])
-
-            fields = [
-                {"name": "👤 Submitter", "value": f"`{report_dict.get('reporter_name', 'Guest')}`", "inline": True},
-                {"name": "📧 Contact", "value": f"`{report_dict.get('reporter_email') or 'Not Provided'}`", "inline": True},
-                {"name": "📌 Status", "value": f"**{str(report_dict.get('status', 'pending')).upper()}**", "inline": True},
-                {"name": "🆔 Ticket ID", "value": f"#{report_id}", "inline": True},
-                {"name": "🖼️ Attachments", "value": f"{len(images)} screenshot(s)", "inline": True},
-            ]
-
-            embed = {
-                "title": f"🚨 [Bug Report #{report_id}] {report_dict.get('title', 'Untitled')[:200]}",
-                "description": (report_dict.get("message") or "No description provided.")[:1900],
-                "color": color,
-                "fields": fields,
-                "footer": {"text": "LemonDBD Bug Tracking System"},
-                "timestamp": datetime.now(timezone.utc).isoformat(),
-            }
-
-            payload = {
-                "username": "LemonDBD Bug Watcher",
-                "embeds": [embed],
-            }
-
-            resp = requests.post(
-                target_webhook,
-                json=payload,
-                impersonate="chrome120",
-                timeout=15,
-                headers={"Content-Type": "application/json"},
-            )
-            logger.info(f"[Discord Webhook] Discord API responded with HTTP {resp.status_code}")
-        except Exception as err:
-            logger.error(f"[Discord Webhook] Error firing Discord webhook for report #{report_id}: {err}", exc_info=True)
-
-    threading.Thread(target=_send, daemon=True).start()
-
-
 @bug_reports_bp.route("/bug-reports", methods=["POST"])
-@limiter.limit("15 per minute")
+@limiter.limit(per_minute("rate_bug_report_per_minute"))
 def submit_bug_report():
     """Submits a new bug report from authenticated users or guest players."""
     data = request.get_json(silent=True) or {}
@@ -144,6 +69,8 @@ def submit_bug_report():
 
     user = get_current_user()
     if not user:
+        if not site_settings.guest_bug_reports_allowed():
+            return error_response("guest_bug_reports_closed", 403, lang=extract_lang())
         rejected = altcha_rejection(data)
         if rejected is not None:
             return rejected
@@ -203,10 +130,11 @@ def submit_bug_report():
             "images": processed_images,
         }
 
-        _dispatch_discord_webhook(report_dict)
+        if site_settings.bug_report_discord_enabled():
+            discord_webhook.announce_bug_report(report_dict)
 
         return jsonify({
-            "message": "Bug report submitted successfully! The team has been notified via Discord.",
+            "message": "Bug report submitted successfully!",
             "report": BugReportResponse.model_validate(new_report).model_dump(),
         }), 201
     except Exception as e:

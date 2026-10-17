@@ -346,7 +346,7 @@ export function RomanceArchetypeBuilder({ archetypes, onChange, availableRoles, 
                               placeholder={ab.rolePlaceholder}
                               list={`roles-list-${arch.id}`}
                               onChange={(e) => updateRule(arch.id, rIdx, { target_value: e.target.value })}
-                              className="w-auto max-w-[130px]"
+                              className="w-auto max-w-32.5"
                             />
                           )}
 
@@ -357,7 +357,7 @@ export function RomanceArchetypeBuilder({ archetypes, onChange, availableRoles, 
                               placeholder={ab.genderPlaceholder}
                               list={`genders-list-${arch.id}`}
                               onChange={(e) => updateRule(arch.id, rIdx, { target_value: e.target.value })}
-                              className="w-auto max-w-[130px]"
+                              className="w-auto max-w-32.5"
                             />
                           )}
 

@@ -77,7 +77,7 @@ const PerkArt: React.FC<{ perk: Perk; size: string }> = ({ perk, size }) => {
 type SlotSize = 'large' | 'small' | 'compact';
 
 const SLOT_ICON_BASE: Record<SlotSize, string> = {
-  large: 'w-11 h-11 sm:w-14 sm:h-14 xl:w-[4.5rem] xl:h-[4.5rem]',
+  large: 'w-11 h-11 sm:w-14 sm:h-14 xl:w-18 xl:h-18',
   small: 'w-11 h-11 xl:w-16 xl:h-16',
   compact: 'w-10 h-10 xl:w-12 xl:h-12',
 };
@@ -309,7 +309,7 @@ export const CompactPlayerBuild: React.FC<CompactPlayerBuildProps> = ({ index, p
   }
 
   return (
-    <div className="flex w-full flex-col items-center gap-4 px-1 sm:min-h-[178px] sm:flex-row sm:px-4">
+    <div className="flex w-full flex-col items-center gap-4 px-1 sm:min-h-44.5 sm:flex-row sm:px-4">
       <div className="flex shrink-0 items-center gap-3 sm:w-1/3 sm:flex-col sm:gap-2 sm:border-r sm:border-border-color sm:pr-4">
         {avatarBox('w-14 h-14 sm:w-24 sm:h-24', 'w-8 h-8 sm:w-10 sm:h-10')}
         <span className="text-xs font-bold text-text-primary text-center leading-tight">{displayName}</span>

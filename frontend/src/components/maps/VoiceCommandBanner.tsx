@@ -58,7 +58,7 @@ export function VoiceCommandBanner({
       className={
         embedded
           ? `relative flex flex-1 h-full w-full flex-col ${className}`
-          : `relative flex w-full flex-col overflow-hidden rounded-card border border-border-color bg-bg-surface px-4 pt-3.5 pb-4 sm:px-6 sm:pt-4 sm:pb-5 md:min-h-[14rem] shadow-sm transition-all duration-300 ${className}`
+          : `relative flex w-full flex-col overflow-hidden rounded-card border border-border-color bg-bg-surface px-4 pt-3.5 pb-4 sm:px-6 sm:pt-4 sm:pb-5 md:min-h-56 shadow-sm transition-all duration-300 ${className}`
       }
     >
       <VoiceBannerHeader

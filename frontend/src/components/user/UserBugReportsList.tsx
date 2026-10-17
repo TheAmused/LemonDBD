@@ -140,7 +140,7 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
         />
       ) : (
         <div
-          className="grid grid-cols-1 auto-rows-max gap-3 max-h-[380px] sm:max-h-[420px] 2xl:max-h-[460px] overflow-y-auto pr-1.5 custom-scrollbar"
+          className="grid grid-cols-1 auto-rows-max gap-3 max-h-95 sm:max-h-105 2xl:max-h-115 overflow-y-auto pr-1.5 custom-scrollbar"
           style={{ overscrollBehavior: 'contain' }}
         >
           {reports.map((report) => {
@@ -285,12 +285,12 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
       >
         <div className="relative flex items-center justify-center">
           <PreviewCloseButton label={dict.modal.close} />
-          <div className="relative max-h-[82dvh] w-auto max-w-full overflow-hidden rounded-card border border-border-color/80 shadow-2xl bg-bg-primary/60 flex items-center justify-center">
+          <div className="relative max-h-dvh-82 w-auto max-w-full overflow-hidden rounded-card border border-border-color/80 shadow-2xl bg-bg-primary/60 flex items-center justify-center">
             {previewImage && (
               <img
                 src={previewImage}
                 alt={t.attachmentPreview || 'Bug Report Attachment Full Preview'}
-                className="max-h-[82dvh] max-w-full w-auto h-auto object-contain rounded-card"
+                className="max-h-dvh-82 max-w-full w-auto h-auto object-contain rounded-card"
               />
             )}
           </div>

@@ -272,7 +272,7 @@ test('SmashOrPass: Dual-Identity Watermarks & Clamping Helper', async (t) => {
     const labels = src.match(/data-lore-label=""[\s\S]*?<\/span>/g) ?? [];
     assert.equal(labels.length, 4, 'one label per lore card');
     for (const label of labels) {
-      assert.match(label, /max-w-\[calc\(100%-1\.5rem\)\]/, 'label must not outgrow its card');
+      assert.match(label, /max-w-gutter/, 'label must not outgrow its card');
       assert.match(label, /<span className="[^"]*\btruncate\b[^"]*\bwhitespace-nowrap\b/, 'label text must truncate on one line');
     }
   });

@@ -82,7 +82,7 @@ export function ImportTab({ tab }: { tab: ReturnType<typeof useImportTab> }) {
         ) : importFile ? (
           <div className="space-y-1">
             <div className="flex items-center justify-center gap-2">
-              <p className="type-strong text-text-primary max-w-[280px] sm:max-w-md truncate" {...tip(importFile.name, undefined, 'default')}>
+              <p className="type-strong text-text-primary max-w-70 sm:max-w-md truncate" {...tip(importFile.name, undefined, 'default')}>
                 {importFile.name}
               </p>
               <Button

@@ -8,6 +8,7 @@ from app.core.account_state import AccountBlockedError
 from app.core.config import demo_accounts_enabled
 from app.core.altcha_guard import require_altcha
 from app.core.limiter import limiter, validate_honeypot
+from app.core.rate_limits import per_minute
 from app.core.security import (
     generate_token,
     clear_session_cookie,
@@ -17,6 +18,7 @@ from app.core.security import (
     widen_legacy_session_cookie,
 )
 from app.schemas.user import UserCreate, UserResponse
+from app.services import site_settings
 from app.services.altcha_service import AltchaService
 from app.services.user import (
     authenticate_user_credentials,
@@ -48,13 +50,16 @@ ownership_service = OwnershipService()
 
 
 @auth_bp.route("/register", methods=["POST"])
-@limiter.limit("10 per minute")
+@limiter.limit(per_minute("rate_auth_per_minute"))
 @require_altcha
 def register():
     payload = request.get_json(silent=True) or {}
 
     if not validate_honeypot(payload):
         return api_error("Spam detected.", 400)
+
+    if not site_settings.registration_open():
+        return error_response("registration_closed", 403)
 
     try:
         validated_data = UserCreate.model_validate(payload)
@@ -102,7 +107,7 @@ def session_response(user, token: str, message: str, status: int = 200, extra: d
 
 
 @auth_bp.route("/login", methods=["POST"])
-@limiter.limit("10 per minute")
+@limiter.limit(per_minute("rate_auth_per_minute"))
 @require_altcha
 def login():
     data = request.get_json(silent=True) or {}
@@ -170,7 +175,7 @@ def resend_verification():
 
 
 @auth_bp.route("/forgot-password", methods=["POST"])
-@limiter.limit("5 per minute")
+@limiter.limit(per_minute("rate_recovery_per_minute"))
 @require_altcha
 def forgot_password():
     data = request.get_json(silent=True) or {}
@@ -189,7 +194,7 @@ def forgot_password():
 
 
 @auth_bp.route("/reset-password", methods=["POST"])
-@limiter.limit("5 per minute")
+@limiter.limit(per_minute("rate_recovery_per_minute"))
 def reset_password():
     data = request.get_json(silent=True) or {}
     token = data.get("token")
@@ -216,7 +221,7 @@ def get_current_user_profile():
         resp.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
         return resp, 200
 
-    require_verification = current_app.config.get("REQUIRE_EMAIL_VERIFICATION", True)
+    require_verification = site_settings.email_verification_required()
     if not require_verification and not user.is_verified:
         auto_verify_user(user)
 

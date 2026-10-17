@@ -213,7 +213,7 @@ describe('User Page: i18n key parity across all supported locales', () => {
 describe('User Page: Responsive Touch Target Contracts', () => {
   it('subtab switcher buttons enforce an explicit >= 48px touch target', () => {
     const minTabHeightPx = 48;
-    assert.ok(minTabHeightPx >= 48, 'Overview/Bug Reports subtab buttons declare min-h-[48px]');
+    assert.ok(minTabHeightPx >= 48, 'Overview/Bug Reports subtab buttons declare min-h-hit-lg');
   });
 
   it('avatar change/reset pill buttons expand their tap target via a pseudo-element without changing visual size', () => {

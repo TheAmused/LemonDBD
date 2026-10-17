@@ -23,7 +23,7 @@ export const MapsPageSkeleton: React.FC<MapsSkeletonProps> = ({ className = '', 
       role="status"
       aria-label={loadingLabel}
       aria-busy="true"
-      className={`w-full min-h-[460px] select-none flex flex-col items-center justify-center p-6 ${className}`}
+      className={`w-full min-h-115 select-none flex flex-col items-center justify-center p-6 ${className}`}
     >
       <DbdSpinner
         size="responsive"

@@ -3,10 +3,15 @@
 from sqlalchemy import delete, func, select
 
 from app.core.extensions import db
+from app.services.site_settings import match_log_max_entries
 from app.services.streak_stats import StreakLog, StreakRun
 
-#: Match logs kept per challenge run.
+#: Match logs kept per challenge run (the ceiling; the admin setting `match_log_max_entries` can lower it).
 MAX_LOGGED_MATCHES = 100
+
+
+def max_logged_matches() -> int:
+    return min(MAX_LOGGED_MATCHES, match_log_max_entries())
 
 
 def add_match_log(run: StreakRun, log: StreakLog) -> None:
@@ -26,7 +31,7 @@ def add_match_log(run: StreakRun, log: StreakLog) -> None:
         .group_by(model.attempt)
         .order_by(model.attempt)
     ).all()
-    excess = sum(count for _, count in per_attempt) - MAX_LOGGED_MATCHES
+    excess = sum(count for _, count in per_attempt) - max_logged_matches()
     for attempt, count in per_attempt:
         if excess <= 0 or attempt >= log.attempt:
             break

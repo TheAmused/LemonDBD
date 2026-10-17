@@ -138,4 +138,5 @@ export default {
   loginLabel: "Login",
   loginOrEmailLabel: "Login oder E-Mail",
   loadingProfileSub: "Spielerinventar und Perk-Meisterschaft werden abgerufen",
+  registrationClosedNotice: "Neue Konten sind im Moment pausiert. Bitte versuchen Sie es später erneut.",
 } as const;

@@ -8,18 +8,19 @@ import { Button } from '@/components/common/Button';
 import { CODE_LENGTH, CodeInput } from '@/components/auth/CodeInput';
 import { formatMessage } from '@/utils/i18nFormat';
 import { useDictionary } from "@/context/DictionaryContext";
+import { useSiteConfig } from '@/context/SiteConfigContext';
 
 interface EmailVerificationFormProps {
   email: string;
   onVerified?: (user?: UserProfile) => void;
 }
 
-const RESEND_COOLDOWN_SECONDS = 60;
-
 export const EmailVerificationForm: React.FC<EmailVerificationFormProps> = ({ email, onVerified }) => {
   const dict = useDictionary();
   const t = dict.user;
   const { verifyEmail, resendVerification, refreshUser } = useAuth();
+  // The server owns the cooldown (an admin setting); this only mirrors it on the button.
+  const resendCooldownSeconds = useSiteConfig().limits.resendCooldownSeconds;
   const [code, setCode] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [verifying, setVerifying] = useState(false);
@@ -53,7 +54,7 @@ export const EmailVerificationForm: React.FC<EmailVerificationFormProps> = ({ em
     if (!res.success) {
       setError(res.error || t.failedToResendCode);
     }
-    setCooldown(RESEND_COOLDOWN_SECONDS);
+    setCooldown(resendCooldownSeconds);
   };
 
   return (

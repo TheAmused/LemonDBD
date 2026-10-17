@@ -452,7 +452,51 @@ for (const sourceFile of project.getSourceFiles()) {
   }
 }
 
-// 7. Raw <button> that looks like a button. Actions use Button / ToggleChip / SegmentedControl / MenuItem /
+// 7. Arbitrary sizes. Widths, heights, gaps, paddings, font sizes ... come from Tailwind's scale or from a
+// name in app/styles/tokens.css (--container-*, --breakpoint-*, `@utility max-h-list`, `icon-sm`, ...), never
+// from a number typed into a bracket: `min-w-[12rem]`, `max-h-[36rem]`, `text-[0.62rem]`, `min-[400px]:`.
+// A value that reads a variable (`w-[var(--sidebar-width)]`) is fine: the number lives in a token file.
+// Files that still have some are counted in scripts/arbitrary-sizes-baseline.json: a file may keep its
+// count or lower it, never raise it, and a file not listed there may have none.
+const ARBITRARY_SIZE_BASELINE_PATH = "scripts/arbitrary-sizes-baseline.json";
+// A number with a unit inside the bracket (a computed size such as calc(100vw-2.5rem) has one too).
+const SIZE_VALUE = /\d(?:px|rem|em|vh|vw|svh|dvh|lvh|svw|dvw|ch|pt|%)/;
+// Utilities whose value is a size. (Colors are rule 4, radii rule 5, glows and shadows live in tokens.)
+const SIZE_UTILITIES =
+  "min-w|max-w|min-h|max-h|w|h|size|basis|gap|gap-x|gap-y|space-x|space-y|p|px|py|pt|pr|pb|pl|ps|pe|m|mx|my|mt|mr|mb|ml|ms|me|" +
+  "inset|inset-x|inset-y|top|right|bottom|left|start|end|translate-x|translate-y|scroll-m|scroll-p|" +
+  "leading|tracking|text|indent|columns|grid-cols|grid-rows|auto-cols|auto-rows|border|border-x|border-y|border-t|border-r|border-b|border-l|" +
+  "ring|ring-offset|outline|outline-offset|blur|backdrop-blur|stroke|aspect|flex";
+// `!` makes a utility important; Tailwind accepts it before or after the class (`w-[10rem]!`).
+const ARBITRARY_SIZE_TOKEN = new RegExp(`^(?:[^\\s:]+:)*!?-?(?:${SIZE_UTILITIES})-\\[([^\\]]+)\\]!?$`);
+// `min-[400px]:`, `max-[640px]:`, `@[640px]/hub:`, `[@media(min-width:600px)]:` -- a breakpoint typed in place instead of a --breakpoint-* token.
+const ARBITRARY_BREAKPOINT_TOKEN = /^(?:[^\s:]+:)*(?:(?:min|max)-\[[^\]]+\]|@(?:min-|max-)?\[[^\]]+\](?:\/[\w-]+)?|\[@(?:media|container)[^\]]*\]):/;
+
+function arbitrarySizesIn(text: string): string[] {
+  const found: string[] = [];
+  for (const token of text.split(/\s+/)) {
+    if (!token.includes("[")) continue;
+    const size = token.match(ARBITRARY_SIZE_TOKEN);
+    if (size && !size[1].startsWith("var(") && SIZE_VALUE.test(size[1])) found.push(token);
+    else if (ARBITRARY_BREAKPOINT_TOKEN.test(token)) found.push(token);
+  }
+  return found;
+}
+
+const arbitrarySizeHits: Record<string, { token: string; line: number }[]> = {};
+for (const sourceFile of project.getSourceFiles()) {
+  const filePath = sourceFile.getFilePath();
+  const rel = filePath.replace(/\\/g, "/").replace(/^.*\/frontend\//, "");
+  for (const kind of STRING_NODE_KINDS) {
+    for (const node of sourceFile.getDescendantsOfKind(kind)) {
+      for (const token of arbitrarySizesIn(node.getText().replace(/[`'"]|\$\{|\}/g, " "))) {
+        (arbitrarySizeHits[rel] ??= []).push({ token, line: node.getStartLineNumber() });
+      }
+    }
+  }
+}
+
+// 8. Raw <button> that looks like a button. Actions use Button / ToggleChip / SegmentedControl / MenuItem /
 // AccordionSection, so a change to one style reaches every button. The buttons that are deliberately
 // custom (tiles, game controls, drag handles, ...) are counted per file in raw-buttons-baseline.json:
 // a file may keep its count or lower it, never raise it. `--update-baseline` rewrites the file.
@@ -484,6 +528,10 @@ for (const sourceFile of project.getSourceFiles()) {
 if (updateBaseline) {
   fs.writeFileSync(BASELINE_PATH, JSON.stringify(rawButtonCounts, Object.keys(rawButtonCounts).sort(), 2) + "\n");
   console.log(`Wrote ${BASELINE_PATH} (${Object.keys(rawButtonCounts).length} files)`);
+  const sizeCounts: Record<string, number> = {};
+  for (const [rel, hits] of Object.entries(arbitrarySizeHits)) sizeCounts[rel] = hits.length;
+  fs.writeFileSync(ARBITRARY_SIZE_BASELINE_PATH, JSON.stringify(sizeCounts, Object.keys(sizeCounts).sort(), 2) + "\n");
+  console.log(`Wrote ${ARBITRARY_SIZE_BASELINE_PATH} (${Object.keys(sizeCounts).length} files)`);
 } else {
   let baseline: Record<string, number> = {};
   try {
@@ -495,6 +543,26 @@ if (updateBaseline) {
     const allowed = baseline[rel] ?? 0;
     if (count > allowed) {
       reportError(rel, 1, `${count} raw <button> styled like a button (allowed ${allowed}): use Button, ToggleChip, SegmentedControl, MenuItem or AccordionSection`);
+    }
+  }
+}
+
+if (!updateBaseline) {
+  let sizeBaseline: Record<string, number> = {};
+  try {
+    sizeBaseline = JSON.parse(fs.readFileSync(ARBITRARY_SIZE_BASELINE_PATH, "utf8"));
+  } catch {
+    console.warn(`[check-global-styles] ${ARBITRARY_SIZE_BASELINE_PATH} missing: run with --update-baseline`);
+  }
+  for (const [rel, hits] of Object.entries(arbitrarySizeHits)) {
+    const allowed = sizeBaseline[rel] ?? 0;
+    if (hits.length <= allowed) continue;
+    for (const { token, line } of hits) {
+      reportError(
+        rel,
+        line,
+        `Arbitrary size "${token}" (${hits.length} in this file, allowed ${allowed}): use the Tailwind scale or add a named size in app/styles/tokens.css`
+      );
     }
   }
 }

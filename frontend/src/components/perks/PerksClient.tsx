@@ -322,7 +322,7 @@ function PerksContent() {
             <section aria-label={dict.filters.viewMode} className="flex min-h-0 flex-1 flex-col">
               <div
                 ref={measureGridArea}
-                className="grid min-h-0 w-full flex-1 grid-cols-3 min-[480px]:grid-cols-4 sm:grid-cols-5 gap-3"
+                className="grid min-h-0 w-full flex-1 grid-cols-3 phone-lg:grid-cols-4 sm:grid-cols-5 gap-3"
                 style={rowHeightPx ? { gridAutoRows: `${rowHeightPx}px` } : undefined}
               >
                 {perks.map((perk, idx) => (

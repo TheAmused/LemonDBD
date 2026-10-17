@@ -4,7 +4,6 @@ export default {
   subtitle: "Roll random perks based on in-game inventory coordinates [Page/Slot].",
   modeInstant: "Instant Roll",
   modeWheel: "Wheel of Fortune",
-  configTitle: "Inventory & Wheel Settings",
   totalPages: "Total Pages",
   perksPerPage: "Perks per Page",
   lastPagePerks: "Last Page Perks",

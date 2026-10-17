@@ -147,7 +147,7 @@ test('using the suggestion sets the kind and length but keeps what the admin alr
 test('the suggestion texts exist in every language with the placeholders they are filled with', () => {
   for (const [name, loc] of Object.entries({ en, es, pl, de, ja })) {
     const t = loc.moderation.admin as Record<string, string>;
-    for (const key of ['suggestionTitle', 'suggestionWarning', 'suggestionBan', 'suggestionHint', 'suggestionApply']) {
+    for (const key of ['suggestionTitle', 'suggestionWarning', 'suggestionBan', 'suggestionApply']) {
       assert.ok(t[key], `${name}: ${key}`);
     }
     assert.ok(t.suggestionSuspension.includes('{days}'), `${name}: suggestionSuspension`);

@@ -18,7 +18,7 @@ test('FormField: required adds a red asterisk and the label uses the small caps 
       children: React.createElement('input', { id: 't' }),
     })
   );
-  assert.match(out, /<label[^>]*for="t"[^>]*type-label-xs/);
+  assert.match(out, /<label[^>]*type-label-xs[^>]*for="t"/);
   assert.match(out, /text-accent-red"> \*<\/span>/);
 });
 

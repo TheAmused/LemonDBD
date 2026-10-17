@@ -50,7 +50,7 @@ export const ErrorPage: React.FC<ErrorPageProps> = ({ variant }) => {
       activeCategory=""
       mainId="main-error-content"
       customPadding="p-4 sm:p-8 lg:p-12"
-      mainClassName="flex items-center justify-center min-h-[calc(100vh-4rem)] lg:min-h-screen"
+      mainClassName="flex items-center justify-center min-h-screen-nav lg:min-h-screen"
     >
       <div className="relative z-10 mx-auto flex w-full max-w-xl flex-col items-center py-8 text-center sm:py-12">
         <div className="group relative mb-8 flex h-36 w-36 items-center justify-center rounded-card border-2 border-accent-red/40 bg-bg-elevated p-6 shadow-md transition-transform duration-300 hover:scale-105 sm:h-44 sm:w-44">

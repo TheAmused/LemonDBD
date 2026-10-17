@@ -26,6 +26,8 @@ export interface LegalDocText {
   lastUpdated: string;
   translationNotice: string;
   tldrLabel: string;
+  /** "Section {number}": the small line above a numbered section's title. */
+  sectionEyebrow?: string;
   /** States that the headings and TL;DR lines are not legally binding. */
   tldrNotice: string;
   summaryHeading: string;

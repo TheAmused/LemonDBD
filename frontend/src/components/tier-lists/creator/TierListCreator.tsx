@@ -195,7 +195,7 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
   const backgroundInvalid = Boolean(trimmedBackground) && !safeBackground;
 
   if (authLoading) {
-    return <div className="min-h-[400px]" />;
+    return <div className="min-h-100" />;
   }
 
   if (!isAuthenticated) {
@@ -361,7 +361,7 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
       data-tier-create=""
       onClick={submit}
       disabled={publishingNow}
-      className={cn(extra ?? 'min-h-12 2xl:min-h-[54px] px-8 2xl:px-10 text-base 2xl:text-lg')}
+      className={cn(extra ?? 'min-h-12 2xl:min-h-hit-2xl px-8 2xl:px-10 text-base 2xl:text-lg')}
     >
       {submitLabel}
     </Button>
@@ -372,7 +372,7 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
     : [];
 
   return (
-    <div className="relative z-10 flex flex-col gap-6 2xl:gap-8 max-w-7xl 2xl:max-wide-2k:max-w-[1800px] wide-2k:max-w-[2400px] mx-auto w-full px-4 sm:px-6">
+    <div className="relative z-10 flex flex-col gap-6 2xl:gap-8 max-w-7xl 2xl:max-wide-2k:max-w-workspace wide-2k:max-w-workspace-xl mx-auto w-full px-4 sm:px-6">
       <h1 className="sr-only">{isEditing ? t.editDetails : c.pageTitle}</h1>
       {restored && (
         <Toast
@@ -389,7 +389,7 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
       )}
 
       {/* THE BASICS BLOCK */}
-      <div className="w-full max-w-4xl 2xl:max-wide-2k:max-w-6xl wide-2k:max-w-[1800px] mx-auto">
+      <div className="w-full max-w-4xl 2xl:max-wide-2k:max-w-6xl wide-2k:max-w-workspace mx-auto">
         <Section title={c.stepBasics}>
           <div className="grid gap-4 2xl:gap-6 md:grid-cols-2">
             <label className="md:col-span-1">
@@ -400,7 +400,7 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
                 onChange={(e) => patch({ title: e.target.value })}
                 placeholder={c.titlePlaceholder}
                 invalid={attempted && titleMissing}
-                className={cn(TOUCH_FIELD, '2xl:min-h-[50px] 2xl:text-base')}
+                className={cn(TOUCH_FIELD, '2xl:min-h-hit-xl 2xl:text-base')}
               />
             </label>
             <label className="md:col-span-1">
@@ -410,7 +410,7 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
                 maxLength={TIER_LIST_LIMITS.maxDescription}
                 onChange={(e) => patch({ description: e.target.value })}
                 placeholder={c.descriptionPlaceholder}
-                className={cn(TOUCH_FIELD, '2xl:min-h-[50px] 2xl:text-base')}
+                className={cn(TOUCH_FIELD, '2xl:min-h-hit-xl 2xl:text-base')}
               />
             </label>
             <label className="md:col-span-2">
@@ -421,7 +421,7 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
                 placeholder={c.backgroundImagePlaceholder}
                 inputMode="url"
                 invalid={attempted && backgroundInvalid}
-                className={cn(TOUCH_FIELD, '2xl:min-h-[50px] 2xl:text-base')}
+                className={cn(TOUCH_FIELD, '2xl:min-h-hit-xl 2xl:text-base')}
               />
               <span
                 className={cn(
@@ -458,7 +458,7 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
       </div>
 
       {/* TIERS BLOCK */}
-      <div className="w-full max-w-4xl 2xl:max-wide-2k:max-w-6xl wide-2k:max-w-[1800px] mx-auto">
+      <div className="w-full max-w-4xl 2xl:max-wide-2k:max-w-6xl wide-2k:max-w-workspace mx-auto">
         <Section title={c.stepTiers}>
           <LadderEditor
             tiers={draft.tiers}
@@ -470,7 +470,7 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
       </div>
 
       {/* ITEMS BLOCK */}
-      <div className="w-full max-w-4xl 2xl:max-wide-2k:max-w-6xl wide-2k:max-w-[1800px] mx-auto">
+      <div className="w-full max-w-4xl 2xl:max-wide-2k:max-w-6xl wide-2k:max-w-workspace mx-auto">
         <Section title={c.stepItems}>
           <div className="flex flex-col gap-6 2xl:gap-8">
             <ItemSources onAdd={addItems} existingIds={existingIds} locale={locale} />
@@ -513,15 +513,15 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
         <Button
           variant="secondary"
           onClick={() => setPreviewOpen(true)}
-          className="min-h-11 2xl:min-h-[50px] px-6 2xl:px-8 uppercase tracking-wider"
+          className="min-h-11 2xl:min-h-hit-xl px-6 2xl:px-8 uppercase tracking-wider"
         >
           {c.previewHeading}
         </Button>
-        {submitButton('min-h-11 2xl:min-h-[50px] px-6 2xl:px-8 text-sm 2xl:text-base font-bold uppercase tracking-wider')}
+        {submitButton('min-h-11 2xl:min-h-hit-xl px-6 2xl:px-8 text-sm 2xl:text-base font-bold uppercase tracking-wider')}
       </div>
 
       {/* Feedback Alerts */}
-      <div className="w-full max-w-4xl 2xl:max-wide-2k:max-w-6xl wide-2k:max-w-[1800px] mx-auto flex flex-col gap-4">
+      <div className="w-full max-w-4xl 2xl:max-wide-2k:max-w-6xl wide-2k:max-w-workspace mx-auto flex flex-col gap-4">
         <Feedback errors={errors as string[]} saveError={saveError} publishError={publishError} />
       </div>
 

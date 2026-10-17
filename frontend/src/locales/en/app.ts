@@ -17,4 +17,5 @@ export default {
   loading: "Loading...",
   notice: "Notice",
   loadingPerksSub: 'Synchronizing survivor & killer trial perks',
+  siteBannerDismiss: "Dismiss notice",
 } as const;

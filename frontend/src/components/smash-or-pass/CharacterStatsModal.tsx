@@ -169,7 +169,7 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({ isOpen
       size="xl"
       title={name}
       badge={roleBadge}
-      className="h-[88vh] max-h-[850px] min-h-[480px]"
+      className="h-modal-panel max-h-212.5 min-h-120"
       bodyClassName="flex flex-col"
     >
       {/* Scrollable Dossier Content */}

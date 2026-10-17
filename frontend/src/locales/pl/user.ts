@@ -138,4 +138,5 @@ export default {
   loginLabel: "Login",
   loginOrEmailLabel: "Login lub e-mail",
   loadingProfileSub: "Pobieranie ekwipunku gracza i mistrzostwa perków",
+  registrationClosedNotice: "Zakładanie nowych kont jest chwilowo wstrzymane. Spróbuj ponownie później.",
 } as const;

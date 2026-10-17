@@ -5,6 +5,7 @@
 
 import React from 'react';
 import { CheckCircle, Clock, XCircle } from 'lucide-react';
+import { Badge } from '@/components/common/Badge';
 import { useDictionary, useLocale } from '@/context/DictionaryContext';
 import { formatDateTime } from '@/utils/format';
 import { formatMessage } from '@/utils/i18nFormat';
@@ -17,24 +18,21 @@ export function UserStandingBadge({ user }: { user: Pick<UserRow, 'is_active' | 
   const standing = accountStanding(user);
   if (standing === 'banned') {
     return (
-      <span className="inline-flex items-center gap-1 type-strong-xs text-accent-red">
-        <XCircle className="h-3.5 w-3.5" />
-        <span>{dict.moderation.admin.badgeBanned}</span>
-      </span>
+      <Badge tone="red" size="sm" plain icon={<XCircle className="icon-sm" aria-hidden="true" />}>
+        {dict.moderation.admin.badgeBanned}
+      </Badge>
     );
   }
   if (standing === 'suspended') {
     return (
-      <span className="inline-flex items-center gap-1 type-strong-xs text-accent-amber">
-        <Clock className="h-3.5 w-3.5" />
-        <span>{formatMessage(dict.moderation.admin.badgeSuspended, { date: formatDateTime(user.suspended_until, locale, { dateStyle: 'medium' }) })}</span>
-      </span>
+      <Badge tone="amber" size="sm" plain icon={<Clock className="icon-sm" aria-hidden="true" />}>
+        {formatMessage(dict.moderation.admin.badgeSuspended, { date: formatDateTime(user.suspended_until, locale, { dateStyle: 'medium' }) })}
+      </Badge>
     );
   }
   return (
-    <span className="inline-flex items-center gap-1 type-strong-xs text-accent-green">
-      <CheckCircle className="h-3.5 w-3.5" />
-      <span>{dict.stats.active}</span>
-    </span>
+    <Badge tone="green" size="sm" plain icon={<CheckCircle className="icon-sm" aria-hidden="true" />}>
+      {dict.stats.active}
+    </Badge>
   );
 }

@@ -2,7 +2,7 @@
 // frontend/src/components/auth/ResetPasswordClient.tsx
 
 import React, { Suspense, useState } from 'react';
-import { Input } from '@/components/common/Field';
+import { FieldLabel, Input } from '@/components/common/Field';
 import { Button, buttonClassName } from '@/components/common/Button';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
@@ -93,9 +93,9 @@ function ResetPasswordContent() {
             )}
 
             <div>
-              <label className="block type-label-xs text-text-secondary mb-1">
+              <FieldLabel>
                 {dict.user.newPassword}
-              </label>
+              </FieldLabel>
               <div className="relative">
                 <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-text-muted" />
                 <Input
@@ -109,9 +109,9 @@ function ResetPasswordContent() {
             </div>
 
             <div>
-              <label className="block type-label-xs text-text-secondary mb-1">
+              <FieldLabel>
                 {dict.user.confirmPassword}
-              </label>
+              </FieldLabel>
               <div className="relative">
                 <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-text-muted" />
                 <Input

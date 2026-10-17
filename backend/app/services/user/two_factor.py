@@ -8,7 +8,8 @@ Safety properties worth keeping when editing this file:
 * the TOTP secret is only ever stored encrypted (app/core/two_factor_crypto.py);
 * a code is accepted once: `last_used_step` is advanced with a conditional UPDATE, so two
   concurrent requests with the same code cannot both succeed;
-* five wrong codes lock the *account's* second factor for 15 minutes (counted in the database,
+* a few wrong codes (admin setting, 5 by default) lock the *account's* second factor for a while
+  (15 minutes by default; counted in the database,
   so the limit holds across workers and cannot be dodged by changing IP);
 * the password is checked before a code is, so a wrong password never burns a valid code.
 """
@@ -35,13 +36,12 @@ from app.core.two_factor_crypto import (
 from app.models import User, UserRecoveryCode, UserTwoFactor
 from app.models.base import utcnow
 from app.services.mail_service import send_security_notice_email
+from app.services.site_settings import two_factor_lockout, two_factor_max_attempts
 
 logger = logging.getLogger(__name__)
 
 CHALLENGE_TOKEN_TYPE = "2fa"
 CHALLENGE_LIFETIME = timedelta(minutes=5)
-MAX_FAILED_ATTEMPTS = 5
-LOCKOUT = timedelta(minutes=15)
 RECOVERY_CODE_COUNT = 10
 # Crockford base32: no I, L, O or U, so a code read off paper cannot be misread.
 _RECOVERY_ALPHABET = "0123456789ABCDEFGHJKMNPQRSTVWXYZ"
@@ -140,12 +140,14 @@ def _register_failure(row: UserTwoFactor) -> TwoFactorError:
     )
     db.session.commit()
     db.session.refresh(row)
-    if row.failed_attempts >= MAX_FAILED_ATTEMPTS:
+    max_attempts = two_factor_max_attempts()
+    if row.failed_attempts >= max_attempts:
+        lockout = two_factor_lockout()
         row.failed_attempts = 0
-        row.locked_until = utcnow() + LOCKOUT
+        row.locked_until = utcnow() + lockout
         db.session.commit()
-        logger.warning(f"2FA locked for user {row.user_id} after {MAX_FAILED_ATTEMPTS} wrong codes")
-        return TwoFactorError("two_factor_locked", 429, {"retry_after": int(LOCKOUT.total_seconds())})
+        logger.warning(f"2FA locked for user {row.user_id} after {max_attempts} wrong codes")
+        return TwoFactorError("two_factor_locked", 429, {"retry_after": int(lockout.total_seconds())})
     return TwoFactorError("invalid_two_factor_code", 401)
 
 

@@ -11,6 +11,7 @@ import { CampfireMugIcon } from '@/components/icons/DbdIcons';
 import { AuricCellIcon } from '@/components/icons/DbdIcons';
 import { Modal } from '@/components/common/Modal';
 import { useDictionary } from "@/context/DictionaryContext";
+import { useSiteConfig } from '@/context/SiteConfigContext';
 import { Surface } from '@/components/common/Surface';
 
 export interface BuyCoffeeModalProps {
@@ -23,22 +24,18 @@ export const BuyCoffeeModal: React.FC<BuyCoffeeModalProps> = ({ isOpen, onClose 
 
   const t: Record<string, string> = dict.sidebar;
 
-  const buyMeCoffeeUrl =
-    process.env.NEXT_PUBLIC_BUY_ME_A_COFFEE_URL ||
-    'https://buymeacoffee.com/lemondbd';
-  const kofiUrl =
-    process.env.NEXT_PUBLIC_KOFI_URL || 'https://ko-fi.com/lemondbd';
-  const patreonUrl =
-    process.env.NEXT_PUBLIC_PATREON_URL || 'https://patreon.com/lemondbd';
+  // The links and the message are admin settings (Settings > Links), so they change without a rebuild.
+  // A link the admin cleared is not shown.
+  const { links } = useSiteConfig();
   const donationMessage =
-    process.env.NEXT_PUBLIC_DONATION_MESSAGE ||
+    links.donationMessage ||
     t.coffeeDonationMessage ||
     'Fuel the Entity with caffeine to keep LemonDBD database servers and live scrapers running 24/7!';
 
   const supportGateways = [
     {
       name: 'Buy Me a Coffee',
-      url: buyMeCoffeeUrl,
+      url: links.donationBmc,
       tagline: t.coffeeBuyMeCoffeeTagline || 'Quick 1-click coffee & support',
       accentColor:
         'border-border-color bg-bg-elevated text-text-secondary hover:border-accent-red/40 hover:bg-accent-red/10',
@@ -47,7 +44,7 @@ export const BuyCoffeeModal: React.FC<BuyCoffeeModalProps> = ({ isOpen, onClose 
     },
     {
       name: 'Ko-fi',
-      url: kofiUrl,
+      url: links.donationKofi,
       tagline: t.coffeeKofiTagline || '0% fee donations & one-time tips',
       accentColor:
         'border-border-color bg-bg-elevated text-text-secondary hover:border-accent-red/40 hover:bg-accent-red/10',
@@ -56,14 +53,14 @@ export const BuyCoffeeModal: React.FC<BuyCoffeeModalProps> = ({ isOpen, onClose 
     },
     {
       name: 'Patreon Community',
-      url: patreonUrl,
+      url: links.donationPatreon,
       tagline: t.coffeePatreonTagline || 'Monthly supporter perks & early features',
       accentColor:
         'border-border-color bg-bg-elevated text-text-secondary hover:border-accent-red/40 hover:bg-accent-red/10',
       buttonBg: 'bg-accent-red hover:bg-accent-red-hover text-text-inverted',
       icon: AuricCellIcon,
     },
-  ];
+  ].flatMap(({ url, ...gateway }) => (url ? [{ ...gateway, url }] : []));
 
   return (
     <Modal
@@ -85,6 +82,9 @@ export const BuyCoffeeModal: React.FC<BuyCoffeeModalProps> = ({ isOpen, onClose 
     </Surface>
 
     <div className="space-y-3">
+      {supportGateways.length === 0 && (
+        <p className="type-body text-text-muted">{t.coffeeNoLinks}</p>
+      )}
       {supportGateways.map((gateway) => {
         const Icon = gateway.icon;
         return (

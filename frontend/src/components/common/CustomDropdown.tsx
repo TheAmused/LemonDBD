@@ -3,7 +3,8 @@
 
 import React, { useState, useRef, useCallback } from 'react';
 import { ChevronDown, Check } from 'lucide-react';
-import { Popover, popoverTriggerProps } from '@/components/common/Popover';
+import { MENU_PANEL_CLASS, Popover, popoverTriggerProps } from '@/components/common/Popover';
+import { cn } from '@/utils/cn';
 import { MenuItem } from '@/components/common/MenuItem';
 
 export interface DropdownOption<T extends string = string> {
@@ -76,7 +77,7 @@ export function CustomDropdown<T extends string = string>({
   buttonClassName = '',
   menuClassName = '',
   align = 'left',
-  minWidthClass = 'min-w-[160px]',
+  minWidthClass = 'min-w-40',
   accent = 'amber',
 }: CustomDropdownProps<T>) {
   const accentClasses = ACCENT_CLASSES[accent];
@@ -133,7 +134,7 @@ export function CustomDropdown<T extends string = string>({
         maxHeight={typeof window !== 'undefined' ? window.innerHeight * 0.7 : undefined}
         role={children ? 'group' : 'listbox'}
         ariaLabel={children ? (ariaLabel || (typeof triggerLabel === 'string' ? triggerLabel : undefined)) : undefined}
-        className={`${minWidthClass} rounded-card bg-bg-surface border border-border-color p-1.5 shadow-xl backdrop-blur-2xl custom-scrollbar ${resolvedMenuClassName}`}
+        className={cn(MENU_PANEL_CLASS, minWidthClass, 'custom-scrollbar', resolvedMenuClassName)}
       >
             {children
               ? children

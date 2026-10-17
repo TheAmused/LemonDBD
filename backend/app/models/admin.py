@@ -30,7 +30,7 @@ class SiteSetting(Base, ColumnDictMixin):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     key: Mapped[str] = mapped_column(String(64), unique=True, index=True, nullable=False)
-    value: Mapped[str] = mapped_column(String(255), nullable=False)
+    value: Mapped[str] = mapped_column(String(1024), nullable=False)
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=utcnow, onupdate=utcnow, nullable=False
     )
@@ -68,3 +68,19 @@ class SeedUpdateLog(Base, ColumnDictMixin):
         DateTime(timezone=True), default=utcnow, onupdate=utcnow, nullable=False
     )
 
+
+
+class MaintenanceJobRun(Base, ColumnDictMixin):
+    """When each housekeeping job last ran, by the scheduler or an admin (one row per job).
+
+    It is the only shared trace of the scheduler, which runs in its own process: the admin panel
+    reads it to say whether scheduled jobs are actually running.
+    """
+
+    __tablename__ = "maintenance_job_runs"
+
+    key: Mapped[str] = mapped_column(String(64), primary_key=True)
+    last_run_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow, nullable=False)
+    last_affected: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    #: "schedule" or "admin".
+    last_trigger: Mapped[str] = mapped_column(String(16), nullable=False)

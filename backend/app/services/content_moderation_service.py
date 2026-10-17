@@ -15,9 +15,9 @@ from app.models.content_moderation import ContentReport, ContentReportSubscriber
 from app.models.user import User
 from app.services.content_report_queries import REPORT_STATUSES, get_admin_reports, get_report_preview  # noqa: F401
 from app.services.mail_service import send_content_moderation_notice_email
-from app.services.moderation_actions import ModerationError, create_sanction
+from app.services.moderation_actions import ModerationError, create_sanction, default_report_facts
 from app.services.sanction_outbox import dispatch_notifications, queued_notification_ids
-from app.services.site_settings import contact_email
+from app.services.site_settings import contact_email, content_evidence_days
 from app.services.content_crypto import (
     canonicalize_payload,
     compute_content_hash,
@@ -32,8 +32,12 @@ HEX_CHARACTERS = frozenset("0123456789abcdefABCDEF")
 CONTENT_TYPES = frozenset({"tier_list", "smash_roster", "minigame"})
 REPORT_REASONS = frozenset({"hate_speech", "harassment", "explicit", "illegal", "spam", "other"})
 MAX_EVIDENCE_CHARS = 500_000
-EVIDENCE_TTL_DAYS = 14
+EVIDENCE_TTL_DAYS = 14  # the Privacy Policy's promise: the admin setting can shorten it, never lengthen it
 UNATTRIBUTED_LOGIN = ""
+
+
+def evidence_days() -> int:
+    return min(EVIDENCE_TTL_DAYS, content_evidence_days())
 
 
 def _is_hex64(value: Any) -> bool:
@@ -252,7 +256,7 @@ def report_content(
                 primary_reason=reason,
                 status="pending",
                 evidence_payload=canonical_str,
-                expires_at=datetime.now(timezone.utc) + timedelta(days=EVIDENCE_TTL_DAYS),
+                expires_at=datetime.now(timezone.utc) + timedelta(days=evidence_days()),
             )
             db.session.add(report)
             db.session.flush()
@@ -370,7 +374,6 @@ def resolve_report(
     admin_notes: str | None = None,
     author_action: str | None = None,
     duration_days: int | None = None,
-    public_message: str | None = None,
     facts: str | None = None,
     rule_ref: str | None = None,
 ) -> tuple[dict[str, Any], int]:
@@ -392,7 +395,7 @@ def resolve_report(
     try:
         return _resolve_report(
             admin, report_id, action, author_action, clean_notes, sanction_ids,
-            duration_days=duration_days, public_message=public_message, facts=facts, rule_ref=rule_ref,
+            duration_days=duration_days, facts=facts, rule_ref=rule_ref,
         )
     except ModerationError as err:
         return {"error": err.message, "status": err.status}, err.status
@@ -407,7 +410,6 @@ def _resolve_report(
     sanction_ids: list[int],
     *,
     duration_days: int | None,
-    public_message: str | None,
     facts: str | None,
     rule_ref: str | None,
 ) -> tuple[dict[str, Any], int]:
@@ -450,9 +452,7 @@ def _resolve_report(
                         admin,
                         author,
                         reason_code=report.primary_reason,
-                        public_message=public_message,
-                        facts=facts
-                        or f"A {report.content_type.replace('_', ' ')} created with your account was blocked after a review of a report.",
+                        facts=facts or default_report_facts(report.content_type),
                         rule_ref=rule_ref,
                         internal_notes=clean_notes,
                         duration_days=duration_days,

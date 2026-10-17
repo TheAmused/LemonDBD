@@ -1,8 +1,8 @@
-# backend/migrations/versions/0022_changelog_edited_discord.py
+# backend/migrations/versions/0025_changelog_edited_discord.py
 """changelog_posts: mark edited entries and remember the Discord message
 
-Revision ID: 0022_changelog_edited_discord
-Revises: 0021_changelog_discord_announced
+Revision ID: 0025_changelog_edited_discord
+Revises: 0024_site_setting_value_length
 Create Date: 2026-10-17
 
 `edited_at` drives the "Edited" note readers see; `discord_message_id` and `discord_synced_at` let an edit
@@ -13,8 +13,8 @@ they cannot be updated on Discord. A database built after this change already ha
 import sqlalchemy as sa
 from alembic import op
 
-revision = "0022_changelog_edited_discord"
-down_revision = "0021_changelog_discord_announced"
+revision = "0025_changelog_edited_discord"
+down_revision = "0024_site_setting_value_length"
 branch_labels = None
 depends_on = None
 

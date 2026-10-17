@@ -1,7 +1,8 @@
 'use client';
 // frontend/src/components/scraper-config/useExportTab.ts
 import { useState } from 'react';
-import { useDictionary } from '@/context/DictionaryContext';
+import { useDictionary, useLocale } from '@/context/DictionaryContext';
+import { formatMessage } from '@/utils/i18nFormat';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 import { authHeaders, getAuthToken, getErrorMessage } from '@/utils/api';
 import { downloadFile } from '@/utils/download';
@@ -10,6 +11,7 @@ import { ALL_TARGETS, type TargetItem } from './scraperTargets';
 /** Which tables to export, and the download of the resulting JSON snapshot. */
 export function useExportTab() {
   const dict = useDictionary();
+  const locale = useLocale();
   const apiBase = getBackendBaseUrl();
   const [exportTargets, setExportTargets] = useState<string[]>(ALL_TARGETS.map((t) => t.id));
   const [isExporting, setIsExporting] = useState<boolean>(false);
@@ -40,7 +42,7 @@ export function useExportTab() {
 
   const handleExecuteExport = async () => {
     if (exportTargets.length === 0) {
-      setExportError(dict.admin.tokenNotFound);
+      setExportError(dict.admin.selectAtLeastOneTarget);
       return;
     }
 
@@ -68,7 +70,7 @@ export function useExportTab() {
 
       if (!res.ok) {
         const errData = await res.json().catch(() => ({}));
-        throw new Error(errData.error || `Export failed with HTTP ${res.status}`);
+        throw new Error(errData.error || dict.admin.exportFailed);
       }
 
       const data = await res.json();
@@ -77,7 +79,7 @@ export function useExportTab() {
 
       downloadFile(JSON.stringify(data, null, 2), `lemondbd_backup_${timestamp}.json`, 'application/json');
 
-      setExportSuccess(`Successfully exported ${exportTargets.length} categories.`);
+      setExportSuccess(formatMessage(dict.admin.exportDone, { count: exportTargets.length }, locale));
     } catch (err: unknown) {
       const msg = getErrorMessage(err, dict.admin.networkError);
       setExportError(msg);

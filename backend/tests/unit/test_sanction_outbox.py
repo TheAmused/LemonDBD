@@ -1,6 +1,7 @@
 # backend/tests/unit/test_sanction_outbox.py
 """The moderation email outbox: claim-based delivery, retries, skip rules, "ended" notices, and the
 texts themselves (every language, every event, nothing internal)."""
+import re
 from datetime import datetime, timedelta, timezone
 
 import pytest
@@ -236,7 +237,6 @@ def test_issued_email_has_the_statement_of_reasons(language, kind) -> None:
         reason_code="harassment",
         rule_ref="respect",
         facts=FACTS,
-        public_message="Please be kind.",
         issued_at=datetime(2026, 10, 15, tzinfo=timezone.utc),
         until=until if kind == "suspension" else None,
         from_report=True,
@@ -245,12 +245,29 @@ def test_issued_email_has_the_statement_of_reasons(language, kind) -> None:
         rules_url="https://lemon.test/en/rules",
     )
     flat = " ".join(" ".join(block[1:]) for block in content.blocks)
-    assert "Ada" in flat and FACTS in flat and "Please be kind." in flat
+    assert "Ada" in flat and FACTS in flat
     assert "help@lemondbd.test" in flat and "https://lemon.test/en/rules" in flat
     if kind == "suspension":
         assert "2026-12-01" in flat
     assert content.subject and content.preheader and content.footer
     assert "{" not in flat and "}" not in flat  # no unfilled placeholder
+    rule_field = next(block for block in content.blocks if block[0] == "field" and block[1] == texts_for(language)["rule_label"])
+    assert re.match(r"(Section|Sekcja|Abschnitt|Sección|第) ?1", rule_field[2])  # respect is section 1 of the Rules page
+
+
+@pytest.mark.parametrize("language", SUPPORTED)
+def test_redress_is_for_restrictions_only(language) -> None:
+    redress = texts_for(language)["redress"]
+
+    def flat(kind: str, content_type: str | None = None) -> str:
+        content = build_sanction_email(
+            language, event="issued", kind=kind, username="Ada", reason_code="spam", content_type=content_type
+        )
+        return " ".join(" ".join(block[1:]) for block in content.blocks)
+
+    assert redress not in flat("warning")
+    assert redress in flat("warning", "tier_list")  # the content was removed, which is a restriction
+    assert redress in flat("suspension") and redress in flat("ban")
 
 
 @pytest.mark.parametrize("language", SUPPORTED)

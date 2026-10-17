@@ -7,6 +7,7 @@ export default {
   lastUpdated: "15 de octubre de 2026",
   translationNotice: "Si las versiones traducidas de esta página difieren de la inglesa, prevalece la versión en inglés.",
   tldrLabel: "Resumen",
+  sectionEyebrow: "Sección {number}",
   tldrNotice: "Los títulos, las líneas de resumen y el compendio son atajos amistosos. Por motivos legales no son vinculantes y no sustituyen al texto que hay debajo. Si difieren de él, se aplica el texto completo.",
   summaryHeading: "Las normas en pocas palabras",
   summary: [

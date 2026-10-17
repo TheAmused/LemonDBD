@@ -140,3 +140,34 @@ export class ApiError extends Error {
     this.code = code;
   }
 }
+
+type Method = 'GET' | 'POST' | 'PUT' | 'DELETE';
+type Query = Record<string, string | number | undefined>;
+
+/**
+ * JSON request to `/api/v1{path}` (query values that are unset or empty are left out). Sends the session
+ * cookie, never caches, and throws ApiError with the server's `error` / `error_code` on a non-2xx answer.
+ */
+export async function apiRequest<T extends object>(path: string, method: Method = 'GET', body?: object, query?: Query): Promise<T> {
+  const params = new URLSearchParams();
+  for (const [key, value] of Object.entries(query ?? {})) {
+    if (value !== undefined && value !== '') params.set(key, String(value));
+  }
+  const qs = params.toString();
+  const res = await fetch(apiUrl(`/api/v1${path}${qs ? `?${qs}` : ''}`), {
+    method,
+    credentials: 'include',
+    cache: 'no-store',
+    headers: authHeaders(undefined, { json: body !== undefined }),
+    body: body === undefined ? undefined : JSON.stringify(body),
+  });
+  let data: (ApiErrorBody & Partial<T>) | undefined;
+  try {
+    data = (await res.json()) as ApiErrorBody & Partial<T>;
+  } catch {
+    data = undefined;
+  }
+  // No server message (a bare 500): leave it empty so the caller's own fallback text is shown.
+  if (!res.ok) throw new ApiError(data?.error ?? '', res.status, data?.error_code);
+  return (data ?? {}) as T;
+}

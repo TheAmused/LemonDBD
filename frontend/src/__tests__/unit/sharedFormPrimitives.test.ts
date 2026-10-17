@@ -5,16 +5,15 @@ import React from 'react';
 import { renderWithDictionary } from '../helpers/renderWithDictionary';
 import { Alert } from '@/components/common/Alert';
 import { Badge } from '@/components/common/Badge';
-import { FieldLabel } from '@/components/common/Field';
+import { FormField } from '@/components/common/Field';
 
 const render = (node: React.ReactElement) => renderWithDictionary(node);
 
-test('FieldLabel: required adds a red asterisk and the caps variant uses the small label style', () => {
+test('FormField: required adds a red asterisk and the label uses the small caps style', () => {
   const out = render(
-    React.createElement(FieldLabel, {
+    React.createElement(FormField, {
       label: 'Title',
       htmlFor: 't',
-      variant: 'caps',
       required: true,
       children: React.createElement('input', { id: 't' }),
     })
@@ -23,8 +22,8 @@ test('FieldLabel: required adds a red asterisk and the caps variant uses the sma
   assert.match(out, /text-accent-red"> \*<\/span>/);
 });
 
-test('FieldLabel: without required there is no asterisk', () => {
-  const out = render(React.createElement(FieldLabel, { label: 'Title', children: React.createElement('input') }));
+test('FormField: without required there is no asterisk', () => {
+  const out = render(React.createElement(FormField, { label: 'Title', children: React.createElement('input') }));
   assert.doesNotMatch(out, /\*/);
 });
 

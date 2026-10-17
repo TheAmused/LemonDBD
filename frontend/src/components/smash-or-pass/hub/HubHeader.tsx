@@ -4,7 +4,7 @@ import { useRef, useState, type ReactNode } from 'react';
 import { ChevronDown } from 'lucide-react';
 import { Tooltip } from '@/components/common/Tooltip';
 import { Button } from '@/components/common/Button';
-import { Popover, popoverTriggerProps } from '@/components/common/Popover';
+import { MENU_PANEL_CLASS, Popover, popoverTriggerProps } from '@/components/common/Popover';
 import {
   AshUrnIcon,
   CardShuffleIcon,
@@ -28,7 +28,7 @@ import { MenuItem } from '@/components/common/MenuItem';
 
 /** Square icon buttons: 44px to touch, a little smaller where a pointer is precise. */
 const DOCK_BUTTON =
-  'h-11 w-11 sm:h-9 sm:w-9 min-h-11 min-w-11 sm:min-h-[38px] sm:min-w-[38px] pointer-coarse:sm:min-h-11 pointer-coarse:sm:min-w-11';
+  'h-11 w-11 sm:h-9 sm:w-9 min-h-11 min-w-11 sm:min-h-hit-sm sm:min-w-hit-sm pointer-coarse:sm:min-h-11 pointer-coarse:sm:min-w-11';
 
 interface DockActionProps {
   title: string;
@@ -115,19 +115,19 @@ export function HubHeader({
   };
 
   // Shuffle, reset and help live in the "More" menu below 640px of hub width and as buttons above it.
-  const WIDE_ONLY = 'hidden @[640px]/hub:flex';
+  const WIDE_ONLY = 'hidden @hub-md/hub:flex';
 
   return (
     <header
       data-hub-header=""
-      className={`relative ${isFilterDrawerOpen ? 'z-40' : 'z-30'} mx-auto w-full max-w-6xl rounded-card bg-bg-surface border border-border-color backdrop-blur-2xl p-2.5 @[560px]/hub:p-4 @[1016px]/hub:p-5 transition-all`}
+      className={`relative ${isFilterDrawerOpen ? 'z-40' : 'z-30'} mx-auto w-full max-w-6xl rounded-card bg-bg-surface border border-border-color backdrop-blur-2xl p-2.5 @hub-sm/hub:p-4 @hub-xl/hub:p-5 transition-all`}
     >
       {/* Below 1016px of hub width: roster on row 1, stats + actions on row 2 (phones: three rows).
           From 1016px: one row, stats | roster | actions. */}
-      <div className="flex flex-col @[1016px]/hub:flex-row items-center justify-between gap-2 @[560px]/hub:gap-3 @[1016px]/hub:gap-4 w-full">
+      <div className="flex flex-col @hub-xl/hub:flex-row items-center justify-between gap-2 @hub-sm/hub:gap-3 @hub-xl/hub:gap-4 w-full">
         {/* ROSTER: heart-flanked selector */}
-        <div className="flex items-center justify-center gap-2.5 w-full @[1016px]/hub:w-auto order-1 @[1016px]/hub:order-2 min-w-0">
-          <ThornHeartIcon className="hidden @[400px]/hub:block h-5 w-5 text-accent-red animate-pulse shrink-0" aria-hidden="true" />
+        <div className="flex items-center justify-center gap-2.5 w-full @hub-xl/hub:w-auto order-1 @hub-xl/hub:order-2 min-w-0">
+          <ThornHeartIcon className="hidden @hub-xs/hub:block h-5 w-5 text-accent-red animate-pulse shrink-0" aria-hidden="true" />
 
           <Button
             type="button"
@@ -144,7 +144,7 @@ export function HubHeader({
                 className="h-full w-full object-cover"
               />
             </span>
-            <span className="truncate min-w-0 max-w-[16rem] text-text-primary group-hover:text-accent-red font-black tracking-wide">
+            <span className="truncate min-w-0 max-w-64 text-text-primary group-hover:text-accent-red font-black tracking-wide">
               {rosterName}
             </span>
             <Badge tone="red" size="sm" plain square>
@@ -153,13 +153,13 @@ export function HubHeader({
             <ChevronDown className="h-4 w-4 shrink-0 text-accent-red group-hover:translate-y-0.5 transition-transform" aria-hidden="true" />
           </Button>
 
-          <ThornHeartIcon className="hidden @[400px]/hub:block h-5 w-5 text-accent-red animate-pulse shrink-0" aria-hidden="true" />
+          <ThornHeartIcon className="hidden @hub-xs/hub:block h-5 w-5 text-accent-red animate-pulse shrink-0" aria-hidden="true" />
         </div>
 
         {/* STATS + ACTIONS: one row from 560px, stacked on phones; dissolves into the main row from 1016px */}
-        <div className="flex flex-col @[560px]/hub:flex-row items-center justify-between gap-2 @[560px]/hub:gap-3 w-full order-2 @[1016px]/hub:order-none @[1016px]/hub:contents">
+        <div className="flex flex-col @hub-sm/hub:flex-row items-center justify-between gap-2 @hub-sm/hub:gap-3 w-full order-2 @hub-xl/hub:order-none @hub-xl/hub:contents">
           {/* Live session telemetry capsule */}
-          <div className="flex items-center justify-center order-2 @[560px]/hub:order-1 shrink-0">
+          <div className="flex items-center justify-center order-2 @hub-sm/hub:order-1 shrink-0">
             <Surface tone="elevated" padding="none" className="flex items-center gap-2 px-3 py-1.5 text-xs shadow-inner">
               <span className="flex items-center gap-1.5 text-text-secondary font-bold">
                 <CardStackIcon className="h-4 w-4 text-text-secondary" aria-hidden="true" />
@@ -185,7 +185,7 @@ export function HubHeader({
           </div>
 
           {/* Action cluster (>=44px touch targets on touch screens) */}
-          <div className="flex items-center justify-center @[1016px]/hub:justify-end gap-1.5 sm:gap-2 order-1 @[560px]/hub:order-2 @[1016px]/hub:order-3 shrink-0">
+          <div className="flex items-center justify-center @hub-xl/hub:justify-end gap-1.5 sm:gap-2 order-1 @hub-sm/hub:order-2 @hub-xl/hub:order-3 shrink-0">
             <DockAction
               title={tooltips.filter}
               description={tooltips.filterDesc}
@@ -265,7 +265,7 @@ export function HubHeader({
             </DockAction>
 
             {/* Narrow hubs: shuffle / reset / help collapse into one menu */}
-            <div className="@[640px]/hub:hidden">
+            <div className="@hub-md/hub:hidden">
               <Button
                 ref={moreRef}
                 variant="secondary"
@@ -285,7 +285,7 @@ export function HubHeader({
                 align="end"
                 role="menu"
                 ariaLabel={tooltips.moreActions}
-                className="rounded-card bg-bg-surface border border-border-color p-1.5 shadow-xl backdrop-blur-2xl"
+                className={MENU_PANEL_CLASS}
               >
                 {[
                   { label: tooltips.shuffle, Icon: CardShuffleIcon, run: onShuffle },

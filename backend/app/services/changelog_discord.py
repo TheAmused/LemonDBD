@@ -5,9 +5,9 @@ import logging
 from typing import Literal, NamedTuple
 
 from curl_cffi import requests
-from flask import current_app
 
 from app.models import ChangelogPost
+from app.services.site_settings import get_secret
 from app.utils.discord_markdown import html_to_discord
 
 logger = logging.getLogger(__name__)
@@ -28,7 +28,7 @@ _HEADERS = {"Content-Type": "application/json"}
 
 
 def _webhook() -> str:
-    return (current_app.config.get("DISCORD_CHANGELOG_WEBHOOK_URL") or "").strip().rstrip("/")
+    return get_secret("discord_changelog_webhook_url").rstrip("/")
 
 
 def _embed(post: ChangelogPost) -> dict[str, str | int | None]:

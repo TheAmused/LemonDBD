@@ -16,7 +16,7 @@ import { Modal } from '@/components/common/Modal';
 import { RichTextEditor, type RichTextEditorHandle } from '@/components/common/RichTextEditor';
 import { Switch } from '@/components/common/Switch';
 import { Button } from '@/components/common/Button';
-import { FieldLabel, Input } from '@/components/common/Field';
+import { FormField, Input } from '@/components/common/Field';
 import { useDictionary } from "@/context/DictionaryContext";
 
 export interface ChangelogEditorModalProps {
@@ -98,7 +98,7 @@ export const ChangelogEditorModal: React.FC<ChangelogEditorModalProps> = ({ open
       padded
       bodyClassName="space-y-4"
     >
-      <FieldLabel label={t.titleLabel} htmlFor={titleId} variant="caps" required>
+      <FormField label={t.titleLabel} htmlFor={titleId} required>
         <Input
           id={titleId}
           data-autofocus
@@ -107,7 +107,7 @@ export const ChangelogEditorModal: React.FC<ChangelogEditorModalProps> = ({ open
           onChange={(e) => setTitle(e.target.value)}
           className="px-4 font-bold"
         />
-      </FieldLabel>
+      </FormField>
 
       <div className="flex flex-wrap items-center gap-2">
         <span className="type-label-2xs text-text-muted">{t.addSection}</span>
@@ -125,7 +125,7 @@ export const ChangelogEditorModal: React.FC<ChangelogEditorModalProps> = ({ open
         ))}
       </div>
 
-      <FieldLabel label={t.bodyLabel} labelId={bodyLabelId} variant="caps" required>
+      <FormField label={t.bodyLabel} labelId={bodyLabelId} required>
         <RichTextEditor
           ref={editorRef}
           initialHtml={initialHtml}
@@ -137,7 +137,7 @@ export const ChangelogEditorModal: React.FC<ChangelogEditorModalProps> = ({ open
           required
           className={CHANGELOG_BODY_CLASS}
         />
-      </FieldLabel>
+      </FormField>
 
       {error && <Alert>{error}</Alert>}
     </Modal>

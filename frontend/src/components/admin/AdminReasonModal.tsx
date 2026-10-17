@@ -1,8 +1,8 @@
 'use client';
 // frontend/src/components/admin/AdminReasonModal.tsx
 
-import React, { useEffect, useState } from 'react';
-import { Textarea } from '@/components/common/Field';
+import React, { useEffect, useId, useState } from 'react';
+import { FieldLabel, Textarea } from '@/components/common/Field';
 import { Button } from '@/components/common/Button';
 import { Modal } from '@/components/common/Modal';
 import { useDictionary } from "@/context/DictionaryContext";
@@ -18,6 +18,7 @@ export interface AdminReasonModalProps {
 
 export const AdminReasonModal: React.FC<AdminReasonModalProps> = ({ isOpen, title, subtitle, confirmLabel, onCancel, onConfirm }) => {
   const dict = useDictionary();
+  const fieldId = useId();
   const [reason, setReason] = useState('');
 
   useEffect(() => {
@@ -31,7 +32,7 @@ export const AdminReasonModal: React.FC<AdminReasonModalProps> = ({ isOpen, titl
       variant="dialog"
       size="md"
       title={title}
-      closeButtonAriaLabel={dict.admin.closeSymbol}
+      closeButtonAriaLabel={dict.admin.close}
       padded
       bodyClassName="space-y-3"
       footerClassName="justify-end flex-col-reverse sm:flex-row"
@@ -47,10 +48,9 @@ export const AdminReasonModal: React.FC<AdminReasonModalProps> = ({ isOpen, titl
       }
     >
       {subtitle && <p className="type-body text-text-secondary">{subtitle}</p>}
-      <label className="block type-label-xs text-text-secondary">
-        {dict.admin.reasonShownToPlayers}
-      </label>
+      <FieldLabel htmlFor={fieldId}>{dict.admin.reasonShownToPlayers}</FieldLabel>
       <Textarea
+        id={fieldId}
         value={reason}
         onChange={(e) => setReason(e.target.value)}
         rows={3}

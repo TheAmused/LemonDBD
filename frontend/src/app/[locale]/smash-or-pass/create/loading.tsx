@@ -6,7 +6,7 @@ import { PageShellFallback } from '@/components/layout/PageShellFallback';
 export default function SmashRosterCreateLoading() {
   return (
     <PageShellFallback
-      mainClassName="min-h-[500px] flex items-center justify-center"
+      mainClassName="min-h-skeleton-page flex items-center justify-center"
       skeleton={
         <DbdSpinner size="responsive" layout="inline" accent="blood" needleSpeed={1.6} labelKey="smashOrPass.loadingCreator" />
       }

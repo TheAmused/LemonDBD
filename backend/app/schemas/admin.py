@@ -44,6 +44,9 @@ class UpdateChallengeModeDTO(BaseModel):
 
 class UpdateSiteSettingsDTO(BaseModel):
     settings: dict[str, Any] = Field(..., min_length=1)
+    # Required (with a reason) for a change that lowers a protection, e.g. turning the e-mail check off.
+    confirm_risky: bool = False
+    reason: str = Field(default="", max_length=300)
 
 
 class PurgeDatabaseDTO(BaseModel):

@@ -17,4 +17,5 @@ export default {
   loading: "読み込み中...",
   notice: "お知らせ",
   loadingPerksSub: 'サバイバーとキラーのパークを同期中',
+  siteBannerDismiss: "お知らせを閉じる",
 } as const;

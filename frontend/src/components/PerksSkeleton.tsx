@@ -20,7 +20,7 @@ export const PerksGridSkeleton: React.FC<PerksSkeletonProps> = ({ className = ''
       role="status"
       aria-label={loadingLabel}
       aria-busy="true"
-      className={`flex h-full min-h-[420px] w-full flex-1 flex-col items-center justify-center overflow-hidden select-none p-6 ${className}`}
+      className={`flex h-full min-h-105 w-full flex-1 flex-col items-center justify-center overflow-hidden select-none p-6 ${className}`}
     >
       <DbdSpinner
         size="responsive"

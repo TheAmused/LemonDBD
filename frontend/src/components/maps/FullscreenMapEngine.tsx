@@ -281,7 +281,7 @@ export const FullscreenMapEngineView: React.FC<FullscreenMapEngineProps> = ({ ma
             <ZoomOut className="w-4 h-4" />
           </Button>
 
-          <span className="type-strong text-text-primary px-2 min-w-[50px] text-center">
+          <span className="type-strong text-text-primary px-2 min-w-hit-xl text-center">
             {Math.round(zoom * 100)}{dict.maps.percentSign}
           </span>
 

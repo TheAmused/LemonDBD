@@ -17,7 +17,7 @@ const OFF = 'border-border-color bg-bg-surface text-text-secondary hover:bg-bg-e
 const SIZES: Record<ToggleChipSize, string> = {
   xs: 'gap-1 px-2.5 py-1 text-mini',
   sm: 'gap-1.5 px-3 py-1.5 text-xs',
-  md: 'min-h-[38px] gap-2 px-3.5 py-2 text-xs sm:text-sm',
+  md: 'min-h-hit-sm gap-2 px-3.5 py-2 text-xs sm:text-sm',
 };
 // Square, icon-only toggle. Phones and tablets get the 44px touch minimum.
 const ICON_SIZES: Record<ToggleChipSize, string> = {

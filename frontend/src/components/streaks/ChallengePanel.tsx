@@ -62,7 +62,7 @@ export const ModeSelectButton: React.FC<ModeSelectButtonProps> = ({ label, tone,
   const content = (
     <>
       <span className={`h-2.5 w-2.5 rounded-full ${MODE_DOT_TONES[tone]}`} aria-hidden="true" />
-      <span className="type-label-sm max-w-[9rem] truncate text-text-primary">{label}</span>
+      <span className="type-label-sm max-w-36 truncate text-text-primary">{label}</span>
       {onClick && <ChevronDown className="h-4 w-4 text-text-muted" aria-hidden="true" />}
     </>
   );

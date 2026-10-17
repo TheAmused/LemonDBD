@@ -120,7 +120,7 @@ export function useImportTab(onPurgeSuccess?: () => void) {
 
   const handleExecuteImport = () => {
     if (!importFile && !importJsonText) {
-      setImportError('Please select a valid JSON file.');
+      setImportError(dict.admin.invalidJsonFile);
       return;
     }
 
@@ -150,7 +150,7 @@ export function useImportTab(onPurgeSuccess?: () => void) {
       try {
         parsedPayload = JSON.parse(importJsonText);
       } catch {
-        throw new Error('Unable to parse JSON file.');
+        throw new Error(dict.admin.importParseFailed);
       }
 
       const res = await fetch(`${apiBase}/api/v1/admin/database/import`, {
@@ -167,10 +167,10 @@ export function useImportTab(onPurgeSuccess?: () => void) {
 
       const data = await res.json();
       if (!res.ok) {
-        throw new Error(data.error || 'Import failed.');
+        throw new Error(data.error || dict.admin.importFailed);
       }
 
-      setImportSuccess(data.message || 'Database imported successfully.');
+      setImportSuccess(dict.admin.importDone);
       setImportSummary(data.summary || null);
 
       if (onPurgeSuccess) {

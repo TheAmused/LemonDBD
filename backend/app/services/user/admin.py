@@ -1,7 +1,9 @@
 # backend/app/services/user/admin.py
 import logging
+from datetime import datetime, timezone
 from typing import Any
-from sqlalchemy import func, or_, select, update
+
+from sqlalchemy import ColumnElement, and_, case, func, not_, or_, select, update
 
 from app.core.account_state import block_kind
 from app.core.extensions import db
@@ -11,15 +13,11 @@ from app.models import (
     BugReport,
     ContentReport,
     ContentReportSubscriber,
-    Killer,
-    Survivor,
-    Perk,
     User,
     UserCharacterOwnership,
     UserPerkOwnership,
 )
 from app.services.moderation_actions import ModerationError, ban, restore_account
-from app.services.streak_stats import fetch_challenge_completion_counts
 from app.services.user import google_auth
 from app.services.user.two_factor import enabled_user_ids
 from app.services.user.avatar import (
@@ -35,6 +33,7 @@ def list_all_users_paginated(
     role: str | None = None,
     page: int = 1,
     per_page: int = 20,
+    standing: str | None = None,
 ) -> dict[str, Any]:
     """Retrieve paginated user records annotated with owned count metrics.
 
@@ -48,6 +47,10 @@ def list_all_users_paginated(
 
     if role and role.lower() in ["admin", "user"]:
         stmt = stmt.where(User.role == role.lower())
+
+    standing_condition = _standing_condition((standing or "").strip().lower())
+    if standing_condition is not None:
+        stmt = stmt.where(standing_condition)
 
     if search and search.strip():
         pat = f"%{search.strip().lower()}%"
@@ -107,8 +110,10 @@ def admin_modify_user(
     role: str | None = None,
     is_active: bool | None = None,
     acting_admin: User | None = None,
+    username: str | None = None,
+    is_verified: bool | None = None,
 ) -> tuple[User | None, str | None]:
-    """Administrative update for role assignment and the account's active status.
+    """Administrative update of an account: role, display name, e-mail verification and active status.
 
     `is_active` is the old enable/disable switch; it now goes through the sanctions so that the
     decision is recorded and the user is told: False bans the account, True lifts every running
@@ -118,9 +123,25 @@ def admin_modify_user(
     if not user:
         return None, "User not found."
 
-    if role and role.lower() in ["admin", "user"]:
+    clean_role = role.lower() if role and role.lower() in ("admin", "user") else None
+    if clean_role == "user" and acting_admin is not None and acting_admin.id == user_id:
+        return None, "You cannot remove your own admin role."
+    clean_username = username.strip() if username is not None else None
+    if clean_username is not None and len(clean_username) < 3:
+        return None, "Username must be at least 3 characters long."
+
+    if clean_role or clean_username or is_verified is not None:
         with transaction():
-            user.role = role.lower()
+            if clean_role:
+                user.role = clean_role
+            if clean_username:
+                user.username = clean_username
+            if is_verified is not None:
+                user.is_verified = is_verified
+                if is_verified:
+                    user.verification_code = None
+                    user.verification_code_expires_at = None
+                    user.verification_attempts = 0
 
     try:
         if is_active is False and block_kind(user) != "banned":
@@ -213,32 +234,47 @@ def delete_own_account(
     return True, None
 
 
+def _standing_condition(standing: str) -> ColumnElement[bool] | None:
+    """SQL twin of `account_state.block_kind`: "banned", "suspended" or "active" (anything else: None)."""
+    now = datetime.now(timezone.utc)
+    suspended = and_(User.is_active.is_(True), User.suspended_until.is_not(None), User.suspended_until > now)
+    if standing == "banned":
+        return User.is_active.is_(False)
+    if standing == "suspended":
+        return suspended
+    if standing == "active":
+        return and_(User.is_active.is_(True), not_(suspended))
+    return None
+
+
 def fetch_admin_metrics() -> dict[str, Any]:
-    """Retrieve system totals for users, characters, and perks."""
-    total_users = db.session.scalar(select(func.count(User.id))) or 0
-    active_users = (
-        db.session.scalar(select(func.count(User.id)).where(User.is_active.is_(True))) or 0
-    )
-    admin_count = (
-        db.session.scalar(select(func.count(User.id)).where(User.role == "admin")) or 0
-    )
-
-    # One COUNT per table. The role used to be a column to filter on; it is
-    # the table now, so the filter is the table name.
-    survivors_count = db.session.scalar(select(func.count(Survivor.id))) or 0
-    killers_count = db.session.scalar(select(func.count(Killer.id))) or 0
-    total_characters = survivors_count + killers_count
-    total_perks = db.session.scalar(select(func.count(Perk.id))) or 0
-
+    """The numbers behind the admin panel's filters and attention markers, in two aggregate queries."""
+    now = datetime.now(timezone.utc)
+    total, admins, banned, suspended = db.session.execute(
+        select(
+            func.count(User.id),
+            func.count(case((User.role == "admin", 1))),
+            func.count(case((User.is_active.is_(False), 1))),
+            func.count(case((and_(User.is_active.is_(True), User.suspended_until > now), 1))),
+        )
+    ).one()
+    bug_pending = db.session.scalar(
+        select(func.count(BugReport.id)).where(BugReport.status == "pending")
+    ) or 0
+    content_pending = db.session.scalar(
+        select(func.count(ContentReport.id)).where(ContentReport.status == "pending")
+    ) or 0
+    total, admins, banned, suspended = total or 0, admins or 0, banned or 0, suspended or 0
     return {
-        "total_users": total_users,
-        "active_users": active_users,
-        "admin_count": admin_count,
-        "total_characters": total_characters,
-        "survivors_count": survivors_count,
-        "killers_count": killers_count,
-        "total_perks": total_perks,
-        "challenge_completions": fetch_challenge_completion_counts(),
+        "users": {
+            "total": total,
+            "admins": admins,
+            "players": total - admins,
+            "active": total - banned - suspended,
+            "suspended": suspended,
+            "banned": banned,
+        },
+        "pending": {"bug_reports": bug_pending, "content_reports": content_pending},
     }
 
 

@@ -4,7 +4,6 @@ export default {
   subtitle: "Losuj umiejętności na podstawie współrzędnych ekwipunku w grze [Strona/Slot].",
   modeInstant: "Błyskawiczne losowanie",
   modeWheel: "Koło Fortuny",
-  configTitle: "Ustawienia Ekwipunku i Koła",
   totalPages: "Liczba stron",
   perksPerPage: "Umiejętności na stronę",
   lastPagePerks: "Umiejętności na ostatniej stronie",

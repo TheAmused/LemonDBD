@@ -51,7 +51,7 @@ export function TierItemPreviewModal({ item, onClose }: TierItemPreviewModalProp
             <img
               src={(item.fullImage ?? item.image) as string}
               alt={item.name}
-              className="h-auto max-h-[65vh] w-auto max-w-full rounded-card border border-border-color bg-bg-elevated object-contain"
+              className="h-auto max-h-vh-65 w-auto max-w-full rounded-card border border-border-color bg-bg-elevated object-contain"
             />
           </div>
         ) : (

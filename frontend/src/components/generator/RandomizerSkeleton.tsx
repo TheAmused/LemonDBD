@@ -22,7 +22,7 @@ export const RandomizerPageSkeleton: React.FC<RandomizerSkeletonProps> = ({ clas
       role="status"
       aria-label={loadingLabel}
       aria-busy="true"
-      className={`min-h-[440px] w-full max-w-6xl mx-auto flex flex-col items-center justify-center p-6 select-none ${className}`}
+      className={`min-h-110 w-full max-w-6xl mx-auto flex flex-col items-center justify-center p-6 select-none ${className}`}
     >
       <DbdSpinner
         size="responsive"

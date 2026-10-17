@@ -11,9 +11,11 @@ never both send. Delivery is at-least-once: a crash between SMTP accepting the m
 `notified_at` write can still produce a duplicate.
 """
 import logging
+from dataclasses import asdict
 from datetime import datetime, timedelta, timezone
 from typing import Any
 
+from flask import current_app
 from sqlalchemy import func, select
 
 from app.core.account_state import as_utc, block_kind
@@ -21,7 +23,7 @@ from app.core.extensions import db
 from app.core.json_provider import safe_json_dumps
 from app.core.transaction import transaction
 from app.models.admin import AdminAuditLog
-from app.models.content_moderation import ContentRevocation
+from app.models.content_moderation import ContentReport, ContentRevocation
 from app.models.sanction import (
     RULE_REFS,
     SANCTION_REASONS,
@@ -32,6 +34,7 @@ from app.models.sanction import (
 from app.models.user import User
 from app.services import ban_list
 from app.services.escalation import suggest_next_step
+from app.services.sanction_email_texts import build_sanction_email
 from app.services.sanction_outbox import dispatch_notifications, queued_notification_ids
 from app.services.site_settings import contact_email, escalation_thresholds, warning_lifetime_days
 from app.utils.responses import api_error
@@ -148,7 +151,6 @@ def create_sanction(
     user: User,
     *,
     reason_code: str,
-    public_message: str | None = None,
     facts: str | None = None,
     rule_ref: str | None = None,
     internal_notes: str | None = None,
@@ -169,7 +171,6 @@ def create_sanction(
     _check_target(admin, user)
 
     facts = _clean_text(facts, "facts", required=kind != "warning")
-    public_message = _clean_text(public_message, "public_message")
     internal_notes = _clean_text(internal_notes, "internal_notes")
 
     now = _now()
@@ -189,7 +190,6 @@ def create_sanction(
         reason_code=reason_code,
         rule_ref=rule_ref,
         facts=facts,
-        public_message=public_message,
         internal_notes=internal_notes,
         source=source,
         report_id=report_id,
@@ -225,6 +225,75 @@ def create_sanction(
     )
     db.session.flush()
     return sanction
+
+
+def default_report_facts(content_type: str) -> str:
+    """The "what happened" of a decision taken from a report when the moderator wrote none."""
+    return f"A {content_type.replace('_', ' ')} created with your account was blocked after a review of a report."
+
+
+def preview_sanction(body: dict[str, Any]) -> dict[str, Any]:
+    """What `apply_sanction` / a report resolution would tell the account holder, without saving anything.
+
+    Takes the same fields as the decision form plus the target: `user_id`, or `report_id` (the author
+    of the reported content; the report supplies the reason). Returns the reason and facts as they would be
+    stored, when it would end, and the email in the account holder's language.
+    """
+    kind = body.get("kind")
+    if kind not in ("warning", "suspension", "ban"):
+        raise ModerationError("kind must be 'warning', 'suspension' or 'ban'", 400)
+    report = None
+    if body.get("report_id") is not None:
+        report = db.session.get(ContentReport, body.get("report_id"))
+        if report is None or report.author_id is None:
+            raise ModerationError("Content report not found", 404)
+        user = db.session.get(User, report.author_id)
+        reason_code = report.primary_reason
+    else:
+        user = db.session.get(User, body.get("user_id")) if isinstance(body.get("user_id"), int) else None
+        reason_code = body.get("reason_code")
+    if user is None:
+        raise ModerationError("User not found", 404)
+    if reason_code not in SANCTION_REASONS:
+        raise ModerationError(f"reason_code must be one of: {', '.join(SANCTION_REASONS)}", 400)
+    rule_ref = body.get("rule_ref") or None
+    if rule_ref is not None and rule_ref not in RULE_REFS:
+        raise ModerationError(f"rule_ref must be one of: {', '.join(RULE_REFS)}", 400)
+
+    facts = _clean_text(body.get("facts"), "facts")
+    if facts is None and report is not None:
+        facts = default_report_facts(report.content_type)
+    until = None
+    if kind == "warning":
+        until = _now() + timedelta(days=warning_lifetime_days())
+    elif kind == "suspension":
+        until = _now() + timedelta(days=_duration(body.get("duration_days")))
+
+    language = user.preferred_language
+    base = str(current_app.config.get("FRONTEND_URL") or "").rstrip("/")
+    email = build_sanction_email(
+        language,
+        event="issued",
+        kind=kind,
+        username=user.username,
+        reason_code=reason_code,
+        rule_ref=rule_ref,
+        facts=facts,
+        issued_at=_now(),
+        until=until if kind == "suspension" else None,
+        from_report=report is not None,
+        content_type=report.content_type if report is not None else None,
+        contact=contact_email(),
+        rules_url=f"{base}/{language or 'en'}/rules" if base and rule_ref else "",
+    )
+    return {
+        "language": language or "en",
+        "reason_code": reason_code,
+        "facts": facts,
+        "appeal_contact": contact_email() or None,
+        "until": until.isoformat() if until else None,
+        "email": asdict(email),
+    }
 
 
 def _issue(kind: str, admin: User | None, user_id: int, **fields: Any) -> UserSanction:
@@ -263,7 +332,6 @@ def apply_sanction(admin: User, user_id: int, body: dict[str, Any]) -> UserSanct
         admin,
         user_id,
         reason_code=reason_code,
-        public_message=body.get("public_message"),
         facts=body.get("facts"),
         rule_ref=body.get("rule_ref"),
         internal_notes=body.get("internal_notes"),
@@ -395,6 +463,5 @@ def blocked_response(user: User):
         code="account_banned" if kind == "banned" else "account_suspended",
         until=until.isoformat() if until else None,
         reason_code=current.reason_code if current else None,
-        public_message=current.public_message if current else None,
         appeal_contact=contact_email() or None,
     )

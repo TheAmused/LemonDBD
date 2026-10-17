@@ -50,7 +50,6 @@ DEMO_ACCOUNTS: tuple[dict[str, Any], ...] = (
             "reason_code": "harassment",
             "rule_ref": "respect",
             "facts": "Demo account: a warning for disrespectful comments, shown once after sign-in.",
-            "public_message": "Please keep your comments friendly. This is only a demo warning.",
         },
     },
     {
@@ -66,7 +65,6 @@ DEMO_ACCOUNTS: tuple[dict[str, Any], ...] = (
             "reason_code": "spam",
             "rule_ref": "fairPlay",
             "facts": "Demo account: suspended for 365 days so the blocked screen can be previewed.",
-            "public_message": "This is only a demo suspension.",
             "duration_days": 365,
         },
     },
@@ -83,7 +81,6 @@ DEMO_ACCOUNTS: tuple[dict[str, Any], ...] = (
             "reason_code": "hate_speech",
             "rule_ref": "respect",
             "facts": "Demo account: permanently banned so the blocked screen can be previewed.",
-            "public_message": "This is only a demo ban.",
         },
     },
 )

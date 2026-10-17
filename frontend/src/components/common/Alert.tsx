@@ -1,5 +1,5 @@
 // frontend/src/components/common/Alert.tsx
-// The one inline error box. Errors under a single input belong to FieldLabel in Field.tsx.
+// The one inline error box. Errors under a single input belong to FormField in Field.tsx.
 import React from 'react';
 import { TriangleAlert, X } from 'lucide-react';
 import { Button } from '@/components/common/Button';

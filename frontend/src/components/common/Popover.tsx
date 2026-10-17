@@ -30,6 +30,9 @@ const POPOVER_CONFIG = {
   exitMs: 120,
 } as const;
 
+/** The look of a menu panel (dropdown options, action menus): pass it as the Popover's className. */
+export const MENU_PANEL_CLASS = 'rounded-card border border-border-color bg-bg-surface p-1.5 shadow-xl backdrop-blur-2xl';
+
 export type PopoverPlacement = 'bottom' | 'top';
 export type PopoverAlign = 'start' | 'center' | 'end';
 

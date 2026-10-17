@@ -21,17 +21,21 @@ from app.models.sanction import SanctionNotification, UserSanction
 from app.models.user import User
 from app.services.mail_service import send_sanction_email
 from app.services.sanction_email_texts import build_sanction_email
-from app.services.site_settings import contact_email
+from app.services.site_settings import contact_email, sanction_email_attempts
 
 logger = logging.getLogger(__name__)
 
-MAX_NOTIFY_ATTEMPTS = 5
+MAX_NOTIFY_ATTEMPTS = 5  # the ceiling; the admin setting `sanction_email_attempts` can lower it
 STALE_CLAIM = timedelta(minutes=10)
 ENDED_LOOKBACK = timedelta(days=7)
 
 
 def _now() -> datetime:
     return datetime.now(timezone.utc)
+
+
+def max_attempts() -> int:
+    return min(MAX_NOTIFY_ATTEMPTS, sanction_email_attempts())
 
 
 def queued_notification_ids(sanction_ids: list[int]) -> list[int]:
@@ -54,7 +58,7 @@ def _claim(notification_id: int) -> bool:
         .where(
             SanctionNotification.id == notification_id,
             SanctionNotification.notified_at.is_(None),
-            SanctionNotification.attempts < MAX_NOTIFY_ATTEMPTS,
+            SanctionNotification.attempts < max_attempts(),
             or_(SanctionNotification.in_flight_at.is_(None), SanctionNotification.in_flight_at < now - STALE_CLAIM),
         )
         .values(in_flight_at=now, attempts=SanctionNotification.attempts + 1)
@@ -109,7 +113,6 @@ def _build_content(notification: SanctionNotification, sanction: UserSanction, u
         reason_code=sanction.reason_code,
         rule_ref=sanction.rule_ref,
         facts=sanction.facts,
-        public_message=sanction.public_message,
         issued_at=sanction.issued_at,
         until=sanction.expires_at if sanction.kind == "suspension" else None,
         from_report=sanction.source == "content_report",
@@ -206,7 +209,7 @@ def retry_pending_notifications(limit: int = 50) -> int:
             select(SanctionNotification.id)
             .where(
                 SanctionNotification.notified_at.is_(None),
-                SanctionNotification.attempts < MAX_NOTIFY_ATTEMPTS,
+                SanctionNotification.attempts < max_attempts(),
                 or_(SanctionNotification.in_flight_at.is_(None), SanctionNotification.in_flight_at < now - STALE_CLAIM),
             )
             .order_by(SanctionNotification.id)

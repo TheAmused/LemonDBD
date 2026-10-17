@@ -125,7 +125,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ locale = 'en' })
 
   return (
     <div
-      className={`relative min-h-[calc(100dvh-5rem)] flex flex-col justify-start space-y-3 pb-12 overflow-x-clip ${
+      className={`relative min-h-screen-smash flex flex-col justify-start space-y-3 pb-12 overflow-x-clip ${
         effectsEnabled ? '' : '[&_*]:animate-none!'
       }`}
     >

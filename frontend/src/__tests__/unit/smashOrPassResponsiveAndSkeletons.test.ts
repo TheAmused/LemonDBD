@@ -14,7 +14,7 @@ test('SmashOrPass: Skeletons & DBD Framer Motion Spinner Suite', async (t) => {
     assert.ok(html.includes('role="status"'));
     assert.ok(html.includes('aria-busy="true"'));
     assert.ok(html.includes(`aria-label="${enDict.smashOrPass.loadingArena}"`));
-    assert.ok(html.includes('min-h-[calc(100dvh-5rem)]'));
+    assert.ok(html.includes('min-h-screen-smash'));
   });
 
   await t.test('SmashLeaderboardSkeleton renders with status role and accessibility label', () => {
@@ -29,14 +29,14 @@ test('SmashOrPass: Responsive Design & Touch Target Sizes', async (t) => {
   await t.test('Touch targets on interactive buttons adhere to >= 48px or >= 44px standard', () => {
     // Verify touch target class requirements
     const checkTouchClasses = (classStr: string) => {
-      const hasMinH = classStr.includes('min-h-[48px]') || classStr.includes('min-h-[44px]');
-      const hasMinW = classStr.includes('min-w-[48px]') || classStr.includes('min-w-[44px]');
+      const hasMinH = classStr.includes('min-h-hit-lg') || classStr.includes('min-h-hit-md');
+      const hasMinW = classStr.includes('min-w-hit-lg') || classStr.includes('min-w-hit-md');
       return hasMinH && hasMinW;
     };
 
-    const cardButtonClasses = 'flex min-h-[48px] min-w-[48px] h-13 w-13 sm:h-14 sm:w-14 items-center justify-center rounded-2xl';
-    const topCardButtonClasses = 'flex min-h-[48px] min-w-[48px] h-12 w-12 sm:h-12 sm:w-12 items-center justify-center rounded-2xl';
-    const dockActionClasses = 'flex min-h-[44px] min-w-[44px] sm:min-h-[38px] sm:min-w-[38px] h-11 w-11 sm:h-9 sm:w-9 items-center justify-center rounded-xl';
+    const cardButtonClasses = 'flex min-h-hit-lg min-w-hit-lg h-13 w-13 sm:h-14 sm:w-14 items-center justify-center rounded-2xl';
+    const topCardButtonClasses = 'flex min-h-hit-lg min-w-hit-lg h-12 w-12 sm:h-12 sm:w-12 items-center justify-center rounded-2xl';
+    const dockActionClasses = 'flex min-h-hit-md min-w-hit-md sm:min-h-hit-sm sm:min-w-hit-sm h-11 w-11 sm:h-9 sm:w-9 items-center justify-center rounded-xl';
 
     assert.ok(checkTouchClasses(cardButtonClasses), 'Card buttons must have min-h and min-w >= 48px');
     assert.ok(checkTouchClasses(topCardButtonClasses), 'Top card buttons must have min-h and min-w >= 48px');

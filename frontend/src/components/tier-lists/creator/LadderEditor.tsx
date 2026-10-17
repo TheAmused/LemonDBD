@@ -98,7 +98,7 @@ export function LadderEditor({ tiers, onChange, onPreset, activePreset }: Ladder
             icon={activePreset ? undefined : <ListOrdered className="h-4 w-4" aria-hidden="true" />}
             ariaLabel={c.presetsLabel}
             buttonClassName="min-h-10"
-            minWidthClass="min-w-[220px]"
+            minWidthClass="min-w-55"
           />
         </div>
         <div className="hidden sm:flex flex-wrap justify-center gap-2">
@@ -204,7 +204,7 @@ export function LadderEditor({ tiers, onChange, onPreset, activePreset }: Ladder
                       placeholder={t.tierBackgroundImagePlaceholder}
                       inputMode="url"
                       invalid={bgInvalid}
-                      className="min-h-[38px] bg-bg-primary"
+                      className="min-h-hit-sm bg-bg-primary"
                     />
                     <span className={cn('text-xs', bgInvalid ? 'font-semibold text-accent-red' : 'text-text-muted')}>
                       {bgInvalid ? t.invalidImage : t.tierBackgroundImageHint}

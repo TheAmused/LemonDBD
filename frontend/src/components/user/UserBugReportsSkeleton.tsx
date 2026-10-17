@@ -17,7 +17,7 @@ export const UserBugReportsSkeleton: React.FC<UserBugReportsSkeletonProps> = () 
       role="status"
       aria-busy="true"
       aria-label={loadingLabel}
-      className="space-y-6 w-full min-h-[320px] flex items-center justify-center p-6"
+      className="space-y-6 w-full min-h-80 flex items-center justify-center p-6"
     >
       <DbdSpinner
         size="lg"

@@ -38,7 +38,6 @@ from app.services.admin_control_service import (
 from app.services.content_moderation_service import (
     get_admin_reports,
     get_report_preview,
-    purge_expired_evidence,
     resolve_report,
 )
 from app.services.db.export_import import DatabaseExportImportService
@@ -47,6 +46,7 @@ from app.services.moderation_actions import (
     apply_sanction,
     list_user_sanctions,
     moderation_summary,
+    preview_sanction,
     restore_account,
     revoke_sanction,
 )
@@ -185,7 +185,7 @@ def list_perks_for_admin():
             {
                 "id": p.id,
                 "name": p.name,
-                "category": p.category,
+                "category": p.role,
                 "character": p.character.name if p.character else "General",
                 "icon_local_path": p.icon_local_path,
                 "is_disabled": p.is_disabled,
@@ -279,8 +279,11 @@ def update_challenge_mode(mode: str):
 @admin_control_bp.route("/audit-logs", methods=["GET"])
 @admin_required
 def list_audit_logs():
+    """`?target_type=user,bug_report` keeps only actions about those kinds of target."""
     page, per_page = paginate_args(default_per_page=25)
-    return jsonify(get_audit_logs(page=page, per_page=per_page)), 200
+    raw = request.args.get("target_type", "")
+    target_types = [part.strip() for part in raw.split(",") if part.strip()][:20]
+    return jsonify(get_audit_logs(page=page, per_page=per_page, target_types=target_types or None)), 200
 
 
 @admin_control_bp.route("/settings", methods=["GET"])
@@ -300,16 +303,16 @@ def update_site_settings():
 
     changes = dto.settings
     try:
-        applied = site_settings.update_settings(changes)
+        applied = site_settings.update_settings(changes, confirm_risky=dto.confirm_risky, reason=dto.reason)
+    except site_settings.RiskyChangeError as err:
+        return jsonify({"error": str(err), "error_code": "confirmation_required", "status": 400}), 400
     except ValueError as err:
         return api_error(str(err), 400)
 
-    log_admin_action(
-        g.current_user.id,
-        action="site_settings_updated",
-        target_type="site_settings",
-        details={"changes": {k: ("<default>" if changes[k] is None else applied[k]) for k in applied}},
-    )
+    details: dict[str, Any] = {"changes": {k: ("<default>" if changes[k] is None else applied[k]) for k in applied}}
+    if dto.reason.strip():
+        details["reason"] = dto.reason.strip()
+    log_admin_action(g.current_user.id, action="site_settings_updated", target_type="site_settings", details=details)
     return jsonify({"message": "Settings saved.", "settings": site_settings.list_settings()}), 200
 
 
@@ -471,7 +474,6 @@ def resolve_content_report_endpoint(report_id: int):
         admin_notes=admin_notes,
         author_action=author_action,
         duration_days=body.get("duration_days"),
-        public_message=body.get("public_message"),
         facts=body.get("facts"),
         rule_ref=body.get("rule_ref"),
     )
@@ -499,6 +501,19 @@ def issue_sanction_for_user(user_id: int):
     except ModerationError as err:
         return api_error(err.message, err.status)
     return jsonify({"status": "success", "sanction": sanction.to_dict()}), 201
+
+
+@admin_control_bp.route("/sanctions/preview", methods=["POST"])
+@admin_required
+def preview_sanction_message():
+    """What a decision would tell the account holder (the email, in their language), saving nothing."""
+    body = request.get_json(silent=True)
+    if not isinstance(body, dict):
+        return api_error("Invalid JSON body", 400)
+    try:
+        return jsonify(preview_sanction(body)), 200
+    except ModerationError as err:
+        return api_error(err.message, err.status)
 
 
 @admin_control_bp.route("/sanctions/<int:sanction_id>/revoke", methods=["POST"])
@@ -530,12 +545,3 @@ def restore_user_account(user_id: int):
     except ModerationError as err:
         return api_error(err.message, err.status)
     return jsonify({"status": "success", "lifted": lifted}), 200
-
-
-@admin_control_bp.route("/content-reports/purge-expired", methods=["POST"])
-@admin_required
-def purge_expired_content_reports():
-    """Purge expired evidence payloads for pending reports past their expiry date."""
-    purged_count = purge_expired_evidence()
-    return jsonify({"purged_count": purged_count}), 200
-

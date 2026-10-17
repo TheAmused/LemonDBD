@@ -163,7 +163,7 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ killer }) 
                   </StreakActionButton>
                 )}
               </StreakActionBar>
-              <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_25rem]">
+              <div className="grid gap-4 lg:grid-cols-main-aside">
                 <div>
                   {nextPagePerks.length > 0 && (
                     <div className="mb-3 flex justify-center">

@@ -10,7 +10,7 @@ type Choice = Omit<SmashPrefs, 'chosenAt'>;
 
 interface EffectsPreferenceModalProps {
   isOpen: boolean;
-  /** No choice has been made yet: only the button (or flipping a switch) lets the viewer past it. */
+  /** No choice has been made yet: there is no header X, and any way of closing (the button, a click outside, Escape) saves what the switches show. */
   mandatory: boolean;
   /** What the switches show. */
   values: Choice;
@@ -52,9 +52,9 @@ export function EffectsPreferenceModal({ isOpen, mandatory, values, onChange, on
       layer="top"
       title={text.title}
       closeButton={mandatory ? 'none' : 'header'}
-      closeOnEscape={!mandatory}
-      closeOnBackdropClick={!mandatory}
-      swipeToClose={!mandatory}
+      closeOnEscape
+      closeOnBackdropClick
+      swipeToClose
       testId="smash-effects-preferences"
       footerClassName="justify-center"
       footer={

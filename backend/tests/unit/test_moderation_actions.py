@@ -71,7 +71,7 @@ def player(db_session: Session) -> User:
 def test_warning_does_not_restrict_or_end_sessions(admin, player, db_session) -> None:
     version = player.token_version
     with mail.record_messages() as outbox:
-        sanction = actions.issue_warning(admin, player.id, reason_code="spam", public_message="Please stop.")
+        sanction = actions.issue_warning(admin, player.id, reason_code="spam")
     db_session.refresh(player)
     assert player.is_active is True and player.suspended_until is None
     assert player.token_version == version
@@ -207,14 +207,41 @@ def test_decisions_are_audited_without_the_internal_notes(admin, player, db_sess
 # --- sign-in ---------------------------------------------------------------------------------
 
 
+def test_preview_shows_the_email_in_the_users_language_and_saves_nothing(admin, db_session) -> None:
+    polish = _user(db_session, "polish", language="pl")
+    with mail.record_messages() as outbox:
+        preview = actions.preview_sanction(
+            {"user_id": polish.id, "kind": "suspension", "reason_code": "harassment", "rule_ref": "respect", "facts": FACTS, "duration_days": 3}
+        )
+    assert preview["language"] == "pl" and preview["facts"] == FACTS and preview["until"]
+    email = preview["email"]
+    flat = " ".join(" ".join(block[1:]) for block in email["blocks"])
+    assert email["subject"] and FACTS in flat and "Sekcja 1: " in flat
+    assert db_session.scalar(select(UserSanction)) is None and db_session.scalar(select(SanctionNotification)) is None
+    assert outbox == []
+
+
+def test_preview_refuses_what_the_decision_would_refuse(admin, player) -> None:
+    for body, status in (
+        ({"user_id": player.id, "kind": "nap", "reason_code": "spam"}, 400),
+        ({"user_id": player.id, "kind": "warning", "reason_code": "nope"}, 400),
+        ({"user_id": player.id, "kind": "warning", "reason_code": "spam", "rule_ref": "nope"}, 400),
+        ({"user_id": player.id, "kind": "suspension", "reason_code": "spam", "duration_days": 0}, 400),
+        ({"user_id": 999999, "kind": "warning", "reason_code": "spam"}, 404),
+    ):
+        with pytest.raises(ModerationError) as err:
+            actions.preview_sanction(body)
+        assert err.value.status == status
+
+
 def test_banned_user_with_the_right_password_is_told_why(client, admin, player) -> None:
     site_settings.update_settings({"contact_email": "help@lemondbd.test"})
-    actions.ban(admin, player.id, reason_code="harassment", facts=FACTS, public_message="Final decision.")
+    actions.ban(admin, player.id, reason_code="harassment", facts=FACTS)
     res = _login(client, player)
     body = res.get_json()
     assert res.status_code == 403
     assert body["code"] == "account_banned"
-    assert body["reason_code"] == "harassment" and body["public_message"] == "Final decision."
+    assert body["reason_code"] == "harassment" and "public_message" not in body
     assert body["appeal_contact"] == "help@lemondbd.test" and body["until"] is None
 
 
@@ -246,7 +273,7 @@ def test_existing_sessions_end_on_suspension_but_not_on_a_warning(client, admin,
 
 
 def test_warnings_show_on_me_until_acknowledged(client, admin, player) -> None:
-    warning = actions.issue_warning(admin, player.id, reason_code="spam", public_message="Careful.", internal_notes="x")
+    warning = actions.issue_warning(admin, player.id, reason_code="spam", internal_notes="x")
     me = client.get("/api/v1/auth/me", headers=_headers(player)).get_json()
     shown = me["moderation"]["warnings"]
     assert [w["id"] for w in shown] == [warning.id]
@@ -256,7 +283,7 @@ def test_warnings_show_on_me_until_acknowledged(client, admin, player) -> None:
 
 
 def test_sign_in_answers_with_the_pending_warnings(client, admin, player) -> None:
-    warning = actions.issue_warning(admin, player.id, reason_code="spam", public_message="Careful.")
+    warning = actions.issue_warning(admin, player.id, reason_code="spam")
     body = _login(client, player).get_json()
     assert [w["id"] for w in body["moderation"]["warnings"]] == [warning.id]
     assert "internal_notes" not in body["moderation"]["warnings"][0]

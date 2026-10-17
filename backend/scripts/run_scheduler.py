@@ -1,64 +1,38 @@
 """Standalone APScheduler runner for LemonDBD.
 
-Runs periodic jobs (inactivity streak losses, cache cleanup, etc.) in a dedicated process,
-avoiding duplicated scheduler instances across multi-worker Gunicorn web processes.
+Runs the periodic housekeeping jobs (app/services/maintenance_jobs.py: inactive streaks, expired
+report evidence, moderation emails, the ban-evasion list) in a dedicated process, so the multi-worker
+gunicorn web processes never each start their own scheduler.
 """
 import logging
 import os
 import signal
 import sys
+
 from apscheduler.schedulers.blocking import BlockingScheduler
-from sqlalchemy import text
 
 # Ensure backend root is on sys.path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from app import create_app, db
-from app.services.site_settings import streak_prune_days
-from app.services.streak_cleanup_service import apply_inactivity_losses
+from app import create_app  # noqa: E402
+from app.core.config import Config  # noqa: E402
+from app.services.maintenance_jobs import register_jobs  # noqa: E402
 
 logging.basicConfig(level=logging.INFO, format="[%(asctime)s] [%(levelname)s] [scheduler] %(message)s")
 logger = logging.getLogger("scheduler")
 
 
-def run_inactivity_job(app):
-    with app.app_context():
-        logger.info("Executing scheduled inactivity streak loss cleanup...")
-        is_pg = False
-        try:
-            is_pg = db.engine.dialect.name in ("postgresql", "postgres")
-        except Exception:
-            pass
+class SchedulerProcessConfig(Config):
+    """This process schedules the jobs itself; the app must not start a second, in-app scheduler."""
 
-        if is_pg:
-            with db.engine.connect() as conn:
-                acquired = conn.execute(text("SELECT pg_try_advisory_lock(8882027);")).scalar()
-                if acquired:
-                    try:
-                        apply_inactivity_losses(streak_prune_days())
-                        logger.info("Inactivity losses applied successfully.")
-                    finally:
-                        conn.execute(text("SELECT pg_advisory_unlock(8882027);"))
-                else:
-                    logger.warning("Could not acquire advisory lock; another runner active.")
-        else:
-            apply_inactivity_losses(streak_prune_days())
-            logger.info("Inactivity losses applied successfully.")
+    SCHEDULER_ENABLED = False
 
 
 def main():
-    os.environ["SCHEDULER_ENABLED"] = "false"  # Don't boot in-app scheduler inside create_app
-    app = create_app()
+    app = create_app(SchedulerProcessConfig)
 
     scheduler = BlockingScheduler()
-    scheduler.add_job(
-        lambda: run_inactivity_job(app),
-        trigger="cron",
-        hour=3,
-        minute=0,
-        id="apply_inactivity_streak_losses",
-        replace_existing=True,
-    )
+    register_jobs(scheduler, app)
 
     def _shutdown(signum, frame):
         logger.info("Received termination signal, shutting down scheduler...")
@@ -68,7 +42,7 @@ def main():
     signal.signal(signal.SIGINT, _shutdown)
     signal.signal(signal.SIGTERM, _shutdown)
 
-    logger.info("LemonDBD Scheduler started. Running jobs...")
+    logger.info("LemonDBD Scheduler started with jobs: %s", ", ".join(job.id for job in scheduler.get_jobs()))
     try:
         scheduler.start()
     except (KeyboardInterrupt, SystemExit):

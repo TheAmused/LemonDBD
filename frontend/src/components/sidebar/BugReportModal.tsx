@@ -17,7 +17,7 @@ import {
 import { Modal } from '@/components/common/Modal';
 import { SuccessState } from '@/components/common/SuccessState';
 import { Button } from '@/components/common/Button';
-import { FieldLabel, Input, Textarea } from '@/components/common/Field';
+import { FormField, Input, Textarea } from '@/components/common/Field';
 import { Alert } from '@/components/common/Alert';
 import { useDictionary } from "@/context/DictionaryContext";
 import { Badge } from '@/components/common/Badge';
@@ -230,10 +230,10 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({ isOpen, onClose 
           </Badge>
         </Surface>
       ) : (
-        <FieldLabel
+        <FormField
           label={t.bugGuestEmailLabel || ''}
           htmlFor="bug-report-email"
-          variant="caps"
+         
           required
           icon={<Mail className="h-3.5 w-3.5 text-text-muted" aria-hidden="true" />}
         >
@@ -245,10 +245,10 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({ isOpen, onClose 
             onChange={(e) => setGuestEmail(e.target.value)}
             placeholder={t.bugGuestEmailPlaceholder || ''}
           />
-        </FieldLabel>
+        </FormField>
       )}
 
-      <FieldLabel label={t.bugTitleLabel || ''} htmlFor="bug-report-title" variant="caps" required>
+      <FormField label={t.bugTitleLabel || ''} htmlFor="bug-report-title" required>
         <Input
           id="bug-report-title"
           type="text"
@@ -257,9 +257,9 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({ isOpen, onClose 
           onChange={(e) => setTitle(e.target.value)}
           placeholder={t.bugTitlePlaceholder || ''}
         />
-      </FieldLabel>
+      </FormField>
 
-      <FieldLabel label={t.bugDescriptionLabel || ''} htmlFor="bug-report-message" variant="caps" required>
+      <FormField label={t.bugDescriptionLabel || ''} htmlFor="bug-report-message" required>
         <Textarea
           id="bug-report-message"
           required
@@ -268,7 +268,7 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({ isOpen, onClose 
           onChange={(e) => setMessage(e.target.value)}
           placeholder={t.bugDescriptionPlaceholder || ''}
         />
-      </FieldLabel>
+      </FormField>
 
       <div>
         <div className="flex items-center justify-between mb-1.5">

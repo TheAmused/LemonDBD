@@ -47,7 +47,7 @@ export const TokenRollModal: React.FC<TokenRollModalProps> = ({ tokenRoll, cap, 
       closeButton="none"
       ariaLabel={dict.streaks.tokensLabel}
     >
-      <Surface padding="none" className="ck-card-in relative flex min-h-[22rem] w-full cursor-default flex-col items-center justify-center gap-4 overflow-hidden border-accent-amber/60 px-8 py-12 text-center">
+      <Surface padding="none" className="ck-card-in relative flex min-h-88 w-full cursor-default flex-col items-center justify-center gap-4 overflow-hidden border-accent-amber/60 px-8 py-12 text-center">
         <Coins className="h-12 w-12 text-accent-amber" aria-hidden="true" />
         <p className="type-label-sm tracking-spaced-md text-accent-amber">
           {full ? dict.streaks.tokenFullTitle : dict.streaks.tokenRollTitle}

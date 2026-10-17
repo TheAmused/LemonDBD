@@ -31,7 +31,7 @@ function LandingContent() {
       locale={locale}
       activeCategory=""
       customPadding="p-4 sm:p-8 lg:p-12"
-      mainClassName="flex items-center justify-center min-h-[calc(100vh-4rem)] lg:min-h-screen"
+      mainClassName="flex items-center justify-center min-h-screen-nav lg:min-h-screen"
     >
         <div className="relative flex flex-col items-center text-center w-full max-w-xl mx-auto z-10 py-8 sm:py-12">
           {/* Big Animated Lemon Icon */}

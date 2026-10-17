@@ -217,6 +217,14 @@ class Config:
 
     GOOGLE_CLIENT_ID: str = os.getenv("GOOGLE_CLIENT_ID", "").strip()
 
+    # Public links. The admin Settings tab overrides each of them without a redeploy; these are the starting values.
+    DISCORD_INVITE_URL: str = os.getenv("DISCORD_INVITE_URL", "https://discord.gg/Veygfp6XfT").strip()
+    DONATION_BMC_URL: str = os.getenv("DONATION_BMC_URL", "https://buymeacoffee.com/lemondbd").strip()
+    DONATION_KOFI_URL: str = os.getenv("DONATION_KOFI_URL", "https://ko-fi.com/lemondbd").strip()
+    DONATION_PATREON_URL: str = os.getenv("DONATION_PATREON_URL", "https://patreon.com/lemondbd").strip()
+    # Admin settings are cached per process for this many seconds (0 = read the database every time).
+    SITE_SETTINGS_CACHE_SECONDS: int = int(os.getenv("SITE_SETTINGS_CACHE_SECONDS", "5"))
+
 
 class TestingConfig(Config):
     TESTING: bool = True
@@ -232,3 +240,4 @@ class TestingConfig(Config):
     ALTCHA_ENFORCED: bool = False
     SCHEDULER_ENABLED: bool = False
     SANCTION_EMAIL_ASYNC: bool = False
+    SITE_SETTINGS_CACHE_SECONDS: int = 0

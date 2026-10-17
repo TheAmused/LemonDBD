@@ -6,7 +6,7 @@ import { DbdSpinner } from '@/components/common/DbdSpinner';
 export default function StreaksLoading() {
   return (
     <PageShellFallback
-      mainClassName="min-h-[500px] flex items-center justify-center"
+      mainClassName="min-h-skeleton-page flex items-center justify-center"
       skeleton={
         <DbdSpinner
           size="responsive"

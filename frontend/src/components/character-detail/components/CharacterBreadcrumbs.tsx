@@ -60,7 +60,7 @@ export const CharacterBreadcrumbs: React.FC<CharacterBreadcrumbsProps> = ({
           {roleLabel}
         </Link>
         <span className="text-text-muted">/</span>
-        <span className="text-text-primary font-bold truncate max-w-[150px] sm:max-w-[240px]">
+        <span className="text-text-primary font-bold truncate max-w-37.5 sm:max-w-60">
           {character.name}
         </span>
       </nav>
@@ -73,7 +73,7 @@ export const CharacterBreadcrumbs: React.FC<CharacterBreadcrumbsProps> = ({
             {...tip(`${t.prevCharacter || 'Previous'}: ${prevChar.name}`, undefined, 'character')}
           >
             <ArrowLeft className="h-3.5 w-3.5" />
-            <span className="hidden md:inline truncate max-w-[120px]">{prevChar.name}</span>
+            <span className="hidden md:inline truncate max-w-30">{prevChar.name}</span>
           </Link>
         )}
         {nextChar && (
@@ -82,7 +82,7 @@ export const CharacterBreadcrumbs: React.FC<CharacterBreadcrumbsProps> = ({
             className={buttonClassName('secondary', 'sm')}
             {...tip(`${t.nextCharacter || 'Next'}: ${nextChar.name}`, undefined, 'character')}
           >
-            <span className="hidden md:inline truncate max-w-[120px]">{nextChar.name}</span>
+            <span className="hidden md:inline truncate max-w-30">{nextChar.name}</span>
             <ArrowRight className="h-3.5 w-3.5" />
           </Link>
         )}

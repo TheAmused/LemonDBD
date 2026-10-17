@@ -84,7 +84,7 @@ export function CandidateTiles({ entities, selectedKey, onSelect, onRename, onRe
         <div className="w-20 hidden sm:block pointer-events-none" aria-hidden="true" />
       </div>
 
-      <ul className="grid grid-cols-[repeat(auto-fill,minmax(5.5rem,1fr))] sm:grid-cols-[repeat(auto-fill,minmax(6.5rem,1fr))] md:grid-cols-[repeat(auto-fill,minmax(7.5rem,1fr))] wide:grid-cols-[repeat(auto-fill,minmax(8.5rem,1fr))] wide-2k:grid-cols-[repeat(auto-fill,minmax(9.5rem,1fr))] gap-2 sm:gap-2.5 justify-center">
+      <ul className="grid grid-cols-tiles-xs sm:grid-cols-tiles-sm md:grid-cols-tiles-md wide:grid-cols-tiles-lg wide-2k:grid-cols-tiles-xl gap-2 sm:gap-2.5 justify-center">
         {entities.map((entity, i) => {
           const isSelected = entity.key === selectedKey;
           const displayIndex = String(i + 1).padStart(2, '0');

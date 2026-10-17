@@ -136,7 +136,7 @@ export function TierListHub({ locale }: TierListHubProps) {
         bodyClassName="p-4 sm:p-6"
       >
         {loading && !error ? (
-          <TierListSkeleton className="min-h-[240px]" />
+          <TierListSkeleton className="min-h-60" />
         ) : error && lists.length === 0 ? (
           <EmptyState
             icon={TriangleAlert}

@@ -15,7 +15,6 @@ export function blockedFromResponse(status: number, data: unknown): BlockedInfo 
     code: body.code,
     until: str(body.until),
     reason_code: str(body.reason_code),
-    public_message: str(body.public_message),
     appeal_contact: str(body.appeal_contact),
   };
 }

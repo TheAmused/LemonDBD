@@ -9,11 +9,11 @@ import { Check, Copy, Mail } from 'lucide-react';
 import { DiscordIcon } from '@/components/icons/DbdIcons';
 import { ActionPill, LinkPill } from '@/components/common/LinkPill';
 import { useDictionary } from '@/context/DictionaryContext';
+import { useSiteConfig } from '@/context/SiteConfigContext';
 import { contactPageFromPath, trackEvent } from '@/utils/analytics';
 import { copyTextWithFallback } from '@/utils/clipboard';
 import { cn } from '@/utils/cn';
 
-const DISCORD_INVITE_URL = 'https://discord.gg/Veygfp6XfT';
 const COPIED_MS = 2000;
 
 /** The e-mail address as a capsule: one click copies it to the clipboard. */
@@ -56,17 +56,21 @@ function EmailPill({ email }: { email: string }) {
 export function ContactLinks({ email, className }: { email?: string | null; className?: string }) {
   const dict = useDictionary();
   const pathname = usePathname();
+  // The invite is an admin setting (Settings > Links); an empty one hides the pill.
+  const { links } = useSiteConfig();
 
   return (
     <div className={cn('flex flex-wrap items-center gap-3 pt-1', className ?? 'justify-start')}>
       {email ? <EmailPill email={email} /> : null}
-      <LinkPill
-        href={DISCORD_INVITE_URL}
-        icon={<DiscordIcon className="h-4 w-4 text-brand-discord" />}
-        onClick={() => trackEvent('contact_click', { method: 'discord', page: contactPageFromPath(pathname) })}
-      >
-        {dict.about.contact.discordLabel}
-      </LinkPill>
+      {links.discordInvite ? (
+        <LinkPill
+          href={links.discordInvite}
+          icon={<DiscordIcon className="h-4 w-4 text-brand-discord" />}
+          onClick={() => trackEvent('contact_click', { method: 'discord', page: contactPageFromPath(pathname) })}
+        >
+          {dict.about.contact.discordLabel}
+        </LinkPill>
+      ) : null}
     </div>
   );
 }

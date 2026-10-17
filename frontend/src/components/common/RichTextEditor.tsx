@@ -210,7 +210,7 @@ export function RichTextEditor({
           onClose={closePanel}
           role="group"
           ariaLabel={labels.link}
-          className={cn(panelClassName, 'flex w-72 max-w-[80vw] items-center gap-1.5')}
+          className={cn(panelClassName, 'flex w-72 max-w-viewport-sm items-center gap-1.5')}
         >
           <Input
             autoFocus
@@ -298,7 +298,7 @@ export function RichTextEditor({
         aria-required={required || undefined}
         aria-labelledby={labelledBy}
         onInput={emitChange}
-        className={cn('min-h-[180px] max-h-[40vh] overflow-y-auto px-4 py-3 outline-none', className)}
+        className={cn('min-h-45 max-h-vh-40 overflow-y-auto px-4 py-3 outline-none', className)}
       />
     </Surface>
   );

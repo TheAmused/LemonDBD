@@ -18,11 +18,14 @@ try {
 } catch {
   // No payload: treat as a plain run.
 }
-// Claude is already continuing because of this hook; do not loop.
-if (input.stop_hook_active) process.exit(0);
+// Claude is already continuing because of this hook, so the check still runs: a half fix must not end the turn
+// on red. To stay out of an endless loop on something that cannot be fixed, give up after MAX_BLOCKS in a row.
+const MAX_BLOCKS = 3;
+const blocks = `${stamp}.blocks`;
+const readBlocks = () => (input.stop_hook_active ? Number(fs.readFileSync(blocks, 'utf8')) || 0 : 0);
 
 const git = (args) => spawnSync('git', args, { cwd: root, encoding: 'utf8' }).stdout ?? '';
-const changed = git(['status', '--porcelain', '--', 'frontend/src', 'frontend/scripts', 'frontend/package.json']).trim();
+const changed = git(['status', '--porcelain', '--untracked-files=all', '--', 'frontend/src', 'frontend/scripts', 'frontend/package.json']).trim();
 if (!changed) process.exit(0);
 
 // Fingerprint = the status plus the content of every changed file, so an edit after a pass re-runs the check.
@@ -45,8 +48,21 @@ try {
 const run = spawnSync('npm', ['run', 'check'], { cwd: frontend, encoding: 'utf8', shell: true, timeout: 280_000 });
 if (run.status === 0) {
   fs.writeFileSync(stamp, fingerprint);
+  fs.rmSync(blocks, { force: true });
   process.exit(0);
 }
+let previous = 0;
+try {
+  previous = readBlocks();
+} catch {
+  // No counter yet.
+}
+if (previous >= MAX_BLOCKS) {
+  fs.rmSync(blocks, { force: true });
+  process.stderr.write(`npm run check is still failing after ${MAX_BLOCKS} attempts; stopping anyway. Run it in frontend/ to see why.\n`);
+  process.exit(0);
+}
+fs.writeFileSync(blocks, String(previous + 1));
 const tail = `${run.stdout ?? ''}\n${run.stderr ?? ''}`.trim().split('\n').slice(-80).join('\n');
 process.stderr.write(`npm run check failed in frontend/. Fix what it reports (do not raise a baseline or silence a guard):\n\n${tail}\n`);
 process.exit(2);

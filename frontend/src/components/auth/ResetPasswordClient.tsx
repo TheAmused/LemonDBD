@@ -96,14 +96,14 @@ function ResetPasswordContent() {
             <FieldLabel>
               {dict.user.newPassword}
             </FieldLabel>
-            <IconInput icon={Lock} type="password" required value={password} onChange={(e) => setPassword(e.target.value)} />
+            <IconInput icon={Lock} type="password" className="pl-10" required value={password} onChange={(e) => setPassword(e.target.value)} />
           </div>
 
           <div>
             <FieldLabel>
               {dict.user.confirmPassword}
             </FieldLabel>
-            <IconInput icon={Lock} type="password" required value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
+            <IconInput icon={Lock} type="password" className="pl-10" required value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
           </div>
 
           <Button type="submit" variant="primary" loading={loading} className="w-full mt-2">

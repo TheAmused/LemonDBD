@@ -19,7 +19,7 @@ export function SlotMachineIdle({ role, disabled, onPull }: SlotMachineIdleProps
 
   return (
     <StageIdleColumn>
-      <StagePrompt>
+      <StagePrompt className="leading-relaxed">
         {dict.generator.slotMachinePrompt}
         {' '}
         {dict.generator.slotCursedFlavor}

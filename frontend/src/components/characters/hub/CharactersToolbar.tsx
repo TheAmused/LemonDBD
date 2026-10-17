@@ -82,7 +82,7 @@ export function CharactersToolbar({
           aria-label={dict.filters.filterByCharacter}
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="pr-10 min-h-11 bg-bg-primary font-semibold shadow-inner"
+          className="pl-10 pr-10 min-h-11 bg-bg-primary font-semibold shadow-inner"
         />
         {searchQuery && (
           <Button

@@ -11,10 +11,10 @@ export const StageIdleColumn: React.FC<{ className?: string; children: React.Rea
   </div>
 );
 
-export const StagePrompt: React.FC<{ live?: boolean; children: React.ReactNode }> = ({ live, children }) => (
+export const StagePrompt: React.FC<{ live?: boolean; className?: string; children: React.ReactNode }> = ({ live, className, children }) => (
   <p
     aria-live={live ? 'polite' : undefined}
-    className="max-w-lg xl:max-w-2xl 2xl:max-w-3xl wide:max-w-4xl text-center text-xs sm:text-base xl:text-lg wide:text-xl font-semibold text-text-secondary"
+    className={cn('max-w-lg xl:max-w-2xl 2xl:max-w-3xl wide:max-w-4xl text-center text-xs sm:text-base xl:text-lg wide:text-xl font-semibold text-text-secondary', className)}
   >
     {children}
   </p>

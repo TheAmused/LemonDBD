@@ -21,7 +21,7 @@ interface KillerPowerModalProps {
 /** One of the three numbers under the power description. */
 const MiniStat: React.FC<{ label: string; value: string; valueClass: string }> = ({ label, value, valueClass }) => (
   <Surface padding="none" className="p-2 text-center">
-    <span className="block type-label-2xs text-text-secondary">{label}</span>
+    <span className="block text-micro font-bold uppercase text-text-secondary">{label}</span>
     <span className={`block type-strong ${valueClass} truncate`}>{value}</span>
   </Surface>
 );

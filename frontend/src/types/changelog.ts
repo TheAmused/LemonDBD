@@ -36,8 +36,11 @@ export interface ChangelogPostDraft {
   is_published: boolean;
 }
 
-/** "missing": the Discord message was deleted there, so the entry can be announced again. */
-export type ChangelogDiscordResult = 'sent' | 'failed' | 'not_configured' | 'missing';
+/**
+ * "missing": the Discord message was deleted there, so the entry can be announced again.
+ * "removed": the message was deleted because the entry went back to a draft.
+ */
+export type ChangelogDiscordResult = 'sent' | 'failed' | 'not_configured' | 'missing' | 'removed';
 
 export interface ChangelogSaveResponse {
   status: string;

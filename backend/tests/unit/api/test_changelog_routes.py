@@ -321,31 +321,107 @@ class TestChangelogRoutes:
 
     # -- back to draft ----------------------------------------------------
 
-    def test_a_live_entry_saved_as_a_draft_leaves_readers_but_keeps_its_discord_message(
+    def _fake_delete(self, monkeypatch: pytest.MonkeyPatch, status_code: int = 204) -> list[dict]:
+        calls: list[dict] = []
+
+        class _Resp:
+            pass
+
+        _Resp.status_code = status_code
+
+        def fake_delete(url: str, **kwargs):
+            calls.append({"url": url, **kwargs})
+            return _Resp()
+
+        monkeypatch.setattr(changelog_discord.requests, "delete", fake_delete)
+        return calls
+
+    def _draft(self, client: FlaskClient, headers: dict[str, str], post_id: int):
+        return client.patch(f"/api/v1/changelog/{post_id}", json={"is_published": False}, headers=headers)
+
+    def test_a_live_entry_saved_as_a_draft_disappears_for_readers_and_from_discord(
         self, app: Flask, client: FlaskClient, admin_headers: dict[str, str], monkeypatch: pytest.MonkeyPatch
     ) -> None:
         post_id = self._announce_with_message_id(app, client, admin_headers, monkeypatch)
-        patched = self._fake_patch(monkeypatch)
+        deleted = self._fake_delete(monkeypatch)
         assert len(client.get("/api/v1/changelog").get_json()["data"]) == 1
 
-        res = client.patch(f"/api/v1/changelog/{post_id}", json={"is_published": False}, headers=admin_headers)
-        body = res.get_json()
-        assert body["discord"] is None and patched == []  # the Discord message is left as it was
-        assert body["data"]["discord_announced_at"] is not None
+        body = self._draft(client, admin_headers, post_id).get_json()
+        assert body["discord"] == "removed"
+        assert deleted[0]["url"] == "https://discord.test/api/webhooks/1/x/messages/555"
+        assert body["data"]["discord_announced_at"] is None and body["data"]["discord_synced_at"] is None
         assert client.get("/api/v1/changelog").get_json()["data"] == []  # gone for readers
         admin_feed = client.get("/api/v1/changelog/admin", headers=admin_headers).get_json()["data"]
         assert [p["id"] for p in admin_feed] == [post_id]  # still there for the admin
 
-    def test_editing_while_a_draft_is_pushed_to_discord_when_it_goes_live_again(
+        # Back on the site it can be announced again, as a fresh message.
+        client.patch(f"/api/v1/changelog/{post_id}", json={"is_published": True}, headers=admin_headers)
+        again = client.post(f"/api/v1/changelog/{post_id}/announce", headers=admin_headers)
+        assert again.get_json()["discord"] == "sent"
+
+    def test_a_message_already_deleted_by_hand_counts_as_removed(
         self, app: Flask, client: FlaskClient, admin_headers: dict[str, str], monkeypatch: pytest.MonkeyPatch
     ) -> None:
         post_id = self._announce_with_message_id(app, client, admin_headers, monkeypatch)
-        patched = self._fake_patch(monkeypatch)
-        client.patch(f"/api/v1/changelog/{post_id}", json={"is_published": False}, headers=admin_headers)
+        self._fake_delete(monkeypatch, status_code=404)
+        body = self._draft(client, admin_headers, post_id).get_json()
+        assert body["discord"] == "removed"
+        assert body["data"]["discord_announced_at"] is None
 
-        drafted = client.patch(f"/api/v1/changelog/{post_id}", json={"title": "Big patch v2"}, headers=admin_headers)
-        assert drafted.get_json()["discord"] is None and patched == []  # a draft is never pushed
-        assert drafted.get_json()["data"]["edited_at"] is not None  # but the change counts as an edit
+    def test_a_failed_delete_keeps_the_message_and_saving_the_draft_again_retries_it(
+        self, app: Flask, client: FlaskClient, admin_headers: dict[str, str], monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        post_id = self._announce_with_message_id(app, client, admin_headers, monkeypatch)
+
+        def boom(*args, **kwargs):
+            raise RuntimeError("network down")
+
+        monkeypatch.setattr(changelog_discord.requests, "delete", boom)
+        failed = self._draft(client, admin_headers, post_id)
+        assert failed.status_code == 200
+        assert failed.get_json()["discord"] == "failed"
+        assert failed.get_json()["data"]["discord_announced_at"] is not None  # still announced
+        assert client.get("/api/v1/changelog").get_json()["data"] == []  # but hidden from readers all the same
+
+        deleted = self._fake_delete(monkeypatch)
+        retry = client.patch(f"/api/v1/changelog/{post_id}", json={"title": "Big patch"}, headers=admin_headers)
+        assert retry.get_json()["discord"] == "removed"
+        assert len(deleted) == 1
+
+    def test_an_entry_announced_before_message_ids_were_kept_just_goes_to_draft(
+        self, app: Flask, client: FlaskClient, admin_headers: dict[str, str], monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        app.config["DISCORD_CHANGELOG_WEBHOOK_URL"] = "https://discord.test/api/webhooks/1/x"
+
+        class _NoId:
+            status_code = 204
+
+        monkeypatch.setattr(changelog_discord.requests, "post", lambda *a, **k: _NoId())
+        post_id = self._publish(client, admin_headers)
+        client.post(f"/api/v1/changelog/{post_id}/announce", headers=admin_headers)
+        deleted = self._fake_delete(monkeypatch)
+
+        body = self._draft(client, admin_headers, post_id).get_json()
+        assert body["discord"] is None and deleted == []
+        assert body["data"]["discord_announced_at"] is not None  # nothing to delete, so it stays "announced"
+
+    def test_editing_after_a_failed_delete_is_pushed_when_the_entry_goes_live_again(
+        self, app: Flask, client: FlaskClient, admin_headers: dict[str, str], monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        post_id = self._announce_with_message_id(app, client, admin_headers, monkeypatch)
+
+        def boom(*args, **kwargs):
+            raise RuntimeError("network down")
+
+        monkeypatch.setattr(changelog_discord.requests, "delete", boom)
+        self._draft(client, admin_headers, post_id)
+        patched = self._fake_patch(monkeypatch)
+        monkeypatch.setattr(changelog_discord.requests, "delete", boom)
+
+        edited = client.patch(f"/api/v1/changelog/{post_id}", json={"title": "Big patch v2"}, headers=admin_headers)
+        assert edited.get_json()["discord"] == "failed"  # a draft is never rewritten, only (re)deleted
+        assert patched == []
+        assert edited.get_json()["data"]["edited_at"] is not None
 
         live = client.patch(f"/api/v1/changelog/{post_id}", json={"is_published": True}, headers=admin_headers)
         assert live.get_json()["discord"] == "sent"

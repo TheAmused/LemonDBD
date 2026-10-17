@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react';
 import { Check, Copy, Download, Link2, TriangleAlert } from 'lucide-react';
 import { Modal } from '@/components/common/Modal';
 import { Button } from '@/components/common/Button';
+import { Alert } from '@/components/common/Alert';
 import { Input, Textarea } from '@/components/common/Field';
 import { copyTextWithFallback } from '@/utils/clipboard';
 import { cn } from '@/utils/cn';
@@ -187,10 +188,7 @@ export function ExportModal<D>({
     >
       <div className="flex flex-col gap-6">
         {signFailed && (
-          <p role="alert" className="flex items-start gap-2 rounded-card border border-accent-red/40 bg-accent-red/10 p-3 type-strong text-accent-red">
-            <TriangleAlert className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
-            {dict.tierLists.signFailed}
-          </p>
+          <Alert>{dict.tierLists.signFailed}</Alert>
         )}
         <section className="flex flex-col gap-2">
           <label htmlFor={`${idPrefix}-share-link`} className={labelClassName}>

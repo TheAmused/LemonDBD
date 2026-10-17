@@ -5,12 +5,14 @@ import React from 'react';
 import { cn } from '@/utils/cn';
 import { FitText } from '@/components/common/FitText';
 
-export type BadgeTone = 'neutral' | 'red' | 'amber' | 'green' | 'blue' | 'purple' | 'overlay' | 'onAccent';
+export type BadgeTone = 'neutral' | 'red' | 'redSolid' | 'amber' | 'green' | 'blue' | 'purple' | 'overlay' | 'onAccent';
 export type BadgeSize = 'xs' | 'sm' | 'md' | 'lg';
 
 const BADGE_TONES: Record<BadgeTone, string> = {
   neutral: 'bg-bg-elevated/70 text-text-secondary border-transparent',
   red: 'bg-accent-red/10 text-accent-red border-accent-red/30',
+  /** A loud "New" marker: full red fill, white text. */
+  redSolid: 'bg-accent-red text-text-inverted border-transparent',
   amber: 'bg-accent-amber/10 text-accent-amber border-accent-amber/30',
   green: 'bg-accent-green/10 text-accent-green border-accent-green/30',
   blue: 'bg-accent-blue/10 text-accent-blue border-accent-blue/30',

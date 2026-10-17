@@ -53,8 +53,8 @@ describe('i18n hygiene: rich text and HTML', () => {
     assert.ok(/__html:\s*SIDEBAR_INIT_SCRIPT\b/.test(layout.text), 'the only allowed __html is the constant SIDEBAR_INIT_SCRIPT');
   });
 
-  it('nothing assigns innerHTML except the admin changelog WYSIWYG editor (its HTML is admin-authored data, not dictionary text)', () => {
-    const bad = scanLines(/\binnerHTML\b/, (m) => m.file === 'components/changelog/ChangelogEditorModal.tsx');
+  it('nothing assigns innerHTML except the shared RichTextEditor (its HTML is admin-authored data, not dictionary text)', () => {
+    const bad = scanLines(/\binnerHTML\b/, (m) => m.file === 'components/common/RichTextEditor.tsx');
     assert.deepEqual(bad, [], `innerHTML assignment:\n${bad.join('\n')}`);
   });
 });

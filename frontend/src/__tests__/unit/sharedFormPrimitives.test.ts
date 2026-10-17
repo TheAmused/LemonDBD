@@ -1,0 +1,44 @@
+// frontend/src/__tests__/unit/sharedFormPrimitives.test.ts
+import test from 'node:test';
+import assert from 'node:assert';
+import React from 'react';
+import { renderWithDictionary } from '../helpers/renderWithDictionary';
+import { Alert } from '@/components/common/Alert';
+import { Badge } from '@/components/common/Badge';
+import { FieldLabel } from '@/components/common/Field';
+
+const render = (node: React.ReactElement) => renderWithDictionary(node);
+
+test('FieldLabel: required adds a red asterisk and the caps variant uses the small label style', () => {
+  const out = render(
+    React.createElement(FieldLabel, {
+      label: 'Title',
+      htmlFor: 't',
+      variant: 'caps',
+      required: true,
+      children: React.createElement('input', { id: 't' }),
+    })
+  );
+  assert.match(out, /<label[^>]*for="t"[^>]*type-label-xs/);
+  assert.match(out, /text-accent-red"> \*<\/span>/);
+});
+
+test('FieldLabel: without required there is no asterisk', () => {
+  const out = render(React.createElement(FieldLabel, { label: 'Title', children: React.createElement('input') }));
+  assert.doesNotMatch(out, /\*/);
+});
+
+test('Alert: an announced error box with an optional dismiss button', () => {
+  const plain = render(React.createElement(Alert, { children: 'Could not save' }));
+  assert.match(plain, /role="alert"/);
+  assert.match(plain, /Could not save/);
+  assert.doesNotMatch(plain, /<button/);
+
+  const dismissible = render(React.createElement(Alert, { onDismiss: () => {}, dismissLabel: 'Close', children: 'Could not save' }));
+  assert.match(dismissible, /<button[^>]*aria-label="Close"/);
+});
+
+test('Badge: redSolid is the filled "New" marker', () => {
+  const out = render(React.createElement(Badge, { tone: 'redSolid', children: 'New' }));
+  assert.match(out, /bg-accent-red[^"]*text-text-inverted/);
+});

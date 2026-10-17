@@ -10,7 +10,6 @@ import { AltchaWidget } from '@/components/common/AltchaWidget';
 import {
   Upload,
   Image as ImageIcon,
-  AlertCircle,
   Trash2,
   UserCheck,
   Mail,
@@ -18,7 +17,8 @@ import {
 import { Modal } from '@/components/common/Modal';
 import { SuccessState } from '@/components/common/SuccessState';
 import { Button } from '@/components/common/Button';
-import { Input, Textarea } from '@/components/common/Field';
+import { FieldLabel, Input, Textarea } from '@/components/common/Field';
+import { Alert } from '@/components/common/Alert';
 import { useDictionary } from "@/context/DictionaryContext";
 import { Badge } from '@/components/common/Badge';
 import { Surface } from '@/components/common/Surface';
@@ -206,12 +206,7 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({ isOpen, onClose 
         <SuccessState title={t.bugSuccessMessage || ''} description={t.bugSuccessThanks || ''} />
       ) : (
         <>
-    {errorMsg && (
-      <div className="flex items-center gap-2.5 rounded-card border border-accent-red/40 bg-accent-red/10 p-3 text-xs text-accent-red shadow-sm" role="alert">
-        <AlertCircle className="h-4 w-4 shrink-0 text-accent-red" aria-hidden="true" />
-        <span>{errorMsg}</span>
-      </div>
-    )}
+    {errorMsg && <Alert>{errorMsg}</Alert>}
 
     <form id="bug-report-form" onSubmit={handleSubmit} className="space-y-4">
       {isAuthenticated && user ? (
@@ -235,47 +230,45 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({ isOpen, onClose 
           </Badge>
         </Surface>
       ) : (
-        <div>
-          <label className="block type-label-xs text-text-muted mb-1 flex items-center gap-1.5">
-            <Mail className="h-3.5 w-3.5 text-text-muted" aria-hidden="true" />
-            {t.bugGuestEmailLabel || ''} <span className="text-accent-red">*</span>
-          </label>
+        <FieldLabel
+          label={t.bugGuestEmailLabel || ''}
+          htmlFor="bug-report-email"
+          variant="caps"
+          required
+          icon={<Mail className="h-3.5 w-3.5 text-text-muted" aria-hidden="true" />}
+        >
           <Input
+            id="bug-report-email"
             type="email"
             required
             value={guestEmail}
             onChange={(e) => setGuestEmail(e.target.value)}
             placeholder={t.bugGuestEmailPlaceholder || ''}
           />
-        </div>
+        </FieldLabel>
       )}
 
-      <div>
-        <label className="block type-label-xs text-text-muted mb-1">
-          {t.bugTitleLabel || ''} <span className="text-accent-red">*</span>
-        </label>
+      <FieldLabel label={t.bugTitleLabel || ''} htmlFor="bug-report-title" variant="caps" required>
         <Input
+          id="bug-report-title"
           type="text"
           required
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           placeholder={t.bugTitlePlaceholder || ''}
         />
-      </div>
+      </FieldLabel>
 
-      <div>
-        <label className="block type-label-xs text-text-muted mb-1">
-          {t.bugDescriptionLabel || ''}{' '}
-          <span className="text-accent-red">*</span>
-        </label>
+      <FieldLabel label={t.bugDescriptionLabel || ''} htmlFor="bug-report-message" variant="caps" required>
         <Textarea
+          id="bug-report-message"
           required
           rows={4}
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           placeholder={t.bugDescriptionPlaceholder || ''}
         />
-      </div>
+      </FieldLabel>
 
       <div>
         <div className="flex items-center justify-between mb-1.5">

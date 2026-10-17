@@ -16,9 +16,7 @@ import {
   Save,
   Share2,
   Trash2,
-  TriangleAlert,
   Upload,
-  X,
 } from 'lucide-react';
 import { ConfirmModal } from '@/components/common/ConfirmModal';
 import type { TierDefinition, TierItem, TierListDocument, TierPlacements } from '@/types/tierList';
@@ -45,6 +43,7 @@ import { type ImportTarget, TierListImportModal } from './TierListImportModal';
 import { TierListScaleControl } from './TierListScaleControl';
 import type { TierTileShape } from './TierItemTile';
 import { TOUCH_BTN } from './styles';
+import { Alert } from '@/components/common/Alert';
 import { Button, buttonClassName } from '@/components/common/Button';
 import { MenuItem, menuItemClassName } from '@/components/common/MenuItem';
 import { Popover, popoverTriggerProps } from '@/components/common/Popover';
@@ -429,18 +428,9 @@ export function TierListEditor(props: TierListEditorProps) {
       </header>
 
       {saveError && (
-        <div role="alert" className="flex items-start gap-3 rounded-card border border-accent-red/40 bg-accent-red/10 p-3 type-card-title text-accent-red">
-          <TriangleAlert className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
-          <span className="flex-1">{saveError === 'quota' ? t.saveFailedQuota : t.saveFailedUnavailable}</span>
-          <Button
-            type="button"
-            onClick={() => setSaveError(null)}
-            aria-label={t.dismiss}
-            variant="ghost" size="sm" icon className="shrink-0"
-          >
-            <X className="h-4 w-4" aria-hidden="true" />
-          </Button>
-        </div>
+        <Alert onDismiss={() => setSaveError(null)} dismissLabel={t.dismiss}>
+          {saveError === 'quota' ? t.saveFailedQuota : t.saveFailedUnavailable}
+        </Alert>
       )}
 
       {selectedItem && (

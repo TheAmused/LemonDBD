@@ -216,7 +216,6 @@ export function SmashRosterCreator({ locale, editId }: SmashRosterCreatorProps) 
           attempted={attempted}
           nameMissing={nameMissing}
           coverInvalid={coverInvalid}
-          safeCover={safeCover}
           isUserAdmin={isUserAdmin}
           official={official}
           onOfficialChange={setOfficial}

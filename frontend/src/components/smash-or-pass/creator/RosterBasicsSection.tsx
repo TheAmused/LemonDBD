@@ -22,8 +22,6 @@ interface RosterBasicsSectionProps {
   attempted: boolean;
   nameMissing: boolean;
   coverInvalid: boolean;
-  /** The cover link once sanitized, or null if absent or unsafe. */
-  safeCover: string | null;
   isUserAdmin: boolean;
   official: boolean;
   onOfficialChange: (official: boolean) => void;
@@ -39,7 +37,6 @@ export function RosterBasicsSection({
   attempted,
   nameMissing,
   coverInvalid,
-  safeCover,
   isUserAdmin,
   official,
   onOfficialChange,
@@ -92,8 +89,10 @@ export function RosterBasicsSection({
             value={draft.cover_image_url}
             onChange={(val) => patch({ cover_image_url: val })}
             label={c.coverImageLabel}
-            hint={c.coverImagePlaceholder}
+            placeholder={c.coverImagePlaceholder}
             invalid={attempted && coverInvalid}
+            invalidMessage={dict.tierLists.invalidImage}
+            aspectRatio="square"
             onPreviewClick={() => onOpenCrop()}
             previewOverlay={
               <div className="absolute inset-0 bg-bg-primary/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-1.5 text-text-inverted type-strong pointer-events-none">

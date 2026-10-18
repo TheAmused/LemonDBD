@@ -433,6 +433,7 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
                 value={draft.backgroundImage}
                 onChange={(val) => patch({ backgroundImage: val })}
                 label={c.backgroundImageLabel}
+                placeholder={c.backgroundImagePlaceholder}
                 hint={c.backgroundImageHint}
                 invalid={attempted && backgroundInvalid}
                 invalidMessage={t.invalidImage}

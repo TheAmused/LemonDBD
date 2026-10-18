@@ -90,14 +90,14 @@ export function OfficialTierListView({ slug, locale }: OfficialTierListViewProps
     [isAdmin, slug, locale, token]
   );
 
-  const handleDeleteOfficial = async () => {
+  const handleDeleteOfficial = useCallback(async () => {
     try {
       await deleteOfficialTierList(slug, token);
       router.push(`/${locale}/tier-lists`);
-    } catch {
-      // handled
+    } catch (err) {
+      console.error('Failed to delete official tier list:', err);
     }
-  };
+  }, [slug, token, locale, router]);
 
   const onReset = useCallback(() => clearRanking(slug), [slug]);
 

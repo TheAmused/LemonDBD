@@ -159,7 +159,7 @@ export function OfficialTierListCard({ list, rankedCount, locale, showNsfw = tru
         )}
         {descClamped && list.description && <DescriptionPeek text={list.description} />}
         {rankedCount > 0 && (
-          <div className="absolute top-3 left-3 z-10 transition-opacity group-has-[[aria-expanded=true]]/banner:opacity-0">
+          <div className="absolute top-3 left-3 z-30 transition-opacity group-has-[[aria-expanded=true]]/banner:opacity-0">
             <Badge tone="overlay" size="sm" className={cn('tabular-nums', fullyRanked ? 'text-accent-green' : 'text-text-muted')}>
               {formatMessage(t.rankedCount, {
                 count: list.item_count !== null ? `${rankedCount}/${list.item_count}` : rankedCount,
@@ -167,12 +167,12 @@ export function OfficialTierListCard({ list, rankedCount, locale, showNsfw = tru
             </Badge>
           </div>
         )}
-        {list.is_nsfw && (
-          <div className="absolute top-3 left-1/2 z-10 -translate-x-1/2 transition-opacity group-has-[[aria-expanded=true]]/banner:opacity-0">
+        {list.is_nsfw && showNsfw && (
+          <div className="absolute top-3 left-1/2 z-30 -translate-x-1/2 transition-opacity group-has-[[aria-expanded=true]]/banner:opacity-0">
             <NsfwBadge label={t.nsfw.badge} />
           </div>
         )}
-        <div className="absolute top-3 right-3 z-10 flex items-center gap-1.5 transition-opacity group-has-[[aria-expanded=true]]/banner:opacity-0">
+        <div className="absolute top-3 right-3 z-30 flex items-center gap-1.5 transition-opacity group-has-[[aria-expanded=true]]/banner:opacity-0">
           {list.is_active === false && (
             <Badge tone="amber" size="sm">
               {t.draft}
@@ -279,13 +279,13 @@ export function CustomTierListCard({ list, locale, onDelete, disabled, showNsfw 
           </div>
         )}
         {descClamped && list.description && <DescriptionPeek text={list.description} />}
-        <div className="absolute top-3 left-3 z-10 transition-opacity group-has-[[aria-expanded=true]]/banner:opacity-0">
+        <div className="absolute top-3 left-3 z-30 transition-opacity group-has-[[aria-expanded=true]]/banner:opacity-0">
           <Badge tone="overlay" size="sm" className={cn('tabular-nums', fullyRanked ? 'text-accent-green' : 'text-text-muted')}>
             {formatMessage(t.itemsCount, { count: `${ranked}/${total}` })}
           </Badge>
         </div>
-        {list.is_nsfw && (
-          <div className="absolute top-3 left-1/2 z-10 -translate-x-1/2 transition-opacity group-has-[[aria-expanded=true]]/banner:opacity-0">
+        {list.is_nsfw && showNsfw && (
+          <div className="absolute top-3 left-1/2 z-30 -translate-x-1/2 transition-opacity group-has-[[aria-expanded=true]]/banner:opacity-0">
             <NsfwBadge label={t.nsfw.badge} />
           </div>
         )}
@@ -299,7 +299,7 @@ export function CustomTierListCard({ list, locale, onDelete, disabled, showNsfw 
             }}
             {...tip(t.deleteList, undefined, 'action')}
             aria-label={`${t.deleteList} ${customTitle}`}
-            variant="overlay" size="sm" icon className="absolute top-3 right-3 z-10 transition-[opacity,color,background-color] hover:bg-accent-red/20 hover:text-accent-red group-has-[[aria-expanded=true]]/banner:opacity-0"
+            variant="overlay" size="sm" icon className="absolute top-3 right-3 z-30 transition-[opacity,color,background-color] hover:bg-accent-red/20 hover:text-accent-red group-has-[[aria-expanded=true]]/banner:opacity-0"
           >
             <Trash2 className="h-4 w-4" aria-hidden="true" />
           </Button>

@@ -13,16 +13,6 @@ import { TIER_LIST_LIMITS } from '@/utils/tierLists/constants';
 function fileToDataUrl(file: File): Promise<string | null> {
   return new Promise((resolve) => {
     if (typeof FileReader === 'undefined') {
-      if (typeof file.arrayBuffer === 'function') {
-        file.arrayBuffer().then(
-          (buf) => {
-            const base64 = Buffer.from(buf).toString('base64');
-            resolve(`data:${file.type};base64,${base64}`);
-          },
-          () => resolve(null)
-        );
-        return;
-      }
       resolve(null);
       return;
     }

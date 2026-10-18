@@ -1,6 +1,6 @@
 // frontend/src/components/character-detail/modals/EquipmentDetailModal.tsx
 import React from 'react';
-import { AddonItem, EquipmentItem, getAssetUrl, getRarityTileStyle } from '../types';
+import { AddonItem, EquipmentItem, getAssetUrl, getRarityTileStyle, CharacterDetailDictionary } from '../types';
 import { RichText } from '@/components/common/RichText';
 import { Modal } from '@/components/common/Modal';
 
@@ -8,7 +8,7 @@ interface EquipmentDetailModalProps {
   item: AddonItem | EquipmentItem | null;
   onClose: () => void;
   backendBase: string;
-  t: Record<string, string>;
+  t: CharacterDetailDictionary;
 }
 
 export const EquipmentDetailModal: React.FC<EquipmentDetailModalProps> = ({
@@ -27,7 +27,7 @@ export const EquipmentDetailModal: React.FC<EquipmentDetailModalProps> = ({
       variant="dialog"
       size="lg"
       title={item.name}
-      closeButtonAriaLabel={t.close || 'Close'}
+      closeButtonAriaLabel={t.close}
       padded
       bodyClassName="space-y-4 text-sm leading-relaxed text-text-secondary"
     >
@@ -45,7 +45,7 @@ export const EquipmentDetailModal: React.FC<EquipmentDetailModalProps> = ({
       </div>
       {item.associated_target && (
         <div className="type-strong text-text-secondary">
-          {t.compatibleTarget || 'Compatible Target:'} <span className="text-text-primary">{item.associated_target}</span>
+          {t.compatibleTarget} <span className="text-text-primary">{item.associated_target}</span>
         </div>
       )}
       <RichText text={item.description} block variant="game" />

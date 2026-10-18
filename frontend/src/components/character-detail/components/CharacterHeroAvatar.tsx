@@ -77,7 +77,7 @@ export const CharacterHeroAvatar: React.FC<CharacterHeroAvatarProps> = ({
             <ZoomIn className="h-6 w-6" />
           </div>
           <span className="type-label-sm text-text-inverted">
-            {t.view3DModel || 'Click to Expand'}
+            {t.view3DModel}
           </span>
         </div>
 

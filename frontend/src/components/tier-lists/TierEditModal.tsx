@@ -26,7 +26,6 @@ interface TierEditModalProps {
   onClose: () => void;
   onSave: (id: string, patch: { label: string; color: string; backgroundImage?: string }) => void;
   onCreate?: (patch: { label: string; color: string; backgroundImage?: string }) => void;
-  onClear?: (id: string) => void;
   onDelete: (id: string) => void;
 }
 
@@ -39,7 +38,6 @@ export function TierEditModal({
   onClose,
   onSave,
   onCreate,
-  onClear,
   onDelete,
 }: TierEditModalProps) {
   const dict = useDictionary();

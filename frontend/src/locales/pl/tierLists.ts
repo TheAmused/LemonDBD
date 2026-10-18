@@ -30,6 +30,8 @@ export default {
   loginToManage: "Zaloguj się, aby zarządzać tier listami",
   loginToManageDesc: "Zaloguj się, aby tworzyć, importować i zapisywać własne tier listy.",
   untitled: "Tier lista bez nazwy",
+  draft: "Szkic",
+  published: "Opublikowano",
   kinds: {
     survivor_perks: "Perki ocalałych",
     killer_perks: "Perki zabójców",
@@ -162,6 +164,7 @@ export default {
     backgroundImageLabel: "URL obrazka tła",
     backgroundImagePlaceholder: "https://...",
     backgroundImageHint: "Link https:// albo URI data:image. Wyświetlany za kartą w sekcji Moje własne listy.",
+    publishedLabel: "Opublikowana (widoczna dla użytkowników)",
     cardPreviewHeading: "Tak będzie wyglądać w Moich własnych listach",
     presetsLabel: "Zacznij od",
     presets: {
@@ -247,6 +250,8 @@ export default {
     description: "Ta tier lista jest oznaczona jako treść NSFW/dla dorosłych. Potwierdź, że chcesz ją zobaczyć.",
     confirm: "Potwierdź",
     back: "Wróć",
+    reveal: "Pokaż zawartość NSFW",
+    toggle: "Pokaż zawartość NSFW",
   },
   reportNoManifest: "Ta kopia nie ma prawidłowego znaku konta, więc moderatorzy nie będą mogli przypisać jej do konta. Nadal możesz ją zgłosić, a moderatorzy sprawdzą samą treść.",
 

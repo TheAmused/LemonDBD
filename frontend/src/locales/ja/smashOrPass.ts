@@ -263,6 +263,7 @@ export default {
     description: 'このロースターは成人向け(NSFW)コンテンツとして設定されています。表示してよいか確認してください。',
     confirm: 'クリックして表示',
     badge: 'NSFW',
+    reveal: 'NSFWを表示',
   },
   comingSoon: '近日公開',
   effectsPrefs: {

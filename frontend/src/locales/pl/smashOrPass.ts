@@ -279,6 +279,7 @@ export default {
     description: 'Ta lista jest oznaczona jako treść NSFW/dla dorosłych. Potwierdź, że chcesz ją zobaczyć.',
     confirm: 'Kliknij, aby wyświetlić',
     badge: 'NSFW',
+    reveal: 'Pokaż NSFW',
   },
   comingSoon: 'Wkrótce Dostępne',
   effectsPrefs: {

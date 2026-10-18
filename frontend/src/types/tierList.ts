@@ -41,6 +41,7 @@ export interface TierListSummary {
   is_featured: boolean;
   /** Adult-oriented list: the card is badged and the list opens behind a confirmation. */
   is_nsfw?: boolean;
+  is_active?: boolean;
   sort_order: number;
   /** Null when the list ranks a whole catalog -- only the live catalog knows how big that is. */
   item_count: number | null;

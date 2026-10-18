@@ -25,6 +25,8 @@ import { Button } from '@/components/common/Button';
 import { useDictionary } from "@/context/DictionaryContext";
 import { Badge } from '@/components/common/Badge';
 import { AccordionSection } from '@/components/common/AccordionSection';
+import { Switch } from '@/components/common/Switch';
+import { useGlobalNsfwPreference } from '@/utils/nsfwAck';
 
 const AuthModal = dynamic(() => import('@/components/AuthModal').then((m) => m.AuthModal), { ssr: false });
 
@@ -51,6 +53,7 @@ export function TierListHub({ locale }: TierListHubProps) {
 
   const [isOfficialOpen, toggleOfficial] = usePersistentDrawer('lemondbd_drawer_tier_lists_official', true);
   const [isCustomOpen, toggleCustom] = usePersistentDrawer('lemondbd_drawer_tier_lists_custom', true);
+  const [showNsfw, setShowNsfw] = useGlobalNsfwPreference();
 
   // A share link lands here as `/tier-lists#import=...`. Read it once, then
   // strip it from the address bar so a reload does not re-open the dialog.
@@ -132,6 +135,12 @@ export function TierListHub({ locale }: TierListHubProps) {
         onToggle={toggleOfficial}
         banner="/images/banners/banner_loadouts.webp"
         badge={lists.length > 0 && (<Badge tone="red" size="sm" plain>{lists.length}</Badge>)}
+        headerAction={
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-text-muted hidden sm:inline">{t.nsfw.toggle}</span>
+            <Switch checked={showNsfw} onChange={setShowNsfw} ariaLabel={t.nsfw.toggle} size="sm" />
+          </div>
+        }
         as="section"
         bodyClassName="p-4 sm:p-6"
       >
@@ -162,6 +171,8 @@ export function TierListHub({ locale }: TierListHubProps) {
                 list={list}
                 rankedCount={hydrated ? rankedCount(list.slug) : 0}
                 locale={locale}
+                showNsfw={showNsfw}
+                onRevealNsfw={() => setShowNsfw(true)}
               />
             ))}
           </div>
@@ -199,6 +210,8 @@ export function TierListHub({ locale }: TierListHubProps) {
                 list={list}
                 locale={locale}
                 onDelete={(id, title) => setListToDelete({ id, title })}
+                showNsfw={showNsfw}
+                onRevealNsfw={() => setShowNsfw(true)}
               />
             ))}
           </div>

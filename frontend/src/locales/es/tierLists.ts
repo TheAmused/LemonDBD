@@ -30,6 +30,8 @@ export default {
   loginToManage: "Inicia sesión para gestionar listas",
   loginToManageDesc: "Inicia sesión para crear, importar y guardar tus listas de niveles personalizadas.",
   untitled: "Tier list sin título",
+  draft: "Borrador",
+  published: "Publicado",
   kinds: {
     survivor_perks: "Habilidades de superviviente",
     killer_perks: "Habilidades de asesino",
@@ -162,6 +164,7 @@ export default {
     backgroundImageLabel: "URL de imagen de fondo",
     backgroundImagePlaceholder: "https://...",
     backgroundImageHint: "Un enlace https:// o una URI data:image. Se muestra detrás de la tarjeta en Mis listas personalizadas.",
+    publishedLabel: "Publicado (visible para los usuarios)",
     cardPreviewHeading: "Así se verá en Mis listas personalizadas",
     presetsLabel: "Empezar con",
     presets: {
@@ -247,6 +250,8 @@ export default {
     description: "Esta tier list está marcada como contenido NSFW/para adultos. Confirma que quieres verla.",
     confirm: "Confirmar",
     back: "Volver",
+    reveal: "Mostrar contenido NSFW",
+    toggle: "Mostrar contenido NSFW",
   },
   reportNoManifest: "Esta copia no tiene una marca de cuenta válida, así que los moderadores no podrán atribuirla a una cuenta. Aun así puedes reportarla y revisarán el propio contenido.",
 

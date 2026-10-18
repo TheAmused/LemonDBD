@@ -11,28 +11,11 @@ import { useAuth } from '@/context/AuthContext';
 import { useSignInThen } from '@/hooks/useSignInThen';
 import { AuthRequiredState } from '@/components/common/AuthRequiredState';
 import {
-  Gamepad2,
-  Calendar,
-  Sparkles,
-  Flame,
-  Plus,
-  Play,
-  Share2,
-  Download,
-  Upload,
-  Trash2,
-  Check,
-  Trophy,
-  AlertCircle,
-  X,
-  History,
-  Layers,
-  MapPin,
-  Zap,
-  Volume2,
-  Eye,
-  BookOpen,
+  Gamepad2, Calendar, Sparkles, Flame, Plus, Play, Share2, Download, Upload, Trash2,
+  Check, Trophy, AlertCircle, X, History, Layers, MapPin, Zap, Volume2, Eye, BookOpen,
 } from 'lucide-react';
+import { useGlobalNsfwPreference } from '@/utils/nsfwAck';
+import { cn } from '@/utils/cn';
 import type { ChallengeDefinition } from '@/types/minigame';
 import {
   getCustomChallenges,
@@ -71,6 +54,7 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
   const router = useRouter();
   const signIn = useSignInThen();
   const [customTrials, setCustomTrials] = useState<ChallengeDefinition[]>([]);
+  const [showNsfw, setShowNsfw] = useGlobalNsfwPreference();
   const [importError, setImportError] = useState<string | null>(null);
   const [streakData, setStreakData] = useState<DailyStreakData>({
     currentStreak: 0,
@@ -517,9 +501,21 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
                         {formatMessage(t.roundsCount, { count: trial.rounds.length }, locale)}
                       </InfoChip>
                     </div>
-                    {trial.is_nsfw && <NsfwBadge label={t.nsfw.badge} className="mt-1.5" />}
+                    <div className="flex items-center gap-1.5 mt-1.5">
+                      {trial.is_nsfw && <NsfwBadge label={t.nsfw.badge} />}
+                      {trial.is_nsfw && !showNsfw && (
+                        <Button
+                          type="button"
+                          variant="secondary"
+                          size="xs"
+                          onClick={() => setShowNsfw(true)}
+                        >
+                          {dict.tierLists.nsfw.reveal}
+                        </Button>
+                      )}
+                    </div>
                     {trial.description && (
-                      <p className="text-xs text-text-secondary mt-1 line-clamp-2">
+                      <p className={cn("text-xs text-text-secondary mt-1 line-clamp-2", trial.is_nsfw && !showNsfw && "blur-xs select-none")}>
                         {trial.description}
                       </p>
                     )}

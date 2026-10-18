@@ -11,7 +11,7 @@ from app.core import redis_cache
 from app.core.extensions import db
 from app.core.redis_cache import bump_catalog_version
 from app.models.slug import slugify, unique_slug
-from app.models.smash_or_pass import Entity, EntityStat, Roster, SmashTaxonomy, clean_media_display
+from app.models.smash_or_pass import Entity, EntityStat, Roster, SmashTaxonomy, Vote, clean_media_display
 
 logger = logging.getLogger(__name__)
 
@@ -159,8 +159,10 @@ class SmashRosterAdminMixin:
         if not roster:
             return False
 
+        roster_slug = roster.slug
         entity_ids = db.session.scalars(select(Entity.id).where(Entity.roster_id == roster.id)).all()
         if entity_ids:
+            db.session.execute(delete(Vote).where(Vote.entity_id.in_(entity_ids)))
             db.session.execute(delete(EntityStat).where(EntityStat.entity_id.in_(entity_ids)))
             db.session.execute(delete(Entity).where(Entity.roster_id == roster.id))
         db.session.delete(roster)
@@ -169,7 +171,7 @@ class SmashRosterAdminMixin:
         bump_catalog_version()
         from app.seeds.smash_roster_seeder import ROSTERS_DIR
 
-        path = ROSTERS_DIR / f"{roster.slug}.json"
+        path = ROSTERS_DIR / f"{roster_slug}.json"
         if path.exists():
             try:
                 path.unlink()

@@ -9,7 +9,7 @@ from sqlalchemy.orm import Session
 
 from app.core.security import generate_token
 from app.models.minigame import MinigameDailyChallenge
-from app.models.smash_or_pass import Entity, EntityStat, Roster
+from app.models.smash_or_pass import Entity, EntityStat, Roster, Vote
 from app.models.tier_list import TierList
 from app.models.user import User
 from app.services import tier_list_service
@@ -236,6 +236,16 @@ def test_smash_or_pass_admin_deletion_and_draft(
     stats = db_session.scalars(select(EntityStat).where(EntityStat.entity_id.in_(entity_ids))).all()
     assert len(stats) == 2
 
+    # Add a vote record to verify Vote deletion
+    vote = Vote(
+        entity_id=entities[0].id,
+        session_id="test-session-123",
+        vote_type="smash",
+    )
+    db_session.add(vote)
+    db_session.commit()
+    assert db_session.scalar(select(Vote).where(Vote.entity_id == entities[0].id)) is not None
+
     # Delete permissions
     del_anon = client.delete(f"/api/v1/smash-or-pass/admin/rosters/{slug}")
     assert del_anon.status_code == 401
@@ -250,6 +260,7 @@ def test_smash_or_pass_admin_deletion_and_draft(
     assert db_session.scalar(select(Roster).where(Roster.slug == slug)) is None
     assert db_session.scalars(select(Entity).where(Entity.roster_id == roster_id)).all() == []
     assert db_session.scalars(select(EntityStat).where(EntityStat.entity_id.in_(entity_ids))).all() == []
+    assert db_session.scalars(select(Vote).where(Vote.entity_id.in_(entity_ids))).all() == []
 
     # Subsequent delete gives 404
     assert client.delete(f"/api/v1/smash-or-pass/admin/rosters/{slug}", headers=admin_headers).status_code == 404

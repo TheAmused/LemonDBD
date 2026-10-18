@@ -159,13 +159,14 @@ def create_roster():
 @admin_required
 def delete_roster(slug: str):
     """Deletes an official smash-or-pass roster."""
-    roster = db.session.scalar(select(Roster).where(Roster.slug == slug))
+    normalized_slug = (slug or "").strip().lower()
+    roster = db.session.scalar(select(Roster).where(Roster.slug == normalized_slug))
     if not roster:
         return api_error(f"Roster '{slug}' not found", 404)
 
     target_id = roster.id
     name = roster.name
-    deleted = smash_service.delete_roster(slug)
+    deleted = smash_service.delete_roster(normalized_slug)
     if not deleted:
         return api_error(f"Roster '{slug}' not found", 404)
 
@@ -174,9 +175,9 @@ def delete_roster(slug: str):
         "smash_roster.delete",
         target_type="roster",
         target_id=target_id,
-        details={"slug": slug, "name": name},
+        details={"slug": normalized_slug, "name": name},
     )
-    return jsonify({"status": "success", "message": f"Roster '{slug}' deleted"}), 200
+    return jsonify({"status": "success", "message": f"Roster '{normalized_slug}' deleted"}), 200
 
 
 @smash_or_pass_bp.route("/rosters/<slug>/feed", methods=["GET"])

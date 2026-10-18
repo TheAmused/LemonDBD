@@ -12,7 +12,6 @@ import {
   STANDARD_CLARIFICATIONS,
   STANDARD_EXCEPTIONS,
   resolveRuleEntries,
-  streakCopy,
 } from '../RulesModalSections';
 import { useDictionary } from "@/context/DictionaryContext";
 
@@ -23,42 +22,41 @@ export interface ChaosRulesModalProps {
 
 export const ChaosRulesModal: React.FC<ChaosRulesModalProps> = ({ isOpen, onClose }) => {
   const dict = useDictionary();
-  const s = streakCopy(dict);
+  const s = dict.streaks;
   return (
     <RulesModalShell
       isOpen={isOpen}
       onClose={onClose}
-      title={s.rules || 'Rules'}
+      title={s.rules}
     >
       <RulesHowItWorks
         tone="red"
-        title={s.howItWorks || 'How it works'}
+        title={s.howItWorks}
         items={[
-          s.chaosWinCondition || 'Win = 3 kills or more.',
-          s.chaosNoRepeatRule || "Perks don't repeat until the whole pool has been drawn.",
-          s.chaosAddonRule || 'Add-ons must match the 2 drawn rarities.',
-          s.chaosCheckpointRule ||
-            'A checkpoint saves your progress, so a loss falls back to your last checkpoint instead of zero.',
-          s.chaosCompletionRule || 'Clear the pool with every killer to complete the run.',
+          s.chaosWinCondition,
+          s.chaosNoRepeatRule,
+          s.chaosAddonRule,
+          s.chaosCheckpointRule,
+          s.chaosCompletionRule,
         ]}
       />
 
-      <RulesSection title={s.difficultyAndCheckpoints || 'Difficulty'}>
+      <RulesSection title={s.difficultyAndCheckpoints}>
         <RulesDifficultyRows
           rows={[
             {
-              label: s.chaosEasyLabel || 'Easy',
-              text: s.chaosEasyDesc || 'A checkpoint every 5 wins.',
+              label: s.chaosEasyLabel,
+              text: s.chaosEasyDesc,
               badgeClassName: DIFFICULTY_BADGE.green,
             },
             {
-              label: s.chaosMediumLabel || 'Medium',
-              text: s.chaosMediumDesc || 'A checkpoint every 10 wins.',
+              label: s.chaosMediumLabel,
+              text: s.chaosMediumDesc,
               badgeClassName: DIFFICULTY_BADGE.amber,
             },
             {
-              label: s.chaosHellLabel || 'Hell',
-              text: s.chaosHellDesc || 'No checkpoints.',
+              label: s.chaosHellLabel,
+              text: s.chaosHellDesc,
               badgeClassName: DIFFICULTY_BADGE.red,
             },
           ]}

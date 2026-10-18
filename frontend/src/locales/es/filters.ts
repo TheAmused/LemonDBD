@@ -26,8 +26,6 @@ export default {
   orderAsc: "A-Z",
   orderDesc: "Z-A",
   aliasLabel: "Alias:",
-  rarityVeryRare: "Muy Rara",
-  rarityUncommon: "Poco Común",
   resetAllFilters: "Restablecer Filtros",
   viewMode: "Cuadrícula de Habilidades",
   clearSearch: "Borrar búsqueda",

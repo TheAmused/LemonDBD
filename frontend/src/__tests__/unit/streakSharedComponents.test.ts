@@ -15,7 +15,6 @@ import {
   STANDARD_EXCEPTIONS,
   RULE_ADDONS_ALLOWED,
   resolveRuleEntries,
-  streakCopy,
 } from '@/components/streaks/RulesModalSections';
 import { CHAOS_DIFFICULTY_ORDER } from '@/utils/challengeTierCompletion';
 import enDict from '@/locales/en';
@@ -70,28 +69,25 @@ describe('buildCompletionTiles', () => {
 });
 
 describe('rules entries', () => {
-  it('falls back to English defaults and honours copy overrides', () => {
-    const entries = resolveRuleEntries({ excHackersLabel: 'Cheaters' }, STANDARD_EXCEPTIONS);
+  it('reads each entry from the copy bag and honours copy overrides', () => {
+    const entries = resolveRuleEntries({ ...enDict.streaks, excHackersLabel: 'Cheaters' }, STANDARD_EXCEPTIONS);
     assert.equal(entries.length, 3);
     assert.equal(entries[1].label, 'Cheaters');
-    assert.equal(entries[0].label, 'Game cancelled');
+    assert.equal(entries[0].label, enDict.streaks.excGameCancelledLabel);
   });
 
   it('picks variant wording when present and the base text otherwise', () => {
-    const def = { ...RULE_ADDONS_ALLOWED, variantTextKeys: { solo: 'soloText' } };
-    assert.equal(resolveRuleEntries({ soloText: 'Solo!' }, [def], 'solo')[0].text, 'Solo!');
-    assert.equal(resolveRuleEntries({}, [def], 'solo')[0].text, 'All available.');
-    assert.equal(resolveRuleEntries({ soloText: 'Solo!' }, [def])[0].text, 'All available.');
-  });
-
-  it('streakCopy exposes the streaks namespace of the dictionary', () => {
-    assert.equal(streakCopy(enDict) as unknown, enDict.streaks);
+    const copy = { ...enDict.streaks, soloKillerDcText: 'Solo!' };
+    const def = { ...RULE_ADDONS_ALLOWED, variantTextKeys: { solo: 'soloKillerDcText' } } as const;
+    assert.equal(resolveRuleEntries(copy, [def], 'solo')[0].text, 'Solo!');
+    assert.equal(resolveRuleEntries(copy, [def], 'duo')[0].text, enDict.streaks.excAddonsAllowedText);
+    assert.equal(resolveRuleEntries(copy, [def])[0].text, enDict.streaks.excAddonsAllowedText);
   });
 });
 
 describe('rules sections static render', () => {
   it('renders concept, how-it-works items, difficulty rows and footer sections', () => {
-    const copy = streakCopy(enDict);
+    const copy = enDict.streaks;
     const html = renderWithDictionary(
       el(
         'div',

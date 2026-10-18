@@ -15,5 +15,6 @@ export default {
   temporarilyDisabled: "Desactivado temporalmente",
   wasDisabledTemporarily: "{item} fue desactivado temporalmente.",
   reasonLabel: "Motivo",
+  retry: "Reintentar",
   done: 'Listo'
 } as const;

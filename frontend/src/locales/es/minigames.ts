@@ -67,6 +67,7 @@ export default {
   finishTrial: "Completar Prueba",
   playAgain: "Jugar de Nuevo",
   backToMinigames: "Volver a Minijuegos",
+  realmClueAlt: "Pista de reino",
   victoryTitle: "¡Escapaste de la Prueba!",
   defeatTitle: "Consumido por el Ente",
   copyResults: "Compartir Resultados",

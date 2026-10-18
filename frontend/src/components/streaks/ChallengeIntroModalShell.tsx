@@ -56,7 +56,6 @@ export interface ChallengeIntroModalShellProps {
   currentLabel: string;
   /** Set on a second-level screen to show a back arrow next to the title. */
   onBack?: () => void;
-  backLabel?: string;
 }
 
 export const ChallengeIntroModalShell: React.FC<ChallengeIntroModalShellProps> = ({
@@ -78,7 +77,6 @@ export const ChallengeIntroModalShell: React.FC<ChallengeIntroModalShellProps> =
       selectedValue,
       currentLabel,
       onBack,
-      backLabel,
     }) => {
   const dict = useDictionary();
   return (
@@ -97,7 +95,7 @@ export const ChallengeIntroModalShell: React.FC<ChallengeIntroModalShellProps> =
             size="md"
             icon
             onClick={onBack}
-            aria-label={backLabel || 'Back'}
+            aria-label={dict.streaks.back}
           >
             <ChevronLeft className="h-5 w-5" aria-hidden="true" />
           </Button>

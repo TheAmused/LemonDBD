@@ -35,9 +35,14 @@ import { Button } from '@/components/common/Button';
 import { Input } from '@/components/common/Field';
 import { type Draft, readDraft, DRAFT_KEY, Section, STORAGE_WARN_BYTES, formatBytes, Feedback } from './TierListCreatorParts';
 import { formatMessage } from '@/utils/i18nFormat';
+import dynamic from 'next/dynamic';
 import { useDictionary } from '@/context/DictionaryContext';
 import { Toast } from '@/components/common/Toast';
-import { ImageUploadDropzone } from '@/components/common/ImageUploadDropzone';
+
+const ImageUploadDropzone = dynamic(
+  () => import('@/components/common/ImageUploadDropzone').then((m) => m.ImageUploadDropzone),
+  { ssr: false }
+);
 
 /** The creator's column: as wide as the workspace allows. */
 const WORKSPACE_COLUMN = 'w-full max-w-4xl 2xl:max-wide-2k:max-w-6xl wide-2k:max-w-workspace mx-auto';

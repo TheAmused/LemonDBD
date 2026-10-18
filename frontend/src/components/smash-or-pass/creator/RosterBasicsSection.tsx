@@ -2,9 +2,14 @@
 // frontend/src/components/smash-or-pass/creator/RosterBasicsSection.tsx
 import type { ReactNode } from 'react';
 import { Crop } from 'lucide-react';
+import dynamic from 'next/dynamic';
 import { Button } from '@/components/common/Button';
-import { ImageUploadDropzone } from '@/components/common/ImageUploadDropzone';
 import { Input, Textarea } from '@/components/common/Field';
+
+const ImageUploadDropzone = dynamic(
+  () => import('@/components/common/ImageUploadDropzone').then((m) => m.ImageUploadDropzone),
+  { ssr: false }
+);
 import { Switch } from '@/components/common/Switch';
 import { Tooltip, tip } from '@/components/common/Tooltip';
 import { useDictionary } from '@/context/DictionaryContext';

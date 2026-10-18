@@ -46,7 +46,7 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({ isOpen, onClose 
   const dict = useDictionary();
   const { user, isAuthenticated } = useAuth();
 
-  const t: Record<string, string> = dict.sidebar;
+  const t = dict.sidebar;
 
   const {
     altchaPayload,
@@ -87,14 +87,14 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({ isOpen, onClose 
     if (!files) return;
 
     if (images.length + files.length > 3) {
-      setErrorMsg(t.bugMaxScreenshots || '');
+      setErrorMsg(t.bugMaxScreenshots);
       return;
     }
 
     setErrorMsg(null);
     Array.from(files).forEach((file) => {
       if (file.size > 5 * 1024 * 1024) {
-        setErrorMsg(t.bugImageSizeLimit || '');
+        setErrorMsg(t.bugImageSizeLimit);
         return;
       }
 
@@ -129,7 +129,7 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({ isOpen, onClose 
       return;
     }
     if (!isAuthenticated && !guestEmail.trim()) {
-      setErrorMsg(t.bugGuestEmailRequired || t.bugGuestEmailLabel || '');
+      setErrorMsg(t.bugGuestEmailRequired);
       return;
     }
 
@@ -141,7 +141,7 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({ isOpen, onClose 
       const payload = {
         title: title.trim(),
         message: message.trim(),
-        reporter_name: user?.username || t.bugGuestPlayer || 'Guest',
+        reporter_name: user?.username || 'Guest',
         reporter_email: user?.email || guestEmail.trim(),
         images,
         website_trap: honeypotValue,
@@ -166,7 +166,7 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({ isOpen, onClose 
       }
 
       if (!res.ok) {
-        setErrorMsg(data.error || t.bugErrorMessage || `Error (${res.status})`);
+        setErrorMsg(data.error || t.bugErrorMessage);
       } else {
         setIsSuccess(true);
       }
@@ -302,13 +302,13 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({ isOpen, onClose 
             >
               <img
                 src={imgSrc}
-                alt={t.bugScreenshotAlt ? `${t.bugScreenshotAlt} #${idx + 1}` : `${idx + 1}`}
+                alt={`${t.bugScreenshotAlt} #${idx + 1}`}
                 className="h-full w-full object-cover"
               />
               <button
                 type="button"
                 onClick={() => handleRemoveImage(idx)}
-                aria-label={t.bugRemoveScreenshot ? `${t.bugRemoveScreenshot} ${idx + 1}` : `${idx + 1}`}
+                aria-label={`${t.bugRemoveScreenshot} ${idx + 1}`}
                 className="absolute inset-0 bg-accent-red/80 opacity-0 group-hover:opacity-100 flex items-center justify-center text-text-inverted transition-opacity focus:opacity-100"
               >
                 <Trash2 className="h-4 w-4" aria-hidden="true" />

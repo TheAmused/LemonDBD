@@ -137,7 +137,7 @@ export function CandidateTiles({ entities, selectedKey, onSelect, onRename, onRe
                     e.stopPropagation();
                     onRemove(entity.key);
                   }}
-                  aria-label={formatMessage((c.removeCandidateAria), { name: entity.name || displayIndex })}
+                  aria-label={formatMessage(c.removeCandidateAria, { name: entity.name || displayIndex })}
                   variant="overlay" size="xs" icon pill className="absolute top-1 right-1 z-10 opacity-80 sm:opacity-0 group-hover/item:opacity-100 hover:opacity-100"
                 >
                   <X className="h-3 w-3" aria-hidden="true" />
@@ -151,7 +151,7 @@ export function CandidateTiles({ entities, selectedKey, onSelect, onRename, onRe
                 onChange={(e) => onRename(entity.key, e.target.value)}
                 onFocus={() => onSelect(entity.key)}
                 placeholder={c.unnamedCandidate}
-                aria-label={formatMessage((c.renameCandidateAria), { name: entity.name || displayIndex })}
+                aria-label={formatMessage(c.renameCandidateAria, { name: entity.name || displayIndex })}
                 className="mt-1 h-6 w-full rounded-chip border border-transparent bg-transparent px-1 text-center type-strong text-text-secondary transition-colors hover:text-text-primary hover:bg-bg-elevated/40 focus:border-accent-red focus:bg-bg-surface focus:text-text-primary focus:outline-hidden truncate"
               />
             </li>
@@ -184,14 +184,14 @@ export function CandidateTiles({ entities, selectedKey, onSelect, onRename, onRe
 
 export function entityTranslationFieldLabel(c: Dictionary['smashOrPass']['creator'], field: string): string {
   const map: Record<string, string> = {
-    archetype: c.entityArchetypeLabel || 'Archetype',
-    bio: c.entityBioLabel || 'Bio',
-    tagline: c.entityTaglineLabel || 'Tagline',
-    quote: c.entityQuoteLabel || 'Signature quote',
-    meme: c.entityMemeLabel || 'Meme',
-    turn_on: c.entityTurnOnLabel || 'Turn on',
-    dealbreaker: c.entityDealbreakerLabel || 'Dealbreaker',
-    dating_vibe: c.entityDatingVibeLabel || 'Dating vibe',
+    archetype: c.entityArchetypeLabel,
+    bio: c.entityBioLabel,
+    tagline: c.entityTaglineLabel,
+    quote: c.entityQuoteLabel,
+    meme: c.entityMemeLabel,
+    turn_on: c.entityTurnOnLabel,
+    dealbreaker: c.entityDealbreakerLabel,
+    dating_vibe: c.entityDatingVibeLabel,
   };
   return map[field] || field;
 }

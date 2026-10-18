@@ -131,7 +131,7 @@ export function useRosterSubmit({
         });
         if (!res.ok) {
           const errorData: { error?: string } = await res.json().catch(() => ({}));
-          setPublishError(errorData.error || c.saveError || 'Something went wrong saving this roster.');
+          setPublishError(errorData.error || c.saveError);
           setPublishing(false);
           return;
         }
@@ -143,7 +143,7 @@ export function useRosterSubmit({
         }
         router.push(`/${locale}/smash-or-pass?roster=${body.data.slug}`);
       } catch {
-        setPublishError(c.saveError || 'Something went wrong saving this roster.');
+        setPublishError(c.saveError);
         setPublishing(false);
       }
       return;

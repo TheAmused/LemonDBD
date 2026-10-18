@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { TriangleAlert } from 'lucide-react';
+import { cn } from '@/utils/cn';
 import type { TierDefinition, TierListDocumentItem } from '@/types/tierList';
 import { type LadderPresetId } from '@/utils/tierLists/creator';
 import { migrateTierListState } from '@/utils/tierLists/storage';
@@ -74,13 +75,20 @@ export function Section({ title, defaultOpen = true, children }: { title: string
   );
 }
 
-export function Feedback({ errors, saveError, publishError }: {
+export function Feedback({ errors, saveError, publishError, scrollSignal, className }: {
   errors: string[];
   saveError: 'quota' | 'unavailable' | null;
   publishError?: string | null;
+  /** Bumped on every submit attempt: brings the alert into view even when its text is unchanged. */
+  scrollSignal: number;
+  className?: string;
 }) {
   const dict = useDictionary();
   const t = dict.tierLists;
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (scrollSignal > 0 || saveError || publishError) ref.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, [scrollSignal, saveError, publishError]);
   const messages = [
     ...errors,
     ...(saveError ? [saveError === 'quota' ? t.saveFailedQuota : t.saveFailedUnavailable] : []),
@@ -88,13 +96,15 @@ export function Feedback({ errors, saveError, publishError }: {
   ];
   if (messages.length === 0) return null;
   return (
-    <div role="alert" className="flex flex-col items-center justify-center gap-1.5 rounded-chip border border-accent-red/40 bg-accent-red/10 p-3 type-card-title text-accent-red text-center">
-      {messages.map((m) => (
-        <p key={m} className="flex items-center justify-center gap-2">
-          <TriangleAlert className="h-4 w-4 shrink-0" aria-hidden="true" />
-          {m}
-        </p>
-      ))}
+    <div ref={ref} className={cn('scroll-mt-4', className)}>
+      <div role="alert" className="flex flex-col items-center justify-center gap-1.5 rounded-chip border border-accent-red/40 bg-accent-red/10 p-3 type-card-title text-accent-red text-center">
+        {messages.map((m) => (
+          <p key={m} className="flex items-center justify-center gap-2">
+            <TriangleAlert className="h-4 w-4 shrink-0" aria-hidden="true" />
+            {m}
+          </p>
+        ))}
+      </div>
     </div>
   );
 }

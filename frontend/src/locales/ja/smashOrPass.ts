@@ -376,7 +376,6 @@ export default {
     categoryLabel: 'カテゴリー',
     categoryPlaceholder: '例：カスタム',
     nsfwLabel: 'NSFWコンテンツを含む',
-    officialHint: 'このブラウザだけでなく、ハブ上の全員に表示されます。',
     addEntity: '候補者を追加',
     removeEntity: '削除',
     entityNameLabel: '名前',

@@ -5,6 +5,7 @@ import { useDictionary } from '@/context/DictionaryContext';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import {
+  Download,
   Ellipsis,
   Eye,
   EyeOff,
@@ -14,7 +15,6 @@ import {
   Plus,
   RotateCcw,
   Save,
-  Share2,
   Trash2,
   Upload,
 } from 'lucide-react';
@@ -58,7 +58,6 @@ export interface TierListEditorProps {
   title: string;
   description?: string;
   kindLabel: string;
-  badges?: React.ReactNode;
   items: TierItem[];
   tiers: TierDefinition[];
   /** As stored -- may include keys of items not currently shown; they are preserved on save. */
@@ -102,7 +101,6 @@ export function TierListEditor(props: TierListEditorProps) {
     preferenceKey,
     title,
     kindLabel,
-    badges,
     items,
     tiers,
     placements,
@@ -290,7 +288,7 @@ export function TierListEditor(props: TierListEditorProps) {
             {t.import}
           </MenuItem>
           <MenuItem role="menuitem" onClick={() => { setMenuOpen(false); setDialog('export'); }}>
-            <Share2 className="h-4 w-4" aria-hidden="true" />
+            <Download className="h-4 w-4" aria-hidden="true" />
             {t.export}
           </MenuItem>
           <MenuItem role="menuitem" onClick={() => { setMenuOpen(false); setDialog('reset'); }}>
@@ -321,7 +319,6 @@ export function TierListEditor(props: TierListEditorProps) {
       <header className="hidden sm:flex flex-col shrink-0">
         <div className="grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-2">
           <div className="flex items-center justify-start gap-2 shrink-0 justify-self-start">
-            {badges}
             <TierListScaleControl scale={scale} onScaleChange={setScale} />
           </div>
 
@@ -386,7 +383,7 @@ export function TierListEditor(props: TierListEditorProps) {
               <span className={secondaryLabelClass}>{t.import}</span>
             </Button>
             <Button variant="secondary" size="sm" onClick={() => setDialog('export')} aria-label={t.export} {...tip(t.export, undefined, 'action')} className={TOOLBAR_BTN}>
-              <Share2 className="h-3.5 w-3.5" aria-hidden="true" />
+              <Download className="h-3.5 w-3.5" aria-hidden="true" />
               <span className={secondaryLabelClass}>{t.export}</span>
             </Button>
             <Button variant="secondary" size="sm" onClick={() => setDialog('reset')} aria-label={t.reset} {...tip(t.reset, undefined, 'action')} className={TOOLBAR_BTN}>

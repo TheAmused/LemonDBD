@@ -30,7 +30,7 @@ import { CreatorPreviewModal } from './CreatorPreview';
 import { type IncomingItem, ItemSources } from './ItemSources';
 import { LadderEditor } from './LadderEditor';
 import { Checkbox } from '@/components/common/Checkbox';
-import { NsfwSwitch } from '@/components/common/NsfwSwitch';
+import { Tooltip } from '@/components/common/Tooltip';
 import { Button } from '@/components/common/Button';
 import { Input } from '@/components/common/Field';
 import { type Draft, readDraft, DRAFT_KEY, Section, STORAGE_WARN_BYTES, formatBytes, Feedback } from "./TierListCreatorParts";
@@ -76,6 +76,7 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
   const [draft, setDraft] = useState<Draft>(freshDraft);
   const [restored, setRestored] = useState<boolean>(false);
   const [attempted, setAttempted] = useState<boolean>(false);
+  const [submitCount, setSubmitCount] = useState<number>(0);
   const [skipped, setSkipped] = useState<number>(0);
   const [saveError, setSaveError] = useState<'quota' | 'unavailable' | null>(null);
   const [previewOpen, setPreviewOpen] = useState<boolean>(false);
@@ -228,6 +229,7 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
 
   const submit = async () => {
     setAttempted(true);
+    setSubmitCount((n) => n + 1);
     if (titleMissing || itemsMissing || backgroundInvalid) return;
     const payload = {
       title: draft.title.trim().slice(0, TIER_LIST_LIMITS.maxTitle),
@@ -391,17 +393,27 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
         />
       )}
 
+      <Feedback
+        errors={errors as string[]}
+        saveError={saveError}
+        publishError={publishError}
+        scrollSignal={submitCount}
+        className={WORKSPACE_COLUMN}
+      />
+
       {/* THE BASICS BLOCK */}
       <div className={WORKSPACE_COLUMN}>
         <Section title={c.stepBasics}>
           <div className="grid gap-4 2xl:gap-6 md:grid-cols-2">
             <label className="md:col-span-1">
-              <span className={LABEL}>{c.titleLabel}</span>
+              <span className={LABEL}>
+                {c.titleLabel}
+                <span className="text-accent-red"> *</span>
+              </span>
               <Input
                 value={draft.title}
                 maxLength={TIER_LIST_LIMITS.maxTitle}
                 onChange={(e) => patch({ title: e.target.value })}
-                placeholder={c.titlePlaceholder}
                 invalid={attempted && titleMissing}
                 className={cn(TOUCH_FIELD, '2xl:min-h-hit-xl 2xl:text-base')}
               />
@@ -412,7 +424,6 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
                 value={draft.description}
                 maxLength={TIER_LIST_LIMITS.maxDescription}
                 onChange={(e) => patch({ description: e.target.value })}
-                placeholder={c.descriptionPlaceholder}
                 className={cn(TOUCH_FIELD, '2xl:min-h-hit-xl 2xl:text-base')}
               />
             </label>
@@ -440,22 +451,18 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
                 </div>
               )}
             </label>
-            <div className="md:col-span-2 flex justify-center">
-              <NsfwSwitch
-                checked={draft.is_nsfw}
-                onChange={(checked) => patch({ is_nsfw: checked })}
-                label={t.nsfw.label}
-                hint={t.nsfw.hint}
-              />
+            <div className="md:col-span-2 flex flex-col items-start gap-3">
+              <Tooltip variant="action" title={t.nsfw.label} description={t.nsfw.hint}>
+                <Checkbox checked={draft.is_nsfw} onChange={(checked) => patch({ is_nsfw: checked })} className="gap-2.5">
+                  <span className={cn(LABEL, 'mb-0 inline')}>{t.nsfw.label}</span>
+                </Checkbox>
+              </Tooltip>
+              {isAdmin && !isEditing && (
+                <Checkbox checked={official} onChange={setOfficial} className="gap-2.5">
+                  <span className={cn(LABEL, 'mb-0 inline')}>{c.official}</span>
+                </Checkbox>
+              )}
             </div>
-            {isAdmin && !isEditing && (
-              <Checkbox checked={official} onChange={setOfficial} className="md:col-span-2 justify-center gap-2.5">
-                <span className="text-center">
-                  <span className={cn(LABEL, 'inline')}>{c.official}</span>
-                  <span className="ml-2 text-xs 2xl:text-sm text-text-muted">{c.officialHint}</span>
-                </span>
-              </Checkbox>
-            )}
           </div>
         </Section>
       </div>
@@ -521,11 +528,6 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
           {c.previewHeading}
         </Button>
         {submitButton('min-h-11 2xl:min-h-hit-xl px-6 2xl:px-8 text-sm 2xl:text-base font-bold uppercase tracking-wider')}
-      </div>
-
-      {/* Feedback Alerts */}
-      <div className={`${WORKSPACE_COLUMN} flex flex-col gap-4`}>
-        <Feedback errors={errors as string[]} saveError={saveError} publishError={publishError} />
       </div>
 
       <CreatorPreviewModal

@@ -2,7 +2,8 @@
 // frontend/src/components/tier-lists/OfficialTierListView.tsx
 
 import React, { useCallback, useMemo, useState } from 'react';
-import { Crown, RotateCcw, SearchX, TriangleAlert } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { RotateCcw, SearchX, TriangleAlert } from 'lucide-react';
 import { EmptyState } from '@/components/common/EmptyState';
 import {
   TIER_LIST_FORMAT,
@@ -24,7 +25,6 @@ import { clearRanking, saveRanking } from '@/utils/tierLists/storage';
 import { TierListEditor } from './TierListEditor';
 import { TierListSkeleton } from './TierListSkeleton';
 import { useDictionary } from "@/context/DictionaryContext";
-import { Badge } from '@/components/common/Badge';
 
 interface OfficialTierListViewProps {
   slug: string;
@@ -37,6 +37,7 @@ const EMPTY: TierPlacements = {};
 export function OfficialTierListView({ slug, locale }: OfficialTierListViewProps) {
   const dict = useDictionary();
   const t = dict.tierLists;
+  const router = useRouter();
   const { isAdmin, token } = useAuth();
   const { template, loading: templateLoading, error: templateError, refresh } = useTierListTemplate(slug, locale);
   const { items, loading: itemsLoading, error: itemsError, refresh: refreshItems } = useTierListItems(template, locale);
@@ -166,6 +167,8 @@ export function OfficialTierListView({ slug, locale }: OfficialTierListViewProps
         description={t.nsfw.description}
         confirmLabel={t.nsfw.confirm}
         onConfirm={nsfwGate.confirm}
+        backLabel={t.nsfw.back}
+        onBack={() => router.push(`/${locale}/tier-lists`)}
       />
     );
   }
@@ -182,14 +185,6 @@ export function OfficialTierListView({ slug, locale }: OfficialTierListViewProps
       title={template.title}
       description={template.description}
       kindLabel={t.kinds[template.kind]}
-      badges={
-        template.has_default_placements ? (
-          <Badge tone="amber" size="sm" square>
-            <Crown className="h-3.5 w-3.5" aria-hidden="true" />
-            {t.officialRanking}
-          </Badge>
-        ) : undefined
-      }
       items={items}
       tiers={tiers}
       placements={placements}

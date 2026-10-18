@@ -3,6 +3,7 @@
 import type { ReactNode } from 'react';
 import { Crop } from 'lucide-react';
 import { Button } from '@/components/common/Button';
+import { ImageUploadDropzone } from '@/components/common/ImageUploadDropzone';
 import { Input, Textarea } from '@/components/common/Field';
 import { Switch } from '@/components/common/Switch';
 import { Tooltip, tip } from '@/components/common/Tooltip';
@@ -87,46 +88,37 @@ export function RosterBasicsSection({
           />
         </label>
         <div className="md:col-span-2">
-          <span className={LABEL}>{c.coverImageLabel || 'Cover image URL (optional)'}</span>
-          <div className="flex gap-2">
-            <Input
-              fieldSize="md" invalid={attempted && coverInvalid}
-              value={draft.cover_image_url}
-              onChange={(e) => patch({ cover_image_url: e.target.value })}
-              placeholder={c.coverImagePlaceholder || 'https://...'}
-              inputMode="url"
-              
-              className="2xl:min-h-hit-xl 2xl:text-base"
-            />
-            <Button
-              variant="secondary" size="md"
-              onClick={() => onOpenCrop()}
-              {...tip(c.cropCoverTitle, undefined, 'action')} aria-label={c.cropCoverTitle}
-              className="shrink-0 px-3"
-            >
-              <Crop className="h-4 w-4 text-accent-red" />
-              <span className="hidden sm:inline">{c.cropCoverBadge}</span>
-            </Button>
-          </div>
-
-          {safeCover && (
-            <div
-              onClick={() => onOpenCrop()}
-              className="mt-3 relative group overflow-hidden rounded-card border border-border-color bg-bg-elevated aspect-video max-w-md 2xl:max-w-lg wide:max-w-xl mx-auto shadow-xs cursor-pointer"
-              {...tip(c.cropCoverTitle, undefined, 'action')}
-            >
-              <img
-                src={safeCover}
-                alt=""
-                referrerPolicy="no-referrer"
-                className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-              />
-              <div className="absolute inset-0 bg-bg-primary/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-1.5 text-text-inverted type-strong">
+          <ImageUploadDropzone
+            value={draft.cover_image_url}
+            onChange={(val) => patch({ cover_image_url: val })}
+            label={c.coverImageLabel}
+            hint={c.coverImagePlaceholder}
+            invalid={attempted && coverInvalid}
+            onPreviewClick={() => onOpenCrop()}
+            previewOverlay={
+              <div className="absolute inset-0 bg-bg-primary/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-1.5 text-text-inverted type-strong pointer-events-none">
                 <Crop className="h-5 w-5 text-accent-red" />
                 <span>{c.cropClickPrompt}</span>
               </div>
-            </div>
-          )}
+            }
+            actions={
+              <Button
+                type="button"
+                variant="secondary"
+                size="sm"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onOpenCrop();
+                }}
+                {...tip(c.cropCoverTitle, undefined, 'action')}
+                aria-label={c.cropCoverTitle}
+                className="shrink-0 px-3"
+              >
+                <Crop className="h-4 w-4 text-accent-red" />
+                <span className="hidden sm:inline">{c.cropCoverBadge}</span>
+              </Button>
+            }
+          />
         </div>
 
         <div className="md:col-span-2 flex flex-col items-center justify-center text-center">

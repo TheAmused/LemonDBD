@@ -45,6 +45,7 @@ export interface OfficialTierListUpdatePayload {
   items?: Array<{ id: string; name: string; image_url?: string }>;
   default_placements?: TierPlacements | null;
   is_nsfw?: boolean;
+  is_active?: boolean;
 }
 
 export async function updateOfficialTierList(
@@ -76,6 +77,7 @@ export interface OfficialTierListCreatePayload {
   tiers: TierDefinition[];
   items: Array<{ id: string; name: string; image_url?: string }>;
   is_nsfw?: boolean;
+  is_active?: boolean;
 }
 
 export async function createOfficialTierList(
@@ -98,4 +100,21 @@ export async function createOfficialTierList(
   invalidate(catalogKey('tier-lists'));
   return body.data;
 }
+
+export async function deleteOfficialTierList(
+  slug: string,
+  token?: string | null
+): Promise<void> {
+  const res = await authFetch(apiUrl(`/api/v1/tier-lists/${encodeURIComponent(slug)}`), {
+    method: 'DELETE',
+    token,
+  });
+  if (!res.ok) {
+    const errBody: { error?: string } = await res.json().catch(() => ({}));
+    throw new Error(errBody.error || `Request failed (${res.status})`);
+  }
+  invalidate(catalogKey(`tier-lists/${encodeURIComponent(slug)}`));
+  invalidate(catalogKey('tier-lists'));
+}
+
 

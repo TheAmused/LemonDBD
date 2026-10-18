@@ -67,7 +67,7 @@ export function RosterCarouselCard({
   const brightness = Math.max(0.3, 1 - absOffset * 0.35);
   const zIndex = Math.round(40 - absOffset * 10);
 
-  const rosterLabel = `${rosterDisplayName(r)}${count ? `, ${count} ${dict.smashOrPass.candidates}` : ''}${r.is_active === false ? ` (${dict.tierLists.draft})` : !isRosterEnabled ? ' (Coming Soon)' : ''}${r.is_nsfw ? ' (NSFW)' : ''}`;
+  const rosterLabel = `${rosterDisplayName(r)}${count ? `, ${count} ${dict.smashOrPass.candidates}` : ''}${r.is_active === false ? ` (${dict.tierLists.draft})` : ''}${r.is_nsfw ? ' (NSFW)' : ''}`;
 
   return (
     <div
@@ -192,13 +192,6 @@ export function RosterCarouselCard({
             {dict.tierLists.draft}
           </Badge>
         </div>
-      )}
-
-      {r.is_active !== false && !isRosterEnabled && !isCurrentlyActive && (
-        <Surface tone="elevated" padding="none" className="absolute top-4 right-4 sm:top-5 sm:right-5 flex items-center gap-1.5 px-3 py-1.5 text-text-secondary type-strong shadow-lg pointer-events-none">
-          <PadlockHeartIcon className="h-4 w-4 text-text-muted" aria-hidden="true" />
-          <span>{dict.smashOrPass.comingSoon}</span>
-        </Surface>
       )}
 
       {isCenter && (!r.is_nsfw || globalNsfw) && (

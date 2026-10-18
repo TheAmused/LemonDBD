@@ -12,6 +12,20 @@ import type { RosterItem } from '@/types/smashOrPass';
 import en from '@/locales/en';
 import { setGlobalNsfwPreference } from '@/utils/nsfwAck';
 
+function createMockLocalStorage(): Storage {
+  const store = new Map<string, string>();
+  return {
+    getItem: (key: string) => store.get(key) ?? null,
+    setItem: (key: string, value: string) => store.set(key, String(value)),
+    removeItem: (key: string) => { store.delete(key); },
+    clear: () => { store.clear(); },
+    key: (index: number) => Array.from(store.keys())[index] ?? null,
+    get length() { return store.size; },
+  };
+}
+
+(globalThis as unknown as { localStorage: unknown }).localStorage = createMockLocalStorage();
+
 const mockTierList: TierListSummary = {
   id: 1,
   slug: 'test-tier-list',
@@ -97,6 +111,37 @@ describe('Hub NSFW Blurring & Admin Draft/Delete UX', () => {
     );
 
     assert.ok(html.includes('blur-md'), 'roster cover should have blur-md class when NSFW is not globally acknowledged');
+  });
+
+  it('RosterCarouselCard renders Draft badge when r.is_active === false', () => {
+    const html = renderWithDictionary(
+      React.createElement(RosterCarouselCard, {
+        roster: { ...mockRoster, is_active: false },
+        visualOffset: 0,
+        isDragging: false,
+        isCurrentlyActive: false,
+        onJump: () => {},
+        onCommit: () => {},
+      })
+    );
+
+    assert.ok(html.includes(en.tierLists.draft), 'draft badge should be rendered for inactive roster');
+  });
+
+  it('TierListCreatorParts readDraft preserves is_active status', async () => {
+    const { readDraft, DRAFT_KEY } = await import('@/components/tier-lists/creator/TierListCreatorParts');
+    localStorage.setItem(
+      DRAFT_KEY,
+      JSON.stringify({
+        title: 'Draft List',
+        tiers: [{ id: 't1', label: 'S', color: 's' }],
+        items: [{ id: 'i1', name: 'Item 1' }],
+        is_active: false,
+      })
+    );
+    const draft = readDraft();
+    assert.strictEqual(draft?.is_active, false);
+    localStorage.removeItem(DRAFT_KEY);
   });
 
   it('OfficialTierListView passes onDelete to TierListEditor when isAdmin=true and wires deleteOfficialTierList', () => {

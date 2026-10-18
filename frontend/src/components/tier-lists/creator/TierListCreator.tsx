@@ -30,7 +30,7 @@ import { CreatorPreviewModal } from './CreatorPreview';
 import { type IncomingItem, ItemSources } from './ItemSources';
 import { LadderEditor } from './LadderEditor';
 import { Checkbox } from '@/components/common/Checkbox';
-import { Tooltip } from '@/components/common/Tooltip';
+import { NsfwSwitch } from '@/components/common/NsfwSwitch';
 import { Button } from '@/components/common/Button';
 import { Input } from '@/components/common/Field';
 import { type Draft, readDraft, DRAFT_KEY, Section, STORAGE_WARN_BYTES, formatBytes, Feedback } from './TierListCreatorParts';
@@ -70,6 +70,7 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
       preset: 'classic',
       backgroundImage: '',
       is_nsfw: false,
+      is_active: true,
     }),
     [translateFeeling]
   );
@@ -172,6 +173,7 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
       preset: null,
       backgroundImage: officialTemplate.cover_image_url ?? '',
       is_nsfw: officialTemplate.is_nsfw === true,
+      is_active: officialTemplate.is_active !== false,
     });
   }, [officialSlug, officialTemplate]);
 
@@ -263,6 +265,7 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
               ...(i.image ? { image_url: i.image } : {}),
             })),
             is_nsfw: draft.is_nsfw,
+            is_active: draft.is_active ?? true,
           },
           locale,
           token
@@ -321,6 +324,7 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
               ...(i.image ? { image_url: i.image } : {}),
             })),
             is_nsfw: draft.is_nsfw,
+            is_active: draft.is_active ?? true,
           },
           locale,
           token
@@ -440,14 +444,24 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
               />
             </div>
             <div className="md:col-span-2 flex flex-col items-start gap-3">
-              <Tooltip variant="action" title={t.nsfw.label} description={t.nsfw.hint}>
-                <Checkbox checked={draft.is_nsfw} onChange={(checked) => patch({ is_nsfw: checked })} className="gap-2.5">
-                  <span className={cn(LABEL, 'mb-0 inline')}>{t.nsfw.label}</span>
-                </Checkbox>
-              </Tooltip>
+              <NsfwSwitch
+                checked={draft.is_nsfw}
+                onChange={(checked) => patch({ is_nsfw: checked })}
+                label={t.nsfw.label}
+                hint={t.nsfw.hint}
+              />
               {isAdmin && !isEditing && (
                 <Checkbox checked={official} onChange={setOfficial} className="gap-2.5">
                   <span className={cn(LABEL, 'mb-0 inline')}>{c.official}</span>
+                </Checkbox>
+              )}
+              {isAdmin && (official || Boolean(officialSlug)) && (
+                <Checkbox
+                  checked={draft.is_active ?? true}
+                  onChange={(checked) => patch({ is_active: checked })}
+                  className="gap-2.5"
+                >
+                  <span className={cn(LABEL, 'mb-0 inline')}>{c.publishedLabel}</span>
                 </Checkbox>
               )}
             </div>

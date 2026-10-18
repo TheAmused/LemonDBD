@@ -263,6 +263,7 @@ export default {
     description: 'This roster is flagged as containing mature/NSFW content. Confirm you want to view it.',
     confirm: 'Click to View',
     badge: 'NSFW',
+    reveal: 'Show NSFW',
   },
   comingSoon: 'Coming Soon',
   effectsPrefs: {

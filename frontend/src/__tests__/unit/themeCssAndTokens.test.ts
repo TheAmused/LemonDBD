@@ -30,10 +30,14 @@ describe('Theme CSS & Fog Overlay Rules', () => {
     // Token assertions
     assert.match(
       cssContent,
-      /rgba\((?:100,\s*116,\s*139|15,\s*23,\s*42),\s*0\.05\)/,
+      /(?:rgba\((?:100,\s*116,\s*139|15,\s*23,\s*42),\s*0\.05\)|color-mix\(in srgb, var\(--palette-slate-900\) 5%, transparent\))/,
       'Must include light mode fog mist token'
     );
-    assert.match(cssContent, /rgba\(220,\s*38,\s*38,\s*0\.06\)/, 'Must include dark mode crimson aura token');
+    assert.match(
+      cssContent,
+      /(?:rgba\(220,\s*38,\s*38,\s*0\.06\)|color-mix\(in srgb, var\(--palette-red-600\) 6%, transparent\))/,
+      'Must include dark mode crimson aura token'
+    );
   });
 
   it('defines dark variant custom-variant for Tailwind v4', () => {

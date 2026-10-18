@@ -50,6 +50,7 @@ export default {
   dropHere: "Einträge hier ablegen",
   tierAria: "Tier {label}",
   editTierAria: "Tier {label} bearbeiten",
+  clearTierAria: "Tier {label} leeren",
   showPool: "Nicht eingestufte anzeigen",
   hidePool: "Nicht eingestufte ausblenden",
   moveHere: "Hierher",

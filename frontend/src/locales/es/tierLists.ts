@@ -50,6 +50,7 @@ export default {
   dropHere: "Suelta elementos aquí",
   tierAria: "Nivel {label}",
   editTierAria: "Editar nivel {label}",
+  clearTierAria: "Limpiar nivel {label}",
   showPool: "Mostrar sin clasificar",
   hidePool: "Ocultar sin clasificar",
   moveHere: "Mover aquí",

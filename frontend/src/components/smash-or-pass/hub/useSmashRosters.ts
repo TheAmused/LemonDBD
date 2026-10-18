@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSmashRosterStore } from '@/hooks/useSmashRosterStore';
 import { fetchRosters } from '@/services/smashApi';
 import type { RosterItem } from '@/types/smashOrPass';
-import { acknowledgeNsfwRoster, hasAcknowledgedNsfwRoster } from '@/utils/nsfwAck';
+import { acknowledgeNsfwRoster, hasAcknowledgedNsfwRoster, useGlobalNsfwPreference } from '@/utils/nsfwAck';
 import { defaultRosterThemeColor } from '@/utils/smashOrPass/constants';
 import {
   customRosterToRosterItem,
@@ -38,10 +38,8 @@ export function useSmashRosters(locale: string) {
   const [selectedRosterSlug, setSelectedRosterSlug] = useState<string>(initialRosterSlug);
   const [rosterSwitchEffect, setRosterSwitchEffect] = useState<string | null>(null);
 
-  // NSFW Content Gate: a roster flagged is_nsfw is blurred/blocked behind an explicit
-  // confirmation until the viewer clicks through it, once per roster per browser (persisted
-  // via nsfwAck.ts, not re-prompted every card).
-  const [nsfwAcknowledged, setNsfwAcknowledged] = useState<boolean>(false);
+  const [globalNsfw, setGlobalNsfw] = useGlobalNsfwPreference();
+  const [nsfwAcknowledgedState, setNsfwAcknowledged] = useState<boolean>(false);
 
   const allRosters = useMemo<RosterItem[]>(() => {
     const local = Object.values(customRosterStore.custom).map(customRosterToRosterItem);
@@ -52,6 +50,8 @@ export function useSmashRosters(locale: string) {
     () => allRosters.find((r) => r.slug === selectedRosterSlug) || canonPlaceholder(),
     [allRosters, selectedRosterSlug]
   );
+
+  const nsfwAcknowledged = globalNsfw || nsfwAcknowledgedState || hasAcknowledgedNsfwRoster(activeRoster.slug);
 
   /** A local roster offers the roles/genders its own entities use; official ones the standard set. */
   const distinctOf = useCallback(
@@ -84,7 +84,8 @@ export function useSmashRosters(locale: string) {
   const handleAcknowledgeNsfw = useCallback(() => {
     acknowledgeNsfwRoster(activeRoster.slug);
     setNsfwAcknowledged(true);
-  }, [activeRoster.slug]);
+    setGlobalNsfw(true);
+  }, [activeRoster.slug, setGlobalNsfw]);
 
   const loadRosters = useCallback(async () => {
     try {

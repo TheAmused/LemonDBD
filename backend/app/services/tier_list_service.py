@@ -52,25 +52,27 @@ def validate_tier_list(tier_list: TierList) -> None:
             )
 
 
-def list_tier_lists(lang: str | None = None) -> list[dict[str, Any]]:
-    """Every active template, featured first, then by the curated order."""
+def list_tier_lists(lang: str | None = None, include_inactive: bool = False) -> list[dict[str, Any]]:
+    """Every active template (or all if include_inactive), featured first, then by the curated order."""
+    query = select(TierList)
+    if not include_inactive:
+        query = query.where(TierList.is_active.is_(True))
     rows = db.session.scalars(
-        select(TierList)
-        .where(TierList.is_active.is_(True))
-        .order_by(TierList.is_featured.desc(), TierList.sort_order, TierList.id)
+        query.order_by(TierList.is_featured.desc(), TierList.sort_order, TierList.id)
     ).all()
     return [row.to_summary_dict(lang) for row in rows]
 
 
-def get_tier_list(slug: str, lang: str | None = None) -> dict[str, Any] | None:
-    """One active template by slug, or None. An inactive list is a 404, not a 403:
-    retiring a list should look exactly like it never existed."""
+def get_tier_list(slug: str, lang: str | None = None, include_inactive: bool = False) -> dict[str, Any] | None:
+    """One template by slug, or None. An inactive list is a 404, not a 403:
+    retiring a list should look exactly like it never existed (unless include_inactive=True)."""
     normalized = (slug or "").strip().lower()
     if not normalized:
         return None
-    row = db.session.scalar(
-        select(TierList).where(TierList.slug == normalized, TierList.is_active.is_(True))
-    )
+    query = select(TierList).where(TierList.slug == normalized)
+    if not include_inactive:
+        query = query.where(TierList.is_active.is_(True))
+    row = db.session.scalar(query)
     return row.to_dict(lang) if row else None
 
 
@@ -93,6 +95,7 @@ def create_tier_list(
     tiers: list[dict[str, Any]],
     custom_items: list[dict[str, Any]],
     is_nsfw: bool = False,
+    is_active: bool = True,
 ) -> TierList:
     """An admin-authored official list: `kind='custom'`, its own tiers and
     items (exactly what the creator already builds for a personal list), but
@@ -116,7 +119,7 @@ def create_tier_list(
         custom_items=custom_items,
         is_featured=False,
         is_nsfw=bool(is_nsfw),
-        is_active=True,
+        is_active=bool(is_active),
         sort_order=next_sort_order,
     )
     validate_tier_list(row)
@@ -145,15 +148,16 @@ def update_tier_list(
     custom_items: list[dict[str, Any]] | None = _UNSET,
     default_placements: dict[str, list[str]] | None = _UNSET,
     is_nsfw: bool | None = _UNSET,
+    is_active: bool | None = _UNSET,
 ) -> TierList | None:
-    """Updates an active official tier list in place and rewrites the seed file
+    """Updates an official tier list in place and rewrites the seed file
     so future reseeds retain the admin's edits.
     """
     normalized = (slug or "").strip().lower()
     if not normalized:
         return None
     row = db.session.scalar(
-        select(TierList).where(TierList.slug == normalized, TierList.is_active.is_(True))
+        select(TierList).where(TierList.slug == normalized)
     )
     if row is None:
         return None
@@ -195,6 +199,8 @@ def update_tier_list(
         row.default_placements = default_placements
     if is_nsfw is not _UNSET and is_nsfw is not None:
         row.is_nsfw = bool(is_nsfw)
+    if is_active is not _UNSET and is_active is not None:
+        row.is_active = bool(is_active)
 
     if row.default_placements:
         tier_ids = {str(t.get("id")) for t in (row.tiers or [])} or {"s", "a", "b", "c", "d", "f"}
@@ -218,6 +224,22 @@ def update_tier_list(
     bump_catalog_version()
     _rewrite_seed_file()
     return row
+
+
+def delete_tier_list(slug: str) -> bool:
+    """Deletes an official tier list by slug, bumps catalog version and rewrites seed file."""
+    normalized = (slug or "").strip().lower()
+    if not normalized:
+        return False
+    row = db.session.scalar(select(TierList).where(TierList.slug == normalized))
+    if not row:
+        return False
+    db.session.delete(row)
+    db.session.commit()
+    bump_catalog_version()
+    _rewrite_seed_file()
+    return True
+
 
 
 

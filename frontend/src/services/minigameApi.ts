@@ -127,3 +127,23 @@ export async function publishOfficialChallenge(
 
   return res.json();
 }
+
+export async function deleteOfficialChallenge(
+  id: number,
+  token?: string | null
+): Promise<void> {
+  const res = await fetch(apiUrl(`/api/v1/minigames/official/${id}`), {
+    method: 'DELETE',
+    headers: {
+      Accept: 'application/json',
+      ...authHeaders(token),
+    },
+    credentials: 'include',
+  });
+
+  if (!res.ok) {
+    const errorBody = await res.json().catch(() => ({}));
+    throw new Error(errorBody.error || `Failed to delete official challenge (${res.status})`);
+  }
+}
+

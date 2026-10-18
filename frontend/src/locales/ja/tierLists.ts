@@ -30,6 +30,8 @@ export default {
   loginToManage: "ログインしてティアリストを管理",
   loginToManageDesc: "カスタムティアリストを作成、インポート、保存するにはログインしてください。",
   untitled: "無題のティアリスト",
+  draft: "下書き",
+  published: "公開済み",
   kinds: {
     survivor_perks: "サバイバーのパーク",
     killer_perks: "キラーのパーク",
@@ -50,6 +52,7 @@ export default {
   dropHere: "ここに項目をドロップ",
   tierAria: "ティア {label}",
   editTierAria: "ティア {label} を編集",
+  clearTierAria: "ティア {label} をクリア",
   showPool: "未ランクを表示",
   hidePool: "未ランクを隠す",
   moveHere: "ここへ移動",
@@ -161,6 +164,7 @@ export default {
     backgroundImageLabel: "背景画像URL",
     backgroundImagePlaceholder: "https://...",
     backgroundImageHint: "https:// のリンク、または data:image URI。「マイカスタムリスト」のカード背景に表示されます。",
+    publishedLabel: "公開（ユーザーに表示）",
     cardPreviewHeading: "マイカスタムリストでの見え方",
     presetsLabel: "テンプレート",
     presets: {
@@ -246,6 +250,8 @@ export default {
     description: "このティアリストは成人向け(NSFW)コンテンツとして設定されています。表示してよいか確認してください。",
     confirm: "確認",
     back: "戻る",
+    reveal: "NSFWコンテンツを表示",
+    toggle: "NSFWコンテンツを表示",
   },
   reportNoManifest: "このコピーには有効なアカウントマークがないため、モデレーターはアカウントに結び付けられません。それでも報告でき、モデレーターが内容そのものを確認します。",
 

@@ -30,6 +30,8 @@ export default {
   loginToManage: "Log in to manage custom tier lists",
   loginToManageDesc: "Log in to create, import, and save your custom tier lists.",
   untitled: "Untitled tier list",
+  draft: "Draft",
+  published: "Published",
   kinds: {
     survivor_perks: "Survivor perks",
     killer_perks: "Killer perks",
@@ -50,6 +52,7 @@ export default {
   dropHere: "Drop items here",
   tierAria: "Tier {label}",
   editTierAria: "Edit tier {label}",
+  clearTierAria: "Clear tier {label}",
   showPool: "Show unranked",
   hidePool: "Hide unranked",
   moveHere: "Move here",
@@ -161,6 +164,7 @@ export default {
     backgroundImageLabel: "Background image URL",
     backgroundImagePlaceholder: "https://...",
     backgroundImageHint: "An https:// link or a data:image URI. Shown behind the card in My Custom Lists.",
+    publishedLabel: "Published (visible to public)",
     cardPreviewHeading: "How it'll look in My Custom Lists",
     presetsLabel: "Start from",
     presets: {
@@ -246,6 +250,8 @@ export default {
     description: "This tier list is flagged as containing mature/NSFW content. Confirm you want to view it.",
     confirm: "Confirm",
     back: "Go back",
+    reveal: "Show NSFW content",
+    toggle: "Show NSFW content",
   },
   reportNoManifest: "This copy has no valid account mark, so moderators will not be able to trace it to an account. You can still report it and they will review the content itself.",
 

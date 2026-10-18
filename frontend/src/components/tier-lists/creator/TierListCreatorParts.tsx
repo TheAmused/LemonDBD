@@ -27,6 +27,7 @@ export interface Draft {
   backgroundImage: string;
   /** Marked as containing mature content. */
   is_nsfw: boolean;
+  is_active?: boolean;
 }
 
 export function readDraft(): Draft | null {
@@ -47,6 +48,7 @@ export function readDraft(): Draft | null {
       preset: (parsed.preset as LadderPresetId | null) ?? null,
       backgroundImage: typeof parsed.backgroundImage === 'string' ? parsed.backgroundImage : '',
       is_nsfw: parsed.is_nsfw === true,
+      is_active: parsed.is_active !== false,
     };
   } catch {
     return null;

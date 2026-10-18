@@ -30,13 +30,14 @@ import { CreatorPreviewModal } from './CreatorPreview';
 import { type IncomingItem, ItemSources } from './ItemSources';
 import { LadderEditor } from './LadderEditor';
 import { Checkbox } from '@/components/common/Checkbox';
-import { Tooltip } from '@/components/common/Tooltip';
+import { NsfwSwitch } from '@/components/common/NsfwSwitch';
 import { Button } from '@/components/common/Button';
 import { Input } from '@/components/common/Field';
-import { type Draft, readDraft, DRAFT_KEY, Section, STORAGE_WARN_BYTES, formatBytes, Feedback } from "./TierListCreatorParts";
+import { type Draft, readDraft, DRAFT_KEY, Section, STORAGE_WARN_BYTES, formatBytes, Feedback } from './TierListCreatorParts';
 import { formatMessage } from '@/utils/i18nFormat';
-import { useDictionary } from "@/context/DictionaryContext";
+import { useDictionary } from '@/context/DictionaryContext';
 import { Toast } from '@/components/common/Toast';
+import { ImageUploadDropzone } from '@/components/common/ImageUploadDropzone';
 
 /** The creator's column: as wide as the workspace allows. */
 const WORKSPACE_COLUMN = 'w-full max-w-4xl 2xl:max-wide-2k:max-w-6xl wide-2k:max-w-workspace mx-auto';
@@ -69,6 +70,7 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
       preset: 'classic',
       backgroundImage: '',
       is_nsfw: false,
+      is_active: true,
     }),
     [translateFeeling]
   );
@@ -171,6 +173,7 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
       preset: null,
       backgroundImage: officialTemplate.cover_image_url ?? '',
       is_nsfw: officialTemplate.is_nsfw === true,
+      is_active: officialTemplate.is_active !== false,
     });
   }, [officialSlug, officialTemplate]);
 
@@ -262,6 +265,7 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
               ...(i.image ? { image_url: i.image } : {}),
             })),
             is_nsfw: draft.is_nsfw,
+            is_active: draft.is_active ?? true,
           },
           locale,
           token
@@ -320,6 +324,7 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
               ...(i.image ? { image_url: i.image } : {}),
             })),
             is_nsfw: draft.is_nsfw,
+            is_active: draft.is_active ?? true,
           },
           locale,
           token
@@ -427,39 +432,36 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
                 className={cn(TOUCH_FIELD, '2xl:min-h-hit-xl 2xl:text-base')}
               />
             </label>
-            <label className="md:col-span-2">
-              <span className={LABEL}>{c.backgroundImageLabel}</span>
-              <Input
+            <div className="md:col-span-2">
+              <ImageUploadDropzone
                 value={draft.backgroundImage}
-                onChange={(e) => patch({ backgroundImage: e.target.value })}
+                onChange={(val) => patch({ backgroundImage: val })}
+                label={c.backgroundImageLabel}
                 placeholder={c.backgroundImagePlaceholder}
-                inputMode="url"
+                hint={c.backgroundImageHint}
                 invalid={attempted && backgroundInvalid}
-                className={cn(TOUCH_FIELD, '2xl:min-h-hit-xl 2xl:text-base')}
+                invalidMessage={t.invalidImage}
               />
-              <span
-                className={cn(
-                  'mt-1 block text-xs 2xl:text-sm',
-                  attempted && backgroundInvalid ? 'font-semibold text-accent-red' : 'text-text-muted'
-                )}
-              >
-                {attempted && backgroundInvalid ? t.invalidImage : c.backgroundImageHint}
-              </span>
-              {safeBackground && (
-                <div className="mt-2 h-24 w-full max-w-sm mx-auto overflow-hidden rounded-chip border border-border-color bg-bg-elevated">
-                  <img src={safeBackground} alt="" referrerPolicy="no-referrer" className="h-full w-full object-cover" />
-                </div>
-              )}
-            </label>
+            </div>
             <div className="md:col-span-2 flex flex-col items-start gap-3">
-              <Tooltip variant="action" title={t.nsfw.label} description={t.nsfw.hint}>
-                <Checkbox checked={draft.is_nsfw} onChange={(checked) => patch({ is_nsfw: checked })} className="gap-2.5">
-                  <span className={cn(LABEL, 'mb-0 inline')}>{t.nsfw.label}</span>
-                </Checkbox>
-              </Tooltip>
+              <NsfwSwitch
+                checked={draft.is_nsfw}
+                onChange={(checked) => patch({ is_nsfw: checked })}
+                label={t.nsfw.label}
+                hint={t.nsfw.hint}
+              />
               {isAdmin && !isEditing && (
                 <Checkbox checked={official} onChange={setOfficial} className="gap-2.5">
                   <span className={cn(LABEL, 'mb-0 inline')}>{c.official}</span>
+                </Checkbox>
+              )}
+              {isAdmin && (official || Boolean(officialSlug)) && (
+                <Checkbox
+                  checked={draft.is_active ?? true}
+                  onChange={(checked) => patch({ is_active: checked })}
+                  className="gap-2.5"
+                >
+                  <span className={cn(LABEL, 'mb-0 inline')}>{c.publishedLabel}</span>
                 </Checkbox>
               )}
             </div>

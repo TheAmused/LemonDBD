@@ -44,6 +44,7 @@ interface TierListBoardProps {
   onBoardChange: (board: BoardContainers) => void;
   onReorderTiers?: (fromId: string, toId: string) => void;
   onEditTier: (tierId: string) => void;
+  onClearTier?: (tierId: string) => void;
   canEditTiers?: boolean;
   selectedKey: string | null;
   onSelectedKeyChange: (key: string | null) => void;
@@ -99,6 +100,7 @@ export function TierListBoard({
       onBoardChange,
       onReorderTiers,
       onEditTier,
+      onClearTier,
       canEditTiers = true,
       selectedKey,
       onSelectedKeyChange,
@@ -360,6 +362,7 @@ export function TierListBoard({
                 onMoveSelectedHere={handleMoveSelectedHere}
                 onEdit={onEditTier}
                 canEdit={canEditTiers}
+                onClearRow={onClearTier}
               />
             ))}
           </SortableContext>

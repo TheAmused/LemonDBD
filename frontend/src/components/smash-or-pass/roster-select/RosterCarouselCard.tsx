@@ -12,7 +12,10 @@ import type { RosterItem } from '@/types/smashOrPass';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 import { SmashSounds } from '../SmashSoundEffects';
 import { rosterCoverUrl, rosterDisplayName } from './rosterDisplay';
-import { Surface } from '@/components/common/Surface';
+import { useGlobalNsfwPreference } from '@/utils/nsfwAck';
+import { Badge } from '@/components/common/Badge';
+import { Button } from '@/components/common/Button';
+import { cn } from '@/utils/cn';
 
 interface RosterCarouselCardProps {
   roster: RosterItem;
@@ -48,6 +51,7 @@ export function RosterCarouselCard({
   onCommit,
 }: RosterCarouselCardProps) {
   const dict = useDictionary();
+  const [globalNsfw, setGlobalNsfw] = useGlobalNsfwPreference();
   const absOffset = Math.abs(visualOffset);
   const isCenter = absOffset < 0.5;
   const isRosterEnabled = r.is_active !== false;
@@ -62,7 +66,7 @@ export function RosterCarouselCard({
   const brightness = Math.max(0.3, 1 - absOffset * 0.35);
   const zIndex = Math.round(40 - absOffset * 10);
 
-  const rosterLabel = `${rosterDisplayName(r)}${count ? `, ${count} ${dict.smashOrPass.candidates}` : ''}${!isRosterEnabled ? ' (Coming Soon)' : ''}${r.is_nsfw ? ' (NSFW)' : ''}`;
+  const rosterLabel = `${rosterDisplayName(r)}${count ? `, ${count} ${dict.smashOrPass.candidates}` : ''}${r.is_active === false ? ` (${dict.tierLists.draft})` : ''}${r.is_nsfw ? ' (NSFW)' : ''}`;
 
   return (
     <div
@@ -119,10 +123,30 @@ export function RosterCarouselCard({
             target.style.display = 'none';
           }
         }}
-        className="absolute inset-0 h-full w-full object-cover object-center pointer-events-none"
+        className={cn(
+          "absolute inset-0 h-full w-full object-cover object-center pointer-events-none transition-all duration-300",
+          r.is_nsfw && !globalNsfw && "blur-md scale-105"
+        )}
       />
 
       <div className="absolute inset-0 bg-gradient-to-t from-bg-primary/95 via-bg-primary/40 to-bg-primary/20 pointer-events-none" aria-hidden="true" />
+
+      {isCenter && r.is_nsfw && !globalNsfw && (
+        <div className="absolute inset-0 z-30 flex items-center justify-center p-4">
+          <Button
+            type="button"
+            variant="secondary"
+            size="sm"
+            onClick={(e) => {
+              e.stopPropagation();
+              setGlobalNsfw(true);
+            }}
+            className="shadow-lg"
+          >
+            {dict.smashOrPass.nsfw.reveal}
+          </Button>
+        </div>
+      )}
 
       {isRosterEnabled && (
         <div
@@ -161,14 +185,15 @@ export function RosterCarouselCard({
         </div>
       )}
 
-      {!isRosterEnabled && !isCurrentlyActive && (
-        <Surface tone="elevated" padding="none" className="absolute top-4 right-4 sm:top-5 sm:right-5 flex items-center gap-1.5 px-3 py-1.5 text-text-secondary type-strong shadow-lg pointer-events-none">
-          <PadlockHeartIcon className="h-4 w-4 text-text-muted" aria-hidden="true" />
-          <span>{dict.smashOrPass.comingSoon}</span>
-        </Surface>
+      {r.is_active === false && (
+        <div className="absolute top-4 right-4 sm:top-5 sm:right-5 z-20 pointer-events-none">
+          <Badge tone="amber" size="sm">
+            {dict.tierLists.draft}
+          </Badge>
+        </div>
       )}
 
-      {isCenter && (
+      {isCenter && (!r.is_nsfw || globalNsfw) && (
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none" aria-hidden="true">
           {isRosterEnabled ? (
             <div className="flex h-16 w-16 sm:h-20 sm:w-20 items-center justify-center rounded-full bg-accent-red/20 border-2 border-accent-red/50 backdrop-blur-sm animate-pulse">

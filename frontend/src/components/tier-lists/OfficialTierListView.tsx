@@ -19,7 +19,7 @@ import { useNsfwGate } from '@/hooks/useNsfwGate';
 import { useTierListItems } from '@/hooks/useTierListItems';
 import { useTierListStore } from '@/hooks/useTierListStore';
 import { useTierListTemplate } from '@/hooks/useTierListTemplates';
-import { isNotFoundError, updateOfficialTierList } from '@/services/tierListApi';
+import { deleteOfficialTierList, isNotFoundError, updateOfficialTierList } from '@/services/tierListApi';
 import { resolveTiers } from '@/utils/tierLists/board';
 import { clearRanking, saveRanking } from '@/utils/tierLists/storage';
 import { TierListEditor } from './TierListEditor';
@@ -89,6 +89,15 @@ export function OfficialTierListView({ slug, locale }: OfficialTierListViewProps
     },
     [isAdmin, slug, locale, token]
   );
+
+  const handleDeleteOfficial = useCallback(async () => {
+    try {
+      await deleteOfficialTierList(slug, token);
+      router.push(`/${locale}/tier-lists`);
+    } catch (err) {
+      console.error('Failed to delete official tier list:', err);
+    }
+  }, [slug, token, locale, router]);
 
   const onReset = useCallback(() => clearRanking(slug), [slug]);
 
@@ -184,7 +193,7 @@ export function OfficialTierListView({ slug, locale }: OfficialTierListViewProps
       preferenceKey={template.kind}
       title={template.title}
       description={template.description}
-      kindLabel={t.kinds[template.kind]}
+      kindLabel={template.kind === 'custom' ? undefined : t.kinds[template.kind]}
       items={items}
       tiers={tiers}
       placements={placements}
@@ -197,6 +206,7 @@ export function OfficialTierListView({ slug, locale }: OfficialTierListViewProps
       onSaveOfficial={isAdmin ? handleSaveOfficial : undefined}
       savingOfficial={savingOfficial}
       editHref={isAdmin && template.kind === 'custom' ? `/${locale}/tier-lists/new?official=${encodeURIComponent(slug)}` : undefined}
+      onDelete={isAdmin ? handleDeleteOfficial : undefined}
       onReset={onReset}
       buildExportDoc={buildExportDoc}
       importTarget={{ kind: 'template', slug, title: template.title }}

@@ -9,10 +9,13 @@ interface NsfwContentGateProps {
   description: string;
   confirmLabel: string;
   onConfirm: () => void;
+  /** Together with `onBack`, adds a way out for a viewer who does not want to see the content. */
+  backLabel?: string;
+  onBack?: () => void;
 }
 
 /** Stands in for a tier list or a minigame flagged NSFW until the viewer confirms. */
-export function NsfwContentGate({ title, description, confirmLabel, onConfirm }: NsfwContentGateProps) {
+export function NsfwContentGate({ title, description, confirmLabel, onConfirm, backLabel, onBack }: NsfwContentGateProps) {
   return (
     <div
       data-testid="nsfw-content-gate"
@@ -24,15 +27,16 @@ export function NsfwContentGate({ title, description, confirmLabel, onConfirm }:
         </IconTile>
         <h2 className="text-base font-black text-text-primary sm:text-lg">{title}</h2>
         <p className="type-body-fluid text-text-muted">{description}</p>
-        <Button
-          variant="primary"
-          size="md"
-          onClick={onConfirm}
-          data-testid="nsfw-content-gate-confirm"
-          className="mt-2"
-        >
-          {confirmLabel}
-        </Button>
+        <div className="mt-2 flex flex-wrap items-center justify-center gap-3">
+          {backLabel && onBack && (
+            <Button variant="secondary" size="md" onClick={onBack} data-testid="nsfw-content-gate-back">
+              {backLabel}
+            </Button>
+          )}
+          <Button variant="primary" size="md" onClick={onConfirm} data-testid="nsfw-content-gate-confirm">
+            {confirmLabel}
+          </Button>
+        </div>
       </div>
     </div>
   );

@@ -162,14 +162,9 @@ export function TierItemEditModal({ item, isOpen, onClose, onSave }: TierItemEdi
               invalid={urlInvalid}
               className={TOUCH_FIELD}
             />
-            <span
-              className={cn(
-                'text-xs',
-                urlInvalid ? 'font-semibold text-accent-red' : 'text-text-muted'
-              )}
-            >
-              {urlInvalid ? t.invalidImage : t.itemImageHint}
-            </span>
+            {urlInvalid && (
+              <span className="text-xs font-semibold text-accent-red">{t.invalidImage}</span>
+            )}
           </label>
 
           {error && (

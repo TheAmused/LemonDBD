@@ -497,7 +497,6 @@ export function TierListEditor(props: TierListEditorProps) {
           }}
           onSave={(id, patch) => applyLadder((s) => updateTier(s, id, patch))}
           onCreate={(patch) => applyLadder((s) => addTier(s, patch.label, patch.color, undefined, patch.backgroundImage))}
-          onClear={(id) => applyLadder((s) => clearTier(s, id, catalogOrder))}
           onDelete={(id) => applyLadder((s) => removeTier(s, id, catalogOrder))}
         />
       )}

@@ -91,8 +91,8 @@ export function RosterBasicsSection({
             label={c.coverImageLabel}
             placeholder={c.coverImagePlaceholder}
             invalid={attempted && coverInvalid}
-            invalidMessage={dict.tierLists.invalidImage}
-            aspectRatio="square"
+            invalidMessage={c.invalidImage || dict.tierLists.invalidImage}
+            aspectRatio="banner"
             onPreviewClick={() => onOpenCrop()}
             previewOverlay={
               <div className="absolute inset-0 bg-bg-primary/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-1.5 text-text-inverted type-strong pointer-events-none">
@@ -100,15 +100,29 @@ export function RosterBasicsSection({
                 <span>{c.cropClickPrompt}</span>
               </div>
             }
-            actions={
+            previewActions={
               <Button
                 type="button"
-                variant="secondary"
-                size="sm"
+                variant="overlay"
+                size="xs"
+                icon
+                pill
                 onClick={(e) => {
                   e.stopPropagation();
                   onOpenCrop();
                 }}
+                {...tip(c.cropCoverTitle, undefined, 'action')}
+                aria-label={c.cropCoverTitle}
+              >
+                <Crop className="h-3.5 w-3.5" />
+              </Button>
+            }
+            emptyActions={
+              <Button
+                type="button"
+                variant="secondary"
+                size="sm"
+                onClick={() => onOpenCrop()}
                 {...tip(c.cropCoverTitle, undefined, 'action')}
                 aria-label={c.cropCoverTitle}
                 className="shrink-0 px-3"

@@ -147,6 +147,42 @@ describe('ImageUploadDropzone: Preview and Remove mode (when value is present)',
     assert.ok(html.includes('data-testid="custom-action"'));
     assert.ok(html.includes('Crop Action'));
   });
+
+  it('renders previewActions in preview mode and emptyActions in empty mode', () => {
+    const emptyHtml = renderWithDictionary(
+      h(ImageUploadDropzone, {
+        onChange: () => {},
+        emptyActions: h('span', { 'data-testid': 'empty-action' }, 'Empty Action'),
+        previewActions: h('span', { 'data-testid': 'preview-action' }, 'Preview Action'),
+      })
+    );
+    assert.ok(emptyHtml.includes('data-testid="empty-action"'));
+    assert.ok(!emptyHtml.includes('data-testid="preview-action"'));
+
+    const previewHtml = renderWithDictionary(
+      h(ImageUploadDropzone, {
+        value: 'https://example.com/banner.png',
+        onChange: () => {},
+        emptyActions: h('span', { 'data-testid': 'empty-action' }, 'Empty Action'),
+        previewActions: h('span', { 'data-testid': 'preview-action' }, 'Preview Action'),
+      })
+    );
+    assert.ok(previewHtml.includes('data-testid="preview-action"'));
+    assert.ok(!previewHtml.includes('data-testid="empty-action"'));
+  });
+
+  it('renders keyboard accessibility attributes when onPreviewClick is provided', () => {
+    const html = renderWithDictionary(
+      h(ImageUploadDropzone, {
+        value: 'https://example.com/banner.png',
+        onChange: () => {},
+        onPreviewClick: () => {},
+      })
+    );
+    assert.ok(html.includes('role="button"'));
+    assert.ok(html.includes('tabindex="0"'));
+    assert.ok(html.includes('cursor-pointer'));
+  });
 });
 
 describe('ImageUploadDropzone: Style compliance and design tokens', () => {

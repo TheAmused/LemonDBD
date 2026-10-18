@@ -1,8 +1,8 @@
 'use client';
 // frontend/src/components/common/ImageUploadDropzone.tsx
 
-import React, { useRef, useState } from 'react';
-import { ImagePlus, Trash2, Upload } from 'lucide-react';
+import React, { useEffect, useRef, useState } from 'react';
+import { Check, ImagePlus, Trash2, Upload } from 'lucide-react';
 import { Button } from '@/components/common/Button';
 import { Input } from '@/components/common/Field';
 import { cn } from '@/utils/cn';
@@ -107,6 +107,8 @@ export interface ImageUploadDropzoneProps {
   className?: string;
   disabled?: boolean;
   actions?: React.ReactNode;
+  emptyActions?: React.ReactNode;
+  previewActions?: React.ReactNode;
   removeAriaLabel?: string;
   onPreviewClick?: () => void;
   previewOverlay?: React.ReactNode;
@@ -125,6 +127,8 @@ export function ImageUploadDropzone({
   className,
   disabled = false,
   actions,
+  emptyActions,
+  previewActions,
   removeAriaLabel,
   onPreviewClick,
   previewOverlay,
@@ -133,6 +137,18 @@ export function ImageUploadDropzone({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const [processing, setProcessing] = useState<boolean>(false);
+  const [urlInput, setUrlInput] = useState<string>(value || '');
+
+  useEffect(() => {
+    setUrlInput(value || '');
+  }, [value]);
+
+  const commitUrl = () => {
+    const trimmed = urlInput.trim();
+    if (trimmed && trimmed !== (value || '').trim()) {
+      onChange(trimmed);
+    }
+  };
 
   const resolvedRemoveLabel = removeAriaLabel || dict.tierLists.creator.removeImage;
   const resolvedBrowseLabel = browseLabel || dict.tierLists.creator.chooseFiles;
@@ -165,9 +181,18 @@ export function ImageUploadDropzone({
       {hasValue ? (
         <div
           onClick={onPreviewClick}
+          onKeyDown={(e) => {
+            if (onPreviewClick && (e.key === 'Enter' || e.key === ' ')) {
+              e.preventDefault();
+              onPreviewClick();
+            }
+          }}
+          tabIndex={onPreviewClick ? 0 : undefined}
+          role={onPreviewClick ? 'button' : undefined}
+          aria-label={onPreviewClick ? dict.tierLists.editDetails : undefined}
           className={cn(
             'relative group overflow-hidden rounded-card border border-border-color bg-bg-elevated w-full mx-auto shadow-xs',
-            onPreviewClick && 'cursor-pointer',
+            onPreviewClick && 'cursor-pointer focus:outline-none focus:ring-1 focus:ring-accent-red',
             aspectRatio === 'square' ? 'aspect-square max-w-xs' : 'aspect-video max-w-md 2xl:max-w-lg',
             invalid && 'border-accent-red'
           )}
@@ -180,7 +205,7 @@ export function ImageUploadDropzone({
           />
           {previewOverlay}
           <div className="absolute top-2 right-2 flex items-center gap-1.5 z-10">
-            {actions}
+            {previewActions || actions}
             <Button
               type="button"
               variant="overlay"
@@ -204,7 +229,11 @@ export function ImageUploadDropzone({
             e.preventDefault();
             if (!disabled) setIsDragging(true);
           }}
-          onDragLeave={() => setIsDragging(false)}
+          onDragLeave={(e) => {
+            e.preventDefault();
+            if (e.currentTarget.contains(e.relatedTarget as Node)) return;
+            setIsDragging(false);
+          }}
           onDrop={(e) => {
             e.preventDefault();
             setIsDragging(false);
@@ -233,7 +262,7 @@ export function ImageUploadDropzone({
               <Upload className="h-4 w-4" />
               <span>{resolvedBrowseLabel}</span>
             </Button>
-            {actions}
+            {emptyActions || actions}
           </div>
 
           <input
@@ -250,17 +279,35 @@ export function ImageUploadDropzone({
             }}
           />
 
-          <div className="w-full max-w-sm mt-1">
+          <div className="flex w-full max-w-sm items-center gap-1.5 mt-1">
             <Input
               fieldSize="sm"
               type="url"
               inputMode="url"
               disabled={disabled}
               invalid={invalid}
-              value={value || ''}
-              onChange={(e) => onChange(e.target.value)}
+              value={urlInput}
+              onChange={(e) => setUrlInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  e.preventDefault();
+                  commitUrl();
+                }
+              }}
+              onBlur={commitUrl}
               placeholder={urlPlaceholder}
             />
+            <Button
+              type="button"
+              variant="secondary"
+              size="xs"
+              disabled={disabled || !urlInput.trim()}
+              onClick={commitUrl}
+              className="shrink-0"
+              aria-label={dict.tierLists.save}
+            >
+              <Check className="h-3.5 w-3.5" />
+            </Button>
           </div>
         </div>
       )}

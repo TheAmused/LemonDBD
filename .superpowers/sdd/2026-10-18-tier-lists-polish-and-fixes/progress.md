@@ -10,3 +10,6 @@ Task 4: fix round 1/5 (spec: typography tokens, placeholder/hint separation, bro
 Task 4: fix round 2/5 (quality: decoupled URL entry state, banner aspect ratio, icon overlay button, preview a11y)
 Task 4: complete (commits 4da72d7..df876d0, review clean)
 Task 5: complete (commits c77b486..11f580d, review clean)
+Task 6: fix round 1/5 (spec: missing toggle key under smashOrPass nsfw in all locales)
+Task 6: fix round 2/5 (quality: nsfw gate sync, badges z-index above blur overlay, dead code cleanup, tests)
+Task 6: complete (commits 15ab1e2..85cb8b9, review clean)

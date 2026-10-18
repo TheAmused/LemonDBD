@@ -2,7 +2,7 @@
 // frontend/src/components/tier-lists/TierEditModal.tsx
 
 import React, { useEffect, useState } from 'react';
-import { Check, Eraser, Plus, Trash2 } from 'lucide-react';
+import { Check, Plus, Trash2 } from 'lucide-react';
 import { Modal } from '@/components/common/Modal';
 import type { TierDefinition } from '@/types/tierList';
 import { cn } from '@/utils/cn';
@@ -26,11 +26,10 @@ interface TierEditModalProps {
   onClose: () => void;
   onSave: (id: string, patch: { label: string; color: string; backgroundImage?: string }) => void;
   onCreate?: (patch: { label: string; color: string; backgroundImage?: string }) => void;
-  onClear: (id: string) => void;
   onDelete: (id: string) => void;
 }
 
-/** Edit one tier or create a new one: label, color, and tier image, plus clear/delete when editing. */
+/** Edit one tier or create a new one: label, color, and tier image, plus delete when editing. */
 export function TierEditModal({
   mode = 'edit',
   tier,
@@ -39,7 +38,6 @@ export function TierEditModal({
   onClose,
   onSave,
   onCreate,
-  onClear,
   onDelete,
 }: TierEditModalProps) {
   const dict = useDictionary();
@@ -165,11 +163,7 @@ export function TierEditModal({
         </fieldset>
 
         {mode === 'edit' && tier && (
-          <div className="grid grid-cols-2 gap-2 border-t border-border-color pt-4">
-            <Button variant="secondary" onClick={run(() => onClear(tier.id))} className={TOUCH_BTN}>
-              <Eraser className="h-4 w-4" aria-hidden="true" />
-              {t.clearTier}
-            </Button>
+          <div className="flex justify-center border-t border-border-color pt-4">
             <Button
               variant="soft"
               disabled={tierCount <= 1}

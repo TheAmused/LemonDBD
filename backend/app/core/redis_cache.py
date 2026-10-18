@@ -49,6 +49,7 @@ _client: Any = None
 _client_lock = threading.Lock()
 _unavailable_logged = False
 _version_cache: tuple[int, float] | None = None
+_local_catalog_version: int = 1
 
 
 def _log_unavailable(exc: Exception) -> None:
@@ -113,14 +114,17 @@ def catalog_version() -> int:
     if _version_cache and now - _version_cache[1] < 1.0:
         return _version_cache[0]
 
-    version = 1
     client = get_client()
-    if client is not None:
-        try:
-            raw = client.get(VERSION_KEY)
-            version = int(raw) if raw is not None else 1
-        except Exception as exc:
-            _log_unavailable(exc)
+    if client is None:
+        _version_cache = (_local_catalog_version, now)
+        return _local_catalog_version
+
+    version = _local_catalog_version
+    try:
+        raw = client.get(VERSION_KEY)
+        version = int(raw) if raw is not None else 1
+    except Exception as exc:
+        _log_unavailable(exc)
     _version_cache = (version, now)
     return version
 
@@ -131,20 +135,22 @@ def bump_catalog_version() -> int:
     Call this after anything that changes what a catalog endpoint would return:
     a seed run, a seed patch, an admin kill-switch toggle.
     """
-    global _version_cache
+    global _version_cache, _local_catalog_version
     _version_cache = None
     _local.clear()
 
     client = get_client()
     if client is None:
-        return 1
+        _local_catalog_version += 1
+        return _local_catalog_version
     try:
         version = int(client.incr(VERSION_KEY))
         logger.info("[cache] catalog invalidated, now at version %d", version)
         return version
     except Exception as exc:
         _log_unavailable(exc)
-        return 1
+        _local_catalog_version += 1
+        return _local_catalog_version
 
 
 # ------------------------------------------------------------------ get/set

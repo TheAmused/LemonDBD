@@ -30,6 +30,8 @@ export default {
   loginToManage: "Anmelden zur Verwaltung von Tierlisten",
   loginToManageDesc: "Melde dich an, um deine eigenen Tierlisten zu erstellen, zu importieren und zu speichern.",
   untitled: "Unbenannte Tierliste",
+  draft: "Entwurf",
+  published: "Veröffentlicht",
   kinds: {
     survivor_perks: "Überlebenden-Fähigkeiten",
     killer_perks: "Killer-Fähigkeiten",
@@ -50,6 +52,7 @@ export default {
   dropHere: "Einträge hier ablegen",
   tierAria: "Tier {label}",
   editTierAria: "Tier {label} bearbeiten",
+  clearTierAria: "Tier {label} leeren",
   showPool: "Nicht eingestufte anzeigen",
   hidePool: "Nicht eingestufte ausblenden",
   moveHere: "Hierher",
@@ -161,6 +164,7 @@ export default {
     backgroundImageLabel: "Hintergrundbild-URL",
     backgroundImagePlaceholder: "https://...",
     backgroundImageHint: "Ein https://-Link oder eine data:image-URI. Wird hinter der Karte in „Meine eigenen Listen“ angezeigt.",
+    publishedLabel: "Veröffentlicht (für Benutzer sichtbar)",
     cardPreviewHeading: "So sieht es in „Meine eigenen Listen“ aus",
     presetsLabel: "Vorlage",
     presets: {
@@ -246,6 +250,8 @@ export default {
     description: "Diese Tierliste ist als NSFW/nicht jugendfrei markiert. Bestätige, dass du sie sehen möchtest.",
     confirm: "Bestätigen",
     back: "Zurück",
+    reveal: "NSFW-Inhalte anzeigen",
+    toggle: "NSFW-Inhalte anzeigen",
   },
   reportNoManifest: "Diese Kopie hat keine gültige Konto-Markierung, daher können Moderatoren sie keinem Konto zuordnen. Du kannst sie trotzdem melden, und sie prüfen den Inhalt selbst.",
 

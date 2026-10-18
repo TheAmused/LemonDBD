@@ -5,7 +5,7 @@ import React from 'react';
 import { useDroppable } from '@dnd-kit/core';
 import { SortableContext, rectSortingStrategy, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { ArrowDownToLine, GripVertical, Pencil } from 'lucide-react';
+import { ArrowDownToLine, Eraser, GripVertical, Pencil } from 'lucide-react';
 import type { TierDefinition, TierItem } from '@/types/tierList';
 import { cn } from '@/utils/cn';
 import { SortableTierItem } from './SortableTierItem';
@@ -28,6 +28,7 @@ interface TierRowProps {
   onMoveSelectedHere: (containerId: string) => void;
   onEdit: (tierId: string) => void;
   canEdit?: boolean;
+  onClearRow?: (tierId: string) => void;
 }
 
 export const TierRow = React.memo(function TierRow({
@@ -42,6 +43,7 @@ export const TierRow = React.memo(function TierRow({
       onMoveSelectedHere,
       onEdit,
       canEdit = true,
+      onClearRow,
     }: TierRowProps) {
   const dict = useDictionary();
   const t = dict.tierLists;
@@ -132,6 +134,26 @@ export const TierRow = React.memo(function TierRow({
           canReceiveSelection && 'cursor-pointer hover:bg-accent-amber/10'
         )}
       >
+        {canEdit && keys.length > 0 && onClearRow && (
+          <div className="absolute top-1.5 right-1.5 z-10 opacity-70 hover:opacity-100 transition-opacity">
+            <Button
+              type="button"
+              variant="overlay"
+              size="xs"
+              icon
+              pill
+              onClick={(e) => {
+                e.stopPropagation();
+                onClearRow(tier.id);
+              }}
+              aria-label={formatMessage(t.clearTierAria, { label: tier.label })}
+              title={formatMessage(t.clearTierAria, { label: tier.label })}
+            >
+              <Eraser className="h-3.5 w-3.5" aria-hidden="true" />
+            </Button>
+          </div>
+        )}
+
         <SortableContext items={keys.map(itemDndId)} strategy={rectSortingStrategy}>
           {keys.map((key) => {
             const item = itemsByKey.get(key);

@@ -102,9 +102,11 @@ interface OfficialCardProps {
   list: TierListSummary;
   rankedCount: number;
   locale: string;
+  showNsfw?: boolean;
+  onRevealNsfw?: () => void;
 }
 
-export function OfficialTierListCard({ list, rankedCount, locale }: OfficialCardProps) {
+export function OfficialTierListCard({ list, rankedCount, locale, showNsfw = true, onRevealNsfw }: OfficialCardProps) {
   const dict = useDictionary();
   const t = dict.tierLists;
   const cover = coverSrc(list.cover_image_url);
@@ -116,7 +118,7 @@ export function OfficialTierListCard({ list, rankedCount, locale }: OfficialCard
   );
   const descRef = React.useRef<HTMLParagraphElement>(null);
   const descClamped = useIsClamped(descRef, list.description ?? '');
-  const showKindBadge = Boolean(kindName && !isDuplicateKind);
+  const showKindBadge = Boolean(kindName && list.kind !== 'custom' && !isDuplicateKind);
   const fullyRanked = list.item_count !== null && list.item_count > 0 && rankedCount >= list.item_count;
 
   return (
@@ -127,16 +129,37 @@ export function OfficialTierListCard({ list, rankedCount, locale }: OfficialCard
             src={effectiveCover}
             alt=""
             loading="lazy"
-            className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+            className={cn(
+              "h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105",
+              list.is_nsfw && !showNsfw && "blur-md scale-105 select-none pointer-events-none"
+            )}
           />
         )}
         <div
           aria-hidden="true"
           className="absolute inset-0 bg-gradient-to-t from-bg-surface via-bg-surface/50 to-transparent pointer-events-none"
         />
+        {list.is_nsfw && !showNsfw && (
+          <div className="absolute inset-0 z-20 flex flex-col items-center justify-center gap-1.5 bg-bg-surface/75 backdrop-blur-xs p-3 text-center">
+            <Badge tone="red" size="sm">{t.nsfw.badge}</Badge>
+            <Button
+              type="button"
+              variant="secondary"
+              size="xs"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                onRevealNsfw?.();
+              }}
+              className="mt-1 shadow-xs"
+            >
+              {t.nsfw.reveal}
+            </Button>
+          </div>
+        )}
         {descClamped && list.description && <DescriptionPeek text={list.description} />}
         {rankedCount > 0 && (
-          <div className="absolute top-3 left-3 z-10 transition-opacity group-has-[[aria-expanded=true]]/banner:opacity-0">
+          <div className="absolute top-3 left-3 z-30 transition-opacity group-has-[[aria-expanded=true]]/banner:opacity-0">
             <Badge tone="overlay" size="sm" className={cn('tabular-nums', fullyRanked ? 'text-accent-green' : 'text-text-muted')}>
               {formatMessage(t.rankedCount, {
                 count: list.item_count !== null ? `${rankedCount}/${list.item_count}` : rankedCount,
@@ -144,18 +167,23 @@ export function OfficialTierListCard({ list, rankedCount, locale }: OfficialCard
             </Badge>
           </div>
         )}
-        {list.is_nsfw && (
-          <div className="absolute top-3 left-1/2 z-10 -translate-x-1/2 transition-opacity group-has-[[aria-expanded=true]]/banner:opacity-0">
+        {list.is_nsfw && showNsfw && (
+          <div className="absolute top-3 left-1/2 z-30 -translate-x-1/2 transition-opacity group-has-[[aria-expanded=true]]/banner:opacity-0">
             <NsfwBadge label={t.nsfw.badge} />
           </div>
         )}
-        {showKindBadge && (
-          <div className="absolute top-3 right-3 z-10 transition-opacity group-has-[[aria-expanded=true]]/banner:opacity-0">
+        <div className="absolute top-3 right-3 z-30 flex items-center gap-1.5 transition-opacity group-has-[[aria-expanded=true]]/banner:opacity-0">
+          {list.is_active === false && (
+            <Badge tone="amber" size="sm">
+              {t.draft}
+            </Badge>
+          )}
+          {showKindBadge && (
             <Badge tone="overlay" size="sm">
               {kindName}
             </Badge>
-          </div>
-        )}
+          )}
+        </div>
       </div>
 
       <div className="flex flex-col gap-1 text-center sm:text-left">
@@ -163,7 +191,10 @@ export function OfficialTierListCard({ list, rankedCount, locale }: OfficialCard
           {list.title}
         </h3>
         {list.description && (
-          <p ref={descRef} className="type-caption text-text-muted line-clamp-1">
+          <p
+            ref={descRef}
+            className="type-caption text-text-muted line-clamp-1 transition-opacity duration-200 group-has-[[aria-expanded=true]]:opacity-0 group-has-[[aria-expanded=true]]:pointer-events-none"
+          >
             {list.description}
           </p>
         )}
@@ -192,9 +223,11 @@ interface CustomCardProps {
    * list id to navigate to yet.
    */
   disabled?: boolean;
+  showNsfw?: boolean;
+  onRevealNsfw?: () => void;
 }
 
-export function CustomTierListCard({ list, locale, onDelete, disabled }: CustomCardProps) {
+export function CustomTierListCard({ list, locale, onDelete, disabled, showNsfw = true, onRevealNsfw }: CustomCardProps) {
   const dict = useDictionary();
   const t = dict.tierLists;
   const descRef = React.useRef<HTMLParagraphElement>(null);
@@ -217,21 +250,42 @@ export function CustomTierListCard({ list, locale, onDelete, disabled }: CustomC
             src={effectiveBackground}
             alt=""
             loading="lazy"
-            className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+            className={cn(
+              "h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105",
+              list.is_nsfw && !showNsfw && "blur-md scale-105 select-none pointer-events-none"
+            )}
           />
         )}
         <div
           aria-hidden="true"
           className="absolute inset-0 bg-gradient-to-t from-bg-surface via-bg-surface/50 to-transparent pointer-events-none"
         />
+        {list.is_nsfw && !showNsfw && (
+          <div className="absolute inset-0 z-20 flex flex-col items-center justify-center gap-1.5 bg-bg-surface/75 backdrop-blur-xs p-3 text-center">
+            <Badge tone="red" size="sm">{t.nsfw.badge}</Badge>
+            <Button
+              type="button"
+              variant="secondary"
+              size="xs"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                onRevealNsfw?.();
+              }}
+              className="mt-1 shadow-xs"
+            >
+              {t.nsfw.reveal}
+            </Button>
+          </div>
+        )}
         {descClamped && list.description && <DescriptionPeek text={list.description} />}
-        <div className="absolute top-3 left-3 z-10 transition-opacity group-has-[[aria-expanded=true]]/banner:opacity-0">
+        <div className="absolute top-3 left-3 z-30 transition-opacity group-has-[[aria-expanded=true]]/banner:opacity-0">
           <Badge tone="overlay" size="sm" className={cn('tabular-nums', fullyRanked ? 'text-accent-green' : 'text-text-muted')}>
             {formatMessage(t.itemsCount, { count: `${ranked}/${total}` })}
           </Badge>
         </div>
-        {list.is_nsfw && (
-          <div className="absolute top-3 left-1/2 z-10 -translate-x-1/2 transition-opacity group-has-[[aria-expanded=true]]/banner:opacity-0">
+        {list.is_nsfw && showNsfw && (
+          <div className="absolute top-3 left-1/2 z-30 -translate-x-1/2 transition-opacity group-has-[[aria-expanded=true]]/banner:opacity-0">
             <NsfwBadge label={t.nsfw.badge} />
           </div>
         )}
@@ -245,7 +299,7 @@ export function CustomTierListCard({ list, locale, onDelete, disabled }: CustomC
             }}
             {...tip(t.deleteList, undefined, 'action')}
             aria-label={`${t.deleteList} ${customTitle}`}
-            variant="overlay" size="sm" icon className="absolute top-3 right-3 z-10 transition-[opacity,color,background-color] hover:bg-accent-red/20 hover:text-accent-red group-has-[[aria-expanded=true]]/banner:opacity-0"
+            variant="overlay" size="sm" icon className="absolute top-3 right-3 z-30 transition-[opacity,color,background-color] hover:bg-accent-red/20 hover:text-accent-red group-has-[[aria-expanded=true]]/banner:opacity-0"
           >
             <Trash2 className="h-4 w-4" aria-hidden="true" />
           </Button>
@@ -258,7 +312,10 @@ export function CustomTierListCard({ list, locale, onDelete, disabled }: CustomC
             {customTitle}
           </h3>
           {list.description && (
-            <p ref={descRef} className="type-caption text-text-muted line-clamp-1">
+            <p
+              ref={descRef}
+              className="type-caption text-text-muted line-clamp-1 transition-opacity duration-200 group-has-[[aria-expanded=true]]:opacity-0 group-has-[[aria-expanded=true]]:pointer-events-none"
+            >
               {list.description}
             </p>
           )}

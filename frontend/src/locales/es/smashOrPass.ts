@@ -263,6 +263,8 @@ export default {
     description: 'Esta lista está marcada como contenido NSFW/para adultos. Confirma que quieres verla.',
     confirm: 'Clic para Ver',
     badge: 'NSFW',
+    reveal: 'Mostrar NSFW',
+    toggle: 'Mostrar NSFW',
   },
   comingSoon: 'Próximamente',
   effectsPrefs: {

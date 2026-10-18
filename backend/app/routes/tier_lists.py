@@ -3,7 +3,7 @@ from flask import Blueprint, g, jsonify, request
 from pydantic import ValidationError
 
 from app.core.http_cache import cache_catalog
-from app.core.security import admin_required
+from app.core.security import admin_required, get_current_user
 from app.schemas.tier_list import TierListAdminCreate, TierListAdminUpdate
 from app.services import tier_list_service
 from app.services.admin_control_service import log_admin_action
@@ -19,9 +19,11 @@ def list_tier_lists():
     """Summaries of every active official tier list, for the /tier-lists hub.
 
     Seed content only, so it shares the catalog generation: a re-seed bumps the
-    ETag and every browser's copy goes stale at once.
+    ETag and every browser's copy goes stale at once. Admins also see drafts.
     """
-    data = tier_list_service.list_tier_lists(lang=extract_lang())
+    user = get_current_user()
+    is_admin = bool(user and getattr(user, "role", None) == "admin")
+    data = tier_list_service.list_tier_lists(lang=extract_lang(), include_inactive=is_admin)
     return jsonify({"count": len(data), "data": data}), 200
 
 
@@ -29,7 +31,9 @@ def list_tier_lists():
 @cache_catalog(ttl=86400, vary=("lang",))
 def get_tier_list(slug: str):
     """One official tier list template, including its items and default ranking."""
-    data = tier_list_service.get_tier_list(slug, lang=extract_lang())
+    user = get_current_user()
+    is_admin = bool(user and getattr(user, "role", None) == "admin")
+    data = tier_list_service.get_tier_list(slug, lang=extract_lang(), include_inactive=is_admin)
     if data is None:
         return jsonify({"error": "Tier list not found", "status": 404}), 404
     return jsonify({"data": data}), 200
@@ -59,6 +63,7 @@ def create_tier_list():
             tiers=[t.model_dump(exclude_none=True) for t in payload.tiers],
             custom_items=[i.model_dump(exclude_none=True) for i in payload.items],
             is_nsfw=payload.is_nsfw,
+            is_active=payload.is_active,
         )
     except ValueError as err:
         return jsonify({"error": str(err)}), 400
@@ -101,6 +106,8 @@ def update_tier_list(slug: str):
         kwargs["default_placements"] = payload.default_placements
     if "is_nsfw" in fields_set and payload.is_nsfw is not None:
         kwargs["is_nsfw"] = payload.is_nsfw
+    if "is_active" in fields_set and payload.is_active is not None:
+        kwargs["is_active"] = payload.is_active
 
     try:
         row = tier_list_service.update_tier_list(slug, **kwargs)
@@ -118,4 +125,28 @@ def update_tier_list(slug: str):
         details={"slug": row.slug, "updated_fields": sorted(fields_set)},
     )
     return jsonify({"status": "success", "data": row.to_dict(extract_lang())}), 200
+
+
+@tier_lists_bp.route("/<string:slug>", methods=["DELETE"])
+@admin_required
+def delete_tier_list(slug: str):
+    """Deletes an official tier list."""
+    row = tier_list_service.get_tier_list(slug, include_inactive=True)
+    if row is None:
+        return jsonify({"error": "Tier list not found", "status": 404}), 404
+
+    target_id = row.get("id")
+    deleted = tier_list_service.delete_tier_list(slug)
+    if not deleted:
+        return jsonify({"error": "Tier list not found", "status": 404}), 404
+
+    log_admin_action(
+        g.current_user.id,
+        "tier_list.delete",
+        target_type="tier_list",
+        target_id=target_id,
+        details={"slug": slug, "title": row.get("title")},
+    )
+    return jsonify({"status": "success", "message": "Tier list deleted"}), 200
+
 

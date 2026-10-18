@@ -57,7 +57,7 @@ export interface TierListEditorProps {
   preferenceKey: string;
   title: string;
   description?: string;
-  kindLabel: string;
+  kindLabel?: string;
   items: TierItem[];
   tiers: TierDefinition[];
   /** As stored -- may include keys of items not currently shown; they are preserved on save. */
@@ -301,7 +301,7 @@ export function TierListEditor(props: TierListEditorProps) {
               {t.editDetails}
             </Link>
           )}
-          {mode === 'custom' && onDelete && (
+          {onDelete && (
             <MenuItem role="menuitem" className="text-accent-red" onClick={() => { setMenuOpen(false); setDialog('delete'); }}>
               <Trash2 className="h-4 w-4" aria-hidden="true" />
               {t.deleteList}
@@ -407,7 +407,7 @@ export function TierListEditor(props: TierListEditorProps) {
                 <span className="hidden xl:inline short:hidden!">{t.editDetails}</span>
               </Link>
             )}
-            {mode === 'custom' && onDelete && (
+            {onDelete && (
               <Button
                 variant="soft"
                 size="sm"
@@ -470,6 +470,7 @@ export function TierListEditor(props: TierListEditorProps) {
         board={board}
         onBoardChange={handleBoardChange}
         onReorderTiers={canEditTiers ? (fromId, toId) => applyLadder((s) => reorderTiers(s, fromId, toId)) : undefined}
+        onClearTier={canEditTiers ? (id) => applyLadder((s) => clearTier(s, id, catalogOrder)) : undefined}
         onEditTier={(id) => {
           if (!canEditTiers) return;
           setAddingTier(false);
@@ -496,7 +497,6 @@ export function TierListEditor(props: TierListEditorProps) {
           }}
           onSave={(id, patch) => applyLadder((s) => updateTier(s, id, patch))}
           onCreate={(patch) => applyLadder((s) => addTier(s, patch.label, patch.color, undefined, patch.backgroundImage))}
-          onClear={(id) => applyLadder((s) => clearTier(s, id, catalogOrder))}
           onDelete={(id) => applyLadder((s) => removeTier(s, id, catalogOrder))}
         />
       )}
@@ -516,7 +516,7 @@ export function TierListEditor(props: TierListEditorProps) {
         }}
       />
 
-      {mode === 'custom' && onDelete && (
+      {onDelete && (
         <ConfirmModal
           open={dialog === 'delete'}
           title={t.deleteListTitle}

@@ -12,7 +12,6 @@ import type { RosterItem } from '@/types/smashOrPass';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 import { SmashSounds } from '../SmashSoundEffects';
 import { rosterCoverUrl, rosterDisplayName } from './rosterDisplay';
-import { Surface } from '@/components/common/Surface';
 import { useGlobalNsfwPreference } from '@/utils/nsfwAck';
 import { Badge } from '@/components/common/Badge';
 import { Button } from '@/components/common/Button';

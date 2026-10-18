@@ -37,7 +37,7 @@ export function VoiceBannerHeader({
   onSourceChange,
 }: VoiceBannerHeaderProps) {
   const dict = useDictionary();
-  const rawVoiceDict = (dict.voice || {}) as Record<string, string>;
+  const rawVoiceDict = dict.voice;
 
   return (
     <div className="relative z-20 flex flex-col md:flex-row items-center justify-between gap-2.5 sm:gap-3 w-full mb-3">
@@ -105,8 +105,8 @@ export function VoiceBannerHeader({
           )}
           <span>
             {activeEngine === 'web-speech'
-              ? rawVoiceDict.engineNativeBadge || 'Web Speech'
-              : rawVoiceDict.engineClientBadge || 'Lokalny Model AI'}
+              ? rawVoiceDict.engineNativeBadge
+              : rawVoiceDict.engineClientBadge}
           </span>
           <span className={`h-2 w-2 rounded-full ${modelProgress.status === 'downloading' ? 'bg-accent-amber animate-pulse' : currentCfg.dotClass}`} aria-hidden="true" />
         </Button>

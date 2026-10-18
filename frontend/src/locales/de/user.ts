@@ -9,6 +9,8 @@ export default {
   statusResolved: "Gelöst",
   statusClosed: "Geschlossen",
   bugReportsTitle: "Deine eingereichten Fehlerberichte",
+  imagePreview: "Bildvorschau",
+  attachmentPreview: "Vollansicht des Anhangs der Fehlermeldung",
   reportNewBug: "Neuen Fehler melden",
   loadingReports: "Lade deine gemeldeten Tickets...",
   noReportsTitle: "Keine Fehlerberichte eingereicht",

@@ -3,18 +3,13 @@
 
 import React, { useState } from 'react';
 import { User, ZoomIn } from 'lucide-react';
-import type { CharacterItem } from '../types';
+import type { CharacterItem, CharacterDetailDictionary } from '../types';
 import { getAvatarUrl } from '../types';
 import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
 
 import { tip } from '@/components/common/Tooltip';
 import { Badge } from '@/components/common/Badge';
-export interface CharacterHeroAvatarTranslations {
-  view3DModel?: string;
-  interactiveViewer?: string;
-  dlcLicensed?: string;
-  dlcOriginal?: string;
-}
+export type CharacterHeroAvatarTranslations = Pick<CharacterDetailDictionary, 'view3DModel' | 'dlcLicensed' | 'dlcOriginal'>;
 
 interface CharacterHeroAvatarProps {
   character: CharacterItem;
@@ -52,7 +47,7 @@ export const CharacterHeroAvatar: React.FC<CharacterHeroAvatarProps> = ({
           }
         }}
         className="group relative w-full max-w-70 sm:max-w-80 aspect-[3/4] rounded-card overflow-hidden border-2 border-border-color bg-bg-elevated shadow-lg dark:shadow-2xl cursor-pointer hover:border-accent-red/60 focus:outline-none focus:ring-2 focus:ring-accent-red transition-all duration-300 flex items-center justify-center"
-        {...tip(t.view3DModel || '', undefined, 'action')}
+        {...tip(t.view3DModel, undefined, 'action')}
         aria-label={heroAriaLabel}
       >
         {!imgFailed ? (
@@ -92,7 +87,7 @@ export const CharacterHeroAvatar: React.FC<CharacterHeroAvatarProps> = ({
           </Badge>
 
           <Badge tone="overlay" size="sm" plain className="backdrop-blur-md">
-            {character.is_licensed ? (t.dlcLicensed || '') : (t.dlcOriginal || '')}
+            {character.is_licensed ? t.dlcLicensed : t.dlcOriginal}
           </Badge>
         </div>
       </div>

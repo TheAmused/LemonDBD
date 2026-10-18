@@ -19,7 +19,7 @@ import { trackEvent } from '@/utils/analytics';
 
 export const DeleteAccountSection: React.FC<{ iconOnly?: boolean }> = ({ iconOnly = false }) => {
   const dict = useDictionary();
-  const t = (dict.user || {}) as Record<string, string>;
+  const t = dict.user;
   const { user, logout } = useAuth();
   const [open, setOpen] = useState(false);
   const [password, setPassword] = useState('');
@@ -76,10 +76,10 @@ export const DeleteAccountSection: React.FC<{ iconOnly?: boolean }> = ({ iconOnl
         icon={iconOnly}
         onClick={() => setOpen(true)}
         leftIcon={<Trash2 className="h-3.5 w-3.5" />}
-        aria-label={t.deleteAccountTitle || 'Delete account'}
-        {...tip(t.deleteAccountTitle || 'Delete account', t.deleteAccountDesc, 'action')}
+        aria-label={t.deleteAccountTitle}
+        {...tip(t.deleteAccountTitle, t.deleteAccountDesc, 'action')}
       >
-        {iconOnly ? null : <span>{t.deleteAccountButton || 'Delete my account'}</span>}
+        {iconOnly ? null : <span>{t.deleteAccountButton}</span>}
       </Button>
 
       <Modal

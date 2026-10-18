@@ -280,6 +280,7 @@ export default {
     confirm: 'Kliknij, aby wyświetlić',
     badge: 'NSFW',
     reveal: 'Pokaż NSFW',
+    toggle: 'Pokaż NSFW',
   },
   comingSoon: 'Wkrótce Dostępne',
   effectsPrefs: {

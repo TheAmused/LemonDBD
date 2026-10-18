@@ -11,6 +11,7 @@ import {
 } from '@/types/smashOrPass';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 import { authHeaders } from '@/utils/api';
+import { catalogKey, invalidate } from '@/services/dataCache';
 
 const SESSION_KEY = 'smash_session_id';
 
@@ -341,3 +342,27 @@ export async function saveSmashPreferences(prefs: RemoteSmashPrefs): Promise<voi
   });
   await handleResponse<unknown>(response);
 }
+
+/**
+ * Deletes an official roster by slug and invalidates relevant caches.
+ */
+export async function deleteOfficialRoster(
+  slug: string,
+  token?: string | null
+): Promise<void> {
+  const backendBase = getBackendBaseUrl();
+  const url = `${backendBase}/api/v1/smash-or-pass/admin/rosters/${encodeURIComponent(slug)}`;
+  const headers = {
+    ...getRequestHeaders(),
+    ...authHeaders(token),
+  };
+  const response = await fetch(url, {
+    method: 'DELETE',
+    headers,
+    credentials: 'include',
+  });
+  await handleResponse<unknown>(response);
+  invalidate(catalogKey('smash-or-pass/rosters'));
+  invalidate(catalogKey('smash-or-pass'));
+}
+

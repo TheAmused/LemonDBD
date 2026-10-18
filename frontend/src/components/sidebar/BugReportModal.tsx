@@ -42,6 +42,8 @@ const BUG_GUIDE_ITEMS = [
   { label: 'bugGuideExpectedLabel', text: 'bugGuideExpectedText' },
 ] as const;
 
+const MAX_SCREENSHOT_BYTES = 2 * 1024 * 1024;
+
 export const BugReportModal: React.FC<BugReportModalProps> = ({ isOpen, onClose }) => {
   const dict = useDictionary();
   const { user, isAuthenticated } = useAuth();
@@ -93,7 +95,7 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({ isOpen, onClose 
 
     setErrorMsg(null);
     Array.from(files).forEach((file) => {
-      if (file.size > 5 * 1024 * 1024) {
+      if (file.size > MAX_SCREENSHOT_BYTES) {
         setErrorMsg(t.bugImageSizeLimit);
         return;
       }

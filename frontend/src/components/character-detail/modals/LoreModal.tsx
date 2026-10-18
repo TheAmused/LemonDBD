@@ -1,6 +1,6 @@
 // frontend/src/components/character-detail/modals/LoreModal.tsx
 import React from 'react';
-import { CharacterItem } from '../types';
+import { CharacterItem, CharacterDetailDictionary } from '../types';
 import { Modal } from '@/components/common/Modal';
 
 interface LoreModalProps {
@@ -8,7 +8,7 @@ interface LoreModalProps {
   onClose: () => void;
   character: CharacterItem;
   rawLoreText: string;
-  t: Record<string, string>;
+  t: CharacterDetailDictionary;
 }
 
 export const LoreModal: React.FC<LoreModalProps> = ({
@@ -26,13 +26,13 @@ export const LoreModal: React.FC<LoreModalProps> = ({
       onClose={onClose}
       variant="dialog"
       size="2xl"
-      title={`${character.name} ${t.emDashSeparator || '—'} ${t.loreTitle || 'Lore & Bio'}`}
-      closeButtonAriaLabel={t.close || 'Close'}
+      title={`${character.name} ${t.emDashSeparator || '—'} ${t.loreTitle}`}
+      closeButtonAriaLabel={t.close}
       padded
       bodyClassName="space-y-4 text-sm leading-relaxed text-text-secondary"
     >
       <p className="italic text-text-secondary border-l-2 border-border-color pl-4 py-1">
-        {t.quoteOpen || '"'}{character.name} {t.emDashSeparator || '—'} {t.enteredTheFog || 'Entered The Fog.'}{t.quoteClose || '"'}
+        {t.quoteOpen || '"'}{character.name} {t.emDashSeparator || '—'} {t.enteredTheFog}{t.quoteClose || '"'}
       </p>
       <div className="text-sm leading-relaxed whitespace-pre-line text-justify hyphens-auto text-text-primary font-medium">
         {rawLoreText}

@@ -2,7 +2,7 @@
 // frontend/src/components/character-detail/components/CharacterPerksSection.tsx
 
 import React, { useState } from 'react';
-import { CharacterItem, PerkItem, getAssetUrl } from '../types';
+import { CharacterItem, PerkItem, getAssetUrl, CharacterDetailDictionary } from '../types';
 import { Perk } from '@/types/perks';
 import { DisabledBadge } from '@/components/DisabledBadge';
 import { DisabledReasonModal } from '@/components/DisabledReasonModal';
@@ -14,7 +14,7 @@ interface CharacterPerksSectionProps {
   character: CharacterItem;
   backendBase: string;
   onSelectPerk: (perk: Perk) => void;
-  t: Record<string, string>;
+  t: CharacterDetailDictionary;
 }
 
 export const CharacterPerksSection: React.FC<CharacterPerksSectionProps> = ({
@@ -52,7 +52,7 @@ export const CharacterPerksSection: React.FC<CharacterPerksSectionProps> = ({
                 })
               }
               className="flex w-full max-w-44 flex-col items-center gap-2 rounded-control p-1 transition-all duration-300"
-              aria-label={`${perk.name} - ${t.clickToInspect || 'Click to inspect perk'}`}
+              aria-label={`${perk.name} - ${t.clickToInspect}`}
             >
               <img
                 src={iconSrc}

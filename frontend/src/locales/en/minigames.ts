@@ -67,6 +67,7 @@ export default {
   finishTrial: "Complete Trial",
   playAgain: "Play Again",
   backToMinigames: "Back to Minigames Hub",
+  realmClueAlt: "Realm clue",
   victoryTitle: "Trial Escaped!",
   defeatTitle: "Consumed by The Entity",
   copyResults: "Share Results",

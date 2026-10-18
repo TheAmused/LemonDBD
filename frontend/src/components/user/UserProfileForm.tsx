@@ -24,7 +24,6 @@ interface UserProfileFormProps {
   twoFactorEnabled?: boolean;
   hasPassword?: boolean;
   onRefreshUser: () => Promise<void>;
-  t?: Record<string, string>;
 }
 
 export const UserProfileForm: React.FC<UserProfileFormProps> = ({
@@ -34,10 +33,9 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
   twoFactorEnabled = false,
   hasPassword = true,
   onRefreshUser,
-  t: propT,
 }) => {
   const dict = useDictionary();
-  const t: Record<string, string> = propT || dict.user || {};
+  const t = dict.user;
   const [isExpanded, toggleExpanded] = usePersistentDrawer('lemondbd_drawer_account', false);
 
   const [newUsername, setNewUsername] = useState(initialUsername);
@@ -65,7 +63,7 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
     setStatusMessage(
       res.success
         ? { type: 'success', text: t.setPasswordSent }
-        : { type: 'error', text: res.error || t.profileUpdateFailedMsg || 'Failed to update profile.' }
+        : { type: 'error', text: res.error || t.profileUpdateFailedMsg }
     );
   };
 
@@ -80,7 +78,7 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
     if (newPassword && newPassword.length < 6) {
       setStatusMessage({
         type: 'error',
-        text: t.passwordTooShort || 'Password must be at least 6 characters long.',
+        text: t.passwordTooShort,
       });
       return;
     }
@@ -88,7 +86,7 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
     if (newPassword && newPassword !== confirmPassword) {
       setStatusMessage({
         type: 'error',
-        text: t.passwordsDoNotMatch || 'Passwords do not match.',
+        text: t.passwordsDoNotMatch,
       });
       return;
     }
@@ -113,7 +111,7 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
     if (needsPassword && !currentPassword) {
       setStatusMessage({
         type: 'error',
-        text: t.currentPasswordRequired || 'You must enter your current password to update your account details.',
+        text: t.currentPasswordRequired,
       });
       return;
     }
@@ -133,7 +131,7 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
       await updateUserProfile(payload);
       setStatusMessage({
         type: 'success',
-        text: t.profileUpdateSuccessMsg || 'Profile updated successfully!',
+        text: t.profileUpdateSuccessMsg,
       });
       setCurrentPassword('');
       setTwoFactorCode('');
@@ -151,14 +149,14 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
       } else if (err instanceof ApiError && err.status === 403) {
         setStatusMessage({
           type: 'error',
-          text: t.currentPasswordIncorrect || 'Your current password is incorrect.',
+          text: t.currentPasswordIncorrect,
         });
       } else if (err instanceof ApiError) {
-        setStatusMessage({ type: 'error', text: err.message || t.profileUpdateFailedMsg || 'Failed to update profile.' });
+        setStatusMessage({ type: 'error', text: err.message || t.profileUpdateFailedMsg });
       } else {
         setStatusMessage({
           type: 'error',
-          text: t.profileUpdateFailedMsg || 'Failed to update profile.',
+          text: t.profileUpdateFailedMsg,
         });
       }
     } finally {
@@ -243,11 +241,11 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
           {hasPassword && (
           <div className="space-y-1.5">
             <label className="block type-label-xs text-text-secondary" htmlFor="profile-current-password">
-              {t.currentPassword || 'Current Password'}
+              {t.currentPassword}
               <span
                 className="ml-1 text-accent-red"
                 aria-hidden="true"
-                {...tip(t.currentPasswordHint || 'Required to update your account details', undefined, 'action')}
+                {...tip(t.currentPasswordHint, undefined, 'action')}
               >
                 *
               </span>
@@ -321,7 +319,7 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
                 <span>{dict.user.passwordLabel}</span>
               </span>
               <span className="type-caption text-text-muted">
-                {t.passwordPlaceholder || 'Leave blank to keep current'}
+                {t.passwordPlaceholder}
               </span>
             </div>
 
@@ -329,7 +327,7 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
               {/* New Password Input */}
               <div className="space-y-1">
                 <label className="block type-label-2xs text-text-secondary">
-                  {t.newPassword || 'New Password'}
+                  {t.newPassword}
                 </label>
                 <div className="relative">
                   <Input
@@ -353,7 +351,7 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
               {/* Confirm Password Input */}
               <div className="space-y-1">
                 <label className="block type-label-2xs text-text-secondary">
-                  {t.confirmPassword || 'Confirm New Password'}
+                  {t.confirmPassword}
                 </label>
                 <div className="relative">
                   <Input
@@ -390,7 +388,7 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
             <DeleteAccountSection iconOnly />
           </div>
           <Button type="submit" variant="primary" size="sm" loading={isUpdating} className="flex-1 sm:flex-none min-w-0">
-            <span>{t.saveChanges || 'Save'}</span>
+            <span>{t.saveChanges}</span>
           </Button>
         </div>
       </form>

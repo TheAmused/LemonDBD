@@ -56,7 +56,7 @@ export const VoiceEngineInfoBody: React.FC<Omit<VoiceEngineInfoModalProps, 'isOp
       modelDescriptor,
     }) => {
   const dict = useDictionary();
-  const t = (dict.voice || {}) as Record<string, string>;
+  const t = dict.voice;
 
   return (
     <div className="space-y-6">
@@ -210,7 +210,7 @@ export const VoiceEngineInfoBody: React.FC<Omit<VoiceEngineInfoModalProps, 'isOp
               ? formatMessage((t.downloadProgress || ''), { progress: modelProgress.progress })
               : modelProgress.status === 'ready'
                 ? t.statusReady || ''
-                : t.modelCacheInfo || t.modelCached || ''}
+                : t.modelCached}
           </span>
         </div>
         <span className="type-strong-2xs text-text-muted">
@@ -248,7 +248,7 @@ export const VoiceEngineInfoModal: React.FC<VoiceEngineInfoModalProps> = ({
   ...bodyProps
 }) => {
   const dict = useDictionary();
-  const t = dict.voice as Record<string, string>;
+  const t = dict.voice;
 
   return (
     <Modal
@@ -258,7 +258,7 @@ export const VoiceEngineInfoModal: React.FC<VoiceEngineInfoModalProps> = ({
       size="xl"
       layer="system"
       title={t.howItWorksTitle || ''}
-      ariaLabel={t.howItWorksTitle || 'Voice engine info'}
+      ariaLabel={t.howItWorksTitle}
       closeButtonAriaLabel={dict.modal.close}
       testId="voice-engine-info-modal"
       padded

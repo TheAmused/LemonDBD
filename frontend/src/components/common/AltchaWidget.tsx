@@ -4,6 +4,7 @@
 import React from 'react';
 import { ShieldCheck, ShieldAlert } from 'lucide-react';
 import { Spinner } from '@/components/common/Spinner';
+import { useDictionary } from '@/context/DictionaryContext';
 
 export interface AltchaWidgetProps {
   isVerifying: boolean;
@@ -16,7 +17,6 @@ export interface AltchaWidgetProps {
   verifyingText?: string;
   verifiedText?: string;
   failedText?: string;
-  retryLabel?: string;
 }
 
 export const AltchaWidget: React.FC<AltchaWidgetProps> = ({
@@ -30,8 +30,8 @@ export const AltchaWidget: React.FC<AltchaWidgetProps> = ({
   verifyingText,
   verifiedText,
   failedText,
-  retryLabel,
 }) => {
+  const dict = useDictionary();
   return (
     <div className={className}>
       <input type="text" {...honeypotProps} aria-hidden="true" />
@@ -61,10 +61,10 @@ export const AltchaWidget: React.FC<AltchaWidgetProps> = ({
                 <button
                   type="button"
                   onClick={onRetry}
-                  aria-label={retryLabel || 'Retry'}
+                  aria-label={dict.modal.retry}
                   className="ml-auto underline text-accent-amber hover:opacity-80 type-strong cursor-pointer focus:outline-none"
                 >
-                  {retryLabel || 'Retry'}
+                  {dict.modal.retry}
                 </button>
               )}
             </>

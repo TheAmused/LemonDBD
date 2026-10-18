@@ -15,5 +15,6 @@ export default {
   temporarilyDisabled: "Vorübergehend deaktiviert",
   wasDisabledTemporarily: "{item} wurde vorübergehend deaktiviert.",
   reasonLabel: "Grund",
+  retry: "Wiederholen",
   done: 'Fertig'
 } as const;

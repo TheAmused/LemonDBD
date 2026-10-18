@@ -65,7 +65,7 @@ export function SmashRosterCreator({ locale, editId }: SmashRosterCreatorProps) 
   const [isCropModalOpen, setIsCropModalOpen] = useState(false);
   const [official, setOfficial] = useState(false);
 
-  useDocumentTitle(editId ? `${c.pageTitleEdit || 'LemonDBD - Edit Smash or Pass roster'}` : (c.pageTitleCreate || 'LemonDBD - Create a Smash or Pass roster'));
+  useDocumentTitle(editId ? c.pageTitleEdit : c.pageTitleCreate);
 
   const {
     draft,
@@ -151,7 +151,7 @@ export function SmashRosterCreator({ locale, editId }: SmashRosterCreatorProps) 
   if (editId && storeHydrated && !editingRoster) {
     return (
       <div className="relative z-10 flex flex-col gap-2">
-        <EmptyState icon={SearchX} title={t?.empty?.title || 'Not Found'} subtitle={t?.empty?.subtitle || ''} />
+        <EmptyState icon={SearchX} title={t.empty.title} subtitle={t.empty.subtitle} />
       </div>
     );
   }
@@ -163,12 +163,12 @@ export function SmashRosterCreator({ locale, editId }: SmashRosterCreatorProps) 
 
   const publishingNow = publishing && official && isUserAdmin;
   const submitLabel = publishingNow
-    ? (c.saving || 'Saving...')
+    ? c.saving
     : official && isUserAdmin
-      ? (c.publish || 'Publish')
+      ? c.publish
       : editId
-        ? (c.saveShort || 'Save')
-        : (c.create || 'Create');
+        ? c.saveShort
+        : c.create;
 
   const submitButton = (
     <Button
@@ -185,26 +185,26 @@ export function SmashRosterCreator({ locale, editId }: SmashRosterCreatorProps) 
 
   const errors = attempted
     ? [
-        nameMissing && (c.validationNameRequired || 'Give this roster a name.'),
-        entitiesMissing && (c.validationEntityRequired || 'Add at least one candidate.'),
-        coverInvalid && (c.invalidImage || 'That cover image link is invalid.'),
+        nameMissing && c.validationNameRequired,
+        entitiesMissing && c.validationEntityRequired,
+        coverInvalid && c.invalidImage,
       ].filter(Boolean)
     : [];
 
   return (
     <div className="relative z-10 flex flex-col gap-6 2xl:gap-8 max-w-7xl 2xl:max-wide-2k:max-w-workspace wide-2k:max-w-workspace-xl mx-auto w-full px-4 sm:px-6">
-      <h1 className="sr-only">{editId ? (c.editTitle || 'Edit Roster') : (c.title || 'Create a Roster')}</h1>
+      <h1 className="sr-only">{editId ? c.editTitle : c.title}</h1>
       {restored && (
         <Toast
           icon={<History className="h-4 w-4 2xl:h-5 2xl:w-5" aria-hidden="true" />}
-          message={c.draftRestored || 'Your unfinished draft was restored.'}
+          message={c.draftRestored}
           actions={
             <Button variant="secondary" size="xs" onClick={startOver} className="whitespace-nowrap">
-              {c.startOver || 'Start over'}
+              {c.startOver}
             </Button>
           }
           onDismiss={() => setRestored(false)}
-          dismissLabel={c.closeToast || 'Dismiss'}
+          dismissLabel={c.closeToast}
         />
       )}
 
@@ -253,7 +253,7 @@ export function SmashRosterCreator({ locale, editId }: SmashRosterCreatorProps) 
       {/* BLOCK 3: CANDIDATES */}
       <div className={CREATOR_COLUMN}>
         <Section
-          title={c.stepEntities || 'Candidates'}
+          title={c.stepEntities}
           badge={draft.entities.length}
           defaultOpen={true}
           headerAction={
@@ -264,7 +264,7 @@ export function SmashRosterCreator({ locale, editId }: SmashRosterCreatorProps) 
               className="uppercase tracking-wider"
             >
               <Plus className="h-3.5 w-3.5" aria-hidden="true" />
-              <span>{c.addEntity || 'Add Candidate'}</span>
+              <span>{c.addEntity}</span>
             </Button>
           }
         >
@@ -272,12 +272,12 @@ export function SmashRosterCreator({ locale, editId }: SmashRosterCreatorProps) 
             {draft.entities.length === 0 ? (
               <EmptyState
                 variant="compact"
-                title={c.noEntitiesYet || 'No candidates yet. Add your first one above.'}
+                title={c.noEntitiesYet}
                 action={{
                   label: (
                     <>
                       <Plus className="h-4 w-4" aria-hidden="true" />
-                      <span>{c.addEntity || 'Add Candidate'}</span>
+                      <span>{c.addEntity}</span>
                     </>
                   ),
                   onClick: addEntity,

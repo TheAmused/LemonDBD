@@ -26,8 +26,6 @@ export default {
   orderAsc: "A-Z",
   orderDesc: "Z-A",
   aliasLabel: "Alias:",
-  rarityVeryRare: "Very Rare",
-  rarityUncommon: "Uncommon",
   resetAllFilters: "Reset Filters",
   viewMode: "Perks Grid",
   clearSearch: "Clear search",

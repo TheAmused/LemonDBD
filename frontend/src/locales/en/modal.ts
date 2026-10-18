@@ -15,5 +15,6 @@ export default {
   temporarilyDisabled: "Temporarily disabled",
   wasDisabledTemporarily: "{item} was disabled temporarily.",
   reasonLabel: "Reason",
+  retry: "Retry",
   done: 'Done'
 } as const;

@@ -16,6 +16,7 @@ import {
   getAssetUrl,
   getRarityTileStyle,
   getRarityRank,
+  CharacterDetailDictionary,
 } from '../types';
 import { CategoryPicker } from './CategoryPicker';
 import { CollapsibleDrawer } from './CollapsibleDrawer';
@@ -37,7 +38,7 @@ interface OfferingsSectionProps {
   role: 'Killer' | 'Survivor';
   backendBase: string;
   onSelectOffering?: (item: OfferingItem) => void;
-  t: Record<string, string>;
+  t: CharacterDetailDictionary;
 }
 
 interface OfferingCategoryConfig {
@@ -62,90 +63,90 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
       return [
         {
           key: 'special',
-          label: t.categorySpecial || 'Special & Events',
+          label: t.categorySpecial,
           icon: Sparkles,
-          desc: t.categorySpecialDesc || 'Anniversary & celebration offerings',
+          desc: t.categorySpecialDesc,
         },
         {
           key: 'mori',
-          label: t.categoryMori || 'Memento Mori',
+          label: t.categoryMori,
           icon: MoriCharmIcon,
-          desc: t.categoryMoriDesc || 'Execution rites',
+          desc: t.categoryMoriDesc,
         },
         {
           key: 'bloodpoint',
-          label: t.categoryBloodpoints || 'Bloodpoints',
+          label: t.categoryBloodpoints,
           icon: Coins,
-          desc: t.categoryBloodpointsDesc || 'Score multipliers',
+          desc: t.categoryBloodpointsDesc,
         },
         {
           key: 'map',
-          label: t.categoryMap || 'Realm Offerings',
+          label: t.categoryMap,
           icon: MapIcon,
-          desc: t.categoryMapDesc || 'Location selections',
+          desc: t.categoryMapDesc,
         },
         {
           key: 'shroud',
-          label: t.categoryShroud || 'Shrouds',
+          label: t.categoryShroud,
           icon: EyeOff,
-          desc: t.categoryShroudDesc || 'Spawn positions',
+          desc: t.categoryShroudDesc,
         },
         {
           key: 'ward',
-          label: t.categoryWard || 'Wards',
+          label: t.categoryWard,
           icon: WardCharmIcon,
-          desc: t.categoryWardDesc || 'Protection against loss',
+          desc: t.categoryWardDescKiller,
         },
       ];
     }
     return [
       {
         key: 'special',
-        label: t.categorySpecial || 'Special & Events',
+        label: t.categorySpecial,
         icon: Sparkles,
-        desc: t.categorySpecialDesc || 'Anniversary & celebration offerings',
+        desc: t.categorySpecialDesc,
       },
       {
         key: 'bloodpoint',
-        label: t.categoryBloodpoints || 'Bloodpoints',
+        label: t.categoryBloodpoints,
         icon: Coins,
-        desc: t.categoryBloodpointsDesc || 'Score multipliers',
+        desc: t.categoryBloodpointsDesc,
       },
       {
         key: 'luck',
-        label: t.categoryLuck || 'Luck Charms',
+        label: t.categoryLuck,
         icon: Sparkles,
-        desc: t.categoryLuckDesc || 'Trial fortune',
+        desc: t.categoryLuckDesc,
       },
       {
         key: 'map',
-        label: t.categoryMap || 'Realm Offerings',
+        label: t.categoryMap,
         icon: MapIcon,
-        desc: t.categoryMapDesc || 'Location selections',
+        desc: t.categoryMapDesc,
       },
       {
         key: 'shroud',
-        label: t.categoryShroud || 'Shrouds',
+        label: t.categoryShroud,
         icon: EyeOff,
-        desc: t.categoryShroudDesc || 'Spawn positions',
+        desc: t.categoryShroudDesc,
       },
       {
         key: 'blueprint',
-        label: t.categoryBlueprint || 'Blueprints',
+        label: t.categoryBlueprint,
         icon: Layers,
-        desc: t.categoryBlueprintDesc || 'Hatch & basement placement',
+        desc: t.categoryBlueprintDesc,
       },
       {
         key: 'chest',
-        label: t.categoryChest || 'Chests & Fog',
+        label: t.categoryChest,
         icon: Box,
-        desc: t.categoryChestDesc || 'Chest spawns & fog density',
+        desc: t.categoryChestDesc,
       },
       {
         key: 'ward',
-        label: t.categoryWard || 'Wards',
+        label: t.categoryWard,
         icon: WardCharmIcon,
-        desc: t.categoryWardDesc || 'Item & offering preservation',
+        desc: t.categoryWardDescSurvivor,
       },
     ];
   }, [isKiller, t]);
@@ -316,7 +317,7 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
             </div>
             <div>
               <SectionHeading>
-                {t.offeringsTitle || 'Offerings & Sacrificial Rites'}
+                {t.offeringsTitle}
                 <Badge
                   tone={isKiller ? 'red' : 'green'} size="sm" plain
                 >
@@ -334,14 +335,14 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
             categories={categories}
             selectedKey={selectedCategory}
             onSelect={setSelectedCategory}
-            ariaLabel={t.offeringCategories || 'Offering categories'}
+            ariaLabel={t.offeringCategories}
             accent={isKiller ? 'red' : 'green'}
             countLabel={`(${sortedAndFilteredOfferings.length})`}
           />
         </div>
 
         <Tabs
-          ariaLabel={t.offeringCategories || 'Offering categories'}
+          ariaLabel={t.offeringCategories}
           value={selectedCategory}
           onChange={setSelectedCategory}
           panels={false}
@@ -365,7 +366,7 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
         />
 
         {sortedAndFilteredOfferings.length === 0 ? (
-          <EmptyState variant="inline" title={t.noOfferingsFound || 'No offerings found in this category matching your active filter.'} />
+          <EmptyState variant="inline" title={t.noOfferingsFound} />
         ) : (
           <div className="flex flex-wrap items-center justify-center gap-3.5" role="list">
             {sortedAndFilteredOfferings.map((offering, idx) => {
@@ -387,7 +388,7 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
                   {...tip(offering.name, undefined, 'item')}
                   className={`relative group rounded-card border-2 p-2 flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-110 active:scale-95 focus:outline-none focus:ring-2 focus:ring-accent-red h-20 w-20 sm:h-24 sm:w-24 ${rarityStyle.bg}`}
                   style={rarityStyle.style}
-                  aria-label={`${t.inspectOfferingPrefix || 'Inspect offering:'} ${offering.name}`}
+                  aria-label={`${t.inspectOfferingPrefix} ${offering.name}`}
                 >
                   <img
                     src={getAssetUrl(backendBase, offering.icon_local_path, offering.icon_url)}

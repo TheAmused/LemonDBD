@@ -20,6 +20,7 @@ import {
   getAssetUrl,
   getRarityTileStyle,
   getRarityRank,
+  CharacterDetailDictionary,
 } from '../types';
 import { CategoryPicker } from './CategoryPicker';
 import { CollapsibleDrawer } from './CollapsibleDrawer';
@@ -38,7 +39,7 @@ interface SurvivorEquipmentSectionProps {
   addons?: (AddonItem | EquipmentItem)[];
   backendBase: string;
   onSelectEquipment: (item: AddonItem | EquipmentItem) => void;
-  t: Record<string, string>;
+  t: CharacterDetailDictionary;
 }
 
 type SurvivorCategoryKey =
@@ -135,14 +136,14 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
 
   const categories = useMemo(
     () => [
-      { key: 'medkit' as const, label: t.categoryMedkit || 'Med-Kits', icon: CATEGORY_ICONS.medkit, desc: t.categoryMedkitDesc || 'Healing & Syringes' },
-      { key: 'toolbox' as const, label: t.categoryToolbox || 'Toolboxes', icon: CATEGORY_ICONS.toolbox, desc: t.categoryToolboxDesc || 'Repairs & Sabotage' },
-      { key: 'flashlight' as const, label: t.categoryFlashlight || 'Flashlights', icon: CATEGORY_ICONS.flashlight, desc: t.categoryFlashlightDesc || 'Blinding & Saves' },
-      { key: 'key' as const, label: t.categoryKey || 'Keys', icon: CATEGORY_ICONS.key, desc: t.categoryKeyDesc || 'Auras & Hatch' },
-      { key: 'map' as const, label: t.categoryMapItem || 'Maps', icon: CATEGORY_ICONS.map, desc: t.categoryMapItemDesc || 'Objectives & Totems' },
-      { key: 'fog_vial' as const, label: t.categoryFogVial || 'Fog Vials', icon: CATEGORY_ICONS.fog_vial, desc: t.categoryFogVialDesc || 'Mist & Concealment' },
-      { key: 'event' as const, label: t.categoryEventItems || 'Event Items & Add-ons', icon: CATEGORY_ICONS.event, desc: t.categoryEventItemsDesc || 'Limited Time & Anniversary Items' },
-      { key: 'trial_exclusive' as const, label: t.categoryTrialArtifacts || 'Trial Artifacts', icon: CATEGORY_ICONS.trial_exclusive, desc: t.categoryTrialArtifactsDesc || 'In-Trial Counter Items' },
+      { key: 'medkit' as const, label: t.categoryMedkit, icon: CATEGORY_ICONS.medkit, desc: t.categoryMedkitDesc },
+      { key: 'toolbox' as const, label: t.categoryToolbox, icon: CATEGORY_ICONS.toolbox, desc: t.categoryToolboxDesc },
+      { key: 'flashlight' as const, label: t.categoryFlashlight, icon: CATEGORY_ICONS.flashlight, desc: t.categoryFlashlightDesc },
+      { key: 'key' as const, label: t.categoryKey, icon: CATEGORY_ICONS.key, desc: t.categoryKeyDesc },
+      { key: 'map' as const, label: t.categoryMapItem, icon: CATEGORY_ICONS.map, desc: t.categoryMapItemDesc },
+      { key: 'fog_vial' as const, label: t.categoryFogVial, icon: CATEGORY_ICONS.fog_vial, desc: t.categoryFogVialDesc },
+      { key: 'event' as const, label: t.categoryEventItems, icon: CATEGORY_ICONS.event, desc: t.categoryEventItemsDesc },
+      { key: 'trial_exclusive' as const, label: t.categoryTrialArtifacts, icon: CATEGORY_ICONS.trial_exclusive, desc: t.categoryTrialArtifactsDesc },
     ],
     [t]
   );
@@ -190,7 +191,7 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
             </IconTile>
             <div>
               <SectionHeading id="survivor-equipment-heading">
-                {t.equipmentTitleSurvivor || 'Survival Items & Equipment'}
+                {t.equipmentTitleSurvivor}
                 <Badge tone="green" size="sm" plain>
                   {items.length + addons.length}
                 </Badge>
@@ -202,7 +203,7 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
       <div className="space-y-4">
       <div className="flex flex-col md:flex-row gap-4 items-stretch">
         <Tabs
-          ariaLabel={t.equipmentCategories || 'Survivor item categories'}
+          ariaLabel={t.equipmentCategories}
           value={selectedCategory}
           onChange={setSelectedCategory}
           panels={false}
@@ -230,7 +231,7 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
                 categories={categories}
                 selectedKey={selectedCategory}
                 onSelect={(key) => setSelectedCategory(key as SurvivorCategoryKey)}
-                ariaLabel={t.equipmentCategories || 'Survivor item categories'}
+                ariaLabel={t.equipmentCategories}
                 accent="green"
                 countLabel={`(${categorizedData.displayedItems.length})`}
               />
@@ -238,12 +239,12 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
             <div className="hidden sm:flex items-center justify-center border-b border-border-color pb-2.5 mb-3">
               <h3 className="type-label-sm text-accent-green flex items-center gap-1.5">
                 <Package className="h-4 w-4" aria-hidden="true" />
-                {t.items || 'Items'} ({categorizedData.displayedItems.length})
+                {t.items} ({categorizedData.displayedItems.length})
               </h3>
             </div>
 
             {categorizedData.displayedItems.length === 0 ? (
-              <EmptyState variant="inline" className="flex-1 py-8 text-center" title={t.noItemsFound || 'No items found in this category matching your filter.'} />
+              <EmptyState variant="inline" className="flex-1 py-8 text-center" title={t.noItemsFound} />
             ) : (
               <div className="flex flex-wrap items-center justify-center gap-3 p-1" role="list">
                 {categorizedData.displayedItems.map((item, idx) => {
@@ -265,7 +266,7 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
                       {...tip(item.name, undefined, 'item')}
                       className={`relative group rounded-card border-2 p-1.5 flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-110 active:scale-95 focus:outline-none focus:ring-2 focus:ring-accent-green h-20 w-20 sm:h-24 sm:w-24 ${rarityStyle.bg}`}
                       style={rarityStyle.style}
-                      aria-label={`${t.inspectItemPrefix || 'Inspect item:'} ${item.name}`}
+                      aria-label={`${t.inspectItemPrefix} ${item.name}`}
                     >
                       <img
                         src={getAssetUrl(backendBase, item.icon_local_path, item.icon_url)}
@@ -287,12 +288,12 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
               <h3 className="type-label-sm text-text-secondary flex items-center gap-1.5">
                 <Sparkles className="h-4 w-4" aria-hidden="true" />
                 {selectedCategory === 'trial_exclusive'
-                  ? t.artifactMechanics || 'Artifact Mechanics'
-                  : `${t.compatibleAddons || 'Compatible Add-ons'} (${categorizedData.displayedAddons.length})`}
+                  ? t.artifactMechanics
+                  : `${t.compatibleAddons} (${categorizedData.displayedAddons.length})`}
               </h3>
               {selectedCategory === 'trial_exclusive' && (
                 <span className="type-micro text-accent-amber">
-                  {t.specialTrialRules || 'Special Trial Rules'}
+                  {t.specialTrialRules}
                 </span>
               )}
             </div>
@@ -301,18 +302,18 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
               <div className="flex-1 flex flex-col justify-center p-4 rounded-card bg-accent-amber/10 border border-accent-amber/30 text-xs space-y-3">
                 <div className="flex items-center gap-2 text-accent-amber type-card-title">
                   <ShieldAlert className="h-5 w-5 shrink-0" aria-hidden="true" />
-                  <span>{t.inTrialArtifactsHeading || 'In-Trial Killer Counters & Artifacts'}</span>
+                  <span>{t.inTrialArtifactsHeading}</span>
                 </div>
                 <p className="text-text-secondary leading-relaxed">
-                  {t.trialArtifactsDesc1 || 'These unique artifacts (such as Hand & Eye of Vecna, Lament Configuration, Remote Flame Turrets, EMPs, First Aid Sprays, and Vaccines) cannot be equipped in the pre-game lobby.'}
+                  {t.trialArtifactsDesc1}
                 </p>
                 <p className="text-text-secondary leading-relaxed">
-                  {t.trialArtifactsDesc2 || "They are spawned inside the Trial grounds to interact directly with specific Killers' powers and counteract their special abilities."}
+                  {t.trialArtifactsDesc2}
                 </p>
               </div>
             ) : categorizedData.displayedAddons.length === 0 ? (
               <div className="flex-1 flex items-center justify-center p-8 text-center text-text-muted text-xs italic">
-                {t.noCompatibleAddons || 'No compatible add-ons found for this item type.'}
+                {t.noCompatibleAddons}
               </div>
             ) : (
               <div className="flex flex-wrap items-center justify-center gap-2.5 p-1" role="list">
@@ -336,7 +337,7 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
                       {...tip(displayItem.name, undefined, 'item')}
                       className={`relative group rounded-card border-2 p-1.5 flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-110 active:scale-95 focus:outline-none focus:ring-2 focus:ring-accent-amber h-20 w-20 sm:h-24 sm:w-24 ${rarityStyle.bg}`}
                       style={rarityStyle.style}
-                      aria-label={`${t.inspectAddonPrefix || 'Inspect addon:'} ${displayItem.name}`}
+                      aria-label={`${t.inspectAddonPrefix} ${displayItem.name}`}
                     >
                       <img
                         src={getAssetUrl(backendBase, item.icon_local_path, item.icon_url)}

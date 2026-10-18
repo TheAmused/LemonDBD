@@ -67,6 +67,7 @@ export default {
   finishTrial: "Prüfung abschließen",
   playAgain: "Erneut spielen",
   backToMinigames: "Zurück zu den Minispielen",
+  realmClueAlt: "Reich-Hinweis",
   victoryTitle: "Der Prüfung entkommen!",
   defeatTitle: "Vom Entitus verschlungen",
   copyResults: "Ergebnisse teilen",

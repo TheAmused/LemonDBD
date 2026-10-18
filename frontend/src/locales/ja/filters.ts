@@ -26,8 +26,6 @@ export default {
   orderAsc: "A-Z",
   orderDesc: "Z-A",
   aliasLabel: "別名:",
-  rarityVeryRare: "ベリーレア",
-  rarityUncommon: "アンコモン",
   resetAllFilters: "すべてのフィルターをリセット",
   viewMode: "パークグリッド表示",
   clearSearch: "検索をクリア",

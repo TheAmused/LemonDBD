@@ -45,7 +45,7 @@ export const RealmGuesser: React.FC<RealmGuesserProps> = ({ roundConfig, realms,
         >
           <Image
             src={imageUrl}
-            alt={targetRealm?.name || 'Realm Clue'}
+            alt={targetRealm?.name || dict.minigames.realmClueAlt}
             fill
             unoptimized
             className="object-cover select-none pointer-events-none"

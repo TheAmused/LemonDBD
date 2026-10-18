@@ -40,7 +40,7 @@ const PerkModal = dynamic(() => import('@/components/PerkModal').then((m) => m.P
 export const KillerDetailView: React.FC<CharacterViewBaseProps> = ({ currentLocale, detailData, allCharacters = [] }) => {
   const dict = useDictionary();
   const backendBase = getBackendBaseUrl();
-  const t: Record<string, string> = dict.characterDetail;
+  const t = dict.characterDetail;
 
   const character = detailData?.character || { name: '', category: 'Killer' };
   const killerPower = detailData?.power;
@@ -65,26 +65,10 @@ export const KillerDetailView: React.FC<CharacterViewBaseProps> = ({ currentLoca
     character.release_date || String(character.release_year || '2016'),
     currentLocale
   );
-  const rawLoreText = character.lore || t.noLoreFound || '';
-
-  const articleAriaLabel = t.characterDetails
-    ? `${character.name} - ${t.characterDetails}`
-    : character.name;
-
-  const powerTitle = killerPower
-    ? t.inspectPowerMechanics
-      ? `${killerPower.name} (${t.inspectPowerMechanics})`
-      : killerPower.name
-    : '';
-
-  const powerAriaLabel = killerPower
-    ? t.powerDetails
-      ? `${killerPower.name} - ${t.powerDetails}`
-      : killerPower.name
-    : '';
+  const rawLoreText = character.lore || '';
 
   return (
-    <article className="space-y-8 animate-in fade-in duration-300 w-full" aria-label={articleAriaLabel}>
+    <article className="space-y-8 animate-in fade-in duration-300 w-full" aria-label={character.name}>
       {/* 1. Breadcrumbs & Character Navigator */}
       <CharacterBreadcrumbs
         currentLocale={currentLocale}
@@ -115,8 +99,8 @@ export const KillerDetailView: React.FC<CharacterViewBaseProps> = ({ currentLoca
                 <TileButton
                   onClick={() => setIsPowerModalOpen(true)}
                   className="group relative h-20 w-20 sm:h-24 sm:w-24 shrink-0 rounded-control bg-bg-elevated border-2 border-accent-red/60 hover:border-accent-red p-2.5 flex items-center justify-center shadow-xl transition-all duration-300"
-                  {...tip(powerTitle, undefined, 'item')}
-                  aria-label={powerAriaLabel}
+                  {...tip(killerPower.name, undefined, 'item')}
+                  aria-label={killerPower.name}
                 >
                   {killerPower.icon_url || killerPower.icon_local_path ? (
                     <img
@@ -178,8 +162,8 @@ export const KillerDetailView: React.FC<CharacterViewBaseProps> = ({ currentLoca
               <InfoChip>
                 <ShieldCheck className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
                 {character.is_licensed
-                  ? t.licensedFranchise || t.dlcLicensed || ''
-                  : t.originalChapter || t.dlcOriginal || ''}
+                  ? t.dlcLicensed
+                  : t.dlcOriginal}
               </InfoChip>
             </WrapRow>
           </header>

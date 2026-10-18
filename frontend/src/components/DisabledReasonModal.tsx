@@ -11,31 +11,27 @@ interface DisabledReasonModalProps {
   onClose: () => void;
   label: string;
   reason?: string | null;
-  t?: Record<string, string>;
 }
 
-export const DisabledReasonModal: React.FC<DisabledReasonModalProps> = ({ isOpen, onClose, label, reason, t: propT }) => {
-  const dict = useDictionary();
-  const t: Record<string, string> | undefined = propT || dict.modal;
-  const wasDisabledText = t?.wasDisabledTemporarily
-    ? formatMessage(t.wasDisabledTemporarily, { item: label })
-    : label;
+export const DisabledReasonModal: React.FC<DisabledReasonModalProps> = ({ isOpen, onClose, label, reason }) => {
+  const t = useDictionary().modal;
+  const wasDisabledText = formatMessage(t.wasDisabledTemporarily, { item: label });
 
   return (
     <Modal
       isOpen={isOpen}
       onClose={onClose}
       variant="confirm"
-      title={t?.temporarilyDisabled}
+      title={t.temporarilyDisabled}
       ariaLabel={label}
-      closeButtonAriaLabel={t?.close}
+      closeButtonAriaLabel={t.close}
       padded
     >
       <p className="type-body-lg text-text-secondary">
         {wasDisabledText}
         {reason && (
           <>
-            {' '}{t?.reasonLabel}: <span className="font-semibold text-text-primary">{reason}</span>
+            {' '}{t.reasonLabel}: <span className="font-semibold text-text-primary">{reason}</span>
           </>
         )}
       </p>

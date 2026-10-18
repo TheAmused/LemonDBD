@@ -9,6 +9,8 @@ export default {
   statusResolved: "Resuelto",
   statusClosed: "Cerrado",
   bugReportsTitle: "Tus Reportes de Errores Enviados",
+  imagePreview: "Vista previa de imagen",
+  attachmentPreview: "Vista previa completa del archivo adjunto del reporte de error",
   reportNewBug: "Reportar Nuevo Error",
   loadingReports: "Cargando tus reportes...",
   noReportsTitle: "No Hay Reportes de Errores Enviados",

@@ -2,6 +2,7 @@
 import React from 'react';
 import { RARITY_TILE_IMAGES } from '@/constants/addonRarityIcons';
 import { localeMetaFor } from '@/i18n/config';
+import type { Dictionary } from '@/locales/types';
 
 export interface CharacterItem {
   id?: number;
@@ -103,7 +104,7 @@ export interface CharacterDetailPayload {
   offerings?: OfferingItem[];
 }
 
-export type CharacterDetailDictionary = Record<string, string>;
+export type CharacterDetailDictionary = Dictionary['characterDetail'];
 
 export interface CharacterViewBaseProps {
   currentLocale: string;
@@ -149,12 +150,12 @@ export function formatLocalizedReleaseDate(rawDate?: string, locale: string = 'e
   return rawDate;
 }
 
-export function formatKillerHeight(height?: string, t?: Record<string, string>): string {
+export function formatKillerHeight(height: string | undefined, t: CharacterDetailDictionary): string {
   const h = (height || '').toLowerCase().trim();
-  if (h === 'tall') return t?.heightTall || 'Tall';
-  if (h === 'average') return t?.heightAverage || 'Average';
-  if (h === 'short') return t?.heightShort || 'Short';
-  return height || t?.heightAverage || 'Average';
+  if (h === 'tall') return t.heightTall;
+  if (h === 'average') return t.heightAverage;
+  if (h === 'short') return t.heightShort;
+  return height || t.heightAverage;
 }
 
 export function localizeMetresUnit(count: number, locale: string): string {
@@ -298,37 +299,3 @@ export function getRarityTileStyle(rarity?: string): RarityTileStyle {
     text: 'text-accent-amber',
   };
 }
-
-export function getLocalizedRarity(rarity?: string, t?: Record<string, string>): string {
-  if (!rarity) return '';
-  const r = rarity.toLowerCase().trim();
-  if (r === 'common') return t?.rarityCommon || 'Common';
-  if (r === 'uncommon') return t?.rarityUncommon || 'Uncommon';
-  if (r === 'rare') return t?.rarityRare || 'Rare';
-  if (r === 'very rare' || r === 'veryrare') return t?.rarityVeryRare || 'Very Rare';
-  if (r === 'ultra rare' || r === 'ultrarare' || r === 'iridescent') return t?.rarityUltraRare || 'Ultra Rare';
-  if (r === 'event') return t?.rarityEvent || 'Event';
-  if (r === 'special') return t?.raritySpecial || 'Special';
-  return rarity;
-}
-
-const ITEM_CATEGORY_KEY_MAP: Record<string, string> = {
-  'med-kit': 'categoryMedkit',
-  'toolbox': 'categoryToolbox',
-  'flashlight': 'categoryFlashlight',
-  'key': 'categoryKey',
-  'map': 'categoryMapItem',
-  'fog vial': 'categoryFogVial',
-  'event': 'categoryEventItems',
-  'firecracker': 'categoryFirecracker',
-  'trial artifact': 'categoryTrialArtifacts',
-};
-
-export function getLocalizedItemCategory(category?: string, t?: Record<string, string>): string | undefined {
-  if (!category) return undefined;
-  const key = ITEM_CATEGORY_KEY_MAP[category.toLowerCase().trim()];
-  return (key && t?.[key]) || category;
-}
-
-
-

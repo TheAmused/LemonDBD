@@ -15,5 +15,6 @@ export default {
   temporarilyDisabled: "一時的に無効化中",
   wasDisabledTemporarily: "{item} は一時的に無効化されています。",
   reasonLabel: "理由",
+  retry: "再試行",
   done: '完了'
 } as const;

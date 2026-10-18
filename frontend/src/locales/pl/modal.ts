@@ -15,5 +15,6 @@ export default {
   temporarilyDisabled: "Tymczasowo wyłączone",
   wasDisabledTemporarily: "{item} zostało tymczasowo zablokowane.",
   reasonLabel: "Powód",
+  retry: "Ponów",
   done: 'Gotowe'
 } as const;

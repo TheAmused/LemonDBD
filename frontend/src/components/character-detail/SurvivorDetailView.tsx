@@ -31,7 +31,7 @@ const PerkModal = dynamic(() => import('@/components/PerkModal').then((m) => m.P
 export const SurvivorDetailView: React.FC<CharacterViewBaseProps> = ({ currentLocale, detailData, allCharacters = [] }) => {
   const dict = useDictionary();
   const backendBase = getBackendBaseUrl();
-  const t: Record<string, string> = dict.characterDetail;
+  const t = dict.characterDetail;
 
   const character = detailData?.character || { name: '', category: 'Survivor' };
   const perks = Array.isArray(detailData?.perks) ? detailData.perks : [];
@@ -49,14 +49,10 @@ export const SurvivorDetailView: React.FC<CharacterViewBaseProps> = ({ currentLo
     character.release_date || String(character.release_year || '2016'),
     currentLocale
   );
-  const rawLoreText = character.lore || t.noLoreFound || '';
-
-  const articleAriaLabel = t.characterDetails
-    ? `${character.name} - ${t.characterDetails}`
-    : character.name;
+  const rawLoreText = character.lore || '';
 
   return (
-    <article className="space-y-8 animate-in fade-in duration-300 w-full" aria-label={articleAriaLabel}>
+    <article className="space-y-8 animate-in fade-in duration-300 w-full" aria-label={character.name}>
       <CharacterBreadcrumbs
         currentLocale={currentLocale}
         character={character}
@@ -115,8 +111,8 @@ export const SurvivorDetailView: React.FC<CharacterViewBaseProps> = ({ currentLo
               <InfoChip>
                 <ShieldCheck className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
                 {character.is_licensed
-                  ? t.licensedFranchise || t.dlcLicensed || ''
-                  : t.originalChapter || t.dlcOriginal || ''}
+                  ? t.dlcLicensed
+                  : t.dlcOriginal}
               </InfoChip>
             </WrapRow>
           </header>

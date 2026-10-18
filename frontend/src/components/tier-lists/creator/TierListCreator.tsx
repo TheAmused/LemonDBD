@@ -76,6 +76,7 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
   const [draft, setDraft] = useState<Draft>(freshDraft);
   const [restored, setRestored] = useState<boolean>(false);
   const [attempted, setAttempted] = useState<boolean>(false);
+  const [submitCount, setSubmitCount] = useState<number>(0);
   const [skipped, setSkipped] = useState<number>(0);
   const [saveError, setSaveError] = useState<'quota' | 'unavailable' | null>(null);
   const [previewOpen, setPreviewOpen] = useState<boolean>(false);
@@ -228,6 +229,7 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
 
   const submit = async () => {
     setAttempted(true);
+    setSubmitCount((n) => n + 1);
     if (titleMissing || itemsMissing || backgroundInvalid) return;
     const payload = {
       title: draft.title.trim().slice(0, TIER_LIST_LIMITS.maxTitle),
@@ -391,6 +393,14 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
         />
       )}
 
+      <Feedback
+        errors={errors as string[]}
+        saveError={saveError}
+        publishError={publishError}
+        scrollSignal={submitCount}
+        className={WORKSPACE_COLUMN}
+      />
+
       {/* THE BASICS BLOCK */}
       <div className={WORKSPACE_COLUMN}>
         <Section title={c.stepBasics}>
@@ -518,11 +528,6 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
           {c.previewHeading}
         </Button>
         {submitButton('min-h-11 2xl:min-h-hit-xl px-6 2xl:px-8 text-sm 2xl:text-base font-bold uppercase tracking-wider')}
-      </div>
-
-      {/* Feedback Alerts */}
-      <div className={`${WORKSPACE_COLUMN} flex flex-col gap-4`}>
-        <Feedback errors={errors as string[]} saveError={saveError} publishError={publishError} />
       </div>
 
       <CreatorPreviewModal

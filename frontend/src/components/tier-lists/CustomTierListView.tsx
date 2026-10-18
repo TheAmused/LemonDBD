@@ -130,6 +130,8 @@ export function CustomTierListView({ id, locale }: CustomTierListViewProps) {
         description={t.nsfw.description}
         confirmLabel={t.nsfw.confirm}
         onConfirm={nsfwGate.confirm}
+        backLabel={t.nsfw.back}
+        onBack={() => router.push(`/${locale}/tier-lists`)}
       />
     );
   }

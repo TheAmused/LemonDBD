@@ -52,23 +52,23 @@ export function ItemSources({ onAdd, existingIds, locale }: ItemSourcesProps) {
   const dict = useDictionary();
   const c = dict.tierLists.creator;
   const { isAdmin } = useAuth();
-  const [tab, setTab] = useState<SourceTab>('links');
+  const [tab, setTab] = useState<SourceTab>('catalog');
 
   // Direct file upload is admin-only (guests and regular users don't get the
   // tab at all, not just a disabled one) -- everyone else adds items by
-  // pasting a link or picking from the game's own catalog.
+  // picking from the game's own catalog or pasting a link.
   const options: readonly TabOption[] = [
+    { value: 'catalog', label: c.tabCatalog, icon: <Gamepad2 className="h-3.5 w-3.5" aria-hidden="true" /> },
+    { value: 'links', label: c.tabLinks, icon: <ClipboardPaste className="h-3.5 w-3.5" aria-hidden="true" /> },
     ...(isAdmin
       ? [{ value: 'upload' as const, label: c.tabUpload, icon: <Upload className="h-3.5 w-3.5" aria-hidden="true" /> }]
       : []),
-    { value: 'links', label: c.tabLinks, icon: <ClipboardPaste className="h-3.5 w-3.5" aria-hidden="true" /> },
-    { value: 'catalog', label: c.tabCatalog, icon: <Gamepad2 className="h-3.5 w-3.5" aria-hidden="true" /> },
   ];
 
   // Guards against a stale 'upload' selection if admin status changes (or
   // isn't known yet on first render) out from under an open tab.
   useEffect(() => {
-    if (tab === 'upload' && !isAdmin) setTab('links');
+    if (tab === 'upload' && !isAdmin) setTab('catalog');
   }, [tab, isAdmin]);
 
   return (
@@ -229,7 +229,6 @@ function LinksSource({ onAdd }: { onAdd: (items: IncomingItem[]) => void; }) {
               if (error) setError(null);
             }}
             onKeyDown={(e) => e.key === 'Enter' && handleAdd()}
-            placeholder={t.itemName}
             className={TOUCH_FIELD}
           />
         </label>

@@ -2,6 +2,7 @@
 // frontend/src/components/tier-lists/OfficialTierListView.tsx
 
 import React, { useCallback, useMemo, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { RotateCcw, SearchX, TriangleAlert } from 'lucide-react';
 import { EmptyState } from '@/components/common/EmptyState';
 import {
@@ -36,6 +37,7 @@ const EMPTY: TierPlacements = {};
 export function OfficialTierListView({ slug, locale }: OfficialTierListViewProps) {
   const dict = useDictionary();
   const t = dict.tierLists;
+  const router = useRouter();
   const { isAdmin, token } = useAuth();
   const { template, loading: templateLoading, error: templateError, refresh } = useTierListTemplate(slug, locale);
   const { items, loading: itemsLoading, error: itemsError, refresh: refreshItems } = useTierListItems(template, locale);
@@ -165,6 +167,8 @@ export function OfficialTierListView({ slug, locale }: OfficialTierListViewProps
         description={t.nsfw.description}
         confirmLabel={t.nsfw.confirm}
         onConfirm={nsfwGate.confirm}
+        backLabel={t.nsfw.back}
+        onBack={() => router.push(`/${locale}/tier-lists`)}
       />
     );
   }

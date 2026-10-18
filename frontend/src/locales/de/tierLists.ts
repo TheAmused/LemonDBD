@@ -244,7 +244,8 @@ export default {
     badge: "NSFW",
     title: "Enthält NSFW-Inhalte",
     description: "Diese Tierliste ist als NSFW/nicht jugendfrei markiert. Bestätige, dass du sie sehen möchtest.",
-    confirm: "Klicken zum Anzeigen",
+    confirm: "Bestätigen",
+    back: "Zurück",
   },
   reportNoManifest: "Diese Kopie hat keine gültige Konto-Markierung, daher können Moderatoren sie keinem Konto zuordnen. Du kannst sie trotzdem melden, und sie prüfen den Inhalt selbst.",
 

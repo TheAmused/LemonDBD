@@ -244,7 +244,8 @@ export default {
     badge: "NSFW",
     title: "Zawiera treści NSFW",
     description: "Ta tier lista jest oznaczona jako treść NSFW/dla dorosłych. Potwierdź, że chcesz ją zobaczyć.",
-    confirm: "Kliknij, aby wyświetlić",
+    confirm: "Potwierdź",
+    back: "Wróć",
   },
   reportNoManifest: "Ta kopia nie ma prawidłowego znaku konta, więc moderatorzy nie będą mogli przypisać jej do konta. Nadal możesz ją zgłosić, a moderatorzy sprawdzą samą treść.",
 

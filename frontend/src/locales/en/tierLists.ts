@@ -244,7 +244,8 @@ export default {
     badge: "NSFW",
     title: "Contains NSFW Content",
     description: "This tier list is flagged as containing mature/NSFW content. Confirm you want to view it.",
-    confirm: "Click to View",
+    confirm: "Confirm",
+    back: "Go back",
   },
   reportNoManifest: "This copy has no valid account mark, so moderators will not be able to trace it to an account. You can still report it and they will review the content itself.",
 

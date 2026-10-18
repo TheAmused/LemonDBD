@@ -1,6 +1,7 @@
 // frontend/src/components/character-detail/components/KillerCombatStats.tsx
 import React from 'react';
 import { Activity, Gauge, Radio, ArrowUpDown, Eye } from 'lucide-react';
+import type { CharacterDetailDictionary } from '../types';
 import { Surface } from '@/components/common/Surface';
 
 interface KillerCombatStatsProps {
@@ -8,7 +9,7 @@ interface KillerCombatStatsProps {
   killerTerrorRadius: string;
   killerHeight: string;
   onOpenTerrorRadiusModal: () => void;
-  t: Record<string, string>;
+  t: CharacterDetailDictionary;
 }
 
 /** One stat of the threat scale: an icon tile, its label and the value. */
@@ -36,19 +37,19 @@ export const KillerCombatStats: React.FC<KillerCombatStatsProps> = ({
       <div className="flex flex-col gap-0.5 sm:flex-row sm:items-center sm:justify-between type-label-xs text-text-secondary">
         <span className="flex items-center gap-1.5 text-accent-red">
           <Activity className="h-3.5 w-3.5" />
-          {t.combatAttributes || 'Combat Attributes & Threat Scale'}
+          {t.combatAttributes}
         </span>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         {/* Movement Speed */}
-        <StatRow icon={Gauge} label={t.movementSpeed || 'Movement Speed'} value={killerSpeed} />
+        <StatRow icon={Gauge} label={t.movementSpeed} value={killerSpeed} />
 
         {/* Terror Radius (Visualizer disabled for now) */}
-        <StatRow icon={Radio} label={t.terrorRadius || 'Terror Radius'} value={killerTerrorRadius} />
+        <StatRow icon={Radio} label={t.terrorRadius} value={killerTerrorRadius} />
 
         {/* Height */}
-        <StatRow icon={ArrowUpDown} label={t.height || 'Height'} value={killerHeight} />
+        <StatRow icon={ArrowUpDown} label={t.height} value={killerHeight} />
       </div>
     </Surface>
   );

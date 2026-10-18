@@ -264,6 +264,7 @@ export default {
     confirm: 'クリックして表示',
     badge: 'NSFW',
     reveal: 'NSFWを表示',
+    toggle: 'NSFWを表示',
   },
   comingSoon: '近日公開',
   effectsPrefs: {

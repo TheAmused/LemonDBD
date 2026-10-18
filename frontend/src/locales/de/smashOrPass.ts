@@ -264,6 +264,7 @@ export default {
     confirm: 'Klicken zum Anzeigen',
     badge: 'NSFW',
     reveal: 'NSFW anzeigen',
+    toggle: 'NSFW anzeigen',
   },
   comingSoon: 'Demnächst verfügbar',
   effectsPrefs: {

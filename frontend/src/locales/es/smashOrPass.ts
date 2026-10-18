@@ -264,6 +264,7 @@ export default {
     confirm: 'Clic para Ver',
     badge: 'NSFW',
     reveal: 'Mostrar NSFW',
+    toggle: 'Mostrar NSFW',
   },
   comingSoon: 'Próximamente',
   effectsPrefs: {

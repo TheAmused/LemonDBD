@@ -8,6 +8,7 @@ import {
   getAssetUrl,
   getRarityTileStyle,
   getRarityRank,
+  CharacterDetailDictionary,
 } from '../types';
 import { tip } from '@/components/common/Tooltip';
 import { CollapsibleDrawer } from './CollapsibleDrawer';
@@ -22,7 +23,7 @@ interface KillerEquipmentSectionProps {
   addons?: (AddonItem | EquipmentItem)[];
   backendBase: string;
   onSelectEquipment: (item: AddonItem | EquipmentItem) => void;
-  t: Record<string, string>;
+  t: CharacterDetailDictionary;
 }
 
 export const KillerEquipmentSection: React.FC<KillerEquipmentSectionProps> = ({
@@ -51,12 +52,12 @@ export const KillerEquipmentSection: React.FC<KillerEquipmentSectionProps> = ({
           </IconTile>
           <div>
             <SectionHeading as="h3">
-              {t.equipmentTitleKiller || 'Killer Power Add-ons & Equipment'}
+              {t.equipmentTitleKiller}
             </SectionHeading>
           </div>
         </div>
         <div className="py-8 text-center text-xs text-text-muted">
-          {t.noEquipment || 'No unique add-ons found for this character in database.'}
+          {t.noEquipment}
         </div>
       </Surface>
     );
@@ -75,7 +76,7 @@ export const KillerEquipmentSection: React.FC<KillerEquipmentSectionProps> = ({
             </IconTile>
             <div>
               <SectionHeading as="h3">
-                {t.equipmentTitleKiller || 'Killer Power Add-ons & Equipment'}
+                {t.equipmentTitleKiller}
                 <Badge tone="red" size="sm" plain>
                   {addons.length}
                 </Badge>

@@ -67,6 +67,7 @@ export default {
   finishTrial: "試練終了",
   playAgain: "もう一度プレイ",
   backToMinigames: "ミニゲームハブに戻る",
+  realmClueAlt: "レルムのヒント",
   victoryTitle: "試練から脱出！",
   defeatTitle: "エンティティに捕獲されました",
   copyResults: "結果を共有",

@@ -2,7 +2,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { ChevronLeft, ArrowLeft, ArrowRight } from 'lucide-react';
-import { CharacterItem, getCharacterSlug } from '../types';
+import { CharacterItem, getCharacterSlug, CharacterDetailDictionary } from '../types';
 import { buttonClassName } from '@/components/common/Button';
 import { tip } from '@/components/common/Tooltip';
 
@@ -12,7 +12,7 @@ interface CharacterBreadcrumbsProps {
   roleLabel: string;
   isSurvivor: boolean;
   allCharacters: CharacterItem[];
-  t: Record<string, string>;
+  t: CharacterDetailDictionary;
 }
 
 export const CharacterBreadcrumbs: React.FC<CharacterBreadcrumbsProps> = ({
@@ -49,7 +49,7 @@ export const CharacterBreadcrumbs: React.FC<CharacterBreadcrumbsProps> = ({
 
   return (
     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:border-b sm:border-border-color pb-0 sm:pb-4 w-full">
-      <nav aria-label={t.breadcrumbs || 'Breadcrumb Navigation'} className="flex items-center gap-2 type-strong-fluid">
+      <nav aria-label={t.breadcrumbs} className="flex items-center gap-2 type-strong-fluid">
         <Link
           href={`/${currentLocale}/characters?role=${roleParam}`}
           className={`flex items-center gap-1 font-bold hover:underline transition-colors ${
@@ -70,7 +70,7 @@ export const CharacterBreadcrumbs: React.FC<CharacterBreadcrumbsProps> = ({
           <Link
             href={`/${currentLocale}/characters/${getCharacterSlug(prevChar.name)}`}
             className={buttonClassName('secondary', 'sm')}
-            {...tip(`${t.prevCharacter || 'Previous'}: ${prevChar.name}`, undefined, 'character')}
+            {...tip(`${t.prevCharacter}: ${prevChar.name}`, undefined, 'character')}
           >
             <ArrowLeft className="h-3.5 w-3.5" />
             <span className="hidden md:inline truncate max-w-30">{prevChar.name}</span>
@@ -80,7 +80,7 @@ export const CharacterBreadcrumbs: React.FC<CharacterBreadcrumbsProps> = ({
           <Link
             href={`/${currentLocale}/characters/${getCharacterSlug(nextChar.name)}`}
             className={buttonClassName('secondary', 'sm')}
-            {...tip(`${t.nextCharacter || 'Next'}: ${nextChar.name}`, undefined, 'character')}
+            {...tip(`${t.nextCharacter}: ${nextChar.name}`, undefined, 'character')}
           >
             <span className="hidden md:inline truncate max-w-30">{nextChar.name}</span>
             <ArrowRight className="h-3.5 w-3.5" />

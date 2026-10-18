@@ -18,8 +18,8 @@ import {
   STANDARD_CLARIFICATIONS_WITH_ADDONS,
   STANDARD_EXCEPTIONS,
   resolveRuleEntries,
-  streakCopy,
   type RuleEntryDef,
+  type StreakTextKey,
 } from '../RulesModalSections';
 import { formatMessage } from '@/utils/i18nFormat';
 import { useDictionary } from "@/context/DictionaryContext";
@@ -34,8 +34,7 @@ export interface GauntletRulesModalProps {
 
 interface TierDefinition {
   level: number;
-  nameKey: string;
-  defaultName: string;
+  nameKey: StreakTextKey;
   streakRange: string;
   perkLimit: number;
   badgeColor: string;
@@ -45,7 +44,6 @@ const SURVIVOR_TIERS: TierDefinition[] = [
   {
     level: 0,
     nameKey: 'tierWarmUp',
-    defaultName: 'The Warm Up',
     streakRange: '1 - 10',
     perkLimit: 4,
     badgeColor: 'bg-accent-green/20 text-accent-green border-accent-green/30',
@@ -53,7 +51,6 @@ const SURVIVOR_TIERS: TierDefinition[] = [
   {
     level: 1,
     nameKey: 'tierThinning',
-    defaultName: 'The Thinning',
     streakRange: '11 - 20',
     perkLimit: 3,
     badgeColor: 'bg-accent-amber/20 text-accent-amber border-accent-amber/30',
@@ -61,7 +58,6 @@ const SURVIVOR_TIERS: TierDefinition[] = [
   {
     level: 2,
     nameKey: 'tierStruggle',
-    defaultName: 'The Struggle',
     streakRange: '21 - 30',
     perkLimit: 2,
     badgeColor: 'bg-accent-amber/20 text-accent-amber border-accent-amber/30',
@@ -69,7 +65,6 @@ const SURVIVOR_TIERS: TierDefinition[] = [
   {
     level: 3,
     nameKey: 'tierHardcore',
-    defaultName: 'The Hardcore',
     streakRange: '31 - 40',
     perkLimit: 1,
     badgeColor: 'bg-accent-amber/20 text-accent-amber border-accent-amber/30',
@@ -77,7 +72,6 @@ const SURVIVOR_TIERS: TierDefinition[] = [
   {
     level: 4,
     nameKey: 'tierLegend',
-    defaultName: 'The Legend',
     streakRange: '41 - 52',
     perkLimit: 0,
     badgeColor: 'bg-accent-red/20 text-accent-red border-accent-red/30',
@@ -91,7 +85,6 @@ const KILLER_TIERS: TierDefinition[] = [
   {
     level: 0,
     nameKey: 'tierBloodbath',
-    defaultName: 'The Bloodbath',
     streakRange: '1 - 10',
     perkLimit: 3,
     badgeColor: 'bg-accent-green/20 text-accent-green border-accent-green/30',
@@ -99,7 +92,6 @@ const KILLER_TIERS: TierDefinition[] = [
   {
     level: 1,
     nameKey: 'tierObsession',
-    defaultName: 'The Obsession',
     streakRange: '11 - 20',
     perkLimit: 2,
     badgeColor: 'bg-accent-amber/20 text-accent-amber border-accent-amber/30',
@@ -107,7 +99,6 @@ const KILLER_TIERS: TierDefinition[] = [
   {
     level: 2,
     nameKey: 'tierExecutioner',
-    defaultName: 'The Executioner',
     streakRange: '21 - 30',
     perkLimit: 1,
     badgeColor: 'bg-accent-amber/20 text-accent-amber border-accent-amber/30',
@@ -115,7 +106,6 @@ const KILLER_TIERS: TierDefinition[] = [
   {
     level: 3,
     nameKey: 'tierEntity',
-    defaultName: 'The Entity',
     streakRange: '31 - 43',
     perkLimit: 0,
     badgeColor: 'bg-accent-red/20 text-accent-red border-accent-red/30',
@@ -125,9 +115,7 @@ const KILLER_TIERS: TierDefinition[] = [
 const SURVIVOR_EXCEPTIONS: RuleEntryDef[] = [
   {
     labelKey: 'excEarlyDcLabel',
-    defaultLabel: 'Early disconnect',
     textKey: 'excEarlyDcText',
-    defaultText: 'A teammate leaves before any generator is finished.',
   },
   RULE_GAME_CANCELLED,
   RULE_HACKERS,
@@ -138,24 +126,16 @@ const SURVIVOR_CLARIFICATIONS: RuleEntryDef[] = [
   RULE_ADDONS_ALLOWED,
   {
     labelKey: 'clarRatOffLabel',
-    defaultLabel: 'Rat off',
     textKey: 'clarRatOffText',
-    defaultText: 'Teammates working with the killer to get you out counts as a loss.',
   },
   {
     labelKey: 'clarDeathIsDeathLabel',
-    defaultLabel: 'A death is a death',
     textKey: 'clarDeathIsDeathText',
-    defaultText:
-      'Dying counts, even to stream sniping, a thrown game, or a teammate sabotaging you. Hackers are the exception, that still voids the whole match. See Exceptions above.',
   },
   {
     labelKey: 'clarKillerDcLabel',
-    defaultLabel: 'Killer disconnects',
     textKey: 'clarKillerDcText',
     variantTextKeys: { solo: 'soloKillerDcText', duo: 'duoKillerDcText', squad: 'squadKillerDcText' },
-    defaultText:
-      "If the killer leaves before the first generator is done, or leaves because of a bug or server issue, the match doesn't count. If they leave after the first generator is done for any other reason, it counts as your escape.",
   },
 ];
 
@@ -173,7 +153,7 @@ export const GauntletRulesModal: React.FC<GauntletRulesModalProps> = ({ isOpen, 
     ? (dict.filters.killer)
     : (dict.filters.survivor);
 
-  const rawStreaks = streakCopy(dict);
+  const rawStreaks = dict.streaks;
 
   const modalTitle = rawStreaks.gauntletRulesTitle
     ? formatMessage(rawStreaks.gauntletRulesTitle, { role: roleLabel })
@@ -188,18 +168,17 @@ export const GauntletRulesModal: React.FC<GauntletRulesModalProps> = ({ isOpen, 
     : isSquad && rawStreaks.squadWinCondition
     ? rawStreaks.squadWinCondition
     : role === 'killer'
-    ? (rawStreaks.gauntletWinConditionKiller || 'Win = 3 kills or more.')
-    : (rawStreaks.gauntletWinConditionSurvivor || 'Win = escape, through the exit gates or the hatch. Anything else breaks the streak.');
+    ? rawStreaks.gauntletWinConditionKiller
+    : rawStreaks.gauntletWinConditionSurvivor;
 
   const perkRule = role === 'killer'
-    ? (isLemonKiller && rawStreaks.lemonKillerPerkRule) || (rawStreaks.gauntletKillerPerkRule || 'You always run your own teachables.')
+    ? (isLemonKiller && rawStreaks.lemonKillerPerkRule) || rawStreaks.gauntletKillerPerkRule
     : (isSolo && rawStreaks.soloPerkRule) ||
-      rawStreaks.gauntletSurvivorPerkRule ||
-      "One of your perks has to be the drawn character's own.";
+      rawStreaks.gauntletSurvivorPerkRule;
 
   const rosterCapNote = role === 'killer'
-    ? (rawStreaks.killerRosterCapNote || 'The roster stops at the 43 killers, up through The Slasher.')
-    : (rawStreaks.survivorRosterCapNote || 'The roster stops at the 52 survivors, up through Kwon Tae-young.');
+    ? rawStreaks.killerRosterCapNote
+    : rawStreaks.survivorRosterCapNote;
 
   const variant = isSolo ? 'solo' : isDuo ? 'duo' : isSquad ? 'squad' : undefined;
   const exceptions = role === 'killer' ? STANDARD_EXCEPTIONS : SURVIVOR_EXCEPTIONS;
@@ -211,7 +190,7 @@ export const GauntletRulesModal: React.FC<GauntletRulesModalProps> = ({ isOpen, 
     ? rawStreaks.duoCheckpointRule
     : isSquad
     ? rawStreaks.squadCheckpointRule
-    : rawStreaks.gauntletCheckpointRule || 'You get a checkpoint every 10 wins, so a loss only falls back that far.';
+    : rawStreaks.gauntletCheckpointRule;
 
   const howItWorks = [
     winCondition,
@@ -258,28 +237,22 @@ export const GauntletRulesModal: React.FC<GauntletRulesModalProps> = ({ isOpen, 
       title={modalTitle}
     >
       {devNote && (
-        <RulesConceptCard tone="red" title={rawStreaks.devNoteTitle || 'Note from the devs'} text={devNote} />
+        <RulesConceptCard tone="red" title={rawStreaks.devNoteTitle} text={devNote} />
       )}
 
-      <RulesHowItWorks tone="red" title={rawStreaks.howItWorks || 'How it works'} items={howItWorks} />
+      <RulesHowItWorks tone="red" title={rawStreaks.howItWorks} items={howItWorks} />
 
-      <RulesSection title={rawStreaks.progressiveTierRestrictions || 'Progressive Tier Restrictions'}>
+      <RulesSection title={rawStreaks.progressiveTierRestrictions}>
         <div className="grid grid-cols-1 gap-2.5" role="list">
           {tiers.map((tier) => {
-            const tierName = rawStreaks[tier.nameKey] || tier.defaultName;
+            const tierName = rawStreaks[tier.nameKey];
             const streakRange = isTeam && role === 'survivor' ? TEAM_STREAK_RANGES[tier.level] : tier.streakRange;
-            const streakRangeFormatted = rawStreaks.streakRangeLabel
-              ? formatMessage(rawStreaks.streakRangeLabel, { range: streakRange })
-              : streakRange;
-
             const perkLimitText =
               tier.perkLimit === 0
                 ? (isSolo && role === 'survivor') || (isLemonKiller && role === 'killer')
-                  ? rawStreaks.soloRandomPerkBadge || '1 random unique perk'
-                  : rawStreaks.perklessTrial || '0 Perks'
-                : rawStreaks.perksAllowedCount
-                  ? formatMessage(rawStreaks.perksAllowedCount, { count: tier.perkLimit })
-                  : `${tier.perkLimit} ${tier.perkLimit > 1 ? (rawStreaks.perksAllowedPlural || '') : (rawStreaks.perksAllowedSingular || '')}`.trim();
+                  ? rawStreaks.soloRandomPerkBadge
+                  : rawStreaks.perklessTrial
+                : `${tier.perkLimit} ${tier.perkLimit > 1 ? rawStreaks.perksAllowedPlural : rawStreaks.perksAllowedSingular}`;
 
             return (
               <Surface
@@ -291,7 +264,7 @@ export const GauntletRulesModal: React.FC<GauntletRulesModalProps> = ({ isOpen, 
                     {rawStreaks.tierLabel || ''} {tier.level}{tierName ? `: ${tierName}` : ''}
                   </span>
                   <span className="text-xs font-medium text-text-muted">
-                    ({streakRangeFormatted})
+                    ({streakRange})
                   </span>
                 </div>
 

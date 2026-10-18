@@ -22,21 +22,18 @@ export interface BuyCoffeeModalProps {
 export const BuyCoffeeModal: React.FC<BuyCoffeeModalProps> = ({ isOpen, onClose }) => {
   const dict = useDictionary();
 
-  const t: Record<string, string> = dict.sidebar;
+  const t = dict.sidebar;
 
   // The links and the message are admin settings (Settings > Links), so they change without a rebuild.
   // A link the admin cleared is not shown.
   const { links } = useSiteConfig();
-  const donationMessage =
-    links.donationMessage ||
-    t.coffeeDonationMessage ||
-    'Fuel the Entity with caffeine to keep LemonDBD database servers and live scrapers running 24/7!';
+  const donationMessage = links.donationMessage || t.coffeeDonationMessage;
 
   const supportGateways = [
     {
       name: 'Buy Me a Coffee',
       url: links.donationBmc,
-      tagline: t.coffeeBuyMeCoffeeTagline || 'Quick 1-click coffee & support',
+      tagline: t.coffeeBuyMeCoffeeTagline,
       accentColor:
         'border-border-color bg-bg-elevated text-text-secondary hover:border-accent-red/40 hover:bg-accent-red/10',
       buttonBg: 'bg-accent-red hover:bg-accent-red-hover text-text-inverted',
@@ -45,7 +42,7 @@ export const BuyCoffeeModal: React.FC<BuyCoffeeModalProps> = ({ isOpen, onClose 
     {
       name: 'Ko-fi',
       url: links.donationKofi,
-      tagline: t.coffeeKofiTagline || '0% fee donations & one-time tips',
+      tagline: t.coffeeKofiTagline,
       accentColor:
         'border-border-color bg-bg-elevated text-text-secondary hover:border-accent-red/40 hover:bg-accent-red/10',
       buttonBg: 'bg-accent-red hover:bg-accent-red-hover text-text-inverted',
@@ -54,7 +51,7 @@ export const BuyCoffeeModal: React.FC<BuyCoffeeModalProps> = ({ isOpen, onClose 
     {
       name: 'Patreon Community',
       url: links.donationPatreon,
-      tagline: t.coffeePatreonTagline || 'Monthly supporter perks & early features',
+      tagline: t.coffeePatreonTagline,
       accentColor:
         'border-border-color bg-bg-elevated text-text-secondary hover:border-accent-red/40 hover:bg-accent-red/10',
       buttonBg: 'bg-accent-red hover:bg-accent-red-hover text-text-inverted',
@@ -68,15 +65,15 @@ export const BuyCoffeeModal: React.FC<BuyCoffeeModalProps> = ({ isOpen, onClose 
       onClose={onClose}
       variant="dialog"
       size="lg"
-      title={t.coffeeTitle || 'Support LemonDBD'}
-      closeButtonAriaLabel={t.coffeeClose || 'Close'}
+      title={t.coffeeTitle}
+      closeButtonAriaLabel={t.coffeeClose}
       padded
       bodyClassName="space-y-6"
     >
     <Surface tone="elevated" padding="none" className="p-4 type-body text-text-secondary space-y-1">
       <div className="flex items-center gap-1.5 font-bold text-accent-red mb-1">
         <Sparkles className="h-4 w-4" />
-        <span>{t.coffeeFuelNotice || 'Entity Fuel Notice'}</span>
+        <span>{t.coffeeFuelNotice}</span>
       </div>
       <p>{donationMessage}</p>
     </Surface>
@@ -113,7 +110,7 @@ export const BuyCoffeeModal: React.FC<BuyCoffeeModalProps> = ({ isOpen, onClose 
               <span
                 className={`hidden sm:inline-flex items-center gap-1 px-3 py-1.5 rounded-control text-mini font-black uppercase tracking-wider shadow-md group-hover:scale-105 transition-all ${gateway.buttonBg}`}
               >
-                <span>{t.coffeeVisit || 'Visit'}</span>
+                <span>{t.coffeeVisit}</span>
                 <ExternalLink className="h-3 w-3" />
               </span>
               <ExternalLink className="sm:hidden h-4 w-4 text-text-muted group-hover:text-accent-red transition-colors" />

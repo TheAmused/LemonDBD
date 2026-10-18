@@ -66,7 +66,6 @@ export interface ChallengeModeModalProps {
   selectedValue?: string;
   title?: string;
   onBack?: () => void;
-  backLabel?: string;
 }
 
 /**
@@ -88,7 +87,6 @@ export const ChallengeModeModal: React.FC<ChallengeModeModalProps> = ({
       selectedValue,
       title,
       onBack,
-      backLabel,
     }) => {
   const dict = useDictionary();
   const [isRulesOpen, setIsRulesOpen] = useState(false);
@@ -127,7 +125,6 @@ export const ChallengeModeModal: React.FC<ChallengeModeModalProps> = ({
         selectedValue={selectedValue}
         currentLabel={dict.streaks.current}
         onBack={onBack}
-        backLabel={backLabel}
       />
       {renderRules({ isOpen: isRulesOpen, onClose: () => setIsRulesOpen(false), value: pending })}
     </>

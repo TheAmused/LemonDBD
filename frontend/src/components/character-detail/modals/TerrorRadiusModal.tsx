@@ -1,6 +1,6 @@
 // frontend/src/components/character-detail/modals/TerrorRadiusModal.tsx
 import React from 'react';
-import { CharacterItem } from '../types';
+import { CharacterItem, CharacterDetailDictionary } from '../types';
 import { Modal } from '@/components/common/Modal';
 import { Surface } from '@/components/common/Surface';
 
@@ -11,7 +11,7 @@ interface TerrorRadiusModalProps {
   killerTerrorRadius: string;
   killerTRMeters: number;
   killerSpeed: string;
-  t: Record<string, string>;
+  t: CharacterDetailDictionary;
 }
 
 export const TerrorRadiusModal: React.FC<TerrorRadiusModalProps> = ({
@@ -31,15 +31,15 @@ export const TerrorRadiusModal: React.FC<TerrorRadiusModalProps> = ({
       onClose={onClose}
       variant="dialog"
       size="2xl"
-      title={t.terrorRadiusVisualizer || 'Terror Radius Visualizer'}
-      closeButtonAriaLabel={t.close || 'Close'}
+      title={t.terrorRadiusVisualizer}
+      closeButtonAriaLabel={t.close}
       padded
       bodyClassName="space-y-6 text-sm text-text-secondary"
     >
     <div className="relative flex flex-col items-center justify-center p-6 rounded-card bg-bg-primary border border-border-color overflow-hidden">
       <div className="relative w-64 h-64 sm:w-72 sm:h-72 flex items-center justify-center">
         <div className="absolute inset-0 rounded-full border border-dashed border-border-subtle flex items-start justify-center pt-1">
-          <span className="text-micro text-text-muted">{t.distance45m || '45m'} ({t.lullaby || 'Lullaby'})</span>
+          <span className="text-micro text-text-muted">{t.distance45m} ({t.lullaby})</span>
         </div>
 
         <div
@@ -49,7 +49,7 @@ export const TerrorRadiusModal: React.FC<TerrorRadiusModalProps> = ({
               : 'border-border-color'
           } flex items-start justify-center pt-1`}
         >
-          <span className="text-micro font-bold text-accent-red">{t.distance32m || '32m'} ({t.audible || 'Audible'})</span>
+          <span className="text-micro font-bold text-accent-red">{t.distance32m} ({t.audible})</span>
         </div>
 
         <div
@@ -68,7 +68,7 @@ export const TerrorRadiusModal: React.FC<TerrorRadiusModalProps> = ({
 
 
         <div className="absolute inset-28 rounded-full border-2 border-accent-red bg-accent-red/20 flex items-center justify-center">
-          <span className="text-micro font-black text-accent-red">{t.distance8m || '8m'} ({t.chase || 'Chase'})</span>
+          <span className="text-micro font-black text-accent-red">{t.distance8m} ({t.chase})</span>
         </div>
 
         <div className="h-4 w-4 rounded-full bg-accent-red shadow-lg shadow-accent-red/50 z-10" />
@@ -77,7 +77,7 @@ export const TerrorRadiusModal: React.FC<TerrorRadiusModalProps> = ({
       <div className="mt-4 flex items-center gap-2 type-strong text-text-secondary">
         <span className="inline-block h-2 w-2 rounded-full bg-accent-red" />
         <span>
-          {t.currentBaseTerrorRadius || 'Current Base Terror Radius'}:{' '}
+          {t.currentBaseTerrorRadius}:{' '}
           <strong className="text-accent-red">{killerTerrorRadius}</strong>
         </span>
       </div>
@@ -85,39 +85,39 @@ export const TerrorRadiusModal: React.FC<TerrorRadiusModalProps> = ({
 
     <div className="space-y-3">
       <h3 className="type-label-sm text-text-secondary">
-        {t.heartbeatStages || 'Heartbeat Intensity Progression'}
+        {t.heartbeatStages}
       </h3>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
         <div className="p-3 rounded-card bg-accent-red/10 border border-accent-red/40">
           <strong className="text-accent-red block mb-1">
-            {t.immediateThreat || '0 - 8 Metres (Immediate Chase)'}
+            {t.immediateThreat}
           </strong>
           <p className="text-text-secondary type-caption">
-            {t.immediateChaseDesc || 'Max heartbeat tempo, aggressive percussion, and direct visual red stain engagement.'}
+            {t.immediateChaseDesc}
           </p>
         </div>
         <div className="p-3 rounded-card bg-accent-red/5 border border-accent-red/25">
           <strong className="text-accent-red block mb-1">
-            {t.dangerZone || '8 - 16 Metres (Danger Zone)'}
+            {t.dangerZone}
           </strong>
           <p className="text-text-secondary type-caption">
-            {t.dangerZoneDesc || 'Rapid heavy thumping heartbeat; killer is actively maneuvering around loops.'}
+            {t.dangerZoneDesc}
           </p>
         </div>
         <div className="p-3 rounded-card bg-accent-amber/10 border border-accent-amber/30">
           <strong className="text-accent-amber block mb-1">
-            {t.approaching || '16 - 24 Metres (Approaching)'}
+            {t.approaching}
           </strong>
           <p className="text-text-secondary type-caption">
-            {t.approachingDesc || 'Rhythmic steady pulse indicating proximity to survivor objectives.'}
+            {t.approachingDesc}
           </p>
         </div>
         <Surface tone="elevated" padding="sm">
           <strong className="text-text-primary block mb-1">
-            {t.audibleRange || '24 - 32 Metres (Audible Range)'}
+            {t.audibleRange}
           </strong>
           <p className="text-text-secondary type-caption">
-            {t.audibleRangeDesc || 'Initial faint audio cues signaling presence within the trial quadrant.'}
+            {t.audibleRangeDesc}
           </p>
         </Surface>
       </div>
@@ -125,22 +125,22 @@ export const TerrorRadiusModal: React.FC<TerrorRadiusModalProps> = ({
 
     <div className="space-y-2">
       <span className="type-label-sm text-text-secondary">
-        {t.survivorComparison || 'Survivor Speed Comparison'}
+        {t.survivorComparison}
       </span>
       <p className="text-xs text-text-secondary">
-        {t.survivorComparisonDesc || 'Survivor standard sprint speed is 4.0 m/s (100%).'}
+        {t.survivorComparisonDesc}
       </p>
       <div className="flex flex-wrap items-center gap-4 text-xs pt-1 text-text-secondary">
         <span>
-          {t.killerBase || 'Killer Base'}: <strong className="text-accent-red">{killerSpeed}</strong>
+          {t.killerBase}: <strong className="text-accent-red">{killerSpeed}</strong>
         </span>
         <span>
-          {t.survivorSprint || 'Survivor Sprint'}: <strong className="text-accent-green">{t.survivorSprintSpeed || '4.0 m/s (100%)'}</strong>
+          {t.survivorSprint}: <strong className="text-accent-green">{t.survivorSprintSpeed}</strong>
         </span>
         <span>
-          {t.straightGapClose || 'Straight Gap Close'}:{' '}
+          {t.straightGapClose}:{' '}
           <strong className="text-accent-amber">
-            {t.approxSymbol || '~'}{(killerTRMeters / 4.6).toFixed(1)}{t.secondsUnit || 's'} {t.straightLine || 'straight line'}
+            {t.approxSymbol || '~'}{(killerTRMeters / 4.6).toFixed(1)}{t.secondsUnit || 's'} {t.straightLine}
           </strong>
         </span>
       </div>

@@ -1,7 +1,7 @@
 // frontend/src/components/character-detail/modals/Model3DModal.tsx
 import React from 'react';
 import { X } from 'lucide-react';
-import { CharacterItem, getAvatarUrl } from '../types';
+import { CharacterItem, getAvatarUrl, CharacterDetailDictionary } from '../types';
 import { Modal, useModal } from '@/components/common/Modal';
 import { Button } from '@/components/common/Button';
 
@@ -11,7 +11,7 @@ interface Model3DModalProps {
   character: CharacterItem;
   isSurvivor: boolean;
   backendBase: string;
-  t: Record<string, string>;
+  t: CharacterDetailDictionary;
 }
 
 const Model3DContent: React.FC<{ src: string; closeLabel: string }> = ({ src, closeLabel }) => {
@@ -58,7 +58,7 @@ export const Model3DModal: React.FC<Model3DModalProps> = ({
     >
       <Model3DContent
         src={getAvatarUrl(backendBase, character, isSurvivor)}
-        closeLabel={t.close || 'Close'}
+        closeLabel={t.close}
       />
     </Modal>
   );

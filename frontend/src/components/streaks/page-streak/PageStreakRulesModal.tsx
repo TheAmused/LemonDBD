@@ -9,7 +9,6 @@ import {
   STANDARD_CLARIFICATIONS_WITH_ADDONS,
   STANDARD_EXCEPTIONS,
   resolveRuleEntries,
-  streakCopy,
 } from '../RulesModalSections';
 import { useDictionary } from "@/context/DictionaryContext";
 
@@ -20,20 +19,20 @@ export interface PageStreakRulesModalProps {
 
 export const PageStreakRulesModal: React.FC<PageStreakRulesModalProps> = ({ isOpen, onClose }) => {
   const dict = useDictionary();
-  const s = streakCopy(dict);
+  const s = dict.streaks;
   return (
     <RulesModalShell
       isOpen={isOpen}
       onClose={onClose}
-      title={s.rules || 'Rules'}
+      title={s.rules}
     >
       <RulesHowItWorks
         tone="red"
-        title={s.howItWorks || 'How it works'}
+        title={s.howItWorks}
         items={[
-          s.pageStreakKillWinCondition || 'Win = 3 kills or more.',
-          s.pageStreakWinCondition || 'Win a page to move to the next.',
-          s.pageStreakLossCondition || 'Lose and start over from page 1.',
+          s.pageStreakKillWinCondition,
+          s.pageStreakWinCondition,
+          s.pageStreakLossCondition,
         ]}
       />
 

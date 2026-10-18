@@ -1,6 +1,7 @@
 // frontend/src/components/maps/voice/voiceStatusConfig.ts
 import type { LucideIcon } from 'lucide-react';
 import { AlertCircle, CheckCircle2, Mic, MicOff, RefreshCw, Volume2 } from 'lucide-react';
+import type { Dictionary } from '@/locales/types';
 import type { VoiceStatusState } from './voiceTypes';
 
 export interface VoiceStatusConfigEntry {
@@ -11,7 +12,7 @@ export interface VoiceStatusConfigEntry {
 }
 
 /** Badge copy, indicator colour, icon and button colours for each voice status. */
-export function buildStatusConfig(rawVoiceDict: Record<string, string>): Record<VoiceStatusState, VoiceStatusConfigEntry> {
+export function buildStatusConfig(rawVoiceDict: Dictionary['voice']): Record<VoiceStatusState, VoiceStatusConfigEntry> {
   return {
     idle: {
       badge: rawVoiceDict.idleReady || '',

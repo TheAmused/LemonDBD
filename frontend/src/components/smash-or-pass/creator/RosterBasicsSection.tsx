@@ -47,39 +47,39 @@ export function RosterBasicsSection({
   const c = dict.smashOrPass.creator;
 
   return (
-    <Section title={c.stepBasics || 'The Basics'}>
+    <Section title={c.stepBasics}>
       <div className="w-full max-w-4xl 2xl:max-wide-2k:max-w-5xl wide-2k:max-w-7xl mx-auto grid gap-4 2xl:gap-6 md:grid-cols-2">
         <label>
-          <span className={LABEL}>{c.nameLabel || 'Roster name'}</span>
+          <span className={LABEL}>{c.nameLabel}</span>
           <Input
             fieldSize="md" invalid={attempted && nameMissing}
             value={draft.name}
             maxLength={SMASH_ROSTER_LIMITS.maxRosterName}
             onChange={(e) => patch({ name: e.target.value })}
-            placeholder={c.namePlaceholder || 'e.g. Chapter 34 Cast'}
+            placeholder={c.namePlaceholder}
             
             className="2xl:min-h-hit-xl 2xl:text-base"
           />
         </label>
         <label>
-          <span className={LABEL}>{c.categoryLabel || 'Category'}</span>
+          <span className={LABEL}>{c.categoryLabel}</span>
           <Input
             fieldSize="md"
             value={draft.category}
             maxLength={64}
             onChange={(e) => patch({ category: e.target.value })}
-            placeholder={c.categoryPlaceholder || 'e.g. Custom'}
+            placeholder={c.categoryPlaceholder}
             className="2xl:min-h-hit-xl 2xl:text-base"
           />
         </label>
         <label className="md:col-span-2">
-          <span className={LABEL}>{c.descriptionLabel || 'Description (optional)'}</span>
+          <span className={LABEL}>{c.descriptionLabel}</span>
           <Textarea
             fieldSize="md"
             value={draft.description}
             maxLength={SMASH_ROSTER_LIMITS.maxRosterDescription}
             onChange={(e) => patch({ description: e.target.value })}
-            placeholder={c.descriptionPlaceholder || 'What is this roster about?'}
+            placeholder={c.descriptionPlaceholder}
             rows={2}
             className="2xl:text-base"
           />
@@ -135,7 +135,7 @@ export function RosterBasicsSection({
         </div>
 
         <div className="md:col-span-2 flex flex-col items-center justify-center text-center">
-          <span className={LABEL}>{c.themeColorLabel || 'Theme color'}</span>
+          <span className={LABEL}>{c.themeColorLabel}</span>
           <input
             type="color"
             value={draft.theme_color || defaultRosterThemeColor()}
@@ -148,8 +148,8 @@ export function RosterBasicsSection({
         <div className="md:col-span-2 pt-4 border-t border-border-color/60 flex flex-wrap items-center justify-center gap-6 sm:gap-8">
           {/* Simple Version Switch */}
           <Tooltip variant="action"
-            title={c.simpleVersion || 'Simple Version'}
-            description={c.simpleVersionDesc || 'Fast cards + optional turn-on & dealbreaker'}
+            title={c.simpleVersion}
+            description={c.simpleVersionDesc}
           >
             <div
               onClick={() => patch({ roster_mode: draft.roster_mode === 'simple' ? 'full' : 'simple' })}
@@ -158,17 +158,17 @@ export function RosterBasicsSection({
               <Switch
                 checked={draft.roster_mode === 'simple'}
                 onChange={(checked) => patch({ roster_mode: checked ? 'simple' : 'full' })}
-                ariaLabel={c.simpleVersion || 'Simple Version'}
+                ariaLabel={c.simpleVersion}
               />
               <span className="type-strong-fluid text-text-primary group-hover:text-accent-red transition-colors">
-                {c.simpleVersion || 'Simple Version'}
+                {c.simpleVersion}
               </span>
             </div>
           </Tooltip>
 
           {/* NSFW Content Switch */}
           <Tooltip variant="action"
-            title={c.nsfwLabel || 'Contains NSFW content'}
+            title={c.nsfwLabel}
             description="Mark this roster as containing mature or sensitive material."
           >
             <div
@@ -178,10 +178,10 @@ export function RosterBasicsSection({
               <Switch
                 checked={draft.is_nsfw}
                 onChange={(checked) => patch({ is_nsfw: checked })}
-                ariaLabel={c.nsfwLabel || 'Contains NSFW content'}
+                ariaLabel={c.nsfwLabel}
               />
               <span className="type-strong-fluid text-text-primary group-hover:text-accent-red transition-colors">
-                {c.nsfwLabel || 'Contains NSFW content'}
+                {c.nsfwLabel}
               </span>
             </div>
           </Tooltip>
@@ -189,7 +189,7 @@ export function RosterBasicsSection({
           {/* Official Roster Switch (Admin only) */}
           {isUserAdmin && (
             <Tooltip variant="action"
-              title={c.officialPublicHub || 'Official Roster (Public on Hub)'}
+              title={c.officialPublicHub}
               description="Publish directly to the public Hub directory for all visitors."
             >
               <div
@@ -199,10 +199,10 @@ export function RosterBasicsSection({
                 <Switch
                   checked={official}
                   onChange={(checked) => onOfficialChange(checked)}
-                  ariaLabel={c.officialPublicHub || 'Official Roster (Public on Hub)'}
+                  ariaLabel={c.officialPublicHub}
                 />
                 <span className="type-strong-fluid text-accent-red group-hover:underline transition-colors">
-                  {c.officialPublicHub || 'Official (Public on Hub)'}
+                  {c.officialPublicHub}
                 </span>
               </div>
             </Tooltip>

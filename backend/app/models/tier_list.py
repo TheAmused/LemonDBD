@@ -236,6 +236,7 @@ class TierList(Base, TranslatableModelMixin):
             "cover_image_url": self.cover_image_url or "",
             "is_featured": bool(self.is_featured),
             "is_nsfw": bool(self.is_nsfw),
+            "is_active": bool(self.is_active),
             "sort_order": self.sort_order,
             "item_count": self.item_count(),
             "tier_count": len(self.tiers) if self.tiers is not None else None,

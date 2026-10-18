@@ -29,6 +29,7 @@ from app.services.minigames import (
     update_killer_chase_music,
     upsert_daily_challenge,
 )
+from app.services.admin_control_service import log_admin_action
 from app.schemas.minigames import (
     MinigameGuessSubmissionDTO,
     MinigameOfficialCreateDTO,
@@ -168,6 +169,33 @@ def create_official_challenge():
         target_date=target_date,
     )
     return jsonify(challenge.to_dict()), 201
+
+
+@minigames_bp.route("/official/<int:challenge_id>", methods=["DELETE"])
+@admin_required
+def delete_official_challenge(challenge_id: int):
+    """Admin-only endpoint to delete an official daily challenge."""
+    challenge = db.session.get(MinigameDailyChallenge, challenge_id)
+    if not challenge:
+        return api_error("Challenge not found", 404)
+
+    try:
+        title = challenge.title
+        db.session.delete(challenge)
+        db.session.commit()
+        log_admin_action(
+            g.current_user.id,
+            "minigame_challenge.delete",
+            target_type="minigame_challenge",
+            target_id=challenge_id,
+            details={"challenge_id": challenge_id, "title": title},
+        )
+        return jsonify({"status": "success", "message": f"Challenge #{challenge_id} deleted"}), 200
+    except Exception as e:
+        db.session.rollback()
+        logger.error(f"Error deleting challenge #{challenge_id}: {e}")
+        return api_error(str(e), 500)
+
 
 
 

@@ -59,6 +59,8 @@ def _is_personal() -> bool:
         return True
     if request.headers.get("Authorization"):
         return True
+    if request.args.get("token"):
+        return True
     # The app also accepts a cookie-borne token; presence alone is enough to
     # bail out -- we do not need to know whether it is valid, only that this
     # response might be personalised.

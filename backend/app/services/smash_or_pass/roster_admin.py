@@ -5,7 +5,7 @@ import re
 import uuid
 from typing import Any
 
-from sqlalchemy import select
+from sqlalchemy import delete, select
 
 from app.core import redis_cache
 from app.core.extensions import db
@@ -35,6 +35,7 @@ class SmashRosterAdminMixin:
         theme_color: str,
         category: str,
         is_nsfw: bool,
+        is_active: bool = True,
         translations: dict[str, Any],
         entities: list[dict[str, Any]],
     ) -> Roster:
@@ -70,7 +71,7 @@ class SmashRosterAdminMixin:
             theme_color=theme_color,
             category=category,
             is_nsfw=is_nsfw,
-            is_active=True,
+            is_active=bool(is_active),
         )
 
         entity_rows: list[Entity] = []
@@ -148,6 +149,33 @@ class SmashRosterAdminMixin:
         bump_catalog_version()
         self._write_roster_seed_file(roster, entity_rows)
         return roster
+
+    def delete_roster(self, slug: str) -> bool:
+        """Deletes an official roster by slug, its entities, entity stats, and its seed file."""
+        normalized = (slug or "").strip().lower()
+        if not normalized:
+            return False
+        roster = db.session.scalar(select(Roster).where(Roster.slug == normalized))
+        if not roster:
+            return False
+
+        entity_ids = db.session.scalars(select(Entity.id).where(Entity.roster_id == roster.id)).all()
+        if entity_ids:
+            db.session.execute(delete(EntityStat).where(EntityStat.entity_id.in_(entity_ids)))
+            db.session.execute(delete(Entity).where(Entity.roster_id == roster.id))
+        db.session.delete(roster)
+        db.session.commit()
+
+        bump_catalog_version()
+        from app.seeds.smash_roster_seeder import ROSTERS_DIR
+
+        path = ROSTERS_DIR / f"{roster.slug}.json"
+        if path.exists():
+            try:
+                path.unlink()
+            except OSError as err:
+                logger.warning(f"Could not delete roster seed file {path}: {err}")
+        return True
 
     @staticmethod
     def _slugify(text: str, *, max_len: int, fallback: str) -> str:

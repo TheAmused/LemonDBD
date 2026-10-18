@@ -41,6 +41,7 @@ class TierListAdminCreate(BaseModel):
     tiers: list[TierListAdminTier] = Field(..., min_length=1, max_length=20)
     items: list[TierListAdminItem] = Field(..., min_length=1, max_length=400)
     is_nsfw: bool = False
+    is_active: bool = True
 
 
 class TierListAdminUpdate(BaseModel):
@@ -51,6 +52,7 @@ class TierListAdminUpdate(BaseModel):
     items: list[TierListAdminItem] | None = Field(default=None, min_length=1, max_length=400)
     default_placements: dict[str, list[str]] | None = None
     is_nsfw: bool | None = None
+    is_active: bool | None = None
 
 
     @field_validator("default_placements")

@@ -67,6 +67,7 @@ export default {
   finishTrial: "Zakończ Próbę",
   playAgain: "Zagraj Ponownie",
   backToMinigames: "Powrót do Centrum Minigier",
+  realmClueAlt: "Wskazówka: kraina",
   victoryTitle: "Ucieczka z Próby!",
   defeatTitle: "Pochłonięty przez Byt",
   copyResults: "Udostępnij Wyniki",

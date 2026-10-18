@@ -6,10 +6,11 @@ import { Clock, Snowflake } from 'lucide-react';
 import { RulesModalListSection, RulesModalNotices, type RuleListEntry } from './RulesModalShell';
 import { Surface } from '@/components/common/Surface';
 
-/** The `dict.streaks` copy bag, loosened so keys can be looked up dynamically. */
-export type StreakCopy = Record<string, string | undefined>;
+/** The `dict.streaks` copy bag. */
+export type StreakCopy = Dictionary['streaks'];
 
-export const streakCopy = (dict: Dictionary): StreakCopy => dict.streaks as unknown as StreakCopy;
+/** Keys of `dict.streaks` that hold plain text, so a rules entry can name its copy and still be type checked. */
+export type StreakTextKey = { [K in keyof StreakCopy]: StreakCopy[K] extends string ? K : never }[keyof StreakCopy];
 
 export type RulesTone = 'red' | 'neutral';
 
@@ -108,63 +109,49 @@ export const DIFFICULTY_BADGE = {
 /* ------------------------------------------------------------------ */
 
 export interface RuleEntryDef {
-  labelKey: string;
-  defaultLabel: string;
-  textKey: string;
-  defaultText: string;
+  labelKey: StreakTextKey;
+  textKey: StreakTextKey;
   /** Alternate text keys per variant (e.g. gauntlet solo/duo/squad wording). */
-  variantTextKeys?: Record<string, string>;
+  variantTextKeys?: Record<string, StreakTextKey>;
 }
 
 export const RULE_GAME_CANCELLED: RuleEntryDef = {
   labelKey: 'excGameCancelledLabel',
-  defaultLabel: 'Game cancelled',
   textKey: 'excGameCancelledText',
-  defaultText: 'Someone leaves the lobby before it finishes loading and the match never starts.',
 };
 export const RULE_HACKERS: RuleEntryDef = {
   labelKey: 'excHackersLabel',
-  defaultLabel: 'Hackers',
   textKey: 'excHackersText',
-  defaultText: 'Obvious cheaters are in the match.',
 };
 export const RULE_CRASH: RuleEntryDef = {
   labelKey: 'excCrashLabel',
-  defaultLabel: 'Crash or server failure',
   textKey: 'excCrashText',
-  defaultText: 'The game or server crashes mid-match.',
 };
 const RULE_SURVIVOR_DC: RuleEntryDef = {
   labelKey: 'excSurvDcLabel',
-  defaultLabel: 'Survivor disconnects',
   textKey: 'excSurvDcText',
-  defaultText: 'Keep playing. The bot match still counts.',
 };
 const RULE_NO_DODGING: RuleEntryDef = {
   labelKey: 'excNoDodgingLabel',
-  defaultLabel: 'No dodging',
   textKey: 'excNoDodgingText',
-  defaultText: 'Play whatever lobby you get.',
 };
 export const RULE_ADDONS_ALLOWED: RuleEntryDef = {
   labelKey: 'excAddonsAllowedLabel',
-  defaultLabel: 'Add-ons and offerings',
   textKey: 'excAddonsAllowedText',
-  defaultText: 'All available.',
 };
 
 export const STANDARD_EXCEPTIONS: RuleEntryDef[] = [RULE_GAME_CANCELLED, RULE_HACKERS, RULE_CRASH];
 export const STANDARD_CLARIFICATIONS: RuleEntryDef[] = [RULE_SURVIVOR_DC, RULE_NO_DODGING];
 export const STANDARD_CLARIFICATIONS_WITH_ADDONS: RuleEntryDef[] = [...STANDARD_CLARIFICATIONS, RULE_ADDONS_ALLOWED];
 
-/** Looks each def up in the copy bag (falling back to its English default) and drops empty rows. */
+/** Looks each def up in the copy bag and drops empty rows. */
 export function resolveRuleEntries(copy: StreakCopy, defs: RuleEntryDef[], variant?: string): RuleListEntry[] {
   return defs
     .map((def) => {
       const textKey = (variant && def.variantTextKeys?.[variant]) || def.textKey;
       return {
-        label: copy[def.labelKey] || def.defaultLabel,
-        text: copy[textKey] || def.defaultText,
+        label: copy[def.labelKey],
+        text: copy[textKey],
       };
     })
     .filter((item) => item.label || item.text);
@@ -182,12 +169,12 @@ export const RulesModalFooterSections: React.FC<{
   return (
     <>
       <RulesModalListSection
-        title={copy.exceptions || 'Exceptions'}
-        intro={voidIntro || copy.voidMatchNotice || "These matches don't count. Replay them."}
+        title={copy.exceptions}
+        intro={voidIntro || copy.voidMatchNotice}
         items={exceptions}
       />
       <RulesModalListSection
-        title={copy.clarifications || 'Clarifications'}
+        title={copy.clarifications}
         items={clarifications}
       />
       <RulesModalNotices
@@ -196,12 +183,11 @@ export const RulesModalFooterSections: React.FC<{
           {
             icon: Snowflake,
             text:
-              copy.runFreezeNotice ||
-              'Your run freezes. New unlocks join after your next reset, loss to zero, or completion.',
+              copy.runFreezeNotice,
           },
           {
             icon: Clock,
-            text: copy.inactivityLossNotice || 'An in-progress run untouched for 90 days automatically counts as a loss.',
+            text: copy.inactivityLossNotice,
           },
         ]}
       />

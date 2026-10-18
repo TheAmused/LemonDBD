@@ -12,7 +12,6 @@ import {
   STANDARD_CLARIFICATIONS_WITH_ADDONS,
   STANDARD_EXCEPTIONS,
   resolveRuleEntries,
-  streakCopy,
 } from '../RulesModalSections';
 import { useDictionary } from "@/context/DictionaryContext";
 
@@ -23,38 +22,37 @@ export interface HistoryRulesModalProps {
 
 export const HistoryRulesModal: React.FC<HistoryRulesModalProps> = ({ isOpen, onClose }) => {
   const dict = useDictionary();
-  const s = streakCopy(dict);
+  const s = dict.streaks;
   return (
     <RulesModalShell
       isOpen={isOpen}
       onClose={onClose}
-      title={s.rules || 'Rules'}
+      title={s.rules}
     >
       <RulesHowItWorks
         tone="neutral"
-        title={s.howItWorks || 'How it works'}
+        title={s.howItWorks}
         items={[
-          s.historyWinCondition || 'Win = 3 kills or more.',
-          s.historyStartingPerksNote || 'You start with every General perk unlocked.',
-          s.historyPerkUnlockRule || 'Beating a killer adds their teachables to your pool.',
-          s.historyCheckpointRule ||
-            'A checkpoint saves your progress, so a loss falls back to your last checkpoint instead of zero.',
+          s.historyWinCondition,
+          s.historyStartingPerksNote,
+          s.historyPerkUnlockRule,
+          s.historyCheckpointRule,
         ]}
-        hint={s.historyConceptHint || 'For the full experience try to play killers in order from the oldest to newest. 🙂'}
+        hint={s.historyConceptHint}
       />
 
-      <RulesSection title={s.difficultyAndCheckpoints || 'Difficulty'}>
+      <RulesSection title={s.difficultyAndCheckpoints}>
         <RulesDifficultyRows
           alignTextRight
           rows={[
             {
-              label: s.mediumMode || 'Medium',
-              text: s.mediumModeDesc || 'Checkpoint every row.',
+              label: s.mediumMode,
+              text: s.mediumModeDesc,
               badgeClassName: DIFFICULTY_BADGE.amber,
             },
             {
-              label: s.hellMode || 'Hell',
-              text: s.hellModeDesc || 'No checkpoints.',
+              label: s.hellMode,
+              text: s.hellModeDesc,
               badgeClassName: DIFFICULTY_BADGE.red,
             },
           ]}

@@ -34,7 +34,6 @@ interface UserBugReportsListProps {
   reports: UserBugReport[];
   loading: boolean;
   onOpenReportModal: () => void;
-  t?: Record<string, string>;
   total?: number;
   page?: number;
   perPage?: number;
@@ -48,7 +47,6 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
       reports,
       loading,
       onOpenReportModal,
-      t: propT,
       total,
       page = 1,
       perPage = 10,
@@ -58,7 +56,7 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
       onReportSeen,
     }) => {
   const dict = useDictionary();
-  const t: Record<string, string> = propT || dict.user || {};
+  const t = dict.user;
   const totalCount = total ?? reports.length;
 
   const [openReports, setOpenReports] = useState<Record<number, boolean>>({});
@@ -78,21 +76,21 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
         return (
           <Badge tone="red" size="sm" square>
             <Clock className="h-3 w-3" />
-            <span>{t.statusInProgress || 'In Progress'}</span>
+            <span>{t.statusInProgress}</span>
           </Badge>
         );
       case 'resolved':
         return (
           <Badge tone="green" size="sm" square>
             <CheckCircle className="h-3 w-3" />
-            <span>{t.statusResolved || 'Resolved'}</span>
+            <span>{t.statusResolved}</span>
           </Badge>
         );
       case 'rejected':
         return (
           <Badge tone="neutral" size="sm" square>
             <XCircle className="h-3 w-3" />
-            <span>{t.statusClosed || 'Closed'}</span>
+            <span>{t.statusClosed}</span>
           </Badge>
         );
       case 'pending':
@@ -100,7 +98,7 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
         return (
           <Badge tone="amber" size="sm" square>
             <HelpCircle className="h-3 w-3" />
-            <span>{t.statusPending || 'Pending'}</span>
+            <span>{t.statusPending}</span>
           </Badge>
         );
     }
@@ -112,7 +110,7 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
         <div className="flex items-center justify-between gap-3 pb-2.5 border-b border-border-color shrink-0">
           <h2 className="text-sm sm:text-base font-black tracking-wider text-text-primary flex items-center gap-2">
             <FogReportIcon className="h-4 w-4 text-accent-red" />
-            <span>{t.bugReportsTitle || 'Your Submitted Bug Reports'}</span>
+            <span>{t.bugReportsTitle}</span>
           </h2>
           <Button
             variant="primary"
@@ -120,7 +118,7 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
             onClick={onOpenReportModal}
             leftIcon={<Plus className="h-3.5 w-3.5" />}
           >
-            <span>{t.reportNewBug || 'Report New Bug'}</span>
+            <span>{t.reportNewBug}</span>
           </Button>
         </div>
       ) : null}
@@ -132,11 +130,8 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
           variant="compact"
           icon={FogReportIcon}
           iconClassName="mx-auto mb-2 h-8 w-8 text-accent-red"
-          title={t.noReportsTitle || 'No Bug Reports Submitted'}
-          subtitle={
-            t.noReportsSubtitle ||
-            'You have not reported any glitches yet. If you spot incorrect perk numbers or map callout issues, report them!'
-          }
+          title={t.noReportsTitle}
+          subtitle={t.noReportsSubtitle}
         />
       ) : (
         <div
@@ -163,7 +158,7 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
                       {report.title}
                     </h3>
                     <div className="type-caption text-text-secondary">
-                      {t.reportedOn || 'Reported on'}{' '}
+                      {t.reportedOn}{' '}
                       {formatDate(report.created_at)}
                     </div>
                   </div>
@@ -174,7 +169,7 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
                       {report.feedback_unread && (
                         <UnreadDot
                           className="absolute -right-1 -top-1"
-                          label={t.newFeedback || 'New feedback from the developers'}
+                          label={t.newFeedback}
                         />
                       )}
                     </span>
@@ -202,7 +197,7 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
                     <div className="space-y-1.5 pt-1">
                       <span className="type-label-2xs text-text-muted flex items-center gap-1">
                         <ImageIcon className="h-3 w-3 text-accent-red" />
-                        {t.attachments || 'Attachments'} ({report.images.length})
+                        {t.attachments} ({report.images.length})
                       </span>
                       <div className="flex flex-wrap items-center gap-2.5 pt-0.5">
                         {report.images.map((imgUrl, i) => {
@@ -215,11 +210,11 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
                                 setPreviewImage(src);
                               }}
                               className="group relative h-16 w-16 sm:h-20 sm:w-20 rounded-control border border-border-color bg-bg-elevated overflow-hidden shadow-xs hover:border-accent-red/60 hover:shadow-md transition-all"
-                              aria-label={`${t.attachments || 'Attachment'} ${i + 1}`}
+                              aria-label={`${t.attachments} ${i + 1}`}
                             >
                               <img
                                 src={src}
-                                alt={`${t.attachments || 'Attachment'} ${i + 1}`}
+                                alt={`${t.attachments} ${i + 1}`}
                                 draggable={false}
                                 className="h-full w-full object-cover group-hover:scale-110 transition-transform duration-300"
                               />
@@ -238,7 +233,7 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
                     <div className="mt-2 rounded-card border border-accent-amber/30 bg-accent-amber/10 p-3 space-y-1">
                       <div className="flex items-center gap-2 text-accent-amber type-strong">
                         <OverseerEyeIcon className="h-3.5 w-3.5" />
-                        <span>{t.devResponse || 'Developer Response'}</span>
+                        <span>{t.devResponse}</span>
                       </div>
                       <p className="text-xs text-text-secondary italic">
                         {t.quoteOpen || '"'}
@@ -251,7 +246,7 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
                   {awaitingReply && (
                     <p className="mt-2 flex items-center gap-2 rounded-card border border-border-color bg-bg-elevated/60 p-3 type-caption text-text-muted">
                       <Clock className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
-                      <span>{t.noDevResponseYet || 'No response from the developers yet.'}</span>
+                      <span>{t.noDevResponseYet}</span>
                     </p>
                   )}
                 </Collapsible>
@@ -280,7 +275,7 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
         onClose={() => setPreviewImage(null)}
         variant="lightbox"
         layer="system"
-        ariaLabel={t.imagePreview || 'Image Preview'}
+        ariaLabel={t.imagePreview}
         className="overflow-visible"
       >
         <div className="relative flex items-center justify-center">
@@ -289,7 +284,7 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
             {previewImage && (
               <img
                 src={previewImage}
-                alt={t.attachmentPreview || 'Bug Report Attachment Full Preview'}
+                alt={t.attachmentPreview}
                 className="max-h-dvh-82 max-w-full w-auto h-auto object-contain rounded-card"
               />
             )}

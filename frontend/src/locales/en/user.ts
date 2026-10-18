@@ -9,6 +9,8 @@ export default {
   statusResolved: "Resolved",
   statusClosed: "Closed",
   bugReportsTitle: "Your Submitted Bug Reports",
+  imagePreview: "Image Preview",
+  attachmentPreview: "Bug Report Attachment Full Preview",
   reportNewBug: "Report New Bug",
   loadingReports: "Loading your reported tickets...",
   noReportsTitle: "No Bug Reports Submitted",

@@ -44,7 +44,7 @@ export function VoiceCommandBanner({
     handleExecuteCommand,
   } = session;
 
-  const rawVoiceDict = (dict.voice || {}) as Record<string, string>;
+  const rawVoiceDict = dict.voice;
   const currentCfg = buildStatusConfig(rawVoiceDict)[voiceStatus];
 
   return (

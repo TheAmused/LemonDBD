@@ -9,6 +9,8 @@ export default {
   statusResolved: "解決済み",
   statusClosed: "クローズ",
   bugReportsTitle: "送信したバグレポート一覧",
+  imagePreview: "画像プレビュー",
+  attachmentPreview: "バグレポート添付ファイルのフルプレビュー",
   reportNewBug: "新しいバグを報告",
   loadingReports: "送信済みチケットを読み込み中...",
   noReportsTitle: "送信されたバグレポートはありません",

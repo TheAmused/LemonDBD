@@ -26,8 +26,6 @@ export default {
   orderAsc: "A-Z",
   orderDesc: "Z-A",
   aliasLabel: "Alias:",
-  rarityVeryRare: "Bardzo rzadki",
-  rarityUncommon: "Niepospolity",
   resetAllFilters: "Zresetuj filtry",
   viewMode: "Siatka umiejętności",
   clearSearch: "Wyczyść wyszukiwanie",

@@ -161,7 +161,6 @@ export const GauntletModeModal: React.FC<GauntletModeModalProps> = ({
       tileGridClassName={isLemonStage ? 'grid-cols-3' : 'grid-cols-2'}
       selectedValue={isLemonStage ? currentMode : rootSelected}
       onBack={isLemonStage ? () => setStage('root') : undefined}
-      backLabel={dict.streaks.back}
       renderRules={({ isOpen: rulesOpen, onClose: closeRules, value }) => (
         <GauntletRulesModal
           isOpen={rulesOpen}

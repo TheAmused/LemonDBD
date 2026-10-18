@@ -1,7 +1,7 @@
 // frontend/src/components/character-detail/modals/KillerPowerModal.tsx
 import React from 'react';
 import { BookOpen, Flame } from 'lucide-react';
-import { KillerPowerInfo, CharacterItem, getAssetUrl } from '../types';
+import { KillerPowerInfo, CharacterItem, getAssetUrl, CharacterDetailDictionary } from '../types';
 import { RichText } from '@/components/common/RichText';
 import { Modal } from '@/components/common/Modal';
 import { Surface } from '@/components/common/Surface';
@@ -15,7 +15,7 @@ interface KillerPowerModalProps {
   killerTerrorRadius: string;
   killerHeight: string;
   backendBase: string;
-  t: Record<string, string>;
+  t: CharacterDetailDictionary;
 }
 
 /** One of the three numbers under the power description. */
@@ -46,7 +46,7 @@ export const KillerPowerModal: React.FC<KillerPowerModalProps> = ({
       variant="dialog"
       size="xl"
       title={killerPower.name}
-      closeButtonAriaLabel={t.close || 'Close'}
+      closeButtonAriaLabel={t.close}
     >
       <div className="flex justify-center px-6 pt-5">
         <div className="w-20 h-20 shrink-0 rounded-card bg-bg-elevated border-2 border-accent-red/50 flex items-center justify-center p-2 shadow-lg">
@@ -68,16 +68,16 @@ export const KillerPowerModal: React.FC<KillerPowerModalProps> = ({
         </div>
       </div>
       <div className="mt-5 px-6 py-3 bg-bg-elevated border-y border-border-color grid grid-cols-3 gap-2">
-        <MiniStat label={t.movementSpeed || 'Speed'} value={killerSpeed} valueClass="text-text-primary" />
-        <MiniStat label={t.terrorRadius || 'Terror Radius'} value={killerTerrorRadius} valueClass="text-accent-red" />
-        <MiniStat label={t.height || 'Height'} value={killerHeight} valueClass="text-text-primary" />
+        <MiniStat label={t.movementSpeed} value={killerSpeed} valueClass="text-text-primary" />
+        <MiniStat label={t.terrorRadius} value={killerTerrorRadius} valueClass="text-accent-red" />
+        <MiniStat label={t.height} value={killerHeight} valueClass="text-text-primary" />
       </div>
 
       <div className="p-4 sm:p-6 space-y-4 type-body-lg text-text-secondary">
         <div className="space-y-2">
           <span className="flex items-center gap-2 type-label-sm text-text-secondary mb-2">
             <BookOpen className="h-3.5 w-3.5 text-accent-red" />
-            {t.killerPowerDesc || 'Special ability and combat mechanics'}
+            {t.killerPowerDesc}
           </span>
           <div className="space-y-2 text-sm sm:text-base leading-relaxed">
             <RichText

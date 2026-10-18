@@ -120,6 +120,7 @@ def create_roster():
             theme_color=payload.theme_color,
             category=payload.category,
             is_nsfw=payload.is_nsfw,
+            is_active=payload.is_active,
             translations={k: v.model_dump(exclude_none=True) for k, v in payload.translations.items()},
             entities=[
                 {
@@ -152,6 +153,30 @@ def create_roster():
     data["character_count"] = len(row.entities)
     data["entities"] = [e.to_dict() for e in row.entities]
     return jsonify({"status": "success", "data": data}), 201
+
+
+@smash_or_pass_bp.route("/admin/rosters/<slug>", methods=["DELETE"])
+@admin_required
+def delete_roster(slug: str):
+    """Deletes an official smash-or-pass roster."""
+    roster = db.session.scalar(select(Roster).where(Roster.slug == slug))
+    if not roster:
+        return api_error(f"Roster '{slug}' not found", 404)
+
+    target_id = roster.id
+    name = roster.name
+    deleted = smash_service.delete_roster(slug)
+    if not deleted:
+        return api_error(f"Roster '{slug}' not found", 404)
+
+    log_admin_action(
+        g.current_user.id,
+        "smash_roster.delete",
+        target_type="roster",
+        target_id=target_id,
+        details={"slug": slug, "name": name},
+    )
+    return jsonify({"status": "success", "message": f"Roster '{slug}' deleted"}), 200
 
 
 @smash_or_pass_bp.route("/rosters/<slug>/feed", methods=["GET"])

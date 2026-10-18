@@ -204,6 +204,7 @@ class SmashRosterAdminCreate(BaseModel):
     theme_color: str = Field(default="#ff0055", min_length=1, max_length=32)
     category: str = Field(default="DBD", min_length=1, max_length=64)
     is_nsfw: bool = False
+    is_active: bool = True
     #: Admin translation authoring for the roster's own name/description.
     translations: dict[str, SmashRosterTranslationAdmin] = Field(default_factory=dict)
     entities: list[SmashEntityAdminCreate] = Field(..., min_length=1, max_length=200)

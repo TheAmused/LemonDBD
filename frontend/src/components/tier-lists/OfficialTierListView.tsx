@@ -184,7 +184,7 @@ export function OfficialTierListView({ slug, locale }: OfficialTierListViewProps
       preferenceKey={template.kind}
       title={template.title}
       description={template.description}
-      kindLabel={t.kinds[template.kind]}
+      kindLabel={template.kind === 'custom' ? undefined : t.kinds[template.kind]}
       items={items}
       tiers={tiers}
       placements={placements}

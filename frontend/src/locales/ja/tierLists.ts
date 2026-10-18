@@ -50,6 +50,7 @@ export default {
   dropHere: "ここに項目をドロップ",
   tierAria: "ティア {label}",
   editTierAria: "ティア {label} を編集",
+  clearTierAria: "ティア {label} をクリア",
   showPool: "未ランクを表示",
   hidePool: "未ランクを隠す",
   moveHere: "ここへ移動",

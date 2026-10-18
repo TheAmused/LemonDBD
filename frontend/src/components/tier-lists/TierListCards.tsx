@@ -116,7 +116,7 @@ export function OfficialTierListCard({ list, rankedCount, locale }: OfficialCard
   );
   const descRef = React.useRef<HTMLParagraphElement>(null);
   const descClamped = useIsClamped(descRef, list.description ?? '');
-  const showKindBadge = Boolean(kindName && !isDuplicateKind);
+  const showKindBadge = Boolean(kindName && list.kind !== 'custom' && !isDuplicateKind);
   const fullyRanked = list.item_count !== null && list.item_count > 0 && rankedCount >= list.item_count;
 
   return (
@@ -163,7 +163,10 @@ export function OfficialTierListCard({ list, rankedCount, locale }: OfficialCard
           {list.title}
         </h3>
         {list.description && (
-          <p ref={descRef} className="type-caption text-text-muted line-clamp-1">
+          <p
+            ref={descRef}
+            className="type-caption text-text-muted line-clamp-1 transition-opacity duration-200 group-has-[[aria-expanded=true]]:opacity-0 group-has-[[aria-expanded=true]]:pointer-events-none"
+          >
             {list.description}
           </p>
         )}
@@ -258,7 +261,10 @@ export function CustomTierListCard({ list, locale, onDelete, disabled }: CustomC
             {customTitle}
           </h3>
           {list.description && (
-            <p ref={descRef} className="type-caption text-text-muted line-clamp-1">
+            <p
+              ref={descRef}
+              className="type-caption text-text-muted line-clamp-1 transition-opacity duration-200 group-has-[[aria-expanded=true]]:opacity-0 group-has-[[aria-expanded=true]]:pointer-events-none"
+            >
               {list.description}
             </p>
           )}

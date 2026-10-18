@@ -50,6 +50,7 @@ export default {
   dropHere: "Drop items here",
   tierAria: "Tier {label}",
   editTierAria: "Edit tier {label}",
+  clearTierAria: "Clear tier {label}",
   showPool: "Show unranked",
   hidePool: "Hide unranked",
   moveHere: "Move here",

@@ -50,6 +50,7 @@ export default {
   dropHere: "Upuść elementy tutaj",
   tierAria: "Tier {label}",
   editTierAria: "Edytuj tier {label}",
+  clearTierAria: "Wyczyść tier {label}",
   showPool: "Pokaż nieocenione",
   hidePool: "Ukryj nieocenione",
   moveHere: "Przenieś tutaj",

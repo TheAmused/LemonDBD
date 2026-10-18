@@ -57,7 +57,7 @@ export interface TierListEditorProps {
   preferenceKey: string;
   title: string;
   description?: string;
-  kindLabel: string;
+  kindLabel?: string;
   items: TierItem[];
   tiers: TierDefinition[];
   /** As stored -- may include keys of items not currently shown; they are preserved on save. */
@@ -470,6 +470,7 @@ export function TierListEditor(props: TierListEditorProps) {
         board={board}
         onBoardChange={handleBoardChange}
         onReorderTiers={canEditTiers ? (fromId, toId) => applyLadder((s) => reorderTiers(s, fromId, toId)) : undefined}
+        onClearTier={canEditTiers ? (id) => applyLadder((s) => clearTier(s, id, catalogOrder)) : undefined}
         onEditTier={(id) => {
           if (!canEditTiers) return;
           setAddingTier(false);

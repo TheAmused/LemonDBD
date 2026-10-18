@@ -47,6 +47,18 @@ describe('ImageUploadDropzone: Props & Rendering (Empty / Dropzone mode)', () =>
     assert.match(html, /<input[^>]+type="url"[^>]+placeholder="https:\/\/\.\.\."/);
   });
 
+  it('renders custom placeholder and browseLabel when provided', () => {
+    const html = renderWithDictionary(
+      h(ImageUploadDropzone, {
+        onChange: () => {},
+        placeholder: 'https://custom-placeholder.com',
+        browseLabel: 'Select file',
+      })
+    );
+    assert.ok(html.includes('placeholder="https://custom-placeholder.com"'));
+    assert.ok(html.includes('Select file'));
+  });
+
   it('renders invalid message and error styling when invalid=true', () => {
     const html = renderWithDictionary(
       h(ImageUploadDropzone, {

@@ -99,6 +99,8 @@ export interface ImageUploadDropzoneProps {
   onChange: (value: string) => void;
   label?: string;
   hint?: string;
+  placeholder?: string;
+  browseLabel?: string;
   invalid?: boolean;
   invalidMessage?: string;
   aspectRatio?: 'banner' | 'square';
@@ -115,6 +117,8 @@ export function ImageUploadDropzone({
   onChange,
   label,
   hint,
+  placeholder,
+  browseLabel,
   invalid = false,
   invalidMessage,
   aspectRatio = 'banner',
@@ -131,8 +135,8 @@ export function ImageUploadDropzone({
   const [processing, setProcessing] = useState<boolean>(false);
 
   const resolvedRemoveLabel = removeAriaLabel || dict.tierLists.creator.removeImage;
-  const browseLabel = dict.tierLists.creator.chooseFiles;
-  const urlPlaceholder = hint || dict.tierLists.creator.backgroundImagePlaceholder;
+  const resolvedBrowseLabel = browseLabel || dict.tierLists.creator.chooseFiles;
+  const urlPlaceholder = placeholder || dict.tierLists.creator.backgroundImagePlaceholder;
 
   const handleFiles = async (fileList: FileList | null) => {
     if (!fileList || fileList.length === 0 || disabled) return;
@@ -153,7 +157,7 @@ export function ImageUploadDropzone({
   return (
     <div className={cn('flex flex-col gap-1.5 w-full', className)}>
       {label && (
-        <span className="block text-xs font-bold uppercase tracking-wider text-text-secondary">
+        <span className="block type-label-sm text-text-secondary">
           {label}
         </span>
       )}
@@ -227,7 +231,7 @@ export function ImageUploadDropzone({
               onClick={() => fileInputRef.current?.click()}
             >
               <Upload className="h-4 w-4" />
-              <span>{browseLabel}</span>
+              <span>{resolvedBrowseLabel}</span>
             </Button>
             {actions}
           </div>
@@ -262,13 +266,13 @@ export function ImageUploadDropzone({
       )}
 
       {invalid && invalidMessage ? (
-        <span className="mt-1 block text-xs 2xl:text-sm font-semibold text-accent-red">
+        <p role="alert" className="mt-1 type-caption font-medium text-accent-red">
           {invalidMessage}
-        </span>
+        </p>
       ) : hint ? (
-        <span className="mt-1 block text-xs 2xl:text-sm text-text-muted">
+        <p className="mt-1 type-caption text-text-muted">
           {hint}
-        </span>
+        </p>
       ) : null}
     </div>
   );

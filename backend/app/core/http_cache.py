@@ -41,6 +41,7 @@ from typing import Callable, Iterable
 from flask import Response, jsonify, request
 
 from app.core import redis_cache
+from app.core.security import SESSION_COOKIE_NAME
 from app.utils.lang import extract_lang
 
 logger = logging.getLogger(__name__)
@@ -61,7 +62,7 @@ def _is_personal() -> bool:
     # The app also accepts a cookie-borne token; presence alone is enough to
     # bail out -- we do not need to know whether it is valid, only that this
     # response might be personalised.
-    for cookie in ("access_token", "token", "session"):
+    for cookie in ("access_token", "token", "session", SESSION_COOKIE_NAME):
         if request.cookies.get(cookie):
             return True
     return False

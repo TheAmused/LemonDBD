@@ -326,8 +326,13 @@ def get_admin_stats():
 
 @admin_control_bp.route("/database/purge", methods=["POST"])
 @admin_required
-def purge_database_tables():
-    """Purge specific database entity tables on demand."""
+def purge_database_tables_route():
+    """Purge specific database entity tables on demand.
+
+    Named `*_route` on purpose: it used to be called `purge_database_tables`, the same name as the
+    service it imports, so the module-level name became this view and every purge called itself
+    with an argument (500: "takes 0 positional arguments but 1 was given").
+    """
     try:
         dto = PurgeDatabaseDTO.model_validate(request.get_json(silent=True) or {})
     except ValidationError as err:
@@ -336,6 +341,8 @@ def purge_database_tables():
     targets: list[str] = dto.targets
     try:
         purged = purge_database_tables(targets)
+        # Cached catalogs (characters, perks, maps) would otherwise keep serving purged rows for a day.
+        bump_catalog_version()
         logger.info(f"Admin {g.current_user.login} purged tables: {purged}")
         return jsonify({
             "status": "success",

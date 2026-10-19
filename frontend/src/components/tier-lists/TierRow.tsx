@@ -123,37 +123,20 @@ export const TierRow = React.memo(function TierRow({
         </div>
       )}
 
+      <div className="flex min-w-0">
       <div
         ref={setNodeRef}
         onClick={canReceiveSelection ? () => onMoveSelectedHere(tier.id) : undefined}
         className={cn(
-          'relative flex min-h-14 phone-lg:min-h-18 sm:max-wide-2k:min-h-21 wide-2k:min-h-28 flex-wrap content-start items-start justify-start gap-1 phone-lg:gap-1.5 sm:gap-2 p-1.5 phone-lg:p-2 transition-colors',
+          'relative flex min-w-0 flex-1 min-h-14 phone-lg:min-h-18 sm:max-wide-2k:min-h-21 wide-2k:min-h-28 flex-wrap content-start items-start justify-start gap-1 phone-lg:gap-1.5 sm:gap-2 p-1.5 phone-lg:p-2 transition-colors',
           'group-data-[fit]/board:min-h-(--row-min)! group-data-[fit]/board:gap-(--tile-gap)! group-data-[fit]/board:p-(--tile-pad)!',
+          // FIT: rows are stretched to fill the screen, so centre the tiles instead of hugging the top edge.
+          'group-data-[fit]/board:content-center group-data-[fit]/board:items-center',
           keys.length === 0 && 'content-center items-center justify-center',
           isOver && 'bg-accent-red/10',
           canReceiveSelection && 'cursor-pointer hover:bg-accent-amber/10'
         )}
       >
-        {canEdit && keys.length > 0 && onClearRow && (
-          <div className="absolute top-1.5 right-1.5 z-10 opacity-70 hover:opacity-100 transition-opacity">
-            <Button
-              type="button"
-              variant="overlay"
-              size="xs"
-              icon
-              pill
-              onClick={(e) => {
-                e.stopPropagation();
-                onClearRow(tier.id);
-              }}
-              aria-label={formatMessage(t.clearTierAria, { label: tier.label })}
-              title={formatMessage(t.clearTierAria, { label: tier.label })}
-            >
-              <Eraser className="h-3.5 w-3.5" aria-hidden="true" />
-            </Button>
-          </div>
-        )}
-
         <SortableContext items={keys.map(itemDndId)} strategy={rectSortingStrategy}>
           {keys.map((key) => {
             const item = itemsByKey.get(key);
@@ -190,6 +173,33 @@ export const TierRow = React.memo(function TierRow({
             {t.moveHere}
           </Button>
         )}
+      </div>
+
+      {/* Far right, on every row, for everyone who can rank: one click empties the row. Empty rows keep a spacer so the column never changes width. */}
+      {onClearRow && (
+        <div className="flex shrink-0 items-center px-1.5 sm:px-2">
+          {keys.length > 0 ? (
+            <Button
+              type="button"
+              variant="overlay"
+              size="xs"
+              icon
+              pill
+              onClick={(e) => {
+                e.stopPropagation();
+                onClearRow(tier.id);
+              }}
+              aria-label={formatMessage(t.clearTierAria, { label: tier.label })}
+              title={formatMessage(t.clearTierAria, { label: tier.label })}
+              className="opacity-70 transition-opacity hover:opacity-100 focus-visible:opacity-100"
+            >
+              <Eraser className="h-3.5 w-3.5" aria-hidden="true" />
+            </Button>
+          ) : (
+            <span aria-hidden="true" className="h-6 w-6" />
+          )}
+        </div>
+      )}
       </div>
     </section>
   );

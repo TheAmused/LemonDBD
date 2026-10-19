@@ -176,14 +176,16 @@ describe('Tier lists: i18n parity across all 5 locales', () => {
 });
 
 describe('Tier lists: banner assets', () => {
-  it('all 6 official and default custom banner graphics exist in backend/app/static/tier-lists/ (single source of truth)', () => {
+  it('all 5 official and 3 default custom banner graphics exist in backend/app/static/tier-lists/ (single source of truth)', () => {
     const banners = [
       'banner_survivor_perks.webp',
       'banner_killer_perks.webp',
       'banner_survivors.webp',
       'banner_killers.webp',
       'banner_maps.webp',
-      'banner_custom_default.webp',
+      'banner_custom_default_1.webp',
+      'banner_custom_default_2.webp',
+      'banner_custom_default_3.webp',
     ];
     const bannerDir = path.resolve(__dirname, '../../../../backend/app/static/tier-lists');
     assert.ok(!fs.existsSync(path.resolve(__dirname, '../../../public/images/tier-lists/banner_maps.webp')), 'Banners must not be duplicated in the frontend');

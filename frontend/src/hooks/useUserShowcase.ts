@@ -4,6 +4,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import {
   DEFAULT_SHOWCASE_STATE,
+  GRADE_EMBLEMS,
   PLAYER_TITLES,
   type UserShowcaseState,
   type MainLoadout,
@@ -56,7 +57,7 @@ export function mergeShowcaseState(partial?: unknown): UserShowcaseState {
         ? Math.max(0, Math.min(99, Math.round(p.devotionLevel)))
         : DEFAULT_SHOWCASE_STATE.devotionLevel,
     gradeRank:
-      typeof p.gradeRank === 'string' && p.gradeRank.trim() !== ''
+      typeof p.gradeRank === 'string' && (GRADE_EMBLEMS as readonly string[]).includes(p.gradeRank)
         ? p.gradeRank
         : DEFAULT_SHOWCASE_STATE.gradeRank,
     survivorMain: {

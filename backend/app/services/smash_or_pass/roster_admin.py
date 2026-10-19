@@ -199,7 +199,8 @@ class SmashRosterAdminMixin:
     def get_taxonomies(self) -> dict[str, list[str]]:
         """Returns cached or database-derived lists of known roles and genders."""
         cache_key = "smash_or_pass:taxonomies"
-        cached = redis_cache.get(cache_key)
+        version = redis_cache.catalog_version()
+        cached = redis_cache.get(cache_key, version=version)
         if cached and isinstance(cached, dict) and "roles" in cached and "genders" in cached:
             return cached
 
@@ -238,7 +239,9 @@ class SmashRosterAdminMixin:
                 genders.append(default_gender)
 
         result = {"roles": roles, "genders": genders}
-        redis_cache.set(cache_key, result, ttl=86400)
+        # Not stored if a taxonomy was registered while this read ran.
+        if redis_cache.catalog_version(fresh=True) == version:
+            redis_cache.set(cache_key, result, ttl=86400, version=version)
         return result
 
     def register_taxonomy(self, term_type: str, name: str) -> dict[str, Any]:
@@ -269,7 +272,6 @@ class SmashRosterAdminMixin:
         try:
             db.session.commit()
             bump_catalog_version()
-            redis_cache.set("smash_or_pass:taxonomies", None, ttl=1)
         except Exception as e:
             db.session.rollback()
             logger.error("[smash_or_pass_service] Error registering taxonomy: %s", e)

@@ -7,6 +7,7 @@ from typing import Any
 from sqlalchemy import select
 
 from app.core.extensions import db
+from app.core.redis_cache import bump_catalog_version
 from app.core.transaction import transaction
 from app.models.character import Killer
 from app.models.minigame import MinigameDailyChallenge, MinigameRepeatableChallenge, MinigameUserStat
@@ -151,8 +152,12 @@ def record_minigame_round(
 
 
 def update_killer_chase_music(killer_id: int, local_path: str) -> None:
-    """Updates the cached chase music path for a killer atomically."""
+    """Updates the cached chase music path for a killer atomically.
+
+    The path is part of the character JSON, so the catalog generation is bumped.
+    """
     with transaction():
         killer = db.session.get(Killer, killer_id)
         if killer:
             killer.chase_music_local_path = local_path
+    bump_catalog_version()

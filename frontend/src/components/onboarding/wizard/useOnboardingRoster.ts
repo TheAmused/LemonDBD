@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { ownershipKey, ownsPerk } from '@/utils/characterUtils';
 import { useAuth } from '@/context/AuthContext';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
-import { CATALOG_TTL_MS, fetchCached } from '@/services/dataCache';
+import { CATALOG_TTL_MS, catalogKey, fetchCached, fetchJson } from '@/services/dataCache';
 import { loadOnboardingDraft, saveOnboardingDraft } from '@/utils/onboardingStorage';
 import { authHeaders } from '@/utils/api';
 import {
@@ -47,13 +47,12 @@ export function useOnboardingRoster(locale: string) {
     // list is catalog data that only moves on a re-seed, and someone who backs
     // out of the wizard and returns should not re-download it.
     let cancelled = false;
-    const chaptersKey = `${backendBase}/api/v1/chapters`;
-    fetchCached<{ chapters?: Array<{ name: string; banner_url: string | null; banner_local_path: string | null }> }>(
-      chaptersKey,
-      () => fetch(chaptersKey).then((res) => res.json()),
-      { ttlMs: CATALOG_TTL_MS }
-    )
-      .then((json: { chapters?: Array<{ name: string; banner_url: string | null; banner_local_path: string | null }> }) => {
+    type ChaptersPayload = {
+      chapters?: Array<{ name: string; banner_url: string | null; banner_local_path: string | null }>;
+    };
+    const chaptersKey = catalogKey('chapters');
+    fetchCached<ChaptersPayload>(chaptersKey, () => fetchJson<ChaptersPayload>(chaptersKey), { ttlMs: CATALOG_TTL_MS })
+      .then((json) => {
         if (cancelled) return;
         const byName: Record<string, ChapterBanner> = {};
         (json.chapters || []).forEach((chapter) => {
@@ -85,11 +84,14 @@ export function useOnboardingRoster(locale: string) {
     // are personalised and neither cache will touch them. The third is the
     // public catalog under the same key the roster page uses, so a visitor who
     // has already loaded /characters pays nothing for it here.
-    const translatedCharsKey = `${backendBase}/api/v1/characters?lang=${locale}`;
+    const translatedCharsKey = catalogKey('characters', { lang: locale });
+    type TranslatedCharacters = {
+      data?: Array<{ id: number; name: string; category: string; chapter_name: string | null }>;
+    };
     Promise.all([
       fetch(`${backendBase}/api/v1/users/${user.id}/characters`, { headers }).then((res) => res.json()),
       fetch(`${backendBase}/api/v1/users/${user.id}/perks?lang=${locale}`, { headers }).then((res) => res.json()),
-      fetchCached(translatedCharsKey, () => fetch(translatedCharsKey).then((res) => res.json()), {
+      fetchCached<TranslatedCharacters>(translatedCharsKey, () => fetchJson<TranslatedCharacters>(translatedCharsKey), {
         ttlMs: CATALOG_TTL_MS,
       }),
     ])

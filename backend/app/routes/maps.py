@@ -1,6 +1,7 @@
 # backend/app/routes/maps.py
 from flask import Blueprint, jsonify, request
 
+from app.core.cache_params import norm_int, norm_lower
 from app.core.http_cache import cache_catalog
 from app.services.map_service import MapService
 from app.utils.lang import extract_lang
@@ -11,8 +12,13 @@ maps_bp = Blueprint("maps", __name__, url_prefix="/api/v1/maps")
 service = MapService()
 
 
+MAPS_DEFAULT_PER_PAGE = 100
+MAPS_MAX_PER_PAGE = 500
+MAPS_MAX_PAGE = 10000
+
+
 @maps_bp.route("/realms", methods=["GET"])
-@cache_catalog(ttl=86400, vary=("lang",))
+@cache_catalog(ttl=86400, vary=())
 def get_realms():
     """Retrieve all realm banner images for client-side name matching."""
     realms = service.get_realms(lang=extract_lang())
@@ -21,14 +27,24 @@ def get_realms():
 
 @maps_bp.route("", methods=["GET"])
 @maps_bp.route("/", methods=["GET"])
-@cache_catalog(ttl=3600, vary=("realm", "search", "source", "lang", "page", "per_page"))
+@cache_catalog(
+    ttl=3600,
+    vary={
+        "realm": norm_lower(drop_all=True),
+        "search": norm_lower(),
+        "source": norm_lower(drop_all=True),
+        # The response shape depends on whether either was sent at all.
+        "page": norm_int(1, 1, MAPS_MAX_PAGE, clamp_high=False, absent_is_none=True),
+        "per_page": norm_int(MAPS_DEFAULT_PER_PAGE, 1, MAPS_MAX_PER_PAGE, absent_is_none=True),
+    },
+)
 def get_maps():
     """Retrieve all available map realms with optional query filtering and pagination."""
     realm = request.args.get("realm")
     search = request.args.get("search")
     source = request.args.get("source")
 
-    page, per_page = paginate_args(default_per_page=100, max_per_page=500)
+    page, per_page = paginate_args(default_per_page=MAPS_DEFAULT_PER_PAGE, max_per_page=MAPS_MAX_PER_PAGE)
     maps = service.get_maps(realm=realm, search=search, source=source, lang=extract_lang())
     if request.args.get("page") or request.args.get("per_page"):
         start = (page - 1) * per_page

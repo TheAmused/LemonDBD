@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { ownershipKey } from '@/utils/characterUtils';
 import { useAuth } from '@/context/AuthContext';
-import { invalidate } from '@/services/dataCache';
+import { catalogKey, invalidate } from '@/services/dataCache';
 import { clearOnboardingDraft } from '@/utils/onboardingStorage';
 import {
   type OnboardingCharacter,
@@ -12,7 +12,6 @@ import {
 } from '../CharacterOnboardingWizardParts';
 
 interface OnboardingCompletionInput {
-  backendBase: string;
   characters: OnboardingCharacter[];
   allPerks: OnboardingPerk[];
   ownershipDraft: Record<string, boolean>;
@@ -22,7 +21,6 @@ interface OnboardingCompletionInput {
 
 /** Saving the drafts (Continue) or leaving them unsaved (Skip), then handing control back. */
 export function useOnboardingCompletion({
-  backendBase,
   characters,
   allPerks,
   ownershipDraft,
@@ -48,8 +46,8 @@ export function useOnboardingCompletion({
       }));
       await bulkUpdateCharacterOwnership(characterUpdates);
       await bulkUpdatePerkOwnership(perkUpdates);
-      invalidate(`${backendBase}/api/v1/perks`);
-      invalidate(`${backendBase}/api/v1/characters`);
+      invalidate(catalogKey('perks'));
+      invalidate(catalogKey('characters'));
       await markOnboardingComplete();
       clearOnboardingDraft(user?.id);
       setSaving(false);

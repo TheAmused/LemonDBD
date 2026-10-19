@@ -156,6 +156,27 @@ describe('createVersionedStore', () => {
     }
   });
 
+  it('an update with nobody subscribed builds on what another tab stored, not on a stale snapshot', () => {
+    const g = globalThis as { localStorage?: Storage };
+    const prev = g.localStorage;
+    const shared = mockStorage();
+    g.localStorage = shared;
+    try {
+      const store = createVersionedStore<S>({ key: 'k', empty: EMPTY, migrate });
+      const unsubscribe = store.subscribe(() => {});
+      store.update((s) => ({ ...s, items: { ...s.items, mine: 1 } }));
+      unsubscribe();
+
+      // Another tab writes while this one has no listener attached.
+      shared.setItem('k', JSON.stringify({ version: 1, items: { mine: 1, theirs: 2 } }));
+      store.update((s) => ({ ...s, items: { ...s.items, later: 3 } }));
+
+      assert.deepEqual(store.load(shared).items, { mine: 1, theirs: 2, later: 3 });
+    } finally {
+      g.localStorage = prev;
+    }
+  });
+
   it('createRandomId yields 10 base-36 chars', () => {
     assert.match(createRandomId(), /^[0-9a-z]{10}$/);
     assert.notEqual(createRandomId(), createRandomId());

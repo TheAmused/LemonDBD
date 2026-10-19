@@ -56,7 +56,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
     toggleChapterExpanded, handleChapterPanelExitComplete,
   } = useChapterExpansion(filteredChapterGroups);
   const { saving, handleContinue, handleSkipConfirm } = useOnboardingCompletion({
-    backendBase, characters, allPerks, ownershipDraft, perkUnlockDraft, onFinished,
+    characters, allPerks, ownershipDraft, perkUnlockDraft, onFinished,
   });
 
   const [isSkipModalOpen, setIsSkipModalOpen] = useState(false);

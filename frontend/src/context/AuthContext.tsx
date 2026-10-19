@@ -80,6 +80,7 @@ import { getBackendBaseUrl } from '@/utils/perkUtils';
 import type { CharacterOwnershipUpdate } from '@/utils/characterUtils';
 import { SESSION_MARKER, authHeaders, setSessionFlag, getErrorMessage, isAbortError } from '@/utils/api';
 import { trackEvent } from '@/utils/analytics';
+import { invalidate } from '@/services/dataCache';
 import { blockedFromResponse, warningsFromResponse } from '@/utils/moderationResponse';
 import { acknowledgeWarning as acknowledgeWarningRequest } from '@/services/moderationApi';
 import type { BlockedInfo, UserWarning } from '@/types/moderation';
@@ -87,6 +88,9 @@ import type { BlockedInfo, UserWarning } from '@/types/moderation';
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 const API_BASE = getBackendBaseUrl();
+
+/** Cached perk lists and admin drafts are per identity: drop them on every sign-in and sign-out. */
+const onIdentityChanged = (): void => invalidate();
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<UserProfile | null>(null);
@@ -150,6 +154,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setUser(data.user);
       setWarnings(warningsFromResponse(data));
       if (data.ownership) setOwnership(data.ownership);
+      onIdentityChanged();
       trackEvent('login', { method: 'password' });
       return { success: true, user: data.user as UserProfile };
     } catch (err) {
@@ -178,6 +183,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setUser(data.user);
       setWarnings(warningsFromResponse(data));
       if (data.ownership) setOwnership(data.ownership);
+      onIdentityChanged();
       // The API has no "new account" flag; a user without a finished onboarding is the one
       // the app sends to /welcome, so that is what counts as a signup.
       if (data.user?.onboarding_completed_at) trackEvent('login', { method: 'google' });
@@ -207,6 +213,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setUser(data.user);
       setWarnings(warningsFromResponse(data));
       if (data.ownership) setOwnership(data.ownership);
+      onIdentityChanged();
       trackEvent('login', { method: 'two_factor' });
       return { success: true, user: data.user as UserProfile };
     } catch (err) {
@@ -230,6 +237,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setSessionFlag(true);
       setUser(data.user);
       if (data.ownership) setOwnership(data.ownership);
+      onIdentityChanged();
       trackEvent('signup', { method: 'password' });
       return { success: true, user: data.user as UserProfile };
     } catch (err) {
@@ -309,6 +317,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const logout = () => {
     // Clears the HttpOnly cookie server-side (JavaScript cannot delete it).
     const cleared = fetch(`${API_BASE}/api/v1/auth/logout`, { method: 'POST', credentials: 'include' }).catch(() => {});
+    // After the cookie is gone, so the refetch is anonymous.
+    cleared.finally(onIdentityChanged);
     setUser(null);
     setToken(null);
     setOwnership(null);

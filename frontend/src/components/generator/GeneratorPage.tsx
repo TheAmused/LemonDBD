@@ -65,7 +65,7 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
   const [spinDurationSec, setSpinDurationSec] = useState<number>(3);
   const [audioEnabled, setAudioEnabledState] = useState<boolean>(true);
 
-  const [drawnPerks, setDrawnPerks] = useState<number[]>([]);
+  const [drawnPerks, setDrawnPerks] = useState<(string | number)[]>([]);
   const [loadout, setLoadout] = useState<(DrawnSlot | null)[]>([null, null, null, null]);
   const [activeSlotIdx, setActiveSlotIdx] = useState<number>(0);
   const [isChaosModalOpen, setIsChaosModalOpen] = useState(false);
@@ -237,9 +237,9 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
 
     // ONLY add to drawnPerks if no-repeat mode is actually ON!
     if (noRepeatPerks && wonData.perk) {
-      const perkId = wonData.perk.id;
+      const perkKey: string | number = wonData.perk.id ?? wonData.perk.name;
       setDrawnPerks((prev) => {
-        const next = Array.from(new Set([...prev, perkId]));
+        const next = Array.from(new Set([...prev, perkKey]));
         saveDrawnPerksForRole(role, next);
         return next;
       });

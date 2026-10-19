@@ -9,6 +9,7 @@ interface DisabledBadgeProps {
   label: string;
   onClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
   position?: string;
+  className?: string;
   ariaLabel?: string;
 }
 
@@ -16,6 +17,7 @@ export const DisabledBadge: React.FC<DisabledBadgeProps> = ({
   label,
   onClick,
   position = 'top-1 right-1',
+  className,
   ariaLabel,
 }) => (
   <Button variant="amberSoft" size="xs" icon pill
@@ -25,7 +27,7 @@ export const DisabledBadge: React.FC<DisabledBadgeProps> = ({
       onClick(e);
     }}
     aria-label={ariaLabel || label}
-    className={`absolute ${position} z-10 bg-bg-surface/90`}
+    className={className || `absolute ${position} z-10 bg-bg-surface/90`}
   >
     <AlertTriangle className="h-3.5 w-3.5" />
   </Button>

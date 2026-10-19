@@ -1,7 +1,6 @@
 # backend/app/services/ownership/summary.py
 from typing import Any
 from sqlalchemy import select
-from sqlalchemy.orm import joinedload
 
 from app.core.db_retry import retry_on_transient_db_error
 from app.core.extensions import db
@@ -13,15 +12,21 @@ def calculate_ownership_summary(user_id: int | None = None) -> dict[str, Any]:
     """Calculate aggregated ownership statistics and identifiers for characters and perks."""
     # Two tables, so two queries. A character is a (role, id) pair everywhere
     # below: survivor 7 and killer 7 are different characters.
-    survivors = db.session.scalars(select(Survivor)).all()
-    killers = db.session.scalars(select(Killer)).all()
+    # Plain column rows, not ORM objects: `/auth/me` runs this on every page load, and loading
+    # every character (with its chapter) and every perk (with both owners joined) to read a few
+    # ids and names was the bulk of that request.
+    survivors = db.session.execute(select(Survivor.id, Survivor.name)).all()
+    killers = db.session.execute(select(Killer.id, Killer.name)).all()
     all_characters = [*survivors, *killers]
     char_map = {
         **{("survivor", c.id): c for c in survivors},
         **{("killer", c.id): c for c in killers},
     }
-    all_perks = db.session.scalars(
-        select(Perk).options(joinedload(Perk.survivor), joinedload(Perk.killer))
+    all_perks = db.session.execute(
+        select(
+            Perk.id, Perk.name, Perk.alternate_name, Perk.role,
+            Perk.survivor_id, Perk.killer_id, Perk.is_generic_counterpart,
+        )
     ).all()
 
     total_surv_chars = len(survivors)
@@ -67,8 +72,10 @@ def calculate_ownership_summary(user_id: int | None = None) -> dict[str, Any]:
     if not user:
         return calculate_ownership_summary(None)
 
-    char_ownership_rows = db.session.scalars(
-        select(UserCharacterOwnership).where(UserCharacterOwnership.user_id == user_id)
+    char_ownership_rows = db.session.execute(
+        select(
+            UserCharacterOwnership.survivor_id, UserCharacterOwnership.killer_id, UserCharacterOwnership.is_owned
+        ).where(UserCharacterOwnership.user_id == user_id)
     ).all()
     deactivated = {
         (("survivor", co.survivor_id) if co.survivor_id else ("killer", co.killer_id))
@@ -78,14 +85,15 @@ def calculate_ownership_summary(user_id: int | None = None) -> dict[str, Any]:
     owned_keys = {key for key in char_map if key not in deactivated}
     owned_character_names = [char_map[key].name for key in owned_keys]
 
-    perk_ownership_rows = db.session.scalars(
-        select(UserPerkOwnership).where(UserPerkOwnership.user_id == user_id)
+    perk_ownership_rows = db.session.execute(
+        select(UserPerkOwnership.perk_id, UserPerkOwnership.is_unlocked).where(UserPerkOwnership.user_id == user_id)
     ).all()
     explicit_perk_unlocked = {po.perk_id for po in perk_ownership_rows if po.is_unlocked}
     explicit_perk_locked = {po.perk_id for po in perk_ownership_rows if not po.is_unlocked}
 
     owned_perk_ids: list[int] = []
     owned_perk_names: list[str] = []
+    seen_names: set[str] = set()
     owned_surv_perks = 0
     owned_kill_perks = 0
 
@@ -110,8 +118,10 @@ def calculate_ownership_summary(user_id: int | None = None) -> dict[str, Any]:
         if is_owned:
             owned_perk_ids.append(perk.id)
             owned_perk_names.append(perk.name)
-            if perk.alternate_name and perk.alternate_name not in owned_perk_names:
+            seen_names.add(perk.name)
+            if perk.alternate_name and perk.alternate_name not in seen_names:
                 owned_perk_names.append(perk.alternate_name)
+                seen_names.add(perk.alternate_name)
             if is_surv:
                 owned_surv_perks += 1
             else:

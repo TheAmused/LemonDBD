@@ -39,8 +39,8 @@ class TestUserShowcaseRoutes:
             token = generate_token(other_user.id, role="user")
         return {"Authorization": f"Bearer {token}"}
 
-    def test_get_showcase_returns_default_when_not_previously_saved(self, client: FlaskClient, user: User) -> None:
-        res = client.get(f"/api/v1/users/{user.id}/showcase")
+    def test_get_showcase_returns_default_when_not_previously_saved(self, client: FlaskClient, user: User, user_headers: dict) -> None:
+        res = client.get(f"/api/v1/users/{user.id}/showcase", headers=user_headers)
         assert res.status_code == 200
         data = res.get_json()["data"]
         assert data["player_title"] == "The Camper"
@@ -51,9 +51,19 @@ class TestUserShowcaseRoutes:
         assert data["killer_main"]["character_name"] == "The Blight"
         assert data["killer_main"]["prestige"] == 1
 
-    def test_get_showcase_user_not_found(self, client: FlaskClient) -> None:
-        res = client.get("/api/v1/users/999999/showcase")
+    def test_get_showcase_user_not_found(self, client: FlaskClient, db_session) -> None:
+        admin = User(login="showcase_admin", username="showcase_admin", email="sa@example.com", password_hash="hashed", role="admin")
+        db_session.add(admin)
+        db_session.commit()
+        headers = {"Authorization": f"Bearer {generate_token(admin.id, role='admin')}"}
+        res = client.get("/api/v1/users/999999/showcase", headers=headers)
         assert res.status_code == 404
+
+    def test_get_showcase_requires_login(self, client: FlaskClient, user: User) -> None:
+        assert client.get(f"/api/v1/users/{user.id}/showcase").status_code == 401
+
+    def test_get_showcase_forbids_other_user(self, client: FlaskClient, user: User, other_headers: dict) -> None:
+        assert client.get(f"/api/v1/users/{user.id}/showcase", headers=other_headers).status_code == 403
 
     def test_update_showcase_requires_auth(self, client: FlaskClient, user: User) -> None:
         res = client.put(f"/api/v1/users/{user.id}/showcase", json={"player_title": "Apex Predator"})
@@ -114,7 +124,7 @@ class TestUserShowcaseRoutes:
         assert saved["killer_main"]["perk_ids"] == [5, 6, 7, 8]
 
         # Fetch again to verify persistence
-        get_res = client.get(f"/api/v1/users/{user.id}/showcase")
+        get_res = client.get(f"/api/v1/users/{user.id}/showcase", headers=user_headers)
         assert get_res.status_code == 200
         fetched = get_res.get_json()["data"]
         assert fetched["player_title"] == "Apex Predator"

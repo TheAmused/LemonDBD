@@ -441,8 +441,15 @@ def get_user_ownership_summary(user_id: int):
 
 
 @users_bp.route("/users/<int:user_id>/showcase", methods=["GET"])
+@login_required
 def get_user_showcase(user_id: int):
-    """Retrieve custom player showcase data (title, devotion, mains, perks)."""
+    """Retrieve custom player showcase data (title, devotion, mains, perks).
+
+    Self or admin only, like every other per-user route: nothing public shows a showcase, and an
+    open endpoint let anyone walk the sequential ids to see which accounts exist.
+    """
+    if err_resp := _self_or_admin_error(user_id, "Unauthorized access to user profile."):
+        return err_resp
     user = fetch_user_by_id(user_id)
     if not user:
         return api_error("User not found.", 404)

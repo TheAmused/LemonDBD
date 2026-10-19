@@ -71,7 +71,7 @@ export default {
   failedToResendCode: "Failed to resend code.",
   digitAriaLabel: "Digit {n} of verification code",
   missingResetToken: "Missing reset token.",
-  passwordTooShort: "Password must be at least 6 characters long.",
+  passwordTooShort: "Password must be at least {min} characters long.",
   passwordsDoNotMatch: "Passwords do not match.",
   failedToResetPassword: "Failed to reset password.",
   failedToRequestPasswordReset: "Failed to request password reset",
@@ -90,6 +90,7 @@ export default {
   authTokenMissing: "Authentication token missing. Please log in again.",
   profileUpdateFailedMsg: "Failed to update profile.",
   profileUpdateSuccessMsg: "Profile updated successfully!",
+  emailChangedVerifyMsg: "Email changed. We sent a verification code to the new address: enter it to verify the account again.",
 
   // --- Campfire Dossier additions ---
   tabSanctum: "Account Management",

@@ -510,8 +510,8 @@ test('generatorStorage: corrupted data & edge-case resilience', async (t) => {
     // Put mixed values in array
     mock.setItem('lemon_drawn_perks_Survivor', JSON.stringify(['Sprint Burst', null, 123, 'Bond']));
     const drawn = getDrawnPerksForRole('Survivor');
-    // Only valid strings preserved
-    assert.deepStrictEqual(drawn, ['Sprint Burst', 'Bond']);
+    // Valid strings and numeric IDs preserved
+    assert.deepStrictEqual(drawn, ['Sprint Burst', 123, 'Bond']);
   });
 
 

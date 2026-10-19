@@ -219,10 +219,15 @@ class TestSmashOrPassAPI:
 
         res4 = client.post(
             "/api/v1/smash-or-pass/vote",
-            json={"character_slug": "non_existent_char_12345", "vote_type": "smash"},
+            json={"character_slug": "non_existent_char_12345", "vote_type": "smash", "session_id": "s"},
         )
         assert res4.status_code == 400
         assert "not found" in res4.get_json()["error"].lower()
+
+        # A guest vote with no session has no owner -- refused, not stored.
+        res5 = client.post("/api/v1/smash-or-pass/vote", json={"character_slug": "ada_wong", "vote_type": "smash"})
+        assert res5.status_code == 400
+        assert "session_id" in res5.get_json()["error"]
 
     def test_cast_vote_rate_limiting_and_pruning(self, app: Flask) -> None:
         client = app.test_client()
@@ -250,6 +255,8 @@ class TestSmashOrPassAPI:
         assert res_blocked.status_code == 429
         assert "Rate limit exceeded" in res_blocked.get_json()["error"]
 
+        # A fresh client-chosen session id must not mint a fresh limit: the
+        # guest limit is per IP.
         res_other = client.post(
             "/api/v1/smash-or-pass/vote",
             json={
@@ -258,11 +265,12 @@ class TestSmashOrPassAPI:
                 "session_id": "other_unlimited_session",
             },
         )
-        assert res_other.status_code == 200
+        assert res_other.status_code == 429
 
-        vote_rate_limiter._requests["127.0.0.1:stale_sess"] = [time.time() - 100]
+        vote_rate_limiter._requests["ip:10.0.0.9"] = [time.time() - 100]
         vote_rate_limiter._prune_stale_keys(time.time() - 60)
-        assert "127.0.0.1:stale_sess" not in vote_rate_limiter._requests
+        assert "ip:10.0.0.9" not in vote_rate_limiter._requests
+        vote_rate_limiter.reset()
 
     def test_get_leaderboard_success_and_sorting(
         self, app: Flask, db_session: Session
@@ -349,25 +357,16 @@ class TestSmashOrPassAPI:
         res_404 = client.get("/api/v1/smash-or-pass/rosters/unknown_roster/leaderboard")
         assert res_404.status_code == 404
 
-    def test_legacy_routes_backward_compatibility(
+    def test_legacy_routes_removed_and_user_votes_work(
         self, app: Flask, db_session: Session
     ) -> None:
         client = app.test_client()
         user = _create_user(db_session, username="legacy_user", email="legacy@test.com")
         token = generate_token(user.id, role="user")
 
-        res_ed = client.get("/api/v1/smash-or-pass/editions")
-        assert res_ed.status_code == 200
-        ed_data = res_ed.get_json()["data"]
-        assert len(ed_data) >= 2
-
-        res_chars = client.get(
-            "/api/v1/smash-or-pass/characters?edition=canon&role=Survivor&search=Leon"
-        )
-        assert res_chars.status_code == 200
-        chars_data = res_chars.get_json()
-        assert chars_data["count"] == 1
-        assert chars_data["data"][0]["character_slug"] == "leon_scott_kennedy"
+        # The unused legacy listings are gone.
+        assert client.get("/api/v1/smash-or-pass/editions").status_code == 404
+        assert client.get("/api/v1/smash-or-pass/characters?edition=canon").status_code == 404
 
         client.post(
             "/api/v1/smash-or-pass/vote",

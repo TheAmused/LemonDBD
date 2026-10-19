@@ -2,21 +2,13 @@
 import logging
 from flask import Blueprint, Response, g, jsonify, request
 from pydantic import ValidationError
-from sqlalchemy import delete, or_, select
 
-from app.core.extensions import db
 from app.core.limiter import limiter
-from app.core.security import admin_required, login_required
-from app.models import (
-    Killer,
-    Perk,
-    Survivor,
-    UserCharacterOwnership,
-    UserPerkOwnership,
-)
+from app.core.security import admin_required, login_required, verify_password
 from app.schemas.user import UserCreate, UserResponse, UserUpdate
 from app.utils.pagination import paginate_args
 from app.services.admin_control_service import log_admin_action
+from app.services.ownership.characters import normalize_role, positive_id
 from app.services.ownership_service import OwnershipService
 from app.services.user import (
     admin_modify_user,
@@ -39,6 +31,37 @@ logger = logging.getLogger(__name__)
 users_bp = Blueprint("users_bp", __name__, url_prefix="/api/v1")
 
 ownership_service = OwnershipService()
+
+
+def _other_admin_confirmation_error(target, password: str | None) -> tuple[Response, int] | None:
+    """A 403 unless the acting admin re-entered their own password, when `target` is another admin.
+
+    Sanctions already refuse admin targets; demoting or resetting the second factor of another
+    admin did not, so one stolen admin session could strip every other admin. Re-entering the
+    password is what a stolen session cookie cannot do.
+    """
+    actor = g.current_user
+    if target is None or target.role != "admin" or target.id == actor.id:
+        return None
+    if not actor.password_hash:
+        return api_error("Set a password on your own account before changing another administrator.", 403)
+    if not password or not verify_password(str(password), actor.password_hash):
+        return api_error("Confirm with your own password to change another administrator.", 403)
+    return None
+
+
+def _unverified_owner_error(user_id: int) -> tuple[Response, int] | None:
+    """A 403 when an account edits its own ownership before verifying its email (when the site
+    requires verification). The "My characters" screen already asks for it; the API did not.
+    Admins editing someone else's ownership are not affected."""
+    curr = g.current_user
+    if curr.id != user_id or curr.is_verified:
+        return None
+    from app.services.site_settings import email_verification_required
+
+    if email_verification_required():
+        return api_error("Verify your email address before changing what you own.", 403, code="email_not_verified")
+    return None
 
 
 def _self_or_admin_error(user_id: int, message: str = "Unauthorized.") -> tuple[Response, int] | None:
@@ -87,6 +110,13 @@ def create_user_by_admin():
         return api_error(err, 400)
 
     ownership_service.seed_default_ownership_for_new_user(user.id)
+    log_admin_action(
+        g.current_user.id,
+        action="user_created",
+        target_type="user",
+        target_id=user.id,
+        details={"login": user.login, "role": user.role},
+    )
 
     return jsonify({
         "status": "success",
@@ -142,6 +172,12 @@ def update_user_by_admin(user_id: int):
     except ValidationError as err:
         return api_error("Validation failed", 400, details=err.errors())
 
+    # Taking the admin role from another admin needs the acting admin's password (banning one is
+    # refused by the sanctions themselves).
+    if (validated_data.role or "").lower() == "user":
+        if err_resp := _other_admin_confirmation_error(fetch_user_by_id(user_id), validated_data.current_password):
+            return err_resp
+
     user, err = admin_modify_user(
         user_id=user_id,
         role=validated_data.role,
@@ -158,7 +194,7 @@ def update_user_by_admin(user_id: int):
         action="user_updated",
         target_type="user",
         target_id=user_id,
-        details=validated_data.model_dump(exclude_none=True),
+        details=validated_data.model_dump(exclude_none=True, exclude={"current_password"}),
     )
 
     return jsonify({
@@ -176,6 +212,9 @@ def reset_user_two_factor(user_id: int):
     target = fetch_user_by_id(user_id)
     if not target:
         return api_error("User not found.", 404)
+    body = request.get_json(silent=True) or {}
+    if err_resp := _other_admin_confirmation_error(target, body.get("current_password")):
+        return err_resp
 
     had_two_factor = two_factor.admin_reset(target)
     log_admin_action(
@@ -194,6 +233,11 @@ def delete_user_by_admin(user_id: int):
     """Delete a user account and associated assets."""
     if g.current_user.id == user_id:
         return api_error("Cannot delete your own admin account.", 400)
+    target = fetch_user_by_id(user_id)
+    if target is not None and target.role == "admin":
+        # Like sanctions, deletion never targets an admin: take the admin role away first (which
+        # needs the acting admin's password), then delete the account.
+        return api_error("Remove the admin role before deleting this account.", 400)
 
     success = admin_remove_user(user_id)
     if not success:
@@ -231,44 +275,24 @@ def set_single_character_ownership(user_id: int):
     """Toggle or set character ownership for a single character."""
     if err_resp := _self_or_admin_error(user_id):
         return err_resp
+    if err_resp := _unverified_owner_error(user_id):
+        return err_resp
 
     data = request.get_json(silent=True) or {}
-    character_id = data.get("character_id")
-    role = data.get("role")
+    character_id = positive_id(data.get("character_id"))
     is_owned = bool(data.get("is_owned", True))
 
-    if not character_id:
+    if character_id is None:
         return api_error("character_id is required.", 400)
-    if not role:
-        existing_owner = db.session.scalars(
-            select(UserCharacterOwnership).where(
-                UserCharacterOwnership.user_id == user_id,
-                or_(
-                    UserCharacterOwnership.killer_id == int(character_id),
-                    UserCharacterOwnership.survivor_id == int(character_id),
-                ),
-            )
-        ).first()
-        if existing_owner:
-            role = "killer" if existing_owner.killer_id == int(character_id) else "survivor"
-        else:
-            k = db.session.get(Killer, int(character_id))
-            s = db.session.get(Survivor, int(character_id))
-            if k and not s:
-                role = "killer"
-            elif s and not k:
-                role = "survivor"
-            elif k:
-                role = "killer"
-            elif s:
-                role = "survivor"
-            else:
-                return api_error("role is required and must be 'survivor' or 'killer'.", 400)
+    # Never guessed: survivor 7 and killer 7 are different characters, and the guess used to
+    # prefer the killer whenever both existed.
+    try:
+        role = normalize_role(data.get("role"))
+    except ValueError:
+        return api_error("role is required and must be 'survivor' or 'killer'.", 400)
 
     try:
-        result = ownership_service.set_character_ownership(
-            user_id, int(character_id), is_owned, role=role
-        )
+        result = ownership_service.set_character_ownership(user_id, character_id, is_owned, role=role)
         return jsonify({"status": "success", "data": result}), 200
     except ValueError as ve:
         return api_error(str(ve), 404)
@@ -280,14 +304,16 @@ def bulk_set_character_ownership(user_id: int):
     """Bulk update character ownership states."""
     if err_resp := _self_or_admin_error(user_id):
         return err_resp
+    if err_resp := _unverified_owner_error(user_id):
+        return err_resp
 
     data = request.get_json(silent=True) or {}
     updates = data.get("updates", [])
 
-    if not isinstance(updates, list):
-        return api_error("updates must be a list of {character_id, role, is_owned}.", 400)
-
-    result = ownership_service.bulk_set_character_ownership(user_id, updates)
+    try:
+        result = ownership_service.bulk_set_character_ownership(user_id, updates)
+    except ValueError as err:
+        return api_error(str(err), 400)
     return jsonify({"status": "success", "data": result}), 200
 
 
@@ -342,6 +368,10 @@ def get_user_perks(user_id: int):
     # against run-state build slots, so it must stay in the caller's control.
     category = request.args.get("category")
     perks = ownership_service.get_user_perks(user_id, category=category, lang=request.args.get("lang"))
+    for perk in perks:
+        # Every language's name and description, per perk: ~70% of the payload and never read by
+        # a client (each row is already localized for `lang`).
+        perk.pop("translations", None)
     return jsonify({
         "user_id": user_id,
         "count": len(perks),
@@ -355,16 +385,18 @@ def set_single_perk_ownership(user_id: int):
     """Toggle or set perk unlock state for a single perk."""
     if err_resp := _self_or_admin_error(user_id):
         return err_resp
+    if err_resp := _unverified_owner_error(user_id):
+        return err_resp
 
     data = request.get_json(silent=True) or {}
-    perk_id = data.get("perk_id")
+    perk_id = positive_id(data.get("perk_id"))
     is_unlocked = bool(data.get("is_unlocked", True))
 
-    if not perk_id:
+    if perk_id is None:
         return api_error("perk_id is required.", 400)
 
     try:
-        result = ownership_service.set_perk_ownership(user_id, int(perk_id), is_unlocked)
+        result = ownership_service.set_perk_ownership(user_id, perk_id, is_unlocked)
         return jsonify({"status": "success", "data": result}), 200
     except ValueError as ve:
         return api_error(str(ve), 404)
@@ -376,14 +408,16 @@ def bulk_set_perk_ownership(user_id: int):
     """Bulk update perk unlock states."""
     if err_resp := _self_or_admin_error(user_id):
         return err_resp
+    if err_resp := _unverified_owner_error(user_id):
+        return err_resp
 
     data = request.get_json(silent=True) or {}
     updates = data.get("updates", [])
 
-    if not isinstance(updates, list):
-        return api_error("updates must be a list of {perk_id, is_unlocked}.", 400)
-
-    result = ownership_service.bulk_set_perk_ownership(user_id, updates)
+    try:
+        result = ownership_service.bulk_set_perk_ownership(user_id, updates)
+    except ValueError as err:
+        return api_error(str(err), 400)
     return jsonify({"status": "success", "data": result}), 200
 
 
@@ -399,8 +433,15 @@ def get_user_ownership_summary(user_id: int):
 
 
 @users_bp.route("/users/<int:user_id>/showcase", methods=["GET"])
+@login_required
 def get_user_showcase(user_id: int):
-    """Retrieve custom player showcase data (title, devotion, mains, perks)."""
+    """Retrieve custom player showcase data (title, devotion, mains, perks).
+
+    Self or admin only, like every other per-user route: nothing public shows a showcase, and an
+    open endpoint let anyone walk the sequential ids to see which accounts exist.
+    """
+    if err_resp := _self_or_admin_error(user_id, "Unauthorized access to user profile."):
+        return err_resp
     user = fetch_user_by_id(user_id)
     if not user:
         return api_error("User not found.", 404)

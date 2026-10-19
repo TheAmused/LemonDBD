@@ -12,6 +12,7 @@ import { CharactersGridSkeleton } from '@/components/character-detail/Characters
 import { useCachedData } from '@/hooks/useCachedData';
 import { fetchJson } from '@/services/dataCache';
 import { EmptyState } from '@/components/common/EmptyState';
+import { ConfirmModal } from '@/components/common/ConfirmModal';
 import { CharacterCard } from '@/components/characters/hub/CharacterCard';
 import { CharactersToolbar } from '@/components/characters/hub/CharactersToolbar';
 import { OwnershipSaveBar } from '@/components/characters/hub/OwnershipSaveBar';
@@ -20,7 +21,7 @@ import { VerificationNotice } from '@/components/characters/hub/VerificationNoti
 import { useCharacterOwnership } from '@/components/characters/hub/useCharacterOwnership';
 import { CharacterItem, PerkItem, AddonItem, EquipmentItem } from '@/components/character-detail/types';
 import { RoleCategory } from '@/types/perks';
-import { getBackendBaseUrl } from '@/utils/perkUtils';
+import { getBackendBaseUrl, normalizeSearchText } from '@/utils/perkUtils';
 import { useDictionary, useLocale } from '@/context/DictionaryContext';
 
 const AuthModal = dynamic(() => import('@/components/AuthModal').then((m) => m.AuthModal), { ssr: false });
@@ -79,7 +80,8 @@ export const CharactersHub: React.FC = () => {
     onVerificationRequired: () => setVerificationNoticeOpen(true),
   });
   const {
-    ownershipMode, ownershipLoading, ownershipSaving, ownershipSaveError, savedModalOpen, closeSavedModal,
+    ownershipMode, ownershipLoading, ownershipSaving, ownershipSaveError, ownershipLoadError,
+    discardConfirmOpen, keepEditing, handleCancelOwnershipMode, savedModalOpen, closeSavedModal,
     characterOwnershipDraft, allPerks, perkUnlockDraft, perksPopupCharacter, setPerksPopupCharacter,
     handleToggleOwnershipMode, handleToggleCharacterOwned, handleTogglePerkUnlocked,
     handleSaveOwnership, getCharacterPerkStats,
@@ -96,14 +98,15 @@ export const CharactersHub: React.FC = () => {
   const loading = charactersLoading;
 
   const filteredCharacters = useMemo(() => {
+    // Accents folded on both sides: "wiesniak" finds "Wieśniak", "elodie" finds "Élodie".
+    const query = normalizeSearchText(searchQuery);
     return characters.filter((c) => {
       const matchesTab =
         c.category?.toLowerCase() === activeTab.toLowerCase();
-      const query = searchQuery.toLowerCase().trim();
       const matchesSearch =
         !query ||
-        c.name.toLowerCase().includes(query) ||
-        (c.real_name && c.real_name.toLowerCase().includes(query));
+        normalizeSearchText(c.name).includes(query) ||
+        (c.real_name && normalizeSearchText(c.real_name).includes(query));
       return matchesTab && matchesSearch;
     });
   }, [characters, activeTab, searchQuery]);
@@ -125,6 +128,12 @@ export const CharactersHub: React.FC = () => {
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
       />
+
+      {ownershipLoadError && (
+        <p role="alert" className="text-center type-body text-accent-red">
+          {ownershipLoadError}
+        </p>
+      )}
 
       {loading ? (
         <div className="w-full py-12 flex items-center justify-center">
@@ -201,6 +210,16 @@ export const CharactersHub: React.FC = () => {
       )}
 
       <SavedChangesModal open={savedModalOpen} onClose={closeSavedModal} />
+
+      <ConfirmModal
+        open={discardConfirmOpen}
+        title={dict.characterDetail.discardOwnershipTitle}
+        message={dict.characterDetail.discardOwnershipMessage}
+        confirmLabel={dict.characterDetail.discardOwnershipConfirm}
+        cancelLabel={dict.characterDetail.keepEditingOwnership}
+        onConfirm={handleCancelOwnershipMode}
+        onCancel={keepEditing}
+      />
 
       {verificationNoticeOpen && user && (
         <VerificationNotice

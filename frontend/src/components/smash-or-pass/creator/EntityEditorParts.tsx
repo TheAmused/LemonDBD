@@ -1,5 +1,6 @@
 'use client';
 
+import React, { useState, useEffect, useRef } from 'react';
 import { Pencil, X, Plus } from 'lucide-react';
 import type { Dictionary } from '@/locales/types';
 import { cn } from '@/utils/cn';
@@ -70,9 +71,30 @@ export interface CandidateTilesProps {
   canAdd: boolean;
 }
 
+const CANDIDATE_CHUNK_SIZE = 40;
+
 export function CandidateTiles({ entities, selectedKey, onSelect, onRename, onRemove, onAdd, canAdd }: CandidateTilesProps) {
   const dict = useDictionary();
   const c = dict.smashOrPass.creator || {};
+  const [visibleCount, setVisibleCount] = useState<number>(CANDIDATE_CHUNK_SIZE);
+  const sentinelRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = sentinelRef.current;
+    if (!el || visibleCount >= entities.length) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0]?.isIntersecting) {
+          setVisibleCount((prev) => Math.min(prev + CANDIDATE_CHUNK_SIZE, entities.length));
+        }
+      },
+      { rootMargin: '200px' }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [visibleCount, entities.length]);
+
+  const visibleEntities = entities.slice(0, visibleCount);
 
   return (
     <div className="flex flex-col gap-3">
@@ -84,100 +106,108 @@ export function CandidateTiles({ entities, selectedKey, onSelect, onRename, onRe
         <div className="w-20 hidden sm:block pointer-events-none" aria-hidden="true" />
       </div>
 
-      <ul className="grid grid-cols-tiles-xs sm:grid-cols-tiles-sm md:grid-cols-tiles-md wide:grid-cols-tiles-lg wide-2k:grid-cols-tiles-xl gap-2 sm:gap-2.5 justify-center">
-        {entities.map((entity, i) => {
-          const isSelected = entity.key === selectedKey;
-          const displayIndex = String(i + 1).padStart(2, '0');
-          const safeMedia = entity.media_url.trim() ? sanitizeImageUrl(entity.media_url.trim()) : null;
+      <div className="max-h-96 sm:max-h-roster overflow-y-auto overflow-x-hidden p-2 rounded-card border border-border-color/60 bg-bg-surface/30">
+        <ul className="grid grid-cols-tiles-sm sm:grid-cols-tiles-md md:grid-cols-tiles-lg wide:grid-cols-tiles-xl wide-2k:grid-cols-tiles-2xl gap-2 sm:gap-2.5 justify-center">
+          {visibleEntities.map((entity, i) => {
+            const isSelected = entity.key === selectedKey;
+            const displayIndex = String(i + 1).padStart(2, '0');
+            const safeMedia = entity.media_url.trim() ? sanitizeImageUrl(entity.media_url.trim()) : null;
 
-          return (
-            <li key={entity.key} className="group/item relative flex flex-col items-center">
-              {/* Crisp Square Tile Container */}
-              <div
-                onClick={() => onSelect(entity.key)}
-                className={cn(
-                  'relative flex aspect-square w-full items-center justify-center overflow-hidden rounded-chip border transition-all duration-150 cursor-pointer select-none',
-                  isSelected
-                    ? 'border-accent-red ring-2 ring-accent-red/80 bg-bg-surface shadow-md'
-                    : 'border-border-color bg-bg-elevated hover:border-accent-red/60 hover:shadow-xs'
-                )}
-              >
-                {/* Number badge on top-left of tile */}
-                <Badge tone="overlay" size="xs" className="absolute top-1 left-1 z-10">
-                  #{displayIndex}
-                </Badge>
+            return (
+              <li key={entity.key} className="group/item relative flex flex-col items-center">
+                {/* Crisp Square Tile Container */}
+                <div
+                  onClick={() => onSelect(entity.key)}
+                  className={cn(
+                    'relative flex aspect-square w-full items-center justify-center overflow-hidden rounded-chip border transition-all duration-150 cursor-pointer select-none',
+                    isSelected
+                      ? 'border-accent-red ring-2 ring-accent-red/80 bg-bg-surface shadow-md'
+                      : 'border-border-color bg-bg-elevated hover:border-accent-red/60 hover:shadow-xs'
+                  )}
+                >
+                  {/* Number badge on top-left of tile */}
+                  <Badge tone="overlay" size="xs" className="absolute top-1 left-1 z-10">
+                    #{displayIndex}
+                  </Badge>
 
-                {/* Edge-to-edge tile image or dark initials placeholder */}
-                {safeMedia ? (
-                  <img
-                    src={safeMedia}
-                    alt={entity.name}
-                    loading="lazy"
-                    decoding="async"
-                    referrerPolicy="no-referrer"
-                    className="h-full w-full object-cover transition-transform duration-200 group-hover/item:scale-105"
-                  />
-                ) : (
-                  <span className="text-base sm:text-lg font-black text-text-muted select-none">
-                    {entity.name.slice(0, 2).toUpperCase() || displayIndex}
-                  </span>
-                )}
+                  {/* Edge-to-edge tile image or dark initials placeholder */}
+                  {safeMedia ? (
+                    <img
+                      src={safeMedia}
+                      alt={entity.name}
+                      loading="lazy"
+                      decoding="async"
+                      draggable={false}
+                      onContextMenu={(e) => e.preventDefault()}
+                      referrerPolicy="no-referrer"
+                      className="h-full w-full object-cover transition-transform duration-200 group-hover/item:scale-105 select-none"
+                    />
+                  ) : (
+                    <span className="text-base sm:text-lg font-black text-text-muted select-none">
+                      {entity.name.slice(0, 2).toUpperCase() || displayIndex}
+                    </span>
+                  )}
 
-                {/* Edit overlay icon on hover */}
-                <div className="absolute inset-0 z-0 flex items-center justify-center bg-bg-primary/50 opacity-0 group-hover/item:opacity-100 transition-opacity backdrop-blur-xs">
-                  <span className="flex h-7 w-7 items-center justify-center rounded-chip bg-bg-surface/90 text-accent-red shadow-sm border border-border-color/60">
-                    <Pencil className="h-3.5 w-3.5" aria-hidden="true" />
-                  </span>
+                  {/* Edit overlay icon on hover */}
+                  <div className="absolute inset-0 z-0 flex items-center justify-center bg-bg-primary/50 opacity-0 group-hover/item:opacity-100 transition-opacity backdrop-blur-xs">
+                    <span className="flex h-7 w-7 items-center justify-center rounded-chip bg-bg-surface/90 text-accent-red shadow-sm border border-border-color/60">
+                      <Pencil className="h-3.5 w-3.5" aria-hidden="true" />
+                    </span>
+                  </div>
+
+                  {/* Top-right delete button */}
+                  <Button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onRemove(entity.key);
+                    }}
+                    aria-label={formatMessage(c.removeCandidateAria, { name: entity.name || displayIndex })}
+                    variant="overlay" size="xs" icon pill className="absolute top-1 right-1 z-10 opacity-80 sm:opacity-0 group-hover/item:opacity-100 hover:opacity-100"
+                  >
+                    <X className="h-3 w-3" aria-hidden="true" />
+                  </Button>
                 </div>
 
-                {/* Top-right delete button */}
-                <Button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onRemove(entity.key);
-                  }}
-                  aria-label={formatMessage(c.removeCandidateAria, { name: entity.name || displayIndex })}
-                  variant="overlay" size="xs" icon pill className="absolute top-1 right-1 z-10 opacity-80 sm:opacity-0 group-hover/item:opacity-100 hover:opacity-100"
-                >
-                  <X className="h-3 w-3" aria-hidden="true" />
-                </Button>
-              </div>
+                {/* Seamless Typography Caption / Inline Input */}
+                <input
+                  value={entity.name}
+                  maxLength={SMASH_ROSTER_LIMITS.maxEntityName}
+                  onChange={(e) => onRename(entity.key, e.target.value)}
+                  onFocus={() => onSelect(entity.key)}
+                  placeholder={c.unnamedCandidate}
+                  aria-label={formatMessage(c.renameCandidateAria, { name: entity.name || displayIndex })}
+                  className="mt-1 h-6 w-full rounded-chip border border-transparent bg-transparent px-1 text-center type-strong text-text-secondary transition-colors hover:text-text-primary hover:bg-bg-elevated/40 focus:border-accent-red focus:bg-bg-surface focus:text-text-primary focus:outline-hidden truncate"
+                />
+              </li>
+            );
+          })}
 
-              {/* Seamless Typography Caption / Inline Input */}
-              <input
-                value={entity.name}
-                maxLength={SMASH_ROSTER_LIMITS.maxEntityName}
-                onChange={(e) => onRename(entity.key, e.target.value)}
-                onFocus={() => onSelect(entity.key)}
-                placeholder={c.unnamedCandidate}
-                aria-label={formatMessage(c.renameCandidateAria, { name: entity.name || displayIndex })}
-                className="mt-1 h-6 w-full rounded-chip border border-transparent bg-transparent px-1 text-center type-strong text-text-secondary transition-colors hover:text-text-primary hover:bg-bg-elevated/40 focus:border-accent-red focus:bg-bg-surface focus:text-text-primary focus:outline-hidden truncate"
-              />
+          {/* Trailing '+ Add' tile if under limit */}
+          {canAdd && (
+            <li className="flex flex-col items-center">
+              <Button
+                type="button"
+                onClick={onAdd}
+                data-testid="add-candidate-tile"
+                variant="secondary" size="md" dashed className="group aspect-square h-auto w-full flex-col"
+              >
+                <div className="flex flex-col items-center gap-1">
+                  <Plus className="h-5 w-5 transition-transform group-hover:scale-110" />
+                  <span className="type-label-2xs">{c.add}</span>
+                </div>
+              </Button>
+              <span className="mt-1 h-6 type-micro text-text-muted flex items-center select-none">
+                {c.addCandidateTile}
+              </span>
             </li>
-          );
-        })}
+          )}
+        </ul>
 
-        {/* Trailing '+ Add' tile if under limit */}
-        {canAdd && (
-          <li className="flex flex-col items-center">
-            <Button
-              type="button"
-              onClick={onAdd}
-              data-testid="add-candidate-tile"
-              variant="secondary" size="md" dashed className="group aspect-square h-auto w-full flex-col"
-            >
-              <div className="flex flex-col items-center gap-1">
-                <Plus className="h-5 w-5 transition-transform group-hover:scale-110" />
-                <span className="type-label-2xs">{c.add}</span>
-              </div>
-            </Button>
-            <span className="mt-1 h-6 type-micro text-text-muted flex items-center select-none">
-              {c.addCandidateTile}
-            </span>
-          </li>
+        {visibleCount < entities.length && (
+          <div ref={sentinelRef} className="h-4 w-full" aria-hidden="true" />
         )}
-      </ul>
+      </div>
     </div>
   );
 }

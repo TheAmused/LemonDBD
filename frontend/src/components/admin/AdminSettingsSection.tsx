@@ -6,7 +6,7 @@
 // secrets) and the moderation thresholds. A saved value overrides the config/env default; "Use default"
 // removes the override. Every save is audited; a change that lowers a protection also needs a
 // confirmation and a reason. The server validates and bounds every value again.
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { DoorOpen, Gauge, Hourglass, KeyRound, Link2, Megaphone, Plug, Scale, ShieldCheck, type LucideIcon } from 'lucide-react';
 import { Badge } from '@/components/common/Badge';
 import { Button } from '@/components/common/Button';
@@ -61,12 +61,12 @@ const BANNER_LEVEL_VALUES: readonly BannerLevel[] = ['info', 'warning', 'critica
 const asBannerLevel = (value: string): BannerLevel => BANNER_LEVEL_VALUES.find((level) => level === value) ?? 'info';
 
 /** Loads the tab's own dictionary (admins only, see locales/adminSettings.ts), then shows the panel. */
-export function AdminSettingsSection({ notify }: { notify: (message: ActionMessage) => void }) {
+export function AdminSettingsSection({ notify, refreshKey = 0 }: { notify: (message: ActionMessage) => void; refreshKey?: number }) {
   const t = useAdminSettingsDict();
-  return t ? <SettingsPanel notify={notify} t={t} /> : <AdminTabContentSkeleton />;
+  return t ? <SettingsPanel notify={notify} t={t} refreshKey={refreshKey} /> : <AdminTabContentSkeleton />;
 }
 
-function SettingsPanel({ notify, t }: { notify: (message: ActionMessage) => void; t: AdminSettingsDict }) {
+function SettingsPanel({ notify, t, refreshKey }: { notify: (message: ActionMessage) => void; t: AdminSettingsDict; refreshKey: number }) {
   const dict = useDictionary();
   // Per-setting labels are looked up by key (config_<key>, config_<key>_desc, configGroup_<group>...).
   const text = (key: string) => (t as Record<string, string | undefined>)[key] ?? '';
@@ -77,17 +77,33 @@ function SettingsPanel({ notify, t }: { notify: (message: ActionMessage) => void
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [reason, setReason] = useState('');
 
-  const applyServerRows = useCallback((rows: AdminSiteSetting[]) => {
+  const settingsRef = useRef<AdminSiteSetting[]>([]);
+  /**
+   * Show the server's values. `keepDirty` keeps every field the admin has changed but not saved:
+   * the header's Refresh used to remount this tab and silently throw those edits away.
+   */
+  const applyServerRows = useCallback((rows: AdminSiteSetting[], keepDirty = false) => {
+    const previous = new Map(settingsRef.current.map((row) => [row.key, row]));
+    settingsRef.current = rows;
     setSettings(rows);
-    setDrafts(Object.fromEntries(rows.map((row) => [row.key, draftOf(row)])));
+    setDrafts((prevDrafts) =>
+      Object.fromEntries(
+        rows.map((row) => {
+          const old = previous.get(row.key);
+          const draft = prevDrafts[row.key];
+          const keep = keepDirty && old !== undefined && draft !== undefined && isDraftDirty(old, draft);
+          return [row.key, keep ? draft : draftOf(row)];
+        })
+      )
+    );
   }, []);
 
   useEffect(() => {
     listSettings()
-      .then((data) => applyServerRows(data.settings ?? []))
+      .then((data) => applyServerRows(data.settings ?? [], true))
       .catch((err: unknown) => notify({ type: 'error', text: getErrorMessage(err, t.configLoadFailed) }))
       .finally(() => setLoading(false));
-  }, [applyServerRows, notify, t.configLoadFailed]);
+  }, [applyServerRows, notify, t.configLoadFailed, refreshKey]);
 
   const send = async (
     payload: Record<string, string | number | boolean | null>,

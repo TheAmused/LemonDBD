@@ -174,14 +174,29 @@ def _anonymise_moderation_records(user_id: int) -> None:
     )
 
 
+def _anonymise_bug_reports(user_id: int) -> None:
+    """Bug reports are kept for the team's records, but without the reporter's name and address."""
+    db.session.execute(
+        update(BugReport)
+        .where(BugReport.user_id == user_id)
+        .values(reporter_name="Deleted user", reporter_email=None)
+        .execution_options(synchronize_session=False)
+    )
+
+
 def admin_remove_user(user_id: int) -> bool:
-    """Administrative deletion of user account and stored media."""
+    """Administrative deletion of user account and stored media.
+
+    Anonymises the account's bug reports exactly like self-service deletion: a report that kept the
+    address would otherwise be claimable by whoever registers it next.
+    """
     user = db.session.get(User, user_id)
     if not user:
         return False
     avatar_dir = get_avatar_storage_directory()
-    remove_stale_avatar_file(user.avatar_url, avatar_dir)
+    remove_stale_avatar_file(user.avatar_url, avatar_dir, user.id)
     with transaction():
+        _anonymise_bug_reports(user.id)
         _anonymise_moderation_records(user.id)
         db.session.delete(user)
     return True
@@ -222,12 +237,10 @@ def delete_own_account(
         two_factor.verify_second_factor(user, two_factor_code)
 
     avatar_dir = get_avatar_storage_directory()
-    remove_stale_avatar_file(user.avatar_url, avatar_dir)
+    remove_stale_avatar_file(user.avatar_url, avatar_dir, user.id)
 
     with transaction():
-        for report in db.session.scalars(select(BugReport).where(BugReport.user_id == user.id)):
-            report.reporter_name = "Deleted user"
-            report.reporter_email = None
+        _anonymise_bug_reports(user.id)
         _anonymise_moderation_records(user.id)
         db.session.delete(user)
 

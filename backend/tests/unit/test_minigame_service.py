@@ -6,7 +6,7 @@ from app.models.chapter import Chapter
 from app.models.character import Killer, Survivor
 from app.models.perk import Perk
 from app.models.map import Realm
-from app.services.minigames import MinigameService
+import app.services.minigames as service
 
 
 @pytest.fixture
@@ -63,7 +63,6 @@ def seeded_minigame_data(app, test_db):
 
 
 def test_get_or_create_daily_caches_in_db(app, test_db, seeded_minigame_data):
-    service = MinigameService()
     d = date(2026, 9, 29)
 
     challenge1 = service.get_or_create_daily(game_mode="classic", target_date=d)
@@ -77,7 +76,6 @@ def test_get_or_create_daily_caches_in_db(app, test_db, seeded_minigame_data):
 
 
 def test_classic_evaluation_correct(app, test_db, seeded_minigame_data):
-    service = MinigameService()
     round_data = {
         "mode": "classic_character",
         "target_type": "killer",
@@ -99,7 +97,6 @@ def test_classic_evaluation_correct(app, test_db, seeded_minigame_data):
 
 
 def test_classic_evaluation_incorrect(app, test_db, seeded_minigame_data):
-    service = MinigameService()
     round_data = {
         "mode": "classic_character",
         "target_type": "killer",
@@ -121,7 +118,6 @@ def test_classic_evaluation_incorrect(app, test_db, seeded_minigame_data):
 
 
 def test_realm_evaluation(app, test_db, seeded_minigame_data):
-    service = MinigameService()
     round_data = {
         "mode": "realm_guesser",
         "target_type": "realm",
@@ -139,7 +135,6 @@ def test_realm_evaluation(app, test_db, seeded_minigame_data):
 
 
 def test_classic_perk_evaluation(app, test_db, seeded_minigame_data):
-    service = MinigameService()
     round_data = {
         "mode": "classic_perk",
         "target_type": "perk",

@@ -185,4 +185,5 @@ export default {
   modeSlotTooltip: "Pociągnij za dźwignię i blokuj bębny w maksymalnie 3 cyklach. Jeden lub dwa bębny mogą się zaciąć, zakręć całą maszyną od nowa, aby je naprawić.",
   modeTarotTooltip: "Potasuj talię i odwracaj karty, aby odkryć swój zestaw, jeden omen na raz.",
   modeCrateTooltip: "Otwórz Dar Próby, aby od razu zdobyć losowy zestaw.",
+  loadError: "Nie udało się wczytać katalogu umiejętności.",
 } as const;

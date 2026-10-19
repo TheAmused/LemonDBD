@@ -3,6 +3,7 @@ import React from 'react';
 import { RARITY_TILE_IMAGES } from '@/constants/addonRarityIcons';
 import { localeMetaFor } from '@/i18n/config';
 import type { Dictionary } from '@/locales/types';
+import { characterSlug, getCharacterSlug } from '@/lib/slug';
 
 export interface CharacterItem {
   id?: number;
@@ -11,6 +12,8 @@ export interface CharacterItem {
   role?: string;
   real_name?: string;
   code_prefix?: string;
+  /** Page segment from the canonical English name; `name` itself is translated. */
+  slug?: string;
   avatar_url?: string;
   avatar_local_path?: string;
   portrait_url?: string;
@@ -182,17 +185,7 @@ export function localizeTerrorRadiusText(raw: string, locale: string): string {
   return raw.replace(/(\d+)\s*metres?\b/gi, (_match, num: string) => `${num} ${localizeMetresUnit(Number(num), locale)}`);
 }
 
-export function getCharacterSlug(name: string): string {
-  return name
-    .toLowerCase()
-    .trim()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .replace(/[\s\-/]+/g, '_')
-    .replace(/[^a-z0-9_]/g, '')
-    .replace(/_+/g, '_')
-    .replace(/^_+|_+$/g, '');
-}
+export { getCharacterSlug, characterSlug };
 
 export function getAssetUrl(backendBase: string, path?: string, url?: string): string {
   if (path) {
@@ -211,7 +204,7 @@ export function getAvatarUrl(
   let rawPath = char.avatar_local_path;
   if (!rawPath && char.name) {
     const subDir = isSurvivor ? 'survivors' : 'killers';
-    const sanitized = getCharacterSlug(char.name);
+    const sanitized = characterSlug(char);
     // Scraped/backend-normalized avatars are always written as WebP
     // (see backend/app/services/image_conversion.py); .png is only a
     // legacy fallback handled by the onError cascades in the UI.

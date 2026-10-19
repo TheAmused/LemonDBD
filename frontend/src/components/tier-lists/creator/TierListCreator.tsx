@@ -29,7 +29,7 @@ import { CreatorItems } from './CreatorItems';
 import { CreatorPreviewModal } from './CreatorPreview';
 import { type IncomingItem, ItemSources } from './ItemSources';
 import { LadderEditor } from './LadderEditor';
-import { Checkbox } from '@/components/common/Checkbox';
+import { Switch } from '@/components/common/Switch';
 import { NsfwSwitch } from '@/components/common/NsfwSwitch';
 import { Button } from '@/components/common/Button';
 import { Input } from '@/components/common/Field';
@@ -248,34 +248,59 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
       ...(draft.is_nsfw ? { is_nsfw: true } : {}),
     };
 
+    // What an admin publishes (create or update). Checked against the server's request size limit
+    // first: inline (data:) images add up fast, and nginx would answer an opaque 413.
+    const officialPayload = {
+      title: payload.title,
+      description: payload.description,
+      cover_image_url: safeBackground ?? null,
+      tiers: payload.tiers.map((tier) => ({
+        id: tier.id,
+        label: tier.label,
+        color: tier.color,
+        ...(tier.backgroundImage ? { backgroundImage: tier.backgroundImage } : {}),
+      })),
+      items: payload.items.map((i) => ({
+        id: i.id,
+        name: i.name,
+        ...(i.image ? { image_url: i.image } : {}),
+      })),
+      is_nsfw: draft.is_nsfw,
+      is_active: draft.is_active ?? true,
+    };
+    if ((officialSlug || official) && isAdmin) {
+      const bytes = new TextEncoder().encode(JSON.stringify(officialPayload)).length;
+      if (bytes > TIER_LIST_LIMITS.maxPublishBytes) {
+        setPublishError(formatMessage(c.publishTooLarge, { size: Math.floor(TIER_LIST_LIMITS.maxPublishBytes / (1024 * 1024)) }));
+        return;
+      }
+    }
+
     if (officialSlug && isAdmin) {
       setPublishError(null);
       setPublishing(true);
       try {
-        await updateOfficialTierList(
-          officialSlug,
-          {
-            title: payload.title,
-            description: payload.description,
-            cover_image_url: safeBackground ?? null,
-            tiers: payload.tiers.map((tier) => ({
-              id: tier.id,
-              label: tier.label,
-              color: tier.color,
-              ...(tier.backgroundImage ? { backgroundImage: tier.backgroundImage } : {}),
-            })),
-            items: payload.items.map((i) => ({
-              id: i.id,
-              name: i.name,
-              ...(i.image ? { image_url: i.image } : {}),
-            })),
-            is_nsfw: draft.is_nsfw,
-            is_active: draft.is_active ?? true,
-          },
-          locale,
-          token
-        );
+        await updateOfficialTierList(officialSlug, officialPayload, locale, token);
         router.push(`/${locale}/tier-lists/${officialSlug}`);
+      } catch (err) {
+        setPublishError(err instanceof Error ? err.message : c.publishFailed);
+        setPublishing(false);
+      }
+      return;
+    }
+
+    // An admin can publish any list as official, including one already saved in this browser.
+    if (official && isAdmin) {
+      setPublishError(null);
+      setPublishing(true);
+      try {
+        const created = await createOfficialTierList(officialPayload, locale, token);
+        try {
+          localStorage.removeItem(DRAFT_KEY);
+        } catch {
+          // ignore
+        }
+        router.push(`/${locale}/tier-lists/${created.slug}`);
       } catch (err) {
         setPublishError(err instanceof Error ? err.message : c.publishFailed);
         setPublishing(false);
@@ -308,45 +333,6 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
       return;
     }
 
-    if (official && isAdmin) {
-      setPublishError(null);
-      setPublishing(true);
-      try {
-        const created = await createOfficialTierList(
-          {
-            title: payload.title,
-            description: payload.description,
-            cover_image_url: safeBackground ?? null,
-            tiers: payload.tiers.map((tier) => ({
-              id: tier.id,
-              label: tier.label,
-              color: tier.color,
-              ...(tier.backgroundImage ? { backgroundImage: tier.backgroundImage } : {}),
-            })),
-            items: payload.items.map((i) => ({
-              id: i.id,
-              name: i.name,
-              ...(i.image ? { image_url: i.image } : {}),
-            })),
-            is_nsfw: draft.is_nsfw,
-            is_active: draft.is_active ?? true,
-          },
-          locale,
-          token
-        );
-        try {
-          localStorage.removeItem(DRAFT_KEY);
-        } catch {
-          // ignore
-        }
-        router.push(`/${locale}/tier-lists/${created.slug}`);
-      } catch (err) {
-        setPublishError(err instanceof Error ? err.message : c.publishFailed);
-        setPublishing(false);
-      }
-      return;
-    }
-
     const id = createCustomListId();
     const result = saveCustomList({ id, ...payload, placements: {}, createdAt: Date.now() });
     if (!result.ok) {
@@ -369,7 +355,7 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
   };
 
   const publishingNow = publishing && isAdmin && (official || Boolean(officialSlug));
-  const submitLabel = isEditing ? (publishingNow ? c.publishing : t.save) : official && isAdmin ? (publishingNow ? c.publishing : c.publish) : c.create;
+  const submitLabel = publishingNow ? c.publishing : (official && isAdmin) ? c.publish : isEditing ? t.save : c.create;
   const submitButton = (extra?: string) => (
     <Button
       variant="primary"
@@ -415,6 +401,40 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
       <div className={WORKSPACE_COLUMN}>
         <Section title={c.stepBasics}>
           <div className="grid gap-4 2xl:gap-6 md:grid-cols-2">
+            <div className="flex flex-wrap items-center gap-x-8 gap-y-3 md:col-span-2">
+              <NsfwSwitch
+                checked={draft.is_nsfw}
+                onChange={(checked) => patch({ is_nsfw: checked })}
+                label={t.nsfw.label}
+                hint={t.nsfw.hint}
+              />
+              {isAdmin && !officialSlug && (
+                <div
+                  onClick={() => setOfficial(!official)}
+                  className="flex cursor-pointer select-none items-center gap-2.5 group"
+                >
+                  <Switch checked={official} onChange={setOfficial} ariaLabel={c.official} />
+                  <span className="type-strong-fluid text-text-primary transition-colors group-hover:text-accent-red">
+                    {c.official}
+                  </span>
+                </div>
+              )}
+              {isAdmin && (official || Boolean(officialSlug)) && (
+                <div
+                  onClick={() => patch({ is_active: !(draft.is_active ?? true) })}
+                  className="flex cursor-pointer select-none items-center gap-2.5 group"
+                >
+                  <Switch
+                    checked={draft.is_active ?? true}
+                    onChange={(checked) => patch({ is_active: checked })}
+                    ariaLabel={c.publishedLabel}
+                  />
+                  <span className="type-strong-fluid text-text-primary transition-colors group-hover:text-accent-red">
+                    {c.publishedLabel}
+                  </span>
+                </div>
+              )}
+            </div>
             <label className="md:col-span-1">
               <span className={LABEL}>
                 {c.titleLabel}
@@ -443,32 +463,11 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
                 onChange={(val) => patch({ backgroundImage: val })}
                 label={c.backgroundImageLabel}
                 placeholder={c.backgroundImagePlaceholder}
-                hint={c.backgroundImageHint}
+                hint={isAdmin ? c.backgroundImageHint : c.backgroundImagePlaceholder}
                 invalid={attempted && backgroundInvalid}
                 invalidMessage={t.invalidImage}
+                allowFileUpload={isAdmin}
               />
-            </div>
-            <div className="md:col-span-2 flex flex-col items-start gap-3">
-              <NsfwSwitch
-                checked={draft.is_nsfw}
-                onChange={(checked) => patch({ is_nsfw: checked })}
-                label={t.nsfw.label}
-                hint={t.nsfw.hint}
-              />
-              {isAdmin && !isEditing && (
-                <Checkbox checked={official} onChange={setOfficial} className="gap-2.5">
-                  <span className={cn(LABEL, 'mb-0 inline')}>{c.official}</span>
-                </Checkbox>
-              )}
-              {isAdmin && (official || Boolean(officialSlug)) && (
-                <Checkbox
-                  checked={draft.is_active ?? true}
-                  onChange={(checked) => patch({ is_active: checked })}
-                  className="gap-2.5"
-                >
-                  <span className={cn(LABEL, 'mb-0 inline')}>{c.publishedLabel}</span>
-                </Checkbox>
-              )}
             </div>
           </div>
         </Section>

@@ -62,10 +62,18 @@ export const InstantStage: React.FC<InstantStageProps> = ({
     };
   }, []);
 
+  const isRollingRef = useRef(false);
+
   const handleRoll = () => {
     if (activePlayablePerks.length === 0) return;
+    if (isRollingRef.current) return;
+    isRollingRef.current = true;
 
     onRollStart?.();
+
+    // Cancel any previous in-flight timeouts
+    stopTimeoutsRef.current.forEach((timeoutId) => clearTimeout(timeoutId));
+    stopTimeoutsRef.current = [];
 
     const picked = pickRandomLoadout(activePlayablePerks, activeMutator, 4);
     const slots = buildDrawnSlots(picked, activePlayablePerks);
@@ -82,6 +90,7 @@ export const InstantStage: React.FC<InstantStageProps> = ({
       celebrate(role, resultsRef.current);
       onRollComplete(slots);
       onLoadoutComplete?.();
+      isRollingRef.current = false;
     }, slots.length * 150 + 200);
     stopTimeoutsRef.current.push(finalTimeoutId);
   };

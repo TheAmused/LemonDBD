@@ -69,6 +69,7 @@ interface PerkFiltersProps {
   killerCount?: number;
   allCount?: number;
   ownedCount?: number;
+  isLoggedIn?: boolean;
 }
 
 export const PerkFilters: React.FC<PerkFiltersProps> = ({
@@ -90,6 +91,7 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
       killerCount,
       allCount,
       ownedCount,
+      isLoggedIn,
     }) => {
   const dict = useDictionary();
   const backendBase = getBackendBaseUrl();
@@ -109,27 +111,39 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  const abortControllerRef = useRef<AbortController | null>(null);
+
   useEffect(() => {
     if (!search || search.trim().length < 1) {
       setPerkSuggestions([]);
       return;
     }
+    abortControllerRef.current?.abort();
+    abortControllerRef.current = new AbortController();
+    const { signal } = abortControllerRef.current;
+
     const timer = setTimeout(async () => {
       try {
         const res = await fetch(
           `${backendBase}/api/v1/perks/suggestions?q=${encodeURIComponent(
             search
-          )}&category=${role}&limit=8&lang=${encodeURIComponent(locale || 'en')}`
+          )}&category=${role}&limit=8&lang=${encodeURIComponent(locale || 'en')}`,
+          { signal }
         );
         if (res.ok) {
           const json = await res.json();
           setPerkSuggestions(json.data || []);
         }
-      } catch (err) {
-        console.error('Failed fetching perk suggestions:', err);
+      } catch (err: unknown) {
+        if (!(err instanceof Error && err.name === 'AbortError')) {
+          console.error('Failed fetching perk suggestions:', err);
+        }
       }
     }, 180);
-    return () => clearTimeout(timer);
+    return () => {
+      clearTimeout(timer);
+      abortControllerRef.current?.abort();
+    };
   }, [search, role, backendBase, locale]);
 
   const roleOptions: readonly [SegmentedControlOption<RoleCategory>, SegmentedControlOption<RoleCategory>] = [
@@ -182,6 +196,7 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
     },
     {
       value: 'owned',
+      disabled: !isLoggedIn,
       activeClassName: 'bg-accent-red text-text-inverted',
       label: (
         <span className="inline-flex items-center gap-1.5">
@@ -338,10 +353,19 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
           pill
           fieldSize="sm"
           value={search}
+          role="combobox"
+          aria-expanded={isPerkSuggestionsOpen && perkSuggestions.length > 0}
+          aria-controls="perk-suggestions-listbox"
+          aria-autocomplete="list"
           onFocus={() => setIsPerkSuggestionsOpen(true)}
           onChange={(e) => {
             setSearch(e.target.value);
             setIsPerkSuggestionsOpen(true);
+          }}
+          onKeyDown={(e) => {
+            if (e.key === 'Escape') {
+              setIsPerkSuggestionsOpen(false);
+            }
           }}
           placeholder={dict.filters.searchPlaceholder}
           aria-label={dict.filters.searchPlaceholder}
@@ -366,6 +390,7 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
 
         {isPerkSuggestionsOpen && perkSuggestions.length > 0 && (
           <Surface
+            id="perk-suggestions-listbox"
             role="listbox"
             padding="none" className="absolute top-full left-0 right-0 mt-2 max-h-60 overflow-y-auto shadow-2xl z-50 p-1.5 flex flex-col gap-1"
           >

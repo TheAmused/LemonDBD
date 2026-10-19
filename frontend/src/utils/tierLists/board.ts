@@ -8,8 +8,7 @@
  * catalog order, so it never needs storing.
  */
 import type { TierDefinition, TierItem, TierPlacements } from '@/types/tierList';
-import { DEFAULT_TIERS, POOL_CONTAINER_ID, TIER_LIST_LIMITS } from './constants';
-import { slugifyItemId, uniqueId } from './codec';
+import { DEFAULT_TIERS, POOL_CONTAINER_ID } from './constants';
 
 export type BoardContainers = Record<string, string[]>;
 
@@ -113,52 +112,13 @@ export function moveItem(
 }
 
 // ---------------------------------------------------------------------------
-// Tier ladder edits. Each returns the new tiers and board together, since
-// removing a tier has to send its items somewhere (the pool).
+// Ranking actions on the whole ladder. The ladder itself (tiers, labels, colors)
+// is edited only in the creator; viewing a list ranks it.
 // ---------------------------------------------------------------------------
 
 export interface LadderState {
   tiers: TierDefinition[];
   board: BoardContainers;
-}
-
-export function addTier(
-  state: LadderState,
-  label: string,
-  color: string,
-  atIndex?: number,
-  backgroundImage?: string
-): LadderState {
-  if (state.tiers.length >= TIER_LIST_LIMITS.maxTiers) return state;
-  const id = uniqueId(slugifyItemId(label || 'tier'), new Set([...state.tiers.map((t) => t.id), POOL_CONTAINER_ID]));
-  const tiers = [...state.tiers];
-  tiers.splice(atIndex === undefined ? tiers.length : Math.max(0, Math.min(atIndex, tiers.length)), 0, {
-    id,
-    label: label.slice(0, TIER_LIST_LIMITS.maxTierLabel),
-    color,
-    ...(backgroundImage ? { backgroundImage } : {}),
-  });
-  return { tiers, board: { ...state.board, [id]: [] } };
-}
-
-export function updateTier(state: LadderState, id: string, patch: Partial<Omit<TierDefinition, 'id'>>): LadderState {
-  return {
-    ...state,
-    tiers: state.tiers.map((t) =>
-      t.id === id
-        ? { ...t, ...patch, label: (patch.label ?? t.label).slice(0, TIER_LIST_LIMITS.maxTierLabel) }
-        : t
-    ),
-  };
-}
-
-export function removeTier(state: LadderState, id: string, catalogOrder: readonly string[]): LadderState {
-  if (state.tiers.length <= 1) return state;
-  const freed = new Set([...(state.board[POOL_CONTAINER_ID] ?? []), ...(state.board[id] ?? [])]);
-  const board = { ...state.board };
-  delete board[id];
-  board[POOL_CONTAINER_ID] = catalogOrder.filter((k) => freed.has(k));
-  return { tiers: state.tiers.filter((t) => t.id !== id), board };
 }
 
 export function clearTier(state: LadderState, id: string, catalogOrder: readonly string[]): LadderState {
@@ -167,24 +127,4 @@ export function clearTier(state: LadderState, id: string, catalogOrder: readonly
     ...state,
     board: { ...state.board, [id]: [], [POOL_CONTAINER_ID]: catalogOrder.filter((k) => freed.has(k)) },
   };
-}
-
-export function moveTier(state: LadderState, id: string, direction: -1 | 1): LadderState {
-  const index = state.tiers.findIndex((t) => t.id === id);
-  const target = index + direction;
-  if (index < 0 || target < 0 || target >= state.tiers.length) return state;
-  const tiers = [...state.tiers];
-  [tiers[index], tiers[target]] = [tiers[target], tiers[index]];
-  return { ...state, tiers };
-}
-
-export function reorderTiers(state: LadderState, fromId: string, toId: string): LadderState {
-  if (fromId === toId) return state;
-  const fromIndex = state.tiers.findIndex((t) => t.id === fromId);
-  const toIndex = state.tiers.findIndex((t) => t.id === toId);
-  if (fromIndex < 0 || toIndex < 0 || fromIndex === toIndex) return state;
-  const tiers = [...state.tiers];
-  const [moved] = tiers.splice(fromIndex, 1);
-  tiers.splice(toIndex, 0, moved);
-  return { ...state, tiers };
 }

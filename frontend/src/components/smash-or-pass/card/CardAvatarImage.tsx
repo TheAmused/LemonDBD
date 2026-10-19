@@ -62,10 +62,12 @@ export function CardAvatarImage({
     <img
       src={src}
       alt={name}
-      loading={priority === undefined ? undefined : priority ? 'eager' : 'lazy'}
-      fetchPriority={priority === undefined ? undefined : priority ? 'high' : 'auto'}
-      decoding={priority === undefined ? undefined : 'async'}
-      className={className}
+      loading={priority ? 'eager' : 'lazy'}
+      fetchPriority={priority ? 'high' : 'auto'}
+      decoding="async"
+      draggable={false}
+      onContextMenu={(e) => e.preventDefault()}
+      className={`select-none ${className ?? ''}`}
       style={mediaDisplayStyle(display)}
       onError={(e) => retryAvatar(e, backendBase, isSurvivor, slug)}
     />

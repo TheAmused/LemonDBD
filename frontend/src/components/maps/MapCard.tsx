@@ -4,7 +4,7 @@
 import React, { useState } from 'react';
 import { ImageOff } from 'lucide-react';
 import type { MapRealm } from '@/types/map';
-import { getMapImageSrc } from '@/utils/mapUtils';
+import { getMapThumbSrc } from '@/utils/mapUtils';
 import { TileButton } from '@/components/common/TileButton';
 
 export interface MapCardProps {
@@ -15,7 +15,7 @@ export interface MapCardProps {
 
 export const MapCard: React.FC<MapCardProps> = ({ map, backendBase, onSelect }) => {
   const [imageFailed, setImageFailed] = useState(false);
-  const imageSrc = getMapImageSrc(map, backendBase);
+  const imageSrc = getMapThumbSrc(map, backendBase);
 
   return (
     <TileButton

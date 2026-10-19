@@ -73,6 +73,14 @@ export default {
   copyResults: "Share Results",
   copiedToClipboard: "Trial results copied to clipboard!",
   revealAnswerNotice: "The correct answer was: {answer}",
+  unknownAnswer: "an unknown answer",
+  guessFailed: "That guess could not be checked. Check your connection and try again.",
+  nameStartsWith: "Name starts with: {letter}...",
+  answerFallback: {
+    realm: "Realm #{id}",
+    perk: "Perk #{id}",
+    character: "Character #{id}",
+  },
 
   // Clues & Attribute Headers
   attributes: {

@@ -176,14 +176,16 @@ describe('Tier lists: i18n parity across all 5 locales', () => {
 });
 
 describe('Tier lists: banner assets', () => {
-  it('all 6 official and default custom banner graphics exist in backend/app/static/tier-lists/ (single source of truth)', () => {
+  it('all 5 official and 3 default custom banner graphics exist in backend/app/static/tier-lists/ (single source of truth)', () => {
     const banners = [
       'banner_survivor_perks.webp',
       'banner_killer_perks.webp',
       'banner_survivors.webp',
       'banner_killers.webp',
       'banner_maps.webp',
-      'banner_custom_default.webp',
+      'banner_custom_default_1.webp',
+      'banner_custom_default_2.webp',
+      'banner_custom_default_3.webp',
     ];
     const bannerDir = path.resolve(__dirname, '../../../../backend/app/static/tier-lists');
     assert.ok(!fs.existsSync(path.resolve(__dirname, '../../../public/images/tier-lists/banner_maps.webp')), 'Banners must not be duplicated in the frontend');
@@ -287,7 +289,8 @@ describe('Tier lists: CustomTierListCard', () => {
     assert.ok(html.includes('absolute top-3 right-3'), 'Delete button sits in the banner top-right');
     assert.ok(html.includes('Updated '), 'Updated label must render');
     assert.ok(html.indexOf('aria-label="Delete') < html.indexOf('Updated '), 'Updated label stays in the footer, below the banner');
-    assert.ok(html.includes('banner_custom_default.webp'), 'Must fallback to default custom banner');
+    // One of the three default covers, picked from the list id (164cd92c).
+    assert.match(html, /banner_custom_default_[123]\.webp/, 'Must fallback to a default custom banner');
   });
 
   it('renders correctly in disabled mode without navigation link or delete button', () => {

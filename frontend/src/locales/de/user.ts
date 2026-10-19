@@ -71,7 +71,7 @@ export default {
   failedToResendCode: "Code konnte nicht erneut gesendet werden.",
   digitAriaLabel: "Ziffer {n} des Bestätigungscodes",
   missingResetToken: "Reset-Token fehlt.",
-  passwordTooShort: "Das Passwort muss mindestens 6 Zeichen lang sein.",
+  passwordTooShort: "Das Passwort muss mindestens {min} Zeichen lang sein.",
   passwordsDoNotMatch: "Die Passwörter stimmen nicht überein.",
   failedToResetPassword: "Passwort konnte nicht zurückgesetzt werden.",
   failedToRequestPasswordReset: "Passwort-Reset konnte nicht angefordert werden.",
@@ -90,6 +90,7 @@ export default {
   authTokenMissing: "Authentifizierungs-Token fehlt. Bitte erneut anmelden.",
   profileUpdateFailedMsg: "Profil konnte nicht aktualisiert werden.",
   profileUpdateSuccessMsg: "Profil erfolgreich aktualisiert!",
+  emailChangedVerifyMsg: "E-Mail-Adresse geändert. Wir haben einen Bestätigungscode an die neue Adresse geschickt: Gib ihn ein, um das Konto erneut zu bestätigen.",
 
   // --- Campfire Dossier additions ---
   tabSanctum: "Kontoverwaltung",

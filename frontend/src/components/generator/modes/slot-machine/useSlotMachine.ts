@@ -84,7 +84,22 @@ export function useSlotMachine({ role, activePlayablePerks, activeMutator, onRol
       tickIntervalsRef.current.set(id, interval);
     });
 
-    pendingDoneRef.current = { remaining: new Set(ids), onAllDone };
+    const maxDuration = Math.max(...targetReels.map((_, idx) => (reduceMotion ? 220 : 900 + idx * 180)));
+    const fallbackTimer = setTimeout(() => {
+      const pending = pendingDoneRef.current;
+      if (pending && pending.remaining.size > 0) {
+        pending.remaining.forEach((id) => {
+          const interval = tickIntervalsRef.current.get(id);
+          if (interval) {
+            clearInterval(interval);
+            tickIntervalsRef.current.delete(id);
+          }
+        });
+        pendingDoneRef.current = null;
+        setSpinningIds(new Set());
+        pending.onAllDone();
+      }
+    }, maxDuration + 600);
 
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {

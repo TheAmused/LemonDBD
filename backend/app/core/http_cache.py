@@ -43,7 +43,7 @@ from flask import Response, make_response, request
 from app.core import redis_cache
 from app.core.cache_params import Normalizer, Uncacheable, norm_lower
 from app.core.security import SESSION_COOKIE_NAME
-from app.utils.lang import SUPPORTED_LANGS, extract_lang
+from app.utils.lang import SOURCE_LOCALE, SUPPORTED_LANGS, extract_lang
 
 logger = logging.getLogger(__name__)
 
@@ -66,8 +66,6 @@ def _is_personal() -> bool:
     if request.args.get("user_id"):
         return True
     if request.headers.get("Authorization"):
-        return True
-    if request.args.get("token"):
         return True
     # The app also accepts a cookie-borne token; presence alone is enough to
     # bail out -- we do not need to know whether it is valid, only that this
@@ -98,7 +96,9 @@ def _cache_key(endpoint: str, vary: Vary | None) -> str:
     # A value that is not a site language folds into "default" (it renders the
     # source language anyway) so `?lang=junk1`, `?lang=junk2` share one entry.
     lang = extract_lang()
-    parts.append(f"~lang={lang if lang in SUPPORTED_LANGS else 'default'}")
+    # `extract_lang` maps an unknown `?lang=` to the source language, which renders exactly
+    # like no language at all, so both share the "default" entry.
+    parts.append(f"~lang={lang if lang in SUPPORTED_LANGS and lang != SOURCE_LOCALE else 'default'}")
 
     if vary is None:
         normalizers: Mapping[str, Normalizer] = {name: norm_lower() for name in request.args.keys()}

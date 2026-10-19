@@ -4,6 +4,7 @@ import assert from 'node:assert';
 import {
   buildCharacterOwnershipDraft,
   changedCharacterUpdates,
+  changedPerkUpdates,
   ownershipKey,
 } from '@/utils/characterUtils';
 
@@ -46,4 +47,28 @@ test('a character missing from the loaded state counts as owned', () => {
   const updates = changedCharacterUpdates({}, { [ownershipKey(7, 'Killer')]: false });
 
   assert.deepStrictEqual(updates, [{ character_id: 7, role: 'killer', is_owned: false }]);
+});
+
+const PERKS = [
+  { perk_id: 1, is_unlocked: true, survivor_id: 4, killer_id: null },
+  { perk_id: 2, is_unlocked: true, survivor_id: 4, killer_id: null },
+  { perk_id: 3, is_unlocked: true, survivor_id: null, killer_id: 4 },
+  { perk_id: 4, is_unlocked: false, survivor_id: null, killer_id: 9 },
+];
+
+test('an untouched draft sends no perks', () => {
+  assert.deepStrictEqual(changedPerkUpdates(PERKS, {}, new Set()), []);
+});
+
+test('only perks that changed are sent', () => {
+  assert.deepStrictEqual(changedPerkUpdates(PERKS, { 1: true, 4: true }, new Set()), [{ perk_id: 4, is_unlocked: true }]);
+});
+
+test("a changed character's perks are always sent, even one toggled back", () => {
+  // Survivor 4 marked unowned (the server will cascade), then perk 2 toggled back to its loaded value.
+  const draft = { 1: false, 2: true };
+  assert.deepStrictEqual(changedPerkUpdates(PERKS, draft, new Set([ownershipKey(4, 'survivor')])), [
+    { perk_id: 1, is_unlocked: false },
+    { perk_id: 2, is_unlocked: true },
+  ]);
 });

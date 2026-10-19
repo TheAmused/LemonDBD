@@ -25,7 +25,6 @@ interface CardStackProps {
   effectsEnabled: boolean;
   onVote: (vote: 'smash' | 'pass', origin?: { x: number; y: number }) => void;
   onDragUpdate: (x: number, y: number, isDragging: boolean) => void;
-  onExitComplete: () => void;
 }
 
 /** How far the card behind has moved up by, from how far the top one is dragged. */
@@ -86,7 +85,6 @@ export function CardStack({
   effectsEnabled,
   onVote,
   onDragUpdate,
-  onExitComplete,
 }: CardStackProps) {
   // The cards behind come forward over exactly as long as the top one takes to leave.
   const exitMs = effectsEnabled ? 480 : CALM_EXIT_MS;
@@ -142,7 +140,6 @@ export function CardStack({
           exitType={exitVote}
           initialExitOffset={exitOffset}
           effects={effectsEnabled}
-          onExitComplete={onExitComplete}
           locale={locale}
           customLabels={activeRoster?.custom_labels}
           rosterMode={activeRoster?.roster_mode}

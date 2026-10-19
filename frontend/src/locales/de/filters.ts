@@ -33,4 +33,5 @@ export default {
   ownershipFilter: "Nach Besitz filtern",
   sortFields: "Sortierfeld",
   sortOrderLabel: "Sortierreihenfolge",
+  loadError: "Talente konnten nicht geladen werden.",
 } as const;

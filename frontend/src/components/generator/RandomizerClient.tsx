@@ -13,6 +13,7 @@ import { getBackendBaseUrl } from '@/utils/perkUtils';
 import { useDictionary, useLocale } from '@/context/DictionaryContext';
 import { useCachedData } from '@/hooks/useCachedData';
 import { fetchJson } from '@/services/dataCache';
+import { Button } from '@/components/common/Button';
 
 const PerkModal = dynamic(() => import('@/components/PerkModal').then((m) => m.PerkModal), { ssr: false });
 
@@ -30,14 +31,9 @@ function RandomizerContent() {
   const [killerCount, setKillerCount] = useState<number>(0);
   const [characterCount, setCharacterCount] = useState<number>(0);
 
-  useEffect(() => {
-    document.title = dict.app.perkRandomizerPageTitle;
-  }, [dict]);
 
-  const allPerksKey = `${backendBase}/api/v1/perks?limit=1000&lang=${locale}${
-    user?.id ? `&user_id=${user.id}` : ''
-  }`;
-  const { data: perksResponse, loading: perksFetching } = useCachedData<{ data?: Perk[] }>(
+  const allPerksKey = `${backendBase}/api/v1/perks?limit=1000&lang=${locale}`;
+  const { data: perksResponse, loading: perksFetching, error: perksError, refresh: retryPerks } = useCachedData<{ data?: Perk[] }>(
     allPerksKey,
     () => fetchJson<{ data?: Perk[] }>(allPerksKey)
   );
@@ -72,7 +68,18 @@ function RandomizerContent() {
       mainClassName="min-h-screen overflow-y-auto flex flex-col relative"
     >
       <div className="relative z-10 flex flex-col flex-1 min-h-0">
-        {perksLoading ? (
+        {perksError && allPerks.length === 0 ? (
+          <div className="flex flex-col items-center justify-center gap-4 p-12 text-center my-auto">
+            <p className="text-text-secondary text-base">{dict.generator.loadError}</p>
+            <Button
+              variant="primary"
+              size="md"
+              onClick={() => retryPerks()}
+            >
+              {dict.modal.retry}
+            </Button>
+          </div>
+        ) : perksLoading && allPerks.length === 0 ? (
           <RandomizerPageSkeleton />
         ) : (
           <Suspense fallback={<RandomizerPageSkeleton />}>

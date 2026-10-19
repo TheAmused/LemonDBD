@@ -84,12 +84,12 @@ export function AdminAvailabilitySection({ refreshKey, notify }: AdminAvailabili
     let cancelled = false;
     const timer = window.setTimeout(() => {
       setLoading(true);
-      Promise.all([listCharacters(role, search.trim()), listPerks(role, search.trim())])
-        .then(([chars, perkList]) => {
-          if (cancelled) return;
-          setCharacters(chars.data ?? []);
-          setPerks(perkList.data ?? []);
-        })
+      // Only the list on screen: both were fetched on every search keystroke and role switch.
+      const request =
+        kind === 'characters'
+          ? listCharacters(role, search.trim()).then((res) => !cancelled && setCharacters(res.data ?? []))
+          : listPerks(role, search.trim()).then((res) => !cancelled && setPerks(res.data ?? []));
+      request
         .catch((err: unknown) => !cancelled && fail(err))
         .finally(() => !cancelled && setLoading(false));
     }, SEARCH_DEBOUNCE_MS);
@@ -97,7 +97,7 @@ export function AdminAvailabilitySection({ refreshKey, notify }: AdminAvailabili
       cancelled = true;
       window.clearTimeout(timer);
     };
-  }, [role, search, refreshKey, reloadKey, fail]);
+  }, [kind, role, search, refreshKey, reloadKey, fail]);
 
   /** Applies one switch and reports it by name. */
   const apply = async (name: string, enable: boolean, action: () => Promise<unknown>) => {

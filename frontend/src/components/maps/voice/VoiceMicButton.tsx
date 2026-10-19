@@ -46,12 +46,18 @@ export function VoiceMicButton({
           }
         }}
         onTouchEnd={(e) => {
+          e.preventDefault();
           const duration =
             holdStartTimeRef.current > 0 ? Date.now() - holdStartTimeRef.current : 0;
           isHoldingRef.current = false;
           if (duration > 250 && isListeningRef.current) {
-            e.preventDefault();
             stopListeningAndProcess();
+          } else if (duration <= 250) {
+            if (isListeningRef.current || voiceStatus === 'listening') {
+              stopListeningAndProcess();
+            } else {
+              startListening(false);
+            }
           }
         }}
         onMouseDown={() => {

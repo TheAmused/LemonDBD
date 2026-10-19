@@ -226,12 +226,14 @@ class TestWeakSecretWarnings:
         from app import create_app
         from app.core.config import TestingConfig
 
+        # A short (but not publicly known) key starts with a warning; a placeholder refuses to
+        # start at all (see test_fatal_secrets.py).
         class WeakConfig(TestingConfig):
             TESTING = False
-            SECRET_KEY = "changeme"
-            JWT_SECRET_KEY = "changeme"
+            SECRET_KEY = "short-but-unique"
+            JWT_SECRET_KEY = "short-but-unique"
 
         monkeypatch.setenv("FLASK_ENV", "production")
         with caplog.at_level("WARNING"):
             create_app(WeakConfig)
-        assert "SECURITY: SECRET_KEY is a publicly known placeholder value" in caplog.text
+        assert "SECURITY: SECRET_KEY is shorter than 32 characters" in caplog.text

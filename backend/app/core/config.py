@@ -82,6 +82,25 @@ def weak_secret_warnings(config: Mapping[str, Any]) -> list[str]:
     return warnings
 
 
+def fatal_secret_problems(config: Mapping[str, Any]) -> list[str]:
+    """The signing-key problems the app refuses to start with (empty for tests and development).
+
+    An empty or publicly known `SECRET_KEY` / `JWT_SECRET_KEY` lets anyone forge a session for
+    any account, admins included, so production fails closed instead of only logging a warning.
+    A merely short key stays a warning (`weak_secret_warnings`).
+    """
+    if config.get("TESTING") or demo_accounts_enabled():
+        return []
+    problems: list[str] = []
+    for name in ("SECRET_KEY", "JWT_SECRET_KEY"):
+        value = str(config.get(name) or "").strip()
+        if not value:
+            problems.append(f"{name} is not set")
+        elif value.lower() in KNOWN_PLACEHOLDER_SECRETS:
+            problems.append(f"{name} is a publicly known placeholder value")
+    return problems
+
+
 BAN_LIST_PEPPER_MIN_BYTES = 32
 
 

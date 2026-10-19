@@ -344,6 +344,7 @@ def purge_database_tables_route():
         # Cached catalogs (characters, perks, maps) would otherwise keep serving purged rows for a day.
         bump_catalog_version()
         logger.info(f"Admin {g.current_user.login} purged tables: {purged}")
+        log_admin_action(g.current_user.id, action="database_purged", target_type="database", details={"targets": purged})
         return jsonify({
             "status": "success",
             "message": f"Successfully purged tables: {', '.join(purged)}",
@@ -368,6 +369,13 @@ def export_database():
 
     try:
         data = DatabaseExportImportService.export_database(targets=targets, include_assets=include_assets)
+        # The export holds every account's password hash: who took one, and of what, is on record.
+        log_admin_action(
+            g.current_user.id,
+            action="database_exported",
+            target_type="database",
+            details={"targets": targets or "all", "include_assets": include_assets},
+        )
         download = request.args.get("download", "false").lower() in ["true", "1", "yes"]
         if download:
             timestamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
@@ -424,6 +432,12 @@ def import_database():
             targets=targets,
         )
         logger.info(f"Admin {g.current_user.login} imported database (mode={mode}): {result.get('summary')}")
+        log_admin_action(
+            g.current_user.id,
+            action="database_imported",
+            target_type="database",
+            details={"mode": mode, "targets": targets or "all", "summary": result.get("summary")},
+        )
         return jsonify(result), 200
     except Exception as e:
         logger.error(f"Database import error: {e}", exc_info=True)

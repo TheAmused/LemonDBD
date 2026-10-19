@@ -87,6 +87,13 @@ def create_user_by_admin():
         return api_error(err, 400)
 
     ownership_service.seed_default_ownership_for_new_user(user.id)
+    log_admin_action(
+        g.current_user.id,
+        action="user_created",
+        target_type="user",
+        target_id=user.id,
+        details={"login": user.login, "role": user.role},
+    )
 
     return jsonify({
         "status": "success",

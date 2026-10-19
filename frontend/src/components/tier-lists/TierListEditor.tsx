@@ -427,7 +427,8 @@ export function TierListEditor(props: TierListEditorProps) {
         board={board}
         onBoardChange={handleBoardChange}
         onReorderTiers={canEditTiers ? (fromId, toId) => applyLadder((s) => reorderTiers(s, fromId, toId)) : undefined}
-        onClearTier={canEditTiers ? (id) => applyLadder((s) => clearTier(s, id, catalogOrder)) : undefined}
+        // Emptying a row is just moving its items back to the pool, so every ranker gets it, not only tier editors.
+        onClearTier={(id) => commit(tiers, clearTier({ tiers, board }, id, catalogOrder).board)}
         onEditTier={(id) => {
           if (!canEditTiers) return;
           setAddingTier(false);

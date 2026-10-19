@@ -68,9 +68,12 @@ export function useSmashVoting({
     }, LEADERBOARD_REFRESH_MS);
   }, []);
 
+  const voteInProgressRef = useRef(false);
+
   const handleVote = useCallback(
     async (vote: 'smash' | 'pass', origin?: { x: number; y: number }) => {
-      if (!currentCharacter || isExiting) return;
+      if (!currentCharacter || isExiting || voteInProgressRef.current) return;
+      voteInProgressRef.current = true;
 
       trackEvent('smash_vote', { vote, roster: rosterTag(selectedRosterSlug) });
       if (rosterPlayedRef.current(selectedRosterSlug)) {
@@ -90,7 +93,12 @@ export function useSmashVoting({
         originY: origin?.y,
       }));
 
-      beginExit(vote, exitOffsetFor(vote, dragPhysics), onExitComplete, effectsEnabled ? undefined : CALM_EXIT_MS);
+      const wrappedExitComplete = () => {
+        voteInProgressRef.current = false;
+        onExitComplete();
+      };
+
+      beginExit(vote, exitOffsetFor(vote, dragPhysics), wrappedExitComplete, effectsEnabled ? undefined : CALM_EXIT_MS);
       recordVote(currentCharacter, vote);
 
       // A local roster's entities were never sent to the backend -- there is no `entity_id`

@@ -171,7 +171,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
         }`}
       >
         {effects && isExiting && exitType && (
-          <CardDisintegrationOverlay exitType={exitType} onComplete={onExitComplete} />
+          <CardDisintegrationOverlay exitType={exitType} />
         )}
 
         {isTopCard && !isExiting && !isFlipped && (

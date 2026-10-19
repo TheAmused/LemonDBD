@@ -8,7 +8,7 @@ from flask import Flask
 from flask.testing import FlaskClient
 
 from app.core.security import generate_token
-from app.models import Chapter, Killer, Survivor, User
+from app.models import Chapter, Killer, Perk, Survivor, User
 
 
 @pytest.mark.unit
@@ -80,6 +80,18 @@ class TestUserShowcaseRoutes:
         assert saved["survivor_main"]["prestige"] == 0
         assert saved["killer_main"]["prestige"] == 100
 
+    def test_unknown_ids_are_ignored_not_stored(self, client: FlaskClient, user: User, user_headers: dict) -> None:
+        res = client.put(
+            f"/api/v1/users/{user.id}/showcase",
+            json={"survivor_main": {"character_id": 9999, "perk_ids": [9999, "x", None]}, "killer_main": {"character_id": "7"}},
+            headers=user_headers,
+        )
+        assert res.status_code == 200
+        saved = res.get_json()["data"]
+        assert saved["survivor_main"]["character_id"] is None
+        assert saved["survivor_main"]["perk_ids"] == [None, None, None, None]
+        assert saved["killer_main"]["character_id"] is None
+
     def test_backend_choices_match_the_frontend_lists(self) -> None:
         import re
         from pathlib import Path
@@ -119,8 +131,15 @@ class TestUserShowcaseRoutes:
         chapter = Chapter(name="Test Chapter")
         db_session.add(chapter)
         db_session.flush()
-        db_session.add(Survivor(name="Meg Thomas", chapter_id=chapter.id))
-        db_session.add(Killer(name="The Trapper", chapter_id=chapter.id, power_name="Bear Trap"))
+        meg = Survivor(name="Meg Thomas", chapter_id=chapter.id)
+        trapper = Killer(name="The Trapper", chapter_id=chapter.id, power_name="Bear Trap")
+        db_session.add_all([meg, trapper])
+        db_session.flush()
+        # Perk slots must name real perks of the main's role (ids 1-4 survivor, 5-8 killer).
+        db_session.add_all(
+            [Perk(id=i, name=f"Survivor perk {i}", role="Survivor", survivor_id=meg.id) for i in range(1, 5)]
+            + [Perk(id=i, name=f"Killer perk {i}", role="Killer", killer_id=trapper.id) for i in range(5, 9)]
+        )
         db_session.commit()
 
         payload = {

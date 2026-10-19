@@ -7,7 +7,6 @@ export default {
   lastUpdated: "15 października 2026",
   translationNotice: "Jeśli przetłumaczone wersje tej strony różnią się od angielskiej, pierwszeństwo ma wersja angielska.",
   tldrLabel: "W skrócie",
-  sectionEyebrow: "Sekcja {number}",
   tldrNotice: "Tytuły, linie „W skrócie” i podsumowanie to przyjazne skróty. Ze względów prawnych nie mają mocy wiążącej i nie zastępują tekstu pod nimi. Jeśli się z nim różnią, obowiązuje pełny tekst.",
   summaryHeading: "Zasady w pigułce",
   summary: [
@@ -33,7 +32,6 @@ export default {
       tldr: "Wszyscy tu przyszli być ścigani przez grę, a nie przez ciebie.",
       paragraphs: [
         "Ta część dotyczy wszystkich treści i zachowań w Serwisie oraz na Serwerze, w tym nazw użytkowników, awatarów, witryn profilu, zgłoszeń błędów, udostępnianych linków i wiadomości. Zabrania się:",
-        "Czarny humor o fikcyjnych postaciach jest dopuszczalny. Nie wolno kierować go przeciwko prawdziwym ludziom.",
       ],
       items: [
         "nękania, zastraszania i grożenia jakiejkolwiek osobie oraz nawoływania do nienawiści lub przemocy wobec osoby lub grupy, bez względu na to, kim są lub jak grają;",
@@ -41,6 +39,9 @@ export default {
         "publikowania treści seksualnych z udziałem małoletnich oraz treści seksualnych dotyczących prawdziwych osób prywatnych;",
         "podszywania się pod innego użytkownika, <brand>LemonTeam</brand> lub twórców gry;",
         "spamowania, zamieszczania niezamówionych reklam, masowych oznaczeń i linków zapraszających na Serwerze oraz pisania nie na temat w kanałach o określonej tematyce.",
+      ],
+      closing: [
+        "Czarny humor o fikcyjnych postaciach jest dopuszczalny. Nie wolno kierować go przeciwko prawdziwym ludziom.",
       ],
     },
     fairPlay: {
@@ -108,7 +109,7 @@ export default {
     },
     enforcement: {
       heading: "Co się stanie, jeśli je złamiesz",
-      tldr: "Trzy etapy haka: upomnienie, porządki, a Byt dopiero wtedy, gdy nie przestajesz.",
+      tldr: "Trzy kroki: ostrzeżenie, czasowe zawieszenie i stały ban.",
       paragraphs: [
         "Wolimy rozwiązywać problemy rozmową, ale to my, według własnego rozsądnego uznania, decydujemy, co jest naruszeniem. W zależności od wagi i częstotliwości naruszenia możemy zastosować dowolny ze środków poniżej, a w poważnych przypadkach od razu ostatni z nich.",
       ],
@@ -126,9 +127,9 @@ export default {
   hookStages: {
     heading: "Etapy haka",
     stages: [
-      { title: "Etap 1: upomnienie", text: "Wiadomość z prośbą o poprawienie lub zaprzestanie danego zachowania albo formalne ostrzeżenie." },
-      { title: "Etap 2: porządki", text: "Usuwamy lub blokujemy treści, zerujemy niesłusznie zdobyte postępy lub ograniczamy funkcje." },
-      { title: "Ofiara", text: "Twoje konto zostaje zawieszone lub zbanowane, a dodatkowe konta lub adresy mogą zostać zablokowane." },
+      { title: "Etap 1: ostrzeżenie", text: "Formalne zawiadomienie na koncie. Nie ogranicza ono konta." },
+      { title: "Etap 2: zawieszenie", text: "Wylogowujemy cię i blokujemy logowanie na określoną liczbę dni." },
+      { title: "Etap 3: ban", text: "Konto zostaje zbanowane na stałe, a konta założone w celu obejścia bana mogą zostać zbanowane." },
     ],
   },
 };

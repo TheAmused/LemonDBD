@@ -255,7 +255,11 @@ def decode_token(token: str) -> dict[str, Any] | None:
 
 
 def get_current_user() -> User | None:
-    """Extract and verify the current user from the Authorization Bearer header, the session cookie or the query string."""
+    """Extract and verify the current user from the Authorization Bearer header or the session cookie.
+
+    A token in the query string (`?token=`) is deliberately not accepted: URLs end up in access
+    logs, browser history and `Referer` headers, and nothing in the app sends one.
+    """
     auth_header = request.headers.get("Authorization")
     token: str | None = None
 
@@ -263,8 +267,6 @@ def get_current_user() -> User | None:
         token = auth_header.split(" ", 1)[1].strip()
     elif request.cookies.get(SESSION_COOKIE_NAME):
         token = request.cookies.get(SESSION_COOKIE_NAME, "").strip()
-    elif request.args.get("token"):
-        token = request.args.get("token", "").strip()
 
     if not token:
         return None

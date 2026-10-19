@@ -144,6 +144,9 @@ export function createVersionedStore<S>({ key, empty, migrate }: VersionedStoreC
       if (listeners.size === 0 && storageListenerAttached && typeof window !== 'undefined') {
         window.removeEventListener('storage', onStorageEvent);
         storageListenerAttached = false;
+        // With the listener gone, another tab's writes would go unseen and the
+        // snapshot would silently turn stale; the next read loads it again.
+        snapshot = null;
       }
     };
   }
@@ -158,7 +161,11 @@ export function createVersionedStore<S>({ key, empty, migrate }: VersionedStoreC
   }
 
   function update(mutate: (state: S) => S): SaveResult {
-    const next = mutate(getSnapshot());
+    // With nobody subscribed nothing keeps the snapshot in step with other tabs,
+    // so a write builds on what is stored now, not on what this tab last saw.
+    const storage = getLocalStorage();
+    const current = listeners.size === 0 && storage ? load(storage) : getSnapshot();
+    const next = mutate(current);
     const result = save(next);
     snapshot = next;
     emit();

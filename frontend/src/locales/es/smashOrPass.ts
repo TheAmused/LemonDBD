@@ -269,10 +269,10 @@ export default {
   },
   comingSoon: 'Próximamente',
   effectsPrefs: {
-    title: 'Antes de jugar',
+    title: 'Preferencias de experiencia y contenido',
     warningTitle: 'Aviso de fotosensibilidad y movimiento',
-    warning: 'Esta página usa luces intermitentes, ráfagas de partículas, movimiento rápido y efectos de sonido. Pueden provocar convulsiones en personas con epilepsia fotosensible y resultar incómodos para quienes son sensibles al movimiento o a los sonidos fuertes.',
-    intro: 'Elige con qué quieres jugar. Puedes cambiarlo en cualquier momento con el botón de efectos en la parte superior de la página.',
+    warning: 'Algunas funciones usan luces intermitentes, ráfagas de partículas, movimiento rápido y efectos de sonido. Pueden provocar convulsiones en personas con epilepsia fotosensible y resultar incómodos para quienes son sensibles al movimiento o a los sonidos fuertes.',
+    intro: 'Elige tus preferencias para todo el sitio. Puedes cambiarlas en cualquier momento con el botón de ajustes.',
     effects: 'Efectos visuales',
     effectsDesc: 'Destellos, partículas, fondos animados y movimiento de las cartas.',
     sounds: 'Efectos de sonido',

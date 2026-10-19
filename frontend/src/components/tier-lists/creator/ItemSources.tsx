@@ -84,9 +84,32 @@ export function ItemSources({ onAdd, existingIds, locale }: ItemSourcesProps) {
           tabs={options}
         />
       </div>
-      {tab === 'upload' && isAdmin && <UploadSource onAdd={onAdd} />}
-      {tab === 'links' && <LinksSource onAdd={onAdd} />}
-      {tab === 'catalog' && <CatalogSource onAdd={onAdd} existingIds={existingIds} locale={locale} />}
+      {/*
+        All panels share one grid cell, so the block is always as tall as the tallest panel
+        (the catalog, whose list has a fixed height) and switching tabs never moves the page.
+        The inactive panels stay mounted, which also keeps the catalog's search and selection.
+      */}
+      <div className="grid">
+        <SourcePanel active={tab === 'catalog'}>
+          <CatalogSource onAdd={onAdd} existingIds={existingIds} locale={locale} />
+        </SourcePanel>
+        <SourcePanel active={tab === 'links'}>
+          <LinksSource onAdd={onAdd} />
+        </SourcePanel>
+        {isAdmin && (
+          <SourcePanel active={tab === 'upload'}>
+            <UploadSource onAdd={onAdd} />
+          </SourcePanel>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function SourcePanel({ active, children }: { active: boolean; children: React.ReactNode }) {
+  return (
+    <div className={cn('col-start-1 row-start-1 min-w-0', !active && 'invisible pointer-events-none')} inert={!active}>
+      {children}
     </div>
   );
 }
@@ -121,7 +144,7 @@ function UploadSource({ onAdd }: { onAdd: (items: IncomingItem[]) => void; }) {
   };
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex h-full flex-col gap-2">
       <div
         onDragOver={(e) => {
           e.preventDefault();
@@ -134,7 +157,7 @@ function UploadSource({ onAdd }: { onAdd: (items: IncomingItem[]) => void; }) {
           void handleFiles(e.dataTransfer.files);
         }}
         className={cn(
-          'flex flex-col items-center justify-center gap-3 rounded-card border-2 border-dashed p-6 sm:p-8 text-center transition-colors',
+          'flex flex-1 flex-col items-center justify-center gap-3 rounded-card border-2 border-dashed p-6 sm:p-8 text-center transition-colors',
           dragging ? 'border-accent-red bg-accent-red/5' : 'border-border-color bg-bg-primary/20'
         )}
       >
@@ -182,12 +205,49 @@ function UploadSource({ onAdd }: { onAdd: (items: IncomingItem[]) => void; }) {
 
 // ---------------------------------------------------------------------------
 
+type ProbeStatus = 'idle' | 'loading' | 'ok' | 'error' | 'invalid';
+
+/** Checks (after a short pause in typing) whether a pasted image link really loads. */
+function useImageProbe(rawUrl: string): { status: ProbeStatus; src: string | null } {
+  const trimmed = rawUrl.trim();
+  const src = useMemo(() => (trimmed ? sanitizeImageUrl(trimmed) : null), [trimmed]);
+  const [status, setStatus] = useState<ProbeStatus>('idle');
+
+  useEffect(() => {
+    if (!trimmed) {
+      setStatus('idle');
+      return;
+    }
+    if (!src) {
+      setStatus('invalid');
+      return;
+    }
+    setStatus('loading');
+    let cancelled = false;
+    const timer = window.setTimeout(() => {
+      const probe = new window.Image();
+      probe.onload = () => !cancelled && setStatus('ok');
+      probe.onerror = () => !cancelled && setStatus('error');
+      probe.src = src;
+    }, 350);
+    return () => {
+      cancelled = true;
+      window.clearTimeout(timer);
+    };
+  }, [trimmed, src]);
+
+  return { status, src };
+}
+
 function LinksSource({ onAdd }: { onAdd: (items: IncomingItem[]) => void; }) {
   const dict = useDictionary();
   const t = dict.tierLists;
   const [itemName, setItemName] = useState<string>('');
   const [imageUrl, setImageUrl] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
+  const c = t.creator;
+  const { status, src: previewSrc } = useImageProbe(imageUrl);
+  const previewName = itemName.trim() || nameFromUrl(imageUrl.trim()) || '';
 
   const handleAdd = () => {
     const trimmedName = itemName.trim();
@@ -215,8 +275,15 @@ function LinksSource({ onAdd }: { onAdd: (items: IncomingItem[]) => void; }) {
     setError(null);
   };
 
+  const statusText =
+    status === 'loading' ? c.linkPreviewLoading
+    : status === 'ok' ? c.linkPreviewOk
+    : status === 'error' ? c.linkPreviewFailed
+    : status === 'invalid' ? t.invalidImage
+    : c.linkPreviewEmpty;
+
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex h-full flex-col gap-3">
       <div className="grid gap-3 sm:grid-cols-2">
         <label className="flex flex-col gap-1.5">
           <span className={LABEL}>{t.itemName}</span>
@@ -253,6 +320,35 @@ function LinksSource({ onAdd }: { onAdd: (items: IncomingItem[]) => void; }) {
           {error}
         </p>
       )}
+
+      {/* Live preview: fills the space the catalog's list takes, so both tabs are the same height. */}
+      <div
+        aria-live="polite"
+        className="flex min-h-40 flex-1 flex-col items-center justify-center gap-3 rounded-card border border-border-color bg-bg-primary/40 p-4 text-center"
+      >
+        <span className={LABEL}>{c.linkPreviewHeading}</span>
+        {(previewSrc || previewName) ? (
+          <div className="relative">
+            <TierItemTile
+              item={{ key: 'link-preview', name: previewName || '?', image: status === 'ok' ? previewSrc : null }}
+              showName={Boolean(previewName)}
+              size="lg"
+              className="pointer-events-none cursor-default"
+            />
+            {status === 'loading' && (
+              <span className="absolute left-1/2 top-10 phone-lg:top-12 sm:top-14 -translate-x-1/2 -translate-y-1/2 text-text-muted">
+                <Spinner size="sm" tone="current" />
+              </span>
+            )}
+          </div>
+        ) : (
+          <ImagePlus className="h-10 w-10 text-text-muted/60" aria-hidden="true" />
+        )}
+        <p className={cn('text-xs', status === 'error' || status === 'invalid' ? 'font-semibold text-accent-red' : 'text-text-muted')}>
+          {statusText}
+        </p>
+      </div>
+
       <div className="flex justify-center w-full pt-1">
         <Button
           variant="primary"
@@ -397,7 +493,7 @@ function CatalogSource({ onAdd, existingIds, locale }: {
 
       <div
         ref={containerRef}
-        className="w-full rounded-card border border-border-color bg-bg-primary/40 p-3 sm:p-4 overflow-y-auto overflow-x-hidden max-h-96 sm:max-h-roster overscroll-contain"
+        className="w-full rounded-card border border-border-color bg-bg-primary/40 p-3 sm:p-4 overflow-y-auto overflow-x-hidden h-96 sm:h-136 overscroll-contain"
       >
         {loading ? (
           <p className="flex items-center justify-center gap-2 py-10 type-card-title text-text-muted">

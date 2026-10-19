@@ -285,10 +285,10 @@ export default {
   },
   comingSoon: 'Wkrótce Dostępne',
   effectsPrefs: {
-    title: 'Zanim zaczniesz grać',
+    title: 'Preferencje wrażeń i treści',
     warningTitle: 'Ostrzeżenie o światłoczułości i ruchu',
-    warning: 'Ta strona używa migających świateł, wybuchów cząsteczek, szybkiego ruchu i efektów dźwiękowych. Mogą one wywołać napady u osób z padaczką światłoczułą oraz być nieprzyjemne dla osób wrażliwych na ruch lub głośne dźwięki.',
-    intro: 'Wybierz, z czego chcesz korzystać. Możesz to zmienić w dowolnej chwili przyciskiem efektów u góry strony.',
+    warning: 'Niektóre funkcje używają migających świateł, wybuchów cząsteczek, szybkiego ruchu i efektów dźwiękowych. Mogą one wywołać napady u osób z padaczką światłoczułą oraz być nieprzyjemne dla osób wrażliwych na ruch lub głośne dźwięki.',
+    intro: 'Wybierz preferowane ustawienia w całym serwisie. Możesz je zmienić w dowolnej chwili przyciskiem preferencji.',
     effects: 'Efekty wizualne',
     effectsDesc: 'Błyski, cząsteczki, animowane tła i ruch kart.',
     sounds: 'Efekty dźwiękowe',

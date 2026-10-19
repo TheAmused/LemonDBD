@@ -15,6 +15,7 @@ import {
   Check, Trophy, AlertCircle, X, History, Layers, MapPin, Zap, Volume2, Eye, BookOpen,
 } from 'lucide-react';
 import { useGlobalNsfwPreference, hasSeenNsfwOnboarding } from '@/utils/nsfwAck';
+import { ThunderPulseIcon } from '@/components/icons/DbdIcons';
 
 const NsfwOnboardingModal = dynamic(
   () => import('@/components/common/NsfwOnboardingModal').then((m) => m.NsfwOnboardingModal),
@@ -441,6 +442,17 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
 
           </div>
           <div className="flex items-center gap-2">
+            <Button
+              variant="secondary"
+              size="sm"
+              icon
+              onClick={() => setOnboardingOpen(true)}
+              {...tip(dict.smashOrPass.effectsPrefs.button, dict.smashOrPass.effectsPrefs.buttonDesc, 'action')}
+              aria-label={dict.smashOrPass.effectsPrefs.button}
+              className="h-9 w-9 min-h-9 min-w-9"
+            >
+              <ThunderPulseIcon className="w-4 h-4" aria-hidden="true" />
+            </Button>
             <Button
               variant="secondary"
               size="sm"

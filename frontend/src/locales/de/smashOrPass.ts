@@ -269,10 +269,10 @@ export default {
   },
   comingSoon: 'Demnächst verfügbar',
   effectsPrefs: {
-    title: 'Bevor du spielst',
+    title: 'Erlebnis- und Inhaltseinstellungen',
     warningTitle: 'Warnung vor Lichtempfindlichkeit und Bewegung',
-    warning: 'Diese Seite verwendet Lichtblitze, Partikelausbrüche, schnelle Bewegungen und Soundeffekte. Sie können bei Menschen mit photosensibler Epilepsie Anfälle auslösen und für Menschen, die empfindlich auf Bewegung oder laute Geräusche reagieren, unangenehm sein.',
-    intro: 'Wähle, womit du spielen möchtest. Du kannst das jederzeit über die Effekte-Schaltfläche oben auf der Seite ändern.',
+    warning: 'Einige Funktionen verwenden Lichtblitze, Partikelausbrüche, schnelle Bewegungen und Soundeffekte. Sie können bei Menschen mit photosensibler Epilepsie Anfälle auslösen und für Menschen, die empfindlich auf Bewegung oder laute Geräusche reagieren, unangenehm sein.',
+    intro: 'Wähle deine bevorzugten Einstellungen für die gesamte Website. Du kannst diese jederzeit über die Einstellungen-Schaltfläche anpassen.',
     effects: 'Visuelle Effekte',
     effectsDesc: 'Blitze, Partikel, animierte Hintergründe und Kartenbewegungen.',
     sounds: 'Soundeffekte',

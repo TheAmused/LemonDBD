@@ -25,7 +25,8 @@ import { Button } from '@/components/common/Button';
 import { useDictionary } from "@/context/DictionaryContext";
 import { Badge } from '@/components/common/Badge';
 import { AccordionSection } from '@/components/common/AccordionSection';
-import { Switch } from '@/components/common/Switch';
+import { Tooltip } from '@/components/common/Tooltip';
+import { ThunderPulseIcon } from '@/components/icons/DbdIcons';
 import { useGlobalNsfwPreference, hasSeenNsfwOnboarding } from '@/utils/nsfwAck';
 
 const NsfwOnboardingModal = dynamic(
@@ -150,10 +151,23 @@ export function TierListHub({ locale }: TierListHubProps) {
         banner="/images/banners/banner_loadouts.webp"
         badge={lists.length > 0 && (<Badge tone="red" size="sm" plain>{lists.length}</Badge>)}
         headerAction={
-          <div className="flex items-center gap-2">
-            <span className="text-xs text-text-muted hidden sm:inline">{t.nsfw.toggle}</span>
-            <Switch checked={showNsfw} onChange={setShowNsfw} ariaLabel={t.nsfw.toggle} size="sm" />
-          </div>
+          <Tooltip
+            variant="action"
+            title={dict.smashOrPass.effectsPrefs.button}
+            description={dict.smashOrPass.effectsPrefs.buttonDesc}
+            placement="bottom"
+          >
+            <Button
+              variant="secondary"
+              size="sm"
+              icon
+              onClick={() => setOnboardingOpen(true)}
+              aria-label={dict.smashOrPass.effectsPrefs.button}
+              className="h-9 w-9 min-h-9 min-w-9"
+            >
+              <ThunderPulseIcon className="h-4 w-4" aria-hidden="true" />
+            </Button>
+          </Tooltip>
         }
         as="section"
         bodyClassName="p-4 sm:p-6"

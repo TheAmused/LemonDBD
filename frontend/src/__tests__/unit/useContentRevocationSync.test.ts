@@ -5,8 +5,12 @@ import React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import {
   checkAndPurgeRevokedContent,
+  MIN_SWEEP_GAP_MS,
+  requestRevocationSweep,
   useContentRevocationSync,
 } from '@/hooks/useContentRevocationSync';
+import { storedContentHash } from '@/utils/contentHash';
+import { DEFAULT_TIERS } from '@/utils/tierLists/constants';
 import { ContentRevocationSync } from '@/components/common/ContentRevocationSync';
 
 class MockLocalStorage implements Storage {
@@ -130,7 +134,7 @@ describe('useContentRevocationSync', () => {
       (e) => e.type === 'content-revoked'
     );
     assert.ok(contentRevokedEvent, 'content-revoked event must be dispatched');
-    assert.deepEqual(contentRevokedEvent?.detail, { count: 1, hashes: [hashRevoked] });
+    assert.deepEqual(contentRevokedEvent?.detail, { count: 1, hashes: [hashRevoked], items: 1 });
   });
 
   it('purges revoked smash roster from lemondbd_smash_rosters and dispatches storage event', async () => {
@@ -374,6 +378,89 @@ describe('useContentRevocationSync', () => {
     const result = await checkAndPurgeRevokedContent();
     assert.deepEqual(result, []);
     assert.equal(fetchCalled, false);
+  });
+
+  it('purges an unsigned saved copy by the hash of its content', async () => {
+    const banned = { id: 'unsigned', title: 'Banned list', tiers: DEFAULT_TIERS, items: [{ id: 'a', name: 'A' }], placements: { s: ['a'] }, createdAt: 1, updatedAt: 2 };
+    const kept = { ...banned, id: 'other', title: 'Fine list' };
+    const bannedHash = await storedContentHash('tier_list', banned);
+    assert.ok(bannedHash);
+    mockStorage.setItem('lemondbd_tier_lists', JSON.stringify({ version: 1, rankings: {}, custom: { unsigned: banned, other: kept } }));
+
+    let sent: string[] = [];
+    globalThis.fetch = async (_input: RequestInfo | URL, init?: RequestInit) => {
+      sent = (JSON.parse(String(init?.body)) as { hashes: string[] }).hashes;
+      return { ok: true, status: 200, json: async () => ({ revoked_hashes: [bannedHash] }) } as Response;
+    };
+
+    const purged = await checkAndPurgeRevokedContent();
+
+    assert.deepEqual(purged, [bannedHash]);
+    assert.equal(sent.length, 2, 'one content hash per saved list');
+    const custom = JSON.parse(mockStorage.getItem('lemondbd_tier_lists') ?? '{}').custom;
+    assert.deepEqual(Object.keys(custom), ['other']);
+    const revoked = dispatchedEvents.find((e) => e.type === 'content-revoked');
+    assert.deepEqual(revoked?.detail, { count: 1, hashes: [bannedHash], items: 1 });
+  });
+
+  it('purges a copy edited after signing: its stamp is stale but its content is banned', async () => {
+    const trial = { id: 'c9', title: 'Edited', description: '', game_mode: 'custom', rounds: [{ mode: 'emoji', target_id: 1 }] };
+    const contentHashValue = await storedContentHash('minigame', trial);
+    assert.ok(contentHashValue);
+    const staleStamp = '9'.repeat(64);
+    mockStorage.setItem('lemondbd_custom_minigames', JSON.stringify([{ ...trial, _manifest: { content_hash: staleStamp } }]));
+
+    globalThis.fetch = async (_input: RequestInfo | URL, init?: RequestInit) => {
+      const hashes = (JSON.parse(String(init?.body)) as { hashes: string[] }).hashes;
+      assert.ok(hashes.includes(staleStamp) && hashes.includes(contentHashValue));
+      return { ok: true, status: 200, json: async () => ({ revoked_hashes: [contentHashValue] }) } as Response;
+    };
+
+    assert.deepEqual(await checkAndPurgeRevokedContent(), [contentHashValue]);
+    assert.deepEqual(JSON.parse(mockStorage.getItem('lemondbd_custom_minigames') ?? 'null'), []);
+  });
+
+  it('keeps an item that was edited while the check was in flight', async () => {
+    const roster = { id: 'r1', name: 'Roster', _manifest: { content_hash: 'c'.repeat(64) } };
+    mockStorage.setItem('lemondbd_smash_rosters', JSON.stringify({ version: 1, custom: { r1: roster } }));
+
+    globalThis.fetch = async () => {
+      mockStorage.setItem('lemondbd_smash_rosters', JSON.stringify({ version: 1, custom: { r1: { id: 'r1', name: 'Reworked' } } }));
+      return { ok: true, status: 200, json: async () => ({ revoked_hashes: ['c'.repeat(64)] }) } as Response;
+    };
+
+    assert.deepEqual(await checkAndPurgeRevokedContent(), []);
+    assert.equal(JSON.parse(mockStorage.getItem('lemondbd_smash_rosters') ?? '{}').custom.r1.name, 'Reworked');
+  });
+
+  it('splits more than 200 hashes into several requests', async () => {
+    const trials = Array.from({ length: 150 }, (_, i) => ({ id: `t${i}`, title: `Trial ${i}`, rounds: [], _manifest: { content_hash: i.toString(16).padStart(64, '0') } }));
+    mockStorage.setItem('lemondbd_custom_minigames', JSON.stringify(trials));
+    const batches: number[] = [];
+    globalThis.fetch = async (_input: RequestInfo | URL, init?: RequestInit) => {
+      batches.push((JSON.parse(String(init?.body)) as { hashes: string[] }).hashes.length);
+      return { ok: true, status: 200, json: async () => ({ revoked_hashes: [] }) } as Response;
+    };
+
+    await checkAndPurgeRevokedContent();
+
+    assert.deepEqual(batches, [200, 100], '150 stamps plus 150 content hashes');
+  });
+
+  it('throttles the automatic sweeps', async () => {
+    mockStorage.setItem('minigames:custom:throttle', JSON.stringify({ contentHash: '8'.repeat(64) }));
+    let calls = 0;
+    globalThis.fetch = async () => {
+      calls++;
+      return { ok: true, status: 200, json: async () => ({ revoked_hashes: [] }) } as Response;
+    };
+    const start = 1_000_000_000_000;
+
+    await requestRevocationSweep(start);
+    await requestRevocationSweep(start + 1000);
+    await requestRevocationSweep(start + MIN_SWEEP_GAP_MS);
+
+    assert.equal(calls, 2, 'a sweep inside the gap is skipped');
   });
 
   it('ContentRevocationSync component renders null and hook is callable', () => {

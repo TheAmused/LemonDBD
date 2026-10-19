@@ -22,8 +22,6 @@ interface CategoryPickerProps {
   ariaLabel: string;
   accent: 'green' | 'red';
   className?: string;
-  /** Shown next to the selected label in the trigger, e.g. "(16)". */
-  countLabel?: string;
 }
 
 const ACCENT_CLASSES: Record<'green' | 'red', { text: string; bg: string; border: string }> = {
@@ -59,7 +57,6 @@ export const CategoryPicker: React.FC<CategoryPickerProps> = ({
   ariaLabel,
   accent,
   className = '',
-  countLabel,
 }) => {
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
@@ -82,7 +79,6 @@ export const CategoryPicker: React.FC<CategoryPickerProps> = ({
         <span className="flex items-center gap-2 min-w-0">
           <SelectedIcon className={`h-4 w-4 shrink-0 ${accentClasses.text}`} aria-hidden="true" />
           <span className="truncate">{selected.label}</span>
-          {countLabel && <span className="text-text-muted shrink-0">{countLabel}</span>}
         </span>
         <ChevronDown className={`h-4 w-4 shrink-0 transition-transform duration-200 ${open ? 'rotate-180' : ''}`} aria-hidden="true" />
       </Button>

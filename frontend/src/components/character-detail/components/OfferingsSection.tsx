@@ -3,7 +3,6 @@
 import { Tabs } from '@/components/common/Tabs';
 import React, { useMemo } from 'react';
 import {
-  Gift,
   Coins,
   Map as MapIcon,
   EyeOff,
@@ -19,17 +18,14 @@ import {
   CharacterDetailDictionary,
 } from '../types';
 import { CategoryPicker } from './CategoryPicker';
-import { CollapsibleDrawer } from './CollapsibleDrawer';
 import { MoriCharmIcon, WardCharmIcon } from '@/components/icons/DbdIcons';
 import { usePersistentString } from '@/hooks/usePersistentString';
 import { usePersistentDrawer } from '@/hooks/usePersistentDrawer';
 
 import { tip } from '@/components/common/Tooltip';
 import { EmptyState } from '@/components/common/EmptyState';
-import { SectionHeading } from '@/components/common/SectionHeading';
 import { isKiller as isKillerRole } from '@/utils/characterUtils';
-import { Badge } from '@/components/common/Badge';
-import { Surface } from '@/components/common/Surface';
+import { AccordionSection } from '@/components/common/AccordionSection';
 const KILLER_OFFERING_KEYS = ['special', 'mori', 'bloodpoint', 'map', 'shroud', 'ward'] as const;
 const SURVIVOR_OFFERING_KEYS = ['special', 'bloodpoint', 'luck', 'map', 'shroud', 'blueprint', 'chest', 'ward'] as const;
 
@@ -159,7 +155,7 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
         value
       )
   );
-  const [isDrawerOpen, , setDrawerOpen] = usePersistentDrawer('lemondbd_drawer_offerings', true);
+  const [isDrawerOpen, toggleDrawer] = usePersistentDrawer('lemondbd_drawer_offerings', true);
 
   const activeCategoryConfig =
     categories.find((c) => c.key === selectedCategory) || categories[0];
@@ -292,42 +288,15 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
   if (!offerings || offerings.length === 0) return null;
 
   return (
-    <Surface
-      as="section" padding="lg" className="mt-8 shadow-sm dark:shadow-none backdrop-blur-md"
-      aria-labelledby="offerings-heading"
+    <AccordionSection
+      as="section"
+      titleId="offerings-heading"
+      title={t.offeringsTitle}
+      open={isDrawerOpen}
+      onToggle={toggleDrawer}
+      className="mt-8"
+      bodyClassName="p-6 sm:p-8"
     >
-      {/* Same flat single-card shape as KillerEquipmentSection: one bordered
-          card, header+count+chevron on top, category control and grid
-          directly inside — no nested card and no border-straddling tab
-          strip, so the two sections read as one visual family. */}
-      <CollapsibleDrawer
-        open={isDrawerOpen}
-        onOpenChange={setDrawerOpen}
-        headerClassName="pb-4 mb-6 border-b border-border-color"
-        header={
-          <div className="flex items-center gap-3">
-            <div
-              className={`flex h-10 w-10 items-center justify-center rounded-card border ${
-                isKiller
-                  ? 'bg-accent-red/10 text-accent-red border-accent-red/20'
-                  : 'bg-accent-green/10 text-accent-green border-accent-green/20'
-              }`}
-            >
-              <Gift className="h-5 w-5" />
-            </div>
-            <div>
-              <SectionHeading>
-                {t.offeringsTitle}
-                <Badge
-                  tone={isKiller ? 'red' : 'green'} size="sm" plain
-                >
-                  {offerings.length}
-                </Badge>
-              </SectionHeading>
-            </div>
-          </div>
-        }
-      >
         {/* Below sm, this dropdown is the only category control — it
             replaces the tab strip entirely rather than sitting next to it. */}
         <div className="sm:hidden mb-4">
@@ -337,7 +306,6 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
             onSelect={setSelectedCategory}
             ariaLabel={t.offeringCategories}
             accent={isKiller ? 'red' : 'green'}
-            countLabel={`(${sortedAndFilteredOfferings.length})`}
           />
         </div>
 
@@ -357,9 +325,6 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
               value: cat.key,
               label: cat.label,
               icon: <Icon className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />,
-              // The count only shows on the selected tab, same idea as the
-              // mobile dropdown's countLabel.
-              count: selectedCategory === cat.key ? sortedAndFilteredOfferings.length : undefined,
               buttonProps: { ...tip(`${cat.label} - ${cat.desc}`, undefined, 'default'), 'aria-label': `${cat.label} - ${cat.desc}` },
             };
           })}
@@ -403,8 +368,7 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
             })}
           </div>
         )}
-      </CollapsibleDrawer>
-    </Surface>
+    </AccordionSection>
   );
 };
 

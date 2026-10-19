@@ -3,7 +3,6 @@
 import { Tabs } from '@/components/common/Tabs';
 import React, { useMemo } from 'react';
 import {
-  Package,
   ShieldAlert,
   Heart,
   Wrench,
@@ -23,17 +22,13 @@ import {
   CharacterDetailDictionary,
 } from '../types';
 import { CategoryPicker } from './CategoryPicker';
-import { CollapsibleDrawer } from './CollapsibleDrawer';
 import { toTitleCase } from '@/utils/textCase';
 import { usePersistentString } from '@/hooks/usePersistentString';
 import { usePersistentDrawer } from '@/hooks/usePersistentDrawer';
 
 import { tip } from '@/components/common/Tooltip';
 import { EmptyState } from '@/components/common/EmptyState';
-import { Badge } from '@/components/common/Badge';
-import { Surface } from '@/components/common/Surface';
-import { IconTile } from '@/components/common/IconTile';
-import { SectionHeading } from '@/components/common/SectionHeading';
+import { AccordionSection } from '@/components/common/AccordionSection';
 interface SurvivorEquipmentSectionProps {
   items?: EquipmentItem[];
   addons?: (AddonItem | EquipmentItem)[];
@@ -132,7 +127,7 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
     'medkit',
     isSurvivorCategoryKey
   );
-  const [isDrawerOpen, , setDrawerOpen] = usePersistentDrawer('lemondbd_drawer_survivor_items', true);
+  const [isDrawerOpen, toggleDrawer] = usePersistentDrawer('lemondbd_drawer_survivor_items', true);
 
   const categories = useMemo(
     () => [
@@ -174,32 +169,15 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
   }, [items, addons, selectedCategory]);
 
   return (
-    <Surface
-      as="section" padding="lg" className="mt-8 shadow-sm dark:shadow-none backdrop-blur-md"
-      aria-labelledby="survivor-equipment-heading"
+    <AccordionSection
+      as="section"
+      titleId="survivor-equipment-heading"
+      title={t.equipmentTitleSurvivor}
+      open={isDrawerOpen}
+      onToggle={toggleDrawer}
+      className="mt-8"
+      bodyClassName="p-6 sm:p-8"
     >
-      {/* Same flat single-card shape as KillerEquipmentSection/OfferingsSection:
-          one bordered card, header+count+chevron on top. */}
-      <CollapsibleDrawer
-        open={isDrawerOpen}
-        onOpenChange={setDrawerOpen}
-        headerClassName="pb-4 mb-6 border-b border-border-color"
-        header={
-          <div className="flex items-center gap-3">
-            <IconTile tone="green" size="sm">
-              <Package className="h-5 w-5" />
-            </IconTile>
-            <div>
-              <SectionHeading id="survivor-equipment-heading">
-                {t.equipmentTitleSurvivor}
-                <Badge tone="green" size="sm" plain>
-                  {items.length + addons.length}
-                </Badge>
-              </SectionHeading>
-            </div>
-          </div>
-        }
-      >
       <div className="space-y-4">
       <div className="flex flex-col md:flex-row gap-4 items-stretch">
         <Tabs
@@ -209,7 +187,7 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
           panels={false}
           variant="pill"
           accent="green"
-          className="hidden sm:flex md:flex-col md:items-stretch md:overflow-x-visible justify-start gap-2 p-2 rounded-card bg-bg-elevated border border-border-color shrink-0"
+          className="hidden sm:flex md:flex-col md:items-stretch md:overflow-x-visible justify-start gap-2 p-2 rounded-card bg-bg-elevated shrink-0"
           tabClassName="relative h-12 w-14 sm:h-14 sm:w-16 flex-col gap-0 rounded-control p-1.5"
           tabs={categories.map((cat) => {
             const Icon = cat.icon;
@@ -224,7 +202,7 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
           })}
         />
 
-        <Surface padding="none" className="flex-1 shadow-sm dark:shadow-lg overflow-hidden grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-border-color">
+        <div className="flex-1 grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-border-color">
           <div className="flex flex-col p-4">
             <div className="sm:hidden mb-3">
               <CategoryPicker
@@ -233,15 +211,11 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
                 onSelect={(key) => setSelectedCategory(key as SurvivorCategoryKey)}
                 ariaLabel={t.equipmentCategories}
                 accent="green"
-                countLabel={`(${categorizedData.displayedItems.length})`}
               />
             </div>
-            <div className="hidden sm:flex items-center justify-center border-b border-border-color pb-2.5 mb-3">
-              <h3 className="type-label-sm text-accent-green flex items-center gap-1.5">
-                <Package className="h-4 w-4" aria-hidden="true" />
-                {t.items} ({categorizedData.displayedItems.length})
-              </h3>
-            </div>
+            <h3 className="hidden sm:block text-center type-label-sm text-accent-green mb-4">
+              {t.items} ({categorizedData.displayedItems.length})
+            </h3>
 
             {categorizedData.displayedItems.length === 0 ? (
               <EmptyState variant="inline" className="flex-1 py-8 text-center" title={t.noItemsFound} />
@@ -284,23 +258,15 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
           </div>
 
           <div className="flex flex-col p-4">
-            <div className="flex items-center justify-between border-b border-border-color pb-2.5 mb-3">
-              <h3 className="type-label-sm text-text-secondary flex items-center gap-1.5">
-                <Sparkles className="h-4 w-4" aria-hidden="true" />
-                {selectedCategory === 'trial_exclusive'
-                  ? t.artifactMechanics
-                  : `${t.compatibleAddons} (${categorizedData.displayedAddons.length})`}
-              </h3>
-              {selectedCategory === 'trial_exclusive' && (
-                <span className="type-micro text-accent-amber">
-                  {t.specialTrialRules}
-                </span>
-              )}
-            </div>
+            <h3 className="text-center type-label-sm text-text-secondary mb-4">
+              {selectedCategory === 'trial_exclusive'
+                ? t.specialTrialRules
+                : `${t.compatibleAddons} (${categorizedData.displayedAddons.length})`}
+            </h3>
 
             {selectedCategory === 'trial_exclusive' ? (
-              <div className="flex-1 flex flex-col justify-center p-4 rounded-card bg-accent-amber/10 border border-accent-amber/30 text-xs space-y-3">
-                <div className="flex items-center gap-2 text-accent-amber type-card-title">
+              <div className="flex-1 flex flex-col items-center justify-center p-6 rounded-card bg-accent-amber/10 border border-accent-amber/30 text-center text-xs space-y-3">
+                <div className="flex items-center justify-center gap-2 text-accent-amber type-card-title">
                   <ShieldAlert className="h-5 w-5 shrink-0" aria-hidden="true" />
                   <span>{t.inTrialArtifactsHeading}</span>
                 </div>
@@ -353,11 +319,10 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
               </div>
             )}
           </div>
-        </Surface>
+        </div>
       </div>
       </div>
-      </CollapsibleDrawer>
-    </Surface>
+    </AccordionSection>
   );
 };
 

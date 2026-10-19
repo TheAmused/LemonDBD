@@ -51,7 +51,6 @@ export default {
   poolNoMatches: "Nothing matches your search",
   dropHere: "Drop items here",
   tierAria: "Tier {label}",
-  editTierAria: "Edit tier {label}",
   clearTierAria: "Clear tier {label}",
   showPool: "Show unranked",
   hidePool: "Hide unranked",
@@ -70,7 +69,6 @@ export default {
   showNames: "Show names",
   hideNames: "Hide names",
   addTier: "Add tier",
-  removeItem: "Remove item",
   editDetails: "Edit details",
   deleteList: "Delete list",
   deleteListTitle: "Delete this custom list?",
@@ -82,7 +80,6 @@ export default {
   scaleZoomOut: "Decrease scale",
   scaleReset: "Reset scale (100%)",
 
-  editTier: "Edit tier",
   tierLabel: "Label",
   tierColor: "Color",
   customColor: "Custom color",
@@ -94,7 +91,6 @@ export default {
   moveUp: "Move up",
   moveDown: "Move down",
   clearTier: "Clear tier",
-  deleteTier: "Delete tier",
   save: "Save",
   newTierLabel: "New",
 

@@ -51,7 +51,6 @@ export default {
   poolNoMatches: "検索に一致する項目がありません",
   dropHere: "ここに項目をドロップ",
   tierAria: "ティア {label}",
-  editTierAria: "ティア {label} を編集",
   clearTierAria: "ティア {label} をクリア",
   showPool: "未ランクを表示",
   hidePool: "未ランクを隠す",
@@ -70,7 +69,6 @@ export default {
   showNames: "名前を表示",
   hideNames: "名前を隠す",
   addTier: "ティアを追加",
-  removeItem: "項目を削除",
   editDetails: "詳細を編集",
   deleteList: "リストを削除",
   deleteListTitle: "このカスタムリストを削除しますか？",
@@ -82,7 +80,6 @@ export default {
   scaleZoomOut: "縮小",
   scaleReset: "倍率をリセット (100%)",
 
-  editTier: "ティアを編集",
   tierLabel: "ラベル",
   tierColor: "色",
   customColor: "カスタムカラー",
@@ -94,7 +91,6 @@ export default {
   moveUp: "上へ",
   moveDown: "下へ",
   clearTier: "ティアを空にする",
-  deleteTier: "ティアを削除",
   save: "保存",
   newTierLabel: "新規",
 

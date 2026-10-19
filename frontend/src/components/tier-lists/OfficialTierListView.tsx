@@ -180,7 +180,6 @@ export function OfficialTierListView({ slug, locale }: OfficialTierListViewProps
       defaultShowNames={template.kind === 'maps' || template.kind === 'custom'}
       resetMessage={template.has_default_placements ? t.resetToOfficialMessage : t.resetMessage}
       poolEmptyLabel={t.poolEmpty}
-      canEditTiers={false}
       onSave={onSave}
       editHref={isAdmin && template.kind === 'custom' ? `/${locale}/tier-lists/new?official=${encodeURIComponent(slug)}` : undefined}
       onDelete={isAdmin ? handleDeleteOfficial : undefined}

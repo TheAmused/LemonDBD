@@ -51,7 +51,6 @@ export default {
   poolNoMatches: "Nichts passt zu deiner Suche",
   dropHere: "Einträge hier ablegen",
   tierAria: "Tier {label}",
-  editTierAria: "Tier {label} bearbeiten",
   clearTierAria: "Tier {label} leeren",
   showPool: "Nicht eingestufte anzeigen",
   hidePool: "Nicht eingestufte ausblenden",
@@ -70,7 +69,6 @@ export default {
   showNames: "Namen zeigen",
   hideNames: "Namen verbergen",
   addTier: "Tier hinzufügen",
-  removeItem: "Eintrag entfernen",
   editDetails: "Details bearbeiten",
   deleteList: "Liste löschen",
   deleteListTitle: "Diese eigene Liste löschen?",
@@ -82,7 +80,6 @@ export default {
   scaleZoomOut: "Maßstab verkleinern",
   scaleReset: "Maßstab zurücksetzen (100%)",
 
-  editTier: "Tier bearbeiten",
   tierLabel: "Bezeichnung",
   tierColor: "Farbe",
   customColor: "Eigene Farbe",
@@ -94,7 +91,6 @@ export default {
   moveUp: "Nach oben",
   moveDown: "Nach unten",
   clearTier: "Tier leeren",
-  deleteTier: "Tier löschen",
   save: "Speichern",
   newTierLabel: "Neu",
 

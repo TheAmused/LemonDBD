@@ -132,7 +132,8 @@ def set_character_disabled(character_id: int):
         g.current_user.id,
         action="character_disabled" if dto.is_disabled else "character_enabled",
         target_type="character",
-        target_id=character.id,
+        # `survivor:7` / `killer:7`: the id alone names two different characters.
+        target_id=f"{character.role.lower()}:{character.id}",
         details={"name": character.name, "reason": reason},
     )
 

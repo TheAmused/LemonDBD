@@ -1,4 +1,5 @@
 # backend/app/services/user/profile.py
+import logging
 from datetime import datetime, timezone
 from typing import Any
 
@@ -8,7 +9,7 @@ from sqlalchemy import func, select
 from app.core.extensions import db
 from app.core.security import hash_password, verify_password
 from app.core.transaction import transaction
-from app.models import Killer, Survivor, User, UserShowcase
+from app.models import Killer, Perk, Survivor, User, UserShowcase
 from app.models.base import utcnow
 from app.models.user import (
     DEFAULT_KILLER_MAIN,
@@ -22,6 +23,8 @@ from app.models.user import (
     SHOWCASE_MAX_PRESTIGE,
     SHOWCASE_PLAYER_TITLES,
 )
+
+logger = logging.getLogger(__name__)
 
 #: `users.email` is a String(120); a longer address could never be stored.
 MAX_EMAIL_LENGTH = 120
@@ -308,45 +311,57 @@ def update_user_showcase(
             if isinstance(data.get("grade_rank"), str) and data["grade_rank"].strip() in SHOWCASE_GRADE_RANKS:
                 showcase.grade_rank = data["grade_rank"].strip()
 
-            if "survivor_main" in data and isinstance(data["survivor_main"], dict):
-                sm = data["survivor_main"]
-                # A key, not a copied name: renaming a character used to strand every
-                # showcase that had picked them.
-                if "character_id" in sm and str(sm["character_id"]).isdigit():
-                    showcase.survivor_main_id = int(sm["character_id"])
-                elif "character_name" in sm and isinstance(sm["character_name"], str):
-                    showcase.survivor_main_id = _resolve_main_id(Survivor, sm["character_name"])
-                if _is_number(sm.get("prestige")):
-                    showcase.survivor_main_prestige = max(0, min(SHOWCASE_MAX_PRESTIGE, int(sm["prestige"])))
-                if "perk_ids" in sm and isinstance(sm["perk_ids"], list):
-                    s_perks = [
-                        int(p) if p is not None and str(p).isdigit() else None
-                        for p in sm["perk_ids"][:4]
-                    ]
-                    while len(s_perks) < 4:
-                        s_perks.append(None)
-                    showcase.survivor_perk_ids = s_perks
-
-            if "killer_main" in data and isinstance(data["killer_main"], dict):
-                km = data["killer_main"]
-                if "character_id" in km and str(km["character_id"]).isdigit():
-                    showcase.killer_main_id = int(km["character_id"])
-                elif "character_name" in km and isinstance(km["character_name"], str):
-                    showcase.killer_main_id = _resolve_main_id(Killer, km["character_name"])
-                if _is_number(km.get("prestige")):
-                    showcase.killer_main_prestige = max(0, min(SHOWCASE_MAX_PRESTIGE, int(km["prestige"])))
-                if "perk_ids" in km and isinstance(km["perk_ids"], list):
-                    k_perks = [
-                        int(p) if p is not None and str(p).isdigit() else None
-                        for p in km["perk_ids"][:4]
-                    ]
-                    while len(k_perks) < 4:
-                        k_perks.append(None)
-                    showcase.killer_perk_ids = k_perks
-    except Exception as exc:
-        return None, f"Database error: {str(exc)}"
+            if isinstance(data.get("survivor_main"), dict):
+                _apply_main(showcase, "survivor", data["survivor_main"])
+            if isinstance(data.get("killer_main"), dict):
+                _apply_main(showcase, "killer", data["killer_main"])
+    except Exception:
+        # The exception (SQL, parameters) stays in the log; the client gets a plain message.
+        logger.exception(f"Saving the showcase of user {user_id} failed")
+        return None, "The showcase could not be saved. Please try again."
 
     return showcase.to_dict(), None
+
+
+def _apply_main(showcase: UserShowcase, side: str, main: dict[str, Any]) -> None:
+    """Apply one main (`survivor` / `killer`): character, prestige and four perk slots.
+
+    A character id must name a row of that side's table, and each perk id a perk of that role;
+    anything else is ignored (an unknown id used to be stored as sent -- and a dangling character
+    key failed the whole save on the foreign key).
+    """
+    model = Survivor if side == "survivor" else Killer
+    role = "Survivor" if side == "survivor" else "Killer"
+
+    # A key, not a copied name: renaming a character used to strand every showcase that had picked them.
+    character_id = _positive_int(main.get("character_id"))
+    if character_id is not None:
+        if db.session.get(model, character_id) is not None:
+            setattr(showcase, f"{side}_main_id", character_id)
+    elif isinstance(main.get("character_name"), str):
+        setattr(showcase, f"{side}_main_id", _resolve_main_id(model, main["character_name"]))
+
+    if _is_number(main.get("prestige")):
+        setattr(showcase, f"{side}_main_prestige", max(0, min(SHOWCASE_MAX_PRESTIGE, int(main["prestige"]))))
+
+    if isinstance(main.get("perk_ids"), list):
+        wanted = [_positive_int(p) for p in main["perk_ids"][:4]]
+        known = set(db.session.scalars(
+            select(Perk.id).where(Perk.id.in_([p for p in wanted if p is not None]), Perk.role == role)
+        ).all()) if any(p is not None for p in wanted) else set()
+        slots = [p if p in known else None for p in wanted]
+        slots += [None] * (4 - len(slots))
+        setattr(showcase, f"{side}_perk_ids", slots)
+
+
+def _positive_int(value: Any) -> int | None:
+    if isinstance(value, bool):
+        return None
+    if isinstance(value, int):
+        return value if value > 0 else None
+    if isinstance(value, str) and value.strip().isdigit():
+        return int(value.strip()) or None
+    return None
 
 
 

@@ -141,7 +141,7 @@ class TestAuthDecoratorsAndUserExtraction:
         assert data["user_id"] == 7
         assert data["role"] == "user"
 
-    def test_login_required_success_via_query_token(self, test_flask_app: Flask, monkeypatch: pytest.MonkeyPatch) -> None:
+    def test_login_required_ignores_a_query_token(self, test_flask_app: Flask, monkeypatch: pytest.MonkeyPatch) -> None:
         mock_user = User(
             id=12,
             username="meg_thomas",
@@ -158,7 +158,10 @@ class TestAuthDecoratorsAndUserExtraction:
         monkeypatch.setattr(security.db.session, "get", lambda model, pk: mock_user if pk == 12 else None)
 
         client = test_flask_app.test_client()
+        # A token in the URL is never accepted (it would end up in logs and Referer headers).
         response = client.get(f"/api/protected?token={token}")
+        assert response.status_code == 401
+        response = client.get("/api/protected", headers={"Authorization": f"Bearer {token}"})
         assert response.status_code == 200
         data = response.get_json()
         assert data["user_id"] == 12

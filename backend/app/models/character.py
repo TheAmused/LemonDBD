@@ -147,7 +147,16 @@ class _CharacterMixin(TranslatableModelMixin):
             if not (type(c) is type(self) and c.id == self.id)
         ]
 
-    def _base_dict(self, lang: str | None = None) -> dict[str, Any]:
+    def to_list_dict(self, lang: str | None = None) -> dict[str, Any]:
+        """One row of a roster (`/characters`, a user's ownership list): everything a grid, picker
+        or ownership screen reads, and none of the heavy or detail-only fields.
+
+        Left out on purpose: `lore` and `translations` (the lore again in four more languages --
+        together about 2 MB for the 98 characters, against ~21 KB for the rest),
+        `dlc_counterparts` (a lazy load of the chapter's other characters, per row) and
+        `emoji_riddle` (the answer key of the emoji minigame). `to_dict` still has all of them for
+        the detail page.
+        """
         chapter = self.chapter
         return {
             "id": self.id,
@@ -158,7 +167,6 @@ class _CharacterMixin(TranslatableModelMixin):
             "category": self.role,
             "gender": self.gender,
             "height": getattr(self, "height", "Average") or "Average",
-            "emoji_riddle": self.emoji_riddle,
             "code_prefix": self.code_prefix,
             "portrait_url": self.portrait_url,
             "real_name": self.real_name or self.name,
@@ -173,6 +181,12 @@ class _CharacterMixin(TranslatableModelMixin):
             "disabled_reason": self.disabled_reason,
             "release_year": (chapter.release_year if chapter else None) or 2016,
             "release_date": chapter.format_release_date(chapter.release_date) if chapter else "",
+        }
+
+    def _base_dict(self, lang: str | None = None) -> dict[str, Any]:
+        return {
+            **self.to_list_dict(lang),
+            "emoji_riddle": self.emoji_riddle,
             "dlc_counterparts": self.dlc_counterparts,
             "lore": self.localized(lang, "lore", self.lore or ""),
             "translations": self.translations or {},

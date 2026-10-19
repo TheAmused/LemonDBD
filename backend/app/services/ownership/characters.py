@@ -107,7 +107,7 @@ def fetch_user_characters(
 
     result = []
     for role_key, row in rows:
-        data = row.to_dict(lang=lang)
+        data = row.to_list_dict(lang=lang)
         # No user means the catalogue view, where everything reads as owned.
         data["is_owned"] = owned.get((role_key, row.id), True) if user_id else True
         data["is_free"] = row.id in _FREE_BY_ROLE[role_key]

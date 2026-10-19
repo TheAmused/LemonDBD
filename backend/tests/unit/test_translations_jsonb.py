@@ -211,4 +211,7 @@ class TestTranslationsJSONB:
         found_clown = next((c for c in char_data if c["id"] == killer_id), None)
         assert found_clown is not None
         assert found_clown["name"] == "Klaun"
-        assert found_clown["power"]["name"] == "Tonik Poprawiający Nastrój"
+        # Roster rows are light (no power block); the translated power is on the detail page.
+        assert "power" not in found_clown
+        detail = client.get(f"/api/v1/characters/{found_clown['slug']}/detail?lang=pl").get_json()["data"]
+        assert detail["character"]["power"]["name"] == "Tonik Poprawiający Nastrój"

@@ -44,11 +44,7 @@ def fetch_characters(service: Any = None, category: str | None = None, lang: str
             # `release_number` is the primary key now, so the CASE that pushed
             # NULL and 0 release numbers to the end of the list has nothing
             # left to guard against: ordering by id is the same order.
-            stmt = (
-                select(model)
-                .options(joinedload(model.perks))
-                .order_by(model.id.asc(), model.name.asc())
-            )
+            stmt = select(model).order_by(model.id.asc(), model.name.asc())
             characters.extend(_run_characters_query(stmt))
 
         if len(models) > 1:
@@ -68,7 +64,7 @@ def fetch_characters(service: Any = None, category: str | None = None, lang: str
                 f"of size {len(chars_cache)}"
             )
         if characters:
-            res = [c.to_dict(lang=lang) for c in characters]
+            res = [c.to_list_dict(lang=lang) for c in characters]
             catalog_cache.set(cache_key, res, ttl=120.0)
             return res
     except Exception:

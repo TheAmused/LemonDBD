@@ -26,7 +26,7 @@ export const LoreModal: React.FC<LoreModalProps> = ({
       onClose={onClose}
       variant="dialog"
       size="2xl"
-      title={`${character.name} ${t.emDashSeparator || '—'} ${t.loreTitle}`}
+      title={t.loreTitle}
       closeButtonAriaLabel={t.close}
       padded
       bodyClassName="space-y-4 text-sm leading-relaxed text-text-secondary"

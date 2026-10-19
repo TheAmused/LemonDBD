@@ -11,7 +11,7 @@ import {
   OfferingItem,
   formatLocalizedReleaseDate,
 } from './types';
-import { CharacterBreadcrumbs } from './components/CharacterBreadcrumbs';
+import { CharacterTopBar } from './components/CharacterTopBar';
 import { CharacterHeroAvatar } from './components/CharacterHeroAvatar';
 import { CharacterPerksSection } from './components/CharacterPerksSection';
 import { SurvivorEquipmentSection } from './components/SurvivorEquipmentSection';
@@ -53,10 +53,9 @@ export const SurvivorDetailView: React.FC<CharacterViewBaseProps> = ({ currentLo
 
   return (
     <article className="space-y-8 animate-in fade-in duration-300 w-full" aria-label={character.name}>
-      <CharacterBreadcrumbs
+      <CharacterTopBar
         currentLocale={currentLocale}
         character={character}
-        roleLabel={t.roleSurvivor || ''}
         isSurvivor={true}
         allCharacters={allCharacters}
         t={t}
@@ -79,7 +78,7 @@ export const SurvivorDetailView: React.FC<CharacterViewBaseProps> = ({ currentLo
                 {character.name}
               </h1>
               {character.real_name && character.real_name !== character.name && (
-                <p className="type-strong-fluid text-text-secondary mt-0.5">
+                <p className="type-strong-fluid text-text-secondary mt-1.5">
                   {t.realName || ''}:{' '}
                   <span className="text-text-primary">{character.real_name}</span>
                 </p>

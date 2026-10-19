@@ -1,7 +1,6 @@
 'use client';
 // frontend/src/components/character-detail/components/KillerEquipmentSection.tsx
 import React, { useMemo } from 'react';
-import { Flame } from 'lucide-react';
 import {
   AddonItem,
   EquipmentItem,
@@ -11,13 +10,9 @@ import {
   CharacterDetailDictionary,
 } from '../types';
 import { tip } from '@/components/common/Tooltip';
-import { CollapsibleDrawer } from './CollapsibleDrawer';
 import { toTitleCase } from '@/utils/textCase';
 import { usePersistentDrawer } from '@/hooks/usePersistentDrawer';
-import { Badge } from '@/components/common/Badge';
-import { Surface } from '@/components/common/Surface';
-import { IconTile } from '@/components/common/IconTile';
-import { SectionHeading } from '@/components/common/SectionHeading';
+import { AccordionSection } from '@/components/common/AccordionSection';
 
 interface KillerEquipmentSectionProps {
   addons?: (AddonItem | EquipmentItem)[];
@@ -32,7 +27,7 @@ export const KillerEquipmentSection: React.FC<KillerEquipmentSectionProps> = ({
   onSelectEquipment,
   t,
 }) => {
-  const [isDrawerOpen, , setDrawerOpen] = usePersistentDrawer('lemondbd_drawer_killer_addons', true);
+  const [isDrawerOpen, toggleDrawer] = usePersistentDrawer('lemondbd_drawer_killer_addons', true);
 
   const sortedAddons = useMemo(() => {
     return [...addons].sort((a, b) => {
@@ -43,48 +38,20 @@ export const KillerEquipmentSection: React.FC<KillerEquipmentSectionProps> = ({
     });
   }, [addons]);
 
-  if (!addons || addons.length === 0) {
-    return (
-      <Surface as="section" padding="lg" className="mt-8 shadow-sm dark:shadow-none backdrop-blur-md">
-        <div className="flex items-center gap-3 border-b border-border-color pb-4 mb-6">
-          <IconTile tone="red" size="sm">
-            <Flame className="h-5 w-5" />
-          </IconTile>
-          <div>
-            <SectionHeading as="h3">
-              {t.equipmentTitleKiller}
-            </SectionHeading>
-          </div>
-        </div>
+  return (
+    <AccordionSection
+      as="section"
+      title={t.equipmentTitleKiller}
+      open={isDrawerOpen}
+      onToggle={toggleDrawer}
+      className="mt-8"
+      bodyClassName="p-6 sm:p-8"
+    >
+      {sortedAddons.length === 0 ? (
         <div className="py-8 text-center text-xs text-text-muted">
           {t.noEquipment}
         </div>
-      </Surface>
-    );
-  }
-
-  return (
-    <Surface as="section" padding="lg" className="mt-8 shadow-sm dark:shadow-none backdrop-blur-md">
-      <CollapsibleDrawer
-        open={isDrawerOpen}
-        onOpenChange={setDrawerOpen}
-        headerClassName="pb-4 mb-6 border-b border-border-color"
-        header={
-          <div className="flex items-center gap-3">
-            <IconTile tone="red" size="sm">
-              <Flame className="h-5 w-5" />
-            </IconTile>
-            <div>
-              <SectionHeading as="h3">
-                {t.equipmentTitleKiller}
-                <Badge tone="red" size="sm" plain>
-                  {addons.length}
-                </Badge>
-              </SectionHeading>
-            </div>
-          </div>
-        }
-      >
+      ) : (
         <div className="flex flex-wrap items-center justify-center gap-3">
           {sortedAddons.map((item, idx) => {
             const iconSrc = getAssetUrl(backendBase, item.icon_local_path, item.icon_url);
@@ -111,8 +78,8 @@ export const KillerEquipmentSection: React.FC<KillerEquipmentSectionProps> = ({
             );
           })}
         </div>
-      </CollapsibleDrawer>
-    </Surface>
+      )}
+    </AccordionSection>
   );
 };
 

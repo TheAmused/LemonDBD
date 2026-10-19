@@ -29,7 +29,7 @@ export const CharacterPerksSection: React.FC<CharacterPerksSectionProps> = ({
   if (perks.length === 0) return null;
 
   return (
-    <div className="mt-auto grid w-full grid-cols-fit-perk gap-4 pt-2 sm:gap-6">
+    <div className="my-auto grid w-full grid-cols-fit-perk gap-4 pt-2 sm:gap-6">
       {perks.map((perk, idx) => {
         const iconSrc = getAssetUrl(backendBase, perk.icon_local_path, perk.icon_url);
 
@@ -51,7 +51,7 @@ export const CharacterPerksSection: React.FC<CharacterPerksSectionProps> = ({
                   icon_local_path: perk.icon_local_path || '',
                 })
               }
-              className="flex w-full max-w-44 flex-col items-center gap-2 rounded-control p-1 transition-all duration-300"
+              className="flex w-full max-w-40 flex-col items-center gap-2 rounded-control p-1 transition-all duration-300"
               aria-label={`${perk.name} - ${t.clickToInspect}`}
             >
               <img
@@ -65,7 +65,7 @@ export const CharacterPerksSection: React.FC<CharacterPerksSectionProps> = ({
                   (e.target as HTMLImageElement).style.display = 'none';
                 }}
               />
-              <span className="line-clamp-2 text-center type-strong text-text-secondary">{perk.name}</span>
+              <span className="line-clamp-2 min-h-10 text-center type-card-title text-text-primary">{perk.name}</span>
             </TileButton>
 
             {perk.is_disabled && (

@@ -22,9 +22,22 @@ def serve_thumb(subdir: str, rel: str, width: int, aspect: float = 2.0):
     thumb = (root / THUMB_ROOT / str(width) / rel).with_suffix(".webp")
     if not thumb.is_file() or thumb.stat().st_mtime < source.stat().st_mtime:
         thumb.parent.mkdir(parents=True, exist_ok=True)
+        import tempfile
+        import os
         with Image.open(source) as img:
             img.thumbnail((width, int(width * aspect)))
-            img.save(thumb, "WEBP", quality=82, method=4)
+            tmp_fd, tmp_path = tempfile.mkstemp(dir=thumb.parent, prefix="thumb_", suffix=".tmp")
+            try:
+                with os.fdopen(tmp_fd, "wb") as f:
+                    img.save(f, "WEBP", quality=82, method=4)
+                os.replace(tmp_path, thumb)
+            except Exception:
+                if os.path.exists(tmp_path):
+                    try:
+                        os.unlink(tmp_path)
+                    except OSError:
+                        pass
+                raise
 
     response = send_file(thumb, mimetype="image/webp", max_age=60 * 60 * 24 * 30)
     response.headers["Cache-Control"] = "public, max-age=2592000"

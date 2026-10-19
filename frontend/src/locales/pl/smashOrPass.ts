@@ -294,6 +294,8 @@ export default {
     soundsDesc: 'Dźwięki przy przesuwaniu, smashu i passie.',
     music: 'Muzyka',
     musicDesc: 'Muzyka w tle podczas gry.',
+    nsfw: 'Zawartość NSFW',
+    nsfwDesc: 'Wyświetlaj treści dla dorosłych i 18+ w całym serwisie.',
     reducedMotion: 'Twoje urządzenie prosi o ograniczenie ruchu, więc efekty są domyślnie wyłączone.',
     saved: 'Twój wybór zapisujemy na tym urządzeniu, a po zalogowaniu także na koncie.',
     continue: 'Dalej',

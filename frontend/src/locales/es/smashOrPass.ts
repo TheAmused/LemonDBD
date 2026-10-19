@@ -278,6 +278,8 @@ export default {
     soundsDesc: 'Sonidos al deslizar, hacer smash y pasar.',
     music: 'Música',
     musicDesc: 'Música de fondo mientras juegas.',
+    nsfw: 'Contenido NSFW',
+    nsfwDesc: 'Mostrar contenido para adultos y 18+ en todo el sitio.',
     reducedMotion: 'Tu dispositivo pide menos movimiento, así que los efectos empiezan desactivados.',
     saved: 'Tu elección se guarda en este dispositivo y, si has iniciado sesión, también en tu cuenta.',
     continue: 'Continuar',

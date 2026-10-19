@@ -5,6 +5,7 @@ import { Modal } from '@/components/common/Modal';
 import { Switch } from '@/components/common/Switch';
 import { useDictionary } from '@/context/DictionaryContext';
 import { prefersReducedMotion, type SmashPrefs } from './smashPrefs';
+import { useGlobalNsfwPreference, markNsfwOnboardingComplete } from '@/utils/nsfwAck';
 
 type Choice = Omit<SmashPrefs, 'chosenAt'>;
 
@@ -42,11 +43,17 @@ function ChoiceRow({ label, description, checked, onChange }: ChoiceRowProps) {
 export function EffectsPreferenceModal({ isOpen, mandatory, values, onChange, onClose }: EffectsPreferenceModalProps) {
   const dict = useDictionary();
   const text = dict.smashOrPass.effectsPrefs;
+  const [nsfw, setNsfw] = useGlobalNsfwPreference();
+
+  const handleClose = () => {
+    markNsfwOnboardingComplete();
+    onClose();
+  };
 
   return (
     <Modal
       isOpen={isOpen}
-      onClose={onClose}
+      onClose={handleClose}
       variant="dialog"
       size="md"
       layer="top"
@@ -58,7 +65,7 @@ export function EffectsPreferenceModal({ isOpen, mandatory, values, onChange, on
       testId="smash-effects-preferences"
       footerClassName="justify-center"
       footer={
-        <Button variant="primary" size="md" data-autofocus onClick={onClose} className="w-full sm:w-auto sm:min-w-40">
+        <Button variant="primary" size="md" data-autofocus onClick={handleClose} className="w-full sm:w-auto sm:min-w-40">
           {text.continue}
         </Button>
       }
@@ -87,6 +94,12 @@ export function EffectsPreferenceModal({ isOpen, mandatory, values, onChange, on
             description={text.musicDesc}
             checked={values.music}
             onChange={(music) => onChange({ music })}
+          />
+          <ChoiceRow
+            label={text.nsfw ?? dict.tierLists.nsfw.label}
+            description={text.nsfwDesc ?? dict.tierLists.nsfw.hint}
+            checked={nsfw}
+            onChange={setNsfw}
           />
         </div>
         {mandatory && prefersReducedMotion() && (

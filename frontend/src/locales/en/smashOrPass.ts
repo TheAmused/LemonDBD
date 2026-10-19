@@ -278,6 +278,8 @@ export default {
     soundsDesc: 'Swipe, smash and pass sounds.',
     music: 'Music',
     musicDesc: 'Background music while you play.',
+    nsfw: 'NSFW content',
+    nsfwDesc: 'Show mature and 18+ content across the site.',
     reducedMotion: 'Your device asks for reduced motion, so effects start switched off.',
     saved: 'Your choice is saved on this device, and on your account when you are signed in.',
     continue: 'Continue',

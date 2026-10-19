@@ -10,17 +10,31 @@ import { useDictionary } from '@/context/DictionaryContext';
 import { TIER_LIST_LIMITS } from '@/utils/tierLists/constants';
 
 /** Reads a file's raw bytes back out as a `data:...;base64,...` URL. */
-function fileToDataUrl(file: File): Promise<string | null> {
-  return new Promise((resolve) => {
-    if (typeof FileReader === 'undefined') {
-      resolve(null);
-      return;
+async function fileToDataUrl(file: File): Promise<string | null> {
+  try {
+    if (typeof file.arrayBuffer === 'function') {
+      const bytes = new Uint8Array(await file.arrayBuffer());
+      if (typeof Buffer !== 'undefined') {
+        return `data:${file.type};base64,${Buffer.from(bytes).toString('base64')}`;
+      }
+      let binary = '';
+      for (let i = 0; i < bytes.byteLength; i++) {
+        binary += String.fromCharCode(bytes[i]);
+      }
+      return `data:${file.type};base64,${btoa(binary)}`;
     }
-    const reader = new FileReader();
-    reader.onload = () => resolve(typeof reader.result === 'string' ? reader.result : null);
-    reader.onerror = () => resolve(null);
-    reader.readAsDataURL(file);
-  });
+  } catch {
+    // fallback to FileReader
+  }
+  if (typeof FileReader !== 'undefined') {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(typeof reader.result === 'string' ? reader.result : null);
+      reader.onerror = () => resolve(null);
+      reader.readAsDataURL(file);
+    });
+  }
+  return null;
 }
 
 /**

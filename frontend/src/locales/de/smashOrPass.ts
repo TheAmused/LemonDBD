@@ -278,6 +278,8 @@ export default {
     soundsDesc: 'Klänge beim Wischen, Smashen und Passen.',
     music: 'Musik',
     musicDesc: 'Hintergrundmusik während des Spiels.',
+    nsfw: 'NSFW-Inhalte',
+    nsfwDesc: 'Inhalte für Erwachsene (18+) auf der gesamten Website anzeigen.',
     reducedMotion: 'Dein Gerät verlangt reduzierte Bewegung, daher sind die Effekte zunächst ausgeschaltet.',
     saved: 'Deine Auswahl wird auf diesem Gerät gespeichert und, wenn du angemeldet bist, auch in deinem Konto.',
     continue: 'Weiter',

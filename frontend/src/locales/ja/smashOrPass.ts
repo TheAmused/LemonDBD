@@ -278,6 +278,8 @@ export default {
     soundsDesc: 'スワイプ、スマッシュ、パスの効果音。',
     music: '音楽',
     musicDesc: 'プレイ中のBGM。',
+    nsfw: 'NSFWコンテンツ',
+    nsfwDesc: 'サイト全体で成人向け（18+）コンテンツを表示します。',
     reducedMotion: 'お使いの端末は動きの軽減を求めているため、エフェクトは最初はオフになっています。',
     saved: '選択はこの端末に保存され、ログイン中はアカウントにも保存されます。',
     continue: '続ける',

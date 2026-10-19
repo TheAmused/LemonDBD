@@ -26,8 +26,12 @@ import { useDictionary } from "@/context/DictionaryContext";
 import { Badge } from '@/components/common/Badge';
 import { AccordionSection } from '@/components/common/AccordionSection';
 import { Switch } from '@/components/common/Switch';
-import { useGlobalNsfwPreference } from '@/utils/nsfwAck';
+import { useGlobalNsfwPreference, hasSeenNsfwOnboarding } from '@/utils/nsfwAck';
 
+const NsfwOnboardingModal = dynamic(
+  () => import('@/components/common/NsfwOnboardingModal').then((m) => m.NsfwOnboardingModal),
+  { ssr: false }
+);
 const AuthModal = dynamic(() => import('@/components/AuthModal').then((m) => m.AuthModal), { ssr: false });
 
 interface TierListHubProps {
@@ -54,6 +58,13 @@ export function TierListHub({ locale }: TierListHubProps) {
   const [isOfficialOpen, toggleOfficial] = usePersistentDrawer('lemondbd_drawer_tier_lists_official', true);
   const [isCustomOpen, toggleCustom] = usePersistentDrawer('lemondbd_drawer_tier_lists_custom', true);
   const [showNsfw, setShowNsfw] = useGlobalNsfwPreference();
+  const [onboardingOpen, setOnboardingOpen] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (!hasSeenNsfwOnboarding()) {
+      setOnboardingOpen(true);
+    }
+  }, []);
 
   // A share link lands here as `/tier-lists#import=...`. Read it once, then
   // strip it from the address bar so a reload does not re-open the dialog.
@@ -257,6 +268,11 @@ export function TierListHub({ locale }: TierListHubProps) {
           }}
         />
       )}
+
+      <NsfwOnboardingModal
+        isOpen={onboardingOpen}
+        onClose={() => setOnboardingOpen(false)}
+      />
     </div>
   );
 }

@@ -151,6 +151,7 @@ export default {
   saveFailedQuota: "Pamięć przeglądarki jest pełna, więc ta zmiana nie została zapisana. Usuń część obrazków lub list.",
   saveFailedUnavailable: "Ta przeglądarka blokuje pamięć lokalną, więc zmiany znikną po opuszczeniu strony.",
   dismiss: "Zamknij",
+  deleteFailed: "Nie udało się usunąć listy. Spróbuj ponownie.",
 
   creator: {
     pageTitle: "LemonDBD - Stwórz tier listę",
@@ -221,6 +222,7 @@ export default {
     publish: "Opublikuj",
     publishing: "Publikowanie...",
     publishFailed: "Nie udało się opublikować tej listy. Spróbuj ponownie.",
+    publishTooLarge: "Ta lista jest za duża, by ją opublikować (ponad {size} MB). Użyj linków do obrazków zamiast wgranych plików albo usuń część pozycji.",
   },
 
   reportTitle: "Zgłoś treść",

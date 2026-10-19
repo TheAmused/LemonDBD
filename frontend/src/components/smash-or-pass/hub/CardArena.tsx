@@ -28,7 +28,6 @@ interface CardArenaProps {
   onAcknowledgeNsfw: () => void;
   onVote: (vote: 'smash' | 'pass', origin?: { x: number; y: number }) => void;
   onDragUpdate: (x: number, y: number, isDragging: boolean) => void;
-  onExitComplete: () => void;
   onOpenPersona: () => void;
   onReset: () => void;
 }
@@ -54,7 +53,6 @@ export function CardArena({
   onAcknowledgeNsfw,
   onVote,
   onDragUpdate,
-  onExitComplete,
   onOpenPersona,
   onReset,
 }: CardArenaProps) {
@@ -91,7 +89,6 @@ export function CardArena({
           effectsEnabled={effectsEnabled}
           onVote={onVote}
           onDragUpdate={onDragUpdate}
-          onExitComplete={onExitComplete}
         />
       ) : (
         <DeckFinished

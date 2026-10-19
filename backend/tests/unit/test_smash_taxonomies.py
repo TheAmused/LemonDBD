@@ -31,10 +31,30 @@ def test_register_taxonomy_unauthenticated_rejected(client):
     assert res.status_code == 401
 
 
+def test_register_taxonomy_is_admin_only(client, db_session: Session):
+    """A regular account's custom terms stay in its own roster (the creator keeps
+    them locally); only an admin adds a term everyone's filter list shows."""
+    user = create_user(db_session, username="tax_user0", email="tax0@example.com")
+    headers = {"Authorization": f"Bearer {generate_token(user.id, role='user')}"}
+    res = client.post("/api/v1/smash-or-pass/taxonomies", headers=headers, json={"type": "gender", "name": "Spam"})
+    assert res.status_code == 403
+    assert "Spam" not in client.get("/api/v1/smash-or-pass/taxonomies").get_json()["data"]["genders"]
+
+
+def test_register_taxonomy_does_not_bust_the_catalog(client, db_session: Session):
+    from app.core import redis_cache
+
+    user = create_user(db_session, username="tax_user4", email="tax4@example.com", role="admin")
+    headers = {"Authorization": f"Bearer {generate_token(user.id, role='admin')}"}
+    before = redis_cache.catalog_version()
+    client.post("/api/v1/smash-or-pass/taxonomies", headers=headers, json={"type": "role", "name": "Hero2"})
+    assert redis_cache.catalog_version() == before
+
+
 def test_register_taxonomy_custom_gender(client, db_session: Session):
     """POST /taxonomies registers a custom gender like 'ABC' and reflects in GET."""
-    user = create_user(db_session, username="tax_user1", email="tax1@example.com")
-    token = generate_token(user.id, role="user")
+    user = create_user(db_session, username="tax_user1", email="tax1@example.com", role="admin")
+    token = generate_token(user.id, role="admin")
     headers = {"Authorization": f"Bearer {token}"}
 
     res = client.post(
@@ -57,8 +77,8 @@ def test_register_taxonomy_custom_gender(client, db_session: Session):
 
 def test_register_taxonomy_custom_role(client, db_session: Session):
     """POST /taxonomies registers a custom role like 'Hero'."""
-    user = create_user(db_session, username="tax_user2", email="tax2@example.com")
-    token = generate_token(user.id, role="user")
+    user = create_user(db_session, username="tax_user2", email="tax2@example.com", role="admin")
+    token = generate_token(user.id, role="admin")
     headers = {"Authorization": f"Bearer {token}"}
 
     res = client.post(
@@ -83,8 +103,8 @@ def test_register_taxonomy_custom_role(client, db_session: Session):
 
 def test_register_taxonomy_validation(client, db_session: Session):
     """POST /taxonomies rejects invalid type or empty name."""
-    user = create_user(db_session, username="tax_user3", email="tax3@example.com")
-    token = generate_token(user.id, role="user")
+    user = create_user(db_session, username="tax_user3", email="tax3@example.com", role="admin")
+    token = generate_token(user.id, role="admin")
     headers = {"Authorization": f"Bearer {token}"}
 
     res1 = client.post(

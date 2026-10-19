@@ -73,6 +73,14 @@ export default {
   copyResults: "結果を共有",
   copiedToClipboard: "試練結果をクリップボードにコピーしました！",
   revealAnswerNotice: "正解は: {answer}",
+  unknownAnswer: "不明",
+  guessFailed: "回答を判定できませんでした。接続を確認して、もう一度お試しください。",
+  nameStartsWith: "名前の頭文字: {letter}...",
+  answerFallback: {
+    realm: "レルム #{id}",
+    perk: "パーク #{id}",
+    character: "キャラクター #{id}",
+  },
 
   // Clues & Attribute Headers
   attributes: {

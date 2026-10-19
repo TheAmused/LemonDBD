@@ -22,7 +22,7 @@ const NsfwOnboardingModal = dynamic(
 );
 import { cn } from '@/utils/cn';
 import type { ChallengeDefinition } from '@/types/minigame';
-import { getCustomChallenges, deleteCustomChallenge, saveCustomChallenge, getDailyStreak, type DailyStreakData } from '@/utils/minigames/storage';
+import { getCustomChallenges, deleteCustomChallenge, saveCustomChallenge, getDailyStreak, wonDailyOn, type DailyStreakData } from '@/utils/minigames/storage';
 import { exportChallengeToJson, importChallengeFromJson } from '@/utils/minigames/jsonExportImport';
 import { buildChallengeShareUrl, encodeChallengeShare } from '@/utils/minigames/shareLink';
 import { signExportPayload } from '@/utils/contentSigning';
@@ -69,7 +69,7 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
   }, []);
 
   const todayStr = useMemo(() => new Date().toISOString().slice(0, 10), []);
-  const isCompletedToday = streakData.lastCompletedDate === todayStr;
+  const isCompletedToday = wonDailyOn(streakData, todayStr);
 
   const [pendingDeleteId, setPendingDeleteId] = useState<string | number | null>(null);
 

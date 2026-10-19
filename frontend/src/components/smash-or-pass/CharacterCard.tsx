@@ -49,7 +49,6 @@ interface CharacterCardProps {
   isExiting?: boolean;
   exitType?: 'smash' | 'pass' | null;
   initialExitOffset?: { x: number; y: number } | null;
-  onExitComplete?: () => void;
   locale?: string;
   customLabels?: RosterCustomLabels;
   rosterMode?: 'simple' | 'full';
@@ -65,7 +64,6 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
       isExiting = false,
       exitType = null,
       initialExitOffset = null,
-      onExitComplete,
       locale = 'en',
       customLabels,
       rosterMode = 'full',

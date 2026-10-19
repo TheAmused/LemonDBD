@@ -217,3 +217,25 @@ describe('tier board model', () => {
     assert.equal(removeTier(one, 'x', order), one);
   });
 });
+
+// 2026-10-19 review L10: custom lists belong to the account that made them.
+describe('custom list ownership', () => {
+ it('custom tier lists are scoped to their owner on a shared browser', async () => {
+  const storage = await import('@/utils/tierLists/storage');
+  const base = { title: 't', description: '', tiers: [{ id: 's', label: 'S', color: 's' }], items: [], placements: {}, createdAt: 1 };
+  const state = {
+    version: 1 as const,
+    rankings: {},
+    custom: {
+      a: { ...base, id: 'a', updatedAt: 1, ownerId: 1 },
+      b: { ...base, id: 'b', updatedAt: 1, ownerId: 2 },
+      legacy: { ...base, id: 'legacy', updatedAt: 1 },
+    },
+  };
+  assert.deepStrictEqual(Object.keys(storage.ownedTierListState(state, 1).custom).sort(), ['a', 'legacy']);
+  assert.deepStrictEqual(Object.keys(storage.ownedTierListState(state, 2).custom).sort(), ['b', 'legacy']);
+  assert.deepStrictEqual(Object.keys(storage.ownedTierListState(state, null).custom), []);
+  const migrated = storage.migrateTierListState({ ...state, custom: { a: { ...state.custom.a, ownerId: -3 } } });
+  assert.strictEqual(migrated.custom.a.ownerId, undefined, 'a bad owner id is dropped, not trusted');
+});
+});

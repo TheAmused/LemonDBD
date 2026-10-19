@@ -378,10 +378,11 @@ class Vote(Base):
     entity: Mapped["Entity"] = relationship("Entity", back_populates="votes")
 
     def to_dict(self) -> dict[str, Any]:
+        # No `session_id`: it is the guest's bearer secret (it authorises
+        # /session/reset), so it never leaves the server in a response.
         return {
             "id": self.id,
             "entity_id": self.entity_id,
-            "session_id": self.session_id,
             "user_id": self.user_id,
             "vote_type": self.vote_type,
             "created_at": self.created_at.isoformat() if self.created_at else None,

@@ -365,6 +365,8 @@ export default {
   maintSanctionEmailsDesc: "Versucht E-Mails zu Verwarnungen, Sperren und Banns erneut, die nicht gesendet werden konnten (alle 3 Minuten).",
   maintBanList: "Sperrumgehungsliste bereinigen",
   maintBanListDesc: "Entfernt Einträge nach Ablauf ihrer Aufbewahrungsfrist (nachts).",
+  maintMinigameSessions: "Übungs-Minispielsitzungen aufräumen",
+  maintMinigameSessionsDesc: "Löscht Übungsrunden, die älter als 24 Stunden sind (stündlich).",
   maintCache: "Katalog-Cache leeren",
   maintCacheDesc: "Liefert frische Perks, Charaktere und Karten, nachdem du die Datenbank direkt bearbeitet hast.",
   databaseTitle: "Datenbank",

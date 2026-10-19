@@ -98,34 +98,13 @@ export function useGlobalNsfwPreference(): [boolean, (enabled: boolean) => void]
   return [enabled, setEnabled];
 }
 
-const STORAGE_PREFIX = 'dbd_smash_nsfw_ack_';
-
-/** Has the viewer already clicked through the NSFW confirmation for this roster? */
-export function hasAcknowledgedNsfwRoster(rosterSlug: string): boolean {
-  const storage = getLocalStorage();
-  if (!storage || !rosterSlug) return false;
-  try {
-    return storage.getItem(`${STORAGE_PREFIX}${rosterSlug}`) === 'true';
-  } catch {
-    return false;
-  }
-}
-
-/** Record that the viewer has confirmed they want to see this roster's content. */
-export function acknowledgeNsfwRoster(rosterSlug: string): void {
-  const storage = getLocalStorage();
-  if (!storage || !rosterSlug) return;
-  try {
-    storage.setItem(`${STORAGE_PREFIX}${rosterSlug}`, 'true');
-  } catch {
-    // Storage unavailable (private browsing, quota, etc.) -- the viewer just
-    // gets re-prompted next time, which is a safe (if mildly annoying) failure
-    // mode for a content gate, not a broken one.
-  }
-}
-
 // ---------------------------------------------------------------------------
-// Tier lists and minigames: the same confirmation, keyed by what is being opened.
+// Tier lists and minigames: the AUTHOR's own flagged items.
+//
+// For viewers the global switch (above) is the only answer: confirming a gate
+// turns it on, turning it off gates everything again. The one thing remembered
+// per item is that the author just saved it, so they are not asked about their
+// own list or trial.
 // ---------------------------------------------------------------------------
 
 /** Kinds of content (besides smash or pass rosters) that can be flagged NSFW. */
@@ -137,7 +116,7 @@ function contentKey(scope: NsfwContentScope, id: string): string {
   return `${CONTENT_STORAGE_PREFIX}${scope}_${id}`;
 }
 
-/** Has the viewer already confirmed they want to open this tier list or minigame? */
+/** Did this browser's user author (save) this flagged tier list or minigame? */
 export function hasAcknowledgedNsfwContent(scope: NsfwContentScope, id: string): boolean {
   const storage = getLocalStorage();
   if (!storage || !id) return false;
@@ -148,7 +127,7 @@ export function hasAcknowledgedNsfwContent(scope: NsfwContentScope, id: string):
   }
 }
 
-/** Record the confirmation. A storage failure only means the viewer is asked again next time. */
+/** Record that the author saved it. A storage failure only means they are asked like anyone else. */
 export function acknowledgeNsfwContent(scope: NsfwContentScope, id: string): void {
   const storage = getLocalStorage();
   if (!storage || !id) return;

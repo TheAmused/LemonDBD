@@ -151,6 +151,7 @@ export default {
   saveFailedQuota: "Der Browser-Speicher ist voll, diese Änderung wurde nicht gespeichert. Entferne einige Bilder oder Listen.",
   saveFailedUnavailable: "Dieser Browser blockiert den lokalen Speicher, Änderungen bleiben nur bis zum Verlassen der Seite erhalten.",
   dismiss: "Schließen",
+  deleteFailed: "Die Liste konnte nicht gelöscht werden. Versuche es erneut.",
 
   creator: {
     pageTitle: "LemonDBD - Tierliste erstellen",
@@ -221,6 +222,7 @@ export default {
     publish: "Veröffentlichen",
     publishing: "Wird veröffentlicht...",
     publishFailed: "Diese Liste konnte nicht veröffentlicht werden. Versuch es erneut.",
+    publishTooLarge: "Diese Liste ist zu groß zum Veröffentlichen (über {size} MB). Verwende Bildlinks statt hochgeladener Bilder oder entferne einige Einträge.",
   },
 
   reportTitle: "Inhalt melden",

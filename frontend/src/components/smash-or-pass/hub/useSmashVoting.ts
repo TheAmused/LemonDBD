@@ -69,6 +69,13 @@ export function useSmashVoting({
   }, []);
 
   const voteInProgressRef = useRef(false);
+  // The guard is released when the exit ends -- normally by the exit timer below, but also when the
+  // exit is CANCELLED (a roster/filter switch or a reset lands a new feed mid-exit: resetExit clears
+  // the timer, so its callback never runs). Keying off isExiting covers both; without this a
+  // cancelled exit left the guard set and every later vote was ignored until a reload.
+  useEffect(() => {
+    if (!isExiting) voteInProgressRef.current = false;
+  }, [isExiting]);
 
   const handleVote = useCallback(
     async (vote: 'smash' | 'pass', origin?: { x: number; y: number }) => {

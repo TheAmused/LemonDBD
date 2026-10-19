@@ -248,33 +248,39 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
       ...(draft.is_nsfw ? { is_nsfw: true } : {}),
     };
 
+    // What an admin publishes (create or update). Checked against the server's request size limit
+    // first: inline (data:) images add up fast, and nginx would answer an opaque 413.
+    const officialPayload = {
+      title: payload.title,
+      description: payload.description,
+      cover_image_url: safeBackground ?? null,
+      tiers: payload.tiers.map((tier) => ({
+        id: tier.id,
+        label: tier.label,
+        color: tier.color,
+        ...(tier.backgroundImage ? { backgroundImage: tier.backgroundImage } : {}),
+      })),
+      items: payload.items.map((i) => ({
+        id: i.id,
+        name: i.name,
+        ...(i.image ? { image_url: i.image } : {}),
+      })),
+      is_nsfw: draft.is_nsfw,
+      is_active: draft.is_active ?? true,
+    };
+    if ((officialSlug || official) && isAdmin) {
+      const bytes = new TextEncoder().encode(JSON.stringify(officialPayload)).length;
+      if (bytes > TIER_LIST_LIMITS.maxPublishBytes) {
+        setPublishError(formatMessage(c.publishTooLarge, { size: Math.floor(TIER_LIST_LIMITS.maxPublishBytes / (1024 * 1024)) }));
+        return;
+      }
+    }
+
     if (officialSlug && isAdmin) {
       setPublishError(null);
       setPublishing(true);
       try {
-        await updateOfficialTierList(
-          officialSlug,
-          {
-            title: payload.title,
-            description: payload.description,
-            cover_image_url: safeBackground ?? null,
-            tiers: payload.tiers.map((tier) => ({
-              id: tier.id,
-              label: tier.label,
-              color: tier.color,
-              ...(tier.backgroundImage ? { backgroundImage: tier.backgroundImage } : {}),
-            })),
-            items: payload.items.map((i) => ({
-              id: i.id,
-              name: i.name,
-              ...(i.image ? { image_url: i.image } : {}),
-            })),
-            is_nsfw: draft.is_nsfw,
-            is_active: draft.is_active ?? true,
-          },
-          locale,
-          token
-        );
+        await updateOfficialTierList(officialSlug, officialPayload, locale, token);
         router.push(`/${locale}/tier-lists/${officialSlug}`);
       } catch (err) {
         setPublishError(err instanceof Error ? err.message : c.publishFailed);
@@ -312,28 +318,7 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
       setPublishError(null);
       setPublishing(true);
       try {
-        const created = await createOfficialTierList(
-          {
-            title: payload.title,
-            description: payload.description,
-            cover_image_url: safeBackground ?? null,
-            tiers: payload.tiers.map((tier) => ({
-              id: tier.id,
-              label: tier.label,
-              color: tier.color,
-              ...(tier.backgroundImage ? { backgroundImage: tier.backgroundImage } : {}),
-            })),
-            items: payload.items.map((i) => ({
-              id: i.id,
-              name: i.name,
-              ...(i.image ? { image_url: i.image } : {}),
-            })),
-            is_nsfw: draft.is_nsfw,
-            is_active: draft.is_active ?? true,
-          },
-          locale,
-          token
-        );
+        const created = await createOfficialTierList(officialPayload, locale, token);
         try {
           localStorage.removeItem(DRAFT_KEY);
         } catch {

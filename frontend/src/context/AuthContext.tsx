@@ -83,6 +83,7 @@ import { trackEvent } from '@/utils/analytics';
 import { blockedFromResponse, warningsFromResponse } from '@/utils/moderationResponse';
 import { acknowledgeWarning as acknowledgeWarningRequest } from '@/services/moderationApi';
 import type { BlockedInfo, UserWarning } from '@/types/moderation';
+import { resetSmashGuestStateOnLogout } from '@/utils/smashOrPass/guestSession';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -315,6 +316,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setWarnings([]);
     if (typeof window !== 'undefined') {
       setSessionFlag(false);
+      // The next person on this browser must not inherit this account's
+      // smash-or-pass session or its cached vote history.
+      resetSmashGuestStateOnLogout();
       const path = window.location.pathname;
       const localeMatch = path.match(/^\/([a-z]{2})/);
       const locale = localeMatch ? localeMatch[1] : 'en';

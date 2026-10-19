@@ -171,12 +171,9 @@ class SmashRosterAdminMixin:
         bump_catalog_version()
         from app.seeds.smash_roster_seeder import ROSTERS_DIR
 
-        path = ROSTERS_DIR / f"{roster_slug}.json"
-        if path.exists():
-            try:
-                path.unlink()
-            except OSError as err:
-                logger.warning(f"Could not delete roster seed file {path}: {err}")
+        from app.seeds.writeback import remove_seed_file
+
+        remove_seed_file(ROSTERS_DIR / f"{roster_slug}.json")
         return True
 
     @staticmethod
@@ -268,7 +265,8 @@ class SmashRosterAdminMixin:
         db.session.add(new_term)
         try:
             db.session.commit()
-            bump_catalog_version()
+            # Only this list changed: expire its own cache entry. Bumping the
+            # catalog version here invalidated every catalog response site-wide.
             redis_cache.set("smash_or_pass:taxonomies", None, ttl=1)
         except Exception as e:
             db.session.rollback()

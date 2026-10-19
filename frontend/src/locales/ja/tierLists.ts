@@ -151,6 +151,7 @@ export default {
   saveFailedQuota: "ブラウザの保存容量がいっぱいのため、この変更は保存されていません。画像やリストをいくつか削除してください。",
   saveFailedUnavailable: "このブラウザはローカルストレージをブロックしているため、変更はページを離れるまでしか保持されません。",
   dismiss: "閉じる",
+  deleteFailed: "リストを削除できませんでした。もう一度お試しください。",
 
   creator: {
     pageTitle: "LemonDBD - ティアリストを作成",
@@ -221,6 +222,7 @@ export default {
     publish: "公開",
     publishing: "公開中...",
     publishFailed: "このリストを公開できませんでした。もう一度お試しください。",
+    publishTooLarge: "このリストは大きすぎて公開できません（{size} MB超）。アップロード画像の代わりに画像リンクを使うか、項目を減らしてください。",
   },
 
   reportTitle: "コンテンツを報告",

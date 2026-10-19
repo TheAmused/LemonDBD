@@ -26,6 +26,7 @@ export default {
   maleOnly: 'Mężczyźni',
   monsters: 'Potwory i Przedwieczni',
   close: 'Zamknij',
+  resetFailed: 'Nie udało się zresetować głosów. Sprawdź połączenie i spróbuj ponownie.',
   groupByTier: 'Grupuj wg Poziomu',
   rankedList: 'Lista Rankingowa',
   sort: 'Sortuj:',

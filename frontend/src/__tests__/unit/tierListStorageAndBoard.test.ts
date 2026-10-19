@@ -17,13 +17,10 @@ import {
   subscribeTierListStore,
 } from '@/utils/tierLists/storage';
 import {
-  addTier,
   buildBoard,
   clearTier,
   moveItem,
-  moveTier,
   placementsFromBoard,
-  removeTier,
   resolveTiers,
 } from '@/utils/tierLists/board';
 import { DEFAULT_TIERS, POOL_CONTAINER_ID } from '@/utils/tierLists/constants';
@@ -195,26 +192,13 @@ describe('tier board model', () => {
     assert.deepEqual(saved.s, ['a', 'hidden-perk']);
   });
 
-  it('edits the ladder', () => {
-    let state = { tiers: resolveTiers(), board: buildBoard(items, resolveTiers(), { s: ['a'], a: ['b'] }) };
-    state = addTier(state, 'God tier', '#123456', 0);
-    assert.equal(state.tiers[0].id, 'god-tier');
-    assert.deepEqual(state.board['god-tier'], []);
-
-    state = moveTier(state, 'god-tier', 1);
-    assert.equal(state.tiers[1].id, 'god-tier');
-
-    state = removeTier(state, 's', order);
-    assert.equal(state.board.s, undefined);
-    assert.deepEqual(state.board[POOL_CONTAINER_ID], ['a', 'c', 'd']);
-
-    state = clearTier(state, 'a', order);
-    assert.deepEqual(state.board[POOL_CONTAINER_ID], order);
-  });
-
-  it('never removes the last tier', () => {
-    const one = { tiers: [{ id: 'x', label: 'X', color: 's' }], board: { x: [], [POOL_CONTAINER_ID]: order } };
-    assert.equal(removeTier(one, 'x', order), one);
+  it('clearing a tier sends its items back to the pool in catalog order', () => {
+    const state = { tiers: resolveTiers(), board: buildBoard(items, resolveTiers(), { s: ['a'], a: ['b'] }) };
+    const cleared = clearTier(state, 's', order);
+    assert.deepEqual(cleared.board.s, []);
+    assert.deepEqual(cleared.board.a, ['b']);
+    assert.deepEqual(cleared.board[POOL_CONTAINER_ID], ['a', 'c', 'd']);
+    assert.equal(cleared.tiers, state.tiers, 'ranking never changes the ladder');
   });
 });
 

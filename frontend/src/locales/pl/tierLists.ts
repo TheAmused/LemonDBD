@@ -51,7 +51,6 @@ export default {
   poolNoMatches: "Nic nie pasuje do wyszukiwania",
   dropHere: "Upuść elementy tutaj",
   tierAria: "Tier {label}",
-  editTierAria: "Edytuj tier {label}",
   clearTierAria: "Wyczyść tier {label}",
   showPool: "Pokaż nieocenione",
   hidePool: "Ukryj nieocenione",
@@ -70,7 +69,6 @@ export default {
   showNames: "Pokaż nazwy",
   hideNames: "Ukryj nazwy",
   addTier: "Dodaj tier",
-  removeItem: "Usuń element",
   editDetails: "Edytuj szczegóły",
   deleteList: "Usuń listę",
   deleteListTitle: "Usunąć tę własną listę?",
@@ -82,7 +80,6 @@ export default {
   scaleZoomOut: "Pomniejsz skalę",
   scaleReset: "Resetuj skalę (100%)",
 
-  editTier: "Edytuj tier",
   tierLabel: "Etykieta",
   tierColor: "Kolor",
   customColor: "Własny kolor",
@@ -94,7 +91,6 @@ export default {
   moveUp: "W górę",
   moveDown: "W dół",
   clearTier: "Wyczyść tier",
-  deleteTier: "Usuń tier",
   save: "Zapisz",
   newTierLabel: "Nowy",
 

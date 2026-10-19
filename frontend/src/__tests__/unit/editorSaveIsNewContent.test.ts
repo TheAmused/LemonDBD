@@ -5,6 +5,9 @@
 // (`_manifest`). The moderation sweep relies on this: a copy that still carries a stamp was never
 // re-saved from an editor, so a ban on the stamped content applies to it (ranking or voting does not
 // make content new). If an editor started copying the old stamp, edited content would be purged.
+//
+// The other half of the rule: viewing a list only ranks it. Tiers and items cannot be changed from
+// the board, so a list that kept its stamp really is the stamped content, only ranked.
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
@@ -30,4 +33,17 @@ test('the minigame editor saves without a stamp', () => {
   const src = read('components/minigames/creator/MinigameCreator.tsx');
   const validate = src.slice(src.indexOf('const validateChallenge'), src.indexOf('const handleSaveToMyTrials'));
   assert.ok(validate.length > 0 && !validate.includes('_manifest'), 'the saved trial is built from the form');
+});
+
+test('viewing a tier list only ranks it: no tier or item editing on the board', () => {
+  const editor = read('components/tier-lists/TierListEditor.tsx');
+  for (const banned of ['TierEditModal', 'canEditTiers', 'onRemoveItem', 'addTier', 'updateTier', 'removeTier', 'reorderTiers']) {
+    assert.ok(!editor.includes(banned), `TierListEditor must not offer ${banned}`);
+  }
+  const board = read('components/tier-lists/TierListBoard.tsx');
+  assert.ok(!/onEditTier|onReorderTiers|canEditTiers/.test(board));
+  const view = read('components/tier-lists/CustomTierListView.tsx');
+  assert.match(view, /\(_tiers: TierDefinition\[\], placements: TierPlacements\) => update\(\{ placements \}\)/);
+  assert.ok(!view.includes('onRemoveItem'));
+  assert.ok(!view.includes('list?._manifest ?? null'), 'an import never keeps the old stamp on new content');
 });

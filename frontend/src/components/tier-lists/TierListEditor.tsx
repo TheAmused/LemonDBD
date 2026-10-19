@@ -12,7 +12,6 @@ import {
   Flag,
   MousePointerClick,
   Pencil,
-  Plus,
   RotateCcw,
   Trash2,
   Upload,
@@ -21,21 +20,9 @@ import { ConfirmModal } from '@/components/common/ConfirmModal';
 import type { TierDefinition, TierItem, TierListDocument, TierPlacements } from '@/types/tierList';
 import { usePersistentString } from '@/hooks/usePersistentString';
 import { useFinePointer } from '@/hooks/useFinePointer';
-import {
-  type BoardContainers,
-  type LadderState,
-  addTier,
-  buildBoard,
-  clearTier,
-  placementsFromBoard,
-  removeTier,
-  reorderTiers,
-  updateTier,
-} from '@/utils/tierLists/board';
-import { TIER_COLOR_TOKENS, TIER_LIST_LIMITS } from '@/utils/tierLists/constants';
+import { type BoardContainers, buildBoard, clearTier, placementsFromBoard } from '@/utils/tierLists/board';
 import { isBoardScale, type BoardScale, type BoardScaleStep } from '@/utils/tierLists/fit';
 import type { SaveResult } from '@/utils/tierLists/storage';
-import { TierEditModal } from './TierEditModal';
 import { TierListBoard } from './TierListBoard';
 import { TierListExportModal } from './TierListExportModal';
 import { type ImportTarget, TierListImportModal } from './TierListImportModal';
@@ -65,15 +52,12 @@ export interface TierListEditorProps {
   defaultShowNames: boolean;
   resetMessage: string;
   poolEmptyLabel: string;
-  /** Whether the user can add, edit, delete, or reorder tiers (true for custom lists and admins on official lists). */
-  canEditTiers?: boolean;
   onSave: (tiers: TierDefinition[], placements: TierPlacements) => SaveResult;
   onReset: () => SaveResult;
   buildExportDoc: (tiers: TierDefinition[], placements: TierPlacements) => TierListDocument;
   importTarget: ImportTarget;
   onImport: (doc: TierListDocument) => SaveResult;
-  onRemoveItem?: (key: string) => SaveResult;
-  /** Where "Edit details" sends them -- the creator, prefilled. */
+  /** Where "Edit details" sends them: the creator, prefilled. Tiers and items are only edited there. */
   editHref?: string;
   onDelete?: () => void;
   onReport?: () => void;
@@ -88,8 +72,13 @@ const isOnOff = (v: string): v is 'on' | 'off' => v === 'on' || v === 'off';
 
 /**
  * Everything around the board that official and custom lists share: header,
- * toolbar, tier editing, reset / import / export, and the "not saved"
- * notice. The page supplies the data and how to persist it.
+ * toolbar, reset / import / export, and the "not saved" notice. The page
+ * supplies the data and how to persist it.
+ *
+ * Viewing a list is for ranking it: moving items between tiers. Its content
+ * (tiers, items, title, images) is edited only in the creator ("Edit details"),
+ * which saves it as new content owned by whoever saved it. Ranking keeps the
+ * list the same content, so its author stamp and any ban on it still apply.
  */
 export function TierListEditor(props: TierListEditorProps) {
   const {
@@ -104,13 +93,11 @@ export function TierListEditor(props: TierListEditorProps) {
     defaultShowNames,
     resetMessage,
     poolEmptyLabel,
-    canEditTiers = mode === 'custom',
     onSave,
     onReset,
     buildExportDoc,
     importTarget,
     onImport,
-    onRemoveItem,
     editHref,
     onDelete,
     onReport,
@@ -122,8 +109,6 @@ export function TierListEditor(props: TierListEditorProps) {
   const [dialog, setDialog] = useState<Dialog>(null);
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
   const menuRef = React.useRef<HTMLButtonElement>(null);
-  const [editingTierId, setEditingTierId] = useState<string | null>(null);
-  const [addingTier, setAddingTier] = useState<boolean>(false);
   const [selectedKey, setSelectedKey] = useState<string | null>(null);
   const [saveError, setSaveError] = useState<'quota' | 'unavailable' | null>(null);
   // Device-wide, like the names preference; stored as '40'..'130' or 'fit'.
@@ -175,18 +160,6 @@ export function TierListEditor(props: TierListEditorProps) {
 
   const handleBoardChange = useCallback((next: BoardContainers) => commit(tiers, next), [commit, tiers]);
 
-  const applyLadder = useCallback(
-    (fn: (state: LadderState) => LadderState) => {
-      if (!canEditTiers) return;
-      const next = fn({ tiers, board });
-      const nextPlacements = placementsFromBoard(next.board, next.tiers, placements, visibleKeys);
-      report(onSave(next.tiers, nextPlacements));
-    },
-    [canEditTiers, tiers, board, placements, visibleKeys, report, onSave]
-  );
-
-  const nextColor = TIER_COLOR_TOKENS[Math.min(tiers.length, TIER_COLOR_TOKENS.length - 1)];
-  const editingIndex = tiers.findIndex((tier) => tier.id === editingTierId);
   const selectedItem = selectedKey ? itemsByKey.get(selectedKey) : undefined;
 
   const exportDoc = useMemo(
@@ -199,7 +172,7 @@ export function TierListEditor(props: TierListEditorProps) {
     kindLabel && pageTitle && kindLabel.trim().toLowerCase() === pageTitle.trim().toLowerCase()
   );
   const showKindBadge = Boolean(kindLabel && !isDuplicateKind);
-  const hasExtendedToolbar = mode === 'custom' || canEditTiers;
+  const hasExtendedToolbar = mode === 'custom';
   const secondaryLabelClass = hasExtendedToolbar ? 'sr-only' : 'hidden xl:inline short:hidden!';
 
   return (
@@ -238,18 +211,6 @@ export function TierListEditor(props: TierListEditorProps) {
           className="min-w-56 rounded-card border border-border-color bg-bg-surface p-1.5 shadow-xl"
         >
           <TierListScaleControl scale={scale} onScaleChange={setScale} variant="menu" />
-          {canEditTiers && (
-            <MenuItem role="menuitem"
-              disabled={tiers.length >= TIER_LIST_LIMITS.maxTiers}
-              onClick={() => {
-                setMenuOpen(false);
-                setAddingTier(true);
-              }}
-            >
-              <Plus className="h-4 w-4" aria-hidden="true" />
-              {t.addTier}
-            </MenuItem>
-          )}
           {!finePointer && (
             <MenuItem role="menuitem" onClick={() => { setMenuOpen(false); setShowNamesPref(showNames ? 'off' : 'on'); }}>
               {showNames ? <EyeOff className="h-4 w-4" aria-hidden="true" /> : <Eye className="h-4 w-4" aria-hidden="true" />}
@@ -307,20 +268,6 @@ export function TierListEditor(props: TierListEditorProps) {
           </div>
 
           <div role="toolbar" aria-label={t.toolbarAria} className="flex flex-nowrap items-center gap-1.5 shrink-0 justify-self-end justify-end">
-            {canEditTiers && (
-              <Button
-                variant="secondary"
-                size="sm"
-                disabled={tiers.length >= TIER_LIST_LIMITS.maxTiers}
-                onClick={() => setAddingTier(true)}
-                aria-label={t.addTier}
-                {...tip(t.addTier, undefined, 'action')}
-                className={TOOLBAR_BTN}
-              >
-                <Plus className="h-3.5 w-3.5" aria-hidden="true" />
-                <span className="hidden lg:inline short:hidden!">{t.addTier}</span>
-              </Button>
-            )}
             {!finePointer && (
               <Button
                 variant="secondary"
@@ -392,7 +339,7 @@ export function TierListEditor(props: TierListEditorProps) {
         // inline above the board and shove every tier row down the instant
         // an item was selected -- and back up on deselect -- a layout jump
         // on every tap. Floating it over the page instead keeps the tap-to-
-        // select flow (and its cancel/remove actions) working exactly as
+        // select flow (and its cancel action) working exactly as
         // before with zero effect on anything else's position.
         <div
           aria-live="polite"
@@ -401,19 +348,6 @@ export function TierListEditor(props: TierListEditorProps) {
           <Surface padding="none" className="pointer-events-auto flex max-w-xl flex-wrap items-center justify-center gap-2 border-accent-amber/40 shadow-lg px-3 py-1.5 type-card-title text-accent-amber text-center">
             <MousePointerClick className="h-4 w-4 shrink-0" aria-hidden="true" />
             <span className="min-w-0">{formatMessage(t.selectedHint, { name: selectedItem.name })}</span>
-            {mode === 'custom' && onRemoveItem && (
-              <Button
-                variant="soft"
-                onClick={() => {
-                  report(onRemoveItem(selectedItem.key));
-                  setSelectedKey(null);
-                }}
-                className={TOUCH_BTN}
-              >
-                <Trash2 className="h-4 w-4" aria-hidden="true" />
-                {t.removeItem}
-              </Button>
-            )}
             <Button variant="secondary" onClick={() => setSelectedKey(null)} className={TOUCH_BTN}>
               {t.cancelSelection}
             </Button>
@@ -426,15 +360,8 @@ export function TierListEditor(props: TierListEditorProps) {
         tiers={tiers}
         board={board}
         onBoardChange={handleBoardChange}
-        onReorderTiers={canEditTiers ? (fromId, toId) => applyLadder((s) => reorderTiers(s, fromId, toId)) : undefined}
-        // Emptying a row is just moving its items back to the pool, so every ranker gets it, not only tier editors.
+        // Emptying a row is just moving its items back to the pool: ranking, not editing.
         onClearTier={(id) => commit(tiers, clearTier({ tiers, board }, id, catalogOrder).board)}
-        onEditTier={(id) => {
-          if (!canEditTiers) return;
-          setAddingTier(false);
-          setEditingTierId(id);
-        }}
-        canEditTiers={canEditTiers}
         selectedKey={selectedKey}
         onSelectedKeyChange={setSelectedKey}
         shape={shape}
@@ -443,21 +370,6 @@ export function TierListEditor(props: TierListEditorProps) {
         poolEmptyLabel={poolEmptyLabel}
       />
 
-      {canEditTiers && (
-        <TierEditModal
-          mode={addingTier ? 'add' : 'edit'}
-          tier={!addingTier && editingIndex >= 0 ? tiers[editingIndex] : null}
-          defaultColor={nextColor}
-          tierCount={tiers.length}
-          onClose={() => {
-            setEditingTierId(null);
-            setAddingTier(false);
-          }}
-          onSave={(id, patch) => applyLadder((s) => updateTier(s, id, patch))}
-          onCreate={(patch) => applyLadder((s) => addTier(s, patch.label, patch.color, undefined, patch.backgroundImage))}
-          onDelete={(id) => applyLadder((s) => removeTier(s, id, catalogOrder))}
-        />
-      )}
 
       <ConfirmModal
         open={dialog === 'reset'}

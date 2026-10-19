@@ -57,23 +57,12 @@ export function CustomTierListView({ id, locale }: CustomTierListViewProps) {
   );
 
   const onSave = useCallback(
-    (tiers: TierDefinition[], placements: TierPlacements) => update({ tiers, placements }),
+    // Viewing a list only ranks it: the tiers come from the creator and are never changed here.
+    (_tiers: TierDefinition[], placements: TierPlacements) => update({ placements }),
     [update]
   );
 
   const onReset = useCallback(() => update({ placements: {} }), [update]);
-
-  const onRemoveItem = useCallback(
-    (key: string) => {
-      if (!list) return { ok: true } as SaveResult;
-      const placements: TierPlacements = {};
-      for (const [tierId, keys] of Object.entries(list.placements)) {
-        placements[tierId] = keys.filter((k) => k !== key);
-      }
-      return update({ items: list.items.filter((i) => i.id !== key), placements });
-    },
-    [list, update]
-  );
 
   const onImport = useCallback(
     (doc: TierListDocument) =>
@@ -86,9 +75,10 @@ export function CustomTierListView({ id, locale }: CustomTierListViewProps) {
         backgroundImage: doc.backgroundImage ?? list?.backgroundImage,
         // An import never turns the flag off: the list keeps it if either side had it.
         is_nsfw: doc.is_nsfw === true || list?.is_nsfw === true ? true : undefined,
-        _manifest: doc._manifest ?? list?._manifest ?? null,
+        // The imported document replaces the content, so its stamp replaces the old one (never the old stamp on new content).
+        _manifest: doc._manifest ?? null,
       }),
-    [list?.title, list?.description, list?.backgroundImage, list?.is_nsfw, list?._manifest, update]
+    [list?.title, list?.description, list?.backgroundImage, list?.is_nsfw, update]
   );
 
   const buildExportDoc = useCallback(
@@ -156,7 +146,6 @@ export function CustomTierListView({ id, locale }: CustomTierListViewProps) {
         buildExportDoc={buildExportDoc}
         importTarget={{ kind: 'custom' }}
         onImport={onImport}
-        onRemoveItem={onRemoveItem}
         editHref={`/${locale}/tier-lists/new?edit=${id}`}
         onDelete={onDelete}
         onReport={() => setReportModalOpen(true)}

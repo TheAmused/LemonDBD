@@ -129,8 +129,11 @@ export function OfficialTierListCard({ list, rankedCount, locale, showNsfw = tru
             src={effectiveCover}
             alt=""
             loading="lazy"
+            decoding="async"
+            draggable={false}
+            onContextMenu={(e) => e.preventDefault()}
             className={cn(
-              "h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105",
+              "h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105 select-none",
               list.is_nsfw && !showNsfw && "blur-md scale-105 select-none pointer-events-none"
             )}
           />
@@ -250,8 +253,11 @@ export function CustomTierListCard({ list, locale, onDelete, disabled, showNsfw 
             src={effectiveBackground}
             alt=""
             loading="lazy"
+            decoding="async"
+            draggable={false}
+            onContextMenu={(e) => e.preventDefault()}
             className={cn(
-              "h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105",
+              "h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105 select-none",
               list.is_nsfw && !showNsfw && "blur-md scale-105 select-none pointer-events-none"
             )}
           />

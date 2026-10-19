@@ -65,6 +65,25 @@ def test_single_character_update_needs_a_role_and_a_real_id(client: FlaskClient,
 
 
 @pytest.mark.unit
+def test_an_unverified_account_cannot_edit_its_ownership(client: FlaskClient, roster, monkeypatch) -> None:
+    import app.services.site_settings as site_settings
+
+    monkeypatch.setattr(site_settings, "email_verification_required", lambda: True)
+    user = roster["user"]
+    user.is_verified = False
+    db.session.commit()
+    body = {"updates": [{"character_id": 3, "role": "killer", "is_owned": False}]}
+    res = client.post(f"/api/v1/users/{user.id}/characters/bulk", json=body, headers=roster["headers"])
+    assert res.status_code == 403
+    assert res.get_json()["code"] == "email_not_verified"
+
+    # Reading stays open, and when verification is not required nothing changes.
+    assert client.get(f"/api/v1/users/{user.id}/characters", headers=roster["headers"]).status_code == 200
+    monkeypatch.setattr(site_settings, "email_verification_required", lambda: False)
+    assert client.post(f"/api/v1/users/{user.id}/characters/bulk", json=body, headers=roster["headers"]).status_code == 200
+
+
+@pytest.mark.unit
 def test_single_perk_update_rejects_a_junk_id(client: FlaskClient, roster) -> None:
     uid = roster["user"].id
     assert client.post(f"/api/v1/users/{uid}/perks", json={"perk_id": "abc"}, headers=roster["headers"]).status_code == 400

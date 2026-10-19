@@ -50,6 +50,20 @@ def _other_admin_confirmation_error(target, password: str | None) -> tuple[Respo
     return None
 
 
+def _unverified_owner_error(user_id: int) -> tuple[Response, int] | None:
+    """A 403 when an account edits its own ownership before verifying its email (when the site
+    requires verification). The "My characters" screen already asks for it; the API did not.
+    Admins editing someone else's ownership are not affected."""
+    curr = g.current_user
+    if curr.id != user_id or curr.is_verified:
+        return None
+    from app.services.site_settings import email_verification_required
+
+    if email_verification_required():
+        return api_error("Verify your email address before changing what you own.", 403, code="email_not_verified")
+    return None
+
+
 def _self_or_admin_error(user_id: int, message: str = "Unauthorized.") -> tuple[Response, int] | None:
     """Return a 403 response if the current user is neither `user_id` nor an
     admin, else None. Shared by every per-user route so the same access rule
@@ -261,6 +275,8 @@ def set_single_character_ownership(user_id: int):
     """Toggle or set character ownership for a single character."""
     if err_resp := _self_or_admin_error(user_id):
         return err_resp
+    if err_resp := _unverified_owner_error(user_id):
+        return err_resp
 
     data = request.get_json(silent=True) or {}
     character_id = positive_id(data.get("character_id"))
@@ -287,6 +303,8 @@ def set_single_character_ownership(user_id: int):
 def bulk_set_character_ownership(user_id: int):
     """Bulk update character ownership states."""
     if err_resp := _self_or_admin_error(user_id):
+        return err_resp
+    if err_resp := _unverified_owner_error(user_id):
         return err_resp
 
     data = request.get_json(silent=True) or {}
@@ -367,6 +385,8 @@ def set_single_perk_ownership(user_id: int):
     """Toggle or set perk unlock state for a single perk."""
     if err_resp := _self_or_admin_error(user_id):
         return err_resp
+    if err_resp := _unverified_owner_error(user_id):
+        return err_resp
 
     data = request.get_json(silent=True) or {}
     perk_id = positive_id(data.get("perk_id"))
@@ -387,6 +407,8 @@ def set_single_perk_ownership(user_id: int):
 def bulk_set_perk_ownership(user_id: int):
     """Bulk update perk unlock states."""
     if err_resp := _self_or_admin_error(user_id):
+        return err_resp
+    if err_resp := _unverified_owner_error(user_id):
         return err_resp
 
     data = request.get_json(silent=True) or {}

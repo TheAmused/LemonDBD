@@ -4,36 +4,21 @@ import { BookOpen, Flame } from 'lucide-react';
 import { KillerPowerInfo, CharacterItem, getAssetUrl, CharacterDetailDictionary } from '../types';
 import { RichText } from '@/components/common/RichText';
 import { Modal } from '@/components/common/Modal';
-import { Surface } from '@/components/common/Surface';
 
 interface KillerPowerModalProps {
   isOpen: boolean;
   onClose: () => void;
   killerPower: KillerPowerInfo;
   character: CharacterItem;
-  killerSpeed: string;
-  killerTerrorRadius: string;
-  killerHeight: string;
   backendBase: string;
   t: CharacterDetailDictionary;
 }
-
-/** One of the three numbers under the power description. */
-const MiniStat: React.FC<{ label: string; value: string; valueClass: string }> = ({ label, value, valueClass }) => (
-  <Surface padding="none" className="p-2 text-center">
-    <span className="block text-micro font-bold uppercase text-text-secondary">{label}</span>
-    <span className={`block type-strong ${valueClass} truncate`}>{value}</span>
-  </Surface>
-);
 
 export const KillerPowerModal: React.FC<KillerPowerModalProps> = ({
   isOpen,
   onClose,
   killerPower,
   character,
-  killerSpeed,
-  killerTerrorRadius,
-  killerHeight,
   backendBase,
   t,
 }) => {
@@ -67,12 +52,6 @@ export const KillerPowerModal: React.FC<KillerPowerModalProps> = ({
           )}
         </div>
       </div>
-      <div className="mt-5 px-6 py-3 bg-bg-elevated border-y border-border-color grid grid-cols-3 gap-2">
-        <MiniStat label={t.movementSpeed} value={killerSpeed} valueClass="text-text-primary" />
-        <MiniStat label={t.terrorRadius} value={killerTerrorRadius} valueClass="text-accent-red" />
-        <MiniStat label={t.height} value={killerHeight} valueClass="text-text-primary" />
-      </div>
-
       <div className="p-4 sm:p-6 space-y-4 type-body-lg text-text-secondary">
         <div className="space-y-2">
           <span className="flex items-center gap-2 type-label-sm text-text-secondary mb-2">

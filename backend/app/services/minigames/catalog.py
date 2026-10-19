@@ -20,11 +20,7 @@ def _asset_url(remote: str | None, local: str | None) -> str:
 
 
 def get_catalog(lang: str | None = None) -> dict[str, Any]:
-    """Returns full searchable catalog of characters, perks, realms, and powers.
-
-    Memoized per catalog generation, so a kill-switch toggle or re-seed shows up
-    here immediately instead of after the TTL.
-    """
+    """Returns full searchable catalog of characters, perks, realms, and powers."""
     return remember(("minigames_catalog", lang or "default"), lambda: _build_catalog(lang), ttl=_CATALOG_TTL_SECONDS)
 
 

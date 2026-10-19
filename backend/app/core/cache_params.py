@@ -1,18 +1,11 @@
 # backend/app/core/cache_params.py
 """Normalizers for the query parameters that key a `@cache_catalog` entry.
 
-A cache key built from raw query strings lets anyone mint a new full-size entry
-per request: `?sort_by=junk1`, `?sort_by=junk2` and so on all produce the same
-body the view computed for `sort_by=name`, and each is stored separately. A
-normalizer maps every raw value the view would treat the same way onto one
-string, so those requests share an entry. The rule that keeps this safe is that
-a normalizer must agree with its view: if the view clamps `limit` to 1..500, the
-normalizer clamps it to the same range, or two different responses would share
-a key.
-
-A value that cannot be normalized into a small set (an unknown category, a long
-free-text search) raises `Uncacheable`, and the request is served live without
-touching the cache, which costs one query and leaves nothing behind to flood.
+Keying on raw query strings lets `?sort_by=junk1`, `?sort_by=junk2`... each mint
+a full-size entry for the same body. A normalizer maps every value the view
+treats alike onto one string, and must agree with its view (same clamp, same
+default) or two different responses would share a key. A value that cannot be
+reduced to a small set raises `Uncacheable` and the request is served live.
 """
 from __future__ import annotations
 
@@ -33,11 +26,7 @@ class Uncacheable(Exception):
 
 
 def norm_lower(*, drop_all: bool = False, max_len: int = MAX_TEXT_LENGTH) -> Normalizer:
-    """Trimmed, lower-cased text, for parameters the view compares case-insensitively.
-
-    `drop_all` folds the literal "all" into "absent", for filters where "all"
-    means no filter.
-    """
+    """Trimmed, lower-cased text; `drop_all` folds "all" into absent."""
 
     def normalize(raw: str | None) -> str | None:
         value = (raw or "").strip().lower()
@@ -53,8 +42,7 @@ def norm_lower(*, drop_all: bool = False, max_len: int = MAX_TEXT_LENGTH) -> Nor
 def norm_choice(allowed: Collection[str], *, default: str | None = None, strict: bool = False) -> Normalizer:
     """One of `allowed` (lower-cased), otherwise `default`.
 
-    With `strict=True` an unrecognised value is `Uncacheable` instead of being
-    folded into `default`, for filters where the view answers an unknown value
+    `strict` makes an unknown value `Uncacheable`, for filters where it answers
     differently from an absent one (an unknown category selects nothing).
     """
     wanted = frozenset(allowed)
@@ -73,12 +61,11 @@ def norm_choice(allowed: Collection[str], *, default: str | None = None, strict:
 def norm_int(
     default: int, lo: int, hi: int, *, clamp_high: bool = True, absent_is_none: bool = False
 ) -> Normalizer:
-    """An integer clamped into `[lo, hi]`, with `default` for a missing or non-numeric value.
+    """An integer clamped into `[lo, hi]`, `default` when missing or non-numeric.
 
-    `clamp_high=False` makes a value above `hi` `Uncacheable` instead, for a
-    parameter the view echoes back (a page number), where clamping would store
-    the wrong echo. `absent_is_none` leaves a parameter that was not sent out of
-    the key, for views whose response shape depends on whether it was present.
+    `clamp_high=False` makes a value above `hi` `Uncacheable` (for a page number
+    the view echoes back). `absent_is_none` omits an unsent parameter from the
+    key, for views whose response shape depends on its presence.
     """
 
     def normalize(raw: str | None) -> str | None:

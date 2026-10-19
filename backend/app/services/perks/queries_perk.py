@@ -99,16 +99,11 @@ def fetch_perks(
     owned_only: bool = False,
     lang: str | None = None,
 ) -> dict[str, Any]:
-    """Execute paginated, sorted perk search with optional role and ownership filtering.
-
-    A database error propagates so `@cache_catalog` answers 5xx instead of
-    storing an empty page as the catalog for an hour.
-    """
+    """Execute paginated, sorted perk search with optional role and ownership filtering."""
     if user_id is not None or owned_only:
         return _query_perks(service, category, character, scope, search, sort_by, order, page, limit, user_id, owned_only, lang)
-    # The key holds the values the query actually uses, not the raw arguments:
-    # an unknown `sort_by` is the same query as "name", and keying on the raw
-    # string would let a caller fill the memo with copies of one page.
+    # Key on the values the query uses, not the raw arguments, so an unknown
+    # `sort_by` ("name") cannot fill the memo with copies of one page.
     allowed_sorts = getattr(service, "ALLOWED_SORT_FIELDS", ALLOWED_SORT_FIELDS)
     key = (
         "fetch_perks",
@@ -326,7 +321,7 @@ def _query_perks(
             d["is_owned"] = True
             paginated_data.append(d)
 
-    result = {
+    return {
         "data": paginated_data,
         "pagination": {
             "total": total_count,
@@ -346,4 +341,3 @@ def _query_perks(
             "owned_only": owned_only,
         },
     }
-    return result

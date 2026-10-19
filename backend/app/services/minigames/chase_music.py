@@ -13,8 +13,7 @@ from app.services.minigames.daily import update_killer_chase_music
 
 logger = logging.getLogger(__name__)
 
-#: After a failed download the wiki is left alone for this long, so a wiki outage
-#: costs one 12 s attempt per killer per window instead of one per request.
+#: After a failed download the wiki is left alone for this long.
 FAILURE_BACKOFF_SECONDS = 300
 DOWNLOAD_TIMEOUT_SECONDS = 12
 
@@ -34,11 +33,7 @@ class ChaseMusicUnavailable(Exception):
 
 
 def track_filename(killer: Killer) -> str:
-    """`killer_<id>_<name>_<url hash>.mp3`: a changed source URL is a new file.
-
-    Without the hash, repointing `chase_music_url` kept serving the old audio
-    from the file the previous URL had produced.
-    """
+    """`killer_<id>_<name>_<url hash>.mp3`, so a changed source URL is a new file."""
     slug = re.sub(r"[^a-z0-9]+", "_", killer.name.lower()).strip("_")
     digest = hashlib.sha1((killer.chase_music_url or "").encode("utf-8")).hexdigest()[:8]
     return f"killer_{killer.id}_{slug}_{digest}.mp3"
@@ -83,7 +78,6 @@ def ensure_track(killer: Killer, cache_dir: str) -> str:
         return filename
 
     with _lock_for(killer.id):
-        # Another request may have finished the download while this one waited.
         if os.path.exists(path) and os.path.getsize(path) > 0:
             return filename
         if _failed_until.get(killer.id, 0.0) > time.monotonic():

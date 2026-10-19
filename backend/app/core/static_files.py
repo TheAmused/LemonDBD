@@ -1,10 +1,8 @@
 # backend/app/core/static_files.py
 """Cache lifetimes for files under `/static` (nginx adds none of its own).
 
-Game art lives at fixed paths and a re-scrape after a patch overwrites it in
-place, so it is trusted for a day and then revalidated with the ETag Flask
-already sends (a cheap 304), not for a week. Anything a user uploaded can be
-taken down by a moderator, so its copies in browsers and CDNs are kept shorter.
+Game art sits at fixed paths and a re-scrape overwrites it, so it is revalidated
+daily. Uploads can be taken down by a moderator, so they are kept shorter.
 """
 STATIC_MAX_AGE = 60 * 60 * 24
 USER_CONTENT_MAX_AGE = 60 * 60

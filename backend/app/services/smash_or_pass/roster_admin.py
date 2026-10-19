@@ -239,8 +239,7 @@ class SmashRosterAdminMixin:
                 genders.append(default_gender)
 
         result = {"roles": roles, "genders": genders}
-        # A taxonomy registered while this read ran bumped the generation; the
-        # list built above may predate it, so it is not filed under the new one.
+        # Not stored if a taxonomy was registered while this read ran.
         if redis_cache.catalog_version(fresh=True) == version:
             redis_cache.set(cache_key, result, ttl=86400, version=version)
         return result
@@ -272,7 +271,6 @@ class SmashRosterAdminMixin:
         db.session.add(new_term)
         try:
             db.session.commit()
-            # The generation bump retires the cached taxonomy list with it.
             bump_catalog_version()
         except Exception as e:
             db.session.rollback()

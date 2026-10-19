@@ -20,11 +20,7 @@ def fetch_perk_suggestions(
     limit: int = 10,
     lang: str | None = None,
 ) -> list[dict[str, Any]]:
-    """Autocomplete suggestions for perks by name.
-
-    A database error propagates so `@cache_catalog` answers 5xx instead of
-    storing an empty list as the suggestions for an hour.
-    """
+    """Autocomplete suggestions for perks by name."""
     key = ("fetch_perk_suggestions", query.strip().lower() if query else "", category.lower() if category else "all", limit, lang)
     return remember(key, lambda: _load_perk_suggestions(query, category, limit, lang), ttl=120.0)
 

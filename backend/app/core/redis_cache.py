@@ -14,21 +14,16 @@ its own TTL. The alternative -- `KEYS`/`SCAN` with a pattern -- is O(keyspace)
 and blocks the server, which is exactly the kind of thing that looks fine on a
 laptop and falls over in production.
 
-The counter is seeded from the clock, never from a small constant. Redis runs
-without persistence, so the key vanishes on a restart; a counter that restarted
-at 1 would repeat generations the browsers still hold ETags for, and its first
-bump would be a no-op.
+The counter is seeded from the clock: Redis runs without persistence, and a
+counter restarting at 1 would repeat generations browsers still hold ETags for.
 
-**A cache must never be able to take the site down.** Every Redis call here is
-wrapped: on a failure the module logs once, trips a circuit breaker that skips
-Redis for `RETRY_AFTER_SECONDS`, and serves from the in-process fallback. A dead
-Redis makes the app slower, not broken, and it costs one timeout per
-`RETRY_AFTER_SECONDS` instead of one per request.
+**A cache must never be able to take the site down.** A failed Redis call trips
+a circuit breaker that skips Redis for `RETRY_AFTER_SECONDS` and serves from the
+in-process fallback.
 
-Two Redis instances can be configured. `REDIS_URL` is the cache and is allowed
-to evict (`allkeys-lru`). `LIMITS_REDIS_URL` holds the rate-limit counters and
-the single-use ALTCHA records, which must never be evicted by cache traffic;
-when it is unset those fall back to the cache instance.
+`REDIS_URL` is the cache and may evict. `LIMITS_REDIS_URL` holds rate-limit
+counters and single-use ALTCHA records, which cache traffic must not evict;
+unset, they use the cache instance.
 """
 from __future__ import annotations
 
@@ -86,8 +81,7 @@ class _Link:
             return None
         if self.client is not None:
             return self.client
-        # One thread connects; the others carry on with the in-process
-        # fallback instead of queueing behind a connect timeout.
+        # One thread connects; the rest use the fallback rather than queue.
         if not self.lock.acquire(blocking=False):
             return None
         try:
@@ -115,7 +109,7 @@ class _Link:
         return client
 
     def mark_down(self, exc: Exception) -> None:
-        """Skip Redis for a while; warn once per outage, not once per request."""
+        """Skip Redis for a while; warn once per outage."""
         self.down_until = time.monotonic() + RETRY_AFTER_SECONDS
         if not self.outage_logged:
             self.outage_logged = True
@@ -144,10 +138,7 @@ def get_client() -> Any:
 
 
 def get_limits_client() -> Any:
-    """The client for state that must not be evicted (ALTCHA replay records).
-
-    Falls back to the cache client when no separate instance is configured.
-    """
+    """The client for state that must not be evicted (ALTCHA replay records)."""
     return _limits_link.get()
 
 
@@ -171,12 +162,9 @@ def _read_version(client: Any) -> int:
 
 
 def catalog_version(*, fresh: bool = False) -> int:
-    """The current catalog generation. Part of every key.
+    """The current catalog generation, cached in-process for a second.
 
-    Cached in-process for a second: it is read on every cached request, and a
-    round trip per request to learn a number that changes a few times a day is
-    the sort of cost a cache is supposed to remove, not add. `fresh=True`
-    bypasses that second, for the one place where a stale answer matters.
+    `fresh=True` bypasses that second, for the check before storing a result.
     """
     global _version_cache
 

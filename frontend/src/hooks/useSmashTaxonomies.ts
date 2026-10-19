@@ -45,9 +45,7 @@ function storeTaxonomies(state: TaxonomiesState): void {
 }
 
 export function useSmashTaxonomies() {
-  // The defaults render first, on the server and in the first client render
-  // alike; the stored list is read in an effect so a browser that holds custom
-  // terms does not hydrate into different markup.
+  // Defaults first; the stored list is read in an effect to avoid a hydration mismatch.
   const [taxonomies, setTaxonomies] = useState<TaxonomiesState>(DEFAULT_STATE);
 
   useEffect(() => {
@@ -61,9 +59,7 @@ export function useSmashTaxonomies() {
       if (!res.ok) return;
       const json = await res.json();
       if (json?.data?.roles && json?.data?.genders) {
-        // Merged with this browser's own terms rather than replacing them: a
-        // role or gender added here lives in the term cache until the server
-        // list catches up, and must not vanish from the filters meanwhile.
+        // Merged, not replaced: terms added in this browser must not vanish from the filters.
         const local = readStoredTaxonomies() ?? DEFAULT_STATE;
         const next = {
           roles: withDefaults(DEFAULT_ROLES, json.data.roles, local.roles),

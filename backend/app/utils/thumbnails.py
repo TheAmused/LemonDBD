@@ -10,8 +10,7 @@ from PIL import Image
 THUMB_ROOT = "_thumbs"
 _ALLOWED = {".webp", ".png", ".jpg", ".jpeg"}
 
-#: Game art is overwritten in place by a re-scrape, so a thumbnail is revalidated
-#: daily instead of being trusted for a month.
+#: Game art is overwritten in place by a re-scrape, so revalidate daily.
 THUMB_MAX_AGE = 60 * 60 * 24
 
 _locks_guard = threading.Lock()
@@ -25,18 +24,15 @@ def _lock_for(path: Path) -> threading.Lock:
 
 
 def _thumb_path(root: Path, width: int, rel: str) -> Path:
-    # The full source name plus ".webp" ("x.png.webp"): `with_suffix` mapped
-    # x.png, x.jpg and x.webp onto one file, and whichever was generated first
-    # was then served for all of them.
+    # Full source name plus ".webp": x.png and x.webp must not share a thumbnail.
     return root / THUMB_ROOT / str(width) / f"{rel}.webp"
 
 
 def _is_current(thumb: Path, source: Path) -> bool:
     """True when the thumbnail was made from this exact version of the source.
 
-    The thumbnail's mtime is set to the source's when it is written, so a source
-    restored or copied with an old mtime (`cp -p`, unzip, git checkout) differs
-    from it as well as a newer one does.
+    Its mtime is set to the source's on write, so a source restored with an old
+    mtime differs just as a newer one does.
     """
     return thumb.is_file() and thumb.stat().st_mtime_ns == source.stat().st_mtime_ns
 

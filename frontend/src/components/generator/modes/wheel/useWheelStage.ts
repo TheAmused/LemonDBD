@@ -10,6 +10,7 @@ import { useJackpotCelebration } from '../../shared/useJackpotCelebration';
 import { drawWheel } from './wheelDrawing';
 import { pickTargetSlot } from './wheelSpin';
 import { useEmberDrift } from './useEmberDrift';
+import { pickRandomLoadout } from '../../lib/perkPicker';
 
 interface WheelStageInput {
   totalPages: number;
@@ -18,6 +19,7 @@ interface WheelStageInput {
   spinDurationSec: number;
   role: RoleCategory;
   sortedPerks: Perk[];
+  loadout: (DrawnSlot | null)[];
   activeSlotIdx: number;
   activeMutator: ChaosMutator | null;
   onWinSlot: (wonData: DrawnSlot) => void;
@@ -32,6 +34,7 @@ export function useWheelStage({
   spinDurationSec,
   role,
   sortedPerks,
+  loadout,
   activeSlotIdx,
   activeMutator,
   onWinSlot,
@@ -196,23 +199,24 @@ export function useWheelStage({
       const perkRotations = reduceMotion ? 1 : 5;
       const morphWaitMs = reduceMotion ? 100 : 250;
 
-      const targetPage = Math.floor(Math.random() * effectiveTotalPages) + 1;
+      // Exclude perks already in the current loadout (other slots) to prevent duplicates
+      const alreadyWonIds = new Set(
+        loadout ? loadout.filter((s) => s?.perk).map((s) => s!.perk.id) : []
+      );
+      const eligiblePool = sortedPerks.filter((p) => !alreadyWonIds.has(p.id));
+      const pool = eligiblePool.length > 0 ? eligiblePool : sortedPerks;
+
+      // Pick the perk first — uniform weighted sampling, then derive page/slot
+      const [targetPerkCandidate] = pickRandomLoadout(pool, activeMutator, 1);
+      const targetPerk = targetPerkCandidate || sortedPerks[0];
+      const perkIndex = sortedPerks.findIndex((p) => p.id === targetPerk.id);
+      const safeIndex = Math.max(0, perkIndex >= 0 ? perkIndex : 0);
+      const targetPage = Math.floor(safeIndex / perksPerPage) + 1;
+      const targetSlot = (safeIndex % perksPerPage) + 1;
       const maxSlotsOnPage = Math.max(
         1,
         targetPage === effectiveTotalPages ? lastPagePerks || perksPerPage : perksPerPage
       );
-
-      const pagePerksWithSlot: { slot: number; perk: Perk }[] = [];
-      for (let s = 1; s <= maxSlotsOnPage; s++) {
-        const idx = (targetPage - 1) * perksPerPage + (s - 1);
-        const perk = sortedPerks[idx];
-        if (perk) pagePerksWithSlot.push({ slot: s, perk });
-      }
-
-      const targetSlot = pickTargetSlot(pagePerksWithSlot, maxSlotsOnPage, activeMutator);
-
-      const targetIndex = (targetPage - 1) * perksPerPage + (targetSlot - 1);
-      const targetPerk = sortedPerks[targetIndex] || sortedPerks[0];
 
       if (effectiveTotalPages > 1) {
         wheelPhaseRef.current = 'page';

@@ -5,7 +5,7 @@ from typing import Any
 from sqlalchemy import func, or_, select
 from sqlalchemy.orm import joinedload
 
-from app.core.cache import catalog_cache
+from app.core.catalog_memo import remember
 from app.core.db_retry import retry_on_transient_db_error
 from app.core.extensions import db
 from app.models import Item, ItemAddon, Killer, KillerAddon, Offering, Survivor
@@ -29,63 +29,51 @@ def _role_models(category: str | None) -> list[type[Survivor] | type[Killer]]:
 
 
 def fetch_characters(service: Any = None, category: str | None = None, lang: str | None = None) -> list[dict[str, Any]]:
-    """Retrieve character list ordered by canonical chapter release numbers."""
-    cache_key = ("fetch_characters", category.lower() if category else "all", lang)
-    cached = catalog_cache.get(cache_key)
-    if cached is not None:
-        return cached
+    """Retrieve character list ordered by canonical chapter release numbers.
 
-    chars_cache = getattr(service, "_characters_cache", [])
-    try:
-        models = _role_models(category)
-        characters: list[Survivor | Killer] = []
-        for model in models:
-            # `release_number` is the primary key now, so the CASE that pushed
-            # NULL and 0 release numbers to the end of the list has nothing
-            # left to guard against: ordering by id is the same order.
-            stmt = (
-                select(model)
-                .options(joinedload(model.perks))
-                .order_by(model.id.asc(), model.name.asc())
-            )
-            characters.extend(_run_characters_query(stmt))
+    A database error propagates, and so does an empty result for a category
+    that names a real role: `@cache_catalog` refuses to store a 5xx, whereas a
+    quiet `[]` would be cached as the roster for a day. A category that names
+    neither role legitimately selects nothing and answers `[]`.
+    """
+    key = ("fetch_characters", category.lower() if category else "all", lang)
+    return remember(key, lambda: _load_characters(category, lang), ttl=120.0)
 
-        if len(models) > 1:
-            # The old single query ordered all 98 rows by release number, so
-            # the two result sets have to be interleaved rather than appended:
-            # survivor 3 came before killer 4. Survivors win an equal release
-            # number because they held ids 1-54 against the killers' 55-98 in
-            # the table that no longer exists, and `id ASC` was the tiebreak.
-            characters.sort(key=lambda c: (c.release_number, 0 if isinstance(c, Survivor) else 1, c.name))
-        # This path falls back to a possibly-empty in-memory cache on any
-        # exception, including one raised inside to_dict(), so an empty result
-        # is logged rather than passed off as "there is no data yet".
-        if not characters:
-            logger.warning(
-                f"[characters-query-check] DB query returned 0 rows "
-                f"(category={category!r}); falling back to in-memory cache "
-                f"of size {len(chars_cache)}"
-            )
-        if characters:
-            res = [c.to_dict(lang=lang) for c in characters]
-            catalog_cache.set(cache_key, res, ttl=120.0)
-            return res
-    except Exception:
-        logger.exception(
-            f"[characters-query-check] Querying/serializing characters from "
-            f"DB raised -- falling back to in-memory cache of size "
-            f"{len(chars_cache)}"
+
+def _load_characters(category: str | None, lang: str | None) -> list[dict[str, Any]]:
+    models = _role_models(category)
+    characters: list[Survivor | Killer] = []
+    for model in models:
+        # `release_number` is the primary key now, so the CASE that pushed
+        # NULL and 0 release numbers to the end of the list has nothing
+        # left to guard against: ordering by id is the same order.
+        stmt = (
+            select(model)
+            .options(joinedload(model.perks))
+            .order_by(model.id.asc(), model.name.asc())
         )
+        characters.extend(_run_characters_query(stmt))
 
-    return chars_cache
+    if len(models) > 1:
+        # The old single query ordered all 98 rows by release number, so
+        # the two result sets have to be interleaved rather than appended:
+        # survivor 3 came before killer 4. Survivors win an equal release
+        # number because they held ids 1-54 against the killers' 55-98 in
+        # the table that no longer exists, and `id ASC` was the tiebreak.
+        characters.sort(key=lambda c: (c.release_number, 0 if isinstance(c, Survivor) else 1, c.name))
+    if models and not characters:
+        raise CatalogEmptyError(f"no characters found (category={category!r})")
+    return [c.to_dict(lang=lang) for c in characters]
+
+
+class CatalogEmptyError(RuntimeError):
+    """A table that always holds rows came back empty: a broken read, not a roster."""
 
 
 @retry_on_transient_db_error()
 def _run_characters_query(stmt):
-    # Split out so a transient connection drop gets retried once here,
-    # before fetch_characters' broader except falls back to the (possibly
-    # empty/stale) in-memory cache -- without this, a one-off blip silently
-    # degrades every caller to a near-empty catalog instead of a clean error.
+    # Split out so a transient connection drop gets retried once here
+    # instead of surfacing as a 5xx for what was a one-off blip.
     return db.session.scalars(stmt).unique().all()
 
 
@@ -95,80 +83,65 @@ def fetch_character_suggestions(
     category: str | None = None,
     limit: int = 15,
 ) -> list[dict[str, Any]]:
-    """Autocomplete suggestions for characters by name or real name."""
-    cache_key = ("fetch_character_suggestions", query.strip().lower() if query else "", category.lower() if category else "all", limit)
-    cached = catalog_cache.get(cache_key)
-    if cached is not None:
-        return cached
+    """Autocomplete suggestions for characters by name or real name.
 
-    try:
-        models = _role_models(category)
-        chars: list[Survivor | Killer] = []
-        for model in models:
-            stmt = select(model)
-            if query:
-                q_clean = f"%{query.strip().lower()}%"
-                stmt = stmt.where(
-                    or_(
-                        func.lower(model.name).like(q_clean),
-                        func.lower(model.real_name).like(q_clean),
-                    )
+    A database error propagates so `@cache_catalog` answers 5xx instead of
+    storing an empty list as the suggestions for an hour.
+    """
+    key = ("fetch_character_suggestions", query.strip().lower() if query else "", category.lower() if category else "all", limit)
+    return remember(key, lambda: _load_character_suggestions(query, category, limit), ttl=120.0)
+
+
+def _load_character_suggestions(query: str, category: str | None, limit: int) -> list[dict[str, Any]]:
+    models = _role_models(category)
+    chars: list[Survivor | Killer] = []
+    for model in models:
+        stmt = select(model)
+        if query:
+            q_clean = f"%{query.strip().lower()}%"
+            stmt = stmt.where(
+                or_(
+                    func.lower(model.name).like(q_clean),
+                    func.lower(model.real_name).like(q_clean),
                 )
+            )
 
-            stmt = stmt.order_by(model.name.asc()).limit(limit)
-            chars.extend(db.session.scalars(stmt).all())
+        stmt = stmt.order_by(model.name.asc()).limit(limit)
+        chars.extend(db.session.scalars(stmt).all())
 
-        if len(models) > 1:
-            # Each half is already name-ordered and capped at `limit`, so the
-            # first `limit` names of the merge are the same ones the single
-            # ordered query returned.
-            chars.sort(key=lambda c: c.name)
-            chars = chars[:limit]
+    if len(models) > 1:
+        # Each half is already name-ordered and capped at `limit`, so the
+        # first `limit` names of the merge are the same ones the single
+        # ordered query returned.
+        chars.sort(key=lambda c: c.name)
+        chars = chars[:limit]
 
-        res = [
-            {
-                "id": c.id,
-                "name": c.name,
-                "real_name": c.real_name or c.name,
-                "category": c.role,
-                "avatar_local_path": c.avatar_local_path or "",
-                "portrait_url": c.portrait_url or "",
-            }
-            for c in chars
-        ]
-        catalog_cache.set(cache_key, res, ttl=120.0)
-        return res
-    except Exception:
-        q_clean = query.strip().lower()
-        res = []
-        for c in getattr(service, "_characters_cache", []):
-            if category and category.lower() != "all" and (c.get("category") or c.get("role", "")).lower() != category.lower():
-                continue
-            if not q_clean or q_clean in c.get("name", "").lower() or q_clean in c.get("real_name", "").lower():
-                res.append({
-                    "id": c.get("id"),
-                    "name": c.get("name", ""),
-                    "real_name": c.get("real_name", c.get("name", "")),
-                    "category": c.get("category") or c.get("role", "Survivor"),
-                    "avatar_local_path": c.get("avatar_local_path", ""),
-                    "portrait_url": c.get("avatar_url", ""),
-                })
-            if len(res) >= limit:
-                break
-        catalog_cache.set(cache_key, res, ttl=60.0)
-        return res
+    return [
+        {
+            "id": c.id,
+            "name": c.name,
+            "real_name": c.real_name or c.name,
+            "category": c.role,
+            "avatar_local_path": c.avatar_local_path or "",
+            "portrait_url": c.portrait_url or "",
+        }
+        for c in chars
+    ]
 
 
 def fetch_character_detail(service: Any = None, character_name: str = "", lang: str | None = None) -> dict[str, Any] | None:
     """Retrieve full character detail including specific addons, powers, and teachable perks."""
+    return remember(
+        ("fetch_character_detail", character_name.strip().lower(), lang),
+        lambda: _load_character_detail(character_name, lang),
+        ttl=120.0,
+    )
+
+
+def _load_character_detail(character_name: str, lang: str | None) -> dict[str, Any] | None:
     target_clean = character_name.strip().lower()
     target_slug = slugify(character_name)
     target_spaces = target_clean.replace("-", " ").replace("_", " ")
-
-    cache_key = ("fetch_character_detail", target_clean, lang)
-    cached = catalog_cache.get(cache_key)
-    if cached is not None:
-        return cached
 
     try:
         # Fast-path: attempt direct indexed SQL lookup on common canonical
@@ -320,7 +293,6 @@ def fetch_character_detail(service: Any = None, character_name: str = "", lang: 
             "items": items_list,
             "offerings": offerings_list,
         }
-        catalog_cache.set(cache_key, result, ttl=120.0)
         return result
     except Exception as e:
         logger.error(f"Error getting character detail from DB: {e}", exc_info=True)

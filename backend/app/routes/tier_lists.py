@@ -14,7 +14,7 @@ tier_lists_bp = Blueprint("tier_lists", __name__, url_prefix="/api/v1/tier-lists
 
 @tier_lists_bp.route("", methods=["GET"])
 @tier_lists_bp.route("/", methods=["GET"])
-@cache_catalog(ttl=86400, vary=("lang",))
+@cache_catalog(ttl=86400, vary=())
 def list_tier_lists():
     """Summaries of every active official tier list, for the /tier-lists hub.
 
@@ -28,7 +28,7 @@ def list_tier_lists():
 
 
 @tier_lists_bp.route("/<string:slug>", methods=["GET"])
-@cache_catalog(ttl=86400, vary=("lang",))
+@cache_catalog(ttl=86400, vary=())
 def get_tier_list(slug: str):
     """One official tier list template, including its items and default ranking."""
     user = get_current_user()

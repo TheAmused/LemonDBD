@@ -20,7 +20,7 @@ from typing import Any
 
 from flask import current_app, jsonify, request
 
-from app.core.redis_cache import get_client
+from app.core.redis_cache import get_limits_client, report_limits_failure
 from app.services.altcha_service import AltchaService
 
 logger = logging.getLogger(__name__)
@@ -44,11 +44,12 @@ def altcha_enforced() -> bool:
 def _claim(signature: str, expires: float) -> bool:
     """True the first time this solved challenge is presented, False for a replay."""
     ttl = max(1, int(expires - time.time()) + 5)
-    client = get_client()
+    client = get_limits_client()
     if client is not None:
         try:
             return bool(client.set(f"{_REDIS_PREFIX}{signature}", "1", nx=True, ex=ttl))
         except Exception as exc:  # a broken Redis must not lock everyone out
+            report_limits_failure(exc)
             logger.warning("[altcha] Redis replay check failed (%s); using the in-process record", exc)
 
     now = time.time()
@@ -56,6 +57,10 @@ def _claim(signature: str, expires: float) -> bool:
         if len(_used) >= _MAX_LOCAL_ENTRIES:
             for key in [k for k, until in _used.items() if until < now]:
                 del _used[key]
+            # Still full of live records: bound the memory by dropping the
+            # oldest instead of growing for as long as the flood lasts.
+            while len(_used) >= _MAX_LOCAL_ENTRIES:
+                del _used[next(iter(_used))]
         if signature in _used and _used[signature] >= now:
             return False
         _used[signature] = now + ttl

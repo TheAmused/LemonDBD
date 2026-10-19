@@ -29,7 +29,7 @@ import { CreatorItems } from './CreatorItems';
 import { CreatorPreviewModal } from './CreatorPreview';
 import { type IncomingItem, ItemSources } from './ItemSources';
 import { LadderEditor } from './LadderEditor';
-import { Checkbox } from '@/components/common/Checkbox';
+import { Switch } from '@/components/common/Switch';
 import { NsfwSwitch } from '@/components/common/NsfwSwitch';
 import { Button } from '@/components/common/Button';
 import { Input } from '@/components/common/Field';
@@ -456,18 +456,30 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
                 hint={t.nsfw.hint}
               />
               {isAdmin && !isEditing && (
-                <Checkbox checked={official} onChange={setOfficial} className="gap-2.5">
-                  <span className={cn(LABEL, 'mb-0 inline')}>{c.official}</span>
-                </Checkbox>
+                <div
+                  onClick={() => setOfficial(!official)}
+                  className="flex cursor-pointer select-none items-center gap-2.5 group"
+                >
+                  <Switch checked={official} onChange={setOfficial} ariaLabel={c.official} />
+                  <span className="type-strong-fluid text-text-primary transition-colors group-hover:text-accent-red">
+                    {c.official}
+                  </span>
+                </div>
               )}
               {isAdmin && (official || Boolean(officialSlug)) && (
-                <Checkbox
-                  checked={draft.is_active ?? true}
-                  onChange={(checked) => patch({ is_active: checked })}
-                  className="gap-2.5"
+                <div
+                  onClick={() => patch({ is_active: !(draft.is_active ?? true) })}
+                  className="flex cursor-pointer select-none items-center gap-2.5 group"
                 >
-                  <span className={cn(LABEL, 'mb-0 inline')}>{c.publishedLabel}</span>
-                </Checkbox>
+                  <Switch
+                    checked={draft.is_active ?? true}
+                    onChange={(checked) => patch({ is_active: checked })}
+                    ariaLabel={c.publishedLabel}
+                  />
+                  <span className="type-strong-fluid text-text-primary transition-colors group-hover:text-accent-red">
+                    {c.publishedLabel}
+                  </span>
+                </div>
               )}
             </div>
           </div>

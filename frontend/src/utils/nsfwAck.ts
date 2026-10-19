@@ -14,6 +14,29 @@ import { useCallback, useSyncExternalStore } from 'react';
 import { getLocalStorage } from '@/utils/safeStorage';
 
 export const GLOBAL_NSFW_KEY = 'lemondbd_show_nsfw';
+const GLOBAL_NSFW_ONBOARDED_KEY = 'lemondbd_nsfw_onboarded';
+
+/** Has the viewer completed initial onboarding / content preferences modal? */
+export function hasSeenNsfwOnboarding(): boolean {
+  const storage = getLocalStorage();
+  if (!storage) return true;
+  try {
+    return storage.getItem(GLOBAL_NSFW_ONBOARDED_KEY) === 'true' || storage.getItem(GLOBAL_NSFW_KEY) !== null;
+  } catch {
+    return true;
+  }
+}
+
+/** Record that the viewer has completed initial content preference onboarding. */
+export function markNsfwOnboardingComplete(): void {
+  const storage = getLocalStorage();
+  if (!storage) return;
+  try {
+    storage.setItem(GLOBAL_NSFW_ONBOARDED_KEY, 'true');
+  } catch {
+    // Storage unavailable
+  }
+}
 
 /** Has the viewer enabled global NSFW content display? */
 export function getGlobalNsfwPreference(): boolean {
@@ -32,6 +55,7 @@ export function setGlobalNsfwPreference(enabled: boolean): void {
   if (storage) {
     try {
       storage.setItem(GLOBAL_NSFW_KEY, String(enabled));
+      storage.setItem(GLOBAL_NSFW_ONBOARDED_KEY, 'true');
     } catch {
       // Storage unavailable (private browsing, quota, etc.)
     }

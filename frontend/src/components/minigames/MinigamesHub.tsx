@@ -14,16 +14,15 @@ import {
   Gamepad2, Calendar, Sparkles, Flame, Plus, Play, Share2, Download, Upload, Trash2,
   Check, Trophy, AlertCircle, X, History, Layers, MapPin, Zap, Volume2, Eye, BookOpen,
 } from 'lucide-react';
-import { useGlobalNsfwPreference } from '@/utils/nsfwAck';
+import { useGlobalNsfwPreference, hasSeenNsfwOnboarding } from '@/utils/nsfwAck';
+
+const NsfwOnboardingModal = dynamic(
+  () => import('@/components/common/NsfwOnboardingModal').then((m) => m.NsfwOnboardingModal),
+  { ssr: false }
+);
 import { cn } from '@/utils/cn';
 import type { ChallengeDefinition } from '@/types/minigame';
-import {
-  getCustomChallenges,
-  deleteCustomChallenge,
-  saveCustomChallenge,
-  getDailyStreak,
-  type DailyStreakData,
-} from '@/utils/minigames/storage';
+import { getCustomChallenges, deleteCustomChallenge, saveCustomChallenge, getDailyStreak, type DailyStreakData } from '@/utils/minigames/storage';
 import { exportChallengeToJson, importChallengeFromJson } from '@/utils/minigames/jsonExportImport';
 import { buildChallengeShareUrl, encodeChallengeShare } from '@/utils/minigames/shareLink';
 import { signExportPayload } from '@/utils/contentSigning';
@@ -55,20 +54,18 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
   const signIn = useSignInThen();
   const [customTrials, setCustomTrials] = useState<ChallengeDefinition[]>([]);
   const [showNsfw, setShowNsfw] = useGlobalNsfwPreference();
+  const [onboardingOpen, setOnboardingOpen] = useState<boolean>(false);
   const [importError, setImportError] = useState<string | null>(null);
-  const [streakData, setStreakData] = useState<DailyStreakData>({
-    currentStreak: 0,
-    maxStreak: 0,
-    lastCompletedDate: null,
-  });
+  const [streakData, setStreakData] = useState<DailyStreakData>({ currentStreak: 0, maxStreak: 0, lastCompletedDate: null });
   const [copiedId, setCopiedId] = useState<string | number | null>(null);
   const [shareLoadingId, setShareLoadingId] = useState<string | number | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Load custom trials and streaks on mount
+  // Load custom trials, streaks, and check onboarding on mount
   useEffect(() => {
     setCustomTrials(getCustomChallenges());
     setStreakData(getDailyStreak());
+    if (!hasSeenNsfwOnboarding()) setOnboardingOpen(true);
   }, []);
 
   const todayStr = useMemo(() => new Date().toISOString().slice(0, 10), []);
@@ -587,6 +584,7 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
       />
 
       {signIn.isAuthModalOpen && <AuthModal isOpen onClose={signIn.closeAuthModal} />}
+      <NsfwOnboardingModal isOpen={onboardingOpen} onClose={() => setOnboardingOpen(false)} />
     </div>
   );
 };

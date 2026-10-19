@@ -363,14 +363,14 @@ function CatalogSource({ onAdd, existingIds, locale }: {
         </div>
       </div>
 
-      <div className="max-h-120 sm:max-h-135 overflow-y-auto overscroll-contain rounded-chip border border-border-color bg-bg-primary/40 p-2">
+      <div className="w-full rounded-chip border border-border-color bg-bg-primary/40 p-2 overflow-x-hidden">
         {loading ? (
           <p className="flex items-center justify-center gap-2 py-10 type-card-title text-text-muted">
             <Spinner size="sm" tone="current" />
             {c.catalogLoading}
           </p>
         ) : (
-          <div className="flex flex-wrap items-start justify-center gap-2">
+          <div className="flex flex-wrap items-start justify-center gap-2 w-full">
             {visible.map((item) => {
               const added = existingIds.has(item.key);
               const isSelected = selected.has(item.key);

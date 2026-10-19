@@ -14,7 +14,7 @@ import { CustomDropdown } from '@/components/common/CustomDropdown';
 import { tip } from '@/components/common/Tooltip';
 import { BUG_STATUSES, bugStatusLabel } from '@/components/admin/reportLabels';
 import { useDictionary, useLocale } from '@/context/DictionaryContext';
-import { staticUrl } from '@/utils/api';
+import { bugAttachmentUrl } from '@/utils/api';
 import { formatDateTime } from '@/utils/format';
 import { formatMessage } from '@/utils/i18nFormat';
 import type { AdminBugReport, BugReportStatus } from '@/types/admin';
@@ -123,9 +123,10 @@ export function BugReportDetail({ report, onStatusChange, onReply, onDelete, onS
           <h4 className="type-label-xs text-text-secondary">{formatMessage(t.attachmentsCount, { count: report.images.length })}</h4>
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
             {report.images.map((src, i) => {
-              const url = staticUrl(src);
-              if (!url) return null;
+              const url = bugAttachmentUrl(src);
               const label = formatMessage(t.attachmentLabel, { index: i + 1 });
+              // Not one of our uploads (an old report with a typed-in URL): shown as text, never fetched.
+              if (!url) return <code key={src} className="break-all type-caption text-text-muted" aria-label={label}>{src}</code>;
               return (
                 <ImageLinkTile key={src} href={url} src={url} label={label} />
               );

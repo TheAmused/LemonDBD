@@ -27,34 +27,54 @@ logger = logging.getLogger(__name__)
 bug_reports_bp = Blueprint("bug_reports", __name__, url_prefix="/api/v1")
 
 
+#: Same limits as the report form (3 screenshots of at most 2 MB each), enforced here too.
+MAX_BUG_REPORT_IMAGES = 3
+MAX_BUG_REPORT_IMAGE_BYTES = 2 * 1024 * 1024
+#: Refuse to decode anything bigger than this, whatever its file size (a decompression bomb).
+MAX_BUG_REPORT_IMAGE_PIXELS = 40_000_000
+#: Longest side of the stored copy; screenshots are re-encoded, never stored as sent.
+MAX_BUG_REPORT_IMAGE_SIDE = 2560
+
+
 def _save_base64_image(b64_data: str, base_dir: Path) -> str | None:
-    """Decodes a base64 image payload and saves it to static uploads."""
+    """Decode one screenshot, check it really is an image, and store a re-encoded WebP copy.
+
+    The bytes used to be written as sent under whatever extension the header claimed, so a guest
+    could host any file on this domain. Now only something Pillow can decode is kept, at most
+    `MAX_BUG_REPORT_IMAGE_BYTES` and `MAX_BUG_REPORT_IMAGE_PIXELS`, re-encoded (which also drops
+    metadata such as GPS tags). Returns the public path, or None when the payload is refused.
+    """
+    from io import BytesIO
+
+    from PIL import Image, ImageOps
+
     try:
-        if "," in b64_data:
-            header, encoded = b64_data.split(",", 1)
-        else:
-            header, encoded = "", b64_data
+        encoded = b64_data.split(",", 1)[1] if "," in b64_data else b64_data
+        if len(encoded) > (MAX_BUG_REPORT_IMAGE_BYTES * 4) // 3 + 4:
+            return None
+        image_bytes = base64.b64decode(encoded, validate=False)
+        if not image_bytes or len(image_bytes) > MAX_BUG_REPORT_IMAGE_BYTES:
+            return None
 
-        ext = ".png"
-        if "image/jpeg" in header or "image/jpg" in header:
-            ext = ".jpg"
-        elif "image/webp" in header:
-            ext = ".webp"
-        elif "image/gif" in header:
-            ext = ".gif"
+        with Image.open(BytesIO(image_bytes)) as probe:
+            width, height = probe.size
+            if width * height > MAX_BUG_REPORT_IMAGE_PIXELS:
+                return None
+            probe.verify()
+        with Image.open(BytesIO(image_bytes)) as image:
+            image.seek(0)
+            frame = ImageOps.exif_transpose(image)
+            frame = frame.convert("RGBA" if frame.mode in ("RGBA", "LA", "P") else "RGB")
+            frame.thumbnail((MAX_BUG_REPORT_IMAGE_SIDE, MAX_BUG_REPORT_IMAGE_SIDE))
 
-        upload_dir = base_dir / "static" / "uploads" / "bug_reports"
-        upload_dir.mkdir(parents=True, exist_ok=True)
-
-        filename = f"bug_{uuid.uuid4().hex[:12]}{ext}"
-        filepath = upload_dir / filename
-
-        image_bytes = base64.b64decode(encoded)
-        filepath.write_bytes(image_bytes)
+            upload_dir = base_dir / "static" / "uploads" / "bug_reports"
+            upload_dir.mkdir(parents=True, exist_ok=True)
+            filename = f"bug_{uuid.uuid4().hex[:12]}.webp"
+            frame.save(upload_dir / filename, format="WEBP", quality=85, method=4)
 
         return f"/static/uploads/bug_reports/{filename}"
     except Exception as err:
-        logger.warning(f"Failed to decode and save base64 bug report image: {err}")
+        logger.warning(f"Refused a bug report screenshot that is not a readable image: {err}")
         return None
 
 
@@ -96,14 +116,15 @@ def submit_bug_report():
     processed_images: list[str] = []
     base_dir = Path(current_app.root_path)
 
-    for img in raw_images:
-        if isinstance(img, str):
-            if img.startswith("data:image"):
-                saved_path = _save_base64_image(img, base_dir)
-                if saved_path:
-                    processed_images.append(saved_path)
-            elif img.startswith("http") or img.startswith("/static"):
-                processed_images.append(img)
+    # Only uploaded screenshots are kept. A remote URL (or any other string) used to be stored
+    # as-is and then loaded by every admin who opened the ticket: a tracking pixel anyone could plant.
+    if not isinstance(raw_images, list):
+        raw_images = []
+    for img in raw_images[:MAX_BUG_REPORT_IMAGES]:
+        if isinstance(img, str) and img.startswith("data:image"):
+            saved_path = _save_base64_image(img, base_dir)
+            if saved_path:
+                processed_images.append(saved_path)
 
     new_report = BugReport(
         user_id=user_id,

@@ -57,6 +57,16 @@ export function staticUrl(rawPath?: string | null): string | undefined {
   return base ? `${base}/static/${cleanPath}` : `/static/${cleanPath}`;
 }
 
+/**
+ * The URL of a bug-report screenshot the server stored itself, or undefined for anything else.
+ * Older reports may hold remote URLs a reporter typed in; those are never loaded (they would tell
+ * their host when an admin opened the ticket).
+ */
+export function bugAttachmentUrl(rawPath?: string | null): string | undefined {
+  if (!rawPath || !/^\/?(static\/)?uploads\/bug_reports\/[A-Za-z0-9_-]+\.(webp|png|jpe?g|gif)$/.test(rawPath)) return undefined;
+  return staticUrl(rawPath);
+}
+
 export const backendBase = typeof window !== 'undefined' ? '' : (process.env.INTERNAL_API_URL || process.env.NEXT_PUBLIC_API_URL || 'http://backend:5000');
 
 // ---------------------------------------------------------------------------

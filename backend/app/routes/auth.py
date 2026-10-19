@@ -17,7 +17,7 @@ from app.core.security import (
     set_session_cookie,
     widen_legacy_session_cookie,
 )
-from app.schemas.user import UserCreate, UserResponse
+from app.schemas.user import UserRegister, UserResponse
 from app.services import site_settings
 from app.services.altcha_service import AltchaService
 from app.services.user import (
@@ -62,16 +62,17 @@ def register():
         return error_response("registration_closed", 403)
 
     try:
-        validated_data = UserCreate.model_validate(payload)
+        validated_data = UserRegister.model_validate(payload)
     except ValidationError as err:
         return api_error("Validation failed", 400, details=err.errors())
 
+    # Self-registration always creates a player. Only an admin (POST /users) can create an admin.
     user, err = create_user_account(
         login=validated_data.login,
         username=validated_data.username,
         email=validated_data.email,
         password=validated_data.password,
-        role=validated_data.role or "user",
+        role="user",
     )
     if err:
         return api_error(err, 400)

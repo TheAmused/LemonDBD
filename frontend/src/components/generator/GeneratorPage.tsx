@@ -65,7 +65,7 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
   const [spinDurationSec, setSpinDurationSec] = useState<number>(3);
   const [audioEnabled, setAudioEnabledState] = useState<boolean>(true);
 
-  const [drawnPerks, setDrawnPerks] = useState<string[]>([]);
+  const [drawnPerks, setDrawnPerks] = useState<number[]>([]);
   const [loadout, setLoadout] = useState<(DrawnSlot | null)[]>([null, null, null, null]);
   const [activeSlotIdx, setActiveSlotIdx] = useState<number>(0);
   const [isChaosModalOpen, setIsChaosModalOpen] = useState(false);
@@ -233,9 +233,9 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
 
     // ONLY add to drawnPerks if no-repeat mode is actually ON!
     if (noRepeatPerks && wonData.perk) {
-      const perkName = wonData.perk.name;
+      const perkId = wonData.perk.id;
       setDrawnPerks((prev) => {
-        const next = Array.from(new Set([...prev, perkName]));
+        const next = Array.from(new Set([...prev, perkId]));
         saveDrawnPerksForRole(role, next);
         return next;
       });
@@ -247,10 +247,10 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
 
     // ONLY add to drawnPerks if no-repeat mode is actually ON!
     if (noRepeatPerks) {
-      const names = slots.map((s) => s.perk?.name).filter((n): n is string => Boolean(n));
-      if (names.length > 0) {
+      const ids = slots.map((s) => s.perk?.id).filter((id): id is number => typeof id === 'number' && id > 0);
+      if (ids.length > 0) {
         setDrawnPerks((prev) => {
-          const next = Array.from(new Set([...prev, ...names]));
+          const next = Array.from(new Set([...prev, ...ids]));
           saveDrawnPerksForRole(role, next);
           return next;
         });

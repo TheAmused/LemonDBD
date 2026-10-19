@@ -234,11 +234,11 @@ export function computeEligiblePool(
 export function computePlayablePool(
   eligiblePool: Perk[],
   noRepeatPerks: boolean,
-  drawnPerkNames: string[]
+  drawnPerkIds: number[]
 ): Perk[] {
   if (!noRepeatPerks) return eligiblePool;
-  const drawnSet = new Set(drawnPerkNames);
-  const remaining = eligiblePool.filter((p) => !drawnSet.has(p.name));
+  const drawnSet = new Set(drawnPerkIds);
+  const remaining = eligiblePool.filter((p) => !drawnSet.has(p.id));
   return remaining.length > 0 ? remaining : eligiblePool;
 }
 

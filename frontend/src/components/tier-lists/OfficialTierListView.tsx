@@ -19,7 +19,7 @@ import { useNsfwGate } from '@/hooks/useNsfwGate';
 import { useTierListItems } from '@/hooks/useTierListItems';
 import { useTierListStore } from '@/hooks/useTierListStore';
 import { useTierListTemplate } from '@/hooks/useTierListTemplates';
-import { deleteOfficialTierList, isNotFoundError, updateOfficialTierList } from '@/services/tierListApi';
+import { deleteOfficialTierList, isNotFoundError } from '@/services/tierListApi';
 import { resolveTiers } from '@/utils/tierLists/board';
 import { clearRanking, saveRanking } from '@/utils/tierLists/storage';
 import { TierListEditor } from './TierListEditor';
@@ -42,7 +42,6 @@ export function OfficialTierListView({ slug, locale }: OfficialTierListViewProps
   const { template, loading: templateLoading, error: templateError, refresh } = useTierListTemplate(slug, locale);
   const { items, loading: itemsLoading, error: itemsError, refresh: refreshItems } = useTierListItems(template, locale);
   const { state, hydrated } = useTierListStore();
-  const [savingOfficial, setSavingOfficial] = useState<boolean>(false);
   const nsfwGate = useNsfwGate('tier_list', slug, template?.is_nsfw === true);
 
   useDocumentTitle(template ? `LemonDBD - ${template.title}` : t.pageTitle);
@@ -59,35 +58,6 @@ export function OfficialTierListView({ slug, locale }: OfficialTierListViewProps
     (nextTiers: TierDefinition[], nextPlacements: TierPlacements) =>
       saveRanking(slug, { tiers: isAdmin ? nextTiers : null, placements: nextPlacements }),
     [slug, isAdmin]
-  );
-
-  const handleSaveOfficial = useCallback(
-    async (nextTiers: TierDefinition[], nextPlacements: TierPlacements) => {
-      if (!isAdmin) return;
-      setSavingOfficial(true);
-      try {
-        await updateOfficialTierList(
-          slug,
-          {
-            tiers: nextTiers.map((tier) => ({
-              id: tier.id,
-              label: tier.label,
-              color: tier.color,
-              ...(tier.backgroundImage ? { backgroundImage: tier.backgroundImage } : {}),
-            })),
-            default_placements: nextPlacements,
-          },
-          locale,
-          token
-        );
-        saveRanking(slug, { tiers: null, placements: nextPlacements });
-      } catch (err) {
-        console.error('Failed to save official tier list:', err);
-      } finally {
-        setSavingOfficial(false);
-      }
-    },
-    [isAdmin, slug, locale, token]
   );
 
   const handleDeleteOfficial = useCallback(async () => {
@@ -203,8 +173,6 @@ export function OfficialTierListView({ slug, locale }: OfficialTierListViewProps
       poolEmptyLabel={t.poolEmpty}
       canEditTiers={isAdmin}
       onSave={onSave}
-      onSaveOfficial={isAdmin ? handleSaveOfficial : undefined}
-      savingOfficial={savingOfficial}
       editHref={isAdmin && template.kind === 'custom' ? `/${locale}/tier-lists/new?official=${encodeURIComponent(slug)}` : undefined}
       onDelete={isAdmin ? handleDeleteOfficial : undefined}
       onReset={onReset}

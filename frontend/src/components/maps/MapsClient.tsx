@@ -28,6 +28,7 @@ function MapsClientInner() {
   const locale = useLocale() as Locale;
 
   const dict = useDictionary();
+  const initialMapId = searchParams?.get('mapId') ? Number(searchParams.get('mapId')) : undefined;
   const initialMapName = searchParams?.get('mapName') || '';
 
   const [searchMode, setSearchMode] = usePersistentString('lemondbd_maps_search_mode', 'text', isValidSearchMode);
@@ -35,18 +36,20 @@ function MapsClientInner() {
   const [availableMaps, setAvailableMaps] = useState<MapRealm[]>([]);
   const [selectedMap, setSelectedMap] = useState<{
     mapName: string;
+    mapId?: number;
     timestamp: number;
     via?: 'voice' | 'link';
   }>({
     mapName: initialMapName,
+    mapId: initialMapId,
     timestamp: Date.now(),
     via: 'link',
   });
   useEffect(() => {
-    if (initialMapName) {
-      setSelectedMap({ mapName: initialMapName, timestamp: Date.now(), via: 'link' });
+    if (initialMapName || initialMapId !== undefined) {
+      setSelectedMap({ mapName: initialMapName, mapId: initialMapId, timestamp: Date.now(), via: 'link' });
     }
-  }, [initialMapName]);
+  }, [initialMapName, initialMapId]);
 
   const backendBase = getBackendBaseUrl();
 
@@ -69,8 +72,8 @@ function MapsClientInner() {
   ];
 
   const handleSourceChange = useCallback(() => {}, []);
-  const handleSelectMap = useCallback((name: string) => {
-    setSelectedMap({ mapName: name, timestamp: Date.now(), via: 'voice' });
+  const handleSelectMap = useCallback((name: string, mapId?: number) => {
+    setSelectedMap({ mapName: name, mapId, timestamp: Date.now(), via: 'voice' });
   }, []);
   const handleAction = useCallback(() => {}, []);
 

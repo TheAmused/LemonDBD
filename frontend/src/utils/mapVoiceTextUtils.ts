@@ -22,6 +22,7 @@ export interface MapDataEntry {
    *  called with any row-like object. */
   id: number;
   name: string;
+  raw_name?: string; // English canonical name — present on non-English locales
   realm?: string;
   source?: string;
 }
@@ -379,6 +380,21 @@ export function createMapMatchResult(
 
     if (!found) {
       found = allMaps.find((m) => normalizeForComparison(m.name) === targetNorm);
+    }
+
+    if (!found) {
+      // Check raw_name (English canonical name) — crucial for non-English locales
+      // where m.name is translated but the voice dictionary uses English canonical names.
+      found = allMaps.find(
+        (m) => m.raw_name && normalizeForComparison(m.raw_name) === targetNorm
+      );
+    }
+
+    if (!found) {
+      // Partial raw_name match as final fallback
+      found = allMaps.find(
+        (m) => m.raw_name && normalizeForComparison(m.raw_name).includes(targetNorm) && targetNorm.length >= 4
+      );
     }
 
     if (!found) {

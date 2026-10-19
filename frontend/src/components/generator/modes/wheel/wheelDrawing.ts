@@ -197,7 +197,7 @@ export function drawWheel(ctx: CanvasRenderingContext2D, size: number, state: Wh
 
       if (imgObj && imgObj.complete && imgObj.naturalWidth > 0) {
         ctx.save();
-        if (isBlocked) ctx.globalAlpha = 0.25;
+        if (isBlocked) ctx.globalAlpha = 0.55;
 
         ctx.drawImage(imgObj, -iconSize / 2, iconRadiusPos - iconSize / 2, iconSize, iconSize);
         ctx.restore();
@@ -217,14 +217,6 @@ export function drawWheel(ctx: CanvasRenderingContext2D, size: number, state: Wh
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillText((perk?.name || 'P').charAt(0).toUpperCase(), 0, iconRadiusPos);
-      }
-
-      if (isBlocked) {
-        ctx.font = canvasFont('bold', 24);
-        ctx.fillStyle = paletteColor('red-700');
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillText('🚫', 0, iconRadiusPos);
       }
 
       ctx.restore();

@@ -68,7 +68,7 @@ interface AuthContextType {
   forgotPassword: (email: string, extra?: Record<string, unknown>) => Promise<{ success: boolean; error?: string }>;
   resetPassword: (token: string, newPassword: string, extra?: Record<string, unknown>) => Promise<{ success: boolean; error?: string }>;
   refreshUser: () => Promise<void>;
-  updateCharacterOwnership: (characterId: number, isOwned: boolean) => Promise<boolean>;
+
   bulkUpdateCharacterOwnership: (updates: CharacterOwnershipUpdate[]) => Promise<boolean>;
   updatePerkOwnership: (perkId: number, isUnlocked: boolean) => Promise<boolean>;
   bulkUpdatePerkOwnership: (updates: Array<{ perk_id: number; is_unlocked: boolean }>) => Promise<boolean>;
@@ -345,27 +345,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  const updateCharacterOwnership = async (characterId: number, isOwned: boolean): Promise<boolean> => {
-    if (!token || !user) return false;
-    try {
-      const res = await fetch(`${API_BASE}/api/v1/users/${user.id}/characters`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          ...authHeaders(token),
-        },
-        body: JSON.stringify({ character_id: characterId, is_owned: isOwned }),
-      });
-      if (res.ok) {
-        await refreshUser();
-        return true;
-      }
-      return false;
-    } catch (err) {
-      console.error('Failed to update character ownership:', err);
-      return false;
-    }
-  };
 
   const bulkUpdateCharacterOwnership = async (
     updates: CharacterOwnershipUpdate[]
@@ -493,7 +472,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     resetPassword,
     refreshUser,
     acknowledgeWarning,
-    updateCharacterOwnership,
     bulkUpdateCharacterOwnership,
     updatePerkOwnership,
     bulkUpdatePerkOwnership,
@@ -512,7 +490,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     resetPassword,
     refreshUser,
     acknowledgeWarning,
-    updateCharacterOwnership,
     bulkUpdateCharacterOwnership,
     updatePerkOwnership,
     bulkUpdatePerkOwnership,
@@ -538,8 +515,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         handlersRef.current.resetPassword(token, newPassword, extra),
       refreshUser: () => handlersRef.current.refreshUser(),
       acknowledgeWarning: (sanctionId: number) => handlersRef.current.acknowledgeWarning(sanctionId),
-      updateCharacterOwnership: (characterId: number, isOwned: boolean) =>
-        handlersRef.current.updateCharacterOwnership(characterId, isOwned),
+
       bulkUpdateCharacterOwnership: (updates: CharacterOwnershipUpdate[]) =>
         handlersRef.current.bulkUpdateCharacterOwnership(updates),
       updatePerkOwnership: (perkId: number, isUnlocked: boolean) =>

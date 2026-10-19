@@ -55,6 +55,22 @@ def test_malformed_requests_are_400s(client: FlaskClient, roster, body) -> None:
 
 
 @pytest.mark.unit
+@pytest.mark.parametrize(
+    "body",
+    [{"character_id": 3, "is_owned": False}, {"character_id": "abc", "role": "killer"}, {"character_id": 3, "role": "both"}],
+)
+def test_single_character_update_needs_a_role_and_a_real_id(client: FlaskClient, roster, body) -> None:
+    uid = roster["user"].id
+    assert client.post(f"/api/v1/users/{uid}/characters", json=body, headers=roster["headers"]).status_code == 400
+
+
+@pytest.mark.unit
+def test_single_perk_update_rejects_a_junk_id(client: FlaskClient, roster) -> None:
+    uid = roster["user"].id
+    assert client.post(f"/api/v1/users/{uid}/perks", json={"perk_id": "abc"}, headers=roster["headers"]).status_code == 400
+
+
+@pytest.mark.unit
 def test_unknown_ids_are_skipped_not_inserted(client: FlaskClient, roster) -> None:
     uid = roster["user"].id
     res = client.post(f"/api/v1/users/{uid}/characters/bulk", json={"updates": [

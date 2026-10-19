@@ -14,7 +14,7 @@ import {
   formatKillerHeight,
   localizeTerrorRadiusText,
 } from './types';
-import { CharacterBreadcrumbs } from './components/CharacterBreadcrumbs';
+import { CharacterTopBar } from './components/CharacterTopBar';
 import { CharacterHeroAvatar } from './components/CharacterHeroAvatar';
 import { KillerCombatStats } from './components/KillerCombatStats';
 import { CharacterPerksSection } from './components/CharacterPerksSection';
@@ -69,11 +69,10 @@ export const KillerDetailView: React.FC<CharacterViewBaseProps> = ({ currentLoca
 
   return (
     <article className="space-y-8 animate-in fade-in duration-300 w-full" aria-label={character.name}>
-      {/* 1. Breadcrumbs & Character Navigator */}
-      <CharacterBreadcrumbs
+      {/* 1. Back button & Character Navigator */}
+      <CharacterTopBar
         currentLocale={currentLocale}
         character={character}
-        roleLabel={t.roleKiller || ''}
         isSurvivor={false}
         allCharacters={allCharacters}
         t={t}
@@ -117,10 +116,6 @@ export const KillerDetailView: React.FC<CharacterViewBaseProps> = ({ currentLoca
                   ) : (
                     <Flame className="h-10 w-10 text-accent-red animate-pulse" aria-hidden="true" />
                   )}
-                  <span className="absolute -bottom-1 -right-1 flex h-4 w-4" aria-hidden="true">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent-red opacity-75" />
-                    <span className="relative inline-flex rounded-full h-4 w-4 bg-accent-red border-2 border-bg-primary" />
-                  </span>
                 </TileButton>
               )}
 
@@ -129,7 +124,7 @@ export const KillerDetailView: React.FC<CharacterViewBaseProps> = ({ currentLoca
                   {character.name}
                 </h1>
                 {character.real_name && character.real_name !== character.name && (
-                  <p className="type-strong-fluid text-text-secondary mt-0.5">
+                  <p className="type-strong-fluid text-text-secondary mt-1.5">
                     {t.realName || ''}:{' '}
                     <span className="text-text-primary">{character.real_name}</span>
                   </p>
@@ -229,9 +224,6 @@ export const KillerDetailView: React.FC<CharacterViewBaseProps> = ({ currentLoca
           onClose={() => setIsPowerModalOpen(false)}
           killerPower={killerPower}
           character={character}
-          killerSpeed={killerSpeed}
-          killerTerrorRadius={killerTerrorRadius}
-          killerHeight={killerHeight}
           backendBase={backendBase}
           t={t}
         />

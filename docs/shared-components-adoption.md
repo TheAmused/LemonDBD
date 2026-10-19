@@ -173,7 +173,7 @@ Zrobione (2026-10-15): 55 przycisków akcji na `Button`, 10 linków tekstowych n
 
 Zostają (61), bo `Button` nie jest ich właściwym kształtem:
 - kafle i karty wyboru (`aria-pressed` na dużych kartach: admin zgłoszenia i raporty, `ChallengeIntroModalShell`, `VoiceEngineInfoModal`, `ShowcaseCharacterModal`, `ShowcasePerkModal`, `KillerPickerGrid`),
-- nagłówki akordeonów (`aria-expanded` na całym wierszu: `TierListHub`, `UserProfileForm`, `DualMainsShowcase`, `UserBugReportsList`, `TierListCreatorParts`, `CollapsibleDrawer`),
+- nagłówki akordeonów (`aria-expanded` na całym wierszu: `TierListHub`, `UserProfileForm`, `DualMainsShowcase`, `UserBugReportsList`, `TierListCreatorParts`),
 - przyciski gry z animacją i skalą (akcje karty i strzałki w Smash or Pass, klawisze `TactileKeycaps`, `VoiceMicButton`, `TarotDeckStage`, `SlotMachineIdle`, `SlotReelRowMobile`),
 - wiersze menu i opcji (`role=option`/`listbox`: `CategoryPicker`, `SidebarBottomControls`, `HubHeader`, `PerkFilters`),
 - uchwyty przeciągania i narzędzia kafli (`WhatsNewLauncher`, `LadderEditor`, `TierRow`, `EntityEditorParts`, `CreatorItems`),
@@ -258,7 +258,7 @@ Przyciski bez własnej ramki i tła: ikony na kartach, nakładki "kliknij cało�
 
 ## 4. Natywne title= (ZROBIONE)
 
-Pierwotna liczba 113 była zawyżona: liczyła też prop `title` komponentów (`Modal`, `EmptyState`, `StreakPanel`...), który nie jest tooltipem. Natywny `title` na elemencie DOM były tylko 3 i wszystkie przeszły na `tip()`: link do panelu admina w `SidebarUserSection` (`action`) oraz poprzednia/następna postać w `CharacterBreadcrumbs` (`character`).
+Pierwotna liczba 113 była zawyżona: liczyła też prop `title` komponentów (`Modal`, `EmptyState`, `StreakPanel`...), który nie jest tooltipem. Natywny `title` na elemencie DOM były tylko 3 i wszystkie przeszły na `tip()`: link do panelu admina w `SidebarUserSection` (`action`) oraz poprzednia/następna postać w `CharacterTopBar` (`character`).
 
 `check:styles` blokuje teraz natywny `title` i ręczne `data-tooltip` na elementach DOM (małe litery, `Link`, `Image`).
 
@@ -560,7 +560,7 @@ Wykonane na Twoje polecenie "mniej wyjątkowych elementów". Nowe lub rozszerzon
 - [x] `IconTile`: 12 kafli z ikoną.
 - [x] `Button` wariant `overlay` oraz prop `dashed`: 5 małych kontrolek na miniaturach i 6 przycisków "dodaj".
 - [x] `Thumb`: 4 miniatury w listach (autouzupełnianie, kreator rund, guessery).
-- [x] `Collapsible`: wspólne zwijanie w `AccordionSection`, `CollapsibleDrawer`, grupach prób, podglądzie następnego rzędu i zgłoszeniach błędów. Zostają własne: `BlockCard` (dwie karty o tej samej wysokości), `TierPool` (układ dopasowany do planszy) i zwijany pasek akcji w `ChallengePanel` (tylko telefon).
+- [x] `Collapsible`: wspólne zwijanie w `AccordionSection`, grupach prób, podglądzie następnego rzędu i zgłoszeniach błędów. Zostają własne: `BlockCard` (dwie karty o tej samej wysokości), `TierPool` (układ dopasowany do planszy) i zwijany pasek akcji w `ChallengePanel` (tylko telefon).
 - [x] `AccordionSection` z `stickyHeader`: sekcja "Moje listy" w hubie tier list.
 - [x] `SelectableCard`: filtry statusów i lista raportów w adminie, silniki głosu i jakość modelu, kafle perków we własnym zestawie. Zostają bez zmian: kafle trybu w `ChallengeIntroModalShell` (akcent koloru każdego trybu), portrety w `ShowcaseCharacterModal`, siatki `KillerPickerGrid` i `ItemSources` (obrazkowe kafle).
 - [x] `ColorSwatch`: próbniki koloru w tier listach.

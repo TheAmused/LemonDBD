@@ -38,7 +38,6 @@ Cel: jedna zmiana w jednym miejscu przesuwa wygląd całej strony. Poniżej źr�
 | Błąd w treści strony (tytuł i powód) | `common/Alert.tsx` (`ErrorNotice`) | `<ErrorNotice title>{error}</ErrorNotice>` |
 | Ładowanie treści strony (spinner i tekst) | `common/LoadingState.tsx` | `<LoadingState label>` |
 | Ikona i tekst w jednej linii (fakt, nagłówek grupy) | `common/IconLabel.tsx` | `<IconLabel icon variant>` (`fact` lub `heading`) |
-| Nagłówek sekcji na stronie szczegółów | `common/SectionHeading.tsx` | `<SectionHeading as>` (`h2` lub `h3`) |
 | Rząd przycisków lub odznak, który się zawija | `common/WrapRow.tsx` | `<WrapRow>` |
 | Ekran z jedną kartą na środku (reset hasła, onboarding) | `layout/CenteredScreen.tsx` | `<CenteredScreen className>` |
 | Justowany tekst prawny i opisowy | `type-roles.css` (`type-prose`) | `type-prose text-text-muted` |

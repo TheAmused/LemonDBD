@@ -1,24 +1,22 @@
-// frontend/src/components/character-detail/components/CharacterBreadcrumbs.tsx
+// frontend/src/components/character-detail/components/CharacterTopBar.tsx
 import React from 'react';
 import Link from 'next/link';
-import { ChevronLeft, ArrowLeft, ArrowRight } from 'lucide-react';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { CharacterItem, characterSlug, CharacterDetailDictionary } from '../types';
 import { buttonClassName } from '@/components/common/Button';
 import { tip } from '@/components/common/Tooltip';
 
-interface CharacterBreadcrumbsProps {
+interface CharacterTopBarProps {
   currentLocale: string;
   character: CharacterItem;
-  roleLabel: string;
   isSurvivor: boolean;
   allCharacters: CharacterItem[];
   t: CharacterDetailDictionary;
 }
 
-export const CharacterBreadcrumbs: React.FC<CharacterBreadcrumbsProps> = ({
+export const CharacterTopBar: React.FC<CharacterTopBarProps> = ({
   currentLocale,
   character,
-  roleLabel,
   isSurvivor,
   allCharacters,
   t,
@@ -49,21 +47,13 @@ export const CharacterBreadcrumbs: React.FC<CharacterBreadcrumbsProps> = ({
 
   return (
     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:border-b sm:border-border-color pb-0 sm:pb-4 w-full">
-      <nav aria-label={t.breadcrumbs} className="flex items-center gap-2 type-strong-fluid">
-        <Link
-          href={`/${currentLocale}/characters?role=${roleParam}`}
-          className={`flex items-center gap-1 font-bold hover:underline transition-colors ${
-            isSurvivor ? 'text-accent-green hover:text-accent-green-hover' : 'text-accent-red hover:text-accent-red-hover'
-          }`}
-        >
-          <ChevronLeft className="h-4 w-4" />
-          {roleLabel}
-        </Link>
-        <span className="text-text-muted">/</span>
-        <span className="text-text-primary font-bold truncate max-w-37.5 sm:max-w-60">
-          {character.name}
-        </span>
-      </nav>
+      <Link
+        href={`/${currentLocale}/characters?role=${roleParam}`}
+        className={buttonClassName('secondary', 'sm', 'self-start sm:self-auto')}
+      >
+        <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" />
+        <span>{t.backToCharacters}</span>
+      </Link>
 
       <div className="hidden sm:flex items-center gap-2 self-end sm:self-auto">
         {prevChar && (

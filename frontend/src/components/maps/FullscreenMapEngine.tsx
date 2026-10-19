@@ -37,6 +37,8 @@ export const FullscreenMapEngineView: React.FC<FullscreenMapEngineProps> = ({ ma
 
   useEffect(() => {
     setImageFailed(false);
+    setZoom(1.0);
+    setPan({ x: 0, y: 0 });
   }, [mapId]);
 
   const activeMap = useMemo(
@@ -57,11 +59,19 @@ export const FullscreenMapEngineView: React.FC<FullscreenMapEngineProps> = ({ ma
   const pointerDownPosRef = useRef<{ x: number; y: number } | null>(null);
   const draggedRef = useRef<boolean>(false);
 
-  const handleWheel = (e: React.WheelEvent) => {
-    e.preventDefault();
-    const zoomFactor = e.deltaY < 0 ? 1.15 : 0.85;
-    setZoom((prev) => Math.min(Math.max(prev * zoomFactor, 0.5), 5.0));
-  };
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const onWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      const zoomFactor = e.deltaY < 0 ? 1.15 : 0.85;
+      setZoom((prev) => Math.min(Math.max(prev * zoomFactor, 0.5), 5.0));
+    };
+    el.addEventListener('wheel', onWheel, { passive: false });
+    return () => {
+      el.removeEventListener('wheel', onWheel);
+    };
+  }, []);
 
   const isImageTarget = (target: EventTarget) => (target as HTMLElement).tagName === 'IMG';
 
@@ -227,7 +237,6 @@ export const FullscreenMapEngineView: React.FC<FullscreenMapEngineProps> = ({ ma
 
       <div
         ref={containerRef}
-        onWheel={handleWheel}
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}

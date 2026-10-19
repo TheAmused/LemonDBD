@@ -34,9 +34,7 @@ function RandomizerContent() {
     document.title = dict.app.perkRandomizerPageTitle;
   }, [dict]);
 
-  const allPerksKey = `${backendBase}/api/v1/perks?limit=1000&lang=${locale}${
-    user?.id ? `&user_id=${user.id}` : ''
-  }`;
+  const allPerksKey = `${backendBase}/api/v1/perks?limit=1000&lang=${locale}`;
   const { data: perksResponse, loading: perksFetching } = useCachedData<{ data?: Perk[] }>(
     allPerksKey,
     () => fetchJson<{ data?: Perk[] }>(allPerksKey)

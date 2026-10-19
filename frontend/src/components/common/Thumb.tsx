@@ -5,12 +5,13 @@ import React from 'react';
 import Image from 'next/image';
 import { cn } from '@/utils/cn';
 
-export type ThumbSize = 'sm' | 'md' | 'lg';
+export type ThumbSize = 'sm' | 'md' | 'lg' | 'xl';
 
 const SIZES: Record<ThumbSize, { box: string; px: number }> = {
   sm: { box: 'h-8 w-8', px: 32 },
-  md: { box: 'h-10 w-10', px: 40 },
-  lg: { box: 'h-11 w-11', px: 44 },
+  md: { box: 'h-11 w-11', px: 44 },
+  lg: { box: 'h-14 w-14', px: 56 },
+  xl: { box: 'h-16 w-16', px: 64 },
 };
 
 export interface ThumbProps {
@@ -34,7 +35,11 @@ export function Thumb({ src, alt, size = 'md', fit = 'cover', fallback, classNam
           width={px}
           height={px}
           unoptimized
-          className={cn('h-full w-full', fit === 'cover' ? 'object-cover' : 'object-contain p-0.5')}
+          loading="lazy"
+          decoding="async"
+          draggable={false}
+          onContextMenu={(e) => e.preventDefault()}
+          className={cn('h-full w-full select-none', fit === 'cover' ? 'object-cover' : 'object-contain p-0.5')}
         />
       ) : (
         fallback

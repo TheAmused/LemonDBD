@@ -245,7 +245,7 @@ export const RoundEditorCard: React.FC<RoundEditorCardProps> = ({ round, index, 
         {selectedTargetItem ? (
           <Surface padding="sm" className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <Thumb src={targetImgSrc} alt={selectedTargetItem.name} fallback={<Sparkles className="h-4 w-4 text-text-muted" />} />
+              <Thumb src={targetImgSrc} alt={selectedTargetItem.name} size="lg" fallback={<Sparkles className="h-4 w-4 text-text-muted" />} />
               <div>
                 <div className="type-card-title text-text-primary">{selectedTargetItem.name}</div>
                 <div className="text-xs text-text-muted capitalize">{targetType}</div>

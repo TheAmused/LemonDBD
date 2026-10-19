@@ -71,7 +71,7 @@ export default {
   failedToResendCode: "Code konnte nicht erneut gesendet werden.",
   digitAriaLabel: "Ziffer {n} des Bestätigungscodes",
   missingResetToken: "Reset-Token fehlt.",
-  passwordTooShort: "Das Passwort muss mindestens 6 Zeichen lang sein.",
+  passwordTooShort: "Das Passwort muss mindestens {min} Zeichen lang sein.",
   passwordsDoNotMatch: "Die Passwörter stimmen nicht überein.",
   failedToResetPassword: "Passwort konnte nicht zurückgesetzt werden.",
   failedToRequestPasswordReset: "Passwort-Reset konnte nicht angefordert werden.",

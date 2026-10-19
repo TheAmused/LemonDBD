@@ -71,7 +71,7 @@ export default {
   failedToResendCode: "コードの再送信に失敗しました。",
   digitAriaLabel: "確認コードの{n}桁目",
   missingResetToken: "リセットトークンがありません。",
-  passwordTooShort: "パスワードは6文字以上である必要があります。",
+  passwordTooShort: "パスワードは{min}文字以上である必要があります。",
   passwordsDoNotMatch: "パスワードが一致しません。",
   failedToResetPassword: "パスワードのリセットに失敗しました。",
   failedToRequestPasswordReset: "パスワードリセットのリクエストに失敗しました。",

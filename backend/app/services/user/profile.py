@@ -78,7 +78,7 @@ def modify_user_profile(
     """
     from app.services import ban_list
     from app.services.mail_service import send_email_changed_notice, send_verification_email
-    from app.services.site_settings import email_verification_required, verification_lifetime
+    from app.services.site_settings import email_verification_required, password_min_length, verification_lifetime
     from app.services.user import two_factor
     from app.services.user.auth import _generate_verification_code
 
@@ -107,8 +107,10 @@ def modify_user_profile(
         if two_factor.is_enabled(user.id) and not (two_factor_code or "").strip():
             raise two_factor.TwoFactorError("two_factor_required", 403)
 
-    if new_password and len(new_password) < 6:
-        return None, "New password must be at least 6 characters long."
+    # The admin-set minimum (Settings > Limits), the same one sign-up and reset enforce.
+    min_length = password_min_length()
+    if new_password and len(new_password) < min_length:
+        return None, f"New password must be at least {min_length} characters long."
 
     if changing_email:
         # Same wording as sign-up, and checked first, so it never reveals whether the address is taken.

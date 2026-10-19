@@ -71,7 +71,7 @@ export default {
   failedToResendCode: "No se pudo reenviar el código.",
   digitAriaLabel: "Dígito {n} del código de verificación",
   missingResetToken: "Falta el token de restablecimiento.",
-  passwordTooShort: "La contraseña debe tener al menos 6 caracteres.",
+  passwordTooShort: "La contraseña debe tener al menos {min} caracteres.",
   passwordsDoNotMatch: "Las contraseñas no coinciden.",
   failedToResetPassword: "No se pudo restablecer la contraseña.",
   failedToRequestPasswordReset: "No se pudo solicitar el restablecimiento de contraseña.",

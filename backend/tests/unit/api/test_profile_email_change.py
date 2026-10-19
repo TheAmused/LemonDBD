@@ -81,6 +81,17 @@ class TestEmailChange:
         db.session.expire_all()
         assert db.session.get(User, user.id).email == "mover@example.com"
 
+    def test_new_password_uses_the_admin_minimum(self, client, account, monkeypatch) -> None:
+        import app.services.site_settings as site_settings
+
+        monkeypatch.setattr(site_settings, "password_min_length", lambda: 10)
+        _, headers = account
+        short = client.put("/api/v1/auth/profile", json={"new_password": "eight888", "current_password": PASSWORD}, headers=headers)
+        assert short.status_code == 400
+        assert "10" in short.get_json()["error"]
+        ok = client.put("/api/v1/auth/profile", json={"new_password": "ten-chars!", "current_password": PASSWORD}, headers=headers)
+        assert ok.status_code == 200
+
     def test_address_taken_by_another_account_is_refused(self, client, account, sent) -> None:
         db.session.add(User(login="other", username="other", email="taken@example.com", password_hash=hash_password(PASSWORD)))
         db.session.commit()

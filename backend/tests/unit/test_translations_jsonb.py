@@ -65,7 +65,7 @@ class TestTranslationsJSONB:
             assert "pl" in loaded.translations
             assert loaded.translations["pl"]["name"] == "Zdecydowany Cios"
 
-            default_dict = loaded.to_dict()
+            default_dict = loaded.to_dict(include_translations=True)
             assert default_dict["name"] == "Decisive Strike"
             assert default_dict["description"] == "English description for Decisive Strike."
             assert "pl" in default_dict["translations"]

@@ -12,7 +12,7 @@ import { Perk, CharacterItem } from '@/types/perks';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 import { useDictionary, useLocale } from '@/context/DictionaryContext';
 import { useCachedData } from '@/hooks/useCachedData';
-import { fetchJson } from '@/services/dataCache';
+import { Button } from '@/components/common/Button';
 
 const PerkModal = dynamic(() => import('@/components/PerkModal').then((m) => m.PerkModal), { ssr: false });
 
@@ -69,13 +69,14 @@ function RandomizerContent() {
       <div className="relative z-10 flex flex-col flex-1 min-h-0">
         {perksError && allPerks.length === 0 ? (
           <div className="flex flex-col items-center justify-center gap-4 p-12 text-center my-auto">
-            <p className="text-text-secondary text-base">Failed to load perks catalog.</p>
-            <button
+            <p className="text-text-secondary text-base">{dict.generator.loadError}</p>
+            <Button
+              variant="primary"
+              size="md"
               onClick={() => retryPerks()}
-              className="px-4 py-2 bg-accent-red text-white rounded hover:bg-opacity-90 font-medium transition-colors"
             >
-              Retry
-            </button>
+              {dict.modal.retry}
+            </Button>
           </div>
         ) : perksLoading && allPerks.length === 0 ? (
           <RandomizerPageSkeleton />

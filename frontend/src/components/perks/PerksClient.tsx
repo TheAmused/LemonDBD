@@ -11,6 +11,7 @@ import { PerkCard } from '@/components/PerkCard';
 import { PerksGridSkeleton } from '@/components/PerksSkeleton';
 import { EmptyState } from '@/components/common/EmptyState';
 import { Pagination } from '@/components/common/Pagination';
+import { Button } from '@/components/common/Button';
 import { Locale } from '@/i18n/config';
 import { SearchX } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
@@ -191,10 +192,10 @@ function PerksContent() {
         setTotalPages(result.pagination.total_pages);
         setTotalResults(result.pagination.total);
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Failed fetching perks:', err);
       if (requestId === fetchSeqRef.current) {
-        setFetchError(err?.message || 'Failed fetching perks');
+        setFetchError(err instanceof Error ? err.message : 'Failed fetching perks');
       }
     } finally {
       if (requestId === fetchSeqRef.current) {
@@ -319,13 +320,14 @@ function PerksContent() {
         <div className="flex min-h-0 flex-1 flex-col overflow-y-auto">
           {fetchError && perks.length === 0 ? (
             <div className="flex flex-col items-center justify-center gap-4 p-12 text-center my-auto">
-              <p className="text-text-secondary text-base">Failed to load perks.</p>
-              <button
+              <p className="text-text-secondary text-base">{dict.filters.loadError}</p>
+              <Button
+                variant="primary"
+                size="md"
                 onClick={() => fetchPerks()}
-                className="px-4 py-2 bg-accent-red text-white rounded hover:bg-opacity-90 font-medium transition-colors"
               >
-                Retry
-              </button>
+                {dict.modal.retry}
+              </Button>
             </div>
           ) : loading ? (
             <PerksGridSkeleton />

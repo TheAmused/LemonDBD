@@ -194,7 +194,7 @@ def admin_remove_user(user_id: int) -> bool:
     if not user:
         return False
     avatar_dir = get_avatar_storage_directory()
-    remove_stale_avatar_file(user.avatar_url, avatar_dir)
+    remove_stale_avatar_file(user.avatar_url, avatar_dir, user.id)
     with transaction():
         _anonymise_bug_reports(user.id)
         _anonymise_moderation_records(user.id)
@@ -237,7 +237,7 @@ def delete_own_account(
         two_factor.verify_second_factor(user, two_factor_code)
 
     avatar_dir = get_avatar_storage_directory()
-    remove_stale_avatar_file(user.avatar_url, avatar_dir)
+    remove_stale_avatar_file(user.avatar_url, avatar_dir, user.id)
 
     with transaction():
         _anonymise_bug_reports(user.id)

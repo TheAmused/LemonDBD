@@ -64,7 +64,7 @@ def list_perks():
     search = request.args.get("search")
     sort_by = request.args.get("sort_by", default="name", type=str)
     order = request.args.get("order", default="asc", type=str)
-    page, limit = paginate_args(default_per_page=50, max_per_page=10000, per_page_arg="limit")
+    page, limit = paginate_args(default_per_page=50, max_per_page=500, per_page_arg="limit")
     lang = _extract_lang()
 
     owned_only_param = request.args.get("owned_only", "false").lower()

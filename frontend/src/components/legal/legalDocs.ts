@@ -15,6 +15,8 @@ export interface LegalSectionText {
   tldr: string;
   paragraphs: readonly string[];
   items: readonly string[];
+  /** Paragraphs shown after the list. */
+  closing?: readonly string[];
 }
 
 /** What every legal document in the dictionary looks like. */
@@ -26,8 +28,6 @@ export interface LegalDocText {
   lastUpdated: string;
   translationNotice: string;
   tldrLabel: string;
-  /** "Section {number}": the small line above a numbered section's title. */
-  sectionEyebrow?: string;
   /** States that the headings and TL;DR lines are not legally binding. */
   tldrNotice: string;
   summaryHeading: string;

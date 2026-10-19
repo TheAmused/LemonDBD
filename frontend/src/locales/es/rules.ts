@@ -7,7 +7,6 @@ export default {
   lastUpdated: "15 de octubre de 2026",
   translationNotice: "Si las versiones traducidas de esta página difieren de la inglesa, prevalece la versión en inglés.",
   tldrLabel: "Resumen",
-  sectionEyebrow: "Sección {number}",
   tldrNotice: "Los títulos, las líneas de resumen y el compendio son atajos amistosos. Por motivos legales no son vinculantes y no sustituyen al texto que hay debajo. Si difieren de él, se aplica el texto completo.",
   summaryHeading: "Las normas en pocas palabras",
   summary: [
@@ -33,7 +32,6 @@ export default {
       tldr: "Aquí todos vienen a que los cace un juego, no tú.",
       paragraphs: [
         "Esta sección se aplica a todo el contenido y la conducta en el Sitio y el Servidor, incluidos nombres de usuario, avatares, vitrinas de perfil, informes de errores, enlaces compartidos y mensajes. No está permitido:",
-        "El humor negro sobre personajes ficticios es aceptable. No debe dirigirse contra personas reales.",
       ],
       items: [
         "acosar, intimidar o amenazar a ninguna persona, ni incitar al odio o a la violencia contra una persona o un grupo, sea por quiénes son o por cómo juegan;",
@@ -41,6 +39,9 @@ export default {
         "publicar contenido sexual que involucre a menores o contenido sexual sobre personas privadas reales;",
         "suplantar a otro usuario, a <brand>LemonTeam</brand> o a los desarrolladores del juego;",
         "enviar spam, publicidad no solicitada, menciones masivas o enlaces de invitación en el Servidor, ni publicar contenido ajeno al tema en canales con un tema definido.",
+      ],
+      closing: [
+        "El humor negro sobre personajes ficticios es aceptable. No debe dirigirse contra personas reales.",
       ],
     },
     fairPlay: {
@@ -108,7 +109,7 @@ export default {
     },
     enforcement: {
       heading: "Qué pasa si las incumples",
-      tldr: "Tres fases del gancho: un aviso, una limpieza y la Entidad solo si sigues insistiendo.",
+      tldr: "Tres pasos: una advertencia, una suspensión temporal y un baneo permanente.",
       paragraphs: [
         "Preferimos resolver los problemas hablando, pero somos nosotros quienes decidimos, con criterio razonable, qué constituye un incumplimiento. Según la gravedad y la frecuencia, podemos adoptar cualquiera de las medidas siguientes y, en casos graves, pasar directamente a la última.",
       ],
@@ -126,9 +127,9 @@ export default {
   hookStages: {
     heading: "Las fases del gancho",
     stages: [
-      { title: "Fase 1: el aviso", text: "Un mensaje pidiéndote que corrijas o dejes de hacer algo, o una advertencia formal." },
-      { title: "Fase 2: la limpieza", text: "Eliminamos o bloqueamos el contenido, reiniciamos el progreso obtenido de forma injusta o limitamos funciones." },
-      { title: "Sacrificio", text: "Tu cuenta se suspende o se banea y se pueden bloquear cuentas o direcciones adicionales." },
+      { title: "Fase 1: advertencia", text: "Un aviso formal en tu cuenta. No te restringe." },
+      { title: "Fase 2: suspensión", text: "Se cierra tu sesión y no puedes iniciarla durante un número de días determinado." },
+      { title: "Fase 3: baneo", text: "Tu cuenta queda baneada para siempre, y las cuentas creadas para eludirlo también pueden banearse." },
     ],
   },
 };

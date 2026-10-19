@@ -7,7 +7,6 @@ export default {
   lastUpdated: "October 15, 2026",
   translationNotice: "If the translated versions of this page differ from the English one, the English version prevails.",
   tldrLabel: "TL;DR",
-  sectionEyebrow: "Section {number}",
   tldrNotice: "The titles, the TL;DR lines and the summary are friendly shortcuts. For legal reasons they are not binding and do not replace the text below them. If they differ from it, the full text applies.",
   summaryHeading: "Rules in a nutshell",
   summary: [
@@ -33,7 +32,6 @@ export default {
       tldr: "Everyone here came to be hunted by a game, not by you.",
       paragraphs: [
         "This section applies to all content and conduct on the Site and the Server, including usernames, avatars, profile showcases, bug reports, shared links and messages. You must not:",
-        "Dark humour about fictional characters is acceptable. It must not be aimed at real people.",
       ],
       items: [
         "harass, bully or threaten any person, or incite hatred or violence against a person or group, whether because of who they are or how they play;",
@@ -41,6 +39,9 @@ export default {
         "publish sexual content involving minors, or sexual content about real private individuals;",
         "impersonate another user, <brand>LemonTeam</brand> or the developers of the game;",
         "post spam, unsolicited advertising, mass mentions or invitation links on the Server, or post off-topic content in channels with a set topic.",
+      ],
+      closing: [
+        "Dark humour about fictional characters is acceptable. It must not be aimed at real people.",
       ],
     },
     fairPlay: {
@@ -108,7 +109,7 @@ export default {
     },
     enforcement: {
       heading: "What happens if you break them",
-      tldr: "Three hook stages: a nudge, a clean-up, and the Entity only if you keep going.",
+      tldr: "Three steps: a warning, a temporary suspension, and a permanent ban.",
       paragraphs: [
         "We prefer to resolve problems through communication, but we decide, at our reasonable discretion, what constitutes a breach. Depending on how serious and how frequent the breach is, we may take any of the measures below, and in serious cases we may go straight to the last of them.",
       ],
@@ -118,7 +119,7 @@ export default {
         "As a rule, repeated breaches escalate: warnings first, then a suspension, then a ban. Warnings that have expired no longer count. Serious breaches can skip any of these steps.",
         "On the Server the same measures take the form of a warning, a timeout, a kick or a ban.",
         "Content that breaks these Rules can be banned: the Site then refuses to open or import it. We may also warn, suspend or ban the account of the person who published it, and we email them the reason.",
-        "Creating another account, or registering again with the address of a banned account, to get round a suspension or a ban is itself a breach. The new account can be banned, and the Site may refuse to register an address that belonged to a permanently banned account.",
+        "Creating another account, or registering again with the address of a banned account, to get around a suspension or a ban is itself a breach. The new account can be banned, and the Site may refuse to register an address that belonged to a permanently banned account.",
         "Where we remove content or restrict an account, we will explain why where practicable. If you believe we made a mistake, you can contest the decision by writing to us, and we will review it; a suspension or ban that turns out to be wrong is lifted. The procedure is set out in the [Terms of Service]({termsPath}).",
       ],
     },
@@ -126,9 +127,9 @@ export default {
   hookStages: {
     heading: "The hook stages",
     stages: [
-      { title: "Stage 1: the nudge", text: "A message asking you to correct or stop the conduct, or a formal warning." },
-      { title: "Stage 2: the clean-up", text: "We remove or block the content, reset progress gained unfairly or restrict features." },
-      { title: "Sacrifice", text: "Your account is suspended or banned, and additional accounts or addresses may be blocked." },
+      { title: "Stage 1: warning", text: "A formal notice on your account. It does not restrict you." },
+      { title: "Stage 2: suspension", text: "You are signed out and cannot sign in for a set number of days." },
+      { title: "Stage 3: ban", text: "Your account is banned for good, and accounts made to get around it can be banned too." },
     ],
   },
 };

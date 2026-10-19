@@ -54,11 +54,12 @@ def fetch_maps(
                 if table_has_any_rows:
                     return [r.to_dict(lang=lang) for r in rows]
         except Exception as e:
-            logger.debug(f"SQLAlchemy get_maps fallback: {e}")
+            logger.exception(f"Database error in fetch_maps: {e}")
             try:
                 db.session.rollback()
             except Exception:
                 pass
+            raise
 
     conn = db_service.get_connection()
     cursor = conn.cursor()
@@ -143,9 +144,10 @@ def fetch_realms(lang: str | None = None) -> list[dict[str, Any]]:
             rows = db.session.scalars(select(Realm)).all()
             return [r.to_dict(lang=lang) for r in rows]
     except Exception as e:
-        logger.debug(f"fetch_realms fallback: {e}")
+        logger.exception(f"Database error in fetch_realms: {e}")
         try:
             db.session.rollback()
         except Exception:
             pass
+        raise
     return []

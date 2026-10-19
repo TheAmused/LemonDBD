@@ -413,9 +413,9 @@ def fetch_perks(
             catalog_cache.set(cache_key, result, ttl=60.0)
         return result
     except Exception as e:
-        logger.debug(f"Falling back to memory cache in get_perks: {e}")
-
-    fallback_res = fetch_perks_fallback(service, category, character, scope, search, sort_by, order, page, limit, lang)
-    if cache_key is not None:
-        catalog_cache.set(cache_key, fallback_res, ttl=30.0)
-    return fallback_res
+        logger.exception(f"Database error in fetch_perks: {e}")
+        try:
+            db.session.rollback()
+        except Exception:
+            pass
+        raise

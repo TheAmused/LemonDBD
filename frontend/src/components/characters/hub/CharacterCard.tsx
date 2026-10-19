@@ -7,7 +7,7 @@ import { DisabledBadge } from '@/components/DisabledBadge';
 import { CharacterOwnershipOverlay } from '@/components/characters/CharacterOwnershipOverlay';
 import {
   CharacterItem,
-  getCharacterSlug,
+  characterSlug,
   getAvatarUrl as resolveAvatarUrl,
   getAvatarThumbUrl,
 } from '@/components/character-detail/types';
@@ -47,7 +47,8 @@ export function CharacterCard({
   const showLockedOverlay = !isOwned;
   const avatarSrc = resolveAvatarUrl(backendBase, char, isSurvivor);
   const avatarThumbSrc = getAvatarThumbUrl(backendBase, char, isSurvivor);
-  const detailHref = `/${locale}/characters/${getCharacterSlug(char.name)}`;
+  const slug = characterSlug(char);
+  const detailHref = `/${locale}/characters/${slug}`;
 
   return (
     <Surface
@@ -104,10 +105,10 @@ export function CharacterCard({
               target.src = avatarSrc;
             } else if (!target.dataset.triedFallback) {
               target.dataset.triedFallback = '1';
-              target.src = `${backendBase}/static/avatars/${isSurvivor ? 'survivors' : 'killers'}/${getCharacterSlug(char.name)}.webp`;
+              target.src = `${backendBase}/static/avatars/${isSurvivor ? 'survivors' : 'killers'}/${slug}.webp`;
             } else if (target.dataset.triedFallback === '1') {
               target.dataset.triedFallback = '2';
-              target.src = `${backendBase}/static/avatars/${isSurvivor ? 'survivors' : 'killers'}/${getCharacterSlug(char.name)}.png`;
+              target.src = `${backendBase}/static/avatars/${isSurvivor ? 'survivors' : 'killers'}/${slug}.png`;
             }
           }}
         />

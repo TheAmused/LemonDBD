@@ -8,4 +8,5 @@ export {
   sanitizeAvatarName,
   getAvatarSubdir,
   getCharacterSlug,
+  characterSlug,
 } from '@/lib/slug';

@@ -60,13 +60,13 @@ export function safeRemoveItem(key: string): void {
   } catch {}
 }
 
-export function getDrawnPerksForRole(role: RoleCategory): string[] {
-  const drawn = safeGetJSON<string[]>(`lemon_drawn_perks_${role}`, []);
-  return drawn.filter((p): p is string => typeof p === 'string' && p.trim().length > 0);
+export function getDrawnPerksForRole(role: RoleCategory): number[] {
+  const drawn = safeGetJSON<unknown[]>(`lemon_drawn_perks_${role}`, []);
+  return drawn.filter((p): p is number => typeof p === 'number' && p > 0);
 }
 
-export function saveDrawnPerksForRole(role: RoleCategory, perks: string[]): boolean {
-  const unique = Array.from(new Set(perks.filter((p): p is string => typeof p === 'string' && p.trim().length > 0)));
+export function saveDrawnPerksForRole(role: RoleCategory, perks: number[]): boolean {
+  const unique = Array.from(new Set(perks.filter((p): p is number => typeof p === 'number' && p > 0)));
   return safeSetJSON(`lemon_drawn_perks_${role}`, unique);
 }
 

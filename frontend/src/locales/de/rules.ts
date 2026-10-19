@@ -7,7 +7,6 @@ export default {
   lastUpdated: "15. Oktober 2026",
   translationNotice: "Falls die übersetzten Fassungen dieser Seite von der englischen abweichen, gilt die englische Fassung.",
   tldrLabel: "Kurz gesagt",
-  sectionEyebrow: "Abschnitt {number}",
   tldrNotice: "Die Titel, die Kurz-gesagt-Zeilen und die Zusammenfassung sind freundliche Abkürzungen. Aus rechtlichen Gründen sind sie nicht verbindlich und ersetzen nicht den Text darunter. Weichen sie davon ab, gilt der vollständige Text.",
   summaryHeading: "Die Regeln in Kürze",
   summary: [
@@ -33,7 +32,6 @@ export default {
       tldr: "Alle hier wollen vom Spiel gejagt werden, nicht von dir.",
       paragraphs: [
         "Dieser Abschnitt gilt für alle Inhalte und alles Verhalten auf der Seite und dem Server, einschließlich Benutzernamen, Avataren, Profil-Vitrinen, Fehlerberichten, geteilten Links und Nachrichten. Nicht erlaubt ist es,",
-        "Schwarzer Humor über fiktive Figuren ist in Ordnung. Er darf sich nicht gegen reale Menschen richten.",
       ],
       items: [
         "Personen zu belästigen, zu mobben oder zu bedrohen oder zu Hass oder Gewalt gegen eine Person oder Gruppe aufzurufen, sei es wegen ihrer Identität oder ihrer Spielweise;",
@@ -41,6 +39,9 @@ export default {
         "sexuelle Inhalte mit Minderjährigen oder sexuelle Inhalte über reale Privatpersonen zu veröffentlichen;",
         "sich als andere Nutzer, <brand>LemonTeam</brand> oder die Entwickler des Spiels auszugeben;",
         "auf dem Server Spam, unerwünschte Werbung, Massenerwähnungen oder Einladungslinks zu posten oder in Kanälen mit festem Thema vom Thema abzuweichen.",
+      ],
+      closing: [
+        "Schwarzer Humor über fiktive Figuren ist in Ordnung. Er darf sich nicht gegen reale Menschen richten.",
       ],
     },
     fairPlay: {
@@ -108,7 +109,7 @@ export default {
     },
     enforcement: {
       heading: "Was passiert, wenn du sie brichst",
-      tldr: "Drei Haken-Stufen: ein Hinweis, ein Aufräumen und die Entität nur, wenn du weitermachst.",
+      tldr: "Drei Schritte: eine Verwarnung, eine befristete Sperre und ein dauerhafter Bann.",
       paragraphs: [
         "Wir klären Probleme lieber im Gespräch, entscheiden aber nach billigem Ermessen, was einen Verstoß darstellt. Je nach Schwere und Häufigkeit des Verstoßes können wir jede der folgenden Maßnahmen ergreifen und in schweren Fällen sofort zur letzten übergehen.",
       ],
@@ -126,9 +127,9 @@ export default {
   hookStages: {
     heading: "Die Haken-Stufen",
     stages: [
-      { title: "Stufe 1: der Hinweis", text: "Eine Nachricht mit der Bitte, das Verhalten zu korrigieren oder zu unterlassen, oder eine förmliche Verwarnung." },
-      { title: "Stufe 2: das Aufräumen", text: "Wir entfernen oder sperren Inhalte, setzen unfair erworbenen Fortschritt zurück oder schränken Funktionen ein." },
-      { title: "Opferung", text: "Dein Konto wird gesperrt oder gebannt, und weitere Konten oder Adressen können blockiert werden." },
+      { title: "Stufe 1: Verwarnung", text: "Eine förmliche Mitteilung auf deinem Konto. Sie schränkt dich nicht ein." },
+      { title: "Stufe 2: Sperre", text: "Du wirst abgemeldet und kannst dich für eine bestimmte Zahl von Tagen nicht anmelden." },
+      { title: "Stufe 3: Bann", text: "Dein Konto wird dauerhaft gebannt, und Konten, die zur Umgehung angelegt wurden, können ebenfalls gebannt werden." },
     ],
   },
 };

@@ -17,6 +17,8 @@ import { getLocalStorage } from '@/utils/safeStorage';
 import { getAuthToken } from '@/utils/api';
 import { reportCompleteShowcaseRoles } from '@/utils/userShowcaseAnalytics';
 
+const SAVE_RETRY_DELAY_MS = 2000;
+
 export function getShowcaseStorageKey(userId?: number | string | null): string {
   return `lemondbd_showcase_${userId ?? 'guest'}`;
 }
@@ -168,9 +170,14 @@ export function useUserShowcase(
   showcaseRef.current = showcase;
   const prevUserIdRef = useRef(userId);
   const saveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const hasUserModifiedRef = useRef(false);
+  /**
+   * Edits made before the saved showcase has arrived. They are replayed on top of the database copy
+   * when it does, instead of the whole (possibly stale, other-device) local copy being saved over it.
+   */
+  const pendingEditsRef = useRef<((prev: UserShowcaseState) => UserShowcaseState)[]>([]);
+  const dbLoadedRef = useRef(false);
 
-  // Sync to database via API when authenticated
+  // Sync to database via API when authenticated; a failed save is retried once.
   const syncToDatabase = useCallback(
     (targetUserId: number | string, nextState: UserShowcaseState) => {
       if (typeof window === 'undefined') return;
@@ -180,14 +187,20 @@ export function useUserShowcase(
       setIsSaving(true);
       setSaveError(null);
 
-      updateUserShowcaseApi(targetUserId, nextState)
-        .then(() => {
-          setIsSaving(false);
-        })
-        .catch((err) => {
-          setIsSaving(false);
-          setSaveError(err instanceof Error ? err.message : 'Failed to save to database');
-        });
+      const attempt = (retriesLeft: number) =>
+        updateUserShowcaseApi(targetUserId, nextState)
+          .then(() => {
+            setIsSaving(false);
+          })
+          .catch((err) => {
+            if (retriesLeft > 0) {
+              setTimeout(() => void attempt(retriesLeft - 1), SAVE_RETRY_DELAY_MS);
+              return;
+            }
+            setIsSaving(false);
+            setSaveError(err instanceof Error ? err.message : 'Failed to save to database');
+          });
+      void attempt(1);
     },
     []
   );
@@ -198,42 +211,46 @@ export function useUserShowcase(
 
     if (prevUserIdRef.current !== userId) {
       prevUserIdRef.current = userId;
-      hasUserModifiedRef.current = false;
+      pendingEditsRef.current = [];
       const loaded = loadStoredShowcase(userId);
       showcaseRef.current = loaded;
       setShowcase(loaded);
     }
 
+    dbLoadedRef.current = false;
     if (!userId || userId === 'guest') return;
 
     let cancelled = false;
     const controller = new AbortController();
     setIsLoading(true);
 
+    /** The base is ready (the database copy, or the local one if it could not be read): replay queued edits. */
+    const settle = (base: UserShowcaseState) => {
+      const edits = pendingEditsRef.current;
+      pendingEditsRef.current = [];
+      dbLoadedRef.current = true;
+      const next = edits.reduce((state, edit) => edit(state), base);
+      showcaseRef.current = next;
+      saveStoredShowcase(userId, next);
+      setShowcase(next);
+      reportCompleteShowcaseRoles(userId, next);
+      if (edits.length > 0) syncToDatabase(userId, next);
+      setIsLoading(false);
+    };
+
     fetchUserShowcase(userId, controller.signal)
       .then((dbData) => {
-        if (!cancelled && dbData) {
-          // Do not overwrite if the user already made edits before the network response returned
-          if (!hasUserModifiedRef.current) {
-            showcaseRef.current = dbData;
-            saveStoredShowcase(userId, dbData);
-            setShowcase(dbData);
-            reportCompleteShowcaseRoles(userId, dbData);
-          }
-          setIsLoading(false);
-        }
+        if (!cancelled) settle(dbData ?? showcaseRef.current);
       })
       .catch(() => {
-        if (!cancelled) {
-          setIsLoading(false);
-        }
+        if (!cancelled) settle(showcaseRef.current);
       });
 
     return () => {
       cancelled = true;
       controller.abort();
     };
-  }, [userId]);
+  }, [userId, syncToDatabase]);
 
   // Flush pending debounced database sync on unmount
   useEffect(() => {
@@ -249,13 +266,17 @@ export function useUserShowcase(
 
   const updateState = useCallback(
     (updater: (prev: UserShowcaseState) => UserShowcaseState) => {
-      hasUserModifiedRef.current = true;
       const next = updater(showcaseRef.current);
       showcaseRef.current = next;
       saveStoredShowcase(userId, next);
       setShowcase(next);
       reportCompleteShowcaseRoles(userId, next);
 
+      if (userId && userId !== 'guest' && !dbLoadedRef.current) {
+        // Not saved yet: replayed on the database copy once it arrives (see `settle`).
+        pendingEditsRef.current.push(updater);
+        return;
+      }
       if (userId && userId !== 'guest') {
         if (saveTimeoutRef.current) {
           clearTimeout(saveTimeoutRef.current);

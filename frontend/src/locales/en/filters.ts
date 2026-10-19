@@ -33,4 +33,5 @@ export default {
   ownershipFilter: "Filter by ownership",
   sortFields: "Sort field",
   sortOrderLabel: "Sort order",
+  loadError: "Failed to load perks.",
 } as const;

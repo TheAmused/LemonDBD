@@ -45,7 +45,7 @@ test('MapCard resolves the local static image path', () => {
       onSelect: () => {},
     })
   );
-  assert.ok(html.includes('http://localhost:5000/static/maps/callouts/hens333/azarovs/azarovs_resting_place.webp'));
+  assert.ok(html.includes('http://localhost:5000/api/v1/maps/thumb/callouts/hens333/azarovs/azarovs_resting_place.webp'));
 });
 
 test('MapCard falls back to the remote callout URL when no local path is set', () => {

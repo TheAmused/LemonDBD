@@ -134,8 +134,8 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
           const json = await res.json();
           setPerkSuggestions(json.data || []);
         }
-      } catch (err: any) {
-        if (err?.name !== 'AbortError') {
+      } catch (err: unknown) {
+        if (!(err instanceof Error && err.name === 'AbortError')) {
           console.error('Failed fetching perk suggestions:', err);
         }
       }
@@ -196,6 +196,7 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
     },
     {
       value: 'owned',
+      disabled: !isLoggedIn,
       activeClassName: 'bg-accent-red text-text-inverted',
       label: (
         <span className="inline-flex items-center gap-1.5">
@@ -285,15 +286,13 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
               onChange={setRole}
               options={roleOptions}
             />
-            {isLoggedIn && (
-              <SegmentedControl
-                className="w-full"
-                ariaLabel={dict.filters.ownershipFilter}
-                value={ownershipFilter}
-                onChange={setOwnershipFilter}
-                options={ownershipOptions}
-              />
-            )}
+            <SegmentedControl
+              className="w-full"
+              ariaLabel={dict.filters.ownershipFilter}
+              value={ownershipFilter}
+              onChange={setOwnershipFilter}
+              options={ownershipOptions}
+            />
             {generalOnlyLabel}
             <SegmentedControl
               className="w-full"
@@ -323,14 +322,12 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
           options={roleOptions}
         />
 
-        {isLoggedIn && (
-          <SegmentedControl
-            ariaLabel={dict.filters.ownershipFilter}
-            value={ownershipFilter}
-            onChange={setOwnershipFilter}
-            options={ownershipOptions}
-          />
-        )}
+        <SegmentedControl
+          ariaLabel={dict.filters.ownershipFilter}
+          value={ownershipFilter}
+          onChange={setOwnershipFilter}
+          options={ownershipOptions}
+        />
 
         {generalOnlyLabel}
 

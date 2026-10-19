@@ -99,8 +99,10 @@ export async function fetchUserShowcase(
     ...authHeaders(token),
   };
 
+  // Self or admin only: the session cookie has to go with it.
   const res = await fetch(`${apiBase()}/api/v1/users/${userId}/showcase?_t=${Date.now()}`, {
     headers,
+    credentials: 'include',
     signal,
   });
 

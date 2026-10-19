@@ -16,7 +16,7 @@ const code = (rel: string) => read(rel).split('\n').filter((line) => !/^\s*(\/\/
 const docOf = (dict: (typeof locales)[keyof typeof locales], id: LegalDocId) => dict[id] as unknown as LegalDocText;
 const allText = (doc: LegalDocText) => [
   doc.tagline, doc.tldrNotice, ...doc.summary,
-  ...Object.values(doc.sections).flatMap((s) => [s.tldr, ...s.paragraphs, ...s.items]),
+  ...Object.values(doc.sections).flatMap((s) => [s.tldr, ...s.paragraphs, ...s.items, ...(s.closing ?? [])]),
 ];
 const countOf = (text: string, needle: string) => text.split(needle).length - 1;
 
@@ -48,6 +48,7 @@ test('legal documents: every locale has the same list sizes as English', () => {
       for (const section of LEGAL_DOCS[id].order) {
         assert.equal(doc.sections[section].items.length, base.sections[section].items.length, `${loc}.${id}.${section}.items`);
         assert.equal(doc.sections[section].paragraphs.length, base.sections[section].paragraphs.length, `${loc}.${id}.${section}.paragraphs`);
+        assert.equal((doc.sections[section].closing ?? []).length, (base.sections[section].closing ?? []).length, `${loc}.${id}.${section}.closing`);
       }
     }
   }

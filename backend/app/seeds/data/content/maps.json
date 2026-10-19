@@ -171,16 +171,16 @@
       "callout_image_local_path": "maps/callouts/hens333/springwood/preschool_i.webp",
       "translations": {
         "de": {
-          "name": "Badham-Vorschule"
+          "name": "Badham-Vorschule I"
         },
         "es": {
-          "name": "Guardería Badham"
+          "name": "Guardería Badham I"
         },
         "ja": {
-          "name": "バダム幼稚園"
+          "name": "バダム幼稚園 I"
         },
         "pl": {
-          "name": "Przedszkole w Badham"
+          "name": "Przedszkole w Badham I"
         }
       }
     },
@@ -201,16 +201,16 @@
       "callout_image_local_path": "maps/callouts/hens333/springwood/preschool_ii.webp",
       "translations": {
         "de": {
-          "name": "Badham-Vorschule"
+          "name": "Badham-Vorschule II"
         },
         "es": {
-          "name": "Guardería Badham"
+          "name": "Guardería Badham II"
         },
         "ja": {
-          "name": "バダム幼稚園"
+          "name": "バダム幼稚園 II"
         },
         "pl": {
-          "name": "Przedszkole w Badham"
+          "name": "Przedszkole w Badham II"
         }
       }
     },
@@ -231,16 +231,16 @@
       "callout_image_local_path": "maps/callouts/hens333/springwood/preschool_iii.webp",
       "translations": {
         "de": {
-          "name": "Badham-Vorschule"
+          "name": "Badham-Vorschule III"
         },
         "es": {
-          "name": "Guardería Badham"
+          "name": "Guardería Badham III"
         },
         "ja": {
-          "name": "バダム幼稚園"
+          "name": "バダム幼稚園 III"
         },
         "pl": {
-          "name": "Przedszkole w Badham"
+          "name": "Przedszkole w Badham III"
         }
       }
     },
@@ -261,16 +261,16 @@
       "callout_image_local_path": "maps/callouts/hens333/springwood/preschool_iiiv.webp",
       "translations": {
         "de": {
-          "name": "Badham-Vorschule"
+          "name": "Badham-Vorschule IV"
         },
         "es": {
-          "name": "Guardería Badham"
+          "name": "Guardería Badham IV"
         },
         "ja": {
-          "name": "バダム幼稚園"
+          "name": "バダム幼稚園 IV"
         },
         "pl": {
-          "name": "Przedszkole w Badham"
+          "name": "Przedszkole w Badham IV"
         }
       }
     },
@@ -291,16 +291,16 @@
       "callout_image_local_path": "maps/callouts/hens333/springwood/preschool_v.webp",
       "translations": {
         "de": {
-          "name": "Badham-Vorschule"
+          "name": "Badham-Vorschule V"
         },
         "es": {
-          "name": "Guardería Badham"
+          "name": "Guardería Badham V"
         },
         "ja": {
-          "name": "バダム幼稚園"
+          "name": "バダム幼稚園 V"
         },
         "pl": {
-          "name": "Przedszkole w Badham"
+          "name": "Przedszkole w Badham V"
         }
       }
     },
@@ -951,16 +951,16 @@
       "callout_image_local_path": "maps/callouts/hens333/yamaoka_estate/family_residence.webp",
       "translations": {
         "de": {
-          "name": "Familiensitz"
+          "name": "Familiensitz I"
         },
         "es": {
-          "name": "Residencia Familiar"
+          "name": "Residencia Familiar I"
         },
         "ja": {
-          "name": "ファミリー・レジデンス"
+          "name": "ファミリー・レジデンス I"
         },
         "pl": {
-          "name": "Rezydencja Rodzinna"
+          "name": "Rezydencja Rodzinna I"
         }
       }
     },
@@ -981,16 +981,16 @@
       "callout_image_local_path": "maps/callouts/hens333/yamaoka_estate/family_residence_ii.webp",
       "translations": {
         "de": {
-          "name": "Familiensitz"
+          "name": "Familiensitz II"
         },
         "es": {
-          "name": "Residencia Familiar"
+          "name": "Residencia Familiar II"
         },
         "ja": {
-          "name": "ファミリー・レジデンス"
+          "name": "ファミリー・レジデンス II"
         },
         "pl": {
-          "name": "Rezydencja Rodzinna"
+          "name": "Rezydencja Rodzinna II"
         }
       }
     },
@@ -1011,16 +1011,16 @@
       "callout_image_local_path": "maps/callouts/hens333/yamaoka_estate/sanctum_of_wrath.webp",
       "translations": {
         "de": {
-          "name": "Heiligtum des Zorns"
+          "name": "Heiligtum des Zorns I"
         },
         "es": {
-          "name": "Santuario de la Ira"
+          "name": "Santuario de la Ira I"
         },
         "ja": {
-          "name": "怒りの聖所"
+          "name": "怒りの聖所 I"
         },
         "pl": {
-          "name": "Sanktuarium Gniewu"
+          "name": "Sanktuarium Gniewu I"
         }
       }
     },
@@ -1041,16 +1041,16 @@
       "callout_image_local_path": "maps/callouts/hens333/yamaoka_estate/sanctum_of_wrath_ii.webp",
       "translations": {
         "de": {
-          "name": "Heiligtum des Zorns"
+          "name": "Heiligtum des Zorns II"
         },
         "es": {
-          "name": "Santuario de la Ira"
+          "name": "Santuario de la Ira II"
         },
         "ja": {
-          "name": "怒りの聖所"
+          "name": "怒りの聖所 II"
         },
         "pl": {
-          "name": "Sanktuarium Gniewu"
+          "name": "Sanktuarium Gniewu II"
         }
       }
     },
@@ -1362,16 +1362,16 @@
       "callout_image_local_path": "maps/callouts/hens333/ormond/mount_ormond_resort.webp",
       "translations": {
         "de": {
-          "name": "Skiort am Mount Ormond"
+          "name": "Skiort am Mount Ormond I"
         },
         "es": {
-          "name": "Complejo del Monte Ormond"
+          "name": "Complejo del Monte Ormond I"
         },
         "ja": {
-          "name": "オーモンド山のリゾート"
+          "name": "オーモンド山のリゾート I"
         },
         "pl": {
-          "name": "Ośrodek Mount Ormond"
+          "name": "Ośrodek Mount Ormond I"
         }
       }
     },
@@ -1392,16 +1392,16 @@
       "callout_image_local_path": "maps/callouts/hens333/ormond/mount_ormond_resort_ii.webp",
       "translations": {
         "de": {
-          "name": "Skiort am Mount Ormond"
+          "name": "Skiort am Mount Ormond II"
         },
         "es": {
-          "name": "Complejo del Monte Ormond"
+          "name": "Complejo del Monte Ormond II"
         },
         "ja": {
-          "name": "オーモンド山のリゾート"
+          "name": "オーモンド山のリゾート II"
         },
         "pl": {
-          "name": "Ośrodek Mount Ormond"
+          "name": "Ośrodek Mount Ormond II"
         }
       }
     },
@@ -1422,16 +1422,16 @@
       "callout_image_local_path": "maps/callouts/hens333/ormond/mount_ormond_resort_iii.webp",
       "translations": {
         "de": {
-          "name": "Skiort am Mount Ormond"
+          "name": "Skiort am Mount Ormond III"
         },
         "es": {
-          "name": "Complejo del Monte Ormond"
+          "name": "Complejo del Monte Ormond III"
         },
         "ja": {
-          "name": "オーモンド山のリゾート"
+          "name": "オーモンド山のリゾート III"
         },
         "pl": {
-          "name": "Ośrodek Mount Ormond"
+          "name": "Ośrodek Mount Ormond III"
         }
       }
     },

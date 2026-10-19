@@ -91,18 +91,3 @@ def perk_matches_search(p: Perk, query_lower: str, norm_query: str, is_general_m
     if is_general_match and ((p.survivor_id is None and p.killer_id is None) or p.is_generic_counterpart):
         return True
     return any(text_matches(h, query_lower, norm_query) for h in perk_search_haystacks(p, lang))
-
-
-def perk_dict_matches_search(
-    p: dict[str, Any], query_lower: str, norm_query: str, is_general_match: bool, lang: str | None = None
-) -> bool:
-    if is_general_match and (not p.get("character") or p.get("character", "").lower() == "general"):
-        return True
-    name = p.get("name", "")
-    translations = p.get("translations")
-    if lang and isinstance(translations, dict):
-        loc_data = translations.get(lang)
-        if isinstance(loc_data, dict):
-            name = loc_data.get("name") or name
-    haystacks = [name, p.get("alternate_name", ""), p.get("character", "")]
-    return any(text_matches(h, query_lower, norm_query) for h in haystacks)

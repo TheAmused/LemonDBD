@@ -6,7 +6,7 @@ from typing import Any
 from sqlalchemy import and_, func, or_, select
 from sqlalchemy.orm import joinedload
 
-from app.core.cache import catalog_cache
+from app.core.catalog_memo import remember
 from app.core.extensions import db
 from app.models import Killer, Perk, Survivor, UserCharacterOwnership, UserPerkOwnership
 from app.services.perks.perk_search import (
@@ -14,7 +14,6 @@ from app.services.perks.perk_search import (
     is_general_query,
     localized_character_name,
     localized_character_real_name,
-    perk_dict_matches_search,
     perk_matches_search,
     text_equals,
 )
@@ -86,103 +85,6 @@ def _resolve_character_ids_by_name(character: str, lang: str | None = None) -> t
     return survivor_ids, killer_ids
 
 
-def fetch_perks_fallback(
-    service,
-    category: str | None = None,
-    character: str | None = None,
-    scope: str | None = None,
-    search: str | None = None,
-    sort_by: str = "name",
-    order: str = "asc",
-    page: int = 1,
-    limit: int = 50,
-    lang: str | None = None,
-) -> dict[str, Any]:
-    """In-memory cache fallback filtering for perk queries."""
-    results = getattr(service, "_cache", [])
-    if category and category.lower() != "all":
-        results = [p for p in results if p.get("category", "").lower() == category.lower()]
-
-    if character and character.lower() != "all":
-        if character.lower() == "general":
-            results = [
-                p for p in results
-                if not p.get("character")
-                or p.get("character").lower() == "general"
-                or p.get("is_generic_counterpart")
-            ]
-        else:
-            results = [
-                p for p in results
-                if p.get("character", "").lower() == character.lower()
-                or p.get("character_real_name", "").lower() == character.lower()
-            ]
-
-    if scope and scope.lower() == "general":
-        results = [
-            p for p in results
-            if not p.get("character")
-            or p.get("character").lower() == "general"
-            or p.get("is_generic_counterpart")
-        ]
-    elif scope and scope.lower() == "teachable":
-        results = [
-            p for p in results
-            if p.get("character")
-            and p.get("character").lower() != "general"
-            and not p.get("is_generic_counterpart")
-        ]
-
-    if search and search.strip():
-        query_lower = search.strip().lower()
-        norm_query = normalize_search_key(search)
-        is_general_match = is_general_query(query_lower, lang)
-        results = [p for p in results if perk_dict_matches_search(p, query_lower, norm_query, is_general_match, lang)]
-
-    allowed_sorts = getattr(service, "ALLOWED_SORT_FIELDS", ALLOWED_SORT_FIELDS)
-    valid_sort_field = sort_by.lower() if sort_by.lower() in allowed_sorts else "name"
-    reverse = (order.lower() == "desc")
-    results = sorted(
-        results,
-        key=lambda x: str(x.get(valid_sort_field, "") or ("General" if valid_sort_field == "character" else "")).lower(),
-        reverse=reverse,
-    )
-
-    total_count = len(results)
-    page = max(1, page)
-    limit = max(1, min(limit, 10000))
-    total_pages = math.ceil(total_count / limit) if total_count > 0 else 1
-    start_idx = (page - 1) * limit
-    end_idx = start_idx + limit
-
-    data_slice = []
-    for p in results[start_idx:end_idx]:
-        p_copy = dict(p)
-        p_copy["is_owned"] = True
-        data_slice.append(p_copy)
-
-    return {
-        "data": data_slice,
-        "pagination": {
-            "total": total_count,
-            "page": page,
-            "limit": limit,
-            "total_pages": total_pages,
-            "has_next": end_idx < total_count,
-            "has_prev": page > 1,
-        },
-        "filters": {
-            "category": category or "all",
-            "character": character or "all",
-            "scope": scope or "all",
-            "search": search or "",
-            "sort_by": valid_sort_field,
-            "order": "desc" if reverse else "asc",
-            "owned_only": False,
-        },
-    }
-
-
 def fetch_perks(
     service: Any = None,
     category: str | None = None,
@@ -197,225 +99,251 @@ def fetch_perks(
     owned_only: bool = False,
     lang: str | None = None,
 ) -> dict[str, Any]:
-    """Execute paginated, sorted perk search with optional role and ownership filtering."""
-    cache_key = None
-    if user_id is None and not owned_only:
-        cache_key = ("fetch_perks", category, character, scope, search, sort_by, order, page, limit, lang)
-        cached_res = catalog_cache.get(cache_key)
-        if cached_res is not None:
-            return cached_res
+    """Execute paginated, sorted perk search with optional role and ownership filtering.
 
-    try:
-        # `Perk.character` is a read-only property over the two owner
-        # relationships, so the join and the eager load name both of them.
-        # Each is an outer join to at most one row, which is what the single
-        # join to `characters` was.
-        stmt = (
-            select(Perk)
-            .outerjoin(Perk.survivor)
-            .outerjoin(Perk.killer)
-            .options(joinedload(Perk.survivor), joinedload(Perk.killer))
+    A database error propagates so `@cache_catalog` answers 5xx instead of
+    storing an empty page as the catalog for an hour.
+    """
+    if user_id is not None or owned_only:
+        return _query_perks(service, category, character, scope, search, sort_by, order, page, limit, user_id, owned_only, lang)
+    # The key holds the values the query actually uses, not the raw arguments:
+    # an unknown `sort_by` is the same query as "name", and keying on the raw
+    # string would let a caller fill the memo with copies of one page.
+    allowed_sorts = getattr(service, "ALLOWED_SORT_FIELDS", ALLOWED_SORT_FIELDS)
+    key = (
+        "fetch_perks",
+        (category or "").lower(),
+        (character or "").lower(),
+        (scope or "").lower(),
+        (search or "").strip().lower(),
+        sort_by.lower() if sort_by.lower() in allowed_sorts else "name",
+        order.lower() == "desc",
+        max(1, page),
+        max(1, min(limit, 10000)),
+        lang,
+    )
+    return remember(
+        key,
+        lambda: _query_perks(service, category, character, scope, search, sort_by, order, page, limit, user_id, owned_only, lang),
+        ttl=60.0,
+    )
+
+
+def _query_perks(
+    service: Any,
+    category: str | None,
+    character: str | None,
+    scope: str | None,
+    search: str | None,
+    sort_by: str,
+    order: str,
+    page: int,
+    limit: int,
+    user_id: int | None,
+    owned_only: bool,
+    lang: str | None,
+) -> dict[str, Any]:
+    # `Perk.character` is a read-only property over the two owner
+    # relationships, so the join and the eager load name both of them.
+    # Each is an outer join to at most one row, which is what the single
+    # join to `characters` was.
+    stmt = (
+        select(Perk)
+        .outerjoin(Perk.survivor)
+        .outerjoin(Perk.killer)
+        .options(joinedload(Perk.survivor), joinedload(Perk.killer))
+    )
+
+    if category and category.lower() != "all":
+        stmt = stmt.where(func.lower(Perk.role) == category.lower())
+
+    if character and character.lower() != "all":
+        if character.lower() == "general":
+            stmt = stmt.where(
+                or_(
+                    has_no_owner(),
+                    Perk.is_generic_counterpart.is_(True),
+                )
+            )
+        else:
+            matched_survivor_ids, matched_killer_ids = _resolve_character_ids_by_name(character, lang)
+            stmt = stmt.where(
+                or_(
+                    Perk.survivor_id.in_(matched_survivor_ids),
+                    Perk.killer_id.in_(matched_killer_ids),
+                )
+            )
+
+    if scope and scope.lower() == "general":
+        stmt = stmt.where(
+            or_(
+                has_no_owner(),
+                Perk.is_generic_counterpart.is_(True),
+            )
+        )
+    elif scope and scope.lower() == "teachable":
+        stmt = stmt.where(
+            and_(
+                or_(
+                    Perk.survivor_id.is_not(None),
+                    Perk.killer_id.is_not(None),
+                ),
+                Perk.is_generic_counterpart.is_(False),
+            )
         )
 
-        if category and category.lower() != "all":
-            stmt = stmt.where(func.lower(Perk.role) == category.lower())
+    if owned_only and user_id:
+        locked_perks_subq = select(UserPerkOwnership.perk_id).where(
+            UserPerkOwnership.user_id == user_id,
+            UserPerkOwnership.is_unlocked.is_(False),
+        )
+        # One ownership row names one side, so the deactivated-character
+        # set is two subqueries. Each excludes the NULL half of its own
+        # rows: a killer's ownership row has `survivor_id IS NULL`, and a
+        # single NULL in a `NOT IN` list makes the whole predicate NULL,
+        # which would drop every perk instead of none.
+        deactivated_survivors_subq = select(UserCharacterOwnership.survivor_id).where(
+            UserCharacterOwnership.user_id == user_id,
+            UserCharacterOwnership.is_owned.is_(False),
+            UserCharacterOwnership.survivor_id.is_not(None),
+        )
+        deactivated_killers_subq = select(UserCharacterOwnership.killer_id).where(
+            UserCharacterOwnership.user_id == user_id,
+            UserCharacterOwnership.is_owned.is_(False),
+            UserCharacterOwnership.killer_id.is_not(None),
+        )
+        unlocked_perks_subq = select(UserPerkOwnership.perk_id).where(
+            UserPerkOwnership.user_id == user_id,
+            UserPerkOwnership.is_unlocked.is_(True),
+        )
 
-        if character and character.lower() != "all":
-            if character.lower() == "general":
-                stmt = stmt.where(
-                    or_(
-                        has_no_owner(),
-                        Perk.is_generic_counterpart.is_(True),
-                    )
-                )
-            else:
-                matched_survivor_ids, matched_killer_ids = _resolve_character_ids_by_name(character, lang)
-                stmt = stmt.where(
-                    or_(
-                        Perk.survivor_id.in_(matched_survivor_ids),
-                        Perk.killer_id.in_(matched_killer_ids),
-                    )
-                )
-
-        if scope and scope.lower() == "general":
-            stmt = stmt.where(
-                or_(
-                    has_no_owner(),
-                    Perk.is_generic_counterpart.is_(True),
-                )
-            )
-        elif scope and scope.lower() == "teachable":
-            stmt = stmt.where(
+        stmt = stmt.where(
+            or_(
+                has_no_owner(),
+                Perk.is_generic_counterpart.is_(True),
                 and_(
+                    Perk.id.not_in(locked_perks_subq),
                     or_(
-                        Perk.survivor_id.is_not(None),
-                        Perk.killer_id.is_not(None),
-                    ),
-                    Perk.is_generic_counterpart.is_(False),
-                )
-            )
-
-        if owned_only and user_id:
-            locked_perks_subq = select(UserPerkOwnership.perk_id).where(
-                UserPerkOwnership.user_id == user_id,
-                UserPerkOwnership.is_unlocked.is_(False),
-            )
-            # One ownership row names one side, so the deactivated-character
-            # set is two subqueries. Each excludes the NULL half of its own
-            # rows: a killer's ownership row has `survivor_id IS NULL`, and a
-            # single NULL in a `NOT IN` list makes the whole predicate NULL,
-            # which would drop every perk instead of none.
-            deactivated_survivors_subq = select(UserCharacterOwnership.survivor_id).where(
-                UserCharacterOwnership.user_id == user_id,
-                UserCharacterOwnership.is_owned.is_(False),
-                UserCharacterOwnership.survivor_id.is_not(None),
-            )
-            deactivated_killers_subq = select(UserCharacterOwnership.killer_id).where(
-                UserCharacterOwnership.user_id == user_id,
-                UserCharacterOwnership.is_owned.is_(False),
-                UserCharacterOwnership.killer_id.is_not(None),
-            )
-            unlocked_perks_subq = select(UserPerkOwnership.perk_id).where(
-                UserPerkOwnership.user_id == user_id,
-                UserPerkOwnership.is_unlocked.is_(True),
-            )
-
-            stmt = stmt.where(
-                or_(
-                    has_no_owner(),
-                    Perk.is_generic_counterpart.is_(True),
-                    and_(
-                        Perk.id.not_in(locked_perks_subq),
-                        or_(
-                            Perk.id.in_(unlocked_perks_subq),
-                            # At most one owner column is set, so the perk's
-                            # owner is active when the side it is on is not
-                            # deactivated and the other side is NULL.
-                            and_(
-                                or_(
-                                    Perk.survivor_id.is_(None),
-                                    Perk.survivor_id.not_in(deactivated_survivors_subq),
-                                ),
-                                or_(
-                                    Perk.killer_id.is_(None),
-                                    Perk.killer_id.not_in(deactivated_killers_subq),
-                                ),
+                        Perk.id.in_(unlocked_perks_subq),
+                        # At most one owner column is set, so the perk's
+                        # owner is active when the side it is on is not
+                        # deactivated and the other side is NULL.
+                        and_(
+                            or_(
+                                Perk.survivor_id.is_(None),
+                                Perk.survivor_id.not_in(deactivated_survivors_subq),
+                            ),
+                            or_(
+                                Perk.killer_id.is_(None),
+                                Perk.killer_id.not_in(deactivated_killers_subq),
                             ),
                         ),
                     ),
-                )
+                ),
             )
+        )
 
-        search_matched_count: int | None = None
-        if search and search.strip():
-            query_lower = search.strip().lower()
-            norm_query = normalize_search_key(search)
-            is_general_match = is_general_query(query_lower, lang)
-            candidates = db.session.scalars(stmt).unique().all()
-            matched_ids = [
-                p.id for p in candidates if perk_matches_search(p, query_lower, norm_query, is_general_match, lang)
-            ]
-            search_matched_count = len(matched_ids)
-            stmt = stmt.where(Perk.id.in_(matched_ids))
+    search_matched_count: int | None = None
+    if search and search.strip():
+        query_lower = search.strip().lower()
+        norm_query = normalize_search_key(search)
+        is_general_match = is_general_query(query_lower, lang)
+        candidates = db.session.scalars(stmt).unique().all()
+        matched_ids = [
+            p.id for p in candidates if perk_matches_search(p, query_lower, norm_query, is_general_match, lang)
+        ]
+        search_matched_count = len(matched_ids)
+        stmt = stmt.where(Perk.id.in_(matched_ids))
 
-        allowed_sorts = getattr(service, "ALLOWED_SORT_FIELDS", ALLOWED_SORT_FIELDS)
-        valid_sort_field = sort_by.lower() if sort_by.lower() in allowed_sorts else "name"
-        if valid_sort_field == "character":
-            # Whichever owner is joined; a general perk has neither and keeps
-            # sorting under "General".
-            sort_col = func.coalesce(Survivor.name, Killer.name, "General")
-        elif valid_sort_field == "category":
-            sort_col = Perk.role
-        else:
-            sort_col = Perk.name
+    allowed_sorts = getattr(service, "ALLOWED_SORT_FIELDS", ALLOWED_SORT_FIELDS)
+    valid_sort_field = sort_by.lower() if sort_by.lower() in allowed_sorts else "name"
+    if valid_sort_field == "character":
+        # Whichever owner is joined; a general perk has neither and keeps
+        # sorting under "General".
+        sort_col = func.coalesce(Survivor.name, Killer.name, "General")
+    elif valid_sort_field == "category":
+        sort_col = Perk.role
+    else:
+        sort_col = Perk.name
 
-        reverse = (order.lower() == "desc")
-        if reverse:
-            stmt = stmt.order_by(sort_col.desc(), Perk.name.desc())
-        else:
-            stmt = stmt.order_by(sort_col.asc(), Perk.name.asc())
+    reverse = (order.lower() == "desc")
+    if reverse:
+        stmt = stmt.order_by(sort_col.desc(), Perk.name.desc())
+    else:
+        stmt = stmt.order_by(sort_col.asc(), Perk.name.asc())
 
-        if search_matched_count is not None:
-            total_count = search_matched_count
-        else:
-            count_stmt = select(func.count()).select_from(stmt.subquery())
-            total_count = db.session.scalar(count_stmt) or 0
+    if search_matched_count is not None:
+        total_count = search_matched_count
+    else:
+        count_stmt = select(func.count()).select_from(stmt.subquery())
+        total_count = db.session.scalar(count_stmt) or 0
 
-        page = max(1, page)
-        limit = max(1, min(limit, 10000))
-        total_pages = math.ceil(total_count / limit) if total_count > 0 else 1
-        offset = (page - 1) * limit
+    page = max(1, page)
+    limit = max(1, min(limit, 10000))
+    total_pages = math.ceil(total_count / limit) if total_count > 0 else 1
+    offset = (page - 1) * limit
 
-        paginated_stmt = stmt.offset(offset).limit(limit)
-        perks = db.session.scalars(paginated_stmt).unique().all()
+    paginated_stmt = stmt.offset(offset).limit(limit)
+    perks = db.session.scalars(paginated_stmt).unique().all()
 
-        paginated_data = []
-        if user_id:
-            # Two sets rather than one: an id only identifies a character
-            # together with its role, and survivor 7 and killer 7 both exist.
-            deactivated_rows = db.session.execute(
-                select(UserCharacterOwnership.survivor_id, UserCharacterOwnership.killer_id).where(
-                    UserCharacterOwnership.user_id == user_id,
-                    UserCharacterOwnership.is_owned.is_(False),
-                )
-            ).all()
-            deactivated_survivor_ids = {row[0] for row in deactivated_rows if row[0] is not None}
-            deactivated_killer_ids = {row[1] for row in deactivated_rows if row[1] is not None}
-            perk_explicit_rows = db.session.execute(
-                select(UserPerkOwnership.perk_id, UserPerkOwnership.is_unlocked).where(
-                    UserPerkOwnership.user_id == user_id
-                )
-            ).all()
-            perk_explicit_map = {row[0]: row[1] for row in perk_explicit_rows}
+    paginated_data = []
+    if user_id:
+        # Two sets rather than one: an id only identifies a character
+        # together with its role, and survivor 7 and killer 7 both exist.
+        deactivated_rows = db.session.execute(
+            select(UserCharacterOwnership.survivor_id, UserCharacterOwnership.killer_id).where(
+                UserCharacterOwnership.user_id == user_id,
+                UserCharacterOwnership.is_owned.is_(False),
+            )
+        ).all()
+        deactivated_survivor_ids = {row[0] for row in deactivated_rows if row[0] is not None}
+        deactivated_killer_ids = {row[1] for row in deactivated_rows if row[1] is not None}
+        perk_explicit_rows = db.session.execute(
+            select(UserPerkOwnership.perk_id, UserPerkOwnership.is_unlocked).where(
+                UserPerkOwnership.user_id == user_id
+            )
+        ).all()
+        perk_explicit_map = {row[0]: row[1] for row in perk_explicit_rows}
 
-            for p in perks:
-                d = p.to_dict(lang=lang)
-                is_gen = (p.survivor_id is None and p.killer_id is None) or p.is_generic_counterpart
-                if is_gen:
-                    is_owned = True
-                elif p.id in perk_explicit_map:
-                    is_owned = perk_explicit_map[p.id]
-                elif p.survivor_id is not None:
-                    is_owned = p.survivor_id not in deactivated_survivor_ids
-                elif p.killer_id is not None:
-                    is_owned = p.killer_id not in deactivated_killer_ids
-                else:
-                    is_owned = True
-                d["is_owned"] = bool(is_owned)
-                paginated_data.append(d)
-        else:
-            for p in perks:
-                d = p.to_dict(lang=lang)
-                d["is_owned"] = True
-                paginated_data.append(d)
+        for p in perks:
+            d = p.to_dict(lang=lang)
+            is_gen = (p.survivor_id is None and p.killer_id is None) or p.is_generic_counterpart
+            if is_gen:
+                is_owned = True
+            elif p.id in perk_explicit_map:
+                is_owned = perk_explicit_map[p.id]
+            elif p.survivor_id is not None:
+                is_owned = p.survivor_id not in deactivated_survivor_ids
+            elif p.killer_id is not None:
+                is_owned = p.killer_id not in deactivated_killer_ids
+            else:
+                is_owned = True
+            d["is_owned"] = bool(is_owned)
+            paginated_data.append(d)
+    else:
+        for p in perks:
+            d = p.to_dict(lang=lang)
+            d["is_owned"] = True
+            paginated_data.append(d)
 
-        result = {
-            "data": paginated_data,
-            "pagination": {
-                "total": total_count,
-                "page": page,
-                "limit": limit,
-                "total_pages": total_pages,
-                "has_next": offset + limit < total_count,
-                "has_prev": page > 1,
-            },
-            "filters": {
-                "category": category or "all",
-                "character": character or "all",
-                "scope": scope or "all",
-                "search": search or "",
-                "sort_by": valid_sort_field,
-                "order": "desc" if reverse else "asc",
-                "owned_only": owned_only,
-            },
-        }
-        if cache_key is not None:
-            catalog_cache.set(cache_key, result, ttl=60.0)
-        return result
-    except Exception as e:
-        logger.debug(f"Falling back to memory cache in get_perks: {e}")
-
-    fallback_res = fetch_perks_fallback(service, category, character, scope, search, sort_by, order, page, limit, lang)
-    if cache_key is not None:
-        catalog_cache.set(cache_key, fallback_res, ttl=30.0)
-    return fallback_res
+    result = {
+        "data": paginated_data,
+        "pagination": {
+            "total": total_count,
+            "page": page,
+            "limit": limit,
+            "total_pages": total_pages,
+            "has_next": offset + limit < total_count,
+            "has_prev": page > 1,
+        },
+        "filters": {
+            "category": category or "all",
+            "character": character or "all",
+            "scope": scope or "all",
+            "search": search or "",
+            "sort_by": valid_sort_field,
+            "order": "desc" if reverse else "asc",
+            "owned_only": owned_only,
+        },
+    }
+    return result

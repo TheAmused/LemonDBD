@@ -194,7 +194,7 @@ def _evaluate_classic_character(target_type: str, target_id: int, guess_type: st
             "release_year": guess_year,
             "is_licensed": guess_licensed,
             "height": guess_height,
-            "avatar_url": guess.portrait_url or f"/static/{guess.avatar_local_path}" if guess.avatar_local_path else "",
+            "avatar_url": guess.portrait_url or (f"/static/{guess.avatar_local_path}" if guess.avatar_local_path else ""),
         },
         "attributes": {
             "role": role_match,

@@ -13,7 +13,6 @@ from sqlalchemy import select
 
 from app import create_app
 from app.core import redis_cache
-from app.core.cache import catalog_cache
 from app.core.config import TestingConfig
 from app.core.extensions import db
 from app.models import Chapter, Killer, Perk, Survivor, User
@@ -39,10 +38,9 @@ def app() -> Generator[Flask, None, None]:
 def test_db(app: Flask) -> Generator[object, None, None]:
     """Provide clean database schema per test with automatic rollback and teardown.
 
-    `@cache_catalog` routes (maps/realms, and any other catalog endpoint) and
-    `perks/queries_character.py`'s `catalog_cache` both cache across requests
-    with no key tied to the database's contents -- entirely correct for a
-    running server, where the seed only changes on a deploy, but fatal for a
+    `@cache_catalog` routes (maps/realms, and any other catalog endpoint) cache
+    across requests with no key tied to the database's contents -- entirely
+    correct for a running server, where the seed only changes on a deploy, but fatal for a
     test session that recreates the schema fresh every function: without an
     explicit bust here, the first test to hit a cached endpoint pins its
     response (or its `None`) for every later test that hits the same key,
@@ -50,13 +48,11 @@ def test_db(app: Flask) -> Generator[object, None, None]:
     """
     with app.app_context():
         redis_cache.bump_catalog_version()
-        catalog_cache.clear()
         db.create_all()
         yield db
         db.session.remove()
         db.drop_all()
         redis_cache.bump_catalog_version()
-        catalog_cache.clear()
 
 
 @pytest.fixture

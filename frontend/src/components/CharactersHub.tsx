@@ -21,7 +21,7 @@ import { VerificationNotice } from '@/components/characters/hub/VerificationNoti
 import { useCharacterOwnership } from '@/components/characters/hub/useCharacterOwnership';
 import { CharacterItem, PerkItem, AddonItem, EquipmentItem } from '@/components/character-detail/types';
 import { RoleCategory } from '@/types/perks';
-import { getBackendBaseUrl } from '@/utils/perkUtils';
+import { getBackendBaseUrl, normalizeSearchText } from '@/utils/perkUtils';
 import { useDictionary, useLocale } from '@/context/DictionaryContext';
 
 const AuthModal = dynamic(() => import('@/components/AuthModal').then((m) => m.AuthModal), { ssr: false });
@@ -98,14 +98,15 @@ export const CharactersHub: React.FC = () => {
   const loading = charactersLoading;
 
   const filteredCharacters = useMemo(() => {
+    // Accents folded on both sides: "wiesniak" finds "Wieśniak", "elodie" finds "Élodie".
+    const query = normalizeSearchText(searchQuery);
     return characters.filter((c) => {
       const matchesTab =
         c.category?.toLowerCase() === activeTab.toLowerCase();
-      const query = searchQuery.toLowerCase().trim();
       const matchesSearch =
         !query ||
-        c.name.toLowerCase().includes(query) ||
-        (c.real_name && c.real_name.toLowerCase().includes(query));
+        normalizeSearchText(c.name).includes(query) ||
+        (c.real_name && normalizeSearchText(c.real_name).includes(query));
       return matchesTab && matchesSearch;
     });
   }, [characters, activeTab, searchQuery]);

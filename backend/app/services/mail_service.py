@@ -343,6 +343,41 @@ def send_security_notice_email(user: User, event: str) -> None:
         logger.warning(f"Failed to send security notice '{event}' to '{user.email}': {err}")
 
 
+def _mask_email(address: str) -> str:
+    """`jane.doe@example.com` -> `j***@example.com`: enough to recognise, not enough to harvest."""
+    local, _, domain = (address or "").partition("@")
+    return f"{local[:1]}***@{domain}" if domain else "***"
+
+
+def send_email_changed_notice(user: User, old_email: str) -> None:
+    """Best-effort heads-up to the *previous* address that the account's email was changed. Never raises."""
+    new_masked = _mask_email(user.email)
+    subject = "Your email address was changed"
+    text = (
+        f"The email address on your LemonDBD account was changed to {new_masked}. "
+        "Sign-in, password resets and notices now go to the new address."
+    )
+    body_html = f"""\
+<p style="margin:0 0 4px; font-size:14px; color:#0f172a;">Hi {_greeting_name(user)},</p>
+<p style="margin:0 0 16px; font-size:13px; color:#64748b; line-height:1.6;">{html.escape(text)}</p>
+<p style="margin:0; font-size:12px; color:#94a3b8;">
+  If this wasn't you, reset your password right away and contact us.
+</p>
+"""
+    try:
+        message = Message(
+            subject=f"LemonDBD: {subject}",
+            recipients=[old_email],
+            body=f"Hi {user.username},\n\n{text}\n\nIf this wasn't you, reset your password right away and contact us.",
+            html=_email_shell(html.escape(subject), body_html),
+            charset=_BASE64_CHARSET,
+        )
+        _attach_logo(message)
+        mail.send(message)
+    except Exception as err:
+        logger.warning(f"Failed to send the email-changed notice to the previous address of user {user.id}: {err}")
+
+
 def send_test_email(user: User) -> None:
     """Admin diagnostic: one plain message to the admin's own address. Raises when sending fails."""
     text = "This is a test message from the LemonDBD admin panel. If you can read it, email delivery works."

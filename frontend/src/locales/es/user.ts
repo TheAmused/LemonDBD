@@ -90,6 +90,7 @@ export default {
   authTokenMissing: "Falta el token de autenticación. Vuelve a iniciar sesión.",
   profileUpdateFailedMsg: "No se pudo actualizar el perfil.",
   profileUpdateSuccessMsg: "¡Perfil actualizado correctamente!",
+  emailChangedVerifyMsg: "Correo cambiado. Hemos enviado un código de verificación a la nueva dirección: introdúcelo para volver a verificar la cuenta.",
 
   // --- Campfire Dossier additions ---
   tabSanctum: "Gestión de Cuenta",

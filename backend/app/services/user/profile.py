@@ -1,5 +1,8 @@
 # backend/app/services/user/profile.py
+from datetime import datetime, timezone
 from typing import Any
+
+from email_validator import EmailNotValidError, validate_email
 from sqlalchemy import func, select
 
 from app.core.extensions import db
@@ -7,6 +10,28 @@ from app.core.security import hash_password, verify_password
 from app.core.transaction import transaction
 from app.models import Killer, Survivor, User, UserShowcase
 from app.models.base import utcnow
+
+#: `users.email` is a String(120); a longer address could never be stored.
+MAX_EMAIL_LENGTH = 120
+
+
+def normalize_new_email(raw: str | None) -> tuple[str | None, str | None]:
+    """`(address, None)` for a usable address (trimmed, lower-cased), else `(None, error)`.
+
+    The same rule registration applies through `EmailStr`, checked here *before* anything is
+    written: an unchecked value used to be committed and then break every response that
+    serialises the user (`UserResponse.email` is an `EmailStr`), signing the account out for good.
+    """
+    candidate = (raw or "").strip().lower()
+    if not candidate:
+        return None, "A valid email address is required."
+    if len(candidate) > MAX_EMAIL_LENGTH:
+        return None, f"Email addresses can be at most {MAX_EMAIL_LENGTH} characters long."
+    try:
+        validate_email(candidate, check_deliverability=False)
+    except EmailNotValidError:
+        return None, "A valid email address is required."
+    return candidate, None
 
 
 def _resolve_main_id(model: type, character_name: str) -> int | None:
@@ -43,8 +68,16 @@ def modify_user_profile(
     Changing the email or the password is what an attacker holding a stolen session would do to
     take the account over, so both need the current password. A password change also bumps
     ``token_version``, which signs out every other session.
+
+    A new email gets the checks registration makes (format, length, the ban-evasion list, not
+    already taken). When the site requires verification the account becomes unverified and a
+    code goes to the new address; the previous address is told about the change either way.
     """
+    from app.services import ban_list
+    from app.services.mail_service import send_email_changed_notice, send_verification_email
+    from app.services.site_settings import email_verification_required, verification_lifetime
     from app.services.user import two_factor
+    from app.services.user.auth import _generate_verification_code
 
     user = db.session.get(User, user_id)
     if not user:
@@ -55,7 +88,11 @@ def modify_user_profile(
         return None, "Username must be between 3 and 50 characters long."
 
     clean_email = email.strip().lower() if email else None
-    changing_email = bool(clean_email) and clean_email != user.email
+    changing_email = bool(clean_email) and clean_email != (user.email or "").lower()
+    if changing_email:
+        clean_email, email_error = normalize_new_email(clean_email)
+        if email_error:
+            return None, email_error
     changing_username = bool(clean_username) and clean_username != user.username
     if (changing_email or changing_username or new_password) and not user.has_password:
         return None, "Set a password with the reset link first."
@@ -71,6 +108,10 @@ def modify_user_profile(
         return None, "New password must be at least 6 characters long."
 
     if changing_email:
+        # Same wording as sign-up, and checked first, so it never reveals whether the address is taken.
+        refusal = ban_list.registration_refusal(clean_email)
+        if refusal:
+            return None, refusal
         existing = db.session.scalars(
             select(User).where(func.lower(User.email) == clean_email, User.id != user_id)
         ).first()
@@ -80,9 +121,16 @@ def modify_user_profile(
     if (changing_email or changing_username or new_password) and two_factor.is_enabled(user.id):
         two_factor.verify_second_factor(user, two_factor_code)
 
+    previous_email = user.email
+    needs_verification = changing_email and email_verification_required()
     with transaction():
         if changing_email:
             user.email = clean_email
+            if needs_verification:
+                user.is_verified = False
+                user.verification_code = _generate_verification_code()
+                user.verification_code_expires_at = datetime.now(timezone.utc) + verification_lifetime()
+                user.verification_attempts = 0
 
         if changing_username:
             user.username = clean_username
@@ -93,6 +141,12 @@ def modify_user_profile(
         if new_password:
             user.password_hash = hash_password(new_password)
             user.token_version = int(user.token_version or 0) + 1
+
+    if changing_email:
+        if needs_verification:
+            send_verification_email(user)
+        if previous_email:
+            send_email_changed_notice(user, previous_email)
 
     return user, None
 

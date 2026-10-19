@@ -107,7 +107,12 @@ export interface UpdateProfilePayload {
   two_factor_code?: string;
 }
 
-export async function updateUserProfile(payload: UpdateProfilePayload): Promise<void> {
+export interface UpdateProfileResult {
+  /** An email change left the account unverified: a code was sent to the new address. */
+  verificationRequired: boolean;
+}
+
+export async function updateUserProfile(payload: UpdateProfilePayload): Promise<UpdateProfileResult> {
   const token = getAuthToken();
   if (!token) {
     throw new ApiError('Authentication token missing.', 401, 'authTokenMissing');
@@ -122,10 +127,11 @@ export async function updateUserProfile(payload: UpdateProfilePayload): Promise<
     body: JSON.stringify(payload),
   });
 
-  const data = await parseJsonSafely(res);
+  const data = await parseJsonSafely<{ verification_required: boolean }>(res);
   if (!res.ok) {
     throw new ApiError(data.error || 'Failed to update profile.', res.status, data.error_code);
   }
+  return { verificationRequired: data.verification_required === true };
 }
 
 export async function uploadAvatar(file: File): Promise<void> {

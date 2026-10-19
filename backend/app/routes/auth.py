@@ -279,6 +279,8 @@ def update_profile():
         "status": "success",
         "message": "Profile updated successfully",
         "user": UserResponse.model_validate(updated_user).model_dump(),
+        # True when an email change left the account waiting for the code sent to the new address.
+        "verification_required": not updated_user.is_verified,
     }
     if not new_password:
         return jsonify(body), 200

@@ -54,10 +54,8 @@ def _minigame_sessions() -> int:
 
 
 def _catalog_cache() -> int:
-    from app.core.cache import catalog_cache
     from app.core.redis_cache import bump_catalog_version
 
-    catalog_cache.clear()
     bump_catalog_version()
     return 0
 

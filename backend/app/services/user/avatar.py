@@ -155,8 +155,9 @@ def clear_user_avatar(user_id: int) -> tuple[User | None, str | None]:
         return None, "User not found."
 
     avatar_dir = get_avatar_storage_directory()
-    remove_stale_avatar_file(user.avatar_url, avatar_dir, user.id)
+    previous_avatar_url = user.avatar_url
 
     user.avatar_url = "default_avatar"
     db.session.commit()
+    remove_stale_avatar_file(previous_avatar_url, avatar_dir, user.id)
     return user, None

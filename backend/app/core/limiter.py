@@ -99,7 +99,8 @@ def _ratelimit_storage_uri() -> str:
     if explicit:
         return explicit
 
-    redis_url = os.getenv("REDIS_URL")
+    # The counters go to the instance that never evicts, when there is one.
+    redis_url = os.getenv("LIMITS_REDIS_URL") or os.getenv("REDIS_URL")
     if not redis_url:
         return "memory://"
     try:
@@ -110,7 +111,7 @@ def _ratelimit_storage_uri() -> str:
         import redis  # noqa: F401
     except ImportError:
         logger.warning(
-            "[limiter] REDIS_URL is set but the redis package is not installed; "
+            "[limiter] a Redis URL is set but the redis package is not installed; "
             "rate-limit counters stay per-worker and every limit is effectively "
             "multiplied by the worker count."
         )

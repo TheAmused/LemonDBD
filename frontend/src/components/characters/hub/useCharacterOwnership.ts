@@ -11,7 +11,7 @@ import {
 } from '@/utils/characterUtils';
 import { useAuth } from '@/context/AuthContext';
 import { useDictionary } from '@/context/DictionaryContext';
-import { invalidate } from '@/services/dataCache';
+import { catalogKey, invalidate } from '@/services/dataCache';
 import { authHeaders } from '@/utils/api';
 import { trackEvent } from '@/utils/analytics';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
@@ -236,8 +236,8 @@ export function useCharacterOwnership({ locale, onLoginRequired, onVerificationR
       triggerSavedModal();
       requestAnimationFrame(() => {
         setTimeout(() => {
-          invalidate(`${backendBase}/api/v1/perks`);
-          invalidate(`${backendBase}/api/v1/characters`);
+          invalidate(catalogKey('perks'));
+          invalidate(catalogKey('characters'));
         }, 150);
       });
     } catch (err: unknown) {

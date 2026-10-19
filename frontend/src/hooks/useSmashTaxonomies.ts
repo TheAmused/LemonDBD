@@ -14,27 +14,46 @@ interface TaxonomiesState {
   genders: string[];
 }
 
+const DEFAULT_STATE: TaxonomiesState = { roles: DEFAULT_ROLES, genders: DEFAULT_GENDERS };
+
+/** The defaults, then every term from `lists` in order, without repeats. */
+function withDefaults(defaults: string[], ...lists: string[][]): string[] {
+  return Array.from(new Set([...defaults, ...lists.flat()]));
+}
+
+/** This browser's term cache, or null when there is none (or storage is unavailable). */
+function readStoredTaxonomies(): TaxonomiesState | null {
+  try {
+    const parsed = JSON.parse(localStorage.getItem(STORAGE_KEY) ?? 'null');
+    if (Array.isArray(parsed?.roles) && Array.isArray(parsed?.genders)) {
+      return {
+        roles: withDefaults(DEFAULT_ROLES, parsed.roles),
+        genders: withDefaults(DEFAULT_GENDERS, parsed.genders),
+      };
+    }
+  } catch {
+    // no storage, or junk in it
+  }
+  return null;
+}
+
+function storeTaxonomies(state: TaxonomiesState): void {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  } catch {
+    // quota or private mode
+  }
+}
+
 export function useSmashTaxonomies() {
   const { isAdmin } = useAuth();
-  const [taxonomies, setTaxonomies] = useState<TaxonomiesState>(() => {
-    if (typeof window !== 'undefined') {
-      try {
-        const stored = localStorage.getItem(STORAGE_KEY);
-        if (stored) {
-          const parsed = JSON.parse(stored);
-          if (Array.isArray(parsed?.roles) && Array.isArray(parsed?.genders)) {
-            return {
-              roles: Array.from(new Set([...DEFAULT_ROLES, ...parsed.roles])),
-              genders: Array.from(new Set([...DEFAULT_GENDERS, ...parsed.genders])),
-            };
-          }
-        }
-      } catch {
-        // fallback
-      }
-    }
-    return { roles: DEFAULT_ROLES, genders: DEFAULT_GENDERS };
-  });
+  // Defaults first; the stored list is read in an effect to avoid a hydration mismatch.
+  const [taxonomies, setTaxonomies] = useState<TaxonomiesState>(DEFAULT_STATE);
+
+  useEffect(() => {
+    const stored = readStoredTaxonomies();
+    if (stored) setTaxonomies(stored);
+  }, []);
 
   const fetchTaxonomies = useCallback(async () => {
     try {
@@ -42,15 +61,14 @@ export function useSmashTaxonomies() {
       if (!res.ok) return;
       const json = await res.json();
       if (json?.data?.roles && json?.data?.genders) {
-        const mergedRoles = Array.from(new Set([...DEFAULT_ROLES, ...json.data.roles]));
-        const mergedGenders = Array.from(new Set([...DEFAULT_GENDERS, ...json.data.genders]));
-        const next = { roles: mergedRoles, genders: mergedGenders };
+        // Merged, not replaced: terms added in this browser must not vanish from the filters.
+        const local = readStoredTaxonomies() ?? DEFAULT_STATE;
+        const next = {
+          roles: withDefaults(DEFAULT_ROLES, json.data.roles, local.roles),
+          genders: withDefaults(DEFAULT_GENDERS, json.data.genders, local.genders),
+        };
         setTaxonomies(next);
-        try {
-          localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
-        } catch {
-          // quota or private mode
-        }
+        storeTaxonomies(next);
       }
     } catch {
       // Best-effort: failure here is non-fatal.
@@ -71,9 +89,7 @@ export function useSmashTaxonomies() {
       if (prev[key].includes(trimmed)) return prev;
       const nextList = [...prev[key], trimmed];
       const next = { ...prev, [key]: nextList };
-      try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
-      } catch {}
+      storeTaxonomies(next);
       return next;
     });
 

@@ -24,11 +24,11 @@ import {
   SortField,
   SortOrder,
 } from '@/types/perks';
-import { getBackendBaseUrl } from '@/utils/perkUtils';
 import { useImagePrefetch } from '@/components/common/ImagePreloadProvider';
 import { useDictionary, useLocale } from '@/context/DictionaryContext';
 import { useCachedData } from '@/hooks/useCachedData';
-import { fetchCached, fetchJson } from '@/services/dataCache';
+import { useCatalogPerks } from '@/hooks/useCatalogPerks';
+import { catalogKey, fetchCached, fetchJson } from '@/services/dataCache';
 import { SEARCH_DEBOUNCE_MS } from '@/constants/timing';
 
 const PerkModal = dynamic(() => import('@/components/PerkModal').then((m) => m.PerkModal), { ssr: false });
@@ -131,8 +131,6 @@ function PerksContent() {
     };
   }, []);
 
-  const backendBase = getBackendBaseUrl();
-
   useEffect(() => {
     if (paramRole === 'Killer' || paramRole === 'Survivor') {
       setRole(paramRole);
@@ -163,26 +161,19 @@ function PerksContent() {
     }
     setFetchError(null);
     try {
-      const queryParams = new URLSearchParams({
-        page: page.toString(),
-        limit: limit.toString(),
+      const url = catalogKey('perks', {
+        page,
+        limit,
         sort_by: sortBy,
-        order: order,
+        order,
         category: role,
         lang: locale,
+        scope: scope === 'general' ? 'general' : undefined,
+        // Debounced: the list refetches once typing pauses, not on every keystroke.
+        search: debouncedSearch,
+        owned_only: ownershipFilter === 'owned' && user ? 'true' : undefined,
+        user_id: user?.id,
       });
-
-      if (scope === 'general') {
-        queryParams.append('scope', 'general');
-      }
-      if (debouncedSearch) {
-        queryParams.append('search', debouncedSearch);
-      }
-      if (ownershipFilter === 'owned' && user) {
-        queryParams.append('owned_only', 'true');
-      }
-
-      const url = `${backendBase}/api/v1/perks?${queryParams.toString()}`;
       const result = await fetchCached<PerksResponse>(url, () => fetchJson(url));
       if (requestId !== fetchSeqRef.current) return;
       const perkList = result.data || [];
@@ -203,7 +194,6 @@ function PerksContent() {
       }
     }
   }, [
-    backendBase,
     role,
     scope,
     debouncedSearch,
@@ -222,20 +212,17 @@ function PerksContent() {
     fetchPerks();
   }, [fetchPerks]);
 
-  const allPerksKey = `${backendBase}/api/v1/perks?limit=1000&lang=${locale}`;
-  const { data: allPerksResponse } = useCachedData<PerksResponse>(
-    allPerksKey,
-    () => fetchJson<PerksResponse>(allPerksKey)
-  );
+  // Shares its cache entry with the tier lists and the profile showcase.
+  const { perks: allPerksList } = useCatalogPerks(locale);
 
-  const charactersKey = `${backendBase}/api/v1/characters?lang=${locale}`;
+  const charactersKey = catalogKey('characters', { lang: locale });
   const { data: charactersResponse } = useCachedData<{ data?: CharacterItem[] }>(
     charactersKey,
     () => fetchJson<{ data?: CharacterItem[] }>(charactersKey)
   );
 
   useEffect(() => {
-    const fullList: Perk[] = allPerksResponse?.data || [];
+    const fullList: Perk[] = allPerksList;
     if (fullList.length === 0) return;
     setAllPerksForGenerator(fullList);
     prefetchPerkIcons(fullList.slice(0, 60));
@@ -248,7 +235,7 @@ function PerksContent() {
       fullList.filter((p) => p.category === 'Killer' && p.is_owned !== false).length
     );
     setOwnedPerksCount(fullList.filter((p) => p.is_owned !== false).length);
-  }, [allPerksResponse, prefetchPerkIcons]);
+  }, [allPerksList, prefetchPerkIcons]);
 
   useEffect(() => {
     setCharacterCount((charactersResponse?.data || []).length);

@@ -27,8 +27,13 @@ interface CacheEntry<T> {
   updatedAt: number;
 }
 
+/** Most entries kept at once; every page, sort and search of /perks is its own key. */
+const MAX_ENTRIES = 50;
+
 const store = new Map<string, CacheEntry<unknown>>();
 const inflight = new Map<string, Promise<unknown>>();
+/** Bumped by `invalidate()`; a request writes its result only if this is unchanged since it started. */
+const generations = new Map<string, number>();
 const listeners = new Map<string, Set<() => void>>();
 const revalidators = new Map<string, Set<() => void>>();
 
@@ -39,16 +44,11 @@ export const DEFAULT_TTL_MS = 5 * 60 * 1000;
  * Freshness window for the static catalog: perks, characters, survivors,
  * killers, items, addons, chapters and maps.
  *
- * Longer than the default because these endpoints now carry an ETag keyed on a
- * catalog generation counter, so the two caches divide the work rather than
- * duplicating it: this one avoids making the *request* at all inside the
- * window, and the ETag makes the request *cheap* when it is made -- a few
- * hundred bytes of 304 instead of a megabyte of perk list. Stretching the
- * client window therefore buys real request savings; what it costs is only the
- * revalidation that would have happened at the 5-minute mark, and the two
- * things that genuinely change the catalog are both already covered: a
- * re-seed or kill-switch toggle bumps the ETag (so the next request after the
- * window sees it), and an ownership edit calls `invalidate()` directly.
+ * Longer than the default because these endpoints carry a body-derived ETag:
+ * this cache skips the request inside the window, and the ETag makes a request
+ * after it a cheap 304. `fetchJson` sends `cache: 'no-cache'`, so that request
+ * always reaches the server. Ownership edits, sign-in and sign-out call
+ * `invalidate()` directly.
  */
 export const CATALOG_TTL_MS = 30 * 60 * 1000;
 
@@ -109,9 +109,20 @@ export function isStale(key: string, ttlMs: number = DEFAULT_TTL_MS): boolean {
   return Date.now() - entry.updatedAt > ttlMs;
 }
 
+/** Drops the oldest-written entries nobody is watching, down to the ceiling. */
+function evictOverflow(): void {
+  for (const key of store.keys()) {
+    if (store.size <= MAX_ENTRIES) return;
+    if (!listeners.has(key)) store.delete(key);
+  }
+}
+
 export function writeCache<T>(key: string, data: T): void {
   if (!isClient()) return;
+  // Delete first so a rewritten key moves to the back of the eviction order.
+  store.delete(key);
   store.set(key, { data, updatedAt: Date.now() });
+  evictOverflow();
   notify(key);
 }
 
@@ -134,6 +145,9 @@ export function onInvalidated(key: string, refetch: () => void): () => void {
 }
 
 function drop(key: string): void {
+  generations.set(key, (generations.get(key) ?? 0) + 1);
+  // The request in flight predates the change; the refetch must not join it.
+  inflight.delete(key);
   store.delete(key);
   notify(key);
   revalidators.get(key)?.forEach((refetch) => {
@@ -152,7 +166,9 @@ function drop(key: string): void {
  * change `is_owned` on perks.
  */
 export function invalidate(prefix?: string): void {
-  for (const key of [...store.keys()]) {
+  // Keys only in flight count too: their first response predates the change.
+  const keys = new Set([...store.keys(), ...inflight.keys()]);
+  for (const key of keys) {
     if (prefix === undefined || key.startsWith(prefix)) drop(key);
   }
 }
@@ -191,20 +207,20 @@ export function fetchCached<T>(
   const existing = inflight.get(key) as Promise<T> | undefined;
   if (existing) return existing;
 
-  const request = fetcher()
+  const generation = generations.get(key) ?? 0;
+  const request: Promise<T> = fetcher()
     .then((data) => {
-      writeCache(key, data);
+      if ((generations.get(key) ?? 0) === generation) writeCache(key, data);
       return data;
     })
     .finally(() => {
-      inflight.delete(key);
+      if (inflight.get(key) === request) inflight.delete(key);
     });
 
   inflight.set(key, request);
   return request;
 }
 
-/** Convenience wrapper: GET + json, throwing on a non-2xx so callers can catch. */
 /** List endpoints answer with either a bare array or `{ data: [...] }`. */
 export type ListPayload<T> = T[] | { data?: T[] };
 
@@ -212,6 +228,10 @@ export function unwrapList<T>(payload: ListPayload<T> | null | undefined): T[] {
   return Array.isArray(payload) ? payload : payload?.data || [];
 }
 
+/**
+ * GET + json, throwing on a non-2xx. Sent `cache: 'no-cache'` so the browser
+ * revalidates instead of handing back a stale HTTP-cache copy.
+ */
 export async function fetchJson<T>(url: string, init?: RequestInit): Promise<T> {
-  return apiClient<T>(url, init);
+  return apiClient<T>(url, { cache: 'no-cache', ...init });
 }

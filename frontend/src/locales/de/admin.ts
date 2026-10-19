@@ -284,6 +284,8 @@ export default {
   saveUser: "Änderungen speichern",
   emailVerifiedLabel: "E-Mail-Adresse bestätigt",
   ownRoleLocked: "Du kannst dir deine eigene Admin-Rolle nicht entziehen.",
+  confirmOwnPasswordLabel: "Dein Passwort",
+  confirmOwnPasswordHint: "Um das Konto eines anderen Admins zu ändern, brauchst du dein eigenes Passwort.",
   userUpdatedSuccess: "{username} wurde aktualisiert.",
   confirmDeleteUser: "{username} und alles, was zu diesem Konto gehört, löschen? Das kann nicht rückgängig gemacht werden.",
   filterByStatus: "Nach Status filtern",

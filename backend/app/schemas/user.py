@@ -41,6 +41,8 @@ class UserUpdate(BaseModel):
     role: str | None = None
     is_active: bool | None = None
     is_verified: bool | None = None
+    #: The acting admin's own password: required to take the admin role from another admin.
+    current_password: str | None = Field(None, max_length=200)
 
 
 class UserResponse(UserBase):

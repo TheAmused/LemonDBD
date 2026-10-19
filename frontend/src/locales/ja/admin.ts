@@ -284,6 +284,8 @@ export default {
   saveUser: "変更を保存",
   emailVerifiedLabel: "メールアドレス確認済み",
   ownRoleLocked: "自分の管理者ロールは外せません。",
+  confirmOwnPasswordLabel: "あなたのパスワード",
+  confirmOwnPasswordHint: "他の管理者のアカウントを変更するには、あなた自身のパスワードが必要です。",
   userUpdatedSuccess: "{username} を更新しました。",
   confirmDeleteUser: "{username} とそのアカウントのすべてのデータを削除しますか？元に戻せません。",
   filterByStatus: "状態で絞り込む",

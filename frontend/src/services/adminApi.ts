@@ -35,7 +35,9 @@ export const listUsers = (query: { page: number; per_page: number; search?: stri
 export const createUser = (user: NewUser) => apiRequest<{ user: UserRow }>('/users', 'POST', user);
 export const updateUser = (id: number, patch: UserPatch) => apiRequest<{ user: UserRow }>(`/users/${id}`, 'PUT', patch);
 export const deleteUser = (id: number) => apiRequest<object>(`/users/${id}`, 'DELETE');
-export const resetTwoFactor = (id: number) => apiRequest<object>(`/users/${id}/two-factor/reset`, 'POST');
+/** `currentPassword` (the acting admin's) is required when the target is another admin. */
+export const resetTwoFactor = (id: number, currentPassword?: string) =>
+  apiRequest<object>(`/users/${id}/two-factor/reset`, 'POST', currentPassword ? { current_password: currentPassword } : undefined);
 
 /* Bug reports */
 export const listBugReports = (query: { page: number; per_page: number; status?: string; search?: string }) =>

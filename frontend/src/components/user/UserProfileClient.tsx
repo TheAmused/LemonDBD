@@ -52,13 +52,21 @@ export function UserProfileClient() {
   const [reportsPage, setReportsPage] = useState(1);
   const [reportsTotalPages, setReportsTotalPages] = useState(1);
   const REPORTS_PER_PAGE = 10;
+  /** The request in flight: a newer page aborts it, so a slow answer can't overwrite a newer one. */
+  const reportsRequestRef = useRef<AbortController | null>(null);
+  const [reportSubmitted, setReportSubmitted] = useState(false);
 
   const fetchMyReports = useCallback(async (page: number = 1, signal?: AbortSignal) => {
     if (!isAuthenticated) return;
 
+    reportsRequestRef.current?.abort();
+    const controller = new AbortController();
+    reportsRequestRef.current = controller;
+    signal?.addEventListener('abort', () => controller.abort());
+
     setLoadingReports(true);
     try {
-      const result = await fetchMyBugReports(page, REPORTS_PER_PAGE, signal);
+      const result = await fetchMyBugReports(page, REPORTS_PER_PAGE, controller.signal);
       setMyReports(result.reports);
       setReportsTotal(result.total);
       setUnreadReports(result.unreadCount);
@@ -68,7 +76,7 @@ export function UserProfileClient() {
       if (err instanceof DOMException && err.name === 'AbortError') return;
       console.error('Failed to fetch user bug reports:', err);
     } finally {
-      setLoadingReports(false);
+      if (reportsRequestRef.current === controller) setLoadingReports(false);
     }
   }, [isAuthenticated]);
 
@@ -85,6 +93,12 @@ export function UserProfileClient() {
     },
     [fetchMyReports]
   );
+
+  // The local preview of an avatar being uploaded is a blob: URL; it is released once replaced.
+  useEffect(() => {
+    if (!optimisticPreview) return;
+    return () => URL.revokeObjectURL(optimisticPreview);
+  }, [optimisticPreview]);
 
   const handleReportSeen = useCallback((id: number) => {
     setMyReports((prev) => prev.map((r) => (r.id === id ? { ...r, feedback_unread: false } : r)));
@@ -230,9 +244,14 @@ export function UserProfileClient() {
 
       <BugReportModal
         isOpen={bugModalOpen}
+        onSubmitted={() => setReportSubmitted(true)}
         onClose={() => {
           setBugModalOpen(false);
-          fetchMyReports();
+          // Only a new report changes the list; closing the dialog unused no longer resets it to page 1.
+          if (reportSubmitted) {
+            setReportSubmitted(false);
+            fetchMyReports(1);
+          }
         }}
       />
     </PageShell>

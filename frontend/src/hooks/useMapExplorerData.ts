@@ -11,7 +11,7 @@ const SEARCH_MIN_CHARS = 3;
 
 export interface UseMapExplorerDataOptions {
   initialMapName?: string;
-  selectedMap?: { mapName: string; timestamp: number; via?: 'voice' | 'link' } | string;
+  selectedMap?: { mapName: string; mapId?: number; timestamp: number; via?: 'voice' | 'link' } | string;
   onAvailableMapsLoaded?: (maps: MapRealm[]) => void;
   /** Called when a map opens by itself (a voice command or a `?mapName=` link), not from a card click. */
   onAutoOpen?: (map: MapRealm, via: 'voice' | 'link') => void;
@@ -46,6 +46,9 @@ export function findMapByName(maps: MapRealm[], targetMapName: string): MapRealm
   if (!targetMapName || !targetMapName.trim() || !maps || maps.length === 0) return undefined;
   const needle = targetMapName.toLowerCase().trim();
   const normNeedle = normalizeMapSearch(needle);
+  // An empty normalized needle matches every string via includes('') — reject it
+  // (this happens for all-Japanese strings which normalize to empty).
+  if (!normNeedle) return undefined;
 
   return maps.find(
     (m) =>
@@ -53,7 +56,10 @@ export function findMapByName(maps: MapRealm[], targetMapName: string): MapRealm
       needle.includes(m.name.toLowerCase()) ||
       normalizeMapSearch(m.name) === normNeedle ||
       normalizeMapSearch(m.name).includes(normNeedle) ||
-      normNeedle.includes(normalizeMapSearch(m.name))
+      normNeedle.includes(normalizeMapSearch(m.name)) ||
+      // Also check raw_name (English canonical) for voice commands on non-English locales
+      (m.raw_name ? normalizeMapSearch(m.raw_name).includes(normNeedle) : false) ||
+      (m.raw_name ? normNeedle.includes(normalizeMapSearch(m.raw_name)) && normNeedle.length >= 3 : false)
   );
 }
 
@@ -169,9 +175,11 @@ export function useMapExplorerData(options: UseMapExplorerDataOptions = {}): Use
 
   useEffect(() => {
     const rawTarget = selectedMap !== undefined ? selectedMap : initialMapName;
+    const rawObj = typeof rawTarget === 'object' && rawTarget !== null ? rawTarget : null;
     const targetMapName =
       typeof rawTarget === 'object' && rawTarget !== null ? rawTarget.mapName : rawTarget;
-    if (!targetMapName || !targetMapName.trim() || maps.length === 0) return;
+    if ((!targetMapName || !targetMapName.trim()) && !rawObj?.mapId) return;
+    if (maps.length === 0) return;
 
     const targetKey =
       typeof rawTarget === 'object' && rawTarget !== null
@@ -179,7 +187,11 @@ export function useMapExplorerData(options: UseMapExplorerDataOptions = {}): Use
         : rawTarget;
     if (lastHandledTargetRef.current === targetKey) return;
 
-    const match = findMapByName(maps, targetMapName);
+    // Prefer a direct id lookup (set by voice commands on non-English locales) over name matching.
+    const directId = rawObj?.mapId as number | undefined;
+    const match = directId
+      ? maps.find((m) => m.id === directId)
+      : findMapByName(maps, targetMapName);
     if (match) {
       // Opening the map that is already open is not an open (a voice command can repeat itself).
       const alreadyOpen = openMapIdRef.current === match.id;

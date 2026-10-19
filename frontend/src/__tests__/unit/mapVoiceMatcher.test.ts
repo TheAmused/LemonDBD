@@ -399,3 +399,16 @@ test('Ormond Lake Mine does not return mount_ormond resort variants', () => {
   assert.deepStrictEqual(getVariantsForMap('ormond kopalnia'), []);
   assert.deepStrictEqual(getVariantsForMap('lake mine'), []);
 });
+
+test('Matches map by raw_name on non-English locale (e.g. Japanese localized name with English canonical raw_name)', () => {
+  const nonEnglishMaps = [
+    { id: 42, name: '石炭の塔', raw_name: 'Coal Tower', source: 'hens333' },
+    { id: 43, name: 'アザロフの休憩所', raw_name: "Azarov's Resting Place", source: 'hens333' },
+  ];
+  const result = matchVoiceQuery('coal tower', 'all', nonEnglishMaps);
+  assert.ok(result);
+  assert.strictEqual(result.matchedMapId, 42);
+  assert.strictEqual(result.matchedMapName, '石炭の塔');
+  assert.strictEqual(result.action, 'navigate');
+});
+

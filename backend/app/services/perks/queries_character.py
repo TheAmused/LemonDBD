@@ -36,7 +36,6 @@ def fetch_characters(service: Any = None, category: str | None = None, lang: str
     if cached is not None:
         return cached
 
-    chars_cache = getattr(service, "_characters_cache", [])
     try:
         models = _role_models(category)
         characters: list[Survivor | Killer] = []
@@ -54,35 +53,32 @@ def fetch_characters(service: Any = None, category: str | None = None, lang: str
             # number because they held ids 1-54 against the killers' 55-98 in
             # the table that no longer exists, and `id ASC` was the tiebreak.
             characters.sort(key=lambda c: (c.release_number, 0 if isinstance(c, Survivor) else 1, c.name))
-        # This path falls back to a possibly-empty in-memory cache on any
-        # exception, including one raised inside to_dict(), so an empty result
-        # is logged rather than passed off as "there is no data yet".
         if not characters:
-            logger.warning(
-                f"[characters-query-check] DB query returned 0 rows "
-                f"(category={category!r}); falling back to in-memory cache "
-                f"of size {len(chars_cache)}"
-            )
-        if characters:
-            res = [c.to_list_dict(lang=lang) for c in characters]
-            catalog_cache.set(cache_key, res, ttl=120.0)
-            return res
+            logger.warning(f"[characters-query-check] DB query returned 0 rows (category={category!r})")
+            return []
+        res = [c.to_list_dict(lang=lang) for c in characters]
+        catalog_cache.set(cache_key, res, ttl=120.0)
+        return res
     except Exception:
-        logger.exception(
-            f"[characters-query-check] Querying/serializing characters from "
-            f"DB raised -- falling back to in-memory cache of size "
-            f"{len(chars_cache)}"
-        )
+        # A database error must surface as a 5xx, which `@cache_catalog` never stores. It used to
+        # fall back to `service._characters_cache` -- `[]` for every route, which pass no service --
+        # and that empty 200 was then cached in Redis for a day.
+        logger.exception("[characters-query-check] Querying/serializing characters from the DB raised")
+        _rollback_quietly()
+        raise
 
-    return chars_cache
+
+def _rollback_quietly() -> None:
+    try:
+        db.session.rollback()
+    except Exception:
+        logger.debug("Rollback after a failed character query also failed", exc_info=True)
 
 
 @retry_on_transient_db_error()
 def _run_characters_query(stmt):
-    # Split out so a transient connection drop gets retried once here,
-    # before fetch_characters' broader except falls back to the (possibly
-    # empty/stale) in-memory cache -- without this, a one-off blip silently
-    # degrades every caller to a near-empty catalog instead of a clean error.
+    # Split out so a transient connection drop gets retried once here, before
+    # fetch_characters gives up and lets the error become a 5xx.
     return db.session.scalars(stmt).unique().all()
 
 
@@ -136,24 +132,10 @@ def fetch_character_suggestions(
         catalog_cache.set(cache_key, res, ttl=120.0)
         return res
     except Exception:
-        q_clean = query.strip().lower()
-        res = []
-        for c in getattr(service, "_characters_cache", []):
-            if category and category.lower() != "all" and (c.get("category") or c.get("role", "")).lower() != category.lower():
-                continue
-            if not q_clean or q_clean in c.get("name", "").lower() or q_clean in c.get("real_name", "").lower():
-                res.append({
-                    "id": c.get("id"),
-                    "name": c.get("name", ""),
-                    "real_name": c.get("real_name", c.get("name", "")),
-                    "category": c.get("category") or c.get("role", "Survivor"),
-                    "avatar_local_path": c.get("avatar_local_path", ""),
-                    "portrait_url": c.get("avatar_url", ""),
-                })
-            if len(res) >= limit:
-                break
-        catalog_cache.set(cache_key, res, ttl=60.0)
-        return res
+        # Same rule as fetch_characters: no silent, cached empty fallback.
+        logger.exception("Character suggestions query raised")
+        _rollback_quietly()
+        raise
 
 
 def fetch_character_detail(service: Any = None, character_name: str = "", lang: str | None = None) -> dict[str, Any] | None:
@@ -320,6 +302,8 @@ def fetch_character_detail(service: Any = None, character_name: str = "", lang: 
         }
         catalog_cache.set(cache_key, result, ttl=120.0)
         return result
-    except Exception as e:
-        logger.error(f"Error getting character detail from DB: {e}", exc_info=True)
-        return None
+    except Exception:
+        # A 5xx, not "Character not found": the page must not tell the user the character is gone.
+        logger.exception("Error getting character detail from DB")
+        _rollback_quietly()
+        raise

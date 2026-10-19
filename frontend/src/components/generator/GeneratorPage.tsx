@@ -87,10 +87,12 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
 
     const saved = getStoredGeneratorState();
     if (saved) {
-      if (saved.role) setRole(saved.role);
-      if (saved.genMode) setGenMode(saved.genMode);
+      if (saved.role === 'Survivor' || saved.role === 'Killer') setRole(saved.role);
+      if (saved.genMode && KNOWN_MODES.includes(saved.genMode)) setGenMode(saved.genMode);
       if (typeof saved.noRepeatPerks === 'boolean') setNoRepeatPerks(saved.noRepeatPerks);
-      if (typeof saved.spinDurationSec === 'number') setSpinDurationSec(saved.spinDurationSec);
+      if (typeof saved.spinDurationSec === 'number' && saved.spinDurationSec >= 1 && saved.spinDurationSec <= 30) {
+        setSpinDurationSec(saved.spinDurationSec);
+      }
       if (Array.isArray(saved.loadout) && saved.genMode === 'wheel') {
         const targetRole = saved.role || 'Survivor';
         const isValidWheelLoadout = saved.loadout.every((s) => {
@@ -103,7 +105,9 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
         }
       }
       if (typeof saved.blindMode === 'boolean') setBlindMode(saved.blindMode);
-      if (saved.activeMutator) setActiveMutator(saved.activeMutator);
+      if (saved.activeMutator && typeof saved.activeMutator === 'object' && typeof saved.activeMutator.id === 'string') {
+        setActiveMutator(saved.activeMutator);
+      }
     }
   }, []);
 

@@ -73,7 +73,7 @@ const TAROT_IMAGE_SLUG: Record<TarotType, string> = {
   hooks: 'hanged-man',
 };
 
-/** Static card art lives under /images/ so the service worker caches it
+/** Static card art lives under /images/ so the browser caches it
  * cache-first and next.config.ts serves it with long-lived headers. Faces are
  * produced by scripts/generate_tarot_card_faces.py from the art above. */
 const TAROT_IMAGE_BASE = '/images/tarot';

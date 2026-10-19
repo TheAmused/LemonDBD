@@ -342,6 +342,10 @@ def get_user_perks(user_id: int):
     # against run-state build slots, so it must stay in the caller's control.
     category = request.args.get("category")
     perks = ownership_service.get_user_perks(user_id, category=category, lang=request.args.get("lang"))
+    for perk in perks:
+        # Every language's name and description, per perk: ~70% of the payload and never read by
+        # a client (each row is already localized for `lang`).
+        perk.pop("translations", None)
     return jsonify({
         "user_id": user_id,
         "count": len(perks),

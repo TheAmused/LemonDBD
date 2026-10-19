@@ -3,7 +3,7 @@
 //
 // One user's moderation history and the decisions an admin can take about them.
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useDictionary } from '@/context/DictionaryContext';
 import {
   fetchUserSanctions,
@@ -26,28 +26,38 @@ interface UserModerationInput {
 
 export function useUserModeration({ userId, username, onChanged, onActionMessage }: UserModerationInput) {
   const t = useDictionary().moderation.admin;
-  const [data, setData] = useState<UserSanctions | null>(null);
+  // The history is stored with the account it belongs to, and only shown for that account.
+  const [loaded, setLoaded] = useState<{ userId: number; data: UserSanctions } | null>(null);
   const [loading, setLoading] = useState(false);
   const [loadFailed, setLoadFailed] = useState(false);
   const [saving, setSaving] = useState(false);
+  /**
+   * Only the newest request may set state. Without this, opening user A and then user B could show
+   * A's history -- and A's suggested next sanction -- in B's drawer when A's answer arrived last.
+   */
+  const latestRequest = useRef(0);
 
   const load = useCallback(async () => {
     if (userId === null) return;
+    const request = ++latestRequest.current;
     setLoading(true);
     setLoadFailed(false);
     try {
-      setData(await fetchUserSanctions(userId));
+      const body = await fetchUserSanctions(userId);
+      if (request === latestRequest.current) setLoaded({ userId, data: body });
     } catch (err: unknown) {
       console.error('Failed to load the moderation history:', err);
-      setLoadFailed(true);
+      if (request === latestRequest.current) setLoadFailed(true);
     } finally {
-      setLoading(false);
+      if (request === latestRequest.current) setLoading(false);
     }
   }, [userId]);
 
+  const data = loaded && loaded.userId === userId ? loaded.data : null;
+
   useEffect(() => {
-    setData(null);
     if (userId !== null) void load();
+    else latestRequest.current += 1; // the drawer closed: drop whatever is still in flight
   }, [userId, load]);
 
   /** Runs one decision; true when it was saved. The server's message is shown when it refuses. */

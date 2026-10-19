@@ -480,96 +480,98 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
         ) : customTrials.length === 0 ? (
           <EmptyState variant="compact" title={t.noCustomTrials} />
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {customTrials.map((trial) => {
-              const id = trial.id!;
-              const isShareLoading = shareLoadingId === id;
-              const isCopied = copiedId === id;
+          <div className="max-h-128 overflow-y-auto overflow-x-hidden p-1 rounded-card border border-border-color/60 bg-bg-surface/30">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {customTrials.map((trial) => {
+                const id = trial.id!;
+                const isShareLoading = shareLoadingId === id;
+                const isCopied = copiedId === id;
 
-              return (
-                <Surface
-                  key={String(id)}
-                  padding="none" className="p-5 shadow-lg flex flex-col justify-between hover:border-border-color transition-all"
-                >
-                  <div>
-                    <div className="flex items-start justify-between gap-2">
-                      <h3 className="font-bold text-text-primary text-base truncate">{trial.title}</h3>
-                      <InfoChip>
-                        {formatMessage(t.roundsCount, { count: trial.rounds.length }, locale)}
-                      </InfoChip>
-                    </div>
-                    <div className="flex items-center gap-1.5 mt-1.5">
-                      {trial.is_nsfw && <NsfwBadge label={t.nsfw.badge} />}
-                      {trial.is_nsfw && !showNsfw && (
-                        <Button
-                          type="button"
-                          variant="secondary"
-                          size="xs"
-                          onClick={() => setShowNsfw(true)}
-                        >
-                          {dict.tierLists.nsfw.reveal}
-                        </Button>
+                return (
+                  <Surface
+                    key={String(id)}
+                    padding="none" className="p-5 shadow-lg flex flex-col justify-between hover:border-border-color transition-all"
+                  >
+                    <div>
+                      <div className="flex items-start justify-between gap-2">
+                        <h3 className="font-bold text-text-primary text-base truncate">{trial.title}</h3>
+                        <InfoChip>
+                          {formatMessage(t.roundsCount, { count: trial.rounds.length }, locale)}
+                        </InfoChip>
+                      </div>
+                      <div className="flex items-center gap-1.5 mt-1.5">
+                        {trial.is_nsfw && <NsfwBadge label={t.nsfw.badge} />}
+                        {trial.is_nsfw && !showNsfw && (
+                          <Button
+                            type="button"
+                            variant="secondary"
+                            size="xs"
+                            onClick={() => setShowNsfw(true)}
+                          >
+                            {dict.tierLists.nsfw.reveal}
+                          </Button>
+                        )}
+                      </div>
+                      {trial.description && (
+                        <p className={cn("text-xs text-text-secondary mt-1 line-clamp-2", trial.is_nsfw && !showNsfw && "blur-xs select-none")}>
+                          {trial.description}
+                        </p>
                       )}
                     </div>
-                    {trial.description && (
-                      <p className={cn("text-xs text-text-secondary mt-1 line-clamp-2", trial.is_nsfw && !showNsfw && "blur-xs select-none")}>
-                        {trial.description}
-                      </p>
-                    )}
-                  </div>
 
-                  <div className="mt-5 pt-3 border-t border-border-color flex items-center justify-between gap-2">
-                    <Link
-                      href={`/${locale}/minigames/play?id=${encodeURIComponent(String(id))}`}
-                      className={buttonClassName('success', 'sm')}
-                    >
-                      <Play className="w-3.5 h-3.5 fill-current" />
-                      <span>{t.playTrial}</span>
-                    </Link>
-
-                    <div className="flex items-center gap-1">
-                      <Button
-                        variant="secondary"
-                        size="sm"
-                        icon
-                        onClick={() => handleShare(trial)}
-                        disabled={isShareLoading}
-                        {...tip(t.shareTrial, undefined, 'action')}
-                        aria-label={t.shareTrial}
+                    <div className="mt-5 pt-3 border-t border-border-color flex items-center justify-between gap-2">
+                      <Link
+                        href={`/${locale}/minigames/play?id=${encodeURIComponent(String(id))}`}
+                        className={buttonClassName('success', 'sm')}
                       >
-                        {isCopied ? (
-                          <Check className="w-4 h-4 text-accent-green" />
-                        ) : (
-                          <Share2 className="w-4 h-4" />
-                        )}
-                      </Button>
+                        <Play className="w-3.5 h-3.5 fill-current" />
+                        <span>{t.playTrial}</span>
+                      </Link>
 
-                      <Button
-                        variant="secondary"
-                        size="sm"
-                        icon
-                        onClick={() => handleExport(trial)}
-                        {...tip(t.exportJson, undefined, 'action')}
-                        aria-label={t.exportJson}
-                      >
-                        <Download className="w-4 h-4" />
-                      </Button>
+                      <div className="flex items-center gap-1">
+                        <Button
+                          variant="secondary"
+                          size="sm"
+                          icon
+                          onClick={() => handleShare(trial)}
+                          disabled={isShareLoading}
+                          {...tip(t.shareTrial, undefined, 'action')}
+                          aria-label={t.shareTrial}
+                        >
+                          {isCopied ? (
+                            <Check className="w-4 h-4 text-accent-green" />
+                          ) : (
+                            <Share2 className="w-4 h-4" />
+                          )}
+                        </Button>
 
-                      <Button
-                        variant="danger"
-                        size="sm"
-                        icon
-                        onClick={() => handleDelete(id)}
-                        {...tip(t.deleteTrial, undefined, 'action')}
-                        aria-label={t.deleteTrial}
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </Button>
+                        <Button
+                          variant="secondary"
+                          size="sm"
+                          icon
+                          onClick={() => handleExport(trial)}
+                          {...tip(t.exportJson, undefined, 'action')}
+                          aria-label={t.exportJson}
+                        >
+                          <Download className="w-4 h-4" />
+                        </Button>
+
+                        <Button
+                          variant="danger"
+                          size="sm"
+                          icon
+                          onClick={() => handleDelete(id)}
+                          {...tip(t.deleteTrial, undefined, 'action')}
+                          aria-label={t.deleteTrial}
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      </div>
                     </div>
-                  </div>
-                </Surface>
-              );
-            })}
+                  </Surface>
+                );
+              })}
+            </div>
           </div>
         )}
       </div>

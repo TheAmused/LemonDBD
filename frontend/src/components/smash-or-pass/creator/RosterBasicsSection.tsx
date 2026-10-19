@@ -98,43 +98,50 @@ export function RosterBasicsSection({
             invalid={attempted && coverInvalid}
             invalidMessage={c.invalidImage || dict.tierLists.invalidImage}
             aspectRatio="banner"
-            onPreviewClick={() => onOpenCrop()}
+            allowFileUpload={isUserAdmin}
+            onPreviewClick={isUserAdmin ? () => onOpenCrop() : undefined}
             previewOverlay={
-              <div className="absolute inset-0 bg-bg-primary/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-1.5 text-text-inverted type-strong pointer-events-none">
-                <Crop className="h-5 w-5 text-accent-red" />
-                <span>{c.cropClickPrompt}</span>
-              </div>
+              isUserAdmin ? (
+                <div className="absolute inset-0 bg-bg-primary/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-1.5 text-text-inverted type-strong pointer-events-none">
+                  <Crop className="h-5 w-5 text-accent-red" />
+                  <span>{c.cropClickPrompt}</span>
+                </div>
+              ) : undefined
             }
             previewActions={
-              <Button
-                type="button"
-                variant="overlay"
-                size="xs"
-                icon
-                pill
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onOpenCrop();
-                }}
-                {...tip(c.cropCoverTitle, undefined, 'action')}
-                aria-label={c.cropCoverTitle}
-              >
-                <Crop className="h-3.5 w-3.5" />
-              </Button>
+              isUserAdmin ? (
+                <Button
+                  type="button"
+                  variant="overlay"
+                  size="xs"
+                  icon
+                  pill
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onOpenCrop();
+                  }}
+                  {...tip(c.cropCoverTitle, undefined, 'action')}
+                  aria-label={c.cropCoverTitle}
+                >
+                  <Crop className="h-3.5 w-3.5" />
+                </Button>
+              ) : undefined
             }
             emptyActions={
-              <Button
-                type="button"
-                variant="secondary"
-                size="sm"
-                onClick={() => onOpenCrop()}
-                {...tip(c.cropCoverTitle, undefined, 'action')}
-                aria-label={c.cropCoverTitle}
-                className="shrink-0 px-3"
-              >
-                <Crop className="h-4 w-4 text-accent-red" />
-                <span className="hidden sm:inline">{c.cropCoverBadge}</span>
-              </Button>
+              isUserAdmin ? (
+                <Button
+                  type="button"
+                  variant="secondary"
+                  size="sm"
+                  onClick={() => onOpenCrop()}
+                  {...tip(c.cropCoverTitle, undefined, 'action')}
+                  aria-label={c.cropCoverTitle}
+                  className="shrink-0 px-3"
+                >
+                  <Crop className="h-4 w-4 text-accent-red" />
+                  <span className="hidden sm:inline">{c.cropCoverBadge}</span>
+                </Button>
+              ) : undefined
             }
           />
         </div>

@@ -443,9 +443,10 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
                 onChange={(val) => patch({ backgroundImage: val })}
                 label={c.backgroundImageLabel}
                 placeholder={c.backgroundImagePlaceholder}
-                hint={c.backgroundImageHint}
+                hint={isAdmin ? c.backgroundImageHint : c.backgroundImagePlaceholder}
                 invalid={attempted && backgroundInvalid}
                 invalidMessage={t.invalidImage}
+                allowFileUpload={isAdmin}
               />
             </div>
             <div className="md:col-span-2 flex flex-col items-start gap-3">

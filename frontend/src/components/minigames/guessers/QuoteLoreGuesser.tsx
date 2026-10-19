@@ -92,8 +92,14 @@ export const QuoteLoreGuesser: React.FC<QuoteLoreGuesserProps> = ({ roundConfig,
         {isSolved && (targetChar || targetPerk) && (
           <div className="mt-6 px-4 py-2 rounded-card bg-accent-green text-text-inverted type-card-title flex items-center gap-3 shadow-lg">
             {solvedImg && (
-              <div className="relative w-8 h-8 rounded-full overflow-hidden border border-border-subtle">
-                <Image src={solvedImg} alt={targetName} fill className="object-cover" />
+              <div className="relative w-8 h-8 rounded-full overflow-hidden border border-border-subtle select-none">
+                <Image
+                  src={solvedImg}
+                  alt={targetName}
+                  fill
+                  draggable={false}
+                  className="object-cover select-none pointer-events-none"
+                />
               </div>
             )}
             <Check className="w-4 h-4" />
@@ -107,7 +113,7 @@ export const QuoteLoreGuesser: React.FC<QuoteLoreGuesserProps> = ({ roundConfig,
 
       {/* Prior Guesses List */}
       {guesses.length > 0 && (
-        <div className="w-full max-w-xl mt-6 space-y-2">
+        <div className="w-full max-w-xl mt-6 space-y-2 max-h-80 overflow-y-auto pr-1">
           {guesses.map((g, idx) => {
             const isCorrect = g.evaluation.is_correct;
             return (

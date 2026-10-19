@@ -154,7 +154,11 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({ isOpen
       <img
         src={avatarSrc}
         alt={name}
-        className="h-full w-full object-cover object-top"
+        loading="lazy"
+        decoding="async"
+        draggable={false}
+        onContextMenu={(e) => e.preventDefault()}
+        className="h-full w-full object-cover object-top select-none pointer-events-none"
         onError={(e) => {
           (e.target as HTMLImageElement).src = `${backendBase}/static/avatars/survivors/sable_ward.webp`;
         }}

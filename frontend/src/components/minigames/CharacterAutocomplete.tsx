@@ -277,7 +277,7 @@ export const CharacterAutocomplete: React.FC<CharacterAutocompleteProps> = ({
                   isHighlighted ? 'bg-accent-red/20 text-text-primary font-bold' : 'text-text-secondary hover:bg-bg-elevated'
                 }`}
               >
-                <Thumb src={imgSrc} alt={item.name} fallback={<Sparkles className="h-5 w-5 text-text-muted" />} />
+                <Thumb src={imgSrc} alt={item.name} size="lg" fallback={<Sparkles className="h-5 w-5 text-text-muted" />} />
 
                 <div className="flex-1 min-w-0">
                   <div className="type-card-title truncate text-text-primary">{item.name}</div>

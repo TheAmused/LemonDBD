@@ -4,7 +4,7 @@
 // The bug-report queue: the filtered, paged list, the selected ticket, and its status / reply / delete.
 import { useCallback, useEffect, useState } from 'react';
 import { ADMIN_STORAGE, BUG_REPORT_FILTERS, oneOf } from '@/components/admin/adminStorage';
-import { DEFAULT_PAGE_SIZE } from '@/constants/pagination';
+import { DEFAULT_PAGE_SIZE, lastPage } from '@/constants/pagination';
 import { SEARCH_DEBOUNCE_MS } from '@/constants/timing';
 import { useDictionary } from '@/context/DictionaryContext';
 import { usePersistentString } from '@/hooks/usePersistentString';
@@ -46,6 +46,10 @@ export function useAdminBugReports({ enabled, refreshKey, notify, onChanged }: B
       .then((data) => {
         if (cancelled) return;
         const list = data.reports ?? [];
+        if (list.length === 0 && page > 1 && (data.total ?? 0) > 0) {
+          setPage(lastPage(data.total ?? 0, DEFAULT_PAGE_SIZE));
+          return;
+        }
         setReports(list);
         setStats(data.stats ?? null);
         setTotal(data.total ?? 0);

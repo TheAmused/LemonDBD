@@ -42,7 +42,10 @@ def perk_search_prefilter(query: str, lang: str | None):
     """
     if not _is_postgres():
         return None
-    norm_query = re.sub(r"[^a-z0-9]", "", query.lower())
+    # Use the same NFKD fold as the Python-side filter so the prefilter is
+    # a genuine superset: ä→a, ę→e, ł→l, etc. Spaces are removed because the
+    # column regex also strips non-alphanumerics.
+    norm_query = re.sub(r"[^a-z0-9]", "", normalize_search_key(query))
     if not norm_query:
         return None
     pattern = f"%{norm_query}%"

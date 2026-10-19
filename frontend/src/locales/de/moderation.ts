@@ -117,4 +117,10 @@ export default {
     previewFailed: "Die Vorschau konnte nicht geladen werden.",
     previewIncomplete: "Fülle die Pflichtfelder aus, um eine Vorschau zu sehen.",
   },
+  /** Shown when saved content was deleted from this browser because moderators banned it. */
+  contentRemoved: {
+    title: "Gespeicherte Inhalte entfernt",
+    body: "{count, plural, one {Ein auf diesem Gerät gespeicherter Inhalt wurde} other {# auf diesem Gerät gespeicherte Inhalte wurden}} entfernt, weil die Moderation {count, plural, one {ihn} other {sie}} wegen eines Regelverstoßes gesperrt hat.",
+    dismiss: "Schließen",
+  },
 };

@@ -23,7 +23,8 @@ const NsfwOnboardingModal = dynamic(
 );
 import { cn } from '@/utils/cn';
 import type { ChallengeDefinition } from '@/types/minigame';
-import { getCustomChallenges, deleteCustomChallenge, saveCustomChallenge, getDailyStreak, wonDailyOn, type DailyStreakData } from '@/utils/minigames/storage';
+import { saveCustomChallenge, getDailyStreak, wonDailyOn, type DailyStreakData } from '@/utils/minigames/storage';
+import { useCustomChallenges } from '@/hooks/useCustomChallenges';
 import { exportChallengeToJson, importChallengeFromJson } from '@/utils/minigames/jsonExportImport';
 import { buildChallengeShareUrl, encodeChallengeShare } from '@/utils/minigames/shareLink';
 import { signExportPayload } from '@/utils/contentSigning';
@@ -53,7 +54,8 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
   const { isAuthenticated, user } = useAuth();
   const router = useRouter();
   const signIn = useSignInThen();
-  const [customTrials, setCustomTrials] = useState<ChallengeDefinition[]>([]);
+  const { trials: customTrials, reload: reloadCustomTrials, pendingDeleteId, requestDelete, cancelDelete, confirmDelete } =
+    useCustomChallenges();
   const [showNsfw, setShowNsfw] = useGlobalNsfwPreference();
   const [onboardingOpen, setOnboardingOpen] = useState<boolean>(false);
   const [importError, setImportError] = useState<string | null>(null);
@@ -62,26 +64,14 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
   const [shareLoadingId, setShareLoadingId] = useState<string | number | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Load custom trials, streaks, and check onboarding on mount
+  // Load streaks and check onboarding on mount
   useEffect(() => {
-    setCustomTrials(getCustomChallenges());
     setStreakData(getDailyStreak());
     if (!hasSeenNsfwOnboarding()) setOnboardingOpen(true);
   }, []);
 
   const todayStr = useMemo(() => new Date().toISOString().slice(0, 10), []);
   const isCompletedToday = wonDailyOn(streakData, todayStr);
-
-  const [pendingDeleteId, setPendingDeleteId] = useState<string | number | null>(null);
-
-  const handleDelete = (id: string | number) => setPendingDeleteId(id);
-
-  const confirmDelete = () => {
-    if (pendingDeleteId === null) return;
-    deleteCustomChallenge(pendingDeleteId);
-    setCustomTrials(getCustomChallenges());
-    setPendingDeleteId(null);
-  };
 
   const ensureSignedTrial = async (trial: ChallengeDefinition): Promise<ChallengeDefinition> => {
     if (trial._manifest) return trial;
@@ -91,7 +81,7 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
     if (!manifest) throw new Error(dict.tierLists.signFailed);
     const signed = { ...trial, _manifest: manifest };
     saveCustomChallenge(signed);
-    setCustomTrials(getCustomChallenges());
+    reloadCustomTrials();
     return signed;
   };
 
@@ -142,7 +132,7 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
           return;
         }
         saveCustomChallenge(imported);
-        setCustomTrials(getCustomChallenges());
+        reloadCustomTrials();
       } catch (err) {
         setImportError(getErrorMessage(err, 'Failed to import trial.'));
       }
@@ -572,7 +562,7 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
                           variant="danger"
                           size="sm"
                           icon
-                          onClick={() => handleDelete(id)}
+                          onClick={() => requestDelete(id)}
                           {...tip(t.deleteTrial, undefined, 'action')}
                           aria-label={t.deleteTrial}
                         >
@@ -594,7 +584,7 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
         confirmLabel={t.deleteTrial}
         cancelLabel={t.cancel}
         onConfirm={confirmDelete}
-        onCancel={() => setPendingDeleteId(null)}
+        onCancel={cancelDelete}
       />
 
       {signIn.isAuthModalOpen && <AuthModal isOpen onClose={signIn.closeAuthModal} />}

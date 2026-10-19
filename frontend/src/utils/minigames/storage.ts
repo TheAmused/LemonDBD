@@ -2,7 +2,7 @@
 import type { ChallengeDefinition, ChallengeProgress } from '@/types/minigame';
 import { getLocalStorage } from '@/utils/safeStorage';
 
-const CUSTOM_CHALLENGES_KEY = 'lemondbd_custom_minigames';
+export const CUSTOM_CHALLENGES_KEY = 'lemondbd_custom_minigames';
 const PROGRESS_KEY_PREFIX = 'lemondbd_minigame_progress_';
 const DAILY_STREAK_KEY = 'lemondbd_minigames_daily_streak';
 

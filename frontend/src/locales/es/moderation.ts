@@ -117,4 +117,10 @@ export default {
     previewFailed: "No se pudo cargar la vista previa.",
     previewIncomplete: "Rellena los campos obligatorios para ver una vista previa.",
   },
+  /** Shown when saved content was deleted from this browser because moderators banned it. */
+  contentRemoved: {
+    title: "Contenido guardado eliminado",
+    body: "{count, plural, one {Se eliminó un elemento que guardaste en este dispositivo} other {Se eliminaron # elementos que guardaste en este dispositivo}} porque los moderadores {count, plural, one {lo bloquearon} other {los bloquearon}} por incumplir las normas.",
+    dismiss: "Cerrar",
+  },
 };

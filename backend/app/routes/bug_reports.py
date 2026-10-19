@@ -144,10 +144,14 @@ def submit_bug_report():
 
 
 def _owned_by(user: User) -> ColumnElement[bool]:
-    conditions = [BugReport.user_id == user.id]
-    if user.email:
-        conditions.append(func.lower(BugReport.reporter_email) == user.email.lower())
-    return or_(*conditions)
+    """A report belongs to the account that filed it, and to nobody else.
+
+    It used to be matched on `reporter_email` as well, but that address is not proof of anything: an
+    unverified account, or one that just changed its email, could claim any guest's reports that
+    way. Guest reports join an account only when its owner proves the address with a verification
+    code (see `verify_email_code`), which sets `user_id`.
+    """
+    return BugReport.user_id == user.id
 
 
 @bug_reports_bp.route("/bug-reports/my", methods=["GET"])

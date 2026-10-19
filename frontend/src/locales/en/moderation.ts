@@ -117,4 +117,10 @@ export default {
     previewFailed: "The preview could not be loaded.",
     previewIncomplete: "Fill in the required fields to see a preview.",
   },
+  /** Shown when saved content was deleted from this browser because moderators banned it. */
+  contentRemoved: {
+    title: "Saved content removed",
+    body: "{count, plural, one {An item you saved on this device was} other {# items you saved on this device were}} removed because moderators blocked {count, plural, one {it} other {them}} for breaking the rules.",
+    dismiss: "Dismiss",
+  },
 };

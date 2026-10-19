@@ -117,4 +117,10 @@ export default {
     previewFailed: "Nie udało się wczytać podglądu.",
     previewIncomplete: "Uzupełnij wymagane pola, aby zobaczyć podgląd.",
   },
+  /** Shown when saved content was deleted from this browser because moderators banned it. */
+  contentRemoved: {
+    title: "Usunięto zapisane treści",
+    body: "{count, plural, one {Usunięto # element zapisany} few {Usunięto # elementy zapisane} many {Usunięto # elementów zapisanych} other {Usunięto # elementu zapisanego}} na tym urządzeniu, ponieważ moderatorzy {count, plural, one {zablokowali go} other {zablokowali je}} za naruszenie zasad.",
+    dismiss: "Zamknij",
+  },
 };

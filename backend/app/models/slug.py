@@ -90,6 +90,25 @@ def slugify(
     return slug or fallback
 
 
+_URL_SEPARATORS = re.compile(r"[\s\-/]+")
+_URL_UNSAFE = re.compile(r"[^a-z0-9_]")
+_URL_REPEATS = re.compile(r"_+")
+
+
+def url_slug(name: str) -> str:
+    """The path segment of a character page: `"The Trapper"` -> `the_trapper`.
+
+    Always built from the canonical English name, never a translation, so every locale links to the
+    same page (a Japanese name has no a-z left and used to produce an empty segment). Kept in step
+    with the frontend's `getCharacterSlug`, which still builds links for rows without a `slug`.
+    """
+    text = unicodedata.normalize("NFD", (name or "").lower().strip())
+    text = "".join(ch for ch in text if not unicodedata.combining(ch))
+    text = _URL_SEPARATORS.sub("_", text)
+    text = _URL_UNSAFE.sub("", text)
+    return _URL_REPEATS.sub("_", text).strip("_")
+
+
 def unique_slug(
     base: str,
     exists: Callable[[str], object],

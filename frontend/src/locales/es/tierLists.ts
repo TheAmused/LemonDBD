@@ -51,7 +51,6 @@ export default {
   poolNoMatches: "Nada coincide con tu búsqueda",
   dropHere: "Suelta elementos aquí",
   tierAria: "Nivel {label}",
-  editTierAria: "Editar nivel {label}",
   clearTierAria: "Limpiar nivel {label}",
   showPool: "Mostrar sin clasificar",
   hidePool: "Ocultar sin clasificar",
@@ -70,7 +69,6 @@ export default {
   showNames: "Mostrar nombres",
   hideNames: "Ocultar nombres",
   addTier: "Añadir nivel",
-  removeItem: "Quitar elemento",
   editDetails: "Editar detalles",
   deleteList: "Borrar lista",
   deleteListTitle: "¿Borrar esta lista personalizada?",
@@ -82,7 +80,6 @@ export default {
   scaleZoomOut: "Reducir escala",
   scaleReset: "Restablecer escala (100%)",
 
-  editTier: "Editar nivel",
   tierLabel: "Etiqueta",
   tierColor: "Color",
   customColor: "Color personalizado",
@@ -94,7 +91,6 @@ export default {
   moveUp: "Subir",
   moveDown: "Bajar",
   clearTier: "Vaciar nivel",
-  deleteTier: "Borrar nivel",
   save: "Guardar",
   newTierLabel: "Nuevo",
 
@@ -151,6 +147,7 @@ export default {
   saveFailedQuota: "El almacenamiento del navegador está lleno, así que este cambio no se ha guardado. Quita algunas imágenes o listas.",
   saveFailedUnavailable: "Este navegador bloquea el almacenamiento local, así que los cambios solo duran hasta que salgas de la página.",
   dismiss: "Cerrar",
+  deleteFailed: "No se pudo eliminar la lista. Inténtalo de nuevo.",
 
   creator: {
     pageTitle: "LemonDBD - Crear una tier list",
@@ -183,6 +180,11 @@ export default {
     tierColorAria: "Cambiar el color del nivel {label}",
     removeTierAria: "Quitar el nivel {label}",
     tabUpload: "Subir",
+    linkPreviewHeading: "Vista previa",
+    linkPreviewEmpty: "Pega un enlace de imagen para verla aquí.",
+    linkPreviewLoading: "Comprobando la imagen...",
+    linkPreviewOk: "Imagen encontrada. Así se verá la ficha.",
+    linkPreviewFailed: "Ese enlace no cargó como imagen. La ficha mostrará iniciales.",
     tabLinks: "Pegar enlaces",
     tabCatalog: "Del juego",
     itemSourceAria: "De dónde añadir elementos",
@@ -221,6 +223,7 @@ export default {
     publish: "Publicar",
     publishing: "Publicando...",
     publishFailed: "No se pudo publicar esta lista. Inténtalo de nuevo.",
+    publishTooLarge: "Esta lista es demasiado grande para publicarla (más de {size} MB). Usa enlaces de imagen en lugar de imágenes subidas o quita algunos elementos.",
   },
 
   reportTitle: "Reportar contenido",

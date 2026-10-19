@@ -35,8 +35,6 @@ describe('Tier Row Clear Button & Chrome Polish', () => {
           onSelect: () => {},
           onPreview: () => {},
           onMoveSelectedHere: () => {},
-          onEdit: () => {},
-          canEdit: true,
           onClearRow: (id: string) => {
             clearedTierId = id;
           },
@@ -67,8 +65,6 @@ describe('Tier Row Clear Button & Chrome Polish', () => {
           onSelect: () => {},
           onPreview: () => {},
           onMoveSelectedHere: () => {},
-          onEdit: () => {},
-          canEdit: true,
           onClearRow: () => {},
         })
       )
@@ -78,15 +74,13 @@ describe('Tier Row Clear Button & Chrome Polish', () => {
     assert.ok(!html.includes('lucide-eraser'), 'Empty TierRow must not render Eraser icon');
   });
 
-  it('Test 3: TierEditModal does not render clear tier button', () => {
-    const modalPath = path.resolve(__dirname, '../../components/tier-lists/TierEditModal.tsx');
-    const modalSource = fs.readFileSync(modalPath, 'utf-8');
-
-    assert.ok(!modalSource.includes('t.clearTier'), 'TierEditModal must not reference t.clearTier');
-    assert.ok(!modalSource.includes('onClear('), 'TierEditModal must not call onClear');
+  it('Test 3: a tier row is not editable from the board (tiers are edited in the creator only)', () => {
+    const rowSource = fs.readFileSync(path.resolve(__dirname, '../../components/tier-lists/TierRow.tsx'), 'utf-8');
+    assert.ok(!rowSource.includes('onEdit'), 'TierRow must not offer tier editing');
+    assert.ok(!rowSource.includes('useSortable'), 'tiers cannot be reordered on the board');
     assert.ok(
-      !modalSource.includes("import { Check, Eraser") && !modalSource.includes(", Eraser"),
-      'TierEditModal must not import Eraser icon'
+      !fs.existsSync(path.resolve(__dirname, '../../components/tier-lists/TierEditModal.tsx')),
+      'the board has no tier edit dialog'
     );
   });
 

@@ -2,27 +2,15 @@ import logging
 from datetime import datetime, timezone
 from typing import Any
 from flask import Blueprint, Response, g, jsonify, request
-from sqlalchemy import and_, case, delete, select
+from sqlalchemy import select
+from sqlalchemy.orm import joinedload
 
 from app.core.extensions import db
 from app.core.json_provider import safe_json_dumps, safe_json_loads
 from app.core.redis_cache import bump_catalog_version
 from app.core.security import admin_required
 from app.utils.pagination import paginate_args
-from app.models import (
-    GauntletRun,
-    Item,
-    ItemAddon,
-    Killer,
-    KillerAddon,
-    MapRealm,
-    PageStreakRun,
-    Perk,
-    Realm,
-    Survivor,
-    UserCharacterOwnership,
-    UserPerkOwnership,
-)
+from app.models import Killer, Perk, Survivor
 from app.models.admin import CHALLENGE_MODES
 from app.models.user import User
 from app.services import site_settings
@@ -144,7 +132,8 @@ def set_character_disabled(character_id: int):
         g.current_user.id,
         action="character_disabled" if dto.is_disabled else "character_enabled",
         target_type="character",
-        target_id=character.id,
+        # `survivor:7` / `killer:7`: the id alone names two different characters.
+        target_id=f"{character.role.lower()}:{character.id}",
         details={"name": character.name, "reason": reason},
     )
 
@@ -166,7 +155,8 @@ def list_perks_for_admin():
     category = request.args.get("category", "All").strip()
     search = request.args.get("search", "").strip().lower()
 
-    stmt = select(Perk)
+    # The owner is read for every row (name and search): load it with the perks, not one query each.
+    stmt = select(Perk).options(joinedload(Perk.survivor), joinedload(Perk.killer))
     if category and category.lower() != "all":
         # `category` became `role`; the query-string name is unchanged.
         stmt = stmt.where(Perk.role == category)
@@ -326,8 +316,13 @@ def get_admin_stats():
 
 @admin_control_bp.route("/database/purge", methods=["POST"])
 @admin_required
-def purge_database_tables():
-    """Purge specific database entity tables on demand."""
+def purge_database_tables_route():
+    """Purge specific database entity tables on demand.
+
+    Named `*_route` on purpose: it used to be called `purge_database_tables`, the same name as the
+    service it imports, so the module-level name became this view and every purge called itself
+    with an argument (500: "takes 0 positional arguments but 1 was given").
+    """
     try:
         dto = PurgeDatabaseDTO.model_validate(request.get_json(silent=True) or {})
     except ValidationError as err:
@@ -336,7 +331,10 @@ def purge_database_tables():
     targets: list[str] = dto.targets
     try:
         purged = purge_database_tables(targets)
+        # Cached catalogs (characters, perks, maps) would otherwise keep serving purged rows for a day.
+        bump_catalog_version()
         logger.info(f"Admin {g.current_user.login} purged tables: {purged}")
+        log_admin_action(g.current_user.id, action="database_purged", target_type="database", details={"targets": purged})
         return jsonify({
             "status": "success",
             "message": f"Successfully purged tables: {', '.join(purged)}",
@@ -361,6 +359,13 @@ def export_database():
 
     try:
         data = DatabaseExportImportService.export_database(targets=targets, include_assets=include_assets)
+        # The export holds every account's password hash: who took one, and of what, is on record.
+        log_admin_action(
+            g.current_user.id,
+            action="database_exported",
+            target_type="database",
+            details={"targets": targets or "all", "include_assets": include_assets},
+        )
         download = request.args.get("download", "false").lower() in ["true", "1", "yes"]
         if download:
             timestamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
@@ -417,6 +422,12 @@ def import_database():
             targets=targets,
         )
         logger.info(f"Admin {g.current_user.login} imported database (mode={mode}): {result.get('summary')}")
+        log_admin_action(
+            g.current_user.id,
+            action="database_imported",
+            target_type="database",
+            details={"mode": mode, "targets": targets or "all", "summary": result.get("summary")},
+        )
         return jsonify(result), 200
     except Exception as e:
         logger.error(f"Database import error: {e}", exc_info=True)

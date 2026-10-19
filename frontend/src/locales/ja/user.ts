@@ -71,7 +71,7 @@ export default {
   failedToResendCode: "コードの再送信に失敗しました。",
   digitAriaLabel: "確認コードの{n}桁目",
   missingResetToken: "リセットトークンがありません。",
-  passwordTooShort: "パスワードは6文字以上である必要があります。",
+  passwordTooShort: "パスワードは{min}文字以上である必要があります。",
   passwordsDoNotMatch: "パスワードが一致しません。",
   failedToResetPassword: "パスワードのリセットに失敗しました。",
   failedToRequestPasswordReset: "パスワードリセットのリクエストに失敗しました。",
@@ -90,6 +90,7 @@ export default {
   authTokenMissing: "認証トークンがありません。再度ログインしてください。",
   profileUpdateFailedMsg: "プロフィールの更新に失敗しました。",
   profileUpdateSuccessMsg: "プロフィールを更新しました！",
+  emailChangedVerifyMsg: "メールアドレスを変更しました。新しいアドレスに確認コードを送信しました。コードを入力してアカウントを再確認してください。",
 
   // --- Campfire Dossier additions ---
   tabSanctum: "アカウント管理",

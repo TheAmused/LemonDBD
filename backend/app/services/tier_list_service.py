@@ -255,6 +255,10 @@ def _rewrite_seed_file() -> None:
     # Imported here, not at module load: static_db_seeder -> export_import ->
     # this module, so importing it back at the top would be a cycle.
     from app.seeds.static_db_seeder import SEEDS_DATA_DIR
+    from app.seeds.writeback import seed_writeback_enabled
+
+    if not seed_writeback_enabled():
+        return
 
     rows = db.session.scalars(select(TierList).order_by(TierList.id)).all()
     payload = {
@@ -265,8 +269,7 @@ def _rewrite_seed_file() -> None:
         "count": len(rows),
         "tier_lists": [serialize_tier_list(row) for row in rows],
     }
-    path = SEEDS_DATA_DIR / "content" / "tier_lists.json"
-    try:
-        path.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
-    except OSError as err:
-        logger.error("[tier_list_service] Failed to rewrite tier_lists seed file: %s", err)
+    # Atomic, locked, and skipped outside development (see app/seeds/writeback.py).
+    from app.seeds.writeback import write_seed_text
+
+    write_seed_text(SEEDS_DATA_DIR / "content" / "tier_lists.json", json.dumps(payload, indent=2, ensure_ascii=False) + "\n")

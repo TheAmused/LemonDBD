@@ -114,7 +114,7 @@ class Roster(Base, TranslatableModelMixin):
     name: Mapped[str] = mapped_column(String(128), nullable=False)
     description: Mapped[str] = mapped_column(Text, default="", nullable=False)
     translations: Mapped[dict[str, Any] | None] = _json_column(default=dict, nullable=True)
-    cover_image_url: Mapped[str | None] = mapped_column(String(512), nullable=True)
+    cover_image_url: Mapped[str | None] = mapped_column(Text, nullable=True)
     theme_color: Mapped[str] = mapped_column(String(32), default="#ff0055", nullable=False)
     category: Mapped[str] = mapped_column(String(64), default="DBD", nullable=False)
     is_nsfw: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
@@ -189,7 +189,7 @@ class Entity(Base, TranslatableModelMixin):
     real_name: Mapped[str | None] = mapped_column(String(128), nullable=True)
     role: Mapped[str] = mapped_column(String(32), default="Survivor", nullable=False)
     gender: Mapped[str] = mapped_column(String(32), default="female", nullable=False)
-    media_url: Mapped[str | None] = mapped_column(String(512), nullable=True)
+    media_url: Mapped[str | None] = mapped_column(Text, nullable=True)
     #: Per-entity picture placement override (see `clean_media_display`). NULL for all but the
     #: few portraits the default card crop does not suit.
     media_display: Mapped[dict[str, Any] | None] = _json_column(nullable=True)
@@ -378,10 +378,11 @@ class Vote(Base):
     entity: Mapped["Entity"] = relationship("Entity", back_populates="votes")
 
     def to_dict(self) -> dict[str, Any]:
+        # No `session_id`: it is the guest's bearer secret (it authorises
+        # /session/reset), so it never leaves the server in a response.
         return {
             "id": self.id,
             "entity_id": self.entity_id,
-            "session_id": self.session_id,
             "user_id": self.user_id,
             "vote_type": self.vote_type,
             "created_at": self.created_at.isoformat() if self.created_at else None,

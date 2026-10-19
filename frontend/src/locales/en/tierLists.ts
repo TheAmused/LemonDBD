@@ -51,7 +51,6 @@ export default {
   poolNoMatches: "Nothing matches your search",
   dropHere: "Drop items here",
   tierAria: "Tier {label}",
-  editTierAria: "Edit tier {label}",
   clearTierAria: "Clear tier {label}",
   showPool: "Show unranked",
   hidePool: "Hide unranked",
@@ -70,7 +69,6 @@ export default {
   showNames: "Show names",
   hideNames: "Hide names",
   addTier: "Add tier",
-  removeItem: "Remove item",
   editDetails: "Edit details",
   deleteList: "Delete list",
   deleteListTitle: "Delete this custom list?",
@@ -82,7 +80,6 @@ export default {
   scaleZoomOut: "Decrease scale",
   scaleReset: "Reset scale (100%)",
 
-  editTier: "Edit tier",
   tierLabel: "Label",
   tierColor: "Color",
   customColor: "Custom color",
@@ -94,7 +91,6 @@ export default {
   moveUp: "Move up",
   moveDown: "Move down",
   clearTier: "Clear tier",
-  deleteTier: "Delete tier",
   save: "Save",
   newTierLabel: "New",
 
@@ -151,6 +147,7 @@ export default {
   saveFailedQuota: "Browser storage is full, so this change isn't saved. Remove some images or lists.",
   saveFailedUnavailable: "This browser blocks local storage, so changes only last until you leave the page.",
   dismiss: "Dismiss",
+  deleteFailed: "Couldn't delete this list. Try again.",
 
   creator: {
     pageTitle: "LemonDBD - Create a tier list",
@@ -183,6 +180,11 @@ export default {
     tierColorAria: "Change the color of tier {label}",
     removeTierAria: "Remove tier {label}",
     tabUpload: "Upload",
+    linkPreviewHeading: "Preview",
+    linkPreviewEmpty: "Paste an image link to see it here.",
+    linkPreviewLoading: "Checking the image...",
+    linkPreviewOk: "Image found. This is how the tile will look.",
+    linkPreviewFailed: "That link didn't load as an image. The tile will show initials instead.",
     tabLinks: "Paste links",
     tabCatalog: "From the game",
     itemSourceAria: "Where to add items from",
@@ -221,6 +223,7 @@ export default {
     publish: "Publish",
     publishing: "Publishing...",
     publishFailed: "Couldn't publish this list. Try again.",
+    publishTooLarge: "This list is too large to publish (over {size} MB). Use image links instead of uploaded images, or remove some items.",
   },
 
   reportTitle: "Report content",

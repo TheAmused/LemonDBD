@@ -10,17 +10,31 @@ import { useDictionary } from '@/context/DictionaryContext';
 import { TIER_LIST_LIMITS } from '@/utils/tierLists/constants';
 
 /** Reads a file's raw bytes back out as a `data:...;base64,...` URL. */
-function fileToDataUrl(file: File): Promise<string | null> {
-  return new Promise((resolve) => {
-    if (typeof FileReader === 'undefined') {
-      resolve(null);
-      return;
+async function fileToDataUrl(file: File): Promise<string | null> {
+  try {
+    if (typeof file.arrayBuffer === 'function') {
+      const bytes = new Uint8Array(await file.arrayBuffer());
+      if (typeof Buffer !== 'undefined') {
+        return `data:${file.type};base64,${Buffer.from(bytes).toString('base64')}`;
+      }
+      let binary = '';
+      for (let i = 0; i < bytes.byteLength; i++) {
+        binary += String.fromCharCode(bytes[i]);
+      }
+      return `data:${file.type};base64,${btoa(binary)}`;
     }
-    const reader = new FileReader();
-    reader.onload = () => resolve(typeof reader.result === 'string' ? reader.result : null);
-    reader.onerror = () => resolve(null);
-    reader.readAsDataURL(file);
-  });
+  } catch {
+    // fallback to FileReader
+  }
+  if (typeof FileReader !== 'undefined') {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(typeof reader.result === 'string' ? reader.result : null);
+      reader.onerror = () => resolve(null);
+      reader.readAsDataURL(file);
+    });
+  }
+  return null;
 }
 
 /**
@@ -96,6 +110,7 @@ export interface ImageUploadDropzoneProps {
   aspectRatio?: 'banner' | 'square';
   className?: string;
   disabled?: boolean;
+  allowFileUpload?: boolean;
   actions?: React.ReactNode;
   emptyActions?: React.ReactNode;
   previewActions?: React.ReactNode;
@@ -116,6 +131,7 @@ export function ImageUploadDropzone({
   aspectRatio = 'banner',
   className,
   disabled = false,
+  allowFileUpload = true,
   actions,
   emptyActions,
   previewActions,
@@ -217,7 +233,7 @@ export function ImageUploadDropzone({
         <div
           onDragOver={(e) => {
             e.preventDefault();
-            if (!disabled) setIsDragging(true);
+            if (!disabled && allowFileUpload) setIsDragging(true);
           }}
           onDragLeave={(e) => {
             e.preventDefault();
@@ -227,11 +243,11 @@ export function ImageUploadDropzone({
           onDrop={(e) => {
             e.preventDefault();
             setIsDragging(false);
-            void handleFiles(e.dataTransfer.files);
+            if (allowFileUpload) void handleFiles(e.dataTransfer.files);
           }}
           className={cn(
             'flex flex-col items-center justify-center gap-3 rounded-card border-2 border-dashed p-4 sm:p-6 text-center transition-colors',
-            isDragging ? 'border-accent-red bg-accent-red/5' : 'border-border-color bg-bg-primary/20',
+            isDragging && allowFileUpload ? 'border-accent-red bg-accent-red/5' : 'border-border-color bg-bg-primary/20',
             invalid && 'border-accent-red',
             disabled && 'opacity-50 cursor-not-allowed'
           )}
@@ -240,34 +256,42 @@ export function ImageUploadDropzone({
             <ImagePlus className="h-5 w-5" aria-hidden="true" />
           </span>
 
-          <div className="flex flex-wrap items-center justify-center gap-2">
-            <Button
-              type="button"
-              variant="secondary"
-              size="sm"
-              disabled={disabled || processing}
-              loading={processing}
-              onClick={() => fileInputRef.current?.click()}
-            >
-              <Upload className="h-4 w-4" />
-              <span>{resolvedBrowseLabel}</span>
-            </Button>
-            {emptyActions || actions}
-          </div>
+          {allowFileUpload ? (
+            <div className="flex flex-wrap items-center justify-center gap-2">
+              <Button
+                type="button"
+                variant="secondary"
+                size="sm"
+                disabled={disabled || processing}
+                loading={processing}
+                onClick={() => fileInputRef.current?.click()}
+              >
+                <Upload className="h-4 w-4" />
+                <span>{resolvedBrowseLabel}</span>
+              </Button>
+              {emptyActions || actions}
+            </div>
+          ) : (emptyActions || actions) ? (
+            <div className="flex flex-wrap items-center justify-center gap-2">
+              {emptyActions || actions}
+            </div>
+          ) : null}
 
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="image/*"
-            disabled={disabled}
-            className="sr-only"
-            tabIndex={-1}
-            aria-hidden="true"
-            onChange={(e) => {
-              void handleFiles(e.target.files);
-              e.target.value = '';
-            }}
-          />
+          {allowFileUpload && (
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              disabled={disabled}
+              className="sr-only"
+              tabIndex={-1}
+              aria-hidden="true"
+              onChange={(e) => {
+                void handleFiles(e.target.files);
+                e.target.value = '';
+              }}
+            />
+          )}
 
           <div className="flex w-full max-w-sm items-center gap-1.5 mt-1">
             <Input

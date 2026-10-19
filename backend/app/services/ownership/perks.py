@@ -109,38 +109,57 @@ def bulk_mutate_perk_ownership(
     updates: list[dict[str, Any]],
     summary_fn: Callable[[int | None], dict[str, Any]],
 ) -> dict[str, Any]:
-    """Bulk update multiple perk unlock entries in a single database transaction."""
-    updated_count = 0
-    with transaction():
-        for item in updates:
-            pid = item.get("perk_id")
-            if not pid:
-                continue
-            is_unlocked = bool(item.get("is_unlocked", True))
-            perk = db.session.get(Perk, int(pid))
-            if not is_unlocked and perk and (perk.is_generic_counterpart or (perk.survivor_id is None and perk.killer_id is None)):
-                is_unlocked = True
+    """Bulk update perk unlock entries in one transaction, with a fixed number of queries.
 
-            record = db.session.scalars(
+    Raises ValueError for a malformed request (not a list of objects, too long). Ids that name no
+    perk are skipped (they used to be inserted and hit the foreign key as a 500); the old loop also
+    ran two queries per row, ~650 for the full list the ownership screen sends.
+    """
+    from app.services.ownership.characters import MAX_BULK_UPDATES, positive_id
+
+    if not isinstance(updates, list) or len(updates) > MAX_BULK_UPDATES:
+        raise ValueError(f"updates must be a list of at most {MAX_BULK_UPDATES} objects.")
+    if not all(isinstance(item, dict) for item in updates):
+        raise ValueError("Each update must be an object {perk_id, is_unlocked}.")
+
+    wanted: dict[int, bool] = {}
+    for item in updates:
+        pid = positive_id(item.get("perk_id"))
+        if pid is not None:
+            wanted[pid] = bool(item.get("is_unlocked", True))  # the last one wins
+
+    perks = {
+        perk.id: perk
+        for perk in db.session.scalars(select(Perk).where(Perk.id.in_(list(wanted)))).all()
+    } if wanted else {}
+    unknown = [pid for pid in wanted if pid not in perks]
+
+    with transaction():
+        rows = {
+            row.perk_id: row
+            for row in db.session.scalars(
                 select(UserPerkOwnership).where(
                     UserPerkOwnership.user_id == user_id,
-                    UserPerkOwnership.perk_id == int(pid),
+                    UserPerkOwnership.perk_id.in_(list(perks)),
                 )
-            ).first()
-
-            if not record:
-                record = UserPerkOwnership(
-                    user_id=user_id,
-                    perk_id=int(pid),
-                    is_unlocked=is_unlocked,
-                )
-                db.session.add(record)
+            ).all()
+        } if perks else {}
+        for pid, perk in perks.items():
+            is_unlocked = wanted[pid]
+            # A general perk or a generic counterpart is always available.
+            if not is_unlocked and (perk.is_generic_counterpart or (perk.survivor_id is None and perk.killer_id is None)):
+                is_unlocked = True
+            row = rows.get(pid)
+            if row is not None:
+                row.is_unlocked = is_unlocked
             else:
-                record.is_unlocked = is_unlocked
-            updated_count += 1
+                db.session.add(UserPerkOwnership(user_id=user_id, perk_id=pid, is_unlocked=is_unlocked))
 
-    return {
+    result: dict[str, Any] = {
         "user_id": user_id,
-        "updated_count": updated_count,
+        "updated_count": len(perks),
         "summary": summary_fn(user_id),
     }
+    if unknown:
+        result["skipped_unknown"] = unknown
+    return result

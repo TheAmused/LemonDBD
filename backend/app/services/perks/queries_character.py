@@ -1,6 +1,5 @@
 # backend/app/services/perks/queries_character.py
 import logging
-import re
 from typing import Any
 from sqlalchemy import func, or_, select
 from sqlalchemy.orm import joinedload
@@ -9,6 +8,7 @@ from app.core.catalog_memo import remember
 from app.core.db_retry import retry_on_transient_db_error
 from app.core.extensions import db
 from app.models import Item, ItemAddon, Killer, KillerAddon, Offering, Survivor
+from app.models.slug import url_slug
 from app.services.perks.utils import HEADER_EXCLUSIONS, normalize_search_key, slugify
 
 logger = logging.getLogger(__name__)
@@ -45,11 +45,8 @@ def _load_characters(category: str | None, lang: str | None) -> list[dict[str, A
         # `release_number` is the primary key now, so the CASE that pushed
         # NULL and 0 release numbers to the end of the list has nothing
         # left to guard against: ordering by id is the same order.
-        stmt = (
-            select(model)
-            .options(joinedload(model.perks))
-            .order_by(model.id.asc(), model.name.asc())
-        )
+        # No `joinedload(perks)`: a roster row (`to_list_dict`) does not read them.
+        stmt = select(model).order_by(model.id.asc(), model.name.asc())
         characters.extend(_run_characters_query(stmt))
 
     if len(models) > 1:
@@ -61,11 +58,19 @@ def _load_characters(category: str | None, lang: str | None) -> list[dict[str, A
         characters.sort(key=lambda c: (c.release_number, 0 if isinstance(c, Survivor) else 1, c.name))
     if models and not characters:
         raise CatalogEmptyError(f"no characters found (category={category!r})")
-    return [c.to_dict(lang=lang) for c in characters]
+    # Light roster rows: no lore, translations, counterparts or riddle (see `to_list_dict`).
+    return [c.to_list_dict(lang=lang) for c in characters]
 
 
 class CatalogEmptyError(RuntimeError):
     """A table that always holds rows came back empty: a broken read, not a roster."""
+
+
+def _rollback_quietly() -> None:
+    try:
+        db.session.rollback()
+    except Exception:
+        logger.debug("Rollback after a failed character query also failed", exc_info=True)
 
 
 @retry_on_transient_db_error()
@@ -183,6 +188,7 @@ def _load_character_detail(character_name: str, lang: str | None) -> dict[str, A
                     c_name,
                     c_real,
                     c_prefix,
+                    url_slug(c.name),
                     slugify(c.name),
                     slugify(c.real_name or ""),
                     normalize_search_key(c.name),
@@ -288,6 +294,8 @@ def _load_character_detail(character_name: str, lang: str | None) -> dict[str, A
             "offerings": offerings_list,
         }
         return result
-    except Exception as e:
-        logger.error(f"Error getting character detail from DB: {e}", exc_info=True)
-        return None
+    except Exception:
+        # A 5xx, not "Character not found": the page must not tell the user the character is gone.
+        logger.exception("Error getting character detail from DB")
+        _rollback_quietly()
+        raise

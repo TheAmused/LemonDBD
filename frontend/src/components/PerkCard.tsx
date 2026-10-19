@@ -159,19 +159,23 @@ export const PerkCard: React.FC<PerkCardProps> = ({ perk, onSelect, coordinate, 
           )}
         </div>
 
-        {perk.is_disabled ? (
-          <DisabledBadge label={perk.name} onClick={() => setShowDisabledModal(true)} />
-        ) : (
-          !isOwned && (
-            <div
-              className="absolute top-1 right-1 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-bg-primary/90 shadow-xs border border-border-color"
-              {...tip(dict.modal.unownedPerk, undefined, 'status')}
-            >
-              <Lock className="h-3.5 w-3.5 text-text-muted" />
-            </div>
-          )
+        {!perk.is_disabled && !isOwned && (
+          <div
+            className="absolute top-1 right-1 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-bg-primary/90 shadow-xs border border-border-color"
+            {...tip(dict.modal.unownedPerk, undefined, 'status')}
+          >
+            <Lock className="h-3.5 w-3.5 text-text-muted" />
+          </div>
         )}
       </TileButton>
+
+      {perk.is_disabled && (
+        <DisabledBadge
+          label={perk.name}
+          onClick={() => setShowDisabledModal(true)}
+          className="absolute top-1 right-1 z-20"
+        />
+      )}
 
       <DisabledReasonModal
         isOpen={showDisabledModal}

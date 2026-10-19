@@ -27,6 +27,8 @@ import { Surface } from '@/components/common/Surface';
 export interface BugReportModalProps {
   isOpen: boolean;
   onClose: () => void;
+  /** Called once a report was accepted (lets a list of the user's reports refresh only then). */
+  onSubmitted?: () => void;
 }
 
 interface BugReportResponse {
@@ -44,7 +46,7 @@ const BUG_GUIDE_ITEMS = [
 
 const MAX_SCREENSHOT_BYTES = 2 * 1024 * 1024;
 
-export const BugReportModal: React.FC<BugReportModalProps> = ({ isOpen, onClose }) => {
+export const BugReportModal: React.FC<BugReportModalProps> = ({ isOpen, onClose, onSubmitted }) => {
   const dict = useDictionary();
   const { user, isAuthenticated } = useAuth();
 
@@ -171,6 +173,7 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({ isOpen, onClose 
         setErrorMsg(data.error || t.bugErrorMessage);
       } else {
         setIsSuccess(true);
+        onSubmitted?.();
       }
     } catch (err: unknown) {
       const msg =

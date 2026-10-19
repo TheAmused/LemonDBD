@@ -10,9 +10,10 @@ from sqlalchemy.orm import joinedload
 from app.core.extensions import db
 from app.models.smash_or_pass import Entity, EntityStat, Roster, Vote
 from app.seeds.smash_roster_seeder import ROSTERS_DIR, seed_smash_rosters
+from app.seeds.writeback import write_seed_text
 from app.services.smash_or_pass.roster_admin import SmashRosterAdminMixin
 from app.services.smash_or_pass.serialize import enrich_with_stat
-from app.services.smash_or_pass.votes import SmashVotesMixin
+from app.services.smash_or_pass.votes import SmashVotesMixin, _owner_conditions
 
 logger = logging.getLogger(__name__)
 
@@ -117,15 +118,16 @@ class SmashOrPassService(SmashVotesMixin, SmashRosterAdminMixin):
         roster_info["character_count"] = int(entity_count or 0)
         roster_info["total_votes"] = int(roster_total_votes or 0)
 
-        voted_conditions = []
-        if user_id is not None:
-            voted_conditions.append(Vote.user_id == user_id)
-        if session_id is not None:
-            voted_conditions.append(Vote.session_id == session_id)
+        voted_conditions = _owner_conditions(user_id, session_id)
 
         voted_entity_ids: list[str] = []
         if voted_conditions:
-            voted_stmt = select(Vote.entity_id).where(or_(*voted_conditions))
+            # Scoped to this roster: the NOT IN below only needs this roster's ids.
+            voted_stmt = (
+                select(Vote.entity_id)
+                .join(Entity, Vote.entity_id == Entity.id)
+                .where(or_(*voted_conditions), Entity.roster_id == roster.id)
+            )
             voted_entity_ids = list(db.session.scalars(voted_stmt).all())
 
         count_stmt = select(func.count(Entity.id)).where(Entity.roster_id == roster.id)
@@ -339,8 +341,5 @@ class SmashOrPassService(SmashVotesMixin, SmashRosterAdminMixin):
             "source": "LemonDBD admin roster creator",
             "rosters": [roster_dict],
         }
-        path = ROSTERS_DIR / f"{roster.slug}.json"
-        try:
-            path.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
-        except OSError as err:
-            logger.error("[smash_or_pass_service] Failed to write roster seed file %s: %s", path, err)
+        # Atomic, locked, and skipped outside development (see app/seeds/writeback.py).
+        write_seed_text(ROSTERS_DIR / f"{roster.slug}.json", json.dumps(payload, indent=2, ensure_ascii=False) + "\n")

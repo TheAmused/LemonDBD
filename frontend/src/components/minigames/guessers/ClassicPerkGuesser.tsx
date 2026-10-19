@@ -18,7 +18,7 @@ export const ClassicPerkGuesser: React.FC<ClassicPerkGuesserProps> = ({ guesses 
   const t = dict.minigames;
 
   return (
-    <div className="w-full overflow-x-auto pb-4 my-6">
+    <div className="w-full max-h-list overflow-y-auto overflow-x-auto pb-4 my-6 rounded-card border border-border-color bg-bg-surface/30">
       <table className="w-full min-w-150 border-separate border-spacing-2 text-center select-none">
         <thead>
           <tr className="type-label-sm text-text-muted">
@@ -42,7 +42,7 @@ export const ClassicPerkGuesser: React.FC<ClassicPerkGuesserProps> = ({ guesses 
               >
                 <td className="p-2 rounded-card bg-bg-surface border border-border-color text-left">
                   <div className="flex items-center gap-2.5">
-                    <Thumb src={imgSrc} alt={guess.name} fit="contain" fallback={<span className="text-xs text-text-muted">?</span>} />
+                    <Thumb src={imgSrc} alt={guess.name} fit="contain" size="lg" fallback={<span className="text-xs text-text-muted">?</span>} />
                     <span className="truncate text-text-primary font-semibold text-xs leading-snug">
                       {guess.name}
                     </span>

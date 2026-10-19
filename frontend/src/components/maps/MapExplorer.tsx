@@ -418,6 +418,7 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
         <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-3">
           {displayedGroups.map(({ realm, maps: realmMaps }, index) => {
             const realmImage = realmImages[realm];
+            const realmIdentifier = realmImage?.id ? `id-${realmImage.id}` : realm.toLowerCase().replace(/[^a-z0-9_-]/g, '-');
             const bannerSrc = realmImage
               ? getMapImageSrc({ callout_image_local_path: realmImage.image_local_path, callout_image_url: realmImage.image_url }, backendBase)
               : '';
@@ -431,7 +432,7 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
                 <TileButton
                   onClick={() => toggleRealm(realm)}
                   aria-expanded={expanded}
-                  aria-controls={`realm-panel-${realm}`}
+                  aria-controls={`realm-panel-${realmIdentifier}`}
                   aria-label={`${expanded ? dict.maps.collapseRealmAria : dict.maps.expandRealmAria}: ${realm}`}
                   className={`group relative aspect-square w-full min-h-12 touch-manipulation overflow-hidden rounded-control border-2 text-left duration-200 ${expanded ? 'border-accent-red' : 'border-border-color hover:border-accent-red/60'}`}
                 >
@@ -459,7 +460,7 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
 
                 {showPanel && (
                   <div
-                    id={`realm-panel-${realm}`}
+                    id={`realm-panel-${realmIdentifier}`}
                     className="grid transition-[grid-template-rows] duration-300 ease-out"
                     style={{ gridColumn: '1 / -1', gridTemplateRows: isOpen ? '1fr' : '0fr' }}
                   >

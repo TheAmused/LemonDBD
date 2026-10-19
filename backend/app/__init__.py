@@ -8,7 +8,7 @@ from flask import Flask, jsonify
 from flask_cors import CORS
 from sqlalchemy import text
 
-from app.core.config import Config, weak_secret_warnings
+from app.core.config import Config, fatal_secret_problems, weak_secret_warnings
 from app.core.extensions import db, mail, migrate
 from app.core.json_provider import ORJSONProvider
 from app.core.limiter import limiter
@@ -34,6 +34,13 @@ def create_app(config_class: Type[Config] | None = None) -> Flask:
         level=logging.INFO,
         format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
     )
+
+    fatal = fatal_secret_problems(flask_app.config)
+    if fatal:
+        raise RuntimeError(
+            "Refusing to start: " + "; ".join(fatal) + ". Set SECRET_KEY and JWT_SECRET_KEY to long random "
+            "values (python -c \"import secrets; print(secrets.token_urlsafe(48))\")."
+        )
 
     for problem in weak_secret_warnings(flask_app.config):
         logging.getLogger(__name__).warning(
@@ -61,6 +68,13 @@ def create_app(config_class: Type[Config] | None = None) -> Flask:
     from app.core.security import enforce_cookie_csrf_protection
 
     flask_app.before_request(enforce_cookie_csrf_protection)
+
+    @flask_app.after_request
+    def _no_content_sniffing(response):
+        # Every API body is JSON or a typed file; never let a browser guess a
+        # different (executable) type for one of them.
+        response.headers.setdefault("X-Content-Type-Options", "nosniff")
+        return response
 
     db_uri = str(flask_app.config.get("SQLALCHEMY_DATABASE_URI", ""))
     if "sqlite" in db_uri.lower():
@@ -93,6 +107,11 @@ def create_app(config_class: Type[Config] | None = None) -> Flask:
             "message": "Rate limit exceeded. Please wait a moment before trying again.",
             "retry_after": str(retry_after) if retry_after is not None else None,
         }), 429
+
+    @flask_app.errorhandler(413)
+    def payload_too_large(_e):
+        limit_mb = (flask_app.config.get("MAX_CONTENT_LENGTH") or 0) // (1024 * 1024)
+        return jsonify({"error": f"Request is too large (limit {limit_mb} MB)", "status": 413}), 413
 
     @flask_app.teardown_appcontext
     def shutdown_session(exception=None):

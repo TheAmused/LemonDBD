@@ -1,13 +1,13 @@
 'use client';
 // frontend/src/components/characters/hub/CharacterCard.tsx
 import React from 'react';
-import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { useDictionary } from '@/context/DictionaryContext';
 import { DisabledBadge } from '@/components/DisabledBadge';
 import { CharacterOwnershipOverlay } from '@/components/characters/CharacterOwnershipOverlay';
 import {
   CharacterItem,
-  getCharacterSlug,
+  characterSlug,
   getAvatarUrl as resolveAvatarUrl,
   getAvatarThumbUrl,
 } from '@/components/character-detail/types';
@@ -28,7 +28,13 @@ interface CharacterCardProps {
   onOpenDisabled: (character: CharacterItem) => void;
 }
 
-/** One portrait tile: opens the detail page, or toggles ownership while in ownership mode. */
+/**
+ * One portrait tile: a real link to the detail page, or (in ownership mode) a toggle button.
+ *
+ * The whole tile used to be a clickable `<div>` that navigated in code: no keyboard access, no middle-click
+ * or "open in new tab", and nothing for a crawler to follow to the 98 detail pages. Now a
+ * full-size `<Link>` / `<button>` sits under the tile's own small buttons (badge, perks).
+ */
 export function CharacterCard({
   char,
   locale,
@@ -41,31 +47,35 @@ export function CharacterCard({
   onOpenDisabled,
 }: CharacterCardProps) {
   const dict = useDictionary();
-  const router = useRouter();
   const isSurvivor = char.category?.toLowerCase() === 'survivor';
   const hasPartialPerks = !isOwned && perkStats.unlocked > 0;
   const showLockedOverlay = !isOwned;
   const avatarSrc = resolveAvatarUrl(backendBase, char, isSurvivor);
   const avatarThumbSrc = getAvatarThumbUrl(backendBase, char, isSurvivor);
-  const detailHref = `/${locale}/characters/${getCharacterSlug(char.name)}`;
+  const slug = characterSlug(char);
+  const detailHref = `/${locale}/characters/${slug}`;
 
   return (
     <Surface
-      onMouseEnter={() => {
-        if (!ownershipMode) router.prefetch(detailHref);
-      }}
-      onFocus={() => {
-        if (!ownershipMode) router.prefetch(detailHref);
-      }}
-      onClick={() => {
-        if (ownershipMode) {
-          if (char.id) onToggleOwned(char.id, char.category);
-        } else {
-          router.push(detailHref);
-        }
-      }}
       padding="none" className="group relative flex flex-col overflow-hidden hover:bg-bg-elevated hover:border-accent-red/50 shadow-xs hover:shadow-lg transition-all duration-300 cursor-pointer touch-manipulation aspect-[3/4] w-full"
     >
+      {ownershipMode ? (
+        <button
+          type="button"
+          aria-pressed={isOwned}
+          aria-label={char.name}
+          onClick={() => {
+            if (char.id) onToggleOwned(char.id, char.category);
+          }}
+          className="absolute inset-0 z-10 cursor-pointer rounded-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent-amber"
+        />
+      ) : (
+        <Link
+          href={detailHref}
+          aria-label={char.name}
+          className="absolute inset-0 z-10 rounded-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent-red"
+        />
+      )}
       <div className="absolute top-1.5 right-1.5 sm:top-2 sm:right-2 z-20">
         <Badge
           tone={isSurvivor ? 'green' : 'red'} size="xs" plain className="backdrop-blur-md"
@@ -104,10 +114,10 @@ export function CharacterCard({
               target.src = avatarSrc;
             } else if (!target.dataset.triedFallback) {
               target.dataset.triedFallback = '1';
-              target.src = `${backendBase}/static/avatars/${isSurvivor ? 'survivors' : 'killers'}/${getCharacterSlug(char.name)}.webp`;
+              target.src = `${backendBase}/static/avatars/${isSurvivor ? 'survivors' : 'killers'}/${slug}.webp`;
             } else if (target.dataset.triedFallback === '1') {
               target.dataset.triedFallback = '2';
-              target.src = `${backendBase}/static/avatars/${isSurvivor ? 'survivors' : 'killers'}/${getCharacterSlug(char.name)}.png`;
+              target.src = `${backendBase}/static/avatars/${isSurvivor ? 'survivors' : 'killers'}/${slug}.png`;
             }
           }}
         />
@@ -137,7 +147,7 @@ export function CharacterCard({
             {perkStats.total > 0 && ` (${perkStats.unlocked}/${perkStats.total})`}
           </Button>
         )}
-        <h3 className="w-full text-center font-extrabold text-mini sm:text-xs md:text-sm text-text-primary group-hover:text-accent-red transition-colors truncate px-1 pointer-events-auto leading-tight">
+        <h3 className="w-full text-center font-extrabold text-mini sm:text-xs md:text-sm text-text-primary group-hover:text-accent-red transition-colors truncate px-1 pointer-events-none leading-tight">
           {char.name}
         </h3>
       </div>

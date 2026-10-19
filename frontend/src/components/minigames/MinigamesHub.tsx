@@ -14,16 +14,17 @@ import {
   Gamepad2, Calendar, Sparkles, Flame, Plus, Play, Share2, Download, Upload, Trash2,
   Check, Trophy, AlertCircle, X, History, Layers, MapPin, Zap, Volume2, Eye, BookOpen,
 } from 'lucide-react';
-import { useGlobalNsfwPreference } from '@/utils/nsfwAck';
+import { useGlobalNsfwPreference, hasSeenNsfwOnboarding } from '@/utils/nsfwAck';
+import { ThunderPulseIcon } from '@/components/icons/DbdIcons';
+
+const NsfwOnboardingModal = dynamic(
+  () => import('@/components/common/NsfwOnboardingModal').then((m) => m.NsfwOnboardingModal),
+  { ssr: false }
+);
 import { cn } from '@/utils/cn';
 import type { ChallengeDefinition } from '@/types/minigame';
-import {
-  getCustomChallenges,
-  deleteCustomChallenge,
-  saveCustomChallenge,
-  getDailyStreak,
-  type DailyStreakData,
-} from '@/utils/minigames/storage';
+import { saveCustomChallenge, getDailyStreak, wonDailyOn, type DailyStreakData } from '@/utils/minigames/storage';
+import { useCustomChallenges } from '@/hooks/useCustomChallenges';
 import { exportChallengeToJson, importChallengeFromJson } from '@/utils/minigames/jsonExportImport';
 import { buildChallengeShareUrl, encodeChallengeShare } from '@/utils/minigames/shareLink';
 import { signExportPayload } from '@/utils/contentSigning';
@@ -53,37 +54,24 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
   const { isAuthenticated, user } = useAuth();
   const router = useRouter();
   const signIn = useSignInThen();
-  const [customTrials, setCustomTrials] = useState<ChallengeDefinition[]>([]);
+  const { trials: customTrials, reload: reloadCustomTrials, pendingDeleteId, requestDelete, cancelDelete, confirmDelete } =
+    useCustomChallenges();
   const [showNsfw, setShowNsfw] = useGlobalNsfwPreference();
+  const [onboardingOpen, setOnboardingOpen] = useState<boolean>(false);
   const [importError, setImportError] = useState<string | null>(null);
-  const [streakData, setStreakData] = useState<DailyStreakData>({
-    currentStreak: 0,
-    maxStreak: 0,
-    lastCompletedDate: null,
-  });
+  const [streakData, setStreakData] = useState<DailyStreakData>({ currentStreak: 0, maxStreak: 0, lastCompletedDate: null });
   const [copiedId, setCopiedId] = useState<string | number | null>(null);
   const [shareLoadingId, setShareLoadingId] = useState<string | number | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Load custom trials and streaks on mount
+  // Load streaks and check onboarding on mount
   useEffect(() => {
-    setCustomTrials(getCustomChallenges());
     setStreakData(getDailyStreak());
+    if (!hasSeenNsfwOnboarding()) setOnboardingOpen(true);
   }, []);
 
   const todayStr = useMemo(() => new Date().toISOString().slice(0, 10), []);
-  const isCompletedToday = streakData.lastCompletedDate === todayStr;
-
-  const [pendingDeleteId, setPendingDeleteId] = useState<string | number | null>(null);
-
-  const handleDelete = (id: string | number) => setPendingDeleteId(id);
-
-  const confirmDelete = () => {
-    if (pendingDeleteId === null) return;
-    deleteCustomChallenge(pendingDeleteId);
-    setCustomTrials(getCustomChallenges());
-    setPendingDeleteId(null);
-  };
+  const isCompletedToday = wonDailyOn(streakData, todayStr);
 
   const ensureSignedTrial = async (trial: ChallengeDefinition): Promise<ChallengeDefinition> => {
     if (trial._manifest) return trial;
@@ -93,7 +81,7 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
     if (!manifest) throw new Error(dict.tierLists.signFailed);
     const signed = { ...trial, _manifest: manifest };
     saveCustomChallenge(signed);
-    setCustomTrials(getCustomChallenges());
+    reloadCustomTrials();
     return signed;
   };
 
@@ -144,7 +132,7 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
           return;
         }
         saveCustomChallenge(imported);
-        setCustomTrials(getCustomChallenges());
+        reloadCustomTrials();
       } catch (err) {
         setImportError(getErrorMessage(err, 'Failed to import trial.'));
       }
@@ -447,6 +435,17 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
             <Button
               variant="secondary"
               size="sm"
+              icon
+              onClick={() => setOnboardingOpen(true)}
+              {...tip(dict.smashOrPass.effectsPrefs.button, dict.smashOrPass.effectsPrefs.buttonDesc, 'action')}
+              aria-label={dict.smashOrPass.effectsPrefs.button}
+              className="h-9 w-9 min-h-9 min-w-9"
+            >
+              <ThunderPulseIcon className="w-4 h-4" aria-hidden="true" />
+            </Button>
+            <Button
+              variant="secondary"
+              size="sm"
               onClick={() => {
                 if (!isAuthenticated) {
                   signIn.run(() => {}); // sign in only: a file picker cannot open without a fresh click
@@ -483,96 +482,98 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
         ) : customTrials.length === 0 ? (
           <EmptyState variant="compact" title={t.noCustomTrials} />
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {customTrials.map((trial) => {
-              const id = trial.id!;
-              const isShareLoading = shareLoadingId === id;
-              const isCopied = copiedId === id;
+          <div className="max-h-128 overflow-y-auto overflow-x-hidden p-1 rounded-card border border-border-color/60 bg-bg-surface/30">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {customTrials.map((trial) => {
+                const id = trial.id!;
+                const isShareLoading = shareLoadingId === id;
+                const isCopied = copiedId === id;
 
-              return (
-                <Surface
-                  key={String(id)}
-                  padding="none" className="p-5 shadow-lg flex flex-col justify-between hover:border-border-color transition-all"
-                >
-                  <div>
-                    <div className="flex items-start justify-between gap-2">
-                      <h3 className="font-bold text-text-primary text-base truncate">{trial.title}</h3>
-                      <InfoChip>
-                        {formatMessage(t.roundsCount, { count: trial.rounds.length }, locale)}
-                      </InfoChip>
-                    </div>
-                    <div className="flex items-center gap-1.5 mt-1.5">
-                      {trial.is_nsfw && <NsfwBadge label={t.nsfw.badge} />}
-                      {trial.is_nsfw && !showNsfw && (
-                        <Button
-                          type="button"
-                          variant="secondary"
-                          size="xs"
-                          onClick={() => setShowNsfw(true)}
-                        >
-                          {dict.tierLists.nsfw.reveal}
-                        </Button>
+                return (
+                  <Surface
+                    key={String(id)}
+                    padding="none" className="p-5 shadow-lg flex flex-col justify-between hover:border-border-color transition-all"
+                  >
+                    <div>
+                      <div className="flex items-start justify-between gap-2">
+                        <h3 className="font-bold text-text-primary text-base truncate">{trial.title}</h3>
+                        <InfoChip>
+                          {formatMessage(t.roundsCount, { count: trial.rounds.length }, locale)}
+                        </InfoChip>
+                      </div>
+                      <div className="flex items-center gap-1.5 mt-1.5">
+                        {trial.is_nsfw && <NsfwBadge label={t.nsfw.badge} />}
+                        {trial.is_nsfw && !showNsfw && (
+                          <Button
+                            type="button"
+                            variant="secondary"
+                            size="xs"
+                            onClick={() => setShowNsfw(true)}
+                          >
+                            {dict.tierLists.nsfw.reveal}
+                          </Button>
+                        )}
+                      </div>
+                      {trial.description && (
+                        <p className={cn("text-xs text-text-secondary mt-1 line-clamp-2", trial.is_nsfw && !showNsfw && "blur-xs select-none")}>
+                          {trial.description}
+                        </p>
                       )}
                     </div>
-                    {trial.description && (
-                      <p className={cn("text-xs text-text-secondary mt-1 line-clamp-2", trial.is_nsfw && !showNsfw && "blur-xs select-none")}>
-                        {trial.description}
-                      </p>
-                    )}
-                  </div>
 
-                  <div className="mt-5 pt-3 border-t border-border-color flex items-center justify-between gap-2">
-                    <Link
-                      href={`/${locale}/minigames/play?id=${encodeURIComponent(String(id))}`}
-                      className={buttonClassName('success', 'sm')}
-                    >
-                      <Play className="w-3.5 h-3.5 fill-current" />
-                      <span>{t.playTrial}</span>
-                    </Link>
-
-                    <div className="flex items-center gap-1">
-                      <Button
-                        variant="secondary"
-                        size="sm"
-                        icon
-                        onClick={() => handleShare(trial)}
-                        disabled={isShareLoading}
-                        {...tip(t.shareTrial, undefined, 'action')}
-                        aria-label={t.shareTrial}
+                    <div className="mt-5 pt-3 border-t border-border-color flex items-center justify-between gap-2">
+                      <Link
+                        href={`/${locale}/minigames/play?id=${encodeURIComponent(String(id))}`}
+                        className={buttonClassName('success', 'sm')}
                       >
-                        {isCopied ? (
-                          <Check className="w-4 h-4 text-accent-green" />
-                        ) : (
-                          <Share2 className="w-4 h-4" />
-                        )}
-                      </Button>
+                        <Play className="w-3.5 h-3.5 fill-current" />
+                        <span>{t.playTrial}</span>
+                      </Link>
 
-                      <Button
-                        variant="secondary"
-                        size="sm"
-                        icon
-                        onClick={() => handleExport(trial)}
-                        {...tip(t.exportJson, undefined, 'action')}
-                        aria-label={t.exportJson}
-                      >
-                        <Download className="w-4 h-4" />
-                      </Button>
+                      <div className="flex items-center gap-1">
+                        <Button
+                          variant="secondary"
+                          size="sm"
+                          icon
+                          onClick={() => handleShare(trial)}
+                          disabled={isShareLoading}
+                          {...tip(t.shareTrial, undefined, 'action')}
+                          aria-label={t.shareTrial}
+                        >
+                          {isCopied ? (
+                            <Check className="w-4 h-4 text-accent-green" />
+                          ) : (
+                            <Share2 className="w-4 h-4" />
+                          )}
+                        </Button>
 
-                      <Button
-                        variant="danger"
-                        size="sm"
-                        icon
-                        onClick={() => handleDelete(id)}
-                        {...tip(t.deleteTrial, undefined, 'action')}
-                        aria-label={t.deleteTrial}
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </Button>
+                        <Button
+                          variant="secondary"
+                          size="sm"
+                          icon
+                          onClick={() => handleExport(trial)}
+                          {...tip(t.exportJson, undefined, 'action')}
+                          aria-label={t.exportJson}
+                        >
+                          <Download className="w-4 h-4" />
+                        </Button>
+
+                        <Button
+                          variant="danger"
+                          size="sm"
+                          icon
+                          onClick={() => requestDelete(id)}
+                          {...tip(t.deleteTrial, undefined, 'action')}
+                          aria-label={t.deleteTrial}
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      </div>
                     </div>
-                  </div>
-                </Surface>
-              );
-            })}
+                  </Surface>
+                );
+              })}
+            </div>
           </div>
         )}
       </div>
@@ -583,10 +584,11 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
         confirmLabel={t.deleteTrial}
         cancelLabel={t.cancel}
         onConfirm={confirmDelete}
-        onCancel={() => setPendingDeleteId(null)}
+        onCancel={cancelDelete}
       />
 
       {signIn.isAuthModalOpen && <AuthModal isOpen onClose={signIn.closeAuthModal} />}
+      <NsfwOnboardingModal isOpen={onboardingOpen} onClose={() => setOnboardingOpen(false)} />
     </div>
   );
 };

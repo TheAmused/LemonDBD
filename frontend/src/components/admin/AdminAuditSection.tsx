@@ -29,7 +29,7 @@ const CATEGORIES = {
   reports: ['bug_report', 'content'],
   availability: ['challenge_mode', 'character', 'perk'],
   publishing: ['tier_list', 'roster', 'changelog_post'],
-  system: ['site_settings', 'maintenance'],
+  system: ['site_settings', 'maintenance', 'database'],
 } as const satisfies Record<string, readonly string[]>;
 type Category = keyof typeof CATEGORIES;
 
@@ -63,6 +63,10 @@ const ACTION_LABEL_KEYS = {
   sanction_revoked: 'auditActionSanctionRevoked',
   account_restored: 'auditActionAccountRestored',
   user_deleted: 'auditActionUserDeleted',
+  user_created: 'auditActionUserCreated',
+  database_exported: 'auditActionDatabaseExported',
+  database_imported: 'auditActionDatabaseImported',
+  database_purged: 'auditActionDatabasePurged',
   user_two_factor_reset: 'auditActionUserTwoFactorReset',
   user_updated: 'auditActionUserUpdated',
   'tier_list.create': 'auditActionTierListCreated',
@@ -86,11 +90,12 @@ const TARGET_LABEL_KEYS = {
   changelog_post: 'auditTargetChangelog',
   site_settings: 'auditTargetSettings',
   maintenance: 'auditTargetMaintenance',
+  database: 'auditTargetDatabase',
 } as const;
 
 /** Removing access or content reads red, giving it back green, everything else neutral. */
 const actionTone = (action: string): string =>
-  /(disabled|deleted|ban|banned|suspended)$/.test(action)
+  /(disabled|deleted|ban|banned|suspended|purged)$/.test(action)
     ? 'text-accent-red'
     : /(enabled|restored|revoked|dismiss)$/.test(action)
       ? 'text-accent-green'

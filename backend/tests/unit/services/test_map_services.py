@@ -147,50 +147,11 @@ def test_fetch_maps_filter_by_search(db_session: Session) -> None:
 
 
 @pytest.mark.unit
-def test_fetch_maps_raw_sqlite_fallback() -> None:
-    """Test the raw SQLite execution path parsing layout figures and sizes."""
+def test_fetch_maps_raw_sqlite_fallback_removed() -> None:
+    """Test that the dead SQLite fallback path has been cleanly removed."""
     mock_db_service = MagicMock()
-    mock_conn = MagicMock()
-    mock_cursor = MagicMock()
-
-    mock_db_service.get_connection.return_value = mock_conn
-    mock_conn.cursor.return_value = mock_cursor
-
-    mock_cursor.fetchall.side_effect = [
-        [(0, "id"), (1, "name"), (2, "layout_type"), (3, "size_sq_tiles")],
-        [
-            {
-                "id": 99,
-                "name": "Custom Test Map",
-                "realm_id": 1,
-                "source_id": 1,
-                "realm_name": "Test Realm",
-                "source_code": "hens333",
-                "source_label": "Hens333 12-Clock Callouts",
-                "layout_type": "Indoor",
-                "pallet_density": "Low",
-                "jungle_gyms_count": 0,
-                "is_shack": 0,
-                "is_main_building": 1,
-                "size_sq_tiles": 120.0,
-                "size_sq_meters": 7680,
-                "description": "Fallback row",
-                "callout_image_url": "https://example.com/fallback.webp",
-            }
-        ],
-    ]
-
     results = fetch_maps(use_sqlalchemy=False, db_service=mock_db_service)
-    assert len(results) == 1
-    row = results[0]
-    assert row["id"] == 99
-    assert row["layout_type"] == "Indoor"
-    assert row["pallet_density"] == "Low"
-    assert row["jungle_gyms_count"] == 0
-    assert row["is_shack"] is False
-    assert row["is_main_building"] is True
-    assert row["size_sq_tiles"] == 120.0
-    assert row["size_sq_meters"] == 7680
+    assert results == []
 
 
 @pytest.mark.unit

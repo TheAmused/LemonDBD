@@ -21,7 +21,7 @@
   "/[locale]/reset-password": 114,
   "/[locale]/rules": 112,
   "/[locale]/smash-or-pass": 152,
-  "/[locale]/smash-or-pass/create": 135,
+  "/[locale]/smash-or-pass/create": 145,
   "/[locale]/streaks": 115,
   "/[locale]/streaks/[role]": 115,
   "/[locale]/streaks/[role]/gauntlet-streak": 134,
@@ -30,10 +30,10 @@
   "/[locale]/streaks/killer/page-streak": 118,
   "/[locale]/streaks/killer/page-streak/[killer]": 129,
   "/[locale]/terms-of-service": 112,
-  "/[locale]/tier-lists": 177,
-  "/[locale]/tier-lists/[slug]": 177,
-  "/[locale]/tier-lists/custom/[id]": 177,
-  "/[locale]/tier-lists/new": 175,
+  "/[locale]/tier-lists": 185,
+  "/[locale]/tier-lists/[slug]": 185,
+  "/[locale]/tier-lists/custom/[id]": 185,
+  "/[locale]/tier-lists/new": 185,
   "/[locale]/user": 158,
   "/[locale]/welcome": 135
 }

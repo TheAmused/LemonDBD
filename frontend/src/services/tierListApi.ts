@@ -65,8 +65,9 @@ export async function updateOfficialTierList(
     throw new Error(errBody.error || `Request failed (${res.status})`);
   }
   const body = (await res.json()) as { data: TierListTemplate };
+  invalidateTierListSummaries();
+  invalidate(`${catalogKey(`tier-lists/${encodeURIComponent(slug)}`)}?`); // the other languages' copies
   writeCache<TierListResponse>(tierListCacheKey(slug, lang), { data: body.data });
-  invalidate(catalogKey('tier-lists'));
   return body.data;
 }
 
@@ -96,8 +97,8 @@ export async function createOfficialTierList(
     throw new Error(errBody.error || `Request failed (${res.status})`);
   }
   const body = (await res.json()) as { data: TierListTemplate };
+  invalidateTierListSummaries();
   writeCache<TierListResponse>(tierListCacheKey(body.data.slug, lang), { data: body.data });
-  invalidate(catalogKey('tier-lists'));
   return body.data;
 }
 
@@ -113,8 +114,17 @@ export async function deleteOfficialTierList(
     const errBody: { error?: string } = await res.json().catch(() => ({}));
     throw new Error(errBody.error || `Request failed (${res.status})`);
   }
-  invalidate(catalogKey(`tier-lists/${encodeURIComponent(slug)}`));
-  invalidate(catalogKey('tier-lists'));
+  invalidate(`${catalogKey(`tier-lists/${encodeURIComponent(slug)}`)}?`);
+  invalidateTierListSummaries();
+}
+
+/**
+ * Drops the hub's list of summaries (every language) -- and only that. A bare
+ * `invalidate(catalogKey('tier-lists'))` is a prefix match that also dropped every
+ * `tier-lists/<slug>` entry, including the one just written.
+ */
+function invalidateTierListSummaries(): void {
+  invalidate(`${catalogKey('tier-lists')}?`);
 }
 
 

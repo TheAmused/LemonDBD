@@ -14,6 +14,17 @@ from app.services.smash_or_pass.serialize import enrich_with_stat
 logger = logging.getLogger(__name__)
 
 
+def _owner_conditions(user_id: int | None, session_id: str | None) -> list:
+    """Rows a caller owns: their account's votes, plus guest rows of their own
+    session that no account has claimed yet."""
+    conditions = []
+    if user_id is not None:
+        conditions.append(Vote.user_id == user_id)
+    if session_id is not None:
+        conditions.append(and_(Vote.session_id == session_id, Vote.user_id.is_(None)))
+    return conditions
+
+
 class SmashVotesMixin:
     """Voting half of `SmashOrPassService`; relies on its `ensure_seeded`."""
 
@@ -117,12 +128,17 @@ class SmashVotesMixin:
             if not entity:
                 raise ValueError(f"Entity not found for entity_id='{entity_id}' or character_slug='{character_slug}'")
 
+            # One owner per vote: the account when signed in, otherwise the guest
+            # session (and only a session row nobody has claimed). Matching on
+            # either one let a signed-in caller who knew someone's session id
+            # take over their votes.
             existing_vote = None
             user_sess_conds = []
             if user_id is not None:
                 user_sess_conds.append(Vote.user_id == user_id)
-            if session_id is not None:
-                user_sess_conds.append(Vote.session_id == session_id)
+                session_id = None
+            elif session_id is not None:
+                user_sess_conds.append(and_(Vote.session_id == session_id, Vote.user_id.is_(None)))
 
             if user_sess_conds:
                 # `.scalars().order_by(...).first()`, not `.scalar()`: two Vote
@@ -149,8 +165,7 @@ class SmashVotesMixin:
                     existing_vote.vote_type = vote_type
                     if user_id is not None:
                         existing_vote.user_id = user_id
-                    if session_id is not None:
-                        existing_vote.session_id = session_id
+                        existing_vote.session_id = None
                     existing_vote.created_at = utcnow()
                 else:
                     new_vote = Vote(
@@ -215,6 +230,9 @@ class SmashVotesMixin:
                         db.session.delete(s_vote)
                     else:
                         s_vote.user_id = user_id
+                        # Claimed: the account owns it now, so the guest session id
+                        # (which outlives the login on this browser) must not.
+                        s_vote.session_id = None
                         affected_entity_ids.add(s_vote.entity_id)
                         synced_count += 1
                         synced_votes.append({
@@ -241,7 +259,10 @@ class SmashVotesMixin:
         self, session_id: str, roster_slug: str | None = None
     ) -> dict[str, Any]:
         try:
-            stmt = select(Vote).where(Vote.session_id == session_id)
+            # Guest rows only. A vote an account has claimed (sync-session) or cast
+            # is reset through /user-votes/reset by that account, never by whoever
+            # holds the browser's guest session id.
+            stmt = select(Vote).where(Vote.session_id == session_id, Vote.user_id.is_(None))
             if roster_slug:
                 roster = db.session.scalar(select(Roster).where(Roster.slug == roster_slug))
                 if roster:
@@ -272,15 +293,12 @@ class SmashVotesMixin:
         user_id: int,
         roster_slug: str | None = None,
         edition: str | None = None,
-        session_id: str | None = None,
     ) -> dict[str, Any]:
+        """Every vote the account owns on the roster, from every device -- not
+        only the ones cast under this browser's guest session."""
         try:
             target_slug = roster_slug or edition
-            conds = [Vote.user_id == user_id]
-            if session_id:
-                conds.append(Vote.session_id == session_id)
-
-            stmt = select(Vote).where(and_(*conds))
+            stmt = select(Vote).where(Vote.user_id == user_id)
             if target_slug:
                 roster = db.session.scalar(select(Roster).where(Roster.slug == target_slug))
                 if roster:
@@ -319,12 +337,7 @@ class SmashVotesMixin:
         if not roster:
             return []
 
-        conditions = []
-        if user_id is not None:
-            conditions.append(Vote.user_id == user_id)
-        if session_id is not None:
-            conditions.append(Vote.session_id == session_id)
-
+        conditions = _owner_conditions(user_id, session_id)
         if not conditions:
             return []
 

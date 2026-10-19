@@ -11,6 +11,7 @@ import { PerkCard } from '@/components/PerkCard';
 import { PerksGridSkeleton } from '@/components/PerksSkeleton';
 import { EmptyState } from '@/components/common/EmptyState';
 import { Pagination } from '@/components/common/Pagination';
+import { Button } from '@/components/common/Button';
 import { Locale } from '@/i18n/config';
 import { SearchX } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
@@ -28,6 +29,7 @@ import { useDictionary, useLocale } from '@/context/DictionaryContext';
 import { useCachedData } from '@/hooks/useCachedData';
 import { useCatalogPerks } from '@/hooks/useCatalogPerks';
 import { catalogKey, fetchCached, fetchJson } from '@/services/dataCache';
+import { SEARCH_DEBOUNCE_MS } from '@/constants/timing';
 
 const PerkModal = dynamic(() => import('@/components/PerkModal').then((m) => m.PerkModal), { ssr: false });
 
@@ -54,8 +56,14 @@ function PerksContent() {
   const [scope, setScope] = useState<ScopeFilter>('all');
   const [ownershipFilter, setOwnershipFilter] = useState<OwnershipFilter>('all');
   const [search, setSearch] = useState<string>('');
+  const [debouncedSearch, setDebouncedSearch] = useState<string>('');
   const [sortBy, setSortBy] = useState<SortField>('name');
   const [order, setOrder] = useState<SortOrder>('asc');
+
+  useEffect(() => {
+    const id = setTimeout(() => setDebouncedSearch(search), SEARCH_DEBOUNCE_MS);
+    return () => clearTimeout(id);
+  }, [search]);
 
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(DEFAULT_PERKS_PER_PAGE);
@@ -127,8 +135,7 @@ function PerksContent() {
     if (paramRole === 'Killer' || paramRole === 'Survivor') {
       setRole(paramRole);
     }
-    document.title = dict.app.perksVaultPageTitle;
-  }, [paramRole, dict]);
+  }, [paramRole]);
 
   const handleSelectCategoryFromSidebar = (selected: string) => {
     if (selected === 'Survivor' || selected === 'Killer') {
@@ -145,9 +152,14 @@ function PerksContent() {
   const { prefetchPerkIcons } = useImagePrefetch();
   const fetchSeqRef = useRef(0);
 
+  const [fetchError, setFetchError] = useState<string | null>(null);
+
   const fetchPerks = useCallback(async () => {
     const requestId = ++fetchSeqRef.current;
-    setLoading(true);
+    if (perks.length === 0) {
+      setLoading(true);
+    }
+    setFetchError(null);
     try {
       const url = catalogKey('perks', {
         page,
@@ -157,7 +169,8 @@ function PerksContent() {
         category: role,
         lang: locale,
         scope: scope === 'general' ? 'general' : undefined,
-        search,
+        // Debounced: the list refetches once typing pauses, not on every keystroke.
+        search: debouncedSearch,
         owned_only: ownershipFilter === 'owned' && user ? 'true' : undefined,
         user_id: user?.id,
       });
@@ -170,8 +183,11 @@ function PerksContent() {
         setTotalPages(result.pagination.total_pages);
         setTotalResults(result.pagination.total);
       }
-    } catch (err) {
+    } catch (err: unknown) {
       console.error('Failed fetching perks:', err);
+      if (requestId === fetchSeqRef.current) {
+        setFetchError(err instanceof Error ? err.message : 'Failed fetching perks');
+      }
     } finally {
       if (requestId === fetchSeqRef.current) {
         setLoading(false);
@@ -180,15 +196,16 @@ function PerksContent() {
   }, [
     role,
     scope,
-    search,
+    debouncedSearch,
     sortBy,
     order,
     page,
     limit,
     ownershipFilter,
-    user?.id,
+    user,
     locale,
     prefetchPerkIcons,
+    perks.length,
   ]);
 
   useEffect(() => {
@@ -283,11 +300,23 @@ function PerksContent() {
             killerCount={killerCount}
             allCount={role === 'Survivor' ? survivorCount : killerCount}
             ownedCount={role === 'Survivor' ? survivorOwnedCount : killerOwnedCount}
+            isLoggedIn={Boolean(user)}
           />
         </div>
 
         <div className="flex min-h-0 flex-1 flex-col overflow-y-auto">
-          {loading ? (
+          {fetchError && perks.length === 0 ? (
+            <div className="flex flex-col items-center justify-center gap-4 p-12 text-center my-auto">
+              <p className="text-text-secondary text-base">{dict.filters.loadError}</p>
+              <Button
+                variant="primary"
+                size="md"
+                onClick={() => fetchPerks()}
+              >
+                {dict.modal.retry}
+              </Button>
+            </div>
+          ) : loading ? (
             <PerksGridSkeleton />
           ) : perks.length === 0 ? (
             <EmptyState

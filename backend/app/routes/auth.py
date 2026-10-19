@@ -18,7 +18,7 @@ from app.core.security import (
     set_session_cookie,
     widen_legacy_session_cookie,
 )
-from app.schemas.user import UserCreate, UserResponse
+from app.schemas.user import UserRegister, UserResponse
 from app.services import site_settings
 from app.services.altcha_service import AltchaService
 from app.services.user import (
@@ -63,16 +63,17 @@ def register():
         return error_response("registration_closed", 403)
 
     try:
-        validated_data = UserCreate.model_validate(payload)
+        validated_data = UserRegister.model_validate(payload)
     except ValidationError as err:
         return api_error("Validation failed", 400, details=err.errors())
 
+    # Self-registration always creates a player. Only an admin (POST /users) can create an admin.
     user, err = create_user_account(
         login=validated_data.login,
         username=validated_data.username,
         email=validated_data.email,
         password=validated_data.password,
-        role=validated_data.role or "user",
+        role="user",
     )
     if err:
         return api_error(err, 400)
@@ -255,7 +256,6 @@ def update_profile():
     user = g.current_user
     data = request.get_json(silent=True) or {}
     email = data.get("email")
-    avatar_url = data.get("avatar_url")
     new_password = data.get("new_password")
     current_password = data.get("current_password")
 
@@ -263,7 +263,6 @@ def update_profile():
         updated_user, err = modify_user_profile(
             user_id=user.id,
             email=email,
-            avatar_url=avatar_url,
             new_password=new_password,
             current_password=str(current_password) if current_password else None,
             two_factor_code=data.get("two_factor_code"),
@@ -279,6 +278,8 @@ def update_profile():
         "status": "success",
         "message": "Profile updated successfully",
         "user": UserResponse.model_validate(updated_user).model_dump(),
+        # True when an email change left the account waiting for the code sent to the new address.
+        "verification_required": not updated_user.is_verified,
     }
     if not new_password:
         return jsonify(body), 200
@@ -291,6 +292,7 @@ def update_profile():
 
 
 @auth_bp.route("/avatar", methods=["POST"])
+@limiter.limit("20 per hour")
 @login_required
 def upload_avatar():
     user = g.current_user

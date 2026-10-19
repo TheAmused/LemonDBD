@@ -37,11 +37,28 @@ def get_avatar_storage_directory() -> str:
     return base_dir
 
 
-def remove_stale_avatar_file(avatar_url: str | None, avatar_dir: str) -> None:
-    """Deletes old avatar image from disk to prevent storage accumulation."""
-    if not avatar_url or avatar_url == "default_avatar":
-        return
-    filename = avatar_url.split("/")[-1].split("?")[0]
+#: The only `avatar_url` values the server writes: an upload, served by `/auth/avatar/file/`.
+AVATAR_URL_PREFIX = "/api/v1/auth/avatar/file/"
+
+
+def owned_avatar_filename(avatar_url: str | None, user_id: int) -> str | None:
+    """The file behind `avatar_url` when it is one of *this* user's uploads, else None.
+
+    Uploads are named `avatar_u<id>_<time>_<hex>.webp`, so the user id in the name is checked: a
+    value pointing at someone else's file (or anything outside the avatar folder) is never treated
+    as this account's to delete.
+    """
+    if not avatar_url or not avatar_url.startswith(AVATAR_URL_PREFIX):
+        return None
+    filename = avatar_url[len(AVATAR_URL_PREFIX):].split("?")[0]
+    if "/" in filename or "\\" in filename or not filename.startswith(f"avatar_u{user_id}_"):
+        return None
+    return filename
+
+
+def remove_stale_avatar_file(avatar_url: str | None, avatar_dir: str, user_id: int) -> None:
+    """Deletes the user's previous upload from disk to prevent storage accumulation."""
+    filename = owned_avatar_filename(avatar_url, user_id)
     if filename:
         old_path = os.path.join(avatar_dir, filename)
         if os.path.isfile(old_path):
@@ -51,8 +68,20 @@ def remove_stale_avatar_file(avatar_url: str | None, avatar_dir: str) -> None:
                 logger.warning(f"Could not remove old avatar {old_path}: {e}")
 
 
+#: Same cap as the profile page's file picker.
+MAX_AVATAR_BYTES = 10 * 1024 * 1024
+#: Refuse to decode anything bigger, whatever its file size: a small PNG can declare 13 000 x 13 000
+#: pixels and cost hundreds of MB of memory once converted (Pillow's own limit is ~178 MP).
+MAX_AVATAR_PIXELS = 40_000_000
+AVATAR_PROCESSING_FAILED = "The image could not be processed. Try a PNG, JPEG or WebP file."
+
+
 def process_and_save_avatar(user_id: int, file_storage) -> tuple[User | None, str | None]:
-    """Center-crops image to 1:1, resizes to 256x256, and saves in WebP format."""
+    """Center-crops image to 1:1, resizes to 256x256, and saves in WebP format.
+
+    The previous upload is deleted only after the new one is stored and saved on the account: it
+    used to be deleted first, so a corrupt file left the account pointing at a missing image.
+    """
     user = db.session.get(User, user_id)
     if not user:
         return None, "User not found."
@@ -74,8 +103,14 @@ def process_and_save_avatar(user_id: int, file_storage) -> tuple[User | None, st
     try:
         from PIL import Image, ImageOps
 
+        file_storage.stream.seek(0, os.SEEK_END)
+        if file_storage.stream.tell() > MAX_AVATAR_BYTES:
+            return None, "The image is larger than 10 MB."
         file_storage.stream.seek(0)
         image = Image.open(file_storage.stream)
+        width, height = image.size
+        if width * height > MAX_AVATAR_PIXELS:
+            return None, "The image is too large (more than 40 megapixels)."
         image = ImageOps.exif_transpose(image)
 
         if image.mode in ("RGBA", "LA") or (image.mode == "P" and "transparency" in image.info):
@@ -94,21 +129,23 @@ def process_and_save_avatar(user_id: int, file_storage) -> tuple[User | None, st
         resized = cropped.resize((256, 256), Image.Resampling.LANCZOS)
         resized.save(destination_path, format="WEBP", quality=90, method=4)
 
-        avatar_url = f"/api/v1/auth/avatar/file/{new_filename}"
+        avatar_url = f"{AVATAR_URL_PREFIX}{new_filename}"
         user.avatar_url = avatar_url
         db.session.commit()
-        # Only after the commit, so a failed decode keeps the old file.
-        remove_stale_avatar_file(previous_avatar_url, avatar_dir)
-        return user, None
-
     except Exception as e:
         logger.error(f"Failed to process and save avatar for user {user_id}: {e}")
+        db.session.rollback()
         if os.path.exists(destination_path):
             try:
                 os.remove(destination_path)
             except Exception:
                 pass
-        return None, f"Failed to process image: {str(e)}"
+        # The exception text (library internals, paths) stays in the log.
+        return None, AVATAR_PROCESSING_FAILED
+
+    if previous_avatar_url != avatar_url:
+        remove_stale_avatar_file(previous_avatar_url, avatar_dir, user.id)
+    return user, None
 
 
 def clear_user_avatar(user_id: int) -> tuple[User | None, str | None]:
@@ -122,5 +159,5 @@ def clear_user_avatar(user_id: int) -> tuple[User | None, str | None]:
 
     user.avatar_url = "default_avatar"
     db.session.commit()
-    remove_stale_avatar_file(previous_avatar_url, avatar_dir)
+    remove_stale_avatar_file(previous_avatar_url, avatar_dir, user.id)
     return user, None

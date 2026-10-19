@@ -49,8 +49,18 @@ test("Live Frontend Workflow: Minigames & DBD Idle End-to-End Suite", async () =
 
   // 4. Guess Evaluation API - Classic Character Guesser
   // First, submit a test guess with an intentional wrong ID or sample character
-  const targetId = daily.rounds[0].target_id;
-  const targetType = daily.rounds[0].target_type || "killer";
+  // A classic daily never ships its answer: it comes back only once the round
+  // is over. Giving up (which stores nothing server-side) is how a test gets it.
+  assert.strictEqual(daily.rounds[0].target_id, undefined, "Classic daily must not expose its answer");
+  const giveUpRes = await fetch(`${API_BASE}/api/v1/minigames/guess`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ challenge_id: daily.id, challenge_type: "daily", round_index: 0, give_up: true }),
+  });
+  assert.strictEqual(giveUpRes.status, 200);
+  const { answer } = await giveUpRes.json();
+  const targetId = answer.target_id;
+  const targetType = answer.target_type || "killer";
   const guessChar = catalog.characters.find(
     (c: any) => c.type === targetType && c.id !== targetId
   ) || catalog.characters[0];
@@ -138,7 +148,7 @@ test("Live Frontend Workflow: Minigames & DBD Idle End-to-End Suite", async () =
 
   // 6. (Custom challenge sharing is client-side: the challenge lives in the URL fragment.)
 
-  // 7. User Registration & Stats Tracking API
+  // 7. A regular account (used below to prove the admin-only route refuses it).
   const testUser = `minigamer_${Date.now()}`;
   const regRes = await fetch(`${API_BASE}/api/v1/auth/register`, {
     method: "POST",
@@ -155,37 +165,11 @@ test("Live Frontend Workflow: Minigames & DBD Idle End-to-End Suite", async () =
   const userToken = authData.token;
   assert.ok(userToken, "Auth must return JWT token");
 
-  // Update user stats
-  const statUpdateRes = await fetch(`${API_BASE}/api/v1/minigames/stats`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${userToken}`,
-    },
-    body: JSON.stringify({
-      game_mode: "classic",
-      won: true,
-      attempts_taken: 3,
-    }),
-  });
-  assert.strictEqual(statUpdateRes.status, 200, "Update stats endpoint must return 200");
-  const statData = await statUpdateRes.json();
-  assert.strictEqual(statData.game_mode, "classic");
-  assert.strictEqual(statData.current_streak, 1);
-  assert.strictEqual(statData.max_streak, 1);
-  assert.strictEqual(statData.total_played, 1);
-  assert.strictEqual(statData.total_won, 1);
-  assert.strictEqual(statData.guess_distribution["3"], 1);
-
-  // Fetch user stats
-  const getStatsRes = await fetch(`${API_BASE}/api/v1/minigames/stats`, {
+  // The self-reported stats endpoints were removed (nothing called them).
+  const statsRes = await fetch(`${API_BASE}/api/v1/minigames/stats`, {
     headers: { Authorization: `Bearer ${userToken}` },
   });
-  assert.strictEqual(getStatsRes.status, 200, "Fetch stats endpoint must return 200");
-  const allStats = await getStatsRes.json();
-  assert.ok(allStats.stats, "Stats response must have stats object");
-  assert.ok("classic" in allStats.stats, "Stats must include classic mode");
-  assert.strictEqual(allStats.stats.classic.total_won, 1);
+  assert.ok([404, 405].includes(statsRes.status), "Stats endpoint must be gone");
 
   // 8. Admin Daily Challenge Creation
   const adminLoginRes = await fetch(`${API_BASE}/api/v1/auth/login`, {

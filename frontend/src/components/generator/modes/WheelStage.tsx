@@ -52,7 +52,7 @@ export const WheelStage: React.FC<WheelStageProps> = ({
     spinButtonText, handleStartSpin,
   } = useWheelStage({
     totalPages, perksPerPage, lastPagePerks, spinDurationSec, role, sortedPerks,
-    activeSlotIdx, activeMutator, onWinSlot, backendBase,
+    loadout, activeSlotIdx, activeMutator, onWinSlot, backendBase,
   });
 
   const renderFlankSlot = (idx: number) => {

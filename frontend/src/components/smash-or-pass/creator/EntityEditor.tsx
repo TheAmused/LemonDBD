@@ -104,8 +104,12 @@ export function CandidateFormInputs({
                 <img
                   src={safeMedia}
                   alt={entity.name}
+                  loading="lazy"
+                  decoding="async"
+                  draggable={false}
+                  onContextMenu={(e) => e.preventDefault()}
                   referrerPolicy="no-referrer"
-                  className="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
+                  className="h-full w-full object-cover transition-transform duration-300 hover:scale-105 select-none"
                 />
               ) : (
                 <div className="flex flex-col items-center gap-2 p-3 text-center text-text-muted select-none">

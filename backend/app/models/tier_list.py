@@ -88,7 +88,7 @@ class TierList(Base, TranslatableModelMixin):
     kind: Mapped[str] = mapped_column(String(20), nullable=False, index=True)
     title: Mapped[str] = mapped_column(String(150), nullable=False)
     description: Mapped[str] = mapped_column(Text, default="", nullable=False)
-    cover_image_url: Mapped[str | None] = mapped_column(String(500), nullable=True)
+    cover_image_url: Mapped[str | None] = mapped_column(Text, nullable=True)
 
     #: `[{"id": "s", "label": "S", "color": "s" | "#ff7f7f", "backgroundImage"?}, ...]`,
     #: top tier first. NULL means the frontend's default S/A/B/C/D/F ladder.

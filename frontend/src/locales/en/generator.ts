@@ -185,4 +185,5 @@ export default {
   modeSlotTooltip: "Pull the lever and lock in reels over up to 3 cycles. A reel or two may jam broken, reroll the whole machine to clear it.",
   modeTarotTooltip: "Shuffle the deck and flip cards to reveal your loadout, one omen at a time.",
   modeCrateTooltip: "Crack open a Trial Offering for a random loadout in one go.",
+  loadError: "Failed to load perks catalog.",
 } as const;

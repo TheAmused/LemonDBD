@@ -17,7 +17,6 @@ from app.services.maps.queries import (
 )
 from app.services.perks.queries_perk import (
     fetch_perks,
-    fetch_perks_fallback,
 )
 from app.services.perks.queries_perk_lookup import (
     fetch_perk_by_identifier,
@@ -54,7 +53,6 @@ __all__ = [
     "load_fallback_files",
     "reload_service_data",
     "fetch_perks",
-    "fetch_perks_fallback",
     "fetch_perk_suggestions",
     "fetch_perk_by_identifier",
     "fetch_characters",

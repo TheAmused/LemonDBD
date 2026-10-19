@@ -65,7 +65,7 @@ def process_and_save_avatar(user_id: int, file_storage) -> tuple[User | None, st
         return None, f"Unsupported file type. Allowed: {', '.join(ALLOWED_EXTENSIONS)}"
 
     avatar_dir = get_avatar_storage_directory()
-    remove_stale_avatar_file(user.avatar_url, avatar_dir)
+    previous_avatar_url = user.avatar_url
 
     unique_id = f"u{user.id}_{int(time.time())}_{uuid.uuid4().hex[:6]}"
     new_filename = f"avatar_{unique_id}.webp"
@@ -97,6 +97,8 @@ def process_and_save_avatar(user_id: int, file_storage) -> tuple[User | None, st
         avatar_url = f"/api/v1/auth/avatar/file/{new_filename}"
         user.avatar_url = avatar_url
         db.session.commit()
+        # Only after the commit, so a failed decode keeps the old file.
+        remove_stale_avatar_file(previous_avatar_url, avatar_dir)
         return user, None
 
     except Exception as e:
@@ -116,8 +118,9 @@ def clear_user_avatar(user_id: int) -> tuple[User | None, str | None]:
         return None, "User not found."
 
     avatar_dir = get_avatar_storage_directory()
-    remove_stale_avatar_file(user.avatar_url, avatar_dir)
+    previous_avatar_url = user.avatar_url
 
     user.avatar_url = "default_avatar"
     db.session.commit()
+    remove_stale_avatar_file(previous_avatar_url, avatar_dir)
     return user, None

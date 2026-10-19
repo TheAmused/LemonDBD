@@ -1,14 +1,15 @@
 # backend/app/routes/perks.py
 import logging
 from dataclasses import asdict
-from pathlib import Path
 
-from flask import Blueprint, current_app, jsonify, request, send_from_directory
+from flask import Blueprint, jsonify, request
 
 from app.core import redis_cache
+from app.core.cache_params import norm_bool, norm_choice, norm_int, norm_lower
 from app.core.extensions import db
 from app.core.http_cache import cache_catalog
 from app.core.security import get_current_user
+from app.services.perks.queries_perk import ALLOWED_SORT_FIELDS
 from app.services.perks import (
     fetch_addons,
     fetch_character_detail,
@@ -25,6 +26,17 @@ from sqlalchemy import select
 
 logger = logging.getLogger(__name__)
 perks_bp = Blueprint("perks", __name__)
+
+#: Paging bounds shared by the view and the cache key.
+PERKS_DEFAULT_LIMIT = 50
+PERKS_MAX_LIMIT = 10000
+PERKS_MAX_PAGE = 10000
+SUGGESTIONS_MAX_LIMIT = 50
+
+#: Any other category selects nothing and is not cached.
+_ROLE = norm_choice(("survivor", "killer"), strict=True)
+_FILTER = norm_lower(drop_all=True)
+_TEXT = norm_lower()
 
 
 def _extract_optional_user_id() -> int | None:
@@ -55,10 +67,17 @@ def health_check():
 @perks_bp.route("/api/v1/perks", methods=["GET"])
 @cache_catalog(
     ttl=3600,
-    vary=(
-        "category", "character", "scope", "search", "sort_by", "order",
-        "page", "limit", "owned_only", "lang",
-    ),
+    vary={
+        "category": _ROLE,
+        "character": _FILTER,
+        "scope": norm_choice(("general", "teachable")),
+        "search": _TEXT,
+        "sort_by": norm_choice(ALLOWED_SORT_FIELDS, default="name"),
+        "order": norm_choice(("desc",)),
+        "page": norm_int(1, 1, PERKS_MAX_PAGE, clamp_high=False),
+        "limit": norm_int(PERKS_DEFAULT_LIMIT, 1, PERKS_MAX_LIMIT),
+        "owned_only": norm_bool(),
+    },
 )
 def list_perks():
     """Retrieve perks with filtering, sorting, pagination, and ownership status."""
@@ -68,7 +87,9 @@ def list_perks():
     search = request.args.get("search")
     sort_by = request.args.get("sort_by", default="name", type=str)
     order = request.args.get("order", default="asc", type=str)
-    page, limit = paginate_args(default_per_page=50, max_per_page=10000, per_page_arg="limit")
+    page, limit = paginate_args(
+        default_per_page=PERKS_DEFAULT_LIMIT, max_per_page=PERKS_MAX_LIMIT, per_page_arg="limit"
+    )
     lang = _extract_lang()
 
     owned_only_param = request.args.get("owned_only", "false").lower()
@@ -93,28 +114,34 @@ def list_perks():
 
 
 @perks_bp.route("/api/v1/perks/suggestions", methods=["GET"])
-@cache_catalog(ttl=3600, vary=("q", "category", "limit", "lang"))
+@cache_catalog(
+    ttl=3600,
+    vary={"q": _TEXT, "category": _ROLE, "limit": norm_int(10, 1, SUGGESTIONS_MAX_LIMIT)},
+)
 def get_perk_suggestions():
     q = request.args.get("q", default="", type=str)
     category = request.args.get("category")
-    limit = request.args.get("limit", default=10, type=int)
+    limit = max(1, min(request.args.get("limit", default=10, type=int), SUGGESTIONS_MAX_LIMIT))
     lang = _extract_lang()
     suggestions = fetch_perk_suggestions(query=q, category=category, limit=limit, lang=lang)
     return jsonify({"data": suggestions, "count": len(suggestions)}), 200
 
 
 @perks_bp.route("/api/v1/characters/suggestions", methods=["GET"])
-@cache_catalog(ttl=3600, vary=("q", "category", "limit"))
+@cache_catalog(
+    ttl=3600,
+    vary={"q": _TEXT, "category": _ROLE, "limit": norm_int(15, 1, SUGGESTIONS_MAX_LIMIT)},
+)
 def get_character_suggestions():
     q = request.args.get("q", default="", type=str)
     category = request.args.get("category")
-    limit = request.args.get("limit", default=15, type=int)
+    limit = max(1, min(request.args.get("limit", default=15, type=int), SUGGESTIONS_MAX_LIMIT))
     suggestions = fetch_character_suggestions(query=q, category=category, limit=limit)
     return jsonify({"data": suggestions, "count": len(suggestions)}), 200
 
 
 @perks_bp.route("/api/v1/perks/<string:identifier>", methods=["GET"])
-@cache_catalog(ttl=86400, vary=("lang",))
+@cache_catalog(ttl=86400, vary=())
 def get_perk(identifier: str):
     lang = _extract_lang()
     perk = fetch_perk_by_identifier(identifier=identifier, lang=lang)
@@ -124,7 +151,7 @@ def get_perk(identifier: str):
 
 
 @perks_bp.route("/api/v1/characters", methods=["GET"])
-@cache_catalog(ttl=86400, vary=("category", "lang"))
+@cache_catalog(ttl=86400, vary={"category": _ROLE})
 def list_characters():
     category = request.args.get("category")
     lang = _extract_lang()
@@ -196,7 +223,7 @@ def stats_summary():
 
 
 @perks_bp.route("/api/v1/characters/<string:character_name>/detail", methods=["GET"])
-@cache_catalog(ttl=86400, vary=("lang",))
+@cache_catalog(ttl=86400, vary=())
 def get_character_detail(character_name: str):
     lang = _extract_lang()
     detail = fetch_character_detail(character_name=character_name, lang=lang)
@@ -213,7 +240,7 @@ def list_challenge_modes_public():
 
 
 @perks_bp.route("/api/v1/survivors", methods=["GET"])
-@cache_catalog(ttl=86400, vary=("lang",))
+@cache_catalog(ttl=86400, vary=())
 def list_survivors():
     lang = _extract_lang()
     survivors = fetch_characters(category="Survivor", lang=lang)
@@ -221,7 +248,7 @@ def list_survivors():
 
 
 @perks_bp.route("/api/v1/killers", methods=["GET"])
-@cache_catalog(ttl=86400, vary=("lang",))
+@cache_catalog(ttl=86400, vary=())
 def list_killers():
     lang = _extract_lang()
     killers = fetch_characters(category="Killer", lang=lang)
@@ -229,7 +256,7 @@ def list_killers():
 
 
 @perks_bp.route("/api/v1/items", methods=["GET"])
-@cache_catalog(ttl=3600, vary=("category", "search", "lang"))
+@cache_catalog(ttl=3600, vary={"category": _FILTER, "search": _TEXT})
 def list_items():
     category = request.args.get("category")
     search = request.args.get("search")
@@ -239,7 +266,10 @@ def list_items():
 
 
 @perks_bp.route("/api/v1/addons", methods=["GET"])
-@cache_catalog(ttl=3600, vary=("category", "target", "associated_target", "search", "lang"))
+@cache_catalog(
+    ttl=3600,
+    vary={"category": _FILTER, "target": _FILTER, "associated_target": _FILTER, "search": _TEXT},
+)
 def list_addons():
     category = request.args.get("category")
     target = request.args.get("target") or request.args.get("associated_target")
@@ -247,13 +277,3 @@ def list_addons():
     lang = _extract_lang()
     addons = fetch_addons(category=category, target=target, search=search, lang=lang)
     return jsonify({"count": len(addons), "data": addons}), 200
-
-
-@perks_bp.route("/static/<path:filename>", methods=["GET"])
-def serve_static_asset(filename: str):
-    """Serve cached static game assets."""
-    static_folder = Path(current_app.root_path) / "static"
-    response = send_from_directory(static_folder, filename)
-    response.headers["Access-Control-Allow-Origin"] = "*"
-    response.headers["Cache-Control"] = "public, max-age=86400"
-    return response

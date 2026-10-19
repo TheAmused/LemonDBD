@@ -1,5 +1,7 @@
 # backend/app/utils/thumbnails.py
 """On-demand, disk-cached WebP thumbnails for files under ``static/<subdir>``."""
+import os
+import threading
 from pathlib import Path
 
 from flask import abort, current_app, send_file
@@ -7,6 +9,46 @@ from PIL import Image
 
 THUMB_ROOT = "_thumbs"
 _ALLOWED = {".webp", ".png", ".jpg", ".jpeg"}
+
+#: Game art is overwritten in place by a re-scrape, so revalidate daily.
+THUMB_MAX_AGE = 60 * 60 * 24
+
+_locks_guard = threading.Lock()
+_locks: dict[str, threading.Lock] = {}
+
+
+def _lock_for(path: Path) -> threading.Lock:
+    """One lock per thumbnail, so concurrent cold requests decode the source once."""
+    with _locks_guard:
+        return _locks.setdefault(str(path), threading.Lock())
+
+
+def _thumb_path(root: Path, width: int, rel: str) -> Path:
+    # Full source name plus ".webp": x.png and x.webp must not share a thumbnail.
+    return root / THUMB_ROOT / str(width) / f"{rel}.webp"
+
+
+def _is_current(thumb: Path, source: Path) -> bool:
+    """True when the thumbnail was made from this exact version of the source.
+
+    Its mtime is set to the source's on write, so a source restored with an old
+    mtime differs just as a newer one does.
+    """
+    return thumb.is_file() and thumb.stat().st_mtime_ns == source.stat().st_mtime_ns
+
+
+def _write_thumb(source: Path, thumb: Path, width: int, aspect: float) -> None:
+    thumb.parent.mkdir(parents=True, exist_ok=True)
+    partial = thumb.with_name(f"{thumb.name}.{os.getpid()}.{threading.get_ident()}.tmp")
+    try:
+        with Image.open(source) as img:
+            img.thumbnail((width, int(width * aspect)))
+            img.save(partial, "WEBP", quality=82, method=4)
+        stat = source.stat()
+        os.utime(partial, ns=(stat.st_atime_ns, stat.st_mtime_ns))
+        os.replace(partial, thumb)
+    finally:
+        partial.unlink(missing_ok=True)
 
 
 def serve_thumb(subdir: str, rel: str, width: int, aspect: float = 2.0):
@@ -19,13 +61,10 @@ def serve_thumb(subdir: str, rel: str, width: int, aspect: float = 2.0):
     if source.suffix.lower() not in _ALLOWED or not source.is_file():
         abort(404)
 
-    thumb = (root / THUMB_ROOT / str(width) / rel).with_suffix(".webp")
-    if not thumb.is_file() or thumb.stat().st_mtime < source.stat().st_mtime:
-        thumb.parent.mkdir(parents=True, exist_ok=True)
-        with Image.open(source) as img:
-            img.thumbnail((width, int(width * aspect)))
-            img.save(thumb, "WEBP", quality=82, method=4)
+    thumb = _thumb_path(root, width, source.relative_to(root).as_posix())
+    if not _is_current(thumb, source):
+        with _lock_for(thumb):
+            if not _is_current(thumb, source):
+                _write_thumb(source, thumb, width, aspect)
 
-    response = send_file(thumb, mimetype="image/webp", max_age=60 * 60 * 24 * 30)
-    response.headers["Cache-Control"] = "public, max-age=2592000"
-    return response
+    return send_file(thumb, mimetype="image/webp", max_age=THUMB_MAX_AGE)

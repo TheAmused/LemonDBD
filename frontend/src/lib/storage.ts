@@ -144,6 +144,8 @@ export function createVersionedStore<S>({ key, empty, migrate }: VersionedStoreC
       if (listeners.size === 0 && storageListenerAttached && typeof window !== 'undefined') {
         window.removeEventListener('storage', onStorageEvent);
         storageListenerAttached = false;
+        // Without the listener other tabs' writes go unseen; reload on the next read.
+        snapshot = null;
       }
     };
   }
@@ -158,7 +160,10 @@ export function createVersionedStore<S>({ key, empty, migrate }: VersionedStoreC
   }
 
   function update(mutate: (state: S) => S): SaveResult {
-    const next = mutate(getSnapshot());
+    // Nobody subscribed means the snapshot may be stale: build on what is stored now.
+    const storage = getLocalStorage();
+    const current = listeners.size === 0 && storage ? load(storage) : getSnapshot();
+    const next = mutate(current);
     const result = save(next);
     snapshot = next;
     emit();

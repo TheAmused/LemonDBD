@@ -30,29 +30,7 @@ const CORE_ASSETS_TO_PREFETCH = [
 export const ImagePreloadProvider: React.FC<{ children?: React.ReactNode }> = ({
   children,
 }) => {
-  // 1. Register Service Worker for Cache-Storage Image Caching
-  useEffect(() => {
-    if (typeof window === 'undefined' || !('serviceWorker' in navigator)) return;
-
-    const registerSW = () => {
-      navigator.serviceWorker
-        .register('/sw.js', { scope: '/' })
-        .then(() => {
-          // Registration successful
-        })
-        .catch(() => {
-          // Non-fatal fallback
-        });
-    };
-
-    if (document.readyState === 'complete') {
-      registerSW();
-    } else {
-      window.addEventListener('load', registerSW, { once: true });
-    }
-  }, []);
-
-  // 2. Prefetch array of image URLs in background idle time
+  // 1. Prefetch array of image URLs in background idle time
   const prefetchImages = useCallback((urls: (string | null | undefined)[]) => {
     if (typeof window === 'undefined' || !urls || urls.length === 0) return;
 
@@ -77,7 +55,7 @@ export const ImagePreloadProvider: React.FC<{ children?: React.ReactNode }> = ({
     }
   }, []);
 
-  // 3. Helper to prefetch all icons from an array of perks / characters
+  // 2. Helper to prefetch all icons from an array of perks / characters
   const prefetchPerkIcons = useCallback(
     (perks: Perk[]) => {
       if (!perks || perks.length === 0) return;
@@ -101,7 +79,7 @@ export const ImagePreloadProvider: React.FC<{ children?: React.ReactNode }> = ({
     [prefetchImages]
   );
 
-  // 4. Initial Background Warmup
+  // 3. Initial Background Warmup
   useEffect(() => {
     prefetchImages(CORE_ASSETS_TO_PREFETCH);
   }, [prefetchImages]);

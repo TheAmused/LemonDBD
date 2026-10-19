@@ -12,12 +12,14 @@ from app.core.config import Config, fatal_secret_problems, weak_secret_warnings
 from app.core.extensions import db, mail, migrate
 from app.core.json_provider import ORJSONProvider
 from app.core.limiter import limiter
+from app.core.static_files import static_max_age
 import app.models  # noqa: F401
 
 
 def create_app(config_class: Type[Config] | None = None) -> Flask:
     flask_app = Flask(__name__)
     flask_app.json = ORJSONProvider(flask_app)
+    flask_app.get_send_file_max_age = static_max_age  # type: ignore[method-assign]
 
     if config_class is None:
         if os.getenv("TESTING", "").lower() in ("true", "1", "yes"):

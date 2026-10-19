@@ -157,15 +157,12 @@ test('the suggestion texts exist in every language with the placeholders they ar
   }
 });
 
-test('a cited rule is named by its section number on the Rules page', () => {
+test('a cited rule is named by its section number', () => {
   // The Rules page opens with the unnumbered `scope`; the rest follow in RULE_REFS order, numbered from 1.
   // The backend keeps the same table (app/core/rule_sections.py).
   assert.deepEqual(LEGAL_DOCS.rules.order.filter((id) => id !== 'scope'), [...RULE_REFS]);
   RULE_REFS.forEach((ref, index) => assert.equal(RULE_SECTION_NUMBERS[ref], index + 1, ref));
   assert.equal(ruleLabel(en, 'respect'), `Section 1: ${en.rules.sections.respect.heading}`);
-  for (const [name, loc] of Object.entries({ en, es, pl, de, ja })) {
-    assert.ok(loc.rules.sectionEyebrow.includes('{number}'), `${name}: rules page label`);
-  }
   assert.equal(ruleLabel(en, null), '');
   assert.equal(ruleLabel(en, 'madeUp'), 'madeUp', 'an unknown rule prints as itself');
   for (const [name, loc] of Object.entries({ en, es, pl, de, ja })) {

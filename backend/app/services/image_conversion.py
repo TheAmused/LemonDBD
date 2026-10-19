@@ -17,7 +17,6 @@ from __future__ import annotations
 
 import io
 import logging
-from pathlib import Path
 
 from PIL import Image
 
@@ -87,14 +86,5 @@ def is_png(content: bytes) -> bool:
     return content[:8] == PNG_MAGIC
 
 
-_perk_frame_template_cache: Image.Image | None = None
-
-
-def get_perk_frame_template(template_path: Path) -> Image.Image | None:
-    """Retrieve and cache the diamond-frame template used to composite perk icons."""
-    global _perk_frame_template_cache
-    if _perk_frame_template_cache is None and template_path.exists():
-        _perk_frame_template_cache = Image.open(template_path).convert("RGBA")
-    return _perk_frame_template_cache
 
 

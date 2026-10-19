@@ -1,16 +1,13 @@
 import logging
 import os
-import re
 import secrets
-import tempfile
-import threading
-import urllib.request
 from datetime import datetime, timezone
 from typing import Any
 
 from flask import Blueprint, current_app, g, jsonify, request, send_from_directory
 from sqlalchemy import select
 from app.core.extensions import db
+from app.core.http_cache import cache_catalog
 from app.core.limiter import limiter
 from app.core.security import admin_required, get_current_user
 from app.models.character import Killer
@@ -24,9 +21,9 @@ from app.services.minigames import (
     get_catalog,
     get_or_create_daily,
     public_challenge,
-    update_killer_chase_music,
     upsert_daily_challenge,
 )
+from app.services.minigames.chase_music import ChaseMusicUnavailable, ensure_track
 from app.services.admin_control_service import log_admin_action
 from app.schemas.minigames import MinigameGuessSubmissionDTO, MinigameOfficialCreateDTO
 from app.utils.lang import extract_lang
@@ -39,6 +36,7 @@ minigames_bp = Blueprint("minigames", __name__, url_prefix="/api/v1/minigames")
 
 
 @minigames_bp.route("/catalog", methods=["GET"])
+@cache_catalog(ttl=3600, vary=())
 def get_minigames_catalog():
     """Retrieve full catalog of characters, perks, and realms for search autocomplete."""
     lang = extract_lang()
@@ -260,48 +258,6 @@ def list_official_challenges():
     return jsonify([public_challenge(c.to_dict()) for c in challenges]), 200
 
 
-#: Largest chase-music file the cache will store. Real tracks are 1-4 MB.
-_AUDIO_MAX_BYTES = 15 * 1024 * 1024
-_audio_locks: dict[int, threading.Lock] = {}
-_audio_locks_guard = threading.Lock()
-
-
-def _audio_lock(killer_id: int) -> threading.Lock:
-    with _audio_locks_guard:
-        return _audio_locks.setdefault(killer_id, threading.Lock())
-
-
-def _download_audio(url: str, dest: str) -> None:
-    """Streams `url` to `dest` atomically (temp file + rename), capped at
-    `_AUDIO_MAX_BYTES`, so a concurrent reader never sees a half-written file
-    and an oversized response never lands on disk."""
-    req = urllib.request.Request(
-        url,
-        headers={
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-            "Referer": "https://deadbydaylight.wiki.gg/wiki/Terror_Radius",
-        },
-    )
-    fd, tmp_path = tempfile.mkstemp(dir=os.path.dirname(dest), suffix=".part")
-    try:
-        written = 0
-        with os.fdopen(fd, "wb") as out, urllib.request.urlopen(req, timeout=12) as resp:
-            while True:
-                chunk = resp.read(65536)
-                if not chunk:
-                    break
-                written += len(chunk)
-                if written > _AUDIO_MAX_BYTES:
-                    raise ValueError("audio file too large")
-                out.write(chunk)
-        if written == 0:
-            raise ValueError("empty audio response")
-        os.replace(tmp_path, dest)
-    finally:
-        if os.path.exists(tmp_path):
-            os.unlink(tmp_path)
-
-
 @minigames_bp.route("/audio/terror_radius/<int:killer_id>", methods=["GET"])
 @limiter.limit("120 per minute")
 def stream_killer_terror_radius(killer_id: int):
@@ -318,21 +274,10 @@ def stream_killer_terror_radius(killer_id: int):
     cache_dir = os.path.join(static_folder, "audio", "cache")
     os.makedirs(cache_dir, exist_ok=True)
 
-    safe_name = re.sub(r"[^a-z0-9_]+", "_", (killer.name or "").lower()).strip("_")[:60]
-    mp3_filename = f"killer_{killer.id}_{safe_name}.mp3"
-    local_path = os.path.join(cache_dir, mp3_filename)
-
-    if not os.path.exists(local_path) or os.path.getsize(local_path) == 0:
-        # One download per killer per worker; the atomic rename covers the
-        # other workers (the last identical file to land wins, harmlessly).
-        with _audio_lock(killer.id):
-            if not os.path.exists(local_path) or os.path.getsize(local_path) == 0:
-                try:
-                    _download_audio(mp3_url, local_path)
-                    update_killer_chase_music(killer.id, f"audio/cache/{mp3_filename}")
-                except Exception as e:
-                    logger.error(f"Failed to fetch audio for {killer.name} from wiki: {e}")
-                    return api_error("Failed to retrieve audio", 502)
+    try:
+        mp3_filename = ensure_track(killer, cache_dir)
+    except ChaseMusicUnavailable as exc:
+        return api_error(f"Failed to retrieve audio: {exc}", 502)
 
     return send_from_directory(cache_dir, mp3_filename, mimetype="audio/mpeg", conditional=True)
 

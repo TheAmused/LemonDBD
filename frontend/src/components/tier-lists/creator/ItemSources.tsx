@@ -282,6 +282,11 @@ function CatalogSource({ onAdd, existingIds, locale }: {
   const [query, setQuery] = useState<string>('');
   const [selected, setSelected] = useState<Set<string>>(new Set());
 
+  const CHUNK_SIZE = 40;
+  const [renderLimit, setRenderLimit] = useState<number>(CHUNK_SIZE);
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const sentinelRef = useRef<HTMLDivElement | null>(null);
+
   const source = useMemo(() => ({ kind, item_ids: null, custom_items: null }), [kind]);
   const { items, loading } = useTierListItems(source, locale);
 
@@ -290,6 +295,33 @@ function CatalogSource({ onAdd, existingIds, locale }: {
     if (!needle) return items;
     return items.filter((i) => normalizeSearchText(`${i.name} ${i.subtitle ?? ''}`).includes(needle));
   }, [items, query]);
+
+  useEffect(() => {
+    setRenderLimit(CHUNK_SIZE);
+    if (containerRef.current) {
+      containerRef.current.scrollTop = 0;
+    }
+  }, [kind, query]);
+
+  useEffect(() => {
+    const sentinel = sentinelRef.current;
+    const container = containerRef.current;
+    if (!sentinel || !container) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0]?.isIntersecting) {
+          setRenderLimit((prev) => (prev < visible.length ? Math.min(prev + CHUNK_SIZE, visible.length) : prev));
+        }
+      },
+      { root: container, rootMargin: '200px' }
+    );
+
+    observer.observe(sentinel);
+    return () => observer.disconnect();
+  }, [visible.length]);
+
+  const renderedItems = useMemo(() => visible.slice(0, renderLimit), [visible, renderLimit]);
 
   const toggle = (key: string) =>
     setSelected((prev) => {
@@ -363,15 +395,18 @@ function CatalogSource({ onAdd, existingIds, locale }: {
         </div>
       </div>
 
-      <div className="w-full rounded-chip border border-border-color bg-bg-primary/40 p-2 overflow-x-hidden">
+      <div
+        ref={containerRef}
+        className="w-full rounded-card border border-border-color bg-bg-primary/40 p-3 sm:p-4 overflow-y-auto overflow-x-hidden max-h-96 sm:max-h-roster overscroll-contain"
+      >
         {loading ? (
           <p className="flex items-center justify-center gap-2 py-10 type-card-title text-text-muted">
             <Spinner size="sm" tone="current" />
             {c.catalogLoading}
           </p>
         ) : (
-          <div className="flex flex-wrap items-start justify-center gap-2 w-full">
-            {visible.map((item) => {
+          <div className="flex flex-wrap items-start justify-center gap-3 sm:gap-3.5 w-full">
+            {renderedItems.map((item) => {
               const added = existingIds.has(item.key);
               const isSelected = selected.has(item.key);
               return (
@@ -381,25 +416,31 @@ function CatalogSource({ onAdd, existingIds, locale }: {
                   onClick={() => toggle(item.key)}
                   aria-pressed={isSelected}
                   aria-label={item.name}
-                  className="relative flex flex-col items-center justify-start self-start rounded-control disabled:opacity-40"
+                  className="relative flex flex-col items-center justify-start self-start rounded-control disabled:opacity-40 transition-transform hover:scale-105"
                 >
                   <TierItemTile
                     item={item}
                     shape={kind === 'maps' ? 'wide' : 'square'}
                     showName
+                    size="lg"
                     selected={isSelected}
                     className="pointer-events-none"
                     aria-hidden="true"
                   />
                   {(isSelected || added) && (
-                    <span className="absolute right-1 top-1 flex h-5 w-5 items-center justify-center rounded-full bg-accent-red text-text-inverted shadow">
-                      <Check className="h-3 w-3" aria-hidden="true" />
+                    <span className="absolute right-1.5 top-1.5 flex h-6 w-6 items-center justify-center rounded-full bg-accent-red text-text-inverted shadow-md">
+                      <Check className="h-3.5 w-3.5 stroke-[2.5]" aria-hidden="true" />
                     </span>
                   )}
                   {added && <span className="sr-only">{c.alreadyAdded}</span>}
                 </TileButton>
               );
             })}
+            {renderLimit < visible.length && (
+              <div ref={sentinelRef} className="flex w-full items-center justify-center py-3 text-text-muted">
+                <Spinner size="sm" tone="current" />
+              </div>
+            )}
           </div>
         )}
       </div>

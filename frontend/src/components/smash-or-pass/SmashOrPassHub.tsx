@@ -53,8 +53,9 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ locale = 'en' })
   const { finishExit } = exit;
   const { advance, loadFeed, loadLeaderboard } = deck;
   const handleExitComplete = useCallback(() => {
-    finishExit();
-    advance();
+    if (finishExit()) {
+      advance();
+    }
   }, [finishExit, advance]);
 
   const { handleVote, animTrigger } = useSmashVoting({

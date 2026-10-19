@@ -36,26 +36,44 @@ export function useCardExit() {
   const [exitOffset, setExitOffset] = useState<Offset | undefined>(undefined);
   const [dragPhysics, setDragPhysics] = useState<DragPhysics>({ x: 0, y: 0, isDragging: false });
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const exitInProgressRef = useRef(false);
 
   /** Clears the exit flags only -- a fresh feed lands with the drag already settled. */
   const resetExit = useCallback(() => {
+    exitInProgressRef.current = false;
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
     setIsExiting(false);
     setExitVote(null);
     setExitOffset(undefined);
   }, []);
 
-  const finishExit = useCallback(() => {
-    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+  const finishExit = useCallback((): boolean => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
+    if (!exitInProgressRef.current) return false;
+    exitInProgressRef.current = false;
     resetExit();
     setDragPhysics({ x: 0, y: 0, isDragging: false });
+    return true;
   }, [resetExit]);
 
   const beginExit = useCallback((vote: 'smash' | 'pass', offset: Offset, onElapsed: () => void, durationMs: number = EXIT_MS) => {
+    exitInProgressRef.current = true;
     setIsExiting(true);
     setExitVote(vote);
     setExitOffset(offset);
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    timeoutRef.current = setTimeout(onElapsed, durationMs);
+    timeoutRef.current = setTimeout(() => {
+      timeoutRef.current = null;
+      if (exitInProgressRef.current) {
+        onElapsed();
+      }
+    }, durationMs);
   }, []);
 
   return { isExiting, exitVote, exitOffset, dragPhysics, setDragPhysics, resetExit, finishExit, beginExit };

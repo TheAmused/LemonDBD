@@ -5,7 +5,7 @@
 // `notify` receives the outcome; `onChanged` runs after anything that changes the panel's counts.
 import { useCallback, useEffect, useState } from 'react';
 import { ADMIN_STORAGE, USER_ROLE_FILTERS, USER_STANDING_FILTERS, oneOf } from '@/components/admin/adminStorage';
-import { DEFAULT_PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/constants/pagination';
+import { DEFAULT_PAGE_SIZE, PAGE_SIZE_OPTIONS, lastPage } from '@/constants/pagination';
 import { SEARCH_DEBOUNCE_MS } from '@/constants/timing';
 import { useDictionary } from '@/context/DictionaryContext';
 import { usePersistentNumber } from '@/hooks/usePersistentNumber';
@@ -55,8 +55,15 @@ export function useAdminUsers({ enabled, refreshKey, notify, onChanged }: AdminU
     })
       .then((data) => {
         if (cancelled) return;
-        setUsers(data.users ?? []);
-        setTotal(data.total ?? 0);
+        const list = data.users ?? [];
+        const count = data.total ?? 0;
+        // The last row of the last page was deleted (or filtered away): step back to the new last page.
+        if (list.length === 0 && page > 1 && count > 0) {
+          setPage(lastPage(count, perPage));
+          return;
+        }
+        setUsers(list);
+        setTotal(count);
       })
       .catch((err: unknown) => {
         if (!cancelled) notify({ type: 'error', text: getErrorMessage(err, t.networkError) });

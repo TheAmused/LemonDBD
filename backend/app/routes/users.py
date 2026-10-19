@@ -2,21 +2,13 @@
 import logging
 from flask import Blueprint, Response, g, jsonify, request
 from pydantic import ValidationError
-from sqlalchemy import delete, or_, select
 
-from app.core.extensions import db
 from app.core.limiter import limiter
 from app.core.security import admin_required, login_required, verify_password
-from app.models import (
-    Killer,
-    Perk,
-    Survivor,
-    UserCharacterOwnership,
-    UserPerkOwnership,
-)
 from app.schemas.user import UserCreate, UserResponse, UserUpdate
 from app.utils.pagination import paginate_args
 from app.services.admin_control_service import log_admin_action
+from app.services.ownership.characters import normalize_role, positive_id
 from app.services.ownership_service import OwnershipService
 from app.services.user import (
     admin_modify_user,
@@ -271,42 +263,20 @@ def set_single_character_ownership(user_id: int):
         return err_resp
 
     data = request.get_json(silent=True) or {}
-    character_id = data.get("character_id")
-    role = data.get("role")
+    character_id = positive_id(data.get("character_id"))
     is_owned = bool(data.get("is_owned", True))
 
-    if not character_id:
+    if character_id is None:
         return api_error("character_id is required.", 400)
-    if not role:
-        existing_owner = db.session.scalars(
-            select(UserCharacterOwnership).where(
-                UserCharacterOwnership.user_id == user_id,
-                or_(
-                    UserCharacterOwnership.killer_id == int(character_id),
-                    UserCharacterOwnership.survivor_id == int(character_id),
-                ),
-            )
-        ).first()
-        if existing_owner:
-            role = "killer" if existing_owner.killer_id == int(character_id) else "survivor"
-        else:
-            k = db.session.get(Killer, int(character_id))
-            s = db.session.get(Survivor, int(character_id))
-            if k and not s:
-                role = "killer"
-            elif s and not k:
-                role = "survivor"
-            elif k:
-                role = "killer"
-            elif s:
-                role = "survivor"
-            else:
-                return api_error("role is required and must be 'survivor' or 'killer'.", 400)
+    # Never guessed: survivor 7 and killer 7 are different characters, and the guess used to
+    # prefer the killer whenever both existed.
+    try:
+        role = normalize_role(data.get("role"))
+    except ValueError:
+        return api_error("role is required and must be 'survivor' or 'killer'.", 400)
 
     try:
-        result = ownership_service.set_character_ownership(
-            user_id, int(character_id), is_owned, role=role
-        )
+        result = ownership_service.set_character_ownership(user_id, character_id, is_owned, role=role)
         return jsonify({"status": "success", "data": result}), 200
     except ValueError as ve:
         return api_error(str(ve), 404)
@@ -399,14 +369,14 @@ def set_single_perk_ownership(user_id: int):
         return err_resp
 
     data = request.get_json(silent=True) or {}
-    perk_id = data.get("perk_id")
+    perk_id = positive_id(data.get("perk_id"))
     is_unlocked = bool(data.get("is_unlocked", True))
 
-    if not perk_id:
+    if perk_id is None:
         return api_error("perk_id is required.", 400)
 
     try:
-        result = ownership_service.set_perk_ownership(user_id, int(perk_id), is_unlocked)
+        result = ownership_service.set_perk_ownership(user_id, perk_id, is_unlocked)
         return jsonify({"status": "success", "data": result}), 200
     except ValueError as ve:
         return api_error(str(ve), 404)

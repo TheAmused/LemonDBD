@@ -68,8 +68,20 @@ def remove_stale_avatar_file(avatar_url: str | None, avatar_dir: str, user_id: i
                 logger.warning(f"Could not remove old avatar {old_path}: {e}")
 
 
+#: Same cap as the profile page's file picker.
+MAX_AVATAR_BYTES = 10 * 1024 * 1024
+#: Refuse to decode anything bigger, whatever its file size: a small PNG can declare 13 000 x 13 000
+#: pixels and cost hundreds of MB of memory once converted (Pillow's own limit is ~178 MP).
+MAX_AVATAR_PIXELS = 40_000_000
+AVATAR_PROCESSING_FAILED = "The image could not be processed. Try a PNG, JPEG or WebP file."
+
+
 def process_and_save_avatar(user_id: int, file_storage) -> tuple[User | None, str | None]:
-    """Center-crops image to 1:1, resizes to 256x256, and saves in WebP format."""
+    """Center-crops image to 1:1, resizes to 256x256, and saves in WebP format.
+
+    The previous upload is deleted only after the new one is stored and saved on the account: it
+    used to be deleted first, so a corrupt file left the account pointing at a missing image.
+    """
     user = db.session.get(User, user_id)
     if not user:
         return None, "User not found."
@@ -82,7 +94,7 @@ def process_and_save_avatar(user_id: int, file_storage) -> tuple[User | None, st
         return None, f"Unsupported file type. Allowed: {', '.join(ALLOWED_EXTENSIONS)}"
 
     avatar_dir = get_avatar_storage_directory()
-    remove_stale_avatar_file(user.avatar_url, avatar_dir, user.id)
+    previous_avatar_url = user.avatar_url
 
     unique_id = f"u{user.id}_{int(time.time())}_{uuid.uuid4().hex[:6]}"
     new_filename = f"avatar_{unique_id}.webp"
@@ -91,8 +103,14 @@ def process_and_save_avatar(user_id: int, file_storage) -> tuple[User | None, st
     try:
         from PIL import Image, ImageOps
 
+        file_storage.stream.seek(0, os.SEEK_END)
+        if file_storage.stream.tell() > MAX_AVATAR_BYTES:
+            return None, "The image is larger than 10 MB."
         file_storage.stream.seek(0)
         image = Image.open(file_storage.stream)
+        width, height = image.size
+        if width * height > MAX_AVATAR_PIXELS:
+            return None, "The image is too large (more than 40 megapixels)."
         image = ImageOps.exif_transpose(image)
 
         if image.mode in ("RGBA", "LA") or (image.mode == "P" and "transparency" in image.info):
@@ -111,19 +129,23 @@ def process_and_save_avatar(user_id: int, file_storage) -> tuple[User | None, st
         resized = cropped.resize((256, 256), Image.Resampling.LANCZOS)
         resized.save(destination_path, format="WEBP", quality=90, method=4)
 
-        avatar_url = f"/api/v1/auth/avatar/file/{new_filename}"
+        avatar_url = f"{AVATAR_URL_PREFIX}{new_filename}"
         user.avatar_url = avatar_url
         db.session.commit()
-        return user, None
-
     except Exception as e:
         logger.error(f"Failed to process and save avatar for user {user_id}: {e}")
+        db.session.rollback()
         if os.path.exists(destination_path):
             try:
                 os.remove(destination_path)
             except Exception:
                 pass
-        return None, f"Failed to process image: {str(e)}"
+        # The exception text (library internals, paths) stays in the log.
+        return None, AVATAR_PROCESSING_FAILED
+
+    if previous_avatar_url != avatar_url:
+        remove_stale_avatar_file(previous_avatar_url, avatar_dir, user.id)
+    return user, None
 
 
 def clear_user_avatar(user_id: int) -> tuple[User | None, str | None]:

@@ -291,6 +291,7 @@ def update_profile():
 
 
 @auth_bp.route("/avatar", methods=["POST"])
+@limiter.limit("20 per hour")
 @login_required
 def upload_avatar():
     user = g.current_user

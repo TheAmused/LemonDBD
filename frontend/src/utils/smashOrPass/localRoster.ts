@@ -13,12 +13,9 @@
  */
 import type { EntityItem, EntityMetadata, RosterItem, SmashRosterDocumentEntity, StoredCustomRoster } from '@/types/smashOrPass';
 import { defaultRosterThemeColor } from '@/utils/smashOrPass/constants';
+import { LOCAL_ROSTER_PREFIX, isLocalRosterSlug } from '@/utils/smashOrPass/rosterSlug';
 
-const LOCAL_ROSTER_PREFIX = 'local:';
-
-export function isLocalRosterSlug(slug: string | undefined | null): boolean {
-  return typeof slug === 'string' && slug.startsWith(LOCAL_ROSTER_PREFIX);
-}
+export { isLocalRosterSlug };
 
 export function localRosterIdFromSlug(slug: string): string {
   return slug.slice(LOCAL_ROSTER_PREFIX.length);

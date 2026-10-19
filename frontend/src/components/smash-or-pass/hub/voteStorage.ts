@@ -1,6 +1,6 @@
 // frontend/src/components/smash-or-pass/hub/voteStorage.ts
 import type { EntityItem } from '@/types/smashOrPass';
-import { isLocalRosterSlug } from '@/utils/smashOrPass/localRoster';
+import { isLocalRosterSlug } from '@/utils/smashOrPass/rosterSlug';
 
 /** One persisted vote; older saves put the slug on the vote itself instead of on `character`. */
 export type StoredVote = {

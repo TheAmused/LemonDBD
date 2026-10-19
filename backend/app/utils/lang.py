@@ -28,7 +28,8 @@ def extract_lang(req: Any = None) -> str | None:
     r = req if req is not None else request
     lang = r.args.get("lang")
     if lang:
-        return lang.strip().lower()
+        normalized = lang.strip().lower()
+        return normalized if normalized in SUPPORTED_LANGS else SOURCE_LOCALE
 
     referer = r.headers.get("Referer", "")
     if referer:

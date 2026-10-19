@@ -10,7 +10,7 @@ export const ADMIN_ONLY_SEGMENTS: readonly string[] = ['minigames', 'achievement
  * The admin panel itself. The panel's API is admin-only anyway; gating the page on the server too
  * means non-admins are not even served its HTML (they get the Forbidden page).
  */
-export const ADMIN_PANEL_SEGMENTS: readonly string[] = ['admin'];
+const ADMIN_PANEL_SEGMENTS: readonly string[] = ['admin'];
 
 function leadingSegments(pathname: string): [string | undefined, string | undefined] {
   let decoded = pathname;

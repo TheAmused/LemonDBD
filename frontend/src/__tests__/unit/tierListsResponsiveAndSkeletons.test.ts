@@ -289,7 +289,8 @@ describe('Tier lists: CustomTierListCard', () => {
     assert.ok(html.includes('absolute top-3 right-3'), 'Delete button sits in the banner top-right');
     assert.ok(html.includes('Updated '), 'Updated label must render');
     assert.ok(html.indexOf('aria-label="Delete') < html.indexOf('Updated '), 'Updated label stays in the footer, below the banner');
-    assert.ok(html.includes('banner_custom_default.webp'), 'Must fallback to default custom banner');
+    // One of the three default covers, picked from the list id (164cd92c).
+    assert.match(html, /banner_custom_default_[123]\.webp/, 'Must fallback to a default custom banner');
   });
 
   it('renders correctly in disabled mode without navigation link or delete button', () => {

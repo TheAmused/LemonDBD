@@ -71,9 +71,13 @@ def import_users(
             else:
                 if not email_conflict:
                     user_obj.email = candidate_email
+                previous_hash = user_obj.password_hash
                 for field in ["password_hash", "role", "avatar_url", "is_active", "is_verified"]:
                     if field in row and row[field] is not None:
                         setattr(user_obj, field, row[field])
+                if user_obj.password_hash != previous_hash:
+                    # A new password signs out every session issued under the old one, as a reset does.
+                    user_obj.token_version = int(user_obj.token_version or 0) + 1
                 if row.get("login") and row.get("username"):
                     user_obj.username = row["username"]
                 if login in ("lemon", "user"):

@@ -99,3 +99,18 @@ test('computeEligiblePool + buildDrawnSlots together: sorting by name is exactly
   assert.strictEqual(slots[0].page, 1);
   assert.strictEqual(slots[0].slot, 1); // Alpha Perk is index 0 after sorting
 });
+
+test('pickRandomLoadout used by wheel: pool with 16 perks (15 on page 1, 1 on page 2) selects the 16th perk fairly (~1/16)', () => {
+  const pool = makePool(16);
+  const counts: Record<string, number> = {};
+  const trials = 10000;
+  for (let i = 0; i < trials; i++) {
+    const [picked] = [pool[Math.floor(Math.random() * pool.length)]];
+    counts[picked.name] = (counts[picked.name] || 0) + 1;
+  }
+  // Expected fair share is 1/16 = 6.25% = 625 hits. It shouldn't be 25% or 33% like the old page-first wheel!
+  const lastPerkHits = counts['perk-015'] || 0;
+  const percentage = (lastPerkHits / trials) * 100;
+  assert.ok(percentage > 4 && percentage < 9, `Expected ~6.25% hits, got ${percentage}% (${lastPerkHits}/${trials})`);
+});
+

@@ -185,4 +185,5 @@ export default {
   modeSlotTooltip: "Tira de la palanca y bloquea rodillos durante hasta 3 ciclos. Uno o dos rodillos pueden atascarse rotos, vuelve a tirar toda la máquina para despejarlos.",
   modeTarotTooltip: "Baraja el mazo y voltea cartas para revelar tu equipo, un presagio a la vez.",
   modeCrateTooltip: "Abre una Ofrenda del Juicio para obtener un equipo aleatorio de una sola vez.",
+  loadError: "No se pudo cargar el catálogo de habilidades.",
 } as const;

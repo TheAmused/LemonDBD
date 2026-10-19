@@ -2,7 +2,7 @@
 import logging
 import secrets
 from datetime import datetime, timezone
-from sqlalchemy import func, or_, select
+from sqlalchemy import func, or_, select, update
 
 from app.core.account_state import AccountBlockedError, is_blocked
 from app.core.db_retry import retry_on_transient_db_error
@@ -15,7 +15,7 @@ from app.core.security import (
     hash_password,
     verify_password,
 )
-from app.models import User
+from app.models import BugReport, User
 from app.services import ban_list
 from app.services.mail_service import send_password_reset_email, send_verification_email
 from app.services.site_settings import (
@@ -130,6 +130,23 @@ def create_user_account(
     return new_user, None
 
 
+def claim_guest_bug_reports(user: User) -> int:
+    """Attach the guest bug reports filed with `user.email` to `user`; returns how many.
+
+    Only call this once the address is proven (a verification code was just consumed): the email a
+    guest types is otherwise all that ties a report to a person.
+    """
+    if not user.email:
+        return 0
+    result = db.session.execute(
+        update(BugReport)
+        .where(BugReport.user_id.is_(None), func.lower(BugReport.reporter_email) == user.email.lower())
+        .values(user_id=user.id)
+        .execution_options(synchronize_session=False)
+    )
+    return int(result.rowcount or 0)
+
+
 def verify_email_code(email: str, code: str) -> tuple[User | None, str | None]:
     """Consume a verification code and mark the matching user as verified."""
     clean_email = (email or "").strip().lower()
@@ -163,8 +180,11 @@ def verify_email_code(email: str, code: str) -> tuple[User | None, str | None]:
         user.verification_code = None
         user.verification_code_expires_at = None
         user.verification_attempts = 0
+        claimed = claim_guest_bug_reports(user)
 
     logger.info(f"User '{user.login}' verified their email.")
+    if claimed:
+        logger.info(f"User '{user.login}' claimed {claimed} guest bug report(s) filed with their address.")
     return user, None
 
 

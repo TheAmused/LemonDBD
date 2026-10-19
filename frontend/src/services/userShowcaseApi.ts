@@ -1,7 +1,7 @@
 // frontend/src/services/userShowcaseApi.ts
 'use client';
 
-import { PLAYER_TITLES, type UserShowcaseState } from '@/types/userShowcase';
+import { DEFAULT_SHOWCASE_STATE, GRADE_EMBLEMS, PLAYER_TITLES, type UserShowcaseState } from '@/types/userShowcase';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 import { ApiError, authHeaders, getAuthToken, type ApiErrorBody } from '@/utils/api';
 
@@ -42,23 +42,31 @@ export function mapBackendToShowcaseState(raw: unknown): UserShowcaseState {
   const sPerks = Array.isArray(data.survivor_main?.perk_ids) ? data.survivor_main.perk_ids : [];
   const kPerks = Array.isArray(data.killer_main?.perk_ids) ? data.killer_main.perk_ids : [];
 
+  // One set of defaults and bounds (DEFAULT_SHOWCASE_STATE, 0-99 / 0-100), the same ones the
+  // backend and `mergeShowcaseState` use; this used to fall back to a title the picker doesn't offer.
+  const D = DEFAULT_SHOWCASE_STATE;
+  const bounded = (value: unknown, max: number, fallback: number) =>
+    typeof value === 'number' && Number.isFinite(value) ? Math.max(0, Math.min(max, Math.round(value))) : fallback;
   return {
     playerTitle:
       typeof data.player_title === 'string' && (PLAYER_TITLES as readonly string[]).includes(data.player_title)
         ? data.player_title
-        : 'The Camper',
-    devotionLevel: typeof data.devotion_level === 'number' ? Math.max(1, Math.min(99, data.devotion_level)) : 14,
-    gradeRank: typeof data.grade_rank === 'string' && data.grade_rank ? data.grade_rank : 'Iridescent I',
+        : D.playerTitle,
+    devotionLevel: bounded(data.devotion_level, 99, D.devotionLevel),
+    gradeRank:
+      typeof data.grade_rank === 'string' && (GRADE_EMBLEMS as readonly string[]).includes(data.grade_rank)
+        ? data.grade_rank
+        : D.gradeRank,
     survivorMain: {
-      characterName: data.survivor_main?.character_name || 'Feng Min',
+      characterName: data.survivor_main?.character_name || D.survivorMain.characterName,
       ...characterIdField(data.survivor_main?.character_id),
-      prestige: typeof data.survivor_main?.prestige === 'number' ? Math.max(1, Math.min(100, data.survivor_main.prestige)) : 9,
+      prestige: bounded(data.survivor_main?.prestige, 100, D.survivorMain.prestige),
       perkIds: [0, 1, 2, 3].map((i) => (typeof sPerks[i] === 'number' ? sPerks[i] : null)),
     },
     killerMain: {
-      characterName: data.killer_main?.character_name || 'The Blight',
+      characterName: data.killer_main?.character_name || D.killerMain.characterName,
       ...characterIdField(data.killer_main?.character_id),
-      prestige: typeof data.killer_main?.prestige === 'number' ? Math.max(1, Math.min(100, data.killer_main.prestige)) : 7,
+      prestige: bounded(data.killer_main?.prestige, 100, D.killerMain.prestige),
       perkIds: [0, 1, 2, 3].map((i) => (typeof kPerks[i] === 'number' ? kPerks[i] : null)),
     },
   };
@@ -99,8 +107,10 @@ export async function fetchUserShowcase(
     ...authHeaders(token),
   };
 
+  // Self or admin only: the session cookie has to go with it.
   const res = await fetch(`${apiBase()}/api/v1/users/${userId}/showcase?_t=${Date.now()}`, {
     headers,
+    credentials: 'include',
     signal,
   });
 

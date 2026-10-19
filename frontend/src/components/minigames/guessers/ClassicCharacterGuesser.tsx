@@ -21,7 +21,7 @@ export const ClassicCharacterGuesser: React.FC<ClassicCharacterGuesserProps> = (
   const t = dict.minigames;
 
   return (
-    <div className="w-full overflow-x-auto pb-4 my-6">
+    <div className="w-full max-h-list overflow-y-auto overflow-x-auto pb-4 my-6 rounded-card border border-border-color bg-bg-surface/30">
       <table className="w-full min-w-175 border-separate border-spacing-2 text-center select-none">
         <thead>
           <tr className="type-label-sm text-text-muted">

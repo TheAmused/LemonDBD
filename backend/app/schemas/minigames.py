@@ -6,20 +6,18 @@ from pydantic import BaseModel, Field
 
 
 class MinigameGuessSubmissionDTO(BaseModel):
-    guess_id: Any = Field(...)
+    guess_id: int | str | None = None
     challenge_id: int | str | None = None
-    challenge_type: Literal["daily", "repeatable"] = "daily"
-    round_index: int = 0
-    guess_type: str = "killer"
-    attempt_number: int = 1
+    #: "custom" = a trial that only exists in the player's browser; graded against
+    #: `custom_round_config`. Official challenges are graded against the stored round.
+    challenge_type: Literal["daily", "repeatable", "custom"] = "daily"
+    round_index: int = Field(default=0, ge=0, le=100)
+    guess_type: str = Field(default="killer", max_length=20)
+    attempt_number: int = Field(default=1, ge=1, le=100)
+    #: Ends the round without a guess and returns the answer.
+    give_up: bool = False
     custom_round_config: dict[str, Any] | None = None
     custom_round: dict[str, Any] | None = None
-
-
-class MinigameScoreSubmissionDTO(BaseModel):
-    game_mode: str = "classic"
-    won: bool = False
-    attempts_taken: int | None = None
 
 
 class MinigameOfficialCreateDTO(BaseModel):

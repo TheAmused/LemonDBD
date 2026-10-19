@@ -14,6 +14,17 @@ class UserBase(BaseModel):
     is_verified: bool = False
 
 
+class UserRegister(BaseModel):
+    """What a visitor may send to `POST /auth/register`. There is deliberately no `role` (or
+    `avatar_url`): those are for admins creating accounts (`UserCreate`), and accepting them here
+    let anyone sign up as an admin."""
+
+    login: str = Field(..., min_length=3, max_length=50, pattern=r"^[^@\s]+$")
+    username: str = Field(..., min_length=3, max_length=50)
+    email: EmailStr
+    password: str = Field(..., min_length=6)
+
+
 class UserCreate(BaseModel):
     login: str = Field(..., min_length=3, max_length=50, pattern=r"^[^@\s]+$")
     username: str = Field(..., min_length=3, max_length=50)
@@ -30,6 +41,8 @@ class UserUpdate(BaseModel):
     role: str | None = None
     is_active: bool | None = None
     is_verified: bool | None = None
+    #: The acting admin's own password: required to take the admin role from another admin.
+    current_password: str | None = Field(None, max_length=200)
 
 
 class UserResponse(UserBase):

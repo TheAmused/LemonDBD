@@ -114,6 +114,10 @@ export function RosterCarouselCard({
       <img
         src={coverUrl}
         alt=""
+        loading="lazy"
+        decoding="async"
+        draggable={false}
+        onContextMenu={(e) => e.preventDefault()}
         onError={(e) => {
           const target = e.target as HTMLImageElement;
           if (!target.dataset.triedFallback) {

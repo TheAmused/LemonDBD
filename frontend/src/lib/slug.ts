@@ -44,6 +44,25 @@ export function getAvatarSubdir(role: string): 'killers' | 'survivors' {
   return role.toLowerCase() === 'survivor' ? 'survivors' : 'killers';
 }
 
+/**
+ * The path segment of a character page from a name: `"The Trapper"` -> `the_trapper`. Mirrors the
+ * backend's `app.models.slug.url_slug`. Only meaningful for the canonical English name: prefer
+ * `characterSlug(char)`, which uses the `slug` the API sends (a translated name such as a Japanese
+ * one has no a-z left and would give an empty segment).
+ */
 export function getCharacterSlug(name: string): string {
-  return slugify(name);
+  return name
+    .toLowerCase()
+    .trim()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[\s\-/]+/g, '_')
+    .replace(/[^a-z0-9_]/g, '')
+    .replace(/_+/g, '_')
+    .replace(/^_+|_+$/g, '');
+}
+
+/** A character's page segment: the API's `slug` (from the English name), else one built from `name`. */
+export function characterSlug(char: { slug?: string | null; name: string }): string {
+  return char.slug || getCharacterSlug(char.name);
 }

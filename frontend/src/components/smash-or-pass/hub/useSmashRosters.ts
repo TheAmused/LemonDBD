@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSmashRosterStore } from '@/hooks/useSmashRosterStore';
 import { fetchRosters } from '@/services/smashApi';
 import type { RosterItem } from '@/types/smashOrPass';
-import { acknowledgeNsfwRoster, hasAcknowledgedNsfwRoster, useGlobalNsfwPreference } from '@/utils/nsfwAck';
+import { useGlobalNsfwPreference } from '@/utils/nsfwAck';
 import { defaultRosterThemeColor } from '@/utils/smashOrPass/constants';
 import {
   customRosterToRosterItem,
@@ -39,7 +39,6 @@ export function useSmashRosters(locale: string) {
   const [rosterSwitchEffect, setRosterSwitchEffect] = useState<string | null>(null);
 
   const [globalNsfw, setGlobalNsfw] = useGlobalNsfwPreference();
-  const [nsfwAcknowledgedState, setNsfwAcknowledged] = useState<boolean>(false);
 
   const allRosters = useMemo<RosterItem[]>(() => {
     const local = Object.values(customRosterStore.custom).map(customRosterToRosterItem);
@@ -51,7 +50,9 @@ export function useSmashRosters(locale: string) {
     [allRosters, selectedRosterSlug]
   );
 
-  const nsfwAcknowledged = globalNsfw || nsfwAcknowledgedState || hasAcknowledgedNsfwRoster(activeRoster.slug);
+  // The global NSFW switch is the only answer (see hooks/useNsfwGate.ts): the gate's confirm turns
+  // it on, and turning it off gates every NSFW roster again.
+  const nsfwAcknowledged = globalNsfw;
 
   /** A local roster offers the roles/genders its own entities use; official ones the standard set. */
   const distinctOf = useCallback(
@@ -75,28 +76,20 @@ export function useSmashRosters(locale: string) {
     [distinctOf]
   );
 
-  // Re-check acknowledgment whenever the active roster changes (including on first mount for
-  // whatever roster was restored from localStorage).
-  useEffect(() => {
-    setNsfwAcknowledged(hasAcknowledgedNsfwRoster(activeRoster.slug));
-  }, [activeRoster.slug]);
+  const handleAcknowledgeNsfw = useCallback(() => setGlobalNsfw(true), [setGlobalNsfw]);
 
-  const handleAcknowledgeNsfw = useCallback(() => {
-    acknowledgeNsfwRoster(activeRoster.slug);
-    setNsfwAcknowledged(true);
-    setGlobalNsfw(true);
-  }, [activeRoster.slug, setGlobalNsfw]);
-
+  // NSFW rosters are only listed once the viewer has NSFW on (each still opens behind the gate's
+  // logic above); switching it on refetches so they appear.
   const loadRosters = useCallback(async () => {
     try {
-      const rosterList = await fetchRosters();
+      const rosterList = await fetchRosters(globalNsfw);
       if (rosterList && rosterList.length > 0) {
         setRosters(rosterList);
       }
     } catch {
       // Best-effort: failure here is non-fatal.
     }
-  }, []);
+  }, [globalNsfw]);
 
   useEffect(() => {
     loadRosters();

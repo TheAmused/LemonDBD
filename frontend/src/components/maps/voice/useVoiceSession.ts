@@ -317,6 +317,7 @@ export function useVoiceSession({
         );
 
       if (match) {
+        liveTranscriptRef.current = '';
         executeMatch(match);
         return;
       } else {

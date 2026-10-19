@@ -185,4 +185,5 @@ export default {
   modeSlotTooltip: "Ziehe den Hebel und sperre Walzen über bis zu 3 Zyklen. Ein oder zwei Walzen können defekt blockieren, drehe die ganze Maschine neu, um sie zu beheben.",
   modeTarotTooltip: "Mische das Deck und decke Karten auf, um dein Loadout nach und nach zu enthüllen.",
   modeCrateTooltip: "Öffne eine Prüfungsgabe für ein zufälliges Loadout auf einen Schlag.",
+  loadError: "Talente-Katalog konnte nicht geladen werden.",
 } as const;

@@ -16,6 +16,8 @@ logger = logging.getLogger(__name__)
 #: After a failed download the wiki is left alone for this long.
 FAILURE_BACKOFF_SECONDS = 300
 DOWNLOAD_TIMEOUT_SECONDS = 12
+#: Largest track the cache will store. Real tracks are 1-4 MB; anything bigger never lands on disk.
+MAX_TRACK_BYTES = 15 * 1024 * 1024
 
 _USER_AGENT = (
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
@@ -49,7 +51,9 @@ def _download(url: str, destination: str) -> None:
     partial = f"{destination}.{os.getpid()}.{threading.get_ident()}.tmp"
     try:
         with urllib.request.urlopen(request, timeout=DOWNLOAD_TIMEOUT_SECONDS) as response:
-            data = response.read()
+            data = response.read(MAX_TRACK_BYTES + 1)
+        if len(data) > MAX_TRACK_BYTES:
+            raise ChaseMusicUnavailable("the wiki returned a file larger than 15 MB")
         if not data:
             raise ChaseMusicUnavailable("the wiki returned an empty file")
         with open(partial, "wb") as handle:

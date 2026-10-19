@@ -2,6 +2,7 @@
 import type {
   MinigameCatalog,
   ChallengeDefinition,
+  ChallengeSource,
   GuessEvaluationResult,
   RoundConfig,
 } from '@/types/minigame';
@@ -74,12 +75,15 @@ export async function fetchRepeatableChallenge(
 
 export interface SubmitGuessParams {
   challenge_id?: number | string;
+  /** Official challenges are graded against the round the server stored; only a custom trial sends its round. */
+  challenge_type: ChallengeSource;
   round_index: number;
   guess_id?: number | string;
   guess_type?: string;
-  guess_name?: string;
   custom_round_config?: RoundConfig;
   attempt_number?: number;
+  /** Ends the round and asks for the answer. */
+  give_up?: boolean;
 }
 
 export async function submitGuess(params: SubmitGuessParams): Promise<GuessEvaluationResult> {

@@ -16,12 +16,14 @@ import {
 } from 'lucide-react';
 import type {
   ChallengeDefinition,
+  ChallengeSource,
   MinigameCatalog,
   GuessRecord,
   RoundConfig,
   TargetType,
 } from '@/types/minigame';
 import { submitGuess } from '@/services/minigameApi';
+import { answerName, guessTargetType, type RevealedAnswer } from '@/utils/minigames/roundAnswers';
 import { soundEngine } from '@/utils/minigames/MinigameSoundEngine';
 import {
   getChallengeProgress,
@@ -51,9 +53,15 @@ interface ChallengeRunnerProps {
   challenge: ChallengeDefinition;
   catalog: MinigameCatalog;
   locale: string;
+  /**
+   * Official (daily/repeatable) guesses are graded by the server against the round it stored, and
+   * the answer only comes back once the round is over. A custom trial exists only in this browser,
+   * so its round travels with each guess.
+   */
+  source: ChallengeSource;
 }
 
-export const ChallengeRunner: React.FC<ChallengeRunnerProps> = ({ challenge, catalog, locale }) => {
+export const ChallengeRunner: React.FC<ChallengeRunnerProps> = ({ challenge, catalog, locale, source }) => {
   const dict = useDictionary();
   const t = dict.minigames;
   const challengeId = challenge.id || 'default_trial';
@@ -63,7 +71,8 @@ export const ChallengeRunner: React.FC<ChallengeRunnerProps> = ({ challenge, cat
   const [roundStatus, setRoundStatus] = useState<Record<number, 'in_progress' | 'won' | 'lost'>>({});
   const [isFinished, setIsFinished] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [revealedAnswers, setRevealedAnswers] = useState<Record<number, string>>({});
+  const [revealedAnswers, setRevealedAnswers] = useState<Record<number, RevealedAnswer>>({});
+  const [guessError, setGuessError] = useState<boolean>(false);
 
   // Restore saved progress on mount
   useEffect(() => {
@@ -73,6 +82,7 @@ export const ChallengeRunner: React.FC<ChallengeRunnerProps> = ({ challenge, cat
       setRoundGuesses(saved.roundGuesses || {});
       setRoundStatus(saved.roundStatus || {});
       setIsFinished(saved.isFinished || false);
+      setRevealedAnswers(saved.revealedAnswers || {});
     }
   }, [challengeId]);
 
@@ -86,40 +96,7 @@ export const ChallengeRunner: React.FC<ChallengeRunnerProps> = ({ challenge, cat
   const attemptsRemaining = Math.max(0, maxAttempts - currentGuesses.length);
 
   // Target type determination for autocomplete
-  const activeTargetType = useMemo<TargetType>(() => {
-    const mode = currentRound.mode;
-    if (mode === 'realm_guesser' || (mode as string) === 'realm') return 'realm';
-    if (
-      mode === 'classic_perk' ||
-      mode === 'perk_icon' ||
-      mode === 'perk_distortion' ||
-      (mode as string) === 'perk'
-    )
-      return 'perk';
-    if (
-      mode === 'classic_killer' ||
-      mode === 'killer_power' ||
-      (mode as string) === 'power' ||
-      mode === 'terror_radius' ||
-      (mode as string) === 'audio'
-    )
-      return 'killer';
-    if (mode === 'quote_lore' || (mode as string) === 'quote') {
-      return (currentRound.target_type as TargetType) || 'character';
-    }
-    if (
-      mode === 'classic_character' ||
-      mode === 'classic' ||
-      mode === 'pixel_avatar' ||
-      (mode as string) === 'pixel' ||
-      mode === 'voice_line' ||
-      mode === 'hook_scream' ||
-      mode === 'emoji_riddle'
-    ) {
-      return 'character';
-    }
-    return (currentRound.target_type as TargetType) || 'character';
-  }, [currentRound]);
+  const activeTargetType = useMemo<TargetType>(() => guessTargetType(currentRound), [currentRound]);
 
   // Excluded keys (already guessed in current round, scoped by role:id to avoid collisions)
   const excludeKeys = useMemo(() => {
@@ -134,7 +111,8 @@ export const ChallengeRunner: React.FC<ChallengeRunnerProps> = ({ challenge, cat
       newIndex: number,
       newGuesses: Record<number, GuessRecord[]>,
       newStatus: Record<number, 'in_progress' | 'won' | 'lost'>,
-      finished: boolean
+      finished: boolean,
+      answers: Record<number, RevealedAnswer> = revealedAnswers
     ) => {
       saveChallengeProgress({
         challengeId,
@@ -144,44 +122,37 @@ export const ChallengeRunner: React.FC<ChallengeRunnerProps> = ({ challenge, cat
         isFinished: finished,
         won: Object.values(newStatus).every((s) => s === 'won'),
         startedAt: Date.now(),
+        revealedAnswers: answers,
       });
     },
-    [challengeId]
+    [challengeId, revealedAnswers]
   );
 
   const getTargetAnswerName = useCallback(
-    (round: RoundConfig): string => {
-      const mode = round.mode;
-      const tId = round.target_id;
-      if (!tId) return 'Unknown';
+    (round: RoundConfig, revealed?: RevealedAnswer): string => answerName(round, catalog, t, revealed),
+    [catalog, t]
+  );
 
-      if (mode === 'realm_guesser' || round.target_type === 'realm') {
-        const found = (catalog.realms || []).find((r) => r.id === tId);
-        return found ? found.name : `Realm #${tId}`;
-      }
+  /** The guess request for the current round: official rounds are graded by id, custom ones carry the round. */
+  const guessRequest = useCallback(
+    () => ({
+      challenge_id: challenge.id,
+      challenge_type: source,
+      round_index: currentRoundIndex,
+      ...(source === 'custom' ? { custom_round_config: currentRound } : {}),
+    }),
+    [challenge.id, source, currentRoundIndex, currentRound]
+  );
 
-      if (
-        mode === 'classic_perk' ||
-        mode === 'perk_icon' ||
-        mode === 'perk_distortion' ||
-        round.target_type === 'perk'
-      ) {
-        const found = (catalog.perks || []).find((p) => p.id === tId);
-        return found ? found.name : `Perk #${tId}`;
-      }
-
-      // Characters
-      const allChars = (catalog.killers || []).concat(catalog.survivors || []);
-      const match =
-        allChars.find(
-          (c) =>
-            c.id === tId &&
-            (!round.target_type || c.role?.toLowerCase() === round.target_type?.toLowerCase())
-        ) || allChars.find((c) => c.id === tId);
-
-      return match ? match.name : `Character #${tId}`;
+  /** A daily's streak is settled once, when its last round is over: won only if every round was. */
+  const settleDaily = useCallback(
+    (statuses: Record<number, 'in_progress' | 'won' | 'lost'>) => {
+      if (!challenge.challenge_date || source !== 'daily') return;
+      const allWon = rounds.every((_, idx) => statuses[idx] === 'won');
+      if (allWon) recordDailyCompletion(challenge.challenge_date);
+      else recordDailyLoss(challenge.challenge_date);
     },
-    [catalog]
+    [challenge.challenge_date, source, rounds]
   );
 
   const handleSelectGuess = async (item: AutocompleteItem) => {
@@ -197,14 +168,12 @@ export const ChallengeRunner: React.FC<ChallengeRunnerProps> = ({ challenge, cat
         : 'killer';
 
     setIsSubmitting(true);
+    setGuessError(false);
     try {
       const result = await submitGuess({
-        challenge_id: challenge.id,
-        round_index: currentRoundIndex,
+        ...guessRequest(),
         guess_id: item.id,
         guess_type: guessType,
-        guess_name: item.name,
-        custom_round_config: currentRound,
         attempt_number: currentGuesses.length + 1,
       });
 
@@ -221,10 +190,10 @@ export const ChallengeRunner: React.FC<ChallengeRunnerProps> = ({ challenge, cat
       const isCorrect = result.is_correct;
       const isExhausted = !isCorrect && currentGuesses.length + 1 >= maxAttempts;
 
-      if (isExhausted) {
-        const ans = getTargetAnswerName(currentRound);
-        setRevealedAnswers((prev) => ({ ...prev, [currentRoundIndex]: ans }));
-      }
+      const updatedAnswers = result.answer
+        ? { ...revealedAnswers, [currentRoundIndex]: result.answer }
+        : revealedAnswers;
+      if (result.answer) setRevealedAnswers(updatedAnswers);
 
       const newRoundStatus = {
         ...roundStatus,
@@ -243,30 +212,40 @@ export const ChallengeRunner: React.FC<ChallengeRunnerProps> = ({ challenge, cat
       // Check if this was the last round
       if ((isCorrect || isExhausted) && currentRoundIndex === rounds.length - 1) {
         setIsFinished(true);
-        if (challenge.challenge_date) {
-          const allWon = Object.values(newRoundStatus).every((s) => s === 'won');
-          if (allWon) {
-            recordDailyCompletion(challenge.challenge_date);
-          } else {
-            recordDailyLoss(challenge.challenge_date);
-          }
-        }
-        persistState(currentRoundIndex, updatedGuesses, newRoundStatus, true);
+        settleDaily(newRoundStatus);
+        persistState(currentRoundIndex, updatedGuesses, newRoundStatus, true, updatedAnswers);
       } else {
-        persistState(currentRoundIndex, updatedGuesses, newRoundStatus, false);
+        persistState(currentRoundIndex, updatedGuesses, newRoundStatus, false, updatedAnswers);
       }
     } catch (err) {
       console.error('Error evaluating guess:', err);
+      setGuessError(true);
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const handleGiveUp = () => {
-    if (isRoundOver) return;
+  const handleGiveUp = async () => {
+    if (isRoundOver || isSubmitting) return;
 
-    const ans = getTargetAnswerName(currentRound);
-    setRevealedAnswers((prev) => ({ ...prev, [currentRoundIndex]: ans }));
+    // An official round's answer is only on the server; a custom round carries its own.
+    let answer: RevealedAnswer = { target_type: currentRound.target_type, target_id: currentRound.target_id };
+    if (source !== 'custom') {
+      setIsSubmitting(true);
+      try {
+        const result = await submitGuess({ ...guessRequest(), give_up: true });
+        if (result.answer) answer = result.answer;
+      } catch (err) {
+        console.error('Error giving up the round:', err);
+        setGuessError(true);
+        setIsSubmitting(false);
+        return;
+      }
+      setIsSubmitting(false);
+    }
+
+    const updatedAnswers = { ...revealedAnswers, [currentRoundIndex]: answer };
+    setRevealedAnswers(updatedAnswers);
 
     const newRoundStatus = {
       ...roundStatus,
@@ -274,15 +253,12 @@ export const ChallengeRunner: React.FC<ChallengeRunnerProps> = ({ challenge, cat
     };
     setRoundStatus(newRoundStatus);
 
-    if (challenge.challenge_date) {
-      recordDailyLoss(challenge.challenge_date);
-    }
-
     if (currentRoundIndex === rounds.length - 1) {
       setIsFinished(true);
-      persistState(currentRoundIndex, roundGuesses, newRoundStatus, true);
+      settleDaily(newRoundStatus);
+      persistState(currentRoundIndex, roundGuesses, newRoundStatus, true, updatedAnswers);
     } else {
-      persistState(currentRoundIndex, roundGuesses, newRoundStatus, false);
+      persistState(currentRoundIndex, roundGuesses, newRoundStatus, false, updatedAnswers);
     }
   };
 
@@ -527,7 +503,7 @@ export const ChallengeRunner: React.FC<ChallengeRunnerProps> = ({ challenge, cat
                 <div>{isRoundSolved ? t.victoryTitle : t.defeatTitle}</div>
                 {!isRoundSolved && (
                   <div className="type-strong text-accent-red mt-1">
-                    {formatMessage(t.revealAnswerNotice, { answer: revealedAnswers[currentRoundIndex] || getTargetAnswerName(currentRound) })}
+                    {formatMessage(t.revealAnswerNotice, { answer: getTargetAnswerName(currentRound, revealedAnswers[currentRoundIndex]) })}
                   </div>
                 )}
               </div>
@@ -554,11 +530,18 @@ export const ChallengeRunner: React.FC<ChallengeRunnerProps> = ({ challenge, cat
             </div>
           )}
 
+          {guessError && (
+            <p role="alert" className="type-strong text-accent-red text-center mb-2">
+              {t.guessFailed}
+            </p>
+          )}
+
           {/* Give up button (when in progress) */}
           {!isRoundOver && (
             <Button
               type="button"
-              onClick={handleGiveUp}
+              onClick={() => void handleGiveUp()}
+              disabled={isSubmitting}
               variant="linkMuted" size="sm"
             >
               {t.skipOrReveal}

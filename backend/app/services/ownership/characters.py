@@ -107,7 +107,7 @@ def fetch_user_characters(
 
     result = []
     for role_key, row in rows:
-        data = row.to_dict(lang=lang)
+        data = row.to_list_dict(lang=lang)
         # No user means the catalogue view, where everything reads as owned.
         data["is_owned"] = owned.get((role_key, row.id), True) if user_id else True
         data["is_free"] = row.id in _FREE_BY_ROLE[role_key]
@@ -187,44 +187,117 @@ def mutate_character_ownership(
     return result
 
 
+#: More rows than any roster has; a longer list is a malformed (or abusive) request.
+MAX_BULK_UPDATES = 1000
+
+
+def positive_id(value: Any) -> int | None:
+    """`7`, `"7"` -> 7; anything else (bools, floats, negatives, junk) -> None."""
+    if isinstance(value, bool):
+        return None
+    if isinstance(value, int):
+        return value if value > 0 else None
+    if isinstance(value, str) and value.strip().isdigit():
+        number = int(value.strip())
+        return number if number > 0 else None
+    return None
+
+
 def bulk_mutate_character_ownership(
     user_id: int,
     updates: list[dict[str, Any]],
     summary_fn: Callable[[int | None], dict[str, Any]],
 ) -> dict[str, Any]:
-    """Apply many ownership changes in one transaction.
+    """Apply many ownership changes in one transaction, with a fixed number of queries.
 
-    Each update needs `role` alongside `character_id`; an update without one
-    is skipped rather than guessed at, because the same id exists on both
-    sides and guessing would silently unlock the wrong character.
+    Raises ValueError for a malformed request (not a list of objects, too long). Inside a
+    well-formed one, an update without a valid `role` is skipped rather than guessed at (the same
+    id exists on both sides), and one naming a character that does not exist is skipped too -- it
+    used to be inserted and hit the foreign key as a 500.
+
+    The old loop ran a get-or-create, a teachable-perks query and one query per perk for every
+    row (about 500 queries to seed a new account); this loads the user's rows, the characters and
+    their perks once per role.
     """
-    updated_count = 0
+    if not isinstance(updates, list) or len(updates) > MAX_BULK_UPDATES:
+        raise ValueError(f"updates must be a list of at most {MAX_BULK_UPDATES} objects.")
+    if not all(isinstance(item, dict) for item in updates):
+        raise ValueError("Each update must be an object {character_id, role, is_owned}.")
+
+    wanted: dict[tuple[str, int], bool] = {}
+    skipped: list[Any] = []
+    for item in updates:
+        character_id = positive_id(item.get("character_id"))
+        if character_id is None:
+            continue
+        try:
+            key = normalize_role(item.get("role"))
+        except ValueError:
+            skipped.append(item.get("character_id"))
+            continue
+        wanted[(key, character_id)] = bool(item.get("is_owned", True))  # the last one wins
+
+    existing_ids = {
+        role: set(db.session.scalars(
+            select(model.id).where(model.id.in_([cid for r, cid in wanted if r == role]))
+        ).all())
+        for role, model in _MODEL_BY_ROLE.items()
+    }
+    unknown = [cid for (role, cid) in wanted if cid not in existing_ids[role]]
+    wanted = {k: v for k, v in wanted.items() if k[1] in existing_ids[k[0]]}
+
+    updated_count = len(wanted)
     auto_unlocked = 0
     auto_locked = 0
-    skipped: list[Any] = []
-
     with transaction():
-        for item in updates:
-            character_id = item.get("character_id")
-            if not character_id:
-                continue
-            try:
-                key = normalize_role(item.get("role"))
-            except ValueError:
-                skipped.append(character_id)
-                continue
+        if wanted:
+            rows = {
+                _owned_key(row): row
+                for row in db.session.scalars(
+                    select(UserCharacterOwnership).where(UserCharacterOwnership.user_id == user_id)
+                ).all()
+            }
+            for (role, cid), is_owned in wanted.items():
+                row = rows.get((role, cid))
+                if row is not None:
+                    row.is_owned = is_owned
+                else:
+                    db.session.add(UserCharacterOwnership(
+                        user_id=user_id,
+                        survivor_id=cid if role == "survivor" else None,
+                        killer_id=cid if role == "killer" else None,
+                        is_owned=is_owned,
+                    ))
 
-            is_owned = bool(item.get("is_owned", True))
-            _get_or_create(user_id, key, int(character_id), is_owned)
-            updated_count += 1
-
-            cascade = _apply_perk_cascade(
-                user_id, _teachable_perks(key, int(character_id)), is_owned
-            )
-            if is_owned:
-                auto_unlocked += cascade
-            else:
-                auto_locked += cascade
+            perks: list[tuple[Perk, bool]] = []
+            for role, column in (("survivor", Perk.survivor_id), ("killer", Perk.killer_id)):
+                ids = [cid for (r, cid) in wanted if r == role]
+                if ids:
+                    for perk in db.session.scalars(select(Perk).where(column.in_(ids))).all():
+                        owner = perk.survivor_id if role == "survivor" else perk.killer_id
+                        perks.append((perk, wanted[(role, owner)]))
+            perk_rows = {
+                row.perk_id: row
+                for row in db.session.scalars(
+                    select(UserPerkOwnership).where(
+                        UserPerkOwnership.user_id == user_id,
+                        UserPerkOwnership.perk_id.in_([perk.id for perk, _ in perks]),
+                    )
+                ).all()
+            } if perks else {}
+            for perk, is_owned in perks:
+                # Same rule as `_apply_perk_cascade`: a generic counterpart is never locked.
+                if not is_owned and perk.is_generic_counterpart:
+                    continue
+                row = perk_rows.get(perk.id)
+                if row is not None:
+                    row.is_unlocked = is_owned
+                else:
+                    db.session.add(UserPerkOwnership(user_id=user_id, perk_id=perk.id, is_unlocked=is_owned))
+                if is_owned:
+                    auto_unlocked += 1
+                else:
+                    auto_locked += 1
 
     result = {
         "user_id": user_id,
@@ -236,6 +309,8 @@ def bulk_mutate_character_ownership(
     }
     if skipped:
         result["skipped_without_role"] = skipped
+    if unknown:
+        result["skipped_unknown"] = unknown
     return result
 
 

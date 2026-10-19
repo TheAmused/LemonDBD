@@ -35,7 +35,10 @@ export const PerkIconGuesser: React.FC<PerkIconGuesserProps> = ({ roundConfig, p
   return (
     <div className="w-full flex flex-col items-center my-6">
       {/* Distorted Perk Icon Frame */}
-      <div className="relative w-44 h-44 sm:w-52 sm:h-52 rounded-card overflow-hidden border-2 border-border-color shadow-2xl bg-bg-surface flex items-center justify-center">
+      <div
+        className="relative w-44 h-44 sm:w-52 sm:h-52 rounded-card overflow-hidden border-2 border-border-color shadow-2xl bg-bg-surface flex items-center justify-center select-none"
+        onContextMenu={(e) => e.preventDefault()}
+      >
         {imageUrl ? (
           <div
             className="relative w-32 h-32 sm:w-40 sm:h-40 transition-all duration-500 ease-out"
@@ -49,6 +52,7 @@ export const PerkIconGuesser: React.FC<PerkIconGuesserProps> = ({ roundConfig, p
               alt={targetPerk?.name || dict.minigames.modes.perk_icon}
               fill
               unoptimized
+              draggable={false}
               className="object-contain select-none pointer-events-none"
             />
           </div>
@@ -69,7 +73,7 @@ export const PerkIconGuesser: React.FC<PerkIconGuesserProps> = ({ roundConfig, p
 
       {/* Prior Guesses List */}
       {guesses.length > 0 && (
-        <div className="w-full max-w-md mt-6 space-y-2">
+        <div className="w-full max-w-md mt-6 space-y-2 max-h-80 overflow-y-auto pr-1">
           {guesses.map((g, idx) => {
             const isCorrect = g.evaluation.is_correct;
             return (

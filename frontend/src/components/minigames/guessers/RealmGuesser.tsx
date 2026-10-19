@@ -36,7 +36,10 @@ export const RealmGuesser: React.FC<RealmGuesserProps> = ({ roundConfig, realms,
   return (
     <div className="w-full flex flex-col items-center my-6">
       {/* Visual Realm Cropped Frame */}
-      <div className="relative w-full max-w-xl h-64 sm:h-80 rounded-card overflow-hidden border-2 border-border-color shadow-2xl bg-bg-surface flex items-center justify-center">
+      <div
+        className="relative w-full max-w-xl h-64 sm:h-80 rounded-card overflow-hidden border-2 border-border-color shadow-2xl bg-bg-surface flex items-center justify-center select-none"
+        onContextMenu={(e) => e.preventDefault()}
+      >
         <div
           className="relative w-full h-full transition-transform duration-700 ease-out origin-center"
           style={{
@@ -48,6 +51,7 @@ export const RealmGuesser: React.FC<RealmGuesserProps> = ({ roundConfig, realms,
             alt={targetRealm?.name || dict.minigames.realmClueAlt}
             fill
             unoptimized
+            draggable={false}
             className="object-cover select-none pointer-events-none"
           />
         </div>
@@ -66,7 +70,7 @@ export const RealmGuesser: React.FC<RealmGuesserProps> = ({ roundConfig, realms,
 
       {/* Prior Guesses List */}
       {guesses.length > 0 && (
-        <div className="w-full max-w-xl mt-6 space-y-2">
+        <div className="w-full max-w-xl mt-6 space-y-2 max-h-80 overflow-y-auto pr-1">
           {guesses.map((g, idx) => {
             const isCorrect = g.evaluation.is_correct;
             return (

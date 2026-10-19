@@ -49,6 +49,8 @@ class SurvivorResponse(BaseModel):
     role: str = "Survivor"
     category: str = "Survivor"
     code_prefix: str
+    #: The page's path segment, from the canonical English name (`app.models.slug.url_slug`).
+    slug: str = ""
     portrait_url: str | None = None
     real_name: str
     avatar_url: str = ""
@@ -125,6 +127,8 @@ class KillerResponse(BaseModel):
     role: str = "Killer"
     category: str = "Killer"
     code_prefix: str
+    #: The page's path segment, from the canonical English name (`app.models.slug.url_slug`).
+    slug: str = ""
     portrait_url: str | None = None
     real_name: str
     avatar_url: str = ""

@@ -4,7 +4,7 @@
 // The content-report queue: the filtered, paged list, the selected report's evidence, and its decision.
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { ADMIN_STORAGE, CONTENT_REPORT_FILTERS, oneOf } from '@/components/admin/adminStorage';
-import { DEFAULT_PAGE_SIZE } from '@/constants/pagination';
+import { DEFAULT_PAGE_SIZE, lastPage } from '@/constants/pagination';
 import { useDictionary } from '@/context/DictionaryContext';
 import { usePersistentString } from '@/hooks/usePersistentString';
 import { fetchContentReport, listContentReports, resolveContentReport } from '@/services/adminApi';
@@ -50,6 +50,10 @@ export function useAdminContentReports({ enabled, refreshKey, notify, onChanged 
       .then((data) => {
         if (cancelled) return;
         const list = data.items ?? [];
+        if (list.length === 0 && page > 1 && (data.total ?? 0) > 0) {
+          setPage(lastPage(data.total ?? 0, DEFAULT_PAGE_SIZE));
+          return;
+        }
         setItems(list);
         setStats(data.stats ?? null);
         setTotal(data.total ?? 0);

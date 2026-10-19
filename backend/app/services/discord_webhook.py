@@ -30,17 +30,33 @@ def webhook_url() -> str | None:
     return get_secret("discord_webhook_url") or None
 
 
+_MARKDOWN_SPECIALS = set("\\*_~`|>[]()#-")
+_ZERO_WIDTH_SPACE = "\u200b"
+
+
+def escape_markdown(text: str) -> str:
+    """A guest's text as plain text in Discord: markdown (masked links `[x](url)`, headings, spoilers)
+    escaped, and `@everyone` / `@here` / `<@id>` mentions broken so they can never ping."""
+    escaped = "".join(f"\\{ch}" if ch in _MARKDOWN_SPECIALS else ch for ch in str(text))
+    return escaped.replace("@", f"@{_ZERO_WIDTH_SPACE}")
+
+
+def _code_span(text: str) -> str:
+    """Inside a `code span` backslashes are literal, so a backtick is swapped for a look-alike instead."""
+    return "`" + str(text).replace("`", "\u02cb").replace("@", f"@{_ZERO_WIDTH_SPACE}") + "`"
+
+
 def bug_report_embed(report: dict[str, Any]) -> dict[str, Any]:
-    """The Discord embed announcing one bug report."""
+    """The Discord embed announcing one bug report. Everything the reporter typed is escaped."""
     report_id = report.get("id", 0)
     images = report.get("images", [])
     return {
-        "title": f"🚨 [Bug Report #{report_id}] {str(report.get('title') or 'Untitled')[:200]}",
-        "description": (report.get("message") or "No description provided.")[:1900],
+        "title": f"🚨 [Bug Report #{report_id}] {escape_markdown(str(report.get('title') or 'Untitled')[:200])}",
+        "description": escape_markdown((report.get("message") or "No description provided.")[:1900]),
         "color": _STATUS_COLORS.get(report.get("status", "pending"), _STATUS_COLORS["pending"]),
         "fields": [
-            {"name": "👤 Submitter", "value": f"`{report.get('reporter_name', 'Guest')}`", "inline": True},
-            {"name": "📧 Contact", "value": f"`{report.get('reporter_email') or 'Not Provided'}`", "inline": True},
+            {"name": "👤 Submitter", "value": _code_span(str(report.get("reporter_name", "Guest"))[:100]), "inline": True},
+            {"name": "📧 Contact", "value": _code_span(str(report.get("reporter_email") or "Not Provided")[:150]), "inline": True},
             {"name": "📌 Status", "value": f"**{str(report.get('status', 'pending')).upper()}**", "inline": True},
             {"name": "🆔 Ticket ID", "value": f"#{report_id}", "inline": True},
             {"name": "🖼️ Attachments", "value": f"{len(images)} screenshot(s)", "inline": True},
@@ -65,7 +81,8 @@ def post_embed(embed: dict[str, Any], url: str) -> int:
     """Send one embed; returns Discord's HTTP status. Raises on a network failure."""
     response = requests.post(
         url,
-        json={"username": "LemonDBD Bug Watcher", "embeds": [embed]},
+        # No mention in an announcement may ever ping anyone.
+        json={"username": "LemonDBD Bug Watcher", "embeds": [embed], "allowed_mentions": {"parse": []}},
         impersonate="chrome120",
         timeout=_TIMEOUT_SECONDS,
         headers={"Content-Type": "application/json"},

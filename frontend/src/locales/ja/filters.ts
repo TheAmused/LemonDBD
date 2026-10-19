@@ -33,4 +33,5 @@ export default {
   ownershipFilter: "所持状況で絞り込む",
   sortFields: "並べ替え項目",
   sortOrderLabel: "並べ替え順",
+  loadError: "パークの読み込みに失敗しました。",
 } as const;

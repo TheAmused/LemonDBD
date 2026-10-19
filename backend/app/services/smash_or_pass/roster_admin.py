@@ -171,12 +171,9 @@ class SmashRosterAdminMixin:
         bump_catalog_version()
         from app.seeds.smash_roster_seeder import ROSTERS_DIR
 
-        path = ROSTERS_DIR / f"{roster_slug}.json"
-        if path.exists():
-            try:
-                path.unlink()
-            except OSError as err:
-                logger.warning(f"Could not delete roster seed file {path}: {err}")
+        from app.seeds.writeback import remove_seed_file
+
+        remove_seed_file(ROSTERS_DIR / f"{roster_slug}.json")
         return True
 
     @staticmethod
@@ -271,7 +268,9 @@ class SmashRosterAdminMixin:
         db.session.add(new_term)
         try:
             db.session.commit()
-            bump_catalog_version()
+            # Only this list changed: drop its own entry. Bumping the catalog version here
+            # invalidated every catalog response site-wide for one new filter term.
+            redis_cache.delete("smash_or_pass:taxonomies")
         except Exception as e:
             db.session.rollback()
             logger.error("[smash_or_pass_service] Error registering taxonomy: %s", e)

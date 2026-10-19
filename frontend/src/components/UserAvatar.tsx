@@ -23,6 +23,23 @@ interface UserAvatarProps {
   alt?: string;
 }
 
+/**
+ * The `src` for an avatar value, or '' for the default picture.
+ *
+ * Only same-origin paths load (uploads are served from `/api/v1/auth/avatar/file/`), plus the
+ * local `blob:` preview of a file the user is uploading right now. A remote URL never does: avatars
+ * are shown in the admin user list, so any `https://` value would be a tracking pixel in every
+ * admin's browser.
+ */
+export function avatarImageSrc(value: string, isLocalPreview = false): string {
+  const v = value.trim();
+  if (!v || v === 'default_avatar') return '';
+  if (isLocalPreview && v.startsWith('blob:')) return v;
+  // No scheme (`https:`, `data:`, `javascript:`...) and no protocol-relative `//host`.
+  if (v.includes(':') || v.startsWith('//') || v.includes('\\')) return '';
+  return v.startsWith('/') ? v : `/${v}`;
+}
+
 const SIZE_MAP = {
   xs: {
     container: 'h-6 w-6 rounded-chip',
@@ -92,27 +109,8 @@ export const UserAvatar: React.FC<UserAvatarProps> = ({
     setImgError(false);
   }, [rawAvatarUrl]);
 
-  const isCustomAvatar =
-    Boolean(rawAvatarUrl) &&
-    rawAvatarUrl !== 'default_avatar' &&
-    rawAvatarUrl !== '' &&
-    !imgError;
-
-  let finalSrc = '';
-  if (isCustomAvatar && rawAvatarUrl) {
-    if (
-      rawAvatarUrl.startsWith('http://') ||
-      rawAvatarUrl.startsWith('https://') ||
-      rawAvatarUrl.startsWith('blob:') ||
-      rawAvatarUrl.startsWith('data:')
-    ) {
-      finalSrc = rawAvatarUrl;
-    } else if (rawAvatarUrl.startsWith('/')) {
-      finalSrc = rawAvatarUrl;
-    } else {
-      finalSrc = `/${rawAvatarUrl}`;
-    }
-  }
+  const finalSrc = rawAvatarUrl ? avatarImageSrc(rawAvatarUrl, Boolean(previewUrl)) : '';
+  const isCustomAvatar = finalSrc !== '' && !imgError;
 
   const defaultBorder =
     borderClassName ||

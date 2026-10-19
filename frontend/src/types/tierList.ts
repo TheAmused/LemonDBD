@@ -148,6 +148,11 @@ export interface StoredCustomList {
   /** Marked by the author as containing mature content. */
   is_nsfw?: boolean;
   _manifest?: ContentManifest | null;
+  /**
+   * The account that made it. Custom lists are only shown to that account (the browser may be
+   * shared); a list saved before this field existed is claimed by the first account to sign in.
+   */
+  ownerId?: number;
 }
 
 export interface TierListStoreState {

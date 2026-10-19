@@ -50,6 +50,8 @@ def normalize_search_key(text: str) -> str:
     """Normalize input text for fuzzy token matching and search indexing."""
     if not text:
         return ""
+    # Polish 'ł' does not decompose under NFKD into an ASCII letter + combining mark
+    text = text.replace("ł", "l").replace("Ł", "L")
     normalized = unicodedata.normalize("NFKD", text).encode("ASCII", "ignore").decode("utf-8")
     normalized = normalized.lower().strip()
     normalized = re.sub(r"[^a-z0-9]", " ", normalized)

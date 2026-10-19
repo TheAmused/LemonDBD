@@ -297,3 +297,26 @@ class TestLegendaryRosterIntegrity:
                 for text in loc_texts:
                     for phrase in forbidden_phrases:
                         assert phrase not in text, f"{slug}: locale '{locale}' text contains boilerplate phrase {phrase!r}"
+
+
+def test_seed_writeback_is_off_in_production_and_atomic(monkeypatch, tmp_path):
+    """2026-10-19 review L11: admin writes into seed files only where a checkout
+    will keep them, and never as a half-written file."""
+    from app.seeds import writeback
+
+    target = tmp_path / "x.json"
+    monkeypatch.setenv("SEED_WRITEBACK", "false")
+    assert writeback.write_seed_text(target, "{}") is False
+    assert not target.exists()
+
+    monkeypatch.setenv("SEED_WRITEBACK", "true")
+    assert writeback.write_seed_text(target, '{"a": 1}\n') is True
+    assert target.read_text() == '{"a": 1}\n'
+    assert [p.name for p in tmp_path.iterdir() if p.name.endswith(".tmp")] == []
+
+    monkeypatch.delenv("SEED_WRITEBACK")
+    monkeypatch.setattr(writeback, "_testing_app", lambda: False)
+    monkeypatch.setenv("FLASK_ENV", "production")
+    assert writeback.seed_writeback_enabled() is False
+    monkeypatch.setenv("FLASK_ENV", "development")
+    assert writeback.seed_writeback_enabled() is True

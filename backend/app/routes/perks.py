@@ -29,7 +29,7 @@ perks_bp = Blueprint("perks", __name__)
 
 #: Paging bounds shared by the view and the cache key.
 PERKS_DEFAULT_LIMIT = 50
-PERKS_MAX_LIMIT = 10000
+PERKS_MAX_LIMIT = 1000  # the catalog asks for limit=1000; the table has ~320 rows
 PERKS_MAX_PAGE = 10000
 SUGGESTIONS_MAX_LIMIT = 50
 
@@ -40,11 +40,7 @@ _TEXT = norm_lower()
 
 
 def _extract_optional_user_id() -> int | None:
-    """Helper to retrieve user ID from explicit query parameter or authenticated JWT context."""
-    user_id_param = request.args.get("user_id", type=int)
-    if user_id_param:
-        return user_id_param
-
+    """Return the authenticated user's id from the JWT/session; ignores any query parameter."""
     user = get_current_user()
     if user:
         return user.id

@@ -254,6 +254,20 @@ class UserPerkOwnership(Base, ColumnDictMixin):
 DEFAULT_SURVIVOR_MAIN = "Feng Min"
 DEFAULT_KILLER_MAIN = "The Blight"
 
+#: The choices the profile page offers. Mirrors `PLAYER_TITLES` and `GRADE_EMBLEMS` in
+#: frontend/src/types/userShowcase.ts (a unit test keeps the two in step); anything else is ignored.
+SHOWCASE_PLAYER_TITLES: tuple[str, ...] = ("Survivor", "Killer")
+SHOWCASE_GRADE_RANKS: tuple[str, ...] = (
+    "Iridescent I", "Iridescent II", "Gold I", "Silver I", "Bronze I", "Ash I", "Ash IV",
+)
+#: One set of defaults for the model, the read fallback and the client (`DEFAULT_SHOWCASE_STATE`).
+SHOWCASE_DEFAULT_TITLE = "Survivor"
+SHOWCASE_DEFAULT_GRADE = "Ash IV"
+SHOWCASE_DEFAULT_DEVOTION = 0
+SHOWCASE_DEFAULT_PRESTIGE = 0
+SHOWCASE_MAX_DEVOTION = 99
+SHOWCASE_MAX_PRESTIGE = 100
+
 
 class UserShowcase(Base):
     __tablename__ = "user_showcases"
@@ -262,20 +276,20 @@ class UserShowcase(Base):
     user_id: Mapped[int] = mapped_column(
         ForeignKey("users.id", ondelete="CASCADE"), unique=True, nullable=False, index=True
     )
-    player_title: Mapped[str] = mapped_column(String(100), default="Survivor", nullable=False)
-    devotion_level: Mapped[int] = mapped_column(Integer, default=14, nullable=False)
-    grade_rank: Mapped[str] = mapped_column(String(50), default="Iridescent I", nullable=False)
+    player_title: Mapped[str] = mapped_column(String(100), default=SHOWCASE_DEFAULT_TITLE, nullable=False)
+    devotion_level: Mapped[int] = mapped_column(Integer, default=SHOWCASE_DEFAULT_DEVOTION, nullable=False)
+    grade_rank: Mapped[str] = mapped_column(String(50), default=SHOWCASE_DEFAULT_GRADE, nullable=False)
     # Was a free-text character name that nothing validated and a rename would
     # have silently orphaned. Each side has exactly one table to point at now.
     survivor_main_id: Mapped[int | None] = mapped_column(
         ForeignKey("survivors.id", ondelete="SET NULL"), nullable=True, index=True
     )
-    survivor_main_prestige: Mapped[int] = mapped_column(Integer, default=9, nullable=False)
+    survivor_main_prestige: Mapped[int] = mapped_column(Integer, default=SHOWCASE_DEFAULT_PRESTIGE, nullable=False)
     survivor_perk_ids: Mapped[list[Any]] = mapped_column(JSON, default=list, nullable=False)
     killer_main_id: Mapped[int | None] = mapped_column(
         ForeignKey("killers.id", ondelete="SET NULL"), nullable=True, index=True
     )
-    killer_main_prestige: Mapped[int] = mapped_column(Integer, default=7, nullable=False)
+    killer_main_prestige: Mapped[int] = mapped_column(Integer, default=SHOWCASE_DEFAULT_PRESTIGE, nullable=False)
     killer_perk_ids: Mapped[list[Any]] = mapped_column(JSON, default=list, nullable=False)
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=utcnow, onupdate=utcnow, nullable=False

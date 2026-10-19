@@ -7,9 +7,12 @@
  *
  *   lemondbd_tier_lists = { version: 1, rankings: {<slug>: ...}, custom: {<id>: ...} }
  *
- * Device-wide rather than per account on purpose: the data never leaves the
- * browser, so scoping it by login would only make a guest's lists vanish the
- * moment they sign in.
+ * Rankings of the official lists are device-wide (anyone may rank an official
+ * list, signed in or not). Custom lists need an account, and on a shared
+ * browser each account sees only its own: every list carries `ownerId`, the
+ * store stamps it with the signed-in account on save (`setTierListOwner`, set
+ * by `useTierListStore`), and a list saved before that field existed is
+ * claimed by the first account that signs in here (`claimUnownedCustomLists`).
  *
  * Reads go through a tiny external store (subscribe + cached snapshot), which
  * `useSyncExternalStore` consumes. That gives three things for free: a stable
@@ -129,6 +132,9 @@ export function migrateTierListState(raw: unknown): TierListStoreState {
         ...(backgroundImage ? { backgroundImage } : {}),
         ...(value.is_nsfw === true ? { is_nsfw: true } : {}),
         ...(manifest ? { _manifest: manifest } : {}),
+        ...(typeof value.ownerId === 'number' && Number.isInteger(value.ownerId) && value.ownerId > 0
+          ? { ownerId: value.ownerId }
+          : {}),
       };
     }
   }
@@ -173,11 +179,47 @@ export function clearRanking(slug: string): SaveResult {
   });
 }
 
+/** The signed-in account new and edited custom lists belong to (null: nobody signed in). */
+let currentOwnerId: number | null = null;
+
+export function setTierListOwner(userId: number | null): void {
+  currentOwnerId = userId;
+}
+
 export function saveCustomList(list: Omit<StoredCustomList, 'updatedAt'>): SaveResult {
+  const ownerId = list.ownerId ?? currentOwnerId ?? undefined;
   return updateTierListState((state) => ({
     ...state,
-    custom: { ...state.custom, [list.id]: { ...list, updatedAt: Date.now() } },
+    custom: {
+      ...state.custom,
+      [list.id]: { ...list, ...(ownerId ? { ownerId } : {}), updatedAt: Date.now() },
+    },
   }));
+}
+
+/** Gives every list without an owner (saved before owners existed) to `userId`. */
+export function claimUnownedCustomLists(userId: number): SaveResult {
+  return updateTierListState((state) => {
+    const unowned = Object.values(state.custom).filter((list) => list.ownerId === undefined);
+    if (unowned.length === 0) return state;
+    const custom = { ...state.custom };
+    for (const list of unowned) custom[list.id] = { ...list, ownerId: userId };
+    return { ...state, custom };
+  });
+}
+
+/**
+ * The state with only `userId`'s custom lists (none when signed out). An unowned (pre-owner) list
+ * counts as theirs: `claimUnownedCustomLists` is about to stamp it, and hiding it for that one
+ * render would flash "not found". Rankings are untouched.
+ */
+export function ownedTierListState(state: TierListStoreState, userId: number | null): TierListStoreState {
+  const entries = Object.entries(state.custom);
+  const mine = entries.filter(
+    ([, list]) => userId !== null && (list.ownerId === userId || list.ownerId === undefined)
+  );
+  if (mine.length === entries.length) return state;
+  return { ...state, custom: Object.fromEntries(mine) };
 }
 
 export function deleteCustomList(id: string): SaveResult {

@@ -33,4 +33,5 @@ export default {
   ownershipFilter: "Filtrar por posesión",
   sortFields: "Campo de orden",
   sortOrderLabel: "Orden de clasificación",
+  loadError: "No se pudieron cargar las habilidades.",
 } as const;

@@ -9,7 +9,7 @@ import { useDictionary, useLocale } from '@/context/DictionaryContext';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { useNsfwGate } from '@/hooks/useNsfwGate';
 import { NsfwContentGate } from '@/components/common/NsfwContentGate';
-import type { ChallengeDefinition, MinigameCatalog } from '@/types/minigame';
+import type { ChallengeDefinition, ChallengeSource, MinigameCatalog } from '@/types/minigame';
 import {
   fetchMinigameCatalog,
   fetchDailyChallenge,
@@ -49,6 +49,7 @@ function PlayTrialContent() {
   const isCustomTrial = Boolean(customId || hasChallengeFragment);
 
   const [challenge, setChallenge] = useState<ChallengeDefinition | null>(null);
+  const [source, setSource] = useState<ChallengeSource>('daily');
   const [catalog, setCatalog] = useState<MinigameCatalog | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -67,19 +68,23 @@ function PlayTrialContent() {
         setCatalog(cat);
 
         let loadedChallenge: ChallengeDefinition | null = null;
+        let loadedSource: ChallengeSource = 'daily';
         const sharedPayload = readChallengeFragment(window.location.hash);
         if (sharedPayload) {
           loadedChallenge = await decodeChallengeShare(sharedPayload);
+          loadedSource = 'custom';
         } else if (customId) {
           const list = getCustomChallenges();
           loadedChallenge = list.find((c) => String(c.id) === String(customId)) || null;
           if (!loadedChallenge) {
             throw new Error('Custom trial not found in this browser.');
           }
+          loadedSource = 'custom';
         } else if (type === 'daily') {
           loadedChallenge = await fetchDailyChallenge(mode || 'fog_trial');
         } else if (type === 'repeatable' || mode) {
           loadedChallenge = await fetchRepeatableChallenge(mode || 'classic');
+          loadedSource = 'repeatable';
         } else {
           loadedChallenge = await fetchDailyChallenge('fog_trial');
         }
@@ -95,6 +100,7 @@ function PlayTrialContent() {
         }
 
         if (isMounted) {
+          setSource(loadedSource);
           setChallenge(loadedChallenge);
         }
       } catch (err) {
@@ -166,6 +172,7 @@ function PlayTrialContent() {
             challenge={challenge}
             catalog={catalog}
             locale={locale}
+            source={source}
           />
           {isCustomTrial && (
             <ReportContentModal

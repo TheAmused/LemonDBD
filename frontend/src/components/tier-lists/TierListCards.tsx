@@ -33,7 +33,22 @@ const DEFAULT_OFFICIAL_COVERS: Record<string, string> = {
 /** Thumbnails shown on a custom card before the `+N` overflow counter. */
 const SHOWCASE_MAX = 4;
 
-const DEFAULT_CUSTOM_COVER = '/static/tier-lists/banner_custom_default.webp';
+const DEFAULT_CUSTOM_COVERS = [
+  '/static/tier-lists/banner_custom_default_1.webp',
+  '/static/tier-lists/banner_custom_default_2.webp',
+  '/static/tier-lists/banner_custom_default_3.webp',
+] as const;
+
+/**
+ * One of the three default banners, picked by hashing the list id: it looks random across lists, but a
+ * given list keeps the same banner on every render and visit (a Math.random() here would reshuffle on
+ * each re-render and mismatch between server and client HTML).
+ */
+function defaultCustomCover(id: string): string {
+  let hash = 0;
+  for (let i = 0; i < id.length; i += 1) hash = (hash * 31 + id.charCodeAt(i)) >>> 0;
+  return DEFAULT_CUSTOM_COVERS[hash % DEFAULT_CUSTOM_COVERS.length];
+}
 
 function coverSrc(url: string): string | null {
   if (!url) return null;
@@ -129,8 +144,11 @@ export function OfficialTierListCard({ list, rankedCount, locale, showNsfw = tru
             src={effectiveCover}
             alt=""
             loading="lazy"
+            decoding="async"
+            draggable={false}
+            onContextMenu={(e) => e.preventDefault()}
             className={cn(
-              "h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105",
+              "h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105 select-none",
               list.is_nsfw && !showNsfw && "blur-md scale-105 select-none pointer-events-none"
             )}
           />
@@ -237,7 +255,7 @@ export function CustomTierListCard({ list, locale, onDelete, disabled, showNsfw 
   const date = list.updatedAt > 0 ? formatDate(list.updatedAt, locale) || null : null;
   const customTitle = list.title || t.untitled;
   const background = list.backgroundImage ? coverSrc(list.backgroundImage) : null;
-  const effectiveBackground = background || coverSrc(DEFAULT_CUSTOM_COVER);
+  const effectiveBackground = background || coverSrc(defaultCustomCover(list.id));
   const shown = list.items.slice(0, SHOWCASE_MAX);
   const overflow = total - shown.length;
   const fullyRanked = total > 0 && ranked >= total;
@@ -250,8 +268,11 @@ export function CustomTierListCard({ list, locale, onDelete, disabled, showNsfw 
             src={effectiveBackground}
             alt=""
             loading="lazy"
+            decoding="async"
+            draggable={false}
+            onContextMenu={(e) => e.preventDefault()}
             className={cn(
-              "h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105",
+              "h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105 select-none",
               list.is_nsfw && !showNsfw && "blur-md scale-105 select-none pointer-events-none"
             )}
           />

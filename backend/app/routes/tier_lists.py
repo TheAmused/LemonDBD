@@ -12,6 +12,13 @@ from app.utils.lang import extract_lang
 tier_lists_bp = Blueprint("tier_lists", __name__, url_prefix="/api/v1/tier-lists")
 
 
+def _cover_rejected(body: dict, cleaned: str | None) -> bool:
+    """True when a non-empty cover URL was sent but failed `clean_image_url`.
+    (An explicit empty string or null still means "remove the cover".)"""
+    raw = body.get("cover_image_url")
+    return isinstance(raw, str) and bool(raw.strip()) and cleaned is None
+
+
 @tier_lists_bp.route("", methods=["GET"])
 @tier_lists_bp.route("/", methods=["GET"])
 @cache_catalog(ttl=86400, vary=())
@@ -54,6 +61,8 @@ def create_tier_list():
         payload = TierListAdminCreate(**body)
     except ValidationError as err:
         return jsonify({"error": "Invalid tier list", "details": err.errors()}), 400
+    if _cover_rejected(body, payload.cover_image_url):
+        return jsonify({"error": "Invalid cover image URL", "status": 400}), 400
 
     try:
         row = tier_list_service.create_tier_list(
@@ -75,7 +84,7 @@ def create_tier_list():
         target_id=row.id,
         details={"slug": row.slug, "title": row.title, "item_count": row.item_count()},
     )
-    return jsonify({"status": "success", "data": row.to_dict()}), 201
+    return jsonify({"status": "success", "data": row.to_dict(extract_lang())}), 201
 
 
 @tier_lists_bp.route("/<string:slug>", methods=["PUT", "PATCH"])
@@ -89,6 +98,10 @@ def update_tier_list(slug: str):
         payload = TierListAdminUpdate(**body)
     except ValidationError as err:
         return jsonify({"error": "Invalid tier list", "details": err.errors()}), 400
+    # Without this an unusable URL would be cleaned to None and, being "set",
+    # silently CLEAR the list's existing cover.
+    if _cover_rejected(body, payload.cover_image_url):
+        return jsonify({"error": "Invalid cover image URL", "status": 400}), 400
 
     fields_set = payload.model_fields_set
     kwargs: dict[str, object] = {}

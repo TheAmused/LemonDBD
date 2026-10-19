@@ -6,7 +6,9 @@ from app.core.security import generate_token
 from app.models.chapter import Chapter
 from app.models.character import Killer, Survivor
 from app.models.map import Realm
+from app.models.minigame import MinigameDailyChallenge, MinigameRepeatableChallenge
 from app.models.user import User
+from sqlalchemy import select
 
 
 @pytest.fixture
@@ -100,32 +102,13 @@ def test_admin_post_official_challenge_permissions(app, test_db, auth_tokens):
     assert admin_data["title"] == "Admin Fog Trial"
 
 
-def test_user_stats_tracking(app, test_db, auth_tokens):
+def test_self_reported_stats_endpoints_are_gone(app, test_db, auth_tokens):
+    """The client-reported win/streak endpoints were removed: nothing called them
+    and anything they stored was whatever the client claimed."""
     client = app.test_client()
-    user_token = auth_tokens["user"]
-
-    # Post stats update
-    res = client.post(
-        "/api/v1/minigames/stats",
-        headers={"Authorization": f"Bearer {user_token}"},
-        json={"game_mode": "classic", "won": True, "attempts_taken": 2},
-    )
-    assert res.status_code == 200
-    data = res.get_json()
-    assert data["current_streak"] == 1
-    assert data["max_streak"] == 1
-    assert data["total_won"] == 1
-    assert data["guess_distribution"]["2"] == 1
-
-    # Get stats
-    res_get = client.get(
-        "/api/v1/minigames/stats",
-        headers={"Authorization": f"Bearer {user_token}"},
-    )
-    assert res_get.status_code == 200
-    all_stats = res_get.get_json()
-    assert "classic" in all_stats["stats"]
-    assert all_stats["stats"]["classic"]["total_won"] == 1
+    headers = {"Authorization": f"Bearer {auth_tokens['user']}"}
+    assert client.post("/api/v1/minigames/stats", headers=headers, json={"won": True}).status_code in (404, 405)
+    assert client.get("/api/v1/minigames/stats", headers=headers).status_code in (404, 405)
 
 
 def test_submit_guess_with_custom_round_config(app, test_db):
@@ -135,6 +118,7 @@ def test_submit_guess_with_custom_round_config(app, test_db):
         json={
             "guess_id": 1,
             "guess_type": "realm",
+            "challenge_type": "custom",
             "custom_round_config": {
                 "round_number": 1,
                 "mode": "realm_guesser",
@@ -172,3 +156,80 @@ def test_list_official_challenges_pagination_boundaries(app, test_db):
     assert res.status_code == 200
     assert isinstance(res.get_json(), list)
 
+
+
+def test_daily_rejects_future_dates_and_unknown_modes(app, test_db, auth_tokens):
+    client = app.test_client()
+    assert client.get("/api/v1/minigames/daily?mode=classic&date=2999-01-01").status_code == 404
+    assert client.get("/api/v1/minigames/daily?mode=made_up_mode&date=2026-09-29").status_code == 404
+    # An admin may preview a scheduled day.
+    admin = {"Authorization": f"Bearer {auth_tokens['admin']}"}
+    assert client.get("/api/v1/minigames/daily?mode=classic&date=2999-01-01", headers=admin).status_code == 200
+
+
+def test_repeatable_rejects_unknown_modes(app, test_db):
+    assert app.test_client().get("/api/v1/minigames/repeatable?mode=nope").status_code == 400
+
+
+def test_classic_daily_withholds_the_answer_and_grades_the_stored_round(app, test_db, auth_tokens):
+    client = app.test_client()
+    daily = client.get("/api/v1/minigames/daily?mode=classic&date=2026-09-29").get_json()
+    assert "target_id" not in daily["rounds"][0]
+
+    stored = db.session.get(MinigameDailyChallenge, daily["id"]).rounds[0]
+    wrong_type = "survivor" if stored["target_type"] == "killer" else "killer"
+    # The client claims a round whose answer is its own guess; the server must
+    # grade against what it stored instead.
+    res = client.post(
+        "/api/v1/minigames/guess",
+        json={
+            "challenge_id": daily["id"],
+            "challenge_type": "daily",
+            "round_index": 0,
+            "guess_id": stored["target_id"],
+            "guess_type": wrong_type,
+            "custom_round_config": {"mode": "classic_character", "target_type": wrong_type, "target_id": stored["target_id"]},
+            "attempt_number": 1,
+        },
+    )
+    assert res.status_code == 200
+    body = res.get_json()
+    assert body["is_correct"] is False
+    assert "answer" not in body  # attempts left: the answer stays on the server
+
+    give_up = client.post(
+        "/api/v1/minigames/guess",
+        json={"challenge_id": daily["id"], "challenge_type": "daily", "round_index": 0, "give_up": True},
+    ).get_json()
+    assert give_up["answer"] == {"target_type": stored["target_type"], "target_id": stored["target_id"]}
+
+
+def test_official_listing_hides_scheduled_days_and_answers(app, test_db, auth_tokens):
+    client = app.test_client()
+    admin = {"Authorization": f"Bearer {auth_tokens['admin']}"}
+    for day in ("2026-09-01", "2999-01-01"):
+        client.post(
+            "/api/v1/minigames/official",
+            headers=admin,
+            json={"challenge_date": day, "game_mode": "classic", "title": f"T {day}",
+                  "rounds": [{"round_number": 1, "mode": "classic_character", "target_type": "killer", "target_id": 1}]},
+        )
+    public = client.get("/api/v1/minigames/official").get_json()
+    assert [c["challenge_date"] for c in public] == ["2026-09-01"]
+    assert "target_id" not in public[0]["rounds"][0]
+    assert len(client.get("/api/v1/minigames/official", headers=admin).get_json()) == 2
+
+
+def test_expired_practice_sessions_are_purged(app, test_db):
+    from datetime import datetime, timedelta, timezone
+    from app.services.minigames import purge_expired_repeatables
+
+    db.session.add(MinigameRepeatableChallenge(
+        session_id="s", game_mode="classic", rounds=[], expires_at=datetime.now(timezone.utc) - timedelta(minutes=1)
+    ))
+    db.session.add(MinigameRepeatableChallenge(
+        session_id="s", game_mode="classic", rounds=[], expires_at=datetime.now(timezone.utc) + timedelta(hours=1)
+    ))
+    db.session.commit()
+    assert purge_expired_repeatables() == 1
+    assert len(db.session.scalars(select(MinigameRepeatableChallenge)).all()) == 1

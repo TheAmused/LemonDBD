@@ -74,6 +74,7 @@ export interface UseMapExplorerDataReturn {
   realmImages: Record<string, Realm>;
   openMapId: number | null;
   setOpenMapId: (id: number | null) => void;
+  allMaps?: MapRealm[];
 }
 
 export function useMapExplorerData(options: UseMapExplorerDataOptions = {}): UseMapExplorerDataReturn {
@@ -128,10 +129,12 @@ export function useMapExplorerData(options: UseMapExplorerDataOptions = {}): Use
       try {
         // Only show the spinner when there is genuinely nothing to display;
         // a cached result should swap in without a loading flash.
-        if (readCache(mapsCacheKey(debouncedSearch, 'hens333', undefined, locale)) === undefined) {
+        if (readCache(mapsCacheKey('', 'hens333', undefined, locale)) === undefined) {
           setLoading(true);
         }
-        const data = await fetchMaps(undefined, debouncedSearch, 'hens333', locale);
+        // Fetch the full list once; filtering is done client-side (M4: backend only
+        // searches the English name column, so non-English searches produce 0 results)
+        const data = await fetchMaps(undefined, '', 'hens333', locale);
         const loaded: MapRealm[] = data?.maps || [];
         if (!isCancelled) {
           setMaps(loaded);
@@ -149,7 +152,7 @@ export function useMapExplorerData(options: UseMapExplorerDataOptions = {}): Use
     return () => {
       isCancelled = true;
     };
-  }, [debouncedSearch, locale]);
+  }, [locale]);
 
   useEffect(() => {
     let isCancelled = false;
@@ -183,7 +186,7 @@ export function useMapExplorerData(options: UseMapExplorerDataOptions = {}): Use
 
     const targetKey =
       typeof rawTarget === 'object' && rawTarget !== null
-        ? `${rawTarget.mapName}:${rawTarget.timestamp}`
+        ? `${rawTarget.mapName}::${rawTarget.timestamp}`
         : rawTarget;
     if (lastHandledTargetRef.current === targetKey) return;
 
@@ -204,10 +207,22 @@ export function useMapExplorerData(options: UseMapExplorerDataOptions = {}): Use
     }
   }, [initialMapName, selectedMap, maps]);
 
-  const groupedMapsByRealm = useMemo(() => groupMapsByRealmSorted(maps), [maps]);
+  const filteredMaps = useMemo(() => {
+    if (!debouncedSearch || debouncedSearch.length < SEARCH_MIN_CHARS) return maps;
+    const needle = normalizeMapSearch(debouncedSearch);
+    if (!needle) return maps;
+    return maps.filter(
+      (m) =>
+        normalizeMapSearch(m.name).includes(needle) ||
+        (m.raw_name ? normalizeMapSearch(m.raw_name).includes(needle) : false)
+    );
+  }, [maps, debouncedSearch]);
+
+  const groupedMapsByRealm = useMemo(() => groupMapsByRealmSorted(filteredMaps), [filteredMaps]);
 
   return {
-    maps,
+    maps: filteredMaps,
+    allMaps: maps,
     loading,
     search,
     setSearch,

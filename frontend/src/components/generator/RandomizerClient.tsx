@@ -35,7 +35,7 @@ function RandomizerContent() {
   }, [dict]);
 
   const allPerksKey = `${backendBase}/api/v1/perks?limit=1000&lang=${locale}`;
-  const { data: perksResponse, loading: perksFetching } = useCachedData<{ data?: Perk[] }>(
+  const { data: perksResponse, loading: perksFetching, error: perksError, refresh: retryPerks } = useCachedData<{ data?: Perk[] }>(
     allPerksKey,
     () => fetchJson<{ data?: Perk[] }>(allPerksKey)
   );
@@ -70,7 +70,17 @@ function RandomizerContent() {
       mainClassName="min-h-screen overflow-y-auto flex flex-col relative"
     >
       <div className="relative z-10 flex flex-col flex-1 min-h-0">
-        {perksLoading ? (
+        {perksError && allPerks.length === 0 ? (
+          <div className="flex flex-col items-center justify-center gap-4 p-12 text-center my-auto">
+            <p className="text-text-secondary text-base">Failed to load perks catalog.</p>
+            <button
+              onClick={() => retryPerks()}
+              className="px-4 py-2 bg-accent-red text-white rounded hover:bg-opacity-90 font-medium transition-colors"
+            >
+              Retry
+            </button>
+          </div>
+        ) : perksLoading && allPerks.length === 0 ? (
           <RandomizerPageSkeleton />
         ) : (
           <Suspense fallback={<RandomizerPageSkeleton />}>

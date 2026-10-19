@@ -30,9 +30,6 @@ function RandomizerContent() {
   const [killerCount, setKillerCount] = useState<number>(0);
   const [characterCount, setCharacterCount] = useState<number>(0);
 
-  useEffect(() => {
-    document.title = dict.app.perkRandomizerPageTitle;
-  }, [dict]);
 
   const allPerksKey = `${backendBase}/api/v1/perks?limit=1000&lang=${locale}`;
   const { data: perksResponse, loading: perksFetching, error: perksError, refresh: retryPerks } = useCachedData<{ data?: Perk[] }>(

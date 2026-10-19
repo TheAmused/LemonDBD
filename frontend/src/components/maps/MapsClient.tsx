@@ -71,6 +71,8 @@ function MapsClientInner() {
     },
   ];
 
+  const router = useRouter();
+
   const handleSourceChange = useCallback(() => {}, []);
   const handleSelectMap = useCallback((name: string, mapId?: number) => {
     setSelectedMap({ mapName: name, mapId, timestamp: Date.now(), via: 'voice' });
@@ -81,13 +83,16 @@ function MapsClientInner() {
     }
   }, []);
 
-  const toggleSwitchElement = (
-    <SegmentedControl
-      value={searchMode}
-      onChange={setSearchMode}
-      ariaLabel={dict.maps.searchModeAria}
-      options={searchModeOptions}
-    />
+  const toggleSwitchElement = useMemo(
+    () => (
+      <SegmentedControl
+        value={searchMode}
+        onChange={setSearchMode}
+        ariaLabel={dict.maps.searchModeAria}
+        options={searchModeOptions}
+      />
+    ),
+    [searchMode, setSearchMode, dict.maps.searchModeAria, searchModeOptions]
   );
 
   const voiceBanner = useMemo(
@@ -104,14 +109,12 @@ function MapsClientInner() {
         embedded={true}
       />
     ),
-    [locale, dict, handleSourceChange, handleSelectMap, handleAction, availableMaps, searchMode, toggleSwitchElement]
+    [locale, handleSourceChange, handleSelectMap, handleAction, availableMaps, searchMode, toggleSwitchElement]
   );
 
-  const handleSelectCategory = () => {
-    if (typeof window !== 'undefined') {
-      window.location.href = `/${locale}`;
-    }
-  };
+  const handleSelectCategory = useCallback(() => {
+    router.push(`/${locale}`);
+  }, [router, locale]);
 
   return (
     <PageShell

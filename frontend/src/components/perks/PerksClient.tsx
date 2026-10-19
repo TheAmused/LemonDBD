@@ -136,8 +136,7 @@ function PerksContent() {
     if (paramRole === 'Killer' || paramRole === 'Survivor') {
       setRole(paramRole);
     }
-    document.title = dict.app.perksVaultPageTitle;
-  }, [paramRole, dict]);
+  }, [paramRole]);
 
   const handleSelectCategoryFromSidebar = (selected: string) => {
     if (selected === 'Survivor' || selected === 'Killer') {

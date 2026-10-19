@@ -45,6 +45,7 @@ from sqlalchemy.orm import Mapped, declared_attr, mapped_column, relationship
 from app.core.extensions import Base
 from app.models.base import TranslatableModelMixin, utcnow
 from app.models.chapter import dlc_type_label
+from app.models.slug import url_slug
 
 if TYPE_CHECKING:
     from app.models.chapter import Chapter
@@ -151,6 +152,8 @@ class _CharacterMixin(TranslatableModelMixin):
         return {
             "id": self.id,
             "name": self.localized(lang, "name", self.name),
+            # Links are built from this, not from `name`, which is translated.
+            "slug": url_slug(self.name),
             "role": self.role,
             "category": self.role,
             "gender": self.gender,

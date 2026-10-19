@@ -9,6 +9,7 @@ from app.core.cache import catalog_cache
 from app.core.db_retry import retry_on_transient_db_error
 from app.core.extensions import db
 from app.models import Item, ItemAddon, Killer, KillerAddon, Offering, Survivor
+from app.models.slug import url_slug
 from app.services.perks.utils import HEADER_EXCLUSIONS, normalize_search_key, slugify
 
 logger = logging.getLogger(__name__)
@@ -216,6 +217,7 @@ def fetch_character_detail(service: Any = None, character_name: str = "", lang: 
                     c_name,
                     c_real,
                     c_prefix,
+                    url_slug(c.name),
                     slugify(c.name),
                     slugify(c.real_name or ""),
                     normalize_search_key(c.name),

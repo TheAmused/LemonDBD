@@ -24,18 +24,18 @@ services:
     networks:
       - dbd_network
 
-  # Shared catalog cache and rate-limit storage.
+  # Shared catalog cache.
   #
   # gunicorn runs GUNICORN_WORKERS (4) separate processes, so anything held in
-  # process memory is four caches and four rate-limit counters that never see
-  # each other -- which made every configured limit effectively 4x looser than
-  # written. This is the one place all four share.
+  # process memory is four caches that never see each other. This is the one
+  # place all four share.
   #
-  # No volume on purpose: everything in here is derived from Postgres or is a
-  # rate-limit window, so persisting it across a restart would only risk
-  # serving a stale generation. `--maxmemory-policy allkeys-lru` means a full
-  # Redis evicts rather than starts refusing writes, since a cache that
-  # fails closed would take the API down with it.
+  # No volume on purpose: everything in here is derived from Postgres, so
+  # persisting it across a restart would only risk serving a stale generation.
+  # `--maxmemory-policy allkeys-lru` means a full Redis evicts rather than
+  # starts refusing writes, since a cache that fails closed would take the API
+  # down with it. Because it evicts, nothing that must survive pressure lives
+  # here: see redis-limits.
   redis:
     image: redis:7-alpine
     container_name: dbd_redis
@@ -46,6 +46,35 @@ services:
       --appendonly no
       --maxmemory ${REDIS_MAXMEMORY:-256mb}
       --maxmemory-policy allkeys-lru
+    expose:
+      - "6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 3s
+      timeout: 3s
+      retries: 10
+      start_period: 3s
+    networks:
+      - dbd_network
+
+  # Rate-limit counters and single-use ALTCHA records.
+  #
+  # Kept apart from the cache on purpose. Under allkeys-lru a burst of cache
+  # traffic evicts the oldest keys first, and those are exactly the login and
+  # registration rate-limit windows and the used ALTCHA signatures: limits
+  # reset early and a solved challenge can be replayed. `noeviction` plus a
+  # small ceiling means this instance never drops a key to make room, and its
+  # contents (short-lived counters) are far too small to reach the ceiling.
+  redis-limits:
+    image: redis:7-alpine
+    container_name: dbd_redis_limits
+    restart: unless-stopped
+    command: >
+      redis-server
+      --save ""
+      --appendonly no
+      --maxmemory ${REDIS_LIMITS_MAXMEMORY:-32mb}
+      --maxmemory-policy noeviction
     expose:
       - "6379"
     healthcheck:
@@ -88,6 +117,8 @@ services:
       # Unset this and the app still boots: the catalog cache falls back to a
       # per-worker dict and the limiter to per-worker counters.
       - REDIS_URL=${REDIS_URL:-redis://redis:6379/0}
+      # Rate-limit counters and ALTCHA replay records (never evicted).
+      - LIMITS_REDIS_URL=${LIMITS_REDIS_URL:-redis://redis-limits:6379/0}
       - CATALOG_CACHE_TTL=${CATALOG_CACHE_TTL:-86400}
       - CORS_ORIGINS=${CORS_ORIGINS:-*}
       - MAIL_SERVER=${MAIL_SERVER:-smtp.gmail.com}
@@ -107,6 +138,8 @@ services:
       db:
         condition: service_healthy
       redis:
+        condition: service_healthy
+      redis-limits:
         condition: service_healthy
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:5000/api/v1/health"]
@@ -133,6 +166,9 @@ services:
       - DATABASE_URL=${DATABASE_URL:-postgresql+psycopg://postgres:postgres@db:5432/dbd_db}
       - DB_POOL_SIZE=2
       - DB_MAX_OVERFLOW=1
+      # The catalog-cache maintenance job bumps the shared generation from here;
+      # without Redis it would only bump this process's private counter.
+      - REDIS_URL=${REDIS_URL:-redis://redis:6379/0}
       - SCHEDULER_ENABLED=true
       # The moderation-email job runs here, so this process needs the same mail settings as the backend.
       - MAIL_SERVER=${MAIL_SERVER:-smtp.gmail.com}
@@ -144,6 +180,8 @@ services:
       - FRONTEND_URL=${FRONTEND_URL:-https://localhost}
     depends_on:
       db:
+        condition: service_healthy
+      redis:
         condition: service_healthy
     networks:
       - dbd_network

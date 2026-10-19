@@ -37,11 +37,28 @@ def get_avatar_storage_directory() -> str:
     return base_dir
 
 
-def remove_stale_avatar_file(avatar_url: str | None, avatar_dir: str) -> None:
-    """Deletes old avatar image from disk to prevent storage accumulation."""
-    if not avatar_url or avatar_url == "default_avatar":
-        return
-    filename = avatar_url.split("/")[-1].split("?")[0]
+#: The only `avatar_url` values the server writes: an upload, served by `/auth/avatar/file/`.
+AVATAR_URL_PREFIX = "/api/v1/auth/avatar/file/"
+
+
+def owned_avatar_filename(avatar_url: str | None, user_id: int) -> str | None:
+    """The file behind `avatar_url` when it is one of *this* user's uploads, else None.
+
+    Uploads are named `avatar_u<id>_<time>_<hex>.webp`, so the user id in the name is checked: a
+    value pointing at someone else's file (or anything outside the avatar folder) is never treated
+    as this account's to delete.
+    """
+    if not avatar_url or not avatar_url.startswith(AVATAR_URL_PREFIX):
+        return None
+    filename = avatar_url[len(AVATAR_URL_PREFIX):].split("?")[0]
+    if "/" in filename or "\\" in filename or not filename.startswith(f"avatar_u{user_id}_"):
+        return None
+    return filename
+
+
+def remove_stale_avatar_file(avatar_url: str | None, avatar_dir: str, user_id: int) -> None:
+    """Deletes the user's previous upload from disk to prevent storage accumulation."""
+    filename = owned_avatar_filename(avatar_url, user_id)
     if filename:
         old_path = os.path.join(avatar_dir, filename)
         if os.path.isfile(old_path):
@@ -65,7 +82,7 @@ def process_and_save_avatar(user_id: int, file_storage) -> tuple[User | None, st
         return None, f"Unsupported file type. Allowed: {', '.join(ALLOWED_EXTENSIONS)}"
 
     avatar_dir = get_avatar_storage_directory()
-    remove_stale_avatar_file(user.avatar_url, avatar_dir)
+    remove_stale_avatar_file(user.avatar_url, avatar_dir, user.id)
 
     unique_id = f"u{user.id}_{int(time.time())}_{uuid.uuid4().hex[:6]}"
     new_filename = f"avatar_{unique_id}.webp"
@@ -116,7 +133,7 @@ def clear_user_avatar(user_id: int) -> tuple[User | None, str | None]:
         return None, "User not found."
 
     avatar_dir = get_avatar_storage_directory()
-    remove_stale_avatar_file(user.avatar_url, avatar_dir)
+    remove_stale_avatar_file(user.avatar_url, avatar_dir, user.id)
 
     user.avatar_url = "default_avatar"
     db.session.commit()

@@ -89,14 +89,18 @@ class UserService:
         self,
         user_id: int,
         email: str | None = None,
-        avatar_url: str | None = None,
         new_password: str | None = None,
         current_password: str | None = None,
         two_factor_code: str | None = None,
         username: str | None = None,
     ) -> tuple[User | None, str | None]:
         return modify_user_profile(
-            user_id, email, avatar_url, new_password, current_password, two_factor_code, username
+            user_id,
+            email=email,
+            new_password=new_password,
+            current_password=current_password,
+            two_factor_code=two_factor_code,
+            username=username,
         )
 
     def mark_onboarding_complete(self, user_id: int) -> tuple[User | None, str | None]:

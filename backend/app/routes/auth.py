@@ -255,7 +255,6 @@ def update_profile():
     user = g.current_user
     data = request.get_json(silent=True) or {}
     email = data.get("email")
-    avatar_url = data.get("avatar_url")
     new_password = data.get("new_password")
     current_password = data.get("current_password")
 
@@ -263,7 +262,6 @@ def update_profile():
         updated_user, err = modify_user_profile(
             user_id=user.id,
             email=email,
-            avatar_url=avatar_url,
             new_password=new_password,
             current_password=str(current_password) if current_password else None,
             two_factor_code=data.get("two_factor_code"),

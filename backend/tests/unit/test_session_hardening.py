@@ -125,12 +125,14 @@ class TestPasswordChangeSignsOutOtherSessions:
         assert login.status_code == 200
         assert decode_token(login.get_json()["token"])["ver"] == 1
 
-    def test_changing_only_the_avatar_keeps_sessions(self, app: Flask, client: FlaskClient, db_session) -> None:
+    def test_an_edit_without_a_password_change_keeps_sessions(self, app: Flask, client: FlaskClient, db_session) -> None:
         user = _make_user()
         token = generate_token(user.id, user.role)
         res = client.put("/api/v1/auth/profile", json={"avatar_url": "custom"}, headers=_bearer(token))
         assert res.status_code == 200
         assert "token" not in res.get_json()
+        # The profile endpoint never sets the avatar: only an upload does.
+        assert res.get_json()["user"]["avatar_url"] != "custom"
         assert client.get("/api/v1/auth/me", headers=_bearer(token)).get_json()["authenticated"] is True
 
 

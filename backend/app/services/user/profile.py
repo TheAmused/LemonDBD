@@ -57,13 +57,16 @@ def fetch_user_by_id(user_id: int) -> User | None:
 def modify_user_profile(
     user_id: int,
     email: str | None = None,
-    avatar_url: str | None = None,
     new_password: str | None = None,
     current_password: str | None = None,
     two_factor_code: str | None = None,
     username: str | None = None,
 ) -> tuple[User | None, str | None]:
-    """Update profile attributes including the public username, email address, avatar, or password.
+    """Update the public username, the email address or the password.
+
+    The avatar is not set here: only `process_and_save_avatar` (an upload) and `clear_user_avatar`
+    write `avatar_url`. Accepting it from the request let anyone point their avatar at any URL --
+    a tracking pixel in every admin's browser that opens the user list.
 
     Changing the email or the password is what an attacker holding a stolen session would do to
     take the account over, so both need the current password. A password change also bumps
@@ -134,9 +137,6 @@ def modify_user_profile(
 
         if changing_username:
             user.username = clean_username
-
-        if avatar_url:
-            user.avatar_url = avatar_url.strip()
 
         if new_password:
             user.password_hash = hash_password(new_password)

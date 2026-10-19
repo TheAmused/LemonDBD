@@ -69,6 +69,7 @@ interface PerkFiltersProps {
   killerCount?: number;
   allCount?: number;
   ownedCount?: number;
+  isLoggedIn?: boolean;
 }
 
 export const PerkFilters: React.FC<PerkFiltersProps> = ({
@@ -90,6 +91,7 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
       killerCount,
       allCount,
       ownedCount,
+      isLoggedIn,
     }) => {
   const dict = useDictionary();
   const backendBase = getBackendBaseUrl();
@@ -283,13 +285,15 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
               onChange={setRole}
               options={roleOptions}
             />
-            <SegmentedControl
-              className="w-full"
-              ariaLabel={dict.filters.ownershipFilter}
-              value={ownershipFilter}
-              onChange={setOwnershipFilter}
-              options={ownershipOptions}
-            />
+            {isLoggedIn && (
+              <SegmentedControl
+                className="w-full"
+                ariaLabel={dict.filters.ownershipFilter}
+                value={ownershipFilter}
+                onChange={setOwnershipFilter}
+                options={ownershipOptions}
+              />
+            )}
             {generalOnlyLabel}
             <SegmentedControl
               className="w-full"
@@ -319,12 +323,14 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
           options={roleOptions}
         />
 
-        <SegmentedControl
-          ariaLabel={dict.filters.ownershipFilter}
-          value={ownershipFilter}
-          onChange={setOwnershipFilter}
-          options={ownershipOptions}
-        />
+        {isLoggedIn && (
+          <SegmentedControl
+            ariaLabel={dict.filters.ownershipFilter}
+            value={ownershipFilter}
+            onChange={setOwnershipFilter}
+            options={ownershipOptions}
+          />
+        )}
 
         {generalOnlyLabel}
 

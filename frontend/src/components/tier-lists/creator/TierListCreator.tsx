@@ -289,6 +289,25 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
       return;
     }
 
+    // An admin can publish any list as official, including one already saved in this browser.
+    if (official && isAdmin) {
+      setPublishError(null);
+      setPublishing(true);
+      try {
+        const created = await createOfficialTierList(officialPayload, locale, token);
+        try {
+          localStorage.removeItem(DRAFT_KEY);
+        } catch {
+          // ignore
+        }
+        router.push(`/${locale}/tier-lists/${created.slug}`);
+      } catch (err) {
+        setPublishError(err instanceof Error ? err.message : c.publishFailed);
+        setPublishing(false);
+      }
+      return;
+    }
+
     if (editId && editingList) {
       // Editing in place: normalize placements against current tiers and items
       // so orphaned keys do not inflate the ranked count.
@@ -314,24 +333,6 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
       return;
     }
 
-    if (official && isAdmin) {
-      setPublishError(null);
-      setPublishing(true);
-      try {
-        const created = await createOfficialTierList(officialPayload, locale, token);
-        try {
-          localStorage.removeItem(DRAFT_KEY);
-        } catch {
-          // ignore
-        }
-        router.push(`/${locale}/tier-lists/${created.slug}`);
-      } catch (err) {
-        setPublishError(err instanceof Error ? err.message : c.publishFailed);
-        setPublishing(false);
-      }
-      return;
-    }
-
     const id = createCustomListId();
     const result = saveCustomList({ id, ...payload, placements: {}, createdAt: Date.now() });
     if (!result.ok) {
@@ -354,7 +355,7 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
   };
 
   const publishingNow = publishing && isAdmin && (official || Boolean(officialSlug));
-  const submitLabel = isEditing ? (publishingNow ? c.publishing : t.save) : official && isAdmin ? (publishingNow ? c.publishing : c.publish) : c.create;
+  const submitLabel = publishingNow ? c.publishing : (official && isAdmin) ? c.publish : isEditing ? t.save : c.create;
   const submitButton = (extra?: string) => (
     <Button
       variant="primary"
@@ -400,6 +401,40 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
       <div className={WORKSPACE_COLUMN}>
         <Section title={c.stepBasics}>
           <div className="grid gap-4 2xl:gap-6 md:grid-cols-2">
+            <div className="flex flex-wrap items-center gap-x-8 gap-y-3 md:col-span-2">
+              <NsfwSwitch
+                checked={draft.is_nsfw}
+                onChange={(checked) => patch({ is_nsfw: checked })}
+                label={t.nsfw.label}
+                hint={t.nsfw.hint}
+              />
+              {isAdmin && !officialSlug && (
+                <div
+                  onClick={() => setOfficial(!official)}
+                  className="flex cursor-pointer select-none items-center gap-2.5 group"
+                >
+                  <Switch checked={official} onChange={setOfficial} ariaLabel={c.official} />
+                  <span className="type-strong-fluid text-text-primary transition-colors group-hover:text-accent-red">
+                    {c.official}
+                  </span>
+                </div>
+              )}
+              {isAdmin && (official || Boolean(officialSlug)) && (
+                <div
+                  onClick={() => patch({ is_active: !(draft.is_active ?? true) })}
+                  className="flex cursor-pointer select-none items-center gap-2.5 group"
+                >
+                  <Switch
+                    checked={draft.is_active ?? true}
+                    onChange={(checked) => patch({ is_active: checked })}
+                    ariaLabel={c.publishedLabel}
+                  />
+                  <span className="type-strong-fluid text-text-primary transition-colors group-hover:text-accent-red">
+                    {c.publishedLabel}
+                  </span>
+                </div>
+              )}
+            </div>
             <label className="md:col-span-1">
               <span className={LABEL}>
                 {c.titleLabel}
@@ -433,40 +468,6 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
                 invalidMessage={t.invalidImage}
                 allowFileUpload={isAdmin}
               />
-            </div>
-            <div className="md:col-span-2 flex flex-col items-start gap-3">
-              <NsfwSwitch
-                checked={draft.is_nsfw}
-                onChange={(checked) => patch({ is_nsfw: checked })}
-                label={t.nsfw.label}
-                hint={t.nsfw.hint}
-              />
-              {isAdmin && !isEditing && (
-                <div
-                  onClick={() => setOfficial(!official)}
-                  className="flex cursor-pointer select-none items-center gap-2.5 group"
-                >
-                  <Switch checked={official} onChange={setOfficial} ariaLabel={c.official} />
-                  <span className="type-strong-fluid text-text-primary transition-colors group-hover:text-accent-red">
-                    {c.official}
-                  </span>
-                </div>
-              )}
-              {isAdmin && (official || Boolean(officialSlug)) && (
-                <div
-                  onClick={() => patch({ is_active: !(draft.is_active ?? true) })}
-                  className="flex cursor-pointer select-none items-center gap-2.5 group"
-                >
-                  <Switch
-                    checked={draft.is_active ?? true}
-                    onChange={(checked) => patch({ is_active: checked })}
-                    ariaLabel={c.publishedLabel}
-                  />
-                  <span className="type-strong-fluid text-text-primary transition-colors group-hover:text-accent-red">
-                    {c.publishedLabel}
-                  </span>
-                </div>
-              )}
             </div>
           </div>
         </Section>

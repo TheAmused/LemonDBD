@@ -151,6 +151,14 @@ export function useStartListening(ctx: StartListeningContext) {
           if (propsRef.current.soundEnabled) {
             playMicStartSound();
           }
+
+          // Cap listening session at 10 seconds (L9)
+          if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
+          silenceTimerRef.current = setTimeout(() => {
+            if (isListeningRef.current) {
+              stopListeningAndProcess();
+            }
+          }, 10000);
         };
 
         recognition.onresult = (event: SpeechRecognitionEvent) => {

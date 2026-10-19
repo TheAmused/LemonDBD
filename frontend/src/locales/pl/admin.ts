@@ -284,6 +284,8 @@ export default {
   saveUser: "Zapisz zmiany",
   emailVerifiedLabel: "Adres e-mail zweryfikowany",
   ownRoleLocked: "Nie możesz odebrać sobie roli administratora.",
+  confirmOwnPasswordLabel: "Twoje hasło",
+  confirmOwnPasswordHint: "Zmiana konta innego administratora wymaga Twojego hasła.",
   userUpdatedSuccess: "Zaktualizowano {username}.",
   confirmDeleteUser: "Usunąć {username} i wszystko, co należy do tego konta? Tej operacji nie można cofnąć.",
   filterByStatus: "Filtruj według statusu",

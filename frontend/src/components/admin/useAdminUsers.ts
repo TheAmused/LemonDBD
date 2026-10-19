@@ -118,7 +118,8 @@ export function useAdminUsers({ enabled, refreshKey, notify, onChanged }: AdminU
     create: (user: NewUser) => act(() => createUser(user), formatMessage(t.userCreatedSuccess, { username: user.username })),
     update: (user: UserRow, patch: UserPatch) => act(() => updateUser(user.id, patch), formatMessage(t.userUpdatedSuccess, { username: patch.username ?? user.username })),
     remove: (user: UserRow) => act(() => deleteUser(user.id), formatMessage(t.userDeletedSuccess, { username: user.username })),
-    resetTwoFactor: (user: UserRow) => act(() => resetTwoFactor(user.id), formatMessage(t.twoFactorResetDone, { username: user.username })),
+    resetTwoFactor: (user: UserRow, currentPassword?: string) =>
+      act(() => resetTwoFactor(user.id, currentPassword), formatMessage(t.twoFactorResetDone, { username: user.username })),
   };
 }
 

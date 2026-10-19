@@ -284,6 +284,8 @@ export default {
   saveUser: "Guardar cambios",
   emailVerifiedLabel: "Correo electrónico verificado",
   ownRoleLocked: "No puedes quitarte tu propio rol de administrador.",
+  confirmOwnPasswordLabel: "Tu contraseña",
+  confirmOwnPasswordHint: "Para cambiar la cuenta de otro administrador necesitas tu propia contraseña.",
   userUpdatedSuccess: "{username} se ha actualizado.",
   confirmDeleteUser: "¿Eliminar a {username} y todo lo que pertenece a su cuenta? No se puede deshacer.",
   filterByStatus: "Filtrar por estado",

@@ -326,10 +326,12 @@ class TestUserAndOwnership:
     def test_admin_routes(
         self, client: FlaskClient, user_service: UserService, db_session: Session
     ) -> None:
-        admin, admin_token = user_service.authenticate("admin", "admin123")
+        admin_password = "admin123"
+        admin, admin_token = user_service.authenticate("admin", admin_password)
         if not admin:
+            admin_password = "adminpass"
             admin, _ = user_service.register_user(
-                "adminuser", "adminuser", "adm@test.com", "adminpass", role="admin"
+                "adminuser", "adminuser", "adm@test.com", admin_password, role="admin"
             )
             admin_token = user_service.generate_token(admin.id)
         user, _ = user_service.register_user(
@@ -354,6 +356,15 @@ class TestUserAndOwnership:
         )
         assert update_res.status_code == 200
         assert update_res.get_json()["user"]["role"] == "admin"
+
+        # An admin is never deleted directly: the role goes first, which needs the actor's password.
+        assert client.delete(f"/api/v1/users/{user.id}", headers=admin_headers).status_code == 400
+        demote_res = client.put(
+            f"/api/v1/users/{user.id}",
+            json={"role": "user", "current_password": admin_password},
+            headers=admin_headers,
+        )
+        assert demote_res.status_code == 200
 
         del_res = client.delete(f"/api/v1/users/{user.id}", headers=admin_headers)
         assert del_res.status_code == 200

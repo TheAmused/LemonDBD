@@ -11,7 +11,7 @@ import { ActionMenu, type ActionMenuItem } from '@/components/common/ActionMenu'
 import { ConfirmModal } from '@/components/common/ConfirmModal';
 import { EmptyState } from '@/components/common/EmptyState';
 import { CustomDropdown } from '@/components/common/CustomDropdown';
-import { SearchInput } from '@/components/common/Field';
+import { Input, SearchInput } from '@/components/common/Field';
 import { Pagination } from '@/components/common/Pagination';
 import { Surface } from '@/components/common/Surface';
 import { Table, TableBody, TableHead, TableRow, Td, Th } from '@/components/common/Table';
@@ -46,6 +46,7 @@ export function AdminUsersSection({ directory, counts, currentUserId, notify, on
   const t = dict.admin;
   const [pending, setPending] = useState<PendingAction>(null);
   const [busy, setBusy] = useState(false);
+  const [ownPassword, setOwnPassword] = useState('');
   const { users, total, loading, page, perPage } = directory;
 
   const count = (n: number | undefined) => ({ count: n ?? '–' });
@@ -67,7 +68,8 @@ export function AdminUsersSection({ directory, counts, currentUserId, notify, on
       ? [{ key: '2fa', label: t.resetTwoFactor, icon: <ShieldOff className="icon-md" aria-hidden="true" />, onSelect: () => setPending({ kind: 'resetTwoFactor', user: u }) }]
       : []),
     { key: 'download', label: t.downloadUserData, icon: <Download className="icon-md" aria-hidden="true" />, onSelect: () => void download(u) },
-    ...(isSelf(u)
+    // Admins are never deleted from here (the server refuses too): take the admin role away first.
+    ...(isSelf(u) || u.role === 'admin'
       ? []
       : [{ key: 'delete', label: t.deleteUser, icon: <Trash2 className="icon-md" aria-hidden="true" />, onSelect: () => setPending({ kind: 'delete', user: u }), danger: true }]),
   ];
@@ -130,12 +132,15 @@ export function AdminUsersSection({ directory, counts, currentUserId, notify, on
     setBusy(true);
     try {
       if (pending.kind === 'delete') await directory.remove(pending.user);
-      else await directory.resetTwoFactor(pending.user);
+      else await directory.resetTwoFactor(pending.user, ownPassword || undefined);
     } finally {
       setBusy(false);
       setPending(null);
+      setOwnPassword('');
     }
   };
+  /** Resetting another admin's second factor needs the acting admin's password. */
+  const needsOwnPassword = pending?.kind === 'resetTwoFactor' && pending.user.role === 'admin' && !isSelf(pending.user);
 
   return (
     <Surface padding="none" className="overflow-hidden">
@@ -245,12 +250,33 @@ export function AdminUsersSection({ directory, counts, currentUserId, notify, on
       <ConfirmModal
         open={pending !== null}
         title={pending?.kind === 'delete' ? t.deleteUserTitle : t.resetTwoFactorTitle}
-        message={formatMessage(pending?.kind === 'delete' ? t.confirmDeleteUser : t.resetTwoFactorMessage, { username: pending?.user.username ?? '' })}
+        message={
+          <>
+            {formatMessage(pending?.kind === 'delete' ? t.confirmDeleteUser : t.resetTwoFactorMessage, { username: pending?.user.username ?? '' })}
+            {needsOwnPassword && (
+              <span className="mt-3 block space-y-1.5 text-left">
+                <span className="block type-caption text-text-muted">{t.confirmOwnPasswordHint}</span>
+                <Input
+                  type="password"
+                  autoComplete="current-password"
+                  aria-label={t.confirmOwnPasswordLabel}
+                  placeholder={t.confirmOwnPasswordLabel}
+                  value={ownPassword}
+                  onChange={(e) => setOwnPassword(e.target.value)}
+                />
+              </span>
+            )}
+          </>
+        }
         confirmLabel={pending?.kind === 'delete' ? t.delete : t.resetTwoFactorConfirm}
         cancelLabel={t.cancel}
         busy={busy}
+        confirmDisabled={needsOwnPassword && !ownPassword}
         onConfirm={confirm}
-        onCancel={() => setPending(null)}
+        onCancel={() => {
+          setPending(null);
+          setOwnPassword('');
+        }}
       />
     </Surface>
   );

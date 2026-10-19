@@ -284,6 +284,8 @@ export default {
   saveUser: "Save changes",
   emailVerifiedLabel: "Email address verified",
   ownRoleLocked: "You cannot remove your own admin role.",
+  confirmOwnPasswordLabel: "Your password",
+  confirmOwnPasswordHint: "Changing another administrator's account needs your own password.",
   userUpdatedSuccess: "{username} was updated.",
   confirmDeleteUser: "Delete {username} and everything their account owns? This cannot be undone.",
   filterByStatus: "Filter by status",

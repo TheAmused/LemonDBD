@@ -10,6 +10,18 @@ from app.core.security import hash_password, verify_password
 from app.core.transaction import transaction
 from app.models import Killer, Survivor, User, UserShowcase
 from app.models.base import utcnow
+from app.models.user import (
+    DEFAULT_KILLER_MAIN,
+    DEFAULT_SURVIVOR_MAIN,
+    SHOWCASE_DEFAULT_DEVOTION,
+    SHOWCASE_DEFAULT_GRADE,
+    SHOWCASE_DEFAULT_PRESTIGE,
+    SHOWCASE_DEFAULT_TITLE,
+    SHOWCASE_GRADE_RANKS,
+    SHOWCASE_MAX_DEVOTION,
+    SHOWCASE_MAX_PRESTIGE,
+    SHOWCASE_PLAYER_TITLES,
+)
 
 #: `users.email` is a String(120); a longer address could never be stored.
 MAX_EMAIL_LENGTH = 120
@@ -47,6 +59,13 @@ def _resolve_main_id(model: type, character_name: str) -> int | None:
         return None
     row = db.session.scalars(select(model).where(model.name == name)).first()
     return row.id if row else None
+
+
+def _is_number(value: Any) -> bool:
+    """A real, finite number (not a bool, not NaN/inf, which `int()` would choke on)."""
+    import math
+
+    return isinstance(value, (int, float)) and not isinstance(value, bool) and math.isfinite(value)
 
 
 def fetch_user_by_id(user_id: int) -> User | None:
@@ -206,17 +225,17 @@ def get_user_showcase(user_id: int) -> dict[str, Any] | None:
 
     # Pure read fallback: default representation without DB write
     return {
-        "player_title": "The Camper",
-        "devotion_level": 0,
-        "grade_rank": "Ash IV",
+        "player_title": SHOWCASE_DEFAULT_TITLE,
+        "devotion_level": SHOWCASE_DEFAULT_DEVOTION,
+        "grade_rank": SHOWCASE_DEFAULT_GRADE,
         "survivor_main": {
-            "character_name": "Feng Min",
-            "prestige": 1,
+            "character_name": DEFAULT_SURVIVOR_MAIN,
+            "prestige": SHOWCASE_DEFAULT_PRESTIGE,
             "perk_ids": [None, None, None, None],
         },
         "killer_main": {
-            "character_name": "The Blight",
-            "prestige": 1,
+            "character_name": DEFAULT_KILLER_MAIN,
+            "prestige": SHOWCASE_DEFAULT_PRESTIGE,
             "perk_ids": [None, None, None, None],
         },
         "updated_at": None,
@@ -236,17 +255,17 @@ def get_or_create_user_showcase(user_id: int) -> UserShowcase | None:
     if not showcase:
         showcase = UserShowcase(
             user_id=user_id,
-            player_title="The Camper",
-            devotion_level=0,
-            grade_rank="Ash IV",
+            player_title=SHOWCASE_DEFAULT_TITLE,
+            devotion_level=SHOWCASE_DEFAULT_DEVOTION,
+            grade_rank=SHOWCASE_DEFAULT_GRADE,
             # No main until the user picks one. The display name the old
             # column defaulted to is served by `to_dict` from
             # DEFAULT_SURVIVOR_MAIN instead of being written into every row.
             survivor_main_id=None,
-            survivor_main_prestige=1,
+            survivor_main_prestige=SHOWCASE_DEFAULT_PRESTIGE,
             survivor_perk_ids=[None, None, None, None],
             killer_main_id=None,
-            killer_main_prestige=1,
+            killer_main_prestige=SHOWCASE_DEFAULT_PRESTIGE,
             killer_perk_ids=[None, None, None, None],
         )
         db.session.add(showcase)
@@ -279,14 +298,15 @@ def update_user_showcase(
                 showcase = UserShowcase(user_id=user_id)
                 db.session.add(showcase)
 
-            if "player_title" in data and isinstance(data["player_title"], str):
-                showcase.player_title = data["player_title"].strip()[:100]
+            # Only the choices the page offers; free text used to be stored as sent.
+            if isinstance(data.get("player_title"), str) and data["player_title"].strip() in SHOWCASE_PLAYER_TITLES:
+                showcase.player_title = data["player_title"].strip()
 
-            if "devotion_level" in data and isinstance(data["devotion_level"], (int, float)):
-                showcase.devotion_level = max(1, min(99, int(data["devotion_level"])))
+            if _is_number(data.get("devotion_level")):
+                showcase.devotion_level = max(0, min(SHOWCASE_MAX_DEVOTION, int(data["devotion_level"])))
 
-            if "grade_rank" in data and isinstance(data["grade_rank"], str):
-                showcase.grade_rank = data["grade_rank"].strip()[:50]
+            if isinstance(data.get("grade_rank"), str) and data["grade_rank"].strip() in SHOWCASE_GRADE_RANKS:
+                showcase.grade_rank = data["grade_rank"].strip()
 
             if "survivor_main" in data and isinstance(data["survivor_main"], dict):
                 sm = data["survivor_main"]
@@ -296,8 +316,8 @@ def update_user_showcase(
                     showcase.survivor_main_id = int(sm["character_id"])
                 elif "character_name" in sm and isinstance(sm["character_name"], str):
                     showcase.survivor_main_id = _resolve_main_id(Survivor, sm["character_name"])
-                if "prestige" in sm and isinstance(sm["prestige"], (int, float)):
-                    showcase.survivor_main_prestige = max(1, min(100, int(sm["prestige"])))
+                if _is_number(sm.get("prestige")):
+                    showcase.survivor_main_prestige = max(0, min(SHOWCASE_MAX_PRESTIGE, int(sm["prestige"])))
                 if "perk_ids" in sm and isinstance(sm["perk_ids"], list):
                     s_perks = [
                         int(p) if p is not None and str(p).isdigit() else None
@@ -313,8 +333,8 @@ def update_user_showcase(
                     showcase.killer_main_id = int(km["character_id"])
                 elif "character_name" in km and isinstance(km["character_name"], str):
                     showcase.killer_main_id = _resolve_main_id(Killer, km["character_name"])
-                if "prestige" in km and isinstance(km["prestige"], (int, float)):
-                    showcase.killer_main_prestige = max(1, min(100, int(km["prestige"])))
+                if _is_number(km.get("prestige")):
+                    showcase.killer_main_prestige = max(0, min(SHOWCASE_MAX_PRESTIGE, int(km["prestige"])))
                 if "perk_ids" in km and isinstance(km["perk_ids"], list):
                     k_perks = [
                         int(p) if p is not None and str(p).isdigit() else None

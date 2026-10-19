@@ -87,7 +87,28 @@ export function ownsPerk(
     : perk.survivor_id === characterId;
 }
 
-/** How many perks the draft changed compared with what was loaded. The save request sends every perk, so its length is not this number. */
+/**
+ * The perk rows a save has to send: every perk whose draft differs from what was loaded, plus every
+ * perk of a character whose ownership changed. The second group matters because the server
+ * cascades a character change to all of that character's perks, so a perk the user toggled away and
+ * back (draft == loaded) still has to be sent or the cascade would overwrite it.
+ */
+export function changedPerkUpdates(
+  perks: { perk_id: number; is_unlocked: boolean; survivor_id?: number | null; killer_id?: number | null }[],
+  draft: Record<number, boolean>,
+  changedCharacterKeys: ReadonlySet<string>
+): { perk_id: number; is_unlocked: boolean }[] {
+  return perks
+    .filter((p) => {
+      const next = draft[p.perk_id] ?? p.is_unlocked;
+      if (next !== p.is_unlocked) return true;
+      const owner = p.survivor_id ? ownershipKey(p.survivor_id, 'survivor') : p.killer_id ? ownershipKey(p.killer_id, 'killer') : null;
+      return owner !== null && changedCharacterKeys.has(owner);
+    })
+    .map((p) => ({ perk_id: p.perk_id, is_unlocked: draft[p.perk_id] ?? p.is_unlocked }));
+}
+
+/** How many perks the draft changed compared with what was loaded (for analytics). */
 export function countChangedPerks(
   perks: { perk_id: number; is_unlocked: boolean }[],
   draft: Record<number, boolean>

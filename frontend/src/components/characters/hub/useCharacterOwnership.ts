@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   buildCharacterOwnershipDraft,
   changedCharacterUpdates,
+  changedPerkUpdates,
   countChangedPerks,
   ownershipKey,
   ownsPerk,
@@ -186,10 +187,13 @@ export function useCharacterOwnership({ locale, onLoginRequired, onVerificationR
         loadedCharacterOwnership.current,
         characterOwnershipDraft,
       );
-      const perkUpdates = Object.entries(perkUnlockDraft).map(([perkId, isUnlocked]) => ({
-        perk_id: Number(perkId),
-        is_unlocked: isUnlocked,
-      }));
+      // Only what changed (and the perks of changed characters): sending all ~320 perks on every
+      // save cost the server two queries each.
+      const perkUpdates = changedPerkUpdates(
+        allPerks,
+        perkUnlockDraft,
+        new Set(characterUpdates.map((u) => ownershipKey(u.character_id, u.role)))
+      );
 
       const charactersOk =
         characterUpdates.length === 0 || (await bulkUpdateCharacterOwnership(characterUpdates));

@@ -284,10 +284,10 @@ def bulk_set_character_ownership(user_id: int):
     data = request.get_json(silent=True) or {}
     updates = data.get("updates", [])
 
-    if not isinstance(updates, list):
-        return api_error("updates must be a list of {character_id, role, is_owned}.", 400)
-
-    result = ownership_service.bulk_set_character_ownership(user_id, updates)
+    try:
+        result = ownership_service.bulk_set_character_ownership(user_id, updates)
+    except ValueError as err:
+        return api_error(str(err), 400)
     return jsonify({"status": "success", "data": result}), 200
 
 
@@ -384,10 +384,10 @@ def bulk_set_perk_ownership(user_id: int):
     data = request.get_json(silent=True) or {}
     updates = data.get("updates", [])
 
-    if not isinstance(updates, list):
-        return api_error("updates must be a list of {perk_id, is_unlocked}.", 400)
-
-    result = ownership_service.bulk_set_perk_ownership(user_id, updates)
+    try:
+        result = ownership_service.bulk_set_perk_ownership(user_id, updates)
+    except ValueError as err:
+        return api_error(str(err), 400)
     return jsonify({"status": "success", "data": result}), 200
 
 

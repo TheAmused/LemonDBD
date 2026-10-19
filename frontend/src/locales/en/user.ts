@@ -71,7 +71,7 @@ export default {
   failedToResendCode: "Failed to resend code.",
   digitAriaLabel: "Digit {n} of verification code",
   missingResetToken: "Missing reset token.",
-  passwordTooShort: "Password must be at least 6 characters long.",
+  passwordTooShort: "Password must be at least {min} characters long.",
   passwordsDoNotMatch: "Passwords do not match.",
   failedToResetPassword: "Failed to reset password.",
   failedToRequestPasswordReset: "Failed to request password reset",

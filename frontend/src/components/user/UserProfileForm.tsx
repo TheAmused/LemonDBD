@@ -16,6 +16,8 @@ import { useAuth } from '@/context/AuthContext';
 import { twoFactorErrorMessage } from '@/utils/twoFactorErrors';
 import { TwoFactorSection } from '@/components/user/TwoFactorSection';
 import { AccordionSection } from '@/components/common/AccordionSection';
+import { useSiteConfig } from '@/context/SiteConfigContext';
+import { formatMessage } from '@/utils/i18nFormat';
 
 interface UserProfileFormProps {
   login: string;
@@ -36,6 +38,8 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
 }) => {
   const dict = useDictionary();
   const t = dict.user;
+  // The admin-set minimum (Settings > Limits); the server enforces the same number.
+  const minPasswordLength = useSiteConfig().limits.passwordMinLength;
   const [isExpanded, toggleExpanded] = usePersistentDrawer('lemondbd_drawer_account', false);
 
   const [newUsername, setNewUsername] = useState(initialUsername);
@@ -75,10 +79,10 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
     setStatusMessage(null);
 
     // Validation
-    if (newPassword && newPassword.length < 6) {
+    if (newPassword && newPassword.length < minPasswordLength) {
       setStatusMessage({
         type: 'error',
-        text: t.passwordTooShort,
+        text: formatMessage(t.passwordTooShort, { min: minPasswordLength }),
       });
       return;
     }

@@ -71,7 +71,7 @@ export default {
   failedToResendCode: "Nie udało się wysłać kodu ponownie.",
   digitAriaLabel: "Cyfra {n} kodu weryfikacyjnego",
   missingResetToken: "Brak tokenu resetującego.",
-  passwordTooShort: "Hasło musi mieć co najmniej 6 znaków.",
+  passwordTooShort: "Hasło musi mieć co najmniej {min} znaków.",
   passwordsDoNotMatch: "Hasła nie są zgodne.",
   failedToResetPassword: "Nie udało się zresetować hasła.",
   failedToRequestPasswordReset: "Nie udało się zażądać resetu hasła.",

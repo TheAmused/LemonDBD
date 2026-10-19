@@ -10,6 +10,8 @@ import { CheckCircle2, Lock, AlertCircle } from 'lucide-react';
 import { LemonIcon } from '@/components/LemonIcon';
 import { useAuth } from '@/context/AuthContext';
 import { useDictionary, useLocale } from '@/context/DictionaryContext';
+import { useSiteConfig } from '@/context/SiteConfigContext';
+import { formatMessage } from '@/utils/i18nFormat';
 import { Surface } from '@/components/common/Surface';
 import { CenteredScreen } from '@/components/layout/CenteredScreen';
 
@@ -20,6 +22,7 @@ function ResetPasswordContent() {
   const { resetPassword } = useAuth();
 
   const dict = useDictionary();
+  const minPasswordLength = useSiteConfig().limits.passwordMinLength;
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -34,8 +37,8 @@ function ResetPasswordContent() {
       setError(dict.user.missingResetToken);
       return;
     }
-    if (password.length < 6) {
-      setError(dict.user.passwordTooShort);
+    if (password.length < minPasswordLength) {
+      setError(formatMessage(dict.user.passwordTooShort, { min: minPasswordLength }));
       return;
     }
     if (password !== confirmPassword) {

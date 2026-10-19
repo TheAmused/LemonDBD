@@ -75,7 +75,11 @@ function MapsClientInner() {
   const handleSelectMap = useCallback((name: string, mapId?: number) => {
     setSelectedMap({ mapName: name, mapId, timestamp: Date.now(), via: 'voice' });
   }, []);
-  const handleAction = useCallback(() => {}, []);
+  const handleAction = useCallback((action: 'zoom_in' | 'zoom_out' | 'fullscreen' | 'close') => {
+    if (action === 'close') {
+      setSelectedMap((prev) => ({ ...prev, mapName: '', mapId: undefined, timestamp: Date.now() }));
+    }
+  }, []);
 
   const toggleSwitchElement = (
     <SegmentedControl

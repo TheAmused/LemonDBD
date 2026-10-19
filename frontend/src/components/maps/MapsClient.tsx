@@ -3,7 +3,7 @@
 
 import React, { Suspense, useCallback, useEffect, useMemo, useState } from 'react';
 import dynamic from 'next/dynamic';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { Search, Mic } from 'lucide-react';
 import { PageShell } from '@/components/layout/PageShell';
 import { PageShellFallback } from '@/components/layout/PageShellFallback';

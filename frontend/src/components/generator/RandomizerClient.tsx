@@ -12,6 +12,7 @@ import { Perk, CharacterItem } from '@/types/perks';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 import { useDictionary, useLocale } from '@/context/DictionaryContext';
 import { useCachedData } from '@/hooks/useCachedData';
+import { fetchJson } from '@/services/dataCache';
 import { Button } from '@/components/common/Button';
 
 const PerkModal = dynamic(() => import('@/components/PerkModal').then((m) => m.PerkModal), { ssr: false });

@@ -201,15 +201,21 @@ export function useWheelStage({
 
       // Exclude perks already in the current loadout (other slots) to prevent duplicates
       const alreadyWonIds = new Set(
-        loadout ? loadout.filter((s) => s?.perk).map((s) => s!.perk.id) : []
+        loadout
+          ? loadout
+              .map((s) => s?.perk?.id)
+              .filter((id): id is number => typeof id === 'number')
+          : []
       );
-      const eligiblePool = sortedPerks.filter((p) => !alreadyWonIds.has(p.id));
+      const eligiblePool = sortedPerks.filter((p) => p.id !== undefined && !alreadyWonIds.has(p.id));
       const pool = eligiblePool.length > 0 ? eligiblePool : sortedPerks;
 
       // Pick the perk first — uniform weighted sampling, then derive page/slot
       const [targetPerkCandidate] = pickRandomLoadout(pool, activeMutator, 1);
       const targetPerk = targetPerkCandidate || sortedPerks[0];
-      const perkIndex = sortedPerks.findIndex((p) => p.id === targetPerk.id);
+      const perkIndex = sortedPerks.findIndex(
+        (p) => (targetPerk.id !== undefined && p.id === targetPerk.id) || p.name === targetPerk.name
+      );
       const safeIndex = Math.max(0, perkIndex >= 0 ? perkIndex : 0);
       const targetPage = Math.floor(safeIndex / perksPerPage) + 1;
       const targetSlot = (safeIndex % perksPerPage) + 1;

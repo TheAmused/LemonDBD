@@ -24,18 +24,12 @@ services:
     networks:
       - dbd_network
 
-  # Shared catalog cache.
-  #
-  # gunicorn runs GUNICORN_WORKERS (4) separate processes, so anything held in
-  # process memory is four caches that never see each other. This is the one
-  # place all four share.
+  # Shared catalog cache: gunicorn runs GUNICORN_WORKERS (4) processes, and this
+  # is the one place all four share.
   #
   # No volume on purpose: everything in here is derived from Postgres, so
-  # persisting it across a restart would only risk serving a stale generation.
-  # `--maxmemory-policy allkeys-lru` means a full Redis evicts rather than
-  # starts refusing writes, since a cache that fails closed would take the API
-  # down with it. Because it evicts, nothing that must survive pressure lives
-  # here: see redis-limits.
+  # persisting it would only risk serving a stale generation. `allkeys-lru`
+  # evicts instead of refusing writes, which would take the API down with it.
   redis:
     image: redis:7-alpine
     container_name: dbd_redis
@@ -57,14 +51,9 @@ services:
     networks:
       - dbd_network
 
-  # Rate-limit counters and single-use ALTCHA records.
-  #
-  # Kept apart from the cache on purpose. Under allkeys-lru a burst of cache
-  # traffic evicts the oldest keys first, and those are exactly the login and
-  # registration rate-limit windows and the used ALTCHA signatures: limits
-  # reset early and a solved challenge can be replayed. `noeviction` plus a
-  # small ceiling means this instance never drops a key to make room, and its
-  # contents (short-lived counters) are far too small to reach the ceiling.
+  # Rate-limit counters and single-use ALTCHA records, apart from the cache:
+  # under allkeys-lru a burst of cache traffic would evict exactly these (limits
+  # reset early, a solved challenge can be replayed). `noeviction` never drops a key.
   redis-limits:
     image: redis:7-alpine
     container_name: dbd_redis_limits
@@ -166,8 +155,7 @@ services:
       - DATABASE_URL=${DATABASE_URL:-postgresql+psycopg://postgres:postgres@db:5432/dbd_db}
       - DB_POOL_SIZE=2
       - DB_MAX_OVERFLOW=1
-      # The catalog-cache maintenance job bumps the shared generation from here;
-      # without Redis it would only bump this process's private counter.
+      # The catalog-cache maintenance job bumps the shared generation from here.
       - REDIS_URL=${REDIS_URL:-redis://redis:6379/0}
       - SCHEDULER_ENABLED=true
       # The moderation-email job runs here, so this process needs the same mail settings as the backend.

@@ -26,13 +26,9 @@ transfer entirely:
   Vary: Accept-Language, Accept-Encoding, Cookie
 
 The ETag is derived from the body and stored with the Redis entry, so a 304 is
-only ever sent for a body the server still holds: a content change that forgot
-to bump the catalog version can no longer be vouched for forever. `Vary: Cookie`
-keeps a browser from handing the anonymous copy to the same URL after sign-in.
-
-Keys are built from *normalized* parameter values (see `cache_params`), so a
-request cannot mint a new entry by varying a value the view treats identically,
-and a body too large to be worth keeping is served without being stored.
+only sent for a body the server still holds. `Vary: Cookie` keeps a browser from
+reusing the anonymous copy after sign-in. Keys use normalized parameter values
+(see `cache_params`), and an oversized body is served without being stored.
 """
 from __future__ import annotations
 
@@ -51,17 +47,14 @@ from app.utils.lang import SUPPORTED_LANGS, extract_lang
 
 logger = logging.getLogger(__name__)
 
-#: How long a browser may reuse a catalog response without asking. Short,
-#: because the ETag revalidation behind it is cheap; the stale window below
-#: only covers the revalidation itself.
+#: How long a browser may reuse a catalog response without asking.
 BROWSER_MAX_AGE = 60
 BROWSER_SWR = 300
 
 #: A compressed body larger than this is served but not stored.
 MAX_ENTRY_BYTES = 256 * 1024
 
-#: Responses to requests carrying these parameters are searches over free text,
-#: which cannot be enumerated, so they are kept briefly.
+#: Free-text parameters: their responses cannot be enumerated, so they expire fast.
 FREE_TEXT_PARAMS = ("search", "q", "character")
 FREE_TEXT_TTL = 120
 
@@ -88,12 +81,8 @@ def _is_personal() -> bool:
 def _cache_key(endpoint: str, vary: Vary | None) -> str:
     """Endpoint plus the normalized query arguments that change the response.
 
-    Raises `Uncacheable` for a value that must not mint an entry.
-
-    An explicit `vary` rather than the whole query string: a URL carrying a
-    `?_=1730000000` cache-buster or a tracking parameter would otherwise mint a
-    new entry per request and the cache would never hit. A mapping supplies a
-    normalizer per parameter; a plain list of names falls back to trimmed,
+    Raises `Uncacheable` for a value that must not mint an entry. A mapping
+    supplies a normalizer per parameter; plain names fall back to trimmed,
     lower-cased text.
     """
     parts = [endpoint]
@@ -104,19 +93,10 @@ def _cache_key(endpoint: str, vary: Vary | None) -> str:
     for name, value in sorted((request.view_args or {}).items()):
         parts.append(f"{name}={value}")
 
-    # The RESOLVED language, not the `lang` query parameter.
-    #
-    # `extract_lang()` falls back from `?lang=` to the locale in the Referer
-    # path and then to the Accept-Language header, so two requests that both
-    # omit `?lang=` can resolve to different languages while producing an
-    # identical URL. Keying on the parameter alone, the first of those to miss
-    # would write its language into the shared entry and every later request
-    # would be served that body -- a German visitor pinning German onto
-    # everyone for the rest of the TTL. `Vary: Accept-Language` fixes this for
-    # browser and proxy caches but says nothing to Redis; only the key does.
-    # `extract_lang()` returns whatever `?lang=` says, so a value that is not a
-    # site language is folded into "default" (it renders the source language
-    # anyway); otherwise `?lang=junk1`, `?lang=junk2` would each mint an entry.
+    # The RESOLVED language, not the `lang` parameter: `extract_lang()` also reads
+    # the Referer and Accept-Language, so identical URLs can resolve differently.
+    # A value that is not a site language folds into "default" (it renders the
+    # source language anyway) so `?lang=junk1`, `?lang=junk2` share one entry.
     lang = extract_lang()
     parts.append(f"~lang={lang if lang in SUPPORTED_LANGS else 'default'}")
 
@@ -153,9 +133,6 @@ def _apply_headers(response: Response, etag: str, max_age: int) -> Response:
     response.headers["Cache-Control"] = (
         f"public, max-age={max_age}, stale-while-revalidate={BROWSER_SWR}"
     )
-    # Responses differ by language, and by who is asking: without these a
-    # shared or browser cache could hand a Polish body to a request that asked
-    # for English, or the anonymous copy to a signed-in user.
     response.headers["Vary"] = "Accept-Language, Accept-Encoding, Cookie"
     return response
 
@@ -214,8 +191,7 @@ def cache_catalog(
             except Uncacheable:
                 return view(*args, **kwargs)
 
-            # One version for this whole request: the lookup and the store must
-            # agree on the generation they belong to.
+            # One version for the whole request, so lookup and store agree.
             version = redis_cache.catalog_version()
             if_none_match = request.headers.get("If-None-Match")
 
@@ -223,7 +199,6 @@ def cache_catalog(
             entry = _unpack(raw) if raw is not None else None
             if entry is not None:
                 etag, body = entry
-                # The validator is vouching for a body this server still holds.
                 if _matches(if_none_match, etag):
                     return _apply_headers(Response(status=304), etag, max_age)
                 response = Response(body, mimetype="application/json")
@@ -232,9 +207,8 @@ def cache_catalog(
 
             result = view(*args, **kwargs)
 
-            # Only a plain 200 is storable. A tuple with an error status, a
-            # streamed file or a redirect is passed straight through.
-            payload, status = (result if isinstance(result, tuple) else (result, 200))
+            # Only a plain 200 is storable; errors, streams and redirects pass through.
+            payload, status = result if isinstance(result, tuple) else (result, getattr(result, "status_code", 200))
             if status != 200 or not isinstance(payload, Response) or payload.is_streamed:
                 return result
             body = payload.get_data()
@@ -243,9 +217,8 @@ def cache_catalog(
 
             etag = _etag(body)
             packed = _pack(etag, body)
-            # Skip the store when the catalog was bumped while the view ran:
-            # the rows it read may predate the change, and filing them under
-            # the new generation would keep them for the whole TTL.
+            # Not stored if the catalog was bumped while the view ran: those rows
+            # may predate the change.
             if len(packed) <= MAX_ENTRY_BYTES and redis_cache.catalog_version(fresh=True) == version:
                 redis_cache.set_raw(key, packed, ttl=_entry_ttl(ttl), version=version)
             payload.headers["X-Cache"] = "MISS"

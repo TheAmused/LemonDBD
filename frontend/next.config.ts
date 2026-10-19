@@ -1,10 +1,7 @@
 // frontend/next.config.ts
 import type { NextConfig } from 'next';
 
-/**
- * Static art under /images is served at fixed paths, so a replaced file must
- * reach browsers within a day, not a week.
- */
+/** Static art under /images has fixed paths: a replaced file must reach browsers within a day. */
 const IMAGE_CACHE_CONTROL = 'public, max-age=86400, stale-while-revalidate=86400';
 
 const nextConfig: NextConfig = {

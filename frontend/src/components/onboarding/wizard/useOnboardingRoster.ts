@@ -51,7 +51,6 @@ export function useOnboardingRoster(locale: string) {
       chapters?: Array<{ name: string; banner_url: string | null; banner_local_path: string | null }>;
     };
     const chaptersKey = catalogKey('chapters');
-    // fetchJson throws on a non-2xx, so a 429 or a 500 body is not cached as the chapter list.
     fetchCached<ChaptersPayload>(chaptersKey, () => fetchJson<ChaptersPayload>(chaptersKey), { ttlMs: CATALOG_TTL_MS })
       .then((json) => {
         if (cancelled) return;

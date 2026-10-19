@@ -97,8 +97,7 @@ def process_and_save_avatar(user_id: int, file_storage) -> tuple[User | None, st
         avatar_url = f"/api/v1/auth/avatar/file/{new_filename}"
         user.avatar_url = avatar_url
         db.session.commit()
-        # Only now: deleting the old file first left the profile pointing at a
-        # file that no longer existed whenever the new image failed to decode.
+        # Only after the commit, so a failed decode keeps the old file.
         remove_stale_avatar_file(previous_avatar_url, avatar_dir)
         return user, None
 

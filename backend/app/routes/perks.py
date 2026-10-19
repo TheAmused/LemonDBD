@@ -27,13 +27,13 @@ from sqlalchemy import select
 logger = logging.getLogger(__name__)
 perks_bp = Blueprint("perks", __name__)
 
-#: Paging bounds shared by the view and the cache key, which must clamp alike.
+#: Paging bounds shared by the view and the cache key.
 PERKS_DEFAULT_LIMIT = 50
 PERKS_MAX_LIMIT = 10000
 PERKS_MAX_PAGE = 10000
 SUGGESTIONS_MAX_LIMIT = 50
 
-#: `category` selects a role; any other value selects nothing and is not cached.
+#: Any other category selects nothing and is not cached.
 _ROLE = norm_choice(("survivor", "killer"), strict=True)
 _FILTER = norm_lower(drop_all=True)
 _TEXT = norm_lower()

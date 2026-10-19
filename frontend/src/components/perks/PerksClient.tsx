@@ -195,8 +195,7 @@ function PerksContent() {
     fetchPerks();
   }, [fetchPerks]);
 
-  // The same entry the tier lists and the profile showcase read, so the whole
-  // catalog is downloaded and held once.
+  // Shares its cache entry with the tier lists and the profile showcase.
   const { perks: allPerksList } = useCatalogPerks(locale);
 
   const charactersKey = catalogKey('characters', { lang: locale });

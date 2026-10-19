@@ -31,10 +31,8 @@ def _role_models(category: str | None) -> list[type[Survivor] | type[Killer]]:
 def fetch_characters(service: Any = None, category: str | None = None, lang: str | None = None) -> list[dict[str, Any]]:
     """Retrieve character list ordered by canonical chapter release numbers.
 
-    A database error propagates, and so does an empty result for a category
-    that names a real role: `@cache_catalog` refuses to store a 5xx, whereas a
-    quiet `[]` would be cached as the roster for a day. A category that names
-    neither role legitimately selects nothing and answers `[]`.
+    A database error propagates, and so does an empty result for a real role
+    (`@cache_catalog` does not store a 5xx, but would store `[]` for a day).
     """
     key = ("fetch_characters", category.lower() if category else "all", lang)
     return remember(key, lambda: _load_characters(category, lang), ttl=120.0)
@@ -83,11 +81,7 @@ def fetch_character_suggestions(
     category: str | None = None,
     limit: int = 15,
 ) -> list[dict[str, Any]]:
-    """Autocomplete suggestions for characters by name or real name.
-
-    A database error propagates so `@cache_catalog` answers 5xx instead of
-    storing an empty list as the suggestions for an hour.
-    """
+    """Autocomplete suggestions for characters by name or real name."""
     key = ("fetch_character_suggestions", query.strip().lower() if query else "", category.lower() if category else "all", limit)
     return remember(key, lambda: _load_character_suggestions(query, category, limit), ttl=120.0)
 

@@ -76,6 +76,16 @@ def test_thumbnails_of_the_same_stem_do_not_share_a_file(static_app: Flask, stat
     assert from_png.headers["Cache-Control"] == f"public, max-age={thumbnails.THUMB_MAX_AGE}"
 
 
+def test_an_unchanged_source_is_not_decoded_again(
+    static_app: Flask, static_client: FlaskClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    _png(Path(static_app.static_folder) / "avatars" / "x.png", "red", (200, 200))
+    static_client.get("/thumb/x.png")
+    monkeypatch.setattr(thumbnails, "_write_thumb", lambda *_: pytest.fail("regenerated an up-to-date thumbnail"))
+
+    assert static_client.get("/thumb/x.png").status_code == 200
+
+
 def test_a_source_restored_with_an_older_mtime_regenerates_its_thumbnail(
     static_app: Flask, static_client: FlaskClient
 ) -> None:

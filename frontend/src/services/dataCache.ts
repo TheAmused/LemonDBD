@@ -27,19 +27,12 @@ interface CacheEntry<T> {
   updatedAt: number;
 }
 
-/**
- * Most entries kept at once. Every page, sort and search combination of /perks
- * is its own key, so without a ceiling a long session holds all of them.
- */
+/** Most entries kept at once; every page, sort and search of /perks is its own key. */
 const MAX_ENTRIES = 50;
 
 const store = new Map<string, CacheEntry<unknown>>();
 const inflight = new Map<string, Promise<unknown>>();
-/**
- * Bumped by `invalidate()`. A request remembers the value it started under and
- * writes its result only if it is unchanged, so a response to a question asked
- * before a mutation cannot put the pre-mutation data back as "fresh".
- */
+/** Bumped by `invalidate()`; a request writes its result only if this is unchanged since it started. */
 const generations = new Map<string, number>();
 const listeners = new Map<string, Set<() => void>>();
 const revalidators = new Map<string, Set<() => void>>();
@@ -51,15 +44,11 @@ export const DEFAULT_TTL_MS = 5 * 60 * 1000;
  * Freshness window for the static catalog: perks, characters, survivors,
  * killers, items, addons, chapters and maps.
  *
- * Longer than the default because these endpoints carry an ETag derived from the
- * response body, so the two caches divide the work rather than duplicating it:
- * this one avoids making the *request* at all inside the window, and the ETag
- * makes the request *cheap* when it is made -- a few hundred bytes of 304
- * instead of a megabyte of perk list. `fetchJson` sends every such request with
- * `cache: 'no-cache'`, so a request made after the window always reaches the
- * server and sees a re-seed or kill-switch toggle (the browser never answers it
- * from a stale HTTP-cache copy). An ownership edit, a sign-in and a sign-out
- * call `invalidate()` directly.
+ * Longer than the default because these endpoints carry a body-derived ETag:
+ * this cache skips the request inside the window, and the ETag makes a request
+ * after it a cheap 304. `fetchJson` sends `cache: 'no-cache'`, so that request
+ * always reaches the server. Ownership edits, sign-in and sign-out call
+ * `invalidate()` directly.
  */
 export const CATALOG_TTL_MS = 30 * 60 * 1000;
 
@@ -120,7 +109,7 @@ export function isStale(key: string, ttlMs: number = DEFAULT_TTL_MS): boolean {
   return Date.now() - entry.updatedAt > ttlMs;
 }
 
-/** Drops the least recently written entries nobody is watching, down to the ceiling. */
+/** Drops the oldest-written entries nobody is watching, down to the ceiling. */
 function evictOverflow(): void {
   for (const key of store.keys()) {
     if (store.size <= MAX_ENTRIES) return;
@@ -157,8 +146,7 @@ export function onInvalidated(key: string, refetch: () => void): () => void {
 
 function drop(key: string): void {
   generations.set(key, (generations.get(key) ?? 0) + 1);
-  // The request still in flight was asked before the change; the refetch below
-  // must not join it.
+  // The request in flight predates the change; the refetch must not join it.
   inflight.delete(key);
   store.delete(key);
   notify(key);
@@ -178,8 +166,7 @@ function drop(key: string): void {
  * change `is_owned` on perks.
  */
 export function invalidate(prefix?: string): void {
-  // Keys that are only in flight count too: their first response is also older
-  // than the change.
+  // Keys only in flight count too: their first response predates the change.
   const keys = new Set([...store.keys(), ...inflight.keys()]);
   for (const key of keys) {
     if (prefix === undefined || key.startsWith(prefix)) drop(key);
@@ -242,11 +229,8 @@ export function unwrapList<T>(payload: ListPayload<T> | null | undefined): T[] {
 }
 
 /**
- * GET + json, throwing on a non-2xx so callers can catch.
- *
- * Reads are sent `cache: 'no-cache'`: the browser always revalidates with the
- * ETag instead of answering from its own HTTP cache, which would otherwise hand
- * back a stale copy and let this module file it as fresh for another window.
+ * GET + json, throwing on a non-2xx. Sent `cache: 'no-cache'` so the browser
+ * revalidates instead of handing back a stale HTTP-cache copy.
  */
 export async function fetchJson<T>(url: string, init?: RequestInit): Promise<T> {
   return apiClient<T>(url, { cache: 'no-cache', ...init });

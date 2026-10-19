@@ -9,6 +9,10 @@
  * code point, and numbers are printed the way Python prints the int or float it parsed. The parity
  * test pins hashes produced by the Python side, so the two cannot drift apart unnoticed.
  *
+ * Bans and stamps name the content itself, not how someone uses it: the server leaves "usage"
+ * fields out first (`content_identity` in the same backend module). Ranking a tier list is usage,
+ * so every ranking of a banned list is still that list; an edit saved from the editor is new content.
+ *
  * Hashing the content itself, rather than trusting the `_manifest.content_hash` an item carries,
  * is what lets a ban reach unsigned copies and copies whose author stamp was removed.
  */
@@ -19,6 +23,18 @@ import { smashRosterExportDoc } from '@/utils/smashOrPass/exportDoc';
 import { buildCustomTierListDoc } from '@/utils/tierLists/customDoc';
 import type { StoredCustomRoster } from '@/types/smashOrPass';
 import type { StoredCustomList } from '@/types/tierList';
+
+/** Mirrors USAGE_FIELDS in backend/app/services/content_moderation_service.py. */
+const USAGE_FIELDS: Readonly<Record<string, readonly string[]>> = {
+  'lemondbd-tier-list': ['placements'],
+};
+
+/** The document without its usage fields: what a ban or an author stamp names. */
+export function contentIdentity(payload: Record<string, unknown>): Record<string, unknown> {
+  const usage = typeof payload.format === 'string' ? USAGE_FIELDS[payload.format] : undefined;
+  if (!usage) return payload;
+  return Object.fromEntries(Object.entries(payload).filter(([key]) => !usage.includes(key)));
+}
 
 /** Python's `repr(float)`: scientific notation below 1e-4 and from 1e16 up, with a 2-digit exponent. */
 function pythonFloat(value: number): string {
@@ -88,13 +104,20 @@ function storedDocument(contentType: ModeratedContentType, item: Record<string, 
   return item;
 }
 
-/** The hash a report of this saved item would be filed under, i.e. the key its ban is stored by. */
-export async function storedContentHash(contentType: ModeratedContentType, item: unknown): Promise<string | null> {
-  if (!isRecord(item)) return null;
+/**
+ * Every hash a ban on this saved item can be stored under: first its identity hash (what reports and
+ * bans use now), then, when it differs, the whole-document hash that bans made before usage fields
+ * were left out used.
+ */
+export async function storedContentHashes(contentType: ModeratedContentType, item: unknown): Promise<string[]> {
+  if (!isRecord(item)) return [];
   try {
     const payload = signingPayload(contentType, storedDocument(contentType, item));
-    return Object.keys(payload).length > 0 ? await contentHash(payload) : null;
+    if (Object.keys(payload).length === 0) return [];
+    const identity = contentIdentity(payload);
+    const hashes = await Promise.all(identity === payload ? [contentHash(payload)] : [contentHash(identity), contentHash(payload)]);
+    return hashes.filter((hash): hash is string => hash !== null);
   } catch {
-    return null;
+    return [];
   }
 }

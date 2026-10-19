@@ -9,7 +9,7 @@ import {
   requestRevocationSweep,
   useContentRevocationSync,
 } from '@/hooks/useContentRevocationSync';
-import { storedContentHash } from '@/utils/contentHash';
+import { storedContentHashes } from '@/utils/contentHash';
 import { DEFAULT_TIERS } from '@/utils/tierLists/constants';
 import { ContentRevocationSync } from '@/components/common/ContentRevocationSync';
 
@@ -383,7 +383,7 @@ describe('useContentRevocationSync', () => {
   it('purges an unsigned saved copy by the hash of its content', async () => {
     const banned = { id: 'unsigned', title: 'Banned list', tiers: DEFAULT_TIERS, items: [{ id: 'a', name: 'A' }], placements: { s: ['a'] }, createdAt: 1, updatedAt: 2 };
     const kept = { ...banned, id: 'other', title: 'Fine list' };
-    const bannedHash = await storedContentHash('tier_list', banned);
+    const [bannedHash] = await storedContentHashes('tier_list', banned);
     assert.ok(bannedHash);
     mockStorage.setItem('lemondbd_tier_lists', JSON.stringify({ version: 1, rankings: {}, custom: { unsigned: banned, other: kept } }));
 
@@ -396,28 +396,41 @@ describe('useContentRevocationSync', () => {
     const purged = await checkAndPurgeRevokedContent();
 
     assert.deepEqual(purged, [bannedHash]);
-    assert.equal(sent.length, 2, 'one content hash per saved list');
+    assert.equal(sent.length, 4, 'per list: its content hash and its whole-document hash (older bans)');
     const custom = JSON.parse(mockStorage.getItem('lemondbd_tier_lists') ?? '{}').custom;
     assert.deepEqual(Object.keys(custom), ['other']);
     const revoked = dispatchedEvents.find((e) => e.type === 'content-revoked');
     assert.deepEqual(revoked?.detail, { count: 1, hashes: [bannedHash], items: 1 });
   });
 
-  it('purges a copy edited after signing: its stamp is stale but its content is banned', async () => {
-    const trial = { id: 'c9', title: 'Edited', description: '', game_mode: 'custom', rounds: [{ mode: 'emoji', target_id: 1 }] };
-    const contentHashValue = await storedContentHash('minigame', trial);
-    assert.ok(contentHashValue);
-    const staleStamp = '9'.repeat(64);
-    mockStorage.setItem('lemondbd_custom_minigames', JSON.stringify([{ ...trial, _manifest: { content_hash: staleStamp } }]));
-
+  it('ranking is not editing: a re-ranked copy of a banned list is removed', async () => {
+    const original = { id: 'l1', title: 'Banned list', tiers: DEFAULT_TIERS, items: [{ id: 'a', name: 'A' }, { id: 'b', name: 'B' }], placements: { s: ['a'], a: ['b'] }, createdAt: 1, updatedAt: 2 };
+    const [banHash] = await storedContentHashes('tier_list', original);
+    const reranked = { ...original, placements: { s: ['b'], f: ['a'] }, updatedAt: 3 };
+    mockStorage.setItem('lemondbd_tier_lists', JSON.stringify({ version: 1, rankings: {}, custom: { l1: reranked } }));
     globalThis.fetch = async (_input: RequestInfo | URL, init?: RequestInit) => {
       const hashes = (JSON.parse(String(init?.body)) as { hashes: string[] }).hashes;
-      assert.ok(hashes.includes(staleStamp) && hashes.includes(contentHashValue));
-      return { ok: true, status: 200, json: async () => ({ revoked_hashes: [contentHashValue] }) } as Response;
+      return { ok: true, status: 200, json: async () => ({ revoked_hashes: hashes.filter((h) => h === banHash) }) } as Response;
     };
 
-    assert.deepEqual(await checkAndPurgeRevokedContent(), [contentHashValue]);
-    assert.deepEqual(JSON.parse(mockStorage.getItem('lemondbd_custom_minigames') ?? 'null'), []);
+    assert.deepEqual(await checkAndPurgeRevokedContent(), [banHash]);
+    assert.deepEqual(JSON.parse(mockStorage.getItem('lemondbd_tier_lists') ?? '{}').custom, {});
+  });
+
+  it('an edit saved from the editor is new content: the ban on the original no longer applies', async () => {
+    const original = { id: 'l2', title: 'Banned list', tiers: DEFAULT_TIERS, items: [{ id: 'a', name: 'A' }], placements: {}, createdAt: 1, updatedAt: 2 };
+    const [banHash] = await storedContentHashes('tier_list', original);
+    // The editor saves without the previous author's stamp: the list is the editor's own now.
+    const edited = { ...original, title: 'My own take', items: [{ id: 'a', name: 'A' }, { id: 'c', name: 'C' }], updatedAt: 5 };
+    mockStorage.setItem('lemondbd_tier_lists', JSON.stringify({ version: 1, rankings: {}, custom: { l2: edited } }));
+    globalThis.fetch = async (_input: RequestInfo | URL, init?: RequestInit) => {
+      const hashes = (JSON.parse(String(init?.body)) as { hashes: string[] }).hashes;
+      assert.ok(!hashes.includes(banHash));
+      return { ok: true, status: 200, json: async () => ({ revoked_hashes: [banHash] }) } as Response;
+    };
+
+    assert.deepEqual(await checkAndPurgeRevokedContent(), []);
+    assert.ok(JSON.parse(mockStorage.getItem('lemondbd_tier_lists') ?? '{}').custom.l2);
   });
 
   it('keeps an item that was edited while the check was in flight', async () => {

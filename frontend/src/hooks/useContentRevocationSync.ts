@@ -7,7 +7,13 @@
  * moderator bans one, its content hash goes on the server's revocation list. This sweep hashes every
  * saved copy the way the server does (`utils/contentHash`), asks which hashes are revoked and deletes
  * those copies. The hash comes from the content itself, so unsigned copies and copies whose author
- * stamp was stripped are caught too; the stamp's own `content_hash` is checked as well.
+ * stamp was stripped are caught too.
+ *
+ * What counts as the same content: ranking a tier list (or voting, or playing) is using it, so every
+ * ranking of a banned list is still the banned list. Saving an edit from an editor makes new content:
+ * its hash changes, and the editors save it without the previous author's stamp (it is stamped with
+ * the editor's own account when it is next exported), so the ban no longer applies. The stamp's
+ * `content_hash` is checked too: a copy still carrying the stamp was never re-saved from an editor.
  *
  * `useContentRevocationSync` (mounted once in the root layout) sweeps on page load, on every
  * navigation, when the tab comes back into view and every few minutes while it is visible, so a ban
@@ -98,14 +104,13 @@ function entriesOf(collection: Collection, parsed: unknown): Array<[string, unkn
 type ScannedItems = Map<string, Map<string, string[]>>;
 
 async function scanCollections(storage: Storage): Promise<ScannedItems> {
-  const { storedContentHash } = await import('@/utils/contentHash');
+  const { storedContentHashes } = await import('@/utils/contentHash');
   const scanned: ScannedItems = new Map();
   for (const collection of COLLECTIONS) {
     const items = new Map<string, string[]>();
     for (const [, item] of entriesOf(collection, readJson(storage, collection.key))) {
-      const hashes = [stampHash(item), await storedContentHash(collection.contentType, item)].filter(
-        (hash): hash is string => hash !== null
-      );
+      const stamp = stampHash(item);
+      const hashes = [...(stamp ? [stamp] : []), ...(await storedContentHashes(collection.contentType, item))];
       if (hashes.length > 0) items.set(JSON.stringify(item), Array.from(new Set(hashes)));
     }
     scanned.set(collection.key, items);

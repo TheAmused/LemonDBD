@@ -154,11 +154,14 @@ function PerksContent() {
   const { prefetchPerkIcons } = useImagePrefetch();
   const fetchSeqRef = useRef(0);
 
+  const [fetchError, setFetchError] = useState<string | null>(null);
+
   const fetchPerks = useCallback(async () => {
     const requestId = ++fetchSeqRef.current;
     if (perks.length === 0) {
       setLoading(true);
     }
+    setFetchError(null);
     try {
       const queryParams = new URLSearchParams({
         page: page.toString(),
@@ -189,8 +192,11 @@ function PerksContent() {
         setTotalPages(result.pagination.total_pages);
         setTotalResults(result.pagination.total);
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error('Failed fetching perks:', err);
+      if (requestId === fetchSeqRef.current) {
+        setFetchError(err?.message || 'Failed fetching perks');
+      }
     } finally {
       if (requestId === fetchSeqRef.current) {
         setLoading(false);
@@ -307,11 +313,22 @@ function PerksContent() {
             killerCount={killerCount}
             allCount={role === 'Survivor' ? survivorCount : killerCount}
             ownedCount={role === 'Survivor' ? survivorOwnedCount : killerOwnedCount}
+            isLoggedIn={Boolean(user)}
           />
         </div>
 
         <div className="flex min-h-0 flex-1 flex-col overflow-y-auto">
-          {loading ? (
+          {fetchError && perks.length === 0 ? (
+            <div className="flex flex-col items-center justify-center gap-4 p-12 text-center my-auto">
+              <p className="text-text-secondary text-base">Failed to load perks.</p>
+              <button
+                onClick={() => fetchPerks()}
+                className="px-4 py-2 bg-accent-red text-white rounded hover:bg-opacity-90 font-medium transition-colors"
+              >
+                Retry
+              </button>
+            </div>
+          ) : loading ? (
             <PerksGridSkeleton />
           ) : perks.length === 0 ? (
             <EmptyState

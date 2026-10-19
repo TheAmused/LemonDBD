@@ -90,6 +90,7 @@ export default {
   authTokenMissing: "Brak tokenu uwierzytelniającego. Zaloguj się ponownie.",
   profileUpdateFailedMsg: "Nie udało się zaktualizować profilu.",
   profileUpdateSuccessMsg: "Profil został pomyślnie zaktualizowany!",
+  emailChangedVerifyMsg: "Adres e-mail zmieniony. Wysłaliśmy kod weryfikacyjny na nowy adres: wpisz go, aby ponownie zweryfikować konto.",
 
   // --- Campfire Dossier additions ---
   tabSanctum: "Zarządzanie Kontem",

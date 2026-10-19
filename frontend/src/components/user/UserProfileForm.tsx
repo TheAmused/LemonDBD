@@ -128,10 +128,10 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
 
     setIsUpdating(true);
     try {
-      await updateUserProfile(payload);
+      const result = await updateUserProfile(payload);
       setStatusMessage({
         type: 'success',
-        text: t.profileUpdateSuccessMsg,
+        text: payload.email && result.verificationRequired ? t.emailChangedVerifyMsg : t.profileUpdateSuccessMsg,
       });
       setCurrentPassword('');
       setTwoFactorCode('');

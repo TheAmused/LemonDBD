@@ -90,6 +90,7 @@ export default {
   authTokenMissing: "認証トークンがありません。再度ログインしてください。",
   profileUpdateFailedMsg: "プロフィールの更新に失敗しました。",
   profileUpdateSuccessMsg: "プロフィールを更新しました！",
+  emailChangedVerifyMsg: "メールアドレスを変更しました。新しいアドレスに確認コードを送信しました。コードを入力してアカウントを再確認してください。",
 
   // --- Campfire Dossier additions ---
   tabSanctum: "アカウント管理",

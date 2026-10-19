@@ -90,6 +90,7 @@ export default {
   authTokenMissing: "Authentifizierungs-Token fehlt. Bitte erneut anmelden.",
   profileUpdateFailedMsg: "Profil konnte nicht aktualisiert werden.",
   profileUpdateSuccessMsg: "Profil erfolgreich aktualisiert!",
+  emailChangedVerifyMsg: "E-Mail-Adresse geändert. Wir haben einen Bestätigungscode an die neue Adresse geschickt: Gib ihn ein, um das Konto erneut zu bestätigen.",
 
   // --- Campfire Dossier additions ---
   tabSanctum: "Kontoverwaltung",

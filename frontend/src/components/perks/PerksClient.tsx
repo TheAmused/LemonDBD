@@ -28,6 +28,7 @@ import { useImagePrefetch } from '@/components/common/ImagePreloadProvider';
 import { useDictionary, useLocale } from '@/context/DictionaryContext';
 import { useCachedData } from '@/hooks/useCachedData';
 import { fetchCached, fetchJson } from '@/services/dataCache';
+import { SEARCH_DEBOUNCE_MS } from '@/constants/timing';
 
 const PerkModal = dynamic(() => import('@/components/PerkModal').then((m) => m.PerkModal), { ssr: false });
 
@@ -54,8 +55,14 @@ function PerksContent() {
   const [scope, setScope] = useState<ScopeFilter>('all');
   const [ownershipFilter, setOwnershipFilter] = useState<OwnershipFilter>('all');
   const [search, setSearch] = useState<string>('');
+  const [debouncedSearch, setDebouncedSearch] = useState<string>('');
   const [sortBy, setSortBy] = useState<SortField>('name');
   const [order, setOrder] = useState<SortOrder>('asc');
+
+  useEffect(() => {
+    const id = setTimeout(() => setDebouncedSearch(search), SEARCH_DEBOUNCE_MS);
+    return () => clearTimeout(id);
+  }, [search]);
 
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(DEFAULT_PERKS_PER_PAGE);
@@ -149,7 +156,9 @@ function PerksContent() {
 
   const fetchPerks = useCallback(async () => {
     const requestId = ++fetchSeqRef.current;
-    setLoading(true);
+    if (perks.length === 0) {
+      setLoading(true);
+    }
     try {
       const queryParams = new URLSearchParams({
         page: page.toString(),
@@ -163,8 +172,8 @@ function PerksContent() {
       if (scope === 'general') {
         queryParams.append('scope', 'general');
       }
-      if (search) {
-        queryParams.append('search', search);
+      if (debouncedSearch) {
+        queryParams.append('search', debouncedSearch);
       }
       if (ownershipFilter === 'owned' && user) {
         queryParams.append('owned_only', 'true');
@@ -191,7 +200,7 @@ function PerksContent() {
     backendBase,
     role,
     scope,
-    search,
+    debouncedSearch,
     sortBy,
     order,
     page,
@@ -200,6 +209,7 @@ function PerksContent() {
     user,
     locale,
     prefetchPerkIcons,
+    perks.length,
   ]);
 
   useEffect(() => {

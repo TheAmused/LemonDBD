@@ -14,7 +14,6 @@ import {
   Pencil,
   Plus,
   RotateCcw,
-  Save,
   Trash2,
   Upload,
 } from 'lucide-react';
@@ -69,9 +68,6 @@ export interface TierListEditorProps {
   /** Whether the user can add, edit, delete, or reorder tiers (true for custom lists and admins on official lists). */
   canEditTiers?: boolean;
   onSave: (tiers: TierDefinition[], placements: TierPlacements) => SaveResult;
-  /** Admin-only callback on official tier lists to persist tiers and default placements to the database. */
-  onSaveOfficial?: (tiers: TierDefinition[], placements: TierPlacements) => Promise<void>;
-  savingOfficial?: boolean;
   onReset: () => SaveResult;
   buildExportDoc: (tiers: TierDefinition[], placements: TierPlacements) => TierListDocument;
   importTarget: ImportTarget;
@@ -110,8 +106,6 @@ export function TierListEditor(props: TierListEditorProps) {
     poolEmptyLabel,
     canEditTiers = mode === 'custom',
     onSave,
-    onSaveOfficial,
-    savingOfficial = false,
     onReset,
     buildExportDoc,
     importTarget,
@@ -187,18 +181,9 @@ export function TierListEditor(props: TierListEditorProps) {
       const next = fn({ tiers, board });
       const nextPlacements = placementsFromBoard(next.board, next.tiers, placements, visibleKeys);
       report(onSave(next.tiers, nextPlacements));
-      if (onSaveOfficial) {
-        void onSaveOfficial(next.tiers, nextPlacements);
-      }
     },
-    [canEditTiers, tiers, board, placements, visibleKeys, report, onSave, onSaveOfficial]
+    [canEditTiers, tiers, board, placements, visibleKeys, report, onSave]
   );
-
-  const handleSaveOfficialClick = useCallback(() => {
-    if (!onSaveOfficial) return;
-    const currentPlacements = placementsFromBoard(board, tiers, placements, visibleKeys);
-    void onSaveOfficial(tiers, currentPlacements);
-  }, [onSaveOfficial, board, tiers, placements, visibleKeys]);
 
   const nextColor = TIER_COLOR_TOKENS[Math.min(tiers.length, TIER_COLOR_TOKENS.length - 1)];
   const editingIndex = tiers.findIndex((tier) => tier.id === editingTierId);
@@ -214,7 +199,7 @@ export function TierListEditor(props: TierListEditorProps) {
     kindLabel && pageTitle && kindLabel.trim().toLowerCase() === pageTitle.trim().toLowerCase()
   );
   const showKindBadge = Boolean(kindLabel && !isDuplicateKind);
-  const hasExtendedToolbar = mode === 'custom' || canEditTiers || Boolean(onSaveOfficial);
+  const hasExtendedToolbar = mode === 'custom' || canEditTiers;
   const secondaryLabelClass = hasExtendedToolbar ? 'sr-only' : 'hidden xl:inline short:hidden!';
 
   return (
@@ -263,18 +248,6 @@ export function TierListEditor(props: TierListEditorProps) {
             >
               <Plus className="h-4 w-4" aria-hidden="true" />
               {t.addTier}
-            </MenuItem>
-          )}
-          {onSaveOfficial && (
-            <MenuItem role="menuitem"
-              disabled={savingOfficial}
-              onClick={() => {
-                setMenuOpen(false);
-                handleSaveOfficialClick();
-              }}
-            >
-              <Save className="h-4 w-4" aria-hidden="true" />
-              {savingOfficial ? t.creator.publishing : t.save}
             </MenuItem>
           )}
           {!finePointer && (
@@ -346,22 +319,6 @@ export function TierListEditor(props: TierListEditorProps) {
               >
                 <Plus className="h-3.5 w-3.5" aria-hidden="true" />
                 <span className="hidden lg:inline short:hidden!">{t.addTier}</span>
-              </Button>
-            )}
-            {onSaveOfficial && (
-              <Button
-                variant="primary"
-                size="sm"
-                disabled={savingOfficial}
-                onClick={handleSaveOfficialClick}
-                aria-label={t.save}
-                {...tip(t.save, undefined, 'action')}
-                className={TOOLBAR_BTN}
-              >
-                <Save className="h-3.5 w-3.5" aria-hidden="true" />
-                <span className="hidden lg:inline short:hidden!">
-                  {savingOfficial ? t.creator.publishing : t.save}
-                </span>
               </Button>
             )}
             {!finePointer && (

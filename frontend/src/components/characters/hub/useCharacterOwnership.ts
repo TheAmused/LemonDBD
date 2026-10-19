@@ -1,6 +1,6 @@
 'use client';
 // frontend/src/components/characters/hub/useCharacterOwnership.ts
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   buildCharacterOwnershipDraft,
   changedCharacterUpdates,
@@ -57,6 +57,8 @@ export function useCharacterOwnership({ locale, onLoginRequired, onVerificationR
   const [ownershipLoading, setOwnershipLoading] = useState<boolean>(false);
   const [ownershipSaving, setOwnershipSaving] = useState<boolean>(false);
   const [ownershipSaveError, setOwnershipSaveError] = useState<string | null>(null);
+  const [ownershipLoadError, setOwnershipLoadError] = useState<string | null>(null);
+  const [discardConfirmOpen, setDiscardConfirmOpen] = useState<boolean>(false);
   const [savedModalOpen, setSavedModalOpen] = useState<boolean>(false);
   const savedModalTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -87,12 +89,34 @@ export function useCharacterOwnership({ locale, onLoginRequired, onVerificationR
   const [allPerks, setAllPerks] = useState<OwnedPerk[]>([]);
   const [perksPopupCharacter, setPerksPopupCharacter] = useState<CharacterItem | null>(null);
 
+  /** Unsaved changes: anything the save would send. */
+  const isDirty = useMemo(
+    () =>
+      ownershipMode &&
+      (changedCharacterUpdates(loadedCharacterOwnership.current, characterOwnershipDraft).length > 0 ||
+        changedPerkUpdates(allPerks, perkUnlockDraft, new Set()).length > 0),
+    [ownershipMode, characterOwnershipDraft, allPerks, perkUnlockDraft]
+  );
+
+  // A reload or a closed tab would silently lose the draft.
+  useEffect(() => {
+    if (!isDirty) return;
+    const warn = (event: BeforeUnloadEvent) => {
+      event.preventDefault();
+      event.returnValue = '';
+    };
+    window.addEventListener('beforeunload', warn);
+    return () => window.removeEventListener('beforeunload', warn);
+  }, [isDirty]);
+
   const handleToggleOwnershipMode = async () => {
     if (ownershipMode) {
-      // "Exit selection" is the only way out without saving, so it also throws the drafts away.
-      handleCancelOwnershipMode();
+      // "Exit selection" is the only way out without saving, so it throws the drafts away -- after asking, when there are any.
+      if (isDirty) setDiscardConfirmOpen(true);
+      else handleCancelOwnershipMode();
       return;
     }
+    setOwnershipLoadError(null);
     if (!isAuthenticated || !token || !user) {
       trackEvent('ownership_blocked', { reason: 'login' });
       onLoginRequired();
@@ -115,21 +139,17 @@ export function useCharacterOwnership({ locale, onLoginRequired, onVerificationR
         }),
       ]);
 
-      let charDraft: Record<string, boolean> = {};
-      if (charsRes.ok) {
-        const data = await charsRes.json();
-        charDraft = buildCharacterOwnershipDraft(data.data as OwnedCharacter[]);
+      // Both lists or nothing: opening the mode on a failed load showed every character as owned.
+      if (!charsRes.ok || !perksRes.ok) {
+        setOwnershipLoadError(dict.characterDetail.loadOwnershipError);
+        return;
       }
-
+      const charDraft = buildCharacterOwnershipDraft((await charsRes.json()).data as OwnedCharacter[]);
+      const perksList = ((await perksRes.json()).data ?? []) as OwnedPerk[];
       const perkDraft: Record<number, boolean> = {};
-      let perksList: OwnedPerk[] = [];
-      if (perksRes.ok) {
-        const data = await perksRes.json();
-        perksList = data.data as OwnedPerk[];
-        perksList.forEach((p) => {
-          perkDraft[p.perk_id] = p.is_unlocked;
-        });
-      }
+      perksList.forEach((p) => {
+        perkDraft[p.perk_id] = p.is_unlocked;
+      });
 
       loadedCharacterOwnership.current = charDraft;
       setCharacterOwnershipDraft(charDraft);
@@ -139,6 +159,7 @@ export function useCharacterOwnership({ locale, onLoginRequired, onVerificationR
       trackEvent('ownership_mode_enter');
     } catch (err: unknown) {
       console.error('Failed to load ownership state:', err);
+      setOwnershipLoadError(dict.characterDetail.loadOwnershipError);
     } finally {
       setOwnershipLoading(false);
     }
@@ -171,6 +192,7 @@ export function useCharacterOwnership({ locale, onLoginRequired, onVerificationR
   };
 
   const handleCancelOwnershipMode = () => {
+    setDiscardConfirmOpen(false);
     setOwnershipMode(false);
     setCharacterOwnershipDraft({});
     setPerkUnlockDraft({});
@@ -238,6 +260,9 @@ export function useCharacterOwnership({ locale, onLoginRequired, onVerificationR
     ownershipLoading,
     ownershipSaving,
     ownershipSaveError,
+    ownershipLoadError,
+    discardConfirmOpen,
+    keepEditing: () => setDiscardConfirmOpen(false),
     savedModalOpen,
     closeSavedModal,
     characterOwnershipDraft,

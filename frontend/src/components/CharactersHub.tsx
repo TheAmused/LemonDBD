@@ -12,6 +12,7 @@ import { CharactersGridSkeleton } from '@/components/character-detail/Characters
 import { useCachedData } from '@/hooks/useCachedData';
 import { fetchJson } from '@/services/dataCache';
 import { EmptyState } from '@/components/common/EmptyState';
+import { ConfirmModal } from '@/components/common/ConfirmModal';
 import { CharacterCard } from '@/components/characters/hub/CharacterCard';
 import { CharactersToolbar } from '@/components/characters/hub/CharactersToolbar';
 import { OwnershipSaveBar } from '@/components/characters/hub/OwnershipSaveBar';
@@ -79,7 +80,8 @@ export const CharactersHub: React.FC = () => {
     onVerificationRequired: () => setVerificationNoticeOpen(true),
   });
   const {
-    ownershipMode, ownershipLoading, ownershipSaving, ownershipSaveError, savedModalOpen, closeSavedModal,
+    ownershipMode, ownershipLoading, ownershipSaving, ownershipSaveError, ownershipLoadError,
+    discardConfirmOpen, keepEditing, handleCancelOwnershipMode, savedModalOpen, closeSavedModal,
     characterOwnershipDraft, allPerks, perkUnlockDraft, perksPopupCharacter, setPerksPopupCharacter,
     handleToggleOwnershipMode, handleToggleCharacterOwned, handleTogglePerkUnlocked,
     handleSaveOwnership, getCharacterPerkStats,
@@ -125,6 +127,12 @@ export const CharactersHub: React.FC = () => {
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
       />
+
+      {ownershipLoadError && (
+        <p role="alert" className="text-center type-body text-accent-red">
+          {ownershipLoadError}
+        </p>
+      )}
 
       {loading ? (
         <div className="w-full py-12 flex items-center justify-center">
@@ -201,6 +209,16 @@ export const CharactersHub: React.FC = () => {
       )}
 
       <SavedChangesModal open={savedModalOpen} onClose={closeSavedModal} />
+
+      <ConfirmModal
+        open={discardConfirmOpen}
+        title={dict.characterDetail.discardOwnershipTitle}
+        message={dict.characterDetail.discardOwnershipMessage}
+        confirmLabel={dict.characterDetail.discardOwnershipConfirm}
+        cancelLabel={dict.characterDetail.keepEditingOwnership}
+        onConfirm={handleCancelOwnershipMode}
+        onCancel={keepEditing}
+      />
 
       {verificationNoticeOpen && user && (
         <VerificationNotice

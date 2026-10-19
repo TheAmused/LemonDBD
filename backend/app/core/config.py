@@ -82,6 +82,25 @@ def weak_secret_warnings(config: Mapping[str, Any]) -> list[str]:
     return warnings
 
 
+def fatal_secret_problems(config: Mapping[str, Any]) -> list[str]:
+    """The signing-key problems the app refuses to start with (empty for tests and development).
+
+    An empty or publicly known `SECRET_KEY` / `JWT_SECRET_KEY` lets anyone forge a session for
+    any account, admins included, so production fails closed instead of only logging a warning.
+    A merely short key stays a warning (`weak_secret_warnings`).
+    """
+    if config.get("TESTING") or demo_accounts_enabled():
+        return []
+    problems: list[str] = []
+    for name in ("SECRET_KEY", "JWT_SECRET_KEY"):
+        value = str(config.get(name) or "").strip()
+        if not value:
+            problems.append(f"{name} is not set")
+        elif value.lower() in KNOWN_PLACEHOLDER_SECRETS:
+            problems.append(f"{name} is a publicly known placeholder value")
+    return problems
+
+
 BAN_LIST_PEPPER_MIN_BYTES = 32
 
 
@@ -139,6 +158,9 @@ class Config:
     ENV: str = os.getenv("FLASK_ENV", "production")
 
     SECRET_KEY: str = os.getenv("SECRET_KEY", "dbd-lemon-secret-key-2026")
+    # Matches nginx's `client_max_body_size 20M`, so a direct hit on the backend
+    # (or a dev run without nginx) has the same ceiling instead of none.
+    MAX_CONTENT_LENGTH: int = int(os.getenv("MAX_CONTENT_LENGTH", str(20 * 1024 * 1024)))
     CORS_ORIGINS: str = os.getenv("CORS_ORIGINS", "*")
 
     JWT_SECRET_KEY: str = os.getenv("JWT_SECRET_KEY", SECRET_KEY)

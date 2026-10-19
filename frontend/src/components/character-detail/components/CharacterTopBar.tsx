@@ -2,7 +2,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
-import { CharacterItem, getCharacterSlug, CharacterDetailDictionary } from '../types';
+import { CharacterItem, characterSlug, CharacterDetailDictionary } from '../types';
 import { buttonClassName } from '@/components/common/Button';
 import { tip } from '@/components/common/Tooltip';
 
@@ -58,7 +58,7 @@ export const CharacterTopBar: React.FC<CharacterTopBarProps> = ({
       <div className="hidden sm:flex items-center gap-2 self-end sm:self-auto">
         {prevChar && (
           <Link
-            href={`/${currentLocale}/characters/${getCharacterSlug(prevChar.name)}`}
+            href={`/${currentLocale}/characters/${characterSlug(prevChar)}`}
             className={buttonClassName('secondary', 'sm')}
             {...tip(`${t.prevCharacter}: ${prevChar.name}`, undefined, 'character')}
           >
@@ -68,7 +68,7 @@ export const CharacterTopBar: React.FC<CharacterTopBarProps> = ({
         )}
         {nextChar && (
           <Link
-            href={`/${currentLocale}/characters/${getCharacterSlug(nextChar.name)}`}
+            href={`/${currentLocale}/characters/${characterSlug(nextChar)}`}
             className={buttonClassName('secondary', 'sm')}
             {...tip(`${t.nextCharacter}: ${nextChar.name}`, undefined, 'character')}
           >

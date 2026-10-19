@@ -44,7 +44,10 @@ export const PixelAvatarGuesser: React.FC<PixelAvatarGuesserProps> = ({ roundCon
   return (
     <div className="w-full flex flex-col items-center my-6">
       {/* Blurred Portrait Frame */}
-      <div className="relative w-48 h-48 sm:w-60 sm:h-60 rounded-card overflow-hidden border-2 border-border-color shadow-2xl bg-bg-surface flex items-center justify-center">
+      <div
+        className="relative w-48 h-48 sm:w-60 sm:h-60 rounded-card overflow-hidden border-2 border-border-color shadow-2xl bg-bg-surface flex items-center justify-center select-none"
+        onContextMenu={(e) => e.preventDefault()}
+      >
         {imageUrl ? (
           <div
             className="relative w-full h-full transition-all duration-500 ease-out"
@@ -58,6 +61,7 @@ export const PixelAvatarGuesser: React.FC<PixelAvatarGuesserProps> = ({ roundCon
               alt={targetChar?.name || dict.minigames.modes.pixel_avatar}
               fill
               unoptimized
+              draggable={false}
               className="object-cover select-none pointer-events-none"
             />
           </div>
@@ -78,7 +82,7 @@ export const PixelAvatarGuesser: React.FC<PixelAvatarGuesserProps> = ({ roundCon
 
       {/* Prior Guesses List */}
       {guesses.length > 0 && (
-        <div className="w-full max-w-md mt-6 space-y-2">
+        <div className="w-full max-w-md mt-6 space-y-2 max-h-80 overflow-y-auto pr-1">
           {guesses.map((g, idx) => {
             const isCorrect = g.evaluation.is_correct;
             return (

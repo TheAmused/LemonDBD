@@ -127,6 +127,12 @@ test('perkUtils: getCharacterAvatarUrl resolves character aliases for Leon, Bill
   );
 });
 
+test('perkUtils: normalizeSearchText folds letters NFD keeps whole (ł, ø, ß)', () => {
+  assert.strictEqual(normalizeSearchText('Wieśniak'), 'wiesniak');
+  assert.strictEqual(normalizeSearchText('Przełom'), 'przelom');
+  assert.strictEqual(normalizeSearchText('Bjørn'), 'bjorn');
+});
+
 test('perkUtils: normalizeSearchText strips accents and converts to lowercase', () => {
   assert.strictEqual(normalizeSearchText('Élodie Rakoto'), 'elodie rakoto');
   assert.strictEqual(normalizeSearchText('  Pośpiech  '), 'pospiech');

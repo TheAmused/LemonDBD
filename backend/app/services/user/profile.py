@@ -1,12 +1,52 @@
 # backend/app/services/user/profile.py
+import logging
+from datetime import datetime, timezone
 from typing import Any
+
+from email_validator import EmailNotValidError, validate_email
 from sqlalchemy import func, select
 
 from app.core.extensions import db
 from app.core.security import hash_password, verify_password
 from app.core.transaction import transaction
-from app.models import Killer, Survivor, User, UserShowcase
+from app.models import Killer, Perk, Survivor, User, UserShowcase
 from app.models.base import utcnow
+from app.models.user import (
+    DEFAULT_KILLER_MAIN,
+    DEFAULT_SURVIVOR_MAIN,
+    SHOWCASE_DEFAULT_DEVOTION,
+    SHOWCASE_DEFAULT_GRADE,
+    SHOWCASE_DEFAULT_PRESTIGE,
+    SHOWCASE_DEFAULT_TITLE,
+    SHOWCASE_GRADE_RANKS,
+    SHOWCASE_MAX_DEVOTION,
+    SHOWCASE_MAX_PRESTIGE,
+    SHOWCASE_PLAYER_TITLES,
+)
+
+logger = logging.getLogger(__name__)
+
+#: `users.email` is a String(120); a longer address could never be stored.
+MAX_EMAIL_LENGTH = 120
+
+
+def normalize_new_email(raw: str | None) -> tuple[str | None, str | None]:
+    """`(address, None)` for a usable address (trimmed, lower-cased), else `(None, error)`.
+
+    The same rule registration applies through `EmailStr`, checked here *before* anything is
+    written: an unchecked value used to be committed and then break every response that
+    serialises the user (`UserResponse.email` is an `EmailStr`), signing the account out for good.
+    """
+    candidate = (raw or "").strip().lower()
+    if not candidate:
+        return None, "A valid email address is required."
+    if len(candidate) > MAX_EMAIL_LENGTH:
+        return None, f"Email addresses can be at most {MAX_EMAIL_LENGTH} characters long."
+    try:
+        validate_email(candidate, check_deliverability=False)
+    except EmailNotValidError:
+        return None, "A valid email address is required."
+    return candidate, None
 
 
 def _resolve_main_id(model: type, character_name: str) -> int | None:
@@ -24,6 +64,13 @@ def _resolve_main_id(model: type, character_name: str) -> int | None:
     return row.id if row else None
 
 
+def _is_number(value: Any) -> bool:
+    """A real, finite number (not a bool, not NaN/inf, which `int()` would choke on)."""
+    import math
+
+    return isinstance(value, (int, float)) and not isinstance(value, bool) and math.isfinite(value)
+
+
 def fetch_user_by_id(user_id: int) -> User | None:
     """Retrieve user entity by primary key."""
     return db.session.get(User, user_id)
@@ -32,19 +79,30 @@ def fetch_user_by_id(user_id: int) -> User | None:
 def modify_user_profile(
     user_id: int,
     email: str | None = None,
-    avatar_url: str | None = None,
     new_password: str | None = None,
     current_password: str | None = None,
     two_factor_code: str | None = None,
     username: str | None = None,
 ) -> tuple[User | None, str | None]:
-    """Update profile attributes including the public username, email address, avatar, or password.
+    """Update the public username, the email address or the password.
+
+    The avatar is not set here: only `process_and_save_avatar` (an upload) and `clear_user_avatar`
+    write `avatar_url`. Accepting it from the request let anyone point their avatar at any URL --
+    a tracking pixel in every admin's browser that opens the user list.
 
     Changing the email or the password is what an attacker holding a stolen session would do to
     take the account over, so both need the current password. A password change also bumps
     ``token_version``, which signs out every other session.
+
+    A new email gets the checks registration makes (format, length, the ban-evasion list, not
+    already taken). When the site requires verification the account becomes unverified and a
+    code goes to the new address; the previous address is told about the change either way.
     """
+    from app.services import ban_list
+    from app.services.mail_service import send_email_changed_notice, send_verification_email
+    from app.services.site_settings import email_verification_required, password_min_length, verification_lifetime
     from app.services.user import two_factor
+    from app.services.user.auth import _generate_verification_code
 
     user = db.session.get(User, user_id)
     if not user:
@@ -55,7 +113,11 @@ def modify_user_profile(
         return None, "Username must be between 3 and 50 characters long."
 
     clean_email = email.strip().lower() if email else None
-    changing_email = bool(clean_email) and clean_email != user.email
+    changing_email = bool(clean_email) and clean_email != (user.email or "").lower()
+    if changing_email:
+        clean_email, email_error = normalize_new_email(clean_email)
+        if email_error:
+            return None, email_error
     changing_username = bool(clean_username) and clean_username != user.username
     if (changing_email or changing_username or new_password) and not user.has_password:
         return None, "Set a password with the reset link first."
@@ -67,10 +129,16 @@ def modify_user_profile(
         if two_factor.is_enabled(user.id) and not (two_factor_code or "").strip():
             raise two_factor.TwoFactorError("two_factor_required", 403)
 
-    if new_password and len(new_password) < 6:
-        return None, "New password must be at least 6 characters long."
+    # The admin-set minimum (Settings > Limits), the same one sign-up and reset enforce.
+    min_length = password_min_length()
+    if new_password and len(new_password) < min_length:
+        return None, f"New password must be at least {min_length} characters long."
 
     if changing_email:
+        # Same wording as sign-up, and checked first, so it never reveals whether the address is taken.
+        refusal = ban_list.registration_refusal(clean_email)
+        if refusal:
+            return None, refusal
         existing = db.session.scalars(
             select(User).where(func.lower(User.email) == clean_email, User.id != user_id)
         ).first()
@@ -80,19 +148,29 @@ def modify_user_profile(
     if (changing_email or changing_username or new_password) and two_factor.is_enabled(user.id):
         two_factor.verify_second_factor(user, two_factor_code)
 
+    previous_email = user.email
+    needs_verification = changing_email and email_verification_required()
     with transaction():
         if changing_email:
             user.email = clean_email
+            if needs_verification:
+                user.is_verified = False
+                user.verification_code = _generate_verification_code()
+                user.verification_code_expires_at = datetime.now(timezone.utc) + verification_lifetime()
+                user.verification_attempts = 0
 
         if changing_username:
             user.username = clean_username
 
-        if avatar_url:
-            user.avatar_url = avatar_url.strip()
-
         if new_password:
             user.password_hash = hash_password(new_password)
             user.token_version = int(user.token_version or 0) + 1
+
+    if changing_email:
+        if needs_verification:
+            send_verification_email(user)
+        if previous_email:
+            send_email_changed_notice(user, previous_email)
 
     return user, None
 
@@ -150,17 +228,17 @@ def get_user_showcase(user_id: int) -> dict[str, Any] | None:
 
     # Pure read fallback: default representation without DB write
     return {
-        "player_title": "The Camper",
-        "devotion_level": 0,
-        "grade_rank": "Ash IV",
+        "player_title": SHOWCASE_DEFAULT_TITLE,
+        "devotion_level": SHOWCASE_DEFAULT_DEVOTION,
+        "grade_rank": SHOWCASE_DEFAULT_GRADE,
         "survivor_main": {
-            "character_name": "Feng Min",
-            "prestige": 1,
+            "character_name": DEFAULT_SURVIVOR_MAIN,
+            "prestige": SHOWCASE_DEFAULT_PRESTIGE,
             "perk_ids": [None, None, None, None],
         },
         "killer_main": {
-            "character_name": "The Blight",
-            "prestige": 1,
+            "character_name": DEFAULT_KILLER_MAIN,
+            "prestige": SHOWCASE_DEFAULT_PRESTIGE,
             "perk_ids": [None, None, None, None],
         },
         "updated_at": None,
@@ -180,17 +258,17 @@ def get_or_create_user_showcase(user_id: int) -> UserShowcase | None:
     if not showcase:
         showcase = UserShowcase(
             user_id=user_id,
-            player_title="The Camper",
-            devotion_level=0,
-            grade_rank="Ash IV",
+            player_title=SHOWCASE_DEFAULT_TITLE,
+            devotion_level=SHOWCASE_DEFAULT_DEVOTION,
+            grade_rank=SHOWCASE_DEFAULT_GRADE,
             # No main until the user picks one. The display name the old
             # column defaulted to is served by `to_dict` from
             # DEFAULT_SURVIVOR_MAIN instead of being written into every row.
             survivor_main_id=None,
-            survivor_main_prestige=1,
+            survivor_main_prestige=SHOWCASE_DEFAULT_PRESTIGE,
             survivor_perk_ids=[None, None, None, None],
             killer_main_id=None,
-            killer_main_prestige=1,
+            killer_main_prestige=SHOWCASE_DEFAULT_PRESTIGE,
             killer_perk_ids=[None, None, None, None],
         )
         db.session.add(showcase)
@@ -223,54 +301,67 @@ def update_user_showcase(
                 showcase = UserShowcase(user_id=user_id)
                 db.session.add(showcase)
 
-            if "player_title" in data and isinstance(data["player_title"], str):
-                showcase.player_title = data["player_title"].strip()[:100]
+            # Only the choices the page offers; free text used to be stored as sent.
+            if isinstance(data.get("player_title"), str) and data["player_title"].strip() in SHOWCASE_PLAYER_TITLES:
+                showcase.player_title = data["player_title"].strip()
 
-            if "devotion_level" in data and isinstance(data["devotion_level"], (int, float)):
-                showcase.devotion_level = max(1, min(99, int(data["devotion_level"])))
+            if _is_number(data.get("devotion_level")):
+                showcase.devotion_level = max(0, min(SHOWCASE_MAX_DEVOTION, int(data["devotion_level"])))
 
-            if "grade_rank" in data and isinstance(data["grade_rank"], str):
-                showcase.grade_rank = data["grade_rank"].strip()[:50]
+            if isinstance(data.get("grade_rank"), str) and data["grade_rank"].strip() in SHOWCASE_GRADE_RANKS:
+                showcase.grade_rank = data["grade_rank"].strip()
 
-            if "survivor_main" in data and isinstance(data["survivor_main"], dict):
-                sm = data["survivor_main"]
-                # A key, not a copied name: renaming a character used to strand every
-                # showcase that had picked them.
-                if "character_id" in sm and str(sm["character_id"]).isdigit():
-                    showcase.survivor_main_id = int(sm["character_id"])
-                elif "character_name" in sm and isinstance(sm["character_name"], str):
-                    showcase.survivor_main_id = _resolve_main_id(Survivor, sm["character_name"])
-                if "prestige" in sm and isinstance(sm["prestige"], (int, float)):
-                    showcase.survivor_main_prestige = max(1, min(100, int(sm["prestige"])))
-                if "perk_ids" in sm and isinstance(sm["perk_ids"], list):
-                    s_perks = [
-                        int(p) if p is not None and str(p).isdigit() else None
-                        for p in sm["perk_ids"][:4]
-                    ]
-                    while len(s_perks) < 4:
-                        s_perks.append(None)
-                    showcase.survivor_perk_ids = s_perks
-
-            if "killer_main" in data and isinstance(data["killer_main"], dict):
-                km = data["killer_main"]
-                if "character_id" in km and str(km["character_id"]).isdigit():
-                    showcase.killer_main_id = int(km["character_id"])
-                elif "character_name" in km and isinstance(km["character_name"], str):
-                    showcase.killer_main_id = _resolve_main_id(Killer, km["character_name"])
-                if "prestige" in km and isinstance(km["prestige"], (int, float)):
-                    showcase.killer_main_prestige = max(1, min(100, int(km["prestige"])))
-                if "perk_ids" in km and isinstance(km["perk_ids"], list):
-                    k_perks = [
-                        int(p) if p is not None and str(p).isdigit() else None
-                        for p in km["perk_ids"][:4]
-                    ]
-                    while len(k_perks) < 4:
-                        k_perks.append(None)
-                    showcase.killer_perk_ids = k_perks
-    except Exception as exc:
-        return None, f"Database error: {str(exc)}"
+            if isinstance(data.get("survivor_main"), dict):
+                _apply_main(showcase, "survivor", data["survivor_main"])
+            if isinstance(data.get("killer_main"), dict):
+                _apply_main(showcase, "killer", data["killer_main"])
+    except Exception:
+        # The exception (SQL, parameters) stays in the log; the client gets a plain message.
+        logger.exception(f"Saving the showcase of user {user_id} failed")
+        return None, "The showcase could not be saved. Please try again."
 
     return showcase.to_dict(), None
+
+
+def _apply_main(showcase: UserShowcase, side: str, main: dict[str, Any]) -> None:
+    """Apply one main (`survivor` / `killer`): character, prestige and four perk slots.
+
+    A character id must name a row of that side's table, and each perk id a perk of that role;
+    anything else is ignored (an unknown id used to be stored as sent -- and a dangling character
+    key failed the whole save on the foreign key).
+    """
+    model = Survivor if side == "survivor" else Killer
+    role = "Survivor" if side == "survivor" else "Killer"
+
+    # A key, not a copied name: renaming a character used to strand every showcase that had picked them.
+    character_id = _positive_int(main.get("character_id"))
+    if character_id is not None:
+        if db.session.get(model, character_id) is not None:
+            setattr(showcase, f"{side}_main_id", character_id)
+    elif isinstance(main.get("character_name"), str):
+        setattr(showcase, f"{side}_main_id", _resolve_main_id(model, main["character_name"]))
+
+    if _is_number(main.get("prestige")):
+        setattr(showcase, f"{side}_main_prestige", max(0, min(SHOWCASE_MAX_PRESTIGE, int(main["prestige"]))))
+
+    if isinstance(main.get("perk_ids"), list):
+        wanted = [_positive_int(p) for p in main["perk_ids"][:4]]
+        known = set(db.session.scalars(
+            select(Perk.id).where(Perk.id.in_([p for p in wanted if p is not None]), Perk.role == role)
+        ).all()) if any(p is not None for p in wanted) else set()
+        slots = [p if p in known else None for p in wanted]
+        slots += [None] * (4 - len(slots))
+        setattr(showcase, f"{side}_perk_ids", slots)
+
+
+def _positive_int(value: Any) -> int | None:
+    if isinstance(value, bool):
+        return None
+    if isinstance(value, int):
+        return value if value > 0 else None
+    if isinstance(value, str) and value.strip().isdigit():
+        return int(value.strip()) or None
+    return None
 
 
 

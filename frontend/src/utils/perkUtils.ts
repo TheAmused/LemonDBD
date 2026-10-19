@@ -85,12 +85,18 @@ export function formatPerkSlug(name: string): string {
   return name.toLowerCase().replace(/[\s\-/]+/g, '_');
 }
 
+/** Lower-cased, trimmed, accents folded (`Wieśniak` -> `wiesniak`), so a search matches without diacritics. */
 export function normalizeSearchText(text: string): string {
   return (text || '')
     .toLowerCase()
     .trim()
     .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '');
+    .replace(/[\u0300-\u036f]/g, '')
+    // Letters NFD does not decompose (Polish ł, Scandinavian ø, ...).
+    .replace(/ł/g, 'l')
+    .replace(/ø/g, 'o')
+    .replace(/đ/g, 'd')
+    .replace(/ß/g, 'ss');
 }
 
 export function matchesPerkSearch(

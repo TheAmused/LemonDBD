@@ -3,7 +3,7 @@
 
 import React, { Suspense, useCallback, useEffect, useMemo, useState } from 'react';
 import dynamic from 'next/dynamic';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { Search, Mic } from 'lucide-react';
 import { PageShell } from '@/components/layout/PageShell';
 import { PageShellFallback } from '@/components/layout/PageShellFallback';
@@ -28,6 +28,7 @@ function MapsClientInner() {
   const locale = useLocale() as Locale;
 
   const dict = useDictionary();
+  const initialMapId = searchParams?.get('mapId') ? Number(searchParams.get('mapId')) : undefined;
   const initialMapName = searchParams?.get('mapName') || '';
 
   const [searchMode, setSearchMode] = usePersistentString('lemondbd_maps_search_mode', 'text', isValidSearchMode);
@@ -35,18 +36,20 @@ function MapsClientInner() {
   const [availableMaps, setAvailableMaps] = useState<MapRealm[]>([]);
   const [selectedMap, setSelectedMap] = useState<{
     mapName: string;
+    mapId?: number;
     timestamp: number;
     via?: 'voice' | 'link';
   }>({
     mapName: initialMapName,
+    mapId: initialMapId,
     timestamp: Date.now(),
     via: 'link',
   });
   useEffect(() => {
-    if (initialMapName) {
-      setSelectedMap({ mapName: initialMapName, timestamp: Date.now(), via: 'link' });
+    if (initialMapName || initialMapId !== undefined) {
+      setSelectedMap({ mapName: initialMapName, mapId: initialMapId, timestamp: Date.now(), via: 'link' });
     }
-  }, [initialMapName]);
+  }, [initialMapName, initialMapId]);
 
   const backendBase = getBackendBaseUrl();
 
@@ -68,19 +71,28 @@ function MapsClientInner() {
     },
   ];
 
-  const handleSourceChange = useCallback(() => {}, []);
-  const handleSelectMap = useCallback((name: string) => {
-    setSelectedMap({ mapName: name, timestamp: Date.now(), via: 'voice' });
-  }, []);
-  const handleAction = useCallback(() => {}, []);
+  const router = useRouter();
 
-  const toggleSwitchElement = (
-    <SegmentedControl
-      value={searchMode}
-      onChange={setSearchMode}
-      ariaLabel={dict.maps.searchModeAria}
-      options={searchModeOptions}
-    />
+  const handleSourceChange = useCallback(() => {}, []);
+  const handleSelectMap = useCallback((name: string, mapId?: number) => {
+    setSelectedMap({ mapName: name, mapId, timestamp: Date.now(), via: 'voice' });
+  }, []);
+  const handleAction = useCallback((action: 'zoom_in' | 'zoom_out' | 'fullscreen' | 'close') => {
+    if (action === 'close') {
+      setSelectedMap((prev) => ({ ...prev, mapName: '', mapId: undefined, timestamp: Date.now() }));
+    }
+  }, []);
+
+  const toggleSwitchElement = useMemo(
+    () => (
+      <SegmentedControl
+        value={searchMode}
+        onChange={setSearchMode}
+        ariaLabel={dict.maps.searchModeAria}
+        options={searchModeOptions}
+      />
+    ),
+    [searchMode, setSearchMode, dict.maps.searchModeAria, searchModeOptions]
   );
 
   const voiceBanner = useMemo(
@@ -97,14 +109,12 @@ function MapsClientInner() {
         embedded={true}
       />
     ),
-    [locale, dict, handleSourceChange, handleSelectMap, handleAction, availableMaps, searchMode, toggleSwitchElement]
+    [locale, handleSourceChange, handleSelectMap, handleAction, availableMaps, searchMode, toggleSwitchElement]
   );
 
-  const handleSelectCategory = () => {
-    if (typeof window !== 'undefined') {
-      window.location.href = `/${locale}`;
-    }
-  };
+  const handleSelectCategory = useCallback(() => {
+    router.push(`/${locale}`);
+  }, [router, locale]);
 
   return (
     <PageShell

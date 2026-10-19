@@ -51,7 +51,6 @@ export default {
   poolNoMatches: "検索に一致する項目がありません",
   dropHere: "ここに項目をドロップ",
   tierAria: "ティア {label}",
-  editTierAria: "ティア {label} を編集",
   clearTierAria: "ティア {label} をクリア",
   showPool: "未ランクを表示",
   hidePool: "未ランクを隠す",
@@ -70,7 +69,6 @@ export default {
   showNames: "名前を表示",
   hideNames: "名前を隠す",
   addTier: "ティアを追加",
-  removeItem: "項目を削除",
   editDetails: "詳細を編集",
   deleteList: "リストを削除",
   deleteListTitle: "このカスタムリストを削除しますか？",
@@ -82,7 +80,6 @@ export default {
   scaleZoomOut: "縮小",
   scaleReset: "倍率をリセット (100%)",
 
-  editTier: "ティアを編集",
   tierLabel: "ラベル",
   tierColor: "色",
   customColor: "カスタムカラー",
@@ -94,7 +91,6 @@ export default {
   moveUp: "上へ",
   moveDown: "下へ",
   clearTier: "ティアを空にする",
-  deleteTier: "ティアを削除",
   save: "保存",
   newTierLabel: "新規",
 
@@ -151,6 +147,7 @@ export default {
   saveFailedQuota: "ブラウザの保存容量がいっぱいのため、この変更は保存されていません。画像やリストをいくつか削除してください。",
   saveFailedUnavailable: "このブラウザはローカルストレージをブロックしているため、変更はページを離れるまでしか保持されません。",
   dismiss: "閉じる",
+  deleteFailed: "リストを削除できませんでした。もう一度お試しください。",
 
   creator: {
     pageTitle: "LemonDBD - ティアリストを作成",
@@ -183,6 +180,11 @@ export default {
     tierColorAria: "ティア{label}の色を変更",
     removeTierAria: "ティア{label}を削除",
     tabUpload: "アップロード",
+    linkPreviewHeading: "プレビュー",
+    linkPreviewEmpty: "画像のリンクを貼り付けると、ここに表示されます。",
+    linkPreviewLoading: "画像を確認しています...",
+    linkPreviewOk: "画像が見つかりました。タイルはこのように表示されます。",
+    linkPreviewFailed: "このリンクは画像として読み込めませんでした。タイルには頭文字が表示されます。",
     tabLinks: "リンクを貼り付け",
     tabCatalog: "ゲームから",
     itemSourceAria: "項目の追加元",
@@ -221,6 +223,7 @@ export default {
     publish: "公開",
     publishing: "公開中...",
     publishFailed: "このリストを公開できませんでした。もう一度お試しください。",
+    publishTooLarge: "このリストは大きすぎて公開できません（{size} MB超）。アップロード画像の代わりに画像リンクを使うか、項目を減らしてください。",
   },
 
   reportTitle: "コンテンツを報告",

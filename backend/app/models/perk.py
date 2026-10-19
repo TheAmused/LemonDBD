@@ -126,7 +126,7 @@ class Perk(Base, TranslatableModelMixin):
         owner = self.character
         return owner.id if owner else None
 
-    def to_dict(self, lang: str | None = None) -> dict[str, Any]:
+    def to_dict(self, lang: str | None = None, include_translations: bool = False) -> dict[str, Any]:
         owner = self.character
         char_name = "General"
         char_real = "General"
@@ -139,7 +139,7 @@ class Perk(Base, TranslatableModelMixin):
         name = self.localized(lang, "name", self.name)
         description = self.localized(lang, "description", self.description)
 
-        return {
+        res: dict[str, Any] = {
             "id": self.id,
             "name": name,
             "alternate_name": self.alternate_name or "",
@@ -157,7 +157,9 @@ class Perk(Base, TranslatableModelMixin):
             "icon_url": self.icon_url or "",
             "icon_local_path": self.icon_local_path or "",
             "perk_types": self.resolved_perk_types,
-            "translations": self.translations or {},
             "is_disabled": self.is_disabled,
             "disabled_reason": self.disabled_reason,
         }
+        if include_translations:
+            res["translations"] = self.translations or {}
+        return res

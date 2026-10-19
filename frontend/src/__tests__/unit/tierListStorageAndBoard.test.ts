@@ -17,13 +17,10 @@ import {
   subscribeTierListStore,
 } from '@/utils/tierLists/storage';
 import {
-  addTier,
   buildBoard,
   clearTier,
   moveItem,
-  moveTier,
   placementsFromBoard,
-  removeTier,
   resolveTiers,
 } from '@/utils/tierLists/board';
 import { DEFAULT_TIERS, POOL_CONTAINER_ID } from '@/utils/tierLists/constants';
@@ -195,25 +192,34 @@ describe('tier board model', () => {
     assert.deepEqual(saved.s, ['a', 'hidden-perk']);
   });
 
-  it('edits the ladder', () => {
-    let state = { tiers: resolveTiers(), board: buildBoard(items, resolveTiers(), { s: ['a'], a: ['b'] }) };
-    state = addTier(state, 'God tier', '#123456', 0);
-    assert.equal(state.tiers[0].id, 'god-tier');
-    assert.deepEqual(state.board['god-tier'], []);
-
-    state = moveTier(state, 'god-tier', 1);
-    assert.equal(state.tiers[1].id, 'god-tier');
-
-    state = removeTier(state, 's', order);
-    assert.equal(state.board.s, undefined);
-    assert.deepEqual(state.board[POOL_CONTAINER_ID], ['a', 'c', 'd']);
-
-    state = clearTier(state, 'a', order);
-    assert.deepEqual(state.board[POOL_CONTAINER_ID], order);
+  it('clearing a tier sends its items back to the pool in catalog order', () => {
+    const state = { tiers: resolveTiers(), board: buildBoard(items, resolveTiers(), { s: ['a'], a: ['b'] }) };
+    const cleared = clearTier(state, 's', order);
+    assert.deepEqual(cleared.board.s, []);
+    assert.deepEqual(cleared.board.a, ['b']);
+    assert.deepEqual(cleared.board[POOL_CONTAINER_ID], ['a', 'c', 'd']);
+    assert.equal(cleared.tiers, state.tiers, 'ranking never changes the ladder');
   });
+});
 
-  it('never removes the last tier', () => {
-    const one = { tiers: [{ id: 'x', label: 'X', color: 's' }], board: { x: [], [POOL_CONTAINER_ID]: order } };
-    assert.equal(removeTier(one, 'x', order), one);
-  });
+// 2026-10-19 review L10: custom lists belong to the account that made them.
+describe('custom list ownership', () => {
+ it('custom tier lists are scoped to their owner on a shared browser', async () => {
+  const storage = await import('@/utils/tierLists/storage');
+  const base = { title: 't', description: '', tiers: [{ id: 's', label: 'S', color: 's' }], items: [], placements: {}, createdAt: 1 };
+  const state = {
+    version: 1 as const,
+    rankings: {},
+    custom: {
+      a: { ...base, id: 'a', updatedAt: 1, ownerId: 1 },
+      b: { ...base, id: 'b', updatedAt: 1, ownerId: 2 },
+      legacy: { ...base, id: 'legacy', updatedAt: 1 },
+    },
+  };
+  assert.deepStrictEqual(Object.keys(storage.ownedTierListState(state, 1).custom).sort(), ['a', 'legacy']);
+  assert.deepStrictEqual(Object.keys(storage.ownedTierListState(state, 2).custom).sort(), ['b', 'legacy']);
+  assert.deepStrictEqual(Object.keys(storage.ownedTierListState(state, null).custom), []);
+  const migrated = storage.migrateTierListState({ ...state, custom: { a: { ...state.custom.a, ownerId: -3 } } });
+  assert.strictEqual(migrated.custom.a.ownerId, undefined, 'a bad owner id is dropped, not trusted');
+});
 });

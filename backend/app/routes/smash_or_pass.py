@@ -9,7 +9,7 @@ from sqlalchemy import select
 
 from app.core.extensions import db
 from app.core.limiter import get_client_ip
-from app.core.security import admin_required, get_current_user, login_required
+from app.core.security import admin_required, get_current_user
 from app.models.smash_or_pass import Roster
 from app.schemas.smash_or_pass import SmashRosterAdminCreate
 from app.services import site_settings
@@ -33,21 +33,31 @@ taxonomy_rate_limiter = SlidingWindowRateLimiter(max_requests=20, window_seconds
 proxy_rate_limiter = SlidingWindowRateLimiter(max_requests=60, window_seconds=60)
 
 
+def _resolve_vote_owner(current_user, requested_user_id: int | None):
+    """The account whose votes a read may touch, or an error response.
+
+    Votes on these rosters are personal (and the rosters can be adult-themed),
+    so an explicit `user_id` is honoured only for an admin. A signed-in user
+    always gets their own id; an anonymous caller gets None (their guest
+    session is the only thing they can name) and a 401 if they try to name an
+    account.
+    """
+    if current_user is None:
+        if requested_user_id:
+            return api_error("Authentication required to read another account's votes", 401)
+        return None
+    if requested_user_id and requested_user_id != current_user.id:
+        if current_user.role != "admin":
+            return api_error("Forbidden: Cannot view votes for another user", 403)
+        return requested_user_id
+    return current_user.id
+
+
 @smash_or_pass_bp.route("/rosters", methods=["GET"])
 def get_rosters():
-    # NOTE: despite what the one-line summary below says, this deliberately
-    # returns EVERY roster, active or not (`active_only=False`) -- a real
-    # existing test (test_get_rosters, expecting count == 6 including 4
-    # currently-inactive rosters) locks that in as intended behavior, so it is
-    # not "fixed" to match the docstring here. Gating on `is_active` happens
-    # downstream instead: the frontend roster picker filters
-    # `is_active !== false` client-side (RosterSelectModal.tsx) before a roster
-    # is selectable, and `/editions` (get_editions -> active_only=True) is the
-    # actual "active only" listing endpoint. Left as a flagged judgment call:
-    # if `/rosters` returning inactive rosters to any API consumer is
-    # unintended, the fix is either changing this flag (and updating
-    # test_get_rosters) or fixing the docstring to say what it really does --
-    # not something to decide unilaterally here.
+    # Returns every roster, active or not (test_get_rosters locks this in); the
+    # roster picker filters `is_active !== false` client-side
+    # (RosterSelectModal.tsx) before a roster is selectable.
     """Retrieve all rosters (active and inactive) with real-time stats."""
     # NSFW-flagged rosters are excluded by default, matching the existing
     # optional-flag convention in this codebase (users.py's include_assets /
@@ -60,7 +70,7 @@ def get_rosters():
         return jsonify({"data": rosters, "count": len(rosters)}), 200
     except Exception as e:
         logger.error(f"Error fetching smash-or-pass rosters: {e}")
-        return api_error(str(e), 500)
+        return api_error("Something went wrong. Please try again.", 500)
 
 
 @smash_or_pass_bp.route("/taxonomies", methods=["GET"])
@@ -71,13 +81,17 @@ def get_taxonomies():
         return jsonify({"data": data}), 200
     except Exception as e:
         logger.error(f"Error fetching smash taxonomies: {e}")
-        return api_error(str(e), 500)
+        return api_error("Something went wrong. Please try again.", 500)
 
 
 @smash_or_pass_bp.route("/taxonomies", methods=["POST"])
-@login_required
+@admin_required
 def register_taxonomy():
-    """Register a custom role or gender in the database."""
+    """Register a role or gender in the shared list every visitor's filters show.
+
+    Admin-only: a regular account's custom terms live in its own (local) roster
+    and in its browser's term cache, so they never reach other visitors
+    unmoderated."""
     client_ip = get_client_ip()
     if not taxonomy_rate_limiter.is_allowed(client_ip):
         return api_error("Too many requests. Please try again later.", 429)
@@ -95,7 +109,7 @@ def register_taxonomy():
         return jsonify({"data": term}), 201
     except Exception as e:
         logger.error(f"Error registering taxonomy: {e}")
-        return api_error(str(e), 500)
+        return api_error("Something went wrong. Please try again.", 500)
 
 
 @smash_or_pass_bp.route("/rosters", methods=["POST"])
@@ -188,15 +202,21 @@ def get_roster_feed(slug: str):
         or request.headers.get("X-Session-ID")
         or request.cookies.get("session_id")
     )
-    user_id = request.args.get("user_id", type=int)
+    requested_user_id = request.args.get("user_id", type=int)
     role = request.args.get("role")
     gender = request.args.get("gender")
     _, limit = paginate_args(default_per_page=250, max_per_page=500, per_page_arg="limit")
     lang = _extract_lang()
 
+    # Which cards are missing from a feed reveals what that account voted on,
+    # so `?user_id=` is an admin-only override. Everyone else gets their own
+    # account (signed in) or their own guest session -- never someone else's.
     current_user = get_current_user()
-    if current_user:
-        user_id = current_user.id
+    user_id = _resolve_vote_owner(current_user, requested_user_id)
+    if isinstance(user_id, tuple):
+        return user_id
+    if current_user is not None and user_id != current_user.id:
+        session_id = None  # an admin looking at another account, not at their own device
 
     try:
         feed_data = smash_service.get_feed(
@@ -214,7 +234,7 @@ def get_roster_feed(slug: str):
         return jsonify({"data": feed_data}), 200
     except Exception as e:
         logger.error(f"Error fetching feed for roster '{slug}': {e}")
-        return api_error(str(e), 500)
+        return api_error("Something went wrong. Please try again.", 500)
 
 
 @smash_or_pass_bp.route("/vote", methods=["POST"])
@@ -237,9 +257,10 @@ def cast_vote():
     current_user = get_current_user()
     user_id = current_user.id if current_user else None
 
-    remote_ip = get_client_ip()
-    sub_key = session_id or (f"user:{user_id}" if user_id else "anon")
-    client_key = f"{remote_ip}:{sub_key}"
+    # Keyed on something the client cannot rotate: the account when signed in,
+    # otherwise the IP. The guest `session_id` is client-chosen, so keying on
+    # it let a script mint a fresh limit per request.
+    client_key = f"user:{user_id}" if user_id else f"ip:{get_client_ip()}"
 
     if not vote_rate_limiter.is_allowed(client_key):
         return api_error("Rate limit exceeded. Maximum 60 votes per minute allowed.", 429)
@@ -253,12 +274,18 @@ def cast_vote():
     if vote_type not in {"smash", "pass", "super_smash"}:
         return api_error(f"Invalid vote_type '{vote_type}'. Must be one of ('smash', 'pass', 'super_smash')", 400)
 
+    if not user_id and not session_id:
+        return api_error("Field 'session_id' is required for a guest vote", 400)
+
     try:
         result = smash_service.cast_vote(
             entity_id=entity_id,
             character_slug=character_slug,
             vote_type=vote_type,
-            session_id=session_id,
+            # A signed-in vote belongs to the account alone. Storing the device's
+            # guest session on it too let whoever used that browser next see and
+            # reset it.
+            session_id=None if user_id else session_id,
             user_id=user_id,
             roster_slug=roster_slug,
             edition=edition,
@@ -269,7 +296,7 @@ def cast_vote():
         return api_error(str(val_err), 400)
     except Exception as e:
         logger.error(f"Error casting smash-or-pass vote: {e}")
-        return api_error(str(e), 500)
+        return api_error("Something went wrong. Please try again.", 500)
 
 
 @smash_or_pass_bp.route("/rosters/<slug>/leaderboard", methods=["GET"])
@@ -309,7 +336,7 @@ def get_roster_leaderboard(slug: str):
         )
     except Exception as e:
         logger.error(f"Error fetching leaderboard for roster '{slug}': {e}")
-        return api_error(str(e), 500)
+        return api_error("Something went wrong. Please try again.", 500)
 
 
 @smash_or_pass_bp.route("/session/reset", methods=["POST"])
@@ -339,7 +366,7 @@ def reset_session():
         return jsonify({"data": result, "status": "success"}), 200
     except Exception as e:
         logger.error(f"Error resetting session votes: {e}")
-        return api_error(str(e), 500)
+        return api_error("Something went wrong. Please try again.", 500)
 
 
 @smash_or_pass_bp.route("/sync-session", methods=["POST"])
@@ -374,7 +401,7 @@ def sync_session():
         return jsonify({"data": result, "status": "success"}), 200
     except Exception as e:
         logger.error(f"Error syncing session votes: {e}")
-        return api_error(str(e), 500)
+        return api_error("Something went wrong. Please try again.", 500)
 
 
 
@@ -383,11 +410,6 @@ def reset_user_votes():
     """Reset and wipe all votes for a specific user and recalculate stats."""
     payload = request.get_json(silent=True) or {}
     requested_user_id = payload.get("user_id") or request.args.get("user_id", type=int)
-    session_id = (
-        payload.get("session_id")
-        or request.headers.get("X-Session-ID")
-        or request.cookies.get("session_id")
-    )
     roster_slug = (
         payload.get("roster_slug")
         or payload.get("edition")
@@ -416,44 +438,13 @@ def reset_user_votes():
             user_id=target_user_id,
             roster_slug=roster_slug,
             edition=edition,
-            session_id=session_id,
         )
         return jsonify({"data": result, "status": "success"}), 200
     except Exception as e:
         logger.error(f"Error resetting user smash-or-pass votes: {e}")
-        return api_error(str(e), 500)
+        return api_error("Something went wrong. Please try again.", 500)
 
 
-
-
-@smash_or_pass_bp.route("/editions", methods=["GET"])
-def get_editions():
-    """Retrieve available smash or pass editions (legacy)."""
-    try:
-        editions = smash_service.get_editions()
-        return jsonify({"data": editions, "count": len(editions)}), 200
-    except Exception as e:
-        logger.error(f"Error fetching smash-or-pass editions: {e}")
-        return api_error(str(e), 500)
-
-
-@smash_or_pass_bp.route("/characters", methods=["GET"])
-def get_characters():
-    """Retrieve character list with stats filtered by edition, role, gender, or search query (legacy)."""
-    edition = request.args.get("edition", "canon")
-    role = request.args.get("role")
-    gender = request.args.get("gender")
-    search = request.args.get("q") or request.args.get("search")
-    lang = _extract_lang()
-
-    try:
-        data = smash_service.get_characters_with_stats(
-            edition=edition, role=role, gender=gender, search=search, lang=lang
-        )
-        return jsonify({"count": len(data), "data": data, "edition": edition}), 200
-    except Exception as e:
-        logger.error(f"Error fetching smash-or-pass characters: {e}")
-        return api_error(str(e), 500)
 
 
 @smash_or_pass_bp.route("/user-votes", methods=["GET"])
@@ -469,12 +460,11 @@ def get_user_votes():
     lang = _extract_lang()
 
     current_user = get_current_user()
-    if current_user:
-        if requested_user_id and requested_user_id != current_user.id and current_user.role != "admin":
-            return api_error("Forbidden: Cannot view votes for another user", 403)
-        target_user_id = requested_user_id if (current_user.role == "admin" and requested_user_id) else current_user.id
-    else:
-        target_user_id = requested_user_id
+    target_user_id = _resolve_vote_owner(current_user, requested_user_id)
+    if isinstance(target_user_id, tuple):
+        return target_user_id
+    if current_user is not None and target_user_id != current_user.id:
+        session_id = None  # an admin looking at another account, not at their own device
 
     if not target_user_id and not session_id:
         return jsonify({"data": [], "count": 0, "message": "No user_id or session_id provided"}), 200
@@ -489,17 +479,27 @@ def get_user_votes():
         return jsonify({"data": votes, "count": len(votes), "edition": edition}), 200
     except Exception as e:
         logger.error(f"Error fetching user/session smash-or-pass votes: {e}")
-        return api_error(str(e), 500)
+        return api_error("Something went wrong. Please try again.", 500)
 
 
-from app.utils.network import is_private_host as _is_private_host
+from app.utils.safe_fetch import FetchRefused, fetch_public_image
+
+#: Sent with every proxied image. The body is never a document: nosniff stops a
+#: browser second-guessing the type, and the sandboxing CSP means that even if
+#: something slipped through, opening the URL directly runs nothing on our origin.
+_PROXY_SECURITY_HEADERS = {
+    "X-Content-Type-Options": "nosniff",
+    "Content-Security-Policy": "default-src 'none'; img-src 'self' data:; style-src 'unsafe-inline'; sandbox",
+    "Content-Disposition": "inline; filename=\"image\"",
+    "Cross-Origin-Resource-Policy": "same-site",
+}
 
 
 @smash_or_pass_bp.route("/proxy-image", methods=["GET"])
 def proxy_image():
-    """Proxies third-party images with CORS headers so canvas can safely crop them."""
-    import requests
-    from urllib.parse import urlparse
+    """Proxies a third-party raster image so the cover cropper can draw it on a
+    canvas without tainting it. Raster only (PNG/JPEG/GIF/WebP/AVIF, checked by
+    content, not label), public hosts only, no redirects."""
     from flask import Response
 
     client_ip = get_client_ip()
@@ -507,67 +507,19 @@ def proxy_image():
         return api_error("Too many requests. Please try again later.", 429)
 
     target_url = request.args.get("url")
-    if not target_url:
+    if not target_url or len(target_url) > 2048:
         return api_error("Missing url parameter", 400)
 
+    max_bytes = site_settings.smash_image_max_bytes()  # at most 5MB (admin setting)
     try:
-        parsed = urlparse(target_url)
-    except Exception:
-        return api_error("Invalid URL", 400)
-
-    if parsed.scheme not in ("http", "https"):
-        return api_error("Only http and https protocols supported", 400)
-
-    if not parsed.hostname or _is_private_host(parsed.hostname):
-        return api_error("Host not allowed", 403)
-
-    MAX_BYTES = site_settings.smash_image_max_bytes()  # at most 5MB (admin setting) to prevent memory exhaustion
-    max_mb = MAX_BYTES // (1024 * 1024)
-
-    try:
-        resp = requests.get(
-            target_url,
-            headers={
-                "User-Agent": (
-                    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-                    "AppleWebKit/537.36 (KHTML, like Gecko) "
-                    "Chrome/124.0.0.0 Safari/537.36"
-                ),
-                "Accept": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8",
-                "Referer": f"{parsed.scheme}://{parsed.netloc}/",
-            },
-            timeout=10,
-            allow_redirects=False,
-            stream=True,
-        )
-        if resp.is_redirect or resp.status_code in (301, 302, 303, 307, 308):
-            return api_error("Redirects are not allowed", 403)
-
-        if not resp.ok:
-            return api_error(f"Upstream returned status {resp.status_code}", resp.status_code)
-
-        content_length = resp.headers.get("content-length")
-        if content_length and int(content_length) > MAX_BYTES:
-            return api_error(f"Image exceeds maximum allowed size ({max_mb}MB)", 413)
-
-        downloaded = bytearray()
-        for chunk in resp.iter_content(chunk_size=65536):
-            if chunk:
-                downloaded.extend(chunk)
-                if len(downloaded) > MAX_BYTES:
-                    return api_error(f"Image exceeds maximum allowed size ({max_mb}MB)", 413)
-
-        content_type = resp.headers.get("content-type", "image/jpeg")
-        if not content_type.startswith("image/"):
-            content_type = "image/jpeg"
-
-        response = Response(bytes(downloaded), status=200, mimetype=content_type)
-        response.headers["Access-Control-Allow-Origin"] = "*"
-        response.headers["Access-Control-Allow-Methods"] = "GET, OPTIONS"
-        response.headers["Cache-Control"] = "public, max-age=86400"
-        return response
+        image = fetch_public_image(target_url, max_bytes=max_bytes)
+    except FetchRefused as refused:
+        return api_error(str(refused), refused.status)
     except Exception as e:
         logger.error(f"Image proxy error: {e}")
-        return api_error(str(e), 502)
+        return api_error("Could not fetch the image", 502)
 
-
+    response = Response(image.body, status=200, mimetype=image.mimetype)
+    response.headers.update(_PROXY_SECURITY_HEADERS)
+    response.headers["Cache-Control"] = "public, max-age=86400"
+    return response

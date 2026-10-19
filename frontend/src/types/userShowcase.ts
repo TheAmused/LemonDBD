@@ -4,18 +4,20 @@ export interface MainLoadout {
   characterName: string;
   /** The character's key. The name can be a translation the backend does not store, so saving sends the id when there is one. */
   characterId?: number;
-  prestige: number; // 1 to 100
+  prestige: number; // 0 to 100
   perkIds: (number | null)[]; // 4 slots
 }
 
 export interface UserShowcaseState {
   playerTitle: string;
-  devotionLevel: number; // 1 to 99
-  gradeRank: string; // e.g. "Iridescent I"
+  devotionLevel: number; // 0 to 99
+  gradeRank: string; // one of GRADE_EMBLEMS
   survivorMain: MainLoadout;
   killerMain: MainLoadout;
 }
 
+// The backend accepts exactly these (`SHOWCASE_PLAYER_TITLES` / `SHOWCASE_GRADE_RANKS` in
+// backend/app/models/user.py); a unit test there keeps the lists in step.
 export const PLAYER_TITLES = [
   'Survivor',
   'Killer',

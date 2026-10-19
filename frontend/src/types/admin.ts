@@ -41,6 +41,8 @@ export interface UserPatch {
   username?: string;
   role?: 'user' | 'admin';
   is_verified?: boolean;
+  /** The acting admin's own password; the server requires it to demote another admin. */
+  current_password?: string;
 }
 
 export interface NewUser {

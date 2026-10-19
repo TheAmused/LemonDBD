@@ -117,4 +117,10 @@ export default {
     previewFailed: "プレビューを読み込めませんでした。",
     previewIncomplete: "必須項目を入力するとプレビューが表示されます。",
   },
+  /** Shown when saved content was deleted from this browser because moderators banned it. */
+  contentRemoved: {
+    title: "保存したコンテンツを削除しました",
+    body: "このデバイスに保存していたコンテンツ{count}件が、ルール違反によりモデレーターにブロックされたため削除されました。",
+    dismiss: "閉じる",
+  },
 };

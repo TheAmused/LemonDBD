@@ -51,7 +51,6 @@ export default {
   poolNoMatches: "Nichts passt zu deiner Suche",
   dropHere: "Einträge hier ablegen",
   tierAria: "Tier {label}",
-  editTierAria: "Tier {label} bearbeiten",
   clearTierAria: "Tier {label} leeren",
   showPool: "Nicht eingestufte anzeigen",
   hidePool: "Nicht eingestufte ausblenden",
@@ -70,7 +69,6 @@ export default {
   showNames: "Namen zeigen",
   hideNames: "Namen verbergen",
   addTier: "Tier hinzufügen",
-  removeItem: "Eintrag entfernen",
   editDetails: "Details bearbeiten",
   deleteList: "Liste löschen",
   deleteListTitle: "Diese eigene Liste löschen?",
@@ -82,7 +80,6 @@ export default {
   scaleZoomOut: "Maßstab verkleinern",
   scaleReset: "Maßstab zurücksetzen (100%)",
 
-  editTier: "Tier bearbeiten",
   tierLabel: "Bezeichnung",
   tierColor: "Farbe",
   customColor: "Eigene Farbe",
@@ -94,7 +91,6 @@ export default {
   moveUp: "Nach oben",
   moveDown: "Nach unten",
   clearTier: "Tier leeren",
-  deleteTier: "Tier löschen",
   save: "Speichern",
   newTierLabel: "Neu",
 
@@ -151,6 +147,7 @@ export default {
   saveFailedQuota: "Der Browser-Speicher ist voll, diese Änderung wurde nicht gespeichert. Entferne einige Bilder oder Listen.",
   saveFailedUnavailable: "Dieser Browser blockiert den lokalen Speicher, Änderungen bleiben nur bis zum Verlassen der Seite erhalten.",
   dismiss: "Schließen",
+  deleteFailed: "Die Liste konnte nicht gelöscht werden. Versuche es erneut.",
 
   creator: {
     pageTitle: "LemonDBD - Tierliste erstellen",
@@ -183,6 +180,11 @@ export default {
     tierColorAria: "Farbe von Tier {label} ändern",
     removeTierAria: "Tier {label} entfernen",
     tabUpload: "Hochladen",
+    linkPreviewHeading: "Vorschau",
+    linkPreviewEmpty: "Füge einen Bildlink ein, um ihn hier zu sehen.",
+    linkPreviewLoading: "Bild wird geprüft...",
+    linkPreviewOk: "Bild gefunden. So sieht die Kachel aus.",
+    linkPreviewFailed: "Dieser Link ließ sich nicht als Bild laden. Die Kachel zeigt stattdessen Initialen.",
     tabLinks: "Links einfügen",
     tabCatalog: "Aus dem Spiel",
     itemSourceAria: "Woher Einträge hinzugefügt werden",
@@ -221,6 +223,7 @@ export default {
     publish: "Veröffentlichen",
     publishing: "Wird veröffentlicht...",
     publishFailed: "Diese Liste konnte nicht veröffentlicht werden. Versuch es erneut.",
+    publishTooLarge: "Diese Liste ist zu groß zum Veröffentlichen (über {size} MB). Verwende Bildlinks statt hochgeladener Bilder oder entferne einige Einträge.",
   },
 
   reportTitle: "Inhalt melden",

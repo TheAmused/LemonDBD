@@ -125,12 +125,14 @@ class TestPasswordChangeSignsOutOtherSessions:
         assert login.status_code == 200
         assert decode_token(login.get_json()["token"])["ver"] == 1
 
-    def test_changing_only_the_avatar_keeps_sessions(self, app: Flask, client: FlaskClient, db_session) -> None:
+    def test_an_edit_without_a_password_change_keeps_sessions(self, app: Flask, client: FlaskClient, db_session) -> None:
         user = _make_user()
         token = generate_token(user.id, user.role)
         res = client.put("/api/v1/auth/profile", json={"avatar_url": "custom"}, headers=_bearer(token))
         assert res.status_code == 200
         assert "token" not in res.get_json()
+        # The profile endpoint never sets the avatar: only an upload does.
+        assert res.get_json()["user"]["avatar_url"] != "custom"
         assert client.get("/api/v1/auth/me", headers=_bearer(token)).get_json()["authenticated"] is True
 
 
@@ -224,12 +226,14 @@ class TestWeakSecretWarnings:
         from app import create_app
         from app.core.config import TestingConfig
 
+        # A short (but not publicly known) key starts with a warning; a placeholder refuses to
+        # start at all (see test_fatal_secrets.py).
         class WeakConfig(TestingConfig):
             TESTING = False
-            SECRET_KEY = "changeme"
-            JWT_SECRET_KEY = "changeme"
+            SECRET_KEY = "short-but-unique"
+            JWT_SECRET_KEY = "short-but-unique"
 
         monkeypatch.setenv("FLASK_ENV", "production")
         with caplog.at_level("WARNING"):
             create_app(WeakConfig)
-        assert "SECURITY: SECRET_KEY is a publicly known placeholder value" in caplog.text
+        assert "SECURITY: SECRET_KEY is shorter than 32 characters" in caplog.text

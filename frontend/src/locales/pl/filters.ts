@@ -33,4 +33,5 @@ export default {
   ownershipFilter: "Filtruj według posiadania",
   sortFields: "Pole sortowania",
   sortOrderLabel: "Kolejność sortowania",
+  loadError: "Nie udało się wczytać umiejętności.",
 } as const;

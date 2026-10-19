@@ -146,7 +146,6 @@ export const TarotDeckStage: React.FC<TarotDeckStageProps> = ({
     }));
     next.forEach((card) => preloadTarotFace(card.type));
     setCards(next);
-    onRollComplete(slots);
   };
 
   const handleFlip = (idx: number) => {

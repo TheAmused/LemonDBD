@@ -1,29 +1,25 @@
 'use client';
 // frontend/src/hooks/useNsfwGate.ts
 import { useCallback, useEffect, useState } from 'react';
-import { acknowledgeNsfwContent, hasAcknowledgedNsfwContent, useGlobalNsfwPreference, type NsfwContentScope } from '@/utils/nsfwAck';
+import { hasAcknowledgedNsfwContent, useGlobalNsfwPreference, type NsfwContentScope } from '@/utils/nsfwAck';
 
 /**
- * Whether a tier list or minigame still has to be confirmed before it is shown.
+ * Whether a flagged tier list or minigame still has to be confirmed before it is shown.
  *
- * `flagged` is the content's own NSFW flag. The stored confirmation is read after mount (it lives in
- * localStorage), so until then a flagged item counts as not yet confirmed -- the gate never flashes
- * the content first. Unflagged content is never gated. If the global NSFW preference is enabled,
- * the gate is automatically bypassed.
+ * The global NSFW switch is the single source of truth: on, nothing is gated; off, every flagged
+ * item is -- except one this browser's user authored (they are never asked about their own). The
+ * gate's "Click to view" turns the switch on, so the hubs' switch always tells the truth; turning it
+ * back off gates everything again. Read after mount (localStorage), so the content never flashes.
  */
 export function useNsfwGate(scope: NsfwContentScope, id: string, flagged: boolean) {
   const [globalNsfw, setGlobalNsfw] = useGlobalNsfwPreference();
-  const [confirmed, setConfirmed] = useState<boolean>(false);
+  const [authored, setAuthored] = useState<boolean>(false);
 
   useEffect(() => {
-    setConfirmed(flagged ? (globalNsfw || hasAcknowledgedNsfwContent(scope, id)) : false);
-  }, [scope, id, flagged, globalNsfw]);
+    setAuthored(flagged ? hasAcknowledgedNsfwContent(scope, id) : false);
+  }, [scope, id, flagged]);
 
-  const confirm = useCallback(() => {
-    acknowledgeNsfwContent(scope, id);
-    setGlobalNsfw(true);
-    setConfirmed(true);
-  }, [scope, id, setGlobalNsfw]);
+  const confirm = useCallback(() => setGlobalNsfw(true), [setGlobalNsfw]);
 
-  return { gated: flagged && !globalNsfw && !confirmed, confirm };
+  return { gated: flagged && !globalNsfw && !authored, confirm };
 }

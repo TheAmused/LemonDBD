@@ -5,8 +5,10 @@ from sqlalchemy import select
 from app.core.extensions import db
 from app.core.transaction import transaction
 from app.models import BugReport, User
-from app.models.minigame import MinigameUserStat
-from app.services.minigames import record_minigame_round
+from datetime import date
+
+from app.models.minigame import MinigameDailyChallenge
+from app.services.minigames import upsert_daily_challenge
 
 
 def test_transaction_commits_cleanly(app):
@@ -119,33 +121,28 @@ def test_nested_transaction_rollback_guarantees_atomicity(app):
 
 
 def test_minigame_service_transaction_boundary(app):
-    """Verify minigame_service.record_minigame_round executes inside atomic transaction."""
+    """Verify upsert_daily_challenge executes inside an atomic transaction and
+    a second call updates the same row instead of inserting another."""
     with app.app_context():
-        user = User(
-            login="uow_minigame_user",
-            username="Minigame User",
-            email="minigame_uow@example.com",
-            password_hash="hash",
-        )
-        with transaction():
-            db.session.add(user)
-
-        stat = record_minigame_round(
-            user_id=user.id,
+        first = upsert_daily_challenge(
             game_mode="perk_guesser",
-            won=True,
-            attempts=3,
+            title="First",
+            description="",
+            rounds=[{"round_number": 1, "mode": "classic_perk", "target_id": 1}],
+            target_date=date(2026, 1, 2),
         )
-        assert stat.current_streak == 1
-        assert stat.total_played == 1
-        assert stat.total_won == 1
+        second = upsert_daily_challenge(
+            game_mode="perk_guesser",
+            title="Second",
+            description="",
+            rounds=[{"round_number": 1, "mode": "classic_perk", "target_id": 2}],
+            target_date=date(2026, 1, 2),
+        )
+        assert first.id == second.id
 
-        # Check DB reflects stat
-        loaded = db.session.scalar(
-            select(MinigameUserStat).where(
-                MinigameUserStat.user_id == user.id,
-                MinigameUserStat.game_mode == "perk_guesser",
-            )
-        )
-        assert loaded is not None
-        assert loaded.current_streak == 1
+        loaded = db.session.scalars(
+            select(MinigameDailyChallenge).where(MinigameDailyChallenge.game_mode == "perk_guesser")
+        ).all()
+        assert len(loaded) == 1
+        assert loaded[0].title == "Second"
+        assert loaded[0].rounds[0]["target_id"] == 2

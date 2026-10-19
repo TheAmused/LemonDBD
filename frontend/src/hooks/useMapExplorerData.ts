@@ -11,7 +11,7 @@ const SEARCH_MIN_CHARS = 3;
 
 export interface UseMapExplorerDataOptions {
   initialMapName?: string;
-  selectedMap?: { mapName: string; timestamp: number; via?: 'voice' | 'link' } | string;
+  selectedMap?: { mapName: string; mapId?: number; timestamp: number; via?: 'voice' | 'link' } | string;
   onAvailableMapsLoaded?: (maps: MapRealm[]) => void;
   /** Called when a map opens by itself (a voice command or a `?mapName=` link), not from a card click. */
   onAutoOpen?: (map: MapRealm, via: 'voice' | 'link') => void;
@@ -46,6 +46,9 @@ export function findMapByName(maps: MapRealm[], targetMapName: string): MapRealm
   if (!targetMapName || !targetMapName.trim() || !maps || maps.length === 0) return undefined;
   const needle = targetMapName.toLowerCase().trim();
   const normNeedle = normalizeMapSearch(needle);
+  // An empty normalized needle matches every string via includes('') — reject it
+  // (this happens for all-Japanese strings which normalize to empty).
+  if (!normNeedle) return undefined;
 
   return maps.find(
     (m) =>
@@ -53,7 +56,10 @@ export function findMapByName(maps: MapRealm[], targetMapName: string): MapRealm
       needle.includes(m.name.toLowerCase()) ||
       normalizeMapSearch(m.name) === normNeedle ||
       normalizeMapSearch(m.name).includes(normNeedle) ||
-      normNeedle.includes(normalizeMapSearch(m.name))
+      normNeedle.includes(normalizeMapSearch(m.name)) ||
+      // Also check raw_name (English canonical) for voice commands on non-English locales
+      (m.raw_name ? normalizeMapSearch(m.raw_name).includes(normNeedle) : false) ||
+      (m.raw_name ? normNeedle.includes(normalizeMapSearch(m.raw_name)) && normNeedle.length >= 3 : false)
   );
 }
 
@@ -68,6 +74,7 @@ export interface UseMapExplorerDataReturn {
   realmImages: Record<string, Realm>;
   openMapId: number | null;
   setOpenMapId: (id: number | null) => void;
+  allMaps?: MapRealm[];
 }
 
 export function useMapExplorerData(options: UseMapExplorerDataOptions = {}): UseMapExplorerDataReturn {
@@ -122,10 +129,12 @@ export function useMapExplorerData(options: UseMapExplorerDataOptions = {}): Use
       try {
         // Only show the spinner when there is genuinely nothing to display;
         // a cached result should swap in without a loading flash.
-        if (readCache(mapsCacheKey(debouncedSearch, 'hens333', undefined, locale)) === undefined) {
+        if (readCache(mapsCacheKey('', 'hens333', undefined, locale)) === undefined) {
           setLoading(true);
         }
-        const data = await fetchMaps(undefined, debouncedSearch, 'hens333', locale);
+        // Fetch the full list once; filtering is done client-side (M4: backend only
+        // searches the English name column, so non-English searches produce 0 results)
+        const data = await fetchMaps(undefined, '', 'hens333', locale);
         const loaded: MapRealm[] = data?.maps || [];
         if (!isCancelled) {
           setMaps(loaded);
@@ -143,7 +152,7 @@ export function useMapExplorerData(options: UseMapExplorerDataOptions = {}): Use
     return () => {
       isCancelled = true;
     };
-  }, [debouncedSearch, locale]);
+  }, [locale]);
 
   useEffect(() => {
     let isCancelled = false;
@@ -169,17 +178,23 @@ export function useMapExplorerData(options: UseMapExplorerDataOptions = {}): Use
 
   useEffect(() => {
     const rawTarget = selectedMap !== undefined ? selectedMap : initialMapName;
+    const rawObj = typeof rawTarget === 'object' && rawTarget !== null ? rawTarget : null;
     const targetMapName =
       typeof rawTarget === 'object' && rawTarget !== null ? rawTarget.mapName : rawTarget;
-    if (!targetMapName || !targetMapName.trim() || maps.length === 0) return;
+    if ((!targetMapName || !targetMapName.trim()) && !rawObj?.mapId) return;
+    if (maps.length === 0) return;
 
     const targetKey =
       typeof rawTarget === 'object' && rawTarget !== null
-        ? `${rawTarget.mapName}:${rawTarget.timestamp}`
+        ? `${rawTarget.mapName}::${rawTarget.timestamp}`
         : rawTarget;
     if (lastHandledTargetRef.current === targetKey) return;
 
-    const match = findMapByName(maps, targetMapName);
+    // Prefer a direct id lookup (set by voice commands on non-English locales) over name matching.
+    const directId = rawObj?.mapId as number | undefined;
+    const match = directId
+      ? maps.find((m) => m.id === directId)
+      : findMapByName(maps, targetMapName);
     if (match) {
       // Opening the map that is already open is not an open (a voice command can repeat itself).
       const alreadyOpen = openMapIdRef.current === match.id;
@@ -192,10 +207,22 @@ export function useMapExplorerData(options: UseMapExplorerDataOptions = {}): Use
     }
   }, [initialMapName, selectedMap, maps]);
 
-  const groupedMapsByRealm = useMemo(() => groupMapsByRealmSorted(maps), [maps]);
+  const filteredMaps = useMemo(() => {
+    if (!debouncedSearch || debouncedSearch.length < SEARCH_MIN_CHARS) return maps;
+    const needle = normalizeMapSearch(debouncedSearch);
+    if (!needle) return maps;
+    return maps.filter(
+      (m) =>
+        normalizeMapSearch(m.name).includes(needle) ||
+        (m.raw_name ? normalizeMapSearch(m.raw_name).includes(needle) : false)
+    );
+  }, [maps, debouncedSearch]);
+
+  const groupedMapsByRealm = useMemo(() => groupMapsByRealmSorted(filteredMaps), [filteredMaps]);
 
   return {
-    maps,
+    maps: filteredMaps,
+    allMaps: maps,
     loading,
     search,
     setSearch,

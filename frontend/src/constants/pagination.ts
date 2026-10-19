@@ -9,3 +9,8 @@ export const DEFAULT_PAGE_SIZE = PAGE_SIZE_OPTIONS[0];
 
 /** Dense, one-line rows (audit log) start with a bigger page. */
 export const DENSE_PAGE_SIZE = PAGE_SIZE_OPTIONS[1];
+
+/** The last page that has rows, for `total` rows shown `perPage` at a time (at least 1). */
+export function lastPage(total: number, perPage: number): number {
+  return Math.max(1, Math.ceil(total / Math.max(1, perPage)));
+}

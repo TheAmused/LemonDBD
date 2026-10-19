@@ -40,6 +40,7 @@ export function AdminUserFormModal({ target, currentUserId, onClose, onCreate, o
   const editing = target !== null && target !== 'new' ? target : null;
   const [form, setForm] = useState<NewUser>(EMPTY);
   const [verified, setVerified] = useState(false);
+  const [ownPassword, setOwnPassword] = useState('');
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
@@ -50,6 +51,7 @@ export function AdminUserFormModal({ target, currentUserId, onClose, onCreate, o
     }
     setForm({ ...EMPTY, login: target.login, username: target.username, email: target.email, role: target.role === 'admin' ? 'admin' : 'user' });
     setVerified(!!target.is_verified);
+    setOwnPassword('');
   }, [target]);
 
   const field = (key: keyof NewUser) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) =>
@@ -64,6 +66,7 @@ export function AdminUserFormModal({ target, currentUserId, onClose, onCreate, o
           ...(form.username.trim() !== editing.username ? { username: form.username.trim() } : {}),
           ...(form.role !== editing.role ? { role: form.role } : {}),
           ...(verified !== !!editing.is_verified ? { is_verified: verified } : {}),
+          ...(demotesAnotherAdmin ? { current_password: ownPassword } : {}),
         };
         if (Object.keys(patch).length === 0 || (await onUpdate(editing, patch))) onClose();
         return;
@@ -75,6 +78,8 @@ export function AdminUserFormModal({ target, currentUserId, onClose, onCreate, o
   };
 
   const ownAccount = editing?.id === currentUserId;
+  /** Taking the admin role from another admin needs the acting admin's own password (the server checks it). */
+  const demotesAnotherAdmin = Boolean(editing && !ownAccount && editing.role === 'admin' && form.role === 'user');
 
   return (
     <Modal
@@ -169,6 +174,20 @@ export function AdminUserFormModal({ target, currentUserId, onClose, onCreate, o
           </div>
           {ownAccount && <span className="block type-caption text-text-muted">{t.ownRoleLocked}</span>}
         </div>
+
+        {demotesAnotherAdmin && (
+          <FormField label={t.confirmOwnPasswordLabel} htmlFor={`${ids}-own-password`}>
+            <Input
+              id={`${ids}-own-password`}
+              type="password"
+              required
+              autoComplete="current-password"
+              value={ownPassword}
+              onChange={(e) => setOwnPassword(e.target.value)}
+            />
+            <span className="block type-caption text-text-muted">{t.confirmOwnPasswordHint}</span>
+          </FormField>
+        )}
 
         {editing && (
           <Checkbox checked={verified} onChange={setVerified}>

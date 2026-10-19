@@ -18,7 +18,7 @@ import {
 import { UserBugReport } from '@/types/userProfile';
 import { UserBugReportsSkeleton } from './UserBugReportsSkeleton';
 import { Pagination } from '@/components/common/Pagination';
-import { staticUrl } from '@/utils/api';
+import { bugAttachmentUrl } from '@/utils/api';
 import { FogReportIcon } from '@/components/icons/DbdIcons';
 import { OverseerEyeIcon } from '@/components/icons/DbdIcons';
 import { EmptyState } from '@/components/common/EmptyState';
@@ -201,7 +201,8 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
                       </span>
                       <div className="flex flex-wrap items-center gap-2.5 pt-0.5">
                         {report.images.map((imgUrl, i) => {
-                          const src = staticUrl(imgUrl) || imgUrl;
+                          const src = bugAttachmentUrl(imgUrl);
+                          if (!src) return null;
                           return (
                             <TileButton press={false}
                               key={i}

@@ -63,6 +63,37 @@ def _canonical_document(payload: Any) -> tuple[str, str]:
         raise ValueError("Failed to canonicalize payload") from err
 
 
+TIER_LIST_FORMAT = "lemondbd-tier-list"
+
+# Fields that record how someone *uses* a document rather than what its author made. Ranking a tier
+# list (which item sits in which tier) leaves it the same list: a ban on it still applies and the
+# author's stamp stays valid. Only an edit saved from an editor (title, items, tiers, images...)
+# makes new content. Smash votes and minigame progress are never part of the document at all.
+# Mirrored in frontend/src/utils/contentHash.ts (USAGE_FIELDS).
+USAGE_FIELDS: dict[str, tuple[str, ...]] = {TIER_LIST_FORMAT: ("placements",)}
+
+
+def content_identity(payload: dict[str, Any]) -> dict[str, Any]:
+    """The part of a document that identifies it: the document without its usage fields."""
+    doc_format = payload.get("format")
+    usage = USAGE_FIELDS.get(doc_format) if isinstance(doc_format, str) else None
+    if not usage:
+        return payload
+    return {key: value for key, value in payload.items() if key not in usage}
+
+
+def _document_hashes(payload: Any) -> tuple[str, str, frozenset[str]]:
+    """Return (evidence_json, identity_hash, every hash a ban or stamp of this document may carry).
+
+    New reports, bans and stamps use the identity hash. The whole-document hash is accepted too, so
+    stamps and bans made before usage fields were left out keep matching.
+    """
+    canonical_str, full_hash = _canonical_document(payload)
+    identity = content_identity(payload)
+    identity_hash = full_hash if identity is payload else _canonical_document(identity)[1]
+    return canonical_str, identity_hash, frozenset({identity_hash, full_hash})
+
+
 def sign_user_content(
     user: User,
     content_type: str,
@@ -85,8 +116,8 @@ def sign_user_content(
     if not isinstance(payload, dict):
         raise ValueError("payload must be a dictionary")
 
-    canonical_str = canonicalize_payload(payload)
-    content_hash = compute_content_hash(canonical_str)
+    # The stamp names the content, not one ranking of it, so re-ranking a list keeps it valid.
+    content_hash = compute_content_hash(canonicalize_payload(content_identity(payload)))
     signature = sign_content(user.id, content_hash, secret_key)
     created_at = datetime.now(timezone.utc).isoformat()
 
@@ -191,6 +222,9 @@ def report_content(
     stamp was copied from elsewhere), is still accepted but stays unattributed, so unsigned
     content can be reviewed and revoked and nobody can be framed by a copied stamp.
 
+    The report is filed under the document's identity hash (`content_identity`), so the ban that
+    follows covers every ranking of a tier list, not only the reporter's.
+
     Returns:
         Tuple of (response_dict, http_status_code).
     """
@@ -207,7 +241,7 @@ def report_content(
         return {"error": "Missing or invalid fields", "status": 400}, 400
 
     try:
-        canonical_str, computed_hash = _canonical_document(payload)
+        canonical_str, computed_hash, known_hashes = _document_hashes(payload)
     except ValueError as err:
         logger.warning(f"Rejected report payload: {err}")
         return {"error": str(err), "status": 400}, 400
@@ -222,8 +256,8 @@ def report_content(
     persisted_author_login = UNATTRIBUTED_LOGIN
     attributed = False
 
-    if manifest is not None and manifest["content_hash"] == computed_hash:
-        if not verify_content_signature(manifest["author_id"], computed_hash, manifest["signature"], secret_key):
+    if manifest is not None and manifest["content_hash"] in known_hashes:
+        if not verify_content_signature(manifest["author_id"], manifest["content_hash"], manifest["signature"], secret_key):
             return {"error": "Invalid content signature", "status": 400}, 400
         attributed = True
         author = db.session.get(User, manifest["author_id"])
@@ -231,7 +265,7 @@ def report_content(
         persisted_author_login = author.login if author else manifest["author_login"]
 
     revocation = db.session.scalar(
-        select(ContentRevocation.id).where(ContentRevocation.content_hash == computed_hash)
+        select(ContentRevocation.id).where(ContentRevocation.content_hash.in_(known_hashes)).limit(1)
     )
     if revocation is not None:
         return {
@@ -325,14 +359,14 @@ def check_revocations(hashes: list[str]) -> list[str]:
     return list(revoked)
 
 
-def _has_valid_author_stamp(manifest: Any, content_hash: str, secret_key: str | None) -> bool:
+def _has_valid_author_stamp(manifest: Any, content_hashes: frozenset[str], secret_key: str | None) -> bool:
     """True when `manifest` is a genuine stamp for exactly this document from an existing account."""
     if not isinstance(manifest, dict) or not secret_key:
         return False
     stamp, malformed = _parse_manifest(manifest)
-    if stamp is None or malformed or stamp["content_hash"] != content_hash:
+    if stamp is None or malformed or stamp["content_hash"] not in content_hashes:
         return False
-    if not verify_content_signature(stamp["author_id"], content_hash, stamp["signature"], secret_key):
+    if not verify_content_signature(stamp["author_id"], stamp["content_hash"], stamp["signature"], secret_key):
         return False
     return db.session.get(User, stamp["author_id"]) is not None
 
@@ -352,14 +386,14 @@ def check_document_revoked(
     Raises:
         ValueError: If the payload is not a hashable JSON object or is too large.
     """
-    _, content_hash = _canonical_document(payload)
+    _, content_hash, known_hashes = _document_hashes(payload)
     revoked = db.session.scalar(
-        select(ContentRevocation.id).where(ContentRevocation.content_hash == content_hash)
+        select(ContentRevocation.id).where(ContentRevocation.content_hash.in_(known_hashes)).limit(1)
     )
     return {
         "revoked": revoked is not None,
         "content_hash": content_hash,
-        "signed": _has_valid_author_stamp(manifest, content_hash, secret_key),
+        "signed": _has_valid_author_stamp(manifest, known_hashes, secret_key),
     }
 
 

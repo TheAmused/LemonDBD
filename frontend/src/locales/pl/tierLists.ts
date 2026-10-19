@@ -51,7 +51,6 @@ export default {
   poolNoMatches: "Nic nie pasuje do wyszukiwania",
   dropHere: "Upuść elementy tutaj",
   tierAria: "Tier {label}",
-  editTierAria: "Edytuj tier {label}",
   clearTierAria: "Wyczyść tier {label}",
   showPool: "Pokaż nieocenione",
   hidePool: "Ukryj nieocenione",
@@ -70,7 +69,6 @@ export default {
   showNames: "Pokaż nazwy",
   hideNames: "Ukryj nazwy",
   addTier: "Dodaj tier",
-  removeItem: "Usuń element",
   editDetails: "Edytuj szczegóły",
   deleteList: "Usuń listę",
   deleteListTitle: "Usunąć tę własną listę?",
@@ -82,7 +80,6 @@ export default {
   scaleZoomOut: "Pomniejsz skalę",
   scaleReset: "Resetuj skalę (100%)",
 
-  editTier: "Edytuj tier",
   tierLabel: "Etykieta",
   tierColor: "Kolor",
   customColor: "Własny kolor",
@@ -94,7 +91,6 @@ export default {
   moveUp: "W górę",
   moveDown: "W dół",
   clearTier: "Wyczyść tier",
-  deleteTier: "Usuń tier",
   save: "Zapisz",
   newTierLabel: "Nowy",
 
@@ -151,6 +147,7 @@ export default {
   saveFailedQuota: "Pamięć przeglądarki jest pełna, więc ta zmiana nie została zapisana. Usuń część obrazków lub list.",
   saveFailedUnavailable: "Ta przeglądarka blokuje pamięć lokalną, więc zmiany znikną po opuszczeniu strony.",
   dismiss: "Zamknij",
+  deleteFailed: "Nie udało się usunąć listy. Spróbuj ponownie.",
 
   creator: {
     pageTitle: "LemonDBD - Stwórz tier listę",
@@ -183,6 +180,11 @@ export default {
     tierColorAria: "Zmień kolor tieru {label}",
     removeTierAria: "Usuń tier {label}",
     tabUpload: "Wgraj",
+    linkPreviewHeading: "Podgląd",
+    linkPreviewEmpty: "Wklej link do obrazka, aby zobaczyć go tutaj.",
+    linkPreviewLoading: "Sprawdzam obrazek...",
+    linkPreviewOk: "Znaleziono obrazek. Tak będzie wyglądał kafelek.",
+    linkPreviewFailed: "Ten link nie wczytał się jako obrazek. Kafelek pokaże inicjały.",
     tabLinks: "Wklej linki",
     tabCatalog: "Z gry",
     itemSourceAria: "Skąd dodać elementy",
@@ -221,6 +223,7 @@ export default {
     publish: "Opublikuj",
     publishing: "Publikowanie...",
     publishFailed: "Nie udało się opublikować tej listy. Spróbuj ponownie.",
+    publishTooLarge: "Ta lista jest za duża, by ją opublikować (ponad {size} MB). Użyj linków do obrazków zamiast wgranych plików albo usuń część pozycji.",
   },
 
   reportTitle: "Zgłoś treść",

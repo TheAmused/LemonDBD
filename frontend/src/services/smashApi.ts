@@ -13,7 +13,9 @@ import { getBackendBaseUrl } from '@/utils/perkUtils';
 import { authHeaders } from '@/utils/api';
 import { catalogKey, invalidate } from '@/services/dataCache';
 
-const SESSION_KEY = 'smash_session_id';
+import { getSessionId } from '@/utils/smashOrPass/guestSession';
+
+export { getSessionId };
 
 /**
  * Constructs universal request headers attaching both persistent Session ID and Bearer Auth Token.
@@ -25,31 +27,6 @@ function getRequestHeaders(customHeaders: Record<string, string> = {}): Record<s
     ...customHeaders,
   };
   return { ...headers, ...authHeaders() };
-}
-
-/**
- * Retrieves the persistent unique session ID for the current client,
- * or generates and stores a new one in localStorage if not already present.
- */
-export function getSessionId(): string {
-  if (typeof window === 'undefined') {
-    return 'ssr_smash_session';
-  }
-
-  try {
-    let sessionId = localStorage.getItem(SESSION_KEY);
-    if (!sessionId) {
-      if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
-        sessionId = `sess_${crypto.randomUUID()}`;
-      } else {
-        sessionId = `sess_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
-      }
-      localStorage.setItem(SESSION_KEY, sessionId);
-    }
-    return sessionId;
-  } catch {
-    return 'fallback_smash_session';
-  }
 }
 
 /**
@@ -70,9 +47,12 @@ async function handleResponse<T>(response: Response): Promise<T> {
 /**
  * Fetch all available active rosters from the backend database.
  */
-export async function fetchRosters(activeOnly: boolean = true): Promise<RosterItem[]> {
+export async function fetchRosters(includeNsfw: boolean = false): Promise<RosterItem[]> {
   const backendBase = getBackendBaseUrl();
-  const url = `${backendBase}/api/v1/smash-or-pass/rosters?active_only=${activeOnly}`;
+  // NSFW rosters are left out of the listing unless asked for; the hub asks
+  // when the viewer's global NSFW switch is on (it gates each one anyway).
+  // Inactive rosters come back too and are filtered by the picker.
+  const url = `${backendBase}/api/v1/smash-or-pass/rosters${includeNsfw ? '?include_nsfw=true' : ''}`;
   // Still `no-store`, even though a roster looks like catalog data.
   //
   // Each RosterItem carries `total_votes`, a live SUM over that roster's

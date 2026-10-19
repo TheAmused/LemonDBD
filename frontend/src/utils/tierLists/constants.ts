@@ -50,6 +50,8 @@ export const TIER_LIST_LIMITS = {
   maxItemId: 64,
   /** Per inline `data:` image, in characters of base64. ~96 KB of image. */
   maxDataImageChars: 131_072,
+  /** An admin's publish request (JSON bytes); the server and nginx refuse more than 20 MB. */
+  maxPublishBytes: 19 * 1024 * 1024,
   /** Past this a share link still works, but chat apps may truncate it. */
   shareLinkWarnChars: 8_000,
 } as const;

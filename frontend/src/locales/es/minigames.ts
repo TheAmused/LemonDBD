@@ -73,6 +73,14 @@ export default {
   copyResults: "Compartir Resultados",
   copiedToClipboard: "¡Resultados copiados al portapapeles!",
   revealAnswerNotice: "La respuesta correcta era: {answer}",
+  unknownAnswer: "una respuesta desconocida",
+  guessFailed: "No se pudo comprobar ese intento. Revisa tu conexión e inténtalo de nuevo.",
+  nameStartsWith: "El nombre empieza por: {letter}...",
+  answerFallback: {
+    realm: "Reino n.º {id}",
+    perk: "Habilidad n.º {id}",
+    character: "Personaje n.º {id}",
+  },
 
   // Clues & Attribute Headers
   attributes: {

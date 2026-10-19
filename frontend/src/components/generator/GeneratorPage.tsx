@@ -65,7 +65,7 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
   const [spinDurationSec, setSpinDurationSec] = useState<number>(3);
   const [audioEnabled, setAudioEnabledState] = useState<boolean>(true);
 
-  const [drawnPerks, setDrawnPerks] = useState<string[]>([]);
+  const [drawnPerks, setDrawnPerks] = useState<(string | number)[]>([]);
   const [loadout, setLoadout] = useState<(DrawnSlot | null)[]>([null, null, null, null]);
   const [activeSlotIdx, setActiveSlotIdx] = useState<number>(0);
   const [isChaosModalOpen, setIsChaosModalOpen] = useState(false);
@@ -87,10 +87,12 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
 
     const saved = getStoredGeneratorState();
     if (saved) {
-      if (saved.role) setRole(saved.role);
-      if (saved.genMode) setGenMode(saved.genMode);
+      if (saved.role === 'Survivor' || saved.role === 'Killer') setRole(saved.role);
+      if (saved.genMode && KNOWN_MODES.includes(saved.genMode)) setGenMode(saved.genMode);
       if (typeof saved.noRepeatPerks === 'boolean') setNoRepeatPerks(saved.noRepeatPerks);
-      if (typeof saved.spinDurationSec === 'number') setSpinDurationSec(saved.spinDurationSec);
+      if (typeof saved.spinDurationSec === 'number' && saved.spinDurationSec >= 1 && saved.spinDurationSec <= 30) {
+        setSpinDurationSec(saved.spinDurationSec);
+      }
       if (Array.isArray(saved.loadout) && saved.genMode === 'wheel') {
         const targetRole = saved.role || 'Survivor';
         const isValidWheelLoadout = saved.loadout.every((s) => {
@@ -103,7 +105,9 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
         }
       }
       if (typeof saved.blindMode === 'boolean') setBlindMode(saved.blindMode);
-      if (saved.activeMutator) setActiveMutator(saved.activeMutator);
+      if (saved.activeMutator && typeof saved.activeMutator === 'object' && typeof saved.activeMutator.id === 'string') {
+        setActiveMutator(saved.activeMutator);
+      }
     }
   }, []);
 
@@ -233,9 +237,9 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
 
     // ONLY add to drawnPerks if no-repeat mode is actually ON!
     if (noRepeatPerks && wonData.perk) {
-      const perkName = wonData.perk.name;
+      const perkKey: string | number = wonData.perk.id ?? wonData.perk.name;
       setDrawnPerks((prev) => {
-        const next = Array.from(new Set([...prev, perkName]));
+        const next = Array.from(new Set([...prev, perkKey]));
         saveDrawnPerksForRole(role, next);
         return next;
       });
@@ -247,10 +251,10 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
 
     // ONLY add to drawnPerks if no-repeat mode is actually ON!
     if (noRepeatPerks) {
-      const names = slots.map((s) => s.perk?.name).filter((n): n is string => Boolean(n));
-      if (names.length > 0) {
+      const ids = slots.map((s) => s.perk?.id).filter((id): id is number => typeof id === 'number' && id > 0);
+      if (ids.length > 0) {
         setDrawnPerks((prev) => {
-          const next = Array.from(new Set([...prev, ...names]));
+          const next = Array.from(new Set([...prev, ...ids]));
           saveDrawnPerksForRole(role, next);
           return next;
         });

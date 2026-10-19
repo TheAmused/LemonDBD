@@ -2,7 +2,7 @@
 import type { ChallengeDefinition, ChallengeProgress } from '@/types/minigame';
 import { getLocalStorage } from '@/utils/safeStorage';
 
-const CUSTOM_CHALLENGES_KEY = 'lemondbd_custom_minigames';
+export const CUSTOM_CHALLENGES_KEY = 'lemondbd_custom_minigames';
 const PROGRESS_KEY_PREFIX = 'lemondbd_minigame_progress_';
 const DAILY_STREAK_KEY = 'lemondbd_minigames_daily_streak';
 
@@ -99,10 +99,22 @@ export function clearChallengeProgress(challengeId: string | number): void {
   }
 }
 
+/**
+ * One streak across every daily mode, one result per day: the FIRST daily the player finishes on a
+ * day decides it (won extends the streak, lost ends it). A later daily of another mode the same day
+ * changes nothing -- before, a loss in one mode zeroed a day already won in another.
+ */
 export interface DailyStreakData {
   currentStreak: number;
   maxStreak: number;
   lastCompletedDate: string | null;
+  /** How `lastCompletedDate` ended. Absent in data saved before it existed (read as a win). */
+  lastResult?: 'won' | 'lost';
+}
+
+/** True when today's daily was won (the hub's "Completed today" badge). */
+export function wonDailyOn(streak: DailyStreakData, dateStr: string): boolean {
+  return streak.lastCompletedDate === dateStr && streak.lastResult !== 'lost';
 }
 
 export function getDailyStreak(): DailyStreakData {
@@ -148,6 +160,7 @@ export function recordDailyCompletion(dateStr: string): DailyStreakData {
     currentStreak: newCurrentStreak,
     maxStreak: newMaxStreak,
     lastCompletedDate: dateStr,
+    lastResult: 'won',
   };
 
   const storage = getLocalStorage();
@@ -164,10 +177,14 @@ export function recordDailyCompletion(dateStr: string): DailyStreakData {
 
 export function recordDailyLoss(dateStr: string): DailyStreakData {
   const current = getDailyStreak();
+  if (current.lastCompletedDate === dateStr) {
+    return current; // the day's result is already in
+  }
   const updated: DailyStreakData = {
     currentStreak: 0,
     maxStreak: current.maxStreak,
     lastCompletedDate: dateStr,
+    lastResult: 'lost',
   };
 
   const storage = getLocalStorage();

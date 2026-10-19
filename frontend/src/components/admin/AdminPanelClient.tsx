@@ -109,7 +109,7 @@ export function AdminPanelClient() {
           )}
           {tab === 'availability' && <AdminAvailabilitySection refreshKey={refreshKey} notify={notify} />}
           {tab === 'audit' && <AdminAuditSection refreshKey={refreshKey} notify={notify} />}
-          {tab === 'settings' && <AdminSettingsSection key={refreshKey} notify={notify} />}
+          {tab === 'settings' && <AdminSettingsSection refreshKey={refreshKey} notify={notify} />}
           {tab === 'tools' && <AdminToolsSection refreshKey={refreshKey} notify={notify} onDataChanged={refreshAll} />}
         </TabPanel>
       </div>

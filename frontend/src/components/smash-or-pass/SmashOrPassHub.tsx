@@ -1,9 +1,10 @@
 'use client';
 // frontend/src/components/smash-or-pass/SmashOrPassHub.tsx
-import React, { Suspense, useCallback, useEffect } from 'react';
+import React, { Suspense, useCallback, useEffect, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useDictionary } from '@/context/DictionaryContext';
 import { AuthRequiredState } from '@/components/common/AuthRequiredState';
+import { Alert } from '@/components/common/Alert';
 import { isLocalRosterSlug } from '@/utils/smashOrPass/localRoster';
 import { SmashSounds } from './SmashSoundEffects';
 import { CardArena } from './hub/CardArena';
@@ -53,8 +54,9 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ locale = 'en' })
   const { finishExit } = exit;
   const { advance, loadFeed, loadLeaderboard } = deck;
   const handleExitComplete = useCallback(() => {
-    finishExit();
-    advance();
+    if (finishExit()) {
+      advance();
+    }
   }, [finishExit, advance]);
 
   const { handleVote, animTrigger } = useSmashVoting({
@@ -71,9 +73,12 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ locale = 'en' })
   const { setIsResetConfirmOpen, setIsHowToPlayOpen, setSelectedStatCharacter } = overlays;
   const { clearVotes } = votes;
   const { resetFilters } = deck;
+  const [resetFailed, setResetFailed] = useState<boolean>(false);
   const handleResetAllVotes = useCallback(async () => {
     setIsResetConfirmOpen(false);
-    await clearVotes();
+    const cleared = await clearVotes();
+    setResetFailed(!cleared);
+    if (!cleared) return;
     trackEvent('smash_reset');
     resetFilters();
     await loadFeed();
@@ -197,6 +202,12 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ locale = 'en' })
             />
           </HubHeader>
 
+          {resetFailed && (
+            <Alert onDismiss={() => setResetFailed(false)} dismissLabel={dict.smashOrPass.close}>
+              {dict.smashOrPass.resetFailed}
+            </Alert>
+          )}
+
           {isLocalRosterSlug(selectedRosterSlug) && !isAuthenticated ? (
             <div className="w-full max-w-lg mx-auto py-12 px-4">
               <AuthRequiredState
@@ -225,7 +236,6 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ locale = 'en' })
               onAcknowledgeNsfw={rosters.handleAcknowledgeNsfw}
               onVote={handleVote}
               onDragUpdate={(x, y, isDragging) => exit.setDragPhysics({ x, y, isDragging })}
-              onExitComplete={handleExitComplete}
               onOpenPersona={() => overlays.setIsPersonaOpen(true)}
               onReset={() => setIsResetConfirmOpen(true)}
             />

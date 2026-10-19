@@ -68,9 +68,19 @@ export function useSmashVoting({
     }, LEADERBOARD_REFRESH_MS);
   }, []);
 
+  const voteInProgressRef = useRef(false);
+  // The guard is released when the exit ends -- normally by the exit timer below, but also when the
+  // exit is CANCELLED (a roster/filter switch or a reset lands a new feed mid-exit: resetExit clears
+  // the timer, so its callback never runs). Keying off isExiting covers both; without this a
+  // cancelled exit left the guard set and every later vote was ignored until a reload.
+  useEffect(() => {
+    if (!isExiting) voteInProgressRef.current = false;
+  }, [isExiting]);
+
   const handleVote = useCallback(
     async (vote: 'smash' | 'pass', origin?: { x: number; y: number }) => {
-      if (!currentCharacter || isExiting) return;
+      if (!currentCharacter || isExiting || voteInProgressRef.current) return;
+      voteInProgressRef.current = true;
 
       trackEvent('smash_vote', { vote, roster: rosterTag(selectedRosterSlug) });
       if (rosterPlayedRef.current(selectedRosterSlug)) {
@@ -90,7 +100,12 @@ export function useSmashVoting({
         originY: origin?.y,
       }));
 
-      beginExit(vote, exitOffsetFor(vote, dragPhysics), onExitComplete, effectsEnabled ? undefined : CALM_EXIT_MS);
+      const wrappedExitComplete = () => {
+        voteInProgressRef.current = false;
+        onExitComplete();
+      };
+
+      beginExit(vote, exitOffsetFor(vote, dragPhysics), wrappedExitComplete, effectsEnabled ? undefined : CALM_EXIT_MS);
       recordVote(currentCharacter, vote);
 
       // A local roster's entities were never sent to the backend -- there is no `entity_id`

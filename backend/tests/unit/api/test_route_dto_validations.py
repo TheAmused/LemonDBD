@@ -27,8 +27,8 @@ def test_admin_headers(db_session: Session) -> dict[str, str]:
 
 @pytest.mark.unit
 def test_minigames_malformed_json_returns_400(client: FlaskClient, test_user_headers: dict[str, str]) -> None:
-    # Malformed stats payload
-    res = client.post("/api/v1/minigames/stats", json={"won": "not_a_bool_or_invalid_structure"}, headers=test_user_headers)
+    # Malformed guess payload (attempt_number out of range)
+    res = client.post("/api/v1/minigames/guess", json={"attempt_number": 0, "guess_id": 1})
     assert res.status_code in (400, 422)
 
     # Malformed guess payload (missing guess_id)

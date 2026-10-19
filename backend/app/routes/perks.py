@@ -28,11 +28,7 @@ perks_bp = Blueprint("perks", __name__)
 
 
 def _extract_optional_user_id() -> int | None:
-    """Helper to retrieve user ID from explicit query parameter or authenticated JWT context."""
-    user_id_param = request.args.get("user_id", type=int)
-    if user_id_param:
-        return user_id_param
-
+    """Return the authenticated user's id from the JWT/session; ignores any query parameter."""
     user = get_current_user()
     if user:
         return user.id

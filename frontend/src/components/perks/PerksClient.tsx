@@ -169,9 +169,6 @@ function PerksContent() {
       if (ownershipFilter === 'owned' && user) {
         queryParams.append('owned_only', 'true');
       }
-      if (user?.id) {
-        queryParams.append('user_id', user.id.toString());
-      }
 
       const url = `${backendBase}/api/v1/perks?${queryParams.toString()}`;
       const result = await fetchCached<PerksResponse>(url, () => fetchJson(url));
@@ -200,7 +197,7 @@ function PerksContent() {
     page,
     limit,
     ownershipFilter,
-    user?.id,
+    user,
     locale,
     prefetchPerkIcons,
   ]);
@@ -209,7 +206,7 @@ function PerksContent() {
     fetchPerks();
   }, [fetchPerks]);
 
-  const allPerksKey = `${backendBase}/api/v1/perks?limit=1000&lang=${locale}${user?.id ? `&user_id=${user.id}` : ''}`;
+  const allPerksKey = `${backendBase}/api/v1/perks?limit=1000&lang=${locale}`;
   const { data: allPerksResponse } = useCachedData<PerksResponse>(
     allPerksKey,
     () => fetchJson<PerksResponse>(allPerksKey)

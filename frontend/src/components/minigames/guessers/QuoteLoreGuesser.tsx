@@ -9,6 +9,7 @@ import { staticUrl } from '@/utils/api';
 import { useDictionary } from "@/context/DictionaryContext";
 import { InfoChip } from '@/components/common/InfoChip';
 import { Surface } from '@/components/common/Surface';
+import { formatMessage } from '@/utils/i18nFormat';
 
 interface QuoteLoreGuesserProps {
   roundConfig: RoundConfig;
@@ -47,7 +48,7 @@ export const QuoteLoreGuesser: React.FC<QuoteLoreGuesserProps> = ({ roundConfig,
   const clue1 = attempts >= 1 && roleHint ? `Entity Role: ${roleHint}` : null;
   const clue2 = attempts >= 2 && chapterHint ? `Chapter: ${chapterHint}${releaseYear ? ` (${releaseYear})` : ''}` : null;
   const targetName = targetChar?.name || targetPerk?.name || '';
-  const clue3 = attempts >= 3 && targetName ? `Name starts with: ${targetName[0]}...` : null;
+  const clue3 = attempts >= 3 && targetName ? formatMessage(dict.minigames.nameStartsWith, { letter: targetName[0] }) : null;
 
   const solvedImgRaw = targetChar?.avatar_url || targetPerk?.icon_url || '';
   const solvedImg = staticUrl(solvedImgRaw) || solvedImgRaw;

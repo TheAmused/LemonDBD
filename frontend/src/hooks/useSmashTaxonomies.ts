@@ -3,6 +3,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { apiUrl, authHeaders } from '@/utils/api';
+import { useAuth } from '@/context/AuthContext';
 
 const DEFAULT_ROLES = ['Survivor', 'Killer'];
 const DEFAULT_GENDERS = ['female', 'male', 'monster_other'];
@@ -14,6 +15,7 @@ interface TaxonomiesState {
 }
 
 export function useSmashTaxonomies() {
+  const { isAdmin } = useAuth();
   const [taxonomies, setTaxonomies] = useState<TaxonomiesState>(() => {
     if (typeof window !== 'undefined') {
       try {
@@ -75,7 +77,9 @@ export function useSmashTaxonomies() {
       return next;
     });
 
-    // Best-effort sync with backend
+    // Only an admin's term joins the shared list every visitor's filters show; anyone else's stays
+    // in this browser's term cache (above) and in their own roster.
+    if (!isAdmin) return;
     try {
       await fetch(apiUrl('/api/v1/smash-or-pass/taxonomies'), {
         method: 'POST',
@@ -85,7 +89,7 @@ export function useSmashTaxonomies() {
     } catch {
       // Offline or network error; local state already updated
     }
-  }, []);
+  }, [isAdmin]);
 
   return {
     roles: taxonomies.roles,

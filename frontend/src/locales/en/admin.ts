@@ -365,6 +365,8 @@ export default {
   maintSanctionEmailsDesc: "Retries warning, suspension and ban emails that could not be sent (every 3 minutes).",
   maintBanList: "Clean the ban-evasion list",
   maintBanListDesc: "Removes entries past their retention period (nightly).",
+  maintMinigameSessions: "Clean up practice minigame sessions",
+  maintMinigameSessionsDesc: "Deletes practice rounds older than 24 hours (hourly).",
   maintCache: "Clear the catalog cache",
   maintCacheDesc: "Serves fresh perks, characters and maps after you edit the database directly.",
   databaseTitle: "Database",

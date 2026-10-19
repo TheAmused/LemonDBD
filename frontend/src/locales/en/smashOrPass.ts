@@ -26,6 +26,7 @@ export default {
   maleOnly: 'Male',
   monsters: 'Monsters & Eldritch',
   close: 'Close',
+  resetFailed: 'Your votes could not be reset. Check your connection and try again.',
   groupByTier: 'Group by Tier',
   rankedList: 'Ranked List',
   sort: 'Sort:',

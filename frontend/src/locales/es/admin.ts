@@ -365,6 +365,8 @@ export default {
   maintSanctionEmailsDesc: "Reintenta los correos de advertencias, suspensiones y baneos que no se pudieron enviar (cada 3 minutos).",
   maintBanList: "Limpiar la lista contra la evasión de baneos",
   maintBanListDesc: "Elimina las entradas cuyo periodo de conservación terminó (cada noche).",
+  maintMinigameSessions: "Limpiar las sesiones de práctica de minijuegos",
+  maintMinigameSessionsDesc: "Elimina las rondas de práctica de más de 24 horas (cada hora).",
   maintCache: "Vaciar la caché del catálogo",
   maintCacheDesc: "Sirve perks, personajes y mapas actualizados después de editar la base de datos directamente.",
   databaseTitle: "Base de datos",

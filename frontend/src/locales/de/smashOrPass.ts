@@ -26,6 +26,7 @@ export default {
   maleOnly: 'Männlich',
   monsters: 'Monster & Uralte Wesen',
   close: 'Schließen',
+  resetFailed: 'Deine Stimmen konnten nicht zurückgesetzt werden. Prüfe deine Verbindung und versuche es erneut.',
   groupByTier: 'Nach Rang gruppieren',
   rankedList: 'Rangliste',
   sort: 'Sortieren:',

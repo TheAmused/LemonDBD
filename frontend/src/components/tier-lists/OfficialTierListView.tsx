@@ -4,6 +4,7 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { RotateCcw, SearchX, TriangleAlert } from 'lucide-react';
+import { Alert } from '@/components/common/Alert';
 import { EmptyState } from '@/components/common/EmptyState';
 import {
   TIER_LIST_FORMAT,
@@ -39,6 +40,7 @@ export function OfficialTierListView({ slug, locale }: OfficialTierListViewProps
   const t = dict.tierLists;
   const router = useRouter();
   const { isAdmin, token } = useAuth();
+  const [deleteFailed, setDeleteFailed] = useState<boolean>(false);
   const { template, loading: templateLoading, error: templateError, refresh } = useTierListTemplate(slug, locale);
   const { items, loading: itemsLoading, error: itemsError, refresh: refreshItems } = useTierListItems(template, locale);
   const { state, hydrated } = useTierListStore();
@@ -47,25 +49,27 @@ export function OfficialTierListView({ slug, locale }: OfficialTierListViewProps
   useDocumentTitle(template ? `LemonDBD - ${template.title}` : t.pageTitle);
 
   const ranking = state.rankings[slug];
-  const tiers = useMemo(
-    () => resolveTiers(isAdmin ? ranking?.tiers : null, template?.tiers),
-    [isAdmin, ranking?.tiers, template?.tiers]
-  );
+  // Always the official ladder. The ladder is edited in the creator (admins get "Edit details"), never
+  // per browser: a locally saved ladder used to override the official one for an admin and hide
+  // later changes to it.
+  const tiers = useMemo(() => resolveTiers(template?.tiers), [template?.tiers]);
   // No ranking yet: start from the official LemonDBD ranking when there is one.
   const placements = ranking?.placements ?? template?.default_placements ?? EMPTY;
 
   const onSave = useCallback(
-    (nextTiers: TierDefinition[], nextPlacements: TierPlacements) =>
-      saveRanking(slug, { tiers: isAdmin ? nextTiers : null, placements: nextPlacements }),
-    [slug, isAdmin]
+    (_nextTiers: TierDefinition[], nextPlacements: TierPlacements) =>
+      saveRanking(slug, { tiers: null, placements: nextPlacements }),
+    [slug]
   );
 
   const handleDeleteOfficial = useCallback(async () => {
+    setDeleteFailed(false);
     try {
       await deleteOfficialTierList(slug, token);
       router.push(`/${locale}/tier-lists`);
     } catch (err) {
       console.error('Failed to delete official tier list:', err);
+      setDeleteFailed(true);
     }
   }, [slug, token, locale, router]);
 
@@ -84,9 +88,8 @@ export function OfficialTierListView({ slug, locale }: OfficialTierListViewProps
   );
 
   const onImport = useCallback(
-    (doc: TierListDocument) =>
-      saveRanking(slug, { tiers: isAdmin ? doc.tiers : null, placements: doc.placements }),
-    [slug, isAdmin]
+    (doc: TierListDocument) => saveRanking(slug, { tiers: null, placements: doc.placements }),
+    [slug]
   );
 
   if (!template) {
@@ -158,6 +161,12 @@ export function OfficialTierListView({ slug, locale }: OfficialTierListViewProps
   if (itemsLoading || !hydrated) return <TierListSkeleton label={t.loadingItems} />;
 
   return (
+    <>
+    {deleteFailed && (
+      <Alert onDismiss={() => setDeleteFailed(false)} dismissLabel={t.dismiss}>
+        {t.deleteFailed}
+      </Alert>
+    )}
     <TierListEditor
       mode="official"
       preferenceKey={template.kind}
@@ -171,7 +180,7 @@ export function OfficialTierListView({ slug, locale }: OfficialTierListViewProps
       defaultShowNames={template.kind === 'maps' || template.kind === 'custom'}
       resetMessage={template.has_default_placements ? t.resetToOfficialMessage : t.resetMessage}
       poolEmptyLabel={t.poolEmpty}
-      canEditTiers={isAdmin}
+      canEditTiers={false}
       onSave={onSave}
       editHref={isAdmin && template.kind === 'custom' ? `/${locale}/tier-lists/new?official=${encodeURIComponent(slug)}` : undefined}
       onDelete={isAdmin ? handleDeleteOfficial : undefined}
@@ -181,6 +190,7 @@ export function OfficialTierListView({ slug, locale }: OfficialTierListViewProps
       onImport={onImport}
       locale={locale}
     />
+    </>
   );
 }
 

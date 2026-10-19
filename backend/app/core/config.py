@@ -139,6 +139,9 @@ class Config:
     ENV: str = os.getenv("FLASK_ENV", "production")
 
     SECRET_KEY: str = os.getenv("SECRET_KEY", "dbd-lemon-secret-key-2026")
+    # Matches nginx's `client_max_body_size 20M`, so a direct hit on the backend
+    # (or a dev run without nginx) has the same ceiling instead of none.
+    MAX_CONTENT_LENGTH: int = int(os.getenv("MAX_CONTENT_LENGTH", str(20 * 1024 * 1024)))
     CORS_ORIGINS: str = os.getenv("CORS_ORIGINS", "*")
 
     JWT_SECRET_KEY: str = os.getenv("JWT_SECRET_KEY", SECRET_KEY)

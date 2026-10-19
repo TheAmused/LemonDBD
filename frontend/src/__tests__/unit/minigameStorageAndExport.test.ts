@@ -11,9 +11,10 @@ import {
   getDailyStreak,
   recordDailyCompletion,
   recordDailyLoss,
+  wonDailyOn,
 } from '@/utils/minigames/storage';
 
-import { importChallengeFromJson } from '@/utils/minigames/jsonExportImport';
+import { MINIGAME_IMPORT_LIMITS, importChallengeFromJson } from '@/utils/minigames/jsonExportImport';
 import type { ChallengeDefinition, ChallengeProgress } from '@/types/minigame';
 
 const memory: Record<string, string> = {};
@@ -116,6 +117,16 @@ describe('minigame local storage', () => {
     assert.equal(loss.currentStreak, 0);
     assert.equal(loss.maxStreak, 2);
     assert.equal(loss.lastCompletedDate, '2026-10-03');
+    assert.equal(wonDailyOn(loss, '2026-10-03'), false, 'a lost day is not "completed"');
+  });
+
+  it('the first daily finished on a day decides it (another mode the same day changes nothing)', () => {
+    recordDailyCompletion('2026-11-01');
+    const won = recordDailyCompletion('2026-11-02');
+    assert.equal(won.currentStreak, 2);
+    const laterLoss = recordDailyLoss('2026-11-02');
+    assert.equal(laterLoss.currentStreak, 2, 'a loss in a second mode must not zero a day already won');
+    assert.equal(wonDailyOn(laterLoss, '2026-11-02'), true);
   });
 });
 
@@ -196,5 +207,35 @@ describe('minigame JSON import validation', () => {
         ),
       /has unsupported mode/
     );
+  });
+});
+
+// 2026-10-19 review L4: an imported trial is untrusted input.
+describe('minigame import caps', () => {
+  const wrap = (challenge: Record<string, unknown>) => JSON.stringify({ challenge });
+  const round = (extra: Record<string, unknown> = {}) => ({ mode: 'classic_character', target_id: 1, ...extra });
+
+  it('refuses oversized files, too many rounds and runaway attempts', () => {
+    assert.throws(() => importChallengeFromJson('x'.repeat(MINIGAME_IMPORT_LIMITS.maxPayloadChars + 1)), /too large/);
+    assert.throws(() => importChallengeFromJson(wrap({ title: 't', rounds: Array.from({ length: 21 }, () => round()) })), /at most 20 rounds/);
+    assert.throws(() => importChallengeFromJson(wrap({ title: 't', rounds: [round({ max_attempts: 1e9 })] })), /too many attempts/);
+    assert.throws(() => importChallengeFromJson(wrap({ title: 't', description: 'd'.repeat(1001), rounds: [round()] })), /too long/);
+  });
+
+  it('only lets audio point at the site own stream', () => {
+    assert.throws(
+      () => importChallengeFromJson(wrap({ title: 't', rounds: [round({ mode: 'terror_radius', custom_data: { audio_endpoint: 'https://evil.example/ping.mp3' } })] })),
+      /other than LemonDBD/
+    );
+    const ok = importChallengeFromJson(
+      wrap({ title: 't', rounds: [round({ mode: 'terror_radius', custom_data: { audio_endpoint: '/api/v1/minigames/audio/terror_radius/7' } })] })
+    );
+    assert.equal(ok.rounds[0].custom_data?.audio_endpoint, '/api/v1/minigames/audio/terror_radius/7');
+  });
+
+  it('refuses non-text custom data instead of rewriting it (rewriting would break the account mark)', () => {
+    assert.throws(() => importChallengeFromJson(wrap({ title: 't', rounds: [round({ custom_data: { quote: { nested: true } } })] })), /invalid "quote"/);
+    const ok = importChallengeFromJson(wrap({ title: 't', rounds: [round({ custom_data: { quote: 'Hi', hints: ['a'] } })] }));
+    assert.deepEqual(ok.rounds[0].custom_data, { quote: 'Hi', hints: ['a'] });
   });
 });

@@ -2,6 +2,7 @@
 'use client';
 
 import { Button } from '@/components/common/Button';
+import { AUDIO_ENDPOINT_PATTERN } from '@/utils/minigames/jsonExportImport';
 import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import Image from 'next/image';
 import { Volume2, VolumeX, Play, Pause, Activity, Check, X, Disc3 } from 'lucide-react';
@@ -50,8 +51,11 @@ export const AudioGuesser: React.FC<AudioGuesserProps> = ({ roundConfig, charact
 
   // Real audio stream endpoint from LemonDBD API
   const audioSrc = useMemo(() => {
-    if (roundConfig.custom_data?.audio_endpoint) {
-      return roundConfig.custom_data.audio_endpoint as string;
+    // Only this site's own stream: a trial is user-made, and an arbitrary URL here would make every
+    // player's browser fetch it (tracking, mixed content).
+    const custom = roundConfig.custom_data?.audio_endpoint;
+    if (typeof custom === 'string' && AUDIO_ENDPOINT_PATTERN.test(custom)) {
+      return custom;
     }
     if (!targetChar) return null;
     return `/api/v1/minigames/audio/terror_radius/${targetChar.id}`;
@@ -59,9 +63,9 @@ export const AudioGuesser: React.FC<AudioGuesserProps> = ({ roundConfig, charact
 
   // Progressive clues unlocked per wrong attempt
   const attempts = guesses.length;
-  const speedClue = attempts >= 1 && targetChar ? `Movement Speed: ${targetChar.movement_speed || (targetChar.speed ? `${targetChar.speed} m/s` : '')}` : null;
-  const terrorClue = attempts >= 2 && targetChar ? `Terror Radius: ${targetChar.terror_radius || (targetChar.terror_radius_meters ? `${targetChar.terror_radius_meters}m` : '')}` : null;
-  const heightClue = attempts >= 3 && targetChar ? `Height: ${targetChar.height || ''}` : null;
+  const speedClue = attempts >= 1 && targetChar ? `${t.attributes.speed}: ${targetChar.movement_speed || (targetChar.speed ? `${targetChar.speed} m/s` : '')}` : null;
+  const terrorClue = attempts >= 2 && targetChar ? `${t.attributes.terror_radius}: ${targetChar.terror_radius || (targetChar.terror_radius_meters ? `${targetChar.terror_radius_meters}m` : '')}` : null;
+  const heightClue = attempts >= 3 && targetChar ? `${t.attributes.height}: ${targetChar.height || ''}` : null;
 
   // Cleanup on unmount or round switch
   useEffect(() => {

@@ -26,6 +26,7 @@ export default {
   maleOnly: 'Masculino',
   monsters: 'Monstruos y Seres Arcanos',
   close: 'Cerrar',
+  resetFailed: 'No se pudieron restablecer tus votos. Revisa tu conexión e inténtalo de nuevo.',
   groupByTier: 'Agrupar por Rango',
   rankedList: 'Lista Clasificatoria',
   sort: 'Ordenar:',

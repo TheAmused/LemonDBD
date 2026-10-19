@@ -60,6 +60,13 @@ def create_app(config_class: Type[Config] | None = None) -> Flask:
 
     flask_app.before_request(enforce_cookie_csrf_protection)
 
+    @flask_app.after_request
+    def _no_content_sniffing(response):
+        # Every API body is JSON or a typed file; never let a browser guess a
+        # different (executable) type for one of them.
+        response.headers.setdefault("X-Content-Type-Options", "nosniff")
+        return response
+
     db_uri = str(flask_app.config.get("SQLALCHEMY_DATABASE_URI", ""))
     if "sqlite" in db_uri.lower():
         engine_opts = dict(flask_app.config.get("SQLALCHEMY_ENGINE_OPTIONS", {}))
@@ -91,6 +98,11 @@ def create_app(config_class: Type[Config] | None = None) -> Flask:
             "message": "Rate limit exceeded. Please wait a moment before trying again.",
             "retry_after": str(retry_after) if retry_after is not None else None,
         }), 429
+
+    @flask_app.errorhandler(413)
+    def payload_too_large(_e):
+        limit_mb = (flask_app.config.get("MAX_CONTENT_LENGTH") or 0) // (1024 * 1024)
+        return jsonify({"error": f"Request is too large (limit {limit_mb} MB)", "status": 413}), 413
 
     @flask_app.teardown_appcontext
     def shutdown_session(exception=None):

@@ -1,5 +1,6 @@
 // frontend/src/components/smash-or-pass/hub/voteStorage.ts
 import type { EntityItem } from '@/types/smashOrPass';
+import { isLocalRosterSlug } from '@/utils/smashOrPass/localRoster';
 
 /** One persisted vote; older saves put the slug on the vote itself instead of on `character`. */
 export type StoredVote = {
@@ -15,7 +16,8 @@ export function voteSlug(v: StoredVote): string | undefined {
 }
 
 const SELECTED_ROSTER_KEY = 'dbd_smash_selected_roster';
-const votesKey = (rosterSlug: string) => `dbd_smash_votes_${rosterSlug}`;
+const VOTES_PREFIX = 'dbd_smash_votes_';
+const votesKey = (rosterSlug: string) => `${VOTES_PREFIX}${rosterSlug}`;
 
 /** The roster the viewer last picked in this browser, or the canon roster. */
 export function rememberedRosterSlug(): string {
@@ -110,5 +112,29 @@ export function clearStoredVotes(rosterSlug: string): void {
     localStorage.removeItem(votesKey(rosterSlug));
   } catch {
     // Nothing to clear if storage is unavailable.
+  }
+}
+
+
+/**
+ * Drops the cached vote history of every official roster (pending writes
+ * included). Those votes belong to an account or a guest session that this
+ * browser has just stopped being; local rosters' votes never left the device
+ * and stay.
+ */
+export function forgetAccountVotes(): void {
+  if (typeof window === 'undefined') return;
+  for (const slug of [...pendingWrites.keys()]) {
+    if (!isLocalRosterSlug(slug)) pendingWrites.delete(slug);
+  }
+  try {
+    const doomed: string[] = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key && key.startsWith(VOTES_PREFIX) && !isLocalRosterSlug(key.slice(VOTES_PREFIX.length))) doomed.push(key);
+    }
+    doomed.forEach((key) => localStorage.removeItem(key));
+  } catch {
+    // Storage unavailable: nothing persisted to forget.
   }
 }

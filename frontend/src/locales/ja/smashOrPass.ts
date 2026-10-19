@@ -26,6 +26,7 @@ export default {
   maleOnly: '男性',
   monsters: '異形・モンスター',
   close: '閉じる',
+  resetFailed: '投票をリセットできませんでした。接続を確認して、もう一度お試しください。',
   groupByTier: 'ティア別にグループ化',
   rankedList: 'ランキング一覧',
   sort: '並び替え:',

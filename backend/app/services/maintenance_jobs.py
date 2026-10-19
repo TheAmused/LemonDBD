@@ -47,6 +47,12 @@ def _ban_list() -> int:
     return purge_expired()
 
 
+def _minigame_sessions() -> int:
+    from app.services.minigames import purge_expired_repeatables
+
+    return purge_expired_repeatables()
+
+
 def _catalog_cache() -> int:
     from app.core.cache import catalog_cache
     from app.core.redis_cache import bump_catalog_version
@@ -71,6 +77,7 @@ JOBS: tuple[MaintenanceJob, ...] = (
     MaintenanceJob("content_evidence", _content_evidence, 8882028, "Wiped evidence of %d unreviewed content report(s) past the 14-day limit"),
     MaintenanceJob("sanction_emails", _sanction_emails, 8882029, "Sent %d queued moderation email(s)"),
     MaintenanceJob("ban_list", _ban_list, 8882030, "Removed %d expired entr(ies) from the ban-evasion list"),
+    MaintenanceJob("minigame_sessions", _minigame_sessions, 8882031, "Deleted %d expired practice minigame session(s)"),
     MaintenanceJob("catalog_cache", _catalog_cache, None, "Cleared the catalog cache"),
 )
 JOB_BY_KEY: dict[str, MaintenanceJob] = {job.key: job for job in JOBS}
@@ -165,6 +172,8 @@ SCHEDULE: tuple[tuple[str, str, dict[str, Any]], ...] = (
     ("retry_sanction_notifications", "sanction_emails", {"trigger": "interval", "minutes": 3}),
     # Ban-evasion list entries past their retention (daily; the list is off by default and empty).
     ("purge_expired_ban_list_entries", "ban_list", {"trigger": "cron", "hour": 3, "minute": 20}),
+    # Practice (repeatable) minigame sessions live 24h; every page load of a practice mode makes one.
+    ("purge_expired_minigame_sessions", "minigame_sessions", {"trigger": "cron", "minute": 41}),
 )
 SCHEDULER_STALE_AFTER = timedelta(hours=1)
 

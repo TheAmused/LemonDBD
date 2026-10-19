@@ -233,7 +233,7 @@ class TestSmashModels:
 
         vote_dict = vote.to_dict()
         assert vote_dict["entity_id"] == entity.id
-        assert vote_dict["session_id"] == "session_abc123"
+        assert "session_id" not in vote_dict  # the guest's secret never leaves the server
         assert vote_dict["vote_type"] == "super_smash"
         assert vote_dict["user_id"] == 1
 

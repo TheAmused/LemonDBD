@@ -99,7 +99,6 @@ class VoteCreate(BaseModel):
 class VoteResponse(BaseModel):
     id: str
     entity_id: str
-    session_id: str | None = None
     user_id: int | None = None
     vote_type: str
     created_at: datetime | None = None

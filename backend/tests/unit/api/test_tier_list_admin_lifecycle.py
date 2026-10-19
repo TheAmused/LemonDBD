@@ -300,3 +300,42 @@ def test_minigames_admin_deletion(
 
     # Subsequent delete gives 404
     assert client.delete(f"/api/v1/minigames/official/{challenge_id}", headers=admin_headers).status_code == 404
+
+
+def test_invalid_cover_url_is_rejected_not_silently_cleared(app, db_session, monkeypatch, tmp_path):
+    """2026-10-19 review L7: an unusable cover URL used to become None and wipe the cover."""
+    from app.core.security import generate_token
+    from app.models.user import User
+    from app.services import tier_list_service
+
+    monkeypatch.setattr(tier_list_service, "_rewrite_seed_file", lambda: None)
+    admin = User(login="cover_admin", username="cover_admin", email="cover_admin@example.com",
+                 password_hash="x", role="admin", is_active=True)
+    db_session.add(admin)
+    db_session.commit()
+    headers = {"Authorization": f"Bearer {generate_token(admin.id, role='admin')}"}
+    client = app.test_client()
+    created = client.post("/api/v1/tier-lists", headers=headers, json={
+        "title": "Cover test", "cover_image_url": "https://cdn.example/cover.png",
+        "tiers": [{"id": "s", "label": "S", "color": "s"}], "items": [{"id": "a", "name": "A"}],
+    })
+    assert created.status_code == 201
+    slug = created.get_json()["data"]["slug"]
+
+    bad = client.put(f"/api/v1/tier-lists/{slug}", headers=headers, json={"cover_image_url": "javascript:alert(1)"})
+    assert bad.status_code == 400
+    assert client.get(f"/api/v1/tier-lists/{slug}", headers=headers).get_json()["data"]["cover_image_url"] == "https://cdn.example/cover.png"
+
+    cleared = client.put(f"/api/v1/tier-lists/{slug}", headers=headers, json={"cover_image_url": ""})
+    assert cleared.status_code == 200
+    assert cleared.get_json()["data"]["cover_image_url"] == ""
+
+
+def test_oversized_request_gets_a_json_413(app):
+    app.config["MAX_CONTENT_LENGTH"] = 1024
+    try:
+        res = app.test_client().post("/api/v1/minigames/guess", data="x" * 4096, content_type="application/json")
+        assert res.status_code == 413
+        assert "too large" in res.get_json()["error"]
+    finally:
+        app.config["MAX_CONTENT_LENGTH"] = 20 * 1024 * 1024

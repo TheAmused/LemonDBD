@@ -8,6 +8,7 @@ import {
   resetUserVotes as apiResetUserVotes,
   syncSessionVotes as apiSyncSessionVotes,
 } from '@/services/smashApi';
+import { rotateSmashSession } from '@/utils/smashOrPass/guestSession';
 import type { EntityItem } from '@/types/smashOrPass';
 import { isLocalRosterSlug } from '@/utils/smashOrPass/localRoster';
 import {
@@ -37,6 +38,15 @@ export function useSmashVotes(selectedRosterSlug: string) {
   // A roster switch or leaving the page must not lose votes still waiting to be written.
   useEffect(() => flushStoredVotes, [selectedRosterSlug]);
 
+  // The roster a sync result is still allowed to land on. A sync awaits up to two requests; if the
+  // viewer switched roster meanwhile, its (old roster's) votes must not replace the new roster's
+  // history -- the next recordVote would then save them under the new roster's key.
+  const activeRosterRef = useRef(selectedRosterSlug);
+  useEffect(() => {
+    activeRosterRef.current = selectedRosterSlug;
+  }, [selectedRosterSlug]);
+  const syncGenerationRef = useRef(0);
+
   const sessionSmashes = useMemo(() => voteHistory.filter((v) => v.vote === 'smash').length, [voteHistory]);
   const sessionPasses = useMemo(() => voteHistory.filter((v) => v.vote === 'pass').length, [voteHistory]);
 
@@ -50,6 +60,8 @@ export function useSmashVotes(selectedRosterSlug: string) {
 
   const syncVotes = useCallback(
     async (rosterSlug: string) => {
+      const generation = ++syncGenerationRef.current;
+      const isStale = () => generation !== syncGenerationRef.current || activeRosterRef.current !== rosterSlug;
       let currentVotes = readStoredVotes(rosterSlug);
 
       // A local roster has no backend session/account to sync against -- there is no server
@@ -59,7 +71,10 @@ export function useSmashVotes(selectedRosterSlug: string) {
         // If user is authenticated, migrate any guest session votes to user account
         if (isAuthenticated || token || user?.id) {
           try {
-            await apiSyncSessionVotes(rosterSlug);
+            const synced = await apiSyncSessionVotes(rosterSlug);
+            // The guest session's votes now belong to the account: start a fresh guest session so
+            // whoever uses this browser after a logout does not inherit it.
+            if (synced.status === 'success') rotateSmashSession();
           } catch {
             // Best-effort: failure here is non-fatal.
           }
@@ -98,7 +113,9 @@ export function useSmashVotes(selectedRosterSlug: string) {
         }
       }
 
+      if (isStale()) return;
       if (currentVotes.length > 0) writeStoredVotes(rosterSlug, currentVotes);
+      historyRef.current = currentVotes;
       setVoteHistory(currentVotes);
     },
     // Rebuilt on every auth transition, on purpose: signing in re-runs the sync below.
@@ -121,20 +138,26 @@ export function useSmashVotes(selectedRosterSlug: string) {
     [selectedRosterSlug]
   );
 
-  /** Forgets every vote on the active roster, on the backend too for an official one. */
-  const clearVotes = useCallback(async () => {
+  /**
+   * Forgets every vote on the active roster, on the backend too for an official one. Both backend
+   * resets are attempted independently; the local history is only cleared when they succeeded,
+   * otherwise the next sync would bring the "cleared" votes straight back. Returns whether it did.
+   */
+  const clearVotes = useCallback(async (): Promise<boolean> => {
     if (!isLocalRosterSlug(selectedRosterSlug)) {
-      try {
-        if (isAuthenticated || token || user?.id) {
-          await apiResetUserVotes(selectedRosterSlug);
-        }
-        await apiResetSessionVotes(selectedRosterSlug);
-      } catch (err) {
-        console.error('Failed to reset votes on backend database:', err);
+      const resets: Promise<unknown>[] = [apiResetSessionVotes(selectedRosterSlug)];
+      if (isAuthenticated || token || user?.id) resets.unshift(apiResetUserVotes(selectedRosterSlug));
+      const results = await Promise.allSettled(resets);
+      const failed = results.filter((r) => r.status === 'rejected');
+      if (failed.length > 0) {
+        console.error('Failed to reset votes on backend database:', (failed[0] as PromiseRejectedResult).reason);
+        return false;
       }
     }
     clearStoredVotes(selectedRosterSlug);
+    historyRef.current = [];
     setVoteHistory([]);
+    return true;
   }, [selectedRosterSlug, isAuthenticated, token, user?.id]);
 
   return { voteHistory, sessionSmashes, sessionPasses, userSmashesList, recordVote, clearVotes };

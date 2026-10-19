@@ -45,7 +45,7 @@ export function TierListHub({ locale }: TierListHubProps) {
   const dict = useDictionary();
   const t = dict.tierLists;
   const router = useRouter();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isLoading: authLoading } = useAuth();
   const [isAuthModalOpen, setIsAuthModalOpen] = useState<boolean>(false);
   const signIn = useSignInThen();
   const { lists, loading, error, refresh } = useTierListSummaries(locale);
@@ -69,6 +69,9 @@ export function TierListHub({ locale }: TierListHubProps) {
   // A share link lands here as `/tier-lists#import=...`. Read it once, then
   // strip it from the address bar so a reload does not re-open the dialog.
   useEffect(() => {
+    // Wait for /auth/me: before it answers a signed-in visitor still reads as signed out, and the
+    // sign-in window would open on top of the import dialog that follows a moment later.
+    if (authLoading) return;
     const consume = () => {
       const payload = readShareFragment(window.location.hash);
       if (!payload) return;
@@ -83,7 +86,7 @@ export function TierListHub({ locale }: TierListHubProps) {
     consume();
     window.addEventListener('hashchange', consume);
     return () => window.removeEventListener('hashchange', consume);
-  }, [isAuthenticated]);
+  }, [isAuthenticated, authLoading]);
 
   const templates = useMemo(() => Object.fromEntries(lists.map((l) => [l.slug, l.title])), [lists]);
 

@@ -28,9 +28,11 @@ class TestLiveMinigamesAPI:
                     "vote": "smash",
                     "vote_type": "smash",
                     "roster_slug": roster_slug,
+                    "session_id": "live-test-session",
                 },
             )
             assert res_vote.status_code == 200
+            live_client.post("/api/v1/smash-or-pass/session/reset", json={"session_id": "live-test-session"})
 
         res_lead = live_client.get(f"/api/v1/smash-or-pass/rosters/{roster_slug}/leaderboard")
         assert res_lead.status_code == 200

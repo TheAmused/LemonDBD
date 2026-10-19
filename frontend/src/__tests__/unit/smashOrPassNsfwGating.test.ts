@@ -11,10 +11,8 @@ import test from 'node:test';
 import assert from 'node:assert';
 import fs from 'node:fs';
 import path from 'node:path';
-import {
-  hasAcknowledgedNsfwRoster,
-  acknowledgeNsfwRoster,
-} from '@/utils/nsfwAck';
+import * as nsfwAck from '@/utils/nsfwAck';
+import { getGlobalNsfwPreference } from '@/utils/nsfwAck';
 
 function createMockLocalStorage() {
   let store: Record<string, string> = {};
@@ -56,61 +54,12 @@ function readRosterModalSource(): string {
   return [fs.readFileSync(ROSTER_MODAL_PATH, 'utf-8'), ...parts].join('\n');
 }
 
-test('nsfwAck: acknowledgment persistence behavior', async (t) => {
-  await t.test('a roster with no prior acknowledgment reads as not acknowledged', () => {
+test('nsfwAck: rosters are gated by the global switch alone', async (t) => {
+  await t.test('there is no per-roster acknowledgment any more (it made the hub switch lie)', () => {
     resetStorage();
-    assert.strictEqual(hasAcknowledgedNsfwRoster('some_nsfw_roster'), false);
-  });
-
-  await t.test('acknowledging a roster makes it read back as acknowledged', () => {
-    resetStorage();
-    assert.strictEqual(hasAcknowledgedNsfwRoster('some_nsfw_roster'), false);
-    acknowledgeNsfwRoster('some_nsfw_roster');
-    assert.strictEqual(hasAcknowledgedNsfwRoster('some_nsfw_roster'), true);
-  });
-
-  await t.test('acknowledgment persists across separate reads (simulating re-render / reload) using the same storage', () => {
-    resetStorage();
-    acknowledgeNsfwRoster('legendary_characters');
-    // Simulate a fresh page load: nothing but the persisted storage survives.
-    assert.strictEqual(hasAcknowledgedNsfwRoster('legendary_characters'), true);
-    assert.strictEqual(hasAcknowledgedNsfwRoster('legendary_characters'), true);
-  });
-
-  await t.test('acknowledgment is scoped per roster slug -- acknowledging one roster does not acknowledge another', () => {
-    resetStorage();
-    acknowledgeNsfwRoster('roster_a');
-    assert.strictEqual(hasAcknowledgedNsfwRoster('roster_a'), true);
-    assert.strictEqual(hasAcknowledgedNsfwRoster('roster_b'), false);
-  });
-
-  await t.test('a fresh mock storage (simulating a different browser/device) is not acknowledged even for a previously-acknowledged roster', () => {
-    resetStorage();
-    acknowledgeNsfwRoster('roster_a');
-    assert.strictEqual(hasAcknowledgedNsfwRoster('roster_a'), true);
-
-    resetStorage(); // brand new storage, nothing carried over
-    assert.strictEqual(hasAcknowledgedNsfwRoster('roster_a'), false);
-  });
-
-  await t.test('empty/falsy roster slug never reads as acknowledged and never throws on ack', () => {
-    resetStorage();
-    assert.strictEqual(hasAcknowledgedNsfwRoster(''), false);
-    assert.doesNotThrow(() => acknowledgeNsfwRoster(''));
-  });
-
-  await t.test('gracefully returns false / no-throw when localStorage access itself throws (private-browsing style)', () => {
-    const throwingStorage = {
-      getItem: () => { throw new Error('storage disabled'); },
-      setItem: () => { throw new Error('storage disabled'); },
-      removeItem: () => {},
-      clear: () => {},
-      key: () => null,
-      length: 0,
-    };
-    globalThis.localStorage = throwingStorage as unknown as Storage;
-    assert.strictEqual(hasAcknowledgedNsfwRoster('roster_a'), false);
-    assert.doesNotThrow(() => acknowledgeNsfwRoster('roster_a'));
+    assert.strictEqual((nsfwAck as Record<string, unknown>).acknowledgeNsfwRoster, undefined);
+    assert.strictEqual((nsfwAck as Record<string, unknown>).hasAcknowledgedNsfwRoster, undefined);
+    assert.strictEqual(getGlobalNsfwPreference(), false);
   });
 });
 
@@ -136,13 +85,9 @@ test('SmashOrPassHub: NSFW content gate is wired into the render tree', async (t
     );
   });
 
-  await t.test('the confirm button calls the acknowledgment handler, which persists via acknowledgeNsfwRoster', () => {
-    assert.match(src, /handleAcknowledgeNsfw/, 'expected a handler wired to the confirm button');
-    assert.match(
-      src,
-      /acknowledgeNsfwRoster\(activeRoster\.slug\)/,
-      'expected the handler to actually persist the acknowledgment for the current roster'
-    );
+  await t.test('the confirm button turns the global NSFW switch on, and acknowledgment IS that switch', () => {
+    assert.match(src, /handleAcknowledgeNsfw = useCallback\(\(\) => setGlobalNsfw\(true\)/);
+    assert.match(src, /const nsfwAcknowledged = globalNsfw;/);
     // The onClick wiring itself, not just the handler existing somewhere unused.
     assert.match(
       src,
@@ -156,12 +101,8 @@ test('SmashOrPassHub: NSFW content gate is wired into the render tree', async (t
     );
   });
 
-  await t.test('acknowledgment state is re-derived from storage whenever the active roster changes (not just set once on mount)', () => {
-    assert.match(
-      src,
-      /useEffect\(\(\) => \{\s*setNsfwAcknowledged\(hasAcknowledgedNsfwRoster\(activeRoster\.slug\)\);\s*\}, \[activeRoster\.slug\]\)/,
-      'expected an effect keyed on activeRoster.slug that re-reads acknowledgment from storage on roster switch'
-    );
+  await t.test('NSFW rosters are only requested once the switch is on', () => {
+    assert.match(src, /fetchRosters\(globalNsfw\)/);
   });
 
   await t.test(

@@ -365,6 +365,8 @@ export default {
   maintSanctionEmailsDesc: "送信できなかった警告・停止・BAN のメールを再送します（3 分ごと）。",
   maintBanList: "BAN回避防止リストを整理",
   maintBanListDesc: "保存期間を過ぎた項目を削除します（毎晩）。",
+  maintMinigameSessions: "練習ミニゲームのセッションを整理",
+  maintMinigameSessionsDesc: "24時間を過ぎた練習ラウンドを削除します（毎時）。",
   maintCache: "カタログのキャッシュを消去",
   maintCacheDesc: "データベースを直接編集した後、最新のパーク・キャラクター・マップを表示します。",
   databaseTitle: "データベース",

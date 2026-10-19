@@ -67,6 +67,7 @@ export function DbdIdleClient() {
           challenge={challenge}
           catalog={catalog}
           locale={locale}
+          source="daily"
         />
       ) : null}
     </PageShell>

@@ -90,16 +90,18 @@ export interface GuessEvaluationResult {
   };
   attributes?: Record<string, AttributeEvaluation>;
   unlocked_clues?: Record<string, unknown>;
+  /**
+   * The round's answer, sent by the server only once the round is over (solved, out of attempts,
+   * or given up). Official classic rounds never ship it up front.
+   */
   answer?: {
-    id: number;
-    name: string;
-    role?: string;
-    avatar_url?: string;
-    icon_url?: string;
-    image_url?: string;
-    [key: string]: unknown;
+    target_type?: TargetType | string | null;
+    target_id?: number | null;
   };
 }
+
+/** Where a challenge came from, which decides how its guesses are graded. */
+export type ChallengeSource = 'daily' | 'repeatable' | 'custom';
 
 export interface CatalogCharacter {
   id: number;
@@ -184,4 +186,6 @@ export interface ChallengeProgress {
   won: boolean;
   startedAt: number;
   completedAt?: number;
+  /** Answers revealed by the server for rounds that are over, by round index. */
+  revealedAnswers?: Record<number, { target_type?: string | null; target_id?: number | null }>;
 }

@@ -151,6 +151,7 @@ export default {
   saveFailedQuota: "Browser storage is full, so this change isn't saved. Remove some images or lists.",
   saveFailedUnavailable: "This browser blocks local storage, so changes only last until you leave the page.",
   dismiss: "Dismiss",
+  deleteFailed: "Couldn't delete this list. Try again.",
 
   creator: {
     pageTitle: "LemonDBD - Create a tier list",
@@ -221,6 +222,7 @@ export default {
     publish: "Publish",
     publishing: "Publishing...",
     publishFailed: "Couldn't publish this list. Try again.",
+    publishTooLarge: "This list is too large to publish (over {size} MB). Use image links instead of uploaded images, or remove some items.",
   },
 
   reportTitle: "Report content",

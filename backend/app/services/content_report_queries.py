@@ -13,6 +13,15 @@ from app.models.user import User
 REPORT_STATUSES = frozenset({"pending", "resolved_banned", "dismissed", "expired"})
 
 
+def _effective_expiry_field(report: ContentReport) -> dict[str, Any]:
+    """A pending report's `expires_at` as the purge will apply it (a shortened period counts too)."""
+    if report.status != "pending" or report.expires_at is None or report.created_at is None:
+        return {}
+    from app.services.content_moderation_service import effective_expiry
+
+    return {"expires_at": effective_expiry(report).isoformat()}
+
+
 def get_admin_reports(
     status: str | None = "pending",
     page: int = 1,
@@ -56,7 +65,10 @@ def get_admin_reports(
         .limit(per_page)
     )
 
-    items = [{**report.to_dict(), "has_evidence": bool(has_evidence)} for report, has_evidence in db.session.execute(stmt).all()]
+    items = [
+        {**report.to_dict(), "has_evidence": bool(has_evidence), **_effective_expiry_field(report)}
+        for report, has_evidence in db.session.execute(stmt).all()
+    ]
 
     return {
         "items": items,
@@ -89,6 +101,7 @@ def get_report_preview(report_id: int) -> dict[str, Any] | None:
 
     return {
         **report.to_dict(),
+        **_effective_expiry_field(report),
         "evidence_payload": report.evidence_payload,
         "reports": [
             {

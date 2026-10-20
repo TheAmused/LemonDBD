@@ -4,7 +4,7 @@ import logging
 from datetime import datetime, timezone, timedelta
 from typing import Any
 
-from sqlalchemy import select, update
+from sqlalchemy import or_, select, update
 from sqlalchemy.exc import IntegrityError
 
 from app.core.extensions import db
@@ -558,14 +558,29 @@ def _resolve_report(
     }, 200
 
 
+def effective_expiry(report: ContentReport) -> datetime:
+    """When a pending report's evidence is wiped: its own expiry, or sooner if the admin has since
+    shortened the evidence period in Settings (a shorter period applies to waiting reports too)."""
+    stored = report.expires_at if report.expires_at.tzinfo else report.expires_at.replace(tzinfo=timezone.utc)
+    created = report.created_at if report.created_at.tzinfo else report.created_at.replace(tzinfo=timezone.utc)
+    return min(stored, created + timedelta(days=evidence_days()))
+
+
 def purge_expired_evidence() -> int:
-    """Wipe evidence payloads and mark expired for all pending reports past their expiry date."""
+    """Wipe evidence payloads and mark expired for all pending reports past their expiry date.
+
+    "Past" also counts the current evidence period from the report's creation, so shortening the
+    period in Settings shortens it for reports already waiting (it used to apply to new ones only).
+    """
     now = datetime.now(timezone.utc)
     stmt = (
         select(ContentReport)
         .where(
             ContentReport.status == "pending",
-            ContentReport.expires_at <= now,
+            or_(
+                ContentReport.expires_at <= now,
+                ContentReport.created_at <= now - timedelta(days=evidence_days()),
+            ),
         )
     )
     with transaction():

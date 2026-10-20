@@ -359,6 +359,7 @@ export default {
   systemStateWarn: "制限あり",
   systemStateOff: "オフ",
   systemStateError: "異常",
+  systemSwitchedOff: "設定でオフ",
   systemDatabase: "データベース",
   systemDatabaseDesc: "テストクエリに応答します。",
   systemCache: "共有キャッシュ",

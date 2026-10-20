@@ -359,6 +359,7 @@ export default {
   systemStateWarn: "Degraded",
   systemStateOff: "Off",
   systemStateError: "Failing",
+  systemSwitchedOff: "switched off in Settings",
   systemDatabase: "Database",
   systemDatabaseDesc: "Answers a test query.",
   systemCache: "Shared cache",

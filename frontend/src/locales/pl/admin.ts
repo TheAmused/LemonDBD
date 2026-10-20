@@ -359,6 +359,7 @@ export default {
   systemStateWarn: "Ograniczony",
   systemStateOff: "Wył.",
   systemStateError: "Awaria",
+  systemSwitchedOff: "wyłączone w Ustawieniach",
   systemDatabase: "Baza danych",
   systemDatabaseDesc: "Odpowiada na zapytanie testowe.",
   systemCache: "Wspólna pamięć podręczna",

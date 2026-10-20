@@ -174,7 +174,7 @@ export function AdminToolsSection({ refreshKey, notify, onDataChanged }: ToolsPr
         {(checks ?? []).map((check) => {
           const keys = CHECK_KEYS[check.key as keyof typeof CHECK_KEYS];
           const details = [
-            check.detail,
+            check.detail === 'switched_off' ? t.systemSwitchedOff : check.detail,
             check.latency_ms !== undefined ? formatMessage(t.systemLatency, { ms: check.latency_ms }) : null,
             check.last_run_at ? formatMessage(t.lastRunScheduled, { date: when(check.last_run_at) }) : null,
           ].filter(Boolean);

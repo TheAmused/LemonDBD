@@ -54,8 +54,12 @@ def lock_for_update[T](query: Select[tuple[T]]) -> Select[tuple[T]]:
 
 def end_transaction() -> None:
     """Ends the open transaction without writing anything. A lookup that locked a row and found nothing to
-    change calls this, so the lock does not outlive the check. Nothing may be pending in the session."""
-    db.session.rollback()
+    change calls this, so the lock does not outlive the check. Refuses when the session holds unsaved work,
+    which the rollback would silently throw away."""
+    session = db.session()
+    if session.new or session.dirty or session.deleted:
+        raise RuntimeError("end_transaction() would discard unsaved changes; commit or roll back first")
+    session.rollback()
 
 
 # Attach to db extension for convenience

@@ -5,11 +5,12 @@ from sqlalchemy import Select, delete, select
 from sqlalchemy.orm import selectinload
 
 from app.core.extensions import db
-from app.core.transaction import end_transaction, lock_for_update, transaction
+from app.core.transaction import lock_for_update, transaction
 from app.models import PageStreakPageLog, PageStreakRun, utcnow
 from app.schemas.page_streak import PageStreakHistoryEntry, PageStreakRunDict
 from app.services.challenge_completions import delete_completions, record_challenge_completion
 from app.services.match_log_retention import add_match_log
+from app.services.streak_run import load_idle_run_locked
 from app.services.page_streak.helpers import BUILD_SIZE, to_utc_iso
 
 
@@ -185,12 +186,8 @@ def record_match_result(
 
 def apply_inactivity_loss(run_id: int, idle_before: datetime | None = None) -> bool:
     """Counts a loss for a run nobody has played since `idle_before`. False when there was nothing to do."""
-    query = select(PageStreakRun).where(PageStreakRun.id == run_id)
-    if idle_before is not None:
-        query = query.where(PageStreakRun.updated_at < idle_before)
-    r = db.session.scalars(lock_for_update(query)).first()
-    if not r or r.status == "completed":
-        end_transaction()
+    r = load_idle_run_locked(PageStreakRun, run_id, idle_before)
+    if r is None:
         return False
 
     with transaction():

@@ -6,6 +6,7 @@ from datetime import datetime, timedelta
 from sqlalchemy import select, text
 
 from app.core.extensions import db
+from app.core.transaction import end_transaction
 from app.models import ChaosRun, GauntletRun, HistoryRun, PageStreakRun
 from app.models.base import utcnow
 from app.services.chaos_service import ChaosService
@@ -27,6 +28,7 @@ def _sweep(model: _RunModel, apply_loss: Callable[[int, datetime], bool], cutoff
     run_ids = db.session.scalars(
         select(model.id).where(model.status == "in_progress", model.updated_at < cutoff)
     ).all()
+    end_transaction()  # the listing opened one; each run below starts its own
     applied = 0
     for run_id in run_ids:
         try:

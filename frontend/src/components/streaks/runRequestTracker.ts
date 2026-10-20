@@ -4,7 +4,7 @@ export type RequestChannel = 'run' | 'stats' | 'completions';
 
 /**
  * The bookkeeping behind `useChallengeRun`, free of React so its rules can be tested on their own: which answers
- * are still worth showing, and which run has a server action in flight.
+ * are still worth showing, and which run already has a server action in flight.
  */
 export function createRunRequestTracker(currentScope: () => string) {
   const counts: Record<RequestChannel, number> = { run: 0, stats: 0, completions: 0 };
@@ -36,10 +36,6 @@ export function createRunRequestTracker(currentScope: () => string) {
 
     finishAction(scope: string): void {
       actionsInFlight.delete(scope);
-    },
-
-    isActing(scope: string): boolean {
-      return actionsInFlight.has(scope);
     },
   };
 }

@@ -65,7 +65,6 @@ describe('createRunRequestTracker', () => {
     tracker.startAction('a');
     moveTo('b');
     moveTo('a');
-    assert.equal(tracker.isActing('a'), true);
     assert.equal(tracker.startAction('a'), false);
   });
 });

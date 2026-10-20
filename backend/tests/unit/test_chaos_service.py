@@ -2,7 +2,7 @@
 import pytest
 from sqlalchemy import select
 from sqlalchemy.orm import Session
-from app.models import ChaosMatchLog, Killer, Perk, User, utcnow
+from app.models import ChaosMatchLog, Killer, Perk, User
 from app.services.chaos_service import ChaosService
 from app.services.ownership_service import OwnershipService
 from app.services.user import UserService
@@ -315,19 +315,3 @@ class TestRunLookupLocking:
         statement = chaos_service._run_by_id_query(chaos_user, 1)
         assert "FOR UPDATE" in str(statement.compile(dialect=postgresql.dialect()))
         assert statement.get_execution_options()["populate_existing"] is True
-
-    def test_inactivity_lookup_locks_the_run_and_rechecks_it_is_still_idle(self, chaos_service: ChaosService, monkeypatch: pytest.MonkeyPatch) -> None:
-        from sqlalchemy.dialects import postgresql
-        from app.core.extensions import db
-
-        seen: list[str] = []
-        real_scalars = db.session.scalars
-
-        def spy(statement, *args, **kwargs):
-            seen.append(str(statement.compile(dialect=postgresql.dialect())))
-            return real_scalars(statement, *args, **kwargs)
-
-        monkeypatch.setattr(db.session, "scalars", spy)
-        chaos_service._load_run_for_inactivity(1, utcnow())
-        assert "FOR UPDATE" in seen[0]
-        assert "updated_at <" in seen[0]

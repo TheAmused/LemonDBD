@@ -132,7 +132,7 @@ export default {
   boostPickHint: "Wähle einen Killer aus der Liste unten.",
   boostConfirmPick: "Wählen",
   pageStreakIntro: "Wähle einen Killer und gewinne mit dem besten Loadout, das du aus jeder Seite seiner Perks bauen kannst.",
-  inactivityLossNotice: "Ein 90 Tage inaktiver Lauf gilt automatisch als verloren.",
+  inactivityLossNotice: "Ein {days} Tage inaktiver Lauf gilt automatisch als verloren.",
   difficultyAndCheckpoints: "Schwierigkeit",
   exceptions: "Ausnahmen",
   clarifications: "Klarstellungen",

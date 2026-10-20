@@ -298,7 +298,9 @@ def preview_sanction(body: dict[str, Any]) -> dict[str, Any]:
 
 def _issue(kind: str, admin: User | None, user_id: int, **fields: Any) -> UserSanction:
     with transaction():
-        user = _check_target(admin, db.session.get(User, user_id))
+        # The account row is locked for the decision, so two admins banning the same account at once
+        # cannot both pass the "already banned" check.
+        user = _check_target(admin, db.session.get(User, user_id, with_for_update=True))
         sanction = create_sanction(kind, admin, user, **fields)
     dispatch_notifications(queued_notification_ids([sanction.id]))
     return sanction
@@ -354,7 +356,7 @@ def _lift(admin: User | None, sanction: UserSanction, reason: str, now: datetime
 def revoke_sanction(admin: User | None, sanction_id: int, reason: Any) -> UserSanction:
     clean_reason = _clean_text(reason, "reason", required=True, limit=1000)
     with transaction():
-        sanction = db.session.get(UserSanction, sanction_id)
+        sanction = db.session.get(UserSanction, sanction_id, with_for_update=True)
         if sanction is None:
             raise ModerationError("Sanction not found", 404)
         if sanction.revoked_at is not None:

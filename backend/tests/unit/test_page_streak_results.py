@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from app.models import Perk, PageStreakPageLog
 from app.services.ownership_service import OwnershipService
 from app.services.page_streak import PageStreakService
-from app.services.page_streak.runs import apply_inactivity_loss
+from app.services.page_streak.runs import apply_inactivity_loss, run_query
 from tests.unit.page_streak_support import (
     FakePerkService,
     make_perks,
@@ -230,3 +230,18 @@ class TestPageStreakResults:
         assert db_session.query(PageStreakPageLog).count() == before_count
         reloaded = self.service.get_run(self.user_id, "Nurse")
         assert reloaded["status"] == "completed"
+
+    def test_result_lookup_locks_the_run_so_two_parallel_submissions_cannot_both_count(self) -> None:
+        from sqlalchemy.dialects import postgresql
+
+        locked = str(run_query(self.user_id, "Nurse", lock=True).compile(dialect=postgresql.dialect()))
+        assert "FOR UPDATE" in locked
+        assert "FOR UPDATE" not in str(run_query(self.user_id, "Nurse").compile(dialect=postgresql.dialect()))
+
+    def test_the_same_page_cannot_be_counted_twice(self) -> None:
+        build = self.build_for(1)
+        self.service.submit_result(self.user_id, "Nurse", 1, build, "win")
+        with pytest.raises(ValueError, match="not the current page"):
+            self.service.submit_result(self.user_id, "Nurse", 1, build, "win")
+        logs = self.service.get_run(self.user_id, "Nurse")["history"]
+        assert len(logs) == 1

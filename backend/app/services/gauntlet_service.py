@@ -1,8 +1,7 @@
 # backend/app/services/gauntlet_service.py
 import logging
 import random
-
-from sqlalchemy import Select, select
+from datetime import datetime
 
 from app.core.extensions import db
 from app.models import GauntletMatchLog, GauntletRun
@@ -88,14 +87,6 @@ class GauntletService(StreakRunService):
             "boosts": get_boost_config(r.game_mode),
         }
 
-    @staticmethod
-    def _run_by_id_query(user_id: int, run_id: int) -> Select[tuple[GauntletRun]]:
-        # Locked for the rest of the request, so two parallel requests cannot both spend the same tokens.
-        return select(GauntletRun).where(GauntletRun.id == run_id, GauntletRun.user_id == user_id).with_for_update()
-
-    def _find_run_by_id(self, user_id: int, run_id: int) -> GauntletRun | None:
-        return db.session.scalars(self._run_by_id_query(user_id, run_id)).first()
-
     def _spend_tokens(self, r: GauntletRun, boost: BoostName) -> None:
         config = get_boost_config(r.game_mode)
         if config is None:
@@ -141,7 +132,11 @@ class GauntletService(StreakRunService):
     def roll(
         self, user_id: int, role: str, target_character: str | None = None, game_mode: str = DEFAULT_GAME_MODE
     ) -> GauntletRunState:
-        run = self.get_or_create_run(user_id, role, game_mode)
+        self.get_or_create_run(user_id, role, game_mode)
+        # Locked before the target is drawn, so a result committed meanwhile is not rolled over with a draw
+        # made from the progress before it.
+        r = self._find_run(user_id, role, game_mode, lock=True)
+        run = self._present(r)
         completed = run.get("completed_characters", [])
 
         team_size = get_characters_per_match(game_mode)
@@ -165,7 +160,6 @@ class GauntletService(StreakRunService):
                 game_mode=game_mode,
             )
 
-        r = db.session.scalars(select(GauntletRun).where(GauntletRun.id == run["id"])).first()
         r.current_character_id = target_char
         r.current_loadout = loadout
         db.session.commit()
@@ -186,7 +180,7 @@ class GauntletService(StreakRunService):
         player picks their own character, an empty seat until they choose."""
         if game_mode not in PICK_CHARACTER_MODES:
             return self.roll(user_id, role, game_mode=game_mode)
-        r = self._find_run(user_id, role, game_mode)
+        r = self._find_run(user_id, role, game_mode, lock=True)
         if not r:
             raise ValueError("Run not found")
         r.target_revealed = False
@@ -260,6 +254,14 @@ class GauntletService(StreakRunService):
             raise ValueError("There is no other character to roll")
         self._spend_tokens(r, "reroll")
         return self._apply_pick(r, random.choice(others))
+
+    def apply_inactivity_loss(self, run_id: int, idle_before: datetime | None = None) -> bool:
+        """Counts a loss for a run nobody has played since `idle_before`. False when there was nothing to do."""
+        run = self._load_run_for_inactivity(run_id, idle_before)
+        if run is None:
+            return False
+        self.submit_result(run.user_id, run.id, "loss", triggered_by="inactivity")
+        return True
 
     def abandon_run(self, user_id: int, role: str, game_mode: str = DEFAULT_GAME_MODE) -> GauntletRunState:
         return self._abandon_run(user_id, role, game_mode)

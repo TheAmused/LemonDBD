@@ -1,7 +1,9 @@
+import { notFound } from 'next/navigation';
 import { pageMetadata } from '@/i18n/metadata';
 import { PageShell } from '@/components/layout/PageShell';
 import { OfficialTierListView } from '@/features/tier-lists';
 import type { Locale } from '@/i18n/config';
+import { safeDecodeParam } from '@/utils/safeDecodeParam';
 
 export const generateMetadata = pageMetadata('/tier-lists', (d) => ({
   title: d.tierLists.pageTitle,
@@ -14,6 +16,8 @@ export default async function OfficialTierListPage({
   params: Promise<{ locale: Locale; slug: string }>;
 }) {
   const { locale, slug } = await params;
+  const decodedSlug = safeDecodeParam(slug);
+  if (decodedSlug === null) notFound();
 
   return (
     <PageShell
@@ -22,7 +26,7 @@ export default async function OfficialTierListPage({
       padding="tight"
       mainClassName="relative flex flex-col"
     >
-      <OfficialTierListView key={slug} slug={decodeURIComponent(slug)} locale={locale} />
+      <OfficialTierListView key={slug} slug={decodedSlug} locale={locale} />
     </PageShell>
   );
 }

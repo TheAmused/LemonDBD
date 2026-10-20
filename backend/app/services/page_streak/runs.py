@@ -1,14 +1,16 @@
 # backend/app/services/page_streak/runs.py
 from collections.abc import Callable
-from sqlalchemy import delete, select
+from datetime import datetime
+from sqlalchemy import Select, delete, select
 from sqlalchemy.orm import selectinload
 
 from app.core.extensions import db
-from app.core.transaction import transaction
+from app.core.transaction import lock_for_update, transaction
 from app.models import PageStreakPageLog, PageStreakRun, utcnow
 from app.schemas.page_streak import PageStreakHistoryEntry, PageStreakRunDict
 from app.services.challenge_completions import delete_completions, record_challenge_completion
 from app.services.match_log_retention import add_match_log
+from app.services.streak_run import load_idle_run_locked
 from app.services.page_streak.helpers import BUILD_SIZE, to_utc_iso
 
 
@@ -38,20 +40,8 @@ def run_to_dict(
     }
 
 
-def fetch_run(
-    user_id: int,
-    killer: str,
-    build_pages_fn: Callable[[int], list[list[str]]] | None = None,
-) -> PageStreakRunDict | None:
-    """Retrieve run state and sorted page logs for a given user and killer."""
-    r = db.session.scalars(
-        select(PageStreakRun)
-        .options(selectinload(PageStreakRun.page_logs))
-        .where(PageStreakRun.user_id == user_id, PageStreakRun.killer == killer)
-    ).first()
-    if r is None:
-        return None
-
+def run_state(r: PageStreakRun, build_pages_fn: Callable[[int], list[list[str]]] | None = None) -> PageStreakRunDict:
+    """A run entity with its match logs (newest first) as the response payload."""
     sorted_logs = sorted(r.page_logs, key=lambda log: log.id, reverse=True)
     history: list[PageStreakHistoryEntry] = [
         {
@@ -65,6 +55,16 @@ def fetch_run(
         for log in sorted_logs
     ]
     return run_to_dict(r, history, build_pages_fn)
+
+
+def fetch_run(
+    user_id: int,
+    killer: str,
+    build_pages_fn: Callable[[int], list[list[str]]] | None = None,
+) -> PageStreakRunDict | None:
+    """Retrieve run state and sorted page logs for a given user and killer."""
+    r = db.session.scalars(run_query(user_id, killer)).first()
+    return None if r is None else run_state(r, build_pages_fn)
 
 
 def create_new_run(
@@ -99,6 +99,17 @@ def create_new_run(
     return fetch_run(user_id, killer, build_pages_fn)
 
 
+def run_query(user_id: int, killer: str, *, lock: bool = False) -> Select[tuple[PageStreakRun]]:
+    """One killer's run with its match logs. `lock` holds the row until the request commits, so two
+    parallel requests (a double click, two tabs) cannot both pass validation and each count the same page."""
+    query = (
+        select(PageStreakRun)
+        .options(selectinload(PageStreakRun.page_logs))
+        .where(PageStreakRun.user_id == user_id, PageStreakRun.killer == killer)
+    )
+    return lock_for_update(query) if lock else query
+
+
 def validate_match_submission(run: PageStreakRunDict, page: int, perks: list[str], result: str) -> None:
     """Validate submitted perks and page constraints against active run state."""
     if result not in ("win", "loss"):
@@ -131,14 +142,14 @@ def record_match_result(
     build_pages_fn: Callable[[int], list[list[str]]] | None = None,
 ) -> PageStreakRunDict | None:
     """Record match logs and update page progression or failure resets."""
-    run = fetch_run(user_id, killer, build_pages_fn)
-    if run is None:
+    r = db.session.scalars(run_query(user_id, killer, lock=True)).first()
+    if r is None:
         raise ValueError(f"No run in progress for {killer}")
+    run = run_state(r, build_pages_fn)
 
     validate_match_submission(run, page, perks, result)
 
     with transaction():
-        r = db.session.scalars(select(PageStreakRun).where(PageStreakRun.id == run["id"])).first()
         if not r.pages:
             r.pages = run["pages"]
         log = PageStreakPageLog(
@@ -173,10 +184,11 @@ def record_match_result(
     return fetch_run(user_id, killer, build_pages_fn)
 
 
-def apply_inactivity_loss(run_id: int) -> None:
-    r = db.session.scalars(select(PageStreakRun).where(PageStreakRun.id == run_id)).first()
-    if not r or r.status == "completed":
-        return
+def apply_inactivity_loss(run_id: int, idle_before: datetime | None = None) -> bool:
+    """Counts a loss for a run nobody has played since `idle_before`. False when there was nothing to do."""
+    r = load_idle_run_locked(PageStreakRun, run_id, idle_before)
+    if r is None:
+        return False
 
     with transaction():
         add_match_log(r, PageStreakPageLog(
@@ -191,6 +203,7 @@ def apply_inactivity_loss(run_id: int) -> None:
         r.current_page = 1
         r.start_new_attempt()
         r.pages = []
+    return True
 
 
 def abandon_active_run(
@@ -199,15 +212,14 @@ def abandon_active_run(
     build_pages_fn: Callable[[int], list[list[str]]],
 ) -> PageStreakRunDict | None:
     """Abandon the run: back to Page 1 in a new attempt."""
-    run = fetch_run(user_id, killer, build_pages_fn)
-    if run is None:
+    r = db.session.scalars(run_query(user_id, killer, lock=True)).first()
+    if r is None:
         raise ValueError(f"No run to abandon for {killer}")
 
     if not build_pages_fn(user_id):
         raise ValueError("No perks available — the pool is empty")
 
     with transaction():
-        r = db.session.scalars(select(PageStreakRun).where(PageStreakRun.id == run["id"])).first()
         r.abandon_attempt()
         r.status = "in_progress"
         r.current_page = 1
@@ -237,11 +249,7 @@ def refresh_untouched_run(
 ) -> None:
     """A run with no match played in its current attempt follows the live perk pool,
     so unlocking killers or perks after it was created does not leave it on old pages."""
-    r = db.session.scalars(
-        select(PageStreakRun)
-        .options(selectinload(PageStreakRun.page_logs))
-        .where(PageStreakRun.user_id == user_id, PageStreakRun.killer == killer)
-    ).first()
+    r = db.session.scalars(run_query(user_id, killer)).first()
     if r is None or r.status != "in_progress" or r.current_page != 1:
         return
     if any(log.attempt == r.attempt for log in r.page_logs):

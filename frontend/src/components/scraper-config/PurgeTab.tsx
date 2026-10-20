@@ -7,6 +7,7 @@ import { useDictionary } from '@/context/DictionaryContext';
 import { formatMessage } from '@/utils/i18nFormat';
 import { StatusBanner } from './StatusBanner';
 import { TargetPicker } from './TargetPicker';
+import { PURGEABLE_TARGET_IDS } from './scraperTargets';
 import type { usePurgeTab } from './usePurgeTab';
 
 interface PurgeTabProps {
@@ -40,6 +41,7 @@ export function PurgeTab({ tab, onClose }: PurgeTabProps) {
         onToggleAll={toggleAllPurge}
         onToggleGroup={toggleGroupPurge}
         onToggleTarget={togglePurgeTarget}
+        available={PURGEABLE_TARGET_IDS}
       />
 
       <div className="flex items-center justify-between pt-3 border-t border-border-color">

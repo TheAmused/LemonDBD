@@ -31,7 +31,7 @@ def test_creating_a_user_is_audited(client: FlaskClient, admin) -> None:
 @pytest.mark.unit
 def test_export_and_purge_are_audited(client: FlaskClient, admin) -> None:
     _, headers = admin
-    assert client.get("/api/v1/admin/database/export?targets=perks&include_assets=false", headers=headers).status_code == 200
+    assert client.post("/api/v1/admin/database/export", json={"targets": ["perks"], "include_assets": False}, headers=headers).status_code == 200
     assert client.post("/api/v1/admin/database/purge", json={"targets": ["perks"], "current_password": "password123"}, headers=headers).status_code == 200
     assert {"database_exported", "database_purged"} <= set(_actions())
 

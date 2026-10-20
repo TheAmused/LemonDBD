@@ -161,6 +161,9 @@ class Config:
     # Matches nginx's `client_max_body_size 20M`, so a direct hit on the backend
     # (or a dev run without nginx) has the same ceiling instead of none.
     MAX_CONTENT_LENGTH: int = int(os.getenv("MAX_CONTENT_LENGTH", str(20 * 1024 * 1024)))
+    # The one exception: an admin database import (a backup with its images is far over 20 MB).
+    # nginx allows the same on that one path (nginx/default.conf).
+    DATABASE_IMPORT_MAX_MB: int = int(os.getenv("DATABASE_IMPORT_MAX_MB", "512"))
     CORS_ORIGINS: str = os.getenv("CORS_ORIGINS", "*")
 
     JWT_SECRET_KEY: str = os.getenv("JWT_SECRET_KEY", SECRET_KEY)

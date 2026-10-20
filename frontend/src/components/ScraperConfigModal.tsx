@@ -11,7 +11,7 @@ import { ExportTab } from './scraper-config/ExportTab';
 import { ImportTab } from './scraper-config/ImportTab';
 import { PurgeTab } from './scraper-config/PurgeTab';
 import { ScraperConfigTabs } from './scraper-config/ScraperConfigTabs';
-import type { ScraperTab } from './scraper-config/scraperTargets';
+import { PURGE_CASCADES, type ScraperTab } from './scraper-config/scraperTargets';
 import { useExportTab } from './scraper-config/useExportTab';
 import { useImportTab } from './scraper-config/useImportTab';
 import { usePurgeTab } from './scraper-config/usePurgeTab';
@@ -84,6 +84,7 @@ export function ScraperConfigModal({ isOpen, onClose, onPurgeSuccess, initialTab
         message={
           <div className="space-y-3">
             <p>{formatMessage(dict.admin.purgeConfirm, { count: purgeTab.purgeTargets.length }, locale)}</p>
+            {purgeTab.purgeTargets.some((id) => PURGE_CASCADES.includes(id)) && <p className="type-body text-accent-amber">{dict.admin.purgeCascadeNote}</p>}
             <ReauthFields value={purgeTab.reauth} onChange={purgeTab.setReauth} hint={dict.admin.reauthDatabaseHint} disabled={purgeTab.isPurging} />
           </div>
         }

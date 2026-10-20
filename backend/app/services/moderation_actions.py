@@ -411,6 +411,13 @@ def list_user_sanctions(user_id: int) -> list[dict[str, Any]]:
     ]
 
 
+def next_suspension_days(user_id: int) -> int:
+    """The length the admin's escalation settings give this account's next suspension (first or later)."""
+    thresholds = escalation_thresholds()
+    earlier = sum(1 for s in _sanctions_of(user_id) if s.kind == "suspension" and s.revoked_at is None)
+    return thresholds["second_suspension_days"] if earlier else thresholds["first_suspension_days"]
+
+
 def moderation_summary(user_id: int) -> dict[str, Any]:
     now = _now()
     sanctions = _sanctions_of(user_id)
@@ -431,6 +438,8 @@ def moderation_summary(user_id: int) -> dict[str, Any]:
             thresholds=escalation_thresholds(),
         ),
         "suspended_until": as_utc(suspension.expires_at).isoformat() if suspension else None,
+        # What a suspension starts at in the form (Settings > Moderation), whatever the suggestion is.
+        "next_suspension_days": next_suspension_days(user_id),
         "content_blocked": db.session.scalar(
             select(func.count(ContentRevocation.id)).where(ContentRevocation.author_id == user_id)
         )

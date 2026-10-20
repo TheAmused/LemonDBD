@@ -9,6 +9,7 @@ from app.core.account_state import block_kind, is_blocked
 from app.core.extensions import db
 from app.models.content_moderation import ContentReport, ContentReportSubscriber
 from app.models.user import User
+from app.services.moderation_actions import next_suspension_days
 
 REPORT_STATUSES = frozenset({"pending", "resolved_banned", "dismissed", "expired"})
 
@@ -118,4 +119,5 @@ def get_report_preview(report_id: int) -> dict[str, Any] | None:
         # longer or banned from the report (author_active alone said "inactive" for both).
         "author_standing": (block_kind(author) or "active") if author is not None else None,
         "author_is_admin": author.role == "admin" if author is not None else False,
+        "author_next_suspension_days": next_suspension_days(author.id) if author is not None else None,
     }

@@ -126,7 +126,12 @@ def login():
         return api_error("Login/email and password are required.", 400)
 
     try:
-        user, token = authenticate_user_credentials(login_or_email.strip(), password.strip())
+        # The password exactly as typed: sign-up, reset and password change all store it untrimmed, so
+        # trimming it here locked out every password that starts or ends with a space. A stray space
+        # around a password that has none is still forgiven, as before.
+        user, token = authenticate_user_credentials(login_or_email.strip(), password)
+        if not user and password.strip() and password.strip() != password:
+            user, token = authenticate_user_credentials(login_or_email.strip(), password.strip())
     except AccountBlockedError as blocked:
         return blocked_response(blocked.user)
     if not user:

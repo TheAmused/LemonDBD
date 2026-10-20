@@ -157,6 +157,7 @@ def modify_user_profile(
                 user.is_verified = False
                 user.verification_code = _generate_verification_code()
                 user.verification_code_expires_at = datetime.now(timezone.utc) + verification_lifetime()
+                user.verification_sent_at = datetime.now(timezone.utc)
                 user.verification_attempts = 0
 
         if changing_username:

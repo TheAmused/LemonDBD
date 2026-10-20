@@ -132,7 +132,7 @@ export default {
   boostPickHint: "Elige un asesino de la lista de abajo.",
   boostConfirmPick: "Elegir",
   pageStreakIntro: "Elige un asesino y gana con la mejor build que puedas montar con cada página de sus habilidades.",
-  inactivityLossNotice: "Un intento sin actividad durante 90 días cuenta como derrota automática.",
+  inactivityLossNotice: "Un intento sin actividad durante {days} días cuenta como derrota automática.",
   difficultyAndCheckpoints: "Dificultad",
   exceptions: "Excepciones",
   clarifications: "Aclaraciones",

@@ -7,7 +7,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from sqlalchemy import select
+from pydantic import EmailStr, TypeAdapter
+from sqlalchemy import func, select
 
 from app.core.extensions import db
 from app.models.character import Killer, Survivor
@@ -32,56 +33,76 @@ class AccountLookups:
     char_map: dict[str, tuple[str, int]]
 
 
+_EMAIL = TypeAdapter(EmailStr)
+
+
+def _clean_email(value: Any) -> str | None:
+    """The address lower-cased, or None when it is missing or not an e-mail address."""
+    if not isinstance(value, str) or not value.strip():
+        return None
+    try:
+        return _EMAIL.validate_python(value.strip()).lower()
+    except ValueError:
+        return None
+
+
 def import_users(
     data: dict[str, Any],
     target_keys: set[str],
     summary: dict[str, dict[str, int]],
     static_dir: Path,
 ) -> None:
-    """Upsert users by login (older files carry it as `username`), resolving email clashes."""
+    """Create the accounts a backup has and the database lacks (matched by login).
+
+    An import is a bulk write path, so it keeps the rules every other path keeps:
+
+    - An **existing** account keeps its role, standing (`is_active`, which only the sanctions may
+      change), e-mail address, password and verification. Only its display name, avatar and creation
+      date are refreshed from the file. Changing any of the others goes through its own audited flow.
+    - A **new** account needs a valid e-mail address that no other account uses and that is not on
+      the ban-evasion list; a row without one is skipped (never given a made-up address). Its role is
+      `admin` or `user`, nothing else.
+    """
     if "users" in target_keys and "users" in data:
-        u_created, u_updated = 0, 0
+        u_created, u_updated, u_skipped = 0, 0, 0
         for row in data["users"]:
+            if not isinstance(row, dict):
+                u_skipped += 1
+                continue
             login = row.get("login") or row.get("username")
             if not login:
+                u_skipped += 1
                 continue
             username = row.get("username") or login
             user_obj = db.session.scalar(select(User).where(User.login == login))
-            candidate_email = row.get("email") or f"{login}@lemondbd.com"
-            email_conflict = db.session.scalar(
-                select(User).where(User.email == candidate_email, User.login != login)
-            )
 
             if not user_obj:
-                final_email = candidate_email
-                if email_conflict:
-                    final_email = f"{login}_{int(datetime.now(timezone.utc).timestamp())}@lemondbd.com"
+                email = _clean_email(row.get("email"))
+                if (
+                    email is None
+                    or db.session.scalar(select(User.id).where(func.lower(User.email) == email)) is not None
+                    or ban_list.registration_refusal(email)
+                ):
+                    logger.warning("Import skipped user %r: missing, taken or refused e-mail address", login)
+                    u_skipped += 1
+                    continue
                 user_obj = User(
                     login=login,
                     username=username,
-                    email=final_email,
-                    password_hash=row.get("password_hash", ""),
-                    role=row.get("role", "user"),
-                    avatar_url=row.get("avatar_url", "default_avatar"),
-                    is_active=row.get("is_active", True),
-                    is_verified=row.get("is_verified", True if login in ("lemon", "user") else False),
+                    email=email,
+                    password_hash=row.get("password_hash") or None,
+                    role="admin" if row.get("role") == "admin" else "user",
+                    avatar_url=row.get("avatar_url") or "default_avatar",
+                    is_active=row.get("is_active") is not False,
+                    is_verified=bool(row.get("is_verified", login in ("lemon", "user"))),
                 )
                 db.session.add(user_obj)
                 u_created += 1
             else:
-                if not email_conflict:
-                    user_obj.email = candidate_email
-                previous_hash = user_obj.password_hash
-                for field in ["password_hash", "role", "avatar_url", "is_active", "is_verified"]:
-                    if field in row and row[field] is not None:
-                        setattr(user_obj, field, row[field])
-                if user_obj.password_hash != previous_hash:
-                    # A new password signs out every session issued under the old one, as a reset does.
-                    user_obj.token_version = int(user_obj.token_version or 0) + 1
                 if row.get("login") and row.get("username"):
                     user_obj.username = row["username"]
-                if login in ("lemon", "user"):
-                    user_obj.is_verified = True
+                if row.get("avatar_url"):
+                    user_obj.avatar_url = row["avatar_url"]
                 u_updated += 1
 
             if row.get("created_at"):
@@ -92,7 +113,7 @@ def import_users(
             write_asset_base64(static_dir, row.get("avatar_relative_path"), row.get("avatar_relative_path_data"))
 
         db.session.flush()
-        summary["users"] = {"created": u_created, "updated": u_updated}
+        summary["users"] = {"created": u_created, "updated": u_updated, **({"skipped": u_skipped} if u_skipped else {})}
 
 
 def build_account_lookups() -> AccountLookups:

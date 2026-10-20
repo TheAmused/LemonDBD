@@ -159,6 +159,7 @@ export default {
   kbReadySuffix: "KB, listo para restaurar",
   createdCountPrefix: "+",
   updatedCountSuffix: "actualizados)",
+  skippedCount: "{count} omitidos",
   loading: "Cargando usuarios...",
   noUsers: "No se encontraron usuarios que coincidan con la búsqueda.",
   you: "Tú",

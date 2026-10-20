@@ -159,6 +159,7 @@ export default {
   kbReadySuffix: "KB, ready to restore",
   createdCountPrefix: "+",
   updatedCountSuffix: "updated)",
+  skippedCount: "{count} skipped",
   loading: "Loading users...",
   noUsers: "No users found matching query.",
   you: "You",

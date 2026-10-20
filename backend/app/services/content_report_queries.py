@@ -3,6 +3,7 @@
 from typing import Any
 
 from sqlalchemy import func, select
+from sqlalchemy.orm import defer
 
 from app.core.account_state import block_kind, is_blocked
 from app.core.extensions import db
@@ -43,8 +44,11 @@ def get_admin_reports(
     stats = {status: by_status.get(status, 0) for status in sorted(REPORT_STATUSES)}
     stats["total"] = sum(stats.values())
 
+    # The evidence (a whole reported document) is not loaded for the list: only whether it is there.
     stmt = (
-        base_stmt.order_by(
+        base_stmt.add_columns(ContentReport.evidence_payload.is_not(None).label("has_evidence"))
+        .options(defer(ContentReport.evidence_payload))
+        .order_by(
             ContentReport.report_count.desc(),
             ContentReport.created_at.desc(),
         )
@@ -52,8 +56,7 @@ def get_admin_reports(
         .limit(per_page)
     )
 
-    reports = db.session.scalars(stmt).all()
-    items = [{**r.to_dict(), "has_evidence": r.evidence_payload is not None} for r in reports]
+    items = [{**report.to_dict(), "has_evidence": bool(has_evidence)} for report, has_evidence in db.session.execute(stmt).all()]
 
     return {
         "items": items,

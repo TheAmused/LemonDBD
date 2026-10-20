@@ -449,7 +449,10 @@ def _resolve_report(
 ) -> tuple[dict[str, Any], int]:
     ban_author = author_action != "none"
     with transaction():
-        report = db.session.get(ContentReport, report_id)
+        # Locked: two admins resolving the same report at once used to both pass the "pending" check
+        # below and both sanction the author (two warnings, two emails). The second now waits and
+        # then sees the first one's decision.
+        report = db.session.get(ContentReport, report_id, with_for_update=True)
         if report is None:
             return {"error": "Content report not found", "status": 404}, 404
 
@@ -479,7 +482,7 @@ def _resolve_report(
                 db.session.add(rev)
 
             if ban_author and report.author_id is not None:
-                author = db.session.get(User, report.author_id)
+                author = db.session.get(User, report.author_id, with_for_update=True)
                 if author is not None and author.role != "admin":
                     sanction = create_sanction(
                         AUTHOR_ACTIONS[author_action],

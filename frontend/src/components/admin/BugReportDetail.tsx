@@ -56,7 +56,7 @@ export function BugReportDetail({ report, onStatusChange, onReply, onDelete, onS
             variant="ghost"
             size="xs"
             icon
-            onClick={() => onShowUser(report.reporter_email || report.reporter_name)}
+            onClick={() => onShowUser(`id:${report.user_id}`)}
             aria-label={t.showInUsers}
             {...tip(t.showInUsers, undefined, 'action')}
           >

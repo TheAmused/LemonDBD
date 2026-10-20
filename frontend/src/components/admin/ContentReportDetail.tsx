@@ -90,7 +90,7 @@ export function ContentReportDetail({ detail, resolving, onResolve, onShowUser }
                 variant="ghost"
                 size="xs"
                 icon
-                onClick={() => onShowUser(detail.author_login)}
+                onClick={() => onShowUser(detail.author_id ? `id:${detail.author_id}` : detail.author_login)}
                 aria-label={dict.admin.showInUsers}
                 {...tip(dict.admin.showInUsers, undefined, 'action')}
               >

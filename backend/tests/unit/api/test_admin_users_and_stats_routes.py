@@ -207,3 +207,21 @@ class TestAdminStatsRoute:
         data = client.get("/api/v1/admin/stats", headers=admin_headers).get_json()
         assert data["users"] == {"total": 4, "admins": 1, "players": 3, "active": 2, "suspended": 1, "banned": 1}
         assert data["pending"]["bug_reports"] == 1
+
+
+@pytest.mark.unit
+def test_the_user_search_finds_one_account_by_id(client, db_session) -> None:
+    """A report's "show in users" searches `id:<n>`: the address on an old report may be stale."""
+    from app.core.security import generate_token, hash_password
+    from app.core.extensions import db
+    from app.models import User
+
+    boss = User(login="boss_id", username="boss", email="boss_id@example.com", password_hash=hash_password("password123"), role="admin")
+    first = User(login="first", username="first", email="first@example.com", password_hash="h")
+    other = User(login="first_too", username="first too", email="first_too@example.com", password_hash="h")
+    db.session.add_all([boss, first, other])
+    db.session.commit()
+    headers = {"Authorization": f"Bearer {generate_token(boss.id, role='admin')}"}
+    body = client.get("/api/v1/users", query_string={"search": f"id:{first.id}"}, headers=headers).get_json()
+    assert [u["login"] for u in body["users"]] == ["first"]
+    assert client.get("/api/v1/users", query_string={"search": "first"}, headers=headers).get_json()["total"] == 2

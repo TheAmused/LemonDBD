@@ -178,7 +178,7 @@ class GauntletService(StreakRunService):
         player picks their own character, an empty seat until they choose."""
         if game_mode not in PICK_CHARACTER_MODES:
             return self.roll(user_id, role, game_mode=game_mode)
-        r = self._find_run(user_id, role, game_mode)
+        r = self._find_run(user_id, role, game_mode, lock=True)
         if not r:
             raise ValueError("Run not found")
         r.target_revealed = False

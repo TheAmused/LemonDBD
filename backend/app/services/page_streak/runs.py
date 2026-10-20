@@ -42,13 +42,11 @@ def fetch_run(
     user_id: int,
     killer: str,
     build_pages_fn: Callable[[int], list[list[str]]] | None = None,
+    *,
+    lock: bool = False,
 ) -> PageStreakRunDict | None:
     """Retrieve run state and sorted page logs for a given user and killer."""
-    r = db.session.scalars(
-        select(PageStreakRun)
-        .options(selectinload(PageStreakRun.page_logs))
-        .where(PageStreakRun.user_id == user_id, PageStreakRun.killer == killer)
-    ).first()
+    r = db.session.scalars(run_query(user_id, killer, lock=lock)).first()
     if r is None:
         return None
 
@@ -99,15 +97,21 @@ def create_new_run(
     return fetch_run(user_id, killer, build_pages_fn)
 
 
-def locked_run_query(user_id: int, killer: str) -> Select[tuple[PageStreakRun]]:
-    """The run row, locked until the request commits, so two parallel submissions (a double
-    click, two tabs) cannot both pass validation for the same page and each count it."""
-    return (
+def run_query(user_id: int, killer: str, *, lock: bool = False) -> Select[tuple[PageStreakRun]]:
+    """One killer's run with its match logs. `lock` holds the row until the request commits, so two
+    parallel requests (a double click, two tabs) cannot both pass validation and each count the same page."""
+    query = (
         select(PageStreakRun)
+        .options(selectinload(PageStreakRun.page_logs))
         .where(PageStreakRun.user_id == user_id, PageStreakRun.killer == killer)
-        .with_for_update()
-        .execution_options(populate_existing=True)
     )
+    return query.with_for_update().execution_options(populate_existing=True) if lock else query
+
+
+def locked_run_by_id(run_id: int) -> PageStreakRun | None:
+    return db.session.scalars(
+        select(PageStreakRun).where(PageStreakRun.id == run_id).with_for_update().execution_options(populate_existing=True)
+    ).first()
 
 
 def validate_match_submission(run: PageStreakRunDict, page: int, perks: list[str], result: str) -> None:
@@ -142,16 +146,14 @@ def record_match_result(
     build_pages_fn: Callable[[int], list[list[str]]] | None = None,
 ) -> PageStreakRunDict | None:
     """Record match logs and update page progression or failure resets."""
-    r = db.session.scalars(locked_run_query(user_id, killer)).first()
-    if r is None:
-        raise ValueError(f"No run in progress for {killer}")
-    run = fetch_run(user_id, killer, build_pages_fn)
+    run = fetch_run(user_id, killer, build_pages_fn, lock=True)
     if run is None:
         raise ValueError(f"No run in progress for {killer}")
 
     validate_match_submission(run, page, perks, result)
 
     with transaction():
+        r = db.session.get(PageStreakRun, run["id"])
         if not r.pages:
             r.pages = run["pages"]
         log = PageStreakPageLog(
@@ -187,7 +189,7 @@ def record_match_result(
 
 
 def apply_inactivity_loss(run_id: int) -> None:
-    r = db.session.scalars(select(PageStreakRun).where(PageStreakRun.id == run_id)).first()
+    r = locked_run_by_id(run_id)
     if not r or r.status == "completed":
         return
 
@@ -212,7 +214,7 @@ def abandon_active_run(
     build_pages_fn: Callable[[int], list[list[str]]],
 ) -> PageStreakRunDict | None:
     """Abandon the run: back to Page 1 in a new attempt."""
-    run = fetch_run(user_id, killer, build_pages_fn)
+    run = fetch_run(user_id, killer, build_pages_fn, lock=True)
     if run is None:
         raise ValueError(f"No run to abandon for {killer}")
 
@@ -220,7 +222,7 @@ def abandon_active_run(
         raise ValueError("No perks available — the pool is empty")
 
     with transaction():
-        r = db.session.scalars(select(PageStreakRun).where(PageStreakRun.id == run["id"])).first()
+        r = db.session.get(PageStreakRun, run["id"])
         r.abandon_attempt()
         r.status = "in_progress"
         r.current_page = 1
@@ -250,11 +252,7 @@ def refresh_untouched_run(
 ) -> None:
     """A run with no match played in its current attempt follows the live perk pool,
     so unlocking killers or perks after it was created does not leave it on old pages."""
-    r = db.session.scalars(
-        select(PageStreakRun)
-        .options(selectinload(PageStreakRun.page_logs))
-        .where(PageStreakRun.user_id == user_id, PageStreakRun.killer == killer)
-    ).first()
+    r = db.session.scalars(run_query(user_id, killer)).first()
     if r is None or r.status != "in_progress" or r.current_page != 1:
         return
     if any(log.attempt == r.attempt for log in r.page_logs):

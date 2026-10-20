@@ -34,17 +34,24 @@ class StreakRunService:
 
     # -- lookup -----------------------------------------------------------
 
-    def _find_run(self, user_id: int, *variant: Any):
+    @staticmethod
+    def _locked(query):
+        """Locks the row until the request commits and reloads it, so a run already in the session
+        is not read from a stale copy while the lock was being waited for."""
+        return query.with_for_update().execution_options(populate_existing=True)
+
+    def _find_run(self, user_id: int, *variant: Any, lock: bool = False):
         model = self.run_model
         conditions = [model.user_id == user_id]
         conditions += [getattr(model, field) == value for field, value in zip(self.variant_fields, variant)]
-        return db.session.scalars(select(model).where(*conditions)).first()
+        query = select(model).where(*conditions)
+        return db.session.scalars(self._locked(query) if lock else query).first()
 
     def _run_by_id_query(self, user_id: int, run_id: int):
-        # Locked for the rest of the request, so two parallel requests (a double click, two tabs)
-        # cannot both read the same state and each count the same match.
+        # Locked, so two parallel requests (a double click, two tabs) cannot both read
+        # the same state and each count the same match.
         model = self.run_model
-        return select(model).where(model.id == run_id, model.user_id == user_id).with_for_update()
+        return self._locked(select(model).where(model.id == run_id, model.user_id == user_id))
 
     def _find_run_by_id(self, user_id: int, run_id: int):
         return db.session.scalars(self._run_by_id_query(user_id, run_id)).first()
@@ -77,7 +84,7 @@ class StreakRunService:
         brand new run starts with; the best streak is a record, so it is left alone.
         """
         assert_challenge_mode_enabled(self.mode)
-        run = self._find_run(user_id, *variant)
+        run = self._find_run(user_id, *variant, lock=True)
         if not run:
             raise ValueError("Run not found")
         with transaction():
@@ -138,7 +145,7 @@ class StreakRunService:
 
     def _load_run_for_inactivity(self, run_id: int):
         """The run an inactivity loss applies to, or None when there is nothing to do."""
-        run = db.session.scalars(select(self.run_model).where(self.run_model.id == run_id)).first()
+        run = db.session.scalars(self._locked(select(self.run_model).where(self.run_model.id == run_id))).first()
         if not run or run.status == "completed":
             return None
         return run

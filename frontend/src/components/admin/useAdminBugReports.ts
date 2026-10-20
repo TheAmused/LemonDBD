@@ -102,8 +102,9 @@ export function useAdminBugReports({ enabled, refreshKey, notify, onChanged }: B
     selectedId,
     setSelectedId,
     selected: reports.find((r) => r.id === selectedId) ?? null,
-    changeStatus: (id: number, next: BugReportStatus) =>
-      act(() => updateBugReport(id, { status: next }), formatMessage(t.ticketUpdatedSuccess, { id })),
+    /** A reply typed but not sent goes with the status: under a status filter the ticket leaves the list. */
+    changeStatus: (id: number, next: BugReportStatus, notes?: string) =>
+      act(() => updateBugReport(id, { status: next, ...(notes !== undefined ? { admin_notes: notes } : {}) }), formatMessage(t.ticketUpdatedSuccess, { id })),
     reply: (id: number, notes: string) =>
       act(() => updateBugReport(id, { admin_notes: notes }), formatMessage(t.ticketReplySaved, { id })),
     remove: (id: number) => act(() => deleteBugReport(id), formatMessage(t.ticketDeleteSuccess, { id })),

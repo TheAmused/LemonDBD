@@ -137,6 +137,13 @@ def admin_modify_user(
     clean_username = username.strip() if username is not None else None
     if clean_username is not None and len(clean_username) < 3:
         return None, "Username must be at least 3 characters long."
+    # Everything the ban below would refuse is refused here, before anything is written: the role,
+    # name and verification used to be committed first and stay changed when the ban then failed.
+    if is_active is False and block_kind(user) != "banned":
+        if acting_admin is not None and acting_admin.id == user_id:
+            return None, "You cannot sanction your own account"
+        if (clean_role or user.role) == "admin":
+            return None, "Administrators cannot be sanctioned; change the role first"
 
     if clean_role or clean_username or is_verified is not None:
         with transaction():

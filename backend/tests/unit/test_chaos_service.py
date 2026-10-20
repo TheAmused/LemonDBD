@@ -309,8 +309,17 @@ class TestAbandonRunAndStats:
 
 
 class TestRunLookupLocking:
-    def test_result_lookup_locks_the_run_so_two_parallel_submissions_cannot_both_count(self, chaos_service: ChaosService, chaos_user: int) -> None:
+    def test_result_lookup_locks_and_reloads_the_run(self, chaos_service: ChaosService, chaos_user: int) -> None:
         from sqlalchemy.dialects import postgresql
 
         statement = chaos_service._run_by_id_query(chaos_user, 1)
+        assert "FOR UPDATE" in str(statement.compile(dialect=postgresql.dialect()))
+        assert statement.get_execution_options()["populate_existing"] is True
+
+    def test_inactivity_and_abandon_lookups_use_the_same_lock(self, chaos_service: ChaosService) -> None:
+        from sqlalchemy import select
+        from sqlalchemy.dialects import postgresql
+        from app.models import ChaosRun
+
+        statement = chaos_service._locked(select(ChaosRun))
         assert "FOR UPDATE" in str(statement.compile(dialect=postgresql.dialect()))

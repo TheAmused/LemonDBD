@@ -11,7 +11,7 @@ import { ActionMenu, type ActionMenuItem } from '@/components/common/ActionMenu'
 import { ConfirmModal } from '@/components/common/ConfirmModal';
 import { EmptyState } from '@/components/common/EmptyState';
 import { CustomDropdown } from '@/components/common/CustomDropdown';
-import { Input, SearchInput } from '@/components/common/Field';
+import { SearchInput } from '@/components/common/Field';
 import { Pagination } from '@/components/common/Pagination';
 import { Surface } from '@/components/common/Surface';
 import { Table, TableBody, TableHead, TableRow, Td, Th } from '@/components/common/Table';
@@ -19,6 +19,7 @@ import { tip } from '@/components/common/Tooltip';
 import { OverseerEyeIcon } from '@/components/icons/DbdIcons';
 import { UserAvatar } from '@/components/UserAvatar';
 import { UserStandingBadge } from '@/components/admin/UserStandingBadge';
+import { EMPTY_REAUTH, ReauthFields, reauthBody, useReauthReady } from '@/components/admin/ReauthFields';
 import { useDictionary, useLocale } from '@/context/DictionaryContext';
 import { downloadAccountData } from '@/services/userProfileApi';
 import { getErrorMessage } from '@/utils/api';
@@ -26,7 +27,7 @@ import { cn } from '@/utils/cn';
 import { formatDate } from '@/utils/format';
 import { formatMessage } from '@/utils/i18nFormat';
 import type { AdminUsersDirectory } from '@/components/admin/useAdminUsers';
-import type { ActionMessage, AdminOverview, UserRoleFilter, UserRow, UserStandingFilter } from '@/types/admin';
+import type { ActionMessage, AdminOverview, Reauth, UserRoleFilter, UserRow, UserStandingFilter } from '@/types/admin';
 
 interface AdminUsersSectionProps {
   directory: AdminUsersDirectory;
@@ -46,7 +47,8 @@ export function AdminUsersSection({ directory, counts, currentUserId, notify, on
   const t = dict.admin;
   const [pending, setPending] = useState<PendingAction>(null);
   const [busy, setBusy] = useState(false);
-  const [ownPassword, setOwnPassword] = useState('');
+  const [reauth, setReauth] = useState<Reauth>(EMPTY_REAUTH);
+  const reauthReady = useReauthReady(reauth);
   const { users, total, loading, page, perPage } = directory;
 
   const count = (n: number | undefined) => ({ count: n ?? '–' });
@@ -132,14 +134,14 @@ export function AdminUsersSection({ directory, counts, currentUserId, notify, on
     setBusy(true);
     try {
       if (pending.kind === 'delete') await directory.remove(pending.user);
-      else await directory.resetTwoFactor(pending.user, ownPassword || undefined);
+      else await directory.resetTwoFactor(pending.user, needsOwnPassword ? reauthBody(reauth) : undefined);
     } finally {
       setBusy(false);
       setPending(null);
-      setOwnPassword('');
+      setReauth(EMPTY_REAUTH);
     }
   };
-  /** Resetting another admin's second factor needs the acting admin's password. */
+  /** Resetting another admin's second factor needs the acting admin to re-authenticate. */
   const needsOwnPassword = pending?.kind === 'resetTwoFactor' && pending.user.role === 'admin' && !isSelf(pending.user);
 
   return (
@@ -254,28 +256,20 @@ export function AdminUsersSection({ directory, counts, currentUserId, notify, on
           <>
             {formatMessage(pending?.kind === 'delete' ? t.confirmDeleteUser : t.resetTwoFactorMessage, { username: pending?.user.username ?? '' })}
             {needsOwnPassword && (
-              <span className="mt-3 block space-y-1.5 text-left">
-                <span className="block type-caption text-text-muted">{t.confirmOwnPasswordHint}</span>
-                <Input
-                  type="password"
-                  autoComplete="current-password"
-                  aria-label={t.confirmOwnPasswordLabel}
-                  placeholder={t.confirmOwnPasswordLabel}
-                  value={ownPassword}
-                  onChange={(e) => setOwnPassword(e.target.value)}
-                />
-              </span>
+              <div className="mt-3">
+                <ReauthFields value={reauth} onChange={setReauth} hint={t.confirmOwnPasswordHint} disabled={busy} />
+              </div>
             )}
           </>
         }
         confirmLabel={pending?.kind === 'delete' ? t.delete : t.resetTwoFactorConfirm}
         cancelLabel={t.cancel}
         busy={busy}
-        confirmDisabled={needsOwnPassword && !ownPassword}
+        confirmDisabled={needsOwnPassword && !reauthReady}
         onConfirm={confirm}
         onCancel={() => {
           setPending(null);
-          setOwnPassword('');
+          setReauth(EMPTY_REAUTH);
         }}
       />
     </Surface>

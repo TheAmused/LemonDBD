@@ -4,7 +4,8 @@ from flask import Blueprint, Response, g, jsonify, request
 from pydantic import ValidationError
 
 from app.core.limiter import limiter
-from app.core.security import admin_required, login_required, verify_password
+from app.core.reauth import reauth_error
+from app.core.security import admin_required, login_required
 from app.schemas.user import UserCreate, UserResponse, UserUpdate
 from app.utils.pagination import paginate_args
 from app.services.admin_control_service import log_admin_action
@@ -33,21 +34,17 @@ users_bp = Blueprint("users_bp", __name__, url_prefix="/api/v1")
 ownership_service = OwnershipService()
 
 
-def _other_admin_confirmation_error(target, password: str | None) -> tuple[Response, int] | None:
-    """A 403 unless the acting admin re-entered their own password, when `target` is another admin.
+def _other_admin_confirmation_error(target, data: dict | None) -> tuple[Response, int] | None:
+    """A 403 unless the acting admin re-authenticated, when `target` is another admin.
 
     Sanctions already refuse admin targets; demoting or resetting the second factor of another
     admin did not, so one stolen admin session could strip every other admin. Re-entering the
-    password is what a stolen session cookie cannot do.
+    password (and a 2FA code) is what a stolen session cookie cannot do.
     """
     actor = g.current_user
     if target is None or target.role != "admin" or target.id == actor.id:
         return None
-    if not actor.password_hash:
-        return api_error("Set a password on your own account before changing another administrator.", 403)
-    if not password or not verify_password(str(password), actor.password_hash):
-        return api_error("Confirm with your own password to change another administrator.", 403)
-    return None
+    return reauth_error(actor, data)
 
 
 def _unverified_owner_error(user_id: int) -> tuple[Response, int] | None:
@@ -97,6 +94,12 @@ def create_user_by_admin():
         validated_data = UserCreate.model_validate(payload)
     except ValidationError as err:
         return api_error("Validation failed", 400, details=err.errors())
+
+    # Creating an admin grants admin rights: a stolen session must not be able to mint one whose
+    # password the attacker chose (and then pass every "your own password" check through it).
+    if (validated_data.role or "").lower() == "admin":
+        if err_resp := reauth_error(g.current_user, payload):
+            return err_resp
 
     user, err = create_user_account(
         login=validated_data.login,
@@ -172,10 +175,15 @@ def update_user_by_admin(user_id: int):
     except ValidationError as err:
         return api_error("Validation failed", 400, details=err.errors())
 
-    # Taking the admin role from another admin needs the acting admin's password (banning one is
-    # refused by the sanctions themselves).
-    if (validated_data.role or "").lower() == "user":
-        if err_resp := _other_admin_confirmation_error(fetch_user_by_id(user_id), validated_data.current_password):
+    # Taking the admin role from another admin, or granting it to anyone, needs the acting admin to
+    # re-authenticate (banning an admin is refused by the sanctions themselves).
+    new_role = (validated_data.role or "").lower()
+    target = fetch_user_by_id(user_id)
+    if new_role == "user":
+        if err_resp := _other_admin_confirmation_error(target, payload):
+            return err_resp
+    elif new_role == "admin" and target is not None and target.role != "admin":
+        if err_resp := reauth_error(g.current_user, payload):
             return err_resp
 
     user, err = admin_modify_user(
@@ -194,7 +202,7 @@ def update_user_by_admin(user_id: int):
         action="user_updated",
         target_type="user",
         target_id=user_id,
-        details=validated_data.model_dump(exclude_none=True, exclude={"current_password"}),
+        details=validated_data.model_dump(exclude_none=True, exclude={"current_password", "two_factor_code"}),
     )
 
     return jsonify({
@@ -213,7 +221,7 @@ def reset_user_two_factor(user_id: int):
     if not target:
         return api_error("User not found.", 404)
     body = request.get_json(silent=True) or {}
-    if err_resp := _other_admin_confirmation_error(target, body.get("current_password")):
+    if err_resp := _other_admin_confirmation_error(target, body):
         return err_resp
 
     had_two_factor = two_factor.admin_reset(target)

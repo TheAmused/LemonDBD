@@ -32,6 +32,9 @@ class UserCreate(BaseModel):
     password: str = Field(..., min_length=6)
     role: str | None = "user"
     avatar_url: str | None = "default_avatar"
+    #: The acting admin's own password (and 2FA code): required when the new account is an admin.
+    current_password: str | None = Field(None, max_length=200)
+    two_factor_code: str | None = Field(None, max_length=64)
 
 
 class UserUpdate(BaseModel):
@@ -41,8 +44,10 @@ class UserUpdate(BaseModel):
     role: str | None = None
     is_active: bool | None = None
     is_verified: bool | None = None
-    #: The acting admin's own password: required to take the admin role from another admin.
+    #: The acting admin's own password (and 2FA code): required to grant the admin role, or to take it
+    #: from another admin.
     current_password: str | None = Field(None, max_length=200)
+    two_factor_code: str | None = Field(None, max_length=64)
 
 
 class UserResponse(UserBase):

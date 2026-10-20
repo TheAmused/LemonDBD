@@ -7,6 +7,7 @@ from sqlalchemy.orm import joinedload
 
 from app.core.extensions import db
 from app.core.json_provider import safe_json_dumps, safe_json_loads
+from app.core.reauth import reauth_error
 from app.core.redis_cache import bump_catalog_version
 from app.core.security import admin_required
 from app.utils.pagination import paginate_args
@@ -323,10 +324,13 @@ def purge_database_tables_route():
     service it imports, so the module-level name became this view and every purge called itself
     with an argument (500: "takes 0 positional arguments but 1 was given").
     """
+    body = request.get_json(silent=True) or {}
     try:
-        dto = PurgeDatabaseDTO.model_validate(request.get_json(silent=True) or {})
+        dto = PurgeDatabaseDTO.model_validate(body)
     except ValidationError as err:
         return api_error("No valid purge targets specified.", 400, details=err.errors())
+    if err_resp := reauth_error(g.current_user, body):
+        return err_resp
 
     targets: list[str] = dto.targets
     try:
@@ -414,6 +418,12 @@ def import_database():
 
     if not payload or not isinstance(payload, dict):
         return jsonify({"error": "No valid JSON payload provided for import.", "status": 400}), 400
+
+    # An import can rewrite accounts in bulk: the acting admin re-authenticates (form fields with a
+    # file upload, JSON fields otherwise).
+    credentials = request.form.to_dict() if request.files else (request.get_json(silent=True) or {})
+    if err_resp := reauth_error(g.current_user, credentials):
+        return err_resp
 
     try:
         result = DatabaseExportImportService.import_database(

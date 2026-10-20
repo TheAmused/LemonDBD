@@ -12,10 +12,11 @@ import { Checkbox } from '@/components/common/Checkbox';
 import { CustomDropdown } from '@/components/common/CustomDropdown';
 import { FieldLabel, FormField, Input } from '@/components/common/Field';
 import { Surface } from '@/components/common/Surface';
+import { EMPTY_REAUTH, ReauthFields, reauthBody } from '@/components/admin/ReauthFields';
 import { useDictionary } from '@/context/DictionaryContext';
 import { useSiteConfig } from '@/context/SiteConfigContext';
 import { formatMessage } from '@/utils/i18nFormat';
-import type { NewUser, UserPatch, UserRow } from '@/types/admin';
+import type { NewUser, Reauth, UserPatch, UserRow } from '@/types/admin';
 
 const FORM_ID = 'admin-user-form';
 
@@ -40,18 +41,19 @@ export function AdminUserFormModal({ target, currentUserId, onClose, onCreate, o
   const editing = target !== null && target !== 'new' ? target : null;
   const [form, setForm] = useState<NewUser>(EMPTY);
   const [verified, setVerified] = useState(false);
-  const [ownPassword, setOwnPassword] = useState('');
+  const [reauth, setReauth] = useState<Reauth>(EMPTY_REAUTH);
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
     if (target === null) return;
+    setReauth(EMPTY_REAUTH);
     if (target === 'new') {
       setForm(EMPTY);
+      setVerified(false);
       return;
     }
     setForm({ ...EMPTY, login: target.login, username: target.username, email: target.email, role: target.role === 'admin' ? 'admin' : 'user' });
     setVerified(!!target.is_verified);
-    setOwnPassword('');
   }, [target]);
 
   const field = (key: keyof NewUser) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) =>
@@ -66,20 +68,24 @@ export function AdminUserFormModal({ target, currentUserId, onClose, onCreate, o
           ...(form.username.trim() !== editing.username ? { username: form.username.trim() } : {}),
           ...(form.role !== editing.role ? { role: form.role } : {}),
           ...(verified !== !!editing.is_verified ? { is_verified: verified } : {}),
-          ...(demotesAnotherAdmin ? { current_password: ownPassword } : {}),
+          ...(needsReauth ? reauthBody(reauth) : {}),
         };
         if (Object.keys(patch).length === 0 || (await onUpdate(editing, patch))) onClose();
         return;
       }
-      if (await onCreate({ ...form, login: form.login.trim(), username: form.username.trim(), email: form.email.trim() })) onClose();
+      const created = { ...form, login: form.login.trim(), username: form.username.trim(), email: form.email.trim() };
+      if (await onCreate(needsReauth ? { ...created, ...reauthBody(reauth) } : created)) onClose();
     } finally {
       setBusy(false);
     }
   };
 
   const ownAccount = editing?.id === currentUserId;
-  /** Taking the admin role from another admin needs the acting admin's own password (the server checks it). */
+  /** Taking the admin role from another admin needs the acting admin to re-authenticate (the server checks it). */
   const demotesAnotherAdmin = Boolean(editing && !ownAccount && editing.role === 'admin' && form.role === 'user');
+  /** So does granting the admin role, to a new account or an existing one. */
+  const grantsAdmin = form.role === 'admin' && (!editing || editing.role !== 'admin');
+  const needsReauth = demotesAnotherAdmin || grantsAdmin;
 
   return (
     <Modal
@@ -175,18 +181,8 @@ export function AdminUserFormModal({ target, currentUserId, onClose, onCreate, o
           {ownAccount && <span className="block type-caption text-text-muted">{t.ownRoleLocked}</span>}
         </div>
 
-        {demotesAnotherAdmin && (
-          <FormField label={t.confirmOwnPasswordLabel} htmlFor={`${ids}-own-password`}>
-            <Input
-              id={`${ids}-own-password`}
-              type="password"
-              required
-              autoComplete="current-password"
-              value={ownPassword}
-              onChange={(e) => setOwnPassword(e.target.value)}
-            />
-            <span className="block type-caption text-text-muted">{t.confirmOwnPasswordHint}</span>
-          </FormField>
+        {needsReauth && (
+          <ReauthFields value={reauth} onChange={setReauth} hint={grantsAdmin ? t.reauthGrantAdminHint : t.confirmOwnPasswordHint} disabled={busy} />
         )}
 
         {editing && (

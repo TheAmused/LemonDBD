@@ -4,6 +4,8 @@ import { useState } from 'react';
 import { useDictionary } from '@/context/DictionaryContext';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 import { authHeaders, getAuthToken, getErrorMessage } from '@/utils/api';
+import { EMPTY_REAUTH, reauthBody } from '@/components/admin/ReauthFields';
+import type { Reauth } from '@/types/admin';
 import { ALL_TARGETS, type TargetItem } from './scraperTargets';
 
 /** Which tables to wipe, behind a confirmation, and the purge request itself. */
@@ -15,6 +17,7 @@ export function usePurgeTab(onPurgeSuccess?: () => void) {
   const [purgeError, setPurgeError] = useState<string | null>(null);
   const [purgeSuccess, setPurgeSuccess] = useState<string | null>(null);
   const [showPurgeConfirm, setShowPurgeConfirm] = useState<boolean>(false);
+  const [reauth, setReauth] = useState<Reauth>(EMPTY_REAUTH);
 
   const togglePurgeTarget = (id: string) => {
     setPurgeTargets((prev) => (prev.includes(id) ? prev.filter((t) => t !== id) : [...prev, id]));
@@ -44,6 +47,7 @@ export function usePurgeTab(onPurgeSuccess?: () => void) {
       return;
     }
 
+    setReauth(EMPTY_REAUTH);
     setShowPurgeConfirm(true);
   };
 
@@ -69,7 +73,7 @@ export function usePurgeTab(onPurgeSuccess?: () => void) {
           Pragma: 'no-cache',
         },
         cache: 'no-store',
-        body: JSON.stringify({ targets: purgeTargets }),
+        body: JSON.stringify({ ...reauthBody(reauth), targets: purgeTargets }),
       });
 
       const data = await res.json();
@@ -97,6 +101,8 @@ export function usePurgeTab(onPurgeSuccess?: () => void) {
     purgeSuccess,
     showPurgeConfirm,
     setShowPurgeConfirm,
+    reauth,
+    setReauth,
     togglePurgeTarget,
     toggleAllPurge,
     toggleGroupPurge,

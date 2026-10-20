@@ -12,6 +12,7 @@ from app.models.map import Realm
 from app.models.perk import Perk
 from app.services.db import export_import as export_import_module
 from tests.unit.api.db_export_import_support import (
+    REAUTH,
     _flat,
 )
 from tests.unit.api.db_export_import_support import (  # noqa: F401  (pytest fixtures)
@@ -110,7 +111,7 @@ class TestDatabaseExportImport:
         res = client.post(
             "/api/v1/admin/database/import",
             headers={"Authorization": f"Bearer {admin_token}", "Content-Type": "application/json"},
-            json={"mode": "merge", "data": payload["data"]},
+            json={**REAUTH, "mode": "merge", "data": payload["data"]},
         )
         assert res.status_code == 200
         res_data = res.get_json()
@@ -156,7 +157,7 @@ class TestDatabaseExportImport:
         res = client.post(
             "/api/v1/admin/database/import",
             headers={"Authorization": f"Bearer {admin_token}"},
-            data={"file": (file_bytes, "backup.json"), "mode": "merge"},
+            data={"file": (file_bytes, "backup.json"), "mode": "merge", **REAUTH},
             content_type="multipart/form-data",
         )
         assert res.status_code == 200
@@ -183,7 +184,7 @@ class TestDatabaseExportImport:
         res = client.post(
             "/api/v1/admin/database/import",
             headers={"Authorization": f"Bearer {admin_token}", "Content-Type": "application/json"},
-            json={"mode": "replace", "targets": ["killers"], "data": payload},
+            json={**REAUTH, "mode": "replace", "targets": ["killers"], "data": payload},
         )
         assert res.status_code == 200
 
@@ -246,7 +247,7 @@ class TestDatabaseExportImport:
         res = client.post(
             "/api/v1/admin/database/import",
             headers={"Authorization": f"Bearer {admin_token}", "Content-Type": "application/json"},
-            json={"mode": "merge", "targets": ["maps"], "data": payload},
+            json={**REAUTH, "mode": "merge", "targets": ["maps"], "data": payload},
         )
         assert res.status_code == 200
         res_data = res.get_json()
@@ -260,7 +261,7 @@ class TestDatabaseExportImport:
         res2 = client.post(
             "/api/v1/admin/database/import",
             headers={"Authorization": f"Bearer {admin_token}", "Content-Type": "application/json"},
-            json={"mode": "merge", "targets": ["maps"], "data": payload},
+            json={**REAUTH, "mode": "merge", "targets": ["maps"], "data": payload},
         )
         assert res2.status_code == 200
         assert res2.get_json()["summary"]["realms"]["updated"] == 1
@@ -284,7 +285,7 @@ class TestDatabaseExportImport:
         res = client.post(
             "/api/v1/admin/database/import",
             headers={"Authorization": f"Bearer {admin_token}", "Content-Type": "application/json"},
-            json={"mode": "replace", "targets": ["maps"], "data": payload},
+            json={**REAUTH, "mode": "replace", "targets": ["maps"], "data": payload},
         )
         assert res.status_code == 200
         assert "realms" not in res.get_json()["summary"]
@@ -306,7 +307,7 @@ class TestDatabaseExportImport:
         res = client.post(
             "/api/v1/admin/database/import",
             headers={"Authorization": f"Bearer {admin_token}", "Content-Type": "application/json"},
-            json={"mode": "replace", "targets": ["maps"], "data": payload},
+            json={**REAUTH, "mode": "replace", "targets": ["maps"], "data": payload},
         )
         assert res.status_code == 200
 

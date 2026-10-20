@@ -24,7 +24,7 @@ def test_purge_succeeds_and_empties_the_target(client: FlaskClient, db_session) 
 
     res = client.post(
         "/api/v1/admin/database/purge",
-        json={"targets": ["perks"]},
+        json={"targets": ["perks"], "current_password": "password123"},
         headers={"Authorization": f"Bearer {generate_token(admin.id, role='admin')}"},
     )
     assert res.status_code == 200, res.get_json()

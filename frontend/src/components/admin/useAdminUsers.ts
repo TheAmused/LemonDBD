@@ -13,7 +13,7 @@ import { usePersistentString } from '@/hooks/usePersistentString';
 import { createUser, deleteUser, listUsers, resetTwoFactor, updateUser } from '@/services/adminApi';
 import { getErrorMessage } from '@/utils/api';
 import { formatMessage } from '@/utils/i18nFormat';
-import type { ActionMessage, NewUser, UserPatch, UserRoleFilter, UserRow, UserStandingFilter } from '@/types/admin';
+import type { ActionMessage, NewUser, Reauth, UserPatch, UserRoleFilter, UserRow, UserStandingFilter } from '@/types/admin';
 
 
 interface AdminUsersInput {
@@ -125,8 +125,8 @@ export function useAdminUsers({ enabled, refreshKey, notify, onChanged }: AdminU
     create: (user: NewUser) => act(() => createUser(user), formatMessage(t.userCreatedSuccess, { username: user.username })),
     update: (user: UserRow, patch: UserPatch) => act(() => updateUser(user.id, patch), formatMessage(t.userUpdatedSuccess, { username: patch.username ?? user.username })),
     remove: (user: UserRow) => act(() => deleteUser(user.id), formatMessage(t.userDeletedSuccess, { username: user.username })),
-    resetTwoFactor: (user: UserRow, currentPassword?: string) =>
-      act(() => resetTwoFactor(user.id, currentPassword), formatMessage(t.twoFactorResetDone, { username: user.username })),
+    resetTwoFactor: (user: UserRow, reauth?: Reauth) =>
+      act(() => resetTwoFactor(user.id, reauth), formatMessage(t.twoFactorResetDone, { username: user.username })),
   };
 }
 

@@ -379,6 +379,8 @@ export default {
   maintBanListDesc: "Elimina las entradas cuyo periodo de conservación terminó (cada noche).",
   maintMinigameSessions: "Limpiar las sesiones de práctica de minijuegos",
   maintMinigameSessionsDesc: "Elimina las rondas de práctica de más de 24 horas (cada hora).",
+  maintBugReportFiles: "Eliminar capturas huérfanas de informes de errores",
+  maintBugReportFilesDesc: "Borra las capturas a las que ya no se refiere ningún informe de error (a diario).",
   maintCache: "Vaciar la caché del catálogo",
   maintCacheDesc: "Sirve perks, personajes y mapas actualizados después de editar la base de datos directamente.",
   databaseTitle: "Base de datos",

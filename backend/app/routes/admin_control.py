@@ -15,7 +15,7 @@ from app.utils.pagination import paginate_args
 from app.models import Killer, Perk, Survivor
 from app.models.admin import CHALLENGE_MODES
 from app.models.user import User
-from app.services import site_settings
+from app.services import bug_report_files, site_settings
 from app.services.admin_control_service import (
     get_audit_logs,
     get_challenge_mode_settings,
@@ -362,6 +362,9 @@ def purge_database_tables_route():
         logger.error(f"Error purging database tables: {e}", exc_info=True)
         return api_error("The purge failed. Details are in the server log.", 500)
 
+    if "bug_reports" in purged:
+        # Their screenshots are public files: remove them now rather than at the nightly sweep.
+        bug_report_files.sweep_orphans(grace_seconds=0)
     # Cached catalogs (characters, perks, maps) would otherwise keep serving purged rows for a day.
     bump_catalog_version()
     logger.info(f"Admin {g.current_user.login} purged tables: {purged}")

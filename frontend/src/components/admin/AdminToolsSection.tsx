@@ -51,6 +51,7 @@ const JOB_KEYS = {
   sanction_emails: ['maintSanctionEmails', 'maintSanctionEmailsDesc'],
   ban_list: ['maintBanList', 'maintBanListDesc'],
   minigame_sessions: ['maintMinigameSessions', 'maintMinigameSessionsDesc'],
+  bug_report_files: ['maintBugReportFiles', 'maintBugReportFilesDesc'],
   catalog_cache: ['maintCache', 'maintCacheDesc'],
 } as const;
 

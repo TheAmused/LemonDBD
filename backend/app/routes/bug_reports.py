@@ -19,7 +19,7 @@ from app.utils.api_i18n import error_response
 from app.utils.lang import extract_lang
 from app.utils.pagination import paginate_args
 from app.schemas.community import BugReportResponse
-from app.services import discord_webhook, site_settings
+from app.services import bug_report_files, discord_webhook, site_settings
 from app.services.admin_control_service import log_admin_action
 
 logger = logging.getLogger(__name__)
@@ -346,9 +346,13 @@ def admin_delete_bug_report(report_id: int):
     if not report:
         return jsonify({"error": "Bug report not found."}), 404
 
+    images = report.images
     try:
         with transaction():
             db.session.delete(report)
+        # The screenshots are public files: they go with the report (after the commit, so a failed
+        # delete never leaves a report pointing at missing files).
+        bug_report_files.delete_files(images)
         log_admin_action(g.current_user.id, action="bug_report_deleted", target_type="bug_report", target_id=report_id)
         return jsonify({"message": f"Bug report #{report_id} deleted."}), 200
     except Exception as e:

@@ -60,13 +60,20 @@ const BANNER_LEVEL_VALUES: readonly BannerLevel[] = ['info', 'warning', 'critica
 
 const asBannerLevel = (value: string): BannerLevel => BANNER_LEVEL_VALUES.find((level) => level === value) ?? 'info';
 
-/** Loads the tab's own dictionary (admins only, see locales/adminSettings.ts), then shows the panel. */
-export function AdminSettingsSection({ notify, refreshKey = 0 }: { notify: (message: ActionMessage) => void; refreshKey?: number }) {
-  const t = useAdminSettingsDict();
-  return t ? <SettingsPanel notify={notify} t={t} refreshKey={refreshKey} /> : <AdminTabContentSkeleton />;
+interface SettingsSectionProps {
+  notify: (message: ActionMessage) => void;
+  refreshKey?: number;
+  /** How many fields hold unsaved changes, so the panel can ask before the tab is left. */
+  onDirtyChange?: (count: number) => void;
 }
 
-function SettingsPanel({ notify, t, refreshKey }: { notify: (message: ActionMessage) => void; t: AdminSettingsDict; refreshKey: number }) {
+/** Loads the tab's own dictionary (admins only, see locales/adminSettings.ts), then shows the panel. */
+export function AdminSettingsSection({ notify, refreshKey = 0, onDirtyChange }: SettingsSectionProps) {
+  const t = useAdminSettingsDict();
+  return t ? <SettingsPanel notify={notify} t={t} refreshKey={refreshKey} onDirtyChange={onDirtyChange} /> : <AdminTabContentSkeleton />;
+}
+
+function SettingsPanel({ notify, t, refreshKey, onDirtyChange }: Omit<SettingsSectionProps, 'refreshKey'> & { t: AdminSettingsDict; refreshKey: number }) {
   const dict = useDictionary();
   // Per-setting labels are looked up by key (config_<key>, config_<key>_desc, configGroup_<group>...).
   const text = (key: string) => (t as Record<string, string | undefined>)[key] ?? '';
@@ -79,10 +86,11 @@ function SettingsPanel({ notify, t, refreshKey }: { notify: (message: ActionMess
 
   const settingsRef = useRef<AdminSiteSetting[]>([]);
   /**
-   * Show the server's values. `keepDirty` keeps every field the admin has changed but not saved:
-   * the header's Refresh used to remount this tab and silently throw those edits away.
+   * Show the server's values. `keepDirty` keeps every field the admin has changed but not saved
+   * (except `savedKey`, the one just reset): the header's Refresh used to remount this tab, and
+   * "Use default" on one row used to reload them all, both silently throwing those edits away.
    */
-  const applyServerRows = useCallback((rows: AdminSiteSetting[], keepDirty = false) => {
+  const applyServerRows = useCallback((rows: AdminSiteSetting[], keepDirty = false, savedKey?: string) => {
     const previous = new Map(settingsRef.current.map((row) => [row.key, row]));
     settingsRef.current = rows;
     setSettings(rows);
@@ -91,7 +99,7 @@ function SettingsPanel({ notify, t, refreshKey }: { notify: (message: ActionMess
         rows.map((row) => {
           const old = previous.get(row.key);
           const draft = prevDrafts[row.key];
-          const keep = keepDirty && old !== undefined && draft !== undefined && isDraftDirty(old, draft);
+          const keep = keepDirty && row.key !== savedKey && old !== undefined && draft !== undefined && isDraftDirty(old, draft);
           return [row.key, keep ? draft : draftOf(row)];
         })
       )
@@ -107,11 +115,13 @@ function SettingsPanel({ notify, t, refreshKey }: { notify: (message: ActionMess
 
   const send = async (
     payload: Record<string, string | number | boolean | null>,
-    options?: { confirmRisky: boolean; reason: string }
+    options?: { confirmRisky: boolean; reason: string },
+    /** A one-row "Use default": every other unsaved field stays as typed. */
+    resetKey?: string
   ) => {
     setSaving(true);
     try {
-      applyServerRows((await saveSettings(payload, options)).settings ?? []);
+      applyServerRows((await saveSettings(payload, options)).settings ?? [], resetKey !== undefined, resetKey);
       notify({ type: 'success', text: t.configSaved });
       setConfirmOpen(false);
       setReason('');
@@ -129,6 +139,18 @@ function SettingsPanel({ notify, t, refreshKey }: { notify: (message: ActionMess
   const payload = () => Object.fromEntries(changed.map((row) => [row.key, payloadValue(row, draftFor(row))]));
   const setDraft = (key: string, value: string) => setDrafts((prev) => ({ ...prev, [key]: value }));
   const reasonOk = reason.trim().length >= MIN_REASON_LENGTH;
+
+  // The panel asks before its tab is left (AdminPanelClient), the browser before the page is.
+  useEffect(() => {
+    onDirtyChange?.(changed.length);
+  }, [changed.length, onDirtyChange]);
+  useEffect(() => () => onDirtyChange?.(0), [onDirtyChange]);
+  useEffect(() => {
+    if (changed.length === 0) return;
+    const warn = (event: BeforeUnloadEvent) => event.preventDefault();
+    window.addEventListener('beforeunload', warn);
+    return () => window.removeEventListener('beforeunload', warn);
+  }, [changed.length]);
 
   const problemText = (row: AdminSiteSetting, problem: DraftProblem): string => {
     if (problem === 'number') return t.configInvalidNumber;
@@ -342,7 +364,7 @@ function SettingsPanel({ notify, t, refreshKey }: { notify: (message: ActionMess
                               <Button
                                 type="button"
                                 disabled={saving}
-                                onClick={() => send({ [row.key]: null })}
+                                onClick={() => send({ [row.key]: null }, undefined, row.key)}
                                 variant="linkDanger"
                                 size="sm"
                               >

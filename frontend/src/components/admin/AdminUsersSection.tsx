@@ -66,7 +66,8 @@ export function AdminUsersSection({ directory, counts, currentUserId, notify, on
 
   const menuItems = (u: UserRow): ActionMenuItem[] => [
     { key: 'edit', label: t.editUser, icon: <Pencil className="icon-md" aria-hidden="true" />, onSelect: () => onEdit(u) },
-    ...(u.two_factor_enabled
+    // Your own second factor is switched off on your profile (with your password and a code).
+    ...(u.two_factor_enabled && !isSelf(u)
       ? [{ key: '2fa', label: t.resetTwoFactor, icon: <ShieldOff className="icon-md" aria-hidden="true" />, onSelect: () => setPending({ kind: 'resetTwoFactor', user: u }) }]
       : []),
     { key: 'download', label: t.downloadUserData, icon: <Download className="icon-md" aria-hidden="true" />, onSelect: () => void download(u) },

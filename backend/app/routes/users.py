@@ -220,6 +220,10 @@ def reset_user_two_factor(user_id: int):
     target = fetch_user_by_id(user_id)
     if not target:
         return api_error("User not found.", 404)
+    if target.id == g.current_user.id:
+        # Your own second factor is switched off on your profile, which asks for the password and a
+        # code; this reset asks for neither, so a stolen session could have removed it.
+        return api_error("Switch off your own two-factor sign-in on your profile page.", 400)
     body = request.get_json(silent=True) or {}
     if err_resp := _other_admin_confirmation_error(target, body):
         return err_resp

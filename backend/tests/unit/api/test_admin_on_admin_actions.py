@@ -65,3 +65,10 @@ def test_players_are_unaffected(client: FlaskClient, admins) -> None:
     db.session.commit()
     assert client.post(f"/api/v1/users/{player.id}/two-factor/reset", headers=headers).status_code == 200
     assert client.delete(f"/api/v1/users/{player.id}", headers=headers).status_code == 200
+
+
+@pytest.mark.unit
+def test_an_admin_cannot_reset_their_own_two_factor_here(client: FlaskClient, admins) -> None:
+    """The profile's own switch needs the password and a code; this reset needs neither."""
+    (alpha, headers), _ = admins
+    assert client.post(f"/api/v1/users/{alpha.id}/two-factor/reset", json={"current_password": PASSWORD}, headers=headers).status_code == 400

@@ -12,7 +12,7 @@ import { ConfirmModal } from '@/components/common/ConfirmModal';
 import { SandboxedContentPreview } from '@/components/admin/SandboxedContentPreview';
 import { SanctionForm } from '@/components/admin/SanctionForm';
 import { contentReasonLabel, contentStatusLabel, contentStatusTone, contentTypeLabel } from '@/components/admin/reportLabels';
-import { useDictionary } from '@/context/DictionaryContext';
+import { useDictionary, useLocale } from '@/context/DictionaryContext';
 import { cn } from '@/utils/cn';
 import { formatDateTime } from '@/utils/format';
 import { formatMessage } from '@/utils/i18nFormat';
@@ -37,6 +37,7 @@ interface ContentReportDetailProps {
 /** One report in full: who flagged what and why, the reported content, and the ban/dismiss decision. */
 export function ContentReportDetail({ detail, resolving, onResolve, onShowUser }: ContentReportDetailProps) {
   const dict = useDictionary();
+  const locale = useLocale();
   const [notes, setNotes] = useState<string>(detail.admin_notes ?? '');
   // What happens to the author's account: nothing, or one of the three decisions (with its form).
   const [authorKind, setAuthorKind] = useState<SanctionKind | 'none'>('none');
@@ -106,14 +107,14 @@ export function ContentReportDetail({ detail, resolving, onResolve, onShowUser }
         </div>
         <div>
           <dt className="type-label-sm text-text-secondary">{dict.admin.contentReportCreated}</dt>
-          <dd className="text-text-primary">{formatDateTime(detail.created_at)}</dd>
+          <dd className="text-text-primary">{formatDateTime(detail.created_at, locale)}</dd>
         </div>
         <div>
           <dt className="type-label-sm text-text-secondary">
             {isPending ? dict.admin.contentReportExpires : dict.admin.contentReportResolvedAt}
           </dt>
           <dd className="text-text-primary">
-            {formatDateTime(isPending ? detail.expires_at : (detail.resolved_at ?? detail.expires_at))}
+            {formatDateTime(isPending ? detail.expires_at : (detail.resolved_at ?? detail.expires_at), locale)}
           </dd>
         </div>
       </dl>

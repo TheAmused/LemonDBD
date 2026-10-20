@@ -34,6 +34,8 @@ MAX_BUG_REPORT_IMAGE_BYTES = 2 * 1024 * 1024
 MAX_BUG_REPORT_IMAGE_PIXELS = 40_000_000
 #: Longest side of the stored copy; screenshots are re-encoded, never stored as sent.
 MAX_BUG_REPORT_IMAGE_SIDE = 2560
+#: The reply the reporter reads on their profile.
+MAX_ADMIN_NOTES_LENGTH = 5000
 
 
 def _save_base64_image(b64_data: str, base_dir: Path) -> str | None:
@@ -304,9 +306,19 @@ def admin_update_bug_report(report_id: int):
     if not report:
         return jsonify({"error": "Bug report not found."}), 404
 
-    data = request.get_json(silent=True) or {}
+    data = request.get_json(silent=True)
+    if not isinstance(data, dict):
+        data = {}
     new_status = data.get("status")
     admin_notes = data.get("admin_notes")
+
+    # Checked before use: a number or a list here used to be a 500 (AttributeError on .lower()).
+    if new_status is not None and not isinstance(new_status, str):
+        return jsonify({"error": "status must be a string."}), 400
+    if admin_notes is not None and not isinstance(admin_notes, str):
+        return jsonify({"error": "admin_notes must be a string."}), 400
+    if admin_notes is not None and len(admin_notes) > MAX_ADMIN_NOTES_LENGTH:
+        return jsonify({"error": f"admin_notes must be at most {MAX_ADMIN_NOTES_LENGTH} characters."}), 400
 
     if new_status:
         valid_statuses = ["pending", "in_progress", "resolved", "rejected"]

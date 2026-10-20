@@ -21,7 +21,8 @@ import type { AdminBugReport, BugReportStatus } from '@/types/admin';
 
 interface BugReportDetailProps {
   report: AdminBugReport;
-  onStatusChange: (status: BugReportStatus) => Promise<boolean>;
+  /** `notes` is the unsaved reply, saved with the status so it is not lost when the ticket leaves the list. */
+  onStatusChange: (status: BugReportStatus, notes?: string) => Promise<boolean>;
   onReply: (notes: string) => Promise<boolean>;
   onDelete: () => Promise<boolean>;
   /** Opens the reporter's account in the user directory. */
@@ -87,7 +88,7 @@ export function BugReportDetail({ report, onStatusChange, onReply, onDelete, onS
             align="right"
             value={report.status}
             onChange={(status) => {
-              if (!busy) run(() => onStatusChange(status));
+              if (!busy) run(() => onStatusChange(status, unchanged ? undefined : notes.trim()));
             }}
             options={BUG_STATUSES.map((s) => ({ value: s, label: bugStatusLabel(dict, s) }))}
           />

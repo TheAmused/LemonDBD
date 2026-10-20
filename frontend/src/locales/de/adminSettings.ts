@@ -82,7 +82,7 @@ export default {
   config_site_banner_text_ja: "Bannertext (日本語)",
   config_site_banner_text_ja_desc: "Optionale Übersetzung. Leer wird Englisch gezeigt.",
   config_email_verification_required: "E-Mail-Bestätigung verlangen",
-  config_email_verification_required_desc: "Neue Konten müssen ihre Adresse mit einem Code bestätigen, bevor sie sich anmelden. Nur ausschalten, solange der Mailversand gestört ist.",
+  config_email_verification_required_desc: "Neue Konten müssen ihre Adresse mit einem Code bestätigen, bevor sie Herausforderungen verfolgen oder ihren Besitz ändern können (anmelden können sie sich vorher). Solange das aus ist, gilt jeder, der sich anmeldet, als bestätigt. Nur ausschalten, solange der Mailversand gestört ist.",
   config_altcha_enforced: "Sicherheitsprüfung verlangen (ALTCHA)",
   config_altcha_enforced_desc: "Registrierung, Anmeldung, Passwort-Reset und Fehlermeldungen von Gästen brauchen eine gelöste Prüfung. Nur ausschalten, wenn die Prüfung selbst defekt ist.",
   config_google_sign_in_enabled: "Anmeldung mit Google",

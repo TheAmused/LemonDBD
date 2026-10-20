@@ -82,7 +82,7 @@ export default {
   config_site_banner_text_ja: "Banner text (日本語)",
   config_site_banner_text_ja_desc: "Optional translation. Empty falls back to English.",
   config_email_verification_required: "Require e-mail confirmation",
-  config_email_verification_required_desc: "New accounts must confirm their address with a code before signing in. Turn off only while mail delivery is down.",
+  config_email_verification_required_desc: "New accounts must confirm their address with a code before they can track challenges or edit what they own (they can sign in before that). While this is off, everyone who signs in is marked as confirmed. Turn off only while mail delivery is down.",
   config_altcha_enforced: "Require the security check (ALTCHA)",
   config_altcha_enforced_desc: "Sign-up, sign-in, password reset and guest bug reports need a solved check. Turn off only if the check itself is broken.",
   config_google_sign_in_enabled: "Google sign-in",

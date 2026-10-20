@@ -40,11 +40,14 @@ class StreakRunService:
         conditions += [getattr(model, field) == value for field, value in zip(self.variant_fields, variant)]
         return db.session.scalars(select(model).where(*conditions)).first()
 
-    def _find_run_by_id(self, user_id: int, run_id: int):
+    def _run_by_id_query(self, user_id: int, run_id: int):
+        # Locked for the rest of the request, so two parallel requests (a double click, two tabs)
+        # cannot both read the same state and each count the same match.
         model = self.run_model
-        return db.session.scalars(
-            select(model).where(model.id == run_id, model.user_id == user_id)
-        ).first()
+        return select(model).where(model.id == run_id, model.user_id == user_id).with_for_update()
+
+    def _find_run_by_id(self, user_id: int, run_id: int):
+        return db.session.scalars(self._run_by_id_query(user_id, run_id)).first()
 
     # -- find-or-create / abandon ---------------------------------------------
 

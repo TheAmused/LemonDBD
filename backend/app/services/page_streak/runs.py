@@ -1,6 +1,6 @@
 # backend/app/services/page_streak/runs.py
 from collections.abc import Callable
-from sqlalchemy import delete, select
+from sqlalchemy import Select, delete, select
 from sqlalchemy.orm import selectinload
 
 from app.core.extensions import db
@@ -99,6 +99,17 @@ def create_new_run(
     return fetch_run(user_id, killer, build_pages_fn)
 
 
+def locked_run_query(user_id: int, killer: str) -> Select[tuple[PageStreakRun]]:
+    """The run row, locked until the request commits, so two parallel submissions (a double
+    click, two tabs) cannot both pass validation for the same page and each count it."""
+    return (
+        select(PageStreakRun)
+        .where(PageStreakRun.user_id == user_id, PageStreakRun.killer == killer)
+        .with_for_update()
+        .execution_options(populate_existing=True)
+    )
+
+
 def validate_match_submission(run: PageStreakRunDict, page: int, perks: list[str], result: str) -> None:
     """Validate submitted perks and page constraints against active run state."""
     if result not in ("win", "loss"):
@@ -131,6 +142,9 @@ def record_match_result(
     build_pages_fn: Callable[[int], list[list[str]]] | None = None,
 ) -> PageStreakRunDict | None:
     """Record match logs and update page progression or failure resets."""
+    r = db.session.scalars(locked_run_query(user_id, killer)).first()
+    if r is None:
+        raise ValueError(f"No run in progress for {killer}")
     run = fetch_run(user_id, killer, build_pages_fn)
     if run is None:
         raise ValueError(f"No run in progress for {killer}")
@@ -138,7 +152,6 @@ def record_match_result(
     validate_match_submission(run, page, perks, result)
 
     with transaction():
-        r = db.session.scalars(select(PageStreakRun).where(PageStreakRun.id == run["id"])).first()
         if not r.pages:
             r.pages = run["pages"]
         log = PageStreakPageLog(

@@ -181,6 +181,26 @@ class TestSaving:
         entry = db.session.query(AdminAuditLog).filter_by(action="site_settings_updated").one()
         assert "ALTCHA outage" in str(entry.details)
 
+    def test_use_default_needs_confirmation_when_the_default_is_the_unsafe_value(
+        self, client: FlaskClient, admin: User, app: Flask, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        monkeypatch.setitem(app.config, "ALTCHA_ENFORCED", False)  # this deployment's default is "off"
+        site_settings.update_settings({"altcha_enforced": True})
+        assert site_settings.altcha_enforced() is True
+        url = "/api/v1/admin/settings"
+        refused = client.put(url, headers=_headers(admin), json={"settings": {"altcha_enforced": None}})
+        assert refused.status_code == 400 and refused.get_json()["error_code"] == "confirmation_required"
+        assert site_settings.altcha_enforced() is True
+        ok = client.put(url, headers=_headers(admin), json={"settings": {"altcha_enforced": None}, "confirm_risky": True, "reason": "check is broken"})
+        assert ok.status_code == 200
+        assert site_settings.altcha_enforced() is False
+
+    def test_use_default_needs_no_confirmation_when_the_default_is_safe(self, admin: User, app: Flask, monkeypatch: pytest.MonkeyPatch) -> None:
+        monkeypatch.setitem(app.config, "ALTCHA_ENFORCED", True)
+        site_settings.update_settings({"altcha_enforced": False}, confirm_risky=True, reason="for the test")
+        site_settings.update_settings({"altcha_enforced": None})
+        assert site_settings.altcha_enforced() is True
+
     def test_tightening_never_needs_confirmation(self, admin: User) -> None:
         site_settings.update_settings({"altcha_enforced": True, "email_verification_required": True})
 

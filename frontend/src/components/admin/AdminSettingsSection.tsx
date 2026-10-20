@@ -82,6 +82,8 @@ function SettingsPanel({ notify, t, refreshKey, onDirtyChange }: Omit<SettingsSe
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
+  /** "Use default" on a security switch whose default is the unsafe value: confirmed like any risky save. */
+  const [riskyReset, setRiskyReset] = useState<AdminSiteSetting | null>(null);
   const [reason, setReason] = useState('');
 
   const settingsRef = useRef<AdminSiteSetting[]>([]);
@@ -124,6 +126,7 @@ function SettingsPanel({ notify, t, refreshKey, onDirtyChange }: Omit<SettingsSe
       applyServerRows((await saveSettings(payload, options)).settings ?? [], resetKey !== undefined, resetKey);
       notify({ type: 'success', text: t.configSaved });
       setConfirmOpen(false);
+      setRiskyReset(null);
       setReason('');
     } catch (err: unknown) {
       notify({ type: 'error', text: getErrorMessage(err, t.configSaveFailed) });
@@ -364,7 +367,11 @@ function SettingsPanel({ notify, t, refreshKey, onDirtyChange }: Omit<SettingsSe
                               <Button
                                 type="button"
                                 disabled={saving}
-                                onClick={() => send({ [row.key]: null }, undefined, row.key)}
+                                onClick={() =>
+                                  row.kind === 'bool' && row.risky_when !== null && row.default === row.risky_when && row.value !== row.default
+                                    ? setRiskyReset(row)
+                                    : send({ [row.key]: null }, undefined, row.key)
+                                }
                                 variant="linkDanger"
                                 size="sm"
                               >
@@ -410,14 +417,14 @@ function SettingsPanel({ notify, t, refreshKey, onDirtyChange }: Omit<SettingsSe
       </div>
 
       <ConfirmModal
-        open={confirmOpen}
+        open={confirmOpen || riskyReset !== null}
         size="md"
         title={t.configRiskTitle}
         message={
           <div className="space-y-3 text-left">
             <p>{t.configRiskBody}</p>
             <ul className="list-disc space-y-1 pl-5 type-strong text-text-primary">
-              {risky.map((row) => (
+              {(riskyReset ? [riskyReset] : risky).map((row) => (
                 <li key={row.key}>{text(`config_${row.key}`) || row.key}</li>
               ))}
             </ul>
@@ -440,9 +447,14 @@ function SettingsPanel({ notify, t, refreshKey, onDirtyChange }: Omit<SettingsSe
         busyLabel={t.configRiskConfirm}
         busy={saving}
         confirmDisabled={!reasonOk}
-        onConfirm={() => send(payload(), { confirmRisky: true, reason: reason.trim() })}
+        onConfirm={() =>
+          riskyReset
+            ? send({ [riskyReset.key]: null }, { confirmRisky: true, reason: reason.trim() }, riskyReset.key)
+            : send(payload(), { confirmRisky: true, reason: reason.trim() })
+        }
         onCancel={() => {
           setConfirmOpen(false);
+          setRiskyReset(null);
           setReason('');
         }}
       />

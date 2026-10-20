@@ -17,6 +17,7 @@ from app.models import (
     UserCharacterOwnership,
     UserPerkOwnership,
 )
+from app.services import bug_report_files
 from app.services.moderation_actions import ModerationError, ban, restore_account
 from app.services.user import google_auth
 from app.services.user.two_factor import enabled_user_ids
@@ -174,14 +175,24 @@ def _anonymise_moderation_records(user_id: int) -> None:
     )
 
 
-def _anonymise_bug_reports(user_id: int) -> None:
-    """Bug reports are kept for the team's records, but without the reporter's name and address."""
+def _anonymise_bug_reports(user_id: int) -> list[str]:
+    """Bug reports are kept for the team's records, but without the reporter's name, address and screenshots.
+
+    Returns the screenshots' paths: the caller deletes the files once the transaction has committed
+    (they are public, and a screenshot can show as much about a person as their name does).
+    """
+    images = [
+        path
+        for images_json in db.session.scalars(select(BugReport.images_json).where(BugReport.user_id == user_id))
+        for path in BugReport.parse_images(images_json)
+    ]
     db.session.execute(
         update(BugReport)
         .where(BugReport.user_id == user_id)
-        .values(reporter_name="Deleted user", reporter_email=None)
+        .values(reporter_name="Deleted user", reporter_email=None, images_json="[]")
         .execution_options(synchronize_session=False)
     )
+    return images
 
 
 def admin_remove_user(user_id: int) -> bool:
@@ -196,9 +207,10 @@ def admin_remove_user(user_id: int) -> bool:
     avatar_dir = get_avatar_storage_directory()
     remove_stale_avatar_file(user.avatar_url, avatar_dir, user.id)
     with transaction():
-        _anonymise_bug_reports(user.id)
+        screenshots = _anonymise_bug_reports(user.id)
         _anonymise_moderation_records(user.id)
         db.session.delete(user)
+    bug_report_files.delete_files(screenshots)
     return True
 
 
@@ -240,9 +252,10 @@ def delete_own_account(
     remove_stale_avatar_file(user.avatar_url, avatar_dir, user.id)
 
     with transaction():
-        _anonymise_bug_reports(user.id)
+        screenshots = _anonymise_bug_reports(user.id)
         _anonymise_moderation_records(user.id)
         db.session.delete(user)
+    bug_report_files.delete_files(screenshots)
 
     return True, None
 

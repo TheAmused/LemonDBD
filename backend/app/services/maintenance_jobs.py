@@ -53,6 +53,12 @@ def _minigame_sessions() -> int:
     return purge_expired_repeatables()
 
 
+def _bug_report_files() -> int:
+    from app.services.bug_report_files import sweep_orphans
+
+    return sweep_orphans()
+
+
 def _catalog_cache() -> int:
     from app.core.redis_cache import bump_catalog_version
 
@@ -76,6 +82,7 @@ JOBS: tuple[MaintenanceJob, ...] = (
     MaintenanceJob("sanction_emails", _sanction_emails, 8882029, "Sent %d queued moderation email(s)"),
     MaintenanceJob("ban_list", _ban_list, 8882030, "Removed %d expired entr(ies) from the ban-evasion list"),
     MaintenanceJob("minigame_sessions", _minigame_sessions, 8882031, "Deleted %d expired practice minigame session(s)"),
+    MaintenanceJob("bug_report_files", _bug_report_files, 8882032, "Deleted %d bug report screenshot(s) no report refers to"),
     MaintenanceJob("catalog_cache", _catalog_cache, None, "Cleared the catalog cache"),
 )
 JOB_BY_KEY: dict[str, MaintenanceJob] = {job.key: job for job in JOBS}
@@ -172,6 +179,8 @@ SCHEDULE: tuple[tuple[str, str, dict[str, Any]], ...] = (
     ("purge_expired_ban_list_entries", "ban_list", {"trigger": "cron", "hour": 3, "minute": 20}),
     # Practice (repeatable) minigame sessions live 24h; every page load of a practice mode makes one.
     ("purge_expired_minigame_sessions", "minigame_sessions", {"trigger": "cron", "minute": 41}),
+    # Screenshots left behind by a purge, a replace import or a crash between commit and delete.
+    ("sweep_bug_report_files", "bug_report_files", {"trigger": "cron", "hour": 3, "minute": 40}),
 )
 SCHEDULER_STALE_AFTER = timedelta(hours=1)
 

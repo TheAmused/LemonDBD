@@ -37,6 +37,12 @@ class BugReport(Base, ColumnDictMixin):
 
     user: Mapped["User | None"] = relationship(back_populates="bug_reports")
 
+    @staticmethod
+    def parse_images(images_json: str | None) -> list[str]:
+        """The attachment paths stored in an `images_json` value (an empty list for anything unexpected)."""
+        value = safe_json_loads(images_json, default=[])
+        return [item for item in value if isinstance(item, str)] if isinstance(value, list) else []
+
     @property
     def images(self) -> list[str]:
         return safe_json_loads(self.images_json, default=[])

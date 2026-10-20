@@ -379,6 +379,8 @@ export default {
   maintBanListDesc: "Entfernt Einträge nach Ablauf ihrer Aufbewahrungsfrist (nachts).",
   maintMinigameSessions: "Übungs-Minispielsitzungen aufräumen",
   maintMinigameSessionsDesc: "Löscht Übungsrunden, die älter als 24 Stunden sind (stündlich).",
+  maintBugReportFiles: "Verwaiste Screenshots von Fehlerberichten entfernen",
+  maintBugReportFilesDesc: "Löscht Screenshots, auf die kein Fehlerbericht mehr verweist (täglich).",
   maintCache: "Katalog-Cache leeren",
   maintCacheDesc: "Liefert frische Perks, Charaktere und Karten, nachdem du die Datenbank direkt bearbeitet hast.",
   databaseTitle: "Datenbank",

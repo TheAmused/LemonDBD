@@ -379,6 +379,8 @@ export default {
   maintBanListDesc: "Usuwa wpisy po okresie przechowywania (co noc).",
   maintMinigameSessions: "Wyczyść sesje treningowe minigier",
   maintMinigameSessionsDesc: "Usuwa rundy treningowe starsze niż 24 godziny (co godzinę).",
+  maintBugReportFiles: "Usuń osierocone zrzuty ekranu ze zgłoszeń",
+  maintBugReportFilesDesc: "Usuwa zrzuty ekranu, do których nie odnosi się już żadne zgłoszenie błędu (codziennie).",
   maintCache: "Wyczyść pamięć podręczną katalogu",
   maintCacheDesc: "Serwuje świeże perki, postacie i mapy po bezpośredniej edycji bazy danych.",
   databaseTitle: "Baza danych",

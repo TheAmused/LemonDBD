@@ -86,7 +86,7 @@ export default {
   config_altcha_enforced: "Require the security check (ALTCHA)",
   config_altcha_enforced_desc: "Sign-up, sign-in, password reset and guest bug reports need a solved check. Turn off only if the check itself is broken.",
   config_google_sign_in_enabled: "Google sign-in",
-  config_google_sign_in_enabled_desc: "Show \"Continue with Google\". It also needs a Google client ID on the server.",
+  config_google_sign_in_enabled_desc: "Show \"Continue with Google\". It also needs a Google client ID on the server. While it is off, accounts that only sign in with Google cannot sign in; they can set a password with \"Forgot password\".",
   config_content_reports_open: "Content reports",
   config_content_reports_open_desc: "Let signed-in users report tier lists, rosters and minigames. When off, reporting answers that it is paused.",
   config_scoreboard_ocr_enabled: "Scoreboard screenshot check",

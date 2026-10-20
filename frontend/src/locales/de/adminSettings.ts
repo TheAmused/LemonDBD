@@ -86,7 +86,7 @@ export default {
   config_altcha_enforced: "Sicherheitsprüfung verlangen (ALTCHA)",
   config_altcha_enforced_desc: "Registrierung, Anmeldung, Passwort-Reset und Fehlermeldungen von Gästen brauchen eine gelöste Prüfung. Nur ausschalten, wenn die Prüfung selbst defekt ist.",
   config_google_sign_in_enabled: "Anmeldung mit Google",
-  config_google_sign_in_enabled_desc: "„Weiter mit Google“ anzeigen. Dafür ist zusätzlich eine Google-Client-ID auf dem Server nötig.",
+  config_google_sign_in_enabled_desc: "„Weiter mit Google“ anzeigen. Dafür ist zusätzlich eine Google-Client-ID auf dem Server nötig. Solange es aus ist, können sich Konten, die sich nur mit Google anmelden, nicht anmelden; sie können über „Passwort vergessen“ ein Passwort setzen.",
   config_content_reports_open: "Inhaltsmeldungen",
   config_content_reports_open_desc: "Angemeldete Nutzer dürfen Tier-Listen, Roster und Minispiele melden. Ausgeschaltet antwortet das Melden, dass es pausiert ist.",
   config_scoreboard_ocr_enabled: "Scoreboard-Screenshot-Prüfung",

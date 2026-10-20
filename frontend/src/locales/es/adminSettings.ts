@@ -86,7 +86,7 @@ export default {
   config_altcha_enforced: "Exigir la comprobación de seguridad (ALTCHA)",
   config_altcha_enforced_desc: "El registro, el inicio de sesión, el restablecimiento de contraseña y los informes de errores de invitados necesitan la comprobación resuelta. Desactívalo solo si la propia comprobación falla.",
   config_google_sign_in_enabled: "Inicio de sesión con Google",
-  config_google_sign_in_enabled_desc: "Mostrar «Continuar con Google». También requiere un ID de cliente de Google en el servidor.",
+  config_google_sign_in_enabled_desc: "Mostrar «Continuar con Google». También requiere un ID de cliente de Google en el servidor. Mientras esté desactivado, las cuentas que solo entran con Google no pueden iniciar sesión; pueden crear una contraseña con «¿Olvidaste tu contraseña?».",
   config_content_reports_open: "Informes de contenido",
   config_content_reports_open_desc: "Permite a los usuarios con sesión informar de listas de niveles, plantillas y minijuegos. Desactivado, informar responde que está en pausa.",
   config_scoreboard_ocr_enabled: "Comprobación de capturas del marcador",

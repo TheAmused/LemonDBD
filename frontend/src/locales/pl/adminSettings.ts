@@ -86,7 +86,7 @@ export default {
   config_altcha_enforced: "Wymagaj zabezpieczenia (ALTCHA)",
   config_altcha_enforced_desc: "Rejestracja, logowanie, reset hasła i zgłoszenia błędów od gości wymagają rozwiązanego testu. Wyłącz tylko, gdy sam test nie działa.",
   config_google_sign_in_enabled: "Logowanie przez Google",
-  config_google_sign_in_enabled_desc: "Pokaż „Kontynuuj z Google”. Wymaga też identyfikatora klienta Google na serwerze.",
+  config_google_sign_in_enabled_desc: "Pokaż „Kontynuuj z Google”. Wymaga też identyfikatora klienta Google na serwerze. Gdy jest wyłączone, konta logujące się tylko przez Google nie mogą się zalogować; mogą ustawić hasło przez „Nie pamiętasz hasła?”.",
   config_content_reports_open: "Zgłaszanie treści",
   config_content_reports_open_desc: "Pozwól zalogowanym użytkownikom zgłaszać tier listy, składy i minigry. Po wyłączeniu zgłaszanie informuje, że jest wstrzymane.",
   config_scoreboard_ocr_enabled: "Sprawdzanie zrzutu tablicy wyników",

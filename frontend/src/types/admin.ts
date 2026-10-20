@@ -205,6 +205,8 @@ export interface AdminContentReportDetail extends AdminContentReport {
   reason_breakdown: Record<string, number>;
   attributed: boolean;
   author_active: boolean | null;
+  /** Null when the report has no attributed author. */
+  author_standing?: 'active' | 'suspended' | 'banned' | null;
   author_is_admin: boolean;
 }
 

@@ -222,6 +222,7 @@ export default {
   contentReportResolvedAt: "Resolved",
   contentReportUnattributed: "This copy carried no valid author stamp, so no account can be linked to it. You can ban the content, but there is no author to deactivate.",
   contentReportAuthorInactive: "The author's account is already deactivated.",
+  contentReportAuthorSuspended: "The author is suspended at the moment. You can still warn them, suspend them for longer or ban them.",
   contentReportAuthorIsAdmin: "The author is an admin, so their account cannot be deactivated here.",
   contentReportReasons: "Reasons given",
   contentReportReporterNotes: "Notes from reporters",

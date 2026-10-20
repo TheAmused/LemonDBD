@@ -222,6 +222,7 @@ export default {
   contentReportResolvedAt: "Rozpatrzono",
   contentReportUnattributed: "Ta kopia nie miała prawidłowego znacznika autora, więc nie można jej powiązać z żadnym kontem. Możesz zablokować treść, ale nie ma autora do dezaktywacji.",
   contentReportAuthorInactive: "Konto autora jest już dezaktywowane.",
+  contentReportAuthorSuspended: "Autor jest obecnie zawieszony. Nadal możesz go ostrzec, przedłużyć zawieszenie albo go zbanować.",
   contentReportAuthorIsAdmin: "Autor jest administratorem, więc jego konta nie można tu dezaktywować.",
   contentReportReasons: "Podane powody",
   contentReportReporterNotes: "Uwagi zgłaszających",

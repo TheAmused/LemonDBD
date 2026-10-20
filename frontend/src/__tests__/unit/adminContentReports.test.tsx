@@ -170,6 +170,17 @@ describe('ContentReportDetail', () => {
     assert.ok(!html.includes(AUTHOR_ACTION_LABEL));
   });
 
+  it('still offers a decision about a suspended author, but none about a banned one', () => {
+    const suspended = { ...baseDetail, author_active: false, author_standing: 'suspended' as const };
+    const suspendedHtml = renderWithDictionary(React.createElement(ContentReportDetail, { detail: suspended, resolving: false, onResolve: noop, onShowUser: showUser }));
+    assert.ok(suspendedHtml.includes(AUTHOR_ACTION_LABEL));
+    assert.ok(suspendedHtml.includes(en.admin.contentReportAuthorSuspended));
+    const banned = { ...baseDetail, author_active: false, author_standing: 'banned' as const };
+    const bannedHtml = renderWithDictionary(React.createElement(ContentReportDetail, { detail: banned, resolving: false, onResolve: noop, onShowUser: showUser }));
+    assert.ok(!bannedHtml.includes(AUTHOR_ACTION_LABEL));
+    assert.ok(bannedHtml.includes(en.admin.contentReportAuthorInactive.replace(/'/g, '&#x27;')));
+  });
+
   it('never offers a decision about an admin author', () => {
     const detail = { ...baseDetail, author_is_admin: true };
     const html = renderWithDictionary(React.createElement(ContentReportDetail, { detail, resolving: false, onResolve: noop, onShowUser: showUser }));

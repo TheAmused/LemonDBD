@@ -4,6 +4,8 @@ import React, { useRef, useState } from 'react';
 import { useDictionary } from '@/context/DictionaryContext';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 import { authHeaders, getAuthToken, getErrorMessage } from '@/utils/api';
+import { EMPTY_REAUTH, reauthBody } from '@/components/admin/ReauthFields';
+import type { Reauth } from '@/types/admin';
 
 /** Staging a JSON backup (file picker or drag-and-drop) and importing it in merge or replace mode. */
 export function useImportTab(onPurgeSuccess?: () => void) {
@@ -17,6 +19,7 @@ export function useImportTab(onPurgeSuccess?: () => void) {
   const [importSuccess, setImportSuccess] = useState<string | null>(null);
   const [importSummary, setImportSummary] = useState<Record<string, { created: number; updated: number }> | null>(null);
   const [showReplaceConfirm, setShowReplaceConfirm] = useState<boolean>(false);
+  const [reauth, setReauth] = useState<Reauth>(EMPTY_REAUTH);
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const dragCounterRef = useRef<number>(0);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -124,12 +127,9 @@ export function useImportTab(onPurgeSuccess?: () => void) {
       return;
     }
 
-    if (importMode === 'replace') {
-      setShowReplaceConfirm(true);
-      return;
-    }
-
-    runImport();
+    // Every import is confirmed: it can rewrite accounts, so the server asks for the admin's password.
+    setReauth(EMPTY_REAUTH);
+    setShowReplaceConfirm(true);
   };
 
   const runImport = async () => {
@@ -160,6 +160,7 @@ export function useImportTab(onPurgeSuccess?: () => void) {
           ...authHeaders(token),
         },
         body: JSON.stringify({
+          ...reauthBody(reauth),
           mode: importMode,
           data: parsedPayload.data || parsedPayload,
         }),
@@ -194,6 +195,8 @@ export function useImportTab(onPurgeSuccess?: () => void) {
     importSummary,
     showReplaceConfirm,
     setShowReplaceConfirm,
+    reauth,
+    setReauth,
     isDragging,
     fileInputRef,
     handleFileChange,

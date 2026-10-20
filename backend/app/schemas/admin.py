@@ -51,4 +51,7 @@ class UpdateSiteSettingsDTO(BaseModel):
 
 class PurgeDatabaseDTO(BaseModel):
     targets: list[str] = Field(..., min_length=1)
+    # Re-authentication (checked by the route, see core/reauth.py).
+    current_password: str | None = Field(None, max_length=200)
+    two_factor_code: str | None = Field(None, max_length=64)
 

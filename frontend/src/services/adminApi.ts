@@ -21,6 +21,7 @@ import type {
   MaintenanceJob,
   MaintenanceRun,
   NewUser,
+  Reauth,
   SystemCheck,
   UserPatch,
   UserRow,
@@ -35,9 +36,8 @@ export const listUsers = (query: { page: number; per_page: number; search?: stri
 export const createUser = (user: NewUser) => apiRequest<{ user: UserRow }>('/users', 'POST', user);
 export const updateUser = (id: number, patch: UserPatch) => apiRequest<{ user: UserRow }>(`/users/${id}`, 'PUT', patch);
 export const deleteUser = (id: number) => apiRequest<object>(`/users/${id}`, 'DELETE');
-/** `currentPassword` (the acting admin's) is required when the target is another admin. */
-export const resetTwoFactor = (id: number, currentPassword?: string) =>
-  apiRequest<object>(`/users/${id}/two-factor/reset`, 'POST', currentPassword ? { current_password: currentPassword } : undefined);
+/** `reauth` (the acting admin's own password and 2FA code) is required when the target is another admin. */
+export const resetTwoFactor = (id: number, reauth?: Reauth) => apiRequest<object>(`/users/${id}/two-factor/reset`, 'POST', reauth);
 
 /* Bug reports */
 export const listBugReports = (query: { page: number; per_page: number; status?: string; search?: string }) =>

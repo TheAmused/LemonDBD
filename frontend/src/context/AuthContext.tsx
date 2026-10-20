@@ -555,6 +555,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
+/** The auth state when there is a provider above, else undefined (for parts that also render on their own). */
+export const useOptionalAuth = () => useContext(AuthContext);
+
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {

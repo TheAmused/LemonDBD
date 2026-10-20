@@ -23,7 +23,7 @@ def _actions() -> list[str]:
 @pytest.mark.unit
 def test_creating_a_user_is_audited(client: FlaskClient, admin) -> None:
     _, headers = admin
-    res = client.post("/api/v1/users", json={"login": "deputy", "username": "deputy", "email": "deputy@example.com", "password": "password123", "role": "admin"}, headers=headers)
+    res = client.post("/api/v1/users", json={"login": "deputy", "username": "deputy", "email": "deputy@example.com", "password": "password123", "role": "admin", "current_password": "password123"}, headers=headers)
     assert res.status_code == 201
     assert "user_created" in _actions()
 
@@ -32,7 +32,7 @@ def test_creating_a_user_is_audited(client: FlaskClient, admin) -> None:
 def test_export_and_purge_are_audited(client: FlaskClient, admin) -> None:
     _, headers = admin
     assert client.get("/api/v1/admin/database/export?targets=perks&include_assets=false", headers=headers).status_code == 200
-    assert client.post("/api/v1/admin/database/purge", json={"targets": ["perks"]}, headers=headers).status_code == 200
+    assert client.post("/api/v1/admin/database/purge", json={"targets": ["perks"], "current_password": "password123"}, headers=headers).status_code == 200
     assert {"database_exported", "database_purged"} <= set(_actions())
 
 
@@ -46,7 +46,7 @@ def test_importing_a_new_password_hash_bumps_the_token_version(client: FlaskClie
 
     res = client.post(
         "/api/v1/admin/database/import",
-        json={"mode": "merge", "targets": ["users"], "data": {"users": [{"login": "player", "email": "player@example.com", "password_hash": hash_password("new-password")}]}},
+        json={"current_password": "password123", "mode": "merge", "targets": ["users"], "data": {"users": [{"login": "player", "email": "player@example.com", "password_hash": hash_password("new-password")}]}},
         headers=headers,
     )
     assert res.status_code == 200, res.get_json()

@@ -6,11 +6,16 @@ from flask.testing import FlaskClient
 from sqlalchemy import select
 from app import create_app
 from app.core.extensions import db
-from app.core.security import generate_token
+from app.core.security import generate_token, hash_password
 from app.models.character import Killer
 from app.models.perk import Perk
 from app.models.user import User
 from tests.unit.conftest import make_chapter
+
+
+ADMIN_PASSWORD = "admin-password-1"
+#: The acting admin's re-authentication, required by import and purge (core/reauth.py).
+REAUTH = {"current_password": ADMIN_PASSWORD}
 
 
 def _flat(exported: dict) -> dict:
@@ -37,7 +42,7 @@ def export_import_app() -> Flask:
             admin_user = User(
                 login="admin_test", username="admin_test",
                 email="admin@test.com",
-                password_hash="hash",
+                password_hash=hash_password(ADMIN_PASSWORD),
                 role="admin",
             )
             db.session.add(admin_user)

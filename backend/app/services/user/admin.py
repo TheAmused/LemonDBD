@@ -1,5 +1,6 @@
 # backend/app/services/user/admin.py
 import logging
+import re
 from datetime import datetime, timezone
 from typing import Any
 
@@ -54,10 +55,16 @@ def list_all_users_paginated(
         stmt = stmt.where(standing_condition)
 
     if search and search.strip():
-        pat = f"%{search.strip().lower()}%"
-        stmt = stmt.where(
-            or_(User.login.ilike(pat), User.username.ilike(pat), User.email.ilike(pat))
-        )
+        # `id:42` names one account exactly (how a report's "show in users" finds its reporter even
+        # after the address on the report went stale); anything else is a substring search.
+        by_id = re.fullmatch(r"id:\s*(\d{1,12})", search.strip(), re.IGNORECASE)
+        if by_id:
+            stmt = stmt.where(User.id == int(by_id.group(1)))
+        else:
+            pat = f"%{search.strip().lower()}%"
+            stmt = stmt.where(
+                or_(User.login.ilike(pat), User.username.ilike(pat), User.email.ilike(pat))
+            )
 
     total = db.session.scalar(select(func.count()).select_from(stmt.subquery())) or 0
     stmt = stmt.order_by(User.id.asc()).offset((page - 1) * per_page).limit(per_page)

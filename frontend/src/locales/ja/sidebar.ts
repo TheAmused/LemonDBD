@@ -34,6 +34,7 @@ export default {
   bugGuideExpectedLabel: "期待した結果",
   bugGuideExpectedText: "本来どうなるべきだと思ったか。",
   bugGuestEmailLabel: "メールアドレス（対応状況の通知用）",
+  bugGuestsClosed: "ログインしていない方からのバグ報告は現在停止中です。送信するにはログインしてください。",
   bugGuestEmailPlaceholder: "you@example.com",
   bugLoggedInAs: "ログイン中:",
   bugScreenshotsLabel: "スクリーンショット添付（最大3枚、各2MBまで）",

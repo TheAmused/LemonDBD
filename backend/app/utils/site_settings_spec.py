@@ -55,7 +55,7 @@ SETTING_SPECS: tuple[SettingSpec, ...] = (
     SettingSpec("google_sign_in_enabled", "bool", "access", public=True),
     SettingSpec("content_reports_open", "bool", "access", public=True),
     SettingSpec("scoreboard_ocr_enabled", "bool", "access", public=True),
-    SettingSpec("guest_bug_reports", "bool", "bug_reports"),
+    SettingSpec("guest_bug_reports", "bool", "bug_reports", public=True),
     SettingSpec("bug_report_discord", "bool", "bug_reports"),
     # Site-wide notice (a banner under the header). Text is plain; the front end never renders HTML.
     SettingSpec("site_banner_enabled", "bool", "notices", public=True),

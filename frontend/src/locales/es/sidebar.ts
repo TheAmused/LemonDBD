@@ -34,6 +34,7 @@ export default {
   bugGuideExpectedLabel: "Resultado esperado",
   bugGuideExpectedText: "Qué crees que debería haber ocurrido.",
   bugGuestEmailLabel: "Correo (para actualizaciones de estado)",
+  bugGuestsClosed: "Los informes de errores de visitantes sin sesión están en pausa. Inicia sesión para enviar uno.",
   bugGuestEmailPlaceholder: "tu@ejemplo.com",
   bugLoggedInAs: "Conectado como",
   bugScreenshotsLabel: "Adjuntar Capturas de Pantalla (Máx 3, 2MB cada una)",

@@ -34,6 +34,7 @@ export default {
   bugGuideExpectedLabel: "Erwartetes Ergebnis",
   bugGuideExpectedText: "Was deiner Meinung nach stattdessen passieren sollte.",
   bugGuestEmailLabel: "E-Mail (für Status-Updates)",
+  bugGuestsClosed: "Fehlerberichte von nicht angemeldeten Besuchern sind gerade pausiert. Bitte melde dich an, um einen zu senden.",
   bugGuestEmailPlaceholder: "du@beispiel.de",
   bugLoggedInAs: "Angemeldet als",
   bugScreenshotsLabel: "Screenshots anhängen (Max. 3, je 2 MB)",

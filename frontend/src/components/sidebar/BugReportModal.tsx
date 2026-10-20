@@ -4,6 +4,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { getBackendBaseUrl, authHeaders, getAuthToken } from '@/utils/api';
 import { useAuth } from '@/context/AuthContext';
+import { useSiteConfig } from '@/context/SiteConfigContext';
 import { LemonIcon } from '@/components/LemonIcon';
 import { useAltcha } from '@/hooks/useAltcha';
 import { AltchaWidget } from '@/components/common/AltchaWidget';
@@ -49,6 +50,10 @@ const MAX_SCREENSHOT_BYTES = 2 * 1024 * 1024;
 export const BugReportModal: React.FC<BugReportModalProps> = ({ isOpen, onClose, onSubmitted }) => {
   const dict = useDictionary();
   const { user, isAuthenticated } = useAuth();
+  // With guest reports switched off (Settings), a signed-out visitor is asked to sign in up front
+  // instead of filling in the form, attachments and all, only to be refused on submit.
+  const { features } = useSiteConfig();
+  const guestsClosed = !isAuthenticated && !features.guestBugReports;
 
   const t = dict.sidebar;
 
@@ -60,7 +65,7 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({ isOpen, onClose,
     refreshChallenge,
     honeypotValue,
     honeypotProps,
-  } = useAltcha(!isAuthenticated && isOpen);
+  } = useAltcha(!isAuthenticated && isOpen && !guestsClosed);
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -201,7 +206,7 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({ isOpen, onClose,
       bodyClassName="space-y-5"
       footerClassName="justify-center"
       footer={
-        isSuccess ? undefined : (
+        isSuccess || guestsClosed ? undefined : (
           <Button
             type="submit"
             form="bug-report-form"
@@ -217,6 +222,8 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({ isOpen, onClose,
     >
       {isSuccess ? (
         <SuccessState title={t.bugSuccessMessage || ''} description={t.bugSuccessThanks || ''} />
+      ) : guestsClosed ? (
+        <Alert>{t.bugGuestsClosed}</Alert>
       ) : (
         <>
     {errorMsg && <Alert>{errorMsg}</Alert>}

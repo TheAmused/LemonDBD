@@ -20,6 +20,7 @@ import {
   EMPTY_SANCTION_DRAFT,
   authorDecisionFromDraft,
   isSanctionDraftValid,
+  patchDraft,
   type AuthorDecision,
   type SanctionDraft,
   type SanctionKind,
@@ -191,7 +192,10 @@ export function ContentReportDetail({ detail, resolving, onResolve, onShowUser }
                   buttonClassName="w-full justify-between py-2.5"
                   menuClassName="w-full"
                   value={authorKind}
-                  onChange={setAuthorKind}
+                  onChange={(kind) => {
+                    if (kind !== 'none') setAuthorDraft((d) => patchDraft({ ...d, kind: authorKind === 'none' ? 'warning' : authorKind }, { kind }, detail.author_next_suspension_days));
+                    setAuthorKind(kind);
+                  }}
                   options={[
                     { value: 'none', label: moderation.authorActionNone },
                     { value: 'warning', label: moderation.authorActionWarning },

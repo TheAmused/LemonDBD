@@ -28,6 +28,7 @@ import {
   SANCTION_KINDS,
   draftFromSuggestion,
   isSanctionDraftValid,
+  patchDraft,
   type AdminSanction,
   type SanctionDraft,
 } from '@/types/moderation';
@@ -157,7 +158,7 @@ export function AdminModerationDrawer({ user, onClose, onChanged, onActionMessag
               draft={draft}
               kinds={SANCTION_KINDS}
               previewTarget={{ userId: user.id }}
-              onChange={(patch) => setDraft((d) => ({ ...d, ...patch }))}
+              onChange={(patch) => setDraft((d) => patchDraft(d, patch, summary?.next_suspension_days))}
             />
 
             <Button

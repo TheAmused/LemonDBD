@@ -208,6 +208,8 @@ export interface AdminContentReportDetail extends AdminContentReport {
   /** Null when the report has no attributed author. */
   author_standing?: 'active' | 'suspended' | 'banned' | null;
   author_is_admin: boolean;
+  /** Settings > Moderation's length for the author's next suspension (null without an author). */
+  author_next_suspension_days?: number | null;
 }
 
 export type SystemCheckState = 'ok' | 'warn' | 'off' | 'error';

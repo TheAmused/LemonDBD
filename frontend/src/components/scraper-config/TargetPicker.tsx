@@ -18,6 +18,8 @@ interface TargetPickerProps {
   onToggleAll: () => void;
   onToggleGroup: (groupKey: TargetItem['category']) => void;
   onToggleTarget: (id: string) => void;
+  /** The ids this picker offers (purge offers fewer than export); every target when left out. */
+  available?: readonly string[];
 }
 
 /** Heading + select-all, then every target grouped by category with per-group select-all. */
@@ -29,9 +31,12 @@ export function TargetPicker({
   onToggleAll,
   onToggleGroup,
   onToggleTarget,
+  available,
 }: TargetPickerProps) {
   const dict = useDictionary();
-  const localizedTargets = useLocalizedTargets();
+  const allTargets = useLocalizedTargets();
+  const localizedTargets = available ? allTargets.filter((t) => available.includes(t.id)) : allTargets;
+  const total = available ? available.length : ALL_TARGETS.length;
 
   return (
     <>
@@ -42,7 +47,7 @@ export function TargetPicker({
           onClick={onToggleAll}
           variant="link" size="sm"
         >
-          {selected.length === ALL_TARGETS.length
+          {selected.length === total
             ? dict.admin.deselectAll
             : dict.admin.selectAll}
         </Button>
@@ -51,6 +56,7 @@ export function TargetPicker({
       <div className="space-y-3 max-h-64 overflow-y-auto pr-1">
         {TARGET_GROUPS_CONFIG.map((group) => {
           const groupTargets = localizedTargets.filter((t) => t.category === group.key);
+          if (groupTargets.length === 0) return null;
           const selectedInGroup = groupTargets.filter((t) => selected.includes(t.id));
           const allGroupSelected = selectedInGroup.length === groupTargets.length && groupTargets.length > 0;
           const GroupIcon = group.icon;

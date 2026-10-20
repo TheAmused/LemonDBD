@@ -193,6 +193,32 @@ SUPPORTED_EXPORT_TARGETS = [
     target for targets in TARGET_GROUPS.values() for target in targets
 ]
 
+#: Never purged from the admin panel: the accounts (that would delete the acting admin too), the
+#: audit log (append-only) and the ban-evasion list (wiping it would let banned addresses back in).
+NOT_PURGEABLE: frozenset[str] = frozenset({"users", "admin_audit_logs", "banned_email_hashes"})
+PURGEABLE_TARGETS: list[str] = [target for target in SUPPORTED_EXPORT_TARGETS if target not in NOT_PURGEABLE]
+
+#: A table can only be purged together with the tables whose rows point at it without a cascade
+#: (`ondelete="RESTRICT"`): chapters <- characters, realms / map sources <- maps, item categories <- items.
+PURGE_REQUIRES: dict[str, tuple[str, ...]] = {
+    "chapters": ("survivors", "killers"),
+    "realms": ("maps",),
+    "map_sources": ("maps",),
+    "item_categories": ("items", "item_addons"),
+}
+
+
+def unknown_targets(targets: list[str] | set[str], allowed: list[str]) -> list[str]:
+    """The names in `targets` that are not in `allowed` (an empty list when all of them are)."""
+    allowed_set = set(allowed)
+    return sorted({str(target) for target in targets if target not in allowed_set})
+
+
+def missing_purge_dependencies(targets: list[str] | set[str]) -> list[str]:
+    """The tables that must be purged too for `targets` to be purged (empty when none are missing)."""
+    chosen = set(targets)
+    return sorted({dep for target in chosen for dep in PURGE_REQUIRES.get(target, ()) if dep not in chosen})
+
 
 # Entities whose export is "select all, serialize each row, store under one key" --
 # no nested collections, no cross-entity joins beyond a single to-one lookup.

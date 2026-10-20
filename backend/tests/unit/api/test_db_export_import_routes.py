@@ -28,7 +28,7 @@ class TestDatabaseExportImport:
     """Tests for administrative full database export JSON generation and merging."""
 
     def test_export_database_all(self, client: FlaskClient, admin_token: str) -> None:
-        res = client.get(
+        res = client.post(
             "/api/v1/admin/database/export",
             headers={"Authorization": f"Bearer {admin_token}"},
         )
@@ -48,8 +48,9 @@ class TestDatabaseExportImport:
         assert any(c["name"] == "The Trapper" for c in data["groups"]["content"]["killers"])
 
     def test_export_database_selective(self, client: FlaskClient, admin_token: str) -> None:
-        res = client.get(
-            "/api/v1/admin/database/export?targets=perks",
+        res = client.post(
+            "/api/v1/admin/database/export",
+            json={"targets": ["perks"]},
             headers={"Authorization": f"Bearer {admin_token}"},
         )
         assert res.status_code == 200
@@ -60,21 +61,35 @@ class TestDatabaseExportImport:
         assert "killers" not in data["groups"].get("content", {})
 
     def test_export_database_download_header(self, client: FlaskClient, admin_token: str) -> None:
-        res = client.get(
-            "/api/v1/admin/database/export?download=true",
+        res = client.post(
+            "/api/v1/admin/database/export",
             headers={"Authorization": f"Bearer {admin_token}"},
         )
         assert res.status_code == 200
-        assert "attachment; filename=lemondbd_export_" in res.headers.get("Content-Disposition", "")
+        assert 'attachment; filename="lemondbd_backup_' in res.headers.get("Content-Disposition", "")
+
+    def test_export_is_not_a_get(self, client: FlaskClient, admin_token: str) -> None:
+        """A GET could be started by an <img> in reported content or by a link from another site."""
+        res = client.get("/api/v1/admin/database/export", headers={"Authorization": f"Bearer {admin_token}"})
+        assert res.status_code == 405
+
+    def test_export_refuses_unknown_targets(self, client: FlaskClient, admin_token: str) -> None:
+        res = client.post(
+            "/api/v1/admin/database/export",
+            json={"targets": ["perks", "characters"]},
+            headers={"Authorization": f"Bearer {admin_token}"},
+        )
+        assert res.status_code == 400
+        assert "characters" in res.get_json()["error"]
 
     def test_export_database_unauthorized(self, client: FlaskClient, user_token: str) -> None:
-        res = client.get(
+        res = client.post(
             "/api/v1/admin/database/export",
             headers={"Authorization": f"Bearer {user_token}"},
         )
         assert res.status_code == 403
 
-        res_no_auth = client.get("/api/v1/admin/database/export")
+        res_no_auth = client.post("/api/v1/admin/database/export")
         assert res_no_auth.status_code == 401
 
     def test_import_database_merge_json_body(self, client: FlaskClient, admin_token: str) -> None:
@@ -208,8 +223,9 @@ class TestDatabaseExportImport:
         db.session.add(realm)
         db.session.commit()
 
-        res = client.get(
-            "/api/v1/admin/database/export?targets=maps",
+        res = client.post(
+            "/api/v1/admin/database/export",
+            json={"targets": ["maps"]},
             headers={"Authorization": f"Bearer {admin_token}"},
         )
         assert res.status_code == 200
@@ -325,8 +341,9 @@ class TestDatabaseExportRouteIncludeAssets:
             char.avatar_local_path = "icons/characters/trapper.webp"
             db.session.commit()
 
-        resp = client.get(
-            "/api/v1/admin/database/export?targets=killers&include_assets=false",
+        resp = client.post(
+            "/api/v1/admin/database/export",
+            json={"targets": ["killers"], "include_assets": False},
             headers={"Authorization": f"Bearer {admin_token}"},
         )
         assert resp.status_code == 200

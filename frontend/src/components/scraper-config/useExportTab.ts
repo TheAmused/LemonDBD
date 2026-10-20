@@ -4,9 +4,10 @@ import { useState } from 'react';
 import { useDictionary, useLocale } from '@/context/DictionaryContext';
 import { formatMessage } from '@/utils/i18nFormat';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
-import { authHeaders, getAuthToken, getErrorMessage } from '@/utils/api';
+import { authFetch, getErrorMessage } from '@/utils/api';
 import { downloadFile } from '@/utils/download';
 import { ALL_TARGETS, type TargetItem } from './scraperTargets';
+import { backupErrorMessage } from './backupErrors';
 
 /** Which tables to export, and the download of the resulting JSON snapshot. */
 export function useExportTab() {
@@ -46,43 +47,26 @@ export function useExportTab() {
       return;
     }
 
-    const token = getAuthToken();
-    if (!token) {
-      setExportError(dict.admin.tokenNotFound);
-      return;
-    }
-
     setIsExporting(true);
     setExportError(null);
     setExportSuccess(null);
 
     try {
-      const query = new URLSearchParams({
-        targets: exportTargets.join(','),
+      // A POST (the session cookie cannot start one from another site or from an <img>), streamed
+      // straight into the download: the snapshot is not parsed and re-serialised in the browser.
+      const res = await authFetch(`${apiBase}/api/v1/admin/database/export`, {
+        method: 'POST',
+        cache: 'no-store',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ targets: exportTargets, include_assets: true }),
       });
+      if (!res.ok) throw new Error(await backupErrorMessage(res, dict.admin.exportFailed, dict));
 
-      const res = await fetch(`${apiBase}/api/v1/admin/database/export?${query.toString()}`, {
-        headers: {
-          ...authHeaders(token),
-          'Cache-Control': 'no-cache',
-        },
-      });
-
-      if (!res.ok) {
-        const errData = await res.json().catch(() => ({}));
-        throw new Error(errData.error || dict.admin.exportFailed);
-      }
-
-      const data = await res.json();
-      const now = new Date();
-      const timestamp = now.toISOString().replace(/[:.]/g, '-').slice(0, 19);
-
-      downloadFile(JSON.stringify(data, null, 2), `lemondbd_backup_${timestamp}.json`, 'application/json');
-
+      const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
+      downloadFile(await res.blob(), `lemondbd_backup_${timestamp}.json`, 'application/json');
       setExportSuccess(formatMessage(dict.admin.exportDone, { count: exportTargets.length }, locale));
     } catch (err: unknown) {
-      const msg = getErrorMessage(err, dict.admin.networkError);
-      setExportError(msg);
+      setExportError(getErrorMessage(err, dict.admin.networkError));
     } finally {
       setIsExporting(false);
     }

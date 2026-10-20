@@ -76,10 +76,8 @@ describe('Admin Database Backup: Drag and Drop Import Modal', () => {
       modalSource.includes('handleClearFile'),
       'Must provide a function to clear the staged file'
     );
-    assert.ok(
-      modalSource.includes('setImportFile(null)') && modalSource.includes("setImportJsonText('')"),
-      'Clearing file must reset both file and text state'
-    );
+    // The file itself is uploaded (multipart), so there is no copy of its text to reset.
+    assert.ok(modalSource.includes('setImportFile(null)'), 'Clearing must reset the staged file');
   });
 
   it('all supported locales define dropFilePrompt, invalidJsonFile, removeFile, and changeFile', () => {

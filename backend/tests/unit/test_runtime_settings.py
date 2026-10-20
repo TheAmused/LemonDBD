@@ -534,3 +534,19 @@ def test_every_banner_locale_has_its_own_setting() -> None:
 def test_risky_error_type_is_a_value_error() -> None:
     assert issubclass(RiskyChangeError, ValueError)
     assert hash_password and totp  # imported helpers used by the 2FA-based test
+
+
+
+@pytest.mark.unit
+def test_capped_settings_cannot_be_set_above_their_cap() -> None:
+    """A spec maximum above the code's own ceiling was accepted in Settings and silently ignored."""
+    from app.services.content_moderation_service import EVIDENCE_TTL_DAYS
+    from app.services.match_log_retention import MAX_LOGGED_MATCHES
+    from app.services.sanction_outbox import MAX_NOTIFY_ATTEMPTS
+    from app.utils.site_settings_spec import SPEC_BY_KEY
+
+    assert SPEC_BY_KEY["sanction_email_attempts"].maximum == MAX_NOTIFY_ATTEMPTS
+    assert SPEC_BY_KEY["content_evidence_days"].maximum == EVIDENCE_TTL_DAYS
+    assert SPEC_BY_KEY["match_log_max_entries"].maximum == MAX_LOGGED_MATCHES
+    with pytest.raises(ValueError):
+        validate_setting("sanction_email_attempts", 6)

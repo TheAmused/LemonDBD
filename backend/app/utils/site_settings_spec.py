@@ -91,7 +91,8 @@ SETTING_SPECS: tuple[SettingSpec, ...] = (
     _int_spec("password_min_length", "limits", 6, 64, public=True),
     _int_spec("scoreboard_upload_max_mb", "limits", 1, 8, public=True),
     _int_spec("smash_image_max_mb", "limits", 1, 5),
-    _int_spec("sanction_email_attempts", "limits", 1, 10),
+    # At most MAX_NOTIFY_ATTEMPTS (5, services/sanction_outbox.py): a bigger value was accepted and ignored.
+    _int_spec("sanction_email_attempts", "limits", 1, 5),
     # Retention. Ceilings are the values the Privacy Policy promises: an admin can shorten, never lengthen.
     _int_spec("content_evidence_days", "retention", 1, 14),
     _int_spec("match_log_max_entries", "retention", 10, 100),

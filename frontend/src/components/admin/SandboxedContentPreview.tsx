@@ -8,7 +8,7 @@ import { useDictionary } from '@/context/DictionaryContext';
 import { cn } from '@/utils/cn';
 import { formatMessage } from '@/utils/i18nFormat';
 import { backendBase } from '@/utils/staticUrl';
-import { buildEvidencePreview, isSafePreviewImage, parseEvidence } from '@/utils/contentPreview';
+import { buildEvidencePreview, isSafeLocalPreviewImage, isSafePreviewImage, parseEvidence } from '@/utils/contentPreview';
 
 const RAW_LIMIT = 20_000;
 
@@ -32,9 +32,11 @@ export function SandboxedContentPreview({ evidence }: { evidence: string }) {
     return <p className="type-body text-text-muted">{dict.admin.contentReportUnreadable}</p>;
   }
 
+  // A site path only when it is one of our own files (see isSafeLocalPreviewImage); anything else that
+  // merely starts with /static/ is counted as blocked, never requested.
   const loadable = preview.images
-    .filter((src) => src.startsWith('/static/') || isSafePreviewImage(src))
-    .map((src) => (src.startsWith('/static/') ? `${backendBase}${src}` : src));
+    .filter((src) => isSafeLocalPreviewImage(src) || isSafePreviewImage(src))
+    .map((src) => (isSafeLocalPreviewImage(src) ? `${backendBase}${src}` : src));
   const blocked = preview.images.length - loadable.length;
 
   return (

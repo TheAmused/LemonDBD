@@ -86,7 +86,7 @@ export default {
   config_altcha_enforced: "セキュリティチェック（ALTCHA）を必須にする",
   config_altcha_enforced_desc: "新規登録、ログイン、パスワードのリセット、ゲストのバグ報告にはチェックの完了が必要です。チェック自体が壊れているときだけオフにしてください。",
   config_google_sign_in_enabled: "Google ログイン",
-  config_google_sign_in_enabled_desc: "「Google で続行」を表示します。サーバーに Google クライアント ID も必要です。",
+  config_google_sign_in_enabled_desc: "「Google で続行」を表示します。サーバーに Google クライアント ID も必要です。オフの間は、Google でのみログインするアカウントはログインできません。「パスワードをお忘れですか」からパスワードを設定できます。",
   config_content_reports_open: "コンテンツの通報",
   config_content_reports_open_desc: "ログイン済みのユーザーがティアリスト、ロスター、ミニゲームを通報できるようにします。オフの場合、通報は一時停止中と表示されます。",
   config_scoreboard_ocr_enabled: "スコアボード画像のチェック",

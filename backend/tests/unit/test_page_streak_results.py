@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from app.models import Perk, PageStreakPageLog
 from app.services.ownership_service import OwnershipService
 from app.services.page_streak import PageStreakService
-from app.services.page_streak.runs import apply_inactivity_loss
+from app.services.page_streak.runs import apply_inactivity_loss, locked_run_query
 from tests.unit.page_streak_support import (
     FakePerkService,
     make_perks,
@@ -230,3 +230,9 @@ class TestPageStreakResults:
         assert db_session.query(PageStreakPageLog).count() == before_count
         reloaded = self.service.get_run(self.user_id, "Nurse")
         assert reloaded["status"] == "completed"
+
+    def test_result_lookup_locks_the_run_so_two_parallel_submissions_cannot_both_count(self) -> None:
+        from sqlalchemy.dialects import postgresql
+
+        statement = locked_run_query(self.user_id, "Nurse")
+        assert "FOR UPDATE" in str(statement.compile(dialect=postgresql.dialect()))

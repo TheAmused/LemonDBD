@@ -48,6 +48,17 @@ def _switch(key: str, enabled: bool, detail: str | None = None) -> dict[str, Any
     return _check(key, "ok" if enabled else "off", detail)
 
 
+#: `detail` of a check that works but is switched off in Settings (the panel names it in words).
+SWITCHED_OFF = "switched_off"
+
+
+def _admin_switched(check: dict[str, Any], enabled: bool) -> dict[str, Any]:
+    """Off, and why, when the admin switch is off: it used to say "ok" while the feature was disabled."""
+    if enabled or check["state"] == "error":
+        return check
+    return {**check, "state": "off", "detail": SWITCHED_OFF}
+
+
 def system_checks() -> list[dict[str, Any]]:
     cfg = current_app.config
     mail_configured = bool(cfg.get("MAIL_USERNAME") and cfg.get("MAIL_PASSWORD"))
@@ -56,8 +67,8 @@ def system_checks() -> list[dict[str, Any]]:
         _database(),
         _check("cache", "ok" if cache_backend == "redis" else "warn", cache_backend),
         _switch("mail", mail_configured, mail_provider_name(cfg.get("MAIL_SERVER", "")) if mail_configured else None),
-        _switch("discord", discord_webhook.webhook_url() is not None),
-        _switch("ocr", scoreboard_ocr.engine_available()),
+        _admin_switched(_switch("discord", discord_webhook.webhook_url() is not None), site_settings.bug_report_discord_enabled()),
+        _admin_switched(_switch("ocr", scoreboard_ocr.engine_available()), site_settings.scoreboard_ocr_enabled()),
         _scheduler(),
         _switch("email_verification", site_settings.email_verification_required()),
         _switch("altcha", site_settings.altcha_enforced()),

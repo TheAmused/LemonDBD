@@ -359,6 +359,7 @@ export default {
   systemStateWarn: "Limitado",
   systemStateOff: "Desactivado",
   systemStateError: "Fallando",
+  systemSwitchedOff: "desactivado en Ajustes",
   systemDatabase: "Base de datos",
   systemDatabaseDesc: "Responde a una consulta de prueba.",
   systemCache: "Caché compartida",

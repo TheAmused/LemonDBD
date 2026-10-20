@@ -29,6 +29,8 @@ describe('parseSiteConfig', () => {
     assert.equal(config.links.donationMessage, 'Thanks!');
     assert.equal(config.features.registrationOpen, false);
     assert.equal(config.features.contentReportsOpen, false);
+    assert.equal(config.features.guestBugReports, true); // missing from the answer: the default
+    assert.equal(parseSiteConfig({ features: { guest_bug_reports: false } }).features.guestBugReports, false);
     assert.deepEqual(config.limits, { resendCooldownSeconds: 120, passwordMinLength: 10, scoreboardUploadMaxBytes: 2097152 });
   });
 

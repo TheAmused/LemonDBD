@@ -393,6 +393,9 @@ def public_config() -> dict[str, Any]:
             "email_verification_required": email_verification_required(),
             "google_sign_in": google_sign_in_available(),
             "content_reports_open": content_reports_open(),
+            # The bug-report form needs it up front: with guest reports off it asks a signed-out
+            # visitor to sign in instead of letting them fill the form in for nothing.
+            "guest_bug_reports": guest_bug_reports_allowed(),
             "scoreboard_ocr": scoreboard_ocr_enabled(),
         },
         "limits": {

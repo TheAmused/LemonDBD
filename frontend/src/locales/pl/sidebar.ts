@@ -34,6 +34,7 @@ export default {
   bugGuideExpectedLabel: "Oczekiwany rezultat",
   bugGuideExpectedText: "Co Twoim zdaniem powinno się stać.",
   bugGuestEmailLabel: "E-mail (do powiadomień o rozwiązaniu)",
+  bugGuestsClosed: "Zgłoszenia błędów od niezalogowanych osób są teraz wstrzymane. Zaloguj się, aby wysłać zgłoszenie.",
   bugGuestEmailPlaceholder: "twoj@email.com",
   bugLoggedInAs: "Zalogowano jako",
   bugScreenshotsLabel: "Załącz zrzuty ekranu (Maks. 3, po 2MB)",

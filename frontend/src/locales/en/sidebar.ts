@@ -34,6 +34,7 @@ export default {
   bugGuideExpectedLabel: "Expected result",
   bugGuideExpectedText: "What you thought should happen instead.",
   bugGuestEmailLabel: "Email (for resolution updates)",
+  bugGuestsClosed: "Bug reports from signed-out visitors are paused at the moment. Please sign in to send one.",
   bugGuestEmailPlaceholder: "you@example.com",
   bugLoggedInAs: "Logged in as",
   bugScreenshotsLabel: "Attach Screenshots (Max 3, 2MB each)",

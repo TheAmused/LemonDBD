@@ -324,6 +324,12 @@ class TestPublicConfig:
         features = client.get(self.URL).get_json()["features"]
         assert features["registration_open"] is False and features["google_sign_in"] is False
 
+    def test_the_guest_bug_report_switch_is_public(self, client: FlaskClient) -> None:
+        """The form needs it up front, to ask a signed-out visitor to sign in instead."""
+        assert client.get(self.URL).get_json()["features"]["guest_bug_reports"] is True
+        site_settings.update_settings({"guest_bug_reports": False})
+        assert client.get(self.URL).get_json()["features"]["guest_bug_reports"] is False
+
     def test_google_is_unavailable_without_a_client_id(self, client: FlaskClient, app: Flask, monkeypatch: pytest.MonkeyPatch) -> None:
         monkeypatch.setitem(app.config, "GOOGLE_CLIENT_ID", "")
         assert client.get(self.URL).get_json()["features"]["google_sign_in"] is False

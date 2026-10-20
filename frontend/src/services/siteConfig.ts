@@ -13,7 +13,7 @@ export const DEFAULT_SITE_CONFIG: SiteConfig = {
   loaded: false,
   banner: { active: false, level: 'info', until: null, text: {} },
   links: { discordInvite: null, donationBmc: null, donationKofi: null, donationPatreon: null, donationMessage: null },
-  features: { registrationOpen: true, emailVerificationRequired: true, googleSignIn: false, contentReportsOpen: true, scoreboardOcr: true },
+  features: { registrationOpen: true, emailVerificationRequired: true, googleSignIn: false, contentReportsOpen: true, scoreboardOcr: true, guestBugReports: true },
   limits: {
     resendCooldownSeconds: DEFAULT_RESEND_COOLDOWN_SECONDS,
     passwordMinLength: MIN_PASSWORD_LENGTH,
@@ -67,6 +67,7 @@ export function parseSiteConfig(body: unknown): SiteConfig {
       emailVerificationRequired: asBool(features.email_verification_required, defaults.features.emailVerificationRequired),
       googleSignIn: asBool(features.google_sign_in, defaults.features.googleSignIn),
       contentReportsOpen: asBool(features.content_reports_open, defaults.features.contentReportsOpen),
+      guestBugReports: asBool(features.guest_bug_reports, defaults.features.guestBugReports),
       scoreboardOcr: asBool(features.scoreboard_ocr, defaults.features.scoreboardOcr),
     },
     limits: {

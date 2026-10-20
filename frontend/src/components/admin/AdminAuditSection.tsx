@@ -28,7 +28,7 @@ const CATEGORIES = {
   users: ['user'],
   reports: ['bug_report', 'content'],
   availability: ['challenge_mode', 'character', 'perk'],
-  publishing: ['tier_list', 'roster', 'changelog_post'],
+  publishing: ['tier_list', 'roster', 'changelog_post', 'minigame_challenge'],
   system: ['site_settings', 'maintenance', 'database'],
 } as const satisfies Record<string, readonly string[]>;
 type Category = keyof typeof CATEGORIES;
@@ -76,6 +76,12 @@ const ACTION_LABEL_KEYS = {
   'changelog.update': 'auditActionChangelogUpdated',
   'changelog.reorder': 'auditActionChangelogReordered',
   'changelog.delete': 'auditActionChangelogDeleted',
+  'tier_list.delete': 'auditActionTierListDeleted',
+  'smash_roster.delete': 'auditActionRosterDeleted',
+  'minigame_challenge.delete': 'auditActionMinigameChallengeDeleted',
+  'changelog.announce': 'auditActionChangelogAnnounced',
+  'changelog.announce_update': 'auditActionChangelogAnnouncementUpdated',
+  'changelog.announce_remove': 'auditActionChangelogAnnouncementRemoved',
 } as const;
 
 const TARGET_LABEL_KEYS = {
@@ -88,6 +94,7 @@ const TARGET_LABEL_KEYS = {
   tier_list: 'auditTargetTierList',
   roster: 'auditTargetRoster',
   changelog_post: 'auditTargetChangelog',
+  minigame_challenge: 'auditTargetMinigameChallenge',
   site_settings: 'auditTargetSettings',
   maintenance: 'auditTargetMaintenance',
   database: 'auditTargetDatabase',
@@ -95,7 +102,7 @@ const TARGET_LABEL_KEYS = {
 
 /** Removing access or content reads red, giving it back green, everything else neutral. */
 const actionTone = (action: string): string =>
-  /(disabled|deleted|ban|banned|suspended|purged)$/.test(action)
+  /(disabled|deleted|delete|ban|banned|suspended|purged|announce_remove)$/.test(action)
     ? 'text-accent-red'
     : /(enabled|restored|revoked|dismiss)$/.test(action)
       ? 'text-accent-green'

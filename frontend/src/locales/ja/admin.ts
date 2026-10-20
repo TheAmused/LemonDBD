@@ -222,6 +222,7 @@ export default {
   contentReportResolvedAt: "処理日時",
   contentReportUnattributed: "このコピーには有効な作成者スタンプがないため、アカウントを特定できません。コンテンツは禁止できますが、無効化する作成者はいません。",
   contentReportAuthorInactive: "作成者のアカウントはすでに無効化されています。",
+  contentReportAuthorSuspended: "作成者は現在停止中です。それでも警告、停止期間の延長、BANができます。",
   contentReportAuthorIsAdmin: "作成者は管理者のため、ここではアカウントを無効化できません。",
   contentReportReasons: "通報理由",
   contentReportReporterNotes: "通報者のメモ",

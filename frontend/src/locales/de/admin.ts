@@ -222,6 +222,7 @@ export default {
   contentReportResolvedAt: "Bearbeitet",
   contentReportUnattributed: "Diese Kopie trug keinen gültigen Autorenstempel, daher lässt sich kein Konto zuordnen. Du kannst den Inhalt sperren, aber es gibt keinen Autor zum Deaktivieren.",
   contentReportAuthorInactive: "Das Konto des Autors ist bereits deaktiviert.",
+  contentReportAuthorSuspended: "Der Autor ist gerade gesperrt. Du kannst ihn trotzdem verwarnen, länger sperren oder bannen.",
   contentReportAuthorIsAdmin: "Der Autor ist Admin, sein Konto kann hier nicht deaktiviert werden.",
   contentReportReasons: "Genannte Gründe",
   contentReportReporterNotes: "Anmerkungen der Meldenden",

@@ -222,6 +222,7 @@ export default {
   contentReportResolvedAt: "Resuelto",
   contentReportUnattributed: "Esta copia no tenía un sello de autor válido, así que no se puede vincular a ninguna cuenta. Puedes vetar el contenido, pero no hay autor al que desactivar.",
   contentReportAuthorInactive: "La cuenta del autor ya está desactivada.",
+  contentReportAuthorSuspended: "El autor está suspendido ahora mismo. Aun así puedes advertirle, alargar la suspensión o banearlo.",
   contentReportAuthorIsAdmin: "El autor es administrador, así que su cuenta no se puede desactivar aquí.",
   contentReportReasons: "Motivos indicados",
   contentReportReporterNotes: "Notas de quienes informaron",

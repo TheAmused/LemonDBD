@@ -54,7 +54,9 @@ export function ContentReportDetail({ detail, resolving, onResolve, onShowUser }
           : '';
 
   const isPending = detail.status === 'pending';
-  const canActOnAuthor = detail.attributed && detail.author_active !== false && !detail.author_is_admin;
+  // A suspended author can still be warned, suspended for longer or banned; a banned one cannot be acted on.
+  const standing = detail.author_standing ?? (detail.author_active === false ? 'banned' : 'active');
+  const canActOnAuthor = detail.attributed && standing !== 'banned' && !detail.author_is_admin;
   const authorDecision: AuthorDecision | null =
     canActOnAuthor && authorKind !== 'none' ? authorDecisionFromDraft({ ...authorDraft, kind: authorKind }) : null;
   const authorValid = authorKind === 'none' || !canActOnAuthor || isSanctionDraftValid({ ...authorDraft, kind: authorKind });
@@ -122,8 +124,11 @@ export function ContentReportDetail({ detail, resolving, onResolve, onShowUser }
           <span>{dict.admin.contentReportUnattributed}</span>
         </p>
       )}
-      {detail.attributed && detail.author_active === false && (
+      {detail.attributed && standing === 'banned' && (
         <p className="type-body text-text-secondary">{dict.admin.contentReportAuthorInactive}</p>
+      )}
+      {detail.attributed && standing === 'suspended' && (
+        <p className="type-body text-text-secondary">{dict.admin.contentReportAuthorSuspended}</p>
       )}
       {detail.attributed && detail.author_is_admin && (
         <p className="type-body text-text-secondary">{dict.admin.contentReportAuthorIsAdmin}</p>

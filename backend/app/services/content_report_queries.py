@@ -4,7 +4,7 @@ from typing import Any
 
 from sqlalchemy import func, select
 
-from app.core.account_state import is_blocked
+from app.core.account_state import block_kind, is_blocked
 from app.core.extensions import db
 from app.models.content_moderation import ContentReport, ContentReportSubscriber
 from app.models.user import User
@@ -98,5 +98,8 @@ def get_report_preview(report_id: int) -> dict[str, Any] | None:
         "reason_breakdown": breakdown,
         "attributed": report.author_id is not None,
         "author_active": not is_blocked(author) if author is not None else None,
+        # "active", "suspended" or "banned": a suspended author can still be warned, suspended for
+        # longer or banned from the report (author_active alone said "inactive" for both).
+        "author_standing": (block_kind(author) or "active") if author is not None else None,
         "author_is_admin": author.role == "admin" if author is not None else False,
     }

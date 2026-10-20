@@ -1,10 +1,11 @@
 # backend/app/services/page_streak/runs.py
 from collections.abc import Callable
+from datetime import datetime
 from sqlalchemy import Select, delete, select
 from sqlalchemy.orm import selectinload
 
 from app.core.extensions import db
-from app.core.transaction import transaction
+from app.core.transaction import end_transaction, lock_for_update, transaction
 from app.models import PageStreakPageLog, PageStreakRun, utcnow
 from app.schemas.page_streak import PageStreakHistoryEntry, PageStreakRunDict
 from app.services.challenge_completions import delete_completions, record_challenge_completion
@@ -38,18 +39,8 @@ def run_to_dict(
     }
 
 
-def fetch_run(
-    user_id: int,
-    killer: str,
-    build_pages_fn: Callable[[int], list[list[str]]] | None = None,
-    *,
-    lock: bool = False,
-) -> PageStreakRunDict | None:
-    """Retrieve run state and sorted page logs for a given user and killer."""
-    r = db.session.scalars(run_query(user_id, killer, lock=lock)).first()
-    if r is None:
-        return None
-
+def run_state(r: PageStreakRun, build_pages_fn: Callable[[int], list[list[str]]] | None = None) -> PageStreakRunDict:
+    """A run entity with its match logs (newest first) as the response payload."""
     sorted_logs = sorted(r.page_logs, key=lambda log: log.id, reverse=True)
     history: list[PageStreakHistoryEntry] = [
         {
@@ -63,6 +54,16 @@ def fetch_run(
         for log in sorted_logs
     ]
     return run_to_dict(r, history, build_pages_fn)
+
+
+def fetch_run(
+    user_id: int,
+    killer: str,
+    build_pages_fn: Callable[[int], list[list[str]]] | None = None,
+) -> PageStreakRunDict | None:
+    """Retrieve run state and sorted page logs for a given user and killer."""
+    r = db.session.scalars(run_query(user_id, killer)).first()
+    return None if r is None else run_state(r, build_pages_fn)
 
 
 def create_new_run(
@@ -105,13 +106,7 @@ def run_query(user_id: int, killer: str, *, lock: bool = False) -> Select[tuple[
         .options(selectinload(PageStreakRun.page_logs))
         .where(PageStreakRun.user_id == user_id, PageStreakRun.killer == killer)
     )
-    return query.with_for_update().execution_options(populate_existing=True) if lock else query
-
-
-def locked_run_by_id(run_id: int) -> PageStreakRun | None:
-    return db.session.scalars(
-        select(PageStreakRun).where(PageStreakRun.id == run_id).with_for_update().execution_options(populate_existing=True)
-    ).first()
+    return lock_for_update(query) if lock else query
 
 
 def validate_match_submission(run: PageStreakRunDict, page: int, perks: list[str], result: str) -> None:
@@ -146,14 +141,14 @@ def record_match_result(
     build_pages_fn: Callable[[int], list[list[str]]] | None = None,
 ) -> PageStreakRunDict | None:
     """Record match logs and update page progression or failure resets."""
-    run = fetch_run(user_id, killer, build_pages_fn, lock=True)
-    if run is None:
+    r = db.session.scalars(run_query(user_id, killer, lock=True)).first()
+    if r is None:
         raise ValueError(f"No run in progress for {killer}")
+    run = run_state(r, build_pages_fn)
 
     validate_match_submission(run, page, perks, result)
 
     with transaction():
-        r = db.session.get(PageStreakRun, run["id"])
         if not r.pages:
             r.pages = run["pages"]
         log = PageStreakPageLog(
@@ -188,10 +183,15 @@ def record_match_result(
     return fetch_run(user_id, killer, build_pages_fn)
 
 
-def apply_inactivity_loss(run_id: int) -> None:
-    r = locked_run_by_id(run_id)
+def apply_inactivity_loss(run_id: int, idle_before: datetime | None = None) -> bool:
+    """Counts a loss for a run nobody has played since `idle_before`. False when there was nothing to do."""
+    query = select(PageStreakRun).where(PageStreakRun.id == run_id)
+    if idle_before is not None:
+        query = query.where(PageStreakRun.updated_at < idle_before)
+    r = db.session.scalars(lock_for_update(query)).first()
     if not r or r.status == "completed":
-        return
+        end_transaction()
+        return False
 
     with transaction():
         add_match_log(r, PageStreakPageLog(
@@ -206,6 +206,7 @@ def apply_inactivity_loss(run_id: int) -> None:
         r.current_page = 1
         r.start_new_attempt()
         r.pages = []
+    return True
 
 
 def abandon_active_run(
@@ -214,15 +215,14 @@ def abandon_active_run(
     build_pages_fn: Callable[[int], list[list[str]]],
 ) -> PageStreakRunDict | None:
     """Abandon the run: back to Page 1 in a new attempt."""
-    run = fetch_run(user_id, killer, build_pages_fn, lock=True)
-    if run is None:
+    r = db.session.scalars(run_query(user_id, killer, lock=True)).first()
+    if r is None:
         raise ValueError(f"No run to abandon for {killer}")
 
     if not build_pages_fn(user_id):
         raise ValueError("No perks available — the pool is empty")
 
     with transaction():
-        r = db.session.get(PageStreakRun, run["id"])
         r.abandon_attempt()
         r.status = "in_progress"
         r.current_page = 1

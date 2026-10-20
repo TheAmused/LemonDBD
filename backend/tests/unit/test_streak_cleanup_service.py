@@ -125,3 +125,47 @@ class TestStreakCleanupService:
         ).first()
         assert log is not None
         assert log.triggered_by == "inactivity"
+
+    def test_skips_a_run_that_was_played_after_the_stale_list_was_built(self, db_session: Session) -> None:
+        from app.core.extensions import db
+        from app.services.chaos_service import ChaosService
+
+        chaos = ChaosRun(user_id=1, difficulty="hell", status="in_progress")
+        db_session.add(chaos)
+        db_session.commit()
+
+        assert ChaosService().apply_inactivity_loss(chaos.id, utcnow() - timedelta(days=90)) is False
+        # The row lock taken by the lookup is released, not held for the rest of the loop.
+        assert not db.session().in_transaction()
+        assert db_session.query(ChaosMatchLog).count() == 0
+
+    def test_skips_a_gauntlet_run_that_was_completed_in_the_meantime(self, db_session: Session) -> None:
+        from app.core.extensions import db
+        from app.services.gauntlet_service import GauntletService
+
+        run = self._stale_gauntlet_run(db_session, days_old=200, status="completed")
+
+        assert GauntletService().apply_inactivity_loss(run.id, utcnow() - timedelta(days=90)) is False
+        assert not db.session().in_transaction()
+        assert db_session.query(GauntletMatchLog).count() == 0
+
+    def test_one_failing_run_does_not_stop_the_rest_of_the_sweep(
+        self, db_session: Session, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        from app.services.gauntlet_service import GauntletService
+
+        self._stale_gauntlet_run(db_session, days_old=91)
+        chaos = ChaosRun(user_id=1, difficulty="hell", status="in_progress")
+        db_session.add(chaos)
+        db_session.commit()
+        chaos.updated_at = utcnow() - timedelta(days=91)
+        db_session.commit()
+
+        def fail(self: GauntletService, run_id: int, idle_before: object = None) -> bool:
+            raise RuntimeError("boom")
+
+        monkeypatch.setattr(GauntletService, "apply_inactivity_loss", fail)
+
+        affected = apply_inactivity_losses(inactive_after_days=90)
+        assert affected["gauntlet_runs"] == 0
+        assert affected["chaos_runs"] == 1

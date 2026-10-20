@@ -1,8 +1,7 @@
 # backend/app/services/gauntlet_service.py
 import logging
 import random
-
-from sqlalchemy import select
+from datetime import datetime
 
 from app.core.extensions import db
 from app.models import GauntletMatchLog, GauntletRun
@@ -133,7 +132,11 @@ class GauntletService(StreakRunService):
     def roll(
         self, user_id: int, role: str, target_character: str | None = None, game_mode: str = DEFAULT_GAME_MODE
     ) -> GauntletRunState:
-        run = self.get_or_create_run(user_id, role, game_mode)
+        self.get_or_create_run(user_id, role, game_mode)
+        # Locked before the target is drawn, so a result committed meanwhile is not rolled over with a draw
+        # made from the progress before it.
+        r = self._find_run(user_id, role, game_mode, lock=True)
+        run = self._present(r)
         completed = run.get("completed_characters", [])
 
         team_size = get_characters_per_match(game_mode)
@@ -157,7 +160,6 @@ class GauntletService(StreakRunService):
                 game_mode=game_mode,
             )
 
-        r = db.session.scalars(select(GauntletRun).where(GauntletRun.id == run["id"])).first()
         r.current_character_id = target_char
         r.current_loadout = loadout
         db.session.commit()
@@ -252,6 +254,14 @@ class GauntletService(StreakRunService):
             raise ValueError("There is no other character to roll")
         self._spend_tokens(r, "reroll")
         return self._apply_pick(r, random.choice(others))
+
+    def apply_inactivity_loss(self, run_id: int, idle_before: datetime | None = None) -> bool:
+        """Counts a loss for a run nobody has played since `idle_before`. False when there was nothing to do."""
+        run = self._load_run_for_inactivity(run_id, idle_before)
+        if run is None:
+            return False
+        self.submit_result(run.user_id, run.id, "loss", triggered_by="inactivity")
+        return True
 
     def abandon_run(self, user_id: int, role: str, game_mode: str = DEFAULT_GAME_MODE) -> GauntletRunState:
         return self._abandon_run(user_id, role, game_mode)

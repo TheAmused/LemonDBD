@@ -5,6 +5,7 @@ import { FileJson, RotateCcw, ShieldCheck, Upload, X } from 'lucide-react';
 import { Button } from '@/components/common/Button';
 import { tip } from '@/components/common/Tooltip';
 import { useDictionary } from '@/context/DictionaryContext';
+import { formatMessage } from '@/utils/i18nFormat';
 import { StatusBanner } from './StatusBanner';
 import type { useImportTab } from './useImportTab';
 
@@ -165,8 +166,11 @@ export function ImportTab({ tab }: { tab: ReturnType<typeof useImportTab> }) {
                   {dict.admin.createdCountPrefix}
                   {counts.created}{' '}
                   <span className="text-text-muted font-normal">
-                    ({counts.updated} {dict.admin.updatedCountSuffix})
+                    ({counts.updated} {dict.admin.updatedCountSuffix}
                   </span>
+                  {counts.skipped ? (
+                    <span className="block type-micro text-accent-amber">{formatMessage(dict.admin.skippedCount, { count: counts.skipped })}</span>
+                  ) : null}
                 </p>
               </div>
             ))}

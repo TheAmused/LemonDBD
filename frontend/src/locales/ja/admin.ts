@@ -159,6 +159,7 @@ export default {
   kbReadySuffix: "KB（復元準備完了）",
   createdCountPrefix: "+",
   updatedCountSuffix: "件更新)",
+  skippedCount: "{count}件スキップ",
   loading: "ユーザーを読み込み中...",
   noUsers: "該当するユーザーは見つかりませんでした。",
   you: "あなた",

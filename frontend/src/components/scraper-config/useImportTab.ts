@@ -17,7 +17,7 @@ export function useImportTab(onPurgeSuccess?: () => void) {
   const [isImporting, setIsImporting] = useState<boolean>(false);
   const [importError, setImportError] = useState<string | null>(null);
   const [importSuccess, setImportSuccess] = useState<string | null>(null);
-  const [importSummary, setImportSummary] = useState<Record<string, { created: number; updated: number }> | null>(null);
+  const [importSummary, setImportSummary] = useState<Record<string, { created: number; updated: number; skipped?: number }> | null>(null);
   const [showReplaceConfirm, setShowReplaceConfirm] = useState<boolean>(false);
   const [reauth, setReauth] = useState<Reauth>(EMPTY_REAUTH);
   const [isDragging, setIsDragging] = useState<boolean>(false);
@@ -143,7 +143,7 @@ export function useImportTab(onPurgeSuccess?: () => void) {
 
       const res = await authFetch(`${apiBase}/api/v1/admin/database/import`, { method: 'POST', body: form });
       if (!res.ok) throw new Error(await backupErrorMessage(res, dict.admin.importFailed, dict));
-      const data = (await res.json()) as { summary?: Record<string, { created: number; updated: number }> };
+      const data = (await res.json()) as { summary?: Record<string, { created: number; updated: number; skipped?: number }> };
 
       setImportSuccess(dict.admin.importDone);
       setImportSummary(data.summary || null);

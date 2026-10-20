@@ -80,6 +80,27 @@ class TestDatabaseExportImportSettingsTables:
 
 @pytest.mark.unit
 class TestDatabaseExportImportAuditLogAndChangelog:
+    def test_audit_log_is_restored_only_into_an_empty_log(self, export_import_app):
+        """The audit log is append-only: an import into a log that has entries adds none of its own."""
+        with export_import_app.app_context():
+            from app.models.admin import AdminAuditLog
+
+            admin = db.session.scalars(select(User).where(User.username == "admin_test")).first()
+            db.session.add(AdminAuditLog(admin_user_id=admin.id, action="user_banned", target_type="user", target_id="7"))
+            db.session.commit()
+            exported = DatabaseExportImportService.export_database(targets=["admin_audit_logs"])
+
+            again = DatabaseExportImportService.import_database(exported, mode="replace", targets=["admin_audit_logs"])
+            assert again["summary"]["admin_audit_logs"] == {"created": 0, "updated": 0, "skipped": 1}
+            assert [row.action for row in db.session.scalars(select(AdminAuditLog)).all()] == ["user_banned"]
+
+            db.session.query(AdminAuditLog).delete()
+            db.session.commit()
+            restored = DatabaseExportImportService.import_database(exported, mode="merge", targets=["admin_audit_logs"])
+            assert restored["summary"]["admin_audit_logs"]["created"] == 1
+            row = db.session.scalars(select(AdminAuditLog)).one()
+            assert (row.action, row.admin_user_id) == ("user_banned", admin.id)
+
     def test_export_import_audit_log_and_changelog_insert_only(self, export_import_app):
         with export_import_app.app_context():
             from app.models.admin import AdminAuditLog
@@ -98,9 +119,10 @@ class TestDatabaseExportImportAuditLogAndChangelog:
             summary = DatabaseExportImportService.import_database(
                 exported, mode="merge", targets=["admin_audit_logs", "changelog_posts"]
             )
-            assert summary["summary"]["admin_audit_logs"]["created"] == 1
+            # The log already has an entry, so nothing is added to it (see the test above).
+            assert summary["summary"]["admin_audit_logs"]["created"] == 0
             assert summary["summary"]["changelog_posts"]["created"] == 1
-            assert len(db.session.scalars(select(AdminAuditLog)).all()) == 2
+            assert len(db.session.scalars(select(AdminAuditLog)).all()) == 1
             assert len(db.session.scalars(select(ChangelogPost)).all()) == 2
 
 

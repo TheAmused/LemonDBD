@@ -261,7 +261,7 @@ SIMPLE_DELETE_TARGETS: list[tuple[str, type]] = [
     ("challenge_mode_settings", ChallengeModeSetting),
     ("user_showcases", UserShowcase),
     ("banned_email_hashes", BannedEmailHash),
-    ("admin_audit_logs", AdminAuditLog),
+    # Never "admin_audit_logs": the audit log is append-only, so replace mode does not clear it.
     ("changelog_posts", ChangelogPost),
     ("gauntlet_runs", GauntletRun),
     ("chaos_runs", ChaosRun),

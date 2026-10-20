@@ -1,7 +1,7 @@
 # backend/app/services/user/auth.py
 import logging
 import secrets
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from sqlalchemy import func, or_, select, update
 
 from app.core.account_state import AccountBlockedError, is_blocked
@@ -95,10 +95,11 @@ def create_user_account(
 
     require_verification = email_verification_required()
 
+    sent_at = datetime.now(timezone.utc)
     if require_verification:
         is_verified = False
         verif_code = _generate_verification_code()
-        verif_expires = datetime.now(timezone.utc) + verification_lifetime()
+        verif_expires = sent_at + verification_lifetime()
     else:
         is_verified = True
         verif_code = None
@@ -115,6 +116,7 @@ def create_user_account(
         is_verified=is_verified,
         verification_code=verif_code,
         verification_code_expires_at=verif_expires,
+        verification_sent_at=sent_at if require_verification else None,
         verification_attempts=0,
     )
     with transaction():
@@ -188,6 +190,25 @@ def verify_email_code(email: str, code: str) -> tuple[User | None, str | None]:
     return user, None
 
 
+def _cooldown_left(sent_at: datetime | None, expires_at: datetime | None, lifetime: timedelta) -> int:
+    """Seconds until another code or link may be sent (0 when it may be sent now).
+
+    Counted from the stored send time. A code sent before that was stored falls back to
+    `expires_at - lifetime`, clamped so a lifetime the admin shortened since cannot push the send
+    time into the future (that used to block new reset mails for most of an hour).
+    """
+    now = datetime.now(timezone.utc)
+    last = sent_at
+    if last is None and expires_at is not None:
+        last = min(expires_at - lifetime, now - resend_cooldown())
+    if last is None:
+        return 0
+    if last.tzinfo is None:
+        last = last.replace(tzinfo=timezone.utc)
+    remaining = resend_cooldown() - (now - last)
+    return max(0, int(remaining.total_seconds()) + 1) if remaining.total_seconds() > 0 else 0
+
+
 def resend_verification_email(email: str) -> tuple[bool, str | None]:
     """Regenerate and resend a verification code if the account isn't verified yet."""
     clean_email = (email or "").strip().lower()
@@ -200,20 +221,19 @@ def resend_verification_email(email: str) -> tuple[bool, str | None]:
     if not user or user.is_verified:
         return True, None
 
-    if user.verification_code_expires_at:
-        expires_at = user.verification_code_expires_at
-        if expires_at.tzinfo is None:
-            expires_at = expires_at.replace(tzinfo=timezone.utc)
-        last_sent_at = expires_at - verification_lifetime()
-        elapsed = datetime.now(timezone.utc) - last_sent_at
-        cooldown = resend_cooldown()
-        if elapsed < cooldown:
-            wait_seconds = int((cooldown - elapsed).total_seconds()) + 1
-            return False, f"Please wait {wait_seconds}s before requesting another code."
+    expires_at = user.verification_code_expires_at
+    if expires_at is not None and expires_at.tzinfo is None:
+        expires_at = expires_at.replace(tzinfo=timezone.utc)
+    if _cooldown_left(user.verification_sent_at, expires_at, verification_lifetime()):
+        # The same answer as for an unknown or verified address: a 429 here told anyone that the
+        # address has an account waiting for its code. The form's own countdown covers the wait.
+        return True, None
 
+    now = datetime.now(timezone.utc)
     with transaction():
         user.verification_code = _generate_verification_code()
-        user.verification_code_expires_at = datetime.now(timezone.utc) + verification_lifetime()
+        user.verification_code_expires_at = now + verification_lifetime()
+        user.verification_sent_at = now
         user.verification_attempts = 0
 
     send_verification_email(user)
@@ -232,20 +252,18 @@ def request_password_reset(email: str) -> tuple[bool, str | None]:
     if not user:
         return True, None
 
-    if user.reset_token_expires_at:
-        expires_at = user.reset_token_expires_at
-        if expires_at.tzinfo is None:
-            expires_at = expires_at.replace(tzinfo=timezone.utc)
-        last_sent_at = expires_at - reset_lifetime()
-        elapsed = datetime.now(timezone.utc) - last_sent_at
-        cooldown = resend_cooldown()
-        if elapsed < cooldown:
-            wait_seconds = int((cooldown - elapsed).total_seconds()) + 1
-            return False, f"Please wait {wait_seconds}s before requesting another reset email."
+    expires_at = user.reset_token_expires_at
+    if expires_at is not None and expires_at.tzinfo is None:
+        expires_at = expires_at.replace(tzinfo=timezone.utc)
+    if _cooldown_left(user.reset_sent_at, expires_at, reset_lifetime()):
+        # Silent, like an unknown address: a 429 only for registered addresses revealed the account.
+        return True, None
 
+    now = datetime.now(timezone.utc)
     with transaction():
         user.reset_token = secrets.token_urlsafe(32)
-        user.reset_token_expires_at = datetime.now(timezone.utc) + reset_lifetime()
+        user.reset_token_expires_at = now + reset_lifetime()
+        user.reset_sent_at = now
 
     send_password_reset_email(user)
     return True, None

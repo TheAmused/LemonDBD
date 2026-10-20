@@ -39,6 +39,8 @@ class User(Base, ColumnDictMixin):
         "verification_attempts",
         "reset_token",
         "reset_token_expires_at",
+        "verification_sent_at",
+        "reset_sent_at",
         "token_version",
         "google_sub",
     })
@@ -85,6 +87,10 @@ class User(Base, ColumnDictMixin):
     reset_token_expires_at: Mapped[datetime | None] = mapped_column(
         DateTime(timezone=True), nullable=True
     )
+    #: When the last verification code / reset link was sent: the resend cooldown counts from here
+    #: (working it out from the expiry broke whenever an admin changed the lifetime).
+    verification_sent_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    reset_sent_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     onboarding_completed_at: Mapped[datetime | None] = mapped_column(
         DateTime(timezone=True), nullable=True
     )

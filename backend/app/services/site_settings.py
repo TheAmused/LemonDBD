@@ -491,7 +491,15 @@ def update_settings(
             raise ValueError(f"Unknown setting '{key}'.")
         cleaned[key] = None if raw is None else validate_setting(key, raw)
 
-    risky = sorted(key for key, value in cleaned.items() if is_risky_change(key, value))
+    def lowers_protection(key: str, value: str | int | bool | None) -> bool:
+        if value is not None:
+            return is_risky_change(key, value)
+        # "Use default" lowers a protection too when the default is the unsafe value and the
+        # setting is not already at it (a deployment whose env turns the check off).
+        default = default_value(key)
+        return is_risky_change(key, default) and get_setting(key) != default
+
+    risky = sorted(key for key, value in cleaned.items() if lowers_protection(key, value))
     if risky and not (confirm_risky and len(reason.strip()) >= 5):
         raise RiskyChangeError(
             "This lowers a protection (" + ", ".join(risky) + "). Confirm it and give a reason (at least 5 characters)."

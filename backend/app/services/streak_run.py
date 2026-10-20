@@ -14,6 +14,7 @@ from sqlalchemy import inspect as sa_inspect, select
 
 from app.core.extensions import db
 from app.core.transaction import end_transaction, lock_for_update, transaction
+from app.models.challenge_mixins import ChallengeRunMixin
 from app.services.admin_control_service import assert_challenge_mode_enabled
 from app.services.challenge_completions import fetch_challenge_completions, record_challenge_completion
 from app.services.roster_milestone import get_full_roster_milestone
@@ -21,6 +22,20 @@ from app.services.roster_milestone import get_full_roster_milestone
 
 #: Run columns that outlive an abandoned run: its identity, its attempt bookkeeping and its lifetime totals.
 _KEPT_ON_ABANDON = frozenset({"id", "user_id", "created_at", "updated_at", "attempt", "attempts", "total_wins", "total_losses"})
+
+
+def load_idle_run_locked[M: ChallengeRunMixin](model: type[M], run_id: int, idle_before: datetime | None = None) -> M | None:
+    """The run an inactivity loss applies to, locked, or None when there is nothing to do: it is gone, completed,
+    or was played after `idle_before` (the cleanup picked it from a list built earlier). When there is nothing to
+    do the transaction is ended, so the lock does not outlive the check."""
+    query = select(model).where(model.id == run_id)
+    if idle_before is not None:
+        query = query.where(model.updated_at < idle_before)
+    run = db.session.scalars(lock_for_update(query)).first()
+    if not run or run.status == "completed":
+        end_transaction()
+        return None
+    return run
 
 
 class StreakRunService:
@@ -139,17 +154,8 @@ class StreakRunService:
         return run
 
     def _load_run_for_inactivity(self, run_id: int, idle_before: datetime | None = None):
-        """The run an inactivity loss applies to, locked, or None when there is nothing to do: it is gone,
-        completed, or was played after `idle_before` (the cleanup picked it from a list built earlier)."""
-        model = self.run_model
-        query = select(model).where(model.id == run_id)
-        if idle_before is not None:
-            query = query.where(model.updated_at < idle_before)
-        run = db.session.scalars(lock_for_update(query)).first()
-        if not run or run.status == "completed":
-            end_transaction()
-            return None
-        return run
+        """The run an inactivity loss applies to, locked, or None when there is nothing to do."""
+        return load_idle_run_locked(self.run_model, run_id, idle_before)
 
     # -- pools / completion ----------------------------------------------------
 

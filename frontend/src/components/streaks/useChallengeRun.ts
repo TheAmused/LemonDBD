@@ -34,13 +34,9 @@ export function useChallengeRun<TRun, TStats>(config: ChallengeRunConfig<TRun, T
   const [stats, setStats] = useState<TStats | null>(null);
   const [completions, setCompletions] = useState<ChallengeCompletion[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [busy, setBusy] = useState<boolean>(false);
+  // Every run with a server action in flight; this run is busy while it is one of them.
+  const [actingScopes, setActingScopes] = useState<readonly string[]>([]);
   const [error, setError] = useState<string | null>(null);
-
-  // Moving to another run leaves the old run's action behind: it no longer marks anything busy here.
-  useEffect(() => {
-    setBusy(tracker.isActing(scope));
-  }, [scope, tracker]);
 
   const loadStats = useCallback(async () => {
     if (!token) return;
@@ -91,7 +87,7 @@ export function useChallengeRun<TRun, TStats>(config: ChallengeRunConfig<TRun, T
     async (action: () => Promise<TRun>, failureMessage = 'That did not go through. Try again.') => {
       const requestScope = configRef.current.scope;
       if (!token || !tracker.startAction(requestScope)) return undefined;
-      setBusy(true);
+      setActingScopes((current) => [...current, requestScope]);
       setError(null);
       try {
         const updated = await action();
@@ -105,11 +101,13 @@ export function useChallengeRun<TRun, TStats>(config: ChallengeRunConfig<TRun, T
         return undefined;
       } finally {
         tracker.finishAction(requestScope);
-        setBusy(tracker.isActing(configRef.current.scope));
+        setActingScopes((current) => current.filter((acting) => acting !== requestScope));
       }
     },
     [token, tracker]
   );
+
+  const busy = actingScopes.includes(scope);
 
   return { token, run, stats, completions, loading, busy, error, load, loadStats, loadCompletions, mutate };
 }
